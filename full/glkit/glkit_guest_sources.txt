@@ -1,4 +1,3 @@
-full/glkit/GLKDependencies.swift
 full/glkit/GLKEffects.swift
 full/glkit/GLKEnums.swift
 full/glkit/GLKMathTypes.swift

@@ -1,49 +1,25 @@
+#if canImport(OpenGLES)
+@_exported import OpenGLES
+#endif
 import CoreFoundation
-import Dispatch
 import Foundation
 
 /// Linux starting point for Apple's public `GLKit` module.
 ///
 /// Vector, matrix, quaternion, and matrix-stack math follows the public
-/// iPhoneOS 26.1 GLKit headers (column-major, matching the inline C). GPU
-/// texture upload, shader `prepareToDraw`, drawable binding, and Model I/O
-/// mesh upload are fail-closed: they do not fabricate an OpenGL ES context
-/// or a successful GPU resource.
+/// iPhoneOS 26.1 GLKit headers (column-major, matching the inline C). This
+/// isolated compile can import Foundation only. Guest `OpenGLES`, `UIKit`,
+/// `ModelIO`, and `CoreGraphics` modules are not on the search path, and
+/// GLKit does not define lookalike `EAGL*`, `UIView`, `CGImage`, `UIImage`,
+/// or `MDL*` types. View, texture-upload, and mesh-upload APIs that name
+/// those nominal types are compiled only when the real modules are
+/// importable (`#if canImport`).
 ///
-/// Dependency modules (`OpenGLES`, `UIKit`, `ModelIO`, `CoreGraphics`) are
-/// not linked in this isolated compile. Local stand-in types with the same
-/// names keep the GLKit signatures source-compatible until those modules
-/// are integrated.
+/// GLES C typedef names (`GLboolean`, `GLfloat`, `GL_TEXTURE_2D`, …) are
+/// not redeclared here. When OpenGLES is importable it is re-exported;
+/// otherwise CPU-side storage uses the same C widths (`UInt8`, `Float`,
+/// `Int32`, `UInt32`).
 
-public typealias GLboolean = UInt8
-public typealias GLbyte = Int8
-public typealias GLubyte = UInt8
-public typealias GLshort = Int16
-public typealias GLushort = UInt16
-public typealias GLint = Int32
-public typealias GLuint = UInt32
-public typealias GLsizei = Int32
-public typealias GLenum = UInt32
-public typealias GLbitfield = UInt32
-public typealias GLfloat = Float
-public typealias GLclampf = Float
-
-public let GL_FALSE: GLboolean = 0
-public let GL_TRUE: GLboolean = 1
-
-public let GL_BYTE: GLenum = 0x1400
-public let GL_UNSIGNED_BYTE: GLenum = 0x1401
-public let GL_SHORT: GLenum = 0x1402
-public let GL_UNSIGNED_SHORT: GLenum = 0x1403
-public let GL_INT: GLenum = 0x1404
-public let GL_UNSIGNED_INT: GLenum = 0x1405
-public let GL_FLOAT: GLenum = 0x1406
-public let GL_HALF_FLOAT: GLenum = 0x140B
-
-public let GL_TEXTURE_2D: GLenum = 0x0DE1
-public let GL_TEXTURE_CUBE_MAP: GLenum = 0x8513
-
-public typealias dispatch_queue_t = DispatchQueue
 public typealias GLKEffectPropertyPrvPtr = OpaquePointer
 
 public let GLKMatrix3Identity = GLKMatrix3Make(
@@ -61,6 +37,7 @@ public let GLKMatrix4Identity = GLKMatrix4Make(
 
 public let GLKQuaternionIdentity = GLKQuaternionMake(0, 0, 0, 1)
 
+/// Identifier-as-string constants. Exact Apple NSString payloads are unobserved.
 public let GLKTextureLoaderApplyPremultiplication = "GLKTextureLoaderApplyPremultiplication"
 public let GLKTextureLoaderGenerateMipmaps = "GLKTextureLoaderGenerateMipmaps"
 public let GLKTextureLoaderOriginBottomLeft = "GLKTextureLoaderOriginBottomLeft"

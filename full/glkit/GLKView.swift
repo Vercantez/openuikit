@@ -1,23 +1,28 @@
 import Foundation
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+#if canImport(OpenGLES)
+import OpenGLES
+#endif
+#if canImport(UIKit)
+import UIKit
+#endif
 
-public protocol GLKViewDelegate: AnyObject {
+#if canImport(UIKit) && canImport(OpenGLES) && canImport(CoreGraphics)
+@MainActor
+public protocol GLKViewDelegate: NSObjectProtocol {
     func glkView(_ view: GLKView, drawIn rect: CGRect)
 }
 
-public protocol GLKViewControllerDelegate: AnyObject {
+@MainActor
+public protocol GLKViewControllerDelegate: NSObjectProtocol {
     func glkViewControllerUpdate(_ controller: GLKViewController)
     func glkViewController(_ controller: GLKViewController, willPause pause: Bool)
 }
 
-extension GLKViewControllerDelegate {
-    public func glkViewController(_ controller: GLKViewController, willPause pause: Bool) {
-        _ = controller
-        _ = pause
-    }
-}
-
 @MainActor
-open class GLKView: NSObject {
+open class GLKView: UIView {
     open var context: EAGLContext
     public weak var delegate: (any GLKViewDelegate)?
     open var drawableColorFormat: GLKViewDrawableColorFormat = .RGBA8888
@@ -27,41 +32,37 @@ open class GLKView: NSObject {
     open var drawableWidth: Int = 0
     open var drawableHeight: Int = 0
     open var enableSetNeedsDisplay: Bool = true
-    public let frame: CGRect
 
     public init(frame: CGRect, context: EAGLContext) {
-        self.frame = frame
         self.context = context
-        super.init()
+        super.init(frame: frame)
     }
 
-    /// No EAGL drawable exists on Linux; this is a documented no-op.
+    public required init?(coder: NSCoder) {
+        return nil
+    }
+
     open func bindDrawable() {}
 
-    /// No EAGL drawable exists on Linux; this is a documented no-op.
     open func deleteDrawable() {}
 
     open func display() {
-        delegate?.glkView(self, drawIn: frame)
+        delegate?.glkView(self, drawIn: bounds)
     }
 
-    /// Returns an empty image. Linux GLKit does not read back a GPU framebuffer.
-    open var snapshot: UIImage { UIImage() }
+    /// Pixel readback is not implemented. This port does not fabricate a UIImage.
+    open var snapshot: UIImage {
+        fatalError("GLKView.snapshot is unavailable in this GLKit port; framebuffer readback is not implemented")
+    }
 }
 
 @MainActor
-open class GLKViewController: NSObject {
+open class GLKViewController: UIViewController {
     public weak var delegate: (any GLKViewControllerDelegate)?
-    open var preferredFramesPerSecond: Int = 30
+    open var preferredFramesPerSecond: Int = 0
     open private(set) var framesPerSecond: Int = 0
     open private(set) var framesDisplayed: Int = 0
-    open var isPaused: Bool = true {
-        didSet {
-            if oldValue != isPaused {
-                delegate?.glkViewController(self, willPause: isPaused)
-            }
-        }
-    }
+    open var isPaused: Bool = true
     open var pauseOnWillResignActive: Bool = true
     open var resumeOnDidBecomeActive: Bool = true
     open private(set) var timeSinceFirstResume: TimeInterval = 0
@@ -69,7 +70,12 @@ open class GLKViewController: NSObject {
     open private(set) var timeSinceLastUpdate: TimeInterval = 0
     open private(set) var timeSinceLastDraw: TimeInterval = 0
 
-    public override init() {
-        super.init()
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 }
+#endif

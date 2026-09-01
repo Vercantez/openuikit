@@ -1,41 +1,41 @@
 import Foundation
 
-public enum GLKFogMode: GLint, Equatable, Hashable, Sendable {
+public enum GLKFogMode: Int32, Equatable, Hashable, Sendable {
     case exp = 0
     case exp2 = 1
     case linear = 2
 }
 
-public enum GLKLightingType: GLint, Equatable, Hashable, Sendable {
+public enum GLKLightingType: Int32, Equatable, Hashable, Sendable {
     case perVertex = 0
     case perPixel = 1
 }
 
-public enum GLKTextureEnvMode: GLint, Equatable, Hashable, Sendable {
+public enum GLKTextureEnvMode: Int32, Equatable, Hashable, Sendable {
     case replace = 0
     case modulate = 1
     case decal = 2
 }
 
-public enum GLKTextureInfoAlphaState: GLint, Equatable, Hashable, Sendable {
+public enum GLKTextureInfoAlphaState: Int32, Equatable, Hashable, Sendable {
     case none = 0
     case nonPremultiplied = 1
     case premultiplied = 2
 }
 
-public enum GLKTextureInfoOrigin: GLint, Equatable, Hashable, Sendable {
+public enum GLKTextureInfoOrigin: Int32, Equatable, Hashable, Sendable {
     case unknown = 0
     case topLeft = 1
     case bottomLeft = 2
 }
 
-public enum GLKTextureTarget: GLenum, Equatable, Hashable, Sendable {
+public enum GLKTextureTarget: UInt32, Equatable, Hashable, Sendable {
     case target2D = 0x0DE1
     case targetCubeMap = 0x8513
     case targetCt = 2
 }
 
-public enum GLKVertexAttrib: GLint, Equatable, Hashable, Sendable {
+public enum GLKVertexAttrib: Int32, Equatable, Hashable, Sendable {
     case position = 0
     case normal = 1
     case color = 2
@@ -43,30 +43,30 @@ public enum GLKVertexAttrib: GLint, Equatable, Hashable, Sendable {
     case texCoord1 = 4
 }
 
-public enum GLKViewDrawableColorFormat: GLint, Equatable, Hashable, Sendable {
+public enum GLKViewDrawableColorFormat: Int32, Equatable, Hashable, Sendable {
     case RGBA8888 = 0
     case RGB565 = 1
     case SRGBA8888 = 2
 }
 
-public enum GLKViewDrawableDepthFormat: GLint, Equatable, Hashable, Sendable {
+public enum GLKViewDrawableDepthFormat: Int32, Equatable, Hashable, Sendable {
     case formatNone = 0
     case format16 = 1
     case format24 = 2
 }
 
-public enum GLKViewDrawableStencilFormat: GLint, Equatable, Hashable, Sendable {
+public enum GLKViewDrawableStencilFormat: Int32, Equatable, Hashable, Sendable {
     case formatNone = 0
     case format8 = 1
 }
 
-public enum GLKViewDrawableMultisample: GLint, Equatable, Hashable, Sendable {
+public enum GLKViewDrawableMultisample: Int32, Equatable, Hashable, Sendable {
     case multisampleNone = 0
     case multisample4X = 1
 }
 
 public struct GLKTextureLoaderError: Error, CustomNSError, Hashable, Equatable, @unchecked Sendable {
-    public enum Code: GLuint, Hashable, Sendable {
+    public enum Code: UInt32, Hashable, Sendable {
         case fileOrURLNotFound = 0
         case invalidNSData = 1
         case invalidCGImage = 2
@@ -97,6 +97,7 @@ public struct GLKTextureLoaderError: Error, CustomNSError, Hashable, Equatable, 
         self.userInfo = userInfo
     }
 
+    /// Identifier-as-string domain. Exact Apple payload is unobserved.
     public static var errorDomain: String { GLKTextureLoaderErrorDomain }
     public var errorCode: Int { Int(code.rawValue) }
     public var errorUserInfo: [String: Any] { userInfo }

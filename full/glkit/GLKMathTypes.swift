@@ -196,11 +196,14 @@ public struct _GLKQuaternion: Equatable, Hashable, Sendable {
 }
 
 public struct _GLKVertexAttributeParameters: Equatable, Hashable, Sendable {
-    public var type: GLenum
-    public var size: GLint
-    public var normalized: GLboolean
+    /// GLES `GLenum` width. Named GLES aliases come from OpenGLES when that module is imported.
+    public var type: UInt32
+    /// GLES `GLint` width.
+    public var size: Int32
+    /// GLES `GLboolean` width.
+    public var normalized: UInt8
 
-    public init(type: GLenum = 0, size: GLint = 0, normalized: GLboolean = 0) {
+    public init(type: UInt32 = 0, size: Int32 = 0, normalized: UInt8 = 0) {
         self.type = type
         self.size = size
         self.normalized = normalized
