@@ -1,0 +1,16 @@
+/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit
+@rpath/libFoundation.dylib
+@rpath/libFoundationEssentials.dylib
+@rpath/libOpenUIKit.dylib
+@rpath/libOpenCoreGraphics.dylib
+@rpath/libCombine.dylib
+@rpath/libOpenCombine.dylib
+@rpath/libDispatch.dylib
+/usr/lib/swift/libswiftCore.dylib
+/usr/lib/swift/libswiftObjectiveC.dylib
+/usr/lib/swift/libswift_Concurrency.dylib
+/usr/lib/swift/libswiftObservation.dylib
+/usr/lib/libswiftcompat.dylib
+/usr/lib/libSystem.B.dylib
+/usr/lib/libobjc.A.dylib
+/usr/lib/libquartz.dylib
