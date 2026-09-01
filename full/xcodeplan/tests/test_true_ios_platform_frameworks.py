@@ -41,6 +41,9 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn("PRIVATE_DYLIBS=(_FoundationICU)", self.builder)
         self.assertIn("RUNTIME_SWIFT_MODULES=(Observation)", self.builder)
         self.assertIn("/usr/lib/swift/libswiftObservation.dylib", self.builder)
+        runtime_search = self.builder.index('-L"$RUNTIME_ROOT/darwin/usr/lib/swift"')
+        inherited_search = self.builder.index('-L"$MRROOT_INPUT/darwin/usr/lib"')
+        self.assertLess(runtime_search, inherited_search)
         self.assertIn("DYLIB_INSTALL_PREFIX=/usr/lib", self.builder)
 
         self.assertIn('TARGET=arm64-apple-ios18.0-simulator', self.builder)

@@ -299,7 +299,8 @@ FE_FLAGS=(-I "$FULL/foundation/essentials"
     -I "$FULL/foundation/collections" -I "$FULL/foundation/os")
 LD=(ld64.lld-18 -arch arm64 -platform_version "$PLATFORM" "$MINIMUM_OS" \
     "$SDK_VERSION" -syslibroot "$SYS")
-COMMON_RUNTIME=(-L"$MRROOT_INPUT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore
+COMMON_RUNTIME=(-L"$RUNTIME_ROOT/darwin/usr/lib/swift"
+    -L"$MRROOT_INPUT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore
     "$MRROOT_INPUT/darwin/usr/lib/libswiftcompat.dylib" -L/usr/lib -lSystem)
 
 echo '== pinned OpenCombine (103 sources) and literal Combine'
