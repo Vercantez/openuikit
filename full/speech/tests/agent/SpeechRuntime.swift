@@ -1,5 +1,7 @@
+@_spi(OpenUIKitHost) import Speech
 import Foundation
-import Speech
+import AVFoundation
+import CoreMedia
 
 func require(_ condition: Bool, _ message: String) {
     if !condition {
@@ -21,6 +23,10 @@ func requireError(_ error: (any Error)?, code: SFSpeechError.Code, _ message: St
     require(speech.errorCode == code.rawValue, "errorCode mismatch")
 }
 
+func isNSObjectInstance(_ value: Any) -> Bool {
+    value is NSObject
+}
+
 struct OneInput: AsyncSequence, Sendable {
     typealias Element = AnalyzerInput
     let value: AnalyzerInput
@@ -36,7 +42,9 @@ struct OneInput: AsyncSequence, Sendable {
     }
 }
 
-// MARK: - Errors and enums
+final class TaskProbe: NSObject, SFSpeechRecognitionTaskDelegate {}
+
+// MARK: - Attested errors and enums
 
 require(SFSpeechErrorDomain == "SFSpeechErrorDomain", "error domain string")
 require(SFSpeechError.internalServiceError.rawValue == 1, "internalServiceError raw")
@@ -45,17 +53,29 @@ require(SFSpeechError.undefinedTemplateClassName.rawValue == 7, "undefinedTempla
 require(SFSpeechError.malformedSupplementalModel.rawValue == 8, "malformedSupplementalModel raw")
 require(SFSpeechError.timeout.rawValue == 12, "timeout raw")
 require(SFSpeechError.missingParameter.rawValue == 13, "missingParameter raw")
-require(SFSpeechError.Code.noModel.rawValue == 5, "noModel raw")
-require(SFSpeechError.Code.audioDisordered.rawValue == 3, "audioDisordered raw")
-require(SFSpeechError.Code.cannotAllocateUnsupportedLocale.rawValue == 15, "cannotAllocate")
 require(SFSpeechError.Code(rawValue: 1) == .internalServiceError, "code init")
 require(SFSpeechError.Code(rawValue: 99) == nil, "unknown code")
 
-let typed = SFSpeechError(.noModel, userInfo: ["reason": "test"])
-require(typed.code == .noModel, "typed code")
-require(SFSpeechError.Code.noModel ~= typed, "pattern match")
+for code in [
+    SFSpeechError.internalServiceError,
+    SFSpeechError.audioReadFailed,
+    SFSpeechError.undefinedTemplateClassName,
+    SFSpeechError.malformedSupplementalModel,
+    SFSpeechError.timeout,
+    SFSpeechError.missingParameter,
+] {
+    let constructed = SFSpeechError(code, userInfo: ["attested": true])
+    require(constructed.errorCode == code.rawValue, "attested code \(code)")
+    require(code ~= constructed, "pattern match \(code)")
+}
+
+let typed = SFSpeechError(.internalServiceError, userInfo: ["reason": "test"])
+require(typed.code == .internalServiceError, "typed code")
 require(typed != SFSpeechError(.timeout), "error inequality")
-require(typed.hashValue != 0 || typed.hashValue == 0, "error hash")
+require(
+    Set([typed, typed]).count == 1,
+    "error hash/equality"
+)
 
 require(SFSpeechRecognitionTaskHint.unspecified.rawValue == 0, "hint unspecified")
 require(SFSpeechRecognitionTaskHint.dictation.rawValue == 1, "hint dictation")
@@ -63,9 +83,16 @@ require(SFSpeechRecognitionTaskHint.search.rawValue == 2, "hint search")
 require(SFSpeechRecognitionTaskHint.confirmation.rawValue == 3, "hint confirmation")
 require(SFSpeechRecognitionTaskHint.dictation != .search, "hint inequality")
 require(SFSpeechRecognitionTaskState.starting.rawValue == 0, "state starting")
+require(SFSpeechRecognitionTaskState.running.rawValue == 1, "state running")
+require(SFSpeechRecognitionTaskState.finishing.rawValue == 2, "state finishing")
+require(SFSpeechRecognitionTaskState.canceling.rawValue == 3, "state canceling")
 require(SFSpeechRecognitionTaskState.completed.rawValue == 4, "state completed")
+require(SFSpeechRecognitionTaskState.starting != .completed, "state inequality")
+require(SFSpeechRecognizerAuthorizationStatus.notDetermined.rawValue == 0, "auth notDetermined")
 require(SFSpeechRecognizerAuthorizationStatus.denied.rawValue == 1, "auth denied")
+require(SFSpeechRecognizerAuthorizationStatus.restricted.rawValue == 2, "auth restricted")
 require(SFSpeechRecognizerAuthorizationStatus.authorized.rawValue == 3, "auth authorized")
+require(SFSpeechRecognizerAuthorizationStatus.denied != .authorized, "auth inequality")
 require(SpeechDetector.SensitivityLevel(rawValue: 1) == .medium, "sensitivity raw")
 require(
     SpeechDetector.SensitivityLevel.allCases == [.low, .medium, .high],
@@ -88,7 +115,7 @@ require(
     "attribute option cases"
 )
 
-// MARK: - Authorization and recognizer (privacy / remote-service fail-closed)
+// MARK: - Authorization (class method; not recognizer.queue)
 
 require(
     SFSpeechRecognizer.authorizationStatus() == .denied,
@@ -97,8 +124,11 @@ require(
 require(SFSpeechRecognizer.supportedLocales().isEmpty, "no Apple locales")
 
 var requested: SFSpeechRecognizerAuthorizationStatus?
+var authorizationReturned = false
 SFSpeechRecognizer.requestAuthorization { requested = $0 }
+authorizationReturned = true
 require(requested == .denied, "requestAuthorization stays denied")
+require(authorizationReturned, "authorization handler is invoked before return")
 require(
     SFSpeechRecognizer.authorizationStatus() == .denied,
     "authorization remains denied"
@@ -108,13 +138,16 @@ guard let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US")) e
     require(false, "recognizer init")
     fatalError("unreachable")
 }
-require(SFSpeechRecognizer() != nil, "default recognizer init")
+let defaultRecognizer = SFSpeechRecognizer()
+require(isNSObjectInstance(defaultRecognizer), "default recognizer is NSObject")
+require(isNSObjectInstance(recognizer), "locale recognizer is NSObject")
 require(!recognizer.isAvailable, "recognizer unavailable")
 require(!recognizer.supportsOnDeviceRecognition, "no on-device")
 require(recognizer.locale.identifier == "en-US", "locale stored")
 recognizer.defaultTaskHint = .search
 require(recognizer.defaultTaskHint == .search, "task hint stored")
-recognizer.queue.maxConcurrentOperationCount = 1
+require(recognizer.queue.maxConcurrentOperationCount == 1, "default queue is serial")
+recognizer.delegate = nil
 
 let urlRequest = SFSpeechURLRecognitionRequest(
     url: URL(fileURLWithPath: "/tmp/speech-sample.wav")
@@ -132,31 +165,114 @@ _ = SFSpeechURLRecognitionRequest(URL: URL(fileURLWithPath: "/tmp/other.wav"))
 let bufferRequest = SFSpeechAudioBufferRecognitionRequest()
 let format = bufferRequest.nativeAudioFormat
 require(format.sampleRate == 16_000, "native sample rate")
-let pcm = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 320)
+require(format.channelCount == 1, "native channels")
+
+guard let pcm = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 320) else {
+    require(false, "pcm buffer")
+    fatalError("unreachable")
+}
 pcm.frameLength = 160
 bufferRequest.append(pcm)
-bufferRequest.appendAudioSampleBuffer(CMSampleBuffer())
+let sampleBuffer = CMSampleBuffer()
+bufferRequest.appendAudioSampleBuffer(sampleBuffer)
 bufferRequest.endAudio()
 
-final class TaskProbe: NSObject, SFSpeechRecognitionTaskDelegate {}
+let time = CMTime(seconds: 0.25, preferredTimescale: 16_000)
+require(time.isNumeric, "cmtime numeric")
+let range = CMTimeRange(start: .zero, duration: time)
+require(range.isValid, "cmtime range valid")
+require(!range.isEmpty, "cmtime range nonempty")
+
 let probe = TaskProbe()
-let task = recognizer.recognitionTask(with: urlRequest, delegate: probe)
-require(task.state == .completed, "task completed")
-requireError(task.error, code: .noModel, "recognition task error")
-
-var handlerSawError = false
-let handlerTask = recognizer.recognitionTask(with: bufferRequest) { result, error in
-    require(result == nil, "no fabricated transcription")
-    requireError(error, code: .noModel, "handler error")
-    handlerSawError = true
+await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
+    let task = recognizer.recognitionTask(with: urlRequest, delegate: probe)
+    require(task.state == .completed, "task completed")
+    requireError(task.error, code: .internalServiceError, "recognition task error")
+    recognizer.queue.addOperation {
+        cont.resume()
+    }
 }
-require(handlerSawError, "handler invoked")
-handlerTask.cancel()
-require(handlerTask.isCancelled, "cancel flag")
-handlerTask.finish()
-require(handlerTask.isFinishing, "finish flag")
 
-// MARK: - Result objects
+await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
+    let handlerTask = recognizer.recognitionTask(with: bufferRequest) { result, error in
+        require(OperationQueue.current === recognizer.queue, "result handler queue identity")
+        require(result == nil, "no fabricated transcription")
+        requireError(error, code: .internalServiceError, "handler error")
+        cont.resume()
+    }
+    _ = handlerTask
+}
+
+await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
+    let lock = NSLock()
+    var order: [Int] = []
+    func record(_ value: Int) {
+        lock.lock()
+        order.append(value)
+        let count = order.count
+        let snapshot = order
+        lock.unlock()
+        if count == 2 {
+            require(snapshot == [1, 2], "handler order")
+            cont.resume()
+        }
+    }
+    _ = recognizer.recognitionTask(with: urlRequest) { _, error in
+        require(OperationQueue.current === recognizer.queue, "first handler queue")
+        requireError(error, code: .internalServiceError, "first ordered handler")
+        record(1)
+    }
+    _ = recognizer.recognitionTask(with: urlRequest) { _, error in
+        require(OperationQueue.current === recognizer.queue, "second handler queue")
+        requireError(error, code: .internalServiceError, "second ordered handler")
+        record(2)
+    }
+}
+
+await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
+    let lock = NSLock()
+    var depth = 0
+    var maxDepth = 0
+    func enter() {
+        lock.lock()
+        depth += 1
+        maxDepth = max(maxDepth, depth)
+        lock.unlock()
+    }
+    func leave() {
+        lock.lock()
+        depth -= 1
+        lock.unlock()
+    }
+    _ = recognizer.recognitionTask(with: urlRequest) { _, _ in
+        enter()
+        _ = recognizer.recognitionTask(with: urlRequest) { _, _ in
+            enter()
+            leave()
+            lock.lock()
+            let observed = maxDepth
+            lock.unlock()
+            require(observed == 1, "handlers are not reentrant")
+            cont.resume()
+        }
+        leave()
+    }
+}
+
+await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
+    let raceTask = recognizer.recognitionTask(with: bufferRequest) { result, error in
+        require(OperationQueue.current === recognizer.queue, "cancel-race queue identity")
+        require(result == nil, "cancel-race has no result")
+        requireError(error, code: .internalServiceError, "cancel-race still delivers")
+        cont.resume()
+    }
+    raceTask.cancel()
+    require(raceTask.isCancelled, "cancel flag")
+    raceTask.finish()
+    require(raceTask.isFinishing, "finish flag")
+}
+
+// MARK: - Result objects (host SPI constructors; not Apple public inits)
 
 let segment = SFTranscriptionSegment(
     substring: "hello",
@@ -202,8 +318,38 @@ let emptyResult = SpeechTranscriber.Result(
     range: .zero,
     resultsFinalizationTime: .zero
 )
+let otherResult = SpeechTranscriber.Result(
+    text: AttributedString("y"),
+    alternatives: [],
+    range: .zero,
+    resultsFinalizationTime: .invalid
+)
 require(emptyResult.isFinal, "module result isFinal")
+require(!otherResult.isFinal, "invalid finalization is not final")
+require(emptyResult != otherResult, "transcriber result inequality")
 require(emptyResult.description == "x", "result description")
+
+let dictationResult = DictationTranscriber.Result(
+    text: AttributedString("d"),
+    alternatives: [],
+    range: .zero,
+    resultsFinalizationTime: .zero
+)
+require(dictationResult.isFinal, "dictation result isFinal")
+require(dictationResult != DictationTranscriber.Result(
+    text: AttributedString("e"),
+    alternatives: [],
+    range: .zero,
+    resultsFinalizationTime: .zero
+), "dictation result inequality")
+
+let detectorResult = SpeechDetector.Result(
+    speechDetected: true,
+    range: .zero,
+    resultsFinalizationTime: .zero
+)
+require(detectorResult.isFinal, "detector result isFinal")
+require(detectorResult.description == "speechDetected", "detector description")
 
 // MARK: - Custom language model data (local, useful)
 
@@ -245,10 +391,16 @@ require(
     SFCustomLanguageModelData.supportedPhonemes(locale: custom.locale).isEmpty,
     "no phoneme inventory"
 )
-require(custom != SFCustomLanguageModelData(locale: Locale(identifier: "fr"), identifier: "x", version: "0"), "lm inequality")
+require(
+    custom != SFCustomLanguageModelData(locale: Locale(identifier: "fr"), identifier: "x", version: "0"),
+    "lm inequality"
+)
 
-let exportURL = FileManager.default.temporaryDirectory
-    .appendingPathComponent("speech-custom-lm.json")
+let tempRoot = FileManager.default.temporaryDirectory
+    .appendingPathComponent("speech-runtime-\(UUID().uuidString)", isDirectory: true)
+try FileManager.default.createDirectory(at: tempRoot, withIntermediateDirectories: true)
+defer { try? FileManager.default.removeItem(at: tempRoot) }
+let exportURL = tempRoot.appendingPathComponent("speech-custom-lm.json")
 try await custom.export(to: exportURL)
 let exported = try Data(contentsOf: exportURL)
 let json = try JSONSerialization.jsonObject(with: exported) as? [String: Any]
@@ -264,13 +416,13 @@ require(
 )
 
 let generator = SFCustomLanguageModelData.TemplatePhraseCountGenerator()
-generator.define(className: "x", values: ["hello"])
 generator.insert(template: "{x}", count: 1)
+generator.define(className: "x", values: ["hello"])
 var seen: [String] = []
 for try await phrase in generator {
     seen.append(phrase.phrase)
 }
-require(seen == ["hello"], "phrase generator sequence")
+require(seen == ["hello"], "define rebuilds cached phrases")
 require(
     try await generator.contains(SFCustomLanguageModelData.PhraseCount(phrase: "hello", count: 1)),
     "contains"
@@ -283,7 +435,7 @@ do {
     )
     require(false, "prepareCustomLanguageModel must fail closed")
 } catch {
-    requireError(error, code: .noModel, "prepare custom LM")
+    requireError(error, code: .internalServiceError, "prepare custom LM")
 }
 
 do {
@@ -295,7 +447,7 @@ do {
     )
     require(false, "prepare with client id must fail closed")
 } catch {
-    requireError(error, code: .noModel, "prepare custom LM client")
+    requireError(error, code: .internalServiceError, "prepare custom LM client")
 }
 
 // MARK: - Analyzer family
@@ -382,7 +534,7 @@ do {
     _ = try await AssetInventory.reserve(locale: Locale(identifier: "en-US"))
     require(false, "reserve must fail closed")
 } catch {
-    requireError(error, code: .cannotAllocateUnsupportedLocale, "reserve locale")
+    requireError(error, code: .internalServiceError, "reserve locale")
 }
 require(
     await AssetInventory.release(reservedLocale: Locale(identifier: "en-US")) == false,
@@ -417,13 +569,10 @@ do {
     try await analyzer.prepareToAnalyze(in: format)
     require(false, "prepareToAnalyze must fail closed")
 } catch {
-    requireError(error, code: .noModel, "prepareToAnalyze")
+    requireError(error, code: .internalServiceError, "prepareToAnalyze")
 }
 
-let input = AnalyzerInput(
-    buffer: pcm,
-    bufferStartTime: CMTime(seconds: 0, preferredTimescale: 16_000)
-)
+let input = AnalyzerInput(buffer: pcm, bufferStartTime: time)
 require(input.bufferStartTime?.isValid == true, "input timestamp")
 _ = AnalyzerInput(buffer: pcm)
 
@@ -431,10 +580,10 @@ do {
     _ = try await analyzer.analyzeSequence(OneInput(value: input))
     require(false, "analyzeSequence must fail closed")
 } catch {
-    requireError(error, code: .noModel, "analyzeSequence")
+    requireError(error, code: .internalServiceError, "analyzeSequence")
 }
 
-let audioFile = AVAudioFile(forReading: URL(fileURLWithPath: "/tmp/missing.wav"))
+let audioFile = try AVAudioFile(forReading: URL(fileURLWithPath: "/tmp/missing.wav"))
 do {
     _ = try await analyzer.analyzeSequence(from: audioFile)
     require(false, "analyze file must fail closed")
@@ -446,14 +595,14 @@ do {
     try await analyzer.start(inputSequence: OneInput(value: input))
     require(false, "start sequence must fail closed")
 } catch {
-    requireError(error, code: .noModel, "start sequence")
+    requireError(error, code: .internalServiceError, "start sequence")
 }
 
 do {
     try await analyzer.start(inputAudioFile: audioFile, finishAfterFile: true)
     require(false, "start file must fail closed")
 } catch {
-    requireError(error, code: .noModel, "start file")
+    requireError(error, code: .internalServiceError, "start file")
 }
 
 await analyzer.cancelAnalysis(before: .zero)
@@ -470,7 +619,7 @@ do {
     )
     require(false, "file analyzer init must fail closed")
 } catch {
-    requireError(error, code: .noModel, "file analyzer init")
+    requireError(error, code: .internalServiceError, "file analyzer init")
 }
 
 _ = SpeechAnalyzer(
