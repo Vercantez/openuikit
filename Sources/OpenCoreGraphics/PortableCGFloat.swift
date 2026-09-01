@@ -4,9 +4,9 @@
 // 761b621da93a856a48995efc29ed11028c283306 (Apache-2.0 with Runtime
 // Library Exception). The full license is bundled at
 // THIRD_PARTY_LICENSES/Swift-Foundation.txt. The generic exact integer
-// conversion is completed below. The tgmath section is intentionally omitted:
-// OpenCoreGraphics' rendering paths already own deterministic helpers, while
-// public tgmath overloads remain a separately measured compatibility slice.
+// conversion is completed below. The public tgmath overloads are retained:
+// Apple's CoreGraphics module owns these CGFloat-specific entry points, and
+// unchanged SwiftUI libraries rely on them when Foundation is not available.
 
 #if !canImport(Foundation)
 // This source file is part of the Swift.org open source project
@@ -17,6 +17,14 @@
 // See http://swift.org/LICENSE.txt for license information
 // See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 //
+
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#elseif canImport(Musl)
+import Musl
+#endif
 
 #if canImport(Android)
 @preconcurrency import Android
@@ -686,6 +694,278 @@ public func %(lhs: CGFloat, rhs: CGFloat) -> CGFloat {
 public func %=(lhs: inout CGFloat, rhs: CGFloat) {
     fatalError("%= is not available.")
 }
+
+//===----------------------------------------------------------------------===//
+// tgmath
+//===----------------------------------------------------------------------===//
+
+@_transparent
+public func acos(_ x: CGFloat) -> CGFloat {
+    CGFloat(acos(x.native))
+}
+
+@_transparent
+public func cos(_ x: CGFloat) -> CGFloat {
+    CGFloat(cos(x.native))
+}
+
+@_transparent
+public func sin(_ x: CGFloat) -> CGFloat {
+    CGFloat(sin(x.native))
+}
+
+@_transparent
+public func asin(_ x: CGFloat) -> CGFloat {
+    CGFloat(asin(x.native))
+}
+
+@_transparent
+public func atan(_ x: CGFloat) -> CGFloat {
+    CGFloat(atan(x.native))
+}
+
+@_transparent
+public func tan(_ x: CGFloat) -> CGFloat {
+    CGFloat(tan(x.native))
+}
+
+@_transparent
+public func acosh(_ x: CGFloat) -> CGFloat {
+    CGFloat(acosh(x.native))
+}
+
+@_transparent
+public func asinh(_ x: CGFloat) -> CGFloat {
+    CGFloat(asinh(x.native))
+}
+
+@_transparent
+public func atanh(_ x: CGFloat) -> CGFloat {
+    CGFloat(atanh(x.native))
+}
+
+@_transparent
+public func cosh(_ x: CGFloat) -> CGFloat {
+    CGFloat(cosh(x.native))
+}
+
+@_transparent
+public func sinh(_ x: CGFloat) -> CGFloat {
+    CGFloat(sinh(x.native))
+}
+
+@_transparent
+public func tanh(_ x: CGFloat) -> CGFloat {
+    CGFloat(tanh(x.native))
+}
+
+@_transparent
+public func exp(_ x: CGFloat) -> CGFloat {
+    CGFloat(exp(x.native))
+}
+
+@_transparent
+public func exp2(_ x: CGFloat) -> CGFloat {
+    CGFloat(exp2(x.native))
+}
+
+@_transparent
+public func expm1(_ x: CGFloat) -> CGFloat {
+    CGFloat(expm1(x.native))
+}
+
+@_transparent
+public func log(_ x: CGFloat) -> CGFloat {
+    CGFloat(log(x.native))
+}
+
+@_transparent
+public func log10(_ x: CGFloat) -> CGFloat {
+    CGFloat(log10(x.native))
+}
+
+@_transparent
+public func log2(_ x: CGFloat) -> CGFloat {
+    CGFloat(log2(x.native))
+}
+
+@_transparent
+public func log1p(_ x: CGFloat) -> CGFloat {
+    CGFloat(log1p(x.native))
+}
+
+@_transparent
+public func logb(_ x: CGFloat) -> CGFloat {
+    CGFloat(logb(x.native))
+}
+
+@_transparent
+public func cbrt(_ x: CGFloat) -> CGFloat {
+    CGFloat(cbrt(x.native))
+}
+
+@_transparent
+public func erf(_ x: CGFloat) -> CGFloat {
+    CGFloat(erf(x.native))
+}
+
+@_transparent
+public func erfc(_ x: CGFloat) -> CGFloat {
+    CGFloat(erfc(x.native))
+}
+
+@_transparent
+public func tgamma(_ x: CGFloat) -> CGFloat {
+    CGFloat(tgamma(x.native))
+}
+
+@_transparent
+public func nearbyint(_ x: CGFloat) -> CGFloat {
+    CGFloat(x.native.rounded(.toNearestOrEven))
+}
+
+@_transparent
+public func rint(_ x: CGFloat) -> CGFloat {
+    CGFloat(x.native.rounded(.toNearestOrEven))
+}
+
+@_transparent
+public func atan2(_ lhs: CGFloat, _ rhs: CGFloat) -> CGFloat {
+    CGFloat(atan2(lhs.native, rhs.native))
+}
+
+@_transparent
+public func hypot(_ lhs: CGFloat, _ rhs: CGFloat) -> CGFloat {
+    CGFloat(hypot(lhs.native, rhs.native))
+}
+
+@_transparent
+public func pow(_ lhs: CGFloat, _ rhs: CGFloat) -> CGFloat {
+    CGFloat(pow(lhs.native, rhs.native))
+}
+
+@_transparent
+public func copysign(_ lhs: CGFloat, _ rhs: CGFloat) -> CGFloat {
+    CGFloat(copysign(lhs.native, rhs.native))
+}
+
+@_transparent
+public func nextafter(_ lhs: CGFloat, _ rhs: CGFloat) -> CGFloat {
+    CGFloat(nextafter(lhs.native, rhs.native))
+}
+
+@_transparent
+public func fdim(_ lhs: CGFloat, _ rhs: CGFloat) -> CGFloat {
+    CGFloat(fdim(lhs.native, rhs.native))
+}
+
+@_transparent
+public func fmax(_ lhs: CGFloat, _ rhs: CGFloat) -> CGFloat {
+    CGFloat(fmax(lhs.native, rhs.native))
+}
+
+@_transparent
+public func fmin(_ lhs: CGFloat, _ rhs: CGFloat) -> CGFloat {
+    CGFloat(fmin(lhs.native, rhs.native))
+}
+
+@_transparent
+@available(*, unavailable, message: "use the floatingPointClass property.")
+public func fpclassify(_ x: CGFloat) -> Int {
+    fatalError("unavailable")
+}
+
+@available(*, unavailable, message: "use the isNormal property.")
+public func isnormal(_ value: CGFloat) -> Bool { value.isNormal }
+
+@available(*, unavailable, message: "use the isFinite property.")
+public func isfinite(_ value: CGFloat) -> Bool { value.isFinite }
+
+@available(*, unavailable, message: "use the isInfinite property.")
+public func isinf(_ value: CGFloat) -> Bool { value.isInfinite }
+
+@available(*, unavailable, message: "use the isNaN property.")
+public func isnan(_ value: CGFloat) -> Bool { value.isNaN }
+
+@available(*, unavailable, message: "use the sign property.")
+public func signbit(_ value: CGFloat) -> Int { value.sign.rawValue }
+
+@_transparent
+public func modf(_ x: CGFloat) -> (CGFloat, CGFloat) {
+    let (integer, fraction) = modf(x.native)
+    return (CGFloat(integer), CGFloat(fraction))
+}
+
+@_transparent
+public func ldexp(_ x: CGFloat, _ n: Int) -> CGFloat {
+    CGFloat(scalbn(x.native, n))
+}
+
+@_transparent
+public func frexp(_ x: CGFloat) -> (CGFloat, Int) {
+    let (fraction, exponent) = frexp(x.native)
+    return (CGFloat(fraction), exponent)
+}
+
+@_transparent
+public func ilogb(_ x: CGFloat) -> Int {
+    x.native.exponent
+}
+
+@_transparent
+public func scalbn(_ x: CGFloat, _ n: Int) -> CGFloat {
+    CGFloat(scalbn(x.native, n))
+}
+
+#if !os(Windows)
+@_transparent
+public func lgamma(_ x: CGFloat) -> (CGFloat, Int) {
+    let (value, sign) = lgamma(x.native)
+    return (CGFloat(value), sign)
+}
+#endif
+
+@_transparent
+public func remquo(_ x: CGFloat, _ y: CGFloat) -> (CGFloat, Int) {
+    let (remainder, quotient) = remquo(x.native, y.native)
+    return (CGFloat(remainder), quotient)
+}
+
+@_transparent
+public func nan(_ tag: String) -> CGFloat {
+    CGFloat(nan(tag) as CGFloat.NativeType)
+}
+
+@_transparent
+public func j0(_ x: CGFloat) -> CGFloat {
+    CGFloat(j0(Double(x.native)))
+}
+
+@_transparent
+public func j1(_ x: CGFloat) -> CGFloat {
+    CGFloat(j1(Double(x.native)))
+}
+
+@_transparent
+public func jn(_ n: Int, _ x: CGFloat) -> CGFloat {
+    CGFloat(jn(n, Double(x.native)))
+}
+
+@_transparent
+public func y0(_ x: CGFloat) -> CGFloat {
+    CGFloat(y0(Double(x.native)))
+}
+
+@_transparent
+public func y1(_ x: CGFloat) -> CGFloat {
+    CGFloat(y1(Double(x.native)))
+}
+
+@_transparent
+public func yn(_ n: Int, _ x: CGFloat) -> CGFloat {
+    CGFloat(yn(n, Double(x.native)))
+}
+
 extension CGFloat : _CVarArgPassedAsDouble, _CVarArgAligned {
     /// Transform `self` into a series of machine words that can be
     /// appropriately interpreted by C varargs
