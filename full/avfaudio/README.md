@@ -1,37 +1,39 @@
 # AVFAudio Linux starting point
 
-This directory is a **clean-room Linux starting point** for Apple's public `AVFAudio` module, seeded from the Xcode 26.1 iPhoneOS SDK symbol graphs. It is not a claim of Apple behavioral parity.
+This directory is a **clean-room Linux starting point** for Apple's public `AVFAudio` module, seeded from the Xcode 26.1 iPhoneOS SDK symbol graphs. It is not a claim of Apple behavioral parity, and it is **not** an integrated Linux success until a future EC2 cold build imports the real dependency modules, builds and load-tests `libAVFAudio.dylib`, and passes `tests/agent/AVFAudioDependencyABI.swift`.
 
-## What is real
+## Dependencies
 
-- **Formats and PCM buffers.** `AVAudioFormat` can be built from common format, standard stereo/mono, settings dictionaries, and `AudioStreamBasicDescription` stand-ins. `AVAudioPCMBuffer` allocates zeroed planar or interleaved storage and exposes float/int channel pointers.
-- **Engine graph.** `AVAudioEngine` tracks attach/connect/disconnect, can enter offline manual rendering, and mixes scheduled `AVAudioPlayerNode` float buffers into a destination PCM buffer. `start()`/`stop()` flip an in-memory running flag; no Core Audio I/O runs.
-- **Session state.** `AVAudioSession.sharedInstance()` stores category, mode, options, sample rate, and mute flags. Record permission is **denied**. Inputs, AirPlay, continuity microphone, and microphone injection are absent.
-- **Player / recorder / file / converter.** Objects can be constructed and configured. `AVAudioPlayer.play()` and `AVAudioRecorder.record()` return `false`. File decode/encode and compressed conversion throw `AVAudioError.codecUnavailable`. Same-format float32 conversion copies samples.
-- **Speech.** `AVSpeechUtterance` holds text and rate. `AVSpeechSynthesizer.speak` queues the utterance and does **not** set `isSpeaking`. Voice catalogs are empty; personal voice authorization is `.unsupported`.
-- **MIDI / units.** Sequencer tracks and MIDI events are in-memory data. `AVAudioUnit.instantiate` throws. Factory AU graphs are parameter holders, not DSP.
+Product sources `import Foundation` and, when the compiler can see them, bind the shared `CoreAudioTypes`, `AudioToolbox`, `CoreMIDI`, and `CoreMedia` modules. This tree does **not** redeclare those modules' C types, aliases, callback ABIs, or constants. `AudioBufferList` is never modeled as a one-element Swift stand-in.
+
+The current isolated host gate compiles AVFAudio without those modules on the search path, so C-ABI signatures are compiled only under `#if canImport(...)`. Linux host controls are `@_spi(OpenUIKitHost)` (`AVFAudioHostAvailability`).
+
+## What has runtime evidence
+
+- **Formats and software PCM.** `AVAudioFormat` from common format, standard mono/stereo, and settings dictionaries. `AVAudioPCMBuffer` allocates zeroed planar or interleaved storage and exposes float channel pointers and stride. No-copy `AudioBufferList` ownership is compiled only when CoreAudioTypes/AudioToolbox is imported.
+- **Engine graph bookkeeping.** Attach/connect/disconnect and connection-point queries. `start()`, manual rendering, and offline render **throw** and do not set `isRunning` or produce buffers.
+- **Session preferences.** `setCategory` stores category/mode/options. Activation, port override, and hardware configuration **throw**. Record permission is delivered **asynchronously**, exactly once, on `AVFAudio.callback`.
+- **Player / recorder / converter / sequencer.** Objects construct. Play, record, convert, and sequencer start stay fail-closed.
+- **Speech.** Utterance text is stored. `speak` does not set `isSpeaking`. Personal-voice authorization is `.unsupported`, delivered asynchronously on the callback queue.
 
 ## Fail-closed boundaries
 
 | Surface | Linux behavior |
 | --- | --- |
-| Hardware playback / capture | No DAC/ADC; play/record return false |
+| Hardware playback / capture | `play()` / `record()` return false |
+| Engine I/O and render | `start` / manual render throw; `isRunning` stays false |
+| Session activation / hardware | `setActive` and preferred hardware APIs throw |
 | Apple speech voices | Empty catalog; no PCM is synthesized |
-| Personal Voice | `.unsupported` |
-| Microphone injection / entitlements | Disabled / denied |
-| Compressed codecs, AU graphs, MusicSequence | `AVAudioError.notSupported` / `codecUnavailable` |
-| Spatial / AirPlay / CarPlay routes | Constants exist; no devices |
+| Personal Voice | `.unsupported`, async callback |
+| Codecs, AU graphs, MusicSequence | Host-unavailable `NSError` |
 | `AVAudioUnitComponent.icon` | Unavailable (UIKit) |
 
-C ABI types (`AudioStreamBasicDescription`, `AudioBufferList`, `AudioTimeStamp`, `AudioComponentDescription`, …) are **portable stand-ins** so signatures compile without linking CoreAudio/AudioToolbox/CoreMIDI/CoreMedia. They are not Apple layout.
-
-## Deferred / later work
-
-True output rendering, tap callbacks on a real-time thread, decoder/encoder containers, AUAudioUnit hosting, and session-daemon interruptions remain for later integration once those dependencies exist in the sysroot.
+Asynchronous callbacks are non-inline, exactly-once, non-reentrant, and delivered on the serial queue `AVFAudio.callback` (`AVFAudioHostAvailability.callbackQueue`).
 
 ## Tests
 
-`tests/agent/AVFAudioRuntime.swift` exercises format/buffer/session/engine mix, fail-closed player/recorder/speech, and prints `AVFAUDIO_AGENT_RUNTIME_OK`.
+- `tests/agent/AVFAudioRuntime.swift` prints `AVFAUDIO_AGENT_RUNTIME_OK`.
+- `tests/agent/AVFAudioDependencyABI.swift` (and `AVFAudioDependencyABI.c`) is a **future EC2** mixed C/Swift identity/ABI probe. It is not executed by the isolated host gate. Do not treat a green host gate as integrated Linux ABI success.
 
 Run the immutable host gate:
 

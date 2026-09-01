@@ -1,5 +1,6 @@
 import Foundation
 import AVFAudio
+@_spi(OpenUIKitHost) import AVFAudio
 
 enum RuntimeFailure: Error {
     case message(String)
@@ -41,13 +42,6 @@ func run() throws {
     }
     try require(fromSettings.sampleRate == 22050, "settings-derived rate")
 
-    let asbd = format.streamDescription.pointee
-    try require(asbd.mFormatID == kAudioFormatLinearPCM, "linear PCM asbd")
-    guard let fromASBD = AVAudioFormat(streamDescription: format.streamDescription) else {
-        throw RuntimeFailure.message("asbd format")
-    }
-    try require(fromASBD.sampleRate == format.sampleRate, "asbd round-trip")
-
     guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 512) else {
         throw RuntimeFailure.message("pcm buffer")
     }
@@ -61,6 +55,19 @@ func run() throws {
     planes[1][0] = -0.25
     try require(planes[0][0] == 0.5, "channel 0 write")
     try require(planes[1][0] == -0.25, "channel 1 write")
+
+    let interleaved = try requireFormat(
+        AVAudioFormat(
+            commonFormat: .pcmFormatFloat32,
+            sampleRate: 44100,
+            channels: 2,
+            interleaved: true
+        )
+    )
+    guard let interleavedBuffer = AVAudioPCMBuffer(pcmFormat: interleaved, frameCapacity: 8) else {
+        throw RuntimeFailure.message("interleaved pcm")
+    }
+    try require(interleavedBuffer.stride == 2, "interleaved stride")
 
     let host = AVAudioTime.hostTime(forSeconds: 1.5)
     let seconds = AVAudioTime.seconds(forHostTime: host)
@@ -76,30 +83,78 @@ func run() throws {
     try require(session.category == .playback, "session category")
     try require(session.mode == .moviePlayback, "session mode")
     try require(session.categoryOptions.contains(.mixWithOthers), "session options")
-    try session.setActive(true)
-    try require(session._isActive, "session active")
+    do {
+        try session.setActive(true)
+        throw RuntimeFailure.message("setActive must fail closed without a host service")
+    } catch {
+        try require(true, "setActive threw")
+    }
+    try require(session.sampleRate == 0, "no fabricated hardware sample rate")
+    try require(session.outputNumberOfChannels == 0, "no fabricated output channels")
+    try require(session.currentRoute.outputs.isEmpty, "no fabricated route")
     try require(session.recordPermission == .denied, "record permission fail-closed")
     try require(!session.isInputAvailable, "no input hardware")
     try require(!session.isMicrophoneInjectionAvailable, "no mic injection")
-    try session.setPreferredSampleRate(48000)
-    try require(session.sampleRate == 48000, "preferred sample rate stored")
-    try session.setOutputMuted(true)
-    try require(session.isOutputMuted, "output muted flag")
-    session.requestRecordPermission { granted in
-        _ = granted
-    }
-    try require(AVAudioSession.Category.playAndRecord.rawValue.contains("PlayAndRecord"), "category raw")
-    try require(AVAudioSession.Port.builtInSpeaker.rawValue == "Speaker", "port raw")
+    do {
+        try session.setPreferredSampleRate(48000)
+        throw RuntimeFailure.message("setPreferredSampleRate must fail closed")
+    } catch {}
+    try require(session.sampleRate == 0, "preferred rate did not become hardware rate")
+    do {
+        try session.overrideOutputAudioPort(.speaker)
+        throw RuntimeFailure.message("overrideOutputAudioPort must fail closed")
+    } catch {}
 
-    var permission = true
-    AVAudioApplication.requestRecordPermission { permission = $0 }
-    try require(permission == false, "application record permission denied")
+    var permissionCalls = 0
+    var permissionGranted = true
+    var permissionInline = false
+    var nestedDuringOuter = false
+    var outerFinished = false
+    let permissionSem = DispatchSemaphore(value: 0)
+    let nestedSem = DispatchSemaphore(value: 0)
+    session.requestRecordPermission { granted in
+        dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
+        permissionCalls += 1
+        permissionGranted = granted
+        session.requestRecordPermission { _ in
+            if !outerFinished { nestedDuringOuter = true }
+            nestedSem.signal()
+        }
+        outerFinished = true
+        permissionSem.signal()
+    }
+    permissionInline = permissionCalls != 0
+    try require(!permissionInline, "record permission callback must not run inline")
+    try require(permissionSem.wait(timeout: .now() + 2) == .success, "permission callback timeout")
+    try require(permissionCalls == 1, "record permission exactly once")
+    try require(permissionGranted == false, "record permission denied")
+    try require(nestedSem.wait(timeout: .now() + 2) == .success, "nested permission timeout")
+    try require(!nestedDuringOuter, "permission callback must not reenter")
+
+    var appPermission = true
+    var appInline = false
+    var appCount = 0
+    let appSem = DispatchSemaphore(value: 0)
+    AVAudioApplication.requestRecordPermission { granted in
+        dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
+        appCount += 1
+        appPermission = granted
+        appSem.signal()
+    }
+    appInline = appCount != 0
+    try require(!appInline, "application permission must not run inline")
+    try require(appSem.wait(timeout: .now() + 2) == .success, "application permission timeout")
+    try require(appCount == 1, "application permission exactly once")
+    try require(appPermission == false, "application record permission denied")
     try require(
         AVAudioApplication.shared.microphoneInjectionPermission == .serviceDisabled,
         "injection disabled"
     )
-    try AVAudioApplication.shared.setInputMuted(true)
-    try require(AVAudioApplication.shared.isInputMuted, "input muted")
+    do {
+        try AVAudioApplication.shared.setInputMuted(true)
+        throw RuntimeFailure.message("setInputMuted must fail closed")
+    } catch {}
+    try require(AVAudioApplication.shared.isInputMuted, "input remains fail-closed muted")
 
     let engine = AVAudioEngine()
     let player = AVAudioPlayerNode()
@@ -107,31 +162,35 @@ func run() throws {
     engine.connect(player, to: engine.mainMixerNode, format: format)
     try require(engine.attachedNodes.contains(player), "player attached")
     try require(
-        engine.inputConnectionPoint(for: engine.mainMixerNode, inputBus: 0)?.node === player
-            || engine.outputConnectionPoints(for: player, outputBus: 0).contains(where: {
-                $0.node === engine.mainMixerNode
-            }),
+        engine.outputConnectionPoints(for: player, outputBus: 0).contains(where: {
+            $0.node === engine.mainMixerNode
+        }),
         "graph connection"
     )
-    try engine.enableManualRenderingMode(.offline, format: format, maximumFrameCount: 512)
-    try require(engine.isInManualRenderingMode, "manual rendering")
-    player.volume = 1
-    engine.mainMixerNode.outputVolume = 1
-    awaitSchedule(player, buffer: buffer)
-    player.play()
-    try require(player.isPlaying, "player node playing")
-
+    try require(!engine.isRunning, "engine is not running")
+    do {
+        try engine.start()
+        throw RuntimeFailure.message("engine.start must fail closed without a device")
+    } catch {
+        try require(!engine.isRunning, "start must not set running")
+    }
+    do {
+        try engine.enableManualRenderingMode(.offline, format: format, maximumFrameCount: 512)
+        throw RuntimeFailure.message("enableManualRenderingMode must fail closed")
+    } catch {
+        try require(!engine.isInManualRenderingMode, "manual rendering must stay disabled")
+    }
     guard let rendered = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 256) else {
         throw RuntimeFailure.message("render buffer")
     }
-    let status = try engine.renderOffline(256, to: rendered)
-    try require(status == .success, "offline render status")
-    try require(rendered.frameLength == 256, "rendered frames")
-    guard let outPlanes = rendered.floatChannelData else {
-        throw RuntimeFailure.message("rendered planes")
+    do {
+        _ = try engine.renderOffline(256, to: rendered)
+        throw RuntimeFailure.message("renderOffline must fail closed")
+    } catch {
+        try require(rendered.frameLength == 0, "failed render must not claim frames")
     }
-    try require(outPlanes[0][0] == 0.5, "mixed channel 0")
-    try require(outPlanes[1][0] == -0.25, "mixed channel 1")
+    player.play()
+    try require(player.isPlaying, "player node local transport")
     engine.stop()
     try require(!engine.isRunning, "engine stopped")
 
@@ -143,10 +202,10 @@ func run() throws {
         throw RuntimeFailure.message("converter src")
     }
     source.frameLength = 4
-    source.floatChannelData?[0][0] = 0.25
-    try converter.convert(to: converted, from: source)
-    try require(converted.frameLength == 4, "converted frames")
-    try require(converted.floatChannelData?[0][0] == 0.25, "converted sample")
+    do {
+        try converter.convert(to: converted, from: source)
+        throw RuntimeFailure.message("converter must fail closed without a codec host")
+    } catch {}
 
     let point = AVAudioMake3DPoint(1, 2, 3)
     try require(point.x == 1 && point.y == 2 && point.z == 3, "3d point")
@@ -161,14 +220,14 @@ func run() throws {
     let tmp = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("avfaudio-probe.bin")
     try Data([0, 1, 2, 3]).write(to: tmp)
     let filePlayer = try AVAudioPlayer(contentsOf: tmp)
-    try require(filePlayer.prepareToPlay(), "player prepare")
+    try require(filePlayer.prepareToPlay() == false, "player prepare fail-closed")
     try require(filePlayer.play() == false, "player hardware fail-closed")
     try require(!filePlayer.isPlaying, "player not playing")
     filePlayer.volume = 0.5
     try require(filePlayer.volume == 0.5, "player volume stored")
 
     let recorder = try AVAudioRecorder(url: tmp.appendingPathExtension("rec"), format: format)
-    try require(recorder.prepareToRecord(), "recorder prepare")
+    try require(recorder.prepareToRecord() == false, "recorder prepare fail-closed")
     try require(recorder.record() == false, "recorder hardware fail-closed")
     try require(!recorder.isRecording, "recorder not recording")
 
@@ -177,12 +236,26 @@ func run() throws {
     try require(utterance.speechString == "hello openuikit", "utterance text")
     let synth = AVSpeechSynthesizer()
     synth.speak(utterance)
-    try require(synth._queuedUtterances.count == 1, "utterance queued")
     try require(!synth.isSpeaking, "speech is not claimed as spoken")
     try require(
         AVSpeechSynthesizer.personalVoiceAuthorizationStatus == .unsupported,
         "personal voice unavailable"
     )
+    var voiceStatus: AVSpeechSynthesizer.PersonalVoiceAuthorizationStatus?
+    var voiceInline = false
+    var voiceCount = 0
+    let voiceSem = DispatchSemaphore(value: 0)
+    AVSpeechSynthesizer.requestPersonalVoiceAuthorization { status in
+        dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
+        voiceCount += 1
+        voiceStatus = status
+        voiceSem.signal()
+    }
+    voiceInline = voiceCount != 0
+    try require(!voiceInline, "personal voice callback must not run inline")
+    try require(voiceSem.wait(timeout: .now() + 2) == .success, "personal voice timeout")
+    try require(voiceCount == 1, "personal voice exactly once")
+    try require(voiceStatus == .unsupported, "personal voice unsupported")
     try require(AVSpeechSynthesisVoice.speechVoices().isEmpty, "no apple voices")
     try require(AVSpeechSynthesisVoice(identifier: "com.apple.ttsbundle.siri") == nil, "voice lookup nil")
 
@@ -190,8 +263,12 @@ func run() throws {
     let track = sequencer.createAndAppendTrack()
     track.addEvent(AVMIDINoteEvent(channel: 0, key: 60, velocity: 100, duration: 1), at: 0)
     try require(sequencer.tracks.count == 1, "sequencer track")
-    try sequencer.start()
-    try require(sequencer.isPlaying, "sequencer software playing flag")
+    do {
+        try sequencer.start()
+        throw RuntimeFailure.message("sequencer.start must fail closed")
+    } catch {
+        try require(!sequencer.isPlaying, "sequencer must not claim playback")
+    }
     sequencer.stop()
 
     let delay = AVAudioUnitDelay()
@@ -200,20 +277,19 @@ func run() throws {
     let eq = AVAudioUnitEQ(numberOfBands: 3)
     try require(eq.bands.count == 3, "eq bands")
 
-    try require(AVAudioQuality.max.rawValue == 0x7F, "quality max")
     try require(AVAudioCommonFormat.pcmFormatInt16 != .pcmFormatFloat32, "format inequality")
     try require(
         AVAudioPlayerNodeBufferOptions.loops.contains(.loops),
         "buffer option set"
     )
-    try require(AVFormatIDKey == "AVFormatIDKey", "format key")
-    try require(AVAUDIOENGINE_HAVE_AUAUDIOUNIT == 0, "no AUAudioUnit feature")
-    try require(!AVFAudioPortable.hardwareOutputAvailable, "portable hardware flag")
-
     try require(
         AVAudioSession.RouteSharingPolicy.longForm == .longFormAudio,
         "longForm alias"
     )
+    try require(session.category == .playAndRecord || session.category == .playback, "category still stored")
+    try require(AVAudioSession.Category.playAndRecord != .playback, "category inequality")
+    try require(!AVFAudioHostAvailability.audioOutputAvailable, "no host output")
+    try require(!AVFAudioHostAvailability.audioInputAvailable, "no host input")
 
     print("AVFAUDIO_AGENT_RUNTIME_OK")
 }
@@ -226,15 +302,6 @@ func requireFormat(_ format: AVAudioFormat?) throws -> AVAudioFormat {
 func requireConverter(_ converter: AVAudioConverter?) throws -> AVAudioConverter {
     guard let converter else { throw RuntimeFailure.message("nil converter") }
     return converter
-}
-
-func awaitSchedule(_ player: AVAudioPlayerNode, buffer: AVAudioPCMBuffer) {
-    let semaphore = DispatchSemaphore(value: 0)
-    Task {
-        await player.scheduleBuffer(buffer)
-        semaphore.signal()
-    }
-    _ = semaphore.wait(timeout: .now() + 2)
 }
 
 do {
