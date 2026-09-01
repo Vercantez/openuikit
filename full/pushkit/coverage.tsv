@@ -1,0 +1,25 @@
+precise	status	evidence	notes
+c:@PKPushTypeComplication	implemented	tests/agent/PushKitRuntime.swift	Constant compared through rawValue; iOS 13 deprecation preserved
+c:@PKPushTypeFileProvider	implemented	tests/agent/PushKitRuntime.swift	Set membership and fail-closed install for unrequested types
+c:@PKPushTypeVoIP	implemented	tests/agent/PushKitRuntime.swift	Primary VoIP type used for registry, credentials, and payload tests
+c:@T@PKPushType	implemented	full/pushkit/PushKit.swift	RawRepresentable String newtype with Hashable Equatable Sendable
+c:objc(cs)PKPushCredentials	implemented	full/pushkit/PushKit.swift	NSObject subclass; public init unavailable; host SPI constructs
+c:objc(cs)PKPushCredentials(py)token	implemented	tests/agent/PushKitRuntime.swift	Token bytes round-trip from host-installed credentials
+c:objc(cs)PKPushCredentials(py)type	implemented	tests/agent/PushKitRuntime.swift	Type matches the requested PKPushType
+c:objc(cs)PKPushPayload	implemented	full/pushkit/PushKit.swift	NSObject subclass; public init unavailable; host SPI constructs
+c:objc(cs)PKPushPayload(py)dictionaryPayload	implemented	tests/agent/PushKitRuntime.swift	Dictionary snapshot read after host-injected delivery
+c:objc(cs)PKPushPayload(py)type	implemented	tests/agent/PushKitRuntime.swift	Payload type matches voIP in the dispatch probe
+c:objc(cs)PKPushRegistry	implemented	full/pushkit/PushKit.swift	Process-local registry; APNs registration never occurs
+c:objc(cs)PKPushRegistry(im)initWithQueue:	implemented	tests/agent/PushKitRuntime.swift	Nil queue binds DispatchQueue.main; explicit queue is retained
+c:objc(cs)PKPushRegistry(im)pushTokenForType:	implemented	tests/agent/PushKitRuntime.swift	Returns nil until host install; nil again after type removal
+c:objc(cs)PKPushRegistry(py)delegate	implemented	tests/agent/PushKitRuntime.swift	Weak assignment; niled when the delegate is released
+c:objc(cs)PKPushRegistry(py)desiredPushTypes	implemented	tests/agent/PushKitRuntime.swift	Stored set; assignment does not mint Apple tokens
+c:objc(pl)PKPushRegistryDelegate	implemented	full/pushkit/PushKit.swift	NSObjectProtocol; optional methods use extension defaults
+c:objc(pl)PKPushRegistryDelegate(im)pushRegistry:didInvalidatePushTokenForType:	implemented	tests/agent/PushKitRuntime.swift	Fired when a cached token's type is removed from desiredPushTypes
+c:objc(pl)PKPushRegistryDelegate(im)pushRegistry:didReceiveIncomingPushWithPayload:forType:	implemented	tests/agent/PushKitRuntime.swift	Deprecated three-argument witness exercised via host SPI
+c:objc(pl)PKPushRegistryDelegate(im)pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:	implemented	tests/agent/PushKitRuntime.swift	Canonical async/completion overlay; completion-handler path exercised
+c:objc(pl)PKPushRegistryDelegate(im)pushRegistry:didUpdatePushCredentials:forType:	implemented	tests/agent/PushKitRuntime.swift	Required witness; invoked only after host credential install
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PKPushType	implemented	tests/agent/PushKitRuntime.swift	Inequality of voIP versus fileProvider and complication
+s:So10PKPushTypea8rawValueABSS_tcfc	implemented	tests/agent/PushKitRuntime.swift	init(rawValue:) round-trips PKPushTypeVoIP
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PKPushType	implemented	tests/agent/PushKitRuntime.swift	Equal raw values share hashValue
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PKPushType	implemented	tests/agent/PushKitRuntime.swift	hash(into:) matches equal raw-value instances
