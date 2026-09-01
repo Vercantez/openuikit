@@ -8,6 +8,9 @@ import unittest
 ROOT = Path(__file__).resolve().parents[3]
 BUILDER = ROOT / "full/xcodeplan/build_true_ios_platform_frameworks.sh"
 PROBE = ROOT / "full/xcodeplan/tests/TrueIOSSwiftUIDylibProbe.swift"
+INTEGRATION = (
+    ROOT / "full/xcodeplan/TRUE_IOS_FOUNDATIONMODELS_NATURALLANGUAGE_INTEGRATION.md"
+)
 
 
 class TrueIOSPlatformFrameworkTests(unittest.TestCase):
@@ -15,6 +18,7 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.builder = BUILDER.read_text(encoding="utf-8")
         cls.probe = PROBE.read_text(encoding="utf-8")
+        cls.integration = INTEGRATION.read_text(encoding="utf-8")
 
     def test_builder_is_valid_strict_shell(self) -> None:
         subprocess.run(["bash", "-n", str(BUILDER)], check=True)
@@ -214,6 +218,43 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn("runtime-foundation-load-rewrites.tsv", self.builder)
         self.assertIn("foundationmodels-runtime.stderr.log", self.builder)
         self.assertIn("NaturalLanguage cold loader stderr differs", self.builder)
+
+    def test_coretext_probe_keeps_the_real_filemanager_fts_contract(self) -> None:
+        self.assertEqual(
+            self.probe.count("try? manager.removeItem(at: root)"), 2
+        )
+        self.assertIn(
+            "try manager.createDirectory(at: root, withIntermediateDirectories: true)",
+            self.probe,
+        )
+        self.assertEqual(self.probe.count("try manager.copyItem"), 2)
+        self.assertNotIn("let fontData = try Data(contentsOf: source)", self.probe)
+        self.assertNotIn(
+            "precondition(!manager.fileExists(atPath: root.path))", self.probe
+        )
+        self.assertNotIn(
+            'rm -rf -- "$stage/coretext-runtime-fonts"', self.builder
+        )
+
+    def test_integration_contract_requires_a_fresh_complete_fts_replay(self) -> None:
+        for omitted in (
+            "d03d48d0ad67e7fb3cfef84666077d8a9021a81d",
+            "d05115d3fe2b25a2b51b82401d1f694caeac3f9b",
+        ):
+            self.assertIn(omitted, self.integration)
+        self.assertIn(
+            "MACHORUN=/private/tmp/machorun-fts-20260901", self.integration
+        )
+        self.assertIn('bash "$replay/full/scripts/build_full.sh"', self.integration)
+        self.assertIn(
+            'MRROOT_INPUT="$replay/scratch/mrroot_full"', self.integration
+        )
+        self.assertIn(
+            "OUTPUT_ROOT=/private/tmp/true-fm-nl-fts-platform-proof-20260901/"
+            "true-ios-platform",
+            self.integration,
+        )
+        self.assertIn("do not copy a lone `libSystem.B.dylib`", self.integration)
 
 
 if __name__ == "__main__":
