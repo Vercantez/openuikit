@@ -39,6 +39,7 @@ COREIMAGE_SOURCES_MANIFEST=$W/full/coreimage/coreimage_guest_sources.txt
 QUARTZCORE_SOURCES_MANIFEST=$W/full/quartzcore/quartzcore_guest_sources.txt
 SWIFTDATA_SOURCES_MANIFEST=$W/full/swiftdata/swiftdata_guest_sources.txt
 QUICKLOOK_SWIFTUI_SOURCES_MANIFEST=$W/full/quicklook/quicklook_swiftui_guest_sources.txt
+PHOTOSUI_SWIFTUI_SOURCES_MANIFEST=$W/full/photosui/photosui_swiftui_guest_sources.txt
 WEBKIT_PROVENANCE_TOOL=$W/full/webkit/webkit_provenance.py
 WEBKIT_PROVENANCE_POLICY=$W/full/webkit/webkit-provenance.json
 FIRST_PARTY_PROVENANCE_TOOL=$W/full/first-party-frameworks/first_party_provenance.py
@@ -82,6 +83,7 @@ FIRST_PARTY_FRAMEWORKS=(
     Charts
     CoreTransferable
     Photos
+    PhotosUI
 )
 FIRST_PARTY_SOURCE_DIRS=(
     localauthentication
@@ -111,6 +113,7 @@ FIRST_PARTY_SOURCE_DIRS=(
     charts
     coretransferable
     photos
+    photosui
 )
 FRONTIER_FRAMEWORKS=(
     CoreGraphics
@@ -133,6 +136,7 @@ FRONTIER_FRAMEWORKS=(
     Charts
     CoreTransferable
     Photos
+    PhotosUI
 )
 FRONTIER_SOURCE_DIRS=(
     coregraphics
@@ -155,6 +159,7 @@ FRONTIER_SOURCE_DIRS=(
     charts
     coretransferable
     photos
+    photosui
 )
 
 EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
@@ -175,12 +180,14 @@ EXPECTED_COREIMAGE_SOURCE_COUNT=1
 EXPECTED_QUARTZCORE_SOURCE_COUNT=1
 EXPECTED_SWIFTDATA_SOURCE_COUNT=2
 EXPECTED_QUICKLOOK_SWIFTUI_SOURCE_COUNT=1
+EXPECTED_PHOTOSUI_SWIFTUI_SOURCE_COUNT=1
 EXPECTED_COREMEDIA_SOURCE_COUNT=1
 EXPECTED_AVFOUNDATION_SOURCE_COUNT=1
 EXPECTED_AVKIT_SOURCE_COUNT=1
 EXPECTED_CHARTS_SOURCE_COUNT=1
 EXPECTED_CORETRANSFERABLE_SOURCE_COUNT=1
 EXPECTED_PHOTOS_SOURCE_COUNT=1
+EXPECTED_PHOTOSUI_SOURCE_COUNT=1
 EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=19
 EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS=2
 EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS=0
@@ -732,6 +739,7 @@ append_frontier_sources() {
             Charts) expected_count=$EXPECTED_CHARTS_SOURCE_COUNT ;;
             CoreTransferable) expected_count=$EXPECTED_CORETRANSFERABLE_SOURCE_COUNT ;;
             Photos) expected_count=$EXPECTED_PHOTOS_SOURCE_COUNT ;;
+            PhotosUI) expected_count=$EXPECTED_PHOTOSUI_SOURCE_COUNT ;;
         esac
         [ "${#frontier_sources[@]}" -eq "$expected_count" ] \
             || die "$framework frontier source manifest cardinality drifted"
@@ -890,12 +898,30 @@ append_frontier_sources() {
                     "$(hash_file "$W/$relative")" >> "$output"
             done
         fi
+        if [ "$framework" = PhotosUI ]; then
+            frontier_inputs=(
+                full/photosui/PhotosUISwiftUI.swift
+                full/photosui/photosui_swiftui_guest_sources.txt
+                full/photosui/SwiftUI.swiftoverlay
+                full/photosui/tests/PhotosUIHostRuntime.swift
+                full/photosui/tests/IceCubesPhotosUIConsumer.swift
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "PhotosUI supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "PhotosUI supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
     done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 21 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 22 ] \
     || die 'frontier framework source count drifted'
-[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 17 ] \
+[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 22 ] \
     || die 'frontier underlying input count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
@@ -2055,7 +2081,7 @@ done
     -emit-module-path "$STAGE/modules/WebKit.swiftmodule" \
     -emit-object -o "$WORK/webkit.o" "${WEBKIT_SOURCE_PATHS[@]}"
 
-echo '== compile twenty-seven independent first-party framework modules'
+echo '== compile twenty-eight independent first-party framework modules'
 clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -fvisibility=hidden -Wall -Wextra -Werror \
     -I "$STAGE/include/CCommonCrypto" \
@@ -2075,6 +2101,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         Charts) expected_framework_source_count=$EXPECTED_CHARTS_SOURCE_COUNT ;;
         CoreTransferable) expected_framework_source_count=$EXPECTED_CORETRANSFERABLE_SOURCE_COUNT ;;
         Photos) expected_framework_source_count=$EXPECTED_PHOTOS_SOURCE_COUNT ;;
+        PhotosUI) expected_framework_source_count=$EXPECTED_PHOTOSUI_SOURCE_COUNT ;;
     esac
     [ "${#framework_sources[@]}" -eq "$expected_framework_source_count" ] \
         || die "$framework source manifest cardinality drifted"
@@ -2121,6 +2148,27 @@ done
 mkdir -p "$STAGE/modules/QuickLook.swiftcrossimport"
 cp "$W/full/quicklook/SwiftUI.swiftoverlay" \
     "$STAGE/modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay"
+
+echo '== compile the PhotosUI SwiftUI cross-import overlay'
+mapfile -t PHOTOSUI_SWIFTUI_SOURCES < "$PHOTOSUI_SWIFTUI_SOURCES_MANIFEST"
+[ "${#PHOTOSUI_SWIFTUI_SOURCES[@]}" -eq \
+    "$EXPECTED_PHOTOSUI_SWIFTUI_SOURCE_COUNT" ] \
+    || die 'PhotosUI SwiftUI overlay source count drifted'
+[ "${PHOTOSUI_SWIFTUI_SOURCES[0]}" = \
+    full/photosui/PhotosUISwiftUI.swift ] \
+    || die 'PhotosUI SwiftUI overlay source path drifted'
+PHOTOSUI_SWIFTUI_SOURCE_PATHS=()
+for relative in "${PHOTOSUI_SWIFTUI_SOURCES[@]}"; do
+    PHOTOSUI_SWIFTUI_SOURCE_PATHS+=("$W/$relative")
+done
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name _PhotosUI_SwiftUI -emit-module \
+    -emit-module-path "$STAGE/modules/_PhotosUI_SwiftUI.swiftmodule" \
+    -emit-object -o "$WORK/photosui-swiftui.o" \
+    "${PHOTOSUI_SWIFTUI_SOURCE_PATHS[@]}"
+mkdir -p "$STAGE/modules/PhotosUI.swiftcrossimport"
+cp "$W/full/photosui/SwiftUI.swiftoverlay" \
+    "$STAGE/modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay"
 network_string_processing_undefineds=$(llvm-nm-18 -u -j "$WORK/network.o" \
     | awk 'index($0, "_StringProcessing") { count++ } END { print count + 0 }')
 [ "$network_string_processing_undefineds" -eq 0 ] \
@@ -2145,7 +2193,7 @@ echo '== prove SwiftUI publicly reexports full Foundation, Combine and Dispatch'
     -module-name SwiftUIFoundationReexportProbe -typecheck \
     "$W/full/frameworks/SwiftUIFoundationReexportProbe.swift"
 
-echo '== link forty-five reusable platform dylibs (forty-four frameworks plus ICU)'
+echo '== link forty-seven reusable platform dylibs (forty-six frameworks plus ICU)'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
     -o "$STAGE/lib/libDispatch.dylib" \
@@ -2411,6 +2459,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     expected_avfoundation_load=0
     expected_uniformtypeidentifiers_load=0
     expected_imageio_load=0
+    expected_photos_load=0
     expected_os_runtime_reexport=0
     case "$framework" in
         SafariServices|StoreKit|PassKit|MessageUI|AppIntents|QuickLook)
@@ -2512,6 +2561,14 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
                 -lImageIO
             )
             ;;
+        PhotosUI)
+            expected_uniformtypeidentifiers_load=1
+            expected_photos_load=1
+            framework_link_dependencies+=(
+                -lPhotos
+                -lUniformTypeIdentifiers
+            )
+            ;;
     esac
     framework_objects=("$WORK/$source_dir.o")
     if [ "$framework" = CommonCrypto ]; then
@@ -2554,6 +2611,9 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     imageio_load_count=$(llvm-otool-18 -L \
         "$STAGE/lib/lib$framework.dylib" \
         | awk '$1 == "@rpath/libImageIO.dylib" { count++ } END { print count + 0 }')
+    photos_load_count=$(llvm-otool-18 -L \
+        "$STAGE/lib/lib$framework.dylib" \
+        | awk '$1 == "@rpath/libPhotos.dylib" { count++ } END { print count + 0 }')
     # `otool -L` includes the dylib's LC_ID_DYLIB as its first entry.  That is
     # an identity, not a dependency.  Exclude it when auditing the two module
     # names that are themselves members of this first-party loop.
@@ -2570,6 +2630,9 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     fi
     if [ "$framework" = ImageIO ]; then
         imageio_load_count=$((imageio_load_count - portable_self_id_count))
+    fi
+    if [ "$framework" = Photos ]; then
+        photos_load_count=$((photos_load_count - portable_self_id_count))
     fi
     concurrency_load_count=$(llvm-otool-18 -L \
         "$STAGE/lib/lib$framework.dylib" \
@@ -2610,6 +2673,8 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         || die "lib$framework UniformTypeIdentifiers load count $uniformtypeidentifiers_load_count, expected $expected_uniformtypeidentifiers_load"
     [ "$imageio_load_count" -eq "$expected_imageio_load" ] \
         || die "lib$framework ImageIO load count $imageio_load_count, expected $expected_imageio_load"
+    [ "$photos_load_count" -eq "$expected_photos_load" ] \
+        || die "lib$framework Photos load count $photos_load_count, expected $expected_photos_load"
     [ "$concurrency_load_count" -eq 1 ] \
         || die "lib$framework Concurrency load count $concurrency_load_count, expected 1"
     [ "$os_runtime_reexport_count" -eq "$expected_os_runtime_reexport" ] \
@@ -2618,7 +2683,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         | grep -Fq "/System/Library/Frameworks/$framework.framework/"; then
         die "lib$framework loads the Apple $framework framework"
     fi
-    printf '%s\tportable-self-id=%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\topenuikit=%s\topencoregraphics=%s\tswiftui=%s\tcoremedia=%s\tavfoundation=%s\tuniformtypeidentifiers=%s\timageio=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
+    printf '%s\tportable-self-id=%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\topenuikit=%s\topencoregraphics=%s\tswiftui=%s\tcoremedia=%s\tavfoundation=%s\tuniformtypeidentifiers=%s\timageio=%s\tphotos=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
         "$framework" "$portable_self_id_count" "$foundation_load_count" \
         "$foundation_essentials_load_count" \
         "$foundation_essentials_ordinary_load_count" "$uikit_load_count" \
@@ -2626,7 +2691,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         "$opencoregraphics_load_count" \
         "$swiftui_load_count" "$coremedia_load_count" \
         "$avfoundation_load_count" "$uniformtypeidentifiers_load_count" \
-        "$imageio_load_count" "$concurrency_load_count" \
+        "$imageio_load_count" "$photos_load_count" "$concurrency_load_count" \
         "$os_runtime_reexport_count" \
         >> "$FIRST_PARTY_LOAD_AUDIT"
 done
@@ -2654,6 +2719,38 @@ fi
 printf '%s\tquicklook=%s\tswiftui=%s\tapple-self-load=0\n' \
     _QuickLook_SwiftUI "$quicklook_overlay_quicklook_load_count" \
     "$quicklook_overlay_swiftui_load_count" >> "$FIRST_PARTY_LOAD_AUDIT"
+
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name @rpath/lib_PhotosUI_SwiftUI.dylib -rpath @loader_path \
+    -o "$STAGE/lib/lib_PhotosUI_SwiftUI.dylib" \
+    "$WORK/photosui-swiftui.o" "${COMMON_LINK[@]}" \
+    -lPhotosUI -lPhotos -lCoreTransferable -lUniformTypeIdentifiers \
+    -lSwiftUI -lFoundation -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
+photosui_overlay_base_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/lib_PhotosUI_SwiftUI.dylib" \
+    | awk '$1 == "@rpath/libPhotosUI.dylib" { count++ } END { print count + 0 }')
+photosui_overlay_swiftui_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/lib_PhotosUI_SwiftUI.dylib" \
+    | awk '$1 == "@rpath/libSwiftUI.dylib" { count++ } END { print count + 0 }')
+photosui_overlay_coretransferable_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/lib_PhotosUI_SwiftUI.dylib" \
+    | awk '$1 == "@rpath/libCoreTransferable.dylib" { count++ } END { print count + 0 }')
+[ "$photosui_overlay_base_load_count" -eq 1 ] \
+    || die "PhotosUI overlay base load count $photosui_overlay_base_load_count, expected 1"
+[ "$photosui_overlay_swiftui_load_count" -eq 1 ] \
+    || die "PhotosUI overlay SwiftUI load count $photosui_overlay_swiftui_load_count, expected 1"
+[ "$photosui_overlay_coretransferable_load_count" -eq 1 ] \
+    || die "PhotosUI overlay CoreTransferable load count $photosui_overlay_coretransferable_load_count, expected 1"
+if llvm-otool-18 -L "$STAGE/lib/lib_PhotosUI_SwiftUI.dylib" \
+    | grep -Eq '/System/Library/Frameworks/(PhotosUI|_PhotosUI_SwiftUI)\.framework/'; then
+    die 'portable PhotosUI overlay loads an Apple PhotosUI framework'
+fi
+printf '%s\tphotosui=%s\tswiftui=%s\tcoretransferable=%s\tapple-self-load=0\n' \
+    _PhotosUI_SwiftUI "$photosui_overlay_base_load_count" \
+    "$photosui_overlay_swiftui_load_count" \
+    "$photosui_overlay_coretransferable_load_count" \
+    >> "$FIRST_PARTY_LOAD_AUDIT"
 
 swiftdata_swiftui_load_count=$(llvm-otool-18 -L \
     "$STAGE/lib/libSwiftData.dylib" \
@@ -2995,6 +3092,49 @@ grep -Fxq \
     "$STAGE/attestation/photos-runtime.log" \
     || die 'standalone Photos runtime marker is missing'
 
+echo '== compile/link/run the standalone PhotosUI transfer and presentation gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name PhotosUIGuestRuntime -emit-object \
+    -o "$WORK/photosui-guest-runtime.o" \
+    "$W/full/photosui/tests/PhotosUIHostRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header \
+    "${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
+    -o "$STAGE/probe/PhotosUIGuestRuntime" \
+    "$WORK/photosui-guest-runtime.o" \
+    "${PREVIEW_STANDALONE_LINK_INPUTS[@]}" "${COMMON_LINK[@]}" \
+    -l_PhotosUI_SwiftUI -lPhotosUI -lPhotos -lCoreTransferable \
+    -lUniformTypeIdentifiers -lSwiftUI -lUIKit \
+    -lFoundation -lFoundationInternationalization -lFoundationEssentials \
+    -lOpenUIKit -lOpenCoreGraphics "$SWIFTUI_RUNTIME_LINK_FLAG" \
+    "${PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS[@]}" \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+photosui_gate_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/PhotosUIGuestRuntime" \
+    | awk '$1 == "@rpath/lib_PhotosUI_SwiftUI.dylib" { count++ } END { print count + 0 }')
+[ "$photosui_gate_load_count" -eq 1 ] \
+    || die "PhotosUI gate overlay load count $photosui_gate_load_count, expected 1"
+photosui_preview_export_count=$(nm_symbol_count --defined-only \
+    "$STAGE/probe/PhotosUIGuestRuntime" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+[ "$photosui_preview_export_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "PhotosUI gate Preview export count $photosui_preview_export_count, expected $PREVIEW_ENABLED"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/PhotosUIGuestRuntime
+) | tee "$STAGE/attestation/photosui-runtime.log"
+grep -Fxq \
+    'PHOTOSUI_HOST_OK filter=images,videos transfer=typed,async,completion presentation=fail-closed,host-driven selection=bounded,binding' \
+    "$STAGE/attestation/photosui-runtime.log" \
+    || die 'standalone PhotosUI runtime marker is missing'
+
+echo '== typecheck an ordinary IceCubes PhotosUI/SwiftUI cross-import consumer'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name IceCubesPhotosUIConsumer -typecheck \
+    "$W/full/photosui/tests/IceCubesPhotosUIConsumer.swift"
+
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${OBSERVATION_PLUGIN_FLAGS[@]}" "${FOUNDATION_PLUGIN_FLAGS[@]}" \
@@ -3038,13 +3178,13 @@ fi
     -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData \
     -lUserNotifications -lQuickLook -l_QuickLook_SwiftUI \
     -lCoreMedia -lAVFoundation -lAVKit -lCharts \
-    -lCoreTransferable -lPhotos \
+    -lCoreTransferable -lPhotos -lPhotosUI -l_PhotosUI_SwiftUI \
     "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "$OBSERVATION_DYLIB"
 
 for dylib in FoundationEssentials FoundationInternationalization \
     OpenCoreGraphics OpenUIKit OpenCombine Dispatch \
-    Combine Symbols SwiftUI _QuickLook_SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
+    Combine Symbols SwiftUI _QuickLook_SwiftUI _PhotosUI_SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     llvm-otool-18 -hv "$STAGE/lib/lib$dylib.dylib" \
         | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
@@ -3107,7 +3247,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-27 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-28 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -3326,14 +3466,14 @@ LINK_ARGUMENTS=(
     guest-root/darwin/usr/lib/libSystem.B.dylib
     -lWebKit -lCoreImage -lQuartzCore -lDispatch -lUIKit -lFoundation
     -lFoundationInternationalization -lFoundationEssentials -lSwiftUI -lSymbols
-    -l_QuickLook_SwiftUI
+    -l_QuickLook_SwiftUI -l_PhotosUI_SwiftUI
     -lIntentsUI -lIntents -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit
     -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData
     -lUserNotifications -lQuickLook -lCoreMedia -lAVFoundation -lAVKit -lCharts
-    -lCoreTransferable -lPhotos
+    -lCoreTransferable -lPhotos -lPhotosUI
 )
 printf '%s\0' "${COMPILE_ARGUMENTS[@]}" > "$STAGE/compile-flags.rsp"
 printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"
@@ -3486,8 +3626,9 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'foundation-byte-count\toracle=%s\tapple-golden=%s\trows=86\n' \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_ORACLE")" \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_GOLDEN")"
-    printf 'frontier-frameworks\tframeworks=20\tsources=21\n'
+    printf 'frontier-frameworks\tframeworks=21\tsources=22\n'
     printf 'quicklook-overlay\tsources=1\tcross-import-metadata=1\n'
+    printf 'photosui-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
         "$(hash_file "$W/full/relativetime/include/OpenRelativeTimeABI.h")" \
         "$(hash_file "$W/full/relativetime/OpenRelativeTimeBridge.c")" \
@@ -3533,13 +3674,15 @@ record_module_family() {
 }
 for framework in FoundationEssentials FoundationInternationalization \
     OpenCoreGraphics OpenUIKit OpenCombine Dispatch \
-    Combine Symbols SwiftUI _QuickLook_SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
+    Combine Symbols SwiftUI _QuickLook_SwiftUI _PhotosUI_SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     record_module_family framework "$framework"
     record_artifact framework "$framework" dylib "lib/lib$framework.dylib"
 done
 record_artifact module-metadata QuickLook cross-import-overlay \
     modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay
+record_artifact module-metadata PhotosUI cross-import-overlay \
+    modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay
 record_module_family framework Observation
 record_artifact runtime Observation dylib \
     guest-root/darwin/usr/lib/swift/libswiftObservation.dylib
@@ -3635,6 +3778,8 @@ record_artifact probe CoreTransferableGuestRuntime executable \
     probe/CoreTransferableGuestRuntime
 record_artifact probe PhotosGuestRuntime executable \
     probe/PhotosGuestRuntime
+record_artifact probe PhotosUIGuestRuntime executable \
+    probe/PhotosUIGuestRuntime
 record_artifact probe DispatchMachORuntime executable \
     probe/DispatchMachORuntime
 record_artifact probe SwiftUIFoundationReexportProbe executable \
@@ -3665,6 +3810,8 @@ record_artifact attestation CoreTransferable runtime-log \
     attestation/coretransferable-runtime.log
 record_artifact attestation Photos runtime-log \
     attestation/photos-runtime.log
+record_artifact attestation PhotosUI runtime-log \
+    attestation/photosui-runtime.log
 record_artifact attestation dispatch host \
     attestation/open-dispatch-host.tsv
 record_artifact attestation dispatch host-test-log \

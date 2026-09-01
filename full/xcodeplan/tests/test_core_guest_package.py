@@ -70,6 +70,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "Symbols",
                 "SwiftUI",
                 "_QuickLook_SwiftUI",
+                "_PhotosUI_SwiftUI",
                 "Foundation",
                 "UIKit",
                 "CoreImage",
@@ -104,6 +105,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "Charts",
                 "CoreTransferable",
                 "Photos",
+                "PhotosUI",
                 "DeveloperToolsSupport",
             )
         )
@@ -147,12 +149,14 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "UserNotifications",
                 "QuickLook",
                 "_QuickLook_SwiftUI",
+                "_PhotosUI_SwiftUI",
                 "CoreMedia",
                 "AVFoundation",
                 "AVKit",
                 "Charts",
                 "CoreTransferable",
                 "Photos",
+                "PhotosUI",
             )
         )
         for relative in required_files:
@@ -298,6 +302,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lSymbols",
                 "-lSwiftUI",
                 "-l_QuickLook_SwiftUI",
+                "-l_PhotosUI_SwiftUI",
                 "-lFoundation",
                 "-lUIKit",
                 "-lCoreImage",
@@ -332,6 +337,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lCharts",
                 "-lCoreTransferable",
                 "-lPhotos",
+                "-lPhotosUI",
             ],
             "format_version": 1,
             "compiler_plugins": compiler_plugins,
@@ -519,6 +525,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "Charts",
             "CoreTransferable",
             "Photos",
+            "PhotosUI",
         ):
             for relative in (
                 f"modules/{framework}.swiftmodule",

@@ -98,6 +98,7 @@ FRAMEWORKS = (
     "Symbols",
     "SwiftUI",
     "_QuickLook_SwiftUI",
+    "_PhotosUI_SwiftUI",
     "Foundation",
     "UIKit",
     "CoreImage",
@@ -132,6 +133,7 @@ FRAMEWORKS = (
     "Charts",
     "CoreTransferable",
     "Photos",
+    "PhotosUI",
 )
 REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(f"-l{name}" for name in FRAMEWORKS)
 MODULE_DEPENDENCIES = (

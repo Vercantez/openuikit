@@ -38,6 +38,7 @@ import AVKit
 import Charts
 import CoreTransferable
 import Photos
+import PhotosUI
 import WebKit
 
 private func coreRequireIndefiniteSymbolEffect<Effect>(_: Effect)
@@ -838,6 +839,27 @@ struct CoreGuestPackageProbe {
                 == .notDetermined
         )
         precondition(PHAsset.fetchAssets(with: .image, options: nil).count == 0)
+        let photosUIFilter = PHPickerFilter.any(of: [.images, .videos])
+        precondition(
+            photosUIFilter == PHPickerFilter.any(of: [.images, .videos])
+        )
+        precondition(!PhotosUIPortable.supportsSystemPicker)
+        var photosUIPresented = false
+        var photosUISelection: [PhotosPickerItem] = []
+        let photosUIView = Text("photos-ui")
+            .photosPicker(
+                isPresented: Binding(
+                    get: { photosUIPresented },
+                    set: { photosUIPresented = $0 }
+                ),
+                selection: Binding(
+                    get: { photosUISelection },
+                    set: { photosUISelection = $0 }
+                ),
+                maxSelectionCount: 4,
+                matching: photosUIFilter
+            )
+        withExtendedLifetime(photosUIView) {}
         let notificationCenter = UNUserNotificationCenter.current()
         var notificationAuthorizationFailedClosed = false
         notificationCenter.requestAuthorization(options: [.alert, .sound]) {
@@ -947,7 +969,7 @@ struct CoreGuestPackageProbe {
                 + "graphics=coreimage,quartzcore "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-27 oslog=standard-error,signposts "
+                + "first-party=portable-28 oslog=standard-error,signposts "
                 + "security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "
                 + "commoncrypto=sha256 "
@@ -959,6 +981,7 @@ struct CoreGuestPackageProbe {
                 + "charts=basic,fail-closed "
                 + "coretransferable=data,file,fail-closed "
                 + "photos=authorization,volatile,host-driven "
+                + "photosui=transfer,binding,host-driven "
                 + "webkit=engine-unavailable preview=\(preview)"
         )
     }

@@ -81,6 +81,7 @@ _REQUIRED_FRAMEWORKS = (
     "Symbols",
     "SwiftUI",
     "_QuickLook_SwiftUI",
+    "_PhotosUI_SwiftUI",
     "Foundation",
     "UIKit",
     "CoreImage",
@@ -115,6 +116,7 @@ _REQUIRED_FRAMEWORKS = (
     "Charts",
     "CoreTransferable",
     "Photos",
+    "PhotosUI",
 )
 _REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
     f"-l{name}" for name in _REQUIRED_FRAMEWORKS

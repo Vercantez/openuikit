@@ -15,8 +15,9 @@ CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI,
 MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog,
 UniformTypeIdentifiers, SwiftData, UserNotifications, QuickLook, and its
 `_QuickLook_SwiftUI` cross-import overlay, CoreMedia, AVFoundation, AVKit,
-Charts, CoreTransferable, and Photos. These are forty-five reusable ARM64
-Mach-O platform binaries (forty-four frameworks plus ICU), including real
+Charts, CoreTransferable, Photos, PhotosUI, and the `_PhotosUI_SwiftUI`
+cross-import overlay. These are forty-seven reusable ARM64 Mach-O platform
+binaries (forty-six frameworks plus ICU), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
@@ -70,11 +71,11 @@ The semantic build order is deliberate:
    donation, resolution, and host-driven controller state.
 8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-9. Compile and link twenty-seven app-facing first-party modules as independent ARM64
+9. Compile and link twenty-eight app-facing first-party modules as independent ARM64
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
-10. Link all forty-five reusable platform dylibs (forty-four frameworks plus
+10. Link all forty-seven reusable platform dylibs (forty-six frameworks plus
    ICU) and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.
@@ -176,6 +177,14 @@ asset fetches, image-data/orientation delivery, and thumbnails over an explicit
 host-installed volatile library. Authorization defaults to denied and no
 durable system photo library is claimed. Both frameworks have standalone Mach-O
 runtime gates and pinned untouched IceCubes consumer hashes.
+
+`libPhotosUI.dylib` owns composable image/video filters and picker
+configuration. Its `_PhotosUI_SwiftUI` cross-import overlay owns picker items,
+typed async and completion-handler transfer loading, and single/multiple
+selection modifiers with bounded binding updates. With no host picker service,
+presentation fails closed and clears the presentation binding. A host can
+install a picker boundary, deliver volatile typed items, and drive selection or
+dismissal without changing application source.
 
 The pinned swift-foundation revision has an upstream-corrected final-class
 Predicate key-path bug. The builder verifies exact source and patch hashes,
