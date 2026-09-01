@@ -921,7 +921,7 @@ struct CoreGuestPackageProbe {
         precondition(
             tgmathRemainder.0 == CGFloat.zero && tgmathRemainder.1 == 1
         )
-        precondition(nan("0x42").isNaN)
+        precondition(OpenCoreGraphics.nan("0x42").isNaN)
         let addController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
         precondition(
             type(of: addController).presentationCapability == .hostDriven

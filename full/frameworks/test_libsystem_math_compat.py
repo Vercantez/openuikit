@@ -34,7 +34,8 @@ class LibSystemMathCompatibilityTests(unittest.TestCase):
     def test_cold_probe_executes_the_real_swift_tgmath_surface(self) -> None:
         probe = PROBE.read_text(encoding="utf-8")
         self.assertIn("remquo(CGFloat(257), CGFloat(1))", probe)
-        self.assertIn('nan("0x42")', probe)
+        self.assertIn('OpenCoreGraphics.nan("0x42")', probe)
+        self.assertNotIn('precondition(nan("0x42")', probe)
         self.assertIn("graphics=coreimage,quartzcore,tgmath", probe)
         self.assertIn(
             "graphics=coreimage,quartzcore,tgmath",
