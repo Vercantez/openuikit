@@ -1,15 +1,16 @@
 @_exported import Foundation
 
-/// Apple's public DeviceCheck error domain. The committed SDK contract names
-/// the exported `_DCErrorDomain` symbol but does not record the string
-/// payload; this spelling matches the `NS_ERROR_ENUM` identifier.
-public let DCErrorDomain = "DCErrorDomain"
+/// Apple's public DeviceCheck error domain, verified against the Xcode 26.1
+/// macOS runtime: `DCErrorDomain` and `DCError.errorDomain` are this string.
+public let DCErrorDomain = "com.apple.devicecheck.error"
 
 /// Portable counterpart of DeviceCheck's bridged `NS_ERROR_ENUM`.
 ///
 /// Numeric codes follow the public Xcode 26.1 `DCError.h` enumeration:
-/// `unknownSystemFailure = 0` through `serverUnavailable = 4`.
-public struct DCError: Error, CustomNSError, Hashable, Equatable, Sendable {
+/// `unknownSystemFailure = 0` through `serverUnavailable = 4`. The stored
+/// `userInfo` is preserved exactly; this overlay does not insert a default
+/// localized-description entry.
+public struct DCError: Error, CustomNSError, Hashable, Equatable, @unchecked Sendable {
     public enum Code: Int, Hashable, Sendable {
         case unknownSystemFailure = 0
         case featureUnsupported = 1
@@ -19,21 +20,16 @@ public struct DCError: Error, CustomNSError, Hashable, Equatable, Sendable {
     }
 
     public let code: Code
+    public let userInfo: [String: Any]
 
     public init(_ code: Code, userInfo: [String: Any] = [:]) {
         self.code = code
-        _ = userInfo
+        self.userInfo = userInfo
     }
-
-    public var userInfo: [String: Any] { errorUserInfo }
 
     public static var errorDomain: String { DCErrorDomain }
     public var errorCode: Int { code.rawValue }
-    public var errorUserInfo: [String: Any] {
-        [
-            NSLocalizedDescriptionKey: Self.defaultReason(for: code)
-        ]
-    }
+    public var errorUserInfo: [String: Any] { userInfo }
 
     public static let unknownSystemFailure = Code.unknownSystemFailure
     public static let featureUnsupported = Code.featureUnsupported
@@ -41,19 +37,14 @@ public struct DCError: Error, CustomNSError, Hashable, Equatable, Sendable {
     public static let invalidKey = Code.invalidKey
     public static let serverUnavailable = Code.serverUnavailable
 
-    private static func defaultReason(for code: Code) -> String {
-        switch code {
-        case .unknownSystemFailure:
-            return "A DeviceCheck system failure occurred"
-        case .featureUnsupported:
-            return "DeviceCheck is unavailable on this host"
-        case .invalidInput:
-            return "The DeviceCheck request input was invalid"
-        case .invalidKey:
-            return "The App Attest key was invalid"
-        case .serverUnavailable:
-            return "The DeviceCheck server is unavailable"
-        }
+    public static func == (lhs: DCError, rhs: DCError) -> Bool {
+        guard lhs.code == rhs.code else { return false }
+        return _deviceCheckUserInfoEqual(lhs.userInfo, rhs.userInfo)
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(code)
+        hasher.combine(_deviceCheckUserInfoFingerprint(userInfo))
     }
 }
 
@@ -62,6 +53,25 @@ extension DCError.Code {
     public static func ~= (match: DCError.Code, error: any Error) -> Bool {
         (error as? DCError)?.code == match
     }
+}
+
+/// Equality and hashing share one fingerprint so `==` and `hash(into:)` stay
+/// lawful for an `Any`-valued dictionary.
+private func _deviceCheckUserInfoEqual(
+    _ lhs: [String: Any],
+    _ rhs: [String: Any]
+) -> Bool {
+    _deviceCheckUserInfoFingerprint(lhs) == _deviceCheckUserInfoFingerprint(rhs)
+}
+
+private func _deviceCheckUserInfoFingerprint(_ info: [String: Any]) -> String {
+    info.keys.sorted().map { key in
+        "\(key)=\(_deviceCheckUserInfoValue(info[key]!))"
+    }.joined(separator: "\u{1e}")
+}
+
+private func _deviceCheckUserInfoValue(_ value: Any) -> String {
+    String(describing: value)
 }
 
 private func _deviceCheckUnsupportedError() -> DCError {

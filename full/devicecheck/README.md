@@ -17,13 +17,19 @@ identities. Private TBD classes (`DCAppAttestDeviceService`,
 `DCAppAttestServicePriv`, `DCAppAttestWebAuthService`) are explicit
 exclusions and are not part of this module.
 
-The committed evidence names `_DCErrorDomain` but does not record the string
-payload. This tranche uses `"DCErrorDomain"`, matching the `NS_ERROR_ENUM`
-identifier. Numeric `DCError.Code` values follow the public header
-enumeration. This cloud runner has no Apple runtime oracle, so the exact
-Apple domain-string bytes and Apple-side callback timing are not claimed.
+`DCErrorDomain` and `DCError.errorDomain` are
+`com.apple.devicecheck.error`, matching the Xcode 26.1 macOS runtime.
+`DCError` preserves the caller-supplied `userInfo` on both `userInfo` and
+`errorUserInfo`; the default initializer leaves both dictionaries empty and
+does not insert a localized-description mapping. Equality includes that
+dictionary; hashing is compatible with equality. Numeric `DCError.Code`
+values follow the public header enumeration.
+
+This cloud runner still has no Apple DeviceCheck/App Attest service, so Apple
+callback timing and cryptographic success are not claimed.
 
 `tests/test_devicecheck_host.sh` typechecks the committed source-surface
-program, cold-runs the committed guest runtime on Linux `swiftc`, audits the
-public/private boundary, and checks provenance plus corpus required-surface
-coverage without modifying reference evidence or application sources.
+program, cold-runs the committed guest runtime on Linux `swiftc`, runs the
+`DCError` domain/userInfo parity helper, and audits the public/private
+boundary plus provenance and corpus required-surface coverage without
+modifying reference evidence or application sources.

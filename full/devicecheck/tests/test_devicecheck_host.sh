@@ -17,6 +17,7 @@ SYMBOLS=$REFERENCE/DeviceCheck.symbols.json
 CORPUS=$REFERENCE/devicecheck-corpus-2026-09-01.tsv
 SURFACE=$HERE/DeviceCheckSourceSurface.swift
 RUNTIME=$HERE/DeviceCheckGuestRuntime.swift
+PARITY=$HERE/DeviceCheckErrorParity.swift
 
 fail() {
     printf 'devicecheck-host-test: %s\n' "$*" >&2
@@ -57,6 +58,7 @@ trap cleanup EXIT
 [ -f "$CORPUS" ] && [ ! -L "$CORPUS" ] || fail 'corpus ledger is missing'
 [ -f "$SURFACE" ] && [ ! -L "$SURFACE" ] || fail 'source-surface program is missing'
 [ -f "$RUNTIME" ] && [ ! -L "$RUNTIME" ] || fail 'guest runtime program is missing'
+[ -f "$PARITY" ] && [ ! -L "$PARITY" ] || fail 'error-parity program is missing'
 
 grep -Fxq 'full/devicecheck/DeviceCheck.swift' "$MANIFEST" \
     || fail 'guest sources manifest does not list DeviceCheck.swift'
@@ -81,6 +83,11 @@ fi
 grep -Fq 'class DCDevice' "$SOURCE" || fail 'DCDevice is missing'
 grep -Fq 'class DCAppAttestService' "$SOURCE" || fail 'DCAppAttestService is missing'
 grep -Fq 'let DCErrorDomain' "$SOURCE" || fail 'DCErrorDomain is missing'
+grep -Fq '"com.apple.devicecheck.error"' "$SOURCE" \
+    || fail 'DCErrorDomain string is not the verified Apple domain'
+if grep -F 'NSLocalizedDescriptionKey' "$SOURCE" >/dev/null; then
+    fail 'DeviceCheck.swift fabricates a localized-description userInfo mapping'
+fi
 grep -Fq 'struct DCError' "$SOURCE" || fail 'DCError is missing'
 grep -Fq 'isSupported' "$SOURCE" || fail 'isSupported is missing'
 grep -Fq 'generateToken' "$SOURCE" || fail 'generateToken is missing'
@@ -217,7 +224,8 @@ for title in needed:
 print("DEVICECHECK_CONTRACT_OK")
 PY
 
-"$SWIFTC" -parse-as-library -typecheck -module-name DeviceCheck "$SOURCE"
+"$SWIFTC" -parse-as-library -typecheck -warnings-as-errors \
+    -module-name DeviceCheck "$SOURCE"
 
 uname_s=$(uname -s)
 if [ "$uname_s" = Darwin ]; then
@@ -251,6 +259,24 @@ grep -Fxq \
     'DEVICECHECK_GUEST_OK singleton=2 callbacks=4 async=4 fail-closed=1' \
     "$OUTPUT/runtime.log" \
     || fail 'guest runtime marker is missing'
+
+"$SWIFTC" -parse-as-library -I "$OUTPUT" -L "$OUTPUT" -lDeviceCheck \
+    -Xlinker -rpath -Xlinker "$OUTPUT" \
+    "$PARITY" \
+    -o "$OUTPUT/DeviceCheckErrorParity"
+
+if [ "$uname_s" = Darwin ]; then
+    DYLD_LIBRARY_PATH="$OUTPUT${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}" \
+        "$OUTPUT/DeviceCheckErrorParity" | tee "$OUTPUT/parity.log"
+else
+    LD_LIBRARY_PATH="$OUTPUT${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+        "$OUTPUT/DeviceCheckErrorParity" | tee "$OUTPUT/parity.log"
+fi
+
+grep -Fxq \
+    'DEVICECHECK_ERROR_PARITY_OK domain=com.apple.devicecheck.error userInfo=preserved hash=lawful' \
+    "$OUTPUT/parity.log" \
+    || fail 'error-parity marker is missing'
 
 if command -v nm >/dev/null 2>&1; then
     if nm -g "$OUTPUT/$libname" 2>/dev/null | grep -E "$private_names" >/dev/null; then
