@@ -626,4 +626,3 @@ public func CNAllPublicStringConstants() -> [String] {
         CNSocialProfileUsernameKey,
     ]
 }
-
