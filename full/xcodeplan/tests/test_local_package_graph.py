@@ -909,6 +909,105 @@ class LocalPackageGraphTests(unittest.TestCase):
         ):
             self.graph()
 
+    def test_tools_version_and_package_modes_select_effective_swift_mode(self) -> None:
+        self.make_local_only()
+        core_manifest = self.root / "Core/Package.swift"
+        core_manifest.write_text(
+            core_manifest.read_text(encoding="utf-8").replace(
+                "swift-tools-version: 6.4", "swift-tools-version: 5.9.1"
+            ),
+            encoding="utf-8",
+        )
+        graph = self.graph()
+        core = graph["targets"][0]
+        self.assertEqual(
+            core["swift_settings"],
+            [{"kind": "swift_language_mode", "value": "5"}],
+        )
+        core_package = next(
+            package for package in graph["packages"] if package["path"] == "Core"
+        )
+        self.assertEqual(core_package["tools_version"], "5.9.1")
+        self.assertEqual(core_package["swift_language_mode"], "5")
+        output = Path(self.temporary.name) / "tools-version-build"
+        contract = local_package_graph.prepare_build(graph, self.root, output)
+        self.assertEqual(
+            contract["targets"][0]["compiler_arguments"],
+            ["-swift-version", "5"],
+        )
+        local_package_graph.verify_build_contract(graph, self.root, output)
+
+        self.write_package(
+            "Core",
+            """
+            let package = Package(
+                name: "Core",
+                products: [.library(name: "Core", targets: ["Core"])],
+                targets: [.target(name: "Core")],
+                swiftLanguageModes: [.v4_2, .v5]
+            )
+            """,
+        )
+        graph = self.graph()
+        self.assertEqual(
+            graph["targets"][0]["swift_settings"],
+            [{"kind": "swift_language_mode", "value": "5"}],
+        )
+
+        self.write_package(
+            "Core",
+            """
+            let package = Package(
+                name: "Core",
+                products: [.library(name: "Core", targets: ["Core"])],
+                targets: [
+                    .target(
+                        name: "Core",
+                        swiftSettings: [.swiftLanguageMode(.v5)]
+                    )
+                ],
+                swiftLanguageModes: [.v6]
+            )
+            """,
+        )
+        graph = self.graph()
+        self.assertEqual(
+            graph["targets"][0]["swift_settings"],
+            [{"kind": "swift_language_mode", "value": "5"}],
+        )
+
+    def test_missing_or_ambiguous_swift_language_contract_is_refused(self) -> None:
+        self.make_local_only()
+        core_manifest = self.root / "Core/Package.swift"
+        core_manifest.write_text(
+            core_manifest.read_text(encoding="utf-8").replace(
+                "// swift-tools-version: 6.4\n", ""
+            ),
+            encoding="utf-8",
+        )
+        with self.assertRaisesRegex(
+            local_package_graph.PackageGraphError,
+            "exactly one static swift-tools-version",
+        ):
+            self.graph()
+
+        self.write_package(
+            "Core",
+            """
+            let package = Package(
+                name: "Core",
+                products: [.library(name: "Core", targets: ["Core"])],
+                targets: [.target(name: "Core")],
+                swiftLanguageModes: []
+            )
+            """,
+        )
+        with self.assertRaisesRegex(
+            local_package_graph.PackageGraphError,
+            "swiftLanguageModes must not be empty",
+        ):
+            self.graph()
+
     def test_resources_are_frozen_bundled_and_get_a_generated_accessor(self) -> None:
         self.make_local_only()
         core = self.root / "Core"
