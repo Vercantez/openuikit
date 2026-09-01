@@ -166,7 +166,9 @@ private class _OpenDispatchSyncContextBase: @unchecked Sendable {
     func invoke() { fatalError("abstract Dispatch sync context invoked") }
 }
 
-private final class _OpenDispatchSyncContext<Result>: _OpenDispatchSyncContextBase {
+private final class _OpenDispatchSyncContext<Result>:
+    _OpenDispatchSyncContextBase,
+    @unchecked Sendable {
     let body: () throws -> Result
     var result: Swift.Result<Result, any Error>?
 
