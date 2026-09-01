@@ -323,6 +323,17 @@ lookups, while glibc uses distinct records; only that line is normalized before
 the otherwise byte-exact native comparison, and the Mach-O fixture must match
 the unmodified Darwin golden.
 
+FileManager enumeration now uses machorun's genuine Darwin-to-glibc `fts`
+translation instead of package-local abort stubs. The package pins the exact
+Apple-built arm64 fixture, source, stdout, empty stderr, zero exit status, and
+Mach-O metadata summary. A cold run must reproduce all 43 oracle rows covering
+the 72-byte stream and 112-byte entry layouts, physical/logical/no-stat walks,
+name-only children, symlink and dangling-link behavior, `SKIP`, `FOLLOW`, and
+`AGAIN`, repeated child generations, parent/level/path invariants, comparator
+callbacks, and stream-device projection. All five `fts` entry points must be
+defined exactly once by the staged real libSystem, while FoundationEssentials'
+four actual imports must bind to that image exactly once.
+
 The app-facing Foundation facade deliberately keeps linker auto-linking
 disabled. Its manual closure therefore names exactly
 `libswift_StringProcessing` (used by `DateFormatter` and the bounded string
