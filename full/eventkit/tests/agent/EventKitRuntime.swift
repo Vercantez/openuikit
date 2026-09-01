@@ -123,8 +123,9 @@ enum EventKitRuntime {
         precondition(store.defaultCalendarForNewReminders() == nil)
 
         let event = EKEvent(eventStore: store)
-        precondition(event is EKCalendarItem)
-        precondition(event is EKObject)
+        let asItem: EKCalendarItem = event
+        let asObject: EKObject = event
+        _ = (asItem, asObject)
         precondition(event.isNew)
         precondition(!event.hasChanges)
         precondition(event.attendees == nil)
