@@ -13,9 +13,12 @@ guest package; that integration is a separate central review step.
   parse helpers return `nil`; public inits trap). Round-trips are tested.
 - `CBError` / `CBATTError` expose documented `NS_ERROR_ENUM` codes and
   domains. `typed as NSError` preserves domain, code, and caller `userInfo`
-  without inserting `NSLocalizedDescriptionKey`. `NSError as? CBError` does
-  **not** rehydrate; tests rebuild via domain/code. `~=` matches both typed
-  errors and `NSError` domain/code.
+  without inserting `NSLocalizedDescriptionKey`. A typed-origin value may
+  remain recoverable with `as?` after that hop, depending on Foundation;
+  a freshly constructed `NSError(domain:code:)` does **not** become
+  `CBError` here. Tests rehydrate that case via domain/code. This is not
+  Apple `_BridgedStoredNSError`. `~=` matches typed errors and `NSError`
+  domain/code.
 - GATT mutables transfer characteristics, descriptors, and included
   services atomically: prior owners drop the child and stale reverse
   references are cleared.

@@ -14,26 +14,70 @@ private func nsError(_ error: any Error) -> NSError {
     error as NSError
 }
 
-private func typedCBError(from error: any Error) -> CBError? {
-    if let typed = error as? CBError {
-        return typed
-    }
-    let nsError = error as NSError
+private func rehydrateCBError(from nsError: NSError) -> CBError? {
     guard nsError.domain == CBErrorDomain, let code = CBError.Code(rawValue: nsError.code) else {
         return nil
     }
     return CBError(code, userInfo: nsError.userInfo)
 }
 
-private func typedCBATTError(from error: any Error) -> CBATTError? {
-    if let typed = error as? CBATTError {
-        return typed
-    }
-    let nsError = error as NSError
+private func rehydrateCBATTError(from nsError: NSError) -> CBATTError? {
     guard nsError.domain == CBATTErrorDomain, let code = CBATTError.Code(rawValue: nsError.code) else {
         return nil
     }
     return CBATTError(code, userInfo: nsError.userInfo)
+}
+
+private func typedCBError(from error: any Error) -> CBError? {
+    if let typed = error as? CBError {
+        return typed
+    }
+    return rehydrateCBError(from: error as NSError)
+}
+
+private func typedCBATTError(from error: any Error) -> CBATTError? {
+    if let typed = error as? CBATTError {
+        return typed
+    }
+    return rehydrateCBATTError(from: error as NSError)
+}
+
+/// Typed-origin `CustomNSError` may remain recoverable with `as?` after
+/// `as NSError`, or it may collapse to a plain NSError. Both are accepted;
+/// this is not Apple `_BridgedStoredNSError`.
+private func assertTypedOriginCBError(_ typed: CBError, key: String, stringValue: String) {
+    let bridged = nsError(typed)
+    precondition(bridged.domain == CBErrorDomain)
+    precondition(bridged.code == typed.errorCode)
+    precondition(bridged.userInfo[key] as? String == stringValue)
+    if let preserved = bridged as? CBError {
+        precondition(preserved.code == typed.code)
+        precondition(preserved.userInfo[key] as? String == stringValue)
+    } else {
+        let rebuilt = rehydrateCBError(from: bridged)
+        precondition(rebuilt?.code == typed.code)
+        precondition(rebuilt?.userInfo[key] as? String == stringValue)
+    }
+    precondition(typed.code ~= bridged)
+    precondition(typedCBError(from: bridged)?.code == typed.code)
+    precondition(typedCBError(from: bridged)?.userInfo[key] as? String == stringValue)
+}
+
+private func assertTypedOriginCBATTError(_ typed: CBATTError, key: String, intValue: Int) {
+    let bridged = nsError(typed)
+    precondition(bridged.domain == CBATTErrorDomain)
+    precondition(bridged.code == typed.errorCode)
+    precondition(bridged.userInfo[key] as? Int == intValue)
+    if let preserved = bridged as? CBATTError {
+        precondition(preserved.code == typed.code)
+        precondition(preserved.userInfo[key] as? Int == intValue)
+    } else {
+        let rebuilt = rehydrateCBATTError(from: bridged)
+        precondition(rebuilt?.code == typed.code)
+        precondition(rebuilt?.userInfo[key] as? Int == intValue)
+    }
+    precondition(typed.code ~= bridged)
+    precondition(typedCBATTError(from: bridged)?.code == typed.code)
 }
 
 private final class CentralStateProbe: NSObject, CBCentralManagerDelegate {
@@ -210,30 +254,24 @@ private func exerciseErrors() {
     precondition(CBError.notConnected ~= typed)
     precondition(!(CBError.unknown ~= typed))
 
-    let bridged = nsError(typed)
-    precondition(bridged.domain == CBErrorDomain)
-    precondition(bridged.code == 3)
-    precondition(bridged.userInfo["reason"] as? String == "linux")
-    precondition((bridged as? CBError) == nil)
-    precondition(CBError.notConnected ~= bridged)
-    let rebuilt = typedCBError(from: bridged)
-    precondition(rebuilt?.code == .notConnected)
-    precondition(rebuilt?.userInfo["reason"] as? String == "linux")
+    assertTypedOriginCBError(typed, key: "reason", stringValue: "linux")
 
     let fresh = NSError(domain: CBErrorDomain, code: CBError.notConnected.rawValue, userInfo: ["k": "v"])
     precondition((fresh as? CBError) == nil)
     precondition(CBError.notConnected ~= fresh)
+    let freshRebuilt = rehydrateCBError(from: fresh)
+    precondition(freshRebuilt?.code == .notConnected)
+    precondition(freshRebuilt?.userInfo["k"] as? String == "v")
     precondition(typedCBError(from: fresh)?.userInfo["k"] as? String == "v")
 
     let att = CBATTError(.readNotPermitted, userInfo: ["att": 2])
     precondition(CBATTError.readNotPermitted ~= att)
     precondition(CBATTError.errorDomain == CBATTErrorDomain)
-    let attNS = nsError(att)
-    precondition(attNS.domain == CBATTErrorDomain)
-    precondition(attNS.code == 2)
-    precondition((attNS as? CBATTError) == nil)
-    precondition(CBATTError.readNotPermitted ~= attNS)
-    precondition(typedCBATTError(from: attNS)?.code == .readNotPermitted)
+    assertTypedOriginCBATTError(att, key: "att", intValue: 2)
+    let freshATT = NSError(domain: CBATTErrorDomain, code: CBATTError.readNotPermitted.rawValue, userInfo: ["att": 2])
+    precondition((freshATT as? CBATTError) == nil)
+    precondition(CBATTError.readNotPermitted ~= freshATT)
+    precondition(rehydrateCBATTError(from: freshATT)?.code == .readNotPermitted)
     _ = typed.hashValue
     _ = att.hashValue
     var hasher = Hasher()
