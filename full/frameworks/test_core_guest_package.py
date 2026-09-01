@@ -353,10 +353,11 @@ def validate_swiftui_runtime_link(source: str) -> None:
     ]
     if missing:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
-    # Observation, SwiftUI, cross-import overlays, WebKit, first-party gates,
-    # the reusable link loop, executable probe, all C/frontier executables, and
-    # AuthenticationServices' overlay/runtime gate share this token.
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 26:
+    # Observation, SwiftUI, AppKit, cross-import overlays, WebKit, first-party
+    # gates, the reusable link loop, executable probes, all C/frontier
+    # executables, and AuthenticationServices' overlay/runtime gate share this
+    # one pinned runtime input.
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 31:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
     swiftui_link_end = source.index(
@@ -469,10 +470,10 @@ def validate_preview_standalone_link_contract(source: str) -> None:
         raise AssertionError(
             f"standalone SwiftUI Preview link contract drifted: {missing}"
         )
-    if source.count('"${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}"') != 8:
+    if source.count('"${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}"') != 9:
         raise AssertionError("standalone SwiftUI Preview export use count drifted")
-    if source.count('"${PREVIEW_STANDALONE_LINK_INPUTS[@]}"') != 9:
-        # One use audits the source object and eight uses link executables.
+    if source.count('"${PREVIEW_STANDALONE_LINK_INPUTS[@]}"') != 10:
+        # One use audits the source object and nine uses link executables.
         raise AssertionError("standalone SwiftUI Preview link-input use count drifted")
     slices = (
         (
@@ -752,6 +753,7 @@ class PackageFixture:
             "lib",
             "frameworks/IOKit.framework/Headers",
             "frameworks/IOKit.framework/Modules",
+            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule",
             "include",
             "include/CoreImage",
             "include/COpenFoundationCore",
@@ -764,6 +766,7 @@ class PackageFixture:
             "resources/OpenUIKit/fonts",
             "guest-root/darwin/usr/lib",
             "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A",
+            "guest-root/darwin/System/Library/Frameworks/AppKit.framework/Versions/C",
             "guest-root/host",
             "host-tools/swift/host/plugins",
             "host-tools/swift/linux",
@@ -879,6 +882,37 @@ class PackageFixture:
             root / "guest-root/darwin/usr/lib/swift/libswiftIOKit.dylib",
             "open Swift IOKit overlay runtime",
         )
+        for suffix in (
+            "abi.json",
+            "private.swiftinterface",
+            "swiftdoc",
+            "swiftinterface",
+            "swiftmodule",
+            "swiftsourceinfo",
+        ):
+            write_file(
+                root
+                / "frameworks/AppKit.framework/Versions/C/Modules/"
+                f"AppKit.swiftmodule/arm64-apple-macos.{suffix}",
+                f"AppKit:{suffix}\n",
+            )
+        write_file(
+            root / "frameworks/AppKit.framework/Versions/C/AppKit",
+            "AppKit ARM64 Mach-O",
+        )
+        write_file(
+            root
+            / "guest-root/darwin/System/Library/Frameworks/"
+            "AppKit.framework/Versions/C/AppKit",
+            "AppKit ARM64 Mach-O",
+        )
+        os.symlink("C", root / "frameworks/AppKit.framework/Versions/Current")
+        os.symlink(
+            "Versions/Current/AppKit", root / "frameworks/AppKit.framework/AppKit"
+        )
+        os.symlink(
+            "Versions/Current/Modules", root / "frameworks/AppKit.framework/Modules"
+        )
         write_file(root / "guest-root/machorun", "loader")
         write_file(root / "guest-root/.manifest", "fixture-root\n")
         write_file(
@@ -920,6 +954,7 @@ class PackageFixture:
             "foundation-sources.tsv",
             "intents-sources.tsv",
             "graphics-sources.tsv",
+            "appkit-sources.tsv",
             "first-party-sources.tsv",
             "first-party-dylib-loads.tsv",
             "webkit-sources.tsv",
@@ -991,6 +1026,8 @@ class PackageFixture:
             "sdk",
             "-F",
             "frameworks",
+            "-framework",
+            "AppKit",
             "-framework",
             "IOKit",
             "-lswiftIOKit",
@@ -1222,6 +1259,36 @@ class PackageFixture:
         )
         records.extend(
             (
+                *(
+                    self._artifact(
+                        "framework",
+                        "AppKit",
+                        role,
+                        "frameworks/AppKit.framework/Versions/C/Modules/"
+                        f"AppKit.swiftmodule/arm64-apple-macos.{suffix}",
+                    )
+                    for role, suffix in (
+                        ("abi-json", "abi.json"),
+                        ("private-swiftinterface", "private.swiftinterface"),
+                        ("swiftdoc", "swiftdoc"),
+                        ("swiftinterface", "swiftinterface"),
+                        ("swiftmodule", "swiftmodule"),
+                        ("swiftsourceinfo", "swiftsourceinfo"),
+                    )
+                ),
+                self._artifact(
+                    "framework",
+                    "AppKit",
+                    "dylib",
+                    "frameworks/AppKit.framework/Versions/C/AppKit",
+                ),
+                self._artifact(
+                    "runtime",
+                    "AppKit",
+                    "framework-dylib",
+                    "guest-root/darwin/System/Library/Frameworks/"
+                    "AppKit.framework/Versions/C/AppKit",
+                ),
                 self._artifact(
                     "framework",
                     "IOKit",
@@ -1506,6 +1573,8 @@ class PackageFixture:
             "attestation/intents-sources.tsv",
             "--graphics-sources",
             "attestation/graphics-sources.tsv",
+            "--appkit-sources",
+            "attestation/appkit-sources.tsv",
             "--first-party-sources",
             "attestation/first-party-sources.tsv",
             "--first-party-dylib-loads",
@@ -1570,7 +1639,7 @@ class PackageContractTests(unittest.TestCase):
         self.assertIsNone(document["preview"])
         self.assertNotIn(str(self.base), json.dumps(document))
         relocated = self.base / "relocated package with spaces"
-        shutil.copytree(fixture.root, relocated)
+        shutil.copytree(fixture.root, relocated, symlinks=True)
         run_tool("verify", "--package-root", str(relocated))
         summary = run_canonical(relocated)
         self.assertIn("preview=no", summary.stdout)
@@ -1774,7 +1843,7 @@ class PackageContractTests(unittest.TestCase):
         summary = run_canonical(fixture.root)
         self.assertIn("preview=yes", summary.stdout)
         relocated = self.base / "relocated preview package"
-        shutil.copytree(fixture.root, relocated)
+        shutil.copytree(fixture.root, relocated, symlinks=True)
         run_tool("verify", "--package-root", str(relocated))
         self.assertIn("preview=yes", run_canonical(relocated).stdout)
 
@@ -1958,6 +2027,128 @@ class PackageContractTests(unittest.TestCase):
             refusal = fixture.write_manifest(expected=2)
             self.assertIn("Swift IOKit overlay runtime", refusal.stderr)
 
+    def test_appkit_versioned_framework_identity_is_exact(self) -> None:
+        fixture = self.fixture(False)
+        document = json.loads(
+            (fixture.root / "attestation/core-package.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        appkit = {
+            artifact["path"]: (artifact["category"], artifact["role"])
+            for artifact in document["artifacts"]
+            if artifact["name"] == "AppKit"
+        }
+        expected_paths = {
+            "frameworks/AppKit.framework/Versions/C/Modules/"
+            f"AppKit.swiftmodule/arm64-apple-macos.{suffix}"
+            for suffix in (
+                "abi.json",
+                "private.swiftinterface",
+                "swiftdoc",
+                "swiftinterface",
+                "swiftmodule",
+                "swiftsourceinfo",
+            )
+        }
+        expected_paths.update(
+            {
+                "frameworks/AppKit.framework/Versions/C/AppKit",
+                "guest-root/darwin/System/Library/Frameworks/"
+                "AppKit.framework/Versions/C/AppKit",
+            }
+        )
+        self.assertEqual(set(appkit), expected_paths)
+        self.assertEqual(
+            os.readlink(fixture.root / "frameworks/AppKit.framework/AppKit"),
+            "Versions/Current/AppKit",
+        )
+        self.assertEqual(
+            os.readlink(fixture.root / "frameworks/AppKit.framework/Modules"),
+            "Versions/Current/Modules",
+        )
+        self.assertEqual(
+            os.readlink(
+                fixture.root / "frameworks/AppKit.framework/Versions/Current"
+            ),
+            "C",
+        )
+        self.assertEqual(
+            document["executable_link_arguments"].count("AppKit"), 1
+        )
+        self.assertNotIn("-lAppKit", document["executable_link_arguments"])
+
+    def test_appkit_artifact_identity_link_and_symlink_mutations_are_refused(
+        self,
+    ) -> None:
+        appkit_paths = (
+            "frameworks/AppKit.framework/Versions/C/Modules/"
+            "AppKit.swiftmodule/arm64-apple-macos.swiftmodule",
+            "frameworks/AppKit.framework/Versions/C/AppKit",
+            "guest-root/darwin/System/Library/Frameworks/"
+            "AppKit.framework/Versions/C/AppKit",
+        )
+        for relative in appkit_paths:
+            with self.subTest(relative=relative), tempfile.TemporaryDirectory() as temporary:
+                fixture = PackageFixture(Path(temporary) / "package", preview=False)
+                ledger = fixture.root / "attestation/artifacts.tsv"
+                ledger.write_text(
+                    "\n".join(
+                        line
+                        for line in ledger.read_text(encoding="utf-8").splitlines()
+                        if relative not in line
+                    )
+                    + "\n",
+                    encoding="utf-8",
+                )
+                refusal = fixture.write_manifest(expected=2)
+                self.assertIn("AppKit versioned framework boundary", refusal.stderr)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = PackageFixture(Path(temporary) / "package", preview=False)
+            runtime = (
+                fixture.root
+                / "guest-root/darwin/System/Library/Frameworks/"
+                "AppKit.framework/Versions/C/AppKit"
+            )
+            write_file(runtime, "different AppKit runtime")
+            fixture._write_ledger()
+            refusal = fixture.write_manifest(expected=2)
+            self.assertIn("compile/runtime framework identities differ", refusal.stderr)
+
+        for replacement in ("missing", "Versions/C/AppKit"):
+            with self.subTest(symlink=replacement), tempfile.TemporaryDirectory() as temporary:
+                fixture = PackageFixture(Path(temporary) / "package", preview=False)
+                fixture.write_manifest()
+                link = fixture.root / "frameworks/AppKit.framework/AppKit"
+                link.unlink()
+                if replacement != "missing":
+                    os.symlink(replacement, link)
+                refusal = run_tool(
+                    "verify", "--package-root", str(fixture.root), expected=2
+                )
+                self.assertIn("symlink contract drifted", refusal.stderr)
+
+        for replacement in ("missing", "flat"):
+            with self.subTest(link=replacement), tempfile.TemporaryDirectory() as temporary:
+                fixture = PackageFixture(Path(temporary) / "package", preview=False)
+                index = next(
+                    index
+                    for index in range(len(fixture.link_arguments) - 1)
+                    if fixture.link_arguments[index : index + 2]
+                    == ["-framework", "AppKit"]
+                )
+                del fixture.link_arguments[index : index + 2]
+                if replacement == "flat":
+                    fixture.link_arguments.append("-lAppKit")
+                (fixture.root / "link-inputs.rsp").write_bytes(
+                    b"".join(
+                        token.encode() + b"\0" for token in fixture.link_arguments
+                    )
+                )
+                refusal = fixture.write_manifest(expected=2)
+                self.assertIn("AppKit framework pair", refusal.stderr)
+
     def test_unattested_host_tool_is_refused(self) -> None:
         fixture = self.fixture(False)
         write_file(fixture.root / "host-tools/swift/host/libStale.so", "stale")
@@ -2015,6 +2206,18 @@ class PackageContractTests(unittest.TestCase):
         )
         refusal = run_tool("verify", "--package-root", str(fixture.root), expected=2)
         self.assertIn("omits required manifests: graphics_sources", refusal.stderr)
+
+    def test_appkit_source_attestation_is_mandatory(self) -> None:
+        fixture = self.fixture(False)
+        manifest_path = fixture.root / "attestation/core-package.json"
+        document = json.loads(manifest_path.read_text(encoding="utf-8"))
+        del document["manifests"]["appkit_sources"]
+        manifest_path.write_text(
+            json.dumps(document, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        refusal = run_tool("verify", "--package-root", str(fixture.root), expected=2)
+        self.assertIn("omits required manifests: appkit_sources", refusal.stderr)
 
     def test_coreimage_underlying_module_inputs_are_mandatory(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -2375,7 +2578,7 @@ class ShellContractTests(unittest.TestCase):
             builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 7
         )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 33
+            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 34
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -3966,7 +4169,7 @@ class ShellContractTests(unittest.TestCase):
             '-module-name IOKit -module-link-name swiftIOKit',
             "-import-underlying-module",
             'record_module_family framework IOKit',
-            "-F frameworks -framework IOKit",
+            "-F frameworks -framework AppKit -framework IOKit",
         ):
             self.assertIn(token, source)
         for token in (

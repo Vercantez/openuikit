@@ -61,6 +61,11 @@ IOKIT_PORTABLE_GOLDEN=$W/full/iokit/tests/iokit-interface-portable-2026-09-01.tx
 IOKIT_HOST_TEST=$W/full/iokit/tests/IOKitHostTests.c
 SWIFT_IOKIT_EXPORTS=$W/full/iokit/tests/libswiftIOKit-apple-2026-09-01.exports
 SWIFT_IOKIT_HOST_TEST=$W/full/iokit/tests/OpenSwiftIOKitHostTests.c
+APPKIT_SOURCES_MANIFEST=$W/full/appkit/appkit_guest_sources.txt
+SWIFTUI_APPKIT_SOURCES_MANIFEST=$W/full/appkit/swiftui_appkit_guest_sources.txt
+APPKIT_ORACLE=$W/full/appkit/tests/AppKitInterfaceOracle.swift
+APPKIT_GOLDEN=$W/full/appkit/tests/appkit-interface-apple-xcode-26.1.txt
+APPKIT_LOAD_IDENTITIES=$W/full/appkit/tests/appkit-load-identities.txt
 FIRST_PARTY_PROVENANCE_TOOL=$W/full/first-party-frameworks/first_party_provenance.py
 FIRST_PARTY_PROVENANCE_POLICY=$W/full/first-party-frameworks/first-party-provenance.json
 SDK_DANGLING_EXCLUSIONS=$W/full/frameworks/sdk_dangling_symlink_exclusions.tsv
@@ -254,6 +259,11 @@ EXPECTED_PHOTOS_SOURCE_COUNT=1
 EXPECTED_PHOTOSUI_SOURCE_COUNT=1
 EXPECTED_NATURALLANGUAGE_SOURCE_COUNT=1
 EXPECTED_AUTHENTICATIONSERVICES_SOURCE_COUNT=1
+EXPECTED_APPKIT_SOURCE_COUNT=1
+EXPECTED_SWIFTUI_APPKIT_SOURCE_COUNT=1
+EXPECTED_APPKIT_EXPORT_COUNT=198
+EXPECTED_APPKIT_EXPORT_SHA=dd9b850d2dcf4deb398752a950248a229b4374c40fa948727fa13ef9f50a2b15
+EXPECTED_APPKIT_IMPORT_SHA=58c8c02cadac24ec680699924a8e4bcc7701562519242e74316b752b048195a4
 EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=19
 EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS=2
 EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS=0
@@ -848,6 +858,68 @@ write_graphics_sources_attestation() {
     } > "$output"
 }
 write_graphics_sources_attestation "$WORK/graphics-sources.pre.tsv"
+
+mapfile -t APPKIT_SOURCES < "$APPKIT_SOURCES_MANIFEST"
+mapfile -t SWIFTUI_APPKIT_SOURCES < "$SWIFTUI_APPKIT_SOURCES_MANIFEST"
+[ "${#APPKIT_SOURCES[@]}" -eq "$EXPECTED_APPKIT_SOURCE_COUNT" ] \
+    || die 'AppKit source manifest cardinality drifted'
+[ "${#SWIFTUI_APPKIT_SOURCES[@]}" -eq \
+    "$EXPECTED_SWIFTUI_APPKIT_SOURCE_COUNT" ] \
+    || die 'SwiftUI/AppKit source manifest cardinality drifted'
+[ "${APPKIT_SOURCES[0]}" = full/appkit/AppKit.swift ] \
+    || die 'AppKit ordered source manifest drifted'
+[ "${SWIFTUI_APPKIT_SOURCES[0]}" = \
+    full/appkit/SwiftUIAppKitCompatibility.swift ] \
+    || die 'SwiftUI/AppKit ordered source manifest drifted'
+APPKIT_PLATFORM_INPUTS=(
+    full/appkit/appkit_guest_sources.txt
+    full/appkit/AppKit.swift
+    full/appkit/swiftui_appkit_guest_sources.txt
+    full/appkit/SwiftUIAppKitCompatibility.swift
+    full/appkit/tests/AppKitGuestRuntime.swift
+    full/appkit/tests/AppKitInterfaceOracle.swift
+    full/appkit/tests/SwiftUIAppKitColorRuntime.swift
+    full/appkit/tests/StoreKitAppKitRuntime.swift
+    full/appkit/tests/appkit-interface-apple-xcode-26.1.txt
+    full/appkit/tests/appkit-load-identities.txt
+)
+for relative in "${APPKIT_PLATFORM_INPUTS[@]}"; do
+    [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+        || die "AppKit platform input is missing or linked: $relative"
+    git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+        || die "AppKit platform input is not tracked: $relative"
+done
+write_appkit_sources_attestation() {
+    local output=$1 relative
+    {
+        printf 'format\tappkit-production-sources-v1\n'
+        printf 'manifest\tAppKit\t%s\tcount=%s\n' \
+            "$(hash_file "$APPKIT_SOURCES_MANIFEST")" \
+            "${#APPKIT_SOURCES[@]}"
+        for relative in "${APPKIT_SOURCES[@]}"; do
+            printf 'source\tAppKit\t%s\t%s\n' \
+                "$relative" "$(hash_file "$W/$relative")"
+        done
+        printf 'manifest\tSwiftUI-AppKit\t%s\tcount=%s\n' \
+            "$(hash_file "$SWIFTUI_APPKIT_SOURCES_MANIFEST")" \
+            "${#SWIFTUI_APPKIT_SOURCES[@]}"
+        for relative in "${SWIFTUI_APPKIT_SOURCES[@]}"; do
+            printf 'source\tSwiftUI-AppKit\t%s\t%s\n' \
+                "$relative" "$(hash_file "$W/$relative")"
+        done
+        for relative in \
+            full/appkit/tests/AppKitGuestRuntime.swift \
+            full/appkit/tests/AppKitInterfaceOracle.swift \
+            full/appkit/tests/SwiftUIAppKitColorRuntime.swift \
+            full/appkit/tests/StoreKitAppKitRuntime.swift \
+            full/appkit/tests/appkit-interface-apple-xcode-26.1.txt \
+            full/appkit/tests/appkit-load-identities.txt; do
+            printf 'gate\t%s\t%s\n' \
+                "$relative" "$(hash_file "$W/$relative")"
+        done
+    } > "$output"
+}
+write_appkit_sources_attestation "$WORK/appkit-sources.pre.tsv"
 
 python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production \
     --support-root "$W" --policy "$FIRST_PARTY_PROVENANCE_POLICY" \
@@ -1805,6 +1877,16 @@ swiftui_runtime_input=$RUNTIME/darwin$SWIFTUI_RUNTIME_INSTALL_NAME
 swiftui_runtime_actual_id=$(llvm-otool-18 -D "$swiftui_runtime_input" | tail -n 1)
 [ "$swiftui_runtime_actual_id" = "$SWIFTUI_RUNTIME_INSTALL_NAME" ] \
     || die "SwiftUI staged runtime ID $swiftui_runtime_actual_id, expected $SWIFTUI_RUNTIME_INSTALL_NAME"
+
+APPKIT_INSTALL_NAME=/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit
+APPKIT_FRAMEWORK=$STAGE/frameworks/AppKit.framework
+APPKIT_VERSIONED=$APPKIT_FRAMEWORK/Versions/C
+APPKIT_MODULE_DIR=$APPKIT_VERSIONED/Modules/AppKit.swiftmodule
+APPKIT_FRAMEWORK_BINARY=$APPKIT_VERSIONED/AppKit
+APPKIT_RUNTIME_FRAMEWORK=$RUNTIME/darwin/System/Library/Frameworks/AppKit.framework
+APPKIT_RUNTIME_VERSIONED=$APPKIT_RUNTIME_FRAMEWORK/Versions/C
+APPKIT_RUNTIME_BINARY=$APPKIT_RUNTIME_VERSIONED/AppKit
+mkdir -p "$APPKIT_MODULE_DIR" "$APPKIT_RUNTIME_VERSIONED"
 
 echo '== build and audit the fail-closed IOKit C framework boundary'
 IOKIT_INSTALL_NAME=/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit
@@ -3117,6 +3199,24 @@ printf 'Foundation facade direct undefineds: StringProcessing=%s Synchronization
     "$foundation_regex_parser_undefineds" \
     "$foundation_darwin_undefineds"
 
+echo '== compile the versioned AppKit framework module against portable Foundation'
+APPKIT_SOURCE_PATHS=()
+for relative in "${APPKIT_SOURCES[@]}"; do
+    APPKIT_SOURCE_PATHS+=("$W/$relative")
+done
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name AppKit -module-link-name AppKit \
+    -enable-library-evolution -no-verify-emitted-module-interface \
+    -emit-module \
+    -emit-module-path \
+        "$APPKIT_MODULE_DIR/arm64-apple-macos.swiftmodule" \
+    -emit-module-interface-path \
+        "$APPKIT_MODULE_DIR/arm64-apple-macos.swiftinterface" \
+    -emit-object -o "$WORK/appkit.o" "${APPKIT_SOURCE_PATHS[@]}"
+ln -s C "$APPKIT_FRAMEWORK/Versions/Current"
+ln -s Versions/Current/AppKit "$APPKIT_FRAMEWORK/AppKit"
+ln -s Versions/Current/Modules "$APPKIT_FRAMEWORK/Modules"
+
 echo '== compile the package-owned Swift IOKit overlay against portable Foundation'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     -module-name IOKit -module-link-name swiftIOKit \
@@ -3162,6 +3262,12 @@ mapfile -d '' -t SWIFTUI_SOURCES < <(
 )
 [ "${#SWIFTUI_SOURCES[@]}" -eq "$EXPECTED_SWIFTUI_SWIFT_COUNT" ] \
     || die 'SwiftUI source count changed before compile'
+for relative in "${SWIFTUI_APPKIT_SOURCES[@]}"; do
+    SWIFTUI_SOURCES+=("$W/$relative")
+done
+[ "${#SWIFTUI_SOURCES[@]}" -eq \
+    "$((EXPECTED_SWIFTUI_SWIFT_COUNT + EXPECTED_SWIFTUI_APPKIT_SOURCE_COUNT))" ] \
+    || die 'SwiftUI production source count changed after AppKit integration'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${OBSERVATION_PLUGIN_FLAGS[@]}" \
     "${OPENUIKIT_PREVIEW_PLUGIN_FLAGS[@]}" \
@@ -3495,6 +3601,88 @@ foundation_internationalization_reexport_count=$(llvm-otool-18 -l \
     || die "libFoundation FoundationInternationalization load command count $foundation_internationalization_load_count, expected 1"
 [ "$foundation_internationalization_reexport_count" -eq 1 ] \
     || die "libFoundation FoundationInternationalization reexport command count $foundation_internationalization_reexport_count, expected 1"
+
+echo '== link and audit the production versioned AppKit framework'
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name "$APPKIT_INSTALL_NAME" -rpath @loader_path \
+    -o "$APPKIT_FRAMEWORK_BINARY" "$WORK/appkit.o" \
+    -L"$STAGE/lib" -L"$RUNTIME/darwin/usr/lib" \
+    -L"$STAGE/sdk/usr/lib/swift" \
+    -lFoundation -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics \
+    -lCombine -lOpenCombine -lDispatch \
+    -lswiftCore -lswiftObjectiveC "$SWIFTUI_RUNTIME_LINK_FLAG" \
+    "$OBSERVATION_DYLIB" \
+    "$RUNTIME/darwin/usr/lib/libswiftcompat.dylib" \
+    -L"$STAGE/sdk/usr/lib" -lSystem -lobjc \
+    "$RUNTIME/darwin/usr/lib/libquartz.dylib" \
+    "$RUNTIME/darwin/usr/lib/libSystem.B.dylib"
+cp "$APPKIT_FRAMEWORK_BINARY" "$APPKIT_RUNTIME_BINARY"
+ln -s C "$APPKIT_RUNTIME_FRAMEWORK/Versions/Current"
+ln -s Versions/Current/AppKit "$APPKIT_RUNTIME_FRAMEWORK/AppKit"
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$APPKIT_FRAMEWORK_BINARY" | LC_ALL=C sort -u \
+    > "$WORK/appkit-exports.txt"
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$APPKIT_FRAMEWORK_BINARY" | LC_ALL=C sort -u \
+    > "$WORK/appkit-imports.txt"
+llvm-otool-18 -L "$APPKIT_FRAMEWORK_BINARY" \
+    > "$WORK/appkit-loads.txt"
+awk 'NR > 1 { print $1 }' "$WORK/appkit-loads.txt" \
+    > "$WORK/appkit-load-identities.txt"
+appkit_export_count=$(wc -l < "$WORK/appkit-exports.txt" \
+    | tr -d '[:space:]')
+[ "$appkit_export_count" -eq "$EXPECTED_APPKIT_EXPORT_COUNT" ] \
+    || die "AppKit export count $appkit_export_count, expected $EXPECTED_APPKIT_EXPORT_COUNT"
+[ "$(hash_file "$WORK/appkit-exports.txt")" = \
+    "$EXPECTED_APPKIT_EXPORT_SHA" ] \
+    || die 'AppKit exact export contract drifted'
+[ "$(hash_file "$WORK/appkit-imports.txt")" = \
+    "$EXPECTED_APPKIT_IMPORT_SHA" ] \
+    || die 'AppKit exact import contract drifted'
+cmp "$APPKIT_LOAD_IDENTITIES" "$WORK/appkit-load-identities.txt" \
+    || die 'AppKit exact load closure drifted'
+for appkit_binary in "$APPKIT_FRAMEWORK_BINARY" "$APPKIT_RUNTIME_BINARY"; do
+    llvm-otool-18 -hv "$appkit_binary" \
+        | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
+        || die "AppKit framework is not an ARM64 Mach-O dylib: $appkit_binary"
+    [ "$(llvm-otool-18 -D "$appkit_binary" | tail -n 1)" = \
+        "$APPKIT_INSTALL_NAME" ] \
+        || die "AppKit framework install name drifted: $appkit_binary"
+done
+cmp "$APPKIT_FRAMEWORK_BINARY" "$APPKIT_RUNTIME_BINARY" \
+    || die 'AppKit compile/runtime framework copies differ'
+[ "$(awk -v expected="$APPKIT_INSTALL_NAME" \
+    '$1 == expected { count++ } END { print count + 0 }' \
+    "$WORK/appkit-loads.txt")" -eq 1 ] \
+    || die 'AppKit self identity is missing or duplicated'
+[ "$(awk '$1 == "@rpath/libFoundation.dylib" { count++ } \
+    END { print count + 0 }' "$WORK/appkit-loads.txt")" -eq 1 ] \
+    || die 'AppKit portable Foundation load is missing or duplicated'
+if grep -Fq '/System/Library/Frameworks/Foundation.framework/' \
+    "$WORK/appkit-loads.txt"; then
+    die 'AppKit loads Apple Foundation rather than the portable runtime'
+fi
+{
+    printf 'format\tappkit-framework-v1\n'
+    printf 'compile-framework\tframeworks/AppKit.framework/Versions/C/AppKit\tsha256=%s\n' \
+        "$(hash_file "$APPKIT_FRAMEWORK_BINARY")"
+    printf 'runtime-framework\tguest-root/darwin%s\tsha256=%s\n' \
+        "$APPKIT_INSTALL_NAME" "$(hash_file "$APPKIT_RUNTIME_BINARY")"
+    printf 'install-name\t%s\n' "$APPKIT_INSTALL_NAME"
+    printf 'architecture\tarm64\n'
+    printf 'exports\tcount=%s\tsha256=%s\n' \
+        "$appkit_export_count" "$(hash_file "$WORK/appkit-exports.txt")"
+    printf 'imports\tcount=%s\tsha256=%s\n' \
+        "$(wc -l < "$WORK/appkit-imports.txt" | tr -d '[:space:]')" \
+        "$(hash_file "$WORK/appkit-imports.txt")"
+    printf 'loads\tcount=16\tsha256=%s\n' \
+        "$(hash_file "$WORK/appkit-load-identities.txt")"
+    printf 'policy\tui=headless\tworkspace=fail-closed\talert=cancel-or-abort\tfonts=unavailable\n'
+} > "$STAGE/attestation/appkit-framework.tsv"
+printf 'local\tdarwin%s\t%s\tbuilt from full/appkit/AppKit.swift\n' \
+    "$APPKIT_INSTALL_NAME" "$(hash_file "$APPKIT_RUNTIME_BINARY")" \
+    >> "$RUNTIME/.manifest"
+
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libSymbols.dylib -rpath @loader_path \
     -o "$STAGE/lib/libSymbols.dylib" "$WORK/symbols.o" \
@@ -3542,6 +3730,7 @@ done
     "${SWIFTUI_DEVELOPER_TOOLS_SUPPORT_LINK_INPUTS[@]}" \
     "${COMMON_LINK[@]}" -lFoundation -lFoundationEssentials -lOpenUIKit \
     -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols \
+    -F "$STAGE/frameworks" -framework AppKit \
     "$SWIFTUI_RUNTIME_LINK_FLAG" "$OBSERVATION_DYLIB" \
     "$FULL/swiftcorepatch.o"
 swiftui_foundation_load_count=$(llvm-otool-18 -L \
@@ -3570,6 +3759,11 @@ swiftui_symbols_load_count=$(llvm-otool-18 -L "$STAGE/lib/libSwiftUI.dylib" \
     | awk '$1 == "@rpath/libSymbols.dylib" { count++ } END { print count + 0 }')
 [ "$swiftui_symbols_load_count" -eq 1 ] \
     || die "libSwiftUI Symbols load count $swiftui_symbols_load_count, expected 1"
+swiftui_appkit_load_count=$(llvm-otool-18 -L "$STAGE/lib/libSwiftUI.dylib" \
+    | awk -v expected="$APPKIT_INSTALL_NAME" \
+        '$1 == expected { count++ } END { print count + 0 }')
+[ "$swiftui_appkit_load_count" -eq 1 ] \
+    || die "libSwiftUI AppKit load count $swiftui_appkit_load_count, expected 1"
 swiftui_preview_import_count=$(nm_symbol_count --undefined-only \
     "$STAGE/lib/libSwiftUI.dylib" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
 [ "$swiftui_preview_import_count" -eq "$PREVIEW_ENABLED" ] \
@@ -3686,6 +3880,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     expected_imageio_load=0
     expected_photos_load=0
     expected_dispatch_load=0
+    expected_appkit_load=0
     expected_os_runtime_reexport=0
     case "$framework" in
         SafariServices|StoreKit|PassKit|MessageUI|AppIntents|QuickLook)
@@ -3697,6 +3892,13 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
                 -lOpenUIKit
                 -lOpenCoreGraphics
             )
+            if [ "$framework" = StoreKit ]; then
+                expected_appkit_load=1
+                framework_link_dependencies+=(
+                    -F "$STAGE/frameworks"
+                    -framework AppKit
+                )
+            fi
             ;;
         CoreGraphics)
             expected_opencoregraphics_load=1
@@ -3872,6 +4074,10 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     dispatch_load_count=$(llvm-otool-18 -L \
         "$STAGE/lib/lib$framework.dylib" \
         | awk '$1 == "@rpath/libDispatch.dylib" { count++ } END { print count + 0 }')
+    appkit_load_count=$(llvm-otool-18 -L \
+        "$STAGE/lib/lib$framework.dylib" \
+        | awk -v expected="$APPKIT_INSTALL_NAME" \
+            '$1 == expected { count++ } END { print count + 0 }')
     # `otool -L` includes the dylib's LC_ID_DYLIB as its first entry.  That is
     # an identity, not a dependency.  Exclude it when auditing the two module
     # names that are themselves members of this first-party loop.
@@ -3935,6 +4141,8 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         || die "lib$framework Photos load count $photos_load_count, expected $expected_photos_load"
     [ "$dispatch_load_count" -eq "$expected_dispatch_load" ] \
         || die "lib$framework Dispatch load count $dispatch_load_count, expected $expected_dispatch_load"
+    [ "$appkit_load_count" -eq "$expected_appkit_load" ] \
+        || die "lib$framework AppKit load count $appkit_load_count, expected $expected_appkit_load"
     [ "$concurrency_load_count" -eq 1 ] \
         || die "lib$framework Concurrency load count $concurrency_load_count, expected 1"
     [ "$os_runtime_reexport_count" -eq "$expected_os_runtime_reexport" ] \
@@ -3943,7 +4151,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         | grep -Fq "/System/Library/Frameworks/$framework.framework/"; then
         die "lib$framework loads the Apple $framework framework"
     fi
-    printf '%s\tportable-self-id=%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\topenuikit=%s\topencoregraphics=%s\tswiftui=%s\tcoremedia=%s\tavfoundation=%s\tuniformtypeidentifiers=%s\timageio=%s\tphotos=%s\tdispatch=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
+    printf '%s\tportable-self-id=%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\topenuikit=%s\topencoregraphics=%s\tswiftui=%s\tcoremedia=%s\tavfoundation=%s\tuniformtypeidentifiers=%s\timageio=%s\tphotos=%s\tdispatch=%s\tappkit=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
         "$framework" "$portable_self_id_count" "$foundation_load_count" \
         "$foundation_essentials_load_count" \
         "$foundation_essentials_ordinary_load_count" "$uikit_load_count" \
@@ -3952,6 +4160,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         "$swiftui_load_count" "$coremedia_load_count" \
         "$avfoundation_load_count" "$uniformtypeidentifiers_load_count" \
         "$imageio_load_count" "$photos_load_count" "$dispatch_load_count" \
+        "$appkit_load_count" \
         "$concurrency_load_count" \
         "$os_runtime_reexport_count" \
         >> "$FIRST_PARTY_LOAD_AUDIT"
@@ -5026,6 +5235,110 @@ tail -n 1 "$STAGE/attestation/iokit-interface-runtime.log" \
     | grep -Fxq 'missing=matching:nil' \
     || die 'IOKit portable missing-device policy is not fail-closed'
 
+echo '== compile/link/run the production AppKit, SwiftUI, and StoreKit gates'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name AppKitGuestRuntime -emit-object \
+    -o "$WORK/appkit-guest-runtime.o" \
+    "$W/full/appkit/tests/AppKitGuestRuntime.swift"
+"${SWIFTC[@]}" "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name AppKitInterfaceOracle -emit-object \
+    -o "$WORK/appkit-interface-oracle.o" "$APPKIT_ORACLE"
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name SwiftUIAppKitColorRuntime -emit-object \
+    -o "$WORK/swiftui-appkit-color-runtime.o" \
+    "$W/full/appkit/tests/SwiftUIAppKitColorRuntime.swift"
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name StoreKitAppKitRuntime -emit-object \
+    -o "$WORK/storekit-appkit-runtime.o" \
+    "$W/full/appkit/tests/StoreKitAppKitRuntime.swift"
+
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/AppKitGuestRuntime" \
+    "$WORK/appkit-guest-runtime.o" "${COMMON_LINK[@]}" \
+    -F "$STAGE/frameworks" -framework AppKit \
+    -lFoundation -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics \
+    -lCombine -lOpenCombine -lDispatch "$SWIFTUI_RUNTIME_LINK_FLAG" \
+    "$OBSERVATION_DYLIB"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/AppKitInterfaceOracle" \
+    "$WORK/appkit-interface-oracle.o" "${COMMON_LINK[@]}" \
+    -F "$STAGE/frameworks" -framework AppKit \
+    -lFoundation -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics \
+    -lCombine -lOpenCombine -lDispatch "$SWIFTUI_RUNTIME_LINK_FLAG" \
+    "$OBSERVATION_DYLIB"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header \
+    "${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
+    -o "$STAGE/probe/SwiftUIAppKitColorRuntime" \
+    "$WORK/swiftui-appkit-color-runtime.o" \
+    "${PREVIEW_STANDALONE_LINK_INPUTS[@]}" "${COMMON_LINK[@]}" \
+    -F "$STAGE/frameworks" -framework AppKit \
+    -lSwiftUI -lFoundation -lFoundationEssentials -lOpenUIKit \
+    -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols -lDispatch \
+    "$SWIFTUI_RUNTIME_LINK_FLAG" "$OBSERVATION_DYLIB" \
+    "${PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS[@]}"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/StoreKitAppKitRuntime" \
+    "$WORK/storekit-appkit-runtime.o" "${COMMON_LINK[@]}" \
+    -F "$STAGE/frameworks" -framework AppKit \
+    -lStoreKit -lUIKit -lFoundation -lFoundationEssentials \
+    -lOpenUIKit -lOpenCoreGraphics "$SWIFTUI_RUNTIME_LINK_FLAG"
+
+for appkit_probe in AppKitGuestRuntime AppKitInterfaceOracle \
+    SwiftUIAppKitColorRuntime StoreKitAppKitRuntime; do
+    llvm-otool-18 -hv "$STAGE/probe/$appkit_probe" \
+        | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+        || die "$appkit_probe is not an ARM64 Mach-O executable"
+    appkit_probe_load_count=$(llvm-otool-18 -L \
+        "$STAGE/probe/$appkit_probe" \
+        | awk -v expected="$APPKIT_INSTALL_NAME" \
+            '$1 == expected { count++ } END { print count + 0 }')
+    [ "$appkit_probe_load_count" -eq 1 ] \
+        || die "$appkit_probe AppKit load count $appkit_probe_load_count, expected 1"
+done
+
+cp "$APPKIT_GOLDEN" "$STAGE/attestation/appkit-interface-apple.txt"
+run_appkit_probe() {
+    local name=$1
+    (
+        cd "$STAGE"
+        LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+        LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+            MACHORUN_ROOT="$RUNTIME" \
+            "$RUNTIME/machorun" "./probe/$name"
+    ) | tee "$STAGE/attestation/$name.log"
+}
+run_appkit_probe AppKitGuestRuntime
+run_appkit_probe AppKitInterfaceOracle
+run_appkit_probe SwiftUIAppKitColorRuntime
+run_appkit_probe StoreKitAppKitRuntime
+grep -Fxq \
+    'APPKIT_GUEST_MACHO_OK surface=application,alert,workspace,window,font,color ui=headless workspace=fail-closed alert=cancel-or-abort fonts=unavailable' \
+    "$STAGE/attestation/AppKitGuestRuntime.log" \
+    || die 'AppKit production cold runtime marker is missing'
+cmp "$STAGE/attestation/AppKitInterfaceOracle.log" \
+    "$STAGE/attestation/appkit-interface-apple.txt" \
+    || die 'AppKit production interface differs from Apple'
+grep -Fxq \
+    'APPKIT_SWIFTUI_COLOR_MACHO_OK rgba=0.125,0.25,0.5,0.75 identity=AppKit.NSColor' \
+    "$STAGE/attestation/SwiftUIAppKitColorRuntime.log" \
+    || die 'SwiftUI/AppKit production color marker is missing'
+grep -Fxq \
+    'APPKIT_STOREKIT_MACHO_OK confirm-in=NSWindow purchase=fail-closed,payments-unavailable' \
+    "$STAGE/attestation/StoreKitAppKitRuntime.log" \
+    || die 'StoreKit/AppKit production fail-closed marker is missing'
+{
+    printf 'apple-differential\trows=10\tsha256=%s\n' \
+        "$(hash_file "$STAGE/attestation/AppKitInterfaceOracle.log")"
+    printf 'cold-runtime\tappkit=%s\tswiftui=%s\tstorekit=%s\n' \
+        "$(hash_file "$STAGE/attestation/AppKitGuestRuntime.log")" \
+        "$(hash_file "$STAGE/attestation/SwiftUIAppKitColorRuntime.log")" \
+        "$(hash_file "$STAGE/attestation/StoreKitAppKitRuntime.log")"
+} >> "$STAGE/attestation/appkit-framework.tsv"
+
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${OBSERVATION_PLUGIN_FLAGS[@]}" "${FOUNDATION_PLUGIN_FLAGS[@]}" \
@@ -5370,7 +5683,7 @@ COMPILE_ARGUMENTS=(
 )
 LINK_ARGUMENTS=(
     -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS" -syslibroot sdk
-    -F frameworks -framework IOKit
+    -F frameworks -framework AppKit -framework IOKit
     -Llib -Lguest-root/darwin/usr/lib -Lsdk/usr/lib/swift
     -lswiftCore -lswiftObjectiveC -lswiftIOKit "${SWIFTUI_RUNTIME_LINK_FLAG}"
     guest-root/darwin/usr/lib/swift/libswiftObservation.dylib
@@ -5445,6 +5758,7 @@ cp "$WORK/observation-sources.pre.tsv" \
     "$STAGE/attestation/observation-sources.tsv"
 cp "$WORK/intents-sources.pre.tsv" "$STAGE/attestation/intents-sources.tsv"
 cp "$WORK/graphics-sources.pre.tsv" "$STAGE/attestation/graphics-sources.tsv"
+cp "$WORK/appkit-sources.pre.tsv" "$STAGE/attestation/appkit-sources.tsv"
 cp "$WORK/webkit-sources.pre.tsv" "$STAGE/attestation/webkit-sources.tsv"
 cp "$WORK/foundation-undefined-symbols.txt" \
     "$STAGE/attestation/foundation-undefined-symbols.txt"
@@ -5452,6 +5766,11 @@ cp "$WORK/foundation-runtime-exports.txt" \
     "$STAGE/attestation/foundation-runtime-exports.txt"
 cp "$WORK/foundation-bindings.txt" \
     "$STAGE/attestation/foundation-bindings.txt"
+cp "$WORK/appkit-exports.txt" "$STAGE/attestation/appkit-exports.txt"
+cp "$WORK/appkit-imports.txt" "$STAGE/attestation/appkit-imports.txt"
+cp "$WORK/appkit-loads.txt" "$STAGE/attestation/appkit-loads.txt"
+cp "$WORK/appkit-load-identities.txt" \
+    "$STAGE/attestation/appkit-load-identities.txt"
 cp "$FULL/foundation/essentials/removefile-compat-tests.log" \
     "$STAGE/attestation/removefile-compat-tests.log"
 cp "$WORK/group-lookup-macho.log" \
@@ -5486,6 +5805,12 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$EXPECTED_OPENUIKIT_PREVIEW_MACROS_SWIFT_COUNT" \
         "$EXPECTED_OPENSWIFTUI_MACROS_SWIFT_COUNT" \
         "$EXPECTED_CQUARTZ_CPP_COUNT"
+    printf 'AppKit\tsources=%s\tswiftui-interop=%s\texports=%s\texport-sha256=%s\timport-sha256=%s\tapple-golden=%s\tload-contract=%s\n' \
+        "$EXPECTED_APPKIT_SOURCE_COUNT" \
+        "$EXPECTED_SWIFTUI_APPKIT_SOURCE_COUNT" \
+        "$EXPECTED_APPKIT_EXPORT_COUNT" "$EXPECTED_APPKIT_EXPORT_SHA" \
+        "$EXPECTED_APPKIT_IMPORT_SHA" "$(hash_file "$APPKIT_GOLDEN")" \
+        "$(hash_file "$APPKIT_LOAD_IDENTITIES")"
     printf 'swift-foundation\tcommit=%s\ttree=%s\n' \
         "$EXPECTED_FOUNDATION_COMMIT" "$EXPECTED_FOUNDATION_TREE"
     printf 'swift-foundation-icu\tcommit=%s\ttree=%s\tcpp=%s\theaders=%s\n' \
@@ -5683,6 +6008,20 @@ for framework in FoundationEssentials FoundationInternationalization \
     record_module_family framework "$framework"
     record_artifact framework "$framework" dylib "lib/lib$framework.dylib"
 done
+record_artifact framework AppKit abi-json \
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.abi.json
+record_artifact framework AppKit private-swiftinterface \
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.private.swiftinterface
+record_artifact framework AppKit swiftdoc \
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftdoc
+record_artifact framework AppKit swiftinterface \
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftinterface
+record_artifact framework AppKit swiftmodule \
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftmodule
+record_artifact framework AppKit swiftsourceinfo \
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftsourceinfo
+record_artifact framework AppKit dylib \
+    frameworks/AppKit.framework/Versions/C/AppKit
 record_artifact module-metadata QuickLook cross-import-overlay \
     modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay
 record_artifact module-metadata PhotosUI cross-import-overlay \
@@ -5787,6 +6126,8 @@ record_artifact runtime zlib darwin-bridge \
 record_artifact runtime zlib linux-helper guest-root/host/libOpenZlibHost.so
 record_artifact runtime IOKit framework-dylib \
     guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit
+record_artifact runtime AppKit framework-dylib \
+    guest-root/darwin/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit
 record_artifact runtime SwiftIOKit overlay-dylib \
     guest-root/darwin/usr/lib/swift/libswiftIOKit.dylib
 record_artifact runtime OpenFoundationInternationalization darwin-bridge \
@@ -5856,6 +6197,12 @@ record_artifact probe NaturalLanguageGuestRuntime executable \
     probe/NaturalLanguageGuestRuntime
 record_artifact probe AuthenticationServicesGuestRuntime executable \
     probe/AuthenticationServicesGuestRuntime
+record_artifact probe AppKitGuestRuntime executable probe/AppKitGuestRuntime
+record_artifact probe AppKitInterfaceOracle executable probe/AppKitInterfaceOracle
+record_artifact probe SwiftUIAppKitColorRuntime executable \
+    probe/SwiftUIAppKitColorRuntime
+record_artifact probe StoreKitAppKitRuntime executable \
+    probe/StoreKitAppKitRuntime
 record_artifact probe DispatchMachORuntime executable \
     probe/DispatchMachORuntime
 record_artifact probe SwiftUIFoundationReexportProbe executable \
@@ -5962,6 +6309,28 @@ record_artifact attestation NaturalLanguage runtime-log \
     attestation/naturallanguage-runtime.log
 record_artifact attestation AuthenticationServices runtime-log \
     attestation/authenticationservices-runtime.log
+record_artifact attestation AppKit sources-manifest \
+    attestation/appkit-sources.tsv
+record_artifact attestation AppKit framework-contract \
+    attestation/appkit-framework.tsv
+record_artifact attestation AppKit exports \
+    attestation/appkit-exports.txt
+record_artifact attestation AppKit imports \
+    attestation/appkit-imports.txt
+record_artifact attestation AppKit loads \
+    attestation/appkit-loads.txt
+record_artifact attestation AppKit load-identities \
+    attestation/appkit-load-identities.txt
+record_artifact attestation AppKit apple-golden \
+    attestation/appkit-interface-apple.txt
+record_artifact attestation AppKit runtime-log \
+    attestation/AppKitGuestRuntime.log
+record_artifact attestation AppKit apple-differential-log \
+    attestation/AppKitInterfaceOracle.log
+record_artifact attestation AppKit swiftui-runtime-log \
+    attestation/SwiftUIAppKitColorRuntime.log
+record_artifact attestation AppKit storekit-runtime-log \
+    attestation/StoreKitAppKitRuntime.log
 record_artifact attestation dispatch host \
     attestation/open-dispatch-host.tsv
 record_artifact attestation dispatch host-test-log \
@@ -6126,6 +6495,10 @@ write_graphics_sources_attestation "$WORK/graphics-sources.post.tsv"
 cmp "$WORK/graphics-sources.pre.tsv" "$WORK/graphics-sources.post.tsv" \
     || die 'CoreImage/QuartzCore source manifests/files changed during build'
 
+write_appkit_sources_attestation "$WORK/appkit-sources.post.tsv"
+cmp "$WORK/appkit-sources.pre.tsv" "$WORK/appkit-sources.post.tsv" \
+    || die 'AppKit production source manifests/files changed during build'
+
 python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production \
     --support-root "$W" --policy "$FIRST_PARTY_PROVENANCE_POLICY" \
     --output "$WORK/first-party-sources.post.tsv"
@@ -6190,6 +6563,7 @@ WRITE_ARGS=(
     --foundation-sources attestation/foundation-sources.tsv
     --intents-sources attestation/intents-sources.tsv
     --graphics-sources attestation/graphics-sources.tsv
+    --appkit-sources attestation/appkit-sources.tsv
     --webkit-sources attestation/webkit-sources.tsv
     --first-party-sources attestation/first-party-sources.tsv
     --first-party-dylib-loads attestation/first-party-dylib-loads.tsv

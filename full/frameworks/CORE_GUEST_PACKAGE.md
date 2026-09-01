@@ -9,7 +9,7 @@ logic.
 This is production code, not a mock SDK. The package contains the target
 modules and dylibs for FoundationEssentials, OpenCoreGraphics, OpenUIKit,
 OpenCombine, Dispatch, Combine, Symbols, SwiftUI, the app-facing Foundation facade, final
-Foundation-visible UIKit, CoreImage, QuartzCore, Intents, IntentsUI, WebKit,
+Foundation-visible UIKit, AppKit, CoreImage, QuartzCore, Intents, IntentsUI, WebKit,
 LocalAuthentication, SafariServices, Network, StoreKit, AudioToolbox,
 CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI,
 MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, WidgetKit,
@@ -25,9 +25,12 @@ NaturalLanguage is backed by a deterministic Unicode-script and Latin-language
 classifier. The app-facing `zlib` Clang module is backed by a separate
 `libz.dylib`. IOKit is a package-owned Swift overlay over a package-owned
 `IOKit.framework` C module and dylib, with its complete 53-symbol Apple Swift
-runtime contract supplied by a separate `libswiftIOKit.dylib`. Together these
-are sixty-one reusable ARM64 Mach-O platform binaries (fifty-seven Swift framework
-dylibs, IOKit, `libswiftIOKit`, ICU, and zlib), including real
+runtime contract supplied by a separate `libswiftIOKit.dylib`. AppKit is
+published with its canonical
+versioned framework identity rather than as a flat `libAppKit.dylib`.
+Together these are sixty-two reusable ARM64 Mach-O platform binaries
+(fifty-eight Swift framework dylibs, IOKit,
+`libswiftIOKit`, ICU, and zlib), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
@@ -68,10 +71,10 @@ The semantic build order is deliberate:
    final app-facing UIKit module.
 3. Build the portable Dispatch module, OpenCombine, Combine, and the
    first-party Symbols value model while Foundation is hidden.
-4. Compile the ordered app-facing Foundation facade, the package-owned IOKit
-   Swift overlay, and then SwiftUI against that facade so SwiftUI publicly
-   re-exports its overlays and portable Dispatch identity while consuming
-   Symbols.
+4. Compile the ordered app-facing Foundation facade, the versioned AppKit
+   module, the package-owned IOKit Swift overlay, and then SwiftUI against
+   those facades so SwiftUI publicly re-exports its overlays and portable
+   Dispatch identity while consuming Symbols and its AppKit color bridge.
 5. Compile final UIKit after Foundation exists, then prove cross-import
    Notification, NotificationCenter, and OperationQueue identity.
 6. Compile the CoreImage Swift overlay over its explicit Clang
@@ -86,12 +89,14 @@ The semantic build order is deliberate:
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
-10. Build and audit the fail-closed IOKit C framework and complete
-   `libswiftIOKit` runtime boundaries, then link all sixty-one reusable
-   platform binaries: the fifty-nine library-directory dylibs (fifty-seven Swift
-   frameworks, ICU, and zlib) plus IOKit and `libswiftIOKit`. Run the package's
-   Mach-O closure/resource/font and framework-behavior probe through the
-   packaged machorun root.
+10. Build and audit the fail-closed IOKit C framework, complete
+   `libswiftIOKit`, and publish the AppKit versioned framework with exact
+   exports, imports, and load closure. Then link all sixty-two reusable
+   platform binaries: the fifty-nine library-directory dylibs (fifty-seven
+   Swift frameworks, ICU, and zlib) plus IOKit, `libswiftIOKit`, and AppKit.
+   Run the package's Mach-O
+   closure/resource/font and framework-behavior probe through the packaged
+   machorun root.
 11. Run a real asynchronous Mach-O gate covering async main, TaskGroup,
     detached jobs, global/main queues, continuations, and delayed work, then
     run the full loopback URLSession async/continuation/TaskGroup gate.
@@ -292,6 +297,22 @@ carry exactly one `-F frameworks` pair; the link contract carries exactly one
 `-framework IOKit` pair and one `-lswiftIOKit`. Module metadata, compile and
 runtime framework copies, header, module map, and Swift runtime are all
 exhaustively artifact-attested.
+
+`AppKit.framework` is built from the tracked one-source production manifest
+against the portable Foundation/OpenUIKit graph. It publishes the canonical
+install name `/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit`,
+six architecture-qualified Swift module artifacts, and the three conventional
+framework symlinks (`AppKit`, `Modules`, and `Versions/Current`). The compile
+framework and runtime-root binary are byte-identical. Publication freezes all
+198 exports, the complete undefined-import set, and all 16 Mach-O load
+identities. Cold probes exercise its headless application, alert, workspace,
+window, font, and color behavior; compare the ten-row public interface against
+the Xcode 26.1 Apple transcript; and prove SwiftUI `Color(nsColor:)` plus
+StoreKit `purchase(confirmIn:)` interoperation. Linux-only UI, Finder, font
+database, and payment operations fail closed rather than claiming success.
+Both package validators require exactly one `-framework AppKit` link pair,
+refuse `-lAppKit`, validate the exact symlink topology, and reject any
+compile/runtime identity drift.
 
 `full/adservices/tests/test_revenuecat_frontier_guest.sh` additionally hashes
 and compiles the exact untouched RevenueCat 5.86.0 attribution, RCContainer,
@@ -545,7 +566,7 @@ The package is self-contained under these directories:
 sdk/                 copied compile sysroot
 modules/             target Swift modules
 lib/                 reusable ARM64 Mach-O dylibs
-frameworks/          compile-time C frameworks (currently IOKit.framework)
+frameworks/          IOKit C framework and versioned Swift AppKit.framework
 include/             C module maps and headers
 objects/             optional executable-layer objects
 resources/OpenUIKit/ exact runtime JSON/resources plus fonts/
@@ -565,7 +586,9 @@ has:
 - package-root-relative `swift_compile_arguments` and
   `executable_link_arguments` arrays;
 - SHA-256 and byte size for every declared product, every library, and every
-  file below `frameworks`, `resources/OpenUIKit`, and `host-tools`;
+  regular file below `frameworks`, `resources/OpenUIKit`, and `host-tools`;
+- exactly the three canonical AppKit framework symlinks, with no other
+  symlink accepted below `frameworks`;
 - exact tree/provenance manifests and logical OpenUIKit resource/font paths;
 - a nullable bounded `preview` record.
 
@@ -808,7 +831,8 @@ The tests exercise exact Foundation and WebKit ordering, all added
 first-party framework products, WebKit deletion/mutation/load refusal,
 path/symlink refusal, relocation to a path containing spaces, Preview
 placeholder/external-plugin behavior, DTS ownership, resource/library tamper
-detection, and the early/final UIKit ordering hooks.
+detection, the versioned AppKit identity/load/symlink and source-manifest
+mutations, and the early/final UIKit ordering hooks.
 
 The final focused Docker smoke is intentionally separate from the static suite.
 It uses the same one-bind/read-only-root/no-network layout, links minimal ARM64

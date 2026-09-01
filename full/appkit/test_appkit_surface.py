@@ -8,6 +8,9 @@ APPKIT = FULL / "appkit/AppKit.swift"
 SWIFTUI = FULL / "appkit/SwiftUIAppKitCompatibility.swift"
 STOREKIT = FULL / "storekit/StoreKit.swift"
 TESTS = FULL / "appkit/tests"
+CORE_BUILDER = FULL / "frameworks/build_core_guest_package.sh"
+CORE_MANIFEST = FULL / "frameworks/core_package_manifest.py"
+CANONICAL_MANIFEST = FULL / "xcodeplan/core_guest_package.py"
 
 
 class AppKitSurfaceTests(unittest.TestCase):
@@ -182,6 +185,50 @@ class AppKitSurfaceTests(unittest.TestCase):
         ):
             self.assertIn(mutation, mutations)
         self.assertIn("APPKIT_VALIDATOR_MUTATIONS_OK", mutations)
+
+    def test_production_package_owns_the_complete_versioned_appkit_route(self):
+        builder = CORE_BUILDER.read_text(encoding="utf-8")
+        for token in (
+            "APPKIT_SOURCES_MANIFEST=",
+            "SWIFTUI_APPKIT_SOURCES_MANIFEST=",
+            "write_appkit_sources_attestation",
+            "AppKit.framework/Versions/C/AppKit",
+            "-module-name AppKit -module-link-name AppKit",
+            "-enable-library-evolution",
+            "arm64-apple-macos.swiftinterface",
+            'ln -s C "$APPKIT_FRAMEWORK/Versions/Current"',
+            'ln -s Versions/Current/AppKit "$APPKIT_FRAMEWORK/AppKit"',
+            '-install_name "$APPKIT_INSTALL_NAME"',
+            "EXPECTED_APPKIT_EXPORT_COUNT=198",
+            "EXPECTED_APPKIT_EXPORT_SHA=dd9b850d2dcf4deb398752a950248a229",
+            "EXPECTED_APPKIT_IMPORT_SHA=58c8c02cadac24ec680699924a8e4bcc",
+            'cmp "$APPKIT_LOAD_IDENTITIES"',
+            "libSwiftUI AppKit load count",
+            "APPKIT_GUEST_MACHO_OK",
+            "APPKIT_SWIFTUI_COLOR_MACHO_OK",
+            "APPKIT_STOREKIT_MACHO_OK",
+            "attestation/appkit-framework.tsv",
+            "--appkit-sources attestation/appkit-sources.tsv",
+            "-F frameworks -framework AppKit -framework IOKit",
+            'if [ "$framework" = StoreKit ]; then',
+            "expected_appkit_load=1",
+        ):
+            self.assertIn(token, builder)
+        self.assertNotIn("lib/libAppKit.dylib", builder)
+
+        for validator_path in (CORE_MANIFEST, CANONICAL_MANIFEST):
+            validator = validator_path.read_text(encoding="utf-8")
+            for token in (
+                "appkit_sources",
+                "require_appkit_framework_contract",
+                "AppKit.framework/Versions/C/AppKit",
+                "arm64-apple-macos.private.swiftinterface",
+                "AppKit compile/runtime framework identities differ",
+                "Versions/Current/AppKit",
+                "Versions/Current/Modules",
+                "not libAppKit",
+            ):
+                self.assertIn(token, validator)
 
 
 if __name__ == "__main__":

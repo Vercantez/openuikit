@@ -140,6 +140,7 @@ _REQUIRED_MANIFESTS = {
     "foundation_sources",
     "intents_sources",
     "graphics_sources",
+    "appkit_sources",
     "first_party_sources",
     "first_party_dylib_loads",
     "webkit_sources",
@@ -431,6 +432,35 @@ def _require_iokit_framework_contract(
         )
 
 
+def _require_appkit_framework_contract(
+    compile_arguments: list[str], link_arguments: list[str]
+) -> None:
+    compile_pair = ["-F", "frameworks"]
+    compile_count = sum(
+        compile_arguments[index : index + 2] == compile_pair
+        for index in range(len(compile_arguments) - 1)
+    )
+    if compile_count != 1:
+        raise CorePackageError(
+            "swift_compile_arguments must contain the AppKit framework search "
+            "pair exactly once: -F frameworks"
+        )
+    for pair in (["-F", "frameworks"], ["-framework", "AppKit"]):
+        count = sum(
+            link_arguments[index : index + 2] == pair
+            for index in range(len(link_arguments) - 1)
+        )
+        if count != 1:
+            raise CorePackageError(
+                "executable_link_arguments must contain the AppKit framework "
+                f"pair exactly once: {' '.join(pair)}"
+            )
+    if "-lAppKit" in link_arguments:
+        raise CorePackageError(
+            "executable_link_arguments must use -framework AppKit, not -lAppKit"
+        )
+
+
 def _require_cross_import_compile_contract(arguments: list[str]) -> None:
     pair = ["-Xfrontend", "-enable-cross-import-overlays"]
     count = sum(
@@ -685,6 +715,10 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         manifest["swift_compile_arguments"],
         manifest["executable_link_arguments"],
     )
+    _require_appkit_framework_contract(
+        manifest["swift_compile_arguments"],
+        manifest["executable_link_arguments"],
+    )
     if manifest["executable_link_arguments"].count("-Llib") != 1:
         raise CorePackageError("executable_link_arguments must contain -Llib exactly once")
     for required in _REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
@@ -730,6 +764,35 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         }
         verified_artifacts.append({"path": relative, "sha256": actual, "size": size})
     manifest["artifacts"] = verified_artifacts
+
+    appkit_compile_path = (
+        f"{paths['frameworks']}/AppKit.framework/Versions/C/AppKit"
+    )
+    appkit_runtime_path = (
+        f"{paths['guest_root']}/darwin/System/Library/Frameworks/"
+        "AppKit.framework/Versions/C/AppKit"
+    )
+    appkit_required_records = {
+        appkit_compile_path: ("framework", "AppKit", "dylib"),
+        appkit_runtime_path: ("runtime", "AppKit", "framework-dylib"),
+    }
+    for relative, expected_record in appkit_required_records.items():
+        record = artifact_records.get(relative)
+        if record is None or (
+            record["category"], record["name"], record["role"]
+        ) != expected_record:
+            raise CorePackageError(
+                f"AppKit versioned framework artifact contract differs: {relative}"
+            )
+    if (
+        artifact_records[appkit_compile_path]["sha256"]
+        != artifact_records[appkit_runtime_path]["sha256"]
+    ):
+        raise CorePackageError("AppKit compile/runtime framework identities differ")
+    if f"{paths['libraries']}/libAppKit.dylib" in artifact_records:
+        raise CorePackageError(
+            "AppKit must use its versioned framework identity, not libAppKit"
+        )
 
     raw_plugins = _array(manifest.get("compiler_plugins"), "compiler_plugins")
     if not raw_plugins:
@@ -983,6 +1046,14 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"{paths['guest_root']}/darwin/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
             f"{paths['guest_root']}/darwin/usr/lib/swift/libswiftIOKit.dylib",
             f"{paths['modules']}/IOKit.swiftmodule",
+            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.abi.json",
+            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.private.swiftinterface",
+            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftdoc",
+            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftinterface",
+            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftmodule",
+            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftsourceinfo",
+            appkit_compile_path,
+            appkit_runtime_path,
         }
     )
     if preview is not None:
@@ -992,17 +1063,37 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         required_artifacts.add(preview["developer_tools_support_object"])
     for directory_key in ("libraries", "frameworks", "resources", "host_tools"):
         directory = physical_paths[directory_key]
+        expected_framework_symlinks = {
+            "AppKit.framework/AppKit": "Versions/Current/AppKit",
+            "AppKit.framework/Modules": "Versions/Current/Modules",
+            "AppKit.framework/Versions/Current": "C",
+        }
+        observed_framework_symlinks: dict[str, str] = {}
         for candidate in directory.rglob("*"):
             if candidate.is_symlink():
-                raise CorePackageError(
-                    f"paths.{directory_key} contains a symlink: {candidate}"
+                relative_to_directory = candidate.relative_to(directory).as_posix()
+                if directory_key != "frameworks":
+                    raise CorePackageError(
+                        f"paths.{directory_key} contains a symlink: {candidate}"
+                    )
+                observed_framework_symlinks[relative_to_directory] = os.readlink(
+                    candidate
                 )
+                continue
             if candidate.is_file():
                 required_artifacts.add(candidate.relative_to(root).as_posix())
             elif not candidate.is_dir():
                 raise CorePackageError(
                     f"paths.{directory_key} contains an unsupported node: {candidate}"
                 )
+        if directory_key == "frameworks" and (
+            observed_framework_symlinks != expected_framework_symlinks
+        ):
+            raise CorePackageError(
+                "paths.frameworks AppKit symlink contract differs: "
+                f"observed={observed_framework_symlinks} "
+                f"expected={expected_framework_symlinks}"
+            )
     missing_artifacts = sorted(required_artifacts - seen)
     if missing_artifacts:
         raise CorePackageError(

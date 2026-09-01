@@ -31,6 +31,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "lib",
             "frameworks/IOKit.framework/Headers",
             "frameworks/IOKit.framework/Modules",
+            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule",
             "include",
             "include/CPortableIO",
             "include/CoreImage",
@@ -47,6 +48,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "guest-root/darwin/usr/lib",
             "guest-root/darwin/usr/lib/swift",
             "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A",
+            "guest-root/darwin/System/Library/Frameworks/AppKit.framework/Versions/C",
             "guest-root/host",
             "guest-root",
             "host-tools/swift/host/plugins",
@@ -89,6 +91,14 @@ class CoreGuestPackageTests(unittest.TestCase):
             "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay",
             "modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay",
             "modules/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay",
+            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.abi.json",
+            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.private.swiftinterface",
+            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftdoc",
+            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftinterface",
+            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftmodule",
+            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftsourceinfo",
+            "frameworks/AppKit.framework/Versions/C/AppKit",
+            "guest-root/darwin/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
             "host-tools/swift/host/plugins/libObservationMacros.so",
             "host-tools/swift/host/plugins/libFoundationMacros.so",
             "host-tools/swift/host/plugins/libSwiftDataMacros.so",
@@ -223,6 +233,19 @@ class CoreGuestPackageTests(unittest.TestCase):
         for relative in required_files:
             target = self.root / relative
             target.write_bytes((relative + "\n").encode("utf-8"))
+        (self.root / "guest-root/darwin/System/Library/Frameworks/"
+         "AppKit.framework/Versions/C/AppKit").write_bytes(
+            (self.root / "frameworks/AppKit.framework/Versions/C/AppKit").read_bytes()
+        )
+        os.symlink(
+            "C", self.root / "frameworks/AppKit.framework/Versions/Current"
+        )
+        os.symlink(
+            "Versions/Current/AppKit", self.root / "frameworks/AppKit.framework/AppKit"
+        )
+        os.symlink(
+            "Versions/Current/Modules", self.root / "frameworks/AppKit.framework/Modules"
+        )
         self.sdk_tree = self.root / "attestation/sdk-tree.tsv"
         self.sdk_tree.write_bytes(
             b"format\tcore-tree-v1\ndirectory\tsdk\tempty=yes\n"
@@ -234,6 +257,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "foundation-sources",
             "intents-sources",
             "graphics-sources",
+            "appkit-sources",
             "first-party-sources",
             "first-party-dylib-loads",
             "webkit-sources",
@@ -350,6 +374,29 @@ class CoreGuestPackageTests(unittest.TestCase):
                 category, name, role = "runtime", "SwiftIOKit", "overlay-dylib"
             elif relative == "modules/IOKit.swiftmodule":
                 category, name, role = "framework", "IOKit", "swiftmodule"
+            elif relative.startswith(
+                "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/"
+            ):
+                category, name = "framework", "AppKit"
+                role = {
+                    ".abi.json": "abi-json",
+                    ".private.swiftinterface": "private-swiftinterface",
+                    ".swiftdoc": "swiftdoc",
+                    ".swiftinterface": "swiftinterface",
+                    ".swiftmodule": "swiftmodule",
+                    ".swiftsourceinfo": "swiftsourceinfo",
+                }[next(suffix for suffix in (
+                    ".private.swiftinterface",
+                    ".swiftinterface",
+                    ".swiftsourceinfo",
+                    ".swiftmodule",
+                    ".swiftdoc",
+                    ".abi.json",
+                ) if relative.endswith(suffix))]
+            elif relative == "frameworks/AppKit.framework/Versions/C/AppKit":
+                category, name, role = "framework", "AppKit", "dylib"
+            elif relative.endswith("/AppKit.framework/Versions/C/AppKit"):
+                category, name, role = "runtime", "AppKit", "framework-dylib"
             artifacts.append(
                 {
                     "category": category,
@@ -374,6 +421,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "@executable_path/../Frameworks",
                 "-F",
                 "frameworks",
+                "-framework",
+                "AppKit",
                 "-framework",
                 "IOKit",
                 "-lswiftIOKit",
@@ -680,6 +729,93 @@ class CoreGuestPackageTests(unittest.TestCase):
             core_guest_package.validate(self.root)
         self.write_manifest(self.manifest)
 
+    def test_refuses_missing_or_unattested_versioned_appkit_framework(self) -> None:
+        for relative in (
+            "frameworks/AppKit.framework/Versions/C/Modules/"
+            "AppKit.swiftmodule/arm64-apple-macos.abi.json",
+            "frameworks/AppKit.framework/Versions/C/Modules/"
+            "AppKit.swiftmodule/arm64-apple-macos.private.swiftinterface",
+            "frameworks/AppKit.framework/Versions/C/Modules/"
+            "AppKit.swiftmodule/arm64-apple-macos.swiftdoc",
+            "frameworks/AppKit.framework/Versions/C/Modules/"
+            "AppKit.swiftmodule/arm64-apple-macos.swiftinterface",
+            "frameworks/AppKit.framework/Versions/C/Modules/"
+            "AppKit.swiftmodule/arm64-apple-macos.swiftmodule",
+            "frameworks/AppKit.framework/Versions/C/Modules/"
+            "AppKit.swiftmodule/arm64-apple-macos.swiftsourceinfo",
+            "frameworks/AppKit.framework/Versions/C/AppKit",
+            "guest-root/darwin/System/Library/Frameworks/"
+            "AppKit.framework/Versions/C/AppKit",
+        ):
+            with self.subTest(relative=relative):
+                changed = copy.deepcopy(self.manifest)
+                changed["artifacts"] = [
+                    artifact
+                    for artifact in changed["artifacts"]
+                    if artifact["path"] != relative
+                ]
+                target = self.root / relative
+                payload = target.read_bytes()
+                target.unlink()
+                self.write_manifest(changed)
+                with self.assertRaisesRegex(
+                    core_guest_package.CorePackageError,
+                    "AppKit versioned framework artifact|required artifact",
+                ):
+                    core_guest_package.validate(self.root)
+                target.write_bytes(payload)
+                self.write_manifest(self.manifest)
+
+    def test_refuses_appkit_identity_link_and_symlink_drift(self) -> None:
+        runtime_relative = (
+            "guest-root/darwin/System/Library/Frameworks/"
+            "AppKit.framework/Versions/C/AppKit"
+        )
+        runtime = self.root / runtime_relative
+        runtime.write_bytes(b"different AppKit runtime\n")
+        changed = copy.deepcopy(self.manifest)
+        runtime_record = next(
+            artifact
+            for artifact in changed["artifacts"]
+            if artifact["path"] == runtime_relative
+        )
+        runtime_record["sha256"] = sha256(runtime)
+        runtime_record["size"] = runtime.stat().st_size
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "AppKit compile/runtime framework identities differ",
+        ):
+            core_guest_package.validate(self.root)
+        runtime.write_bytes(
+            (self.root / "frameworks/AppKit.framework/Versions/C/AppKit").read_bytes()
+        )
+        self.write_manifest(self.manifest)
+
+        changed = copy.deepcopy(self.manifest)
+        appkit_index = next(
+            index
+            for index in range(len(changed["executable_link_arguments"]) - 1)
+            if changed["executable_link_arguments"][index : index + 2]
+            == ["-framework", "AppKit"]
+        )
+        del changed["executable_link_arguments"][appkit_index : appkit_index + 2]
+        changed["executable_link_arguments"].append("-lAppKit")
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError, "AppKit framework pair"
+        ):
+            core_guest_package.validate(self.root)
+        self.write_manifest(self.manifest)
+
+        link = self.root / "frameworks/AppKit.framework/AppKit"
+        link.unlink()
+        os.symlink("Versions/C/AppKit", link)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError, "AppKit symlink contract differs"
+        ):
+            core_guest_package.validate(self.root)
+
     def test_refuses_artifact_mutation_and_path_symlink(self) -> None:
         (self.root / "lib/libUIKit.dylib").write_text("changed\n", encoding="utf-8")
         with self.assertRaisesRegex(core_guest_package.CorePackageError, "artifact changed"):
@@ -786,6 +922,16 @@ class CoreGuestPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(
             core_guest_package.CorePackageError,
             "omits required manifests: graphics_sources",
+        ):
+            core_guest_package.validate(self.root)
+
+    def test_refuses_missing_appkit_source_manifest(self) -> None:
+        changed = copy.deepcopy(self.manifest)
+        del changed["manifests"]["appkit_sources"]
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "omits required manifests: appkit_sources",
         ):
             core_guest_package.validate(self.root)
 

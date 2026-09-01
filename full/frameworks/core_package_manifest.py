@@ -70,6 +70,7 @@ REQUIRED_MANIFESTS = {
     "foundation_sources",
     "intents_sources",
     "graphics_sources",
+    "appkit_sources",
     "first_party_sources",
     "first_party_dylib_loads",
     "webkit_sources",
@@ -149,6 +150,7 @@ FRAMEWORKS = (
     "AuthenticationServices",
     "FoundationModels",
 )
+VERSIONED_FRAMEWORKS = ("AppKit",)
 REQUIRED_FRAMEWORK_LINK_ARGUMENTS = (
     tuple(f"-l{name}" for name in FRAMEWORKS) + ("-lz",)
 )
@@ -841,6 +843,77 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
             "IOKit framework boundary artifacts are absent: "
             + ", ".join(path for _category, _role, path in missing_iokit)
         )
+    required_appkit = {
+        (
+            "framework",
+            "abi-json",
+            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.abi.json",
+        ),
+        (
+            "framework",
+            "private-swiftinterface",
+            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.private.swiftinterface",
+        ),
+        (
+            "framework",
+            "swiftdoc",
+            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftdoc",
+        ),
+        (
+            "framework",
+            "swiftinterface",
+            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftinterface",
+        ),
+        (
+            "framework",
+            "swiftmodule",
+            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftmodule",
+        ),
+        (
+            "framework",
+            "swiftsourceinfo",
+            "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftsourceinfo",
+        ),
+        (
+            "framework",
+            "dylib",
+            "frameworks/AppKit.framework/Versions/C/AppKit",
+        ),
+        (
+            "runtime",
+            "framework-dylib",
+            "guest-root/darwin/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
+        ),
+    }
+    actual_appkit = {
+        (str(item["category"]), str(item["role"]), str(item["path"]))
+        for item in artifacts
+        if item["name"] == "AppKit"
+    }
+    missing_appkit = sorted(required_appkit - actual_appkit)
+    if missing_appkit:
+        refuse(
+            "AppKit versioned framework boundary artifacts are absent: "
+            + ", ".join(path for _category, _role, path in missing_appkit)
+        )
+    appkit_compile = next(
+        item
+        for item in artifacts
+        if item["path"] == "frameworks/AppKit.framework/Versions/C/AppKit"
+    )
+    appkit_runtime = next(
+        item
+        for item in artifacts
+        if item["path"]
+        == "guest-root/darwin/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit"
+    )
+    if (
+        appkit_compile["sha256"] != appkit_runtime["sha256"]
+        or appkit_compile["size"] != appkit_runtime["size"]
+    ):
+        refuse("AppKit compile/runtime framework identities differ")
+    if any(item["path"] == "lib/libAppKit.dylib" for item in artifacts):
+        refuse("AppKit must use its versioned framework identity, not libAppKit")
     if not any(
         item["category"] == "runtime"
         and item["name"] == "CQuartz"
@@ -1016,6 +1089,33 @@ def require_iokit_framework_contract(
         )
 
 
+def require_appkit_framework_contract(
+    compile_tokens: list[str], link_tokens: list[str]
+) -> None:
+    compile_pair = ["-F", "frameworks"]
+    compile_count = sum(
+        compile_tokens[index : index + 2] == compile_pair
+        for index in range(len(compile_tokens) - 1)
+    )
+    if compile_count != 1:
+        refuse(
+            "compile flags must contain the AppKit framework search pair "
+            "exactly once: -F frameworks"
+        )
+    for pair in (["-F", "frameworks"], ["-framework", "AppKit"]):
+        count = sum(
+            link_tokens[index : index + 2] == pair
+            for index in range(len(link_tokens) - 1)
+        )
+        if count != 1:
+            refuse(
+                "link inputs must contain the AppKit framework pair exactly "
+                f"once: {' '.join(pair)}"
+            )
+    if "-lAppKit" in link_tokens:
+        refuse("link inputs must use -framework AppKit, not -lAppKit")
+
+
 def require_cross_import_compile_contract(tokens: list[str]) -> None:
     pair = ["-Xfrontend", "-enable-cross-import-overlays"]
     count = sum(
@@ -1033,20 +1133,34 @@ def require_exhaustive_artifact_tree(
     package: Path,
     artifacts: list[dict[str, object]],
     relative_root: str,
+    expected_symlinks: dict[str, str] | None = None,
 ) -> None:
     root = package / safe_relative(relative_root, "exhaustive tree root")
     require_directory_no_link(root, f"exhaustive artifact tree {relative_root}")
     physical: set[str] = set()
+    observed_symlinks: dict[str, str] = {}
     for directory, names, files in os.walk(root, followlinks=False):
         directory_path = Path(directory)
-        for name in names:
+        for name in list(names):
             candidate = directory_path / name
             if candidate.is_symlink():
-                refuse(f"symlink in exhaustive artifact tree: {candidate}")
+                relative = candidate.relative_to(root).as_posix()
+                observed_symlinks[relative] = os.readlink(candidate)
+                names.remove(name)
         for name in files:
             candidate = directory_path / name
+            if candidate.is_symlink():
+                relative = candidate.relative_to(root).as_posix()
+                observed_symlinks[relative] = os.readlink(candidate)
+                continue
             require_regular_no_link(candidate, "exhaustive tree file")
             physical.add(candidate.relative_to(package).as_posix())
+    expected_symlinks = expected_symlinks or {}
+    if observed_symlinks != expected_symlinks:
+        refuse(
+            f"symlink contract drifted under {relative_root}: "
+            f"observed={observed_symlinks} expected={expected_symlinks}"
+        )
     recorded = {
         str(item["path"])
         for item in artifacts
@@ -1213,7 +1327,16 @@ def validate_document(
         if path.stat().st_size != size:
             refuse(f"JSON artifact size drifted: {relative}")
     require_exhaustive_artifact_tree(package, artifacts, "lib")
-    require_exhaustive_artifact_tree(package, artifacts, "frameworks")
+    require_exhaustive_artifact_tree(
+        package,
+        artifacts,
+        "frameworks",
+        {
+            "AppKit.framework/AppKit": "Versions/Current/AppKit",
+            "AppKit.framework/Modules": "Versions/Current/Modules",
+            "AppKit.framework/Versions/Current": "C",
+        },
+    )
     require_exhaustive_artifact_tree(package, artifacts, "resources/OpenUIKit")
     require_exhaustive_artifact_tree(package, artifacts, "host-tools")
     manifests = document.get("manifests")
@@ -1287,6 +1410,7 @@ def validate_document(
     require_cferror_compile_contract(compile_tokens)
     require_frontier_c_compile_contract(compile_tokens)
     require_iokit_framework_contract(compile_tokens, link_tokens)
+    require_appkit_framework_contract(compile_tokens, link_tokens)
     require_cross_import_compile_contract(compile_tokens)
     for required in REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
         if link_tokens.count(required) != 1:
@@ -1439,6 +1563,7 @@ def write_command(args: argparse.Namespace) -> None:
     require_cferror_compile_contract(compile_tokens)
     require_frontier_c_compile_contract(compile_tokens)
     require_iokit_framework_contract(compile_tokens, link_tokens)
+    require_appkit_framework_contract(compile_tokens, link_tokens)
     require_cross_import_compile_contract(compile_tokens)
     if link_tokens.count("-Llib") != 1:
         refuse("link inputs must contain -Llib exactly once")
@@ -1462,7 +1587,7 @@ def write_command(args: argparse.Namespace) -> None:
         )
 
     frameworks: dict[str, list[dict[str, str]]] = {}
-    for name in FRAMEWORKS:
+    for name in FRAMEWORKS + VERSIONED_FRAMEWORKS:
         frameworks[name] = [
             item for item in artifacts if item["category"] == "framework" and item["name"] == name
         ]
@@ -1496,6 +1621,9 @@ def write_command(args: argparse.Namespace) -> None:
             "intents_sources": checked_manifest(package, args.intents_sources, "Intents sources"),
             "graphics_sources": checked_manifest(
                 package, args.graphics_sources, "CoreImage/QuartzCore sources"
+            ),
+            "appkit_sources": checked_manifest(
+                package, args.appkit_sources, "AppKit production sources"
             ),
             "first_party_sources": checked_manifest(
                 package, args.first_party_sources, "first-party sources"
@@ -1601,6 +1729,7 @@ def parser() -> argparse.ArgumentParser:
     write.add_argument("--foundation-sources", required=True)
     write.add_argument("--intents-sources", required=True)
     write.add_argument("--graphics-sources", required=True)
+    write.add_argument("--appkit-sources", required=True)
     write.add_argument("--first-party-sources", required=True)
     write.add_argument("--first-party-dylib-loads", required=True)
     write.add_argument("--webkit-sources", required=True)

@@ -58,3 +58,13 @@ of ten independent corruptions, including framework/runtime bytes, missing
 module, export/load attestations, Apple transcript, completion record,
 framework link, install identity, and binary load closure. Its temporary
 copies are removed exactly after the proof.
+
+The same contract is now part of the production core package builder rather
+than remaining a focused sidecar. Production emits the six target-qualified
+module artifacts and canonical three-symlink versioned framework, installs a
+byte-identical copy into the machorun root, links SwiftUI and StoreKit through
+that identity, and cold-runs all four AppKit/SwiftUI/StoreKit probes before
+publication. Both the creation-time and canonical consumer validators require
+the AppKit source attestation, versioned artifact family, exact symlinks,
+compile/runtime hash identity, and `-framework AppKit`; a flat
+`libAppKit.dylib` is explicitly refused.
