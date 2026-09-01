@@ -92,6 +92,16 @@ func runFoundationHackersCompatibilityProbe(resourceRoot: String) -> String {
         NSIntersectionRange(firstRange, NSRange(location: 7, length: 1))
             == NSRange(location: 0, length: 0)
     )
+    let sortDescriptor = NSSortDescriptor(
+        key: "creationDate",
+        ascending: false
+    )
+    precondition(sortDescriptor.key == "creationDate")
+    precondition(!sortDescriptor.ascending)
+    let reversedSortDescriptor =
+        sortDescriptor.reversedSortDescriptor as! NSSortDescriptor
+    precondition(reversedSortDescriptor.key == "creationDate")
+    precondition(reversedSortDescriptor.ascending)
     var attributed = AttributedString("portable")
     attributed.inlinePresentationIntent = [.emphasized, .code]
     precondition(attributed.inlinePresentationIntent == [.emphasized, .code])

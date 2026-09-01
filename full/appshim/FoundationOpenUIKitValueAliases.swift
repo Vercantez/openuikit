@@ -95,6 +95,30 @@ public extension NSRange {
     }
 }
 
+// MARK: - Sort descriptors
+
+/// The app-facing Foundation identity for an Objective-C key sort descriptor.
+///
+/// Open-source Foundation provides the generic `SortDescriptor`, while
+/// Apple's Foundation overlay also exposes this reference type. The portable
+/// Photos implementation consumes the key and direction directly, so it can
+/// preserve the caller's ordering request without pretending that arbitrary
+/// Objective-C key-value lookup is available.
+open class NSSortDescriptor: NSObject, @unchecked Sendable {
+    public let key: String?
+    public let ascending: Bool
+
+    public init(key: String?, ascending: Bool) {
+        self.key = key
+        self.ascending = ascending
+        super.init()
+    }
+
+    open var reversedSortDescriptor: Any {
+        NSSortDescriptor(key: key, ascending: !ascending)
+    }
+}
+
 // MARK: - Objective-C runtime name conversion
 
 // The Foundation overlay owns these string/name conversion APIs on Apple
