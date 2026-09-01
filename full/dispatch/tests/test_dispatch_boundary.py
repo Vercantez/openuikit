@@ -25,6 +25,13 @@ class DispatchBoundaryTests(unittest.TestCase):
         self.assertIn("unminted global queue pointer crossed the ELF boundary", source)
         self.assertIn("dispatch_async_f(checked_queue", source)
         self.assertIn("dispatch_main();", source)
+        self.assertIn("OPENUI_DISPATCH_QUEUE_CUSTOM_V1", source)
+        self.assertIn("remember_custom_queue(queue)", source)
+        self.assertIn("unminted custom queue pointer crossed the ELF boundary", source)
+        self.assertIn("dispatch_barrier_sync_f(checked", source)
+        self.assertIn("/sys/fs/cgroup/memory.current", source)
+        self.assertIn("/proc/meminfo", source)
+        self.assertIn("OPENUI_DISPATCH_MEMORY_PRESSURE", source)
         header = (ROOT / "full/dispatch/include/OpenDispatchABI.h").read_text(
             encoding="utf-8"
         )
@@ -41,6 +48,36 @@ class DispatchBoundaryTests(unittest.TestCase):
         self.assertIn("openui_dispatch_v1_async", source)
         self.assertIn("Unmanaged.passRetained", source)
         self.assertNotIn("work()", source)
+
+    def test_custom_queues_sync_and_sources_are_real_surfaces(self) -> None:
+        source = (ROOT / "full/dispatch/Dispatch.swift").read_text(encoding="utf-8")
+        for token in (
+            "public struct Attributes: OptionSet",
+            "public init(\n        label: String,",
+            "public func sync<Result>",
+            "withoutActuallyEscaping(work)",
+            "public protocol DispatchSourceMemoryPressure",
+            "public protocol DispatchSourceTimer",
+            "makeMemoryPressureSource",
+            "makeTimerSource",
+            "_openuiDispatchMemoryPressure()",
+            "queue.asyncAfter(deadline:",
+        ):
+            self.assertIn(token, source)
+        self.assertNotIn("typealias DispatchSourceMemoryPressure", source)
+
+        runtime = (
+            ROOT / "full/dispatch/tests/DispatchMachORuntime.swift"
+        ).read_text(encoding="utf-8")
+        for token in (
+            "attributes: .concurrent",
+            "sync(flags: .barrier)",
+            "throw ExpectedSyncError.value",
+            "pressureSource.activate()",
+            "oneShot.resume()",
+            "cancelledSource.cancel()",
+        ):
+            self.assertIn(token, runtime)
 
     def test_portable_queue_is_the_opencombine_scheduler(self) -> None:
         source = (ROOT / "full/dispatch/Dispatch.swift").read_text(encoding="utf-8")
