@@ -671,6 +671,10 @@ class PackageFixture:
         for framework in FRAMEWORKS:
             write_file(root / f"modules/{framework}.swiftmodule", framework)
             write_file(root / f"lib/lib{framework}.dylib", f"dylib:{framework}")
+        write_file(
+            root / "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay",
+            "_QuickLook_SwiftUI\n",
+        )
         for dependency in DEPENDENCIES:
             write_file(root / f"modules/{dependency}.swiftmodule", dependency)
         write_file(root / "include/CoreImage/CoreImage.h", "umbrella")
@@ -937,6 +941,14 @@ class PackageFixture:
             records.append(
                 self._artifact("framework", framework, "dylib", f"lib/lib{framework}.dylib")
             )
+        records.append(
+            self._artifact(
+                "module-metadata",
+                "QuickLook",
+                "cross-import-overlay",
+                "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay",
+            )
+        )
         for dependency in DEPENDENCIES:
             records.append(
                 self._artifact(
@@ -1173,6 +1185,46 @@ class PackageContractTests(unittest.TestCase):
         run_tool("verify", "--package-root", str(relocated))
         summary = run_canonical(relocated)
         self.assertIn("preview=no", summary.stdout)
+
+    def test_cross_import_overlay_is_typed_and_unknown_category_is_refused(self) -> None:
+        fixture = self.fixture(False)
+        document = json.loads(
+            (fixture.root / "attestation/core-package.json").read_text()
+        )
+        overlays = [
+            artifact
+            for artifact in document["artifacts"]
+            if artifact["category"] == "module-metadata"
+        ]
+        self.assertEqual(
+            overlays,
+            [
+                {
+                    "category": "module-metadata",
+                    "name": "QuickLook",
+                    "path": "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay",
+                    "role": "cross-import-overlay",
+                    "sha256": sha256(
+                        fixture.root
+                        / "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay"
+                    ),
+                    "size": len("_QuickLook_SwiftUI\n"),
+                }
+            ],
+        )
+
+        ledger = fixture.root / "attestation/artifacts.tsv"
+        ledger.write_text(
+            ledger.read_text(encoding="utf-8").replace(
+                "module-metadata\tQuickLook\t",
+                "module_metadata\tQuickLook\t",
+                1,
+            ),
+            encoding="utf-8",
+            newline="\n",
+        )
+        refusal = fixture.write_manifest(expected=2)
+        self.assertIn("unknown artifact category", refusal.stderr)
 
     def test_compiler_plugin_manifest_is_structured_and_relocatable(self) -> None:
         fixture = self.fixture(False)

@@ -142,6 +142,7 @@ MODULE_DEPENDENCIES = (
 )
 ARTIFACT_CATEGORIES = {
     "framework",
+    "module-metadata",
     "module-dependency",
     "include",
     "object",
