@@ -182,12 +182,19 @@ class NotificationGuestAliasTests(unittest.TestCase):
     def test_full_build_enforces_early_identity_probe_order(self) -> None:
         build = (ROOT / "full/scripts/build_full.sh").read_text()
         openuikit = build.index("-module-name OpenUIKit")
-        uikit = build.index("-module-name UIKit", openuikit)
-        foundation = build.index("-module-name Foundation", uikit)
-        identity = build.index("-module-name NotificationGuestIdentityProbe", foundation)
-        self.assertLess(openuikit, uikit)
-        self.assertLess(uikit, foundation)
+        foundation = build.index("-module-name Foundation", openuikit)
+        developer_tools = build.index("-module-name DeveloperToolsSupport", foundation)
+        uikit = build.index("-module-name UIKit", developer_tools)
+        identity = build.index("-module-name NotificationGuestIdentityProbe", uikit)
+        self.assertLess(openuikit, foundation)
+        self.assertLess(foundation, developer_tools)
+        self.assertLess(developer_tools, uikit)
         self.assertLess(foundation, identity)
+        uikit_command = next(
+            line for line in logical_shell_lines(build)
+            if "-module-name UIKit" in line
+        )
+        self.assertNotIn('"$APPINC"', uikit_command)
         for probe in (FOUNDATION_PROBE, UIKIT_PROBE, DIRECT_PROBE):
             self.assertEqual(build.count(probe.name), 1)
 

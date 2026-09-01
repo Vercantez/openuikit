@@ -1933,7 +1933,17 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("PREVIEW_INPUT_COUNT", source)
         self.assertIn("${PREVIEW_SWIFT_FLAGS[@]}", source)
         self.assertIn("${PREVIEW_LINK_OBJECTS[@]}", source)
-        self.assertLess(source.index("literal UIKit shim"), source.index("app-only Foundation identity shim"))
+        self.assertLess(
+            source.index("app-only Foundation identity shim"),
+            source.index("DeveloperToolsSupport (canonical target module)"),
+        )
+        self.assertLess(
+            source.index("DeveloperToolsSupport (canonical target module)"),
+            source.index("literal UIKit shim"),
+        )
+        literal_uikit = source[source.index("literal UIKit shim"):]
+        literal_uikit = literal_uikit[:literal_uikit.index("literal UIKit IndexPath")]
+        self.assertNotIn('-I "$APPINC"', literal_uikit)
 
     def test_every_preview_plugin_compile_is_single_job_and_mutation_refuses(self) -> None:
         builder = BUILDER.read_text(encoding="utf-8")

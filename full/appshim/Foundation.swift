@@ -37,8 +37,13 @@
 // invisible OpenUIKit build.
 import OpenUIKit
 
-/// The one name the app source needs. OpenUIKit's Foundation-free fallback is
-/// opaque on purpose: no archive decoding exists, and the app probes never
-/// invoke it. Sharing the identity is nevertheless essential for Swift's
-/// required/designated/convenience initializer inheritance rules.
+/// The archive identity needed by the original app probe. OpenUIKit's
+/// Foundation-free fallback is opaque on purpose: no archive decoding exists,
+/// but sharing the identity is essential for required initializer inheritance.
 public typealias NSCoder = OpenUIKit.NSCoder
+
+/// DeveloperToolsSupport's asset-resource value is compiled after OpenUIKit
+/// and before the complete app-facing Foundation facade. It must name the
+/// exact bundle identity OpenUIKit uses rather than inventing a parallel
+/// placeholder or making the target depend on the later full facade.
+public typealias Bundle = OpenUIKit.Bundle

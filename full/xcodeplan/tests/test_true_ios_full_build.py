@@ -131,6 +131,14 @@ class TrueIOSFullBuildContractTests(unittest.TestCase):
         self.assertIn('-module-name DeveloperToolsSupport', builder)
         self.assertIn('$UIKIT/Sources/DeveloperToolsSupport/Preview.swift', builder)
         self.assertIn('PREVIEW_LINK_OBJECTS=("$DTS_OUT/developertoolsupport.o")', builder)
+        foundation = builder.index("== app-only Foundation identity shim")
+        developer_tools = builder.index(
+            "== DeveloperToolsSupport (canonical target module)", foundation
+        )
+        uikit = builder.index("== literal UIKit shim", developer_tools)
+        self.assertLess(foundation, developer_tools)
+        self.assertLess(developer_tools, uikit)
+        self.assertIn('-I "$OUT" -I "$APPINC"', builder[foundation:uikit])
         subject = UIHELPERS_SUBJECT_PATH.read_text(encoding="utf-8")
         self.assertIn('"$UIKIT/Sources/DeveloperToolsSupport"', subject)
 

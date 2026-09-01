@@ -605,19 +605,6 @@ CINC=(-Xcc -I"$OUT/inc/CPortableIO" -Xcc -I"$OUT/inc/CSTBTrueType"
 # canonical target source here and links it into both proof binaries. Disabled
 # mode intentionally does neither; its ownership token is accepted only for the
 # core-package route that builds DTS after the Foundation visibility boundary.
-if [ "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE" = standalone ]; then
-    DTS_OUT=$OUT/developertoolsupport
-    mkdir -p "$DTS_OUT"
-    echo "== DeveloperToolsSupport (canonical target module)"
-    "${SWIFTC[@]}" -parse-as-library \
-        -module-name DeveloperToolsSupport \
-        -emit-module -emit-module-path "$DTS_OUT/DeveloperToolsSupport.swiftmodule" \
-        -emit-object -o "$DTS_OUT/developertoolsupport.o" \
-        "$UIKIT/Sources/DeveloperToolsSupport/Preview.swift"
-    PREVIEW_SWIFT_FLAGS=(-I "$DTS_OUT")
-    PREVIEW_LINK_OBJECTS=("$DTS_OUT/developertoolsupport.o")
-fi
-
 # ---- FoundationEssentials: built here, not borrowed as a stale object -------
 # This is the production full path. Every invocation rebuilds the exact pinned
 # upstream sources, stages their modules beside OpenUIKit, and later links all
@@ -744,6 +731,33 @@ UIKITINC=$OUT/uikitinc
 APPINC=$OUT/appinc
 rm -rf "$UIKITINC" "$APPINC"
 mkdir -p "$UIKITINC" "$APPINC"
+
+# The narrow Foundation identity module is physically built now so canonical
+# DeveloperToolsSupport can use OpenUIKit's exact Bundle. It remains invisible
+# to the UIKit invocation below because APPINC is deliberately absent from
+# that command's search path; the Foundation-hidden UIKit branch is therefore
+# still a compile-time property rather than an ordering accident.
+echo "== app-only Foundation identity shim"
+"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" -I "$OUT" \
+    -module-name Foundation -emit-module -emit-module-path "$APPINC/Foundation.swiftmodule" \
+    -emit-object -o "$OUT/foundation.o" \
+    "$W/full/appshim/Foundation.swift" \
+    "$W/full/appshim/FoundationOpenUIKitAliases.swift"
+
+if [ "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE" = standalone ]; then
+    DTS_OUT=$OUT/developertoolsupport
+    mkdir -p "$DTS_OUT"
+    echo "== DeveloperToolsSupport (canonical target module)"
+    "${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" \
+        -I "$OUT" -I "$APPINC" \
+        -module-name DeveloperToolsSupport \
+        -emit-module -emit-module-path "$DTS_OUT/DeveloperToolsSupport.swiftmodule" \
+        -emit-object -o "$DTS_OUT/developertoolsupport.o" \
+        "$UIKIT/Sources/DeveloperToolsSupport/Preview.swift"
+    PREVIEW_SWIFT_FLAGS=(-I "$DTS_OUT")
+    PREVIEW_LINK_OBJECTS=("$DTS_OUT/developertoolsupport.o")
+fi
+
 echo "== literal UIKit shim (FoundationEssentials branch, actual /uikit source)"
 "${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" \
     "${PREVIEW_SWIFT_FLAGS[@]}" -I "$OUT" \
@@ -760,19 +774,10 @@ echo "== literal UIKit IndexPath compile proof"
     -emit-object -o "$OUT/literal_uikit_indexpath_probe.o" \
     "$W/full/foundation/literal_uikit_indexpath_probe.swift"
 
-# The original vendored probe needs Foundation's NSCoder spelling.  Compile its
-# narrow app-only module after UIKit and add only the shared notification
-# identities used by the next unchanged-app gate.  This deliberately EARLY
-# UIKit is a Foundation-hidden identity/legacy-renderer probe: neither earlier
-# framework can accidentally select a Foundation-visible source branch.  It is
-# not the final app-facing UIKit for the all-source application graph; the
-# package build emits that module after its Foundation facade exists.
-echo "== app-only Foundation identity shim + RealAppProbe (UNMODIFIED app source)"
-"${SWIFTC[@]}" -parse-as-library "${CINC[@]}" "${FEMODULES[@]}" -I "$OUT" \
-    -module-name Foundation -emit-module -emit-module-path "$APPINC/Foundation.swiftmodule" \
-    -emit-object -o "$OUT/foundation.o" \
-    "$W/full/appshim/Foundation.swift" \
-    "$W/full/appshim/FoundationOpenUIKitAliases.swift"
+# The original vendored probe consumes the already-built narrow Foundation
+# identity module. UIKit above could not see it, preserving the deliberate
+# Foundation-hidden identity/legacy-renderer boundary.
+echo "== RealAppProbe (UNMODIFIED app source)"
 
 # Three files preserve the source-level split found in real apps: a
 # Foundation-only extension, a UIKit-only consumer, and a direct dual import.
