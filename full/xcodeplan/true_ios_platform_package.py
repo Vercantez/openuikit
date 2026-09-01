@@ -36,6 +36,7 @@ _MODULES = (
     "Foundation",
     "Dispatch",
     "OpenCoreGraphics",
+    "CoreGraphics",
     "OpenUIKit",
     "DeveloperToolsSupport",
     "UIKit",
@@ -43,6 +44,9 @@ _MODULES = (
     "Combine",
     "Symbols",
     "SwiftUI",
+    "AppIntents",
+    "Intents",
+    "WidgetKit",
     "UniformTypeIdentifiers",
     "BackgroundTasks",
     "CoreSpotlight",
@@ -57,6 +61,15 @@ _MODULES = (
 _PRIVATE_DYLIBS = ("_FoundationICU",)
 _RUNTIME_SWIFT_MODULES = ("Observation",)
 _FRAMEWORK_LOAD_CONTRACT = {
+    "CoreGraphics": ("/usr/lib/libOpenCoreGraphics.dylib",),
+    "AppIntents": ("/usr/lib/libUIKit.dylib",),
+    "Intents": ("/usr/lib/libOpenUIKit.dylib",),
+    "WidgetKit": (
+        "/usr/lib/libCoreGraphics.dylib",
+        "/usr/lib/libAppIntents.dylib",
+        "/usr/lib/libIntents.dylib",
+        "/usr/lib/libSwiftUI.dylib",
+    ),
     "BackgroundTasks": ("/usr/lib/libDispatch.dylib",),
     "CoreSpotlight": ("/usr/lib/libUniformTypeIdentifiers.dylib",),
 }
@@ -126,6 +139,8 @@ _REQUIRED_ATTESTATION = {
     "source-subject.after.sha256",
     "source-subject.before.sha256",
     "symlinks.tsv",
+    "widgetkit-loads.tsv",
+    "widgetkit-sources.tsv",
 }
 _REQUIRED_FOUNDATION_RUNTIME_EXPORTS = {
     "_$s10Foundation24_getErrorDefaultUserInfoyyXlSgxs0C0RzlF",
@@ -272,6 +287,25 @@ _BACKGROUND_SPOTLIGHT_SOURCE_HASHES = {
     "full/corespotlight/corespotlight_guest_sources.txt": "031488a5dc52620c90a77adba2b2b7a7c5f7191d2dfe0b240319821d1360386c",
     "full/corespotlight/tests/CoreSpotlightHostRuntime.swift": "ca4afb02191f3277bbd54bc2649a795c994657c06dee86c0610188ca98a3adbe",
     "full/corespotlight/tests/CorpusConsumerSurface.swift": "f38f23ff90e4189b405861caaaa66a28167962d9c5eb24cf78856c52284a9992",
+}
+_WIDGETKIT_SOURCE_HASHES = {
+    "full/coregraphics/CoreGraphics.swift": "502558a9f2e8123af588ee13e08777a789a09c3a31b24ba92ff57a624bb4c3fd",
+    "full/coregraphics/coregraphics_guest_sources.txt": "4c9578ec18298533ada3d11847a90b439c5ebb89af160f7bdfe69d35cec8c1f1",
+    "full/appintents/AppIntents.swift": "ae37e117f3cdd0239a76bf33079acc6ff776f996332fd009bf7cbb177c36916f",
+    "full/appintents/appintents_guest_sources.txt": "f854c693088e35db96919dbf6ac6b76fc1068b7d6cacef5eb4caff43f7707b3b",
+    "full/intents/Intents.swift": "1fe007c1033b06fd93361667d26cb591e91569024a092dfb314c59e191f91e7b",
+    "full/intents/intents_guest_sources.txt": "bfad50cfb44bbbb7067413fe67f6d5bdeb05a2f9df882c4c84d6816390466482",
+    "full/widgetkit/WidgetKit.swift": "f723dd9aebae55a75a4e869efc92c811ad42020d5e318de8bff1061c8758862f",
+    "full/widgetkit/widgetkit_guest_sources.txt": "667433e17ad071f4827c6227861c713f666311f55987888753a7d74effe64d2e",
+    "full/appintents/tests/AppIntentsHostRuntime.swift": "8c107e398c0e5e61d4c46f54f070a7c7bed34284a7ac5c4cb1fe60519ba54db4",
+    "full/widgetkit/tests/WidgetKitHostRuntime.swift": "3b6bf3f91a44581bf010b083fd27ff5e2518256915d1762e0188c816d0c580e3",
+    "full/widgetkit/tests/IceCubesWidgetKitConsumer.swift": "f2413978eef808d7052461890a55fafc3fbd26b082d2ab308dc83dd7701aff17",
+    "full/widgetkit/tests/SimplenoteWidgetKitConsumer.swift": "d1366b2215d1499d87bd07995171d93b563db808b7eecada610e8bab5bdb727b",
+    "full/widgetkit/tests/IceCubesWidgetBundleSupport.swift": "62ce9370234aa8ee86bd4ea1134dc02576f8850673011a2698dcbfb657806d8d",
+    "full/widgetkit/tests/SimplenoteWidgetControllerSupport.swift": "c5a81d1a1c961becd7f5a7d18f0e3d55b3a110c513e44de38ebf7fa758617497",
+    "full/widgetkit/tests/SimplenoteExactWidgetSupport.swift": "0124073c588c0ab5702e37c9fb197c590d9a45eb747e63065e5dde6c13781e70",
+    "full/widgetkit/tests/icecubes-widgetkit-frontier.tsv": "d0f5842b4f8d7c9baa58b1ac91a476829ddc042fcee114bd379173eb187847f6",
+    "full/widgetkit/tests/test_widgetkit_host.sh": "df2337d80917da0555be180ed149942d0a28a6e7485bdfaa99d7c5ba611f58ed",
 }
 
 
@@ -814,6 +848,35 @@ def _validate_background_spotlight_frontier(root: Path) -> None:
         )
 
 
+def _validate_widgetkit_frontier(root: Path) -> None:
+    provenance = _regular(
+        root,
+        "attestation/widgetkit-sources.tsv",
+        "WidgetKit graph source provenance",
+    ).read_text(encoding="utf-8").splitlines()
+    if not provenance or provenance[0] != "format\ttrue-ios-widgetkit-sources-v1":
+        raise TrueIOSPlatformError("WidgetKit source provenance format drifted")
+    records: dict[str, str] = {}
+    paths: list[str] = []
+    for index, line in enumerate(provenance[1:], 2):
+        fields = line.split("\t")
+        if (
+            len(fields) != 3
+            or fields[0] != "source"
+            or not _SHA256.fullmatch(fields[2])
+        ):
+            raise TrueIOSPlatformError(
+                f"malformed WidgetKit source line {index}"
+            )
+        path = _relative(fields[1], f"WidgetKit source path {index}").as_posix()
+        if path in records:
+            raise TrueIOSPlatformError(f"duplicate WidgetKit source: {path}")
+        records[path] = fields[2]
+        paths.append(path)
+    if paths != sorted(paths) or records != _WIDGETKIT_SOURCE_HASHES:
+        raise TrueIOSPlatformError("WidgetKit source provenance differs")
+
+
 def _compile_arguments() -> list[str]:
     include = "platform-include"
     return [
@@ -862,6 +925,10 @@ def _link_arguments() -> list[str]:
         "-F", "sdk/System/Library/Frameworks",
         "-framework", "SwiftUI",
         "-framework", "UIKit",
+        "-framework", "CoreGraphics",
+        "-framework", "AppIntents",
+        "-framework", "Intents",
+        "-framework", "WidgetKit",
         "-framework", "FoundationModels",
         "-framework", "NaturalLanguage",
         "-framework", "AuthenticationServices",
@@ -954,6 +1021,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         _validate_foundationmodels_naturallanguage_frontier(root)
     )
     _validate_background_spotlight_frontier(root)
+    _validate_widgetkit_frontier(root)
     runtime_log = _regular(root, "attestation/runtime.log", "runtime log").read_text(
         encoding="utf-8"
     )
@@ -964,6 +1032,10 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             "cold SwiftUI runtime lacks FoundationModels evidence"
         )
     for marker in (
+        "coregraphics=portable",
+        "appintents=execution",
+        "intents=identity",
+        "widgetkit=process-local",
         "uniform-types=text",
         "backgroundtasks=scheduler",
         "corespotlight=index",
@@ -1016,6 +1088,21 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         raise TrueIOSPlatformError(
             "BackgroundTasks/CoreSpotlight load attestation differs"
         )
+    widgetkit_loads = _regular(
+        root,
+        "attestation/widgetkit-loads.tsv",
+        "WidgetKit graph load attestation",
+    ).read_text(encoding="ascii")
+    if widgetkit_loads != (
+        "format\ttrue-ios-widgetkit-loads-v1\n"
+        "probe\tcoregraphics=1\tappintents=1\tintents=1\twidgetkit=1\n"
+        "coregraphics\topencoregraphics=1\tapple-self-load=0\n"
+        "appintents\tuikit=1\tapple-self-load=0\n"
+        "intents\topenuikit=1\tapple-self-load=0\n"
+        "widgetkit\tcoregraphics=1\tappintents=1\tintents=1\t"
+        "swiftui=1\tapple-self-load=0\n"
+    ):
+        raise TrueIOSPlatformError("WidgetKit graph load attestation differs")
     frontier_loads = _regular(
         root,
         "attestation/accelerate-compression-coretext-loads.tsv",
@@ -1093,6 +1180,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     ).read_text(encoding="utf-8")
     for module in (
         "SwiftUI", "UIKit", "OpenUIKit", "Combine", "OpenCombine",
+        "CoreGraphics", "AppIntents", "Intents", "WidgetKit",
         "FoundationModels", "NaturalLanguage", "AuthenticationServices",
         "_AuthenticationServices_SwiftUI", "UniformTypeIdentifiers",
         "BackgroundTasks", "CoreSpotlight", "Accelerate", "Compression",
@@ -1278,6 +1366,10 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     for required in (
         "/usr/lib/libSwiftUI.dylib",
         "/usr/lib/libUIKit.dylib",
+        "/usr/lib/libCoreGraphics.dylib",
+        "/usr/lib/libAppIntents.dylib",
+        "/usr/lib/libIntents.dylib",
+        "/usr/lib/libWidgetKit.dylib",
         "/usr/lib/libFoundationModels.dylib",
         "/usr/lib/libNaturalLanguage.dylib",
         "/usr/lib/libAuthenticationServices.dylib",

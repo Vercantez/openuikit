@@ -33,6 +33,10 @@ NON_LINKING_HELPERS = (
 
 MACH_HEADER_EXPORT = "-exported_symbol __mh_execute_header"
 FRONTIER_LINK_OUTPUTS = (
+    ('"$PRODUCTS/libCoreGraphics.dylib"', True),
+    ('"$PRODUCTS/libAppIntents.dylib"', True),
+    ('"$PRODUCTS/libIntents.dylib"', True),
+    ('"$PRODUCTS/libWidgetKit.dylib"', True),
     ('"$PRODUCTS/libUniformTypeIdentifiers.dylib"', True),
     ('"$PRODUCTS/libBackgroundTasks.dylib"', True),
     ('"$PRODUCTS/libCoreSpotlight.dylib"', True),
@@ -139,7 +143,7 @@ class MachExecuteHeaderContractTests(unittest.TestCase):
         source = TRUE_IOS_BUILDER.read_text(encoding="utf-8")
         validate_direct_link_commands(
             source,
-            expected_links=28,
+            expected_links=32,
             expected_executables=3,
             expected_linker_mentions=2,
         )
@@ -164,11 +168,11 @@ class MachExecuteHeaderContractTests(unittest.TestCase):
                     + source[link_offset + len('"${LD[@]}" ') :]
                 )
                 with self.assertRaisesRegex(
-                    AssertionError, "Mach-O link command count 27, expected 28"
+                    AssertionError, "Mach-O link command count 31, expected 32"
                 ):
                     validate_direct_link_commands(
                         mutated,
-                        expected_links=28,
+                        expected_links=32,
                         expected_executables=3,
                         expected_linker_mentions=2,
                     )
@@ -177,7 +181,7 @@ class MachExecuteHeaderContractTests(unittest.TestCase):
         ):
             validate_direct_link_commands(
                 source.replace(MACH_HEADER_EXPORT, "", 1),
-                expected_links=28,
+                expected_links=32,
                 expected_executables=3,
                 expected_linker_mentions=2,
             )
@@ -190,7 +194,7 @@ class MachExecuteHeaderContractTests(unittest.TestCase):
                     f"{MACH_HEADER_EXPORT} {MACH_HEADER_EXPORT}",
                     1,
                 ),
-                expected_links=28,
+                expected_links=32,
                 expected_executables=3,
                 expected_linker_mentions=2,
             )

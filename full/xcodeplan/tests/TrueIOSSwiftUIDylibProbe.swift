@@ -1,6 +1,10 @@
 import SwiftUI
 import UIKit
+import CoreGraphics
 import Foundation
+import AppIntents
+import Intents
+import WidgetKit
 import FoundationModels
 import NaturalLanguage
 import AuthenticationServices
@@ -19,6 +23,12 @@ private struct TrueIOSSwiftUIDylibView: View {
             Button("Advance") {}
         }
         .padding(.all, 12)
+    }
+}
+
+private struct TrueIOSProbeIntent: AppIntent {
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        .result(dialog: "true-ios-widget")
     }
 }
 
@@ -222,6 +232,26 @@ private enum TrueIOSSwiftUIDylibProbe {
             EnvironmentValues().webAuthenticationSession
         withExtendedLifetime(session) {}
 
+        let widgetSize = CGSize(width: 364, height: 170)
+        precondition(widgetSize.width == 364 && widgetSize.height == 170)
+        let appIntentResult = try await AppIntentRuntime.shared.perform(
+            TrueIOSProbeIntent()
+        )
+        precondition(
+            (appIntentResult as? IntentResultValue)?.dialog?.text
+                == "true-ios-widget"
+        )
+        let legacyIntent = INIntent()
+        legacyIntent.identifier = "OpenUIKit.TrueIOS.intent"
+        precondition(legacyIntent.identifier == "OpenUIKit.TrueIOS.intent")
+        precondition(WidgetKitPortable.presentationCapability == .hostDriven)
+        precondition(WidgetKitPortable.reloadCapability == .processLocal)
+        let widgetCenter = WidgetCenter.shared
+        let currentWidgets = try await widgetCenter.currentConfigurations()
+        precondition(currentWidgets.isEmpty)
+        widgetCenter.reloadTimelines(ofKind: "OpenUIKit.TrueIOS.widget")
+        widgetCenter.reloadAllTimelines()
+
         let taskIdentifier = "OpenUIKit.TrueIOS.refresh"
         precondition(
             BGTaskScheduler.shared.register(
@@ -262,6 +292,8 @@ private enum TrueIOSSwiftUIDylibProbe {
             "descendants=\(descendants.count) text=rendered button=rendered " +
             "foundationmodels=generated-content,fail-closed " +
             "naturallanguage=en authenticationservices=fail-closed " +
+            "coregraphics=portable appintents=execution intents=identity " +
+            "widgetkit=process-local " +
             "uniform-types=text backgroundtasks=scheduler " +
             "corespotlight=index " +
             "accelerate=vimage compression=brotli coretext=font-registration"

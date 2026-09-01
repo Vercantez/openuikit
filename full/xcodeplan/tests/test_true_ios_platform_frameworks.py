@@ -31,6 +31,7 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
             "Foundation",
             "Dispatch",
             "OpenCoreGraphics",
+            "CoreGraphics",
             "OpenUIKit",
             "DeveloperToolsSupport",
             "UIKit",
@@ -38,6 +39,9 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
             "Combine",
             "Symbols",
             "SwiftUI",
+            "AppIntents",
+            "Intents",
+            "WidgetKit",
             "UniformTypeIdentifiers",
             "BackgroundTasks",
             "CoreSpotlight",
@@ -116,6 +120,10 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         for module in (
             "SwiftUI",
             "UIKit",
+            "CoreGraphics",
+            "AppIntents",
+            "Intents",
+            "WidgetKit",
             "FoundationModels",
             "NaturalLanguage",
             "AuthenticationServices",
@@ -171,6 +179,10 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
     def test_probe_exercises_swiftui_through_uikit_at_runtime(self) -> None:
         self.assertIn('import SwiftUI', self.probe)
         self.assertIn('import UIKit', self.probe)
+        self.assertIn('import CoreGraphics', self.probe)
+        self.assertIn('import AppIntents', self.probe)
+        self.assertIn('import Intents', self.probe)
+        self.assertIn('import WidgetKit', self.probe)
         self.assertIn('import FoundationModels', self.probe)
         self.assertIn('import NaturalLanguage', self.probe)
         self.assertIn('import AuthenticationServices', self.probe)
@@ -202,6 +214,27 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn(
             "cfErrorAsError._getEmbeddedNSError() === cfError", self.probe
         )
+
+    def test_widgetkit_dependency_graph_is_project_owned_on_true_ios(self) -> None:
+        for evidence in (
+            "CORE_GRAPHICS_SOURCES_MANIFEST",
+            "APP_INTENTS_SOURCES_MANIFEST",
+            "INTENTS_SOURCES_MANIFEST",
+            "WIDGETKIT_SOURCES_MANIFEST",
+            "true-ios-widgetkit-sources-v1",
+            "true-ios-widgetkit-loads-v1",
+            "-D OPENUIKIT_PORTABLE_SWIFTUI",
+            "CoreGraphics OpenCoreGraphics load count drifted",
+            "AppIntents UIKit load count drifted",
+            "Intents OpenUIKit load count drifted",
+            "WidgetKit SwiftUI load count drifted",
+            "portable WidgetKit graph loads an Apple framework",
+        ):
+            self.assertIn(evidence, self.builder)
+        self.assertIn("AppIntentRuntime.shared.perform", self.probe)
+        self.assertIn("WidgetKitPortable.presentationCapability", self.probe)
+        self.assertIn("WidgetCenter.shared", self.probe)
+        self.assertIn("widgetkit=process-local", self.probe)
 
     def test_background_tasks_and_core_spotlight_are_true_ios_products(self) -> None:
         for evidence in (

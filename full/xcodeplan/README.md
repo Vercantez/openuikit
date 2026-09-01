@@ -483,13 +483,17 @@ the complete first-party framework graph as iOS rather than a claim that the
 existing macOS-target framework modules can be mixed into an iOS compilation.
 
 `build_true_ios_platform_frameworks.sh` carries that target identity into a
-reusable framework SDK. Its current release graph publishes twenty-two public
+reusable framework SDK. Its current release graph publishes twenty-six public
 platform-7 framework dylibs plus the private Foundation ICU and Observation
-runtime boundaries. In addition to the SwiftUI/UIKit/Foundation core, the true
-iOS route now builds project-owned `libUniformTypeIdentifiers.dylib`,
+runtime boundaries: twenty-eight dynamic products in total. In addition to the
+SwiftUI/UIKit/Foundation core, the true iOS route builds project-owned
+`libCoreGraphics.dylib`, `libAppIntents.dylib`, `libIntents.dylib`,
+`libWidgetKit.dylib`, `libUniformTypeIdentifiers.dylib`,
 `libBackgroundTasks.dylib`, and `libCoreSpotlight.dylib`. The unchanged runtime
-probe submits and cancels background work and indexes/removes a searchable item;
-the validator requires all three framework-module origins, direct dylib loads,
+probe executes an app intent, exercises SiriKit identity, records WidgetCenter
+reload work, submits and cancels background work, and indexes/removes a
+searchable item. The validator requires every framework-module origin and
+direct dylib load, the complete WidgetKit-to-AppIntents/Intents/SwiftUI graph,
 the BackgroundTasks-to-Dispatch edge, the CoreSpotlight-to-UTType edge, frozen
 source provenance, and cold runtime markers. Apple framework self-loads are
 rejected.

@@ -28,6 +28,10 @@ NATURAL_LANGUAGE_SOURCES_MANIFEST=${NATURAL_LANGUAGE_SOURCES_MANIFEST:-$W/full/n
 FOUNDATION_MODELS_SOURCES_MANIFEST=${FOUNDATION_MODELS_SOURCES_MANIFEST:-$W/full/foundationmodels/foundationmodels_guest_sources.txt}
 AUTHENTICATION_SERVICES_SOURCES_MANIFEST=${AUTHENTICATION_SERVICES_SOURCES_MANIFEST:-$W/full/authenticationservices/authenticationservices_guest_sources.txt}
 AUTHENTICATION_SERVICES_SWIFTUI_SOURCES_MANIFEST=${AUTHENTICATION_SERVICES_SWIFTUI_SOURCES_MANIFEST:-$W/full/authenticationservices/authenticationservices_swiftui_guest_sources.txt}
+CORE_GRAPHICS_SOURCES_MANIFEST=${CORE_GRAPHICS_SOURCES_MANIFEST:-$W/full/coregraphics/coregraphics_guest_sources.txt}
+APP_INTENTS_SOURCES_MANIFEST=${APP_INTENTS_SOURCES_MANIFEST:-$W/full/appintents/appintents_guest_sources.txt}
+INTENTS_SOURCES_MANIFEST=${INTENTS_SOURCES_MANIFEST:-$W/full/intents/intents_guest_sources.txt}
+WIDGETKIT_SOURCES_MANIFEST=${WIDGETKIT_SOURCES_MANIFEST:-$W/full/widgetkit/widgetkit_guest_sources.txt}
 UNIFORM_TYPE_IDENTIFIERS_SOURCES_MANIFEST=${UNIFORM_TYPE_IDENTIFIERS_SOURCES_MANIFEST:-$W/full/uniformtypeidentifiers/uniformtypeidentifiers_guest_sources.txt}
 BACKGROUND_TASKS_SOURCES_MANIFEST=${BACKGROUND_TASKS_SOURCES_MANIFEST:-$W/full/backgroundtasks/backgroundtasks_guest_sources.txt}
 CORE_SPOTLIGHT_SOURCES_MANIFEST=${CORE_SPOTLIGHT_SOURCES_MANIFEST:-$W/full/corespotlight/corespotlight_guest_sources.txt}
@@ -126,6 +130,8 @@ for manifest in "$NATURAL_LANGUAGE_SOURCES_MANIFEST" \
     "$FOUNDATION_MODELS_SOURCES_MANIFEST" \
     "$AUTHENTICATION_SERVICES_SOURCES_MANIFEST" \
     "$AUTHENTICATION_SERVICES_SWIFTUI_SOURCES_MANIFEST" \
+    "$CORE_GRAPHICS_SOURCES_MANIFEST" "$APP_INTENTS_SOURCES_MANIFEST" \
+    "$INTENTS_SOURCES_MANIFEST" "$WIDGETKIT_SOURCES_MANIFEST" \
     "$UNIFORM_TYPE_IDENTIFIERS_SOURCES_MANIFEST" \
     "$BACKGROUND_TASKS_SOURCES_MANIFEST" \
     "$CORE_SPOTLIGHT_SOURCES_MANIFEST" \
@@ -167,9 +173,21 @@ BACKGROUND_SPOTLIGHT_SUPPORT_INPUTS=(
     full/corespotlight/tests/CoreSpotlightHostRuntime.swift
     full/corespotlight/tests/CorpusConsumerSurface.swift
 )
+WIDGETKIT_SUPPORT_INPUTS=(
+    full/appintents/tests/AppIntentsHostRuntime.swift
+    full/widgetkit/tests/WidgetKitHostRuntime.swift
+    full/widgetkit/tests/IceCubesWidgetKitConsumer.swift
+    full/widgetkit/tests/SimplenoteWidgetKitConsumer.swift
+    full/widgetkit/tests/IceCubesWidgetBundleSupport.swift
+    full/widgetkit/tests/SimplenoteWidgetControllerSupport.swift
+    full/widgetkit/tests/SimplenoteExactWidgetSupport.swift
+    full/widgetkit/tests/icecubes-widgetkit-frontier.tsv
+    full/widgetkit/tests/test_widgetkit_host.sh
+)
 FRONTIER_SUPPORT_INPUTS=(
     "${FOUNDATION_MODELS_NATURAL_LANGUAGE_SUPPORT_INPUTS[@]}"
     "${BACKGROUND_SPOTLIGHT_SUPPORT_INPUTS[@]}"
+    "${WIDGETKIT_SUPPORT_INPUTS[@]}"
     full/accelerate/Accelerate.c
     full/accelerate/include/Accelerate.h
     full/accelerate/include/module.modulemap
@@ -340,6 +358,24 @@ mkdir -p "$BUILD" "$PACKAGE" "$PRODUCTS" "$FRAMEWORKS" \
     } | LC_ALL=C sort
 } > "$AUDIT/backgroundtasks-corespotlight-sources.tsv"
 
+{
+    printf 'format\ttrue-ios-widgetkit-sources-v1\n'
+    {
+        for manifest in "$CORE_GRAPHICS_SOURCES_MANIFEST" \
+            "$APP_INTENTS_SOURCES_MANIFEST" "$INTENTS_SOURCES_MANIFEST" \
+            "$WIDGETKIT_SOURCES_MANIFEST"; do
+            printf 'source\t%s\t%s\n' "${manifest#"$W"/}" "$(sha "$manifest")"
+            while IFS= read -r relative; do
+                [ -n "$relative" ] || continue
+                printf 'source\t%s\t%s\n' "$relative" "$(sha "$W/$relative")"
+            done < "$manifest"
+        done
+        for relative in "${WIDGETKIT_SUPPORT_INPUTS[@]}"; do
+            printf 'source\t%s\t%s\n' "$relative" "$(sha "$W/$relative")"
+        done
+    } | LC_ALL=C sort
+} > "$AUDIT/widgetkit-sources.tsv"
+
 # Attest the complete pinned OpenCombine compiler subject before compiling it.
 perl "$W/full/oracle-opencombine/policy_tool.pl" attest \
     "$W/full/oracle-opencombine/policy.json" "$OPENCOMBINE_SOURCE" \
@@ -413,6 +449,9 @@ source_subject() {
             "$FOUNDATION_MODELS_SOURCES_MANIFEST" \
             "$AUTHENTICATION_SERVICES_SOURCES_MANIFEST" \
             "$AUTHENTICATION_SERVICES_SWIFTUI_SOURCES_MANIFEST" \
+            "$CORE_GRAPHICS_SOURCES_MANIFEST" \
+            "$APP_INTENTS_SOURCES_MANIFEST" "$INTENTS_SOURCES_MANIFEST" \
+            "$WIDGETKIT_SOURCES_MANIFEST" \
             "$UNIFORM_TYPE_IDENTIFIERS_SOURCES_MANIFEST" \
             "$BACKGROUND_TASKS_SOURCES_MANIFEST" \
             "$CORE_SPOTLIGHT_SOURCES_MANIFEST" \
@@ -1051,6 +1090,93 @@ mapfile -d '' -t swiftui_sources < <(
     "$OBSERVATION_DYLIB" \
     "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
 
+echo '== CoreGraphics, AppIntents, Intents, and WidgetKit frameworks'
+mapfile -t core_graphics_relative_sources < "$CORE_GRAPHICS_SOURCES_MANIFEST"
+mapfile -t app_intents_relative_sources < "$APP_INTENTS_SOURCES_MANIFEST"
+mapfile -t intents_relative_sources < "$INTENTS_SOURCES_MANIFEST"
+mapfile -t widgetkit_relative_sources < "$WIDGETKIT_SOURCES_MANIFEST"
+[ "${#core_graphics_relative_sources[@]}" -eq 1 ] \
+    || die 'CoreGraphics source denominator drifted'
+[ "${#app_intents_relative_sources[@]}" -eq 1 ] \
+    || die 'AppIntents source denominator drifted'
+[ "${#intents_relative_sources[@]}" -eq 1 ] \
+    || die 'Intents source denominator drifted'
+[ "${#widgetkit_relative_sources[@]}" -eq 1 ] \
+    || die 'WidgetKit source denominator drifted'
+for relative in "${core_graphics_relative_sources[@]}" \
+    "${app_intents_relative_sources[@]}" "${intents_relative_sources[@]}" \
+    "${widgetkit_relative_sources[@]}"; do
+    [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+        || die "WidgetKit graph source is missing or linked: $relative"
+done
+
+"${SWIFTC[@]}" "${CFLAGS[@]}" "${FOUNDATION_CFLAGS[@]}" \
+    "${FE_FLAGS[@]}" -parse-as-library -I "$PACKAGE" \
+    -module-name CoreGraphics -emit-module \
+    -emit-module-path "$PACKAGE/CoreGraphics.swiftmodule" \
+    -emit-object -o "$BUILD/CoreGraphics.o" \
+    "$W/${core_graphics_relative_sources[0]}"
+"${SWIFTC[@]}" "${CFLAGS[@]}" "${FOUNDATION_CFLAGS[@]}" \
+    "${FE_FLAGS[@]}" -parse-as-library -I "$PACKAGE" \
+    -module-name AppIntents -emit-module \
+    -emit-module-path "$PACKAGE/AppIntents.swiftmodule" \
+    -emit-object -o "$BUILD/AppIntents.o" \
+    "$W/${app_intents_relative_sources[0]}"
+"${SWIFTC[@]}" "${CFLAGS[@]}" "${FOUNDATION_CFLAGS[@]}" \
+    "${FE_FLAGS[@]}" -parse-as-library -I "$PACKAGE" \
+    -module-name Intents -emit-module \
+    -emit-module-path "$PACKAGE/Intents.swiftmodule" \
+    -emit-object -o "$BUILD/Intents.o" \
+    "$W/${intents_relative_sources[0]}"
+"${SWIFTC[@]}" "${CFLAGS[@]}" "${FOUNDATION_CFLAGS[@]}" \
+    "${FE_FLAGS[@]}" -parse-as-library -I "$PACKAGE" \
+    -D OPENUIKIT_PORTABLE_SWIFTUI \
+    -module-name WidgetKit -emit-module \
+    -emit-module-path "$PACKAGE/WidgetKit.swiftmodule" \
+    -emit-object -o "$BUILD/WidgetKit.o" \
+    "$W/${widgetkit_relative_sources[0]}"
+
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name /usr/lib/libCoreGraphics.dylib \
+    -current_version 1.0 -compatibility_version 1.0 \
+    -L"$PRODUCTS" -lOpenCoreGraphics \
+    "${COMMON_RUNTIME[@]}" \
+    -o "$PRODUCTS/libCoreGraphics.dylib" "$BUILD/CoreGraphics.o" \
+    "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name /usr/lib/libAppIntents.dylib \
+    -current_version 1.0 -compatibility_version 1.0 \
+    -L"$PRODUCTS" -lUIKit -lFoundation -lFoundationEssentials \
+    -lOpenUIKit -lOpenCoreGraphics \
+    "${COMMON_RUNTIME[@]}" -lswiftObjectiveC -lswift_Concurrency -lobjc \
+    -o "$PRODUCTS/libAppIntents.dylib" "$BUILD/AppIntents.o" \
+    "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name /usr/lib/libIntents.dylib \
+    -current_version 1.0 -compatibility_version 1.0 \
+    -L"$PRODUCTS" -lFoundation -lFoundationEssentials -lOpenUIKit \
+    -lCombine -lOpenCombine \
+    "${COMMON_RUNTIME[@]}" -lswiftObjectiveC -lswiftSynchronization -lobjc \
+    -o "$PRODUCTS/libIntents.dylib" "$BUILD/Intents.o" \
+    "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name /usr/lib/libWidgetKit.dylib \
+    -current_version 1.0 -compatibility_version 1.0 \
+    -L"$PRODUCTS" -lCoreGraphics -lAppIntents -lIntents -lSwiftUI -lUIKit \
+    -lFoundation -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics \
+    -lDeveloperToolsSupport -lCombine -lOpenCombine -lSymbols \
+    "${COMMON_RUNTIME[@]}" -lswiftObjectiveC -lswift_Concurrency \
+    -lswiftSynchronization -lobjc \
+    -o "$PRODUCTS/libWidgetKit.dylib" "$BUILD/WidgetKit.o" \
+    "$OBSERVATION_DYLIB" \
+    "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
+for module in CoreGraphics AppIntents Intents WidgetKit; do
+    if llvm-otool-18 -L "$PRODUCTS/lib$module.dylib" \
+        | grep -Fq "/System/Library/Frameworks/$module.framework/"; then
+        die "portable lib$module loads the Apple $module framework"
+    fi
+done
+
 echo '== UniformTypeIdentifiers, BackgroundTasks, and CoreSpotlight frameworks'
 mapfile -t uniform_type_identifiers_relative_sources \
     < "$UNIFORM_TYPE_IDENTIFIERS_SOURCES_MANIFEST"
@@ -1323,8 +1449,9 @@ done
 cp -a "$INCLUDE/." "$PUBLISHED_INCLUDE/"
 PUBLIC_MODULES=(
     FoundationEssentials FoundationInternationalization Foundation Dispatch
-    OpenCoreGraphics OpenUIKit DeveloperToolsSupport UIKit OpenCombine Combine
-    Symbols SwiftUI UniformTypeIdentifiers BackgroundTasks CoreSpotlight
+    OpenCoreGraphics CoreGraphics OpenUIKit DeveloperToolsSupport UIKit
+    OpenCombine Combine Symbols SwiftUI AppIntents Intents WidgetKit
+    UniformTypeIdentifiers BackgroundTasks CoreSpotlight
     FoundationModels NaturalLanguage AuthenticationServices
     _AuthenticationServices_SwiftUI Accelerate Compression CoreText
 )
@@ -1430,7 +1557,8 @@ if ! swiftc -target "$TARGET" -sdk "$SDK_OUT" -I "$APPLE_OVERLAYS_OUT" \
     die 'framework-only consumer compile failed'
 fi
 for module in SwiftUI UIKit Foundation Dispatch Symbols OpenUIKit Combine \
-    OpenCombine FoundationModels NaturalLanguage AuthenticationServices \
+    OpenCombine CoreGraphics AppIntents Intents WidgetKit \
+    FoundationModels NaturalLanguage AuthenticationServices \
     _AuthenticationServices_SwiftUI UniformTypeIdentifiers BackgroundTasks \
     CoreSpotlight Accelerate Compression CoreText; do
     expected_module_path="$FRAMEWORKS/$module.framework/Modules/$module.swiftmodule/$TARGET_VARIANT.swiftmodule"
@@ -1440,6 +1568,8 @@ for module in SwiftUI UIKit Foundation Dispatch Symbols OpenUIKit Combine \
 done
 "${LD[@]}" -dead_strip -exported_symbol __mh_execute_header \
     -rpath @loader_path -F"$FRAMEWORKS" -framework SwiftUI -framework UIKit \
+    -framework CoreGraphics -framework AppIntents -framework Intents \
+    -framework WidgetKit \
     -framework FoundationModels -framework NaturalLanguage \
     -framework AuthenticationServices \
     -framework _AuthenticationServices_SwiftUI \
@@ -1592,6 +1722,18 @@ background_tasks_loads=$(llvm-otool-18 -L \
 core_spotlight_loads=$(llvm-otool-18 -L \
     "$stage/true-ios-swiftui-dylib-probe" \
     | awk '$1 == "/usr/lib/libCoreSpotlight.dylib" { count++ } END { print count + 0 }')
+core_graphics_loads=$(llvm-otool-18 -L \
+    "$stage/true-ios-swiftui-dylib-probe" \
+    | awk '$1 == "/usr/lib/libCoreGraphics.dylib" { count++ } END { print count + 0 }')
+app_intents_loads=$(llvm-otool-18 -L \
+    "$stage/true-ios-swiftui-dylib-probe" \
+    | awk '$1 == "/usr/lib/libAppIntents.dylib" { count++ } END { print count + 0 }')
+intents_loads=$(llvm-otool-18 -L \
+    "$stage/true-ios-swiftui-dylib-probe" \
+    | awk '$1 == "/usr/lib/libIntents.dylib" { count++ } END { print count + 0 }')
+widgetkit_loads=$(llvm-otool-18 -L \
+    "$stage/true-ios-swiftui-dylib-probe" \
+    | awk '$1 == "/usr/lib/libWidgetKit.dylib" { count++ } END { print count + 0 }')
 accelerate_loads=$(llvm-otool-18 -L \
     "$stage/true-ios-swiftui-dylib-probe" \
     | awk '$1 == "/usr/lib/libAccelerate.dylib" { count++ } END { print count + 0 }')
@@ -1615,6 +1757,14 @@ coretext_loads=$(llvm-otool-18 -L \
     || die "probe BackgroundTasks load count is $background_tasks_loads"
 [ "$core_spotlight_loads" -eq 1 ] \
     || die "probe CoreSpotlight load count is $core_spotlight_loads"
+[ "$core_graphics_loads" -eq 1 ] \
+    || die "probe CoreGraphics load count is $core_graphics_loads"
+[ "$app_intents_loads" -eq 1 ] \
+    || die "probe AppIntents load count is $app_intents_loads"
+[ "$intents_loads" -eq 1 ] \
+    || die "probe Intents load count is $intents_loads"
+[ "$widgetkit_loads" -eq 1 ] \
+    || die "probe WidgetKit load count is $widgetkit_loads"
 [ "$accelerate_loads" -eq 1 ] \
     || die "probe Accelerate load count is $accelerate_loads"
 [ "$compression_loads" -eq 1 ] \
@@ -1686,6 +1836,65 @@ core_spotlight_uniform_types_loads=$(llvm-otool-18 -L \
     printf 'corespotlight\tuniformtypeidentifiers=%s\tapple-self-load=0\n' \
         "$core_spotlight_uniform_types_loads"
 } > "$AUDIT/backgroundtasks-corespotlight-loads.tsv"
+
+core_graphics_open_loads=$(llvm-otool-18 -L \
+    "$PRODUCTS/libCoreGraphics.dylib" \
+    | awk '$1 == "/usr/lib/libOpenCoreGraphics.dylib" { count++ } END { print count + 0 }')
+app_intents_uikit_loads=$(llvm-otool-18 -L \
+    "$PRODUCTS/libAppIntents.dylib" \
+    | awk '$1 == "/usr/lib/libUIKit.dylib" { count++ } END { print count + 0 }')
+intents_openuikit_loads=$(llvm-otool-18 -L \
+    "$PRODUCTS/libIntents.dylib" \
+    | awk '$1 == "/usr/lib/libOpenUIKit.dylib" { count++ } END { print count + 0 }')
+widgetkit_core_graphics_loads=$(llvm-otool-18 -L \
+    "$PRODUCTS/libWidgetKit.dylib" \
+    | awk '$1 == "/usr/lib/libCoreGraphics.dylib" { count++ } END { print count + 0 }')
+widgetkit_app_intents_loads=$(llvm-otool-18 -L \
+    "$PRODUCTS/libWidgetKit.dylib" \
+    | awk '$1 == "/usr/lib/libAppIntents.dylib" { count++ } END { print count + 0 }')
+widgetkit_intents_loads=$(llvm-otool-18 -L \
+    "$PRODUCTS/libWidgetKit.dylib" \
+    | awk '$1 == "/usr/lib/libIntents.dylib" { count++ } END { print count + 0 }')
+widgetkit_swiftui_loads=$(llvm-otool-18 -L \
+    "$PRODUCTS/libWidgetKit.dylib" \
+    | awk '$1 == "/usr/lib/libSwiftUI.dylib" { count++ } END { print count + 0 }')
+[ "$core_graphics_open_loads" -eq 1 ] \
+    || die 'CoreGraphics OpenCoreGraphics load count drifted'
+[ "$app_intents_uikit_loads" -eq 1 ] \
+    || die 'AppIntents UIKit load count drifted'
+[ "$intents_openuikit_loads" -eq 1 ] \
+    || die 'Intents OpenUIKit load count drifted'
+[ "$widgetkit_core_graphics_loads" -eq 1 ] \
+    || die 'WidgetKit CoreGraphics load count drifted'
+[ "$widgetkit_app_intents_loads" -eq 1 ] \
+    || die 'WidgetKit AppIntents load count drifted'
+[ "$widgetkit_intents_loads" -eq 1 ] \
+    || die 'WidgetKit Intents load count drifted'
+[ "$widgetkit_swiftui_loads" -eq 1 ] \
+    || die 'WidgetKit SwiftUI load count drifted'
+for binary in "$PRODUCTS/libCoreGraphics.dylib" \
+    "$PRODUCTS/libAppIntents.dylib" "$PRODUCTS/libIntents.dylib" \
+    "$PRODUCTS/libWidgetKit.dylib"; do
+    if llvm-otool-18 -L "$binary" \
+        | grep -Eq '/System/Library/Frameworks/(CoreGraphics|AppIntents|Intents|WidgetKit|SwiftUI|UIKit)\.framework/'; then
+        die "portable WidgetKit graph loads an Apple framework: $binary"
+    fi
+done
+{
+    printf 'format\ttrue-ios-widgetkit-loads-v1\n'
+    printf 'probe\tcoregraphics=%s\tappintents=%s\tintents=%s\twidgetkit=%s\n' \
+        "$core_graphics_loads" "$app_intents_loads" "$intents_loads" \
+        "$widgetkit_loads"
+    printf 'coregraphics\topencoregraphics=%s\tapple-self-load=0\n' \
+        "$core_graphics_open_loads"
+    printf 'appintents\tuikit=%s\tapple-self-load=0\n' \
+        "$app_intents_uikit_loads"
+    printf 'intents\topenuikit=%s\tapple-self-load=0\n' \
+        "$intents_openuikit_loads"
+    printf 'widgetkit\tcoregraphics=%s\tappintents=%s\tintents=%s\tswiftui=%s\tapple-self-load=0\n' \
+        "$widgetkit_core_graphics_loads" "$widgetkit_app_intents_loads" \
+        "$widgetkit_intents_loads" "$widgetkit_swiftui_loads"
+} > "$AUDIT/widgetkit-loads.tsv"
 
 accelerate_vimage_exports=$(llvm-nm-18 --defined-only --extern-only \
     --just-symbol-name "$PRODUCTS/libAccelerate.dylib" \

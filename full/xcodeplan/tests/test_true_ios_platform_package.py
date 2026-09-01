@@ -23,6 +23,7 @@ MODULES = (
     "Foundation",
     "Dispatch",
     "OpenCoreGraphics",
+    "CoreGraphics",
     "OpenUIKit",
     "DeveloperToolsSupport",
     "UIKit",
@@ -30,6 +31,9 @@ MODULES = (
     "Combine",
     "Symbols",
     "SwiftUI",
+    "AppIntents",
+    "Intents",
+    "WidgetKit",
     "UniformTypeIdentifiers",
     "BackgroundTasks",
     "CoreSpotlight",
@@ -182,7 +186,20 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
 
         for module in MODULES:
             loads: tuple[str, ...] = ()
-            if module == "BackgroundTasks":
+            if module == "CoreGraphics":
+                loads = ("/usr/lib/libOpenCoreGraphics.dylib",)
+            elif module == "AppIntents":
+                loads = ("/usr/lib/libUIKit.dylib",)
+            elif module == "Intents":
+                loads = ("/usr/lib/libOpenUIKit.dylib",)
+            elif module == "WidgetKit":
+                loads = (
+                    "/usr/lib/libCoreGraphics.dylib",
+                    "/usr/lib/libAppIntents.dylib",
+                    "/usr/lib/libIntents.dylib",
+                    "/usr/lib/libSwiftUI.dylib",
+                )
+            elif module == "BackgroundTasks":
                 loads = ("/usr/lib/libDispatch.dylib",)
             elif module == "CoreSpotlight":
                 loads = ("/usr/lib/libUniformTypeIdentifiers.dylib",)
@@ -362,6 +379,10 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             loads=(
                 "/usr/lib/libSwiftUI.dylib",
                 "/usr/lib/libUIKit.dylib",
+                "/usr/lib/libCoreGraphics.dylib",
+                "/usr/lib/libAppIntents.dylib",
+                "/usr/lib/libIntents.dylib",
+                "/usr/lib/libWidgetKit.dylib",
                 "/usr/lib/libFoundationModels.dylib",
                 "/usr/lib/libNaturalLanguage.dylib",
                 "/usr/lib/libAuthenticationServices.dylib",
@@ -430,6 +451,18 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         (
             self.root / "attestation/backgroundtasks-corespotlight-sources.tsv"
         ).write_text(background_spotlight_provenance, encoding="ascii")
+        widgetkit_provenance = (
+            "format\ttrue-ios-widgetkit-sources-v1\n"
+            + "".join(
+                f"source\t{path}\t{digest}\n"
+                for path, digest in sorted(
+                    platform_package._WIDGETKIT_SOURCE_HASHES.items()
+                )
+            )
+        )
+        (self.root / "attestation/widgetkit-sources.tsv").write_text(
+            widgetkit_provenance, encoding="ascii"
+        )
         foundationmodels_exports = sorted(
             platform_package._REQUIRED_FOUNDATIONMODELS_EXPORTS
         )
@@ -476,7 +509,9 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         (self.root / "attestation/runtime.log").write_text(
             "TRUE_IOS_SWIFTUI_DYLIB_RUNTIME_OK descendants=3 text=rendered "
             "button=rendered foundationmodels=generated-content,fail-closed "
-            "uniform-types=text backgroundtasks=scheduler corespotlight=index\n",
+            "coregraphics=portable appintents=execution intents=identity "
+            "widgetkit=process-local uniform-types=text "
+            "backgroundtasks=scheduler corespotlight=index\n",
             encoding="utf-8",
         )
         for name, loader_stderr in (
@@ -500,6 +535,10 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
                 "OpenUIKit",
                 "Combine",
                 "OpenCombine",
+                "CoreGraphics",
+                "AppIntents",
+                "Intents",
+                "WidgetKit",
                 "FoundationModels",
                 "NaturalLanguage",
                 "AuthenticationServices",
@@ -547,6 +586,16 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             "probe\tuniformtypeidentifiers=1\tbackgroundtasks=1\tcorespotlight=1\n"
             "backgroundtasks\tdispatch=1\tapple-self-load=0\n"
             "corespotlight\tuniformtypeidentifiers=1\tapple-self-load=0\n",
+            encoding="ascii",
+        )
+        (self.root / "attestation/widgetkit-loads.tsv").write_text(
+            "format\ttrue-ios-widgetkit-loads-v1\n"
+            "probe\tcoregraphics=1\tappintents=1\tintents=1\twidgetkit=1\n"
+            "coregraphics\topencoregraphics=1\tapple-self-load=0\n"
+            "appintents\tuikit=1\tapple-self-load=0\n"
+            "intents\topenuikit=1\tapple-self-load=0\n"
+            "widgetkit\tcoregraphics=1\tappintents=1\tintents=1\t"
+            "swiftui=1\tapple-self-load=0\n",
             encoding="ascii",
         )
         (
@@ -668,7 +717,7 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         )
         (self.root / "PLATFORM_COMPLETE").write_text(
             "TRUE_IOS_PLATFORM_COMPLETE "
-            "target=arm64-apple-ios18.0-simulator dylibs=24 swiftui_sources=11 "
+            "target=arm64-apple-ios18.0-simulator dylibs=28 swiftui_sources=11 "
             f"source={self.source_subject} artifacts={sha256(artifact_ledger)} "
             f"symlinks={sha256(symlink_ledger)}\n",
             encoding="ascii",
@@ -708,6 +757,10 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             )
         for framework in (
             "FoundationModels",
+            "CoreGraphics",
+            "AppIntents",
+            "Intents",
+            "WidgetKit",
             "UniformTypeIdentifiers",
             "BackgroundTasks",
             "CoreSpotlight",
@@ -918,6 +971,48 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(
             platform_package.TrueIOSPlatformError,
             "source provenance differs",
+        ):
+            platform_package.validate(self.root)
+
+    def test_resealed_widgetkit_source_provenance_mutation_is_rejected(self) -> None:
+        provenance = self.root / "attestation/widgetkit-sources.tsv"
+        source_digest = next(iter(platform_package._WIDGETKIT_SOURCE_HASHES.values()))
+        provenance.write_text(
+            provenance.read_text(encoding="ascii").replace(
+                source_digest,
+                "0" * 64,
+                1,
+            ),
+            encoding="ascii",
+        )
+        self.seal()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "WidgetKit source provenance differs",
+        ):
+            platform_package.validate(self.root)
+
+    def test_resealed_widgetkit_required_load_removal_is_rejected(self) -> None:
+        binary = macho(
+            filetype=6,
+            install_name="/usr/lib/libWidgetKit.dylib",
+            loads=(
+                "/usr/lib/libCoreGraphics.dylib",
+                "/usr/lib/libAppIntents.dylib",
+                "/usr/lib/libIntents.dylib",
+            ),
+        )
+        for relative in (
+            "products/libWidgetKit.dylib",
+            "sdk/System/Library/Frameworks/WidgetKit.framework/WidgetKit",
+            "runtime-root/darwin/usr/lib/libWidgetKit.dylib",
+            "runtime-root/darwin/System/Library/Frameworks/WidgetKit.framework/WidgetKit",
+        ):
+            (self.root / relative).write_bytes(binary)
+        self.seal()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "libWidgetKit does not load exactly one /usr/lib/libSwiftUI.dylib",
         ):
             platform_package.validate(self.root)
 
