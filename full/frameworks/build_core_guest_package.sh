@@ -1864,7 +1864,7 @@ cp "$WORK/open-compression-host-test.log" \
 } > "$STAGE/attestation/open-compression-abi.tsv"
 printf 'local\thost/libOpenCompressionHost.so\t%s\tbuilt from full/compression/OpenCompressionHost.c\n' \
     "$(hash_file "$COMPRESSION_HOST")" >> "$RUNTIME/.manifest"
-PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST:$COMPRESSION_HOST
+EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST:$COMPRESSION_HOST
 
 echo '== prove pinned Darwin group lookup adapters and native ABI agreement'
 LIBSYSTEM_REAL=$RUNTIME/darwin/usr/lib/libSystem.real.dylib
@@ -1911,7 +1911,7 @@ awk '$0 == "  static storage reused 0" { $0 = "  static storage reused 1" }
 cmp "$GROUP_GOLDEN" "$WORK/group-lookup-native.normalized.log" \
     || die 'native Linux group reentrant/layout contract differs from Darwin'
 LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
 MACHORUN_ROOT="$RUNTIME" \
     "$RUNTIME/machorun" "$GROUP_FIXTURE" \
     > "$WORK/group-lookup-macho.log"
@@ -1939,7 +1939,7 @@ for symbol in _fgetxattr _fsetxattr _getxattr _listxattr _setxattr; do
         || die "staged libSystem $symbol definition count $definition_count, expected 1"
 done
 LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
 MACHORUN_ROOT="$RUNTIME" \
     "$RUNTIME/machorun" "$XATTR_FIXTURE" \
     > "$WORK/xattr-macho.log"
@@ -1980,7 +1980,7 @@ for fixture in quota uname; do
     [ "$definition_count" -eq 1 ] \
         || die "staged libSystem $adapter_symbol definition count $definition_count, expected 1"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
     MACHORUN_ROOT="$RUNTIME" \
         "$RUNTIME/machorun" "$fixture_binary" \
         > "$WORK/$fixture-macho.actual"
@@ -2048,6 +2048,7 @@ env SUPPORT_ROOT="$W" SWIFT_FOUNDATION="$SWIFT_FOUNDATION" \
 FOUNDATION_INTL_HOST=$RUNTIME/host/libOpenFoundationInternationalizationHost.so
 [ -f "$FOUNDATION_INTL_HOST" ] && [ ! -L "$FOUNDATION_INTL_HOST" ] \
     || die 'FoundationInternationalization Linux helper is missing after build'
+PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST:$COMPRESSION_HOST
 
 echo '== prewarm a new core-package Darwin module cache'
 swiftc -target "$TARGET" -sdk "$STAGE/sdk" \

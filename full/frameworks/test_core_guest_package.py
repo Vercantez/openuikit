@@ -1897,8 +1897,16 @@ class ShellContractTests(unittest.TestCase):
             "$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST:$COMPRESSION_HOST",
             builder,
         )
+        self.assertIn(
+            "EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$URL_TRANSPORT_HOST:"
+            "$RELATIVE_TIME_HOST:$COMPRESSION_HOST",
+            builder,
+        )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 23
+            builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 3
+        )
+        self.assertEqual(
+            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 20
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
