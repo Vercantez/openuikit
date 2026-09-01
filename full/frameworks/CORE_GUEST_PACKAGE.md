@@ -14,9 +14,9 @@ LocalAuthentication, SafariServices, Network, StoreKit, AudioToolbox,
 CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI,
 MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog,
 UniformTypeIdentifiers, SwiftData, UserNotifications, QuickLook, and its
-`_QuickLook_SwiftUI` cross-import overlay, CoreMedia, AVFoundation, AVKit, and
-Charts. These are forty-three reusable ARM64 Mach-O platform binaries
-(forty-two frameworks plus ICU), including real
+`_QuickLook_SwiftUI` cross-import overlay, CoreMedia, AVFoundation, AVKit,
+Charts, CoreTransferable, and Photos. These are forty-five reusable ARM64
+Mach-O platform binaries (forty-four frameworks plus ICU), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
@@ -44,7 +44,7 @@ the fact. Both source checkouts are bracketed for commit/tree and cleanliness;
 the support commit must also descend from the accepted Foundation substrate.
 
 The Foundation facade source list is mandatory and defaults to
-`full/foundation/foundation_guest_sources.txt`. Its thirty-one LF-terminated lines
+`full/foundation/foundation_guest_sources.txt`. Its thirty-two LF-terminated lines
 are validated for exact order, identity, regular-file topology, and content
 hash before and after the build. A different path can be supplied with
 `--foundation-sources-manifest`, but it must satisfy that same exact contract.
@@ -70,11 +70,11 @@ The semantic build order is deliberate:
    donation, resolution, and host-driven controller state.
 8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-9. Compile and link twenty-five app-facing first-party modules as independent ARM64
+9. Compile and link twenty-seven app-facing first-party modules as independent ARM64
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
-10. Link all forty-three reusable platform dylibs (forty-two frameworks plus
+10. Link all forty-five reusable platform dylibs (forty-four frameworks plus
    ICU) and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.
@@ -167,6 +167,16 @@ through packaged Swift cross-import metadata and supplies both Apple
 generators and editing fail closed; hosts can replace presentation through the
 attested SPI without changing application source.
 
+`libCoreTransferable.dylib` supplies the data and file transfer-representation
+model used by unchanged package sources. Its result builder composes multiple
+representations, asynchronous export/import closures execute normally, and an
+unconfigured direction throws a typed error instead of pretending a service is
+available. `libPhotos.dylib` provides authorization, filtered/sorted/limited
+asset fetches, image-data/orientation delivery, and thumbnails over an explicit
+host-installed volatile library. Authorization defaults to denied and no
+durable system photo library is claimed. Both frameworks have standalone Mach-O
+runtime gates and pinned untouched IceCubes consumer hashes.
+
 The pinned swift-foundation revision has an upstream-corrected final-class
 Predicate key-path bug. The builder verifies exact source and patch hashes,
 applies the backport only to a derived build copy, and leaves the pinned
@@ -183,7 +193,7 @@ overload selection, and composable effect options. It is emitted as the literal
 `Symbols` module and `libSymbols.dylib`; the builder rejects any load of Apple's
 Symbols framework.
 
-The production SwiftUI source-set contract is nine Swift files. The seventh
+The production SwiftUI source-set contract is eleven Swift files. The seventh
 is the settings runtime used by Focus's untouched internal-settings screens:
 sections, toggles, text fields, pickers, disabled propagation, and retained
 change/publisher effects. It is compiled into the same real
@@ -240,7 +250,7 @@ reexported library's ordinal. The facade object has no direct RegexParser symbol
 dylib remains StringProcessing's transitive runtime dependency rather than a
 guessed direct link.
 
-The thirty-one-source facade's names-only undefined-symbol inventory is also a
+The thirty-two-source facade's names-only undefined-symbol inventory is also a
 packaged attestation. With the pinned Swift compiler it contains exactly 19
 `17_StringProcessing` records, two `15Synchronization` records, and zero
 `12_RegexParser` records, plus exactly two `6Darwin` records. The build refuses
