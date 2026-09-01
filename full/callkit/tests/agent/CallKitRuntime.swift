@@ -459,13 +459,6 @@ enum CallKitRuntime {
         }
 
         let controller = CXCallController()
-        let firstEnded = DispatchSemaphore(value: 0)
-        firstDelegate.onEnd = { firstEnded.signal() }
-        let error = request(controller, CXTransaction(action: CXEndCallAction(call: a)))
-        require(error == nil, "end A submit")
-        wait(firstEnded, "end A routed to owner")
-        require(firstDelegate.ended == [a], "first owner ended A")
-        require(secondDelegate.ended.isEmpty, "last provider must not steal A")
 
         let crossGroup = CXSetGroupCallAction(call: a, callUUIDToGroupWith: b)
         requireRequestError(
@@ -484,6 +477,14 @@ enum CallKitRuntime {
             .unknownCallProvider
         )
         require(firstDelegate.started.isEmpty && secondDelegate.started.isEmpty, "start unbound with two providers")
+
+        let firstEnded = DispatchSemaphore(value: 0)
+        firstDelegate.onEnd = { firstEnded.signal() }
+        let error = request(controller, CXTransaction(action: CXEndCallAction(call: a)))
+        require(error == nil, "end A submit")
+        wait(firstEnded, "end A routed to owner")
+        require(firstDelegate.ended == [a], "first owner ended A")
+        require(secondDelegate.ended.isEmpty, "last provider must not steal A")
 
         first.invalidate()
         second.invalidate()
