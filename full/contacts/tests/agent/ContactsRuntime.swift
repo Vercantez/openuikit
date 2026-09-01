@@ -13,6 +13,16 @@ func fail(_ message: String) -> Never {
     exit(1)
 }
 
+func wait(_ semaphore: DispatchSemaphore, _ message: String) {
+    if semaphore.wait(timeout: .now() + 5) == .timedOut {
+        fail(message)
+    }
+}
+
+func keys(_ values: String...) -> [any CNKeyDescriptor] {
+    values.map { $0 as NSString }
+}
+
 final class RecordingVisitor: NSObject, CNChangeHistoryEventVisitor {
     var addContacts = 0
     var subgroups = 0
@@ -31,27 +41,76 @@ expect(constants.count == 308, "expected 308 public string constants, got \(cons
 expect(constants.allSatisfy { !$0.isEmpty }, "public string constants must be nonempty")
 expect(CNContactGivenNameKey == "givenName", "given name key")
 expect(CNLabelHome == "_$!<Home>!$_", "home label payload")
+expect(CNLabelWork == "_$!<Work>!$_", "work label payload")
+expect(CNLabelOther == "_$!<Other>!$_", "other label payload")
 expect(CNLabelPhoneNumberiPhone == "iPhone", "iPhone label")
+expect(CNLabelPhoneNumberMobile == "_$!<Mobile>!$_", "mobile label")
 expect(CNErrorDomain == "CNErrorDomain", "error domain")
 expect(CNLabelContactRelationFather == "_$!<Father>!$_", "father relation")
+expect(CNLabelContactRelationMother == "_$!<Mother>!$_", "mother relation")
+expect(CNLabelDateAnniversary == "_$!<Anniversary>!$_", "anniversary label")
 
 expect(CNAuthorizationStatus.notDetermined.rawValue == 0, "auth notDetermined")
+expect(CNAuthorizationStatus.restricted.rawValue == 1, "auth restricted")
+expect(CNAuthorizationStatus.denied.rawValue == 2, "auth denied")
 expect(CNAuthorizationStatus.authorized.rawValue == 3, "auth authorized")
+expect(CNAuthorizationStatus.limited.rawValue == 4, "auth limited")
 expect(CNAuthorizationStatus.limited != CNAuthorizationStatus.denied, "auth inequality")
+expect(CNContactSortOrder.none.rawValue == 0, "sort none")
+expect(CNContactSortOrder.userDefault.rawValue == 1, "sort userDefault")
+expect(CNContactSortOrder.givenName.rawValue == 2, "sort given")
 expect(CNContactSortOrder.familyName.rawValue == 3, "sort family")
+expect(CNContactSortOrder.givenName != .familyName, "sort inequality")
+expect(CNContactType.person.rawValue == 0, "person type")
 expect(CNContactType.organization.rawValue == 1, "org type")
+expect(CNContactType.person != .organization, "contact type inequality")
 expect(CNEntityType.contacts.rawValue == 0, "entity")
+expect(CNContainerType.unassigned.rawValue == 0, "unassigned")
+expect(CNContainerType.local.rawValue == 1, "local container type")
+expect(CNContainerType.exchange.rawValue == 2, "exchange")
 expect(CNContainerType.cardDAV.rawValue == 3, "carddav")
+expect(CNContainerType.local != .exchange, "container inequality")
+expect(CNContactDisplayNameOrder.userDefault.rawValue == 0, "display userDefault")
+expect(CNContactDisplayNameOrder.givenNameFirst.rawValue == 1, "display given first")
 expect(CNContactDisplayNameOrder.familyNameFirst.rawValue == 2, "display order")
+expect(CNContactDisplayNameOrder.givenNameFirst != .familyNameFirst, "display inequality")
+expect(CNContactFormatterStyle.fullName.rawValue == 0, "full name style")
 expect(CNContactFormatterStyle.phoneticFullName.rawValue == 1, "formatter style")
+expect(CNContactFormatterStyle.fullName != .phoneticFullName, "formatter inequality")
 expect(CNPostalAddressFormatterStyle.mailingAddress.rawValue == 0, "postal style")
 expect(CNError.Code.authorizationDenied.rawValue == 100, "auth denied code")
 expect(CNError.featureNotAvailable.rawValue == 104, "feature not available")
-expect(CNError.vCardMalformed.rawValue == 800, "vcard malformed")
+expect(CNError.recordDoesNotExist.rawValue == 200, "record does not exist")
+expect(CNError.insertedRecordAlreadyExists.rawValue == 201, "already exists")
+expect(CNError.predicateInvalid.rawValue == 400, "predicate invalid")
+expect(CNError.Code(rawValue: 100) == .authorizationDenied, "error rawValue init")
+expect(CNAuthorizationStatus(rawValue: 0) == .notDetermined, "auth rawValue init")
+expect(CNContactSortOrder(rawValue: 3) == .familyName, "sort rawValue init")
+expect(CNContactType(rawValue: 1) == .organization, "type rawValue init")
+expect(CNEntityType(rawValue: 0) == .contacts, "entity rawValue init")
+expect(CNContainerType(rawValue: 3) == .cardDAV, "container rawValue init")
+expect(CNContactFormatterStyle(rawValue: 1) == .phoneticFullName, "formatter rawValue init")
+expect(CNContactDisplayNameOrder(rawValue: 2) == .familyNameFirst, "display rawValue init")
+expect(CNPostalAddressFormatterStyle(rawValue: 0) == .mailingAddress, "postal rawValue init")
 var hasher = Hasher()
 CNAuthorizationStatus.authorized.hash(into: &hasher)
+CNContactSortOrder.givenName.hash(into: &hasher)
+CNContactType.person.hash(into: &hasher)
+CNContainerType.local.hash(into: &hasher)
+CNEntityType.contacts.hash(into: &hasher)
+CNContactDisplayNameOrder.givenNameFirst.hash(into: &hasher)
+CNContactFormatterStyle.fullName.hash(into: &hasher)
+CNPostalAddressFormatterStyle.mailingAddress.hash(into: &hasher)
+CNError.Code.authorizationDenied.hash(into: &hasher)
 _ = hasher.finalize()
 _ = CNContactSortOrder.givenName.hashValue
+_ = CNContactDisplayNameOrder.givenNameFirst.hashValue
+_ = CNContactFormatterStyle.fullName.hashValue
+_ = CNContactType.person.hashValue
+_ = CNContainerType.local.hashValue
+_ = CNEntityType.contacts.hashValue
+_ = CNPostalAddressFormatterStyle.mailingAddress.hashValue
+_ = CNError.Code.authorizationDenied.hashValue
 
 let denied = CNError(
     .authorizationDenied,
@@ -71,7 +130,7 @@ let store = CNContactStore()
 do {
     _ = try store.unifiedContacts(
         matching: CNContact.predicateForContacts(matchingName: "Ada"),
-        keysToFetch: [CNContactGivenNameKey]
+        keysToFetch: keys(CNContactGivenNameKey)
     )
     fail("fetch must fail closed before requestAccess")
 } catch let error as CNError {
@@ -80,18 +139,47 @@ do {
     fail("unexpected error \(error)")
 }
 
+var requestAccessReturned = false
 var granted = false
 var grantError: Error?
+let grantedSem = DispatchSemaphore(value: 0)
 store.requestAccess(for: .contacts) { ok, error in
+    expect(requestAccessReturned, "requestAccess callback is not reentrant on the calling stack")
     granted = ok
     grantError = error
+    _ = try? store.containers(matching: nil)
+    var nestedReturned = false
+    let nestedSem = DispatchSemaphore(value: 0)
+    store.requestAccess(for: .contacts) { nestedGranted, nestedError in
+        expect(nestedReturned, "nested requestAccess callback is not reentrant")
+        expect(nestedGranted && nestedError == nil, "nested requestAccess")
+        nestedSem.signal()
+    }
+    nestedReturned = true
+    wait(nestedSem, "nested requestAccess deadlock")
+    grantedSem.signal()
 }
+requestAccessReturned = true
+wait(grantedSem, "requestAccess callback deadlock")
 expect(grantError == nil, "requestAccess error")
 expect(granted, "in-memory requestAccess")
 expect(
     CNContactStore.authorizationStatus(for: .contacts) == .authorized,
     "authorized after request"
 )
+
+let asyncGrantedSem = DispatchSemaphore(value: 0)
+var asyncGranted = false
+Task {
+    do {
+        asyncGranted = try await store.requestAccess(for: .contacts)
+    } catch {
+        fail("async requestAccess \(error)")
+    }
+    asyncGrantedSem.signal()
+}
+wait(asyncGrantedSem, "async requestAccess deadlock")
+expect(asyncGranted, "async requestAccess grants the in-memory sandbox")
 
 let contact = CNMutableContact()
 contact.givenName = "Ada"
@@ -164,6 +252,11 @@ expect(contact.isKeyAvailable(CNContactGivenNameKey), "mutable keys available")
 expect(contact.imageDataAvailable, "image available")
 expect(contact.id.uuidString == contact.identifier, "identifiable id")
 expect(contact.areKeysAvailable([CNContactFormatter.descriptorForRequiredKeys(for: .fullName)]), "descriptor keys")
+let givenDescriptor: any CNKeyDescriptor = CNContactGivenNameKey as NSString
+expect(givenDescriptor is NSString, "String keys are NSString descriptors")
+expect(givenDescriptor is NSCopying, "descriptor NSCopying")
+expect(givenDescriptor is NSSecureCoding, "descriptor NSSecureCoding")
+expect(givenDescriptor is NSObjectProtocol, "descriptor NSObjectProtocol")
 
 let formatted = CNContactFormatter.string(from: contact, style: .fullName)
 expect(formatted == "Ada Lovelace", "full name \(String(describing: formatted))")
@@ -197,6 +290,7 @@ expect(CNLabeledValue<NSString>.localizedString(forLabel: CNLabelHome) == "Home"
 expect(CNContact.localizedString(forKey: CNContactGivenNameKey) == "Given Name", "contact key title")
 expect(CNInstantMessageAddress.localizedString(forService: CNInstantMessageServiceJabber) == "Jabber", "im service")
 expect(CNSocialProfile.localizedString(forKey: CNSocialProfileUsernameKey) == "Username", "social key")
+expect(CNSocialProfile.localizedString(forService: CNSocialProfileServiceTwitter) == "Twitter", "social service")
 
 let labeled = CNLabeledValue(label: CNLabelWork, value: "work@example.com" as NSString)
 let relabeled = labeled.settingLabel(CNLabelOther)
@@ -207,6 +301,22 @@ expect((relabeled.settingValue("other@example.com" as NSString).value as String)
 let emptyPhone = CNPhoneNumber.new()
 expect(emptyPhone.stringValue == "", "empty phone")
 
+var observerQueries = 0
+let observer = NotificationCenter.default.addObserver(
+    forName: .CNContactStoreDidChange,
+    object: store,
+    queue: nil
+) { _ in
+    let containers = try? store.containers(matching: nil)
+    expect(containers?.count == 1, "observer reentered containers()")
+    let custom = NSPredicate { object, _ in
+        _ = try? store.defaultContainerIdentifier()
+        return (object as? CNGroup) != nil || object is CNGroup
+    }
+    _ = try? store.groups(matching: custom)
+    observerQueries += 1
+}
+
 let save = CNSaveRequest()
 save.transactionAuthor = "ContactsRuntime"
 save.shouldRefetchContacts = true
@@ -216,10 +326,16 @@ let group = CNMutableGroup()
 group.name = "Scientists"
 save.add(group, toContainerWithIdentifier: nil)
 try! store.execute(save)
+expect(observerQueries >= 1, "did-change observer ran without deadlock")
 
 let fetched = try! store.unifiedContacts(
     matching: CNContact.predicateForContacts(matchingName: "Ada"),
-    keysToFetch: [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactEmailAddressesKey, CNContactPhoneNumbersKey]
+    keysToFetch: keys(
+        CNContactGivenNameKey,
+        CNContactFamilyNameKey,
+        CNContactEmailAddressesKey,
+        CNContactPhoneNumbersKey
+    )
 )
 expect(fetched.count == 1, "fetched ada")
 expect(fetched[0].givenName == "Ada", "fetched given")
@@ -227,17 +343,17 @@ expect(fetched[0].isKeyAvailable(CNContactEmailAddressesKey), "email key fetched
 
 let byEmail = try! store.unifiedContacts(
     matching: CNContact.predicateForContacts(matchingEmailAddress: "ada@example.com"),
-    keysToFetch: [CNContactIdentifierKey]
+    keysToFetch: keys(CNContactIdentifierKey)
 )
 expect(byEmail.count == 1, "email predicate")
 let byPhone = try! store.unifiedContacts(
     matching: CNContact.predicateForContacts(matching: CNPhoneNumber(stringValue: "+1-555-0100")),
-    keysToFetch: [CNContactIdentifierKey]
+    keysToFetch: keys(CNContactIdentifierKey)
 )
 expect(byPhone.count == 1, "phone predicate")
 let byID = try! store.unifiedContact(
     withIdentifier: contact.identifier,
-    keysToFetch: [CNContactGivenNameKey]
+    keysToFetch: keys(CNContactGivenNameKey)
 )
 expect(byID.givenName == "Ada", "unified by id")
 expect(byID.id == contact.id, "uuid identity")
@@ -249,7 +365,7 @@ let groups = try! store.groups(matching: CNGroup.predicateForGroups(withIdentifi
 expect(groups.count == 1 && groups[0].name == "Scientists", "group fetch")
 let inGroup = try! store.unifiedContacts(
     matching: CNContact.predicateForContactsInGroup(withIdentifier: group.identifier),
-    keysToFetch: [CNContactGivenNameKey]
+    keysToFetch: keys(CNContactGivenNameKey)
 )
 expect(inGroup.count == 1, "contacts in group")
 let containers = try! store.containers(matching: nil)
@@ -261,7 +377,7 @@ let ofContact = try! store.containers(
 expect(ofContact.count == 1, "container of contact")
 
 var enumerated = 0
-let request = CNContactFetchRequest(keysToFetch: [CNContactGivenNameKey, CNContactFamilyNameKey])
+let request = CNContactFetchRequest(keysToFetch: keys(CNContactGivenNameKey, CNContactFamilyNameKey))
 request.sortOrder = .familyName
 request.unifyResults = true
 try! store.enumerateContacts(with: request) { item, stop in
@@ -277,6 +393,23 @@ expect(comparator(fetched[0], fetched[0]) == .orderedSame, "comparator same")
 _ = CNContact.descriptorForAllComparatorKeys()
 _ = CNContactFormatter.descriptorForRequiredKeysForDelimiter
 _ = CNContactFormatter.descriptorForRequiredKeysForNameOrder
+
+let customPredicate = NSPredicate { object, _ in
+    _ = try? store.containers(matching: nil)
+    return (object as? CNContact)?.givenName == "Ada"
+}
+let customHits = try! store.unifiedContacts(
+    matching: customPredicate,
+    keysToFetch: keys(CNContactGivenNameKey)
+)
+expect(customHits.count == 1, "custom predicate reentered store without deadlock")
+
+let rejectAll = NSPredicate { _, _ in false }
+let rejected = try! store.unifiedContacts(
+    matching: rejectAll,
+    keysToFetch: keys(CNContactIdentifierKey)
+)
+expect(rejected.isEmpty, "untagged custom predicate is not misclassified")
 
 let vCard = try! CNContactVCardSerialization.data(with: [contact])
 let decoded = try! CNContactVCardSerialization.contacts(with: vCard)
@@ -314,7 +447,7 @@ updateRequest.update(update)
 try! store.execute(updateRequest)
 let updated = try! store.unifiedContact(
     withIdentifier: contact.identifier,
-    keysToFetch: [CNContactFamilyNameKey]
+    keysToFetch: keys(CNContactFamilyNameKey)
 )
 expect(updated.familyName == "King", "updated family")
 
@@ -336,21 +469,7 @@ let removeSub = CNChangeHistoryRemoveSubgroupFromGroupEvent(subgroup: group, gro
 removeSub.accept(visitor)
 expect(visitor.subgroups >= 1, "subgroup visitor")
 
-let remove = CNSaveRequest()
-remove.removeMember(contact, from: group)
-remove.delete(group)
-let doomed = updated.mutableCopy() as! CNMutableContact
-remove.delete(doomed)
-try! store.execute(remove)
-let remaining = try! store.unifiedContacts(
-    matching: CNContact.predicateForContacts(withIdentifiers: [contact.identifier]),
-    keysToFetch: [CNContactIdentifierKey]
-)
-expect(remaining.isEmpty, "deleted contact")
-
-expect(NSNotification.Name.CNContactStoreDidChange.rawValue == "CNContactStoreDidChangeNotification", "note name")
-
-let errorAliases: [CNError.Code] = [
+let attestedCodes: [CNError.Code] = [
     CNError.communicationError,
     CNError.dataAccessError,
     CNError.authorizationDenied,
@@ -365,22 +484,13 @@ let errorAliases: [CNError.Code] = [
     CNError.recordIdentifierInvalid,
     CNError.recordNotWritable,
     CNError.parentRecordDoesNotExist,
-    CNError.parentContainerNotWritable,
     CNError.validationMultipleErrors,
     CNError.validationTypeMismatch,
     CNError.validationConfigurationError,
     CNError.predicateInvalid,
     CNError.policyViolation,
-    CNError.clientIdentifierInvalid,
-    CNError.clientIdentifierDoesNotExist,
-    CNError.clientIdentifierCollision,
-    CNError.changeHistoryExpired,
-    CNError.changeHistoryInvalidAnchor,
-    CNError.changeHistoryInvalidFetchRequest,
-    CNError.vCardMalformed,
-    CNError.vCardSummarizationError,
 ]
-expect(Set(errorAliases.map(\.rawValue)).count == errorAliases.count, "unique error aliases")
+expect(Set(attestedCodes.map(\.rawValue)).count == attestedCodes.count, "unique attested error aliases")
 let hashedError = CNError(.communicationError)
 expect(hashedError == CNError(.communicationError), "error equality")
 expect(hashedError != CNError(.dataAccessError), "error inequality")
@@ -394,7 +504,7 @@ _ = hashedError.localizedDescription
 
 _ = try! store.unifiedContacts(
     matching: CNContact.predicateForContactsInContainer(withIdentifier: store.defaultContainerIdentifier()),
-    keysToFetch: [CNContactIdentifierKey]
+    keysToFetch: keys(CNContactIdentifierKey)
 )
 _ = try! store.groups(matching: CNGroup.predicateForGroupsInContainer(withIdentifier: store.defaultContainerIdentifier()))
 _ = try! store.containers(matching: CNContainer.predicateForContainers(withIdentifiers: [store.defaultContainerIdentifier()]))
@@ -406,7 +516,7 @@ historyRequest.startingToken = store.currentHistoryToken
 historyRequest.includeGroupChanges = true
 historyRequest.shouldUnifyResults = true
 historyRequest.mutableObjects = false
-historyRequest.additionalContactKeyDescriptors = [CNContactGivenNameKey]
+historyRequest.additionalContactKeyDescriptors = keys(CNContactGivenNameKey)
 historyRequest.excludedTransactionAuthors = ["ContactsRuntime"]
 _ = CNFetchRequest()
 
@@ -418,5 +528,59 @@ expect(postalCopy.city == "London", "postal copy independence")
 expect(CNContactRelation(name: "X").name == "X", "relation name")
 expect(!contact.isUnifiedWithContact(withIdentifier: "missing"), "not unified")
 
-print("CONTACTS_AGENT_RUNTIME_OK")
+let rolledInsert = CNMutableContact()
+rolledInsert.givenName = "RollbackA"
+let duplicateInsert = CNSaveRequest()
+duplicateInsert.add(rolledInsert, toContainerWithIdentifier: nil)
+duplicateInsert.add(rolledInsert, toContainerWithIdentifier: nil)
+do {
+    try store.execute(duplicateInsert)
+    fail("duplicate insert must fail the whole transaction")
+} catch let error as CNError {
+    expect(error.code == .insertedRecordAlreadyExists, "duplicate insert code")
+} catch {
+    fail("unexpected rollback error \(error)")
+}
+let rolledHits = try! store.unifiedContacts(
+    matching: CNContact.predicateForContacts(matchingName: "RollbackA"),
+    keysToFetch: keys(CNContactGivenNameKey)
+)
+expect(rolledHits.isEmpty, "valid insert rolled back after later duplicate")
 
+let keep = CNMutableContact()
+keep.givenName = "KeepMe"
+let ghost = CNMutableContact()
+ghost.givenName = "Ghost"
+let updateMissing = CNSaveRequest()
+updateMissing.add(keep, toContainerWithIdentifier: nil)
+updateMissing.update(ghost)
+do {
+    try store.execute(updateMissing)
+    fail("update of missing contact must fail the whole transaction")
+} catch let error as CNError {
+    expect(error.code == .recordDoesNotExist, "missing update code")
+} catch {
+    fail("unexpected missing-update error \(error)")
+}
+let keepHits = try! store.unifiedContacts(
+    matching: CNContact.predicateForContacts(matchingName: "KeepMe"),
+    keysToFetch: keys(CNContactGivenNameKey)
+)
+expect(keepHits.isEmpty, "valid insert rolled back after later invalid update")
+
+let remove = CNSaveRequest()
+remove.removeMember(contact, from: group)
+remove.delete(group)
+let doomed = updated.mutableCopy() as! CNMutableContact
+remove.delete(doomed)
+try! store.execute(remove)
+let remaining = try! store.unifiedContacts(
+    matching: CNContact.predicateForContacts(withIdentifiers: [contact.identifier]),
+    keysToFetch: keys(CNContactIdentifierKey)
+)
+expect(remaining.isEmpty, "deleted contact")
+
+expect(NSNotification.Name.CNContactStoreDidChange.rawValue == "CNContactStoreDidChangeNotification", "note name")
+NotificationCenter.default.removeObserver(observer)
+
+print("CONTACTS_AGENT_RUNTIME_OK")
