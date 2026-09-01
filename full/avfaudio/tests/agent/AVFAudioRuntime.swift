@@ -1,6 +1,12 @@
 import Foundation
 import AVFAudio
 @_spi(OpenUIKitHost) import AVFAudio
+#if canImport(CoreAudioTypes)
+import CoreAudioTypes
+#endif
+#if canImport(AudioToolbox)
+import AudioToolbox
+#endif
 
 enum RuntimeFailure: Error {
     case message(String)
@@ -77,6 +83,7 @@ func run() throws {
     try require(!sampleTime.isHostTimeValid, "host time invalid")
     let both = AVAudioTime(hostTime: host, sampleTime: 0, atRate: 44100)
     try require(both.extrapolateTime(fromAnchor: sampleTime) != nil, "extrapolate")
+    try proveAudioTimeStampFlagRoundTrip()
 
     let session = AVAudioSession.sharedInstance()
     try session.setCategory(.playback, mode: .moviePlayback, options: [.mixWithOthers])
@@ -302,6 +309,107 @@ func requireFormat(_ format: AVAudioFormat?) throws -> AVAudioFormat {
 func requireConverter(_ converter: AVAudioConverter?) throws -> AVAudioConverter {
     guard let converter else { throw RuntimeFailure.message("nil converter") }
     return converter
+}
+
+func proveAudioTimeStampFlagRoundTrip() throws {
+    #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
+    func stamp(
+        hostTime: UInt64,
+        sampleTime: Double,
+        flags: AudioTimeStampFlags
+    ) -> AudioTimeStamp {
+        var value = AudioTimeStamp()
+        value.mHostTime = hostTime
+        value.mSampleTime = sampleTime
+        value.mFlags = flags
+        return value
+    }
+
+    func roundTrip(
+        _ flags: AudioTimeStampFlags,
+        expectHost: Bool,
+        expectSample: Bool,
+        label: String
+    ) throws {
+        var value = stamp(hostTime: 99, sampleTime: 44100, flags: flags)
+        try require(
+            value.mFlags.contains(.hostTimeValid) == expectHost,
+            "\(label) host flag"
+        )
+        try require(
+            value.mFlags.contains(.sampleTimeValid) == expectSample,
+            "\(label) sample flag"
+        )
+        let decoded = AVAudioTime(audioTimeStamp: &value, sampleRate: 44100)
+        try require(decoded.isHostTimeValid == expectHost, "\(label) host validity")
+        try require(decoded.isSampleTimeValid == expectSample, "\(label) sample validity")
+        var encoded = decoded.audioTimeStamp
+        try require(
+            encoded.mFlags.contains(.hostTimeValid) == expectHost,
+            "\(label) encoded host flag"
+        )
+        try require(
+            encoded.mFlags.contains(.sampleTimeValid) == expectSample,
+            "\(label) encoded sample flag"
+        )
+        let again = AVAudioTime(audioTimeStamp: &encoded, sampleRate: 44100)
+        try require(again.isHostTimeValid == expectHost, "\(label) second host validity")
+        try require(again.isSampleTimeValid == expectSample, "\(label) second sample validity")
+        if !expectHost {
+            try require(encoded.mHostTime == 0, "\(label) encoded host time cleared")
+        }
+        if !expectSample {
+            try require(encoded.mSampleTime == 0, "\(label) encoded sample time cleared")
+        }
+    }
+
+    // Leftover mHostTime=99 / mSampleTime=44100 must not imply validity.
+    try roundTrip([], expectHost: false, expectSample: false, label: "none")
+    try roundTrip([.hostTimeValid], expectHost: true, expectSample: false, label: "host-only")
+    try roundTrip([.sampleTimeValid], expectHost: false, expectSample: true, label: "sample-only")
+    try roundTrip(
+        [.hostTimeValid, .sampleTimeValid],
+        expectHost: true,
+        expectSample: true,
+        label: "both"
+    )
+    try roundTrip(
+        [.rateScalarValid],
+        expectHost: false,
+        expectSample: false,
+        label: "nonzero-rate-scalar-only"
+    )
+
+    let hostOnly = AVAudioTime(hostTime: 42)
+    var hostStamp = hostOnly.audioTimeStamp
+    try require(hostStamp.mFlags.contains(.hostTimeValid), "AVAudioTime host-only flag")
+    try require(!hostStamp.mFlags.contains(.sampleTimeValid), "AVAudioTime host-only excludes sample")
+    let hostDecoded = AVAudioTime(audioTimeStamp: &hostStamp, sampleRate: 48000)
+    try require(hostDecoded.isHostTimeValid && !hostDecoded.isSampleTimeValid, "host-only round-trip")
+
+    let sampleOnly = AVAudioTime(sampleTime: 128, atRate: 44100)
+    var sampleStamp = sampleOnly.audioTimeStamp
+    try require(sampleStamp.mFlags.contains(.sampleTimeValid), "AVAudioTime sample-only flag")
+    try require(!sampleStamp.mFlags.contains(.hostTimeValid), "AVAudioTime sample-only excludes host")
+    let sampleDecoded = AVAudioTime(audioTimeStamp: &sampleStamp, sampleRate: 44100)
+    try require(
+        sampleDecoded.isSampleTimeValid && !sampleDecoded.isHostTimeValid,
+        "sample-only round-trip"
+    )
+
+    let bothValid = AVAudioTime(hostTime: 7, sampleTime: 256, atRate: 48000)
+    var bothStamp = bothValid.audioTimeStamp
+    try require(
+        bothStamp.mFlags.contains(.hostTimeValid) && bothStamp.mFlags.contains(.sampleTimeValid),
+        "AVAudioTime both flags"
+    )
+    let bothDecoded = AVAudioTime(audioTimeStamp: &bothStamp, sampleRate: 48000)
+    try require(
+        bothDecoded.isHostTimeValid && bothDecoded.isSampleTimeValid,
+        "both flags round-trip"
+    )
+    print("AVFAUDIO_AUDIO_TIMESTAMP_FLAGS_OK")
+    #endif
 }
 
 do {

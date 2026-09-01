@@ -726,7 +726,10 @@ public final class AVAudioTime: NSObject, @unchecked Sendable {
         stamp.mSampleTime = isSampleTimeValid ? Double(sampleTime) : 0
         stamp.mHostTime = isHostTimeValid ? hostTime : 0
         stamp.mRateScalar = 1
-        stamp.mFlags = (isHostTimeValid ? 1 : 0) | (isSampleTimeValid ? 2 : 0)
+        stamp.mFlags = avfaudioTimeStampFlags(
+            hostValid: isHostTimeValid,
+            sampleValid: isSampleTimeValid
+        )
         return stamp
     }
 
@@ -735,9 +738,22 @@ public final class AVAudioTime: NSObject, @unchecked Sendable {
         self.hostTime = stamp.mHostTime
         self.sampleTime = AVAudioFramePosition(stamp.mSampleTime)
         self.sampleRate = sampleRate
-        self.isHostTimeValid = stamp.mHostTime != 0
-        self.isSampleTimeValid = stamp.mFlags != 0
+        self.isHostTimeValid = stamp.mFlags.contains(.hostTimeValid)
+        self.isSampleTimeValid = stamp.mFlags.contains(.sampleTimeValid)
         super.init()
     }
     #endif
 }
+
+#if canImport(CoreAudioTypes) || canImport(AudioToolbox)
+func avfaudioTimeStampFlags(hostValid: Bool, sampleValid: Bool) -> AudioTimeStampFlags {
+    var flags: AudioTimeStampFlags = []
+    if hostValid {
+        flags.insert(.hostTimeValid)
+    }
+    if sampleValid {
+        flags.insert(.sampleTimeValid)
+    }
+    return flags
+}
+#endif
