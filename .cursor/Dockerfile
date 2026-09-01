@@ -65,4 +65,5 @@ RUN apt-get update \
     && python3 --version
 
 ENV LANG=C.UTF-8 \
-    LC_ALL=C.UTF-8
+    LC_ALL=C.UTF-8 \
+    OPENUIKIT_MACIOS_ROOT=/opt/openuikit-evidence/dotnet-macios

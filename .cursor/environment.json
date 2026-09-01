@@ -4,5 +4,5 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "install": "bash .cursor/verify-cloud-environment.sh"
+  "install": "bash .cursor/install-static-evidence.sh && bash .cursor/verify-cloud-environment.sh"
 }

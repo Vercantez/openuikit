@@ -18,6 +18,7 @@ import os
 from pathlib import Path, PurePosixPath
 import re
 import stat
+import subprocess
 import sys
 import tempfile
 from typing import Any, Callable, Sequence
@@ -38,7 +39,7 @@ BUILD_ID_RE = re.compile(r"^bld-[A-Za-z0-9][A-Za-z0-9-]*$")
 CAMPAIGN_ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{0,127}$")
 CONTROL_RE = re.compile(r"[\x00-\x1f\x7f]")
 
-FRAMEWORK_KEYS = frozenset(
+FRAMEWORK_KEYS_V1 = frozenset(
     {
         "schema",
         "module",
@@ -59,6 +60,9 @@ FRAMEWORK_KEYS = frozenset(
         "provenance",
     }
 )
+FRAMEWORK_KEYS_V2 = FRAMEWORK_KEYS_V1 | frozenset(
+    {"apiCrosswalk", "apiDigester", "externalEvidence", "symbolConflicts"}
+)
 REQUIRED_IMMUTABLE = frozenset(
     {
         "AGENTS.md",
@@ -66,6 +70,14 @@ REQUIRED_IMMUTABLE = frozenset(
         "reference/framework.json",
         "reference/seed-files.sha256",
         "tests/acceptance/test_host.sh",
+    }
+)
+REQUIRED_IMMUTABLE_V2 = REQUIRED_IMMUTABLE | frozenset(
+    {
+        "reference/api-digester.json",
+        "reference/api-crosswalk.tsv",
+        "reference/external-evidence.json",
+        "reference/symbol-conflicts.tsv",
     }
 )
 
@@ -218,7 +230,48 @@ def read_json_object(path: Path, label: str) -> dict[str, Any]:
     return value
 
 
-def parse_and_verify_immutable_ledger(dossier: Path, ledger: Path) -> str:
+def validate_seed_semantics(repo_root: Path, dossier: Path) -> None:
+    """Run the shared fail-closed seed validator before a dossier is dispatchable."""
+
+    validator = repo_root / "full/framework-fanout/validate_seed.py"
+    refuse(
+        validator.is_file() and not validator.is_symlink(),
+        "shared framework seed validator is missing or unsafe",
+    )
+    try:
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-B",
+                str(validator),
+                "--framework",
+                str(dossier),
+                "--phase",
+                "seed",
+            ],
+            cwd=repo_root,
+            check=False,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+            timeout=120,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise ManifestError(f"cannot run shared seed validator for {dossier.name}: {exc}") from exc
+    if result.returncode != 0:
+        detail = result.stderr.strip() or result.stdout.strip() or "no diagnostic"
+        if len(detail) > 4000:
+            detail = detail[-4000:]
+        raise ManifestError(
+            f"shared seed validator rejected {dossier.name}: {detail}"
+        )
+
+
+def parse_and_verify_immutable_ledger(
+    dossier: Path, ledger: Path, required_paths: frozenset[str]
+) -> str:
     try:
         raw = ledger.read_bytes()
         text = raw.decode("ascii")
@@ -243,9 +296,9 @@ def parse_and_verify_immutable_ledger(dossier: Path, ledger: Path) -> str:
         f"immutable ledger paths for {dossier.name} are not sorted",
     )
     refuse(
-        REQUIRED_IMMUTABLE.issubset(entries),
+        required_paths.issubset(entries),
         f"immutable ledger for {dossier.name} lacks required paths: "
-        f"{sorted(REQUIRED_IMMUTABLE - set(entries))}",
+        f"{sorted(required_paths - set(entries))}",
     )
     for relative_text, expected in entries.items():
         target = confined_file(
@@ -261,14 +314,25 @@ def parse_and_verify_immutable_ledger(dossier: Path, ledger: Path) -> str:
 
 
 def normalized_runtime_marker(module: str) -> str:
-    normalized = re.sub(r"[^A-Za-z0-9]", "_", module).upper()
+    normalized = re.sub(r"[^A-Za-z0-9]+", "_", module).strip("_").upper()
     return f"{normalized}_AGENT_RUNTIME_OK"
 
 
 def verify_metadata(metadata: dict[str, Any], target: Target, dossier: Path) -> None:
-    refuse(set(metadata) == FRAMEWORK_KEYS, f"framework.json keys differ for {target.module}")
+    framework_schema = metadata.get("schema")
+    expected_keys = (
+        FRAMEWORK_KEYS_V2 if framework_schema == 2 else FRAMEWORK_KEYS_V1
+    )
+    refuse(
+        type(framework_schema) is int and framework_schema in {1, 2},
+        f"unsupported framework schema for {target.module}: {framework_schema!r}",
+    )
+    refuse(
+        set(metadata) == expected_keys,
+        f"framework.json keys differ for {target.module}",
+    )
     expected_scalars = {
-        "schema": 1,
+        "schema": framework_schema,
         "module": target.module,
         "slug": target.slug,
         "lane": target.lane,
@@ -280,6 +344,13 @@ def verify_metadata(metadata: dict[str, Any], target: Target, dossier: Path) -> 
         "corpusSummary": "reference/corpus-summary.json",
         "sdkInputs": "reference/sdk-inputs.tsv",
     }
+    if framework_schema == 2:
+        expected_scalars |= {
+            "apiCrosswalk": "reference/api-crosswalk.tsv",
+            "apiDigester": "reference/api-digester.json",
+            "externalEvidence": "reference/external-evidence.json",
+            "symbolConflicts": "reference/symbol-conflicts.tsv",
+        }
     for key, expected in expected_scalars.items():
         refuse(
             metadata.get(key) == expected,
@@ -341,10 +412,31 @@ def framework_record(
     )
     metadata = read_json_object(metadata_path, f"framework metadata for {target.module}")
     verify_metadata(metadata, target, dossier)
-    immutable_digest = parse_and_verify_immutable_ledger(dossier, ledger_path)
+    validate_seed_semantics(repo_root, dossier)
+    required_paths = (
+        REQUIRED_IMMUTABLE_V2
+        if metadata.get("schema") == 2
+        else REQUIRED_IMMUTABLE
+    )
+    immutable_digest = parse_and_verify_immutable_ledger(
+        dossier, ledger_path, required_paths
+    )
 
     module = target.module
     slug = target.slug
+    expected_markers = [environment_marker]
+    if metadata.get("schema") == 2:
+        expected_markers.append(
+            "FRAMEWORK_FANOUT_DELIVERABLE_OK "
+            f"module={module} lane={target.lane} symbols={metadata['symbolCount']}"
+        )
+    expected_markers.extend(
+        [
+            "FRAMEWORK_FANOUT_REFERENCE_OK",
+            metadata["runtimeMarker"],
+            f"FRAMEWORK_FANOUT_HOST_OK module={module} dylib=lib{module}.dylib",
+        ]
+    )
     return {
         "module": module,
         "slug": slug,
@@ -363,12 +455,7 @@ def framework_record(
         ],
         "immutableDigest": immutable_digest,
         "gate": f"bash full/{slug}/tests/acceptance/test_host.sh",
-        "expectedMarkers": [
-            environment_marker,
-            "FRAMEWORK_FANOUT_REFERENCE_OK",
-            metadata["runtimeMarker"],
-            f"FRAMEWORK_FANOUT_HOST_OK module={module} dylib=lib{module}.dylib",
-        ],
+        "expectedMarkers": expected_markers,
         "dependencies": list(target.dependencies),
         "symbolCount": metadata["symbolCount"],
         "risks": list(target.risks),
@@ -543,6 +630,53 @@ def run_self_check() -> None:
         reference.mkdir(parents=True)
         acceptance.mkdir(parents=True)
 
+        # The manifest builder must call the repository's shared semantic seed
+        # validator. This bounded fixture validator makes that contract visible
+        # in the offline self-check without copying the production validator.
+        validator = campaign_root / "validate_seed.py"
+        validator.write_text(
+            """#!/usr/bin/env python3
+import argparse
+import json
+from pathlib import Path
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--framework", required=True, type=Path)
+parser.add_argument("--phase", required=True, choices=("seed",))
+args = parser.parse_args()
+metadata = json.loads((args.framework / "reference/framework.json").read_text())
+if metadata.get("schema") == 2:
+    api = json.loads((args.framework / metadata["apiDigester"]).read_text())
+    external = json.loads((args.framework / metadata["externalEvidence"]).read_text())
+    crosswalk = (args.framework / metadata["apiCrosswalk"]).read_text().splitlines()
+    conflicts = (args.framework / metadata["symbolConflicts"]).read_text().splitlines()
+    root = api.get("ABIRoot") if isinstance(api, dict) else None
+    if not isinstance(root, dict) or root.get("name") != metadata.get("module"):
+        raise SystemExit("invalid API digester")
+    if not isinstance(root.get("children"), list) or not root["children"]:
+        raise SystemExit("empty API digester")
+    if not isinstance(external, dict) or external.get("module") != metadata.get("module"):
+        raise SystemExit("invalid external evidence")
+    crosswalk_header = (
+        "precise\tgraphKind\tgraphPath\tstatus\tbasis\trawCandidateCount\t"
+        "compatibleCandidateCount\tselectedNodePath\tcandidateNodePaths"
+    )
+    conflict_header = (
+        "precise\tpayloadSHA256\tgraphPath\townershipTier\toccurrenceCount\t"
+        "canonicalSelection\tkind\ttitle\tsymbolPath\tdeclaration"
+    )
+    if not crosswalk or crosswalk[0] != crosswalk_header:
+        raise SystemExit("invalid API crosswalk")
+    if len(crosswalk) - 1 != metadata.get("symbolCount"):
+        raise SystemExit("API crosswalk count differs")
+    if conflicts != [conflict_header]:
+        raise SystemExit("invalid symbol conflict ledger")
+print("FRAMEWORK_FANOUT_SEED_OK")
+""",
+            encoding="utf-8",
+            newline="\n",
+        )
+
         target_text = (
             "\t".join(TARGET_HEADER)
             + "\nTinyKit\ttinykit\tleaf-full\t100\tservice,fail-closed\tFoundation\n"
@@ -626,6 +760,165 @@ def run_self_check() -> None:
             == "FRAMEWORK_FANOUT_HOST_OK module=TinyKit dylib=libTinyKit.dylib",
             "marker self-check failed",
         )
+
+        api_digester = reference / "api-digester.json"
+        api_crosswalk = reference / "api-crosswalk.tsv"
+        external_evidence = reference / "external-evidence.json"
+        symbol_conflicts = reference / "symbol-conflicts.tsv"
+        valid_api_digester = {
+            "ABIRoot": {
+                "children": [
+                    {
+                        "declKind": "Import",
+                        "kind": "Import",
+                        "moduleName": "TinyKit",
+                        "name": "TinyKit.Widget",
+                        "printedName": "TinyKit.Widget",
+                    }
+                ],
+                "json_format_version": 8,
+                "kind": "Root",
+                "name": "TinyKit",
+                "printedName": "TinyKit",
+            }
+        }
+        valid_external_evidence = {
+            "schema": 1,
+            "module": "TinyKit",
+            "lock": {"path": "lock.json", "sha256": "0" * 64},
+            "policy": {},
+            "sources": [{"id": "fixture"}],
+        }
+        api_digester.write_bytes(json_bytes(valid_api_digester))
+        api_crosswalk.write_text(
+            "precise\tgraphKind\tgraphPath\tstatus\tbasis\trawCandidateCount\t"
+            "compatibleCandidateCount\tselectedNodePath\tcandidateNodePaths\n"
+            "s:7TinyKit6WidgetV\tswift.struct\tTinyKit.Widget\timport-name\t"
+            "TinyKit.Widget\t1\t1\tABIRoot.children[0]\tABIRoot.children[0]\n"
+            "s:7TinyKit6WidgetV5valueSivp\tswift.property\tTinyKit.Widget.value\t"
+            "unmatched\t\t0\t0\t\t\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+        external_evidence.write_bytes(json_bytes(valid_external_evidence))
+        symbol_conflicts.write_text(
+            "precise\tpayloadSHA256\tgraphPath\townershipTier\toccurrenceCount\t"
+            "canonicalSelection\tkind\ttitle\tsymbolPath\tdeclaration\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+        metadata["schema"] = 2
+        metadata["apiCrosswalk"] = "reference/api-crosswalk.tsv"
+        metadata["apiDigester"] = "reference/api-digester.json"
+        metadata["externalEvidence"] = "reference/external-evidence.json"
+        metadata["symbolConflicts"] = "reference/symbol-conflicts.tsv"
+        framework_json.write_bytes(json_bytes(metadata))
+        immutable_relatives_v2 = (
+            *immutable_relatives,
+            "reference/api-digester.json",
+            "reference/api-crosswalk.tsv",
+            "reference/external-evidence.json",
+            "reference/symbol-conflicts.tsv",
+        )
+        immutable.write_text(
+            "".join(
+                f"{sha256_file(dossier / relative)}  {relative}\n"
+                for relative in sorted(immutable_relatives_v2)
+            ),
+            encoding="ascii",
+        )
+        schema_v2 = build_manifest(
+            repo_root=root,
+            targets_path=targets,
+            campaign_id="ios26.1-fwseed-self-check",
+            starting_sha="a" * 40,
+            starting_ref="seed-branch",
+            repository_url="https://github.com/example/openuikit",
+            active_build_id="bld-self-check",
+            environment_marker="CURSOR_SWIFT_ENVIRONMENT_OK",
+        )
+        refuse(
+            schema_v2["frameworks"][0]["module"] == "TinyKit",
+            "schema-v2 self-check failed",
+        )
+        refuse(
+            "FRAMEWORK_FANOUT_DELIVERABLE_OK module=TinyKit lane=leaf-full symbols=2"
+            in schema_v2["frameworks"][0]["expectedMarkers"],
+            "schema-v2 deliverable-marker self-check failed",
+        )
+
+        metadata["schema"] = True
+        framework_json.write_bytes(json_bytes(metadata))
+        try:
+            build_manifest(
+                repo_root=root,
+                targets_path=targets,
+                campaign_id="ios26.1-fwseed-self-check",
+                starting_sha="a" * 40,
+                starting_ref="seed-branch",
+                repository_url="https://github.com/example/openuikit",
+                active_build_id="bld-self-check",
+                environment_marker="CURSOR_SWIFT_ENVIRONMENT_OK",
+            )
+        except ManifestError as exc:
+            refuse(
+                "unsupported framework schema" in str(exc),
+                "boolean-schema self-check returned the wrong error",
+            )
+        else:
+            raise ManifestError("boolean-schema self-check failed")
+        metadata["schema"] = 2
+        framework_json.write_bytes(json_bytes(metadata))
+
+        api_digester.write_text("{}\n", encoding="utf-8")
+        try:
+            build_manifest(
+                repo_root=root,
+                targets_path=targets,
+                campaign_id="ios26.1-fwseed-self-check",
+                starting_sha="a" * 40,
+                starting_ref="seed-branch",
+                repository_url="https://github.com/example/openuikit",
+                active_build_id="bld-self-check",
+                environment_marker="CURSOR_SWIFT_ENVIRONMENT_OK",
+            )
+        except ManifestError as exc:
+            refuse(
+                "shared seed validator rejected" in str(exc),
+                "schema-v2 malformed-evidence self-check returned the wrong error",
+            )
+        else:
+            raise ManifestError("schema-v2 malformed-evidence self-check failed")
+        api_digester.write_bytes(json_bytes(valid_api_digester))
+
+        immutable.write_text(
+            "".join(
+                f"{sha256_file(dossier / relative)}  {relative}\n"
+                for relative in sorted(
+                    set(immutable_relatives_v2) - {"reference/api-digester.json"}
+                )
+            ),
+            encoding="ascii",
+        )
+        try:
+            build_manifest(
+                repo_root=root,
+                targets_path=targets,
+                campaign_id="ios26.1-fwseed-self-check",
+                starting_sha="a" * 40,
+                starting_ref="seed-branch",
+                repository_url="https://github.com/example/openuikit",
+                active_build_id="bld-self-check",
+                environment_marker="CURSOR_SWIFT_ENVIRONMENT_OK",
+            )
+        except ManifestError as exc:
+            refuse(
+                "lacks required paths" in str(exc),
+                "schema-v2 missing-evidence self-check returned the wrong error",
+            )
+        else:
+            raise ManifestError("schema-v2 missing-evidence self-check failed")
+
         output = campaign_root / "campaign.json"
         atomic_publish_json(output, first, validate=validate_with_launcher)
         try:
@@ -637,7 +930,8 @@ def run_self_check() -> None:
 
     print(
         "FRAMEWORK_FANOUT_MANIFEST_SELF_CHECK_OK "
-        "deterministic=ok dossiers=verified launcher-compatible=ok overwrite=refused"
+        "deterministic=ok dossiers=verified schema-v2=verified "
+        "launcher-compatible=ok overwrite=refused"
     )
 
 
