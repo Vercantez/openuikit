@@ -1,257 +1,257 @@
 precise	status	evidence	notes
-c:@M@TipKit@objc(cs)TipUICollectionReusableView	unavailable		UIKit type; Linux host has no UIKit dependency
-c:@M@TipKit@objc(cs)TipUICollectionReusableView(im)initWithCoder:	unavailable		UIKit type; Linux host has no UIKit dependency
-c:@M@TipKit@objc(cs)TipUICollectionReusableView(im)initWithFrame:	unavailable		UIKit type; Linux host has no UIKit dependency
-c:@M@TipKit@objc(cs)TipUICollectionViewCell	unavailable		UIKit type; Linux host has no UIKit dependency
-c:@M@TipKit@objc(cs)TipUICollectionViewCell(im)initWithCoder:	unavailable		UIKit type; Linux host has no UIKit dependency
-c:@M@TipKit@objc(cs)TipUICollectionViewCell(im)initWithFrame:	unavailable		UIKit type; Linux host has no UIKit dependency
-c:@M@TipKit@objc(cs)TipUICollectionViewCell(py)backgroundColor	unavailable		UIKit type; Linux host has no UIKit dependency
-c:@M@TipKit@objc(cs)TipUIPopoverViewController	unavailable		UIKit type; Linux host has no UIKit dependency
-c:@M@TipKit@objc(cs)TipUIPopoverViewController(im)initWithCoder:	unavailable		UIKit type; Linux host has no UIKit dependency
-c:@M@TipKit@objc(cs)TipUIPopoverViewController(im)initWithNibName:bundle:	unavailable		UIKit type; Linux host has no UIKit dependency
-c:@M@TipKit@objc(cs)TipUIView	unavailable		UIKit type; Linux host has no UIKit dependency
-c:@M@TipKit@objc(cs)TipUIView(py)backgroundColor	unavailable		UIKit type; Linux host has no UIKit dependency
-s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:10Foundation14LocalizedErrorPAAE16errorDescriptionSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit03AnyA0V	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit03AnyA0V2IDa	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit04MiniA9ViewStyleV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit04MiniA9ViewStyleV4Bodya	deferred		Requires SwiftUI.View / TipViewStyle Body
-s:6TipKit04MiniA9ViewStyleV8makeBody13configurationQrAA0adE13ConfigurationV_tF	deferred		Requires SwiftUI.View / TipViewStyle Body
-s:6TipKit0A0P	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0P2idSSvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0P5image7SwiftUI5ImageVSgvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0P5rulesSayAA4TipsO4RuleVGvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0P5title7SwiftUI4TextVvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0P7actionsSayAA4TipsO6ActionVGvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0P7message7SwiftUI4TextVSgvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0P7optionsSayAA0A6Option_pGvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE10invalidate6reasonyAA4TipsO18InvalidationReasonO_tF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE10invalidate6reasonyAA4TipsO18InvalidationReasonO_tF::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE13shouldDisplaySbvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE13shouldDisplaySbvp::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE13statusUpdatesScSyAA4TipsO6StatusOGvp	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
-s:6TipKit0A0PAAE13statusUpdatesScSyAA4TipsO6StatusOGvp::SYNTHESIZED::s:6TipKit03AnyA0V	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
-s:6TipKit0A0PAAE15MaxDisplayCounta	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE15MaxDisplayCounta::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE16resetEligibilityyyYaF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE16resetEligibilityyyYaF::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE18InvalidationReasona	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE18InvalidationReasona::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE18MaxDisplayDurationa	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE18MaxDisplayDurationa::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE20shouldDisplayUpdates12_Concurrency16AsyncMapSequenceVyScSyAA4TipsO6StatusOGSbGvp	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
-s:6TipKit0A0PAAE20shouldDisplayUpdates12_Concurrency16AsyncMapSequenceVyScSyAA4TipsO6StatusOGSbGvp::SYNTHESIZED::s:6TipKit03AnyA0V	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
-s:6TipKit0A0PAAE23IgnoresDisplayFrequencya	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE23IgnoresDisplayFrequencya::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE4Rulea	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE4Rulea::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE5Eventa	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE5Eventa::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE6Actiona	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE6Actiona::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE6Optiona	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE6Optiona::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE6Statusa	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE6Statusa::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE6statusAA4TipsO6StatusOvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A0PAAE6statusAA4TipsO6StatusOvp::SYNTHESIZED::s:6TipKit03AnyA0V	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A20UICollectionViewCellC09configureA0_9arrowEdge13actionHandlerACXDAA0A0_p_7SwiftUI0H0OSgyAA4TipsO6ActionVctF	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A20UICollectionViewCellC10imageStyle7SwiftUI05ShapeG0_pSgvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A20UICollectionViewCellC12cornerRadius14CoreFoundation7CGFloatVvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A20UICollectionViewCellC15backgroundStyle7SwiftUI05ShapeG0_pvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A20UICollectionViewCellC9imageSizeSo6CGSizeVvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A20UICollectionViewCellC9viewStyleAA0adG0_pvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A22ViewStyleConfigurationV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A22ViewStyleConfigurationV3tipAA0A0_pvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A22ViewStyleConfigurationV5image7SwiftUI5ImageVSgvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A22ViewStyleConfigurationV5title7SwiftUI4TextVSgvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A22ViewStyleConfigurationV7actionsSayAA4TipsO6ActionVGvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A22ViewStyleConfigurationV7message7SwiftUI4TextVSgvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A23UIPopoverViewControllerC10imageStyle7SwiftUI05ShapeG0_pSgvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A23UIPopoverViewControllerC10sourceItemSo0c12Presentatione6SourceG0_pSgvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A23UIPopoverViewControllerC15backgroundColorSo7UIColorCSgvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A23UIPopoverViewControllerC15backgroundStyle7SwiftUI05ShapeG0_pvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A23UIPopoverViewControllerC20presentationDelegateSo0c12PresentationeG0_pSgvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A23UIPopoverViewControllerC9imageSizeSo6CGSizeVvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A23UIPopoverViewControllerC9viewStyleAA0adG0_pvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A23UIPopoverViewControllerC_10sourceItem13actionHandlerAcA0A0_p_So0c12Presentatione6SourceG0_pyAA4TipsO6ActionVctcfc	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A24UICollectionReusableViewC09configureA0_9arrowEdge13actionHandlerACXDAA0A0_p_7SwiftUI0H0OSgyAA4TipsO6ActionVctF	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A24UICollectionReusableViewC10imageStyle7SwiftUI05ShapeG0_pSgvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A24UICollectionReusableViewC12cornerRadius14CoreFoundation7CGFloatVvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A24UICollectionReusableViewC15backgroundStyle7SwiftUI05ShapeG0_pvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A24UICollectionReusableViewC9imageSizeSo6CGSizeVvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A24UICollectionReusableViewC9viewStyleAA0aeG0_pvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A4ViewV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A4ViewV4Bodya	deferred		Requires SwiftUI.View / TipViewStyle Body
-s:6TipKit0A4ViewV4bodyQrvp	deferred		Requires SwiftUI.View / TipViewStyle Body
-s:6TipKit0A4ViewV_11isPresented9arrowEdge6actionACyAA03AnyA0VGAA0A0_pSg_7SwiftUI7BindingVySbGSgAL0G0OSgyAA4TipsO6ActionVctcAHRszrlufc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A4ViewV_11isPresented9arrowEdge8anchorID6actionACyAA03AnyA0VGAA0A0_pSg_7SwiftUI7BindingVySbGSgAM0G0OSgqd__yAA4TipsO6ActionVctcAIRszSHRd__lufc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A4ViewV_9arrowEdge6actionACyAA03AnyA0VGAA0A0_pSg_7SwiftUI0E0OSgyAA4TipsO6ActionVctcAGRszrlufc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A5GroupC	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A5GroupC07currentA0AA0A0_pSgvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A5GroupC07currentA7UpdatesQrvp	declared	full/tipkit/TipKitPresentation.swift	Compiles; behavior not separately asserted
-s:6TipKit0A5GroupC8PriorityO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A5GroupC8PriorityO14firstAvailableyA2EmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A5GroupC8PriorityO2eeoiySbAE_AEtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A5GroupC8PriorityO4hash4intoys6HasherVz_tF	declared	full/tipkit/TipKitPresentation.swift	Compiles; behavior not separately asserted
-s:6TipKit0A5GroupC8PriorityO7orderedyA2EmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A5GroupC8PriorityO9hashValueSivp	declared	full/tipkit/TipKitPresentation.swift	Compiles; behavior not separately asserted
-s:6TipKit0A5GroupCyA2C8PriorityO_SayAA0A0_pGyXEtcfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A6OptionP	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0A6UIViewC10imageStyle7SwiftUI05ShapeE0_pSgvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A6UIViewC12cornerRadius14CoreFoundation7CGFloatVvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A6UIViewC15backgroundStyle7SwiftUI05ShapeE0_pvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A6UIViewC9imageSizeSo6CGSizeVvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A6UIViewC9viewStyleAA0a4ViewE0_pvp	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A6UIViewC_9arrowEdge13actionHandlerAcA0A0_p_7SwiftUI0E0OSgyAA4TipsO6ActionVctcfc	unavailable		UIKit type; Linux host has no UIKit dependency
-s:6TipKit0A9ViewStyleP	deferred		Requires SwiftUI.View / TipViewStyle Body
-s:6TipKit0A9ViewStyleP13Configurationa	deferred		Requires SwiftUI.View / TipViewStyle Body
-s:6TipKit0A9ViewStyleP4BodyQa	deferred		Requires SwiftUI.View / TipViewStyle Body
-s:6TipKit0A9ViewStyleP8makeBody13configuration0F0QzAA0acD13ConfigurationV_tF	deferred		Requires SwiftUI.View / TipViewStyle Body
-s:6TipKit0A9ViewStylePA2A04MiniacD0VRszrlE04miniA0AEvpZ	deferred		Requires SwiftUI.View / TipViewStyle Body
-s:6TipKit0A9ViewStylePA2A04MiniacD0VRszrlE04miniA0AEvpZ::SYNTHESIZED::s:6TipKit04MiniA9ViewStyleV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0aB5ErrorV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0aB5ErrorV11descriptionSSvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0aB5ErrorV16errorDescriptionSSSgvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0aB5ErrorV25invalidPredicateValueTypeACvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0aB5ErrorV2eeoiySbAC_ACtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0aB5ErrorV30tipsDatastoreAlreadyConfiguredACvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit0aB5ErrorV33missingGroupContainerEntitlementsACvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
+c:@M@TipKit@objc(cs)TipUICollectionReusableView	unavailable		UIKit type; UIKit is not a declared dependency
+c:@M@TipKit@objc(cs)TipUICollectionReusableView(im)initWithCoder:	unavailable		UIKit type; UIKit is not a declared dependency
+c:@M@TipKit@objc(cs)TipUICollectionReusableView(im)initWithFrame:	unavailable		UIKit type; UIKit is not a declared dependency
+c:@M@TipKit@objc(cs)TipUICollectionViewCell	unavailable		UIKit type; UIKit is not a declared dependency
+c:@M@TipKit@objc(cs)TipUICollectionViewCell(im)initWithCoder:	unavailable		UIKit type; UIKit is not a declared dependency
+c:@M@TipKit@objc(cs)TipUICollectionViewCell(im)initWithFrame:	unavailable		UIKit type; UIKit is not a declared dependency
+c:@M@TipKit@objc(cs)TipUICollectionViewCell(py)backgroundColor	unavailable		UIKit type; UIKit is not a declared dependency
+c:@M@TipKit@objc(cs)TipUIPopoverViewController	unavailable		UIKit type; UIKit is not a declared dependency
+c:@M@TipKit@objc(cs)TipUIPopoverViewController(im)initWithCoder:	unavailable		UIKit type; UIKit is not a declared dependency
+c:@M@TipKit@objc(cs)TipUIPopoverViewController(im)initWithNibName:bundle:	unavailable		UIKit type; UIKit is not a declared dependency
+c:@M@TipKit@objc(cs)TipUIView	unavailable		UIKit type; UIKit is not a declared dependency
+c:@M@TipKit@objc(cs)TipUIView(py)backgroundColor	unavailable		UIKit type; UIKit is not a declared dependency
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:10Foundation14LocalizedErrorPAAE16errorDescriptionSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit03AnyA0V2IDa	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit04MiniA9ViewStyleV	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit04MiniA9ViewStyleV4Bodya	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit04MiniA9ViewStyleV8makeBody13configurationQrAA0adE13ConfigurationV_tF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0P	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0P2idSSvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0P5image7SwiftUI5ImageVSgvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0P5rulesSayAA4TipsO4RuleVGvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0P5title7SwiftUI4TextVvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0P7actionsSayAA4TipsO6ActionVGvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0P7message7SwiftUI4TextVSgvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0P7optionsSayAA0A6Option_pGvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE10invalidate6reasonyAA4TipsO18InvalidationReasonO_tF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE10invalidate6reasonyAA4TipsO18InvalidationReasonO_tF::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE13shouldDisplaySbvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE13shouldDisplaySbvp::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE13statusUpdatesScSyAA4TipsO6StatusOGvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE13statusUpdatesScSyAA4TipsO6StatusOGvp::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE15MaxDisplayCounta	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE15MaxDisplayCounta::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE16resetEligibilityyyYaF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE16resetEligibilityyyYaF::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE18InvalidationReasona	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE18InvalidationReasona::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE18MaxDisplayDurationa	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE18MaxDisplayDurationa::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE20shouldDisplayUpdates12_Concurrency16AsyncMapSequenceVyScSyAA4TipsO6StatusOGSbGvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE20shouldDisplayUpdates12_Concurrency16AsyncMapSequenceVyScSyAA4TipsO6StatusOGSbGvp::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE23IgnoresDisplayFrequencya	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE23IgnoresDisplayFrequencya::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE4Rulea	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE4Rulea::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE5Eventa	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE5Eventa::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE6Actiona	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE6Actiona::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE6Optiona	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE6Optiona::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE6Statusa	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE6Statusa::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE6statusAA4TipsO6StatusOvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A0PAAE6statusAA4TipsO6StatusOvp::SYNTHESIZED::s:6TipKit03AnyA0V	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A20UICollectionViewCellC09configureA0_9arrowEdge13actionHandlerACXDAA0A0_p_7SwiftUI0H0OSgyAA4TipsO6ActionVctF	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A20UICollectionViewCellC10imageStyle7SwiftUI05ShapeG0_pSgvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A20UICollectionViewCellC12cornerRadius14CoreFoundation7CGFloatVvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A20UICollectionViewCellC15backgroundStyle7SwiftUI05ShapeG0_pvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A20UICollectionViewCellC9imageSizeSo6CGSizeVvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A20UICollectionViewCellC9viewStyleAA0adG0_pvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A22ViewStyleConfigurationV	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A22ViewStyleConfigurationV3tipAA0A0_pvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A22ViewStyleConfigurationV5image7SwiftUI5ImageVSgvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A22ViewStyleConfigurationV5title7SwiftUI4TextVSgvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A22ViewStyleConfigurationV7actionsSayAA4TipsO6ActionVGvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A22ViewStyleConfigurationV7message7SwiftUI4TextVSgvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A23UIPopoverViewControllerC10imageStyle7SwiftUI05ShapeG0_pSgvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A23UIPopoverViewControllerC10sourceItemSo0c12Presentatione6SourceG0_pSgvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A23UIPopoverViewControllerC15backgroundColorSo7UIColorCSgvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A23UIPopoverViewControllerC15backgroundStyle7SwiftUI05ShapeG0_pvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A23UIPopoverViewControllerC20presentationDelegateSo0c12PresentationeG0_pSgvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A23UIPopoverViewControllerC9imageSizeSo6CGSizeVvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A23UIPopoverViewControllerC9viewStyleAA0adG0_pvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A23UIPopoverViewControllerC_10sourceItem13actionHandlerAcA0A0_p_So0c12Presentatione6SourceG0_pyAA4TipsO6ActionVctcfc	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A24UICollectionReusableViewC09configureA0_9arrowEdge13actionHandlerACXDAA0A0_p_7SwiftUI0H0OSgyAA4TipsO6ActionVctF	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A24UICollectionReusableViewC10imageStyle7SwiftUI05ShapeG0_pSgvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A24UICollectionReusableViewC12cornerRadius14CoreFoundation7CGFloatVvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A24UICollectionReusableViewC15backgroundStyle7SwiftUI05ShapeG0_pvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A24UICollectionReusableViewC9imageSizeSo6CGSizeVvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A24UICollectionReusableViewC9viewStyleAA0aeG0_pvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A4ViewV	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A4ViewV4Bodya	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A4ViewV4bodyQrvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A4ViewV_11isPresented9arrowEdge6actionACyAA03AnyA0VGAA0A0_pSg_7SwiftUI7BindingVySbGSgAL0G0OSgyAA4TipsO6ActionVctcAHRszrlufc	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A4ViewV_11isPresented9arrowEdge8anchorID6actionACyAA03AnyA0VGAA0A0_pSg_7SwiftUI7BindingVySbGSgAM0G0OSgqd__yAA4TipsO6ActionVctcAIRszSHRd__lufc	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A4ViewV_9arrowEdge6actionACyAA03AnyA0VGAA0A0_pSg_7SwiftUI0E0OSgyAA4TipsO6ActionVctcAGRszrlufc	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A5GroupC	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A5GroupC07currentA0AA0A0_pSgvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A5GroupC07currentA7UpdatesQrvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A5GroupC8PriorityO	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A5GroupC8PriorityO14firstAvailableyA2EmF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A5GroupC8PriorityO2eeoiySbAE_AEtFZ	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A5GroupC8PriorityO4hash4intoys6HasherVz_tF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A5GroupC8PriorityO7orderedyA2EmF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A5GroupC8PriorityO9hashValueSivp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A5GroupCyA2C8PriorityO_SayAA0A0_pGyXEtcfc	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A6OptionP	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit0A6UIViewC10imageStyle7SwiftUI05ShapeE0_pSgvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A6UIViewC12cornerRadius14CoreFoundation7CGFloatVvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A6UIViewC15backgroundStyle7SwiftUI05ShapeE0_pvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A6UIViewC9imageSizeSo6CGSizeVvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A6UIViewC9viewStyleAA0a4ViewE0_pvp	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A6UIViewC_9arrowEdge13actionHandlerAcA0A0_p_7SwiftUI0E0OSgyAA4TipsO6ActionVctcfc	unavailable		UIKit type; UIKit is not a declared dependency
+s:6TipKit0A9ViewStyleP	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A9ViewStyleP13Configurationa	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A9ViewStyleP4BodyQa	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A9ViewStyleP8makeBody13configuration0F0QzAA0acD13ConfigurationV_tF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A9ViewStylePA2A04MiniacD0VRszrlE04miniA0AEvpZ	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0A9ViewStylePA2A04MiniacD0VRszrlE04miniA0AEvpZ::SYNTHESIZED::s:6TipKit04MiniA9ViewStyleV	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit0aB5ErrorV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit0aB5ErrorV11descriptionSSvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit0aB5ErrorV16errorDescriptionSSSgvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit0aB5ErrorV25invalidPredicateValueTypeACvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit0aB5ErrorV2eeoiySbAC_ACtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit0aB5ErrorV30tipsDatastoreAlreadyConfiguredACvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit0aB5ErrorV33missingGroupContainerEntitlementsACvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
 s:6TipKit0aB5ErrorV4hash4intoys6HasherVz_tF	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
 s:6TipKit0aB5ErrorV9hashValueSivp	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
-s:6TipKit4TipsO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO04hideC10ForTestingyySayAA0A0_pXpGFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO04showC10ForTestingyySayAA0A0_pXpGFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO07hideAllC10ForTestingyyFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO07showAllC10ForTestingyyFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO13DonationLimitV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO13DonationLimitV10maximumAgeAC0D9TimeRangeVSgvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO13DonationLimitV12maximumCount0F3AgeAESi_AC0D9TimeRangeVSgtcfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO13DonationLimitV12maximumCountSivp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO13EmptyDonationV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO13EmptyDonationV4fromAEs7Decoder_p_tKcfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO13EmptyDonationV6encode2toys7Encoder_p_tKF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO14resetDatastoreyyKFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO15MaxDisplayCountV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO15MaxDisplayCountVyAESicfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO15ParameterOptionV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO15ParameterOptionV9transientAEvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO17DonationTimeRangeV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO17DonationTimeRangeV2eeoiySbAE_AEtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO17DonationTimeRangeV3dayAEvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO17DonationTimeRangeV4daysyAESiFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
+s:6TipKit4TipsO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO04hideC10ForTestingyySayAA0A0_pXpGFZ	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit4TipsO04showC10ForTestingyySayAA0A0_pXpGFZ	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit4TipsO07hideAllC10ForTestingyyFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO07showAllC10ForTestingyyFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO13DonationLimitV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO13DonationLimitV10maximumAgeAC0D9TimeRangeVSgvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO13DonationLimitV12maximumCount0F3AgeAESi_AC0D9TimeRangeVSgtcfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO13DonationLimitV12maximumCountSivp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO13EmptyDonationV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO13EmptyDonationV4fromAEs7Decoder_p_tKcfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO13EmptyDonationV6encode2toys7Encoder_p_tKF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO14resetDatastoreyyKFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO15MaxDisplayCountV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO15MaxDisplayCountVyAESicfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO15ParameterOptionV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO15ParameterOptionV9transientAEvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO17DonationTimeRangeV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO17DonationTimeRangeV2eeoiySbAE_AEtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO17DonationTimeRangeV3dayAEvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO17DonationTimeRangeV4daysyAESiFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
 s:6TipKit4TipsO17DonationTimeRangeV4fromAEs7Decoder_p_tKcfc	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
 s:6TipKit4TipsO17DonationTimeRangeV4hash4intoys6HasherVz_tF	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
-s:6TipKit4TipsO17DonationTimeRangeV4hourAEvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO17DonationTimeRangeV4weekAEvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO17DonationTimeRangeV5hoursyAESiFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO17DonationTimeRangeV5weeksyAESiFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
+s:6TipKit4TipsO17DonationTimeRangeV4hourAEvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO17DonationTimeRangeV4weekAEvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO17DonationTimeRangeV5hoursyAESiFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO17DonationTimeRangeV5weeksyAESiFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
 s:6TipKit4TipsO17DonationTimeRangeV6encode2toys7Encoder_p_tKF	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
-s:6TipKit4TipsO17DonationTimeRangeV6minuteAEvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO17DonationTimeRangeV7minutesyAESiFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
+s:6TipKit4TipsO17DonationTimeRangeV6minuteAEvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO17DonationTimeRangeV7minutesyAESiFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
 s:6TipKit4TipsO17DonationTimeRangeV9hashValueSivp	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
-s:6TipKit4TipsO18InvalidationReasonO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO18InvalidationReasonO15actionPerformedyA2EmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO18InvalidationReasonO20displayCountExceededyA2EmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO18InvalidationReasonO23displayDurationExceededyA2EmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO18InvalidationReasonO2eeoiySbAE_AEtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
+s:6TipKit4TipsO18InvalidationReasonO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO18InvalidationReasonO15actionPerformedyA2EmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO18InvalidationReasonO20displayCountExceededyA2EmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO18InvalidationReasonO23displayDurationExceededyA2EmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO18InvalidationReasonO2eeoiySbAE_AEtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
 s:6TipKit4TipsO18InvalidationReasonO4hash4intoys6HasherVz_tF	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
 s:6TipKit4TipsO18InvalidationReasonO9hashValueSivp	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
-s:6TipKit4TipsO18InvalidationReasonO9tipClosedyA2EmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO18MaxDisplayDurationV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO18MaxDisplayDurationVyAESdcfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV2eeoiySbAG_AGtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV5namedyAGSSFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV9automaticAGvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV05cloudB9ContaineryA2E05CloudbG0VSgFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV2eeoiySbAG_AGtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV5dailyAGvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV6hourlyAGvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV6weeklyAGvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV7monthlyAGvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV9immediateAGvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV16displayFrequencyyA2E07DisplayG0VFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV14groupContainer10identifierAGSS_tKFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV18applicationDefaultAGvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV2eeoiySbAG_AGtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV3urlyAG10Foundation3URLVFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO19ConfigurationOptionV17datastoreLocationyA2E09DatastoreG0VFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO23IgnoresDisplayFrequencyV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO23IgnoresDisplayFrequencyVyAESbcfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO4RuleV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO4RuleV17CompoundOperationO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO4RuleV17CompoundOperationO11conjunctionyA2GmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO4RuleV17CompoundOperationO11disjunctionyA2GmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO4RuleV17CompoundOperationO2eeoiySbAG_AGtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
+s:6TipKit4TipsO18InvalidationReasonO9tipClosedyA2EmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO18MaxDisplayDurationV	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
+s:6TipKit4TipsO18MaxDisplayDurationVyAESdcfc	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
+s:6TipKit4TipsO19ConfigurationOptionV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV	implemented	tests/agent/TipKitRuntime.swift	Value type and fail-closed configure; CloudKit sync is not implemented
+s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV2eeoiySbAG_AGtFZ	implemented	tests/agent/TipKitRuntime.swift	Value type and fail-closed configure; CloudKit sync is not implemented
+s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV5namedyAGSSFZ	implemented	tests/agent/TipKitRuntime.swift	Value type and fail-closed configure; CloudKit sync is not implemented
+s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV9automaticAGvpZ	implemented	tests/agent/TipKitRuntime.swift	Value type and fail-closed configure; CloudKit sync is not implemented
+s:6TipKit4TipsO19ConfigurationOptionV05cloudB9ContaineryA2E05CloudbG0VSgFZ	implemented	tests/agent/TipKitRuntime.swift	Value type and fail-closed configure; CloudKit sync is not implemented
+s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV2eeoiySbAG_AGtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV5dailyAGvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV6hourlyAGvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV6weeklyAGvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV7monthlyAGvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV9immediateAGvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO19ConfigurationOptionV16displayFrequencyyA2E07DisplayG0VFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV14groupContainer10identifierAGSS_tKFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV18applicationDefaultAGvpZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV2eeoiySbAG_AGtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV3urlyAG10Foundation3URLVFZ	implemented	tests/agent/TipKitRuntime.swift	applicationDefault is process-local; URL location is rejected, not persisted
+s:6TipKit4TipsO19ConfigurationOptionV17datastoreLocationyA2E09DatastoreG0VFZ	implemented	tests/agent/TipKitRuntime.swift	applicationDefault is process-local; URL location is rejected, not persisted
+s:6TipKit4TipsO23IgnoresDisplayFrequencyV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO23IgnoresDisplayFrequencyVyAESbcfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO4RuleV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO4RuleV17CompoundOperationO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO4RuleV17CompoundOperationO11conjunctionyA2GmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO4RuleV17CompoundOperationO11disjunctionyA2GmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO4RuleV17CompoundOperationO2eeoiySbAG_AGtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
 s:6TipKit4TipsO4RuleV17CompoundOperationO4hash4intoys6HasherVz_tF	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
 s:6TipKit4TipsO4RuleV17CompoundOperationO9hashValueSivp	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
-s:6TipKit4TipsO5EventV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV12sendDonationyyx_yyYbcSgtF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV12sendDonationyyyyYbcSgAC05EmptyF0VRszrlF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV15deleteDonationsyyYaKF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV2IDa	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV2id13donationLimitAEy_AC13EmptyDonationVGSS_AC0iG0VtcAIRszrlufc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV2id13donationLimitAEy_xGSS_AC08DonationG0Vtcfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV2idAEy_AC13EmptyDonationVGSS_tcAHRszrlufc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV2idAEy_xGSS_tcfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV5Valuea	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV6donateyyYaAC13EmptyDonationVRszrlF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV6donateyyxYaF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV8DonationV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV8DonationV13dynamicMemberqd__s7KeyPathCyxqd__G_tcluip	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV8DonationV4date10Foundation4DateVvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV8DonationV4fromAGy_x_Gs7Decoder_p_tKcfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV8DonationV6encode2toys7Encoder_p_tKF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO5EventV9donationsSayAE8DonationVy_x_GGvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO6ActionV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO6ActionV2IDa	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO6ActionV2id5title7performAESSSg_xyyctcSyRzlufc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO6ActionV2id7perform_AESSSg_yyc7SwiftUI4TextVyctcfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO6ActionV2idSSvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO6ActionV5indexSiSgvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO6ActionV5label7SwiftUI4TextVyYbcvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO6ActionV7handleryycvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO6StatusO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO6StatusO11invalidatedyAeC18InvalidationReasonOcAEmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO6StatusO2eeoiySbAE_AEtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
+s:6TipKit4TipsO5EventV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO5EventV12sendDonationyyx_yyYbcSgtF	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
+s:6TipKit4TipsO5EventV12sendDonationyyyyYbcSgAC05EmptyF0VRszrlF	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
+s:6TipKit4TipsO5EventV15deleteDonationsyyYaKF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO5EventV2IDa	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO5EventV2id13donationLimitAEy_AC13EmptyDonationVGSS_AC0iG0VtcAIRszrlufc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO5EventV2id13donationLimitAEy_xGSS_AC08DonationG0Vtcfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO5EventV2idAEy_AC13EmptyDonationVGSS_tcAHRszrlufc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO5EventV2idAEy_xGSS_tcfc	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO5EventV5Valuea	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO5EventV6donateyyYaAC13EmptyDonationVRszrlF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO5EventV6donateyyxYaF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO5EventV8DonationV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO5EventV8DonationV13dynamicMemberqd__s7KeyPathCyxqd__G_tcluip	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO5EventV8DonationV4date10Foundation4DateVvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO5EventV8DonationV4fromAGy_x_Gs7Decoder_p_tKcfc	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
+s:6TipKit4TipsO5EventV8DonationV6encode2toys7Encoder_p_tKF	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
+s:6TipKit4TipsO5EventV9donationsSayAE8DonationVy_x_GGvp	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO6ActionV	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit4TipsO6ActionV2IDa	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit4TipsO6ActionV2id5title7performAESSSg_xyyctcSyRzlufc	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit4TipsO6ActionV2id7perform_AESSSg_yyc7SwiftUI4TextVyctcfc	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit4TipsO6ActionV2idSSvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit4TipsO6ActionV5indexSiSgvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit4TipsO6ActionV5label7SwiftUI4TextVyYbcvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit4TipsO6ActionV7handleryycvp	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:6TipKit4TipsO6StatusO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO6StatusO11invalidatedyAeC18InvalidationReasonOcAEmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO6StatusO2eeoiySbAE_AEtFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
 s:6TipKit4TipsO6StatusO4hash4intoys6HasherVz_tF	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
-s:6TipKit4TipsO6StatusO7pendingyA2EmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO6StatusO9availableyA2EmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
+s:6TipKit4TipsO6StatusO7pendingyA2EmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO6StatusO9availableyA2EmF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
 s:6TipKit4TipsO6StatusO9hashValueSivp	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
-s:6TipKit4TipsO9ParameterV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:6TipKit4TipsO9ParameterV2IDa	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
+s:6TipKit4TipsO9ParameterV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:6TipKit4TipsO9ParameterV2IDa	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
 s:6TipKit4TipsO9ParameterV5Valuea	declared	full/tipkit/TipKit.swift	Compiles; behavior not separately asserted
-s:6TipKit4TipsO9configureyySayAC19ConfigurationOptionVGKFZ	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:7SwiftUI4ViewP6TipKitE03tipC5StyleyQrqd__AD0dcG0Rd__lF	deferred		SwiftUI.View modifier requires the SwiftUI module
+s:6TipKit4TipsO9configureyySayAC19ConfigurationOptionVGKFZ	implemented	tests/agent/TipKitRuntime.swift	Process-local eligibility engine; URL and CloudKit options fail closed
+s:7SwiftUI4ViewP6TipKitE03tipC5StyleyQrqd__AD0dcG0Rd__lF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
 s:7SwiftUI4ViewP6TipKitE03tipC5StyleyQrqd__AD0dcG0Rd__lF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
-s:7SwiftUI4ViewP6TipKitE07popoverD0_11isPresented16attachmentAnchor10arrowEdges6actionQrAD0D0_pSg_AA7BindingVySbGSgAA017PopoverAttachmentJ0OAA4EdgeO3SetVyAD4TipsO6ActionVctF	deferred		SwiftUI.View modifier requires the SwiftUI module
+s:7SwiftUI4ViewP6TipKitE07popoverD0_11isPresented16attachmentAnchor10arrowEdges6actionQrAD0D0_pSg_AA7BindingVySbGSgAA017PopoverAttachmentJ0OAA4EdgeO3SetVyAD4TipsO6ActionVctF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
 s:7SwiftUI4ViewP6TipKitE07popoverD0_11isPresented16attachmentAnchor10arrowEdges6actionQrAD0D0_pSg_AA7BindingVySbGSgAA017PopoverAttachmentJ0OAA4EdgeO3SetVyAD4TipsO6ActionVctF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
-s:7SwiftUI4ViewP6TipKitE07popoverD0_11isPresented16attachmentAnchor9arrowEdge6actionQrAD0D0_pSg_AA7BindingVySbGSgAA017PopoverAttachmentJ0OAA0L0OSgyAD4TipsO6ActionVctF	deferred		SwiftUI.View modifier requires the SwiftUI module
+s:7SwiftUI4ViewP6TipKitE07popoverD0_11isPresented16attachmentAnchor9arrowEdge6actionQrAD0D0_pSg_AA7BindingVySbGSgAA017PopoverAttachmentJ0OAA0L0OSgyAD4TipsO6ActionVctF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
 s:7SwiftUI4ViewP6TipKitE07popoverD0_11isPresented16attachmentAnchor9arrowEdge6actionQrAD0D0_pSg_AA7BindingVySbGSgAA017PopoverAttachmentJ0OAA0L0OSgyAD4TipsO6ActionVctF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
-s:7SwiftUI4ViewP6TipKitE07popoverD0_9arrowEdge6actionQrAD0D0_pSg_AA0H0OSgyAD4TipsO6ActionVctF	deferred		SwiftUI.View modifier requires the SwiftUI module
+s:7SwiftUI4ViewP6TipKitE07popoverD0_9arrowEdge6actionQrAD0D0_pSg_AA0H0OSgyAD4TipsO6ActionVctF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
 s:7SwiftUI4ViewP6TipKitE07popoverD0_9arrowEdge6actionQrAD0D0_pSg_AA0H0OSgyAD4TipsO6ActionVctF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
-s:7SwiftUI4ViewP6TipKitE12tipImageSizeyQrSo6CGSizeVF	deferred		SwiftUI.View modifier requires the SwiftUI module
+s:7SwiftUI4ViewP6TipKitE12tipImageSizeyQrSo6CGSizeVF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
 s:7SwiftUI4ViewP6TipKitE12tipImageSizeyQrSo6CGSizeVF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
-s:7SwiftUI4ViewP6TipKitE13tipBackgroundyQrqd__AA10ShapeStyleRd__lF	deferred		SwiftUI.View modifier requires the SwiftUI module
+s:7SwiftUI4ViewP6TipKitE13tipBackgroundyQrqd__AA10ShapeStyleRd__lF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
 s:7SwiftUI4ViewP6TipKitE13tipBackgroundyQrqd__AA10ShapeStyleRd__lF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
-s:7SwiftUI4ViewP6TipKitE13tipImageStyleyQrqd__AA05ShapeH0Rd__lF	deferred		SwiftUI.View modifier requires the SwiftUI module
+s:7SwiftUI4ViewP6TipKitE13tipImageStyleyQrqd__AA05ShapeH0Rd__lF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
 s:7SwiftUI4ViewP6TipKitE13tipImageStyleyQrqd__AA05ShapeH0Rd__lF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
-s:7SwiftUI4ViewP6TipKitE13tipImageStyleyQrqd___qd_0_qd_1_tAA05ShapeH0Rd__AaFRd_0_AaFRd_1_r1_lF	deferred		SwiftUI.View modifier requires the SwiftUI module
+s:7SwiftUI4ViewP6TipKitE13tipImageStyleyQrqd___qd_0_qd_1_tAA05ShapeH0Rd__AaFRd_0_AaFRd_1_r1_lF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
 s:7SwiftUI4ViewP6TipKitE13tipImageStyleyQrqd___qd_0_qd_1_tAA05ShapeH0Rd__AaFRd_0_AaFRd_1_r1_lF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
-s:7SwiftUI4ViewP6TipKitE13tipImageStyleyQrqd___qd_0_tAA05ShapeH0Rd__AaFRd_0_r0_lF	deferred		SwiftUI.View modifier requires the SwiftUI module
+s:7SwiftUI4ViewP6TipKitE13tipImageStyleyQrqd___qd_0_tAA05ShapeH0Rd__AaFRd_0_r0_lF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
 s:7SwiftUI4ViewP6TipKitE13tipImageStyleyQrqd___qd_0_tAA05ShapeH0Rd__AaFRd_0_r0_lF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
-s:7SwiftUI4ViewP6TipKitE15tipCornerRadius_11antialiasedQr14CoreFoundation7CGFloatV_SbtF	deferred		SwiftUI.View modifier requires the SwiftUI module
+s:7SwiftUI4ViewP6TipKitE15tipCornerRadius_11antialiasedQr14CoreFoundation7CGFloatV_SbtF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
 s:7SwiftUI4ViewP6TipKitE15tipCornerRadius_11antialiasedQr14CoreFoundation7CGFloatV_SbtF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
-s:7SwiftUI4ViewP6TipKitE24tipBackgroundInteractionyQrAA012PresentationgH0VF	deferred		SwiftUI.View modifier requires the SwiftUI module
+s:7SwiftUI4ViewP6TipKitE24tipBackgroundInteractionyQrAA012PresentationgH0VF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
 s:7SwiftUI4ViewP6TipKitE24tipBackgroundInteractionyQrAA012PresentationgH0VF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
-s:7SwiftUI4ViewP6TipKitE9tipAnchoryQrqd__SHRd__s8SendableRd__lF	deferred		SwiftUI.View modifier requires the SwiftUI module
+s:7SwiftUI4ViewP6TipKitE9tipAnchoryQrqd__SHRd__s8SendableRd__lF	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
 s:7SwiftUI4ViewP6TipKitE9tipAnchoryQrqd__SHRd__s8SendableRd__lF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
 s:7SwiftUI4ViewPAAE010navigationC5StyleyQrqd__AA010NavigationcE0Rd__lF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
 s:7SwiftUI4ViewPAAE015navigationSplitC11ColumnWidth3min5ideal3maxQr14CoreFoundation7CGFloatVSg_AjKtF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
@@ -1021,16 +1021,16 @@ s:7SwiftUI4ViewPAAE9onReceive_7performQrqd___y6OutputQyd__ct7Combine9PublisherRd
 s:7SwiftUI4ViewPAAE9statusBar6hiddenQrSb_tF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
 s:7SwiftUI4ViewPAAE9textScale_9isEnabledQrAA4TextV0E0V_SbtF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
 s:7SwiftUI4ViewPAAE9underline_7pattern5colorQrSb_AA4TextV9LineStyleV7PatternVAA5ColorVSgtF::SYNTHESIZED::s:6TipKit0A4ViewV	not-applicable		SwiftUI.View protocol member synthesized onto TipView
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit0A5GroupC8PriorityO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO17DonationTimeRangeV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO18InvalidationReasonO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO4RuleV17CompoundOperationO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO6StatusO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:ST6TipKitE13donatedWithinySayAA4TipsO5EventV8DonationVy_qd___GGAD0G9TimeRangeVSeRd__SERd__s8SendableRd__AI7ElementRtzlF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:ST6TipKitE13largestSubset9groupedBySayAA4TipsO5EventV8DonationVy_qd___GGs7KeyPathCyqd__qd_0_G_tSeRd__SERd__s8SendableRd__SHRd_0_AJ7ElementRtzr0_lF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:ST6TipKitE14smallestSubset9groupedBySayAA4TipsO5EventV8DonationVy_qd___GGs7KeyPathCyqd__qd_0_G_tSeRd__SERd__s8SendableRd__SHRd_0_AJ7ElementRtzr0_lF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the agent runtime probe
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit0A5GroupC8PriorityO	deferred		Requires real SwiftUI.Text/Image/Edge/Binding/View; gated when SwiftUI is unavailable
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO17DonationTimeRangeV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO18InvalidationReasonO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO19ConfigurationOptionV05CloudB9ContainerV	implemented	tests/agent/TipKitRuntime.swift	Value type and fail-closed configure; CloudKit sync is not implemented
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO19ConfigurationOptionV16DisplayFrequencyV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO19ConfigurationOptionV17DatastoreLocationV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO4RuleV17CompoundOperationO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6TipKit4TipsO6StatusO	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:ST6TipKitE13donatedWithinySayAA4TipsO5EventV8DonationVy_qd___GGAD0G9TimeRangeVSeRd__SERd__s8SendableRd__AI7ElementRtzlF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:ST6TipKitE13largestSubset9groupedBySayAA4TipsO5EventV8DonationVy_qd___GGs7KeyPathCyqd__qd_0_G_tSeRd__SERd__s8SendableRd__SHRd_0_AJ7ElementRtzr0_lF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:ST6TipKitE14smallestSubset9groupedBySayAA4TipsO5EventV8DonationVy_qd___GGs7KeyPathCyqd__qd_0_G_tSeRd__SERd__s8SendableRd__SHRd_0_AJ7ElementRtzr0_lF	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:6TipKit0aB5ErrorV	implemented	tests/agent/TipKitRuntime.swift	Exercised by the Foundation-only agent runtime

@@ -1,75 +1,13 @@
 @_exported import Foundation
-
 #if canImport(SwiftUI)
-@_exported import SwiftUI
-#endif
-
-// MARK: - Portable SwiftUI stand-ins
-//
-// The isolated host gate compiles this module with Linux `swiftc` and no
-// SwiftUI search path. When SwiftUI is present (guest package / later
-// integration), TipKit uses the real `Text`, `Image`, `Edge`, and `Binding`
-// types. Otherwise these stand-ins keep the public Tip surface type-checkable
-// without fabricating SwiftUI presentation.
-
-#if !canImport(SwiftUI)
-
-/// Portable stand-in for `SwiftUI.Text` used when SwiftUI is not importable.
-public struct Text: Equatable, Hashable, Sendable {
-    public let portableValue: String
-
-    public init(_ content: String) {
-        portableValue = content
-    }
-
-    public init(verbatim content: String) {
-        portableValue = content
-    }
-}
-
-extension Text: ExpressibleByStringLiteral {
-    public init(stringLiteral value: String) {
-        portableValue = value
-    }
-}
-
-/// Portable stand-in for `SwiftUI.Image` used when SwiftUI is not importable.
-public struct Image: Equatable, Hashable, Sendable {
-    public let portableSystemName: String?
-
-    public init(systemName name: String) {
-        portableSystemName = name
-    }
-}
-
-/// Portable stand-in for `SwiftUI.Edge`.
-public enum Edge: Hashable, Sendable {
-    case top
-    case leading
-    case bottom
-    case trailing
-}
-
-/// Portable stand-in for `SwiftUI.Binding`. Not a live SwiftUI binding.
-public struct Binding<Value> {
-    public var wrappedValue: Value
-
-    public init(wrappedValue: Value) {
-        self.wrappedValue = wrappedValue
-    }
-
-    public static func constant(_ value: Value) -> Binding<Value> {
-        Binding(wrappedValue: value)
-    }
-}
-
+import SwiftUI
 #endif
 
 // MARK: - Process-local runtime
 //
-// Linux has no Apple TipKit Core Data / CloudKit datastore. Eligibility,
-// donations, parameters, and invalidations are process-local and fail closed
-// for App Group containers and iCloud sync.
+// Isolated Linux has no Apple TipKit Core Data store and no iCloud. Eligibility,
+// donations, parameters, and invalidations are process-local. App Group
+// containers, URL datastores, and CloudKit containers fail closed.
 
 enum TipKitTestingMode: Equatable, Sendable {
     case normal
@@ -88,8 +26,6 @@ final class TipKitState: @unchecked Sendable {
     private let lock = NSLock()
     private var configured = false
     private var displayFrequency = Tips.ConfigurationOption.DisplayFrequency.immediate
-    private var datastoreLocation = Tips.ConfigurationOption.DatastoreLocation.applicationDefault
-    private var cloudKitContainer: Tips.ConfigurationOption.CloudKitContainer?
     private var invalidations: [String: Tips.InvalidationReason] = [:]
     private var displayCounts: [String: Int] = [:]
     private var firstDisplayDates: [String: Date] = [:]
@@ -105,39 +41,30 @@ final class TipKitState: @unchecked Sendable {
         lock.withLock { configured }
     }
 
-    var portableDisplayFrequency: Tips.ConfigurationOption.DisplayFrequency {
-        lock.withLock { displayFrequency }
-    }
-
-    var portableCloudKitContainer: Tips.ConfigurationOption.CloudKitContainer? {
-        lock.withLock { cloudKitContainer }
-    }
-
-    var portableDatastoreLocation: Tips.ConfigurationOption.DatastoreLocation {
-        lock.withLock { datastoreLocation }
-    }
-
     func configure(_ options: [Tips.ConfigurationOption]) throws {
         try lock.withLock {
             if configured {
                 throw TipKitError.tipsDatastoreAlreadyConfigured
             }
             var frequency = Tips.ConfigurationOption.DisplayFrequency.immediate
-            var location = Tips.ConfigurationOption.DatastoreLocation.applicationDefault
-            var cloud: Tips.ConfigurationOption.CloudKitContainer?
             for option in options {
                 switch option.storage {
                 case .displayFrequency(let value):
                     frequency = value
                 case .datastoreLocation(let value):
-                    location = value
+                    switch value.kind {
+                    case .applicationDefault:
+                        break
+                    case .url:
+                        throw TipKitError.urlDatastoreUnavailable
+                    }
                 case .cloudKitContainer(let value):
-                    cloud = value
+                    if value != nil {
+                        throw TipKitError.cloudKitUnavailable
+                    }
                 }
             }
             displayFrequency = frequency
-            datastoreLocation = location
-            cloudKitContainer = cloud
             configured = true
         }
     }
@@ -399,6 +326,8 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
         case invalidPredicateValueType
         case tipsDatastoreAlreadyConfigured
         case missingGroupContainerEntitlements
+        case cloudKitUnavailable
+        case urlDatastoreUnavailable
     }
 
     let kind: Kind
@@ -411,6 +340,12 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
     public static let tipsDatastoreAlreadyConfigured = TipKitError(.tipsDatastoreAlreadyConfigured)
     public static let missingGroupContainerEntitlements = TipKitError(.missingGroupContainerEntitlements)
 
+    @_spi(OpenUIKitHost)
+    public static let cloudKitUnavailable = TipKitError(.cloudKitUnavailable)
+
+    @_spi(OpenUIKitHost)
+    public static let urlDatastoreUnavailable = TipKitError(.urlDatastoreUnavailable)
+
     public var errorDescription: String? {
         switch kind {
         case .invalidPredicateValueType:
@@ -419,6 +354,10 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
             return "The tips datastore has already been configured."
         case .missingGroupContainerEntitlements:
             return "The App Group container entitlement is missing or unavailable."
+        case .cloudKitUnavailable:
+            return "CloudKit tip datastores are unavailable on this Linux host."
+        case .urlDatastoreUnavailable:
+            return "URL tip datastores are unavailable; isolated Linux is process-local memory only."
         }
     }
 
@@ -451,6 +390,7 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
         TipKitState.shared.hideAllTipsForTesting()
     }
 
+#if canImport(SwiftUI)
     public static func showTipsForTesting(_ tips: [any Tip.Type]) {
         TipKitState.shared.showTipsForTesting(tips.map { String(reflecting: $0) })
     }
@@ -458,6 +398,7 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
     public static func hideTipsForTesting(_ tips: [any Tip.Type]) {
         TipKitState.shared.hideTipsForTesting(tips.map { String(reflecting: $0) })
     }
+#endif
 
     /// A type that describes the current display eligibility status for a tip.
     public enum Status: Hashable, Sendable {
@@ -503,9 +444,6 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
         public init(_ maxDisplayCount: Int) {
             value = maxDisplayCount
         }
-
-        @_spi(OpenUIKitHost)
-        public var portableValue: Int { value }
     }
 
     public struct MaxDisplayDuration: TipOption, Sendable {
@@ -514,9 +452,6 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
         public init(_ maxDisplayDuration: TimeInterval) {
             value = maxDisplayDuration
         }
-
-        @_spi(OpenUIKitHost)
-        public var portableValue: TimeInterval { value }
     }
 
     public struct IgnoresDisplayFrequency: TipOption, Sendable {
@@ -525,9 +460,6 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
         public init(_ ignoresDisplayFrequency: Bool) {
             ignores = ignoresDisplayFrequency
         }
-
-        @_spi(OpenUIKitHost)
-        public var portableValue: Bool { ignores }
     }
 
     public struct ParameterOption: Hashable, Sendable {
@@ -565,9 +497,6 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
         public static func weeks(_ value: Int) -> Tips.DonationTimeRange {
             DonationTimeRange(seconds: TimeInterval(value) * 604800)
         }
-
-        @_spi(OpenUIKitHost)
-        public var portableSeconds: TimeInterval { seconds }
     }
 
     public struct ConfigurationOption: Sendable {
@@ -593,14 +522,6 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
 
             public static func named(_ containerName: String) -> CloudKitContainer {
                 CloudKitContainer(kind: .named(containerName))
-            }
-
-            @_spi(OpenUIKitHost)
-            public var portableName: String? {
-                switch kind {
-                case .automatic: return nil
-                case .named(let name): return name
-                }
             }
         }
 
@@ -652,14 +573,6 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
                 _ = identifier
                 throw TipKitError.missingGroupContainerEntitlements
             }
-
-            @_spi(OpenUIKitHost)
-            public var portableURL: URL? {
-                switch kind {
-                case .applicationDefault: return nil
-                case .url(let url): return url
-                }
-            }
         }
 
         public static func displayFrequency(
@@ -703,6 +616,7 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
         }
     }
 
+#if canImport(SwiftUI)
     @resultBuilder
     public struct ActionBuilder {
         public static func buildExpression(_ expression: Action) -> [Action] { [expression] }
@@ -732,6 +646,7 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
             }
         }
     }
+#endif
 
     @resultBuilder
     public struct OptionsBuilder {
@@ -767,6 +682,7 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
         }
     }
 
+#if canImport(SwiftUI)
     @resultBuilder
     public struct GroupBuilder {
         public static func buildExpression(_ expression: any Tip) -> [any Tip] { [expression] }
@@ -785,6 +701,7 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
         }
         public static func buildIf(_ component: [any Tip]?) -> [any Tip] { component ?? [] }
     }
+#endif
 
     /// A condition to meet before displaying a tip.
     public struct Rule: @unchecked Sendable {
@@ -795,7 +712,7 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
 
         enum Storage {
             case always
-            case portable(() -> Bool)
+            case evaluated(() -> Bool)
             case compound(CompoundOperation, [Rule])
         }
 
@@ -806,8 +723,8 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
         }
 
         @_spi(OpenUIKitHost)
-        public static func portable(_ predicate: @escaping () -> Bool) -> Rule {
-            Rule(storage: .portable(predicate))
+        public static func evaluated(_ predicate: @escaping () -> Bool) -> Rule {
+            Rule(storage: .evaluated(predicate))
         }
 
         init(storage: Storage) {
@@ -818,7 +735,7 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
             switch storage {
             case .always:
                 return true
-            case .portable(let predicate):
+            case .evaluated(let predicate):
                 return predicate()
             case .compound(.conjunction, let children):
                 return children.allSatisfy { $0.evaluate() }
@@ -828,6 +745,7 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
         }
     }
 
+#if canImport(SwiftUI)
     /// A type that describes a control associated with a tip.
     public struct Action: Identifiable, @unchecked Sendable {
         public typealias ID = String
@@ -874,6 +792,7 @@ public struct TipKitError: Error, LocalizedError, CustomStringConvertible, Hasha
             self.handler = { @MainActor in handler() }
         }
     }
+#endif
 
     /// A repeatable user-defined action.
     public struct Event<DonationInfo: Codable & Sendable>: Identifiable, Sendable {
@@ -1018,6 +937,38 @@ extension Tips.Event where DonationInfo == Tips.EmptyDonation {
     }
 }
 
+extension Tips {
+    @_spi(OpenUIKitHost)
+    public static func eligibilityStatus(
+        id: String,
+        typeName: String = "",
+        rules: [Rule] = [],
+        options: [any TipOption] = []
+    ) -> Status {
+        TipKitState.shared.status(
+            id: id,
+            typeName: typeName,
+            rules: rules,
+            options: options
+        )
+    }
+
+    @_spi(OpenUIKitHost)
+    public static func invalidateEligibility(
+        id: String,
+        reason: InvalidationReason
+    ) {
+        TipKitState.shared.invalidate(id: id, reason: reason)
+    }
+
+    @_spi(OpenUIKitHost)
+    public static func resetEligibility(id: String) {
+        TipKitState.shared.resetEligibility(id: id)
+    }
+}
+
+#if canImport(SwiftUI)
+
 // MARK: - Tip protocol
 
 /// A type that sets a tip's content, as well as the conditions for when it displays.
@@ -1095,11 +1046,6 @@ extension Tip {
     public func resetEligibility() async {
         TipKitState.shared.resetEligibility(id: id)
     }
-
-    @_spi(OpenUIKitHost)
-    public func portableRecordDisplay() {
-        TipKitState.shared.recordDisplay(id: id)
-    }
 }
 
 /// A type-erased tip value.
@@ -1139,3 +1085,5 @@ public struct AnyTip: Tip, @unchecked Sendable {
         await base.resetEligibility()
     }
 }
+
+#endif

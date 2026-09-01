@@ -1,4 +1,6 @@
+#if canImport(SwiftUI)
 import Foundation
+import SwiftUI
 
 /// A group of tips that presents one eligible tip at a time.
 public final class TipGroup: @unchecked Sendable {
@@ -88,8 +90,6 @@ public struct TipViewStyleConfiguration: @unchecked Sendable {
     public var actions: [Tips.Action] { tip.actions }
 }
 
-#if canImport(SwiftUI)
-
 @MainActor @preconcurrency
 public protocol TipViewStyle {
     associatedtype Body: View
@@ -154,7 +154,7 @@ extension TipView where Content == AnyTip {
         arrowEdge: Edge? = nil,
         action: @escaping @MainActor (Tips.Action) -> Void = { _ in }
     ) {
-        self.tip = tip.map(AnyTip.init)
+        self.tip = tip.map { AnyTip($0) }
         self.isPresented = isPresented
         self.arrowEdge = arrowEdge
         self.action = action
@@ -273,62 +273,6 @@ extension View {
     nonisolated public func tipAnchor<AnchorID: Hashable & Sendable>(_ id: AnchorID) -> some View {
         _ = id
         return self
-    }
-}
-
-#else
-
-@MainActor @preconcurrency
-public struct MiniTipViewStyle: Sendable {
-    nonisolated public init() {}
-
-    nonisolated public static var miniTip: MiniTipViewStyle { MiniTipViewStyle() }
-}
-
-@MainActor @preconcurrency
-public struct TipView<Content: Tip>: @unchecked Sendable {
-    public let portableTip: AnyTip?
-    public let portableIsPresented: Binding<Bool>?
-    public let portableArrowEdge: Edge?
-    let action: @MainActor (Tips.Action) -> Void
-
-    @MainActor @preconcurrency
-    public init(
-        _ tip: (any Tip)?,
-        isPresented: Binding<Bool>? = nil,
-        arrowEdge: Edge? = nil,
-        action: @escaping @MainActor (Tips.Action) -> Void = { _ in }
-    ) where Content == AnyTip {
-        portableTip = tip.map { AnyTip($0) }
-        portableIsPresented = isPresented
-        portableArrowEdge = arrowEdge
-        self.action = action
-    }
-
-    @MainActor @preconcurrency
-    public init<AnchorID: Hashable>(
-        _ tip: (any Tip)?,
-        isPresented: Binding<Bool>? = nil,
-        arrowEdge: Edge? = nil,
-        anchorID: AnchorID,
-        action: @escaping @MainActor (Tips.Action) -> Void = { _ in }
-    ) where Content == AnyTip {
-        self.init(tip, isPresented: isPresented, arrowEdge: arrowEdge, action: action)
-        _ = anchorID
-    }
-
-    @MainActor @preconcurrency
-    public init(
-        _ tip: (any Tip)?,
-        arrowEdge: Edge? = nil,
-        action: @escaping @MainActor (Tips.Action) -> Void = { _ in }
-    ) where Content == AnyTip {
-        self.init(tip, isPresented: nil, arrowEdge: arrowEdge, action: action)
-    }
-
-    @_spi(OpenUIKitHost)
-    public var portableShouldDisplay: Bool {
-        portableTip?.shouldDisplay ?? false
     }
 }
 
