@@ -2025,7 +2025,23 @@ class ShellContractTests(unittest.TestCase):
     def test_host_wrapper_physically_stages_one_content_verified_bind(self) -> None:
         source = HOST_WRAPPER.read_text(encoding="utf-8")
         helper = PHYSICAL_REPLAY_TOOL.read_text(encoding="utf-8")
+        builder = BUILDER.read_text(encoding="utf-8")
         validate_core_single_bind_contract(source)
+        self.assertIn(
+            "EXPECTED_MACHORUN_COMMIT="
+            "edb99a8574255ddc4c979b2f0cf2615033ff14fd",
+            builder,
+        )
+        self.assertIn(
+            "EXPECTED_MACHORUN_TREE="
+            "19b2308f300ef4006acf526e599fad9265e7664c",
+            builder,
+        )
+        self.assertNotIn(
+            "EXPECTED_MACHORUN_COMMIT="
+            "e6b1745bef09ac8f1e2d6e6c83f7c70d6dbe49a5",
+            builder,
+        )
         for token in (
             "--network none",
             "--read-only",
