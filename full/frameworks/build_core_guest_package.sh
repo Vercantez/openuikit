@@ -237,8 +237,8 @@ EXPECTED_COLLECTIONS_COMMIT=9bf03ff58ce34478e66aaee630e491823326fd06
 EXPECTED_COLLECTIONS_TREE=5e4de96f40ccf147dab967f38cb7988ecd933c27
 EXPECTED_OPENCOMBINE_COMMIT=1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b
 EXPECTED_OPENCOMBINE_TREE=66a9d91efc910c7577e40b2dec166a2de427594a
-EXPECTED_MACHORUN_COMMIT=edb99a8574255ddc4c979b2f0cf2615033ff14fd
-EXPECTED_MACHORUN_TREE=19b2308f300ef4006acf526e599fad9265e7664c
+EXPECTED_MACHORUN_COMMIT=dd18e0b5e51e26d4673193d341e7c9a864db2fb8
+EXPECTED_MACHORUN_TREE=42d42ace9c6ff7a4ae7c25c3a8e466f82d5f70c8
 SWIFT_CORE_REQUIRED_AVAILABILITY_SYMBOL='_$ss042_stdlib_isOSVersionAtLeastOrVariantVersiondE0yBi1_Bw_BwBwBwBwBwtF'
 EXPECTED_MACHORUN_GROUP_FIXTURE_SHA=d90194ae586e14f652435e4764d4b13d338be53b95da10cf73df4d1955895624
 EXPECTED_MACHORUN_GROUP_GOLDEN_SHA=671c6a3487332fa71c9fa398de9015b37f38f97978a0ebcdd66fdce69f5562d4
@@ -246,6 +246,13 @@ EXPECTED_MACHORUN_GROUP_SOURCE_SHA=940c48317d4d782aaf61193f54b1a1ac216a7fa2ef718
 EXPECTED_MACHORUN_XATTR_FIXTURE_SHA=08505e9ba4da6dc21a6eea360a8583b3fa2460020e6ed881a7ffefe6f8527ed7
 EXPECTED_MACHORUN_XATTR_GOLDEN_SHA=5e9d15742e594d5cf2b8bb767629a6e0a5acaae33bdb0fa591c9b535dd3f734f
 EXPECTED_MACHORUN_XATTR_SOURCE_SHA=9603c5296d343769fbe3b0889623511d69a59498700483d3bc523404919f5c00
+EXPECTED_MACHORUN_FTS_FIXTURE_SHA=dfdfb829fc3030367bec2be71c36e7524f49a0cc19dca67dfb6add54be24e2fb
+EXPECTED_MACHORUN_FTS_GOLDEN_SHA=4450fd565645e269e1aadbebb0932fc97415360ba867668e143890d418119756
+EXPECTED_MACHORUN_FTS_STDERR_SHA=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+EXPECTED_MACHORUN_FTS_EXIT_SHA=9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa
+EXPECTED_MACHORUN_FTS_SOURCE_SHA=dcd6ce46373dcbbf3fd9b6b413ce4f1bd2ee561bd9cb6c1d20065a62b86d7f05
+EXPECTED_MACHORUN_FTS_SUMMARY_SHA=87a60c1363f50ecaf9ba08108fd6ab0a03cde70c14449ad8c7f7c44edb677670
+EXPECTED_MACHORUN_FTS_LIBSYSTEM_SOURCE_SHA=d773d67137cb4c77cded251446ca73a56f269b8a47de2650f244135209c8df1d
 EXPECTED_MACHORUN_QUOTA_FIXTURE_SHA=79b88f72fa2f1a844aaeae05564f2da7e305080b97422ef602a040d04f57f166
 EXPECTED_MACHORUN_QUOTA_GOLDEN_SHA=13ee8b893730f6f8e9bff25be80562359006648b167d0c94c6bb9eb6ee7d2a18
 EXPECTED_MACHORUN_QUOTA_SOURCE_SHA=5b091a2842a95283bb575f01d8b6a0eaa180158b1107f61c8d4036e036848f6f
@@ -2398,6 +2405,54 @@ printf '%s\n' \
     'OPEN_FOUNDATION_XATTR_OK names=darwin-mapped flags=create,replace,nofollow errno=translated list=repacked' \
     >> "$WORK/xattr-macho.log"
 
+echo '== prove genuine Darwin-to-glibc fts ABI translation'
+FTS_FIXTURE=$MACHORUN/tests/bin/fts
+FTS_GOLDEN=$MACHORUN/tests/expected/fts.stdout
+FTS_STDERR=$MACHORUN/tests/expected/fts.stderr
+FTS_EXIT=$MACHORUN/tests/expected/fts.exit
+FTS_SOURCE=$MACHORUN/tests/src/fts.c
+FTS_SUMMARY=$MACHORUN/tests/meta/fts.summary.txt
+require_hash "$FTS_FIXTURE" "$EXPECTED_MACHORUN_FTS_FIXTURE_SHA" \
+    machorun-fts-fixture
+require_hash "$FTS_GOLDEN" "$EXPECTED_MACHORUN_FTS_GOLDEN_SHA" \
+    machorun-fts-golden
+require_hash "$FTS_STDERR" "$EXPECTED_MACHORUN_FTS_STDERR_SHA" \
+    machorun-fts-stderr
+require_hash "$FTS_EXIT" "$EXPECTED_MACHORUN_FTS_EXIT_SHA" \
+    machorun-fts-exit
+require_hash "$FTS_SOURCE" "$EXPECTED_MACHORUN_FTS_SOURCE_SHA" \
+    machorun-fts-source
+require_hash "$FTS_SUMMARY" "$EXPECTED_MACHORUN_FTS_SUMMARY_SHA" \
+    machorun-fts-summary
+require_hash "$MACHORUN/darwin/src/posix.c" \
+    "$EXPECTED_MACHORUN_FTS_LIBSYSTEM_SOURCE_SHA" machorun-fts-libsystem-source
+for symbol in _fts_open _fts_read _fts_children _fts_set _fts_close; do
+    definition_count=$(llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+        "$LIBSYSTEM_REAL" \
+        | awk -v expected="$symbol" '$0 == expected { count++ } END { print count + 0 }')
+    [ "$definition_count" -eq 1 ] \
+        || die "staged libSystem $symbol definition count $definition_count, expected 1"
+done
+set +e
+LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+MACHORUN_ROOT="$RUNTIME" \
+    "$RUNTIME/machorun" "$FTS_FIXTURE" \
+    > "$WORK/fts-macho.stdout" 2> "$WORK/fts-macho.stderr"
+fts_status=$?
+set -e
+printf '%s\n' "$fts_status" > "$WORK/fts-macho.exit"
+cmp "$FTS_GOLDEN" "$WORK/fts-macho.stdout" \
+    || die 'Mach-O Darwin fts translation differs from the Apple golden stdout'
+cmp "$FTS_STDERR" "$WORK/fts-macho.stderr" \
+    || die 'Mach-O Darwin fts translation produced unexpected stderr'
+cmp "$FTS_EXIT" "$WORK/fts-macho.exit" \
+    || die 'Mach-O Darwin fts translation produced the wrong exit status'
+cp "$WORK/fts-macho.stdout" "$WORK/fts-macho.log"
+printf '%s\n' \
+    'OPEN_FOUNDATION_FTS_OK abi=72,112 traversal=physical,logical,nostat children=nameonly instructions=skip,follow,again oracle=apple-exact' \
+    >> "$WORK/fts-macho.log"
+
 echo '== remove stale shadows over pinned quota and uname translations'
 : > "$WORK/libsystem-compat-macho.log"
 for fixture in quota uname; do
@@ -2471,7 +2526,8 @@ echo '== link FoundationEssentials before its full internationalization layer'
         "$STAGE/lib/libFoundationEssentials.dylib"
 } > "$WORK/foundation-essentials-bindings.txt"
 for symbol in _getgrgid_r _getgrnam_r _fgetxattr _fsetxattr \
-    _getxattr _listxattr _setxattr _quotactl _uname; do
+    _getxattr _listxattr _setxattr _fts_close _fts_open _fts_read _fts_set \
+    _quotactl _uname; do
     binding_count=$(awk -v expected="$symbol" \
         '$NF == expected && $(NF - 1) == "libSystem.real" { count++ }
          END { print count + 0 }' "$WORK/foundation-essentials-bindings.txt")
@@ -4568,6 +4624,9 @@ cp "$WORK/group-lookup-macho.log" \
     "$STAGE/attestation/group-lookup-macho.log"
 cp "$WORK/xattr-macho.log" \
     "$STAGE/attestation/xattr-macho.log"
+cp "$FTS_GOLDEN" "$STAGE/attestation/fts-apple.txt"
+cp "$FTS_SUMMARY" "$STAGE/attestation/fts-apple-summary.txt"
+cp "$WORK/fts-macho.log" "$STAGE/attestation/fts-macho.log"
 cp "$WORK/libsystem-compat-macho.log" \
     "$STAGE/attestation/libsystem-compat-macho.log"
 cp "$WORK/first-party-sources.pre.tsv" \
@@ -4611,6 +4670,14 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$EXPECTED_MACHORUN_XATTR_FIXTURE_SHA" \
         "$EXPECTED_MACHORUN_XATTR_GOLDEN_SHA" \
         "$EXPECTED_MACHORUN_XATTR_SOURCE_SHA"
+    printf 'FoundationEssentials-fts\tlibSystem-source=%s\tfixture=%s\tgolden=%s\tstderr=%s\texit=%s\tapple-source=%s\tapple-summary=%s\n' \
+        "$EXPECTED_MACHORUN_FTS_LIBSYSTEM_SOURCE_SHA" \
+        "$EXPECTED_MACHORUN_FTS_FIXTURE_SHA" \
+        "$EXPECTED_MACHORUN_FTS_GOLDEN_SHA" \
+        "$EXPECTED_MACHORUN_FTS_STDERR_SHA" \
+        "$EXPECTED_MACHORUN_FTS_EXIT_SHA" \
+        "$EXPECTED_MACHORUN_FTS_SOURCE_SHA" \
+        "$EXPECTED_MACHORUN_FTS_SUMMARY_SHA"
     printf 'FoundationEssentials-libSystem-compat\tquota=%s,%s,%s\tuname=%s,%s,%s\n' \
         "$EXPECTED_MACHORUN_QUOTA_FIXTURE_SHA" \
         "$EXPECTED_MACHORUN_QUOTA_GOLDEN_SHA" \
@@ -5044,6 +5111,12 @@ record_artifact attestation FoundationEssentials group-lookup-semantics \
     attestation/group-lookup-macho.log
 record_artifact attestation FoundationEssentials xattr-semantics \
     attestation/xattr-macho.log
+record_artifact attestation FoundationEssentials fts-apple-golden \
+    attestation/fts-apple.txt
+record_artifact attestation FoundationEssentials fts-apple-binary-summary \
+    attestation/fts-apple-summary.txt
+record_artifact attestation FoundationEssentials fts-runtime-semantics \
+    attestation/fts-macho.log
 record_artifact attestation FoundationEssentials libSystem-compat-semantics \
     attestation/libsystem-compat-macho.log
 record_artifact attestation first-party-sources manifest \
