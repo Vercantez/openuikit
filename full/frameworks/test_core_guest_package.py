@@ -744,6 +744,8 @@ class PackageFixture:
             "arm64-apple-macos15.0",
             "-sdk",
             "sdk",
+            "-Xfrontend",
+            "-enable-cross-import-overlays",
             "-I",
             "modules",
             "-Xcc",
@@ -1432,6 +1434,28 @@ class PackageContractTests(unittest.TestCase):
             refusal = fixture.write_manifest(expected=2)
             self.assertIn("CoreImage underlying-module pair", refusal.stderr)
 
+    def test_cross_import_overlay_compile_pair_is_mandatory(self) -> None:
+        for mutation in ("missing", "duplicate"):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
+                fixture = PackageFixture(Path(temporary) / "package", preview=False)
+                pair_end = fixture.compile_arguments.index(
+                    "-enable-cross-import-overlays"
+                ) + 1
+                if mutation == "missing":
+                    del fixture.compile_arguments[pair_end - 2 : pair_end]
+                else:
+                    fixture.compile_arguments[pair_end:pair_end] = [
+                        "-Xfrontend",
+                        "-enable-cross-import-overlays",
+                    ]
+                (fixture.root / "compile-flags.rsp").write_bytes(
+                    b"".join(
+                        token.encode() + b"\0" for token in fixture.compile_arguments
+                    )
+                )
+                refusal = fixture.write_manifest(expected=2)
+                self.assertIn("enable Swift cross-import overlays", refusal.stderr)
+
     def test_webkit_source_attestation_is_mandatory(self) -> None:
         fixture = self.fixture(False)
         manifest_path = fixture.root / "attestation/core-package.json"
@@ -1473,6 +1497,17 @@ class PackageContractTests(unittest.TestCase):
 
 
 class ShellContractTests(unittest.TestCase):
+    def test_builder_enables_cross_import_overlays_for_platform_and_consumers(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        self.assertEqual(
+            source.count("-Xfrontend -enable-cross-import-overlays"), 2
+        )
+        cross_import_gate = source[
+            source.index("typecheck an ordinary QuickLook/SwiftUI cross-import consumer") :
+            source.index("compile/link/run the standalone CoreMedia rational-time gate")
+        ]
+        self.assertIn('"${SWIFTC[@]}"', cross_import_gate)
+
     def test_foundation_hackers_frontier_is_foundation_only_and_runs(self) -> None:
         builder = BUILDER.read_text(encoding="utf-8")
         core_probe = (HERE / "CoreGuestPackageProbe.swift").read_text(

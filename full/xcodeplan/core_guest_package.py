@@ -338,6 +338,19 @@ def _require_coreimage_compile_contract(arguments: list[str]) -> None:
             )
 
 
+def _require_cross_import_compile_contract(arguments: list[str]) -> None:
+    pair = ["-Xfrontend", "-enable-cross-import-overlays"]
+    count = sum(
+        arguments[index : index + 2] == pair
+        for index in range(len(arguments) - 1)
+    )
+    if count != 1:
+        raise CorePackageError(
+            "swift_compile_arguments must enable Swift cross-import overlays "
+            "exactly once: -Xfrontend -enable-cross-import-overlays"
+        )
+
+
 def _sdk_symlink_target(
     sdk_root: Path, relative: PurePosixPath, target: str
 ) -> bytes:
@@ -567,6 +580,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         _CONTROLLED_COMPILE_OPTIONS,
     )
     _require_coreimage_compile_contract(manifest["swift_compile_arguments"])
+    _require_cross_import_compile_contract(manifest["swift_compile_arguments"])
     manifest["executable_link_arguments"] = _arguments(
         manifest.get("executable_link_arguments"),
         "executable_link_arguments",

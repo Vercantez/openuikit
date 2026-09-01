@@ -1181,6 +1181,7 @@ MODULE_CACHE=$WORK/module-cache
 mkdir -p "$MODULE_CACHE"
 SWIFTC=(swiftc -target "$TARGET" -sdk "$STAGE/sdk"
     -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
+    -Xfrontend -enable-cross-import-overlays
     -Xfrontend -disable-implicit-string-processing-module-import
     -Xfrontend -disable-objc-attr-requires-foundation-module)
 LD=(ld64.lld-18 -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS"
@@ -3129,6 +3130,7 @@ echo 'FOUNDATION_BYTE_COUNT_MACHO_OK rows=86 apple-differential=exact'
 echo '== write relocatable compile/link contracts'
 COMPILE_ARGUMENTS=(
     -target "$TARGET" -sdk sdk -runtime-compatibility-version none
+    -Xfrontend -enable-cross-import-overlays
     -Xfrontend -disable-implicit-string-processing-module-import
     -Xfrontend -disable-objc-attr-requires-foundation-module
     -load-plugin-library host-tools/swift/host/plugins/libObservationMacros.so

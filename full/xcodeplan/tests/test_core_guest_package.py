@@ -366,6 +366,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "arm64-apple-macos15.0",
                 "-sdk",
                 "sdk",
+                "-Xfrontend",
+                "-enable-cross-import-overlays",
                 "-load-plugin-library",
                 "host-tools/swift/host/plugins/libObservationMacros.so",
                 "-load-plugin-library",
@@ -568,6 +570,35 @@ class CoreGuestPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(
             core_guest_package.CorePackageError,
             "CoreImage underlying-module pair",
+        ):
+            core_guest_package.validate(self.root)
+
+    def test_refuses_missing_cross_import_overlay_compile_contract(self) -> None:
+        changed = copy.deepcopy(self.manifest)
+        pair_end = changed["swift_compile_arguments"].index(
+            "-enable-cross-import-overlays"
+        ) + 1
+        del changed["swift_compile_arguments"][pair_end - 2 : pair_end]
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "enable Swift cross-import overlays",
+        ):
+            core_guest_package.validate(self.root)
+
+    def test_refuses_duplicate_cross_import_overlay_compile_contract(self) -> None:
+        changed = copy.deepcopy(self.manifest)
+        pair_end = changed["swift_compile_arguments"].index(
+            "-enable-cross-import-overlays"
+        ) + 1
+        changed["swift_compile_arguments"][pair_end:pair_end] = [
+            "-Xfrontend",
+            "-enable-cross-import-overlays",
+        ]
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "enable Swift cross-import overlays",
         ):
             core_guest_package.validate(self.root)
 
