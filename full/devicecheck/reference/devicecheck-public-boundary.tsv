@@ -1,0 +1,8 @@
+kind	name	policy	evidence
+install-name	/System/Library/Frameworks/DeviceCheck.framework/DeviceCheck	required	DeviceCheck.tbd Xcode 26.1
+data-symbol	_DCErrorDomain	public	DeviceCheck.tbd Xcode 26.1
+objc-class	DCDevice	public	DeviceCheck.tbd and public header
+objc-class	DCAppAttestService	public	DeviceCheck.tbd and public header
+objc-class	DCAppAttestDeviceService	private-exclusion	DeviceCheck.tbd only
+objc-class	DCAppAttestServicePriv	private-exclusion	DeviceCheck.tbd only
+objc-class	DCAppAttestWebAuthService	private-exclusion	DeviceCheck.tbd only

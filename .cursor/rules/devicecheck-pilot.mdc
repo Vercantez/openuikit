@@ -1,0 +1,12 @@
+---
+description: DeviceCheck cloud-agent pilot scope and evidence policy
+globs:
+  - full/devicecheck/**
+alwaysApply: false
+---
+
+Read `full/devicecheck/AGENTS.md` and `full/devicecheck/PILOT_TASK.md` before
+editing. Work only in `full/devicecheck/**`. The committed symbol graph,
+boundary ledger, corpus ledger, and acceptance programs are fixed task inputs.
+Do not claim Apple runtime parity, weaken tests, fabricate security successes,
+or edit shared platform integration files.
