@@ -1,4 +1,5 @@
 import Foundation
+import Dispatch
 
 public typealias GCControllerAxisValueChangedHandler = (GCControllerAxisInput, Float) -> Void
 public typealias GCControllerButtonTouchedChangedHandler = (GCControllerButtonInput, Float, Bool, Bool) -> Void
@@ -47,7 +48,11 @@ open class GCControllerAxisInput: GCControllerElement {
     open func setValue(_ value: Float) {
         let clamped = _gcClampUnit(value)
         self.value = clamped
-        valueChangedHandler?(self, clamped)
+        let handler = valueChangedHandler
+        let element = self
+        _gcAsync(_gcHandlerQueue(for: self)) {
+            handler?(element, clamped)
+        }
         _gcNotifyProfile(self)
     }
 }
@@ -64,16 +69,29 @@ open class GCControllerButtonInput: GCControllerElement {
         let clamped = _gcClamp01(value)
         let wasPressed = isPressed
         self.value = clamped
-        if !isTouched && clamped > 0 {
+        let pressed = isPressed
+        let touched = isTouched
+        let valueHandler = valueChangedHandler
+        let pressedHandler = pressedChangedHandler
+        let touchedHandler = touchedChangedHandler
+        let element = self
+        let becameTouched = !touched && clamped > 0
+        let becameUntouched = touched && clamped == 0
+        if becameTouched {
             isTouched = true
-            touchedChangedHandler?(self, clamped, isPressed, true)
-        } else if isTouched && clamped == 0 {
+        } else if becameUntouched {
             isTouched = false
-            touchedChangedHandler?(self, clamped, isPressed, false)
         }
-        valueChangedHandler?(self, clamped, isPressed)
-        if wasPressed != isPressed {
-            pressedChangedHandler?(self, clamped, isPressed)
+        _gcAsync(_gcHandlerQueue(for: self)) {
+            if becameTouched {
+                touchedHandler?(element, clamped, pressed, true)
+            } else if becameUntouched {
+                touchedHandler?(element, clamped, pressed, false)
+            }
+            valueHandler?(element, clamped, pressed)
+            if wasPressed != pressed {
+                pressedHandler?(element, clamped, pressed)
+            }
         }
         _gcNotifyProfile(self)
     }
@@ -103,7 +121,13 @@ open class GCControllerDirectionPad: GCControllerElement {
         left.setValue(max(0, -xAxis.value))
         up.setValue(max(0, yAxis.value))
         down.setValue(max(0, -yAxis.value))
-        valueChangedHandler?(self, xAxis.value, yAxis.value)
+        let handler = valueChangedHandler
+        let element = self
+        let x = xAxis.value
+        let y = yAxis.value
+        _gcAsync(_gcHandlerQueue(for: self)) {
+            handler?(element, x, y)
+        }
         _gcNotifyProfile(self)
     }
 }
@@ -149,7 +173,13 @@ open class GCControllerTouchpad: GCControllerElement {
         case .moving: handler = touchMoved
         case .up: handler = touchUp
         }
-        handler?(self, touchSurface.xAxis.value, touchSurface.yAxis.value, button.value, touchIsDown)
+        let element = self
+        let x = touchSurface.xAxis.value
+        let y = touchSurface.yAxis.value
+        let buttonValueNow = button.value
+        _gcAsync(_gcHandlerQueue(for: self)) {
+            handler?(element, x, y, buttonValueNow, touchIsDown)
+        }
         _gcNotifyProfile(self)
     }
 }
@@ -263,12 +293,18 @@ open class GCDualSenseAdaptiveTrigger: GCControllerButtonInput {
 
 func _gcNotifyProfile(_ element: GCControllerElement) {
     var cursor: GCControllerElement? = element
+    var profile: GCPhysicalInputProfile?
     while let current = cursor {
-        if let profile = current.owningProfile {
-            profile.valueDidChangeHandler?(profile, element)
-            return
+        if let found = current.owningProfile {
+            profile = found
+            break
         }
         cursor = current.collection
     }
-    element.owningProfile?.valueDidChangeHandler?(element.owningProfile!, element)
+    profile = profile ?? element.owningProfile
+    guard let profile else { return }
+    let handler = profile.valueDidChangeHandler
+    _gcAsync(_gcHandlerQueue(for: element)) {
+        handler?(profile, element)
+    }
 }

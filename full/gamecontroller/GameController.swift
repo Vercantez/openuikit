@@ -1,6 +1,14 @@
 import Foundation
 import Dispatch
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
+#if canImport(CoreServices)
+import CoreServices
+#endif
+
 /// Linux starting implementation of Apple's public `GameController` module.
 ///
 /// Software snapshot controllers (`GCController.withExtendedGamepad()` /
@@ -8,6 +16,8 @@ import Dispatch
 /// elements. Physical HID, wireless discovery, haptics engines, DualSense
 /// trigger motors, virtual-controller injection, and UIKit/SwiftUI event
 /// routing are fail-closed: this host has no Apple GameController service.
+/// UIKit types are imported and used when the real module is present; they are
+/// omitted (not replaced with `NSObject` or a local stand-in) otherwise.
 
 public enum GCControllerPlayerIndex: Int, Sendable, Hashable {
     case indexUnset = -1
@@ -220,11 +230,19 @@ public protocol GCDevice: NSObjectProtocol {
     var vendorName: String? { get }
 }
 
-public protocol GCGameControllerSceneDelegate: NSObjectProtocol {}
-
 open class GCGameControllerActivationContext: NSObject {
     open var previousApplicationBundleID: String? { nil }
 }
+
+#if canImport(UIKit)
+@MainActor
+public protocol GCGameControllerSceneDelegate: NSObjectProtocol {
+    func scene(
+        _ scene: UIKit.UIScene,
+        didActivateGameControllerWith context: GCGameControllerActivationContext
+    )
+}
+#endif
 
 open class GCColor: NSObject, NSSecureCoding {
     open var red: Float
@@ -294,17 +312,90 @@ public struct GameControllerEventHandlingOptions: Equatable, Sendable {
     }
 }
 
+#if canImport(UIKit)
 @MainActor
-open class GCEventViewController: NSObject {
+open class GCEventViewController: UIKit.UIViewController {
     open var controllerUserInteractionEnabled = false
 }
 
-open class GCEventInteraction: NSObject {
+@MainActor
+open class GCEventInteraction: NSObject, UIKit.UIInteraction {
     public override init() {
         super.init()
     }
+
     open var handledEventTypes = GCUIEventTypes.gamepad
     open var receivesEventsInView = false
+    public private(set) weak var view: UIKit.UIView?
+
+    public func willMove(to view: UIKit.UIView?) {
+        _ = view
+    }
+
+    public func didMove(to view: UIKit.UIView?) {
+        self.view = view
+    }
+}
+#endif
+
+struct _GCUncheckedAction: @unchecked Sendable {
+    let run: () -> Void
+}
+
+func _gcAsync(_ queue: DispatchQueue, _ body: @escaping () -> Void) {
+    let action = _GCUncheckedAction(run: body)
+    queue.async { action.run() }
+}
+
+let _gcServiceQueue = DispatchQueue(label: "GameController.service")
+
+final class _GCOnce: @unchecked Sendable {
+    private let lock = NSLock()
+    private var pending: (() -> Void)?
+
+    func store(_ handler: (() -> Void)?) {
+        lock.lock()
+        pending = handler
+        lock.unlock()
+    }
+
+    func fireOnce() {
+        lock.lock()
+        let handler = pending
+        pending = nil
+        lock.unlock()
+        handler?()
+    }
+}
+
+let _gcDiscoveryOnce = _GCOnce()
+
+final class _GCOnceError: @unchecked Sendable {
+    private let lock = NSLock()
+    private var pending: (((any Error)?) -> Void)?
+
+    init(_ handler: (((any Error)?) -> Void)?) {
+        pending = handler
+    }
+
+    func fireOnce(_ error: (any Error)?) {
+        lock.lock()
+        let handler = pending
+        pending = nil
+        lock.unlock()
+        handler?(error)
+    }
+}
+
+func _gcHandlerQueue(for element: GCControllerElement) -> DispatchQueue {
+    var cursor: GCControllerElement? = element
+    while let current = cursor {
+        if let device = current.owningProfile?.device {
+            return device.handlerQueue
+        }
+        cursor = current.collection
+    }
+    return element.owningProfile?.device?.handlerQueue ?? .main
 }
 
 func _gcClampUnit(_ value: Float) -> Float {
@@ -322,6 +413,13 @@ func _gcLinuxUnsupported(_ reason: String) -> NSError {
         userInfo: [NSLocalizedDescriptionKey: reason]
     )
 }
+
+#if canImport(CoreServices)
+@inline(never)
+func _gcTouchCoreServices() {
+    _ = kUTTypeData
+}
+#endif
 
 extension NSValue {
     public convenience init(GCPoint2 point: GCPoint2) {

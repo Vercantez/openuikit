@@ -1,6 +1,10 @@
 import Foundation
 import Dispatch
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
 open class GCController: NSObject, GCDevice {
     open var handlerQueue: DispatchQueue = .main
     open var productCategory: String = GCProductCategoryHID
@@ -72,9 +76,16 @@ open class GCController: NSObject, GCDevice {
         return controller
     }
 
-    /// Linux has no GameController wireless discovery service.
+    /// Linux has no GameController wireless discovery service. The completion
+    /// is delivered once, asynchronously, on the internal service queue.
     open class func startWirelessControllerDiscovery(completionHandler: (() -> Void)? = nil) {
-        completionHandler?()
+        #if canImport(CoreServices)
+        _gcTouchCoreServices()
+        #endif
+        _gcDiscoveryOnce.store(completionHandler)
+        _gcAsync(_gcServiceQueue) {
+            _gcDiscoveryOnce.fireOnce()
+        }
     }
 
     open class func stopWirelessControllerDiscovery() {}
@@ -297,6 +308,9 @@ open class GCVirtualController: NSObject {
     open class ElementConfiguration: NSObject {
         open var actsAsTouchpad = false
         open var isHidden = false
+        #if canImport(UIKit)
+        open var path: UIKit.UIBezierPath?
+        #endif
     }
 
     open var controller: GCController? { nil }
@@ -308,11 +322,13 @@ open class GCVirtualController: NSObject {
     }
 
     open func connect(replyHandler reply: (((any Error)?) -> Void)? = nil) {
-        reply?(
-            _gcLinuxUnsupported(
-                "GCVirtualController cannot inject HID devices on this host"
-            )
+        let error = _gcLinuxUnsupported(
+            "GCVirtualController cannot inject HID devices on this host"
         )
+        let once = _GCOnceError(reply)
+        _gcAsync(_gcServiceQueue) {
+            once.fireOnce(error)
+        }
     }
 
     open func disconnect() {}

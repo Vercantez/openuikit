@@ -278,4 +278,3 @@ public let GCKeyX = "X"
 public let GCKeyY = "Y"
 public let GCKeyZ = "Z"
 public let GCKeyZero = "Zero"
-
