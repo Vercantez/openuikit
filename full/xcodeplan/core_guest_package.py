@@ -80,6 +80,7 @@ _REQUIRED_FRAMEWORKS = (
     "Combine",
     "Symbols",
     "SwiftUI",
+    "_QuickLook_SwiftUI",
     "Foundation",
     "UIKit",
     "CoreImage",
@@ -107,6 +108,7 @@ _REQUIRED_FRAMEWORKS = (
     "UniformTypeIdentifiers",
     "SwiftData",
     "UserNotifications",
+    "QuickLook",
 )
 _REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
     f"-l{name}" for name in _REQUIRED_FRAMEWORKS

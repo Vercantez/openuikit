@@ -90,6 +90,7 @@ FRAMEWORKS = (
     "Combine",
     "Symbols",
     "SwiftUI",
+    "_QuickLook_SwiftUI",
     "Foundation",
     "UIKit",
     "CoreImage",
@@ -117,6 +118,7 @@ FRAMEWORKS = (
     "UniformTypeIdentifiers",
     "SwiftData",
     "UserNotifications",
+    "QuickLook",
 )
 REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(f"-l{name}" for name in FRAMEWORKS)
 MODULE_DEPENDENCIES = (

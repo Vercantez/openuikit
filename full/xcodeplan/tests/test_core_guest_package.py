@@ -67,6 +67,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "Combine",
                 "Symbols",
                 "SwiftUI",
+                "_QuickLook_SwiftUI",
                 "Foundation",
                 "UIKit",
                 "CoreImage",
@@ -94,6 +95,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "UniformTypeIdentifiers",
                 "SwiftData",
                 "UserNotifications",
+                "QuickLook",
                 "DeveloperToolsSupport",
             )
         )
@@ -135,6 +137,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "UniformTypeIdentifiers",
                 "SwiftData",
                 "UserNotifications",
+                "QuickLook",
+                "_QuickLook_SwiftUI",
             )
         )
         for relative in required_files:
@@ -269,6 +273,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lCombine",
                 "-lSymbols",
                 "-lSwiftUI",
+                "-l_QuickLook_SwiftUI",
                 "-lFoundation",
                 "-lUIKit",
                 "-lCoreImage",
@@ -296,6 +301,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lUniformTypeIdentifiers",
                 "-lSwiftData",
                 "-lUserNotifications",
+                "-lQuickLook",
             ],
             "format_version": 1,
             "compiler_plugins": compiler_plugins,

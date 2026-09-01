@@ -139,6 +139,7 @@ FRAMEWORKS = (
     "Combine",
     "Symbols",
     "SwiftUI",
+    "_QuickLook_SwiftUI",
     "Foundation",
     "UIKit",
     "CoreImage",
@@ -166,6 +167,7 @@ FRAMEWORKS = (
     "UniformTypeIdentifiers",
     "SwiftData",
     "UserNotifications",
+    "QuickLook",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -265,10 +267,10 @@ def validate_swiftui_runtime_link(source: str) -> None:
     ]
     if missing:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
-    # Observation and SwiftUI each link Concurrency, while the reusable
-    # first-party link loop, executable probe, and SwiftData runtime gate each
-    # carry the same token.
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 5:
+    # Observation, SwiftUI, and the QuickLook SwiftUI overlay each link
+    # Concurrency, while the reusable first-party link loop, executable probe,
+    # and SwiftData runtime gate each carry the same token.
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 6:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
     swiftui_link_end = source.index(
@@ -693,6 +695,7 @@ class PackageFixture:
             "-lFoundationEssentials",
             "-lSymbols",
             "-lSwiftUI",
+            "-l_QuickLook_SwiftUI",
             "-lIntentsUI",
             "-lIntents",
             "-lWebKit",
@@ -721,6 +724,7 @@ class PackageFixture:
             "-lUniformTypeIdentifiers",
             "-lSwiftData",
             "-lUserNotifications",
+            "-lQuickLook",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
@@ -1524,7 +1528,7 @@ class ShellContractTests(unittest.TestCase):
                 'LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:'
                 '$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST'
             ),
-            6,
+            7,
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -1698,8 +1702,8 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 36)
-        self.assertEqual(FRAMEWORKS.index("WebKit"), 15)
+        self.assertEqual(len(FRAMEWORKS), 38)
+        self.assertEqual(FRAMEWORKS.index("WebKit"), 16)
         for token in (
             "-module-name WebKit -emit-module",
             "-install_name @rpath/libWebKit.dylib",
@@ -2097,7 +2101,7 @@ class ShellContractTests(unittest.TestCase):
             source.count(
                 "\n".join(
                     (
-                        "Combine Symbols SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \\",
+                        "Combine Symbols SwiftUI _QuickLook_SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \\",
                         '    "${FIRST_PARTY_FRAMEWORKS[@]}"; do',
                     )
                 )
@@ -2255,7 +2259,7 @@ class ShellContractTests(unittest.TestCase):
                         source.replace(predicate, "deleted-predicate", 1)
                     )
 
-    def test_twenty_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_twenty_one_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -2281,8 +2285,9 @@ class ShellContractTests(unittest.TestCase):
             "UniformTypeIdentifiers",
             "SwiftData",
             "UserNotifications",
+            "QuickLook",
         )
-        self.assertEqual(FRAMEWORKS[-20:], first_party)
+        self.assertEqual(FRAMEWORKS[-21:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -2294,17 +2299,17 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertIn("first-party-dylib-loads-v1", source)
         self.assertIn("apple-self-load=0", source)
-        self.assertIn("frontier-frameworks\\tframeworks=13\\tsources=14", source)
+        self.assertIn("frontier-frameworks\\tframeworks=14\\tsources=15", source)
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 14",
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 15",
             source,
         )
         self.assertIn(
-            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 7",
+            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 11",
             source,
         )
         self.assertIn(
-            "compile twenty independent first-party framework modules", source
+            "compile twenty-one independent first-party framework modules", source
         )
         self.assertIn("network_string_processing_undefineds", source)
         self.assertIn("direct StringProcessing undefineds, expected 0", source)
@@ -2312,7 +2317,7 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=portable-20", probe)
+        self.assertIn("first-party=portable-21", probe)
         self.assertIn("usernotifications=fail-closed,volatile", probe)
         self.assertIn("UserNotificationsGuestRuntime", source)
         self.assertIn("USERNOTIFICATIONS_GUEST_MACHO_OK", source)
@@ -2320,6 +2325,11 @@ class ShellContractTests(unittest.TestCase):
             "full/usernotifications/tests/UserNotificationsHostRuntime.swift",
             source,
         )
+        self.assertIn("quicklook=local-image,host-driven", probe)
+        self.assertIn("QuickLookGuestRuntime", source)
+        self.assertIn("QUICKLOOK_GUEST_MACHO_OK", source)
+        self.assertIn("QuickLook.swiftcrossimport", source)
+        self.assertIn("lib_QuickLook_SwiftUI.dylib", source)
         self.assertIn("oslog=standard-error,signposts", probe)
         self.assertIn("uniform-types=tags,conformance", probe)
         self.assertIn("security=keychain,random", probe)

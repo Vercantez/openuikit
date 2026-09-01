@@ -13,8 +13,9 @@ Foundation-visible UIKit, CoreImage, QuartzCore, Intents, IntentsUI, WebKit,
 LocalAuthentication, SafariServices, Network, StoreKit, AudioToolbox,
 CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI,
 MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog,
-UniformTypeIdentifiers, SwiftData, and UserNotifications. These are thirty-seven
-reusable ARM64 Mach-O platform binaries (thirty-six frameworks plus ICU), including real
+UniformTypeIdentifiers, SwiftData, UserNotifications, QuickLook, and its
+`_QuickLook_SwiftUI` cross-import overlay. These are thirty-nine reusable ARM64
+Mach-O platform binaries (thirty-eight frameworks plus ICU), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
@@ -68,11 +69,11 @@ The semantic build order is deliberate:
    donation, resolution, and host-driven controller state.
 8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-9. Compile and link twenty app-facing first-party modules as independent ARM64
+9. Compile and link twenty-one app-facing first-party modules as independent ARM64
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
-10. Link all thirty-six reusable platform dylibs (thirty-five frameworks plus
+10. Link all thirty-nine reusable platform dylibs (thirty-eight frameworks plus
    ICU) and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.
@@ -156,6 +157,14 @@ request, settings, category, center, and async delegate surface. It fails closed
 when no host authorization is provided and offers an explicitly authorized,
 process-local volatile delivery queue for portable hosts; it does not claim an
 operating-system notification daemon, push transport, or durable scheduling.
+
+`libQuickLook.dylib` implements preview items, indexed controller/data-source
+state, AR metadata, and a local OpenUIKit presenter that renders PNG/JPEG files
+with a truthful metadata fallback. `lib_QuickLook_SwiftUI.dylib` is discovered
+through packaged Swift cross-import metadata and supplies both Apple
+`quickLookPreview` overloads with selection synchronization. Proprietary preview
+generators and editing fail closed; hosts can replace presentation through the
+attested SPI without changing application source.
 
 The pinned swift-foundation revision has an upstream-corrected final-class
 Predicate key-path bug. The builder verifies exact source and patch hashes,

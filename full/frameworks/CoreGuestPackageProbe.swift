@@ -31,6 +31,7 @@ import OSLog
 import UniformTypeIdentifiers
 import SwiftData
 import UserNotifications
+import QuickLook
 import WebKit
 
 private func coreRequireIndefiniteSymbolEffect<Effect>(_: Effect)
@@ -833,6 +834,18 @@ struct CoreGuestPackageProbe {
             notificationAuthorizationFailedClosed = true
         }
         precondition(notificationAuthorizationFailedClosed)
+        precondition(
+            QuickLookPortable.defaultCapability == .localImageAndMetadata
+        )
+        precondition(!QuickLookPortable.supportsProprietaryPreviewGenerators)
+        var quickLookSelection: URL?
+        let quickLookBinding = Binding<URL?>(
+            get: { quickLookSelection },
+            set: { quickLookSelection = $0 }
+        )
+        let quickLookView = Text("quick-look")
+            .quickLookPreview(quickLookBinding)
+        withExtendedLifetime(quickLookView) {}
         let addController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
         precondition(
             type(of: addController).presentationCapability == .hostDriven
@@ -863,13 +876,14 @@ struct CoreGuestPackageProbe {
                 + "graphics=coreimage,quartzcore "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-20 oslog=standard-error,signposts "
+                + "first-party=portable-21 oslog=standard-error,signposts "
                 + "security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "
                 + "commoncrypto=sha256 "
                 + "uniform-types=tags,conformance "
                 + "swiftdata=volatile,fail-closed-durable "
                 + "usernotifications=fail-closed,volatile "
+                + "quicklook=local-image,host-driven "
                 + "webkit=engine-unavailable preview=\(preview)"
         )
     }
