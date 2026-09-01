@@ -1,0 +1,8 @@
+full/multipeerconnectivity/MCAdvertiserAssistant.swift
+full/multipeerconnectivity/MCBrowserViewController.swift
+full/multipeerconnectivity/MCError.swift
+full/multipeerconnectivity/MCNearbyServiceAdvertiser.swift
+full/multipeerconnectivity/MCNearbyServiceBrowser.swift
+full/multipeerconnectivity/MCPeerID.swift
+full/multipeerconnectivity/MCSession.swift
+full/multipeerconnectivity/MultipeerConnectivity.swift
