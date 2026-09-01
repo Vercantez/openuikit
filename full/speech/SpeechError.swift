@@ -1,11 +1,15 @@
+import Foundation
+
 /// Apple's public Speech error domain string, attested by the Xcode 26.1
 /// `NS_ERROR_ENUM` binding (`ErrorDomain("SFSpeechErrorDomain")`).
 public let SFSpeechErrorDomain = "SFSpeechErrorDomain"
 
-/// Bridged Speech error. Classic codes 1, 2, 7, 8, 12, 13 follow the public
-/// `SFSpeechErrorCode` header. Analyzer overlay codes occupy unused integer
-/// slots and are recorded as oracle questions until an Apple runtime probe
-/// confirms them.
+/// Bridged Speech error.
+///
+/// Classic `SFSpeechErrorCode` integers 1, 2, 7, 8, 12, and 13 follow the
+/// public header. Analyzer overlay cases are present for source compatibility;
+/// their raw values are inferred (see `ORACLE.md`) and must not be treated as
+/// Apple-runtime attested ABI until an oracle probe confirms them.
 public struct SFSpeechError: Error, CustomNSError, Hashable, Equatable, @unchecked Sendable {
     public enum Code: Int, Hashable, Sendable {
         case internalServiceError = 1

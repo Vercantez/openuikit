@@ -3,5 +3,4 @@ full/speech/SpeechAnalyzer.swift
 full/speech/SpeechAttributes.swift
 full/speech/SpeechError.swift
 full/speech/SpeechLanguageModel.swift
-full/speech/SpeechMediaTypes.swift
 full/speech/SpeechRecognizer.swift

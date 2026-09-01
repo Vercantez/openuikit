@@ -1,3 +1,7 @@
+import Foundation
+import AVFoundation
+import CoreMedia
+
 public enum SFSpeechRecognitionTaskHint: Int, Hashable, Sendable {
     case unspecified = 0
     case dictation = 1
@@ -101,6 +105,7 @@ open class SFAcousticFeature: NSObject, NSSecureCoding, NSCopying, @unchecked Se
     public let acousticFeatureValuePerFrame: [Double]
     public let frameDuration: TimeInterval
 
+    @_spi(OpenUIKitHost)
     public init(
         acousticFeatureValuePerFrame: [Double] = [],
         frameDuration: TimeInterval = 0
@@ -138,6 +143,7 @@ open class SFVoiceAnalytics: NSObject, NSSecureCoding, NSCopying, @unchecked Sen
     public let shimmer: SFAcousticFeature
     public let voicing: SFAcousticFeature
 
+    @_spi(OpenUIKitHost)
     public init(
         jitter: SFAcousticFeature = SFAcousticFeature(),
         pitch: SFAcousticFeature = SFAcousticFeature(),
@@ -183,6 +189,7 @@ open class SFTranscriptionSegment: NSObject, NSSecureCoding, NSCopying, @uncheck
     public let alternativeSubstrings: [String]
     public let voiceAnalytics: SFVoiceAnalytics?
 
+    @_spi(OpenUIKitHost)
     public init(
         substring: String = "",
         substringRange: NSRange = NSRange(location: 0, length: 0),
@@ -246,6 +253,7 @@ open class SFTranscription: NSObject, NSSecureCoding, NSCopying, @unchecked Send
     public let speakingRate: Double
     public let averagePauseDuration: TimeInterval
 
+    @_spi(OpenUIKitHost)
     public init(
         formattedString: String = "",
         segments: [SFTranscriptionSegment] = [],
@@ -295,6 +303,7 @@ open class SFSpeechRecognitionMetadata: NSObject, NSSecureCoding, NSCopying, @un
     public let speechDuration: TimeInterval
     public let voiceAnalytics: SFVoiceAnalytics?
 
+    @_spi(OpenUIKitHost)
     public init(
         speakingRate: Double = 0,
         averagePauseDuration: TimeInterval = 0,
@@ -347,6 +356,7 @@ open class SFSpeechRecognitionResult: NSObject, NSSecureCoding, NSCopying, @unch
     public let isFinal: Bool
     public let speechRecognitionMetadata: SFSpeechRecognitionMetadata?
 
+    @_spi(OpenUIKitHost)
     public init(
         bestTranscription: SFTranscription = SFTranscription(),
         transcriptions: [SFTranscription]? = nil,
@@ -452,6 +462,13 @@ open class SFSpeechAudioBufferRecognitionRequest: SFSpeechRecognitionRequest {
     }
 }
 
+private func speechMakeRecognizerQueue() -> OperationQueue {
+    let queue = OperationQueue()
+    queue.maxConcurrentOperationCount = 1
+    queue.name = "SFSpeechRecognizer.queue"
+    return queue
+}
+
 open class SFSpeechRecognitionTask: NSObject {
     private let lock = NSLock()
     private var _state: SFSpeechRecognitionTaskState = .starting
@@ -491,10 +508,7 @@ open class SFSpeechRecognitionTask: NSObject {
         _cancelled = true
         _state = .completed
         if _error == nil {
-            _error = SpeechPortable.failClosedError(
-                .internalServiceError,
-                reason: "Speech recognition was cancelled and is unavailable on this host"
-            )
+            _error = SpeechPortable.failClosedService()
         }
         lock.unlock()
     }
@@ -504,33 +518,43 @@ open class SFSpeechRecognitionTask: NSObject {
         _finishing = true
         _state = .completed
         if _error == nil {
-            _error = SpeechPortable.failClosedError(
-                .noModel,
-                reason: "Speech recognition has no on-device or remote model on this host"
-            )
+            _error = SpeechPortable.failClosedService()
         }
         lock.unlock()
     }
 }
 
-open class SFSpeechRecognizer {
+/// Speech-to-text recognizer. Availability is `false` on this host because no
+/// recognition engine is wired. Result and delegate callbacks are delivered
+/// through `queue`. Authorization is a class method; its scheduling is not this
+/// instance queue (see `ORACLE.md`).
+open class SFSpeechRecognizer: NSObject {
     private static let statusLock = NSLock()
     private static var _authorizationStatus: SFSpeechRecognizerAuthorizationStatus = .denied
 
     public let locale: Locale
     public var defaultTaskHint: SFSpeechRecognitionTaskHint = .unspecified
     public weak var delegate: (any SFSpeechRecognizerDelegate)?
-    public var queue = OperationQueue()
+    public var queue: OperationQueue
     public var supportsOnDeviceRecognition = false
 
     public var isAvailable: Bool { false }
 
-    public convenience init?() {
-        self.init(locale: Locale.current)
+    /// Linux `NSObject` designated initializer. The Apple graph lists
+    /// `convenience init?()`; that failable override cannot replace
+    /// non-failable `NSObject.init()`.
+    public override init() {
+        locale = Locale.current
+        queue = speechMakeRecognizerQueue()
+        super.init()
     }
 
+    /// Designated locale initializer. Always succeeds so the public type
+    /// remains constructible; `isAvailable` is still `false`.
     public init?(locale: Locale) {
         self.locale = locale
+        queue = speechMakeRecognizerQueue()
+        super.init()
     }
 
     public class func authorizationStatus() -> SFSpeechRecognizerAuthorizationStatus {
@@ -538,6 +562,8 @@ open class SFSpeechRecognizer {
         return _authorizationStatus
     }
 
+    /// Fail-closed: always `.denied`. Handler scheduling relative to the
+    /// caller is unattested (see `ORACLE.md`) and is not `recognizer.queue`.
     public class func requestAuthorization(
         _ handler: @escaping (SFSpeechRecognizerAuthorizationStatus) -> Void
     ) {
@@ -558,12 +584,12 @@ open class SFSpeechRecognizer {
     ) -> SFSpeechRecognitionTask {
         _ = request
         let task = SFSpeechRecognitionTask()
-        let error = SpeechPortable.failClosedError(
-            .noModel,
-            reason: "SFSpeechRecognizer has no speech service on this host"
-        )
+        let error = SpeechPortable.failClosedService()
         task.failClosed(error)
-        resultHandler(nil, error)
+        let callbackQueue = queue
+        callbackQueue.addOperation {
+            resultHandler(nil, error)
+        }
         return task
     }
 
@@ -573,12 +599,12 @@ open class SFSpeechRecognizer {
     ) -> SFSpeechRecognitionTask {
         _ = request
         let task = SFSpeechRecognitionTask()
-        let error = SpeechPortable.failClosedError(
-            .noModel,
-            reason: "SFSpeechRecognizer has no speech service on this host"
-        )
+        let error = SpeechPortable.failClosedService()
         task.failClosed(error)
-        delegate.speechRecognitionTask(task, didFinishSuccessfully: false)
+        let callbackQueue = queue
+        callbackQueue.addOperation {
+            delegate.speechRecognitionTask(task, didFinishSuccessfully: false)
+        }
         return task
     }
 }

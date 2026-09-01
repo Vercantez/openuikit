@@ -1,3 +1,7 @@
+import Foundation
+import AVFoundation
+import CoreMedia
+
 public protocol SpeechModuleResult: Sendable {
     var resultsFinalizationTime: CMTime { get }
     var range: CMTimeRange { get }
@@ -76,10 +80,7 @@ public final class AssetInstallationRequest: @unchecked Sendable {
     }
 
     public func downloadAndInstall() async throws {
-        throw SpeechPortable.failClosedError(
-            .noModel,
-            reason: "Speech asset download is unavailable on this host"
-        )
+        throw SpeechPortable.failClosedService()
     }
 }
 
@@ -112,10 +113,7 @@ public final class AssetInventory: Sendable {
     @discardableResult
     public static func reserve(locale: Locale) async throws -> Bool {
         _ = locale
-        throw SpeechPortable.failClosedError(
-            .cannotAllocateUnsupportedLocale,
-            reason: "Speech locales cannot be reserved on this host"
-        )
+        throw SpeechPortable.failClosedService()
     }
 
     @discardableResult
@@ -189,6 +187,7 @@ public final class SpeechTranscriber: LocaleDependentSpeechModule, @unchecked Se
         public let range: CMTimeRange
         public let resultsFinalizationTime: CMTime
 
+        @_spi(OpenUIKitHost)
         public init(
             text: AttributedString,
             alternatives: [AttributedString],
@@ -368,6 +367,7 @@ public final class DictationTranscriber: LocaleDependentSpeechModule, @unchecked
         public let range: CMTimeRange
         public let resultsFinalizationTime: CMTime
 
+        @_spi(OpenUIKitHost)
         public init(
             text: AttributedString,
             alternatives: [AttributedString],
@@ -470,6 +470,7 @@ public final class SpeechDetector: SpeechModule, @unchecked Sendable {
         public let range: CMTimeRange
         public let resultsFinalizationTime: CMTime
 
+        @_spi(OpenUIKitHost)
         public init(
             speechDetected: Bool,
             range: CMTimeRange,
@@ -582,10 +583,7 @@ public final actor SpeechAnalyzer {
             analysisContext: analysisContext,
             volatileRangeChangedHandler: volatileRangeChangedHandler
         )
-        throw SpeechPortable.failClosedError(
-            .noModel,
-            reason: "SpeechAnalyzer cannot read audio files without a speech model"
-        )
+        throw SpeechPortable.failClosedService()
     }
 
     init(
@@ -638,20 +636,14 @@ public final actor SpeechAnalyzer {
         withProgressReadyHandler progressReadyHandler: sending ((Progress) -> Void)?
     ) async throws {
         _ = (audioFormat, progressReadyHandler)
-        throw SpeechPortable.failClosedError(
-            .noModel,
-            reason: "SpeechAnalyzer has no on-device model on this host"
-        )
+        throw SpeechPortable.failClosedService()
     }
 
     public func analyzeSequence<InputSequence>(
         _ inputSequence: InputSequence
     ) async throws -> CMTime? where InputSequence: Sendable, InputSequence: AsyncSequence, InputSequence.Element == AnalyzerInput {
         _ = inputSequence
-        throw SpeechPortable.failClosedError(
-            .noModel,
-            reason: "SpeechAnalyzer cannot analyze audio without a speech model"
-        )
+        throw SpeechPortable.failClosedService()
     }
 
     public func analyzeSequence(from audioFile: AVAudioFile) async throws -> CMTime? {
@@ -666,10 +658,7 @@ public final actor SpeechAnalyzer {
         inputSequence: InputSequence
     ) async throws where InputSequence: Sendable, InputSequence: AsyncSequence, InputSequence.Element == AnalyzerInput {
         _ = inputSequence
-        throw SpeechPortable.failClosedError(
-            .noModel,
-            reason: "SpeechAnalyzer cannot start without a speech model"
-        )
+        throw SpeechPortable.failClosedService()
     }
 
     public func start(
@@ -677,10 +666,7 @@ public final actor SpeechAnalyzer {
         finishAfterFile: Bool = false
     ) async throws {
         _ = (audioFile, finishAfterFile)
-        throw SpeechPortable.failClosedError(
-            .noModel,
-            reason: "SpeechAnalyzer cannot start an audio file without a speech model"
-        )
+        throw SpeechPortable.failClosedService()
     }
 
     public func cancelAnalysis(before: CMTime) {

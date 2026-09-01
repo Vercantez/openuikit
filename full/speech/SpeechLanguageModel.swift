@@ -1,3 +1,5 @@
+import Foundation
+
 open class SFSpeechLanguageModel: NSObject {
     public final class Configuration: NSObject, NSSecureCoding, NSCopying, @unchecked Sendable {
         public let languageModel: URL
@@ -64,10 +66,7 @@ open class SFSpeechLanguageModel: NSObject {
         ignoresCache: Bool
     ) async throws {
         _ = (asset, configuration, ignoresCache)
-        throw SpeechPortable.failClosedError(
-            .noModel,
-            reason: "Custom language-model compilation is unavailable on this host"
-        )
+        throw SpeechPortable.failClosedService()
     }
 
     public class func prepareCustomLanguageModel(
@@ -458,6 +457,7 @@ public final class SFCustomLanguageModelData: Hashable, @unchecked Sendable {
 
         public func define(className: String, values: [String]) {
             templateClasses[className] = values
+            rebuildPhrases()
         }
 
         public func insert(template: String, count: Int) {
