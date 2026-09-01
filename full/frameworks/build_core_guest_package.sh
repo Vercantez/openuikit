@@ -1738,6 +1738,7 @@ SWIFTC=(swiftc -target "$TARGET" -sdk "$STAGE/sdk" -F "$STAGE/frameworks"
 # retain normal Swift source semantics: StatusKit uses `Regex` after importing
 # Foundation and NaturalLanguage, without an explicit _StringProcessing import.
 APP_CONSUMER_SWIFTC=(swiftc -target "$TARGET" -sdk "$STAGE/sdk"
+    -F "$STAGE/frameworks"
     -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
     -Xfrontend -enable-cross-import-overlays
     -Xfrontend -disable-objc-attr-requires-foundation-module)

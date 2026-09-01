@@ -2393,6 +2393,19 @@ class ShellContractTests(unittest.TestCase):
         ]
         self.assertIn('"${APP_CONSUMER_SWIFTC[@]}"', natural_language_gate)
 
+    def test_app_consumer_compiler_roots_versioned_framework_modules(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        definition_start = source.index("APP_CONSUMER_SWIFTC=(")
+        definition = source[
+            definition_start : source.index("\nLD=(", definition_start)
+        ]
+        self.assertEqual(definition.count('-F "$STAGE/frameworks"'), 1)
+        widget_consumer_gate = source[
+            source.index("typecheck the exact-surface IceCubes WidgetKit consumer") :
+            source.index("compile/link/run the standalone CoreTransferable data and file gate")
+        ]
+        self.assertEqual(widget_consumer_gate.count('"${APP_CONSUMER_SWIFTC[@]}"'), 2)
+
     def test_foundation_hackers_frontier_is_foundation_only_and_runs(self) -> None:
         builder = BUILDER.read_text(encoding="utf-8")
         core_probe = (HERE / "CoreGuestPackageProbe.swift").read_text(
