@@ -98,6 +98,12 @@ class AppKitSurfaceTests(unittest.TestCase):
         self.assertIn("NSFontManager.shared.availableFonts.isEmpty", runtime)
         self.assertIn("Color(nsColor: source)", color)
         self.assertIn("NSColor(color)", color)
+        storekit = (TESTS / "StoreKitAppKitRuntime.swift").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("product.purchase(confirmIn: NSWindow())", storekit)
+        self.assertIn("case .paymentsUnavailable", storekit)
+        self.assertIn("APPKIT_STOREKIT_MACHO_OK", storekit)
 
     def test_full_untouched_frontier_driver_accepts_only_a_later_wall(self):
         driver = (
