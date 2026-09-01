@@ -2056,11 +2056,15 @@ PREVIEW_EXECUTABLE_RESOLUTION_FLAGS=()
     || PREVIEW_EXECUTABLE_RESOLUTION_FLAGS=(-undefined dynamic_lookup)
 PREVIEW_STANDALONE_LINK_INPUTS=()
 PREVIEW_STANDALONE_EXPORT_FLAGS=()
+PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS=()
 if [ "$PREVIEW_ENABLED" -eq 1 ]; then
     PREVIEW_STANDALONE_LINK_INPUTS+=("$STAGE/objects/developertoolsupport.o")
     PREVIEW_STANDALONE_EXPORT_FLAGS+=(
         -exported_symbol "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL"
     )
+    # The canonical DTS ImageResource stores Foundation.Bundle's portable
+    # nominal implementation, which is owned by OpenUIKit in this platform.
+    PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS+=(-lOpenUIKit)
 fi
 preview_standalone_dts_input_count=0
 for input in "${PREVIEW_STANDALONE_LINK_INPUTS[@]}"; do
@@ -2069,6 +2073,13 @@ for input in "${PREVIEW_STANDALONE_LINK_INPUTS[@]}"; do
 done
 [ "$preview_standalone_dts_input_count" -eq "$PREVIEW_ENABLED" ] \
     || die "standalone SwiftUI DTS link count $preview_standalone_dts_input_count, expected $PREVIEW_ENABLED"
+preview_standalone_openuikit_flag_count=0
+for input in "${PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS[@]}"; do
+    [ "$input" != -lOpenUIKit ] \
+        || preview_standalone_openuikit_flag_count=$((preview_standalone_openuikit_flag_count + 1))
+done
+[ "$preview_standalone_openuikit_flag_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "standalone DTS OpenUIKit link count $preview_standalone_openuikit_flag_count, expected $PREVIEW_ENABLED"
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
     "${PREVIEW_EXECUTABLE_RESOLUTION_FLAGS[@]}" \
@@ -2389,6 +2400,7 @@ echo '== compile/link/run the standalone SwiftData macro and persistence gate'
     "${PREVIEW_STANDALONE_LINK_INPUTS[@]}" "${COMMON_LINK[@]}" \
     -lSwiftData -lSwiftUI -lFoundation -lFoundationInternationalization \
     -lFoundationEssentials "$SWIFTUI_RUNTIME_LINK_FLAG" "$OBSERVATION_DYLIB" \
+    "${PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS[@]}" \
     "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
 llvm-otool-18 -hv "$STAGE/probe/SwiftDataGuestRuntime" \
     | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \

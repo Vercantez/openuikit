@@ -368,7 +368,9 @@ def validate_preview_standalone_link_contract(source: str) -> None:
     required = (
         "PREVIEW_STANDALONE_LINK_INPUTS=()",
         "PREVIEW_STANDALONE_EXPORT_FLAGS=()",
+        "PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS=()",
         'PREVIEW_STANDALONE_LINK_INPUTS+=("$STAGE/objects/developertoolsupport.o")',
+        "PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS+=(-lOpenUIKit)",
         'preview_standalone_dts_input_count=$((preview_standalone_dts_input_count + 1))',
         '"${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}"',
         '"${PREVIEW_STANDALONE_LINK_INPUTS[@]}"',
@@ -409,6 +411,14 @@ def validate_preview_standalone_link_contract(source: str) -> None:
                 raise AssertionError(
                     f"standalone SwiftUI Preview link slice drifted: {token}"
                 )
+    swiftdata_start = source.index(slices[0][0])
+    swiftdata_end = source.index(slices[0][1], swiftdata_start)
+    if '"${PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS[@]}"' not in source[
+        swiftdata_start:swiftdata_end
+    ]:
+        raise AssertionError(
+            "standalone SwiftUI Preview nominal DTS link closure drifted"
+        )
 
 
 def validate_preview_plugin_single_job_contract(
@@ -1833,6 +1843,7 @@ class ShellContractTests(unittest.TestCase):
         validate_preview_standalone_link_contract(source)
         for token in (
             'PREVIEW_STANDALONE_LINK_INPUTS+=("$STAGE/objects/developertoolsupport.o")',
+            "PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS+=(-lOpenUIKit)",
             "swiftdata_preview_export_count=$(nm_symbol_count --defined-only",
             "swiftui_reexport_preview_export_count=$(nm_symbol_count --defined-only",
         ):
