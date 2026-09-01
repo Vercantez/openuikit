@@ -862,12 +862,10 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"{paths['includes']}/CoreImage/CoreImage.h",
             f"{paths['includes']}/CoreImage/CIFilterBuiltins.h",
             f"{paths['includes']}/CoreImage/module.modulemap",
+            f"{paths['modules']}/DeveloperToolsSupport.swiftmodule",
         }
     )
     if preview is not None:
-        required_artifacts.add(
-            f"{paths['modules']}/DeveloperToolsSupport.swiftmodule"
-        )
         required_artifacts.add(preview["developer_tools_support_object"])
     for directory_key in ("libraries", "resources", "host_tools"):
         directory = physical_paths[directory_key]

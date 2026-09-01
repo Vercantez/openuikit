@@ -825,8 +825,48 @@ def preview_json(
 ) -> dict[str, object] | None:
     dts = [item for item in artifacts if item["name"] == "DeveloperToolsSupport"]
     if preview_relative is None:
-        if dts:
-            refuse("DeveloperToolsSupport artifacts exist without preview attestation")
+        expected_module_family = {
+            (
+                "module-dependency",
+                "swiftmodule",
+                "modules/DeveloperToolsSupport.swiftmodule",
+            ),
+            (
+                "module-dependency",
+                "swiftdoc",
+                "modules/DeveloperToolsSupport.swiftdoc",
+            ),
+            (
+                "module-dependency",
+                "swiftsourceinfo",
+                "modules/DeveloperToolsSupport.swiftsourceinfo",
+            ),
+            (
+                "module-dependency",
+                "abi-json",
+                "modules/DeveloperToolsSupport.abi.json",
+            ),
+        }
+        observed = {
+            (str(item["category"]), str(item["role"]), str(item["path"]))
+            for item in dts
+        }
+        required_module = (
+            "module-dependency",
+            "swiftmodule",
+            "modules/DeveloperToolsSupport.swiftmodule",
+        )
+        if required_module not in observed:
+            refuse(
+                "non-Preview package lacks its package-owned "
+                "DeveloperToolsSupport swiftmodule"
+            )
+        unexpected = observed - expected_module_family
+        if unexpected:
+            refuse(
+                "non-Preview package carries non-module DeveloperToolsSupport "
+                f"artifacts: {sorted(unexpected)}"
+            )
         return None
     safe_relative(preview_relative, "preview attestation path")
     preview_path = require_regular_beneath(package, preview_relative, "preview attestation")

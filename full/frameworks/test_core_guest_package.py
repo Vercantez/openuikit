@@ -184,6 +184,7 @@ DEPENDENCIES = (
     "OrderedCollections",
     "_RopeModule",
     "os",
+    "DeveloperToolsSupport",
 )
 
 
@@ -500,6 +501,59 @@ def validate_preview_standalone_link_contract(source: str) -> None:
     ]:
         raise AssertionError(
             "standalone SwiftUI Preview nominal DTS link closure drifted"
+        )
+
+
+def validate_package_owned_developer_tools_support_contract(source: str) -> None:
+    required = (
+        "SWIFTUI_DEVELOPER_TOOLS_SUPPORT_LINK_INPUTS=()",
+        "compile package-owned DeveloperToolsSupport for SwiftUI ImageResource",
+        '-emit-module-path "$STAGE/modules/DeveloperToolsSupport.swiftmodule"',
+        '-emit-object -o "$WORK/developertoolsupport-package.o"',
+        '"$UIKIT/Sources/DeveloperToolsSupport/Preview.swift"',
+        "package-owned DeveloperToolsSupport object is not ARM64 Mach-O",
+        'SWIFTUI_DEVELOPER_TOOLS_SUPPORT_LINK_INPUTS+=(\n'
+        '        "$WORK/developertoolsupport-package.o"',
+        '"${SWIFTUI_DEVELOPER_TOOLS_SUPPORT_LINK_INPUTS[@]}"',
+        "for dependency in InternalCollectionsUtilities OrderedCollections "
+        "_RopeModule os \\\n    DeveloperToolsSupport; do",
+    )
+    missing = [token for token in required if token not in source]
+    if missing:
+        raise AssertionError(
+            f"package-owned DeveloperToolsSupport contract drifted: {missing}"
+        )
+
+    uikit_compile = source.index(
+        "compile final Foundation-visible UIKit (optional Preview plugin explicit)"
+    )
+    package_owned = source.index(
+        "compile package-owned DeveloperToolsSupport for SwiftUI ImageResource"
+    )
+    swiftui_compile = source.index(
+        "compile SwiftUI against the app-facing Foundation facade"
+    )
+    if not uikit_compile < package_owned < swiftui_compile:
+        raise AssertionError(
+            "package-owned DeveloperToolsSupport visibility ordering drifted"
+        )
+
+    fallback_start = source.rindex(
+        'if [ "$PREVIEW_ENABLED" -eq 0 ]; then', 0, package_owned
+    )
+    fallback_end = source.index("\nfi\n", package_owned)
+    fallback = source[fallback_start:fallback_end]
+    if fallback.count("developertoolsupport-package.o") != 3:
+        raise AssertionError(
+            "package-owned DeveloperToolsSupport fallback scope drifted"
+        )
+
+    if (
+        "record_artifact module-dependency DeveloperToolsSupport swiftmodule"
+        in source
+    ):
+        raise AssertionError(
+            "package-owned DeveloperToolsSupport retained Preview-only module recording"
         )
 
 
@@ -1138,14 +1192,6 @@ class PackageFixture:
         if self.preview:
             records.append(
                 self._artifact(
-                    "module-dependency",
-                    "DeveloperToolsSupport",
-                    "swiftmodule",
-                    "modules/DeveloperToolsSupport.swiftmodule",
-                )
-            )
-            records.append(
-                self._artifact(
                     "object",
                     "DeveloperToolsSupport",
                     "object",
@@ -1237,12 +1283,57 @@ class PackageContractTests(unittest.TestCase):
         self.assertEqual(document["paths"]["resources"], "resources/OpenUIKit")
         self.assertEqual(document["paths"]["host_tools"], "host-tools")
         self.assertIsNone(document["preview"])
+        self.assertIn(
+            "modules/DeveloperToolsSupport.swiftmodule",
+            {artifact["path"] for artifact in document["artifacts"]},
+        )
         self.assertNotIn(str(self.base), json.dumps(document))
         relocated = self.base / "relocated package with spaces"
         shutil.copytree(fixture.root, relocated)
         run_tool("verify", "--package-root", str(relocated))
         summary = run_canonical(relocated)
         self.assertIn("preview=no", summary.stdout)
+
+    def test_plain_package_requires_only_the_package_owned_dts_module(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = PackageFixture(Path(temporary) / "missing", preview=False)
+            module = fixture.root / "modules/DeveloperToolsSupport.swiftmodule"
+            module.unlink()
+            ledger = fixture.root / "attestation/artifacts.tsv"
+            ledger.write_text(
+                "\n".join(
+                    line
+                    for line in ledger.read_text(encoding="utf-8").splitlines()
+                    if "\tDeveloperToolsSupport\t" not in line
+                )
+                + "\n",
+                encoding="utf-8",
+                newline="\n",
+            )
+            refusal = fixture.write_manifest(expected=2)
+            self.assertIn(
+                "non-Preview package lacks its package-owned "
+                "DeveloperToolsSupport swiftmodule",
+                refusal.stderr,
+            )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = PackageFixture(Path(temporary) / "object", preview=False)
+            relative = "objects/developertoolsupport.o"
+            write_file(fixture.root / relative, "unexpected external object")
+            ledger = fixture.root / "attestation/artifacts.tsv"
+            with ledger.open("a", encoding="utf-8", newline="\n") as stream:
+                stream.write(
+                    fixture._artifact(
+                        "object", "DeveloperToolsSupport", "object", relative
+                    )
+                    + "\n"
+                )
+            refusal = fixture.write_manifest(expected=2)
+            self.assertIn(
+                "non-Preview package carries non-module DeveloperToolsSupport",
+                refusal.stderr,
+            )
 
     def test_cross_import_overlay_is_typed_and_unknown_category_is_refused(self) -> None:
         fixture = self.fixture(False)
@@ -2051,6 +2142,23 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertNotIn("LINK_ARGUMENTS+=(objects/developertoolsupport.o)", source)
         validate_preview_standalone_link_contract(source)
+
+    def test_swiftui_self_hosts_developer_tools_support_without_preview(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        validate_package_owned_developer_tools_support_contract(source)
+        for token in (
+            "SWIFTUI_DEVELOPER_TOOLS_SUPPORT_LINK_INPUTS=()",
+            "compile package-owned DeveloperToolsSupport for SwiftUI ImageResource",
+            '"${SWIFTUI_DEVELOPER_TOOLS_SUPPORT_LINK_INPUTS[@]}"',
+            "DeveloperToolsSupport; do",
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(
+                    AssertionError, "package-owned DeveloperToolsSupport"
+                ):
+                    validate_package_owned_developer_tools_support_contract(
+                        source.replace(token, "", 1)
+                    )
 
     def test_every_standalone_swiftui_executable_owns_preview_metadata(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
