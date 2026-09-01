@@ -6,7 +6,21 @@ import OpenUIKit
 @MainActor
 private extension Animation {
     func performOpenUIKitTransaction(_ updates: @escaping () -> Void) {
+        performOpenUIKitTransaction(storage, repeatPolicy: nil, updates)
+    }
+
+    func performOpenUIKitTransaction(
+        _ storage: Storage,
+        repeatPolicy: Bool?,
+        _ updates: @escaping () -> Void
+    ) {
         switch storage {
+        case .repeated(let base, let autoreverses):
+            performOpenUIKitTransaction(
+                base,
+                repeatPolicy: autoreverses,
+                updates
+            )
         case .cubic(let c1x, let c1y, let c2x, let c2y, let duration):
             let timing = UICubicTimingParameters(
                 controlPoint1: CGPoint(x: CGFloat(c1x), y: CGFloat(c1y)),
@@ -16,15 +30,25 @@ private extension Animation {
                 duration: duration,
                 timingParameters: timing
             )
+            animator._openUIKitRepeats = repeatPolicy != nil
+            animator._openUIKitAutoreverses = repeatPolicy ?? false
             animator.addAnimations(updates)
             animator.startAnimation()
         case .spring(let response, let dampingFraction, _):
+            var options: UIView.AnimationOptions = [
+                .beginFromCurrentState,
+                .allowUserInteraction,
+            ]
+            if let repeatPolicy {
+                options.insert(.repeat)
+                if repeatPolicy { options.insert(.autoreverse) }
+            }
             UIView.animate(
                 withDuration: response,
                 delay: 0,
                 usingSpringWithDamping: CGFloat(dampingFraction),
                 initialSpringVelocity: 0,
-                options: [.beginFromCurrentState, .allowUserInteraction],
+                options: options,
                 animations: updates
             )
         }
@@ -1568,6 +1592,7 @@ private final class _SwiftUIHostingView: UIView {
 private struct _RenderEnvironment {
     var font: _OpenFont? = .body
     var weight: _OpenFont.Weight?
+    var usesMonospacedDigits = false
     var minimumScaleFactor: CGFloat = 0
     var allowsTightening = false
     var foregroundColor: _OpenColor?
@@ -1973,6 +1998,10 @@ private enum _ViewRenderer {
                 var next = environment
                 next.weight = weight
                 return measure(content, proposed: proposed, environment: next)
+            case .monospacedDigits:
+                var next = environment
+                next.usesMonospacedDigits = true
+                return measure(content, proposed: proposed, environment: next)
             case .minimumScaleFactor(let factor):
                 var next = environment
                 next.minimumScaleFactor = factor
@@ -2160,7 +2189,8 @@ private enum _ViewRenderer {
             case .tapAction, .simultaneousTapAction, .gesture, .onAppear,
                  .onDisappear, .openURL,
                  .shadow, .colorScheme, .safeAreaIgnored, .opacity,
-                 .scaleEffect, .anchoredScaleEffect, .offset,
+                 .brightness, .saturation,
+                 .scaleEffect, .anchoredScaleEffect, .rotationEffect, .offset,
                  .layoutPriority, .accessibilityElement,
                  .accessibilityLabel, .accessibilityHint, .accessibilityValue,
                  .accessibilityTraits, .allowsHitTesting, .zIndex,
@@ -3017,6 +3047,10 @@ private enum _ViewRenderer {
                 var next = environment
                 next.weight = weight
                 place(content, in: rect, on: surface, environment: next)
+            case .monospacedDigits:
+                var next = environment
+                next.usesMonospacedDigits = true
+                place(content, in: rect, on: surface, environment: next)
             case .minimumScaleFactor(let factor):
                 var next = environment
                 next.minimumScaleFactor = factor
@@ -3239,6 +3273,18 @@ private enum _ViewRenderer {
                 opacityHost.accessibilityIdentifier = "SwiftUI.Opacity"
                 surface.addSubview(opacityHost)
                 place(content, in: opacityHost.bounds, on: opacityHost, environment: environment)
+            case .brightness(let amount):
+                let host = _SwiftUIPassthroughView(frame: rect)
+                host._openUIKitBrightness = amount.isFinite ? CGFloat(amount) : 0
+                host.accessibilityIdentifier = "SwiftUI.Brightness"
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
+            case .saturation(let amount):
+                let host = _SwiftUIPassthroughView(frame: rect)
+                host._openUIKitSaturation = amount.isFinite ? CGFloat(amount) : 1
+                host.accessibilityIdentifier = "SwiftUI.Saturation"
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
             case .scaleEffect(let scale):
                 let scaleHost = _SwiftUIPassthroughView(frame: rect)
                 scaleHost.transform = CGAffineTransform(scaleX: scale, y: scale)
@@ -3263,6 +3309,29 @@ private enum _ViewRenderer {
                 scaleHost.accessibilityIdentifier = "SwiftUI.ScaleEffect"
                 surface.addSubview(scaleHost)
                 place(content, in: scaleHost.bounds, on: scaleHost, environment: environment)
+            case .rotationEffect(let angle, let anchor):
+                let radians = angle.radians.isFinite ? CGFloat(angle.radians) : 0
+                let rotation = OpenCoreGraphics.CGAffineTransform(
+                    rotationAngle: radians
+                )
+                let host = _SwiftUIPassthroughView(frame: rect)
+                let anchorPoint = CGPoint(
+                    x: rect.minX + rect.width * anchor.x,
+                    y: rect.minY + rect.height * anchor.y
+                )
+                let delta = CGPoint(
+                    x: anchorPoint.x - rect.midX,
+                    y: anchorPoint.y - rect.midY
+                )
+                let rotatedDelta = delta.applying(rotation)
+                host.center = CGPoint(
+                    x: anchorPoint.x - rotatedDelta.x,
+                    y: anchorPoint.y - rotatedDelta.y
+                )
+                host.transform = rotation
+                host.accessibilityIdentifier = "SwiftUI.RotationEffect"
+                surface.addSubview(host)
+                place(content, in: host.bounds, on: host, environment: environment)
             case .offset(let offset):
                 let offsetHost = _SwiftUIPassthroughView(
                     frame: rect.offsetBy(dx: offset.width, dy: offset.height)
@@ -4150,7 +4219,13 @@ private enum _ViewRenderer {
     ) -> UILabel {
         let label = UILabel()
         label.text = string
-        label.font = (environment.font ?? .body).resolve(weight: environment.weight)
+        let resolvedFont = (environment.font ?? .body).resolve(weight: environment.weight)
+        label.font = environment.usesMonospacedDigits
+            ? .monospacedSystemFont(
+                ofSize: resolvedFont.pointSize,
+                weight: resolvedFont.weight
+            )
+            : resolvedFont
         label.textColor = environment.foregroundColor?.resolve() ?? .label
         switch environment.textAlignment {
         case .leading: label.textAlignment = .left

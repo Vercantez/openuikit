@@ -66,4 +66,119 @@ extension Canvas {
         backend.drawLinearGradient(colors: colors, locations: locations,
                                    start: start, end: end, in: rect)
     }
+
+    /// Adjust every nontransparent pixel in the current transparency target.
+    /// Saturation is evaluated around Rec. 709 luminance and brightness is an
+    /// additive sRGB offset, matching SwiftUI's compositing modifier model.
+    /// Alpha is preserved exactly. Nonfinite inputs are neutral so hostile
+    /// animation state cannot poison the render target.
+    public func applyColorAdjustment(
+        brightness: CGFloat,
+        saturation: CGFloat
+    ) {
+        let finiteBrightness = brightness.isFinite ? brightness : 0
+        let finiteSaturation = saturation.isFinite ? saturation : 1
+        guard finiteBrightness != 0 || finiteSaturation != 1 else { return }
+        backend.applyColorAdjustment(
+            brightness: finiteBrightness,
+            saturation: finiteSaturation
+        )
+    }
+}
+
+/// Backend-neutral straight/premultiplied implementations for the current
+/// transparency buffer. Keeping the arithmetic here makes the Swift and
+/// CQuartz compositors differ only in storage representation.
+enum _CanvasColorAdjustment {
+    @inline(__always)
+    private static func channel(
+        _ value: CGFloat,
+        luminance: CGFloat,
+        brightness: CGFloat,
+        saturation: CGFloat
+    ) -> CGFloat {
+        Swift.min(
+            1,
+            Swift.max(0, luminance + (value - luminance) * saturation + brightness)
+        )
+    }
+
+    @inline(__always)
+    private static func byte(_ value: CGFloat) -> UInt8 {
+        UInt8(Swift.min(255, Swift.max(0, (value * 255).rounded())))
+    }
+
+    @inline(__always)
+    private static func adjusted(
+        red: CGFloat,
+        green: CGFloat,
+        blue: CGFloat,
+        brightness: CGFloat,
+        saturation: CGFloat
+    ) -> (CGFloat, CGFloat, CGFloat) {
+        let luminance = red * 0.2126 + green * 0.7152 + blue * 0.0722
+        return (
+            channel(red, luminance: luminance, brightness: brightness,
+                    saturation: saturation),
+            channel(green, luminance: luminance, brightness: brightness,
+                    saturation: saturation),
+            channel(blue, luminance: luminance, brightness: brightness,
+                    saturation: saturation)
+        )
+    }
+
+    static func applyToStraight(
+        _ pixels: inout [UInt8],
+        width: Int,
+        height: Int,
+        brightness: CGFloat,
+        saturation: CGFloat
+    ) {
+        guard width > 0, height > 0,
+              width <= pixels.count / 4,
+              height <= pixels.count / (width * 4) else { return }
+        for index in 0..<(width * height) {
+            let offset = index * 4
+            guard pixels[offset + 3] != 0 else { continue }
+            let result = adjusted(
+                red: CGFloat(pixels[offset]) / 255,
+                green: CGFloat(pixels[offset + 1]) / 255,
+                blue: CGFloat(pixels[offset + 2]) / 255,
+                brightness: brightness,
+                saturation: saturation
+            )
+            pixels[offset] = byte(result.0)
+            pixels[offset + 1] = byte(result.1)
+            pixels[offset + 2] = byte(result.2)
+        }
+    }
+
+    static func applyToPremultiplied(
+        _ pixels: UnsafeMutablePointer<UInt8>,
+        width: Int,
+        height: Int,
+        bytesPerRow: Int,
+        brightness: CGFloat,
+        saturation: CGFloat
+    ) {
+        guard width > 0, height > 0, bytesPerRow >= width * 4 else { return }
+        for y in 0..<height {
+            for x in 0..<width {
+                let offset = y * bytesPerRow + x * 4
+                let alphaByte = pixels[offset + 3]
+                guard alphaByte != 0 else { continue }
+                let alpha = CGFloat(alphaByte) / 255
+                let result = adjusted(
+                    red: Swift.min(1, CGFloat(pixels[offset]) / CGFloat(alphaByte)),
+                    green: Swift.min(1, CGFloat(pixels[offset + 1]) / CGFloat(alphaByte)),
+                    blue: Swift.min(1, CGFloat(pixels[offset + 2]) / CGFloat(alphaByte)),
+                    brightness: brightness,
+                    saturation: saturation
+                )
+                pixels[offset] = byte(result.0 * alpha)
+                pixels[offset + 1] = byte(result.1 * alpha)
+                pixels[offset + 2] = byte(result.2 * alpha)
+            }
+        }
+    }
 }

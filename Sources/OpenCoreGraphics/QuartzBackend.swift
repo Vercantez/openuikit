@@ -181,6 +181,18 @@ final class QuartzBackend: CanvasBackend {
         if layerDepth == 0 { syncAll() }
     }
 
+    func applyColorAdjustment(brightness: CGFloat, saturation: CGFloat) {
+        guard let data = QZBitmapContextGetData(ctx) else { return }
+        _CanvasColorAdjustment.applyToPremultiplied(
+            data.assumingMemoryBound(to: UInt8.self),
+            width: width,
+            height: height,
+            bytesPerRow: bytesPerRow,
+            brightness: brightness,
+            saturation: saturation
+        )
+    }
+
     // MARK: Drawing
 
     func fill(_ path: Path, color: CGColor, evenOdd: Bool, hardEdges: Bool) {

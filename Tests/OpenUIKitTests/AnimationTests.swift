@@ -340,6 +340,39 @@ final class AnimationTests: XCTestCase {
                        0.1291619310, accuracy: 2e-5)
     }
 
+    func testRepeatAndAutoreverseSampleIndefinitelyOnHostClock() {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        view.alpha = 0
+        var completion: Bool?
+        OpenUIKitRuntime.animationTime = 0
+        UIView.animate(
+            withDuration: 1,
+            delay: 0,
+            options: [.curveLinear, .repeat, .autoreverse]
+        ) {
+            view.alpha = 1
+        } completion: {
+            completion = $0
+        }
+
+        let animation = try! XCTUnwrap(view.animations.first)
+        XCTAssertTrue(animation.repeats)
+        XCTAssertTrue(animation.autoreverses)
+        XCTAssertEqual(LayerBridge.animationProgress(animation, at: 0.25), 0.25,
+                       accuracy: 0.000_01)
+        XCTAssertEqual(LayerBridge.animationProgress(animation, at: 1.25), 0.75,
+                       accuracy: 0.000_01)
+        XCTAssertEqual(LayerBridge.animationProgress(animation, at: 2.25), 0.25,
+                       accuracy: 0.000_01)
+        view._removeFinishedAnimations(at: 100)
+        XCTAssertEqual(view.animations.count, 1)
+        UIView._stepAnimationCompletions(to: .infinity)
+        XCTAssertNil(completion)
+
+        UIView.animate(withDuration: 0.25) { view.alpha = 0 }
+        XCTAssertEqual(completion, false)
+    }
+
     // MARK: Spring duration fit (vs probed UIKit CASpringAnimation params)
 
     /// UIKit-generated CASpringAnimation parameters captured with

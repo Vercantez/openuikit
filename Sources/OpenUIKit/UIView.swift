@@ -557,6 +557,15 @@ open class UIView: UIResponder, CALayerDelegate {
             }
         }
     }
+    /// Portable compositor hooks used by SwiftUI's brightness/saturation
+    /// modifiers. They apply to the completed subtree as a single group,
+    /// preserving descendant alpha and overlap exactly like a layer filter.
+    public var _openUIKitBrightness: CGFloat = 0 {
+        didSet { if _openUIKitBrightness != oldValue { setNeedsDisplay() } }
+    }
+    public var _openUIKitSaturation: CGFloat = 1 {
+        didSet { if _openUIKitSaturation != oldValue { setNeedsDisplay() } }
+    }
     public var isHidden = false
     public var isOpaque = true
     /// Hit-testing / touch delivery opt-out. UIKit defaults: true for

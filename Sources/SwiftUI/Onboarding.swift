@@ -1058,7 +1058,7 @@ public extension _OpenUIViewControllerRepresentable where Coordinator == Void {
 /// independent of Core Animation: the OpenUIKit host translates it into the
 /// same deterministic UIView animation clock used by UIKit transitions.
 public struct _OpenAnimation: Hashable, Sendable {
-    enum Storage: Hashable, Sendable {
+    indirect enum Storage: Hashable, Sendable {
         case cubic(
             c1x: Double,
             c1y: Double,
@@ -1067,6 +1067,7 @@ public struct _OpenAnimation: Hashable, Sendable {
             duration: Double
         )
         case spring(response: Double, dampingFraction: Double, blendDuration: Double)
+        case repeated(Storage, autoreverses: Bool)
     }
 
     let storage: Storage
@@ -1127,6 +1128,13 @@ public struct _OpenAnimation: Hashable, Sendable {
                 blendDuration: max(0, blendDuration)
             )
         )
+    }
+
+    /// Repeats the receiver for as long as it remains installed in the view
+    /// graph. Each leg keeps the receiver's exact timing curve; autoreverse
+    /// alternates the presentation direction without changing the model.
+    public func repeatForever(autoreverses: Bool = true) -> _OpenAnimation {
+        _OpenAnimation(storage: .repeated(storage, autoreverses: autoreverses))
     }
 }
 

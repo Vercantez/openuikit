@@ -302,7 +302,7 @@ public enum LayerBridge {
         // Active animations. Placement properties (position / alpha / pure-
         // translation transform) stay live on a composite layer; anything
         // else salts the fingerprint so the subtree reads as "changing".
-        for a in v.animations where now < a.begin + a.delay + a.duration {
+        for a in v.animations where a.isActive(at: now) {
             switch a.property {
             case .position, .alpha:
                 info.selfPlacementAnimated = true
@@ -903,9 +903,23 @@ public enum LayerBridge {
     /// clock fill semantics: FROM before `delay`, MODEL at
     /// `delay + duration` and later (CA removes completed animations).
     static func animationProgress(_ a: UIViewAnimation, at t: Double) -> CGFloat {
-        let local = t - a.begin - a.delay
+        var local = t - a.begin - a.delay
         if local <= 0 { return 0 }
-        if local >= a.duration - 1e-9 { return 1 }
+        guard a.duration > 1e-12 else { return 1 }
+        if a.repeats {
+            // Extend the host's finite redraw lease one leg at a time. This
+            // keeps a mounted repeat live without poisoning the global work
+            // deadline forever after the animation is removed.
+            OpenUIKitRuntime.noteAnimationWork(until: t + a.duration)
+            let leg = (local / a.duration).rounded(.down)
+            local.formTruncatingRemainder(dividingBy: a.duration)
+            if a.autoreverses
+                && leg.truncatingRemainder(dividingBy: 2) >= 1 {
+                local = a.duration - local
+            }
+        } else if local >= a.duration - 1e-9 {
+            return 1
+        }
         switch a.timing {
         case .curve(let c1x, let c1y, let c2x, let c2y):
             guard let fn = QZMediaTimingFunctionCreateWithControlPoints(

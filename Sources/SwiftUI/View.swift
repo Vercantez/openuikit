@@ -304,13 +304,17 @@ struct _OpenGeometryObserver {
 enum _OpenViewModification {
     case font(Font?)
     case fontWeight(Font.Weight?)
+    case monospacedDigits
     case minimumScaleFactor(CGFloat)
     case allowsTightening(Bool)
     case foregroundColor(Color?)
     case tint(Color?)
     case opacity(CGFloat)
+    case brightness(Double)
+    case saturation(Double)
     case scaleEffect(CGFloat)
     case anchoredScaleEffect(CGFloat, UnitPoint)
+    case rotationEffect(Angle, UnitPoint)
     case offset(CGSize)
     case lineLimit(Int?)
     case lineLimitRange(ClosedRange<Int>)
@@ -416,13 +420,17 @@ enum _OpenViewModification {
 fileprivate enum _OpenViewModifier {
     case font(Font?)
     case fontWeight(Font.Weight?)
+    case monospacedDigits
     case minimumScaleFactor(CGFloat)
     case allowsTightening(Bool)
     case foregroundColor(Color?)
     case tint(Color?)
     case opacity(CGFloat)
+    case brightness(Double)
+    case saturation(Double)
     case scaleEffect(CGFloat)
     case anchoredScaleEffect(CGFloat, UnitPoint)
+    case rotationEffect(Angle, UnitPoint)
     case offset(CGSize)
     case lineLimit(Int?)
     case lineLimitRange(ClosedRange<Int>)
@@ -547,14 +555,19 @@ fileprivate enum _OpenViewModifier {
         switch self {
         case .font(let value): return .font(value)
         case .fontWeight(let value): return .fontWeight(value)
+        case .monospacedDigits: return .monospacedDigits
         case .minimumScaleFactor(let value): return .minimumScaleFactor(value)
         case .allowsTightening(let value): return .allowsTightening(value)
         case .foregroundColor(let value): return .foregroundColor(value)
         case .tint(let value): return .tint(value)
         case .opacity(let value): return .opacity(value)
+        case .brightness(let value): return .brightness(value)
+        case .saturation(let value): return .saturation(value)
         case .scaleEffect(let value): return .scaleEffect(value)
         case .anchoredScaleEffect(let value, let anchor):
             return .anchoredScaleEffect(value, anchor)
+        case .rotationEffect(let angle, let anchor):
+            return .rotationEffect(angle, anchor)
         case .offset(let offset): return .offset(offset)
         case .lineLimit(let value): return .lineLimit(value)
         case .lineLimitRange(let value): return .lineLimitRange(value)
@@ -1087,6 +1100,7 @@ extension Optional: _OpenView where Wrapped: _OpenView {
 public struct _OpenText: _OpenView {
     public typealias Body = Never
     public let content: String
+    private var usesMonospacedDigits = false
 
     nonisolated public init(_ content: String) {
         self.content = content
@@ -1106,8 +1120,28 @@ public struct _OpenText: _OpenView {
         self.content = String(content.characters)
     }
 
+    #if canImport(Foundation) || canImport(FoundationEssentials)
+    @available(macOS 12, iOS 15, tvOS 15, watchOS 8, *)
+    nonisolated public init<F>(_ input: F.FormatInput, format: F)
+    where F: FormatStyle, F.FormatInput: Equatable, F.FormatOutput == String {
+        content = format.format(input)
+    }
+    #endif
+
+    /// Uses a fixed-width numeral design while leaving punctuation and other
+    /// glyphs in the surrounding text style. OpenUIKit's portable font cut
+    /// currently represents that OpenType feature with its monospaced face,
+    /// preserving stable counter widths across value changes.
+    nonisolated public func monospacedDigit() -> _OpenText {
+        var result = self
+        result.usesMonospacedDigits = true
+        return result
+    }
+
     public func _makeOpenUIKitNode() -> _OpenViewNode {
-        _OpenViewNode(.text(content))
+        let text = _OpenViewNode(.text(content))
+        guard usesMonospacedDigits else { return text }
+        return _OpenViewNode(.modified(text, .monospacedDigits))
     }
 }
 
@@ -1418,6 +1452,214 @@ extension _OpenCircle: _OpenView {
 
     public func stroke(_ color: Color, lineWidth: CGFloat = 1) -> some _OpenView {
         _OpenStrokedCapsule(color: color, lineWidth: lineWidth)
+    }
+}
+
+/// Shape value returned by `trim(from:to:)`.  Keeping the authored fractions
+/// in the value (instead of clipping a pre-rendered bitmap) lets animation
+/// updates rebuild the exact arc and keeps stroke caps on the true endpoints.
+@frozen
+public struct _OpenTrimmedShape<Base: _OpenShape>: _OpenShape {
+    public var shape: Base
+    public var startFraction: CGFloat
+    public var endFraction: CGFloat
+
+    public init(
+        shape: Base,
+        startFraction: CGFloat = 0,
+        endFraction: CGFloat = 1
+    ) {
+        self.shape = shape
+        self.startFraction = startFraction
+        self.endFraction = endFraction
+    }
+}
+
+extension _OpenTrimmedShape: Sendable where Base: Sendable {}
+
+public extension _OpenShape {
+    nonisolated func trim(
+        from startFraction: CGFloat = 0,
+        to endFraction: CGFloat = 1
+    ) -> _OpenTrimmedShape<Self> {
+        _OpenTrimmedShape(
+            shape: self,
+            startFraction: startFraction,
+            endFraction: endFraction
+        )
+    }
+
+    /// Portable CGFloat is intentionally a distinct value type in the guest
+    /// SDK. Apple source commonly passes progress ratios stored as Double;
+    /// CoreGraphics bridges that conversion at this generic Shape boundary.
+    @_disfavoredOverload
+    nonisolated func trim(
+        from startFraction: Double,
+        to endFraction: Double
+    ) -> _OpenTrimmedShape<Self> {
+        trim(from: CGFloat(startFraction), to: CGFloat(endFraction))
+    }
+}
+
+public struct _OpenTrimmedCircleStroke<Style: ShapeStyle>: _OpenView {
+    public typealias Body = Never
+    let shape: _OpenTrimmedShape<_OpenCircle>
+    let style: Style
+    let strokeStyle: StrokeStyle
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        let view = _SwiftUITrimmedCircleStrokeView(
+            startFraction: shape.startFraction,
+            endFraction: shape.endFraction,
+            color: style._openResolvedForegroundColor(),
+            strokeStyle: strokeStyle
+        )
+        return _OpenViewNode(.view(view))
+    }
+}
+
+extension _OpenTrimmedShape: _OpenView where Base == _OpenCircle {
+    public typealias Body = Never
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenTrimmedCircleStroke(
+            shape: self,
+            style: _OpenColor.black,
+            strokeStyle: StrokeStyle()
+        )._makeOpenUIKitNode()
+    }
+
+    public func stroke<Style: ShapeStyle>(
+        _ content: Style,
+        style: StrokeStyle
+    ) -> some _OpenView {
+        _OpenTrimmedCircleStroke(
+            shape: self,
+            style: content,
+            strokeStyle: style
+        )
+    }
+
+    public func stroke<Style: ShapeStyle>(
+        _ content: Style,
+        lineWidth: CGFloat = 1
+    ) -> some _OpenView {
+        stroke(content, style: StrokeStyle(lineWidth: lineWidth))
+    }
+}
+
+@MainActor
+private final class _SwiftUITrimmedCircleStrokeView: UIView {
+    let startFraction: CGFloat
+    let endFraction: CGFloat
+    let strokeColor: Color
+    let strokeStyle: StrokeStyle
+
+    init(
+        startFraction: CGFloat,
+        endFraction: CGFloat,
+        color: Color,
+        strokeStyle: StrokeStyle
+    ) {
+        self.startFraction = startFraction
+        self.endFraction = endFraction
+        strokeColor = color
+        self.strokeStyle = strokeStyle
+        super.init(frame: .zero)
+        backgroundColor = .clear
+        isOpaque = false
+        isUserInteractionEnabled = false
+        accessibilityIdentifier = "SwiftUI.Circle.trim.stroke"
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    override func drawContent(in canvas: Canvas, bounds: CGRect) {
+        let width = strokeStyle.lineWidth.isFinite
+            ? max(0, strokeStyle.lineWidth) : 0
+        guard width > 0,
+              startFraction.isFinite,
+              endFraction.isFinite else { return }
+        let start = min(max(startFraction, 0), 1)
+        let end = min(max(endFraction, 0), 1)
+        guard end > start else { return }
+
+        let radius = max(0, min(bounds.width, bounds.height) / 2 - width / 2)
+        guard radius > 0 else { return }
+        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+        let circumference = 2 * CGFloat.pi * radius
+        guard circumference.isFinite, circumference > 0 else { return }
+        let pathLength = (end - start) * circumference
+        let color = strokeColor.resolve().resolvedCGColor(with: traitCollection)
+        let cap: CanvasLineCap
+        switch strokeStyle.lineCap {
+        case .butt: cap = .butt
+        case .round: cap = .round
+        case .square: cap = .square
+        }
+        let join: CanvasLineJoin
+        switch strokeStyle.lineJoin {
+        case .miter: join = .miter
+        case .round: join = .round
+        case .bevel: join = .bevel
+        }
+
+        func drawArc(from lower: CGFloat, to upper: CGFloat) {
+            guard upper > lower else { return }
+            let path = UIBezierPath(
+                arcCenter: center,
+                radius: radius,
+                startAngle: lower * 2 * .pi,
+                endAngle: upper * 2 * .pi,
+                clockwise: true
+            ).cgPath
+            canvas.stroke(
+                path,
+                color: color,
+                lineWidth: width,
+                cap: cap,
+                join: join,
+                miterLimit: strokeStyle.miterLimit.isFinite
+                    ? max(0, strokeStyle.miterLimit) : 10
+            )
+        }
+
+        var pattern = strokeStyle.dash.filter { $0.isFinite && $0 > 0 }
+        guard !pattern.isEmpty else {
+            drawArc(from: start, to: end)
+            return
+        }
+        if pattern.count % 2 != 0 { pattern.append(contentsOf: pattern) }
+        let cycle = pattern.reduce(0, +)
+        guard cycle.isFinite, cycle > 0,
+              pathLength.isFinite, pathLength > 0 else { return }
+
+        var phase = strokeStyle.dashPhase.isFinite ? strokeStyle.dashPhase : 0
+        phase.formTruncatingRemainder(dividingBy: cycle)
+        if phase < 0 { phase += cycle }
+        var patternIndex = 0
+        while phase >= pattern[patternIndex] {
+            phase -= pattern[patternIndex]
+            patternIndex = (patternIndex + 1) % pattern.count
+        }
+        var remaining = pattern[patternIndex] - phase
+        var cursor: CGFloat = 0
+        while cursor < pathLength {
+            let next = min(pathLength, cursor + remaining)
+            // Extremely small finite dash entries can round away when added
+            // to a much larger path position. Fail closed instead of spinning
+            // forever on an unrepresentable segment boundary.
+            guard next > cursor else { return }
+            if patternIndex % 2 == 0 {
+                drawArc(
+                    from: start + cursor / circumference,
+                    to: start + next / circumference
+                )
+            }
+            cursor = next
+            patternIndex = (patternIndex + 1) % pattern.count
+            remaining = pattern[patternIndex]
+        }
     }
 }
 
@@ -2409,6 +2651,10 @@ public extension _OpenView {
         _OpenModifiedContent(content: self, modification: .fontWeight(weight))
     }
 
+    func monospacedDigit() -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .monospacedDigits)
+    }
+
     func minimumScaleFactor(_ factor: CGFloat) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .minimumScaleFactor(factor))
     }
@@ -2444,6 +2690,16 @@ public extension _OpenView {
         )
     }
 
+    /// Adds an sRGB brightness offset to the completed view subtree.
+    func brightness(_ amount: Double) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .brightness(amount))
+    }
+
+    /// Scales colorfulness around luminance while preserving subtree alpha.
+    func saturation(_ amount: Double) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .saturation(amount))
+    }
+
     func scaleEffect(_ scale: CGFloat) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .scaleEffect(scale))
     }
@@ -2452,6 +2708,16 @@ public extension _OpenView {
         _OpenModifiedContent(
             content: self,
             modification: .anchoredScaleEffect(scale, anchor)
+        )
+    }
+
+    func rotationEffect(
+        _ angle: Angle,
+        anchor: UnitPoint = .center
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .rotationEffect(angle, anchor)
         )
     }
 

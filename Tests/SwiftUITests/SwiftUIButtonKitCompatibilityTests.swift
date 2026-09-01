@@ -287,6 +287,179 @@ final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
     }
 
     @MainActor
+    func testTrimmedCircleStrokeRetainsDirectionCapsAndDashPolicy() throws {
+        let doubleStart: Double = 0
+        let doubleEnd: Double = 0.25
+        let solidRoot = try hosted(
+            Circle()
+                .trim(from: doubleStart, to: doubleEnd)
+                .stroke(
+                    .red,
+                    style: StrokeStyle(
+                        lineWidth: 8,
+                        lineCap: .round,
+                        lineJoin: .bevel,
+                        miterLimit: 6
+                    )
+                )
+                .frame(width: 80, height: 80)
+        )
+        let solidView = try XCTUnwrap(
+            descendants(including: solidRoot).first {
+                $0.accessibilityIdentifier == "SwiftUI.Circle.trim.stroke"
+            }
+        )
+        XCTAssertEqual(solidView.bounds.size, CGSize(width: 80, height: 80))
+        let solid = UIRenderer.render(solidView, scale: 1)
+
+        // Circle fractions start at three o'clock and advance clockwise in
+        // UIKit's top-left coordinate space. A quarter therefore paints the
+        // right and bottom extrema but not the opposite half.
+        XCTAssertGreaterThan(alpha(solid, x: 76, y: 40), 0)
+        XCTAssertGreaterThan(alpha(solid, x: 40, y: 76), 0)
+        XCTAssertEqual(alpha(solid, x: 3, y: 40), 0)
+        XCTAssertEqual(alpha(solid, x: 40, y: 3), 0)
+
+        let dashedRoot = try hosted(
+            Circle()
+                .trim()
+                .stroke(
+                    .black,
+                    style: StrokeStyle(
+                        lineWidth: 5,
+                        lineCap: .butt,
+                        dash: [8, 8],
+                        dashPhase: 3
+                    )
+                )
+                .frame(width: 80, height: 80)
+        )
+        let dashedView = try XCTUnwrap(
+            descendants(including: dashedRoot).first {
+                $0.accessibilityIdentifier == "SwiftUI.Circle.trim.stroke"
+            }
+        )
+        let dashed = UIRenderer.render(dashedView, scale: 1)
+        let solidPixels = stride(from: 3, to: solid.pixels.count, by: 4)
+            .filter { solid.pixels[$0] > 0 }.count
+        let dashedPixels = stride(from: 3, to: dashed.pixels.count, by: 4)
+            .filter { dashed.pixels[$0] > 0 }.count
+        XCTAssertGreaterThan(dashedPixels, solidPixels)
+        XCTAssertLessThan(dashedPixels, solidPixels * 4)
+    }
+
+    @MainActor
+    func testRotationEffectUsesAuthoredAngleAndKeepsAnchorFixed() throws {
+        let root = try hosted(
+            Circle()
+                .trim(from: 0, to: 0.5)
+                .stroke(.black, style: StrokeStyle(lineWidth: 4))
+                .frame(width: 80, height: 60)
+                .rotationEffect(.degrees(-90), anchor: .topLeading)
+        )
+        let host = try XCTUnwrap(
+            descendants(including: root).first {
+                $0.accessibilityIdentifier == "SwiftUI.RotationEffect"
+            }
+        )
+        XCTAssertEqual(host.transform.a, 0, accuracy: 0.000_001)
+        XCTAssertEqual(host.transform.b, -1, accuracy: 0.000_001)
+        XCTAssertEqual(host.transform.c, 1, accuracy: 0.000_001)
+        XCTAssertEqual(host.transform.d, 0, accuracy: 0.000_001)
+
+        let localAnchor = CGPoint(
+            x: -host.bounds.midX,
+            y: -host.bounds.midY
+        ).applying(host.transform)
+        XCTAssertEqual(
+            host.center.x + localAnchor.x,
+            root.bounds.minX,
+            accuracy: 0.000_001
+        )
+        XCTAssertEqual(
+            host.center.y + localAnchor.y,
+            root.bounds.minY,
+            accuracy: 0.000_001
+        )
+    }
+
+    @MainActor
+    func testFormatStyleTextAndMonospacedDigitsRenderConcreteValue() throws {
+        let value: Double = 0.437
+        let text = Text(value, format: .percent.rounded(increment: 1))
+            .monospacedDigit()
+        let root = try hosted(text)
+        let label = try XCTUnwrap(
+            descendants(including: root).first {
+                $0.accessibilityIdentifier == "SwiftUI.Text"
+            } as? UILabel
+        )
+        XCTAssertEqual(label.text, "44%")
+        XCTAssertEqual(label.font.design, UIFont.Design.monospaced)
+    }
+
+    @MainActor
+    func testBrightnessAndSaturationFilterCompletedSubtreeOnBothBackends() throws {
+        let savedBackend = OpenUIKitRuntime.renderBackend
+        let savedCompositor = OpenUIKitRuntime.compositor
+        defer {
+            OpenUIKitRuntime.renderBackend = savedBackend
+            OpenUIKitRuntime.compositor = savedCompositor
+        }
+
+        let root = try hosted(
+            Color.red
+                .frame(width: 40, height: 40)
+                .brightness(0.2)
+                .saturation(0)
+        )
+        XCTAssertNotNil(descendants(including: root).first {
+            $0.accessibilityIdentifier == "SwiftUI.Brightness"
+        })
+        XCTAssertNotNil(descendants(including: root).first {
+            $0.accessibilityIdentifier == "SwiftUI.Saturation"
+        })
+
+        var samples: [[UInt8]] = []
+        for backend in [RenderBackend.swift, .quartz] {
+            OpenUIKitRuntime.renderBackend = backend
+            OpenUIKitRuntime.compositor = .layers
+            let bitmap = UIRenderer.render(root, scale: 1)
+            let pixel = try XCTUnwrap(
+                stride(from: 0, to: bitmap.pixels.count, by: 4)
+                    .first { bitmap.pixels[$0 + 3] == 255 }
+            )
+            let sample = Array(bitmap.pixels[pixel..<(pixel + 4)])
+            // Red brightened by 0.2 becomes (1,.2,.2); zero saturation
+            // evaluates Rec. 709 luminance and produces a concrete 94 gray.
+            XCTAssertEqual(sample, [94, 94, 94, 255])
+            samples.append(sample)
+        }
+        XCTAssertEqual(samples[0], samples[1])
+    }
+
+    func testEnvironmentIsConditionallySendable() {
+        func requireSendable<T: Sendable>(_: T) {}
+        requireSendable(Environment<Bool>(\.isEnabled))
+    }
+
+    func testRepeatForeverRetainsBaseTimingAndAutoreversePolicy() {
+        let animation = Animation.linear(duration: 1.25)
+            .repeatForever(autoreverses: false)
+        guard case .repeated(let base, let autoreverses) = animation.storage,
+              case .cubic(let x1, let y1, let x2, let y2, let duration) = base
+        else {
+            return XCTFail("repeatForever must retain its authored base timing")
+        }
+        XCTAssertFalse(autoreverses)
+        XCTAssertEqual(x1, 0)
+        XCTAssertEqual(y1, 0)
+        XCTAssertEqual(x2, 1)
+        XCTAssertEqual(y2, 1)
+        XCTAssertEqual(duration, 1.25)
+    }
+
+    @MainActor
     func testOnDisappearPairsEachVisibleHostAppearanceExactlyOnce() throws {
         var events: [String] = []
         let controller = UIHostingController(
@@ -370,5 +543,9 @@ final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
 
     private func descendants(including root: UIView) -> [UIView] {
         [root] + root.subviews.flatMap(descendants(including:))
+    }
+
+    private func alpha(_ bitmap: Bitmap, x: Int, y: Int) -> Int {
+        Int(bitmap.pixels[(y * bitmap.width + x) * 4 + 3])
     }
 }

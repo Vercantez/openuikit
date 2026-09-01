@@ -695,6 +695,12 @@ public struct _OpenEnvironment<Value>: _OpenDynamicProperty, _OpenGraphProperty 
     }
 }
 
+// SwiftUI's wrapper is conditionally Sendable even though resolution is
+// performed on the graph's main actor.  The unchecked spelling is required
+// because the object-source closure itself is actor-confined rather than a
+// @Sendable closure; Value is still required to be safely transferable.
+extension _OpenEnvironment: @unchecked Sendable where Value: Sendable {}
+
 public typealias Environment<Value> = _OpenEnvironment<Value>
 
 @MainActor

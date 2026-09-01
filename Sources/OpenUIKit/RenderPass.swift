@@ -98,7 +98,7 @@ public enum UIRenderer {
     public static func render(_ root: UIView, scale: CGFloat) -> Bitmap {
         if OpenUIKitRuntime.compositor == .layers,
            OpenUIKitRuntime.renderBackend == .quartz,
-           !containsActiveBackdropFilter(root) {
+           !containsRenderPassOnlyEffect(root) {
             return LayerBridge.render(root, scale: scale)
         }
         return renderPassRender(root, scale: scale)
@@ -110,13 +110,20 @@ public enum UIRenderer {
     /// global default. This is a semantic fallback, not a source-level fake:
     /// every other hierarchy still uses QZLayer, and the selected path runs
     /// the same backend-neutral filter kernel for Swift and Quartz Canvases.
-    static func containsActiveBackdropFilter(_ view: UIView) -> Bool {
+    /// Color-adjustment groups currently execute in the Canvas compositor;
+    /// retained QZLayer has no public color-matrix node yet. Select the same
+    /// deterministic render-pass fallback used by backdrop filters rather
+    /// than silently dropping the authored effect.
+    static func containsRenderPassOnlyEffect(_ view: UIView) -> Bool {
         if let backdrop = view as? _UIVisualEffectBackdropView,
            let effectView = backdrop.superview as? UIVisualEffectView,
            effectView._canvasBackdropConfiguration(for: backdrop) != nil {
             return true
         }
-        return view.subviews.contains(where: containsActiveBackdropFilter)
+        if view._openUIKitBrightness != 0 || view._openUIKitSaturation != 1 {
+            return true
+        }
+        return view.subviews.contains(where: containsRenderPassOnlyEffect)
     }
 
     /// The hand-written render-pass traversal (always available; the
@@ -172,7 +179,9 @@ public enum UIRenderer {
         if let maskClip {
             c.beginMaskedTransparencyLayer(alpha: maskAlpha, mask: maskClip)
         }
-        let grouped = alpha < 1
+        let adjustsColor = v._openUIKitBrightness != 0
+            || v._openUIKitSaturation != 1
+        let grouped = alpha < 1 || adjustsColor
 
         let bounds = backingPresentation.bounds
         let radius = backingPresentation.cornerRadius
@@ -281,6 +290,12 @@ public enum UIRenderer {
         renderBorder(of: v, bounds: bounds, radius: radius,
                      maskedCorners: corners, hardEdges: hardEdges, into: c)
 
+        if adjustsColor {
+            c.applyColorAdjustment(
+                brightness: v._openUIKitBrightness,
+                saturation: v._openUIKitSaturation
+            )
+        }
         if grouped { c.endTransparencyLayer() }
         if maskClip != nil { c.endTransparencyLayer() }
         c.restore()

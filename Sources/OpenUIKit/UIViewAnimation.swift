@@ -88,6 +88,11 @@ struct UIViewAnimation {
     /// UIKit suppresses hit testing through a view whose property animation
     /// does not opt into `.allowUserInteraction`.
     var allowsUserInteraction: Bool = false
+    /// Infinite repetition and alternating playback mirror UIView's
+    /// `.repeat` / `.autoreverse` transaction options.  Defaults preserve
+    /// the memberwise construction used by scene and focused timing tests.
+    var repeats: Bool = false
+    var autoreverses: Bool = false
     /// Animation-block transaction that owns this property animation. Zero
     /// denotes a manually constructed/test animation with no completion.
     var transactionID: Int = 0
@@ -104,6 +109,8 @@ enum UIViewAnimationContext {
         var timing: UIViewAnimation.Timing
         var beginsFromCurrentState: Bool = false
         var allowsUserInteraction: Bool = false
+        var repeats: Bool = false
+        var autoreverses: Bool = false
         var transactionID: Int = 0
     }
     static var current: Params?
@@ -181,7 +188,14 @@ enum UIViewAnimationCompletionQueue {
         var due: [Entry] = []
         var remaining: [Entry] = []
         for e in entries {
-            if e.end <= time { due.append(e) } else { remaining.append(e) }
+            // `.infinity` is the explicit no-success edge for an indefinitely
+            // repeating transaction. Even an adversarial infinite host clock
+            // must not turn repeatForever into a completed animation.
+            if e.end != .infinity, e.end <= time {
+                due.append(e)
+            } else {
+                remaining.append(e)
+            }
         }
         guard !due.isEmpty else { return }
         entries = remaining
@@ -243,6 +257,12 @@ extension UIView {
         /// values are changing.
         public static let allowUserInteraction = AnimationOptions(rawValue: 1 << 1)
 
+        /// Repeat the recorded presentation indefinitely.  These raw values
+        /// match UIViewAnimationOptions so unchanged UIKit callers and the
+        /// SwiftUI animation bridge share one timing contract.
+        public static let `repeat` = AnimationOptions(rawValue: 1 << 3)
+        public static let autoreverse = AnimationOptions(rawValue: 1 << 4)
+
         /// UIKit's cross-dissolve transition selector. OpenUIKit preserves
         /// transition duration/completion and all property animations in the
         /// block; content snapshot blending is not yet represented by the
@@ -267,7 +287,9 @@ extension UIView {
         runAnimationBlock(UIViewAnimationContext.Params(
             duration: duration, delay: delay, timing: options.timingCurve,
             beginsFromCurrentState: options.contains(.beginFromCurrentState),
-            allowsUserInteraction: options.contains(.allowUserInteraction)),
+            allowsUserInteraction: options.contains(.allowUserInteraction),
+            repeats: options.contains(.repeat),
+            autoreverses: options.contains(.autoreverse)),
             animations: animations, completion: completion)
     }
 
@@ -289,7 +311,9 @@ extension UIView {
             duration: duration, delay: delay,
             timing: .spring(dampingRatio: dampingRatio, initialVelocity: velocity),
             beginsFromCurrentState: options.contains(.beginFromCurrentState),
-            allowsUserInteraction: options.contains(.allowUserInteraction)),
+            allowsUserInteraction: options.contains(.allowUserInteraction),
+            repeats: options.contains(.repeat),
+            autoreverses: options.contains(.autoreverse)),
             animations: animations, completion: completion)
     }
 
@@ -335,6 +359,18 @@ extension UIView {
         }
 
         guard let completion else { return }
+        // An infinite UIView transaction has no successful completion edge.
+        // Its completion is delivered as `false` only if a future property
+        // transaction interrupts it; callers without a completion (SwiftUI's
+        // repeatForever bridge) simply retain the live presentation track.
+        if params.repeats, recorded > 0 {
+            UIViewAnimationCompletionQueue.schedule(
+                end: .infinity,
+                transactionID: transaction.transactionID,
+                completion
+            )
+            return
+        }
         let end = OpenUIKitRuntime.animationTime + params.delay + params.duration
         if (recorded == 0 && !waitsForDurationWhenEmpty)
             || end <= OpenUIKitRuntime.animationTime {
@@ -381,8 +417,7 @@ extension UIView {
         var actualFrom = from
         if let oldIndex = animations.firstIndex(where: { $0.property == property }) {
             let old = animations[oldIndex]
-            let oldEnd = old.begin + old.delay + old.duration
-            if now < oldEnd {
+            if old.isActive(at: now) {
                 UIViewAnimationContext.interruptedEntries.append(contentsOf:
                     UIViewAnimationCompletionQueue.takeInterrupted(
                         transactionID: old.transactionID))
@@ -395,6 +430,8 @@ extension UIView {
                                    begin: now, delay: ctx.delay,
                                    duration: ctx.duration, timing: ctx.timing,
                                    allowsUserInteraction: ctx.allowsUserInteraction,
+                                   repeats: ctx.repeats,
+                                   autoreverses: ctx.autoreverses,
                                    transactionID: ctx.transactionID)
         // Host redraw hint: frames keep changing until this animation ends.
         OpenUIKitRuntime.noteAnimationWork(until: anim.begin + anim.delay
@@ -451,7 +488,7 @@ extension UIView {
     func _hasInteractionBlockingAnimation(at time: Double) -> Bool {
         animations.contains {
             !$0.allowsUserInteraction
-                && time < $0.begin + $0.delay + $0.duration
+                && $0.isActive(at: time)
         }
     }
 
@@ -464,7 +501,15 @@ extension UIView {
     /// that reassigns an animated property after its animation finished calls
     /// this from the completion handler.
     func _removeFinishedAnimations(at time: Double) {
-        animations.removeAll { time >= $0.begin + $0.delay + $0.duration }
+        animations.removeAll { !$0.repeats && time >= $0.endTime }
+    }
+}
+
+extension UIViewAnimation {
+    var endTime: Double { begin + delay + duration }
+
+    func isActive(at time: Double) -> Bool {
+        repeats ? time >= begin : time < endTime
     }
 }
 

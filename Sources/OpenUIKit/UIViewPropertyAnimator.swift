@@ -59,6 +59,15 @@ open class UIViewPropertyAnimator {
     public private(set) var state: UIViewAnimatingState = .inactive
     public var isRunning: Bool { state == .active }
 
+    /// Internal framework bridge used by SwiftUI's `repeatForever`. UIKit's
+    /// public property animator surface has no repeat toggle, but SwiftUI's
+    /// renderer ultimately installs the same repeating Core Animation track.
+    /// Keeping the knobs on the retained animator preserves an arbitrary
+    /// cubic timing curve instead of degrading repeats to the four UIView
+    /// convenience curves.
+    public var _openUIKitRepeats = false
+    public var _openUIKitAutoreverses = false
+
     private let timing: UIViewAnimation.Timing
     private var animationBlocks: [() -> Void] = []
     private var completionBlocks: [(UIViewAnimatingPosition) -> Void] = []
@@ -116,7 +125,9 @@ open class UIViewPropertyAnimator {
         UIView.runAnimationBlock(
             UIViewAnimationContext.Params(duration: duration,
                                           delay: max(0, delay),
-                                          timing: timing),
+                                          timing: timing,
+                                          repeats: _openUIKitRepeats,
+                                          autoreverses: _openUIKitAutoreverses),
             animations: { for block in blocks { block() } },
             // The active transaction owns its animator until delivery. Focus
             // and other UIKit apps commonly keep an animator only in a local

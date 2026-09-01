@@ -65,6 +65,7 @@ protocol CanvasBackend: AnyObject {
     // its nonzero pixels.  Backends must mutate their CURRENT render target.
     func applyBackdropFilter(_ filter: _CanvasBackdropFilter,
                              coverage: [UInt8], bounds: _CanvasDeviceBounds)
+    func applyColorAdjustment(brightness: CGFloat, saturation: CGFloat)
 }
 
 /// Line cap / join styles for the additive stroke entry point
@@ -134,5 +135,15 @@ final class SwiftRasterizerBackend: CanvasBackend {
             &canvas.bitmap.pixels, width: canvas.bitmap.width,
             height: canvas.bitmap.height, coverage: coverage,
             bounds: bounds, filter: filter)
+    }
+
+    func applyColorAdjustment(brightness: CGFloat, saturation: CGFloat) {
+        _CanvasColorAdjustment.applyToStraight(
+            &canvas.bitmap.pixels,
+            width: canvas.bitmap.width,
+            height: canvas.bitmap.height,
+            brightness: brightness,
+            saturation: saturation
+        )
     }
 }

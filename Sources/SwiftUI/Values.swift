@@ -412,6 +412,37 @@ public struct _OpenUnitPoint: Equatable, Sendable {
 
 public typealias UnitPoint = _OpenUnitPoint
 
+/// A rotation expressed in radians, matching SwiftUI's value semantics.
+/// Keeping the canonical storage in Double avoids accumulating conversion
+/// error when a view repeatedly derives an angle from degrees.
+@frozen
+public struct _OpenAngle: Hashable, Comparable, Sendable {
+    public var radians: Double
+
+    public var degrees: Double {
+        get { radians * (180 / Double.pi) }
+        set { radians = newValue * (Double.pi / 180) }
+    }
+
+    public init() { radians = 0 }
+    public init(radians: Double) { self.radians = radians }
+    public init(degrees: Double) { radians = degrees * (Double.pi / 180) }
+
+    public static func radians(_ radians: Double) -> _OpenAngle {
+        _OpenAngle(radians: radians)
+    }
+
+    public static func degrees(_ degrees: Double) -> _OpenAngle {
+        _OpenAngle(degrees: degrees)
+    }
+
+    public static func < (lhs: _OpenAngle, rhs: _OpenAngle) -> Bool {
+        lhs.radians < rhs.radians
+    }
+}
+
+public typealias Angle = _OpenAngle
+
 public struct _OpenHorizontalAlignment: Equatable, Sendable {
     enum Value: Equatable, Sendable { case leading, center, trailing }
     let value: Value
