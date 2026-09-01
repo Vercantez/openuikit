@@ -11,10 +11,8 @@ public let CBATTErrorDomain = "CBATTErrorDomain"
 
 // MARK: - Advertisement data keys
 
-/// Dictionary keys used by apps to read or build advertisement payloads.
-/// Values are the public identifier names. Exact Apple binary strings are
-/// still an oracle question; clients should compare against these constants
-/// rather than hard-coded literals.
+/// Process-local dictionary keys. Apple binary payloads are unobserved in
+/// this seed; clients must compare against these constants, not literals.
 public let CBAdvertisementDataLocalNameKey = "CBAdvertisementDataLocalNameKey"
 public let CBAdvertisementDataManufacturerDataKey = "CBAdvertisementDataManufacturerDataKey"
 public let CBAdvertisementDataServiceDataKey = "CBAdvertisementDataServiceDataKey"
@@ -59,10 +57,10 @@ public let CBUUIDCharacteristicFormatString = "2904"
 public let CBUUIDCharacteristicAggregateFormatString = "2905"
 public let CBUUIDCharacteristicValidRangeString = "2906"
 
-/// Apple's documented L2CAP PSM characteristic UUID string.
+/// Apple's public documentation records this 128-bit L2CAP PSM characteristic.
 public let CBUUIDL2CAPPSMCharacteristicString = "ABDD3056-28FA-441D-A470-55A75A52553A"
 
-/// Public identifier used until an Apple-oracle probe records the binary value.
+/// Process-local identity only; Apple's binary payload is unobserved.
 public let CBUUIDCharacteristicObservationScheduleString = "CBUUIDCharacteristicObservationScheduleString"
 
 // MARK: - Typealiases
@@ -78,7 +76,9 @@ public struct CBConnectionEventMatchingOption: RawRepresentable, Equatable, Hash
         self.rawValue = rawValue
     }
 
+    /// Process-local identity; Apple's bridged NSDictionary raw string is unobserved.
     public static let peripheralUUIDs = CBConnectionEventMatchingOption(rawValue: "peripheralUUIDs")
+    /// Process-local identity; Apple's bridged NSDictionary raw string is unobserved.
     public static let serviceUUIDs = CBConnectionEventMatchingOption(rawValue: "serviceUUIDs")
 }
 
@@ -253,7 +253,11 @@ public struct CBError: Error, CustomNSError, Hashable, Equatable, @unchecked Sen
 
 extension CBError.Code {
     public static func ~= (match: CBError.Code, error: any Error) -> Bool {
-        (error as? CBError)?.code == match
+        if let typed = error as? CBError {
+            return typed.code == match
+        }
+        let nsError = error as NSError
+        return nsError.domain == CBErrorDomain && nsError.code == match.rawValue
     }
 }
 
@@ -322,7 +326,11 @@ public struct CBATTError: Error, CustomNSError, Hashable, Equatable, @unchecked 
 
 extension CBATTError.Code {
     public static func ~= (match: CBATTError.Code, error: any Error) -> Bool {
-        (error as? CBATTError)?.code == match
+        if let typed = error as? CBATTError {
+            return typed.code == match
+        }
+        let nsError = error as NSError
+        return nsError.domain == CBATTErrorDomain && nsError.code == match.rawValue
     }
 }
 
@@ -330,6 +338,8 @@ func _CBUnsupportedError() -> CBError {
     CBError(.operationNotSupported)
 }
 
+/// Hop asynchronously onto `queue`, or `DispatchQueue.main` when `queue` is
+/// nil. The body never runs inline in the caller.
 func _CBDispatch(_ queue: DispatchQueue?, _ body: @escaping () -> Void) {
     (queue ?? DispatchQueue.main).async {
         body()

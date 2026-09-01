@@ -15,6 +15,7 @@ open class CBAttribute: NSObject {
 @available(iOS 5.0, *)
 open class CBService: CBAttribute {
     weak var _peripheral: CBPeripheral?
+    weak var _includedOwner: CBMutableService?
     var _isPrimary: Bool
     var _characteristics: [CBCharacteristic]?
     var _includedServices: [CBService]?
@@ -38,17 +39,64 @@ open class CBMutableService: CBService {
 
     open override var characteristics: [CBCharacteristic]? {
         get { _characteristics }
-        set {
-            _characteristics = newValue
-            newValue?.forEach { $0._service = self }
-        }
+        set { _adoptCharacteristics(newValue) }
     }
 
     open override var includedServices: [CBService]? {
         get { _includedServices }
-        set {
-            _includedServices = newValue
-            newValue?.forEach { $0._peripheral = self._peripheral }
+        set { _adoptIncludedServices(newValue) }
+    }
+
+    func _adoptCharacteristics(_ newValue: [CBCharacteristic]?) {
+        let incoming = newValue ?? []
+        let previous = _characteristics ?? []
+        for characteristic in previous where !incoming.contains(where: { $0 === characteristic }) {
+            if characteristic._service === self {
+                characteristic._service = nil
+            }
+        }
+        for characteristic in incoming {
+            if let owner = characteristic._service as? CBMutableService, owner !== self {
+                owner._removeCharacteristicIdentity(characteristic)
+            }
+            characteristic._service = self
+        }
+        _characteristics = newValue
+    }
+
+    func _removeCharacteristicIdentity(_ characteristic: CBCharacteristic) {
+        guard var list = _characteristics else { return }
+        list.removeAll { $0 === characteristic }
+        _characteristics = list.isEmpty ? nil : list
+        if characteristic._service === self {
+            characteristic._service = nil
+        }
+    }
+
+    func _adoptIncludedServices(_ newValue: [CBService]?) {
+        let incoming = newValue ?? []
+        let previous = _includedServices ?? []
+        for service in previous where !incoming.contains(where: { $0 === service }) {
+            if service._includedOwner === self {
+                service._includedOwner = nil
+            }
+        }
+        for service in incoming {
+            if let owner = service._includedOwner, owner !== self {
+                owner._removeIncludedServiceIdentity(service)
+            }
+            service._includedOwner = self
+            service._peripheral = _peripheral
+        }
+        _includedServices = newValue
+    }
+
+    func _removeIncludedServiceIdentity(_ service: CBService) {
+        guard var list = _includedServices else { return }
+        list.removeAll { $0 === service }
+        _includedServices = list.isEmpty ? nil : list
+        if service._includedOwner === self {
+            service._includedOwner = nil
         }
     }
 }
@@ -107,13 +155,36 @@ open class CBMutableCharacteristic: CBCharacteristic {
 
     open override var descriptors: [CBDescriptor]? {
         get { _descriptors }
-        set {
-            _descriptors = newValue
-            newValue?.forEach { $0._characteristic = self }
-        }
+        set { _adoptDescriptors(newValue) }
     }
 
     open var subscribedCentrals: [CBCentral]? { _subscribedCentrals }
+
+    func _adoptDescriptors(_ newValue: [CBDescriptor]?) {
+        let incoming = newValue ?? []
+        let previous = _descriptors ?? []
+        for descriptor in previous where !incoming.contains(where: { $0 === descriptor }) {
+            if descriptor._characteristic === self {
+                descriptor._characteristic = nil
+            }
+        }
+        for descriptor in incoming {
+            if let owner = descriptor._characteristic as? CBMutableCharacteristic, owner !== self {
+                owner._removeDescriptorIdentity(descriptor)
+            }
+            descriptor._characteristic = self
+        }
+        _descriptors = newValue
+    }
+
+    func _removeDescriptorIdentity(_ descriptor: CBDescriptor) {
+        guard var list = _descriptors else { return }
+        list.removeAll { $0 === descriptor }
+        _descriptors = list.isEmpty ? nil : list
+        if descriptor._characteristic === self {
+            descriptor._characteristic = nil
+        }
+    }
 }
 
 @available(iOS 5.0, *)
