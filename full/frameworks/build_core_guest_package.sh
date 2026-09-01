@@ -2257,6 +2257,37 @@ printf 'Foundation facade direct undefineds: StringProcessing=%s Synchronization
     "$foundation_regex_parser_undefineds" \
     "$foundation_darwin_undefineds"
 
+# UIKit only imports the Preview-facing compatibility extensions when the
+# caller supplied the legacy external Preview inputs.  Compile it before the
+# package-owned fallback DeveloperToolsSupport module is made visible so the
+# ordinary route does not accidentally acquire the executable-owned Preview
+# ABI.
+echo '== compile final Foundation-visible UIKit (optional Preview plugin explicit)'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    "${PREVIEW_FLAGS[@]}" -module-name UIKit -emit-module \
+    -emit-module-path "$STAGE/modules/UIKit.swiftmodule" \
+    -emit-object -o "$WORK/uikit.o" "$UIKIT/Sources/UIKitShim/UIKit.swift"
+
+# SwiftUI's ImageResource API now has a nominal DeveloperToolsSupport
+# dependency even when #Preview hosting is disabled.  Preserve the external
+# executable/object contract for explicit Preview builds, while making the
+# ordinary package self-hosting from the canonical post-Foundation source.
+SWIFTUI_DEVELOPER_TOOLS_SUPPORT_LINK_INPUTS=()
+if [ "$PREVIEW_ENABLED" -eq 0 ]; then
+    echo '== compile package-owned DeveloperToolsSupport for SwiftUI ImageResource'
+    "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+        -module-name DeveloperToolsSupport -emit-module \
+        -emit-module-path "$STAGE/modules/DeveloperToolsSupport.swiftmodule" \
+        -emit-object -o "$WORK/developertoolsupport-package.o" \
+        "$UIKIT/Sources/DeveloperToolsSupport/Preview.swift"
+    llvm-otool-18 -hv "$WORK/developertoolsupport-package.o" \
+        | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]OBJECT' \
+        || die 'package-owned DeveloperToolsSupport object is not ARM64 Mach-O'
+    SWIFTUI_DEVELOPER_TOOLS_SUPPORT_LINK_INPUTS+=(
+        "$WORK/developertoolsupport-package.o"
+    )
+fi
+
 echo '== compile SwiftUI against the app-facing Foundation facade'
 mapfile -d '' -t SWIFTUI_SOURCES < <(
     find "$UIKIT/Sources/SwiftUI" -maxdepth 1 -type f -name '*.swift' \
@@ -2293,12 +2324,6 @@ grep -Fq '__Key_portableCompilerPluginProbe' "$swiftui_plugin_expansions" \
 printf '%s\n' \
     'SWIFTUI_COMPILER_PLUGINS_OK preview=unnamed,named entry=environment-key transport=library scopes=app,framework,package' \
     > "$STAGE/attestation/swiftui-compiler-plugins.log"
-
-echo '== compile final Foundation-visible UIKit (optional Preview plugin explicit)'
-"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
-    "${PREVIEW_FLAGS[@]}" -module-name UIKit -emit-module \
-    -emit-module-path "$STAGE/modules/UIKit.swiftmodule" \
-    -emit-object -o "$WORK/uikit.o" "$UIKIT/Sources/UIKitShim/UIKit.swift"
 
 echo '== compile CoreImage overlay and identity-preserving QuartzCore facade'
 COREIMAGE_SOURCE_PATHS=()
@@ -2628,6 +2653,7 @@ done
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
     "${PREVIEW_EXECUTABLE_RESOLUTION_FLAGS[@]}" \
     -o "$STAGE/lib/libSwiftUI.dylib" "$WORK/swiftui.o" \
+    "${SWIFTUI_DEVELOPER_TOOLS_SUPPORT_LINK_INPUTS[@]}" \
     "${COMMON_LINK[@]}" -lFoundation -lFoundationEssentials -lOpenUIKit \
     -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols \
     "$SWIFTUI_RUNTIME_LINK_FLAG" "$OBSERVATION_DYLIB" \
@@ -4326,12 +4352,11 @@ record_artifact include COpenFoundationCore opaque-header \
     include/COpenFoundationCore/OpenFoundationCFError.h
 record_artifact include COpenFoundationCore module-map \
     include/COpenFoundationCore/module.modulemap
-for dependency in InternalCollectionsUtilities OrderedCollections _RopeModule os; do
+for dependency in InternalCollectionsUtilities OrderedCollections _RopeModule os \
+    DeveloperToolsSupport; do
     record_module_family module-dependency "$dependency"
 done
 if [ "$PREVIEW_ENABLED" -eq 1 ]; then
-    record_artifact module-dependency DeveloperToolsSupport swiftmodule \
-        modules/DeveloperToolsSupport.swiftmodule
     record_artifact object DeveloperToolsSupport object \
         objects/developertoolsupport.o
 fi
