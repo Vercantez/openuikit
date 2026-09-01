@@ -13,6 +13,7 @@ W=${W:-/w}
 UIKIT=${UIKIT:-/uikit}
 SYS=${SYS:-/true-ios-sdk/sdk}
 APPLE_SWIFT_USER_OVERLAYS=${APPLE_SWIFT_USER_OVERLAYS:-/true-ios-sdk/apple-overlays}
+TRUE_IOS_SDK_STAGE=${TRUE_IOS_SDK_STAGE:-/true-ios-sdk}
 FULL=${FULL:-$W/build/full}
 FULL_BUILD_PROJECT=${FULL_BUILD_PROJECT:-$W}
 MRROOT_INPUT=${MRROOT_INPUT:-$W/scratch/mrroot_full}
@@ -48,6 +49,24 @@ esac
 [ -d "$UIKIT/Sources/SwiftUI" ] || die "canonical UIKit source is missing: $UIKIT"
 [ -d "$SYS/usr/lib/swift" ] || die "true-iOS SDK is missing: $SYS"
 [ -d "$APPLE_SWIFT_USER_OVERLAYS" ] || die 'Apple user-overlay directory is missing'
+[ "$SYS" = "$TRUE_IOS_SDK_STAGE/sdk" ] \
+    || die 'SYS must name the SDK inside TRUE_IOS_SDK_STAGE'
+[ "$APPLE_SWIFT_USER_OVERLAYS" = "$TRUE_IOS_SDK_STAGE/apple-overlays" ] \
+    || die 'Apple overlays must come from TRUE_IOS_SDK_STAGE'
+[ -f "$TRUE_IOS_SDK_STAGE/SDK_COMPLETE" ] \
+    && [ ! -L "$TRUE_IOS_SDK_STAGE/SDK_COMPLETE" ] \
+    || die 'true-iOS SDK completion marker is missing'
+grep -Fx \
+    'TRUE_IOS_FULL_SDK_COMPLETE target=arm64-apple-ios18.0-simulator apple-overlays=darwin,objectivec' \
+    "$TRUE_IOS_SDK_STAGE/SDK_COMPLETE" >/dev/null \
+    || die 'true-iOS SDK completion marker drifted'
+[ -f "$TRUE_IOS_SDK_STAGE/attestation/target-sdk-inputs.sha256" ] \
+    && [ ! -L "$TRUE_IOS_SDK_STAGE/attestation/target-sdk-inputs.sha256" ] \
+    || die 'true-iOS SDK input attestation is missing'
+(
+    cd "$TRUE_IOS_SDK_STAGE"
+    sha256sum -c attestation/target-sdk-inputs.sha256 >/dev/null
+) || die 'true-iOS SDK input attestation failed'
 [ -x "$MRROOT_INPUT/machorun" ] || die 'input guest root has no machorun loader'
 [ -d "$OPENCOMBINE_SOURCE/.git" ] || die 'OpenCombine input is not a Git checkout'
 
@@ -94,13 +113,17 @@ PACKAGE=$stage/package
 PRODUCTS=$stage/products
 SDK_OUT=$stage/sdk
 FRAMEWORKS=$SDK_OUT/System/Library/Frameworks
+APPLE_OVERLAYS_OUT=$stage/apple-overlays
 RUNTIME_ROOT=$stage/runtime-root
 AUDIT=$stage/attestation
 MODULE_CACHE=$BUILD/module-cache
 INCLUDE=$stage/include
+PUBLISHED_INCLUDE=$stage/platform-include
+SDK_PROVENANCE=$stage/sdk-provenance
 INTERNAL_MODULE_PATH=$stage/internal-modules
 mkdir -p "$BUILD" "$PACKAGE" "$PRODUCTS" "$FRAMEWORKS" \
-    "$AUDIT" "$MODULE_CACHE" "$INCLUDE" "$INTERNAL_MODULE_PATH"
+    "$APPLE_OVERLAYS_OUT" "$AUDIT" "$MODULE_CACHE" "$INCLUDE" \
+    "$PUBLISHED_INCLUDE" "$SDK_PROVENANCE" "$INTERNAL_MODULE_PATH"
 
 # Attest the complete pinned OpenCombine compiler subject before compiling it.
 perl "$W/full/oracle-opencombine/policy_tool.pl" attest \
@@ -128,6 +151,10 @@ source_subject() {
             done
         printf 'full-subject\t%s\n' "$actual_full_subject"
         printf 'opencombine-audit\t%s\n' "$(sha "$AUDIT/opencombine-sources.json")"
+        printf 'true-ios-sdk-complete\t%s\n' \
+            "$(sha "$TRUE_IOS_SDK_STAGE/SDK_COMPLETE")"
+        printf 'true-ios-sdk-inputs\t%s\n' \
+            "$(sha "$TRUE_IOS_SDK_STAGE/attestation/target-sdk-inputs.sha256")"
     } | sha256sum | awk '{print $1}'
 }
 SOURCE_SUBJECT_BEFORE=$(source_subject)
@@ -141,6 +168,7 @@ cp -a "$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers/include" \
     "$INCLUDE/COpenCombineHelpers"
 cp -a "$SWIFT_FOUNDATION/Sources/_FoundationCShims/include" \
     "$INCLUDE/_FoundationCShims"
+cp -a "$INCLUDE/." "$PUBLISHED_INCLUDE/"
 
 copy_module() {
     local module=$1 source_directory=$2 suffix source
@@ -283,6 +311,10 @@ INTERNAL_MODULES=(InternalCollectionsUtilities OrderedCollections _RopeModule os
 
 echo '== framework SDK layout'
 cp -a "$SYS/." "$SDK_OUT/"
+cp -a "$APPLE_SWIFT_USER_OVERLAYS/." "$APPLE_OVERLAYS_OUT/"
+cp "$TRUE_IOS_SDK_STAGE/SDK_COMPLETE" "$SDK_PROVENANCE/"
+cp "$TRUE_IOS_SDK_STAGE/attestation/target-sdk-inputs.sha256" \
+    "$SDK_PROVENANCE/"
 stage_framework() {
     local module=$1 framework="$FRAMEWORKS/$1.framework" suffix source destination
     mkdir -p "$framework/Modules/$module.swiftmodule"
@@ -307,8 +339,6 @@ for module in "${INTERNAL_MODULES[@]}"; do
         cp "$PACKAGE/$module.$suffix" "$INTERNAL_MODULE_PATH/"
     done
 done
-mkdir -p "$SDK_OUT/usr/local"
-cp -a "$INCLUDE" "$SDK_OUT/usr/local/include"
 
 echo '== private cold runtime root'
 cp -a "$MRROOT_INPUT/." "$RUNTIME_ROOT/"
@@ -326,19 +356,19 @@ echo '== untouched-source-shaped framework consumer'
 PROBE_SOURCE=$W/full/xcodeplan/tests/TrueIOSSwiftUIDylibProbe.swift
 [ -f "$PROBE_SOURCE" ] && [ ! -L "$PROBE_SOURCE" ] \
     || die 'SwiftUI dylib probe source is missing'
-PROBE_CFLAGS=(-Xcc -I"$SDK_OUT/usr/local/include/CPortableIO"
-    -Xcc -I"$SDK_OUT/usr/local/include/CSTBTrueType"
-    -Xcc -I"$SDK_OUT/usr/local/include/CHostClock"
-    -Xcc -I"$SDK_OUT/usr/local/include/COpenCombineHelpers"
-    -Xcc -I"$SDK_OUT/usr/local/include/CQuartz"
-    -Xcc -fmodule-map-file="$SDK_OUT/usr/local/include/_FoundationCShims/module.modulemap"
-    -Xcc -I"$SDK_OUT/usr/local/include/_FoundationCShims")
-# Compile against the immutable base SDK plus the newly emitted framework
-# overlay. The published SDK is a byte-for-byte base copy carrying that same
-# overlay; keeping the base path here also proves the framework layer does not
-# rely on mutating or shadowing Apple SDK modules.
-if ! swiftc -target "$TARGET" -sdk "$SYS" -I "$APPLE_SWIFT_USER_OVERLAYS" \
-    -F "$FRAMEWORKS" -I "$INTERNAL_MODULE_PATH" \
+PROBE_CFLAGS=(-Xcc -I"$PUBLISHED_INCLUDE/CPortableIO"
+    -Xcc -I"$PUBLISHED_INCLUDE/CSTBTrueType"
+    -Xcc -I"$PUBLISHED_INCLUDE/CHostClock"
+    -Xcc -I"$PUBLISHED_INCLUDE/COpenCombineHelpers"
+    -Xcc -I"$PUBLISHED_INCLUDE/CQuartz"
+    -Xcc -fmodule-map-file="$PUBLISHED_INCLUDE/_FoundationCShims/module.modulemap"
+    -Xcc -I"$PUBLISHED_INCLUDE/_FoundationCShims")
+# Compile from a fresh cache using only paths that will be published. Keeping
+# support module maps outside the SDK is intentional: SDK usr/local/include is
+# an implicit Clang search path and would collide with the toolchain's own
+# _FoundationCShims module map in a downstream clean build.
+if ! swiftc -target "$TARGET" -sdk "$SDK_OUT" -I "$APPLE_OVERLAYS_OUT" \
+    -F "$FRAMEWORKS" \
     -module-cache-path "$BUILD/framework-module-cache" \
     -runtime-compatibility-version none -Rmodule-loading \
     -Xfrontend -disable-implicit-string-processing-module-import \
@@ -411,27 +441,45 @@ SOURCE_SUBJECT_AFTER=$(source_subject)
 printf '%s\n' "$SOURCE_SUBJECT_AFTER" > "$AUDIT/source-subject.after.sha256"
 [ "$SOURCE_SUBJECT_BEFORE" = "$SOURCE_SUBJECT_AFTER" ] \
     || die 'canonical/upstream source changed during the build'
+(
+    cd "$TRUE_IOS_SDK_STAGE"
+    sha256sum -c attestation/target-sdk-inputs.sha256 >/dev/null
+) || die 'true-iOS SDK input changed during the build'
 
 # Compiler caches and intermediate objects are deliberately not published.
 # Every replay starts from a clean temporary stage and regenerates them.
 rm -rf -- "$BUILD" "$INCLUDE"
 (
     cd "$stage"
-    find products package internal-modules sdk/System/Library/Frameworks \
+    find products package internal-modules sdk apple-overlays platform-include \
+        runtime-root sdk-provenance \
         -type f -print0 | LC_ALL=C sort -z \
+        | while IFS= read -r -d '' path; do
+            printf '%s\t%s\n' "$(sha256sum "$path" | awk '{print $1}')" "$path"
+        done
+    find attestation -type f \
+        ! -name artifacts.sha256 ! -name symlinks.tsv -print0 \
+        | LC_ALL=C sort -z \
         | while IFS= read -r -d '' path; do
             printf '%s\t%s\n' "$(sha256sum "$path" | awk '{print $1}')" "$path"
         done
     printf '%s\t%s\n' "$(sha256sum true-ios-swiftui-dylib-probe | awk '{print $1}')" \
         true-ios-swiftui-dylib-probe
-    for module in "${PUBLIC_MODULES[@]}"; do
-        runtime_path="runtime-root/darwin/usr/lib/lib$module.dylib"
-        printf '%s\t%s\n' "$(sha256sum "$runtime_path" | awk '{print $1}')" \
-            "$runtime_path"
-    done
 ) | LC_ALL=C sort > "$AUDIT/artifacts.sha256"
+(
+    cd "$stage"
+    find sdk apple-overlays platform-include runtime-root -type l -print0 \
+        | LC_ALL=C sort -z \
+        | while IFS= read -r -d '' path; do
+            target=$(readlink "$path")
+            target_sha=$(printf '%s' "$target" | sha256sum | awk '{print $1}')
+            printf '%s\t%s\t%s\n' "$target_sha" "$path" "$target"
+        done
+) > "$AUDIT/symlinks.tsv"
+artifact_ledger_sha=$(sha "$AUDIT/artifacts.sha256")
+symlink_ledger_sha=$(sha "$AUDIT/symlinks.tsv")
 printf '%s\n' \
-    "TRUE_IOS_PLATFORM_COMPLETE target=$TARGET dylibs=${#PUBLIC_MODULES[@]} swiftui_sources=${#swiftui_sources[@]} source=$SOURCE_SUBJECT_BEFORE" \
+    "TRUE_IOS_PLATFORM_COMPLETE target=$TARGET dylibs=${#PUBLIC_MODULES[@]} swiftui_sources=${#swiftui_sources[@]} source=$SOURCE_SUBJECT_BEFORE artifacts=$artifact_ledger_sha symlinks=$symlink_ledger_sha" \
     > "$stage/PLATFORM_COMPLETE"
 
 mv "$stage" "$OUTPUT_ROOT"

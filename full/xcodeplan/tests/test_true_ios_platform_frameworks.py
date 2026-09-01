@@ -48,6 +48,10 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
             'loaded module \'$module\'; source: \'$expected_module_path\'',
             self.builder,
         )
+        self.assertIn('-sdk "$SDK_OUT" -I "$APPLE_OVERLAYS_OUT"', self.builder)
+        self.assertIn('PUBLISHED_INCLUDE=$stage/platform-include', self.builder)
+        self.assertNotIn('mkdir -p "$SDK_OUT/usr/local"', self.builder)
+        self.assertNotIn('$SDK_OUT/usr/local/include', self.builder)
 
     def test_build_is_source_preserving_atomic_and_stale_safe(self) -> None:
         self.assertIn('uikit_status=$(git -C "$UIKIT" status', self.builder)
@@ -57,6 +61,15 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn('stage=$(mktemp -d', self.builder)
         self.assertIn('rm -rf -- "$BUILD" "$INCLUDE"', self.builder)
         self.assertIn('mv "$stage" "$OUTPUT_ROOT"', self.builder)
+        self.assertIn('sha256sum -c attestation/target-sdk-inputs.sha256', self.builder)
+        self.assertIn(
+            'find products package internal-modules sdk apple-overlays platform-include',
+            self.builder,
+        )
+        self.assertIn('runtime-root sdk-provenance', self.builder)
+        self.assertIn('find attestation -type f', self.builder)
+        self.assertIn('> "$AUDIT/symlinks.tsv"', self.builder)
+        self.assertIn('artifacts=$artifact_ledger_sha symlinks=$symlink_ledger_sha', self.builder)
 
     def test_probe_exercises_swiftui_through_uikit_at_runtime(self) -> None:
         self.assertIn('import SwiftUI', self.probe)
