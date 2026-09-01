@@ -1,0 +1,14 @@
+full/healthkit/HKConstants.swift
+full/healthkit/HKEnums.swift
+full/healthkit/HKError.swift
+full/healthkit/HKHealthStore.swift
+full/healthkit/HKIdentifiers.swift
+full/healthkit/HKObjectTypes.swift
+full/healthkit/HKObjects.swift
+full/healthkit/HKOptionSets.swift
+full/healthkit/HKQuantity.swift
+full/healthkit/HKQuery.swift
+full/healthkit/HKStubs.swift
+full/healthkit/HKUnit.swift
+full/healthkit/HKWorkout.swift
+full/healthkit/HealthKit.swift
