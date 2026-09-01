@@ -143,7 +143,7 @@ for relative in "${FOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do
         || die "Foundation guest source is not a regular file: $relative"
     # This legacy Focus-only harness runs against a read-only shared machorun
     # root and cannot stage the production Linux URL-transport helper there.
-    # The relocatable core-package builder compiles the complete 31-source
+    # The relocatable core-package builder compiles the complete 32-source
     # facade; this bounded historical harness explicitly excludes URLSession.
     if [ "$relative" = full/foundation/URLSession.swift ]; then
         FOUNDATION_GUEST_EXCLUDED_URLSESSION=$((FOUNDATION_GUEST_EXCLUDED_URLSESSION + 1))

@@ -93,6 +93,7 @@ FOUNDATION_SOURCES = (
     "full/foundation/CharacterSet.swift",
     "full/foundation/NSLock.swift",
     "full/foundation/NotificationCenter+Combine.swift",
+    "full/foundation/Progress.swift",
     "full/foundation/NSCache.swift",
     "full/foundation/FileHandle.swift",
     "full/foundation/Data+Searching.swift",
@@ -443,14 +444,14 @@ class FoundationManifestTests(unittest.TestCase):
         self.attest()
         lines = (self.root / "attestation.tsv").read_text().splitlines()
         self.assertEqual(lines[0], "format\tfoundation-guest-sources-v1")
-        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 31)
+        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 32)
 
     def test_reordered_manifest_is_refused(self) -> None:
         reordered = list(FOUNDATION_SOURCES)
         reordered[0], reordered[1] = reordered[1], reordered[0]
         write_file(self.manifest, "\n".join(reordered) + "\n")
         refusal = self.attest(expected=2)
-        self.assertIn("exact ordered 31-path contract", refusal.stderr)
+        self.assertIn("exact ordered 32-path contract", refusal.stderr)
 
     def test_symlinked_source_is_refused(self) -> None:
         source = self.root / FOUNDATION_SOURCES[-1]
@@ -1380,7 +1381,7 @@ class ShellContractTests(unittest.TestCase):
 
     def test_builder_pins_the_canonical_105_source_openuikit_tree(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
-        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=31"), 1)
+        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=32"), 1)
         self.assertIn(
             "-lOpenCoreGraphics -lCombine -lOpenCombine -lDispatch",
             source,
