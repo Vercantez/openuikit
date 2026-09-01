@@ -192,6 +192,29 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn("true-ios-foundationmodels-natural-auth-loads-v2", self.builder)
         self.assertIn("cmp \"$AUDIT/naturallanguage-generalization-runtime.log\"", self.builder)
 
+    def test_cold_runtime_has_one_portable_foundation_identity(self) -> None:
+        self.assertIn("rewrite_macho_dependency.py", self.builder)
+        self.assertIn(
+            "/System/Library/Frameworks/Foundation.framework/Foundation",
+            self.builder,
+        )
+        self.assertIn("/usr/lib/libFoundation.dylib", self.builder)
+        for library in (
+            "libswiftCore.dylib",
+            "libswiftSynchronization.dylib",
+            "libswift_Builtin_float.dylib",
+            "libswift_Concurrency.dylib",
+            "libswift_RegexParser.dylib",
+            "libswift_StringProcessing.dylib",
+        ):
+            self.assertIn(library, self.builder)
+        self.assertIn(
+            "true-ios-runtime-foundation-load-rewrites-v1", self.builder
+        )
+        self.assertIn("runtime-foundation-load-rewrites.tsv", self.builder)
+        self.assertIn("foundationmodels-runtime.stderr.log", self.builder)
+        self.assertIn("NaturalLanguage cold loader stderr differs", self.builder)
+
 
 if __name__ == "__main__":
     unittest.main()

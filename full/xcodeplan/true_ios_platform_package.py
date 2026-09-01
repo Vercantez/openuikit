@@ -100,16 +100,20 @@ _REQUIRED_ATTESTATION = {
     "foundationmodels-naturallanguage-sources.tsv",
     "foundationmodels-runtime-exports.txt",
     "foundationmodels-runtime.log",
+    "foundationmodels-runtime.stderr.log",
     "framework-module-loading.log",
     "naturallanguage-authenticationservices-loads.tsv",
     "naturallanguage-generalization-apple-26.1.txt",
     "naturallanguage-generalization-runtime.log",
+    "naturallanguage-generalization-runtime.stderr.log",
     "open-compression-abi.tsv",
     "open-compression-host-test.log",
     "open-compression-host.tsv",
     "opencombine-sources.json",
     "opencombine-sources.nul",
     "runtime.log",
+    "runtime.stderr.log",
+    "runtime-foundation-load-rewrites.tsv",
     "source-subject.after.sha256",
     "source-subject.before.sha256",
     "symlinks.tsv",
@@ -134,6 +138,22 @@ _REQUIRED_HOST_LIBRARIES = {
     "libOpenCompressionHost.so",
     "libdispatch.so",
 }
+_APPLE_FOUNDATION_LOAD = (
+    "/System/Library/Frameworks/Foundation.framework/Foundation"
+)
+_PORTABLE_FOUNDATION_LOAD = "/usr/lib/libFoundation.dylib"
+_RUNTIME_FOUNDATION_LOAD_REWRITES = (
+    "libswiftCore.dylib",
+    "libswiftSynchronization.dylib",
+    "libswift_Builtin_float.dylib",
+    "libswift_Concurrency.dylib",
+    "libswift_RegexParser.dylib",
+    "libswift_StringProcessing.dylib",
+)
+_EXPECTED_LOADER_STDERR = (
+    'concpatch: dlopen("/System/Library/Frameworks/CoreFoundation.framework/'
+    'CoreFoundation") -- refused, as machorun does. mode=16\n'
+)
 _REQUIRED_RUNTIME_FILES = (
     "runtime-root/machorun",
     "runtime-root/darwin/usr/lib/libSystem.B.dylib",
@@ -141,10 +161,11 @@ _REQUIRED_RUNTIME_FILES = (
     "runtime-root/darwin/usr/lib/libobjc.A.dylib",
     "runtime-root/darwin/usr/lib/libquartz.dylib",
     "runtime-root/darwin/usr/lib/libswiftcompat.dylib",
-    "runtime-root/darwin/usr/lib/swift/libswiftCore.dylib",
     "runtime-root/darwin/usr/lib/swift/libswiftObjectiveC.dylib",
-    "runtime-root/darwin/usr/lib/swift/libswift_Concurrency.dylib",
     "runtime-root/darwin/usr/lib/swift/libswiftObservation.dylib",
+) + tuple(
+    f"runtime-root/darwin/usr/lib/swift/{name}"
+    for name in _RUNTIME_FOUNDATION_LOAD_REWRITES
 )
 _REQUIRED_SDK_FILES = (
     "sdk/usr/lib/libSystem.B.tbd",
@@ -408,7 +429,7 @@ def _symlink_ledger(root: Path, expected_sha: str) -> dict[str, str]:
     return records
 
 
-def _macho(path: Path, *, filetype: int, install_name: str | None) -> set[str]:
+def _macho(path: Path, *, filetype: int, install_name: str | None) -> tuple[str, ...]:
     try:
         payload = path.read_bytes()
     except OSError as exc:
@@ -425,7 +446,7 @@ def _macho(path: Path, *, filetype: int, install_name: str | None) -> set[str]:
     cursor = 32
     build_versions: list[tuple[int, int, int]] = []
     ids: list[str] = []
-    loads: set[str] = set()
+    loads: list[str] = []
     dylib_commands = {0x0C, 0x20, 0x80000018, 0x8000001F, 0x80000023}
     for _ in range(ncmds):
         if cursor + 8 > 32 + sizeofcmds:
@@ -452,7 +473,7 @@ def _macho(path: Path, *, filetype: int, install_name: str | None) -> set[str]:
             if command == 0x0D:
                 ids.append(name)
             else:
-                loads.add(name)
+                loads.append(name)
         cursor += size
     if cursor != 32 + sizeofcmds or len(build_versions) != 1:
         raise TrueIOSPlatformError(f"Mach-O load-command denominator drifted: {path}")
@@ -461,13 +482,69 @@ def _macho(path: Path, *, filetype: int, install_name: str | None) -> set[str]:
     expected_ids = [] if install_name is None else [install_name]
     if ids != expected_ids:
         raise TrueIOSPlatformError(f"Mach-O install name drifted: {path}: {ids}")
-    return loads
+    return tuple(loads)
 
 
 def _same_hash(paths: list[Path], label: str) -> None:
     values = {_sha256(path) for path in paths}
     if len(values) != 1:
         raise TrueIOSPlatformError(f"published copies differ: {label}")
+
+
+def _validate_runtime_foundation_load_rewrites(root: Path) -> None:
+    attestation = _regular(
+        root,
+        "attestation/runtime-foundation-load-rewrites.tsv",
+        "runtime Foundation load rewrite attestation",
+    ).read_text(encoding="ascii").splitlines()
+    expected_header = [
+        "format\ttrue-ios-runtime-foundation-load-rewrites-v1",
+        "policy\tportable-foundation-identity\t"
+        "code-signature=not-enforced-by-machorun",
+    ]
+    if attestation[:2] != expected_header or len(attestation) != (
+        2 + len(_RUNTIME_FOUNDATION_LOAD_REWRITES)
+    ):
+        raise TrueIOSPlatformError(
+            "runtime Foundation load rewrite attestation shape differs"
+        )
+    for line, name in zip(attestation[2:], _RUNTIME_FOUNDATION_LOAD_REWRITES):
+        relative = f"runtime-root/darwin/usr/lib/swift/{name}"
+        fields = line.split("\t")
+        if (
+            len(fields) != 6
+            or fields[0] != "runtime-load"
+            or fields[1] != relative
+            or not fields[2].startswith("input=")
+            or not fields[3].startswith("output=")
+            or fields[4:] != ["old=1", "new=1"]
+        ):
+            raise TrueIOSPlatformError(
+                f"runtime Foundation load rewrite record differs: {relative}"
+            )
+        input_digest = fields[2].removeprefix("input=")
+        output_digest = fields[3].removeprefix("output=")
+        binary = _regular(root, relative, "rewritten Swift runtime dylib")
+        if (
+            not _SHA256.fullmatch(input_digest)
+            or not _SHA256.fullmatch(output_digest)
+            or input_digest == output_digest
+            or output_digest != _sha256(binary)
+        ):
+            raise TrueIOSPlatformError(
+                f"runtime Foundation load rewrite hashes differ: {relative}"
+            )
+        loads = _macho(
+            binary,
+            filetype=6,
+            install_name=f"/usr/lib/swift/{name}",
+        )
+        if loads.count(_APPLE_FOUNDATION_LOAD) != 0 or loads.count(
+            _PORTABLE_FOUNDATION_LOAD
+        ) != 1:
+            raise TrueIOSPlatformError(
+                f"runtime Foundation identity closure differs: {relative}"
+            )
 
 
 def _validate_sdk_inputs(root: Path) -> None:
@@ -811,6 +888,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     ).read_text(encoding="ascii").strip()
     if before != completion["source"] or after != before:
         raise TrueIOSPlatformError("source subject bracket differs from completion")
+    _validate_runtime_foundation_load_rewrites(root)
     foundationmodels_export_count = (
         _validate_foundationmodels_naturallanguage_frontier(root)
     )
@@ -823,6 +901,18 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         raise TrueIOSPlatformError(
             "cold SwiftUI runtime lacks FoundationModels evidence"
         )
+    for name, expected_stderr in (
+        ("runtime.stderr.log", _EXPECTED_LOADER_STDERR),
+        ("foundationmodels-runtime.stderr.log", _EXPECTED_LOADER_STDERR),
+        ("naturallanguage-generalization-runtime.stderr.log", ""),
+    ):
+        stderr = _regular(
+            root, f"attestation/{name}", "cold loader stderr"
+        ).read_text(encoding="utf-8")
+        if stderr != expected_stderr:
+            raise TrueIOSPlatformError(
+                f"cold loader stderr contains an unexpected warning: {name}"
+            )
     load_attestation = _regular(
         root,
         "attestation/naturallanguage-authenticationservices-loads.tsv",
@@ -1115,7 +1205,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         if not frontier_probe.stat().st_mode & stat.S_IXUSR:
             raise TrueIOSPlatformError(f"{label} is not executable")
         frontier_loads = _macho(frontier_probe, filetype=2, install_name=None)
-        if required_load not in frontier_loads:
+        if frontier_loads.count(required_load) != 1:
             raise TrueIOSPlatformError(
                 f"{label} does not load exactly one {required_load}"
             )

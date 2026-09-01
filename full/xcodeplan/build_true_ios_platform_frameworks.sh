@@ -41,6 +41,7 @@ FOUNDATION_MODELS_CONSUMER=$W/full/foundationmodels/tests/IceCubesFoundationMode
 FOUNDATION_MODELS_GOLDEN=$W/full/foundationmodels/tests/foundationmodels-apple-26.1.txt
 NATURAL_LANGUAGE_GENERALIZATION=$W/full/naturallanguage/tests/NaturalLanguageGeneralizationOracle.swift
 NATURAL_LANGUAGE_GENERALIZATION_GOLDEN=$W/full/naturallanguage/tests/naturallanguage-generalization-apple-26.1.txt
+MACHO_DEPENDENCY_REWRITER=$W/full/xcodeplan/rewrite_macho_dependency.py
 OUTPUT_ROOT=${OUTPUT_ROOT:-$W/build/true-ios-platform}
 SYSTEM_FONT=${SYSTEM_FONT:-/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf}
 BOLD_FONT=${BOLD_FONT:-/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf}
@@ -182,6 +183,12 @@ done
     || die "system font input is missing: $SYSTEM_FONT"
 [ -f "$BOLD_FONT" ] && [ ! -L "$BOLD_FONT" ] \
     || die "bold font input is missing: $BOLD_FONT"
+[ -f "$MACHO_DEPENDENCY_REWRITER" ] \
+    && [ ! -L "$MACHO_DEPENDENCY_REWRITER" ] \
+    || die 'Mach-O dependency rewriter is missing'
+git -C "$W" ls-files --error-unmatch \
+    "${MACHO_DEPENDENCY_REWRITER#"$W/"}" >/dev/null \
+    || die 'Mach-O dependency rewriter is not tracked'
 [ "$(sha "$SYSTEM_FONT")" = ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280 ] \
     || die 'system font input hash drifted'
 [ "$(sha "$BOLD_FONT")" = 5c1247acef7f2b8522a31742c76d6adcb5569bacc0be7ceaa4dc39dd252ce895 ] \
@@ -316,6 +323,7 @@ source_subject() {
         for support_source in \
             full/xcodeplan/build_true_ios_platform_frameworks.sh \
             full/xcodeplan/true_ios_platform_package.py \
+            full/xcodeplan/rewrite_macho_dependency.py \
             full/xcodeplan/tests/TrueIOSSwiftUIDylibProbe.swift \
             full/foundationinternationalization/build_foundation_internationalization.sh \
             full/foundationinternationalization/FoundationICUCXXThreading.cpp \
@@ -369,6 +377,55 @@ echo '== immutable SDK and cold runtime staging'
 cp -a "$SYS/." "$SDK_OUT/"
 cp -a "$APPLE_SWIFT_USER_OVERLAYS/." "$APPLE_OVERLAYS_OUT/"
 cp -a "$MRROOT_INPUT/." "$RUNTIME_ROOT/"
+
+# The Apple simulator Swift runtime names Foundation by its framework path.
+# Our public framework intentionally installs the portable implementation as
+# /usr/lib/libFoundation.dylib.  Leaving both identities in the cold closure
+# maps the same image twice under machorun and registers every Foundation ObjC
+# class twice.  Rewrite exactly the six measured Apple runtime clients before
+# any probe runs, without changing Mach-O layout, and publish the complete
+# input/output hash and dependency-identity proof.
+APPLE_FOUNDATION_LOAD=/System/Library/Frameworks/Foundation.framework/Foundation
+PORTABLE_FOUNDATION_LOAD=/usr/lib/libFoundation.dylib
+RUNTIME_FOUNDATION_LOAD_CLIENTS=(
+    libswiftCore.dylib
+    libswiftSynchronization.dylib
+    libswift_Builtin_float.dylib
+    libswift_Concurrency.dylib
+    libswift_RegexParser.dylib
+    libswift_StringProcessing.dylib
+)
+{
+    printf 'format\ttrue-ios-runtime-foundation-load-rewrites-v1\n'
+    printf 'policy\tportable-foundation-identity\tcode-signature=not-enforced-by-machorun\n'
+    for library in "${RUNTIME_FOUNDATION_LOAD_CLIENTS[@]}"; do
+        relative=runtime-root/darwin/usr/lib/swift/$library
+        binary=$stage/$relative
+        [ -f "$binary" ] && [ ! -L "$binary" ] \
+            || die "runtime Foundation load client is missing: $relative"
+        before_sha=$(sha "$binary")
+        old_before=$(llvm-otool-18 -L "$binary" \
+            | awk -v name="$APPLE_FOUNDATION_LOAD" \
+                '$1 == name { count++ } END { print count + 0 }')
+        new_before=$(llvm-otool-18 -L "$binary" \
+            | awk -v name="$PORTABLE_FOUNDATION_LOAD" \
+                '$1 == name { count++ } END { print count + 0 }')
+        [ "$old_before" -eq 1 ] && [ "$new_before" -eq 0 ] \
+            || die "runtime Foundation load input drifted: $relative old=$old_before new=$new_before"
+        python3 -B "$MACHO_DEPENDENCY_REWRITER" "$binary" \
+            "$APPLE_FOUNDATION_LOAD" "$PORTABLE_FOUNDATION_LOAD"
+        old_after=$(llvm-otool-18 -L "$binary" \
+            | awk -v name="$APPLE_FOUNDATION_LOAD" \
+                '$1 == name { count++ } END { print count + 0 }')
+        new_after=$(llvm-otool-18 -L "$binary" \
+            | awk -v name="$PORTABLE_FOUNDATION_LOAD" \
+                '$1 == name { count++ } END { print count + 0 }')
+        [ "$old_after" -eq 0 ] && [ "$new_after" -eq 1 ] \
+            || die "runtime Foundation load rewrite failed: $relative old=$old_after new=$new_after"
+        printf 'runtime-load\t%s\tinput=%s\toutput=%s\told=1\tnew=1\n' \
+            "$relative" "$before_sha" "$(sha "$binary")"
+    done
+} > "$AUDIT/runtime-foundation-load-rewrites.tsv"
 cp "$TRUE_IOS_SDK_STAGE/SDK_COMPLETE" "$SDK_PROVENANCE/"
 cp "$TRUE_IOS_SDK_STAGE/attestation/target-sdk-inputs.sha256" \
     "$SDK_PROVENANCE/"
@@ -1488,6 +1545,9 @@ for host_library in "${HOST_LIBRARIES[@]}"; do
         || die "cold runtime host closure is missing $host_library"
 done
 host_preload="$RUNTIME_ROOT/host/libOpenDispatchHost.so:$RUNTIME_ROOT/host/libOpenFoundationInternationalizationHost.so:$RUNTIME_ROOT/host/libOpenURLTransportHost.so:$RUNTIME_ROOT/host/libOpenRelativeTimeHost.so:$RUNTIME_ROOT/host/libOpenCompressionHost.so"
+printf '%s\n' \
+    'concpatch: dlopen("/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation") -- refused, as machorun does. mode=16' \
+    > "$BUILD/runtime-loader-expected.stderr.log"
 (
     cd "$stage"
     MACHORUN_ROOT="$RUNTIME_ROOT" \
@@ -1495,9 +1555,12 @@ host_preload="$RUNTIME_ROOT/host/libOpenDispatchHost.so:$RUNTIME_ROOT/host/libOp
         "$RUNTIME_ROOT/machorun" ./true-ios-swiftui-dylib-probe \
         "$RESOURCES/fonts/DejaVuSans.ttf" \
         "$stage/coretext-runtime-fonts"
-) | tee "$AUDIT/runtime.log"
+) 2> "$AUDIT/runtime.stderr.log" | tee "$AUDIT/runtime.log"
 grep -Fq 'TRUE_IOS_SWIFTUI_DYLIB_RUNTIME_OK descendants=' "$AUDIT/runtime.log" \
     || die 'cold SwiftUI dylib runtime marker is missing'
+cmp "$BUILD/runtime-loader-expected.stderr.log" \
+    "$AUDIT/runtime.stderr.log" \
+    || die 'cold SwiftUI dylib loader stderr differs'
 
 cp "$FOUNDATION_MODELS_GOLDEN" \
     "$AUDIT/foundationmodels-apple-26.1.txt"
@@ -1508,7 +1571,8 @@ cp "$NATURAL_LANGUAGE_GENERALIZATION_GOLDEN" \
     MACHORUN_ROOT="$RUNTIME_ROOT" \
     LD_LIBRARY_PATH="$RUNTIME_ROOT/host" LD_PRELOAD="$host_preload" \
         "$RUNTIME_ROOT/machorun" ./foundationmodels-icecubes-probe
-) | tee "$AUDIT/foundationmodels-runtime.log"
+) 2> "$AUDIT/foundationmodels-runtime.stderr.log" \
+    | tee "$AUDIT/foundationmodels-runtime.log"
 head -n 4 "$AUDIT/foundationmodels-runtime.log" \
     > "$BUILD/foundationmodels-apple-comparable.txt"
 cmp "$BUILD/foundationmodels-apple-comparable.txt" \
@@ -1518,15 +1582,21 @@ grep -Fxq \
     'FOUNDATIONMODELS_GUEST_MACHO_OK macro=generable guide=count generated=roundtrip direct=fail-closed stream=fail-closed available=false' \
     "$AUDIT/foundationmodels-runtime.log" \
     || die 'FoundationModels fail-closed runtime marker is missing'
+cmp "$BUILD/runtime-loader-expected.stderr.log" \
+    "$AUDIT/foundationmodels-runtime.stderr.log" \
+    || die 'FoundationModels cold loader stderr differs'
 (
     cd "$stage"
     MACHORUN_ROOT="$RUNTIME_ROOT" \
     LD_LIBRARY_PATH="$RUNTIME_ROOT/host" LD_PRELOAD="$host_preload" \
         "$RUNTIME_ROOT/machorun" ./naturallanguage-generalization-probe
-) | tee "$AUDIT/naturallanguage-generalization-runtime.log"
+) 2> "$AUDIT/naturallanguage-generalization-runtime.stderr.log" \
+    | tee "$AUDIT/naturallanguage-generalization-runtime.log"
 cmp "$AUDIT/naturallanguage-generalization-runtime.log" \
     "$AUDIT/naturallanguage-generalization-apple-26.1.txt" \
     || die 'NaturalLanguage 29-row generalization differs from Apple 26.1'
+[ ! -s "$AUDIT/naturallanguage-generalization-runtime.stderr.log" ] \
+    || die 'NaturalLanguage cold loader stderr differs'
 
 SOURCE_SUBJECT_AFTER=$(source_subject)
 printf '%s\n' "$SOURCE_SUBJECT_AFTER" > "$AUDIT/source-subject.after.sha256"

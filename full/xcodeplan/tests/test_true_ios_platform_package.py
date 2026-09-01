@@ -247,13 +247,33 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             "runtime-root/darwin/usr/lib/libobjc.A.dylib",
             "runtime-root/darwin/usr/lib/libquartz.dylib",
             "runtime-root/darwin/usr/lib/libswiftcompat.dylib",
-            "runtime-root/darwin/usr/lib/swift/libswiftCore.dylib",
             "runtime-root/darwin/usr/lib/swift/libswiftObjectiveC.dylib",
-            "runtime-root/darwin/usr/lib/swift/libswift_Concurrency.dylib",
         ):
             path = self.root / relative
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(relative + "\n", encoding="utf-8")
+        runtime_rewrite_records = [
+            "format\ttrue-ios-runtime-foundation-load-rewrites-v1\n",
+            "policy\tportable-foundation-identity\t"
+            "code-signature=not-enforced-by-machorun\n",
+        ]
+        for name in platform_package._RUNTIME_FOUNDATION_LOAD_REWRITES:
+            relative = f"runtime-root/darwin/usr/lib/swift/{name}"
+            path = self.root / relative
+            path.write_bytes(
+                macho(
+                    filetype=6,
+                    install_name=f"/usr/lib/swift/{name}",
+                    loads=(platform_package._PORTABLE_FOUNDATION_LOAD,),
+                )
+            )
+            runtime_rewrite_records.append(
+                f"runtime-load\t{relative}\tinput={'0' * 64}\t"
+                f"output={sha256(path)}\told=1\tnew=1\n"
+            )
+        (
+            self.root / "attestation/runtime-foundation-load-rewrites.tsv"
+        ).write_text("".join(runtime_rewrite_records), encoding="ascii")
         for library in (
             "libBlocksRuntime.so",
             "libOpenDispatchHost.so",
@@ -433,6 +453,18 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             "button=rendered foundationmodels=generated-content,fail-closed\n",
             encoding="utf-8",
         )
+        for name, loader_stderr in (
+            ("runtime.stderr.log", platform_package._EXPECTED_LOADER_STDERR),
+            (
+                "foundationmodels-runtime.stderr.log",
+                platform_package._EXPECTED_LOADER_STDERR,
+            ),
+            ("naturallanguage-generalization-runtime.stderr.log", ""),
+        ):
+            (self.root / f"attestation/{name}").write_text(
+                loader_stderr,
+                encoding="utf-8",
+            )
         module_log = "".join(
             f"loaded module '{module}'; source: '/stage/sdk/System/Library/Frameworks/"
             f"{module}.framework/Modules/{module}.swiftmodule/{VARIANT}.swiftmodule'\n"
@@ -736,6 +768,52 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(
             platform_package.TrueIOSPlatformError,
             "NaturalLanguage 29-row Apple differential runtime differs",
+        ):
+            platform_package.validate(self.root)
+
+    def test_resealed_runtime_foundation_identity_mutation_is_rejected(self) -> None:
+        name = "libswiftCore.dylib"
+        relative = f"runtime-root/darwin/usr/lib/swift/{name}"
+        binary = self.root / relative
+        binary.write_bytes(
+            macho(
+                filetype=6,
+                install_name=f"/usr/lib/swift/{name}",
+                loads=(platform_package._APPLE_FOUNDATION_LOAD,),
+            )
+        )
+        attestation = (
+            self.root / "attestation/runtime-foundation-load-rewrites.tsv"
+        )
+        lines = attestation.read_text(encoding="ascii").splitlines()
+        lines = [
+            (
+                f"runtime-load\t{relative}\tinput={'0' * 64}\t"
+                f"output={sha256(binary)}\told=1\tnew=1"
+                if line.startswith(f"runtime-load\t{relative}\t")
+                else line
+            )
+            for line in lines
+        ]
+        attestation.write_text("\n".join(lines) + "\n", encoding="ascii")
+        self.seal()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "runtime Foundation identity closure differs",
+        ):
+            platform_package.validate(self.root)
+
+    def test_resealed_duplicate_objc_loader_warning_is_rejected(self) -> None:
+        stderr = self.root / "attestation/foundationmodels-runtime.stderr.log"
+        stderr.write_text(
+            platform_package._EXPECTED_LOADER_STDERR
+            + "objc[9]: Class Foundation.NSString is implemented in both images\n",
+            encoding="utf-8",
+        )
+        self.seal()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "cold loader stderr contains an unexpected warning",
         ):
             platform_package.validate(self.root)
 
