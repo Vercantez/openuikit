@@ -44,6 +44,9 @@ import Compression
 import CoreText
 import AdServices
 import zlib
+import NaturalLanguage
+import AuthenticationServices
+import FoundationModels
 import WebKit
 
 private func coreRequireIndefiniteSymbolEffect<Effect>(_: Effect)
@@ -853,6 +856,30 @@ struct CoreGuestPackageProbe {
         precondition(UTType.usdz.conforms(to: .threeDContent))
         precondition(!SwiftDataPortable.supportsDurableStorage)
         precondition(!SwiftDataPortable.supportsCloudKit)
+        precondition(!SystemLanguageModel.default.isAvailable)
+        precondition(
+            SystemLanguageModel.default.availability ==
+                .unavailable(.deviceNotEligible)
+        )
+        let languageRecognizer = NLLanguageRecognizer()
+        languageRecognizer.processString(
+            "This is a thoughtful message about building a better social network together."
+        )
+        let languageHypothesis = languageRecognizer
+            .languageHypotheses(withMaximum: 1).first
+        precondition(languageHypothesis?.key == .english)
+        precondition((languageHypothesis?.value ?? 0) >= 0.85)
+        let constrainedLanguageRecognizer = NLLanguageRecognizer()
+        constrainedLanguageRecognizer.languageConstraints = [.french, .spanish]
+        constrainedLanguageRecognizer.processString(
+            "Hola a todos, estamos construyendo una comunidad abierta y amable."
+        )
+        precondition(constrainedLanguageRecognizer.dominantLanguage == .spanish)
+        precondition(
+            NLLanguageRecognizer.dominantLanguage(
+                for: "今日はみんなで、より良いコミュニティを作っています。"
+            ) == .japanese
+        )
         precondition(
             TransferableError.exportNotSupported(contentType: "public.data")
                 == .exportNotSupported(contentType: "public.data")
@@ -883,6 +910,19 @@ struct CoreGuestPackageProbe {
                 matching: photosUIFilter
             )
         withExtendedLifetime(photosUIView) {}
+        let languageRecognizer = NLLanguageRecognizer()
+        languageRecognizer.processString(
+            "This application has excellent dark mode support and useful settings"
+        )
+        precondition(languageRecognizer.dominantLanguage == .english)
+        precondition(
+            (languageRecognizer.languageHypotheses(withMaximum: 1)[.english]
+                ?? 0) >= 0.85
+        )
+        precondition(!AuthenticationServicesPortable.isHostConfigured)
+        let webAuthenticationSession: WebAuthenticationSession =
+            EnvironmentValues().webAuthenticationSession
+        withExtendedLifetime(webAuthenticationSession) {}
         let notificationCenter = UNUserNotificationCenter.current()
         var notificationAuthorizationFailedClosed = false
         notificationCenter.requestAuthorization(options: [.alert, .sound]) {
@@ -1007,7 +1047,9 @@ struct CoreGuestPackageProbe {
                 + "graphics=coreimage,quartzcore,tgmath "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-32 zlib=gzip-host-v1 "
+                + "first-party=portable-35 zlib=gzip-host-v1 "
+                + "foundationmodels=generated-content,fail-closed "
+                + "naturallanguage=classifier,apple-29 "
                 + "oslog=standard-error,signposts "
                 + "security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "
@@ -1021,6 +1063,8 @@ struct CoreGuestPackageProbe {
                 + "coretransferable=data,file,fail-closed "
                 + "photos=authorization,volatile,host-driven "
                 + "photosui=transfer,binding,host-driven "
+                + "naturallanguage=deterministic,confidence-gated "
+                + "authenticationservices=host-driven,fail-closed "
                 + "webkit=engine-unavailable preview=\(preview)"
         )
     }

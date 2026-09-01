@@ -91,7 +91,6 @@ MR_STUB(fchmod)
 MR_STUB(getattrlist)
 MR_STUB(link)
 MR_STUB(mktemp)
-MR_STUB(statfs)
 MR_STUB(sysctlbyname)
 MR_STUB(utimes)
 #ifndef OPEN_FOUNDATION_UUID_COMPAT

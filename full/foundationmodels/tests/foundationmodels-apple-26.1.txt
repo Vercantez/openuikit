@@ -1,0 +1,4 @@
+json={"values": ["#swiftOnLinux", "#iceCubes"]}
+roundtrip=#swiftOnLinux,#iceCubes
+schema-values=1
+options=0.3

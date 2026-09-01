@@ -16,13 +16,17 @@ MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog,
 UniformTypeIdentifiers, SwiftData, UserNotifications, QuickLook, and its
 `_QuickLook_SwiftUI` cross-import overlay, CoreMedia, AVFoundation, AVKit,
 Charts, CoreTransferable, Photos, PhotosUI, and the `_PhotosUI_SwiftUI`
-cross-import overlay, Accelerate, Compression, CoreText, and AdServices. The
-app-facing `zlib` Clang module is backed by a separate `libz.dylib`. IOKit is a
-package-owned Swift overlay over a package-owned `IOKit.framework` C module and
-dylib, with its complete 53-symbol Apple Swift runtime contract supplied by a
-separate `libswiftIOKit.dylib`. Together these are fifty-four reusable ARM64
-Mach-O platform binaries (fifty Swift framework dylibs, IOKit,
-`libswiftIOKit`, ICU, and zlib), including real
+cross-import overlay, Accelerate, Compression, CoreText, AdServices,
+NaturalLanguage, AuthenticationServices, the
+`_AuthenticationServices_SwiftUI` cross-import overlay, and FoundationModels
+with its native host compiler plugin for `@Generable` and `@Guide`.
+NaturalLanguage is backed by a deterministic Unicode-script and Latin-language
+classifier. The app-facing `zlib` Clang module is backed by a separate
+`libz.dylib`. IOKit is a package-owned Swift overlay over a package-owned
+`IOKit.framework` C module and dylib, with its complete 53-symbol Apple Swift
+runtime contract supplied by a separate `libswiftIOKit.dylib`. Together these
+are fifty-eight reusable ARM64 Mach-O platform binaries (fifty-four Swift framework
+dylibs, IOKit, `libswiftIOKit`, ICU, and zlib), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
@@ -77,16 +81,16 @@ The semantic build order is deliberate:
    donation, resolution, and host-driven controller state.
 8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-9. Compile and link thirty-two app-facing first-party modules as independent ARM64
+9. Compile and link thirty-five app-facing first-party modules as independent ARM64
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
 10. Build and audit the fail-closed IOKit C framework and complete
-   `libswiftIOKit` runtime boundaries, then link all fifty-four reusable
-   platform binaries (fifty Swift framework dylibs, IOKit, `libswiftIOKit`,
-   ICU, and zlib) and run the package's Mach-O
-   closure/resource/font and framework-behavior probe through the packaged
-   machorun root.
+   `libswiftIOKit` runtime boundaries, then link all fifty-eight reusable
+   platform binaries: the fifty-six library-directory dylibs (fifty-four Swift
+   frameworks, ICU, and zlib) plus IOKit and `libswiftIOKit`. Run the package's
+   Mach-O closure/resource/font and framework-behavior probe through the
+   packaged machorun root.
 11. Run a real asynchronous Mach-O gate covering async main, TaskGroup,
     detached jobs, global/main queues, continuations, and delayed work, then
     run the full loopback URLSession async/continuation/TaskGroup gate.
@@ -268,6 +272,26 @@ and `MacDevice.swift` sources from commit
 AdServices, Compression, zlib, and IOKit binaries, and cold-runs all three
 executables on Linux through the packaged loader and host-helper closure.
 
+`libNaturalLanguage.dylib` publishes all measured `NLLanguage` constants and a
+stateful `NLLanguageRecognizer`. Recognition is local and deterministic: it
+combines Unicode-script classification with conservative lexical profiles,
+preserves Apple's replacement/empty-input/reset semantics, honors language
+constraints and hints, and assigns conservative confidence to ambiguous text
+so callers can apply their own threshold. It does not claim Apple's proprietary
+on-device model. Native-oracle,
+literal StatusKit/WishKit consumers, and direct Mach-O runtime gates cover the
+surface.
+
+`libAuthenticationServices.dylib` and its packaged Swift cross-import overlay
+provide the modern `WebAuthenticationSession` environment value and async
+authentication call used by unchanged applications. A startup-only host
+boundary receives browser-start/cancel events and may complete a request only
+with a callback URL whose scheme matches the request. Missing hosts,
+concurrent sessions, mismatched callbacks, cancellation, and stale completion
+all fail with typed AuthenticationServices errors; the platform never invents
+successful credentials. The overlay's direct base/SwiftUI loads and the
+consumer's three framework loads are audited exactly once.
+
 The pinned swift-foundation revision has an upstream-corrected final-class
 Predicate key-path bug. The builder verifies exact source and patch hashes,
 applies the backport only to a derived build copy, and leaves the pinned
@@ -333,6 +357,21 @@ name-only children, symlink and dangling-link behavior, `SKIP`, `FOLLOW`, and
 callbacks, and stream-device projection. All five `fts` entry points must be
 defined exactly once by the staged real libSystem, while FoundationEssentials'
 four actual imports must bind to that image exactly once.
+
+FoundationEssentials' filesystem enumeration also consumes machorun's genuine
+Darwin `statfs` and `fstatfs` projection. The bounded Apple differential covers
+the 2,168-byte ABI, exact path/file-descriptor identity across root and nested
+mounts, translated mount flags, and Darwin errno behavior. The cold marker is:
+
+```text
+OPEN_FOUNDATION_STATFS_OK abi=2168 path-fd=exact mounts=root,nested flags=translated errno=darwin oracle=apple-bounded
+```
+
+Provenance key
+`FoundationEssentials-statfs` pins `libSystem-source`, `fixture`, `golden`,
+`stderr`, `exit`, `apple-source`, and `apple-summary`, while the package retains
+`statfs-apple.txt`, `statfs-apple-summary.txt`, and `statfs-macho.log` as the
+independently checkable attestations.
 
 FileManager copying now follows the same ownership rule: the package-local
 `copyfile` and `fcopyfile` traps are gone, and both imports bind exactly once to
@@ -466,6 +505,11 @@ The argument arrays are evaluated with the package root as the current working
 directory. No absolute build path is permitted. The parallel `.rsp` files are
 NUL-delimited UTF-8 for diagnostics only; consumers use the JSON arrays. Verify
 any moved package with:
+
+The published app compile contract keeps Swift's normal implicit
+StringProcessing import enabled. Platform framework compilation suppresses it
+internally to audit dependencies, but exporting that internal hygiene flag
+would break unchanged sources such as StatusKit's ordinary `Regex(...)` use.
 
 ```sh
 python3 -B full/xcodeplan/core_guest_package.py PACKAGE --emit-summary
@@ -686,7 +730,7 @@ bash full/frameworks/test_single_bind_guest_root_docker.sh \
   --container-image sha256:64_LOWERCASE_HEX
 ```
 
-The tests exercise exact Foundation and WebKit ordering, all eight added
+The tests exercise exact Foundation and WebKit ordering, all added
 first-party framework products, WebKit deletion/mutation/load refusal,
 path/symlink refusal, relocation to a path containing spaces, Preview
 placeholder/external-plugin behavior, DTS ownership, resource/library tamper

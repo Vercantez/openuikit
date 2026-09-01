@@ -43,6 +43,13 @@ _MODULES = (
     "Combine",
     "Symbols",
     "SwiftUI",
+    "FoundationModels",
+    "NaturalLanguage",
+    "AuthenticationServices",
+    "_AuthenticationServices_SwiftUI",
+    "Accelerate",
+    "Compression",
+    "CoreText",
 )
 _PRIVATE_DYLIBS = ("_FoundationICU",)
 _RUNTIME_SWIFT_MODULES = ("Observation",)
@@ -68,6 +75,8 @@ _ROOT_ENTRIES = {
     "sdk",
     "sdk-provenance",
     "true-ios-swiftui-dylib-probe",
+    "foundationmodels-icecubes-probe",
+    "naturallanguage-generalization-probe",
 }
 _UNLEDGERED_REGULAR = {
     "PLATFORM_COMPLETE",
@@ -76,16 +85,35 @@ _UNLEDGERED_REGULAR = {
 }
 _REQUIRED_ATTESTATION = {
     "artifacts.sha256",
+    "accelerate-apple-differential.log",
+    "accelerate-compression-coretext-loads.tsv",
     "compiler-plugins.tsv",
+    "compression-brotli-apple.txt",
+    "coretext-font-manager-apple.txt",
     "foundation-internationalization-abi.tsv",
     "foundation-internationalization-host.tsv",
     "foundation-internationalization-sources.tsv",
     "foundation-runtime-exports.txt",
     "foundation-runtime-undefineds.txt",
+    "foundationmodels-apple-26.1.txt",
+    "foundationmodels-macro-expansions.log",
+    "foundationmodels-naturallanguage-sources.tsv",
+    "foundationmodels-runtime-exports.txt",
+    "foundationmodels-runtime.log",
+    "foundationmodels-runtime.stderr.log",
     "framework-module-loading.log",
+    "naturallanguage-authenticationservices-loads.tsv",
+    "naturallanguage-generalization-apple-26.1.txt",
+    "naturallanguage-generalization-runtime.log",
+    "naturallanguage-generalization-runtime.stderr.log",
+    "open-compression-abi.tsv",
+    "open-compression-host-test.log",
+    "open-compression-host.tsv",
     "opencombine-sources.json",
     "opencombine-sources.nul",
     "runtime.log",
+    "runtime.stderr.log",
+    "runtime-foundation-load-rewrites.tsv",
     "source-subject.after.sha256",
     "source-subject.before.sha256",
     "symlinks.tsv",
@@ -107,8 +135,25 @@ _REQUIRED_HOST_LIBRARIES = {
     "libOpenFoundationInternationalizationHost.so",
     "libOpenRelativeTimeHost.so",
     "libOpenURLTransportHost.so",
+    "libOpenCompressionHost.so",
     "libdispatch.so",
 }
+_APPLE_FOUNDATION_LOAD = (
+    "/System/Library/Frameworks/Foundation.framework/Foundation"
+)
+_PORTABLE_FOUNDATION_LOAD = "/usr/lib/libFoundation.dylib"
+_RUNTIME_FOUNDATION_LOAD_REWRITES = (
+    "libswiftCore.dylib",
+    "libswiftSynchronization.dylib",
+    "libswift_Builtin_float.dylib",
+    "libswift_Concurrency.dylib",
+    "libswift_RegexParser.dylib",
+    "libswift_StringProcessing.dylib",
+)
+_EXPECTED_LOADER_STDERR = (
+    'concpatch: dlopen("/System/Library/Frameworks/CoreFoundation.framework/'
+    'CoreFoundation") -- refused, as machorun does. mode=16\n'
+)
 _REQUIRED_RUNTIME_FILES = (
     "runtime-root/machorun",
     "runtime-root/darwin/usr/lib/libSystem.B.dylib",
@@ -116,10 +161,11 @@ _REQUIRED_RUNTIME_FILES = (
     "runtime-root/darwin/usr/lib/libobjc.A.dylib",
     "runtime-root/darwin/usr/lib/libquartz.dylib",
     "runtime-root/darwin/usr/lib/libswiftcompat.dylib",
-    "runtime-root/darwin/usr/lib/swift/libswiftCore.dylib",
     "runtime-root/darwin/usr/lib/swift/libswiftObjectiveC.dylib",
-    "runtime-root/darwin/usr/lib/swift/libswift_Concurrency.dylib",
     "runtime-root/darwin/usr/lib/swift/libswiftObservation.dylib",
+) + tuple(
+    f"runtime-root/darwin/usr/lib/swift/{name}"
+    for name in _RUNTIME_FOUNDATION_LOAD_REWRITES
 )
 _REQUIRED_SDK_FILES = (
     "sdk/usr/lib/libSystem.B.tbd",
@@ -138,6 +184,8 @@ _REQUIRED_RESOURCE_FILES = (
 _REQUIRED_CLANG_MODULES = (
     "CHostClock",
     "COpenCombineHelpers",
+    "COpenAccelerate",
+    "COpenCompression",
     "COpenDispatch",
     "COpenFoundationCore",
     "COpenRelativeTime",
@@ -151,6 +199,7 @@ _COMPILER_PLUGINS = (
     "ObservationMacros",
     "FoundationMacros",
     "SwiftDataMacros",
+    "FoundationModelsMacros",
     "OpenUIKitPreviewMacros",
     "OpenSwiftUIMacros",
 )
@@ -173,6 +222,35 @@ _PLUGIN_LINUX_LIBRARIES = {
     "libswiftSwiftOnoneSupport.so",
     "libswift_StringProcessing.so",
     "libswift_RegexParser.so",
+}
+_REQUIRED_FOUNDATIONMODELS_EXPORTS = {
+    "_$s16FoundationModels16GeneratedContentV10jsonStringSSvg",
+    "_$s16FoundationModels19SystemLanguageModelC7defaultACvgZ",
+    "_$s16FoundationModels20LanguageModelSessionC7respond2to10generating21includeSchemaInPrompt7optionsAC8ResponseVy_xGSS_xmSbAA17GenerationOptionsVtYaKAA9GenerableRzlF",
+    "_$s16FoundationModels20LanguageModelSessionC14streamResponse2to10generating21includeSchemaInPrompt7optionsAC0G6StreamVy_xGSS_xmSbAA17GenerationOptionsVtAA9GenerableRzlF",
+}
+_FOUNDATIONMODELS_RUNTIME_MARKER = (
+    "FOUNDATIONMODELS_GUEST_MACHO_OK macro=generable guide=count "
+    "generated=roundtrip direct=fail-closed stream=fail-closed available=false"
+)
+_FRONTIER_SOURCE_HASHES = {
+    "full/foundationmodels/FoundationModels.swift": "2ffb33957a0619b1b04903a970a4968d4704da9650e0f1118c495e397da8c14a",
+    "full/foundationmodels/FoundationModelsMacros.swift": "748c6e508548deea91b28d2621e18519db9814a20f38e24379bb989b8b50340b",
+    "full/foundationmodels/foundationmodels_guest_sources.txt": "a34f2cb36d66a6d3bca019d48de50cfc4705c2ebd921c7efdcab80ff2809f4ee",
+    "full/foundationmodels/tests/FoundationModelsMacroOracle.swift": "4ade2404ea85c40ee4c5ac040fa690ce625b644fc167116eb0af633c5b50787f",
+    "full/foundationmodels/tests/FoundationModelsNativeOracle.swift": "848ef843046134c871124586970e56c4a7011a32399d253dd8d1a77420784944",
+    "full/foundationmodels/tests/IceCubesFoundationModelsConsumer.swift": "248c9cc76b4e83472458e44cf5bff77186e7365705d0975003470e9d6e58beef",
+    "full/foundationmodels/tests/foundationmodels-apple-26.1.txt": "5cabd032687f12555ddf70ba0b17c4b0bc2393a1428fa651b41b28601a2f6c49",
+    "full/foundationmodels/tests/icecubes_foundationmodels_frontier.tsv": "1963d896a308a62abe759330370f6d278c6adb03323a2e00bc47504d7519de36",
+    "full/naturallanguage/NaturalLanguage.swift": "79c65e438572b270ad1137125d1f9e24d44da37eaf6f763a9058af4454d093b1",
+    "full/naturallanguage/naturallanguage_guest_sources.txt": "3409510ab024a2be613be0057b57777616baea6d83a12166a6a716a5822566ba",
+    "full/naturallanguage/tests/IceCubesNaturalLanguageConsumers.swift": "4b0307cc74ff9b987c271ee1c94900083bcbf9701e45ea1fca14780b8f1373ff",
+    "full/naturallanguage/tests/NaturalLanguageGeneralizationOracle.swift": "9ca4b4dae14d3533a77b666676174f97d95a060072acad185d93b567b5653590",
+    "full/naturallanguage/tests/NaturalLanguageIceCubesOracle.swift": "2e81ffde8f5117f96b62e123a50169e257fde0fe86c37122177c369865769e4e",
+    "full/naturallanguage/tests/NaturalLanguageNativeOracle.swift": "822aac91a89d8d3bf4b53dda4437efccd85034f34563cac95cbda16ef6c0f1e0",
+    "full/naturallanguage/tests/icecubes_naturallanguage_frontier.tsv": "af3515a82a14251d23fffd763f71b0ec99d7e6e1534c0c98a9d224a8260cfc07",
+    "full/naturallanguage/tests/naturallanguage-apple-26.1.txt": "bff76de14ca81a7e2216381f8fb1f2e224f4e69d5f4449b200234b0881e90215",
+    "full/naturallanguage/tests/naturallanguage-generalization-apple-26.1.txt": "a3f2c93e68040d85d3795bfef736575a0189da98e8b81ef4f379034cf34bb6f5",
 }
 
 
@@ -351,7 +429,7 @@ def _symlink_ledger(root: Path, expected_sha: str) -> dict[str, str]:
     return records
 
 
-def _macho(path: Path, *, filetype: int, install_name: str | None) -> set[str]:
+def _macho(path: Path, *, filetype: int, install_name: str | None) -> tuple[str, ...]:
     try:
         payload = path.read_bytes()
     except OSError as exc:
@@ -368,7 +446,7 @@ def _macho(path: Path, *, filetype: int, install_name: str | None) -> set[str]:
     cursor = 32
     build_versions: list[tuple[int, int, int]] = []
     ids: list[str] = []
-    loads: set[str] = set()
+    loads: list[str] = []
     dylib_commands = {0x0C, 0x20, 0x80000018, 0x8000001F, 0x80000023}
     for _ in range(ncmds):
         if cursor + 8 > 32 + sizeofcmds:
@@ -395,7 +473,7 @@ def _macho(path: Path, *, filetype: int, install_name: str | None) -> set[str]:
             if command == 0x0D:
                 ids.append(name)
             else:
-                loads.add(name)
+                loads.append(name)
         cursor += size
     if cursor != 32 + sizeofcmds or len(build_versions) != 1:
         raise TrueIOSPlatformError(f"Mach-O load-command denominator drifted: {path}")
@@ -404,13 +482,69 @@ def _macho(path: Path, *, filetype: int, install_name: str | None) -> set[str]:
     expected_ids = [] if install_name is None else [install_name]
     if ids != expected_ids:
         raise TrueIOSPlatformError(f"Mach-O install name drifted: {path}: {ids}")
-    return loads
+    return tuple(loads)
 
 
 def _same_hash(paths: list[Path], label: str) -> None:
     values = {_sha256(path) for path in paths}
     if len(values) != 1:
         raise TrueIOSPlatformError(f"published copies differ: {label}")
+
+
+def _validate_runtime_foundation_load_rewrites(root: Path) -> None:
+    attestation = _regular(
+        root,
+        "attestation/runtime-foundation-load-rewrites.tsv",
+        "runtime Foundation load rewrite attestation",
+    ).read_text(encoding="ascii").splitlines()
+    expected_header = [
+        "format\ttrue-ios-runtime-foundation-load-rewrites-v1",
+        "policy\tportable-foundation-identity\t"
+        "code-signature=not-enforced-by-machorun",
+    ]
+    if attestation[:2] != expected_header or len(attestation) != (
+        2 + len(_RUNTIME_FOUNDATION_LOAD_REWRITES)
+    ):
+        raise TrueIOSPlatformError(
+            "runtime Foundation load rewrite attestation shape differs"
+        )
+    for line, name in zip(attestation[2:], _RUNTIME_FOUNDATION_LOAD_REWRITES):
+        relative = f"runtime-root/darwin/usr/lib/swift/{name}"
+        fields = line.split("\t")
+        if (
+            len(fields) != 6
+            or fields[0] != "runtime-load"
+            or fields[1] != relative
+            or not fields[2].startswith("input=")
+            or not fields[3].startswith("output=")
+            or fields[4:] != ["old=1", "new=1"]
+        ):
+            raise TrueIOSPlatformError(
+                f"runtime Foundation load rewrite record differs: {relative}"
+            )
+        input_digest = fields[2].removeprefix("input=")
+        output_digest = fields[3].removeprefix("output=")
+        binary = _regular(root, relative, "rewritten Swift runtime dylib")
+        if (
+            not _SHA256.fullmatch(input_digest)
+            or not _SHA256.fullmatch(output_digest)
+            or input_digest == output_digest
+            or output_digest != _sha256(binary)
+        ):
+            raise TrueIOSPlatformError(
+                f"runtime Foundation load rewrite hashes differ: {relative}"
+            )
+        loads = _macho(
+            binary,
+            filetype=6,
+            install_name=f"/usr/lib/swift/{name}",
+        )
+        if loads.count(_APPLE_FOUNDATION_LOAD) != 0 or loads.count(
+            _PORTABLE_FOUNDATION_LOAD
+        ) != 1:
+            raise TrueIOSPlatformError(
+                f"runtime Foundation identity closure differs: {relative}"
+            )
 
 
 def _validate_sdk_inputs(root: Path) -> None:
@@ -515,6 +649,113 @@ def _validate_foundation_runtime_bridge(root: Path) -> None:
         )
 
 
+def _validate_foundationmodels_naturallanguage_frontier(root: Path) -> int:
+    provenance = _regular(
+        root,
+        "attestation/foundationmodels-naturallanguage-sources.tsv",
+        "FoundationModels/NaturalLanguage source provenance",
+    ).read_text(encoding="utf-8").splitlines()
+    if not provenance or provenance[0] != (
+        "format\ttrue-ios-foundationmodels-naturallanguage-sources-v1"
+    ):
+        raise TrueIOSPlatformError(
+            "FoundationModels/NaturalLanguage source provenance format drifted"
+        )
+    records: dict[str, str] = {}
+    paths: list[str] = []
+    for index, line in enumerate(provenance[1:], 2):
+        fields = line.split("\t")
+        if (
+            len(fields) != 3
+            or fields[0] != "source"
+            or not _SHA256.fullmatch(fields[2])
+        ):
+            raise TrueIOSPlatformError(
+                f"malformed FoundationModels/NaturalLanguage source line {index}"
+            )
+        path = _relative(fields[1], f"frontier source path {index}").as_posix()
+        if path in records:
+            raise TrueIOSPlatformError(f"duplicate frontier source: {path}")
+        records[path] = fields[2]
+        paths.append(path)
+    if paths != sorted(paths) or records != _FRONTIER_SOURCE_HASHES:
+        raise TrueIOSPlatformError(
+            "FoundationModels/NaturalLanguage source provenance differs"
+        )
+
+    exports = _symbol_attestation(
+        root,
+        "attestation/foundationmodels-runtime-exports.txt",
+        "FoundationModels runtime export attestation",
+    )
+    missing = sorted(_REQUIRED_FOUNDATIONMODELS_EXPORTS - exports)
+    if missing:
+        raise TrueIOSPlatformError(
+            f"FoundationModels runtime exports are missing: {missing}"
+        )
+
+    macro_log = _regular(
+        root,
+        "attestation/foundationmodels-macro-expansions.log",
+        "FoundationModels macro expansion attestation",
+    ).read_text(encoding="utf-8")
+    for expansion in (
+        "static var generationSchema",
+        "var generatedContent",
+        "struct PartiallyGenerated",
+        "extension Tags: FoundationModels.Generable",
+        "guides: [.count(5)]",
+    ):
+        if expansion not in macro_log:
+            raise TrueIOSPlatformError(
+                f"FoundationModels macro expansion is missing: {expansion}"
+            )
+
+    foundationmodels_apple = _regular(
+        root,
+        "attestation/foundationmodels-apple-26.1.txt",
+        "FoundationModels Apple differential",
+    ).read_bytes()
+    if _sha256_bytes(foundationmodels_apple) != (
+        "5cabd032687f12555ddf70ba0b17c4b0bc2393a1428fa651b41b28601a2f6c49"
+    ):
+        raise TrueIOSPlatformError("FoundationModels Apple transcript differs")
+    foundationmodels_runtime = _regular(
+        root,
+        "attestation/foundationmodels-runtime.log",
+        "FoundationModels cold runtime",
+    ).read_bytes()
+    expected_foundationmodels_runtime = (
+        foundationmodels_apple + _FOUNDATIONMODELS_RUNTIME_MARKER.encode("ascii") + b"\n"
+    )
+    if foundationmodels_runtime != expected_foundationmodels_runtime:
+        raise TrueIOSPlatformError(
+            "FoundationModels Apple differential or fail-closed runtime differs"
+        )
+
+    natural_language_apple = _regular(
+        root,
+        "attestation/naturallanguage-generalization-apple-26.1.txt",
+        "NaturalLanguage 29-row Apple differential",
+    ).read_bytes()
+    if _sha256_bytes(natural_language_apple) != (
+        "a3f2c93e68040d85d3795bfef736575a0189da98e8b81ef4f379034cf34bb6f5"
+    ):
+        raise TrueIOSPlatformError("NaturalLanguage 29-row Apple transcript differs")
+    natural_language_runtime = _regular(
+        root,
+        "attestation/naturallanguage-generalization-runtime.log",
+        "NaturalLanguage 29-row cold runtime",
+    ).read_bytes()
+    if natural_language_runtime != natural_language_apple:
+        raise TrueIOSPlatformError(
+            "NaturalLanguage 29-row Apple differential runtime differs"
+        )
+    if len(natural_language_runtime.splitlines()) != 29:
+        raise TrueIOSPlatformError("NaturalLanguage generalization denominator drifted")
+    return len(exports)
+
+
 def _compile_arguments() -> list[str]:
     include = "platform-include"
     return [
@@ -524,17 +765,21 @@ def _compile_arguments() -> list[str]:
         "-F", "sdk/System/Library/Frameworks",
         "-runtime-compatibility-version", "none",
         "-Xfrontend", "-enable-cross-import-overlays",
-        "-Xfrontend", "-disable-implicit-string-processing-module-import",
         "-Xfrontend", "-disable-objc-attr-requires-foundation-module",
         "-load-plugin-library", "host-tools/swift/host/plugins/libObservationMacros.so",
         "-load-plugin-library", "host-tools/swift/host/plugins/libFoundationMacros.so",
         "-load-plugin-library", "host-tools/swift/host/plugins/libSwiftDataMacros.so",
+        "-load-plugin-library", "host-tools/swift/host/plugins/libFoundationModelsMacros.so",
         "-load-plugin-library", "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
         "-load-plugin-library", "host-tools/swift/host/plugins/libOpenSwiftUIMacros.so",
         "-Xcc", f"-I{include}/CPortableIO",
         "-Xcc", f"-I{include}/CSTBTrueType",
         "-Xcc", f"-I{include}/CHostClock",
         "-Xcc", f"-I{include}/COpenCombineHelpers",
+        "-Xcc", f"-fmodule-map-file={include}/COpenAccelerate/module.modulemap",
+        "-Xcc", f"-I{include}/COpenAccelerate",
+        "-Xcc", f"-fmodule-map-file={include}/COpenCompression/module.modulemap",
+        "-Xcc", f"-I{include}/COpenCompression",
         "-Xcc", f"-I{include}/CQuartz",
         "-Xcc", f"-fmodule-map-file={include}/COpenDispatch/module.modulemap",
         "-Xcc", f"-I{include}/COpenDispatch",
@@ -559,6 +804,13 @@ def _link_arguments() -> list[str]:
         "-F", "sdk/System/Library/Frameworks",
         "-framework", "SwiftUI",
         "-framework", "UIKit",
+        "-framework", "FoundationModels",
+        "-framework", "NaturalLanguage",
+        "-framework", "AuthenticationServices",
+        "-framework", "_AuthenticationServices_SwiftUI",
+        "-framework", "Accelerate",
+        "-framework", "Compression",
+        "-framework", "CoreText",
         "-Lproducts",
         "-lFoundation", "-lFoundationInternationalization", "-lDispatch",
         "-lOpenUIKit", "-lOpenCoreGraphics", "-lFoundationEssentials",
@@ -636,15 +888,130 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     ).read_text(encoding="ascii").strip()
     if before != completion["source"] or after != before:
         raise TrueIOSPlatformError("source subject bracket differs from completion")
+    _validate_runtime_foundation_load_rewrites(root)
+    foundationmodels_export_count = (
+        _validate_foundationmodels_naturallanguage_frontier(root)
+    )
     runtime_log = _regular(root, "attestation/runtime.log", "runtime log").read_text(
         encoding="utf-8"
     )
     if "TRUE_IOS_SWIFTUI_DYLIB_RUNTIME_OK descendants=" not in runtime_log:
         raise TrueIOSPlatformError("cold SwiftUI runtime marker is missing")
+    if "foundationmodels=generated-content,fail-closed" not in runtime_log:
+        raise TrueIOSPlatformError(
+            "cold SwiftUI runtime lacks FoundationModels evidence"
+        )
+    for name, expected_stderr in (
+        ("runtime.stderr.log", _EXPECTED_LOADER_STDERR),
+        ("foundationmodels-runtime.stderr.log", _EXPECTED_LOADER_STDERR),
+        ("naturallanguage-generalization-runtime.stderr.log", ""),
+    ):
+        stderr = _regular(
+            root, f"attestation/{name}", "cold loader stderr"
+        ).read_text(encoding="utf-8")
+        if stderr != expected_stderr:
+            raise TrueIOSPlatformError(
+                f"cold loader stderr contains an unexpected warning: {name}"
+            )
+    load_attestation = _regular(
+        root,
+        "attestation/naturallanguage-authenticationservices-loads.tsv",
+        "FoundationModels/NaturalLanguage/AuthenticationServices load attestation",
+    ).read_text(encoding="ascii")
+    expected_load_attestation = (
+        "format\ttrue-ios-foundationmodels-natural-auth-loads-v2\n"
+        "probe\tfoundationmodels=1\tnaturallanguage=1\t"
+        "authenticationservices=1\toverlay=1\n"
+        f"foundationmodels\tconsumer=1\texports={foundationmodels_export_count}\t"
+        "apple-self-load=0\n"
+        "naturallanguage\tgeneralization=1\tapple-self-load=0\n"
+        "overlay\tbase=1\tswiftui=1\tapple-self-load=0\n"
+    )
+    if load_attestation != expected_load_attestation:
+        raise TrueIOSPlatformError(
+            "FoundationModels/NaturalLanguage/AuthenticationServices load attestation differs"
+        )
+    frontier_loads = _regular(
+        root,
+        "attestation/accelerate-compression-coretext-loads.tsv",
+        "Accelerate/Compression/CoreText load attestation",
+    ).read_text(encoding="ascii")
+    if frontier_loads != (
+        "format\ttrue-ios-accelerate-compression-coretext-loads-v1\n"
+        "probe\taccelerate=1\tcompression=1\tcoretext=1\n"
+        "accelerate\tvimage-export=1\tapple-self-load=0\n"
+        "compression\tc-exports=2\thost-imports=2\tbrotli-load=0\tapple-self-load=0\n"
+        "coretext\tapple-self-load=0\n"
+    ):
+        raise TrueIOSPlatformError(
+            "Accelerate/Compression/CoreText load attestation differs"
+        )
+    transcript_hashes = {
+        "accelerate-apple-differential.log":
+            "c2ad6d611001db3d79cb1d39890e36ac8f2fe5ed4fe23bfda40e1aeb4376fbd0",
+        "compression-brotli-apple.txt":
+            "c3c7826b4bf603fcd4ec3f2ca9ae97906409789e352af48f926bf1acce6c9b65",
+        "coretext-font-manager-apple.txt":
+            "c38a8b9dfbe6d5220a2da12a6874a74e37e0570e52b71141c7529dc229df30fa",
+    }
+    for name, digest in transcript_hashes.items():
+        if _sha256(_regular(root, f"attestation/{name}", name)) != digest:
+            raise TrueIOSPlatformError(f"frozen Apple transcript differs: {name}")
+    host_test = _regular(
+        root,
+        "attestation/open-compression-host-test.log",
+        "Compression host test",
+    ).read_text(encoding="ascii")
+    if host_test != (
+        "OPEN_COMPRESSION_HOST_OK algorithm=brotli roundtrip=exact "
+        "malformed=fail-closed limit=hard abi=v1\n"
+    ):
+        raise TrueIOSPlatformError("Compression host test attestation differs")
+    compression_abi = _regular(
+        root,
+        "attestation/open-compression-abi.tsv",
+        "Compression ABI attestation",
+    ).read_text(encoding="ascii")
+    if compression_abi != (
+        "format\topen-compression-abi-v1\n"
+        "response-layout\tsize=24\tpointers=64-bit\n"
+        "symbol\topenui_compression_v1_transform\t"
+        "guest-export=_openui_compression_v1_transform\t"
+        "guest-host-import=_glibc_openui_compression_v1_transform\t"
+        "host-export=openui_compression_v1_transform\n"
+        "symbol\topenui_compression_v1_release\t"
+        "guest-export=_openui_compression_v1_release\t"
+        "guest-host-import=_glibc_openui_compression_v1_release\t"
+        "host-export=openui_compression_v1_release\n"
+    ):
+        raise TrueIOSPlatformError("Compression ABI attestation differs")
+    compression_host = _regular(
+        root,
+        "attestation/open-compression-host.tsv",
+        "Compression host attestation",
+    ).read_text(encoding="ascii").splitlines()
+    required_host_lines = {
+        "format\topen-compression-host-v1",
+        "host-abi\tELF64-AArch64",
+        "algorithm\tbrotli\tencode=real\tdecode=real",
+        "limits\tguest-input=256MiB\tguest-output=256MiB",
+        "apple-transcript\t"
+        "c3c7826b4bf603fcd4ec3f2ca9ae97906409789e352af48f926bf1acce6c9b65",
+        "transitive-soname\tlibbrotlidec.so.1",
+        "transitive-soname\tlibbrotlienc.so.1",
+        "transitive-soname\tlibbrotlicommon.so.1",
+    }
+    if not required_host_lines.issubset(compression_host):
+        raise TrueIOSPlatformError("Compression host attestation is incomplete")
     module_log = _regular(
         root, "attestation/framework-module-loading.log", "module loading log"
     ).read_text(encoding="utf-8")
-    for module in ("SwiftUI", "UIKit", "OpenUIKit", "Combine", "OpenCombine"):
+    for module in (
+        "SwiftUI", "UIKit", "OpenUIKit", "Combine", "OpenCombine",
+        "FoundationModels", "NaturalLanguage", "AuthenticationServices",
+        "_AuthenticationServices_SwiftUI", "Accelerate", "Compression",
+        "CoreText",
+    ):
         if f"loaded module '{module}'; source:" not in module_log or (
             f"/System/Library/Frameworks/{module}.framework/Modules/" not in module_log
         ):
@@ -672,6 +1039,16 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         root,
         "platform-include/COpenFoundationCore/OpenFoundationCFError.h",
         "Foundation CFError opaque header",
+    )
+    _regular(
+        root,
+        "platform-include/COpenAccelerate/Accelerate.h",
+        "Accelerate C header",
+    )
+    _regular(
+        root,
+        "platform-include/COpenCompression/OpenCompressionABI.h",
+        "Compression ABI header",
     )
     _regular(
         root,
@@ -735,6 +1112,30 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             )
             _same_hash([raw, sdk_module, runtime_module], f"{module}.{suffix}")
 
+    overlay_relative = (
+        "AuthenticationServices.framework/Modules/"
+        "AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay"
+    )
+    overlay_source = _regular(
+        root,
+        "package/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay",
+        "AuthenticationServices cross-import overlay",
+    )
+    overlay_sdk = _regular(
+        root,
+        f"sdk/System/Library/Frameworks/{overlay_relative}",
+        "SDK AuthenticationServices cross-import overlay",
+    )
+    overlay_runtime = _regular(
+        root,
+        f"runtime-root/darwin/System/Library/Frameworks/{overlay_relative}",
+        "runtime AuthenticationServices cross-import overlay",
+    )
+    _same_hash(
+        [overlay_source, overlay_sdk, overlay_runtime],
+        "AuthenticationServices cross-import overlay",
+    )
+
     for module in _PRIVATE_DYLIBS:
         product = _regular(root, f"products/lib{module}.dylib", f"lib{module} product")
         runtime_library = _regular(
@@ -774,9 +1175,40 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
 
     probe = _regular(root, "true-ios-swiftui-dylib-probe", "SwiftUI probe")
     loads = _macho(probe, filetype=2, install_name=None)
-    for required in ("/usr/lib/libSwiftUI.dylib", "/usr/lib/libUIKit.dylib"):
+    for required in (
+        "/usr/lib/libSwiftUI.dylib",
+        "/usr/lib/libUIKit.dylib",
+        "/usr/lib/libFoundationModels.dylib",
+        "/usr/lib/libNaturalLanguage.dylib",
+        "/usr/lib/libAuthenticationServices.dylib",
+        "/usr/lib/lib_AuthenticationServices_SwiftUI.dylib",
+        "/usr/lib/libAccelerate.dylib",
+        "/usr/lib/libCompression.dylib",
+        "/usr/lib/libCoreText.dylib",
+    ):
         if required not in loads:
             raise TrueIOSPlatformError(f"probe does not load {required}")
+
+    for relative, label, required_load in (
+        (
+            "foundationmodels-icecubes-probe",
+            "FoundationModels exact IceCubes probe",
+            "/usr/lib/libFoundationModels.dylib",
+        ),
+        (
+            "naturallanguage-generalization-probe",
+            "NaturalLanguage 29-row probe",
+            "/usr/lib/libNaturalLanguage.dylib",
+        ),
+    ):
+        frontier_probe = _regular(root, relative, label)
+        if not frontier_probe.stat().st_mode & stat.S_IXUSR:
+            raise TrueIOSPlatformError(f"{label} is not executable")
+        frontier_loads = _macho(frontier_probe, filetype=2, install_name=None)
+        if frontier_loads.count(required_load) != 1:
+            raise TrueIOSPlatformError(
+                f"{label} does not load exactly one {required_load}"
+            )
 
     metadata: dict[str, Any] = {
         "target": _TARGET,

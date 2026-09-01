@@ -32,6 +32,11 @@ NON_LINKING_HELPERS = (
 )
 
 MACH_HEADER_EXPORT = "-exported_symbol __mh_execute_header"
+FRONTIER_LINK_OUTPUTS = (
+    ('"$PRODUCTS/libFoundationModels.dylib"', True),
+    ('"$stage/foundationmodels-icecubes-probe"', False),
+    ('"$stage/naturallanguage-generalization-probe"', False),
+)
 
 
 def logical_shell_commands(source: str) -> list[str]:
@@ -131,17 +136,46 @@ class MachExecuteHeaderContractTests(unittest.TestCase):
         source = TRUE_IOS_BUILDER.read_text(encoding="utf-8")
         validate_direct_link_commands(
             source,
-            expected_links=16,
-            expected_executables=1,
+            expected_links=25,
+            expected_executables=3,
             expected_linker_mentions=2,
         )
+        commands = direct_macho_link_commands(source)
+        for output, expected_dylib in FRONTIER_LINK_OUTPUTS:
+            with self.subTest(output=output):
+                matches = [
+                    command
+                    for command in commands
+                    if f" -o {output} " in f" {command} "
+                ]
+                self.assertEqual(len(matches), 1)
+                self.assertEqual(
+                    " -dylib " in f" {matches[0]} ", expected_dylib
+                )
+                output_offset = source.index(f"-o {output}")
+                link_offset = source.rfind('"${LD[@]}" ', 0, output_offset)
+                self.assertNotEqual(link_offset, -1)
+                mutated = (
+                    source[:link_offset]
+                    + "true "
+                    + source[link_offset + len('"${LD[@]}" ') :]
+                )
+                with self.assertRaisesRegex(
+                    AssertionError, "Mach-O link command count 24, expected 25"
+                ):
+                    validate_direct_link_commands(
+                        mutated,
+                        expected_links=25,
+                        expected_executables=3,
+                        expected_linker_mentions=2,
+                    )
         with self.assertRaisesRegex(
             AssertionError, "__mh_execute_header export count"
         ):
             validate_direct_link_commands(
                 source.replace(MACH_HEADER_EXPORT, "", 1),
-                expected_links=16,
-                expected_executables=1,
+                expected_links=25,
+                expected_executables=3,
                 expected_linker_mentions=2,
             )
         with self.assertRaisesRegex(
@@ -153,8 +187,8 @@ class MachExecuteHeaderContractTests(unittest.TestCase):
                     f"{MACH_HEADER_EXPORT} {MACH_HEADER_EXPORT}",
                     1,
                 ),
-                expected_links=16,
-                expected_executables=1,
+                expected_links=25,
+                expected_executables=3,
                 expected_linker_mentions=2,
             )
 

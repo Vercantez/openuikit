@@ -86,6 +86,7 @@ REQUIRED_COMPILER_PLUGIN_MODULES = {
     "ObservationMacros",
     "FoundationMacros",
     "SwiftDataMacros",
+    "FoundationModelsMacros",
     "OpenUIKitPreviewMacros",
     "OpenSwiftUIMacros",
 }
@@ -101,6 +102,7 @@ FRAMEWORKS = (
     "SwiftUI",
     "_QuickLook_SwiftUI",
     "_PhotosUI_SwiftUI",
+    "_AuthenticationServices_SwiftUI",
     "Foundation",
     "UIKit",
     "CoreImage",
@@ -140,6 +142,9 @@ FRAMEWORKS = (
     "Compression",
     "CoreText",
     "AdServices",
+    "NaturalLanguage",
+    "AuthenticationServices",
+    "FoundationModels",
 )
 REQUIRED_FRAMEWORK_LINK_ARGUMENTS = (
     tuple(f"-l{name}" for name in FRAMEWORKS) + ("-lz",)
@@ -704,6 +709,37 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
             for item in artifacts
         ):
             refuse(f"module dependency {module} has no swiftmodule artifact")
+    required_cross_import_overlays = {
+        (
+            "QuickLook",
+            "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay",
+        ),
+        (
+            "PhotosUI",
+            "modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay",
+        ),
+        (
+            "AuthenticationServices",
+            "modules/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay",
+        ),
+    }
+    actual_cross_import_overlays = {
+        (str(item["name"]), str(item["path"]))
+        for item in artifacts
+        if item["category"] == "module-metadata"
+        and item["role"] == "cross-import-overlay"
+    }
+    missing_cross_import_overlays = sorted(
+        required_cross_import_overlays - actual_cross_import_overlays
+    )
+    if missing_cross_import_overlays:
+        refuse(
+            "required Swift cross-import overlay metadata is absent: "
+            + ", ".join(
+                f"{name}={path}"
+                for name, path in missing_cross_import_overlays
+            )
+        )
     required_icu = {
         ("dylib", "lib/lib_FoundationICU.dylib"),
         (

@@ -12,6 +12,7 @@ RETARGET_PATH = ROOT / "full/scripts/retarget_macho_build_version.py"
 BUILD_FULL_PATH = ROOT / "full/scripts/build_full.sh"
 STAGE_SDK_PATH = ROOT / "full/xcodeplan/stage_true_ios_full_sdk.sh"
 UIHELPERS_SUBJECT_PATH = ROOT / "full/scripts/uihelpers_subject.sh"
+FE_PROVENANCE_PATH = ROOT / "full/foundation/fe_object_provenance.py"
 
 
 def load_retarget_module():
@@ -114,6 +115,42 @@ class TrueIOSFullBuildContractTests(unittest.TestCase):
         self.assertIn('SWIFT_COLLECTIONS=${4:-$ROOT/scratch/swift-collections}', source)
         builder = BUILD_FULL_PATH.read_text(encoding="utf-8")
         self.assertEqual(builder.count('"$W" "$UIKIT" "$SF" "$SC"'), 2)
+
+    def test_full_builder_publishes_fe_source_object_provenance_atomically(self) -> None:
+        builder = BUILD_FULL_PATH.read_text(encoding="utf-8")
+        provenance = FE_PROVENANCE_PATH.read_text(encoding="utf-8")
+        self.assertIn("foundation-fe-object-provenance.tsv.tmp", builder)
+        self.assertIn('python3 "$FE_OBJECT_PROVENANCE_TOOL" attest', builder)
+        self.assertIn('python3 "$FE_OBJECT_PROVENANCE_TOOL" verify', builder)
+        provenance_publish = builder.index(
+            'mv "$OUT/foundation-fe-object-provenance.tsv.tmp"'
+        )
+        subject_publish = builder.index(
+            'mv "$OUT/uihelpers-subject.sha256.tmp"'
+        )
+        self.assertLess(provenance_publish, subject_publish)
+        for object_path in (
+            "FoundationEssentials.o",
+            "InternalCollectionsUtilities.o",
+            "OrderedCollections.o",
+            "_RopeModule.o",
+            "os.o",
+            "platform_shims.o",
+            "string_shims.o",
+            "uuid.o",
+            "fm_unimplemented.o",
+            "removefile_compat.o",
+            "uuid_compat.o",
+        ):
+            self.assertIn(object_path, provenance)
+        for source_path in (
+            "os-module/os.swift",
+            "fm_unimplemented.c",
+            "removefile_compat.c",
+            "removefile_compat.h",
+            "uuid_compat.c",
+        ):
+            self.assertIn(source_path, provenance)
 
     def test_developer_tools_support_is_a_standalone_full_build_dependency(self) -> None:
         builder = BUILD_FULL_PATH.read_text(encoding="utf-8")

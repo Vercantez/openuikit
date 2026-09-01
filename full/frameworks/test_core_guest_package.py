@@ -146,6 +146,7 @@ FRAMEWORKS = (
     "SwiftUI",
     "_QuickLook_SwiftUI",
     "_PhotosUI_SwiftUI",
+    "_AuthenticationServices_SwiftUI",
     "Foundation",
     "UIKit",
     "CoreImage",
@@ -185,6 +186,9 @@ FRAMEWORKS = (
     "Compression",
     "CoreText",
     "AdServices",
+    "NaturalLanguage",
+    "AuthenticationServices",
+    "FoundationModels",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -338,9 +342,10 @@ def validate_swiftui_runtime_link(source: str) -> None:
     ]
     if missing:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
-    # Observation, SwiftUI, overlays, first-party gates, the reusable link loop,
-    # executable probe, and the ten frontier executables share this token.
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 22:
+    # Observation, SwiftUI, cross-import overlays, first-party gates, the
+    # reusable link loop, executable probe, all C/frontier executables, and
+    # AuthenticationServices' overlay/runtime gate share this token.
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 24:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
     swiftui_link_end = source.index(
@@ -453,10 +458,10 @@ def validate_preview_standalone_link_contract(source: str) -> None:
         raise AssertionError(
             f"standalone SwiftUI Preview link contract drifted: {missing}"
         )
-    if source.count('"${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}"') != 6:
+    if source.count('"${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}"') != 7:
         raise AssertionError("standalone SwiftUI Preview export use count drifted")
-    if source.count('"${PREVIEW_STANDALONE_LINK_INPUTS[@]}"') != 7:
-        # One use audits the source object and six uses link executables.
+    if source.count('"${PREVIEW_STANDALONE_LINK_INPUTS[@]}"') != 8:
+        # One use audits the source object and seven uses link executables.
         raise AssertionError("standalone SwiftUI Preview link-input use count drifted")
     slices = (
         (
@@ -488,6 +493,11 @@ def validate_preview_standalone_link_contract(source: str) -> None:
             "compile/link/run the standalone PhotosUI transfer and presentation gate",
             "typecheck an ordinary IceCubes PhotosUI/SwiftUI cross-import consumer",
             "photosui_preview_export_count=$(nm_symbol_count --defined-only",
+        ),
+        (
+            "compile/link/run the standalone AuthenticationServices browser gate",
+            "typecheck the IceCubes AuthenticationServices cross-import consumer",
+            "authenticationservices_preview_export_count=$(nm_symbol_count --defined-only",
         ),
     )
     for start_marker, end_marker, audit in slices:
@@ -752,6 +762,15 @@ class PackageFixture:
             root / "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay",
             "_QuickLook_SwiftUI\n",
         )
+        write_file(
+            root / "modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay",
+            "_PhotosUI_SwiftUI\n",
+        )
+        write_file(
+            root
+            / "modules/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay",
+            "_AuthenticationServices_SwiftUI\n",
+        )
         for dependency in DEPENDENCIES:
             write_file(root / f"modules/{dependency}.swiftmodule", dependency)
         write_file(root / "include/CoreImage/CoreImage.h", "umbrella")
@@ -859,6 +878,10 @@ class PackageFixture:
             "swiftdata macros",
         )
         write_file(
+            root / "host-tools/swift/host/plugins/libFoundationModelsMacros.so",
+            "foundation models macros",
+        )
+        write_file(
             root / "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
             "open uikit preview macros",
         )
@@ -935,6 +958,8 @@ class PackageFixture:
             "-load-plugin-library",
             "host-tools/swift/host/plugins/libSwiftDataMacros.so",
             "-load-plugin-library",
+            "host-tools/swift/host/plugins/libFoundationModelsMacros.so",
+            "-load-plugin-library",
             "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
             "-load-plugin-library",
             "host-tools/swift/host/plugins/libOpenSwiftUIMacros.so",
@@ -964,6 +989,7 @@ class PackageFixture:
             "-lSwiftUI",
             "-l_QuickLook_SwiftUI",
             "-l_PhotosUI_SwiftUI",
+            "-l_AuthenticationServices_SwiftUI",
             "-lIntentsUI",
             "-lIntents",
             "-lWebKit",
@@ -1005,6 +1031,9 @@ class PackageFixture:
             "-lCoreText",
             "-lAdServices",
             "-lz",
+            "-lNaturalLanguage",
+            "-lAuthenticationServices",
+            "-lFoundationModels",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
@@ -1028,6 +1057,11 @@ class PackageFixture:
                 "SwiftDataMacros",
                 "libSwiftDataMacros.so",
                 "PersistentModelMacro",
+            ),
+            (
+                "FoundationModelsMacros",
+                "libFoundationModelsMacros.so",
+                "GenerableMacro,GuideMacro",
             ),
             (
                 "OpenUIKitPreviewMacros",
@@ -1124,6 +1158,22 @@ class PackageFixture:
                 "QuickLook",
                 "cross-import-overlay",
                 "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay",
+            )
+        )
+        records.append(
+            self._artifact(
+                "module-metadata",
+                "PhotosUI",
+                "cross-import-overlay",
+                "modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay",
+            )
+        )
+        records.append(
+            self._artifact(
+                "module-metadata",
+                "AuthenticationServices",
+                "cross-import-overlay",
+                "modules/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay",
             )
         )
         for dependency in DEPENDENCIES:
@@ -1357,6 +1407,14 @@ class PackageFixture:
         records.append(
             self._artifact(
                 "host-tool",
+                "FoundationModelsMacros",
+                "plugin",
+                "host-tools/swift/host/plugins/libFoundationModelsMacros.so",
+            )
+        )
+        records.append(
+            self._artifact(
+                "host-tool",
                 "OpenUIKitPreviewMacros",
                 "plugin",
                 "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
@@ -1509,21 +1567,29 @@ class PackageContractTests(unittest.TestCase):
             if artifact["category"] == "module-metadata"
         ]
         self.assertEqual(
-            overlays,
+            [(item["name"], item["path"], item["role"]) for item in overlays],
             [
-                {
-                    "category": "module-metadata",
-                    "name": "QuickLook",
-                    "path": "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay",
-                    "role": "cross-import-overlay",
-                    "sha256": sha256(
-                        fixture.root
-                        / "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay"
-                    ),
-                    "size": len("_QuickLook_SwiftUI\n"),
-                }
+                (
+                    "QuickLook",
+                    "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay",
+                    "cross-import-overlay",
+                ),
+                (
+                    "PhotosUI",
+                    "modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay",
+                    "cross-import-overlay",
+                ),
+                (
+                    "AuthenticationServices",
+                    "modules/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay",
+                    "cross-import-overlay",
+                ),
             ],
         )
+        for item in overlays:
+            path = fixture.root / item["path"]
+            self.assertEqual(item["sha256"], sha256(path))
+            self.assertEqual(item["size"], path.stat().st_size)
 
         ledger = fixture.root / "attestation/artifacts.tsv"
         ledger.write_text(
@@ -1538,6 +1604,25 @@ class PackageContractTests(unittest.TestCase):
         refusal = fixture.write_manifest(expected=2)
         self.assertIn("unknown artifact category", refusal.stderr)
 
+    def test_authenticationservices_cross_import_overlay_is_required(self) -> None:
+        fixture = self.fixture(False)
+        ledger = fixture.root / "attestation/artifacts.tsv"
+        lines = ledger.read_text(encoding="utf-8").splitlines()
+        ledger.write_text(
+            "\n".join(
+                line
+                for line in lines
+                if "modules/AuthenticationServices.swiftcrossimport/"
+                not in line
+            )
+            + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+        refusal = fixture.write_manifest(expected=2)
+        self.assertIn("AuthenticationServices", refusal.stderr)
+        self.assertIn("cross-import overlay", refusal.stderr)
+
     def test_compiler_plugin_manifest_is_structured_and_relocatable(self) -> None:
         fixture = self.fixture(False)
         document = json.loads(
@@ -1550,6 +1635,7 @@ class PackageContractTests(unittest.TestCase):
                 "ObservationMacros",
                 "FoundationMacros",
                 "SwiftDataMacros",
+                "FoundationModelsMacros",
                 "OpenUIKitPreviewMacros",
                 "OpenSwiftUIMacros",
             ],
@@ -1564,6 +1650,7 @@ class PackageContractTests(unittest.TestCase):
                 ],
                 "FoundationMacros": ["ExpressionMacro", "PredicateMacro"],
                 "SwiftDataMacros": ["PersistentModelMacro"],
+                "FoundationModelsMacros": ["GenerableMacro", "GuideMacro"],
                 "OpenUIKitPreviewMacros": ["UIKitPreviewMacro"],
                 "OpenSwiftUIMacros": ["EntryMacro"],
             },
@@ -2028,16 +2115,36 @@ class PackageContractTests(unittest.TestCase):
 
 
 class ShellContractTests(unittest.TestCase):
+    def test_published_app_contract_keeps_swift_regex_implicit_import(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        published_contract = source[
+            source.index("== write relocatable compile/link contracts") :
+            source.index("printf '%s\\0'", source.index("== write relocatable compile/link contracts"))
+        ]
+        self.assertNotIn(
+            "-disable-implicit-string-processing-module-import",
+            published_contract,
+        )
+        self.assertEqual(
+            source.count("-disable-implicit-string-processing-module-import"),
+            1,
+        )
+
     def test_builder_enables_cross_import_overlays_for_platform_and_consumers(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         self.assertEqual(
-            source.count("-Xfrontend -enable-cross-import-overlays"), 2
+            source.count("-Xfrontend -enable-cross-import-overlays"), 3
         )
         cross_import_gate = source[
             source.index("typecheck an ordinary QuickLook/SwiftUI cross-import consumer") :
             source.index("compile/link/run the standalone CoreMedia rational-time gate")
         ]
         self.assertIn('"${SWIFTC[@]}"', cross_import_gate)
+        natural_language_gate = source[
+            source.index("typecheck untouched-consumer-shaped NaturalLanguage clients") :
+            source.index("compile/link/run the standalone AuthenticationServices browser gate")
+        ]
+        self.assertIn('"${APP_CONSUMER_SWIFTC[@]}"', natural_language_gate)
 
     def test_foundation_hackers_frontier_is_foundation_only_and_runs(self) -> None:
         builder = BUILDER.read_text(encoding="utf-8")
@@ -2246,10 +2353,10 @@ class ShellContractTests(unittest.TestCase):
             builder,
         )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 5
+            builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 6
         )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 26
+            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 30
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -2486,8 +2593,8 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 50)
-        self.assertEqual(FRAMEWORKS.index("WebKit"), 17)
+        self.assertEqual(len(FRAMEWORKS), 54)
+        self.assertEqual(FRAMEWORKS.index("WebKit"), 18)
         for token in (
             "-module-name WebKit -emit-module",
             "-install_name @rpath/libWebKit.dylib",
@@ -2572,19 +2679,24 @@ class ShellContractTests(unittest.TestCase):
         validate_build_full_swift_core_source(build_full)
         self.assertIn(
             "EXPECTED_MACHORUN_COMMIT="
-            "74f46d3b02b372e14f9ca9cee3d8a76ccc96fccb",
+            "d359cd37ac7f12a5048f4993eab6efd8259d9890",
             builder,
         )
         self.assertIn(
             "EXPECTED_MACHORUN_TREE="
-            "902fdd27b904f88b86b58f61efa73785235d83ad",
+            "9072be6c7805264341f1b298c4f7bb0d1bd2587f",
             builder,
         )
-        self.assertNotIn(
-            "EXPECTED_MACHORUN_COMMIT="
+        for obsolete_machorun_pin in (
+            "edb99a8574255ddc4c979b2f0cf2615033ff14fd",
             "dd18e0b5e51e26d4673193d341e7c9a864db2fb8",
-            builder,
-        )
+            "74f46d3b02b372e14f9ca9cee3d8a76ccc96fccb",
+            "1f4021b69495c1a743e85f51cb60d2f337b0bc75",
+        ):
+            self.assertNotIn(
+                "EXPECTED_MACHORUN_COMMIT=" + obsolete_machorun_pin,
+                builder,
+            )
         for token in (
             "--network none",
             "--read-only",
@@ -2930,7 +3042,7 @@ class ShellContractTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(result.stdout.strip(), marker)
 
-    def test_foundation_uses_proven_libsystem_group_xattr_fts_and_copyfile_adapters(self) -> None:
+    def test_foundation_uses_proven_libsystem_group_xattr_fts_statfs_and_copyfile_adapters(self) -> None:
         builder = BUILDER.read_text(encoding="utf-8")
         stubs = (REPO / "full/foundation/fm_unimplemented.c").read_text(
             encoding="utf-8"
@@ -2947,6 +3059,8 @@ class ShellContractTests(unittest.TestCase):
             "MR_STUB(fts_open)",
             "MR_STUB(fts_read)",
             "MR_STUB(fts_set)",
+            "MR_STUB(statfs)",
+            "MR_STUB(fstatfs)",
             "MR_STUB(copyfile)",
             "MR_STUB(fcopyfile)",
             "MR_STUB(quotactl)",
@@ -2955,7 +3069,7 @@ class ShellContractTests(unittest.TestCase):
             self.assertNotIn(removed_stub, stubs)
         for token in (
             "EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA="
-            "c076cfa9f5c797d2f69f156e87fedb6c035a8747ad2055b82da9a99530ce5af4",
+            "bb73d86e8daf09c256edc469737f0c6fd6ca6642ec4480b4819f8378b403904e",
             "EXPECTED_MACHORUN_GROUP_FIXTURE_SHA=",
             "EXPECTED_MACHORUN_GROUP_GOLDEN_SHA=",
             "EXPECTED_MACHORUN_GROUP_SOURCE_SHA=",
@@ -2969,6 +3083,13 @@ class ShellContractTests(unittest.TestCase):
             "EXPECTED_MACHORUN_FTS_SOURCE_SHA=",
             "EXPECTED_MACHORUN_FTS_SUMMARY_SHA=",
             "EXPECTED_MACHORUN_FTS_LIBSYSTEM_SOURCE_SHA=",
+            "EXPECTED_MACHORUN_STATFS_FIXTURE_SHA=",
+            "EXPECTED_MACHORUN_STATFS_GOLDEN_SHA=",
+            "EXPECTED_MACHORUN_STATFS_STDERR_SHA=",
+            "EXPECTED_MACHORUN_STATFS_EXIT_SHA=",
+            "EXPECTED_MACHORUN_STATFS_SOURCE_SHA=",
+            "EXPECTED_MACHORUN_STATFS_SUMMARY_SHA=",
+            "EXPECTED_MACHORUN_STATFS_LIBSYSTEM_SOURCE_SHA=",
             "EXPECTED_MACHORUN_COPYFILE_FIXTURE_SHA=",
             "EXPECTED_MACHORUN_COPYFILE_GOLDEN_SHA=",
             "EXPECTED_MACHORUN_COPYFILE_STDERR_SHA=",
@@ -2994,6 +3115,12 @@ class ShellContractTests(unittest.TestCase):
             "tests/expected/fts.exit",
             "tests/src/fts.c",
             "tests/meta/fts.summary.txt",
+            "tests/bin/statfs",
+            "tests/expected/statfs.stdout",
+            "tests/expected/statfs.stderr",
+            "tests/expected/statfs.exit",
+            "tests/src/statfs.c",
+            "tests/meta/statfs.summary.txt",
             "tests/bin/copyfile",
             "tests/expected/copyfile.stdout",
             "tests/expected/copyfile.stderr",
@@ -3003,14 +3130,22 @@ class ShellContractTests(unittest.TestCase):
             "OPEN_FOUNDATION_GROUP_LOOKUP_OK",
             "OPEN_FOUNDATION_XATTR_OK",
             "OPEN_FOUNDATION_FTS_OK",
+            "OPEN_FOUNDATION_STATFS_OK abi=2168 path-fd=exact mounts=root,nested "
+            "flags=translated errno=darwin oracle=apple-bounded",
             "OPEN_FOUNDATION_COPYFILE_OK",
             "OPEN_FOUNDATION_LIBSYSTEM_COMPAT_OK",
+            "FoundationEssentials-statfs\\tlibSystem-source=%s\\tfixture=%s\\t"
+            "golden=%s\\tstderr=%s\\texit=%s\\tapple-source=%s\\t"
+            "apple-summary=%s",
             '$(NF - 1) == "libSystem.real"',
             "group-lookup-macho.log",
             "xattr-macho.log",
             "fts-apple.txt",
             "fts-apple-summary.txt",
             "fts-macho.log",
+            "statfs-apple.txt",
+            "statfs-apple-summary.txt",
+            "statfs-macho.log",
             "copyfile-apple.txt",
             "copyfile-apple-summary.txt",
             "copyfile-macho.log",
@@ -3021,6 +3156,11 @@ class ShellContractTests(unittest.TestCase):
             self.assertIn(token, builder)
         self.assertIn(
             "EXPECTED_MACHORUN_FTS_LIBSYSTEM_SOURCE_SHA="
+            "$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA",
+            builder,
+        )
+        self.assertIn(
+            "EXPECTED_MACHORUN_STATFS_LIBSYSTEM_SOURCE_SHA="
             "$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA",
             builder,
         )
@@ -3044,6 +3184,8 @@ class ShellContractTests(unittest.TestCase):
             "_fts_read",
             "_fts_children",
             "_fts_set",
+            "_statfs",
+            "_fstatfs",
             "_copyfile",
             "_copyfile_state_alloc",
             "_copyfile_state_free",
@@ -3105,7 +3247,9 @@ class ShellContractTests(unittest.TestCase):
             source.count(
                 "\n".join(
                     (
-                        "Combine Symbols SwiftUI _QuickLook_SwiftUI _PhotosUI_SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \\",
+                        "Combine Symbols SwiftUI _QuickLook_SwiftUI _PhotosUI_SwiftUI \\",
+                        "    _AuthenticationServices_SwiftUI Foundation UIKit CoreImage QuartzCore \\",
+                        "    Intents IntentsUI WebKit \\",
                         '    "${FIRST_PARTY_FRAMEWORKS[@]}"; do',
                     )
                 )
@@ -3295,7 +3439,7 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn(
             "cfErrorAsError._getEmbeddedNSError() === cfError", probe
         )
-    def test_thirty_two_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_thirty_five_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -3333,8 +3477,11 @@ class ShellContractTests(unittest.TestCase):
             "Compression",
             "CoreText",
             "AdServices",
+            "NaturalLanguage",
+            "AuthenticationServices",
+            "FoundationModels",
         )
-        self.assertEqual(FRAMEWORKS[-32:], first_party)
+        self.assertEqual(FRAMEWORKS[-35:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -3361,19 +3508,27 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("portable install ID count", source)
         self.assertIn("apple-self-load=0", source)
         self.assertIn(
-            "frontier-frameworks\\tframeworks=26\\tsources=29\\tinputs=68",
+            "frontier-frameworks\\tframeworks=28\\tsources=32\\tinputs=96",
             source,
         )
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 29",
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 32",
             source,
         )
         self.assertIn(
-            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 68",
+            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 96",
             source,
         )
         self.assertIn(
-            "compile thirty-two independent first-party framework modules", source
+            "compile thirty-five independent first-party framework modules", source
+        )
+        accelerate_header = (
+            REPO / "full/accelerate/include/Accelerate.h"
+        ).read_text(encoding="utf-8")
+        self.assertIn(
+            "OPENUIKIT_ACCELERATE_EXPORT vImage_Error "
+            "vImageBoxConvolve_ARGB8888(",
+            accelerate_header,
         )
         self.assertIn("network_string_processing_undefineds", source)
         self.assertIn("direct StringProcessing undefineds, expected 0", source)
@@ -3381,7 +3536,34 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=portable-32", probe)
+        self.assertIn("first-party=portable-35", probe)
+        self.assertIn("foundationmodels=generated-content,fail-closed", probe)
+        self.assertIn("FoundationModelsGuestRuntime", source)
+        self.assertIn("FOUNDATIONMODELS_GUEST_MACHO_OK", source)
+        self.assertIn("naturallanguage=classifier,apple-29", probe)
+        self.assertIn("NaturalLanguageGeneralizationRuntime", source)
+        self.assertIn("NATURALLANGUAGE_GUEST_MACHO_OK", source)
+        self.assertIn(
+            "naturallanguage-generalization-apple-26.1.txt", source
+        )
+        self.assertIn(
+            "NaturalLanguage generalization output differs from Apple 26.1",
+            source,
+        )
+        self.assertIn(
+            "NaturalLanguage generalization row count "
+            "$naturallanguage_generalization_rows, expected 29",
+            source,
+        )
+        self.assertIn(
+            "@rpath/libNaturalLanguage.dylib", source
+        )
+        self.assertIn("languageHypotheses(withMaximum: 1)", probe)
+        self.assertIn(
+            "constrainedLanguageRecognizer.languageConstraints = "
+            "[.french, .spanish]",
+            probe,
+        )
         self.assertIn("usernotifications=fail-closed,volatile", probe)
         self.assertIn("UserNotificationsGuestRuntime", source)
         self.assertIn("USERNOTIFICATIONS_GUEST_MACHO_OK", source)
@@ -3403,6 +3585,8 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("CoreTransferableGuestRuntime", source)
         self.assertIn("PhotosGuestRuntime", source)
         self.assertIn("PhotosUIGuestRuntime", source)
+        self.assertIn("NaturalLanguageGuestRuntime", source)
+        self.assertIn("AuthenticationServicesGuestRuntime", source)
         self.assertIn("AVFOUNDATION_HOST_OK", source)
         self.assertIn("CHARTS_HOST_OK", source)
         self.assertIn("CORETRANSFERABLE_HOST_OK", source)
@@ -3411,6 +3595,8 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("coretransferable=data,file,fail-closed", probe)
         self.assertIn("photos=authorization,volatile,host-driven", probe)
         self.assertIn("photosui=transfer,binding,host-driven", probe)
+        self.assertIn("naturallanguage=deterministic,confidence-gated", probe)
+        self.assertIn("authenticationservices=host-driven,fail-closed", probe)
         avfoundation_source = (
             REPO / "full/avfoundation/AVFoundation.swift"
         ).read_text(encoding="utf-8")

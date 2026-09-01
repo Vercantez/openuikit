@@ -1,0 +1,11 @@
+format	icecubes-naturallanguage-frontier-v1
+upstream	IceCubesApp	commit	b2db3033fbf67a97b54d25d6dac2df8a029b26b1	tree	acecd527919ebd0c868f752b0ac73a2b45fdfcf5
+census	swift-files	428	ordered-source-sha256	f30e76f6c112045641321507c4c8178f0cf5584808353d7516cdca383633af42
+import	NaturalLanguage	Packages/StatusKit/Sources/StatusKit/LanguageDetection/LanguageDetection.swift	line=2	lines=34	sha256=f5d2ed281604303d5e3323b322c0490d1676134d50b2bb350141d9029f9f96f8
+import	NaturalLanguage	Packages/StatusKit/Sources/StatusKit/Editor/EditorStore.swift	line=5	lines=979	sha256=ddbebf90c661b1a2e143f7585e578deb2633ab7bdfe28fa74bd8866875151232
+import	NaturalLanguage	Packages/StatusKit/Sources/StatusKit/Row/StatusRowViewModel.swift	line=5	lines=506	sha256=ca1cf5b24ba41ed2a18f62aca51afa40ebe1e4ce053e80c043b67fa4972bccb9
+usage	NLLanguageRecognizer	init,processString,languageHypotheses(withMaximum:)	callsite=Packages/StatusKit/Sources/StatusKit/LanguageDetection/LanguageDetection.swift:20-30
+usage	NLLanguage	rawValue	callsite=Packages/StatusKit/Sources/StatusKit/LanguageDetection/LanguageDetection.swift:30
+flow	detectLanguage	EditorStore.evaluateLanguages	callsite=Packages/StatusKit/Sources/StatusKit/Editor/EditorStore.swift:266-274
+policy	consumer-source	unchanged	sha256=f5d2ed281604303d5e3323b322c0490d1676134d50b2bb350141d9029f9f96f8
+policy	inference	unicode-script-plus-latin-trigram	service=local-deterministic	fabricated-host-model=no

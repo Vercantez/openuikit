@@ -41,6 +41,7 @@ QUARTZCORE_SOURCES_MANIFEST=$W/full/quartzcore/quartzcore_guest_sources.txt
 SWIFTDATA_SOURCES_MANIFEST=$W/full/swiftdata/swiftdata_guest_sources.txt
 QUICKLOOK_SWIFTUI_SOURCES_MANIFEST=$W/full/quicklook/quicklook_swiftui_guest_sources.txt
 PHOTOSUI_SWIFTUI_SOURCES_MANIFEST=$W/full/photosui/photosui_swiftui_guest_sources.txt
+AUTHENTICATIONSERVICES_SWIFTUI_SOURCES_MANIFEST=$W/full/authenticationservices/authenticationservices_swiftui_guest_sources.txt
 WEBKIT_PROVENANCE_TOOL=$W/full/webkit/webkit_provenance.py
 WEBKIT_PROVENANCE_POLICY=$W/full/webkit/webkit-provenance.json
 ACCELERATE_ORACLE=$W/full/accelerate/tests/AccelerateBoxConvolveOracle.c
@@ -106,6 +107,9 @@ FIRST_PARTY_FRAMEWORKS=(
     Compression
     CoreText
     AdServices
+    NaturalLanguage
+    AuthenticationServices
+    FoundationModels
 )
 FIRST_PARTY_SOURCE_DIRS=(
     localauthentication
@@ -140,6 +144,9 @@ FIRST_PARTY_SOURCE_DIRS=(
     compression
     coretext
     adservices
+    naturallanguage
+    authenticationservices
+    foundationmodels
 )
 FRONTIER_FRAMEWORKS=(
     CoreGraphics
@@ -167,6 +174,9 @@ FRONTIER_FRAMEWORKS=(
     Compression
     CoreText
     AdServices
+    NaturalLanguage
+    AuthenticationServices
+    FoundationModels
 )
 FRONTIER_SOURCE_DIRS=(
     coregraphics
@@ -194,6 +204,9 @@ FRONTIER_SOURCE_DIRS=(
     compression
     coretext
     adservices
+    naturallanguage
+    authenticationservices
+    foundationmodels
 )
 
 EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
@@ -215,6 +228,7 @@ EXPECTED_QUARTZCORE_SOURCE_COUNT=1
 EXPECTED_SWIFTDATA_SOURCE_COUNT=2
 EXPECTED_QUICKLOOK_SWIFTUI_SOURCE_COUNT=1
 EXPECTED_PHOTOSUI_SWIFTUI_SOURCE_COUNT=1
+EXPECTED_AUTHENTICATIONSERVICES_SWIFTUI_SOURCE_COUNT=1
 EXPECTED_COREMEDIA_SOURCE_COUNT=1
 EXPECTED_AVFOUNDATION_SOURCE_COUNT=1
 EXPECTED_AVKIT_SOURCE_COUNT=1
@@ -222,6 +236,8 @@ EXPECTED_CHARTS_SOURCE_COUNT=1
 EXPECTED_CORETRANSFERABLE_SOURCE_COUNT=1
 EXPECTED_PHOTOS_SOURCE_COUNT=1
 EXPECTED_PHOTOSUI_SOURCE_COUNT=1
+EXPECTED_NATURALLANGUAGE_SOURCE_COUNT=1
+EXPECTED_AUTHENTICATIONSERVICES_SOURCE_COUNT=1
 EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=19
 EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS=2
 EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS=0
@@ -237,9 +253,9 @@ EXPECTED_COLLECTIONS_COMMIT=9bf03ff58ce34478e66aaee630e491823326fd06
 EXPECTED_COLLECTIONS_TREE=5e4de96f40ccf147dab967f38cb7988ecd933c27
 EXPECTED_OPENCOMBINE_COMMIT=1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b
 EXPECTED_OPENCOMBINE_TREE=66a9d91efc910c7577e40b2dec166a2de427594a
-EXPECTED_MACHORUN_COMMIT=74f46d3b02b372e14f9ca9cee3d8a76ccc96fccb
-EXPECTED_MACHORUN_TREE=902fdd27b904f88b86b58f61efa73785235d83ad
-EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA=c076cfa9f5c797d2f69f156e87fedb6c035a8747ad2055b82da9a99530ce5af4
+EXPECTED_MACHORUN_COMMIT=d359cd37ac7f12a5048f4993eab6efd8259d9890
+EXPECTED_MACHORUN_TREE=9072be6c7805264341f1b298c4f7bb0d1bd2587f
+EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA=bb73d86e8daf09c256edc469737f0c6fd6ca6642ec4480b4819f8378b403904e
 SWIFT_CORE_REQUIRED_AVAILABILITY_SYMBOL='_$ss042_stdlib_isOSVersionAtLeastOrVariantVersiondE0yBi1_Bw_BwBwBwBwBwtF'
 EXPECTED_MACHORUN_GROUP_FIXTURE_SHA=d90194ae586e14f652435e4764d4b13d338be53b95da10cf73df4d1955895624
 EXPECTED_MACHORUN_GROUP_GOLDEN_SHA=671c6a3487332fa71c9fa398de9015b37f38f97978a0ebcdd66fdce69f5562d4
@@ -254,16 +270,23 @@ EXPECTED_MACHORUN_FTS_EXIT_SHA=9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc
 EXPECTED_MACHORUN_FTS_SOURCE_SHA=dcd6ce46373dcbbf3fd9b6b413ce4f1bd2ee561bd9cb6c1d20065a62b86d7f05
 EXPECTED_MACHORUN_FTS_SUMMARY_SHA=87a60c1363f50ecaf9ba08108fd6ab0a03cde70c14449ad8c7f7c44edb677670
 EXPECTED_MACHORUN_FTS_LIBSYSTEM_SOURCE_SHA=$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA
-EXPECTED_MACHORUN_COPYFILE_FIXTURE_SHA=e4488eaa99591657f1434b8d6e4971bae8fe3b888622b37a81ef59da6d9d1a9b
+EXPECTED_MACHORUN_STATFS_FIXTURE_SHA=61e88ded4231e581fcbec2916e148c77375c04811b0b515682509f3fe2c66919
+EXPECTED_MACHORUN_STATFS_GOLDEN_SHA=a60e1cc80da7e784a05268a1e8a5e8a895a0b89f1d6d728a8674b13b74a1871f
+EXPECTED_MACHORUN_STATFS_STDERR_SHA=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+EXPECTED_MACHORUN_STATFS_EXIT_SHA=9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa
+EXPECTED_MACHORUN_STATFS_SOURCE_SHA=d3a5e8026d10c76f3a759d1503065a29558a5a3bc94c5dbb3928350d7a03fac5
+EXPECTED_MACHORUN_STATFS_SUMMARY_SHA=452aac764d0c73cfdb5fa3974dac358447a00a6d4dcea703bf0e6dc629705db6
+EXPECTED_MACHORUN_STATFS_LIBSYSTEM_SOURCE_SHA=$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA
+EXPECTED_MACHORUN_COPYFILE_FIXTURE_SHA=d1c2bce67013ba40f389907580c7cc87a86203e651c813e2bc068f369c4e9d2a
 EXPECTED_MACHORUN_COPYFILE_GOLDEN_SHA=d467e161e746a4bebd07f0b8bba12fa68914e59b5ef345fed6fa808bdaf6bd86
 EXPECTED_MACHORUN_COPYFILE_STDERR_SHA=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 EXPECTED_MACHORUN_COPYFILE_EXIT_SHA=9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa
-EXPECTED_MACHORUN_COPYFILE_SOURCE_SHA=d5dd3d1c522d9cdc5d44bffc1708d52670d9d693ac17203fd4f3d145dceb50ff
-EXPECTED_MACHORUN_COPYFILE_SUMMARY_SHA=58bbbff5f040a8d63517a193d10f53bfdd6d2cf45f0c5135889ca91b7cb9976c
+EXPECTED_MACHORUN_COPYFILE_SOURCE_SHA=e8407a7753a447c89c2f93513f3ce06282020fff820169011f8dc643314b1c2b
+EXPECTED_MACHORUN_COPYFILE_SUMMARY_SHA=ced87f863ec09d0793d89641867a26e46219dbded8251e99dd824fa823e4efda
 EXPECTED_MACHORUN_COPYFILE_LIBSYSTEM_SOURCE_SHA=$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA
-EXPECTED_MACHORUN_QUOTA_FIXTURE_SHA=79b88f72fa2f1a844aaeae05564f2da7e305080b97422ef602a040d04f57f166
+EXPECTED_MACHORUN_QUOTA_FIXTURE_SHA=8275f9be13889cd44bf96f6442f61fb742ca8756061b0bfc285ff75d782f4d8d
 EXPECTED_MACHORUN_QUOTA_GOLDEN_SHA=13ee8b893730f6f8e9bff25be80562359006648b167d0c94c6bb9eb6ee7d2a18
-EXPECTED_MACHORUN_QUOTA_SOURCE_SHA=5b091a2842a95283bb575f01d8b6a0eaa180158b1107f61c8d4036e036848f6f
+EXPECTED_MACHORUN_QUOTA_SOURCE_SHA=2707bdd1692fb8623328bb7d663ccc83573a314168ccd39b1787b412cc839070
 EXPECTED_MACHORUN_UNAME_FIXTURE_SHA=a5f6ea4ca57c74ac1cbcf1205f36ea82eeada909b903bb66ffbf547e6281357b
 EXPECTED_MACHORUN_UNAME_GOLDEN_SHA=45a2dc5584efcb12c0f28d3ebbdd080f233453302b91177208e014a5b21163a4
 EXPECTED_MACHORUN_UNAME_SOURCE_SHA=e552d0b9959a639c09501fecfab90d70a568f8672d930481a44dcf51cafe5578
@@ -811,6 +834,8 @@ append_frontier_sources() {
             CoreTransferable) expected_count=$EXPECTED_CORETRANSFERABLE_SOURCE_COUNT ;;
             Photos) expected_count=$EXPECTED_PHOTOS_SOURCE_COUNT ;;
             PhotosUI) expected_count=$EXPECTED_PHOTOSUI_SOURCE_COUNT ;;
+            NaturalLanguage) expected_count=$EXPECTED_NATURALLANGUAGE_SOURCE_COUNT ;;
+            AuthenticationServices) expected_count=$EXPECTED_AUTHENTICATIONSERVICES_SOURCE_COUNT ;;
         esac
         [ "${#frontier_sources[@]}" -eq "$expected_count" ] \
             || die "$framework frontier source manifest cardinality drifted"
@@ -1006,6 +1031,21 @@ append_frontier_sources() {
                     "$(hash_file "$W/$relative")" >> "$output"
             done
         fi
+        if [ "$framework" = NaturalLanguage ]; then
+            frontier_inputs=(
+                full/naturallanguage/tests/NaturalLanguageHostRuntime.swift
+                full/naturallanguage/tests/IceCubesNaturalLanguageConsumers.swift
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "NaturalLanguage supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "NaturalLanguage supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
         if [ "$framework" = Compression ]; then
             frontier_inputs=(
                 full/compression/OpenCompressionBridge.c
@@ -1074,6 +1114,71 @@ append_frontier_sources() {
                     "$(hash_file "$W/$relative")" >> "$output"
             done
         fi
+        if [ "$framework" = AuthenticationServices ]; then
+            frontier_inputs=(
+                full/authenticationservices/AuthenticationServicesSwiftUI.swift
+                full/authenticationservices/authenticationservices_swiftui_guest_sources.txt
+                full/authenticationservices/SwiftUI.swiftoverlay
+                full/authenticationservices/tests/AuthenticationServicesHostRuntime.swift
+                full/authenticationservices/tests/IceCubesAuthenticationServicesConsumer.swift
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "AuthenticationServices supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "AuthenticationServices supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
+        if [ "$framework" = FoundationModels ]; then
+            frontier_inputs=(
+                full/foundationmodels/FoundationModelsMacros.swift
+                full/foundationmodels/README.md
+                full/foundationmodels/tests/FoundationModelsMacroOracle.swift
+                full/foundationmodels/tests/FoundationModelsNativeOracle.swift
+                full/foundationmodels/tests/IceCubesFoundationModelsConsumer.swift
+                full/foundationmodels/tests/foundationmodels-apple-26.1.txt
+                full/foundationmodels/tests/icecubes_foundationmodels_frontier.tsv
+                full/foundationmodels/tests/build_foundationmodels_guest.sh
+                full/foundationmodels/tests/build_foundationmodels_guest_in_container.sh
+                full/foundationmodels/tests/test_foundationmodels_frontier.py
+                full/foundationmodels/tests/test_foundationmodels_native.sh
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "FoundationModels supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "FoundationModels supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
+        if [ "$framework" = NaturalLanguage ]; then
+            frontier_inputs=(
+                full/naturallanguage/README.md
+                full/naturallanguage/tests/NaturalLanguageIceCubesOracle.swift
+                full/naturallanguage/tests/NaturalLanguageGeneralizationOracle.swift
+                full/naturallanguage/tests/naturallanguage-apple-26.1.txt
+                full/naturallanguage/tests/naturallanguage-generalization-apple-26.1.txt
+                full/naturallanguage/tests/icecubes_naturallanguage_frontier.tsv
+                full/naturallanguage/tests/build_naturallanguage_guest.sh
+                full/naturallanguage/tests/build_naturallanguage_guest_in_container.sh
+                full/naturallanguage/tests/test_naturallanguage_native.sh
+                full/naturallanguage/tests/test_naturallanguage_frontier.py
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "NaturalLanguage supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "NaturalLanguage supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
     done
     printf 'frontier-source\t33\tIOKit\t%s\t%s\n' \
         full/iokit/IOKit.c "$(hash_file "$W/full/iokit/IOKit.c")" >> "$output"
@@ -1106,9 +1211,9 @@ append_frontier_sources() {
     done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 29 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 32 ] \
     || die 'frontier framework source count drifted'
-[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 68 ] \
+[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 96 ] \
     || die 'frontier underlying input count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
@@ -1300,6 +1405,16 @@ swiftc -parse-as-library -emit-library -module-name SwiftDataMacros \
     -Xlinker -rpath -Xlinker '$ORIGIN/../../../swift/linux' \
     "$W/full/swiftdata/SwiftDataMacros.swift" -o "$STAGED_SWIFTDATA_PLUGIN"
 SWIFTDATA_PLUGIN_FLAGS=(-load-plugin-library "$STAGED_SWIFTDATA_PLUGIN")
+STAGED_FOUNDATIONMODELS_PLUGIN=$STAGE/host-tools/swift/host/plugins/libFoundationModelsMacros.so
+swiftc -parse-as-library -emit-library -module-name FoundationModelsMacros \
+    -no-toolchain-stdlib-rpath -I /usr/lib/swift/host -L /usr/lib/swift/host \
+    -Xlinker -rpath -Xlinker '$ORIGIN/..' \
+    -Xlinker -rpath -Xlinker '$ORIGIN/../../../swift/linux' \
+    "$W/full/foundationmodels/FoundationModelsMacros.swift" \
+    -o "$STAGED_FOUNDATIONMODELS_PLUGIN"
+FOUNDATIONMODELS_PLUGIN_FLAGS=(
+    -load-plugin-library "$STAGED_FOUNDATIONMODELS_PLUGIN"
+)
 STAGED_OPENUIKIT_PREVIEW_PLUGIN=$STAGE/host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so
 swiftc -parse-as-library -emit-library -module-name OpenUIKitPreviewMacros \
     -no-toolchain-stdlib-rpath -I /usr/lib/swift/host -L /usr/lib/swift/host \
@@ -1327,6 +1442,7 @@ if ldd "$STAGED_OBSERVATION_PLUGIN" | grep -Fq 'not found'; then
     die 'packaged Observation macro plugin closure is incomplete'
 fi
 for plugin in "$STAGED_FOUNDATION_PLUGIN" "$STAGED_SWIFTDATA_PLUGIN" \
+    "$STAGED_FOUNDATIONMODELS_PLUGIN" \
     "$STAGED_OPENUIKIT_PREVIEW_PLUGIN" "$STAGED_OPENSWIFTUI_PLUGIN"; do
     file "$plugin" | grep -Eq 'ELF 64-bit.*(ARM aarch64|aarch64)' \
         || die "packaged compiler plugin is not native ELF64/aarch64: $plugin"
@@ -1377,11 +1493,14 @@ mapfile -t PLUGIN_CLOSURE_PATHS < <(printf '%s\n' \
         "$(hash_file "$STAGED_FOUNDATION_PLUGIN")"
     printf 'plugin\tSwiftDataMacros\tlibrary\thost-tools/swift/host/plugins/libSwiftDataMacros.so\t%s\tPersistentModelMacro\tapp,framework,package\tserialized=no\n' \
         "$(hash_file "$STAGED_SWIFTDATA_PLUGIN")"
+    printf 'plugin\tFoundationModelsMacros\tlibrary\thost-tools/swift/host/plugins/libFoundationModelsMacros.so\t%s\tGenerableMacro,GuideMacro\tapp,framework,package\tserialized=no\n' \
+        "$(hash_file "$STAGED_FOUNDATIONMODELS_PLUGIN")"
     printf 'plugin\tOpenUIKitPreviewMacros\tlibrary\thost-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so\t%s\tUIKitPreviewMacro\tapp,framework,package\tserialized=no\n' \
         "$(hash_file "$STAGED_OPENUIKIT_PREVIEW_PLUGIN")"
     printf 'plugin\tOpenSwiftUIMacros\tlibrary\thost-tools/swift/host/plugins/libOpenSwiftUIMacros.so\t%s\tEntryMacro\tapp,framework,package\tserialized=no\n' \
         "$(hash_file "$STAGED_OPENSWIFTUI_PLUGIN")"
     for module in ObservationMacros FoundationMacros SwiftDataMacros \
+        FoundationModelsMacros \
         OpenUIKitPreviewMacros OpenSwiftUIMacros; do
         for relative in "${PLUGIN_CLOSURE_PATHS[@]}"; do
             printf 'closure\t%s\t%s\t%s\n' "$module" "$relative" \
@@ -1449,6 +1568,14 @@ SWIFTC=(swiftc -target "$TARGET" -sdk "$STAGE/sdk" -F "$STAGE/frameworks"
     -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
     -Xfrontend -enable-cross-import-overlays
     -Xfrontend -disable-implicit-string-processing-module-import
+    -Xfrontend -disable-objc-attr-requires-foundation-module)
+# Platform modules suppress the compiler's convenience Regex import so their
+# dependency inventories stay explicit. Untouched app/package consumers must
+# retain normal Swift source semantics: StatusKit uses `Regex` after importing
+# Foundation and NaturalLanguage, without an explicit _StringProcessing import.
+APP_CONSUMER_SWIFTC=(swiftc -target "$TARGET" -sdk "$STAGE/sdk"
+    -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
+    -Xfrontend -enable-cross-import-overlays
     -Xfrontend -disable-objc-attr-requires-foundation-module)
 LD=(ld64.lld-18 -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS"
     -syslibroot "$STAGE/sdk")
@@ -2461,6 +2588,55 @@ printf '%s\n' \
     'OPEN_FOUNDATION_FTS_OK abi=72,112 traversal=physical,logical,nostat children=nameonly instructions=skip,follow,again oracle=apple-exact' \
     >> "$WORK/fts-macho.log"
 
+echo '== prove translated Darwin statfs and fstatfs layouts and mount identity'
+STATFS_FIXTURE=$MACHORUN/tests/bin/statfs
+STATFS_GOLDEN=$MACHORUN/tests/expected/statfs.stdout
+STATFS_STDERR=$MACHORUN/tests/expected/statfs.stderr
+STATFS_EXIT=$MACHORUN/tests/expected/statfs.exit
+STATFS_SOURCE=$MACHORUN/tests/src/statfs.c
+STATFS_SUMMARY=$MACHORUN/tests/meta/statfs.summary.txt
+require_hash "$STATFS_FIXTURE" "$EXPECTED_MACHORUN_STATFS_FIXTURE_SHA" \
+    machorun-statfs-fixture
+require_hash "$STATFS_GOLDEN" "$EXPECTED_MACHORUN_STATFS_GOLDEN_SHA" \
+    machorun-statfs-golden
+require_hash "$STATFS_STDERR" "$EXPECTED_MACHORUN_STATFS_STDERR_SHA" \
+    machorun-statfs-stderr
+require_hash "$STATFS_EXIT" "$EXPECTED_MACHORUN_STATFS_EXIT_SHA" \
+    machorun-statfs-exit
+require_hash "$STATFS_SOURCE" "$EXPECTED_MACHORUN_STATFS_SOURCE_SHA" \
+    machorun-statfs-source
+require_hash "$STATFS_SUMMARY" "$EXPECTED_MACHORUN_STATFS_SUMMARY_SHA" \
+    machorun-statfs-summary
+require_hash "$MACHORUN/darwin/src/posix.c" \
+    "$EXPECTED_MACHORUN_STATFS_LIBSYSTEM_SOURCE_SHA" \
+    machorun-statfs-libsystem-source
+for symbol in _statfs _fstatfs '_statfs$INODE64' '_fstatfs$INODE64'; do
+    definition_count=$(llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+        "$LIBSYSTEM_REAL" \
+        | awk -v expected="$symbol" '$0 == expected { count++ } END { print count + 0 }')
+    [ "$definition_count" -eq 1 ] \
+        || die "staged libSystem $symbol definition count $definition_count, expected 1"
+done
+set +e
+LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+MACHORUN_ROOT="$RUNTIME" \
+    "$RUNTIME/machorun" "$STATFS_FIXTURE" \
+    > "$WORK/statfs-macho.stdout" 2> "$WORK/statfs-macho.stderr"
+statfs_status=$?
+set -e
+printf '%s\n' "$statfs_status" > "$WORK/statfs-macho.exit"
+cmp "$STATFS_GOLDEN" "$WORK/statfs-macho.stdout" \
+    || die 'Mach-O Darwin statfs translation differs from the Apple golden stdout'
+cmp "$STATFS_STDERR" "$WORK/statfs-macho.stderr" \
+    || die 'Mach-O Darwin statfs translation produced unexpected stderr'
+cmp "$STATFS_EXIT" "$WORK/statfs-macho.exit" \
+    || die 'Mach-O Darwin statfs translation produced the wrong exit status'
+cp "$WORK/statfs-macho.stdout" "$WORK/statfs-macho.log"
+printf '%s\n' \
+    'OPEN_FOUNDATION_STATFS_OK abi=2168 path-fd=exact mounts=root,nested flags=translated errno=darwin oracle=apple-bounded' \
+    >> "$WORK/statfs-macho.log"
+
 echo '== prove genuine Darwin copyfile and fcopyfile semantics'
 COPYFILE_FIXTURE=$MACHORUN/tests/bin/copyfile
 COPYFILE_GOLDEN=$MACHORUN/tests/expected/copyfile.stdout
@@ -2585,7 +2761,7 @@ echo '== link FoundationEssentials before its full internationalization layer'
 } > "$WORK/foundation-essentials-bindings.txt"
 for symbol in _getgrgid_r _getgrnam_r _fgetxattr _fsetxattr \
     _getxattr _listxattr _setxattr _fts_close _fts_open _fts_read _fts_set \
-    _copyfile _fcopyfile _quotactl _uname; do
+    _statfs _copyfile _fcopyfile _quotactl _uname; do
     binding_count=$(awk -v expected="$symbol" \
         '$NF == expected && $(NF - 1) == "libSystem.real" { count++ }
          END { print count + 0 }' "$WORK/foundation-essentials-bindings.txt")
@@ -2772,6 +2948,37 @@ echo '== compile the package-owned Swift IOKit overlay against portable Foundati
     -emit-module -emit-module-path "$STAGE/modules/IOKit.swiftmodule" \
     "$W/full/iokit/IOKit.swift"
 
+# UIKit only imports the Preview-facing compatibility extensions when the
+# caller supplied the legacy external Preview inputs.  Compile it before the
+# package-owned fallback DeveloperToolsSupport module is made visible so the
+# ordinary route does not accidentally acquire the executable-owned Preview
+# ABI.
+echo '== compile final Foundation-visible UIKit (optional Preview plugin explicit)'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    "${PREVIEW_FLAGS[@]}" -module-name UIKit -emit-module \
+    -emit-module-path "$STAGE/modules/UIKit.swiftmodule" \
+    -emit-object -o "$WORK/uikit.o" "$UIKIT/Sources/UIKitShim/UIKit.swift"
+
+# SwiftUI's ImageResource API now has a nominal DeveloperToolsSupport
+# dependency even when #Preview hosting is disabled.  Preserve the external
+# executable/object contract for explicit Preview builds, while making the
+# ordinary package self-hosting from the canonical post-Foundation source.
+SWIFTUI_DEVELOPER_TOOLS_SUPPORT_LINK_INPUTS=()
+if [ "$PREVIEW_ENABLED" -eq 0 ]; then
+    echo '== compile package-owned DeveloperToolsSupport for SwiftUI ImageResource'
+    "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+        -module-name DeveloperToolsSupport -emit-module \
+        -emit-module-path "$STAGE/modules/DeveloperToolsSupport.swiftmodule" \
+        -emit-object -o "$WORK/developertoolsupport-package.o" \
+        "$UIKIT/Sources/DeveloperToolsSupport/Preview.swift"
+    llvm-otool-18 -hv "$WORK/developertoolsupport-package.o" \
+        | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]OBJECT' \
+        || die 'package-owned DeveloperToolsSupport object is not ARM64 Mach-O'
+    SWIFTUI_DEVELOPER_TOOLS_SUPPORT_LINK_INPUTS+=(
+        "$WORK/developertoolsupport-package.o"
+    )
+fi
+
 echo '== compile SwiftUI against the app-facing Foundation facade'
 mapfile -d '' -t SWIFTUI_SOURCES < <(
     find "$UIKIT/Sources/SwiftUI" -maxdepth 1 -type f -name '*.swift' \
@@ -2808,12 +3015,6 @@ grep -Fq '__Key_portableCompilerPluginProbe' "$swiftui_plugin_expansions" \
 printf '%s\n' \
     'SWIFTUI_COMPILER_PLUGINS_OK preview=unnamed,named entry=environment-key transport=library scopes=app,framework,package' \
     > "$STAGE/attestation/swiftui-compiler-plugins.log"
-
-echo '== compile final Foundation-visible UIKit (optional Preview plugin explicit)'
-"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
-    "${PREVIEW_FLAGS[@]}" -module-name UIKit -emit-module \
-    -emit-module-path "$STAGE/modules/UIKit.swiftmodule" \
-    -emit-object -o "$WORK/uikit.o" "$UIKIT/Sources/UIKitShim/UIKit.swift"
 
 echo '== compile CoreImage overlay and identity-preserving QuartzCore facade'
 COREIMAGE_SOURCE_PATHS=()
@@ -2864,7 +3065,7 @@ done
     -emit-module-path "$STAGE/modules/WebKit.swiftmodule" \
     -emit-object -o "$WORK/webkit.o" "${WEBKIT_SOURCE_PATHS[@]}"
 
-echo '== compile thirty-two independent first-party framework modules'
+echo '== compile thirty-five independent first-party framework modules'
 clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -fvisibility=hidden -Wall -Wextra -Werror \
     -I "$STAGE/include/CCommonCrypto" \
@@ -2890,6 +3091,8 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         CoreTransferable) expected_framework_source_count=$EXPECTED_CORETRANSFERABLE_SOURCE_COUNT ;;
         Photos) expected_framework_source_count=$EXPECTED_PHOTOS_SOURCE_COUNT ;;
         PhotosUI) expected_framework_source_count=$EXPECTED_PHOTOSUI_SOURCE_COUNT ;;
+        NaturalLanguage) expected_framework_source_count=$EXPECTED_NATURALLANGUAGE_SOURCE_COUNT ;;
+        AuthenticationServices) expected_framework_source_count=$EXPECTED_AUTHENTICATIONSERVICES_SOURCE_COUNT ;;
     esac
     [ "${#framework_sources[@]}" -eq "$expected_framework_source_count" ] \
         || die "$framework source manifest cardinality drifted"
@@ -2907,6 +3110,9 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
             "${FOUNDATION_PLUGIN_FLAGS[@]}"
             "${SWIFTDATA_PLUGIN_FLAGS[@]}"
         )
+    fi
+    if [ "$framework" = FoundationModels ]; then
+        framework_compile_flags+=("${FOUNDATIONMODELS_PLUGIN_FLAGS[@]}")
     fi
     "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
         "${framework_compile_flags[@]}" \
@@ -2957,6 +3163,29 @@ done
 mkdir -p "$STAGE/modules/PhotosUI.swiftcrossimport"
 cp "$W/full/photosui/SwiftUI.swiftoverlay" \
     "$STAGE/modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay"
+
+echo '== compile the AuthenticationServices SwiftUI cross-import overlay'
+mapfile -t AUTHENTICATIONSERVICES_SWIFTUI_SOURCES \
+    < "$AUTHENTICATIONSERVICES_SWIFTUI_SOURCES_MANIFEST"
+[ "${#AUTHENTICATIONSERVICES_SWIFTUI_SOURCES[@]}" -eq \
+    "$EXPECTED_AUTHENTICATIONSERVICES_SWIFTUI_SOURCE_COUNT" ] \
+    || die 'AuthenticationServices SwiftUI overlay source count drifted'
+[ "${AUTHENTICATIONSERVICES_SWIFTUI_SOURCES[0]}" = \
+    full/authenticationservices/AuthenticationServicesSwiftUI.swift ] \
+    || die 'AuthenticationServices SwiftUI overlay source path drifted'
+AUTHENTICATIONSERVICES_SWIFTUI_SOURCE_PATHS=()
+for relative in "${AUTHENTICATIONSERVICES_SWIFTUI_SOURCES[@]}"; do
+    AUTHENTICATIONSERVICES_SWIFTUI_SOURCE_PATHS+=("$W/$relative")
+done
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name _AuthenticationServices_SwiftUI -emit-module \
+    -emit-module-path \
+        "$STAGE/modules/_AuthenticationServices_SwiftUI.swiftmodule" \
+    -emit-object -o "$WORK/authenticationservices-swiftui.o" \
+    "${AUTHENTICATIONSERVICES_SWIFTUI_SOURCE_PATHS[@]}"
+mkdir -p "$STAGE/modules/AuthenticationServices.swiftcrossimport"
+cp "$W/full/authenticationservices/SwiftUI.swiftoverlay" \
+    "$STAGE/modules/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay"
 network_string_processing_undefineds=$(llvm-nm-18 -u -j "$WORK/network.o" \
     | awk 'index($0, "_StringProcessing") { count++ } END { print count + 0 }')
 [ "$network_string_processing_undefineds" -eq 0 ] \
@@ -2981,7 +3210,7 @@ echo '== prove SwiftUI publicly reexports full Foundation, Combine and Dispatch'
     -module-name SwiftUIFoundationReexportProbe -typecheck \
     "$W/full/frameworks/SwiftUIFoundationReexportProbe.swift"
 
-echo '== link fifty-two reusable platform dylibs (fifty frameworks, ICU, and zlib)'
+echo '== link fifty-six reusable platform dylibs (fifty-four frameworks, ICU, and zlib)'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libz.dylib -rpath @loader_path \
     -o "$STAGE/lib/libz.dylib" \
@@ -3123,6 +3352,7 @@ done
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
     "${PREVIEW_EXECUTABLE_RESOLUTION_FLAGS[@]}" \
     -o "$STAGE/lib/libSwiftUI.dylib" "$WORK/swiftui.o" \
+    "${SWIFTUI_DEVELOPER_TOOLS_SUPPORT_LINK_INPUTS[@]}" \
     "${COMMON_LINK[@]}" -lFoundation -lFoundationEssentials -lOpenUIKit \
     -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols \
     "$SWIFTUI_RUNTIME_LINK_FLAG" "$OBSERVATION_DYLIB" \
@@ -3607,6 +3837,33 @@ printf '%s\tphotosui=%s\tswiftui=%s\tcoretransferable=%s\tapple-self-load=0\n' \
     "$photosui_overlay_coretransferable_load_count" \
     >> "$FIRST_PARTY_LOAD_AUDIT"
 
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name @rpath/lib_AuthenticationServices_SwiftUI.dylib \
+    -rpath @loader_path \
+    -o "$STAGE/lib/lib_AuthenticationServices_SwiftUI.dylib" \
+    "$WORK/authenticationservices-swiftui.o" "${COMMON_LINK[@]}" \
+    -lAuthenticationServices -lSwiftUI -lFoundation -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
+authenticationservices_overlay_base_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/lib_AuthenticationServices_SwiftUI.dylib" \
+    | awk '$1 == "@rpath/libAuthenticationServices.dylib" { count++ } END { print count + 0 }')
+authenticationservices_overlay_swiftui_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/lib_AuthenticationServices_SwiftUI.dylib" \
+    | awk '$1 == "@rpath/libSwiftUI.dylib" { count++ } END { print count + 0 }')
+[ "$authenticationservices_overlay_base_load_count" -eq 1 ] \
+    || die "AuthenticationServices overlay base load count $authenticationservices_overlay_base_load_count, expected 1"
+[ "$authenticationservices_overlay_swiftui_load_count" -eq 1 ] \
+    || die "AuthenticationServices overlay SwiftUI load count $authenticationservices_overlay_swiftui_load_count, expected 1"
+if llvm-otool-18 -L "$STAGE/lib/lib_AuthenticationServices_SwiftUI.dylib" \
+    | grep -Eq '/System/Library/Frameworks/(AuthenticationServices|_AuthenticationServices_SwiftUI)\.framework/'; then
+    die 'portable AuthenticationServices overlay loads an Apple AuthenticationServices framework'
+fi
+printf '%s\tauthenticationservices=%s\tswiftui=%s\tapple-self-load=0\n' \
+    _AuthenticationServices_SwiftUI \
+    "$authenticationservices_overlay_base_load_count" \
+    "$authenticationservices_overlay_swiftui_load_count" \
+    >> "$FIRST_PARTY_LOAD_AUDIT"
+
 swiftdata_swiftui_load_count=$(llvm-otool-18 -L \
     "$STAGE/lib/libSwiftData.dylib" \
     | awk '$1 == "@rpath/libSwiftUI.dylib" { count++ } END { print count + 0 }')
@@ -3714,6 +3971,98 @@ grep -Fxq \
     'SWIFTDATA_GUEST_MACHO_OK macro=attached predicate=compound sort=reverse mutation=insert-delete query=live durable=fail-closed' \
     "$STAGE/attestation/swiftdata-runtime.log" \
     || die 'standalone SwiftData runtime marker is missing'
+
+echo '== compile/link/run the standalone FoundationModels macro and service gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    "${FOUNDATIONMODELS_PLUGIN_FLAGS[@]}" -typecheck \
+    -dump-macro-expansions \
+    "$W/full/foundationmodels/tests/IceCubesFoundationModelsConsumer.swift" \
+    > "$STAGE/attestation/foundationmodels-macro-expansions.log" 2>&1
+for expansion in \
+    'static var generationSchema' \
+    'var generatedContent' \
+    'struct PartiallyGenerated' \
+    'extension Tags: FoundationModels.Generable' \
+    'guides: [.count(5)]'; do
+    grep -Fq "$expansion" \
+        "$STAGE/attestation/foundationmodels-macro-expansions.log" \
+        || die "FoundationModels macro expansion is missing: $expansion"
+done
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    "${FOUNDATIONMODELS_PLUGIN_FLAGS[@]}" \
+    -module-name FoundationModelsGuestRuntime -emit-object \
+    -o "$WORK/foundationmodels-guest-runtime.o" \
+    "$W/full/foundationmodels/tests/IceCubesFoundationModelsConsumer.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/FoundationModelsGuestRuntime" \
+    "$WORK/foundationmodels-guest-runtime.o" "${COMMON_LINK[@]}" \
+    -lFoundationModels -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+llvm-otool-18 -hv "$STAGE/probe/FoundationModelsGuestRuntime" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+    || die 'FoundationModels runtime gate is not an ARM64 Mach-O executable'
+foundationmodels_gate_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/FoundationModelsGuestRuntime" \
+    | awk '$1 == "@rpath/libFoundationModels.dylib" { count++ } END { print count + 0 }')
+[ "$foundationmodels_gate_load_count" -eq 1 ] \
+    || die "FoundationModels gate load count $foundationmodels_gate_load_count, expected 1"
+cp "$W/full/foundationmodels/tests/foundationmodels-apple-26.1.txt" \
+    "$STAGE/attestation/foundationmodels-apple-26.1.txt"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/FoundationModelsGuestRuntime
+) | tee "$STAGE/attestation/foundationmodels-runtime.log"
+grep -Fxq \
+    'FOUNDATIONMODELS_GUEST_MACHO_OK macro=generable guide=count generated=roundtrip direct=fail-closed stream=fail-closed available=false' \
+    "$STAGE/attestation/foundationmodels-runtime.log" \
+    || die 'standalone FoundationModels runtime marker is missing'
+head -n 4 "$STAGE/attestation/foundationmodels-runtime.log" \
+    > "$WORK/foundationmodels-apple-comparable.txt"
+cmp "$WORK/foundationmodels-apple-comparable.txt" \
+    "$STAGE/attestation/foundationmodels-apple-26.1.txt" \
+    || die 'FoundationModels generated-content output differs from Apple 26.1'
+
+echo '== compile/link/run the standalone NaturalLanguage Apple-differential gate'
+"${SWIFTC[@]}" "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name NaturalLanguageGeneralizationRuntime -emit-object \
+    -o "$WORK/naturallanguage-generalization-runtime.o" \
+    "$W/full/naturallanguage/tests/NaturalLanguageGeneralizationOracle.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/NaturalLanguageGeneralizationRuntime" \
+    "$WORK/naturallanguage-generalization-runtime.o" "${COMMON_LINK[@]}" \
+    -lNaturalLanguage -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+llvm-otool-18 -hv "$STAGE/probe/NaturalLanguageGeneralizationRuntime" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+    || die 'NaturalLanguage generalization gate is not an ARM64 Mach-O executable'
+naturallanguage_gate_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/NaturalLanguageGeneralizationRuntime" \
+    | awk '$1 == "@rpath/libNaturalLanguage.dylib" { count++ } END { print count + 0 }')
+[ "$naturallanguage_gate_load_count" -eq 1 ] \
+    || die "NaturalLanguage gate load count $naturallanguage_gate_load_count, expected 1"
+cp "$W/full/naturallanguage/tests/naturallanguage-generalization-apple-26.1.txt" \
+    "$STAGE/attestation/naturallanguage-generalization-apple-26.1.txt"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/NaturalLanguageGeneralizationRuntime
+) | tee "$STAGE/attestation/naturallanguage-generalization-runtime.log"
+cmp "$STAGE/attestation/naturallanguage-generalization-runtime.log" \
+    "$STAGE/attestation/naturallanguage-generalization-apple-26.1.txt" \
+    || die 'NaturalLanguage generalization output differs from Apple 26.1'
+naturallanguage_generalization_rows=$(wc -l \
+    < "$STAGE/attestation/naturallanguage-generalization-runtime.log" \
+    | tr -d '[:space:]')
+[ "$naturallanguage_generalization_rows" -eq 29 ] \
+    || die "NaturalLanguage generalization row count $naturallanguage_generalization_rows, expected 29"
+echo 'NATURALLANGUAGE_GUEST_MACHO_OK classifier=script,trigram hints=real constraints=real apple-differential=29/29'
 
 echo '== compile/link/run the standalone UserNotifications service gate'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
@@ -4190,6 +4539,86 @@ cmp "$STAGE/attestation/coretext-font-manager-runtime.log" \
     "$STAGE/attestation/coretext-font-manager-apple.txt" \
     || die 'CoreText font-manager guest output differs from Apple'
 
+echo '== compile/link/run the standalone NaturalLanguage classifier gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name NaturalLanguageGuestRuntime -emit-object \
+    -o "$WORK/naturallanguage-guest-runtime.o" \
+    "$W/full/naturallanguage/tests/NaturalLanguageHostRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/NaturalLanguageGuestRuntime" \
+    "$WORK/naturallanguage-guest-runtime.o" "${COMMON_LINK[@]}" \
+    -lNaturalLanguage -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+naturallanguage_gate_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/NaturalLanguageGuestRuntime" \
+    | awk '$1 == "@rpath/libNaturalLanguage.dylib" { count++ } END { print count + 0 }')
+[ "$naturallanguage_gate_load_count" -eq 1 ] \
+    || die "NaturalLanguage gate load count $naturallanguage_gate_load_count, expected 1"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/NaturalLanguageGuestRuntime
+) | tee "$STAGE/attestation/naturallanguage-runtime.log"
+grep -Fxq \
+    'NATURALLANGUAGE_HOST_OK constants=58 raw-tags=extensible state=replace,empty-noop,reset max=zero-unbounded corpus=en,de,fr,es,ja,zh-Hans,zh-Hant,ar confidence=conservative constraints=closed hints=prior' \
+    "$STAGE/attestation/naturallanguage-runtime.log" \
+    || die 'standalone NaturalLanguage runtime marker is missing'
+
+echo '== typecheck untouched-consumer-shaped NaturalLanguage clients'
+"${APP_CONSUMER_SWIFTC[@]}" -parse-as-library \
+    "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name IceCubesNaturalLanguageConsumers -typecheck \
+    "$W/full/naturallanguage/tests/IceCubesNaturalLanguageConsumers.swift"
+
+echo '== compile/link/run the standalone AuthenticationServices browser gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name AuthenticationServicesGuestRuntime -emit-object \
+    -o "$WORK/authenticationservices-guest-runtime.o" \
+    "$W/full/authenticationservices/tests/AuthenticationServicesHostRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header \
+    "${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
+    -o "$STAGE/probe/AuthenticationServicesGuestRuntime" \
+    "$WORK/authenticationservices-guest-runtime.o" \
+    "${PREVIEW_STANDALONE_LINK_INPUTS[@]}" "${COMMON_LINK[@]}" \
+    -l_AuthenticationServices_SwiftUI -lAuthenticationServices \
+    -lSwiftUI -lUIKit -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics \
+    "$SWIFTUI_RUNTIME_LINK_FLAG" \
+    "${PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS[@]}" \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+authenticationservices_gate_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/AuthenticationServicesGuestRuntime" \
+    | awk '$1 == "@rpath/lib_AuthenticationServices_SwiftUI.dylib" { count++ } END { print count + 0 }')
+[ "$authenticationservices_gate_load_count" -eq 1 ] \
+    || die "AuthenticationServices gate overlay load count $authenticationservices_gate_load_count, expected 1"
+authenticationservices_preview_export_count=$(nm_symbol_count --defined-only \
+    "$STAGE/probe/AuthenticationServicesGuestRuntime" \
+    "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+[ "$authenticationservices_preview_export_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "AuthenticationServices gate Preview export count $authenticationservices_preview_export_count, expected $PREVIEW_ENABLED"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/AuthenticationServicesGuestRuntime
+) | tee "$STAGE/attestation/authenticationservices-runtime.log"
+grep -Fxq \
+    'AUTHENTICATIONSERVICES_HOST_OK environment=default startup=locked browser=host-driven callback=validated cancellation=once unavailable=fail-closed' \
+    "$STAGE/attestation/authenticationservices-runtime.log" \
+    || die 'standalone AuthenticationServices runtime marker is missing'
+
+echo '== typecheck the IceCubes AuthenticationServices cross-import consumer'
+"${APP_CONSUMER_SWIFTC[@]}" -parse-as-library \
+    "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name IceCubesAuthenticationServicesConsumer -typecheck \
+    "$W/full/authenticationservices/tests/IceCubesAuthenticationServicesConsumer.swift"
+
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
@@ -4265,7 +4694,8 @@ tail -n 1 "$STAGE/attestation/iokit-interface-runtime.log" \
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${OBSERVATION_PLUGIN_FLAGS[@]}" "${FOUNDATION_PLUGIN_FLAGS[@]}" \
-    "${SWIFTDATA_PLUGIN_FLAGS[@]}" "${PREVIEW_FLAGS[@]}" \
+    "${SWIFTDATA_PLUGIN_FLAGS[@]}" "${FOUNDATIONMODELS_PLUGIN_FLAGS[@]}" \
+    "${PREVIEW_FLAGS[@]}" \
     "${OPENSWIFTUI_PLUGIN_FLAGS[@]}" \
     -module-name CoreGuestPackageProbe \
     -emit-object -o "$WORK/core-probe.o" \
@@ -4303,16 +4733,20 @@ fi
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO \
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit \
     -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData \
+    -lFoundationModels -lNaturalLanguage \
     -lUserNotifications -lQuickLook -l_QuickLook_SwiftUI \
     -lCoreMedia -lAVFoundation -lAVKit -lCharts \
     -lCoreTransferable -lPhotos -lPhotosUI -l_PhotosUI_SwiftUI \
     -lAccelerate -lCompression -lCoreText -lAdServices -lz \
+    -lAuthenticationServices -l_AuthenticationServices_SwiftUI \
     "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "$OBSERVATION_DYLIB"
 
 for dylib in FoundationEssentials FoundationInternationalization \
     OpenCoreGraphics OpenUIKit OpenCombine Dispatch \
-    Combine Symbols SwiftUI _QuickLook_SwiftUI _PhotosUI_SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
+    Combine Symbols SwiftUI _QuickLook_SwiftUI _PhotosUI_SwiftUI \
+    _AuthenticationServices_SwiftUI Foundation UIKit CoreImage QuartzCore \
+    Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     llvm-otool-18 -hv "$STAGE/lib/lib$dylib.dylib" \
         | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
@@ -4380,7 +4814,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-32 zlib=gzip-host-v1 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-35 zlib=gzip-host-v1 foundationmodels=generated-content,fail-closed naturallanguage=classifier,apple-29 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven naturallanguage=deterministic,confidence-gated authenticationservices=host-driven,fail-closed webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -4561,11 +4995,11 @@ COMPILE_ARGUMENTS=(
     -target "$TARGET" -sdk sdk -runtime-compatibility-version none
     -F frameworks
     -Xfrontend -enable-cross-import-overlays
-    -Xfrontend -disable-implicit-string-processing-module-import
     -Xfrontend -disable-objc-attr-requires-foundation-module
     -load-plugin-library host-tools/swift/host/plugins/libObservationMacros.so
     -load-plugin-library host-tools/swift/host/plugins/libFoundationMacros.so
     -load-plugin-library host-tools/swift/host/plugins/libSwiftDataMacros.so
+    -load-plugin-library host-tools/swift/host/plugins/libFoundationModelsMacros.so
     -load-plugin-library host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so
     -load-plugin-library host-tools/swift/host/plugins/libOpenSwiftUIMacros.so
     -I modules
@@ -4609,15 +5043,18 @@ LINK_ARGUMENTS=(
     guest-root/darwin/usr/lib/libSystem.B.dylib
     -lWebKit -lCoreImage -lQuartzCore -lDispatch -lUIKit -lFoundation
     -lFoundationInternationalization -lFoundationEssentials -lSwiftUI -lSymbols
-    -l_QuickLook_SwiftUI -l_PhotosUI_SwiftUI
+    -l_QuickLook_SwiftUI -l_PhotosUI_SwiftUI \
+    -l_AuthenticationServices_SwiftUI
     -lIntentsUI -lIntents -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit
     -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData
+    -lFoundationModels
     -lUserNotifications -lQuickLook -lCoreMedia -lAVFoundation -lAVKit -lCharts
     -lCoreTransferable -lPhotos -lPhotosUI -lAccelerate -lCompression -lCoreText
     -lAdServices -lz
+    -lNaturalLanguage -lAuthenticationServices
 )
 printf '%s\0' "${COMPILE_ARGUMENTS[@]}" > "$STAGE/compile-flags.rsp"
 printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"
@@ -4685,6 +5122,9 @@ cp "$WORK/xattr-macho.log" \
 cp "$FTS_GOLDEN" "$STAGE/attestation/fts-apple.txt"
 cp "$FTS_SUMMARY" "$STAGE/attestation/fts-apple-summary.txt"
 cp "$WORK/fts-macho.log" "$STAGE/attestation/fts-macho.log"
+cp "$STATFS_GOLDEN" "$STAGE/attestation/statfs-apple.txt"
+cp "$STATFS_SUMMARY" "$STAGE/attestation/statfs-apple-summary.txt"
+cp "$WORK/statfs-macho.log" "$STAGE/attestation/statfs-macho.log"
 cp "$COPYFILE_GOLDEN" "$STAGE/attestation/copyfile-apple.txt"
 cp "$COPYFILE_SUMMARY" "$STAGE/attestation/copyfile-apple-summary.txt"
 cp "$WORK/copyfile-macho.log" "$STAGE/attestation/copyfile-macho.log"
@@ -4739,6 +5179,14 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$EXPECTED_MACHORUN_FTS_EXIT_SHA" \
         "$EXPECTED_MACHORUN_FTS_SOURCE_SHA" \
         "$EXPECTED_MACHORUN_FTS_SUMMARY_SHA"
+    printf 'FoundationEssentials-statfs\tlibSystem-source=%s\tfixture=%s\tgolden=%s\tstderr=%s\texit=%s\tapple-source=%s\tapple-summary=%s\n' \
+        "$EXPECTED_MACHORUN_STATFS_LIBSYSTEM_SOURCE_SHA" \
+        "$EXPECTED_MACHORUN_STATFS_FIXTURE_SHA" \
+        "$EXPECTED_MACHORUN_STATFS_GOLDEN_SHA" \
+        "$EXPECTED_MACHORUN_STATFS_STDERR_SHA" \
+        "$EXPECTED_MACHORUN_STATFS_EXIT_SHA" \
+        "$EXPECTED_MACHORUN_STATFS_SOURCE_SHA" \
+        "$EXPECTED_MACHORUN_STATFS_SUMMARY_SHA"
     printf 'FoundationEssentials-copyfile\tlibSystem-source=%s\tfixture=%s\tgolden=%s\tstderr=%s\texit=%s\tapple-source=%s\tapple-summary=%s\n' \
         "$EXPECTED_MACHORUN_COPYFILE_LIBSYSTEM_SOURCE_SHA" \
         "$EXPECTED_MACHORUN_COPYFILE_FIXTURE_SHA" \
@@ -4762,10 +5210,11 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$EXPECTED_OBSERVATION_UPSTREAM_COMMIT" \
         "$(hash_file "$OBSERVATION_SOURCES_MANIFEST")" \
         "$EXPECTED_OBSERVATION_PLUGIN_SHA" "$OBSERVATION_TOOLCHAIN"
-    printf 'compiler-plugins\tObservationMacros=%s\tFoundationMacros=%s\tSwiftDataMacros=%s\tOpenUIKitPreviewMacros=%s\tOpenSwiftUIMacros=%s\tmanifest=%s\n' \
+    printf 'compiler-plugins\tObservationMacros=%s\tFoundationMacros=%s\tSwiftDataMacros=%s\tFoundationModelsMacros=%s\tOpenUIKitPreviewMacros=%s\tOpenSwiftUIMacros=%s\tmanifest=%s\n' \
         "$(hash_file "$STAGED_OBSERVATION_PLUGIN")" \
         "$(hash_file "$STAGED_FOUNDATION_PLUGIN")" \
         "$(hash_file "$STAGED_SWIFTDATA_PLUGIN")" \
+        "$(hash_file "$STAGED_FOUNDATIONMODELS_PLUGIN")" \
         "$(hash_file "$STAGED_OPENUIKIT_PREVIEW_PLUGIN")" \
         "$(hash_file "$STAGED_OPENSWIFTUI_PLUGIN")" \
         "$(hash_file "$STAGE/attestation/compiler-plugins.tsv")"
@@ -4802,7 +5251,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'foundation-byte-count\toracle=%s\tapple-golden=%s\trows=86\n' \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_ORACLE")" \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_GOLDEN")"
-    printf 'frontier-frameworks\tframeworks=26\tsources=29\tinputs=68\n'
+    printf 'frontier-frameworks\tframeworks=28\tsources=32\tinputs=96\n'
     printf 'quicklook-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'photosui-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
@@ -4884,7 +5333,9 @@ record_module_family() {
 }
 for framework in FoundationEssentials FoundationInternationalization \
     OpenCoreGraphics OpenUIKit OpenCombine Dispatch \
-    Combine Symbols SwiftUI _QuickLook_SwiftUI _PhotosUI_SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
+    Combine Symbols SwiftUI _QuickLook_SwiftUI _PhotosUI_SwiftUI \
+    _AuthenticationServices_SwiftUI Foundation UIKit CoreImage QuartzCore \
+    Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     record_module_family framework "$framework"
     record_artifact framework "$framework" dylib "lib/lib$framework.dylib"
@@ -4893,6 +5344,8 @@ record_artifact module-metadata QuickLook cross-import-overlay \
     modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay
 record_artifact module-metadata PhotosUI cross-import-overlay \
     modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay
+record_artifact module-metadata AuthenticationServices cross-import-overlay \
+    modules/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay
 record_module_family framework Observation
 record_artifact runtime Observation dylib \
     guest-root/darwin/usr/lib/swift/libswiftObservation.dylib
@@ -4902,6 +5355,8 @@ record_artifact host-tool FoundationMacros plugin \
     host-tools/swift/host/plugins/libFoundationMacros.so
 record_artifact host-tool SwiftDataMacros plugin \
     host-tools/swift/host/plugins/libSwiftDataMacros.so
+record_artifact host-tool FoundationModelsMacros plugin \
+    host-tools/swift/host/plugins/libFoundationModelsMacros.so
 record_artifact host-tool OpenUIKitPreviewMacros plugin \
     host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so
 record_artifact host-tool OpenSwiftUIMacros plugin \
@@ -4954,12 +5409,11 @@ record_artifact include COpenFoundationCore opaque-header \
     include/COpenFoundationCore/OpenFoundationCFError.h
 record_artifact include COpenFoundationCore module-map \
     include/COpenFoundationCore/module.modulemap
-for dependency in InternalCollectionsUtilities OrderedCollections _RopeModule os; do
+for dependency in InternalCollectionsUtilities OrderedCollections _RopeModule os \
+    DeveloperToolsSupport; do
     record_module_family module-dependency "$dependency"
 done
 if [ "$PREVIEW_ENABLED" -eq 1 ]; then
-    record_artifact module-dependency DeveloperToolsSupport swiftmodule \
-        modules/DeveloperToolsSupport.swiftmodule
     record_artifact object DeveloperToolsSupport object \
         objects/developertoolsupport.o
 fi
@@ -5010,6 +5464,10 @@ record_artifact probe CoreGuestPackageProbe executable probe/CoreGuestPackagePro
 record_artifact probe OSLogGuestRuntime executable probe/OSLogGuestRuntime
 record_artifact probe SwiftDataGuestRuntime executable \
     probe/SwiftDataGuestRuntime
+record_artifact probe FoundationModelsGuestRuntime executable \
+    probe/FoundationModelsGuestRuntime
+record_artifact probe NaturalLanguageGeneralizationRuntime executable \
+    probe/NaturalLanguageGeneralizationRuntime
 record_artifact probe UserNotificationsGuestRuntime executable \
     probe/UserNotificationsGuestRuntime
 record_artifact probe QuickLookGuestRuntime executable \
@@ -5043,6 +5501,10 @@ record_artifact probe ZlibGzipOracle executable probe/ZlibGzipOracle
 record_artifact probe IOKitGuestRuntime executable probe/IOKitGuestRuntime
 record_artifact probe IOKitInterfaceOracle executable \
     probe/IOKitInterfaceOracle
+record_artifact probe NaturalLanguageGuestRuntime executable \
+    probe/NaturalLanguageGuestRuntime
+record_artifact probe AuthenticationServicesGuestRuntime executable \
+    probe/AuthenticationServicesGuestRuntime
 record_artifact probe DispatchMachORuntime executable \
     probe/DispatchMachORuntime
 record_artifact probe SwiftUIFoundationReexportProbe executable \
@@ -5059,6 +5521,16 @@ record_artifact attestation OSLog link-audit \
     attestation/oslog-standalone-link.tsv
 record_artifact attestation SwiftData runtime-log \
     attestation/swiftdata-runtime.log
+record_artifact attestation FoundationModels runtime-log \
+    attestation/foundationmodels-runtime.log
+record_artifact attestation FoundationModels macro-expansions \
+    attestation/foundationmodels-macro-expansions.log
+record_artifact attestation FoundationModels apple-golden \
+    attestation/foundationmodels-apple-26.1.txt
+record_artifact attestation NaturalLanguage runtime-log \
+    attestation/naturallanguage-generalization-runtime.log
+record_artifact attestation NaturalLanguage apple-golden \
+    attestation/naturallanguage-generalization-apple-26.1.txt
 record_artifact attestation UserNotifications runtime-log \
     attestation/usernotifications-runtime.log
 record_artifact attestation QuickLook runtime-log \
@@ -5129,6 +5601,10 @@ record_artifact attestation SwiftIOKit host-test-log \
 record_artifact attestation IOKit runtime-log attestation/iokit-runtime.log
 record_artifact attestation IOKit portable-interface-log \
     attestation/iokit-interface-runtime.log
+record_artifact attestation NaturalLanguage runtime-log \
+    attestation/naturallanguage-runtime.log
+record_artifact attestation AuthenticationServices runtime-log \
+    attestation/authenticationservices-runtime.log
 record_artifact attestation dispatch host \
     attestation/open-dispatch-host.tsv
 record_artifact attestation dispatch host-test-log \
@@ -5186,6 +5662,12 @@ record_artifact attestation FoundationEssentials fts-apple-binary-summary \
     attestation/fts-apple-summary.txt
 record_artifact attestation FoundationEssentials fts-runtime-semantics \
     attestation/fts-macho.log
+record_artifact attestation FoundationEssentials statfs-apple-golden \
+    attestation/statfs-apple.txt
+record_artifact attestation FoundationEssentials statfs-apple-binary-summary \
+    attestation/statfs-apple-summary.txt
+record_artifact attestation FoundationEssentials statfs-runtime-semantics \
+    attestation/statfs-macho.log
 record_artifact attestation FoundationEssentials copyfile-apple-golden \
     attestation/copyfile-apple.txt
 record_artifact attestation FoundationEssentials copyfile-apple-binary-summary \
