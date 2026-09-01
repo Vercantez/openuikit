@@ -1,0 +1,17 @@
+english=en
+french=fr
+spanish=es
+german=de
+italian=it
+portuguese=pt
+japanese=ja
+chinese=zh-Hans
+russian=ru
+decorated-english=en
+short=nil
+symbols=nil
+direct=en
+incremental=en
+reset=fr
+constrained=es
+hinted=en
