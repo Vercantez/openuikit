@@ -273,6 +273,7 @@ copy_module os "$FULL/foundation/os"
 
 SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS" -I "$APPLE_SWIFT_USER_OVERLAYS"
     -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
+    -Xfrontend -enable-cross-import-overlays
     -Xfrontend -disable-implicit-string-processing-module-import
     -Xfrontend -disable-objc-attr-requires-foundation-module)
 CFLAGS=(-Xcc -I"$INCLUDE/CPortableIO" -Xcc -I"$INCLUDE/CSTBTrueType"

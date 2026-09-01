@@ -44,6 +44,9 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn('PLATFORM=ios-simulator', self.builder)
         self.assertIn('SDK_VERSION=26.1', self.builder)
         self.assertIn('-framework SwiftUI -framework UIKit', self.builder)
+        self.assertEqual(
+            self.builder.count("-Xfrontend -enable-cross-import-overlays"), 1
+        )
 
     def test_full_foundation_precedes_final_uikit_and_swiftui(self) -> None:
         foundation = self.builder.index("32-source public Foundation facade")

@@ -473,6 +473,7 @@ def _compile_arguments() -> list[str]:
         "-I", "apple-overlays",
         "-F", "sdk/System/Library/Frameworks",
         "-runtime-compatibility-version", "none",
+        "-Xfrontend", "-enable-cross-import-overlays",
         "-Xfrontend", "-disable-implicit-string-processing-module-import",
         "-Xfrontend", "-disable-objc-attr-requires-foundation-module",
         "-load-plugin-library", "host-tools/swift/host/plugins/libObservationMacros.so",

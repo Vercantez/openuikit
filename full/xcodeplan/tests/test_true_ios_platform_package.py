@@ -376,6 +376,10 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         self.assertEqual(metadata["modules"], list(MODULES))
         self.assertIn("sdk", metadata["swift_compile_arguments"])
         self.assertIn("-framework", metadata["executable_link_arguments"])
+        self.assertEqual(
+            metadata["swift_compile_arguments"].count("-enable-cross-import-overlays"),
+            1,
+        )
         self.assertEqual(metadata["paths"]["resources"], "resources/OpenUIKit")
         rooted = platform_package.rooted_compile_arguments(
             root, metadata["swift_compile_arguments"]
