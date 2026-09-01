@@ -1,6 +1,8 @@
 import Foundation
 
-open class GKComponent: NSObject, NSCopying {
+open class GKComponent: NSObject, NSCopying, NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
     public weak var entity: GKEntity?
 
     public required override init() {
@@ -8,8 +10,12 @@ open class GKComponent: NSObject, NSCopying {
     }
 
     public required init?(coder: NSCoder) {
+        guard GKLinuxArchive.hasMarker(coder) else { return nil }
         super.init()
-        return nil
+    }
+
+    open func encode(with coder: NSCoder) {
+        GKLinuxArchive.encodeMarker(coder)
     }
 
     open func copy(with zone: NSZone? = nil) -> Any {
@@ -23,7 +29,9 @@ open class GKComponent: NSObject, NSCopying {
     open func update(deltaTime seconds: TimeInterval) {}
 }
 
-open class GKEntity: NSObject, NSCopying {
+open class GKEntity: NSObject, NSCopying, NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
     private var storage: [GKComponent] = []
 
     public var components: [GKComponent] { storage }
@@ -33,8 +41,22 @@ open class GKEntity: NSObject, NSCopying {
     }
 
     public required init?(coder: NSCoder) {
+        guard GKLinuxArchive.hasMarker(coder) else { return nil }
         super.init()
-        return nil
+        let decoded = GKLinuxArchive.decodeObjectArray(
+            coder,
+            key: GKLinuxArchive.componentsKey,
+            classes: [GKComponent.self]
+        ) as [GKComponent]?
+        guard let decoded else { return nil }
+        for component in decoded {
+            addComponent(component)
+        }
+    }
+
+    open func encode(with coder: NSCoder) {
+        GKLinuxArchive.encodeMarker(coder)
+        coder.encode(storage as NSArray, forKey: GKLinuxArchive.componentsKey)
     }
 
     public func copy(with zone: NSZone? = nil) -> Any {
@@ -211,7 +233,9 @@ open class GKStateMachine: NSObject {
 
 public protocol GKSceneRootNodeType: NSObjectProtocol {}
 
-open class GKScene: NSObject, NSCopying {
+open class GKScene: NSObject, NSCopying, NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
     private var entityStorage: [GKEntity] = []
     private var graphStorage: [String: GKGraph] = [:]
 
@@ -224,8 +248,37 @@ open class GKScene: NSObject, NSCopying {
     }
 
     public required init?(coder: NSCoder) {
+        guard GKLinuxArchive.hasMarker(coder) else { return nil }
         super.init()
-        return nil
+        let decodedEntities = GKLinuxArchive.decodeObjectArray(
+            coder,
+            key: GKLinuxArchive.entitiesKey,
+            classes: [GKEntity.self, GKComponent.self]
+        ) as [GKEntity]?
+        guard let decodedEntities else { return nil }
+        entityStorage = decodedEntities
+        let names = coder.decodeObject(of: [NSArray.self, NSString.self], forKey: GKLinuxArchive.graphNamesKey) as? [NSString]
+        let decodedGraphs = GKLinuxArchive.decodeObjectArray(
+            coder,
+            key: GKLinuxArchive.graphsKey,
+            classes: [GKGraph.self, GKGraphNode.self, GKGraphNode2D.self, GKGraphNode3D.self, GKGridGraphNode.self]
+        ) as [GKGraph]?
+        if let names, let decodedGraphs, names.count == decodedGraphs.count {
+            for (name, graph) in zip(names, decodedGraphs) {
+                graphStorage[name as String] = graph
+            }
+        } else if names != nil || decodedGraphs != nil {
+            return nil
+        }
+    }
+
+    open func encode(with coder: NSCoder) {
+        GKLinuxArchive.encodeMarker(coder)
+        coder.encode(entityStorage as NSArray, forKey: GKLinuxArchive.entitiesKey)
+        let names = graphStorage.keys.sorted().map { $0 as NSString }
+        let graphs = names.compactMap { graphStorage[$0 as String] }
+        coder.encode(names as NSArray, forKey: GKLinuxArchive.graphNamesKey)
+        coder.encode(graphs as NSArray, forKey: GKLinuxArchive.graphsKey)
     }
 
     public func copy(with zone: NSZone? = nil) -> Any {
@@ -235,7 +288,11 @@ open class GKScene: NSObject, NSCopying {
                 copy.entityStorage.append(cloned)
             }
         }
-        copy.graphStorage = graphStorage
+        for (name, graph) in graphStorage {
+            if let cloned = graph.copy() as? GKGraph {
+                copy.graphStorage[name] = cloned
+            }
+        }
         copy.rootNode = rootNode
         return copy
     }

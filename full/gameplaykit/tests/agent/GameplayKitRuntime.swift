@@ -38,6 +38,10 @@ final class HealthComponent: GKComponent {
         self.value = value
     }
 
+    required init() {
+        super.init()
+    }
+
     override func didAddToEntity() {
         added += 1
     }
@@ -48,6 +52,16 @@ final class HealthComponent: GKComponent {
 
     override func copy(with zone: NSZone? = nil) -> Any {
         HealthComponent(value: value)
+    }
+
+    override func encode(with coder: NSCoder) {
+        super.encode(with: coder)
+        coder.encode(Int64(value), forKey: "health.value")
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        value = Int(coder.decodeInt64(forKey: "health.value"))
     }
 }
 
@@ -343,9 +357,70 @@ func testCodingFailClosed() throws {
         try expect(GKPolygonObstacle(coder: coder) == nil, "polygon coder nil")
         try expect(GKDecisionTree(coder: coder) == nil, "decision tree coder nil")
     } catch {
-        // swift-corelibs-foundation may throw before producing a coder.
         try expect(true, "malformed archive rejected")
     }
+
+    let unrelated = try NSKeyedArchiver.archivedData(withRootObject: "nope" as NSString, requiringSecureCoding: true)
+    do {
+        let decoded = try NSKeyedUnarchiver.unarchivedObject(ofClass: GKEntity.self, from: unrelated)
+        try expect(decoded == nil, "unrelated root is not an entity")
+    } catch {
+        try expect(true, "unrelated root rejected")
+    }
+
+    try testLinuxArchiveRoundTrip()
+}
+
+func testLinuxArchiveRoundTrip() throws {
+    let entity = GKEntity()
+    entity.addComponent(HealthComponent(value: 13))
+    let entityData = try NSKeyedArchiver.archivedData(withRootObject: entity, requiringSecureCoding: true)
+    let entityDecoded = try NSKeyedUnarchiver.unarchivedObject(ofClass: GKEntity.self, from: entityData)
+    try expect(entityDecoded?.component(ofType: HealthComponent.self)?.value == 13, "entity archive value")
+    try expect(entityDecoded?.component(ofType: HealthComponent.self)?.entity === entityDecoded, "decoded ownership")
+
+    let a = GKGraphNode2D(point: SIMD2<Float>(0, 0))
+    let b = GKGraphNode2D(point: SIMD2<Float>(2, 0))
+    a.addConnections(to: [b], bidirectional: true)
+    let graph = GKGraph(nodes: [a, b])
+    let graphData = try NSKeyedArchiver.archivedData(withRootObject: graph, requiringSecureCoding: true)
+    let graphDecoded = try NSKeyedUnarchiver.unarchivedObject(ofClass: GKGraph.self, from: graphData)
+    try expect(graphDecoded?.nodes?.count == 2, "graph node count")
+    let decodedA = graphDecoded?.nodes?.first as? GKGraphNode2D
+    let decodedB = graphDecoded?.nodes?.dropFirst().first as? GKGraphNode2D
+    try expect(decodedA?.position == SIMD2<Float>(0, 0), "decoded A position")
+    try expect(decodedB?.position == SIMD2<Float>(2, 0), "decoded B position")
+    try expect(decodedA?.connectedNodes.count == 1, "decoded A edge")
+    try expect(decodedA?.connectedNodes.first === decodedB, "decoded edge identity")
+
+    let wall = GKPolygonObstacle(points: [
+        SIMD2<Float>(0, 0), SIMD2<Float>(1, 0), SIMD2<Float>(0, 1)
+    ])
+    let wallData = try NSKeyedArchiver.archivedData(withRootObject: wall, requiringSecureCoding: true)
+    let wallDecoded = try NSKeyedUnarchiver.unarchivedObject(ofClass: GKPolygonObstacle.self, from: wallData)
+    try expect(wallDecoded?.vertexCount == 3, "polygon archive count")
+    try expect(wallDecoded?.vertex(at: 1) == SIMD2<Float>(1, 0), "polygon archive vertex")
+
+    let scene = GKScene()
+    scene.addEntity(entity)
+    scene.addGraph(graph, name: "main")
+    let sceneData = try NSKeyedArchiver.archivedData(withRootObject: scene, requiringSecureCoding: true)
+    let sceneDecoded = try NSKeyedUnarchiver.unarchivedObject(ofClass: GKScene.self, from: sceneData)
+    try expect(sceneDecoded?.entities.count == 1, "scene entities")
+    try expect(sceneDecoded?.graphs["main"]?.nodes?.count == 2, "scene graph")
+
+    let tree = GKDecisionTree(attribute: "color" as NSString)
+    _ = tree.rootNode?.createBranch(value: 1, attribute: "go" as NSString)
+    let treeData = try NSKeyedArchiver.archivedData(withRootObject: tree, requiringSecureCoding: true)
+    let treeDecoded = try NSKeyedUnarchiver.unarchivedObject(ofClass: GKDecisionTree.self, from: treeData)
+    let action = treeDecoded?.findAction(forAnswers: ["color" as NSString: 1 as NSNumber]) as? NSString
+    try expect(action == "go", "decision tree archive")
+
+    let source = GKARC4RandomSource(seed: Data([1, 2, 3, 4, 5, 6, 7, 8]))
+    _ = source.nextInt()
+    let sourceData = try NSKeyedArchiver.archivedData(withRootObject: source, requiringSecureCoding: true)
+    let sourceDecoded = try NSKeyedUnarchiver.unarchivedObject(ofClass: GKARC4RandomSource.self, from: sourceData)
+    try expect(sourceDecoded?.nextInt() == source.nextInt(), "arc4 archive stream")
 }
 
 func testCopyIndependence() throws {
@@ -371,6 +446,22 @@ func testCopyIndependence() throws {
     try expect(entityCopy.component(ofType: HealthComponent.self)?.value == 11, "entity copy value")
     entityCopy.component(ofType: HealthComponent.self)?.value = 0
     try expect(entity.component(ofType: HealthComponent.self)?.value == 11, "entity copy independent")
+
+    let a = GKGraphNode2D(point: SIMD2<Float>(0, 0))
+    let b = GKGraphNode2D(point: SIMD2<Float>(1, 0))
+    a.addConnections(to: [b], bidirectional: true)
+    let graph = GKGraph(nodes: [a, b])
+    let graphCopy = graph.copy() as! GKGraph
+    let copyA = graphCopy.nodes?.first as? GKGraphNode2D
+    copyA?.position = SIMD2<Float>(9, 9)
+    try expect(a.position == SIMD2<Float>(0, 0), "graph copy node independent")
+    try expect(copyA?.connectedNodes.count == 1, "graph copy keeps edges")
+    try expect(copyA?.connectedNodes.first !== b, "graph copy does not share nodes")
+
+    let scene = GKScene()
+    scene.addGraph(graph, name: "g")
+    let sceneCopy = scene.copy() as! GKScene
+    try expect(sceneCopy.graphs["g"] !== graph, "scene copy graph independent")
 }
 
 func testRandomBounds() throws {

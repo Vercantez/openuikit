@@ -166,12 +166,68 @@ func gkPointInPolygon(_ point: SIMD2<Float>, _ vertices: [SIMD2<Float>]) -> Bool
     return inside
 }
 
+enum GKLinuxArchive {
+    static let markerKey = "ouik.gk.linux"
+    static let marker: Int64 = 1
+    static let componentsKey = "ouik.gk.components"
+    static let entitiesKey = "ouik.gk.entities"
+    static let graphsKey = "ouik.gk.graphs"
+    static let graphNamesKey = "ouik.gk.graphNames"
+    static let nodesKey = "ouik.gk.nodes"
+    static let edgesKey = "ouik.gk.edges"
+    static let xKey = "ouik.gk.x"
+    static let yKey = "ouik.gk.y"
+    static let zKey = "ouik.gk.z"
+    static let verticesKey = "ouik.gk.vertices"
+    static let rootKey = "ouik.gk.root"
+    static let attributeKey = "ouik.gk.attribute"
+    static let branchesKey = "ouik.gk.branches"
+    static let kindKey = "ouik.gk.kind"
+    static let valueKey = "ouik.gk.value"
+    static let weightKey = "ouik.gk.weight"
+    static let childKey = "ouik.gk.child"
+    static let seedKey = "ouik.gk.seed"
+    static let stateKey = "ouik.gk.state"
+    static let siKey = "ouik.gk.si"
+    static let sjKey = "ouik.gk.sj"
+    static let indexKey = "ouik.gk.index"
+    static let randomKey = "ouik.gk.random"
+
+    static func encodeMarker(_ coder: NSCoder) {
+        coder.encode(marker, forKey: markerKey)
+    }
+
+    static func hasMarker(_ coder: NSCoder) -> Bool {
+        coder.containsValue(forKey: markerKey)
+    }
+
+    static func decodeObjectArray<T: NSObject>(_ coder: NSCoder, key: String, classes: [AnyClass]) -> [T]? {
+        var allowed: [AnyClass] = [NSArray.self]
+        allowed.append(contentsOf: classes)
+        return coder.decodeObject(of: allowed, forKey: key) as? [T]
+    }
+
+    static func allowedUnarchiveClasses() -> [AnyClass] {
+        [
+            NSArray.self, NSString.self, NSNumber.self, NSData.self, NSDictionary.self,
+            GKComponent.self, GKEntity.self, GKScene.self,
+            GKGraph.self, GKGraphNode.self, GKGraphNode2D.self, GKGraphNode3D.self, GKGridGraphNode.self,
+            GKPolygonObstacle.self, GKDecisionTree.self, GKDecisionNode.self, GKDecisionBranch.self,
+            GKRandomSource.self, GKARC4RandomSource.self,
+            GKLinearCongruentialRandomSource.self, GKMersenneTwisterRandomSource.self
+        ]
+    }
+}
+
 @_spi(OpenUIKitHost)
 public enum GameplayKitHostArchive {
-    /// Unobserved Apple archive layouts are rejected. A `nil` result is the
-    /// documented Linux control, not a decoded object.
+    /// Linux-keyed archives carry `ouik.gk.linux`. Apple keyed layouts and other
+    /// malformed buffers are rejected.
     public static func rejectMalformedCoder(_ coder: NSCoder) -> Bool {
-        _ = coder
-        return true
+        !GKLinuxArchive.hasMarker(coder)
+    }
+
+    public static func unarchivedRoot<T: NSObject & NSCoding>(_ type: T.Type, from data: Data) throws -> T? {
+        try NSKeyedUnarchiver.unarchivedObject(ofClass: type, from: data)
     }
 }

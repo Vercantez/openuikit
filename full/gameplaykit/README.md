@@ -25,8 +25,10 @@ graphs.
 - Grid graph lookup and 4-neighbor paths
 - Spatial queries, rule-system facts, option-set/enum values, `GKScene`
   in-memory bookkeeping
-- `init?(coder:)` is present and fail-closed (`nil` / unarchiver throw). Types
-  do not advertise `NSSecureCoding` or encode state.
+- `init?(coder:)` round-trips Linux-keyed `NSSecureCoding` archives for
+  entities, graphs, scenes, polygon obstacles, decision trees, and random
+  sources. Malformed and Apple-layout buffers are rejected. Apple keyed
+  archive identity is unobserved (`declared`).
 
 ## Fail-closed / deferred
 

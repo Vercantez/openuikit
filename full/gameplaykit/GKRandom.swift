@@ -7,7 +7,9 @@ public protocol GKRandom {
     func nextBool() -> Bool
 }
 
-open class GKRandomSource: NSObject, GKRandom, NSCopying {
+open class GKRandomSource: NSObject, GKRandom, NSCopying, NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
     private static let shared = GKSystemRandomSource()
 
     open class func sharedRandom() -> GKRandomSource {
@@ -20,6 +22,11 @@ open class GKRandomSource: NSObject, GKRandom, NSCopying {
 
     public required init(coder aDecoder: NSCoder) {
         super.init()
+        _ = aDecoder
+    }
+
+    open func encode(with coder: NSCoder) {
+        GKLinuxArchive.encodeMarker(coder)
     }
 
     open func copy(with zone: NSZone? = nil) -> Any {
@@ -91,9 +98,24 @@ open class GKARC4RandomSource: GKRandomSource {
     }
 
     public required init(coder aDecoder: NSCoder) {
-        seed = Data()
+        seed = (aDecoder.decodeObject(of: NSData.self, forKey: GKLinuxArchive.seedKey) as Data?) ?? Data()
         super.init(coder: aDecoder)
-        resetState()
+        if let stateData = aDecoder.decodeObject(of: NSData.self, forKey: GKLinuxArchive.stateKey) as Data?,
+           stateData.count == 256 {
+            state = [UInt8](stateData)
+            si = Int(aDecoder.decodeInt64(forKey: GKLinuxArchive.siKey))
+            sj = Int(aDecoder.decodeInt64(forKey: GKLinuxArchive.sjKey))
+        } else {
+            resetState()
+        }
+    }
+
+    public override func encode(with coder: NSCoder) {
+        super.encode(with: coder)
+        coder.encode(seed as NSData, forKey: GKLinuxArchive.seedKey)
+        coder.encode(Data(state) as NSData, forKey: GKLinuxArchive.stateKey)
+        coder.encode(Int64(si), forKey: GKLinuxArchive.siKey)
+        coder.encode(Int64(sj), forKey: GKLinuxArchive.sjKey)
     }
 
     public override func copy(with zone: NSZone? = nil) -> Any {
@@ -155,8 +177,18 @@ open class GKLinearCongruentialRandomSource: GKRandomSource {
     }
 
     public required init(coder aDecoder: NSCoder) {
-        seed = 1
+        if aDecoder.containsValue(forKey: GKLinuxArchive.seedKey) {
+            seed = UInt64(bitPattern: aDecoder.decodeInt64(forKey: GKLinuxArchive.seedKey))
+            if seed == 0 { seed = 1 }
+        } else {
+            seed = 1
+        }
         super.init(coder: aDecoder)
+    }
+
+    public override func encode(with coder: NSCoder) {
+        super.encode(with: coder)
+        coder.encode(Int64(bitPattern: seed), forKey: GKLinuxArchive.seedKey)
     }
 
     public override func copy(with zone: NSZone? = nil) -> Any {
@@ -199,11 +231,41 @@ open class GKMersenneTwisterRandomSource: GKRandomSource {
     }
 
     public required init(coder aDecoder: NSCoder) {
-        seed = 5489
+        if aDecoder.containsValue(forKey: GKLinuxArchive.seedKey) {
+            seed = UInt64(bitPattern: aDecoder.decodeInt64(forKey: GKLinuxArchive.seedKey))
+        } else {
+            seed = 5489
+        }
         mt = Array(repeating: 0, count: Self.n)
         index = Self.n
         super.init(coder: aDecoder)
-        twistSeed()
+        if let stateData = aDecoder.decodeObject(of: NSData.self, forKey: GKLinuxArchive.stateKey) as Data?,
+           stateData.count == Self.n * MemoryLayout<UInt64>.size {
+            stateData.withUnsafeBytes { raw in
+                let typed = raw.bindMemory(to: UInt64.self)
+                mt = Array(typed)
+            }
+            index = Int(aDecoder.decodeInt64(forKey: GKLinuxArchive.indexKey))
+            if index < 0 || index > Self.n {
+                index = Self.n
+            }
+        } else {
+            twistSeed()
+        }
+    }
+
+    public override func encode(with coder: NSCoder) {
+        super.encode(with: coder)
+        coder.encode(Int64(bitPattern: seed), forKey: GKLinuxArchive.seedKey)
+        var bytes = Data(count: Self.n * MemoryLayout<UInt64>.size)
+        bytes.withUnsafeMutableBytes { raw in
+            let typed = raw.bindMemory(to: UInt64.self)
+            for i in 0..<Self.n {
+                typed[i] = mt[i]
+            }
+        }
+        coder.encode(bytes as NSData, forKey: GKLinuxArchive.stateKey)
+        coder.encode(Int64(index), forKey: GKLinuxArchive.indexKey)
     }
 
     public override func copy(with zone: NSZone? = nil) -> Any {

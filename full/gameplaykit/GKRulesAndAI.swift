@@ -325,7 +325,9 @@ open class GKRuleSystem: NSObject {
     }
 }
 
-final class GKDecisionBranch {
+final class GKDecisionBranch: NSObject, NSSecureCoding {
+    static var supportsSecureCoding: Bool { true }
+
     enum Kind {
         case value(NSNumber)
         case predicate(NSPredicate)
@@ -340,16 +342,89 @@ final class GKDecisionBranch {
         self.kind = kind
         self.attribute = attribute
         self.child = child
+        super.init()
+    }
+
+    func encode(with coder: NSCoder) {
+        GKLinuxArchive.encodeMarker(coder)
+        if let attributeObject = attribute as? NSObject {
+            coder.encode(attributeObject, forKey: GKLinuxArchive.attributeKey)
+        }
+        coder.encode(child, forKey: GKLinuxArchive.childKey)
+        switch kind {
+        case .value(let number):
+            coder.encode(Int64(0), forKey: GKLinuxArchive.kindKey)
+            coder.encode(number, forKey: GKLinuxArchive.valueKey)
+        case .predicate:
+            coder.encode(Int64(1), forKey: GKLinuxArchive.kindKey)
+        case .weight(let weight):
+            coder.encode(Int64(2), forKey: GKLinuxArchive.kindKey)
+            coder.encode(Int64(weight), forKey: GKLinuxArchive.weightKey)
+        }
+    }
+
+    required init?(coder: NSCoder) {
+        guard GKLinuxArchive.hasMarker(coder),
+              coder.containsValue(forKey: GKLinuxArchive.kindKey) else {
+            return nil
+        }
+        let kindValue = coder.decodeInt64(forKey: GKLinuxArchive.kindKey)
+        guard let child = coder.decodeObject(of: GKDecisionNode.self, forKey: GKLinuxArchive.childKey) else {
+            return nil
+        }
+        self.child = child
+        if let decoded = coder.decodeObject(of: [NSString.self, NSNumber.self], forKey: GKLinuxArchive.attributeKey) as? NSObject {
+            attribute = decoded
+        } else {
+            attribute = child.attribute
+        }
+        switch kindValue {
+        case 0:
+            guard let number = coder.decodeObject(of: NSNumber.self, forKey: GKLinuxArchive.valueKey) else {
+                return nil
+            }
+            kind = .value(number)
+        case 2:
+            kind = .weight(Int(coder.decodeInt64(forKey: GKLinuxArchive.weightKey)))
+        default:
+            return nil
+        }
+        super.init()
     }
 }
 
-open class GKDecisionNode: NSObject {
+open class GKDecisionNode: NSObject, NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
     public let attribute: any NSObjectProtocol
     var branches: [GKDecisionBranch] = []
 
     public required init(attribute: any NSObjectProtocol) {
         self.attribute = attribute
         super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        guard GKLinuxArchive.hasMarker(coder) else { return nil }
+        if let decoded = coder.decodeObject(of: [NSString.self, NSNumber.self], forKey: GKLinuxArchive.attributeKey) as? NSObject {
+            attribute = decoded
+        } else {
+            return nil
+        }
+        super.init()
+        branches = GKLinuxArchive.decodeObjectArray(
+            coder,
+            key: GKLinuxArchive.branchesKey,
+            classes: [GKDecisionBranch.self, GKDecisionNode.self, NSString.self, NSNumber.self]
+        ) as [GKDecisionBranch]? ?? []
+    }
+
+    open func encode(with coder: NSCoder) {
+        GKLinuxArchive.encodeMarker(coder)
+        if let attributeObject = attribute as? NSObject {
+            coder.encode(attributeObject, forKey: GKLinuxArchive.attributeKey)
+        }
+        coder.encode(branches as NSArray, forKey: GKLinuxArchive.branchesKey)
     }
 
     @discardableResult
@@ -374,7 +449,9 @@ open class GKDecisionNode: NSObject {
     }
 }
 
-open class GKDecisionTree: NSObject {
+open class GKDecisionTree: NSObject, NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
     public var randomSource: GKRandomSource = GKARC4RandomSource()
     public private(set) var rootNode: GKDecisionNode?
 
@@ -407,8 +484,23 @@ open class GKDecisionTree: NSObject {
     }
 
     public required init?(coder: NSCoder) {
+        guard GKLinuxArchive.hasMarker(coder) else { return nil }
         super.init()
-        return nil
+        rootNode = coder.decodeObject(of: GKDecisionNode.self, forKey: GKLinuxArchive.rootKey)
+        if let source = coder.decodeObject(
+            of: [GKRandomSource.self, GKARC4RandomSource.self, GKLinearCongruentialRandomSource.self, GKMersenneTwisterRandomSource.self],
+            forKey: GKLinuxArchive.randomKey
+        ) as? GKRandomSource {
+            randomSource = source
+        }
+    }
+
+    open func encode(with coder: NSCoder) {
+        GKLinuxArchive.encodeMarker(coder)
+        if let rootNode {
+            coder.encode(rootNode, forKey: GKLinuxArchive.rootKey)
+        }
+        coder.encode(randomSource, forKey: GKLinuxArchive.randomKey)
     }
 
     open func findAction(forAnswers answers: [AnyHashable: any NSObjectProtocol]) -> (any NSObjectProtocol)? {

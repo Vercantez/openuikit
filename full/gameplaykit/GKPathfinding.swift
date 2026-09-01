@@ -1,6 +1,8 @@
 import Foundation
 
-open class GKGraphNode: NSObject, NSCopying {
+open class GKGraphNode: NSObject, NSCopying, NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
     private var connections: [GKGraphNode] = []
 
     public var connectedNodes: [GKGraphNode] { connections }
@@ -10,12 +12,20 @@ open class GKGraphNode: NSObject, NSCopying {
     }
 
     public required init?(coder: NSCoder) {
+        guard GKLinuxArchive.hasMarker(coder) else { return nil }
         super.init()
-        return nil
+    }
+
+    open func encode(with coder: NSCoder) {
+        GKLinuxArchive.encodeMarker(coder)
     }
 
     open func copy(with zone: NSZone? = nil) -> Any {
         GKGraphNode()
+    }
+
+    func gkRestoreConnections(_ nodes: [GKGraphNode]) {
+        connections = nodes
     }
 
     open func addConnections(to nodes: [GKGraphNode], bidirectional: Bool) {
@@ -70,8 +80,22 @@ open class GKGraphNode2D: GKGraphNode {
     }
 
     public required init?(coder: NSCoder) {
-        position = SIMD2<Float>(0, 0)
+        guard GKLinuxArchive.hasMarker(coder),
+              coder.containsValue(forKey: GKLinuxArchive.xKey),
+              coder.containsValue(forKey: GKLinuxArchive.yKey) else {
+            return nil
+        }
+        position = SIMD2<Float>(
+            coder.decodeFloat(forKey: GKLinuxArchive.xKey),
+            coder.decodeFloat(forKey: GKLinuxArchive.yKey)
+        )
         super.init(coder: coder)
+    }
+
+    open override func encode(with coder: NSCoder) {
+        super.encode(with: coder)
+        coder.encode(position.x, forKey: GKLinuxArchive.xKey)
+        coder.encode(position.y, forKey: GKLinuxArchive.yKey)
     }
 
     open class func node(withPoint point: SIMD2<Float>) -> Self {
@@ -110,8 +134,25 @@ open class GKGraphNode3D: GKGraphNode {
     }
 
     public required init?(coder: NSCoder) {
-        position = SIMD3<Float>(0, 0, 0)
+        guard GKLinuxArchive.hasMarker(coder),
+              coder.containsValue(forKey: GKLinuxArchive.xKey),
+              coder.containsValue(forKey: GKLinuxArchive.yKey),
+              coder.containsValue(forKey: GKLinuxArchive.zKey) else {
+            return nil
+        }
+        position = SIMD3<Float>(
+            coder.decodeFloat(forKey: GKLinuxArchive.xKey),
+            coder.decodeFloat(forKey: GKLinuxArchive.yKey),
+            coder.decodeFloat(forKey: GKLinuxArchive.zKey)
+        )
         super.init(coder: coder)
+    }
+
+    open override func encode(with coder: NSCoder) {
+        super.encode(with: coder)
+        coder.encode(position.x, forKey: GKLinuxArchive.xKey)
+        coder.encode(position.y, forKey: GKLinuxArchive.yKey)
+        coder.encode(position.z, forKey: GKLinuxArchive.zKey)
     }
 
     open class func node(withPoint point: SIMD3<Float>) -> Self {
@@ -150,8 +191,22 @@ open class GKGridGraphNode: GKGraphNode {
     }
 
     public required init?(coder: NSCoder) {
-        gridPosition = SIMD2<Int32>(0, 0)
+        guard GKLinuxArchive.hasMarker(coder),
+              coder.containsValue(forKey: GKLinuxArchive.xKey),
+              coder.containsValue(forKey: GKLinuxArchive.yKey) else {
+            return nil
+        }
+        gridPosition = SIMD2<Int32>(
+            Int32(truncatingIfNeeded: coder.decodeInt64(forKey: GKLinuxArchive.xKey)),
+            Int32(truncatingIfNeeded: coder.decodeInt64(forKey: GKLinuxArchive.yKey))
+        )
         super.init(coder: coder)
+    }
+
+    open override func encode(with coder: NSCoder) {
+        super.encode(with: coder)
+        coder.encode(Int64(gridPosition.x), forKey: GKLinuxArchive.xKey)
+        coder.encode(Int64(gridPosition.y), forKey: GKLinuxArchive.yKey)
     }
 
     public override func copy(with zone: NSZone? = nil) -> Any {
@@ -182,7 +237,9 @@ open class GKGridGraphNode: GKGraphNode {
     }
 }
 
-open class GKGraph: NSObject, NSCopying {
+open class GKGraph: NSObject, NSCopying, NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
     private var nodeStorage: [GKGraphNode] = []
 
     public var nodes: [GKGraphNode]? { nodeStorage.isEmpty ? nil : nodeStorage }
@@ -201,12 +258,61 @@ open class GKGraph: NSObject, NSCopying {
     }
 
     public required init?(coder: NSCoder) {
+        guard GKLinuxArchive.hasMarker(coder) else { return nil }
         super.init()
-        return nil
+        let decoded = GKLinuxArchive.decodeObjectArray(
+            coder,
+            key: GKLinuxArchive.nodesKey,
+            classes: [GKGraphNode.self, GKGraphNode2D.self, GKGraphNode3D.self, GKGridGraphNode.self]
+        ) as [GKGraphNode]?
+        guard let decoded else { return nil }
+        nodeStorage = decoded
+        let edges = coder.decodeObject(of: [NSArray.self, NSNumber.self], forKey: GKLinuxArchive.edgesKey) as? [NSNumber]
+        guard let edges else { return nil }
+        guard edges.count % 2 == 0 else { return nil }
+        var index = 0
+        while index < edges.count {
+            let from = edges[index].intValue
+            let to = edges[index + 1].intValue
+            index += 2
+            guard nodeStorage.indices.contains(from), nodeStorage.indices.contains(to) else { return nil }
+            nodeStorage[from].addConnections(to: [nodeStorage[to]], bidirectional: false)
+        }
+    }
+
+    open func encode(with coder: NSCoder) {
+        GKLinuxArchive.encodeMarker(coder)
+        coder.encode(nodeStorage as NSArray, forKey: GKLinuxArchive.nodesKey)
+        var identity = [ObjectIdentifier: Int]()
+        for (offset, node) in nodeStorage.enumerated() {
+            identity[ObjectIdentifier(node)] = offset
+        }
+        var edges: [NSNumber] = []
+        for (offset, node) in nodeStorage.enumerated() {
+            for connected in node.connectedNodes {
+                if let target = identity[ObjectIdentifier(connected)] {
+                    edges.append(NSNumber(value: offset))
+                    edges.append(NSNumber(value: target))
+                }
+            }
+        }
+        coder.encode(edges as NSArray, forKey: GKLinuxArchive.edgesKey)
     }
 
     public func copy(with zone: NSZone? = nil) -> Any {
-        GKGraph(nodeStorage)
+        let clones = nodeStorage.map { node -> GKGraphNode in
+            (node.copy() as? GKGraphNode) ?? GKGraphNode()
+        }
+        var map: [ObjectIdentifier: GKGraphNode] = [:]
+        for (original, clone) in zip(nodeStorage, clones) {
+            map[ObjectIdentifier(original)] = clone
+        }
+        for original in nodeStorage {
+            guard let clone = map[ObjectIdentifier(original)] else { continue }
+            let restored = original.connectedNodes.compactMap { map[ObjectIdentifier($0)] }
+            clone.gkRestoreConnections(restored)
+        }
+        return GKGraph(clones)
     }
 
     open func add(_ nodes: [GKGraphNode]) {
@@ -299,7 +405,8 @@ open class GKGridGraph<NodeType: GKGridGraphNode>: GKGraph {
         self.gridHeight = 0
         self.diagonalsAllowed = false
         self.nodeType = NodeType.self
-        super.init(coder: coder)
+        super.init()
+        return nil
     }
 
     private func buildGrid() {
@@ -394,7 +501,8 @@ open class GKObstacleGraph<NodeType: GKGraphNode2D>: GKGraph {
     public required init?(coder: NSCoder) {
         self.bufferRadius = 0
         self.nodeType = NodeType.self
-        super.init(coder: coder)
+        super.init()
+        return nil
     }
 
     open func addObstacles(_ obstacles: [GKPolygonObstacle]) {
@@ -551,7 +659,8 @@ open class GKMeshGraph<NodeType: GKGraphNode2D>: GKGraph {
         self.minCoordinate = SIMD2<Float>(0, 0)
         self.maxCoordinate = SIMD2<Float>(1, 1)
         self.nodeType = NodeType.self
-        super.init(coder: coder)
+        super.init()
+        return nil
     }
 
     open func addObstacles(_ obstacles: [GKPolygonObstacle]) {
