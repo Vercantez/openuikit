@@ -2355,6 +2355,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     expected_foundation_load=1
     expected_foundation_essentials_load=1
     expected_uikit_load=0
+    expected_openuikit_load=0
     expected_swiftui_load=0
     expected_coremedia_load=0
     expected_avfoundation_load=0
@@ -2362,6 +2363,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     case "$framework" in
         SafariServices|StoreKit|PassKit|MessageUI|AppIntents|QuickLook)
             expected_uikit_load=1
+            expected_openuikit_load=1
             framework_link_dependencies+=(
                 -lUIKit
                 -lOpenUIKit
@@ -2406,13 +2408,16 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
             ;;
         AVFoundation)
             expected_coremedia_load=1
+            expected_openuikit_load=1
             framework_link_dependencies+=(
                 -lCoreMedia
+                -lOpenUIKit
                 -lOpenCoreGraphics
             )
             ;;
         AVKit)
             expected_uikit_load=1
+            expected_openuikit_load=1
             expected_swiftui_load=1
             expected_avfoundation_load=1
             framework_link_dependencies+=(
@@ -2452,6 +2457,9 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         | awk '$1 == "@rpath/libFoundationEssentials.dylib" { count++ } END { print count + 0 }')
     uikit_load_count=$(llvm-otool-18 -L "$STAGE/lib/lib$framework.dylib" \
         | awk '$1 == "@rpath/libUIKit.dylib" { count++ } END { print count + 0 }')
+    openuikit_load_count=$(llvm-otool-18 -L \
+        "$STAGE/lib/lib$framework.dylib" \
+        | awk '$1 == "@rpath/libOpenUIKit.dylib" { count++ } END { print count + 0 }')
     swiftui_load_count=$(llvm-otool-18 -L "$STAGE/lib/lib$framework.dylib" \
         | awk '$1 == "@rpath/libSwiftUI.dylib" { count++ } END { print count + 0 }')
     coremedia_load_count=$(llvm-otool-18 -L "$STAGE/lib/lib$framework.dylib" \
@@ -2491,6 +2499,8 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         || die "lib$framework ordinary FoundationEssentials load count $foundation_essentials_ordinary_load_count, expected 1"
     [ "$uikit_load_count" -eq "$expected_uikit_load" ] \
         || die "lib$framework UIKit load count $uikit_load_count, expected $expected_uikit_load"
+    [ "$openuikit_load_count" -eq "$expected_openuikit_load" ] \
+        || die "lib$framework OpenUIKit load count $openuikit_load_count, expected $expected_openuikit_load"
     [ "$swiftui_load_count" -eq "$expected_swiftui_load" ] \
         || die "lib$framework SwiftUI load count $swiftui_load_count, expected $expected_swiftui_load"
     [ "$coremedia_load_count" -eq "$expected_coremedia_load" ] \
@@ -2505,10 +2515,11 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         | grep -Fq "/System/Library/Frameworks/$framework.framework/"; then
         die "lib$framework loads the Apple $framework framework"
     fi
-    printf '%s\tportable-self-id=%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\tswiftui=%s\tcoremedia=%s\tavfoundation=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
+    printf '%s\tportable-self-id=%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\topenuikit=%s\tswiftui=%s\tcoremedia=%s\tavfoundation=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
         "$framework" "$portable_self_id_count" "$foundation_load_count" \
         "$foundation_essentials_load_count" \
         "$foundation_essentials_ordinary_load_count" "$uikit_load_count" \
+        "$openuikit_load_count" \
         "$swiftui_load_count" "$coremedia_load_count" \
         "$avfoundation_load_count" "$concurrency_load_count" \
         "$os_runtime_reexport_count" \

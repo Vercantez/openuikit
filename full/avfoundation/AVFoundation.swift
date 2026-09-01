@@ -1,6 +1,11 @@
 @_exported import CoreMedia
 @_exported import Foundation
 import CoreGraphics
+#if canImport(OpenUIKit)
+// The portable Foundation facade deliberately preserves OpenUIKit's
+// Notification.Name identity instead of manufacturing a second copy.
+import OpenUIKit
+#endif
 
 public enum AVFoundationPortableError: Error, Equatable, Sendable,
     CustomStringConvertible

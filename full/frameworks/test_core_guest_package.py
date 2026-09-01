@@ -2506,6 +2506,9 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertIn("first-party-dylib-loads-v1", source)
         self.assertIn("portable-self-id=%s", source)
+        self.assertIn("openuikit=%s", source)
+        self.assertIn("expected_openuikit_load=1", source)
+        self.assertIn("lib$framework OpenUIKit load count", source)
         self.assertIn(
             "coremedia_load_count - portable_self_id_count", source
         )
@@ -2552,6 +2555,12 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("ChartsGuestRuntime", source)
         self.assertIn("AVFOUNDATION_HOST_OK", source)
         self.assertIn("CHARTS_HOST_OK", source)
+        avfoundation_source = (
+            REPO / "full/avfoundation/AVFoundation.swift"
+        ).read_text(encoding="utf-8")
+        self.assertIn("#if canImport(OpenUIKit)", avfoundation_source)
+        self.assertIn("import OpenUIKit", avfoundation_source)
+        self.assertIn("-lOpenUIKit", source)
         self.assertIn("oslog=standard-error,signposts", probe)
         self.assertIn("uniform-types=tags,conformance", probe)
         self.assertIn("security=keychain,random", probe)
