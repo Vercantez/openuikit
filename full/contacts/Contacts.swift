@@ -8,14 +8,16 @@ import Foundation
 /// TCC. Authorization succeeds only for that in-memory sandbox after
 /// `requestAccess`; host address books stay fail-closed.
 ///
-/// `CNKeyDescriptor` is a portable protocol. Apple's overlay requires
-/// `NSCopying`, `NSSecureCoding`, and `NSObjectProtocol` so `NSString` keys
-/// bridge. Linux `String` cannot satisfy those class constraints, so `String`
-/// and `NSString` both conform here without claiming ObjC key-descriptor ABI.
+/// Apple's `CNKeyDescriptor` inherits `NSCopying`, `NSSecureCoding`, and
+/// `NSObjectProtocol`. Darwin `String` keys bridge to `NSString`. Linux
+/// `String` is a value type and cannot satisfy those class bounds, so the
+/// public overlay matches Foundation's class identity: `NSString` conforms,
+/// and callers pass `CNContactGivenNameKey as NSString` (or a
+/// `CNContactKeyDescriptor`). This is the shared Foundation strategy rather
+/// than a second String-shaped descriptor type.
 
-public protocol CNKeyDescriptor {}
+public protocol CNKeyDescriptor: NSObjectProtocol, NSCopying, NSSecureCoding {}
 
-extension String: CNKeyDescriptor {}
 extension NSString: CNKeyDescriptor {}
 
 /// Composite key descriptor returned by formatter / comparator helpers.
@@ -48,12 +50,10 @@ public final class CNContactKeyDescriptor: NSObject, CNKeyDescriptor, NSCopying,
 func CNFlattenKeyDescriptors(_ descriptors: [any CNKeyDescriptor]) -> [String] {
     var keys: [String] = []
     for descriptor in descriptors {
-        if let string = descriptor as? String {
-            keys.append(string)
+        if let composite = descriptor as? CNContactKeyDescriptor {
+            keys.append(contentsOf: composite.keys)
         } else if let string = descriptor as? NSString {
             keys.append(string as String)
-        } else if let composite = descriptor as? CNContactKeyDescriptor {
-            keys.append(contentsOf: composite.keys)
         }
     }
     return keys

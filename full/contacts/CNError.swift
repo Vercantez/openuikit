@@ -2,13 +2,12 @@ import Foundation
 
 /// Portable `NS_ERROR_ENUM(CNErrorDomain, CNErrorCode)` overlay.
 ///
-/// Numeric codes follow the public `CNError.h` layout from the iPhoneOS 26.1
-/// SDK seed: communication/data-access in the 1s, authorization in the 100s,
-/// record errors in the 200s, validation in the 300s, predicate 400, policy
-/// 500, client identifiers 600, change history 700, vCard 800. The raw value
-/// of `parentContainerNotWritable` is recorded as 207 (sequentially after
-/// `parentRecordDoesNotExist`); confirm with an Apple oracle before treating
-/// that code as ABI-stable against Darwin.
+/// Attested numeric codes follow the public `CNError.h` layout: communication
+/// and data-access (1–2), authorization (100–104), record errors (200–206),
+/// validation (300–302), predicate 400, and policy 500. Newer cases exist in
+/// the public graph (`parentContainerNotWritable`, client-identifier, change
+/// history, vCard) but their Darwin raw values are unattested and must not be
+/// treated as ABI until an Apple oracle dump.
 public struct CNError: Error, CustomNSError, Hashable, Equatable, @unchecked Sendable {
     public enum Code: Int, Hashable, Sendable {
         case communicationError = 1

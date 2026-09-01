@@ -14,25 +14,31 @@ enum CNStorePredicateKind: Equatable {
     case containerOfGroup(String)
 }
 
-enum CNStorePredicate {
-    private static let lock = NSLock()
-    nonisolated(unsafe) private static var table: [ObjectIdentifier: CNStorePredicateKind] = [:]
+/// Lifetime-safe tagged `NSPredicate` subclass. The kind lives on the object,
+/// so it cannot leak a global table or be confused with a later object that
+/// reused an `ObjectIdentifier`.
+final class CNContactsStorePredicate: NSPredicate {
+    let kind: CNStorePredicateKind
 
-    static func make(_ kind: CNStorePredicateKind) -> NSPredicate {
-        let predicate = NSPredicate { object, _ in
+    init(kind: CNStorePredicateKind) {
+        self.kind = kind
+        super.init { object, _ in
             CNStorePredicate.evaluate(kind, object)
         }
-        lock.lock()
-        table[ObjectIdentifier(predicate)] = kind
-        lock.unlock()
-        return predicate
+    }
+
+    required init?(coder: NSCoder) {
+        return nil
+    }
+}
+
+enum CNStorePredicate {
+    static func make(_ kind: CNStorePredicateKind) -> NSPredicate {
+        CNContactsStorePredicate(kind: kind)
     }
 
     static func kind(of predicate: NSPredicate?) -> CNStorePredicateKind? {
-        guard let predicate else { return nil }
-        lock.lock()
-        defer { lock.unlock() }
-        return table[ObjectIdentifier(predicate)]
+        (predicate as? CNContactsStorePredicate)?.kind
     }
 
     static func evaluate(_ kind: CNStorePredicateKind, _ object: Any?) -> Bool {
@@ -85,26 +91,46 @@ private enum CNMemoryStore {
         type: .local
     )
 
-    nonisolated(unsafe) static var authorization: CNAuthorizationStatus = .notDetermined
-    nonisolated(unsafe) static var contacts: [String: CNContactStorage] = [:]
-    nonisolated(unsafe) static var groups: [String: (identifier: String, name: String)] = [:]
-    nonisolated(unsafe) static var groupMembers: [String: Set<String>] = [:]
-    nonisolated(unsafe) static var contactContainers: [String: String] = [:]
-    nonisolated(unsafe) static var groupContainers: [String: String] = [:]
-    nonisolated(unsafe) static var history: [CNChangeHistoryEvent] = []
-    nonisolated(unsafe) static var historyCounter: UInt64 = 0
+    struct Snapshot {
+        var authorization: CNAuthorizationStatus = .notDetermined
+        var contacts: [String: CNContactStorage] = [:]
+        var groups: [String: (identifier: String, name: String)] = [:]
+        var groupMembers: [String: Set<String>] = [:]
+        var contactContainers: [String: String] = [:]
+        var groupContainers: [String: String] = [:]
+        var history: [CNChangeHistoryEvent] = []
+        var historyCounter: UInt64 = 0
+    }
+
+    nonisolated(unsafe) static var state = Snapshot()
+
+    static var authorization: CNAuthorizationStatus {
+        get { state.authorization }
+        set { state.authorization = newValue }
+    }
+    static var contacts: [String: CNContactStorage] {
+        get { state.contacts }
+        set { state.contacts = newValue }
+    }
+    static var history: [CNChangeHistoryEvent] {
+        get { state.history }
+        set { state.history = newValue }
+    }
+    static var historyCounter: UInt64 {
+        get { state.historyCounter }
+        set { state.historyCounter = newValue }
+    }
+
+    static func capture() -> Snapshot { state }
+
+    static func install(_ snapshot: Snapshot) {
+        state = snapshot
+    }
 
     static func reset() {
         lock.lock()
         defer { lock.unlock() }
-        authorization = .notDetermined
-        contacts = [:]
-        groups = [:]
-        groupMembers = [:]
-        contactContainers = [:]
-        groupContainers = [:]
-        history = []
-        historyCounter = 0
+        state = Snapshot()
     }
 
     static func tokenData(_ value: UInt64) -> Data {
@@ -129,7 +155,8 @@ open class CNContactFetchRequest: CNFetchRequest, NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
 
     public required init?(coder: NSCoder) {
-        self.keysToFetch = (coder.decodeObject(of: [NSArray.self, NSString.self], forKey: "keysToFetch") as? [String]) ?? []
+        let names = (coder.decodeObject(of: [NSArray.self, NSString.self], forKey: "keysToFetch") as? [String]) ?? []
+        self.keysToFetch = names.map { $0 as NSString }
         self.mutableObjects = coder.decodeBool(forKey: "mutableObjects")
         self.unifyResults = coder.decodeBool(forKey: "unifyResults")
         self.sortOrder = CNContactSortOrder(rawValue: coder.decodeInteger(forKey: "sortOrder")) ?? .none
@@ -222,18 +249,43 @@ open class CNContactStore: NSObject {
 
     /// Grants access to the process-local in-memory store only. This is not an
     /// Apple TCC prompt and does not unlock a host AddressBook.
+    ///
+    /// The completion handler is invoked on a detached thread after this
+    /// method returns, matching Darwin's non-reentrant "arbitrary queue"
+    /// contract rather than calling back on the same stack.
     open func requestAccess(for entityType: CNEntityType) async throws -> Bool {
-        try requestAccessBlocking(for: entityType)
+        try await withCheckedThrowingContinuation { continuation in
+            requestAccess(for: entityType) { granted, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: granted)
+                }
+            }
+        }
     }
 
     open func requestAccess(
         for entityType: CNEntityType,
         completionHandler: @escaping (Bool, Error?) -> Void
     ) {
+        let outcome: Result<Bool, Error>
         do {
-            completionHandler(try requestAccessBlocking(for: entityType), nil)
+            outcome = .success(try requestAccessBlocking(for: entityType))
         } catch {
-            completionHandler(false, error)
+            outcome = .failure(error)
+        }
+        // Invoke off the calling stack so the completion cannot re-enter
+        // `requestAccess` on the same thread. Darwin delivers this on an
+        // arbitrary queue; Linux uses a detached thread for the same
+        // non-reentrancy contract.
+        Thread.detachNewThread {
+            switch outcome {
+            case .success(let granted):
+                completionHandler(granted, nil)
+            case .failure(let error):
+                completionHandler(false, error)
+            }
         }
     }
 
@@ -309,12 +361,13 @@ open class CNContactStore: NSObject {
     open func groups(matching predicate: NSPredicate?) throws -> [CNGroup] {
         try requireAccess()
         CNMemoryStore.lock.lock()
-        defer { CNMemoryStore.lock.unlock() }
-        var result: [CNGroup] = CNMemoryStore.groups.values.map {
+        let snapshot = CNMemoryStore.capture()
+        CNMemoryStore.lock.unlock()
+        var result: [CNGroup] = snapshot.groups.values.map {
             CNGroup(identifier: $0.identifier, name: $0.name)
         }
         if let predicate {
-            result = filterGroups(result, predicate: predicate)
+            result = filterGroups(result, predicate: predicate, snapshot: snapshot)
         }
         return result
     }
@@ -322,20 +375,33 @@ open class CNContactStore: NSObject {
     open func containers(matching predicate: NSPredicate?) throws -> [CNContainer] {
         try requireAccess()
         CNMemoryStore.lock.lock()
-        defer { CNMemoryStore.lock.unlock() }
+        let snapshot = CNMemoryStore.capture()
+        CNMemoryStore.lock.unlock()
         var result = [CNMemoryStore.defaultContainer]
         if let predicate {
-            result = filterContainers(result, predicate: predicate)
+            result = filterContainers(result, predicate: predicate, snapshot: snapshot)
         }
         return result
     }
 
     open func execute(_ saveRequest: CNSaveRequest) throws {
         try requireAccess()
+        var commitError: Error?
         CNMemoryStore.lock.lock()
-        defer { CNMemoryStore.lock.unlock() }
-        for operation in saveRequest.operations {
-            try applyLocked(operation)
+        let prior = CNMemoryStore.capture()
+        var working = prior
+        do {
+            for operation in saveRequest.operations {
+                try apply(operation, to: &working)
+            }
+            CNMemoryStore.install(working)
+        } catch {
+            CNMemoryStore.install(prior)
+            commitError = error
+        }
+        CNMemoryStore.lock.unlock()
+        if let commitError {
+            throw commitError
         }
         NotificationCenter.default.post(name: .CNContactStoreDidChange, object: self)
     }
@@ -378,39 +444,17 @@ open class CNContactStore: NSObject {
         sort: CNContactSortOrder
     ) throws -> [CNContact] {
         CNMemoryStore.lock.lock()
-        var storages = Array(CNMemoryStore.contacts.values)
-        let kind = CNStorePredicate.kind(of: predicate)
-        switch kind {
-        case .contactsWithIdentifiers(let identifiers):
-            storages = storages.filter { identifiers.contains($0.identifier) }
-        case .contactsMatchingName(let name):
-            storages = storages.filter { CNContact(storage: $0).matchesName(name) }
-        case .contactsMatchingEmail(let email):
-            storages = storages.filter { storage in
-                storage.emailAddresses.contains {
-                    ($0.value as String).caseInsensitiveCompare(email) == .orderedSame
-                }
-            }
-        case .contactsMatchingPhone(let phone):
-            let digits = phone.filter(\.isNumber)
-            storages = storages.filter { storage in
-                storage.phoneNumbers.contains { $0.value.digits() == digits && !digits.isEmpty }
-            }
-        case .contactsInContainer(let container):
-            storages = storages.filter {
-                CNMemoryStore.contactContainers[$0.identifier] == container
-            }
-        case .contactsInGroup(let group):
-            let members = CNMemoryStore.groupMembers[group] ?? []
-            storages = storages.filter { members.contains($0.identifier) }
-        case .none:
-            if let predicate {
-                storages = storages.filter { predicate.evaluate(with: CNContact(storage: $0)) }
-            }
-        default:
-            throw CNError(.predicateInvalid)
-        }
+        let snapshot = CNMemoryStore.capture()
         CNMemoryStore.lock.unlock()
+
+        var storages = Array(snapshot.contacts.values)
+        if let kind = CNStorePredicate.kind(of: predicate) {
+            storages = storages.filter { storage in
+                matches(kind, storage: storage, snapshot: snapshot)
+            }
+        } else if let predicate {
+            storages = storages.filter { predicate.evaluate(with: CNContact(storage: $0)) }
+        }
 
         let projected = storages.map { $0.projected(keys: CNFlattenKeyDescriptors(keys)) }
         var result: [CNContact] = projected.map { storage in
@@ -423,54 +467,96 @@ open class CNContactStore: NSObject {
         return result
     }
 
-    private func filterGroups(_ groups: [CNGroup], predicate: NSPredicate) -> [CNGroup] {
+    private func matches(
+        _ kind: CNStorePredicateKind,
+        storage: CNContactStorage,
+        snapshot: CNMemoryStore.Snapshot
+    ) -> Bool {
+        switch kind {
+        case .contactsWithIdentifiers(let identifiers):
+            return identifiers.contains(storage.identifier)
+        case .contactsMatchingName(let name):
+            return CNContact(storage: storage).matchesName(name)
+        case .contactsMatchingEmail(let email):
+            return storage.emailAddresses.contains {
+                ($0.value as String).caseInsensitiveCompare(email) == .orderedSame
+            }
+        case .contactsMatchingPhone(let phone):
+            let digits = phone.filter(\.isNumber)
+            return storage.phoneNumbers.contains { $0.value.digits() == digits && !digits.isEmpty }
+        case .contactsInContainer(let container):
+            return snapshot.contactContainers[storage.identifier] == container
+        case .contactsInGroup(let group):
+            return snapshot.groupMembers[group]?.contains(storage.identifier) == true
+        default:
+            return false
+        }
+    }
+
+    private func filterGroups(
+        _ groups: [CNGroup],
+        predicate: NSPredicate,
+        snapshot: CNMemoryStore.Snapshot
+    ) -> [CNGroup] {
         switch CNStorePredicate.kind(of: predicate) {
         case .groupsWithIdentifiers(let identifiers):
             return groups.filter { identifiers.contains($0.identifier) }
         case .groupsInContainer(let container):
-            return groups.filter { CNMemoryStore.groupContainers[$0.identifier] == container }
+            return groups.filter { snapshot.groupContainers[$0.identifier] == container }
+        case .none:
+            return groups.filter { predicate.evaluate(with: $0) }
         default:
             return groups.filter { predicate.evaluate(with: $0) }
         }
     }
 
-    private func filterContainers(_ containers: [CNContainer], predicate: NSPredicate) -> [CNContainer] {
+    private func filterContainers(
+        _ containers: [CNContainer],
+        predicate: NSPredicate,
+        snapshot: CNMemoryStore.Snapshot
+    ) -> [CNContainer] {
         switch CNStorePredicate.kind(of: predicate) {
         case .containersWithIdentifiers(let identifiers):
             return containers.filter { identifiers.contains($0.identifier) }
         case .containerOfContact(let identifier):
-            let containerID = CNMemoryStore.contactContainers[identifier]
+            let containerID = snapshot.contactContainers[identifier]
             return containers.filter { $0.identifier == containerID }
         case .containerOfGroup(let identifier):
-            let containerID = CNMemoryStore.groupContainers[identifier]
+            let containerID = snapshot.groupContainers[identifier]
             return containers.filter { $0.identifier == containerID }
+        case .none:
+            return containers.filter { predicate.evaluate(with: $0) }
         default:
             return containers.filter { predicate.evaluate(with: $0) }
         }
     }
 
-    private func applyLocked(_ operation: CNSaveOperation) throws {
+    private func apply(
+        _ operation: CNSaveOperation,
+        to working: inout CNMemoryStore.Snapshot
+    ) throws {
         let containerID = CNMemoryStore.defaultContainer.identifier
         switch operation {
         case .addContact(let contact, let container):
             var storage = contact.storage
-            if CNMemoryStore.contacts[storage.identifier] != nil {
+            if working.contacts[storage.identifier] != nil {
                 throw CNError(
                     .insertedRecordAlreadyExists,
                     userInfo: [CNErrorUserInfoAffectedRecordIdentifiersKey: [storage.identifier]]
                 )
             }
             storage.availableKeys = Set(CNAllContactPropertyKeys())
-            CNMemoryStore.contacts[storage.identifier] = storage
-            CNMemoryStore.contactContainers[storage.identifier] = container ?? containerID
+            working.contacts[storage.identifier] = storage
+            working.contactContainers[storage.identifier] = container ?? containerID
             appendHistory(
                 CNChangeHistoryAddContactEvent(
                     contact: CNContact(storage: storage),
                     containerIdentifier: container ?? containerID
-                )
+                ),
+                to: &working
             )
         case .updateContact(let contact):
-            guard CNMemoryStore.contacts[contact.identifier] != nil else {
+            guard working.contacts[contact.identifier] != nil else {
                 throw CNError(
                     .recordDoesNotExist,
                     userInfo: [CNErrorUserInfoAffectedRecordIdentifiersKey: [contact.identifier]]
@@ -478,80 +564,96 @@ open class CNContactStore: NSObject {
             }
             var storage = contact.storage
             storage.availableKeys = Set(CNAllContactPropertyKeys())
-            CNMemoryStore.contacts[contact.identifier] = storage
-            appendHistory(CNChangeHistoryUpdateContactEvent(contact: CNContact(storage: storage)))
+            working.contacts[contact.identifier] = storage
+            appendHistory(
+                CNChangeHistoryUpdateContactEvent(contact: CNContact(storage: storage)),
+                to: &working
+            )
         case .deleteContact(let contact):
-            guard CNMemoryStore.contacts.removeValue(forKey: contact.identifier) != nil else {
+            guard working.contacts.removeValue(forKey: contact.identifier) != nil else {
                 throw CNError(
                     .recordDoesNotExist,
                     userInfo: [CNErrorUserInfoAffectedRecordIdentifiersKey: [contact.identifier]]
                 )
             }
-            CNMemoryStore.contactContainers.removeValue(forKey: contact.identifier)
-            for key in CNMemoryStore.groupMembers.keys {
-                CNMemoryStore.groupMembers[key]?.remove(contact.identifier)
+            working.contactContainers.removeValue(forKey: contact.identifier)
+            for key in working.groupMembers.keys {
+                working.groupMembers[key]?.remove(contact.identifier)
             }
-            appendHistory(CNChangeHistoryDeleteContactEvent(contactIdentifier: contact.identifier))
+            appendHistory(
+                CNChangeHistoryDeleteContactEvent(contactIdentifier: contact.identifier),
+                to: &working
+            )
         case .addGroup(let group, let container):
-            if CNMemoryStore.groups[group.identifier] != nil {
+            if working.groups[group.identifier] != nil {
                 throw CNError(.insertedRecordAlreadyExists)
             }
-            CNMemoryStore.groups[group.identifier] = (group.identifier, group.name)
-            CNMemoryStore.groupContainers[group.identifier] = container ?? containerID
-            CNMemoryStore.groupMembers[group.identifier] = []
+            working.groups[group.identifier] = (group.identifier, group.name)
+            working.groupContainers[group.identifier] = container ?? containerID
+            working.groupMembers[group.identifier] = []
             appendHistory(
                 CNChangeHistoryAddGroupEvent(
                     group: CNGroup(identifier: group.identifier, name: group.name),
                     containerIdentifier: container ?? containerID
-                )
+                ),
+                to: &working
             )
         case .updateGroup(let group):
-            guard CNMemoryStore.groups[group.identifier] != nil else {
+            guard working.groups[group.identifier] != nil else {
                 throw CNError(.recordDoesNotExist)
             }
-            CNMemoryStore.groups[group.identifier] = (group.identifier, group.name)
+            working.groups[group.identifier] = (group.identifier, group.name)
             appendHistory(
                 CNChangeHistoryUpdateGroupEvent(
                     group: CNGroup(identifier: group.identifier, name: group.name)
-                )
+                ),
+                to: &working
             )
         case .deleteGroup(let group):
-            guard CNMemoryStore.groups.removeValue(forKey: group.identifier) != nil else {
+            guard working.groups.removeValue(forKey: group.identifier) != nil else {
                 throw CNError(.recordDoesNotExist)
             }
-            CNMemoryStore.groupMembers.removeValue(forKey: group.identifier)
-            CNMemoryStore.groupContainers.removeValue(forKey: group.identifier)
-            appendHistory(CNChangeHistoryDeleteGroupEvent(groupIdentifier: group.identifier))
+            working.groupMembers.removeValue(forKey: group.identifier)
+            working.groupContainers.removeValue(forKey: group.identifier)
+            appendHistory(
+                CNChangeHistoryDeleteGroupEvent(groupIdentifier: group.identifier),
+                to: &working
+            )
         case .addMember(let contactID, let groupID):
-            guard CNMemoryStore.contacts[contactID] != nil else {
+            guard working.contacts[contactID] != nil else {
                 throw CNError(.recordDoesNotExist)
             }
-            guard CNMemoryStore.groups[groupID] != nil else {
+            guard working.groups[groupID] != nil else {
                 throw CNError(.parentRecordDoesNotExist)
             }
-            CNMemoryStore.groupMembers[groupID, default: []].insert(contactID)
-            let group = CNMemoryStore.groups[groupID]!
+            working.groupMembers[groupID, default: []].insert(contactID)
+            let group = working.groups[groupID]!
             appendHistory(
                 CNChangeHistoryAddMemberToGroupEvent(
-                    member: CNContact(storage: CNMemoryStore.contacts[contactID]!),
+                    member: CNContact(storage: working.contacts[contactID]!),
                     group: CNGroup(identifier: group.identifier, name: group.name)
-                )
+                ),
+                to: &working
             )
         case .removeMember(let contactID, let groupID):
-            CNMemoryStore.groupMembers[groupID]?.remove(contactID)
-            if let group = CNMemoryStore.groups[groupID], let storage = CNMemoryStore.contacts[contactID] {
+            working.groupMembers[groupID]?.remove(contactID)
+            if let group = working.groups[groupID], let storage = working.contacts[contactID] {
                 appendHistory(
                     CNChangeHistoryRemoveMemberFromGroupEvent(
                         member: CNContact(storage: storage),
                         group: CNGroup(identifier: group.identifier, name: group.name)
-                    )
+                    ),
+                    to: &working
                 )
             }
         }
     }
 
-    private func appendHistory(_ event: CNChangeHistoryEvent) {
-        CNMemoryStore.history.append(event)
-        CNMemoryStore.historyCounter += 1
+    private func appendHistory(
+        _ event: CNChangeHistoryEvent,
+        to working: inout CNMemoryStore.Snapshot
+    ) {
+        working.history.append(event)
+        working.historyCounter += 1
     }
 }
