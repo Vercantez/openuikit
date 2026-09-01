@@ -2713,9 +2713,11 @@ echo '== compile/link/run the standalone QuickLook controller gate'
     -o "$WORK/quicklook-guest-runtime.o" \
     "$W/full/quicklook/tests/QuickLookGuestRuntime.swift"
 "${LD[@]}" -dead_strip -ignore_auto_link \
-    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -exported_symbol __mh_execute_header \
+    "${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
     -o "$STAGE/probe/QuickLookGuestRuntime" \
-    "$WORK/quicklook-guest-runtime.o" "${COMMON_LINK[@]}" \
+    "$WORK/quicklook-guest-runtime.o" \
+    "${PREVIEW_STANDALONE_LINK_INPUTS[@]}" "${COMMON_LINK[@]}" \
     -lQuickLook -lUIKit -lFoundation -lFoundationInternationalization \
     -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics \
     "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
@@ -2727,6 +2729,10 @@ quicklook_gate_load_count=$(llvm-otool-18 -L \
     | awk '$1 == "@rpath/libQuickLook.dylib" { count++ } END { print count + 0 }')
 [ "$quicklook_gate_load_count" -eq 1 ] \
     || die "QuickLook gate load count $quicklook_gate_load_count, expected 1"
+quicklook_preview_export_count=$(nm_symbol_count --defined-only \
+    "$STAGE/probe/QuickLookGuestRuntime" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+[ "$quicklook_preview_export_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "QuickLook gate Preview export count $quicklook_preview_export_count, expected $PREVIEW_ENABLED"
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \

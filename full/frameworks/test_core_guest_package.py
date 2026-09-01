@@ -387,10 +387,10 @@ def validate_preview_standalone_link_contract(source: str) -> None:
         raise AssertionError(
             f"standalone SwiftUI Preview link contract drifted: {missing}"
         )
-    if source.count('"${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}"') != 3:
+    if source.count('"${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}"') != 4:
         raise AssertionError("standalone SwiftUI Preview export use count drifted")
-    if source.count('"${PREVIEW_STANDALONE_LINK_INPUTS[@]}"') != 4:
-        # One use audits the source object and three uses link executables.
+    if source.count('"${PREVIEW_STANDALONE_LINK_INPUTS[@]}"') != 5:
+        # One use audits the source object and four uses link executables.
         raise AssertionError("standalone SwiftUI Preview link-input use count drifted")
     slices = (
         (
@@ -402,6 +402,11 @@ def validate_preview_standalone_link_contract(source: str) -> None:
             "compile/link/run the SwiftUI-only Foundation/Combine/Dispatch reexport gate",
             "compile/link/run the full async Foundation URLSession cold gate",
             "swiftui_reexport_preview_export_count=$(nm_symbol_count --defined-only",
+        ),
+        (
+            "compile/link/run the standalone QuickLook controller gate",
+            "typecheck an ordinary QuickLook/SwiftUI cross-import consumer",
+            "quicklook_preview_export_count=$(nm_symbol_count --defined-only",
         ),
         (
             "compile/link/run the standalone Charts mark and interaction gate",
@@ -1894,6 +1899,7 @@ class ShellContractTests(unittest.TestCase):
             'PREVIEW_STANDALONE_LINK_INPUTS+=("$STAGE/objects/developertoolsupport.o")',
             "PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS+=(-lOpenUIKit)",
             "swiftdata_preview_export_count=$(nm_symbol_count --defined-only",
+            "quicklook_preview_export_count=$(nm_symbol_count --defined-only",
             "swiftui_reexport_preview_export_count=$(nm_symbol_count --defined-only",
         ):
             with self.subTest(deleted=token):
