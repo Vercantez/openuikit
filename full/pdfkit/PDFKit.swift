@@ -1,9 +1,15 @@
 @_exported import Foundation
+
 #if canImport(CoreGraphics)
 @_exported import CoreGraphics
+#elseif canImport(OpenCoreGraphics)
+@_exported import OpenCoreGraphics
 #endif
+
 #if canImport(UIKit)
 @_exported import UIKit
+#elseif canImport(OpenUIKit)
+@_exported import OpenUIKit
 #endif
 
 /// Sentinel used when a destination does not specify a point. The magnitude
@@ -38,4 +44,36 @@ extension Notification.Name {
     public static let PDFDocumentDidEndWrite = Notification.Name("PDFDocumentDidEndWriteNotification")
     public static let PDFDocumentDidBeginPageWrite = Notification.Name("PDFDocumentDidBeginPageWriteNotification")
     public static let PDFDocumentDidEndPageWrite = Notification.Name("PDFDocumentDidEndPageWriteNotification")
+}
+
+@_spi(PDFKitTesting)
+public enum PDFKitTesting {
+    public static func parseStatus(_ data: Data) -> String {
+        switch PDFKitIO.parseDetailed(data) {
+        case .success(let document) where document.encrypted:
+            return "encrypted"
+        case .success:
+            return "ok"
+        case .failure(let failure):
+            return failure.rawValue
+        }
+    }
+
+    public static func resourceKeyCount(for page: PDFPage) -> Int {
+        page.resourceKeyCount
+    }
+
+    #if canImport(CoreGraphics)
+    public static func acceptIdentity(document: CGPDFDocument, page: CGPDFPage, rect: CGRect) -> Bool {
+        _ = (document, page)
+        return rect.width >= 0 && rect.height >= 0
+    }
+    #endif
+
+    #if canImport(UIKit)
+    public static func acceptIdentity(image: UIImage, view: UIView, controller: UIViewController) -> Bool {
+        _ = (image.size, view.bounds, controller)
+        return true
+    }
+    #endif
 }

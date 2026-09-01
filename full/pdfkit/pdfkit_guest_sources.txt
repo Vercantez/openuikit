@@ -2,7 +2,7 @@ full/pdfkit/PDFAction.swift
 full/pdfkit/PDFAnnotation.swift
 full/pdfkit/PDFDocument.swift
 full/pdfkit/PDFKit.swift
+full/pdfkit/PDFKitDependencies.swift
 full/pdfkit/PDFKitEnums.swift
-full/pdfkit/PDFKitHostTypes.swift
 full/pdfkit/PDFKitPDFIO.swift
 full/pdfkit/PDFView.swift

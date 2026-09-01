@@ -9,7 +9,15 @@ open class PDFAnnotation: NSObject, NSSecureCoding {
     open var contents: String?
     open var userName: String?
     open var modificationDate: Date?
+    #if canImport(UIKit)
     open var color: UIColor = .black
+    open var font: UIFont?
+    open var fontColor: UIColor?
+    open var interiorColor: UIColor?
+    open var backgroundColor: UIColor?
+    open var alignment: NSTextAlignment = .left
+    public private(set) var paths: [UIBezierPath]?
+    #endif
     open var border: PDFBorder?
     open var action: PDFAction?
     open var url: URL?
@@ -21,11 +29,6 @@ open class PDFAnnotation: NSObject, NSSecureCoding {
     open var hasAppearanceStream: Bool { false }
     open var isActivatableTextField: Bool { widgetFieldType == .text && !isReadOnly }
 
-    open var alignment: NSTextAlignment = .left
-    open var font: UIFont?
-    open var fontColor: UIColor?
-    open var interiorColor: UIColor?
-    open var backgroundColor: UIColor?
     open var startPoint: CGPoint = .zero
     open var endPoint: CGPoint = .zero
     open var startLineStyle: PDFLineStyle = .none
@@ -47,13 +50,11 @@ open class PDFAnnotation: NSObject, NSSecureCoding {
     open var maximumLength: Int = 0
     open var hasComb = false
     open var isListChoice = false
-    open var isMultiline = false
     open var isPasswordField: Bool { false }
     open var isReadOnly = false
     open var allowsToggleToOff = true
     open var radiosInUnison = false
     open var quadrilateralPoints: [NSValue]?
-    public private(set) var paths: [UIBezierPath]?
 
     private var storedValues: [String: Any] = [:]
 
@@ -97,7 +98,9 @@ open class PDFAnnotation: NSObject, NSSecureCoding {
         case .contents: return contents
         case .rect: return bounds
         case .subtype: return type.map { "/\($0)" } ?? storedValues[key.rawValue]
+        #if canImport(UIKit)
         case .color: return color
+        #endif
         default: return storedValues[key.rawValue]
         }
     }
@@ -114,6 +117,10 @@ open class PDFAnnotation: NSObject, NSSecureCoding {
             if let name = value as? String {
                 type = name.hasPrefix("/") ? String(name.dropFirst()) : name
             }
+        #if canImport(UIKit)
+        case .color:
+            if let colorValue = value as? UIColor { color = colorValue }
+        #endif
         default:
             break
         }
@@ -139,6 +146,7 @@ open class PDFAnnotation: NSObject, NSSecureCoding {
         if key == .contents { contents = nil }
     }
 
+    #if canImport(UIKit)
     open func add(_ path: UIBezierPath) {
         var current = paths ?? []
         current.append(path)
@@ -148,11 +156,13 @@ open class PDFAnnotation: NSObject, NSSecureCoding {
     open func remove(_ path: UIBezierPath) {
         paths = paths?.filter { $0 !== path }
     }
+    #endif
 
+    #if canImport(CoreGraphics)
     open func draw(with box: PDFDisplayBox, in context: CGContext) {
         _ = (box, context)
-        // Fail-closed: annotation appearance streams are not rendered here.
     }
+    #endif
 
     open class func lineStyle(fromName name: String) -> PDFLineStyle {
         switch name {

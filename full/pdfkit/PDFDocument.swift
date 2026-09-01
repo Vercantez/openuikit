@@ -59,7 +59,9 @@ open class PDFDocument: NSObject {
             || accessPermissions.contains(.allowsHighQualityPrinting)
     }
 
+    #if canImport(CoreGraphics)
     open var documentRef: CGPDFDocument? { nil }
+    #endif
     open var pageClass: AnyClass { delegate?.classForPage() ?? PDFPage.self }
 
     var pages: [PDFPage] = []
@@ -138,8 +140,9 @@ open class PDFDocument: NSObject {
     }
 
     open func dataRepresentation(options: [AnyHashable: Any] = [:]) -> Data? {
+        if isLocked { return nil }
         if writeOptionsAreUnsupported(options) { return nil }
-        if !mutated, let originalData, !isLocked { return originalData }
+        if !mutated, let originalData { return originalData }
         return PDFKitIO.write(pages: pages, attributes: documentAttributes, version: (majorVersion, minorVersion))
     }
 
@@ -188,17 +191,8 @@ open class PDFDocument: NSObject {
         withOptions options: NSString.CompareOptions = []
     ) -> PDFSelection? {
         let all = findString(string, withOptions: options)
-        guard let selection, let lastPage = selection.pages.last else { return all.first }
-        let start = index(for: lastPage)
-        return all.first { match in
-            guard let page = match.pages.first else { return false }
-            let pageIndex = index(for: page)
-            if pageIndex > start { return true }
-            if pageIndex == start {
-                return (match.string ?? "") != selection.string
-            }
-            return false
-        } ?? all.first
+        guard let selection else { return all.first }
+        return all.first { $0.isAfter(selection, in: self) }
     }
 
     open func beginFindString(_ string: String, withOptions options: NSString.CompareOptions = []) {
@@ -367,14 +361,21 @@ open class PDFDocument: NSObject {
     }
 
     private func writeOptionsAreUnsupported(_ options: [AnyHashable: Any]) -> Bool {
-        let keys = options.keys.map { "\($0)" }
-        let blocked = [
+        let blocked: Set<String> = [
             PDFDocumentWriteOption.ownerPasswordOption.rawValue,
             PDFDocumentWriteOption.userPasswordOption.rawValue,
             PDFDocumentWriteOption.burnInAnnotationsOption.rawValue,
             PDFDocumentWriteOption.saveTextFromOCROption.rawValue
         ]
-        return keys.contains(where: { blocked.contains($0) })
+        for key in options.keys {
+            if let option = key as? PDFDocumentWriteOption, blocked.contains(option.rawValue) {
+                return true
+            }
+            if let string = key as? String, blocked.contains(string) {
+                return true
+            }
+        }
+        return false
     }
 }
 
@@ -399,11 +400,13 @@ open class PDFPage: NSObject {
         .mediaBox: CGRect(x: 0, y: 0, width: 612, height: 792)
     ]
     var contentData: Data?
+    var resourceKeyCount = 0
 
     public required override init() {
         super.init()
     }
 
+    #if canImport(UIKit)
     public convenience init?(image: UIImage) {
         self.init(image: image, options: [:])
     }
@@ -424,7 +427,32 @@ open class PDFPage: NSObject {
         storedString = nil
     }
 
+    open func thumbnail(of size: CGSize, for box: PDFDisplayBox) -> UIImage {
+        _ = box
+        let thumbSize = CGSize(width: max(1, size.width), height: max(1, size.height))
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        let renderer = UIGraphicsImageRenderer(size: thumbSize, format: format)
+        return renderer.image { _ in }
+    }
+    #endif
+
+    #if canImport(CoreGraphics)
     open var pageRef: CGPDFPage? { nil }
+
+    open func draw(with box: PDFDisplayBox, to context: CGContext) {
+        _ = (box, context)
+    }
+
+    open func transform(_ context: CGContext, for box: PDFDisplayBox) {
+        _ = (context, box)
+    }
+
+    open func transform(for box: PDFDisplayBox) -> CGAffineTransform {
+        _ = box
+        return .identity
+    }
+    #endif
 
     open var string: String? { storedString }
 
@@ -512,25 +540,6 @@ open class PDFPage: NSObject {
         return selection
     }
 
-    open func thumbnail(of size: CGSize, for box: PDFDisplayBox) -> UIImage {
-        _ = box
-        // Fail-closed rendering: return an empty image of the requested size.
-        return UIImage(size: size)
-    }
-
-    open func draw(with box: PDFDisplayBox, to context: CGContext) {
-        _ = (box, context)
-    }
-
-    open func transform(_ context: CGContext, for box: PDFDisplayBox) {
-        _ = (context, box)
-    }
-
-    open func transform(for box: PDFDisplayBox) -> CGAffineTransform {
-        _ = box
-        return .identity
-    }
-
     func apply(_ parsed: PDFKitParsedPage) {
         boxes[.mediaBox] = parsed.mediaBox
         if let crop = parsed.cropBox { boxes[.cropBox] = crop }
@@ -540,6 +549,7 @@ open class PDFPage: NSObject {
         rotation = parsed.rotation
         storedString = parsed.text.isEmpty ? nil : parsed.text
         contentData = parsed.contents
+        resourceKeyCount = parsed.resourceKeyCount
     }
 
     func matches(of string: String, options: NSString.CompareOptions) -> [PDFSelection] {
@@ -619,7 +629,9 @@ open class PDFOutline: NSObject {
 open class PDFSelection: NSObject {
     public private(set) weak var owningDocument: PDFDocument?
     public private(set) var pages: [PDFPage] = []
+    #if canImport(UIKit)
     open var color: UIColor?
+    #endif
     private var pieces: [(page: PDFPage, text: String, range: NSRange?)] = []
 
     public init(document: PDFDocument) {
@@ -696,5 +708,14 @@ open class PDFSelection: NSObject {
         if !pages.contains(where: { $0 === page }) {
             pages.append(page)
         }
+    }
+
+    func isAfter(_ other: PDFSelection, in document: PDFDocument) -> Bool {
+        let selfPage = pages.first.flatMap { document.index(for: $0) } ?? Int.max
+        let otherPage = other.pages.first.flatMap { document.index(for: $0) } ?? -1
+        if selfPage != otherPage { return selfPage > otherPage }
+        let selfLocation = pieces.first?.range?.location ?? 0
+        let otherRange = other.pieces.first?.range ?? NSRange(location: 0, length: 0)
+        return selfLocation >= otherRange.location + otherRange.length
     }
 }

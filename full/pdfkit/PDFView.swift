@@ -1,5 +1,6 @@
 import Foundation
 
+#if canImport(UIKit)
 public protocol PDFPageOverlayViewProvider: NSObjectProtocol {
     func pdfView(_ view: PDFView, overlayViewFor page: PDFPage) -> UIView?
     func pdfView(_ pdfView: PDFView, willDisplayOverlayView overlayView: UIView, for page: PDFPage)
@@ -15,10 +16,13 @@ public extension PDFPageOverlayViewProvider {
         _ = (pdfView, overlayView, page)
     }
 }
+#endif
 
 public protocol PDFViewDelegate: NSObjectProtocol {
     func pdfViewOpenPDF(_ sender: PDFView, forRemoteGoToAction action: PDFActionRemoteGoTo)
+    #if canImport(UIKit)
     func pdfViewParentViewController() -> UIViewController
+    #endif
     func pdfViewPerformFind(_ sender: PDFView)
     func pdfViewPerformGo(toPage sender: PDFView)
     func pdfViewWillClick(onLink sender: PDFView, with url: URL)
@@ -29,27 +33,68 @@ public extension PDFViewDelegate {
         _ = (sender, action)
     }
 
+    #if canImport(UIKit)
     func pdfViewParentViewController() -> UIViewController {
         UIViewController()
     }
+    #endif
 
     func pdfViewPerformFind(_ sender: PDFView) { _ = sender }
     func pdfViewPerformGo(toPage sender: PDFView) { _ = sender }
     func pdfViewWillClick(onLink sender: PDFView, with url: URL) { _ = (sender, url) }
 }
 
+#if canImport(UIKit)
+private final class PDFKitFindSessionDelegate: NSObject, UIFindInteractionDelegate {
+    func findInteraction(_ interaction: UIFindInteraction, sessionFor view: UIView) -> UIFindSession? {
+        _ = (interaction, view)
+        return nil
+    }
+}
+#endif
+
+#if canImport(UIKit)
+public typealias PDFKitViewBase = UIView
+#else
+open class PDFKitViewBase: NSObject {
+    open var frame: CGRect = .zero
+    open var bounds: CGRect = .zero
+    open var isHidden = false
+
+    public override init() {
+        super.init()
+    }
+
+    public init(frame: CGRect) {
+        self.frame = frame
+        self.bounds = CGRect(origin: .zero, size: frame.size)
+        super.init()
+    }
+}
+#endif
+
 @MainActor
-open class PDFView: UIView {
+open class PDFView: PDFKitViewBase {
     public weak var delegate: (any PDFViewDelegate)?
+    #if canImport(UIKit)
     public weak var pageOverlayViewProvider: (any PDFPageOverlayViewProvider)?
+    #endif
 
     private var _document: PDFDocument?
     private var _currentIndex = 0
     private var history: [Int] = []
     private var historyIndex = -1
     private var _scaleFactor: CGFloat = 1
-    private let hostedFindInteraction = UIFindInteraction()
+    private var breakTop: CGFloat = 4
+    private var breakLeft: CGFloat = 4
+    private var breakBottom: CGFloat = 4
+    private var breakRight: CGFloat = 4
+
+    #if canImport(UIKit)
+    private let findSessionDelegate = PDFKitFindSessionDelegate()
+    private lazy var hostedFindInteraction = UIFindInteraction(sessionDelegate: findSessionDelegate)
     private let hostedDocumentView = UIView()
+    #endif
 
     open var document: PDFDocument? {
         get { _document }
@@ -83,27 +128,32 @@ open class PDFView: UIView {
     open var autoScales = false
     open var minScaleFactor: CGFloat = 0.25
     open var maxScaleFactor: CGFloat = 4
-    open var pageBreakMargins = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
     open var currentSelection: PDFSelection? {
         didSet { NotificationCenter.default.post(name: .PDFViewSelectionChanged, object: self) }
     }
     open var highlightedSelections: [PDFSelection]?
+
+    #if canImport(UIKit)
+    open var pageBreakMargins: UIEdgeInsets {
+        get { UIEdgeInsets(top: breakTop, left: breakLeft, bottom: breakBottom, right: breakRight) }
+        set {
+            breakTop = newValue.top
+            breakLeft = newValue.left
+            breakBottom = newValue.bottom
+            breakRight = newValue.right
+        }
+    }
+
     open var findInteraction: UIFindInteraction { hostedFindInteraction }
     open var documentView: UIView? { hostedDocumentView }
 
-    #if canImport(UIKit)
     open override var backgroundColor: UIColor? {
         get { pdfBackgroundColor }
         set { pdfBackgroundColor = newValue ?? UIColor(white: 0.5, alpha: 1) }
     }
-    #else
-    open var backgroundColor: UIColor {
-        get { pdfBackgroundColor }
-        set { pdfBackgroundColor = newValue }
-    }
-    #endif
 
-    private var pdfBackgroundColor: UIColor = .init(white: 0.5, alpha: 1)
+    private var pdfBackgroundColor: UIColor = UIColor(white: 0.5, alpha: 1)
+    #endif
 
     open var scaleFactor: CGFloat {
         get { _scaleFactor }
@@ -154,13 +204,21 @@ open class PDFView: UIView {
     open var canZoomIn: Bool { _scaleFactor < maxScaleFactor }
     open var canZoomOut: Bool { _scaleFactor > minScaleFactor }
 
+    #if !canImport(UIKit)
     public override init() {
         super.init()
     }
+    #endif
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
     }
+
+    #if canImport(UIKit)
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    #endif
 
     open func go(to page: PDFPage) {
         guard let document, let index = optionalIndex(of: page, in: document) else { return }
@@ -267,10 +325,12 @@ open class PDFView: UIView {
         layoutDocumentView()
     }
 
+    #if canImport(UIKit)
     open func areaOfInterest(forMouse event: UIEvent) -> PDFAreaOfInterest {
         _ = event
         return .pageArea
     }
+    #endif
 
     open func areaOfInterest(for cursorLocation: CGPoint) -> PDFAreaOfInterest {
         if let page = currentPage, page.annotation(at: cursorLocation) != nil {
@@ -301,6 +361,7 @@ open class PDFView: UIView {
         return CGRect(origin: origin, size: CGSize(width: rect.size.width / _scaleFactor, height: rect.size.height / _scaleFactor))
     }
 
+    #if canImport(CoreGraphics)
     open func draw(_ page: PDFPage, to context: CGContext) {
         page.draw(with: displayBox, to: context)
     }
@@ -308,6 +369,7 @@ open class PDFView: UIView {
     open func drawPagePost(_ page: PDFPage, to context: CGContext) {
         _ = (page, context)
     }
+    #endif
 
     open func layoutDocumentView() {
         NotificationCenter.default.post(name: .PDFViewVisiblePagesChanged, object: self)
@@ -385,32 +447,39 @@ open class PDFView: UIView {
         let box = page.bounds(for: displayBox)
         let size = CGSize(width: box.size.width * _scaleFactor, height: box.size.height * _scaleFactor)
         if displayDirection == .vertical {
-            let y = CGFloat(index) * (size.height + pageBreakMargins.top + pageBreakMargins.bottom)
-            return CGRect(origin: CGPoint(x: pageBreakMargins.left, y: y), size: size)
+            let y = CGFloat(index) * (size.height + breakTop + breakBottom)
+            return CGRect(origin: CGPoint(x: breakLeft, y: y), size: size)
         }
-        let x = CGFloat(index) * (size.width + pageBreakMargins.left + pageBreakMargins.right)
-        return CGRect(origin: CGPoint(x: x, y: pageBreakMargins.top), size: size)
+        let x = CGFloat(index) * (size.width + breakLeft + breakRight)
+        return CGRect(origin: CGPoint(x: x, y: breakTop), size: size)
     }
 }
 
 @MainActor
-open class PDFThumbnailView: UIView {
+open class PDFThumbnailView: PDFKitViewBase {
     public weak var pdfView: PDFView?
     open var layoutMode: PDFThumbnailLayoutMode = .vertical
     open var thumbnailSize = CGSize(width: 100, height: 130)
-    open var contentInset = UIEdgeInsets.zero
 
-    #if !canImport(UIKit)
-    open var backgroundColor: UIColor?
+    #if canImport(UIKit)
+    open var contentInset = UIEdgeInsets.zero
     #endif
 
+    #if !canImport(UIKit)
     public override init() {
         super.init()
     }
+    #endif
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
     }
+
+    #if canImport(UIKit)
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    #endif
 
     open var selectedPages: [PDFPage]? {
         pdfView?.currentPage.map { [$0] }
