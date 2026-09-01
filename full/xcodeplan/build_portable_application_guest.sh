@@ -152,6 +152,7 @@ prepare_host() {
 
     python3 -B "$SCRIPT_DIR/core_guest_package.py" "$platform" --emit-summary
     local preview_required expected_plugin_sha actual_plugin_sha
+    local preview_evidence_enabled=no
     local preview_source_list_sha=
     read -r preview_required expected_plugin_sha < <(
         PYTHONPATH="$SCRIPT_DIR" python3 -B - "$platform" <<'PY'
@@ -164,14 +165,20 @@ print("yes", preview["plugin_sha256"] if preview else "-") if preview else print
 PY
     )
     if [ "$preview_required" = yes ]; then
-        [ -n "$plugin" ] || die "core package requires --preview-plugin"
-        [ -n "$preview_source_list" ] \
-            || die "core package requires --preview-evidence-source-list"
-        [ -x "$plugin" ] || die "Preview macro plugin is not executable: $plugin"
-        actual_plugin_sha=$(shasum -a 256 "$plugin" | awk '{print $1}')
-        [ "$actual_plugin_sha" = "$expected_plugin_sha" ] \
-            || die "Preview macro plugin hash differs from core package"
-        preview_source_list_sha=$(shasum -a 256 "$preview_source_list" | awk '{print $1}')
+        if [ -n "$plugin" ] || [ -n "$preview_source_list" ]; then
+            [ -n "$plugin" ] \
+                || die "--preview-evidence-source-list requires --preview-plugin"
+            [ -n "$preview_source_list" ] \
+                || die "--preview-plugin requires --preview-evidence-source-list"
+            [ -x "$plugin" ] \
+                || die "Preview macro plugin is not executable: $plugin"
+            actual_plugin_sha=$(shasum -a 256 "$plugin" | awk '{print $1}')
+            [ "$actual_plugin_sha" = "$expected_plugin_sha" ] \
+                || die "Preview macro plugin hash differs from core package"
+            preview_source_list_sha=$(shasum -a 256 \
+                "$preview_source_list" | awk '{print $1}')
+            preview_evidence_enabled=yes
+        fi
     elif [ -n "$plugin" ]; then
         die "--preview-plugin supplied but core package has no Preview contract"
     elif [ -n "$preview_source_list" ]; then
@@ -204,7 +211,7 @@ PY
             "$output/local-package-graph.json" --source-root "$source_root" \
             "${remote_cache_arguments[@]}"
     fi
-    if [ "$preview_required" = yes ]; then
+    if [ "$preview_evidence_enabled" = yes ]; then
         [ ! -e "$output/preview-evidence-sources.nul" ] \
             && [ ! -L "$output/preview-evidence-sources.nul" ] \
             || die "Preview evidence source-list destination already exists"
@@ -297,7 +304,7 @@ PY
         || die "support checkout identity changed during build"
     support_status=$(git -C "$SUPPORT_ROOT" status --porcelain=v1 --untracked-files=all)
     [ -z "$support_status" ] || die "support checkout changed during build: $support_status"
-    if [ "$preview_required" = yes ]; then
+    if [ "$preview_evidence_enabled" = yes ]; then
         [ "$(shasum -a 256 "$preview_source_list" | awk '{print $1}')" \
             = "$preview_source_list_sha" ] \
             || die "Preview evidence source list changed during build"
@@ -351,6 +358,7 @@ build_inside() {
         "${remote_cache_arguments[@]}" --verify
 
     local module product preview_required expected_plugin_sha plugin_module dts_object
+    local preview_evidence_enabled=no legacy_preview_evidence_count=0
     local -a metadata
     mapfile -d '' -t metadata < <(
         PYTHONPATH="$SCRIPT_DIR" python3 -B - "$platform" \
@@ -384,17 +392,39 @@ PY
     plugin_module=${metadata[4]}
     dts_object=${metadata[5]}
     if [ "$preview_required" = yes ]; then
-        require_regular "$plugin" "mounted Preview macro plugin"
-        [ -x "$plugin" ] || die "mounted Preview macro plugin is not executable"
-        local plugin_sha
-        plugin_sha=$(sha256sum "$plugin" | awk '{print $1}')
-        [ "$plugin_sha" = "$expected_plugin_sha" ] \
-            || die "mounted Preview macro plugin hash differs"
-        file "$plugin" | grep -Eq 'ELF 64-bit.*(ARM aarch64|aarch64)' \
-            || die "Preview macro plugin is not a Linux aarch64 ELF executable"
         require_regular "$platform/$dts_object" "DeveloperToolsSupport target object"
+        if [ -n "$plugin" ]; then
+            require_regular "$plugin" "mounted Preview macro plugin"
+            require_regular "$output/preview-evidence-sources.nul" \
+                "copied Preview evidence source list"
+            [ -x "$plugin" ] \
+                || die "mounted Preview macro plugin is not executable"
+            local plugin_sha
+            plugin_sha=$(sha256sum "$plugin" | awk '{print $1}')
+            [ "$plugin_sha" = "$expected_plugin_sha" ] \
+                || die "mounted Preview macro plugin hash differs"
+            file "$plugin" | grep -Eq 'ELF 64-bit.*(ARM aarch64|aarch64)' \
+                || die "Preview macro plugin is not a Linux aarch64 ELF executable"
+            preview_evidence_enabled=yes
+            legacy_preview_evidence_count=1
+        else
+            [ ! -e "$output/preview-evidence-sources.nul" ] \
+                && [ ! -L "$output/preview-evidence-sources.nul" ] \
+                || die "Preview evidence source list exists without a mounted plugin"
+        fi
     elif [ -n "$plugin" ]; then
         die "mounted Preview plugin without package Preview contract"
+    fi
+    case "$legacy_preview_evidence_count" in
+        0|1) ;;
+        *) die "legacy Preview evidence count is outside the 0-or-1 contract" ;;
+    esac
+    if [ "$preview_evidence_enabled" = yes ]; then
+        [ "$legacy_preview_evidence_count" -eq 1 ] \
+            || die "enabled legacy Preview evidence count is not one"
+    else
+        [ "$legacy_preview_evidence_count" -eq 0 ] \
+            || die "disabled legacy Preview evidence count is not zero"
     fi
 
     local -a swift_arguments link_arguments diagnostic_arguments relative_sources app_sources
@@ -452,7 +482,7 @@ PY
         || die "application object audit already exists"
     mkdir "$module_cache"
     local -a plugin_arguments=()
-    if [ "$preview_required" = yes ]; then
+    if [ "$preview_evidence_enabled" = yes ]; then
         plugin_arguments=(-load-plugin-executable "$plugin#$plugin_module")
     fi
     # Every invocation that loads the SwiftSyntax executable plugin must use
@@ -800,6 +830,11 @@ PY
             && [ "${diagnostic_arguments[0]}" = -Xfrontend ] \
             && [ "${diagnostic_arguments[1]}" = -dump-macro-expansions ] \
             || die "Preview diagnostic arguments drifted"
+    else
+        [ "${#diagnostic_arguments[@]}" -eq 0 ] \
+            || die "non-Preview package published diagnostic arguments"
+    fi
+    if [ "$preview_evidence_enabled" = yes ]; then
         require_regular "$output/preview-evidence-sources.nul" \
             "copied Preview evidence source list"
         [ ! -e "$preview_module_cache" ] && [ ! -L "$preview_module_cache" ] \
@@ -881,11 +916,11 @@ PY
                 "$(sha256sum "$preview_stderr" | awk '{print $1}')"
         } >"$output/preview-evidence-audit.tsv"
     else
-        [ "${#diagnostic_arguments[@]}" -eq 0 ] \
-            || die "non-Preview package published diagnostic arguments"
         [ ! -e "$output/preview-evidence-sources.nul" ] \
             && [ ! -L "$output/preview-evidence-sources.nul" ] \
-            || die "non-Preview build carries a Preview evidence source list"
+            || die "generic Preview build carries a legacy evidence source list"
+        [ ! -e "$preview_module_cache" ] && [ ! -L "$preview_module_cache" ] \
+            || die "generic Preview build carries a legacy evidence module cache"
     fi
 
     local materialized_root materialized_source_list materialization_audit
@@ -894,7 +929,7 @@ PY
     materialization_audit=$output/preview-materialization-audit.json
     local -a production_app_sources=("${app_sources[@]}")
     local preview_original_source= preview_materialized_source=
-    if [ "$preview_required" = yes ]; then
+    if [ "$preview_evidence_enabled" = yes ]; then
         echo "== materialize the attested Preview expansion into an output-owned source"
         python3 -B "$SCRIPT_DIR/application_object_contract.py" \
             materialize-preview-expansion \
@@ -937,7 +972,7 @@ PY
             && [ ! -L "$materialized_source_list" ] \
             && [ ! -e "$materialization_audit" ] \
             && [ ! -L "$materialization_audit" ] \
-            || die "non-Preview build carries Preview materialization artifacts"
+            || die "generic Preview build carries legacy materialization artifacts"
     fi
     local -a compile_sources=(
         "${production_app_sources[@]}" "${derived_sources[@]}" "${platform_sources[@]}"
@@ -948,9 +983,10 @@ PY
     python3 -B "$SCRIPT_DIR/application_object_contract.py" create-output-map \
         --output-map "$output_map" --object-root "$object_root" \
         "${compile_sources[@]}"
-    # The executable plugin is confined to the bounded evidence invocation.
-    # Production consumes the freshly attested expansion as ordinary Swift;
-    # every logical app source still has one ordered output-map entry.
+    # The legacy executable plugin is confined to the optional bounded evidence
+    # invocation. Ordinary app and package compiles receive the relocatable
+    # compiler-library plugins through swift_arguments; when legacy evidence is
+    # selected, production consumes its attested materialization as plain Swift.
     local -a compile_command
     compile_command=(swiftc "${swift_arguments[@]}"
         -module-cache-path "$module_cache"
@@ -1006,7 +1042,7 @@ PY
         || die "application production compile retains a Preview plugin argument"
     [ "$effective_original_preview_source_count" -eq 0 ] \
         || die "application production compile retains the original #Preview source"
-    if [ "$preview_required" = yes ]; then
+    if [ "$preview_evidence_enabled" = yes ]; then
         [ "$effective_materialized_preview_source_count" -eq 1 ] \
             || die "application production compile does not contain one materialized Preview source"
     else
@@ -1022,7 +1058,7 @@ PY
     [ ! -e "$compile_stderr" ] && [ ! -L "$compile_stderr" ] \
         && [ ! -e "$compile_stdout" ] && [ ! -L "$compile_stdout" ] \
         || die "application compiler output already exists"
-    echo "== compile ordered application sources with attested Preview materialization"
+    echo "== compile ordered application sources with packaged compiler plugins"
     set +e
     (
         cd "$platform"
@@ -1065,8 +1101,11 @@ PY
         --audit "$output/application-cross-file-symbols.json" \
         "${application_objects[@]}"
     {
-        printf 'format\tportable-application-compile-audit-v4\n'
+        printf 'format\tportable-application-compile-audit-v5\n'
         printf 'mode\tstandard-driver-output-file-map\n'
+        printf 'preview-target-support\t%s\n' "$preview_required"
+        printf 'legacy-preview-evidence-count\t%s\n' \
+            "$legacy_preview_evidence_count"
         printf 'source-count\t%s\n' "${#compile_sources[@]}"
         printf 'application-source-count\t%s\n' "${#app_sources[@]}"
         printf 'original-application-source-count\t%s\n' \
@@ -1102,7 +1141,7 @@ PY
             "$(sha256sum "$compile_stderr" | awk '{print $1}')"
         printf 'derived-source-attestation-sha256\t%s\n' \
             "$(sha256sum "$derived_root/derived-sources-attestation.json" | awk '{print $1}')"
-        if [ "$preview_required" = yes ]; then
+        if [ "$preview_evidence_enabled" = yes ]; then
             printf 'preview-materialization-audit-sha256\t%s\n' \
                 "$(sha256sum "$materialization_audit" | awk '{print $1}')"
         fi
@@ -1308,7 +1347,7 @@ PY
     python3 -B "$SCRIPT_DIR/compiler_input_providers.py" verify \
         --build-plan "$output/application-build-plan.json" \
         --source-root "$app_root" --output-root "$derived_root"
-    if [ "$preview_required" = yes ]; then
+    if [ "$preview_evidence_enabled" = yes ]; then
         [ "$(sha256sum "$plugin" | awk '{print $1}')" = "$expected_plugin_sha" ] \
             || die "Preview macro plugin changed during build"
         python3 -B "$SCRIPT_DIR/application_object_contract.py" \
@@ -1339,7 +1378,7 @@ PY
         runtime-closure.manifest
         runtime.log
     )
-    if [ "$preview_required" = yes ]; then
+    if [ "$preview_evidence_enabled" = yes ]; then
         build_artifacts+=(
             app-macro-expansions.stderr
             app-macro-expansions.stdout
@@ -1366,7 +1405,7 @@ PY
             find local-package-build -type f -print0 | sort -z | xargs -0 sha256sum \
                 >>application-build-artifacts.sha256
         fi
-        if [ "$preview_required" = yes ]; then
+        if [ "$preview_evidence_enabled" = yes ]; then
             find preview-materialized-sources -type f -print0 \
                 | sort -z | xargs -0 sha256sum \
                 >>application-build-artifacts.sha256

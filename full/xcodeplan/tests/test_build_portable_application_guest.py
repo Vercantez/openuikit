@@ -119,8 +119,16 @@ def validate_multi_source_object_map_contract(source: str) -> None:
             raise AssertionError(f"multi-source object-map refusal drifted: {refusal}")
 
 
-def validate_preview_materialization_contract(source: str) -> None:
+def validate_preview_transport_contract(source: str) -> None:
     required_once = (
+        "local preview_evidence_enabled=no\n    local preview_source_list_sha=",
+        "local preview_evidence_enabled=no legacy_preview_evidence_count=0",
+        'legacy_preview_evidence_count=1',
+        '"legacy Preview evidence count is outside the 0-or-1 contract"',
+        '"enabled legacy Preview evidence count is not one"',
+        '"disabled legacy Preview evidence count is not zero"',
+        '"--preview-evidence-source-list requires --preview-plugin"',
+        '"--preview-plugin requires --preview-evidence-source-list"',
         'materialize-preview-expansion \\\n',
         'materialized_root=$output/preview-materialized-sources',
         'materialized_source_list=$output/preview-materialized-app-sources.nul',
@@ -137,7 +145,9 @@ def validate_preview_materialization_contract(source: str) -> None:
         'application production compile retains a Preview plugin argument',
         'application production compile retains the original #Preview source',
         'application production compile does not contain one materialized Preview source',
-        'portable-application-compile-audit-v4',
+        'portable-application-compile-audit-v5',
+        'preview-target-support\\t%s\\n',
+        'legacy-preview-evidence-count\\t%s\\n',
         'production-plugin-load-count\\t%s\\n',
         'production-plugin-path-count\\t%s\\n',
         'original-preview-source-count\\t%s\\n',
@@ -148,9 +158,21 @@ def validate_preview_materialization_contract(source: str) -> None:
     )
     drifted = [token for token in required_once if source.count(token) != 1]
     if drifted:
-        raise AssertionError(f"Preview materialization contract drifted: {drifted}")
+        raise AssertionError(f"Preview transport contract drifted: {drifted}")
     if source.count('verify-preview-materialization \\\n') != 2:
-        raise AssertionError("Preview materialization verification bracket drifted")
+        raise AssertionError("Preview transport verification bracket drifted")
+    if source.count('if [ "$preview_evidence_enabled" = yes ]; then') < 8:
+        raise AssertionError("Preview transport optional-evidence bracket drifted")
+    if source.count("preview_evidence_enabled=yes") != 2:
+        raise AssertionError("Preview transport host/guest enablement drifted")
+    for legacy_requirement in (
+        "core package requires --preview-plugin",
+        "core package requires --preview-evidence-source-list",
+    ):
+        if legacy_requirement in source:
+            raise AssertionError(
+                "generic Preview transport regained a mandatory legacy input"
+            )
     production_start = source.index("    compile_command=(swiftc")
     production = source[production_start : source.index(
         "    local effective_output_map_count", production_start
@@ -210,7 +232,7 @@ def validate_local_package_module_object_boundary(source: str) -> None:
     preflight = source.rindex('local_package_graph.py" require-buildable')
     compile_target = source.index("== compile local Swift-package target")
     application_compile = source.index(
-        "== compile ordered application sources with attested Preview materialization"
+        "== compile ordered application sources with packaged compiler plugins"
     )
     if not preflight < compile_target < application_compile:
         raise AssertionError("local package build order drifted")
@@ -259,7 +281,7 @@ def validate_c_family_package_boundary(source: str) -> None:
         raise AssertionError("package Clang contaminated the Swift import cache")
     package_object = source.index('package_objects+=("$package_object")', clang_case)
     application_compile = source.index(
-        "== compile ordered application sources with attested Preview materialization"
+        "== compile ordered application sources with packaged compiler plugins"
     )
     if not target_case < clang_case < package_object < application_compile:
         raise AssertionError("local package C-family build ordering drifted")
@@ -536,12 +558,15 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
                 with self.assertRaisesRegex(AssertionError, "remote package cache"):
                     validate_remote_package_cache_boundary(source.replace(token, "", 1))
 
-    def test_preview_is_materialized_once_and_plugin_is_evidence_only(self) -> None:
+    def test_preview_plugins_are_generic_and_legacy_evidence_is_optional(self) -> None:
         source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(
             encoding="utf-8"
         )
-        validate_preview_materialization_contract(source)
+        validate_preview_transport_contract(source)
         for token in (
+            "local preview_evidence_enabled=no legacy_preview_evidence_count=0",
+            '"--preview-evidence-source-list requires --preview-plugin"',
+            '"--preview-plugin requires --preview-evidence-source-list"',
             'materialize-preview-expansion \\\n',
             'verify-preview-materialization \\\n',
             'mapfile -d \'\' -t production_app_sources <"$materialized_source_list"',
@@ -556,12 +581,12 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
             'find preview-materialized-sources -type f -print0',
         ):
             with self.subTest(deleted=token):
-                with self.assertRaisesRegex(AssertionError, "materialization"):
-                    validate_preview_materialization_contract(
+                with self.assertRaisesRegex(AssertionError, "transport"):
+                    validate_preview_transport_contract(
                         source.replace(token, "", 1)
                     )
         with self.assertRaisesRegex(AssertionError, "production compile"):
-            validate_preview_materialization_contract(
+            validate_preview_transport_contract(
                 source.replace(
                     '"$serial_job_argument" -emit-object',
                     '"${plugin_arguments[@]}" "$serial_job_argument" -emit-object',
@@ -569,7 +594,7 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
                 )
             )
         with self.assertRaisesRegex(AssertionError, "package compile"):
-            validate_preview_materialization_contract(
+            validate_preview_transport_contract(
                 source.replace(
                     '-module-name "$package_module"',
                     '-module-name "$package_module" "${plugin_arguments[@]}"',
