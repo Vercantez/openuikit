@@ -87,9 +87,7 @@ int vm_copy(unsigned int task, unsigned long src, unsigned long size, unsigned l
 
 MR_STUB(chflags)
 MR_STUB(confstr)
-MR_STUB(copyfile)
 MR_STUB(fchmod)
-MR_STUB(fcopyfile)
 MR_STUB(getattrlist)
 MR_STUB(link)
 MR_STUB(mktemp)
