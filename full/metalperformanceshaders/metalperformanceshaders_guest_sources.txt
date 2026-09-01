@@ -1,0 +1,8 @@
+full/metalperformanceshaders/MPSGeometry.swift
+full/metalperformanceshaders/MPSImage.swift
+full/metalperformanceshaders/MPSImageFilters.swift
+full/metalperformanceshaders/MPSKernel.swift
+full/metalperformanceshaders/MPSMatrix.swift
+full/metalperformanceshaders/MPSTypes.swift
+full/metalperformanceshaders/MetalPerformanceShaders.swift
+full/metalperformanceshaders/MetalStandIn.swift
