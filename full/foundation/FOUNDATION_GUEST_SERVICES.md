@@ -44,6 +44,9 @@ platform `CGFloat` and `os_unfair_lock` APIs. The thirty-one-source facade adds:
   cost limits, immediate trimming, strong key/value ownership, a weak
   delegate, and Apple-measured eviction callback ordering. Its full native
   differential is documented in `FOUNDATION_GUEST_CACHE.md`.
+- `ByteCountFormatter`, with decimal/file and binary/memory scales, constrained
+  unit selection, adaptive or fixed fraction precision, numeric/word zero
+  rendering, composable count/unit/actual-byte flags, and signed grouped output.
 - `NSLocking` and an NSObject-backed `NSLock` implemented by the guest
   `os_unfair_lock` substrate, including nonblocking acquisition, bounded
   date-based acquisition, names, and throwing `withLock` critical sections.

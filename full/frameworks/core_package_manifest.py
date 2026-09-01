@@ -43,6 +43,7 @@ FOUNDATION_SOURCES = (
     "full/foundation/JSONSerialization.swift",
     "full/foundation/NSRegularExpression.swift",
     "full/foundation/DateFormatter.swift",
+    "full/foundation/ByteCountFormatter.swift",
     "full/foundation/UserDefaults.swift",
     "full/foundation/UbiquitousKeyValueStore.swift",
     "full/foundation/RelativeDateTimeFormatter.swift",

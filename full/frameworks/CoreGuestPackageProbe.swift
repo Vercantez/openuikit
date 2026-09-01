@@ -233,6 +233,20 @@ struct CoreGuestPackageProbe {
             foundationCompatibility ==
                 "locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports"
         )
+        let byteCount = ByteCountFormatter()
+        byteCount.countStyle = .binary
+        byteCount.allowedUnits = [.useMB]
+        byteCount.includesActualByteCount = true
+        precondition(
+            byteCount.string(fromByteCount: 1_048_576) ==
+                "1 MB (1,048,576 bytes)"
+        )
+        precondition(
+            ByteCountFormatter.string(
+                fromByteCount: 999_999,
+                countStyle: .file
+            ) == "1 MB"
+        )
         let observationPlatform = runObservationGuestRuntimeProbe()
         precondition(
             observationPlatform ==
@@ -830,7 +844,7 @@ struct CoreGuestPackageProbe {
                 + "combine=delivered resources=loaded "
                 + "fonts=system,bold intents=donated shortcuts=stored "
                 + "appintents=process-local "
-                + "foundation=\(foundationCompatibility) "
+                + "foundation=\(foundationCompatibility),byte-count "
                 + "internationalization=icu-fr,number,idna "
                 + "data-platform=\(dataPlatform) "
                 + "observation=\(observationPlatform) "

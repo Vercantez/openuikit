@@ -28,6 +28,8 @@ MANIFEST_TOOL=$W/full/frameworks/core_package_manifest.py
 FOUNDATION_SOURCES_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
 FOUNDATION_CACHE_ORACLE=$W/full/foundation/tests/FoundationCacheOracle.swift
 FOUNDATION_CACHE_GOLDEN=$W/full/foundation/tests/foundation-cache-apple-2026-08-31.txt
+FOUNDATION_BYTE_COUNT_ORACLE=$W/full/foundation/tests/FoundationByteCountFormatterOracle.swift
+FOUNDATION_BYTE_COUNT_GOLDEN=$W/full/foundation/tests/foundation-byte-count-apple-2026-08-31.txt
 OBSERVATION_SOURCES_MANIFEST=$W/full/observation/observation_guest_sources.txt
 FOUNDATION_INTERNATIONALIZATION_BUILDER=$W/full/foundationinternationalization/build_foundation_internationalization.sh
 INTENTS_SOURCES_MANIFEST=$W/full/intents/intents_guest_sources.txt
@@ -242,6 +244,8 @@ EXPECTED_HOST_DISPATCH_SHA256=39e502b3a8b016073947574a932172c1dafff8c41abd15b9b9
 EXPECTED_HOST_BLOCKS_RUNTIME_SHA256=47a4f774ed1f4c094f8510c50d0006fde89a837ae785236e2ed669b8db9d002d
 EXPECTED_FOUNDATION_CACHE_ORACLE_SHA256=9a3479d559d4ba6c979868e6f34254547b13158c087319d78b72f177f88749a3
 EXPECTED_FOUNDATION_CACHE_GOLDEN_SHA256=0dd1fab4b09c76dfe6ab6fc07ac93d9350cf3bb19d31c7d8524c2df8e59e441c
+EXPECTED_FOUNDATION_BYTE_COUNT_ORACLE_SHA256=c5565bd04a7451f3ef828e3cc928718ce095fa5d2bdf2b41d8c40541e15f4616
+EXPECTED_FOUNDATION_BYTE_COUNT_GOLDEN_SHA256=1390be735b11d92409e81bb9e04115502bed76bd830daa440fde7377cb4773c0
 
 usage() {
     cat <<'EOF'
@@ -761,6 +765,14 @@ require_hash "$FOUNDATION_CACHE_GOLDEN" \
 for cache_input in "$FOUNDATION_CACHE_ORACLE" "$FOUNDATION_CACHE_GOLDEN"; do
     git -C "$W" ls-files --error-unmatch "${cache_input#"$W"/}" >/dev/null \
         || die "Foundation cache oracle input is not tracked: $cache_input"
+done
+require_hash "$FOUNDATION_BYTE_COUNT_ORACLE" \
+    "$EXPECTED_FOUNDATION_BYTE_COUNT_ORACLE_SHA256" Foundation-byte-count-oracle
+require_hash "$FOUNDATION_BYTE_COUNT_GOLDEN" \
+    "$EXPECTED_FOUNDATION_BYTE_COUNT_GOLDEN_SHA256" Foundation-byte-count-Apple-golden
+for byte_count_input in "$FOUNDATION_BYTE_COUNT_ORACLE" "$FOUNDATION_BYTE_COUNT_GOLDEN"; do
+    git -C "$W" ls-files --error-unmatch "${byte_count_input#"$W"/}" >/dev/null \
+        || die "Foundation byte-count oracle input is not tracked: $byte_count_input"
 done
 require_hash "$SYSTEM_FONT" "$EXPECTED_SYSTEM_FONT" system-font
 require_hash "$BOLD_FONT" "$EXPECTED_BOLD_FONT" bold-font
@@ -2418,7 +2430,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-19 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-19 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -2552,6 +2564,40 @@ foundation_cache_rows=$(wc -l \
 [ "$foundation_cache_rows" -eq 43 ] \
     || die "Foundation cache runtime row count $foundation_cache_rows, expected 43"
 echo 'FOUNDATION_CACHE_MACHO_OK rows=43 apple-differential=exact'
+
+echo '== compile/link/run the Apple-differential ByteCountFormatter cold gate'
+"${SWIFTC[@]}" "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name FoundationByteCountFormatterRuntime -emit-object \
+    -o "$WORK/foundation-byte-count-runtime.o" \
+    "$FOUNDATION_BYTE_COUNT_ORACLE"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/FoundationByteCountFormatterRuntime" \
+    "$WORK/foundation-byte-count-runtime.o" "${COMMON_LINK[@]}" \
+    -lFoundation -lFoundationEssentials -lOpenUIKit \
+    -lOpenCoreGraphics -lCombine -lOpenCombine \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+llvm-otool-18 -hv "$STAGE/probe/FoundationByteCountFormatterRuntime" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+    || die 'Foundation byte-count runtime gate is not an ARM64 Mach-O executable'
+cp "$FOUNDATION_BYTE_COUNT_GOLDEN" \
+    "$STAGE/attestation/foundation-byte-count-apple.txt"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/FoundationByteCountFormatterRuntime
+) | tee "$STAGE/attestation/foundation-byte-count-runtime.log"
+cmp "$STAGE/attestation/foundation-byte-count-runtime.log" \
+    "$STAGE/attestation/foundation-byte-count-apple.txt" \
+    || die 'Foundation ByteCountFormatter guest output differs from Apple'
+foundation_byte_count_rows=$(wc -l \
+    < "$STAGE/attestation/foundation-byte-count-runtime.log" \
+    | tr -d '[:space:]')
+[ "$foundation_byte_count_rows" -eq 86 ] \
+    || die "Foundation byte-count runtime row count $foundation_byte_count_rows, expected 86"
+echo 'FOUNDATION_BYTE_COUNT_MACHO_OK rows=86 apple-differential=exact'
 
 echo '== write relocatable compile/link contracts'
 COMPILE_ARGUMENTS=(
@@ -2742,6 +2788,9 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'foundation-cache\toracle=%s\tapple-golden=%s\trows=43\n' \
         "$(hash_file "$FOUNDATION_CACHE_ORACLE")" \
         "$(hash_file "$FOUNDATION_CACHE_GOLDEN")"
+    printf 'foundation-byte-count\toracle=%s\tapple-golden=%s\trows=86\n' \
+        "$(hash_file "$FOUNDATION_BYTE_COUNT_ORACLE")" \
+        "$(hash_file "$FOUNDATION_BYTE_COUNT_GOLDEN")"
     printf 'frontier-frameworks\tframeworks=12\tsources=13\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
         "$(hash_file "$W/full/relativetime/include/OpenRelativeTimeABI.h")" \
@@ -2878,6 +2927,8 @@ record_artifact probe FoundationURLSessionRuntime executable \
     probe/FoundationURLSessionRuntime
 record_artifact probe FoundationCacheRuntime executable \
     probe/FoundationCacheRuntime
+record_artifact probe FoundationByteCountFormatterRuntime executable \
+    probe/FoundationByteCountFormatterRuntime
 record_artifact attestation runtime runtime-log attestation/runtime.log
 record_artifact attestation OSLog runtime-log attestation/oslog-runtime.log
 record_artifact attestation OSLog link-audit \
@@ -2898,6 +2949,10 @@ record_artifact attestation foundation-cache apple-golden \
     attestation/foundation-cache-apple.txt
 record_artifact attestation foundation-cache runtime-log \
     attestation/foundation-cache-runtime.log
+record_artifact attestation foundation-byte-count apple-golden \
+    attestation/foundation-byte-count-apple.txt
+record_artifact attestation foundation-byte-count runtime-log \
+    attestation/foundation-byte-count-runtime.log
 record_artifact attestation contracts compile-rsp compile-flags.rsp
 record_artifact attestation contracts link-rsp link-inputs.rsp
 record_artifact attestation source-sets manifest attestation/source-sets.tsv
@@ -3041,6 +3096,10 @@ require_hash "$FOUNDATION_CACHE_ORACLE" \
     "$EXPECTED_FOUNDATION_CACHE_ORACLE_SHA256" post-Foundation-cache-oracle
 require_hash "$FOUNDATION_CACHE_GOLDEN" \
     "$EXPECTED_FOUNDATION_CACHE_GOLDEN_SHA256" post-Foundation-cache-Apple-golden
+require_hash "$FOUNDATION_BYTE_COUNT_ORACLE" \
+    "$EXPECTED_FOUNDATION_BYTE_COUNT_ORACLE_SHA256" post-Foundation-byte-count-oracle
+require_hash "$FOUNDATION_BYTE_COUNT_GOLDEN" \
+    "$EXPECTED_FOUNDATION_BYTE_COUNT_GOLDEN_SHA256" post-Foundation-byte-count-Apple-golden
 require_hash "$OBSERVATION_MACRO_PLUGIN" "$EXPECTED_OBSERVATION_PLUGIN_SHA" \
     post-Observation-macro-plugin
 require_hash "$FOUNDATION_MACRO_PLUGIN" "$EXPECTED_FOUNDATION_PLUGIN_SHA" \

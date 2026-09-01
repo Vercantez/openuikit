@@ -37,6 +37,7 @@ EXPECTED = [
     "full/foundation/JSONSerialization.swift",
     "full/foundation/NSRegularExpression.swift",
     "full/foundation/DateFormatter.swift",
+    "full/foundation/ByteCountFormatter.swift",
     "full/foundation/UserDefaults.swift",
     "full/foundation/UbiquitousKeyValueStore.swift",
     "full/foundation/RelativeDateTimeFormatter.swift",
@@ -77,6 +78,14 @@ class FoundationGuestServicesTests(unittest.TestCase):
         for token in ('case "M", "L"', 'case "E"', 'case "h"', 'case "S"', 'case "X"'):
             self.assertIn(token, source)
         self.assertNotIn("Date(timeIntervalSince1970: 0)", source)
+
+    def test_byte_count_formatter_has_real_unit_and_rounding_semantics(self) -> None:
+        source = (ROOT / "full/foundation/ByteCountFormatter.swift").read_text()
+        self.assertIn("public struct Units: OptionSet", source)
+        self.assertIn("public enum CountStyle: UInt", source)
+        self.assertIn("private func _selectedUnit(", source)
+        self.assertIn("rounded(.toNearestOrAwayFromZero)", source)
+        self.assertIn("includesActualByteCount", source)
 
     def test_user_defaults_has_real_persistence_and_value_round_trips(self) -> None:
         source = (ROOT / "full/foundation/UserDefaults.swift").read_text()

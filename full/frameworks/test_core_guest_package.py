@@ -111,6 +111,7 @@ FOUNDATION_SOURCES = (
     "full/foundation/JSONSerialization.swift",
     "full/foundation/NSRegularExpression.swift",
     "full/foundation/DateFormatter.swift",
+    "full/foundation/ByteCountFormatter.swift",
     "full/foundation/UserDefaults.swift",
     "full/foundation/UbiquitousKeyValueStore.swift",
     "full/foundation/RelativeDateTimeFormatter.swift",
@@ -442,14 +443,14 @@ class FoundationManifestTests(unittest.TestCase):
         self.attest()
         lines = (self.root / "attestation.tsv").read_text().splitlines()
         self.assertEqual(lines[0], "format\tfoundation-guest-sources-v1")
-        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 30)
+        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 31)
 
     def test_reordered_manifest_is_refused(self) -> None:
         reordered = list(FOUNDATION_SOURCES)
         reordered[0], reordered[1] = reordered[1], reordered[0]
         write_file(self.manifest, "\n".join(reordered) + "\n")
         refusal = self.attest(expected=2)
-        self.assertIn("exact ordered 30-path contract", refusal.stderr)
+        self.assertIn("exact ordered 31-path contract", refusal.stderr)
 
     def test_symlinked_source_is_refused(self) -> None:
         source = self.root / FOUNDATION_SOURCES[-1]
@@ -1370,10 +1371,12 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("FoundationHackersCompatibilityProbe.swift", builder)
         self.assertIn("runFoundationHackersCompatibilityProbe(", core_probe)
         marker = (
-            "foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports"
+            "foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count"
         )
         self.assertIn(marker, builder)
         self.assertIn("foundation=\\(foundationCompatibility)", core_probe)
+        self.assertIn("ByteCountFormatter()", core_probe)
+        self.assertIn('"1 MB (1,048,576 bytes)"', core_probe)
 
     def test_builder_pins_the_canonical_105_source_openuikit_tree(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
@@ -1613,6 +1616,7 @@ class ShellContractTests(unittest.TestCase):
             "scheduler=immediate,delayed,cancelled,receive-on",
             "FOUNDATION_URLSESSION_MACHO_OK",
             "FOUNDATION_CACHE_MACHO_OK rows=43 apple-differential=exact",
+            "FOUNDATION_BYTE_COUNT_MACHO_OK rows=86 apple-differential=exact",
             "attestation/dispatch-runtime.log",
             "attestation/foundation-urlsession-runtime.log",
             "FoundationCacheOracle.swift",
@@ -1620,6 +1624,11 @@ class ShellContractTests(unittest.TestCase):
             "probe/FoundationCacheRuntime",
             "attestation/foundation-cache-runtime.log",
             "attestation/foundation-cache-apple.txt",
+            "FoundationByteCountFormatterOracle.swift",
+            "foundation-byte-count-apple-2026-08-31.txt",
+            "probe/FoundationByteCountFormatterRuntime",
+            "attestation/foundation-byte-count-runtime.log",
+            "attestation/foundation-byte-count-apple.txt",
         ):
             self.assertIn(token, builder)
         for token in (

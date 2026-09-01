@@ -79,9 +79,10 @@ The semantic build order is deliberate:
 11. Run a real asynchronous Mach-O gate covering async main, TaskGroup,
     detached jobs, global/main queues, continuations, and delayed work, then
     run the full loopback URLSession async/continuation/TaskGroup gate.
-12. Compile the native Apple Foundation URL/cache oracle unchanged against the
-    project-owned module, run it in a new Linux guest process, and require its
-    43-line output to match the checked-in Apple transcript byte-for-byte.
+12. Compile the native Apple Foundation URL/cache and byte-count formatter
+    oracles unchanged against the project-owned module, run each in a new Linux
+    guest process, and require their 43- and 86-line outputs to match the
+    checked-in Apple transcripts byte-for-byte.
 
 The portable `Dispatch.swiftmodule` is built with the package compiler and
 shadows the version-incompatible Apple SDK binary module for unchanged
