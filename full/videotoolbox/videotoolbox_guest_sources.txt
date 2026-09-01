@@ -1,0 +1,6 @@
+full/videotoolbox/VTFlags.swift
+full/videotoolbox/VTFrameProcessor.swift
+full/videotoolbox/VTMotionAndHDR.swift
+full/videotoolbox/VTPropertyKeys.swift
+full/videotoolbox/VTSessions.swift
+full/videotoolbox/VideoToolbox.swift
