@@ -1,10 +1,14 @@
 // Foundation.NSExtensionContext Today View additions.
 //
 // The nominal type is Foundation's. NotificationCenter only extends it so
-// UserNotificationsUI can extend the same identity. Linux without a staged
-// first-party Foundation+UIKit pair does not compile this file's body.
+// UserNotificationsUI can extend the same identity. Linux guest Foundation
+// does not currently expose NSExtensionContext; this file's body compiles
+// only when a real staged Foundation module has that type and the integration
+// probe passes -D NOTIFICATIONCENTER_HAS_FOUNDATION_EXTENSION_CONTEXT.
+// canImport(UIKit) alone is not enough: a real UIKit without this Foundation
+// type must not fail the whole module.
 
-#if canImport(UIKit)
+#if canImport(UIKit) && NOTIFICATIONCENTER_HAS_FOUNDATION_EXTENSION_CONTEXT
 import Foundation
 import UIKit
 

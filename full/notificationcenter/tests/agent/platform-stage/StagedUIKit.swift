@@ -1,9 +1,12 @@
-// Test-only staged UIKit module for the platform identity gate.
+// UNIT FIXTURE ONLY. This file invents UIEdgeInsets, UIVibrancyEffectStyle,
+// and UIVibrancyEffect. It is a test-owned lookalike, not guest UIKit, and
+// must never be compiled as -module-name UIKit for platform identity evidence.
 //
-// Provides the canonical UIKit.UIEdgeInsets and UIKit.UIVibrancyEffect
-// identities NotificationCenter extends. Compiled as -module-name UIKit
-// against the staged Foundation overlay.
+// tests/agent/test_unit_fixture.sh may compile it only when
+// NOTIFICATIONCENTER_UNIT_FIXTURE=1. tests/agent/test_platform_identities.sh
+// must not consume this file.
 
+#if NOTIFICATIONCENTER_UNIT_FIXTURE
 import Foundation
 
 public struct UIEdgeInsets: Equatable, Sendable {
@@ -38,3 +41,4 @@ open class UIVibrancyEffect: NSObject {
         super.init()
     }
 }
+#endif

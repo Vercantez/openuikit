@@ -160,7 +160,7 @@ func exerciseWidgetController() {
     )
 }
 
-#if canImport(UIKit)
+#if canImport(UIKit) && NOTIFICATIONCENTER_HAS_FOUNDATION_EXTENSION_CONTEXT
 func exerciseExtensionContext() {
     let context: Foundation.NSExtensionContext = NSExtensionContext()
     precondition(context.widgetLargestAvailableDisplayMode == .compact)
@@ -186,7 +186,9 @@ func exerciseExtensionContext() {
     precondition(other.widgetLargestAvailableDisplayMode == .compact)
     precondition(other.widgetMaximumSize(for: .compact) == .zero)
 }
+#endif
 
+#if canImport(UIKit)
 func exerciseVibrancy() {
     let notification: UIKit.UIVibrancyEffect = .notificationCenter()
     let primary: UIKit.UIVibrancyEffect = .widgetPrimary()
@@ -206,8 +208,10 @@ exerciseDisplayMode()
 await exerciseWidgetProviding()
 exerciseWidgetController()
 #if canImport(UIKit)
-exerciseExtensionContext()
 exerciseVibrancy()
+#endif
+#if canImport(UIKit) && NOTIFICATIONCENTER_HAS_FOUNDATION_EXTENSION_CONTEXT
+exerciseExtensionContext()
 #endif
 print("NOTIFICATIONCENTER_AGENT_RUNTIME_OK")
 #if !canImport(UIKit)

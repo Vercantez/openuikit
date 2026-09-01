@@ -1,3 +1,7 @@
+// Integration-only client. Compile this against actual staged guest
+// Foundation and UIKit module/dylib outputs. Never compile it against a
+// test-owned module named Foundation or UIKit; lookalikes are not identity
+// evidence.
 import Foundation
 import UIKit
 @_spi(OpenUIKitHost) import NotificationCenter

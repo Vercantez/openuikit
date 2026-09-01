@@ -1,10 +1,13 @@
-// Test-only staged Foundation overlay for the platform identity gate.
+// UNIT FIXTURE ONLY. This file invents NSObject, NSObjectProtocol,
+// NSExtensionContext, CGFloat, CGSize, and NSLock. It is a test-owned
+// lookalike, not guest Foundation, and must never be compiled as
+// -module-name Foundation for platform identity evidence.
 //
-// Adds Foundation.NSExtensionContext so NotificationCenter and
-// UserNotificationsUI can extend one canonical identity. Used only when
-// compiling with -I pointing at this module; never shipped as a
-// NotificationCenter nominal type.
+// tests/agent/test_unit_fixture.sh may compile it only when
+// NOTIFICATIONCENTER_UNIT_FIXTURE=1. tests/agent/test_platform_identities.sh
+// must not consume this file.
 
+#if NOTIFICATIONCENTER_UNIT_FIXTURE
 open class NSObject {
     public init() {}
 }
@@ -36,3 +39,4 @@ public final class NSLock: @unchecked Sendable {
     public func lock() {}
     public func unlock() {}
 }
+#endif
