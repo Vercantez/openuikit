@@ -1,0 +1,596 @@
+import Foundation
+
+struct _CDStoredRow {
+    var entityName: String
+    var reference: String
+    var values: [String: Any]
+}
+
+final class _CDInMemoryBacking {
+    let lock = NSLock()
+    let uuid = UUID().uuidString
+    var rows: [String: _CDStoredRow] = [:]
+    var metadata: [String: Any] = [:]
+}
+
+open class NSPersistentStore: NSObject {
+    public struct StoreType: RawRepresentable, Hashable, Sendable {
+        public var rawValue: String
+        public init(rawValue: String) { self.rawValue = rawValue }
+        public static let sqlite = StoreType(rawValue: NSSQLiteStoreType)
+        public static let binary = StoreType(rawValue: NSBinaryStoreType)
+        public static let inMemory = StoreType(rawValue: NSInMemoryStoreType)
+    }
+
+    public private(set) weak var persistentStoreCoordinator: NSPersistentStoreCoordinator?
+    public private(set) var configurationName: String
+    public var url: URL?
+    public private(set) var options: [AnyHashable: Any]?
+    public var identifier: String!
+    public var metadata: [String: Any]!
+    public var isReadOnly: Bool = false
+    public var type: String { NSInMemoryStoreType }
+
+    public init(
+        persistentStoreCoordinator root: NSPersistentStoreCoordinator?,
+        configurationName name: String?,
+        at url: URL,
+        options: [AnyHashable: Any]? = nil
+    ) {
+        self.persistentStoreCoordinator = root
+        self.configurationName = name ?? "PF_DEFAULT_CONFIGURATION_NAME"
+        self.url = url
+        self.options = options
+        self.identifier = UUID().uuidString
+        self.metadata = [
+            NSStoreTypeKey: NSInMemoryStoreType,
+            NSStoreUUIDKey: self.identifier as Any
+        ]
+        super.init()
+    }
+
+    public convenience init(
+        persistentStoreCoordinator root: NSPersistentStoreCoordinator?,
+        configurationName name: String?,
+        URL url: URL,
+        options: [AnyHashable: Any]? = nil
+    ) {
+        self.init(persistentStoreCoordinator: root, configurationName: name, at: url, options: options)
+    }
+
+    open class func metadataForPersistentStore(with url: URL) throws -> [String: Any] {
+        _ = url
+        throw _CDUnsupportedStoreError(NSSQLiteStoreType)
+    }
+
+    open class func setMetadata(_ metadata: [String: Any]?, forPersistentStoreAt url: URL) throws {
+        _ = (metadata, url)
+        throw _CDUnsupportedStoreError(NSSQLiteStoreType)
+    }
+
+    open class func migrationManagerClass() -> AnyClass { NSMigrationManager.self }
+
+    open func loadMetadata() throws {}
+    open func didAdd(to coordinator: NSPersistentStoreCoordinator) {
+        persistentStoreCoordinator = coordinator
+    }
+    open func willRemove(from coordinator: NSPersistentStoreCoordinator?) {
+        persistentStoreCoordinator = nil
+        _ = coordinator
+    }
+
+    public var coreSpotlightExporter: NSCoreDataCoreSpotlightDelegate {
+        NSCoreDataCoreSpotlightDelegate(
+            forStoreWith: NSPersistentStoreDescription(url: url ?? URL(fileURLWithPath: "/dev/null")),
+            coordinator: persistentStoreCoordinator ?? NSPersistentStoreCoordinator(managedObjectModel: NSManagedObjectModel())
+        )
+    }
+}
+
+final class _CDInMemoryPersistentStore: NSPersistentStore {
+    let backing = _CDInMemoryBacking()
+    override var type: String { NSInMemoryStoreType }
+
+    override init(
+        persistentStoreCoordinator root: NSPersistentStoreCoordinator?,
+        configurationName name: String?,
+        at url: URL,
+        options: [AnyHashable: Any]? = nil
+    ) {
+        super.init(persistentStoreCoordinator: root, configurationName: name, at: url, options: options)
+        backing.metadata = metadata
+        identifier = backing.uuid
+        metadata[NSStoreUUIDKey] = backing.uuid
+        metadata[NSStoreTypeKey] = NSInMemoryStoreType
+    }
+}
+
+open class NSPersistentStoreDescription: NSObject {
+    public var url: URL?
+    public var type: String = NSSQLiteStoreType
+    public var configuration: String?
+    public var timeout: TimeInterval = 0
+    public var isReadOnly: Bool = false
+    public var shouldAddStoreAsynchronously: Bool = false
+    public var shouldMigrateStoreAutomatically: Bool = true
+    public var shouldInferMappingModelAutomatically: Bool = true
+    public var cloudKitContainerOptions: NSPersistentCloudKitContainerOptions?
+    private var _options: [String: NSObject] = [:]
+    private var _pragmas: [String: NSObject] = [:]
+
+    public var options: [String: NSObject] { _options }
+    public var sqlitePragmas: [String: NSObject] { _pragmas }
+
+    public init(url: URL) {
+        self.url = url
+        super.init()
+    }
+
+    public convenience init(URL url: URL) {
+        self.init(url: url)
+    }
+
+    public func setOption(_ option: NSObject?, forKey key: String) {
+        if let option {
+            _options[key] = option
+        } else {
+            _options.removeValue(forKey: key)
+        }
+    }
+
+    public func setValue(_ value: NSObject?, forPragmaNamed name: String) {
+        if let value {
+            _pragmas[name] = value
+        } else {
+            _pragmas.removeValue(forKey: name)
+        }
+    }
+}
+
+open class NSPersistentStoreCoordinator: NSObject, NSLocking {
+    public let managedObjectModel: NSManagedObjectModel
+    public var name: String?
+    public private(set) var persistentStores: [NSPersistentStore] = []
+    private let _lock = NSRecursiveLock()
+    private static let _registryLock = NSLock()
+    private static var _registry: [String: AnyClass] = [
+        NSInMemoryStoreType: _CDInMemoryPersistentStore.self
+    ]
+
+    public init(managedObjectModel model: NSManagedObjectModel) {
+        self.managedObjectModel = model
+        super.init()
+    }
+
+    public func lock() { _lock.lock() }
+    public func unlock() { _lock.unlock() }
+    public func tryLock() -> Bool { _lock.try() }
+
+    public func perform(_ block: @escaping () -> Void) {
+        DispatchQueue.global().async {
+            self.lock()
+            defer { self.unlock() }
+            block()
+        }
+    }
+
+    public func performAndWait(_ block: () -> Void) {
+        lock()
+        defer { unlock() }
+        block()
+    }
+
+    public func performAndWait<T>(_ block: () throws -> T) rethrows -> T {
+        lock()
+        defer { unlock() }
+        return try block()
+    }
+
+    public func perform<T>(_ block: @escaping () throws -> T) async rethrows -> T {
+        try performAndWait(block)
+    }
+
+    open class var registeredStoreTypes: [String: NSValue] { [:] }
+
+    open class func registerStoreClass(_ storeClass: AnyClass?, forStoreType storeType: String) {
+        _registryLock.lock()
+        defer { _registryLock.unlock() }
+        _registry[storeType] = storeClass
+    }
+
+    open class func registerStoreClass(_ storeClass: AnyClass?, type: NSPersistentStore.StoreType) {
+        registerStoreClass(storeClass, forStoreType: type.rawValue)
+    }
+
+    open class func metadataForPersistentStore(ofType storeType: String?, at url: URL) throws -> [String: Any] {
+        try metadataForPersistentStore(ofType: storeType ?? NSSQLiteStoreType, at: url, options: nil)
+    }
+
+    open class func metadataForPersistentStore(
+        ofType storeType: String,
+        at url: URL,
+        options: [AnyHashable: Any]? = nil
+    ) throws -> [String: Any] {
+        _ = (url, options)
+        if storeType == NSInMemoryStoreType {
+            return [NSStoreTypeKey: NSInMemoryStoreType]
+        }
+        throw _CDUnsupportedStoreError(storeType)
+    }
+
+    open class func metadataForPersistentStore(
+        type storeType: NSPersistentStore.StoreType,
+        at storeURL: URL,
+        options: [AnyHashable: Any]? = nil
+    ) throws -> [String: Any] {
+        try metadataForPersistentStore(ofType: storeType.rawValue, at: storeURL, options: options)
+    }
+
+    open class func setMetadata(
+        _ metadata: [String: Any]?,
+        forPersistentStoreOfType storeType: String?,
+        at url: URL
+    ) throws {
+        try setMetadata(metadata, forPersistentStoreOfType: storeType ?? NSSQLiteStoreType, at: url, options: nil)
+    }
+
+    open class func setMetadata(
+        _ metadata: [String: Any]?,
+        forPersistentStoreOfType storeType: String,
+        at url: URL,
+        options: [AnyHashable: Any]? = nil
+    ) throws {
+        _ = (metadata, url, options)
+        if storeType != NSInMemoryStoreType {
+            throw _CDUnsupportedStoreError(storeType)
+        }
+    }
+
+    open class func setMetadata(
+        _ metadata: [String: Any]?,
+        type storeType: NSPersistentStore.StoreType,
+        at storeURL: URL,
+        options: [AnyHashable: Any]? = nil
+    ) throws {
+        try setMetadata(metadata, forPersistentStoreOfType: storeType.rawValue, at: storeURL, options: options)
+    }
+
+    open class func removeUbiquitousContentAndPersistentStore(
+        at storeURL: URL,
+        options: [AnyHashable: Any]? = nil
+    ) throws {
+        _ = (storeURL, options)
+        throw _CDMakeError(
+            NSPersistentStoreOperationError,
+            "iCloud ubiquity stores are unavailable on Linux"
+        )
+    }
+
+    public func addPersistentStore(
+        ofType storeType: String,
+        configurationName configuration: String?,
+        at storeURL: URL?,
+        options: [AnyHashable: Any]? = nil
+    ) throws -> NSPersistentStore {
+        guard storeType == NSInMemoryStoreType else {
+            throw _CDUnsupportedStoreError(storeType)
+        }
+        let url = storeURL ?? URL(string: "x-coredata-in-memory://\(_CDIDSource.next())")!
+        let store = _CDInMemoryPersistentStore(
+            persistentStoreCoordinator: self,
+            configurationName: configuration,
+            at: url,
+            options: options
+        )
+        store.metadata[NSStoreModelVersionHashesKey] = managedObjectModel.entityVersionHashesByName
+        persistentStores.append(store)
+        store.didAdd(to: self)
+        NotificationCenter.default.post(
+            name: .NSPersistentStoreCoordinatorStoresDidChange,
+            object: self,
+            userInfo: [NSAddedPersistentStoresKey: [store]]
+        )
+        return store
+    }
+
+    public func addPersistentStore(
+        type: NSPersistentStore.StoreType,
+        configuration: String? = nil,
+        at storeURL: URL,
+        options: [AnyHashable: Any]? = nil
+    ) throws -> NSPersistentStore {
+        try addPersistentStore(ofType: type.rawValue, configurationName: configuration, at: storeURL, options: options)
+    }
+
+    public func addPersistentStore(
+        with storeDescription: NSPersistentStoreDescription,
+        completionHandler block: @escaping (NSPersistentStoreDescription, (any Error)?) -> Void
+    ) {
+        let work = {
+            do {
+                _ = try self.addPersistentStore(
+                    ofType: storeDescription.type,
+                    configurationName: storeDescription.configuration,
+                    at: storeDescription.url,
+                    options: storeDescription.options
+                )
+                block(storeDescription, nil)
+            } catch {
+                block(storeDescription, error)
+            }
+        }
+        if storeDescription.shouldAddStoreAsynchronously {
+            perform(work)
+        } else {
+            performAndWait(work)
+        }
+    }
+
+    public func remove(_ store: NSPersistentStore) throws {
+        store.willRemove(from: self)
+        persistentStores.removeAll { $0 === store }
+        NotificationCenter.default.post(
+            name: .NSPersistentStoreCoordinatorStoresDidChange,
+            object: self,
+            userInfo: [NSRemovedPersistentStoresKey: [store]]
+        )
+    }
+
+    public func persistentStore(for URL: URL) -> NSPersistentStore? {
+        persistentStores.first { $0.url == URL }
+    }
+
+    public func url(for store: NSPersistentStore) -> URL {
+        store.url ?? URL(string: "x-coredata-in-memory://\(store.identifier ?? "store")")!
+    }
+
+    public func setURL(_ url: URL, for store: NSPersistentStore) -> Bool {
+        store.url = url
+        return true
+    }
+
+    public func metadata(for store: NSPersistentStore) -> [String: Any] {
+        store.metadata ?? [:]
+    }
+
+    public func setMetadata(_ metadata: [String: Any]?, for store: NSPersistentStore) {
+        store.metadata = metadata
+    }
+
+    public func managedObjectID(forURIRepresentation url: URL) -> NSManagedObjectID? {
+        managedObjectID(for: url.absoluteString)
+    }
+
+    public func managedObjectID(for string: String) -> NSManagedObjectID? {
+        guard let url = URL(string: string) else { return nil }
+        let parts = url.path.split(separator: "/").map(String.init)
+        guard parts.count >= 2 else { return nil }
+        let entityName = parts[0]
+        let refToken = parts[1]
+        guard let entity = managedObjectModel.entitiesByName[entityName] else { return nil }
+        let isTemporary = refToken.hasPrefix("t")
+        let reference = String(refToken.dropFirst())
+        return NSManagedObjectID(
+            entity: entity,
+            reference: reference,
+            storeIdentifier: url.host ?? "memory",
+            isTemporary: isTemporary,
+            store: persistentStores.first
+        )
+    }
+
+    public func execute(_ request: NSPersistentStoreRequest, with context: NSManagedObjectContext) throws -> Any {
+        try context.execute(request)
+    }
+
+    public func currentPersistentHistoryToken(fromStores stores: [Any]?) -> NSPersistentHistoryToken? {
+        _ = stores
+        return nil
+    }
+
+    public func finishDeferredLightweightMigration() throws {
+        throw _CDMakeError(NSMigrationError, "lightweight migration is not implemented on Linux")
+    }
+
+    public func finishDeferredLightweightMigrationTask() throws {
+        try finishDeferredLightweightMigration()
+    }
+
+    public func destroyPersistentStore(
+        at url: URL,
+        ofType storeType: String,
+        options: [AnyHashable: Any]? = nil
+    ) throws {
+        _ = options
+        if storeType != NSInMemoryStoreType {
+            throw _CDUnsupportedStoreError(storeType)
+        }
+        if let store = persistentStore(for: url) {
+            try remove(store)
+        }
+    }
+
+    public func destroyPersistentStore(
+        at url: URL,
+        type storeType: NSPersistentStore.StoreType,
+        options: [AnyHashable: Any]? = nil
+    ) throws {
+        try destroyPersistentStore(at: url, ofType: storeType.rawValue, options: options)
+    }
+
+    public func migratePersistentStore(
+        _ store: NSPersistentStore,
+        to URL: URL,
+        options: [AnyHashable: Any]? = nil,
+        withType storeType: String
+    ) throws -> NSPersistentStore {
+        _ = (store, URL, options)
+        throw _CDUnsupportedStoreError(storeType)
+    }
+
+    public func migratePersistentStore(
+        _ store: NSPersistentStore,
+        to storeURL: URL,
+        options: [AnyHashable: Any]? = nil,
+        type storeType: NSPersistentStore.StoreType
+    ) throws -> NSPersistentStore {
+        try migratePersistentStore(store, to: storeURL, options: options, withType: storeType.rawValue)
+    }
+
+    public func replacePersistentStore(
+        at destinationURL: URL,
+        destinationOptions: [AnyHashable: Any]? = nil,
+        withPersistentStoreFrom sourceURL: URL,
+        sourceOptions: [AnyHashable: Any]? = nil,
+        ofType storeType: String
+    ) throws {
+        _ = (destinationURL, destinationOptions, sourceURL, sourceOptions)
+        throw _CDUnsupportedStoreError(storeType)
+    }
+
+    public func replacePersistentStore(
+        at destinationURL: URL,
+        destinationOptions: [AnyHashable: Any]? = nil,
+        withPersistentStoreFrom sourceURL: URL,
+        sourceOptions: [AnyHashable: Any]? = nil,
+        type sourceType: NSPersistentStore.StoreType
+    ) throws {
+        try replacePersistentStore(
+            at: destinationURL,
+            destinationOptions: destinationOptions,
+            withPersistentStoreFrom: sourceURL,
+            sourceOptions: sourceOptions,
+            ofType: sourceType.rawValue
+        )
+    }
+
+    func _fetchRows(
+        entityName: String,
+        stores: [NSPersistentStore]?,
+        includesSubentities: Bool
+    ) -> [_CDStoredRow] {
+        let targetStores = stores ?? persistentStores
+        var rows: [_CDStoredRow] = []
+        let names = _entityNames(matching: entityName, includesSubentities: includesSubentities)
+        for store in targetStores {
+            guard let memory = store as? _CDInMemoryPersistentStore else { continue }
+            memory.backing.lock.lock()
+            defer { memory.backing.lock.unlock() }
+            for row in memory.backing.rows.values where names.contains(row.entityName) {
+                rows.append(row)
+            }
+        }
+        return rows
+    }
+
+    func _row(for objectID: NSManagedObjectID) -> _CDStoredRow? {
+        for store in persistentStores {
+            guard let memory = store as? _CDInMemoryPersistentStore else { continue }
+            memory.backing.lock.lock()
+            defer { memory.backing.lock.unlock() }
+            if let row = memory.backing.rows[objectID.reference] {
+                return row
+            }
+        }
+        return nil
+    }
+
+    func _save(inserted: [NSManagedObject], updated: [NSManagedObject], deleted: [NSManagedObject]) throws {
+        guard let store = persistentStores.first as? _CDInMemoryPersistentStore else {
+            throw _CDMakeError(NSPersistentStoreSaveError, "no in-memory store is attached")
+        }
+        store.backing.lock.lock()
+        defer { store.backing.lock.unlock() }
+        for object in deleted {
+            store.backing.rows.removeValue(forKey: object.objectID.reference)
+        }
+        for object in inserted + updated {
+            store.backing.rows[object.objectID.reference] = _CDStoredRow(
+                entityName: object.entity.name ?? "",
+                reference: object.objectID.reference,
+                values: object._snapshotValues()
+            )
+        }
+    }
+
+    private func _entityNames(matching name: String, includesSubentities: Bool) -> Set<String> {
+        var names: Set<String> = [name]
+        if includesSubentities, let entity = managedObjectModel.entitiesByName[name] {
+            func walk(_ entity: NSEntityDescription) {
+                for child in entity.subentities {
+                    if let childName = child.name {
+                        names.insert(childName)
+                    }
+                    walk(child)
+                }
+            }
+            walk(entity)
+        }
+        return names
+    }
+}
+
+open class NSPersistentContainer: NSObject {
+    public let name: String
+    public let managedObjectModel: NSManagedObjectModel
+    public let persistentStoreCoordinator: NSPersistentStoreCoordinator
+    public var persistentStoreDescriptions: [NSPersistentStoreDescription]
+    public let viewContext: NSManagedObjectContext
+
+    open class func defaultDirectoryURL() -> URL {
+        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+            ?? FileManager.default.temporaryDirectory
+        let url = base.appendingPathComponent("CoreData", isDirectory: true)
+        try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        return url
+    }
+
+    public convenience init(name: String) {
+        self.init(name: name, managedObjectModel: NSManagedObjectModel())
+    }
+
+    public init(name: String, managedObjectModel model: NSManagedObjectModel) {
+        self.name = name
+        self.managedObjectModel = model
+        self.persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
+        let description = NSPersistentStoreDescription(
+            url: NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("\(name).sqlite")
+        )
+        description.type = NSSQLiteStoreType
+        self.persistentStoreDescriptions = [description]
+        self.viewContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        super.init()
+        viewContext.persistentStoreCoordinator = persistentStoreCoordinator
+        viewContext.automaticallyMergesChangesFromParent = true
+        viewContext.name = "viewContext"
+    }
+
+    public func loadPersistentStores(
+        completionHandler block: @escaping (NSPersistentStoreDescription, (any Error)?) -> Void
+    ) {
+        for description in persistentStoreDescriptions {
+            persistentStoreCoordinator.addPersistentStore(with: description, completionHandler: block)
+        }
+    }
+
+    public func newBackgroundContext() -> NSManagedObjectContext {
+        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        context.persistentStoreCoordinator = persistentStoreCoordinator
+        context.name = "background"
+        return context
+    }
+
+    public func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void) {
+        let context = newBackgroundContext()
+        context.perform { block(context) }
+    }
+
+    public func performBackgroundTask<T>(
+        _ block: @escaping (NSManagedObjectContext) throws -> T
+    ) async rethrows -> T {
+        let context = newBackgroundContext()
+        return try await context.perform(schedule: .enqueued) {
+            try block(context)
+        }
+    }
+}

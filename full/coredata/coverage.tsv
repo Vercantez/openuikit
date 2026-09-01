@@ -1,0 +1,1320 @@
+precise	status	evidence	notes
+c:@CM@CoreData@@objc(cs)NSManagedObject(cm)fetchRequest	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:@E@NSAttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSBinaryDataAttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSBooleanAttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSCompositeAttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSDateAttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSDecimalAttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSDoubleAttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSFloatAttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSInteger16AttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSInteger32AttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSInteger64AttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSObjectIDAttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSStringAttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSTransformableAttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSURIAttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSUUIDAttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSAttributeType@NSUndefinedAttributeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSBatchDeleteRequestResultType	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+c:@E@NSBatchDeleteRequestResultType@NSBatchDeleteResultTypeCount	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+c:@E@NSBatchDeleteRequestResultType@NSBatchDeleteResultTypeObjectIDs	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+c:@E@NSBatchDeleteRequestResultType@NSBatchDeleteResultTypeStatusOnly	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+c:@E@NSBatchInsertRequestResultType	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+c:@E@NSBatchInsertRequestResultType@NSBatchInsertRequestResultTypeCount	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+c:@E@NSBatchInsertRequestResultType@NSBatchInsertRequestResultTypeObjectIDs	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+c:@E@NSBatchInsertRequestResultType@NSBatchInsertRequestResultTypeStatusOnly	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+c:@E@NSBatchUpdateRequestResultType	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+c:@E@NSBatchUpdateRequestResultType@NSStatusOnlyResultType	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+c:@E@NSBatchUpdateRequestResultType@NSUpdatedObjectIDsResultType	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+c:@E@NSBatchUpdateRequestResultType@NSUpdatedObjectsCountResultType	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+c:@E@NSDeleteRule	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSDeleteRule@NSCascadeDeleteRule	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSDeleteRule@NSDenyDeleteRule	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSDeleteRule@NSNoActionDeleteRule	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSDeleteRule@NSNullifyDeleteRule	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSEntityMappingType	declared	full/coredata/CoreData.swift	migration types compile; migrate/infer APIs throw
+c:@E@NSEntityMappingType@NSAddEntityMappingType	declared	full/coredata/CoreData.swift	migration types compile; migrate/infer APIs throw
+c:@E@NSEntityMappingType@NSCopyEntityMappingType	declared	full/coredata/CoreData.swift	migration types compile; migrate/infer APIs throw
+c:@E@NSEntityMappingType@NSCustomEntityMappingType	declared	full/coredata/CoreData.swift	migration types compile; migrate/infer APIs throw
+c:@E@NSEntityMappingType@NSRemoveEntityMappingType	declared	full/coredata/CoreData.swift	migration types compile; migrate/infer APIs throw
+c:@E@NSEntityMappingType@NSTransformEntityMappingType	declared	full/coredata/CoreData.swift	migration types compile; migrate/infer APIs throw
+c:@E@NSEntityMappingType@NSUndefinedEntityMappingType	declared	full/coredata/CoreData.swift	migration types compile; migrate/infer APIs throw
+c:@E@NSFetchIndexElementType	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+c:@E@NSFetchIndexElementType@NSFetchIndexElementTypeBinary	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+c:@E@NSFetchIndexElementType@NSFetchIndexElementTypeRTree	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSFetchRequestResultType@NSCountResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSFetchRequestResultType@NSDictionaryResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSFetchRequestResultType@NSManagedObjectIDResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSFetchRequestResultType@NSManagedObjectResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSFetchedResultsChangeType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSFetchedResultsChangeType@NSFetchedResultsChangeDelete	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSFetchedResultsChangeType@NSFetchedResultsChangeInsert	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSFetchedResultsChangeType@NSFetchedResultsChangeMove	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSFetchedResultsChangeType@NSFetchedResultsChangeUpdate	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSManagedObjectContextConcurrencyType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSManagedObjectContextConcurrencyType@NSConfinementConcurrencyType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSManagedObjectContextConcurrencyType@NSMainQueueConcurrencyType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSManagedObjectContextConcurrencyType@NSPrivateQueueConcurrencyType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSMergePolicyType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSMergePolicyType@NSErrorMergePolicyType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSMergePolicyType@NSMergeByPropertyObjectTrumpMergePolicyType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSMergePolicyType@NSMergeByPropertyStoreTrumpMergePolicyType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSMergePolicyType@NSOverwriteMergePolicyType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSMergePolicyType@NSRollbackMergePolicyType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSPersistentCloudKitContainerEventResultType	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:@E@NSPersistentCloudKitContainerEventResultType@NSPersistentCloudKitContainerEventResultTypeCountEvents	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:@E@NSPersistentCloudKitContainerEventResultType@NSPersistentCloudKitContainerEventResultTypeEvents	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:@E@NSPersistentCloudKitContainerEventType	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:@E@NSPersistentCloudKitContainerEventType@NSPersistentCloudKitContainerEventTypeExport	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:@E@NSPersistentCloudKitContainerEventType@NSPersistentCloudKitContainerEventTypeImport	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:@E@NSPersistentCloudKitContainerEventType@NSPersistentCloudKitContainerEventTypeSetup	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions@NSPersistentCloudKitContainerSchemaInitializationOptionsDryRun	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions@NSPersistentCloudKitContainerSchemaInitializationOptionsPrintSchema	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:@E@NSPersistentHistoryChangeType	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:@E@NSPersistentHistoryChangeType@NSPersistentHistoryChangeTypeDelete	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:@E@NSPersistentHistoryChangeType@NSPersistentHistoryChangeTypeInsert	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:@E@NSPersistentHistoryChangeType@NSPersistentHistoryChangeTypeUpdate	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:@E@NSPersistentHistoryResultType	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:@E@NSPersistentHistoryResultType@NSPersistentHistoryResultTypeChangesOnly	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:@E@NSPersistentHistoryResultType@NSPersistentHistoryResultTypeCount	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:@E@NSPersistentHistoryResultType@NSPersistentHistoryResultTypeObjectIDs	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:@E@NSPersistentHistoryResultType@NSPersistentHistoryResultTypeStatusOnly	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:@E@NSPersistentHistoryResultType@NSPersistentHistoryResultTypeTransactionsAndChanges	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:@E@NSPersistentHistoryResultType@NSPersistentHistoryResultTypeTransactionsOnly	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:@E@NSPersistentStoreRequestType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSPersistentStoreRequestType@NSBatchDeleteRequestType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSPersistentStoreRequestType@NSBatchInsertRequestType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSPersistentStoreRequestType@NSBatchUpdateRequestType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSPersistentStoreRequestType@NSFetchRequestType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSPersistentStoreRequestType@NSSaveRequestType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSPersistentStoreUbiquitousTransitionType	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+c:@E@NSPersistentStoreUbiquitousTransitionType@NSPersistentStoreUbiquitousTransitionTypeAccountAdded	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+c:@E@NSPersistentStoreUbiquitousTransitionType@NSPersistentStoreUbiquitousTransitionTypeAccountRemoved	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+c:@E@NSPersistentStoreUbiquitousTransitionType@NSPersistentStoreUbiquitousTransitionTypeContentRemoved	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+c:@E@NSPersistentStoreUbiquitousTransitionType@NSPersistentStoreUbiquitousTransitionTypeInitialImportCompleted	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSSnapshotEventType@NSSnapshotEventMergePolicy	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSSnapshotEventType@NSSnapshotEventRefresh	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSSnapshotEventType@NSSnapshotEventRollback	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSSnapshotEventType@NSSnapshotEventUndoDeletion	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSSnapshotEventType@NSSnapshotEventUndoInsertion	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@E@NSSnapshotEventType@NSSnapshotEventUndoUpdate	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:@Ea@NSManagedObjectValidationError@NSCoreDataError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSEntityMigrationPolicyError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSExternalRecordImportError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSInferredMappingModelError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSManagedObjectConstraintMergeError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSManagedObjectConstraintValidationError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSManagedObjectContextLockingError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSManagedObjectExternalRelationshipError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSManagedObjectMergeError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSManagedObjectModelReferenceNotFoundError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSManagedObjectReferentialIntegrityError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSManagedObjectValidationError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSMigrationCancelledError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSMigrationConstraintViolationError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSMigrationError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSMigrationManagerDestinationStoreError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSMigrationManagerSourceStoreError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSMigrationMissingMappingModelError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSMigrationMissingSourceModelError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSPersistentHistoryTokenExpiredError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSPersistentStoreCoordinatorLockingError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSPersistentStoreIncompatibleSchemaError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSPersistentStoreIncompatibleVersionHashError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSPersistentStoreIncompleteSaveError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSPersistentStoreInvalidTypeError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSPersistentStoreOpenError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSPersistentStoreOperationError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSPersistentStoreSaveConflictsError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSPersistentStoreSaveError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSPersistentStoreTimeoutError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSPersistentStoreTypeMismatchError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSPersistentStoreUnsupportedRequestTypeError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSSQLiteError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSStagedMigrationBackwardMigrationError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSStagedMigrationFrameworkVersionMismatchError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSValidationDateTooLateError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSValidationDateTooSoonError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSValidationInvalidDateError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSValidationInvalidURIError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSValidationMissingMandatoryPropertyError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSValidationMultipleErrorsError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSValidationNumberTooLargeError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSValidationNumberTooSmallError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSValidationRelationshipDeniedDeleteError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSValidationRelationshipExceedsMaximumCountError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSValidationRelationshipLacksMinimumCountError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSValidationStringPatternMatchingError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSValidationStringTooLongError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@Ea@NSManagedObjectValidationError@NSValidationStringTooShortError	implemented	full/coredata/CoreData.swift	public CoreDataErrors.h code
+c:@NSAddedPersistentStoresKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSAffectedObjectsErrorKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSAffectedStoresErrorKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSBinaryStoreInsecureDecodingCompatibilityOption	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSBinaryStoreSecureDecodingClasses	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSBinaryStoreType	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSCoreDataCoreSpotlightDelegateIndexDidUpdateNotification	implemented	full/coredata/NSManagedObjectContext.swift	notification names posted or exported
+c:@NSCoreDataCoreSpotlightExporter	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSCoreDataVersionNumber	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSDeletedObjectIDsKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSDeletedObjectsKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSDetailedErrorsKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSErrorMergePolicy	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSFetchRequestExpressionType	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:@NSIgnorePersistentStoreVersioningOption	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSInMemoryStoreType	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSInferMappingModelAutomaticallyOption	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSInsertedObjectIDsKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSInsertedObjectsKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSInvalidatedAllObjectsKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSInvalidatedObjectIDsKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSInvalidatedObjectsKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSManagedObjectContextDidMergeChangesObjectIDsNotification	implemented	full/coredata/NSManagedObjectContext.swift	notification names posted or exported
+c:@NSManagedObjectContextDidSaveNotification	implemented	full/coredata/NSManagedObjectContext.swift	notification names posted or exported
+c:@NSManagedObjectContextDidSaveObjectIDsNotification	implemented	full/coredata/NSManagedObjectContext.swift	notification names posted or exported
+c:@NSManagedObjectContextObjectsDidChangeNotification	implemented	full/coredata/NSManagedObjectContext.swift	notification names posted or exported
+c:@NSManagedObjectContextQueryGenerationKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSManagedObjectContextWillSaveNotification	implemented	full/coredata/NSManagedObjectContext.swift	notification names posted or exported
+c:@NSMergeByPropertyObjectTrumpMergePolicy	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSMergeByPropertyStoreTrumpMergePolicy	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSMigratePersistentStoresAutomaticallyOption	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSMigrationDestinationObjectKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSMigrationEntityMappingKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSMigrationEntityPolicyKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSMigrationManagerKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSMigrationPropertyMappingKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSMigrationSourceObjectKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSOverwriteMergePolicy	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSPersistentCloudKitContainerEventChangedNotification	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:@NSPersistentCloudKitContainerEventUserInfoKey	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:@NSPersistentHistoryTokenKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSPersistentHistoryTrackingKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSPersistentStoreConnectionPoolMaxSizeKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSPersistentStoreCoordinatorStoresDidChangeNotification	implemented	full/coredata/NSManagedObjectContext.swift	notification names posted or exported
+c:@NSPersistentStoreCoordinatorStoresWillChangeNotification	implemented	full/coredata/NSManagedObjectContext.swift	notification names posted or exported
+c:@NSPersistentStoreCoordinatorWillRemoveStoreNotification	implemented	full/coredata/NSManagedObjectContext.swift	notification names posted or exported
+c:@NSPersistentStoreDeferredLightweightMigrationOptionKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSPersistentStoreDidImportUbiquitousContentChangesNotification	declared	full/coredata/NSManagedObjectContext.swift	notification name exists; iCloud content is never imported
+c:@NSPersistentStoreFileProtectionKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSPersistentStoreForceDestroyOption	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSPersistentStoreModelVersionChecksumKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSPersistentStoreOSCompatibility	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSPersistentStoreRebuildFromUbiquitousContentOption	unavailable		iCloud ubiquity options have no Linux daemon or Apple identity
+c:@NSPersistentStoreRemoteChangeNotification	implemented	full/coredata/NSManagedObjectContext.swift	notification names posted or exported
+c:@NSPersistentStoreRemoteChangeNotificationPostOptionKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSPersistentStoreRemoveUbiquitousMetadataOption	unavailable		iCloud ubiquity options have no Linux daemon or Apple identity
+c:@NSPersistentStoreSaveConflictsErrorKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSPersistentStoreStagedMigrationManagerOptionKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSPersistentStoreTimeoutOption	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSPersistentStoreURLKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSPersistentStoreUbiquitousContainerIdentifierKey	unavailable		iCloud ubiquity options have no Linux daemon or Apple identity
+c:@NSPersistentStoreUbiquitousContentNameKey	unavailable		iCloud ubiquity options have no Linux daemon or Apple identity
+c:@NSPersistentStoreUbiquitousContentURLKey	unavailable		iCloud ubiquity options have no Linux daemon or Apple identity
+c:@NSPersistentStoreUbiquitousPeerTokenOption	unavailable		iCloud ubiquity options have no Linux daemon or Apple identity
+c:@NSPersistentStoreUbiquitousTransitionTypeKey	unavailable		iCloud ubiquity options have no Linux daemon or Apple identity
+c:@NSReadOnlyPersistentStoreOption	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSRefreshedObjectIDsKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSRefreshedObjectsKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSRemovedPersistentStoresKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSRollbackMergePolicy	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSSQLiteAnalyzeOption	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSSQLiteErrorDomain	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSSQLiteManualVacuumOption	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSSQLitePragmasOption	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSSQLiteStoreType	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSStoreModelVersionHashesKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSStoreModelVersionIdentifiersKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSStoreTypeKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSStoreUUIDKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSUUIDChangedPersistentStoresKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSUpdatedObjectIDsKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSUpdatedObjectsKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSValidationKeyErrorKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSValidationObjectErrorKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSValidationPredicateErrorKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@NSValidationValueErrorKey	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@T@NSPersistentStoreAsynchronousFetchResultCompletionBlock	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:@macro@NSCoreDataVersionNumber10_10	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_10_2	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_10_3	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_11	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_11_3	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_4	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_4_3	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_5	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_5_3	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_6	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_6_2	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_6_3	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_7	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_7_2	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_7_3	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_7_4	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_8	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_8_2	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_9	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_9_2	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber10_9_3	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_3_0	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_3_1	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_3_2	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_4_0	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_4_1	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_4_2	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_4_3	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_5_0	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_5_1	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_6_0	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_6_1	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_7_0	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_7_1	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_8_0	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_8_3	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_9_0	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_9_2	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:@macro@NSCoreDataVersionNumber_iPhoneOS_9_3	implemented	full/coredata/CoreData.swift	exported Linux constant
+c:objc(cs)NSAsynchronousFetchRequest	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSAsynchronousFetchRequest(im)initWithFetchRequest:completionBlock:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSAsynchronousFetchRequest(py)completionBlock	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSAsynchronousFetchRequest(py)estimatedResultCount	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSAsynchronousFetchRequest(py)fetchRequest	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSAsynchronousFetchResult	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSAsynchronousFetchResult(py)fetchRequest	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSAsynchronousFetchResult(py)finalResult	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSAtomicStore	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStore(im)addCacheNodes:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStore(im)cacheNodeForObjectID:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStore(im)cacheNodes	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStore(im)initWithPersistentStoreCoordinator:configurationName:URL:options:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStore(im)load:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStore(im)newCacheNodeForManagedObject:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStore(im)newReferenceObjectForManagedObject:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStore(im)objectIDForEntity:referenceObject:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStore(im)referenceObjectForObjectID:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStore(im)save:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStore(im)updateCacheNode:fromManagedObject:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStore(im)willRemoveCacheNodes:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStoreCacheNode	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStoreCacheNode(im)initWithObjectID:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStoreCacheNode(im)setValue:forKey:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStoreCacheNode(im)valueForKey:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStoreCacheNode(py)objectID	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAtomicStoreCacheNode(py)propertyCache	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSAttributeDescription	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSAttributeDescription(py)allowsCloudEncryption	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSAttributeDescription(py)allowsExternalBinaryDataStorage	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSAttributeDescription(py)attributeType	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSAttributeDescription(py)attributeValueClassName	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSAttributeDescription(py)defaultValue	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSAttributeDescription(py)preservesValueInHistoryOnDeletion	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSAttributeDescription(py)valueTransformerName	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSAttributeDescription(py)versionHash	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSBatchDeleteRequest	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchDeleteRequest(im)initWithFetchRequest:	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchDeleteRequest(im)initWithObjectIDs:	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchDeleteRequest(py)fetchRequest	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchDeleteRequest(py)resultType	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchDeleteResult	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchDeleteResult(py)result	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchDeleteResult(py)resultType	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertRequest	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertRequest(im)init	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertRequest(im)initWithEntity:dictionaryHandler:	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertRequest(im)initWithEntity:managedObjectHandler:	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertRequest(im)initWithEntity:objects:	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertRequest(im)initWithEntityName:dictionaryHandler:	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertRequest(im)initWithEntityName:managedObjectHandler:	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertRequest(im)initWithEntityName:objects:	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertRequest(py)dictionaryHandler	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertRequest(py)entity	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertRequest(py)entityName	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertRequest(py)managedObjectHandler	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertRequest(py)objectsToInsert	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertRequest(py)resultType	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertResult	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertResult(py)result	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchInsertResult(py)resultType	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchUpdateRequest	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchUpdateRequest(im)initWithEntity:	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchUpdateRequest(im)initWithEntityName:	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchUpdateRequest(py)entity	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchUpdateRequest(py)entityName	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchUpdateRequest(py)includesSubentities	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchUpdateRequest(py)predicate	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchUpdateRequest(py)propertiesToUpdate	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchUpdateRequest(py)resultType	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchUpdateResult	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchUpdateResult(py)result	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSBatchUpdateResult(py)resultType	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSCompositeAttributeDescription	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSCompositeAttributeDescription(py)elements	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSConstraintConflict	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSConstraintConflict(im)initWithConstraint:databaseObject:databaseSnapshot:conflictingObjects:conflictingSnapshots:	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSConstraintConflict(im)initWithConstraint:databaseObject:databaseSnapshot:conflictingObjects:conflictingSnapshots:::SYNTHESIZED::c:objc(cs)NSConstraintConflict	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSConstraintConflict(py)conflictingObjects	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSConstraintConflict(py)conflictingSnapshots	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSConstraintConflict(py)constraint	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSConstraintConflict(py)constraintValues	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSConstraintConflict(py)databaseObject	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSConstraintConflict(py)databaseSnapshot	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSCoreDataCoreSpotlightDelegate	declared	full/coredata/CoreDataFailClosed.swift	Spotlight delegate compiles; indexing never starts
+c:objc(cs)NSCoreDataCoreSpotlightDelegate(im)attributeSetForObject:	unavailable		Core Spotlight types and indexing are not present on Linux
+c:objc(cs)NSCoreDataCoreSpotlightDelegate(im)deleteSpotlightIndexWithCompletionHandler:	declared	full/coredata/CoreDataFailClosed.swift	Spotlight delegate compiles; indexing never starts
+c:objc(cs)NSCoreDataCoreSpotlightDelegate(im)domainIdentifier	declared	full/coredata/CoreDataFailClosed.swift	Spotlight delegate compiles; indexing never starts
+c:objc(cs)NSCoreDataCoreSpotlightDelegate(im)indexName	declared	full/coredata/CoreDataFailClosed.swift	Spotlight delegate compiles; indexing never starts
+c:objc(cs)NSCoreDataCoreSpotlightDelegate(im)initForStoreWithDescription:coordinator:	declared	full/coredata/CoreDataFailClosed.swift	Spotlight delegate compiles; indexing never starts
+c:objc(cs)NSCoreDataCoreSpotlightDelegate(im)initForStoreWithDescription:coordinator:::SYNTHESIZED::c:objc(cs)NSCoreDataCoreSpotlightDelegate	declared	full/coredata/CoreDataFailClosed.swift	Spotlight delegate compiles; indexing never starts
+c:objc(cs)NSCoreDataCoreSpotlightDelegate(im)initForStoreWithDescription:model:	declared	full/coredata/CoreDataFailClosed.swift	Spotlight delegate compiles; indexing never starts
+c:objc(cs)NSCoreDataCoreSpotlightDelegate(im)initForStoreWithDescription:model:::SYNTHESIZED::c:objc(cs)NSCoreDataCoreSpotlightDelegate	declared	full/coredata/CoreDataFailClosed.swift	Spotlight delegate compiles; indexing never starts
+c:objc(cs)NSCoreDataCoreSpotlightDelegate(im)searchableIndex:reindexAllSearchableItemsWithAcknowledgementHandler:	unavailable		Core Spotlight types and indexing are not present on Linux
+c:objc(cs)NSCoreDataCoreSpotlightDelegate(im)searchableIndex:reindexSearchableItemsWithIdentifiers:acknowledgementHandler:	unavailable		Core Spotlight types and indexing are not present on Linux
+c:objc(cs)NSCoreDataCoreSpotlightDelegate(im)startSpotlightIndexing	declared	full/coredata/CoreDataFailClosed.swift	Spotlight delegate compiles; indexing never starts
+c:objc(cs)NSCoreDataCoreSpotlightDelegate(im)stopSpotlightIndexing	declared	full/coredata/CoreDataFailClosed.swift	Spotlight delegate compiles; indexing never starts
+c:objc(cs)NSCoreDataCoreSpotlightDelegate(py)indexingEnabled	declared	full/coredata/CoreDataFailClosed.swift	Spotlight delegate compiles; indexing never starts
+c:objc(cs)NSCustomMigrationStage	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSCustomMigrationStage(py)currentModel	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSCustomMigrationStage(py)nextModel	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSDerivedAttributeDescription	declared	full/coredata/CoreDataFailClosed.swift	declared fail-closed Linux surface
+c:objc(cs)NSDerivedAttributeDescription(py)derivationExpression	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:objc(cs)NSEntityDescription	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(cm)entityForName:inManagedObjectContext:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(cm)insertNewObjectForEntityForName:inManagedObjectContext:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(im)isKindOfEntity:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(im)relationshipsWithDestinationEntity:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)abstract	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)attributesByName	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)compoundIndexes	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)coreSpotlightDisplayNameExpression	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:objc(cs)NSEntityDescription(py)indexes	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)managedObjectClassName	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)managedObjectModel	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)name	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)properties	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)propertiesByName	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)relationshipsByName	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)renamingIdentifier	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)subentities	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)subentitiesByName	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)superentity	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)uniquenessConstraints	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)userInfo	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)versionHash	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityDescription(py)versionHashModifier	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSEntityMapping	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMapping(py)attributeMappings	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMapping(py)destinationEntityName	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMapping(py)destinationEntityVersionHash	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMapping(py)entityMigrationPolicyClassName	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMapping(py)mappingType	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMapping(py)name	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMapping(py)relationshipMappings	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMapping(py)sourceEntityName	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMapping(py)sourceEntityVersionHash	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMapping(py)sourceExpression	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:objc(cs)NSEntityMapping(py)userInfo	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMigrationPolicy	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMigrationPolicy(im)beginEntityMapping:manager:error:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMigrationPolicy(im)createDestinationInstancesForSourceInstance:entityMapping:manager:error:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMigrationPolicy(im)createRelationshipsForDestinationInstance:entityMapping:manager:error:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMigrationPolicy(im)endEntityMapping:manager:error:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMigrationPolicy(im)endInstanceCreationForEntityMapping:manager:error:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMigrationPolicy(im)endRelationshipCreationForEntityMapping:manager:error:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSEntityMigrationPolicy(im)performCustomValidationForEntityMapping:manager:error:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSExpressionDescription	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSExpressionDescription(py)expression	deferred		NSExpression is deprecated/unavailable in swift-corelibs-foundation
+c:objc(cs)NSExpressionDescription(py)expressionResultType	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchIndexDescription	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchIndexDescription(im)initWithName:elements:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchIndexDescription(py)elements	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchIndexDescription(py)entity	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchIndexDescription(py)name	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchIndexDescription(py)partialIndexPredicate	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchIndexElementDescription	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchIndexElementDescription(im)initWithProperty:collationType:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchIndexElementDescription(py)ascending	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchIndexElementDescription(py)collationType	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchIndexElementDescription(py)indexDescription	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchIndexElementDescription(py)property	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchIndexElementDescription(py)propertyName	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchRequest	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(im)execute:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(im)init	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(im)initWithEntityName:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)affectedStores	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)entity	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)entityName	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)fetchBatchSize	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)fetchLimit	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)fetchOffset	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)havingPredicate	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)includesPendingChanges	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)includesPropertyValues	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)includesSubentities	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)predicate	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)propertiesToFetch	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)propertiesToGroupBy	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)relationshipKeyPathsForPrefetching	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)resultType	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)returnsDistinctResults	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)returnsObjectsAsFaults	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)shouldRefreshRefetchedObjects	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequest(py)sortDescriptors	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchRequestExpression	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:objc(cs)NSFetchRequestExpression(cm)expressionForFetch:context:countOnly:	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:objc(cs)NSFetchRequestExpression(py)contextExpression	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:objc(cs)NSFetchRequestExpression(py)countOnlyRequest	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:objc(cs)NSFetchRequestExpression(py)requestExpression	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:objc(cs)NSFetchedPropertyDescription	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchedPropertyDescription(py)fetchRequest	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(cm)deleteCacheWithName:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(im)indexPathForObject:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(im)initWithFetchRequest:managedObjectContext:sectionNameKeyPath:cacheName:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(im)objectAtIndexPath:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(im)performFetch:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(im)sectionForSectionIndexTitle:atIndex:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(im)sectionIndexTitleForSectionName:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(py)cacheName	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(py)delegate	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(py)fetchRequest	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(py)fetchedObjects	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(py)managedObjectContext	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(py)sectionIndexTitles	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(py)sectionNameKeyPath	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSFetchedResultsController(py)sections	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSIncrementalStore	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStore(cm)identifierForNewStoreAtURL:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStore(im)executeRequest:withContext:error:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStore(im)loadMetadata:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStore(im)managedObjectContextDidRegisterObjectsWithIDs:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStore(im)managedObjectContextDidUnregisterObjectsWithIDs:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStore(im)newObjectIDForEntity:referenceObject:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStore(im)newValueForRelationship:forObjectWithID:withContext:error:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStore(im)newValuesForObjectWithID:withContext:error:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStore(im)obtainPermanentIDsForObjects:error:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStore(im)referenceObjectForObjectID:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStoreNode	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStoreNode(im)initWithObjectID:withValues:version:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStoreNode(im)updateWithValues:version:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStoreNode(im)valueForPropertyDescription:	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStoreNode(py)objectID	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSIncrementalStoreNode(py)version	declared	full/coredata/CoreDataFailClosed.swift	store subclass surface compiles; load/save/execute throw
+c:objc(cs)NSLightweightMigrationStage	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSLightweightMigrationStage(py)versionChecksums	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSManagedObject	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(cm)entity	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(cpy)contextShouldIgnoreUnmodeledPropertyChanges	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)awakeFromFetch	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)awakeFromInsert	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)awakeFromSnapshotEvents:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)changedValues	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)changedValuesForCurrentEvent	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)committedValuesForKeys:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)didAccessValueForKey:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)didChangeValueForKey:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)didChangeValueForKey:withSetMutation:usingObjects:	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:objc(cs)NSManagedObject(im)didSave	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)didTurnIntoFault	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)hasFaultForRelationshipNamed:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)initWithContext:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)initWithEntity:insertIntoManagedObjectContext:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)initWithEntity:insertIntoManagedObjectContext:::SYNTHESIZED::c:objc(cs)NSManagedObject	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)objectIDsForRelationshipNamed:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)prepareForDeletion	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)primitiveValueForKey:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)setPrimitiveValue:forKey:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)setValue:forKey:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)validateForDelete:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)validateForInsert:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)validateForUpdate:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)validateValue:forKey:error:	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:objc(cs)NSManagedObject(im)valueForKey:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)willAccessValueForKey:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)willChangeValueForKey:	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)willChangeValueForKey:withSetMutation:usingObjects:	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:objc(cs)NSManagedObject(im)willSave	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(im)willTurnIntoFault	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(py)deleted	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(py)entity	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(py)fault	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(py)faultingState	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(py)hasChanges	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(py)hasPersistentChangedValues	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(py)inserted	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(py)managedObjectContext	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(py)objectID	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObject(py)updated	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(cm)mergeChangesFromRemoteContextSave:intoContexts:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(cm)new	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)assignObject:toPersistentStore:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)countForFetchRequest:error:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)deleteObject:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)detectConflictsForObject:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)executeRequest:error:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)existingObjectWithID:error:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)init	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)initWithConcurrencyType:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)insertObject:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)lock	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)mergeChangesFromContextDidSaveNotification:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)objectRegisteredForID:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)objectWithID:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)observeValueForKeyPath:ofObject:change:context:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)obtainPermanentIDsForObjects:error:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)performBlock:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)performBlockAndWait:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)processPendingChanges	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)redo	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)refreshAllObjects	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)refreshObject:mergeChanges:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)reset	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)rollback	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)save:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)setQueryGenerationFromToken:error:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)shouldHandleInaccessibleFault:forObjectID:triggeredByProperty:	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)tryLock	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)undo	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(im)unlock	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)automaticallyMergesChangesFromParent	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)concurrencyType	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)deletedObjects	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)hasChanges	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)insertedObjects	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)mergePolicy	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)name	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)parentContext	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)persistentStoreCoordinator	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)propagatesDeletesAtEndOfEvent	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)queryGenerationToken	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)registeredObjects	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)retainsRegisteredObjects	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)shouldDeleteInaccessibleFaults	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)stalenessInterval	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)transactionAuthor	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)undoManager	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:objc(cs)NSManagedObjectContext(py)updatedObjects	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectContext(py)userInfo	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(cs)NSManagedObjectID	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObjectID(im)URIRepresentation	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObjectID(py)entity	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObjectID(py)persistentStore	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObjectID(py)temporaryID	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(cm)mergedModelFromBundles:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(cm)mergedModelFromBundles:forStoreMetadata:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(cm)modelByMergingModels:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(cm)modelByMergingModels:::SYNTHESIZED::c:objc(cs)NSManagedObjectModel	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(cm)modelByMergingModels:forStoreMetadata:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(cm)modelByMergingModels:forStoreMetadata:::SYNTHESIZED::c:objc(cs)NSManagedObjectModel	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(im)entitiesForConfiguration:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(im)fetchRequestFromTemplateWithName:substitutionVariables:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(im)fetchRequestTemplateForName:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(im)init	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(im)initWithContentsOfURL:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(im)initWithContentsOfURL:::SYNTHESIZED::c:objc(cs)NSManagedObjectModel	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(im)isConfiguration:compatibleWithStoreMetadata:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(im)setEntities:forConfiguration:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(im)setFetchRequestTemplate:forName:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(py)configurations	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(py)entities	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(py)entitiesByName	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(py)entityVersionHashesByName	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(py)fetchRequestTemplatesByName	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(py)localizationDictionary	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(py)versionChecksum	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModel(py)versionIdentifiers	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSManagedObjectModelReference	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSManagedObjectModelReference(im)initWithEntityVersionHashes:inBundle:versionChecksum:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSManagedObjectModelReference(im)initWithEntityVersionHashes:inBundle:versionChecksum:::SYNTHESIZED::c:objc(cs)NSManagedObjectModelReference	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSManagedObjectModelReference(im)initWithFileURL:versionChecksum:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSManagedObjectModelReference(im)initWithModel:versionChecksum:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSManagedObjectModelReference(im)initWithName:inBundle:versionChecksum:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSManagedObjectModelReference(im)initWithName:inBundle:versionChecksum:::SYNTHESIZED::c:objc(cs)NSManagedObjectModelReference	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSManagedObjectModelReference(py)resolvedModel	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSManagedObjectModelReference(py)versionChecksum	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMappingModel	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMappingModel(cm)inferredMappingModelForSourceModel:destinationModel:error:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMappingModel(cm)mappingModelFromBundles:forSourceModel:destinationModel:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMappingModel(cm)mappingModelFromBundles:forSourceModel:destinationModel:::SYNTHESIZED::c:objc(cs)NSMappingModel	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMappingModel(im)initWithContentsOfURL:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMappingModel(im)initWithContentsOfURL:::SYNTHESIZED::c:objc(cs)NSMappingModel	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMappingModel(py)entityMappings	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMappingModel(py)entityMappingsByName	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMergeConflict	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergeConflict(im)initWithSource:newVersion:oldVersion:cachedSnapshot:persistedSnapshot:	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergeConflict(py)cachedSnapshot	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergeConflict(py)newVersionNumber	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergeConflict(py)objectSnapshot	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergeConflict(py)oldVersionNumber	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergeConflict(py)persistedSnapshot	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergeConflict(py)sourceObject	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergePolicy	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergePolicy(cpy)errorMergePolicy	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergePolicy(cpy)mergeByPropertyObjectTrumpMergePolicy	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergePolicy(cpy)mergeByPropertyStoreTrumpMergePolicy	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergePolicy(cpy)overwriteMergePolicy	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergePolicy(cpy)rollbackMergePolicy	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergePolicy(im)initWithMergeType:	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergePolicy(im)initWithMergeType:::SYNTHESIZED::c:objc(cs)NSMergePolicy	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergePolicy(im)resolveConflicts:error:	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergePolicy(im)resolveConstraintConflicts:error:	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergePolicy(im)resolveOptimisticLockingVersionConflicts:error:	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMergePolicy(py)mergeType	implemented	full/coredata/NSMergePolicy.swift	in-memory implementation
+c:objc(cs)NSMigrationManager	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(im)associateSourceInstance:withDestinationInstance:forEntityMapping:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(im)cancelMigrationWithError:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(im)destinationEntityForEntityMapping:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(im)destinationInstancesForEntityMappingNamed:sourceInstances:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(im)initWithSourceModel:destinationModel:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(im)migrateStoreFromURL:type:options:withMappingModel:toDestinationURL:destinationType:destinationOptions:error:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(im)reset	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(im)sourceEntityForEntityMapping:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(im)sourceInstancesForEntityMappingNamed:destinationInstances:	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(py)currentEntityMapping	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(py)destinationContext	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(py)destinationModel	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(py)mappingModel	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(py)migrationProgress	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(py)sourceContext	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(py)sourceModel	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(py)userInfo	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationManager(py)usesStoreSpecificMigrationManager	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationStage	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSMigrationStage(py)label	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSPersistentCloudKitContainer	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainer(im)canDeleteRecordForManagedObjectWithID:	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainer(im)canModifyManagedObjectsInStore:	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainer(im)canUpdateRecordForManagedObjectWithID:	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainer(im)initializeCloudKitSchemaWithOptions:error:	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEvent	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEvent(py)endDate	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEvent(py)error	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEvent(py)identifier	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEvent(py)startDate	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEvent(py)storeIdentifier	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEvent(py)succeeded	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEvent(py)type	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEventRequest	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEventRequest(cm)fetchEventsAfterDate:	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEventRequest(cm)fetchEventsAfterEvent:	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEventRequest(cm)fetchEventsMatchingFetchRequest:	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEventRequest(cm)fetchRequestForEvents	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEventRequest(py)resultType	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEventResult	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEventResult(py)result	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerEventResult(py)resultType	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerOptions	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerOptions(im)initWithContainerIdentifier:	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentCloudKitContainerOptions(py)containerIdentifier	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+c:objc(cs)NSPersistentContainer	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentContainer(cm)defaultDirectoryURL	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentContainer(im)initWithName:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentContainer(im)initWithName:managedObjectModel:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentContainer(im)loadPersistentStoresWithCompletionHandler:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentContainer(im)newBackgroundContext	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentContainer(im)performBackgroundTask:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentContainer(py)managedObjectModel	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentContainer(py)name	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentContainer(py)persistentStoreCoordinator	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentContainer(py)persistentStoreDescriptions	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentContainer(py)viewContext	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentHistoryChange	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChange(cm)entityDescriptionWithContext:	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChange(cpy)entityDescription	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChange(cpy)fetchRequest	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChange(py)changeID	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChange(py)changeType	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChange(py)changedObjectID	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChange(py)tombstone	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChange(py)transaction	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChange(py)updatedProperties	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChangeRequest	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChangeRequest(cm)deleteHistoryBeforeDate:	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChangeRequest(cm)deleteHistoryBeforeToken:	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChangeRequest(cm)deleteHistoryBeforeTransaction:	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChangeRequest(cm)fetchHistoryAfterDate:	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChangeRequest(cm)fetchHistoryAfterToken:	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChangeRequest(cm)fetchHistoryAfterTransaction:	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChangeRequest(cm)fetchHistoryWithFetchRequest:	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChangeRequest(py)fetchRequest	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChangeRequest(py)resultType	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryChangeRequest(py)token	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryResult	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryResult(py)result	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryResult(py)resultType	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryToken	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryTransaction	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryTransaction(cm)entityDescriptionWithContext:	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryTransaction(cpy)entityDescription	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryTransaction(cpy)fetchRequest	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryTransaction(im)objectIDNotification	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryTransaction(py)author	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryTransaction(py)bundleID	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryTransaction(py)changes	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryTransaction(py)contextName	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryTransaction(py)processID	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryTransaction(py)storeID	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryTransaction(py)timestamp	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryTransaction(py)token	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentHistoryTransaction(py)transactionNumber	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(cs)NSPersistentStore	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(cm)metadataForPersistentStoreWithURL:error:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(cm)migrationManagerClass	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(cm)setMetadata:forPersistentStoreWithURL:error:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(im)didAddToPersistentStoreCoordinator:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(im)initWithPersistentStoreCoordinator:configurationName:URL:options:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(im)initWithPersistentStoreCoordinator:configurationName:URL:options:::SYNTHESIZED::c:objc(cs)NSPersistentStore	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(im)loadMetadata:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(im)willRemoveFromPersistentStoreCoordinator:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(py)URL	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(py)configurationName	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(py)coreSpotlightExporter	declared	full/coredata/NSPersistentStore.swift	returns a fail-closed Spotlight delegate
+c:objc(cs)NSPersistentStore(py)identifier	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(py)metadata	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(py)options	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(py)persistentStoreCoordinator	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(py)readOnly	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStore(py)type	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreAsynchronousResult	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreAsynchronousResult(im)cancel	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreAsynchronousResult(py)managedObjectContext	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreAsynchronousResult(py)operationError	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreAsynchronousResult(py)progress	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(cm)metadataForPersistentStoreOfType:URL:error:	implemented	full/coredata/NSPersistentStore.swift	in-memory metadata path; other types throw
+c:objc(cs)NSPersistentStoreCoordinator(cm)metadataForPersistentStoreOfType:URL:options:error:	implemented	full/coredata/NSPersistentStore.swift	in-memory metadata path; other types throw
+c:objc(cs)NSPersistentStoreCoordinator(cm)registerStoreClass:forStoreType:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(cm)removeUbiquitousContentAndPersistentStoreAtURL:options:error:	declared	full/coredata/NSPersistentStore.swift	always throws; iCloud ubiquity is unavailable
+c:objc(cs)NSPersistentStoreCoordinator(cm)setMetadata:forPersistentStoreOfType:URL:error:	implemented	full/coredata/NSPersistentStore.swift	in-memory metadata path; other types throw
+c:objc(cs)NSPersistentStoreCoordinator(cm)setMetadata:forPersistentStoreOfType:URL:options:error:	implemented	full/coredata/NSPersistentStore.swift	in-memory metadata path; other types throw
+c:objc(cs)NSPersistentStoreCoordinator(cpy)registeredStoreTypes	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)URLForPersistentStore:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)addPersistentStoreWithDescription:completionHandler:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)addPersistentStoreWithType:configuration:URL:options:error:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)currentPersistentHistoryTokenFromStores:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)destroyPersistentStoreAtURL:withType:options:error:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)executeRequest:withContext:error:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)finishDeferredLightweightMigration:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)finishDeferredLightweightMigrationTask:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)initWithManagedObjectModel:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)lock	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)managedObjectIDForURIRepresentation:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)metadataForPersistentStore:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)migratePersistentStore:toURL:options:withType:error:	declared	full/coredata/NSPersistentStore.swift	throws for non-in-memory Apple store formats
+c:objc(cs)NSPersistentStoreCoordinator(im)performBlock:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)performBlockAndWait:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)persistentStoreForURL:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)removePersistentStore:error:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)replacePersistentStoreAtURL:destinationOptions:withPersistentStoreFromURL:sourceOptions:storeType:error:	declared	full/coredata/NSPersistentStore.swift	throws for non-in-memory Apple store formats
+c:objc(cs)NSPersistentStoreCoordinator(im)setMetadata:forPersistentStore:	implemented	full/coredata/NSPersistentStore.swift	in-memory metadata path; other types throw
+c:objc(cs)NSPersistentStoreCoordinator(im)setURL:forPersistentStore:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)tryLock	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(im)unlock	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(py)managedObjectModel	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(py)name	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreCoordinator(py)persistentStores	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(cm)persistentStoreDescriptionWithURL:::SYNTHESIZED::c:objc(cs)NSPersistentStoreDescription	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(im)initWithURL:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(im)initWithURL:::SYNTHESIZED::c:objc(cs)NSPersistentStoreDescription	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(im)setOption:forKey:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(im)setValue:forPragmaNamed:	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(py)URL	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(py)cloudKitContainerOptions	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(py)configuration	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(py)options	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(py)readOnly	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(py)shouldAddStoreAsynchronously	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(py)shouldInferMappingModelAutomatically	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(py)shouldMigrateStoreAutomatically	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(py)sqlitePragmas	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(py)timeout	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreDescription(py)type	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreRequest	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreRequest(py)affectedStores	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreRequest(py)requestType	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSPersistentStoreResult	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription(im)setValidationPredicates:withValidationWarnings:	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription(py)entity	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription(py)indexed	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription(py)indexedBySpotlight	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription(py)name	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription(py)optional	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription(py)renamingIdentifier	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription(py)storedInExternalRecord	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription(py)transient	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription(py)userInfo	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription(py)validationPredicates	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription(py)validationWarnings	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription(py)versionHash	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyDescription(py)versionHashModifier	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSPropertyMapping	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSPropertyMapping(py)name	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSPropertyMapping(py)userInfo	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSPropertyMapping(py)valueExpression	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:objc(cs)NSQueryGenerationToken	declared	full/coredata/CoreDataFailClosed.swift	declared fail-closed Linux surface
+c:objc(cs)NSQueryGenerationToken(cpy)currentQueryGenerationToken	declared	full/coredata/CoreDataFailClosed.swift	declared fail-closed Linux surface
+c:objc(cs)NSRelationshipDescription	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSRelationshipDescription(py)deleteRule	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSRelationshipDescription(py)destinationEntity	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSRelationshipDescription(py)inverseRelationship	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSRelationshipDescription(py)maxCount	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSRelationshipDescription(py)minCount	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSRelationshipDescription(py)ordered	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSRelationshipDescription(py)toMany	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSRelationshipDescription(py)versionHash	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(cs)NSSaveChangesRequest	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSSaveChangesRequest(im)initWithInsertedObjects:updatedObjects:deletedObjects:lockedObjects:	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSSaveChangesRequest(im)initWithInsertedObjects:updatedObjects:deletedObjects:lockedObjects:::SYNTHESIZED::c:objc(cs)NSSaveChangesRequest	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSSaveChangesRequest(py)deletedObjects	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSSaveChangesRequest(py)insertedObjects	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSSaveChangesRequest(py)lockedObjects	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSSaveChangesRequest(py)updatedObjects	implemented	full/coredata/NSFetchRequest.swift	in-memory batch/save request path
+c:objc(cs)NSStagedMigrationManager	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSStagedMigrationManager(py)container	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(cs)NSStagedMigrationManager(py)stages	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NSEntityDescription	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NSFetchIndexDescription	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NSFetchIndexElementDescription	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NSFetchRequest	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NSManagedObjectContext	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NSManagedObjectModel	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NSPersistentHistoryToken	declared	full/coredata/CoreDataFailClosed.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NSPropertyDescription	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NSQueryGenerationToken	declared	full/coredata/CoreDataFailClosed.swift	declared fail-closed Linux surface
+c:objc(pl)NSFetchRequestResult	implemented	full/coredata/CoreData.swift	in-memory implementation
+c:objc(pl)NSFetchedResultsControllerDelegate	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(pl)NSFetchedResultsControllerDelegate(im)controller:didChangeContentWithDifference:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(pl)NSFetchedResultsControllerDelegate(im)controller:didChangeContentWithSnapshot:	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+c:objc(pl)NSFetchedResultsControllerDelegate(im)controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(pl)NSFetchedResultsControllerDelegate(im)controller:didChangeSection:atIndex:forChangeType:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(pl)NSFetchedResultsControllerDelegate(im)controller:sectionIndexTitleForSectionName:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(pl)NSFetchedResultsControllerDelegate(im)controllerDidChangeContent:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(pl)NSFetchedResultsControllerDelegate(im)controllerWillChangeContent:	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(pl)NSFetchedResultsSectionInfo	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(pl)NSFetchedResultsSectionInfo(py)indexTitle	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(pl)NSFetchedResultsSectionInfo(py)name	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(pl)NSFetchedResultsSectionInfo(py)numberOfObjects	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+c:objc(pl)NSFetchedResultsSectionInfo(py)objects	implemented	full/coredata/NSFetchRequest.swift	in-memory implementation
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE018managedObjectMergeC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE018migrationCancelledC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE019persistentStoreOpenC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE019persistentStoreSaveC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE020externalRecordImportC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE020inferredMappingModelC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE021entityMigrationPolicyC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE021validationDateTooLateC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE021validationDateTooSoonC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE021validationInvalidDateC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE022persistentStoreTimeoutC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE023managedObjectValidationC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE023validationStringTooLongC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE024persistentStoreOperationC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE024validationMultipleErrorsC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE024validationNumberTooLargeC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE024validationNumberTooSmallC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE024validationStringTooShortC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE026persistentStoreInvalidTypeC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE027managedObjectContextLockingC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE027migrationManagerSourceStoreC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE027migrationMissingSourceModelC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE027persistentStoreTypeMismatchC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE028managedObjectConstraintMergeC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE028migrationMissingMappingModelC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE028persistentStoreSaveConflictsC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE029persistentStoreIncompleteSaveC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE031validationStringPatternMatchingC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE032migrationManagerDestinationStoreC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE033managedObjectExternalRelationshipC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE033managedObjectReferentialIntegrityC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE033persistentStoreCoordinatorLockingC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE033persistentStoreIncompatibleSchemaC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE034validationMissingMandatoryPropertyC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE034validationRelationshipDeniedDeleteC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE037persistentStoreUnsupportedRequestTypeC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE038persistentStoreIncompatibleVersionHashC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE039validationRelationshipLacksMinimumCountC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE041validationRelationshipExceedsMaximumCountC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE04coreF0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE04corefC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE06sqliteC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE09migrationC0AEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE18managedObjectMergeAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE18migrationCancelledAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE19persistentStoreOpenAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE19persistentStoreSaveAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE20externalRecordImportAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE20inferredMappingModelAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE21entityMigrationPolicyAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE21validationDateTooLateAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE21validationDateTooSoonAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE21validationInvalidDateAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE22persistentStoreTimeoutAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE23managedObjectValidationAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE23validationStringTooLongAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE24persistentStoreOperationAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE24validationMultipleErrorsAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE24validationNumberTooLargeAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE24validationNumberTooSmallAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE24validationStringTooShortAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE26persistentStoreInvalidTypeAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE27managedObjectContextLockingAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE27migrationManagerSourceStoreAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE27migrationMissingSourceModelAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE27persistentStoreTypeMismatchAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE28managedObjectConstraintMergeAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE28migrationMissingMappingModelAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE28persistentStoreSaveConflictsAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE29persistentStoreIncompleteSaveAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE31validationStringPatternMatchingAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE32migrationManagerDestinationStoreAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE33managedObjectExternalRelationshipAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE33managedObjectReferentialIntegrityAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE33persistentStoreCoordinatorLockingAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE33persistentStoreIncompatibleSchemaAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE34validationMissingMandatoryPropertyAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE34validationRelationshipDeniedDeleteAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE37persistentStoreUnsupportedRequestTypeAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE38persistentStoreIncompatibleVersionHashAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE39validationRelationshipLacksMinimumCountAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE41validationRelationshipExceedsMaximumCountAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE6sqliteAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV4CodeV8CoreDataE9migrationAEvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE018managedObjectMergeC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE018migrationCancelledC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE019persistentStoreOpenC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE019persistentStoreSaveC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE020externalRecordImportC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE020inferredMappingModelC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE021entityMigrationPolicyC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE021validationDateTooLateC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE021validationDateTooSoonC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE021validationInvalidDateC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE022persistentStoreTimeoutC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE023managedObjectValidationC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE023validationStringTooLongC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE024persistentStoreOperationC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE024validationMultipleErrorsC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE024validationNumberTooLargeC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE024validationNumberTooSmallC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE024validationStringTooShortC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE026persistentStoreInvalidTypeC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE027managedObjectContextLockingC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE027migrationManagerSourceStoreC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE027migrationMissingSourceModelC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE027persistentStoreTypeMismatchC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE028managedObjectConstraintMergeC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE028migrationMissingMappingModelC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE028persistentStoreSaveConflictsC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE029persistentStoreIncompleteSaveC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE031validationStringPatternMatchingC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE032migrationManagerDestinationStoreC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE033managedObjectExternalRelationshipC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE033managedObjectReferentialIntegrityC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE033persistentStoreCoordinatorLockingC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE033persistentStoreIncompatibleSchemaC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE034validationMissingMandatoryPropertyC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE034validationRelationshipDeniedDeleteC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE037persistentStoreUnsupportedRequestTypeC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE038persistentStoreIncompatibleVersionHashC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE039validationRelationshipLacksMinimumCountC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE041validationRelationshipExceedsMaximumCountC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE04coreE0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE04coreeC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE06sqliteC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE09migrationC0AC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE13validationKeySSSgvp	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE14affectedStoresSayyXlGSgvp	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE15affectedObjectsSayyXlGSgvp	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE15validationValueypSgvp	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE16validationObjectypSgvp	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE18managedObjectMergeAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE18migrationCancelledAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE19persistentStoreOpenAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE19persistentStoreSaveAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE19validationPredicateSo11NSPredicateCSgvp	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE20externalRecordImportAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE20inferredMappingModelAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE21entityMigrationPolicyAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE21validationDateTooLateAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE21validationDateTooSoonAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE21validationInvalidDateAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE22persistentStoreTimeoutAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE23managedObjectValidationAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE23validationStringTooLongAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE24persistentStoreOperationAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE24validationMultipleErrorsAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE24validationNumberTooLargeAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE24validationNumberTooSmallAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE24validationStringTooShortAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE26persistentStoreInvalidTypeAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE27managedObjectContextLockingAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE27migrationManagerSourceStoreAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE27migrationMissingSourceModelAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE27persistentStoreTypeMismatchAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE28managedObjectConstraintMergeAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE28migrationMissingMappingModelAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE28persistentStoreSaveConflictsAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE28persistentStoreSaveConflictsSaySo15NSMergeConflictCGSgvp	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE29persistentStoreIncompleteSaveAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE31validationStringPatternMatchingAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE32migrationManagerDestinationStoreAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE33managedObjectExternalRelationshipAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE33managedObjectReferentialIntegrityAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE33persistentStoreCoordinatorLockingAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE33persistentStoreIncompatibleSchemaAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE34validationMissingMandatoryPropertyAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE34validationRelationshipDeniedDeleteAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE37persistentStoreUnsupportedRequestTypeAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE38persistentStoreIncompatibleVersionHashAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE39validationRelationshipLacksMinimumCountAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE41validationRelationshipExceedsMaximumCountAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE6sqliteAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:10Foundation10CocoaErrorV8CoreDataE9migrationAC4CodeVvpZ	implemented	full/coredata/CoreData.swift	CocoaError Core Data codes and userInfo accessors
+s:7Combine16ObservableObjectPA2A0bC9PublisherC0c10WillChangeD0RtzrlE06objecteF0AEvp::SYNTHESIZED::c:objc(cs)NSManagedObject	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSAttributeType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSBatchDeleteRequestResultType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSBatchInsertRequestResultType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSBatchUpdateRequestResultType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSDeleteRule	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSEntityMappingType	declared	full/coredata/CoreData.swift	migration types compile; migrate/infer APIs throw
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFetchIndexElementType	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFetchedResultsChangeType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSManagedObjectContextConcurrencyType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSMergePolicyType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerEventResultType	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerEventType	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSPersistentHistoryChangeType	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSPersistentHistoryResultType	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSPersistentStoreRequestType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSPersistentStoreUbiquitousTransitionType	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So17NSPersistentStoreC8CoreDataE0B4TypeV	implemented	full/coredata/NSPersistentStore.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV	implemented	full/coredata/NSManagedObjectModel.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So22NSManagedObjectContextC8CoreDataE15ConcurrencyTypeV	implemented	full/coredata/NSManagedObjectContext.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO	implemented	full/coredata/NSManagedObjectContext.swift	Hashable/Equatable synthesis on the implemented type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So22NSManagedObjectContextC8CoreDataE17ScheduledTaskTypeO	implemented	full/coredata/NSManagedObjectContext.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSAttributeType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSBatchDeleteRequestResultType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSBatchInsertRequestResultType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSBatchUpdateRequestResultType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSDeleteRule	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSEntityMappingType	declared	full/coredata/CoreData.swift	migration types compile; migrate/infer APIs throw
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSFetchIndexElementType	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSFetchedResultsChangeType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSManagedObjectContextConcurrencyType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSMergePolicyType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerEventResultType	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerEventType	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSPersistentHistoryChangeType	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSPersistentHistoryResultType	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSPersistentStoreRequestType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSPersistentStoreUbiquitousTransitionType	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:So17NSPersistentStoreC8CoreDataE0B4TypeV	implemented	full/coredata/NSPersistentStore.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV	implemented	full/coredata/NSManagedObjectModel.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:So22NSManagedObjectContextC8CoreDataE15ConcurrencyTypeV	implemented	full/coredata/NSManagedObjectContext.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO	implemented	full/coredata/NSManagedObjectContext.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSAttributeType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSBatchDeleteRequestResultType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSBatchInsertRequestResultType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSBatchUpdateRequestResultType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSDeleteRule	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSEntityMappingType	declared	full/coredata/CoreData.swift	migration types compile; migrate/infer APIs throw
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFetchIndexElementType	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFetchedResultsChangeType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSManagedObjectContextConcurrencyType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSMergePolicyType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerEventResultType	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerEventType	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSPersistentHistoryChangeType	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSPersistentHistoryResultType	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSPersistentStoreRequestType	implemented	full/coredata/CoreData.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSPersistentStoreUbiquitousTransitionType	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:So17NSPersistentStoreC8CoreDataE0B4TypeV	implemented	full/coredata/NSPersistentStore.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV	implemented	full/coredata/NSManagedObjectModel.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:So22NSManagedObjectContextC8CoreDataE15ConcurrencyTypeV	implemented	full/coredata/NSManagedObjectContext.swift	Hashable/Equatable synthesis on the implemented type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO	implemented	full/coredata/NSManagedObjectContext.swift	Hashable/Equatable synthesis on the implemented type
+s:So12NSDeleteRuleV8rawValueABSgSu_tcfc	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:So15NSAttributeTypeV8rawValueABSgSu_tcfc	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:So15NSManagedObjectC8CoreDataE0B19WillChangePublishera	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+s:So15NSManagedObjectC8CoreDataE16objectWillChange7Combine010ObservableB9PublisherCvp	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+s:So15NSManagedObjectC8CoreDataEyypSgSScip	implemented	full/coredata/NSManagedObject.swift	in-memory implementation
+s:So17NSMergePolicyTypeV8rawValueABSgSu_tcfc	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:So17NSPersistentStoreC8CoreDataE0B4TypeV	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:So17NSPersistentStoreC8CoreDataE0B4TypeV6binaryAEvpZ	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:So17NSPersistentStoreC8CoreDataE0B4TypeV6sqliteAEvpZ	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:So17NSPersistentStoreC8CoreDataE0B4TypeV8RawValuea	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:So17NSPersistentStoreC8CoreDataE0B4TypeV8inMemoryAEvpZ	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:So17NSPersistentStoreC8CoreDataE0B4TypeV8rawValueAESS_tcfc	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:So17NSPersistentStoreC8CoreDataE0B4TypeV8rawValueSSvp	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:So18NSMigrationManagerC8CoreDataE12migrateStore4from4type7options7mapping2toAfGy10Foundation3URLV_So012NSPersistentF0CACE0F4TypeVSDys11AnyHashableVypGSgSo14NSMappingModelCAlpTtKF	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+s:So19NSEntityMappingTypeV8rawValueABSgSu_tcfc	declared	full/coredata/CoreData.swift	migration types compile; migrate/infer APIs throw
+s:So19NSSnapshotEventTypeV8rawValueABSu_tcfc	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:So21NSPersistentContainerC8CoreDataE19defaultDirectoryURL10Foundation0G0VvpZ	deferred		Linux Swift cannot declare both class func defaultDirectoryURL() and class var defaultDirectoryURL
+s:So21NSPersistentContainerC8CoreDataE21performBackgroundTaskyxxSo22NSManagedObjectContextCKcYaKlF	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV06binaryD0AEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV13transformableAEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV3uriAEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV4dateAEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV4uuidAEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV5floatAEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV6doubleAEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV6stringAEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV7booleanAEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV7decimalAEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV8RawValuea	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV8objectIDAEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV8rawValueAESo0aF0V_tcfc	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV8rawValueSo0aF0Vvp	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV9compositeAEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV9integer16AEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV9integer32AEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV9integer64AEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE13AttributeTypeV9undefinedAEvpZ	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSAttributeDescriptionC8CoreDataE4typeAbCE13AttributeTypeVvp	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So22NSCustomMigrationStageC8CoreDataE13migratingFrom2toABSo29NSManagedObjectModelReferenceC_AGtcfc	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+s:So22NSCustomMigrationStageC8CoreDataE17didMigrateHandlerySo08NSStagedB7ManagerC_ABtKcSgvp	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+s:So22NSCustomMigrationStageC8CoreDataE18willMigrateHandlerySo08NSStagedB7ManagerC_ABtKcSgvp	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+s:So22NSManagedObjectContextC8CoreDataE015didMergeChangesB15IDsNotificationSo18NSNotificationNameavpZ	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE07didSaveB15IDsNotificationSo18NSNotificationNameavpZ	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE14performAndWaityxxyKXEKlF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15ConcurrencyTypeV	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15ConcurrencyTypeV12privateQueueAEvpZ	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15ConcurrencyTypeV8RawValuea	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15ConcurrencyTypeV8rawValueAESo0abcfG0V_tcfc	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15ConcurrencyTypeV8rawValueSo0abcfG0Vvp	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15ConcurrencyTypeV9mainQueueAEvpZ	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO011invalidatedB3IDsyA2EmF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO07deletedB3IDsyA2EmF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO07updatedB3IDsyA2EmF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO08insertedB3IDsyA2EmF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO09refreshedB3IDsyA2EmF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO14deletedObjectsyA2EmF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO14updatedObjectsyA2EmF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO15insertedObjectsyA2EmF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO15queryGenerationyA2EmF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO16refreshedObjectsyA2EmF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO18invalidatedObjectsyA2EmF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO21invalidatedAllObjectsyA2EmF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO8RawValuea	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO8rawValueAESgSS_tcfc	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE15NotificationKeyO8rawValueSSvp	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE17ScheduledTaskTypeO	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE17ScheduledTaskTypeO2eeoiySbAE_AEtFZ	implemented	full/coredata/NSManagedObjectContext.swift	Hashable/Equatable synthesis on the implemented type
+s:So22NSManagedObjectContextC8CoreDataE17ScheduledTaskTypeO4hash4intoys6HasherVz_tF	implemented	full/coredata/NSManagedObjectContext.swift	Hashable/Equatable synthesis on the implemented type
+s:So22NSManagedObjectContextC8CoreDataE17ScheduledTaskTypeO8enqueuedyA2EmF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE17ScheduledTaskTypeO9hashValueSivp	implemented	full/coredata/NSManagedObjectContext.swift	Hashable/Equatable synthesis on the implemented type
+s:So22NSManagedObjectContextC8CoreDataE17ScheduledTaskTypeO9immediateyA2EmF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE26didSaveObjectsNotificationSo18NSNotificationNameavpZ	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE27willSaveObjectsNotificationSo18NSNotificationNameavpZ	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE28didChangeObjectsNotificationSo18NSNotificationNameavpZ	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE5count3forSiSo14NSFetchRequestCyxG_tKSo0hI6ResultRzlF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE5fetchySayxGSo14NSFetchRequestCyxGKSo0gH6ResultRzlF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE5fetchySayypGSo14NSFetchRequestCySo0gH6Result_pGKF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataE7perform8schedule_xAbCE17ScheduledTaskTypeO_xyKctYaKlF	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So22NSManagedObjectContextC8CoreDataEyA2bCE15ConcurrencyTypeVcfc	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So23NSExpressionDescriptionC8CoreDataE10resultTypeSo011NSAttributeB0CACE09AttributeF0Vvp	implemented	full/coredata/NSManagedObjectModel.swift	in-memory implementation
+s:So23NSFetchIndexElementTypeV8rawValueABSgSu_tcfc	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+s:So24NSFetchRequestResultTypeV8rawValueABSu_tcfc	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:So24NSStagedMigrationManagerC8CoreDataEyABSaySo16NSMigrationStageCGcfc	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+s:So26NSFetchedResultsChangeTypeV8rawValueABSgSu_tcfc	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:So27NSLightweightMigrationStageC8CoreDataEyABSaySSGcfc	declared	full/coredata/CoreDataFailClosed.swift	migration types compile; migrate/infer APIs throw
+s:So28NSPersistentStoreCoordinatorC8CoreDataE013addPersistentB04type13configuration2at7optionsSo0aB0CAjCE0B4TypeV_SSSg10Foundation3URLVSDys11AnyHashableVypGSgtKF	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:So28NSPersistentStoreCoordinatorC8CoreDataE017destroyPersistentB02at4type7optionsy10Foundation3URLV_So0aB0CACE0B4TypeVSDys11AnyHashableVypGSgtKF	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:So28NSPersistentStoreCoordinatorC8CoreDataE017migratePersistentB0_2to7options4typeSo0aB0CAI_10Foundation3URLVSDys11AnyHashableVypGSgAiCE0B4TypeVtKF	declared	full/coredata/NSPersistentStore.swift	throws for non-in-memory Apple store formats
+s:So28NSPersistentStoreCoordinatorC8CoreDataE017replacePersistentB02at18destinationOptions04withgB4From06sourceJ04typey10Foundation3URLV_SDys11AnyHashableVypGSgAlPSo0aB0CACE0B4TypeVtKF	declared	full/coredata/NSPersistentStore.swift	throws for non-in-memory Apple store formats
+s:So28NSPersistentStoreCoordinatorC8CoreDataE021metadataForPersistentB04type2at7optionsSDySSypGSo0aB0CACE0B4TypeV_10Foundation3URLVSDys11AnyHashableVypGSgtKFZ	implemented	full/coredata/NSPersistentStore.swift	in-memory metadata path; other types throw
+s:So28NSPersistentStoreCoordinatorC8CoreDataE08registerB5Class_4typeyyXlXpSg_So0aB0CACE0B4TypeVtFZ	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:So28NSPersistentStoreCoordinatorC8CoreDataE11setMetadata_4type2at7optionsySDySSypGSg_So0aB0CACE0B4TypeV10Foundation3URLVSDys11AnyHashableVypGSgtKFZ	implemented	full/coredata/NSPersistentStore.swift	in-memory metadata path; other types throw
+s:So28NSPersistentStoreCoordinatorC8CoreDataE14performAndWaityxxyKXEKlF	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:So28NSPersistentStoreCoordinatorC8CoreDataE15managedObjectID3forSo09NSManagedgH0CSgSS_tF	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:So28NSPersistentStoreCoordinatorC8CoreDataE7performyxxyKcYaKlF	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:So28NSPersistentStoreRequestTypeV8rawValueABSgSu_tcfc	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:So29NSPersistentHistoryChangeTypeV8rawValueABSgSi_tcfc	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+s:So29NSPersistentHistoryResultTypeV8rawValueABSgSi_tcfc	declared	full/coredata/CoreData.swift	history types compile; Linux in-memory store does not emit Apple history tokens
+s:So30NSBatchDeleteRequestResultTypeV8rawValueABSgSu_tcfc	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+s:So30NSBatchInsertRequestResultTypeV8rawValueABSgSu_tcfc	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+s:So30NSBatchUpdateRequestResultTypeV8rawValueABSgSu_tcfc	implemented	full/coredata/CoreData.swift	in-memory batch/save request path
+s:So31NSCoreDataCoreSpotlightDelegateC0cB0E26indexDidUpdateNotificationSo18NSNotificationNameavpZ	declared	full/coredata/CoreDataFailClosed.swift	Spotlight delegate compiles; indexing never starts
+s:So36NSPersistentCloudKitContainerOptionsC010_CoreData_bC0E13databaseScopeSo010CKDatabaseI0Vvp	deferred		Linux Foundation/toolchain lacks KVC predicates, Combine, UndoManager, NSExpression, or related Apple types
+s:So37NSManagedObjectContextConcurrencyTypeV8rawValueABSgSu_tcfc	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:So38NSPersistentCloudKitContainerEventTypeV8rawValueABSgSi_tcfc	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:So41NSPersistentStoreUbiquitousTransitionTypeV8rawValueABSgSu_tcfc	declared	full/coredata/CoreData.swift	declared fail-closed Linux surface
+s:So44NSPersistentCloudKitContainerEventResultTypeV8rawValueABSgSi_tcfc	declared	full/coredata/CoreDataFailClosed.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:So56NSPersistentCloudKitContainerSchemaInitializationOptionsV8rawValueABSu_tcfc	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:So9NSLockingP10FoundationE8withLockyqd__qd__yKXEKlF::SYNTHESIZED::c:objc(cs)NSManagedObjectContext	implemented	full/coredata/NSManagedObjectContext.swift	in-memory implementation
+s:So9NSLockingP10FoundationE8withLockyqd__qd__yKXEKlF::SYNTHESIZED::c:objc(cs)NSPersistentStoreCoordinator	implemented	full/coredata/NSPersistentStore.swift	in-memory implementation
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSFetchRequestResultType	implemented	full/coredata/CoreData.swift	in-memory implementation
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSPersistentCloudKitContainerSchemaInitializationOptions	declared	full/coredata/CoreData.swift	CloudKit API compiles; operations fail closed without an Apple CloudKit runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSSnapshotEventType	implemented	full/coredata/CoreData.swift	in-memory implementation
