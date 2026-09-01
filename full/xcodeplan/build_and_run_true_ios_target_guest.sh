@@ -51,6 +51,7 @@ IOS_MODULES=(
     Swift
     SwiftOnoneSupport
     Synchronization
+    Darwin
     _Builtin_float
     _Concurrency
     _StringProcessing
@@ -71,6 +72,12 @@ IOS_RUNTIME_TBDS=(
     libswiftCore.tbd
     libswiftSwiftOnoneSupport.tbd
     libswiftSynchronization.tbd
+    libswiftDarwin.tbd
+    libswiftObjectiveC.tbd
+    libswift_DarwinFoundation1.tbd
+    libswift_DarwinFoundation2.tbd
+    libswift_DarwinFoundation3.tbd
+    libswift_errno.tbd
     libswift_Builtin_float.tbd
     libswift_Concurrency.tbd
     libswift_RegexParser.tbd
@@ -94,6 +101,11 @@ fi
 cp "$SCRIPT_DIR/TrueIOSTargetProbe.swift" "$STAGE/"
 cp "$SCRIPT_DIR/true_ios_target_guest_inner.sh" "$STAGE/"
 chmod 0755 "$STAGE/true_ios_target_guest_inner.sh"
+mkdir -p "$STAGE/inputs"
+cp "$SCRIPT_DIR/../foundation/os-module/os.swift" "$STAGE/inputs/os.swift"
+cp "$SCRIPT_DIR/../oslog/OSLog.swift" "$STAGE/inputs/OSLog.swift"
+cp "$SCRIPT_DIR/../oslog/tests/OSLogGuestRuntime.swift" \
+    "$STAGE/inputs/OSLogGuestRuntime.swift"
 
 {
     printf 'container-image\t%s\n' "$CONTAINER_IMAGE"
@@ -107,6 +119,8 @@ chmod 0755 "$STAGE/true_ios_target_guest_inner.sh"
                -o -name '*.tbd' \) -print0 \
             | sort -z | xargs -0 sha256sum
         sha256sum sdk/usr/lib/libSystem.B.tbd sdk/usr/lib/libobjc.A.tbd
+        sha256sum inputs/os.swift inputs/OSLog.swift \
+            inputs/OSLogGuestRuntime.swift
     )
 } > "$STAGE/attestation/target-sdk-inputs.tsv"
 

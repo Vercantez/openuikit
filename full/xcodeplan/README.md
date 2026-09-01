@@ -456,8 +456,11 @@ runtime TBDs from an iPhoneSimulator SDK, then runs the pinned Linux/arm64 image
 with no network and a read-only root. It compiles
 `TrueIOSTargetProbe.swift` as `arm64-apple-ios17.0-simulator`, links an ARM64
 Mach-O executable with `LC_BUILD_VERSION` platform 7, and cold-runs it under the
-packaged loader. Neither the core package nor an app/vendor checkout is
-modified.
+packaged loader. The same gate then rebuilds this repository's real `os` and
+public `OSLog` modules, links `libosPortable.dylib` and `libOSLog.dylib` as
+platform-7 Mach-O dylibs, verifies the OSLog re-export edge, and runs the
+existing OSLog guest runtime with visible logger and signpost output. Neither
+the core package nor an app/vendor checkout is modified.
 
 ```sh
 full/xcodeplan/build_and_run_true_ios_target_guest.sh \
