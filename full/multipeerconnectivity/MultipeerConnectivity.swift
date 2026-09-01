@@ -1,11 +1,12 @@
 @_exported import Foundation
+import Dispatch
 
 /// Public `NSError` domain for MultipeerConnectivity failures.
 ///
-/// The pinned SDK bytes are absent, so this portable overlay uses the public
-/// constant name as the domain string (same pattern as `kCLErrorDomain`).
-/// The exact Apple runtime string remains an oracle question.
-public let MCErrorDomain = "MCErrorDomain"
+/// Apple's exact runtime string is unobserved (SDK bytes are absent). This
+/// portable overlay uses an OpenUIKit domain and must not be treated as Apple
+/// ABI parity.
+public let MCErrorDomain = "org.openuikit.multipeerconnectivity.error"
 
 /// Minimum session size, including the local peer.
 /// Documented by Apple as 2 (the local peer plus one remote peer).
@@ -61,4 +62,25 @@ func mc_invalidParameterError() -> MCError {
 
 func mc_notConnectedError() -> MCError {
     MCError(.notConnected)
+}
+
+/// Serial fail-closed delivery. Start-browser, advertiser, resource-send, and
+/// nearby-connection completions are enqueued here so they never run inline
+/// with the originating call, and a generation token can drop stale work.
+enum MCFailClosed {
+    static let queue = DispatchQueue(
+        label: "full.multipeerconnectivity.fail-closed",
+        qos: .userInitiated
+    )
+
+    private final class Box: @unchecked Sendable {
+        let body: () -> Void
+        init(_ body: @escaping () -> Void) { self.body = body }
+        func run() { body() }
+    }
+
+    static func deliver(_ body: @escaping () -> Void) {
+        let box = Box(body)
+        queue.async { box.run() }
+    }
 }

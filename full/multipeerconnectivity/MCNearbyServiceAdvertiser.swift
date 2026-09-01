@@ -4,9 +4,9 @@ import Foundation
 ///
 /// Linux has no Bonjour/AWDL MultipeerConnectivity advertiser. Starting
 /// advertising fails closed: the optional delegate is told
-/// `didNotStartAdvertisingPeer` with `MCError.unavailable` (or
-/// `invalidParameter` when the service type is not a documented Bonjour-style
-/// name). No invitation is ever delivered.
+/// `didNotStartAdvertisingPeer` asynchronously, exactly once per start,
+/// with `MCError.unavailable` (or `invalidParameter` when the service type is
+/// not a documented Bonjour-style name). No invitation is ever delivered.
 open class MCNearbyServiceAdvertiser: NSObject {
     open weak var delegate: (any MCNearbyServiceAdvertiserDelegate)?
     open var myPeerID: MCPeerID { _myPeerID }
@@ -16,7 +16,9 @@ open class MCNearbyServiceAdvertiser: NSObject {
     private let _myPeerID: MCPeerID
     private let _discoveryInfo: [String: String]?
     private let _serviceType: String
+    private let stateLock = NSLock()
     private var isAdvertising = false
+    private var deliveryGeneration = 0
 
     public init(
         peer myPeerID: MCPeerID,
@@ -30,17 +32,38 @@ open class MCNearbyServiceAdvertiser: NSObject {
     }
 
     open func startAdvertisingPeer() {
-        guard !isAdvertising else { return }
-        isAdvertising = true
-        if !mc_isValidServiceType(_serviceType) {
-            delegate?.advertiser(self, didNotStartAdvertisingPeer: mc_invalidParameterError())
+        stateLock.lock()
+        if isAdvertising {
+            stateLock.unlock()
             return
         }
-        delegate?.advertiser(self, didNotStartAdvertisingPeer: mc_unavailableError())
+        isAdvertising = true
+        deliveryGeneration += 1
+        let generation = deliveryGeneration
+        stateLock.unlock()
+
+        let error: MCError = mc_isValidServiceType(_serviceType)
+            ? mc_unavailableError()
+            : mc_invalidParameterError()
+        MCFailClosed.deliver { [weak self] in
+            guard let self else { return }
+            self.stateLock.lock()
+            let shouldDeliver =
+                self.isAdvertising && self.deliveryGeneration == generation
+            if shouldDeliver {
+                self.isAdvertising = false
+            }
+            self.stateLock.unlock()
+            guard shouldDeliver else { return }
+            self.delegate?.advertiser(self, didNotStartAdvertisingPeer: error)
+        }
     }
 
     open func stopAdvertisingPeer() {
+        stateLock.lock()
         isAdvertising = false
+        deliveryGeneration += 1
+        stateLock.unlock()
     }
 }
 

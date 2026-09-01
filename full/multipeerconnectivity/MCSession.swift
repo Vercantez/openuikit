@@ -73,7 +73,10 @@ open class MCSession: NSObject {
         withCompletionHandler completionHandler: (((any Error)?) -> Void)? = nil
     ) -> Progress? {
         _ = (resourceURL, resourceName, peerID)
-        completionHandler?(mc_notConnectedError())
+        let error = mc_notConnectedError()
+        MCFailClosed.deliver {
+            completionHandler?(error)
+        }
         return nil
     }
 
@@ -91,7 +94,10 @@ open class MCSession: NSObject {
         withCompletionHandler completionHandler: @escaping (Data?, (any Error)?) -> Void
     ) {
         _ = peerID
-        completionHandler(nil, mc_unavailableError())
+        let error = mc_unavailableError()
+        MCFailClosed.deliver {
+            completionHandler(nil, error)
+        }
     }
 
     open func nearbyConnectionData(forPeer peerID: MCPeerID) async throws -> Data {

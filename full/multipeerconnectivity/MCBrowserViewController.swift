@@ -1,13 +1,14 @@
-import Foundation
+#if canImport(UIKit)
+import UIKit
 
 /// System browser UI for nearby peers.
 ///
-/// Apple's overlay subclasses `UIViewController`. The host gate compiles
-/// against Foundation only, so this Linux starting point subclasses
-/// `NSObject`, keeps the documented peer-limit and session/browser properties,
-/// and never presents Apple's peer picker or discovers peers.
+/// Subclasses the real `UIKit.UIViewController`. This type is omitted from
+/// the isolated Foundation-only host compile (`canImport(UIKit)` is false)
+/// and must not be replaced with an `NSObject` stand-in. The controller never
+/// presents Apple's peer picker and never discovers peers.
 @MainActor
-open class MCBrowserViewController: NSObject {
+open class MCBrowserViewController: UIKit.UIViewController {
     open weak var delegate: (any MCBrowserViewControllerDelegate)?
     open var browser: MCNearbyServiceBrowser? { _browser }
     open var session: MCSession { _session }
@@ -23,7 +24,7 @@ open class MCBrowserViewController: NSObject {
         _session = session
         _minimumNumberOfPeers = kMCSessionMinimumNumberOfPeers
         _maximumNumberOfPeers = kMCSessionMaximumNumberOfPeers
-        super.init()
+        super.init(nibName: nil, bundle: nil)
     }
 
     @MainActor
@@ -33,6 +34,11 @@ open class MCBrowserViewController: NSObject {
             serviceType: serviceType
         )
         self.init(browser: browser, session: session)
+    }
+
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) {
+        fatalError("MCBrowserViewController does not support storyboard decoding")
     }
 
     @MainActor
@@ -87,3 +93,4 @@ public extension MCBrowserViewControllerDelegate {
         return true
     }
 }
+#endif

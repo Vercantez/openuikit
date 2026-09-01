@@ -3,16 +3,13 @@ import Foundation
 /// Local identity of a MultipeerConnectivity peer.
 ///
 /// Linux has no Apple peer-ID keychain or Bonjour identity. Each constructed
-/// `MCPeerID` therefore owns a portable UUID that is preserved across
-/// `NSCopying` and `NSSecureCoding`. Two separately constructed peers with the
-/// same display name are not equal. Apple's archive key names and any
-/// device-stable identity scheme remain oracle questions; this codec is a
-/// Linux-local round trip, not an Apple archive claim.
+/// `MCPeerID` owns a portable UUID used for `NSCopying` and equality. Two
+/// separately constructed peers with the same display name are not equal; a
+/// copy is equal to its source. Apple's NSCoder keys and archive layout are
+/// unobserved, so `init(coder:)` fails closed with `nil` and `encode(with:)`
+/// writes no guessed ABI keys.
 open class MCPeerID: NSObject, NSCopying, NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
-
-    private static let displayNameKey = "displayName"
-    private static let identityKey = "identity"
 
     open var displayName: String { _displayName }
     let identity: UUID
@@ -32,28 +29,12 @@ open class MCPeerID: NSObject, NSCopying, NSSecureCoding {
     }
 
     public required init?(coder: NSCoder) {
-        let decodedName = coder.decodeObject(
-            of: NSString.self,
-            forKey: Self.displayNameKey
-        ) as String?
-        let decodedIdentity = coder.decodeObject(
-            of: NSString.self,
-            forKey: Self.identityKey
-        ) as String?
-        guard let decodedName,
-              let decodedIdentity,
-              let uuid = UUID(uuidString: decodedIdentity)
-        else {
-            return nil
-        }
-        _displayName = decodedName
-        identity = uuid
-        super.init()
+        _ = coder
+        return nil
     }
 
     open func encode(with coder: NSCoder) {
-        coder.encode(_displayName, forKey: Self.displayNameKey)
-        coder.encode(identity.uuidString, forKey: Self.identityKey)
+        _ = coder
     }
 
     public func copy(with zone: NSZone? = nil) -> Any {
