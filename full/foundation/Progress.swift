@@ -48,6 +48,14 @@ public struct NSKeyValueObservedChange<Value>: @unchecked Sendable {
     }
 }
 
+private struct _PortableKVOValue: @unchecked Sendable {
+    let value: Any
+
+    init<Value>(_ value: Value) {
+        self.value = value as Any
+    }
+}
+
 private final class _WeakProgressObservation: @unchecked Sendable {
     weak var value: NSKeyValueObservation?
     init(_ value: NSKeyValueObservation) { self.value = value }
@@ -57,30 +65,37 @@ public final class NSKeyValueObservation: NSObject, @unchecked Sendable {
     fileprivate let identifier: UInt64
     fileprivate let keyPath: AnyKeyPath
     fileprivate let options: NSKeyValueObservingOptions
-    private let handler: (Progress, Any?, Any?, Bool) -> Void
+    private let handler: (
+        AnyObject, _PortableKVOValue?, _PortableKVOValue?, Bool
+    ) -> Void
+    private let invalidation: @Sendable () -> Void
     private let invalidated = Mutex(false)
-    fileprivate weak var owner: Progress?
+    fileprivate weak var owner: AnyObject?
 
-    fileprivate init<Value>(
+    fileprivate init<Object: AnyObject, Value>(
         identifier: UInt64,
-        owner: Progress,
-        keyPath: KeyPath<Progress, Value>,
+        owner: Object,
+        keyPath: KeyPath<Object, Value>,
         options: NSKeyValueObservingOptions,
+        invalidation: @escaping @Sendable () -> Void,
         handler: @escaping (
-            Progress, NSKeyValueObservedChange<Value>
+            Object, NSKeyValueObservedChange<Value>
         ) -> Void
     ) {
         self.identifier = identifier
         self.owner = owner
         self.keyPath = keyPath
         self.options = options
+        self.invalidation = invalidation
         self.handler = { object, old, new, isPrior in
+            guard let object = object as? Object else { return }
             handler(
                 object,
                 NSKeyValueObservedChange(
                     newValue: !isPrior && options.contains(.new)
-                        ? new as? Value : nil,
-                    oldValue: options.contains(.old) ? old as? Value : nil,
+                        ? new.map { $0.value as! Value } : nil,
+                    oldValue: options.contains(.old)
+                        ? old.map { $0.value as! Value } : nil,
                     isPrior: isPrior
                 )
             )
@@ -95,12 +110,15 @@ public final class NSKeyValueObservation: NSObject, @unchecked Sendable {
             return true
         }
         guard shouldDetach else { return }
-        owner?._removeObservation(identifier)
+        invalidation()
         owner = nil
     }
 
     fileprivate func deliver(
-        object: Progress, old: Any?, new: Any?, isPrior: Bool
+        object: AnyObject,
+        old: _PortableKVOValue?,
+        new: _PortableKVOValue?,
+        isPrior: Bool
     ) {
         guard !invalidated.withLock({ $0 }) else { return }
         if isPrior && !options.contains(.prior) { return }
@@ -109,6 +127,176 @@ public final class NSKeyValueObservation: NSObject, @unchecked Sendable {
 
     deinit { invalidate() }
 }
+
+#if !FOUNDATION_PROGRESS_HOST
+/// Process-local typed observation storage for portable Objective-C objects.
+///
+/// Linux-built Mach-O code has no Objective-C KVO runtime. The facade keeps
+/// the public typed-Foundation contract while requiring framework owners to
+/// bracket real mutations explicitly. Tokens are held weakly, as on Darwin:
+/// dropping or invalidating the token immediately stops delivery.
+private final class _PortableKVORegistry: @unchecked Sendable {
+    private struct State {
+        var nextIdentifier: UInt64 = 1
+        var observations: [
+            ObjectIdentifier: [UInt64: _WeakProgressObservation]
+        ] = [:]
+    }
+
+    static let shared = _PortableKVORegistry()
+    private let state = Mutex(State())
+
+    func observe<Object: NSObject, Value>(
+        object: Object,
+        keyPath: KeyPath<Object, Value>,
+        options: NSKeyValueObservingOptions,
+        handler: @escaping @Sendable (
+            Object, NSKeyValueObservedChange<Value>
+        ) -> Void
+    ) -> NSKeyValueObservation {
+        let objectIdentifier = ObjectIdentifier(object)
+        let identifier = state.withLock { state in
+            let identifier = state.nextIdentifier
+            state.nextIdentifier &+= 1
+            return identifier
+        }
+        let observation = NSKeyValueObservation(
+            identifier: identifier,
+            owner: object,
+            keyPath: keyPath,
+            options: options,
+            invalidation: { [objectIdentifier] in
+                Self.shared.remove(
+                    objectIdentifier: objectIdentifier,
+                    identifier: identifier
+                )
+            },
+            handler: handler
+        )
+        state.withLock { state in
+            state.observations[objectIdentifier, default: [:]][identifier] =
+                _WeakProgressObservation(observation)
+        }
+        if options.contains(.initial) {
+            observation.deliver(
+                object: object,
+                old: nil,
+                new: _PortableKVOValue(object[keyPath: keyPath]),
+                isPrior: false
+            )
+        }
+        return observation
+    }
+
+    func deliver<Object: NSObject, Value>(
+        object: Object,
+        keyPath: KeyPath<Object, Value>,
+        oldValue: Value,
+        newValue: Value,
+        isPrior: Bool
+    ) {
+        let objectIdentifier = ObjectIdentifier(object)
+        let retained = state.withLock { state -> [NSKeyValueObservation] in
+            guard let values = state.observations[objectIdentifier] else {
+                return []
+            }
+            var live: [UInt64: _WeakProgressObservation] = [:]
+            var matching: [NSKeyValueObservation] = []
+            for (identifier, weakValue) in values {
+                guard let observation = weakValue.value else { continue }
+                guard observation.owner === object else { continue }
+                live[identifier] = weakValue
+                if observation.keyPath == keyPath {
+                    matching.append(observation)
+                }
+            }
+            if live.isEmpty {
+                state.observations.removeValue(forKey: objectIdentifier)
+            } else {
+                state.observations[objectIdentifier] = live
+            }
+            matching.sort { $0.identifier < $1.identifier }
+            return matching
+        }
+        let old = _PortableKVOValue(oldValue)
+        let new = _PortableKVOValue(newValue)
+        for observation in retained {
+            observation.deliver(
+                object: object, old: old, new: new, isPrior: isPrior
+            )
+        }
+    }
+
+    private func remove(
+        objectIdentifier: ObjectIdentifier, identifier: UInt64
+    ) {
+        state.withLock { state in
+            state.observations[objectIdentifier]?.removeValue(
+                forKey: identifier
+            )
+            if state.observations[objectIdentifier]?.isEmpty == true {
+                state.observations.removeValue(forKey: objectIdentifier)
+            }
+        }
+    }
+}
+
+/// Foundation's typed-observation capability. A protocol extension is used so
+/// `Self` retains the concrete subclass in key paths and callbacks, matching
+/// the native Foundation declaration rather than erasing to `NSObject`.
+public protocol _KeyValueCodingAndObserving: AnyObject {}
+
+extension NSObject: _KeyValueCodingAndObserving {}
+
+public extension _KeyValueCodingAndObserving where Self: NSObject {
+    /// Creates a lifetime-bound typed observation of a portable Objective-C
+    /// object. Framework implementations must emit the matching explicit
+    /// mutation brackets below because automatic Objective-C KVO is absent.
+    @preconcurrency
+    func observe<Value>(
+        _ keyPath: KeyPath<Self, Value>,
+        options: NSKeyValueObservingOptions = [],
+        changeHandler: @escaping @Sendable (
+            Self, NSKeyValueObservedChange<Value>
+        ) -> Void
+    ) -> NSKeyValueObservation {
+        _PortableKVORegistry.shared.observe(
+            object: self,
+            keyPath: keyPath,
+            options: options,
+            handler: changeHandler
+        )
+    }
+
+    /// Delivers `.prior` observations immediately before a real mutation.
+    func _portableWillChangeValue<Value>(
+        for keyPath: KeyPath<Self, Value>, oldValue: Value
+    ) {
+        _PortableKVORegistry.shared.deliver(
+            object: self,
+            keyPath: keyPath,
+            oldValue: oldValue,
+            newValue: oldValue,
+            isPrior: true
+        )
+    }
+
+    /// Delivers the post-mutation observation with requested old/new values.
+    func _portableDidChangeValue<Value>(
+        for keyPath: KeyPath<Self, Value>,
+        oldValue: Value,
+        newValue: Value
+    ) {
+        _PortableKVORegistry.shared.deliver(
+            object: self,
+            keyPath: keyPath,
+            oldValue: oldValue,
+            newValue: newValue,
+            isPrior: false
+        )
+    }
+}
+#endif
 
 open class Progress: NSObject, @unchecked Sendable {
     private struct State {
@@ -186,6 +374,9 @@ open class Progress: NSObject, @unchecked Sendable {
                 owner: self,
                 keyPath: keyPath,
                 options: options,
+                invalidation: { [weak self] in
+                    self?._removeObservation(identifier)
+                },
                 handler: changeHandler
             )
             state.observations[identifier] = _WeakProgressObservation(observation)
@@ -193,7 +384,12 @@ open class Progress: NSObject, @unchecked Sendable {
         }
         if options.contains(.initial) {
             let value = self[keyPath: keyPath]
-            observation.deliver(object: self, old: nil, new: value, isPrior: false)
+            observation.deliver(
+                object: self,
+                old: nil,
+                new: _PortableKVOValue(value),
+                isPrior: false
+            )
         }
         return observation
     }
@@ -234,7 +430,10 @@ open class Progress: NSObject, @unchecked Sendable {
             guard oldValue != newValue else { return }
             for observation in observations where observation.keyPath == keyPath {
                 observation.deliver(
-                    object: self, old: oldValue, new: newValue, isPrior: prior
+                    object: self,
+                    old: _PortableKVOValue(oldValue),
+                    new: _PortableKVOValue(newValue),
+                    isPrior: prior
                 )
             }
         }

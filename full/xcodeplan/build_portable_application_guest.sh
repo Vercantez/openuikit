@@ -360,6 +360,13 @@ build_inside() {
     for tool in python3 swiftc clang-18 clang++-18 ld64.lld-18 llvm-nm-18 llvm-otool-18 file sha256sum perl; do
         command -v "$tool" >/dev/null || die "required container tool is missing: $tool"
     done
+    # Ubuntu exposes the versioned LLVM tools through /usr/bin symlinks. Bind
+    # the symbol audit to the resolved regular executable instead of trusting
+    # a mutable lookup at each audit call.
+    local llvm_nm
+    llvm_nm=$(canonical_existing "$(command -v llvm-nm-18)")
+    require_regular "$llvm_nm" "canonical llvm-nm"
+    [ -x "$llvm_nm" ] || die "canonical llvm-nm is not executable: $llvm_nm"
     PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/application_platform_package.py" \
         "$platform" --emit-summary
     local -a remote_cache_arguments=()
@@ -1129,7 +1136,7 @@ PY
             || die "application object header drifted: $object_path"
     done
     python3 -B "$SCRIPT_DIR/application_object_contract.py" \
-        audit-cross-file-symbols --nm "$(command -v llvm-nm-18)" \
+        audit-cross-file-symbols --nm "$llvm_nm" \
         --audit "$output/application-cross-file-symbols.json" \
         "${application_objects[@]}"
     {
@@ -1349,7 +1356,7 @@ PY
         'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
         || die "linked application is not an ARM64 Mach-O executable"
     python3 -B "$SCRIPT_DIR/application_object_contract.py" \
-        audit-linked-executable --nm "$(command -v llvm-nm-18)" \
+        audit-linked-executable --nm "$llvm_nm" \
         --executable "$executable" \
         --cross-file-audit "$output/application-cross-file-symbols.json" \
         --audit "$output/application-linked-symbols.json" \

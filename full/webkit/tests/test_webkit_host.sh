@@ -56,7 +56,7 @@ xcrun swiftc -parse-as-library "$HERE/WebKitHostRuntime.swift" \
 DYLD_LIBRARY_PATH="$BIN${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}" \
     "$OUT/WebKitHostRuntime" | tee "$OUT/runtime.log"
 grep -Fx \
-    'WEBKIT_HOST_RUNTIME_OK configuration=copied state=retained policies=honored navigation=engine-unavailable rendering=absent' \
+    'WEBKIT_HOST_RUNTIME_OK configuration=copied state=retained media=paired insets=retained background=retained policies=honored navigation=engine-unavailable rendering=absent' \
     "$OUT/runtime.log" >/dev/null
 
 [ "$(xcrun otool -D "$BIN/libWebKit.dylib" | grep -Fc '@rpath/libWebKit.dylib')" -eq 1 ]

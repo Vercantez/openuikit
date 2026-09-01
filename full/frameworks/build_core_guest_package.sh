@@ -36,6 +36,7 @@ FOUNDATION_INTERNATIONALIZATION_BUILDER=$W/full/foundationinternationalization/b
 INTENTS_SOURCES_MANIFEST=$W/full/intents/intents_guest_sources.txt
 INTENTSUI_SOURCES_MANIFEST=$W/full/intentsui/intentsui_guest_sources.txt
 WEBKIT_SOURCES_MANIFEST=$W/full/webkit/webkit_guest_sources.txt
+HACKERS_WEBKIT_SURFACE=$W/full/webkit/tests/HackersWebKitSurface.swift
 COREIMAGE_SOURCES_MANIFEST=$W/full/coreimage/coreimage_guest_sources.txt
 QUARTZCORE_SOURCES_MANIFEST=$W/full/quartzcore/quartzcore_guest_sources.txt
 SWIFTDATA_SOURCES_MANIFEST=$W/full/swiftdata/swiftdata_guest_sources.txt
@@ -223,6 +224,7 @@ EXPECTED_OBSERVATION_SOURCE_COUNT=6
 EXPECTED_INTENTS_SOURCE_COUNT=1
 EXPECTED_INTENTSUI_SOURCE_COUNT=1
 EXPECTED_WEBKIT_SOURCE_COUNT=5
+EXPECTED_HACKERS_WEBKIT_SURFACE_SHA256=fa5ac0e8d8a72453d604cc5a8f24a8a8e9a771249115f569b2cd5b31422f194c
 EXPECTED_COREIMAGE_SOURCE_COUNT=1
 EXPECTED_QUARTZCORE_SOURCE_COUNT=1
 EXPECTED_SWIFTDATA_SOURCE_COUNT=2
@@ -720,6 +722,14 @@ python3 -B "$WEBKIT_PROVENANCE_TOOL" production \
     --output "$WORK/webkit-sources.pre.tsv"
 [ "$(grep -c '^source' "$WORK/webkit-sources.pre.tsv")" -eq \
     "$EXPECTED_WEBKIT_SOURCE_COUNT" ] || die 'WebKit source count drifted'
+[ -f "$HACKERS_WEBKIT_SURFACE" ] && [ ! -L "$HACKERS_WEBKIT_SURFACE" ] \
+    || die 'Hackers WebKit Swift 6 surface gate is missing or linked'
+git -C "$W" ls-files --error-unmatch \
+    "${HACKERS_WEBKIT_SURFACE#"$W"/}" >/dev/null \
+    || die 'Hackers WebKit Swift 6 surface gate is not tracked'
+require_hash "$HACKERS_WEBKIT_SURFACE" \
+    "$EXPECTED_HACKERS_WEBKIT_SURFACE_SHA256" \
+    Hackers-WebKit-Swift-6-surface
 
 mapfile -t INTENTS_SOURCES < "$INTENTS_SOURCES_MANIFEST"
 mapfile -t INTENTSUI_SOURCES < "$INTENTSUI_SOURCES_MANIFEST"
@@ -3064,6 +3074,11 @@ done
     -module-name WebKit -emit-module \
     -emit-module-path "$STAGE/modules/WebKit.swiftmodule" \
     -emit-object -o "$WORK/webkit.o" "${WEBKIT_SOURCE_PATHS[@]}"
+echo '== strict Swift 6 Hackers WebKit/KVO source-surface gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -swift-version 6 \
+    -module-name HackersWebKitSurface -typecheck \
+    "$HACKERS_WEBKIT_SURFACE"
 
 echo '== compile thirty-five independent first-party framework modules'
 clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
@@ -3439,11 +3454,13 @@ intents_runtime_load_count=$(llvm-otool-18 -L "$STAGE/lib/libIntents.dylib" \
     -needed_library "$STAGE/lib/libUIKit.dylib" \
     -needed_library "$STAGE/lib/libFoundation.dylib" \
     -o "$STAGE/lib/libWebKit.dylib" "$WORK/webkit.o" \
-    "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics
+    "${COMMON_LINK[@]}" -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
 
 WEBKIT_REQUIRED_LOADS=(
     @rpath/libUIKit.dylib
     @rpath/libFoundation.dylib
+    "$SWIFTUI_RUNTIME_INSTALL_NAME"
 )
 for install_name in "${WEBKIT_REQUIRED_LOADS[@]}"; do
     load_count=$(llvm-otool-18 -L "$STAGE/lib/libWebKit.dylib" \
@@ -3460,6 +3477,7 @@ fi
     printf 'install-id\t@rpath/libWebKit.dylib\n'
     printf 'required-load\t@rpath/libUIKit.dylib\tcount=1\n'
     printf 'required-load\t@rpath/libFoundation.dylib\tcount=1\n'
+    printf 'required-load\t%s\tcount=1\n' "$SWIFTUI_RUNTIME_INSTALL_NAME"
     printf 'apple-webkit-framework-load-count\t0\n'
     printf 'rendering-engine\tabsent\n'
 } > "$STAGE/attestation/webkit-dylib-loads.tsv"
@@ -4814,7 +4832,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-35 zlib=gzip-host-v1 foundationmodels=generated-content,fail-closed naturallanguage=classifier,apple-29 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven naturallanguage=deterministic,confidence-gated authenticationservices=host-driven,fail-closed webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-35 zlib=gzip-host-v1 foundationmodels=generated-content,fail-closed naturallanguage=classifier,apple-29 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven naturallanguage=deterministic,confidence-gated authenticationservices=host-driven,fail-closed webkit=state,kvo,engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'

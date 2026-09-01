@@ -231,7 +231,7 @@ private struct CorePreviewRegistry: DeveloperToolsSupport.PreviewRegistry {
 @main
 struct CoreGuestPackageProbe {
     @MainActor
-    static func main() {
+    static func main() async {
         guard CommandLine.arguments.count == 4 else {
             fatalError(
                 "usage: CoreGuestPackageProbe <resource-root> <system-font> <bold-font>"
@@ -565,6 +565,65 @@ struct CoreGuestPackageProbe {
             webView.configuration.websiteDataStore ===
                 webConfiguration.websiteDataStore
         )
+        precondition(webView.obscuredContentInsets == .zero)
+        precondition(webView.underPageBackgroundColor == .white)
+        webView.obscuredContentInsets = UIEdgeInsets(
+            top: 0, left: 0, bottom: 24, right: 0
+        )
+        precondition(webView.obscuredContentInsets.bottom == 24)
+        var mediaCompletions = 0
+        await withCheckedContinuation { continuation in
+            webView.setAllMediaPlaybackSuspended(true) {
+                mediaCompletions += 1
+                continuation.resume()
+            }
+        }
+        await withCheckedContinuation { continuation in
+            webView.setAllMediaPlaybackSuspended(false) {
+                mediaCompletions += 1
+                continuation.resume()
+            }
+        }
+        precondition(mediaCompletions == 2)
+
+        var loadingChanges: [(Bool?, Bool?, Bool)] = []
+        let loadingObservation = webView.observe(
+            \.isLoading, options: [.initial, .old, .new, .prior]
+        ) { _, change in
+            loadingChanges.append(
+                (change.oldValue, change.newValue, change.isPrior)
+            )
+        }
+        var urlChanges = 0
+        let urlObservation = webView.observe(\.url, options: [.new]) {
+            _, change in
+            precondition(change.newValue != nil)
+            urlChanges += 1
+        }
+        var backgroundChanges: [UIColor?] = []
+        let backgroundObservation = webView.observe(
+            \.underPageBackgroundColor, options: [.initial, .new]
+        ) { _, change in
+            backgroundChanges.append(change.newValue ?? nil)
+        }
+        precondition(
+            loadingChanges.count == 1 &&
+                loadingChanges[0].0 == nil &&
+                loadingChanges[0].1 == false &&
+                !loadingChanges[0].2
+        )
+        precondition(
+            backgroundChanges.count == 1 &&
+                backgroundChanges[0] == .white
+        )
+        let portablePageColor = UIColor(
+            red: 0.125, green: 0.25, blue: 0.5, alpha: 0.75
+        )
+        webView.underPageBackgroundColor = portablePageColor
+        precondition(
+            backgroundChanges.count == 2 &&
+                backgroundChanges[1] == portablePageColor
+        )
         let webDelegate = CoreWebKitDelegate()
         webView.navigationDelegate = webDelegate
         let navigation = webView.load(request)
@@ -576,6 +635,27 @@ struct CoreGuestPackageProbe {
         precondition(webView.lastPortableError?.code == .engineUnavailable)
         precondition(!webView.isLoading)
         precondition(webView.backForwardList.currentItem == nil)
+        precondition(urlChanges == 1)
+        precondition(loadingChanges.count == 5)
+        precondition(
+            loadingChanges[1].0 == false &&
+                loadingChanges[1].1 == nil && loadingChanges[1].2
+        )
+        precondition(
+            loadingChanges[2].0 == false &&
+                loadingChanges[2].1 == true && !loadingChanges[2].2
+        )
+        precondition(
+            loadingChanges[3].0 == true &&
+                loadingChanges[3].1 == nil && loadingChanges[3].2
+        )
+        precondition(
+            loadingChanges[4].0 == true &&
+                loadingChanges[4].1 == false && !loadingChanges[4].2
+        )
+        withExtendedLifetime(
+            (loadingObservation, urlObservation, backgroundObservation)
+        ) {}
         var javaScriptFailures = 0
         webView.evaluateJavaScript("document.title") { value, error in
             precondition(value == nil)
@@ -583,6 +663,9 @@ struct CoreGuestPackageProbe {
             javaScriptFailures += 1
         }
         precondition(javaScriptFailures == 1)
+        backgroundObservation.invalidate()
+        webView.underPageBackgroundColor = .black
+        precondition(backgroundChanges.count == 2)
 
         let auth = LAContext()
         var authError: LAError?
@@ -685,6 +768,43 @@ struct CoreGuestPackageProbe {
         precondition(decoded.width == 2 && decoded.height == 1)
         precondition(decoded.pixels == bitmap.pixels)
         precondition(CGImageSourceCreateImageAtIndex(imageSource, 1, nil) == nil)
+
+        // ImageIO incremental sources consume the caller's accumulated byte
+        // buffer. Match the native status/count/type frontier: a short PNG
+        // prefix is invalid data, a recognized header exposes one incomplete
+        // image, and the final complete payload publishes decoded pixels.
+        precondition(encoded.count > 34)
+        let incremental = CGImageSourceCreateIncremental(nil)
+        precondition(CGImageSourceGetStatus(incremental) == .statusInvalidData)
+        precondition(CGImageSourceGetCount(incremental) == 0)
+        precondition(CGImageSourceGetType(incremental) == nil)
+        CGImageSourceUpdateData(
+            incremental, Data(encoded.prefix(4)) as CFData, false
+        )
+        precondition(CGImageSourceGetStatus(incremental) == .statusInvalidData)
+        precondition(CGImageSourceGetCount(incremental) == 0)
+        CGImageSourceUpdateData(
+            incremental, Data(encoded.prefix(16)) as CFData, false
+        )
+        precondition(CGImageSourceGetStatus(incremental) == .statusIncomplete)
+        precondition(CGImageSourceGetCount(incremental) == 1)
+        precondition(CGImageSourceGetType(incremental) == "public.png")
+        precondition(
+            CGImageSourceCreateImageAtIndex(incremental, 0, nil) == nil
+        )
+        CGImageSourceUpdateData(
+            incremental, Data(encoded.prefix(34)) as CFData, false
+        )
+        precondition(CGImageSourceGetStatus(incremental) == .statusIncomplete)
+        precondition(
+            CGImageSourceCreateImageAtIndex(incremental, 0, nil) == nil
+        )
+        CGImageSourceUpdateData(incremental, encoded as CFData, true)
+        precondition(CGImageSourceGetStatus(incremental) == .statusComplete)
+        let incrementalImage = CGImageSourceCreateImageAtIndex(
+            incremental, 0, nil
+        )!
+        precondition(incrementalImage.pixels == bitmap.pixels)
 
         let metadata = LPLinkMetadata()
         metadata.title = "Core package"
@@ -908,16 +1028,16 @@ struct CoreGuestPackageProbe {
                 ),
                 maxSelectionCount: 4,
                 matching: photosUIFilter
-            )
+        )
         withExtendedLifetime(photosUIView) {}
-        let languageRecognizer = NLLanguageRecognizer()
-        languageRecognizer.processString(
+        let iceCubesLanguageRecognizer = NLLanguageRecognizer()
+        iceCubesLanguageRecognizer.processString(
             "This application has excellent dark mode support and useful settings"
         )
-        precondition(languageRecognizer.dominantLanguage == .english)
+        precondition(iceCubesLanguageRecognizer.dominantLanguage == .english)
         precondition(
-            (languageRecognizer.languageHypotheses(withMaximum: 1)[.english]
-                ?? 0) >= 0.85
+            (iceCubesLanguageRecognizer
+                .languageHypotheses(withMaximum: 1)[.english] ?? 0) >= 0.85
         )
         precondition(!AuthenticationServicesPortable.isHostConfigured)
         let webAuthenticationSession: WebAuthenticationSession =
@@ -1065,7 +1185,7 @@ struct CoreGuestPackageProbe {
                 + "photosui=transfer,binding,host-driven "
                 + "naturallanguage=deterministic,confidence-gated "
                 + "authenticationservices=host-driven,fail-closed "
-                + "webkit=engine-unavailable preview=\(preview)"
+                + "webkit=state,kvo,engine-unavailable preview=\(preview)"
         )
     }
 }

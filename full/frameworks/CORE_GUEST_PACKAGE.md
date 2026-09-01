@@ -132,9 +132,21 @@ once. The builder rejects any load of Apple's `WebKit.framework`. Its runtime
 probe preserves web-view configuration and data-store identity, honors
 navigation policy, and observes a typed engine-unavailable provisional failure
 with zero commits, finishes, history entries, JavaScript results, network
-responses, or rendering claims. Exact sources, native Xcode 26.1 evidence,
+responses, or rendering claims. State-only obscured insets, under-page color,
+asynchronous media-suspension completion, and KVO initial/prior/old/new
+transitions for URL, loading, and background color remain observable even
+without a rendering engine. Exact sources, native Xcode 26.1 evidence,
 install/load audit, and pre/post source brackets are packaged under
 `attestation/` alongside the seven-framework provenance and load audits.
+
+`libImageIO.dylib` owns static and incremental image-source state over the
+package's OpenCoreGraphics image identity. Incremental PNG input progresses
+from invalid data through recognized-but-incomplete headers to a complete,
+decodable image only after final bytes arrive; premature image requests fail
+closed. The same source model publishes composited animated GIF frames and
+their delays rather than flattening every source to one frame. The package
+probe also consumes Darwin `remquo` and `nan` through the real CoreGraphics
+math boundary, preventing constant-folded placeholders from satisfying it.
 
 `libUniformTypeIdentifiers.dylib` owns the canonical `UTType` and
 `UTTagClass` value identities. Its registry covers the system item, content,
@@ -460,6 +472,12 @@ advertises that symbol while its dylib does not define it, so SwiftUI links the
 same exact `swiftcorepatch.o` compatibility thunk already used by
 FoundationEssentials and OpenUIKit. The package test scopes that object to the
 SwiftUI dylib link and refuses its deletion.
+
+The packaged replay separately pins the current machorun `libswiftCore.dylib`,
+physically copies it into the staged root, verifies the required availability
+symbol against both the SDK TBD and runtime export inventory, and attests the
+source and staged hashes. The full-runtime stager refuses a stale base-root
+copy instead of silently overriding this canonical runtime identity.
 
 The Intents and IntentsUI source lists are exact, tracked package inputs. Their
 paths, manifests, and content hashes are bracketed before and after every cold

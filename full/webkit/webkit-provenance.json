@@ -76,7 +76,7 @@
     "ios_simulator_sdk_build": "23B77",
     "signature_source": {
       "path": "full/webkit/tests/WebKitNativeOracle.swift",
-      "sha256": "f79bb5da9f272a9b2df9c5a24736a8b2f7adf22f7ab0a9db061bf60172c78058"
+      "sha256": "78258eee9fa95ca1faf0d09428275d1f21dd16ab14edad47b63882e209a2ab3b"
     },
     "xcode_build": "17B55",
     "xcode_version": "26.1"
@@ -105,7 +105,7 @@
     },
     {
       "path": "full/webkit/WebKitWebView.swift",
-      "sha256": "5861f39ff157deb97aa3b7ad5e8912a13d28b2b1987488e762c44058a9011853"
+      "sha256": "6407816c3794a9c820a0892c59640d8498ea5345b77f52bae13335cd3e0683f4"
     }
   ]
 }

@@ -13,6 +13,14 @@ real stateful APIs. Content-rule compilation validates and stores JSON syntax;
 it does not claim to enforce rules. The empty data store completes deletion
 because no engine has ever persisted data.
 
+The web-view state surface includes retained non-negative obscured-content
+insets, opaque-white/null-resettable under-page color, and paired media
+suspension. Media completion is scheduled asynchronously on the main actor and
+delivered exactly once after each state commit. URL, title, loading, history,
+and under-page values participate in the portable Foundation typed-observation
+substrate. Registration and mutation delivery preserve `.initial`, `.prior`,
+`.old`, and `.new` payload semantics while observation tokens remain alive.
+
 Navigation is fail-closed. An allowed request receives
 `didStartProvisionalNavigation`, then
 `didFailProvisionalNavigation` with `WKPortableError.engineUnavailable`. It can
@@ -29,8 +37,10 @@ proves the ARM64 Mach-O dylib, its precise first-party dependency closure, and
 execution through the packaged loader on Linux.
 
 Native behavior is pinned to Xcode 26.1 / iOS Simulator 26.1. Those oracles
-cover configuration-copy identity, defaults, empty history/view state, and enum
-raw values. They are compatibility evidence, not evidence of an engine.
+cover configuration-copy identity, defaults, empty history/view state, media
+completion ordering, inset/background behavior, typed observation payloads,
+and enum raw values. They are compatibility evidence, not evidence of an
+engine.
 
 ## Untouched Focus result
 

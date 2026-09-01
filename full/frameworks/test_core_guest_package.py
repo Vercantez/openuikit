@@ -342,10 +342,10 @@ def validate_swiftui_runtime_link(source: str) -> None:
     ]
     if missing:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
-    # Observation, SwiftUI, cross-import overlays, first-party gates, the
-    # reusable link loop, executable probe, all C/frontier executables, and
+    # Observation, SwiftUI, cross-import overlays, WebKit, first-party gates,
+    # the reusable link loop, executable probe, all C/frontier executables, and
     # AuthenticationServices' overlay/runtime gate share this token.
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 24:
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 25:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
     swiftui_link_end = source.index(
@@ -2600,8 +2600,14 @@ class ShellContractTests(unittest.TestCase):
             "-install_name @rpath/libWebKit.dylib",
             '-needed_library "$STAGE/lib/libUIKit.dylib"',
             '-needed_library "$STAGE/lib/libFoundation.dylib"',
+            '"$SWIFTUI_RUNTIME_LINK_FLAG"',
+            '"$SWIFTUI_RUNTIME_INSTALL_NAME"',
             "/System/Library/Frameworks/WebKit.framework/",
             "webkit-dylib-loads.tsv",
+            "strict Swift 6 Hackers WebKit/KVO source-surface gate",
+            "full/webkit/tests/HackersWebKitSurface.swift",
+            "EXPECTED_HACKERS_WEBKIT_SURFACE_SHA256=fa5ac0e8",
+            "Hackers-WebKit-Swift-6-surface",
             "rendering-engine\\tabsent",
             "-lWebKit -lCoreImage",
             "Intents IntentsUI WebKit",
@@ -2610,7 +2616,29 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("import WebKit", probe)
         self.assertIn("WKPortableError", probe)
         self.assertIn("webDelegate.commits == 0", probe)
-        self.assertIn("webkit=engine-unavailable", probe)
+        self.assertIn("webView.observe(", probe)
+        self.assertIn("loadingChanges.count == 5", probe)
+        self.assertIn("setAllMediaPlaybackSuspended(true)", probe)
+        self.assertIn("webkit=state,kvo,engine-unavailable", probe)
+
+    def test_hackers_webkit_swift6_surface_is_digest_pinned(self) -> None:
+        builder = BUILDER.read_text(encoding="utf-8")
+        surface = REPO / "full/webkit/tests/HackersWebKitSurface.swift"
+        digest = sha256(surface)
+        self.assertEqual(
+            digest,
+            "fa5ac0e8d8a72453d604cc5a8f24a8a8e9a771249115f569b2cd5b31422f194c",
+        )
+        self.assertIn(
+            f"EXPECTED_HACKERS_WEBKIT_SURFACE_SHA256={digest}", builder
+        )
+        self.assertIn(
+            'require_hash "$HACKERS_WEBKIT_SURFACE"', builder
+        )
+        self.assertNotEqual(
+            hashlib.sha256(surface.read_bytes() + b"\n// mutation\n").hexdigest(),
+            digest,
+        )
 
     def test_preview_core_export_is_exact_and_mutation_is_refused(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
@@ -2688,6 +2716,7 @@ class ShellContractTests(unittest.TestCase):
             builder,
         )
         for obsolete_machorun_pin in (
+            "e6b1745bef09ac8f1e2d6e6c83f7c70d6dbe49a5",
             "edb99a8574255ddc4c979b2f0cf2615033ff14fd",
             "dd18e0b5e51e26d4673193d341e7c9a864db2fb8",
             "74f46d3b02b372e14f9ca9cee3d8a76ccc96fccb",
@@ -3532,6 +3561,15 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertIn("network_string_processing_undefineds", source)
         self.assertIn("direct StringProcessing undefineds, expected 0", source)
+        for imageio_probe_token in (
+            "CGImageSourceCreateIncremental(nil)",
+            "CGImageSourceGetStatus(incremental) == .statusIncomplete",
+            "CGImageSourceUpdateData(incremental, encoded as CFData, true)",
+            "CGImageSourceGetStatus(incremental) == .statusComplete",
+        ):
+            self.assertIn(imageio_probe_token, probe)
+        self.assertIn("let tgmathRemainder = remquo(CGFloat(257), CGFloat(1))", probe)
+        self.assertIn('OpenCoreGraphics.nan("0x42").isNaN', probe)
         network_source = (REPO / "full/network/Network.swift").read_text(
             encoding="utf-8"
         )
