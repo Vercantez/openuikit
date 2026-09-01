@@ -201,7 +201,7 @@ private final class CoreSafariDelegate: SFSafariViewControllerDelegate {
     }
 }
 
-#if canImport(DeveloperToolsSupport)
+#if OPENUIKIT_PREVIEW_ENABLED && canImport(DeveloperToolsSupport)
 @_spi(OpenUIKitPreview) import DeveloperToolsSupport
 
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
@@ -210,7 +210,7 @@ private struct CorePreviewRegistry: DeveloperToolsSupport.PreviewRegistry {
     static let line = 1
     static let column = 1
 
-    @MainActor static let retainedView = UIView()
+    @MainActor static let retainedView = Text("Core package Preview")
 
     @MainActor
     static func makePreview() throws -> DeveloperToolsSupport.Preview {

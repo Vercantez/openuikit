@@ -3116,10 +3116,13 @@ grep -Fxq \
     || die 'standalone Photos runtime marker is missing'
 
 echo '== compile/link/run the core package probe'
+CORE_PREVIEW_PROBE_FLAGS=()
+[ "$PREVIEW_ENABLED" -eq 0 ] \
+    || CORE_PREVIEW_PROBE_FLAGS=(-D OPENUIKIT_PREVIEW_ENABLED)
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${OBSERVATION_PLUGIN_FLAGS[@]}" "${FOUNDATION_PLUGIN_FLAGS[@]}" \
     "${SWIFTDATA_PLUGIN_FLAGS[@]}" "${PREVIEW_FLAGS[@]}" \
-    "${OPENSWIFTUI_PLUGIN_FLAGS[@]}" \
+    "${OPENSWIFTUI_PLUGIN_FLAGS[@]}" "${CORE_PREVIEW_PROBE_FLAGS[@]}" \
     -module-name CoreGuestPackageProbe \
     -emit-object -o "$WORK/core-probe.o" \
     "$W/full/frameworks/CoreGuestPackageProbe.swift" \

@@ -2145,6 +2145,9 @@ class ShellContractTests(unittest.TestCase):
 
     def test_swiftui_self_hosts_developer_tools_support_without_preview(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(
+            encoding="utf-8"
+        )
         validate_package_owned_developer_tools_support_contract(source)
         for token in (
             "SWIFTUI_DEVELOPER_TOOLS_SUPPORT_LINK_INPUTS=()",
@@ -2159,6 +2162,20 @@ class ShellContractTests(unittest.TestCase):
                     validate_package_owned_developer_tools_support_contract(
                         source.replace(token, "", 1)
                     )
+        for token in (
+            "CORE_PREVIEW_PROBE_FLAGS=()",
+            "CORE_PREVIEW_PROBE_FLAGS=(-D OPENUIKIT_PREVIEW_ENABLED)",
+            '"${OPENSWIFTUI_PLUGIN_FLAGS[@]}" '
+            '"${CORE_PREVIEW_PROBE_FLAGS[@]}"',
+        ):
+            self.assertIn(token, source)
+        self.assertIn(
+            "#if OPENUIKIT_PREVIEW_ENABLED && "
+            "canImport(DeveloperToolsSupport)",
+            probe,
+        )
+        self.assertIn('Text("Core package Preview")', probe)
+        self.assertNotIn("static let retainedView = UIView()", probe)
 
     def test_every_standalone_swiftui_executable_owns_preview_metadata(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
