@@ -2,6 +2,30 @@ import XCTest
 import OpenCoreGraphics
 
 final class BitmapContextTests: XCTestCase {
+    func testCGImageBytesPerRowDescribesItsPackedRGBAStorage() throws {
+        let image = Bitmap(width: 3, height: 2)
+        XCTAssertEqual(image.bytesPerRow, 12)
+        XCTAssertEqual(image.pixels.count, image.bytesPerRow * image.height)
+
+        var paddedStorage = [UInt8](repeating: 0, count: 16)
+        let snapshot = try paddedStorage.withUnsafeMutableBytes { bytes in
+            let context = try XCTUnwrap(OpenCoreGraphics.Canvas(
+                data: bytes.baseAddress,
+                width: 1,
+                height: 2,
+                bitsPerComponent: 8,
+                bytesPerRow: 8,
+                space: OpenCoreGraphics.CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: OpenCoreGraphics.CGImageAlphaInfo.premultipliedLast.rawValue
+            ))
+            return try XCTUnwrap(context.makeImage())
+        }
+        XCTAssertEqual(snapshot.bytesPerRow, 4,
+                       "the immutable CGImage snapshot reports its compact stride, not the source context padding")
+        XCTAssertEqual(snapshot.pixels.count,
+                       snapshot.bytesPerRow * snapshot.height)
+    }
+
     func testOwnedDeviceRGBContextMakesIndependentImageSnapshot() throws {
         let space = OpenCoreGraphics.CGColorSpaceCreateDeviceRGB()
         let context = try XCTUnwrap(OpenCoreGraphics.Canvas(

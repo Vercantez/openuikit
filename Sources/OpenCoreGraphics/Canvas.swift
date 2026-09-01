@@ -76,6 +76,11 @@ public final class Bitmap {
     public let height: Int
     public var pixels: [UInt8]  // count == width * height * 4
 
+    /// Number of bytes between adjacent rows in the concrete CGImage
+    /// storage. Bitmap owns a tightly packed RGBA8 buffer, so its true
+    /// stride is exactly four bytes per pixel with no hidden row padding.
+    public var bytesPerRow: Int { width * 4 }
+
     public init(width: Int, height: Int) {
         self.width = width
         self.height = height
