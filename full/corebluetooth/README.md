@@ -7,52 +7,47 @@ guest package; that integration is a separate central review step.
 
 ## What is real
 
-- `CBUUID` parses 16-bit, 32-bit, and 128-bit Bluetooth UUID strings and
-  `Data` values, expands the Bluetooth base UUID, compact-forms `uuidString`
-  and `data`, and compares equal across short and expanded forms. `UUID` and
-  `CFUUID` initializers are implemented.
-- Public error types `CBError` and `CBATTError` use the documented
-  `NS_ERROR_ENUM` raw values and domains `CBErrorDomain` /
-  `CBATTErrorDomain`. Caller `userInfo` is preserved; hashing uses only the
-  code.
-- Enumerations, option sets, advertisement/option keys, and GATT assigned-
-  number strings (`2900`–`2906`, plus Apple's documented L2CAP PSM UUID)
-  are present and usable as dictionary keys and GATT constructors.
-- `CBMutableService`, `CBMutableCharacteristic`, and `CBMutableDescriptor`
-  store local GATT tree state, including reverse `service` /
-  `characteristic` pointers.
+- `CBUUID` accepts only exact 16-bit (4 hex), 32-bit (8 hex), 128-bit
+  hyphenated, or 32-hex encodings. Bytes are big-endian. Bluetooth-base
+  UUIDs compact. Malformed strings/data are rejected (`@_spi(OpenUIKitHost)`
+  parse helpers return `nil`; public inits trap). Round-trips are tested.
+- `CBError` / `CBATTError` expose documented `NS_ERROR_ENUM` codes and
+  domains. `typed as NSError` preserves domain, code, and caller `userInfo`
+  without inserting `NSLocalizedDescriptionKey`. `NSError as? CBError` does
+  **not** rehydrate; tests rebuild via domain/code. `~=` matches both typed
+  errors and `NSError` domain/code.
+- GATT mutables transfer characteristics, descriptors, and included
+  services atomically: prior owners drop the child and stale reverse
+  references are cleared.
+- Managers report `.unsupported` / `.denied`, never scan, and deliver
+  `centralManagerDidUpdateState` / `peripheralManagerDidUpdateState`
+  asynchronously on the supplied queue, exactly once per current delegate.
+  Replacing the delegate, including after a nil assignment, delivers initial
+  state to the new object. `connect` fail-closes with
+  `didFailToConnect` after the call returns; `cancelPeripheralConnection`
+  does not invent a disconnect for a never-connected peripheral.
 
 ## Fail-closed boundaries
 
-Linux has no Apple CoreBluetooth radio, TCC Bluetooth prompt, or system
-peripheral cache. Fabricating scans, connections, advertisements, or ATT
-traffic would be a privacy and bluetooth-hosting bug.
+- Advertisement/option key **payloads** and
+  `CBUUIDCharacteristicObservationScheduleString` are unobserved; constants
+  exist as process-local identities only.
+- `CBConnectionEventMatchingOption.peripheralUUIDs` /
+  `serviceUUIDs` raw strings are unobserved.
+- `cancelPeripheralConnection` does not fabricate a disconnect callback for
+  a peripheral that was never connected.
+- Linux has no radio, TCC prompt, or restore cache. Scans stay idle,
+  retrieves return `[]`, advertising/`add` fail with
+  `CBError.operationNotSupported`.
 
-- `CBManager.state` is always `.unsupported`.
-- `CBManager.authorization` and `CBPeripheralManager.authorizationStatus()`
-  are always `.denied`.
-- `CBCentralManager.supports(_:)` is always `false`.
-- `scanForPeripherals` does not set `isScanning` and never discovers
-  devices. `retrievePeripherals` / `retrieveConnectedPeripherals` return
-  `[]`.
-- `startAdvertising` leaves `isAdvertising == false` and reports
-  `CBError.operationNotSupported` to the delegate. `add(_:)` and L2CAP
-  publish/unpublish do the same. `updateValue(_:for:onSubscribedCentrals:)`
-  returns `false`.
-- Delegate `centralManagerDidUpdateState` /
-  `peripheralManagerDidUpdateState` fire once on the supplied queue (or
-  `DispatchQueue.main` when the queue is `nil`) so apps can observe the
-  unsupported state. Restored peripherals are never invented.
+## Tests
 
-## Still deferred / oracle-open
+`tests/agent/CoreBluetoothRuntime.swift` is the host-gate probe and prints
+`COREBLUETOOTH_AGENT_RUNTIME_OK`.
 
-Exact Apple binary strings for advertisement and manager option keys are
-not in the pinned graph; this port uses the public identifier names.
-`CBUUIDCharacteristicObservationScheduleString` is similarly unresolved.
-Invalid `CBUUID(string:)` input, restore-identifier behavior, and
-connection-event matching raw strings are recorded in
-`oracle-questions.tsv`.
-
-`tests/agent/CoreBluetoothRuntime.swift` exercises UUID math, errors,
-option sets, mutable GATT, and the fail-closed manager callbacks, then
-prints `COREBLUETOOTH_AGENT_RUNTIME_OK`.
+`tests/agent/CoreBluetoothDependencyIdentity.swift` is a future EC2 identity
+probe: real Foundation / CoreFoundation / Dispatch / CoreBluetooth imports,
+cross-module NSError checks, UUID/GATT/callback proofs, and `ldd` of
+`libCoreBluetooth.dylib`. It prints
+`COREBLUETOOTH_DEPENDENCY_IDENTITY_OK`. It does not claim an integrated
+Linux product until that cold build uses real dependency modules.
