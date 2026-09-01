@@ -1,13 +1,12 @@
 # NotificationCenter (Linux starting point)
 
 This directory is an isolated clean-room port of Apple's public
-`NotificationCenter` module from the Xcode 26.1 iPhoneOS SDK seed. It produces
-`NotificationCenter.swiftmodule` and `libNotificationCenter.dylib` for a
-Foundation-only Linux toolchain. It is not wired into the shared guest package;
-that integration is a later central-review step.
+`NotificationCenter` module from the Xcode 26.1 iPhoneOS SDK seed. The sealed
+standalone gate produces `libNotificationCenter.dylib` against toolchain
+Foundation only. The platform identity gate stages Foundation and UIKit first
+and rebuilds the same sources with no fallback path.
 
-The public seed contains 28 precise identifiers. This tranche implements all of
-them as a source-compatible Linux surface. Today View extensions were
+The public seed contains 28 precise identifiers. Today View extensions were
 deprecated in iOS 14 in favor of WidgetKit; the types remain because the
 20-app corpus still lists Telegram, Wikipedia, and DuckDuckGo files that
 import this module.
@@ -17,33 +16,37 @@ import this module.
 - `NCUpdateResult` (`UInt`: `newData` 0, `noData` 1, `failed` 2) and
   `NCWidgetDisplayMode` (`Int`: `compact` 0, `expanded` 1), including
   synthesized `Equatable` / `Hashable` and failable `init(rawValue:)`.
-- `NCWidgetProviding` as an `NSObjectProtocol` with Swift defaults for the
-  Objective-C optional methods. The default update completes with `.noData`.
-  The async `widgetPerformUpdate()` overlay resumes the completion-handler
-  form (the raw graph's conflicting duplicate of the same precise ID).
+- `NCWidgetProviding` as an `NSObjectProtocol` with Swift defaults. The default
+  update completes with `.noData`. The async overlay resumes the
+  completion-handler form.
 - `NCWidgetController.setHasContent(_:forWidgetWithBundleIdentifier:)` records
   process-local flags. A host can read them through SPI.
-- `NSExtensionContext` widget properties: largest available mode is get/set
-  (default compact), active mode is get-only (default compact), and
-  `widgetMaximumSize(for:)` returns `CGSize.zero` until a host injects sizes.
-- `UIVibrancyEffect` factories return distinguishable inert placeholders.
+- With staged UIKit/Foundation: `widgetMarginInsets` uses
+  `UIKit.UIEdgeInsets`; `UIVibrancyEffect` factories return
+  `UIKit.UIVibrancyEffect`; widget geometry is an extension of
+  `Foundation.NSExtensionContext`.
 
 ## Fail-closed boundaries
 
 Linux has no SpringBoard, Today View extension host, or Notification Center
 visual-effect compositor.
 
-- `NCWidgetController.systemWidgetHostAvailable` is `false`. Setting a content
-  flag never claims that the system hid or showed a widget. Entitlement-gated
-  XPC (`NCWidgetControllerHasContentEntitlement`) is not simulated.
-- Widget maximum sizes are not invented (no 110pt compact height).
-- Vibrancy factories do not apply Apple blur or vibrancy.
+- `NCWidgetController.systemWidgetHostAvailable` is `false`.
 - Default `widgetPerformUpdate` does not report `.newData`.
+- `widgetMaximumSize(for:)` is `CGSize.zero` until a host injects sizes.
+- Vibrancy factories return inert UIKit instances; they do not apply Apple
+  blur or vibrancy.
 
-On this Foundation-only host, `NSExtensionContext`, `UIVibrancyEffect`,
-`UIVibrancyEffectStyle`, and `UIEdgeInsets` are NotificationCenter-owned
-stand-ins so the isolated gate can compile. When UIKit is present, the
-vibrancy factories become extensions of UIKit's type.
+This module does not declare `UIEdgeInsets`, `UIVibrancyEffect`, or
+`NSExtensionContext`. Those identities belong to UIKit and Foundation so
+UserNotificationsUI can extend the same `NSExtensionContext`.
+
+The sealed `tests/acceptance/test_host.sh` dylib is standalone-only: UIKit is
+not importable, so the Foundation/UIKit extensions are compiled out. That
+dylib is not a platform-compatible UIKit/Foundation product. The platform
+gate in `tests/agent/test_platform_identities.sh` stages Foundation+UIKit,
+builds with those modules visible, and proves no NotificationCenter-owned
+fallback nominals are emitted.
 
 ## Still deferred / for the Apple oracle
 
@@ -51,7 +54,3 @@ See `oracle-questions.tsv`. Open questions include compact/expanded metrics,
 `+widgetController` identity, entitlement failure mode, default-margin
 constants, `UIVibrancyEffectStyle` raw values, and whether the three corpus
 apps still call this deprecated surface.
-
-Private TBD symbols (`NCWidgetMetrics`, extension-item user-info keys,
-`_NCIsValidWidgetDisplayMode`, and friends) are not part of the public Swift
-graph and are not declared here.

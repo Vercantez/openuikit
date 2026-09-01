@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(UIKit)
+import UIKit
+#endif
 @_spi(OpenUIKitHost) import NotificationCenter
 
 private final class DefaultWidget: NSObject, NCWidgetProviding {}
@@ -22,6 +25,7 @@ private final class RecordingWidget: NSObject, NCWidgetProviding {
         lastSize = maxSize
     }
 
+#if canImport(UIKit)
     func widgetMarginInsets(
         forProposedMarginInsets defaultMarginInsets: UIEdgeInsets
     ) -> UIEdgeInsets {
@@ -32,6 +36,7 @@ private final class RecordingWidget: NSObject, NCWidgetProviding {
             right: defaultMarginInsets.right + 4
         )
     }
+#endif
 }
 
 func exerciseUpdateResult() {
@@ -76,9 +81,6 @@ func exerciseWidgetProviding() async {
         .expanded,
         withMaximumSize: CGSize(width: 10, height: 20)
     )
-    let passed = UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4)
-    let returned = defaults.widgetMarginInsets(forProposedMarginInsets: passed)
-    precondition(returned == passed)
 
     let recording = RecordingWidget()
     var recorded: NCUpdateResult?
@@ -91,13 +93,21 @@ func exerciseWidgetProviding() async {
     precondition(recording.lastMode == .expanded)
     precondition(recording.lastSize?.width == 320)
     precondition(recording.lastSize?.height == 200)
-    let adjusted = recording.widgetMarginInsets(
+
+#if canImport(UIKit)
+    let passed = UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4)
+    let returned: UIKit.UIEdgeInsets = defaults.widgetMarginInsets(
+        forProposedMarginInsets: passed
+    )
+    precondition(returned == passed)
+    let adjusted: UIKit.UIEdgeInsets = recording.widgetMarginInsets(
         forProposedMarginInsets: UIEdgeInsets(top: 5, left: 6, bottom: 7, right: 8)
     )
     precondition(adjusted.top == 6)
     precondition(adjusted.left == 8)
     precondition(adjusted.bottom == 10)
     precondition(adjusted.right == 12)
+#endif
 
     let asyncResult = await recording.widgetPerformUpdate()
     precondition(asyncResult == .newData)
@@ -150,8 +160,9 @@ func exerciseWidgetController() {
     )
 }
 
+#if canImport(UIKit)
 func exerciseExtensionContext() {
-    let context = NSExtensionContext()
+    let context: Foundation.NSExtensionContext = NSExtensionContext()
     precondition(context.widgetLargestAvailableDisplayMode == .compact)
     precondition(context.widgetActiveDisplayMode == .compact)
     precondition(context.widgetMaximumSize(for: .compact) == .zero)
@@ -171,32 +182,34 @@ func exerciseExtensionContext() {
     precondition(context.widgetMaximumSize(for: .compact) == compactSize)
     precondition(context.widgetMaximumSize(for: .expanded) == expandedSize)
 
-    let other = NSExtensionContext()
+    let other: Foundation.NSExtensionContext = NSExtensionContext()
     precondition(other.widgetLargestAvailableDisplayMode == .compact)
     precondition(other.widgetMaximumSize(for: .compact) == .zero)
 }
 
-@MainActor
 func exerciseVibrancy() {
-    let notification = UIVibrancyEffect.notificationCenter()
-    let primary = UIVibrancyEffect.widgetPrimary()
-    let secondary = UIVibrancyEffect.widgetSecondary()
-    let styled = UIVibrancyEffect.widgetEffect(forVibrancyStyle: .label)
-    let fill = UIVibrancyEffect.widgetEffect(forVibrancyStyle: .fill)
-    precondition(notification.portableKind == .notificationCenter)
-    precondition(primary.portableKind == .widgetPrimary)
-    precondition(secondary.portableKind == .widgetSecondary)
-    precondition(styled.portableKind == .widget(style: .label))
-    precondition(fill.portableKind == .widget(style: .fill))
+    let notification: UIKit.UIVibrancyEffect = .notificationCenter()
+    let primary: UIKit.UIVibrancyEffect = .widgetPrimary()
+    let secondary: UIKit.UIVibrancyEffect = .widgetSecondary()
+    let styled: UIKit.UIVibrancyEffect = .widgetEffect(forVibrancyStyle: .label)
+    let fill: UIKit.UIVibrancyEffect = .widgetEffect(forVibrancyStyle: .fill)
     precondition(notification !== primary)
+    precondition(primary !== secondary)
+    precondition(styled !== fill)
     precondition(UIVibrancyEffectStyle.label.rawValue == 0)
     precondition(UIVibrancyEffectStyle.separator.rawValue == 7)
 }
+#endif
 
 exerciseUpdateResult()
 exerciseDisplayMode()
 await exerciseWidgetProviding()
 exerciseWidgetController()
+#if canImport(UIKit)
 exerciseExtensionContext()
 exerciseVibrancy()
+#endif
 print("NOTIFICATIONCENTER_AGENT_RUNTIME_OK")
+#if !canImport(UIKit)
+print("NOTIFICATIONCENTER_STANDALONE_DYLIB_ONLY")
+#endif
