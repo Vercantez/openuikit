@@ -1,0 +1,551 @@
+precise	status	evidence	notes
+c:@E@GLKFogMode	implemented	GLKEnums.swift	
+c:@E@GLKFogMode@GLKFogModeExp	implemented	GLKEnums.swift	
+c:@E@GLKFogMode@GLKFogModeExp2	implemented	GLKEnums.swift	
+c:@E@GLKFogMode@GLKFogModeLinear	implemented	GLKEnums.swift	
+c:@E@GLKLightingType	implemented	GLKEnums.swift	
+c:@E@GLKLightingType@GLKLightingTypePerPixel	implemented	GLKEnums.swift	
+c:@E@GLKLightingType@GLKLightingTypePerVertex	implemented	GLKEnums.swift	
+c:@E@GLKTextureEnvMode	implemented	GLKEnums.swift	
+c:@E@GLKTextureEnvMode@GLKTextureEnvModeDecal	implemented	GLKEnums.swift	
+c:@E@GLKTextureEnvMode@GLKTextureEnvModeModulate	implemented	GLKEnums.swift	
+c:@E@GLKTextureEnvMode@GLKTextureEnvModeReplace	implemented	GLKEnums.swift	
+c:@E@GLKTextureInfoAlphaState	implemented	GLKEnums.swift	
+c:@E@GLKTextureInfoAlphaState@GLKTextureInfoAlphaStateNonPremultiplied	implemented	GLKEnums.swift	
+c:@E@GLKTextureInfoAlphaState@GLKTextureInfoAlphaStateNone	implemented	GLKEnums.swift	
+c:@E@GLKTextureInfoAlphaState@GLKTextureInfoAlphaStatePremultiplied	implemented	GLKEnums.swift	
+c:@E@GLKTextureInfoOrigin	implemented	GLKEnums.swift	
+c:@E@GLKTextureInfoOrigin@GLKTextureInfoOriginBottomLeft	implemented	GLKEnums.swift	
+c:@E@GLKTextureInfoOrigin@GLKTextureInfoOriginTopLeft	implemented	GLKEnums.swift	
+c:@E@GLKTextureInfoOrigin@GLKTextureInfoOriginUnknown	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorAlphaPremultiplicationFailure	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorCompressedTextureUpload	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorCubeMapInvalidNumFiles	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorDataPreprocessingFailure	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorFileOrURLNotFound	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorIncompatibleFormatSRGB	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorInvalidCGImage	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorInvalidEAGLContext	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorInvalidNSData	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorMipmapUnsupported	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorPVRAtlasUnsupported	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorReorientationFailure	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUncompressedTextureUpload	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnknownFileType	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnknownPathType	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedBitDepth	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedCubeMapDimensions	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedOrientation	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedPVRFormat	implemented	GLKEnums.swift	
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedTextureTarget	implemented	GLKEnums.swift	
+c:@E@GLKTextureTarget	implemented	GLKEnums.swift	
+c:@E@GLKTextureTarget@GLKTextureTarget2D	implemented	GLKEnums.swift	
+c:@E@GLKTextureTarget@GLKTextureTargetCt	implemented	GLKEnums.swift	
+c:@E@GLKTextureTarget@GLKTextureTargetCubeMap	implemented	GLKEnums.swift	
+c:@E@GLKVertexAttrib	implemented	GLKEnums.swift	
+c:@E@GLKVertexAttrib@GLKVertexAttribColor	implemented	GLKEnums.swift	
+c:@E@GLKVertexAttrib@GLKVertexAttribNormal	implemented	GLKEnums.swift	
+c:@E@GLKVertexAttrib@GLKVertexAttribPosition	implemented	GLKEnums.swift	
+c:@E@GLKVertexAttrib@GLKVertexAttribTexCoord0	implemented	GLKEnums.swift	
+c:@E@GLKVertexAttrib@GLKVertexAttribTexCoord1	implemented	GLKEnums.swift	
+c:@E@GLKViewDrawableColorFormat	implemented	GLKEnums.swift	
+c:@E@GLKViewDrawableColorFormat@GLKViewDrawableColorFormatRGB565	implemented	GLKEnums.swift	
+c:@E@GLKViewDrawableColorFormat@GLKViewDrawableColorFormatRGBA8888	implemented	GLKEnums.swift	
+c:@E@GLKViewDrawableColorFormat@GLKViewDrawableColorFormatSRGBA8888	implemented	GLKEnums.swift	
+c:@E@GLKViewDrawableDepthFormat	implemented	GLKEnums.swift	
+c:@E@GLKViewDrawableDepthFormat@GLKViewDrawableDepthFormat16	implemented	GLKEnums.swift	
+c:@E@GLKViewDrawableDepthFormat@GLKViewDrawableDepthFormat24	implemented	GLKEnums.swift	
+c:@E@GLKViewDrawableDepthFormat@GLKViewDrawableDepthFormatNone	implemented	GLKEnums.swift	
+c:@E@GLKViewDrawableMultisample	implemented	GLKEnums.swift	
+c:@E@GLKViewDrawableMultisample@GLKViewDrawableMultisample4X	implemented	GLKEnums.swift	
+c:@E@GLKViewDrawableMultisample@GLKViewDrawableMultisampleNone	implemented	GLKEnums.swift	
+c:@E@GLKViewDrawableStencilFormat	implemented	GLKEnums.swift	
+c:@E@GLKViewDrawableStencilFormat@GLKViewDrawableStencilFormat8	implemented	GLKEnums.swift	
+c:@E@GLKViewDrawableStencilFormat@GLKViewDrawableStencilFormatNone	implemented	GLKEnums.swift	
+c:@F@GLKMathDegreesToRadians	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMathProject	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMathRadiansToDegrees	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMathUnproject	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3Add	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3GetColumn	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3GetMatrix2	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3GetRow	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3Invert	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3InvertAndTranspose	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3Make	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3MakeAndTranspose	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3MakeRotation	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3MakeScale	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3MakeWithArray	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3MakeWithArrayAndTranspose	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3MakeWithColumns	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3MakeWithQuaternion	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3MakeWithRows	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3MakeXRotation	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3MakeYRotation	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3MakeZRotation	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3Multiply	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3MultiplyVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3MultiplyVector3Array	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3Rotate	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3RotateWithVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3RotateWithVector4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3RotateX	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3RotateY	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3RotateZ	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3Scale	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3ScaleWithVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3ScaleWithVector4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3SetColumn	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3SetRow	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3Subtract	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix3Transpose	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4Add	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4GetColumn	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4GetMatrix2	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4GetMatrix3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4GetRow	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4Invert	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4InvertAndTranspose	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4Make	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeAndTranspose	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeFrustum	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeLookAt	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeOrtho	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakePerspective	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeRotation	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeScale	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeTranslation	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeWithArray	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeWithArrayAndTranspose	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeWithColumns	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeWithQuaternion	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeWithRows	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeXRotation	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeYRotation	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MakeZRotation	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4Multiply	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MultiplyAndProjectVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MultiplyAndProjectVector3Array	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MultiplyVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MultiplyVector3Array	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MultiplyVector3ArrayWithTranslation	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MultiplyVector3WithTranslation	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MultiplyVector4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4MultiplyVector4Array	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4Rotate	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4RotateWithVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4RotateWithVector4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4RotateX	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4RotateY	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4RotateZ	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4Scale	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4ScaleWithVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4ScaleWithVector4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4SetColumn	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4SetRow	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4Subtract	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4Translate	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4TranslateWithVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4TranslateWithVector4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrix4Transpose	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackCreate	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackGetMatrix2	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackGetMatrix3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackGetMatrix3Inverse	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackGetMatrix3InverseTranspose	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackGetMatrix4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackGetMatrix4Inverse	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackGetMatrix4InverseTranspose	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackGetTypeID	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackLoadMatrix4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackMultiplyMatrix4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackMultiplyMatrixStack	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackPop	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackPush	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackRotate	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackRotateWithVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackRotateWithVector4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackRotateX	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackRotateY	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackRotateZ	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackScale	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackScaleWithVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackScaleWithVector4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackSize	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackTranslate	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackTranslateWithVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKMatrixStackTranslateWithVector4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionAdd	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionAngle	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionAxis	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionConjugate	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionInvert	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionLength	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionMake	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionMakeWithAngleAndAxis	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionMakeWithAngleAndVector3Axis	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionMakeWithArray	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionMakeWithMatrix3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionMakeWithMatrix4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionMakeWithVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionMultiply	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionNormalize	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionRotateVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionRotateVector3Array	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionRotateVector4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionRotateVector4Array	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionSlerp	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKQuaternionSubtract	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2Add	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2AddScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2AllEqualToScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2AllEqualToVector2	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2AllGreaterThanOrEqualToScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2AllGreaterThanOrEqualToVector2	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2AllGreaterThanScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2AllGreaterThanVector2	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2Distance	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2Divide	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2DivideScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2DotProduct	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2Length	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2Lerp	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2Make	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2MakeWithArray	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2Maximum	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2Minimum	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2Multiply	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2MultiplyScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2Negate	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2Normalize	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2Project	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2Subtract	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector2SubtractScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3Add	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3AddScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3AllEqualToScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3AllEqualToVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3AllGreaterThanOrEqualToScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3AllGreaterThanOrEqualToVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3AllGreaterThanScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3AllGreaterThanVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3CrossProduct	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3Distance	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3Divide	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3DivideScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3DotProduct	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3Length	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3Lerp	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3Make	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3MakeWithArray	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3Maximum	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3Minimum	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3Multiply	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3MultiplyScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3Negate	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3Normalize	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3Project	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3Subtract	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector3SubtractScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4Add	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4AddScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4AllEqualToScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4AllEqualToVector4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4AllGreaterThanOrEqualToScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4AllGreaterThanOrEqualToVector4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4AllGreaterThanScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4AllGreaterThanVector4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4CrossProduct	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4Distance	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4Divide	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4DivideScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4DotProduct	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4Length	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4Lerp	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4Make	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4MakeWithArray	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4MakeWithVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4Maximum	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4Minimum	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4Multiply	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4MultiplyScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4Negate	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4Normalize	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4Project	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4Subtract	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVector4SubtractScalar	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@GLKVertexAttributeParametersFromModelIO	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@NSStringFromGLKMatrix2	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@NSStringFromGLKMatrix3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@NSStringFromGLKMatrix4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@NSStringFromGLKQuaternion	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@NSStringFromGLKVector2	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@NSStringFromGLKVector3	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@F@NSStringFromGLKVector4	implemented	GLKVectorMath.swift;GLKMatrixMath.swift;GLKQuaternionMath.swift;GLKMatrixStack.swift;GLKMesh.swift;tests/agent/GLKitRuntime.swift	
+c:@GLKMatrix3Identity	implemented	GLKit.swift	
+c:@GLKMatrix4Identity	implemented	GLKit.swift	
+c:@GLKQuaternionIdentity	implemented	GLKit.swift	
+c:@GLKTextureLoaderApplyPremultiplication	implemented	GLKit.swift	
+c:@GLKTextureLoaderErrorDomain	implemented	GLKit.swift	
+c:@GLKTextureLoaderErrorKey	implemented	GLKit.swift	
+c:@GLKTextureLoaderGLErrorKey	implemented	GLKit.swift	
+c:@GLKTextureLoaderGenerateMipmaps	implemented	GLKit.swift	
+c:@GLKTextureLoaderGrayscaleAsAlpha	implemented	GLKit.swift	
+c:@GLKTextureLoaderOriginBottomLeft	implemented	GLKit.swift	
+c:@GLKTextureLoaderSRGB	implemented	GLKit.swift	
+c:@T@GLKEffectPropertyPrvPtr	implemented	GLKMathTypes.swift;GLKit.swift	
+c:@T@GLKMatrix2	implemented	GLKMathTypes.swift;GLKit.swift	
+c:@T@GLKMatrix3	implemented	GLKMathTypes.swift;GLKit.swift	
+c:@T@GLKMatrix4	implemented	GLKMathTypes.swift;GLKit.swift	
+c:@T@GLKMatrixStackRef	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:@T@GLKQuaternion	implemented	GLKMathTypes.swift;GLKit.swift	
+c:@T@GLKTextureLoaderCallback	implemented	GLKMathTypes.swift;GLKit.swift	
+c:@T@GLKVector2	implemented	GLKMathTypes.swift;GLKit.swift	
+c:@T@GLKVector3	implemented	GLKMathTypes.swift;GLKit.swift	
+c:@T@GLKVector4	implemented	GLKMathTypes.swift;GLKit.swift	
+c:@T@GLKVertexAttributeParameters	implemented	GLKMathTypes.swift;GLKit.swift	
+c:@kGLKModelErrorDomain	implemented	GLKit.swift	
+c:@kGLKModelErrorKey	implemented	GLKit.swift	
+c:objc(cs)GLKBaseEffect	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(im)prepareToDraw	declared	GLKEffects.swift;GLKView.swift	GPU/EAGL path is a documented no-op on Linux
+c:objc(cs)GLKBaseEffect(py)colorMaterialEnabled	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)constantColor	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)fog	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)label	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)light0	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)light1	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)light2	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)lightModelAmbientColor	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)lightModelTwoSided	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)lightingType	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)material	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)texture2d0	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)texture2d1	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)textureOrder	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)transform	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKBaseEffect(py)useConstantColor	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectProperty	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyFog	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyFog(py)color	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyFog(py)density	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyFog(py)enabled	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyFog(py)end	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyFog(py)mode	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyFog(py)start	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyLight	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyLight(py)ambientColor	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyLight(py)constantAttenuation	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyLight(py)diffuseColor	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyLight(py)enabled	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyLight(py)linearAttenuation	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyLight(py)position	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyLight(py)quadraticAttenuation	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyLight(py)specularColor	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyLight(py)spotCutoff	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyLight(py)spotDirection	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyLight(py)spotExponent	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyLight(py)transform	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyMaterial	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyMaterial(py)ambientColor	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyMaterial(py)diffuseColor	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyMaterial(py)emissiveColor	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyMaterial(py)shininess	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyMaterial(py)specularColor	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyTexture	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyTexture(py)enabled	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyTexture(py)envMode	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyTexture(py)name	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyTexture(py)target	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyTransform	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyTransform(py)modelviewMatrix	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyTransform(py)normalMatrix	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKEffectPropertyTransform(py)projectionMatrix	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKMesh	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKMesh(cm)newMeshesFromAsset:sourceMeshes:error:	implemented	GLKMesh.swift;tests/agent/GLKitRuntime.swift	fail-closed GPU unavailable
+c:objc(cs)GLKMesh(im)initWithMesh:error:	implemented	GLKMesh.swift;tests/agent/GLKitRuntime.swift	fail-closed GPU unavailable
+c:objc(cs)GLKMesh(py)name	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKMesh(py)submeshes	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKMesh(py)vertexBuffers	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKMesh(py)vertexCount	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKMesh(py)vertexDescriptor	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKMeshBuffer	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKMeshBuffer(im)zone	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKMeshBuffer(py)allocator	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKMeshBuffer(py)glBufferName	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKMeshBuffer(py)length	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKMeshBuffer(py)offset	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKMeshBuffer(py)type	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKMeshBufferAllocator	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKReflectionMapEffect	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKReflectionMapEffect(im)prepareToDraw	declared	GLKEffects.swift;GLKView.swift	GPU/EAGL path is a documented no-op on Linux
+c:objc(cs)GLKReflectionMapEffect(py)matrix	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKReflectionMapEffect(py)textureCubeMap	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSkyboxEffect	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSkyboxEffect(im)draw	declared	GLKEffects.swift;GLKView.swift	GPU/EAGL path is a documented no-op on Linux
+c:objc(cs)GLKSkyboxEffect(im)prepareToDraw	declared	GLKEffects.swift;GLKView.swift	GPU/EAGL path is a documented no-op on Linux
+c:objc(cs)GLKSkyboxEffect(py)center	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSkyboxEffect(py)label	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSkyboxEffect(py)textureCubeMap	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSkyboxEffect(py)transform	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSkyboxEffect(py)xSize	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSkyboxEffect(py)ySize	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSkyboxEffect(py)zSize	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSubmesh	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSubmesh(py)elementBuffer	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSubmesh(py)elementCount	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSubmesh(py)mesh	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSubmesh(py)mode	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSubmesh(py)name	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKSubmesh(py)type	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKTextureInfo	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKTextureInfo(py)alphaState	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKTextureInfo(py)arrayLength	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKTextureInfo(py)containsMipmaps	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKTextureInfo(py)depth	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKTextureInfo(py)height	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKTextureInfo(py)mimapLevelCount	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKTextureInfo(py)name	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKTextureInfo(py)target	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKTextureInfo(py)textureOrigin	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKTextureInfo(py)width	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKTextureLoader	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKTextureLoader(cm)cubeMapWithContentsOfFile:options:error:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(cm)cubeMapWithContentsOfFiles:options:error:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(cm)cubeMapWithContentsOfURL:options:error:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(cm)textureWithCGImage:options:error:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(cm)textureWithContentsOfData:options:error:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(cm)textureWithContentsOfFile:options:error:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(cm)textureWithContentsOfURL:options:error:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(cm)textureWithName:scaleFactor:bundle:options:error:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(im)cubeMapWithContentsOfFile:options:queue:completionHandler:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(im)cubeMapWithContentsOfFiles:options:queue:completionHandler:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(im)cubeMapWithContentsOfURL:options:queue:completionHandler:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(im)initWithSharegroup:	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(cs)GLKTextureLoader(im)textureWithCGImage:options:queue:completionHandler:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(im)textureWithContentsOfData:options:queue:completionHandler:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(im)textureWithContentsOfFile:options:queue:completionHandler:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(im)textureWithContentsOfURL:options:queue:completionHandler:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKTextureLoader(im)textureWithName:scaleFactor:bundle:options:queue:completionHandler:	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+c:objc(cs)GLKView	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKView(im)bindDrawable	declared	GLKEffects.swift;GLKView.swift	GPU/EAGL path is a documented no-op on Linux
+c:objc(cs)GLKView(im)deleteDrawable	declared	GLKEffects.swift;GLKView.swift	GPU/EAGL path is a documented no-op on Linux
+c:objc(cs)GLKView(im)display	declared	GLKEffects.swift;GLKView.swift	GPU/EAGL path is a documented no-op on Linux
+c:objc(cs)GLKView(im)initWithFrame:context:	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKView(py)context	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKView(py)delegate	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKView(py)drawableColorFormat	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKView(py)drawableDepthFormat	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKView(py)drawableHeight	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKView(py)drawableMultisample	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKView(py)drawableStencilFormat	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKView(py)drawableWidth	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKView(py)enableSetNeedsDisplay	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKView(py)snapshot	declared	GLKEffects.swift;GLKView.swift	GPU/EAGL path is a documented no-op on Linux
+c:objc(cs)GLKViewController	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKViewController(py)delegate	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKViewController(py)framesDisplayed	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKViewController(py)framesPerSecond	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKViewController(py)pauseOnWillResignActive	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKViewController(py)paused	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKViewController(py)preferredFramesPerSecond	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKViewController(py)resumeOnDidBecomeActive	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKViewController(py)timeSinceFirstResume	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKViewController(py)timeSinceLastDraw	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKViewController(py)timeSinceLastResume	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(cs)GLKViewController(py)timeSinceLastUpdate	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(pl)GLKNamedEffect	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+c:objc(pl)GLKNamedEffect(im)prepareToDraw	declared	GLKEffects.swift;GLKView.swift	GPU/EAGL path is a documented no-op on Linux
+c:objc(pl)GLKViewControllerDelegate	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(pl)GLKViewControllerDelegate(im)glkViewController:willPause:	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(pl)GLKViewControllerDelegate(im)glkViewControllerUpdate:	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(pl)GLKViewDelegate	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+c:objc(pl)GLKViewDelegate(im)glkView:drawInRect:	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	CustomNSError overlay
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	CustomNSError overlay
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	CustomNSError overlay
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	CustomNSError overlay
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	CustomNSError overlay
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	CustomNSError overlay
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	CustomNSError overlay
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	CustomNSError overlay
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@GLKMatrixStackRef	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@GLKMatrixStackRef	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@GLKMatrixStackRef	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SC21GLKTextureLoaderErrorLeV	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV11errorDomainSSvpZ	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	CustomNSError overlay
+s:SC21GLKTextureLoaderErrorLeV13invalidNSDataSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV14invalidCGImageSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV15unknownFileTypeSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV15unknownPathTypeSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV17fileOrURLNotFoundSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV17mipmapUnsupportedSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV18invalidEAGLContextSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV19pvrAtlasUnsupportedSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV19unsupportedBitDepthSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV20reorientationFailureSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV20unsupportedPVRFormatSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV22cubeMapInvalidNumFilesSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV22incompatibleFormatSRGBSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV22unsupportedOrientationSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV23compressedTextureUploadSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV24dataPreprocessingFailureSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV24unsupportedTextureTargetSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV25uncompressedTextureUploadSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV28unsupportedCubeMapDimensionsSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SC21GLKTextureLoaderErrorLeV29alphaPremultiplicationFailureSoAAVvpZ	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKFogMode	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKLightingType	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureEnvMode	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureInfoAlphaState	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureInfoOrigin	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureTarget	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKVertexAttrib	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableColorFormat	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableDepthFormat	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableMultisample	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableStencilFormat	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@GLKMatrixStackRef	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKFogMode	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKLightingType	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureEnvMode	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureInfoAlphaState	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureInfoOrigin	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureTarget	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKVertexAttrib	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableColorFormat	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableDepthFormat	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableMultisample	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableStencilFormat	implemented	GLKEnums.swift;GLKMatrixStack.swift	Hashable/Equatable synthesis
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKFogMode	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKLightingType	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureEnvMode	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureInfoAlphaState	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureInfoOrigin	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKTexture.swift;tests/agent/GLKitRuntime.swift	fail-closed invalidEAGLContext
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureTarget	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKVertexAttrib	implemented	GLKEffects.swift;GLKTexture.swift;GLKMesh.swift;GLKEnums.swift;tests/agent/GLKitRuntime.swift	
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableColorFormat	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableDepthFormat	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableMultisample	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableStencilFormat	implemented	GLKView.swift;tests/agent/GLKitRuntime.swift	CPU-side view/controller state; GPU drawables fail closed
+s:So10GLKFogModeV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift	
+s:So15GLKLightingTypeV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift	
+s:So15GLKVertexAttribV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift	
+s:So16GLKTextureTargetV8rawValueABSgs6UInt32V_tcfc	implemented	GLKEnums.swift	
+s:So17GLKTextureEnvModeV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift	
+s:So20GLKTextureInfoOriginV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift	
+s:So21GLKTextureLoaderErrorV8rawValueABSgs6UInt32V_tcfc	implemented	GLKEnums.swift	
+s:So24GLKTextureInfoAlphaStateV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift	
+s:So26GLKViewDrawableColorFormatV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift	
+s:So26GLKViewDrawableDepthFormatV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift	
+s:So26GLKViewDrawableMultisampleV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift	
+s:So28GLKViewDrawableStencilFormatV8rawValueABSgs5Int32V_tcfc	implemented	GLKEnums.swift	
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	implemented	GLKEnums.swift;tests/agent/GLKitRuntime.swift	CustomNSError overlay
