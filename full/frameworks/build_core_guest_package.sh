@@ -2051,8 +2051,12 @@ symbols_apple_load_count=$(llvm-otool-18 -L "$STAGE/lib/libSymbols.dylib" \
         END { print count + 0 }')
 [ "$symbols_apple_load_count" -eq 0 ] \
     || die "libSymbols Apple Symbols load count $symbols_apple_load_count, expected 0"
+PREVIEW_EXECUTABLE_RESOLUTION_FLAGS=()
+[ "$PREVIEW_ENABLED" -eq 0 ] \
+    || PREVIEW_EXECUTABLE_RESOLUTION_FLAGS=(-undefined dynamic_lookup)
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
+    "${PREVIEW_EXECUTABLE_RESOLUTION_FLAGS[@]}" \
     -o "$STAGE/lib/libSwiftUI.dylib" "$WORK/swiftui.o" \
     "${COMMON_LINK[@]}" -lFoundation -lFoundationEssentials -lOpenUIKit \
     -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols \
@@ -2084,11 +2088,13 @@ swiftui_symbols_load_count=$(llvm-otool-18 -L "$STAGE/lib/libSwiftUI.dylib" \
     | awk '$1 == "@rpath/libSymbols.dylib" { count++ } END { print count + 0 }')
 [ "$swiftui_symbols_load_count" -eq 1 ] \
     || die "libSwiftUI Symbols load count $swiftui_symbols_load_count, expected 1"
-UIKIT_UNDEFINED_FLAGS=()
-[ "$PREVIEW_ENABLED" -eq 0 ] || UIKIT_UNDEFINED_FLAGS=(-undefined dynamic_lookup)
+swiftui_preview_import_count=$(nm_symbol_count --undefined-only \
+    "$STAGE/lib/libSwiftUI.dylib" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+[ "$swiftui_preview_import_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "Preview libSwiftUI initializer import count $swiftui_preview_import_count, expected $PREVIEW_ENABLED"
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libUIKit.dylib -rpath @loader_path \
-    "${UIKIT_UNDEFINED_FLAGS[@]}" \
+    "${PREVIEW_EXECUTABLE_RESOLUTION_FLAGS[@]}" \
     -o "$STAGE/lib/libUIKit.dylib" "$WORK/uikit.o" \
     "${COMMON_LINK[@]}" -lFoundation -lFoundationEssentials \
     -lOpenUIKit -lOpenCoreGraphics
@@ -2462,6 +2468,8 @@ probe_dts_export_count=$(nm_developer_tools_support_count --defined-only \
 {
     printf 'format\tcore-probe-link-audit-v1\n'
     printf 'developer-tools-support-object-count\t%s\n' "$probe_dts_count"
+    printf 'libSwiftUI-preview-initializer-import-count\t%s\n' \
+        "$swiftui_preview_import_count"
     printf 'libUIKit-developer-tools-support-load-count\t0\n'
     printf 'libUIKit-preview-initializer-import-count\t%s\n' \
         "$uikit_preview_import_count"
