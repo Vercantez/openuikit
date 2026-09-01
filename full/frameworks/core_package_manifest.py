@@ -130,6 +130,8 @@ FRAMEWORKS = (
     "UniformTypeIdentifiers",
     "SwiftData",
     "UserNotifications",
+    "BackgroundTasks",
+    "CoreSpotlight",
     "QuickLook",
     "CoreMedia",
     "AVFoundation",

@@ -28,6 +28,9 @@ NATURAL_LANGUAGE_SOURCES_MANIFEST=${NATURAL_LANGUAGE_SOURCES_MANIFEST:-$W/full/n
 FOUNDATION_MODELS_SOURCES_MANIFEST=${FOUNDATION_MODELS_SOURCES_MANIFEST:-$W/full/foundationmodels/foundationmodels_guest_sources.txt}
 AUTHENTICATION_SERVICES_SOURCES_MANIFEST=${AUTHENTICATION_SERVICES_SOURCES_MANIFEST:-$W/full/authenticationservices/authenticationservices_guest_sources.txt}
 AUTHENTICATION_SERVICES_SWIFTUI_SOURCES_MANIFEST=${AUTHENTICATION_SERVICES_SWIFTUI_SOURCES_MANIFEST:-$W/full/authenticationservices/authenticationservices_swiftui_guest_sources.txt}
+UNIFORM_TYPE_IDENTIFIERS_SOURCES_MANIFEST=${UNIFORM_TYPE_IDENTIFIERS_SOURCES_MANIFEST:-$W/full/uniformtypeidentifiers/uniformtypeidentifiers_guest_sources.txt}
+BACKGROUND_TASKS_SOURCES_MANIFEST=${BACKGROUND_TASKS_SOURCES_MANIFEST:-$W/full/backgroundtasks/backgroundtasks_guest_sources.txt}
+CORE_SPOTLIGHT_SOURCES_MANIFEST=${CORE_SPOTLIGHT_SOURCES_MANIFEST:-$W/full/corespotlight/corespotlight_guest_sources.txt}
 ACCELERATE_SOURCES_MANIFEST=${ACCELERATE_SOURCES_MANIFEST:-$W/full/accelerate/accelerate_guest_sources.txt}
 COMPRESSION_SOURCES_MANIFEST=${COMPRESSION_SOURCES_MANIFEST:-$W/full/compression/compression_guest_sources.txt}
 CORETEXT_SOURCES_MANIFEST=${CORETEXT_SOURCES_MANIFEST:-$W/full/coretext/coretext_guest_sources.txt}
@@ -123,6 +126,9 @@ for manifest in "$NATURAL_LANGUAGE_SOURCES_MANIFEST" \
     "$FOUNDATION_MODELS_SOURCES_MANIFEST" \
     "$AUTHENTICATION_SERVICES_SOURCES_MANIFEST" \
     "$AUTHENTICATION_SERVICES_SWIFTUI_SOURCES_MANIFEST" \
+    "$UNIFORM_TYPE_IDENTIFIERS_SOURCES_MANIFEST" \
+    "$BACKGROUND_TASKS_SOURCES_MANIFEST" \
+    "$CORE_SPOTLIGHT_SOURCES_MANIFEST" \
     "$ACCELERATE_SOURCES_MANIFEST" "$COMPRESSION_SOURCES_MANIFEST" \
     "$CORETEXT_SOURCES_MANIFEST"; do
     [ -f "$manifest" ] && [ ! -L "$manifest" ] \
@@ -155,8 +161,15 @@ FOUNDATION_MODELS_NATURAL_LANGUAGE_SUPPORT_INPUTS=(
     full/naturallanguage/tests/naturallanguage-apple-26.1.txt
     full/naturallanguage/tests/naturallanguage-generalization-apple-26.1.txt
 )
+BACKGROUND_SPOTLIGHT_SUPPORT_INPUTS=(
+    full/backgroundtasks/tests/BackgroundTasksHostRuntime.swift
+    full/backgroundtasks/tests/test_background_spotlight_host.sh
+    full/corespotlight/tests/CoreSpotlightHostRuntime.swift
+    full/corespotlight/tests/CorpusConsumerSurface.swift
+)
 FRONTIER_SUPPORT_INPUTS=(
     "${FOUNDATION_MODELS_NATURAL_LANGUAGE_SUPPORT_INPUTS[@]}"
+    "${BACKGROUND_SPOTLIGHT_SUPPORT_INPUTS[@]}"
     full/accelerate/Accelerate.c
     full/accelerate/include/Accelerate.h
     full/accelerate/include/module.modulemap
@@ -309,6 +322,24 @@ mkdir -p "$BUILD" "$PACKAGE" "$PRODUCTS" "$FRAMEWORKS" \
     } | LC_ALL=C sort
 } > "$AUDIT/foundationmodels-naturallanguage-sources.tsv"
 
+{
+    printf 'format\ttrue-ios-backgroundtasks-corespotlight-sources-v1\n'
+    {
+        for manifest in "$UNIFORM_TYPE_IDENTIFIERS_SOURCES_MANIFEST" \
+            "$BACKGROUND_TASKS_SOURCES_MANIFEST" \
+            "$CORE_SPOTLIGHT_SOURCES_MANIFEST"; do
+            printf 'source\t%s\t%s\n' "${manifest#"$W/"}" "$(sha "$manifest")"
+            while IFS= read -r relative; do
+                [ -n "$relative" ] || continue
+                printf 'source\t%s\t%s\n' "$relative" "$(sha "$W/$relative")"
+            done < "$manifest"
+        done
+        for relative in "${BACKGROUND_SPOTLIGHT_SUPPORT_INPUTS[@]}"; do
+            printf 'source\t%s\t%s\n' "$relative" "$(sha "$W/$relative")"
+        done
+    } | LC_ALL=C sort
+} > "$AUDIT/backgroundtasks-corespotlight-sources.tsv"
+
 # Attest the complete pinned OpenCombine compiler subject before compiling it.
 perl "$W/full/oracle-opencombine/policy_tool.pl" attest \
     "$W/full/oracle-opencombine/policy.json" "$OPENCOMBINE_SOURCE" \
@@ -382,6 +413,9 @@ source_subject() {
             "$FOUNDATION_MODELS_SOURCES_MANIFEST" \
             "$AUTHENTICATION_SERVICES_SOURCES_MANIFEST" \
             "$AUTHENTICATION_SERVICES_SWIFTUI_SOURCES_MANIFEST" \
+            "$UNIFORM_TYPE_IDENTIFIERS_SOURCES_MANIFEST" \
+            "$BACKGROUND_TASKS_SOURCES_MANIFEST" \
+            "$CORE_SPOTLIGHT_SOURCES_MANIFEST" \
             "$ACCELERATE_SOURCES_MANIFEST" "$COMPRESSION_SOURCES_MANIFEST" \
             "$CORETEXT_SOURCES_MANIFEST"; do
             printf '%s\t%s\n' "${manifest#"$W"/}" "$(sha "$manifest")"
@@ -1017,6 +1051,75 @@ mapfile -d '' -t swiftui_sources < <(
     "$OBSERVATION_DYLIB" \
     "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
 
+echo '== UniformTypeIdentifiers, BackgroundTasks, and CoreSpotlight frameworks'
+mapfile -t uniform_type_identifiers_relative_sources \
+    < "$UNIFORM_TYPE_IDENTIFIERS_SOURCES_MANIFEST"
+mapfile -t background_tasks_relative_sources \
+    < "$BACKGROUND_TASKS_SOURCES_MANIFEST"
+mapfile -t core_spotlight_relative_sources \
+    < "$CORE_SPOTLIGHT_SOURCES_MANIFEST"
+[ "${#uniform_type_identifiers_relative_sources[@]}" -eq 1 ] \
+    || die 'UniformTypeIdentifiers source denominator drifted'
+[ "${#background_tasks_relative_sources[@]}" -eq 1 ] \
+    || die 'BackgroundTasks source denominator drifted'
+[ "${#core_spotlight_relative_sources[@]}" -eq 1 ] \
+    || die 'CoreSpotlight source denominator drifted'
+for relative in "${uniform_type_identifiers_relative_sources[@]}" \
+    "${background_tasks_relative_sources[@]}" \
+    "${core_spotlight_relative_sources[@]}"; do
+    [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+        || die "search/background framework source is missing or linked: $relative"
+done
+
+"${SWIFTC[@]}" "${CFLAGS[@]}" "${FOUNDATION_CFLAGS[@]}" \
+    "${FE_FLAGS[@]}" -parse-as-library -I "$PACKAGE" \
+    -module-name UniformTypeIdentifiers -emit-module \
+    -emit-module-path "$PACKAGE/UniformTypeIdentifiers.swiftmodule" \
+    -emit-object -o "$BUILD/UniformTypeIdentifiers.o" \
+    "$W/${uniform_type_identifiers_relative_sources[0]}"
+"${SWIFTC[@]}" "${CFLAGS[@]}" "${FOUNDATION_CFLAGS[@]}" \
+    "${FE_FLAGS[@]}" -parse-as-library -I "$PACKAGE" \
+    -module-name BackgroundTasks -emit-module \
+    -emit-module-path "$PACKAGE/BackgroundTasks.swiftmodule" \
+    -emit-object -o "$BUILD/BackgroundTasks.o" \
+    "$W/${background_tasks_relative_sources[0]}"
+"${SWIFTC[@]}" "${CFLAGS[@]}" "${FOUNDATION_CFLAGS[@]}" \
+    "${FE_FLAGS[@]}" -parse-as-library -I "$PACKAGE" \
+    -module-name CoreSpotlight -emit-module \
+    -emit-module-path "$PACKAGE/CoreSpotlight.swiftmodule" \
+    -emit-object -o "$BUILD/CoreSpotlight.o" \
+    "$W/${core_spotlight_relative_sources[0]}"
+
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name /usr/lib/libUniformTypeIdentifiers.dylib \
+    -current_version 1.0 -compatibility_version 1.0 \
+    -L"$PRODUCTS" -lFoundation -lFoundationEssentials \
+    "${COMMON_RUNTIME[@]}" -lswiftObjectiveC -lobjc \
+    -o "$PRODUCTS/libUniformTypeIdentifiers.dylib" \
+    "$BUILD/UniformTypeIdentifiers.o" \
+    "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name /usr/lib/libBackgroundTasks.dylib \
+    -current_version 1.0 -compatibility_version 1.0 \
+    -L"$PRODUCTS" -lFoundation -lFoundationEssentials -lDispatch \
+    "${COMMON_RUNTIME[@]}" -lswiftObjectiveC -lswift_Concurrency -lobjc \
+    -o "$PRODUCTS/libBackgroundTasks.dylib" "$BUILD/BackgroundTasks.o" \
+    "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name /usr/lib/libCoreSpotlight.dylib \
+    -current_version 1.0 -compatibility_version 1.0 \
+    -L"$PRODUCTS" -lFoundation -lFoundationEssentials \
+    -lUniformTypeIdentifiers \
+    "${COMMON_RUNTIME[@]}" -lswiftObjectiveC -lswift_Concurrency -lobjc \
+    -o "$PRODUCTS/libCoreSpotlight.dylib" "$BUILD/CoreSpotlight.o" \
+    "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
+for module in UniformTypeIdentifiers BackgroundTasks CoreSpotlight; do
+    if llvm-otool-18 -L "$PRODUCTS/lib$module.dylib" \
+        | grep -Fq "/System/Library/Frameworks/$module.framework/"; then
+        die "portable lib$module loads the Apple $module framework"
+    fi
+done
+
 echo '== FoundationModels, NaturalLanguage, and AuthenticationServices frameworks'
 mapfile -t foundation_models_relative_sources \
     < "$FOUNDATION_MODELS_SOURCES_MANIFEST"
@@ -1221,7 +1324,8 @@ cp -a "$INCLUDE/." "$PUBLISHED_INCLUDE/"
 PUBLIC_MODULES=(
     FoundationEssentials FoundationInternationalization Foundation Dispatch
     OpenCoreGraphics OpenUIKit DeveloperToolsSupport UIKit OpenCombine Combine
-    Symbols SwiftUI FoundationModels NaturalLanguage AuthenticationServices
+    Symbols SwiftUI UniformTypeIdentifiers BackgroundTasks CoreSpotlight
+    FoundationModels NaturalLanguage AuthenticationServices
     _AuthenticationServices_SwiftUI Accelerate Compression CoreText
 )
 PRIVATE_DYLIBS=(_FoundationICU)
@@ -1327,7 +1431,8 @@ if ! swiftc -target "$TARGET" -sdk "$SDK_OUT" -I "$APPLE_OVERLAYS_OUT" \
 fi
 for module in SwiftUI UIKit Foundation Dispatch Symbols OpenUIKit Combine \
     OpenCombine FoundationModels NaturalLanguage AuthenticationServices \
-    _AuthenticationServices_SwiftUI Accelerate Compression CoreText; do
+    _AuthenticationServices_SwiftUI UniformTypeIdentifiers BackgroundTasks \
+    CoreSpotlight Accelerate Compression CoreText; do
     expected_module_path="$FRAMEWORKS/$module.framework/Modules/$module.swiftmodule/$TARGET_VARIANT.swiftmodule"
     grep -Fq "loaded module '$module'; source: '$expected_module_path'" \
         "$AUDIT/framework-module-loading.log" \
@@ -1337,7 +1442,9 @@ done
     -rpath @loader_path -F"$FRAMEWORKS" -framework SwiftUI -framework UIKit \
     -framework FoundationModels -framework NaturalLanguage \
     -framework AuthenticationServices \
-    -framework _AuthenticationServices_SwiftUI -framework Accelerate \
+    -framework _AuthenticationServices_SwiftUI \
+    -framework UniformTypeIdentifiers -framework BackgroundTasks \
+    -framework CoreSpotlight -framework Accelerate \
     -framework Compression -framework CoreText \
     -L"$PRODUCTS" -lFoundation -lFoundationInternationalization -lDispatch \
     -lOpenUIKit -lOpenCoreGraphics -lFoundationEssentials \
@@ -1476,6 +1583,15 @@ authentication_services_loads=$(llvm-otool-18 -L \
 authentication_services_overlay_loads=$(llvm-otool-18 -L \
     "$stage/true-ios-swiftui-dylib-probe" \
     | awk '$1 == "/usr/lib/lib_AuthenticationServices_SwiftUI.dylib" { count++ } END { print count + 0 }')
+uniform_type_identifiers_loads=$(llvm-otool-18 -L \
+    "$stage/true-ios-swiftui-dylib-probe" \
+    | awk '$1 == "/usr/lib/libUniformTypeIdentifiers.dylib" { count++ } END { print count + 0 }')
+background_tasks_loads=$(llvm-otool-18 -L \
+    "$stage/true-ios-swiftui-dylib-probe" \
+    | awk '$1 == "/usr/lib/libBackgroundTasks.dylib" { count++ } END { print count + 0 }')
+core_spotlight_loads=$(llvm-otool-18 -L \
+    "$stage/true-ios-swiftui-dylib-probe" \
+    | awk '$1 == "/usr/lib/libCoreSpotlight.dylib" { count++ } END { print count + 0 }')
 accelerate_loads=$(llvm-otool-18 -L \
     "$stage/true-ios-swiftui-dylib-probe" \
     | awk '$1 == "/usr/lib/libAccelerate.dylib" { count++ } END { print count + 0 }')
@@ -1493,6 +1609,12 @@ coretext_loads=$(llvm-otool-18 -L \
     || die "probe AuthenticationServices load count is $authentication_services_loads"
 [ "$authentication_services_overlay_loads" -eq 1 ] \
     || die "probe AuthenticationServices overlay load count is $authentication_services_overlay_loads"
+[ "$uniform_type_identifiers_loads" -eq 1 ] \
+    || die "probe UniformTypeIdentifiers load count is $uniform_type_identifiers_loads"
+[ "$background_tasks_loads" -eq 1 ] \
+    || die "probe BackgroundTasks load count is $background_tasks_loads"
+[ "$core_spotlight_loads" -eq 1 ] \
+    || die "probe CoreSpotlight load count is $core_spotlight_loads"
 [ "$accelerate_loads" -eq 1 ] \
     || die "probe Accelerate load count is $accelerate_loads"
 [ "$compression_loads" -eq 1 ] \
@@ -1543,6 +1665,27 @@ done
         "$authentication_services_overlay_base_loads" \
         "$authentication_services_overlay_swiftui_loads"
 } > "$AUDIT/naturallanguage-authenticationservices-loads.tsv"
+
+background_tasks_dispatch_loads=$(llvm-otool-18 -L \
+    "$PRODUCTS/libBackgroundTasks.dylib" \
+    | awk '$1 == "/usr/lib/libDispatch.dylib" { count++ } END { print count + 0 }')
+core_spotlight_uniform_types_loads=$(llvm-otool-18 -L \
+    "$PRODUCTS/libCoreSpotlight.dylib" \
+    | awk '$1 == "/usr/lib/libUniformTypeIdentifiers.dylib" { count++ } END { print count + 0 }')
+[ "$background_tasks_dispatch_loads" -eq 1 ] \
+    || die 'BackgroundTasks Dispatch load count drifted'
+[ "$core_spotlight_uniform_types_loads" -eq 1 ] \
+    || die 'CoreSpotlight UniformTypeIdentifiers load count drifted'
+{
+    printf 'format\ttrue-ios-backgroundtasks-corespotlight-loads-v1\n'
+    printf 'probe\tuniformtypeidentifiers=%s\tbackgroundtasks=%s\tcorespotlight=%s\n' \
+        "$uniform_type_identifiers_loads" "$background_tasks_loads" \
+        "$core_spotlight_loads"
+    printf 'backgroundtasks\tdispatch=%s\tapple-self-load=0\n' \
+        "$background_tasks_dispatch_loads"
+    printf 'corespotlight\tuniformtypeidentifiers=%s\tapple-self-load=0\n' \
+        "$core_spotlight_uniform_types_loads"
+} > "$AUDIT/backgroundtasks-corespotlight-loads.tsv"
 
 accelerate_vimage_exports=$(llvm-nm-18 --defined-only --extern-only \
     --just-symbol-name "$PRODUCTS/libAccelerate.dylib" \

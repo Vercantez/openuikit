@@ -4,6 +4,9 @@ import Foundation
 import FoundationModels
 import NaturalLanguage
 import AuthenticationServices
+import UniformTypeIdentifiers
+import BackgroundTasks
+import CoreSpotlight
 import Accelerate
 import Compression
 import CoreText
@@ -167,7 +170,7 @@ private func proveCoreText() throws {
 @main
 private enum TrueIOSSwiftUIDylibProbe {
     @MainActor
-    static func main() throws {
+    static func main() async throws {
         let controller = UIHostingController(rootView: TrueIOSSwiftUIDylibView())
         let host = controller.view!
         host.frame = CGRect(x: 0, y: 0, width: 240, height: 120)
@@ -219,6 +222,37 @@ private enum TrueIOSSwiftUIDylibProbe {
             EnvironmentValues().webAuthenticationSession
         withExtendedLifetime(session) {}
 
+        let taskIdentifier = "OpenUIKit.TrueIOS.refresh"
+        precondition(
+            BGTaskScheduler.shared.register(
+                forTaskWithIdentifier: taskIdentifier,
+                using: nil
+            ) { task in
+                task.setTaskCompleted(success: true)
+            }
+        )
+        let taskRequest = BGAppRefreshTaskRequest(identifier: taskIdentifier)
+        try BGTaskScheduler.shared.submit(taskRequest)
+        let pendingTasks = await BGTaskScheduler.shared.pendingTaskRequests()
+        precondition(pendingTasks.map(\.identifier) == [taskIdentifier])
+        BGTaskScheduler.shared.cancel(
+            taskRequestWithIdentifier: taskIdentifier
+        )
+
+        let spotlightAttributes = CSSearchableItemAttributeSet(contentType: .text)
+        spotlightAttributes.title = "True iOS platform"
+        spotlightAttributes.keywords = ["SwiftUI", "Linux"]
+        let spotlightItem = CSSearchableItem(
+            uniqueIdentifier: "true-ios-platform",
+            domainIdentifier: "OpenUIKit",
+            attributeSet: spotlightAttributes
+        )
+        let spotlightIndex = CSSearchableIndex(name: "TrueIOSProbe")
+        try await spotlightIndex.indexSearchableItems([spotlightItem])
+        try await spotlightIndex.deleteSearchableItems(
+            withIdentifiers: ["true-ios-platform"]
+        )
+
         proveAccelerate()
         try proveCompression()
         try proveCoreText()
@@ -228,6 +262,8 @@ private enum TrueIOSSwiftUIDylibProbe {
             "descendants=\(descendants.count) text=rendered button=rendered " +
             "foundationmodels=generated-content,fail-closed " +
             "naturallanguage=en authenticationservices=fail-closed " +
+            "uniform-types=text backgroundtasks=scheduler " +
+            "corespotlight=index " +
             "accelerate=vimage compression=brotli coretext=font-registration"
         )
     }

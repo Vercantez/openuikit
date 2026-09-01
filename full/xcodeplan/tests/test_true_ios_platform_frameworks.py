@@ -38,6 +38,9 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
             "Combine",
             "Symbols",
             "SwiftUI",
+            "UniformTypeIdentifiers",
+            "BackgroundTasks",
+            "CoreSpotlight",
             "FoundationModels",
             "NaturalLanguage",
             "AuthenticationServices",
@@ -117,6 +120,9 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
             "NaturalLanguage",
             "AuthenticationServices",
             "_AuthenticationServices_SwiftUI",
+            "UniformTypeIdentifiers",
+            "BackgroundTasks",
+            "CoreSpotlight",
             "Accelerate",
             "Compression",
             "CoreText",
@@ -168,6 +174,9 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn('import FoundationModels', self.probe)
         self.assertIn('import NaturalLanguage', self.probe)
         self.assertIn('import AuthenticationServices', self.probe)
+        self.assertIn('import UniformTypeIdentifiers', self.probe)
+        self.assertIn('import BackgroundTasks', self.probe)
+        self.assertIn('import CoreSpotlight', self.probe)
         self.assertIn('import Accelerate', self.probe)
         self.assertIn('import Compression', self.probe)
         self.assertIn('import CoreText', self.probe)
@@ -183,12 +192,33 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn("SystemLanguageModel.default", self.probe)
         self.assertIn('"portable".generatedContent.jsonString', self.probe)
         self.assertIn("EnvironmentValues().webAuthenticationSession", self.probe)
+        self.assertIn("BGAppRefreshTaskRequest", self.probe)
+        self.assertIn("pendingTaskRequests()", self.probe)
+        self.assertIn("CSSearchableItemAttributeSet", self.probe)
+        self.assertIn("indexSearchableItems", self.probe)
         self.assertIn("vImageBoxConvolve_ARGB8888", self.probe)
         self.assertIn("InputFilter<Data>(.decompress", self.probe)
         self.assertIn("CTFontManagerRegisterFontsForURL", self.probe)
         self.assertIn(
             "cfErrorAsError._getEmbeddedNSError() === cfError", self.probe
         )
+
+    def test_background_tasks_and_core_spotlight_are_true_ios_products(self) -> None:
+        for evidence in (
+            "UNIFORM_TYPE_IDENTIFIERS_SOURCES_MANIFEST",
+            "BACKGROUND_TASKS_SOURCES_MANIFEST",
+            "CORE_SPOTLIGHT_SOURCES_MANIFEST",
+            "true-ios-backgroundtasks-corespotlight-sources-v1",
+            "true-ios-backgroundtasks-corespotlight-loads-v1",
+            "-lFoundation -lFoundationEssentials -lDispatch",
+            "-lUniformTypeIdentifiers",
+            "BackgroundTasks Dispatch load count drifted",
+            "CoreSpotlight UniformTypeIdentifiers load count drifted",
+        ):
+            self.assertIn(evidence, self.builder)
+        self.assertIn("uniform-types=text", self.probe)
+        self.assertIn("backgroundtasks=scheduler", self.probe)
+        self.assertIn("corespotlight=index", self.probe)
 
     def test_foundationmodels_and_naturallanguage_frontier_is_cold_and_exact(self) -> None:
         for evidence in (

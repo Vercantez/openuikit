@@ -174,6 +174,8 @@ FRAMEWORKS = (
     "UniformTypeIdentifiers",
     "SwiftData",
     "UserNotifications",
+    "BackgroundTasks",
+    "CoreSpotlight",
     "QuickLook",
     "CoreMedia",
     "AVFoundation",
@@ -1018,6 +1020,8 @@ class PackageFixture:
             "-lUniformTypeIdentifiers",
             "-lSwiftData",
             "-lUserNotifications",
+            "-lBackgroundTasks",
+            "-lCoreSpotlight",
             "-lQuickLook",
             "-lCoreMedia",
             "-lAVFoundation",
@@ -2356,7 +2360,7 @@ class ShellContractTests(unittest.TestCase):
             builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 7
         )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 30
+            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 32
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -2593,7 +2597,7 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 54)
+        self.assertEqual(len(FRAMEWORKS), 56)
         self.assertEqual(FRAMEWORKS.index("WebKit"), 18)
         for token in (
             "-module-name WebKit -emit-module",
@@ -3520,7 +3524,62 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn(
             "cfErrorAsError._getEmbeddedNSError() === cfError", probe
         )
-    def test_thirty_five_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_background_tasks_and_core_spotlight_are_native_shaped_runtime_products(
+        self,
+    ) -> None:
+        builder = BUILDER.read_text(encoding="utf-8")
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
+        background = (
+            REPO / "full/backgroundtasks/BackgroundTasks.swift"
+        ).read_text(encoding="utf-8")
+        spotlight = (REPO / "full/corespotlight/CoreSpotlight.swift").read_text(
+            encoding="utf-8"
+        )
+        corpus = (
+            REPO / "full/corespotlight/tests/CorpusConsumerSurface.swift"
+        ).read_text(encoding="utf-8")
+        host_gate = (
+            REPO
+            / "full/backgroundtasks/tests/test_background_spotlight_host.sh"
+        ).read_text(encoding="utf-8")
+
+        for token in (
+            "BGAppRefreshTaskRequest",
+            "BGProcessingTaskRequest",
+            "pendingTaskRequests() async",
+            "cancelAllTaskRequests()",
+            "_launchPortableTask",
+            "BGTaskSchedulerErrorDomain",
+            "pending.append(taskRequest.portableCopy())",
+        ):
+            self.assertIn(token, background)
+        for token in (
+            "CSSearchableItemAttributeSet",
+            "CSSearchableIndex",
+            "indexSearchableItems",
+            "deleteSearchableItems",
+            "beginIndexBatch",
+            "endIndexBatch",
+            "indexAppEntities",
+            "_searchPortable",
+            "item.portableCopy()",
+        ):
+            self.assertIn(token, spotlight)
+        for module in ("BackgroundTasks", "CoreSpotlight"):
+            self.assertIn(f"import {module}", corpus)
+            self.assertIn(f"import {module}", probe)
+            self.assertIn(f"lib{module}.dylib", builder)
+            self.assertIn(f"{module}GuestRuntime", builder)
+        self.assertIn("-lBackgroundTasks -lDispatch", builder)
+        self.assertIn("-lCoreSpotlight -lUniformTypeIdentifiers", builder)
+        self.assertIn("backgroundtasks=scheduler,host-driven", probe)
+        self.assertIn("corespotlight=index,query,app-entities", probe)
+        self.assertIn("xcrun --sdk iphoneos --show-sdk-path", host_gate)
+        self.assertIn("-target arm64-apple-ios18.0", host_gate)
+        self.assertIn('swiftc -parse-as-library -typecheck -I "$PROOF"', host_gate)
+        self.assertIn("BACKGROUND_SPOTLIGHT_HOST_GATE_OK", host_gate)
+
+    def test_thirty_seven_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -3546,6 +3605,8 @@ class ShellContractTests(unittest.TestCase):
             "UniformTypeIdentifiers",
             "SwiftData",
             "UserNotifications",
+            "BackgroundTasks",
+            "CoreSpotlight",
             "QuickLook",
             "CoreMedia",
             "AVFoundation",
@@ -3562,7 +3623,7 @@ class ShellContractTests(unittest.TestCase):
             "AuthenticationServices",
             "FoundationModels",
         )
-        self.assertEqual(FRAMEWORKS[-35:], first_party)
+        self.assertEqual(FRAMEWORKS[-37:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -3589,19 +3650,19 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("portable install ID count", source)
         self.assertIn("apple-self-load=0", source)
         self.assertIn(
-            "frontier-frameworks\\tframeworks=28\\tsources=32\\tinputs=96",
+            "frontier-frameworks\\tframeworks=30\\tsources=34\\tinputs=100",
             source,
         )
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 32",
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 34",
             source,
         )
         self.assertIn(
-            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 96",
+            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 100",
             source,
         )
         self.assertIn(
-            "compile thirty-five independent first-party framework modules", source
+            "compile thirty-seven independent first-party framework modules", source
         )
         accelerate_header = (
             REPO / "full/accelerate/include/Accelerate.h"
@@ -3626,7 +3687,7 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=portable-35", probe)
+        self.assertIn("first-party=portable-37", probe)
         self.assertIn("foundationmodels=generated-content,fail-closed", probe)
         self.assertIn("FoundationModelsGuestRuntime", source)
         self.assertIn("FOUNDATIONMODELS_GUEST_MACHO_OK", source)

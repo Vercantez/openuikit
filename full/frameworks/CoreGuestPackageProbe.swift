@@ -31,6 +31,8 @@ import OSLog
 import UniformTypeIdentifiers
 import SwiftData
 import UserNotifications
+import BackgroundTasks
+import CoreSpotlight
 import QuickLook
 import CoreMedia
 import AVFoundation
@@ -1054,6 +1056,43 @@ struct CoreGuestPackageProbe {
             notificationAuthorizationFailedClosed = true
         }
         precondition(notificationAuthorizationFailedClosed)
+        let backgroundIdentifier = "OpenUIKit.CoreGuestPackageProbe.refresh"
+        precondition(
+            BGTaskScheduler.shared.register(
+                forTaskWithIdentifier: backgroundIdentifier,
+                using: nil
+            ) { task in
+                task.setTaskCompleted(success: true)
+            }
+        )
+        let backgroundRequest = BGAppRefreshTaskRequest(
+            identifier: backgroundIdentifier
+        )
+        try! BGTaskScheduler.shared.submit(backgroundRequest)
+        let pendingBackgroundRequests =
+            await BGTaskScheduler.shared.pendingTaskRequests()
+        precondition(
+            pendingBackgroundRequests.map(\.identifier) == [backgroundIdentifier]
+        )
+        BGTaskScheduler.shared.cancel(
+            taskRequestWithIdentifier: backgroundIdentifier
+        )
+        let spotlightAttributes = CSSearchableItemAttributeSet(
+            contentType: .text
+        )
+        spotlightAttributes.title = "Core guest package"
+        spotlightAttributes.keywords = ["Swift", "Linux", "UIKit"]
+        let spotlightItem = CSSearchableItem(
+            uniqueIdentifier: "core-package",
+            domainIdentifier: "OpenUIKit",
+            attributeSet: spotlightAttributes
+        )
+        try! await CSSearchableIndex.default().indexSearchableItems(
+            [spotlightItem]
+        )
+        try! await CSSearchableIndex.default().deleteSearchableItems(
+            withIdentifiers: ["core-package"]
+        )
         precondition(
             QuickLookPortable.defaultCapability == .localImageAndMetadata
         )
@@ -1167,7 +1206,7 @@ struct CoreGuestPackageProbe {
                 + "graphics=coreimage,quartzcore,tgmath "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-35 zlib=gzip-host-v1 "
+                + "first-party=portable-37 zlib=gzip-host-v1 "
                 + "foundationmodels=generated-content,fail-closed "
                 + "naturallanguage=classifier,apple-29 "
                 + "oslog=standard-error,signposts "
@@ -1177,6 +1216,8 @@ struct CoreGuestPackageProbe {
                 + "uniform-types=tags,conformance "
                 + "swiftdata=volatile,fail-closed-durable "
                 + "usernotifications=fail-closed,volatile "
+                + "backgroundtasks=scheduler,host-driven "
+                + "corespotlight=index,query,app-entities "
                 + "quicklook=local-image,host-driven "
                 + "media=rational,state,host-driven,fail-closed "
                 + "charts=basic,fail-closed "

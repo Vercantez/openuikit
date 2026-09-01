@@ -43,6 +43,9 @@ _MODULES = (
     "Combine",
     "Symbols",
     "SwiftUI",
+    "UniformTypeIdentifiers",
+    "BackgroundTasks",
+    "CoreSpotlight",
     "FoundationModels",
     "NaturalLanguage",
     "AuthenticationServices",
@@ -53,6 +56,10 @@ _MODULES = (
 )
 _PRIVATE_DYLIBS = ("_FoundationICU",)
 _RUNTIME_SWIFT_MODULES = ("Observation",)
+_FRAMEWORK_LOAD_CONTRACT = {
+    "BackgroundTasks": ("/usr/lib/libDispatch.dylib",),
+    "CoreSpotlight": ("/usr/lib/libUniformTypeIdentifiers.dylib",),
+}
 _MODULE_SUFFIXES = ("swiftmodule", "swiftdoc", "swiftsourceinfo", "abi.json")
 _OVERLAYS = (
     "Darwin",
@@ -87,6 +94,8 @@ _REQUIRED_ATTESTATION = {
     "artifacts.sha256",
     "accelerate-apple-differential.log",
     "accelerate-compression-coretext-loads.tsv",
+    "backgroundtasks-corespotlight-loads.tsv",
+    "backgroundtasks-corespotlight-sources.tsv",
     "compiler-plugins.tsv",
     "compression-brotli-apple.txt",
     "coretext-font-manager-apple.txt",
@@ -251,6 +260,18 @@ _FRONTIER_SOURCE_HASHES = {
     "full/naturallanguage/tests/icecubes_naturallanguage_frontier.tsv": "af3515a82a14251d23fffd763f71b0ec99d7e6e1534c0c98a9d224a8260cfc07",
     "full/naturallanguage/tests/naturallanguage-apple-26.1.txt": "bff76de14ca81a7e2216381f8fb1f2e224f4e69d5f4449b200234b0881e90215",
     "full/naturallanguage/tests/naturallanguage-generalization-apple-26.1.txt": "a3f2c93e68040d85d3795bfef736575a0189da98e8b81ef4f379034cf34bb6f5",
+}
+_BACKGROUND_SPOTLIGHT_SOURCE_HASHES = {
+    "full/uniformtypeidentifiers/UniformTypeIdentifiers.swift": "65b2f60a87f6bc09a89fd8878545d9b9b79632d50300dcbff13668cc80825622",
+    "full/uniformtypeidentifiers/uniformtypeidentifiers_guest_sources.txt": "ba2d36aeab6c3a3d46c14fc20fd27ef0484401dbdec3b6b8d02f74be4bd33e2e",
+    "full/backgroundtasks/BackgroundTasks.swift": "df4236307353aa3df7a5c4f7c055236f749187ed99ea7004f0001aec7907889a",
+    "full/backgroundtasks/backgroundtasks_guest_sources.txt": "58f7ca2b7ccaa76036a6e8eb8a43f72479a4b2cdcbaa26caf77e57c24cd68528",
+    "full/backgroundtasks/tests/BackgroundTasksHostRuntime.swift": "e4019e6e540e7df2cdd1484f8d99e4d4fc56df6dbdcc6425b67cbc9514c3b2cd",
+    "full/backgroundtasks/tests/test_background_spotlight_host.sh": "53b8fb5f3edf302b87c1a7636313a78825b50edb8a36956392b5de97ffac5180",
+    "full/corespotlight/CoreSpotlight.swift": "2331ae547136cf24fdc9e97f4e776343f68253f3a625fb5d8c0feb7518ff7ff7",
+    "full/corespotlight/corespotlight_guest_sources.txt": "031488a5dc52620c90a77adba2b2b7a7c5f7191d2dfe0b240319821d1360386c",
+    "full/corespotlight/tests/CoreSpotlightHostRuntime.swift": "ca4afb02191f3277bbd54bc2649a795c994657c06dee86c0610188ca98a3adbe",
+    "full/corespotlight/tests/CorpusConsumerSurface.swift": "f38f23ff90e4189b405861caaaa66a28167962d9c5eb24cf78856c52284a9992",
 }
 
 
@@ -756,6 +777,43 @@ def _validate_foundationmodels_naturallanguage_frontier(root: Path) -> int:
     return len(exports)
 
 
+def _validate_background_spotlight_frontier(root: Path) -> None:
+    provenance = _regular(
+        root,
+        "attestation/backgroundtasks-corespotlight-sources.tsv",
+        "BackgroundTasks/CoreSpotlight source provenance",
+    ).read_text(encoding="utf-8").splitlines()
+    if not provenance or provenance[0] != (
+        "format\ttrue-ios-backgroundtasks-corespotlight-sources-v1"
+    ):
+        raise TrueIOSPlatformError(
+            "BackgroundTasks/CoreSpotlight source provenance format drifted"
+        )
+    records: dict[str, str] = {}
+    paths: list[str] = []
+    for index, line in enumerate(provenance[1:], 2):
+        fields = line.split("\t")
+        if (
+            len(fields) != 3
+            or fields[0] != "source"
+            or not _SHA256.fullmatch(fields[2])
+        ):
+            raise TrueIOSPlatformError(
+                f"malformed BackgroundTasks/CoreSpotlight source line {index}"
+            )
+        path = _relative(fields[1], f"search/background source path {index}").as_posix()
+        if path in records:
+            raise TrueIOSPlatformError(
+                f"duplicate BackgroundTasks/CoreSpotlight source: {path}"
+            )
+        records[path] = fields[2]
+        paths.append(path)
+    if paths != sorted(paths) or records != _BACKGROUND_SPOTLIGHT_SOURCE_HASHES:
+        raise TrueIOSPlatformError(
+            "BackgroundTasks/CoreSpotlight source provenance differs"
+        )
+
+
 def _compile_arguments() -> list[str]:
     include = "platform-include"
     return [
@@ -808,6 +866,9 @@ def _link_arguments() -> list[str]:
         "-framework", "NaturalLanguage",
         "-framework", "AuthenticationServices",
         "-framework", "_AuthenticationServices_SwiftUI",
+        "-framework", "UniformTypeIdentifiers",
+        "-framework", "BackgroundTasks",
+        "-framework", "CoreSpotlight",
         "-framework", "Accelerate",
         "-framework", "Compression",
         "-framework", "CoreText",
@@ -892,6 +953,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     foundationmodels_export_count = (
         _validate_foundationmodels_naturallanguage_frontier(root)
     )
+    _validate_background_spotlight_frontier(root)
     runtime_log = _regular(root, "attestation/runtime.log", "runtime log").read_text(
         encoding="utf-8"
     )
@@ -901,6 +963,15 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         raise TrueIOSPlatformError(
             "cold SwiftUI runtime lacks FoundationModels evidence"
         )
+    for marker in (
+        "uniform-types=text",
+        "backgroundtasks=scheduler",
+        "corespotlight=index",
+    ):
+        if marker not in runtime_log:
+            raise TrueIOSPlatformError(
+                f"cold SwiftUI runtime lacks first-party evidence: {marker}"
+            )
     for name, expected_stderr in (
         ("runtime.stderr.log", _EXPECTED_LOADER_STDERR),
         ("foundationmodels-runtime.stderr.log", _EXPECTED_LOADER_STDERR),
@@ -930,6 +1001,20 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     if load_attestation != expected_load_attestation:
         raise TrueIOSPlatformError(
             "FoundationModels/NaturalLanguage/AuthenticationServices load attestation differs"
+        )
+    background_spotlight_loads = _regular(
+        root,
+        "attestation/backgroundtasks-corespotlight-loads.tsv",
+        "BackgroundTasks/CoreSpotlight load attestation",
+    ).read_text(encoding="ascii")
+    if background_spotlight_loads != (
+        "format\ttrue-ios-backgroundtasks-corespotlight-loads-v1\n"
+        "probe\tuniformtypeidentifiers=1\tbackgroundtasks=1\tcorespotlight=1\n"
+        "backgroundtasks\tdispatch=1\tapple-self-load=0\n"
+        "corespotlight\tuniformtypeidentifiers=1\tapple-self-load=0\n"
+    ):
+        raise TrueIOSPlatformError(
+            "BackgroundTasks/CoreSpotlight load attestation differs"
         )
     frontier_loads = _regular(
         root,
@@ -1009,7 +1094,8 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     for module in (
         "SwiftUI", "UIKit", "OpenUIKit", "Combine", "OpenCombine",
         "FoundationModels", "NaturalLanguage", "AuthenticationServices",
-        "_AuthenticationServices_SwiftUI", "Accelerate", "Compression",
+        "_AuthenticationServices_SwiftUI", "UniformTypeIdentifiers",
+        "BackgroundTasks", "CoreSpotlight", "Accelerate", "Compression",
         "CoreText",
     ):
         if f"loaded module '{module}'; source:" not in module_log or (
@@ -1095,7 +1181,21 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         _same_hash(
             [product, sdk_binary, runtime_library, runtime_framework], f"lib{module}"
         )
-        _macho(product, filetype=6, install_name=f"/usr/lib/lib{module}.dylib")
+        product_loads = _macho(
+            product, filetype=6, install_name=f"/usr/lib/lib{module}.dylib"
+        )
+        for required_load in _FRAMEWORK_LOAD_CONTRACT.get(module, ()):
+            if product_loads.count(required_load) != 1:
+                raise TrueIOSPlatformError(
+                    f"lib{module} does not load exactly one {required_load}"
+                )
+        apple_self_load = (
+            f"/System/Library/Frameworks/{module}.framework/{module}"
+        )
+        if apple_self_load in product_loads:
+            raise TrueIOSPlatformError(
+                f"lib{module} loads Apple's {module} framework"
+            )
         for suffix in _MODULE_SUFFIXES:
             raw = _regular(root, f"package/{module}.{suffix}", f"{module}.{suffix}")
             sdk_module = _regular(
@@ -1182,6 +1282,9 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         "/usr/lib/libNaturalLanguage.dylib",
         "/usr/lib/libAuthenticationServices.dylib",
         "/usr/lib/lib_AuthenticationServices_SwiftUI.dylib",
+        "/usr/lib/libUniformTypeIdentifiers.dylib",
+        "/usr/lib/libBackgroundTasks.dylib",
+        "/usr/lib/libCoreSpotlight.dylib",
         "/usr/lib/libAccelerate.dylib",
         "/usr/lib/libCompression.dylib",
         "/usr/lib/libCoreText.dylib",

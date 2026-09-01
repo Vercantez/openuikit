@@ -482,6 +482,18 @@ full load-command/runtime logs, hashes of every overlaid target input, and a
 the complete first-party framework graph as iOS rather than a claim that the
 existing macOS-target framework modules can be mixed into an iOS compilation.
 
+`build_true_ios_platform_frameworks.sh` carries that target identity into a
+reusable framework SDK. Its current release graph publishes twenty-two public
+platform-7 framework dylibs plus the private Foundation ICU and Observation
+runtime boundaries. In addition to the SwiftUI/UIKit/Foundation core, the true
+iOS route now builds project-owned `libUniformTypeIdentifiers.dylib`,
+`libBackgroundTasks.dylib`, and `libCoreSpotlight.dylib`. The unchanged runtime
+probe submits and cancels background work and indexes/removes a searchable item;
+the validator requires all three framework-module origins, direct dylib loads,
+the BackgroundTasks-to-Dispatch edge, the CoreSpotlight-to-UTType edge, frozen
+source provenance, and cold runtime markers. Apple framework self-loads are
+rejected.
+
 The same command also exercises a two-target Xcode 16-style synchronized
 fixture, including target-specific exclusions, explicit file types, classic
 compatibility, scheme identity, canonical output, and symlink/escape controls.

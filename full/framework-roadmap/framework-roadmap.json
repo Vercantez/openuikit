@@ -854,6 +854,30 @@
       "focus_repository_file_count": 0
     },
     {
+      "family": "BackgroundTasks",
+      "modules": [
+        "BackgroundTasks"
+      ],
+      "note": "background scheduling and task lifecycle",
+      "app_coverage_count": 11,
+      "apps": [
+        "NetNewsWire",
+        "ProtonMail-ios",
+        "Signal-iOS",
+        "Telegram-iOS",
+        "WordPress-iOS",
+        "duckduckgo-ios",
+        "firefox-ios",
+        "home-assistant-ios",
+        "nextcloud-ios",
+        "pocket-casts-ios",
+        "wikipedia-ios"
+      ],
+      "file_count": 33,
+      "focus_main_target_file_count": 0,
+      "focus_repository_file_count": 0
+    },
+    {
       "family": "CoreSpotlight",
       "modules": [
         "CoreSpotlight"

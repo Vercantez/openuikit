@@ -13,7 +13,8 @@ Foundation-visible UIKit, CoreImage, QuartzCore, Intents, IntentsUI, WebKit,
 LocalAuthentication, SafariServices, Network, StoreKit, AudioToolbox,
 CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI,
 MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog,
-UniformTypeIdentifiers, SwiftData, UserNotifications, QuickLook, and its
+UniformTypeIdentifiers, SwiftData, UserNotifications, BackgroundTasks,
+CoreSpotlight, QuickLook, and its
 `_QuickLook_SwiftUI` cross-import overlay, CoreMedia, AVFoundation, AVKit,
 Charts, CoreTransferable, Photos, PhotosUI, and the `_PhotosUI_SwiftUI`
 cross-import overlay, Accelerate, Compression, CoreText, AdServices,
@@ -25,7 +26,7 @@ classifier. The app-facing `zlib` Clang module is backed by a separate
 `libz.dylib`. IOKit is a package-owned Swift overlay over a package-owned
 `IOKit.framework` C module and dylib, with its complete 53-symbol Apple Swift
 runtime contract supplied by a separate `libswiftIOKit.dylib`. Together these
-are fifty-eight reusable ARM64 Mach-O platform binaries (fifty-four Swift framework
+are sixty reusable ARM64 Mach-O platform binaries (fifty-six Swift framework
 dylibs, IOKit, `libswiftIOKit`, ICU, and zlib), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
@@ -81,13 +82,13 @@ The semantic build order is deliberate:
    donation, resolution, and host-driven controller state.
 8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-9. Compile and link thirty-five app-facing first-party modules as independent ARM64
+9. Compile and link thirty-seven app-facing first-party modules as independent ARM64
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
 10. Build and audit the fail-closed IOKit C framework and complete
-   `libswiftIOKit` runtime boundaries, then link all fifty-eight reusable
-   platform binaries: the fifty-six library-directory dylibs (fifty-four Swift
+   `libswiftIOKit` runtime boundaries, then link all sixty reusable platform
+   binaries: the fifty-eight library-directory dylibs (fifty-six Swift
    frameworks, ICU, and zlib) plus IOKit and `libswiftIOKit`. Run the package's
    Mach-O closure/resource/font and framework-behavior probe through the
    packaged machorun root.
@@ -183,6 +184,21 @@ request, settings, category, center, and async delegate surface. It fails closed
 when no host authorization is provided and offers an explicitly authorized,
 process-local volatile delivery queue for portable hosts; it does not claim an
 operating-system notification daemon, push transport, or durable scheduling.
+
+`libBackgroundTasks.dylib` implements Apple's request, scheduler, registration,
+pending-query, cancellation, expiration, and completion surface. Submitted
+requests are owned snapshots, scheduler state is locked, registered queues are
+honored, and the production host can launch due work through a narrow SPI. Linux
+does not fabricate Apple's private scheduling daemon: availability and permitted
+identifiers remain explicit host policy, with Darwin-shaped errors for refusal.
+
+`libCoreSpotlight.dylib` provides named process-local indexes, owned searchable
+item and attribute snapshots, synchronous and asynchronous indexing/deletion,
+domain deletion, expiration filtering, deterministic term queries, batch client
+state, and AppIntents entity mutation hooks. Its Apple-shaped consumer surface is
+first typechecked against the native iPhoneOS SDK and then unchanged against the
+portable module. Search state is intentionally volatile until a platform search
+service and durable index are introduced.
 
 `libQuickLook.dylib` implements preview items, indexed controller/data-source
 state, AR metadata, and a local OpenUIKit presenter that renders PNG/JPEG files

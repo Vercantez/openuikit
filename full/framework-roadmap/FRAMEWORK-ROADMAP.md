@@ -93,6 +93,7 @@ This order puts direct imports in Focus launch anchors first, then imports in th
 | WebKit | `WebKit` | 19 | 383 | 6 | 6 |
 | Intents / IntentsUI | `Intents`, `IntentsUI` | 13 | 117 | 7 | 9 |
 | UserNotifications | `UserNotifications`, `UserNotificationsUI` | 15 | 137 | 0 | 0 |
+| BackgroundTasks | `BackgroundTasks` | 11 | 33 | 0 | 0 |
 | CoreSpotlight | `CoreSpotlight` | 10 | 35 | 0 | 0 |
 | MobileCoreServices / UTType | `MobileCoreServices`, `UniformTypeIdentifiers` | 17 | 218 | 0 | 2 |
 | WidgetKit | `WidgetKit` | 14 | 301 | 0 | 1 |

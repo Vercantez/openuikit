@@ -346,6 +346,7 @@ REQUESTED_FAMILIES = (
     ("WebKit", ("WebKit",), "web view and browser engine API"),
     ("Intents / IntentsUI", ("Intents", "IntentsUI"), "Siri/custom intent model and UI"),
     ("UserNotifications", ("UserNotifications", "UserNotificationsUI"), "notification delivery and extension UI"),
+    ("BackgroundTasks", ("BackgroundTasks",), "background scheduling and task lifecycle"),
     ("CoreSpotlight", ("CoreSpotlight",), "system search indexing"),
     (
         "MobileCoreServices / UTType",

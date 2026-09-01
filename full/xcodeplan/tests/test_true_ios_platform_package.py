@@ -30,6 +30,9 @@ MODULES = (
     "Combine",
     "Symbols",
     "SwiftUI",
+    "UniformTypeIdentifiers",
+    "BackgroundTasks",
+    "CoreSpotlight",
     "FoundationModels",
     "NaturalLanguage",
     "AuthenticationServices",
@@ -178,8 +181,15 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         (self.root / "sdk/usr/lib/libobjc.tbd").symlink_to("libobjc.A.tbd")
 
         for module in MODULES:
+            loads: tuple[str, ...] = ()
+            if module == "BackgroundTasks":
+                loads = ("/usr/lib/libDispatch.dylib",)
+            elif module == "CoreSpotlight":
+                loads = ("/usr/lib/libUniformTypeIdentifiers.dylib",)
             binary = macho(
-                filetype=6, install_name=f"/usr/lib/lib{module}.dylib"
+                filetype=6,
+                install_name=f"/usr/lib/lib{module}.dylib",
+                loads=loads,
             )
             product = self.root / f"products/lib{module}.dylib"
             product.write_bytes(binary)
@@ -356,6 +366,9 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
                 "/usr/lib/libNaturalLanguage.dylib",
                 "/usr/lib/libAuthenticationServices.dylib",
                 "/usr/lib/lib_AuthenticationServices_SwiftUI.dylib",
+                "/usr/lib/libUniformTypeIdentifiers.dylib",
+                "/usr/lib/libBackgroundTasks.dylib",
+                "/usr/lib/libCoreSpotlight.dylib",
                 "/usr/lib/libAccelerate.dylib",
                 "/usr/lib/libCompression.dylib",
                 "/usr/lib/libCoreText.dylib",
@@ -405,6 +418,18 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             self.root
             / "attestation/foundationmodels-naturallanguage-sources.tsv"
         ).write_text(provenance, encoding="ascii")
+        background_spotlight_provenance = (
+            "format\ttrue-ios-backgroundtasks-corespotlight-sources-v1\n"
+            + "".join(
+                f"source\t{path}\t{digest}\n"
+                for path, digest in sorted(
+                    platform_package._BACKGROUND_SPOTLIGHT_SOURCE_HASHES.items()
+                )
+            )
+        )
+        (
+            self.root / "attestation/backgroundtasks-corespotlight-sources.tsv"
+        ).write_text(background_spotlight_provenance, encoding="ascii")
         foundationmodels_exports = sorted(
             platform_package._REQUIRED_FOUNDATIONMODELS_EXPORTS
         )
@@ -450,7 +475,8 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         ).write_bytes(natural_language_apple)
         (self.root / "attestation/runtime.log").write_text(
             "TRUE_IOS_SWIFTUI_DYLIB_RUNTIME_OK descendants=3 text=rendered "
-            "button=rendered foundationmodels=generated-content,fail-closed\n",
+            "button=rendered foundationmodels=generated-content,fail-closed "
+            "uniform-types=text backgroundtasks=scheduler corespotlight=index\n",
             encoding="utf-8",
         )
         for name, loader_stderr in (
@@ -478,6 +504,9 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
                 "NaturalLanguage",
                 "AuthenticationServices",
                 "_AuthenticationServices_SwiftUI",
+                "UniformTypeIdentifiers",
+                "BackgroundTasks",
+                "CoreSpotlight",
                 "Accelerate",
                 "Compression",
                 "CoreText",
@@ -509,6 +538,15 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             "accelerate\tvimage-export=1\tapple-self-load=0\n"
             "compression\tc-exports=2\thost-imports=2\tbrotli-load=0\tapple-self-load=0\n"
             "coretext\tapple-self-load=0\n",
+            encoding="ascii",
+        )
+        (
+            self.root / "attestation/backgroundtasks-corespotlight-loads.tsv"
+        ).write_text(
+            "format\ttrue-ios-backgroundtasks-corespotlight-loads-v1\n"
+            "probe\tuniformtypeidentifiers=1\tbackgroundtasks=1\tcorespotlight=1\n"
+            "backgroundtasks\tdispatch=1\tapple-self-load=0\n"
+            "corespotlight\tuniformtypeidentifiers=1\tapple-self-load=0\n",
             encoding="ascii",
         )
         (
@@ -630,7 +668,7 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         )
         (self.root / "PLATFORM_COMPLETE").write_text(
             "TRUE_IOS_PLATFORM_COMPLETE "
-            "target=arm64-apple-ios18.0-simulator dylibs=21 swiftui_sources=11 "
+            "target=arm64-apple-ios18.0-simulator dylibs=24 swiftui_sources=11 "
             f"source={self.source_subject} artifacts={sha256(artifact_ledger)} "
             f"symlinks={sha256(symlink_ledger)}\n",
             encoding="ascii",
@@ -670,6 +708,9 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             )
         for framework in (
             "FoundationModels",
+            "UniformTypeIdentifiers",
+            "BackgroundTasks",
+            "CoreSpotlight",
             "Accelerate",
             "Compression",
             "CoreText",
