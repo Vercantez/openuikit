@@ -2,53 +2,49 @@
 
 Linux starting point for Apple's public `MatterSupport` surface, reconstructed
 from the Xcode 26.1 iPhoneOS symbol graph (124 precise identifiers). This
-directory is not wired into the shared guest package.
+directory is not wired into the shared guest package. A passing isolated host
+gate is not integrated Linux success.
 
 ## What is real
 
-Value types construct, mutate, compare, hash, and round-trip through a **local**
-`Codable` representation:
+Value types construct, mutate, compare, and hash:
 
 - `MatterAddDeviceRequest` plus `Home`, `Room`, `Topology`, and `DeviceCriteria`
 - `MatterAddDeviceExtensionRequestHandler.DeviceCredential`
-- `WiFiScanResult` / `ThreadScanResult`
+- `ThreadScanResult`
+- `WiFiScanResult` `ssid` / `rssi`
 - `WiFiNetworkAssociation` / `ThreadNetworkAssociation` sentinels and factories
 
 `MatterAddDeviceExtensionRequestHandler` is an `open` `NSObject` subclass.
-Apps can override `rooms(in:)`, `configureDevice(named:in:)`,
-`validateDeviceCredential(_:)`, `selectWiFiNetwork(from:)`,
-`selectThreadNetwork(from:)`, and `commissionDevice(in:onboardingPayload:commissioningID:)`.
 The default `rooms(in:)` returns `[]`; `configureDevice(named:in:)` is inert.
+`MatterAddDeviceRequest.isSupported` is `false`. `perform()` fails closed.
 
-`MatterAddDeviceRequest.isSupported` is `false`.
+`Codable` declarations exist so the types compile as `Codable`. Keyed layouts
+are unobserved on Apple and are not claimed.
 
 ## Fail-closed boundaries
 
 Linux has no Apple commissioning UI, Matter fabric, setup-payload entitlement,
-device-attestation service, or Wi-Fi/Thread credential store. The following
-never fabricate success:
+device-attestation service, or Wi-Fi/Thread credential store:
 
-- `MatterAddDeviceRequest.perform()` throws `MatterSupportError`
+- `perform()` throws an internal unavailable error
 - Base `validateDeviceCredential`, `selectWiFiNetwork`, `selectThreadNetwork`,
-  and `commissionDevice` throw `MatterSupportError`
-- A non-nil `setupPayload` is stored only; it is not parsed and is dropped on
-  `Codable` round-trip
-- `WiFiNetworkAssociation.defaultSystemNetwork` and
-  `ThreadNetworkAssociation.defaultSystemNetwork` are sentinels, not joins
+  and `commissionDevice` throw the same internal error
+- Association `defaultSystemNetwork` values are sentinels, not joins
 
-`MatterSupportError` is a Linux-local error type. Apple's thrown error identity
-is an oracle question.
+Apple's thrown error identity is not public in the graph and is not exposed.
 
-## Matter stand-ins
+## Matter dependency
 
-There is no `Matter` module in this seed. `MTRSetupPayload`,
-`MTRNetworkCommissioningWiFiSecurity`, and `MTRNetworkCommissioningWiFiBand`
-are local stand-ins so MatterSupport signatures compile. They are not a Matter
-port. Central review should replace them with the real Matter types when that
-module exists.
+Public signatures that mention `MTRSetupPayload`,
+`MTRNetworkCommissioningWiFiSecurity`, or `MTRNetworkCommissioningWiFiBand`
+are compiled only when `canImport(Matter)` and they use Matter's nominal
+types. This isolated host configuration does not import Matter, so those APIs
+are omitted and marked unavailable. There are no module-local substitutes.
 
-Local `Codable` is for in-process round-trip only. Apple keyed-container layout
-is unobserved.
+`tests/agent/MatterSupportDependencyIdentity.swift` is a probe for a future
+clean EC2 run that builds guest Matter and Foundation first, then builds
+MatterSupport against those modules.
 
 ## Tests
 
