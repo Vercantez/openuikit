@@ -744,6 +744,7 @@ enum _OpenGraphStructuralScope: Hashable {
     case overlay
     case toolbar
     case onAppear
+    case onDisappear
     case presentation
     case onChange
     case animation

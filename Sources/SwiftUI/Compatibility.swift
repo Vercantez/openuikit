@@ -266,6 +266,11 @@ public extension _OpenLabel where Title == _OpenText, Icon == _OpenImage {
         icon = _OpenImage(systemName: systemImage)
     }
 
+    @_disfavoredOverload
+    nonisolated init<S: StringProtocol>(_ title: S, systemImage: String) {
+        self.init(LocalizedStringKey(String(title)), systemImage: systemImage)
+    }
+
     @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
     nonisolated init(_ titleKey: LocalizedStringKey, image resource: ImageResource) {
         title = _OpenText(titleKey)

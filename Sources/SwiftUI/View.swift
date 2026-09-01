@@ -292,6 +292,7 @@ enum _OpenViewModification {
     case simultaneousTapAction(@MainActor () -> Void)
     case gesture(_OpenGestureNode)
     case onAppear(identity: _OpenGraphIdentity?, action: @MainActor () -> Void)
+    case onDisappear(identity: _OpenGraphIdentity?, action: @MainActor () -> Void)
     case shadow(color: Color, radius: CGFloat, x: CGFloat, y: CGFloat)
     case colorScheme(ColorScheme)
     case safeAreaIgnored(Edge.Set)
@@ -395,6 +396,7 @@ fileprivate enum _OpenViewModifier {
     case simultaneousTapAction(@MainActor () -> Void)
     case gesture(_OpenGestureNode)
     case onAppear(@MainActor () -> Void)
+    case onDisappear(@MainActor () -> Void)
     case shadow(color: Color, radius: CGFloat, x: CGFloat, y: CGFloat)
     case colorScheme(ColorScheme)
     case safeAreaIgnored(Edge.Set)
@@ -535,6 +537,10 @@ fileprivate enum _OpenViewModifier {
         case .onAppear(let action):
             return _OpenGraphContext.withStructuralScope(.onAppear) {
                 .onAppear(identity: _OpenGraphContext.currentIdentity(), action: action)
+            }
+        case .onDisappear(let action):
+            return _OpenGraphContext.withStructuralScope(.onDisappear) {
+                .onDisappear(identity: _OpenGraphContext.currentIdentity(), action: action)
             }
         case .shadow(let color, let radius, let x, let y):
             return .shadow(color: color, radius: radius, x: x, y: y)
@@ -1014,6 +1020,11 @@ public struct _OpenText: _OpenView {
 
     nonisolated public init(_ content: String) {
         self.content = content
+    }
+
+    @_disfavoredOverload
+    nonisolated public init<S: StringProtocol>(_ content: S) {
+        self.content = String(content)
     }
 
     nonisolated public init(verbatim content: String) {
@@ -2294,6 +2305,12 @@ public extension _OpenView {
 
     func onAppear(perform action: @escaping @MainActor () -> Void) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .onAppear(action))
+    }
+
+    func onDisappear(
+        perform action: (@MainActor () -> Void)? = nil
+    ) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .onDisappear(action ?? {}))
     }
 
     func onTapGesture(perform action: @escaping @MainActor () -> Void) -> some _OpenView {

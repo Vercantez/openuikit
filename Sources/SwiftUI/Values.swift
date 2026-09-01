@@ -627,6 +627,7 @@ public struct _OpenAccessibilityTraits: OptionSet, Sendable {
     public static let isHeader = _OpenAccessibilityTraits(rawValue: 1 << 2)
     public static let isImage = _OpenAccessibilityTraits(rawValue: 1 << 3)
     public static let isSelected = _OpenAccessibilityTraits(rawValue: 1 << 4)
+    public static let updatesFrequently = _OpenAccessibilityTraits(rawValue: 1 << 5)
 }
 
 public struct _OpenMatchedGeometryProperties: OptionSet, Sendable {

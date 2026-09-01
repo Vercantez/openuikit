@@ -36,6 +36,11 @@ private enum _OpenAppearanceIdentity: Hashable {
     case ephemeral(ObjectIdentifier)
 }
 
+private struct _OpenAppearanceActions {
+    var appear: (@MainActor () -> Void)?
+    var disappear: (@MainActor () -> Void)?
+}
+
 /// Structural SwiftUI wrappers must not become accidental touch targets.
 /// They still expose interactive descendants (notably nested Buttons), while
 /// their otherwise-transparent surface falls through to the enclosing view.
@@ -523,6 +528,7 @@ private func _openUIKitTraits(_ traits: AccessibilityTraits) -> UIAccessibilityT
     if traits.contains(.isHeader) { result.insert(.header) }
     if traits.contains(.isImage) { result.insert(.image) }
     if traits.contains(.isSelected) { result.insert(.selected) }
+    if traits.contains(.updatesFrequently) { result.insert(.updatesFrequently) }
     return result
 }
 
@@ -668,10 +674,13 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
     private var installedRepresentedControllers: [ObjectIdentifier: UIViewController] = [:]
     private var pendingRepresentedControllerMoves: Set<ObjectIdentifier> = []
     private var appearanceTransitionChildren: Set<ObjectIdentifier> = []
-    private var activeAppearActions: [
-        _OpenAppearanceIdentity: @MainActor () -> Void
+    private var activeAppearanceActions: [
+        _OpenAppearanceIdentity: _OpenAppearanceActions
     ] = [:]
-    private var deliveredAppearActions: Set<_OpenAppearanceIdentity> = []
+    /// Identities whose appearance cycle has begun. This includes nodes that
+    /// register only `onDisappear`, so removal and host disappearance remain
+    /// paired even when there was no corresponding `onAppear` closure.
+    private var visibleAppearanceIdentities: Set<_OpenAppearanceIdentity> = []
     private var hostIsVisible = false
     private var appliedRootNavigationTitle: String?
     private var appliedRootBackButtonHidden = false
@@ -763,7 +772,11 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
         }
         appearanceTransitionChildren.removeAll(keepingCapacity: true)
         hostIsVisible = false
-        deliveredAppearActions.removeAll(keepingCapacity: true)
+        let disappearing = visibleAppearanceIdentities.compactMap {
+            activeAppearanceActions[$0]?.disappear
+        }
+        visibleAppearanceIdentities.removeAll(keepingCapacity: true)
+        disappearing.forEach { $0() }
     }
 
     private func install(_ node: _OpenViewNode, animation: Animation?) {
@@ -793,8 +806,24 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
             pendingRepresentedControllerMoves.insert(identity)
         }
 
-        activeAppearActions = _openAppearanceActions(in: node)
-        deliveredAppearActions.formIntersection(activeAppearActions.keys)
+        let nextAppearanceActions = _openAppearanceActions(in: node)
+        if hostIsVisible {
+            // A conditional branch or selected page can leave the mounted
+            // graph without the hosting controller disappearing. Deliver the
+            // old node's action exactly once before forgetting its closure.
+            let removed = visibleAppearanceIdentities.subtracting(
+                nextAppearanceActions.keys
+            )
+            let disappearing = removed.compactMap {
+                activeAppearanceActions[$0]?.disappear
+            }
+            visibleAppearanceIdentities.subtract(removed)
+            activeAppearanceActions = nextAppearanceActions
+            disappearing.forEach { $0() }
+        } else {
+            activeAppearanceActions = nextAppearanceActions
+            visibleAppearanceIdentities.removeAll(keepingCapacity: true)
+        }
         lastAppliedAnimation = animation
         guard let animation else {
             host.node = node
@@ -829,10 +858,12 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
 
     private func deliverPendingAppearActions() {
         guard hostIsVisible else { return }
-        for (key, action) in activeAppearActions
-        where !deliveredAppearActions.contains(key) {
-            action()
-            deliveredAppearActions.insert(key)
+        for (key, actions) in activeAppearanceActions
+        where !visibleAppearanceIdentities.contains(key) {
+            // Record before invoking arbitrary app code so a synchronous graph
+            // invalidation cannot deliver the same appearance twice.
+            visibleAppearanceIdentities.insert(key)
+            actions.appear?()
         }
     }
 
@@ -1006,8 +1037,8 @@ private func _openContainedViews(in root: _OpenViewNode) -> [UIView] {
 @MainActor
 private func _openAppearanceActions(
     in root: _OpenViewNode
-) -> [_OpenAppearanceIdentity: @MainActor () -> Void] {
-    var result: [_OpenAppearanceIdentity: @MainActor () -> Void] = [:]
+) -> [_OpenAppearanceIdentity: _OpenAppearanceActions] {
+    var result: [_OpenAppearanceIdentity: _OpenAppearanceActions] = [:]
 
     func visit(_ node: _OpenViewNode) {
         switch node.kind {
@@ -1048,7 +1079,18 @@ private func _openAppearanceActions(
             if case .onAppear(let identity, let action) = modification {
                 let key = identity.map(_OpenAppearanceIdentity.graph)
                     ?? .ephemeral(ObjectIdentifier(node))
-                result[key] = action
+                result[key] = _OpenAppearanceActions(
+                    appear: action,
+                    disappear: nil
+                )
+            }
+            if case .onDisappear(let identity, let action) = modification {
+                let key = identity.map(_OpenAppearanceIdentity.graph)
+                    ?? .ephemeral(ObjectIdentifier(node))
+                result[key] = _OpenAppearanceActions(
+                    appear: nil,
+                    disappear: action
+                )
             }
             visit(content)
             switch modification {
@@ -1687,6 +1729,7 @@ private enum _ViewRenderer {
                 next.textAlignment = alignment
                 return measure(content, proposed: proposed, environment: next)
             case .tapAction, .simultaneousTapAction, .gesture, .onAppear,
+                 .onDisappear,
                  .shadow, .colorScheme, .safeAreaIgnored, .opacity,
                  .scaleEffect, .layoutPriority, .accessibilityElement,
                  .accessibilityLabel, .accessibilityHint, .accessibilityValue,
@@ -2797,7 +2840,7 @@ private enum _ViewRenderer {
                 surface.addSubview(host)
                 _openInstallGesture(gesture, on: host)
                 place(content, in: host.bounds, on: host, environment: environment)
-            case .onAppear:
+            case .onAppear, .onDisappear:
                 place(content, in: rect, on: surface, environment: environment)
             case .shadow(let color, let radius, let x, let y):
                 let shadowHost = _SwiftUIPassthroughView(frame: rect)

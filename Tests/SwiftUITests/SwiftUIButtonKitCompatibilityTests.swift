@@ -38,6 +38,20 @@ private struct FadingModifier: AnimatableModifier {
     }
 }
 
+private struct ConditionalDisappearFixture: View {
+    let isVisible: Bool
+    let disappeared: @MainActor () -> Void
+
+    var body: some View {
+        if isVisible {
+            Text("conditional")
+                .onDisappear(perform: disappeared)
+        } else {
+            Text("removed")
+        }
+    }
+}
+
 final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
     @available(macOS 14.0, *)
     @MainActor
@@ -198,6 +212,95 @@ final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
         XCTAssertEqual(gradient.locations ?? [], [0, 1])
         XCTAssertEqual(gradient.startPoint, CGPoint(x: 0, y: 0))
         XCTAssertEqual(gradient.endPoint, CGPoint(x: 1, y: 1))
+    }
+
+    func testStringProtocolTextAndSystemLabelPreserveTheirDisplayedValue() throws {
+        let storage = "xxLive scoreyy"
+        let title = storage.dropFirst(2).dropLast(2)
+        let root = try hosted(
+            VStack {
+                Text(title)
+                Label(title, systemImage: "clock")
+                    .accessibilityAddTraits(.updatesFrequently)
+            }
+        )
+
+        let labels = descendants(including: root).compactMap { $0 as? UILabel }
+        XCTAssertEqual(labels.filter { $0.text == "Live score" }.count, 2)
+        let accessibility = try XCTUnwrap(
+            descendants(including: root).first {
+                $0.accessibilityIdentifier == "SwiftUI.AccessibilityTraits"
+            }
+        )
+        XCTAssertTrue(accessibility.accessibilityTraits.contains(.updatesFrequently))
+    }
+
+    @MainActor
+    func testOnDisappearPairsEachVisibleHostAppearanceExactlyOnce() throws {
+        var events: [String] = []
+        let controller = UIHostingController(
+            rootView: Text("lifecycle")
+                .onAppear { events.append("appear") }
+                .onDisappear { events.append("disappear") }
+        )
+        let root = try XCTUnwrap(controller.view)
+        root.frame = CGRect(x: 0, y: 0, width: 120, height: 44)
+        root.layoutIfNeeded()
+        XCTAssertEqual(events, [])
+
+        controller.beginAppearanceTransition(true, animated: false)
+        controller.endAppearanceTransition()
+        controller.beginAppearanceTransition(false, animated: false)
+        controller.endAppearanceTransition()
+        XCTAssertEqual(events, ["appear", "disappear"])
+
+        // A duplicate disappearance without a new visible cycle is inert.
+        controller.beginAppearanceTransition(false, animated: false)
+        controller.endAppearanceTransition()
+        XCTAssertEqual(events, ["appear", "disappear"])
+
+        controller.beginAppearanceTransition(true, animated: false)
+        controller.endAppearanceTransition()
+        controller.beginAppearanceTransition(false, animated: false)
+        controller.endAppearanceTransition()
+        XCTAssertEqual(events, ["appear", "disappear", "appear", "disappear"])
+    }
+
+    @MainActor
+    func testOnDisappearFiresWhenVisibleConditionalLeavesRetainedGraph() throws {
+        var disappearances = 0
+        let action: @MainActor () -> Void = { disappearances += 1 }
+        let controller = UIHostingController(
+            rootView: ConditionalDisappearFixture(
+                isVisible: true,
+                disappeared: action
+            )
+        )
+        _ = controller.view
+        controller.beginAppearanceTransition(true, animated: false)
+        controller.endAppearanceTransition()
+
+        controller.rootView = ConditionalDisappearFixture(
+            isVisible: false,
+            disappeared: action
+        )
+        XCTAssertEqual(disappearances, 1)
+        controller.rootView = ConditionalDisappearFixture(
+            isVisible: false,
+            disappeared: action
+        )
+        XCTAssertEqual(disappearances, 1)
+
+        controller.rootView = ConditionalDisappearFixture(
+            isVisible: true,
+            disappeared: action
+        )
+        controller.view.layoutIfNeeded()
+        controller.rootView = ConditionalDisappearFixture(
+            isVisible: false,
+            disappeared: action
+        )
+        XCTAssertEqual(disappearances, 2)
     }
 
     private func hosted<Content: View>(_ content: Content) throws -> UIView {
