@@ -12,6 +12,15 @@
 // This file is intentionally shared by the reusable FoundationGuest umbrella
 // and the narrow build_full measuring shim.  Every production compilation of
 // either input must include this file so the two paths cannot drift.
+// These aliases are part of Foundation's public ABI. Swift 6 diagnoses a
+// downstream public extension of Notification.Name when the module that owns
+// the underlying declaration is only an implementation-detail import. Export
+// the canonical notification family selectively: this makes the owning module
+// visible wherever Foundation is imported without re-exporting all of UIKit.
+@_exported import struct OpenUIKit.Notification
+@_exported import typealias OpenUIKit.NSNotification
+@_exported import class OpenUIKit.NotificationCenter
+@_exported import class OpenUIKit.OperationQueue
 import OpenUIKit
 
 public typealias Notification = OpenUIKit.Notification

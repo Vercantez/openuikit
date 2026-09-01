@@ -81,8 +81,11 @@ class NotificationGuestAliasTests(unittest.TestCase):
     def test_aliases_are_exact_and_do_not_invent_an_api(self) -> None:
         source = ALIASES.read_text()
         validate_alias_source(source)
-        self.assertEqual(imports(source), ["OpenUIKit"])
-        self.assertNotIn("@_exported import OpenUIKit", source)
+        self.assertIn("@_exported import struct OpenUIKit.Notification", source)
+        self.assertIn("@_exported import typealias OpenUIKit.NSNotification", source)
+        self.assertIn("@_exported import class OpenUIKit.NotificationCenter", source)
+        self.assertIn("@_exported import class OpenUIKit.OperationQueue", source)
+        self.assertNotIn("@_exported import OpenUIKit\n", source)
         self.assertIn("not a claim that the complete Foundation.NSNotification", source)
         self.assertIn("Coding,", source)
         self.assertIn("interoperability with an Apple Foundation center", source)
@@ -113,6 +116,7 @@ class NotificationGuestAliasTests(unittest.TestCase):
         self.assertEqual(imports(uikit), ["UIKit"])
         self.assertEqual(imports(direct), ["Foundation", "UIKit"])
         self.assertIn("extension Notification.Name", foundation)
+        self.assertIn("NSNotification.Name(rawValue:", foundation)
         self.assertIn(".guestReminderDidChange", uikit)
         self.assertNotRegex(uikit, r"(?m)^import (Foundation|OpenUIKit)$")
 
@@ -221,6 +225,21 @@ class NotificationGuestAliasTests(unittest.TestCase):
         for probe in (FOUNDATION_PROBE, UIKIT_PROBE, DIRECT_PROBE):
             self.assertEqual(onboarding.count(probe.name), 1)
             self.assertEqual(package.count(probe.name), 1)
+
+    def test_core_package_compiles_foundation_only_public_extension_alone(self) -> None:
+        build = (ROOT / "full/frameworks/build_core_guest_package.sh").read_text()
+        marker = "Foundation-only notification selective-reexport proof"
+        self.assertIn(marker, build)
+        command = next(
+            line
+            for line in logical_shell_lines(build)
+            if "FoundationNotificationPublicImportProbe" in line
+        )
+        self.assertIn(FOUNDATION_PROBE.as_posix().removeprefix(ROOT.as_posix() + "/"), command)
+        self.assertIn("-swift-version 6", command)
+        self.assertIn("-warnings-as-errors", command)
+        self.assertNotIn(UIKIT_PROBE.name, command)
+        self.assertNotIn(DIRECT_PROBE.name, command)
 
     def test_legacy_diagnostic_keeps_early_uikit_before_foundation(self) -> None:
         script = (ROOT / "full/scripts/app_probe2.sh").read_text()

@@ -4,7 +4,7 @@ import Foundation
 
 extension Notification.Name {
     static let guestReminderDidChange =
-        Notification.Name("GuestReminderDidChange")
+        NSNotification.Name(rawValue: "GuestReminderDidChange")
 }
 
 func foundationNotificationMetatype() -> Foundation.Notification.Type {
