@@ -183,6 +183,7 @@ FRAMEWORKS = (
     "CoreText",
     "NaturalLanguage",
     "AuthenticationServices",
+    "FoundationModels",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -768,6 +769,10 @@ class PackageFixture:
             "swiftdata macros",
         )
         write_file(
+            root / "host-tools/swift/host/plugins/libFoundationModelsMacros.so",
+            "foundation models macros",
+        )
+        write_file(
             root / "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
             "open uikit preview macros",
         )
@@ -838,6 +843,8 @@ class PackageFixture:
             "-load-plugin-library",
             "host-tools/swift/host/plugins/libSwiftDataMacros.so",
             "-load-plugin-library",
+            "host-tools/swift/host/plugins/libFoundationModelsMacros.so",
+            "-load-plugin-library",
             "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
             "-load-plugin-library",
             "host-tools/swift/host/plugins/libOpenSwiftUIMacros.so",
@@ -904,6 +911,7 @@ class PackageFixture:
             "-lCoreText",
             "-lNaturalLanguage",
             "-lAuthenticationServices",
+            "-lFoundationModels",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
@@ -927,6 +935,11 @@ class PackageFixture:
                 "SwiftDataMacros",
                 "libSwiftDataMacros.so",
                 "PersistentModelMacro",
+            ),
+            (
+                "FoundationModelsMacros",
+                "libFoundationModelsMacros.so",
+                "GenerableMacro,GuideMacro",
             ),
             (
                 "OpenUIKitPreviewMacros",
@@ -1181,6 +1194,14 @@ class PackageFixture:
         records.append(
             self._artifact(
                 "host-tool",
+                "FoundationModelsMacros",
+                "plugin",
+                "host-tools/swift/host/plugins/libFoundationModelsMacros.so",
+            )
+        )
+        records.append(
+            self._artifact(
+                "host-tool",
                 "OpenUIKitPreviewMacros",
                 "plugin",
                 "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
@@ -1401,6 +1422,7 @@ class PackageContractTests(unittest.TestCase):
                 "ObservationMacros",
                 "FoundationMacros",
                 "SwiftDataMacros",
+                "FoundationModelsMacros",
                 "OpenUIKitPreviewMacros",
                 "OpenSwiftUIMacros",
             ],
@@ -1415,6 +1437,7 @@ class PackageContractTests(unittest.TestCase):
                 ],
                 "FoundationMacros": ["ExpressionMacro", "PredicateMacro"],
                 "SwiftDataMacros": ["PersistentModelMacro"],
+                "FoundationModelsMacros": ["GenerableMacro", "GuideMacro"],
                 "OpenUIKitPreviewMacros": ["UIKitPreviewMacro"],
                 "OpenSwiftUIMacros": ["EntryMacro"],
             },
@@ -1990,7 +2013,7 @@ class ShellContractTests(unittest.TestCase):
             builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 3
         )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 22
+            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 23
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -2227,7 +2250,7 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 52)
+        self.assertEqual(len(FRAMEWORKS), 53)
         self.assertEqual(FRAMEWORKS.index("WebKit"), 18)
         for token in (
             "-module-name WebKit -emit-module",
@@ -2844,7 +2867,7 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn(
             "cfErrorAsError._getEmbeddedNSError() === cfError", probe
         )
-    def test_thirty_three_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_thirty_four_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -2883,8 +2906,9 @@ class ShellContractTests(unittest.TestCase):
             "CoreText",
             "NaturalLanguage",
             "AuthenticationServices",
+            "FoundationModels",
         )
-        self.assertEqual(FRAMEWORKS[-33:], first_party)
+        self.assertEqual(FRAMEWORKS[-34:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -2911,19 +2935,19 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("portable install ID count", source)
         self.assertIn("apple-self-load=0", source)
         self.assertIn(
-            "frontier-frameworks\\tframeworks=26\\tsources=27\\tinputs=46",
+            "frontier-frameworks\\tframeworks=27\\tsources=28\\tinputs=57",
             source,
         )
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 27",
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 28",
             source,
         )
         self.assertIn(
-            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 46",
+            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 57",
             source,
         )
         self.assertIn(
-            "compile thirty-three independent first-party framework modules", source
+            "compile thirty-four independent first-party framework modules", source
         )
         accelerate_header = (
             REPO / "full/accelerate/include/Accelerate.h"
@@ -2938,7 +2962,10 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=portable-33", probe)
+        self.assertIn("first-party=portable-34", probe)
+        self.assertIn("foundationmodels=generated-content,fail-closed", probe)
+        self.assertIn("FoundationModelsGuestRuntime", source)
+        self.assertIn("FOUNDATIONMODELS_GUEST_MACHO_OK", source)
         self.assertIn("usernotifications=fail-closed,volatile", probe)
         self.assertIn("UserNotificationsGuestRuntime", source)
         self.assertIn("USERNOTIFICATIONS_GUEST_MACHO_OK", source)

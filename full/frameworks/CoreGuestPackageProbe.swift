@@ -44,6 +44,7 @@ import Compression
 import CoreText
 import NaturalLanguage
 import AuthenticationServices
+import FoundationModels
 import WebKit
 
 private func coreRequireIndefiniteSymbolEffect<Effect>(_: Effect)
@@ -853,6 +854,11 @@ struct CoreGuestPackageProbe {
         precondition(UTType.usdz.conforms(to: .threeDContent))
         precondition(!SwiftDataPortable.supportsDurableStorage)
         precondition(!SwiftDataPortable.supportsCloudKit)
+        precondition(!SystemLanguageModel.default.isAvailable)
+        precondition(
+            SystemLanguageModel.default.availability ==
+                .unavailable(.deviceNotEligible)
+        )
         precondition(
             TransferableError.exportNotSupported(contentType: "public.data")
                 == .exportNotSupported(contentType: "public.data")
@@ -1010,7 +1016,9 @@ struct CoreGuestPackageProbe {
                 + "graphics=coreimage,quartzcore,tgmath "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-33 oslog=standard-error,signposts "
+                + "first-party=portable-34 "
+                + "foundationmodels=generated-content,fail-closed "
+                + "oslog=standard-error,signposts "
                 + "security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "
                 + "commoncrypto=sha256 "

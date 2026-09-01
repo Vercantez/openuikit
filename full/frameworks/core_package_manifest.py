@@ -85,6 +85,7 @@ REQUIRED_COMPILER_PLUGIN_MODULES = {
     "ObservationMacros",
     "FoundationMacros",
     "SwiftDataMacros",
+    "FoundationModelsMacros",
     "OpenUIKitPreviewMacros",
     "OpenSwiftUIMacros",
 }
@@ -141,6 +142,7 @@ FRAMEWORKS = (
     "CoreText",
     "NaturalLanguage",
     "AuthenticationServices",
+    "FoundationModels",
 )
 REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(f"-l{name}" for name in FRAMEWORKS)
 MODULE_DEPENDENCIES = (

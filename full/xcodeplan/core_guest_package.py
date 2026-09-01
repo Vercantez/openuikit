@@ -123,6 +123,7 @@ _REQUIRED_FRAMEWORKS = (
     "CoreText",
     "NaturalLanguage",
     "AuthenticationServices",
+    "FoundationModels",
 )
 _REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
     f"-l{name}" for name in _REQUIRED_FRAMEWORKS
@@ -151,6 +152,7 @@ _REQUIRED_COMPILER_PLUGIN_MODULES = {
     "ObservationMacros",
     "FoundationMacros",
     "SwiftDataMacros",
+    "FoundationModelsMacros",
     "OpenUIKitPreviewMacros",
     "OpenSwiftUIMacros",
 }

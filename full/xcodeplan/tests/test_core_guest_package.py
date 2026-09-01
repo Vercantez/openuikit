@@ -71,6 +71,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "host-tools/swift/host/plugins/libObservationMacros.so",
             "host-tools/swift/host/plugins/libFoundationMacros.so",
             "host-tools/swift/host/plugins/libSwiftDataMacros.so",
+            "host-tools/swift/host/plugins/libFoundationModelsMacros.so",
             "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
             "host-tools/swift/host/plugins/libOpenSwiftUIMacros.so",
             "host-tools/swift/linux/libswiftCore.so",
@@ -129,6 +130,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "CoreText",
                 "NaturalLanguage",
                 "AuthenticationServices",
+                "FoundationModels",
                 "DeveloperToolsSupport",
             )
         )
@@ -186,6 +188,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "CoreText",
                 "NaturalLanguage",
                 "AuthenticationServices",
+                "FoundationModels",
             )
         )
         for relative in required_files:
@@ -233,6 +236,11 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "SwiftDataMacros",
                 "libSwiftDataMacros.so",
                 ["PersistentModelMacro"],
+            ),
+            (
+                "FoundationModelsMacros",
+                "libFoundationModelsMacros.so",
+                ["GenerableMacro", "GuideMacro"],
             ),
             (
                 "OpenUIKitPreviewMacros",
@@ -375,6 +383,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lCoreText",
                 "-lNaturalLanguage",
                 "-lAuthenticationServices",
+                "-lFoundationModels",
             ],
             "format_version": 1,
             "compiler_plugins": compiler_plugins,
@@ -423,6 +432,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "host-tools/swift/host/plugins/libFoundationMacros.so",
                 "-load-plugin-library",
                 "host-tools/swift/host/plugins/libSwiftDataMacros.so",
+                "-load-plugin-library",
+                "host-tools/swift/host/plugins/libFoundationModelsMacros.so",
                 "-load-plugin-library",
                 "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
                 "-load-plugin-library",
@@ -596,6 +607,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "NaturalLanguage",
             "AuthenticationServices",
             "_AuthenticationServices_SwiftUI",
+            "FoundationModels",
         ):
             for relative in (
                 f"modules/{framework}.swiftmodule",
