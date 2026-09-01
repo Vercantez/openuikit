@@ -27,6 +27,7 @@ MODULES = (
     "UIKit",
     "OpenCombine",
     "Combine",
+    "Symbols",
     "SwiftUI",
 )
 PRIVATE_DYLIBS = ("_FoundationICU",)
@@ -188,6 +189,21 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             (self.root / f"runtime-root/darwin/usr/lib/lib{module}.dylib").write_bytes(
                 binary
             )
+
+        observation_binary = macho(
+            filetype=6,
+            install_name="/usr/lib/swift/libswiftObservation.dylib",
+        )
+        (
+            self.root
+            / "runtime-root/darwin/usr/lib/swift/libswiftObservation.dylib"
+        ).write_bytes(observation_binary)
+        observation_directory = self.root / "sdk/usr/lib/swift/Observation.swiftmodule"
+        observation_directory.mkdir(parents=True)
+        for suffix in SUFFIXES:
+            payload = f"Observation:{suffix}\n".encode("utf-8")
+            (self.root / f"package/Observation.{suffix}").write_bytes(payload)
+            (observation_directory / f"{VARIANT}.{suffix}").write_bytes(payload)
 
         for relative in (
             "runtime-root/darwin/usr/lib/libSystem.B.dylib",
@@ -364,7 +380,7 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         )
         (self.root / "PLATFORM_COMPLETE").write_text(
             "TRUE_IOS_PLATFORM_COMPLETE "
-            "target=arm64-apple-ios18.0-simulator dylibs=12 swiftui_sources=11 "
+            "target=arm64-apple-ios18.0-simulator dylibs=14 swiftui_sources=11 "
             f"source={self.source_subject} artifacts={sha256(artifact_ledger)} "
             f"symlinks={sha256(symlink_ledger)}\n",
             encoding="ascii",

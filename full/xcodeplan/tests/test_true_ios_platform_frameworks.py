@@ -32,12 +32,15 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
             "UIKit",
             "OpenCombine",
             "Combine",
+            "Symbols",
             "SwiftUI",
         ):
             self.assertIn(f"lib{module}.dylib", self.builder)
             if module != "FoundationInternationalization":
                 self.assertIn(f"/usr/lib/lib{module}.dylib", self.builder)
         self.assertIn("PRIVATE_DYLIBS=(_FoundationICU)", self.builder)
+        self.assertIn("RUNTIME_SWIFT_MODULES=(Observation)", self.builder)
+        self.assertIn("/usr/lib/swift/libswiftObservation.dylib", self.builder)
         self.assertIn("DYLIB_INSTALL_PREFIX=/usr/lib", self.builder)
 
         self.assertIn('TARGET=arm64-apple-ios18.0-simulator', self.builder)
@@ -74,7 +77,10 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn('FRAMEWORKS=$SDK_OUT/System/Library/Frameworks', self.builder)
         self.assertIn('stage_framework "$module"', self.builder)
         self.assertIn('-Rmodule-loading', self.builder)
-        self.assertIn('for module in SwiftUI UIKit OpenUIKit Combine OpenCombine', self.builder)
+        self.assertIn(
+            'for module in SwiftUI UIKit Foundation Dispatch Symbols OpenUIKit Combine OpenCombine',
+            self.builder,
+        )
         self.assertIn(
             'loaded module \'$module\'; source: \'$expected_module_path\'',
             self.builder,

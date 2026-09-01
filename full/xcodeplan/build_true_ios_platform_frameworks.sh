@@ -125,6 +125,7 @@ actual_full_subject=$(tr -d '[:space:]' < "$FULL/uihelpers-subject.sha256")
 
 uikit_status=$(git -C "$UIKIT" status --porcelain=v1 --untracked-files=all -- \
     Sources/SwiftUI Sources/Combine Sources/UIKitShim \
+    Sources/Symbols \
     Sources/DeveloperToolsSupport Sources/OpenUIKitPreviewMacros \
     Sources/OpenSwiftUIMacros)
 [ -z "$uikit_status" ] \
@@ -183,6 +184,7 @@ source_subject() {
         printf 'uikit-commit\t%s\n' "$(git -C "$UIKIT" rev-parse HEAD^{commit})"
         printf 'uikit-tree\t%s\n' "$(git -C "$UIKIT" rev-parse HEAD^{tree})"
         find "$UIKIT/Sources/SwiftUI" "$UIKIT/Sources/Combine" \
+            "$UIKIT/Sources/Symbols" \
             "$UIKIT/Sources/UIKitShim" "$UIKIT/Sources/DeveloperToolsSupport" \
             "$UIKIT/Sources/OpenUIKitPreviewMacros" \
             "$UIKIT/Sources/OpenSwiftUIMacros" -type f \
@@ -216,9 +218,15 @@ source_subject() {
             full/relativetime/OpenRelativeTimeBridge.c \
             full/relativetime/OpenRelativeTimeHost.c \
             full/dispatch/Dispatch.swift full/dispatch/OpenDispatchBridge.c \
-            full/dispatch/OpenDispatchHost.c; do
+            full/dispatch/OpenDispatchHost.c \
+            full/observation/observation_guest_sources.txt \
+            full/observation/ObservationRuntimeBridge.c; do
             printf '%s\t%s\n' "$support_source" "$(sha "$W/$support_source")"
         done
+        while IFS= read -r relative; do
+            [ -n "$relative" ] || continue
+            printf '%s\t%s\n' "$relative" "$(sha "$W/$relative")"
+        done < "$W/full/observation/observation_guest_sources.txt"
         printf 'full-subject\t%s\n' "$actual_full_subject"
         printf 'opencombine-audit\t%s\n' "$(sha "$AUDIT/opencombine-sources.json")"
         printf 'true-ios-sdk-complete\t%s\n' \
@@ -360,6 +368,56 @@ echo '== split true-iOS dynamic framework graph'
     "$FULL/hostclock.o" "$FULL/swiftcorepatch.o" \
     "$MRROOT_INPUT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
+
+echo '== first-party Symbols and official Observation runtime'
+mapfile -d '' -t symbols_sources < <(
+    find "$UIKIT/Sources/Symbols" -maxdepth 1 -type f -name '*.swift' \
+        -print0 | LC_ALL=C sort -z
+)
+[ "${#symbols_sources[@]}" -eq 1 ] \
+    || die "Symbols source denominator is ${#symbols_sources[@]}, expected 1"
+"${SWIFTC[@]}" -parse-as-library -module-name Symbols \
+    -module-link-name Symbols -enable-library-evolution \
+    -emit-module -emit-module-path "$PACKAGE/Symbols.swiftmodule" \
+    -emit-module-interface-path "$PACKAGE/Symbols.swiftinterface" \
+    -emit-object -o "$BUILD/Symbols.o" "${symbols_sources[@]}"
+"${LD[@]}" -dylib -dead_strip -install_name /usr/lib/libSymbols.dylib \
+    -current_version 1.0 -compatibility_version 1.0 \
+    "${COMMON_RUNTIME[@]}" -o "$PRODUCTS/libSymbols.dylib" \
+    "$BUILD/Symbols.o" "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
+
+mapfile -t observation_relative_sources \
+    < "$W/full/observation/observation_guest_sources.txt"
+[ "${#observation_relative_sources[@]}" -eq 6 ] \
+    || die "Observation source denominator is ${#observation_relative_sources[@]}, expected 6"
+observation_sources=()
+for relative in "${observation_relative_sources[@]}"; do
+    [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+        || die "Observation source is missing or a symlink: $relative"
+    observation_sources+=("$W/$relative")
+done
+"${SWIFTC[@]}" -parse-as-library -suppress-warnings \
+    -module-name Observation -module-link-name swiftObservation \
+    -enable-library-evolution -enable-experimental-feature Macros \
+    -enable-experimental-feature ExtensionMacros \
+    -emit-module -emit-module-path "$PACKAGE/Observation.swiftmodule" \
+    -emit-module-interface-path "$PACKAGE/Observation.swiftinterface" \
+    -emit-object -o "$BUILD/Observation.o" "${observation_sources[@]}"
+clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -c "$W/full/observation/ObservationRuntimeBridge.c" \
+    -o "$BUILD/observation-runtime-bridge.o"
+OBSERVATION_DYLIB=$RUNTIME_ROOT/darwin/usr/lib/swift/libswiftObservation.dylib
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name /usr/lib/swift/libswiftObservation.dylib \
+    -o "$OBSERVATION_DYLIB" \
+    "$BUILD/Observation.o" "$BUILD/observation-runtime-bridge.o" \
+    "$FULL/swiftcorepatch.o" -L"$MRROOT_INPUT/darwin/usr/lib" \
+    -L/usr/lib/swift -lswiftCore -lswiftObjectiveC -lswift_Concurrency \
+    "$MRROOT_INPUT/darwin/usr/lib/libswiftcompat.dylib" \
+    -L/usr/lib -lSystem -lobjc \
+    "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
+
 echo '== fixed-ABI Foundation service bridges'
 URL_TRANSPORT_DARWIN=$RUNTIME_ROOT/darwin/usr/lib/libOpenURLTransport.dylib
 URL_TRANSPORT_HOST=$RUNTIME_ROOT/host/libOpenURLTransportHost.so
@@ -584,16 +642,20 @@ mapfile -d '' -t swiftui_sources < <(
     -current_version 1.0 -compatibility_version 1.0 \
     -L"$PRODUCTS" -lUIKit -lFoundation -lOpenUIKit -lOpenCoreGraphics \
     -lFoundationEssentials -lDeveloperToolsSupport -lCombine -lOpenCombine \
+    -lSymbols \
     "${COMMON_RUNTIME[@]}" -lswiftObjectiveC -lswift_Concurrency \
     -o "$PRODUCTS/libSwiftUI.dylib" "$BUILD/SwiftUI.o" \
+    "$OBSERVATION_DYLIB" \
     "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
 
 cp -a "$INCLUDE/." "$PUBLISHED_INCLUDE/"
 PUBLIC_MODULES=(
     FoundationEssentials FoundationInternationalization Foundation Dispatch
-    OpenCoreGraphics OpenUIKit DeveloperToolsSupport UIKit OpenCombine Combine SwiftUI
+    OpenCoreGraphics OpenUIKit DeveloperToolsSupport UIKit OpenCombine Combine
+    Symbols SwiftUI
 )
 PRIVATE_DYLIBS=(_FoundationICU)
+RUNTIME_SWIFT_MODULES=(Observation)
 INTERNAL_MODULES=(InternalCollectionsUtilities OrderedCollections _RopeModule os)
 
 echo '== framework SDK layout'
@@ -613,6 +675,15 @@ for module in "${PUBLIC_MODULES[@]}"; do stage_framework "$module"; done
 # Private transitive Swift modules live in the SDK Swift module directory; the
 # public first-party identities above remain framework modules.
 for module in "${INTERNAL_MODULES[@]}"; do
+    module_directory="$SDK_OUT/usr/lib/swift/$module.swiftmodule"
+    mkdir -p "$module_directory"
+    for suffix in swiftmodule swiftdoc swiftsourceinfo abi.json; do
+        cp "$PACKAGE/$module.$suffix" \
+            "$module_directory/$TARGET_VARIANT.$suffix"
+        cp "$PACKAGE/$module.$suffix" "$INTERNAL_MODULE_PATH/"
+    done
+done
+for module in "${RUNTIME_SWIFT_MODULES[@]}"; do
     module_directory="$SDK_OUT/usr/lib/swift/$module.swiftmodule"
     mkdir -p "$module_directory"
     for suffix in swiftmodule swiftdoc swiftsourceinfo abi.json; do
@@ -673,7 +744,7 @@ if ! swiftc -target "$TARGET" -sdk "$SDK_OUT" -I "$APPLE_OVERLAYS_OUT" \
     cat "$AUDIT/framework-module-loading.log" >&2
     die 'framework-only consumer compile failed'
 fi
-for module in SwiftUI UIKit OpenUIKit Combine OpenCombine; do
+for module in SwiftUI UIKit Foundation Dispatch Symbols OpenUIKit Combine OpenCombine; do
     expected_module_path="$FRAMEWORKS/$module.framework/Modules/$module.swiftmodule/$TARGET_VARIANT.swiftmodule"
     grep -Fq "loaded module '$module'; source: '$expected_module_path'" \
         "$AUDIT/framework-module-loading.log" \
@@ -683,8 +754,9 @@ done
     -rpath @loader_path -F"$FRAMEWORKS" -framework SwiftUI -framework UIKit \
     -L"$PRODUCTS" -lFoundation -lFoundationInternationalization -lDispatch \
     -lOpenUIKit -lOpenCoreGraphics -lFoundationEssentials \
-    -lDeveloperToolsSupport -lCombine -lOpenCombine -l_FoundationICU \
+    -lDeveloperToolsSupport -lCombine -lOpenCombine -lSymbols -l_FoundationICU \
     "${COMMON_RUNTIME[@]}" -lswiftObjectiveC -lswift_Concurrency -lobjc \
+    "$OBSERVATION_DYLIB" \
     -o "$stage/true-ios-swiftui-dylib-probe" \
     "$BUILD/true-ios-swiftui-dylib-probe.o" \
     "$MRROOT_INPUT/darwin/usr/lib/libquartz.dylib" \
@@ -717,6 +789,20 @@ for module in "${PRIVATE_DYLIBS[@]}"; do
     grep -Fq 'sdk 26.1' <<< "$headers" || die "lib$module SDK marker drifted"
     grep -Fq 'minos 18.0' <<< "$headers" || die "lib$module minOS marker drifted"
 done
+file "$OBSERVATION_DYLIB" \
+    | grep -Fq 'Mach-O 64-bit arm64 dynamically linked shared library' \
+    || die 'libswiftObservation is not an ARM64 Mach-O dylib'
+[ "$(llvm-otool-18 -D "$OBSERVATION_DYLIB" | tail -n 1)" = \
+    /usr/lib/swift/libswiftObservation.dylib ] \
+    || die 'libswiftObservation install name drifted'
+observation_headers=$(llvm-objdump-18 --macho --private-headers \
+    "$OBSERVATION_DYLIB")
+grep -Fq 'platform iossimulator' <<< "$observation_headers" \
+    || die 'libswiftObservation does not advertise iOS Simulator'
+grep -Fq 'sdk 26.1' <<< "$observation_headers" \
+    || die 'libswiftObservation SDK marker drifted'
+grep -Fq 'minos 18.0' <<< "$observation_headers" \
+    || die 'libswiftObservation minOS marker drifted'
 probe_headers=$(llvm-objdump-18 --macho --private-headers \
     "$stage/true-ios-swiftui-dylib-probe")
 grep -Fq 'platform iossimulator' <<< "$probe_headers" \
@@ -787,7 +873,7 @@ rm -rf -- "$BUILD" "$INCLUDE"
 artifact_ledger_sha=$(sha "$AUDIT/artifacts.sha256")
 symlink_ledger_sha=$(sha "$AUDIT/symlinks.tsv")
 printf '%s\n' \
-    "TRUE_IOS_PLATFORM_COMPLETE target=$TARGET dylibs=$((${#PUBLIC_MODULES[@]} + ${#PRIVATE_DYLIBS[@]})) swiftui_sources=${#swiftui_sources[@]} source=$SOURCE_SUBJECT_BEFORE artifacts=$artifact_ledger_sha symlinks=$symlink_ledger_sha" \
+    "TRUE_IOS_PLATFORM_COMPLETE target=$TARGET dylibs=$((${#PUBLIC_MODULES[@]} + ${#PRIVATE_DYLIBS[@]} + ${#RUNTIME_SWIFT_MODULES[@]})) swiftui_sources=${#swiftui_sources[@]} source=$SOURCE_SUBJECT_BEFORE artifacts=$artifact_ledger_sha symlinks=$symlink_ledger_sha" \
     > "$stage/PLATFORM_COMPLETE"
 python3 -B "$W/full/xcodeplan/true_ios_platform_package.py" \
     "$stage" --emit-summary

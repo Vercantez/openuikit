@@ -41,9 +41,11 @@ _MODULES = (
     "UIKit",
     "OpenCombine",
     "Combine",
+    "Symbols",
     "SwiftUI",
 )
 _PRIVATE_DYLIBS = ("_FoundationICU",)
+_RUNTIME_SWIFT_MODULES = ("Observation",)
 _MODULE_SUFFIXES = ("swiftmodule", "swiftdoc", "swiftsourceinfo", "abi.json")
 _OVERLAYS = (
     "Darwin",
@@ -104,6 +106,7 @@ _REQUIRED_RUNTIME_FILES = (
     "runtime-root/darwin/usr/lib/swift/libswiftCore.dylib",
     "runtime-root/darwin/usr/lib/swift/libswiftObjectiveC.dylib",
     "runtime-root/darwin/usr/lib/swift/libswift_Concurrency.dylib",
+    "runtime-root/darwin/usr/lib/swift/libswiftObservation.dylib",
 )
 _REQUIRED_SDK_FILES = (
     "sdk/usr/lib/libSystem.B.tbd",
@@ -272,7 +275,7 @@ def _completion(root: Path) -> dict[str, str]:
             f"extra={sorted(set(values) - expected_keys)}"
         )
     if values["target"] != _TARGET or values["dylibs"] != str(
-        len(_MODULES) + len(_PRIVATE_DYLIBS)
+        len(_MODULES) + len(_PRIVATE_DYLIBS) + len(_RUNTIME_SWIFT_MODULES)
     ):
         raise TrueIOSPlatformError("completion target or dylib denominator drifted")
     try:
@@ -511,13 +514,14 @@ def _link_arguments() -> list[str]:
         "-lFoundation", "-lFoundationInternationalization", "-lDispatch",
         "-lOpenUIKit", "-lOpenCoreGraphics", "-lFoundationEssentials",
         "-lDeveloperToolsSupport", "-lCombine", "-lOpenCombine",
-        "-l_FoundationICU",
+        "-lSymbols", "-l_FoundationICU",
         "-Lsdk/usr/lib/swift",
         "-Lruntime-root/darwin/usr/lib/swift",
         "-lswiftCore", "-lswiftObjectiveC", "-lswift_Concurrency",
         "-lswift_StringProcessing", "-lswiftSynchronization",
         "-lswiftDarwin", "-lswift_errno",
         "runtime-root/darwin/usr/lib/libswiftcompat.dylib",
+        "runtime-root/darwin/usr/lib/swift/libswiftObservation.dylib",
         "-Lruntime-root/darwin/usr/lib",
         "-Lsdk/usr/lib", "-lSystem", "-lobjc",
         "runtime-root/darwin/usr/lib/libquartz.dylib",
@@ -683,6 +687,26 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         )
         _same_hash([product, runtime_library], f"lib{module}")
         _macho(product, filetype=6, install_name=f"/usr/lib/lib{module}.dylib")
+
+    for module in _RUNTIME_SWIFT_MODULES:
+        for suffix in _MODULE_SUFFIXES:
+            raw = _regular(root, f"package/{module}.{suffix}", f"{module}.{suffix}")
+            sdk_module = _regular(
+                root,
+                f"sdk/usr/lib/swift/{module}.swiftmodule/{_VARIANT}.{suffix}",
+                f"SDK runtime module {module}.{suffix}",
+            )
+            _same_hash([raw, sdk_module], f"runtime module {module}.{suffix}")
+    observation = _regular(
+        root,
+        "runtime-root/darwin/usr/lib/swift/libswiftObservation.dylib",
+        "Observation runtime",
+    )
+    _macho(
+        observation,
+        filetype=6,
+        install_name="/usr/lib/swift/libswiftObservation.dylib",
+    )
 
     for relative in _REQUIRED_RUNTIME_FILES:
         _regular(root, relative, "runtime closure file")
