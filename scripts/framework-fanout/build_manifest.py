@@ -35,6 +35,7 @@ SLUG_RE = re.compile(r"^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$")
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 BUILD_ID_RE = re.compile(r"^bld-[A-Za-z0-9][A-Za-z0-9-]*$")
+CAMPAIGN_ID_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{0,127}$")
 CONTROL_RE = re.compile(r"[\x00-\x1f\x7f]")
 
 FRAMEWORK_KEYS = frozenset(
@@ -394,12 +395,18 @@ def build_manifest(
     *,
     repo_root: Path,
     targets_path: Path,
+    campaign_id: str,
     starting_sha: str,
     starting_ref: str,
     repository_url: str,
     active_build_id: str,
     environment_marker: str,
 ) -> dict[str, Any]:
+    campaign_id = require_plain_string(campaign_id, "--campaign-id", maximum=128)
+    refuse(
+        bool(CAMPAIGN_ID_RE.fullmatch(campaign_id)),
+        "--campaign-id must use lowercase letters, digits, dots, underscores, or hyphens",
+    )
     starting_sha = starting_sha.lower()
     refuse(bool(SHA_RE.fullmatch(starting_sha)), "--starting-sha must be a full 40-character Git SHA")
     starting_ref = require_plain_string(starting_ref, "--starting-ref", maximum=255)
@@ -418,7 +425,7 @@ def build_manifest(
     return {
         "schema": SCHEMA,
         "campaign": {
-            "id": CAMPAIGN_ID,
+            "id": campaign_id,
             "startingSha": starting_sha,
             "activeBuildId": active_build_id,
             "environmentMarker": environment_marker,
@@ -590,6 +597,7 @@ def run_self_check() -> None:
         first = build_manifest(
             repo_root=root,
             targets_path=targets,
+            campaign_id="ios26.1-fwseed-self-check",
             starting_sha="a" * 40,
             starting_ref="seed-branch",
             repository_url="https://github.com/example/openuikit",
@@ -599,6 +607,7 @@ def run_self_check() -> None:
         second = build_manifest(
             repo_root=root,
             targets_path=targets,
+            campaign_id="ios26.1-fwseed-self-check",
             starting_sha="a" * 40,
             starting_ref="seed-branch",
             repository_url="https://github.com/example/openuikit",
@@ -606,6 +615,10 @@ def run_self_check() -> None:
             environment_marker="CURSOR_SWIFT_ENVIRONMENT_OK",
         )
         refuse(json_bytes(first) == json_bytes(second), "determinism self-check failed")
+        refuse(
+            first["campaign"]["id"] == "ios26.1-fwseed-self-check",
+            "campaign-id self-check failed",
+        )
         framework = first["frameworks"][0]
         refuse(framework["ownedPaths"] == ["full/tinykit/**"], "owned-path self-check failed")
         refuse(
@@ -638,6 +651,10 @@ def argument_parser() -> argparse.ArgumentParser:
         help="run offline deterministic integration tests and exit",
     )
     parser.add_argument("--targets", help="campaign target TSV")
+    parser.add_argument(
+        "--campaign-id",
+        help=f"unique campaign id (default: {CAMPAIGN_ID})",
+    )
     parser.add_argument("--starting-sha", help="full seed commit SHA")
     parser.add_argument("--starting-ref", help="Cursor repository starting ref")
     parser.add_argument("--repository-url", help="https://github.com/<owner>/<repo>")
@@ -654,6 +671,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.self_check:
             supplied = [
                 args.targets,
+                args.campaign_id,
                 args.starting_sha,
                 args.starting_ref,
                 args.repository_url,
@@ -682,6 +700,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         manifest = build_manifest(
             repo_root=repo_root,
             targets_path=targets_path,
+            campaign_id=args.campaign_id or CAMPAIGN_ID,
             starting_sha=args.starting_sha,
             starting_ref=args.starting_ref,
             repository_url=args.repository_url,

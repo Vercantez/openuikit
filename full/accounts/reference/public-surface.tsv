@@ -1,0 +1,83 @@
+precise	kind	title	path	declaration
+c:@ACAccountStoreDidChangeNotification	swift.type.property	ACAccountStoreDidChange	NSNotification.Name.ACAccountStoreDidChange	static let ACAccountStoreDidChange: NSNotification.Name
+c:@ACAccountTypeIdentifierFacebook	swift.var	ACAccountTypeIdentifierFacebook	ACAccountTypeIdentifierFacebook	let ACAccountTypeIdentifierFacebook: String
+c:@ACAccountTypeIdentifierSinaWeibo	swift.var	ACAccountTypeIdentifierSinaWeibo	ACAccountTypeIdentifierSinaWeibo	let ACAccountTypeIdentifierSinaWeibo: String
+c:@ACAccountTypeIdentifierTencentWeibo	swift.var	ACAccountTypeIdentifierTencentWeibo	ACAccountTypeIdentifierTencentWeibo	let ACAccountTypeIdentifierTencentWeibo: String
+c:@ACAccountTypeIdentifierTwitter	swift.var	ACAccountTypeIdentifierTwitter	ACAccountTypeIdentifierTwitter	let ACAccountTypeIdentifierTwitter: String
+c:@ACErrorDomain	swift.var	ACErrorDomain	ACErrorDomain	let ACErrorDomain: String
+c:@ACFacebookAppIdKey	swift.var	ACFacebookAppIdKey	ACFacebookAppIdKey	let ACFacebookAppIdKey: String
+c:@ACFacebookAudienceEveryone	swift.var	ACFacebookAudienceEveryone	ACFacebookAudienceEveryone	let ACFacebookAudienceEveryone: String
+c:@ACFacebookAudienceFriends	swift.var	ACFacebookAudienceFriends	ACFacebookAudienceFriends	let ACFacebookAudienceFriends: String
+c:@ACFacebookAudienceKey	swift.var	ACFacebookAudienceKey	ACFacebookAudienceKey	let ACFacebookAudienceKey: String
+c:@ACFacebookAudienceOnlyMe	swift.var	ACFacebookAudienceOnlyMe	ACFacebookAudienceOnlyMe	let ACFacebookAudienceOnlyMe: String
+c:@ACFacebookPermissionsKey	swift.var	ACFacebookPermissionsKey	ACFacebookPermissionsKey	let ACFacebookPermissionsKey: String
+c:@ACTencentWeiboAppIdKey	swift.var	ACTencentWeiboAppIdKey	ACTencentWeiboAppIdKey	let ACTencentWeiboAppIdKey: String
+c:@E@ACAccountCredentialRenewResult	swift.enum	ACAccountCredentialRenewResult	ACAccountCredentialRenewResult	enum ACAccountCredentialRenewResult
+c:@E@ACAccountCredentialRenewResult@ACAccountCredentialRenewResultFailed	swift.enum.case	ACAccountCredentialRenewResult.failed	ACAccountCredentialRenewResult.failed	case failed
+c:@E@ACAccountCredentialRenewResult@ACAccountCredentialRenewResultRejected	swift.enum.case	ACAccountCredentialRenewResult.rejected	ACAccountCredentialRenewResult.rejected	case rejected
+c:@E@ACAccountCredentialRenewResult@ACAccountCredentialRenewResultRenewed	swift.enum.case	ACAccountCredentialRenewResult.renewed	ACAccountCredentialRenewResult.renewed	case renewed
+c:@E@ACErrorCode	swift.struct	ACErrorCode	ACErrorCode	struct ACErrorCode
+c:@E@ACErrorCode@ACErrorAccessDeniedByProtectionPolicy	swift.var	ACErrorAccessDeniedByProtectionPolicy	ACErrorAccessDeniedByProtectionPolicy	var ACErrorAccessDeniedByProtectionPolicy: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorAccessInfoInvalid	swift.var	ACErrorAccessInfoInvalid	ACErrorAccessInfoInvalid	var ACErrorAccessInfoInvalid: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorAccountAlreadyExists	swift.var	ACErrorAccountAlreadyExists	ACErrorAccountAlreadyExists	var ACErrorAccountAlreadyExists: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorAccountAuthenticationFailed	swift.var	ACErrorAccountAuthenticationFailed	ACErrorAccountAuthenticationFailed	var ACErrorAccountAuthenticationFailed: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorAccountMissingRequiredProperty	swift.var	ACErrorAccountMissingRequiredProperty	ACErrorAccountMissingRequiredProperty	var ACErrorAccountMissingRequiredProperty: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorAccountNotFound	swift.var	ACErrorAccountNotFound	ACErrorAccountNotFound	var ACErrorAccountNotFound: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorAccountTypeInvalid	swift.var	ACErrorAccountTypeInvalid	ACErrorAccountTypeInvalid	var ACErrorAccountTypeInvalid: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorClientPermissionDenied	swift.var	ACErrorClientPermissionDenied	ACErrorClientPermissionDenied	var ACErrorClientPermissionDenied: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorCoreDataSaveFailed	swift.var	ACErrorCoreDataSaveFailed	ACErrorCoreDataSaveFailed	var ACErrorCoreDataSaveFailed: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorCredentialItemNotExpired	swift.var	ACErrorCredentialItemNotExpired	ACErrorCredentialItemNotExpired	var ACErrorCredentialItemNotExpired: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorCredentialItemNotFound	swift.var	ACErrorCredentialItemNotFound	ACErrorCredentialItemNotFound	var ACErrorCredentialItemNotFound: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorCredentialNotFound	swift.var	ACErrorCredentialNotFound	ACErrorCredentialNotFound	var ACErrorCredentialNotFound: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorDeniedByPlugin	swift.var	ACErrorDeniedByPlugin	ACErrorDeniedByPlugin	var ACErrorDeniedByPlugin: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorFailedSerializingAccountInfo	swift.var	ACErrorFailedSerializingAccountInfo	ACErrorFailedSerializingAccountInfo	var ACErrorFailedSerializingAccountInfo: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorFetchCredentialFailed	swift.var	ACErrorFetchCredentialFailed	ACErrorFetchCredentialFailed	var ACErrorFetchCredentialFailed: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorInvalidClientBundleID	swift.var	ACErrorInvalidClientBundleID	ACErrorInvalidClientBundleID	var ACErrorInvalidClientBundleID: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorInvalidCommand	swift.var	ACErrorInvalidCommand	ACErrorInvalidCommand	var ACErrorInvalidCommand: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorMissingTransportMessageID	swift.var	ACErrorMissingTransportMessageID	ACErrorMissingTransportMessageID	var ACErrorMissingTransportMessageID: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorPermissionDenied	swift.var	ACErrorPermissionDenied	ACErrorPermissionDenied	var ACErrorPermissionDenied: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorRemoveCredentialFailed	swift.var	ACErrorRemoveCredentialFailed	ACErrorRemoveCredentialFailed	var ACErrorRemoveCredentialFailed: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorStoreCredentialFailed	swift.var	ACErrorStoreCredentialFailed	ACErrorStoreCredentialFailed	var ACErrorStoreCredentialFailed: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorUnknown	swift.var	ACErrorUnknown	ACErrorUnknown	var ACErrorUnknown: ACErrorCode { get }
+c:@E@ACErrorCode@ACErrorUpdatingNonexistentAccount	swift.var	ACErrorUpdatingNonexistentAccount	ACErrorUpdatingNonexistentAccount	var ACErrorUpdatingNonexistentAccount: ACErrorCode { get }
+c:@T@ACAccountStoreCredentialRenewalHandler	swift.typealias	ACAccountStoreCredentialRenewalHandler	ACAccountStoreCredentialRenewalHandler	typealias ACAccountStoreCredentialRenewalHandler = (ACAccountCredentialRenewResult, (any Error)?) -> Void
+c:@T@ACAccountStoreRemoveCompletionHandler	swift.typealias	ACAccountStoreRemoveCompletionHandler	ACAccountStoreRemoveCompletionHandler	typealias ACAccountStoreRemoveCompletionHandler = (Bool, (any Error)?) -> Void
+c:@T@ACAccountStoreRequestAccessCompletionHandler	swift.typealias	ACAccountStoreRequestAccessCompletionHandler	ACAccountStoreRequestAccessCompletionHandler	typealias ACAccountStoreRequestAccessCompletionHandler = (Bool, (any Error)?) -> Void
+c:@T@ACAccountStoreSaveCompletionHandler	swift.typealias	ACAccountStoreSaveCompletionHandler	ACAccountStoreSaveCompletionHandler	typealias ACAccountStoreSaveCompletionHandler = (Bool, (any Error)?) -> Void
+c:objc(cs)ACAccount	swift.class	ACAccount	ACAccount	class ACAccount
+c:objc(cs)ACAccount(im)initWithAccountType:	swift.init	init(accountType:)	ACAccount.init(accountType:)	init!(accountType type: ACAccountType!)
+c:objc(cs)ACAccount(py)accountDescription	swift.property	accountDescription	ACAccount.accountDescription	var accountDescription: String! { get set }
+c:objc(cs)ACAccount(py)accountType	swift.property	accountType	ACAccount.accountType	var accountType: ACAccountType! { get set }
+c:objc(cs)ACAccount(py)credential	swift.property	credential	ACAccount.credential	var credential: ACAccountCredential! { get set }
+c:objc(cs)ACAccount(py)identifier	swift.property	identifier	ACAccount.identifier	weak var identifier: NSString! { get }
+c:objc(cs)ACAccount(py)userFullName	swift.property	userFullName	ACAccount.userFullName	var userFullName: String! { get }
+c:objc(cs)ACAccount(py)username	swift.property	username	ACAccount.username	var username: String! { get set }
+c:objc(cs)ACAccountCredential	swift.class	ACAccountCredential	ACAccountCredential	class ACAccountCredential
+c:objc(cs)ACAccountCredential(im)initWithOAuth2Token:refreshToken:expiryDate:	swift.init	init(oAuth2Token:refreshToken:expiryDate:)	ACAccountCredential.init(oAuth2Token:refreshToken:expiryDate:)	init!(oAuth2Token token: String!, refreshToken: String!, expiryDate: Date!)
+c:objc(cs)ACAccountCredential(im)initWithOAuth2Token:refreshToken:expiryDate:::SYNTHESIZED::c:objc(cs)ACAccountCredential	swift.init	init(OAuth2Token:refreshToken:expiryDate:)	ACAccountCredential.init(OAuth2Token:refreshToken:expiryDate:)	init!(OAuth2Token token: String!, refreshToken: String!, expiryDate: Date!)
+c:objc(cs)ACAccountCredential(im)initWithOAuthToken:tokenSecret:	swift.init	init(oAuthToken:tokenSecret:)	ACAccountCredential.init(oAuthToken:tokenSecret:)	init!(oAuthToken token: String!, tokenSecret secret: String!)
+c:objc(cs)ACAccountCredential(im)initWithOAuthToken:tokenSecret:::SYNTHESIZED::c:objc(cs)ACAccountCredential	swift.init	init(OAuthToken:tokenSecret:)	ACAccountCredential.init(OAuthToken:tokenSecret:)	init!(OAuthToken token: String!, tokenSecret secret: String!)
+c:objc(cs)ACAccountCredential(py)oauthToken	swift.property	oauthToken	ACAccountCredential.oauthToken	var oauthToken: String! { get set }
+c:objc(cs)ACAccountStore	swift.class	ACAccountStore	ACAccountStore	class ACAccountStore
+c:objc(cs)ACAccountStore(im)accountTypeWithAccountTypeIdentifier:	swift.method	accountType(withAccountTypeIdentifier:)	ACAccountStore.accountType(withAccountTypeIdentifier:)	func accountType(withAccountTypeIdentifier typeIdentifier: String!) -> ACAccountType!
+c:objc(cs)ACAccountStore(im)accountWithIdentifier:	swift.method	account(withIdentifier:)	ACAccountStore.account(withIdentifier:)	func account(withIdentifier identifier: String!) -> ACAccount!
+c:objc(cs)ACAccountStore(im)accountsWithAccountType:	swift.method	accounts(with:)	ACAccountStore.accounts(with:)	func accounts(with accountType: ACAccountType!) -> [Any]!
+c:objc(cs)ACAccountStore(im)removeAccount:withCompletionHandler:	swift.method	removeAccount(_:)	ACAccountStore.removeAccount(_:)	func removeAccount(_ account: ACAccount!) async throws -> Bool
+c:objc(cs)ACAccountStore(im)renewCredentialsForAccount:completion:	swift.method	renewCredentials(for:)	ACAccountStore.renewCredentials(for:)	func renewCredentials(for account: ACAccount!) async throws -> ACAccountCredentialRenewResult
+c:objc(cs)ACAccountStore(im)requestAccessToAccountsWithType:options:completion:	swift.method	requestAccessToAccounts(with:options:)	ACAccountStore.requestAccessToAccounts(with:options:)	func requestAccessToAccounts(with accountType: ACAccountType!, options: [AnyHashable : Any]! = [:]) async throws -> Bool
+c:objc(cs)ACAccountStore(im)saveAccount:withCompletionHandler:	swift.method	saveAccount(_:)	ACAccountStore.saveAccount(_:)	func saveAccount(_ account: ACAccount!) async throws -> Bool
+c:objc(cs)ACAccountStore(py)accounts	swift.property	accounts	ACAccountStore.accounts	weak var accounts: NSArray! { get }
+c:objc(cs)ACAccountType	swift.class	ACAccountType	ACAccountType	class ACAccountType
+c:objc(cs)ACAccountType(py)accessGranted	swift.property	accessGranted	ACAccountType.accessGranted	var accessGranted: Bool { get }
+c:objc(cs)ACAccountType(py)accountTypeDescription	swift.property	accountTypeDescription	ACAccountType.accountTypeDescription	var accountTypeDescription: String! { get }
+c:objc(cs)ACAccountType(py)identifier	swift.property	identifier	ACAccountType.identifier	var identifier: String! { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	swift.func.op	!=(_:_:)	ACAccountCredentialRenewResult.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ACErrorCode	swift.func.op	!=(_:_:)	ACErrorCode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	swift.property	hashValue	ACAccountCredentialRenewResult.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ACErrorCode	swift.property	hashValue	ACErrorCode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	swift.method	hash(into:)	ACAccountCredentialRenewResult.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ACErrorCode	swift.method	hash(into:)	ACErrorCode.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11ACErrorCodeV8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	ACErrorCode.init(rawValue:)	init(rawValue: UInt32)
+s:So11ACErrorCodeV8rawValues6UInt32Vvp	swift.property	rawValue	ACErrorCode.rawValue	var rawValue: UInt32
+s:So11ACErrorCodeVyABs6UInt32Vcfc	swift.init	init(_:)	ACErrorCode.init(_:)	init(_ rawValue: UInt32)
+s:So30ACAccountCredentialRenewResultV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ACAccountCredentialRenewResult.init(rawValue:)	init?(rawValue: Int)

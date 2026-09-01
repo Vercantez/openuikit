@@ -1,0 +1,42 @@
+{
+  "module": "MetricKit",
+  "moduleRecord": {
+    "app_coverage_count": 1,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 1,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 128,
+    "iphoneos_runtime_focus_launch_build_rank": 123,
+    "module": "MetricKit",
+    "occurrence_count": 1,
+    "per_app": {
+      "firefox-ios": {
+        "evidence_sha256": "f5a734a121aa927b6d8bf9f44d42a2eb90c3668cb0ca5b627f170719d4a9ae21",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "firefox-ios/Client/Telemetry/MetricKit/MetricKitWrapper.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 128,
+    "byFocusLaunchBuildRelevance": 123
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

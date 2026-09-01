@@ -1,0 +1,492 @@
+precise	kind	title	path	declaration
+c:@E@GKMeshGraphTriangulationMode	swift.struct	GKMeshGraphTriangulationMode	GKMeshGraphTriangulationMode	struct GKMeshGraphTriangulationMode
+c:@E@GKMeshGraphTriangulationMode@GKMeshGraphTriangulationModeCenters	swift.type.property	centers	GKMeshGraphTriangulationMode.centers	static var centers: GKMeshGraphTriangulationMode { get }
+c:@E@GKMeshGraphTriangulationMode@GKMeshGraphTriangulationModeEdgeMidpoints	swift.type.property	edgeMidpoints	GKMeshGraphTriangulationMode.edgeMidpoints	static var edgeMidpoints: GKMeshGraphTriangulationMode { get }
+c:@E@GKMeshGraphTriangulationMode@GKMeshGraphTriangulationModeVertices	swift.type.property	vertices	GKMeshGraphTriangulationMode.vertices	static var vertices: GKMeshGraphTriangulationMode { get }
+c:@E@GKRTreeSplitStrategy	swift.enum	GKRTreeSplitStrategy	GKRTreeSplitStrategy	enum GKRTreeSplitStrategy
+c:@E@GKRTreeSplitStrategy@GKRTreeSplitStrategyHalve	swift.enum.case	GKRTreeSplitStrategy.halve	GKRTreeSplitStrategy.halve	case halve
+c:@E@GKRTreeSplitStrategy@GKRTreeSplitStrategyLinear	swift.enum.case	GKRTreeSplitStrategy.linear	GKRTreeSplitStrategy.linear	case linear
+c:@E@GKRTreeSplitStrategy@GKRTreeSplitStrategyQuadratic	swift.enum.case	GKRTreeSplitStrategy.quadratic	GKRTreeSplitStrategy.quadratic	case quadratic
+c:@E@GKRTreeSplitStrategy@GKRTreeSplitStrategyReduceOverlap	swift.enum.case	GKRTreeSplitStrategy.reduceOverlap	GKRTreeSplitStrategy.reduceOverlap	case reduceOverlap
+c:@GKGameModelMaxScore	swift.var	GKGameModelMaxScore	GKGameModelMaxScore	let GKGameModelMaxScore: Int
+c:@GKGameModelMinScore	swift.var	GKGameModelMinScore	GKGameModelMinScore	let GKGameModelMinScore: Int
+c:@S@GKBox	swift.struct	GKBox	GKBox	struct GKBox
+c:@S@GKBox@FI@boxMax	swift.property	boxMax	GKBox.boxMax	var boxMax: vector_float3
+c:@S@GKBox@FI@boxMin	swift.property	boxMin	GKBox.boxMin	var boxMin: vector_float3
+c:@S@GKQuad	swift.struct	GKQuad	GKQuad	struct GKQuad
+c:@S@GKQuad@FI@quadMax	swift.property	quadMax	GKQuad.quadMax	var quadMax: vector_float2
+c:@S@GKQuad@FI@quadMin	swift.property	quadMin	GKQuad.quadMin	var quadMin: vector_float2
+c:@S@GKTriangle	swift.struct	GKTriangle	GKTriangle	struct GKTriangle
+c:@S@GKTriangle@FI@points	swift.property	points	GKTriangle.points	var points: (vector_float3, vector_float3, vector_float3)
+c:@macro@GK_VERSION	swift.var	GK_VERSION	GK_VERSION	var GK_VERSION: Int32 { get }
+c:objc(cs)GKARC4RandomSource	swift.class	GKARC4RandomSource	GKARC4RandomSource	class GKARC4RandomSource
+c:objc(cs)GKARC4RandomSource(im)dropValuesWithCount:	swift.method	dropValues(_:)	GKARC4RandomSource.dropValues(_:)	func dropValues(_ count: Int)
+c:objc(cs)GKARC4RandomSource(im)init	swift.init	init()	GKARC4RandomSource.init()	convenience init()
+c:objc(cs)GKARC4RandomSource(im)initWithSeed:	swift.init	init(seed:)	GKARC4RandomSource.init(seed:)	init(seed: Data)
+c:objc(cs)GKARC4RandomSource(py)seed	swift.property	seed	GKARC4RandomSource.seed	var seed: Data { get set }
+c:objc(cs)GKAgent	swift.class	GKAgent	GKAgent	class GKAgent
+c:objc(cs)GKAgent(py)behavior	swift.property	behavior	GKAgent.behavior	var behavior: GKBehavior? { get set }
+c:objc(cs)GKAgent(py)delegate	swift.property	delegate	GKAgent.delegate	weak var delegate: (any GKAgentDelegate)? { get set }
+c:objc(cs)GKAgent(py)mass	swift.property	mass	GKAgent.mass	var mass: Float { get set }
+c:objc(cs)GKAgent(py)maxAcceleration	swift.property	maxAcceleration	GKAgent.maxAcceleration	var maxAcceleration: Float { get set }
+c:objc(cs)GKAgent(py)maxSpeed	swift.property	maxSpeed	GKAgent.maxSpeed	var maxSpeed: Float { get set }
+c:objc(cs)GKAgent(py)radius	swift.property	radius	GKAgent.radius	var radius: Float { get set }
+c:objc(cs)GKAgent(py)speed	swift.property	speed	GKAgent.speed	var speed: Float { get set }
+c:objc(cs)GKAgent2D	swift.class	GKAgent2D	GKAgent2D	class GKAgent2D
+c:objc(cs)GKAgent2D(im)updateWithDeltaTime:	swift.method	update(deltaTime:)	GKAgent2D.update(deltaTime:)	func update(deltaTime seconds: TimeInterval)
+c:objc(cs)GKAgent2D(py)position	swift.property	position	GKAgent2D.position	var position: vector_float2 { get set }
+c:objc(cs)GKAgent2D(py)rotation	swift.property	rotation	GKAgent2D.rotation	var rotation: Float { get set }
+c:objc(cs)GKAgent2D(py)velocity	swift.property	velocity	GKAgent2D.velocity	var velocity: vector_float2 { get }
+c:objc(cs)GKAgent3D	swift.class	GKAgent3D	GKAgent3D	class GKAgent3D
+c:objc(cs)GKAgent3D(im)updateWithDeltaTime:	swift.method	update(deltaTime:)	GKAgent3D.update(deltaTime:)	func update(deltaTime seconds: TimeInterval)
+c:objc(cs)GKAgent3D(py)position	swift.property	position	GKAgent3D.position	var position: vector_float3 { get set }
+c:objc(cs)GKAgent3D(py)rightHanded	swift.property	rightHanded	GKAgent3D.rightHanded	var rightHanded: Bool { get set }
+c:objc(cs)GKAgent3D(py)rotation	swift.property	rotation	GKAgent3D.rotation	var rotation: matrix_float3x3 { get set }
+c:objc(cs)GKAgent3D(py)velocity	swift.property	velocity	GKAgent3D.velocity	var velocity: vector_float3 { get }
+c:objc(cs)GKBehavior	swift.class	GKBehavior	GKBehavior	class GKBehavior
+c:objc(cs)GKBehavior(cm)behaviorWithGoal:weight:	swift.init	init(goal:weight:)	GKBehavior.init(goal:weight:)	convenience init(goal: GKGoal, weight: Float)
+c:objc(cs)GKBehavior(cm)behaviorWithGoals:	swift.init	init(goals:)	GKBehavior.init(goals:)	convenience init(goals: [GKGoal])
+c:objc(cs)GKBehavior(cm)behaviorWithGoals:andWeights:	swift.init	init(goals:andWeights:)	GKBehavior.init(goals:andWeights:)	convenience init(goals: [GKGoal], andWeights weights: [NSNumber])
+c:objc(cs)GKBehavior(cm)behaviorWithWeightedGoals:	swift.init	init(weightedGoals:)	GKBehavior.init(weightedGoals:)	convenience init(weightedGoals: [GKGoal : NSNumber])
+c:objc(cs)GKBehavior(im)objectAtIndexedSubscript:	swift.subscript	subscript(_:)	GKBehavior.subscript(_:)	subscript(idx: Int) -> GKGoal { get }
+c:objc(cs)GKBehavior(im)objectForKeyedSubscript:	swift.subscript	subscript(_:)	GKBehavior.subscript(_:)	subscript(goal: GKGoal) -> NSNumber! { get set }
+c:objc(cs)GKBehavior(im)removeAllGoals	swift.method	removeAllGoals()	GKBehavior.removeAllGoals()	func removeAllGoals()
+c:objc(cs)GKBehavior(im)removeGoal:	swift.method	remove(_:)	GKBehavior.remove(_:)	func remove(_ goal: GKGoal)
+c:objc(cs)GKBehavior(im)setWeight:forGoal:	swift.method	setWeight(_:for:)	GKBehavior.setWeight(_:for:)	func setWeight(_ weight: Float, for goal: GKGoal)
+c:objc(cs)GKBehavior(im)weightForGoal:	swift.method	weight(for:)	GKBehavior.weight(for:)	func weight(for goal: GKGoal) -> Float
+c:objc(cs)GKBehavior(py)goalCount	swift.property	goalCount	GKBehavior.goalCount	var goalCount: Int { get }
+c:objc(cs)GKBillowNoiseSource	swift.class	GKBillowNoiseSource	GKBillowNoiseSource	class GKBillowNoiseSource
+c:objc(cs)GKBillowNoiseSource(im)initWithFrequency:octaveCount:persistence:lacunarity:seed:	swift.init	init(frequency:octaveCount:persistence:lacunarity:seed:)	GKBillowNoiseSource.init(frequency:octaveCount:persistence:lacunarity:seed:)	init(frequency: Double, octaveCount: Int, persistence: Double, lacunarity: Double, seed: Int32)
+c:objc(cs)GKBillowNoiseSource(py)persistence	swift.property	persistence	GKBillowNoiseSource.persistence	var persistence: Double { get set }
+c:objc(cs)GKCheckerboardNoiseSource	swift.class	GKCheckerboardNoiseSource	GKCheckerboardNoiseSource	class GKCheckerboardNoiseSource
+c:objc(cs)GKCheckerboardNoiseSource(cm)checkerboardNoiseWithSquareSize:	swift.type.method	checkerboardNoise(withSquareSize:)	GKCheckerboardNoiseSource.checkerboardNoise(withSquareSize:)	class func checkerboardNoise(withSquareSize squareSize: Double) -> Self
+c:objc(cs)GKCheckerboardNoiseSource(im)initWithSquareSize:	swift.init	init(squareSize:)	GKCheckerboardNoiseSource.init(squareSize:)	init(squareSize: Double)
+c:objc(cs)GKCheckerboardNoiseSource(py)squareSize	swift.property	squareSize	GKCheckerboardNoiseSource.squareSize	var squareSize: Double { get set }
+c:objc(cs)GKCircleObstacle	swift.class	GKCircleObstacle	GKCircleObstacle	class GKCircleObstacle
+c:objc(cs)GKCircleObstacle(im)initWithRadius:	swift.init	init(radius:)	GKCircleObstacle.init(radius:)	init(radius: Float)
+c:objc(cs)GKCircleObstacle(py)position	swift.property	position	GKCircleObstacle.position	var position: vector_float2 { get set }
+c:objc(cs)GKCircleObstacle(py)radius	swift.property	radius	GKCircleObstacle.radius	var radius: Float { get set }
+c:objc(cs)GKCoherentNoiseSource	swift.class	GKCoherentNoiseSource	GKCoherentNoiseSource	class GKCoherentNoiseSource
+c:objc(cs)GKCoherentNoiseSource(py)frequency	swift.property	frequency	GKCoherentNoiseSource.frequency	var frequency: Double { get set }
+c:objc(cs)GKCoherentNoiseSource(py)lacunarity	swift.property	lacunarity	GKCoherentNoiseSource.lacunarity	var lacunarity: Double { get set }
+c:objc(cs)GKCoherentNoiseSource(py)octaveCount	swift.property	octaveCount	GKCoherentNoiseSource.octaveCount	var octaveCount: Int { get set }
+c:objc(cs)GKCoherentNoiseSource(py)seed	swift.property	seed	GKCoherentNoiseSource.seed	var seed: Int32 { get set }
+c:objc(cs)GKComponent	swift.class	GKComponent	GKComponent	class GKComponent
+c:objc(cs)GKComponent(im)didAddToEntity	swift.method	didAddToEntity()	GKComponent.didAddToEntity()	func didAddToEntity()
+c:objc(cs)GKComponent(im)updateWithDeltaTime:	swift.method	update(deltaTime:)	GKComponent.update(deltaTime:)	func update(deltaTime seconds: TimeInterval)
+c:objc(cs)GKComponent(im)willRemoveFromEntity	swift.method	willRemoveFromEntity()	GKComponent.willRemoveFromEntity()	func willRemoveFromEntity()
+c:objc(cs)GKComponent(py)entity	swift.property	entity	GKComponent.entity	weak var entity: GKEntity? { get }
+c:objc(cs)GKComponentSystem	swift.class	GKComponentSystem	GKComponentSystem	class GKComponentSystem<ComponentType> where ComponentType : GKComponent
+c:objc(cs)GKComponentSystem(im)addComponent:	swift.method	addComponent(_:)	GKComponentSystem.addComponent(_:)	func addComponent(_ component: ComponentType)
+c:objc(cs)GKComponentSystem(im)addComponentWithEntity:	swift.method	addComponent(foundIn:)	GKComponentSystem.addComponent(foundIn:)	func addComponent(foundIn entity: GKEntity)
+c:objc(cs)GKComponentSystem(im)classForGenericArgumentAtIndex:	swift.method	classForGenericArgument(at:)	GKComponentSystem.classForGenericArgument(at:)	func classForGenericArgument(at index: Int) -> AnyClass
+c:objc(cs)GKComponentSystem(im)initWithComponentClass:	swift.init	init(componentClass:)	GKComponentSystem.init(componentClass:)	init(componentClass cls: AnyClass)
+c:objc(cs)GKComponentSystem(im)objectAtIndexedSubscript:	swift.subscript	subscript(_:)	GKComponentSystem.subscript(_:)	subscript(idx: Int) -> ComponentType { get }
+c:objc(cs)GKComponentSystem(im)removeComponent:	swift.method	removeComponent(_:)	GKComponentSystem.removeComponent(_:)	func removeComponent(_ component: ComponentType)
+c:objc(cs)GKComponentSystem(im)removeComponentWithEntity:	swift.method	removeComponent(foundIn:)	GKComponentSystem.removeComponent(foundIn:)	func removeComponent(foundIn entity: GKEntity)
+c:objc(cs)GKComponentSystem(im)updateWithDeltaTime:	swift.method	update(deltaTime:)	GKComponentSystem.update(deltaTime:)	func update(deltaTime seconds: TimeInterval)
+c:objc(cs)GKComponentSystem(py)componentClass	swift.property	componentClass	GKComponentSystem.componentClass	var componentClass: AnyClass { get }
+c:objc(cs)GKComponentSystem(py)components	swift.property	components	GKComponentSystem.components	var components: [ComponentType] { get }
+c:objc(cs)GKCompositeBehavior	swift.class	GKCompositeBehavior	GKCompositeBehavior	class GKCompositeBehavior
+c:objc(cs)GKCompositeBehavior(cm)behaviorWithBehaviors:	swift.init	init(behaviors:)	GKCompositeBehavior.init(behaviors:)	convenience init(behaviors: [GKBehavior])
+c:objc(cs)GKCompositeBehavior(cm)behaviorWithBehaviors:andWeights:	swift.init	init(behaviors:andWeights:)	GKCompositeBehavior.init(behaviors:andWeights:)	convenience init(behaviors: [GKBehavior], andWeights weights: [NSNumber])
+c:objc(cs)GKCompositeBehavior(im)objectAtIndexedSubscript:	swift.subscript	subscript(_:)	GKCompositeBehavior.subscript(_:)	subscript(idx: Int) -> GKBehavior { get }
+c:objc(cs)GKCompositeBehavior(im)objectForKeyedSubscript:	swift.subscript	subscript(_:)	GKCompositeBehavior.subscript(_:)	subscript(behavior: GKBehavior) -> NSNumber { get set }
+c:objc(cs)GKCompositeBehavior(im)removeAllBehaviors	swift.method	removeAllBehaviors()	GKCompositeBehavior.removeAllBehaviors()	func removeAllBehaviors()
+c:objc(cs)GKCompositeBehavior(im)removeBehavior:	swift.method	remove(_:)	GKCompositeBehavior.remove(_:)	func remove(_ behavior: GKBehavior)
+c:objc(cs)GKCompositeBehavior(im)setWeight:forBehavior:	swift.method	setWeight(_:for:)	GKCompositeBehavior.setWeight(_:for:)	func setWeight(_ weight: Float, for behavior: GKBehavior)
+c:objc(cs)GKCompositeBehavior(im)weightForBehavior:	swift.method	weight(for:)	GKCompositeBehavior.weight(for:)	func weight(for behavior: GKBehavior) -> Float
+c:objc(cs)GKCompositeBehavior(py)behaviorCount	swift.property	behaviorCount	GKCompositeBehavior.behaviorCount	var behaviorCount: Int { get }
+c:objc(cs)GKConstantNoiseSource	swift.class	GKConstantNoiseSource	GKConstantNoiseSource	class GKConstantNoiseSource
+c:objc(cs)GKConstantNoiseSource(cm)constantNoiseWithValue:	swift.type.method	constantNoise(withValue:)	GKConstantNoiseSource.constantNoise(withValue:)	class func constantNoise(withValue value: Double) -> Self
+c:objc(cs)GKConstantNoiseSource(im)initWithValue:	swift.init	init(value:)	GKConstantNoiseSource.init(value:)	init(value: Double)
+c:objc(cs)GKConstantNoiseSource(py)value	swift.property	value	GKConstantNoiseSource.value	var value: Double { get set }
+c:objc(cs)GKCylindersNoiseSource	swift.class	GKCylindersNoiseSource	GKCylindersNoiseSource	class GKCylindersNoiseSource
+c:objc(cs)GKCylindersNoiseSource(cm)cylindersNoiseWithFrequency:	swift.type.method	cylindersNoise(withFrequency:)	GKCylindersNoiseSource.cylindersNoise(withFrequency:)	class func cylindersNoise(withFrequency frequency: Double) -> Self
+c:objc(cs)GKCylindersNoiseSource(im)initWithFrequency:	swift.init	init(frequency:)	GKCylindersNoiseSource.init(frequency:)	init(frequency: Double)
+c:objc(cs)GKCylindersNoiseSource(py)frequency	swift.property	frequency	GKCylindersNoiseSource.frequency	var frequency: Double { get set }
+c:objc(cs)GKDecisionNode	swift.class	GKDecisionNode	GKDecisionNode	class GKDecisionNode
+c:objc(cs)GKDecisionNode(im)createBranchWithPredicate:attribute:	swift.method	createBranch(predicate:attribute:)	GKDecisionNode.createBranch(predicate:attribute:)	func createBranch(predicate: NSPredicate, attribute: any NSObjectProtocol) -> Self
+c:objc(cs)GKDecisionNode(im)createBranchWithValue:attribute:	swift.method	createBranch(value:attribute:)	GKDecisionNode.createBranch(value:attribute:)	func createBranch(value: NSNumber, attribute: any NSObjectProtocol) -> Self
+c:objc(cs)GKDecisionNode(im)createBranchWithWeight:attribute:	swift.method	createBranch(weight:attribute:)	GKDecisionNode.createBranch(weight:attribute:)	func createBranch(weight: Int, attribute: any NSObjectProtocol) -> Self
+c:objc(cs)GKDecisionTree	swift.class	GKDecisionTree	GKDecisionTree	class GKDecisionTree
+c:objc(cs)GKDecisionTree(im)exportToURL:error:	swift.method	export(to:error:)	GKDecisionTree.export(to:error:)	func export(to url: URL, error: (any Error)?) -> Bool
+c:objc(cs)GKDecisionTree(im)findActionForAnswers:	swift.method	findAction(forAnswers:)	GKDecisionTree.findAction(forAnswers:)	func findAction(forAnswers answers: [AnyHashable : any NSObjectProtocol]) -> (any NSObjectProtocol)?
+c:objc(cs)GKDecisionTree(im)initWithAttribute:	swift.init	init(attribute:)	GKDecisionTree.init(attribute:)	init(attribute: any NSObjectProtocol)
+c:objc(cs)GKDecisionTree(im)initWithExamples:actions:attributes:	swift.init	init(examples:actions:attributes:)	GKDecisionTree.init(examples:actions:attributes:)	init(examples: [[any NSObjectProtocol]], actions: [any NSObjectProtocol], attributes: [any NSObjectProtocol])
+c:objc(cs)GKDecisionTree(im)initWithURL:error:	swift.init	init(url:error:)	GKDecisionTree.init(url:error:)	init(url: URL, error: (any Error)?)
+c:objc(cs)GKDecisionTree(im)initWithURL:error:::SYNTHESIZED::c:objc(cs)GKDecisionTree	swift.init	init(URL:error:)	GKDecisionTree.init(URL:error:)	init(URL url: URL, error: (any Error)?)
+c:objc(cs)GKDecisionTree(py)randomSource	swift.property	randomSource	GKDecisionTree.randomSource	@NSCopying var randomSource: GKRandomSource { get set }
+c:objc(cs)GKDecisionTree(py)rootNode	swift.property	rootNode	GKDecisionTree.rootNode	var rootNode: GKDecisionNode? { get }
+c:objc(cs)GKEntity	swift.class	GKEntity	GKEntity	class GKEntity
+c:objc(cs)GKEntity(im)addComponent:	swift.method	addComponent(_:)	GKEntity.addComponent(_:)	func addComponent(_ component: GKComponent)
+c:objc(cs)GKEntity(im)init	swift.init	init()	GKEntity.init()	init()
+c:objc(cs)GKEntity(im)updateWithDeltaTime:	swift.method	update(deltaTime:)	GKEntity.update(deltaTime:)	func update(deltaTime seconds: TimeInterval)
+c:objc(cs)GKEntity(py)components	swift.property	components	GKEntity.components	var components: [GKComponent] { get }
+c:objc(cs)GKGaussianDistribution	swift.class	GKGaussianDistribution	GKGaussianDistribution	class GKGaussianDistribution
+c:objc(cs)GKGaussianDistribution(im)initWithRandomSource:lowestValue:highestValue:	swift.init	init(randomSource:lowestValue:highestValue:)	GKGaussianDistribution.init(randomSource:lowestValue:highestValue:)	init(randomSource source: any GKRandom, lowestValue lowestInclusive: Int, highestValue highestInclusive: Int)
+c:objc(cs)GKGaussianDistribution(im)initWithRandomSource:mean:deviation:	swift.init	init(randomSource:mean:deviation:)	GKGaussianDistribution.init(randomSource:mean:deviation:)	init(randomSource source: any GKRandom, mean: Float, deviation: Float)
+c:objc(cs)GKGaussianDistribution(py)deviation	swift.property	deviation	GKGaussianDistribution.deviation	var deviation: Float { get }
+c:objc(cs)GKGaussianDistribution(py)mean	swift.property	mean	GKGaussianDistribution.mean	var mean: Float { get }
+c:objc(cs)GKGoal	swift.class	GKGoal	GKGoal	class GKGoal
+c:objc(cs)GKGoal(cm)goalToAlignWithAgents:maxDistance:maxAngle:	swift.init	init(toAlignWith:maxDistance:maxAngle:)	GKGoal.init(toAlignWith:maxDistance:maxAngle:)	convenience init(toAlignWith agents: [GKAgent], maxDistance: Float, maxAngle: Float)
+c:objc(cs)GKGoal(cm)goalToAlignWithAgents:maxDistance:maxAngle:::SYNTHESIZED::c:objc(cs)GKGoal	swift.init	init(toAlignWithAgents:maxDistance:maxAngle:)	GKGoal.init(toAlignWithAgents:maxDistance:maxAngle:)	convenience init(toAlignWithAgents agents: [GKAgent], maxDistance: Float, maxAngle: Float)
+c:objc(cs)GKGoal(cm)goalToAvoidAgents:maxPredictionTime:	swift.init	init(toAvoid:maxPredictionTime:)	GKGoal.init(toAvoid:maxPredictionTime:)	convenience init(toAvoid agents: [GKAgent], maxPredictionTime: TimeInterval)
+c:objc(cs)GKGoal(cm)goalToAvoidAgents:maxPredictionTime:::SYNTHESIZED::c:objc(cs)GKGoal	swift.init	init(toAvoidAgents:maxPredictionTime:)	GKGoal.init(toAvoidAgents:maxPredictionTime:)	convenience init(toAvoidAgents agents: [GKAgent], maxPredictionTime: TimeInterval)
+c:objc(cs)GKGoal(cm)goalToAvoidObstacles:maxPredictionTime:	swift.init	init(toAvoid:maxPredictionTime:)	GKGoal.init(toAvoid:maxPredictionTime:)	convenience init(toAvoid obstacles: [GKObstacle], maxPredictionTime: TimeInterval)
+c:objc(cs)GKGoal(cm)goalToAvoidObstacles:maxPredictionTime:::SYNTHESIZED::c:objc(cs)GKGoal	swift.init	init(toAvoidObstacles:maxPredictionTime:)	GKGoal.init(toAvoidObstacles:maxPredictionTime:)	convenience init(toAvoidObstacles obstacles: [GKObstacle], maxPredictionTime: TimeInterval)
+c:objc(cs)GKGoal(cm)goalToCohereWithAgents:maxDistance:maxAngle:	swift.init	init(toCohereWith:maxDistance:maxAngle:)	GKGoal.init(toCohereWith:maxDistance:maxAngle:)	convenience init(toCohereWith agents: [GKAgent], maxDistance: Float, maxAngle: Float)
+c:objc(cs)GKGoal(cm)goalToCohereWithAgents:maxDistance:maxAngle:::SYNTHESIZED::c:objc(cs)GKGoal	swift.init	init(toCohereWithAgents:maxDistance:maxAngle:)	GKGoal.init(toCohereWithAgents:maxDistance:maxAngle:)	convenience init(toCohereWithAgents agents: [GKAgent], maxDistance: Float, maxAngle: Float)
+c:objc(cs)GKGoal(cm)goalToFleeAgent:	swift.init	init(toFleeAgent:)	GKGoal.init(toFleeAgent:)	convenience init(toFleeAgent agent: GKAgent)
+c:objc(cs)GKGoal(cm)goalToFollowPath:maxPredictionTime:forward:	swift.init	init(toFollow:maxPredictionTime:forward:)	GKGoal.init(toFollow:maxPredictionTime:forward:)	convenience init(toFollow path: GKPath, maxPredictionTime: TimeInterval, forward: Bool)
+c:objc(cs)GKGoal(cm)goalToFollowPath:maxPredictionTime:forward:::SYNTHESIZED::c:objc(cs)GKGoal	swift.init	init(toFollowPath:maxPredictionTime:forward:)	GKGoal.init(toFollowPath:maxPredictionTime:forward:)	convenience init(toFollowPath path: GKPath, maxPredictionTime: TimeInterval, forward: Bool)
+c:objc(cs)GKGoal(cm)goalToInterceptAgent:maxPredictionTime:	swift.init	init(toInterceptAgent:maxPredictionTime:)	GKGoal.init(toInterceptAgent:maxPredictionTime:)	convenience init(toInterceptAgent target: GKAgent, maxPredictionTime: TimeInterval)
+c:objc(cs)GKGoal(cm)goalToReachTargetSpeed:	swift.init	init(toReachTargetSpeed:)	GKGoal.init(toReachTargetSpeed:)	convenience init(toReachTargetSpeed targetSpeed: Float)
+c:objc(cs)GKGoal(cm)goalToSeekAgent:	swift.init	init(toSeekAgent:)	GKGoal.init(toSeekAgent:)	convenience init(toSeekAgent agent: GKAgent)
+c:objc(cs)GKGoal(cm)goalToSeparateFromAgents:maxDistance:maxAngle:	swift.init	init(toSeparateFrom:maxDistance:maxAngle:)	GKGoal.init(toSeparateFrom:maxDistance:maxAngle:)	convenience init(toSeparateFrom agents: [GKAgent], maxDistance: Float, maxAngle: Float)
+c:objc(cs)GKGoal(cm)goalToSeparateFromAgents:maxDistance:maxAngle:::SYNTHESIZED::c:objc(cs)GKGoal	swift.init	init(toSeparateFromAgents:maxDistance:maxAngle:)	GKGoal.init(toSeparateFromAgents:maxDistance:maxAngle:)	convenience init(toSeparateFromAgents agents: [GKAgent], maxDistance: Float, maxAngle: Float)
+c:objc(cs)GKGoal(cm)goalToStayOnPath:maxPredictionTime:	swift.init	init(toStayOn:maxPredictionTime:)	GKGoal.init(toStayOn:maxPredictionTime:)	convenience init(toStayOn path: GKPath, maxPredictionTime: TimeInterval)
+c:objc(cs)GKGoal(cm)goalToStayOnPath:maxPredictionTime:::SYNTHESIZED::c:objc(cs)GKGoal	swift.init	init(toStayOnPath:maxPredictionTime:)	GKGoal.init(toStayOnPath:maxPredictionTime:)	convenience init(toStayOnPath path: GKPath, maxPredictionTime: TimeInterval)
+c:objc(cs)GKGoal(cm)goalToWander:	swift.init	init(toWander:)	GKGoal.init(toWander:)	convenience init(toWander speed: Float)
+c:objc(cs)GKGraph	swift.class	GKGraph	GKGraph	class GKGraph
+c:objc(cs)GKGraph(cm)graphWithNodes:::SYNTHESIZED::c:objc(cs)GKGridGraph	swift.init	init(nodes:)	GKGridGraph.init(nodes:)	convenience init(nodes: [GKGraphNode])
+c:objc(cs)GKGraph(cm)graphWithNodes:::SYNTHESIZED::c:objc(cs)GKMeshGraph	swift.init	init(nodes:)	GKMeshGraph.init(nodes:)	convenience init(nodes: [GKGraphNode])
+c:objc(cs)GKGraph(cm)graphWithNodes:::SYNTHESIZED::c:objc(cs)GKObstacleGraph	swift.init	init(nodes:)	GKObstacleGraph.init(nodes:)	convenience init(nodes: [GKGraphNode])
+c:objc(cs)GKGraph(im)addNodes:	swift.method	add(_:)	GKGraph.add(_:)	func add(_ nodes: [GKGraphNode])
+c:objc(cs)GKGraph(im)connectNodeToLowestCostNode:bidirectional:	swift.method	connectToLowestCostNode(node:bidirectional:)	GKGraph.connectToLowestCostNode(node:bidirectional:)	func connectToLowestCostNode(node: GKGraphNode, bidirectional: Bool)
+c:objc(cs)GKGraph(im)findPathFromNode:toNode:	swift.method	findPath(from:to:)	GKGraph.findPath(from:to:)	func findPath(from startNode: GKGraphNode, to endNode: GKGraphNode) -> [GKGraphNode]
+c:objc(cs)GKGraph(im)initWithNodes:	swift.init	init(_:)	GKGraph.init(_:)	init(_ nodes: [GKGraphNode])
+c:objc(cs)GKGraph(im)initWithNodes:::SYNTHESIZED::c:objc(cs)GKGraph	swift.init	init(nodes:)	GKGraph.init(nodes:)	init(nodes: [GKGraphNode])
+c:objc(cs)GKGraph(im)removeNodes:	swift.method	remove(_:)	GKGraph.remove(_:)	func remove(_ nodes: [GKGraphNode])
+c:objc(cs)GKGraph(py)nodes	swift.property	nodes	GKGraph.nodes	var nodes: [GKGraphNode]? { get }
+c:objc(cs)GKGraphNode	swift.class	GKGraphNode	GKGraphNode	class GKGraphNode
+c:objc(cs)GKGraphNode(im)addConnectionsToNodes:bidirectional:	swift.method	addConnections(to:bidirectional:)	GKGraphNode.addConnections(to:bidirectional:)	func addConnections(to nodes: [GKGraphNode], bidirectional: Bool)
+c:objc(cs)GKGraphNode(im)costToNode:	swift.method	cost(to:)	GKGraphNode.cost(to:)	func cost(to node: GKGraphNode) -> Float
+c:objc(cs)GKGraphNode(im)estimatedCostToNode:	swift.method	estimatedCost(to:)	GKGraphNode.estimatedCost(to:)	func estimatedCost(to node: GKGraphNode) -> Float
+c:objc(cs)GKGraphNode(im)findPathFromNode:	swift.method	findPath(from:)	GKGraphNode.findPath(from:)	func findPath(from startNode: GKGraphNode) -> [GKGraphNode]
+c:objc(cs)GKGraphNode(im)findPathToNode:	swift.method	findPath(to:)	GKGraphNode.findPath(to:)	func findPath(to goalNode: GKGraphNode) -> [GKGraphNode]
+c:objc(cs)GKGraphNode(im)removeConnectionsToNodes:bidirectional:	swift.method	removeConnections(to:bidirectional:)	GKGraphNode.removeConnections(to:bidirectional:)	func removeConnections(to nodes: [GKGraphNode], bidirectional: Bool)
+c:objc(cs)GKGraphNode(py)connectedNodes	swift.property	connectedNodes	GKGraphNode.connectedNodes	var connectedNodes: [GKGraphNode] { get }
+c:objc(cs)GKGraphNode2D	swift.class	GKGraphNode2D	GKGraphNode2D	class GKGraphNode2D
+c:objc(cs)GKGraphNode2D(cm)nodeWithPoint:	swift.type.method	node(withPoint:)	GKGraphNode2D.node(withPoint:)	class func node(withPoint point: vector_float2) -> Self
+c:objc(cs)GKGraphNode2D(im)initWithPoint:	swift.init	init(point:)	GKGraphNode2D.init(point:)	init(point: vector_float2)
+c:objc(cs)GKGraphNode2D(py)position	swift.property	position	GKGraphNode2D.position	var position: vector_float2 { get set }
+c:objc(cs)GKGraphNode3D	swift.class	GKGraphNode3D	GKGraphNode3D	class GKGraphNode3D
+c:objc(cs)GKGraphNode3D(cm)nodeWithPoint:	swift.type.method	node(withPoint:)	GKGraphNode3D.node(withPoint:)	class func node(withPoint point: vector_float3) -> Self
+c:objc(cs)GKGraphNode3D(im)initWithPoint:	swift.init	init(point:)	GKGraphNode3D.init(point:)	init(point: vector_float3)
+c:objc(cs)GKGraphNode3D(py)position	swift.property	position	GKGraphNode3D.position	var position: vector_float3 { get set }
+c:objc(cs)GKGridGraph	swift.class	GKGridGraph	GKGridGraph	class GKGridGraph<NodeType> where NodeType : GKGridGraphNode
+c:objc(cs)GKGridGraph(im)classForGenericArgumentAtIndex:	swift.method	classForGenericArgument(at:)	GKGridGraph.classForGenericArgument(at:)	func classForGenericArgument(at index: Int) -> AnyClass
+c:objc(cs)GKGridGraph(im)connectNodeToAdjacentNodes:	swift.method	connectToAdjacentNodes(node:)	GKGridGraph.connectToAdjacentNodes(node:)	func connectToAdjacentNodes(node: GKGridGraphNode)
+c:objc(cs)GKGridGraph(im)initFromGridStartingAt:width:height:diagonalsAllowed:	swift.init	init(fromGridStartingAt:width:height:diagonalsAllowed:)	GKGridGraph.init(fromGridStartingAt:width:height:diagonalsAllowed:)	init(fromGridStartingAt position: vector_int2, width: Int32, height: Int32, diagonalsAllowed: Bool)
+c:objc(cs)GKGridGraph(im)initFromGridStartingAt:width:height:diagonalsAllowed:nodeClass:	swift.init	init(fromGridStartingAt:width:height:diagonalsAllowed:nodeClass:)	GKGridGraph.init(fromGridStartingAt:width:height:diagonalsAllowed:nodeClass:)	init(fromGridStartingAt position: vector_int2, width: Int32, height: Int32, diagonalsAllowed: Bool, nodeClass: AnyClass)
+c:objc(cs)GKGridGraph(im)nodeAtGridPosition:	swift.method	node(atGridPosition:)	GKGridGraph.node(atGridPosition:)	func node(atGridPosition position: vector_int2) -> NodeType?
+c:objc(cs)GKGridGraph(py)diagonalsAllowed	swift.property	diagonalsAllowed	GKGridGraph.diagonalsAllowed	var diagonalsAllowed: Bool { get }
+c:objc(cs)GKGridGraph(py)gridHeight	swift.property	gridHeight	GKGridGraph.gridHeight	var gridHeight: Int { get }
+c:objc(cs)GKGridGraph(py)gridOrigin	swift.property	gridOrigin	GKGridGraph.gridOrigin	var gridOrigin: vector_int2 { get }
+c:objc(cs)GKGridGraph(py)gridWidth	swift.property	gridWidth	GKGridGraph.gridWidth	var gridWidth: Int { get }
+c:objc(cs)GKGridGraphNode	swift.class	GKGridGraphNode	GKGridGraphNode	class GKGridGraphNode
+c:objc(cs)GKGridGraphNode(im)initWithGridPosition:	swift.init	init(gridPosition:)	GKGridGraphNode.init(gridPosition:)	init(gridPosition: vector_int2)
+c:objc(cs)GKGridGraphNode(py)gridPosition	swift.property	gridPosition	GKGridGraphNode.gridPosition	var gridPosition: vector_int2 { get }
+c:objc(cs)GKLinearCongruentialRandomSource	swift.class	GKLinearCongruentialRandomSource	GKLinearCongruentialRandomSource	class GKLinearCongruentialRandomSource
+c:objc(cs)GKLinearCongruentialRandomSource(im)init	swift.init	init()	GKLinearCongruentialRandomSource.init()	convenience init()
+c:objc(cs)GKLinearCongruentialRandomSource(im)initWithSeed:	swift.init	init(seed:)	GKLinearCongruentialRandomSource.init(seed:)	init(seed: UInt64)
+c:objc(cs)GKLinearCongruentialRandomSource(py)seed	swift.property	seed	GKLinearCongruentialRandomSource.seed	var seed: UInt64 { get set }
+c:objc(cs)GKMersenneTwisterRandomSource	swift.class	GKMersenneTwisterRandomSource	GKMersenneTwisterRandomSource	class GKMersenneTwisterRandomSource
+c:objc(cs)GKMersenneTwisterRandomSource(im)init	swift.init	init()	GKMersenneTwisterRandomSource.init()	convenience init()
+c:objc(cs)GKMersenneTwisterRandomSource(im)initWithSeed:	swift.init	init(seed:)	GKMersenneTwisterRandomSource.init(seed:)	init(seed: UInt64)
+c:objc(cs)GKMersenneTwisterRandomSource(py)seed	swift.property	seed	GKMersenneTwisterRandomSource.seed	var seed: UInt64 { get set }
+c:objc(cs)GKMeshGraph	swift.class	GKMeshGraph	GKMeshGraph	class GKMeshGraph<NodeType> where NodeType : GKGraphNode2D
+c:objc(cs)GKMeshGraph(im)addObstacles:	swift.method	addObstacles(_:)	GKMeshGraph.addObstacles(_:)	func addObstacles(_ obstacles: [GKPolygonObstacle])
+c:objc(cs)GKMeshGraph(im)classForGenericArgumentAtIndex:	swift.method	classForGenericArgument(at:)	GKMeshGraph.classForGenericArgument(at:)	func classForGenericArgument(at index: Int) -> AnyClass
+c:objc(cs)GKMeshGraph(im)connectNodeUsingObstacles:	swift.method	connectUsingObstacles(node:)	GKMeshGraph.connectUsingObstacles(node:)	func connectUsingObstacles(node: NodeType)
+c:objc(cs)GKMeshGraph(im)initWithBufferRadius:minCoordinate:maxCoordinate:	swift.init	init(bufferRadius:minCoordinate:maxCoordinate:)	GKMeshGraph.init(bufferRadius:minCoordinate:maxCoordinate:)	init(bufferRadius: Float, minCoordinate min: vector_float2, maxCoordinate max: vector_float2)
+c:objc(cs)GKMeshGraph(im)initWithBufferRadius:minCoordinate:maxCoordinate:nodeClass:	swift.init	init(bufferRadius:minCoordinate:maxCoordinate:nodeClass:)	GKMeshGraph.init(bufferRadius:minCoordinate:maxCoordinate:nodeClass:)	init(bufferRadius: Float, minCoordinate min: vector_float2, maxCoordinate max: vector_float2, nodeClass: AnyClass)
+c:objc(cs)GKMeshGraph(im)removeObstacles:	swift.method	removeObstacles(_:)	GKMeshGraph.removeObstacles(_:)	func removeObstacles(_ obstacles: [GKPolygonObstacle])
+c:objc(cs)GKMeshGraph(im)triangleAtIndex:	swift.method	triangle(at:)	GKMeshGraph.triangle(at:)	func triangle(at index: Int) -> GKTriangle
+c:objc(cs)GKMeshGraph(im)triangulate	swift.method	triangulate()	GKMeshGraph.triangulate()	func triangulate()
+c:objc(cs)GKMeshGraph(py)bufferRadius	swift.property	bufferRadius	GKMeshGraph.bufferRadius	var bufferRadius: Float { get }
+c:objc(cs)GKMeshGraph(py)obstacles	swift.property	obstacles	GKMeshGraph.obstacles	var obstacles: [GKPolygonObstacle] { get }
+c:objc(cs)GKMeshGraph(py)triangleCount	swift.property	triangleCount	GKMeshGraph.triangleCount	var triangleCount: Int { get }
+c:objc(cs)GKMeshGraph(py)triangulationMode	swift.property	triangulationMode	GKMeshGraph.triangulationMode	var triangulationMode: GKMeshGraphTriangulationMode { get set }
+c:objc(cs)GKMinmaxStrategist	swift.class	GKMinmaxStrategist	GKMinmaxStrategist	class GKMinmaxStrategist
+c:objc(cs)GKMinmaxStrategist(im)bestMoveForPlayer:	swift.method	bestMove(for:)	GKMinmaxStrategist.bestMove(for:)	func bestMove(for player: any GKGameModelPlayer) -> (any GKGameModelUpdate)?
+c:objc(cs)GKMinmaxStrategist(im)randomMoveForPlayer:fromNumberOfBestMoves:	swift.method	randomMove(for:fromNumberOfBestMoves:)	GKMinmaxStrategist.randomMove(for:fromNumberOfBestMoves:)	func randomMove(for player: any GKGameModelPlayer, fromNumberOfBestMoves numMovesToConsider: Int) -> (any GKGameModelUpdate)?
+c:objc(cs)GKMinmaxStrategist(py)maxLookAheadDepth	swift.property	maxLookAheadDepth	GKMinmaxStrategist.maxLookAheadDepth	var maxLookAheadDepth: Int { get set }
+c:objc(cs)GKMonteCarloStrategist	swift.class	GKMonteCarloStrategist	GKMonteCarloStrategist	class GKMonteCarloStrategist
+c:objc(cs)GKMonteCarloStrategist(py)budget	swift.property	budget	GKMonteCarloStrategist.budget	var budget: Int { get set }
+c:objc(cs)GKMonteCarloStrategist(py)explorationParameter	swift.property	explorationParameter	GKMonteCarloStrategist.explorationParameter	var explorationParameter: Int { get set }
+c:objc(cs)GKNSPredicateRule	swift.class	GKNSPredicateRule	GKNSPredicateRule	class GKNSPredicateRule
+c:objc(cs)GKNSPredicateRule(im)evaluatePredicateWithSystem:	swift.method	evaluatePredicate(in:)	GKNSPredicateRule.evaluatePredicate(in:)	func evaluatePredicate(in system: GKRuleSystem) -> Bool
+c:objc(cs)GKNSPredicateRule(im)initWithPredicate:	swift.init	init(predicate:)	GKNSPredicateRule.init(predicate:)	init(predicate: NSPredicate)
+c:objc(cs)GKNSPredicateRule(py)predicate	swift.property	predicate	GKNSPredicateRule.predicate	var predicate: NSPredicate { get }
+c:objc(cs)GKNoise	swift.class	GKNoise	GKNoise	class GKNoise
+c:objc(cs)GKNoise(cm)noiseWithComponentNoises:selectionNoise:	swift.init	init(componentNoises:selectionNoise:)	GKNoise.init(componentNoises:selectionNoise:)	convenience init(componentNoises noises: [GKNoise], selectionNoise: GKNoise)
+c:objc(cs)GKNoise(cm)noiseWithComponentNoises:selectionNoise:componentBoundaries:boundaryBlendDistances:	swift.init	init(componentNoises:selectionNoise:componentBoundaries:boundaryBlendDistances:)	GKNoise.init(componentNoises:selectionNoise:componentBoundaries:boundaryBlendDistances:)	convenience init(componentNoises noises: [GKNoise], selectionNoise: GKNoise, componentBoundaries: [NSNumber], boundaryBlendDistances blendDistances: [NSNumber])
+c:objc(cs)GKNoise(im)addWithNoise:	swift.method	add(_:)	GKNoise.add(_:)	func add(_ noise: GKNoise)
+c:objc(cs)GKNoise(im)applyAbsoluteValue	swift.method	applyAbsoluteValue()	GKNoise.applyAbsoluteValue()	func applyAbsoluteValue()
+c:objc(cs)GKNoise(im)applyTurbulenceWithFrequency:power:roughness:seed:	swift.method	applyTurbulence(frequency:power:roughness:seed:)	GKNoise.applyTurbulence(frequency:power:roughness:seed:)	func applyTurbulence(frequency: Double, power: Double, roughness: Int32, seed: Int32)
+c:objc(cs)GKNoise(im)clampWithLowerBound:upperBound:	swift.method	clamp(lowerBound:upperBound:)	GKNoise.clamp(lowerBound:upperBound:)	func clamp(lowerBound: Double, upperBound: Double)
+c:objc(cs)GKNoise(im)displaceXWithNoise:yWithNoise:zWithNoise:	swift.method	displaceWithNoises(x:y:z:)	GKNoise.displaceWithNoises(x:y:z:)	func displaceWithNoises(x xDisplacementNoise: GKNoise, y yDisplacementNoise: GKNoise, z zDisplacementNoise: GKNoise)
+c:objc(cs)GKNoise(im)init	swift.init	init()	GKNoise.init()	convenience init()
+c:objc(cs)GKNoise(im)initWithNoiseSource:	swift.init	init(_:)	GKNoise.init(_:)	convenience init(_ noiseSource: GKNoiseSource)
+c:objc(cs)GKNoise(im)initWithNoiseSource:::SYNTHESIZED::c:objc(cs)GKNoise	swift.init	init(noiseSource:)	GKNoise.init(noiseSource:)	convenience init(noiseSource: GKNoiseSource)
+c:objc(cs)GKNoise(im)initWithNoiseSource:gradientColors:	swift.init	init(_:gradientColors:)	GKNoise.init(_:gradientColors:)	init(_ noiseSource: GKNoiseSource, gradientColors: [NSNumber : UIColor])
+c:objc(cs)GKNoise(im)initWithNoiseSource:gradientColors:::SYNTHESIZED::c:objc(cs)GKNoise	swift.init	init(noiseSource:gradientColors:)	GKNoise.init(noiseSource:gradientColors:)	init(noiseSource: GKNoiseSource, gradientColors: [NSNumber : UIColor])
+c:objc(cs)GKNoise(im)invert	swift.method	invert()	GKNoise.invert()	func invert()
+c:objc(cs)GKNoise(im)maximumWithNoise:	swift.method	maximum(_:)	GKNoise.maximum(_:)	func maximum(_ noise: GKNoise)
+c:objc(cs)GKNoise(im)minimumWithNoise:	swift.method	minimum(_:)	GKNoise.minimum(_:)	func minimum(_ noise: GKNoise)
+c:objc(cs)GKNoise(im)moveBy:	swift.method	move(by:)	GKNoise.move(by:)	func move(by delta: vector_double3)
+c:objc(cs)GKNoise(im)multiplyWithNoise:	swift.method	multiply(_:)	GKNoise.multiply(_:)	func multiply(_ noise: GKNoise)
+c:objc(cs)GKNoise(im)raiseToPower:	swift.method	raiseToPower(_:)	GKNoise.raiseToPower(_:)	func raiseToPower(_ power: Double)
+c:objc(cs)GKNoise(im)raiseToPowerWithNoise:	swift.method	raiseToPower(_:)	GKNoise.raiseToPower(_:)	func raiseToPower(_ noise: GKNoise)
+c:objc(cs)GKNoise(im)remapValuesToCurveWithControlPoints:	swift.method	remapValues(toCurveWithControlPoints:)	GKNoise.remapValues(toCurveWithControlPoints:)	func remapValues(toCurveWithControlPoints controlPoints: [NSNumber : NSNumber])
+c:objc(cs)GKNoise(im)remapValuesToTerracesWithPeaks:terracesInverted:	swift.method	remapValues(toTerracesWithPeaks:terracesInverted:)	GKNoise.remapValues(toTerracesWithPeaks:terracesInverted:)	func remapValues(toTerracesWithPeaks peakInputValues: [NSNumber], terracesInverted inverted: Bool)
+c:objc(cs)GKNoise(im)rotateBy:	swift.method	rotate(by:)	GKNoise.rotate(by:)	func rotate(by radians: vector_double3)
+c:objc(cs)GKNoise(im)scaleBy:	swift.method	scale(by:)	GKNoise.scale(by:)	func scale(by factor: vector_double3)
+c:objc(cs)GKNoise(im)valueAtPosition:	swift.method	value(atPosition:)	GKNoise.value(atPosition:)	func value(atPosition position: vector_float2) -> Float
+c:objc(cs)GKNoise(py)gradientColors	swift.property	gradientColors	GKNoise.gradientColors	var gradientColors: [NSNumber : UIColor] { get set }
+c:objc(cs)GKNoiseMap	swift.class	GKNoiseMap	GKNoiseMap	class GKNoiseMap
+c:objc(cs)GKNoiseMap(im)init	swift.init	init()	GKNoiseMap.init()	convenience init()
+c:objc(cs)GKNoiseMap(im)initWithNoise:	swift.init	init(_:)	GKNoiseMap.init(_:)	convenience init(_ noise: GKNoise)
+c:objc(cs)GKNoiseMap(im)initWithNoise:::SYNTHESIZED::c:objc(cs)GKNoiseMap	swift.init	init(noise:)	GKNoiseMap.init(noise:)	convenience init(noise: GKNoise)
+c:objc(cs)GKNoiseMap(im)initWithNoise:size:origin:sampleCount:seamless:	swift.init	init(_:size:origin:sampleCount:seamless:)	GKNoiseMap.init(_:size:origin:sampleCount:seamless:)	init(_ noise: GKNoise, size: vector_double2, origin: vector_double2, sampleCount: vector_int2, seamless: Bool)
+c:objc(cs)GKNoiseMap(im)initWithNoise:size:origin:sampleCount:seamless:::SYNTHESIZED::c:objc(cs)GKNoiseMap	swift.init	init(noise:size:origin:sampleCount:seamless:)	GKNoiseMap.init(noise:size:origin:sampleCount:seamless:)	init(noise: GKNoise, size: vector_double2, origin: vector_double2, sampleCount: vector_int2, seamless: Bool)
+c:objc(cs)GKNoiseMap(im)interpolatedValueAtPosition:	swift.method	interpolatedValue(at:)	GKNoiseMap.interpolatedValue(at:)	func interpolatedValue(at position: vector_float2) -> Float
+c:objc(cs)GKNoiseMap(im)setValue:atPosition:	swift.method	setValue(_:at:)	GKNoiseMap.setValue(_:at:)	func setValue(_ value: Float, at position: vector_int2)
+c:objc(cs)GKNoiseMap(im)valueAtPosition:	swift.method	value(at:)	GKNoiseMap.value(at:)	func value(at position: vector_int2) -> Float
+c:objc(cs)GKNoiseMap(py)origin	swift.property	origin	GKNoiseMap.origin	var origin: vector_double2 { get }
+c:objc(cs)GKNoiseMap(py)sampleCount	swift.property	sampleCount	GKNoiseMap.sampleCount	var sampleCount: vector_int2 { get }
+c:objc(cs)GKNoiseMap(py)seamless	swift.property	isSeamless	GKNoiseMap.isSeamless	var isSeamless: Bool { get }
+c:objc(cs)GKNoiseMap(py)size	swift.property	size	GKNoiseMap.size	var size: vector_double2 { get }
+c:objc(cs)GKNoiseSource	swift.class	GKNoiseSource	GKNoiseSource	class GKNoiseSource
+c:objc(cs)GKObstacle	swift.class	GKObstacle	GKObstacle	class GKObstacle
+c:objc(cs)GKObstacleGraph	swift.class	GKObstacleGraph	GKObstacleGraph	class GKObstacleGraph<NodeType> where NodeType : GKGraphNode2D
+c:objc(cs)GKObstacleGraph(im)addObstacles:	swift.method	addObstacles(_:)	GKObstacleGraph.addObstacles(_:)	func addObstacles(_ obstacles: [GKPolygonObstacle])
+c:objc(cs)GKObstacleGraph(im)classForGenericArgumentAtIndex:	swift.method	classForGenericArgument(at:)	GKObstacleGraph.classForGenericArgument(at:)	func classForGenericArgument(at index: Int) -> AnyClass
+c:objc(cs)GKObstacleGraph(im)connectNodeUsingObstacles:	swift.method	connectUsingObstacles(node:)	GKObstacleGraph.connectUsingObstacles(node:)	func connectUsingObstacles(node: NodeType)
+c:objc(cs)GKObstacleGraph(im)connectNodeUsingObstacles:ignoringBufferRadiusOfObstacles:	swift.method	connectUsingObstacles(node:ignoringBufferRadiusOf:)	GKObstacleGraph.connectUsingObstacles(node:ignoringBufferRadiusOf:)	func connectUsingObstacles(node: NodeType, ignoringBufferRadiusOf obstaclesBufferRadiusToIgnore: [GKPolygonObstacle])
+c:objc(cs)GKObstacleGraph(im)connectNodeUsingObstacles:ignoringObstacles:	swift.method	connectUsingObstacles(node:ignoring:)	GKObstacleGraph.connectUsingObstacles(node:ignoring:)	func connectUsingObstacles(node: NodeType, ignoring obstaclesToIgnore: [GKPolygonObstacle])
+c:objc(cs)GKObstacleGraph(im)initWithObstacles:bufferRadius:	swift.init	init(obstacles:bufferRadius:)	GKObstacleGraph.init(obstacles:bufferRadius:)	init(obstacles: [GKPolygonObstacle], bufferRadius: Float)
+c:objc(cs)GKObstacleGraph(im)initWithObstacles:bufferRadius:nodeClass:	swift.init	init(obstacles:bufferRadius:nodeClass:)	GKObstacleGraph.init(obstacles:bufferRadius:nodeClass:)	init(obstacles: [GKPolygonObstacle], bufferRadius: Float, nodeClass: AnyClass)
+c:objc(cs)GKObstacleGraph(im)isConnectionLockedFromNode:toNode:	swift.method	isConnectionLocked(from:to:)	GKObstacleGraph.isConnectionLocked(from:to:)	func isConnectionLocked(from startNode: NodeType, to endNode: NodeType) -> Bool
+c:objc(cs)GKObstacleGraph(im)lockConnectionFromNode:toNode:	swift.method	lockConnection(from:to:)	GKObstacleGraph.lockConnection(from:to:)	func lockConnection(from startNode: NodeType, to endNode: NodeType)
+c:objc(cs)GKObstacleGraph(im)nodesForObstacle:	swift.method	nodes(for:)	GKObstacleGraph.nodes(for:)	func nodes(for obstacle: GKPolygonObstacle) -> [NodeType]
+c:objc(cs)GKObstacleGraph(im)removeAllObstacles	swift.method	removeAllObstacles()	GKObstacleGraph.removeAllObstacles()	func removeAllObstacles()
+c:objc(cs)GKObstacleGraph(im)removeObstacles:	swift.method	removeObstacles(_:)	GKObstacleGraph.removeObstacles(_:)	func removeObstacles(_ obstacles: [GKPolygonObstacle])
+c:objc(cs)GKObstacleGraph(im)unlockConnectionFromNode:toNode:	swift.method	unlockConnection(from:to:)	GKObstacleGraph.unlockConnection(from:to:)	func unlockConnection(from startNode: NodeType, to endNode: NodeType)
+c:objc(cs)GKObstacleGraph(py)bufferRadius	swift.property	bufferRadius	GKObstacleGraph.bufferRadius	var bufferRadius: Float { get }
+c:objc(cs)GKObstacleGraph(py)obstacles	swift.property	obstacles	GKObstacleGraph.obstacles	var obstacles: [GKPolygonObstacle] { get }
+c:objc(cs)GKOctree	swift.class	GKOctree	GKOctree	class GKOctree<ElementType> where ElementType : NSObject
+c:objc(cs)GKOctree(im)addElement:withBox:	swift.method	add(_:in:)	GKOctree.add(_:in:)	func add(_ element: ElementType, in box: GKBox) -> GKOctreeNode
+c:objc(cs)GKOctree(im)addElement:withPoint:	swift.method	add(_:at:)	GKOctree.add(_:at:)	func add(_ element: ElementType, at point: vector_float3) -> GKOctreeNode
+c:objc(cs)GKOctree(im)elementsAtPoint:	swift.method	elements(at:)	GKOctree.elements(at:)	func elements(at point: vector_float3) -> [ElementType]
+c:objc(cs)GKOctree(im)elementsInBox:	swift.method	elements(in:)	GKOctree.elements(in:)	func elements(in box: GKBox) -> [ElementType]
+c:objc(cs)GKOctree(im)initWithBoundingBox:minimumCellSize:	swift.init	init(boundingBox:minimumCellSize:)	GKOctree.init(boundingBox:minimumCellSize:)	init(boundingBox box: GKBox, minimumCellSize minCellSize: Float)
+c:objc(cs)GKOctree(im)removeElement:	swift.method	remove(_:)	GKOctree.remove(_:)	func remove(_ element: ElementType) -> Bool
+c:objc(cs)GKOctree(im)removeElement:withNode:	swift.method	remove(_:using:)	GKOctree.remove(_:using:)	func remove(_ element: ElementType, using node: GKOctreeNode) -> Bool
+c:objc(cs)GKOctreeNode	swift.class	GKOctreeNode	GKOctreeNode	class GKOctreeNode
+c:objc(cs)GKOctreeNode(py)box	swift.property	box	GKOctreeNode.box	var box: GKBox { get }
+c:objc(cs)GKPath	swift.class	GKPath	GKPath	class GKPath
+c:objc(cs)GKPath(im)float2AtIndex:	swift.method	float2(at:)	GKPath.float2(at:)	func float2(at index: Int) -> vector_float2
+c:objc(cs)GKPath(im)float3AtIndex:	swift.method	float3(at:)	GKPath.float3(at:)	func float3(at index: Int) -> vector_float3
+c:objc(cs)GKPath(im)initWithGraphNodes:radius:	swift.init	init(graphNodes:radius:)	GKPath.init(graphNodes:radius:)	init(graphNodes: [GKGraphNode], radius: Float)
+c:objc(cs)GKPath(im)pointAtIndex:	swift.method	point(at:)	GKPath.point(at:)	func point(at index: Int) -> vector_float2
+c:objc(cs)GKPath(py)cyclical	swift.property	isCyclical	GKPath.isCyclical	var isCyclical: Bool { get set }
+c:objc(cs)GKPath(py)numPoints	swift.property	numPoints	GKPath.numPoints	var numPoints: Int { get }
+c:objc(cs)GKPath(py)radius	swift.property	radius	GKPath.radius	var radius: Float { get set }
+c:objc(cs)GKPerlinNoiseSource	swift.class	GKPerlinNoiseSource	GKPerlinNoiseSource	class GKPerlinNoiseSource
+c:objc(cs)GKPerlinNoiseSource(im)initWithFrequency:octaveCount:persistence:lacunarity:seed:	swift.init	init(frequency:octaveCount:persistence:lacunarity:seed:)	GKPerlinNoiseSource.init(frequency:octaveCount:persistence:lacunarity:seed:)	init(frequency: Double, octaveCount: Int, persistence: Double, lacunarity: Double, seed: Int32)
+c:objc(cs)GKPerlinNoiseSource(py)persistence	swift.property	persistence	GKPerlinNoiseSource.persistence	var persistence: Double { get set }
+c:objc(cs)GKPolygonObstacle	swift.class	GKPolygonObstacle	GKPolygonObstacle	class GKPolygonObstacle
+c:objc(cs)GKPolygonObstacle(im)vertexAtIndex:	swift.method	vertex(at:)	GKPolygonObstacle.vertex(at:)	func vertex(at index: Int) -> vector_float2
+c:objc(cs)GKPolygonObstacle(py)vertexCount	swift.property	vertexCount	GKPolygonObstacle.vertexCount	var vertexCount: Int { get }
+c:objc(cs)GKQuadtree	swift.class	GKQuadtree	GKQuadtree	class GKQuadtree<ElementType> where ElementType : NSObject
+c:objc(cs)GKQuadtree(im)addElement:withPoint:	swift.method	add(_:at:)	GKQuadtree.add(_:at:)	func add(_ element: ElementType, at point: vector_float2) -> GKQuadtreeNode
+c:objc(cs)GKQuadtree(im)addElement:withQuad:	swift.method	add(_:in:)	GKQuadtree.add(_:in:)	func add(_ element: ElementType, in quad: GKQuad) -> GKQuadtreeNode
+c:objc(cs)GKQuadtree(im)elementsAtPoint:	swift.method	elements(at:)	GKQuadtree.elements(at:)	func elements(at point: vector_float2) -> [ElementType]
+c:objc(cs)GKQuadtree(im)elementsInQuad:	swift.method	elements(in:)	GKQuadtree.elements(in:)	func elements(in quad: GKQuad) -> [ElementType]
+c:objc(cs)GKQuadtree(im)initWithBoundingQuad:minimumCellSize:	swift.init	init(boundingQuad:minimumCellSize:)	GKQuadtree.init(boundingQuad:minimumCellSize:)	init(boundingQuad quad: GKQuad, minimumCellSize minCellSize: Float)
+c:objc(cs)GKQuadtree(im)removeElement:	swift.method	remove(_:)	GKQuadtree.remove(_:)	func remove(_ element: ElementType) -> Bool
+c:objc(cs)GKQuadtree(im)removeElement:withNode:	swift.method	remove(_:using:)	GKQuadtree.remove(_:using:)	func remove(_ data: ElementType, using node: GKQuadtreeNode) -> Bool
+c:objc(cs)GKQuadtreeNode	swift.class	GKQuadtreeNode	GKQuadtreeNode	class GKQuadtreeNode
+c:objc(cs)GKQuadtreeNode(py)quad	swift.property	quad	GKQuadtreeNode.quad	var quad: GKQuad { get }
+c:objc(cs)GKRTree	swift.class	GKRTree	GKRTree	class GKRTree<ElementType> where ElementType : NSObject
+c:objc(cs)GKRTree(im)addElement:boundingRectMin:boundingRectMax:splitStrategy:	swift.method	addElement(_:boundingRectMin:boundingRectMax:splitStrategy:)	GKRTree.addElement(_:boundingRectMin:boundingRectMax:splitStrategy:)	func addElement(_ element: ElementType, boundingRectMin: vector_float2, boundingRectMax: vector_float2, splitStrategy: GKRTreeSplitStrategy)
+c:objc(cs)GKRTree(im)elementsInBoundingRectMin:rectMax:	swift.method	elements(inBoundingRectMin:rectMax:)	GKRTree.elements(inBoundingRectMin:rectMax:)	func elements(inBoundingRectMin rectMin: vector_float2, rectMax: vector_float2) -> [ElementType]
+c:objc(cs)GKRTree(im)initWithMaxNumberOfChildren:	swift.init	init(maxNumberOfChildren:)	GKRTree.init(maxNumberOfChildren:)	init(maxNumberOfChildren: Int)
+c:objc(cs)GKRTree(im)removeElement:boundingRectMin:boundingRectMax:	swift.method	removeElement(_:boundingRectMin:boundingRectMax:)	GKRTree.removeElement(_:boundingRectMin:boundingRectMax:)	func removeElement(_ element: ElementType, boundingRectMin: vector_float2, boundingRectMax: vector_float2)
+c:objc(cs)GKRTree(py)queryReserve	swift.property	queryReserve	GKRTree.queryReserve	var queryReserve: Int { get set }
+c:objc(cs)GKRandomDistribution	swift.class	GKRandomDistribution	GKRandomDistribution	class GKRandomDistribution
+c:objc(cs)GKRandomDistribution(cm)d20	swift.type.method	d20()	GKRandomDistribution.d20()	class func d20() -> Self
+c:objc(cs)GKRandomDistribution(cm)d6	swift.type.method	d6()	GKRandomDistribution.d6()	class func d6() -> Self
+c:objc(cs)GKRandomDistribution(cm)distributionForDieWithSideCount:	swift.init	init(forDieWithSideCount:)	GKRandomDistribution.init(forDieWithSideCount:)	convenience init(forDieWithSideCount sideCount: Int)
+c:objc(cs)GKRandomDistribution(cm)distributionWithLowestValue:highestValue:	swift.init	init(lowestValue:highestValue:)	GKRandomDistribution.init(lowestValue:highestValue:)	convenience init(lowestValue lowestInclusive: Int, highestValue highestInclusive: Int)
+c:objc(cs)GKRandomDistribution(im)initWithRandomSource:lowestValue:highestValue:	swift.init	init(randomSource:lowestValue:highestValue:)	GKRandomDistribution.init(randomSource:lowestValue:highestValue:)	init(randomSource source: any GKRandom, lowestValue lowestInclusive: Int, highestValue highestInclusive: Int)
+c:objc(cs)GKRandomDistribution(im)nextBool	swift.method	nextBool()	GKRandomDistribution.nextBool()	func nextBool() -> Bool
+c:objc(cs)GKRandomDistribution(im)nextInt	swift.method	nextInt()	GKRandomDistribution.nextInt()	func nextInt() -> Int
+c:objc(cs)GKRandomDistribution(im)nextIntWithUpperBound:	swift.method	nextInt(upperBound:)	GKRandomDistribution.nextInt(upperBound:)	func nextInt(upperBound: Int) -> Int
+c:objc(cs)GKRandomDistribution(im)nextUniform	swift.method	nextUniform()	GKRandomDistribution.nextUniform()	func nextUniform() -> Float
+c:objc(cs)GKRandomDistribution(py)highestValue	swift.property	highestValue	GKRandomDistribution.highestValue	var highestValue: Int { get }
+c:objc(cs)GKRandomDistribution(py)lowestValue	swift.property	lowestValue	GKRandomDistribution.lowestValue	var lowestValue: Int { get }
+c:objc(cs)GKRandomDistribution(py)numberOfPossibleOutcomes	swift.property	numberOfPossibleOutcomes	GKRandomDistribution.numberOfPossibleOutcomes	var numberOfPossibleOutcomes: Int { get }
+c:objc(cs)GKRandomSource	swift.class	GKRandomSource	GKRandomSource	class GKRandomSource
+c:objc(cs)GKRandomSource(cm)sharedRandom	swift.type.method	sharedRandom()	GKRandomSource.sharedRandom()	class func sharedRandom() -> GKRandomSource
+c:objc(cs)GKRandomSource(im)arrayByShufflingObjectsInArray:	swift.method	arrayByShufflingObjects(in:)	GKRandomSource.arrayByShufflingObjects(in:)	func arrayByShufflingObjects(in array: [Any]) -> [Any]
+c:objc(cs)GKRandomSource(im)init	swift.init	init()	GKRandomSource.init()	init()
+c:objc(cs)GKRandomSource(im)initWithCoder:	swift.init	init(coder:)	GKRandomSource.init(coder:)	init(coder aDecoder: NSCoder)
+c:objc(cs)GKRidgedNoiseSource	swift.class	GKRidgedNoiseSource	GKRidgedNoiseSource	class GKRidgedNoiseSource
+c:objc(cs)GKRidgedNoiseSource(im)initWithFrequency:octaveCount:lacunarity:seed:	swift.init	init(frequency:octaveCount:lacunarity:seed:)	GKRidgedNoiseSource.init(frequency:octaveCount:lacunarity:seed:)	init(frequency: Double, octaveCount: Int, lacunarity: Double, seed: Int32)
+c:objc(cs)GKRule	swift.class	GKRule	GKRule	class GKRule
+c:objc(cs)GKRule(cm)ruleWithBlockPredicate:action:	swift.init	init(blockPredicate:action:)	GKRule.init(blockPredicate:action:)	convenience init(blockPredicate predicate: @escaping (GKRuleSystem) -> Bool, action: @escaping (GKRuleSystem) -> Void)
+c:objc(cs)GKRule(cm)ruleWithPredicate:assertingFact:grade:	swift.init	init(predicate:assertingFact:grade:)	GKRule.init(predicate:assertingFact:grade:)	convenience init(predicate: NSPredicate, assertingFact fact: any NSObjectProtocol, grade: Float)
+c:objc(cs)GKRule(cm)ruleWithPredicate:retractingFact:grade:	swift.init	init(predicate:retractingFact:grade:)	GKRule.init(predicate:retractingFact:grade:)	convenience init(predicate: NSPredicate, retractingFact fact: any NSObjectProtocol, grade: Float)
+c:objc(cs)GKRule(im)evaluatePredicateWithSystem:	swift.method	evaluatePredicate(in:)	GKRule.evaluatePredicate(in:)	func evaluatePredicate(in system: GKRuleSystem) -> Bool
+c:objc(cs)GKRule(im)performActionWithSystem:	swift.method	performAction(in:)	GKRule.performAction(in:)	func performAction(in system: GKRuleSystem)
+c:objc(cs)GKRule(py)salience	swift.property	salience	GKRule.salience	var salience: Int { get set }
+c:objc(cs)GKRuleSystem	swift.class	GKRuleSystem	GKRuleSystem	class GKRuleSystem
+c:objc(cs)GKRuleSystem(im)addRule:	swift.method	add(_:)	GKRuleSystem.add(_:)	func add(_ rule: GKRule)
+c:objc(cs)GKRuleSystem(im)addRulesFromArray:	swift.method	add(_:)	GKRuleSystem.add(_:)	func add(_ rules: [GKRule])
+c:objc(cs)GKRuleSystem(im)assertFact:	swift.method	assertFact(_:)	GKRuleSystem.assertFact(_:)	func assertFact(_ fact: any NSObjectProtocol)
+c:objc(cs)GKRuleSystem(im)assertFact:grade:	swift.method	assertFact(_:grade:)	GKRuleSystem.assertFact(_:grade:)	func assertFact(_ fact: any NSObjectProtocol, grade: Float)
+c:objc(cs)GKRuleSystem(im)evaluate	swift.method	evaluate()	GKRuleSystem.evaluate()	func evaluate()
+c:objc(cs)GKRuleSystem(im)gradeForFact:	swift.method	grade(forFact:)	GKRuleSystem.grade(forFact:)	func grade(forFact fact: any NSObjectProtocol) -> Float
+c:objc(cs)GKRuleSystem(im)init	swift.init	init()	GKRuleSystem.init()	init()
+c:objc(cs)GKRuleSystem(im)maximumGradeForFacts:	swift.method	maximumGrade(forFacts:)	GKRuleSystem.maximumGrade(forFacts:)	func maximumGrade(forFacts facts: [Any]) -> Float
+c:objc(cs)GKRuleSystem(im)minimumGradeForFacts:	swift.method	minimumGrade(forFacts:)	GKRuleSystem.minimumGrade(forFacts:)	func minimumGrade(forFacts facts: [Any]) -> Float
+c:objc(cs)GKRuleSystem(im)removeAllRules	swift.method	removeAllRules()	GKRuleSystem.removeAllRules()	func removeAllRules()
+c:objc(cs)GKRuleSystem(im)reset	swift.method	reset()	GKRuleSystem.reset()	func reset()
+c:objc(cs)GKRuleSystem(im)retractFact:	swift.method	retractFact(_:)	GKRuleSystem.retractFact(_:)	func retractFact(_ fact: any NSObjectProtocol)
+c:objc(cs)GKRuleSystem(im)retractFact:grade:	swift.method	retractFact(_:grade:)	GKRuleSystem.retractFact(_:grade:)	func retractFact(_ fact: any NSObjectProtocol, grade: Float)
+c:objc(cs)GKRuleSystem(py)agenda	swift.property	agenda	GKRuleSystem.agenda	var agenda: [GKRule] { get }
+c:objc(cs)GKRuleSystem(py)executed	swift.property	executed	GKRuleSystem.executed	var executed: [GKRule] { get }
+c:objc(cs)GKRuleSystem(py)facts	swift.property	facts	GKRuleSystem.facts	var facts: [Any] { get }
+c:objc(cs)GKRuleSystem(py)rules	swift.property	rules	GKRuleSystem.rules	var rules: [GKRule] { get }
+c:objc(cs)GKRuleSystem(py)state	swift.property	state	GKRuleSystem.state	var state: NSMutableDictionary { get }
+c:objc(cs)GKSCNNodeComponent	swift.class	GKSCNNodeComponent	GKSCNNodeComponent	class GKSCNNodeComponent
+c:objc(cs)GKSCNNodeComponent(im)initWithNode:	swift.init	init(node:)	GKSCNNodeComponent.init(node:)	init(node: SCNNode)
+c:objc(cs)GKSCNNodeComponent(py)node	swift.property	node	GKSCNNodeComponent.node	var node: SCNNode { get }
+c:objc(cs)GKSKNodeComponent	swift.class	GKSKNodeComponent	GKSKNodeComponent	class GKSKNodeComponent
+c:objc(cs)GKSKNodeComponent(im)initWithNode:	swift.init	init(node:)	GKSKNodeComponent.init(node:)	init(node: SKNode)
+c:objc(cs)GKSKNodeComponent(py)node	swift.property	node	GKSKNodeComponent.node	var node: SKNode { get set }
+c:objc(cs)GKScene	swift.class	GKScene	GKScene	class GKScene
+c:objc(cs)GKScene(cm)sceneWithFileNamed:	swift.init	init(fileNamed:)	GKScene.init(fileNamed:)	convenience init?(fileNamed filename: String)
+c:objc(cs)GKScene(cm)sceneWithFileNamed:rootNode:	swift.init	init(fileNamed:rootNode:)	GKScene.init(fileNamed:rootNode:)	convenience init?(fileNamed filename: String, rootNode: any GKSceneRootNodeType)
+c:objc(cs)GKScene(im)addEntity:	swift.method	addEntity(_:)	GKScene.addEntity(_:)	func addEntity(_ entity: GKEntity)
+c:objc(cs)GKScene(im)addGraph:name:	swift.method	addGraph(_:name:)	GKScene.addGraph(_:name:)	func addGraph(_ graph: GKGraph, name: String)
+c:objc(cs)GKScene(im)removeEntity:	swift.method	removeEntity(_:)	GKScene.removeEntity(_:)	func removeEntity(_ entity: GKEntity)
+c:objc(cs)GKScene(im)removeGraph:	swift.method	removeGraph(_:)	GKScene.removeGraph(_:)	func removeGraph(_ name: String)
+c:objc(cs)GKScene(py)entities	swift.property	entities	GKScene.entities	var entities: [GKEntity] { get }
+c:objc(cs)GKScene(py)graphs	swift.property	graphs	GKScene.graphs	var graphs: [String : GKGraph] { get }
+c:objc(cs)GKScene(py)rootNode	swift.property	rootNode	GKScene.rootNode	var rootNode: (any GKSceneRootNodeType)? { get set }
+c:objc(cs)GKShuffledDistribution	swift.class	GKShuffledDistribution	GKShuffledDistribution	class GKShuffledDistribution
+c:objc(cs)GKSphereObstacle	swift.class	GKSphereObstacle	GKSphereObstacle	class GKSphereObstacle
+c:objc(cs)GKSphereObstacle(im)initWithRadius:	swift.init	init(radius:)	GKSphereObstacle.init(radius:)	init(radius: Float)
+c:objc(cs)GKSphereObstacle(py)position	swift.property	position	GKSphereObstacle.position	var position: vector_float3 { get set }
+c:objc(cs)GKSphereObstacle(py)radius	swift.property	radius	GKSphereObstacle.radius	var radius: Float { get set }
+c:objc(cs)GKSpheresNoiseSource	swift.class	GKSpheresNoiseSource	GKSpheresNoiseSource	class GKSpheresNoiseSource
+c:objc(cs)GKSpheresNoiseSource(cm)spheresNoiseWithFrequency:	swift.type.method	spheresNoise(withFrequency:)	GKSpheresNoiseSource.spheresNoise(withFrequency:)	class func spheresNoise(withFrequency frequency: Double) -> Self
+c:objc(cs)GKSpheresNoiseSource(im)initWithFrequency:	swift.init	init(frequency:)	GKSpheresNoiseSource.init(frequency:)	init(frequency: Double)
+c:objc(cs)GKSpheresNoiseSource(py)frequency	swift.property	frequency	GKSpheresNoiseSource.frequency	var frequency: Double { get set }
+c:objc(cs)GKState	swift.class	GKState	GKState	class GKState
+c:objc(cs)GKState(im)didEnterWithPreviousState:	swift.method	didEnter(from:)	GKState.didEnter(from:)	func didEnter(from previousState: GKState?)
+c:objc(cs)GKState(im)init	swift.init	init()	GKState.init()	init()
+c:objc(cs)GKState(im)isValidNextState:	swift.method	isValidNextState(_:)	GKState.isValidNextState(_:)	func isValidNextState(_ stateClass: AnyClass) -> Bool
+c:objc(cs)GKState(im)updateWithDeltaTime:	swift.method	update(deltaTime:)	GKState.update(deltaTime:)	func update(deltaTime seconds: TimeInterval)
+c:objc(cs)GKState(im)willExitWithNextState:	swift.method	willExit(to:)	GKState.willExit(to:)	func willExit(to nextState: GKState)
+c:objc(cs)GKState(py)stateMachine	swift.property	stateMachine	GKState.stateMachine	weak var stateMachine: GKStateMachine? { get }
+c:objc(cs)GKStateMachine	swift.class	GKStateMachine	GKStateMachine	class GKStateMachine
+c:objc(cs)GKStateMachine(im)canEnterState:	swift.method	canEnterState(_:)	GKStateMachine.canEnterState(_:)	func canEnterState(_ stateClass: AnyClass) -> Bool
+c:objc(cs)GKStateMachine(im)enterState:	swift.method	enter(_:)	GKStateMachine.enter(_:)	func enter(_ stateClass: AnyClass) -> Bool
+c:objc(cs)GKStateMachine(im)initWithStates:	swift.init	init(states:)	GKStateMachine.init(states:)	init(states: [GKState])
+c:objc(cs)GKStateMachine(im)updateWithDeltaTime:	swift.method	update(deltaTime:)	GKStateMachine.update(deltaTime:)	func update(deltaTime sec: TimeInterval)
+c:objc(cs)GKStateMachine(py)currentState	swift.property	currentState	GKStateMachine.currentState	var currentState: GKState? { get }
+c:objc(cs)GKVoronoiNoiseSource	swift.class	GKVoronoiNoiseSource	GKVoronoiNoiseSource	class GKVoronoiNoiseSource
+c:objc(cs)GKVoronoiNoiseSource(cm)voronoiNoiseWithFrequency:displacement:distanceEnabled:seed:	swift.type.method	voronoiNoise(withFrequency:displacement:distanceEnabled:seed:)	GKVoronoiNoiseSource.voronoiNoise(withFrequency:displacement:distanceEnabled:seed:)	class func voronoiNoise(withFrequency frequency: Double, displacement: Double, distanceEnabled: Bool, seed: Int32) -> Self
+c:objc(cs)GKVoronoiNoiseSource(im)initWithFrequency:displacement:distanceEnabled:seed:	swift.init	init(frequency:displacement:distanceEnabled:seed:)	GKVoronoiNoiseSource.init(frequency:displacement:distanceEnabled:seed:)	init(frequency: Double, displacement: Double, distanceEnabled: Bool, seed: Int32)
+c:objc(cs)GKVoronoiNoiseSource(py)displacement	swift.property	displacement	GKVoronoiNoiseSource.displacement	var displacement: Double { get set }
+c:objc(cs)GKVoronoiNoiseSource(py)distanceEnabled	swift.property	isDistanceEnabled	GKVoronoiNoiseSource.isDistanceEnabled	var isDistanceEnabled: Bool { get set }
+c:objc(cs)GKVoronoiNoiseSource(py)frequency	swift.property	frequency	GKVoronoiNoiseSource.frequency	var frequency: Double { get set }
+c:objc(cs)GKVoronoiNoiseSource(py)seed	swift.property	seed	GKVoronoiNoiseSource.seed	var seed: Int32 { get set }
+c:objc(cs)NSArray(im)shuffledArray	swift.method	shuffled()	NSArray.shuffled()	func shuffled() -> [Any]
+c:objc(cs)NSArray(im)shuffledArrayWithRandomSource:	swift.method	shuffled(using:)	NSArray.shuffled(using:)	func shuffled(using randomSource: GKRandomSource) -> [Any]
+c:objc(cs)SCNNode(py)entity	swift.property	entity	SCNNode.entity	weak var entity: GKEntity? { get set }
+c:objc(cs)SKNode(cm)obstaclesFromNodeBounds:	swift.type.method	obstacles(fromNodeBounds:)	SKNode.obstacles(fromNodeBounds:)	@MainActor class func obstacles(fromNodeBounds nodes: [SKNode]) -> [GKPolygonObstacle]
+c:objc(cs)SKNode(cm)obstaclesFromNodePhysicsBodies:	swift.type.method	obstacles(fromNodePhysicsBodies:)	SKNode.obstacles(fromNodePhysicsBodies:)	@MainActor class func obstacles(fromNodePhysicsBodies nodes: [SKNode]) -> [GKPolygonObstacle]
+c:objc(cs)SKNode(cm)obstaclesFromSpriteTextures:accuracy:	swift.type.method	obstacles(fromSpriteTextures:accuracy:)	SKNode.obstacles(fromSpriteTextures:accuracy:)	@MainActor class func obstacles(fromSpriteTextures sprites: [SKNode], accuracy: Float) -> [GKPolygonObstacle]
+c:objc(cs)SKNode(py)entity	swift.property	entity	SKNode.entity	@MainActor weak var entity: GKEntity? { get set }
+c:objc(cs)SKTexture(cm)textureWithNoiseMap:	swift.init	init(noiseMap:)	SKTexture.init(noiseMap:)	convenience init(noiseMap: GKNoiseMap)
+c:objc(cs)SKTileMapNode(cm)tileMapNodesWithTileSet:columns:rows:tileSize:fromNoiseMap:tileTypeNoiseMapThresholds:	swift.type.method	tileMapNodes(tileSet:columns:rows:tileSize:from:tileTypeNoiseMapThresholds:)	SKTileMapNode.tileMapNodes(tileSet:columns:rows:tileSize:from:tileTypeNoiseMapThresholds:)	@MainActor class func tileMapNodes(tileSet: SKTileSet, columns: Int, rows: Int, tileSize: CGSize, from noiseMap: GKNoiseMap, tileTypeNoiseMapThresholds thresholds: [NSNumber]) -> [SKTileMapNode]
+c:objc(pl)GKAgentDelegate	swift.protocol	GKAgentDelegate	GKAgentDelegate	protocol GKAgentDelegate : NSObjectProtocol
+c:objc(pl)GKAgentDelegate(im)agentDidUpdate:	swift.method	agentDidUpdate(_:)	GKAgentDelegate.agentDidUpdate(_:)	optional func agentDidUpdate(_ agent: GKAgent)
+c:objc(pl)GKAgentDelegate(im)agentWillUpdate:	swift.method	agentWillUpdate(_:)	GKAgentDelegate.agentWillUpdate(_:)	optional func agentWillUpdate(_ agent: GKAgent)
+c:objc(pl)GKGameModel	swift.protocol	GKGameModel	GKGameModel	protocol GKGameModel : NSCopying, NSObjectProtocol
+c:objc(pl)GKGameModel(im)applyGameModelUpdate:	swift.method	apply(_:)	GKGameModel.apply(_:)	func apply(_ gameModelUpdate: any GKGameModelUpdate)
+c:objc(pl)GKGameModel(im)gameModelUpdatesForPlayer:	swift.method	gameModelUpdates(for:)	GKGameModel.gameModelUpdates(for:)	func gameModelUpdates(for player: any GKGameModelPlayer) -> [any GKGameModelUpdate]?
+c:objc(pl)GKGameModel(im)isLossForPlayer:	swift.method	isLoss(for:)	GKGameModel.isLoss(for:)	optional func isLoss(for player: any GKGameModelPlayer) -> Bool
+c:objc(pl)GKGameModel(im)isWinForPlayer:	swift.method	isWin(for:)	GKGameModel.isWin(for:)	optional func isWin(for player: any GKGameModelPlayer) -> Bool
+c:objc(pl)GKGameModel(im)scoreForPlayer:	swift.method	score(for:)	GKGameModel.score(for:)	optional func score(for player: any GKGameModelPlayer) -> Int
+c:objc(pl)GKGameModel(im)setGameModel:	swift.method	setGameModel(_:)	GKGameModel.setGameModel(_:)	func setGameModel(_ gameModel: any GKGameModel)
+c:objc(pl)GKGameModel(im)unapplyGameModelUpdate:	swift.method	unapplyGameModelUpdate(_:)	GKGameModel.unapplyGameModelUpdate(_:)	optional func unapplyGameModelUpdate(_ gameModelUpdate: any GKGameModelUpdate)
+c:objc(pl)GKGameModel(py)activePlayer	swift.property	activePlayer	GKGameModel.activePlayer	var activePlayer: (any GKGameModelPlayer)? { get }
+c:objc(pl)GKGameModel(py)players	swift.property	players	GKGameModel.players	var players: [any GKGameModelPlayer]? { get }
+c:objc(pl)GKGameModelPlayer	swift.protocol	GKGameModelPlayer	GKGameModelPlayer	protocol GKGameModelPlayer : NSObjectProtocol
+c:objc(pl)GKGameModelPlayer(py)playerId	swift.property	playerId	GKGameModelPlayer.playerId	var playerId: Int { get }
+c:objc(pl)GKGameModelUpdate	swift.protocol	GKGameModelUpdate	GKGameModelUpdate	protocol GKGameModelUpdate : NSObjectProtocol
+c:objc(pl)GKGameModelUpdate(py)value	swift.property	value	GKGameModelUpdate.value	var value: Int { get set }
+c:objc(pl)GKRandom	swift.protocol	GKRandom	GKRandom	protocol GKRandom
+c:objc(pl)GKRandom(im)nextBool	swift.method	nextBool()	GKRandom.nextBool()	func nextBool() -> Bool
+c:objc(pl)GKRandom(im)nextInt	swift.method	nextInt()	GKRandom.nextInt()	func nextInt() -> Int
+c:objc(pl)GKRandom(im)nextIntWithUpperBound:	swift.method	nextInt(upperBound:)	GKRandom.nextInt(upperBound:)	func nextInt(upperBound: Int) -> Int
+c:objc(pl)GKRandom(im)nextUniform	swift.method	nextUniform()	GKRandom.nextUniform()	func nextUniform() -> Float
+c:objc(pl)GKSceneRootNodeType	swift.protocol	GKSceneRootNodeType	GKSceneRootNodeType	protocol GKSceneRootNodeType : NSObjectProtocol
+c:objc(pl)GKStrategist	swift.protocol	GKStrategist	GKStrategist	protocol GKStrategist : NSObjectProtocol
+c:objc(pl)GKStrategist(im)bestMoveForActivePlayer	swift.method	bestMoveForActivePlayer()	GKStrategist.bestMoveForActivePlayer()	func bestMoveForActivePlayer() -> (any GKGameModelUpdate)?
+c:objc(pl)GKStrategist(py)gameModel	swift.property	gameModel	GKStrategist.gameModel	var gameModel: (any GKGameModel)? { get set }
+c:objc(pl)GKStrategist(py)randomSource	swift.property	randomSource	GKStrategist.randomSource	var randomSource: (any GKRandom)? { get set }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKComponent	swift.init	init(coder:)	GKComponent.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKDecisionTree	swift.init	init(coder:)	GKDecisionTree.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKEntity	swift.init	init(coder:)	GKEntity.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKGraph	swift.init	init(coder:)	GKGraph.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKGraphNode	swift.init	init(coder:)	GKGraphNode.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKPolygonObstacle	swift.init	init(coder:)	GKPolygonObstacle.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKScene	swift.init	init(coder:)	GKScene.init(coder:)	init?(coder: NSCoder)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.func.op	!=(_:_:)	GKMeshGraphTriangulationMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GKRTreeSplitStrategy	swift.func.op	!=(_:_:)	GKRTreeSplitStrategy.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GKRTreeSplitStrategy	swift.property	hashValue	GKRTreeSplitStrategy.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GKRTreeSplitStrategy	swift.method	hash(into:)	GKRTreeSplitStrategy.hash(into:)	func hash(into hasher: inout Hasher)
+s:So10GKTriangleV6pointsABs5SIMD3VySfG_A2Ft_tcfc	swift.init	init(points:)	GKTriangle.init(points:)	init(points: (vector_float3, vector_float3, vector_float3))
+s:So10GKTriangleVABycfc	swift.init	init()	GKTriangle.init()	init()
+s:So14GKStateMachineC11GameplayKitE5state8forClassxSgxm_tSo0A0CRbzlF	swift.method	state(forClass:)	GKStateMachine.state(forClass:)	func state<StateType>(forClass stateClass: StateType.Type) -> StateType? where StateType : GKState
+s:So17GKPolygonObstacleC11GameplayKitE6pointsABSays5SIMD2VySfGG_tcfc	swift.init	init(points:)	GKPolygonObstacle.init(points:)	convenience init(points: [SIMD2<Float>])
+s:So20GKRTreeSplitStrategyV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GKRTreeSplitStrategy.init(rawValue:)	init?(rawValue: Int)
+s:So28GKMeshGraphTriangulationModeV8rawValueABSu_tcfc	swift.init	init(rawValue:)	GKMeshGraphTriangulationMode.init(rawValue:)	init(rawValue: UInt)
+s:So5GKBoxV6boxMin0B3MaxABs5SIMD3VySfG_AGtcfc	swift.init	init(boxMin:boxMax:)	GKBox.init(boxMin:boxMax:)	init(boxMin: vector_float3, boxMax: vector_float3)
+s:So5GKBoxVABycfc	swift.init	init()	GKBox.init()	init()
+s:So6GKPathC11GameplayKitE6points6radius8cyclicalABSays5SIMD2VySfGG_SfSbtcfc	swift.init	init(points:radius:cyclical:)	GKPath.init(points:radius:cyclical:)	convenience init(points: [SIMD2<Float>], radius: Float, cyclical: Bool)
+s:So6GKPathC11GameplayKitE6points6radius8cyclicalABSays5SIMD3VySfGG_SfSbtcfc	swift.init	init(points:radius:cyclical:)	GKPath.init(points:radius:cyclical:)	convenience init(points: [SIMD3<Float>], radius: Float, cyclical: Bool)
+s:So6GKQuadV7quadMin0B3MaxABs5SIMD2VySfG_AGtcfc	swift.init	init(quadMin:quadMax:)	GKQuad.init(quadMin:quadMax:)	init(quadMin: vector_float2, quadMax: vector_float2)
+s:So6GKQuadVABycfc	swift.init	init()	GKQuad.init()	init()
+s:So8GKEntityC11GameplayKitE15removeComponent6ofTypeyxm_tSo11GKComponentCRbzlF	swift.method	removeComponent(ofType:)	GKEntity.removeComponent(ofType:)	func removeComponent<ComponentType>(ofType componentClass: ComponentType.Type) where ComponentType : GKComponent
+s:So8GKEntityC11GameplayKitE9component6ofTypexSgxm_tSo11GKComponentCRbzlF	swift.method	component(ofType:)	GKEntity.component(ofType:)	func component<ComponentType>(ofType componentClass: ComponentType.Type) -> ComponentType? where ComponentType : GKComponent
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.init	init(arrayLiteral:)	GKMeshGraphTriangulationMode.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	isDisjoint(with:)	GKMeshGraphTriangulationMode.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	isSuperset(of:)	GKMeshGraphTriangulationMode.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	subtracting(_:)	GKMeshGraphTriangulationMode.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	isStrictSubset(of:)	GKMeshGraphTriangulationMode.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	isStrictSuperset(of:)	GKMeshGraphTriangulationMode.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.property	isEmpty	GKMeshGraphTriangulationMode.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	isSubset(of:)	GKMeshGraphTriangulationMode.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	subtract(_:)	GKMeshGraphTriangulationMode.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.init	init(_:)	GKMeshGraphTriangulationMode.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	insert(_:)	GKMeshGraphTriangulationMode.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	remove(_:)	GKMeshGraphTriangulationMode.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	update(with:)	GKMeshGraphTriangulationMode.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	contains(_:)	GKMeshGraphTriangulationMode.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	intersection(_:)	GKMeshGraphTriangulationMode.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	symmetricDifference(_:)	GKMeshGraphTriangulationMode.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	union(_:)	GKMeshGraphTriangulationMode.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	formIntersection(_:)	GKMeshGraphTriangulationMode.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	formSymmetricDifference(_:)	GKMeshGraphTriangulationMode.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.method	formUnion(_:)	GKMeshGraphTriangulationMode.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@GKMeshGraphTriangulationMode	swift.init	init()	GKMeshGraphTriangulationMode.init()	init()

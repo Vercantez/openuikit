@@ -1,0 +1,77 @@
+precise	kind	title	path	declaration
+s:16AdAttributionKit0abC5ErrorO	swift.enum	AdAttributionKitError	AdAttributionKitError	enum AdAttributionKitError
+s:16AdAttributionKit0abC5ErrorO07missingB4ViewyA2CmF	swift.enum.case	AdAttributionKitError.missingAttributionView	AdAttributionKitError.missingAttributionView	case missingAttributionView
+s:16AdAttributionKit0abC5ErrorO11descriptionSSvp	swift.property	description	AdAttributionKitError.description	var description: String { get }
+s:16AdAttributionKit0abC5ErrorO17impressionExpiredyA2CmF	swift.enum.case	AdAttributionKitError.impressionExpired	AdAttributionKitError.impressionExpired	case impressionExpired
+s:16AdAttributionKit0abC5ErrorO20invalidConversionTagyA2CmF	swift.enum.case	AdAttributionKitError.invalidConversionTag	AdAttributionKitError.invalidConversionTag	case invalidConversionTag
+s:16AdAttributionKit0abC5ErrorO25conversionTagNotSupportedyA2CmF	swift.enum.case	AdAttributionKitError.conversionTagNotSupported	AdAttributionKitError.conversionTagNotSupported	case conversionTagNotSupported
+s:16AdAttributionKit0abC5ErrorO26invalidImpressionJWSHeaderyA2CmF	swift.enum.case	AdAttributionKitError.invalidImpressionJWSHeader	AdAttributionKitError.invalidImpressionJWSHeader	case invalidImpressionJWSHeader
+s:16AdAttributionKit0abC5ErrorO27invalidImpressionJWSPayloadyA2CmF	swift.enum.case	AdAttributionKitError.invalidImpressionJWSPayload	AdAttributionKitError.invalidImpressionJWSPayload	case invalidImpressionJWSPayload
+s:16AdAttributionKit0abC5ErrorO29invalidImpressionJWSSignatureyA2CmF	swift.enum.case	AdAttributionKitError.invalidImpressionJWSSignature	AdAttributionKitError.invalidImpressionJWSSignature	case invalidImpressionJWSSignature
+s:16AdAttributionKit0abC5ErrorO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	AdAttributionKitError.==(_:_:)	static func == (a: AdAttributionKitError, b: AdAttributionKitError) -> Bool
+s:16AdAttributionKit0abC5ErrorO30invalidImpressionJWSComponentsyA2CmF	swift.enum.case	AdAttributionKitError.invalidImpressionJWSComponents	AdAttributionKitError.invalidImpressionJWSComponents	case invalidImpressionJWSComponents
+s:16AdAttributionKit0abC5ErrorO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	AdAttributionKitError.hash(into:)	func hash(into hasher: inout Hasher)
+s:16AdAttributionKit0abC5ErrorO7unknownyA2CmF	swift.enum.case	AdAttributionKitError.unknown	AdAttributionKitError.unknown	case unknown
+s:16AdAttributionKit0abC5ErrorO9hashValueSivp	swift.property	hashValue	AdAttributionKitError.hashValue	var hashValue: Int { get }
+s:16AdAttributionKit13AppImpressionV	swift.struct	AppImpression	AppImpression	struct AppImpression
+s:16AdAttributionKit13AppImpressionV10compactJWSACSS_tYaKcfc	swift.init	init(compactJWS:)	AppImpression.init(compactJWS:)	init(compactJWS: String) async throws
+s:16AdAttributionKit13AppImpressionV11adNetworkIDSSvp	swift.property	adNetworkID	AppImpression.adNetworkID	var adNetworkID: String { get }
+s:16AdAttributionKit13AppImpressionV11isSupportedSbvpZ	swift.type.property	isSupported	AppImpression.isSupported	static var isSupported: Bool { get }
+s:16AdAttributionKit13AppImpressionV15publisherItemIDs6UInt64Vvp	swift.property	publisherItemID	AppImpression.publisherItemID	var publisherItemID: UInt64 { get }
+s:16AdAttributionKit13AppImpressionV16advertisedItemIDs6UInt64Vvp	swift.property	advertisedItemID	AppImpression.advertisedItemID	var advertisedItemID: UInt64 { get }
+s:16AdAttributionKit13AppImpressionV23eligibleForReengagementSbvp	swift.property	eligibleForReengagement	AppImpression.eligibleForReengagement	var eligibleForReengagement: Bool { get }
+s:16AdAttributionKit13AppImpressionV24compactJWSRepresentationSSvp	swift.property	compactJWSRepresentation	AppImpression.compactJWSRepresentation	var compactJWSRepresentation: String { get }
+s:16AdAttributionKit13AppImpressionV2IDa	swift.typealias	AppImpression.ID	AppImpression.ID	typealias ID = UUID
+s:16AdAttributionKit13AppImpressionV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	AppImpression.==(_:_:)	static func == (lhs: AppImpression, rhs: AppImpression) -> Bool
+s:16AdAttributionKit13AppImpressionV2id10Foundation4UUIDVvp	swift.property	id	AppImpression.id	var id: UUID { get }
+s:16AdAttributionKit13AppImpressionV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	AppImpression.hash(into:)	func hash(into hasher: inout Hasher)
+s:16AdAttributionKit13AppImpressionV5keyIDSSvp	swift.property	keyID	AppImpression.keyID	var keyID: String { get }
+s:16AdAttributionKit13AppImpressionV7endViewyyYaKF	swift.method	endView()	AppImpression.endView()	func endView() async throws
+s:16AdAttributionKit13AppImpressionV8sourceIDSivp	swift.property	sourceID	AppImpression.sourceID	var sourceID: Int { get }
+s:16AdAttributionKit13AppImpressionV9beginViewyyYaKF	swift.method	beginView()	AppImpression.beginView()	func beginView() async throws
+s:16AdAttributionKit13AppImpressionV9handleTap15reengagementURLy10Foundation0I0V_tYaKF	swift.method	handleTap(reengagementURL:)	AppImpression.handleTap(reengagementURL:)	func handleTap(reengagementURL: URL) async throws
+s:16AdAttributionKit13AppImpressionV9handleTapyyYaKF	swift.method	handleTap()	AppImpression.handleTap()	func handleTap() async throws
+s:16AdAttributionKit13AppImpressionV9hashValueSivp	swift.property	hashValue	AppImpression.hashValue	var hashValue: Int { get }
+s:16AdAttributionKit13AppImpressionV9timestamp10Foundation4DateVvp	swift.property	timestamp	AppImpression.timestamp	var timestamp: Date { get }
+s:16AdAttributionKit14PostbackUpdateV	swift.struct	PostbackUpdate	PostbackUpdate	struct PostbackUpdate
+s:16AdAttributionKit14PostbackUpdateV04lockD0Sbvp	swift.property	lockPostback	PostbackUpdate.lockPostback	let lockPostback: Bool
+s:16AdAttributionKit14PostbackUpdateV13conversionTagSSSgvp	swift.property	conversionTag	PostbackUpdate.conversionTag	let conversionTag: String?
+s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO	swift.enum	PostbackUpdate.ConversionType	PostbackUpdate.ConversionType	enum ConversionType
+s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO12reengagementyA2EmF	swift.enum.case	PostbackUpdate.ConversionType.reengagement	PostbackUpdate.ConversionType.reengagement	case reengagement
+s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO7installyA2EmF	swift.enum.case	PostbackUpdate.ConversionType.install	PostbackUpdate.ConversionType.install	case install
+s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO8RawValuea	swift.typealias	PostbackUpdate.ConversionType.RawValue	PostbackUpdate.ConversionType.RawValue	typealias RawValue = String
+s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO8rawValueAESgSS_tcfc	swift.init	init(rawValue:)	PostbackUpdate.ConversionType.init(rawValue:)	init?(rawValue: String)
+s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO8rawValueSSvp	swift.property	rawValue	PostbackUpdate.ConversionType.rawValue	var rawValue: String { get }
+s:16AdAttributionKit14PostbackUpdateV15conversionTypesSayAC14ConversionTypeOGSgvp	swift.property	conversionTypes	PostbackUpdate.conversionTypes	let conversionTypes: [PostbackUpdate.ConversionType]?
+s:16AdAttributionKit14PostbackUpdateV19fineConversionValue04lockD006coarsegH015conversionTypesACSi_SbAA06CoarsegH0OSgSayAC0G4TypeOGSgtcfc	swift.init	init(fineConversionValue:lockPostback:coarseConversionValue:conversionTypes:)	PostbackUpdate.init(fineConversionValue:lockPostback:coarseConversionValue:conversionTypes:)	init(fineConversionValue: Int, lockPostback: Bool, coarseConversionValue: CoarseConversionValue? = nil, conversionTypes: [PostbackUpdate.ConversionType]? = nil)
+s:16AdAttributionKit14PostbackUpdateV19fineConversionValue04lockD013conversionTag06coarsegH00J5TypesACSi_SbSSAA06CoarsegH0OSgSayAC0G4TypeOGSgtcfc	swift.init	init(fineConversionValue:lockPostback:conversionTag:coarseConversionValue:conversionTypes:)	PostbackUpdate.init(fineConversionValue:lockPostback:conversionTag:coarseConversionValue:conversionTypes:)	init(fineConversionValue: Int, lockPostback: Bool, conversionTag: String, coarseConversionValue: CoarseConversionValue? = nil, conversionTypes: [PostbackUpdate.ConversionType]? = nil)
+s:16AdAttributionKit14PostbackUpdateV19fineConversionValueSivp	swift.property	fineConversionValue	PostbackUpdate.fineConversionValue	let fineConversionValue: Int
+s:16AdAttributionKit14PostbackUpdateV21coarseConversionValueAA06CoarsegH0OSgvp	swift.property	coarseConversionValue	PostbackUpdate.coarseConversionValue	let coarseConversionValue: CoarseConversionValue?
+s:16AdAttributionKit21CoarseConversionValueO	swift.enum	CoarseConversionValue	CoarseConversionValue	enum CoarseConversionValue
+s:16AdAttributionKit21CoarseConversionValueO03RawF0a	swift.typealias	CoarseConversionValue.RawValue	CoarseConversionValue.RawValue	typealias RawValue = String
+s:16AdAttributionKit21CoarseConversionValueO03rawF0ACSgSS_tcfc	swift.init	init(rawValue:)	CoarseConversionValue.init(rawValue:)	init?(rawValue: String)
+s:16AdAttributionKit21CoarseConversionValueO03rawF0SSvp	swift.property	rawValue	CoarseConversionValue.rawValue	var rawValue: String { get }
+s:16AdAttributionKit21CoarseConversionValueO3lowyA2CmF	swift.enum.case	CoarseConversionValue.low	CoarseConversionValue.low	case low
+s:16AdAttributionKit21CoarseConversionValueO4highyA2CmF	swift.enum.case	CoarseConversionValue.high	CoarseConversionValue.high	case high
+s:16AdAttributionKit21CoarseConversionValueO6mediumyA2CmF	swift.enum.case	CoarseConversionValue.medium	CoarseConversionValue.medium	case medium
+s:16AdAttributionKit8PostbackV	swift.struct	Postback	Postback	struct Postback
+s:16AdAttributionKit8PostbackV11isSupportedSbvpZ	swift.type.property	isSupported	Postback.isSupported	static var isSupported: Bool { get }
+s:16AdAttributionKit8PostbackV21updateConversionValue_04lockD0ySi_SbtYaKFZ	swift.type.method	updateConversionValue(_:lockPostback:)	Postback.updateConversionValue(_:lockPostback:)	static func updateConversionValue(_ fineConversionValue: Int, lockPostback: Bool) async throws
+s:16AdAttributionKit8PostbackV21updateConversionValue_06coarsefG004lockD0ySi_AA06CoarsefG0OSbtYaKFZ	swift.type.method	updateConversionValue(_:coarseConversionValue:lockPostback:)	Postback.updateConversionValue(_:coarseConversionValue:lockPostback:)	static func updateConversionValue(_ fineConversionValue: Int, coarseConversionValue: CoarseConversionValue, lockPostback: Bool) async throws
+s:16AdAttributionKit8PostbackV21updateConversionValueyyAA0D6UpdateVYaKFZ	swift.type.method	updateConversionValue(_:)	Postback.updateConversionValue(_:)	static func updateConversionValue(_ postbackUpdate: PostbackUpdate) async throws
+s:16AdAttributionKit8PostbackV28reengagementOpenURLParameterSSvpZ	swift.type.property	reengagementOpenURLParameter	Postback.reengagementOpenURLParameter	static var reengagementOpenURLParameter: String { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16AdAttributionKit0abC5ErrorO	swift.func.op	!=(_:_:)	AdAttributionKitError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16AdAttributionKit13AppImpressionV	swift.func.op	!=(_:_:)	AppImpression.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO	swift.func.op	!=(_:_:)	PostbackUpdate.ConversionType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16AdAttributionKit21CoarseConversionValueO	swift.func.op	!=(_:_:)	CoarseConversionValue.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSERzSS8RawValueSYRtzrlE6encode2toys7Encoder_p_tKF::SYNTHESIZED::s:16AdAttributionKit21CoarseConversionValueO	swift.method	encode(to:)	CoarseConversionValue.encode(to:)	func encode(to encoder: any Encoder) throws
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO	swift.property	hashValue	PostbackUpdate.ConversionType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:16AdAttributionKit21CoarseConversionValueO	swift.property	hashValue	CoarseConversionValue.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO	swift.method	hash(into:)	PostbackUpdate.ConversionType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:16AdAttributionKit21CoarseConversionValueO	swift.method	hash(into:)	CoarseConversionValue.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSeRzSS8RawValueSYRtzrlE4fromxs7Decoder_p_tKcfc::SYNTHESIZED::s:16AdAttributionKit21CoarseConversionValueO	swift.init	init(from:)	CoarseConversionValue.init(from:)	init(from decoder: any Decoder) throws
+s:So25SKOverlayAppConfigurationC023_AdAttributionKit_StoreF0E02adE15ReengagementURL10Foundation0J0VSgvp	swift.property	adAttributionReengagementURL	SKOverlay.AppConfiguration.adAttributionReengagementURL	var adAttributionReengagementURL: URL? { get set }
+s:So25SKOverlayAppConfigurationC023_AdAttributionKit_StoreF0E13appImpression0deF00bI0VSgvp	swift.property	appImpression	SKOverlay.AppConfiguration.appImpression	var appImpression: AppImpression? { get set }
+s:So28SKStoreProductViewControllerC023_AdAttributionKit_StoreG0E04loadB010parameters10impression15reengagementURLySDySSypG_0efG013AppImpressionV10Foundation0M0VtYaKF	swift.method	loadProduct(parameters:impression:reengagementURL:)	SKStoreProductViewController.loadProduct(parameters:impression:reengagementURL:)	@MainActor @preconcurrency func loadProduct(parameters: [String : Any], impression: AppImpression, reengagementURL: URL) async throws
+s:So28SKStoreProductViewControllerC023_AdAttributionKit_StoreG0E04loadB010parameters10impressionySDySSypG_0efG013AppImpressionVtYaKF	swift.method	loadProduct(parameters:impression:)	SKStoreProductViewController.loadProduct(parameters:impression:)	@MainActor @preconcurrency func loadProduct(parameters: [String : Any], impression: AppImpression) async throws
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:16AdAttributionKit0abC5ErrorO	swift.property	localizedDescription	AdAttributionKitError.localizedDescription	var localizedDescription: String { get }

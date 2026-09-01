@@ -1,0 +1,261 @@
+precise	kind	title	path	declaration
+c:@E@MXErrorCode	swift.enum	MXError.Code	MXError.Code	enum Code
+c:@E@MXErrorCode@MXErrorLaunchTaskDuplicated	swift.enum.case	MXError.Code.launchTaskDuplicated	MXError.Code.launchTaskDuplicated	case launchTaskDuplicated
+c:@E@MXErrorCode@MXErrorLaunchTaskInternalFailure	swift.enum.case	MXError.Code.launchTaskInternalFailure	MXError.Code.launchTaskInternalFailure	case launchTaskInternalFailure
+c:@E@MXErrorCode@MXErrorLaunchTaskInvalidID	swift.enum.case	MXError.Code.launchTaskInvalidID	MXError.Code.launchTaskInvalidID	case launchTaskInvalidID
+c:@E@MXErrorCode@MXErrorLaunchTaskMaxCount	swift.enum.case	MXError.Code.launchTaskMaxCount	MXError.Code.launchTaskMaxCount	case launchTaskMaxCount
+c:@E@MXErrorCode@MXErrorLaunchTaskPastDeadline	swift.enum.case	MXError.Code.launchTaskPastDeadline	MXError.Code.launchTaskPastDeadline	case launchTaskPastDeadline
+c:@E@MXErrorCode@MXErrorLaunchTaskUnknown	swift.enum.case	MXError.Code.launchTaskUnknown	MXError.Code.launchTaskUnknown	case launchTaskUnknown
+c:@MXErrorDomain	swift.var	MXErrorDomain	MXErrorDomain	let MXErrorDomain: String
+c:@T@MXLaunchTaskID	swift.struct	MXLaunchTaskID	MXLaunchTaskID	struct MXLaunchTaskID
+c:objc(cs)MXAnimationMetric	swift.class	MXAnimationMetric	MXAnimationMetric	class MXAnimationMetric
+c:objc(cs)MXAnimationMetric(py)hitchTimeRatio	swift.property	hitchTimeRatio	MXAnimationMetric.hitchTimeRatio	var hitchTimeRatio: Measurement<Unit> { get }
+c:objc(cs)MXAnimationMetric(py)scrollHitchTimeRatio	swift.property	scrollHitchTimeRatio	MXAnimationMetric.scrollHitchTimeRatio	var scrollHitchTimeRatio: Measurement<Unit> { get }
+c:objc(cs)MXAppExitMetric	swift.class	MXAppExitMetric	MXAppExitMetric	class MXAppExitMetric
+c:objc(cs)MXAppExitMetric(py)backgroundExitData	swift.property	backgroundExitData	MXAppExitMetric.backgroundExitData	var backgroundExitData: MXBackgroundExitData { get }
+c:objc(cs)MXAppExitMetric(py)foregroundExitData	swift.property	foregroundExitData	MXAppExitMetric.foregroundExitData	var foregroundExitData: MXForegroundExitData { get }
+c:objc(cs)MXAppLaunchDiagnostic	swift.class	MXAppLaunchDiagnostic	MXAppLaunchDiagnostic	class MXAppLaunchDiagnostic
+c:objc(cs)MXAppLaunchDiagnostic(py)callStackTree	swift.property	callStackTree	MXAppLaunchDiagnostic.callStackTree	var callStackTree: MXCallStackTree { get }
+c:objc(cs)MXAppLaunchDiagnostic(py)launchDuration	swift.property	launchDuration	MXAppLaunchDiagnostic.launchDuration	var launchDuration: Measurement<UnitDuration> { get }
+c:objc(cs)MXAppLaunchMetric	swift.class	MXAppLaunchMetric	MXAppLaunchMetric	class MXAppLaunchMetric
+c:objc(cs)MXAppLaunchMetric(py)histogrammedApplicationResumeTime	swift.property	histogrammedApplicationResumeTime	MXAppLaunchMetric.histogrammedApplicationResumeTime	var histogrammedApplicationResumeTime: MXHistogram<UnitDuration> { get }
+c:objc(cs)MXAppLaunchMetric(py)histogrammedExtendedLaunch	swift.property	histogrammedExtendedLaunch	MXAppLaunchMetric.histogrammedExtendedLaunch	var histogrammedExtendedLaunch: MXHistogram<UnitDuration> { get }
+c:objc(cs)MXAppLaunchMetric(py)histogrammedOptimizedTimeToFirstDraw	swift.property	histogrammedOptimizedTimeToFirstDraw	MXAppLaunchMetric.histogrammedOptimizedTimeToFirstDraw	var histogrammedOptimizedTimeToFirstDraw: MXHistogram<UnitDuration> { get }
+c:objc(cs)MXAppLaunchMetric(py)histogrammedTimeToFirstDraw	swift.property	histogrammedTimeToFirstDraw	MXAppLaunchMetric.histogrammedTimeToFirstDraw	var histogrammedTimeToFirstDraw: MXHistogram<UnitDuration> { get }
+c:objc(cs)MXAppResponsivenessMetric	swift.class	MXAppResponsivenessMetric	MXAppResponsivenessMetric	class MXAppResponsivenessMetric
+c:objc(cs)MXAppResponsivenessMetric(py)histogrammedApplicationHangTime	swift.property	histogrammedApplicationHangTime	MXAppResponsivenessMetric.histogrammedApplicationHangTime	var histogrammedApplicationHangTime: MXHistogram<UnitDuration> { get }
+c:objc(cs)MXAppRunTimeMetric	swift.class	MXAppRunTimeMetric	MXAppRunTimeMetric	class MXAppRunTimeMetric
+c:objc(cs)MXAppRunTimeMetric(py)cumulativeBackgroundAudioTime	swift.property	cumulativeBackgroundAudioTime	MXAppRunTimeMetric.cumulativeBackgroundAudioTime	var cumulativeBackgroundAudioTime: Measurement<UnitDuration> { get }
+c:objc(cs)MXAppRunTimeMetric(py)cumulativeBackgroundLocationTime	swift.property	cumulativeBackgroundLocationTime	MXAppRunTimeMetric.cumulativeBackgroundLocationTime	var cumulativeBackgroundLocationTime: Measurement<UnitDuration> { get }
+c:objc(cs)MXAppRunTimeMetric(py)cumulativeBackgroundTime	swift.property	cumulativeBackgroundTime	MXAppRunTimeMetric.cumulativeBackgroundTime	var cumulativeBackgroundTime: Measurement<UnitDuration> { get }
+c:objc(cs)MXAppRunTimeMetric(py)cumulativeForegroundTime	swift.property	cumulativeForegroundTime	MXAppRunTimeMetric.cumulativeForegroundTime	var cumulativeForegroundTime: Measurement<UnitDuration> { get }
+c:objc(cs)MXAverage	swift.class	MXAverage	MXAverage	class MXAverage<UnitType> where UnitType : Unit
+c:objc(cs)MXAverage(py)averageMeasurement	swift.property	averageMeasurement	MXAverage.averageMeasurement	var averageMeasurement: Measurement<UnitType> { get }
+c:objc(cs)MXAverage(py)sampleCount	swift.property	sampleCount	MXAverage.sampleCount	var sampleCount: Int { get }
+c:objc(cs)MXAverage(py)standardDeviation	swift.property	standardDeviation	MXAverage.standardDeviation	var standardDeviation: Double { get }
+c:objc(cs)MXBackgroundExitData	swift.class	MXBackgroundExitData	MXBackgroundExitData	class MXBackgroundExitData
+c:objc(cs)MXBackgroundExitData(py)cumulativeAbnormalExitCount	swift.property	cumulativeAbnormalExitCount	MXBackgroundExitData.cumulativeAbnormalExitCount	var cumulativeAbnormalExitCount: Int { get }
+c:objc(cs)MXBackgroundExitData(py)cumulativeAppWatchdogExitCount	swift.property	cumulativeAppWatchdogExitCount	MXBackgroundExitData.cumulativeAppWatchdogExitCount	var cumulativeAppWatchdogExitCount: Int { get }
+c:objc(cs)MXBackgroundExitData(py)cumulativeBackgroundTaskAssertionTimeoutExitCount	swift.property	cumulativeBackgroundTaskAssertionTimeoutExitCount	MXBackgroundExitData.cumulativeBackgroundTaskAssertionTimeoutExitCount	var cumulativeBackgroundTaskAssertionTimeoutExitCount: Int { get }
+c:objc(cs)MXBackgroundExitData(py)cumulativeBadAccessExitCount	swift.property	cumulativeBadAccessExitCount	MXBackgroundExitData.cumulativeBadAccessExitCount	var cumulativeBadAccessExitCount: Int { get }
+c:objc(cs)MXBackgroundExitData(py)cumulativeCPUResourceLimitExitCount	swift.property	cumulativeCPUResourceLimitExitCount	MXBackgroundExitData.cumulativeCPUResourceLimitExitCount	var cumulativeCPUResourceLimitExitCount: Int { get }
+c:objc(cs)MXBackgroundExitData(py)cumulativeIllegalInstructionExitCount	swift.property	cumulativeIllegalInstructionExitCount	MXBackgroundExitData.cumulativeIllegalInstructionExitCount	var cumulativeIllegalInstructionExitCount: Int { get }
+c:objc(cs)MXBackgroundExitData(py)cumulativeMemoryPressureExitCount	swift.property	cumulativeMemoryPressureExitCount	MXBackgroundExitData.cumulativeMemoryPressureExitCount	var cumulativeMemoryPressureExitCount: Int { get }
+c:objc(cs)MXBackgroundExitData(py)cumulativeMemoryResourceLimitExitCount	swift.property	cumulativeMemoryResourceLimitExitCount	MXBackgroundExitData.cumulativeMemoryResourceLimitExitCount	var cumulativeMemoryResourceLimitExitCount: Int { get }
+c:objc(cs)MXBackgroundExitData(py)cumulativeNormalAppExitCount	swift.property	cumulativeNormalAppExitCount	MXBackgroundExitData.cumulativeNormalAppExitCount	var cumulativeNormalAppExitCount: Int { get }
+c:objc(cs)MXBackgroundExitData(py)cumulativeSuspendedWithLockedFileExitCount	swift.property	cumulativeSuspendedWithLockedFileExitCount	MXBackgroundExitData.cumulativeSuspendedWithLockedFileExitCount	var cumulativeSuspendedWithLockedFileExitCount: Int { get }
+c:objc(cs)MXCPUExceptionDiagnostic	swift.class	MXCPUExceptionDiagnostic	MXCPUExceptionDiagnostic	class MXCPUExceptionDiagnostic
+c:objc(cs)MXCPUExceptionDiagnostic(py)callStackTree	swift.property	callStackTree	MXCPUExceptionDiagnostic.callStackTree	var callStackTree: MXCallStackTree { get }
+c:objc(cs)MXCPUExceptionDiagnostic(py)totalCPUTime	swift.property	totalCPUTime	MXCPUExceptionDiagnostic.totalCPUTime	var totalCPUTime: Measurement<UnitDuration> { get }
+c:objc(cs)MXCPUExceptionDiagnostic(py)totalSampledTime	swift.property	totalSampledTime	MXCPUExceptionDiagnostic.totalSampledTime	var totalSampledTime: Measurement<UnitDuration> { get }
+c:objc(cs)MXCPUMetric	swift.class	MXCPUMetric	MXCPUMetric	class MXCPUMetric
+c:objc(cs)MXCPUMetric(py)cumulativeCPUInstructions	swift.property	cumulativeCPUInstructions	MXCPUMetric.cumulativeCPUInstructions	var cumulativeCPUInstructions: Measurement<Unit> { get }
+c:objc(cs)MXCPUMetric(py)cumulativeCPUTime	swift.property	cumulativeCPUTime	MXCPUMetric.cumulativeCPUTime	var cumulativeCPUTime: Measurement<UnitDuration> { get }
+c:objc(cs)MXCallStackTree	swift.class	MXCallStackTree	MXCallStackTree	class MXCallStackTree
+c:objc(cs)MXCallStackTree(im)JSONRepresentation	swift.method	jsonRepresentation()	MXCallStackTree.jsonRepresentation()	func jsonRepresentation() -> Data
+c:objc(cs)MXCellularConditionMetric	swift.class	MXCellularConditionMetric	MXCellularConditionMetric	class MXCellularConditionMetric
+c:objc(cs)MXCellularConditionMetric(py)histogrammedCellularConditionTime	swift.property	histogrammedCellularConditionTime	MXCellularConditionMetric.histogrammedCellularConditionTime	var histogrammedCellularConditionTime: MXHistogram<MXUnitSignalBars> { get }
+c:objc(cs)MXCrashDiagnostic	swift.class	MXCrashDiagnostic	MXCrashDiagnostic	class MXCrashDiagnostic
+c:objc(cs)MXCrashDiagnostic(py)callStackTree	swift.property	callStackTree	MXCrashDiagnostic.callStackTree	var callStackTree: MXCallStackTree { get }
+c:objc(cs)MXCrashDiagnostic(py)exceptionCode	swift.property	exceptionCode	MXCrashDiagnostic.exceptionCode	var exceptionCode: NSNumber? { get }
+c:objc(cs)MXCrashDiagnostic(py)exceptionReason	swift.property	exceptionReason	MXCrashDiagnostic.exceptionReason	var exceptionReason: MXCrashDiagnosticObjectiveCExceptionReason? { get }
+c:objc(cs)MXCrashDiagnostic(py)exceptionType	swift.property	exceptionType	MXCrashDiagnostic.exceptionType	var exceptionType: NSNumber? { get }
+c:objc(cs)MXCrashDiagnostic(py)signal	swift.property	signal	MXCrashDiagnostic.signal	var signal: NSNumber? { get }
+c:objc(cs)MXCrashDiagnostic(py)terminationReason	swift.property	terminationReason	MXCrashDiagnostic.terminationReason	var terminationReason: String? { get }
+c:objc(cs)MXCrashDiagnostic(py)virtualMemoryRegionInfo	swift.property	virtualMemoryRegionInfo	MXCrashDiagnostic.virtualMemoryRegionInfo	var virtualMemoryRegionInfo: String? { get }
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason	swift.class	MXCrashDiagnosticObjectiveCExceptionReason	MXCrashDiagnosticObjectiveCExceptionReason	class MXCrashDiagnosticObjectiveCExceptionReason
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(im)JSONRepresentation	swift.method	jsonRepresentation()	MXCrashDiagnosticObjectiveCExceptionReason.jsonRepresentation()	func jsonRepresentation() -> Data
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(im)dictionaryRepresentation	swift.method	dictionaryRepresentation()	MXCrashDiagnosticObjectiveCExceptionReason.dictionaryRepresentation()	func dictionaryRepresentation() -> [AnyHashable : Any]
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)arguments	swift.property	arguments	MXCrashDiagnosticObjectiveCExceptionReason.arguments	var arguments: [String] { get }
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)className	swift.property	className	MXCrashDiagnosticObjectiveCExceptionReason.className	var className: String { get }
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)composedMessage	swift.property	composedMessage	MXCrashDiagnosticObjectiveCExceptionReason.composedMessage	var composedMessage: String { get }
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)exceptionName	swift.property	exceptionName	MXCrashDiagnosticObjectiveCExceptionReason.exceptionName	var exceptionName: String { get }
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)exceptionType	swift.property	exceptionType	MXCrashDiagnosticObjectiveCExceptionReason.exceptionType	var exceptionType: String { get }
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)formatString	swift.property	formatString	MXCrashDiagnosticObjectiveCExceptionReason.formatString	var formatString: String { get }
+c:objc(cs)MXDiagnostic	swift.class	MXDiagnostic	MXDiagnostic	class MXDiagnostic
+c:objc(cs)MXDiagnostic(im)JSONRepresentation	swift.method	jsonRepresentation()	MXDiagnostic.jsonRepresentation()	func jsonRepresentation() -> Data
+c:objc(cs)MXDiagnostic(im)dictionaryRepresentation	swift.method	dictionaryRepresentation()	MXDiagnostic.dictionaryRepresentation()	func dictionaryRepresentation() -> [AnyHashable : Any]
+c:objc(cs)MXDiagnostic(py)applicationVersion	swift.property	applicationVersion	MXDiagnostic.applicationVersion	var applicationVersion: String { get }
+c:objc(cs)MXDiagnostic(py)metaData	swift.property	metaData	MXDiagnostic.metaData	var metaData: MXMetaData { get }
+c:objc(cs)MXDiagnostic(py)signpostData	swift.property	signpostData	MXDiagnostic.signpostData	var signpostData: [MXSignpostRecord]? { get }
+c:objc(cs)MXDiagnosticPayload	swift.class	MXDiagnosticPayload	MXDiagnosticPayload	class MXDiagnosticPayload
+c:objc(cs)MXDiagnosticPayload(im)JSONRepresentation	swift.method	jsonRepresentation()	MXDiagnosticPayload.jsonRepresentation()	func jsonRepresentation() -> Data
+c:objc(cs)MXDiagnosticPayload(im)dictionaryRepresentation	swift.method	dictionaryRepresentation()	MXDiagnosticPayload.dictionaryRepresentation()	func dictionaryRepresentation() -> [AnyHashable : Any]
+c:objc(cs)MXDiagnosticPayload(py)appLaunchDiagnostics	swift.property	appLaunchDiagnostics	MXDiagnosticPayload.appLaunchDiagnostics	var appLaunchDiagnostics: [MXAppLaunchDiagnostic]? { get }
+c:objc(cs)MXDiagnosticPayload(py)cpuExceptionDiagnostics	swift.property	cpuExceptionDiagnostics	MXDiagnosticPayload.cpuExceptionDiagnostics	var cpuExceptionDiagnostics: [MXCPUExceptionDiagnostic]? { get }
+c:objc(cs)MXDiagnosticPayload(py)crashDiagnostics	swift.property	crashDiagnostics	MXDiagnosticPayload.crashDiagnostics	var crashDiagnostics: [MXCrashDiagnostic]? { get }
+c:objc(cs)MXDiagnosticPayload(py)diskWriteExceptionDiagnostics	swift.property	diskWriteExceptionDiagnostics	MXDiagnosticPayload.diskWriteExceptionDiagnostics	var diskWriteExceptionDiagnostics: [MXDiskWriteExceptionDiagnostic]? { get }
+c:objc(cs)MXDiagnosticPayload(py)hangDiagnostics	swift.property	hangDiagnostics	MXDiagnosticPayload.hangDiagnostics	var hangDiagnostics: [MXHangDiagnostic]? { get }
+c:objc(cs)MXDiagnosticPayload(py)timeStampBegin	swift.property	timeStampBegin	MXDiagnosticPayload.timeStampBegin	var timeStampBegin: Date { get }
+c:objc(cs)MXDiagnosticPayload(py)timeStampEnd	swift.property	timeStampEnd	MXDiagnosticPayload.timeStampEnd	var timeStampEnd: Date { get }
+c:objc(cs)MXDiskIOMetric	swift.class	MXDiskIOMetric	MXDiskIOMetric	class MXDiskIOMetric
+c:objc(cs)MXDiskIOMetric(py)cumulativeLogicalWrites	swift.property	cumulativeLogicalWrites	MXDiskIOMetric.cumulativeLogicalWrites	var cumulativeLogicalWrites: Measurement<UnitInformationStorage> { get }
+c:objc(cs)MXDiskSpaceUsageMetric	swift.class	MXDiskSpaceUsageMetric	MXDiskSpaceUsageMetric	class MXDiskSpaceUsageMetric
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalBinaryFileCount	swift.property	totalBinaryFileCount	MXDiskSpaceUsageMetric.totalBinaryFileCount	var totalBinaryFileCount: Int { get }
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalBinaryFileSize	swift.property	totalBinaryFileSize	MXDiskSpaceUsageMetric.totalBinaryFileSize	var totalBinaryFileSize: Measurement<UnitInformationStorage> { get }
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalCacheFolderSize	swift.property	totalCacheFolderSize	MXDiskSpaceUsageMetric.totalCacheFolderSize	var totalCacheFolderSize: Measurement<UnitInformationStorage> { get }
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalCloneSize	swift.property	totalCloneSize	MXDiskSpaceUsageMetric.totalCloneSize	var totalCloneSize: Measurement<UnitInformationStorage> { get }
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalDataFileCount	swift.property	totalDataFileCount	MXDiskSpaceUsageMetric.totalDataFileCount	var totalDataFileCount: Int { get }
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalDataFileSize	swift.property	totalDataFileSize	MXDiskSpaceUsageMetric.totalDataFileSize	var totalDataFileSize: Measurement<UnitInformationStorage> { get }
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalDiskSpaceCapacity	swift.property	totalDiskSpaceCapacity	MXDiskSpaceUsageMetric.totalDiskSpaceCapacity	var totalDiskSpaceCapacity: Measurement<UnitInformationStorage> { get }
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalDiskSpaceUsedSize	swift.property	totalDiskSpaceUsedSize	MXDiskSpaceUsageMetric.totalDiskSpaceUsedSize	var totalDiskSpaceUsedSize: Measurement<UnitInformationStorage> { get }
+c:objc(cs)MXDiskWriteExceptionDiagnostic	swift.class	MXDiskWriteExceptionDiagnostic	MXDiskWriteExceptionDiagnostic	class MXDiskWriteExceptionDiagnostic
+c:objc(cs)MXDiskWriteExceptionDiagnostic(py)callStackTree	swift.property	callStackTree	MXDiskWriteExceptionDiagnostic.callStackTree	var callStackTree: MXCallStackTree { get }
+c:objc(cs)MXDiskWriteExceptionDiagnostic(py)totalWritesCaused	swift.property	totalWritesCaused	MXDiskWriteExceptionDiagnostic.totalWritesCaused	var totalWritesCaused: Measurement<UnitInformationStorage> { get }
+c:objc(cs)MXDisplayMetric	swift.class	MXDisplayMetric	MXDisplayMetric	class MXDisplayMetric
+c:objc(cs)MXDisplayMetric(py)averagePixelLuminance	swift.property	averagePixelLuminance	MXDisplayMetric.averagePixelLuminance	var averagePixelLuminance: MXAverage<MXUnitAveragePixelLuminance>? { get }
+c:objc(cs)MXForegroundExitData	swift.class	MXForegroundExitData	MXForegroundExitData	class MXForegroundExitData
+c:objc(cs)MXForegroundExitData(py)cumulativeAbnormalExitCount	swift.property	cumulativeAbnormalExitCount	MXForegroundExitData.cumulativeAbnormalExitCount	var cumulativeAbnormalExitCount: Int { get }
+c:objc(cs)MXForegroundExitData(py)cumulativeAppWatchdogExitCount	swift.property	cumulativeAppWatchdogExitCount	MXForegroundExitData.cumulativeAppWatchdogExitCount	var cumulativeAppWatchdogExitCount: Int { get }
+c:objc(cs)MXForegroundExitData(py)cumulativeBadAccessExitCount	swift.property	cumulativeBadAccessExitCount	MXForegroundExitData.cumulativeBadAccessExitCount	var cumulativeBadAccessExitCount: Int { get }
+c:objc(cs)MXForegroundExitData(py)cumulativeIllegalInstructionExitCount	swift.property	cumulativeIllegalInstructionExitCount	MXForegroundExitData.cumulativeIllegalInstructionExitCount	var cumulativeIllegalInstructionExitCount: Int { get }
+c:objc(cs)MXForegroundExitData(py)cumulativeMemoryResourceLimitExitCount	swift.property	cumulativeMemoryResourceLimitExitCount	MXForegroundExitData.cumulativeMemoryResourceLimitExitCount	var cumulativeMemoryResourceLimitExitCount: Int { get }
+c:objc(cs)MXForegroundExitData(py)cumulativeNormalAppExitCount	swift.property	cumulativeNormalAppExitCount	MXForegroundExitData.cumulativeNormalAppExitCount	var cumulativeNormalAppExitCount: Int { get }
+c:objc(cs)MXGPUMetric	swift.class	MXGPUMetric	MXGPUMetric	class MXGPUMetric
+c:objc(cs)MXGPUMetric(py)cumulativeGPUTime	swift.property	cumulativeGPUTime	MXGPUMetric.cumulativeGPUTime	var cumulativeGPUTime: Measurement<UnitDuration> { get }
+c:objc(cs)MXHangDiagnostic	swift.class	MXHangDiagnostic	MXHangDiagnostic	class MXHangDiagnostic
+c:objc(cs)MXHangDiagnostic(py)callStackTree	swift.property	callStackTree	MXHangDiagnostic.callStackTree	var callStackTree: MXCallStackTree { get }
+c:objc(cs)MXHangDiagnostic(py)hangDuration	swift.property	hangDuration	MXHangDiagnostic.hangDuration	var hangDuration: Measurement<UnitDuration> { get }
+c:objc(cs)MXHistogram	swift.class	MXHistogram	MXHistogram	class MXHistogram<UnitType> where UnitType : Unit
+c:objc(cs)MXHistogram(py)bucketEnumerator	swift.property	bucketEnumerator	MXHistogram.bucketEnumerator	var bucketEnumerator: NSEnumerator { get }
+c:objc(cs)MXHistogram(py)totalBucketCount	swift.property	totalBucketCount	MXHistogram.totalBucketCount	var totalBucketCount: Int { get }
+c:objc(cs)MXHistogramBucket	swift.class	MXHistogramBucket	MXHistogramBucket	class MXHistogramBucket<UnitType> where UnitType : Unit
+c:objc(cs)MXHistogramBucket(py)bucketCount	swift.property	bucketCount	MXHistogramBucket.bucketCount	var bucketCount: Int { get }
+c:objc(cs)MXHistogramBucket(py)bucketEnd	swift.property	bucketEnd	MXHistogramBucket.bucketEnd	var bucketEnd: Measurement<UnitType> { get }
+c:objc(cs)MXHistogramBucket(py)bucketStart	swift.property	bucketStart	MXHistogramBucket.bucketStart	var bucketStart: Measurement<UnitType> { get }
+c:objc(cs)MXLocationActivityMetric	swift.class	MXLocationActivityMetric	MXLocationActivityMetric	class MXLocationActivityMetric
+c:objc(cs)MXLocationActivityMetric(py)cumulativeBestAccuracyForNavigationTime	swift.property	cumulativeBestAccuracyForNavigationTime	MXLocationActivityMetric.cumulativeBestAccuracyForNavigationTime	var cumulativeBestAccuracyForNavigationTime: Measurement<UnitDuration> { get }
+c:objc(cs)MXLocationActivityMetric(py)cumulativeBestAccuracyTime	swift.property	cumulativeBestAccuracyTime	MXLocationActivityMetric.cumulativeBestAccuracyTime	var cumulativeBestAccuracyTime: Measurement<UnitDuration> { get }
+c:objc(cs)MXLocationActivityMetric(py)cumulativeHundredMetersAccuracyTime	swift.property	cumulativeHundredMetersAccuracyTime	MXLocationActivityMetric.cumulativeHundredMetersAccuracyTime	var cumulativeHundredMetersAccuracyTime: Measurement<UnitDuration> { get }
+c:objc(cs)MXLocationActivityMetric(py)cumulativeKilometerAccuracyTime	swift.property	cumulativeKilometerAccuracyTime	MXLocationActivityMetric.cumulativeKilometerAccuracyTime	var cumulativeKilometerAccuracyTime: Measurement<UnitDuration> { get }
+c:objc(cs)MXLocationActivityMetric(py)cumulativeNearestTenMetersAccuracyTime	swift.property	cumulativeNearestTenMetersAccuracyTime	MXLocationActivityMetric.cumulativeNearestTenMetersAccuracyTime	var cumulativeNearestTenMetersAccuracyTime: Measurement<UnitDuration> { get }
+c:objc(cs)MXLocationActivityMetric(py)cumulativeThreeKilometersAccuracyTime	swift.property	cumulativeThreeKilometersAccuracyTime	MXLocationActivityMetric.cumulativeThreeKilometersAccuracyTime	var cumulativeThreeKilometersAccuracyTime: Measurement<UnitDuration> { get }
+c:objc(cs)MXMemoryMetric	swift.class	MXMemoryMetric	MXMemoryMetric	class MXMemoryMetric
+c:objc(cs)MXMemoryMetric(py)averageSuspendedMemory	swift.property	averageSuspendedMemory	MXMemoryMetric.averageSuspendedMemory	var averageSuspendedMemory: MXAverage<UnitInformationStorage> { get }
+c:objc(cs)MXMemoryMetric(py)peakMemoryUsage	swift.property	peakMemoryUsage	MXMemoryMetric.peakMemoryUsage	var peakMemoryUsage: Measurement<UnitInformationStorage> { get }
+c:objc(cs)MXMetaData	swift.class	MXMetaData	MXMetaData	class MXMetaData
+c:objc(cs)MXMetaData(im)JSONRepresentation	swift.method	jsonRepresentation()	MXMetaData.jsonRepresentation()	func jsonRepresentation() -> Data
+c:objc(cs)MXMetaData(im)dictionaryRepresentation	swift.method	dictionaryRepresentation()	MXMetaData.dictionaryRepresentation()	func dictionaryRepresentation() -> [AnyHashable : Any]
+c:objc(cs)MXMetaData(py)applicationBuildVersion	swift.property	applicationBuildVersion	MXMetaData.applicationBuildVersion	var applicationBuildVersion: String { get }
+c:objc(cs)MXMetaData(py)bundleIdentifier	swift.property	bundleIdentifier	MXMetaData.bundleIdentifier	var bundleIdentifier: String { get }
+c:objc(cs)MXMetaData(py)deviceType	swift.property	deviceType	MXMetaData.deviceType	var deviceType: String { get }
+c:objc(cs)MXMetaData(py)isTestFlightApp	swift.property	isTestFlightApp	MXMetaData.isTestFlightApp	var isTestFlightApp: Bool { get }
+c:objc(cs)MXMetaData(py)lowPowerModeEnabled	swift.property	lowPowerModeEnabled	MXMetaData.lowPowerModeEnabled	var lowPowerModeEnabled: Bool { get }
+c:objc(cs)MXMetaData(py)osVersion	swift.property	osVersion	MXMetaData.osVersion	var osVersion: String { get }
+c:objc(cs)MXMetaData(py)pid	swift.property	pid	MXMetaData.pid	var pid: pid_t { get }
+c:objc(cs)MXMetaData(py)platformArchitecture	swift.property	platformArchitecture	MXMetaData.platformArchitecture	var platformArchitecture: String { get }
+c:objc(cs)MXMetaData(py)regionFormat	swift.property	regionFormat	MXMetaData.regionFormat	var regionFormat: String { get }
+c:objc(cs)MXMetric	swift.class	MXMetric	MXMetric	class MXMetric
+c:objc(cs)MXMetric(im)JSONRepresentation	swift.method	jsonRepresentation()	MXMetric.jsonRepresentation()	func jsonRepresentation() -> Data
+c:objc(cs)MXMetric(im)dictionaryRepresentation	swift.method	dictionaryRepresentation()	MXMetric.dictionaryRepresentation()	func dictionaryRepresentation() -> [AnyHashable : Any]
+c:objc(cs)MXMetricManager	swift.class	MXMetricManager	MXMetricManager	class MXMetricManager
+c:objc(cs)MXMetricManager(cm)extendLaunchMeasurementForTaskID:error:	swift.type.method	extendLaunchMeasurement(forTaskID:)	MXMetricManager.extendLaunchMeasurement(forTaskID:)	class func extendLaunchMeasurement(forTaskID taskID: MXLaunchTaskID) throws
+c:objc(cs)MXMetricManager(cm)finishExtendedLaunchMeasurementForTaskID:error:	swift.type.method	finishExtendedLaunchMeasurement(forTaskID:)	MXMetricManager.finishExtendedLaunchMeasurement(forTaskID:)	class func finishExtendedLaunchMeasurement(forTaskID taskID: MXLaunchTaskID) throws
+c:objc(cs)MXMetricManager(cm)makeLogHandleWithCategory:	swift.type.method	makeLogHandle(category:)	MXMetricManager.makeLogHandle(category:)	class func makeLogHandle(category: String) -> OSLog
+c:objc(cs)MXMetricManager(cpy)sharedManager	swift.type.property	shared	MXMetricManager.shared	class var shared: MXMetricManager { get }
+c:objc(cs)MXMetricManager(im)addSubscriber:	swift.method	add(_:)	MXMetricManager.add(_:)	func add(_ subscriber: any MXMetricManagerSubscriber)
+c:objc(cs)MXMetricManager(im)removeSubscriber:	swift.method	remove(_:)	MXMetricManager.remove(_:)	func remove(_ subscriber: any MXMetricManagerSubscriber)
+c:objc(cs)MXMetricManager(py)pastDiagnosticPayloads	swift.property	pastDiagnosticPayloads	MXMetricManager.pastDiagnosticPayloads	var pastDiagnosticPayloads: [MXDiagnosticPayload] { get }
+c:objc(cs)MXMetricManager(py)pastPayloads	swift.property	pastPayloads	MXMetricManager.pastPayloads	var pastPayloads: [MXMetricPayload] { get }
+c:objc(cs)MXMetricPayload	swift.class	MXMetricPayload	MXMetricPayload	class MXMetricPayload
+c:objc(cs)MXMetricPayload(im)JSONRepresentation	swift.method	jsonRepresentation()	MXMetricPayload.jsonRepresentation()	func jsonRepresentation() -> Data
+c:objc(cs)MXMetricPayload(im)dictionaryRepresentation	swift.method	dictionaryRepresentation()	MXMetricPayload.dictionaryRepresentation()	func dictionaryRepresentation() -> [AnyHashable : Any]
+c:objc(cs)MXMetricPayload(py)animationMetrics	swift.property	animationMetrics	MXMetricPayload.animationMetrics	var animationMetrics: MXAnimationMetric? { get }
+c:objc(cs)MXMetricPayload(py)applicationExitMetrics	swift.property	applicationExitMetrics	MXMetricPayload.applicationExitMetrics	var applicationExitMetrics: MXAppExitMetric? { get }
+c:objc(cs)MXMetricPayload(py)applicationLaunchMetrics	swift.property	applicationLaunchMetrics	MXMetricPayload.applicationLaunchMetrics	var applicationLaunchMetrics: MXAppLaunchMetric? { get }
+c:objc(cs)MXMetricPayload(py)applicationResponsivenessMetrics	swift.property	applicationResponsivenessMetrics	MXMetricPayload.applicationResponsivenessMetrics	var applicationResponsivenessMetrics: MXAppResponsivenessMetric? { get }
+c:objc(cs)MXMetricPayload(py)applicationTimeMetrics	swift.property	applicationTimeMetrics	MXMetricPayload.applicationTimeMetrics	var applicationTimeMetrics: MXAppRunTimeMetric? { get }
+c:objc(cs)MXMetricPayload(py)cellularConditionMetrics	swift.property	cellularConditionMetrics	MXMetricPayload.cellularConditionMetrics	var cellularConditionMetrics: MXCellularConditionMetric? { get }
+c:objc(cs)MXMetricPayload(py)cpuMetrics	swift.property	cpuMetrics	MXMetricPayload.cpuMetrics	var cpuMetrics: MXCPUMetric? { get }
+c:objc(cs)MXMetricPayload(py)diskIOMetrics	swift.property	diskIOMetrics	MXMetricPayload.diskIOMetrics	var diskIOMetrics: MXDiskIOMetric? { get }
+c:objc(cs)MXMetricPayload(py)diskSpaceUsageMetrics	swift.property	diskSpaceUsageMetrics	MXMetricPayload.diskSpaceUsageMetrics	var diskSpaceUsageMetrics: MXDiskSpaceUsageMetric? { get }
+c:objc(cs)MXMetricPayload(py)displayMetrics	swift.property	displayMetrics	MXMetricPayload.displayMetrics	var displayMetrics: MXDisplayMetric? { get }
+c:objc(cs)MXMetricPayload(py)gpuMetrics	swift.property	gpuMetrics	MXMetricPayload.gpuMetrics	var gpuMetrics: MXGPUMetric? { get }
+c:objc(cs)MXMetricPayload(py)includesMultipleApplicationVersions	swift.property	includesMultipleApplicationVersions	MXMetricPayload.includesMultipleApplicationVersions	var includesMultipleApplicationVersions: Bool { get }
+c:objc(cs)MXMetricPayload(py)latestApplicationVersion	swift.property	latestApplicationVersion	MXMetricPayload.latestApplicationVersion	var latestApplicationVersion: String { get }
+c:objc(cs)MXMetricPayload(py)locationActivityMetrics	swift.property	locationActivityMetrics	MXMetricPayload.locationActivityMetrics	var locationActivityMetrics: MXLocationActivityMetric? { get }
+c:objc(cs)MXMetricPayload(py)memoryMetrics	swift.property	memoryMetrics	MXMetricPayload.memoryMetrics	var memoryMetrics: MXMemoryMetric? { get }
+c:objc(cs)MXMetricPayload(py)metaData	swift.property	metaData	MXMetricPayload.metaData	var metaData: MXMetaData? { get }
+c:objc(cs)MXMetricPayload(py)networkTransferMetrics	swift.property	networkTransferMetrics	MXMetricPayload.networkTransferMetrics	var networkTransferMetrics: MXNetworkTransferMetric? { get }
+c:objc(cs)MXMetricPayload(py)signpostMetrics	swift.property	signpostMetrics	MXMetricPayload.signpostMetrics	var signpostMetrics: [MXSignpostMetric]? { get }
+c:objc(cs)MXMetricPayload(py)timeStampBegin	swift.property	timeStampBegin	MXMetricPayload.timeStampBegin	var timeStampBegin: Date { get }
+c:objc(cs)MXMetricPayload(py)timeStampEnd	swift.property	timeStampEnd	MXMetricPayload.timeStampEnd	var timeStampEnd: Date { get }
+c:objc(cs)MXNetworkTransferMetric	swift.class	MXNetworkTransferMetric	MXNetworkTransferMetric	class MXNetworkTransferMetric
+c:objc(cs)MXNetworkTransferMetric(py)cumulativeCellularDownload	swift.property	cumulativeCellularDownload	MXNetworkTransferMetric.cumulativeCellularDownload	var cumulativeCellularDownload: Measurement<UnitInformationStorage> { get }
+c:objc(cs)MXNetworkTransferMetric(py)cumulativeCellularUpload	swift.property	cumulativeCellularUpload	MXNetworkTransferMetric.cumulativeCellularUpload	var cumulativeCellularUpload: Measurement<UnitInformationStorage> { get }
+c:objc(cs)MXNetworkTransferMetric(py)cumulativeWifiDownload	swift.property	cumulativeWifiDownload	MXNetworkTransferMetric.cumulativeWifiDownload	var cumulativeWifiDownload: Measurement<UnitInformationStorage> { get }
+c:objc(cs)MXNetworkTransferMetric(py)cumulativeWifiUpload	swift.property	cumulativeWifiUpload	MXNetworkTransferMetric.cumulativeWifiUpload	var cumulativeWifiUpload: Measurement<UnitInformationStorage> { get }
+c:objc(cs)MXSignpostIntervalData	swift.class	MXSignpostIntervalData	MXSignpostIntervalData	class MXSignpostIntervalData
+c:objc(cs)MXSignpostIntervalData(py)averageMemory	swift.property	averageMemory	MXSignpostIntervalData.averageMemory	var averageMemory: MXAverage<UnitInformationStorage>? { get }
+c:objc(cs)MXSignpostIntervalData(py)cumulativeCPUTime	swift.property	cumulativeCPUTime	MXSignpostIntervalData.cumulativeCPUTime	var cumulativeCPUTime: Measurement<UnitDuration>? { get }
+c:objc(cs)MXSignpostIntervalData(py)cumulativeHitchTimeRatio	swift.property	cumulativeHitchTimeRatio	MXSignpostIntervalData.cumulativeHitchTimeRatio	var cumulativeHitchTimeRatio: Measurement<Unit>? { get }
+c:objc(cs)MXSignpostIntervalData(py)cumulativeLogicalWrites	swift.property	cumulativeLogicalWrites	MXSignpostIntervalData.cumulativeLogicalWrites	var cumulativeLogicalWrites: Measurement<UnitInformationStorage>? { get }
+c:objc(cs)MXSignpostIntervalData(py)histogrammedSignpostDuration	swift.property	histogrammedSignpostDuration	MXSignpostIntervalData.histogrammedSignpostDuration	var histogrammedSignpostDuration: MXHistogram<UnitDuration> { get }
+c:objc(cs)MXSignpostMetric	swift.class	MXSignpostMetric	MXSignpostMetric	class MXSignpostMetric
+c:objc(cs)MXSignpostMetric(py)signpostCategory	swift.property	signpostCategory	MXSignpostMetric.signpostCategory	var signpostCategory: String { get }
+c:objc(cs)MXSignpostMetric(py)signpostIntervalData	swift.property	signpostIntervalData	MXSignpostMetric.signpostIntervalData	var signpostIntervalData: MXSignpostIntervalData? { get }
+c:objc(cs)MXSignpostMetric(py)signpostName	swift.property	signpostName	MXSignpostMetric.signpostName	var signpostName: String { get }
+c:objc(cs)MXSignpostMetric(py)totalCount	swift.property	totalCount	MXSignpostMetric.totalCount	var totalCount: Int { get }
+c:objc(cs)MXSignpostRecord	swift.class	MXSignpostRecord	MXSignpostRecord	class MXSignpostRecord
+c:objc(cs)MXSignpostRecord(im)JSONRepresentation	swift.method	jsonRepresentation()	MXSignpostRecord.jsonRepresentation()	func jsonRepresentation() -> Data
+c:objc(cs)MXSignpostRecord(im)dictionaryRepresentation	swift.method	dictionaryRepresentation()	MXSignpostRecord.dictionaryRepresentation()	func dictionaryRepresentation() -> [AnyHashable : Any]
+c:objc(cs)MXSignpostRecord(py)beginTimeStamp	swift.property	beginTimeStamp	MXSignpostRecord.beginTimeStamp	var beginTimeStamp: Date { get }
+c:objc(cs)MXSignpostRecord(py)category	swift.property	category	MXSignpostRecord.category	var category: String { get }
+c:objc(cs)MXSignpostRecord(py)duration	swift.property	duration	MXSignpostRecord.duration	var duration: Measurement<UnitDuration>? { get }
+c:objc(cs)MXSignpostRecord(py)endTimeStamp	swift.property	endTimeStamp	MXSignpostRecord.endTimeStamp	var endTimeStamp: Date? { get }
+c:objc(cs)MXSignpostRecord(py)isInterval	swift.property	isInterval	MXSignpostRecord.isInterval	var isInterval: Bool { get }
+c:objc(cs)MXSignpostRecord(py)name	swift.property	name	MXSignpostRecord.name	var name: String { get }
+c:objc(cs)MXSignpostRecord(py)subsystem	swift.property	subsystem	MXSignpostRecord.subsystem	var subsystem: String { get }
+c:objc(cs)MXUnitAveragePixelLuminance	swift.class	MXUnitAveragePixelLuminance	MXUnitAveragePixelLuminance	class MXUnitAveragePixelLuminance
+c:objc(cs)MXUnitAveragePixelLuminance(cpy)apl	swift.type.property	apl	MXUnitAveragePixelLuminance.apl	@NSCopying class var apl: MXUnitAveragePixelLuminance { get }
+c:objc(cs)MXUnitSignalBars	swift.class	MXUnitSignalBars	MXUnitSignalBars	class MXUnitSignalBars
+c:objc(cs)MXUnitSignalBars(cpy)bars	swift.type.property	bars	MXUnitSignalBars.bars	@NSCopying class var bars: MXUnitSignalBars { get }
+c:objc(pl)MXMetricManagerSubscriber	swift.protocol	MXMetricManagerSubscriber	MXMetricManagerSubscriber	protocol MXMetricManagerSubscriber : NSObjectProtocol
+c:objc(pl)MXMetricManagerSubscriber(im)didReceiveDiagnosticPayloads:	swift.method	didReceive(_:)	MXMetricManagerSubscriber.didReceive(_:)	optional func didReceive(_ payloads: [MXDiagnosticPayload])
+c:objc(pl)MXMetricManagerSubscriber(im)didReceiveMetricPayloads:	swift.method	didReceive(_:)	MXMetricManagerSubscriber.didReceive(_:)	optional func didReceive(_ payloads: [MXMetricPayload])
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXAverage	swift.init	init(coder:)	MXAverage.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXBackgroundExitData	swift.init	init(coder:)	MXBackgroundExitData.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXCallStackTree	swift.init	init(coder:)	MXCallStackTree.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason	swift.init	init(coder:)	MXCrashDiagnosticObjectiveCExceptionReason.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXDiagnostic	swift.init	init(coder:)	MXDiagnostic.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXDiagnosticPayload	swift.init	init(coder:)	MXDiagnosticPayload.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXForegroundExitData	swift.init	init(coder:)	MXForegroundExitData.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXHistogram	swift.init	init(coder:)	MXHistogram.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXHistogramBucket	swift.init	init(coder:)	MXHistogramBucket.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXMetaData	swift.init	init(coder:)	MXMetaData.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXMetric	swift.init	init(coder:)	MXMetric.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXMetricPayload	swift.init	init(coder:)	MXMetricPayload.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXSignpostIntervalData	swift.init	init(coder:)	MXSignpostIntervalData.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXSignpostRecord	swift.init	init(coder:)	MXSignpostRecord.init(coder:)	init?(coder: NSCoder)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@MXErrorCode	swift.type.property	errorDomain	MXError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MXErrorCode	swift.property	errorUserInfo	MXError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MXErrorCode	swift.property	errorCode	MXError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MXErrorCode	swift.func.op	~=(_:_:)	MXError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MXErrorCode	swift.property	errorUserInfo	MXError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MXErrorCode	swift.func.op	==(_:_:)	MXError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@MXErrorCode	swift.property	code	MXError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MXErrorCode	swift.method	hash(into:)	MXError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@MXErrorCode	swift.property	userInfo	MXError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MXErrorCode	swift.property	errorCode	MXError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MXErrorCode	swift.property	hashValue	MXError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@MXErrorCode	swift.init	init(_:userInfo:)	MXError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:9MetricKit10mxSignpost_3dso3log4name10signpostID__ySo03os_H7_type_ta_SVSo03OS_j1_F0Cs12StaticStringV0J0010OSSignpostI0VALSays7CVarArg_pGtF	swift.func	mxSignpost(_:dso:log:name:signpostID:_:_:)	mxSignpost(_:dso:log:name:signpostID:_:_:)	func mxSignpost(_ type: OSSignpostType, dso: UnsafeRawPointer = #dsohandle, log: OSLog, name: StaticString, signpostID: OSSignpostID = .exclusive, _ format: StaticString = "%{public, signpost:metrics}@", _ arguments: [any CVarArg] = [Unmanaged<NSObject>.fromOpaque(_MXSignpostMetricsSnapshot()).takeUnretainedValue()])
+s:9MetricKit32mxSignpostAnimationIntervalBegin3dso3log4name10signpostID__ySV_So06OS_os_I0Cs12StaticStringV0N0010OSSignpostL0VAJSays7CVarArg_pGtF	swift.func	mxSignpostAnimationIntervalBegin(dso:log:name:signpostID:_:_:)	mxSignpostAnimationIntervalBegin(dso:log:name:signpostID:_:_:)	func mxSignpostAnimationIntervalBegin(dso: UnsafeRawPointer = #dsohandle, log: OSLog, name: StaticString, signpostID: OSSignpostID = .exclusive, _ format: StaticString = "isAnimation=YES \\n%{public, signpost:metrics}@", _ arguments: [any CVarArg] = [Unmanaged<NSObject>.fromOpaque(_MXSignpostMetricsSnapshot()).takeUnretainedValue()])
+s:SC11MXErrorCodeLeV	swift.struct	MXError	MXError	struct MXError
+s:SC11MXErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	MXError.errorDomain	static var errorDomain: String { get }
+s:SC11MXErrorCodeLeV17launchTaskUnknownSoAAVvpZ	swift.type.property	launchTaskUnknown	MXError.launchTaskUnknown	static var launchTaskUnknown: MXError.Code { get }
+s:SC11MXErrorCodeLeV18launchTaskMaxCountSoAAVvpZ	swift.type.property	launchTaskMaxCount	MXError.launchTaskMaxCount	static var launchTaskMaxCount: MXError.Code { get }
+s:SC11MXErrorCodeLeV19launchTaskInvalidIDSoAAVvpZ	swift.type.property	launchTaskInvalidID	MXError.launchTaskInvalidID	static var launchTaskInvalidID: MXError.Code { get }
+s:SC11MXErrorCodeLeV20launchTaskDuplicatedSoAAVvpZ	swift.type.property	launchTaskDuplicated	MXError.launchTaskDuplicated	static var launchTaskDuplicated: MXError.Code { get }
+s:SC11MXErrorCodeLeV22launchTaskPastDeadlineSoAAVvpZ	swift.type.property	launchTaskPastDeadline	MXError.launchTaskPastDeadline	static var launchTaskPastDeadline: MXError.Code { get }
+s:SC11MXErrorCodeLeV25launchTaskInternalFailureSoAAVvpZ	swift.type.property	launchTaskInternalFailure	MXError.launchTaskInternalFailure	static var launchTaskInternalFailure: MXError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MXErrorCode	swift.func.op	!=(_:_:)	MXError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MXLaunchTaskID	swift.func.op	!=(_:_:)	MXLaunchTaskID.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MXErrorCode	swift.property	hashValue	MXError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MXErrorCode	swift.method	hash(into:)	MXError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11MXErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MXError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So14MXLaunchTaskIDa8rawValueABSS_tcfc	swift.init	init(rawValue:)	MXLaunchTaskID.init(rawValue:)	init(rawValue: String)
+s:So14MXLaunchTaskIDayABSScfc	swift.init	init(_:)	MXLaunchTaskID.init(_:)	init(_ rawValue: String)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MXLaunchTaskID	swift.property	hashValue	MXLaunchTaskID.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MXLaunchTaskID	swift.method	hash(into:)	MXLaunchTaskID.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MXErrorCode	swift.property	localizedDescription	MXError.localizedDescription	var localizedDescription: String { get }

@@ -1,0 +1,37 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 37,
+  "duplicateOccurrenceCount": 37,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CoreNFC.symbols.json",
+      "relationshipCount": 810,
+      "sha256": "881b24de4aaa281f9d235504814753866b898a741504f5e0548de5fd5c1fc103",
+      "symbolCount": 610
+    },
+    {
+      "path": "reference/symbol-graphs/CoreNFC@Foundation.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "190c5b95aea5642933a1582ab2600edda715c51f9be1708e8dc4dce8526d9a4c",
+      "symbolCount": 1
+    },
+    {
+      "path": "reference/symbol-graphs/_CoreNFC_UIKit@CoreNFC.symbols.json",
+      "relationshipCount": 15,
+      "sha256": "c9de25de43a14bb2dde183100c3973e31c226e11c0003ac5abee12680c2687c2",
+      "symbolCount": 12
+    },
+    {
+      "path": "reference/symbol-graphs/_CoreNFC_UIKit@UIKit.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "ee7f58fafd715480f813489cbf5bf41b8db231926821e9c939a831fc5d8ca66d",
+      "symbolCount": 1
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CoreNFC",
+  "relationshipCount": 827,
+  "schema": 1,
+  "symbolCount": 587,
+  "target": "arm64-apple-ios26.0"
+}

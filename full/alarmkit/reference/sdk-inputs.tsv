@@ -1,0 +1,5 @@
+category	sdkRelativePath	size	sha256
+tbd	System/Library/Frameworks/AlarmKit.framework/AlarmKit.tbd	77350	c9315ecceafc06bc72ead58f1509b878f5ad84e633daa7718a7d3fac3c85e104
+header	System/Library/Frameworks/AlarmKit.framework/Headers/AlarmKit.h	454	fcc0c230e504a370772095f0da34e7904e65f5518816b64fe8053214b5975302
+swiftinterface	System/Library/Frameworks/AlarmKit.framework/Modules/AlarmKit.swiftmodule/arm64e-apple-ios.swiftinterface	19044	2336370bb65ee49c2697f052d54e4278b2ae27867c3aed7be76ecb50375dae6d
+modulemap	System/Library/Frameworks/AlarmKit.framework/Modules/module.modulemap	97	584a9f8793fe629a8e9313844de332c18a16a0cb56736ce7026609d7814375ae

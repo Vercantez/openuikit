@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/ImagePlayground.symbols.json",
+      "relationshipCount": 130,
+      "sha256": "cc7832c8f3e802837617a945ddbe6bfddbf3a5d6c9e7925e5c448610a5385dbd",
+      "symbolCount": 79
+    },
+    {
+      "path": "reference/symbol-graphs/ImagePlayground@SwiftUICore.symbols.json",
+      "relationshipCount": 10,
+      "sha256": "20c042973dcaa97ac436e3a6816f4469fbc3d1b3f3c70f72de984913ddf5602c",
+      "symbolCount": 10
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "ImagePlayground",
+  "relationshipCount": 140,
+  "schema": 1,
+  "symbolCount": 89,
+  "target": "arm64-apple-ios26.0"
+}

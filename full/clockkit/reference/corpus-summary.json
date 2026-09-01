@@ -1,0 +1,59 @@
+{
+  "module": "ClockKit",
+  "moduleRecord": {
+    "app_coverage_count": 3,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 4,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 74,
+    "iphoneos_runtime_focus_launch_build_rank": 69,
+    "module": "ClockKit",
+    "occurrence_count": 4,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "53f65615dc408a579944ec1cf504f97fe4ea14ec6cede592d37bd06ca7f9d6d7",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Telegram/Watch/Extension/TGComplicationController.h"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "c268334cdc1de6864e519ce7dd1c71e45d66e6b0fc048d6aad5e750914b46d2e",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Sources/Shared/API/WatchHelpers.swift",
+          "Sources/Shared/Common/Extensions/CLKComplication+Strings.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "892ff1729664b20328c15a280b262653aff7da6766cf31daf0e2f7ca32e99d70",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Pocket Casts Watch App/Complication/ComplicationController.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 74,
+    "byFocusLaunchBuildRelevance": 69
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

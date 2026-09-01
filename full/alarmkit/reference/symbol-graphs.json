@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/AlarmKit.symbols.json",
+      "relationshipCount": 385,
+      "sha256": "703931ef49b6ed4ec8e2554207b43458dc3a537080af7639a5572d7b61ed7515",
+      "symbolCount": 262
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "AlarmKit",
+  "relationshipCount": 385,
+  "schema": 1,
+  "symbolCount": 262,
+  "target": "arm64-apple-ios26.0"
+}

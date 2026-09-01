@@ -1,0 +1,551 @@
+precise	kind	title	path	declaration
+c:@E@GLKFogMode	swift.enum	GLKFogMode	GLKFogMode	enum GLKFogMode
+c:@E@GLKFogMode@GLKFogModeExp	swift.enum.case	GLKFogMode.exp	GLKFogMode.exp	case exp
+c:@E@GLKFogMode@GLKFogModeExp2	swift.enum.case	GLKFogMode.exp2	GLKFogMode.exp2	case exp2
+c:@E@GLKFogMode@GLKFogModeLinear	swift.enum.case	GLKFogMode.linear	GLKFogMode.linear	case linear
+c:@E@GLKLightingType	swift.enum	GLKLightingType	GLKLightingType	enum GLKLightingType
+c:@E@GLKLightingType@GLKLightingTypePerPixel	swift.enum.case	GLKLightingType.perPixel	GLKLightingType.perPixel	case perPixel
+c:@E@GLKLightingType@GLKLightingTypePerVertex	swift.enum.case	GLKLightingType.perVertex	GLKLightingType.perVertex	case perVertex
+c:@E@GLKTextureEnvMode	swift.enum	GLKTextureEnvMode	GLKTextureEnvMode	enum GLKTextureEnvMode
+c:@E@GLKTextureEnvMode@GLKTextureEnvModeDecal	swift.enum.case	GLKTextureEnvMode.decal	GLKTextureEnvMode.decal	case decal
+c:@E@GLKTextureEnvMode@GLKTextureEnvModeModulate	swift.enum.case	GLKTextureEnvMode.modulate	GLKTextureEnvMode.modulate	case modulate
+c:@E@GLKTextureEnvMode@GLKTextureEnvModeReplace	swift.enum.case	GLKTextureEnvMode.replace	GLKTextureEnvMode.replace	case replace
+c:@E@GLKTextureInfoAlphaState	swift.enum	GLKTextureInfoAlphaState	GLKTextureInfoAlphaState	enum GLKTextureInfoAlphaState
+c:@E@GLKTextureInfoAlphaState@GLKTextureInfoAlphaStateNonPremultiplied	swift.enum.case	GLKTextureInfoAlphaState.nonPremultiplied	GLKTextureInfoAlphaState.nonPremultiplied	case nonPremultiplied
+c:@E@GLKTextureInfoAlphaState@GLKTextureInfoAlphaStateNone	swift.enum.case	GLKTextureInfoAlphaState.none	GLKTextureInfoAlphaState.none	case none
+c:@E@GLKTextureInfoAlphaState@GLKTextureInfoAlphaStatePremultiplied	swift.enum.case	GLKTextureInfoAlphaState.premultiplied	GLKTextureInfoAlphaState.premultiplied	case premultiplied
+c:@E@GLKTextureInfoOrigin	swift.enum	GLKTextureInfoOrigin	GLKTextureInfoOrigin	enum GLKTextureInfoOrigin
+c:@E@GLKTextureInfoOrigin@GLKTextureInfoOriginBottomLeft	swift.enum.case	GLKTextureInfoOrigin.bottomLeft	GLKTextureInfoOrigin.bottomLeft	case bottomLeft
+c:@E@GLKTextureInfoOrigin@GLKTextureInfoOriginTopLeft	swift.enum.case	GLKTextureInfoOrigin.topLeft	GLKTextureInfoOrigin.topLeft	case topLeft
+c:@E@GLKTextureInfoOrigin@GLKTextureInfoOriginUnknown	swift.enum.case	GLKTextureInfoOrigin.unknown	GLKTextureInfoOrigin.unknown	case unknown
+c:@E@GLKTextureLoaderError	swift.enum	GLKTextureLoaderError.Code	GLKTextureLoaderError.Code	enum Code
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorAlphaPremultiplicationFailure	swift.enum.case	GLKTextureLoaderError.Code.alphaPremultiplicationFailure	GLKTextureLoaderError.Code.alphaPremultiplicationFailure	case alphaPremultiplicationFailure
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorCompressedTextureUpload	swift.enum.case	GLKTextureLoaderError.Code.compressedTextureUpload	GLKTextureLoaderError.Code.compressedTextureUpload	case compressedTextureUpload
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorCubeMapInvalidNumFiles	swift.enum.case	GLKTextureLoaderError.Code.cubeMapInvalidNumFiles	GLKTextureLoaderError.Code.cubeMapInvalidNumFiles	case cubeMapInvalidNumFiles
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorDataPreprocessingFailure	swift.enum.case	GLKTextureLoaderError.Code.dataPreprocessingFailure	GLKTextureLoaderError.Code.dataPreprocessingFailure	case dataPreprocessingFailure
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorFileOrURLNotFound	swift.enum.case	GLKTextureLoaderError.Code.fileOrURLNotFound	GLKTextureLoaderError.Code.fileOrURLNotFound	case fileOrURLNotFound
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorIncompatibleFormatSRGB	swift.enum.case	GLKTextureLoaderError.Code.incompatibleFormatSRGB	GLKTextureLoaderError.Code.incompatibleFormatSRGB	case incompatibleFormatSRGB
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorInvalidCGImage	swift.enum.case	GLKTextureLoaderError.Code.invalidCGImage	GLKTextureLoaderError.Code.invalidCGImage	case invalidCGImage
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorInvalidEAGLContext	swift.enum.case	GLKTextureLoaderError.Code.invalidEAGLContext	GLKTextureLoaderError.Code.invalidEAGLContext	case invalidEAGLContext
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorInvalidNSData	swift.enum.case	GLKTextureLoaderError.Code.invalidNSData	GLKTextureLoaderError.Code.invalidNSData	case invalidNSData
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorMipmapUnsupported	swift.enum.case	GLKTextureLoaderError.Code.mipmapUnsupported	GLKTextureLoaderError.Code.mipmapUnsupported	case mipmapUnsupported
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorPVRAtlasUnsupported	swift.enum.case	GLKTextureLoaderError.Code.pvrAtlasUnsupported	GLKTextureLoaderError.Code.pvrAtlasUnsupported	case pvrAtlasUnsupported
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorReorientationFailure	swift.enum.case	GLKTextureLoaderError.Code.reorientationFailure	GLKTextureLoaderError.Code.reorientationFailure	case reorientationFailure
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUncompressedTextureUpload	swift.enum.case	GLKTextureLoaderError.Code.uncompressedTextureUpload	GLKTextureLoaderError.Code.uncompressedTextureUpload	case uncompressedTextureUpload
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnknownFileType	swift.enum.case	GLKTextureLoaderError.Code.unknownFileType	GLKTextureLoaderError.Code.unknownFileType	case unknownFileType
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnknownPathType	swift.enum.case	GLKTextureLoaderError.Code.unknownPathType	GLKTextureLoaderError.Code.unknownPathType	case unknownPathType
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedBitDepth	swift.enum.case	GLKTextureLoaderError.Code.unsupportedBitDepth	GLKTextureLoaderError.Code.unsupportedBitDepth	case unsupportedBitDepth
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedCubeMapDimensions	swift.enum.case	GLKTextureLoaderError.Code.unsupportedCubeMapDimensions	GLKTextureLoaderError.Code.unsupportedCubeMapDimensions	case unsupportedCubeMapDimensions
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedOrientation	swift.enum.case	GLKTextureLoaderError.Code.unsupportedOrientation	GLKTextureLoaderError.Code.unsupportedOrientation	case unsupportedOrientation
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedPVRFormat	swift.enum.case	GLKTextureLoaderError.Code.unsupportedPVRFormat	GLKTextureLoaderError.Code.unsupportedPVRFormat	case unsupportedPVRFormat
+c:@E@GLKTextureLoaderError@GLKTextureLoaderErrorUnsupportedTextureTarget	swift.enum.case	GLKTextureLoaderError.Code.unsupportedTextureTarget	GLKTextureLoaderError.Code.unsupportedTextureTarget	case unsupportedTextureTarget
+c:@E@GLKTextureTarget	swift.enum	GLKTextureTarget	GLKTextureTarget	enum GLKTextureTarget
+c:@E@GLKTextureTarget@GLKTextureTarget2D	swift.enum.case	GLKTextureTarget.target2D	GLKTextureTarget.target2D	case target2D
+c:@E@GLKTextureTarget@GLKTextureTargetCt	swift.enum.case	GLKTextureTarget.targetCt	GLKTextureTarget.targetCt	case targetCt
+c:@E@GLKTextureTarget@GLKTextureTargetCubeMap	swift.enum.case	GLKTextureTarget.targetCubeMap	GLKTextureTarget.targetCubeMap	case targetCubeMap
+c:@E@GLKVertexAttrib	swift.enum	GLKVertexAttrib	GLKVertexAttrib	enum GLKVertexAttrib
+c:@E@GLKVertexAttrib@GLKVertexAttribColor	swift.enum.case	GLKVertexAttrib.color	GLKVertexAttrib.color	case color
+c:@E@GLKVertexAttrib@GLKVertexAttribNormal	swift.enum.case	GLKVertexAttrib.normal	GLKVertexAttrib.normal	case normal
+c:@E@GLKVertexAttrib@GLKVertexAttribPosition	swift.enum.case	GLKVertexAttrib.position	GLKVertexAttrib.position	case position
+c:@E@GLKVertexAttrib@GLKVertexAttribTexCoord0	swift.enum.case	GLKVertexAttrib.texCoord0	GLKVertexAttrib.texCoord0	case texCoord0
+c:@E@GLKVertexAttrib@GLKVertexAttribTexCoord1	swift.enum.case	GLKVertexAttrib.texCoord1	GLKVertexAttrib.texCoord1	case texCoord1
+c:@E@GLKViewDrawableColorFormat	swift.enum	GLKViewDrawableColorFormat	GLKViewDrawableColorFormat	enum GLKViewDrawableColorFormat
+c:@E@GLKViewDrawableColorFormat@GLKViewDrawableColorFormatRGB565	swift.enum.case	GLKViewDrawableColorFormat.RGB565	GLKViewDrawableColorFormat.RGB565	case RGB565
+c:@E@GLKViewDrawableColorFormat@GLKViewDrawableColorFormatRGBA8888	swift.enum.case	GLKViewDrawableColorFormat.RGBA8888	GLKViewDrawableColorFormat.RGBA8888	case RGBA8888
+c:@E@GLKViewDrawableColorFormat@GLKViewDrawableColorFormatSRGBA8888	swift.enum.case	GLKViewDrawableColorFormat.SRGBA8888	GLKViewDrawableColorFormat.SRGBA8888	case SRGBA8888
+c:@E@GLKViewDrawableDepthFormat	swift.enum	GLKViewDrawableDepthFormat	GLKViewDrawableDepthFormat	enum GLKViewDrawableDepthFormat
+c:@E@GLKViewDrawableDepthFormat@GLKViewDrawableDepthFormat16	swift.enum.case	GLKViewDrawableDepthFormat.format16	GLKViewDrawableDepthFormat.format16	case format16
+c:@E@GLKViewDrawableDepthFormat@GLKViewDrawableDepthFormat24	swift.enum.case	GLKViewDrawableDepthFormat.format24	GLKViewDrawableDepthFormat.format24	case format24
+c:@E@GLKViewDrawableDepthFormat@GLKViewDrawableDepthFormatNone	swift.enum.case	GLKViewDrawableDepthFormat.formatNone	GLKViewDrawableDepthFormat.formatNone	case formatNone
+c:@E@GLKViewDrawableMultisample	swift.enum	GLKViewDrawableMultisample	GLKViewDrawableMultisample	enum GLKViewDrawableMultisample
+c:@E@GLKViewDrawableMultisample@GLKViewDrawableMultisample4X	swift.enum.case	GLKViewDrawableMultisample.multisample4X	GLKViewDrawableMultisample.multisample4X	case multisample4X
+c:@E@GLKViewDrawableMultisample@GLKViewDrawableMultisampleNone	swift.enum.case	GLKViewDrawableMultisample.multisampleNone	GLKViewDrawableMultisample.multisampleNone	case multisampleNone
+c:@E@GLKViewDrawableStencilFormat	swift.enum	GLKViewDrawableStencilFormat	GLKViewDrawableStencilFormat	enum GLKViewDrawableStencilFormat
+c:@E@GLKViewDrawableStencilFormat@GLKViewDrawableStencilFormat8	swift.enum.case	GLKViewDrawableStencilFormat.format8	GLKViewDrawableStencilFormat.format8	case format8
+c:@E@GLKViewDrawableStencilFormat@GLKViewDrawableStencilFormatNone	swift.enum.case	GLKViewDrawableStencilFormat.formatNone	GLKViewDrawableStencilFormat.formatNone	case formatNone
+c:@F@GLKMathDegreesToRadians	swift.func	GLKMathDegreesToRadians(_:)	GLKMathDegreesToRadians(_:)	func GLKMathDegreesToRadians(_ degrees: Float) -> Float
+c:@F@GLKMathProject	swift.func	GLKMathProject(_:_:_:_:)	GLKMathProject(_:_:_:_:)	func GLKMathProject(_ object: GLKVector3, _ model: GLKMatrix4, _ projection: GLKMatrix4, _ viewport: UnsafeMutablePointer<Int32>) -> GLKVector3
+c:@F@GLKMathRadiansToDegrees	swift.func	GLKMathRadiansToDegrees(_:)	GLKMathRadiansToDegrees(_:)	func GLKMathRadiansToDegrees(_ radians: Float) -> Float
+c:@F@GLKMathUnproject	swift.func	GLKMathUnproject(_:_:_:_:_:)	GLKMathUnproject(_:_:_:_:_:)	func GLKMathUnproject(_ window: GLKVector3, _ model: GLKMatrix4, _ projection: GLKMatrix4, _ viewport: UnsafeMutablePointer<Int32>, _ success: UnsafeMutablePointer<Bool>?) -> GLKVector3
+c:@F@GLKMatrix3Add	swift.func	GLKMatrix3Add(_:_:)	GLKMatrix3Add(_:_:)	func GLKMatrix3Add(_ matrixLeft: GLKMatrix3, _ matrixRight: GLKMatrix3) -> GLKMatrix3
+c:@F@GLKMatrix3GetColumn	swift.func	GLKMatrix3GetColumn(_:_:)	GLKMatrix3GetColumn(_:_:)	func GLKMatrix3GetColumn(_ matrix: GLKMatrix3, _ column: Int32) -> GLKVector3
+c:@F@GLKMatrix3GetMatrix2	swift.func	GLKMatrix3GetMatrix2(_:)	GLKMatrix3GetMatrix2(_:)	func GLKMatrix3GetMatrix2(_ matrix: GLKMatrix3) -> GLKMatrix2
+c:@F@GLKMatrix3GetRow	swift.func	GLKMatrix3GetRow(_:_:)	GLKMatrix3GetRow(_:_:)	func GLKMatrix3GetRow(_ matrix: GLKMatrix3, _ row: Int32) -> GLKVector3
+c:@F@GLKMatrix3Invert	swift.func	GLKMatrix3Invert(_:_:)	GLKMatrix3Invert(_:_:)	func GLKMatrix3Invert(_ matrix: GLKMatrix3, _ isInvertible: UnsafeMutablePointer<Bool>!) -> GLKMatrix3
+c:@F@GLKMatrix3InvertAndTranspose	swift.func	GLKMatrix3InvertAndTranspose(_:_:)	GLKMatrix3InvertAndTranspose(_:_:)	func GLKMatrix3InvertAndTranspose(_ matrix: GLKMatrix3, _ isInvertible: UnsafeMutablePointer<Bool>!) -> GLKMatrix3
+c:@F@GLKMatrix3Make	swift.func	GLKMatrix3Make(_:_:_:_:_:_:_:_:_:)	GLKMatrix3Make(_:_:_:_:_:_:_:_:_:)	func GLKMatrix3Make(_ m00: Float, _ m01: Float, _ m02: Float, _ m10: Float, _ m11: Float, _ m12: Float, _ m20: Float, _ m21: Float, _ m22: Float) -> GLKMatrix3
+c:@F@GLKMatrix3MakeAndTranspose	swift.func	GLKMatrix3MakeAndTranspose(_:_:_:_:_:_:_:_:_:)	GLKMatrix3MakeAndTranspose(_:_:_:_:_:_:_:_:_:)	func GLKMatrix3MakeAndTranspose(_ m00: Float, _ m01: Float, _ m02: Float, _ m10: Float, _ m11: Float, _ m12: Float, _ m20: Float, _ m21: Float, _ m22: Float) -> GLKMatrix3
+c:@F@GLKMatrix3MakeRotation	swift.func	GLKMatrix3MakeRotation(_:_:_:_:)	GLKMatrix3MakeRotation(_:_:_:_:)	func GLKMatrix3MakeRotation(_ radians: Float, _ x: Float, _ y: Float, _ z: Float) -> GLKMatrix3
+c:@F@GLKMatrix3MakeScale	swift.func	GLKMatrix3MakeScale(_:_:_:)	GLKMatrix3MakeScale(_:_:_:)	func GLKMatrix3MakeScale(_ sx: Float, _ sy: Float, _ sz: Float) -> GLKMatrix3
+c:@F@GLKMatrix3MakeWithArray	swift.func	GLKMatrix3MakeWithArray(_:)	GLKMatrix3MakeWithArray(_:)	func GLKMatrix3MakeWithArray(_ values: UnsafeMutablePointer<Float>!) -> GLKMatrix3
+c:@F@GLKMatrix3MakeWithArrayAndTranspose	swift.func	GLKMatrix3MakeWithArrayAndTranspose(_:)	GLKMatrix3MakeWithArrayAndTranspose(_:)	func GLKMatrix3MakeWithArrayAndTranspose(_ values: UnsafeMutablePointer<Float>!) -> GLKMatrix3
+c:@F@GLKMatrix3MakeWithColumns	swift.func	GLKMatrix3MakeWithColumns(_:_:_:)	GLKMatrix3MakeWithColumns(_:_:_:)	func GLKMatrix3MakeWithColumns(_ column0: GLKVector3, _ column1: GLKVector3, _ column2: GLKVector3) -> GLKMatrix3
+c:@F@GLKMatrix3MakeWithQuaternion	swift.func	GLKMatrix3MakeWithQuaternion(_:)	GLKMatrix3MakeWithQuaternion(_:)	func GLKMatrix3MakeWithQuaternion(_ quaternion: GLKQuaternion) -> GLKMatrix3
+c:@F@GLKMatrix3MakeWithRows	swift.func	GLKMatrix3MakeWithRows(_:_:_:)	GLKMatrix3MakeWithRows(_:_:_:)	func GLKMatrix3MakeWithRows(_ row0: GLKVector3, _ row1: GLKVector3, _ row2: GLKVector3) -> GLKMatrix3
+c:@F@GLKMatrix3MakeXRotation	swift.func	GLKMatrix3MakeXRotation(_:)	GLKMatrix3MakeXRotation(_:)	func GLKMatrix3MakeXRotation(_ radians: Float) -> GLKMatrix3
+c:@F@GLKMatrix3MakeYRotation	swift.func	GLKMatrix3MakeYRotation(_:)	GLKMatrix3MakeYRotation(_:)	func GLKMatrix3MakeYRotation(_ radians: Float) -> GLKMatrix3
+c:@F@GLKMatrix3MakeZRotation	swift.func	GLKMatrix3MakeZRotation(_:)	GLKMatrix3MakeZRotation(_:)	func GLKMatrix3MakeZRotation(_ radians: Float) -> GLKMatrix3
+c:@F@GLKMatrix3Multiply	swift.func	GLKMatrix3Multiply(_:_:)	GLKMatrix3Multiply(_:_:)	func GLKMatrix3Multiply(_ matrixLeft: GLKMatrix3, _ matrixRight: GLKMatrix3) -> GLKMatrix3
+c:@F@GLKMatrix3MultiplyVector3	swift.func	GLKMatrix3MultiplyVector3(_:_:)	GLKMatrix3MultiplyVector3(_:_:)	func GLKMatrix3MultiplyVector3(_ matrixLeft: GLKMatrix3, _ vectorRight: GLKVector3) -> GLKVector3
+c:@F@GLKMatrix3MultiplyVector3Array	swift.func	GLKMatrix3MultiplyVector3Array(_:_:_:)	GLKMatrix3MultiplyVector3Array(_:_:_:)	func GLKMatrix3MultiplyVector3Array(_ matrix: GLKMatrix3, _ vectors: UnsafeMutablePointer<GLKVector3>, _ vectorCount: Int)
+c:@F@GLKMatrix3Rotate	swift.func	GLKMatrix3Rotate(_:_:_:_:_:)	GLKMatrix3Rotate(_:_:_:_:_:)	func GLKMatrix3Rotate(_ matrix: GLKMatrix3, _ radians: Float, _ x: Float, _ y: Float, _ z: Float) -> GLKMatrix3
+c:@F@GLKMatrix3RotateWithVector3	swift.func	GLKMatrix3RotateWithVector3(_:_:_:)	GLKMatrix3RotateWithVector3(_:_:_:)	func GLKMatrix3RotateWithVector3(_ matrix: GLKMatrix3, _ radians: Float, _ axisVector: GLKVector3) -> GLKMatrix3
+c:@F@GLKMatrix3RotateWithVector4	swift.func	GLKMatrix3RotateWithVector4(_:_:_:)	GLKMatrix3RotateWithVector4(_:_:_:)	func GLKMatrix3RotateWithVector4(_ matrix: GLKMatrix3, _ radians: Float, _ axisVector: GLKVector4) -> GLKMatrix3
+c:@F@GLKMatrix3RotateX	swift.func	GLKMatrix3RotateX(_:_:)	GLKMatrix3RotateX(_:_:)	func GLKMatrix3RotateX(_ matrix: GLKMatrix3, _ radians: Float) -> GLKMatrix3
+c:@F@GLKMatrix3RotateY	swift.func	GLKMatrix3RotateY(_:_:)	GLKMatrix3RotateY(_:_:)	func GLKMatrix3RotateY(_ matrix: GLKMatrix3, _ radians: Float) -> GLKMatrix3
+c:@F@GLKMatrix3RotateZ	swift.func	GLKMatrix3RotateZ(_:_:)	GLKMatrix3RotateZ(_:_:)	func GLKMatrix3RotateZ(_ matrix: GLKMatrix3, _ radians: Float) -> GLKMatrix3
+c:@F@GLKMatrix3Scale	swift.func	GLKMatrix3Scale(_:_:_:_:)	GLKMatrix3Scale(_:_:_:_:)	func GLKMatrix3Scale(_ matrix: GLKMatrix3, _ sx: Float, _ sy: Float, _ sz: Float) -> GLKMatrix3
+c:@F@GLKMatrix3ScaleWithVector3	swift.func	GLKMatrix3ScaleWithVector3(_:_:)	GLKMatrix3ScaleWithVector3(_:_:)	func GLKMatrix3ScaleWithVector3(_ matrix: GLKMatrix3, _ scaleVector: GLKVector3) -> GLKMatrix3
+c:@F@GLKMatrix3ScaleWithVector4	swift.func	GLKMatrix3ScaleWithVector4(_:_:)	GLKMatrix3ScaleWithVector4(_:_:)	func GLKMatrix3ScaleWithVector4(_ matrix: GLKMatrix3, _ scaleVector: GLKVector4) -> GLKMatrix3
+c:@F@GLKMatrix3SetColumn	swift.func	GLKMatrix3SetColumn(_:_:_:)	GLKMatrix3SetColumn(_:_:_:)	func GLKMatrix3SetColumn(_ matrix: GLKMatrix3, _ column: Int32, _ vector: GLKVector3) -> GLKMatrix3
+c:@F@GLKMatrix3SetRow	swift.func	GLKMatrix3SetRow(_:_:_:)	GLKMatrix3SetRow(_:_:_:)	func GLKMatrix3SetRow(_ matrix: GLKMatrix3, _ row: Int32, _ vector: GLKVector3) -> GLKMatrix3
+c:@F@GLKMatrix3Subtract	swift.func	GLKMatrix3Subtract(_:_:)	GLKMatrix3Subtract(_:_:)	func GLKMatrix3Subtract(_ matrixLeft: GLKMatrix3, _ matrixRight: GLKMatrix3) -> GLKMatrix3
+c:@F@GLKMatrix3Transpose	swift.func	GLKMatrix3Transpose(_:)	GLKMatrix3Transpose(_:)	func GLKMatrix3Transpose(_ matrix: GLKMatrix3) -> GLKMatrix3
+c:@F@GLKMatrix4Add	swift.func	GLKMatrix4Add(_:_:)	GLKMatrix4Add(_:_:)	func GLKMatrix4Add(_ matrixLeft: GLKMatrix4, _ matrixRight: GLKMatrix4) -> GLKMatrix4
+c:@F@GLKMatrix4GetColumn	swift.func	GLKMatrix4GetColumn(_:_:)	GLKMatrix4GetColumn(_:_:)	func GLKMatrix4GetColumn(_ matrix: GLKMatrix4, _ column: Int32) -> GLKVector4
+c:@F@GLKMatrix4GetMatrix2	swift.func	GLKMatrix4GetMatrix2(_:)	GLKMatrix4GetMatrix2(_:)	func GLKMatrix4GetMatrix2(_ matrix: GLKMatrix4) -> GLKMatrix2
+c:@F@GLKMatrix4GetMatrix3	swift.func	GLKMatrix4GetMatrix3(_:)	GLKMatrix4GetMatrix3(_:)	func GLKMatrix4GetMatrix3(_ matrix: GLKMatrix4) -> GLKMatrix3
+c:@F@GLKMatrix4GetRow	swift.func	GLKMatrix4GetRow(_:_:)	GLKMatrix4GetRow(_:_:)	func GLKMatrix4GetRow(_ matrix: GLKMatrix4, _ row: Int32) -> GLKVector4
+c:@F@GLKMatrix4Invert	swift.func	GLKMatrix4Invert(_:_:)	GLKMatrix4Invert(_:_:)	func GLKMatrix4Invert(_ matrix: GLKMatrix4, _ isInvertible: UnsafeMutablePointer<Bool>?) -> GLKMatrix4
+c:@F@GLKMatrix4InvertAndTranspose	swift.func	GLKMatrix4InvertAndTranspose(_:_:)	GLKMatrix4InvertAndTranspose(_:_:)	func GLKMatrix4InvertAndTranspose(_ matrix: GLKMatrix4, _ isInvertible: UnsafeMutablePointer<Bool>?) -> GLKMatrix4
+c:@F@GLKMatrix4Make	swift.func	GLKMatrix4Make(_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:)	GLKMatrix4Make(_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:)	func GLKMatrix4Make(_ m00: Float, _ m01: Float, _ m02: Float, _ m03: Float, _ m10: Float, _ m11: Float, _ m12: Float, _ m13: Float, _ m20: Float, _ m21: Float, _ m22: Float, _ m23: Float, _ m30: Float, _ m31: Float, _ m32: Float, _ m33: Float) -> GLKMatrix4
+c:@F@GLKMatrix4MakeAndTranspose	swift.func	GLKMatrix4MakeAndTranspose(_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:)	GLKMatrix4MakeAndTranspose(_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:_:)	func GLKMatrix4MakeAndTranspose(_ m00: Float, _ m01: Float, _ m02: Float, _ m03: Float, _ m10: Float, _ m11: Float, _ m12: Float, _ m13: Float, _ m20: Float, _ m21: Float, _ m22: Float, _ m23: Float, _ m30: Float, _ m31: Float, _ m32: Float, _ m33: Float) -> GLKMatrix4
+c:@F@GLKMatrix4MakeFrustum	swift.func	GLKMatrix4MakeFrustum(_:_:_:_:_:_:)	GLKMatrix4MakeFrustum(_:_:_:_:_:_:)	func GLKMatrix4MakeFrustum(_ left: Float, _ right: Float, _ bottom: Float, _ top: Float, _ nearZ: Float, _ farZ: Float) -> GLKMatrix4
+c:@F@GLKMatrix4MakeLookAt	swift.func	GLKMatrix4MakeLookAt(_:_:_:_:_:_:_:_:_:)	GLKMatrix4MakeLookAt(_:_:_:_:_:_:_:_:_:)	func GLKMatrix4MakeLookAt(_ eyeX: Float, _ eyeY: Float, _ eyeZ: Float, _ centerX: Float, _ centerY: Float, _ centerZ: Float, _ upX: Float, _ upY: Float, _ upZ: Float) -> GLKMatrix4
+c:@F@GLKMatrix4MakeOrtho	swift.func	GLKMatrix4MakeOrtho(_:_:_:_:_:_:)	GLKMatrix4MakeOrtho(_:_:_:_:_:_:)	func GLKMatrix4MakeOrtho(_ left: Float, _ right: Float, _ bottom: Float, _ top: Float, _ nearZ: Float, _ farZ: Float) -> GLKMatrix4
+c:@F@GLKMatrix4MakePerspective	swift.func	GLKMatrix4MakePerspective(_:_:_:_:)	GLKMatrix4MakePerspective(_:_:_:_:)	func GLKMatrix4MakePerspective(_ fovyRadians: Float, _ aspect: Float, _ nearZ: Float, _ farZ: Float) -> GLKMatrix4
+c:@F@GLKMatrix4MakeRotation	swift.func	GLKMatrix4MakeRotation(_:_:_:_:)	GLKMatrix4MakeRotation(_:_:_:_:)	func GLKMatrix4MakeRotation(_ radians: Float, _ x: Float, _ y: Float, _ z: Float) -> GLKMatrix4
+c:@F@GLKMatrix4MakeScale	swift.func	GLKMatrix4MakeScale(_:_:_:)	GLKMatrix4MakeScale(_:_:_:)	func GLKMatrix4MakeScale(_ sx: Float, _ sy: Float, _ sz: Float) -> GLKMatrix4
+c:@F@GLKMatrix4MakeTranslation	swift.func	GLKMatrix4MakeTranslation(_:_:_:)	GLKMatrix4MakeTranslation(_:_:_:)	func GLKMatrix4MakeTranslation(_ tx: Float, _ ty: Float, _ tz: Float) -> GLKMatrix4
+c:@F@GLKMatrix4MakeWithArray	swift.func	GLKMatrix4MakeWithArray(_:)	GLKMatrix4MakeWithArray(_:)	func GLKMatrix4MakeWithArray(_ values: UnsafeMutablePointer<Float>!) -> GLKMatrix4
+c:@F@GLKMatrix4MakeWithArrayAndTranspose	swift.func	GLKMatrix4MakeWithArrayAndTranspose(_:)	GLKMatrix4MakeWithArrayAndTranspose(_:)	func GLKMatrix4MakeWithArrayAndTranspose(_ values: UnsafeMutablePointer<Float>!) -> GLKMatrix4
+c:@F@GLKMatrix4MakeWithColumns	swift.func	GLKMatrix4MakeWithColumns(_:_:_:_:)	GLKMatrix4MakeWithColumns(_:_:_:_:)	func GLKMatrix4MakeWithColumns(_ column0: GLKVector4, _ column1: GLKVector4, _ column2: GLKVector4, _ column3: GLKVector4) -> GLKMatrix4
+c:@F@GLKMatrix4MakeWithQuaternion	swift.func	GLKMatrix4MakeWithQuaternion(_:)	GLKMatrix4MakeWithQuaternion(_:)	func GLKMatrix4MakeWithQuaternion(_ quaternion: GLKQuaternion) -> GLKMatrix4
+c:@F@GLKMatrix4MakeWithRows	swift.func	GLKMatrix4MakeWithRows(_:_:_:_:)	GLKMatrix4MakeWithRows(_:_:_:_:)	func GLKMatrix4MakeWithRows(_ row0: GLKVector4, _ row1: GLKVector4, _ row2: GLKVector4, _ row3: GLKVector4) -> GLKMatrix4
+c:@F@GLKMatrix4MakeXRotation	swift.func	GLKMatrix4MakeXRotation(_:)	GLKMatrix4MakeXRotation(_:)	func GLKMatrix4MakeXRotation(_ radians: Float) -> GLKMatrix4
+c:@F@GLKMatrix4MakeYRotation	swift.func	GLKMatrix4MakeYRotation(_:)	GLKMatrix4MakeYRotation(_:)	func GLKMatrix4MakeYRotation(_ radians: Float) -> GLKMatrix4
+c:@F@GLKMatrix4MakeZRotation	swift.func	GLKMatrix4MakeZRotation(_:)	GLKMatrix4MakeZRotation(_:)	func GLKMatrix4MakeZRotation(_ radians: Float) -> GLKMatrix4
+c:@F@GLKMatrix4Multiply	swift.func	GLKMatrix4Multiply(_:_:)	GLKMatrix4Multiply(_:_:)	func GLKMatrix4Multiply(_ matrixLeft: GLKMatrix4, _ matrixRight: GLKMatrix4) -> GLKMatrix4
+c:@F@GLKMatrix4MultiplyAndProjectVector3	swift.func	GLKMatrix4MultiplyAndProjectVector3(_:_:)	GLKMatrix4MultiplyAndProjectVector3(_:_:)	func GLKMatrix4MultiplyAndProjectVector3(_ matrixLeft: GLKMatrix4, _ vectorRight: GLKVector3) -> GLKVector3
+c:@F@GLKMatrix4MultiplyAndProjectVector3Array	swift.func	GLKMatrix4MultiplyAndProjectVector3Array(_:_:_:)	GLKMatrix4MultiplyAndProjectVector3Array(_:_:_:)	func GLKMatrix4MultiplyAndProjectVector3Array(_ matrix: GLKMatrix4, _ vectors: UnsafeMutablePointer<GLKVector3>, _ vectorCount: Int)
+c:@F@GLKMatrix4MultiplyVector3	swift.func	GLKMatrix4MultiplyVector3(_:_:)	GLKMatrix4MultiplyVector3(_:_:)	func GLKMatrix4MultiplyVector3(_ matrixLeft: GLKMatrix4, _ vectorRight: GLKVector3) -> GLKVector3
+c:@F@GLKMatrix4MultiplyVector3Array	swift.func	GLKMatrix4MultiplyVector3Array(_:_:_:)	GLKMatrix4MultiplyVector3Array(_:_:_:)	func GLKMatrix4MultiplyVector3Array(_ matrix: GLKMatrix4, _ vectors: UnsafeMutablePointer<GLKVector3>, _ vectorCount: Int)
+c:@F@GLKMatrix4MultiplyVector3ArrayWithTranslation	swift.func	GLKMatrix4MultiplyVector3ArrayWithTranslation(_:_:_:)	GLKMatrix4MultiplyVector3ArrayWithTranslation(_:_:_:)	func GLKMatrix4MultiplyVector3ArrayWithTranslation(_ matrix: GLKMatrix4, _ vectors: UnsafeMutablePointer<GLKVector3>, _ vectorCount: Int)
+c:@F@GLKMatrix4MultiplyVector3WithTranslation	swift.func	GLKMatrix4MultiplyVector3WithTranslation(_:_:)	GLKMatrix4MultiplyVector3WithTranslation(_:_:)	func GLKMatrix4MultiplyVector3WithTranslation(_ matrixLeft: GLKMatrix4, _ vectorRight: GLKVector3) -> GLKVector3
+c:@F@GLKMatrix4MultiplyVector4	swift.func	GLKMatrix4MultiplyVector4(_:_:)	GLKMatrix4MultiplyVector4(_:_:)	func GLKMatrix4MultiplyVector4(_ matrixLeft: GLKMatrix4, _ vectorRight: GLKVector4) -> GLKVector4
+c:@F@GLKMatrix4MultiplyVector4Array	swift.func	GLKMatrix4MultiplyVector4Array(_:_:_:)	GLKMatrix4MultiplyVector4Array(_:_:_:)	func GLKMatrix4MultiplyVector4Array(_ matrix: GLKMatrix4, _ vectors: UnsafeMutablePointer<GLKVector4>, _ vectorCount: Int)
+c:@F@GLKMatrix4Rotate	swift.func	GLKMatrix4Rotate(_:_:_:_:_:)	GLKMatrix4Rotate(_:_:_:_:_:)	func GLKMatrix4Rotate(_ matrix: GLKMatrix4, _ radians: Float, _ x: Float, _ y: Float, _ z: Float) -> GLKMatrix4
+c:@F@GLKMatrix4RotateWithVector3	swift.func	GLKMatrix4RotateWithVector3(_:_:_:)	GLKMatrix4RotateWithVector3(_:_:_:)	func GLKMatrix4RotateWithVector3(_ matrix: GLKMatrix4, _ radians: Float, _ axisVector: GLKVector3) -> GLKMatrix4
+c:@F@GLKMatrix4RotateWithVector4	swift.func	GLKMatrix4RotateWithVector4(_:_:_:)	GLKMatrix4RotateWithVector4(_:_:_:)	func GLKMatrix4RotateWithVector4(_ matrix: GLKMatrix4, _ radians: Float, _ axisVector: GLKVector4) -> GLKMatrix4
+c:@F@GLKMatrix4RotateX	swift.func	GLKMatrix4RotateX(_:_:)	GLKMatrix4RotateX(_:_:)	func GLKMatrix4RotateX(_ matrix: GLKMatrix4, _ radians: Float) -> GLKMatrix4
+c:@F@GLKMatrix4RotateY	swift.func	GLKMatrix4RotateY(_:_:)	GLKMatrix4RotateY(_:_:)	func GLKMatrix4RotateY(_ matrix: GLKMatrix4, _ radians: Float) -> GLKMatrix4
+c:@F@GLKMatrix4RotateZ	swift.func	GLKMatrix4RotateZ(_:_:)	GLKMatrix4RotateZ(_:_:)	func GLKMatrix4RotateZ(_ matrix: GLKMatrix4, _ radians: Float) -> GLKMatrix4
+c:@F@GLKMatrix4Scale	swift.func	GLKMatrix4Scale(_:_:_:_:)	GLKMatrix4Scale(_:_:_:_:)	func GLKMatrix4Scale(_ matrix: GLKMatrix4, _ sx: Float, _ sy: Float, _ sz: Float) -> GLKMatrix4
+c:@F@GLKMatrix4ScaleWithVector3	swift.func	GLKMatrix4ScaleWithVector3(_:_:)	GLKMatrix4ScaleWithVector3(_:_:)	func GLKMatrix4ScaleWithVector3(_ matrix: GLKMatrix4, _ scaleVector: GLKVector3) -> GLKMatrix4
+c:@F@GLKMatrix4ScaleWithVector4	swift.func	GLKMatrix4ScaleWithVector4(_:_:)	GLKMatrix4ScaleWithVector4(_:_:)	func GLKMatrix4ScaleWithVector4(_ matrix: GLKMatrix4, _ scaleVector: GLKVector4) -> GLKMatrix4
+c:@F@GLKMatrix4SetColumn	swift.func	GLKMatrix4SetColumn(_:_:_:)	GLKMatrix4SetColumn(_:_:_:)	func GLKMatrix4SetColumn(_ matrix: GLKMatrix4, _ column: Int32, _ vector: GLKVector4) -> GLKMatrix4
+c:@F@GLKMatrix4SetRow	swift.func	GLKMatrix4SetRow(_:_:_:)	GLKMatrix4SetRow(_:_:_:)	func GLKMatrix4SetRow(_ matrix: GLKMatrix4, _ row: Int32, _ vector: GLKVector4) -> GLKMatrix4
+c:@F@GLKMatrix4Subtract	swift.func	GLKMatrix4Subtract(_:_:)	GLKMatrix4Subtract(_:_:)	func GLKMatrix4Subtract(_ matrixLeft: GLKMatrix4, _ matrixRight: GLKMatrix4) -> GLKMatrix4
+c:@F@GLKMatrix4Translate	swift.func	GLKMatrix4Translate(_:_:_:_:)	GLKMatrix4Translate(_:_:_:_:)	func GLKMatrix4Translate(_ matrix: GLKMatrix4, _ tx: Float, _ ty: Float, _ tz: Float) -> GLKMatrix4
+c:@F@GLKMatrix4TranslateWithVector3	swift.func	GLKMatrix4TranslateWithVector3(_:_:)	GLKMatrix4TranslateWithVector3(_:_:)	func GLKMatrix4TranslateWithVector3(_ matrix: GLKMatrix4, _ translationVector: GLKVector3) -> GLKMatrix4
+c:@F@GLKMatrix4TranslateWithVector4	swift.func	GLKMatrix4TranslateWithVector4(_:_:)	GLKMatrix4TranslateWithVector4(_:_:)	func GLKMatrix4TranslateWithVector4(_ matrix: GLKMatrix4, _ translationVector: GLKVector4) -> GLKMatrix4
+c:@F@GLKMatrix4Transpose	swift.func	GLKMatrix4Transpose(_:)	GLKMatrix4Transpose(_:)	func GLKMatrix4Transpose(_ matrix: GLKMatrix4) -> GLKMatrix4
+c:@F@GLKMatrixStackCreate	swift.func	GLKMatrixStackCreate(_:)	GLKMatrixStackCreate(_:)	func GLKMatrixStackCreate(_ alloc: CFAllocator?) -> Unmanaged<GLKMatrixStack>?
+c:@F@GLKMatrixStackGetMatrix2	swift.func	GLKMatrixStackGetMatrix2(_:)	GLKMatrixStackGetMatrix2(_:)	func GLKMatrixStackGetMatrix2(_ stack: GLKMatrixStack) -> GLKMatrix2
+c:@F@GLKMatrixStackGetMatrix3	swift.func	GLKMatrixStackGetMatrix3(_:)	GLKMatrixStackGetMatrix3(_:)	func GLKMatrixStackGetMatrix3(_ stack: GLKMatrixStack) -> GLKMatrix3
+c:@F@GLKMatrixStackGetMatrix3Inverse	swift.func	GLKMatrixStackGetMatrix3Inverse(_:)	GLKMatrixStackGetMatrix3Inverse(_:)	func GLKMatrixStackGetMatrix3Inverse(_ stack: GLKMatrixStack) -> GLKMatrix3
+c:@F@GLKMatrixStackGetMatrix3InverseTranspose	swift.func	GLKMatrixStackGetMatrix3InverseTranspose(_:)	GLKMatrixStackGetMatrix3InverseTranspose(_:)	func GLKMatrixStackGetMatrix3InverseTranspose(_ stack: GLKMatrixStack) -> GLKMatrix3
+c:@F@GLKMatrixStackGetMatrix4	swift.func	GLKMatrixStackGetMatrix4(_:)	GLKMatrixStackGetMatrix4(_:)	func GLKMatrixStackGetMatrix4(_ stack: GLKMatrixStack) -> GLKMatrix4
+c:@F@GLKMatrixStackGetMatrix4Inverse	swift.func	GLKMatrixStackGetMatrix4Inverse(_:)	GLKMatrixStackGetMatrix4Inverse(_:)	func GLKMatrixStackGetMatrix4Inverse(_ stack: GLKMatrixStack) -> GLKMatrix4
+c:@F@GLKMatrixStackGetMatrix4InverseTranspose	swift.func	GLKMatrixStackGetMatrix4InverseTranspose(_:)	GLKMatrixStackGetMatrix4InverseTranspose(_:)	func GLKMatrixStackGetMatrix4InverseTranspose(_ stack: GLKMatrixStack) -> GLKMatrix4
+c:@F@GLKMatrixStackGetTypeID	swift.func	GLKMatrixStackGetTypeID()	GLKMatrixStackGetTypeID()	func GLKMatrixStackGetTypeID() -> CFTypeID
+c:@F@GLKMatrixStackLoadMatrix4	swift.func	GLKMatrixStackLoadMatrix4(_:_:)	GLKMatrixStackLoadMatrix4(_:_:)	func GLKMatrixStackLoadMatrix4(_ stack: GLKMatrixStack, _ matrix: GLKMatrix4)
+c:@F@GLKMatrixStackMultiplyMatrix4	swift.func	GLKMatrixStackMultiplyMatrix4(_:_:)	GLKMatrixStackMultiplyMatrix4(_:_:)	func GLKMatrixStackMultiplyMatrix4(_ stack: GLKMatrixStack, _ matrix: GLKMatrix4)
+c:@F@GLKMatrixStackMultiplyMatrixStack	swift.func	GLKMatrixStackMultiplyMatrixStack(_:_:)	GLKMatrixStackMultiplyMatrixStack(_:_:)	func GLKMatrixStackMultiplyMatrixStack(_ stackLeft: GLKMatrixStack, _ stackRight: GLKMatrixStack)
+c:@F@GLKMatrixStackPop	swift.func	GLKMatrixStackPop(_:)	GLKMatrixStackPop(_:)	func GLKMatrixStackPop(_ stack: GLKMatrixStack)
+c:@F@GLKMatrixStackPush	swift.func	GLKMatrixStackPush(_:)	GLKMatrixStackPush(_:)	func GLKMatrixStackPush(_ stack: GLKMatrixStack)
+c:@F@GLKMatrixStackRotate	swift.func	GLKMatrixStackRotate(_:_:_:_:_:)	GLKMatrixStackRotate(_:_:_:_:_:)	func GLKMatrixStackRotate(_ stack: GLKMatrixStack, _ radians: Float, _ x: Float, _ y: Float, _ z: Float)
+c:@F@GLKMatrixStackRotateWithVector3	swift.func	GLKMatrixStackRotateWithVector3(_:_:_:)	GLKMatrixStackRotateWithVector3(_:_:_:)	func GLKMatrixStackRotateWithVector3(_ stack: GLKMatrixStack, _ radians: Float, _ axisVector: GLKVector3)
+c:@F@GLKMatrixStackRotateWithVector4	swift.func	GLKMatrixStackRotateWithVector4(_:_:_:)	GLKMatrixStackRotateWithVector4(_:_:_:)	func GLKMatrixStackRotateWithVector4(_ stack: GLKMatrixStack, _ radians: Float, _ axisVector: GLKVector4)
+c:@F@GLKMatrixStackRotateX	swift.func	GLKMatrixStackRotateX(_:_:)	GLKMatrixStackRotateX(_:_:)	func GLKMatrixStackRotateX(_ stack: GLKMatrixStack, _ radians: Float)
+c:@F@GLKMatrixStackRotateY	swift.func	GLKMatrixStackRotateY(_:_:)	GLKMatrixStackRotateY(_:_:)	func GLKMatrixStackRotateY(_ stack: GLKMatrixStack, _ radians: Float)
+c:@F@GLKMatrixStackRotateZ	swift.func	GLKMatrixStackRotateZ(_:_:)	GLKMatrixStackRotateZ(_:_:)	func GLKMatrixStackRotateZ(_ stack: GLKMatrixStack, _ radians: Float)
+c:@F@GLKMatrixStackScale	swift.func	GLKMatrixStackScale(_:_:_:_:)	GLKMatrixStackScale(_:_:_:_:)	func GLKMatrixStackScale(_ stack: GLKMatrixStack, _ sx: Float, _ sy: Float, _ sz: Float)
+c:@F@GLKMatrixStackScaleWithVector3	swift.func	GLKMatrixStackScaleWithVector3(_:_:)	GLKMatrixStackScaleWithVector3(_:_:)	func GLKMatrixStackScaleWithVector3(_ stack: GLKMatrixStack, _ scaleVector: GLKVector3)
+c:@F@GLKMatrixStackScaleWithVector4	swift.func	GLKMatrixStackScaleWithVector4(_:_:)	GLKMatrixStackScaleWithVector4(_:_:)	func GLKMatrixStackScaleWithVector4(_ stack: GLKMatrixStack, _ scaleVector: GLKVector4)
+c:@F@GLKMatrixStackSize	swift.func	GLKMatrixStackSize(_:)	GLKMatrixStackSize(_:)	func GLKMatrixStackSize(_ stack: GLKMatrixStack) -> Int32
+c:@F@GLKMatrixStackTranslate	swift.func	GLKMatrixStackTranslate(_:_:_:_:)	GLKMatrixStackTranslate(_:_:_:_:)	func GLKMatrixStackTranslate(_ stack: GLKMatrixStack, _ tx: Float, _ ty: Float, _ tz: Float)
+c:@F@GLKMatrixStackTranslateWithVector3	swift.func	GLKMatrixStackTranslateWithVector3(_:_:)	GLKMatrixStackTranslateWithVector3(_:_:)	func GLKMatrixStackTranslateWithVector3(_ stack: GLKMatrixStack, _ translationVector: GLKVector3)
+c:@F@GLKMatrixStackTranslateWithVector4	swift.func	GLKMatrixStackTranslateWithVector4(_:_:)	GLKMatrixStackTranslateWithVector4(_:_:)	func GLKMatrixStackTranslateWithVector4(_ stack: GLKMatrixStack, _ translationVector: GLKVector4)
+c:@F@GLKQuaternionAdd	swift.func	GLKQuaternionAdd(_:_:)	GLKQuaternionAdd(_:_:)	func GLKQuaternionAdd(_ quaternionLeft: GLKQuaternion, _ quaternionRight: GLKQuaternion) -> GLKQuaternion
+c:@F@GLKQuaternionAngle	swift.func	GLKQuaternionAngle(_:)	GLKQuaternionAngle(_:)	func GLKQuaternionAngle(_ quaternion: GLKQuaternion) -> Float
+c:@F@GLKQuaternionAxis	swift.func	GLKQuaternionAxis(_:)	GLKQuaternionAxis(_:)	func GLKQuaternionAxis(_ quaternion: GLKQuaternion) -> GLKVector3
+c:@F@GLKQuaternionConjugate	swift.func	GLKQuaternionConjugate(_:)	GLKQuaternionConjugate(_:)	func GLKQuaternionConjugate(_ quaternion: GLKQuaternion) -> GLKQuaternion
+c:@F@GLKQuaternionInvert	swift.func	GLKQuaternionInvert(_:)	GLKQuaternionInvert(_:)	func GLKQuaternionInvert(_ quaternion: GLKQuaternion) -> GLKQuaternion
+c:@F@GLKQuaternionLength	swift.func	GLKQuaternionLength(_:)	GLKQuaternionLength(_:)	func GLKQuaternionLength(_ quaternion: GLKQuaternion) -> Float
+c:@F@GLKQuaternionMake	swift.func	GLKQuaternionMake(_:_:_:_:)	GLKQuaternionMake(_:_:_:_:)	func GLKQuaternionMake(_ x: Float, _ y: Float, _ z: Float, _ w: Float) -> GLKQuaternion
+c:@F@GLKQuaternionMakeWithAngleAndAxis	swift.func	GLKQuaternionMakeWithAngleAndAxis(_:_:_:_:)	GLKQuaternionMakeWithAngleAndAxis(_:_:_:_:)	func GLKQuaternionMakeWithAngleAndAxis(_ radians: Float, _ x: Float, _ y: Float, _ z: Float) -> GLKQuaternion
+c:@F@GLKQuaternionMakeWithAngleAndVector3Axis	swift.func	GLKQuaternionMakeWithAngleAndVector3Axis(_:_:)	GLKQuaternionMakeWithAngleAndVector3Axis(_:_:)	func GLKQuaternionMakeWithAngleAndVector3Axis(_ radians: Float, _ axisVector: GLKVector3) -> GLKQuaternion
+c:@F@GLKQuaternionMakeWithArray	swift.func	GLKQuaternionMakeWithArray(_:)	GLKQuaternionMakeWithArray(_:)	func GLKQuaternionMakeWithArray(_ values: UnsafeMutablePointer<Float>!) -> GLKQuaternion
+c:@F@GLKQuaternionMakeWithMatrix3	swift.func	GLKQuaternionMakeWithMatrix3(_:)	GLKQuaternionMakeWithMatrix3(_:)	func GLKQuaternionMakeWithMatrix3(_ matrix: GLKMatrix3) -> GLKQuaternion
+c:@F@GLKQuaternionMakeWithMatrix4	swift.func	GLKQuaternionMakeWithMatrix4(_:)	GLKQuaternionMakeWithMatrix4(_:)	func GLKQuaternionMakeWithMatrix4(_ matrix: GLKMatrix4) -> GLKQuaternion
+c:@F@GLKQuaternionMakeWithVector3	swift.func	GLKQuaternionMakeWithVector3(_:_:)	GLKQuaternionMakeWithVector3(_:_:)	func GLKQuaternionMakeWithVector3(_ vector: GLKVector3, _ scalar: Float) -> GLKQuaternion
+c:@F@GLKQuaternionMultiply	swift.func	GLKQuaternionMultiply(_:_:)	GLKQuaternionMultiply(_:_:)	func GLKQuaternionMultiply(_ quaternionLeft: GLKQuaternion, _ quaternionRight: GLKQuaternion) -> GLKQuaternion
+c:@F@GLKQuaternionNormalize	swift.func	GLKQuaternionNormalize(_:)	GLKQuaternionNormalize(_:)	func GLKQuaternionNormalize(_ quaternion: GLKQuaternion) -> GLKQuaternion
+c:@F@GLKQuaternionRotateVector3	swift.func	GLKQuaternionRotateVector3(_:_:)	GLKQuaternionRotateVector3(_:_:)	func GLKQuaternionRotateVector3(_ quaternion: GLKQuaternion, _ vector: GLKVector3) -> GLKVector3
+c:@F@GLKQuaternionRotateVector3Array	swift.func	GLKQuaternionRotateVector3Array(_:_:_:)	GLKQuaternionRotateVector3Array(_:_:_:)	func GLKQuaternionRotateVector3Array(_ quaternion: GLKQuaternion, _ vectors: UnsafeMutablePointer<GLKVector3>, _ vectorCount: Int)
+c:@F@GLKQuaternionRotateVector4	swift.func	GLKQuaternionRotateVector4(_:_:)	GLKQuaternionRotateVector4(_:_:)	func GLKQuaternionRotateVector4(_ quaternion: GLKQuaternion, _ vector: GLKVector4) -> GLKVector4
+c:@F@GLKQuaternionRotateVector4Array	swift.func	GLKQuaternionRotateVector4Array(_:_:_:)	GLKQuaternionRotateVector4Array(_:_:_:)	func GLKQuaternionRotateVector4Array(_ quaternion: GLKQuaternion, _ vectors: UnsafeMutablePointer<GLKVector4>, _ vectorCount: Int)
+c:@F@GLKQuaternionSlerp	swift.func	GLKQuaternionSlerp(_:_:_:)	GLKQuaternionSlerp(_:_:_:)	func GLKQuaternionSlerp(_ quaternionStart: GLKQuaternion, _ quaternionEnd: GLKQuaternion, _ t: Float) -> GLKQuaternion
+c:@F@GLKQuaternionSubtract	swift.func	GLKQuaternionSubtract(_:_:)	GLKQuaternionSubtract(_:_:)	func GLKQuaternionSubtract(_ quaternionLeft: GLKQuaternion, _ quaternionRight: GLKQuaternion) -> GLKQuaternion
+c:@F@GLKVector2Add	swift.func	GLKVector2Add(_:_:)	GLKVector2Add(_:_:)	func GLKVector2Add(_ vectorLeft: GLKVector2, _ vectorRight: GLKVector2) -> GLKVector2
+c:@F@GLKVector2AddScalar	swift.func	GLKVector2AddScalar(_:_:)	GLKVector2AddScalar(_:_:)	func GLKVector2AddScalar(_ vector: GLKVector2, _ value: Float) -> GLKVector2
+c:@F@GLKVector2AllEqualToScalar	swift.func	GLKVector2AllEqualToScalar(_:_:)	GLKVector2AllEqualToScalar(_:_:)	func GLKVector2AllEqualToScalar(_ vector: GLKVector2, _ value: Float) -> Bool
+c:@F@GLKVector2AllEqualToVector2	swift.func	GLKVector2AllEqualToVector2(_:_:)	GLKVector2AllEqualToVector2(_:_:)	func GLKVector2AllEqualToVector2(_ vectorLeft: GLKVector2, _ vectorRight: GLKVector2) -> Bool
+c:@F@GLKVector2AllGreaterThanOrEqualToScalar	swift.func	GLKVector2AllGreaterThanOrEqualToScalar(_:_:)	GLKVector2AllGreaterThanOrEqualToScalar(_:_:)	func GLKVector2AllGreaterThanOrEqualToScalar(_ vector: GLKVector2, _ value: Float) -> Bool
+c:@F@GLKVector2AllGreaterThanOrEqualToVector2	swift.func	GLKVector2AllGreaterThanOrEqualToVector2(_:_:)	GLKVector2AllGreaterThanOrEqualToVector2(_:_:)	func GLKVector2AllGreaterThanOrEqualToVector2(_ vectorLeft: GLKVector2, _ vectorRight: GLKVector2) -> Bool
+c:@F@GLKVector2AllGreaterThanScalar	swift.func	GLKVector2AllGreaterThanScalar(_:_:)	GLKVector2AllGreaterThanScalar(_:_:)	func GLKVector2AllGreaterThanScalar(_ vector: GLKVector2, _ value: Float) -> Bool
+c:@F@GLKVector2AllGreaterThanVector2	swift.func	GLKVector2AllGreaterThanVector2(_:_:)	GLKVector2AllGreaterThanVector2(_:_:)	func GLKVector2AllGreaterThanVector2(_ vectorLeft: GLKVector2, _ vectorRight: GLKVector2) -> Bool
+c:@F@GLKVector2Distance	swift.func	GLKVector2Distance(_:_:)	GLKVector2Distance(_:_:)	func GLKVector2Distance(_ vectorStart: GLKVector2, _ vectorEnd: GLKVector2) -> Float
+c:@F@GLKVector2Divide	swift.func	GLKVector2Divide(_:_:)	GLKVector2Divide(_:_:)	func GLKVector2Divide(_ vectorLeft: GLKVector2, _ vectorRight: GLKVector2) -> GLKVector2
+c:@F@GLKVector2DivideScalar	swift.func	GLKVector2DivideScalar(_:_:)	GLKVector2DivideScalar(_:_:)	func GLKVector2DivideScalar(_ vector: GLKVector2, _ value: Float) -> GLKVector2
+c:@F@GLKVector2DotProduct	swift.func	GLKVector2DotProduct(_:_:)	GLKVector2DotProduct(_:_:)	func GLKVector2DotProduct(_ vectorLeft: GLKVector2, _ vectorRight: GLKVector2) -> Float
+c:@F@GLKVector2Length	swift.func	GLKVector2Length(_:)	GLKVector2Length(_:)	func GLKVector2Length(_ vector: GLKVector2) -> Float
+c:@F@GLKVector2Lerp	swift.func	GLKVector2Lerp(_:_:_:)	GLKVector2Lerp(_:_:_:)	func GLKVector2Lerp(_ vectorStart: GLKVector2, _ vectorEnd: GLKVector2, _ t: Float) -> GLKVector2
+c:@F@GLKVector2Make	swift.func	GLKVector2Make(_:_:)	GLKVector2Make(_:_:)	func GLKVector2Make(_ x: Float, _ y: Float) -> GLKVector2
+c:@F@GLKVector2MakeWithArray	swift.func	GLKVector2MakeWithArray(_:)	GLKVector2MakeWithArray(_:)	func GLKVector2MakeWithArray(_ values: UnsafeMutablePointer<Float>!) -> GLKVector2
+c:@F@GLKVector2Maximum	swift.func	GLKVector2Maximum(_:_:)	GLKVector2Maximum(_:_:)	func GLKVector2Maximum(_ vectorLeft: GLKVector2, _ vectorRight: GLKVector2) -> GLKVector2
+c:@F@GLKVector2Minimum	swift.func	GLKVector2Minimum(_:_:)	GLKVector2Minimum(_:_:)	func GLKVector2Minimum(_ vectorLeft: GLKVector2, _ vectorRight: GLKVector2) -> GLKVector2
+c:@F@GLKVector2Multiply	swift.func	GLKVector2Multiply(_:_:)	GLKVector2Multiply(_:_:)	func GLKVector2Multiply(_ vectorLeft: GLKVector2, _ vectorRight: GLKVector2) -> GLKVector2
+c:@F@GLKVector2MultiplyScalar	swift.func	GLKVector2MultiplyScalar(_:_:)	GLKVector2MultiplyScalar(_:_:)	func GLKVector2MultiplyScalar(_ vector: GLKVector2, _ value: Float) -> GLKVector2
+c:@F@GLKVector2Negate	swift.func	GLKVector2Negate(_:)	GLKVector2Negate(_:)	func GLKVector2Negate(_ vector: GLKVector2) -> GLKVector2
+c:@F@GLKVector2Normalize	swift.func	GLKVector2Normalize(_:)	GLKVector2Normalize(_:)	func GLKVector2Normalize(_ vector: GLKVector2) -> GLKVector2
+c:@F@GLKVector2Project	swift.func	GLKVector2Project(_:_:)	GLKVector2Project(_:_:)	func GLKVector2Project(_ vectorToProject: GLKVector2, _ projectionVector: GLKVector2) -> GLKVector2
+c:@F@GLKVector2Subtract	swift.func	GLKVector2Subtract(_:_:)	GLKVector2Subtract(_:_:)	func GLKVector2Subtract(_ vectorLeft: GLKVector2, _ vectorRight: GLKVector2) -> GLKVector2
+c:@F@GLKVector2SubtractScalar	swift.func	GLKVector2SubtractScalar(_:_:)	GLKVector2SubtractScalar(_:_:)	func GLKVector2SubtractScalar(_ vector: GLKVector2, _ value: Float) -> GLKVector2
+c:@F@GLKVector3Add	swift.func	GLKVector3Add(_:_:)	GLKVector3Add(_:_:)	func GLKVector3Add(_ vectorLeft: GLKVector3, _ vectorRight: GLKVector3) -> GLKVector3
+c:@F@GLKVector3AddScalar	swift.func	GLKVector3AddScalar(_:_:)	GLKVector3AddScalar(_:_:)	func GLKVector3AddScalar(_ vector: GLKVector3, _ value: Float) -> GLKVector3
+c:@F@GLKVector3AllEqualToScalar	swift.func	GLKVector3AllEqualToScalar(_:_:)	GLKVector3AllEqualToScalar(_:_:)	func GLKVector3AllEqualToScalar(_ vector: GLKVector3, _ value: Float) -> Bool
+c:@F@GLKVector3AllEqualToVector3	swift.func	GLKVector3AllEqualToVector3(_:_:)	GLKVector3AllEqualToVector3(_:_:)	func GLKVector3AllEqualToVector3(_ vectorLeft: GLKVector3, _ vectorRight: GLKVector3) -> Bool
+c:@F@GLKVector3AllGreaterThanOrEqualToScalar	swift.func	GLKVector3AllGreaterThanOrEqualToScalar(_:_:)	GLKVector3AllGreaterThanOrEqualToScalar(_:_:)	func GLKVector3AllGreaterThanOrEqualToScalar(_ vector: GLKVector3, _ value: Float) -> Bool
+c:@F@GLKVector3AllGreaterThanOrEqualToVector3	swift.func	GLKVector3AllGreaterThanOrEqualToVector3(_:_:)	GLKVector3AllGreaterThanOrEqualToVector3(_:_:)	func GLKVector3AllGreaterThanOrEqualToVector3(_ vectorLeft: GLKVector3, _ vectorRight: GLKVector3) -> Bool
+c:@F@GLKVector3AllGreaterThanScalar	swift.func	GLKVector3AllGreaterThanScalar(_:_:)	GLKVector3AllGreaterThanScalar(_:_:)	func GLKVector3AllGreaterThanScalar(_ vector: GLKVector3, _ value: Float) -> Bool
+c:@F@GLKVector3AllGreaterThanVector3	swift.func	GLKVector3AllGreaterThanVector3(_:_:)	GLKVector3AllGreaterThanVector3(_:_:)	func GLKVector3AllGreaterThanVector3(_ vectorLeft: GLKVector3, _ vectorRight: GLKVector3) -> Bool
+c:@F@GLKVector3CrossProduct	swift.func	GLKVector3CrossProduct(_:_:)	GLKVector3CrossProduct(_:_:)	func GLKVector3CrossProduct(_ vectorLeft: GLKVector3, _ vectorRight: GLKVector3) -> GLKVector3
+c:@F@GLKVector3Distance	swift.func	GLKVector3Distance(_:_:)	GLKVector3Distance(_:_:)	func GLKVector3Distance(_ vectorStart: GLKVector3, _ vectorEnd: GLKVector3) -> Float
+c:@F@GLKVector3Divide	swift.func	GLKVector3Divide(_:_:)	GLKVector3Divide(_:_:)	func GLKVector3Divide(_ vectorLeft: GLKVector3, _ vectorRight: GLKVector3) -> GLKVector3
+c:@F@GLKVector3DivideScalar	swift.func	GLKVector3DivideScalar(_:_:)	GLKVector3DivideScalar(_:_:)	func GLKVector3DivideScalar(_ vector: GLKVector3, _ value: Float) -> GLKVector3
+c:@F@GLKVector3DotProduct	swift.func	GLKVector3DotProduct(_:_:)	GLKVector3DotProduct(_:_:)	func GLKVector3DotProduct(_ vectorLeft: GLKVector3, _ vectorRight: GLKVector3) -> Float
+c:@F@GLKVector3Length	swift.func	GLKVector3Length(_:)	GLKVector3Length(_:)	func GLKVector3Length(_ vector: GLKVector3) -> Float
+c:@F@GLKVector3Lerp	swift.func	GLKVector3Lerp(_:_:_:)	GLKVector3Lerp(_:_:_:)	func GLKVector3Lerp(_ vectorStart: GLKVector3, _ vectorEnd: GLKVector3, _ t: Float) -> GLKVector3
+c:@F@GLKVector3Make	swift.func	GLKVector3Make(_:_:_:)	GLKVector3Make(_:_:_:)	func GLKVector3Make(_ x: Float, _ y: Float, _ z: Float) -> GLKVector3
+c:@F@GLKVector3MakeWithArray	swift.func	GLKVector3MakeWithArray(_:)	GLKVector3MakeWithArray(_:)	func GLKVector3MakeWithArray(_ values: UnsafeMutablePointer<Float>!) -> GLKVector3
+c:@F@GLKVector3Maximum	swift.func	GLKVector3Maximum(_:_:)	GLKVector3Maximum(_:_:)	func GLKVector3Maximum(_ vectorLeft: GLKVector3, _ vectorRight: GLKVector3) -> GLKVector3
+c:@F@GLKVector3Minimum	swift.func	GLKVector3Minimum(_:_:)	GLKVector3Minimum(_:_:)	func GLKVector3Minimum(_ vectorLeft: GLKVector3, _ vectorRight: GLKVector3) -> GLKVector3
+c:@F@GLKVector3Multiply	swift.func	GLKVector3Multiply(_:_:)	GLKVector3Multiply(_:_:)	func GLKVector3Multiply(_ vectorLeft: GLKVector3, _ vectorRight: GLKVector3) -> GLKVector3
+c:@F@GLKVector3MultiplyScalar	swift.func	GLKVector3MultiplyScalar(_:_:)	GLKVector3MultiplyScalar(_:_:)	func GLKVector3MultiplyScalar(_ vector: GLKVector3, _ value: Float) -> GLKVector3
+c:@F@GLKVector3Negate	swift.func	GLKVector3Negate(_:)	GLKVector3Negate(_:)	func GLKVector3Negate(_ vector: GLKVector3) -> GLKVector3
+c:@F@GLKVector3Normalize	swift.func	GLKVector3Normalize(_:)	GLKVector3Normalize(_:)	func GLKVector3Normalize(_ vector: GLKVector3) -> GLKVector3
+c:@F@GLKVector3Project	swift.func	GLKVector3Project(_:_:)	GLKVector3Project(_:_:)	func GLKVector3Project(_ vectorToProject: GLKVector3, _ projectionVector: GLKVector3) -> GLKVector3
+c:@F@GLKVector3Subtract	swift.func	GLKVector3Subtract(_:_:)	GLKVector3Subtract(_:_:)	func GLKVector3Subtract(_ vectorLeft: GLKVector3, _ vectorRight: GLKVector3) -> GLKVector3
+c:@F@GLKVector3SubtractScalar	swift.func	GLKVector3SubtractScalar(_:_:)	GLKVector3SubtractScalar(_:_:)	func GLKVector3SubtractScalar(_ vector: GLKVector3, _ value: Float) -> GLKVector3
+c:@F@GLKVector4Add	swift.func	GLKVector4Add(_:_:)	GLKVector4Add(_:_:)	func GLKVector4Add(_ vectorLeft: GLKVector4, _ vectorRight: GLKVector4) -> GLKVector4
+c:@F@GLKVector4AddScalar	swift.func	GLKVector4AddScalar(_:_:)	GLKVector4AddScalar(_:_:)	func GLKVector4AddScalar(_ vector: GLKVector4, _ value: Float) -> GLKVector4
+c:@F@GLKVector4AllEqualToScalar	swift.func	GLKVector4AllEqualToScalar(_:_:)	GLKVector4AllEqualToScalar(_:_:)	func GLKVector4AllEqualToScalar(_ vector: GLKVector4, _ value: Float) -> Bool
+c:@F@GLKVector4AllEqualToVector4	swift.func	GLKVector4AllEqualToVector4(_:_:)	GLKVector4AllEqualToVector4(_:_:)	func GLKVector4AllEqualToVector4(_ vectorLeft: GLKVector4, _ vectorRight: GLKVector4) -> Bool
+c:@F@GLKVector4AllGreaterThanOrEqualToScalar	swift.func	GLKVector4AllGreaterThanOrEqualToScalar(_:_:)	GLKVector4AllGreaterThanOrEqualToScalar(_:_:)	func GLKVector4AllGreaterThanOrEqualToScalar(_ vector: GLKVector4, _ value: Float) -> Bool
+c:@F@GLKVector4AllGreaterThanOrEqualToVector4	swift.func	GLKVector4AllGreaterThanOrEqualToVector4(_:_:)	GLKVector4AllGreaterThanOrEqualToVector4(_:_:)	func GLKVector4AllGreaterThanOrEqualToVector4(_ vectorLeft: GLKVector4, _ vectorRight: GLKVector4) -> Bool
+c:@F@GLKVector4AllGreaterThanScalar	swift.func	GLKVector4AllGreaterThanScalar(_:_:)	GLKVector4AllGreaterThanScalar(_:_:)	func GLKVector4AllGreaterThanScalar(_ vector: GLKVector4, _ value: Float) -> Bool
+c:@F@GLKVector4AllGreaterThanVector4	swift.func	GLKVector4AllGreaterThanVector4(_:_:)	GLKVector4AllGreaterThanVector4(_:_:)	func GLKVector4AllGreaterThanVector4(_ vectorLeft: GLKVector4, _ vectorRight: GLKVector4) -> Bool
+c:@F@GLKVector4CrossProduct	swift.func	GLKVector4CrossProduct(_:_:)	GLKVector4CrossProduct(_:_:)	func GLKVector4CrossProduct(_ vectorLeft: GLKVector4, _ vectorRight: GLKVector4) -> GLKVector4
+c:@F@GLKVector4Distance	swift.func	GLKVector4Distance(_:_:)	GLKVector4Distance(_:_:)	func GLKVector4Distance(_ vectorStart: GLKVector4, _ vectorEnd: GLKVector4) -> Float
+c:@F@GLKVector4Divide	swift.func	GLKVector4Divide(_:_:)	GLKVector4Divide(_:_:)	func GLKVector4Divide(_ vectorLeft: GLKVector4, _ vectorRight: GLKVector4) -> GLKVector4
+c:@F@GLKVector4DivideScalar	swift.func	GLKVector4DivideScalar(_:_:)	GLKVector4DivideScalar(_:_:)	func GLKVector4DivideScalar(_ vector: GLKVector4, _ value: Float) -> GLKVector4
+c:@F@GLKVector4DotProduct	swift.func	GLKVector4DotProduct(_:_:)	GLKVector4DotProduct(_:_:)	func GLKVector4DotProduct(_ vectorLeft: GLKVector4, _ vectorRight: GLKVector4) -> Float
+c:@F@GLKVector4Length	swift.func	GLKVector4Length(_:)	GLKVector4Length(_:)	func GLKVector4Length(_ vector: GLKVector4) -> Float
+c:@F@GLKVector4Lerp	swift.func	GLKVector4Lerp(_:_:_:)	GLKVector4Lerp(_:_:_:)	func GLKVector4Lerp(_ vectorStart: GLKVector4, _ vectorEnd: GLKVector4, _ t: Float) -> GLKVector4
+c:@F@GLKVector4Make	swift.func	GLKVector4Make(_:_:_:_:)	GLKVector4Make(_:_:_:_:)	func GLKVector4Make(_ x: Float, _ y: Float, _ z: Float, _ w: Float) -> GLKVector4
+c:@F@GLKVector4MakeWithArray	swift.func	GLKVector4MakeWithArray(_:)	GLKVector4MakeWithArray(_:)	func GLKVector4MakeWithArray(_ values: UnsafeMutablePointer<Float>!) -> GLKVector4
+c:@F@GLKVector4MakeWithVector3	swift.func	GLKVector4MakeWithVector3(_:_:)	GLKVector4MakeWithVector3(_:_:)	func GLKVector4MakeWithVector3(_ vector: GLKVector3, _ w: Float) -> GLKVector4
+c:@F@GLKVector4Maximum	swift.func	GLKVector4Maximum(_:_:)	GLKVector4Maximum(_:_:)	func GLKVector4Maximum(_ vectorLeft: GLKVector4, _ vectorRight: GLKVector4) -> GLKVector4
+c:@F@GLKVector4Minimum	swift.func	GLKVector4Minimum(_:_:)	GLKVector4Minimum(_:_:)	func GLKVector4Minimum(_ vectorLeft: GLKVector4, _ vectorRight: GLKVector4) -> GLKVector4
+c:@F@GLKVector4Multiply	swift.func	GLKVector4Multiply(_:_:)	GLKVector4Multiply(_:_:)	func GLKVector4Multiply(_ vectorLeft: GLKVector4, _ vectorRight: GLKVector4) -> GLKVector4
+c:@F@GLKVector4MultiplyScalar	swift.func	GLKVector4MultiplyScalar(_:_:)	GLKVector4MultiplyScalar(_:_:)	func GLKVector4MultiplyScalar(_ vector: GLKVector4, _ value: Float) -> GLKVector4
+c:@F@GLKVector4Negate	swift.func	GLKVector4Negate(_:)	GLKVector4Negate(_:)	func GLKVector4Negate(_ vector: GLKVector4) -> GLKVector4
+c:@F@GLKVector4Normalize	swift.func	GLKVector4Normalize(_:)	GLKVector4Normalize(_:)	func GLKVector4Normalize(_ vector: GLKVector4) -> GLKVector4
+c:@F@GLKVector4Project	swift.func	GLKVector4Project(_:_:)	GLKVector4Project(_:_:)	func GLKVector4Project(_ vectorToProject: GLKVector4, _ projectionVector: GLKVector4) -> GLKVector4
+c:@F@GLKVector4Subtract	swift.func	GLKVector4Subtract(_:_:)	GLKVector4Subtract(_:_:)	func GLKVector4Subtract(_ vectorLeft: GLKVector4, _ vectorRight: GLKVector4) -> GLKVector4
+c:@F@GLKVector4SubtractScalar	swift.func	GLKVector4SubtractScalar(_:_:)	GLKVector4SubtractScalar(_:_:)	func GLKVector4SubtractScalar(_ vector: GLKVector4, _ value: Float) -> GLKVector4
+c:@F@GLKVertexAttributeParametersFromModelIO	swift.func	GLKVertexAttributeParametersFromModelIO(_:)	GLKVertexAttributeParametersFromModelIO(_:)	func GLKVertexAttributeParametersFromModelIO(_ vertexFormat: MDLVertexFormat) -> GLKVertexAttributeParameters
+c:@F@NSStringFromGLKMatrix2	swift.func	NSStringFromGLKMatrix2(_:)	NSStringFromGLKMatrix2(_:)	func NSStringFromGLKMatrix2(_ matrix: GLKMatrix2) -> String
+c:@F@NSStringFromGLKMatrix3	swift.func	NSStringFromGLKMatrix3(_:)	NSStringFromGLKMatrix3(_:)	func NSStringFromGLKMatrix3(_ matrix: GLKMatrix3) -> String
+c:@F@NSStringFromGLKMatrix4	swift.func	NSStringFromGLKMatrix4(_:)	NSStringFromGLKMatrix4(_:)	func NSStringFromGLKMatrix4(_ matrix: GLKMatrix4) -> String
+c:@F@NSStringFromGLKQuaternion	swift.func	NSStringFromGLKQuaternion(_:)	NSStringFromGLKQuaternion(_:)	func NSStringFromGLKQuaternion(_ quaternion: GLKQuaternion) -> String
+c:@F@NSStringFromGLKVector2	swift.func	NSStringFromGLKVector2(_:)	NSStringFromGLKVector2(_:)	func NSStringFromGLKVector2(_ vector: GLKVector2) -> String
+c:@F@NSStringFromGLKVector3	swift.func	NSStringFromGLKVector3(_:)	NSStringFromGLKVector3(_:)	func NSStringFromGLKVector3(_ vector: GLKVector3) -> String
+c:@F@NSStringFromGLKVector4	swift.func	NSStringFromGLKVector4(_:)	NSStringFromGLKVector4(_:)	func NSStringFromGLKVector4(_ vector: GLKVector4) -> String
+c:@GLKMatrix3Identity	swift.var	GLKMatrix3Identity	GLKMatrix3Identity	let GLKMatrix3Identity: GLKMatrix3
+c:@GLKMatrix4Identity	swift.var	GLKMatrix4Identity	GLKMatrix4Identity	let GLKMatrix4Identity: GLKMatrix4
+c:@GLKQuaternionIdentity	swift.var	GLKQuaternionIdentity	GLKQuaternionIdentity	let GLKQuaternionIdentity: GLKQuaternion
+c:@GLKTextureLoaderApplyPremultiplication	swift.var	GLKTextureLoaderApplyPremultiplication	GLKTextureLoaderApplyPremultiplication	let GLKTextureLoaderApplyPremultiplication: String
+c:@GLKTextureLoaderErrorDomain	swift.var	GLKTextureLoaderErrorDomain	GLKTextureLoaderErrorDomain	let GLKTextureLoaderErrorDomain: String
+c:@GLKTextureLoaderErrorKey	swift.var	GLKTextureLoaderErrorKey	GLKTextureLoaderErrorKey	let GLKTextureLoaderErrorKey: String
+c:@GLKTextureLoaderGLErrorKey	swift.var	GLKTextureLoaderGLErrorKey	GLKTextureLoaderGLErrorKey	let GLKTextureLoaderGLErrorKey: String
+c:@GLKTextureLoaderGenerateMipmaps	swift.var	GLKTextureLoaderGenerateMipmaps	GLKTextureLoaderGenerateMipmaps	let GLKTextureLoaderGenerateMipmaps: String
+c:@GLKTextureLoaderGrayscaleAsAlpha	swift.var	GLKTextureLoaderGrayscaleAsAlpha	GLKTextureLoaderGrayscaleAsAlpha	let GLKTextureLoaderGrayscaleAsAlpha: String
+c:@GLKTextureLoaderOriginBottomLeft	swift.var	GLKTextureLoaderOriginBottomLeft	GLKTextureLoaderOriginBottomLeft	let GLKTextureLoaderOriginBottomLeft: String
+c:@GLKTextureLoaderSRGB	swift.var	GLKTextureLoaderSRGB	GLKTextureLoaderSRGB	let GLKTextureLoaderSRGB: String
+c:@T@GLKEffectPropertyPrvPtr	swift.typealias	GLKEffectPropertyPrvPtr	GLKEffectPropertyPrvPtr	typealias GLKEffectPropertyPrvPtr = OpaquePointer
+c:@T@GLKMatrix2	swift.typealias	GLKMatrix2	GLKMatrix2	typealias GLKMatrix2 = _GLKMatrix2
+c:@T@GLKMatrix3	swift.typealias	GLKMatrix3	GLKMatrix3	typealias GLKMatrix3 = _GLKMatrix3
+c:@T@GLKMatrix4	swift.typealias	GLKMatrix4	GLKMatrix4	typealias GLKMatrix4 = _GLKMatrix4
+c:@T@GLKMatrixStackRef	swift.class	GLKMatrixStack	GLKMatrixStack	class GLKMatrixStack
+c:@T@GLKQuaternion	swift.typealias	GLKQuaternion	GLKQuaternion	typealias GLKQuaternion = _GLKQuaternion
+c:@T@GLKTextureLoaderCallback	swift.typealias	GLKTextureLoaderCallback	GLKTextureLoaderCallback	typealias GLKTextureLoaderCallback = (GLKTextureInfo?, (any Error)?) -> Void
+c:@T@GLKVector2	swift.typealias	GLKVector2	GLKVector2	typealias GLKVector2 = _GLKVector2
+c:@T@GLKVector3	swift.typealias	GLKVector3	GLKVector3	typealias GLKVector3 = _GLKVector3
+c:@T@GLKVector4	swift.typealias	GLKVector4	GLKVector4	typealias GLKVector4 = _GLKVector4
+c:@T@GLKVertexAttributeParameters	swift.typealias	GLKVertexAttributeParameters	GLKVertexAttributeParameters	typealias GLKVertexAttributeParameters = _GLKVertexAttributeParameters
+c:@kGLKModelErrorDomain	swift.var	kGLKModelErrorDomain	kGLKModelErrorDomain	let kGLKModelErrorDomain: String
+c:@kGLKModelErrorKey	swift.var	kGLKModelErrorKey	kGLKModelErrorKey	let kGLKModelErrorKey: String
+c:objc(cs)GLKBaseEffect	swift.class	GLKBaseEffect	GLKBaseEffect	class GLKBaseEffect
+c:objc(cs)GLKBaseEffect(im)prepareToDraw	swift.method	prepareToDraw()	GLKBaseEffect.prepareToDraw()	func prepareToDraw()
+c:objc(cs)GLKBaseEffect(py)colorMaterialEnabled	swift.property	colorMaterialEnabled	GLKBaseEffect.colorMaterialEnabled	var colorMaterialEnabled: GLboolean { get set }
+c:objc(cs)GLKBaseEffect(py)constantColor	swift.property	constantColor	GLKBaseEffect.constantColor	var constantColor: GLKVector4 { get set }
+c:objc(cs)GLKBaseEffect(py)fog	swift.property	fog	GLKBaseEffect.fog	var fog: GLKEffectPropertyFog { get }
+c:objc(cs)GLKBaseEffect(py)label	swift.property	label	GLKBaseEffect.label	var label: String? { get set }
+c:objc(cs)GLKBaseEffect(py)light0	swift.property	light0	GLKBaseEffect.light0	var light0: GLKEffectPropertyLight { get }
+c:objc(cs)GLKBaseEffect(py)light1	swift.property	light1	GLKBaseEffect.light1	var light1: GLKEffectPropertyLight { get }
+c:objc(cs)GLKBaseEffect(py)light2	swift.property	light2	GLKBaseEffect.light2	var light2: GLKEffectPropertyLight { get }
+c:objc(cs)GLKBaseEffect(py)lightModelAmbientColor	swift.property	lightModelAmbientColor	GLKBaseEffect.lightModelAmbientColor	var lightModelAmbientColor: GLKVector4 { get set }
+c:objc(cs)GLKBaseEffect(py)lightModelTwoSided	swift.property	lightModelTwoSided	GLKBaseEffect.lightModelTwoSided	var lightModelTwoSided: GLboolean { get set }
+c:objc(cs)GLKBaseEffect(py)lightingType	swift.property	lightingType	GLKBaseEffect.lightingType	var lightingType: GLKLightingType { get set }
+c:objc(cs)GLKBaseEffect(py)material	swift.property	material	GLKBaseEffect.material	var material: GLKEffectPropertyMaterial { get }
+c:objc(cs)GLKBaseEffect(py)texture2d0	swift.property	texture2d0	GLKBaseEffect.texture2d0	var texture2d0: GLKEffectPropertyTexture { get }
+c:objc(cs)GLKBaseEffect(py)texture2d1	swift.property	texture2d1	GLKBaseEffect.texture2d1	var texture2d1: GLKEffectPropertyTexture { get }
+c:objc(cs)GLKBaseEffect(py)textureOrder	swift.property	textureOrder	GLKBaseEffect.textureOrder	var textureOrder: [GLKEffectPropertyTexture]? { get set }
+c:objc(cs)GLKBaseEffect(py)transform	swift.property	transform	GLKBaseEffect.transform	var transform: GLKEffectPropertyTransform { get }
+c:objc(cs)GLKBaseEffect(py)useConstantColor	swift.property	useConstantColor	GLKBaseEffect.useConstantColor	var useConstantColor: GLboolean { get set }
+c:objc(cs)GLKEffectProperty	swift.class	GLKEffectProperty	GLKEffectProperty	class GLKEffectProperty
+c:objc(cs)GLKEffectPropertyFog	swift.class	GLKEffectPropertyFog	GLKEffectPropertyFog	class GLKEffectPropertyFog
+c:objc(cs)GLKEffectPropertyFog(py)color	swift.property	color	GLKEffectPropertyFog.color	var color: GLKVector4 { get set }
+c:objc(cs)GLKEffectPropertyFog(py)density	swift.property	density	GLKEffectPropertyFog.density	var density: GLfloat { get set }
+c:objc(cs)GLKEffectPropertyFog(py)enabled	swift.property	enabled	GLKEffectPropertyFog.enabled	var enabled: GLboolean { get set }
+c:objc(cs)GLKEffectPropertyFog(py)end	swift.property	end	GLKEffectPropertyFog.end	var end: GLfloat { get set }
+c:objc(cs)GLKEffectPropertyFog(py)mode	swift.property	mode	GLKEffectPropertyFog.mode	var mode: GLint { get set }
+c:objc(cs)GLKEffectPropertyFog(py)start	swift.property	start	GLKEffectPropertyFog.start	var start: GLfloat { get set }
+c:objc(cs)GLKEffectPropertyLight	swift.class	GLKEffectPropertyLight	GLKEffectPropertyLight	class GLKEffectPropertyLight
+c:objc(cs)GLKEffectPropertyLight(py)ambientColor	swift.property	ambientColor	GLKEffectPropertyLight.ambientColor	var ambientColor: GLKVector4 { get set }
+c:objc(cs)GLKEffectPropertyLight(py)constantAttenuation	swift.property	constantAttenuation	GLKEffectPropertyLight.constantAttenuation	var constantAttenuation: GLfloat { get set }
+c:objc(cs)GLKEffectPropertyLight(py)diffuseColor	swift.property	diffuseColor	GLKEffectPropertyLight.diffuseColor	var diffuseColor: GLKVector4 { get set }
+c:objc(cs)GLKEffectPropertyLight(py)enabled	swift.property	enabled	GLKEffectPropertyLight.enabled	var enabled: GLboolean { get set }
+c:objc(cs)GLKEffectPropertyLight(py)linearAttenuation	swift.property	linearAttenuation	GLKEffectPropertyLight.linearAttenuation	var linearAttenuation: GLfloat { get set }
+c:objc(cs)GLKEffectPropertyLight(py)position	swift.property	position	GLKEffectPropertyLight.position	var position: GLKVector4 { get set }
+c:objc(cs)GLKEffectPropertyLight(py)quadraticAttenuation	swift.property	quadraticAttenuation	GLKEffectPropertyLight.quadraticAttenuation	var quadraticAttenuation: GLfloat { get set }
+c:objc(cs)GLKEffectPropertyLight(py)specularColor	swift.property	specularColor	GLKEffectPropertyLight.specularColor	var specularColor: GLKVector4 { get set }
+c:objc(cs)GLKEffectPropertyLight(py)spotCutoff	swift.property	spotCutoff	GLKEffectPropertyLight.spotCutoff	var spotCutoff: GLfloat { get set }
+c:objc(cs)GLKEffectPropertyLight(py)spotDirection	swift.property	spotDirection	GLKEffectPropertyLight.spotDirection	var spotDirection: GLKVector3 { get set }
+c:objc(cs)GLKEffectPropertyLight(py)spotExponent	swift.property	spotExponent	GLKEffectPropertyLight.spotExponent	var spotExponent: GLfloat { get set }
+c:objc(cs)GLKEffectPropertyLight(py)transform	swift.property	transform	GLKEffectPropertyLight.transform	var transform: GLKEffectPropertyTransform { get set }
+c:objc(cs)GLKEffectPropertyMaterial	swift.class	GLKEffectPropertyMaterial	GLKEffectPropertyMaterial	class GLKEffectPropertyMaterial
+c:objc(cs)GLKEffectPropertyMaterial(py)ambientColor	swift.property	ambientColor	GLKEffectPropertyMaterial.ambientColor	var ambientColor: GLKVector4 { get set }
+c:objc(cs)GLKEffectPropertyMaterial(py)diffuseColor	swift.property	diffuseColor	GLKEffectPropertyMaterial.diffuseColor	var diffuseColor: GLKVector4 { get set }
+c:objc(cs)GLKEffectPropertyMaterial(py)emissiveColor	swift.property	emissiveColor	GLKEffectPropertyMaterial.emissiveColor	var emissiveColor: GLKVector4 { get set }
+c:objc(cs)GLKEffectPropertyMaterial(py)shininess	swift.property	shininess	GLKEffectPropertyMaterial.shininess	var shininess: GLfloat { get set }
+c:objc(cs)GLKEffectPropertyMaterial(py)specularColor	swift.property	specularColor	GLKEffectPropertyMaterial.specularColor	var specularColor: GLKVector4 { get set }
+c:objc(cs)GLKEffectPropertyTexture	swift.class	GLKEffectPropertyTexture	GLKEffectPropertyTexture	class GLKEffectPropertyTexture
+c:objc(cs)GLKEffectPropertyTexture(py)enabled	swift.property	enabled	GLKEffectPropertyTexture.enabled	var enabled: GLboolean { get set }
+c:objc(cs)GLKEffectPropertyTexture(py)envMode	swift.property	envMode	GLKEffectPropertyTexture.envMode	var envMode: GLKTextureEnvMode { get set }
+c:objc(cs)GLKEffectPropertyTexture(py)name	swift.property	name	GLKEffectPropertyTexture.name	var name: GLuint { get set }
+c:objc(cs)GLKEffectPropertyTexture(py)target	swift.property	target	GLKEffectPropertyTexture.target	var target: GLKTextureTarget { get set }
+c:objc(cs)GLKEffectPropertyTransform	swift.class	GLKEffectPropertyTransform	GLKEffectPropertyTransform	class GLKEffectPropertyTransform
+c:objc(cs)GLKEffectPropertyTransform(py)modelviewMatrix	swift.property	modelviewMatrix	GLKEffectPropertyTransform.modelviewMatrix	var modelviewMatrix: GLKMatrix4 { get set }
+c:objc(cs)GLKEffectPropertyTransform(py)normalMatrix	swift.property	normalMatrix	GLKEffectPropertyTransform.normalMatrix	var normalMatrix: GLKMatrix3 { get }
+c:objc(cs)GLKEffectPropertyTransform(py)projectionMatrix	swift.property	projectionMatrix	GLKEffectPropertyTransform.projectionMatrix	var projectionMatrix: GLKMatrix4 { get set }
+c:objc(cs)GLKMesh	swift.class	GLKMesh	GLKMesh	class GLKMesh
+c:objc(cs)GLKMesh(cm)newMeshesFromAsset:sourceMeshes:error:	swift.type.method	newMeshes(from:sourceMeshes:)	GLKMesh.newMeshes(from:sourceMeshes:)	class func newMeshes(from asset: MDLAsset, sourceMeshes: AutoreleasingUnsafeMutablePointer<NSArray?>?) throws -> [GLKMesh]
+c:objc(cs)GLKMesh(im)initWithMesh:error:	swift.init	init(mesh:)	GLKMesh.init(mesh:)	init(mesh: MDLMesh) throws
+c:objc(cs)GLKMesh(py)name	swift.property	name	GLKMesh.name	var name: String { get }
+c:objc(cs)GLKMesh(py)submeshes	swift.property	submeshes	GLKMesh.submeshes	var submeshes: [GLKSubmesh] { get }
+c:objc(cs)GLKMesh(py)vertexBuffers	swift.property	vertexBuffers	GLKMesh.vertexBuffers	var vertexBuffers: [GLKMeshBuffer] { get }
+c:objc(cs)GLKMesh(py)vertexCount	swift.property	vertexCount	GLKMesh.vertexCount	var vertexCount: Int { get }
+c:objc(cs)GLKMesh(py)vertexDescriptor	swift.property	vertexDescriptor	GLKMesh.vertexDescriptor	var vertexDescriptor: MDLVertexDescriptor { get }
+c:objc(cs)GLKMeshBuffer	swift.class	GLKMeshBuffer	GLKMeshBuffer	class GLKMeshBuffer
+c:objc(cs)GLKMeshBuffer(im)zone	swift.method	zone()	GLKMeshBuffer.zone()	func zone() -> (any MDLMeshBufferZone)?
+c:objc(cs)GLKMeshBuffer(py)allocator	swift.property	allocator	GLKMeshBuffer.allocator	var allocator: GLKMeshBufferAllocator { get }
+c:objc(cs)GLKMeshBuffer(py)glBufferName	swift.property	glBufferName	GLKMeshBuffer.glBufferName	var glBufferName: GLuint { get }
+c:objc(cs)GLKMeshBuffer(py)length	swift.property	length	GLKMeshBuffer.length	var length: Int { get }
+c:objc(cs)GLKMeshBuffer(py)offset	swift.property	offset	GLKMeshBuffer.offset	var offset: Int { get }
+c:objc(cs)GLKMeshBuffer(py)type	swift.property	type	GLKMeshBuffer.type	var type: MDLMeshBufferType { get }
+c:objc(cs)GLKMeshBufferAllocator	swift.class	GLKMeshBufferAllocator	GLKMeshBufferAllocator	class GLKMeshBufferAllocator
+c:objc(cs)GLKReflectionMapEffect	swift.class	GLKReflectionMapEffect	GLKReflectionMapEffect	class GLKReflectionMapEffect
+c:objc(cs)GLKReflectionMapEffect(im)prepareToDraw	swift.method	prepareToDraw()	GLKReflectionMapEffect.prepareToDraw()	func prepareToDraw()
+c:objc(cs)GLKReflectionMapEffect(py)matrix	swift.property	matrix	GLKReflectionMapEffect.matrix	var matrix: GLKMatrix3 { get set }
+c:objc(cs)GLKReflectionMapEffect(py)textureCubeMap	swift.property	textureCubeMap	GLKReflectionMapEffect.textureCubeMap	var textureCubeMap: GLKEffectPropertyTexture { get }
+c:objc(cs)GLKSkyboxEffect	swift.class	GLKSkyboxEffect	GLKSkyboxEffect	class GLKSkyboxEffect
+c:objc(cs)GLKSkyboxEffect(im)draw	swift.method	draw()	GLKSkyboxEffect.draw()	func draw()
+c:objc(cs)GLKSkyboxEffect(im)prepareToDraw	swift.method	prepareToDraw()	GLKSkyboxEffect.prepareToDraw()	func prepareToDraw()
+c:objc(cs)GLKSkyboxEffect(py)center	swift.property	center	GLKSkyboxEffect.center	var center: GLKVector3 { get set }
+c:objc(cs)GLKSkyboxEffect(py)label	swift.property	label	GLKSkyboxEffect.label	var label: String? { get set }
+c:objc(cs)GLKSkyboxEffect(py)textureCubeMap	swift.property	textureCubeMap	GLKSkyboxEffect.textureCubeMap	var textureCubeMap: GLKEffectPropertyTexture { get }
+c:objc(cs)GLKSkyboxEffect(py)transform	swift.property	transform	GLKSkyboxEffect.transform	var transform: GLKEffectPropertyTransform { get }
+c:objc(cs)GLKSkyboxEffect(py)xSize	swift.property	xSize	GLKSkyboxEffect.xSize	var xSize: GLfloat { get set }
+c:objc(cs)GLKSkyboxEffect(py)ySize	swift.property	ySize	GLKSkyboxEffect.ySize	var ySize: GLfloat { get set }
+c:objc(cs)GLKSkyboxEffect(py)zSize	swift.property	zSize	GLKSkyboxEffect.zSize	var zSize: GLfloat { get set }
+c:objc(cs)GLKSubmesh	swift.class	GLKSubmesh	GLKSubmesh	class GLKSubmesh
+c:objc(cs)GLKSubmesh(py)elementBuffer	swift.property	elementBuffer	GLKSubmesh.elementBuffer	var elementBuffer: GLKMeshBuffer { get }
+c:objc(cs)GLKSubmesh(py)elementCount	swift.property	elementCount	GLKSubmesh.elementCount	var elementCount: GLsizei { get }
+c:objc(cs)GLKSubmesh(py)mesh	swift.property	mesh	GLKSubmesh.mesh	weak var mesh: GLKMesh? { get }
+c:objc(cs)GLKSubmesh(py)mode	swift.property	mode	GLKSubmesh.mode	var mode: GLenum { get }
+c:objc(cs)GLKSubmesh(py)name	swift.property	name	GLKSubmesh.name	var name: String { get }
+c:objc(cs)GLKSubmesh(py)type	swift.property	type	GLKSubmesh.type	var type: GLenum { get }
+c:objc(cs)GLKTextureInfo	swift.class	GLKTextureInfo	GLKTextureInfo	class GLKTextureInfo
+c:objc(cs)GLKTextureInfo(py)alphaState	swift.property	alphaState	GLKTextureInfo.alphaState	var alphaState: GLKTextureInfoAlphaState { get }
+c:objc(cs)GLKTextureInfo(py)arrayLength	swift.property	arrayLength	GLKTextureInfo.arrayLength	var arrayLength: GLuint { get }
+c:objc(cs)GLKTextureInfo(py)containsMipmaps	swift.property	containsMipmaps	GLKTextureInfo.containsMipmaps	var containsMipmaps: Bool { get }
+c:objc(cs)GLKTextureInfo(py)depth	swift.property	depth	GLKTextureInfo.depth	var depth: GLuint { get }
+c:objc(cs)GLKTextureInfo(py)height	swift.property	height	GLKTextureInfo.height	var height: GLuint { get }
+c:objc(cs)GLKTextureInfo(py)mimapLevelCount	swift.property	mimapLevelCount	GLKTextureInfo.mimapLevelCount	var mimapLevelCount: GLuint { get }
+c:objc(cs)GLKTextureInfo(py)name	swift.property	name	GLKTextureInfo.name	var name: GLuint { get }
+c:objc(cs)GLKTextureInfo(py)target	swift.property	target	GLKTextureInfo.target	var target: GLenum { get }
+c:objc(cs)GLKTextureInfo(py)textureOrigin	swift.property	textureOrigin	GLKTextureInfo.textureOrigin	var textureOrigin: GLKTextureInfoOrigin { get }
+c:objc(cs)GLKTextureInfo(py)width	swift.property	width	GLKTextureInfo.width	var width: GLuint { get }
+c:objc(cs)GLKTextureLoader	swift.class	GLKTextureLoader	GLKTextureLoader	class GLKTextureLoader
+c:objc(cs)GLKTextureLoader(cm)cubeMapWithContentsOfFile:options:error:	swift.type.method	cubeMap(withContentsOfFile:options:)	GLKTextureLoader.cubeMap(withContentsOfFile:options:)	class func cubeMap(withContentsOfFile path: String, options: [String : NSNumber]? = nil) throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(cm)cubeMapWithContentsOfFiles:options:error:	swift.type.method	cubeMap(withContentsOfFiles:options:)	GLKTextureLoader.cubeMap(withContentsOfFiles:options:)	class func cubeMap(withContentsOfFiles paths: [Any], options: [String : NSNumber]? = nil) throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(cm)cubeMapWithContentsOfURL:options:error:	swift.type.method	cubeMap(withContentsOf:options:)	GLKTextureLoader.cubeMap(withContentsOf:options:)	class func cubeMap(withContentsOf url: URL, options: [String : NSNumber]? = nil) throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(cm)textureWithCGImage:options:error:	swift.type.method	texture(with:options:)	GLKTextureLoader.texture(with:options:)	class func texture(with cgImage: CGImage, options: [String : NSNumber]? = nil) throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(cm)textureWithContentsOfData:options:error:	swift.type.method	texture(withContentsOf:options:)	GLKTextureLoader.texture(withContentsOf:options:)	class func texture(withContentsOf data: Data, options: [String : NSNumber]? = nil) throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(cm)textureWithContentsOfFile:options:error:	swift.type.method	texture(withContentsOfFile:options:)	GLKTextureLoader.texture(withContentsOfFile:options:)	class func texture(withContentsOfFile path: String, options: [String : NSNumber]? = nil) throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(cm)textureWithContentsOfURL:options:error:	swift.type.method	texture(withContentsOf:options:)	GLKTextureLoader.texture(withContentsOf:options:)	class func texture(withContentsOf url: URL, options: [String : NSNumber]? = nil) throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(cm)textureWithName:scaleFactor:bundle:options:error:	swift.type.method	texture(withName:scaleFactor:bundle:options:)	GLKTextureLoader.texture(withName:scaleFactor:bundle:options:)	class func texture(withName name: String, scaleFactor: CGFloat, bundle: Bundle?, options: [String : NSNumber]? = nil) throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(im)cubeMapWithContentsOfFile:options:queue:completionHandler:	swift.method	cubeMap(withContentsOfFile:options:queue:)	GLKTextureLoader.cubeMap(withContentsOfFile:options:queue:)	func cubeMap(withContentsOfFile path: String, options: [String : NSNumber]? = nil, queue: dispatch_queue_t?) async throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(im)cubeMapWithContentsOfFiles:options:queue:completionHandler:	swift.method	cubeMap(withContentsOfFiles:options:queue:)	GLKTextureLoader.cubeMap(withContentsOfFiles:options:queue:)	func cubeMap(withContentsOfFiles paths: [Any], options: [String : NSNumber]? = nil, queue: dispatch_queue_t?) async throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(im)cubeMapWithContentsOfURL:options:queue:completionHandler:	swift.method	cubeMap(withContentsOf:options:queue:)	GLKTextureLoader.cubeMap(withContentsOf:options:queue:)	func cubeMap(withContentsOf url: URL, options: [String : NSNumber]? = nil, queue: dispatch_queue_t?) async throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(im)initWithSharegroup:	swift.init	init(sharegroup:)	GLKTextureLoader.init(sharegroup:)	init(sharegroup: EAGLSharegroup)
+c:objc(cs)GLKTextureLoader(im)textureWithCGImage:options:queue:completionHandler:	swift.method	texture(with:options:queue:)	GLKTextureLoader.texture(with:options:queue:)	func texture(with cgImage: CGImage, options: [String : NSNumber]? = nil, queue: dispatch_queue_t?) async throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(im)textureWithContentsOfData:options:queue:completionHandler:	swift.method	texture(withContentsOf:options:queue:)	GLKTextureLoader.texture(withContentsOf:options:queue:)	func texture(withContentsOf data: Data, options: [String : NSNumber]? = nil, queue: dispatch_queue_t?) async throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(im)textureWithContentsOfFile:options:queue:completionHandler:	swift.method	texture(withContentsOfFile:options:queue:)	GLKTextureLoader.texture(withContentsOfFile:options:queue:)	func texture(withContentsOfFile path: String, options: [String : NSNumber]? = nil, queue: dispatch_queue_t?) async throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(im)textureWithContentsOfURL:options:queue:completionHandler:	swift.method	texture(withContentsOf:options:queue:)	GLKTextureLoader.texture(withContentsOf:options:queue:)	func texture(withContentsOf url: URL, options: [String : NSNumber]? = nil, queue: dispatch_queue_t?) async throws -> GLKTextureInfo
+c:objc(cs)GLKTextureLoader(im)textureWithName:scaleFactor:bundle:options:queue:completionHandler:	swift.method	texture(withName:scaleFactor:bundle:options:queue:)	GLKTextureLoader.texture(withName:scaleFactor:bundle:options:queue:)	func texture(withName name: String, scaleFactor: CGFloat, bundle: Bundle?, options: [String : NSNumber]? = nil, queue: dispatch_queue_t?) async throws -> GLKTextureInfo
+c:objc(cs)GLKView	swift.class	GLKView	GLKView	@MainActor class GLKView
+c:objc(cs)GLKView(im)bindDrawable	swift.method	bindDrawable()	GLKView.bindDrawable()	@MainActor func bindDrawable()
+c:objc(cs)GLKView(im)deleteDrawable	swift.method	deleteDrawable()	GLKView.deleteDrawable()	@MainActor func deleteDrawable()
+c:objc(cs)GLKView(im)display	swift.method	display()	GLKView.display()	@MainActor func display()
+c:objc(cs)GLKView(im)initWithFrame:context:	swift.init	init(frame:context:)	GLKView.init(frame:context:)	@MainActor init(frame: CGRect, context: EAGLContext)
+c:objc(cs)GLKView(py)context	swift.property	context	GLKView.context	@MainActor var context: EAGLContext { get set }
+c:objc(cs)GLKView(py)delegate	swift.property	delegate	GLKView.delegate	@IBOutlet @MainActor unowned(unsafe) var delegate: (any GLKViewDelegate)? { get set }
+c:objc(cs)GLKView(py)drawableColorFormat	swift.property	drawableColorFormat	GLKView.drawableColorFormat	@MainActor var drawableColorFormat: GLKViewDrawableColorFormat { get set }
+c:objc(cs)GLKView(py)drawableDepthFormat	swift.property	drawableDepthFormat	GLKView.drawableDepthFormat	@MainActor var drawableDepthFormat: GLKViewDrawableDepthFormat { get set }
+c:objc(cs)GLKView(py)drawableHeight	swift.property	drawableHeight	GLKView.drawableHeight	@MainActor var drawableHeight: Int { get }
+c:objc(cs)GLKView(py)drawableMultisample	swift.property	drawableMultisample	GLKView.drawableMultisample	@MainActor var drawableMultisample: GLKViewDrawableMultisample { get set }
+c:objc(cs)GLKView(py)drawableStencilFormat	swift.property	drawableStencilFormat	GLKView.drawableStencilFormat	@MainActor var drawableStencilFormat: GLKViewDrawableStencilFormat { get set }
+c:objc(cs)GLKView(py)drawableWidth	swift.property	drawableWidth	GLKView.drawableWidth	@MainActor var drawableWidth: Int { get }
+c:objc(cs)GLKView(py)enableSetNeedsDisplay	swift.property	enableSetNeedsDisplay	GLKView.enableSetNeedsDisplay	@MainActor var enableSetNeedsDisplay: Bool { get set }
+c:objc(cs)GLKView(py)snapshot	swift.property	snapshot	GLKView.snapshot	@MainActor var snapshot: UIImage { get }
+c:objc(cs)GLKViewController	swift.class	GLKViewController	GLKViewController	@MainActor class GLKViewController
+c:objc(cs)GLKViewController(py)delegate	swift.property	delegate	GLKViewController.delegate	@IBOutlet @MainActor unowned(unsafe) var delegate: (any GLKViewControllerDelegate)? { get set }
+c:objc(cs)GLKViewController(py)framesDisplayed	swift.property	framesDisplayed	GLKViewController.framesDisplayed	@MainActor var framesDisplayed: Int { get }
+c:objc(cs)GLKViewController(py)framesPerSecond	swift.property	framesPerSecond	GLKViewController.framesPerSecond	@MainActor var framesPerSecond: Int { get }
+c:objc(cs)GLKViewController(py)pauseOnWillResignActive	swift.property	pauseOnWillResignActive	GLKViewController.pauseOnWillResignActive	@MainActor var pauseOnWillResignActive: Bool { get set }
+c:objc(cs)GLKViewController(py)paused	swift.property	isPaused	GLKViewController.isPaused	@MainActor var isPaused: Bool { get set }
+c:objc(cs)GLKViewController(py)preferredFramesPerSecond	swift.property	preferredFramesPerSecond	GLKViewController.preferredFramesPerSecond	@MainActor var preferredFramesPerSecond: Int { get set }
+c:objc(cs)GLKViewController(py)resumeOnDidBecomeActive	swift.property	resumeOnDidBecomeActive	GLKViewController.resumeOnDidBecomeActive	@MainActor var resumeOnDidBecomeActive: Bool { get set }
+c:objc(cs)GLKViewController(py)timeSinceFirstResume	swift.property	timeSinceFirstResume	GLKViewController.timeSinceFirstResume	@MainActor var timeSinceFirstResume: TimeInterval { get }
+c:objc(cs)GLKViewController(py)timeSinceLastDraw	swift.property	timeSinceLastDraw	GLKViewController.timeSinceLastDraw	@MainActor var timeSinceLastDraw: TimeInterval { get }
+c:objc(cs)GLKViewController(py)timeSinceLastResume	swift.property	timeSinceLastResume	GLKViewController.timeSinceLastResume	@MainActor var timeSinceLastResume: TimeInterval { get }
+c:objc(cs)GLKViewController(py)timeSinceLastUpdate	swift.property	timeSinceLastUpdate	GLKViewController.timeSinceLastUpdate	@MainActor var timeSinceLastUpdate: TimeInterval { get }
+c:objc(pl)GLKNamedEffect	swift.protocol	GLKNamedEffect	GLKNamedEffect	protocol GLKNamedEffect
+c:objc(pl)GLKNamedEffect(im)prepareToDraw	swift.method	prepareToDraw()	GLKNamedEffect.prepareToDraw()	func prepareToDraw()
+c:objc(pl)GLKViewControllerDelegate	swift.protocol	GLKViewControllerDelegate	GLKViewControllerDelegate	protocol GLKViewControllerDelegate : NSObjectProtocol
+c:objc(pl)GLKViewControllerDelegate(im)glkViewController:willPause:	swift.method	glkViewController(_:willPause:)	GLKViewControllerDelegate.glkViewController(_:willPause:)	optional func glkViewController(_ controller: GLKViewController, willPause pause: Bool)
+c:objc(pl)GLKViewControllerDelegate(im)glkViewControllerUpdate:	swift.method	glkViewControllerUpdate(_:)	GLKViewControllerDelegate.glkViewControllerUpdate(_:)	func glkViewControllerUpdate(_ controller: GLKViewController)
+c:objc(pl)GLKViewDelegate	swift.protocol	GLKViewDelegate	GLKViewDelegate	protocol GLKViewDelegate : NSObjectProtocol
+c:objc(pl)GLKViewDelegate(im)glkView:drawInRect:	swift.method	glkView(_:drawIn:)	GLKViewDelegate.glkView(_:drawIn:)	func glkView(_ view: GLKView, drawIn rect: CGRect)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.type.property	errorDomain	GLKTextureLoaderError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.property	errorUserInfo	GLKTextureLoaderError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.property	errorCode	GLKTextureLoaderError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.func.op	~=(_:_:)	GLKTextureLoaderError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.property	errorUserInfo	GLKTextureLoaderError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.func.op	==(_:_:)	GLKTextureLoaderError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.property	code	GLKTextureLoaderError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.method	hash(into:)	GLKTextureLoaderError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.property	userInfo	GLKTextureLoaderError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.property	errorCode	GLKTextureLoaderError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.property	hashValue	GLKTextureLoaderError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.init	init(_:userInfo:)	GLKTextureLoaderError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@GLKMatrixStackRef	swift.func.op	==(_:_:)	GLKMatrixStack.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@GLKMatrixStackRef	swift.method	hash(into:)	GLKMatrixStack.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@GLKMatrixStackRef	swift.property	hashValue	GLKMatrixStack.hashValue	var hashValue: Int { get }
+s:SC21GLKTextureLoaderErrorLeV	swift.struct	GLKTextureLoaderError	GLKTextureLoaderError	struct GLKTextureLoaderError
+s:SC21GLKTextureLoaderErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	GLKTextureLoaderError.errorDomain	static var errorDomain: String { get }
+s:SC21GLKTextureLoaderErrorLeV13invalidNSDataSoAAVvpZ	swift.type.property	invalidNSData	GLKTextureLoaderError.invalidNSData	static var invalidNSData: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV14invalidCGImageSoAAVvpZ	swift.type.property	invalidCGImage	GLKTextureLoaderError.invalidCGImage	static var invalidCGImage: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV15unknownFileTypeSoAAVvpZ	swift.type.property	unknownFileType	GLKTextureLoaderError.unknownFileType	static var unknownFileType: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV15unknownPathTypeSoAAVvpZ	swift.type.property	unknownPathType	GLKTextureLoaderError.unknownPathType	static var unknownPathType: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV17fileOrURLNotFoundSoAAVvpZ	swift.type.property	fileOrURLNotFound	GLKTextureLoaderError.fileOrURLNotFound	static var fileOrURLNotFound: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV17mipmapUnsupportedSoAAVvpZ	swift.type.property	mipmapUnsupported	GLKTextureLoaderError.mipmapUnsupported	static var mipmapUnsupported: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV18invalidEAGLContextSoAAVvpZ	swift.type.property	invalidEAGLContext	GLKTextureLoaderError.invalidEAGLContext	static var invalidEAGLContext: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV19pvrAtlasUnsupportedSoAAVvpZ	swift.type.property	pvrAtlasUnsupported	GLKTextureLoaderError.pvrAtlasUnsupported	static var pvrAtlasUnsupported: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV19unsupportedBitDepthSoAAVvpZ	swift.type.property	unsupportedBitDepth	GLKTextureLoaderError.unsupportedBitDepth	static var unsupportedBitDepth: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV20reorientationFailureSoAAVvpZ	swift.type.property	reorientationFailure	GLKTextureLoaderError.reorientationFailure	static var reorientationFailure: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV20unsupportedPVRFormatSoAAVvpZ	swift.type.property	unsupportedPVRFormat	GLKTextureLoaderError.unsupportedPVRFormat	static var unsupportedPVRFormat: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV22cubeMapInvalidNumFilesSoAAVvpZ	swift.type.property	cubeMapInvalidNumFiles	GLKTextureLoaderError.cubeMapInvalidNumFiles	static var cubeMapInvalidNumFiles: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV22incompatibleFormatSRGBSoAAVvpZ	swift.type.property	incompatibleFormatSRGB	GLKTextureLoaderError.incompatibleFormatSRGB	static var incompatibleFormatSRGB: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV22unsupportedOrientationSoAAVvpZ	swift.type.property	unsupportedOrientation	GLKTextureLoaderError.unsupportedOrientation	static var unsupportedOrientation: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV23compressedTextureUploadSoAAVvpZ	swift.type.property	compressedTextureUpload	GLKTextureLoaderError.compressedTextureUpload	static var compressedTextureUpload: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV24dataPreprocessingFailureSoAAVvpZ	swift.type.property	dataPreprocessingFailure	GLKTextureLoaderError.dataPreprocessingFailure	static var dataPreprocessingFailure: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV24unsupportedTextureTargetSoAAVvpZ	swift.type.property	unsupportedTextureTarget	GLKTextureLoaderError.unsupportedTextureTarget	static var unsupportedTextureTarget: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV25uncompressedTextureUploadSoAAVvpZ	swift.type.property	uncompressedTextureUpload	GLKTextureLoaderError.uncompressedTextureUpload	static var uncompressedTextureUpload: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV28unsupportedCubeMapDimensionsSoAAVvpZ	swift.type.property	unsupportedCubeMapDimensions	GLKTextureLoaderError.unsupportedCubeMapDimensions	static var unsupportedCubeMapDimensions: GLKTextureLoaderError.Code { get }
+s:SC21GLKTextureLoaderErrorLeV29alphaPremultiplicationFailureSoAAVvpZ	swift.type.property	alphaPremultiplicationFailure	GLKTextureLoaderError.alphaPremultiplicationFailure	static var alphaPremultiplicationFailure: GLKTextureLoaderError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKFogMode	swift.func.op	!=(_:_:)	GLKFogMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKLightingType	swift.func.op	!=(_:_:)	GLKLightingType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureEnvMode	swift.func.op	!=(_:_:)	GLKTextureEnvMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureInfoAlphaState	swift.func.op	!=(_:_:)	GLKTextureInfoAlphaState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureInfoOrigin	swift.func.op	!=(_:_:)	GLKTextureInfoOrigin.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.func.op	!=(_:_:)	GLKTextureLoaderError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKTextureTarget	swift.func.op	!=(_:_:)	GLKTextureTarget.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKVertexAttrib	swift.func.op	!=(_:_:)	GLKVertexAttrib.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableColorFormat	swift.func.op	!=(_:_:)	GLKViewDrawableColorFormat.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableDepthFormat	swift.func.op	!=(_:_:)	GLKViewDrawableDepthFormat.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableMultisample	swift.func.op	!=(_:_:)	GLKViewDrawableMultisample.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GLKViewDrawableStencilFormat	swift.func.op	!=(_:_:)	GLKViewDrawableStencilFormat.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@GLKMatrixStackRef	swift.func.op	!=(_:_:)	GLKMatrixStack.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKFogMode	swift.property	hashValue	GLKFogMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKLightingType	swift.property	hashValue	GLKLightingType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureEnvMode	swift.property	hashValue	GLKTextureEnvMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureInfoAlphaState	swift.property	hashValue	GLKTextureInfoAlphaState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureInfoOrigin	swift.property	hashValue	GLKTextureInfoOrigin.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.property	hashValue	GLKTextureLoaderError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKTextureTarget	swift.property	hashValue	GLKTextureTarget.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKVertexAttrib	swift.property	hashValue	GLKVertexAttrib.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableColorFormat	swift.property	hashValue	GLKViewDrawableColorFormat.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableDepthFormat	swift.property	hashValue	GLKViewDrawableDepthFormat.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableMultisample	swift.property	hashValue	GLKViewDrawableMultisample.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GLKViewDrawableStencilFormat	swift.property	hashValue	GLKViewDrawableStencilFormat.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKFogMode	swift.method	hash(into:)	GLKFogMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKLightingType	swift.method	hash(into:)	GLKLightingType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureEnvMode	swift.method	hash(into:)	GLKTextureEnvMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureInfoAlphaState	swift.method	hash(into:)	GLKTextureInfoAlphaState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureInfoOrigin	swift.method	hash(into:)	GLKTextureInfoOrigin.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.method	hash(into:)	GLKTextureLoaderError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKTextureTarget	swift.method	hash(into:)	GLKTextureTarget.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKVertexAttrib	swift.method	hash(into:)	GLKVertexAttrib.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableColorFormat	swift.method	hash(into:)	GLKViewDrawableColorFormat.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableDepthFormat	swift.method	hash(into:)	GLKViewDrawableDepthFormat.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableMultisample	swift.method	hash(into:)	GLKViewDrawableMultisample.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GLKViewDrawableStencilFormat	swift.method	hash(into:)	GLKViewDrawableStencilFormat.hash(into:)	func hash(into hasher: inout Hasher)
+s:So10GLKFogModeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	GLKFogMode.init(rawValue:)	init?(rawValue: GLint)
+s:So15GLKLightingTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	GLKLightingType.init(rawValue:)	init?(rawValue: GLint)
+s:So15GLKVertexAttribV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	GLKVertexAttrib.init(rawValue:)	init?(rawValue: GLint)
+s:So16GLKTextureTargetV8rawValueABSgs6UInt32V_tcfc	swift.init	init(rawValue:)	GLKTextureTarget.init(rawValue:)	init?(rawValue: GLenum)
+s:So17GLKTextureEnvModeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	GLKTextureEnvMode.init(rawValue:)	init?(rawValue: GLint)
+s:So20GLKTextureInfoOriginV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	GLKTextureInfoOrigin.init(rawValue:)	init?(rawValue: GLint)
+s:So21GLKTextureLoaderErrorV8rawValueABSgs6UInt32V_tcfc	swift.init	init(rawValue:)	GLKTextureLoaderError.Code.init(rawValue:)	init?(rawValue: GLuint)
+s:So24GLKTextureInfoAlphaStateV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	GLKTextureInfoAlphaState.init(rawValue:)	init?(rawValue: GLint)
+s:So26GLKViewDrawableColorFormatV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	GLKViewDrawableColorFormat.init(rawValue:)	init?(rawValue: GLint)
+s:So26GLKViewDrawableDepthFormatV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	GLKViewDrawableDepthFormat.init(rawValue:)	init?(rawValue: GLint)
+s:So26GLKViewDrawableMultisampleV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	GLKViewDrawableMultisample.init(rawValue:)	init?(rawValue: GLint)
+s:So28GLKViewDrawableStencilFormatV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	GLKViewDrawableStencilFormat.init(rawValue:)	init?(rawValue: GLint)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@GLKTextureLoaderError	swift.property	localizedDescription	GLKTextureLoaderError.localizedDescription	var localizedDescription: String { get }

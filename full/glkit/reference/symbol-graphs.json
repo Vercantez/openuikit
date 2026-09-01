@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 9,
+  "duplicateOccurrenceCount": 9,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/GLKit.symbols.json",
+      "relationshipCount": 525,
+      "sha256": "17517a7b042916b1434b7a736a4b27101ad9beae1365aee120a4b1a6b78bb7a2",
+      "symbolCount": 559
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "GLKit",
+  "relationshipCount": 525,
+  "schema": 1,
+  "symbolCount": 550,
+  "target": "arm64-apple-ios26.0"
+}

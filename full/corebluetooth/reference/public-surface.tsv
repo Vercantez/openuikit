@@ -1,0 +1,475 @@
+precise	kind	title	path	declaration
+c:@CBATTErrorDomain	swift.var	CBATTErrorDomain	CBATTErrorDomain	let CBATTErrorDomain: String
+c:@CBAdvertisementDataIsConnectable	swift.var	CBAdvertisementDataIsConnectable	CBAdvertisementDataIsConnectable	let CBAdvertisementDataIsConnectable: String
+c:@CBAdvertisementDataLocalNameKey	swift.var	CBAdvertisementDataLocalNameKey	CBAdvertisementDataLocalNameKey	let CBAdvertisementDataLocalNameKey: String
+c:@CBAdvertisementDataManufacturerDataKey	swift.var	CBAdvertisementDataManufacturerDataKey	CBAdvertisementDataManufacturerDataKey	let CBAdvertisementDataManufacturerDataKey: String
+c:@CBAdvertisementDataOverflowServiceUUIDsKey	swift.var	CBAdvertisementDataOverflowServiceUUIDsKey	CBAdvertisementDataOverflowServiceUUIDsKey	let CBAdvertisementDataOverflowServiceUUIDsKey: String
+c:@CBAdvertisementDataServiceDataKey	swift.var	CBAdvertisementDataServiceDataKey	CBAdvertisementDataServiceDataKey	let CBAdvertisementDataServiceDataKey: String
+c:@CBAdvertisementDataServiceUUIDsKey	swift.var	CBAdvertisementDataServiceUUIDsKey	CBAdvertisementDataServiceUUIDsKey	let CBAdvertisementDataServiceUUIDsKey: String
+c:@CBAdvertisementDataSolicitedServiceUUIDsKey	swift.var	CBAdvertisementDataSolicitedServiceUUIDsKey	CBAdvertisementDataSolicitedServiceUUIDsKey	let CBAdvertisementDataSolicitedServiceUUIDsKey: String
+c:@CBAdvertisementDataTxPowerLevelKey	swift.var	CBAdvertisementDataTxPowerLevelKey	CBAdvertisementDataTxPowerLevelKey	let CBAdvertisementDataTxPowerLevelKey: String
+c:@CBCentralManagerOptionDeviceAccessForMedia	swift.var	CBCentralManagerOptionDeviceAccessForMedia	CBCentralManagerOptionDeviceAccessForMedia	let CBCentralManagerOptionDeviceAccessForMedia: String
+c:@CBCentralManagerOptionRestoreIdentifierKey	swift.var	CBCentralManagerOptionRestoreIdentifierKey	CBCentralManagerOptionRestoreIdentifierKey	let CBCentralManagerOptionRestoreIdentifierKey: String
+c:@CBCentralManagerOptionShowPowerAlertKey	swift.var	CBCentralManagerOptionShowPowerAlertKey	CBCentralManagerOptionShowPowerAlertKey	let CBCentralManagerOptionShowPowerAlertKey: String
+c:@CBCentralManagerRestoredStatePeripheralsKey	swift.var	CBCentralManagerRestoredStatePeripheralsKey	CBCentralManagerRestoredStatePeripheralsKey	let CBCentralManagerRestoredStatePeripheralsKey: String
+c:@CBCentralManagerRestoredStateScanOptionsKey	swift.var	CBCentralManagerRestoredStateScanOptionsKey	CBCentralManagerRestoredStateScanOptionsKey	let CBCentralManagerRestoredStateScanOptionsKey: String
+c:@CBCentralManagerRestoredStateScanServicesKey	swift.var	CBCentralManagerRestoredStateScanServicesKey	CBCentralManagerRestoredStateScanServicesKey	let CBCentralManagerRestoredStateScanServicesKey: String
+c:@CBCentralManagerScanOptionAllowDuplicatesKey	swift.var	CBCentralManagerScanOptionAllowDuplicatesKey	CBCentralManagerScanOptionAllowDuplicatesKey	let CBCentralManagerScanOptionAllowDuplicatesKey: String
+c:@CBCentralManagerScanOptionSolicitedServiceUUIDsKey	swift.var	CBCentralManagerScanOptionSolicitedServiceUUIDsKey	CBCentralManagerScanOptionSolicitedServiceUUIDsKey	let CBCentralManagerScanOptionSolicitedServiceUUIDsKey: String
+c:@CBConnectPeripheralOptionEnableAutoReconnect	swift.var	CBConnectPeripheralOptionEnableAutoReconnect	CBConnectPeripheralOptionEnableAutoReconnect	let CBConnectPeripheralOptionEnableAutoReconnect: String
+c:@CBConnectPeripheralOptionEnableTransportBridgingKey	swift.var	CBConnectPeripheralOptionEnableTransportBridgingKey	CBConnectPeripheralOptionEnableTransportBridgingKey	let CBConnectPeripheralOptionEnableTransportBridgingKey: String
+c:@CBConnectPeripheralOptionNotifyOnConnectionKey	swift.var	CBConnectPeripheralOptionNotifyOnConnectionKey	CBConnectPeripheralOptionNotifyOnConnectionKey	let CBConnectPeripheralOptionNotifyOnConnectionKey: String
+c:@CBConnectPeripheralOptionNotifyOnDisconnectionKey	swift.var	CBConnectPeripheralOptionNotifyOnDisconnectionKey	CBConnectPeripheralOptionNotifyOnDisconnectionKey	let CBConnectPeripheralOptionNotifyOnDisconnectionKey: String
+c:@CBConnectPeripheralOptionNotifyOnNotificationKey	swift.var	CBConnectPeripheralOptionNotifyOnNotificationKey	CBConnectPeripheralOptionNotifyOnNotificationKey	let CBConnectPeripheralOptionNotifyOnNotificationKey: String
+c:@CBConnectPeripheralOptionRequiresANCS	swift.var	CBConnectPeripheralOptionRequiresANCS	CBConnectPeripheralOptionRequiresANCS	let CBConnectPeripheralOptionRequiresANCS: String
+c:@CBConnectPeripheralOptionStartDelayKey	swift.var	CBConnectPeripheralOptionStartDelayKey	CBConnectPeripheralOptionStartDelayKey	let CBConnectPeripheralOptionStartDelayKey: String
+c:@CBConnectionEventMatchingOptionPeripheralUUIDs	swift.type.property	peripheralUUIDs	CBConnectionEventMatchingOption.peripheralUUIDs	static let peripheralUUIDs: CBConnectionEventMatchingOption
+c:@CBConnectionEventMatchingOptionServiceUUIDs	swift.type.property	serviceUUIDs	CBConnectionEventMatchingOption.serviceUUIDs	static let serviceUUIDs: CBConnectionEventMatchingOption
+c:@CBErrorDomain	swift.var	CBErrorDomain	CBErrorDomain	let CBErrorDomain: String
+c:@CBPeripheralManagerOptionRestoreIdentifierKey	swift.var	CBPeripheralManagerOptionRestoreIdentifierKey	CBPeripheralManagerOptionRestoreIdentifierKey	let CBPeripheralManagerOptionRestoreIdentifierKey: String
+c:@CBPeripheralManagerOptionShowPowerAlertKey	swift.var	CBPeripheralManagerOptionShowPowerAlertKey	CBPeripheralManagerOptionShowPowerAlertKey	let CBPeripheralManagerOptionShowPowerAlertKey: String
+c:@CBPeripheralManagerRestoredStateAdvertisementDataKey	swift.var	CBPeripheralManagerRestoredStateAdvertisementDataKey	CBPeripheralManagerRestoredStateAdvertisementDataKey	let CBPeripheralManagerRestoredStateAdvertisementDataKey: String
+c:@CBPeripheralManagerRestoredStateServicesKey	swift.var	CBPeripheralManagerRestoredStateServicesKey	CBPeripheralManagerRestoredStateServicesKey	let CBPeripheralManagerRestoredStateServicesKey: String
+c:@CBUUIDCharacteristicAggregateFormatString	swift.var	CBUUIDCharacteristicAggregateFormatString	CBUUIDCharacteristicAggregateFormatString	let CBUUIDCharacteristicAggregateFormatString: String
+c:@CBUUIDCharacteristicExtendedPropertiesString	swift.var	CBUUIDCharacteristicExtendedPropertiesString	CBUUIDCharacteristicExtendedPropertiesString	let CBUUIDCharacteristicExtendedPropertiesString: String
+c:@CBUUIDCharacteristicFormatString	swift.var	CBUUIDCharacteristicFormatString	CBUUIDCharacteristicFormatString	let CBUUIDCharacteristicFormatString: String
+c:@CBUUIDCharacteristicObservationScheduleString	swift.var	CBUUIDCharacteristicObservationScheduleString	CBUUIDCharacteristicObservationScheduleString	let CBUUIDCharacteristicObservationScheduleString: String
+c:@CBUUIDCharacteristicUserDescriptionString	swift.var	CBUUIDCharacteristicUserDescriptionString	CBUUIDCharacteristicUserDescriptionString	let CBUUIDCharacteristicUserDescriptionString: String
+c:@CBUUIDCharacteristicValidRangeString	swift.var	CBUUIDCharacteristicValidRangeString	CBUUIDCharacteristicValidRangeString	let CBUUIDCharacteristicValidRangeString: String
+c:@CBUUIDClientCharacteristicConfigurationString	swift.var	CBUUIDClientCharacteristicConfigurationString	CBUUIDClientCharacteristicConfigurationString	let CBUUIDClientCharacteristicConfigurationString: String
+c:@CBUUIDL2CAPPSMCharacteristicString	swift.var	CBUUIDL2CAPPSMCharacteristicString	CBUUIDL2CAPPSMCharacteristicString	let CBUUIDL2CAPPSMCharacteristicString: String
+c:@CBUUIDServerCharacteristicConfigurationString	swift.var	CBUUIDServerCharacteristicConfigurationString	CBUUIDServerCharacteristicConfigurationString	let CBUUIDServerCharacteristicConfigurationString: String
+c:@E@CBATTError	swift.enum	CBATTError.Code	CBATTError.Code	enum Code
+c:@E@CBATTError@CBATTErrorAttributeNotFound	swift.enum.case	CBATTError.Code.attributeNotFound	CBATTError.Code.attributeNotFound	case attributeNotFound
+c:@E@CBATTError@CBATTErrorAttributeNotLong	swift.enum.case	CBATTError.Code.attributeNotLong	CBATTError.Code.attributeNotLong	case attributeNotLong
+c:@E@CBATTError@CBATTErrorInsufficientAuthentication	swift.enum.case	CBATTError.Code.insufficientAuthentication	CBATTError.Code.insufficientAuthentication	case insufficientAuthentication
+c:@E@CBATTError@CBATTErrorInsufficientAuthorization	swift.enum.case	CBATTError.Code.insufficientAuthorization	CBATTError.Code.insufficientAuthorization	case insufficientAuthorization
+c:@E@CBATTError@CBATTErrorInsufficientEncryption	swift.enum.case	CBATTError.Code.insufficientEncryption	CBATTError.Code.insufficientEncryption	case insufficientEncryption
+c:@E@CBATTError@CBATTErrorInsufficientEncryptionKeySize	swift.enum.case	CBATTError.Code.insufficientEncryptionKeySize	CBATTError.Code.insufficientEncryptionKeySize	case insufficientEncryptionKeySize
+c:@E@CBATTError@CBATTErrorInsufficientResources	swift.enum.case	CBATTError.Code.insufficientResources	CBATTError.Code.insufficientResources	case insufficientResources
+c:@E@CBATTError@CBATTErrorInvalidAttributeValueLength	swift.enum.case	CBATTError.Code.invalidAttributeValueLength	CBATTError.Code.invalidAttributeValueLength	case invalidAttributeValueLength
+c:@E@CBATTError@CBATTErrorInvalidHandle	swift.enum.case	CBATTError.Code.invalidHandle	CBATTError.Code.invalidHandle	case invalidHandle
+c:@E@CBATTError@CBATTErrorInvalidOffset	swift.enum.case	CBATTError.Code.invalidOffset	CBATTError.Code.invalidOffset	case invalidOffset
+c:@E@CBATTError@CBATTErrorInvalidPdu	swift.enum.case	CBATTError.Code.invalidPdu	CBATTError.Code.invalidPdu	case invalidPdu
+c:@E@CBATTError@CBATTErrorPrepareQueueFull	swift.enum.case	CBATTError.Code.prepareQueueFull	CBATTError.Code.prepareQueueFull	case prepareQueueFull
+c:@E@CBATTError@CBATTErrorReadNotPermitted	swift.enum.case	CBATTError.Code.readNotPermitted	CBATTError.Code.readNotPermitted	case readNotPermitted
+c:@E@CBATTError@CBATTErrorRequestNotSupported	swift.enum.case	CBATTError.Code.requestNotSupported	CBATTError.Code.requestNotSupported	case requestNotSupported
+c:@E@CBATTError@CBATTErrorSuccess	swift.enum.case	CBATTError.Code.success	CBATTError.Code.success	case success
+c:@E@CBATTError@CBATTErrorUnlikelyError	swift.enum.case	CBATTError.Code.unlikelyError	CBATTError.Code.unlikelyError	case unlikelyError
+c:@E@CBATTError@CBATTErrorUnsupportedGroupType	swift.enum.case	CBATTError.Code.unsupportedGroupType	CBATTError.Code.unsupportedGroupType	case unsupportedGroupType
+c:@E@CBATTError@CBATTErrorWriteNotPermitted	swift.enum.case	CBATTError.Code.writeNotPermitted	CBATTError.Code.writeNotPermitted	case writeNotPermitted
+c:@E@CBAttributePermissions	swift.struct	CBAttributePermissions	CBAttributePermissions	struct CBAttributePermissions
+c:@E@CBAttributePermissions@CBAttributePermissionsReadEncryptionRequired	swift.type.property	readEncryptionRequired	CBAttributePermissions.readEncryptionRequired	static var readEncryptionRequired: CBAttributePermissions { get }
+c:@E@CBAttributePermissions@CBAttributePermissionsReadable	swift.type.property	readable	CBAttributePermissions.readable	static var readable: CBAttributePermissions { get }
+c:@E@CBAttributePermissions@CBAttributePermissionsWriteEncryptionRequired	swift.type.property	writeEncryptionRequired	CBAttributePermissions.writeEncryptionRequired	static var writeEncryptionRequired: CBAttributePermissions { get }
+c:@E@CBAttributePermissions@CBAttributePermissionsWriteable	swift.type.property	writeable	CBAttributePermissions.writeable	static var writeable: CBAttributePermissions { get }
+c:@E@CBCentralManagerFeature	swift.struct	CBCentralManager.Feature	CBCentralManager.Feature	struct Feature
+c:@E@CBCentralManagerFeature@CBCentralManagerFeatureExtendedScanAndConnect	swift.type.property	extendedScanAndConnect	CBCentralManager.Feature.extendedScanAndConnect	static var extendedScanAndConnect: CBCentralManager.Feature { get }
+c:@E@CBCentralManagerState	swift.enum	CBCentralManagerState	CBCentralManagerState	enum CBCentralManagerState
+c:@E@CBCentralManagerState@CBCentralManagerStatePoweredOff	swift.enum.case	CBCentralManagerState.poweredOff	CBCentralManagerState.poweredOff	case poweredOff
+c:@E@CBCentralManagerState@CBCentralManagerStatePoweredOn	swift.enum.case	CBCentralManagerState.poweredOn	CBCentralManagerState.poweredOn	case poweredOn
+c:@E@CBCentralManagerState@CBCentralManagerStateResetting	swift.enum.case	CBCentralManagerState.resetting	CBCentralManagerState.resetting	case resetting
+c:@E@CBCentralManagerState@CBCentralManagerStateUnauthorized	swift.enum.case	CBCentralManagerState.unauthorized	CBCentralManagerState.unauthorized	case unauthorized
+c:@E@CBCentralManagerState@CBCentralManagerStateUnknown	swift.enum.case	CBCentralManagerState.unknown	CBCentralManagerState.unknown	case unknown
+c:@E@CBCentralManagerState@CBCentralManagerStateUnsupported	swift.enum.case	CBCentralManagerState.unsupported	CBCentralManagerState.unsupported	case unsupported
+c:@E@CBCharacteristicProperties	swift.struct	CBCharacteristicProperties	CBCharacteristicProperties	struct CBCharacteristicProperties
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyAuthenticatedSignedWrites	swift.type.property	authenticatedSignedWrites	CBCharacteristicProperties.authenticatedSignedWrites	static var authenticatedSignedWrites: CBCharacteristicProperties { get }
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyBroadcast	swift.type.property	broadcast	CBCharacteristicProperties.broadcast	static var broadcast: CBCharacteristicProperties { get }
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyExtendedProperties	swift.type.property	extendedProperties	CBCharacteristicProperties.extendedProperties	static var extendedProperties: CBCharacteristicProperties { get }
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyIndicate	swift.type.property	indicate	CBCharacteristicProperties.indicate	static var indicate: CBCharacteristicProperties { get }
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyIndicateEncryptionRequired	swift.type.property	indicateEncryptionRequired	CBCharacteristicProperties.indicateEncryptionRequired	static var indicateEncryptionRequired: CBCharacteristicProperties { get }
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyNotify	swift.type.property	notify	CBCharacteristicProperties.notify	static var notify: CBCharacteristicProperties { get }
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyNotifyEncryptionRequired	swift.type.property	notifyEncryptionRequired	CBCharacteristicProperties.notifyEncryptionRequired	static var notifyEncryptionRequired: CBCharacteristicProperties { get }
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyRead	swift.type.property	read	CBCharacteristicProperties.read	static var read: CBCharacteristicProperties { get }
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyWrite	swift.type.property	write	CBCharacteristicProperties.write	static var write: CBCharacteristicProperties { get }
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyWriteWithoutResponse	swift.type.property	writeWithoutResponse	CBCharacteristicProperties.writeWithoutResponse	static var writeWithoutResponse: CBCharacteristicProperties { get }
+c:@E@CBCharacteristicWriteType	swift.enum	CBCharacteristicWriteType	CBCharacteristicWriteType	enum CBCharacteristicWriteType
+c:@E@CBCharacteristicWriteType@CBCharacteristicWriteWithResponse	swift.enum.case	CBCharacteristicWriteType.withResponse	CBCharacteristicWriteType.withResponse	case withResponse
+c:@E@CBCharacteristicWriteType@CBCharacteristicWriteWithoutResponse	swift.enum.case	CBCharacteristicWriteType.withoutResponse	CBCharacteristicWriteType.withoutResponse	case withoutResponse
+c:@E@CBConnectionEvent	swift.enum	CBConnectionEvent	CBConnectionEvent	enum CBConnectionEvent
+c:@E@CBConnectionEvent@CBConnectionEventPeerConnected	swift.enum.case	CBConnectionEvent.peerConnected	CBConnectionEvent.peerConnected	case peerConnected
+c:@E@CBConnectionEvent@CBConnectionEventPeerDisconnected	swift.enum.case	CBConnectionEvent.peerDisconnected	CBConnectionEvent.peerDisconnected	case peerDisconnected
+c:@E@CBError	swift.enum	CBError.Code	CBError.Code	enum Code
+c:@E@CBError@CBErrorAlreadyAdvertising	swift.enum.case	CBError.Code.alreadyAdvertising	CBError.Code.alreadyAdvertising	case alreadyAdvertising
+c:@E@CBError@CBErrorConnectionFailed	swift.enum.case	CBError.Code.connectionFailed	CBError.Code.connectionFailed	case connectionFailed
+c:@E@CBError@CBErrorConnectionLimitReached	swift.enum.case	CBError.Code.connectionLimitReached	CBError.Code.connectionLimitReached	case connectionLimitReached
+c:@E@CBError@CBErrorConnectionTimeout	swift.enum.case	CBError.Code.connectionTimeout	CBError.Code.connectionTimeout	case connectionTimeout
+c:@E@CBError@CBErrorEncryptionTimedOut	swift.enum.case	CBError.Code.encryptionTimedOut	CBError.Code.encryptionTimedOut	case encryptionTimedOut
+c:@E@CBError@CBErrorInvalidHandle	swift.enum.case	CBError.Code.invalidHandle	CBError.Code.invalidHandle	case invalidHandle
+c:@E@CBError@CBErrorInvalidParameters	swift.enum.case	CBError.Code.invalidParameters	CBError.Code.invalidParameters	case invalidParameters
+c:@E@CBError@CBErrorNotConnected	swift.enum.case	CBError.Code.notConnected	CBError.Code.notConnected	case notConnected
+c:@E@CBError@CBErrorOperationCancelled	swift.enum.case	CBError.Code.operationCancelled	CBError.Code.operationCancelled	case operationCancelled
+c:@E@CBError@CBErrorOperationNotSupported	swift.enum.case	CBError.Code.operationNotSupported	CBError.Code.operationNotSupported	case operationNotSupported
+c:@E@CBError@CBErrorOutOfSpace	swift.enum.case	CBError.Code.outOfSpace	CBError.Code.outOfSpace	case outOfSpace
+c:@E@CBError@CBErrorPeerRemovedPairingInformation	swift.enum.case	CBError.Code.peerRemovedPairingInformation	CBError.Code.peerRemovedPairingInformation	case peerRemovedPairingInformation
+c:@E@CBError@CBErrorPeripheralDisconnected	swift.enum.case	CBError.Code.peripheralDisconnected	CBError.Code.peripheralDisconnected	case peripheralDisconnected
+c:@E@CBError@CBErrorTooManyLEPairedDevices	swift.enum.case	CBError.Code.tooManyLEPairedDevices	CBError.Code.tooManyLEPairedDevices	case tooManyLEPairedDevices
+c:@E@CBError@CBErrorUUIDNotAllowed	swift.enum.case	CBError.Code.uuidNotAllowed	CBError.Code.uuidNotAllowed	case uuidNotAllowed
+c:@E@CBError@CBErrorUnknown	swift.enum.case	CBError.Code.unknown	CBError.Code.unknown	case unknown
+c:@E@CBError@CBErrorUnkownDevice	swift.enum.case	CBError.Code.unkownDevice	CBError.Code.unkownDevice	case unkownDevice
+c:@E@CBManagerAuthorization	swift.enum	CBManagerAuthorization	CBManagerAuthorization	enum CBManagerAuthorization
+c:@E@CBManagerAuthorization@CBManagerAuthorizationAllowedAlways	swift.enum.case	CBManagerAuthorization.allowedAlways	CBManagerAuthorization.allowedAlways	case allowedAlways
+c:@E@CBManagerAuthorization@CBManagerAuthorizationDenied	swift.enum.case	CBManagerAuthorization.denied	CBManagerAuthorization.denied	case denied
+c:@E@CBManagerAuthorization@CBManagerAuthorizationNotDetermined	swift.enum.case	CBManagerAuthorization.notDetermined	CBManagerAuthorization.notDetermined	case notDetermined
+c:@E@CBManagerAuthorization@CBManagerAuthorizationRestricted	swift.enum.case	CBManagerAuthorization.restricted	CBManagerAuthorization.restricted	case restricted
+c:@E@CBManagerState	swift.enum	CBManagerState	CBManagerState	enum CBManagerState
+c:@E@CBManagerState@CBManagerStatePoweredOff	swift.enum.case	CBManagerState.poweredOff	CBManagerState.poweredOff	case poweredOff
+c:@E@CBManagerState@CBManagerStatePoweredOn	swift.enum.case	CBManagerState.poweredOn	CBManagerState.poweredOn	case poweredOn
+c:@E@CBManagerState@CBManagerStateResetting	swift.enum.case	CBManagerState.resetting	CBManagerState.resetting	case resetting
+c:@E@CBManagerState@CBManagerStateUnauthorized	swift.enum.case	CBManagerState.unauthorized	CBManagerState.unauthorized	case unauthorized
+c:@E@CBManagerState@CBManagerStateUnknown	swift.enum.case	CBManagerState.unknown	CBManagerState.unknown	case unknown
+c:@E@CBManagerState@CBManagerStateUnsupported	swift.enum.case	CBManagerState.unsupported	CBManagerState.unsupported	case unsupported
+c:@E@CBPeripheralManagerAuthorizationStatus	swift.enum	CBPeripheralManagerAuthorizationStatus	CBPeripheralManagerAuthorizationStatus	enum CBPeripheralManagerAuthorizationStatus
+c:@E@CBPeripheralManagerAuthorizationStatus@CBPeripheralManagerAuthorizationStatusAuthorized	swift.enum.case	CBPeripheralManagerAuthorizationStatus.authorized	CBPeripheralManagerAuthorizationStatus.authorized	case authorized
+c:@E@CBPeripheralManagerAuthorizationStatus@CBPeripheralManagerAuthorizationStatusDenied	swift.enum.case	CBPeripheralManagerAuthorizationStatus.denied	CBPeripheralManagerAuthorizationStatus.denied	case denied
+c:@E@CBPeripheralManagerAuthorizationStatus@CBPeripheralManagerAuthorizationStatusNotDetermined	swift.enum.case	CBPeripheralManagerAuthorizationStatus.notDetermined	CBPeripheralManagerAuthorizationStatus.notDetermined	case notDetermined
+c:@E@CBPeripheralManagerAuthorizationStatus@CBPeripheralManagerAuthorizationStatusRestricted	swift.enum.case	CBPeripheralManagerAuthorizationStatus.restricted	CBPeripheralManagerAuthorizationStatus.restricted	case restricted
+c:@E@CBPeripheralManagerConnectionLatency	swift.enum	CBPeripheralManagerConnectionLatency	CBPeripheralManagerConnectionLatency	enum CBPeripheralManagerConnectionLatency
+c:@E@CBPeripheralManagerConnectionLatency@CBPeripheralManagerConnectionLatencyHigh	swift.enum.case	CBPeripheralManagerConnectionLatency.high	CBPeripheralManagerConnectionLatency.high	case high
+c:@E@CBPeripheralManagerConnectionLatency@CBPeripheralManagerConnectionLatencyLow	swift.enum.case	CBPeripheralManagerConnectionLatency.low	CBPeripheralManagerConnectionLatency.low	case low
+c:@E@CBPeripheralManagerConnectionLatency@CBPeripheralManagerConnectionLatencyMedium	swift.enum.case	CBPeripheralManagerConnectionLatency.medium	CBPeripheralManagerConnectionLatency.medium	case medium
+c:@E@CBPeripheralManagerState	swift.enum	CBPeripheralManagerState	CBPeripheralManagerState	enum CBPeripheralManagerState
+c:@E@CBPeripheralManagerState@CBPeripheralManagerStatePoweredOff	swift.enum.case	CBPeripheralManagerState.poweredOff	CBPeripheralManagerState.poweredOff	case poweredOff
+c:@E@CBPeripheralManagerState@CBPeripheralManagerStatePoweredOn	swift.enum.case	CBPeripheralManagerState.poweredOn	CBPeripheralManagerState.poweredOn	case poweredOn
+c:@E@CBPeripheralManagerState@CBPeripheralManagerStateResetting	swift.enum.case	CBPeripheralManagerState.resetting	CBPeripheralManagerState.resetting	case resetting
+c:@E@CBPeripheralManagerState@CBPeripheralManagerStateUnauthorized	swift.enum.case	CBPeripheralManagerState.unauthorized	CBPeripheralManagerState.unauthorized	case unauthorized
+c:@E@CBPeripheralManagerState@CBPeripheralManagerStateUnknown	swift.enum.case	CBPeripheralManagerState.unknown	CBPeripheralManagerState.unknown	case unknown
+c:@E@CBPeripheralManagerState@CBPeripheralManagerStateUnsupported	swift.enum.case	CBPeripheralManagerState.unsupported	CBPeripheralManagerState.unsupported	case unsupported
+c:@E@CBPeripheralState	swift.enum	CBPeripheralState	CBPeripheralState	enum CBPeripheralState
+c:@E@CBPeripheralState@CBPeripheralStateConnected	swift.enum.case	CBPeripheralState.connected	CBPeripheralState.connected	case connected
+c:@E@CBPeripheralState@CBPeripheralStateConnecting	swift.enum.case	CBPeripheralState.connecting	CBPeripheralState.connecting	case connecting
+c:@E@CBPeripheralState@CBPeripheralStateDisconnected	swift.enum.case	CBPeripheralState.disconnected	CBPeripheralState.disconnected	case disconnected
+c:@E@CBPeripheralState@CBPeripheralStateDisconnecting	swift.enum.case	CBPeripheralState.disconnecting	CBPeripheralState.disconnecting	case disconnecting
+c:@T@CBConnectionEventMatchingOption	swift.struct	CBConnectionEventMatchingOption	CBConnectionEventMatchingOption	struct CBConnectionEventMatchingOption
+c:@T@CBL2CAPPSM	swift.typealias	CBL2CAPPSM	CBL2CAPPSM	typealias CBL2CAPPSM = UInt16
+c:objc(cs)CBATTRequest	swift.class	CBATTRequest	CBATTRequest	class CBATTRequest
+c:objc(cs)CBATTRequest(py)central	swift.property	central	CBATTRequest.central	var central: CBCentral { get }
+c:objc(cs)CBATTRequest(py)characteristic	swift.property	characteristic	CBATTRequest.characteristic	var characteristic: CBCharacteristic { get }
+c:objc(cs)CBATTRequest(py)offset	swift.property	offset	CBATTRequest.offset	var offset: Int { get }
+c:objc(cs)CBATTRequest(py)value	swift.property	value	CBATTRequest.value	var value: Data? { get set }
+c:objc(cs)CBAttribute	swift.class	CBAttribute	CBAttribute	class CBAttribute
+c:objc(cs)CBAttribute(py)UUID	swift.property	uuid	CBAttribute.uuid	var uuid: CBUUID { get }
+c:objc(cs)CBCentral	swift.class	CBCentral	CBCentral	class CBCentral
+c:objc(cs)CBCentral(py)maximumUpdateValueLength	swift.property	maximumUpdateValueLength	CBCentral.maximumUpdateValueLength	var maximumUpdateValueLength: Int { get }
+c:objc(cs)CBCentralManager	swift.class	CBCentralManager	CBCentralManager	class CBCentralManager
+c:objc(cs)CBCentralManager(cm)supportsFeatures:	swift.type.method	supports(_:)	CBCentralManager.supports(_:)	class func supports(_ features: CBCentralManager.Feature) -> Bool
+c:objc(cs)CBCentralManager(im)cancelPeripheralConnection:	swift.method	cancelPeripheralConnection(_:)	CBCentralManager.cancelPeripheralConnection(_:)	func cancelPeripheralConnection(_ peripheral: CBPeripheral)
+c:objc(cs)CBCentralManager(im)connectPeripheral:options:	swift.method	connect(_:options:)	CBCentralManager.connect(_:options:)	func connect(_ peripheral: CBPeripheral, options: [String : Any]? = nil)
+c:objc(cs)CBCentralManager(im)init	swift.init	init()	CBCentralManager.init()	convenience init()
+c:objc(cs)CBCentralManager(im)initWithDelegate:queue:	swift.init	init(delegate:queue:)	CBCentralManager.init(delegate:queue:)	convenience init(delegate: (any CBCentralManagerDelegate)?, queue: dispatch_queue_t?)
+c:objc(cs)CBCentralManager(im)initWithDelegate:queue:options:	swift.init	init(delegate:queue:options:)	CBCentralManager.init(delegate:queue:options:)	init(delegate: (any CBCentralManagerDelegate)?, queue: dispatch_queue_t?, options: [String : Any]? = nil)
+c:objc(cs)CBCentralManager(im)registerForConnectionEventsWithOptions:	swift.method	registerForConnectionEvents(options:)	CBCentralManager.registerForConnectionEvents(options:)	func registerForConnectionEvents(options: [CBConnectionEventMatchingOption : Any]? = nil)
+c:objc(cs)CBCentralManager(im)retrieveConnectedPeripheralsWithServices:	swift.method	retrieveConnectedPeripherals(withServices:)	CBCentralManager.retrieveConnectedPeripherals(withServices:)	func retrieveConnectedPeripherals(withServices serviceUUIDs: [CBUUID]) -> [CBPeripheral]
+c:objc(cs)CBCentralManager(im)retrievePeripheralsWithIdentifiers:	swift.method	retrievePeripherals(withIdentifiers:)	CBCentralManager.retrievePeripherals(withIdentifiers:)	func retrievePeripherals(withIdentifiers identifiers: [UUID]) -> [CBPeripheral]
+c:objc(cs)CBCentralManager(im)scanForPeripheralsWithServices:options:	swift.method	scanForPeripherals(withServices:options:)	CBCentralManager.scanForPeripherals(withServices:options:)	func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?, options: [String : Any]? = nil)
+c:objc(cs)CBCentralManager(im)stopScan	swift.method	stopScan()	CBCentralManager.stopScan()	func stopScan()
+c:objc(cs)CBCentralManager(py)delegate	swift.property	delegate	CBCentralManager.delegate	weak var delegate: (any CBCentralManagerDelegate)? { get set }
+c:objc(cs)CBCentralManager(py)isScanning	swift.property	isScanning	CBCentralManager.isScanning	var isScanning: Bool { get }
+c:objc(cs)CBCharacteristic	swift.class	CBCharacteristic	CBCharacteristic	class CBCharacteristic
+c:objc(cs)CBCharacteristic(py)descriptors	swift.property	descriptors	CBCharacteristic.descriptors	var descriptors: [CBDescriptor]? { get }
+c:objc(cs)CBCharacteristic(py)isBroadcasted	swift.property	isBroadcasted	CBCharacteristic.isBroadcasted	var isBroadcasted: Bool { get }
+c:objc(cs)CBCharacteristic(py)isNotifying	swift.property	isNotifying	CBCharacteristic.isNotifying	var isNotifying: Bool { get }
+c:objc(cs)CBCharacteristic(py)properties	swift.property	properties	CBCharacteristic.properties	var properties: CBCharacteristicProperties { get }
+c:objc(cs)CBCharacteristic(py)service	swift.property	service	CBCharacteristic.service	weak var service: CBService? { get }
+c:objc(cs)CBCharacteristic(py)value	swift.property	value	CBCharacteristic.value	var value: Data? { get }
+c:objc(cs)CBDescriptor	swift.class	CBDescriptor	CBDescriptor	class CBDescriptor
+c:objc(cs)CBDescriptor(py)characteristic	swift.property	characteristic	CBDescriptor.characteristic	weak var characteristic: CBCharacteristic? { get }
+c:objc(cs)CBDescriptor(py)value	swift.property	value	CBDescriptor.value	var value: Any? { get }
+c:objc(cs)CBL2CAPChannel	swift.class	CBL2CAPChannel	CBL2CAPChannel	class CBL2CAPChannel
+c:objc(cs)CBL2CAPChannel(py)PSM	swift.property	psm	CBL2CAPChannel.psm	var psm: CBL2CAPPSM { get }
+c:objc(cs)CBL2CAPChannel(py)inputStream	swift.property	inputStream	CBL2CAPChannel.inputStream	var inputStream: InputStream! { get }
+c:objc(cs)CBL2CAPChannel(py)outputStream	swift.property	outputStream	CBL2CAPChannel.outputStream	var outputStream: OutputStream! { get }
+c:objc(cs)CBL2CAPChannel(py)peer	swift.property	peer	CBL2CAPChannel.peer	var peer: CBPeer! { get }
+c:objc(cs)CBManager	swift.class	CBManager	CBManager	class CBManager
+c:objc(cs)CBManager(cpy)authorization	swift.type.property	authorization	CBManager.authorization	class var authorization: CBManagerAuthorization { get }
+c:objc(cs)CBManager(py)authorization	swift.property	authorization	CBManager.authorization	var authorization: CBManagerAuthorization { get }
+c:objc(cs)CBManager(py)state	swift.property	state	CBManager.state	var state: CBManagerState { get }
+c:objc(cs)CBMutableCharacteristic	swift.class	CBMutableCharacteristic	CBMutableCharacteristic	class CBMutableCharacteristic
+c:objc(cs)CBMutableCharacteristic(im)initWithType:properties:value:permissions:	swift.init	init(type:properties:value:permissions:)	CBMutableCharacteristic.init(type:properties:value:permissions:)	init(type UUID: CBUUID, properties: CBCharacteristicProperties, value: Data?, permissions: CBAttributePermissions)
+c:objc(cs)CBMutableCharacteristic(py)descriptors	swift.property	descriptors	CBMutableCharacteristic.descriptors	var descriptors: [CBDescriptor]? { get set }
+c:objc(cs)CBMutableCharacteristic(py)permissions	swift.property	permissions	CBMutableCharacteristic.permissions	var permissions: CBAttributePermissions { get set }
+c:objc(cs)CBMutableCharacteristic(py)properties	swift.property	properties	CBMutableCharacteristic.properties	var properties: CBCharacteristicProperties { get set }
+c:objc(cs)CBMutableCharacteristic(py)subscribedCentrals	swift.property	subscribedCentrals	CBMutableCharacteristic.subscribedCentrals	var subscribedCentrals: [CBCentral]? { get }
+c:objc(cs)CBMutableCharacteristic(py)value	swift.property	value	CBMutableCharacteristic.value	var value: Data? { get set }
+c:objc(cs)CBMutableDescriptor	swift.class	CBMutableDescriptor	CBMutableDescriptor	class CBMutableDescriptor
+c:objc(cs)CBMutableDescriptor(im)initWithType:value:	swift.init	init(type:value:)	CBMutableDescriptor.init(type:value:)	init(type UUID: CBUUID, value: Any?)
+c:objc(cs)CBMutableService	swift.class	CBMutableService	CBMutableService	class CBMutableService
+c:objc(cs)CBMutableService(im)initWithType:primary:	swift.init	init(type:primary:)	CBMutableService.init(type:primary:)	init(type UUID: CBUUID, primary isPrimary: Bool)
+c:objc(cs)CBMutableService(py)characteristics	swift.property	characteristics	CBMutableService.characteristics	var characteristics: [CBCharacteristic]? { get set }
+c:objc(cs)CBMutableService(py)includedServices	swift.property	includedServices	CBMutableService.includedServices	var includedServices: [CBService]? { get set }
+c:objc(cs)CBPeer	swift.class	CBPeer	CBPeer	class CBPeer
+c:objc(cs)CBPeer(py)identifier	swift.property	identifier	CBPeer.identifier	var identifier: UUID { get }
+c:objc(cs)CBPeripheral	swift.class	CBPeripheral	CBPeripheral	class CBPeripheral
+c:objc(cs)CBPeripheral(im)discoverCharacteristics:forService:	swift.method	discoverCharacteristics(_:for:)	CBPeripheral.discoverCharacteristics(_:for:)	func discoverCharacteristics(_ characteristicUUIDs: [CBUUID]?, for service: CBService)
+c:objc(cs)CBPeripheral(im)discoverDescriptorsForCharacteristic:	swift.method	discoverDescriptors(for:)	CBPeripheral.discoverDescriptors(for:)	func discoverDescriptors(for characteristic: CBCharacteristic)
+c:objc(cs)CBPeripheral(im)discoverIncludedServices:forService:	swift.method	discoverIncludedServices(_:for:)	CBPeripheral.discoverIncludedServices(_:for:)	func discoverIncludedServices(_ includedServiceUUIDs: [CBUUID]?, for service: CBService)
+c:objc(cs)CBPeripheral(im)discoverServices:	swift.method	discoverServices(_:)	CBPeripheral.discoverServices(_:)	func discoverServices(_ serviceUUIDs: [CBUUID]?)
+c:objc(cs)CBPeripheral(im)maximumWriteValueLengthForType:	swift.method	maximumWriteValueLength(for:)	CBPeripheral.maximumWriteValueLength(for:)	func maximumWriteValueLength(for type: CBCharacteristicWriteType) -> Int
+c:objc(cs)CBPeripheral(im)openL2CAPChannel:	swift.method	openL2CAPChannel(_:)	CBPeripheral.openL2CAPChannel(_:)	func openL2CAPChannel(_ PSM: CBL2CAPPSM)
+c:objc(cs)CBPeripheral(im)readRSSI	swift.method	readRSSI()	CBPeripheral.readRSSI()	func readRSSI()
+c:objc(cs)CBPeripheral(im)readValueForCharacteristic:	swift.method	readValue(for:)	CBPeripheral.readValue(for:)	func readValue(for characteristic: CBCharacteristic)
+c:objc(cs)CBPeripheral(im)readValueForDescriptor:	swift.method	readValue(for:)	CBPeripheral.readValue(for:)	func readValue(for descriptor: CBDescriptor)
+c:objc(cs)CBPeripheral(im)setNotifyValue:forCharacteristic:	swift.method	setNotifyValue(_:for:)	CBPeripheral.setNotifyValue(_:for:)	func setNotifyValue(_ enabled: Bool, for characteristic: CBCharacteristic)
+c:objc(cs)CBPeripheral(im)writeValue:forCharacteristic:type:	swift.method	writeValue(_:for:type:)	CBPeripheral.writeValue(_:for:type:)	func writeValue(_ data: Data, for characteristic: CBCharacteristic, type: CBCharacteristicWriteType)
+c:objc(cs)CBPeripheral(im)writeValue:forDescriptor:	swift.method	writeValue(_:for:)	CBPeripheral.writeValue(_:for:)	func writeValue(_ data: Data, for descriptor: CBDescriptor)
+c:objc(cs)CBPeripheral(py)RSSI	swift.property	rssi	CBPeripheral.rssi	var rssi: NSNumber? { get }
+c:objc(cs)CBPeripheral(py)ancsAuthorized	swift.property	ancsAuthorized	CBPeripheral.ancsAuthorized	var ancsAuthorized: Bool { get }
+c:objc(cs)CBPeripheral(py)canSendWriteWithoutResponse	swift.property	canSendWriteWithoutResponse	CBPeripheral.canSendWriteWithoutResponse	var canSendWriteWithoutResponse: Bool { get }
+c:objc(cs)CBPeripheral(py)delegate	swift.property	delegate	CBPeripheral.delegate	weak var delegate: (any CBPeripheralDelegate)? { get set }
+c:objc(cs)CBPeripheral(py)name	swift.property	name	CBPeripheral.name	var name: String? { get }
+c:objc(cs)CBPeripheral(py)services	swift.property	services	CBPeripheral.services	var services: [CBService]? { get }
+c:objc(cs)CBPeripheral(py)state	swift.property	state	CBPeripheral.state	var state: CBPeripheralState { get }
+c:objc(cs)CBPeripheralManager	swift.class	CBPeripheralManager	CBPeripheralManager	class CBPeripheralManager
+c:objc(cs)CBPeripheralManager(cm)authorizationStatus	swift.type.method	authorizationStatus()	CBPeripheralManager.authorizationStatus()	class func authorizationStatus() -> CBPeripheralManagerAuthorizationStatus
+c:objc(cs)CBPeripheralManager(im)addService:	swift.method	add(_:)	CBPeripheralManager.add(_:)	func add(_ service: CBMutableService)
+c:objc(cs)CBPeripheralManager(im)init	swift.init	init()	CBPeripheralManager.init()	convenience init()
+c:objc(cs)CBPeripheralManager(im)initWithDelegate:queue:	swift.init	init(delegate:queue:)	CBPeripheralManager.init(delegate:queue:)	convenience init(delegate: (any CBPeripheralManagerDelegate)?, queue: dispatch_queue_t?)
+c:objc(cs)CBPeripheralManager(im)initWithDelegate:queue:options:	swift.init	init(delegate:queue:options:)	CBPeripheralManager.init(delegate:queue:options:)	init(delegate: (any CBPeripheralManagerDelegate)?, queue: dispatch_queue_t?, options: [String : Any]? = nil)
+c:objc(cs)CBPeripheralManager(im)publishL2CAPChannelWithEncryption:	swift.method	publishL2CAPChannel(withEncryption:)	CBPeripheralManager.publishL2CAPChannel(withEncryption:)	func publishL2CAPChannel(withEncryption encryptionRequired: Bool)
+c:objc(cs)CBPeripheralManager(im)removeAllServices	swift.method	removeAllServices()	CBPeripheralManager.removeAllServices()	func removeAllServices()
+c:objc(cs)CBPeripheralManager(im)removeService:	swift.method	remove(_:)	CBPeripheralManager.remove(_:)	func remove(_ service: CBMutableService)
+c:objc(cs)CBPeripheralManager(im)respondToRequest:withResult:	swift.method	respond(to:withResult:)	CBPeripheralManager.respond(to:withResult:)	func respond(to request: CBATTRequest, withResult result: CBATTError.Code)
+c:objc(cs)CBPeripheralManager(im)setDesiredConnectionLatency:forCentral:	swift.method	setDesiredConnectionLatency(_:for:)	CBPeripheralManager.setDesiredConnectionLatency(_:for:)	func setDesiredConnectionLatency(_ latency: CBPeripheralManagerConnectionLatency, for central: CBCentral)
+c:objc(cs)CBPeripheralManager(im)startAdvertising:	swift.method	startAdvertising(_:)	CBPeripheralManager.startAdvertising(_:)	func startAdvertising(_ advertisementData: [String : Any]?)
+c:objc(cs)CBPeripheralManager(im)stopAdvertising	swift.method	stopAdvertising()	CBPeripheralManager.stopAdvertising()	func stopAdvertising()
+c:objc(cs)CBPeripheralManager(im)unpublishL2CAPChannel:	swift.method	unpublishL2CAPChannel(_:)	CBPeripheralManager.unpublishL2CAPChannel(_:)	func unpublishL2CAPChannel(_ PSM: CBL2CAPPSM)
+c:objc(cs)CBPeripheralManager(im)updateValue:forCharacteristic:onSubscribedCentrals:	swift.method	updateValue(_:for:onSubscribedCentrals:)	CBPeripheralManager.updateValue(_:for:onSubscribedCentrals:)	func updateValue(_ value: Data, for characteristic: CBMutableCharacteristic, onSubscribedCentrals centrals: [CBCentral]?) -> Bool
+c:objc(cs)CBPeripheralManager(py)delegate	swift.property	delegate	CBPeripheralManager.delegate	weak var delegate: (any CBPeripheralManagerDelegate)? { get set }
+c:objc(cs)CBPeripheralManager(py)isAdvertising	swift.property	isAdvertising	CBPeripheralManager.isAdvertising	var isAdvertising: Bool { get }
+c:objc(cs)CBService	swift.class	CBService	CBService	class CBService
+c:objc(cs)CBService(py)characteristics	swift.property	characteristics	CBService.characteristics	var characteristics: [CBCharacteristic]? { get }
+c:objc(cs)CBService(py)includedServices	swift.property	includedServices	CBService.includedServices	var includedServices: [CBService]? { get }
+c:objc(cs)CBService(py)isPrimary	swift.property	isPrimary	CBService.isPrimary	var isPrimary: Bool { get }
+c:objc(cs)CBService(py)peripheral	swift.property	peripheral	CBService.peripheral	weak var peripheral: CBPeripheral? { get }
+c:objc(cs)CBUUID	swift.class	CBUUID	CBUUID	class CBUUID
+c:objc(cs)CBUUID(cm)UUIDWithCFUUID:	swift.init	init(cfuuid:)	CBUUID.init(cfuuid:)	init(cfuuid theUUID: CFUUID)
+c:objc(cs)CBUUID(cm)UUIDWithCFUUID:::SYNTHESIZED::c:objc(cs)CBUUID	swift.init	init(CFUUID:)	CBUUID.init(CFUUID:)	init(CFUUID theUUID: CFUUID)
+c:objc(cs)CBUUID(cm)UUIDWithData:	swift.init	init(data:)	CBUUID.init(data:)	init(data theData: Data)
+c:objc(cs)CBUUID(cm)UUIDWithNSUUID:	swift.init	init(nsuuid:)	CBUUID.init(nsuuid:)	init(nsuuid theUUID: UUID)
+c:objc(cs)CBUUID(cm)UUIDWithNSUUID:::SYNTHESIZED::c:objc(cs)CBUUID	swift.init	init(NSUUID:)	CBUUID.init(NSUUID:)	init(NSUUID theUUID: UUID)
+c:objc(cs)CBUUID(cm)UUIDWithString:	swift.init	init(string:)	CBUUID.init(string:)	init(string theString: String)
+c:objc(cs)CBUUID(py)UUIDString	swift.property	uuidString	CBUUID.uuidString	var uuidString: String { get }
+c:objc(cs)CBUUID(py)data	swift.property	data	CBUUID.data	var data: Data { get }
+c:objc(pl)CBCentralManagerDelegate	swift.protocol	CBCentralManagerDelegate	CBCentralManagerDelegate	protocol CBCentralManagerDelegate : NSObjectProtocol
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:connectionEventDidOccur:forPeripheral:	swift.method	centralManager(_:connectionEventDidOccur:for:)	CBCentralManagerDelegate.centralManager(_:connectionEventDidOccur:for:)	optional func centralManager(_ central: CBCentralManager, connectionEventDidOccur event: CBConnectionEvent, for peripheral: CBPeripheral)
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didConnectPeripheral:	swift.method	centralManager(_:didConnect:)	CBCentralManagerDelegate.centralManager(_:didConnect:)	optional func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral)
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDisconnectPeripheral:error:	swift.method	centralManager(_:didDisconnectPeripheral:error:)	CBCentralManagerDelegate.centralManager(_:didDisconnectPeripheral:error:)	optional func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: (any Error)?)
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDisconnectPeripheral:timestamp:isReconnecting:error:	swift.method	centralManager(_:didDisconnectPeripheral:timestamp:isReconnecting:error:)	CBCentralManagerDelegate.centralManager(_:didDisconnectPeripheral:timestamp:isReconnecting:error:)	optional func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, timestamp: CFAbsoluteTime, isReconnecting: Bool, error: (any Error)?)
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDiscoverPeripheral:advertisementData:RSSI:	swift.method	centralManager(_:didDiscover:advertisementData:rssi:)	CBCentralManagerDelegate.centralManager(_:didDiscover:advertisementData:rssi:)	optional func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber)
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didFailToConnectPeripheral:error:	swift.method	centralManager(_:didFailToConnect:error:)	CBCentralManagerDelegate.centralManager(_:didFailToConnect:error:)	optional func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: (any Error)?)
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didUpdateANCSAuthorizationForPeripheral:	swift.method	centralManager(_:didUpdateANCSAuthorizationFor:)	CBCentralManagerDelegate.centralManager(_:didUpdateANCSAuthorizationFor:)	optional func centralManager(_ central: CBCentralManager, didUpdateANCSAuthorizationFor peripheral: CBPeripheral)
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:willRestoreState:	swift.method	centralManager(_:willRestoreState:)	CBCentralManagerDelegate.centralManager(_:willRestoreState:)	optional func centralManager(_ central: CBCentralManager, willRestoreState dict: [String : Any])
+c:objc(pl)CBCentralManagerDelegate(im)centralManagerDidUpdateState:	swift.method	centralManagerDidUpdateState(_:)	CBCentralManagerDelegate.centralManagerDidUpdateState(_:)	func centralManagerDidUpdateState(_ central: CBCentralManager)
+c:objc(pl)CBPeripheralDelegate	swift.protocol	CBPeripheralDelegate	CBPeripheralDelegate	protocol CBPeripheralDelegate : NSObjectProtocol
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverCharacteristicsForService:error:	swift.method	peripheral(_:didDiscoverCharacteristicsFor:error:)	CBPeripheralDelegate.peripheral(_:didDiscoverCharacteristicsFor:error:)	optional func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: (any Error)?)
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverDescriptorsForCharacteristic:error:	swift.method	peripheral(_:didDiscoverDescriptorsFor:error:)	CBPeripheralDelegate.peripheral(_:didDiscoverDescriptorsFor:error:)	optional func peripheral(_ peripheral: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error: (any Error)?)
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverIncludedServicesForService:error:	swift.method	peripheral(_:didDiscoverIncludedServicesFor:error:)	CBPeripheralDelegate.peripheral(_:didDiscoverIncludedServicesFor:error:)	optional func peripheral(_ peripheral: CBPeripheral, didDiscoverIncludedServicesFor service: CBService, error: (any Error)?)
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverServices:	swift.method	peripheral(_:didDiscoverServices:)	CBPeripheralDelegate.peripheral(_:didDiscoverServices:)	optional func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: (any Error)?)
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didModifyServices:	swift.method	peripheral(_:didModifyServices:)	CBPeripheralDelegate.peripheral(_:didModifyServices:)	optional func peripheral(_ peripheral: CBPeripheral, didModifyServices invalidatedServices: [CBService])
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didOpenL2CAPChannel:error:	swift.method	peripheral(_:didOpen:error:)	CBPeripheralDelegate.peripheral(_:didOpen:error:)	optional func peripheral(_ peripheral: CBPeripheral, didOpen channel: CBL2CAPChannel?, error: (any Error)?)
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didReadRSSI:error:	swift.method	peripheral(_:didReadRSSI:error:)	CBPeripheralDelegate.peripheral(_:didReadRSSI:error:)	optional func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: (any Error)?)
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateNotificationStateForCharacteristic:error:	swift.method	peripheral(_:didUpdateNotificationStateFor:error:)	CBPeripheralDelegate.peripheral(_:didUpdateNotificationStateFor:error:)	optional func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: (any Error)?)
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateValueForCharacteristic:error:	swift.method	peripheral(_:didUpdateValueFor:error:)	CBPeripheralDelegate.peripheral(_:didUpdateValueFor:error:)	optional func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: (any Error)?)
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateValueForDescriptor:error:	swift.method	peripheral(_:didUpdateValueFor:error:)	CBPeripheralDelegate.peripheral(_:didUpdateValueFor:error:)	optional func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor descriptor: CBDescriptor, error: (any Error)?)
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didWriteValueForCharacteristic:error:	swift.method	peripheral(_:didWriteValueFor:error:)	CBPeripheralDelegate.peripheral(_:didWriteValueFor:error:)	optional func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: (any Error)?)
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didWriteValueForDescriptor:error:	swift.method	peripheral(_:didWriteValueFor:error:)	CBPeripheralDelegate.peripheral(_:didWriteValueFor:error:)	optional func peripheral(_ peripheral: CBPeripheral, didWriteValueFor descriptor: CBDescriptor, error: (any Error)?)
+c:objc(pl)CBPeripheralDelegate(im)peripheralDidUpdateName:	swift.method	peripheralDidUpdateName(_:)	CBPeripheralDelegate.peripheralDidUpdateName(_:)	optional func peripheralDidUpdateName(_ peripheral: CBPeripheral)
+c:objc(pl)CBPeripheralDelegate(im)peripheralDidUpdateRSSI:error:	swift.method	peripheralDidUpdateRSSI(_:error:)	CBPeripheralDelegate.peripheralDidUpdateRSSI(_:error:)	optional func peripheralDidUpdateRSSI(_ peripheral: CBPeripheral, error: (any Error)?)
+c:objc(pl)CBPeripheralDelegate(im)peripheralIsReadyToSendWriteWithoutResponse:	swift.method	peripheralIsReady(toSendWriteWithoutResponse:)	CBPeripheralDelegate.peripheralIsReady(toSendWriteWithoutResponse:)	optional func peripheralIsReady(toSendWriteWithoutResponse peripheral: CBPeripheral)
+c:objc(pl)CBPeripheralManagerDelegate	swift.protocol	CBPeripheralManagerDelegate	CBPeripheralManagerDelegate	protocol CBPeripheralManagerDelegate : NSObjectProtocol
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:central:didSubscribeToCharacteristic:	swift.method	peripheralManager(_:central:didSubscribeTo:)	CBPeripheralManagerDelegate.peripheralManager(_:central:didSubscribeTo:)	optional func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic)
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:central:didUnsubscribeFromCharacteristic:	swift.method	peripheralManager(_:central:didUnsubscribeFrom:)	CBPeripheralManagerDelegate.peripheralManager(_:central:didUnsubscribeFrom:)	optional func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic)
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didAddService:error:	swift.method	peripheralManager(_:didAdd:error:)	CBPeripheralManagerDelegate.peripheralManager(_:didAdd:error:)	optional func peripheralManager(_ peripheral: CBPeripheralManager, didAdd service: CBService, error: (any Error)?)
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didOpenL2CAPChannel:error:	swift.method	peripheralManager(_:didOpen:error:)	CBPeripheralManagerDelegate.peripheralManager(_:didOpen:error:)	optional func peripheralManager(_ peripheral: CBPeripheralManager, didOpen channel: CBL2CAPChannel?, error: (any Error)?)
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didPublishL2CAPChannel:error:	swift.method	peripheralManager(_:didPublishL2CAPChannel:error:)	CBPeripheralManagerDelegate.peripheralManager(_:didPublishL2CAPChannel:error:)	optional func peripheralManager(_ peripheral: CBPeripheralManager, didPublishL2CAPChannel PSM: CBL2CAPPSM, error: (any Error)?)
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didReceiveReadRequest:	swift.method	peripheralManager(_:didReceiveRead:)	CBPeripheralManagerDelegate.peripheralManager(_:didReceiveRead:)	optional func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest)
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didReceiveWriteRequests:	swift.method	peripheralManager(_:didReceiveWrite:)	CBPeripheralManagerDelegate.peripheralManager(_:didReceiveWrite:)	optional func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest])
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didUnpublishL2CAPChannel:error:	swift.method	peripheralManager(_:didUnpublishL2CAPChannel:error:)	CBPeripheralManagerDelegate.peripheralManager(_:didUnpublishL2CAPChannel:error:)	optional func peripheralManager(_ peripheral: CBPeripheralManager, didUnpublishL2CAPChannel PSM: CBL2CAPPSM, error: (any Error)?)
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:willRestoreState:	swift.method	peripheralManager(_:willRestoreState:)	CBPeripheralManagerDelegate.peripheralManager(_:willRestoreState:)	optional func peripheralManager(_ peripheral: CBPeripheralManager, willRestoreState dict: [String : Any])
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerDidStartAdvertising:error:	swift.method	peripheralManagerDidStartAdvertising(_:error:)	CBPeripheralManagerDelegate.peripheralManagerDidStartAdvertising(_:error:)	optional func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: (any Error)?)
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerDidUpdateState:	swift.method	peripheralManagerDidUpdateState(_:)	CBPeripheralManagerDelegate.peripheralManagerDidUpdateState(_:)	func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager)
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerIsReadyToUpdateSubscribers:	swift.method	peripheralManagerIsReady(toUpdateSubscribers:)	CBPeripheralManagerDelegate.peripheralManagerIsReady(toUpdateSubscribers:)	optional func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CBATTError	swift.type.property	errorDomain	CBATTError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CBError	swift.type.property	errorDomain	CBError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	swift.property	errorUserInfo	CBATTError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	swift.property	errorUserInfo	CBError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBATTError	swift.property	errorCode	CBATTError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBError	swift.property	errorCode	CBError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CBATTError	swift.func.op	~=(_:_:)	CBATTError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CBError	swift.func.op	~=(_:_:)	CBError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	swift.property	errorUserInfo	CBATTError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	swift.property	errorUserInfo	CBError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CBATTError	swift.func.op	==(_:_:)	CBATTError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CBError	swift.func.op	==(_:_:)	CBError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CBATTError	swift.property	code	CBATTError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CBError	swift.property	code	CBError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBATTError	swift.method	hash(into:)	CBATTError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBError	swift.method	hash(into:)	CBError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	swift.property	userInfo	CBATTError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	swift.property	userInfo	CBError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBATTError	swift.property	errorCode	CBATTError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBError	swift.property	errorCode	CBError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CBATTError	swift.property	hashValue	CBATTError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CBError	swift.property	hashValue	CBError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CBATTError	swift.init	init(_:userInfo:)	CBATTError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CBError	swift.init	init(_:userInfo:)	CBError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC10CBATTErrorLeV	swift.struct	CBATTError	CBATTError	struct CBATTError
+s:SC10CBATTErrorLeV10invalidPduSoAAVvpZ	swift.type.property	invalidPdu	CBATTError.invalidPdu	static var invalidPdu: CBATTError.Code { get }
+s:SC10CBATTErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	CBATTError.errorDomain	static var errorDomain: String { get }
+s:SC10CBATTErrorLeV13invalidHandleSoAAVvpZ	swift.type.property	invalidHandle	CBATTError.invalidHandle	static var invalidHandle: CBATTError.Code { get }
+s:SC10CBATTErrorLeV13invalidOffsetSoAAVvpZ	swift.type.property	invalidOffset	CBATTError.invalidOffset	static var invalidOffset: CBATTError.Code { get }
+s:SC10CBATTErrorLeV13unlikelyErrorSoAAVvpZ	swift.type.property	unlikelyError	CBATTError.unlikelyError	static var unlikelyError: CBATTError.Code { get }
+s:SC10CBATTErrorLeV16attributeNotLongSoAAVvpZ	swift.type.property	attributeNotLong	CBATTError.attributeNotLong	static var attributeNotLong: CBATTError.Code { get }
+s:SC10CBATTErrorLeV16prepareQueueFullSoAAVvpZ	swift.type.property	prepareQueueFull	CBATTError.prepareQueueFull	static var prepareQueueFull: CBATTError.Code { get }
+s:SC10CBATTErrorLeV16readNotPermittedSoAAVvpZ	swift.type.property	readNotPermitted	CBATTError.readNotPermitted	static var readNotPermitted: CBATTError.Code { get }
+s:SC10CBATTErrorLeV17attributeNotFoundSoAAVvpZ	swift.type.property	attributeNotFound	CBATTError.attributeNotFound	static var attributeNotFound: CBATTError.Code { get }
+s:SC10CBATTErrorLeV17writeNotPermittedSoAAVvpZ	swift.type.property	writeNotPermitted	CBATTError.writeNotPermitted	static var writeNotPermitted: CBATTError.Code { get }
+s:SC10CBATTErrorLeV19requestNotSupportedSoAAVvpZ	swift.type.property	requestNotSupported	CBATTError.requestNotSupported	static var requestNotSupported: CBATTError.Code { get }
+s:SC10CBATTErrorLeV20unsupportedGroupTypeSoAAVvpZ	swift.type.property	unsupportedGroupType	CBATTError.unsupportedGroupType	static var unsupportedGroupType: CBATTError.Code { get }
+s:SC10CBATTErrorLeV21insufficientResourcesSoAAVvpZ	swift.type.property	insufficientResources	CBATTError.insufficientResources	static var insufficientResources: CBATTError.Code { get }
+s:SC10CBATTErrorLeV22insufficientEncryptionSoAAVvpZ	swift.type.property	insufficientEncryption	CBATTError.insufficientEncryption	static var insufficientEncryption: CBATTError.Code { get }
+s:SC10CBATTErrorLeV25insufficientAuthorizationSoAAVvpZ	swift.type.property	insufficientAuthorization	CBATTError.insufficientAuthorization	static var insufficientAuthorization: CBATTError.Code { get }
+s:SC10CBATTErrorLeV26insufficientAuthenticationSoAAVvpZ	swift.type.property	insufficientAuthentication	CBATTError.insufficientAuthentication	static var insufficientAuthentication: CBATTError.Code { get }
+s:SC10CBATTErrorLeV27invalidAttributeValueLengthSoAAVvpZ	swift.type.property	invalidAttributeValueLength	CBATTError.invalidAttributeValueLength	static var invalidAttributeValueLength: CBATTError.Code { get }
+s:SC10CBATTErrorLeV29insufficientEncryptionKeySizeSoAAVvpZ	swift.type.property	insufficientEncryptionKeySize	CBATTError.insufficientEncryptionKeySize	static var insufficientEncryptionKeySize: CBATTError.Code { get }
+s:SC10CBATTErrorLeV7successSoAAVvpZ	swift.type.property	success	CBATTError.success	static var success: CBATTError.Code { get }
+s:SC7CBErrorLeV	swift.struct	CBError	CBError	struct CBError
+s:SC7CBErrorLeV10outOfSpaceSoAAVvpZ	swift.type.property	outOfSpace	CBError.outOfSpace	static var outOfSpace: CBError.Code { get }
+s:SC7CBErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	CBError.errorDomain	static var errorDomain: String { get }
+s:SC7CBErrorLeV12notConnectedSoAAVvpZ	swift.type.property	notConnected	CBError.notConnected	static var notConnected: CBError.Code { get }
+s:SC7CBErrorLeV12unkownDeviceSoAAVvpZ	swift.type.property	unkownDevice	CBError.unkownDevice	static var unkownDevice: CBError.Code { get }
+s:SC7CBErrorLeV13invalidHandleSoAAVvpZ	swift.type.property	invalidHandle	CBError.invalidHandle	static var invalidHandle: CBError.Code { get }
+s:SC7CBErrorLeV13unknownDeviceSoAAVvpZ	swift.type.property	unknownDevice	CBError.unknownDevice	static var unknownDevice: CBError.Code { get }
+s:SC7CBErrorLeV14uuidNotAllowedSoAAVvpZ	swift.type.property	uuidNotAllowed	CBError.uuidNotAllowed	static var uuidNotAllowed: CBError.Code { get }
+s:SC7CBErrorLeV16connectionFailedSoAAVvpZ	swift.type.property	connectionFailed	CBError.connectionFailed	static var connectionFailed: CBError.Code { get }
+s:SC7CBErrorLeV17connectionTimeoutSoAAVvpZ	swift.type.property	connectionTimeout	CBError.connectionTimeout	static var connectionTimeout: CBError.Code { get }
+s:SC7CBErrorLeV17invalidParametersSoAAVvpZ	swift.type.property	invalidParameters	CBError.invalidParameters	static var invalidParameters: CBError.Code { get }
+s:SC7CBErrorLeV18alreadyAdvertisingSoAAVvpZ	swift.type.property	alreadyAdvertising	CBError.alreadyAdvertising	static var alreadyAdvertising: CBError.Code { get }
+s:SC7CBErrorLeV18encryptionTimedOutSoAAVvpZ	swift.type.property	encryptionTimedOut	CBError.encryptionTimedOut	static var encryptionTimedOut: CBError.Code { get }
+s:SC7CBErrorLeV18operationCancelledSoAAVvpZ	swift.type.property	operationCancelled	CBError.operationCancelled	static var operationCancelled: CBError.Code { get }
+s:SC7CBErrorLeV21operationNotSupportedSoAAVvpZ	swift.type.property	operationNotSupported	CBError.operationNotSupported	static var operationNotSupported: CBError.Code { get }
+s:SC7CBErrorLeV22connectionLimitReachedSoAAVvpZ	swift.type.property	connectionLimitReached	CBError.connectionLimitReached	static var connectionLimitReached: CBError.Code { get }
+s:SC7CBErrorLeV22peripheralDisconnectedSoAAVvpZ	swift.type.property	peripheralDisconnected	CBError.peripheralDisconnected	static var peripheralDisconnected: CBError.Code { get }
+s:SC7CBErrorLeV22tooManyLEPairedDevicesSoAAVvpZ	swift.type.property	tooManyLEPairedDevices	CBError.tooManyLEPairedDevices	static var tooManyLEPairedDevices: CBError.Code { get }
+s:SC7CBErrorLeV29peerRemovedPairingInformationSoAAVvpZ	swift.type.property	peerRemovedPairingInformation	CBError.peerRemovedPairingInformation	static var peerRemovedPairingInformation: CBError.Code { get }
+s:SC7CBErrorLeV7unknownSoAAVvpZ	swift.type.property	unknown	CBError.unknown	static var unknown: CBError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBATTError	swift.func.op	!=(_:_:)	CBATTError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBAttributePermissions	swift.func.op	!=(_:_:)	CBAttributePermissions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.func.op	!=(_:_:)	CBCentralManager.Feature.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBCentralManagerState	swift.func.op	!=(_:_:)	CBCentralManagerState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.func.op	!=(_:_:)	CBCharacteristicProperties.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBCharacteristicWriteType	swift.func.op	!=(_:_:)	CBCharacteristicWriteType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBConnectionEvent	swift.func.op	!=(_:_:)	CBConnectionEvent.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBError	swift.func.op	!=(_:_:)	CBError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBManagerAuthorization	swift.func.op	!=(_:_:)	CBManagerAuthorization.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBManagerState	swift.func.op	!=(_:_:)	CBManagerState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBPeripheralManagerAuthorizationStatus	swift.func.op	!=(_:_:)	CBPeripheralManagerAuthorizationStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBPeripheralManagerConnectionLatency	swift.func.op	!=(_:_:)	CBPeripheralManagerConnectionLatency.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBPeripheralManagerState	swift.func.op	!=(_:_:)	CBPeripheralManagerState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBPeripheralState	swift.func.op	!=(_:_:)	CBPeripheralState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CBConnectionEventMatchingOption	swift.func.op	!=(_:_:)	CBConnectionEventMatchingOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBATTError	swift.property	hashValue	CBATTError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBCentralManagerState	swift.property	hashValue	CBCentralManagerState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBCharacteristicWriteType	swift.property	hashValue	CBCharacteristicWriteType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBConnectionEvent	swift.property	hashValue	CBConnectionEvent.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBError	swift.property	hashValue	CBError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBManagerAuthorization	swift.property	hashValue	CBManagerAuthorization.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBManagerState	swift.property	hashValue	CBManagerState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBPeripheralManagerAuthorizationStatus	swift.property	hashValue	CBPeripheralManagerAuthorizationStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBPeripheralManagerConnectionLatency	swift.property	hashValue	CBPeripheralManagerConnectionLatency.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBPeripheralManagerState	swift.property	hashValue	CBPeripheralManagerState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBPeripheralState	swift.property	hashValue	CBPeripheralState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBATTError	swift.method	hash(into:)	CBATTError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBCentralManagerState	swift.method	hash(into:)	CBCentralManagerState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBCharacteristicWriteType	swift.method	hash(into:)	CBCharacteristicWriteType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBConnectionEvent	swift.method	hash(into:)	CBConnectionEvent.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBError	swift.method	hash(into:)	CBError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBManagerAuthorization	swift.method	hash(into:)	CBManagerAuthorization.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBManagerState	swift.method	hash(into:)	CBManagerState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBPeripheralManagerAuthorizationStatus	swift.method	hash(into:)	CBPeripheralManagerAuthorizationStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBPeripheralManagerConnectionLatency	swift.method	hash(into:)	CBPeripheralManagerConnectionLatency.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBPeripheralManagerState	swift.method	hash(into:)	CBPeripheralManagerState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBPeripheralState	swift.method	hash(into:)	CBPeripheralState.hash(into:)	func hash(into hasher: inout Hasher)
+s:So10CBATTErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CBATTError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So14CBManagerStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CBManagerState.init(rawValue:)	init?(rawValue: Int)
+s:So17CBConnectionEventV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CBConnectionEvent.init(rawValue:)	init?(rawValue: Int)
+s:So17CBPeripheralStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CBPeripheralState.init(rawValue:)	init?(rawValue: Int)
+s:So21CBCentralManagerStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CBCentralManagerState.init(rawValue:)	init?(rawValue: Int)
+s:So22CBAttributePermissionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	CBAttributePermissions.init(rawValue:)	init(rawValue: UInt)
+s:So22CBManagerAuthorizationV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CBManagerAuthorization.init(rawValue:)	init?(rawValue: Int)
+s:So23CBCentralManagerFeatureV8rawValueABSu_tcfc	swift.init	init(rawValue:)	CBCentralManager.Feature.init(rawValue:)	init(rawValue: UInt)
+s:So24CBPeripheralManagerStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CBPeripheralManagerState.init(rawValue:)	init?(rawValue: Int)
+s:So25CBCharacteristicWriteTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CBCharacteristicWriteType.init(rawValue:)	init?(rawValue: Int)
+s:So26CBCharacteristicPropertiesV8rawValueABSu_tcfc	swift.init	init(rawValue:)	CBCharacteristicProperties.init(rawValue:)	init(rawValue: UInt)
+s:So31CBConnectionEventMatchingOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	CBConnectionEventMatchingOption.init(rawValue:)	init(rawValue: String)
+s:So36CBPeripheralManagerConnectionLatencyV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CBPeripheralManagerConnectionLatency.init(rawValue:)	init?(rawValue: Int)
+s:So38CBPeripheralManagerAuthorizationStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CBPeripheralManagerAuthorizationStatus.init(rawValue:)	init?(rawValue: Int)
+s:So7CBErrorV13unknownDeviceABvpZ	swift.type.property	unknownDevice	CBError.Code.unknownDevice	static var unknownDevice: CBError.Code { get }
+s:So7CBErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CBError.Code.init(rawValue:)	init?(rawValue: Int)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CBAttributePermissions	swift.init	init(arrayLiteral:)	CBAttributePermissions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.init	init(arrayLiteral:)	CBCentralManager.Feature.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.init	init(arrayLiteral:)	CBCharacteristicProperties.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	isDisjoint(with:)	CBAttributePermissions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	isDisjoint(with:)	CBCentralManager.Feature.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	isDisjoint(with:)	CBCharacteristicProperties.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	isSuperset(of:)	CBAttributePermissions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	isSuperset(of:)	CBCentralManager.Feature.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	isSuperset(of:)	CBCharacteristicProperties.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	subtracting(_:)	CBAttributePermissions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	subtracting(_:)	CBCentralManager.Feature.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	subtracting(_:)	CBCharacteristicProperties.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	isStrictSubset(of:)	CBAttributePermissions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	isStrictSubset(of:)	CBCentralManager.Feature.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	isStrictSubset(of:)	CBCharacteristicProperties.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	isStrictSuperset(of:)	CBAttributePermissions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	isStrictSuperset(of:)	CBCentralManager.Feature.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	isStrictSuperset(of:)	CBCharacteristicProperties.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CBAttributePermissions	swift.property	isEmpty	CBAttributePermissions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.property	isEmpty	CBCentralManager.Feature.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.property	isEmpty	CBCharacteristicProperties.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	isSubset(of:)	CBAttributePermissions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	isSubset(of:)	CBCentralManager.Feature.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	isSubset(of:)	CBCharacteristicProperties.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	subtract(_:)	CBAttributePermissions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	subtract(_:)	CBCentralManager.Feature.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	subtract(_:)	CBCharacteristicProperties.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CBAttributePermissions	swift.init	init(_:)	CBAttributePermissions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.init	init(_:)	CBCentralManager.Feature.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.init	init(_:)	CBCharacteristicProperties.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CBConnectionEventMatchingOption	swift.property	hashValue	CBConnectionEventMatchingOption.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CBConnectionEventMatchingOption	swift.method	hash(into:)	CBConnectionEventMatchingOption.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CBATTError	swift.property	localizedDescription	CBATTError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CBError	swift.property	localizedDescription	CBError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	insert(_:)	CBAttributePermissions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	insert(_:)	CBCentralManager.Feature.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	insert(_:)	CBCharacteristicProperties.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	remove(_:)	CBAttributePermissions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	remove(_:)	CBCentralManager.Feature.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	remove(_:)	CBCharacteristicProperties.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	update(with:)	CBAttributePermissions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	update(with:)	CBCentralManager.Feature.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	update(with:)	CBCharacteristicProperties.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	contains(_:)	CBAttributePermissions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	contains(_:)	CBCentralManager.Feature.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	contains(_:)	CBCharacteristicProperties.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	intersection(_:)	CBAttributePermissions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	intersection(_:)	CBCentralManager.Feature.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	intersection(_:)	CBCharacteristicProperties.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	symmetricDifference(_:)	CBAttributePermissions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	symmetricDifference(_:)	CBCentralManager.Feature.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	symmetricDifference(_:)	CBCharacteristicProperties.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	union(_:)	CBAttributePermissions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	union(_:)	CBCentralManager.Feature.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	union(_:)	CBCharacteristicProperties.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	formIntersection(_:)	CBAttributePermissions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	formIntersection(_:)	CBCentralManager.Feature.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	formIntersection(_:)	CBCharacteristicProperties.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	formSymmetricDifference(_:)	CBAttributePermissions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	formSymmetricDifference(_:)	CBCentralManager.Feature.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	formSymmetricDifference(_:)	CBCharacteristicProperties.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CBAttributePermissions	swift.method	formUnion(_:)	CBAttributePermissions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.method	formUnion(_:)	CBCentralManager.Feature.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.method	formUnion(_:)	CBCharacteristicProperties.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CBAttributePermissions	swift.init	init()	CBAttributePermissions.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CBCentralManagerFeature	swift.init	init()	CBCentralManager.Feature.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CBCharacteristicProperties	swift.init	init()	CBCharacteristicProperties.init()	init()

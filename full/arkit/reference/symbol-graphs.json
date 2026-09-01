@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 7,
+  "duplicateOccurrenceCount": 7,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/ARKit.symbols.json",
+      "relationshipCount": 1635,
+      "sha256": "09889aa43636794213fd3637d18a9440caca7ac98a62282d6499517e32ed6b53",
+      "symbolCount": 880
+    },
+    {
+      "path": "reference/symbol-graphs/ARKit@SceneKit.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "450d21afb5ac4f85f28523af35aa67de66acf6346e0a9c3e6e549a89dbb55bb6",
+      "symbolCount": 2
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "ARKit",
+  "relationshipCount": 1637,
+  "schema": 1,
+  "symbolCount": 875,
+  "target": "arm64-apple-ios26.0"
+}

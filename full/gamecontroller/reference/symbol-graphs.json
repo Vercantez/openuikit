@@ -1,0 +1,43 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 3,
+  "duplicateOccurrenceCount": 3,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/GameController.symbols.json",
+      "relationshipCount": 1447,
+      "sha256": "cbb6a1229aece51069c191481dc3b339e554f0aca7223af89e75d0c164b80bf6",
+      "symbolCount": 1241
+    },
+    {
+      "path": "reference/symbol-graphs/GameController@Foundation.symbols.json",
+      "relationshipCount": 24,
+      "sha256": "2eda31d69f11d621062e5ac0767b0b44f6e5609729780869f6ec56cb61859d3d",
+      "symbolCount": 24
+    },
+    {
+      "path": "reference/symbol-graphs/GameController@UIKit.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "326134f431ea25546aa8e7c9a5321e17fea5ba7bcf0cc7a70e234a588b604bb2",
+      "symbolCount": 1
+    },
+    {
+      "path": "reference/symbol-graphs/_GameController_SwiftUI@GameController.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "ba1744502607afbe8123c3fa4056a309209805749365a24ed9da47f78bd20d93",
+      "symbolCount": 3
+    },
+    {
+      "path": "reference/symbol-graphs/_GameController_SwiftUI@SwiftUICore.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "2b6c1bb438866fefce009bf2a856ff0370683906e7a064257d554bdfc2cd400a",
+      "symbolCount": 2
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "GameController",
+  "relationshipCount": 1476,
+  "schema": 1,
+  "symbolCount": 1268,
+  "target": "arm64-apple-ios26.0"
+}

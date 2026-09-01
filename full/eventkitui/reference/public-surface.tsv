@@ -1,0 +1,62 @@
+precise	kind	title	path	declaration
+c:@E@EKCalendarChooserDisplayStyle	swift.enum	EKCalendarChooserDisplayStyle	EKCalendarChooserDisplayStyle	enum EKCalendarChooserDisplayStyle
+c:@E@EKCalendarChooserDisplayStyle@EKCalendarChooserDisplayAllCalendars	swift.enum.case	EKCalendarChooserDisplayStyle.allCalendars	EKCalendarChooserDisplayStyle.allCalendars	case allCalendars
+c:@E@EKCalendarChooserDisplayStyle@EKCalendarChooserDisplayWritableCalendarsOnly	swift.enum.case	EKCalendarChooserDisplayStyle.writableCalendarsOnly	EKCalendarChooserDisplayStyle.writableCalendarsOnly	case writableCalendarsOnly
+c:@E@EKCalendarChooserSelectionStyle	swift.enum	EKCalendarChooserSelectionStyle	EKCalendarChooserSelectionStyle	enum EKCalendarChooserSelectionStyle
+c:@E@EKCalendarChooserSelectionStyle@EKCalendarChooserSelectionStyleMultiple	swift.enum.case	EKCalendarChooserSelectionStyle.multiple	EKCalendarChooserSelectionStyle.multiple	case multiple
+c:@E@EKCalendarChooserSelectionStyle@EKCalendarChooserSelectionStyleSingle	swift.enum.case	EKCalendarChooserSelectionStyle.single	EKCalendarChooserSelectionStyle.single	case single
+c:@E@EKEventEditViewAction	swift.enum	EKEventEditViewAction	EKEventEditViewAction	enum EKEventEditViewAction
+c:@E@EKEventEditViewAction@EKEventEditViewActionCanceled	swift.enum.case	EKEventEditViewAction.canceled	EKEventEditViewAction.canceled	case canceled
+c:@E@EKEventEditViewAction@EKEventEditViewActionCancelled	swift.type.property	cancelled	EKEventEditViewAction.cancelled	static var cancelled: EKEventEditViewAction { get }
+c:@E@EKEventEditViewAction@EKEventEditViewActionDeleted	swift.enum.case	EKEventEditViewAction.deleted	EKEventEditViewAction.deleted	case deleted
+c:@E@EKEventEditViewAction@EKEventEditViewActionSaved	swift.enum.case	EKEventEditViewAction.saved	EKEventEditViewAction.saved	case saved
+c:@E@EKEventViewAction	swift.enum	EKEventViewAction	EKEventViewAction	enum EKEventViewAction
+c:@E@EKEventViewAction@EKEventViewActionDeleted	swift.enum.case	EKEventViewAction.deleted	EKEventViewAction.deleted	case deleted
+c:@E@EKEventViewAction@EKEventViewActionDone	swift.enum.case	EKEventViewAction.done	EKEventViewAction.done	case done
+c:@E@EKEventViewAction@EKEventViewActionResponded	swift.enum.case	EKEventViewAction.responded	EKEventViewAction.responded	case responded
+c:@F@EventKitUIBundle	swift.func	EventKitUIBundle()	EventKitUIBundle()	func EventKitUIBundle() -> Bundle!
+c:@macro@EKUI_IS_IOS	swift.var	EKUI_IS_IOS	EKUI_IS_IOS	var EKUI_IS_IOS: Int32 { get }
+c:@macro@EKUI_IS_SIMULATOR	swift.var	EKUI_IS_SIMULATOR	EKUI_IS_SIMULATOR	var EKUI_IS_SIMULATOR: Int32 { get }
+c:objc(cs)EKCalendarChooser	swift.class	EKCalendarChooser	EKCalendarChooser	@MainActor class EKCalendarChooser
+c:objc(cs)EKCalendarChooser(im)initWithSelectionStyle:displayStyle:entityType:eventStore:	swift.init	init(selectionStyle:displayStyle:entityType:eventStore:)	EKCalendarChooser.init(selectionStyle:displayStyle:entityType:eventStore:)	@MainActor init(selectionStyle style: EKCalendarChooserSelectionStyle, displayStyle: EKCalendarChooserDisplayStyle, entityType: EKEntityType, eventStore: EKEventStore)
+c:objc(cs)EKCalendarChooser(im)initWithSelectionStyle:displayStyle:eventStore:	swift.init	init(selectionStyle:displayStyle:eventStore:)	EKCalendarChooser.init(selectionStyle:displayStyle:eventStore:)	@MainActor init(selectionStyle: EKCalendarChooserSelectionStyle, displayStyle: EKCalendarChooserDisplayStyle, eventStore: EKEventStore)
+c:objc(cs)EKCalendarChooser(py)delegate	swift.property	delegate	EKCalendarChooser.delegate	@MainActor weak var delegate: (any EKCalendarChooserDelegate)? { get set }
+c:objc(cs)EKCalendarChooser(py)selectedCalendars	swift.property	selectedCalendars	EKCalendarChooser.selectedCalendars	@MainActor var selectedCalendars: Set<EKCalendar> { get set }
+c:objc(cs)EKCalendarChooser(py)selectionStyle	swift.property	selectionStyle	EKCalendarChooser.selectionStyle	@MainActor var selectionStyle: EKCalendarChooserSelectionStyle { get }
+c:objc(cs)EKCalendarChooser(py)showsCancelButton	swift.property	showsCancelButton	EKCalendarChooser.showsCancelButton	@MainActor var showsCancelButton: Bool { get set }
+c:objc(cs)EKCalendarChooser(py)showsDoneButton	swift.property	showsDoneButton	EKCalendarChooser.showsDoneButton	@MainActor var showsDoneButton: Bool { get set }
+c:objc(cs)EKEventEditViewController	swift.class	EKEventEditViewController	EKEventEditViewController	@MainActor class EKEventEditViewController
+c:objc(cs)EKEventEditViewController(im)cancelEditing	swift.method	cancelEditing()	EKEventEditViewController.cancelEditing()	@MainActor func cancelEditing()
+c:objc(cs)EKEventEditViewController(py)editViewDelegate	swift.property	editViewDelegate	EKEventEditViewController.editViewDelegate	@MainActor weak var editViewDelegate: (any EKEventEditViewDelegate)? { get set }
+c:objc(cs)EKEventEditViewController(py)event	swift.property	event	EKEventEditViewController.event	@MainActor var event: EKEvent? { get set }
+c:objc(cs)EKEventEditViewController(py)eventStore	swift.property	eventStore	EKEventEditViewController.eventStore	@MainActor var eventStore: EKEventStore! { get set }
+c:objc(cs)EKEventViewController	swift.class	EKEventViewController	EKEventViewController	@MainActor class EKEventViewController
+c:objc(cs)EKEventViewController(py)allowsCalendarPreview	swift.property	allowsCalendarPreview	EKEventViewController.allowsCalendarPreview	@MainActor var allowsCalendarPreview: Bool { get set }
+c:objc(cs)EKEventViewController(py)allowsEditing	swift.property	allowsEditing	EKEventViewController.allowsEditing	@MainActor var allowsEditing: Bool { get set }
+c:objc(cs)EKEventViewController(py)delegate	swift.property	delegate	EKEventViewController.delegate	@MainActor weak var delegate: (any EKEventViewDelegate)? { get set }
+c:objc(cs)EKEventViewController(py)event	swift.property	event	EKEventViewController.event	@MainActor var event: EKEvent! { get set }
+c:objc(pl)EKCalendarChooserDelegate	swift.protocol	EKCalendarChooserDelegate	EKCalendarChooserDelegate	protocol EKCalendarChooserDelegate : NSObjectProtocol
+c:objc(pl)EKCalendarChooserDelegate(im)calendarChooserDidCancel:	swift.method	calendarChooserDidCancel(_:)	EKCalendarChooserDelegate.calendarChooserDidCancel(_:)	optional func calendarChooserDidCancel(_ calendarChooser: EKCalendarChooser)
+c:objc(pl)EKCalendarChooserDelegate(im)calendarChooserDidFinish:	swift.method	calendarChooserDidFinish(_:)	EKCalendarChooserDelegate.calendarChooserDidFinish(_:)	optional func calendarChooserDidFinish(_ calendarChooser: EKCalendarChooser)
+c:objc(pl)EKCalendarChooserDelegate(im)calendarChooserSelectionDidChange:	swift.method	calendarChooserSelectionDidChange(_:)	EKCalendarChooserDelegate.calendarChooserSelectionDidChange(_:)	optional func calendarChooserSelectionDidChange(_ calendarChooser: EKCalendarChooser)
+c:objc(pl)EKEventEditViewDelegate	swift.protocol	EKEventEditViewDelegate	EKEventEditViewDelegate	protocol EKEventEditViewDelegate : NSObjectProtocol
+c:objc(pl)EKEventEditViewDelegate(im)eventEditViewController:didCompleteWithAction:	swift.method	eventEditViewController(_:didCompleteWith:)	EKEventEditViewDelegate.eventEditViewController(_:didCompleteWith:)	func eventEditViewController(_ controller: EKEventEditViewController, didCompleteWith action: EKEventEditViewAction)
+c:objc(pl)EKEventEditViewDelegate(im)eventEditViewControllerDefaultCalendarForNewEvents:	swift.method	eventEditViewControllerDefaultCalendar(forNewEvents:)	EKEventEditViewDelegate.eventEditViewControllerDefaultCalendar(forNewEvents:)	optional func eventEditViewControllerDefaultCalendar(forNewEvents controller: EKEventEditViewController) -> EKCalendar
+c:objc(pl)EKEventViewDelegate	swift.protocol	EKEventViewDelegate	EKEventViewDelegate	protocol EKEventViewDelegate : NSObjectProtocol
+c:objc(pl)EKEventViewDelegate(im)eventViewController:didCompleteWithAction:	swift.method	eventViewController(_:didCompleteWith:)	EKEventViewDelegate.eventViewController(_:didCompleteWith:)	func eventViewController(_ controller: EKEventViewController, didCompleteWith action: EKEventViewAction)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKCalendarChooserDisplayStyle	swift.func.op	!=(_:_:)	EKCalendarChooserDisplayStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKCalendarChooserSelectionStyle	swift.func.op	!=(_:_:)	EKCalendarChooserSelectionStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKEventEditViewAction	swift.func.op	!=(_:_:)	EKEventEditViewAction.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKEventViewAction	swift.func.op	!=(_:_:)	EKEventViewAction.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKCalendarChooserDisplayStyle	swift.property	hashValue	EKCalendarChooserDisplayStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKCalendarChooserSelectionStyle	swift.property	hashValue	EKCalendarChooserSelectionStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKEventEditViewAction	swift.property	hashValue	EKEventEditViewAction.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKEventViewAction	swift.property	hashValue	EKEventViewAction.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKCalendarChooserDisplayStyle	swift.method	hash(into:)	EKCalendarChooserDisplayStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKCalendarChooserSelectionStyle	swift.method	hash(into:)	EKCalendarChooserSelectionStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKEventEditViewAction	swift.method	hash(into:)	EKEventEditViewAction.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKEventViewAction	swift.method	hash(into:)	EKEventViewAction.hash(into:)	func hash(into hasher: inout Hasher)
+s:So17EKEventViewActionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKEventViewAction.init(rawValue:)	init?(rawValue: Int)
+s:So21EKEventEditViewActionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKEventEditViewAction.init(rawValue:)	init?(rawValue: Int)
+s:So29EKCalendarChooserDisplayStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKCalendarChooserDisplayStyle.init(rawValue:)	init?(rawValue: Int)
+s:So31EKCalendarChooserSelectionStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKCalendarChooserSelectionStyle.init(rawValue:)	init?(rawValue: Int)

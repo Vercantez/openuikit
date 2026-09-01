@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 4,
+  "duplicateOccurrenceCount": 4,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/Accounts.symbols.json",
+      "relationshipCount": 79,
+      "sha256": "9a6b0ee87f0aaa98cba6c00ea47485d67ada58f0f5613dc5a35af9487603e3d4",
+      "symbolCount": 85
+    },
+    {
+      "path": "reference/symbol-graphs/Accounts@Foundation.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "22a2303954fa14b5e8c1d1712bc5d9565b8c9388f50dd64c2f923c85a5d1fc44",
+      "symbolCount": 1
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "Accounts",
+  "relationshipCount": 80,
+  "schema": 1,
+  "symbolCount": 82,
+  "target": "arm64-apple-ios26.0"
+}

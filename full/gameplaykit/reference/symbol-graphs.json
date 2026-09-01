@@ -1,0 +1,37 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/GameplayKit.symbols.json",
+      "relationshipCount": 933,
+      "sha256": "7e6622a862eecd52b85c747c66d876953e01ec171ab07ac703f2605a36461474",
+      "symbolCount": 482
+    },
+    {
+      "path": "reference/symbol-graphs/GameplayKit@Foundation.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "7adcea1e2e1488b23a8bb453aee74a6c7a6af88300c73e1013b7d55c2fa567a2",
+      "symbolCount": 2
+    },
+    {
+      "path": "reference/symbol-graphs/GameplayKit@SceneKit.symbols.json",
+      "relationshipCount": 4,
+      "sha256": "c69932927eb924910f87a905e86768f4f90156ae621ce164ddc2aab66467087f",
+      "symbolCount": 1
+    },
+    {
+      "path": "reference/symbol-graphs/GameplayKit@SpriteKit.symbols.json",
+      "relationshipCount": 9,
+      "sha256": "d7aa1d29b59e25e285c937532b6b40facd9199cbe2431a5ee356c2711101135f",
+      "symbolCount": 6
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "GameplayKit",
+  "relationshipCount": 948,
+  "schema": 1,
+  "symbolCount": 491,
+  "target": "arm64-apple-ios26.0"
+}

@@ -1,0 +1,261 @@
+precise	kind	title	path	declaration
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:9WiFiAware7WAErrorO	swift.property	helpAnchor	WAError.helpAnchor	var helpAnchor: String? { get }
+s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:9WiFiAware7WAErrorO	swift.property	failureReason	WAError.failureReason	var failureReason: String? { get }
+s:10Foundation14LocalizedErrorPAAE16errorDescriptionSSSgvp::SYNTHESIZED::s:9WiFiAware7WAErrorO	swift.property	errorDescription	WAError.errorDescription	var errorDescription: String? { get }
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:9WiFiAware7WAErrorO	swift.property	recoverySuggestion	WAError.recoverySuggestion	var recoverySuggestion: String? { get }
+s:7Network12NWParametersC9WiFiAwareE04wifiE0AD12WAParametersVvp	swift.property	wifiAware	NWParameters.wifiAware	final var wifiAware: WAParameters { get set }
+s:7Network12NWParametersC9WiFiAwareE04wifiE0yACXDyAD12WAParametersVzXEF	swift.method	wifiAware(_:)	NWParameters.wifiAware(_:)	final func wifiAware(_ configurator: (inout WAParameters) -> Void) -> Self
+s:7Network15BrowserProviderP9WiFiAwareAD012WASubscriberB0VRszrlE04wifiF0_6activeA2F6ActionV_s8DurationVSgtFZ	swift.type.method	wifiAware(_:active:)	BrowserProvider.wifiAware(_:active:)	static func wifiAware(_ action: WASubscriberBrowser.Action, active requestedDuration: Duration? = nil) -> Self
+s:7Network15BrowserProviderP9WiFiAwareAD012WASubscriberB0VRszrlE04wifiF0_6activeA2F6ActionV_s8DurationVSgtFZ::SYNTHESIZED::s:9WiFiAware19WASubscriberBrowserV	swift.type.method	wifiAware(_:active:)	WASubscriberBrowser.wifiAware(_:active:)	static func wifiAware(_ action: WASubscriberBrowser.Action, active requestedDuration: Duration? = nil) -> Self
+s:7Network16ListenerProviderP9WiFiAwareAD011WAPublisherB0VRszrlE04wifiF0_6activeA2F6ActionV_s8DurationVSgtFZ	swift.type.method	wifiAware(_:active:)	ListenerProvider.wifiAware(_:active:)	static func wifiAware(_ action: WAPublisherListener.Action, active requestedDuration: Duration? = nil) -> Self
+s:7Network16ListenerProviderP9WiFiAwareAD011WAPublisherB0VRszrlE04wifiF0_6activeA2F6ActionV_s8DurationVSgtFZ::SYNTHESIZED::s:9WiFiAware19WAPublisherListenerV	swift.type.method	wifiAware(_:active:)	WAPublisherListener.wifiAware(_:active:)	static func wifiAware(_ action: WAPublisherListener.Action, active requestedDuration: Duration? = nil) -> Self
+s:7Network19NWParametersBuilderV9WiFiAwareE04wifiF0yACyxq_q_Qp_QPGyAD12WAParametersVzXEF	swift.method	wifiAware(_:)	NWParametersBuilder.wifiAware(_:)	func wifiAware(_ configurator: (inout WAParameters) -> Void) -> NWParametersBuilder<Top, repeat each P>
+s:7Network6NWPathV9WiFiAwareE04wifiE0AD6WAPathVSgvp	swift.property	wifiAware	NWPath.wifiAware	var wifiAware: WAPath? { get async throws }
+s:7Network7NWErrorO9WiFiAwareE04wifiE0AD7WAErrorOSgvp	swift.property	wifiAware	NWError.wifiAware	var wifiAware: WAError? { get }
+s:9WiFiAware10WAEndpointV	swift.struct	WAEndpoint	WAEndpoint	struct WAEndpoint
+s:9WiFiAware10WAEndpointV11descriptionSSvp	swift.property	description	WAEndpoint.description	var description: String { get }
+s:9WiFiAware10WAEndpointV16publishedServiceAA013WAPublishableF0VSgvp	swift.property	publishedService	WAEndpoint.publishedService	var publishedService: WAPublishableService? { get }
+s:9WiFiAware10WAEndpointV17subscribedServiceAA014WASubscribableF0VSgvp	swift.property	subscribedService	WAEndpoint.subscribedService	var subscribedService: WASubscribableService? { get }
+s:9WiFiAware10WAEndpointV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	WAEndpoint.==(_:_:)	static func == (lhs: WAEndpoint, rhs: WAEndpoint) -> Bool
+s:9WiFiAware10WAEndpointV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WAEndpoint.hash(into:)	func hash(into hasher: inout Hasher)
+s:9WiFiAware10WAEndpointV6deviceAA14WAPairedDeviceVvp	swift.property	device	WAEndpoint.device	let device: WAPairedDevice
+s:9WiFiAware10WAEndpointV9hashValueSivp	swift.property	hashValue	WAEndpoint.hashValue	var hashValue: Int { get }
+s:9WiFiAware12WAParametersV	swift.struct	WAParameters	WAParameters	struct WAParameters
+s:9WiFiAware12WAParametersV15performanceModeAA013WAPerformanceF0Ovp	swift.property	performanceMode	WAParameters.performanceMode	var performanceMode: WAPerformanceMode
+s:9WiFiAware12WAParametersV15performanceModeAcA013WAPerformanceF0O_tcfc	swift.init	init(performanceMode:)	WAParameters.init(performanceMode:)	init(performanceMode: WAPerformanceMode = .bulk)
+s:9WiFiAware12WAParametersV8defaultsACvpZ	swift.type.property	defaults	WAParameters.defaults	static let defaults: WAParameters
+s:9WiFiAware12WAParametersV8realtimeACvpZ	swift.type.property	realtime	WAParameters.realtime	static let realtime: WAParameters
+s:9WiFiAware14WACapabilitiesV	swift.struct	WACapabilities	WACapabilities	struct WACapabilities
+s:9WiFiAware14WACapabilitiesV17supportedFeaturesShyAC7FeatureOGvpZ	swift.type.property	supportedFeatures	WACapabilities.supportedFeatures	static var supportedFeatures: Set<WACapabilities.Feature> { get }
+s:9WiFiAware14WACapabilitiesV25maximumConnectableDevicesSivpZ	swift.type.property	maximumConnectableDevices	WACapabilities.maximumConnectableDevices	static var maximumConnectableDevices: Int { get }
+s:9WiFiAware14WACapabilitiesV26maximumPublishableServicesSivpZ	swift.type.property	maximumPublishableServices	WACapabilities.maximumPublishableServices	static var maximumPublishableServices: Int { get }
+s:9WiFiAware14WACapabilitiesV27maximumSubscribableServicesSivpZ	swift.type.property	maximumSubscribableServices	WACapabilities.maximumSubscribableServices	static var maximumSubscribableServices: Int { get }
+s:9WiFiAware14WACapabilitiesV7FeatureO	swift.enum	WACapabilities.Feature	WACapabilities.Feature	enum Feature
+s:9WiFiAware14WACapabilitiesV7FeatureO04wifiC0yA2EmF	swift.enum.case	WACapabilities.Feature.wifiAware	WACapabilities.Feature.wifiAware	case wifiAware
+s:9WiFiAware14WACapabilitiesV7FeatureO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	WACapabilities.Feature.==(_:_:)	static func == (a: WACapabilities.Feature, b: WACapabilities.Feature) -> Bool
+s:9WiFiAware14WACapabilitiesV7FeatureO4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WACapabilities.Feature.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware14WACapabilitiesV7FeatureO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WACapabilities.Feature.hash(into:)	func hash(into hasher: inout Hasher)
+s:9WiFiAware14WACapabilitiesV7FeatureO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WACapabilities.Feature.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware14WACapabilitiesV7FeatureO8AllCasesa	swift.typealias	WACapabilities.Feature.AllCases	WACapabilities.Feature.AllCases	typealias AllCases = [WACapabilities.Feature]
+s:9WiFiAware14WACapabilitiesV7FeatureO8allCasesSayAEGvpZ	swift.type.property	allCases	WACapabilities.Feature.allCases	nonisolated static var allCases: [WACapabilities.Feature] { get }
+s:9WiFiAware14WACapabilitiesV7FeatureO9hashValueSivp	swift.property	hashValue	WACapabilities.Feature.hashValue	var hashValue: Int { get }
+s:9WiFiAware14WAPairedDeviceV	swift.struct	WAPairedDevice	WAPairedDevice	struct WAPairedDevice
+s:9WiFiAware14WAPairedDeviceV10allDevices8matchingAC0G8SequenceV10Foundation9PredicateVyAC_QPG_tFZ	swift.type.method	allDevices(matching:)	WAPairedDevice.allDevices(matching:)	static func allDevices(matching: Predicate<WAPairedDevice>) -> WAPairedDevice.DevicesSequence
+s:9WiFiAware14WAPairedDeviceV10allDevicesAC0G8SequenceVvpZ	swift.type.property	allDevices	WAPairedDevice.allDevices	static var allDevices: WAPairedDevice.DevicesSequence { get }
+s:9WiFiAware14WAPairedDeviceV11PairingInfoV	swift.struct	WAPairedDevice.PairingInfo	WAPairedDevice.PairingInfo	struct PairingInfo
+s:9WiFiAware14WAPairedDeviceV11PairingInfoV10vendorNameSSvp	swift.property	vendorName	WAPairedDevice.PairingInfo.vendorName	let vendorName: String
+s:9WiFiAware14WAPairedDeviceV11PairingInfoV11descriptionSSvp	swift.property	description	WAPairedDevice.PairingInfo.description	var description: String { get }
+s:9WiFiAware14WAPairedDeviceV11PairingInfoV11pairingNameSSvp	swift.property	pairingName	WAPairedDevice.PairingInfo.pairingName	let pairingName: String
+s:9WiFiAware14WAPairedDeviceV11PairingInfoV2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	WAPairedDevice.PairingInfo.==(_:_:)	static func == (a: WAPairedDevice.PairingInfo, b: WAPairedDevice.PairingInfo) -> Bool
+s:9WiFiAware14WAPairedDeviceV11PairingInfoV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAPairedDevice.PairingInfo.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware14WAPairedDeviceV11PairingInfoV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WAPairedDevice.PairingInfo.hash(into:)	func hash(into hasher: inout Hasher)
+s:9WiFiAware14WAPairedDeviceV11PairingInfoV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAPairedDevice.PairingInfo.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware14WAPairedDeviceV11PairingInfoV9hashValueSivp	swift.property	hashValue	WAPairedDevice.PairingInfo.hashValue	var hashValue: Int { get }
+s:9WiFiAware14WAPairedDeviceV11PairingInfoV9modelNameSSvp	swift.property	modelName	WAPairedDevice.PairingInfo.modelName	let modelName: String
+s:9WiFiAware14WAPairedDeviceV11descriptionSSvp	swift.property	description	WAPairedDevice.description	var description: String { get }
+s:9WiFiAware14WAPairedDeviceV11pairingInfoAC07PairingG0VSgvp	swift.property	pairingInfo	WAPairedDevice.pairingInfo	let pairingInfo: WAPairedDevice.PairingInfo?
+s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.struct	WAPairedDevice.DevicesSequence	WAPairedDevice.DevicesSequence	struct DevicesSequence
+s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV13AsyncIteratorC	swift.class	WAPairedDevice.DevicesSequence.AsyncIterator	WAPairedDevice.DevicesSequence.AsyncIterator	class AsyncIterator
+s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV13AsyncIteratorC4nextSDys6UInt64VACGSgyYaKF	swift.method	next()	WAPairedDevice.DevicesSequence.AsyncIterator.next()	func next() async throws -> WAPairedDevice.DevicesSequence.AsyncIterator.Element?
+s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV13AsyncIteratorC7Elementa	swift.typealias	WAPairedDevice.DevicesSequence.AsyncIterator.Element	WAPairedDevice.DevicesSequence.AsyncIterator.Element	typealias Element = WAPairedDevice.Devices
+s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV13AsyncIteratorC7Failurea	swift.typealias	WAPairedDevice.DevicesSequence.AsyncIterator.Failure	WAPairedDevice.DevicesSequence.AsyncIterator.Failure	typealias Failure = Error
+s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV17makeAsyncIteratorAE0iJ0CyF	swift.method	makeAsyncIterator()	WAPairedDevice.DevicesSequence.makeAsyncIterator()	func makeAsyncIterator() -> WAPairedDevice.DevicesSequence.AsyncIterator
+s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV7Elementa	swift.typealias	WAPairedDevice.DevicesSequence.Element	WAPairedDevice.DevicesSequence.Element	typealias Element = WAPairedDevice.Devices
+s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV7currentSDys6UInt64VACGSgyYaKF	swift.method	current()	WAPairedDevice.DevicesSequence.current()	func current() async throws -> WAPairedDevice.DevicesSequence.Element?
+s:9WiFiAware14WAPairedDeviceV2IDa	swift.typealias	WAPairedDevice.ID	WAPairedDevice.ID	typealias ID = UInt64
+s:9WiFiAware14WAPairedDeviceV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	WAPairedDevice.==(_:_:)	static func == (a: WAPairedDevice, b: WAPairedDevice) -> Bool
+s:9WiFiAware14WAPairedDeviceV2ids6UInt64Vvp	swift.property	id	WAPairedDevice.id	let id: WAPairedDevice.ID
+s:9WiFiAware14WAPairedDeviceV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	WAPairedDevice.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware14WAPairedDeviceV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WAPairedDevice.hash(into:)	func hash(into hasher: inout Hasher)
+s:9WiFiAware14WAPairedDeviceV4nameSSSgvp	swift.property	name	WAPairedDevice.name	let name: String?
+s:9WiFiAware14WAPairedDeviceV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAPairedDevice.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware14WAPairedDeviceV7Devicesa	swift.typealias	WAPairedDevice.Devices	WAPairedDevice.Devices	typealias Devices = [WAPairedDevice.ID : WAPairedDevice]
+s:9WiFiAware14WAPairedDeviceV9hashValueSivp	swift.property	hashValue	WAPairedDevice.hashValue	var hashValue: Int { get }
+s:9WiFiAware16WAAccessCategoryO	swift.enum	WAAccessCategory	WAAccessCategory	enum WAAccessCategory
+s:9WiFiAware16WAAccessCategoryO10backgroundyA2CmF	swift.enum.case	WAAccessCategory.background	WAAccessCategory.background	case background
+s:9WiFiAware16WAAccessCategoryO10bestEffortyA2CmF	swift.enum.case	WAAccessCategory.bestEffort	WAAccessCategory.bestEffort	case bestEffort
+s:9WiFiAware16WAAccessCategoryO16interactiveVideoyA2CmF	swift.enum.case	WAAccessCategory.interactiveVideo	WAAccessCategory.interactiveVideo	case interactiveVideo
+s:9WiFiAware16WAAccessCategoryO16interactiveVoiceyA2CmF	swift.enum.case	WAAccessCategory.interactiveVoice	WAAccessCategory.interactiveVoice	case interactiveVoice
+s:9WiFiAware16WAAccessCategoryO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	WAAccessCategory.==(_:_:)	static func == (a: WAAccessCategory, b: WAAccessCategory) -> Bool
+s:9WiFiAware16WAAccessCategoryO4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	WAAccessCategory.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware16WAAccessCategoryO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WAAccessCategory.hash(into:)	func hash(into hasher: inout Hasher)
+s:9WiFiAware16WAAccessCategoryO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAAccessCategory.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware16WAAccessCategoryO8AllCasesa	swift.typealias	WAAccessCategory.AllCases	WAAccessCategory.AllCases	typealias AllCases = [WAAccessCategory]
+s:9WiFiAware16WAAccessCategoryO8allCasesSayACGvpZ	swift.type.property	allCases	WAAccessCategory.allCases	nonisolated static var allCases: [WAAccessCategory] { get }
+s:9WiFiAware16WAAccessCategoryO9hashValueSivp	swift.property	hashValue	WAAccessCategory.hashValue	var hashValue: Int { get }
+s:9WiFiAware17WAPerformanceModeO	swift.enum	WAPerformanceMode	WAPerformanceMode	enum WAPerformanceMode
+s:9WiFiAware17WAPerformanceModeO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	WAPerformanceMode.==(_:_:)	static func == (a: WAPerformanceMode, b: WAPerformanceMode) -> Bool
+s:9WiFiAware17WAPerformanceModeO4bulkyA2CmF	swift.enum.case	WAPerformanceMode.bulk	WAPerformanceMode.bulk	case bulk
+s:9WiFiAware17WAPerformanceModeO4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	WAPerformanceMode.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware17WAPerformanceModeO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WAPerformanceMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:9WiFiAware17WAPerformanceModeO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAPerformanceMode.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware17WAPerformanceModeO8AllCasesa	swift.typealias	WAPerformanceMode.AllCases	WAPerformanceMode.AllCases	typealias AllCases = [WAPerformanceMode]
+s:9WiFiAware17WAPerformanceModeO8allCasesSayACGvpZ	swift.type.property	allCases	WAPerformanceMode.allCases	nonisolated static var allCases: [WAPerformanceMode] { get }
+s:9WiFiAware17WAPerformanceModeO8realtimeyA2CmF	swift.enum.case	WAPerformanceMode.realtime	WAPerformanceMode.realtime	case realtime
+s:9WiFiAware17WAPerformanceModeO9hashValueSivp	swift.property	hashValue	WAPerformanceMode.hashValue	var hashValue: Int { get }
+s:9WiFiAware19WAPerformanceReportV	swift.struct	WAPerformanceReport	WAPerformanceReport	struct WAPerformanceReport
+s:9WiFiAware19WAPerformanceReportV14localTimestamp12_Concurrency15ContinuousClockV7InstantVvp	swift.property	localTimestamp	WAPerformanceReport.localTimestamp	let localTimestamp: ContinuousClock.Instant
+s:9WiFiAware19WAPerformanceReportV14signalStrengthSdSgvp	swift.property	signalStrength	WAPerformanceReport.signalStrength	let signalStrength: Double?
+s:9WiFiAware19WAPerformanceReportV15transmitLatencySDyAA16WAAccessCategoryOAC08TransmitG7MetricsVGvp	swift.property	transmitLatency	WAPerformanceReport.transmitLatency	let transmitLatency: [WAAccessCategory : WAPerformanceReport.TransmitLatencyMetrics]
+s:9WiFiAware19WAPerformanceReportV17throughputCeilingSdSgvp	swift.property	throughputCeiling	WAPerformanceReport.throughputCeiling	let throughputCeiling: Double?
+s:9WiFiAware19WAPerformanceReportV18throughputCapacitySdSgvp	swift.property	throughputCapacity	WAPerformanceReport.throughputCapacity	let throughputCapacity: Double?
+s:9WiFiAware19WAPerformanceReportV22TransmitLatencyMetricsV	swift.struct	WAPerformanceReport.TransmitLatencyMetrics	WAPerformanceReport.TransmitLatencyMetrics	struct TransmitLatencyMetrics
+s:9WiFiAware19WAPerformanceReportV22TransmitLatencyMetricsV14accessCategoryAA08WAAccessJ0Ovp	swift.property	accessCategory	WAPerformanceReport.TransmitLatencyMetrics.accessCategory	let accessCategory: WAAccessCategory
+s:9WiFiAware19WAPerformanceReportV22TransmitLatencyMetricsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAPerformanceReport.TransmitLatencyMetrics.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware19WAPerformanceReportV22TransmitLatencyMetricsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAPerformanceReport.TransmitLatencyMetrics.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware19WAPerformanceReportV22TransmitLatencyMetricsV7averages8DurationVSgvp	swift.property	average	WAPerformanceReport.TransmitLatencyMetrics.average	let average: Duration?
+s:9WiFiAware19WAPerformanceReportV23throughputCapacityRatioSdSgvp	swift.property	throughputCapacityRatio	WAPerformanceReport.throughputCapacityRatio	var throughputCapacityRatio: Double? { get }
+s:9WiFiAware19WAPerformanceReportV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	WAPerformanceReport.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware19WAPerformanceReportV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAPerformanceReport.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware19WAPerformanceReportV9timestamp10Foundation4DateVvp	swift.property	timestamp	WAPerformanceReport.timestamp	let timestamp: Date
+s:9WiFiAware19WAPublisherListenerV	swift.struct	WAPublisherListener	WAPublisherListener	struct WAPublisherListener
+s:9WiFiAware19WAPublisherListenerV18DatapathParametersV	swift.struct	WAPublisherListener.DatapathParameters	WAPublisherListener.DatapathParameters	struct DatapathParameters
+s:9WiFiAware19WAPublisherListenerV18DatapathParametersV8defaultsAEvpZ	swift.type.property	defaults	WAPublisherListener.DatapathParameters.defaults	static let defaults: WAPublisherListener.DatapathParameters
+s:9WiFiAware19WAPublisherListenerV18DatapathParametersV8realtimeAEvpZ	swift.type.property	realtime	WAPublisherListener.DatapathParameters.realtime	static let realtime: WAPublisherListener.DatapathParameters
+s:9WiFiAware19WAPublisherListenerV19configureParametersyy7Network12NWParametersCF	swift.method	configureParameters(_:)	WAPublisherListener.configureParameters(_:)	func configureParameters(_ parameters: NWParameters)
+s:9WiFiAware19WAPublisherListenerV20isApplicationServiceSbvp	swift.property	isApplicationService	WAPublisherListener.isApplicationService	var isApplicationService: Bool { get }
+s:9WiFiAware19WAPublisherListenerV6ActionV	swift.struct	WAPublisherListener.Action	WAPublisherListener.Action	struct Action
+s:9WiFiAware19WAPublisherListenerV6ActionV10connecting2to4from8datapathAeA20WAPublishableServiceV_AC7DevicesVAC18DatapathParametersVSgtFZ	swift.type.method	connecting(to:from:datapath:)	WAPublisherListener.Action.connecting(to:from:datapath:)	static func connecting(to myPublishingService: WAPublishableService, from pairedDevices: WAPublisherListener.Devices, datapath wifiAware: WAPublisherListener.DatapathParameters? = nil) -> WAPublisherListener.Action
+s:9WiFiAware19WAPublisherListenerV7DevicesV	swift.struct	WAPublisherListener.Devices	WAPublisherListener.Devices	struct Devices
+s:9WiFiAware19WAPublisherListenerV7DevicesV013userSpecifiedF0AEvpZ	swift.type.property	userSpecifiedDevices	WAPublisherListener.Devices.userSpecifiedDevices	static let userSpecifiedDevices: WAPublisherListener.Devices
+s:9WiFiAware19WAPublisherListenerV7DevicesV09allPairedF0AEvpZ	swift.type.property	allPairedDevices	WAPublisherListener.Devices.allPairedDevices	static let allPairedDevices: WAPublisherListener.Devices
+s:9WiFiAware19WAPublisherListenerV7DevicesV8matchingyAE10Foundation9PredicateVyAA14WAPairedDeviceV_QPGFZ	swift.type.method	matching(_:)	WAPublisherListener.Devices.matching(_:)	static func matching(_ pairedDevicesFilter: Predicate<WAPairedDevice>) -> WAPublisherListener.Devices
+s:9WiFiAware19WAPublisherListenerV7DevicesV8selectedyAESDys6UInt64VAA14WAPairedDeviceVGFZ	swift.type.method	selected(_:)	WAPublisherListener.Devices.selected(_:)	static func selected(_ pairedDevices: WAPairedDevice.Devices) -> WAPublisherListener.Devices
+s:9WiFiAware19WAPublisherListenerV7DevicesV8selectedyAExSTRzAA14WAPairedDeviceV7ElementRtzlFZ	swift.type.method	selected(_:)	WAPublisherListener.Devices.selected(_:)	static func selected(_ pairedDevices: some Sequence<WAPairedDevice>) -> WAPublisherListener.Devices
+s:9WiFiAware19WAPublisherListenerV7service7Network10NWListenerC7ServiceVvp	swift.property	service	WAPublisherListener.service	var service: NWListener.Service { get }
+s:9WiFiAware19WASubscriberBrowserV	swift.struct	WASubscriberBrowser	WASubscriberBrowser	struct WASubscriberBrowser
+s:9WiFiAware19WASubscriberBrowserV12makeEndpoint4fromAA10WAEndpointVSg7Network9NWBrowserC6ResultV_tKF	swift.method	makeEndpoint(from:)	WASubscriberBrowser.makeEndpoint(from:)	func makeEndpoint(from browseResult: NWBrowser.Result) throws -> WASubscriberBrowser.Endpoint?
+s:9WiFiAware19WASubscriberBrowserV14makeDescriptor7Network9NWBrowserC0G0OyF	swift.method	makeDescriptor()	WASubscriberBrowser.makeDescriptor()	func makeDescriptor() -> NWBrowser.Descriptor
+s:9WiFiAware19WASubscriberBrowserV19configureParametersy7Network12NWParametersCAGSgF	swift.method	configureParameters(_:)	WASubscriberBrowser.configureParameters(_:)	func configureParameters(_ parameters: NWParameters?) -> NWParameters
+s:9WiFiAware19WASubscriberBrowserV6ActionV	swift.struct	WASubscriberBrowser.Action	WASubscriberBrowser.Action	struct Action
+s:9WiFiAware19WASubscriberBrowserV6ActionV10connecting2to4fromAeC7DevicesV_AA21WASubscribableServiceVtFZ	swift.type.method	connecting(to:from:)	WASubscriberBrowser.Action.connecting(to:from:)	static func connecting(to pairedDevices: WASubscriberBrowser.Devices, from mySubscribingService: WASubscribableService) -> WASubscriberBrowser.Action
+s:9WiFiAware19WASubscriberBrowserV7DevicesV	swift.struct	WASubscriberBrowser.Devices	WASubscriberBrowser.Devices	struct Devices
+s:9WiFiAware19WASubscriberBrowserV7DevicesV013userSpecifiedF0AEvpZ	swift.type.property	userSpecifiedDevices	WASubscriberBrowser.Devices.userSpecifiedDevices	static let userSpecifiedDevices: WASubscriberBrowser.Devices
+s:9WiFiAware19WASubscriberBrowserV7DevicesV09allPairedF0AEvpZ	swift.type.property	allPairedDevices	WASubscriberBrowser.Devices.allPairedDevices	static let allPairedDevices: WASubscriberBrowser.Devices
+s:9WiFiAware19WASubscriberBrowserV7DevicesV8matchingyAE10Foundation9PredicateVyAA14WAPairedDeviceV_QPGFZ	swift.type.method	matching(_:)	WASubscriberBrowser.Devices.matching(_:)	static func matching(_ pairedDevicesFilter: Predicate<WAPairedDevice>) -> WASubscriberBrowser.Devices
+s:9WiFiAware19WASubscriberBrowserV7DevicesV8selectedyAESDys6UInt64VAA14WAPairedDeviceVGFZ	swift.type.method	selected(_:)	WASubscriberBrowser.Devices.selected(_:)	static func selected(_ pairedDevices: WAPairedDevice.Devices) -> WASubscriberBrowser.Devices
+s:9WiFiAware19WASubscriberBrowserV7DevicesV8selectedyAExSTRzAA14WAPairedDeviceV7ElementRtzlFZ	swift.type.method	selected(_:)	WASubscriberBrowser.Devices.selected(_:)	static func selected(_ pairedDevices: some Sequence<WAPairedDevice>) -> WASubscriberBrowser.Devices
+s:9WiFiAware19WASubscriberBrowserV8Endpointa	swift.typealias	WASubscriberBrowser.Endpoint	WASubscriberBrowser.Endpoint	typealias Endpoint = WAEndpoint
+s:9WiFiAware20WAPublishableServiceV	swift.struct	WAPublishableService	WAPublishableService	struct WAPublishableService
+s:9WiFiAware20WAPublishableServiceV11allServicesSDySSACGvpZ	swift.type.property	allServices	WAPublishableService.allServices	static var allServices: [WAPublishableService.ID : WAPublishableService] { get }
+s:9WiFiAware20WAPublishableServiceV11descriptionSSvp	swift.property	description	WAPublishableService.description	var description: String { get }
+s:9WiFiAware20WAPublishableServiceV2IDa	swift.typealias	WAPublishableService.ID	WAPublishableService.ID	typealias ID = String
+s:9WiFiAware20WAPublishableServiceV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	WAPublishableService.==(_:_:)	static func == (a: WAPublishableService, b: WAPublishableService) -> Bool
+s:9WiFiAware20WAPublishableServiceV2idSSvp	swift.property	id	WAPublishableService.id	var id: WAPublishableService.ID { get }
+s:9WiFiAware20WAPublishableServiceV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	WAPublishableService.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware20WAPublishableServiceV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WAPublishableService.hash(into:)	func hash(into hasher: inout Hasher)
+s:9WiFiAware20WAPublishableServiceV4nameSSvp	swift.property	name	WAPublishableService.name	let name: String
+s:9WiFiAware20WAPublishableServiceV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAPublishableService.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware20WAPublishableServiceV9hashValueSivp	swift.property	hashValue	WAPublishableService.hashValue	var hashValue: Int { get }
+s:9WiFiAware21WASubscribableServiceV	swift.struct	WASubscribableService	WASubscribableService	struct WASubscribableService
+s:9WiFiAware21WASubscribableServiceV11allServicesSDySSACGvpZ	swift.type.property	allServices	WASubscribableService.allServices	static var allServices: [WASubscribableService.ID : WASubscribableService] { get }
+s:9WiFiAware21WASubscribableServiceV11descriptionSSvp	swift.property	description	WASubscribableService.description	var description: String { get }
+s:9WiFiAware21WASubscribableServiceV2IDa	swift.typealias	WASubscribableService.ID	WASubscribableService.ID	typealias ID = String
+s:9WiFiAware21WASubscribableServiceV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	WASubscribableService.==(_:_:)	static func == (a: WASubscribableService, b: WASubscribableService) -> Bool
+s:9WiFiAware21WASubscribableServiceV2idSSvp	swift.property	id	WASubscribableService.id	var id: WASubscribableService.ID { get }
+s:9WiFiAware21WASubscribableServiceV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	WASubscribableService.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware21WASubscribableServiceV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	WASubscribableService.hash(into:)	func hash(into hasher: inout Hasher)
+s:9WiFiAware21WASubscribableServiceV4nameSSvp	swift.property	name	WASubscribableService.name	let name: String
+s:9WiFiAware21WASubscribableServiceV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WASubscribableService.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware21WASubscribableServiceV9hashValueSivp	swift.property	hashValue	WASubscribableService.hashValue	var hashValue: Int { get }
+s:9WiFiAware6WAPathV	swift.struct	WAPath	WAPath	struct WAPath
+s:9WiFiAware6WAPathV11performanceAA19WAPerformanceReportVvp	swift.property	performance	WAPath.performance	let performance: WAPerformanceReport
+s:9WiFiAware6WAPathV14durationActives8DurationVvp	swift.property	durationActive	WAPath.durationActive	let durationActive: Duration
+s:9WiFiAware6WAPathV8endpointAA10WAEndpointVvp	swift.property	endpoint	WAPath.endpoint	let endpoint: WAEndpoint
+s:9WiFiAware7WAErrorO	swift.enum	WAError	WAError	enum WAError
+s:9WiFiAware7WAErrorO04wifiC11UnsupportedyA2C0abcF7DetailsVcACmF	swift.enum.case	WAError.wifiAwareUnsupported(_:)	WAError.wifiAwareUnsupported(_:)	case wifiAwareUnsupported(WAError.WiFiAwareUnsupportedDetails)
+s:9WiFiAware7WAErrorO0abC18UnsupportedDetailsV	swift.struct	WAError.WiFiAwareUnsupportedDetails	WAError.WiFiAwareUnsupportedDetails	struct WiFiAwareUnsupportedDetails
+s:9WiFiAware7WAErrorO0abC18UnsupportedDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.WiFiAwareUnsupportedDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO0abC18UnsupportedDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.WiFiAwareUnsupportedDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO12ErrorDetailsV	swift.struct	WAError.ErrorDetails	WAError.ErrorDetails	struct ErrorDetails
+s:9WiFiAware7WAErrorO12ErrorDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.ErrorDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO12ErrorDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.ErrorDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO13deviceInvalidyA2C06DeviceF7DetailsVcACmF	swift.enum.case	WAError.deviceInvalid(_:)	WAError.deviceInvalid(_:)	case deviceInvalid(WAError.DeviceInvalidDetails)
+s:9WiFiAware7WAErrorO15noPairedDevicesyA2C02NofG7DetailsVcACmF	swift.enum.case	WAError.noPairedDevices(_:)	WAError.noPairedDevices(_:)	case noPairedDevices(WAError.NoPairedDevicesDetails)
+s:9WiFiAware7WAErrorO16connectionFailedyA2C010ConnectionF7DetailsVcACmF	swift.enum.case	WAError.connectionFailed(_:)	WAError.connectionFailed(_:)	case connectionFailed(WAError.ConnectionFailedDetails)
+s:9WiFiAware7WAErrorO16noRadioResourcesyA2C02NofG7DetailsVcACmF	swift.enum.case	WAError.noRadioResources(_:)	WAError.noRadioResources(_:)	case noRadioResources(WAError.NoRadioResourcesDetails)
+s:9WiFiAware7WAErrorO16publisherTimeoutyA2C09PublisherF7DetailsVcACmF	swift.enum.case	WAError.publisherTimeout(_:)	WAError.publisherTimeout(_:)	case publisherTimeout(WAError.PublisherTimeoutDetails)
+s:9WiFiAware7WAErrorO17subscriberTimeoutyA2C010SubscriberF7DetailsVcACmF	swift.enum.case	WAError.subscriberTimeout(_:)	WAError.subscriberTimeout(_:)	case subscriberTimeout(WAError.SubscriberTimeoutDetails)
+s:9WiFiAware7WAErrorO18entitlementMissingyA2C011EntitlementF7DetailsVcACmF	swift.enum.case	WAError.entitlementMissing(_:)	WAError.entitlementMissing(_:)	case entitlementMissing(WAError.EntitlementMissingDetails)
+s:9WiFiAware7WAErrorO18serviceNotDeclaredyA2C07ServicefG7DetailsVcACmF	swift.enum.case	WAError.serviceNotDeclared(_:)	WAError.serviceNotDeclared(_:)	case serviceNotDeclared(WAError.ServiceNotDeclaredDetails)
+s:9WiFiAware7WAErrorO20DeviceInvalidDetailsV	swift.struct	WAError.DeviceInvalidDetails	WAError.DeviceInvalidDetails	struct DeviceInvalidDetails
+s:9WiFiAware7WAErrorO20DeviceInvalidDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.DeviceInvalidDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO20DeviceInvalidDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.DeviceInvalidDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO20connectionTerminatedyA2C010ConnectionF7DetailsVcACmF	swift.enum.case	WAError.connectionTerminated(_:)	WAError.connectionTerminated(_:)	case connectionTerminated(WAError.ConnectionTerminatedDetails)
+s:9WiFiAware7WAErrorO21connectionIdleTimeoutyA2C010ConnectionfG7DetailsVcACmF	swift.enum.case	WAError.connectionIdleTimeout(_:)	WAError.connectionIdleTimeout(_:)	case connectionIdleTimeout(WAError.ConnectionIdleTimeoutDetails)
+s:9WiFiAware7WAErrorO22NoPairedDevicesDetailsV	swift.struct	WAError.NoPairedDevicesDetails	WAError.NoPairedDevicesDetails	struct NoPairedDevicesDetails
+s:9WiFiAware7WAErrorO22NoPairedDevicesDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.NoPairedDevicesDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO22NoPairedDevicesDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.NoPairedDevicesDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO23ConnectionFailedDetailsV	swift.struct	WAError.ConnectionFailedDetails	WAError.ConnectionFailedDetails	struct ConnectionFailedDetails
+s:9WiFiAware7WAErrorO23ConnectionFailedDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.ConnectionFailedDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO23ConnectionFailedDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.ConnectionFailedDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO23NoRadioResourcesDetailsV	swift.struct	WAError.NoRadioResourcesDetails	WAError.NoRadioResourcesDetails	struct NoRadioResourcesDetails
+s:9WiFiAware7WAErrorO23NoRadioResourcesDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.NoRadioResourcesDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO23NoRadioResourcesDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.NoRadioResourcesDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO23PublisherTimeoutDetailsV	swift.struct	WAError.PublisherTimeoutDetails	WAError.PublisherTimeoutDetails	struct PublisherTimeoutDetails
+s:9WiFiAware7WAErrorO23PublisherTimeoutDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.PublisherTimeoutDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO23PublisherTimeoutDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.PublisherTimeoutDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO23deviceNoLongerAvailableyA2C06DevicefgH7DetailsVcACmF	swift.enum.case	WAError.deviceNoLongerAvailable(_:)	WAError.deviceNoLongerAvailable(_:)	case deviceNoLongerAvailable(WAError.DeviceNoLongerAvailableDetails)
+s:9WiFiAware7WAErrorO24SubscriberTimeoutDetailsV	swift.struct	WAError.SubscriberTimeoutDetails	WAError.SubscriberTimeoutDetails	struct SubscriberTimeoutDetails
+s:9WiFiAware7WAErrorO24SubscriberTimeoutDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.SubscriberTimeoutDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO24SubscriberTimeoutDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.SubscriberTimeoutDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO24serviceAlreadyPublishingyA2C07ServicefG7DetailsVcACmF	swift.enum.case	WAError.serviceAlreadyPublishing(_:)	WAError.serviceAlreadyPublishing(_:)	case serviceAlreadyPublishing(WAError.ServiceAlreadyPublishingDetails)
+s:9WiFiAware7WAErrorO25EntitlementMissingDetailsV	swift.struct	WAError.EntitlementMissingDetails	WAError.EntitlementMissingDetails	struct EntitlementMissingDetails
+s:9WiFiAware7WAErrorO25EntitlementMissingDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.EntitlementMissingDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO25EntitlementMissingDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.EntitlementMissingDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO25ServiceNotDeclaredDetailsV	swift.struct	WAError.ServiceNotDeclaredDetails	WAError.ServiceNotDeclaredDetails	struct ServiceNotDeclaredDetails
+s:9WiFiAware7WAErrorO25ServiceNotDeclaredDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.ServiceNotDeclaredDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO25ServiceNotDeclaredDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.ServiceNotDeclaredDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO25serviceAlreadySubscribingyA2C07ServicefG7DetailsVcACmF	swift.enum.case	WAError.serviceAlreadySubscribing(_:)	WAError.serviceAlreadySubscribing(_:)	case serviceAlreadySubscribing(WAError.ServiceAlreadySubscribingDetails)
+s:9WiFiAware7WAErrorO27ConnectionTerminatedDetailsV	swift.struct	WAError.ConnectionTerminatedDetails	WAError.ConnectionTerminatedDetails	struct ConnectionTerminatedDetails
+s:9WiFiAware7WAErrorO27ConnectionTerminatedDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.ConnectionTerminatedDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO27ConnectionTerminatedDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.ConnectionTerminatedDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO28ConnectionIdleTimeoutDetailsV	swift.struct	WAError.ConnectionIdleTimeoutDetails	WAError.ConnectionIdleTimeoutDetails	struct ConnectionIdleTimeoutDetails
+s:9WiFiAware7WAErrorO28ConnectionIdleTimeoutDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.ConnectionIdleTimeoutDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO28ConnectionIdleTimeoutDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.ConnectionIdleTimeoutDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO30DeviceNoLongerAvailableDetailsV	swift.struct	WAError.DeviceNoLongerAvailableDetails	WAError.DeviceNoLongerAvailableDetails	struct DeviceNoLongerAvailableDetails
+s:9WiFiAware7WAErrorO30DeviceNoLongerAvailableDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.DeviceNoLongerAvailableDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO30DeviceNoLongerAvailableDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.DeviceNoLongerAvailableDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO31ServiceAlreadyPublishingDetailsV	swift.struct	WAError.ServiceAlreadyPublishingDetails	WAError.ServiceAlreadyPublishingDetails	struct ServiceAlreadyPublishingDetails
+s:9WiFiAware7WAErrorO31ServiceAlreadyPublishingDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.ServiceAlreadyPublishingDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO31ServiceAlreadyPublishingDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.ServiceAlreadyPublishingDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO32ServiceAlreadySubscribingDetailsV	swift.struct	WAError.ServiceAlreadySubscribingDetails	WAError.ServiceAlreadySubscribingDetails	struct ServiceAlreadySubscribingDetails
+s:9WiFiAware7WAErrorO32ServiceAlreadySubscribingDetailsV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.ServiceAlreadySubscribingDetails.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO32ServiceAlreadySubscribingDetailsV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.ServiceAlreadySubscribingDetails.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware7WAErrorO4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	WAError.init(from:)	init(from decoder: any Decoder) throws
+s:9WiFiAware7WAErrorO5erroryA2C12ErrorDetailsVcACmF	swift.enum.case	WAError.error(_:)	WAError.error(_:)	case error(WAError.ErrorDetails)
+s:9WiFiAware7WAErrorO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	WAError.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9WiFiAware9WAServiceP	swift.protocol	WAService	WAService	protocol WAService : CustomStringConvertible, Decodable, Encodable, Hashable, Identifiable, Sendable
+s:9WiFiAware9WAServiceP11allServicesSDySSxGvpZ	swift.type.property	allServices	WAService.allServices	static var allServices: [String : Self] { get }
+s:9WiFiAware9WAServiceP4nameSSvp	swift.property	name	WAService.name	var name: String { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware10WAEndpointV	swift.func.op	!=(_:_:)	WAEndpoint.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware14WACapabilitiesV7FeatureO	swift.func.op	!=(_:_:)	WACapabilities.Feature.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV	swift.func.op	!=(_:_:)	WAPairedDevice.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV11PairingInfoV	swift.func.op	!=(_:_:)	WAPairedDevice.PairingInfo.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware16WAAccessCategoryO	swift.func.op	!=(_:_:)	WAAccessCategory.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware17WAPerformanceModeO	swift.func.op	!=(_:_:)	WAPerformanceMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware20WAPublishableServiceV	swift.func.op	!=(_:_:)	WAPublishableService.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware21WASubscribableServiceV	swift.func.op	!=(_:_:)	WASubscribableService.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV13AsyncIteratorC	swift.method	next(isolation:)	WAPairedDevice.DevicesSequence.AsyncIterator.next(isolation:)	mutating func next(isolation actor: isolated (any Actor)?) async throws(Self.Failure) -> Self.Element?
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	allSatisfy(_:)	WAPairedDevice.DevicesSequence.allSatisfy(_:)	func allSatisfy(_ predicate: (Self.Element) async throws -> Bool) async rethrows -> Bool
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	compactMap(_:)	WAPairedDevice.DevicesSequence.compactMap(_:)	@preconcurrency func compactMap<ElementOfResult>(_ transform: @escaping (Self.Element) async -> ElementOfResult?) -> AsyncCompactMapSequence<Self, ElementOfResult>
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	compactMap(_:)	WAPairedDevice.DevicesSequence.compactMap(_:)	@preconcurrency func compactMap<ElementOfResult>(_ transform: @escaping (Self.Element) async throws -> ElementOfResult?) -> AsyncThrowingCompactMapSequence<Self, ElementOfResult>
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	map(_:)	WAPairedDevice.DevicesSequence.map(_:)	@preconcurrency func map<Transformed>(_ transform: @escaping (Self.Element) async -> Transformed) -> AsyncMapSequence<Self, Transformed>
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	map(_:)	WAPairedDevice.DevicesSequence.map(_:)	@preconcurrency func map<Transformed>(_ transform: @escaping (Self.Element) async throws -> Transformed) -> AsyncThrowingMapSequence<Self, Transformed>
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	max(by:)	WAPairedDevice.DevicesSequence.max(by:)	@warn_unqualified_access func max(by areInIncreasingOrder: (Self.Element, Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	min(by:)	WAPairedDevice.DevicesSequence.min(by:)	@warn_unqualified_access func min(by areInIncreasingOrder: (Self.Element, Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	drop(while:)	WAPairedDevice.DevicesSequence.drop(while:)	@preconcurrency func drop(while predicate: @escaping (Self.Element) async -> Bool) -> AsyncDropWhileSequence<Self>
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	first(where:)	WAPairedDevice.DevicesSequence.first(where:)	func first(where predicate: (Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	filter(_:)	WAPairedDevice.DevicesSequence.filter(_:)	@preconcurrency func filter(_ isIncluded: @escaping (Self.Element) async -> Bool) -> AsyncFilterSequence<Self>
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	prefix(while:)	WAPairedDevice.DevicesSequence.prefix(while:)	@preconcurrency func prefix(while predicate: @escaping (Self.Element) async -> Bool) rethrows -> AsyncPrefixWhileSequence<Self>
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	prefix(_:)	WAPairedDevice.DevicesSequence.prefix(_:)	func prefix(_ count: Int) -> AsyncPrefixSequence<Self>
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	reduce(into:_:)	WAPairedDevice.DevicesSequence.reduce(into:_:)	func reduce<Result>(into initialResult: Result, _ updateAccumulatingResult: (inout Result, Self.Element) async throws -> Void) async rethrows -> Result
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	reduce(_:_:)	WAPairedDevice.DevicesSequence.reduce(_:_:)	func reduce<Result>(_ initialResult: Result, _ nextPartialResult: (Result, Self.Element) async throws -> Result) async rethrows -> Result
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	flatMap(_:)	WAPairedDevice.DevicesSequence.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async throws -> SegmentOfResult) -> AsyncThrowingFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	flatMap(_:)	WAPairedDevice.DevicesSequence.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, Self.Failure == SegmentOfResult.Failure
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	flatMap(_:)	WAPairedDevice.DevicesSequence.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, SegmentOfResult.Failure == Never
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	flatMap(_:)	WAPairedDevice.DevicesSequence.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, Self.Failure == Never, SegmentOfResult.Failure == Never
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	contains(where:)	WAPairedDevice.DevicesSequence.contains(where:)	func contains(where predicate: (Self.Element) async throws -> Bool) async rethrows -> Bool
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	dropFirst(_:)	WAPairedDevice.DevicesSequence.dropFirst(_:)	func dropFirst(_ count: Int = 1) -> AsyncDropFirstSequence<Self>
+s:Sci12_ConcurrencySQ7ElementRpzrlE8containsySbACYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	swift.method	contains(_:)	WAPairedDevice.DevicesSequence.contains(_:)	func contains(_ search: Self.Element) async rethrows -> Bool
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:9WiFiAware7WAErrorO	swift.property	localizedDescription	WAError.localizedDescription	var localizedDescription: String { get }

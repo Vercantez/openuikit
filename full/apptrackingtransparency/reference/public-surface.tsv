@@ -1,0 +1,13 @@
+precise	kind	title	path	declaration
+c:@E@ATTrackingManagerAuthorizationStatus	swift.enum	ATTrackingManager.AuthorizationStatus	ATTrackingManager.AuthorizationStatus	enum AuthorizationStatus
+c:@E@ATTrackingManagerAuthorizationStatus@ATTrackingManagerAuthorizationStatusAuthorized	swift.enum.case	ATTrackingManager.AuthorizationStatus.authorized	ATTrackingManager.AuthorizationStatus.authorized	case authorized
+c:@E@ATTrackingManagerAuthorizationStatus@ATTrackingManagerAuthorizationStatusDenied	swift.enum.case	ATTrackingManager.AuthorizationStatus.denied	ATTrackingManager.AuthorizationStatus.denied	case denied
+c:@E@ATTrackingManagerAuthorizationStatus@ATTrackingManagerAuthorizationStatusNotDetermined	swift.enum.case	ATTrackingManager.AuthorizationStatus.notDetermined	ATTrackingManager.AuthorizationStatus.notDetermined	case notDetermined
+c:@E@ATTrackingManagerAuthorizationStatus@ATTrackingManagerAuthorizationStatusRestricted	swift.enum.case	ATTrackingManager.AuthorizationStatus.restricted	ATTrackingManager.AuthorizationStatus.restricted	case restricted
+c:objc(cs)ATTrackingManager	swift.class	ATTrackingManager	ATTrackingManager	class ATTrackingManager
+c:objc(cs)ATTrackingManager(cm)requestTrackingAuthorizationWithCompletionHandler:	swift.type.method	requestTrackingAuthorization(completionHandler:)	ATTrackingManager.requestTrackingAuthorization(completionHandler:)	class func requestTrackingAuthorization(completionHandler completion: @escaping (ATTrackingManager.AuthorizationStatus) -> Void)
+c:objc(cs)ATTrackingManager(cpy)trackingAuthorizationStatus	swift.type.property	trackingAuthorizationStatus	ATTrackingManager.trackingAuthorizationStatus	class var trackingAuthorizationStatus: ATTrackingManager.AuthorizationStatus { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ATTrackingManagerAuthorizationStatus	swift.func.op	!=(_:_:)	ATTrackingManager.AuthorizationStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ATTrackingManagerAuthorizationStatus	swift.property	hashValue	ATTrackingManager.AuthorizationStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ATTrackingManagerAuthorizationStatus	swift.method	hash(into:)	ATTrackingManager.AuthorizationStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:So36ATTrackingManagerAuthorizationStatusV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	ATTrackingManager.AuthorizationStatus.init(rawValue:)	init?(rawValue: UInt)

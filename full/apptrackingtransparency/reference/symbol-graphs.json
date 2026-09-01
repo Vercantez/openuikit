@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 1,
+  "duplicateOccurrenceCount": 1,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/AppTrackingTransparency.symbols.json",
+      "relationshipCount": 25,
+      "sha256": "a6bd9585433d0b22f08b26287d0ecdfebfdd96e8e2f0a71ef8d15a2c5c03edeb",
+      "symbolCount": 13
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "AppTrackingTransparency",
+  "relationshipCount": 25,
+  "schema": 1,
+  "symbolCount": 12,
+  "target": "arm64-apple-ios26.0"
+}

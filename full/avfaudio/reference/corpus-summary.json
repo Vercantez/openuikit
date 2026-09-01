@@ -1,0 +1,61 @@
+{
+  "module": "AVFAudio",
+  "moduleRecord": {
+    "app_coverage_count": 3,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 6,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 72,
+    "iphoneos_runtime_focus_launch_build_rank": 64,
+    "module": "AVFAudio",
+    "occurrence_count": 6,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "77cad1e2a55e6c91b490f77985446d63e98cf5b823110254029a50715717b71c",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Signal/Accessibility/SpeechManager.swift",
+          "Signal/ConversationView/ConversationViewController+MessageActionsDelegate.swift",
+          "SignalServiceKit/Messages/BodyRanges/HydratedMessageBody.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "038fae541437322b76230667754d9a5068a994cac4b282f5612d49c565c12a68",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "submodules/TelegramUI/Sources/OpenChatMessage.swift",
+          "submodules/TelegramUI/Sources/SharedWakeupManager.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "cd0a804eaa6ff656dc59783269f801a28950e11904b7f200482095492b552c65",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "iOSClient/Utility/NCAskAuthorization.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 72,
+    "byFocusLaunchBuildRelevance": 64
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

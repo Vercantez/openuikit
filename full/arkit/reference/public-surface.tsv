@@ -1,0 +1,876 @@
+precise	kind	title	path	declaration
+c:@ARBlendShapeLocationBrowDownLeft	swift.type.property	browDownLeft	ARFaceAnchor.BlendShapeLocation.browDownLeft	static let browDownLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationBrowDownRight	swift.type.property	browDownRight	ARFaceAnchor.BlendShapeLocation.browDownRight	static let browDownRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationBrowInnerUp	swift.type.property	browInnerUp	ARFaceAnchor.BlendShapeLocation.browInnerUp	static let browInnerUp: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationBrowOuterUpLeft	swift.type.property	browOuterUpLeft	ARFaceAnchor.BlendShapeLocation.browOuterUpLeft	static let browOuterUpLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationBrowOuterUpRight	swift.type.property	browOuterUpRight	ARFaceAnchor.BlendShapeLocation.browOuterUpRight	static let browOuterUpRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationCheekPuff	swift.type.property	cheekPuff	ARFaceAnchor.BlendShapeLocation.cheekPuff	static let cheekPuff: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationCheekSquintLeft	swift.type.property	cheekSquintLeft	ARFaceAnchor.BlendShapeLocation.cheekSquintLeft	static let cheekSquintLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationCheekSquintRight	swift.type.property	cheekSquintRight	ARFaceAnchor.BlendShapeLocation.cheekSquintRight	static let cheekSquintRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationEyeBlinkLeft	swift.type.property	eyeBlinkLeft	ARFaceAnchor.BlendShapeLocation.eyeBlinkLeft	static let eyeBlinkLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationEyeBlinkRight	swift.type.property	eyeBlinkRight	ARFaceAnchor.BlendShapeLocation.eyeBlinkRight	static let eyeBlinkRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationEyeLookDownLeft	swift.type.property	eyeLookDownLeft	ARFaceAnchor.BlendShapeLocation.eyeLookDownLeft	static let eyeLookDownLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationEyeLookDownRight	swift.type.property	eyeLookDownRight	ARFaceAnchor.BlendShapeLocation.eyeLookDownRight	static let eyeLookDownRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationEyeLookInLeft	swift.type.property	eyeLookInLeft	ARFaceAnchor.BlendShapeLocation.eyeLookInLeft	static let eyeLookInLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationEyeLookInRight	swift.type.property	eyeLookInRight	ARFaceAnchor.BlendShapeLocation.eyeLookInRight	static let eyeLookInRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationEyeLookOutLeft	swift.type.property	eyeLookOutLeft	ARFaceAnchor.BlendShapeLocation.eyeLookOutLeft	static let eyeLookOutLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationEyeLookOutRight	swift.type.property	eyeLookOutRight	ARFaceAnchor.BlendShapeLocation.eyeLookOutRight	static let eyeLookOutRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationEyeLookUpLeft	swift.type.property	eyeLookUpLeft	ARFaceAnchor.BlendShapeLocation.eyeLookUpLeft	static let eyeLookUpLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationEyeLookUpRight	swift.type.property	eyeLookUpRight	ARFaceAnchor.BlendShapeLocation.eyeLookUpRight	static let eyeLookUpRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationEyeSquintLeft	swift.type.property	eyeSquintLeft	ARFaceAnchor.BlendShapeLocation.eyeSquintLeft	static let eyeSquintLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationEyeSquintRight	swift.type.property	eyeSquintRight	ARFaceAnchor.BlendShapeLocation.eyeSquintRight	static let eyeSquintRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationEyeWideLeft	swift.type.property	eyeWideLeft	ARFaceAnchor.BlendShapeLocation.eyeWideLeft	static let eyeWideLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationEyeWideRight	swift.type.property	eyeWideRight	ARFaceAnchor.BlendShapeLocation.eyeWideRight	static let eyeWideRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationJawForward	swift.type.property	jawForward	ARFaceAnchor.BlendShapeLocation.jawForward	static let jawForward: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationJawLeft	swift.type.property	jawLeft	ARFaceAnchor.BlendShapeLocation.jawLeft	static let jawLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationJawOpen	swift.type.property	jawOpen	ARFaceAnchor.BlendShapeLocation.jawOpen	static let jawOpen: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationJawRight	swift.type.property	jawRight	ARFaceAnchor.BlendShapeLocation.jawRight	static let jawRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthClose	swift.type.property	mouthClose	ARFaceAnchor.BlendShapeLocation.mouthClose	static let mouthClose: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthDimpleLeft	swift.type.property	mouthDimpleLeft	ARFaceAnchor.BlendShapeLocation.mouthDimpleLeft	static let mouthDimpleLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthDimpleRight	swift.type.property	mouthDimpleRight	ARFaceAnchor.BlendShapeLocation.mouthDimpleRight	static let mouthDimpleRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthFrownLeft	swift.type.property	mouthFrownLeft	ARFaceAnchor.BlendShapeLocation.mouthFrownLeft	static let mouthFrownLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthFrownRight	swift.type.property	mouthFrownRight	ARFaceAnchor.BlendShapeLocation.mouthFrownRight	static let mouthFrownRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthFunnel	swift.type.property	mouthFunnel	ARFaceAnchor.BlendShapeLocation.mouthFunnel	static let mouthFunnel: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthLeft	swift.type.property	mouthLeft	ARFaceAnchor.BlendShapeLocation.mouthLeft	static let mouthLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthLowerDownLeft	swift.type.property	mouthLowerDownLeft	ARFaceAnchor.BlendShapeLocation.mouthLowerDownLeft	static let mouthLowerDownLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthLowerDownRight	swift.type.property	mouthLowerDownRight	ARFaceAnchor.BlendShapeLocation.mouthLowerDownRight	static let mouthLowerDownRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthPressLeft	swift.type.property	mouthPressLeft	ARFaceAnchor.BlendShapeLocation.mouthPressLeft	static let mouthPressLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthPressRight	swift.type.property	mouthPressRight	ARFaceAnchor.BlendShapeLocation.mouthPressRight	static let mouthPressRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthPucker	swift.type.property	mouthPucker	ARFaceAnchor.BlendShapeLocation.mouthPucker	static let mouthPucker: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthRight	swift.type.property	mouthRight	ARFaceAnchor.BlendShapeLocation.mouthRight	static let mouthRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthRollLower	swift.type.property	mouthRollLower	ARFaceAnchor.BlendShapeLocation.mouthRollLower	static let mouthRollLower: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthRollUpper	swift.type.property	mouthRollUpper	ARFaceAnchor.BlendShapeLocation.mouthRollUpper	static let mouthRollUpper: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthShrugLower	swift.type.property	mouthShrugLower	ARFaceAnchor.BlendShapeLocation.mouthShrugLower	static let mouthShrugLower: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthShrugUpper	swift.type.property	mouthShrugUpper	ARFaceAnchor.BlendShapeLocation.mouthShrugUpper	static let mouthShrugUpper: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthSmileLeft	swift.type.property	mouthSmileLeft	ARFaceAnchor.BlendShapeLocation.mouthSmileLeft	static let mouthSmileLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthSmileRight	swift.type.property	mouthSmileRight	ARFaceAnchor.BlendShapeLocation.mouthSmileRight	static let mouthSmileRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthStretchLeft	swift.type.property	mouthStretchLeft	ARFaceAnchor.BlendShapeLocation.mouthStretchLeft	static let mouthStretchLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthStretchRight	swift.type.property	mouthStretchRight	ARFaceAnchor.BlendShapeLocation.mouthStretchRight	static let mouthStretchRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthUpperUpLeft	swift.type.property	mouthUpperUpLeft	ARFaceAnchor.BlendShapeLocation.mouthUpperUpLeft	static let mouthUpperUpLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationMouthUpperUpRight	swift.type.property	mouthUpperUpRight	ARFaceAnchor.BlendShapeLocation.mouthUpperUpRight	static let mouthUpperUpRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationNoseSneerLeft	swift.type.property	noseSneerLeft	ARFaceAnchor.BlendShapeLocation.noseSneerLeft	static let noseSneerLeft: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationNoseSneerRight	swift.type.property	noseSneerRight	ARFaceAnchor.BlendShapeLocation.noseSneerRight	static let noseSneerRight: ARFaceAnchor.BlendShapeLocation
+c:@ARBlendShapeLocationTongueOut	swift.type.property	tongueOut	ARFaceAnchor.BlendShapeLocation.tongueOut	static let tongueOut: ARFaceAnchor.BlendShapeLocation
+c:@ARErrorDomain	swift.var	ARErrorDomain	ARErrorDomain	let ARErrorDomain: String
+c:@ARReferenceObjectArchiveExtension	swift.type.property	archiveExtension	ARReferenceObject.archiveExtension	class let archiveExtension: String
+c:@ARSCNDebugOptionShowFeaturePoints	swift.type.property	showFeaturePoints	SCNDebugOptions.showFeaturePoints	static let showFeaturePoints: SCNDebugOptions
+c:@ARSCNDebugOptionShowWorldOrigin	swift.type.property	showWorldOrigin	SCNDebugOptions.showWorldOrigin	static let showWorldOrigin: SCNDebugOptions
+c:@ARSkeletonJointNameHead	swift.type.property	head	ARSkeleton.JointName.head	static let head: ARSkeleton.JointName
+c:@ARSkeletonJointNameLeftFoot	swift.type.property	leftFoot	ARSkeleton.JointName.leftFoot	static let leftFoot: ARSkeleton.JointName
+c:@ARSkeletonJointNameLeftHand	swift.type.property	leftHand	ARSkeleton.JointName.leftHand	static let leftHand: ARSkeleton.JointName
+c:@ARSkeletonJointNameLeftShoulder	swift.type.property	leftShoulder	ARSkeleton.JointName.leftShoulder	static let leftShoulder: ARSkeleton.JointName
+c:@ARSkeletonJointNameRightFoot	swift.type.property	rightFoot	ARSkeleton.JointName.rightFoot	static let rightFoot: ARSkeleton.JointName
+c:@ARSkeletonJointNameRightHand	swift.type.property	rightHand	ARSkeleton.JointName.rightHand	static let rightHand: ARSkeleton.JointName
+c:@ARSkeletonJointNameRightShoulder	swift.type.property	rightShoulder	ARSkeleton.JointName.rightShoulder	static let rightShoulder: ARSkeleton.JointName
+c:@ARSkeletonJointNameRoot	swift.type.property	root	ARSkeleton.JointName.root	static let root: ARSkeleton.JointName
+c:@E@ARAltitudeSource	swift.enum	ARGeoAnchor.AltitudeSource	ARGeoAnchor.AltitudeSource	enum AltitudeSource
+c:@E@ARAltitudeSource@ARAltitudeSourceCoarse	swift.enum.case	ARGeoAnchor.AltitudeSource.coarse	ARGeoAnchor.AltitudeSource.coarse	case coarse
+c:@E@ARAltitudeSource@ARAltitudeSourcePrecise	swift.enum.case	ARGeoAnchor.AltitudeSource.precise	ARGeoAnchor.AltitudeSource.precise	case precise
+c:@E@ARAltitudeSource@ARAltitudeSourceUnknown	swift.enum.case	ARGeoAnchor.AltitudeSource.unknown	ARGeoAnchor.AltitudeSource.unknown	case unknown
+c:@E@ARAltitudeSource@ARAltitudeSourceUserDefined	swift.enum.case	ARGeoAnchor.AltitudeSource.userDefined	ARGeoAnchor.AltitudeSource.userDefined	case userDefined
+c:@E@ARAppClipCodeURLDecodingState	swift.enum	ARAppClipCodeAnchor.URLDecodingState	ARAppClipCodeAnchor.URLDecodingState	enum URLDecodingState
+c:@E@ARAppClipCodeURLDecodingState@ARAppClipCodeURLDecodingStateDecoded	swift.enum.case	ARAppClipCodeAnchor.URLDecodingState.decoded	ARAppClipCodeAnchor.URLDecodingState.decoded	case decoded
+c:@E@ARAppClipCodeURLDecodingState@ARAppClipCodeURLDecodingStateDecoding	swift.enum.case	ARAppClipCodeAnchor.URLDecodingState.decoding	ARAppClipCodeAnchor.URLDecodingState.decoding	case decoding
+c:@E@ARAppClipCodeURLDecodingState@ARAppClipCodeURLDecodingStateFailed	swift.enum.case	ARAppClipCodeAnchor.URLDecodingState.failed	ARAppClipCodeAnchor.URLDecodingState.failed	case failed
+c:@E@ARCoachingGoal	swift.enum	ARCoachingOverlayView.Goal	ARCoachingOverlayView.Goal	enum Goal
+c:@E@ARCoachingGoal@ARCoachingGoalAnyPlane	swift.enum.case	ARCoachingOverlayView.Goal.anyPlane	ARCoachingOverlayView.Goal.anyPlane	case anyPlane
+c:@E@ARCoachingGoal@ARCoachingGoalGeoTracking	swift.enum.case	ARCoachingOverlayView.Goal.geoTracking	ARCoachingOverlayView.Goal.geoTracking	case geoTracking
+c:@E@ARCoachingGoal@ARCoachingGoalHorizontalPlane	swift.enum.case	ARCoachingOverlayView.Goal.horizontalPlane	ARCoachingOverlayView.Goal.horizontalPlane	case horizontalPlane
+c:@E@ARCoachingGoal@ARCoachingGoalTracking	swift.enum.case	ARCoachingOverlayView.Goal.tracking	ARCoachingOverlayView.Goal.tracking	case tracking
+c:@E@ARCoachingGoal@ARCoachingGoalVerticalPlane	swift.enum.case	ARCoachingOverlayView.Goal.verticalPlane	ARCoachingOverlayView.Goal.verticalPlane	case verticalPlane
+c:@E@ARCollaborationDataPriority	swift.enum	ARSession.CollaborationData.Priority	ARSession.CollaborationData.Priority	enum Priority
+c:@E@ARCollaborationDataPriority@ARCollaborationDataPriorityCritical	swift.enum.case	ARSession.CollaborationData.Priority.critical	ARSession.CollaborationData.Priority.critical	case critical
+c:@E@ARCollaborationDataPriority@ARCollaborationDataPriorityOptional	swift.enum.case	ARSession.CollaborationData.Priority.optional	ARSession.CollaborationData.Priority.optional	case optional
+c:@E@ARConfidenceLevel	swift.enum	ARConfidenceLevel	ARConfidenceLevel	enum ARConfidenceLevel
+c:@E@ARConfidenceLevel@ARConfidenceLevelHigh	swift.enum.case	ARConfidenceLevel.high	ARConfidenceLevel.high	case high
+c:@E@ARConfidenceLevel@ARConfidenceLevelLow	swift.enum.case	ARConfidenceLevel.low	ARConfidenceLevel.low	case low
+c:@E@ARConfidenceLevel@ARConfidenceLevelMedium	swift.enum.case	ARConfidenceLevel.medium	ARConfidenceLevel.medium	case medium
+c:@E@AREnvironmentTexturing	swift.enum	ARWorldTrackingConfiguration.EnvironmentTexturing	ARWorldTrackingConfiguration.EnvironmentTexturing	enum EnvironmentTexturing
+c:@E@AREnvironmentTexturing@AREnvironmentTexturingAutomatic	swift.enum.case	ARWorldTrackingConfiguration.EnvironmentTexturing.automatic	ARWorldTrackingConfiguration.EnvironmentTexturing.automatic	case automatic
+c:@E@AREnvironmentTexturing@AREnvironmentTexturingManual	swift.enum.case	ARWorldTrackingConfiguration.EnvironmentTexturing.manual	ARWorldTrackingConfiguration.EnvironmentTexturing.manual	case manual
+c:@E@AREnvironmentTexturing@AREnvironmentTexturingNone	swift.enum.case	ARWorldTrackingConfiguration.EnvironmentTexturing.none	ARWorldTrackingConfiguration.EnvironmentTexturing.none	case none
+c:@E@ARErrorCode	swift.enum	ARError.Code	ARError.Code	enum Code
+c:@E@ARErrorCode@ARErrorCodeCameraUnauthorized	swift.enum.case	ARError.Code.cameraUnauthorized	ARError.Code.cameraUnauthorized	case cameraUnauthorized
+c:@E@ARErrorCode@ARErrorCodeFileIOFailed	swift.enum.case	ARError.Code.fileIOFailed	ARError.Code.fileIOFailed	case fileIOFailed
+c:@E@ARErrorCode@ARErrorCodeGeoTrackingFailed	swift.enum.case	ARError.Code.geoTrackingFailed	ARError.Code.geoTrackingFailed	case geoTrackingFailed
+c:@E@ARErrorCode@ARErrorCodeGeoTrackingNotAvailableAtLocation	swift.enum.case	ARError.Code.geoTrackingNotAvailableAtLocation	ARError.Code.geoTrackingNotAvailableAtLocation	case geoTrackingNotAvailableAtLocation
+c:@E@ARErrorCode@ARErrorCodeHighResolutionFrameCaptureFailed	swift.enum.case	ARError.Code.highResolutionFrameCaptureFailed	ARError.Code.highResolutionFrameCaptureFailed	case highResolutionFrameCaptureFailed
+c:@E@ARErrorCode@ARErrorCodeHighResolutionFrameCaptureInProgress	swift.enum.case	ARError.Code.highResolutionFrameCaptureInProgress	ARError.Code.highResolutionFrameCaptureInProgress	case highResolutionFrameCaptureInProgress
+c:@E@ARErrorCode@ARErrorCodeInsufficientFeatures	swift.enum.case	ARError.Code.insufficientFeatures	ARError.Code.insufficientFeatures	case insufficientFeatures
+c:@E@ARErrorCode@ARErrorCodeInvalidCollaborationData	swift.enum.case	ARError.Code.invalidCollaborationData	ARError.Code.invalidCollaborationData	case invalidCollaborationData
+c:@E@ARErrorCode@ARErrorCodeInvalidConfiguration	swift.enum.case	ARError.Code.invalidConfiguration	ARError.Code.invalidConfiguration	case invalidConfiguration
+c:@E@ARErrorCode@ARErrorCodeInvalidReferenceImage	swift.enum.case	ARError.Code.invalidReferenceImage	ARError.Code.invalidReferenceImage	case invalidReferenceImage
+c:@E@ARErrorCode@ARErrorCodeInvalidReferenceObject	swift.enum.case	ARError.Code.invalidReferenceObject	ARError.Code.invalidReferenceObject	case invalidReferenceObject
+c:@E@ARErrorCode@ARErrorCodeInvalidWorldMap	swift.enum.case	ARError.Code.invalidWorldMap	ARError.Code.invalidWorldMap	case invalidWorldMap
+c:@E@ARErrorCode@ARErrorCodeLocationUnauthorized	swift.enum.case	ARError.Code.locationUnauthorized	ARError.Code.locationUnauthorized	case locationUnauthorized
+c:@E@ARErrorCode@ARErrorCodeMicrophoneUnauthorized	swift.enum.case	ARError.Code.microphoneUnauthorized	ARError.Code.microphoneUnauthorized	case microphoneUnauthorized
+c:@E@ARErrorCode@ARErrorCodeObjectMergeFailed	swift.enum.case	ARError.Code.objectMergeFailed	ARError.Code.objectMergeFailed	case objectMergeFailed
+c:@E@ARErrorCode@ARErrorCodeRequestFailed	swift.enum.case	ARError.Code.requestFailed	ARError.Code.requestFailed	case requestFailed
+c:@E@ARErrorCode@ARErrorCodeSensorFailed	swift.enum.case	ARError.Code.sensorFailed	ARError.Code.sensorFailed	case sensorFailed
+c:@E@ARErrorCode@ARErrorCodeSensorUnavailable	swift.enum.case	ARError.Code.sensorUnavailable	ARError.Code.sensorUnavailable	case sensorUnavailable
+c:@E@ARErrorCode@ARErrorCodeUnsupportedConfiguration	swift.enum.case	ARError.Code.unsupportedConfiguration	ARError.Code.unsupportedConfiguration	case unsupportedConfiguration
+c:@E@ARErrorCode@ARErrorCodeWorldTrackingFailed	swift.enum.case	ARError.Code.worldTrackingFailed	ARError.Code.worldTrackingFailed	case worldTrackingFailed
+c:@E@ARFrameSemantics	swift.struct	ARConfiguration.FrameSemantics	ARConfiguration.FrameSemantics	struct FrameSemantics
+c:@E@ARFrameSemantics@ARFrameSemanticBodyDetection	swift.type.property	bodyDetection	ARConfiguration.FrameSemantics.bodyDetection	static var bodyDetection: ARConfiguration.FrameSemantics { get }
+c:@E@ARFrameSemantics@ARFrameSemanticPersonSegmentation	swift.type.property	personSegmentation	ARConfiguration.FrameSemantics.personSegmentation	static var personSegmentation: ARConfiguration.FrameSemantics { get }
+c:@E@ARFrameSemantics@ARFrameSemanticPersonSegmentationWithDepth	swift.type.property	personSegmentationWithDepth	ARConfiguration.FrameSemantics.personSegmentationWithDepth	static var personSegmentationWithDepth: ARConfiguration.FrameSemantics { get }
+c:@E@ARFrameSemantics@ARFrameSemanticSceneDepth	swift.type.property	sceneDepth	ARConfiguration.FrameSemantics.sceneDepth	static var sceneDepth: ARConfiguration.FrameSemantics { get }
+c:@E@ARFrameSemantics@ARFrameSemanticSmoothedSceneDepth	swift.type.property	smoothedSceneDepth	ARConfiguration.FrameSemantics.smoothedSceneDepth	static var smoothedSceneDepth: ARConfiguration.FrameSemantics { get }
+c:@E@ARGeoTrackingAccuracy	swift.enum	ARGeoTrackingStatus.Accuracy	ARGeoTrackingStatus.Accuracy	enum Accuracy
+c:@E@ARGeoTrackingAccuracy@ARGeoTrackingAccuracyHigh	swift.enum.case	ARGeoTrackingStatus.Accuracy.high	ARGeoTrackingStatus.Accuracy.high	case high
+c:@E@ARGeoTrackingAccuracy@ARGeoTrackingAccuracyLow	swift.enum.case	ARGeoTrackingStatus.Accuracy.low	ARGeoTrackingStatus.Accuracy.low	case low
+c:@E@ARGeoTrackingAccuracy@ARGeoTrackingAccuracyMedium	swift.enum.case	ARGeoTrackingStatus.Accuracy.medium	ARGeoTrackingStatus.Accuracy.medium	case medium
+c:@E@ARGeoTrackingAccuracy@ARGeoTrackingAccuracyUndetermined	swift.enum.case	ARGeoTrackingStatus.Accuracy.undetermined	ARGeoTrackingStatus.Accuracy.undetermined	case undetermined
+c:@E@ARGeoTrackingState	swift.enum	ARGeoTrackingStatus.State	ARGeoTrackingStatus.State	enum State
+c:@E@ARGeoTrackingState@ARGeoTrackingStateInitializing	swift.enum.case	ARGeoTrackingStatus.State.initializing	ARGeoTrackingStatus.State.initializing	case initializing
+c:@E@ARGeoTrackingState@ARGeoTrackingStateLocalized	swift.enum.case	ARGeoTrackingStatus.State.localized	ARGeoTrackingStatus.State.localized	case localized
+c:@E@ARGeoTrackingState@ARGeoTrackingStateLocalizing	swift.enum.case	ARGeoTrackingStatus.State.localizing	ARGeoTrackingStatus.State.localizing	case localizing
+c:@E@ARGeoTrackingState@ARGeoTrackingStateNotAvailable	swift.enum.case	ARGeoTrackingStatus.State.notAvailable	ARGeoTrackingStatus.State.notAvailable	case notAvailable
+c:@E@ARGeoTrackingStateReason	swift.enum	ARGeoTrackingStatus.StateReason	ARGeoTrackingStatus.StateReason	enum StateReason
+c:@E@ARGeoTrackingStateReason@ARGeoTrackingStateReasonDevicePointedTooLow	swift.enum.case	ARGeoTrackingStatus.StateReason.devicePointedTooLow	ARGeoTrackingStatus.StateReason.devicePointedTooLow	case devicePointedTooLow
+c:@E@ARGeoTrackingStateReason@ARGeoTrackingStateReasonGeoDataNotLoaded	swift.enum.case	ARGeoTrackingStatus.StateReason.geoDataNotLoaded	ARGeoTrackingStatus.StateReason.geoDataNotLoaded	case geoDataNotLoaded
+c:@E@ARGeoTrackingStateReason@ARGeoTrackingStateReasonNeedLocationPermissions	swift.enum.case	ARGeoTrackingStatus.StateReason.needLocationPermissions	ARGeoTrackingStatus.StateReason.needLocationPermissions	case needLocationPermissions
+c:@E@ARGeoTrackingStateReason@ARGeoTrackingStateReasonNone	swift.enum.case	ARGeoTrackingStatus.StateReason.none	ARGeoTrackingStatus.StateReason.none	case none
+c:@E@ARGeoTrackingStateReason@ARGeoTrackingStateReasonNotAvailableAtLocation	swift.enum.case	ARGeoTrackingStatus.StateReason.notAvailableAtLocation	ARGeoTrackingStatus.StateReason.notAvailableAtLocation	case notAvailableAtLocation
+c:@E@ARGeoTrackingStateReason@ARGeoTrackingStateReasonVisualLocalizationFailed	swift.enum.case	ARGeoTrackingStatus.StateReason.visualLocalizationFailed	ARGeoTrackingStatus.StateReason.visualLocalizationFailed	case visualLocalizationFailed
+c:@E@ARGeoTrackingStateReason@ARGeoTrackingStateReasonWaitingForAvailabilityCheck	swift.enum.case	ARGeoTrackingStatus.StateReason.waitingForAvailabilityCheck	ARGeoTrackingStatus.StateReason.waitingForAvailabilityCheck	case waitingForAvailabilityCheck
+c:@E@ARGeoTrackingStateReason@ARGeoTrackingStateReasonWaitingForLocation	swift.enum.case	ARGeoTrackingStatus.StateReason.waitingForLocation	ARGeoTrackingStatus.StateReason.waitingForLocation	case waitingForLocation
+c:@E@ARGeoTrackingStateReason@ARGeoTrackingStateReasonWorldTrackingUnstable	swift.enum.case	ARGeoTrackingStatus.StateReason.worldTrackingUnstable	ARGeoTrackingStatus.StateReason.worldTrackingUnstable	case worldTrackingUnstable
+c:@E@ARGeometryPrimitiveType	swift.enum	ARGeometryPrimitiveType	ARGeometryPrimitiveType	enum ARGeometryPrimitiveType
+c:@E@ARGeometryPrimitiveType@ARGeometryPrimitiveTypeLine	swift.enum.case	ARGeometryPrimitiveType.line	ARGeometryPrimitiveType.line	case line
+c:@E@ARGeometryPrimitiveType@ARGeometryPrimitiveTypeTriangle	swift.enum.case	ARGeometryPrimitiveType.triangle	ARGeometryPrimitiveType.triangle	case triangle
+c:@E@ARHitTestResultType	swift.struct	ARHitTestResult.ResultType	ARHitTestResult.ResultType	struct ResultType
+c:@E@ARHitTestResultType@ARHitTestResultTypeEstimatedHorizontalPlane	swift.type.property	estimatedHorizontalPlane	ARHitTestResult.ResultType.estimatedHorizontalPlane	static var estimatedHorizontalPlane: ARHitTestResult.ResultType { get }
+c:@E@ARHitTestResultType@ARHitTestResultTypeEstimatedVerticalPlane	swift.type.property	estimatedVerticalPlane	ARHitTestResult.ResultType.estimatedVerticalPlane	static var estimatedVerticalPlane: ARHitTestResult.ResultType { get }
+c:@E@ARHitTestResultType@ARHitTestResultTypeExistingPlane	swift.type.property	existingPlane	ARHitTestResult.ResultType.existingPlane	static var existingPlane: ARHitTestResult.ResultType { get }
+c:@E@ARHitTestResultType@ARHitTestResultTypeExistingPlaneUsingExtent	swift.type.property	existingPlaneUsingExtent	ARHitTestResult.ResultType.existingPlaneUsingExtent	static var existingPlaneUsingExtent: ARHitTestResult.ResultType { get }
+c:@E@ARHitTestResultType@ARHitTestResultTypeExistingPlaneUsingGeometry	swift.type.property	existingPlaneUsingGeometry	ARHitTestResult.ResultType.existingPlaneUsingGeometry	static var existingPlaneUsingGeometry: ARHitTestResult.ResultType { get }
+c:@E@ARHitTestResultType@ARHitTestResultTypeFeaturePoint	swift.type.property	featurePoint	ARHitTestResult.ResultType.featurePoint	static var featurePoint: ARHitTestResult.ResultType { get }
+c:@E@ARMatteResolution	swift.enum	ARMatteGenerator.Resolution	ARMatteGenerator.Resolution	enum Resolution
+c:@E@ARMatteResolution@ARMatteResolutionFull	swift.enum.case	ARMatteGenerator.Resolution.full	ARMatteGenerator.Resolution.full	case full
+c:@E@ARMatteResolution@ARMatteResolutionHalf	swift.enum.case	ARMatteGenerator.Resolution.half	ARMatteGenerator.Resolution.half	case half
+c:@E@ARMeshClassification	swift.enum	ARMeshClassification	ARMeshClassification	enum ARMeshClassification
+c:@E@ARMeshClassification@ARMeshClassificationCeiling	swift.enum.case	ARMeshClassification.ceiling	ARMeshClassification.ceiling	case ceiling
+c:@E@ARMeshClassification@ARMeshClassificationDoor	swift.enum.case	ARMeshClassification.door	ARMeshClassification.door	case door
+c:@E@ARMeshClassification@ARMeshClassificationFloor	swift.enum.case	ARMeshClassification.floor	ARMeshClassification.floor	case floor
+c:@E@ARMeshClassification@ARMeshClassificationNone	swift.enum.case	ARMeshClassification.none	ARMeshClassification.none	case none
+c:@E@ARMeshClassification@ARMeshClassificationSeat	swift.enum.case	ARMeshClassification.seat	ARMeshClassification.seat	case seat
+c:@E@ARMeshClassification@ARMeshClassificationTable	swift.enum.case	ARMeshClassification.table	ARMeshClassification.table	case table
+c:@E@ARMeshClassification@ARMeshClassificationWall	swift.enum.case	ARMeshClassification.wall	ARMeshClassification.wall	case wall
+c:@E@ARMeshClassification@ARMeshClassificationWindow	swift.enum.case	ARMeshClassification.window	ARMeshClassification.window	case window
+c:@E@ARPlaneAnchorAlignment	swift.enum	ARPlaneAnchor.Alignment	ARPlaneAnchor.Alignment	enum Alignment
+c:@E@ARPlaneAnchorAlignment@ARPlaneAnchorAlignmentHorizontal	swift.enum.case	ARPlaneAnchor.Alignment.horizontal	ARPlaneAnchor.Alignment.horizontal	case horizontal
+c:@E@ARPlaneAnchorAlignment@ARPlaneAnchorAlignmentVertical	swift.enum.case	ARPlaneAnchor.Alignment.vertical	ARPlaneAnchor.Alignment.vertical	case vertical
+c:@E@ARPlaneDetection	swift.struct	ARWorldTrackingConfiguration.PlaneDetection	ARWorldTrackingConfiguration.PlaneDetection	struct PlaneDetection
+c:@E@ARPlaneDetection@ARPlaneDetectionHorizontal	swift.type.property	horizontal	ARWorldTrackingConfiguration.PlaneDetection.horizontal	static var horizontal: ARWorldTrackingConfiguration.PlaneDetection { get }
+c:@E@ARPlaneDetection@ARPlaneDetectionVertical	swift.type.property	vertical	ARWorldTrackingConfiguration.PlaneDetection.vertical	static var vertical: ARWorldTrackingConfiguration.PlaneDetection { get }
+c:@E@ARRaycastTarget	swift.enum	ARRaycastQuery.Target	ARRaycastQuery.Target	enum Target
+c:@E@ARRaycastTarget@ARRaycastTargetEstimatedPlane	swift.enum.case	ARRaycastQuery.Target.estimatedPlane	ARRaycastQuery.Target.estimatedPlane	case estimatedPlane
+c:@E@ARRaycastTarget@ARRaycastTargetExistingPlaneGeometry	swift.enum.case	ARRaycastQuery.Target.existingPlaneGeometry	ARRaycastQuery.Target.existingPlaneGeometry	case existingPlaneGeometry
+c:@E@ARRaycastTarget@ARRaycastTargetExistingPlaneInfinite	swift.enum.case	ARRaycastQuery.Target.existingPlaneInfinite	ARRaycastQuery.Target.existingPlaneInfinite	case existingPlaneInfinite
+c:@E@ARRaycastTargetAlignment	swift.enum	ARRaycastQuery.TargetAlignment	ARRaycastQuery.TargetAlignment	enum TargetAlignment
+c:@E@ARRaycastTargetAlignment@ARRaycastTargetAlignmentAny	swift.enum.case	ARRaycastQuery.TargetAlignment.any	ARRaycastQuery.TargetAlignment.any	case any
+c:@E@ARRaycastTargetAlignment@ARRaycastTargetAlignmentHorizontal	swift.enum.case	ARRaycastQuery.TargetAlignment.horizontal	ARRaycastQuery.TargetAlignment.horizontal	case horizontal
+c:@E@ARRaycastTargetAlignment@ARRaycastTargetAlignmentVertical	swift.enum.case	ARRaycastQuery.TargetAlignment.vertical	ARRaycastQuery.TargetAlignment.vertical	case vertical
+c:@E@ARSceneReconstruction	swift.struct	ARConfiguration.SceneReconstruction	ARConfiguration.SceneReconstruction	struct SceneReconstruction
+c:@E@ARSceneReconstruction@ARSceneReconstructionMesh	swift.type.property	mesh	ARConfiguration.SceneReconstruction.mesh	static var mesh: ARConfiguration.SceneReconstruction { get }
+c:@E@ARSceneReconstruction@ARSceneReconstructionMeshWithClassification	swift.type.property	meshWithClassification	ARConfiguration.SceneReconstruction.meshWithClassification	static var meshWithClassification: ARConfiguration.SceneReconstruction { get }
+c:@E@ARSegmentationClass	swift.enum	ARFrame.SegmentationClass	ARFrame.SegmentationClass	enum SegmentationClass
+c:@E@ARSegmentationClass@ARSegmentationClassNone	swift.enum.case	ARFrame.SegmentationClass.none	ARFrame.SegmentationClass.none	case none
+c:@E@ARSegmentationClass@ARSegmentationClassPerson	swift.enum.case	ARFrame.SegmentationClass.person	ARFrame.SegmentationClass.person	case person
+c:@E@ARSessionRunOptions	swift.struct	ARSession.RunOptions	ARSession.RunOptions	struct RunOptions
+c:@E@ARSessionRunOptions@ARSessionRunOptionRemoveExistingAnchors	swift.type.property	removeExistingAnchors	ARSession.RunOptions.removeExistingAnchors	static var removeExistingAnchors: ARSession.RunOptions { get }
+c:@E@ARSessionRunOptions@ARSessionRunOptionResetSceneReconstruction	swift.type.property	resetSceneReconstruction	ARSession.RunOptions.resetSceneReconstruction	static var resetSceneReconstruction: ARSession.RunOptions { get }
+c:@E@ARSessionRunOptions@ARSessionRunOptionResetTracking	swift.type.property	resetTracking	ARSession.RunOptions.resetTracking	static var resetTracking: ARSession.RunOptions { get }
+c:@E@ARSessionRunOptions@ARSessionRunOptionStopTrackedRaycasts	swift.type.property	stopTrackedRaycasts	ARSession.RunOptions.stopTrackedRaycasts	static var stopTrackedRaycasts: ARSession.RunOptions { get }
+c:@E@ARWorldAlignment	swift.enum	ARConfiguration.WorldAlignment	ARConfiguration.WorldAlignment	enum WorldAlignment
+c:@E@ARWorldAlignment@ARWorldAlignmentCamera	swift.enum.case	ARConfiguration.WorldAlignment.camera	ARConfiguration.WorldAlignment.camera	case camera
+c:@E@ARWorldAlignment@ARWorldAlignmentGravity	swift.enum.case	ARConfiguration.WorldAlignment.gravity	ARConfiguration.WorldAlignment.gravity	case gravity
+c:@E@ARWorldAlignment@ARWorldAlignmentGravityAndHeading	swift.enum.case	ARConfiguration.WorldAlignment.gravityAndHeading	ARConfiguration.WorldAlignment.gravityAndHeading	case gravityAndHeading
+c:@E@ARWorldMappingStatus	swift.enum	ARFrame.WorldMappingStatus	ARFrame.WorldMappingStatus	enum WorldMappingStatus
+c:@E@ARWorldMappingStatus@ARWorldMappingStatusExtending	swift.enum.case	ARFrame.WorldMappingStatus.extending	ARFrame.WorldMappingStatus.extending	case extending
+c:@E@ARWorldMappingStatus@ARWorldMappingStatusLimited	swift.enum.case	ARFrame.WorldMappingStatus.limited	ARFrame.WorldMappingStatus.limited	case limited
+c:@E@ARWorldMappingStatus@ARWorldMappingStatusMapped	swift.enum.case	ARFrame.WorldMappingStatus.mapped	ARFrame.WorldMappingStatus.mapped	case mapped
+c:@E@ARWorldMappingStatus@ARWorldMappingStatusNotAvailable	swift.enum.case	ARFrame.WorldMappingStatus.notAvailable	ARFrame.WorldMappingStatus.notAvailable	case notAvailable
+c:@F@ARSkeletonJointNameForRecognizedPointKey	swift.init	init(_:)	ARSkeleton.JointName.init(_:)	init?(_ recognizedPointKey: VNRecognizedPointKey)
+c:@T@ARBlendShapeLocation	swift.struct	ARFaceAnchor.BlendShapeLocation	ARFaceAnchor.BlendShapeLocation	struct BlendShapeLocation
+c:@T@ARSCNDebugOptions	swift.typealias	ARSCNDebugOptions	ARSCNDebugOptions	typealias ARSCNDebugOptions = SCNDebugOptions
+c:@T@ARSkeletonJointName	swift.struct	ARSkeleton.JointName	ARSkeleton.JointName	struct JointName
+c:objc(cs)ARAnchor	swift.class	ARAnchor	ARAnchor	class ARAnchor
+c:objc(cs)ARAnchor(im)initWithName:transform:	swift.init	init(name:transform:)	ARAnchor.init(name:transform:)	init(name: String, transform: simd_float4x4)
+c:objc(cs)ARAnchor(im)initWithTransform:	swift.init	init(transform:)	ARAnchor.init(transform:)	init(transform: simd_float4x4)
+c:objc(cs)ARAnchor(py)identifier	swift.property	identifier	ARAnchor.identifier	var identifier: UUID { get }
+c:objc(cs)ARAnchor(py)name	swift.property	name	ARAnchor.name	var name: String? { get }
+c:objc(cs)ARAnchor(py)sessionIdentifier	swift.property	sessionIdentifier	ARAnchor.sessionIdentifier	var sessionIdentifier: UUID? { get }
+c:objc(cs)ARAnchor(py)transform	swift.property	transform	ARAnchor.transform	var transform: simd_float4x4 { get }
+c:objc(cs)ARAppClipCodeAnchor	swift.class	ARAppClipCodeAnchor	ARAppClipCodeAnchor	class ARAppClipCodeAnchor
+c:objc(cs)ARAppClipCodeAnchor(py)radius	swift.property	radius	ARAppClipCodeAnchor.radius	var radius: Float { get }
+c:objc(cs)ARAppClipCodeAnchor(py)url	swift.property	url	ARAppClipCodeAnchor.url	var url: URL? { get }
+c:objc(cs)ARAppClipCodeAnchor(py)urlDecodingState	swift.property	urlDecodingState	ARAppClipCodeAnchor.urlDecodingState	var urlDecodingState: ARAppClipCodeAnchor.URLDecodingState { get }
+c:objc(cs)ARBody2D	swift.class	ARBody2D	ARBody2D	class ARBody2D
+c:objc(cs)ARBody2D(py)skeleton	swift.property	skeleton	ARBody2D.skeleton	var skeleton: ARSkeleton2D { get }
+c:objc(cs)ARBodyAnchor	swift.class	ARBodyAnchor	ARBodyAnchor	class ARBodyAnchor
+c:objc(cs)ARBodyAnchor(py)estimatedScaleFactor	swift.property	estimatedScaleFactor	ARBodyAnchor.estimatedScaleFactor	var estimatedScaleFactor: CGFloat { get }
+c:objc(cs)ARBodyAnchor(py)skeleton	swift.property	skeleton	ARBodyAnchor.skeleton	var skeleton: ARSkeleton3D { get }
+c:objc(cs)ARBodyTrackingConfiguration	swift.class	ARBodyTrackingConfiguration	ARBodyTrackingConfiguration	class ARBodyTrackingConfiguration
+c:objc(cs)ARBodyTrackingConfiguration(cpy)supportsAppClipCodeTracking	swift.type.property	supportsAppClipCodeTracking	ARBodyTrackingConfiguration.supportsAppClipCodeTracking	class var supportsAppClipCodeTracking: Bool { get }
+c:objc(cs)ARBodyTrackingConfiguration(im)init	swift.init	init()	ARBodyTrackingConfiguration.init()	init()
+c:objc(cs)ARBodyTrackingConfiguration(py)appClipCodeTrackingEnabled	swift.property	appClipCodeTrackingEnabled	ARBodyTrackingConfiguration.appClipCodeTrackingEnabled	var appClipCodeTrackingEnabled: Bool { get set }
+c:objc(cs)ARBodyTrackingConfiguration(py)autoFocusEnabled	swift.property	isAutoFocusEnabled	ARBodyTrackingConfiguration.isAutoFocusEnabled	var isAutoFocusEnabled: Bool { get set }
+c:objc(cs)ARBodyTrackingConfiguration(py)automaticImageScaleEstimationEnabled	swift.property	automaticImageScaleEstimationEnabled	ARBodyTrackingConfiguration.automaticImageScaleEstimationEnabled	var automaticImageScaleEstimationEnabled: Bool { get set }
+c:objc(cs)ARBodyTrackingConfiguration(py)automaticSkeletonScaleEstimationEnabled	swift.property	automaticSkeletonScaleEstimationEnabled	ARBodyTrackingConfiguration.automaticSkeletonScaleEstimationEnabled	var automaticSkeletonScaleEstimationEnabled: Bool { get set }
+c:objc(cs)ARBodyTrackingConfiguration(py)detectionImages	swift.property	detectionImages	ARBodyTrackingConfiguration.detectionImages	var detectionImages: Set<ARReferenceImage> { get set }
+c:objc(cs)ARBodyTrackingConfiguration(py)environmentTexturing	swift.property	environmentTexturing	ARBodyTrackingConfiguration.environmentTexturing	var environmentTexturing: ARWorldTrackingConfiguration.EnvironmentTexturing { get set }
+c:objc(cs)ARBodyTrackingConfiguration(py)initialWorldMap	swift.property	initialWorldMap	ARBodyTrackingConfiguration.initialWorldMap	var initialWorldMap: ARWorldMap? { get set }
+c:objc(cs)ARBodyTrackingConfiguration(py)maximumNumberOfTrackedImages	swift.property	maximumNumberOfTrackedImages	ARBodyTrackingConfiguration.maximumNumberOfTrackedImages	var maximumNumberOfTrackedImages: Int { get set }
+c:objc(cs)ARBodyTrackingConfiguration(py)planeDetection	swift.property	planeDetection	ARBodyTrackingConfiguration.planeDetection	var planeDetection: ARWorldTrackingConfiguration.PlaneDetection { get set }
+c:objc(cs)ARBodyTrackingConfiguration(py)wantsHDREnvironmentTextures	swift.property	wantsHDREnvironmentTextures	ARBodyTrackingConfiguration.wantsHDREnvironmentTextures	var wantsHDREnvironmentTextures: Bool { get set }
+c:objc(cs)ARCamera	swift.class	ARCamera	ARCamera	class ARCamera
+c:objc(cs)ARCamera(im)projectPoint:orientation:viewportSize:	swift.method	projectPoint(_:orientation:viewportSize:)	ARCamera.projectPoint(_:orientation:viewportSize:)	func projectPoint(_ point: simd_float3, orientation: UIInterfaceOrientation, viewportSize: CGSize) -> CGPoint
+c:objc(cs)ARCamera(im)projectionMatrixForOrientation:viewportSize:zNear:zFar:	swift.method	projectionMatrix(for:viewportSize:zNear:zFar:)	ARCamera.projectionMatrix(for:viewportSize:zNear:zFar:)	func projectionMatrix(for orientation: UIInterfaceOrientation, viewportSize: CGSize, zNear: CGFloat, zFar: CGFloat) -> simd_float4x4
+c:objc(cs)ARCamera(im)viewMatrixForOrientation:	swift.method	viewMatrix(for:)	ARCamera.viewMatrix(for:)	func viewMatrix(for orientation: UIInterfaceOrientation) -> simd_float4x4
+c:objc(cs)ARCamera(py)eulerAngles	swift.property	eulerAngles	ARCamera.eulerAngles	var eulerAngles: simd_float3 { get }
+c:objc(cs)ARCamera(py)exposureDuration	swift.property	exposureDuration	ARCamera.exposureDuration	var exposureDuration: TimeInterval { get }
+c:objc(cs)ARCamera(py)exposureOffset	swift.property	exposureOffset	ARCamera.exposureOffset	var exposureOffset: Float { get }
+c:objc(cs)ARCamera(py)imageResolution	swift.property	imageResolution	ARCamera.imageResolution	var imageResolution: CGSize { get }
+c:objc(cs)ARCamera(py)intrinsics	swift.property	intrinsics	ARCamera.intrinsics	var intrinsics: simd_float3x3 { get }
+c:objc(cs)ARCamera(py)projectionMatrix	swift.property	projectionMatrix	ARCamera.projectionMatrix	var projectionMatrix: simd_float4x4 { get }
+c:objc(cs)ARCamera(py)transform	swift.property	transform	ARCamera.transform	var transform: simd_float4x4 { get }
+c:objc(cs)ARCoachingOverlayView	swift.class	ARCoachingOverlayView	ARCoachingOverlayView	@MainActor class ARCoachingOverlayView
+c:objc(cs)ARCoachingOverlayView(im)setActive:animated:	swift.method	setActive(_:animated:)	ARCoachingOverlayView.setActive(_:animated:)	@MainActor func setActive(_ active: Bool, animated: Bool)
+c:objc(cs)ARCoachingOverlayView(py)activatesAutomatically	swift.property	activatesAutomatically	ARCoachingOverlayView.activatesAutomatically	@MainActor var activatesAutomatically: Bool { get set }
+c:objc(cs)ARCoachingOverlayView(py)delegate	swift.property	delegate	ARCoachingOverlayView.delegate	@IBOutlet @MainActor weak var delegate: (any ARCoachingOverlayViewDelegate)? { get set }
+c:objc(cs)ARCoachingOverlayView(py)goal	swift.property	goal	ARCoachingOverlayView.goal	@MainActor var goal: ARCoachingOverlayView.Goal { get set }
+c:objc(cs)ARCoachingOverlayView(py)isActive	swift.property	isActive	ARCoachingOverlayView.isActive	@MainActor var isActive: Bool { get }
+c:objc(cs)ARCoachingOverlayView(py)session	swift.property	session	ARCoachingOverlayView.session	@MainActor var session: ARSession? { get set }
+c:objc(cs)ARCoachingOverlayView(py)sessionProvider	swift.property	sessionProvider	ARCoachingOverlayView.sessionProvider	@IBOutlet @MainActor weak var sessionProvider: (any ARSessionProviding)? { get set }
+c:objc(cs)ARCollaborationData	swift.class	ARSession.CollaborationData	ARSession.CollaborationData	class CollaborationData
+c:objc(cs)ARCollaborationData(py)priority	swift.property	priority	ARSession.CollaborationData.priority	var priority: ARSession.CollaborationData.Priority { get }
+c:objc(cs)ARConfiguration	swift.class	ARConfiguration	ARConfiguration	class ARConfiguration
+c:objc(cs)ARConfiguration(cm)supportsFrameSemantics:	swift.type.method	supportsFrameSemantics(_:)	ARConfiguration.supportsFrameSemantics(_:)	class func supportsFrameSemantics(_ frameSemantics: ARConfiguration.FrameSemantics) -> Bool
+c:objc(cs)ARConfiguration(cpy)configurableCaptureDeviceForPrimaryCamera	swift.type.property	configurableCaptureDeviceForPrimaryCamera	ARConfiguration.configurableCaptureDeviceForPrimaryCamera	class var configurableCaptureDeviceForPrimaryCamera: AVCaptureDevice? { get }
+c:objc(cs)ARConfiguration(cpy)isSupported	swift.type.property	isSupported	ARConfiguration.isSupported	class var isSupported: Bool { get }
+c:objc(cs)ARConfiguration(cpy)recommendedVideoFormatFor4KResolution	swift.type.property	recommendedVideoFormatFor4KResolution	ARConfiguration.recommendedVideoFormatFor4KResolution	class var recommendedVideoFormatFor4KResolution: ARConfiguration.VideoFormat? { get }
+c:objc(cs)ARConfiguration(cpy)recommendedVideoFormatForHighResolutionFrameCapturing	swift.type.property	recommendedVideoFormatForHighResolutionFrameCapturing	ARConfiguration.recommendedVideoFormatForHighResolutionFrameCapturing	class var recommendedVideoFormatForHighResolutionFrameCapturing: ARConfiguration.VideoFormat? { get }
+c:objc(cs)ARConfiguration(cpy)supportedVideoFormats	swift.type.property	supportedVideoFormats	ARConfiguration.supportedVideoFormats	class var supportedVideoFormats: [ARConfiguration.VideoFormat] { get }
+c:objc(cs)ARConfiguration(py)frameSemantics	swift.property	frameSemantics	ARConfiguration.frameSemantics	var frameSemantics: ARConfiguration.FrameSemantics { get set }
+c:objc(cs)ARConfiguration(py)lightEstimationEnabled	swift.property	isLightEstimationEnabled	ARConfiguration.isLightEstimationEnabled	var isLightEstimationEnabled: Bool { get set }
+c:objc(cs)ARConfiguration(py)providesAudioData	swift.property	providesAudioData	ARConfiguration.providesAudioData	var providesAudioData: Bool { get set }
+c:objc(cs)ARConfiguration(py)videoFormat	swift.property	videoFormat	ARConfiguration.videoFormat	var videoFormat: ARConfiguration.VideoFormat { get set }
+c:objc(cs)ARConfiguration(py)videoHDRAllowed	swift.property	videoHDRAllowed	ARConfiguration.videoHDRAllowed	var videoHDRAllowed: Bool { get set }
+c:objc(cs)ARConfiguration(py)worldAlignment	swift.property	worldAlignment	ARConfiguration.worldAlignment	var worldAlignment: ARConfiguration.WorldAlignment { get set }
+c:objc(cs)ARDepthData	swift.class	ARDepthData	ARDepthData	class ARDepthData
+c:objc(cs)ARDepthData(py)confidenceMap	swift.property	confidenceMap	ARDepthData.confidenceMap	unowned(unsafe) var confidenceMap: CVPixelBuffer? { get }
+c:objc(cs)ARDepthData(py)depthMap	swift.property	depthMap	ARDepthData.depthMap	unowned(unsafe) var depthMap: CVPixelBuffer { get }
+c:objc(cs)ARDirectionalLightEstimate	swift.class	ARDirectionalLightEstimate	ARDirectionalLightEstimate	class ARDirectionalLightEstimate
+c:objc(cs)ARDirectionalLightEstimate(py)primaryLightDirection	swift.property	primaryLightDirection	ARDirectionalLightEstimate.primaryLightDirection	var primaryLightDirection: simd_float3 { get }
+c:objc(cs)ARDirectionalLightEstimate(py)primaryLightIntensity	swift.property	primaryLightIntensity	ARDirectionalLightEstimate.primaryLightIntensity	var primaryLightIntensity: CGFloat { get }
+c:objc(cs)ARDirectionalLightEstimate(py)sphericalHarmonicsCoefficients	swift.property	sphericalHarmonicsCoefficients	ARDirectionalLightEstimate.sphericalHarmonicsCoefficients	var sphericalHarmonicsCoefficients: Data { get }
+c:objc(cs)AREnvironmentProbeAnchor	swift.class	AREnvironmentProbeAnchor	AREnvironmentProbeAnchor	class AREnvironmentProbeAnchor
+c:objc(cs)AREnvironmentProbeAnchor(im)initWithName:transform:extent:	swift.init	init(name:transform:extent:)	AREnvironmentProbeAnchor.init(name:transform:extent:)	init(name: String, transform: simd_float4x4, extent: simd_float3)
+c:objc(cs)AREnvironmentProbeAnchor(im)initWithTransform:extent:	swift.init	init(transform:extent:)	AREnvironmentProbeAnchor.init(transform:extent:)	init(transform: simd_float4x4, extent: simd_float3)
+c:objc(cs)AREnvironmentProbeAnchor(py)environmentTexture	swift.property	environmentTexture	AREnvironmentProbeAnchor.environmentTexture	var environmentTexture: (any MTLTexture)? { get }
+c:objc(cs)AREnvironmentProbeAnchor(py)extent	swift.property	extent	AREnvironmentProbeAnchor.extent	var extent: simd_float3 { get }
+c:objc(cs)ARFaceAnchor	swift.class	ARFaceAnchor	ARFaceAnchor	class ARFaceAnchor
+c:objc(cs)ARFaceAnchor(py)blendShapes	swift.property	blendShapes	ARFaceAnchor.blendShapes	var blendShapes: [ARFaceAnchor.BlendShapeLocation : NSNumber] { get }
+c:objc(cs)ARFaceAnchor(py)geometry	swift.property	geometry	ARFaceAnchor.geometry	var geometry: ARFaceGeometry { get }
+c:objc(cs)ARFaceAnchor(py)leftEyeTransform	swift.property	leftEyeTransform	ARFaceAnchor.leftEyeTransform	var leftEyeTransform: simd_float4x4 { get }
+c:objc(cs)ARFaceAnchor(py)lookAtPoint	swift.property	lookAtPoint	ARFaceAnchor.lookAtPoint	var lookAtPoint: simd_float3 { get }
+c:objc(cs)ARFaceAnchor(py)rightEyeTransform	swift.property	rightEyeTransform	ARFaceAnchor.rightEyeTransform	var rightEyeTransform: simd_float4x4 { get }
+c:objc(cs)ARFaceGeometry	swift.class	ARFaceGeometry	ARFaceGeometry	class ARFaceGeometry
+c:objc(cs)ARFaceGeometry(im)initWithBlendShapes:	swift.init	init(blendShapes:)	ARFaceGeometry.init(blendShapes:)	init?(blendShapes: [ARFaceAnchor.BlendShapeLocation : NSNumber])
+c:objc(cs)ARFaceGeometry(py)triangleCount	swift.property	triangleCount	ARFaceGeometry.triangleCount	var triangleCount: Int { get }
+c:objc(cs)ARFaceTrackingConfiguration	swift.class	ARFaceTrackingConfiguration	ARFaceTrackingConfiguration	class ARFaceTrackingConfiguration
+c:objc(cs)ARFaceTrackingConfiguration(cpy)supportedNumberOfTrackedFaces	swift.type.property	supportedNumberOfTrackedFaces	ARFaceTrackingConfiguration.supportedNumberOfTrackedFaces	class var supportedNumberOfTrackedFaces: Int { get }
+c:objc(cs)ARFaceTrackingConfiguration(cpy)supportsWorldTracking	swift.type.property	supportsWorldTracking	ARFaceTrackingConfiguration.supportsWorldTracking	class var supportsWorldTracking: Bool { get }
+c:objc(cs)ARFaceTrackingConfiguration(im)init	swift.init	init()	ARFaceTrackingConfiguration.init()	init()
+c:objc(cs)ARFaceTrackingConfiguration(py)maximumNumberOfTrackedFaces	swift.property	maximumNumberOfTrackedFaces	ARFaceTrackingConfiguration.maximumNumberOfTrackedFaces	var maximumNumberOfTrackedFaces: Int { get set }
+c:objc(cs)ARFaceTrackingConfiguration(py)worldTrackingEnabled	swift.property	isWorldTrackingEnabled	ARFaceTrackingConfiguration.isWorldTrackingEnabled	var isWorldTrackingEnabled: Bool { get set }
+c:objc(cs)ARFrame	swift.class	ARFrame	ARFrame	class ARFrame
+c:objc(cs)ARFrame(im)displayTransformForOrientation:viewportSize:	swift.method	displayTransform(for:viewportSize:)	ARFrame.displayTransform(for:viewportSize:)	func displayTransform(for orientation: UIInterfaceOrientation, viewportSize: CGSize) -> CGAffineTransform
+c:objc(cs)ARFrame(im)hitTest:types:	swift.method	hitTest(_:types:)	ARFrame.hitTest(_:types:)	func hitTest(_ point: CGPoint, types: ARHitTestResult.ResultType) -> [ARHitTestResult]
+c:objc(cs)ARFrame(im)raycastQueryFromPoint:allowingTarget:alignment:	swift.method	raycastQuery(from:allowing:alignment:)	ARFrame.raycastQuery(from:allowing:alignment:)	func raycastQuery(from point: CGPoint, allowing target: ARRaycastQuery.Target, alignment: ARRaycastQuery.TargetAlignment) -> ARRaycastQuery
+c:objc(cs)ARFrame(py)anchors	swift.property	anchors	ARFrame.anchors	var anchors: [ARAnchor] { get }
+c:objc(cs)ARFrame(py)camera	swift.property	camera	ARFrame.camera	@NSCopying var camera: ARCamera { get }
+c:objc(cs)ARFrame(py)cameraGrainIntensity	swift.property	cameraGrainIntensity	ARFrame.cameraGrainIntensity	var cameraGrainIntensity: Float { get }
+c:objc(cs)ARFrame(py)cameraGrainTexture	swift.property	cameraGrainTexture	ARFrame.cameraGrainTexture	var cameraGrainTexture: (any MTLTexture)? { get }
+c:objc(cs)ARFrame(py)capturedDepthData	swift.property	capturedDepthData	ARFrame.capturedDepthData	var capturedDepthData: AVDepthData? { get }
+c:objc(cs)ARFrame(py)capturedDepthDataTimestamp	swift.property	capturedDepthDataTimestamp	ARFrame.capturedDepthDataTimestamp	var capturedDepthDataTimestamp: TimeInterval { get }
+c:objc(cs)ARFrame(py)capturedImage	swift.property	capturedImage	ARFrame.capturedImage	var capturedImage: CVPixelBuffer { get }
+c:objc(cs)ARFrame(py)detectedBody	swift.property	detectedBody	ARFrame.detectedBody	var detectedBody: ARBody2D? { get }
+c:objc(cs)ARFrame(py)estimatedDepthData	swift.property	estimatedDepthData	ARFrame.estimatedDepthData	var estimatedDepthData: CVPixelBuffer? { get }
+c:objc(cs)ARFrame(py)exifData	swift.property	exifData	ARFrame.exifData	var exifData: [String : Any] { get }
+c:objc(cs)ARFrame(py)geoTrackingStatus	swift.property	geoTrackingStatus	ARFrame.geoTrackingStatus	var geoTrackingStatus: ARGeoTrackingStatus? { get }
+c:objc(cs)ARFrame(py)lightEstimate	swift.property	lightEstimate	ARFrame.lightEstimate	var lightEstimate: ARLightEstimate? { get }
+c:objc(cs)ARFrame(py)rawFeaturePoints	swift.property	rawFeaturePoints	ARFrame.rawFeaturePoints	var rawFeaturePoints: ARPointCloud? { get }
+c:objc(cs)ARFrame(py)sceneDepth	swift.property	sceneDepth	ARFrame.sceneDepth	var sceneDepth: ARDepthData? { get }
+c:objc(cs)ARFrame(py)segmentationBuffer	swift.property	segmentationBuffer	ARFrame.segmentationBuffer	var segmentationBuffer: CVPixelBuffer? { get }
+c:objc(cs)ARFrame(py)smoothedSceneDepth	swift.property	smoothedSceneDepth	ARFrame.smoothedSceneDepth	var smoothedSceneDepth: ARDepthData? { get }
+c:objc(cs)ARFrame(py)timestamp	swift.property	timestamp	ARFrame.timestamp	var timestamp: TimeInterval { get }
+c:objc(cs)ARFrame(py)worldMappingStatus	swift.property	worldMappingStatus	ARFrame.worldMappingStatus	var worldMappingStatus: ARFrame.WorldMappingStatus { get }
+c:objc(cs)ARGeoAnchor	swift.class	ARGeoAnchor	ARGeoAnchor	class ARGeoAnchor
+c:objc(cs)ARGeoAnchor(im)initWithName:coordinate:altitude:	swift.init	init(name:coordinate:altitude:)	ARGeoAnchor.init(name:coordinate:altitude:)	init(name: String, coordinate: CLLocationCoordinate2D, altitude: CLLocationDistance)
+c:objc(cs)ARGeoAnchor(py)altitudeSource	swift.property	altitudeSource	ARGeoAnchor.altitudeSource	var altitudeSource: ARGeoAnchor.AltitudeSource { get }
+c:objc(cs)ARGeoAnchor(py)coordinate	swift.property	coordinate	ARGeoAnchor.coordinate	var coordinate: CLLocationCoordinate2D { get }
+c:objc(cs)ARGeoTrackingConfiguration	swift.class	ARGeoTrackingConfiguration	ARGeoTrackingConfiguration	class ARGeoTrackingConfiguration
+c:objc(cs)ARGeoTrackingConfiguration(cm)checkAvailabilityAtCoordinate:completionHandler:	swift.type.method	checkAvailability(at:completionHandler:)	ARGeoTrackingConfiguration.checkAvailability(at:completionHandler:)	class func checkAvailability(at coordinate: CLLocationCoordinate2D, completionHandler: @escaping (Bool, (any Error)?) -> Void)
+c:objc(cs)ARGeoTrackingConfiguration(cm)checkAvailabilityWithCompletionHandler:	swift.type.method	checkAvailability(completionHandler:)	ARGeoTrackingConfiguration.checkAvailability(completionHandler:)	class func checkAvailability(completionHandler: @escaping (Bool, (any Error)?) -> Void)
+c:objc(cs)ARGeoTrackingConfiguration(cpy)supportsAppClipCodeTracking	swift.type.property	supportsAppClipCodeTracking	ARGeoTrackingConfiguration.supportsAppClipCodeTracking	class var supportsAppClipCodeTracking: Bool { get }
+c:objc(cs)ARGeoTrackingConfiguration(im)init	swift.init	init()	ARGeoTrackingConfiguration.init()	init()
+c:objc(cs)ARGeoTrackingConfiguration(py)appClipCodeTrackingEnabled	swift.property	appClipCodeTrackingEnabled	ARGeoTrackingConfiguration.appClipCodeTrackingEnabled	var appClipCodeTrackingEnabled: Bool { get set }
+c:objc(cs)ARGeoTrackingConfiguration(py)automaticImageScaleEstimationEnabled	swift.property	automaticImageScaleEstimationEnabled	ARGeoTrackingConfiguration.automaticImageScaleEstimationEnabled	var automaticImageScaleEstimationEnabled: Bool { get set }
+c:objc(cs)ARGeoTrackingConfiguration(py)detectionImages	swift.property	detectionImages	ARGeoTrackingConfiguration.detectionImages	var detectionImages: Set<ARReferenceImage>! { get set }
+c:objc(cs)ARGeoTrackingConfiguration(py)detectionObjects	swift.property	detectionObjects	ARGeoTrackingConfiguration.detectionObjects	var detectionObjects: Set<ARReferenceObject> { get set }
+c:objc(cs)ARGeoTrackingConfiguration(py)environmentTexturing	swift.property	environmentTexturing	ARGeoTrackingConfiguration.environmentTexturing	var environmentTexturing: ARWorldTrackingConfiguration.EnvironmentTexturing { get set }
+c:objc(cs)ARGeoTrackingConfiguration(py)maximumNumberOfTrackedImages	swift.property	maximumNumberOfTrackedImages	ARGeoTrackingConfiguration.maximumNumberOfTrackedImages	var maximumNumberOfTrackedImages: Int { get set }
+c:objc(cs)ARGeoTrackingConfiguration(py)planeDetection	swift.property	planeDetection	ARGeoTrackingConfiguration.planeDetection	var planeDetection: ARWorldTrackingConfiguration.PlaneDetection { get set }
+c:objc(cs)ARGeoTrackingConfiguration(py)wantsHDREnvironmentTextures	swift.property	wantsHDREnvironmentTextures	ARGeoTrackingConfiguration.wantsHDREnvironmentTextures	var wantsHDREnvironmentTextures: Bool { get set }
+c:objc(cs)ARGeoTrackingStatus	swift.class	ARGeoTrackingStatus	ARGeoTrackingStatus	class ARGeoTrackingStatus
+c:objc(cs)ARGeoTrackingStatus(py)accuracy	swift.property	accuracy	ARGeoTrackingStatus.accuracy	var accuracy: ARGeoTrackingStatus.Accuracy { get }
+c:objc(cs)ARGeoTrackingStatus(py)state	swift.property	state	ARGeoTrackingStatus.state	var state: ARGeoTrackingStatus.State { get }
+c:objc(cs)ARGeoTrackingStatus(py)stateReason	swift.property	stateReason	ARGeoTrackingStatus.stateReason	var stateReason: ARGeoTrackingStatus.StateReason { get }
+c:objc(cs)ARGeometryElement	swift.class	ARGeometryElement	ARGeometryElement	class ARGeometryElement
+c:objc(cs)ARGeometryElement(py)buffer	swift.property	buffer	ARGeometryElement.buffer	var buffer: any MTLBuffer { get }
+c:objc(cs)ARGeometryElement(py)bytesPerIndex	swift.property	bytesPerIndex	ARGeometryElement.bytesPerIndex	var bytesPerIndex: Int { get }
+c:objc(cs)ARGeometryElement(py)count	swift.property	count	ARGeometryElement.count	var count: Int { get }
+c:objc(cs)ARGeometryElement(py)indexCountPerPrimitive	swift.property	indexCountPerPrimitive	ARGeometryElement.indexCountPerPrimitive	var indexCountPerPrimitive: Int { get }
+c:objc(cs)ARGeometryElement(py)primitiveType	swift.property	primitiveType	ARGeometryElement.primitiveType	var primitiveType: ARGeometryPrimitiveType { get }
+c:objc(cs)ARGeometrySource	swift.class	ARGeometrySource	ARGeometrySource	class ARGeometrySource
+c:objc(cs)ARGeometrySource(py)buffer	swift.property	buffer	ARGeometrySource.buffer	var buffer: any MTLBuffer { get }
+c:objc(cs)ARGeometrySource(py)componentsPerVector	swift.property	componentsPerVector	ARGeometrySource.componentsPerVector	var componentsPerVector: Int { get }
+c:objc(cs)ARGeometrySource(py)count	swift.property	count	ARGeometrySource.count	var count: Int { get }
+c:objc(cs)ARGeometrySource(py)format	swift.property	format	ARGeometrySource.format	var format: MTLVertexFormat { get }
+c:objc(cs)ARGeometrySource(py)offset	swift.property	offset	ARGeometrySource.offset	var offset: Int { get }
+c:objc(cs)ARGeometrySource(py)stride	swift.property	stride	ARGeometrySource.stride	var stride: Int { get }
+c:objc(cs)ARHitTestResult	swift.class	ARHitTestResult	ARHitTestResult	class ARHitTestResult
+c:objc(cs)ARHitTestResult(py)anchor	swift.property	anchor	ARHitTestResult.anchor	var anchor: ARAnchor? { get }
+c:objc(cs)ARHitTestResult(py)distance	swift.property	distance	ARHitTestResult.distance	var distance: CGFloat { get }
+c:objc(cs)ARHitTestResult(py)localTransform	swift.property	localTransform	ARHitTestResult.localTransform	var localTransform: simd_float4x4 { get }
+c:objc(cs)ARHitTestResult(py)type	swift.property	type	ARHitTestResult.type	var type: ARHitTestResult.ResultType { get }
+c:objc(cs)ARHitTestResult(py)worldTransform	swift.property	worldTransform	ARHitTestResult.worldTransform	var worldTransform: simd_float4x4 { get }
+c:objc(cs)ARImageAnchor	swift.class	ARImageAnchor	ARImageAnchor	class ARImageAnchor
+c:objc(cs)ARImageAnchor(py)estimatedScaleFactor	swift.property	estimatedScaleFactor	ARImageAnchor.estimatedScaleFactor	var estimatedScaleFactor: CGFloat { get }
+c:objc(cs)ARImageAnchor(py)referenceImage	swift.property	referenceImage	ARImageAnchor.referenceImage	var referenceImage: ARReferenceImage { get }
+c:objc(cs)ARImageTrackingConfiguration	swift.class	ARImageTrackingConfiguration	ARImageTrackingConfiguration	class ARImageTrackingConfiguration
+c:objc(cs)ARImageTrackingConfiguration(im)init	swift.init	init()	ARImageTrackingConfiguration.init()	init()
+c:objc(cs)ARImageTrackingConfiguration(py)autoFocusEnabled	swift.property	isAutoFocusEnabled	ARImageTrackingConfiguration.isAutoFocusEnabled	var isAutoFocusEnabled: Bool { get set }
+c:objc(cs)ARImageTrackingConfiguration(py)maximumNumberOfTrackedImages	swift.property	maximumNumberOfTrackedImages	ARImageTrackingConfiguration.maximumNumberOfTrackedImages	var maximumNumberOfTrackedImages: Int { get set }
+c:objc(cs)ARImageTrackingConfiguration(py)trackingImages	swift.property	trackingImages	ARImageTrackingConfiguration.trackingImages	var trackingImages: Set<ARReferenceImage> { get set }
+c:objc(cs)ARLightEstimate	swift.class	ARLightEstimate	ARLightEstimate	class ARLightEstimate
+c:objc(cs)ARLightEstimate(py)ambientColorTemperature	swift.property	ambientColorTemperature	ARLightEstimate.ambientColorTemperature	var ambientColorTemperature: CGFloat { get }
+c:objc(cs)ARLightEstimate(py)ambientIntensity	swift.property	ambientIntensity	ARLightEstimate.ambientIntensity	var ambientIntensity: CGFloat { get }
+c:objc(cs)ARMatteGenerator	swift.class	ARMatteGenerator	ARMatteGenerator	class ARMatteGenerator
+c:objc(cs)ARMatteGenerator(im)generateDilatedDepthFromFrame:commandBuffer:	swift.method	generateDilatedDepth(from:commandBuffer:)	ARMatteGenerator.generateDilatedDepth(from:commandBuffer:)	func generateDilatedDepth(from frame: ARFrame, commandBuffer: any MTLCommandBuffer) -> any MTLTexture
+c:objc(cs)ARMatteGenerator(im)generateMatteFromFrame:commandBuffer:	swift.method	generateMatte(from:commandBuffer:)	ARMatteGenerator.generateMatte(from:commandBuffer:)	func generateMatte(from frame: ARFrame, commandBuffer: any MTLCommandBuffer) -> any MTLTexture
+c:objc(cs)ARMatteGenerator(im)initWithDevice:matteResolution:	swift.init	init(device:matteResolution:)	ARMatteGenerator.init(device:matteResolution:)	init(device: any MTLDevice, matteResolution: ARMatteGenerator.Resolution)
+c:objc(cs)ARMeshAnchor	swift.class	ARMeshAnchor	ARMeshAnchor	class ARMeshAnchor
+c:objc(cs)ARMeshAnchor(py)geometry	swift.property	geometry	ARMeshAnchor.geometry	var geometry: ARMeshGeometry { get }
+c:objc(cs)ARMeshGeometry	swift.class	ARMeshGeometry	ARMeshGeometry	class ARMeshGeometry
+c:objc(cs)ARMeshGeometry(py)classification	swift.property	classification	ARMeshGeometry.classification	var classification: ARGeometrySource? { get }
+c:objc(cs)ARMeshGeometry(py)faces	swift.property	faces	ARMeshGeometry.faces	var faces: ARGeometryElement { get }
+c:objc(cs)ARMeshGeometry(py)normals	swift.property	normals	ARMeshGeometry.normals	var normals: ARGeometrySource { get }
+c:objc(cs)ARMeshGeometry(py)vertices	swift.property	vertices	ARMeshGeometry.vertices	var vertices: ARGeometrySource { get }
+c:objc(cs)ARObjectAnchor	swift.class	ARObjectAnchor	ARObjectAnchor	class ARObjectAnchor
+c:objc(cs)ARObjectAnchor(py)referenceObject	swift.property	referenceObject	ARObjectAnchor.referenceObject	var referenceObject: ARReferenceObject { get }
+c:objc(cs)ARObjectScanningConfiguration	swift.class	ARObjectScanningConfiguration	ARObjectScanningConfiguration	class ARObjectScanningConfiguration
+c:objc(cs)ARObjectScanningConfiguration(im)init	swift.init	init()	ARObjectScanningConfiguration.init()	init()
+c:objc(cs)ARObjectScanningConfiguration(py)autoFocusEnabled	swift.property	isAutoFocusEnabled	ARObjectScanningConfiguration.isAutoFocusEnabled	var isAutoFocusEnabled: Bool { get set }
+c:objc(cs)ARObjectScanningConfiguration(py)planeDetection	swift.property	planeDetection	ARObjectScanningConfiguration.planeDetection	var planeDetection: ARWorldTrackingConfiguration.PlaneDetection { get set }
+c:objc(cs)AROrientationTrackingConfiguration	swift.class	AROrientationTrackingConfiguration	AROrientationTrackingConfiguration	class AROrientationTrackingConfiguration
+c:objc(cs)AROrientationTrackingConfiguration(im)init	swift.init	init()	AROrientationTrackingConfiguration.init()	init()
+c:objc(cs)AROrientationTrackingConfiguration(py)autoFocusEnabled	swift.property	isAutoFocusEnabled	AROrientationTrackingConfiguration.isAutoFocusEnabled	var isAutoFocusEnabled: Bool { get set }
+c:objc(cs)ARParticipantAnchor	swift.class	ARParticipantAnchor	ARParticipantAnchor	class ARParticipantAnchor
+c:objc(cs)ARPlaneAnchor	swift.class	ARPlaneAnchor	ARPlaneAnchor	class ARPlaneAnchor
+c:objc(cs)ARPlaneAnchor(cpy)classificationSupported	swift.type.property	isClassificationSupported	ARPlaneAnchor.isClassificationSupported	class var isClassificationSupported: Bool { get }
+c:objc(cs)ARPlaneAnchor(py)alignment	swift.property	alignment	ARPlaneAnchor.alignment	var alignment: ARPlaneAnchor.Alignment { get }
+c:objc(cs)ARPlaneAnchor(py)center	swift.property	center	ARPlaneAnchor.center	var center: simd_float3 { get }
+c:objc(cs)ARPlaneAnchor(py)extent	swift.property	extent	ARPlaneAnchor.extent	var extent: simd_float3 { get }
+c:objc(cs)ARPlaneAnchor(py)geometry	swift.property	geometry	ARPlaneAnchor.geometry	var geometry: ARPlaneGeometry { get }
+c:objc(cs)ARPlaneAnchor(py)planeExtent	swift.property	planeExtent	ARPlaneAnchor.planeExtent	var planeExtent: ARPlaneExtent { get }
+c:objc(cs)ARPlaneExtent	swift.class	ARPlaneExtent	ARPlaneExtent	class ARPlaneExtent
+c:objc(cs)ARPlaneExtent(py)height	swift.property	height	ARPlaneExtent.height	var height: Float { get }
+c:objc(cs)ARPlaneExtent(py)rotationOnYAxis	swift.property	rotationOnYAxis	ARPlaneExtent.rotationOnYAxis	var rotationOnYAxis: Float { get }
+c:objc(cs)ARPlaneExtent(py)width	swift.property	width	ARPlaneExtent.width	var width: Float { get }
+c:objc(cs)ARPlaneGeometry	swift.class	ARPlaneGeometry	ARPlaneGeometry	class ARPlaneGeometry
+c:objc(cs)ARPlaneGeometry(py)triangleCount	swift.property	triangleCount	ARPlaneGeometry.triangleCount	var triangleCount: Int { get }
+c:objc(cs)ARPointCloud	swift.class	ARPointCloud	ARPointCloud	class ARPointCloud
+c:objc(cs)ARPositionalTrackingConfiguration	swift.class	ARPositionalTrackingConfiguration	ARPositionalTrackingConfiguration	class ARPositionalTrackingConfiguration
+c:objc(cs)ARPositionalTrackingConfiguration(im)init	swift.init	init()	ARPositionalTrackingConfiguration.init()	init()
+c:objc(cs)ARPositionalTrackingConfiguration(py)initialWorldMap	swift.property	initialWorldMap	ARPositionalTrackingConfiguration.initialWorldMap	var initialWorldMap: ARWorldMap? { get set }
+c:objc(cs)ARPositionalTrackingConfiguration(py)planeDetection	swift.property	planeDetection	ARPositionalTrackingConfiguration.planeDetection	var planeDetection: ARWorldTrackingConfiguration.PlaneDetection { get set }
+c:objc(cs)ARRaycastQuery	swift.class	ARRaycastQuery	ARRaycastQuery	class ARRaycastQuery
+c:objc(cs)ARRaycastQuery(im)initWithOrigin:direction:allowingTarget:alignment:	swift.init	init(origin:direction:allowing:alignment:)	ARRaycastQuery.init(origin:direction:allowing:alignment:)	init(origin: simd_float3, direction: simd_float3, allowing target: ARRaycastQuery.Target, alignment: ARRaycastQuery.TargetAlignment)
+c:objc(cs)ARRaycastQuery(im)initWithOrigin:direction:allowingTarget:alignment:::SYNTHESIZED::c:objc(cs)ARRaycastQuery	swift.init	init(origin:direction:allowingTarget:alignment:)	ARRaycastQuery.init(origin:direction:allowingTarget:alignment:)	init(origin: simd_float3, direction: simd_float3, allowingTarget target: ARRaycastQuery.Target, alignment: ARRaycastQuery.TargetAlignment)
+c:objc(cs)ARRaycastQuery(py)direction	swift.property	direction	ARRaycastQuery.direction	var direction: simd_float3 { get }
+c:objc(cs)ARRaycastQuery(py)origin	swift.property	origin	ARRaycastQuery.origin	var origin: simd_float3 { get }
+c:objc(cs)ARRaycastQuery(py)target	swift.property	target	ARRaycastQuery.target	var target: ARRaycastQuery.Target { get }
+c:objc(cs)ARRaycastQuery(py)targetAlignment	swift.property	targetAlignment	ARRaycastQuery.targetAlignment	var targetAlignment: ARRaycastQuery.TargetAlignment { get }
+c:objc(cs)ARRaycastResult	swift.class	ARRaycastResult	ARRaycastResult	class ARRaycastResult
+c:objc(cs)ARRaycastResult(py)anchor	swift.property	anchor	ARRaycastResult.anchor	var anchor: ARAnchor? { get }
+c:objc(cs)ARRaycastResult(py)target	swift.property	target	ARRaycastResult.target	var target: ARRaycastQuery.Target { get }
+c:objc(cs)ARRaycastResult(py)targetAlignment	swift.property	targetAlignment	ARRaycastResult.targetAlignment	var targetAlignment: ARRaycastQuery.TargetAlignment { get }
+c:objc(cs)ARRaycastResult(py)worldTransform	swift.property	worldTransform	ARRaycastResult.worldTransform	var worldTransform: simd_float4x4 { get }
+c:objc(cs)ARReferenceImage	swift.class	ARReferenceImage	ARReferenceImage	class ARReferenceImage
+c:objc(cs)ARReferenceImage(cm)referenceImagesInGroupNamed:bundle:	swift.type.method	referenceImages(inGroupNamed:bundle:)	ARReferenceImage.referenceImages(inGroupNamed:bundle:)	class func referenceImages(inGroupNamed name: String, bundle: Bundle?) -> Set<ARReferenceImage>?
+c:objc(cs)ARReferenceImage(im)initWithCGImage:orientation:physicalWidth:	swift.init	init(_:orientation:physicalWidth:)	ARReferenceImage.init(_:orientation:physicalWidth:)	init(_ image: CGImage, orientation: CGImagePropertyOrientation, physicalWidth: CGFloat)
+c:objc(cs)ARReferenceImage(im)initWithCGImage:orientation:physicalWidth:::SYNTHESIZED::c:objc(cs)ARReferenceImage	swift.init	init(CGImage:orientation:physicalWidth:)	ARReferenceImage.init(CGImage:orientation:physicalWidth:)	init(CGImage image: CGImage, orientation: CGImagePropertyOrientation, physicalWidth: CGFloat)
+c:objc(cs)ARReferenceImage(im)initWithPixelBuffer:orientation:physicalWidth:	swift.init	init(_:orientation:physicalWidth:)	ARReferenceImage.init(_:orientation:physicalWidth:)	init(_ pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation, physicalWidth: CGFloat)
+c:objc(cs)ARReferenceImage(im)initWithPixelBuffer:orientation:physicalWidth:::SYNTHESIZED::c:objc(cs)ARReferenceImage	swift.init	init(pixelBuffer:orientation:physicalWidth:)	ARReferenceImage.init(pixelBuffer:orientation:physicalWidth:)	init(pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation, physicalWidth: CGFloat)
+c:objc(cs)ARReferenceImage(im)validateWithCompletionHandler:	swift.method	validate(completionHandler:)	ARReferenceImage.validate(completionHandler:)	func validate(completionHandler: @escaping ((any Error)?) -> Void)
+c:objc(cs)ARReferenceImage(py)name	swift.property	name	ARReferenceImage.name	var name: String? { get set }
+c:objc(cs)ARReferenceImage(py)physicalSize	swift.property	physicalSize	ARReferenceImage.physicalSize	var physicalSize: CGSize { get }
+c:objc(cs)ARReferenceImage(py)resourceGroupName	swift.property	resourceGroupName	ARReferenceImage.resourceGroupName	var resourceGroupName: String? { get }
+c:objc(cs)ARReferenceObject	swift.class	ARReferenceObject	ARReferenceObject	class ARReferenceObject
+c:objc(cs)ARReferenceObject(cm)referenceObjectsInGroupNamed:bundle:	swift.type.method	referenceObjects(inGroupNamed:bundle:)	ARReferenceObject.referenceObjects(inGroupNamed:bundle:)	class func referenceObjects(inGroupNamed name: String, bundle: Bundle?) -> Set<ARReferenceObject>?
+c:objc(cs)ARReferenceObject(im)exportObjectToURL:previewImage:error:	swift.method	export(to:previewImage:)	ARReferenceObject.export(to:previewImage:)	func export(to url: URL, previewImage: UIImage?) throws
+c:objc(cs)ARReferenceObject(im)initWithArchiveURL:error:	swift.init	init(archiveURL:)	ARReferenceObject.init(archiveURL:)	init(archiveURL url: URL) throws
+c:objc(cs)ARReferenceObject(im)referenceObjectByApplyingTransform:	swift.method	applyingTransform(_:)	ARReferenceObject.applyingTransform(_:)	func applyingTransform(_ transform: simd_float4x4) -> ARReferenceObject
+c:objc(cs)ARReferenceObject(im)referenceObjectByMergingObject:error:	swift.method	merging(_:)	ARReferenceObject.merging(_:)	func merging(_ object: ARReferenceObject) throws -> ARReferenceObject
+c:objc(cs)ARReferenceObject(py)center	swift.property	center	ARReferenceObject.center	var center: simd_float3 { get }
+c:objc(cs)ARReferenceObject(py)extent	swift.property	extent	ARReferenceObject.extent	var extent: simd_float3 { get }
+c:objc(cs)ARReferenceObject(py)name	swift.property	name	ARReferenceObject.name	var name: String? { get set }
+c:objc(cs)ARReferenceObject(py)rawFeaturePoints	swift.property	rawFeaturePoints	ARReferenceObject.rawFeaturePoints	var rawFeaturePoints: ARPointCloud { get }
+c:objc(cs)ARReferenceObject(py)resourceGroupName	swift.property	resourceGroupName	ARReferenceObject.resourceGroupName	var resourceGroupName: String? { get }
+c:objc(cs)ARReferenceObject(py)scale	swift.property	scale	ARReferenceObject.scale	var scale: simd_float3 { get }
+c:objc(cs)ARSCNFaceGeometry	swift.class	ARSCNFaceGeometry	ARSCNFaceGeometry	class ARSCNFaceGeometry
+c:objc(cs)ARSCNFaceGeometry(cm)faceGeometryWithDevice:	swift.init	init(device:)	ARSCNFaceGeometry.init(device:)	convenience init?(device: any MTLDevice)
+c:objc(cs)ARSCNFaceGeometry(cm)faceGeometryWithDevice:fillMesh:	swift.init	init(device:fillMesh:)	ARSCNFaceGeometry.init(device:fillMesh:)	convenience init?(device: any MTLDevice, fillMesh: Bool)
+c:objc(cs)ARSCNFaceGeometry(im)updateFromFaceGeometry:	swift.method	update(from:)	ARSCNFaceGeometry.update(from:)	func update(from faceGeometry: ARFaceGeometry)
+c:objc(cs)ARSCNPlaneGeometry	swift.class	ARSCNPlaneGeometry	ARSCNPlaneGeometry	class ARSCNPlaneGeometry
+c:objc(cs)ARSCNPlaneGeometry(cm)planeGeometryWithDevice:	swift.init	init(device:)	ARSCNPlaneGeometry.init(device:)	convenience init?(device: any MTLDevice)
+c:objc(cs)ARSCNPlaneGeometry(im)updateFromPlaneGeometry:	swift.method	update(from:)	ARSCNPlaneGeometry.update(from:)	func update(from planeGeometry: ARPlaneGeometry)
+c:objc(cs)ARSCNView	swift.class	ARSCNView	ARSCNView	@MainActor class ARSCNView
+c:objc(cs)ARSCNView(im)anchorForNode:	swift.method	anchor(for:)	ARSCNView.anchor(for:)	@MainActor func anchor(for node: SCNNode) -> ARAnchor?
+c:objc(cs)ARSCNView(im)hitTest:types:	swift.method	hitTest(_:types:)	ARSCNView.hitTest(_:types:)	@MainActor func hitTest(_ point: CGPoint, types: ARHitTestResult.ResultType) -> [ARHitTestResult]
+c:objc(cs)ARSCNView(im)nodeForAnchor:	swift.method	node(for:)	ARSCNView.node(for:)	@MainActor func node(for anchor: ARAnchor) -> SCNNode?
+c:objc(cs)ARSCNView(im)raycastQueryFromPoint:allowingTarget:alignment:	swift.method	raycastQuery(from:allowing:alignment:)	ARSCNView.raycastQuery(from:allowing:alignment:)	@MainActor func raycastQuery(from point: CGPoint, allowing target: ARRaycastQuery.Target, alignment: ARRaycastQuery.TargetAlignment) -> ARRaycastQuery?
+c:objc(cs)ARSCNView(py)automaticallyUpdatesLighting	swift.property	automaticallyUpdatesLighting	ARSCNView.automaticallyUpdatesLighting	@MainActor var automaticallyUpdatesLighting: Bool { get set }
+c:objc(cs)ARSCNView(py)delegate	swift.property	delegate	ARSCNView.delegate	@MainActor weak var delegate: (any ARSCNViewDelegate)? { get set }
+c:objc(cs)ARSCNView(py)rendersCameraGrain	swift.property	rendersCameraGrain	ARSCNView.rendersCameraGrain	@MainActor var rendersCameraGrain: Bool { get set }
+c:objc(cs)ARSCNView(py)rendersMotionBlur	swift.property	rendersMotionBlur	ARSCNView.rendersMotionBlur	@MainActor var rendersMotionBlur: Bool { get set }
+c:objc(cs)ARSCNView(py)scene	swift.property	scene	ARSCNView.scene	@MainActor var scene: SCNScene { get set }
+c:objc(cs)ARSCNView(py)session	swift.property	session	ARSCNView.session	@MainActor var session: ARSession { get set }
+c:objc(cs)ARSKView	swift.class	ARSKView	ARSKView	@MainActor class ARSKView
+c:objc(cs)ARSKView(im)anchorForNode:	swift.method	anchor(for:)	ARSKView.anchor(for:)	@MainActor func anchor(for node: SKNode) -> ARAnchor?
+c:objc(cs)ARSKView(im)hitTest:types:	swift.method	hitTest(_:types:)	ARSKView.hitTest(_:types:)	@MainActor func hitTest(_ point: CGPoint, types: ARHitTestResult.ResultType) -> [ARHitTestResult]
+c:objc(cs)ARSKView(im)nodeForAnchor:	swift.method	node(for:)	ARSKView.node(for:)	@MainActor func node(for anchor: ARAnchor) -> SKNode?
+c:objc(cs)ARSKView(py)delegate	swift.property	delegate	ARSKView.delegate	@MainActor weak var delegate: (any ARSKViewDelegate)? { get set }
+c:objc(cs)ARSKView(py)session	swift.property	session	ARSKView.session	@MainActor var session: ARSession { get set }
+c:objc(cs)ARSession	swift.class	ARSession	ARSession	class ARSession
+c:objc(cs)ARSession(im)addAnchor:	swift.method	add(anchor:)	ARSession.add(anchor:)	func add(anchor: ARAnchor)
+c:objc(cs)ARSession(im)captureHighResolutionFrameUsingPhotoSettings:completion:	swift.method	captureHighResolutionFrame(using:)	ARSession.captureHighResolutionFrame(using:)	func captureHighResolutionFrame(using photoSettings: AVCapturePhotoSettings?) async throws -> ARFrame
+c:objc(cs)ARSession(im)captureHighResolutionFrameWithCompletion:	swift.method	captureHighResolutionFrame(completion:)	ARSession.captureHighResolutionFrame(completion:)	func captureHighResolutionFrame(completion: @escaping (ARFrame?, (any Error)?) -> Void)
+c:objc(cs)ARSession(im)createReferenceObjectWithTransform:center:extent:completionHandler:	swift.method	createReferenceObject(transform:center:extent:)	ARSession.createReferenceObject(transform:center:extent:)	func createReferenceObject(transform: simd_float4x4, center: simd_float3, extent: simd_float3) async throws -> ARReferenceObject
+c:objc(cs)ARSession(im)getCurrentWorldMapWithCompletionHandler:	swift.method	currentWorldMap()	ARSession.currentWorldMap()	func currentWorldMap() async throws -> ARWorldMap
+c:objc(cs)ARSession(im)getGeoLocationForPoint:completionHandler:	swift.method	geoLocation(forPoint:)	ARSession.geoLocation(forPoint:)	func geoLocation(forPoint position: simd_float3) async throws -> (CLLocationCoordinate2D, CLLocationDistance)
+c:objc(cs)ARSession(im)pause	swift.method	pause()	ARSession.pause()	func pause()
+c:objc(cs)ARSession(im)raycast:	swift.method	raycast(_:)	ARSession.raycast(_:)	func raycast(_ query: ARRaycastQuery) -> [ARRaycastResult]
+c:objc(cs)ARSession(im)removeAnchor:	swift.method	remove(anchor:)	ARSession.remove(anchor:)	func remove(anchor: ARAnchor)
+c:objc(cs)ARSession(im)runWithConfiguration:options:	swift.method	run(_:options:)	ARSession.run(_:options:)	func run(_ configuration: ARConfiguration, options: ARSession.RunOptions = [])
+c:objc(cs)ARSession(im)setWorldOrigin:	swift.method	setWorldOrigin(relativeTransform:)	ARSession.setWorldOrigin(relativeTransform:)	func setWorldOrigin(relativeTransform: simd_float4x4)
+c:objc(cs)ARSession(im)trackedRaycast:updateHandler:	swift.method	trackedRaycast(_:updateHandler:)	ARSession.trackedRaycast(_:updateHandler:)	func trackedRaycast(_ query: ARRaycastQuery, updateHandler: @escaping ([ARRaycastResult]) -> Void) -> ARTrackedRaycast?
+c:objc(cs)ARSession(im)updateWithCollaborationData:	swift.method	update(with:)	ARSession.update(with:)	func update(with collaborationData: ARSession.CollaborationData)
+c:objc(cs)ARSession(py)configuration	swift.property	configuration	ARSession.configuration	@NSCopying var configuration: ARConfiguration? { get }
+c:objc(cs)ARSession(py)currentFrame	swift.property	currentFrame	ARSession.currentFrame	@NSCopying var currentFrame: ARFrame? { get }
+c:objc(cs)ARSession(py)delegate	swift.property	delegate	ARSession.delegate	weak var delegate: (any ARSessionDelegate)? { get set }
+c:objc(cs)ARSession(py)delegateQueue	swift.property	delegateQueue	ARSession.delegateQueue	var delegateQueue: dispatch_queue_t? { get set }
+c:objc(cs)ARSession(py)identifier	swift.property	identifier	ARSession.identifier	var identifier: UUID { get }
+c:objc(cs)ARSkeleton	swift.class	ARSkeleton	ARSkeleton	class ARSkeleton
+c:objc(cs)ARSkeleton(im)isJointTracked:	swift.method	isJointTracked(_:)	ARSkeleton.isJointTracked(_:)	func isJointTracked(_ jointIndex: Int) -> Bool
+c:objc(cs)ARSkeleton(py)definition	swift.property	definition	ARSkeleton.definition	var definition: ARSkeletonDefinition { get }
+c:objc(cs)ARSkeleton2D	swift.class	ARSkeleton2D	ARSkeleton2D	class ARSkeleton2D
+c:objc(cs)ARSkeleton3D	swift.class	ARSkeleton3D	ARSkeleton3D	class ARSkeleton3D
+c:objc(cs)ARSkeletonDefinition	swift.class	ARSkeletonDefinition	ARSkeletonDefinition	class ARSkeletonDefinition
+c:objc(cs)ARSkeletonDefinition(cpy)defaultBody2DSkeletonDefinition	swift.type.property	defaultBody2D	ARSkeletonDefinition.defaultBody2D	class var defaultBody2D: ARSkeletonDefinition { get }
+c:objc(cs)ARSkeletonDefinition(cpy)defaultBody3DSkeletonDefinition	swift.type.property	defaultBody3D	ARSkeletonDefinition.defaultBody3D	class var defaultBody3D: ARSkeletonDefinition { get }
+c:objc(cs)ARSkeletonDefinition(py)jointCount	swift.property	jointCount	ARSkeletonDefinition.jointCount	var jointCount: Int { get }
+c:objc(cs)ARSkeletonDefinition(py)jointNames	swift.property	jointNames	ARSkeletonDefinition.jointNames	var jointNames: [String] { get }
+c:objc(cs)ARSkeletonDefinition(py)neutralBodySkeleton3D	swift.property	neutralBodySkeleton3D	ARSkeletonDefinition.neutralBodySkeleton3D	var neutralBodySkeleton3D: ARSkeleton3D? { get }
+c:objc(cs)ARTrackedRaycast	swift.class	ARTrackedRaycast	ARTrackedRaycast	class ARTrackedRaycast
+c:objc(cs)ARTrackedRaycast(im)stopTracking	swift.method	stopTracking()	ARTrackedRaycast.stopTracking()	func stopTracking()
+c:objc(cs)ARVideoFormat	swift.class	ARConfiguration.VideoFormat	ARConfiguration.VideoFormat	class VideoFormat
+c:objc(cs)ARVideoFormat(py)captureDevicePosition	swift.property	captureDevicePosition	ARConfiguration.VideoFormat.captureDevicePosition	var captureDevicePosition: AVCaptureDevice.Position { get }
+c:objc(cs)ARVideoFormat(py)captureDeviceType	swift.property	captureDeviceType	ARConfiguration.VideoFormat.captureDeviceType	var captureDeviceType: AVCaptureDevice.DeviceType { get }
+c:objc(cs)ARVideoFormat(py)defaultColorSpace	swift.property	defaultColorSpace	ARConfiguration.VideoFormat.defaultColorSpace	var defaultColorSpace: AVCaptureColorSpace { get }
+c:objc(cs)ARVideoFormat(py)defaultPhotoSettings	swift.property	defaultPhotoSettings	ARConfiguration.VideoFormat.defaultPhotoSettings	var defaultPhotoSettings: AVCapturePhotoSettings { get }
+c:objc(cs)ARVideoFormat(py)framesPerSecond	swift.property	framesPerSecond	ARConfiguration.VideoFormat.framesPerSecond	var framesPerSecond: Int { get }
+c:objc(cs)ARVideoFormat(py)imageResolution	swift.property	imageResolution	ARConfiguration.VideoFormat.imageResolution	var imageResolution: CGSize { get }
+c:objc(cs)ARVideoFormat(py)isRecommendedForHighResolutionFrameCapturing	swift.property	isRecommendedForHighResolutionFrameCapturing	ARConfiguration.VideoFormat.isRecommendedForHighResolutionFrameCapturing	var isRecommendedForHighResolutionFrameCapturing: Bool { get }
+c:objc(cs)ARVideoFormat(py)videoHDRSupported	swift.property	isVideoHDRSupported	ARConfiguration.VideoFormat.isVideoHDRSupported	var isVideoHDRSupported: Bool { get }
+c:objc(cs)ARWorldMap	swift.class	ARWorldMap	ARWorldMap	class ARWorldMap
+c:objc(cs)ARWorldMap(py)anchors	swift.property	anchors	ARWorldMap.anchors	var anchors: [ARAnchor] { get set }
+c:objc(cs)ARWorldMap(py)center	swift.property	center	ARWorldMap.center	var center: simd_float3 { get }
+c:objc(cs)ARWorldMap(py)extent	swift.property	extent	ARWorldMap.extent	var extent: simd_float3 { get }
+c:objc(cs)ARWorldMap(py)rawFeaturePoints	swift.property	rawFeaturePoints	ARWorldMap.rawFeaturePoints	var rawFeaturePoints: ARPointCloud { get }
+c:objc(cs)ARWorldTrackingConfiguration	swift.class	ARWorldTrackingConfiguration	ARWorldTrackingConfiguration	class ARWorldTrackingConfiguration
+c:objc(cs)ARWorldTrackingConfiguration(cm)supportsSceneReconstruction:	swift.type.method	supportsSceneReconstruction(_:)	ARWorldTrackingConfiguration.supportsSceneReconstruction(_:)	class func supportsSceneReconstruction(_ sceneReconstruction: ARConfiguration.SceneReconstruction) -> Bool
+c:objc(cs)ARWorldTrackingConfiguration(cpy)supportsAppClipCodeTracking	swift.type.property	supportsAppClipCodeTracking	ARWorldTrackingConfiguration.supportsAppClipCodeTracking	class var supportsAppClipCodeTracking: Bool { get }
+c:objc(cs)ARWorldTrackingConfiguration(cpy)supportsUserFaceTracking	swift.type.property	supportsUserFaceTracking	ARWorldTrackingConfiguration.supportsUserFaceTracking	class var supportsUserFaceTracking: Bool { get }
+c:objc(cs)ARWorldTrackingConfiguration(im)init	swift.init	init()	ARWorldTrackingConfiguration.init()	init()
+c:objc(cs)ARWorldTrackingConfiguration(py)appClipCodeTrackingEnabled	swift.property	appClipCodeTrackingEnabled	ARWorldTrackingConfiguration.appClipCodeTrackingEnabled	var appClipCodeTrackingEnabled: Bool { get set }
+c:objc(cs)ARWorldTrackingConfiguration(py)autoFocusEnabled	swift.property	isAutoFocusEnabled	ARWorldTrackingConfiguration.isAutoFocusEnabled	var isAutoFocusEnabled: Bool { get set }
+c:objc(cs)ARWorldTrackingConfiguration(py)automaticImageScaleEstimationEnabled	swift.property	automaticImageScaleEstimationEnabled	ARWorldTrackingConfiguration.automaticImageScaleEstimationEnabled	var automaticImageScaleEstimationEnabled: Bool { get set }
+c:objc(cs)ARWorldTrackingConfiguration(py)collaborationEnabled	swift.property	isCollaborationEnabled	ARWorldTrackingConfiguration.isCollaborationEnabled	var isCollaborationEnabled: Bool { get set }
+c:objc(cs)ARWorldTrackingConfiguration(py)detectionImages	swift.property	detectionImages	ARWorldTrackingConfiguration.detectionImages	var detectionImages: Set<ARReferenceImage>! { get set }
+c:objc(cs)ARWorldTrackingConfiguration(py)detectionObjects	swift.property	detectionObjects	ARWorldTrackingConfiguration.detectionObjects	var detectionObjects: Set<ARReferenceObject> { get set }
+c:objc(cs)ARWorldTrackingConfiguration(py)environmentTexturing	swift.property	environmentTexturing	ARWorldTrackingConfiguration.environmentTexturing	var environmentTexturing: ARWorldTrackingConfiguration.EnvironmentTexturing { get set }
+c:objc(cs)ARWorldTrackingConfiguration(py)initialWorldMap	swift.property	initialWorldMap	ARWorldTrackingConfiguration.initialWorldMap	var initialWorldMap: ARWorldMap? { get set }
+c:objc(cs)ARWorldTrackingConfiguration(py)maximumNumberOfTrackedImages	swift.property	maximumNumberOfTrackedImages	ARWorldTrackingConfiguration.maximumNumberOfTrackedImages	var maximumNumberOfTrackedImages: Int { get set }
+c:objc(cs)ARWorldTrackingConfiguration(py)planeDetection	swift.property	planeDetection	ARWorldTrackingConfiguration.planeDetection	var planeDetection: ARWorldTrackingConfiguration.PlaneDetection { get set }
+c:objc(cs)ARWorldTrackingConfiguration(py)sceneReconstruction	swift.property	sceneReconstruction	ARWorldTrackingConfiguration.sceneReconstruction	var sceneReconstruction: ARConfiguration.SceneReconstruction { get set }
+c:objc(cs)ARWorldTrackingConfiguration(py)userFaceTrackingEnabled	swift.property	userFaceTrackingEnabled	ARWorldTrackingConfiguration.userFaceTrackingEnabled	var userFaceTrackingEnabled: Bool { get set }
+c:objc(cs)ARWorldTrackingConfiguration(py)wantsHDREnvironmentTextures	swift.property	wantsHDREnvironmentTextures	ARWorldTrackingConfiguration.wantsHDREnvironmentTextures	var wantsHDREnvironmentTextures: Bool { get set }
+c:objc(cs)SCNGeometry(cm)geometry::SYNTHESIZED::c:objc(cs)ARSCNFaceGeometry	swift.init	init()	ARSCNFaceGeometry.init()	convenience init()
+c:objc(pl)ARAnchorCopying	swift.protocol	ARAnchorCopying	ARAnchorCopying	protocol ARAnchorCopying : NSCopying
+c:objc(pl)ARAnchorCopying(im)initWithAnchor:	swift.init	init(anchor:)	ARAnchorCopying.init(anchor:)	init(anchor: ARAnchor)
+c:objc(pl)ARAnchorCopying(im)initWithAnchor:::SYNTHESIZED::c:objc(cs)ARAnchor	swift.init	init(anchor:)	ARAnchor.init(anchor:)	init(anchor: ARAnchor)
+c:objc(pl)ARCoachingOverlayViewDelegate	swift.protocol	ARCoachingOverlayViewDelegate	ARCoachingOverlayViewDelegate	protocol ARCoachingOverlayViewDelegate : NSObjectProtocol
+c:objc(pl)ARCoachingOverlayViewDelegate(im)coachingOverlayViewDidDeactivate:	swift.method	coachingOverlayViewDidDeactivate(_:)	ARCoachingOverlayViewDelegate.coachingOverlayViewDidDeactivate(_:)	optional func coachingOverlayViewDidDeactivate(_ coachingOverlayView: ARCoachingOverlayView)
+c:objc(pl)ARCoachingOverlayViewDelegate(im)coachingOverlayViewDidRequestSessionReset:	swift.method	coachingOverlayViewDidRequestSessionReset(_:)	ARCoachingOverlayViewDelegate.coachingOverlayViewDidRequestSessionReset(_:)	optional func coachingOverlayViewDidRequestSessionReset(_ coachingOverlayView: ARCoachingOverlayView)
+c:objc(pl)ARCoachingOverlayViewDelegate(im)coachingOverlayViewWillActivate:	swift.method	coachingOverlayViewWillActivate(_:)	ARCoachingOverlayViewDelegate.coachingOverlayViewWillActivate(_:)	optional func coachingOverlayViewWillActivate(_ coachingOverlayView: ARCoachingOverlayView)
+c:objc(pl)ARSCNViewDelegate	swift.protocol	ARSCNViewDelegate	ARSCNViewDelegate	protocol ARSCNViewDelegate : ARSessionObserver, SCNSceneRendererDelegate
+c:objc(pl)ARSCNViewDelegate(im)renderer:didAddNode:forAnchor:	swift.method	renderer(_:didAdd:for:)	ARSCNViewDelegate.renderer(_:didAdd:for:)	optional func renderer(_ renderer: any SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor)
+c:objc(pl)ARSCNViewDelegate(im)renderer:didRemoveNode:forAnchor:	swift.method	renderer(_:didRemove:for:)	ARSCNViewDelegate.renderer(_:didRemove:for:)	optional func renderer(_ renderer: any SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor)
+c:objc(pl)ARSCNViewDelegate(im)renderer:didUpdateNode:forAnchor:	swift.method	renderer(_:didUpdate:for:)	ARSCNViewDelegate.renderer(_:didUpdate:for:)	optional func renderer(_ renderer: any SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor)
+c:objc(pl)ARSCNViewDelegate(im)renderer:nodeForAnchor:	swift.method	renderer(_:nodeFor:)	ARSCNViewDelegate.renderer(_:nodeFor:)	optional func renderer(_ renderer: any SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode?
+c:objc(pl)ARSCNViewDelegate(im)renderer:willUpdateNode:forAnchor:	swift.method	renderer(_:willUpdate:for:)	ARSCNViewDelegate.renderer(_:willUpdate:for:)	optional func renderer(_ renderer: any SCNSceneRenderer, willUpdate node: SCNNode, for anchor: ARAnchor)
+c:objc(pl)ARSKViewDelegate	swift.protocol	ARSKViewDelegate	ARSKViewDelegate	protocol ARSKViewDelegate : ARSessionObserver, SKViewDelegate
+c:objc(pl)ARSKViewDelegate(im)view:didAddNode:forAnchor:	swift.method	view(_:didAdd:for:)	ARSKViewDelegate.view(_:didAdd:for:)	optional func view(_ view: ARSKView, didAdd node: SKNode, for anchor: ARAnchor)
+c:objc(pl)ARSKViewDelegate(im)view:didRemoveNode:forAnchor:	swift.method	view(_:didRemove:for:)	ARSKViewDelegate.view(_:didRemove:for:)	optional func view(_ view: ARSKView, didRemove node: SKNode, for anchor: ARAnchor)
+c:objc(pl)ARSKViewDelegate(im)view:didUpdateNode:forAnchor:	swift.method	view(_:didUpdate:for:)	ARSKViewDelegate.view(_:didUpdate:for:)	optional func view(_ view: ARSKView, didUpdate node: SKNode, for anchor: ARAnchor)
+c:objc(pl)ARSKViewDelegate(im)view:nodeForAnchor:	swift.method	view(_:nodeFor:)	ARSKViewDelegate.view(_:nodeFor:)	optional func view(_ view: ARSKView, nodeFor anchor: ARAnchor) -> SKNode?
+c:objc(pl)ARSKViewDelegate(im)view:willUpdateNode:forAnchor:	swift.method	view(_:willUpdate:for:)	ARSKViewDelegate.view(_:willUpdate:for:)	optional func view(_ view: ARSKView, willUpdate node: SKNode, for anchor: ARAnchor)
+c:objc(pl)ARSessionDelegate	swift.protocol	ARSessionDelegate	ARSessionDelegate	protocol ARSessionDelegate : ARSessionObserver
+c:objc(pl)ARSessionDelegate(im)session:didAddAnchors:	swift.method	session(_:didAdd:)	ARSessionDelegate.session(_:didAdd:)	optional func session(_ session: ARSession, didAdd anchors: [ARAnchor])
+c:objc(pl)ARSessionDelegate(im)session:didRemoveAnchors:	swift.method	session(_:didRemove:)	ARSessionDelegate.session(_:didRemove:)	optional func session(_ session: ARSession, didRemove anchors: [ARAnchor])
+c:objc(pl)ARSessionDelegate(im)session:didUpdateAnchors:	swift.method	session(_:didUpdate:)	ARSessionDelegate.session(_:didUpdate:)	optional func session(_ session: ARSession, didUpdate anchors: [ARAnchor])
+c:objc(pl)ARSessionDelegate(im)session:didUpdateFrame:	swift.method	session(_:didUpdate:)	ARSessionDelegate.session(_:didUpdate:)	optional func session(_ session: ARSession, didUpdate frame: ARFrame)
+c:objc(pl)ARSessionObserver	swift.protocol	ARSessionObserver	ARSessionObserver	protocol ARSessionObserver : NSObjectProtocol
+c:objc(pl)ARSessionObserver(im)session:cameraDidChangeTrackingState:	swift.method	session(_:cameraDidChangeTrackingState:)	ARSessionObserver.session(_:cameraDidChangeTrackingState:)	optional func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera)
+c:objc(pl)ARSessionObserver(im)session:didChangeGeoTrackingStatus:	swift.method	session(_:didChange:)	ARSessionObserver.session(_:didChange:)	optional func session(_ session: ARSession, didChange geoTrackingStatus: ARGeoTrackingStatus)
+c:objc(pl)ARSessionObserver(im)session:didFailWithError:	swift.method	session(_:didFailWithError:)	ARSessionObserver.session(_:didFailWithError:)	optional func session(_ session: ARSession, didFailWithError error: any Error)
+c:objc(pl)ARSessionObserver(im)session:didOutputAudioSampleBuffer:	swift.method	session(_:didOutputAudioSampleBuffer:)	ARSessionObserver.session(_:didOutputAudioSampleBuffer:)	optional func session(_ session: ARSession, didOutputAudioSampleBuffer audioSampleBuffer: CMSampleBuffer)
+c:objc(pl)ARSessionObserver(im)session:didOutputCollaborationData:	swift.method	session(_:didOutputCollaborationData:)	ARSessionObserver.session(_:didOutputCollaborationData:)	optional func session(_ session: ARSession, didOutputCollaborationData data: ARSession.CollaborationData)
+c:objc(pl)ARSessionObserver(im)sessionInterruptionEnded:	swift.method	sessionInterruptionEnded(_:)	ARSessionObserver.sessionInterruptionEnded(_:)	optional func sessionInterruptionEnded(_ session: ARSession)
+c:objc(pl)ARSessionObserver(im)sessionShouldAttemptRelocalization:	swift.method	sessionShouldAttemptRelocalization(_:)	ARSessionObserver.sessionShouldAttemptRelocalization(_:)	optional func sessionShouldAttemptRelocalization(_ session: ARSession) -> Bool
+c:objc(pl)ARSessionObserver(im)sessionWasInterrupted:	swift.method	sessionWasInterrupted(_:)	ARSessionObserver.sessionWasInterrupted(_:)	optional func sessionWasInterrupted(_ session: ARSession)
+c:objc(pl)ARSessionProviding	swift.protocol	ARSessionProviding	ARSessionProviding	protocol ARSessionProviding : NSObjectProtocol
+c:objc(pl)ARSessionProviding(py)session	swift.property	session	ARSessionProviding.session	var session: ARSession { get }
+c:objc(pl)ARTrackable	swift.protocol	ARTrackable	ARTrackable	protocol ARTrackable : NSObjectProtocol
+c:objc(pl)ARTrackable(py)isTracked	swift.property	isTracked	ARTrackable.isTracked	var isTracked: Bool { get }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ARAnchor	swift.init	init(coder:)	ARAnchor.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ARCollaborationData	swift.init	init(coder:)	ARSession.CollaborationData.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ARFaceGeometry	swift.init	init(coder:)	ARFaceGeometry.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ARGeoTrackingStatus	swift.init	init(coder:)	ARGeoTrackingStatus.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ARGeometryElement	swift.init	init(coder:)	ARGeometryElement.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ARGeometrySource	swift.init	init(coder:)	ARGeometrySource.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ARMeshGeometry	swift.init	init(coder:)	ARMeshGeometry.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ARPlaneExtent	swift.init	init(coder:)	ARPlaneExtent.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ARPlaneGeometry	swift.init	init(coder:)	ARPlaneGeometry.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ARPointCloud	swift.init	init(coder:)	ARPointCloud.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ARReferenceObject	swift.init	init(coder:)	ARReferenceObject.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ARWorldMap	swift.init	init(coder:)	ARWorldMap.init(coder:)	init?(coder: NSCoder)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@ARErrorCode	swift.type.property	errorDomain	ARError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ARErrorCode	swift.property	errorUserInfo	ARError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ARErrorCode	swift.property	errorCode	ARError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@ARErrorCode	swift.func.op	~=(_:_:)	ARError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ARErrorCode	swift.property	errorUserInfo	ARError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@ARErrorCode	swift.func.op	==(_:_:)	ARError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@ARErrorCode	swift.property	code	ARError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARErrorCode	swift.method	hash(into:)	ARError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@ARErrorCode	swift.property	userInfo	ARError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ARErrorCode	swift.property	errorCode	ARError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@ARErrorCode	swift.property	hashValue	ARError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@ARErrorCode	swift.init	init(_:userInfo:)	ARError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC11ARErrorCodeLeV	swift.struct	ARError	ARError	struct ARError
+s:SC11ARErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	ARError.errorDomain	static var errorDomain: String { get }
+s:SC11ARErrorCodeLeV12fileIOFailedSoAAVvpZ	swift.type.property	fileIOFailed	ARError.fileIOFailed	static var fileIOFailed: ARError.Code { get }
+s:SC11ARErrorCodeLeV12sensorFailedSoAAVvpZ	swift.type.property	sensorFailed	ARError.sensorFailed	static var sensorFailed: ARError.Code { get }
+s:SC11ARErrorCodeLeV13requestFailedSoAAVvpZ	swift.type.property	requestFailed	ARError.requestFailed	static var requestFailed: ARError.Code { get }
+s:SC11ARErrorCodeLeV15invalidWorldMapSoAAVvpZ	swift.type.property	invalidWorldMap	ARError.invalidWorldMap	static var invalidWorldMap: ARError.Code { get }
+s:SC11ARErrorCodeLeV17geoTrackingFailedSoAAVvpZ	swift.type.property	geoTrackingFailed	ARError.geoTrackingFailed	static var geoTrackingFailed: ARError.Code { get }
+s:SC11ARErrorCodeLeV17objectMergeFailedSoAAVvpZ	swift.type.property	objectMergeFailed	ARError.objectMergeFailed	static var objectMergeFailed: ARError.Code { get }
+s:SC11ARErrorCodeLeV17sensorUnavailableSoAAVvpZ	swift.type.property	sensorUnavailable	ARError.sensorUnavailable	static var sensorUnavailable: ARError.Code { get }
+s:SC11ARErrorCodeLeV18cameraUnauthorizedSoAAVvpZ	swift.type.property	cameraUnauthorized	ARError.cameraUnauthorized	static var cameraUnauthorized: ARError.Code { get }
+s:SC11ARErrorCodeLeV19worldTrackingFailedSoAAVvpZ	swift.type.property	worldTrackingFailed	ARError.worldTrackingFailed	static var worldTrackingFailed: ARError.Code { get }
+s:SC11ARErrorCodeLeV20insufficientFeaturesSoAAVvpZ	swift.type.property	insufficientFeatures	ARError.insufficientFeatures	static var insufficientFeatures: ARError.Code { get }
+s:SC11ARErrorCodeLeV20invalidConfigurationSoAAVvpZ	swift.type.property	invalidConfiguration	ARError.invalidConfiguration	static var invalidConfiguration: ARError.Code { get }
+s:SC11ARErrorCodeLeV20locationUnauthorizedSoAAVvpZ	swift.type.property	locationUnauthorized	ARError.locationUnauthorized	static var locationUnauthorized: ARError.Code { get }
+s:SC11ARErrorCodeLeV21invalidReferenceImageSoAAVvpZ	swift.type.property	invalidReferenceImage	ARError.invalidReferenceImage	static var invalidReferenceImage: ARError.Code { get }
+s:SC11ARErrorCodeLeV22invalidReferenceObjectSoAAVvpZ	swift.type.property	invalidReferenceObject	ARError.invalidReferenceObject	static var invalidReferenceObject: ARError.Code { get }
+s:SC11ARErrorCodeLeV22microphoneUnauthorizedSoAAVvpZ	swift.type.property	microphoneUnauthorized	ARError.microphoneUnauthorized	static var microphoneUnauthorized: ARError.Code { get }
+s:SC11ARErrorCodeLeV24invalidCollaborationDataSoAAVvpZ	swift.type.property	invalidCollaborationData	ARError.invalidCollaborationData	static var invalidCollaborationData: ARError.Code { get }
+s:SC11ARErrorCodeLeV24unsupportedConfigurationSoAAVvpZ	swift.type.property	unsupportedConfiguration	ARError.unsupportedConfiguration	static var unsupportedConfiguration: ARError.Code { get }
+s:SC11ARErrorCodeLeV32highResolutionFrameCaptureFailedSoAAVvpZ	swift.type.property	highResolutionFrameCaptureFailed	ARError.highResolutionFrameCaptureFailed	static var highResolutionFrameCaptureFailed: ARError.Code { get }
+s:SC11ARErrorCodeLeV33geoTrackingNotAvailableAtLocationSoAAVvpZ	swift.type.property	geoTrackingNotAvailableAtLocation	ARError.geoTrackingNotAvailableAtLocation	static var geoTrackingNotAvailableAtLocation: ARError.Code { get }
+s:SC11ARErrorCodeLeV36highResolutionFrameCaptureInProgressSoAAVvpZ	swift.type.property	highResolutionFrameCaptureInProgress	ARError.highResolutionFrameCaptureInProgress	static var highResolutionFrameCaptureInProgress: ARError.Code { get }
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::c:@E@ARConfidenceLevel	swift.func.op	>(_:_:)	ARConfidenceLevel.>(_:_:)	static func > (lhs: Self, rhs: Self) -> Bool
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::c:@E@ARConfidenceLevel	swift.func.op	>=(_:_:)	ARConfidenceLevel.>=(_:_:)	static func >= (lhs: Self, rhs: Self) -> Bool
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::c:@E@ARConfidenceLevel	swift.func.op	<=(_:_:)	ARConfidenceLevel.<=(_:_:)	static func <= (lhs: Self, rhs: Self) -> Bool
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::c:@E@ARConfidenceLevel	swift.func.op	..<(_:_:)	ARConfidenceLevel...<(_:_:)	static func ..< (minimum: Self, maximum: Self) -> Range<Self>
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::c:@E@ARConfidenceLevel	swift.func.op	..<(_:)	ARConfidenceLevel...<(_:)	static func ..< (maximum: Self) -> PartialRangeUpTo<Self>
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::c:@E@ARConfidenceLevel	swift.func.op	...(_:)	ARConfidenceLevel....(_:)	static func ... (minimum: Self) -> PartialRangeFrom<Self>
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::c:@E@ARConfidenceLevel	swift.func.op	...(_:_:)	ARConfidenceLevel....(_:_:)	static func ... (minimum: Self, maximum: Self) -> ClosedRange<Self>
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::c:@E@ARConfidenceLevel	swift.func.op	...(_:)	ARConfidenceLevel....(_:)	static func ... (maximum: Self) -> PartialRangeThrough<Self>
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARAltitudeSource	swift.func.op	!=(_:_:)	ARGeoAnchor.AltitudeSource.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARAppClipCodeURLDecodingState	swift.func.op	!=(_:_:)	ARAppClipCodeAnchor.URLDecodingState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARCoachingGoal	swift.func.op	!=(_:_:)	ARCoachingOverlayView.Goal.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARCollaborationDataPriority	swift.func.op	!=(_:_:)	ARSession.CollaborationData.Priority.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARConfidenceLevel	swift.func.op	!=(_:_:)	ARConfidenceLevel.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@AREnvironmentTexturing	swift.func.op	!=(_:_:)	ARWorldTrackingConfiguration.EnvironmentTexturing.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARErrorCode	swift.func.op	!=(_:_:)	ARError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARFrameSemantics	swift.func.op	!=(_:_:)	ARConfiguration.FrameSemantics.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARGeoTrackingAccuracy	swift.func.op	!=(_:_:)	ARGeoTrackingStatus.Accuracy.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARGeoTrackingState	swift.func.op	!=(_:_:)	ARGeoTrackingStatus.State.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARGeoTrackingStateReason	swift.func.op	!=(_:_:)	ARGeoTrackingStatus.StateReason.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARGeometryPrimitiveType	swift.func.op	!=(_:_:)	ARGeometryPrimitiveType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARHitTestResultType	swift.func.op	!=(_:_:)	ARHitTestResult.ResultType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARMatteResolution	swift.func.op	!=(_:_:)	ARMatteGenerator.Resolution.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARMeshClassification	swift.func.op	!=(_:_:)	ARMeshClassification.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARPlaneAnchorAlignment	swift.func.op	!=(_:_:)	ARPlaneAnchor.Alignment.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARPlaneDetection	swift.func.op	!=(_:_:)	ARWorldTrackingConfiguration.PlaneDetection.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARRaycastTarget	swift.func.op	!=(_:_:)	ARRaycastQuery.Target.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARRaycastTargetAlignment	swift.func.op	!=(_:_:)	ARRaycastQuery.TargetAlignment.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.func.op	!=(_:_:)	ARConfiguration.SceneReconstruction.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARSegmentationClass	swift.func.op	!=(_:_:)	ARFrame.SegmentationClass.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.func.op	!=(_:_:)	ARSession.RunOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARWorldAlignment	swift.func.op	!=(_:_:)	ARConfiguration.WorldAlignment.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ARWorldMappingStatus	swift.func.op	!=(_:_:)	ARFrame.WorldMappingStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ARBlendShapeLocation	swift.func.op	!=(_:_:)	ARFaceAnchor.BlendShapeLocation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ARSkeletonJointName	swift.func.op	!=(_:_:)	ARSkeleton.JointName.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So13ARPlaneAnchorC5ARKitE14ClassificationO	swift.func.op	!=(_:_:)	ARPlaneAnchor.Classification.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So13ARPlaneAnchorC5ARKitE14ClassificationO6StatusO	swift.func.op	!=(_:_:)	ARPlaneAnchor.Classification.Status.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So8ARCameraC5ARKitE13TrackingStateO	swift.func.op	!=(_:_:)	ARCamera.TrackingState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:So8ARCameraC5ARKitE13TrackingStateO6ReasonO	swift.func.op	!=(_:_:)	ARCamera.TrackingState.Reason.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARAltitudeSource	swift.property	hashValue	ARGeoAnchor.AltitudeSource.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARAppClipCodeURLDecodingState	swift.property	hashValue	ARAppClipCodeAnchor.URLDecodingState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARCoachingGoal	swift.property	hashValue	ARCoachingOverlayView.Goal.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARCollaborationDataPriority	swift.property	hashValue	ARSession.CollaborationData.Priority.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARConfidenceLevel	swift.property	hashValue	ARConfidenceLevel.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AREnvironmentTexturing	swift.property	hashValue	ARWorldTrackingConfiguration.EnvironmentTexturing.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARErrorCode	swift.property	hashValue	ARError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARGeoTrackingAccuracy	swift.property	hashValue	ARGeoTrackingStatus.Accuracy.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARGeoTrackingState	swift.property	hashValue	ARGeoTrackingStatus.State.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARGeoTrackingStateReason	swift.property	hashValue	ARGeoTrackingStatus.StateReason.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARGeometryPrimitiveType	swift.property	hashValue	ARGeometryPrimitiveType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARMatteResolution	swift.property	hashValue	ARMatteGenerator.Resolution.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARMeshClassification	swift.property	hashValue	ARMeshClassification.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARPlaneAnchorAlignment	swift.property	hashValue	ARPlaneAnchor.Alignment.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARRaycastTarget	swift.property	hashValue	ARRaycastQuery.Target.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARRaycastTargetAlignment	swift.property	hashValue	ARRaycastQuery.TargetAlignment.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARSegmentationClass	swift.property	hashValue	ARFrame.SegmentationClass.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARWorldAlignment	swift.property	hashValue	ARConfiguration.WorldAlignment.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ARWorldMappingStatus	swift.property	hashValue	ARFrame.WorldMappingStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARAltitudeSource	swift.method	hash(into:)	ARGeoAnchor.AltitudeSource.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARAppClipCodeURLDecodingState	swift.method	hash(into:)	ARAppClipCodeAnchor.URLDecodingState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARCoachingGoal	swift.method	hash(into:)	ARCoachingOverlayView.Goal.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARCollaborationDataPriority	swift.method	hash(into:)	ARSession.CollaborationData.Priority.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARConfidenceLevel	swift.method	hash(into:)	ARConfidenceLevel.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AREnvironmentTexturing	swift.method	hash(into:)	ARWorldTrackingConfiguration.EnvironmentTexturing.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARErrorCode	swift.method	hash(into:)	ARError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARGeoTrackingAccuracy	swift.method	hash(into:)	ARGeoTrackingStatus.Accuracy.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARGeoTrackingState	swift.method	hash(into:)	ARGeoTrackingStatus.State.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARGeoTrackingStateReason	swift.method	hash(into:)	ARGeoTrackingStatus.StateReason.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARGeometryPrimitiveType	swift.method	hash(into:)	ARGeometryPrimitiveType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARMatteResolution	swift.method	hash(into:)	ARMatteGenerator.Resolution.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARMeshClassification	swift.method	hash(into:)	ARMeshClassification.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARPlaneAnchorAlignment	swift.method	hash(into:)	ARPlaneAnchor.Alignment.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARRaycastTarget	swift.method	hash(into:)	ARRaycastQuery.Target.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARRaycastTargetAlignment	swift.method	hash(into:)	ARRaycastQuery.TargetAlignment.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARSegmentationClass	swift.method	hash(into:)	ARFrame.SegmentationClass.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARWorldAlignment	swift.method	hash(into:)	ARConfiguration.WorldAlignment.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ARWorldMappingStatus	swift.method	hash(into:)	ARFrame.WorldMappingStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11ARErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So11ARGeoAnchorC5ARKitE10coordinate8altitudeABSo22CLLocationCoordinate2DV_SdSgtcfc	swift.init	init(coordinate:altitude:)	ARGeoAnchor.init(coordinate:altitude:)	@nonobjc convenience init(coordinate: CLLocationCoordinate2D, altitude: CLLocationDistance? = nil)
+s:So11ARGeoAnchorC5ARKitE4name10coordinate8altitudeABSS_So22CLLocationCoordinate2DVSdSgtcfc	swift.init	init(name:coordinate:altitude:)	ARGeoAnchor.init(name:coordinate:altitude:)	@nonobjc convenience init(name: String, coordinate: CLLocationCoordinate2D, altitude: CLLocationDistance? = nil)
+s:So11ARGeoAnchorC5ARKitE8altitudeSdSgvp	swift.property	altitude	ARGeoAnchor.altitude	@nonobjc var altitude: CLLocationDistance? { get }
+s:So12ARPointCloudC5ARKitE11identifiersSays6UInt64VGvp	swift.property	identifiers	ARPointCloud.identifiers	@nonobjc var identifiers: [UInt64] { get }
+s:So12ARPointCloudC5ARKitE6pointsSays5SIMD3VySfGGvp	swift.property	points	ARPointCloud.points	@nonobjc var points: [simd_float3] { get }
+s:So12ARSkeleton2DC5ARKitE14jointLandmarksSays5SIMD2VySfGGvp	swift.property	jointLandmarks	ARSkeleton2D.jointLandmarks	@nonobjc var jointLandmarks: [simd_float2] { get }
+s:So12ARSkeleton2DC5ARKitE8landmark3fors5SIMD2VySfGSgSo19ARSkeletonJointNamea_tF	swift.method	landmark(for:)	ARSkeleton2D.landmark(for:)	@nonobjc func landmark(for jointName: ARSkeleton.JointName) -> simd_float2?
+s:So12ARSkeleton3DC5ARKitE14localTransform3forSo13simd_float4x4aSgSo19ARSkeletonJointNamea_tF	swift.method	localTransform(for:)	ARSkeleton3D.localTransform(for:)	@nonobjc func localTransform(for jointName: ARSkeleton.JointName) -> simd_float4x4?
+s:So12ARSkeleton3DC5ARKitE14modelTransform3forSo13simd_float4x4aSgSo19ARSkeletonJointNamea_tF	swift.method	modelTransform(for:)	ARSkeleton3D.modelTransform(for:)	@nonobjc func modelTransform(for jointName: ARSkeleton.JointName) -> simd_float4x4?
+s:So12ARSkeleton3DC5ARKitE20jointLocalTransformsSaySo13simd_float4x4aGvp	swift.property	jointLocalTransforms	ARSkeleton3D.jointLocalTransforms	@nonobjc var jointLocalTransforms: [simd_float4x4] { get }
+s:So12ARSkeleton3DC5ARKitE20jointModelTransformsSaySo13simd_float4x4aGvp	swift.property	jointModelTransforms	ARSkeleton3D.jointModelTransforms	@nonobjc var jointModelTransforms: [simd_float4x4] { get }
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO	swift.enum	ARPlaneAnchor.Classification	ARPlaneAnchor.Classification	enum Classification
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	ARPlaneAnchor.Classification.==(_:_:)	static func == (a: ARPlaneAnchor.Classification, b: ARPlaneAnchor.Classification) -> Bool
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO4dooryA2EmF	swift.enum.case	ARPlaneAnchor.Classification.door	ARPlaneAnchor.Classification.door	case door
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO4noneyA2E6StatusOcAEmF	swift.enum.case	ARPlaneAnchor.Classification.none(_:)	ARPlaneAnchor.Classification.none(_:)	case none(ARPlaneAnchor.Classification.Status)
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO4seatyA2EmF	swift.enum.case	ARPlaneAnchor.Classification.seat	ARPlaneAnchor.Classification.seat	case seat
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO4wallyA2EmF	swift.enum.case	ARPlaneAnchor.Classification.wall	ARPlaneAnchor.Classification.wall	case wall
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO5flooryA2EmF	swift.enum.case	ARPlaneAnchor.Classification.floor	ARPlaneAnchor.Classification.floor	case floor
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO5tableyA2EmF	swift.enum.case	ARPlaneAnchor.Classification.table	ARPlaneAnchor.Classification.table	case table
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO6StatusO	swift.enum	ARPlaneAnchor.Classification.Status	ARPlaneAnchor.Classification.Status	enum Status
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO6StatusO12notAvailableyA2GmF	swift.enum.case	ARPlaneAnchor.Classification.Status.notAvailable	ARPlaneAnchor.Classification.Status.notAvailable	case notAvailable
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO6StatusO12undeterminedyA2GmF	swift.enum.case	ARPlaneAnchor.Classification.Status.undetermined	ARPlaneAnchor.Classification.Status.undetermined	case undetermined
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO6StatusO2eeoiySbAG_AGtFZ	swift.func.op	==(_:_:)	ARPlaneAnchor.Classification.Status.==(_:_:)	static func == (a: ARPlaneAnchor.Classification.Status, b: ARPlaneAnchor.Classification.Status) -> Bool
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO6StatusO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ARPlaneAnchor.Classification.Status.hash(into:)	func hash(into hasher: inout Hasher)
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO6StatusO7unknownyA2GmF	swift.enum.case	ARPlaneAnchor.Classification.Status.unknown	ARPlaneAnchor.Classification.Status.unknown	case unknown
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO6StatusO9hashValueSivp	swift.property	hashValue	ARPlaneAnchor.Classification.Status.hashValue	var hashValue: Int { get }
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO6windowyA2EmF	swift.enum.case	ARPlaneAnchor.Classification.window	ARPlaneAnchor.Classification.window	case window
+s:So13ARPlaneAnchorC5ARKitE14ClassificationO7ceilingyA2EmF	swift.enum.case	ARPlaneAnchor.Classification.ceiling	ARPlaneAnchor.Classification.ceiling	case ceiling
+s:So13ARPlaneAnchorC5ARKitE14classificationAbCE14ClassificationOvp	swift.property	classification	ARPlaneAnchor.classification	var classification: ARPlaneAnchor.Classification { get }
+s:So14ARCoachingGoalV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARCoachingOverlayView.Goal.init(rawValue:)	init?(rawValue: Int)
+s:So14ARFaceGeometryC5ARKitE15triangleIndicesSays5Int16VGvp	swift.property	triangleIndices	ARFaceGeometry.triangleIndices	@nonobjc var triangleIndices: [Int16] { get }
+s:So14ARFaceGeometryC5ARKitE18textureCoordinatesSays5SIMD2VySfGGvp	swift.property	textureCoordinates	ARFaceGeometry.textureCoordinates	@nonobjc var textureCoordinates: [vector_float2] { get }
+s:So14ARFaceGeometryC5ARKitE8verticesSays5SIMD3VySfGGvp	swift.property	vertices	ARFaceGeometry.vertices	@nonobjc var vertices: [simd_float3] { get }
+s:So15ARPlaneGeometryC5ARKitE15triangleIndicesSays5Int16VGvp	swift.property	triangleIndices	ARPlaneGeometry.triangleIndices	@nonobjc var triangleIndices: [Int16] { get }
+s:So15ARPlaneGeometryC5ARKitE16boundaryVerticesSays5SIMD3VySfGGvp	swift.property	boundaryVertices	ARPlaneGeometry.boundaryVertices	@nonobjc var boundaryVertices: [simd_float3] { get }
+s:So15ARPlaneGeometryC5ARKitE18textureCoordinatesSays5SIMD2VySfGGvp	swift.property	textureCoordinates	ARPlaneGeometry.textureCoordinates	@nonobjc var textureCoordinates: [vector_float2] { get }
+s:So15ARPlaneGeometryC5ARKitE8verticesSays5SIMD3VySfGGvp	swift.property	vertices	ARPlaneGeometry.vertices	@nonobjc var vertices: [simd_float3] { get }
+s:So15ARRaycastTargetV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARRaycastQuery.Target.init(rawValue:)	init?(rawValue: Int)
+s:So16ARAltitudeSourceV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARGeoAnchor.AltitudeSource.init(rawValue:)	init?(rawValue: Int)
+s:So16ARFrameSemanticsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	ARConfiguration.FrameSemantics.init(rawValue:)	init(rawValue: UInt)
+s:So16ARGeometrySourceC5ARKitEySf_S2fts5Int32Vcip	swift.subscript	subscript(_:)	ARGeometrySource.subscript(_:)	@nonobjc subscript(index: Int32) -> (Float, Float, Float) { get }
+s:So16ARGeometrySourceC5ARKitEys5UInt8Vs5Int32Vcip	swift.subscript	subscript(_:)	ARGeometrySource.subscript(_:)	@nonobjc subscript(index: Int32) -> CUnsignedChar { get }
+s:So16ARPlaneDetectionV8rawValueABSu_tcfc	swift.init	init(rawValue:)	ARWorldTrackingConfiguration.PlaneDetection.init(rawValue:)	init(rawValue: UInt)
+s:So16ARWorldAlignmentV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARConfiguration.WorldAlignment.init(rawValue:)	init?(rawValue: Int)
+s:So17ARConfidenceLevelV5ARKitE1loiySbAB_ABtFZ	swift.func.op	<(_:_:)	ARConfidenceLevel.<(_:_:)	static func < (lhs: ARConfidenceLevel, rhs: ARConfidenceLevel) -> Bool
+s:So17ARConfidenceLevelV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARConfidenceLevel.init(rawValue:)	init?(rawValue: Int)
+s:So17ARGeometryElementC5ARKitEySays5Int32VGSicip	swift.subscript	subscript(_:)	ARGeometryElement.subscript(_:)	@nonobjc subscript(index: Int) -> [Int32] { get }
+s:So17ARMatteResolutionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARMatteGenerator.Resolution.init(rawValue:)	init?(rawValue: Int)
+s:So18ARGeoTrackingStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARGeoTrackingStatus.State.init(rawValue:)	init?(rawValue: Int)
+s:So19ARHitTestResultTypeV8rawValueABSu_tcfc	swift.init	init(rawValue:)	ARHitTestResult.ResultType.init(rawValue:)	init(rawValue: UInt)
+s:So19ARSegmentationClassV8rawValueABSgs5UInt8V_tcfc	swift.init	init(rawValue:)	ARFrame.SegmentationClass.init(rawValue:)	init?(rawValue: UInt8)
+s:So19ARSessionRunOptionsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	ARSession.RunOptions.init(rawValue:)	init(rawValue: UInt)
+s:So19ARSkeletonJointNamea8rawValueABSS_tcfc	swift.init	init(rawValue:)	ARSkeleton.JointName.init(rawValue:)	init(rawValue: String)
+s:So20ARBlendShapeLocationa8rawValueABSS_tcfc	swift.init	init(rawValue:)	ARFaceAnchor.BlendShapeLocation.init(rawValue:)	init(rawValue: String)
+s:So20ARMeshClassificationV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARMeshClassification.init(rawValue:)	init?(rawValue: Int)
+s:So20ARSkeletonDefinitionC5ARKitE13parentIndicesSaySiGvp	swift.property	parentIndices	ARSkeletonDefinition.parentIndices	@nonobjc var parentIndices: [Int] { get }
+s:So20ARSkeletonDefinitionC5ARKitE5index3forSiSo0A9JointNamea_tF	swift.method	index(for:)	ARSkeletonDefinition.index(for:)	@nonobjc func index(for jointName: ARSkeleton.JointName) -> Int
+s:So20ARWorldMappingStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARFrame.WorldMappingStatus.init(rawValue:)	init?(rawValue: Int)
+s:So21ARGeoTrackingAccuracyV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARGeoTrackingStatus.Accuracy.init(rawValue:)	init?(rawValue: Int)
+s:So21ARSceneReconstructionV8rawValueABSu_tcfc	swift.init	init(rawValue:)	ARConfiguration.SceneReconstruction.init(rawValue:)	init(rawValue: UInt)
+s:So22AREnvironmentTexturingV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARWorldTrackingConfiguration.EnvironmentTexturing.init(rawValue:)	init?(rawValue: Int)
+s:So22ARPlaneAnchorAlignmentV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARPlaneAnchor.Alignment.init(rawValue:)	init?(rawValue: Int)
+s:So23ARGeometryPrimitiveTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARGeometryPrimitiveType.init(rawValue:)	init?(rawValue: Int)
+s:So24ARGeoTrackingStateReasonV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARGeoTrackingStatus.StateReason.init(rawValue:)	init?(rawValue: Int)
+s:So24ARRaycastTargetAlignmentV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARRaycastQuery.TargetAlignment.init(rawValue:)	init?(rawValue: Int)
+s:So27ARCollaborationDataPriorityV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARSession.CollaborationData.Priority.init(rawValue:)	init?(rawValue: Int)
+s:So29ARAppClipCodeURLDecodingStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ARAppClipCodeAnchor.URLDecodingState.init(rawValue:)	init?(rawValue: Int)
+s:So8ARCameraC5ARKitE13TrackingStateO	swift.enum	ARCamera.TrackingState	ARCamera.TrackingState	@frozen enum TrackingState
+s:So8ARCameraC5ARKitE13TrackingStateO12notAvailableyA2EmF	swift.enum.case	ARCamera.TrackingState.notAvailable	ARCamera.TrackingState.notAvailable	case notAvailable
+s:So8ARCameraC5ARKitE13TrackingStateO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	ARCamera.TrackingState.==(_:_:)	static func == (a: ARCamera.TrackingState, b: ARCamera.TrackingState) -> Bool
+s:So8ARCameraC5ARKitE13TrackingStateO6ReasonO	swift.enum	ARCamera.TrackingState.Reason	ARCamera.TrackingState.Reason	enum Reason
+s:So8ARCameraC5ARKitE13TrackingStateO6ReasonO12initializingyA2GmF	swift.enum.case	ARCamera.TrackingState.Reason.initializing	ARCamera.TrackingState.Reason.initializing	case initializing
+s:So8ARCameraC5ARKitE13TrackingStateO6ReasonO12relocalizingyA2GmF	swift.enum.case	ARCamera.TrackingState.Reason.relocalizing	ARCamera.TrackingState.Reason.relocalizing	case relocalizing
+s:So8ARCameraC5ARKitE13TrackingStateO6ReasonO15excessiveMotionyA2GmF	swift.enum.case	ARCamera.TrackingState.Reason.excessiveMotion	ARCamera.TrackingState.Reason.excessiveMotion	case excessiveMotion
+s:So8ARCameraC5ARKitE13TrackingStateO6ReasonO20insufficientFeaturesyA2GmF	swift.enum.case	ARCamera.TrackingState.Reason.insufficientFeatures	ARCamera.TrackingState.Reason.insufficientFeatures	case insufficientFeatures
+s:So8ARCameraC5ARKitE13TrackingStateO6ReasonO2eeoiySbAG_AGtFZ	swift.func.op	==(_:_:)	ARCamera.TrackingState.Reason.==(_:_:)	static func == (a: ARCamera.TrackingState.Reason, b: ARCamera.TrackingState.Reason) -> Bool
+s:So8ARCameraC5ARKitE13TrackingStateO6ReasonO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ARCamera.TrackingState.Reason.hash(into:)	func hash(into hasher: inout Hasher)
+s:So8ARCameraC5ARKitE13TrackingStateO6ReasonO9hashValueSivp	swift.property	hashValue	ARCamera.TrackingState.Reason.hashValue	var hashValue: Int { get }
+s:So8ARCameraC5ARKitE13TrackingStateO6normalyA2EmF	swift.enum.case	ARCamera.TrackingState.normal	ARCamera.TrackingState.normal	case normal
+s:So8ARCameraC5ARKitE13TrackingStateO7limitedyA2E6ReasonOcAEmF	swift.enum.case	ARCamera.TrackingState.limited(_:)	ARCamera.TrackingState.limited(_:)	case limited(ARCamera.TrackingState.Reason)
+s:So8ARCameraC5ARKitE13trackingStateAbCE08TrackingD0Ovp	swift.property	trackingState	ARCamera.trackingState	var trackingState: ARCamera.TrackingState { get }
+s:So8ARCameraC5ARKitE14unprojectPoint_9ontoPlane11orientation12viewportSizes5SIMD3VySfGSgSo7CGPointV_So13simd_float4x4aSo22UIInterfaceOrientationVSo6CGSizeVtF	swift.method	unprojectPoint(_:ontoPlane:orientation:viewportSize:)	ARCamera.unprojectPoint(_:ontoPlane:orientation:viewportSize:)	@nonobjc func unprojectPoint(_ point: CGPoint, ontoPlane planeTransform: simd_float4x4, orientation: UIInterfaceOrientation, viewportSize: CGSize) -> simd_float3?
+s:So9ARSCNViewC5ARKitE14unprojectPoint_9ontoPlanes5SIMD3VySfGSgSo7CGPointV_So13simd_float4x4atF	swift.method	unprojectPoint(_:ontoPlane:)	ARSCNView.unprojectPoint(_:ontoPlane:)	@MainActor @nonobjc @preconcurrency func unprojectPoint(_ point: CGPoint, ontoPlane planeTransform: simd_float4x4) -> simd_float3?
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@ARFrameSemantics	swift.init	init(arrayLiteral:)	ARConfiguration.FrameSemantics.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@ARHitTestResultType	swift.init	init(arrayLiteral:)	ARHitTestResult.ResultType.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@ARPlaneDetection	swift.init	init(arrayLiteral:)	ARWorldTrackingConfiguration.PlaneDetection.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.init	init(arrayLiteral:)	ARConfiguration.SceneReconstruction.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.init	init(arrayLiteral:)	ARSession.RunOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	isDisjoint(with:)	ARConfiguration.FrameSemantics.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	isDisjoint(with:)	ARHitTestResult.ResultType.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	isDisjoint(with:)	ARWorldTrackingConfiguration.PlaneDetection.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	isDisjoint(with:)	ARConfiguration.SceneReconstruction.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	isDisjoint(with:)	ARSession.RunOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	isSuperset(of:)	ARConfiguration.FrameSemantics.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	isSuperset(of:)	ARHitTestResult.ResultType.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	isSuperset(of:)	ARWorldTrackingConfiguration.PlaneDetection.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	isSuperset(of:)	ARConfiguration.SceneReconstruction.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	isSuperset(of:)	ARSession.RunOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	subtracting(_:)	ARConfiguration.FrameSemantics.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	subtracting(_:)	ARHitTestResult.ResultType.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	subtracting(_:)	ARWorldTrackingConfiguration.PlaneDetection.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	subtracting(_:)	ARConfiguration.SceneReconstruction.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	subtracting(_:)	ARSession.RunOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	isStrictSubset(of:)	ARConfiguration.FrameSemantics.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	isStrictSubset(of:)	ARHitTestResult.ResultType.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	isStrictSubset(of:)	ARWorldTrackingConfiguration.PlaneDetection.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	isStrictSubset(of:)	ARConfiguration.SceneReconstruction.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	isStrictSubset(of:)	ARSession.RunOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	isStrictSuperset(of:)	ARConfiguration.FrameSemantics.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	isStrictSuperset(of:)	ARHitTestResult.ResultType.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	isStrictSuperset(of:)	ARWorldTrackingConfiguration.PlaneDetection.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	isStrictSuperset(of:)	ARConfiguration.SceneReconstruction.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	isStrictSuperset(of:)	ARSession.RunOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@ARFrameSemantics	swift.property	isEmpty	ARConfiguration.FrameSemantics.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@ARHitTestResultType	swift.property	isEmpty	ARHitTestResult.ResultType.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@ARPlaneDetection	swift.property	isEmpty	ARWorldTrackingConfiguration.PlaneDetection.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.property	isEmpty	ARConfiguration.SceneReconstruction.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.property	isEmpty	ARSession.RunOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	isSubset(of:)	ARConfiguration.FrameSemantics.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	isSubset(of:)	ARHitTestResult.ResultType.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	isSubset(of:)	ARWorldTrackingConfiguration.PlaneDetection.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	isSubset(of:)	ARConfiguration.SceneReconstruction.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	isSubset(of:)	ARSession.RunOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	subtract(_:)	ARConfiguration.FrameSemantics.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	subtract(_:)	ARHitTestResult.ResultType.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	subtract(_:)	ARWorldTrackingConfiguration.PlaneDetection.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	subtract(_:)	ARConfiguration.SceneReconstruction.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	subtract(_:)	ARSession.RunOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@ARFrameSemantics	swift.init	init(_:)	ARConfiguration.FrameSemantics.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@ARHitTestResultType	swift.init	init(_:)	ARHitTestResult.ResultType.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@ARPlaneDetection	swift.init	init(_:)	ARWorldTrackingConfiguration.PlaneDetection.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.init	init(_:)	ARConfiguration.SceneReconstruction.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.init	init(_:)	ARSession.RunOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ARBlendShapeLocation	swift.property	hashValue	ARFaceAnchor.BlendShapeLocation.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ARSkeletonJointName	swift.property	hashValue	ARSkeleton.JointName.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ARBlendShapeLocation	swift.method	hash(into:)	ARFaceAnchor.BlendShapeLocation.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ARSkeletonJointName	swift.method	hash(into:)	ARSkeleton.JointName.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@ARErrorCode	swift.property	localizedDescription	ARError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	insert(_:)	ARConfiguration.FrameSemantics.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	insert(_:)	ARHitTestResult.ResultType.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	insert(_:)	ARWorldTrackingConfiguration.PlaneDetection.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	insert(_:)	ARConfiguration.SceneReconstruction.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	insert(_:)	ARSession.RunOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	remove(_:)	ARConfiguration.FrameSemantics.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	remove(_:)	ARHitTestResult.ResultType.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	remove(_:)	ARWorldTrackingConfiguration.PlaneDetection.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	remove(_:)	ARConfiguration.SceneReconstruction.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	remove(_:)	ARSession.RunOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	update(with:)	ARConfiguration.FrameSemantics.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	update(with:)	ARHitTestResult.ResultType.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	update(with:)	ARWorldTrackingConfiguration.PlaneDetection.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	update(with:)	ARConfiguration.SceneReconstruction.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	update(with:)	ARSession.RunOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	contains(_:)	ARConfiguration.FrameSemantics.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	contains(_:)	ARHitTestResult.ResultType.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	contains(_:)	ARWorldTrackingConfiguration.PlaneDetection.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	contains(_:)	ARConfiguration.SceneReconstruction.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	contains(_:)	ARSession.RunOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	intersection(_:)	ARConfiguration.FrameSemantics.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	intersection(_:)	ARHitTestResult.ResultType.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	intersection(_:)	ARWorldTrackingConfiguration.PlaneDetection.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	intersection(_:)	ARConfiguration.SceneReconstruction.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	intersection(_:)	ARSession.RunOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	symmetricDifference(_:)	ARConfiguration.FrameSemantics.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	symmetricDifference(_:)	ARHitTestResult.ResultType.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	symmetricDifference(_:)	ARWorldTrackingConfiguration.PlaneDetection.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	symmetricDifference(_:)	ARConfiguration.SceneReconstruction.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	symmetricDifference(_:)	ARSession.RunOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	union(_:)	ARConfiguration.FrameSemantics.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	union(_:)	ARHitTestResult.ResultType.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	union(_:)	ARWorldTrackingConfiguration.PlaneDetection.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	union(_:)	ARConfiguration.SceneReconstruction.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	union(_:)	ARSession.RunOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	formIntersection(_:)	ARConfiguration.FrameSemantics.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	formIntersection(_:)	ARHitTestResult.ResultType.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	formIntersection(_:)	ARWorldTrackingConfiguration.PlaneDetection.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	formIntersection(_:)	ARConfiguration.SceneReconstruction.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	formIntersection(_:)	ARSession.RunOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	formSymmetricDifference(_:)	ARConfiguration.FrameSemantics.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	formSymmetricDifference(_:)	ARHitTestResult.ResultType.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	formSymmetricDifference(_:)	ARWorldTrackingConfiguration.PlaneDetection.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	formSymmetricDifference(_:)	ARConfiguration.SceneReconstruction.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	formSymmetricDifference(_:)	ARSession.RunOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@ARFrameSemantics	swift.method	formUnion(_:)	ARConfiguration.FrameSemantics.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@ARHitTestResultType	swift.method	formUnion(_:)	ARHitTestResult.ResultType.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@ARPlaneDetection	swift.method	formUnion(_:)	ARWorldTrackingConfiguration.PlaneDetection.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.method	formUnion(_:)	ARConfiguration.SceneReconstruction.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.method	formUnion(_:)	ARSession.RunOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@ARFrameSemantics	swift.init	init()	ARConfiguration.FrameSemantics.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@ARHitTestResultType	swift.init	init()	ARHitTestResult.ResultType.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@ARPlaneDetection	swift.init	init()	ARWorldTrackingConfiguration.PlaneDetection.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@ARSceneReconstruction	swift.init	init()	ARConfiguration.SceneReconstruction.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@ARSessionRunOptions	swift.init	init()	ARSession.RunOptions.init()	init()
