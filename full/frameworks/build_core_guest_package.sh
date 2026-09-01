@@ -1181,6 +1181,7 @@ echo '== rebuild the proven FoundationEssentials/OpenUIKit substrate from cold r
 # the legacy executable remains an immutable external compatibility input.
 BUILD_FULL_ENV=(
     W="$W" UIKIT="$UIKIT" MACHORUN="$MACHORUN"
+    SWIFT_CORE_RUNTIME_EXPECTED_SHA256="$EXPECTED_MACHORUN_SWIFT_CORE_SHA256"
     BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE=disabled
     BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_DISABLED_OWNER=core-package-post-foundation
     BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE=''
@@ -1221,6 +1222,8 @@ cmp "$WORK/sdk-dangling.pre.tsv" \
     "$STAGE/attestation/sdk-dangling-symlinks.tsv" \
     || die 'staged SDK dangling-symlink set differs from bracketed input'
 cp -a "$MRROOT/." "$STAGE/guest-root/"
+cp "$FULL/swift-core-runtime-stage.json" \
+    "$STAGE/attestation/build-full-swift-core-stage.json"
 cp -a "$UIKIT/Sources/OpenUIKit/Resources/." "$STAGE/resources/OpenUIKit/"
 cp "$SYSTEM_FONT" "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf"
 cp "$BOLD_FONT" "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
@@ -4299,9 +4302,10 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'machorun\tcommit=%s\ttree=%s\tloader-sha256=%s\n' \
         "$EXPECTED_MACHORUN_COMMIT" "$EXPECTED_MACHORUN_TREE" \
         "$(hash_file "$MACHORUN/build/machorun")"
-    printf 'machorun-runtime\tlibswiftCore-sha256=%s\tcontract=%s\n' \
+    printf 'machorun-runtime\tlibswiftCore-sha256=%s\tcontract=%s\tbuild-full-stage=%s\n' \
         "$(hash_file "$SWIFT_CORE_RUNTIME")" \
-        "$(hash_file "$STAGE/attestation/swift-core-runtime.tsv")"
+        "$(hash_file "$STAGE/attestation/swift-core-runtime.tsv")" \
+        "$(hash_file "$STAGE/attestation/build-full-swift-core-stage.json")"
     printf 'font\tsystem\tcontainer:/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf\t%s\n' \
         "$EXPECTED_SYSTEM_FONT"
     printf 'font\tbold\tcontainer:/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf\t%s\n' \
@@ -4665,6 +4669,8 @@ record_artifact attestation input-provenance manifest \
     attestation/input-provenance.tsv
 record_artifact attestation Swift-core runtime-contract \
     attestation/swift-core-runtime.tsv
+record_artifact attestation Swift-core build-full-stage \
+    attestation/build-full-swift-core-stage.json
 record_artifact attestation url-transport abi \
     attestation/url-transport-abi.tsv
 record_artifact attestation url-transport host \
