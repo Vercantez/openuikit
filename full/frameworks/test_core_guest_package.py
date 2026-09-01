@@ -3751,6 +3751,9 @@ class ShellContractTests(unittest.TestCase):
             "CGImageSourceGetStatus(incremental) == .statusIncomplete",
             "CGImageSourceUpdateData(incremental, encoded as CFData, true)",
             "CGImageSourceGetStatus(incremental) == .statusComplete",
+            "CGImageSourceGetCount(animatedSource) == 2",
+            "kCGImagePropertyGIFDelayTime",
+            "imageio=static,incremental,animated-gif",
         ):
             self.assertIn(imageio_probe_token, probe)
         self.assertIn("let tgmathRemainder = remquo(CGFloat(257), CGFloat(1))", probe)

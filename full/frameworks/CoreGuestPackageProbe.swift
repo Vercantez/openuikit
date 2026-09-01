@@ -809,6 +809,65 @@ struct CoreGuestPackageProbe {
         )!
         precondition(incrementalImage.pixels == bitmap.pixels)
 
+        // Two fully opaque 2x1 frames (red, then blue), with 120 ms and
+        // 340 ms delays. This goes through ImageIO's public indexed-source
+        // API and therefore proves the CQuartz multi-frame bridge is present
+        // in a clean platform build rather than surviving in a stale module.
+        let animatedGIF = Data([
+            0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x02, 0x00, 0x01, 0x00,
+            0x81, 0x00, 0x00, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x21, 0xff, 0x0b, 0x4e, 0x45,
+            0x54, 0x53, 0x43, 0x41, 0x50, 0x45, 0x32, 0x2e, 0x30, 0x03,
+            0x01, 0x00, 0x00, 0x00, 0x21, 0xf9, 0x04, 0x08, 0x0c, 0x00,
+            0x00, 0x00, 0x2c, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x01,
+            0x00, 0x00, 0x08, 0x05, 0x00, 0x01, 0x00, 0x08, 0x08, 0x00,
+            0x21, 0xf9, 0x04, 0x08, 0x22, 0x00, 0x00, 0x00, 0x2c, 0x00,
+            0x00, 0x00, 0x00, 0x02, 0x00, 0x01, 0x00, 0x81, 0x00, 0x00,
+            0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x08, 0x05, 0x00, 0x01, 0x00, 0x08, 0x08, 0x00, 0x3b,
+        ])
+        let animatedSource = CGImageSourceCreateWithData(
+            animatedGIF as CFData, nil
+        )!
+        precondition(CGImageSourceGetType(animatedSource) == "com.compuserve.gif")
+        precondition(CGImageSourceGetCount(animatedSource) == 2)
+        let firstGIFFrame = CGImageSourceCreateImageAtIndex(
+            animatedSource, 0, nil
+        )!
+        let secondGIFFrame = CGImageSourceCreateImageAtIndex(
+            animatedSource, 1, nil
+        )!
+        precondition(
+            firstGIFFrame.pixels == [
+                255, 0, 0, 255, 255, 0, 0, 255,
+            ]
+        )
+        precondition(
+            secondGIFFrame.pixels == [
+                0, 0, 255, 255, 0, 0, 255, 255,
+            ]
+        )
+        let firstGIFProperties = CGImageSourceCopyPropertiesAtIndex(
+            animatedSource, 0, nil
+        )!
+        let secondGIFProperties = CGImageSourceCopyPropertiesAtIndex(
+            animatedSource, 1, nil
+        )!
+        let firstGIFDictionary = firstGIFProperties[
+            kCGImagePropertyGIFDictionary
+        ] as? [CFString: Any]
+        let secondGIFDictionary = secondGIFProperties[
+            kCGImagePropertyGIFDictionary
+        ] as? [CFString: Any]
+        precondition(
+            firstGIFDictionary?[kCGImagePropertyGIFDelayTime] as? Double
+                == 0.12
+        )
+        precondition(
+            secondGIFDictionary?[kCGImagePropertyGIFDelayTime] as? Double
+                == 0.34
+        )
+
         let metadata = LPLinkMetadata()
         metadata.title = "Core package"
         metadata.url = URL(string: "https://core.invalid/share")
@@ -1217,6 +1276,7 @@ struct CoreGuestPackageProbe {
                 + "data-platform=\(dataPlatform) "
                 + "observation=\(observationPlatform) "
                 + "graphics=coreimage,quartzcore,tgmath "
+                + "imageio=static,incremental,animated-gif "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
                 + "first-party=portable-38 zlib=gzip-host-v1 "
