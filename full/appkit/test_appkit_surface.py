@@ -99,6 +99,26 @@ class AppKitSurfaceTests(unittest.TestCase):
         self.assertIn("Color(nsColor: source)", color)
         self.assertIn("NSColor(color)", color)
 
+    def test_full_untouched_frontier_driver_accepts_only_a_later_wall(self):
+        driver = (
+            TESTS / "test_revenuecat_appkit_frontier_guest.sh"
+        ).read_text(encoding="utf-8")
+        for token in (
+            "tracked Swift source count",
+            "selected source count",
+            "no such module 'AppKit'",
+            "versioned AppKit framework binary is missing",
+            "compile and runtime AppKit framework binaries differ",
+            "-F frameworks exactly once",
+            "-framework AppKit exactly once",
+            "REVENUECAT_APPKIT_FRONTIER_OK",
+        ):
+            self.assertIn(token, driver)
+        self.assertIn("-module-name RevenueCat -typecheck", driver)
+        self.assertIn('"${selected_sources[@]}"', driver)
+        self.assertNotIn("sed -i", driver)
+        self.assertNotIn("Sources/AppKit.swift", driver)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -34,3 +34,8 @@ Swift module consumable through `-F`, an ARM64 Mach-O dylib with that exact
 identity, a byte-identical runtime-root copy, an exhaustive tracked export
 contract, no unexpected imports or load commands, cold AppKit and SwiftUI color
 runtime transcripts, and the exact untouched 530-source RevenueCat frontier.
+`tests/test_revenuecat_appkit_frontier_guest.sh` consumes only a completed
+package and the clean pinned checkout. It accepts either a complete typecheck
+or a later compiler wall, but refuses the old AppKit import error, missing
+surface diagnostics, source drift, package drift, or any non-versioned runtime
+identity.
