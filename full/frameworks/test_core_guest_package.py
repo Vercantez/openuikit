@@ -1650,7 +1650,7 @@ class ShellContractTests(unittest.TestCase):
                 'LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:'
                 '$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST'
             ),
-            5,
+            6,
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -1733,6 +1733,18 @@ class ShellContractTests(unittest.TestCase):
     def test_dispatch_is_a_portable_module_and_real_host_scheduler(self) -> None:
         builder = BUILDER.read_text(encoding="utf-8")
         driver = APP_DRIVER.read_text(encoding="utf-8")
+        cache_gate = builder[
+            builder.index(
+                "== compile/link/run the Apple-differential NSURL and NSCache cold gate"
+            ) : builder.index(
+                "== compile/link/run the Apple-differential ByteCountFormatter cold gate"
+            )
+        ]
+        self.assertIn(
+            'LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:'
+            '$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST',
+            cache_gate,
+        )
         for token in (
             "-module-name Dispatch -module-link-name Dispatch",
             "libDispatch.dylib",
