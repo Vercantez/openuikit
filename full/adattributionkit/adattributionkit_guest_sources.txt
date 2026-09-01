@@ -1,0 +1,5 @@
+full/adattributionkit/AdAttributionKit.swift
+full/adattributionkit/AdAttributionKitError.swift
+full/adattributionkit/AppImpression.swift
+full/adattributionkit/CoarseConversionValue.swift
+full/adattributionkit/Postback.swift
