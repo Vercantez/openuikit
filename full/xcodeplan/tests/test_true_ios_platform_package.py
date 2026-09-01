@@ -32,6 +32,9 @@ MODULES = (
     "NaturalLanguage",
     "AuthenticationServices",
     "_AuthenticationServices_SwiftUI",
+    "Accelerate",
+    "Compression",
+    "CoreText",
 )
 PRIVATE_DYLIBS = ("_FoundationICU",)
 SUFFIXES = ("swiftmodule", "swiftdoc", "swiftsourceinfo", "abi.json")
@@ -128,6 +131,8 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         for module in (
             "CHostClock",
             "COpenCombineHelpers",
+            "COpenAccelerate",
+            "COpenCompression",
             "COpenDispatch",
             "COpenFoundationCore",
             "COpenRelativeTime",
@@ -144,6 +149,12 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             )
         (self.root / "platform-include/COpenFoundationCore/OpenFoundationCFError.h").write_text(
             "typedef struct __CFError *CFErrorRef;\n", encoding="utf-8"
+        )
+        (self.root / "platform-include/COpenAccelerate/Accelerate.h").write_text(
+            "typedef long vImage_Error;\n", encoding="utf-8"
+        )
+        (self.root / "platform-include/COpenCompression/OpenCompressionABI.h").write_text(
+            "typedef int compression_algorithm;\n", encoding="utf-8"
         )
         icu = self.root / "platform-include/FoundationICU/_foundation_unicode"
         icu.mkdir(parents=True)
@@ -247,6 +258,7 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             "libOpenFoundationInternationalizationHost.so",
             "libOpenRelativeTimeHost.so",
             "libOpenURLTransportHost.so",
+            "libOpenCompressionHost.so",
             "libdispatch.so",
         ):
             (self.root / f"runtime-root/host/{library}").write_text(
@@ -320,6 +332,9 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
                 "/usr/lib/libNaturalLanguage.dylib",
                 "/usr/lib/libAuthenticationServices.dylib",
                 "/usr/lib/lib_AuthenticationServices_SwiftUI.dylib",
+                "/usr/lib/libAccelerate.dylib",
+                "/usr/lib/libCompression.dylib",
+                "/usr/lib/libCoreText.dylib",
             ),
         )
         (self.root / "true-ios-swiftui-dylib-probe").write_bytes(probe)
@@ -356,6 +371,9 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
                 "NaturalLanguage",
                 "AuthenticationServices",
                 "_AuthenticationServices_SwiftUI",
+                "Accelerate",
+                "Compression",
+                "CoreText",
             )
         )
         (self.root / "attestation/framework-module-loading.log").write_text(
@@ -371,6 +389,65 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             "format\ttrue-ios-natural-auth-loads-v1\n"
             "probe\tnaturallanguage=1\tauthenticationservices=1\toverlay=1\n"
             "overlay\tbase=1\tswiftui=1\tapple-self-load=0\n",
+            encoding="ascii",
+        )
+        (
+            self.root / "attestation/accelerate-compression-coretext-loads.tsv"
+        ).write_text(
+            "format\ttrue-ios-accelerate-compression-coretext-loads-v1\n"
+            "probe\taccelerate=1\tcompression=1\tcoretext=1\n"
+            "accelerate\tvimage-export=1\tapple-self-load=0\n"
+            "compression\tc-exports=2\thost-imports=2\tbrotli-load=0\tapple-self-load=0\n"
+            "coretext\tapple-self-load=0\n",
+            encoding="ascii",
+        )
+        (
+            self.root / "attestation/accelerate-apple-differential.log"
+        ).write_text(
+            "edge-status=0\n"
+            "edge-pixels=23,4,5,6,30,6,7,8,37,8,9,10,43,10,11,12,50,12,13,14,57,14,15,16,63,16,17,18,70,18,19,20,77,20,21,22\n"
+            "alpha-status=0\n"
+            "alpha-pixels=10,4,5,6,20,6,7,8,30,8,9,10,40,10,11,12,50,12,13,14,60,14,15,16,70,16,17,18,80,18,19,20,90,20,21,22\n"
+            "errors=even:-21767,no-edge:-21768,roi:-21774\n",
+            encoding="ascii",
+        )
+        (self.root / "attestation/compression-brotli-apple.txt").write_text(
+            "algorithm=compression_algorithm(rawValue: 2818)\n"
+            "encoded=iyaASWNlQ3ViZXMgdW50b3VjaGVkIFJldmVudWVDYXQgQnJvdGxpIHJlc3BvbnNlOiBwb3J0YWJsZSBNYWNoLU8gZ3Vlc3RzIG9uIExpbnV4Aw==\n"
+            "decoded=IceCubes untouched RevenueCat Brotli response: portable Mach-O guests on Linux\n",
+            encoding="ascii",
+        )
+        (self.root / "attestation/coretext-font-manager-apple.txt").write_text(
+            "domain=com.apple.CoreText.CTFontManagerErrorDomain\n"
+            "codes=already:105,duplicate:305\n"
+            "first=true,domain:nil,code:nil\n"
+            "repeat=false,domain:com.apple.CoreText.CTFontManagerErrorDomain,code:105\n"
+            "duplicate=true,domain:nil,code:nil\n"
+            "invalid=false,domain:com.apple.CoreText.CTFontManagerErrorDomain,code:103\n"
+            "missing=false,domain:com.apple.CoreText.CTFontManagerErrorDomain,code:101\n",
+            encoding="ascii",
+        )
+        (self.root / "attestation/open-compression-host-test.log").write_text(
+            "OPEN_COMPRESSION_HOST_OK algorithm=brotli roundtrip=exact "
+            "malformed=fail-closed limit=hard abi=v1\n",
+            encoding="ascii",
+        )
+        (self.root / "attestation/open-compression-abi.tsv").write_text(
+            "format\topen-compression-abi-v1\n"
+            "response-layout\tsize=24\tpointers=64-bit\n"
+            "symbol\topenui_compression_v1_transform\tguest-export=_openui_compression_v1_transform\tguest-host-import=_glibc_openui_compression_v1_transform\thost-export=openui_compression_v1_transform\n"
+            "symbol\topenui_compression_v1_release\tguest-export=_openui_compression_v1_release\tguest-host-import=_glibc_openui_compression_v1_release\thost-export=openui_compression_v1_release\n",
+            encoding="ascii",
+        )
+        (self.root / "attestation/open-compression-host.tsv").write_text(
+            "format\topen-compression-host-v1\n"
+            "host-abi\tELF64-AArch64\n"
+            "algorithm\tbrotli\tencode=real\tdecode=real\n"
+            "limits\tguest-input=256MiB\tguest-output=256MiB\n"
+            "apple-transcript\tc3c7826b4bf603fcd4ec3f2ca9ae97906409789e352af48f926bf1acce6c9b65\n"
+            "transitive-soname\tlibbrotlidec.so.1\n"
+            "transitive-soname\tlibbrotlienc.so.1\n"
+            "transitive-soname\tlibbrotlicommon.so.1\n",
             encoding="ascii",
         )
         for name in (
@@ -443,7 +520,7 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         )
         (self.root / "PLATFORM_COMPLETE").write_text(
             "TRUE_IOS_PLATFORM_COMPLETE "
-            "target=arm64-apple-ios18.0-simulator dylibs=17 swiftui_sources=11 "
+            "target=arm64-apple-ios18.0-simulator dylibs=20 swiftui_sources=11 "
             f"source={self.source_subject} artifacts={sha256(artifact_ledger)} "
             f"symlinks={sha256(symlink_ledger)}\n",
             encoding="ascii",
@@ -476,6 +553,14 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             f"-fmodule-map-file={root / 'platform-include/COpenFoundationCore/module.modulemap'}",
             rooted,
         )
+        for module in ("COpenAccelerate", "COpenCompression"):
+            self.assertIn(
+                f"-fmodule-map-file={root / f'platform-include/{module}/module.modulemap'}",
+                rooted,
+            )
+        for framework in ("Accelerate", "Compression", "CoreText"):
+            index = metadata["executable_link_arguments"].index(framework)
+            self.assertEqual(metadata["executable_link_arguments"][index - 1], "-framework")
 
     def test_changed_artifact_is_rejected(self) -> None:
         (self.root / "products/libSwiftUI.dylib").write_bytes(b"changed")
@@ -495,6 +580,37 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(
             platform_package.TrueIOSPlatformError,
             "artifact|CFError opaque header",
+        ):
+            platform_package.validate(self.root)
+
+    def test_frontier_c_headers_are_required(self) -> None:
+        for relative, label in (
+            ("platform-include/COpenAccelerate/Accelerate.h", "Accelerate"),
+            (
+                "platform-include/COpenCompression/OpenCompressionABI.h",
+                "Compression",
+            ),
+        ):
+            with self.subTest(module=label):
+                with tempfile.TemporaryDirectory(prefix="true-ios-frontier-header.") as temporary:
+                    clone = Path(temporary) / "package"
+                    import shutil
+
+                    shutil.copytree(self.root, clone, symlinks=True)
+                    (clone / relative).unlink()
+                    with self.assertRaisesRegex(
+                        platform_package.TrueIOSPlatformError,
+                        "artifact|header",
+                    ):
+                        platform_package.validate(clone)
+
+    def test_resealed_frontier_transcript_mutation_is_rejected(self) -> None:
+        transcript = self.root / "attestation/compression-brotli-apple.txt"
+        transcript.write_text("forged\n", encoding="ascii")
+        self.seal()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "frozen Apple transcript differs",
         ):
             platform_package.validate(self.root)
 

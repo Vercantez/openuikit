@@ -46,6 +46,9 @@ _MODULES = (
     "NaturalLanguage",
     "AuthenticationServices",
     "_AuthenticationServices_SwiftUI",
+    "Accelerate",
+    "Compression",
+    "CoreText",
 )
 _PRIVATE_DYLIBS = ("_FoundationICU",)
 _RUNTIME_SWIFT_MODULES = ("Observation",)
@@ -79,7 +82,11 @@ _UNLEDGERED_REGULAR = {
 }
 _REQUIRED_ATTESTATION = {
     "artifacts.sha256",
+    "accelerate-apple-differential.log",
+    "accelerate-compression-coretext-loads.tsv",
     "compiler-plugins.tsv",
+    "compression-brotli-apple.txt",
+    "coretext-font-manager-apple.txt",
     "foundation-internationalization-abi.tsv",
     "foundation-internationalization-host.tsv",
     "foundation-internationalization-sources.tsv",
@@ -87,6 +94,9 @@ _REQUIRED_ATTESTATION = {
     "foundation-runtime-undefineds.txt",
     "framework-module-loading.log",
     "naturallanguage-authenticationservices-loads.tsv",
+    "open-compression-abi.tsv",
+    "open-compression-host-test.log",
+    "open-compression-host.tsv",
     "opencombine-sources.json",
     "opencombine-sources.nul",
     "runtime.log",
@@ -111,6 +121,7 @@ _REQUIRED_HOST_LIBRARIES = {
     "libOpenFoundationInternationalizationHost.so",
     "libOpenRelativeTimeHost.so",
     "libOpenURLTransportHost.so",
+    "libOpenCompressionHost.so",
     "libdispatch.so",
 }
 _REQUIRED_RUNTIME_FILES = (
@@ -142,6 +153,8 @@ _REQUIRED_RESOURCE_FILES = (
 _REQUIRED_CLANG_MODULES = (
     "CHostClock",
     "COpenCombineHelpers",
+    "COpenAccelerate",
+    "COpenCompression",
     "COpenDispatch",
     "COpenFoundationCore",
     "COpenRelativeTime",
@@ -538,6 +551,10 @@ def _compile_arguments() -> list[str]:
         "-Xcc", f"-I{include}/CSTBTrueType",
         "-Xcc", f"-I{include}/CHostClock",
         "-Xcc", f"-I{include}/COpenCombineHelpers",
+        "-Xcc", f"-fmodule-map-file={include}/COpenAccelerate/module.modulemap",
+        "-Xcc", f"-I{include}/COpenAccelerate",
+        "-Xcc", f"-fmodule-map-file={include}/COpenCompression/module.modulemap",
+        "-Xcc", f"-I{include}/COpenCompression",
         "-Xcc", f"-I{include}/CQuartz",
         "-Xcc", f"-fmodule-map-file={include}/COpenDispatch/module.modulemap",
         "-Xcc", f"-I{include}/COpenDispatch",
@@ -565,6 +582,9 @@ def _link_arguments() -> list[str]:
         "-framework", "NaturalLanguage",
         "-framework", "AuthenticationServices",
         "-framework", "_AuthenticationServices_SwiftUI",
+        "-framework", "Accelerate",
+        "-framework", "Compression",
+        "-framework", "CoreText",
         "-Lproducts",
         "-lFoundation", "-lFoundationInternationalization", "-lDispatch",
         "-lOpenUIKit", "-lOpenCoreGraphics", "-lFoundationEssentials",
@@ -661,13 +681,86 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         raise TrueIOSPlatformError(
             "NaturalLanguage/AuthenticationServices load attestation differs"
         )
+    frontier_loads = _regular(
+        root,
+        "attestation/accelerate-compression-coretext-loads.tsv",
+        "Accelerate/Compression/CoreText load attestation",
+    ).read_text(encoding="ascii")
+    if frontier_loads != (
+        "format\ttrue-ios-accelerate-compression-coretext-loads-v1\n"
+        "probe\taccelerate=1\tcompression=1\tcoretext=1\n"
+        "accelerate\tvimage-export=1\tapple-self-load=0\n"
+        "compression\tc-exports=2\thost-imports=2\tbrotli-load=0\tapple-self-load=0\n"
+        "coretext\tapple-self-load=0\n"
+    ):
+        raise TrueIOSPlatformError(
+            "Accelerate/Compression/CoreText load attestation differs"
+        )
+    transcript_hashes = {
+        "accelerate-apple-differential.log":
+            "c2ad6d611001db3d79cb1d39890e36ac8f2fe5ed4fe23bfda40e1aeb4376fbd0",
+        "compression-brotli-apple.txt":
+            "c3c7826b4bf603fcd4ec3f2ca9ae97906409789e352af48f926bf1acce6c9b65",
+        "coretext-font-manager-apple.txt":
+            "c38a8b9dfbe6d5220a2da12a6874a74e37e0570e52b71141c7529dc229df30fa",
+    }
+    for name, digest in transcript_hashes.items():
+        if _sha256(_regular(root, f"attestation/{name}", name)) != digest:
+            raise TrueIOSPlatformError(f"frozen Apple transcript differs: {name}")
+    host_test = _regular(
+        root,
+        "attestation/open-compression-host-test.log",
+        "Compression host test",
+    ).read_text(encoding="ascii")
+    if host_test != (
+        "OPEN_COMPRESSION_HOST_OK algorithm=brotli roundtrip=exact "
+        "malformed=fail-closed limit=hard abi=v1\n"
+    ):
+        raise TrueIOSPlatformError("Compression host test attestation differs")
+    compression_abi = _regular(
+        root,
+        "attestation/open-compression-abi.tsv",
+        "Compression ABI attestation",
+    ).read_text(encoding="ascii")
+    if compression_abi != (
+        "format\topen-compression-abi-v1\n"
+        "response-layout\tsize=24\tpointers=64-bit\n"
+        "symbol\topenui_compression_v1_transform\t"
+        "guest-export=_openui_compression_v1_transform\t"
+        "guest-host-import=_glibc_openui_compression_v1_transform\t"
+        "host-export=openui_compression_v1_transform\n"
+        "symbol\topenui_compression_v1_release\t"
+        "guest-export=_openui_compression_v1_release\t"
+        "guest-host-import=_glibc_openui_compression_v1_release\t"
+        "host-export=openui_compression_v1_release\n"
+    ):
+        raise TrueIOSPlatformError("Compression ABI attestation differs")
+    compression_host = _regular(
+        root,
+        "attestation/open-compression-host.tsv",
+        "Compression host attestation",
+    ).read_text(encoding="ascii").splitlines()
+    required_host_lines = {
+        "format\topen-compression-host-v1",
+        "host-abi\tELF64-AArch64",
+        "algorithm\tbrotli\tencode=real\tdecode=real",
+        "limits\tguest-input=256MiB\tguest-output=256MiB",
+        "apple-transcript\t"
+        "c3c7826b4bf603fcd4ec3f2ca9ae97906409789e352af48f926bf1acce6c9b65",
+        "transitive-soname\tlibbrotlidec.so.1",
+        "transitive-soname\tlibbrotlienc.so.1",
+        "transitive-soname\tlibbrotlicommon.so.1",
+    }
+    if not required_host_lines.issubset(compression_host):
+        raise TrueIOSPlatformError("Compression host attestation is incomplete")
     module_log = _regular(
         root, "attestation/framework-module-loading.log", "module loading log"
     ).read_text(encoding="utf-8")
     for module in (
         "SwiftUI", "UIKit", "OpenUIKit", "Combine", "OpenCombine",
         "NaturalLanguage", "AuthenticationServices",
-        "_AuthenticationServices_SwiftUI",
+        "_AuthenticationServices_SwiftUI", "Accelerate", "Compression",
+        "CoreText",
     ):
         if f"loaded module '{module}'; source:" not in module_log or (
             f"/System/Library/Frameworks/{module}.framework/Modules/" not in module_log
@@ -696,6 +789,16 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         root,
         "platform-include/COpenFoundationCore/OpenFoundationCFError.h",
         "Foundation CFError opaque header",
+    )
+    _regular(
+        root,
+        "platform-include/COpenAccelerate/Accelerate.h",
+        "Accelerate C header",
+    )
+    _regular(
+        root,
+        "platform-include/COpenCompression/OpenCompressionABI.h",
+        "Compression ABI header",
     )
     _regular(
         root,
@@ -828,6 +931,9 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         "/usr/lib/libNaturalLanguage.dylib",
         "/usr/lib/libAuthenticationServices.dylib",
         "/usr/lib/lib_AuthenticationServices_SwiftUI.dylib",
+        "/usr/lib/libAccelerate.dylib",
+        "/usr/lib/libCompression.dylib",
+        "/usr/lib/libCoreText.dylib",
     ):
         if required not in loads:
             raise TrueIOSPlatformError(f"probe does not load {required}")

@@ -37,6 +37,9 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
             "NaturalLanguage",
             "AuthenticationServices",
             "_AuthenticationServices_SwiftUI",
+            "Accelerate",
+            "Compression",
+            "CoreText",
         ):
             self.assertIn(f"lib{module}.dylib", self.builder)
             if module != "FoundationInternationalization":
@@ -107,6 +110,9 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
             "NaturalLanguage",
             "AuthenticationServices",
             "_AuthenticationServices_SwiftUI",
+            "Accelerate",
+            "Compression",
+            "CoreText",
         ):
             self.assertIn(module, self.builder)
         self.assertIn(
@@ -143,6 +149,9 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn('import UIKit', self.probe)
         self.assertIn('import NaturalLanguage', self.probe)
         self.assertIn('import AuthenticationServices', self.probe)
+        self.assertIn('import Accelerate', self.probe)
+        self.assertIn('import Compression', self.probe)
+        self.assertIn('import CoreText', self.probe)
         self.assertIn('UIHostingController', self.probe)
         self.assertIn('VStack(spacing:', self.probe)
         self.assertIn('Button("Advance")', self.probe)
@@ -153,6 +162,9 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn("let cfErrorAsError: any Error = cfError", self.probe)
         self.assertIn("recognizer.dominantLanguage", self.probe)
         self.assertIn("EnvironmentValues().webAuthenticationSession", self.probe)
+        self.assertIn("vImageBoxConvolve_ARGB8888", self.probe)
+        self.assertIn("InputFilter<Data>(.decompress", self.probe)
+        self.assertIn("CTFontManagerRegisterFontsForURL", self.probe)
         self.assertIn(
             "cfErrorAsError._getEmbeddedNSError() === cfError", self.probe
         )
