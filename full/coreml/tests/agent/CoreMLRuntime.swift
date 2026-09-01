@@ -324,11 +324,20 @@ enum CoreMLRuntime {
         configuration.allowLowPrecisionAccumulationOnGPU = true
         configuration.functionName = "main"
         configuration.modelDisplayName = "AgeNet"
+        configuration.parameters = [MLParameterKey.learningRate: 0.01]
         configuration.optimizationHints.reshapeFrequency = .infrequent
         configuration.optimizationHints.specializationStrategy = .fastPrediction
+        let copyingWitness: any Foundation.NSCopying = configuration
+        _ = copyingWitness
         let copy = configuration.copy() as! MLModelConfiguration
+        precondition(copy !== configuration)
         precondition(copy.computeUnits == .cpuOnly)
+        precondition(copy.allowLowPrecisionAccumulationOnGPU == true)
         precondition(copy.functionName == "main")
+        precondition(copy.modelDisplayName == "AgeNet")
+        precondition((copy.parameters?[MLParameterKey.learningRate] as? Double) == 0.01)
+        precondition(copy.optimizationHints.reshapeFrequency == .infrequent)
+        precondition(copy.optimizationHints.specializationStrategy == .fastPrediction)
         let options = MLPredictionOptions()
         precondition(options.usesCPUOnly == false)
         options.usesCPUOnly = true
