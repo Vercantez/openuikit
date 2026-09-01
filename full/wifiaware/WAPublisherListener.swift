@@ -73,15 +73,10 @@ public struct WAPublisherListener: Sendable {
     public var isApplicationService: Bool { true }
 
 #if canImport(Network)
-    public var service: NWListener.Service {
-        get {
-            // Linux Network has no NWListener.Service. This branch exists so a
-            // later Network module that grows the nested type can compile the
-            // Apple signature; the isolated gate does not compile this path.
-            fatalError("NWListener.Service is not available on this Network starting point")
-        }
-    }
-
+    /// Applies stored datapath performance to Network parameters.
+    ///
+    /// `NWListener.Service` is not part of the guest Network module, so the
+    /// Apple `service` getter stays deferred rather than trapping.
     public func configureParameters(_ parameters: NWParameters) {
         parameters.wifiAware = action.datapath.map {
             WAParameters(performanceMode: $0.performanceMode)

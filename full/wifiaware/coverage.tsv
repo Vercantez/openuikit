@@ -3,23 +3,23 @@ s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:9WiFiAware7
 s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:9WiFiAware7WAErrorO	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAError.failureReason
 s:10Foundation14LocalizedErrorPAAE16errorDescriptionSSSgvp::SYNTHESIZED::s:9WiFiAware7WAErrorO	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAError.errorDescription
 s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:9WiFiAware7WAErrorO	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAError.recoverySuggestion
-s:7Network12NWParametersC9WiFiAwareE04wifiE0AD12WAParametersVvp	deferred		Isolated host gate cannot import Network; extension is compiled only with canImport(Network).
-s:7Network12NWParametersC9WiFiAwareE04wifiE0yACXDyAD12WAParametersVzXEF	deferred		Isolated host gate cannot import Network; extension is compiled only with canImport(Network).
-s:7Network15BrowserProviderP9WiFiAwareAD012WASubscriberB0VRszrlE04wifiF0_6activeA2F6ActionV_s8DurationVSgtFZ	deferred		Linux Network has no BrowserProvider protocol; concrete WASubscriberBrowser.wifiAware is implemented instead.
+s:7Network12NWParametersC9WiFiAwareE04wifiE0AD12WAParametersVvp	deferred		Isolated host gate cannot import Network. Extension compiles only against the guest Network module; identity probe is for a future EC2 run.
+s:7Network12NWParametersC9WiFiAwareE04wifiE0yACXDyAD12WAParametersVzXEF	deferred		Isolated host gate cannot import Network. Extension compiles only against the guest Network module.
+s:7Network15BrowserProviderP9WiFiAwareAD012WASubscriberB0VRszrlE04wifiF0_6activeA2F6ActionV_s8DurationVSgtFZ	deferred		Guest Network has no BrowserProvider protocol.
 s:7Network15BrowserProviderP9WiFiAwareAD012WASubscriberB0VRszrlE04wifiF0_6activeA2F6ActionV_s8DurationVSgtFZ::SYNTHESIZED::s:9WiFiAware19WASubscriberBrowserV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.type.method WASubscriberBrowser.wifiAware(_:active:)
-s:7Network16ListenerProviderP9WiFiAwareAD011WAPublisherB0VRszrlE04wifiF0_6activeA2F6ActionV_s8DurationVSgtFZ	deferred		Linux Network has no ListenerProvider protocol; concrete WAPublisherListener.wifiAware is implemented instead.
+s:7Network16ListenerProviderP9WiFiAwareAD011WAPublisherB0VRszrlE04wifiF0_6activeA2F6ActionV_s8DurationVSgtFZ	deferred		Guest Network has no ListenerProvider protocol.
 s:7Network16ListenerProviderP9WiFiAwareAD011WAPublisherB0VRszrlE04wifiF0_6activeA2F6ActionV_s8DurationVSgtFZ::SYNTHESIZED::s:9WiFiAware19WAPublisherListenerV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.type.method WAPublisherListener.wifiAware(_:active:)
-s:7Network19NWParametersBuilderV9WiFiAwareE04wifiF0yACyxq_q_Qp_QPGyAD12WAParametersVzXEF	deferred		Linux Network has no NWParametersBuilder parameter-pack type.
-s:7Network6NWPathV9WiFiAwareE04wifiE0AD6WAPathVSgvp	deferred		Isolated host gate cannot import Network; path.wifiAware would throw wifiAwareUnsupported when Network is present.
-s:7Network7NWErrorO9WiFiAwareE04wifiE0AD7WAErrorOSgvp	deferred		Isolated host gate cannot import Network; Linux NWError cases do not wrap WAError.
-s:9WiFiAware10WAEndpointV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.struct WAEndpoint
-s:9WiFiAware10WAEndpointV11descriptionSSvp	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAEndpoint.description
-s:9WiFiAware10WAEndpointV16publishedServiceAA013WAPublishableF0VSgvp	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAEndpoint.publishedService
-s:9WiFiAware10WAEndpointV17subscribedServiceAA014WASubscribableF0VSgvp	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAEndpoint.subscribedService
-s:9WiFiAware10WAEndpointV2eeoiySbAC_ACtFZ	implemented	tests/agent/WiFiAwareRuntime.swift	swift.func.op WAEndpoint.==(_:_:)
-s:9WiFiAware10WAEndpointV4hash4intoys6HasherVz_tF	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAEndpoint.hash(into:)
-s:9WiFiAware10WAEndpointV6deviceAA14WAPairedDeviceVvp	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAEndpoint.device
-s:9WiFiAware10WAEndpointV9hashValueSivp	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAEndpoint.hashValue
+s:7Network19NWParametersBuilderV9WiFiAwareE04wifiF0yACyxq_q_Qp_QPGyAD12WAParametersVzXEF	deferred		Guest Network has no NWParametersBuilder type.
+s:7Network6NWPathV9WiFiAwareE04wifiE0AD6WAPathVSgvp	deferred		Isolated host gate cannot import Network. When Network is present the getter throws wifiAwareUnsupported.
+s:7Network7NWErrorO9WiFiAwareE04wifiE0AD7WAErrorOSgvp	deferred		Isolated host gate cannot import Network. Guest NWError cases do not wrap WAError.
+s:9WiFiAware10WAEndpointV	declared	full/wifiaware/WAPath.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:9WiFiAware10WAEndpointV11descriptionSSvp	declared	full/wifiaware/WAPath.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:9WiFiAware10WAEndpointV16publishedServiceAA013WAPublishableF0VSgvp	declared	full/wifiaware/WAPath.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:9WiFiAware10WAEndpointV17subscribedServiceAA014WASubscribableF0VSgvp	declared	full/wifiaware/WAPath.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:9WiFiAware10WAEndpointV2eeoiySbAC_ACtFZ	declared	full/wifiaware/WAPath.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:9WiFiAware10WAEndpointV4hash4intoys6HasherVz_tF	declared	full/wifiaware/WAPath.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:9WiFiAware10WAEndpointV6deviceAA14WAPairedDeviceVvp	declared	full/wifiaware/WAPath.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:9WiFiAware10WAEndpointV9hashValueSivp	declared	full/wifiaware/WAPath.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
 s:9WiFiAware12WAParametersV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.struct WAParameters
 s:9WiFiAware12WAParametersV15performanceModeAA013WAPerformanceF0Ovp	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAParameters.performanceMode
 s:9WiFiAware12WAParametersV15performanceModeAcA013WAPerformanceF0O_tcfc	implemented	tests/agent/WiFiAwareRuntime.swift	swift.init WAParameters.init(performanceMode:)
@@ -112,7 +112,7 @@ s:9WiFiAware19WAPublisherListenerV	implemented	tests/agent/WiFiAwareRuntime.swif
 s:9WiFiAware19WAPublisherListenerV18DatapathParametersV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.struct WAPublisherListener.DatapathParameters
 s:9WiFiAware19WAPublisherListenerV18DatapathParametersV8defaultsAEvpZ	implemented	tests/agent/WiFiAwareRuntime.swift	swift.type.property WAPublisherListener.DatapathParameters.defaults
 s:9WiFiAware19WAPublisherListenerV18DatapathParametersV8realtimeAEvpZ	implemented	tests/agent/WiFiAwareRuntime.swift	swift.type.property WAPublisherListener.DatapathParameters.realtime
-s:9WiFiAware19WAPublisherListenerV19configureParametersyy7Network12NWParametersCF	deferred		Requires Network.NWParameters, which is not on the isolated host compile graph.
+s:9WiFiAware19WAPublisherListenerV19configureParametersyy7Network12NWParametersCF	deferred		Requires Network.NWParameters; not compiled by the isolated host gate. Identity probe exercises it against guest Network.
 s:9WiFiAware19WAPublisherListenerV20isApplicationServiceSbvp	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAPublisherListener.isApplicationService
 s:9WiFiAware19WAPublisherListenerV6ActionV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.struct WAPublisherListener.Action
 s:9WiFiAware19WAPublisherListenerV6ActionV10connecting2to4from8datapathAeA20WAPublishableServiceV_AC7DevicesVAC18DatapathParametersVSgtFZ	implemented	tests/agent/WiFiAwareRuntime.swift	swift.type.method WAPublisherListener.Action.connecting(to:from:datapath:)
@@ -122,11 +122,11 @@ s:9WiFiAware19WAPublisherListenerV7DevicesV09allPairedF0AEvpZ	implemented	tests/
 s:9WiFiAware19WAPublisherListenerV7DevicesV8matchingyAE10Foundation9PredicateVyAA14WAPairedDeviceV_QPGFZ	implemented	tests/agent/WiFiAwareRuntime.swift	swift.type.method WAPublisherListener.Devices.matching(_:)
 s:9WiFiAware19WAPublisherListenerV7DevicesV8selectedyAESDys6UInt64VAA14WAPairedDeviceVGFZ	implemented	tests/agent/WiFiAwareRuntime.swift	swift.type.method WAPublisherListener.Devices.selected(_:)
 s:9WiFiAware19WAPublisherListenerV7DevicesV8selectedyAExSTRzAA14WAPairedDeviceV7ElementRtzlFZ	implemented	tests/agent/WiFiAwareRuntime.swift	swift.type.method WAPublisherListener.Devices.selected(_:)
-s:9WiFiAware19WAPublisherListenerV7service7Network10NWListenerC7ServiceVvp	deferred		Linux Network.NWListener has no nested Service type.
+s:9WiFiAware19WAPublisherListenerV7service7Network10NWListenerC7ServiceVvp	deferred		Guest Network.NWListener has no nested Service type; declaring a lookalike is forbidden.
 s:9WiFiAware19WASubscriberBrowserV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.struct WASubscriberBrowser
-s:9WiFiAware19WASubscriberBrowserV12makeEndpoint4fromAA10WAEndpointVSg7Network9NWBrowserC6ResultV_tKF	deferred		Linux Network has no NWBrowser.Result.
-s:9WiFiAware19WASubscriberBrowserV14makeDescriptor7Network9NWBrowserC0G0OyF	deferred		Linux Network has no NWBrowser.Descriptor.
-s:9WiFiAware19WASubscriberBrowserV19configureParametersy7Network12NWParametersCAGSgF	deferred		Requires Network.NWParameters, which is not on the isolated host compile graph.
+s:9WiFiAware19WASubscriberBrowserV12makeEndpoint4fromAA10WAEndpointVSg7Network9NWBrowserC6ResultV_tKF	deferred		Guest Network has no NWBrowser.Result.
+s:9WiFiAware19WASubscriberBrowserV14makeDescriptor7Network9NWBrowserC0G0OyF	deferred		Guest Network has no NWBrowser.Descriptor.
+s:9WiFiAware19WASubscriberBrowserV19configureParametersy7Network12NWParametersCAGSgF	deferred		Requires Network.NWParameters; not compiled by the isolated host gate.
 s:9WiFiAware19WASubscriberBrowserV6ActionV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.struct WASubscriberBrowser.Action
 s:9WiFiAware19WASubscriberBrowserV6ActionV10connecting2to4fromAeC7DevicesV_AA21WASubscribableServiceVtFZ	implemented	tests/agent/WiFiAwareRuntime.swift	swift.type.method WASubscriberBrowser.Action.connecting(to:from:)
 s:9WiFiAware19WASubscriberBrowserV7DevicesV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.struct WASubscriberBrowser.Devices
@@ -158,10 +158,10 @@ s:9WiFiAware21WASubscribableServiceV4hash4intoys6HasherVz_tF	implemented	tests/a
 s:9WiFiAware21WASubscribableServiceV4nameSSvp	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WASubscribableService.name
 s:9WiFiAware21WASubscribableServiceV6encode2toys7Encoder_p_tKF	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WASubscribableService.encode(to:)
 s:9WiFiAware21WASubscribableServiceV9hashValueSivp	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WASubscribableService.hashValue
-s:9WiFiAware6WAPathV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.struct WAPath
-s:9WiFiAware6WAPathV11performanceAA19WAPerformanceReportVvp	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAPath.performance
-s:9WiFiAware6WAPathV14durationActives8DurationVvp	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAPath.durationActive
-s:9WiFiAware6WAPathV8endpointAA10WAEndpointVvp	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAPath.endpoint
+s:9WiFiAware6WAPathV	declared	full/wifiaware/WAPath.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:9WiFiAware6WAPathV11performanceAA19WAPerformanceReportVvp	declared	full/wifiaware/WAPath.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:9WiFiAware6WAPathV14durationActives8DurationVvp	declared	full/wifiaware/WAPath.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:9WiFiAware6WAPathV8endpointAA10WAEndpointVvp	declared	full/wifiaware/WAPath.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
 s:9WiFiAware7WAErrorO	implemented	tests/agent/WiFiAwareRuntime.swift	swift.enum WAError
 s:9WiFiAware7WAErrorO04wifiC11UnsupportedyA2C0abcF7DetailsVcACmF	implemented	tests/agent/WiFiAwareRuntime.swift	swift.enum.case WAError.wifiAwareUnsupported(_:)
 s:9WiFiAware7WAErrorO0abC18UnsupportedDetailsV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.struct WAError.WiFiAwareUnsupportedDetails
@@ -228,7 +228,7 @@ s:9WiFiAware7WAErrorO6encode2toys7Encoder_p_tKF	implemented	tests/agent/WiFiAwar
 s:9WiFiAware9WAServiceP	implemented	tests/agent/WiFiAwareRuntime.swift	swift.protocol WAService
 s:9WiFiAware9WAServiceP11allServicesSDySSxGvpZ	implemented	tests/agent/WiFiAwareRuntime.swift	swift.type.property WAService.allServices
 s:9WiFiAware9WAServiceP4nameSSvp	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAService.name
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware10WAEndpointV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.func.op WAEndpoint.!=(_:_:)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware10WAEndpointV	declared	full/wifiaware/WAPath.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware14WACapabilitiesV7FeatureO	implemented	tests/agent/WiFiAwareRuntime.swift	swift.func.op WACapabilities.Feature.!=(_:_:)
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.func.op WAPairedDevice.!=(_:_:)
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV11PairingInfoV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.func.op WAPairedDevice.PairingInfo.!=(_:_:)
@@ -236,26 +236,26 @@ s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware16WAAccessCategoryO	implemented	t
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware17WAPerformanceModeO	implemented	tests/agent/WiFiAwareRuntime.swift	swift.func.op WAPerformanceMode.!=(_:_:)
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware20WAPublishableServiceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.func.op WAPublishableService.!=(_:_:)
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9WiFiAware21WASubscribableServiceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.func.op WASubscribableService.!=(_:_:)
-s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV13AsyncIteratorC	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.AsyncIterator.next(isolation:)
-s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.allSatisfy(_:)
-s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.compactMap(_:)
-s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.compactMap(_:)
-s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.map(_:)
-s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.map(_:)
-s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.max(by:)
-s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.min(by:)
-s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.drop(while:)
-s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.first(where:)
-s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.filter(_:)
-s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.prefix(while:)
-s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.prefix(_:)
-s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.reduce(into:_:)
-s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.reduce(_:_:)
-s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.flatMap(_:)
-s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.flatMap(_:)
-s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.flatMap(_:)
-s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.flatMap(_:)
-s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.contains(where:)
-s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.dropFirst(_:)
-s:Sci12_ConcurrencySQ7ElementRpzrlE8containsySbACYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	implemented	tests/agent/WiFiAwareRuntime.swift	swift.method WAPairedDevice.DevicesSequence.contains(_:)
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV13AsyncIteratorC	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
+s:Sci12_ConcurrencySQ7ElementRpzrlE8containsySbACYaKF::SYNTHESIZED::s:9WiFiAware14WAPairedDeviceV15DevicesSequenceV	declared	full/wifiaware/WAPairedDevice.swift	Compiles; system-produced value or protocol-extension sugar without isolated runtime construction/iteration evidence.
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:9WiFiAware7WAErrorO	implemented	tests/agent/WiFiAwareRuntime.swift	swift.property WAError.localizedDescription

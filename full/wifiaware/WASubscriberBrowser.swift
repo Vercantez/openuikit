@@ -7,7 +7,8 @@ import Network
 /// Configures a Network browser to subscribe to a Wi-Fi Aware service.
 ///
 /// Like ``WAPublisherListener``, constructing a browser configuration does not
-/// discover peers or open a datapath.
+/// discover peers or open a datapath. Guest Network has no `NWBrowser`, so
+/// `makeDescriptor()` and `makeEndpoint(from:)` stay deferred.
 public struct WASubscriberBrowser: Sendable {
     public typealias Endpoint = WAEndpoint
 
@@ -60,14 +61,6 @@ public struct WASubscriberBrowser: Sendable {
     }
 
 #if canImport(Network)
-    public func makeDescriptor() -> NWBrowser.Descriptor {
-        fatalError("NWBrowser is not available on this Network starting point")
-    }
-
-    public func makeEndpoint(from browseResult: NWBrowser.Result) throws -> Endpoint? {
-        throw wiFiAwareUnsupportedError()
-    }
-
     public func configureParameters(_ parameters: NWParameters?) -> NWParameters {
         let resolved = parameters ?? .tcp
         resolved.wifiAware = .defaults

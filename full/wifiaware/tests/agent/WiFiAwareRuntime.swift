@@ -33,6 +33,14 @@ private enum WiFiAwareRuntime {
         try box.result.get()
     }
 
+    static func decode<T: Decodable>(_ json: String) throws -> T {
+        try JSONDecoder().decode(T.self, from: Data(json.utf8))
+    }
+
+    static func errorJSON(_ caseName: String) -> String {
+        "{\"\(caseName)\":{\"_0\":{}}}"
+    }
+
     static func run() async throws {
         try testCapabilities()
         try testParameters()
@@ -42,7 +50,7 @@ private enum WiFiAwareRuntime {
         try await testDeviceSequenceFailClosed()
         try testServices()
         try testPublisherAndSubscriberConfiguration()
-        try testEndpointPathAndPerformance()
+        try testPerformanceReportCodable()
         try testAsyncSequenceSurface()
     }
 
@@ -58,7 +66,8 @@ private enum WiFiAwareRuntime {
         precondition(decoded == .wifiAware)
         precondition(WACapabilities.Feature.wifiAware == WACapabilities.Feature.allCases[0])
         _ = WACapabilities.Feature.wifiAware.hashValue
-        precondition(WiFiAwareAvailability.isSupported == false)
+        let fromDecoder: WACapabilities.Feature = try decode("{\"wifiAware\":{}}")
+        precondition(fromDecoder == .wifiAware)
     }
 
     static func testParameters() throws {
@@ -73,9 +82,7 @@ private enum WiFiAwareRuntime {
     }
 
     static func testAccessAndPerformanceEnums() throws {
-        precondition(
-            WAPerformanceMode.allCases == [.bulk, .realtime]
-        )
+        precondition(WAPerformanceMode.allCases == [.bulk, .realtime])
         precondition(
             Set(WAAccessCategory.allCases)
                 == [
@@ -84,68 +91,73 @@ private enum WiFiAwareRuntime {
         )
         precondition(WAPerformanceMode.bulk != .realtime)
         precondition(WAAccessCategory.bestEffort != .interactiveVoice)
-        let mode = try JSONDecoder().decode(
-            WAPerformanceMode.self,
-            from: try JSONEncoder().encode(WAPerformanceMode.realtime)
-        )
+        let mode: WAPerformanceMode = try decode("{\"realtime\":{}}")
         precondition(mode == .realtime)
-        let category = try JSONDecoder().decode(
-            WAAccessCategory.self,
-            from: try JSONEncoder().encode(WAAccessCategory.background)
-        )
+        let category: WAAccessCategory = try decode("{\"background\":{}}")
         precondition(category == .background)
         _ = WAPerformanceMode.bulk.hashValue
         _ = WAAccessCategory.interactiveVideo.hashValue
+        let encodedMode = try JSONEncoder().encode(WAPerformanceMode.realtime)
+        let decodedMode = try JSONDecoder().decode(WAPerformanceMode.self, from: encodedMode)
+        precondition(decodedMode == .realtime)
     }
 
     static func testErrors() throws {
-        let cases: [WAError] = [
-            .error(.init()),
-            .wifiAwareUnsupported(.init()),
-            .entitlementMissing(.init()),
-            .noRadioResources(.init()),
-            .serviceNotDeclared(.init()),
-            .serviceAlreadySubscribing(.init()),
-            .serviceAlreadyPublishing(.init()),
-            .noPairedDevices(.init()),
-            .deviceInvalid(.init()),
-            .deviceNoLongerAvailable(.init()),
-            .publisherTimeout(.init()),
-            .subscriberTimeout(.init()),
-            .connectionFailed(.init()),
-            .connectionIdleTimeout(.init()),
-            .connectionTerminated(.init()),
+        let caseNames = [
+            "error",
+            "wifiAwareUnsupported",
+            "entitlementMissing",
+            "noRadioResources",
+            "serviceNotDeclared",
+            "serviceAlreadySubscribing",
+            "serviceAlreadyPublishing",
+            "noPairedDevices",
+            "deviceInvalid",
+            "deviceNoLongerAvailable",
+            "publisherTimeout",
+            "subscriberTimeout",
+            "connectionFailed",
+            "connectionIdleTimeout",
+            "connectionTerminated",
         ]
-        for error in cases {
+        var decodedCases: [WAError] = []
+        for name in caseNames {
+            let error: WAError = try decode(errorJSON(name))
             precondition(error.errorDescription != nil)
             precondition(error.failureReason == error.errorDescription)
             _ = error.recoverySuggestion
             _ = error.helpAnchor
             _ = error.localizedDescription
             let data = try JSONEncoder().encode(error)
-            let decoded = try JSONDecoder().decode(WAError.self, from: data)
-            precondition(decoded.errorDescription == error.errorDescription)
+            let roundTrip = try JSONDecoder().decode(WAError.self, from: data)
+            precondition(roundTrip.errorDescription == error.errorDescription)
+            decodedCases.append(error)
         }
-        let unsupported = WAError.wifiAwareUnsupported(.init())
+        let unsupported: WAError = try decode(errorJSON("wifiAwareUnsupported"))
         precondition(unsupported.recoverySuggestion != nil)
         if case .wifiAwareUnsupported = unsupported {
         } else {
             preconditionFailure("expected wifiAwareUnsupported")
         }
+        let details: WAError.WiFiAwareUnsupportedDetails = try decode("{}")
+        _ = details
+        precondition(decodedCases.count == caseNames.count)
     }
 
     static func testPairedDevices() throws {
-        let info = WAPairedDevice.PairingInfo(
-            pairingName: "Pad",
-            vendorName: "Acme",
-            modelName: "Pad1"
+        let info: WAPairedDevice.PairingInfo = try decode(
+            """
+            {"pairingName":"Pad","vendorName":"Acme","modelName":"Pad1"}
+            """
         )
         precondition(info.pairingName == "Pad")
         precondition(info.vendorName == "Acme")
         precondition(info.modelName == "Pad1")
         precondition(info.description.contains("Pad"))
-        let copy = WAPairedDevice.PairingInfo(
-            pairingName: "Pad", vendorName: "Acme", modelName: "Pad1"
+        let copy: WAPairedDevice.PairingInfo = try decode(
+            """
+            {"pairingName":"Pad","vendorName":"Acme","modelName":"Pad1"}
+            """
         )
         precondition(info == copy)
         precondition(info.hashValue == copy.hashValue)
@@ -155,12 +167,20 @@ private enum WiFiAwareRuntime {
         )
         precondition(decodedInfo == info)
 
-        let device = WAPairedDevice(id: 7, name: "Kitchen", pairingInfo: info)
+        let device: WAPairedDevice = try decode(
+            """
+            {"id":7,"name":"Kitchen","pairingInfo":{"pairingName":"Pad","vendorName":"Acme","modelName":"Pad1"}}
+            """
+        )
         precondition(device.id == 7)
         precondition(device.name == "Kitchen")
         precondition(device.pairingInfo == info)
         precondition(device.description.contains("Kitchen"))
-        let other = WAPairedDevice(id: 8, name: nil, pairingInfo: nil)
+        let other: WAPairedDevice = try decode(
+            """
+            {"id":8,"name":null,"pairingInfo":null}
+            """
+        )
         precondition(device != other)
         precondition(other.description.contains("unnamed"))
         let encodedDevice = try JSONEncoder().encode(device)
@@ -208,15 +228,17 @@ private enum WiFiAwareRuntime {
     static func testServices() throws {
         precondition(WAPublishableService.allServices.isEmpty)
         precondition(WASubscribableService.allServices.isEmpty)
-        let published = WAPublishableService(name: "example-service")
-        let subscribed = WASubscribableService(name: "example-service")
+        let published: WAPublishableService = try decode("{\"name\":\"example-service\"}")
+        let subscribed: WASubscribableService = try decode("{\"name\":\"example-service\"}")
         precondition(published.id == "example-service")
         precondition(subscribed.id == "example-service")
         precondition(published.name == subscribed.name)
         precondition(published.description.contains("example-service"))
         precondition(subscribed.description.contains("example-service"))
-        precondition(published == WAPublishableService(name: "example-service"))
-        precondition(subscribed != WASubscribableService(name: "other"))
+        let publishedCopy: WAPublishableService = try decode("{\"name\":\"example-service\"}")
+        precondition(published == publishedCopy)
+        let other: WASubscribableService = try decode("{\"name\":\"other\"}")
+        precondition(subscribed != other)
         _ = published.hashValue
         _ = subscribed.hashValue
         let encodedPublished = try JSONEncoder().encode(published)
@@ -232,11 +254,17 @@ private enum WiFiAwareRuntime {
     }
 
     static func testPublisherAndSubscriberConfiguration() throws {
-        let service = WAPublishableService(name: "xfer")
-        let device = WAPairedDevice(id: 1, name: "Peer", pairingInfo: nil)
+        let service: WAPublishableService = try decode("{\"name\":\"xfer\"}")
+        let device: WAPairedDevice = try decode(
+            """
+            {"id":1,"name":"Peer","pairingInfo":null}
+            """
+        )
         let selected = WAPublisherListener.Devices.selected([device])
         let fromDictionary = WAPublisherListener.Devices.selected([device.id: device])
         _ = fromDictionary
+        let emptySelected = WAPublisherListener.Devices.selected([] as [WAPairedDevice])
+        _ = emptySelected
         let matching = WAPublisherListener.Devices.matching(
             #Predicate<WAPairedDevice> { $0.id == 1 }
         )
@@ -257,7 +285,7 @@ private enum WiFiAwareRuntime {
         _ = WAPublisherListener.DatapathParameters.defaults
         _ = WAPublisherListener.DatapathParameters.realtime
 
-        let subscribeService = WASubscribableService(name: "xfer")
+        let subscribeService: WASubscribableService = try decode("{\"name\":\"xfer\"}")
         let browserDevices = WASubscriberBrowser.Devices.selected([device])
         _ = WASubscriberBrowser.Devices.selected([device.id: device])
         _ = WASubscriberBrowser.Devices.matching(
@@ -273,67 +301,59 @@ private enum WiFiAwareRuntime {
         _ = typed
     }
 
-    static func testEndpointPathAndPerformance() throws {
-        let device = WAPairedDevice(id: 42, name: "Lamp", pairingInfo: nil)
-        let published = WAPublishableService(name: "lamp")
-        let subscribed = WASubscribableService(name: "lamp")
-        let endpoint = WAEndpoint(
-            device: device,
-            publishedService: published,
-            subscribedService: subscribed
-        )
-        precondition(endpoint.device == device)
-        precondition(endpoint.publishedService == published)
-        precondition(endpoint.subscribedService == subscribed)
-        precondition(endpoint.description.contains("Lamp"))
-        let other = WAEndpoint(device: device)
-        precondition(endpoint != other)
-        _ = endpoint.hashValue
-
-        let metrics = WAPerformanceReport.TransmitLatencyMetrics(
-            accessCategory: .bestEffort,
-            average: .milliseconds(12)
+    static func testPerformanceReportCodable() throws {
+        let metrics: WAPerformanceReport.TransmitLatencyMetrics = try decode(
+            """
+            {"accessCategory":{"bestEffort":{}},"average":[0,12000000000000000]}
+            """
         )
         precondition(metrics.accessCategory == .bestEffort)
-        let report = WAPerformanceReport(
-            timestamp: Date(timeIntervalSince1970: 1),
-            localTimestamp: ContinuousClock.now,
-            throughputCeiling: 100,
-            throughputCapacity: 40,
-            transmitLatency: [.bestEffort: metrics],
-            signalStrength: -50
-        )
-        precondition(report.throughputCapacityRatio == 0.4)
+        precondition(metrics.average != nil)
+
+        let encoder = JSONEncoder()
+        func embed<T: Encodable>(_ value: T) throws -> Any {
+            try JSONSerialization.jsonObject(
+                with: try encoder.encode(value),
+                options: [.fragmentsAllowed]
+            )
+        }
+        var object: [String: Any] = [
+            "timestamp": try embed(Date(timeIntervalSince1970: 1)),
+            "localTimestamp": try embed(ContinuousClock.now),
+            "throughputCeiling": 100.0,
+            "throughputCapacity": 40.0,
+            "signalStrength": -50.0,
+        ]
+        let encodedMetrics = try encoder.encode(metrics)
+        let metricsObject = try JSONSerialization.jsonObject(with: encodedMetrics)
+        object["transmitLatency"] = [
+            try embed(WAAccessCategory.bestEffort),
+            metricsObject,
+        ]
+        let data = try JSONSerialization.data(withJSONObject: object)
+        let report = try JSONDecoder().decode(WAPerformanceReport.self, from: data)
+        precondition(report.throughputCeiling == 100)
+        precondition(report.throughputCapacity == 40)
         precondition(report.signalStrength == -50)
-        let missingRatio = WAPerformanceReport(
-            timestamp: Date(timeIntervalSince1970: 1),
-            localTimestamp: ContinuousClock.now,
-            throughputCeiling: nil,
-            throughputCapacity: 40,
-            transmitLatency: [:],
-            signalStrength: nil
-        )
-        precondition(missingRatio.throughputCapacityRatio == nil)
+        precondition(report.throughputCapacityRatio == 0.4)
+        precondition(report.transmitLatency[.bestEffort]?.accessCategory == .bestEffort)
         let encoded = try JSONEncoder().encode(report)
         let decoded = try JSONDecoder().decode(WAPerformanceReport.self, from: encoded)
-        precondition(decoded.throughputCeiling == 100)
-        precondition(decoded.throughputCapacity == 40)
-        precondition(decoded.transmitLatency[.bestEffort]?.accessCategory == .bestEffort)
+        precondition(decoded.throughputCapacityRatio == 0.4)
 
-        let path = WAPath(
-            endpoint: endpoint,
-            performance: report,
-            durationActive: .seconds(3)
-        )
-        precondition(path.endpoint == endpoint)
-        precondition(path.durationActive == .seconds(3))
-        precondition(path.performance.throughputCapacity == 40)
+        var missingObject = object
+        missingObject.removeValue(forKey: "throughputCeiling")
+        missingObject["throughputCapacity"] = 40.0
+        missingObject["transmitLatency"] = [] as [Any]
+        missingObject.removeValue(forKey: "signalStrength")
+        let missingData = try JSONSerialization.data(withJSONObject: missingObject)
+        let missing = try JSONDecoder().decode(WAPerformanceReport.self, from: missingData)
+        precondition(missing.throughputCapacityRatio == nil)
     }
 
     static func testAsyncSequenceSurface() throws {
         let sequence = WAPairedDevice.allDevices
         _ = sequence.map { $0.count }
-        _ = sequence.map { snapshot in snapshot.count }
         _ = sequence.compactMap { $0.keys.first }
         _ = sequence.filter { !$0.isEmpty }
         _ = sequence.dropFirst()

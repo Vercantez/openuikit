@@ -4,7 +4,8 @@ import Foundation
 ///
 /// Linux uses ``wifiAwareUnsupported(_:)`` as the fail-closed result for any
 /// operation that would require a radio, pairing daemon, entitlement, or
-/// Apple Network listener/browser.
+/// Apple Network listener/browser. Detail structs have no public memberwise
+/// constructor in the exact graph; construct them with `init(from:)`.
 public enum WAError: Error, Sendable, Codable {
     case error(ErrorDetails)
     case wifiAwareUnsupported(WiFiAwareUnsupportedDetails)
@@ -22,65 +23,21 @@ public enum WAError: Error, Sendable, Codable {
     case connectionIdleTimeout(ConnectionIdleTimeoutDetails)
     case connectionTerminated(ConnectionTerminatedDetails)
 
-    public struct ErrorDetails: Sendable, Codable {
-        public init() {}
-    }
-
-    public struct WiFiAwareUnsupportedDetails: Sendable, Codable {
-        public init() {}
-    }
-
-    public struct EntitlementMissingDetails: Sendable, Codable {
-        public init() {}
-    }
-
-    public struct NoRadioResourcesDetails: Sendable, Codable {
-        public init() {}
-    }
-
-    public struct ServiceNotDeclaredDetails: Sendable, Codable {
-        public init() {}
-    }
-
-    public struct ServiceAlreadySubscribingDetails: Sendable, Codable {
-        public init() {}
-    }
-
-    public struct ServiceAlreadyPublishingDetails: Sendable, Codable {
-        public init() {}
-    }
-
-    public struct NoPairedDevicesDetails: Sendable, Codable {
-        public init() {}
-    }
-
-    public struct DeviceInvalidDetails: Sendable, Codable {
-        public init() {}
-    }
-
-    public struct DeviceNoLongerAvailableDetails: Sendable, Codable {
-        public init() {}
-    }
-
-    public struct PublisherTimeoutDetails: Sendable, Codable {
-        public init() {}
-    }
-
-    public struct SubscriberTimeoutDetails: Sendable, Codable {
-        public init() {}
-    }
-
-    public struct ConnectionFailedDetails: Sendable, Codable {
-        public init() {}
-    }
-
-    public struct ConnectionIdleTimeoutDetails: Sendable, Codable {
-        public init() {}
-    }
-
-    public struct ConnectionTerminatedDetails: Sendable, Codable {
-        public init() {}
-    }
+    public struct ErrorDetails: Sendable, Codable {}
+    public struct WiFiAwareUnsupportedDetails: Sendable, Codable {}
+    public struct EntitlementMissingDetails: Sendable, Codable {}
+    public struct NoRadioResourcesDetails: Sendable, Codable {}
+    public struct ServiceNotDeclaredDetails: Sendable, Codable {}
+    public struct ServiceAlreadySubscribingDetails: Sendable, Codable {}
+    public struct ServiceAlreadyPublishingDetails: Sendable, Codable {}
+    public struct NoPairedDevicesDetails: Sendable, Codable {}
+    public struct DeviceInvalidDetails: Sendable, Codable {}
+    public struct DeviceNoLongerAvailableDetails: Sendable, Codable {}
+    public struct PublisherTimeoutDetails: Sendable, Codable {}
+    public struct SubscriberTimeoutDetails: Sendable, Codable {}
+    public struct ConnectionFailedDetails: Sendable, Codable {}
+    public struct ConnectionIdleTimeoutDetails: Sendable, Codable {}
+    public struct ConnectionTerminatedDetails: Sendable, Codable {}
 }
 
 extension WAError: LocalizedError {

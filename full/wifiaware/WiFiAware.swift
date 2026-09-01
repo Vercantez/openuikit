@@ -13,11 +13,6 @@ import OSLog
 /// compile and behave deterministically. Discovery, pairing, radio datapaths,
 /// entitlements, and Network listener/browser integration stay fail-closed:
 /// this host has no Wi-Fi Aware hardware or pairing daemon.
-public enum WiFiAwareAvailability: Sendable {
-    /// Always `false` on this Linux starting point.
-    public static let isSupported = false
-}
-
 #if canImport(OSLog)
 private let wiFiAwareLog = Logger(subsystem: "WiFiAware", category: "WiFiAware")
 #endif
