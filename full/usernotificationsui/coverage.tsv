@@ -7,18 +7,18 @@ c:@E@UNNotificationContentExtensionResponseOption	implemented	tests/agent/UserNo
 c:@E@UNNotificationContentExtensionResponseOption@UNNotificationContentExtensionResponseOptionDismiss	implemented	tests/agent/UserNotificationsUIRuntime.swift	case dismiss rawValue 1
 c:@E@UNNotificationContentExtensionResponseOption@UNNotificationContentExtensionResponseOptionDismissAndForwardAction	implemented	tests/agent/UserNotificationsUIRuntime.swift	case dismissAndForwardAction rawValue 2
 c:@E@UNNotificationContentExtensionResponseOption@UNNotificationContentExtensionResponseOptionDoNotDismiss	implemented	tests/agent/UserNotificationsUIRuntime.swift	case doNotDismiss rawValue 0
-c:objc(cs)NSExtensionContext(im)dismissNotificationContentExtension	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Fail-closed sidecar flag on staged Foundation.NSExtensionContext
-c:objc(cs)NSExtensionContext(im)mediaPlayingPaused	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Fail-closed sidecar media-playing flag cleared
-c:objc(cs)NSExtensionContext(im)mediaPlayingStarted	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Fail-closed sidecar media-playing flag set
-c:objc(cs)NSExtensionContext(im)performNotificationDefaultAction	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Fail-closed sidecar flag; no app launch
-c:objc(cs)NSExtensionContext(py)notificationActions	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Sidecar get/set array copy; not delivered to Apple host
-c:objc(pl)UNNotificationContentExtension	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	NSObjectProtocol; optional members are requirements with defaults
-c:objc(pl)UNNotificationContentExtension(im)didReceiveNotification:	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Required @MainActor didReceive through existential
-c:objc(pl)UNNotificationContentExtension(im)didReceiveNotificationResponse:completionHandler:	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Async overlay dynamically dispatched through existential
-c:objc(pl)UNNotificationContentExtension(im)mediaPause	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential dispatch of override; default is no-op
+c:objc(cs)NSExtensionContext(im)dismissNotificationContentExtension	deferred	module	BLOCKER: platform Foundation lacks NSExtensionContext; unit-fixture lookalike is not that identity
+c:objc(cs)NSExtensionContext(im)mediaPlayingPaused	deferred	module	BLOCKER: platform Foundation lacks NSExtensionContext; unit-fixture lookalike is not that identity
+c:objc(cs)NSExtensionContext(im)mediaPlayingStarted	deferred	module	BLOCKER: platform Foundation lacks NSExtensionContext; unit-fixture lookalike is not that identity
+c:objc(cs)NSExtensionContext(im)performNotificationDefaultAction	deferred	module	BLOCKER: platform Foundation lacks NSExtensionContext; unit-fixture lookalike is not that identity
+c:objc(cs)NSExtensionContext(py)notificationActions	deferred	module	BLOCKER: platform Foundation lacks NSExtensionContext; unit-fixture lookalike is not that identity
+c:objc(pl)UNNotificationContentExtension	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential conformance; optional members are requirements with defaults
+c:objc(pl)UNNotificationContentExtension(im)didReceiveNotification:	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential didReceive with repo UserNotifications.UNNotification
+c:objc(pl)UNNotificationContentExtension(im)didReceiveNotificationResponse:completionHandler:	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential async and completion-handler overrides
+c:objc(pl)UNNotificationContentExtension(im)mediaPause	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential dispatch of override; static dispatch would leave count 0
 c:objc(pl)UNNotificationContentExtension(im)mediaPlay	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential dispatch of override; static dispatch would leave count 0
 c:objc(pl)UNNotificationContentExtension(py)mediaPlayPauseButtonFrame	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential reads overlay frame; default is CGRect.zero
-c:objc(pl)UNNotificationContentExtension(py)mediaPlayPauseButtonTintColor	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential reads UIKit.UIColor override
+c:objc(pl)UNNotificationContentExtension(py)mediaPlayPauseButtonTintColor	declared	UserNotificationsUI.swift	Protocol requirement; UIKit.UIColor identity needs platform UIKit, not unit-fixture UIColor
 c:objc(pl)UNNotificationContentExtension(py)mediaPlayPauseButtonType	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential reads overlay; default is none
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNNotificationContentExtensionMediaPlayPauseButtonType	implemented	tests/agent/UserNotificationsUIRuntime.swift	Synthesized Equatable != on button type
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNNotificationContentExtensionResponseOption	implemented	tests/agent/UserNotificationsUIRuntime.swift	Synthesized Equatable != on response option

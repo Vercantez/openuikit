@@ -121,12 +121,15 @@ extension UNNotificationContentExtension {
     }
 }
 
-// MARK: - Foundation.NSExtensionContext
+// MARK: - NSExtensionContext
 //
-// UserNotificationsUI does not own `NSExtensionContext`. Production APIs
-// extend the staged Foundation identity so NotificationCenter and this module
-// share one type. Linux has no extension host: the methods only record local
-// sidecar state.
+// UserNotificationsUI does not own `NSExtensionContext`. The Apple surface
+// extends Foundation.NSExtensionContext. This extension is compiled only when
+// UIKit and UserNotifications are importable; it binds to whichever
+// NSExtensionContext those imports bring into scope. Linux platform Foundation
+// currently lacks that nominal — a central blocker for real integration.
+// Isolated unit-fixture builds may supply a lookalike so protocol/host code
+// typechecks; that lookalike is not Foundation.NSExtensionContext.
 
 private final class _UNNotificationContentExtensionHostState {
     var actions: [UNNotificationAction] = []
