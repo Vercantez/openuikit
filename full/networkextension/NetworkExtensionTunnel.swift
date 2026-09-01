@@ -1,7 +1,17 @@
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#endif
+#if canImport(Network)
+import Network
+#endif
+
 open class NEFlowMetaData: NSObject {
     public let sourceAppSigningIdentifier: String
     public let sourceAppUniqueIdentifier: Data
 
+    @_spi(OpenUIKitHost)
     public init(sourceAppSigningIdentifier: String, sourceAppUniqueIdentifier: Data) {
         self.sourceAppSigningIdentifier = sourceAppSigningIdentifier
         self.sourceAppUniqueIdentifier = sourceAppUniqueIdentifier
@@ -23,11 +33,13 @@ open class NEPacket: NSObject {
 
 open class NEPacketTunnelFlow: NSObject {
     open func readPacketObjects(completionHandler: @escaping ([NEPacket]) -> Void) {
-        completionHandler([])
+        _NEOnceDelivery(completionHandler).schedule([])
     }
 
     open func readPackets(completionHandler: @escaping ([Data], [NSNumber]) -> Void) {
-        completionHandler([], [])
+        _NEOnceDelivery { (pair: ([Data], [NSNumber])) in
+            completionHandler(pair.0, pair.1)
+        }.schedule(([], []))
     }
 
     open func writePacketObjects(_ packets: [NEPacket]) -> Bool {
@@ -42,7 +54,9 @@ open class NEPacketTunnelFlow: NSObject {
 }
 
 open class NEProvider: NSObject {
-    open var defaultPath: NWPath? { NWPath(status: .unsatisfied) }
+    open var defaultPath: NWPath? {
+        NWPath(status: .unsatisfied)
+    }
 
     open func createTCPConnection(
         to remoteEndpoint: NWEndpoint,
@@ -67,11 +81,13 @@ open class NEProvider: NSObject {
         completionHandler: @escaping (Bool) -> Void
     ) {
         _ = message
-        completionHandler(false)
+        _NEOnceDelivery(completionHandler).schedule(false)
     }
 
     open func sleep(completionHandler: @escaping () -> Void) {
-        completionHandler()
+        _NEOnceDelivery { (_: Void) in
+            completionHandler()
+        }.schedule(())
     }
 
     open func wake() {}
@@ -100,6 +116,10 @@ open class NEPacketTunnelProvider: NETunnelProvider {
     private let _packetFlow = NEPacketTunnelFlow()
 
     open var packetFlow: NEPacketTunnelFlow { _packetFlow }
+
+#if canImport(Network)
+    open var virtualInterface: Network.NWInterface? { nil }
+#endif
 
     open func startTunnel(options: [String: NSObject]? = nil) async throws {
         _ = options
@@ -151,6 +171,13 @@ open class NEAppProxyFlow: NSObject {
     open var metaData: NEFlowMetaData { _metaData }
     open var remoteHostname: String? { nil }
 
+#if canImport(Network)
+    open var interface: Network.NWInterface?
+    open func setMetadata(on parameters: Network.NWParameters) {
+        _ = parameters
+    }
+#endif
+
     open func closeReadWithError(_ error: (any Error)?) {
         _ = error
     }
@@ -169,7 +196,9 @@ open class NEAppProxyFlow: NSObject {
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
         _ = localEndpoint
-        completionHandler(_NEHostBoundary.appProxyError(.notConnected))
+        _NEOnceDelivery(completionHandler).schedule(
+            _NEHostBoundary.appProxyError(.notConnected)
+        )
     }
 
     open func open(withLocalFlowEndpoint localEndpoint: NWEndpoint?) async throws {
@@ -186,7 +215,9 @@ open class NEAppProxyTCPFlow: NEAppProxyFlow {
     open var remoteFlowEndpoint: NWEndpoint { remoteEndpoint }
 
     open func readData(completionHandler: @escaping (Data?, (any Error)?) -> Void) {
-        completionHandler(nil, _NEHostBoundary.appProxyError(.notConnected))
+        _NEOncePair(completionHandler).schedule(
+            (nil, _NEHostBoundary.appProxyError(.notConnected))
+        )
     }
 
     open func write(_ data: Data) async throws {
@@ -213,7 +244,9 @@ open class NEAppProxyUDPFlow: NEAppProxyFlow {
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
         _ = array
-        completionHandler(_NEHostBoundary.appProxyError(.notConnected))
+        _NEOnceDelivery(completionHandler).schedule(
+            _NEHostBoundary.appProxyError(.notConnected)
+        )
     }
 
     open func writeDatagrams(

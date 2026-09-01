@@ -148,7 +148,8 @@ open class NEFilterManager: NSObject {
     open func loadFromPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(
+        _NEHostBoundary.complete(
+            completionHandler,
             _NEHostBoundary.nsError(
                 domain: NEFilterErrorDomain,
                 code: NEFilterManagerError.configurationInvalid.rawValue
@@ -159,7 +160,8 @@ open class NEFilterManager: NSObject {
     open func saveToPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(
+        _NEHostBoundary.complete(
+            completionHandler,
             _NEHostBoundary.nsError(
                 domain: NEFilterErrorDomain,
                 code: NEFilterManagerError.configurationPermissionDenied.rawValue
@@ -170,7 +172,8 @@ open class NEFilterManager: NSObject {
     open func removeFromPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(
+        _NEHostBoundary.complete(
+            completionHandler,
             _NEHostBoundary.nsError(
                 domain: NEFilterErrorDomain,
                 code: NEFilterManagerError.configurationCannotBeRemoved.rawValue
@@ -185,7 +188,8 @@ open class NEFilterProvider: NEProvider {
     }
 
     open func startFilter(completionHandler: @escaping ((any Error)?) -> Void) {
-        completionHandler(
+        _NEHostBoundary.complete(
+            completionHandler,
             _NEHostBoundary.nsError(
                 domain: NEFilterErrorDomain,
                 code: NEFilterManagerError.configurationInvalid.rawValue

@@ -1,3 +1,7 @@
+#if canImport(ExtensionFoundation)
+import ExtensionFoundation
+#endif
+
 public protocol NEAppPushDelegate: NSObjectProtocol {
     func appPushManager(
         _ manager: NEAppPushManager,
@@ -9,7 +13,9 @@ open class NEAppPushManager: NSObject {
     open class func loadAllFromPreferences(
         completionHandler: @escaping ([NEAppPushManager]?, (any Error)?) -> Void
     ) {
-        completionHandler(nil, _NEHostBoundary.appPushError(.configurationInvalid))
+        _NEOnceDelivery { (pair: ([NEAppPushManager]?, (any Error)?)) in
+            completionHandler(pair.0, pair.1)
+        }.schedule((nil, _NEHostBoundary.appPushError(.configurationInvalid)))
     }
 
     open var isActive: Bool { false }
@@ -25,19 +31,39 @@ open class NEAppPushManager: NSObject {
     open func loadFromPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(_NEHostBoundary.appPushError(.configurationNotLoaded))
+        _NEHostBoundary.complete(
+            completionHandler,
+            _NEHostBoundary.appPushError(.configurationNotLoaded)
+        )
     }
 
     open func saveToPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(_NEHostBoundary.appPushError(.configurationInvalid))
+        _NEHostBoundary.complete(
+            completionHandler,
+            _NEHostBoundary.appPushError(.configurationInvalid)
+        )
     }
 
     open func removeFromPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(_NEHostBoundary.appPushError(.configurationInvalid))
+        _NEHostBoundary.complete(
+            completionHandler,
+            _NEHostBoundary.appPushError(.configurationInvalid)
+        )
+    }
+
+    @_spi(OpenUIKitHost)
+    public func deliverIncomingCallForHostTesting(userInfo: [AnyHashable: Any] = [:]) {
+        NetworkExtensionHostCallback.schedule { [weak self] in
+            guard let self else { return }
+            self.delegate?.appPushManager(
+                self,
+                didReceiveIncomingCallWithUserInfo: userInfo
+            )
+        }
     }
 }
 
@@ -47,7 +73,10 @@ open class NEAppPushProvider: NEProvider {
     open func start() {}
 
     open func start(completionHandler: @escaping ((any Error)?) -> Void) {
-        completionHandler(_NEHostBoundary.appPushError(.inactiveSession))
+        _NEHostBoundary.complete(
+            completionHandler,
+            _NEHostBoundary.appPushError(.inactiveSession)
+        )
     }
 
     open func stop(with reason: NEProviderStopReason) async {
@@ -145,6 +174,9 @@ open class NEURLFilterManager: NSObject {
     public static var shared: NEURLFilterManager { _shared }
 
     open var pirServerURL: URL? { nil }
+#if !os(Linux)
+    open var localizedDescription: LocalizedStringResource?
+#endif
     open var shouldFailClosed = true
     open var appBundleIdentifier: String? { nil }
     open var pirAuthenticationToken: String? { nil }
@@ -207,8 +239,10 @@ open class NEURLFilterManager: NSObject {
 @MainActor
 public class NEURLFilterControlProviderConfiguration: NEAppExtensionConfiguration {}
 
-public protocol NEURLFilterControlProvider {
+#if canImport(ExtensionFoundation)
+public protocol NEURLFilterControlProvider: AppExtension {
     func fetchPrefilter(existingPrefilterTag: String?) async throws -> NEURLFilterPrefilter?
     func start() async throws
     func stop(reason: NEProviderStopReason) async throws
 }
+#endif

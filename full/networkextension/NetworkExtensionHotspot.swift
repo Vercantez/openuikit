@@ -1,3 +1,16 @@
+#if canImport(Dispatch)
+import Dispatch
+#endif
+#if canImport(Security)
+import Security
+#endif
+#if canImport(AccessorySetupKit)
+import AccessorySetupKit
+#endif
+#if canImport(ExtensionFoundation)
+import ExtensionFoundation
+#endif
+
 open class NEPrivateLTENetwork: NSObject {
     open var mobileCountryCode = ""
     open var mobileNetworkCode = ""
@@ -35,6 +48,13 @@ open class NEHotspotEAPSettings: NSObject {
     open var ttlsInnerAuthenticationType: TTLSInnerAuthenticationType =
         .eapttlsInnerAuthenticationMSCHAPv2
     open var username = ""
+
+#if canImport(Security)
+    open func setIdentity(_ identity: SecIdentity) -> Bool {
+        _ = identity
+        return false
+    }
+#endif
 
     open func setTrustedServerCertificates(_ certificates: [Any]) -> Bool {
         _ = certificates
@@ -150,7 +170,8 @@ open class NEHotspotNetwork: NSObject {
     public let ssid: String
     public let bssid: String
 
-    public init(ssid: String = "", bssid: String = "") {
+    @_spi(OpenUIKitHost)
+    public init(ssid: String, bssid: String) {
         self.ssid = ssid
         self.bssid = bssid
         super.init()
@@ -164,7 +185,7 @@ open class NEHotspotNetwork: NSObject {
     open var signalStrength: Double { 0 }
 
     open class func fetchCurrent(completionHandler: @escaping (NEHotspotNetwork?) -> Void) {
-        completionHandler(nil)
+        _NEOnceDelivery(completionHandler).schedule(nil as NEHotspotNetwork?)
     }
 
     open func setConfidence(_ confidence: NEHotspotHelperConfidence) {
@@ -236,7 +257,24 @@ open class NEHotspotConfigurationManager: NSObject {
         throw NEHotspotConfigurationError.internal
     }
 
-    open func configuredSSIDs() async -> [String] { [] }
+    open func configuredSSIDs() async -> [String] {
+        []
+    }
+
+#if canImport(AccessorySetupKit)
+    open func joinAccessoryHotspot(
+        _ accessory: ASAccessory,
+        passphrase: String
+    ) async throws {
+        _ = (accessory, passphrase)
+        throw NEHotspotConfigurationError.internal
+    }
+
+    open func joinAccessoryHotspotWithoutSecurity(_ accessory: ASAccessory) async throws {
+        _ = accessory
+        throw NEHotspotConfigurationError.internal
+    }
+#endif
 
     open func removeConfiguration(forHS20DomainName domainName: String) {
         _ = domainName
@@ -284,15 +322,17 @@ public class NEHotspotEvaluationProviderConfiguration: NEAppExtensionConfigurati
 @MainActor
 public class NEHotspotAuthenticationProviderConfiguration: NEAppExtensionConfiguration {}
 
-public protocol NEHotspotEvaluationProvider {
+#if canImport(ExtensionFoundation)
+public protocol NEHotspotEvaluationProvider: AppExtension {
     var localizedDisplayName: String { get }
     func handleCommand(_ command: NEHotspotHelperCommand) async -> NEHotspotHelperResponse
     func start() async -> Bool
     func stop(reason: NEProviderStopReason) async
 }
 
-public protocol NEHotspotAuthenticationProvider {
+public protocol NEHotspotAuthenticationProvider: AppExtension {
     func handleCommand(_ command: NEHotspotHelperCommand) async -> NEHotspotHelperResponse
     func start() async -> Bool
     func stop(reason: NEProviderStopReason) async
 }
+#endif

@@ -25,7 +25,7 @@ open class NEVPNConnection: NSObject {
     open func fetchLastDisconnectError(
         completionHandler handler: @escaping ((any Error)?) -> Void
     ) {
-        handler(lastDisconnectError)
+        _NEOnceDelivery(handler).schedule(lastDisconnectError)
     }
 }
 
@@ -114,7 +114,9 @@ open class NETunnelProviderManager: NEVPNManager {
     open class func loadAllFromPreferences(
         completionHandler: @escaping ([NETunnelProviderManager]?, (any Error)?) -> Void
     ) {
-        completionHandler(nil, _NEHostBoundary.vpnError(.configurationReadWriteFailed))
+        _NEOnceDelivery { (pair: ([NETunnelProviderManager]?, (any Error)?)) in
+            completionHandler(pair.0, pair.1)
+        }.schedule((nil, _NEHostBoundary.vpnError(.configurationReadWriteFailed)))
     }
 
     open func copyAppRules() -> [NEAppRule]? { nil }
@@ -124,7 +126,9 @@ open class NEAppProxyProviderManager: NETunnelProviderManager {
     open class func loadAllFromPreferences(
         completionHandler: @escaping ([NEAppProxyProviderManager]?, (any Error)?) -> Void
     ) {
-        completionHandler(nil, _NEHostBoundary.vpnError(.configurationReadWriteFailed))
+        _NEOnceDelivery { (pair: ([NEAppProxyProviderManager]?, (any Error)?)) in
+            completionHandler(pair.0, pair.1)
+        }.schedule((nil, _NEHostBoundary.vpnError(.configurationReadWriteFailed)))
     }
 }
 
@@ -141,7 +145,8 @@ open class NEDNSSettingsManager: NSObject {
     open func loadFromPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(
+        _NEHostBoundary.complete(
+            completionHandler,
             _NEHostBoundary.nsError(
                 domain: NEDNSSettingsErrorDomain,
                 code: NEDNSSettingsManagerError.configurationInvalid.rawValue
@@ -152,7 +157,8 @@ open class NEDNSSettingsManager: NSObject {
     open func saveToPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(
+        _NEHostBoundary.complete(
+            completionHandler,
             _NEHostBoundary.nsError(
                 domain: NEDNSSettingsErrorDomain,
                 code: NEDNSSettingsManagerError.configurationInvalid.rawValue
@@ -163,7 +169,8 @@ open class NEDNSSettingsManager: NSObject {
     open func removeFromPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(
+        _NEHostBoundary.complete(
+            completionHandler,
             _NEHostBoundary.nsError(
                 domain: NEDNSSettingsErrorDomain,
                 code: NEDNSSettingsManagerError.configurationCannotBeRemoved.rawValue
@@ -184,7 +191,8 @@ open class NEDNSProxyManager: NSObject {
     open func loadFromPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(
+        _NEHostBoundary.complete(
+            completionHandler,
             _NEHostBoundary.nsError(
                 domain: NEDNSProxyErrorDomain,
                 code: NEDNSProxyManagerError.configurationInvalid.rawValue
@@ -195,7 +203,8 @@ open class NEDNSProxyManager: NSObject {
     open func saveToPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(
+        _NEHostBoundary.complete(
+            completionHandler,
             _NEHostBoundary.nsError(
                 domain: NEDNSProxyErrorDomain,
                 code: NEDNSProxyManagerError.configurationInvalid.rawValue
@@ -206,7 +215,8 @@ open class NEDNSProxyManager: NSObject {
     open func removeFromPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(
+        _NEHostBoundary.complete(
+            completionHandler,
             _NEHostBoundary.nsError(
                 domain: NEDNSProxyErrorDomain,
                 code: NEDNSProxyManagerError.configurationCannotBeRemoved.rawValue
@@ -246,11 +256,15 @@ open class NERelayManager: NSObject {
     open class func loadAllManagersFromPreferences(
         completionHandler: @escaping ([NERelayManager], (any Error)?) -> Void
     ) {
-        completionHandler(
-            [],
-            _NEHostBoundary.nsError(
-                domain: NERelayErrorDomain,
-                code: NERelayManagerError.configurationInvalid.rawValue
+        _NEOnceDelivery { (pair: ([NERelayManager], (any Error)?)) in
+            completionHandler(pair.0, pair.1)
+        }.schedule(
+            (
+                [],
+                _NEHostBoundary.nsError(
+                    domain: NERelayErrorDomain,
+                    code: NERelayManagerError.configurationInvalid.rawValue
+                )
             )
         )
     }
@@ -258,7 +272,8 @@ open class NERelayManager: NSObject {
     open func loadFromPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(
+        _NEHostBoundary.complete(
+            completionHandler,
             _NEHostBoundary.nsError(
                 domain: NERelayErrorDomain,
                 code: NERelayManagerError.configurationInvalid.rawValue
@@ -269,7 +284,8 @@ open class NERelayManager: NSObject {
     open func saveToPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(
+        _NEHostBoundary.complete(
+            completionHandler,
             _NEHostBoundary.nsError(
                 domain: NERelayErrorDomain,
                 code: NERelayManagerError.configurationInvalid.rawValue
@@ -280,7 +296,8 @@ open class NERelayManager: NSObject {
     open func removeFromPreferences(
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
-        completionHandler(
+        _NEHostBoundary.complete(
+            completionHandler,
             _NEHostBoundary.nsError(
                 domain: NERelayErrorDomain,
                 code: NERelayManagerError.configurationCannotBeRemoved.rawValue
@@ -293,6 +310,6 @@ open class NERelayManager: NSObject {
         completionHandler: @escaping ([any Error]?) -> Void
     ) {
         _ = seconds
-        completionHandler(nil)
+        _NEOnceDelivery(completionHandler).schedule(nil)
     }
 }

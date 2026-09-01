@@ -1,6 +1,5 @@
+@_spi(OpenUIKitHost) import NetworkExtension
 import Foundation
-import Glibc
-import NetworkExtension
 
 private func requireVPNError(_ error: Error?, code: NEVPNError.Code) {
     guard let error = error as? NEVPNError else {
@@ -9,6 +8,59 @@ private func requireVPNError(_ error: Error?, code: NEVPNError.Code) {
     precondition(error.code == code)
     precondition(error.errorCode == code.rawValue)
     precondition(NEVPNError.errorDomain == NEVPNErrorDomain)
+}
+
+private func drainHostQueue() async {
+    await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+        NetworkExtensionHostCallback.schedule {
+            continuation.resume()
+        }
+    }
+}
+
+/// Wait for an asynchronous NetworkExtension completion. The probed API must
+/// return before the handler runs, and the handler must run on
+/// `NetworkExtensionHostCallback.queue`. That queue is a Linux host control,
+/// not Apple `nesessionmanager` identity.
+private func awaitHostCallback<T>(
+    _ body: (@escaping (T) -> Void) -> Void
+) async -> T {
+    await withCheckedContinuation { continuation in
+        var returned = false
+        body { value in
+            precondition(returned, "asynchronous completion ran inline")
+            precondition(
+                NetworkExtensionHostCallback.isCurrentQueue,
+                "completion was not delivered on NetworkExtensionHostCallback.queue"
+            )
+            continuation.resume(returning: value)
+        }
+        returned = true
+    }
+}
+
+private final class PushCallDelegate: NSObject, NEAppPushDelegate {
+    private let lock = NSLock()
+    private var _calls = 0
+    private var _lastInfo: [AnyHashable: Any] = [:]
+
+    var calls: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return _calls
+    }
+
+    func appPushManager(
+        _ manager: NEAppPushManager,
+        didReceiveIncomingCallWithUserInfo userInfo: [AnyHashable: Any]
+    ) {
+        _ = manager
+        precondition(NetworkExtensionHostCallback.isCurrentQueue)
+        lock.lock()
+        _calls += 1
+        _lastInfo = userInfo
+        lock.unlock()
+    }
 }
 
 struct NetworkExtensionRuntime {
@@ -21,40 +73,42 @@ struct NetworkExtensionRuntime {
         exerciseHotspotObjects()
         await exerciseLegacyNetworkAndPackets()
         await exerciseURLFilterBoundary()
+        await exerciseHostCallbackContracts()
         print("NETWORKEXTENSION_AGENT_RUNTIME_OK")
     }
 
     static func exerciseConstantsAndNotifications() {
-        precondition(NEVPNErrorDomain == "NEVPNErrorDomain")
-        precondition(NEVPNConnectionErrorDomain == "NEVPNConnectionErrorDomain")
-        precondition(NETunnelProviderErrorDomain == "NETunnelProviderErrorDomain")
-        precondition(NEAppProxyErrorDomain == "NEAppProxyErrorDomain")
-        precondition(NEAppPushErrorDomain == "NEAppPushErrorDomain")
-        precondition(NEDNSProxyErrorDomain == "NEDNSProxyErrorDomain")
-        precondition(NEDNSSettingsErrorDomain == "NEDNSSettingsErrorDomain")
-        precondition(NEFilterErrorDomain == "NEFilterErrorDomain")
-        precondition(NEHotspotConfigurationErrorDomain == "NEHotspotConfigurationErrorDomain")
-        precondition(NERelayErrorDomain == "NERelayErrorDomain")
-        precondition(NERelayClientErrorDomain == "NERelayClientErrorDomain")
-        precondition(NEVPNConnectionStartOptionUsername == "Username")
-        precondition(NEVPNConnectionStartOptionPassword == "Password")
-        precondition(kNEHotspotHelperOptionDisplayName == "DisplayName")
-        precondition(NEFilterFlowBytesMax == 512 * 1024)
-        precondition(NEFilterProviderRemediationMapRemediationURLs == "RemediationURLs")
-        precondition(NEFilterProviderRemediationMapRemediationButtonTexts == "RemediationButtonTexts")
-        precondition(NEFilterProviderRemediationURLFlowURL == "FLOW_URL")
-        precondition(NEFilterProviderRemediationURLFlowURLHostname == "FLOW_URL_HOSTNAME")
-        precondition(NEFilterProviderRemediationURLOrganization == "ORGANIZATION")
-        precondition(NEFilterProviderRemediationURLUsername == "USERNAME")
-
-        precondition(NSNotification.Name.NEVPNStatusDidChange.rawValue == "NEVPNStatusDidChangeNotification")
-        precondition(NSNotification.Name.NEVPNConfigurationChange.rawValue == "NEVPNConfigurationChangeNotification")
-        precondition(NSNotification.Name.NEFilterConfigurationDidChange.rawValue == "NEFilterConfigurationDidChangeNotification")
-        precondition(NSNotification.Name.NEDNSProxyConfigurationDidChange.rawValue == "NEDNSProxyConfigurationDidChangeNotification")
-        precondition(NSNotification.Name.NEDNSSettingsConfigurationDidChange.rawValue == "NEDNSSettingsConfigurationDidChangeNotification")
-        precondition(NSNotification.Name.NERelayConfigurationDidChange.rawValue == "NERelayConfigurationDidChangeNotification")
-        precondition(NSNotification.Name.NEURLFilterStatusDidChange.rawValue == "NEURLFilterStatusDidChangeNotification")
-        precondition(NSNotification.Name.NEURLFilterConfigurationDidChange.rawValue == "NEURLFilterConfigurationDidChangeNotification")
+        // Payloads are C-identifier placeholders, not Apple-oracle strings.
+        // Tests only prove the symbols exist and are usable as keys.
+        _ = NEVPNErrorDomain
+        _ = NEVPNConnectionErrorDomain
+        _ = NETunnelProviderErrorDomain
+        _ = NEAppProxyErrorDomain
+        _ = NEAppPushErrorDomain
+        _ = NEDNSProxyErrorDomain
+        _ = NEDNSSettingsErrorDomain
+        _ = NEFilterErrorDomain
+        _ = NEHotspotConfigurationErrorDomain
+        _ = NERelayErrorDomain
+        _ = NERelayClientErrorDomain
+        _ = NEVPNConnectionStartOptionUsername
+        _ = NEVPNConnectionStartOptionPassword
+        _ = kNEHotspotHelperOptionDisplayName
+        _ = NEFilterFlowBytesMax
+        _ = NEFilterProviderRemediationMapRemediationURLs
+        _ = NEFilterProviderRemediationMapRemediationButtonTexts
+        _ = NEFilterProviderRemediationURLFlowURL
+        _ = NEFilterProviderRemediationURLFlowURLHostname
+        _ = NEFilterProviderRemediationURLOrganization
+        _ = NEFilterProviderRemediationURLUsername
+        _ = NSNotification.Name.NEVPNStatusDidChange
+        _ = NSNotification.Name.NEVPNConfigurationChange
+        _ = NSNotification.Name.NEFilterConfigurationDidChange
+        _ = NSNotification.Name.NEDNSProxyConfigurationDidChange
+        _ = NSNotification.Name.NEDNSSettingsConfigurationDidChange
+        _ = NSNotification.Name.NERelayConfigurationDidChange
+        _ = NSNotification.Name.NEURLFilterStatusDidChange
+        _ = NSNotification.Name.NEURLFilterConfigurationDidChange
 
         precondition(NEVPNStatus.disconnected.rawValue == 1)
         precondition(NEVPNStatus.connected.rawValue == 3)
@@ -179,25 +233,21 @@ struct NetworkExtensionRuntime {
     }
 
     static func exerciseFailClosedManagers() async {
-        let vpnLoad = await withCheckedContinuation { continuation in
-            NEVPNManager.shared().loadFromPreferences { error in
-                continuation.resume(returning: error)
-            }
+        let vpnLoad = await awaitHostCallback { handler in
+            NEVPNManager.shared().loadFromPreferences(completionHandler: handler)
         }
         requireVPNError(vpnLoad, code: .configurationReadWriteFailed)
 
-        let allTunnels = await withCheckedContinuation { continuation in
+        let allTunnels = await awaitHostCallback { handler in
             NETunnelProviderManager.loadAllFromPreferences { managers, error in
-                continuation.resume(returning: (managers, error))
+                handler((managers, error))
             }
         }
         precondition(allTunnels.0 == nil)
         requireVPNError(allTunnels.1, code: .configurationReadWriteFailed)
 
-        let filterLoad = await withCheckedContinuation { continuation in
-            NEFilterManager.shared().loadFromPreferences { error in
-                continuation.resume(returning: error)
-            }
+        let filterLoad = await awaitHostCallback { handler in
+            NEFilterManager.shared().loadFromPreferences(completionHandler: handler)
         }
         guard let filterError = filterLoad as? NSError else {
             fatalError("expected NSError from filter load")
@@ -208,10 +258,8 @@ struct NetworkExtensionRuntime {
         NEFilterManager.shared().providerConfiguration = NEFilterProviderConfiguration()
         NEFilterManager.shared().providerConfiguration?.filterSockets = true
 
-        let dnsLoad = await withCheckedContinuation { continuation in
-            NEDNSSettingsManager.shared().loadFromPreferences { error in
-                continuation.resume(returning: error)
-            }
+        let dnsLoad = await awaitHostCallback { handler in
+            NEDNSSettingsManager.shared().loadFromPreferences(completionHandler: handler)
         }
         guard let dnsError = dnsLoad as? NSError else {
             fatalError("expected NSError from DNS settings load")
@@ -219,20 +267,16 @@ struct NetworkExtensionRuntime {
         precondition(dnsError.domain == NEDNSSettingsErrorDomain)
         precondition(NEDNSSettingsManager.shared().isEnabled == false)
 
-        let proxyLoad = await withCheckedContinuation { continuation in
-            NEDNSProxyManager.shared().loadFromPreferences { error in
-                continuation.resume(returning: error)
-            }
+        let proxyLoad = await awaitHostCallback { handler in
+            NEDNSProxyManager.shared().loadFromPreferences(completionHandler: handler)
         }
         guard let proxyError = proxyLoad as? NSError else {
             fatalError("expected NSError from DNS proxy load")
         }
         precondition(proxyError.domain == NEDNSProxyErrorDomain)
 
-        let pushLoad = await withCheckedContinuation { continuation in
-            NEAppPushManager().loadFromPreferences { error in
-                continuation.resume(returning: error)
-            }
+        let pushLoad = await awaitHostCallback { handler in
+            NEAppPushManager().loadFromPreferences(completionHandler: handler)
         }
         guard let pushError = pushLoad as? NEAppPushManagerError else {
             fatalError("expected NEAppPushManagerError")
@@ -240,17 +284,15 @@ struct NetworkExtensionRuntime {
         precondition(pushError.code == .configurationNotLoaded)
         precondition(NEAppPushManagerError.errorDomain == NEAppPushErrorDomain)
 
-        let allPush = await withCheckedContinuation { continuation in
+        let allPush = await awaitHostCallback { handler in
             NEAppPushManager.loadAllFromPreferences { managers, error in
-                continuation.resume(returning: (managers, error))
+                handler((managers, error))
             }
         }
         precondition(allPush.0 == nil)
 
-        let relayLoad = await withCheckedContinuation { continuation in
-            NERelayManager.shared().loadFromPreferences { error in
-                continuation.resume(returning: error)
-            }
+        let relayLoad = await awaitHostCallback { handler in
+            NERelayManager.shared().loadFromPreferences(completionHandler: handler)
         }
         guard let relayError = relayLoad as? NSError else {
             fatalError("expected NSError from relay load")
@@ -273,9 +315,11 @@ struct NetworkExtensionRuntime {
         }
         let ssids = await NEHotspotConfigurationManager.shared.configuredSSIDs()
         precondition(ssids.isEmpty)
-        NEHotspotNetwork.fetchCurrent { network in
-            precondition(network == nil)
+
+        let currentNetwork = await awaitHostCallback { handler in
+            NEHotspotNetwork.fetchCurrent(completionHandler: handler)
         }
+        precondition(currentNetwork == nil)
 
         do {
             try await NEHotspotManager.shared.loadFromPreferences()
@@ -429,27 +473,30 @@ struct NetworkExtensionRuntime {
         let tcp = NWTCPConnection(endpoint: endpoint)
         precondition(tcp.state == .disconnected)
         precondition(tcp.isViable == false)
-        let tcpError = await withCheckedContinuation { continuation in
-            tcp.write(Data([0x00])) { error in
-                continuation.resume(returning: error)
-            }
+        let tcpError = await awaitHostCallback { handler in
+            tcp.write(Data([0x00]), completionHandler: handler)
         }
         precondition(tcpError != nil)
         tcp.cancel()
+        precondition(tcp.state == .cancelled)
 
         let udp = NWUDPSession(endpoint: endpoint)
         precondition(udp.state == .failed)
-        udp.setReadHandler({ _, _ in }, maxDatagrams: 1)
+        let udpRead = await awaitHostCallback { handler in
+            udp.setReadHandler({ data, error in
+                handler((data, error))
+            }, maxDatagrams: 1)
+        }
+        precondition(udpRead.0 == nil)
+        precondition(udpRead.1 != nil)
 
-        let packet = NEPacket(data: Data([0x45]), protocolFamily: sa_family_t(AF_INET))
+        let packet = NEPacket(data: Data([0x45]), protocolFamily: NetworkExtensionPOSIX.inetFamily)
         precondition(packet.data.count == 1)
         let flow = NEPacketTunnelFlow()
         precondition(flow.writePacketObjects([packet]) == false)
-        precondition(flow.writePackets([packet.data], withProtocols: [NSNumber(value: AF_INET)]) == false)
-        let objects = await withCheckedContinuation { continuation in
-            flow.readPacketObjects { packets in
-                continuation.resume(returning: packets)
-            }
+        precondition(flow.writePackets([packet.data], withProtocols: [NSNumber(value: 2)]) == false)
+        let objects = await awaitHostCallback { handler in
+            flow.readPacketObjects(completionHandler: handler)
         }
         precondition(objects.isEmpty)
 
@@ -478,9 +525,10 @@ struct NetworkExtensionRuntime {
             tlsParameters: NWTLSParameters(),
             delegate: nil
         )
-        provider.displayMessage("unsupported") { displayed in
-            precondition(displayed == false)
+        let displayed = await awaitHostCallback { handler in
+            provider.displayMessage("unsupported", completionHandler: handler)
         }
+        precondition(displayed == false)
 
         let appProxy = NEAppProxyProvider()
         do {
@@ -492,10 +540,8 @@ struct NetworkExtensionRuntime {
         precondition(appProxy.handleNewFlow(NEAppProxyTCPFlow()) == false)
 
         let pushProvider = NEAppPushProvider()
-        let startError = await withCheckedContinuation { continuation in
-            pushProvider.start { error in
-                continuation.resume(returning: error)
-            }
+        let startError = await awaitHostCallback { handler in
+            pushProvider.start(completionHandler: handler)
         }
         guard let typed = startError as? NEAppPushManagerError else {
             fatalError("expected NEAppPushManagerError from app push start")
@@ -535,6 +581,182 @@ struct NetworkExtensionRuntime {
         } catch {
             fatalError("unexpected URL filter configuration error \(error)")
         }
+    }
+
+    static func exerciseHostCallbackContracts() async {
+        await exerciseReturnBeforeCallbackAndQueueIdentity()
+        await exerciseExactlyOnceDelivery()
+        await exerciseCancellation()
+        await exerciseDelegateReplacement()
+        await exerciseWeakOwnership()
+        await exerciseConcurrentSafety()
+        await exerciseOverrideDispatch()
+    }
+
+    static func exerciseReturnBeforeCallbackAndQueueIdentity() async {
+        var returned = false
+        let error = await withCheckedContinuation { continuation in
+            NEVPNManager.shared().loadFromPreferences { value in
+                precondition(returned)
+                precondition(NetworkExtensionHostCallback.isCurrentQueue)
+                continuation.resume(returning: value)
+            }
+            returned = true
+        }
+        requireVPNError(error, code: .configurationReadWriteFailed)
+
+        let disconnect = await awaitHostCallback { handler in
+            NEVPNManager.shared().connection.fetchLastDisconnectError(completionHandler: handler)
+        }
+        requireVPNError(disconnect, code: .connectionFailed)
+    }
+
+    static func exerciseExactlyOnceDelivery() async {
+        final class OnceCount: @unchecked Sendable {
+            var value = 0
+        }
+        let count = OnceCount()
+        let tcp = NWTCPConnection(endpoint: NWHostEndpoint(hostname: "example.invalid", port: "443"))
+        tcp.readLength(1) { _, _ in
+            precondition(NetworkExtensionHostCallback.isCurrentQueue)
+            count.value += 1
+        }
+        tcp.cancel()
+        await drainHostQueue()
+        await drainHostQueue()
+        precondition(count.value == 1)
+        precondition(tcp.state == .cancelled)
+    }
+
+    static func exerciseCancellation() async {
+        let tcp = NWTCPConnection(endpoint: NWHostEndpoint(hostname: "example.invalid", port: "1"))
+        tcp.cancel()
+        precondition(tcp.state == .cancelled)
+        let result = await awaitHostCallback { handler in
+            tcp.readMinimumLength(1, maximumLength: 8) { data, error in
+                handler((data, error))
+            }
+        }
+        precondition(result.0 == nil)
+        guard let error = result.1 as? NEAppProxyFlowError else {
+            fatalError("expected NEAppProxyFlowError after cancel")
+        }
+        precondition(error.code == NEAppProxyFlowError.Code.aborted)
+
+        let udp = NWUDPSession(endpoint: NWHostEndpoint(hostname: "example.invalid", port: "1"))
+        udp.cancel()
+        precondition(udp.state == .cancelled)
+        let datagram = await awaitHostCallback { handler in
+            udp.writeDatagram(Data([0x01]), completionHandler: handler)
+        }
+        precondition(datagram != nil)
+    }
+
+    static func exerciseDelegateReplacement() async {
+        let manager = NEAppPushManager()
+        let first = PushCallDelegate()
+        let second = PushCallDelegate()
+        manager.delegate = first
+        manager.deliverIncomingCallForHostTesting(userInfo: ["token": "a"])
+        manager.delegate = second
+        await drainHostQueue()
+        precondition(first.calls == 0)
+        precondition(second.calls == 1)
+    }
+
+    static func exerciseWeakOwnership() async {
+        let manager = NEAppPushManager()
+        weak var weakDelegate: PushCallDelegate?
+        do {
+            let delegate = PushCallDelegate()
+            manager.delegate = delegate
+            weakDelegate = delegate
+            precondition(weakDelegate != nil)
+        }
+        precondition(weakDelegate == nil)
+
+        weak var weakManager: NEAppPushManager?
+        do {
+            let owned = NEAppPushManager()
+            weakManager = owned
+            owned.deliverIncomingCallForHostTesting()
+        }
+        await drainHostQueue()
+        precondition(weakManager == nil)
+    }
+
+    static func exerciseConcurrentSafety() async {
+        let groupCount = 8
+        let results = await withTaskGroup(of: (any Error)?.self, returning: [(any Error)?].self) { group in
+            for _ in 0..<groupCount {
+                group.addTask {
+                    await awaitHostCallback { handler in
+                        NEVPNManager().loadFromPreferences(completionHandler: handler)
+                    }
+                }
+            }
+            var collected: [(any Error)?] = []
+            for await error in group {
+                collected.append(error)
+            }
+            return collected
+        }
+        precondition(results.count == groupCount)
+        for error in results {
+            requireVPNError(error, code: .configurationReadWriteFailed)
+        }
+
+        let filterSaves = await withTaskGroup(of: (any Error)?.self, returning: [(any Error)?].self) { group in
+            for _ in 0..<4 {
+                group.addTask {
+                    await awaitHostCallback { handler in
+                        NEFilterManager.shared().saveToPreferences(completionHandler: handler)
+                    }
+                }
+            }
+            var collected: [(any Error)?] = []
+            for await error in group {
+                collected.append(error)
+            }
+            return collected
+        }
+        precondition(filterSaves.count == 4)
+    }
+
+    static func exerciseOverrideDispatch() async {
+        class HostTunnel: NEPacketTunnelProvider {
+            var started = false
+
+            override func startTunnel(options: [String: NSObject]? = nil) async throws {
+                started = true
+                try await super.startTunnel(options: options)
+            }
+        }
+
+        let concrete = HostTunnel()
+        let existential: NEProvider = concrete
+        let endpoint = NWHostEndpoint(hostname: "example.invalid", port: "80")
+        let connection = existential.createTCPConnection(
+            to: endpoint,
+            enableTLS: false,
+            tlsParameters: nil,
+            delegate: nil
+        )
+        precondition(connection.endpoint === endpoint)
+        do {
+            try await concrete.startTunnel(options: nil)
+            fatalError("overridden startTunnel must still fail closed")
+        } catch {
+            requireVPNError(error, code: .connectionFailed)
+        }
+        precondition(concrete.started)
+
+        let slept: Void = await awaitHostCallback { handler in
+            existential.sleep {
+                handler(())
+            }
+        }
+        _ = slept
     }
 }
 

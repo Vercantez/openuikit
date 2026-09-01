@@ -1,3 +1,10 @@
+#if canImport(Network)
+import Network
+#endif
+#if canImport(Security)
+import Security
+#endif
+
 open class NWEndpoint: NSObject {}
 
 open class NWHostEndpoint: NWEndpoint {
@@ -37,8 +44,9 @@ open class NWPath: NSObject {
     public let isExpensive: Bool
     public let isConstrained: Bool
 
+    @_spi(OpenUIKitHost)
     public init(
-        status: NWPathStatus = .unsatisfied,
+        status: NWPathStatus,
         isExpensive: Bool = false,
         isConstrained: Bool = false
     ) {
@@ -65,6 +73,17 @@ open class NWTLSParameters: NSObject {
 public protocol NWTCPConnectionAuthenticationDelegate: NSObjectProtocol {
     func shouldEvaluateTrust(for connection: NWTCPConnection) -> Bool
     func shouldProvideIdentity(for connection: NWTCPConnection) -> Bool
+#if canImport(Security)
+    func evaluateTrust(
+        for connection: NWTCPConnection,
+        peerCertificateChain: [Any],
+        completionHandler completion: @escaping (SecTrust) -> Void
+    )
+    func provideIdentity(
+        for connection: NWTCPConnection,
+        completionHandler completion: @escaping (SecIdentity, [Any]) -> Void
+    )
+#endif
 }
 
 extension NWTCPConnectionAuthenticationDelegate {
@@ -80,11 +99,23 @@ extension NWTCPConnectionAuthenticationDelegate {
 }
 
 open class NWTCPConnection: NSObject {
+    private let lock = NSLock()
+    private var cancelled = false
+    private var pending = [_NEOnceDelivery<(Data?, (any Error)?)>]()
+    private var writePending = [_NEOnceDelivery<(any Error)?>]()
+    private var _state: NWTCPConnectionState = .disconnected
+
     public let endpoint: NWEndpoint
-    open var state: NWTCPConnectionState { .disconnected }
-    open var error: (any Error)? {
-        _NEHostBoundary.nsError(domain: NEAppProxyErrorDomain, code: NEAppProxyFlowError.notConnected.rawValue)
+    open var state: NWTCPConnectionState {
+        lock.lock()
+        defer { lock.unlock() }
+        return _state
     }
+
+    open var error: (any Error)? {
+        _NEHostBoundary.appProxyError(.notConnected)
+    }
+
     open var connectedPath: NWPath? { nil }
     open var hasBetterPath: Bool { false }
     open var localAddress: NWEndpoint? { nil }
@@ -92,6 +123,7 @@ open class NWTCPConnection: NSObject {
     open var txtRecord: Data? { nil }
     open var isViable: Bool { false }
 
+    @_spi(OpenUIKitHost)
     public init(endpoint: NWEndpoint) {
         self.endpoint = endpoint
         super.init()
@@ -105,7 +137,23 @@ open class NWTCPConnection: NSObject {
         self.init(upgradeFor: connection)
     }
 
-    open func cancel() {}
+    open func cancel() {
+        lock.lock()
+        cancelled = true
+        _state = .cancelled
+        let reads = pending
+        pending.removeAll()
+        let writes = writePending
+        writePending.removeAll()
+        lock.unlock()
+        let error = _NEHostBoundary.appProxyError(.aborted)
+        for item in reads {
+            item.schedule((nil, error))
+        }
+        for item in writes {
+            item.schedule(error)
+        }
+    }
 
     open func writeClose() {}
 
@@ -114,7 +162,7 @@ open class NWTCPConnection: NSObject {
         completionHandler completion: @escaping (Data?, (any Error)?) -> Void
     ) {
         _ = length
-        completion(nil, _NEHostBoundary.appProxyError(.notConnected))
+        scheduleRead(completion)
     }
 
     open func readMinimumLength(
@@ -123,7 +171,7 @@ open class NWTCPConnection: NSObject {
         completionHandler completion: @escaping (Data?, (any Error)?) -> Void
     ) {
         _ = (minimum, maximum)
-        completion(nil, _NEHostBoundary.appProxyError(.notConnected))
+        scheduleRead(completion)
     }
 
     open func write(
@@ -131,19 +179,81 @@ open class NWTCPConnection: NSObject {
         completionHandler completion: @escaping ((any Error)?) -> Void
     ) {
         _ = data
-        completion(_NEHostBoundary.appProxyError(.notConnected))
+        let delivery = _NEOnceDelivery(completion)
+        lock.lock()
+        let isCancelled = cancelled
+        if !isCancelled {
+            writePending.append(delivery)
+        }
+        lock.unlock()
+        NetworkExtensionHostCallback.schedule { [weak self] in
+            guard let self else {
+                delivery.deliver(_NEHostBoundary.appProxyError(.aborted))
+                return
+            }
+            self.lock.lock()
+            let cancelled = self.cancelled
+            self.writePending.removeAll { $0 === delivery }
+            self.lock.unlock()
+            delivery.deliver(
+                cancelled
+                    ? _NEHostBoundary.appProxyError(.aborted)
+                    : _NEHostBoundary.appProxyError(.notConnected)
+            )
+        }
+    }
+
+    private func scheduleRead(
+        _ completion: @escaping (Data?, (any Error)?) -> Void
+    ) {
+        let delivery = _NEOncePair(completion)
+        lock.lock()
+        let isCancelled = cancelled
+        if !isCancelled {
+            pending.append(delivery)
+        }
+        lock.unlock()
+        NetworkExtensionHostCallback.schedule { [weak self] in
+            guard let self else {
+                delivery.deliver((nil, _NEHostBoundary.appProxyError(.aborted)))
+                return
+            }
+            self.lock.lock()
+            let cancelled = self.cancelled
+            self.pending.removeAll { $0 === delivery }
+            self.lock.unlock()
+            delivery.deliver(
+                (
+                    nil,
+                    cancelled
+                        ? _NEHostBoundary.appProxyError(.aborted)
+                        : _NEHostBoundary.appProxyError(.notConnected)
+                )
+            )
+        }
     }
 }
 
 open class NWUDPSession: NSObject {
+    private let lock = NSLock()
+    private var cancelled = false
+    private var _state: NWUDPSessionState = .failed
+    private var readDelivery: _NEOnceDelivery<([Data]?, (any Error)?)>?
+
     public let endpoint: NWEndpoint
-    open var state: NWUDPSessionState { .failed }
+    open var state: NWUDPSessionState {
+        lock.lock()
+        defer { lock.unlock() }
+        return _state
+    }
+
     open var currentPath: NWPath? { nil }
     open var hasBetterPath: Bool { false }
     open var maximumDatagramLength: Int { 0 }
     open var resolvedEndpoint: NWEndpoint? { nil }
     open var isViable: Bool { false }
 
+    @_spi(OpenUIKitHost)
     public init(endpoint: NWEndpoint) {
         self.endpoint = endpoint
         super.init()
@@ -157,7 +267,15 @@ open class NWUDPSession: NSObject {
         self.init(upgradeFor: session)
     }
 
-    open func cancel() {}
+    open func cancel() {
+        lock.lock()
+        cancelled = true
+        _state = .cancelled
+        let pending = readDelivery
+        readDelivery = nil
+        lock.unlock()
+        pending?.schedule((nil, _NEHostBoundary.appProxyError(.aborted)))
+    }
 
     open func tryNextResolvedEndpoint() {}
 
@@ -166,7 +284,32 @@ open class NWUDPSession: NSObject {
         maxDatagrams: Int
     ) {
         _ = maxDatagrams
-        handler(nil, _NEHostBoundary.appProxyError(.notConnected))
+        let delivery = _NEOncePair(handler)
+        lock.lock()
+        readDelivery = delivery
+        let isCancelled = cancelled
+        lock.unlock()
+        NetworkExtensionHostCallback.schedule { [weak self] in
+            guard let self else {
+                delivery.deliver((nil, _NEHostBoundary.appProxyError(.aborted)))
+                return
+            }
+            self.lock.lock()
+            let cancelled = self.cancelled
+            if self.readDelivery === delivery {
+                self.readDelivery = nil
+            }
+            self.lock.unlock()
+            delivery.deliver(
+                (
+                    nil,
+                    cancelled
+                        ? _NEHostBoundary.appProxyError(.aborted)
+                        : _NEHostBoundary.appProxyError(.notConnected)
+                )
+            )
+        }
+        _ = isCancelled
     }
 
     open func writeDatagram(
@@ -174,7 +317,9 @@ open class NWUDPSession: NSObject {
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
         _ = datagram
-        completionHandler(_NEHostBoundary.appProxyError(.notConnected))
+        _NEOnceDelivery(completionHandler).schedule(
+            _NEHostBoundary.appProxyError(.notConnected)
+        )
     }
 
     open func writeMultipleDatagrams(
@@ -182,6 +327,8 @@ open class NWUDPSession: NSObject {
         completionHandler: @escaping ((any Error)?) -> Void
     ) {
         _ = datagramArray
-        completionHandler(_NEHostBoundary.appProxyError(.notConnected))
+        _NEOnceDelivery(completionHandler).schedule(
+            _NEHostBoundary.appProxyError(.notConnected)
+        )
     }
 }

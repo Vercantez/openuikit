@@ -5,7 +5,23 @@ import FoundationNetworking
 #if canImport(Dispatch)
 import Dispatch
 #endif
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
 import Glibc
+#endif
+#if canImport(Network)
+import Network
+#endif
+#if canImport(Security)
+import Security
+#endif
+#if canImport(ExtensionFoundation)
+import ExtensionFoundation
+#endif
+#if canImport(AccessorySetupKit)
+import AccessorySetupKit
+#endif
 
 /// Portable Linux starting point for Apple's public `NetworkExtension` module.
 ///
@@ -14,7 +30,14 @@ import Glibc
 /// and Apple entitlement-gated services fail closed. This module never
 /// fabricates a connected tunnel, a joined hotspot, or a successful content
 /// filter decision.
+///
+/// Asynchronous completions are delivered exactly once on
+/// `NetworkExtensionHostCallback.queue` after the calling function returns.
+/// That scheduler is a Linux host control, not Apple callback semantics.
 
+// Placeholder string payloads use C identifier spelling. They are not
+// oracle-verified iPhoneOS 26.1 values; coverage for these symbols is
+// `declared` until a runtime probe records the Apple strings.
 public let NEAppProxyErrorDomain = "NEAppProxyErrorDomain"
 public let NEAppPushErrorDomain = "NEAppPushErrorDomain"
 public let NEDNSProxyErrorDomain = "NEDNSProxyErrorDomain"
@@ -27,48 +50,57 @@ public let NETunnelProviderErrorDomain = "NETunnelProviderErrorDomain"
 public let NEVPNConnectionErrorDomain = "NEVPNConnectionErrorDomain"
 public let NEVPNErrorDomain = "NEVPNErrorDomain"
 
-public let NEVPNConnectionStartOptionUsername = "Username"
-public let NEVPNConnectionStartOptionPassword = "Password"
-public let kNEHotspotHelperOptionDisplayName = "DisplayName"
+public let NEVPNConnectionStartOptionUsername = "NEVPNConnectionStartOptionUsername"
+public let NEVPNConnectionStartOptionPassword = "NEVPNConnectionStartOptionPassword"
+public let kNEHotspotHelperOptionDisplayName = "kNEHotspotHelperOptionDisplayName"
 
 public let NEFilterProviderRemediationMapRemediationButtonTexts =
-    "RemediationButtonTexts"
-public let NEFilterProviderRemediationMapRemediationURLs = "RemediationURLs"
+    "NEFilterProviderRemediationMapRemediationButtonTexts"
+public let NEFilterProviderRemediationMapRemediationURLs =
+    "NEFilterProviderRemediationMapRemediationURLs"
 
-/// Maximum peek window documented by Apple's `NEFilterFlow` header discussion.
-public var NEFilterFlowBytesMax: UInt64 { 512 * 1024 }
+/// Unverified placeholder. The pinned graph does not record the exported value.
+public var NEFilterFlowBytesMax: UInt64 { 0 }
 
-public var NEFilterProviderRemediationURLFlowURL: String { "FLOW_URL" }
-public var NEFilterProviderRemediationURLFlowURLHostname: String {
-    "FLOW_URL_HOSTNAME"
+public var NEFilterProviderRemediationURLFlowURL: String {
+    "NEFilterProviderRemediationURLFlowURL"
 }
-public var NEFilterProviderRemediationURLOrganization: String { "ORGANIZATION" }
-public var NEFilterProviderRemediationURLUsername: String { "USERNAME" }
+public var NEFilterProviderRemediationURLFlowURLHostname: String {
+    "NEFilterProviderRemediationURLFlowURLHostname"
+}
+public var NEFilterProviderRemediationURLOrganization: String {
+    "NEFilterProviderRemediationURLOrganization"
+}
+public var NEFilterProviderRemediationURLUsername: String {
+    "NEFilterProviderRemediationURLUsername"
+}
 
 extension NSNotification.Name {
+    // Placeholder raw values use the Swift overlay names. They are not
+    // oracle-verified Darwin notification strings.
     public static let NEVPNStatusDidChange = NSNotification.Name(
-        "NEVPNStatusDidChangeNotification"
+        "NEVPNStatusDidChange"
     )
     public static let NEVPNConfigurationChange = NSNotification.Name(
-        "NEVPNConfigurationChangeNotification"
+        "NEVPNConfigurationChange"
     )
     public static let NEFilterConfigurationDidChange = NSNotification.Name(
-        "NEFilterConfigurationDidChangeNotification"
+        "NEFilterConfigurationDidChange"
     )
     public static let NEDNSProxyConfigurationDidChange = NSNotification.Name(
-        "NEDNSProxyConfigurationDidChangeNotification"
+        "NEDNSProxyConfigurationDidChange"
     )
     public static let NEDNSSettingsConfigurationDidChange = NSNotification.Name(
-        "NEDNSSettingsConfigurationDidChangeNotification"
+        "NEDNSSettingsConfigurationDidChange"
     )
     public static let NERelayConfigurationDidChange = NSNotification.Name(
-        "NERelayConfigurationDidChangeNotification"
+        "NERelayConfigurationDidChange"
     )
     public static let NEURLFilterStatusDidChange = NSNotification.Name(
-        "NEURLFilterStatusDidChangeNotification"
+        "NEURLFilterStatusDidChange"
     )
     public static let NEURLFilterConfigurationDidChange = NSNotification.Name(
-        "NEURLFilterConfigurationDidChangeNotification"
+        "NEURLFilterConfigurationDidChange"
     )
 }
 
@@ -128,14 +160,29 @@ enum _NEHostBoundary {
         )
     }
 
-    static func complete(_ handler: ((any Error)?) -> Void, _ error: any Error) {
-        handler(error)
+    static func complete(
+        _ handler: @escaping ((any Error)?) -> Void,
+        _ error: any Error
+    ) {
+        _NEOnceDelivery(handler).schedule(error as (any Error)?)
     }
 
     static func completeOptional(
         _ handler: (((any Error)?) -> Void)?,
         _ error: any Error
     ) {
-        handler?(error)
+        guard let handler else { return }
+        complete(handler, error)
+    }
+
+    static func completeNilError(_ handler: @escaping ((any Error)?) -> Void) {
+        _NEOnceDelivery(handler).schedule(nil)
+    }
+}
+
+@_spi(OpenUIKitHost)
+public enum NetworkExtensionPOSIX {
+    public static var inetFamily: sa_family_t {
+        sa_family_t(AF_INET)
     }
 }
