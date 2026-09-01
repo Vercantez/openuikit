@@ -137,7 +137,10 @@ EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
 EXPECTED_UIKIT_SWIFT_COUNT=105
 EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT=12
 EXPECTED_SYMBOLS_SWIFT_COUNT=1
-EXPECTED_SWIFTUI_SWIFT_COUNT=9
+EXPECTED_SWIFTUI_SWIFT_COUNT=11
+EXPECTED_DEVELOPER_TOOLS_SUPPORT_SWIFT_COUNT=1
+EXPECTED_OPENUIKIT_PREVIEW_MACROS_SWIFT_COUNT=2
+EXPECTED_OPENSWIFTUI_MACROS_SWIFT_COUNT=2
 EXPECTED_CQUARTZ_CPP_COUNT=37
 EXPECTED_FOUNDATION_SOURCE_COUNT=32
 EXPECTED_OBSERVATION_SOURCE_COUNT=6
@@ -504,6 +507,15 @@ SOURCE_SET_ATTEST=$WORK/source-sets.pre.tsv
         "$EXPECTED_SYMBOLS_SWIFT_COUNT" Symbols symbols
     assert_exact_swift_set "$UIKIT" Sources/SwiftUI \
         "$EXPECTED_SWIFTUI_SWIFT_COUNT" SwiftUI swiftui
+    assert_exact_swift_set "$UIKIT" Sources/DeveloperToolsSupport \
+        "$EXPECTED_DEVELOPER_TOOLS_SUPPORT_SWIFT_COUNT" \
+        DeveloperToolsSupport developertoolsupport
+    assert_exact_swift_set "$UIKIT" Sources/OpenUIKitPreviewMacros \
+        "$EXPECTED_OPENUIKIT_PREVIEW_MACROS_SWIFT_COUNT" \
+        OpenUIKitPreviewMacros open-uikit-preview-macros
+    assert_exact_swift_set "$UIKIT" Sources/OpenSwiftUIMacros \
+        "$EXPECTED_OPENSWIFTUI_MACROS_SWIFT_COUNT" \
+        OpenSwiftUIMacros open-swiftui-macros
 } > "$SOURCE_SET_ATTEST"
 cquartz_count=$(find "$UIKIT/Sources/CQuartz" -maxdepth 1 -type f -name '*.cpp' \
     | wc -l | tr -d '[:space:]')
@@ -962,10 +974,34 @@ swiftc -parse-as-library -emit-library -module-name SwiftDataMacros \
     -Xlinker -rpath -Xlinker '$ORIGIN/../../../swift/linux' \
     "$W/full/swiftdata/SwiftDataMacros.swift" -o "$STAGED_SWIFTDATA_PLUGIN"
 SWIFTDATA_PLUGIN_FLAGS=(-load-plugin-library "$STAGED_SWIFTDATA_PLUGIN")
+STAGED_OPENUIKIT_PREVIEW_PLUGIN=$STAGE/host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so
+swiftc -parse-as-library -emit-library -module-name OpenUIKitPreviewMacros \
+    -no-toolchain-stdlib-rpath -I /usr/lib/swift/host -L /usr/lib/swift/host \
+    -Xlinker -rpath -Xlinker '$ORIGIN/..' \
+    -Xlinker -rpath -Xlinker '$ORIGIN/../../../swift/linux' \
+    "$UIKIT/Sources/OpenUIKitPreviewMacros/UIKitPreviewMacro.swift" \
+    -o "$STAGED_OPENUIKIT_PREVIEW_PLUGIN"
+OPENUIKIT_PREVIEW_PLUGIN_FLAGS=(
+    -load-plugin-library "$STAGED_OPENUIKIT_PREVIEW_PLUGIN"
+)
+STAGED_OPENSWIFTUI_PLUGIN=$STAGE/host-tools/swift/host/plugins/libOpenSwiftUIMacros.so
+swiftc -parse-as-library -emit-library -module-name OpenSwiftUIMacros \
+    -no-toolchain-stdlib-rpath -I /usr/lib/swift/host -L /usr/lib/swift/host \
+    -Xlinker -rpath -Xlinker '$ORIGIN/..' \
+    -Xlinker -rpath -Xlinker '$ORIGIN/../../../swift/linux' \
+    "$UIKIT/Sources/OpenSwiftUIMacros/EntryMacro.swift" \
+    -o "$STAGED_OPENSWIFTUI_PLUGIN"
+OPENSWIFTUI_PLUGIN_FLAGS=(-load-plugin-library "$STAGED_OPENSWIFTUI_PLUGIN")
+# From this point forward Preview uses the packaged in-process library. The
+# external executable remains only as the immutable build_full/evidence input;
+# ordinary framework, package, and app compiler arguments use this generic
+# relocatable transport alongside Entry and the other first-party macros.
+PREVIEW_FLAGS=("${OPENUIKIT_PREVIEW_PLUGIN_FLAGS[@]}")
 if ldd "$STAGED_OBSERVATION_PLUGIN" | grep -Fq 'not found'; then
     die 'packaged Observation macro plugin closure is incomplete'
 fi
-for plugin in "$STAGED_FOUNDATION_PLUGIN" "$STAGED_SWIFTDATA_PLUGIN"; do
+for plugin in "$STAGED_FOUNDATION_PLUGIN" "$STAGED_SWIFTDATA_PLUGIN" \
+    "$STAGED_OPENUIKIT_PREVIEW_PLUGIN" "$STAGED_OPENSWIFTUI_PLUGIN"; do
     file "$plugin" | grep -Eq 'ELF 64-bit.*(ARM aarch64|aarch64)' \
         || die "packaged compiler plugin is not native ELF64/aarch64: $plugin"
     readelf -h "$plugin" | grep -Eq 'Machine:[[:space:]]+AArch64' \
@@ -1015,7 +1051,12 @@ mapfile -t PLUGIN_CLOSURE_PATHS < <(printf '%s\n' \
         "$(hash_file "$STAGED_FOUNDATION_PLUGIN")"
     printf 'plugin\tSwiftDataMacros\tlibrary\thost-tools/swift/host/plugins/libSwiftDataMacros.so\t%s\tPersistentModelMacro\tapp,framework,package\tserialized=no\n' \
         "$(hash_file "$STAGED_SWIFTDATA_PLUGIN")"
-    for module in ObservationMacros FoundationMacros SwiftDataMacros; do
+    printf 'plugin\tOpenUIKitPreviewMacros\tlibrary\thost-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so\t%s\tUIKitPreviewMacro\tapp,framework,package\tserialized=no\n' \
+        "$(hash_file "$STAGED_OPENUIKIT_PREVIEW_PLUGIN")"
+    printf 'plugin\tOpenSwiftUIMacros\tlibrary\thost-tools/swift/host/plugins/libOpenSwiftUIMacros.so\t%s\tEntryMacro\tapp,framework,package\tserialized=no\n' \
+        "$(hash_file "$STAGED_OPENSWIFTUI_PLUGIN")"
+    for module in ObservationMacros FoundationMacros SwiftDataMacros \
+        OpenUIKitPreviewMacros OpenSwiftUIMacros; do
         for relative in "${PLUGIN_CLOSURE_PATHS[@]}"; do
             printf 'closure\t%s\t%s\t%s\n' "$module" "$relative" \
                 "$(hash_file "$STAGE/$relative")"
@@ -1821,9 +1862,33 @@ mapfile -d '' -t SWIFTUI_SOURCES < <(
     || die 'SwiftUI source count changed before compile'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${OBSERVATION_PLUGIN_FLAGS[@]}" \
+    "${OPENUIKIT_PREVIEW_PLUGIN_FLAGS[@]}" \
+    "${OPENSWIFTUI_PLUGIN_FLAGS[@]}" \
     -module-name SwiftUI -emit-module \
     -emit-module-path "$STAGE/modules/SwiftUI.swiftmodule" \
     -emit-object -o "$WORK/swiftui.o" "${SWIFTUI_SOURCES[@]}"
+
+echo '== expand packaged SwiftUI Preview and Entry macros in an ordinary client'
+swiftui_plugin_expansions=$WORK/swiftui-compiler-plugin-expansions.log
+if ! "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    "${OPENUIKIT_PREVIEW_PLUGIN_FLAGS[@]}" \
+    "${OPENSWIFTUI_PLUGIN_FLAGS[@]}" \
+    -Xfrontend -dump-macro-expansions \
+    -module-name SwiftUICompilerPluginsProbe -typecheck \
+    "$W/full/frameworks/SwiftUICompilerPluginsProbe.swift" \
+    > "$swiftui_plugin_expansions" 2>&1; then
+    cat "$swiftui_plugin_expansions" >&2
+    die 'packaged SwiftUI compiler-plugin client failed'
+fi
+preview_expansion_count=$(grep -c 'PreviewRegistry' \
+    "$swiftui_plugin_expansions" || true)
+[ "$preview_expansion_count" -ge 2 ] \
+    || die "SwiftUI Preview expansion count $preview_expansion_count, expected at least 2"
+grep -Fq '__Key_portableCompilerPluginProbe' "$swiftui_plugin_expansions" \
+    || die 'SwiftUI Entry expansion is missing its generated environment key'
+printf '%s\n' \
+    'SWIFTUI_COMPILER_PLUGINS_OK preview=unnamed,named entry=environment-key transport=library scopes=app,framework,package' \
+    > "$STAGE/attestation/swiftui-compiler-plugins.log"
 
 echo '== compile final Foundation-visible UIKit (optional Preview plugin explicit)'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
@@ -2485,6 +2550,7 @@ echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${OBSERVATION_PLUGIN_FLAGS[@]}" "${FOUNDATION_PLUGIN_FLAGS[@]}" \
     "${SWIFTDATA_PLUGIN_FLAGS[@]}" "${PREVIEW_FLAGS[@]}" \
+    "${OPENSWIFTUI_PLUGIN_FLAGS[@]}" \
     -module-name CoreGuestPackageProbe \
     -emit-object -o "$WORK/core-probe.o" \
     "$W/full/frameworks/CoreGuestPackageProbe.swift" \
@@ -2765,6 +2831,8 @@ COMPILE_ARGUMENTS=(
     -load-plugin-library host-tools/swift/host/plugins/libObservationMacros.so
     -load-plugin-library host-tools/swift/host/plugins/libFoundationMacros.so
     -load-plugin-library host-tools/swift/host/plugins/libSwiftDataMacros.so
+    -load-plugin-library host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so
+    -load-plugin-library host-tools/swift/host/plugins/libOpenSwiftUIMacros.so
     -I modules
     -Xcc -Iinclude/CPortableIO
     -Xcc -Iinclude/CSTBTrueType
@@ -2875,10 +2943,13 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'format\tcore-input-provenance-v1\n'
     printf 'support\tcommit=%s\ttree=%s\tbase=%s\n' \
         "$SUPPORT_COMMIT" "$SUPPORT_TREE" "$EXPECTED_SUPPORT_BASE"
-    printf 'OpenUIKit\tcommit=%s\ttree=%s\tSwift=%s\tOpenCoreGraphics=%s\tSymbols=%s\tSwiftUI=%s\tCQuartzCPP=%s\n' \
+    printf 'OpenUIKit\tcommit=%s\ttree=%s\tSwift=%s\tOpenCoreGraphics=%s\tSymbols=%s\tSwiftUI=%s\tDeveloperToolsSupport=%s\tOpenUIKitPreviewMacros=%s\tOpenSwiftUIMacros=%s\tCQuartzCPP=%s\n' \
         "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" \
         "$EXPECTED_UIKIT_SWIFT_COUNT" "$EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT" \
         "$EXPECTED_SYMBOLS_SWIFT_COUNT" "$EXPECTED_SWIFTUI_SWIFT_COUNT" \
+        "$EXPECTED_DEVELOPER_TOOLS_SUPPORT_SWIFT_COUNT" \
+        "$EXPECTED_OPENUIKIT_PREVIEW_MACROS_SWIFT_COUNT" \
+        "$EXPECTED_OPENSWIFTUI_MACROS_SWIFT_COUNT" \
         "$EXPECTED_CQUARTZ_CPP_COUNT"
     printf 'swift-foundation\tcommit=%s\ttree=%s\n' \
         "$EXPECTED_FOUNDATION_COMMIT" "$EXPECTED_FOUNDATION_TREE"
@@ -2921,10 +2992,12 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$EXPECTED_OBSERVATION_UPSTREAM_COMMIT" \
         "$(hash_file "$OBSERVATION_SOURCES_MANIFEST")" \
         "$EXPECTED_OBSERVATION_PLUGIN_SHA" "$OBSERVATION_TOOLCHAIN"
-    printf 'compiler-plugins\tObservationMacros=%s\tFoundationMacros=%s\tSwiftDataMacros=%s\tmanifest=%s\n' \
+    printf 'compiler-plugins\tObservationMacros=%s\tFoundationMacros=%s\tSwiftDataMacros=%s\tOpenUIKitPreviewMacros=%s\tOpenSwiftUIMacros=%s\tmanifest=%s\n' \
         "$(hash_file "$STAGED_OBSERVATION_PLUGIN")" \
         "$(hash_file "$STAGED_FOUNDATION_PLUGIN")" \
         "$(hash_file "$STAGED_SWIFTDATA_PLUGIN")" \
+        "$(hash_file "$STAGED_OPENUIKIT_PREVIEW_PLUGIN")" \
+        "$(hash_file "$STAGED_OPENSWIFTUI_PLUGIN")" \
         "$(hash_file "$STAGE/attestation/compiler-plugins.tsv")"
     printf 'FoundationEssentials-predicate-keypath\tpatch=%s\tupstream=%s\n' \
         "$(hash_file "$W/full/foundation/patches/FoundationEssentials-PredicateFinalClassKeyPath.patch")" \
@@ -3014,6 +3087,10 @@ record_artifact host-tool FoundationMacros plugin \
     host-tools/swift/host/plugins/libFoundationMacros.so
 record_artifact host-tool SwiftDataMacros plugin \
     host-tools/swift/host/plugins/libSwiftDataMacros.so
+record_artifact host-tool OpenUIKitPreviewMacros plugin \
+    host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so
+record_artifact host-tool OpenSwiftUIMacros plugin \
+    host-tools/swift/host/plugins/libOpenSwiftUIMacros.so
 for library in "${OBSERVATION_PLUGIN_HOST_LIBS[@]}"; do
     record_artifact host-tool ObservationMacros dependency \
         "host-tools/swift/host/$library"
@@ -3114,6 +3191,8 @@ record_artifact attestation dispatch runtime-log \
     attestation/dispatch-runtime.log
 record_artifact attestation SwiftUI reexport-runtime-log \
     attestation/swiftui-foundation-reexport-runtime.log
+record_artifact attestation SwiftUI compiler-plugin-log \
+    attestation/swiftui-compiler-plugins.log
 record_artifact attestation foundation-urlsession runtime-log \
     attestation/foundation-urlsession-runtime.log
 record_artifact attestation foundation-cache apple-golden \

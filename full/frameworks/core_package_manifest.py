@@ -80,6 +80,13 @@ REQUIRED_MANIFESTS = {
     "runtime_closure",
     "compiler_plugins",
 }
+REQUIRED_COMPILER_PLUGIN_MODULES = {
+    "ObservationMacros",
+    "FoundationMacros",
+    "SwiftDataMacros",
+    "OpenUIKitPreviewMacros",
+    "OpenSwiftUIMacros",
+}
 FRAMEWORKS = (
     "FoundationEssentials",
     "FoundationInternationalization",
@@ -656,6 +663,12 @@ def compiler_plugins_json(
         )
     if set(closure_rows) != seen_modules:
         refuse("compiler-plugin closure names differ from declared plugins")
+    missing_modules = sorted(REQUIRED_COMPILER_PLUGIN_MODULES - seen_modules)
+    if missing_modules:
+        refuse(
+            "compiler-plugin manifest omits required modules: "
+            + ", ".join(missing_modules)
+        )
     return result
 
 

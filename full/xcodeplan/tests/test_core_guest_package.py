@@ -54,6 +54,8 @@ class CoreGuestPackageTests(unittest.TestCase):
             "host-tools/swift/host/plugins/libObservationMacros.so",
             "host-tools/swift/host/plugins/libFoundationMacros.so",
             "host-tools/swift/host/plugins/libSwiftDataMacros.so",
+            "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
+            "host-tools/swift/host/plugins/libOpenSwiftUIMacros.so",
             "host-tools/swift/linux/libswiftCore.so",
         ]
         required_files.extend(
@@ -186,6 +188,16 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "SwiftDataMacros",
                 "libSwiftDataMacros.so",
                 ["PersistentModelMacro"],
+            ),
+            (
+                "OpenUIKitPreviewMacros",
+                "libOpenUIKitPreviewMacros.so",
+                ["UIKitPreviewMacro"],
+            ),
+            (
+                "OpenSwiftUIMacros",
+                "libOpenSwiftUIMacros.so",
+                ["EntryMacro"],
             ),
         )
         closure_relative = "host-tools/swift/linux/libswiftCore.so"
@@ -348,6 +360,10 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "host-tools/swift/host/plugins/libFoundationMacros.so",
                 "-load-plugin-library",
                 "host-tools/swift/host/plugins/libSwiftDataMacros.so",
+                "-load-plugin-library",
+                "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
+                "-load-plugin-library",
+                "host-tools/swift/host/plugins/libOpenSwiftUIMacros.so",
                 "-I",
                 "modules",
                 "-Xcc",
@@ -410,12 +426,8 @@ class CoreGuestPackageTests(unittest.TestCase):
         self.assertEqual(
             arguments[arguments.index("-I") + 1], os.fspath(root / "modules")
         )
-        self.assertEqual(
-            arguments[arguments.index("-load-plugin-library") + 1],
-            os.fspath(
-                root / "host-tools/swift/host/plugins/libObservationMacros.so"
-            ),
-        )
+        for plugin in self.manifest["compiler_plugins"]:
+            self.assertEqual(arguments.count(os.fspath(root / plugin["path"])), 1)
         self.assertIn(f"-I{root}/include/CPortableIO", arguments)
         self.assertIn(
             f"-fmodule-map-file={root}/include/CoreImage/module.modulemap",

@@ -137,6 +137,8 @@ _REQUIRED_COMPILER_PLUGIN_MODULES = {
     "ObservationMacros",
     "FoundationMacros",
     "SwiftDataMacros",
+    "OpenUIKitPreviewMacros",
+    "OpenSwiftUIMacros",
 }
 
 
