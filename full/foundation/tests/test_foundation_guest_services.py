@@ -205,8 +205,25 @@ class FoundationGuestServicesTests(unittest.TestCase):
             "enum InlinePresentationIntentAttribute: CodableAttributedStringKey",
             'public static let name = "NSInlinePresentationIntent"',
             "var inlinePresentationIntent: InlinePresentationIntentAttribute",
+            "open class NSSortDescriptor: NSObject, @unchecked Sendable",
+            "public init(key: String?, ascending: Bool)",
+            "public let key: String?",
+            "public let ascending: Bool",
+            "open var reversedSortDescriptor: Any",
         ):
             self.assertIn(token, value_compatibility)
+        compatibility_probe = (
+            ROOT / "full/frameworks/FoundationHackersCompatibilityProbe.swift"
+        ).read_text()
+        for token in (
+            'NSSortDescriptor(',
+            'key: "creationDate"',
+            "sortDescriptor.key == \"creationDate\"",
+            "!sortDescriptor.ascending",
+            "sortDescriptor.reversedSortDescriptor as! NSSortDescriptor",
+            "reversedSortDescriptor.ascending",
+        ):
+            self.assertIn(token, compatibility_probe)
         for token in (
             "public protocol NSLocking",
             "public final class NSLock",
