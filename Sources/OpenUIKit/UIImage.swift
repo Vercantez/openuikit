@@ -26,6 +26,17 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
+// UIImageWriteToSavedPhotosAlbum is implemented in this Foundation-free
+// target, but its optional selector completion receives an NSError on an
+// ordinary Darwin build. Keep that dependency conditional: the cold guest
+// builds OpenUIKit before the app-facing Foundation facade exists.
+#if canImport(Foundation)
+import class Foundation.NSError
+#endif
+#if canImport(ObjectiveC)
+import ObjectiveC
+#endif
+
 
 /// How a UIImage's pixels are used when it is drawn: as-is, or as a
 /// silhouette tinted with the destination's tint color.
@@ -492,6 +503,214 @@ extension UIImage: _ExpressibleByImageLiteral {}
 
 /// Swift's image-literal default type, matching UIKit's module-level alias.
 public typealias _ImageLiteralType = UIImage
+
+// MARK: - Saved photo album host boundary
+
+/// A portable failure reported by a host implementing saved-photo storage.
+///
+/// UIKit's C function reports failure only through an optional NSError sent
+/// to the completion selector. OpenUIKit additionally publishes this small
+/// value to its host hook so a Linux compositor, desktop shell, or test host
+/// can describe the result without importing Foundation or Photos.
+public struct UIImagePhotoLibrarySaveError: Error, Hashable, Sendable,
+                                            CustomStringConvertible {
+    public enum Code: Int, Hashable, Sendable {
+        /// No host installed a photo-library writer.
+        case unavailable = 1
+        /// The user or host denied add access.
+        case permissionDenied = 2
+        /// A configured host attempted the write and it failed.
+        case writeFailed = 3
+    }
+
+    /// NSError domain used for Objective-C selector completions on builds
+    /// where Foundation is visible.
+    public static let errorDomain = "OpenUIKit.PhotoLibrary"
+
+    public let code: Code
+    public let description: String
+
+    public init(code: Code, description: String) {
+        self.code = code
+        self.description = description
+    }
+
+    public static let unavailable = UIImagePhotoLibrarySaveError(
+        code: .unavailable,
+        description: "No host photo-library save handler is installed"
+    )
+}
+
+/// Completion result used by ``OpenUIKitRuntime/photoLibrarySaveHandler``.
+public enum UIImagePhotoLibrarySaveResult: Hashable, Sendable {
+    case success
+    case failure(UIImagePhotoLibrarySaveError)
+}
+
+/// Host implementation of saved-photo storage.
+///
+/// The host receives the immutable UIImage and calls `completion` exactly
+/// once when its write has actually completed. The completion may be retained
+/// for an asynchronous OS service. OpenUIKit never chooses a filesystem path,
+/// silently exports a PNG, or reports success without this handler.
+public typealias UIImagePhotoLibrarySaveHandler = (
+    _ image: UIImage,
+    _ completion: @escaping (UIImagePhotoLibrarySaveResult) -> Void
+) -> Void
+
+extension OpenUIKitRuntime {
+    /// HOST HOOK for ``UIImageWriteToSavedPhotosAlbum(_:_:_:_:)``.
+    ///
+    /// Install this during host startup to route the UIKit API to the host's
+    /// real photo library. Nil is the safe default: no bytes leave the
+    /// process, and a supplied completion selector receives `.unavailable`.
+    /// Hosts must configure this startup seam before concurrent application
+    /// work begins, just like the other OpenUIKitRuntime backend selections.
+    nonisolated(unsafe) public static var photoLibrarySaveHandler:
+        UIImagePhotoLibrarySaveHandler?
+}
+
+/// Portable fallback for a three-argument Objective-C completion selector.
+///
+/// Mach-O builds use the genuine Objective-C runtime and unchanged `@objc`
+/// methods. A host without Objective-C cannot compile `#selector`; it can use
+/// `Selector.named(...)` and adopt this SPI to preserve the same selector
+/// name, image, failure, and context-pointer delivery without changing the
+/// public UIKit function.
+@_spi(OpenUIKitHost)
+public protocol UIImagePhotoLibrarySaveCompletionDispatching: AnyObject {
+    @discardableResult
+    func _openUIKitPerformPhotoLibrarySaveCompletion(
+        _ selectorName: String,
+        image: UIImage,
+        error: UIImagePhotoLibrarySaveError?,
+        contextInfo: UnsafeMutableRawPointer?
+    ) -> Bool
+}
+
+#if canImport(ObjectiveC)
+private typealias _UIImagePhotoLibraryCompletionIMP = @convention(c) (
+    AnyObject, Selector, AnyObject, AnyObject?, UnsafeMutableRawPointer?
+) -> Void
+#endif
+
+#if canImport(ObjectiveC) && !canImport(Foundation)
+/// Objective-C `id` fallback used only while Foundation is hidden from the
+/// cold guest OpenUIKit build. The final app-facing platform normally has a
+/// host handler and therefore supplies its own result; this box still makes
+/// the default failure non-nil and inspectable instead of claiming success.
+private final class _UIImagePhotoLibrarySaveErrorBox: NSObject {
+    let failure: UIImagePhotoLibrarySaveError
+
+    init(_ failure: UIImagePhotoLibrarySaveError) {
+        self.failure = failure
+        super.init()
+    }
+}
+#endif
+
+private final class _UIImagePhotoLibrarySaveCompletion {
+    private let image: UIImage
+    private let target: Any?
+    private let selector: Selector?
+    private let contextInfo: UnsafeMutableRawPointer?
+    private var hasDelivered = false
+
+    init(image: UIImage, target: Any?, selector: Selector?,
+         contextInfo: UnsafeMutableRawPointer?) {
+        self.image = image
+        self.target = target
+        self.selector = selector
+        self.contextInfo = contextInfo
+    }
+
+    func deliver(_ result: UIImagePhotoLibrarySaveResult) {
+        // A misbehaving host must not invoke an application callback twice.
+        guard !hasDelivered else { return }
+        hasDelivered = true
+
+        guard let target, let selector, selector.actionArity == 3 else { return }
+        let failure: UIImagePhotoLibrarySaveError?
+        switch result {
+        case .success:
+            failure = nil
+        case .failure(let error):
+            failure = error
+        }
+
+#if canImport(ObjectiveC)
+        // NSObject.perform exposes only zero, one, and two argument forms.
+        // The documented UIKit callback has three arguments, so resolve the
+        // genuine method IMP and invoke its exact Objective-C ABI directly.
+        if let object = target as? NSObject,
+           object.responds(to: selector) {
+            let implementation = object.method(for: selector)
+            let call = unsafeBitCast(
+                implementation,
+                to: _UIImagePhotoLibraryCompletionIMP.self
+            )
+            call(object, selector, image, errorObject(for: failure), contextInfo)
+            return
+        }
+#endif
+
+        if let portable = target as?
+            any UIImagePhotoLibrarySaveCompletionDispatching {
+            _ = portable._openUIKitPerformPhotoLibrarySaveCompletion(
+                selector.actionName,
+                image: image,
+                error: failure,
+                contextInfo: contextInfo
+            )
+        }
+    }
+
+#if canImport(ObjectiveC)
+    private func errorObject(
+        for failure: UIImagePhotoLibrarySaveError?
+    ) -> AnyObject? {
+        guard let failure else { return nil }
+#if canImport(Foundation)
+        return NSError(
+            domain: UIImagePhotoLibrarySaveError.errorDomain,
+            code: failure.code.rawValue,
+            userInfo: nil
+        )
+#else
+        return _UIImagePhotoLibrarySaveErrorBox(failure)
+#endif
+    }
+#endif
+}
+
+/// Adds `image` to the host's saved-photos album.
+///
+/// This is the exact source shape of UIKit's C entry point. A host-installed
+/// ``OpenUIKitRuntime/photoLibrarySaveHandler`` owns the actual persistence
+/// operation. Its result is forwarded once to the optional selector using
+/// the documented `image:didFinishSavingWithError:contextInfo:` ABI. With no
+/// handler the operation fails closed and delivers a non-nil unavailable
+/// error when the caller supplied a valid completion target and selector.
+public func UIImageWriteToSavedPhotosAlbum(
+    _ image: UIImage,
+    _ completionTarget: Any?,
+    _ completionSelector: Selector?,
+    _ contextInfo: UnsafeMutableRawPointer?
+) {
+    let completion = _UIImagePhotoLibrarySaveCompletion(
+        image: image,
+        target: completionTarget,
+        selector: completionSelector,
+        contextInfo: contextInfo
+    )
+    guard let handler = OpenUIKitRuntime.photoLibrarySaveHandler else {
+        completion.deliver(.failure(.unavailable))
+        return
+    }
+    handler(image) { result in
+        completion.deliver(result)
+    }
+}
 
 // MARK: - Drawing (M14, real-app harness)
 //
