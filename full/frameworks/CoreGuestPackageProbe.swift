@@ -859,6 +859,25 @@ struct CoreGuestPackageProbe {
             SystemLanguageModel.default.availability ==
                 .unavailable(.deviceNotEligible)
         )
+        let languageRecognizer = NLLanguageRecognizer()
+        languageRecognizer.processString(
+            "This is a thoughtful message about building a better social network together."
+        )
+        let languageHypothesis = languageRecognizer
+            .languageHypotheses(withMaximum: 1).first
+        precondition(languageHypothesis?.key == .english)
+        precondition((languageHypothesis?.value ?? 0) >= 0.85)
+        let constrainedLanguageRecognizer = NLLanguageRecognizer()
+        constrainedLanguageRecognizer.languageConstraints = [.french, .spanish]
+        constrainedLanguageRecognizer.processString(
+            "Hola a todos, estamos construyendo una comunidad abierta y amable."
+        )
+        precondition(constrainedLanguageRecognizer.dominantLanguage == .spanish)
+        precondition(
+            NLLanguageRecognizer.dominantLanguage(
+                for: "今日はみんなで、より良いコミュニティを作っています。"
+            ) == .japanese
+        )
         precondition(
             TransferableError.exportNotSupported(contentType: "public.data")
                 == .exportNotSupported(contentType: "public.data")
@@ -1018,6 +1037,7 @@ struct CoreGuestPackageProbe {
                 + "intentsui=host-driven swiftui-app=constructed "
                 + "first-party=portable-34 "
                 + "foundationmodels=generated-content,fail-closed "
+                + "naturallanguage=classifier,apple-29 "
                 + "oslog=standard-error,signposts "
                 + "security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "

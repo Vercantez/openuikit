@@ -2013,7 +2013,7 @@ class ShellContractTests(unittest.TestCase):
             builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 3
         )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 23
+            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 24
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -2935,7 +2935,7 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("portable install ID count", source)
         self.assertIn("apple-self-load=0", source)
         self.assertIn(
-            "frontier-frameworks\\tframeworks=27\\tsources=28\\tinputs=57",
+            "frontier-frameworks\\tframeworks=27\\tsources=28\\tinputs=67",
             source,
         )
         self.assertIn(
@@ -2943,7 +2943,7 @@ class ShellContractTests(unittest.TestCase):
             source,
         )
         self.assertIn(
-            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 57",
+            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 67",
             source,
         )
         self.assertIn(
@@ -2966,6 +2966,30 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("foundationmodels=generated-content,fail-closed", probe)
         self.assertIn("FoundationModelsGuestRuntime", source)
         self.assertIn("FOUNDATIONMODELS_GUEST_MACHO_OK", source)
+        self.assertIn("naturallanguage=classifier,apple-29", probe)
+        self.assertIn("NaturalLanguageGeneralizationRuntime", source)
+        self.assertIn("NATURALLANGUAGE_GUEST_MACHO_OK", source)
+        self.assertIn(
+            "naturallanguage-generalization-apple-26.1.txt", source
+        )
+        self.assertIn(
+            "NaturalLanguage generalization output differs from Apple 26.1",
+            source,
+        )
+        self.assertIn(
+            "NaturalLanguage generalization row count "
+            "$naturallanguage_generalization_rows, expected 29",
+            source,
+        )
+        self.assertIn(
+            "@rpath/libNaturalLanguage.dylib", source
+        )
+        self.assertIn("languageHypotheses(withMaximum: 1)", probe)
+        self.assertIn(
+            "constrainedLanguageRecognizer.languageConstraints = "
+            "[.french, .spanish]",
+            probe,
+        )
         self.assertIn("usernotifications=fail-closed,volatile", probe)
         self.assertIn("UserNotificationsGuestRuntime", source)
         self.assertIn("USERNOTIFICATIONS_GUEST_MACHO_OK", source)

@@ -19,7 +19,8 @@ Charts, CoreTransferable, Photos, PhotosUI, and the `_PhotosUI_SwiftUI`
 cross-import overlay, Accelerate, Compression, CoreText, NaturalLanguage,
 AuthenticationServices, the `_AuthenticationServices_SwiftUI` cross-import
 overlay, plus FoundationModels with its native host compiler plugin for
-`@Generable` and `@Guide`. These are fifty-four reusable ARM64 Mach-O platform
+`@Generable` and `@Guide`, with NaturalLanguage backed by a deterministic
+Unicode-script and Latin-language classifier. These are fifty-four reusable ARM64 Mach-O platform
 binaries (fifty-three frameworks plus ICU), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
@@ -630,7 +631,7 @@ bash full/frameworks/test_single_bind_guest_root_docker.sh \
   --container-image sha256:64_LOWERCASE_HEX
 ```
 
-The tests exercise exact Foundation and WebKit ordering, all eight added
+The tests exercise exact Foundation and WebKit ordering, all added
 first-party framework products, WebKit deletion/mutation/load refusal,
 path/symlink refusal, relocation to a path containing spaces, Preview
 placeholder/external-plugin behavior, DTS ownership, resource/library tamper

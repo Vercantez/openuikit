@@ -1071,12 +1071,35 @@ append_frontier_sources() {
                     "$(hash_file "$W/$relative")" >> "$output"
             done
         fi
+        if [ "$framework" = NaturalLanguage ]; then
+            frontier_inputs=(
+                full/naturallanguage/README.md
+                full/naturallanguage/tests/NaturalLanguageIceCubesOracle.swift
+                full/naturallanguage/tests/NaturalLanguageGeneralizationOracle.swift
+                full/naturallanguage/tests/naturallanguage-apple-26.1.txt
+                full/naturallanguage/tests/naturallanguage-generalization-apple-26.1.txt
+                full/naturallanguage/tests/icecubes_naturallanguage_frontier.tsv
+                full/naturallanguage/tests/build_naturallanguage_guest.sh
+                full/naturallanguage/tests/build_naturallanguage_guest_in_container.sh
+                full/naturallanguage/tests/test_naturallanguage_native.sh
+                full/naturallanguage/tests/test_naturallanguage_frontier.py
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "NaturalLanguage supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "NaturalLanguage supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
     done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
 [ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 28 ] \
     || die 'frontier framework source count drifted'
-[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 57 ] \
+[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 67 ] \
     || die 'frontier underlying input count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
@@ -3354,6 +3377,44 @@ cmp "$WORK/foundationmodels-apple-comparable.txt" \
     "$STAGE/attestation/foundationmodels-apple-26.1.txt" \
     || die 'FoundationModels generated-content output differs from Apple 26.1'
 
+echo '== compile/link/run the standalone NaturalLanguage Apple-differential gate'
+"${SWIFTC[@]}" "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name NaturalLanguageGeneralizationRuntime -emit-object \
+    -o "$WORK/naturallanguage-generalization-runtime.o" \
+    "$W/full/naturallanguage/tests/NaturalLanguageGeneralizationOracle.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/NaturalLanguageGeneralizationRuntime" \
+    "$WORK/naturallanguage-generalization-runtime.o" "${COMMON_LINK[@]}" \
+    -lNaturalLanguage -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+llvm-otool-18 -hv "$STAGE/probe/NaturalLanguageGeneralizationRuntime" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+    || die 'NaturalLanguage generalization gate is not an ARM64 Mach-O executable'
+naturallanguage_gate_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/NaturalLanguageGeneralizationRuntime" \
+    | awk '$1 == "@rpath/libNaturalLanguage.dylib" { count++ } END { print count + 0 }')
+[ "$naturallanguage_gate_load_count" -eq 1 ] \
+    || die "NaturalLanguage gate load count $naturallanguage_gate_load_count, expected 1"
+cp "$W/full/naturallanguage/tests/naturallanguage-generalization-apple-26.1.txt" \
+    "$STAGE/attestation/naturallanguage-generalization-apple-26.1.txt"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/NaturalLanguageGeneralizationRuntime
+) | tee "$STAGE/attestation/naturallanguage-generalization-runtime.log"
+cmp "$STAGE/attestation/naturallanguage-generalization-runtime.log" \
+    "$STAGE/attestation/naturallanguage-generalization-apple-26.1.txt" \
+    || die 'NaturalLanguage generalization output differs from Apple 26.1'
+naturallanguage_generalization_rows=$(wc -l \
+    < "$STAGE/attestation/naturallanguage-generalization-runtime.log" \
+    | tr -d '[:space:]')
+[ "$naturallanguage_generalization_rows" -eq 29 ] \
+    || die "NaturalLanguage generalization row count $naturallanguage_generalization_rows, expected 29"
+echo 'NATURALLANGUAGE_GUEST_MACHO_OK classifier=script,trigram hints=real constraints=real apple-differential=29/29'
+
 echo '== compile/link/run the standalone UserNotifications service gate'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     -module-name UserNotificationsGuestRuntime -emit-object \
@@ -3861,7 +3922,7 @@ fi
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO \
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit \
     -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData \
-    -lFoundationModels \
+    -lFoundationModels -lNaturalLanguage \
     -lUserNotifications -lQuickLook -l_QuickLook_SwiftUI \
     -lCoreMedia -lAVFoundation -lAVKit -lCharts \
     -lCoreTransferable -lPhotos -lPhotosUI -l_PhotosUI_SwiftUI \
@@ -3938,7 +3999,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-34 foundationmodels=generated-content,fail-closed oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven naturallanguage=deterministic,confidence-gated authenticationservices=host-driven,fail-closed webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-34 foundationmodels=generated-content,fail-closed naturallanguage=classifier,apple-29 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven naturallanguage=deterministic,confidence-gated authenticationservices=host-driven,fail-closed webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -4333,7 +4394,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'foundation-byte-count\toracle=%s\tapple-golden=%s\trows=86\n' \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_ORACLE")" \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_GOLDEN")"
-    printf 'frontier-frameworks\tframeworks=27\tsources=28\tinputs=57\n'
+    printf 'frontier-frameworks\tframeworks=27\tsources=28\tinputs=67\n'
     printf 'quicklook-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'photosui-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
@@ -4505,6 +4566,8 @@ record_artifact probe SwiftDataGuestRuntime executable \
     probe/SwiftDataGuestRuntime
 record_artifact probe FoundationModelsGuestRuntime executable \
     probe/FoundationModelsGuestRuntime
+record_artifact probe NaturalLanguageGeneralizationRuntime executable \
+    probe/NaturalLanguageGeneralizationRuntime
 record_artifact probe UserNotificationsGuestRuntime executable \
     probe/UserNotificationsGuestRuntime
 record_artifact probe QuickLookGuestRuntime executable \
@@ -4555,6 +4618,10 @@ record_artifact attestation FoundationModels macro-expansions \
     attestation/foundationmodels-macro-expansions.log
 record_artifact attestation FoundationModels apple-golden \
     attestation/foundationmodels-apple-26.1.txt
+record_artifact attestation NaturalLanguage runtime-log \
+    attestation/naturallanguage-generalization-runtime.log
+record_artifact attestation NaturalLanguage apple-golden \
+    attestation/naturallanguage-generalization-apple-26.1.txt
 record_artifact attestation UserNotifications runtime-log \
     attestation/usernotifications-runtime.log
 record_artifact attestation QuickLook runtime-log \
