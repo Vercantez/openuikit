@@ -1,0 +1,30 @@
+precise	status	evidence	notes
+c:@E@UNNotificationContentExtensionMediaPlayPauseButtonType	implemented	tests/agent/UserNotificationsUIRuntime.swift	UInt NS_ENUM none=0 default=1 overlay=2
+c:@E@UNNotificationContentExtensionMediaPlayPauseButtonType@UNNotificationContentExtensionMediaPlayPauseButtonTypeDefault	implemented	tests/agent/UserNotificationsUIRuntime.swift	case default rawValue 1
+c:@E@UNNotificationContentExtensionMediaPlayPauseButtonType@UNNotificationContentExtensionMediaPlayPauseButtonTypeNone	implemented	tests/agent/UserNotificationsUIRuntime.swift	case none rawValue 0
+c:@E@UNNotificationContentExtensionMediaPlayPauseButtonType@UNNotificationContentExtensionMediaPlayPauseButtonTypeOverlay	implemented	tests/agent/UserNotificationsUIRuntime.swift	case overlay rawValue 2
+c:@E@UNNotificationContentExtensionResponseOption	implemented	tests/agent/UserNotificationsUIRuntime.swift	UInt NS_ENUM doNotDismiss=0 dismiss=1 dismissAndForwardAction=2
+c:@E@UNNotificationContentExtensionResponseOption@UNNotificationContentExtensionResponseOptionDismiss	implemented	tests/agent/UserNotificationsUIRuntime.swift	case dismiss rawValue 1
+c:@E@UNNotificationContentExtensionResponseOption@UNNotificationContentExtensionResponseOptionDismissAndForwardAction	implemented	tests/agent/UserNotificationsUIRuntime.swift	case dismissAndForwardAction rawValue 2
+c:@E@UNNotificationContentExtensionResponseOption@UNNotificationContentExtensionResponseOptionDoNotDismiss	implemented	tests/agent/UserNotificationsUIRuntime.swift	case doNotDismiss rawValue 0
+c:objc(cs)NSExtensionContext(im)dismissNotificationContentExtension	implemented	tests/agent/UserNotificationsUIRuntime.swift	Fail-closed local request flag; no system banner dismiss
+c:objc(cs)NSExtensionContext(im)mediaPlayingPaused	implemented	tests/agent/UserNotificationsUIRuntime.swift	Fail-closed local media-playing flag cleared
+c:objc(cs)NSExtensionContext(im)mediaPlayingStarted	implemented	tests/agent/UserNotificationsUIRuntime.swift	Fail-closed local media-playing flag set
+c:objc(cs)NSExtensionContext(im)performNotificationDefaultAction	implemented	tests/agent/UserNotificationsUIRuntime.swift	Fail-closed local request flag; no app launch
+c:objc(cs)NSExtensionContext(py)notificationActions	implemented	tests/agent/UserNotificationsUIRuntime.swift	Local get/set array copy; not delivered to Apple host
+c:objc(pl)UNNotificationContentExtension	implemented	tests/agent/UserNotificationsUIRuntime.swift	NSObjectProtocol; ObjC optionals via protocol defaults
+c:objc(pl)UNNotificationContentExtension(im)didReceiveNotification:	implemented	tests/agent/UserNotificationsUIRuntime.swift	Required @MainActor didReceive(UNNotification)
+c:objc(pl)UNNotificationContentExtension(im)didReceiveNotificationResponse:completionHandler:	implemented	tests/agent/UserNotificationsUIRuntime.swift	Canonical async overlay; default returns doNotDismiss
+c:objc(pl)UNNotificationContentExtension(im)mediaPause	implemented	tests/agent/UserNotificationsUIRuntime.swift	Optional default no-op; override increments pause count
+c:objc(pl)UNNotificationContentExtension(im)mediaPlay	implemented	tests/agent/UserNotificationsUIRuntime.swift	Optional default no-op; override increments play count
+c:objc(pl)UNNotificationContentExtension(py)mediaPlayPauseButtonFrame	implemented	tests/agent/UserNotificationsUIRuntime.swift	Optional default CGRect.zero; override returns explicit frame
+c:objc(pl)UNNotificationContentExtension(py)mediaPlayPauseButtonTintColor	implemented	tests/agent/UserNotificationsUIRuntime.swift	Optional default black RGBA; override returns red; copy exercised
+c:objc(pl)UNNotificationContentExtension(py)mediaPlayPauseButtonType	implemented	tests/agent/UserNotificationsUIRuntime.swift	Optional default none; override returns overlay
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNNotificationContentExtensionMediaPlayPauseButtonType	implemented	tests/agent/UserNotificationsUIRuntime.swift	Synthesized Equatable != on button type
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNNotificationContentExtensionResponseOption	implemented	tests/agent/UserNotificationsUIRuntime.swift	Synthesized Equatable != on response option
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@UNNotificationContentExtensionMediaPlayPauseButtonType	implemented	tests/agent/UserNotificationsUIRuntime.swift	Synthesized Hashable hashValue on button type
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@UNNotificationContentExtensionResponseOption	implemented	tests/agent/UserNotificationsUIRuntime.swift	Synthesized Hashable hashValue on response option
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@UNNotificationContentExtensionMediaPlayPauseButtonType	implemented	tests/agent/UserNotificationsUIRuntime.swift	Synthesized hash(into:) on button type
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@UNNotificationContentExtensionResponseOption	implemented	tests/agent/UserNotificationsUIRuntime.swift	Synthesized hash(into:) on response option
+s:So44UNNotificationContentExtensionResponseOptionV8rawValueABSgSu_tcfc	implemented	tests/agent/UserNotificationsUIRuntime.swift	init?(rawValue:) accepts 0...2 and rejects 7
+s:So54UNNotificationContentExtensionMediaPlayPauseButtonTypeV8rawValueABSgSu_tcfc	implemented	tests/agent/UserNotificationsUIRuntime.swift	init?(rawValue:) accepts 0...2 and rejects 99
