@@ -5,7 +5,7 @@ open class MLPredictionOptions: NSObject {
     open var outputBackings: [String: Any]
 
     public override init() {
-        self.usesCPUOnly = true
+        self.usesCPUOnly = false
         self.outputBackings = [:]
         super.init()
     }
@@ -22,7 +22,7 @@ open class MLModelConfiguration: NSObject, NSSecureCoding {
     open var optimizationHints: MLOptimizationHints
 
     public override init() {
-        self.computeUnits = .cpuOnly
+        self.computeUnits = .all
         self.allowLowPrecisionAccumulationOnGPU = false
         self.functionName = nil
         self.modelDisplayName = nil
@@ -86,14 +86,12 @@ open class MLModelAsset: NSObject {
         self.sourceURL = compiledModelURL
         self.specificationData = nil
         super.init()
-        throw coreMLNoModelIO("MLModelAsset.init(URL:)")
     }
 
     public init(specification specificationData: Data) throws {
         self.sourceURL = nil
         self.specificationData = specificationData
         super.init()
-        throw coreMLNoModelIO("MLModelAsset.init(specification:)")
     }
 
     public init(specification specificationData: Data, blobMapping: [URL: Data]) throws {
@@ -101,20 +99,46 @@ open class MLModelAsset: NSObject {
         self.sourceURL = nil
         self.specificationData = specificationData
         super.init()
-        throw coreMLNoModelIO("MLModelAsset.init(specification:blobMapping:)")
     }
 
     public func functionNames(completionHandler handler: @escaping ([String]?, (any Error)?) -> Void) {
-        handler(nil, coreMLNoBackend("MLModelAsset.functionNames"))
+        _ = (sourceURL, specificationData)
+        let error = coreMLNoBackend("MLModelAsset.functionNames")
+        coreMLDeliverCompletion {
+            handler(nil, error)
+        }
+    }
+
+    public func modelDescription(
+        of functionName: String,
+        completionHandler handler: @escaping (MLModelDescription?, (any Error)?) -> Void
+    ) {
+        _ = functionName
+        let error = coreMLNoBackend("MLModelAsset.modelDescription(of:)")
+        coreMLDeliverCompletion {
+            handler(nil, error)
+        }
     }
 
     public func modelDescription(of functionName: String) async throws -> MLModelDescription {
-        _ = functionName
-        throw coreMLNoBackend("MLModelAsset.modelDescription(of:)")
+        try await withCheckedThrowingContinuation { continuation in
+            modelDescription(of: functionName) { description, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else if let description {
+                    continuation.resume(returning: description)
+                } else {
+                    continuation.resume(throwing: coreMLNoBackend("MLModelAsset.modelDescription(of:)"))
+                }
+            }
+        }
     }
 
     public func modelDescription(completionHandler handler: @escaping (MLModelDescription?, (any Error)?) -> Void) {
-        handler(nil, coreMLNoBackend("MLModelAsset.modelDescription"))
+        let error = coreMLNoBackend("MLModelAsset.modelDescription")
+        coreMLDeliverCompletion {
+            handler(nil, error)
+        }
     }
 }
 
@@ -158,7 +182,10 @@ open class MLModel: NSObject {
         completionHandler handler: @escaping (MLModel?, (any Error)?) -> Void
     ) {
         _ = (asset, configuration)
-        handler(nil, coreMLNoBackend("MLModel.load(_:configuration:)"))
+        let error = coreMLMissingModelLoad("MLModel.load(_:configuration:)")
+        coreMLDeliverCompletion {
+            handler(nil, error)
+        }
     }
 
     open class func load(
@@ -166,14 +193,20 @@ open class MLModel: NSObject {
         configuration: MLModelConfiguration = MLModelConfiguration(),
         completionHandler handler: @escaping (Result<MLModel, any Error>) -> Void
     ) {
-        handler(.failure(coreMLNoModelIO("MLModel.load(contentsOf:configuration:)")))
+        _ = (url, configuration)
+        let error = coreMLMissingModelLoad("MLModel.load(contentsOf:configuration:)")
+        coreMLDeliverCompletion {
+            handler(.failure(error))
+        }
     }
 
     open class func load(
         contentsOf url: URL,
         configuration: MLModelConfiguration = MLModelConfiguration()
     ) async throws -> MLModel {
-        throw coreMLNoModelIO("MLModel.load(contentsOf:configuration:)")
+        try await coreMLAwaitCompletion { completion in
+            load(contentsOf: url, configuration: configuration, completionHandler: completion)
+        }
     }
 
     open class func compileModel(at modelURL: URL) throws -> URL {
@@ -182,15 +215,20 @@ open class MLModel: NSObject {
     }
 
     open class func compileModel(at modelURL: URL) async throws -> URL {
-        _ = modelURL
-        throw coreMLNoModelIO("MLModel.compileModel(at:)")
+        try await coreMLAwaitCompletion { completion in
+            compileModel(at: modelURL, completionHandler: completion)
+        }
     }
 
     open class func compileModel(
         at url: URL,
         completionHandler handler: @escaping (Result<URL, any Error>) -> Void
     ) {
-        handler(.failure(coreMLNoModelIO("MLModel.compileModel(at:completionHandler:)")))
+        _ = url
+        let error = coreMLNoModelIO("MLModel.compileModel(at:completionHandler:)")
+        coreMLDeliverCompletion {
+            handler(.failure(error))
+        }
     }
 
     open func parameterValue(for key: MLParameterKey) throws -> Any {

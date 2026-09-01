@@ -1,8 +1,9 @@
 @_exported import Foundation
+import Dispatch
 
-/// Public CoreML error domain from Xcode 26.1 `MLModelError.h`.
-/// An oracle question records the exact runtime string for central confirmation.
-public let MLModelErrorDomain = "com.apple.CoreML.ErrorDomain"
+/// Exact iPhoneOS 26.1 runtime string. The public header name is MLModelErrorDomain;
+/// Apple's NSError domain is `com.apple.CoreML`, not `com.apple.CoreML.ErrorDomain`.
+public let MLModelErrorDomain = "com.apple.CoreML"
 
 func coreMLError(
     _ code: MLModelError.Code,
@@ -25,23 +26,166 @@ func coreMLNoModelIO(_ operation: String) -> MLModelError {
     )
 }
 
+/// Apple's missing-model `MLModel.load` completion uses domain `com.apple.CoreML` code 0.
+func coreMLMissingModelLoad(_ operation: String) -> MLModelError {
+    coreMLError(
+        .generic,
+        "CoreML cannot load a compiled model on Linux: \(operation)."
+    )
+}
+
+private struct CoreMLUncheckedWork: @unchecked Sendable {
+    let body: () -> Void
+}
+
+final class CoreMLOnceToken: @unchecked Sendable {
+    private let lock = NSLock()
+    private var delivered = false
+
+    func run(_ body: () -> Void) {
+        lock.lock()
+        let shouldRun = !delivered
+        if shouldRun {
+            delivered = true
+        }
+        lock.unlock()
+        if shouldRun {
+            body()
+        }
+    }
+}
+
+/// Fail-closed completion delivery: non-inline, exactly once, race-safe.
+/// The hop is only required to be off the caller; no particular queue is claimed.
+func coreMLDeliverCompletion(_ body: @escaping () -> Void) {
+    let token = CoreMLOnceToken()
+    let work = CoreMLUncheckedWork(body: {
+        token.run(body)
+    })
+    DispatchQueue.global(qos: .userInitiated).async {
+        work.body()
+    }
+}
+
+func coreMLAwaitCompletion<T>(
+    _ start: (@escaping (Result<T, any Error>) -> Void) -> Void
+) async throws -> T {
+    try await withCheckedThrowingContinuation { continuation in
+        start { result in
+            continuation.resume(with: result)
+        }
+    }
+}
+
+func coreMLCheckedMultiply(_ lhs: Int, _ rhs: Int) -> Int? {
+    let (value, overflow) = lhs.multipliedReportingOverflow(by: rhs)
+    return overflow ? nil : value
+}
+
+func coreMLCheckedAdd(_ lhs: Int, _ rhs: Int) -> Int? {
+    let (value, overflow) = lhs.addingReportingOverflow(rhs)
+    return overflow ? nil : value
+}
+
 func coreMLCContiguousStrides(shape: [Int]) -> [Int] {
     guard !shape.isEmpty else { return [] }
     var strides = Array(repeating: 1, count: shape.count)
     if shape.count >= 2 {
         for index in stride(from: shape.count - 2, through: 0, by: -1) {
-            strides[index] = strides[index + 1] * shape[index + 1]
+            guard let next = coreMLCheckedMultiply(strides[index + 1], shape[index + 1]) else {
+                return strides
+            }
+            strides[index] = next
         }
     }
     return strides
 }
 
 func coreMLElementCount(shape: [Int]) -> Int {
-    shape.reduce(1, *)
+    var count = 1
+    for dimension in shape {
+        guard let next = coreMLCheckedMultiply(count, dimension) else {
+            return 0
+        }
+        count = next
+    }
+    return count
 }
 
 func coreMLByteCount(count: Int, dataType: MLMultiArrayDataType) -> Int {
-    count * dataType.byteSize
+    coreMLCheckedMultiply(count, dataType.byteSize) ?? 0
+}
+
+func coreMLUnravel(linear: Int, shape: [Int]) -> [Int] {
+    guard !shape.isEmpty else { return [] }
+    var remaining = linear
+    var indices = Array(repeating: 0, count: shape.count)
+    for axis in stride(from: shape.count - 1, through: 0, by: -1) {
+        let dimension = shape[axis]
+        if dimension <= 0 {
+            indices[axis] = 0
+            continue
+        }
+        indices[axis] = remaining % dimension
+        remaining /= dimension
+    }
+    return indices
+}
+
+func coreMLHighestReachableOffset(shape: [Int], strides: [Int]) -> Int? {
+    if shape.contains(where: { $0 == 0 }) {
+        return 0
+    }
+    var offset = 0
+    for (dimension, stride) in zip(shape, strides) {
+        guard dimension >= 0, stride >= 0 else { return nil }
+        guard dimension > 0 else { continue }
+        guard let spanned = coreMLCheckedMultiply(dimension - 1, stride) else { return nil }
+        guard let next = coreMLCheckedAdd(offset, spanned) else { return nil }
+        offset = next
+    }
+    return offset
+}
+
+func coreMLValidateMultiArrayLayout(
+    shape: [Int],
+    strides: [Int]?,
+    dataType: MLMultiArrayDataType
+) throws -> (shape: [Int], strides: [Int], byteCount: Int) {
+    if let strides, strides.count != shape.count {
+        throw coreMLError(.featureType, "MLMultiArray rank of shape and strides must match.")
+    }
+    guard shape.allSatisfy({ $0 >= 0 }) else {
+        throw coreMLError(.io, "MLMultiArray shape must be non-negative.")
+    }
+    let resolvedStrides = strides ?? coreMLCContiguousStrides(shape: shape)
+    guard resolvedStrides.allSatisfy({ $0 >= 0 }) else {
+        throw coreMLError(.io, "MLMultiArray strides must be non-negative.")
+    }
+    var elementCount = 1
+    for dimension in shape {
+        guard let next = coreMLCheckedMultiply(elementCount, dimension) else {
+            throw coreMLError(.io, "MLMultiArray shape overflows Int.")
+        }
+        elementCount = next
+    }
+    guard let highest = coreMLHighestReachableOffset(shape: shape, strides: resolvedStrides) else {
+        throw coreMLError(.io, "MLMultiArray layout overflows Int.")
+    }
+    let spannedElements: Int
+    if shape.contains(where: { $0 == 0 }) {
+        spannedElements = 0
+    } else {
+        guard let count = coreMLCheckedAdd(highest, 1) else {
+            throw coreMLError(.io, "MLMultiArray layout overflows Int.")
+        }
+        spannedElements = count
+    }
+    let allocationCount = max(spannedElements, 1)
+    guard let byteCount = coreMLCheckedMultiply(allocationCount, dataType.byteSize) else {
+        throw coreMLError(.io, "MLMultiArray byte count overflows Int.")
+    }
+    return (shape, resolvedStrides, spannedElements == 0 ? 0 : byteCount)
 }
 
 /// Portable counterpart of CoreML's bridged `NS_ERROR_ENUM`.

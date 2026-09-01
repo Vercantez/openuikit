@@ -3,15 +3,18 @@ import Foundation
 private final class MLMultiArrayStorage {
     let pointer: UnsafeMutableRawPointer
     let byteCount: Int
-    let deallocator: (UnsafeMutableRawPointer) -> Void
+    private let lock = NSLock()
+    private var deallocated = false
+    private let deallocator: (UnsafeMutableRawPointer) -> Void
 
     init(byteCount: Int) {
+        let allocation = max(byteCount, 1)
         self.byteCount = byteCount
         self.pointer = UnsafeMutableRawPointer.allocate(
-            byteCount: max(byteCount, 1),
+            byteCount: allocation,
             alignment: MemoryLayout<Double>.alignment
         )
-        self.pointer.initializeMemory(as: UInt8.self, repeating: 0, count: max(byteCount, 1))
+        self.pointer.initializeMemory(as: UInt8.self, repeating: 0, count: allocation)
         self.deallocator = { $0.deallocate() }
     }
 
@@ -26,7 +29,19 @@ private final class MLMultiArrayStorage {
     }
 
     deinit {
-        deallocator(pointer)
+        invokeDeallocator()
+    }
+
+    func invokeDeallocator() {
+        lock.lock()
+        let shouldRun = !deallocated
+        if shouldRun {
+            deallocated = true
+        }
+        lock.unlock()
+        if shouldRun {
+            deallocator(pointer)
+        }
     }
 }
 
@@ -48,31 +63,32 @@ open class MLMultiArray: NSObject, NSSecureCoding {
 
     public init(shape: [NSNumber], dataType: MLMultiArrayDataType) throws {
         let dims = shape.map(\.intValue)
-        guard dims.allSatisfy({ $0 >= 0 }) else {
-            throw coreMLError(.io, "MLMultiArray shape must be non-negative.")
-        }
-        let elementCount = coreMLElementCount(shape: dims)
-        let byteCount = coreMLByteCount(count: elementCount, dataType: dataType)
-        self.storage = MLMultiArrayStorage(byteCount: byteCount)
+        let layout = try coreMLValidateMultiArrayLayout(shape: dims, strides: nil, dataType: dataType)
+        self.storage = MLMultiArrayStorage(byteCount: layout.byteCount)
         self.shape = shape
         self.dataType = dataType
-        self.strides = coreMLCContiguousStrides(shape: dims).map { NSNumber(value: $0) }
+        self.strides = layout.strides.map { NSNumber(value: $0) }
         super.init()
     }
 
     public convenience init(shape: [Int], dataType: MLMultiArrayDataType, strides: [Int]) {
-        let elementCount = coreMLElementCount(shape: shape)
-        let owned = MLMultiArrayStorage(
-            byteCount: coreMLByteCount(count: elementCount, dataType: dataType)
+        let layout = try! coreMLValidateMultiArrayLayout(
+            shape: shape,
+            strides: strides,
+            dataType: dataType
         )
+        let allocation = max(layout.byteCount, 1)
+        let pointer = UnsafeMutableRawPointer.allocate(
+            byteCount: allocation,
+            alignment: MemoryLayout<Double>.alignment
+        )
+        pointer.initializeMemory(as: UInt8.self, repeating: 0, count: allocation)
         try! self.init(
-            dataPointer: owned.pointer,
+            dataPointer: pointer,
             shape: shape.map { NSNumber(value: $0) },
             dataType: dataType,
             strides: strides.map { NSNumber(value: $0) },
-            deallocator: { _ in
-                withExtendedLifetime(owned) {}
-            }
+            deallocator: { $0.deallocate() }
         )
     }
 
@@ -84,10 +100,15 @@ open class MLMultiArray: NSObject, NSSecureCoding {
         deallocator: ((UnsafeMutableRawPointer) -> Void)? = nil
     ) throws {
         let dims = shape.map(\.intValue)
-        let elementCount = coreMLElementCount(shape: dims)
+        let strideValues = strides.map(\.intValue)
+        let layout = try coreMLValidateMultiArrayLayout(
+            shape: dims,
+            strides: strideValues,
+            dataType: dataType
+        )
         self.storage = MLMultiArrayStorage(
             pointer: dataPointer,
-            byteCount: coreMLByteCount(count: elementCount, dataType: dataType),
+            byteCount: layout.byteCount,
             deallocator: deallocator
         )
         self.shape = shape
@@ -96,31 +117,45 @@ open class MLMultiArray: NSObject, NSSecureCoding {
         super.init()
     }
 
-    public convenience init(byConcatenatingMultiArrays multiArrays: [MLMultiArray], alongAxis axis: Int, dataType: MLMultiArrayDataType) {
+    public convenience init(
+        byConcatenatingMultiArrays multiArrays: [MLMultiArray],
+        alongAxis axis: Int,
+        dataType: MLMultiArrayDataType
+    ) {
         precondition(!multiArrays.isEmpty, "concatenating empty MLMultiArray list")
         let first = multiArrays[0]
+        let rank = first.shape.count
+        precondition(rank > 0, "concatenating rank-0 MLMultiArray")
+        var normalizedAxis = axis
+        if normalizedAxis < 0 {
+            normalizedAxis += rank
+        }
+        precondition(normalizedAxis >= 0 && normalizedAxis < rank, "MLMultiArray concat axis out of range")
         var dims = first.shape.map(\.intValue)
-        let normalizedAxis = axis < 0 ? axis + dims.count : axis
-        precondition(normalizedAxis >= 0 && normalizedAxis < dims.count)
         var axisCount = 0
         for array in multiArrays {
-            precondition(array.dataType == dataType)
-            precondition(array.shape.count == first.shape.count)
-            for (index, dim) in array.shape.map(\.intValue).enumerated() where index != normalizedAxis {
-                precondition(dim == dims[index])
+            precondition(array.shape.count == rank, "MLMultiArray concat rank mismatch")
+            let sourceDims = array.shape.map(\.intValue)
+            for (index, dim) in sourceDims.enumerated() where index != normalizedAxis {
+                precondition(dim == dims[index], "MLMultiArray concat shape mismatch")
             }
-            axisCount += array.shape[normalizedAxis].intValue
+            guard let next = coreMLCheckedAdd(axisCount, sourceDims[normalizedAxis]) else {
+                preconditionFailure("MLMultiArray concat axis overflows Int")
+            }
+            axisCount = next
         }
         dims[normalizedAxis] = axisCount
         try! self.init(shape: dims.map { NSNumber(value: $0) }, dataType: dataType)
-        var destinationOffset = 0
+        var axisOrigin = 0
         for array in multiArrays {
-            let bytes = coreMLByteCount(count: array.count, dataType: dataType)
-            self.dataPointer.advanced(by: destinationOffset).copyMemory(
-                from: array.dataPointer,
-                byteCount: bytes
-            )
-            destinationOffset += bytes
+            let sourceAxis = array.shape[normalizedAxis].intValue
+            let sourceCount = array.count
+            for linear in 0..<sourceCount {
+                var indices = coreMLUnravel(linear: linear, shape: array.shape.map(\.intValue))
+                indices[normalizedAxis] += axisOrigin
+                self.setNumber(array.number(atLinear: linear), atIndices: indices)
+            }
+            axisOrigin += sourceAxis
         }
     }
 
@@ -156,10 +191,12 @@ open class MLMultiArray: NSObject, NSSecureCoding {
             shape: shapedArray.shape.map { NSNumber(value: $0) },
             dataType: ShapedArray.Scalar.multiArrayDataType
         )
-        shapedArray.withUnsafeShapedBufferPointer { buffer, _, _ in
-            let bytes = buffer.count * MemoryLayout<ShapedArray.Scalar>.stride
-            if bytes > 0, let base = buffer.baseAddress {
-                self.dataPointer.copyMemory(from: UnsafeRawPointer(base), byteCount: bytes)
+        shapedArray.withUnsafeShapedBufferPointer { buffer, shape, _ in
+            guard let base = buffer.baseAddress else { return }
+            for linear in 0..<buffer.count {
+                let indices = coreMLUnravel(linear: linear, shape: shape)
+                let value = base[linear]
+                self.setNumber(Self.number(fromScalar: value), atIndices: indices)
             }
         }
     }
@@ -171,30 +208,48 @@ open class MLMultiArray: NSObject, NSSecureCoding {
     open func encode(with coder: NSCoder) {}
 
     public subscript(idx: Int) -> NSNumber {
-        get { number(atLinear: idx) }
-        set { setNumber(newValue, atLinear: idx) }
+        get {
+            precondition(idx >= 0 && idx < count, "MLMultiArray linear index out of range")
+            return number(atLinear: idx)
+        }
+        set {
+            precondition(idx >= 0 && idx < count, "MLMultiArray linear index out of range")
+            setNumber(newValue, atLinear: idx)
+        }
     }
 
     public subscript(key: [NSNumber]) -> NSNumber {
-        get { number(atLinear: linearIndex(key.map(\.intValue))) }
-        set { setNumber(newValue, atLinear: linearIndex(key.map(\.intValue))) }
+        get {
+            let indices = key.map(\.intValue)
+            precondition(isValidIndices(indices), "MLMultiArray indices out of range")
+            return number(atIndices: indices)
+        }
+        set {
+            let indices = key.map(\.intValue)
+            precondition(isValidIndices(indices), "MLMultiArray indices out of range")
+            setNumber(newValue, atIndices: indices)
+        }
     }
 
     public func transfer(to destinationMultiArray: MLMultiArray) {
-        precondition(count == destinationMultiArray.count)
-        precondition(dataType == destinationMultiArray.dataType)
-        destinationMultiArray.dataPointer.copyMemory(from: dataPointer, byteCount: storage.byteCount)
+        let sourceShape = shape.map(\.intValue)
+        let destinationShape = destinationMultiArray.shape.map(\.intValue)
+        precondition(sourceShape == destinationShape, "MLMultiArray transfer requires identical shapes")
+        for linear in 0..<count {
+            let indices = coreMLUnravel(linear: linear, shape: sourceShape)
+            destinationMultiArray.setNumber(number(atIndices: indices), atIndices: indices)
+        }
     }
 
     public func withUnsafeBytes<R>(_ body: (UnsafeRawBufferPointer) throws -> R) rethrows -> R {
-        try body(UnsafeRawBufferPointer(start: storage.pointer, count: storage.byteCount))
+        try body(UnsafeRawBufferPointer(start: storage.pointer, count: max(storage.byteCount, 0)))
     }
 
     public func withUnsafeMutableBytes<R>(
         _ body: (UnsafeMutableRawBufferPointer, [Int]) throws -> R
     ) rethrows -> R {
         try body(
-            UnsafeMutableRawBufferPointer(start: storage.pointer, count: storage.byteCount),
+            UnsafeMutableRawBufferPointer(start: storage.pointer, count: max(storage.byteCount, 0)),
             strides.map(\.intValue)
         )
     }
@@ -205,7 +260,8 @@ open class MLMultiArray: NSObject, NSSecureCoding {
     ) rethrows -> R where S: MLShapedArrayScalar {
         precondition(S.multiArrayDataType == dataType)
         let typed = UnsafePointer<S>(OpaquePointer(storage.pointer))
-        return try body(UnsafeBufferPointer(start: typed, count: count))
+        let capacity = storage.byteCount / max(MemoryLayout<S>.stride, 1)
+        return try body(UnsafeBufferPointer(start: typed, count: capacity))
     }
 
     public func withUnsafeMutableBufferPointer<S, R>(
@@ -214,46 +270,93 @@ open class MLMultiArray: NSObject, NSSecureCoding {
     ) rethrows -> R where S: MLShapedArrayScalar {
         precondition(S.multiArrayDataType == dataType)
         let typed = UnsafeMutablePointer<S>(OpaquePointer(storage.pointer))
+        let capacity = storage.byteCount / max(MemoryLayout<S>.stride, 1)
         return try body(
-            UnsafeMutableBufferPointer(start: typed, count: count),
+            UnsafeMutableBufferPointer(start: typed, count: capacity),
             strides.map(\.intValue)
         )
     }
 
-    private func linearIndex(_ indices: [Int]) -> Int {
+    private func isValidIndices(_ indices: [Int]) -> Bool {
+        let dims = shape.map(\.intValue)
+        guard indices.count == dims.count else { return false }
+        for (index, dimension) in zip(indices, dims) {
+            if dimension == 0 { return false }
+            if index < 0 || index >= dimension { return false }
+        }
+        return true
+    }
+
+    private func linearOffset(_ indices: [Int]) -> Int {
         zip(indices, strides.map(\.intValue)).reduce(0) { $0 + $1.0 * $1.1 }
     }
 
-    private func number(atLinear index: Int) -> NSNumber {
+    fileprivate func number(atLinear linear: Int) -> NSNumber {
+        number(atIndices: coreMLUnravel(linear: linear, shape: shape.map(\.intValue)))
+    }
+
+    fileprivate func setNumber(_ number: NSNumber, atLinear linear: Int) {
+        setNumber(number, atIndices: coreMLUnravel(linear: linear, shape: shape.map(\.intValue)))
+    }
+
+    fileprivate func number(atIndices indices: [Int]) -> NSNumber {
+        number(atOffset: linearOffset(indices))
+    }
+
+    fileprivate func setNumber(_ number: NSNumber, atIndices indices: [Int]) {
+        storeNumber(number, atOffset: linearOffset(indices))
+    }
+
+    private func number(atOffset offset: Int) -> NSNumber {
         let pointer = storage.pointer
         switch dataType {
         case .double:
-            return NSNumber(value: pointer.advanced(by: index * 8).load(as: Double.self))
+            return NSNumber(value: pointer.advanced(by: offset * 8).load(as: Double.self))
         case .float32:
-            return NSNumber(value: pointer.advanced(by: index * 4).load(as: Float.self))
+            return NSNumber(value: pointer.advanced(by: offset * 4).load(as: Float.self))
         case .float16:
-            let value = pointer.advanced(by: index * 2).load(as: Float16.self)
+            let value = pointer.advanced(by: offset * 2).load(as: Float16.self)
             return NSNumber(value: Float(value))
         case .int32:
-            return NSNumber(value: pointer.advanced(by: index * 4).load(as: Int32.self))
+            return NSNumber(value: pointer.advanced(by: offset * 4).load(as: Int32.self))
         case .int8:
-            return NSNumber(value: pointer.advanced(by: index).load(as: Int8.self))
+            return NSNumber(value: pointer.advanced(by: offset).load(as: Int8.self))
         }
     }
 
-    private func setNumber(_ number: NSNumber, atLinear index: Int) {
+    private func storeNumber(_ number: NSNumber, atOffset offset: Int) {
         let pointer = storage.pointer
         switch dataType {
         case .double:
-            pointer.advanced(by: index * 8).storeBytes(of: number.doubleValue, as: Double.self)
+            pointer.advanced(by: offset * 8).storeBytes(of: number.doubleValue, as: Double.self)
         case .float32:
-            pointer.advanced(by: index * 4).storeBytes(of: number.floatValue, as: Float.self)
+            pointer.advanced(by: offset * 4).storeBytes(of: number.floatValue, as: Float.self)
         case .float16:
-            pointer.advanced(by: index * 2).storeBytes(of: Float16(number.floatValue), as: Float16.self)
+            pointer.advanced(by: offset * 2).storeBytes(of: Float16(number.floatValue), as: Float16.self)
         case .int32:
-            pointer.advanced(by: index * 4).storeBytes(of: number.int32Value, as: Int32.self)
+            pointer.advanced(by: offset * 4).storeBytes(of: number.int32Value, as: Int32.self)
         case .int8:
-            pointer.advanced(by: index).storeBytes(of: Int8(truncatingIfNeeded: number.intValue), as: Int8.self)
+            pointer.advanced(by: offset).storeBytes(
+                of: Int8(truncatingIfNeeded: number.intValue),
+                as: Int8.self
+            )
+        }
+    }
+
+    private static func number<Scalar>(fromScalar value: Scalar) -> NSNumber {
+        switch value {
+        case let double as Double:
+            return NSNumber(value: double)
+        case let float as Float:
+            return NSNumber(value: float)
+        case let float16 as Float16:
+            return NSNumber(value: Float(float16))
+        case let int32 as Int32:
+            return NSNumber(value: int32)
+        case let int8 as Int8:
+            return NSNumber(value: int8)
+        default:
+            return NSNumber(value: 0)
         }
     }
 }

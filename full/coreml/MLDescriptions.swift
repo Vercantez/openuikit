@@ -1,7 +1,5 @@
 import Foundation
 
-public typealias OSType = UInt32
-
 open class MLDictionaryConstraint: NSObject, NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public private(set) var keyType: MLFeatureType
@@ -58,13 +56,13 @@ open class MLImageConstraint: NSObject, NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public private(set) var pixelsWide: Int
     public private(set) var pixelsHigh: Int
-    public private(set) var pixelFormatType: OSType
+    public private(set) var pixelFormatType: UInt32
     public private(set) var sizeConstraint: MLImageSizeConstraint
 
     init(
         pixelsWide: Int,
         pixelsHigh: Int,
-        pixelFormatType: OSType,
+        pixelFormatType: UInt32,
         sizeConstraint: MLImageSizeConstraint
     ) {
         self.pixelsWide = pixelsWide
