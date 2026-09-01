@@ -18,7 +18,7 @@ c:@E@MCSessionState	implemented	MultipeerConnectivity.swift;tests/agent/Multipee
 c:@E@MCSessionState@MCSessionStateConnected	implemented	MultipeerConnectivity.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:@E@MCSessionState@MCSessionStateConnecting	implemented	MultipeerConnectivity.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:@E@MCSessionState@MCSessionStateNotConnected	implemented	MultipeerConnectivity.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
-c:@MCErrorDomain	implemented	MultipeerConnectivity.swift;tests/agent/MultipeerConnectivityRuntime.swift	portable domain string; Apple runtime value is an oracle question
+c:@MCErrorDomain	declared	MultipeerConnectivity.swift;tests/agent/MultipeerConnectivityRuntime.swift	portable OpenUIKit domain compiles; Apple runtime string unobserved
 c:@kMCSessionMaximumNumberOfPeers	implemented	MultipeerConnectivity.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:@kMCSessionMinimumNumberOfPeers	implemented	MultipeerConnectivity.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(cs)MCAdvertiserAssistant	implemented	MCAdvertiserAssistant.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
@@ -29,17 +29,17 @@ c:objc(cs)MCAdvertiserAssistant(py)delegate	implemented	MCAdvertiserAssistant.sw
 c:objc(cs)MCAdvertiserAssistant(py)discoveryInfo	implemented	MCAdvertiserAssistant.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(cs)MCAdvertiserAssistant(py)serviceType	implemented	MCAdvertiserAssistant.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(cs)MCAdvertiserAssistant(py)session	implemented	MCAdvertiserAssistant.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
-c:objc(cs)MCBrowserViewController	implemented	MCBrowserViewController.swift;tests/agent/MultipeerConnectivityRuntime.swift	NSObject subclass when UIKit cannot be imported; no peer picker
-c:objc(cs)MCBrowserViewController(im)initWithBrowser:session:	implemented	MCBrowserViewController.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
-c:objc(cs)MCBrowserViewController(im)initWithServiceType:session:	implemented	MCBrowserViewController.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
-c:objc(cs)MCBrowserViewController(py)browser	implemented	MCBrowserViewController.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
-c:objc(cs)MCBrowserViewController(py)delegate	implemented	MCBrowserViewController.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
-c:objc(cs)MCBrowserViewController(py)maximumNumberOfPeers	implemented	MCBrowserViewController.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
-c:objc(cs)MCBrowserViewController(py)minimumNumberOfPeers	implemented	MCBrowserViewController.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
-c:objc(cs)MCBrowserViewController(py)session	implemented	MCBrowserViewController.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
+c:objc(cs)MCBrowserViewController	deferred	tests/agent/MultipeerConnectivityDependencyIdentity.swift	omitted unless canImport(UIKit); must subclass UIKit.UIViewController; isolated NSObject stand-in is forbidden
+c:objc(cs)MCBrowserViewController(im)initWithBrowser:session:	deferred	tests/agent/MultipeerConnectivityDependencyIdentity.swift	omitted unless canImport(UIKit); must subclass UIKit.UIViewController; isolated NSObject stand-in is forbidden
+c:objc(cs)MCBrowserViewController(im)initWithServiceType:session:	deferred	tests/agent/MultipeerConnectivityDependencyIdentity.swift	omitted unless canImport(UIKit); must subclass UIKit.UIViewController; isolated NSObject stand-in is forbidden
+c:objc(cs)MCBrowserViewController(py)browser	deferred	tests/agent/MultipeerConnectivityDependencyIdentity.swift	omitted unless canImport(UIKit); must subclass UIKit.UIViewController; isolated NSObject stand-in is forbidden
+c:objc(cs)MCBrowserViewController(py)delegate	deferred	tests/agent/MultipeerConnectivityDependencyIdentity.swift	omitted unless canImport(UIKit); must subclass UIKit.UIViewController; isolated NSObject stand-in is forbidden
+c:objc(cs)MCBrowserViewController(py)maximumNumberOfPeers	deferred	tests/agent/MultipeerConnectivityDependencyIdentity.swift	omitted unless canImport(UIKit); must subclass UIKit.UIViewController; isolated NSObject stand-in is forbidden
+c:objc(cs)MCBrowserViewController(py)minimumNumberOfPeers	deferred	tests/agent/MultipeerConnectivityDependencyIdentity.swift	omitted unless canImport(UIKit); must subclass UIKit.UIViewController; isolated NSObject stand-in is forbidden
+c:objc(cs)MCBrowserViewController(py)session	deferred	tests/agent/MultipeerConnectivityDependencyIdentity.swift	omitted unless canImport(UIKit); must subclass UIKit.UIViewController; isolated NSObject stand-in is forbidden
 c:objc(cs)MCNearbyServiceAdvertiser	implemented	MCNearbyServiceAdvertiser.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(cs)MCNearbyServiceAdvertiser(im)initWithPeer:discoveryInfo:serviceType:	implemented	MCNearbyServiceAdvertiser.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
-c:objc(cs)MCNearbyServiceAdvertiser(im)startAdvertisingPeer	implemented	MCNearbyServiceAdvertiser.swift;tests/agent/MultipeerConnectivityRuntime.swift	fail-closed: didNotStart callback with unavailable or invalidParameter
+c:objc(cs)MCNearbyServiceAdvertiser(im)startAdvertisingPeer	implemented	MCNearbyServiceAdvertiser.swift;tests/agent/MultipeerConnectivityRuntime.swift	fail-closed async exactly-once didNotStart with unavailable or invalidParameter
 c:objc(cs)MCNearbyServiceAdvertiser(im)stopAdvertisingPeer	implemented	MCNearbyServiceAdvertiser.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(cs)MCNearbyServiceAdvertiser(py)delegate	implemented	MCNearbyServiceAdvertiser.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(cs)MCNearbyServiceAdvertiser(py)discoveryInfo	implemented	MCNearbyServiceAdvertiser.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
@@ -48,7 +48,7 @@ c:objc(cs)MCNearbyServiceAdvertiser(py)serviceType	implemented	MCNearbyServiceAd
 c:objc(cs)MCNearbyServiceBrowser	implemented	MCNearbyServiceBrowser.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(cs)MCNearbyServiceBrowser(im)initWithPeer:serviceType:	implemented	MCNearbyServiceBrowser.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(cs)MCNearbyServiceBrowser(im)invitePeer:toSession:withContext:timeout:	implemented	MCNearbyServiceBrowser.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
-c:objc(cs)MCNearbyServiceBrowser(im)startBrowsingForPeers	implemented	MCNearbyServiceBrowser.swift;tests/agent/MultipeerConnectivityRuntime.swift	fail-closed: didNotStart callback with unavailable or invalidParameter
+c:objc(cs)MCNearbyServiceBrowser(im)startBrowsingForPeers	implemented	MCNearbyServiceBrowser.swift;tests/agent/MultipeerConnectivityRuntime.swift	fail-closed async exactly-once didNotStart with unavailable or invalidParameter
 c:objc(cs)MCNearbyServiceBrowser(im)stopBrowsingForPeers	implemented	MCNearbyServiceBrowser.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(cs)MCNearbyServiceBrowser(py)delegate	implemented	MCNearbyServiceBrowser.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(cs)MCNearbyServiceBrowser(py)myPeerID	implemented	MCNearbyServiceBrowser.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
@@ -62,9 +62,9 @@ c:objc(cs)MCSession(im)connectPeer:withNearbyConnectionData:	implemented	MCSessi
 c:objc(cs)MCSession(im)disconnect	implemented	MCSession.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(cs)MCSession(im)initWithPeer:	implemented	MCSession.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(cs)MCSession(im)initWithPeer:securityIdentity:encryptionPreference:	implemented	MCSession.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
-c:objc(cs)MCSession(im)nearbyConnectionDataForPeer:withCompletionHandler:	implemented	MCSession.swift;tests/agent/MultipeerConnectivityRuntime.swift	fail-closed: no Apple nearby connection data
+c:objc(cs)MCSession(im)nearbyConnectionDataForPeer:withCompletionHandler:	implemented	MCSession.swift;tests/agent/MultipeerConnectivityRuntime.swift	fail-closed async exactly-once unavailable; async overlay shares this path
 c:objc(cs)MCSession(im)sendData:toPeers:withMode:error:	implemented	MCSession.swift;tests/agent/MultipeerConnectivityRuntime.swift	fail-closed: notConnected unless a local peer is already connected
-c:objc(cs)MCSession(im)sendResourceAtURL:withName:toPeer:withCompletionHandler:	implemented	MCSession.swift;tests/agent/MultipeerConnectivityRuntime.swift	fail-closed: notConnected unless a local peer is already connected
+c:objc(cs)MCSession(im)sendResourceAtURL:withName:toPeer:withCompletionHandler:	implemented	MCSession.swift;tests/agent/MultipeerConnectivityRuntime.swift	fail-closed async exactly-once notConnected; returns nil Progress
 c:objc(cs)MCSession(im)startStreamWithName:toPeer:error:	implemented	MCSession.swift;tests/agent/MultipeerConnectivityRuntime.swift	fail-closed: notConnected unless a local peer is already connected
 c:objc(cs)MCSession(py)connectedPeers	implemented	MCSession.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(cs)MCSession(py)delegate	implemented	MCSession.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
@@ -74,10 +74,10 @@ c:objc(cs)MCSession(py)securityIdentity	implemented	MCSession.swift;tests/agent/
 c:objc(pl)MCAdvertiserAssistantDelegate	declared	MCAdvertiserAssistant.swift;tests/agent/MultipeerConnectivityRuntime.swift	Swift protocol surface; required methods have no default bodies
 c:objc(pl)MCAdvertiserAssistantDelegate(im)advertiserAssistantDidDismissInvitation:	implemented	MCAdvertiserAssistant.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(pl)MCAdvertiserAssistantDelegate(im)advertiserAssistantWillPresentInvitation:	implemented	MCAdvertiserAssistant.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
-c:objc(pl)MCBrowserViewControllerDelegate	declared	MCBrowserViewController.swift;tests/agent/MultipeerConnectivityRuntime.swift	Swift protocol surface; required methods have no default bodies
-c:objc(pl)MCBrowserViewControllerDelegate(im)browserViewController:shouldPresentNearbyPeer:withDiscoveryInfo:	implemented	MCBrowserViewController.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
-c:objc(pl)MCBrowserViewControllerDelegate(im)browserViewControllerDidFinish:	declared	MCBrowserViewController.swift;tests/agent/MultipeerConnectivityRuntime.swift	required delegate method; exercised by tests/agent/MultipeerConnectivityRuntime.swift conformers
-c:objc(pl)MCBrowserViewControllerDelegate(im)browserViewControllerWasCancelled:	declared	MCBrowserViewController.swift;tests/agent/MultipeerConnectivityRuntime.swift	required delegate method; exercised by tests/agent/MultipeerConnectivityRuntime.swift conformers
+c:objc(pl)MCBrowserViewControllerDelegate	deferred	tests/agent/MultipeerConnectivityDependencyIdentity.swift	omitted unless canImport(UIKit); must subclass UIKit.UIViewController; isolated NSObject stand-in is forbidden
+c:objc(pl)MCBrowserViewControllerDelegate(im)browserViewController:shouldPresentNearbyPeer:withDiscoveryInfo:	deferred	tests/agent/MultipeerConnectivityDependencyIdentity.swift	omitted unless canImport(UIKit); must subclass UIKit.UIViewController; isolated NSObject stand-in is forbidden
+c:objc(pl)MCBrowserViewControllerDelegate(im)browserViewControllerDidFinish:	deferred	tests/agent/MultipeerConnectivityDependencyIdentity.swift	omitted unless canImport(UIKit); must subclass UIKit.UIViewController; isolated NSObject stand-in is forbidden
+c:objc(pl)MCBrowserViewControllerDelegate(im)browserViewControllerWasCancelled:	deferred	tests/agent/MultipeerConnectivityDependencyIdentity.swift	omitted unless canImport(UIKit); must subclass UIKit.UIViewController; isolated NSObject stand-in is forbidden
 c:objc(pl)MCNearbyServiceAdvertiserDelegate	declared	MCNearbyServiceAdvertiser.swift;tests/agent/MultipeerConnectivityRuntime.swift	Swift protocol surface; required methods have no default bodies
 c:objc(pl)MCNearbyServiceAdvertiserDelegate(im)advertiser:didNotStartAdvertisingPeer:	implemented	MCNearbyServiceAdvertiser.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 c:objc(pl)MCNearbyServiceAdvertiserDelegate(im)advertiser:didReceiveInvitationFromPeer:withContext:invitationHandler:	declared	MCNearbyServiceAdvertiser.swift;tests/agent/MultipeerConnectivityRuntime.swift	required delegate method; exercised by tests/agent/MultipeerConnectivityRuntime.swift conformers
@@ -92,7 +92,7 @@ c:objc(pl)MCSessionDelegate(im)session:didReceiveData:fromPeer:	declared	MCSessi
 c:objc(pl)MCSessionDelegate(im)session:didReceiveStream:withName:fromPeer:	declared	MCSession.swift;tests/agent/MultipeerConnectivityRuntime.swift	required delegate method; exercised by tests/agent/MultipeerConnectivityRuntime.swift conformers
 c:objc(pl)MCSessionDelegate(im)session:didStartReceivingResourceWithName:fromPeer:withProgress:	declared	MCSession.swift;tests/agent/MultipeerConnectivityRuntime.swift	required delegate method; exercised by tests/agent/MultipeerConnectivityRuntime.swift conformers
 c:objc(pl)MCSessionDelegate(im)session:peer:didChangeState:	declared	MCSession.swift;tests/agent/MultipeerConnectivityRuntime.swift	required delegate method; exercised by tests/agent/MultipeerConnectivityRuntime.swift conformers
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MCPeerID	implemented	MCPeerID.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MCPeerID	declared	MCPeerID.swift;tests/agent/MultipeerConnectivityRuntime.swift	Apple NSCoder keys unobserved; init(coder:) compiles and fails closed with nil
 s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@MCErrorCode	implemented	MCError.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MCErrorCode	implemented	MCError.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation
 s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MCErrorCode	implemented	MCError.swift;tests/agent/MultipeerConnectivityRuntime.swift	Linux starting implementation

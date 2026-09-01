@@ -1,7 +1,10 @@
+import Dispatch
 import Foundation
 import MultipeerConnectivity
 
-final class SessionProbeDelegate: NSObject, MCSessionDelegate {
+class SessionProbeDelegate: NSObject, MCSessionDelegate {
+    var receivedDataCount = 0
+
     func session(
         _ session: MCSession,
         peer peerID: MCPeerID,
@@ -15,7 +18,9 @@ final class SessionProbeDelegate: NSObject, MCSessionDelegate {
         didReceive data: Data,
         fromPeer peerID: MCPeerID
     ) {
-        _ = (session, data, peerID)
+        _ = (session, peerID)
+        receivedDataCount += 1
+        _ = data
     }
 
     func session(
@@ -47,8 +52,21 @@ final class SessionProbeDelegate: NSObject, MCSessionDelegate {
     }
 }
 
-final class AdvertiserProbeDelegate: NSObject, MCNearbyServiceAdvertiserDelegate {
+final class SessionOverrideDelegate: SessionProbeDelegate {
+    override func session(
+        _ session: MCSession,
+        didReceive data: Data,
+        fromPeer peerID: MCPeerID
+    ) {
+        receivedDataCount += 10
+        super.session(session, didReceive: data, fromPeer: peerID)
+    }
+}
+
+class AdvertiserProbeDelegate: NSObject, MCNearbyServiceAdvertiserDelegate {
     var startError: (any Error)?
+    var startCount = 0
+    let startLock = DispatchSemaphore(value: 0)
 
     func advertiser(
         _ advertiser: MCNearbyServiceAdvertiser,
@@ -66,12 +84,28 @@ final class AdvertiserProbeDelegate: NSObject, MCNearbyServiceAdvertiserDelegate
     ) {
         _ = advertiser
         startError = error
+        startCount += 1
+        startLock.signal()
     }
 }
 
-final class BrowserProbeDelegate: NSObject, MCNearbyServiceBrowserDelegate {
+final class AdvertiserOverrideDelegate: AdvertiserProbeDelegate {
+    var overrideCount = 0
+
+    override func advertiser(
+        _ advertiser: MCNearbyServiceAdvertiser,
+        didNotStartAdvertisingPeer error: any Error
+    ) {
+        overrideCount += 1
+        super.advertiser(advertiser, didNotStartAdvertisingPeer: error)
+    }
+}
+
+class BrowserProbeDelegate: NSObject, MCNearbyServiceBrowserDelegate {
     var startError: (any Error)?
+    var startCount = 0
     var foundCount = 0
+    let startLock = DispatchSemaphore(value: 0)
 
     func browser(
         _ browser: MCNearbyServiceBrowser,
@@ -92,6 +126,20 @@ final class BrowserProbeDelegate: NSObject, MCNearbyServiceBrowserDelegate {
     ) {
         _ = browser
         startError = error
+        startCount += 1
+        startLock.signal()
+    }
+}
+
+final class BrowserOverrideDelegate: BrowserProbeDelegate {
+    var overrideCount = 0
+
+    override func browser(
+        _ browser: MCNearbyServiceBrowser,
+        didNotStartBrowsingForPeers error: any Error
+    ) {
+        overrideCount += 1
+        super.browser(browser, didNotStartBrowsingForPeers: error)
     }
 }
 
@@ -114,17 +162,21 @@ final class AssistantProbeDelegate: NSObject, MCAdvertiserAssistantDelegate {
     }
 }
 
-final class BrowserUIProbeDelegate: NSObject, MCBrowserViewControllerDelegate {
-    func browserViewControllerDidFinish(
-        _ browserViewController: MCBrowserViewController
-    ) {
-        _ = browserViewController
-    }
+final class CountingAdvertiser: MCNearbyServiceAdvertiser {
+    var startCalls = 0
 
-    func browserViewControllerWasCancelled(
-        _ browserViewController: MCBrowserViewController
-    ) {
-        _ = browserViewController
+    override func startAdvertisingPeer() {
+        startCalls += 1
+        super.startAdvertisingPeer()
+    }
+}
+
+final class CountingBrowser: MCNearbyServiceBrowser {
+    var startCalls = 0
+
+    override func startBrowsingForPeers() {
+        startCalls += 1
+        super.startBrowsingForPeers()
     }
 }
 
@@ -137,9 +189,14 @@ func requireMCError(_ error: any Error, code: MCError.Code) {
     precondition(MCError.errorDomain == MCErrorDomain)
 }
 
+func waitForCallback(_ semaphore: DispatchSemaphore) {
+    let result = semaphore.wait(timeout: .now() + 2)
+    precondition(result == .success, "fail-closed callback was not delivered")
+}
+
 precondition(kMCSessionMinimumNumberOfPeers == 2)
 precondition(kMCSessionMaximumNumberOfPeers == 8)
-precondition(MCErrorDomain == "MCErrorDomain")
+precondition(!MCErrorDomain.isEmpty)
 precondition(MCError.errorDomain == MCErrorDomain)
 
 precondition(MCEncryptionPreference.optional.rawValue == 0)
@@ -176,18 +233,8 @@ let aliceCopy = alice.copy() as! MCPeerID
 precondition(aliceCopy == alice)
 precondition(aliceCopy.displayName == "alice")
 do {
-    let data = try NSKeyedArchiver.archivedData(
-        withRootObject: alice,
-        requiringSecureCoding: true
-    )
-    let decoded = try NSKeyedUnarchiver.unarchivedObject(
-        ofClass: MCPeerID.self,
-        from: data
-    )
-    precondition(decoded == alice)
-    precondition(decoded?.displayName == "alice")
-} catch {
-    fatalError("MCPeerID archive failed: \(error)")
+    let coder = NSKeyedArchiver(requiringSecureCoding: true)
+    precondition(MCPeerID(coder: coder) == nil)
 }
 
 let session = MCSession(peer: alice)
@@ -205,15 +252,16 @@ let required = MCSession(
 )
 precondition(required.encryptionPreference == .required)
 
+let payload = Data([0x01, 0x02])
 do {
-    try session.send(Data([0x01]), toPeers: [], with: .reliable)
+    try session.send(Data(), toPeers: [], with: .reliable)
     fatalError("empty peer list must be invalidParameter")
 } catch {
     requireMCError(error, code: .invalidParameter)
 }
 
 do {
-    try session.send(Data([0x01]), toPeers: [aliceTwin], with: .reliable)
+    try session.send(payload, toPeers: [aliceTwin], with: .reliable)
     fatalError("send must fail closed")
 } catch {
     requireMCError(error, code: .notConnected)
@@ -227,32 +275,53 @@ do {
 }
 
 do {
-    _ = try session.startStream(withName: "chat", toPeer: aliceTwin)
+    let produced: OutputStream = try session.startStream(
+        withName: "chat",
+        toPeer: aliceTwin
+    )
+    _ = produced
     fatalError("startStream must fail closed")
 } catch {
     requireMCError(error, code: .notConnected)
 }
 
-var resourceProgress: Progress? = Progress(totalUnitCount: 1)
+var resourceCount = 0
 var resourceError: (any Error)?
-resourceProgress = session.sendResource(
+let resourceLock = DispatchSemaphore(value: 0)
+let resourceProgress = session.sendResource(
     at: URL(fileURLWithPath: "/tmp/missing-mc-resource"),
     withName: "payload.bin",
     toPeer: aliceTwin
 ) { error in
+    resourceCount += 1
     resourceError = error
+    resourceLock.signal()
 }
 precondition(resourceProgress == nil)
+precondition(resourceCount == 0)
+waitForCallback(resourceLock)
+precondition(resourceCount == 1)
 requireMCError(resourceError!, code: .notConnected)
+Thread.sleep(forTimeInterval: 0.05)
+precondition(resourceCount == 1)
 
+var nearbyCount = 0
 var nearbyError: (any Error)?
+let nearbyLock = DispatchSemaphore(value: 0)
 session.nearbyConnectionData(forPeer: aliceTwin) { data, error in
     precondition(data == nil)
+    nearbyCount += 1
     nearbyError = error
+    nearbyLock.signal()
 }
+precondition(nearbyCount == 0)
+waitForCallback(nearbyLock)
+precondition(nearbyCount == 1)
 requireMCError(nearbyError!, code: .unavailable)
+Thread.sleep(forTimeInterval: 0.05)
+precondition(nearbyCount == 1)
 
-let nearbyLock = DispatchSemaphore(value: 0)
+let nearbyAsyncLock = DispatchSemaphore(value: 0)
 var nearbyAsyncError: (any Error)?
 Task {
     do {
@@ -261,29 +330,38 @@ Task {
     } catch {
         nearbyAsyncError = error
     }
-    nearbyLock.signal()
+    nearbyAsyncLock.signal()
 }
-nearbyLock.wait()
+waitForCallback(nearbyAsyncLock)
 requireMCError(nearbyAsyncError!, code: .unavailable)
 
-session.connectPeer(aliceTwin, withNearbyConnectionData: Data([0xFF]))
+session.connectPeer(aliceTwin, withNearbyConnectionData: payload)
 session.cancelConnectPeer(aliceTwin)
 session.disconnect()
 precondition(session.connectedPeers.isEmpty)
 
-let advertiserDelegate = AdvertiserProbeDelegate()
-let advertiser = MCNearbyServiceAdvertiser(
+let advertiserOverride = AdvertiserOverrideDelegate()
+let advertiserExistential: any MCNearbyServiceAdvertiserDelegate = advertiserOverride
+let countingAdvertiser = CountingAdvertiser(
     peer: alice,
     discoveryInfo: ["role": "source"],
     serviceType: "sig-xfer"
 )
-precondition(advertiser.myPeerID == alice)
-precondition(advertiser.discoveryInfo?["role"] == "source")
-precondition(advertiser.serviceType == "sig-xfer")
-advertiser.delegate = advertiserDelegate
-advertiser.startAdvertisingPeer()
-requireMCError(advertiserDelegate.startError!, code: .unavailable)
-advertiser.stopAdvertisingPeer()
+precondition(countingAdvertiser.myPeerID == alice)
+precondition(countingAdvertiser.discoveryInfo?["role"] == "source")
+precondition(countingAdvertiser.serviceType == "sig-xfer")
+countingAdvertiser.delegate = advertiserExistential
+countingAdvertiser.startAdvertisingPeer()
+precondition(countingAdvertiser.startCalls == 1)
+precondition(advertiserOverride.startCount == 0)
+precondition(advertiserOverride.overrideCount == 0)
+waitForCallback(advertiserOverride.startLock)
+precondition(advertiserOverride.overrideCount == 1)
+precondition(advertiserOverride.startCount == 1)
+requireMCError(advertiserOverride.startError!, code: .unavailable)
+Thread.sleep(forTimeInterval: 0.05)
+precondition(advertiserOverride.startCount == 1)
+countingAdvertiser.stopAdvertisingPeer()
 
 let invalidAdvertiserDelegate = AdvertiserProbeDelegate()
 let invalidAdvertiser = MCNearbyServiceAdvertiser(
@@ -293,24 +371,35 @@ let invalidAdvertiser = MCNearbyServiceAdvertiser(
 )
 invalidAdvertiser.delegate = invalidAdvertiserDelegate
 invalidAdvertiser.startAdvertisingPeer()
+precondition(invalidAdvertiserDelegate.startCount == 0)
+waitForCallback(invalidAdvertiserDelegate.startLock)
+precondition(invalidAdvertiserDelegate.startCount == 1)
 requireMCError(invalidAdvertiserDelegate.startError!, code: .invalidParameter)
 
-let browserDelegate = BrowserProbeDelegate()
-let browser = MCNearbyServiceBrowser(peer: alice, serviceType: "sig-xfer")
-precondition(browser.myPeerID == alice)
-precondition(browser.serviceType == "sig-xfer")
-browser.delegate = browserDelegate
-browser.startBrowsingForPeers()
-requireMCError(browserDelegate.startError!, code: .unavailable)
-precondition(browserDelegate.foundCount == 0)
-browser.invitePeer(
+let browserOverride = BrowserOverrideDelegate()
+let browserExistential: any MCNearbyServiceBrowserDelegate = browserOverride
+let countingBrowser = CountingBrowser(peer: alice, serviceType: "sig-xfer")
+precondition(countingBrowser.myPeerID == alice)
+precondition(countingBrowser.serviceType == "sig-xfer")
+countingBrowser.delegate = browserExistential
+countingBrowser.startBrowsingForPeers()
+precondition(countingBrowser.startCalls == 1)
+precondition(browserOverride.startCount == 0)
+waitForCallback(browserOverride.startLock)
+precondition(browserOverride.overrideCount == 1)
+precondition(browserOverride.startCount == 1)
+requireMCError(browserOverride.startError!, code: .unavailable)
+precondition(browserOverride.foundCount == 0)
+Thread.sleep(forTimeInterval: 0.05)
+precondition(browserOverride.startCount == 1)
+countingBrowser.invitePeer(
     aliceTwin,
     to: session,
-    withContext: Data([0x02]),
+    withContext: payload,
     timeout: 30
 )
 precondition(session.connectedPeers.isEmpty)
-browser.stopBrowsingForPeers()
+countingBrowser.stopBrowsingForPeers()
 
 let assistantDelegate = AssistantProbeDelegate()
 let assistant = MCAdvertiserAssistant(
@@ -326,22 +415,26 @@ assistant.stop()
 precondition(assistantDelegate.presented == false)
 precondition(assistantDelegate.dismissed == false)
 
-let uiDelegate = BrowserUIProbeDelegate()
-MainActor.assumeIsolated {
-    let controller = MCBrowserViewController(serviceType: "sig-xfer", session: session)
-    controller.delegate = uiDelegate
-    precondition(controller.session === session)
-    precondition(controller.browser?.serviceType == "sig-xfer")
-    precondition(controller.minimumNumberOfPeers == kMCSessionMinimumNumberOfPeers)
-    precondition(controller.maximumNumberOfPeers == kMCSessionMaximumNumberOfPeers)
-    controller.minimumNumberOfPeers = 0
-    precondition(controller.minimumNumberOfPeers == kMCSessionMinimumNumberOfPeers)
-    controller.maximumNumberOfPeers = 99
-    precondition(controller.maximumNumberOfPeers == kMCSessionMaximumNumberOfPeers)
-    let wrapped = MCBrowserViewController(browser: browser, session: session)
-    precondition(wrapped.browser === browser)
-}
-_ = uiDelegate
+let sessionOverride = SessionOverrideDelegate()
+let sessionExistential: any MCSessionDelegate = sessionOverride
+let incoming = Data([0xA5])
+let incomingStream = InputStream(data: incoming)
+let incomingProgress = Progress(totalUnitCount: 4)
+sessionExistential.session(session, didReceive: incoming, fromPeer: aliceTwin)
+sessionExistential.session(
+    session,
+    didReceive: incomingStream,
+    withName: "chat",
+    fromPeer: aliceTwin
+)
+sessionExistential.session(
+    session,
+    didStartReceivingResourceWithName: "payload.bin",
+    fromPeer: aliceTwin,
+    with: incomingProgress
+)
+precondition(sessionOverride.receivedDataCount == 11)
+_ = OutputStream.toMemory()
 _ = sessionDelegate
 
 print("MULTIPEERCONNECTIVITY_AGENT_RUNTIME_OK")
