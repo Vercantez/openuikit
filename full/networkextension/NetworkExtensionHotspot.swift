@@ -4,7 +4,7 @@ import Dispatch
 #if canImport(Security)
 import Security
 #endif
-#if canImport(AccessorySetupKit)
+#if (os(iOS) || os(Linux)) && canImport(AccessorySetupKit) && canImport(UIKit)
 import AccessorySetupKit
 #endif
 #if canImport(ExtensionFoundation)
@@ -261,16 +261,18 @@ open class NEHotspotConfigurationManager: NSObject {
         []
     }
 
-#if canImport(AccessorySetupKit)
+#if (os(iOS) || os(Linux)) && canImport(AccessorySetupKit) && canImport(UIKit)
     open func joinAccessoryHotspot(
-        _ accessory: ASAccessory,
+        _ accessory: AccessorySetupKit.ASAccessory,
         passphrase: String
     ) async throws {
         _ = (accessory, passphrase)
         throw NEHotspotConfigurationError.internal
     }
 
-    open func joinAccessoryHotspotWithoutSecurity(_ accessory: ASAccessory) async throws {
+    open func joinAccessoryHotspotWithoutSecurity(
+        _ accessory: AccessorySetupKit.ASAccessory
+    ) async throws {
         _ = accessory
         throw NEHotspotConfigurationError.internal
     }

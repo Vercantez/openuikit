@@ -2,6 +2,8 @@ import Foundation
 import Network
 import Security
 import ExtensionFoundation
+import AccessorySetupKit
+import UIKit
 @_spi(OpenUIKitHost) import NetworkExtension
 
 #if canImport(Darwin)
@@ -11,9 +13,10 @@ import Glibc
 #endif
 
 /// Future EC2 identity/ABI probe. This file is not part of the isolated Linux
-/// host gate. It requires real `Network`, `Security`, and `ExtensionFoundation`
-/// modules, then loads `libNetworkExtension.dylib` and exercises both the
-/// legacy NetworkExtension-owned `NW*` classes and the modern dependency types.
+/// host gate. It requires real `Network`, `Security`, `ExtensionFoundation`,
+/// `AccessorySetupKit`, and `UIKit` modules, then loads
+/// `libNetworkExtension.dylib` and exercises both the legacy
+/// NetworkExtension-owned `NW*` classes and the modern dependency types.
 ///
 /// Do not treat a local isolated-host compile as evidence that this probe passed.
 
@@ -74,6 +77,21 @@ private enum DependencyWitness {
     ) -> Void = { delegate, connection, completion in
         delegate.provideIdentity(for: connection, completionHandler: completion)
     }
+
+    static let joinAccessoryHotspot: (
+        NEHotspotConfigurationManager,
+        AccessorySetupKit.ASAccessory,
+        String
+    ) async throws -> Void = { manager, accessory, passphrase in
+        try await manager.joinAccessoryHotspot(accessory, passphrase: passphrase)
+    }
+
+    static let joinAccessoryHotspotWithoutSecurity: (
+        NEHotspotConfigurationManager,
+        AccessorySetupKit.ASAccessory
+    ) async throws -> Void = { manager, accessory in
+        try await manager.joinAccessoryHotspotWithoutSecurity(accessory)
+    }
 }
 
 private final class IdentityAuthDelegate: NSObject, NWTCPConnectionAuthenticationDelegate {}
@@ -98,6 +116,7 @@ enum NetworkExtensionDependencyIdentity {
         exerciseLegacyNetworkExtensionTypes()
         exerciseModernNetworkTypes()
         exerciseSecurityWitnesses()
+        exerciseAccessorySetupKitAndUIKitWitnesses()
         await exerciseExtensionFoundationTypes()
         await exerciseCallbackScheduling()
         inspectLoadedDylib()
@@ -167,6 +186,21 @@ enum NetworkExtensionDependencyIdentity {
         require(delegate.shouldProvideIdentity(for: connection) == false, "identity default drifted")
     }
 
+    static func exerciseAccessorySetupKitAndUIKitWitnesses() {
+        require(
+            ObjectIdentifier(ASAccessory.self)
+                == ObjectIdentifier(AccessorySetupKit.ASAccessory.self),
+            "ASAccessory is not the AccessorySetupKit type"
+        )
+        require(
+            ObjectIdentifier(UIView.self) == ObjectIdentifier(UIKit.UIView.self),
+            "UIView is not the UIKit type"
+        )
+        _ = DependencyWitness.joinAccessoryHotspot
+        _ = DependencyWitness.joinAccessoryHotspotWithoutSecurity
+        _ = UIView.self
+    }
+
     static func exerciseExtensionFoundationTypes() async {
         let configuration = NEURLFilterControlProviderConfiguration()
         _ = configuration
@@ -233,6 +267,14 @@ enum NetworkExtensionDependencyIdentity {
         require(
             dlsym(handle, "$s16NetworkExtension11NWInterfaceVMa") == nil,
             "libNetworkExtension.dylib defined NetworkExtension.NWInterface"
+        )
+        require(
+            dlsym(handle, "$s16NetworkExtension10ASAccessoryCMa") == nil,
+            "libNetworkExtension.dylib defined NetworkExtension.ASAccessory"
+        )
+        require(
+            dlsym(handle, "$s16NetworkExtension6UIViewCMa") == nil,
+            "libNetworkExtension.dylib defined NetworkExtension.UIView"
         )
     }
 }

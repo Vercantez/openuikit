@@ -19,9 +19,11 @@ import Security
 #if canImport(ExtensionFoundation)
 import ExtensionFoundation
 #endif
-#if canImport(AccessorySetupKit)
-import AccessorySetupKit
-#endif
+// AccessorySetupKit is not imported here. `ASAccessory` APIs live in
+// NetworkExtensionHotspot.swift and compile only under a usable combination:
+// `(os(iOS) || os(Linux)) && canImport(AccessorySetupKit) && canImport(UIKit)`.
+// `canImport(AccessorySetupKit)` alone is insufficient: macOS can see the
+// module, but `ASPickerDisplayItem` requires `UIKit/UIKit.h`.
 
 /// Portable Linux starting point for Apple's public `NetworkExtension` module.
 ///

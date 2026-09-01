@@ -55,16 +55,20 @@ placeholders. Coverage for those symbols is `declared` until an Apple-oracle
 probe records the exact strings.
 
 Members that require `Network.NWInterface` / `Network.NWParameters`,
-`SecIdentity` / `SecTrust`, `ASAccessory`, `NSXPCConnection`,
-`LocalizedStringResource`, or `AppExtension` are omitted from this isolated
-compile (`#if canImport`). This module never defines lookalike modern
-`Network` or `Security` types.
+`SecIdentity` / `SecTrust`, `NSXPCConnection`, `LocalizedStringResource`, or
+`AppExtension` are omitted from this isolated compile (`#if canImport`).
+`ASAccessory` hotspot joins compile only on iOS or Linux when both real
+`AccessorySetupKit` and canonical `UIKit` are importable; macOS is omitted
+because `AccessorySetupKit` there pulls `UIKit/UIKit.h`. This module never
+defines lookalike `ASAccessory`, `UIKit`, `Network`, `Security`, or
+`ExtensionFoundation` types.
 
 `tests/agent/NetworkExtensionDependencyIdentity.swift` is a **future EC2**
 probe. It is not compiled by `tests/acceptance/test_host.sh`. Integrated Linux
-success requires a cold build with real `Network`, `Security`, and
-`ExtensionFoundation` modules, a load test of `libNetworkExtension.dylib`, and
-a passing identity/ABI probe. This isolated host run is not that evidence.
+success requires a cold build with real `Network`, `Security`,
+`ExtensionFoundation`, `AccessorySetupKit`, and `UIKit` modules, a load test
+of `libNetworkExtension.dylib`, and a passing identity/ABI probe. This isolated
+host run is not that evidence.
 
 `tests/acceptance/test_host.sh` is the supplied gate: it seals the seed,
 checks coverage, builds `libNetworkExtension.dylib` with warnings-as-errors,
