@@ -126,6 +126,10 @@ FRAMEWORKS = (
     "SwiftData",
     "UserNotifications",
     "QuickLook",
+    "CoreMedia",
+    "AVFoundation",
+    "AVKit",
+    "Charts",
 )
 REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(f"-l{name}" for name in FRAMEWORKS)
 MODULE_DEPENDENCIES = (

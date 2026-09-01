@@ -76,6 +76,7 @@ struct AVFoundationHostRuntime {
         precondition(defaultExport.status == .failed)
 
         let outputURL = URL(fileURLWithPath: "/tmp/openav-host-output.mp4")
+        defer { try? FileManager.default.removeItem(at: outputURL) }
         AVFoundationPortable._installExportHandler { request in
             precondition(request.sourceURL == sourceURL)
             precondition(request.outputFileType == .mp4)

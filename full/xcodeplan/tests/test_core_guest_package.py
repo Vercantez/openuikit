@@ -98,6 +98,10 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "SwiftData",
                 "UserNotifications",
                 "QuickLook",
+                "CoreMedia",
+                "AVFoundation",
+                "AVKit",
+                "Charts",
                 "DeveloperToolsSupport",
             )
         )
@@ -141,6 +145,10 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "UserNotifications",
                 "QuickLook",
                 "_QuickLook_SwiftUI",
+                "CoreMedia",
+                "AVFoundation",
+                "AVKit",
+                "Charts",
             )
         )
         for relative in required_files:
@@ -314,6 +322,10 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lSwiftData",
                 "-lUserNotifications",
                 "-lQuickLook",
+                "-lCoreMedia",
+                "-lAVFoundation",
+                "-lAVKit",
+                "-lCharts",
             ],
             "format_version": 1,
             "compiler_plugins": compiler_plugins,
@@ -489,7 +501,15 @@ class CoreGuestPackageTests(unittest.TestCase):
                 self.write_manifest(self.manifest)
 
     def test_refuses_missing_first_party_module_dylib_or_link_argument(self) -> None:
-        for framework in ("Intents", "IntentsUI", "WebKit"):
+        for framework in (
+            "Intents",
+            "IntentsUI",
+            "WebKit",
+            "CoreMedia",
+            "AVFoundation",
+            "AVKit",
+            "Charts",
+        ):
             for relative in (
                 f"modules/{framework}.swiftmodule",
                 f"lib/lib{framework}.dylib",

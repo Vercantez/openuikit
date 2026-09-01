@@ -109,6 +109,10 @@ _REQUIRED_FRAMEWORKS = (
     "SwiftData",
     "UserNotifications",
     "QuickLook",
+    "CoreMedia",
+    "AVFoundation",
+    "AVKit",
+    "Charts",
 )
 _REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
     f"-l{name}" for name in _REQUIRED_FRAMEWORKS

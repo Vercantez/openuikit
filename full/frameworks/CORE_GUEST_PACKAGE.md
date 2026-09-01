@@ -14,8 +14,9 @@ LocalAuthentication, SafariServices, Network, StoreKit, AudioToolbox,
 CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI,
 MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog,
 UniformTypeIdentifiers, SwiftData, UserNotifications, QuickLook, and its
-`_QuickLook_SwiftUI` cross-import overlay. These are thirty-nine reusable ARM64
-Mach-O platform binaries (thirty-eight frameworks plus ICU), including real
+`_QuickLook_SwiftUI` cross-import overlay, CoreMedia, AVFoundation, AVKit, and
+Charts. These are forty-three reusable ARM64 Mach-O platform binaries
+(forty-two frameworks plus ICU), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
@@ -69,11 +70,11 @@ The semantic build order is deliberate:
    donation, resolution, and host-driven controller state.
 8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-9. Compile and link twenty-one app-facing first-party modules as independent ARM64
+9. Compile and link twenty-five app-facing first-party modules as independent ARM64
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
-10. Link all thirty-nine reusable platform dylibs (thirty-eight frameworks plus
+10. Link all forty-three reusable platform dylibs (forty-two frameworks plus
    ICU) and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.

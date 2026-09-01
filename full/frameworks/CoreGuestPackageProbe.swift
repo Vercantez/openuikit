@@ -32,6 +32,10 @@ import UniformTypeIdentifiers
 import SwiftData
 import UserNotifications
 import QuickLook
+import CoreMedia
+import AVFoundation
+import AVKit
+import Charts
 import WebKit
 
 private func coreRequireIndefiniteSymbolEffect<Effect>(_: Effect)
@@ -846,6 +850,62 @@ struct CoreGuestPackageProbe {
         let quickLookView = Text("quick-look")
             .quickLookPreview(quickLookBinding)
         withExtendedLifetime(quickLookView) {}
+
+        let halfSecond = CMTime(value: 1, timescale: 2)
+        let thirdSecond = CMTime(value: 1, timescale: 3)
+        precondition(
+            CMTimeAdd(halfSecond, thirdSecond)
+                == CMTime(value: 5, timescale: 6)
+        )
+        precondition(AVFoundationPortable.playbackCapability == .stateOnly)
+        precondition(AVFoundationPortable.exportCapability == .stateOnly)
+        let mediaPlayer = AVPlayer(
+            url: URL(fileURLWithPath: "/tmp/core-media.mp4")
+        )
+        mediaPlayer.seek(to: halfSecond)
+        precondition(mediaPlayer.currentTime() == halfSecond)
+        let videoController = UIHostingController(
+            rootView: VideoPlayer(player: mediaPlayer)
+        )
+        let videoRoot = videoController.view!
+        videoRoot.frame = CGRect(x: 0, y: 0, width: 160, height: 90)
+        videoRoot.layoutIfNeeded()
+        let videoStatus = coreDescendant(
+            videoRoot,
+            accessibilityIdentifier: "AVKit.VideoPlayer.status"
+        ) as? UILabel
+        precondition(videoStatus?.text == "core-media.mp4\nPaused")
+
+        switch ChartsPortable.renderingCapability {
+        case .basicMarks: break
+        }
+        switch ChartsPortable.interactionCapability {
+        case .unavailable: break
+        case .hostDriven:
+            preconditionFailure("Charts advertised an uninstalled host service")
+        }
+        let chartMark = RectangleMark(
+            xStart: .value("start", 0),
+            xEnd: .value("end", 1),
+            yStart: .value("base", 0),
+            yEnd: .value("count", 9)
+        )
+        precondition(chartMark.xStart == 0 && chartMark.xEnd == 1)
+        precondition(chartMark.yStart == 0 && chartMark.yEnd == 9)
+        precondition(ChartProxy().position(forX: 1) == nil)
+        let chartController = UIHostingController(
+            rootView: Chart {
+                LineMark(
+                    x: .value("day", 1),
+                    y: .value("count", 9)
+                )
+                .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
+            }
+        )
+        let chartRoot = chartController.view!
+        chartRoot.frame = CGRect(x: 0, y: 0, width: 160, height: 90)
+        chartRoot.layoutIfNeeded()
+        precondition(!chartRoot.subviews.isEmpty)
         let addController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
         precondition(
             type(of: addController).presentationCapability == .hostDriven
@@ -876,7 +936,7 @@ struct CoreGuestPackageProbe {
                 + "graphics=coreimage,quartzcore "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-21 oslog=standard-error,signposts "
+                + "first-party=portable-25 oslog=standard-error,signposts "
                 + "security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "
                 + "commoncrypto=sha256 "
@@ -884,6 +944,8 @@ struct CoreGuestPackageProbe {
                 + "swiftdata=volatile,fail-closed-durable "
                 + "usernotifications=fail-closed,volatile "
                 + "quicklook=local-image,host-driven "
+                + "media=rational,state,host-driven,fail-closed "
+                + "charts=basic,fail-closed "
                 + "webkit=engine-unavailable preview=\(preview)"
         )
     }
