@@ -4,12 +4,15 @@ import UIKit
 #error(
     "Social imports the canonical UIKit module; OpenUIKit is only a staged implementation dependency. Stage OpenUIKit as UIKit before compiling Social."
 )
-#else
+#elseif SOCIAL_STANDALONE_TEST_FIXTURES
 import Foundation
 
-// Isolated standalone-host configuration.
-// These types exist only when the canonical UIKit module is absent. They are
-// not production Social ABI. The sealed leaf gate result is standalone-only.
+// standalone-unit-fixture-only
+// These nominal UIKit identities exist only when compiling with
+// `-D SOCIAL_STANDALONE_TEST_FIXTURES`. They are not production Social ABI.
+// Ordinary production compilation without UIKit must fail instead of
+// publishing Social.UIView / Social.UIViewController / Social.UIImage /
+// Social.UITextView / Social.UITextViewDelegate.
 
 @MainActor
 public protocol UITextViewDelegate: AnyObject {
@@ -46,4 +49,8 @@ open class UITextView: UIView {
     public weak var delegate: UITextViewDelegate?
     public var text: String = ""
 }
+#else
+#error(
+    "Social requires the canonical UIKit module. Missing UIKit is a production dependency blocker. Isolated tests must compile with -D SOCIAL_STANDALONE_TEST_FIXTURES; that dylib is standalone-unit-fixture-only and must not be treated as production Social ABI. Social must never silently acquire UIView, UIViewController, UIImage, UITextView, or UITextViewDelegate."
+)
 #endif

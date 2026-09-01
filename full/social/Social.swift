@@ -8,8 +8,17 @@ import Foundation
 /// compose UI are fail-closed or partial host hooks.
 ///
 /// Production Social imports the canonical `UIKit` module and `Accounts`.
-/// Fallback UIKit/Accounts types exist only in the sealed standalone host
-/// compile, where `canImport(UIKit)` is false; they are not production ABI.
+/// Fallback UIKit/Accounts types exist only when compiling with
+/// `-D SOCIAL_STANDALONE_TEST_FIXTURES` (standalone-unit-fixture-only).
+/// Ordinary production compilation without those modules is a dependency
+/// blocker and must not publish Social-owned UIKit or Accounts identities.
+
+#if SOCIAL_STANDALONE_TEST_FIXTURES
+/// Present only in the isolated fixture compile. Not production Social ABI.
+public enum SocialStandaloneUnitFixture {
+    public static let marker = "standalone-unit-fixture-only"
+}
+#endif
 
 /// Identifies Facebook as an `SLRequest` / compose service type.
 ///

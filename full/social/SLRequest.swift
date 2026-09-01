@@ -6,17 +6,17 @@ import FoundationNetworking
 
 #if canImport(Accounts)
 import Accounts
-#elseif canImport(UIKit)
-#error(
-    "Accounts is not staged. Refusing to declare Social.ACAccount. This is an integration blocker."
-)
-#else
-/// Isolated standalone-host configuration only. Not production Social ABI.
+#elseif SOCIAL_STANDALONE_TEST_FIXTURES
+/// standalone-unit-fixture-only. Not production Social ABI.
 open class ACAccount: NSObject {
     public override init() {
         super.init()
     }
 }
+#else
+#error(
+    "Social requires the Accounts module for SLRequest.account. Accounts is not staged in the shared platform. This is an integration blocker. Isolated tests must compile with -D SOCIAL_STANDALONE_TEST_FIXTURES; that configuration is standalone-unit-fixture-only. Social.ACAccount is forbidden as production ABI."
+)
 #endif
 
 /// Completion callback for `SLRequest.perform(handler:)`.
@@ -50,6 +50,18 @@ open class SLRequest: NSObject {
 
     @_spi(OpenUIKitHost)
     public private(set) var hostMultipartParts: [MultipartPart] = []
+
+    /// Ordered boundary candidates for isolated tests. Each candidate is
+    /// collision-checked against parameter names/values and part metadata/data.
+    /// Production uses `nil` and generates UUID candidates; every returned
+    /// boundary has been collision-tested. Never returns an unchecked fallback.
+    @_spi(OpenUIKitHost)
+    nonisolated(unsafe) public static var hostMultipartBoundaryCandidates: [String]? = nil
+
+    @_spi(OpenUIKitHost)
+    public static func hostResetMultipartBoundaryCandidates() {
+        hostMultipartBoundaryCandidates = nil
+    }
 
     public init!(
         forServiceType serviceType: String!,
@@ -196,9 +208,15 @@ open class SLRequest: NSObject {
     }
 
     private static func isSafeMultipartToken(_ string: String) -> Bool {
-        !string.contains(where: { character in
-            character == "\r" || character == "\n" || character == "\""
-        })
+        !string.isEmpty
+            && !string.contains(where: { character in
+                character == "\r" || character == "\n" || character == "\""
+            })
+    }
+
+    /// Multipart `Content-Disposition` field names, including parameter keys.
+    private static func multipartFieldName(_ string: String) -> String? {
+        isSafeMultipartToken(string) ? string : nil
     }
 
     private static func urlByAppendingQueryItems(
@@ -215,10 +233,10 @@ open class SLRequest: NSObject {
         return components.url ?? url
     }
 
-    private static func multipartBoundary(
+    private static func multipartHaystack(
         parameters: [URLQueryItem],
         parts: [MultipartPart]
-    ) -> String {
+    ) -> Data {
         var haystack = Data()
         for item in parameters {
             haystack.append(Data(item.name.utf8))
@@ -236,14 +254,45 @@ open class SLRequest: NSObject {
                 haystack.append(Data(filename.utf8))
             }
         }
-        for attempt in 0..<16 {
+        return haystack
+    }
+
+    private static func isCollisionFreeBoundary(_ boundary: String, haystack: Data) -> Bool {
+        guard isSafeMultipartToken(boundary) else { return false }
+        return haystack.range(of: Data(boundary.utf8)) == nil
+    }
+
+    /// Yields injected test candidates first, then UUID candidates forever.
+    /// Every value still has to pass `isCollisionFreeBoundary`.
+    private static func multipartBoundaryCandidateSource() -> AnyIterator<String> {
+        let forced = hostMultipartBoundaryCandidates ?? []
+        var forcedIndex = 0
+        var attempt = 0
+        return AnyIterator {
+            if forcedIndex < forced.count {
+                let candidate = forced[forcedIndex]
+                forcedIndex += 1
+                return candidate
+            }
             let token = UUID().uuidString.replacingOccurrences(of: "-", with: "")
             let boundary = "Boundary\(token)\(attempt)"
-            if haystack.range(of: Data(boundary.utf8)) == nil {
-                return boundary
+            attempt += 1
+            return boundary
+        }
+    }
+
+    private static func multipartBoundary(
+        parameters: [URLQueryItem],
+        parts: [MultipartPart]
+    ) -> String {
+        let haystack = multipartHaystack(parameters: parameters, parts: parts)
+        var candidates = multipartBoundaryCandidateSource()
+        while let candidate = candidates.next() {
+            if isCollisionFreeBoundary(candidate, haystack: haystack) {
+                return candidate
             }
         }
-        return "Boundary\(UUID().uuidString.replacingOccurrences(of: "-", with: ""))\(haystack.count)"
+        fatalError("Social multipart boundary generation produced no candidate")
     }
 
     private static func multipartBody(
@@ -254,10 +303,11 @@ open class SLRequest: NSObject {
         var body = Data()
         let crlf = "\r\n"
         for item in parameters {
+            guard let name = multipartFieldName(item.name) else { continue }
             body.append(Data("--\(boundary)\(crlf)".utf8))
             body.append(
                 Data(
-                    "Content-Disposition: form-data; name=\"\(item.name)\"\(crlf)\(crlf)"
+                    "Content-Disposition: form-data; name=\"\(name)\"\(crlf)\(crlf)"
                         .utf8
                 )
             )
@@ -265,13 +315,14 @@ open class SLRequest: NSObject {
             body.append(Data(crlf.utf8))
         }
         for part in parts {
+            guard let name = multipartFieldName(part.name) else { continue }
             body.append(Data("--\(boundary)\(crlf)".utf8))
-            var disposition = "Content-Disposition: form-data; name=\"\(part.name)\""
-            if let filename = part.filename {
+            var disposition = "Content-Disposition: form-data; name=\"\(name)\""
+            if let filename = part.filename, isSafeMultipartToken(filename) {
                 disposition += "; filename=\"\(filename)\""
             }
             body.append(Data("\(disposition)\(crlf)".utf8))
-            if let type = part.type {
+            if let type = part.type, isSafeMultipartToken(type) {
                 body.append(Data("Content-Type: \(type)\(crlf)".utf8))
             }
             body.append(Data(crlf.utf8))
