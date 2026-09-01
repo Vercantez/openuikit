@@ -40,6 +40,7 @@ SF=${SF:-$W/scratch/swift-foundation}
 SC=${SC:-$W/scratch/swift-collections}
 BASE_RUNTIME_SOURCE=${BASE_RUNTIME_SOURCE:-$W/scratch/mrroot}
 FE_RUNTIME_SOURCE=${FE_RUNTIME_SOURCE:-$W/scratch/mrroot_fe}
+SWIFT_CORE_RUNTIME_STAGER=$W/full/scripts/stage_swift_core_runtime.py
 FE_BUILD=$OUT/foundation
 FE_OUT=$FE_BUILD/essentials
 FE_COLLECTIONS=$FE_BUILD/collections
@@ -80,7 +81,8 @@ mkdir -p "$OUT" "$MC" "$FE_OUT" "$FE_COLLECTIONS" "$FE_OS" "$FE_CSHIMS"
 # These files are commit markers for a completely successful build. Remove
 # them before mutating any output, so a failed or interrupted rebuild can never
 # leave yesterday's attestation blessing today's partial binary.
-rm -f "$OUT/uihelpers-subject.sha256" "$OUT/uihelpers-artifacts.sha256"
+rm -f "$OUT/uihelpers-subject.sha256" "$OUT/uihelpers-artifacts.sha256" \
+    "$OUT/swift-core-runtime-stage.json"
 
 APPLE_SWIFT_OVERLAY_FLAGS=()
 if [ -n "$APPLE_SWIFT_USER_OVERLAYS" ]; then
@@ -189,6 +191,8 @@ fi
 # before machorun's heap-below-2^47 fix (9659e73) reproduced a bug that had
 # been fixed upstream hours earlier.
 MACHORUN=${MACHORUN:-/machorun}
+SWIFT_CORE_RUNTIME_SOURCE=${SWIFT_CORE_RUNTIME_SOURCE:-$MACHORUN/darwin/usr/lib/swift/libswiftCore.dylib}
+SWIFT_CORE_RUNTIME_EXPECTED_SHA256=${SWIFT_CORE_RUNTIME_EXPECTED_SHA256:-}
 # REFUSE WITHOUT THE MOUNT, rather than silently building half a root.
 # Measured 2026-08-27: invoked without `-v ~/machorun:/machorun:ro`, every `-nt`
 # test below compares against a path that does not exist and is therefore FALSE,
@@ -197,7 +201,9 @@ MACHORUN=${MACHORUN:-/machorun}
 # to contain. That is the same class as the half-and-half root the comment above
 # describes, except it leaves no trace at all. The docs' own §5 reproduce command
 # omitted the mount, so this was reachable by following the instructions.
-for req in "$MACHORUN/build/machorun" "$MACHORUN/darwin/usr/lib/libSystem.B.dylib"; do
+for req in "$MACHORUN/build/machorun" \
+    "$MACHORUN/darwin/usr/lib/libSystem.B.dylib" \
+    "$SWIFT_CORE_RUNTIME_SOURCE"; do
     [ -e "$req" ] && continue
     cat >&2 <<EOF
 
@@ -216,6 +222,19 @@ build_full: REFUSING TO BUILD -- $req is missing.
 EOF
     exit 2
 done
+[ -f "$SWIFT_CORE_RUNTIME_STAGER" ] && [ ! -L "$SWIFT_CORE_RUNTIME_STAGER" ] \
+    || { echo "build_full: Swift core runtime stager is missing: $SWIFT_CORE_RUNTIME_STAGER" >&2; exit 2; }
+if [ -z "$SWIFT_CORE_RUNTIME_EXPECTED_SHA256" ]; then
+    SWIFT_CORE_RUNTIME_EXPECTED_SHA256=$(sha256sum \
+        "$SWIFT_CORE_RUNTIME_SOURCE" | awk '{print $1}')
+fi
+[ "${#SWIFT_CORE_RUNTIME_EXPECTED_SHA256}" -eq 64 ] \
+    || { echo 'build_full: Swift core expected SHA-256 must be lowercase 64-hex' >&2; exit 2; }
+case "$SWIFT_CORE_RUNTIME_EXPECTED_SHA256" in
+    *[!0-9a-f]*)
+        echo 'build_full: Swift core expected SHA-256 must be lowercase 64-hex' >&2
+        exit 2 ;;
+esac
 # RE-STAGED WHENEVER THE LOADER MOVES, not only when the root is missing.
 # Staging on first creation only was not enough, and the gap was not
 # theoretical: the umbrellas below are rebuilt from machorun's CURRENT
@@ -230,13 +249,16 @@ if [ ! -d "$ROOTDIR" ] || [ "$MACHORUN/build/machorun" -nt "$ROOTDIR/machorun" ]
     echo "== staging guest root from $MACHORUN"
     mkdir -p "$ROOTDIR/darwin/usr/lib/swift"
     cp "$MACHORUN/build/machorun" "$ROOTDIR/machorun"
-    # The Swift runtime dylibs and the Foundation/CoreFoundation loud-abort
-    # stubs are NOT machorun's -- they are the spike's staged Apple simulator
-    # runtime and shims (docs/RUNTIME.md §4), so they come from the explicit
-    # base runtime source. Keeping this input configurable also avoids nested
-    # Docker Desktop bind mounts, which can disappear during long compiler jobs.
+    # ObjectiveC/Concurrency and the Foundation/CoreFoundation loud-abort stubs
+    # come from the explicit spike runtime. libswiftCore comes from the current
+    # machorun runtime below: the SDK TBD and compiler can promise availability
+    # entry points that an older spike copy does not implement, and Mach-O
+    # two-level binding makes a same-named export in another image irrelevant.
     [ -d "$BASE_RUNTIME_SOURCE/darwin/System" ] && cp -R "$BASE_RUNTIME_SOURCE/darwin/System" "$ROOTDIR/darwin/"
-    cp "$BASE_RUNTIME_SOURCE/darwin/usr/lib/swift/"*.dylib "$ROOTDIR/darwin/usr/lib/swift/"
+    for runtime in "$BASE_RUNTIME_SOURCE/darwin/usr/lib/swift/"*.dylib; do
+        [ "$(basename "$runtime")" = libswiftCore.dylib ] && continue
+        cp "$runtime" "$ROOTDIR/darwin/usr/lib/swift/"
+    done
     cp "$BASE_RUNTIME_SOURCE/darwin/usr/lib/libswiftcompat.dylib" "$ROOTDIR/darwin/usr/lib/"
     for d in "$MACHORUN/darwin/usr/lib/"*.dylib; do
         # NOT libquartz: machorun's is an older sync of ~/quartz and is rebuilt
@@ -251,20 +273,27 @@ if [ ! -d "$ROOTDIR" ] || [ "$MACHORUN/build/machorun" -nt "$ROOTDIR/machorun" ]
     done
 fi
 
-# The three Swift runtime dylibs are NOT machorun copies. They come from the
-# spike's recorded Apple-runtime root, and that source can change without the
-# machorun loader changing. Synchronise them independently of the root-staging
-# condition above; otherwise a second build rewrites the manifest with the new
-# source digest while leaving the old runtime bytes in place, and its own
-# freshness guard can never become green.
+# Synchronise every runtime independently of the root-staging condition above.
+# ObjectiveC/Concurrency remain recorded spike inputs. libswiftCore is the
+# current canonical machorun input and is synchronised separately so an old
+# spike copy can never silently overwrite its SDK-facing ABI.
 for d in "$BASE_RUNTIME_SOURCE/darwin/usr/lib/swift/"*.dylib; do
     [ -f "$d" ] || { echo "build_full: no staged Swift runtime dylibs in $BASE_RUNTIME_SOURCE" >&2; exit 2; }
+    [ "$(basename "$d")" = libswiftCore.dylib ] && continue
     target="$ROOTDIR/darwin/usr/lib/swift/$(basename "$d")"
     if ! cmp -s "$d" "$target"; then
         echo "== restaging $(basename "$d") from scratch/mrroot"
         cp "$d" "$target"
     fi
 done
+swift_core_target=$ROOTDIR/darwin/usr/lib/swift/libswiftCore.dylib
+echo '== staging libswiftCore.dylib from current machorun runtime'
+python3 -B "$SWIFT_CORE_RUNTIME_STAGER" \
+    --canonical "$SWIFT_CORE_RUNTIME_SOURCE" \
+    --base "$BASE_RUNTIME_SOURCE/darwin/usr/lib/swift/libswiftCore.dylib" \
+    --destination "$swift_core_target" \
+    --expected-sha256 "$SWIFT_CORE_RUNTIME_EXPECTED_SHA256" \
+    --report "$OUT/swift-core-runtime-stage.json"
 SWIFTCOMPAT=$ROOTDIR/darwin/usr/lib/libswiftcompat.dylib
 
 # FoundationEssentials pulls this nine-dylib Swift overlay closure. The source
@@ -487,19 +516,11 @@ echo "== manifest ($ROOTDIR/.manifest)"
     for n in libc++abi.dylib libobjc.A.dylib libswiftcompat.dylib; do
         printf 'copy\tdarwin/usr/lib/%s\tdarwin/usr/lib/%s\n' "$n" "$n"
     done
-    for n in libswiftCore.dylib libswiftObjectiveC.dylib libswift_Concurrency.dylib; do
+    printf 'copy\tdarwin/usr/lib/swift/libswiftCore.dylib\tdarwin/usr/lib/swift/libswiftCore.dylib\n'
+    for n in libswiftObjectiveC.dylib libswift_Concurrency.dylib; do
         source="$BASE_RUNTIME_SOURCE/darwin/usr/lib/swift/$n"
         source_sha=$(shasum -a 256 "$source" | cut -d' ' -f1)
-        if [ "$n" = libswiftCore.dylib ]; then
-            # machorun now also carries a DIFFERENT libswiftCore. This full root
-            # intentionally overrides it with the spike runtime, so the final
-            # field accounts for that upstream path without pretending the
-            # bytes are a copy of it.
-            printf 'staged\tdarwin/usr/lib/swift/%s\t%s\t%s\tdarwin/usr/lib/swift/%s\n' \
-                "$n" "$source_sha" "$source" "$n"
-        else
-            printf 'staged\tdarwin/usr/lib/swift/%s\t%s\t%s\n' "$n" "$source_sha" "$source"
-        fi
+        printf 'staged\tdarwin/usr/lib/swift/%s\t%s\t%s\n' "$n" "$source_sha" "$source"
     done
     for n in "${FE_OVERLAYS[@]}"; do
         source="$FE_RUNTIME_SOURCE/darwin/usr/lib/swift/$n"

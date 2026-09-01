@@ -27,6 +27,7 @@ FOUNDATION_DATA_PLATFORM_GOLDEN = (
     REPO / "full/foundation/tests/foundation-data-platform-apple-2026-08-31.txt"
 )
 BUILD_FULL = REPO / "full/scripts/build_full.sh"
+SWIFT_CORE_STAGER = REPO / "full/scripts/stage_swift_core_runtime.py"
 HOST_WRAPPER = HERE / "run_core_guest_package_docker.sh"
 PHYSICAL_REPLAY_TOOL = HERE / "physical_replay.py"
 SINGLE_BIND_GUEST_ROOT_SMOKE = HERE / "test_single_bind_guest_root_docker.sh"
@@ -271,6 +272,7 @@ def validate_swift_core_runtime_contract(builder: str, wrapper: str) -> None:
         '[ "$swift_core_runtime_symbol_count" -eq 1 ]',
         "format\\tswift-core-runtime-contract-v1",
         "attestation/swift-core-runtime.tsv",
+        "attestation/build-full-swift-core-stage.json",
         "post-machorun-Swift-core",
     )
     wrapper_required = (
@@ -286,6 +288,29 @@ def validate_swift_core_runtime_contract(builder: str, wrapper: str) -> None:
     missing.extend(token for token in wrapper_required if token not in wrapper)
     if missing:
         raise AssertionError(f"Swift core runtime contract drifted: {missing}")
+
+
+def validate_build_full_swift_core_source(source: str) -> None:
+    required = (
+        "SWIFT_CORE_RUNTIME_SOURCE=${SWIFT_CORE_RUNTIME_SOURCE:-$MACHORUN/darwin/usr/lib/swift/libswiftCore.dylib}",
+        "SWIFT_CORE_RUNTIME_EXPECTED_SHA256=",
+        'python3 -B "$SWIFT_CORE_RUNTIME_STAGER"',
+        '--base "$BASE_RUNTIME_SOURCE/darwin/usr/lib/swift/libswiftCore.dylib"',
+        '--expected-sha256 "$SWIFT_CORE_RUNTIME_EXPECTED_SHA256"',
+        '--report "$OUT/swift-core-runtime-stage.json"',
+        '[ "$(basename "$d")" = libswiftCore.dylib ] && continue',
+        "staging libswiftCore.dylib from current machorun runtime",
+        "copy\\tdarwin/usr/lib/swift/libswiftCore.dylib\\tdarwin/usr/lib/swift/libswiftCore.dylib",
+    )
+    missing = [token for token in required if token not in source]
+    if missing:
+        raise AssertionError(f"build_full Swift core source drifted: {missing}")
+    stale_override = (
+        "for n in libswiftCore.dylib libswiftObjectiveC.dylib "
+        "libswift_Concurrency.dylib"
+    )
+    if stale_override in source:
+        raise AssertionError("build_full Swift core source retained stale override")
 
 
 def validate_foundation_runtime_links(source: str) -> None:
@@ -2139,8 +2164,10 @@ class ShellContractTests(unittest.TestCase):
         source = HOST_WRAPPER.read_text(encoding="utf-8")
         helper = PHYSICAL_REPLAY_TOOL.read_text(encoding="utf-8")
         builder = BUILDER.read_text(encoding="utf-8")
+        build_full = BUILD_FULL.read_text(encoding="utf-8")
         validate_core_single_bind_contract(source)
         validate_swift_core_runtime_contract(builder, source)
+        validate_build_full_swift_core_source(build_full)
         self.assertIn(
             "EXPECTED_MACHORUN_COMMIT="
             "edb99a8574255ddc4c979b2f0cf2615033ff14fd",
@@ -2252,6 +2279,95 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn('"$BUILD_FE_CACHE"', BUILDER.read_text(encoding="utf-8"))
         self.assertIn("sdk_dangling_symlink_exclusions.tsv", BUILDER.read_text(encoding="utf-8"))
         self.assertIn("sdk-dangling-symlinks.tsv", BUILDER.read_text(encoding="utf-8"))
+
+    def test_swift_core_stager_overrides_a_precisely_mixed_base_root(self) -> None:
+        source = BUILD_FULL.read_text(encoding="utf-8")
+        validate_build_full_swift_core_source(source)
+        mutations = (
+            source.replace(
+                '[ "$(basename "$d")" = libswiftCore.dylib ] && continue',
+                "",
+                1,
+            ),
+            source.replace(
+                '--base "$BASE_RUNTIME_SOURCE/darwin/usr/lib/swift/libswiftCore.dylib"',
+                "--base /unattested/libswiftCore.dylib",
+                1,
+            ),
+        )
+        for mutation in mutations:
+            with self.subTest():
+                with self.assertRaisesRegex(AssertionError, "build_full Swift core"):
+                    validate_build_full_swift_core_source(mutation)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            canonical = root / "canonical/libswiftCore.dylib"
+            stale_base = root / "staged-mrroot/libswiftCore.dylib"
+            destination = root / "mrroot-full/libswiftCore.dylib"
+            report = root / "swift-core-runtime-stage.json"
+            write_file(canonical, b"canonical-dd016-runtime")
+            write_file(stale_base, b"stale-583c-runtime")
+            write_file(destination, b"preexisting-stale-runtime")
+            expected = sha256(canonical)
+            result = subprocess.run(
+                [
+                    "python3",
+                    "-B",
+                    str(SWIFT_CORE_STAGER),
+                    "--canonical",
+                    str(canonical),
+                    "--base",
+                    str(stale_base),
+                    "--destination",
+                    str(destination),
+                    "--expected-sha256",
+                    expected,
+                    "--report",
+                    str(report),
+                ],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(destination.read_bytes(), canonical.read_bytes())
+            payload = json.loads(report.read_text(encoding="utf-8"))
+            self.assertEqual(payload["format"], "swift-core-runtime-stage-v1")
+            self.assertFalse(payload["base_matches_canonical"])
+            self.assertEqual(payload["base_sha256"], sha256(stale_base))
+            self.assertEqual(payload["canonical_sha256"], expected)
+            self.assertEqual(payload["staged_sha256"], expected)
+
+            refused_destination = root / "refused/libswiftCore.dylib"
+            write_file(refused_destination, b"must-remain-untouched")
+            refused = subprocess.run(
+                [
+                    "python3",
+                    "-B",
+                    str(SWIFT_CORE_STAGER),
+                    "--canonical",
+                    str(canonical),
+                    "--base",
+                    str(stale_base),
+                    "--destination",
+                    str(refused_destination),
+                    "--expected-sha256",
+                    "0" * 64,
+                    "--report",
+                    str(root / "refused.json"),
+                ],
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=False,
+            )
+            self.assertEqual(refused.returncode, 2)
+            self.assertIn("canonical Swift core hash", refused.stderr)
+            self.assertEqual(
+                refused_destination.read_bytes(), b"must-remain-untouched"
+            )
 
     def test_single_bind_control_refuses_nested_tmpfs_and_missing_fresh_path(self) -> None:
         source = HOST_WRAPPER.read_text(encoding="utf-8")
