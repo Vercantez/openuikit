@@ -3,25 +3,18 @@ import Foundation
 import FoundationNetworking
 #endif
 
-/// Process-local File Provider manager. Domain add/remove/list and placeholder
-/// helpers are real. Daemon, Files.app, and testing-harness calls fail closed.
+/// File Provider manager. Domain add/remove/list and daemon operations fail
+/// closed unless a Linux `FileProviderHostAdapter` is installed. Public APIs
+/// never post system-style success notifications on the unhosted path.
 open class NSFileProviderManager: NSObject, @unchecked Sendable {
     public enum DomainRemovalMode: Int, Hashable, Sendable {
         case removeAll = 0
     }
 
-    private static let registryLock = NSLock()
-    nonisolated(unsafe) private static var registeredDomains: [String: NSFileProviderDomain] = [:]
     private static let defaultManagerStorage = NSFileProviderManager(
         providerIdentifier: FileProviderHost.unhostedProviderIdentifier,
         domain: nil
     )
-
-    private static func withRegistry<T>(_ body: () -> T) -> T {
-        registryLock.lock()
-        defer { registryLock.unlock() }
-        return body()
-    }
 
     public class var `default`: NSFileProviderManager {
         defaultManagerStorage
@@ -36,6 +29,9 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
     }
 
     public convenience init?(forDomain domain: NSFileProviderDomain) {
+        guard FileProviderHostRegistry.currentAdapter() != nil else {
+            return nil
+        }
         self.init(
             providerIdentifier: FileProviderHost.unhostedProviderIdentifier,
             domain: domain
@@ -57,38 +53,61 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
     }
 
     public class func add(_ domain: NSFileProviderDomain) async throws {
-        withRegistry { registeredDomains[domain.identifier.rawValue] = domain }
-        NotificationCenter.default.post(name: .fileProviderDomainDidChange, object: domain)
+        guard let adapter = FileProviderHostRegistry.currentAdapter() else {
+            throw FileProviderHost.unsupported(.providerNotFound)
+        }
+        try await adapter.addDomain(domain)
     }
 
     public class func domains() async throws -> [NSFileProviderDomain] {
-        withRegistry { Array(registeredDomains.values) }
+        guard let adapter = FileProviderHostRegistry.currentAdapter() else {
+            throw FileProviderHost.unsupported(.providerNotFound)
+        }
+        return try await adapter.domains()
     }
 
     public class func remove(_ domain: NSFileProviderDomain) async throws {
-        withRegistry { _ = registeredDomains.removeValue(forKey: domain.identifier.rawValue) }
-        NotificationCenter.default.post(name: .fileProviderDomainDidChange, object: domain)
+        guard let adapter = FileProviderHostRegistry.currentAdapter() else {
+            throw FileProviderHost.unsupported(.providerNotFound)
+        }
+        try await adapter.removeDomain(domain)
     }
 
     public class func remove(
         _ domain: NSFileProviderDomain,
         mode: DomainRemovalMode
     ) async throws -> URL? {
-        _ = mode
-        try await remove(domain)
-        return nil
+        guard let adapter = FileProviderHostRegistry.currentAdapter() else {
+            throw FileProviderHost.unsupported(.providerNotFound)
+        }
+        return try await adapter.removeDomain(domain, mode: mode)
     }
 
     public class func removeAllDomains(completionHandler: @escaping ((any Error)?) -> Void) {
-        withRegistry { registeredDomains.removeAll() }
-        NotificationCenter.default.post(name: .fileProviderDomainDidChange, object: nil)
-        completionHandler(nil)
+        let once = FileProviderCallback.Once()
+        FileProviderCallback.queue.async {
+            guard let adapter = FileProviderHostRegistry.currentAdapter() else {
+                once.run {
+                    completionHandler(FileProviderHost.unsupported(.providerNotFound))
+                }
+                return
+            }
+            Task {
+                do {
+                    try await adapter.removeAllDomains()
+                    once.run { completionHandler(nil) }
+                } catch {
+                    once.run { completionHandler(error) }
+                }
+            }
+        }
     }
 
     public class func `import`(
         _ domain: NSFileProviderDomain,
         fromDirectoryAt url: URL
     ) async throws {
+        _ = domain
         _ = url
         throw FileProviderHost.unsupported(.applicationExtensionNotFound)
     }
@@ -102,7 +121,10 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
         ) -> Void
     ) {
         _ = url
-        completionHandler(nil, nil, FileProviderHost.unsupported())
+        let once = FileProviderCallback.Once()
+        FileProviderCallback.asyncOnce(once) {
+            completionHandler(nil, nil, FileProviderHost.unsupported())
+        }
     }
 
     public class func placeholderURL(for url: URL) -> URL {
@@ -113,13 +135,10 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
         at placeholderURL: URL,
         withMetadata metadata: NSFileProviderItem
     ) throws {
-        let payload: [String: String] = [
-            "itemIdentifier": metadata.itemIdentifier.rawValue,
-            "parentItemIdentifier": metadata.parentItemIdentifier.rawValue,
-            "filename": metadata.filename,
-        ]
-        let data = try JSONSerialization.data(withJSONObject: payload, options: [.sortedKeys])
-        try data.write(to: placeholderURL, options: .atomic)
+        guard let adapter = FileProviderHostRegistry.currentAdapter() else {
+            throw FileProviderHost.unsupported(.providerNotFound)
+        }
+        try adapter.writePlaceholder(at: placeholderURL, metadata: metadata)
     }
 
     public func enumeratorForMaterializedItems() -> any NSFileProviderEnumerator {
@@ -135,15 +154,33 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
         throw FileProviderHost.unsupported(.nonEvictable)
     }
 
+#if canImport(UniformTypeIdentifiers)
     public func getService(
         named serviceName: NSFileProviderServiceName,
         for itemIdentifier: NSFileProviderItemIdentifier,
-        completionHandler: @escaping (NSFileProviderService?, (any Error)?) -> Void
+        completionHandler: @escaping (Foundation.NSFileProviderService?, (any Error)?) -> Void
     ) {
         _ = serviceName
         _ = itemIdentifier
-        completionHandler(nil, FileProviderHost.unsupported())
+        let once = FileProviderCallback.Once()
+        FileProviderCallback.asyncOnce(once) {
+            completionHandler(nil, FileProviderHost.unsupported())
+        }
     }
+#else
+    public func getService(
+        named serviceName: NSFileProviderServiceName,
+        for itemIdentifier: NSFileProviderItemIdentifier,
+        completionHandler: @escaping (AnyObject?, (any Error)?) -> Void
+    ) {
+        _ = serviceName
+        _ = itemIdentifier
+        let once = FileProviderCallback.Once()
+        FileProviderCallback.asyncOnce(once) {
+            completionHandler(nil, FileProviderHost.unsupported())
+        }
+    }
+#endif
 
     public func getUserVisibleURL(
         for itemIdentifier: NSFileProviderItemIdentifier
@@ -223,7 +260,10 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
     }
 
     public func waitForStabilization(completionHandler: @escaping ((any Error)?) -> Void) {
-        completionHandler(FileProviderHost.unsupported())
+        let once = FileProviderCallback.Once()
+        FileProviderCallback.asyncOnce(once) {
+            completionHandler(FileProviderHost.unsupported())
+        }
     }
 
     public func requestDownloadForItem(
@@ -233,7 +273,10 @@ open class NSFileProviderManager: NSObject, @unchecked Sendable {
     ) {
         _ = itemIdentifier
         _ = requestedRange
-        completionHandler(FileProviderHost.unsupported())
+        let once = FileProviderCallback.Once()
+        FileProviderCallback.asyncOnce(once) {
+            completionHandler(FileProviderHost.unsupported())
+        }
     }
 
     public func requestDownloadForItem(

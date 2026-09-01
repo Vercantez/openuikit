@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(UniformTypeIdentifiers)
+import UniformTypeIdentifiers
+#endif
 
 /// Finder type/creator pair carried on some File Provider items.
 public struct NSFileProviderTypeAndCreator: Hashable, Sendable {
@@ -65,6 +68,9 @@ public protocol NSFileProviderItemProtocol: NSObjectProtocol {
     var isTrashed: Bool { get }
     var typeAndCreator: NSFileProviderTypeAndCreator { get }
     var typeIdentifier: String? { get }
+#if canImport(UniformTypeIdentifiers)
+    var contentType: UTType? { get }
+#endif
     var isUploaded: Bool { get }
     var isUploading: Bool { get }
     var uploadingError: (any Error)? { get }
@@ -97,6 +103,9 @@ extension NSFileProviderItemProtocol {
     public var isTrashed: Bool { false }
     public var typeAndCreator: NSFileProviderTypeAndCreator { NSFileProviderTypeAndCreator() }
     public var typeIdentifier: String? { nil }
+#if canImport(UniformTypeIdentifiers)
+    public var contentType: UTType? { nil }
+#endif
     public var isUploaded: Bool { true }
     public var isUploading: Bool { false }
     public var uploadingError: (any Error)? { nil }
@@ -112,7 +121,8 @@ public protocol NSFileProviderItemDecorating: NSFileProviderItemProtocol {
     var decorations: [NSFileProviderItemDecorationIdentifier]? { get }
 }
 
-/// Concrete, mutable item used by the portable enumerator and tests.
+/// Concrete, mutable item used by Linux host tests. Not part of Apple's graph.
+@_spi(OpenUIKitHost)
 open class NSFileProviderEnumeratedItem: NSObject, NSFileProviderItemProtocol, @unchecked Sendable {
     public var itemIdentifier: NSFileProviderItemIdentifier
     public var parentItemIdentifier: NSFileProviderItemIdentifier
@@ -141,6 +151,9 @@ open class NSFileProviderEnumeratedItem: NSObject, NSFileProviderItemProtocol, @
     public var isTrashed: Bool
     public var typeAndCreator: NSFileProviderTypeAndCreator
     public var typeIdentifier: String?
+#if canImport(UniformTypeIdentifiers)
+    public var contentType: UTType?
+#endif
     public var isUploaded: Bool
     public var isUploading: Bool
     public var uploadingError: (any Error)?
@@ -179,6 +192,9 @@ open class NSFileProviderEnumeratedItem: NSObject, NSFileProviderItemProtocol, @
         self.isTrashed = false
         self.typeAndCreator = NSFileProviderTypeAndCreator()
         self.typeIdentifier = nil
+#if canImport(UniformTypeIdentifiers)
+        self.contentType = nil
+#endif
         self.isUploaded = true
         self.isUploading = false
         self.uploadingError = nil

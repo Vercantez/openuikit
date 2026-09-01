@@ -2,7 +2,7 @@ import Foundation
 
 /// Non-replicated File Provider extension base class. Linux has no appex host:
 /// overridable action methods fail closed unless a subclass implements them.
-/// Placeholder URL construction and local placeholder writes are real.
+/// Public placeholder writes do not persist Apple-compatible placeholder files.
 open class NSFileProviderExtension: NSObject, @unchecked Sendable {
     public private(set) var domain: NSFileProviderDomain?
     open var providerIdentifier: String { FileProviderHost.unhostedProviderIdentifier }
@@ -38,12 +38,10 @@ open class NSFileProviderExtension: NSObject, @unchecked Sendable {
         at placeholderURL: URL,
         withMetadata metadata: [URLResourceKey: Any]
     ) throws {
-        let payload = metadata.map { key, value in
-            (key.rawValue, String(describing: value))
+        guard let adapter = FileProviderHostRegistry.currentAdapter() else {
+            throw FileProviderHost.unsupported(.providerNotFound)
         }
-        let object = Dictionary(uniqueKeysWithValues: payload)
-        let data = try JSONSerialization.data(withJSONObject: object, options: [.sortedKeys])
-        try data.write(to: placeholderURL, options: .atomic)
+        try adapter.writePlaceholder(at: placeholderURL, resourceValues: metadata)
     }
 
     open func urlForItem(
@@ -69,11 +67,8 @@ open class NSFileProviderExtension: NSObject, @unchecked Sendable {
     }
 
     open func providePlaceholder(at url: URL) async throws {
-        let placeholder = Self.placeholderURL(for: url)
-        try Self.writePlaceholder(
-            at: placeholder,
-            withMetadata: [.nameKey: url.lastPathComponent]
-        )
+        _ = url
+        throw FileProviderHost.unsupported(.providerNotFound)
     }
 
     open func startProvidingItem(at url: URL) async throws {
@@ -195,16 +190,30 @@ open class NSFileProviderExtension: NSObject, @unchecked Sendable {
         completionHandler: @escaping ((any Error)?) -> Void
     ) -> Progress {
         _ = size
-        let progress = Progress(totalUnitCount: Int64(itemIdentifiers.count))
+        let progress = Progress(totalUnitCount: Int64(max(itemIdentifiers.count, 1)))
+        let progressLock = NSLock()
+        let finishOnce = FileProviderCallback.Once()
         for identifier in itemIdentifiers {
-            perThumbnailCompletionHandler(
-                identifier,
-                nil,
-                FileProviderHost.unsupported()
-            )
-            progress.completedUnitCount += 1
+            let itemOnce = FileProviderCallback.Once()
+            FileProviderCallback.asyncOnce(itemOnce) {
+                perThumbnailCompletionHandler(
+                    identifier,
+                    nil,
+                    FileProviderHost.unsupported()
+                )
+                progressLock.lock()
+                progress.completedUnitCount += 1
+                progressLock.unlock()
+            }
         }
-        completionHandler(FileProviderHost.unsupported())
+        FileProviderCallback.asyncOnce(finishOnce) {
+            completionHandler(FileProviderHost.unsupported())
+            if itemIdentifiers.isEmpty {
+                progressLock.lock()
+                progress.completedUnitCount = progress.totalUnitCount
+                progressLock.unlock()
+            }
+        }
         return progress
     }
 }

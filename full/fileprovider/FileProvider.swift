@@ -1,17 +1,25 @@
 /// Portable Linux starting point for Apple's public `FileProvider` module.
 ///
-/// Local value types, item metadata, enumerators, placeholder helpers, and a
-/// process-local domain registry are real. Apple's File Provider daemon,
-/// application-extension host, XPC services, and privacy-gated user-visible
-/// URLs are fail-closed: they return typed `NSFileProviderError` values and
-/// never fabricate a successful Apple Files.app or iCloud Desktop experience.
+/// Value types, errors, item/enumerator protocols, and fail-closed manager
+/// and extension APIs are real. Apple's File Provider daemon, Files.app,
+/// application-extension host, and XPC services are not hosted here: public
+/// registration and daemon APIs throw typed `NSFileProviderError` unless a
+/// Linux host installs `@_spi(OpenUIKitHost)` `FileProviderHostAdapter`.
 ///
-/// CoreGraphics is a declared seed dependency because thumbnail APIs take
-/// `CGSize`. Linux Foundation already vends `CGSize`, so this module does not
-/// import `CoreGraphics` (the host gate does not pass that product).
+/// `NSXPCListenerEndpoint` and `NSFileProviderService` are Foundation types.
+/// This module never vends a local type of those names. When the guest
+/// Foundation / UniformTypeIdentifiers configuration is on the compile path,
+/// service-source and item APIs use `Foundation.NSXPCListenerEndpoint` and
+/// `UniformTypeIdentifiers.UTType` directly.
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
 import Foundation
 #if canImport(FoundationNetworking)
 import FoundationNetworking
+#endif
+#if canImport(UniformTypeIdentifiers)
+import UniformTypeIdentifiers
 #endif
 
 /// Four-character Mac OS type code used by `NSFileProviderTypeAndCreator`.
@@ -34,26 +42,24 @@ public let NSFileProviderErrorNonExistentItemIdentifierKey =
 public let NSFileProviderFavoriteRankUnranked = UInt64.max
 
 extension Notification.Name {
-    /// Posted after the process-local domain registry changes.
+    /// Posted by an installed Linux host adapter after a domain registry change.
+    /// Public manager APIs do not post this name on the fail-closed path.
     public static let fileProviderDomainDidChange = Notification.Name(
         "NSFileProviderDomainDidChange"
     )
 
-    /// Posted when a materialized-set enumerator would have changed on Apple.
-    /// Linux never hosts a materialized set, so this name exists for identity
-    /// only and is not posted by the portable manager.
+    /// Identity of Apple's materialized-set notification. Linux never posts it.
     public static let fileProviderMaterializedSetDidChange = Notification.Name(
         "NSFileProviderMaterializedSetDidChange"
     )
 
-    /// Posted when a pending-set enumerator would have changed on Apple.
-    /// Linux never hosts a pending set, so this name exists for identity only.
+    /// Identity of Apple's pending-set notification. Linux never posts it.
     public static let fileProviderPendingSetDidChange = Notification.Name(
         "NSFileProviderPendingSetDidChange"
     )
 }
 
-/// Name of an `NSFileProviderService` advertised by a provider.
+/// Name of a File Provider service advertised by a provider.
 public struct NSFileProviderServiceName: RawRepresentable, Hashable, Sendable {
     public let rawValue: String
 
@@ -64,32 +70,6 @@ public struct NSFileProviderServiceName: RawRepresentable, Hashable, Sendable {
     public init(_ rawValue: String) {
         self.rawValue = rawValue
     }
-}
-
-/// Portable stand-in for Foundation's Apple-only `NSFileProviderService`.
-open class NSFileProviderService: NSObject, @unchecked Sendable {
-    public let name: NSFileProviderServiceName
-
-    public init(name: NSFileProviderServiceName) {
-        self.name = name
-        super.init()
-    }
-}
-
-/// Linux has no XPC listener runtime. Service-source signatures still compile
-/// against this inert endpoint type and fail closed when asked to activate.
-open class NSXPCListenerEndpoint: NSObject, NSSecureCoding, @unchecked Sendable {
-    public static var supportsSecureCoding: Bool { true }
-
-    public override init() {
-        super.init()
-    }
-
-    public required init?(coder: NSCoder) {
-        return nil
-    }
-
-    public func encode(with coder: NSCoder) {}
 }
 
 enum FileProviderHost {
@@ -110,5 +90,36 @@ enum FileProviderHost {
             withIntermediateDirectories: true
         )
         return base
+    }
+}
+
+enum FileProviderCallback {
+    static let queue = DispatchQueue(
+        label: "org.openuikit.fileprovider.callback",
+        qos: .userInitiated,
+        attributes: .concurrent
+    )
+
+    final class Once: @unchecked Sendable {
+        private let lock = NSLock()
+        private var finished = false
+
+        func run(_ body: () -> Void) {
+            lock.lock()
+            let shouldRun = !finished
+            if shouldRun {
+                finished = true
+            }
+            lock.unlock()
+            if shouldRun {
+                body()
+            }
+        }
+    }
+
+    static func asyncOnce(_ once: Once, _ body: @escaping () -> Void) {
+        queue.async {
+            once.run(body)
+        }
     }
 }

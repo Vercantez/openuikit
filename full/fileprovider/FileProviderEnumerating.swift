@@ -69,7 +69,8 @@ public protocol NSFileProviderEnumerating: NSObjectProtocol {
     ) throws -> any NSFileProviderEnumerator
 }
 
-/// In-memory enumerator used by the portable runtime and tests.
+/// In-memory enumerator used by Linux host tests. Not part of Apple's graph.
+@_spi(OpenUIKitHost)
 open class NSFileProviderMemoryEnumerator: NSObject, NSFileProviderEnumerator, @unchecked Sendable {
     public private(set) var items: [NSFileProviderItem]
     public var syncAnchor: NSFileProviderSyncAnchor?
@@ -147,7 +148,8 @@ final class FileProviderEmptyPendingSetEnumerator: NSObject, NSFileProviderPendi
     }
 }
 
-/// Collecting observer used by runtime tests.
+/// Collecting observer used by Linux host tests. Not part of Apple's graph.
+@_spi(OpenUIKitHost)
 public final class NSFileProviderCollectingObserver: NSObject, NSFileProviderEnumerationObserver,
     NSFileProviderChangeObserver, @unchecked Sendable
 {

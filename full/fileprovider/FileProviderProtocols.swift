@@ -1,3 +1,6 @@
+#if canImport(UniformTypeIdentifiers)
+import UniformTypeIdentifiers
+#endif
 import Foundation
 
 /// Custom action vended by a File Provider extension.
@@ -95,7 +98,9 @@ extension NSFileProviderReplicatedExtension {
 public protocol NSFileProviderServiceSource {
     var serviceName: NSFileProviderServiceName { get }
     var isRestricted: Bool { get }
-    func makeListenerEndpoint() throws -> NSXPCListenerEndpoint
+#if canImport(UniformTypeIdentifiers)
+    func makeListenerEndpoint() throws -> Foundation.NSXPCListenerEndpoint
+#endif
 }
 
 extension NSFileProviderServiceSource {
