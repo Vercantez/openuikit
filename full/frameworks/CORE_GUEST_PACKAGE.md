@@ -343,7 +343,8 @@ xattr metadata, exclusive/no-follow behavior, symlink identity, empty-directory
 creation, descriptor copying, byte progress, and the documented best-effort
 `CLONE` fallback. Its stdout, empty stderr, zero exit status, source, binary and
 Mach-O summary are independently hashed, cold-run, and artifact-attested. A
-second cold route creates the same fixture on the production virtiofs bind,
+second cold route creates the same fixture on the production Docker Desktop
+bind (`fakeowner` today and `virtiofs` on earlier releases),
 requires its `EOPNOTSUPP` xattr-discovery precondition, and proves that file
 data, mode, time and progress still succeed with exactly one explicit
 `xattr-unavailable fallback=success run-in-place=neutral` marker. Both the
@@ -364,7 +365,11 @@ layout, translated flags, sane counters, actual mount-root discovery, complete
 path/descriptor agreement, nested mounts, exact error translation and the
 mount-point passed to the quota fallback. Its source, binary, golden output,
 empty stderr, exit status and Mach-O summary are independently hashed and
-attested before FoundationEssentials is linked.
+attested before FoundationEssentials is linked. The native Apple oracle keeps
+its default `/tmp` route, while package acceptance passes `/replay` explicitly:
+that is the one persistent host bind and therefore exercises the production
+`fakeowner`/`virtiofs` `MNT_DOVOLFS` translation rather than the wrapper's
+intentionally separate tmpfs `/tmp`.
 
 The app-facing Foundation facade deliberately keeps linker auto-linking
 disabled. Its manual closure therefore names exactly

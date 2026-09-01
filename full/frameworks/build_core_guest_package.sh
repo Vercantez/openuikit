@@ -237,9 +237,9 @@ EXPECTED_COLLECTIONS_COMMIT=9bf03ff58ce34478e66aaee630e491823326fd06
 EXPECTED_COLLECTIONS_TREE=5e4de96f40ccf147dab967f38cb7988ecd933c27
 EXPECTED_OPENCOMBINE_COMMIT=1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b
 EXPECTED_OPENCOMBINE_TREE=66a9d91efc910c7577e40b2dec166a2de427594a
-EXPECTED_MACHORUN_COMMIT=d359cd37ac7f12a5048f4993eab6efd8259d9890
-EXPECTED_MACHORUN_TREE=9072be6c7805264341f1b298c4f7bb0d1bd2587f
-EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA=bb73d86e8daf09c256edc469737f0c6fd6ca6642ec4480b4819f8378b403904e
+EXPECTED_MACHORUN_COMMIT=98551893760e553c14d5dbb2c28138e014290918
+EXPECTED_MACHORUN_TREE=d4448ff9f8a89c5cefad8b74f16db5d8d6ccff15
+EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA=0d8680f13e023c9f002fad78f1f0382c975f479595cd8cf3fa8eb6da3c42d29b
 SWIFT_CORE_REQUIRED_AVAILABILITY_SYMBOL='_$ss042_stdlib_isOSVersionAtLeastOrVariantVersiondE0yBi1_Bw_BwBwBwBwBwtF'
 EXPECTED_MACHORUN_GROUP_FIXTURE_SHA=d90194ae586e14f652435e4764d4b13d338be53b95da10cf73df4d1955895624
 EXPECTED_MACHORUN_GROUP_GOLDEN_SHA=671c6a3487332fa71c9fa398de9015b37f38f97978a0ebcdd66fdce69f5562d4
@@ -262,11 +262,11 @@ EXPECTED_MACHORUN_COPYFILE_SOURCE_SHA=e8407a7753a447c89c2f93513f3ce06282020fff82
 EXPECTED_MACHORUN_COPYFILE_SUMMARY_SHA=ced87f863ec09d0793d89641867a26e46219dbded8251e99dd824fa823e4efda
 EXPECTED_MACHORUN_COPYFILE_XATTR_GATE_SHA=23cf9bf53f83196fcb17515fe42bbd2654df5354cc24573d22a87cc712b3a7ca
 EXPECTED_MACHORUN_COPYFILE_LIBSYSTEM_SOURCE_SHA=$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA
-EXPECTED_MACHORUN_STATFS_FIXTURE_SHA=61e88ded4231e581fcbec2916e148c77375c04811b0b515682509f3fe2c66919
+EXPECTED_MACHORUN_STATFS_FIXTURE_SHA=723da2ef92cc06456c909b947950427420f1ce51ba61d71a5c5815555699970a
 EXPECTED_MACHORUN_STATFS_GOLDEN_SHA=a60e1cc80da7e784a05268a1e8a5e8a895a0b89f1d6d728a8674b13b74a1871f
 EXPECTED_MACHORUN_STATFS_STDERR_SHA=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 EXPECTED_MACHORUN_STATFS_EXIT_SHA=9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa
-EXPECTED_MACHORUN_STATFS_SOURCE_SHA=d3a5e8026d10c76f3a759d1503065a29558a5a3bc94c5dbb3928350d7a03fac5
+EXPECTED_MACHORUN_STATFS_SOURCE_SHA=86a32bb57849992c8b2ef51a3b493d834fab988c119fdc9c4fcbd61c8ef038b9
 EXPECTED_MACHORUN_STATFS_SUMMARY_SHA=452aac764d0c73cfdb5fa3974dac358447a00a6d4dcea703bf0e6dc629705db6
 EXPECTED_MACHORUN_STATFS_LIBSYSTEM_SOURCE_SHA=$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA
 EXPECTED_MACHORUN_QUOTA_FIXTURE_SHA=79b88f72fa2f1a844aaeae05564f2da7e305080b97422ef602a040d04f57f166
@@ -2524,9 +2524,10 @@ printf '%s\n' \
     >> "$WORK/copyfile-macho.log"
 
 # The ordinary Apple differential lives on /tmp, where Linux xattrs work. The
-# production package itself is built on Docker Desktop's virtiofs bind, where
-# listxattr reports Linux EOPNOTSUPP. Exercise that real second route before a
-# Foundation runtime can discover it indirectly while copying a bundled font.
+# production package itself is built on Docker Desktop's host bind (fakeowner
+# today and virtiofs on earlier releases), where listxattr reports Linux
+# EOPNOTSUPP. Exercise that real second route before a Foundation runtime can
+# discover it indirectly while copying a bundled font.
 COPYFILE_XATTR_UNAVAILABLE_ROOT=$WORK/copyfile-xattr-unavailable-probe
 [ ! -e "$COPYFILE_XATTR_UNAVAILABLE_ROOT" ] \
     || die 'copyfile xattr-unavailable probe root already exists'
@@ -2561,7 +2562,7 @@ cmp "$COPYFILE_GOLDEN" "$WORK/copyfile-xattr-unavailable.oracle-projection" \
 {
     cat "$WORK/copyfile-xattr-unavailable.stdout"
     printf '%s\n' \
-        'OPEN_FOUNDATION_COPYFILE_XATTR_UNAVAILABLE_OK source=virtiofs errno=EOPNOTSUPP metadata=absent copy=success'
+        'OPEN_FOUNDATION_COPYFILE_XATTR_UNAVAILABLE_OK source=docker-bindfs errno=EOPNOTSUPP metadata=absent copy=success'
 } > "$WORK/copyfile-xattr-unavailable-macho.log"
 
 echo '== prove genuine Darwin statfs/fstatfs layout and mount translation'
@@ -2593,11 +2594,17 @@ for symbol in _statfs _fstatfs; do
     [ "$definition_count" -eq 1 ] \
         || die "staged libSystem $symbol definition count $definition_count, expected 1"
 done
+statfs_primary_type=$(stat -f -c %T /replay) \
+    || die 'cannot identify the production /replay filesystem'
+case "$statfs_primary_type" in
+    fakeowner|virtiofs) ;;
+    *) die "production /replay filesystem $statfs_primary_type is not a pinned Docker Desktop bind type" ;;
+esac
 set +e
 LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
 LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
 MACHORUN_ROOT="$RUNTIME" \
-    "$RUNTIME/machorun" "$STATFS_FIXTURE" \
+    "$RUNTIME/machorun" "$STATFS_FIXTURE" /replay \
     > "$WORK/statfs-macho.stdout" 2> "$WORK/statfs-macho.stderr"
 statfs_status=$?
 set -e
@@ -2609,9 +2616,8 @@ cmp "$STATFS_STDERR" "$WORK/statfs-macho.stderr" \
 cmp "$STATFS_EXIT" "$WORK/statfs-macho.exit" \
     || die 'Mach-O Darwin statfs translation produced the wrong exit status'
 cp "$WORK/statfs-macho.stdout" "$WORK/statfs-macho.log"
-printf '%s\n' \
-    'OPEN_FOUNDATION_STATFS_OK layout=2168 mount=actual counters=sane fstatfs=all-fields flags=translated quota=mount-point oracle=apple-exact' \
-    >> "$WORK/statfs-macho.log"
+printf 'OPEN_FOUNDATION_STATFS_OK primary=/replay bind-filesystem=%s layout=2168 mount=actual counters=sane fstatfs=all-fields flags=translated quota=mount-point oracle=apple-exact\n' \
+    "$statfs_primary_type" >> "$WORK/statfs-macho.log"
 
 echo '== remove stale shadows over pinned quota and uname translations'
 : > "$WORK/libsystem-compat-macho.log"

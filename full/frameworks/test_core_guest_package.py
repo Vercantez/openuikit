@@ -2572,12 +2572,12 @@ class ShellContractTests(unittest.TestCase):
         validate_build_full_swift_core_source(build_full)
         self.assertIn(
             "EXPECTED_MACHORUN_COMMIT="
-            "d359cd37ac7f12a5048f4993eab6efd8259d9890",
+            "98551893760e553c14d5dbb2c28138e014290918",
             builder,
         )
         self.assertIn(
             "EXPECTED_MACHORUN_TREE="
-            "9072be6c7805264341f1b298c4f7bb0d1bd2587f",
+            "d4448ff9f8a89c5cefad8b74f16db5d8d6ccff15",
             builder,
         )
         self.assertNotIn(
@@ -2956,7 +2956,7 @@ class ShellContractTests(unittest.TestCase):
             self.assertNotIn(removed_stub, stubs)
         for token in (
             "EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA="
-            "bb73d86e8daf09c256edc469737f0c6fd6ca6642ec4480b4819f8378b403904e",
+            "0d8680f13e023c9f002fad78f1f0382c975f479595cd8cf3fa8eb6da3c42d29b",
             "EXPECTED_MACHORUN_GROUP_FIXTURE_SHA=",
             "EXPECTED_MACHORUN_GROUP_GOLDEN_SHA=",
             "EXPECTED_MACHORUN_GROUP_SOURCE_SHA=",
@@ -3013,6 +3013,9 @@ class ShellContractTests(unittest.TestCase):
             "copyfile-xattr-unavailable-probe",
             "xattr-unavailable fallback=success",
             "OPEN_FOUNDATION_COPYFILE_XATTR_UNAVAILABLE_OK",
+            '"$RUNTIME/machorun" "$STATFS_FIXTURE" /replay',
+            "fakeowner|virtiofs",
+            "primary=/replay bind-filesystem=%s",
             "tests/bin/statfs",
             "tests/expected/statfs.stdout",
             "tests/expected/statfs.stderr",
