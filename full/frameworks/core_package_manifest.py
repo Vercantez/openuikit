@@ -135,6 +135,9 @@ FRAMEWORKS = (
     "CoreTransferable",
     "Photos",
     "PhotosUI",
+    "Accelerate",
+    "Compression",
+    "CoreText",
 )
 REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(f"-l{name}" for name in FRAMEWORKS)
 MODULE_DEPENDENCIES = (
@@ -728,6 +731,14 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
         refuse("FoundationInternationalization runtime bridge/helper is absent")
     if not any(
         item["category"] == "runtime"
+        and item["name"] == "Compression"
+        and item["role"] == "linux-helper"
+        and item["path"] == "guest-root/host/libOpenCompressionHost.so"
+        for item in artifacts
+    ):
+        refuse("Compression Linux host helper is absent")
+    if not any(
+        item["category"] == "runtime"
         and item["name"] == "CQuartz"
         and item["role"] == "dylib"
         for item in artifacts
@@ -777,6 +788,28 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
             "Foundation CFError Clang substrate is absent: "
             + ", ".join(path for _role, path in missing_cferror_includes)
         )
+    required_frontier_includes = {
+        "COpenAccelerate": {
+            ("abi-header", "include/COpenAccelerate/Accelerate.h"),
+            ("module-map", "include/COpenAccelerate/module.modulemap"),
+        },
+        "COpenCompression": {
+            ("abi-header", "include/COpenCompression/OpenCompressionABI.h"),
+            ("module-map", "include/COpenCompression/module.modulemap"),
+        },
+    }
+    for module, required in required_frontier_includes.items():
+        actual = {
+            (str(item["role"]), str(item["path"]))
+            for item in artifacts
+            if item["category"] == "include" and item["name"] == module
+        }
+        missing = sorted(required - actual)
+        if missing:
+            refuse(
+                f"{module} underlying-module artifacts are absent: "
+                + ", ".join(path for _role, path in missing)
+            )
 
 
 def require_coreimage_compile_contract(tokens: list[str]) -> None:
@@ -809,6 +842,23 @@ def require_cferror_compile_contract(tokens: list[str]) -> None:
                 "compile flags must contain the Foundation CFError Clang "
                 f"module pair exactly once: -Xcc {argument}"
             )
+
+
+def require_frontier_c_compile_contract(tokens: list[str]) -> None:
+    for module in ("COpenAccelerate", "COpenCompression"):
+        for argument in (
+            f"-fmodule-map-file=include/{module}/module.modulemap",
+            f"-Iinclude/{module}",
+        ):
+            count = sum(
+                tokens[index : index + 2] == ["-Xcc", argument]
+                for index in range(len(tokens) - 1)
+            )
+            if count != 1:
+                refuse(
+                    f"compile flags must contain {module} pair exactly once: "
+                    f"-Xcc {argument}"
+                )
 
 
 def require_cross_import_compile_contract(tokens: list[str]) -> None:
@@ -1079,6 +1129,7 @@ def validate_document(
         refuse("link inputs must contain -Llib exactly once")
     require_coreimage_compile_contract(compile_tokens)
     require_cferror_compile_contract(compile_tokens)
+    require_frontier_c_compile_contract(compile_tokens)
     require_cross_import_compile_contract(compile_tokens)
     for required in REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
         if link_tokens.count(required) != 1:
@@ -1228,6 +1279,8 @@ def write_command(args: argparse.Namespace) -> None:
         if required not in compile_tokens:
             refuse(f"compile flags omit required token: {required}")
     require_coreimage_compile_contract(compile_tokens)
+    require_cferror_compile_contract(compile_tokens)
+    require_frontier_c_compile_contract(compile_tokens)
     require_cross_import_compile_contract(compile_tokens)
     if link_tokens.count("-Llib") != 1:
         refuse("link inputs must contain -Llib exactly once")

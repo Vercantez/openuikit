@@ -39,6 +39,9 @@ import Charts
 import CoreTransferable
 import Photos
 import PhotosUI
+import Accelerate
+import Compression
+import CoreText
 import WebKit
 
 private func coreRequireIndefiniteSymbolEffect<Effect>(_: Effect)
@@ -992,7 +995,7 @@ struct CoreGuestPackageProbe {
                 + "graphics=coreimage,quartzcore,tgmath "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-28 oslog=standard-error,signposts "
+                + "first-party=portable-31 oslog=standard-error,signposts "
                 + "security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "
                 + "commoncrypto=sha256 "

@@ -117,6 +117,9 @@ _REQUIRED_FRAMEWORKS = (
     "CoreTransferable",
     "Photos",
     "PhotosUI",
+    "Accelerate",
+    "Compression",
+    "CoreText",
 )
 _REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
     f"-l{name}" for name in _REQUIRED_FRAMEWORKS
@@ -356,6 +359,23 @@ def _require_cferror_compile_contract(arguments: list[str]) -> None:
                 "swift_compile_arguments must contain the Foundation CFError "
                 "Clang module pair exactly once: -Xcc " + argument
             )
+
+
+def _require_frontier_c_compile_contract(arguments: list[str]) -> None:
+    for module in ("COpenAccelerate", "COpenCompression"):
+        for argument in (
+            f"-fmodule-map-file=include/{module}/module.modulemap",
+            f"-Iinclude/{module}",
+        ):
+            count = sum(
+                arguments[index : index + 2] == ["-Xcc", argument]
+                for index in range(len(arguments) - 1)
+            )
+            if count != 1:
+                raise CorePackageError(
+                    "swift_compile_arguments must contain the portable "
+                    f"{module} Clang module pair exactly once: -Xcc {argument}"
+                )
 
 
 def _require_cross_import_compile_contract(arguments: list[str]) -> None:
@@ -601,6 +621,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     )
     _require_coreimage_compile_contract(manifest["swift_compile_arguments"])
     _require_cferror_compile_contract(manifest["swift_compile_arguments"])
+    _require_frontier_c_compile_contract(manifest["swift_compile_arguments"])
     _require_cross_import_compile_contract(manifest["swift_compile_arguments"])
     manifest["executable_link_arguments"] = _arguments(
         manifest.get("executable_link_arguments"),
@@ -883,6 +904,11 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"{paths['includes']}/CoreImage/module.modulemap",
             f"{paths['includes']}/COpenFoundationCore/OpenFoundationCFError.h",
             f"{paths['includes']}/COpenFoundationCore/module.modulemap",
+            f"{paths['includes']}/COpenAccelerate/Accelerate.h",
+            f"{paths['includes']}/COpenAccelerate/module.modulemap",
+            f"{paths['includes']}/COpenCompression/OpenCompressionABI.h",
+            f"{paths['includes']}/COpenCompression/module.modulemap",
+            f"{paths['guest_root']}/host/libOpenCompressionHost.so",
         }
     )
     if preview is not None:

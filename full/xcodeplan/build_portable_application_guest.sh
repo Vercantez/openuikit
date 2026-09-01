@@ -1385,17 +1385,19 @@ root, manifest = application_platform_package.validate(Path(sys.argv[1]))
 print(root / manifest["paths"]["runtime_root"])
 PY
     )
-    local url_transport_host dispatch_host dispatch_runtime blocks_runtime relative_time_host foundation_intl_host
+    local url_transport_host dispatch_host dispatch_runtime blocks_runtime relative_time_host foundation_intl_host compression_host
     url_transport_host=$guest_root/host/libOpenURLTransportHost.so
     dispatch_host=$guest_root/host/libOpenDispatchHost.so
     dispatch_runtime=$guest_root/host/libdispatch.so
     blocks_runtime=$guest_root/host/libBlocksRuntime.so
     relative_time_host=$guest_root/host/libOpenRelativeTimeHost.so
     foundation_intl_host=$guest_root/host/libOpenFoundationInternationalizationHost.so
+    compression_host=$guest_root/host/libOpenCompressionHost.so
     require_regular "$url_transport_host" "Linux URL transport helper"
     require_regular "$relative_time_host" "Linux relative-time helper"
     require_regular "$foundation_intl_host" \
         "Linux FoundationInternationalization helper"
+    require_regular "$compression_host" "Linux Compression helper"
     require_regular "$dispatch_host" "Linux Dispatch helper"
     require_regular "$dispatch_runtime" "pinned Linux libdispatch"
     require_regular "$blocks_runtime" "pinned Linux BlocksRuntime"
@@ -1408,7 +1410,7 @@ PY
     (
         cd "$output"
         LD_LIBRARY_PATH="$guest_root/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-        LD_PRELOAD="$dispatch_host:$foundation_intl_host:$url_transport_host:$relative_time_host${LD_PRELOAD:+:$LD_PRELOAD}" \
+        LD_PRELOAD="$dispatch_host:$foundation_intl_host:$url_transport_host:$relative_time_host:$compression_host${LD_PRELOAD:+:$LD_PRELOAD}" \
             MACHORUN_ROOT="$guest_root" OPENUIKIT_HOST_TURNS=3 \
             "$guest_root/machorun" "$executable"
     ) | tee "$output/runtime.log"

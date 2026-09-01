@@ -43,6 +43,11 @@ QUICKLOOK_SWIFTUI_SOURCES_MANIFEST=$W/full/quicklook/quicklook_swiftui_guest_sou
 PHOTOSUI_SWIFTUI_SOURCES_MANIFEST=$W/full/photosui/photosui_swiftui_guest_sources.txt
 WEBKIT_PROVENANCE_TOOL=$W/full/webkit/webkit_provenance.py
 WEBKIT_PROVENANCE_POLICY=$W/full/webkit/webkit-provenance.json
+ACCELERATE_ORACLE=$W/full/accelerate/tests/AccelerateBoxConvolveOracle.c
+ACCELERATE_GOLDEN=$W/full/accelerate/tests/accelerate-box-convolve-apple-2026-09-01.txt
+COMPRESSION_HOST_TEST=$W/full/compression/tests/OpenCompressionHostTests.c
+CORETEXT_ORACLE=$W/full/coretext/tests/CoreTextFontManagerOracle.swift
+CORETEXT_GOLDEN=$W/full/coretext/tests/coretext-font-manager-apple-2026-09-01.txt
 FIRST_PARTY_PROVENANCE_TOOL=$W/full/first-party-frameworks/first_party_provenance.py
 FIRST_PARTY_PROVENANCE_POLICY=$W/full/first-party-frameworks/first-party-provenance.json
 SDK_DANGLING_EXCLUSIONS=$W/full/frameworks/sdk_dangling_symlink_exclusions.tsv
@@ -85,6 +90,9 @@ FIRST_PARTY_FRAMEWORKS=(
     CoreTransferable
     Photos
     PhotosUI
+    Accelerate
+    Compression
+    CoreText
 )
 FIRST_PARTY_SOURCE_DIRS=(
     localauthentication
@@ -115,6 +123,9 @@ FIRST_PARTY_SOURCE_DIRS=(
     coretransferable
     photos
     photosui
+    accelerate
+    compression
+    coretext
 )
 FRONTIER_FRAMEWORKS=(
     CoreGraphics
@@ -138,6 +149,9 @@ FRONTIER_FRAMEWORKS=(
     CoreTransferable
     Photos
     PhotosUI
+    Accelerate
+    Compression
+    CoreText
 )
 FRONTIER_SOURCE_DIRS=(
     coregraphics
@@ -161,6 +175,9 @@ FRONTIER_SOURCE_DIRS=(
     coretransferable
     photos
     photosui
+    accelerate
+    compression
+    coretext
 )
 
 EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
@@ -923,12 +940,68 @@ append_frontier_sources() {
                     "$(hash_file "$W/$relative")" >> "$output"
             done
         fi
+        if [ "$framework" = Accelerate ]; then
+            frontier_inputs=(
+                full/accelerate/Accelerate.c
+                full/accelerate/include/Accelerate.h
+                full/accelerate/include/module.modulemap
+                full/accelerate/tests/AccelerateBoxConvolveOracle.c
+                full/accelerate/tests/AccelerateGuestRuntime.swift
+                full/accelerate/tests/accelerate-box-convolve-apple-2026-09-01.txt
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "Accelerate supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "Accelerate supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
+        if [ "$framework" = Compression ]; then
+            frontier_inputs=(
+                full/compression/OpenCompressionBridge.c
+                full/compression/OpenCompressionHost.c
+                full/compression/include/OpenCompressionABI.h
+                full/compression/include/module.modulemap
+                full/compression/tests/CompressionBrotliOracle.swift
+                full/compression/tests/CompressionGuestRuntime.swift
+                full/compression/tests/OpenCompressionHostTests.c
+                full/compression/tests/compression-brotli-apple-2026-09-01.txt
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "Compression supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "Compression supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
+        if [ "$framework" = CoreText ]; then
+            frontier_inputs=(
+                full/coretext/tests/CoreTextFontManagerOracle.swift
+                full/coretext/tests/CoreTextGuestRuntime.swift
+                full/coretext/tests/coretext-font-manager-apple-2026-09-01.txt
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "CoreText supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "CoreText supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
     done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 22 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 25 ] \
     || die 'frontier framework source count drifted'
-[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 22 ] \
+[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 39 ] \
     || die 'frontier underlying input count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
@@ -1212,6 +1285,7 @@ mkdir -p "$STAGE/include/CHostClock" "$STAGE/include/CQuartz" \
     "$STAGE/include/COpenCombineHelpers" "$STAGE/include/COpenURLTransport" \
     "$STAGE/include/COpenRelativeTime" "$STAGE/include/COpenDispatch" \
     "$STAGE/include/CCommonCrypto" "$STAGE/include/COpenFoundationCore" \
+    "$STAGE/include/COpenAccelerate" "$STAGE/include/COpenCompression" \
     "$STAGE/include/_FoundationCShims" \
     "$STAGE/guest-root/host"
 cp -a "$W/full/hostclock/include/." "$STAGE/include/CHostClock/"
@@ -1221,6 +1295,8 @@ cp -a "$W/full/urltransport/include/." "$STAGE/include/COpenURLTransport/"
 cp -a "$W/full/relativetime/include/." "$STAGE/include/COpenRelativeTime/"
 cp -a "$W/full/dispatch/include/." "$STAGE/include/COpenDispatch/"
 cp -a "$W/full/commoncrypto/include/." "$STAGE/include/CCommonCrypto/"
+cp -a "$W/full/accelerate/include/." "$STAGE/include/COpenAccelerate/"
+cp -a "$W/full/compression/include/." "$STAGE/include/COpenCompression/"
 cp -a "$COPEN_FOUNDATION_CORE_INCLUDE/." \
     "$STAGE/include/COpenFoundationCore/"
 cp -a "$SWIFT_FOUNDATION/Sources/_FoundationCShims/include/." \
@@ -1277,6 +1353,10 @@ C_FLAGS=(-Xcc -I"$STAGE/include/CPortableIO"
     -Xcc -I"$STAGE/include/COpenDispatch"
     -Xcc -fmodule-map-file="$STAGE/include/CCommonCrypto/module.modulemap"
     -Xcc -I"$STAGE/include/CCommonCrypto"
+    -Xcc -fmodule-map-file="$STAGE/include/COpenAccelerate/module.modulemap"
+    -Xcc -I"$STAGE/include/COpenAccelerate"
+    -Xcc -fmodule-map-file="$STAGE/include/COpenCompression/module.modulemap"
+    -Xcc -I"$STAGE/include/COpenCompression"
     -Xcc -fmodule-map-file="$STAGE/include/COpenFoundationCore/module.modulemap"
     -Xcc -I"$STAGE/include/COpenFoundationCore"
     -Xcc -fmodule-map-file="$STAGE/include/FoundationICU/_foundation_unicode/module.modulemap"
@@ -1678,6 +1758,114 @@ cmp "$WORK/open-dispatch-mach-expected-imports.txt" \
         "$(hash_file "$DISPATCH_HOST")"
 } >> "$RUNTIME/.manifest"
 
+echo '== prove Accelerate vImage against the frozen Apple transcript'
+clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
+    -I "$STAGE/include/COpenAccelerate" \
+    "$W/full/accelerate/Accelerate.c" "$ACCELERATE_ORACLE" \
+    -o "$WORK/accelerate-native-oracle"
+"$WORK/accelerate-native-oracle" > "$WORK/accelerate-native-oracle.log"
+cmp "$ACCELERATE_GOLDEN" "$WORK/accelerate-native-oracle.log" \
+    || die 'portable Accelerate output differs from Apple'
+
+echo '== build and audit the fixed-ABI Brotli Compression boundary'
+BROTLI_DECODER=$(readlink -f /lib/aarch64-linux-gnu/libbrotlidec.so.1)
+BROTLI_ENCODER=$(readlink -f /lib/aarch64-linux-gnu/libbrotlienc.so.1)
+BROTLI_COMMON=$(readlink -f /lib/aarch64-linux-gnu/libbrotlicommon.so.1)
+for brotli_library in "$BROTLI_DECODER" "$BROTLI_ENCODER" "$BROTLI_COMMON"; do
+    [ -f "$brotli_library" ] && [ ! -L "$brotli_library" ] \
+        || die "pinned Brotli runtime is not a regular file: $brotli_library"
+    case "$brotli_library" in
+        /usr/lib/aarch64-linux-gnu/libbrotli*.so.1.1.0) ;;
+        *) die "pinned Brotli runtime resolved outside the exact closure: $brotli_library" ;;
+    esac
+done
+COMPRESSION_HOST=$RUNTIME/host/libOpenCompressionHost.so
+clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$STAGE/include/COpenCompression" -shared \
+    "$W/full/compression/OpenCompressionHost.c" \
+    -o "$COMPRESSION_HOST" \
+    "$BROTLI_DECODER" "$BROTLI_ENCODER" "$BROTLI_COMMON"
+clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
+    -I "$STAGE/include/COpenCompression" \
+    "$W/full/compression/OpenCompressionHost.c" "$COMPRESSION_HOST_TEST" \
+    -o "$WORK/open-compression-host-tests" \
+    "$BROTLI_DECODER" "$BROTLI_ENCODER" "$BROTLI_COMMON"
+"$WORK/open-compression-host-tests" \
+    > "$WORK/open-compression-host-test.log"
+grep -Fx \
+    'OPEN_COMPRESSION_HOST_OK algorithm=brotli roundtrip=exact malformed=fail-closed limit=hard abi=v1' \
+    "$WORK/open-compression-host-test.log" >/dev/null \
+    || die 'native Compression semantic marker is missing'
+
+printf '%s\n' openui_compression_v1_release openui_compression_v1_transform \
+    > "$WORK/open-compression-expected-elf.txt"
+readelf --wide --syms "$COMPRESSION_HOST" \
+    | awk '$5 == "GLOBAL" && $7 != "UND" && $8 ~ /^openui_compression_v1_/ { print $8 }' \
+    | LC_ALL=C sort -u > "$WORK/open-compression-elf-exports.txt"
+cmp "$WORK/open-compression-expected-elf.txt" \
+    "$WORK/open-compression-elf-exports.txt" \
+    || die 'Linux Compression helper exports drifted'
+readelf --wide --file-header "$COMPRESSION_HOST" \
+    | grep -Fq 'Machine:                           AArch64' \
+    || die 'Linux Compression helper is not ELF AArch64'
+
+clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$STAGE/include/COpenCompression" \
+    -c "$W/full/compression/OpenCompressionBridge.c" \
+    -o "$WORK/open-compression-bridge.o"
+printf '%s\n' _openui_compression_v1_release _openui_compression_v1_transform \
+    > "$WORK/open-compression-expected-mach-exports.txt"
+printf '%s\n' _glibc_openui_compression_v1_release _glibc_openui_compression_v1_transform \
+    > "$WORK/open-compression-expected-mach-imports.txt"
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$WORK/open-compression-bridge.o" | LC_ALL=C sort -u \
+    > "$WORK/open-compression-mach-exports.txt"
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$WORK/open-compression-bridge.o" | LC_ALL=C sort -u \
+    > "$WORK/open-compression-mach-imports.txt"
+cmp "$WORK/open-compression-expected-mach-exports.txt" \
+    "$WORK/open-compression-mach-exports.txt" \
+    || die 'Mach-O Compression bridge exports drifted'
+cmp "$WORK/open-compression-expected-mach-imports.txt" \
+    "$WORK/open-compression-mach-imports.txt" \
+    || die 'Mach-O Compression host imports drifted'
+
+readelf --wide --dynamic "$COMPRESSION_HOST" \
+    | awk '$2 == "(NEEDED)" { value=$5; gsub(/^\[|\]$/, "", value); print value }' \
+    | LC_ALL=C sort -u > "$WORK/open-compression-direct-sonames.txt"
+ldd "$COMPRESSION_HOST" \
+    | awk '/=>/ { print $1; next } /^[[:space:]]*\// { count=split($1, part, "/"); print part[count] }' \
+    | LC_ALL=C sort -u > "$WORK/open-compression-transitive-sonames.txt"
+for required_soname in libbrotlidec.so.1 libbrotlienc.so.1 libbrotlicommon.so.1; do
+    grep -Fx "$required_soname" "$WORK/open-compression-transitive-sonames.txt" >/dev/null \
+        || die "Linux Compression closure does not contain $required_soname"
+done
+{
+    printf 'format\topen-compression-host-v1\n'
+    printf 'host-abi\tELF64-AArch64\n'
+    printf 'algorithm\tbrotli\tencode=real\tdecode=real\n'
+    printf 'limits\tguest-input=256MiB\tguest-output=256MiB\n'
+    printf 'apple-transcript\t%s\n' "$(hash_file "$W/full/compression/tests/compression-brotli-apple-2026-09-01.txt")"
+    while IFS= read -r soname; do
+        printf 'direct-soname\t%s\n' "$soname"
+    done < "$WORK/open-compression-direct-sonames.txt"
+    while IFS= read -r soname; do
+        printf 'transitive-soname\t%s\n' "$soname"
+    done < "$WORK/open-compression-transitive-sonames.txt"
+} > "$STAGE/attestation/open-compression-host.tsv"
+cp "$WORK/open-compression-host-test.log" \
+    "$STAGE/attestation/open-compression-host-test.log"
+{
+    printf 'format\topen-compression-abi-v1\n'
+    printf 'response-layout\tsize=24\tpointers=64-bit\n'
+    printf 'symbol\topenui_compression_v1_transform\tguest-export=_openui_compression_v1_transform\tguest-host-import=_glibc_openui_compression_v1_transform\thost-export=openui_compression_v1_transform\n'
+    printf 'symbol\topenui_compression_v1_release\tguest-export=_openui_compression_v1_release\tguest-host-import=_glibc_openui_compression_v1_release\thost-export=openui_compression_v1_release\n'
+} > "$STAGE/attestation/open-compression-abi.tsv"
+printf 'local\thost/libOpenCompressionHost.so\t%s\tbuilt from full/compression/OpenCompressionHost.c\n' \
+    "$(hash_file "$COMPRESSION_HOST")" >> "$RUNTIME/.manifest"
+PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST:$COMPRESSION_HOST
+
 echo '== prove pinned Darwin group lookup adapters and native ABI agreement'
 LIBSYSTEM_REAL=$RUNTIME/darwin/usr/lib/libSystem.real.dylib
 [ -f "$LIBSYSTEM_REAL" ] && [ ! -L "$LIBSYSTEM_REAL" ] \
@@ -1723,7 +1911,7 @@ awk '$0 == "  static storage reused 0" { $0 = "  static storage reused 1" }
 cmp "$GROUP_GOLDEN" "$WORK/group-lookup-native.normalized.log" \
     || die 'native Linux group reentrant/layout contract differs from Darwin'
 LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-LD_PRELOAD="$DISPATCH_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
 MACHORUN_ROOT="$RUNTIME" \
     "$RUNTIME/machorun" "$GROUP_FIXTURE" \
     > "$WORK/group-lookup-macho.log"
@@ -1751,7 +1939,7 @@ for symbol in _fgetxattr _fsetxattr _getxattr _listxattr _setxattr; do
         || die "staged libSystem $symbol definition count $definition_count, expected 1"
 done
 LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-LD_PRELOAD="$DISPATCH_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
 MACHORUN_ROOT="$RUNTIME" \
     "$RUNTIME/machorun" "$XATTR_FIXTURE" \
     > "$WORK/xattr-macho.log"
@@ -1792,7 +1980,7 @@ for fixture in quota uname; do
     [ "$definition_count" -eq 1 ] \
         || die "staged libSystem $adapter_symbol definition count $definition_count, expected 1"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
     MACHORUN_ROOT="$RUNTIME" \
         "$RUNTIME/machorun" "$fixture_binary" \
         > "$WORK/$fixture-macho.actual"
@@ -2105,12 +2293,17 @@ done
     -emit-module-path "$STAGE/modules/WebKit.swiftmodule" \
     -emit-object -o "$WORK/webkit.o" "${WEBKIT_SOURCE_PATHS[@]}"
 
-echo '== compile twenty-eight independent first-party framework modules'
+echo '== compile thirty-one independent first-party framework modules'
 clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -fvisibility=hidden -Wall -Wextra -Werror \
     -I "$STAGE/include/CCommonCrypto" \
     -c "$W/full/commoncrypto/CommonDigest.c" \
     -o "$WORK/commoncrypto-c.o"
+clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$STAGE/include/COpenAccelerate" \
+    -c "$W/full/accelerate/Accelerate.c" \
+    -o "$WORK/accelerate-c.o"
 for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     framework=${FIRST_PARTY_FRAMEWORKS[$index]}
     source_dir=${FIRST_PARTY_SOURCE_DIRS[$index]}
@@ -2217,7 +2410,7 @@ echo '== prove SwiftUI publicly reexports full Foundation, Combine and Dispatch'
     -module-name SwiftUIFoundationReexportProbe -typecheck \
     "$W/full/frameworks/SwiftUIFoundationReexportProbe.swift"
 
-echo '== link forty-seven reusable platform dylibs (forty-six frameworks plus ICU)'
+echo '== link fifty reusable platform dylibs (forty-nine frameworks plus ICU)'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
     -o "$STAGE/lib/libDispatch.dylib" \
@@ -2484,6 +2677,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         -lFoundationEssentials
         "$SWIFTUI_RUNTIME_LINK_FLAG"
     )
+    framework_link_options=()
     expected_foundation_load=1
     expected_foundation_essentials_load=1
     expected_uikit_load=0
@@ -2604,12 +2798,22 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
                 -lUniformTypeIdentifiers
             )
             ;;
+        Compression)
+            framework_link_options+=(-undefined dynamic_lookup)
+            ;;
     esac
     framework_objects=("$WORK/$source_dir.o")
     if [ "$framework" = CommonCrypto ]; then
         framework_objects+=("$WORK/commoncrypto-c.o")
     fi
+    if [ "$framework" = Accelerate ]; then
+        framework_objects+=("$WORK/accelerate-c.o")
+    fi
+    if [ "$framework" = Compression ]; then
+        framework_objects+=("$WORK/open-compression-bridge.o")
+    fi
     "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+        "${framework_link_options[@]}" \
         -install_name "@rpath/lib$framework.dylib" -rpath @loader_path \
         -o "$STAGE/lib/lib$framework.dylib" "${framework_objects[@]}" \
         "${COMMON_LINK[@]}" "${framework_link_dependencies[@]}"
@@ -2731,6 +2935,28 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         >> "$FIRST_PARTY_LOAD_AUDIT"
 done
 
+[ "$(llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$STAGE/lib/libAccelerate.dylib" \
+    | awk '$0 == "_vImageBoxConvolve_ARGB8888" { count++ } END { print count + 0 }')" \
+    -eq 1 ] || die 'libAccelerate vImage export count drifted'
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$STAGE/lib/libCompression.dylib" \
+    | awk '$0 ~ /^_openui_compression_v1_/ { print }' | LC_ALL=C sort -u \
+    > "$WORK/libcompression-c-exports.txt"
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$STAGE/lib/libCompression.dylib" \
+    | awk '$0 ~ /^_glibc_openui_compression_v1_/ { print }' | LC_ALL=C sort -u \
+    > "$WORK/libcompression-host-imports.txt"
+cmp "$WORK/open-compression-expected-mach-exports.txt" \
+    "$WORK/libcompression-c-exports.txt" \
+    || die 'libCompression C exports drifted'
+cmp "$WORK/open-compression-expected-mach-imports.txt" \
+    "$WORK/libcompression-host-imports.txt" \
+    || die 'libCompression host imports drifted'
+if llvm-otool-18 -L "$STAGE/lib/libCompression.dylib" | grep -Fq libbrotli; then
+    die 'libCompression must cross the fixed host ABI instead of loading Brotli'
+fi
+
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/lib_QuickLook_SwiftUI.dylib -rpath @loader_path \
     -o "$STAGE/lib/lib_QuickLook_SwiftUI.dylib" \
@@ -2838,7 +3064,7 @@ oslog_gate_foundation_essentials_load_count=$(llvm-otool-18 -L \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/OSLogGuestRuntime
 ) 2>&1 | tee "$STAGE/attestation/oslog-runtime.log"
@@ -2886,7 +3112,7 @@ swiftdata_preview_export_count=$(nm_symbol_count --defined-only \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/SwiftDataGuestRuntime
 ) | tee "$STAGE/attestation/swiftdata-runtime.log"
@@ -2917,7 +3143,7 @@ usernotifications_gate_load_count=$(llvm-otool-18 -L \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/UserNotificationsGuestRuntime
 ) | tee "$STAGE/attestation/usernotifications-runtime.log"
@@ -2958,7 +3184,7 @@ quicklook_preview_export_count=$(nm_symbol_count --defined-only \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/QuickLookGuestRuntime
 ) | tee "$STAGE/attestation/quicklook-runtime.log"
@@ -2984,7 +3210,7 @@ echo '== compile/link/run the standalone CoreMedia rational-time gate'
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/CoreMediaGuestRuntime
 ) | tee "$STAGE/attestation/coremedia-runtime.log"
@@ -3016,7 +3242,7 @@ echo '== compile/link/run the standalone AVFoundation service gate'
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/AVFoundationGuestRuntime
 ) | tee "$STAGE/attestation/avfoundation-runtime.log"
@@ -3048,7 +3274,7 @@ charts_preview_export_count=$(nm_symbol_count --defined-only \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/ChartsGuestRuntime
 ) | tee "$STAGE/attestation/charts-runtime.log"
@@ -3082,7 +3308,7 @@ coretransferable_gate_load_count=$(llvm-otool-18 -L \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/CoreTransferableGuestRuntime
 ) | tee "$STAGE/attestation/coretransferable-runtime.log"
@@ -3119,7 +3345,7 @@ photos_preview_export_count=$(nm_symbol_count --defined-only \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/PhotosGuestRuntime
 ) | tee "$STAGE/attestation/photos-runtime.log"
@@ -3157,7 +3383,7 @@ photosui_preview_export_count=$(nm_symbol_count --defined-only \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/PhotosUIGuestRuntime
 ) | tee "$STAGE/attestation/photosui-runtime.log"
@@ -3170,6 +3396,115 @@ echo '== typecheck an ordinary IceCubes PhotosUI/SwiftUI cross-import consumer'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     -module-name IceCubesPhotosUIConsumer -typecheck \
     "$W/full/photosui/tests/IceCubesPhotosUIConsumer.swift"
+
+echo '== compile/link/run Accelerate, Compression, and CoreText frontier gates'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name AccelerateGuestRuntime -emit-object \
+    -o "$WORK/accelerate-guest-runtime.o" \
+    "$W/full/accelerate/tests/AccelerateGuestRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/AccelerateGuestRuntime" \
+    "$WORK/accelerate-guest-runtime.o" "${COMMON_LINK[@]}" \
+    -lAccelerate -lFoundation -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
+
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name CompressionGuestRuntime -emit-object \
+    -o "$WORK/compression-guest-runtime.o" \
+    "$W/full/compression/tests/CompressionGuestRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/CompressionGuestRuntime" \
+    "$WORK/compression-guest-runtime.o" "${COMMON_LINK[@]}" \
+    -lCompression -lFoundation -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
+
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name CoreTextGuestRuntime -emit-object \
+    -o "$WORK/coretext-guest-runtime.o" \
+    "$W/full/coretext/tests/CoreTextGuestRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/CoreTextGuestRuntime" \
+    "$WORK/coretext-guest-runtime.o" "${COMMON_LINK[@]}" \
+    -lCoreText -lFoundation -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
+
+"${SWIFTC[@]}" "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name CoreTextFontManagerOracle -emit-object \
+    -o "$WORK/coretext-font-manager-oracle.o" "$CORETEXT_ORACLE"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/CoreTextFontManagerOracle" \
+    "$WORK/coretext-font-manager-oracle.o" "${COMMON_LINK[@]}" \
+    -lCoreText -lFoundation -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
+
+for frontier_probe in AccelerateGuestRuntime CompressionGuestRuntime \
+    CoreTextGuestRuntime CoreTextFontManagerOracle; do
+    llvm-otool-18 -hv "$STAGE/probe/$frontier_probe" \
+        | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+        || die "$frontier_probe is not an ARM64 Mach-O executable"
+done
+cp "$ACCELERATE_GOLDEN" \
+    "$STAGE/attestation/accelerate-box-convolve-apple.txt"
+cp "$WORK/accelerate-native-oracle.log" \
+    "$STAGE/attestation/accelerate-native-oracle.log"
+cp "$W/full/compression/tests/compression-brotli-apple-2026-09-01.txt" \
+    "$STAGE/attestation/compression-brotli-apple.txt"
+cp "$CORETEXT_GOLDEN" "$STAGE/attestation/coretext-font-manager-apple.txt"
+
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/AccelerateGuestRuntime
+) | tee "$STAGE/attestation/accelerate-runtime.log"
+grep -Fxq \
+    'ACCELERATE_GUEST_OK vimage=box-convolve,argb8888 edge=extend apple-transcript=exact' \
+    "$STAGE/attestation/accelerate-runtime.log" \
+    || die 'Accelerate Mach-O runtime marker is missing'
+
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/CompressionGuestRuntime
+) | tee "$STAGE/attestation/compression-runtime.log"
+grep -Fxq \
+    'COMPRESSION_GUEST_OK algorithm=brotli apple-payload=decoded roundtrip=exact bounds=256MiB' \
+    "$STAGE/attestation/compression-runtime.log" \
+    || die 'Compression Mach-O runtime marker is missing'
+
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/CoreTextGuestRuntime \
+        "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
+        "$WORK/coretext-guest-runtime-fonts"
+) | tee "$STAGE/attestation/coretext-runtime.log"
+grep -Fxq \
+    'CORETEXT_GUEST_OK font-register=process duplicate-url=apple-exact errors=domain,codes' \
+    "$STAGE/attestation/coretext-runtime.log" \
+    || die 'CoreText Mach-O runtime marker is missing'
+
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/CoreTextFontManagerOracle \
+        "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
+        "$WORK/coretext-font-manager-oracle-fonts"
+) | tee "$STAGE/attestation/coretext-font-manager-runtime.log"
+cmp "$STAGE/attestation/coretext-font-manager-runtime.log" \
+    "$STAGE/attestation/coretext-font-manager-apple.txt" \
+    || die 'CoreText font-manager guest output differs from Apple'
 
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
@@ -3215,6 +3550,7 @@ fi
     -lUserNotifications -lQuickLook -l_QuickLook_SwiftUI \
     -lCoreMedia -lAVFoundation -lAVKit -lCharts \
     -lCoreTransferable -lPhotos -lPhotosUI -l_PhotosUI_SwiftUI \
+    -lAccelerate -lCompression -lCoreText \
     "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "$OBSERVATION_DYLIB"
 
@@ -3276,14 +3612,14 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$STAGE/guest-root" \
         "$STAGE/guest-root/machorun" ./probe/CoreGuestPackageProbe \
         "$STAGE/resources/OpenUIKit" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-28 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-31 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -3305,7 +3641,7 @@ llvm-otool-18 -hv "$STAGE/probe/DispatchMachORuntime" \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$RUNTIME" \
         "$RUNTIME/machorun" ./probe/DispatchMachORuntime
 ) | tee "$STAGE/attestation/dispatch-runtime.log"
@@ -3339,7 +3675,7 @@ swiftui_reexport_preview_export_count=$(nm_symbol_count --defined-only \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$RUNTIME" \
         "$RUNTIME/machorun" ./probe/SwiftUIFoundationReexportProbe
 ) | tee "$STAGE/attestation/swiftui-foundation-reexport-runtime.log"
@@ -3381,7 +3717,7 @@ llvm-otool-18 -hv "$STAGE/probe/FoundationURLSessionRuntime" \
     server_port=$(tr -d '[:space:]' < "$server_port_file")
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$RUNTIME" \
         "$RUNTIME/machorun" ./probe/FoundationURLSessionRuntime \
         "http://127.0.0.1:$server_port"
@@ -3411,7 +3747,7 @@ cp "$FOUNDATION_CACHE_GOLDEN" \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$RUNTIME" \
         "$RUNTIME/machorun" ./probe/FoundationCacheRuntime
 ) | tee "$STAGE/attestation/foundation-cache-runtime.log"
@@ -3445,7 +3781,7 @@ cp "$FOUNDATION_BYTE_COUNT_GOLDEN" \
 (
     cd "$STAGE"
     LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         MACHORUN_ROOT="$RUNTIME" \
         "$RUNTIME/machorun" ./probe/FoundationByteCountFormatterRuntime
 ) | tee "$STAGE/attestation/foundation-byte-count-runtime.log"
@@ -3486,6 +3822,10 @@ COMPILE_ARGUMENTS=(
     -Xcc -Iinclude/COpenDispatch
     -Xcc -fmodule-map-file=include/CCommonCrypto/module.modulemap
     -Xcc -Iinclude/CCommonCrypto
+    -Xcc -fmodule-map-file=include/COpenAccelerate/module.modulemap
+    -Xcc -Iinclude/COpenAccelerate
+    -Xcc -fmodule-map-file=include/COpenCompression/module.modulemap
+    -Xcc -Iinclude/COpenCompression
     -Xcc -fmodule-map-file=include/COpenFoundationCore/module.modulemap
     -Xcc -Iinclude/COpenFoundationCore
     -Xcc -fmodule-map-file=include/FoundationICU/_foundation_unicode/module.modulemap
@@ -3511,7 +3851,7 @@ LINK_ARGUMENTS=(
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit
     -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData
     -lUserNotifications -lQuickLook -lCoreMedia -lAVFoundation -lAVKit -lCharts
-    -lCoreTransferable -lPhotos -lPhotosUI
+    -lCoreTransferable -lPhotos -lPhotosUI -lAccelerate -lCompression -lCoreText
 )
 printf '%s\0' "${COMPILE_ARGUMENTS[@]}" > "$STAGE/compile-flags.rsp"
 printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"
@@ -3670,7 +4010,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'foundation-byte-count\toracle=%s\tapple-golden=%s\trows=86\n' \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_ORACLE")" \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_GOLDEN")"
-    printf 'frontier-frameworks\tframeworks=21\tsources=22\n'
+    printf 'frontier-frameworks\tframeworks=24\tsources=25\tinputs=39\n'
     printf 'quicklook-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'photosui-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
@@ -3689,6 +4029,19 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'dispatch-host-runtime\tlibdispatch=%s\tlibBlocksRuntime=%s\tglibc-minimum=2.38\n' \
         "$EXPECTED_HOST_DISPATCH_SHA256" \
         "$EXPECTED_HOST_BLOCKS_RUNTIME_SHA256"
+    printf 'accelerate\theader=%s\tmodule-map=%s\tc=%s\tapple-golden=%s\n' \
+        "$(hash_file "$W/full/accelerate/include/Accelerate.h")" \
+        "$(hash_file "$W/full/accelerate/include/module.modulemap")" \
+        "$(hash_file "$W/full/accelerate/Accelerate.c")" \
+        "$(hash_file "$ACCELERATE_GOLDEN")"
+    printf 'compression\theader=%s\tmodule-map=%s\tbridge=%s\thost=%s\tapple-golden=%s\n' \
+        "$(hash_file "$W/full/compression/include/OpenCompressionABI.h")" \
+        "$(hash_file "$W/full/compression/include/module.modulemap")" \
+        "$(hash_file "$W/full/compression/OpenCompressionBridge.c")" \
+        "$(hash_file "$W/full/compression/OpenCompressionHost.c")" \
+        "$(hash_file "$W/full/compression/tests/compression-brotli-apple-2026-09-01.txt")"
+    printf 'coretext\toracle=%s\tapple-golden=%s\n' \
+        "$(hash_file "$CORETEXT_ORACLE")" "$(hash_file "$CORETEXT_GOLDEN")"
     printf 'toolchain\tswiftc\t%s\n' "$(swiftc --version | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
     printf 'toolchain\tclang\t%s\n' "$(clang-18 --version | head -1)"
     [ "$PREVIEW_ENABLED" -eq 0 ] || printf 'preview\tmodule=%s\tobject=%s\tplugin=%s\n' \
@@ -3764,6 +4117,14 @@ record_artifact include CCommonCrypto abi-header \
     include/CCommonCrypto/CommonDigest.h
 record_artifact include CCommonCrypto module-map \
     include/CCommonCrypto/module.modulemap
+record_artifact include COpenAccelerate abi-header \
+    include/COpenAccelerate/Accelerate.h
+record_artifact include COpenAccelerate module-map \
+    include/COpenAccelerate/module.modulemap
+record_artifact include COpenCompression abi-header \
+    include/COpenCompression/OpenCompressionABI.h
+record_artifact include COpenCompression module-map \
+    include/COpenCompression/module.modulemap
 record_artifact include COpenFoundationCore opaque-header \
     include/COpenFoundationCore/OpenFoundationCFError.h
 record_artifact include COpenFoundationCore module-map \
@@ -3794,6 +4155,8 @@ record_artifact runtime OpenDispatch linux-libdispatch \
     guest-root/host/libdispatch.so
 record_artifact runtime OpenDispatch linux-blocks-runtime \
     guest-root/host/libBlocksRuntime.so
+record_artifact runtime Compression linux-helper \
+    guest-root/host/libOpenCompressionHost.so
 record_artifact runtime OpenFoundationInternationalization darwin-bridge \
     guest-root/darwin/usr/lib/libOpenFoundationInternationalization.dylib
 record_artifact runtime OpenFoundationInternationalization linux-helper \
@@ -3828,6 +4191,14 @@ record_artifact probe PhotosGuestRuntime executable \
     probe/PhotosGuestRuntime
 record_artifact probe PhotosUIGuestRuntime executable \
     probe/PhotosUIGuestRuntime
+record_artifact probe AccelerateGuestRuntime executable \
+    probe/AccelerateGuestRuntime
+record_artifact probe CompressionGuestRuntime executable \
+    probe/CompressionGuestRuntime
+record_artifact probe CoreTextGuestRuntime executable \
+    probe/CoreTextGuestRuntime
+record_artifact probe CoreTextFontManagerOracle executable \
+    probe/CoreTextFontManagerOracle
 record_artifact probe DispatchMachORuntime executable \
     probe/DispatchMachORuntime
 record_artifact probe SwiftUIFoundationReexportProbe executable \
@@ -3860,6 +4231,28 @@ record_artifact attestation Photos runtime-log \
     attestation/photos-runtime.log
 record_artifact attestation PhotosUI runtime-log \
     attestation/photosui-runtime.log
+record_artifact attestation Accelerate apple-golden \
+    attestation/accelerate-box-convolve-apple.txt
+record_artifact attestation Accelerate native-oracle-log \
+    attestation/accelerate-native-oracle.log
+record_artifact attestation Accelerate runtime-log \
+    attestation/accelerate-runtime.log
+record_artifact attestation Compression apple-golden \
+    attestation/compression-brotli-apple.txt
+record_artifact attestation Compression abi \
+    attestation/open-compression-abi.tsv
+record_artifact attestation Compression host \
+    attestation/open-compression-host.tsv
+record_artifact attestation Compression host-test-log \
+    attestation/open-compression-host-test.log
+record_artifact attestation Compression runtime-log \
+    attestation/compression-runtime.log
+record_artifact attestation CoreText apple-golden \
+    attestation/coretext-font-manager-apple.txt
+record_artifact attestation CoreText runtime-log \
+    attestation/coretext-runtime.log
+record_artifact attestation CoreText apple-differential-log \
+    attestation/coretext-font-manager-runtime.log
 record_artifact attestation dispatch host \
     attestation/open-dispatch-host.tsv
 record_artifact attestation dispatch host-test-log \

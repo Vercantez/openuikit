@@ -16,8 +16,8 @@ MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog,
 UniformTypeIdentifiers, SwiftData, UserNotifications, QuickLook, and its
 `_QuickLook_SwiftUI` cross-import overlay, CoreMedia, AVFoundation, AVKit,
 Charts, CoreTransferable, Photos, PhotosUI, and the `_PhotosUI_SwiftUI`
-cross-import overlay. These are forty-seven reusable ARM64 Mach-O platform
-binaries (forty-six frameworks plus ICU), including real
+cross-import overlay, Accelerate, Compression, and CoreText. These are fifty
+reusable ARM64 Mach-O platform binaries (forty-nine frameworks plus ICU), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
@@ -71,11 +71,11 @@ The semantic build order is deliberate:
    donation, resolution, and host-driven controller state.
 8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-9. Compile and link twenty-eight app-facing first-party modules as independent ARM64
+9. Compile and link thirty-one app-facing first-party modules as independent ARM64
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
-10. Link all forty-seven reusable platform dylibs (forty-six frameworks plus
+10. Link all fifty reusable platform dylibs (forty-nine frameworks plus
    ICU) and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.
@@ -185,6 +185,30 @@ selection modifiers with bounded binding updates. With no host picker service,
 presentation fails closed and clears the presentation binding. A host can
 install a picker boundary, deliver volatile typed items, and drive selection or
 dismissal without changing application source.
+
+`libAccelerate.dylib` exposes the imported C `vImage` buffer, pixel-count,
+flag, error, and ARGB8888 box-convolution surface used by unchanged Nuke. Its
+portable implementation validates row-byte, region, kernel, and flag contracts,
+supports edge extension, and is byte-for-byte differential-tested against an
+Apple-produced convolution transcript. The Clang module map and header are
+published as part of the app compile contract rather than hidden in the build.
+
+`libCompression.dylib` supplies Apple's `Algorithm`, `InputFilter`, and
+`OutputFilter` streaming shapes over an explicit Darwin-to-ELF bridge. Brotli
+compression and decompression use the pinned Linux Brotli runtime through the
+attested `libOpenCompressionHost.so`; output limits are hard, malformed streams
+fail closed, and the package gate decodes an exact payload produced by Apple's
+Compression framework before round-tripping native data. The host helper and
+its complete SONAME closure are package artifacts and are included in every
+cold-run preload set.
+
+`libCoreText.dylib` provides process-scoped font registration with Apple's
+CoreText error domain and observed error codes. It validates font files,
+accepts the same font bytes at distinct URLs, rejects repeat registration at a
+single URL with the Apple-observed already-registered error, and publishes the
+URL registration API used by unchanged RevenueCat Paywalls. A native Apple
+oracle freezes the registration, duplicate-copy, invalid-file, and missing-file
+transcript used by the ARM64 Mach-O package gate.
 
 The pinned swift-foundation revision has an upstream-corrected final-class
 Predicate key-path bug. The builder verifies exact source and patch hashes,

@@ -177,6 +177,9 @@ FRAMEWORKS = (
     "CoreTransferable",
     "Photos",
     "PhotosUI",
+    "Accelerate",
+    "Compression",
+    "CoreText",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -276,10 +279,9 @@ def validate_swiftui_runtime_link(source: str) -> None:
     ]
     if missing:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
-    # Observation, SwiftUI, the QuickLook overlay, AVFoundation, Charts,
-    # CoreTransferable, Photos and PhotosUI runtime gates, the reusable first-party link
-    # loop, executable probe, and SwiftData gate carry the same concurrency token.
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 12:
+    # Observation, SwiftUI, overlays, first-party gates, the reusable link loop,
+    # executable probe, and the four new frontier executables share this token.
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 16:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
     swiftui_link_end = source.index(
@@ -666,6 +668,8 @@ class PackageFixture:
             "include",
             "include/CoreImage",
             "include/COpenFoundationCore",
+            "include/COpenAccelerate",
+            "include/COpenCompression",
             "include/FoundationICU/_foundation_unicode",
             "objects",
             "resources/OpenUIKit/fonts",
@@ -699,6 +703,19 @@ class PackageFixture:
             root / "include/COpenFoundationCore/module.modulemap",
             "module COpenFoundationCore {}\n",
         )
+        write_file(root / "include/COpenAccelerate/Accelerate.h", "vImage\n")
+        write_file(
+            root / "include/COpenAccelerate/module.modulemap",
+            "module COpenAccelerate {}\n",
+        )
+        write_file(
+            root / "include/COpenCompression/OpenCompressionABI.h",
+            "compression ABI\n",
+        )
+        write_file(
+            root / "include/COpenCompression/module.modulemap",
+            "module COpenCompression {}\n",
+        )
         write_file(
             root / "include/FoundationICU/_foundation_unicode/module.modulemap",
             "module _FoundationICU { export * }",
@@ -713,6 +730,10 @@ class PackageFixture:
         write_file(
             root / "guest-root/host/libOpenFoundationInternationalizationHost.so",
             "intl host",
+        )
+        write_file(
+            root / "guest-root/host/libOpenCompressionHost.so",
+            "compression host",
         )
         write_file(root / "guest-root/machorun", "loader")
         write_file(root / "guest-root/.manifest", "fixture-root\n")
@@ -784,6 +805,14 @@ class PackageFixture:
             "-fmodule-map-file=include/COpenFoundationCore/module.modulemap",
             "-Xcc",
             "-Iinclude/COpenFoundationCore",
+            "-Xcc",
+            "-fmodule-map-file=include/COpenAccelerate/module.modulemap",
+            "-Xcc",
+            "-Iinclude/COpenAccelerate",
+            "-Xcc",
+            "-fmodule-map-file=include/COpenCompression/module.modulemap",
+            "-Xcc",
+            "-Iinclude/COpenCompression",
             "-load-plugin-library",
             "host-tools/swift/host/plugins/libObservationMacros.so",
             "-load-plugin-library",
@@ -851,6 +880,9 @@ class PackageFixture:
             "-lCoreTransferable",
             "-lPhotos",
             "-lPhotosUI",
+            "-lAccelerate",
+            "-lCompression",
+            "-lCoreText",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
@@ -1029,6 +1061,30 @@ class PackageFixture:
                     "module-map",
                     "include/COpenFoundationCore/module.modulemap",
                 ),
+                self._artifact(
+                    "include",
+                    "COpenAccelerate",
+                    "abi-header",
+                    "include/COpenAccelerate/Accelerate.h",
+                ),
+                self._artifact(
+                    "include",
+                    "COpenAccelerate",
+                    "module-map",
+                    "include/COpenAccelerate/module.modulemap",
+                ),
+                self._artifact(
+                    "include",
+                    "COpenCompression",
+                    "abi-header",
+                    "include/COpenCompression/OpenCompressionABI.h",
+                ),
+                self._artifact(
+                    "include",
+                    "COpenCompression",
+                    "module-map",
+                    "include/COpenCompression/module.modulemap",
+                ),
             )
         )
         records.append(
@@ -1042,6 +1098,14 @@ class PackageFixture:
                 "OpenFoundationInternationalization",
                 "darwin-bridge",
                 "guest-root/darwin/usr/lib/libOpenFoundationInternationalization.dylib",
+            )
+        )
+        records.append(
+            self._artifact(
+                "runtime",
+                "Compression",
+                "linux-helper",
+                "guest-root/host/libOpenCompressionHost.so",
             )
         )
         records.append(
@@ -1736,7 +1800,7 @@ class ShellContractTests(unittest.TestCase):
             "curl-config --ssl-backends",
             "curl-config --ca",
             "url-transport-transitive-sonames.txt",
-            'LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST',
+            'PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST',
         ):
             self.assertIn(token, builder)
         self.assertIn("host/libOpenURLTransportHost.so", driver)
@@ -1828,12 +1892,13 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn('command == "LC_REEXPORT_DYLIB"', builder)
         self.assertIn("swift-foundation-icu", wrapper)
         self.assertIn("foundation_intl_host", driver)
+        self.assertIn(
+            "PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:"
+            "$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST:$COMPRESSION_HOST",
+            builder,
+        )
         self.assertEqual(
-            builder.count(
-                'LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:'
-                '$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST'
-            ),
-            15,
+            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 23
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -1924,8 +1989,7 @@ class ShellContractTests(unittest.TestCase):
             )
         ]
         self.assertIn(
-            'LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:'
-            '$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST',
+            'LD_PRELOAD="$PLATFORM_HOST_PRELOAD',
             cache_gate,
         )
         byte_count_gate = builder[
@@ -1934,8 +1998,7 @@ class ShellContractTests(unittest.TestCase):
             ) : builder.index("== write relocatable compile/link contracts")
         ]
         self.assertIn(
-            'LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:'
-            '$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST',
+            'LD_PRELOAD="$PLATFORM_HOST_PRELOAD',
             byte_count_gate,
         )
         for token in (
@@ -2072,7 +2135,7 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 46)
+        self.assertEqual(len(FRAMEWORKS), 49)
         self.assertEqual(FRAMEWORKS.index("WebKit"), 17)
         for token in (
             "-module-name WebKit -emit-module",
@@ -2687,7 +2750,7 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn(
             "cfErrorAsError._getEmbeddedNSError() === cfError", probe
         )
-    def test_twenty_eight_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_thirty_one_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -2721,8 +2784,11 @@ class ShellContractTests(unittest.TestCase):
             "CoreTransferable",
             "Photos",
             "PhotosUI",
+            "Accelerate",
+            "Compression",
+            "CoreText",
         )
-        self.assertEqual(FRAMEWORKS[-28:], first_party)
+        self.assertEqual(FRAMEWORKS[-31:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -2748,17 +2814,20 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertIn("portable install ID count", source)
         self.assertIn("apple-self-load=0", source)
-        self.assertIn("frontier-frameworks\\tframeworks=21\\tsources=22", source)
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 22",
+            "frontier-frameworks\\tframeworks=24\\tsources=25\\tinputs=39",
             source,
         )
         self.assertIn(
-            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 22",
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 25",
             source,
         )
         self.assertIn(
-            "compile twenty-eight independent first-party framework modules", source
+            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 39",
+            source,
+        )
+        self.assertIn(
+            "compile thirty-one independent first-party framework modules", source
         )
         self.assertIn("network_string_processing_undefineds", source)
         self.assertIn("direct StringProcessing undefineds, expected 0", source)
@@ -2766,7 +2835,7 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=portable-28", probe)
+        self.assertIn("first-party=portable-31", probe)
         self.assertIn("usernotifications=fail-closed,volatile", probe)
         self.assertIn("UserNotificationsGuestRuntime", source)
         self.assertIn("USERNOTIFICATIONS_GUEST_MACHO_OK", source)

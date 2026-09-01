@@ -33,8 +33,11 @@ class CoreGuestPackageTests(unittest.TestCase):
             "include/CPortableIO",
             "include/CoreImage",
             "include/COpenFoundationCore",
+            "include/COpenAccelerate",
+            "include/COpenCompression",
             "objects",
             "resources/OpenUIKit/fonts",
+            "guest-root/host",
             "guest-root",
             "host-tools/swift/host/plugins",
             "host-tools/swift/linux",
@@ -54,6 +57,11 @@ class CoreGuestPackageTests(unittest.TestCase):
             "include/CoreImage/module.modulemap",
             "include/COpenFoundationCore/OpenFoundationCFError.h",
             "include/COpenFoundationCore/module.modulemap",
+            "include/COpenAccelerate/Accelerate.h",
+            "include/COpenAccelerate/module.modulemap",
+            "include/COpenCompression/OpenCompressionABI.h",
+            "include/COpenCompression/module.modulemap",
+            "guest-root/host/libOpenCompressionHost.so",
             "host-tools/swift/host/plugins/libObservationMacros.so",
             "host-tools/swift/host/plugins/libFoundationMacros.so",
             "host-tools/swift/host/plugins/libSwiftDataMacros.so",
@@ -109,6 +117,9 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "CoreTransferable",
                 "Photos",
                 "PhotosUI",
+                "Accelerate",
+                "Compression",
+                "CoreText",
                 "DeveloperToolsSupport",
             )
         )
@@ -160,6 +171,9 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "CoreTransferable",
                 "Photos",
                 "PhotosUI",
+                "Accelerate",
+                "Compression",
+                "CoreText",
             )
         )
         for relative in required_files:
@@ -264,7 +278,7 @@ class CoreGuestPackageTests(unittest.TestCase):
         )
         artifacts = []
         for relative in required_files:
-            if relative.startswith("guest-root/"):
+            if relative in ("guest-root/machorun", "guest-root/.manifest"):
                 continue
             path = self.root / relative
             category, name, role = "framework", "Fixture", "fixture"
@@ -273,6 +287,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 name = Path(relative).stem.removeprefix("lib")
             elif relative.startswith("host-tools/"):
                 category, name, role = "host-tool", "CompilerPluginClosure", "dependency"
+            elif relative.startswith("guest-root/host/"):
+                category, name, role = "host-tool", "OpenCompressionHost", "runtime"
             artifacts.append(
                 {
                     "category": category,
@@ -341,6 +357,9 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lCoreTransferable",
                 "-lPhotos",
                 "-lPhotosUI",
+                "-lAccelerate",
+                "-lCompression",
+                "-lCoreText",
             ],
             "format_version": 1,
             "compiler_plugins": compiler_plugins,
@@ -405,6 +424,14 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-fmodule-map-file=include/COpenFoundationCore/module.modulemap",
                 "-Xcc",
                 "-Iinclude/COpenFoundationCore",
+                "-Xcc",
+                "-fmodule-map-file=include/COpenAccelerate/module.modulemap",
+                "-Xcc",
+                "-Iinclude/COpenAccelerate",
+                "-Xcc",
+                "-fmodule-map-file=include/COpenCompression/module.modulemap",
+                "-Xcc",
+                "-Iinclude/COpenCompression",
             ],
             "target": {"triple": "arm64-apple-macos15.0"},
         }
@@ -472,6 +499,16 @@ class CoreGuestPackageTests(unittest.TestCase):
             arguments,
         )
         self.assertIn(f"-I{root}/include/COpenFoundationCore", arguments)
+        self.assertIn(
+            f"-fmodule-map-file={root}/include/COpenAccelerate/module.modulemap",
+            arguments,
+        )
+        self.assertIn(f"-I{root}/include/COpenAccelerate", arguments)
+        self.assertIn(
+            f"-fmodule-map-file={root}/include/COpenCompression/module.modulemap",
+            arguments,
+        )
+        self.assertIn(f"-I{root}/include/COpenCompression", arguments)
         self.assertNotIn("sdk", arguments)
         self.assertNotIn("modules", arguments)
         self.assertFalse(
@@ -538,6 +575,9 @@ class CoreGuestPackageTests(unittest.TestCase):
             "CoreTransferable",
             "Photos",
             "PhotosUI",
+            "Accelerate",
+            "Compression",
+            "CoreText",
         ):
             for relative in (
                 f"modules/{framework}.swiftmodule",
@@ -613,6 +653,38 @@ class CoreGuestPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(
             core_guest_package.CorePackageError,
             "Foundation CFError Clang module pair",
+        ):
+            core_guest_package.validate(self.root)
+
+    def test_refuses_missing_frontier_c_compile_contract(self) -> None:
+        for module in ("COpenAccelerate", "COpenCompression"):
+            with self.subTest(module=module):
+                changed = copy.deepcopy(self.manifest)
+                pair_end = changed["swift_compile_arguments"].index(
+                    f"-Iinclude/{module}"
+                ) + 1
+                del changed["swift_compile_arguments"][pair_end - 2 : pair_end]
+                self.write_manifest(changed)
+                with self.assertRaisesRegex(
+                    core_guest_package.CorePackageError,
+                    f"portable {module} Clang module pair",
+                ):
+                    core_guest_package.validate(self.root)
+                self.write_manifest(self.manifest)
+
+    def test_refuses_missing_compression_host_runtime(self) -> None:
+        relative = "guest-root/host/libOpenCompressionHost.so"
+        changed = copy.deepcopy(self.manifest)
+        changed["artifacts"] = [
+            artifact
+            for artifact in changed["artifacts"]
+            if artifact["path"] != relative
+        ]
+        (self.root / relative).unlink()
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "required artifact",
         ):
             core_guest_package.validate(self.root)
 
