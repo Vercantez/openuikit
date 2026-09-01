@@ -28,6 +28,23 @@ private func waitOnce(_ work: (@escaping () -> Void) -> Void) {
     gate.wait()
 }
 
+private final class RuntimeCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value = 0
+
+    func increment() {
+        lock.lock()
+        value += 1
+        lock.unlock()
+    }
+
+    var snapshot: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return value
+    }
+}
+
 private final class RuntimeItem: NSObject, NSFileProviderItemProtocol {
     let itemIdentifier: NSFileProviderItemIdentifier
     let parentItemIdentifier: NSFileProviderItemIdentifier
@@ -275,25 +292,25 @@ enum FileProviderRuntime {
         precondition(domain.identifier.rawValue == "nextcloud")
         precondition(domain.displayName == "Nextcloud")
 
-        var postedDomainChange = 0
-        var postedMaterialized = 0
-        var postedPending = 0
+        let postedDomainChange = RuntimeCounter()
+        let postedMaterialized = RuntimeCounter()
+        let postedPending = RuntimeCounter()
         let center = NotificationCenter.default
         let domainToken = center.addObserver(
             forName: .fileProviderDomainDidChange,
             object: nil,
             queue: nil
-        ) { _ in postedDomainChange += 1 }
+        ) { _ in postedDomainChange.increment() }
         let materializedToken = center.addObserver(
             forName: .fileProviderMaterializedSetDidChange,
             object: nil,
             queue: nil
-        ) { _ in postedMaterialized += 1 }
+        ) { _ in postedMaterialized.increment() }
         let pendingToken = center.addObserver(
             forName: .fileProviderPendingSetDidChange,
             object: nil,
             queue: nil
-        ) { _ in postedPending += 1 }
+        ) { _ in postedPending.increment() }
         defer {
             center.removeObserver(domainToken)
             center.removeObserver(materializedToken)
@@ -323,9 +340,9 @@ enum FileProviderRuntime {
         await requireFailClosed({
             _ = try await NSFileProviderManager.remove(domain, mode: .removeAll)
         }, .providerNotFound)
-        precondition(postedDomainChange == 0)
-        precondition(postedMaterialized == 0)
-        precondition(postedPending == 0)
+        precondition(postedDomainChange.snapshot == 0)
+        precondition(postedMaterialized.snapshot == 0)
+        precondition(postedPending.snapshot == 0)
 
         precondition(NSFileProviderManager(for: domain2) == nil)
         precondition(NSFileProviderManager(forDomain: domain2) == nil)
@@ -630,9 +647,9 @@ enum FileProviderRuntime {
         precondition(request.isSystemRequest)
         precondition(!request.isFileViewerRequest)
         _ = NSFileProviderServiceName("svc")
-        precondition(postedDomainChange == 0)
-        precondition(postedMaterialized == 0)
-        precondition(postedPending == 0)
+        precondition(postedDomainChange.snapshot == 0)
+        precondition(postedMaterialized.snapshot == 0)
+        precondition(postedPending.snapshot == 0)
 
         print("FILEPROVIDER_AGENT_RUNTIME_OK")
     }
