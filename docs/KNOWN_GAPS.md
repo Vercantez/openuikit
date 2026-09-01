@@ -667,12 +667,19 @@ private backing-layer tree:
 
 - Focus's progress-bar slice adds `CATransaction`, copied/keyed
   `CABasicAnimation`, layer masks, `drawsAsynchronously`, and host-clock
-  presentation sampling for `bounds`, `bounds.size`, `position`, `opacity`,
-  `cornerRadius`, and gradient `locations`, including supported animations
-  installed directly on a `UIView` backing layer. Explicit `fromValue`/`toValue`,
-  removal/forwards fill, infinite repetition, replacement/removal, implicit
-  frame animation inside an explicit transaction, and transaction completion
-  are behavioral and tested. Each installed animation has a fresh work
+  presentation sampling for `bounds`, `bounds.size`, `position`,
+  `anchorPoint`, `opacity`, `cornerRadius`, `borderWidth`, `shadowOpacity`,
+  `shadowRadius`, `shadowOffset`, and gradient `locations`, including
+  supported animations installed directly on a `UIView` backing layer.
+  `fromValue`/`toValue`/`byValue` endpoint lowering is Apple-shaped for every
+  decoded scalar, point, size, rect, and equal-arity vector value: from/to
+  takes precedence, from/by adds, to/by subtracts, and single-ended modes use
+  the interrupted render-tree value. The layers and RenderPass compositors
+  consume the added anchor, border, and shadow presentation fields rather
+  than acknowledging animations they cannot draw. Explicit removal/forwards
+  fill, infinite repetition, replacement/removal, implicit animation inside
+  an explicit transaction, and transaction completion are behavioral and
+  tested. Each installed animation has a fresh work
   identity. Removal retires that identity immediately; replacing a key in a
   later transaction therefore releases the old completion rather than making
   it wait for unrelated replacement work. A replacement made in the same
@@ -703,16 +710,25 @@ private backing-layer tree:
 - This is not general Core Animation. There is no automatic run-loop
   transaction, `presentation()` facade, timing-function surface, delegate,
   animation group/keyframe/spring class, additive/cumulative/autoreverse
-  behavior, or `byValue` lowering. Unsupported animation classes, key paths,
-  and `byValue` fail loudly at `CALayer.add`; the implemented basic
-  interpolation is linear. Endpoint value shapes are checked per key path
-  (including `CGSize` for `bounds.size` and equal-length gradient-location
-  vectors); scalar `Double` and `[Double]` endpoints are decoded explicitly
-  on both Darwin and Linux, where corelibs Foundation's `CGFloat` is a
-  distinct dynamic type. Supplied but mismatched values fail at `add` instead
-  of being silently ignored. Extend the value/key-path table alongside an
-  exact app consumer and behavior oracle rather than accepting an inert
-  animation.
+  behavior. Unsupported animation classes and key paths still fail loudly at
+  `CALayer.add`; the implemented basic interpolation is linear. Endpoint and
+  participating `byValue` shapes are checked per key path (including
+  `CGSize` for `bounds.size` and equal-length gradient-location vectors);
+  scalar `Double` and `[Double]` endpoints are decoded explicitly on both
+  Darwin and Linux, where corelibs Foundation's `CGFloat` is a distinct
+  dynamic type. iOS 26.1 likewise raises an Objective-C exception when a
+  participating scalar `byValue` is a point, while an invalid third byValue
+  is ignored when from/to are both valid; OpenUIKit preserves that precedence.
+  `contentsScale` remains model-only because neither renderer consumes it as
+  live raster resolution; accepting its animation would invent success.
+  Extend the value/key-path table alongside an exact app consumer and behavior
+  oracle rather than accepting an inert animation.
+
+- Animated shadow presentation is consumed by the QZ retained-layer path and
+  by `UIView` backing layers in both compositors. The pure-Swift RenderPass
+  still does not draw shadows for an app-installed standalone `CALayer`
+  sublayer; that pre-existing rendering boundary remains explicit rather than
+  pretending those shadow animations are visible there.
 
 - `view.layer.sublayers` exposes app-installed layers only; it does not also
   expose the backing layers of `view.subviews`. Rendering places those
@@ -2653,10 +2669,11 @@ floor(width)) and truncates button titles MIDDLE, not tail (commit 0d4da17).
 - The default quartz/layers pipeline has the broadest presentation surface.
   RenderPass (including the pure-Swift backend) now samples `UIView.animate`
   and explicit-CA presentation values for `bounds`, `bounds.size`, `position`,
-  `opacity`/view alpha, `cornerRadius`, and gradient `locations`. Animated
-  background colors and transforms remain layers-compositor-only; RenderPass
-  draws their model values. A root bounds animation also does not resize the
-  already-allocated output bitmap.
+  `anchorPoint`, `opacity`/view alpha, `cornerRadius`, `borderWidth`,
+  `shadowOpacity`, `shadowRadius`, `shadowOffset`, and gradient `locations`.
+  Animated background colors and transforms remain layers-compositor-only;
+  RenderPass draws their model values. A root bounds animation also does not
+  resize the already-allocated output bitmap.
 - `UIView.animate` completion handlers now fire ON THE CLOCK (M8.1, was
   synchronous): they are queued at `begin + delay + duration` and
   delivered by `UIView._stepAnimationCompletions(to:)`, which

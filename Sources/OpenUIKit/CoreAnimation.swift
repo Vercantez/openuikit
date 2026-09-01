@@ -133,6 +133,54 @@ enum _CALayerAnimationValue {
             return nil
         }
     }
+
+    /// Core Animation's `byValue` arithmetic. Geometry values add every
+    /// component, while vectors require identical arity. Keeping this on the
+    /// decoded value makes endpoint resolution use the exact same dynamic
+    /// shape rules as interpolation.
+    func adding(_ other: _CALayerAnimationValue) -> _CALayerAnimationValue? {
+        switch (self, other) {
+        case let (.scalar(a), .scalar(b)):
+            return .scalar(a + b)
+        case let (.point(a), .point(b)):
+            return .point(CGPoint(x: a.x + b.x, y: a.y + b.y))
+        case let (.size(a), .size(b)):
+            return .size(CGSize(width: a.width + b.width,
+                                height: a.height + b.height))
+        case let (.rect(a), .rect(b)):
+            return .rect(CGRect(x: a.origin.x + b.origin.x,
+                                y: a.origin.y + b.origin.y,
+                                width: a.size.width + b.size.width,
+                                height: a.size.height + b.size.height))
+        case let (.vector(a), .vector(b)) where a.count == b.count:
+            return .vector(zip(a, b).map(+))
+        default:
+            return nil
+        }
+    }
+
+    func subtracting(
+        _ other: _CALayerAnimationValue
+    ) -> _CALayerAnimationValue? {
+        switch (self, other) {
+        case let (.scalar(a), .scalar(b)):
+            return .scalar(a - b)
+        case let (.point(a), .point(b)):
+            return .point(CGPoint(x: a.x - b.x, y: a.y - b.y))
+        case let (.size(a), .size(b)):
+            return .size(CGSize(width: a.width - b.width,
+                                height: a.height - b.height))
+        case let (.rect(a), .rect(b)):
+            return .rect(CGRect(x: a.origin.x - b.origin.x,
+                                y: a.origin.y - b.origin.y,
+                                width: a.size.width - b.size.width,
+                                height: a.size.height - b.size.height))
+        case let (.vector(a), .vector(b)) where a.count == b.count:
+            return .vector(zip(a, b).map(-))
+        default:
+            return nil
+        }
+    }
 }
 
 struct _CALayerAnimationRecord {
@@ -192,8 +240,13 @@ struct _CALayerAnimationRecord {
 struct _CALayerPresentationState {
     var bounds: CGRect
     var position: CGPoint
+    var anchorPoint: CGPoint
     var opacity: Float
     var cornerRadius: CGFloat
+    var borderWidth: CGFloat
+    var shadowOpacity: Float
+    var shadowRadius: CGFloat
+    var shadowOffset: CGSize
     var locations: [CGFloat]?
 }
 
@@ -408,8 +461,6 @@ extension CALayer {
               let basic = animation as? CABasicAnimation else {
             preconditionFailure("OpenUIKit CALayer.add currently supports CABasicAnimation with a keyPath")
         }
-        precondition(basic.byValue == nil,
-                     "OpenUIKit CABasicAnimation.byValue is not implemented")
         guard let endpoints = _resolvedEndpoints(for: basic, keyPath: keyPath) else {
             preconditionFailure("OpenUIKit does not support CABasicAnimation keyPath/value shape: \(keyPath)")
         }
@@ -468,8 +519,10 @@ extension CALayer {
     func _presentationState(at time: Double) -> _CALayerPresentationState {
         _purgeFinishedAnimations(at: time)
         var result = _CALayerPresentationState(
-            bounds: bounds, position: position, opacity: opacity,
-            cornerRadius: cornerRadius,
+            bounds: bounds, position: position, anchorPoint: anchorPoint,
+            opacity: opacity, cornerRadius: cornerRadius,
+            borderWidth: borderWidth, shadowOpacity: shadowOpacity,
+            shadowRadius: shadowRadius, shadowOffset: shadowOffset,
             locations: (self as? CAGradientLayer)?.locations)
         _applyExplicitPresentation(to: &result, at: time)
         return result
@@ -488,8 +541,14 @@ extension CALayer {
             case ("bounds", .rect(let value)): result.bounds = value
             case ("bounds.size", .size(let value)): result.bounds.size = value
             case ("position", .point(let value)): result.position = value
+            case ("anchorPoint", .point(let value)): result.anchorPoint = value
             case ("opacity", .scalar(let value)): result.opacity = Float(value)
             case ("cornerRadius", .scalar(let value)): result.cornerRadius = value
+            case ("borderWidth", .scalar(let value)): result.borderWidth = value
+            case ("shadowOpacity", .scalar(let value)):
+                result.shadowOpacity = Float(value)
+            case ("shadowRadius", .scalar(let value)): result.shadowRadius = value
+            case ("shadowOffset", .size(let value)): result.shadowOffset = value
             case ("locations", .vector(let value)): result.locations = value
             default: break
             }
@@ -504,8 +563,13 @@ extension CALayer {
         case "bounds": model = .rect(bounds)
         case "bounds.size": model = .size(bounds.size)
         case "position": model = .point(position)
+        case "anchorPoint": model = .point(anchorPoint)
         case "opacity": model = .scalar(CGFloat(opacity))
         case "cornerRadius": model = .scalar(cornerRadius)
+        case "borderWidth": model = .scalar(borderWidth)
+        case "shadowOpacity": model = .scalar(CGFloat(shadowOpacity))
+        case "shadowRadius": model = .scalar(shadowRadius)
+        case "shadowOffset": model = .size(shadowOffset)
         case "locations": model = (self as? CAGradientLayer)?.locations.map {
             .vector($0)
         }
@@ -514,13 +578,52 @@ extension CALayer {
         guard _isSupportedKeyPath(keyPath) else { return nil }
         let suppliedFrom = animation.fromValue.flatMap(_CALayerAnimationValue.decode)
         let suppliedTo = animation.toValue.flatMap(_CALayerAnimationValue.decode)
-        // A fully supplied vector animation is valid even when the model
-        // gradient has nil locations. Only an omitted endpoint needs model
-        // or live-presentation fallback.
-        let presentation = _presentationAnimationValue(
+        func suppliedBy() -> _CALayerAnimationValue? {
+            animation.byValue.flatMap(_CALayerAnimationValue.decode)
+        }
+        // The SDK contract calls this the property's current value in the
+        // render tree. An interrupted animation therefore contributes its
+        // live presentation, while an idle property falls back to its model.
+        let current = _presentationAnimationValue(
             for: keyPath, at: OpenUIKitRuntime.animationTime) ?? model
-        let from = animation.fromValue == nil ? presentation : suppliedFrom
-        let to = animation.toValue == nil ? model : suppliedTo
+
+        let from: _CALayerAnimationValue?
+        let to: _CALayerAnimationValue?
+        switch (animation.fromValue, animation.toValue, animation.byValue) {
+        // Although the header says no more than two values should be set,
+        // iOS 26.1 gives an explicit from/to pair precedence and ignores a
+        // third byValue. Do not even decode the ignored value: it may have a
+        // different dynamic shape without affecting the valid pair.
+        case (.some, .some, _):
+            from = suppliedFrom
+            to = suppliedTo
+        case (.some, nil, .some):
+            from = suppliedFrom
+            to = suppliedFrom.flatMap { start in
+                suppliedBy().flatMap(start.adding)
+            }
+        case (nil, .some, .some):
+            to = suppliedTo
+            from = suppliedTo.flatMap { end in
+                suppliedBy().flatMap(end.subtracting)
+            }
+        case (.some, nil, nil):
+            from = suppliedFrom
+            to = current
+        case (nil, .some, nil):
+            from = current
+            to = suppliedTo
+        case (nil, nil, .some):
+            from = current
+            to = current.flatMap { start in
+                suppliedBy().flatMap(start.adding)
+            }
+        case (nil, nil, nil):
+            // Preserve the existing useful lowering for endpoint-free basic
+            // animations: animate an interrupted presentation to the model.
+            from = current
+            to = model
+        }
         guard let from, let to,
               _value(from, hasShapeFor: keyPath),
               _value(to, hasShapeFor: keyPath),
@@ -541,16 +644,20 @@ extension CALayer {
     }
 
     private func _isSupportedKeyPath(_ keyPath: String) -> Bool {
-        ["bounds", "bounds.size", "position", "opacity", "cornerRadius",
-         "locations"].contains(keyPath)
+        ["bounds", "bounds.size", "position", "anchorPoint", "opacity",
+         "cornerRadius", "borderWidth", "shadowOpacity", "shadowRadius",
+         "shadowOffset", "locations"].contains(keyPath)
     }
 
     private func _value(_ value: _CALayerAnimationValue,
                         hasShapeFor keyPath: String) -> Bool {
         switch (keyPath, value) {
         case ("bounds", .rect), ("bounds.size", .size),
-             ("position", .point), ("opacity", .scalar),
-             ("cornerRadius", .scalar), ("locations", .vector):
+             ("position", .point), ("anchorPoint", .point),
+             ("opacity", .scalar), ("cornerRadius", .scalar),
+             ("borderWidth", .scalar), ("shadowOpacity", .scalar),
+             ("shadowRadius", .scalar), ("shadowOffset", .size),
+             ("locations", .vector):
             return true
         default:
             return false

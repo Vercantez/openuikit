@@ -126,7 +126,13 @@ open class CALayer {
     }
     public var anchorPoint: CGPoint {
         get { storedAnchorPoint }
-        set { storedAnchorPoint = newValue }
+        set {
+            if storedAnchorPoint != newValue {
+                _recordImplicitAnimation(keyPath: "anchorPoint",
+                                         from: storedAnchorPoint, to: newValue)
+                storedAnchorPoint = newValue
+            }
+        }
     }
     public var frame: CGRect {
         get {
@@ -258,7 +264,14 @@ open class CALayer {
         get { storedMaskedCorners }
         set { storedMaskedCorners = newValue.intersection(._allKnown) }
     }
-    public var borderWidth: CGFloat = 0
+    public var borderWidth: CGFloat = 0 {
+        didSet {
+            if borderWidth != oldValue {
+                _recordImplicitAnimation(keyPath: "borderWidth",
+                                         from: oldValue, to: borderWidth)
+            }
+        }
+    }
     public var borderColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
     public var masksToBounds: Bool = false
     /// Core Animation's opaque-content optimization hint. It does not alter
@@ -300,9 +313,30 @@ open class CALayer {
     // offset (0, -3) (up, in iOS's top-left geometry), radius 3.
     // Invisible while masksToBounds is true, like CoreAnimation.
     public var shadowColor: CGColor? = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
-    public var shadowOpacity: Float = 0
-    public var shadowOffset: CGSize = CGSize(width: 0, height: -3)
-    public var shadowRadius: CGFloat = 3
+    public var shadowOpacity: Float = 0 {
+        didSet {
+            if shadowOpacity != oldValue {
+                _recordImplicitAnimation(keyPath: "shadowOpacity",
+                                         from: oldValue, to: shadowOpacity)
+            }
+        }
+    }
+    public var shadowOffset: CGSize = CGSize(width: 0, height: -3) {
+        didSet {
+            if shadowOffset != oldValue {
+                _recordImplicitAnimation(keyPath: "shadowOffset",
+                                         from: oldValue, to: shadowOffset)
+            }
+        }
+    }
+    public var shadowRadius: CGFloat = 3 {
+        didSet {
+            if shadowRadius != oldValue {
+                _recordImplicitAnimation(keyPath: "shadowRadius",
+                                         from: oldValue, to: shadowRadius)
+            }
+        }
+    }
 
     public init() {}
     init(owner: UIView) {

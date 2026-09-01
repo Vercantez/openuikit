@@ -128,6 +128,7 @@ public enum LayerBridge {
         // Like CALayer.render(in:), the root's OWN transform/position are
         // not applied — neutralize them so bounds render at the origin.
         QZLayerSetAffineTransform(rootLayer, QZAffineTransformIdentity())
+        QZLayerSetAnchorPoint(rootLayer, QZPoint(x: 0.5, y: 0.5))
         QZLayerSetPosition(rootLayer, QZPoint(x: rootPresentation.bounds.midX,
                                               y: rootPresentation.bounds.midY))
         QZLayerRenderInContext(rootLayer, ctx)
@@ -487,6 +488,8 @@ public enum LayerBridge {
         QZLayerSetBounds(l, qzRect(b))
         QZLayerSetPosition(l, QZPoint(x: backingPresentation.position.x,
                                       y: backingPresentation.position.y))
+        QZLayerSetAnchorPoint(l, QZPoint(x: backingPresentation.anchorPoint.x,
+                                         y: backingPresentation.anchorPoint.y))
         let t = v.transform
         QZLayerSetAffineTransform(l, QZAffineTransform(a: t.a, b: t.b, c: t.c,
                                                        d: t.d, tx: t.tx, ty: t.ty))
@@ -503,8 +506,8 @@ public enum LayerBridge {
             QZLayerSetBackgroundColor(l, QZFloat(c.red), QZFloat(c.green),
                                       QZFloat(c.blue), QZFloat(c.alpha))
         }
-        if v.layer.borderWidth > 0, let bc = v.layer.borderColor {
-            QZLayerSetBorderWidth(l, QZFloat(v.layer.borderWidth))
+        if backingPresentation.borderWidth > 0, let bc = v.layer.borderColor {
+            QZLayerSetBorderWidth(l, QZFloat(backingPresentation.borderWidth))
             QZLayerSetBorderColor(l, QZFloat(bc.red), QZFloat(bc.green),
                                   QZFloat(bc.blue), QZFloat(bc.alpha))
         }
@@ -523,6 +526,8 @@ public enum LayerBridge {
         QZLayerSetBounds(l, qzRect(backingPresentation.bounds))
         QZLayerSetPosition(l, QZPoint(x: backingPresentation.position.x,
                                       y: backingPresentation.position.y))
+        QZLayerSetAnchorPoint(l, QZPoint(x: backingPresentation.anchorPoint.x,
+                                         y: backingPresentation.anchorPoint.y))
         QZLayerSetOpacity(l, QZFloat(Swift.min(
             Swift.max(backingPresentation.opacity, 0), 1)))
         QZLayerSetCornerRadius(l, QZFloat(backingPresentation.cornerRadius))
@@ -536,14 +541,16 @@ public enum LayerBridge {
 
         // Layer shadow (spec v2). Invisible while masksToBounds, like CA.
         let lay = v.layer
-        if lay.shadowOpacity > 0, !lay.masksToBounds, !b.isEmpty,
+        if backingPresentation.shadowOpacity > 0,
+           !lay.masksToBounds, !b.isEmpty,
            let sc = lay.shadowColor {
-            let op = CGFloat(Swift.min(Swift.max(lay.shadowOpacity, 0), 1))
+            let op = CGFloat(Swift.min(Swift.max(
+                backingPresentation.shadowOpacity, 0), 1))
             let strength = sc.alpha * op
             if strength > 0 {
-                QZLayerSetShadow(l, QZFloat(lay.shadowOffset.width),
-                                 QZFloat(lay.shadowOffset.height),
-                                 QZFloat(lay.shadowRadius),
+                QZLayerSetShadow(l, QZFloat(backingPresentation.shadowOffset.width),
+                                 QZFloat(backingPresentation.shadowOffset.height),
+                                 QZFloat(backingPresentation.shadowRadius),
                                  QZFloat(sc.red), QZFloat(sc.green),
                                  QZFloat(sc.blue), QZFloat(strength))
             }
@@ -622,8 +629,8 @@ public enum LayerBridge {
         QZLayerSetBounds(qz, qzRect(bounds))
         QZLayerSetPosition(qz, QZPoint(x: presentation.position.x,
                                       y: presentation.position.y))
-        QZLayerSetAnchorPoint(qz, QZPoint(x: layer.anchorPoint.x,
-                                         y: layer.anchorPoint.y))
+        QZLayerSetAnchorPoint(qz, QZPoint(x: presentation.anchorPoint.x,
+                                         y: presentation.anchorPoint.y))
         QZLayerSetHidden(qz, layer.isHidden)
         QZLayerSetOpacity(qz, QZFloat(Swift.min(Swift.max(presentation.opacity, 0), 1)))
         QZLayerSetCornerRadius(qz, QZFloat(presentation.cornerRadius))
@@ -634,19 +641,22 @@ public enum LayerBridge {
             QZLayerSetBackgroundColor(qz, QZFloat(color.red), QZFloat(color.green),
                                       QZFloat(color.blue), QZFloat(color.alpha))
         }
-        if layer.borderWidth > 0, let color = layer.borderColor {
-            QZLayerSetBorderWidth(qz, QZFloat(layer.borderWidth))
+        if presentation.borderWidth > 0, let color = layer.borderColor {
+            QZLayerSetBorderWidth(qz, QZFloat(presentation.borderWidth))
             QZLayerSetBorderColor(qz, QZFloat(color.red), QZFloat(color.green),
                                   QZFloat(color.blue), QZFloat(color.alpha))
         }
-        if layer.shadowOpacity > 0, !layer.masksToBounds, !bounds.isEmpty,
+        if presentation.shadowOpacity > 0,
+           !layer.masksToBounds, !bounds.isEmpty,
            let color = layer.shadowColor {
-            let opacity = CGFloat(Swift.min(Swift.max(layer.shadowOpacity, 0), 1))
+            let opacity = CGFloat(Swift.min(Swift.max(
+                presentation.shadowOpacity, 0), 1))
             let strength = color.alpha * opacity
             if strength > 0 {
-                QZLayerSetShadow(qz, QZFloat(layer.shadowOffset.width),
-                                 QZFloat(layer.shadowOffset.height),
-                                 QZFloat(layer.shadowRadius), QZFloat(color.red),
+                QZLayerSetShadow(qz, QZFloat(presentation.shadowOffset.width),
+                                 QZFloat(presentation.shadowOffset.height),
+                                 QZFloat(presentation.shadowRadius),
+                                 QZFloat(color.red),
                                  QZFloat(color.green), QZFloat(color.blue),
                                  QZFloat(strength))
             }
@@ -867,8 +877,13 @@ public enum LayerBridge {
         of v: UIView, at time: Double
     ) -> _CALayerPresentationState {
         var result = _CALayerPresentationState(
-            bounds: v.bounds, position: v.center, opacity: Float(v.alpha),
+            bounds: v.bounds, position: v.center,
+            anchorPoint: v.layer.anchorPoint, opacity: Float(v.alpha),
             cornerRadius: v.layer.cornerRadius,
+            borderWidth: v.layer.borderWidth,
+            shadowOpacity: v.layer.shadowOpacity,
+            shadowRadius: v.layer.shadowRadius,
+            shadowOffset: v.layer.shadowOffset,
             locations: (v.layer as? CAGradientLayer)?.locations)
         for animation in v.animations {
             let u = animationProgress(animation, at: time)

@@ -653,6 +653,266 @@ final class CoreAnimationCompatibilityTests: XCTestCase {
                                                   keyPath: "locations"))
     }
 
+    func testByValueEndpointPrecedenceMatchesNativeCoreAnimation() {
+        func midpoint(
+            from: Any? = nil, to: Any? = nil, by: Any? = nil
+        ) -> CGFloat {
+            let layer = PortableLayer()
+            layer.cornerRadius = 0.5
+            let animation = PortableBasicAnimation(keyPath: "cornerRadius")
+            animation.duration = 10
+            animation.fromValue = from
+            animation.toValue = to
+            animation.byValue = by
+            layer.add(animation, forKey: "probe")
+            return layer._presentationState(at: 15).cornerRadius
+        }
+
+        XCTAssertEqual(midpoint(from: 1.0, to: 9.0, by: 2.0), 5,
+                       accuracy: 0.0001)
+        XCTAssertEqual(midpoint(from: 1.0, by: 2.0), 2,
+                       accuracy: 0.0001)
+        XCTAssertEqual(midpoint(to: 9.0, by: 2.0), 8,
+                       accuracy: 0.0001)
+        XCTAssertEqual(midpoint(from: 1.0), 0.75, accuracy: 0.0001)
+        XCTAssertEqual(midpoint(to: 9.0), 4.75, accuracy: 0.0001)
+        XCTAssertEqual(midpoint(by: 2.0), 1.5, accuracy: 0.0001)
+        XCTAssertEqual(midpoint(), 0.5, accuracy: 0.0001)
+
+        // iOS ignores the third value when a complete from/to pair exists,
+        // even when that ignored byValue has the wrong dynamic shape.
+        XCTAssertEqual(
+            midpoint(from: 1.0, to: 9.0, by: CGPoint(x: 2, y: 3)),
+            5,
+            accuracy: 0.0001
+        )
+    }
+
+    func testByValueArithmeticCoversEveryDecodedValueShape() {
+        let scalar = PortableLayer()
+        scalar.borderWidth = 2
+        let scalarAnimation = PortableBasicAnimation(keyPath: "borderWidth")
+        scalarAnimation.duration = 2
+        scalarAnimation.byValue = 6.0
+        scalar.add(scalarAnimation, forKey: "scalar")
+        XCTAssertEqual(scalar._presentationState(at: 11).borderWidth, 5,
+                       accuracy: 0.0001)
+
+        let point = PortableLayer()
+        point.anchorPoint = CGPoint(x: 0.2, y: 0.3)
+        let pointAnimation = PortableBasicAnimation(keyPath: "anchorPoint")
+        pointAnimation.duration = 2
+        pointAnimation.byValue = CGPoint(x: 0.4, y: 0.6)
+        point.add(pointAnimation, forKey: "point")
+        let presentedPoint = point._presentationState(at: 11).anchorPoint
+        XCTAssertEqual(presentedPoint.x, 0.4, accuracy: 0.0001)
+        XCTAssertEqual(presentedPoint.y, 0.6, accuracy: 0.0001)
+
+        let size = PortableLayer()
+        size.shadowOffset = CGSize(width: 2, height: 4)
+        let sizeAnimation = PortableBasicAnimation(keyPath: "shadowOffset")
+        sizeAnimation.duration = 2
+        sizeAnimation.byValue = CGSize(width: 6, height: 8)
+        size.add(sizeAnimation, forKey: "size")
+        XCTAssertEqual(size._presentationState(at: 11).shadowOffset,
+                       CGSize(width: 5, height: 8))
+
+        let rect = PortableLayer()
+        rect.bounds = CGRect(x: 1, y: 2, width: 20, height: 30)
+        let rectAnimation = PortableBasicAnimation(keyPath: "bounds")
+        rectAnimation.duration = 2
+        rectAnimation.byValue = CGRect(x: 4, y: 6, width: 8, height: 10)
+        rect.add(rectAnimation, forKey: "rect")
+        XCTAssertEqual(rect._presentationState(at: 11).bounds,
+                       CGRect(x: 3, y: 5, width: 24, height: 35))
+
+        let vector = PortableGradientLayer()
+        vector.colors = [
+            PortableCGColor(red: 1, green: 0, blue: 0, alpha: 1),
+            PortableCGColor(red: 0, green: 0, blue: 1, alpha: 1),
+        ]
+        vector.locations = [0.2, 0.4]
+        let vectorAnimation = PortableBasicAnimation(keyPath: "locations")
+        vectorAnimation.duration = 2
+        vectorAnimation.byValue = [0.3, 0.4]
+        vector.add(vectorAnimation, forKey: "vector")
+        let locations = vector._presentationState(at: 11).locations!
+        XCTAssertEqual(locations[0], 0.35, accuracy: 0.0001)
+        XCTAssertEqual(locations[1], 0.6, accuracy: 0.0001)
+    }
+
+    func testByValueShapeValidationHappensOnlyWhenByValueParticipates() {
+        let layer = PortableLayer()
+        let invalid = PortableBasicAnimation(keyPath: "opacity")
+        invalid.byValue = CGPoint(x: 1, y: 2)
+        XCTAssertNil(layer._resolvedEndpoints(for: invalid,
+                                               keyPath: "opacity"))
+
+        let ignored = PortableBasicAnimation(keyPath: "opacity")
+        ignored.fromValue = 0.0
+        ignored.toValue = 1.0
+        ignored.byValue = CGPoint(x: 1, y: 2)
+        XCTAssertNotNil(layer._resolvedEndpoints(for: ignored,
+                                                  keyPath: "opacity"))
+
+        let gradient = PortableGradientLayer()
+        let mismatched = PortableBasicAnimation(keyPath: "locations")
+        mismatched.fromValue = [0.0, 0.5]
+        mismatched.byValue = [0.1, 0.2, 0.3]
+        XCTAssertNil(gradient._resolvedEndpoints(for: mismatched,
+                                                  keyPath: "locations"))
+    }
+
+    func testByValueAndFromOnlyStartFromInterruptedRenderTreeValue() {
+        let fromOnly = PortableLayer()
+        fromOnly.cornerRadius = 10
+        let first = PortableBasicAnimation(keyPath: "cornerRadius")
+        first.duration = 2
+        first.fromValue = 0.0
+        first.toValue = 8.0
+        fromOnly.add(first, forKey: "radius")
+
+        OpenUIKitRuntime.animationTime = 11
+        let replacement = PortableBasicAnimation(keyPath: "cornerRadius")
+        replacement.duration = 2
+        replacement.fromValue = 2.0
+        fromOnly.add(replacement, forKey: "radius")
+        XCTAssertEqual(fromOnly._presentationState(at: 12).cornerRadius, 3,
+                       accuracy: 0.0001,
+                       "from-only ends at the interrupted presentation (4)")
+
+        let byOnly = PortableLayer()
+        byOnly.borderWidth = 10
+        let old = PortableBasicAnimation(keyPath: "borderWidth")
+        old.duration = 2
+        old.fromValue = 1.0
+        old.toValue = 5.0
+        OpenUIKitRuntime.animationTime = 20
+        byOnly.add(old, forKey: "border")
+
+        OpenUIKitRuntime.animationTime = 21
+        let additive = PortableBasicAnimation(keyPath: "borderWidth")
+        additive.duration = 2
+        additive.byValue = 2.0
+        byOnly.add(additive, forKey: "border")
+        XCTAssertEqual(byOnly._presentationState(at: 22).borderWidth, 4,
+                       accuracy: 0.0001,
+                       "by-only starts at interrupted presentation 3")
+    }
+
+    func testNumericLayerPropertiesImplicitlyAnimateOnHostClock() {
+        let layer = PortableLayer()
+        layer.anchorPoint = CGPoint(x: 0, y: 0)
+        layer.borderWidth = 0
+        layer.shadowOpacity = 0
+        layer.shadowRadius = 0
+        layer.shadowOffset = .zero
+
+        PortableTransaction.begin()
+        PortableTransaction.setAnimationDuration(2)
+        layer.anchorPoint = CGPoint(x: 1, y: 0.5)
+        layer.borderWidth = 4
+        layer.shadowOpacity = 0.8
+        layer.shadowRadius = 6
+        layer.shadowOffset = CGSize(width: 8, height: 10)
+        PortableTransaction.commit()
+
+        let middle = layer._presentationState(at: 11)
+        XCTAssertEqual(middle.anchorPoint, CGPoint(x: 0.5, y: 0.25))
+        XCTAssertEqual(middle.borderWidth, 2, accuracy: 0.0001)
+        XCTAssertEqual(middle.shadowOpacity, 0.4, accuracy: 0.0001)
+        XCTAssertEqual(middle.shadowRadius, 3, accuracy: 0.0001)
+        XCTAssertEqual(middle.shadowOffset, CGSize(width: 4, height: 5))
+    }
+
+    func testAnimatedAnchorAndBorderWidthRenderInBothCompositors() {
+        let root = UIView(frame: CGRect(x: 0, y: 0, width: 24, height: 16))
+        let child = UIView(frame: CGRect(x: 8, y: 4, width: 8, height: 8))
+        child.backgroundColor = .white
+        child.layer.borderColor = PortableCGColor(
+            red: 1, green: 0, blue: 0, alpha: 1)
+        child.layer.borderWidth = 4
+        root.addSubview(child)
+
+        let anchor = PortableBasicAnimation(keyPath: "anchorPoint")
+        anchor.duration = 2
+        anchor.fromValue = CGPoint(x: 0.5, y: 0.5)
+        anchor.byValue = CGPoint(x: 0.5, y: 0)
+        child.layer.add(anchor, forKey: "anchor")
+        let border = PortableBasicAnimation(keyPath: "borderWidth")
+        border.duration = 2
+        border.fromValue = 0.0
+        border.byValue = 4.0
+        child.layer.add(border, forKey: "border")
+        OpenUIKitRuntime.animationTime = 11
+
+        for bitmap in [
+            LayerBridge.render(root, scale: 1),
+            UIRenderer.renderPassRender(root, scale: 1),
+        ] {
+            func rgba(_ x: Int, _ y: Int) -> ArraySlice<UInt8> {
+                let start = (y * bitmap.width + x) * 4
+                return bitmap.pixels[start..<(start + 4)]
+            }
+            XCTAssertGreaterThan(rgba(6, 8)[rgba(6, 8).startIndex + 3], 240,
+                                 "animated anchor moves the left edge to x=6")
+            XCTAssertEqual(rgba(14, 8)[rgba(14, 8).startIndex + 3], 0)
+            XCTAssertLessThan(rgba(7, 8)[rgba(7, 8).startIndex + 1], 16,
+                              "two-point presented border covers x=7")
+            XCTAssertGreaterThan(rgba(9, 8)[rgba(9, 8).startIndex + 1], 240,
+                                 "presented border is 2, not model width 4")
+        }
+    }
+
+    func testAnimatedShadowPresentationDrivesBothCompositors() {
+        let root = UIView(frame: CGRect(x: 0, y: 0, width: 32, height: 16))
+        let child = UIView(frame: CGRect(x: 4, y: 6, width: 8, height: 4))
+        child.backgroundColor = .white
+        child.layer.shadowColor = PortableCGColor(
+            red: 0, green: 0, blue: 0, alpha: 1)
+        child.layer.shadowOpacity = 1
+        child.layer.shadowRadius = 2
+        child.layer.shadowOffset = CGSize(width: 4, height: 0)
+        root.addSubview(child)
+
+        let opacity = PortableBasicAnimation(keyPath: "shadowOpacity")
+        opacity.duration = 2
+        opacity.fromValue = 0.0
+        opacity.byValue = 1.0
+        child.layer.add(opacity, forKey: "shadowOpacity")
+        let radius = PortableBasicAnimation(keyPath: "shadowRadius")
+        radius.duration = 2
+        radius.fromValue = 0.0
+        radius.byValue = 2.0
+        child.layer.add(radius, forKey: "shadowRadius")
+        let offset = PortableBasicAnimation(keyPath: "shadowOffset")
+        offset.duration = 2
+        offset.fromValue = CGSize.zero
+        offset.byValue = CGSize(width: 4, height: 0)
+        child.layer.add(offset, forKey: "shadowOffset")
+
+        let middle = child.layer._presentationState(at: 11)
+        XCTAssertEqual(middle.shadowOpacity, 0.5, accuracy: 0.0001)
+        XCTAssertEqual(middle.shadowRadius, 1, accuracy: 0.0001)
+        XCTAssertEqual(middle.shadowOffset, CGSize(width: 2, height: 0))
+
+        for renderer: (UIView) -> Bitmap in [
+            { LayerBridge.render($0, scale: 1) },
+            { UIRenderer.renderPassRender($0, scale: 1) },
+        ] {
+            OpenUIKitRuntime.animationTime = 10
+            let start = renderer(root)
+            XCTAssertEqual(start.pixels[(8 * start.width + 13) * 4 + 3], 0,
+                           "zero presented opacity casts no model shadow")
+            OpenUIKitRuntime.animationTime = 11
+            let middleFrame = renderer(root)
+            XCTAssertGreaterThan(
+                middleFrame.pixels[(8 * middleFrame.width + 13) * 4 + 3], 0,
+                "presented offset/radius/opacity cast a live shadow"
+            )
+        }
+    }
+
     func testBackingLayerComposesUIViewBoundsWithExplicitSize() {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: 10))
         view.bounds = CGRect(x: 10, y: 2, width: 20, height: 10)
