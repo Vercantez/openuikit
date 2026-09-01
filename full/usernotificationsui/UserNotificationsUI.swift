@@ -1,91 +1,21 @@
-@_exported import Foundation
-
 #if canImport(UIKit)
-@_exported import UIKit
+import UIKit
 #endif
-
 #if canImport(UserNotifications)
-@_exported import UserNotifications
+import UserNotifications
 #endif
-
-// MARK: - Linux dependency stand-ins
-//
-// The isolated host gate compiles only this module. UIKit and UserNotifications
-// are declared dependencies but are not on the Linux toolchain module path.
-// These stand-ins exist solely so the UserNotificationsUI surface typechecks
-// until those modules are linked. They are not Apple notification objects and
-// they are not a UIKit color catalog.
-
-#if !canImport(UIKit)
-public final class UIColor: NSObject, NSCopying {
-    public let red: CGFloat
-    public let green: CGFloat
-    public let blue: CGFloat
-    public let alpha: CGFloat
-
-    public init(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
-        self.red = red
-        self.green = green
-        self.blue = blue
-        self.alpha = alpha
-        super.init()
-    }
-
-    public func copy(with zone: NSZone? = nil) -> Any {
-        _ = zone
-        return UIColor(red: red, green: green, blue: blue, alpha: alpha)
-    }
-
-    public override func isEqual(_ object: Any?) -> Bool {
-        guard let other = object as? UIColor else { return false }
-        return red == other.red
-            && green == other.green
-            && blue == other.blue
-            && alpha == other.alpha
-    }
-}
-#endif
-
-#if !canImport(UserNotifications)
-public final class UNNotification: NSObject {
-    public let date: Date
-
-    public init(date: Date = Date()) {
-        self.date = date
-        super.init()
-    }
-}
-
-public final class UNNotificationResponse: NSObject {
-    public let notification: UNNotification
-    public let actionIdentifier: String
-
-    public init(notification: UNNotification, actionIdentifier: String) {
-        self.notification = notification
-        self.actionIdentifier = actionIdentifier
-        super.init()
-    }
-}
-
-public final class UNNotificationAction: NSObject {
-    public let identifier: String
-    public let title: String
-
-    public init(identifier: String, title: String) {
-        self.identifier = identifier
-        self.title = title
-        super.init()
-    }
-}
+#if canImport(UIKit) && canImport(UserNotifications)
+import Foundation
 #endif
 
 // MARK: - Host availability
+//
+// Linux has no Apple notification-content-extension process, no SpringBoard
+// banner host, and no entitlement to present `UNNotificationContentExtension`
+// UI. Methods that would talk to that host record the request and do nothing
+// else. They never report a successful system dismiss, default action, or
+// media session.
 
-/// Linux has no Apple notification-content-extension process, no SpringBoard
-/// banner host, and no entitlement to present `UNNotificationContentExtension`
-/// UI. Methods that would talk to that host record the request and do nothing
-/// else. They never report a successful system dismiss, default action, or
-/// media session.
 public enum UserNotificationsUIHost: Sendable {
     public static let contentExtensionHostAvailable = false
     public static let appleNotificationServiceAvailable = false
@@ -122,15 +52,35 @@ public enum UNNotificationContentExtensionResponseOption: UInt, Equatable, Hasha
     case dismissAndForwardAction = 2
 }
 
+#if canImport(UIKit) && canImport(UserNotifications)
 // MARK: - Content extension protocol
 //
-// Apple's optional Objective-C requirements cannot be expressed as `@objc
-// optional` on this Linux toolchain (Objective-C interoperability is
-// disabled). Protocol extension defaults provide the same source surface:
-// conformers may override any of the members below.
+// Apple's optional Objective-C requirements cannot be `@objc optional` on this
+// Linux toolchain. They are still protocol requirements so existential
+// dispatch uses the conformer's witness. Defaults live in the extension.
 
 public protocol UNNotificationContentExtension: NSObjectProtocol {
     @MainActor func didReceive(_ notification: UNNotification)
+
+    func didReceive(
+        _ response: UNNotificationResponse
+    ) async -> UNNotificationContentExtensionResponseOption
+
+    func didReceive(
+        _ response: UNNotificationResponse,
+        completionHandler completion: @escaping (UNNotificationContentExtensionResponseOption) ->
+            Void
+    )
+
+    func mediaPlay()
+
+    func mediaPause()
+
+    var mediaPlayPauseButtonType: UNNotificationContentExtensionMediaPlayPauseButtonType { get }
+
+    var mediaPlayPauseButtonFrame: CGRect { get }
+
+    var mediaPlayPauseButtonTintColor: UIColor { get }
 }
 
 extension UNNotificationContentExtension {
@@ -171,59 +121,100 @@ extension UNNotificationContentExtension {
     }
 }
 
-// MARK: - NSExtensionContext
+// MARK: - Foundation.NSExtensionContext
+//
+// UserNotificationsUI does not own `NSExtensionContext`. Production APIs
+// extend the staged Foundation identity so NotificationCenter and this module
+// share one type. Linux has no extension host: the methods only record local
+// sidecar state.
 
-/// Linux counterpart of Foundation's `NSExtensionContext` plus the
-/// UserNotificationsUI category methods. Foundation on this toolchain does not
-/// ship `NSExtensionContext`. The type stores local extension state; it does
-/// not complete an Apple extension request or drive a notification UI.
-open class NSExtensionContext: NSObject {
-    private var storedNotificationActions: [UNNotificationAction] = []
+private final class _UNNotificationContentExtensionHostState {
+    var actions: [UNNotificationAction] = []
+    var didRequestDismiss = false
+    var didRequestDefaultAction = false
+    var mediaIsPlaying = false
+    var hostEvents: [UserNotificationsUIHostEvent] = []
+}
 
-    public private(set) var notificationContentExtensionDidRequestDismiss = false
-    public private(set) var notificationContentExtensionDidRequestDefaultAction = false
-    public private(set) var notificationContentExtensionMediaIsPlaying = false
-    public private(set) var hostEvents: [UserNotificationsUIHostEvent] = []
+private enum _UNNotificationContentExtensionHostStorage {
+    private static let lock = NSLock()
+    private static var states: [ObjectIdentifier: _UNNotificationContentExtensionHostState] = [:]
 
-    public override init() {
-        super.init()
+    static func state(for context: NSExtensionContext) -> _UNNotificationContentExtensionHostState {
+        lock.lock()
+        defer { lock.unlock() }
+        let key = ObjectIdentifier(context)
+        if let existing = states[key] {
+            return existing
+        }
+        let created = _UNNotificationContentExtensionHostState()
+        states[key] = created
+        return created
     }
+}
 
-    open var notificationActions: [UNNotificationAction] {
-        get { storedNotificationActions }
+extension NSExtensionContext {
+    public var notificationActions: [UNNotificationAction] {
+        get { _UNNotificationContentExtensionHostStorage.state(for: self).actions }
         set {
-            storedNotificationActions = Array(newValue)
-            hostEvents.append(
-                .notificationActionsUpdated(count: storedNotificationActions.count)
+            let state = _UNNotificationContentExtensionHostStorage.state(for: self)
+            state.actions = Array(newValue)
+            state.hostEvents.append(
+                .notificationActionsUpdated(count: state.actions.count)
             )
         }
     }
 
     /// Records a dismiss request. Does not remove a system banner or complete
     /// an extension request: `contentExtensionHostAvailable` is false.
-    open func dismissNotificationContentExtension() {
-        notificationContentExtensionDidRequestDismiss = true
-        hostEvents.append(.dismissRequested)
+    public func dismissNotificationContentExtension() {
+        let state = _UNNotificationContentExtensionHostStorage.state(for: self)
+        state.didRequestDismiss = true
+        state.hostEvents.append(.dismissRequested)
     }
 
     /// Records a default-action request. Does not launch the containing app
     /// or invoke `UNNotificationDefaultActionIdentifier`.
-    open func performNotificationDefaultAction() {
-        notificationContentExtensionDidRequestDefaultAction = true
-        hostEvents.append(.defaultActionRequested)
+    public func performNotificationDefaultAction() {
+        let state = _UNNotificationContentExtensionHostStorage.state(for: self)
+        state.didRequestDefaultAction = true
+        state.hostEvents.append(.defaultActionRequested)
     }
 
     /// Records that the extension began media playback. Linux has no
     /// notification media session; the flag is local only.
-    open func mediaPlayingStarted() {
-        notificationContentExtensionMediaIsPlaying = true
-        hostEvents.append(.mediaPlayingStarted)
+    public func mediaPlayingStarted() {
+        let state = _UNNotificationContentExtensionHostStorage.state(for: self)
+        state.mediaIsPlaying = true
+        state.hostEvents.append(.mediaPlayingStarted)
     }
 
     /// Records that the extension paused media playback. Linux has no
     /// notification media session; the flag is local only.
-    open func mediaPlayingPaused() {
-        notificationContentExtensionMediaIsPlaying = false
-        hostEvents.append(.mediaPlayingPaused)
+    public func mediaPlayingPaused() {
+        let state = _UNNotificationContentExtensionHostStorage.state(for: self)
+        state.mediaIsPlaying = false
+        state.hostEvents.append(.mediaPlayingPaused)
+    }
+
+    @_spi(OpenUIKitHost)
+    public var notificationContentExtensionDidRequestDismiss: Bool {
+        _UNNotificationContentExtensionHostStorage.state(for: self).didRequestDismiss
+    }
+
+    @_spi(OpenUIKitHost)
+    public var notificationContentExtensionDidRequestDefaultAction: Bool {
+        _UNNotificationContentExtensionHostStorage.state(for: self).didRequestDefaultAction
+    }
+
+    @_spi(OpenUIKitHost)
+    public var notificationContentExtensionMediaIsPlaying: Bool {
+        _UNNotificationContentExtensionHostStorage.state(for: self).mediaIsPlaying
+    }
+
+    @_spi(OpenUIKitHost)
+    public var notificationContentExtensionHostEvents: [UserNotificationsUIHostEvent] {
+        _UNNotificationContentExtensionHostStorage.state(for: self).hostEvents
     }
 }
+#endif
