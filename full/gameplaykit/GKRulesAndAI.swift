@@ -374,10 +374,9 @@ open class GKDecisionNode: NSObject {
     }
 }
 
-open class GKDecisionTree: NSObject, NSSecureCoding {
+open class GKDecisionTree: NSObject {
     public var randomSource: GKRandomSource = GKARC4RandomSource()
     public private(set) var rootNode: GKDecisionNode?
-    public static var supportsSecureCoding: Bool { true }
 
     public init(attribute: any NSObjectProtocol) {
         self.rootNode = GKDecisionNode(attribute: attribute)
@@ -411,8 +410,6 @@ open class GKDecisionTree: NSObject, NSSecureCoding {
         super.init()
         return nil
     }
-
-    public func encode(with coder: NSCoder) {}
 
     open func findAction(forAnswers answers: [AnyHashable: any NSObjectProtocol]) -> (any NSObjectProtocol)? {
         guard var node = rootNode else { return nil }

@@ -1,8 +1,7 @@
 import Foundation
 
-open class GKComponent: NSObject, NSCopying, NSSecureCoding {
+open class GKComponent: NSObject, NSCopying {
     public weak var entity: GKEntity?
-    public static var supportsSecureCoding: Bool { true }
 
     public required override init() {
         super.init()
@@ -10,11 +9,10 @@ open class GKComponent: NSObject, NSCopying, NSSecureCoding {
 
     public required init?(coder: NSCoder) {
         super.init()
+        return nil
     }
 
-    public func encode(with coder: NSCoder) {}
-
-    public func copy(with zone: NSZone? = nil) -> Any {
+    open func copy(with zone: NSZone? = nil) -> Any {
         type(of: self).init()
     }
 
@@ -25,12 +23,10 @@ open class GKComponent: NSObject, NSCopying, NSSecureCoding {
     open func update(deltaTime seconds: TimeInterval) {}
 }
 
-open class GKEntity: NSObject, NSCopying, NSSecureCoding {
+open class GKEntity: NSObject, NSCopying {
     private var storage: [GKComponent] = []
 
     public var components: [GKComponent] { storage }
-
-    public static var supportsSecureCoding: Bool { true }
 
     public override init() {
         super.init()
@@ -38,9 +34,8 @@ open class GKEntity: NSObject, NSCopying, NSSecureCoding {
 
     public required init?(coder: NSCoder) {
         super.init()
+        return nil
     }
-
-    public func encode(with coder: NSCoder) {}
 
     public func copy(with zone: NSZone? = nil) -> Any {
         let copy = GKEntity()
@@ -53,28 +48,36 @@ open class GKEntity: NSObject, NSCopying, NSSecureCoding {
     }
 
     open func addComponent(_ component: GKComponent) {
-        let componentType = type(of: component)
-        storage.removeAll { existing in
-            if type(of: existing) == componentType {
-                existing.willRemoveFromEntity()
-                existing.entity = nil
-                return true
-            }
-            return false
+        if let old = component.entity, old !== self {
+            old.detach(component)
         }
-        storage.append(component)
+        let componentType = type(of: component)
+        let replaced = storage.filter { type(of: $0) == componentType && $0 !== component }
+        for existing in replaced {
+            detach(existing)
+        }
+        if !storage.contains(where: { $0 === component }) {
+            storage.append(component)
+        }
         component.entity = self
         component.didAddToEntity()
     }
 
-    open func removeComponent<ComponentType: GKComponent>(ofType componentClass: ComponentType.Type) {
-        storage.removeAll { existing in
-            if existing is ComponentType {
-                existing.willRemoveFromEntity()
-                existing.entity = nil
-                return true
+    fileprivate func detach(_ component: GKComponent) {
+        let present = storage.contains { $0 === component }
+        storage.removeAll { $0 === component }
+        if present {
+            component.willRemoveFromEntity()
+            if component.entity === self {
+                component.entity = nil
             }
-            return false
+        }
+    }
+
+    open func removeComponent<ComponentType: GKComponent>(ofType componentClass: ComponentType.Type) {
+        let matches = storage.compactMap { $0 as? ComponentType }
+        for existing in matches {
+            detach(existing)
         }
     }
 
@@ -208,7 +211,7 @@ open class GKStateMachine: NSObject {
 
 public protocol GKSceneRootNodeType: NSObjectProtocol {}
 
-open class GKScene: NSObject, NSCopying, NSSecureCoding {
+open class GKScene: NSObject, NSCopying {
     private var entityStorage: [GKEntity] = []
     private var graphStorage: [String: GKGraph] = [:]
 
@@ -216,21 +219,22 @@ open class GKScene: NSObject, NSCopying, NSSecureCoding {
     public var graphs: [String: GKGraph] { graphStorage }
     public var rootNode: (any GKSceneRootNodeType)?
 
-    public static var supportsSecureCoding: Bool { true }
-
     public override init() {
         super.init()
     }
 
     public required init?(coder: NSCoder) {
         super.init()
+        return nil
     }
-
-    public func encode(with coder: NSCoder) {}
 
     public func copy(with zone: NSZone? = nil) -> Any {
         let copy = GKScene()
-        copy.entityStorage = entityStorage
+        for entity in entityStorage {
+            if let cloned = entity.copy() as? GKEntity {
+                copy.entityStorage.append(cloned)
+            }
+        }
         copy.graphStorage = graphStorage
         copy.rootNode = rootNode
         return copy

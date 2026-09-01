@@ -4,5 +4,6 @@ full/gameplaykit/GKNoise.swift
 full/gameplaykit/GKPathfinding.swift
 full/gameplaykit/GKRandom.swift
 full/gameplaykit/GKRulesAndAI.swift
+full/gameplaykit/GKSceneKitSpriteKit.swift
 full/gameplaykit/GKSpatial.swift
 full/gameplaykit/GameplayKit.swift

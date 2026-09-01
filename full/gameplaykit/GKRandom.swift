@@ -22,9 +22,7 @@ open class GKRandomSource: NSObject, GKRandom, NSCopying {
         super.init()
     }
 
-    public func encode(with coder: NSCoder) {}
-
-    public func copy(with zone: NSZone? = nil) -> Any {
+    open func copy(with zone: NSZone? = nil) -> Any {
         GKRandomSource()
     }
 
