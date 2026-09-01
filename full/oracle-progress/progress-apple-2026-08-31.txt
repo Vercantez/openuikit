@@ -1,0 +1,10 @@
+options new=1 old=2 initial=4 prior=8
+state total=-1 completed=0 fraction=0.0 indeterminate=true finished=false
+state total=0 completed=0 fraction=0.0 indeterminate=true finished=false
+state total=1 completed=0 fraction=0.0 indeterminate=false finished=false
+state total=100 completed=0 fraction=0.0 indeterminate=false finished=false
+fraction old=nil new=0.0 prior=false
+fraction old=0.0 new=nil prior=true
+fraction old=0.0 new=0.25 prior=false
+state total=100 completed=25 fraction=0.25 indeterminate=false finished=false
+state total=0 completed=1 fraction=1.0 indeterminate=false finished=true

@@ -18,6 +18,7 @@ EXPECTED = [
     "full/foundation/CharacterSet.swift",
     "full/foundation/NSLock.swift",
     "full/foundation/NotificationCenter+Combine.swift",
+    "full/foundation/Progress.swift",
     "full/foundation/FileHandle.swift",
     "full/foundation/Data+Searching.swift",
     "full/foundation/CoreFoundationCompatibility.swift",
@@ -57,7 +58,7 @@ class FoundationGuestServicesTests(unittest.TestCase):
         source = ONBOARDING.read_text()
         self.assertIn("FOUNDATION_GUEST_MANIFEST=", source)
         self.assertIn("mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES", source)
-        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 28', source)
+        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 29', source)
         self.assertIn('"${FOUNDATION_GUEST_SOURCES[@]}"', source)
         self.assertIn("duplicate Foundation guest source", source)
         self.assertIn("escaped production source roots", source)
@@ -135,6 +136,23 @@ class FoundationGuestServicesTests(unittest.TestCase):
             self.assertIn(f"step {mutation} delta=1", oracle)
         for nonmutation in ("add-suite", "remove-suite", "synchronize"):
             self.assertIn(f"step {nonmutation} delta=0", oracle)
+
+    def test_progress_has_typed_lifetime_bound_observation(self) -> None:
+        source = (ROOT / "full/foundation/Progress.swift").read_text()
+        for token in (
+            "public struct NSKeyValueObservingOptions: OptionSet",
+            "public struct NSKeyValueObservedChange<Value>",
+            "public final class NSKeyValueObservation: NSObject",
+            "private final class _WeakProgressObservation",
+            "open class Progress: NSObject",
+            "open func observe<Value>(",
+            "weak var value: NSKeyValueObservation?",
+            "deinit { invalidate() }",
+            "state.totalUnitCount < 0 || state.completedUnitCount < 0",
+            "Double(state.completedUnitCount) / Double(state.totalUnitCount)",
+        ):
+            self.assertIn(token, source)
+        self.assertNotIn("addObserver(forName:", source)
 
     def test_hackers_frontier_uses_real_lock_file_and_reexport_surfaces(self) -> None:
         umbrella = (ROOT / "full/appshim/FoundationGuest.swift").read_text()

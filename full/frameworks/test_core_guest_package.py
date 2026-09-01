@@ -1236,7 +1236,7 @@ class ShellContractTests(unittest.TestCase):
 
     def test_builder_pins_the_canonical_105_source_openuikit_tree(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
-        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=28"), 1)
+        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=29"), 1)
         self.assertIn(
             "-lOpenCoreGraphics -lCombine -lOpenCombine -lDispatch",
             source,

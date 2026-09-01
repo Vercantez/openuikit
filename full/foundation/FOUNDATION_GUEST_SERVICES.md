@@ -11,7 +11,7 @@ The facade re-exports FoundationEssentials and therefore uses its `Date`,
 `Data`, `URL`, `UUID`, `JSONEncoder`, `JSONDecoder`, `Calendar`, `Locale`,
 `TimeZone`, and `IndexPath` identities. It also re-exports OpenCoreGraphics and
 the guest `os` module, so a source file importing only Foundation sees the
-platform `CGFloat` and `os_unfair_lock` APIs. The twenty-eight-source facade adds:
+platform `CGFloat` and `os_unfair_lock` APIs. The twenty-nine-source facade adds:
 
 - `CharacterSet`, including Darwin-measured whitespace and URL component sets,
   Unicode-category-backed uppercase, lowercase, letter, alphanumeric, symbol,
@@ -73,6 +73,11 @@ platform `CGFloat` and `os_unfair_lock` APIs. The twenty-eight-source facade add
   `Publisher` protocol, filters posting objects by identity, honors bounded
   demand, serializes concurrent downstream calls while permitting recursive
   posts, and removes its observer immediately on idempotent cancellation.
+- `Progress` with Darwin-compatible determinate/indeterminate fraction rules,
+  cancellation, pause/resume, completion, and typed key-path observation.
+  `NSKeyValueObservation` tokens have identity hashing, weakly attach to the
+  observed progress, invalidate idempotently, and deliver Apple-shaped
+  initial/prior/old/new changes without depending on automatic Objective-C KVO.
 - A shared `NSNumber`/`NSError`/`NSNull` value and error bridge,
   `JSONSerialization`, and UTF-16 `NSRegularExpression` surface. Its exact
   behavior and bounded exclusions are documented in
@@ -88,6 +93,7 @@ platform `CGFloat` and `os_unfair_lock` APIs. The twenty-eight-source facade add
 PYTHONDONTWRITEBYTECODE=1 \
   python3 full/foundation/tests/test_foundation_guest_services.py
 bash full/foundation/tests/test_foundation_guest_services_host.sh
+bash full/foundation/tests/test_foundation_progress_host.sh
 bash full/foundation/tests/test_foundation_guest_text_host.sh
 ```
 
@@ -103,7 +109,7 @@ does not yet use FoundationInternationalization/ICU, so localized symbol
 tables beyond English and French and date parsing are outside this slice.
 Unsupported Unicode pattern letters are rendered literally instead of being
 silently discarded. `UserDefaults` does not claim `cfprefsd`, managed-domain,
-NSGlobalDomain, Objective-C KVO, cross-process Darwin notification delivery,
+NSGlobalDomain, general NSObject automatic KVO, cross-process Darwin notification delivery,
 or Apple binary-plist storage compatibility;
 its persistence path and encoding are intentionally project-owned. The public
 value behavior exercised here is useful without pretending those system
