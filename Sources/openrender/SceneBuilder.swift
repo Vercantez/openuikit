@@ -1559,10 +1559,11 @@ struct SceneResult {
 func runScene(_ scene: JSONValue, warn: (String) -> Void) -> SceneResult {
     guard let name = scene["name"]?.stringValue else { fatalError("scene missing name") }
     guard let sz = numArray(scene["size"]), sz.count == 2 else { fatalError("scene missing size") }
-    // One scene's scheduled Timers must never leak into the next scene's
-    // capture (Sources/OpenUIKit/Timer.swift): the host clock is the only
-    // thing that fires them, and it rewinds per scene.
+    // One scene's scheduled Timers/display links must never leak into the
+    // next capture: the host clock is the only thing that fires them, and it
+    // rewinds per scene.
     Timer._reset()
+    CADisplayLink._reset()
     let scale = num(scene["scale"]) ?? 2
     let style: UIUserInterfaceStyle = scene["style"]?.stringValue == "dark" ? .dark : .light
     // Window scenes ("window": true, rendered by oracle2 via drawHierarchy

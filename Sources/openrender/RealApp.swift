@@ -37,6 +37,7 @@ func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
     let size = RealAppScreen.windowSize
     let scale: CGFloat = 2
     Timer._reset()
+    CADisplayLink._reset()
     GlyphInkTable.windowCompositing = false
     OpenUIKitRuntime.systemFontCut = .iOS
     UITraitCollection.current = UITraitCollection(userInterfaceStyle: variant.style,

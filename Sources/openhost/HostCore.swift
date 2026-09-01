@@ -414,6 +414,7 @@ func runLive(_ scene: HostScene) {
             || UIViewController._hasActiveSheetInteraction   // sheet release spring
             || UIView._hasPendingAnimationCompletions
             || UITextInputState._hasActiveCaret   // caret blink (M8 text input)
+            || CADisplayLink._hasActiveDisplayLinks
             || now <= OpenUIKitRuntime.animationWorkDeadline + 0.1
     }
 

@@ -296,6 +296,11 @@ open class UIWindow: UIView {
     /// recognizers (long press) a chance to fire while a touch is held
     /// stationary. Call from the host's frame loop while touches are down.
     public func tick(timestamp: TimeInterval) {
+        // Display links run at the beginning of the display turn. Their
+        // callbacks may mark backing layers dirty; flush that delegate work
+        // before advancing the remaining time-based UIKit state machines.
+        CADisplayLink._step(to: timestamp)
+        _displayLayerTreeIfNeeded()
         // Scroll deceleration/bounce advances on the SAME host clock as
         // everything else (openhost feeds OpenUIKitRuntime.animationTime
         // here) — scripted captures stay deterministic.

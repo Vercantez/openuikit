@@ -150,6 +150,16 @@ extension IndexPath {
 
 #endif
 
+/// Core Foundation's display-clock interval is ABI-identical to `Double` on
+/// every Apple platform. UIKit re-exports this spelling through QuartzCore,
+/// so a source file which imports only UIKit can use `CFTimeInterval` (for
+/// example, a `CADisplayLink.duration`) without importing CoreFoundation.
+///
+/// Keep the alias owned by OpenUIKit instead of importing the CoreFoundation
+/// umbrella: Foundation-hidden Mach-O guests intentionally expose only the
+/// first-party modules carried by the portable platform package.
+public typealias CFTimeInterval = Double
+
 #if canImport(Foundation)
 
 public typealias IndexSet = Foundation.IndexSet

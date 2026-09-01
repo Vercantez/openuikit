@@ -28,6 +28,14 @@ import Foundation
 import struct Foundation.Data
 #endif
 
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#else
+#error("OpenUIKit requires Foundation.NSObject or ObjectiveC.NSObject")
+#endif
+
 
 public struct UIRectEdge: OptionSet, Sendable {
     public let rawValue: UInt
@@ -65,18 +73,23 @@ public enum UIViewContentMode: Sendable {
 @preconcurrency @MainActor
 public protocol CALayerDelegate: AnyObject {
     func layoutSublayers(of layer: CALayer)
+    func display(_ layer: CALayer)
 }
 
 public extension CALayerDelegate {
     func layoutSublayers(of layer: CALayer) {}
+    func display(_ layer: CALayer) {}
 }
 
 /// Portable CALayer subset. A UIView's backing layer forwards its geometry
 /// to the view; layers created directly keep independent geometry and can be
 /// attached as an explicit layer tree.  Rendering lives in RenderPass.swift
 /// (and LayerBridge.swift for the quartz compositor).
+#if canImport(ObjectiveC)
+@objc(_OpenUIKitCALayer)
+#endif
 @preconcurrency @MainActor
-open class CALayer {
+open class CALayer: NSObject {
     public weak var owner: UIView?
     public weak var delegate: CALayerDelegate?
 
@@ -92,6 +105,7 @@ open class CALayer {
     private var storedCompatibilityValues: [String: Any] = [:]
     private var _needsLayout = true
     private var _isLayingOut = false
+    private var _needsDisplay = false
     /// Core Animation records live in `CoreAnimation.swift`. They are kept on
     /// the portable layer rather than the transient QZLayer built for one
     /// frame, so rebuilding the renderer tree does not restart animations.
@@ -338,10 +352,11 @@ open class CALayer {
         }
     }
 
-    public init() {}
+    public override init() { super.init() }
     init(owner: UIView) {
         self.owner = owner
         self.delegate = owner
+        super.init()
     }
 
     isolated deinit {
@@ -353,11 +368,11 @@ open class CALayer {
     // MARK: Bounded key-value compatibility
 
     /// Retain dynamically addressed Core Animation properties used by
-    /// open-source visual-effect implementations. This is deliberately a
-    /// CALayer-owned compatibility surface rather than a pretend NSObject
-    /// runtime: known public properties remain strongly typed above, while
-    /// private filter inputs retain their exact values under their keys.
-    open func setValue(_ value: Any?, forKey key: String) {
+    /// open-source visual-effect implementations. NSObject identity is real;
+    /// this bounded CALayer-owned store deliberately does not claim complete
+    /// KVC: known public properties remain strongly typed above, while private
+    /// filter inputs retain their exact values under their keys.
+    private func _setCompatibilityValue(_ value: Any?, forKey key: String) {
         switch key {
         case "isOpaque":
             if let value = value as? Bool { isOpaque = value }
@@ -372,7 +387,7 @@ open class CALayer {
         }
     }
 
-    open func value(forKey key: String) -> Any? {
+    private func _compatibilityValue(forKey key: String) -> Any? {
         switch key {
         case "isOpaque": return isOpaque
         case "contentsScale": return contentsScale
@@ -380,9 +395,36 @@ open class CALayer {
         }
     }
 
+#if canImport(ObjectiveC) && canImport(Foundation)
+    open override func setValue(_ value: Any?, forKey key: String) {
+        _setCompatibilityValue(value, forKey: key)
+    }
+
+    open override func value(forKey key: String) -> Any? {
+        _compatibilityValue(forKey: key)
+    }
+#else
+    open func setValue(_ value: Any?, forKey key: String) {
+        _setCompatibilityValue(value, forKey: key)
+    }
+
+    open func value(forKey key: String) -> Any? {
+        _compatibilityValue(forKey: key)
+    }
+#endif
+
     /// Key-path variants preserve the complete path. They cover private
     /// paths such as `filters.gaussianBlur.inputRadius` without claiming a
     /// general Objective-C KVC implementation on non-Objective-C platforms.
+#if canImport(ObjectiveC) && canImport(Foundation)
+    open override func setValue(_ value: Any?, forKeyPath keyPath: String) {
+        setValue(value, forKey: keyPath)
+    }
+
+    open override func value(forKeyPath keyPath: String) -> Any? {
+        value(forKey: keyPath)
+    }
+#else
     open func setValue(_ value: Any?, forKeyPath keyPath: String) {
         setValue(value, forKey: keyPath)
     }
@@ -390,6 +432,7 @@ open class CALayer {
     open func value(forKeyPath keyPath: String) -> Any? {
         value(forKey: keyPath)
     }
+#endif
 
     /// Marks this layer's delegate/layout pass dirty.
     public func setNeedsLayout() {
@@ -407,6 +450,32 @@ open class CALayer {
     }
 
     public func needsLayout() -> Bool { _needsLayout }
+
+    /// Marks the receiver for display on the next host turn. Core Animation
+    /// coalesces repeated invalidations; retaining a single bit preserves that
+    /// contract and lets delegate-driven content such as animated image views
+    /// update at display-link cadence.
+    public func setNeedsDisplay() { _needsDisplay = true }
+
+    /// Run the layer delegate's display callback when the receiver is dirty.
+    /// A callback may invalidate the layer again; clear the consumed bit first
+    /// so that new work remains scheduled for the next host turn.
+    public func displayIfNeeded() {
+        guard _needsDisplay else { return }
+        _needsDisplay = false
+        display()
+    }
+
+    /// Core Animation display override point. The default implementation asks
+    /// the delegate (a UIView for backing layers) to provide fresh contents.
+    open func display() { delegate?.display(self) }
+
+    /// Flush display work for this layer tree. UIWindow calls this once per
+    /// host turn after display links fire, matching the run-loop commit order.
+    func _displayTreeIfNeeded() {
+        displayIfNeeded()
+        for sublayer in storedSublayers { sublayer._displayTreeIfNeeded() }
+    }
 
     /// Runs the nearest dirty ancestor first, then every dirty descendant.
     /// This mirrors the observable Core Animation contract while remaining
@@ -480,6 +549,11 @@ protocol _UIViewSubviewAdmission: AnyObject {
 
 @preconcurrency @MainActor
 open class UIView: UIResponder, CALayerDelegate {
+    /// Swift's Apple SDK spelling for the Objective-C `UIViewContentMode`
+    /// enumeration. Keep the existing global name as the implementation
+    /// identity while exposing the nested source-compatible spelling.
+    public typealias ContentMode = UIViewContentMode
+
     /// Process-wide base-view appearance proxy. New views inherit explicitly
     /// configured values; inherited defaults remain live through the normal
     /// superview chain. A construction guard prevents the proxy from trying
@@ -545,6 +619,26 @@ open class UIView: UIResponder, CALayerDelegate {
     /// Mark this view's custom-drawn content as needing a redraw (UIKit
     /// semantics). Cheap: bumps a version consumed by the render caches.
     public func setNeedsDisplay() { contentVersion &+= 1 }
+
+    /// Flush backing-layer display callbacks through the UIView hierarchy.
+    /// UIView children are not represented in CALayer's explicit `sublayers`
+    /// collection, so the host walks both trees without conflating their
+    /// ownership models.
+    func _displayLayerTreeIfNeeded() {
+        layer._displayTreeIfNeeded()
+        for subview in subviews { subview._displayLayerTreeIfNeeded() }
+    }
+
+    /// CALayerDelegate display hook. Subclasses such as animated UIImageView
+    /// implementations override this exact UIKit surface; the base callback
+    /// invalidates the view's cached custom contents.
+#if canImport(ObjectiveC)
+    @objc(displayLayer:)
+#endif
+    open func display(_ layer: CALayer) {
+        _ = layer
+        setNeedsDisplay()
+    }
 
     /// LayerBridge's per-view cache storage (content image, subtree
     /// composite, fingerprint stability). Opaque here to keep the view
