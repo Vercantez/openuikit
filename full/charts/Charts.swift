@@ -1,4 +1,5 @@
 @_exported import SwiftUI
+import CoreGraphics
 import Foundation
 
 public enum ChartsPortable {

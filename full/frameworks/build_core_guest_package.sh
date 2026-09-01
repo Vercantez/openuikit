@@ -2356,6 +2356,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     expected_foundation_essentials_load=1
     expected_uikit_load=0
     expected_openuikit_load=0
+    expected_opencoregraphics_load=0
     expected_swiftui_load=0
     expected_coremedia_load=0
     expected_avfoundation_load=0
@@ -2364,6 +2365,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         SafariServices|StoreKit|PassKit|MessageUI|AppIntents|QuickLook)
             expected_uikit_load=1
             expected_openuikit_load=1
+            expected_opencoregraphics_load=1
             framework_link_dependencies+=(
                 -lUIKit
                 -lOpenUIKit
@@ -2371,11 +2373,13 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
             )
             ;;
         CoreGraphics)
+            expected_opencoregraphics_load=1
             framework_link_dependencies+=(
                 -lOpenCoreGraphics
             )
             ;;
         ImageIO)
+            expected_opencoregraphics_load=1
             framework_link_dependencies+=(
                 -lCoreGraphics
                 -lOpenCoreGraphics
@@ -2409,6 +2413,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         AVFoundation)
             expected_coremedia_load=1
             expected_openuikit_load=1
+            expected_opencoregraphics_load=1
             framework_link_dependencies+=(
                 -lCoreMedia
                 -lOpenUIKit
@@ -2418,6 +2423,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         AVKit)
             expected_uikit_load=1
             expected_openuikit_load=1
+            expected_opencoregraphics_load=1
             expected_swiftui_load=1
             expected_avfoundation_load=1
             framework_link_dependencies+=(
@@ -2430,8 +2436,10 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
             ;;
         Charts)
             expected_swiftui_load=1
+            expected_opencoregraphics_load=1
             framework_link_dependencies+=(
                 -lSwiftUI
+                -lOpenCoreGraphics
             )
             ;;
     esac
@@ -2460,6 +2468,9 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     openuikit_load_count=$(llvm-otool-18 -L \
         "$STAGE/lib/lib$framework.dylib" \
         | awk '$1 == "@rpath/libOpenUIKit.dylib" { count++ } END { print count + 0 }')
+    opencoregraphics_load_count=$(llvm-otool-18 -L \
+        "$STAGE/lib/lib$framework.dylib" \
+        | awk '$1 == "@rpath/libOpenCoreGraphics.dylib" { count++ } END { print count + 0 }')
     swiftui_load_count=$(llvm-otool-18 -L "$STAGE/lib/lib$framework.dylib" \
         | awk '$1 == "@rpath/libSwiftUI.dylib" { count++ } END { print count + 0 }')
     coremedia_load_count=$(llvm-otool-18 -L "$STAGE/lib/lib$framework.dylib" \
@@ -2501,6 +2512,9 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         || die "lib$framework UIKit load count $uikit_load_count, expected $expected_uikit_load"
     [ "$openuikit_load_count" -eq "$expected_openuikit_load" ] \
         || die "lib$framework OpenUIKit load count $openuikit_load_count, expected $expected_openuikit_load"
+    [ "$opencoregraphics_load_count" -eq \
+        "$expected_opencoregraphics_load" ] \
+        || die "lib$framework OpenCoreGraphics load count $opencoregraphics_load_count, expected $expected_opencoregraphics_load"
     [ "$swiftui_load_count" -eq "$expected_swiftui_load" ] \
         || die "lib$framework SwiftUI load count $swiftui_load_count, expected $expected_swiftui_load"
     [ "$coremedia_load_count" -eq "$expected_coremedia_load" ] \
@@ -2515,11 +2529,12 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         | grep -Fq "/System/Library/Frameworks/$framework.framework/"; then
         die "lib$framework loads the Apple $framework framework"
     fi
-    printf '%s\tportable-self-id=%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\topenuikit=%s\tswiftui=%s\tcoremedia=%s\tavfoundation=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
+    printf '%s\tportable-self-id=%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\topenuikit=%s\topencoregraphics=%s\tswiftui=%s\tcoremedia=%s\tavfoundation=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
         "$framework" "$portable_self_id_count" "$foundation_load_count" \
         "$foundation_essentials_load_count" \
         "$foundation_essentials_ordinary_load_count" "$uikit_load_count" \
         "$openuikit_load_count" \
+        "$opencoregraphics_load_count" \
         "$swiftui_load_count" "$coremedia_load_count" \
         "$avfoundation_load_count" "$concurrency_load_count" \
         "$os_runtime_reexport_count" \

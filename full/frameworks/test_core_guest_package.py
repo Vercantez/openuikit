@@ -2507,8 +2507,11 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("first-party-dylib-loads-v1", source)
         self.assertIn("portable-self-id=%s", source)
         self.assertIn("openuikit=%s", source)
+        self.assertIn("opencoregraphics=%s", source)
         self.assertIn("expected_openuikit_load=1", source)
+        self.assertIn("expected_opencoregraphics_load=1", source)
         self.assertIn("lib$framework OpenUIKit load count", source)
+        self.assertIn("lib$framework OpenCoreGraphics load count", source)
         self.assertIn(
             "coremedia_load_count - portable_self_id_count", source
         )
@@ -2561,6 +2564,11 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("#if canImport(OpenUIKit)", avfoundation_source)
         self.assertIn("import OpenUIKit", avfoundation_source)
         self.assertIn("-lOpenUIKit", source)
+        charts_source = (REPO / "full/charts/Charts.swift").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("import CoreGraphics", charts_source)
+        self.assertIn("-lOpenCoreGraphics", source)
         self.assertIn("oslog=standard-error,signposts", probe)
         self.assertIn("uniform-types=tags,conformance", probe)
         self.assertIn("security=keychain,random", probe)
