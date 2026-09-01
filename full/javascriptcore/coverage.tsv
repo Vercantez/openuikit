@@ -1,358 +1,358 @@
 precise	status	evidence	notes
-c:@E@JSRelationCondition	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@E@JSRelationCondition@kJSRelationConditionEqual	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@E@JSRelationCondition@kJSRelationConditionGreaterThan	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@E@JSRelationCondition@kJSRelationConditionLessThan	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@E@JSRelationCondition@kJSRelationConditionUndefined	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSType	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSType@kJSTypeBigInt	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSType@kJSTypeBoolean	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSType@kJSTypeNull	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSType@kJSTypeNumber	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSType@kJSTypeObject	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSType@kJSTypeString	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSType@kJSTypeSymbol	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSType@kJSTypeUndefined	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSTypedArrayType	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeArrayBuffer	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeBigInt64Array	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeBigUint64Array	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeFloat32Array	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeFloat64Array	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt16Array	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt32Array	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt8Array	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeNone	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint16Array	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint32Array	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint8Array	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint8ClampedArray	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@Ea@kJSClassAttributeNone@kJSClassAttributeNoAutomaticPrototype	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@Ea@kJSClassAttributeNone@kJSClassAttributeNone	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeDontDelete	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeDontEnum	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeNone	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeReadOnly	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSBigIntCreateWithDouble	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSBigIntCreateWithInt64	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSBigIntCreateWithString	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSBigIntCreateWithUInt64	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSCheckScriptSyntax	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSClassCreate	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSClassRelease	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSClassRetain	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSContextGetGlobalContext	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSContextGetGlobalObject	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSContextGetGroup	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSContextGroupCreate	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSContextGroupRelease	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSContextGroupRetain	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSEvaluateScript	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSGarbageCollect	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	No-op under Swift ARC; values live until the owning JSContext/JSVirtualMachine is released.
-c:@F@JSGlobalContextCopyName	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSGlobalContextCreate	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSGlobalContextCreateInGroup	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSGlobalContextIsInspectable	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Stores the flag only; remote inspector/WebKit debugging is fail-closed.
-c:@F@JSGlobalContextRelease	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSGlobalContextRetain	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSGlobalContextSetInspectable	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Stores the flag only; remote inspector/WebKit debugging is fail-closed.
-c:@F@JSGlobalContextSetName	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectCallAsConstructor	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectCallAsFunction	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectCopyPropertyNames	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectDeleteProperty	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectDeletePropertyForKey	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectGetArrayBufferByteLength	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectGetArrayBufferBytesPtr	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectGetPrivate	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectGetProperty	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectGetPropertyAtIndex	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectGetPropertyForKey	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectGetPrototype	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectGetTypedArrayBuffer	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectGetTypedArrayByteLength	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectGetTypedArrayByteOffset	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectGetTypedArrayBytesPtr	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectGetTypedArrayLength	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectHasProperty	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectHasPropertyForKey	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectIsConstructor	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectIsFunction	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectMake	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectMakeArray	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectMakeArrayBufferWithBytesNoCopy	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Honors the supplied deallocator when the buffer object is released.
-c:@F@JSObjectMakeConstructor	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectMakeDate	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectMakeDeferredPromise	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectMakeError	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectMakeFunction	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectMakeFunctionWithCallback	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectMakeRegExp	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectMakeTypedArray	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectMakeTypedArrayWithArrayBuffer	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectMakeTypedArrayWithArrayBufferAndOffset	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectMakeTypedArrayWithBytesNoCopy	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Honors the supplied deallocator when the buffer object is released.
-c:@F@JSObjectSetPrivate	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectSetProperty	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectSetPropertyAtIndex	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectSetPropertyForKey	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSObjectSetPrototype	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSPropertyNameAccumulatorAddName	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSPropertyNameArrayGetCount	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSPropertyNameArrayGetNameAtIndex	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSPropertyNameArrayRelease	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSPropertyNameArrayRetain	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSStringCopyCFString	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Uses CoreFoundation CFStringCreateWithCString/GetCString on Linux with UTF-8 encoding 0x08000100.
-c:@F@JSStringCreateWithCFString	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Uses CoreFoundation CFStringCreateWithCString/GetCString on Linux with UTF-8 encoding 0x08000100.
-c:@F@JSStringCreateWithCharacters	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSStringCreateWithUTF8CString	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSStringGetCharactersPtr	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSStringGetLength	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSStringGetMaximumUTF8CStringSize	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSStringGetUTF8CString	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSStringIsEqual	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSStringIsEqualToUTF8CString	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSStringRelease	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSStringRetain	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueCompare	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueCompareDouble	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueCompareInt64	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueCompareUInt64	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueCreateJSONString	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueGetType	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueGetTypedArrayType	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueIsArray	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueIsBigInt	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueIsBoolean	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueIsDate	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueIsEqual	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueIsInstanceOfConstructor	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueIsNull	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueIsNumber	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueIsObject	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueIsObjectOfClass	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueIsStrictEqual	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueIsString	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueIsSymbol	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueIsUndefined	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueMakeBoolean	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueMakeFromJSONString	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueMakeNull	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueMakeNumber	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueMakeString	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueMakeSymbol	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueMakeUndefined	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueProtect	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueToBoolean	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueToInt32	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueToInt64	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueToNumber	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueToObject	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueToStringCopy	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueToUInt32	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueToUInt64	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@F@JSValueUnprotect	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@JSPropertyDescriptorConfigurableKey	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@JSPropertyDescriptorEnumerableKey	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@JSPropertyDescriptorGetKey	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@JSPropertyDescriptorSetKey	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@JSPropertyDescriptorValueKey	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@JSPropertyDescriptorWritableKey	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@attributes	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@callAsConstructor	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@callAsFunction	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@className	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@convertToType	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@deleteProperty	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@finalize	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@getProperty	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@getPropertyNames	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@hasInstance	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@hasProperty	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@initialize	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@parentClass	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@setProperty	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@staticFunctions	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@staticValues	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSClassDefinition@FI@version	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSStaticFunction	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSStaticFunction@FI@attributes	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSStaticFunction@FI@callAsFunction	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSStaticFunction@FI@name	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSStaticValue	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSStaticValue@FI@attributes	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSStaticValue@FI@getProperty	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSStaticValue@FI@name	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@SA@JSStaticValue@FI@setProperty	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSChar	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSClassAttributes	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSClassRef	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSContextGroupRef	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSContextRef	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSGlobalContextRef	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSObjectCallAsConstructorCallback	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSObjectCallAsFunctionCallback	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSObjectConvertToTypeCallback	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSObjectDeletePropertyCallback	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSObjectFinalizeCallback	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSObjectGetPropertyCallback	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSObjectGetPropertyNamesCallback	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSObjectHasInstanceCallback	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSObjectHasPropertyCallback	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSObjectInitializeCallback	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSObjectRef	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSObjectSetPropertyCallback	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSPropertyAttributes	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSPropertyNameAccumulatorRef	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSPropertyNameArrayRef	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSStringRef	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSTypedArrayBytesDeallocator	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Honors the supplied deallocator when the buffer object is released.
-c:@T@JSValueProperty	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@T@JSValueRef	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@kJSClassDefinitionEmpty	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:@macro@JSC_OBJC_API_ENABLED	implemented	JSCAPI.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSContext	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSContext(cm)contextWithJSGlobalContextRef:	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSContext(cm)currentArguments	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	Thread-local during evaluateScript and function calls.
-c:objc(cs)JSContext(cm)currentCallee	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	Thread-local during evaluateScript and function calls.
-c:objc(cs)JSContext(cm)currentContext	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	Thread-local during evaluateScript and function calls.
-c:objc(cs)JSContext(cm)currentThis	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	Thread-local during evaluateScript and function calls.
-c:objc(cs)JSContext(im)evaluateScript:	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSContext(im)evaluateScript:withSourceURL:	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSContext(im)init	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSContext(im)initWithVirtualMachine:	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSContext(im)objectForKeyedSubscript:	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSContext(im)setObject:forKeyedSubscript:	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSContext(py)JSGlobalContextRef	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSContext(py)exception	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSContext(py)exceptionHandler	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSContext(py)globalObject	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSContext(py)inspectable	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	Local stored flag; no inspector backend.
-c:objc(cs)JSContext(py)name	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSContext(py)virtualMachine	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSManagedValue	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSManagedValue(cm)managedValueWithValue:andOwner:	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSManagedValue(im)initWithValue:	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSManagedValue(py)value	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithBool:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithBool:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithDouble:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithDouble:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithInt32:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithInt32:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithJSValueRef:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewArrayInContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewArrayInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromDouble:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromDouble:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromInt64:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromInt64:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromString:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromString:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromUInt64:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewBigIntFromUInt64:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewErrorFromMessage:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewErrorFromMessage:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewObjectInContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewObjectInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewPromiseInContext:fromExecutor:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Executor and then/catch run synchronously; no JSC microtask queue.
-c:objc(cs)JSValue(cm)valueWithNewPromiseInContext:fromExecutor:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Executor and then/catch run synchronously; no JSC microtask queue.
-c:objc(cs)JSValue(cm)valueWithNewPromiseRejectedWithReason:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Executor and then/catch run synchronously; no JSC microtask queue.
-c:objc(cs)JSValue(cm)valueWithNewPromiseRejectedWithReason:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Executor and then/catch run synchronously; no JSC microtask queue.
-c:objc(cs)JSValue(cm)valueWithNewPromiseResolvedWithResult:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Executor and then/catch run synchronously; no JSC microtask queue.
-c:objc(cs)JSValue(cm)valueWithNewPromiseResolvedWithResult:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Executor and then/catch run synchronously; no JSC microtask queue.
-c:objc(cs)JSValue(cm)valueWithNewRegularExpressionFromPattern:flags:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	NSRegularExpression-backed; not a claim of ESRegExp lastIndex/exec parity.
-c:objc(cs)JSValue(cm)valueWithNewRegularExpressionFromPattern:flags:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	NSRegularExpression-backed; not a claim of ESRegExp lastIndex/exec parity.
-c:objc(cs)JSValue(cm)valueWithNewSymbolFromDescription:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNewSymbolFromDescription:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNullInContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithNullInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithObject:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithObject:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithPoint:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithRange:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithRect:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithSize:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithUInt32:inContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithUInt32:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithUndefinedInContext:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(cm)valueWithUndefinedInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)callWithArguments:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)compareDouble:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)compareInt64:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)compareJSValue:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)compareUInt64:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)constructWithArguments:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)defineProperty:descriptor:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)deleteProperty:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)hasProperty:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)invokeMethod:withArguments:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)isEqualToObject:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)isEqualWithTypeCoercionToObject:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)isInstanceOf:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)objectAtIndexedSubscript:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)objectForKeyedSubscript:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)setObject:atIndexedSubscript:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)setObject:forKeyedSubscript:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)setValue:atIndex:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)setValue:forProperty:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toArray	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toBool	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toDate	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toDictionary	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toDouble	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toInt32	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toInt64	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toNumber	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toObject	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toObjectOfClass:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toPoint	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toRange	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toRect	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toSize	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toString	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toUInt32	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)toUInt64	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)valueAtIndex:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(im)valueForProperty:	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(py)JSValueRef	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(py)context	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(py)isArray	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(py)isBigInt	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(py)isBoolean	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(py)isDate	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(py)isNull	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(py)isNumber	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(py)isObject	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(py)isString	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(py)isSymbol	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSValue(py)isUndefined	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSVirtualMachine	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSVirtualMachine(im)addManagedReference:withOwner:	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSVirtualMachine(im)init	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(cs)JSVirtualMachine(im)removeManagedReference:withOwner:	implemented	JSContext.swift;tests/agent/JavaScriptCoreRuntime.swift	
-c:objc(pl)JSExport	implemented	JavaScriptCore.swift	Empty Swift protocol; automatic ObjC export of conforming methods is unavailable on Linux.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@JSRelationCondition	implemented	JavaScriptCore.swift	Provided by Equatable/Hashable/RawRepresentable conformance.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@JSType	implemented	JavaScriptCore.swift	Provided by Equatable/Hashable/RawRepresentable conformance.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@JSTypedArrayType	implemented	JavaScriptCore.swift	Provided by Equatable/Hashable/RawRepresentable conformance.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@JSRelationCondition	implemented	JavaScriptCore.swift	Provided by Equatable/Hashable/RawRepresentable conformance.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@JSType	implemented	JavaScriptCore.swift	Provided by Equatable/Hashable/RawRepresentable conformance.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@JSTypedArrayType	implemented	JavaScriptCore.swift	Provided by Equatable/Hashable/RawRepresentable conformance.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@JSRelationCondition	implemented	JavaScriptCore.swift	Provided by Equatable/Hashable/RawRepresentable conformance.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@JSType	implemented	JavaScriptCore.swift	Provided by Equatable/Hashable/RawRepresentable conformance.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@JSTypedArrayType	implemented	JavaScriptCore.swift	Provided by Equatable/Hashable/RawRepresentable conformance.
-s:So13JSStaticValuea4name11getProperty03setE010attributesABSPys4Int8VGSg_s13OpaquePointerVSgAM_A2MSpyAMGSgtXCSgSbAM_A3mOtXCSgs6UInt32Vtcfc	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-s:So13JSStaticValueaABycfc	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-s:So16JSStaticFunctiona4name06callAsB010attributesABSPys4Int8VGSg_s13OpaquePointerVSgAL_A2LSiSPyALGSgSpyALGSgtXCSgs6UInt32Vtcfc	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-s:So16JSStaticFunctionaABycfc	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-s:So16JSTypedArrayTypea8rawValueABs6UInt32V_tcfc	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-s:So16JSTypedArrayTypea8rawValues6UInt32Vvp	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-s:So16JSTypedArrayTypeayABs6UInt32Vcfc	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-s:So17JSClassDefinitiona7version10attributes9className11parentClass12staticValues0I9Functions10initialize8finalize11hasProperty03getO003setO006deleteO00pO5Names14callAsFunction0tU11Constructor0N8Instance13convertToTypeABs5Int32V_s6UInt32VSPys4Int8VGSgs13OpaquePointerVSgSPySo13JSStaticValueaGSgSPySo08JSStaticV0aGSgyA2__A2_tXCSgyA2_XCSgSbA2__A2_A2_tXCSgA2_A2__A2_A2_SpyA2_GSgtXCSgSbA2__A2_A2_A2_A15_tXCSgSbA2__A2_A2_A15_tXCSgyA2__A2_A2_tXCSgA2_A2__A2_A2_SiSPyA2_GSgA15_tXCSgA2_A2__A2_SiA21_A15_tXCSgA18_A2_A2__A2_So6JSTypeaA15_tXCSgtcfc	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-s:So17JSClassDefinitionaABycfc	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-s:So19JSRelationConditionV8rawValueABSgs6UInt32V_tcfc	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-s:So6JSTypea8rawValueABs6UInt32V_tcfc	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-s:So6JSTypea8rawValues6UInt32Vvp	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
-s:So6JSTypeayABs6UInt32Vcfc	implemented	JSValue.swift;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	
+c:@E@JSRelationCondition	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@E@JSRelationCondition@kJSRelationConditionEqual	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@E@JSRelationCondition@kJSRelationConditionGreaterThan	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@E@JSRelationCondition@kJSRelationConditionLessThan	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@E@JSRelationCondition@kJSRelationConditionUndefined	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSType	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSType@kJSTypeBigInt	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSType@kJSTypeBoolean	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSType@kJSTypeNull	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSType@kJSTypeNumber	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSType@kJSTypeObject	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSType@kJSTypeString	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSType@kJSTypeSymbol	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSType@kJSTypeUndefined	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSTypedArrayType	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeArrayBuffer	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeBigInt64Array	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeBigUint64Array	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeFloat32Array	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeFloat64Array	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt16Array	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt32Array	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt8Array	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeNone	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint16Array	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint32Array	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint8Array	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint8ClampedArray	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@Ea@kJSClassAttributeNone@kJSClassAttributeNoAutomaticPrototype	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@Ea@kJSClassAttributeNone@kJSClassAttributeNone	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeDontDelete	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeDontEnum	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeNone	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeReadOnly	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift;include/JSValueRef.h;tests/agent/JavaScriptCoreCABI.c	Enum/constant raw values match the C headers and are observed by the C and Swift probes.
+c:@F@JSBigIntCreateWithDouble	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSBigIntCreateWithInt64	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSBigIntCreateWithString	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSBigIntCreateWithUInt64	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSCheckScriptSyntax	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSClassCreate	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled C thunk copies JSClassDefinition including static tables and @convention(c) callbacks.
+c:@F@JSClassRelease	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSClassRetain	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSContextGetGlobalContext	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSContextGetGlobalObject	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSContextGetGroup	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSContextGroupCreate	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSContextGroupRelease	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSContextGroupRetain	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSEvaluateScript	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSGarbageCollect	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Mark-sweep from the global object and JSValueProtect roots; class finalizers run once on dropped boxes. Not Apple JSC GC.
+c:@F@JSGlobalContextCopyName	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSGlobalContextCreate	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSGlobalContextCreateInGroup	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSGlobalContextIsInspectable	declared	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Stores the inspectable flag only; no WebKit inspector transport is created.
+c:@F@JSGlobalContextRelease	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSGlobalContextRetain	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSGlobalContextSetInspectable	declared	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Stores the inspectable flag only; no WebKit inspector transport is created.
+c:@F@JSGlobalContextSetName	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectCallAsConstructor	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectCallAsFunction	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectCopyPropertyNames	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectDeleteProperty	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectDeletePropertyForKey	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectGetArrayBufferByteLength	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectGetArrayBufferBytesPtr	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectGetPrivate	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectGetProperty	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectGetPropertyAtIndex	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectGetPropertyForKey	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectGetPrototype	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectGetTypedArrayBuffer	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Returns the context-interned ArrayBuffer object with stable identity and shared bytes; C probe checks pointer equality across calls and after GC.
+c:@F@JSObjectGetTypedArrayByteLength	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectGetTypedArrayByteOffset	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectGetTypedArrayBytesPtr	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectGetTypedArrayLength	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectHasProperty	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectHasPropertyForKey	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectIsConstructor	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectIsFunction	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectMake	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectMakeArray	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectMakeArrayBufferWithBytesNoCopy	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectMakeConstructor	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectMakeDate	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectMakeDeferredPromise	declared	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Factory returns a promise plus resolve/reject callbacks; then/catch run synchronously with no JSC microtask queue.
+c:@F@JSObjectMakeError	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectMakeFunction	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectMakeFunctionWithCallback	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectMakeRegExp	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectMakeTypedArray	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectMakeTypedArrayWithArrayBuffer	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectMakeTypedArrayWithArrayBufferAndOffset	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectMakeTypedArrayWithBytesNoCopy	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectSetPrivate	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectSetProperty	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectSetPropertyAtIndex	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectSetPropertyForKey	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSObjectSetPrototype	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSPropertyNameAccumulatorAddName	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSPropertyNameArrayGetCount	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSPropertyNameArrayGetNameAtIndex	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSPropertyNameArrayRelease	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSPropertyNameArrayRetain	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSStringCopyCFString	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSStringCreateWithCFString	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSStringCreateWithCharacters	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSStringCreateWithUTF8CString	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSStringGetCharactersPtr	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSStringGetLength	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSStringGetMaximumUTF8CStringSize	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSStringGetUTF8CString	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSStringIsEqual	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSStringIsEqualToUTF8CString	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSStringRelease	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSStringRetain	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueCompare	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueCompareDouble	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueCompareInt64	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueCompareUInt64	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueCreateJSONString	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueGetType	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueGetTypedArrayType	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueIsArray	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueIsBigInt	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueIsBoolean	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueIsDate	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueIsEqual	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueIsInstanceOfConstructor	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueIsNull	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueIsNumber	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueIsObject	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueIsObjectOfClass	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueIsStrictEqual	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueIsString	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueIsSymbol	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueIsUndefined	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueMakeBoolean	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueMakeFromJSONString	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueMakeNull	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueMakeNumber	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueMakeString	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueMakeSymbol	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueMakeUndefined	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueProtect	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Increments protectCount and interns the box as a GC root; C probe shows GC does not finalize while protected.
+c:@F@JSValueToBoolean	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueToInt32	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueToInt64	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueToNumber	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueToObject	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueToStringCopy	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueToUInt32	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueToUInt64	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Unmangled @_cdecl export exercised by tests/agent/JavaScriptCoreCABI.c against the C headers.
+c:@F@JSValueUnprotect	implemented	JSCAPI.swift;JSCExports.swift;include/JavaScriptCore.h;tests/agent/JavaScriptCoreCABI.c	Decrements protectCount; C probe shows unprotect plus JSGarbageCollect finalizes unreachable class objects.
+c:@JSPropertyDescriptorConfigurableKey	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	String keys are present and used by JSValue.defineProperty in the runtime probe.
+c:@JSPropertyDescriptorEnumerableKey	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	String keys are present and used by JSValue.defineProperty in the runtime probe.
+c:@JSPropertyDescriptorGetKey	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	String keys are present and used by JSValue.defineProperty in the runtime probe.
+c:@JSPropertyDescriptorSetKey	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	String keys are present and used by JSValue.defineProperty in the runtime probe.
+c:@JSPropertyDescriptorValueKey	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	String keys are present and used by JSValue.defineProperty in the runtime probe.
+c:@JSPropertyDescriptorWritableKey	implemented	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	String keys are present and used by JSValue.defineProperty in the runtime probe.
+c:@SA@JSClassDefinition	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@attributes	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@callAsConstructor	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@callAsFunction	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@className	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@convertToType	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@deleteProperty	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@finalize	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@getProperty	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@getPropertyNames	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@hasInstance	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@hasProperty	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@initialize	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@parentClass	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@setProperty	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@staticFunctions	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@staticValues	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSClassDefinition@FI@version	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSStaticFunction	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSStaticFunction@FI@attributes	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSStaticFunction@FI@callAsFunction	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSStaticFunction@FI@name	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSStaticValue	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSStaticValue@FI@attributes	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSStaticValue@FI@getProperty	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSStaticValue@FI@name	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@SA@JSStaticValue@FI@setProperty	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C struct field layout matched in the Swift overlay; C probe fills and exercises the field.
+c:@T@JSChar	implemented	JavaScriptCore.swift;include/JSBase.h;tests/agent/JavaScriptCoreCABI.c	Opaque C ref / attribute typedef imported by the headers and overlay.
+c:@T@JSClassAttributes	implemented	JavaScriptCore.swift;include/JSBase.h;tests/agent/JavaScriptCoreCABI.c	Opaque C ref / attribute typedef imported by the headers and overlay.
+c:@T@JSClassRef	implemented	JavaScriptCore.swift;include/JSBase.h;tests/agent/JavaScriptCoreCABI.c	Opaque C ref / attribute typedef imported by the headers and overlay.
+c:@T@JSContextGroupRef	implemented	JavaScriptCore.swift;include/JSBase.h;tests/agent/JavaScriptCoreCABI.c	Opaque C ref / attribute typedef imported by the headers and overlay.
+c:@T@JSContextRef	implemented	JavaScriptCore.swift;include/JSBase.h;tests/agent/JavaScriptCoreCABI.c	Opaque C ref / attribute typedef imported by the headers and overlay.
+c:@T@JSGlobalContextRef	implemented	JavaScriptCore.swift;include/JSBase.h;tests/agent/JavaScriptCoreCABI.c	Opaque C ref / attribute typedef imported by the headers and overlay.
+c:@T@JSObjectCallAsConstructorCallback	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C function-pointer typedef with @convention(c); C probe installs and invokes the callback.
+c:@T@JSObjectCallAsFunctionCallback	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C function-pointer typedef with @convention(c); C probe installs and invokes the callback.
+c:@T@JSObjectConvertToTypeCallback	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C function-pointer typedef with @convention(c); C probe installs and invokes the callback.
+c:@T@JSObjectDeletePropertyCallback	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C function-pointer typedef with @convention(c); C probe installs and invokes the callback.
+c:@T@JSObjectFinalizeCallback	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C function-pointer typedef with @convention(c); C probe installs and invokes the callback.
+c:@T@JSObjectGetPropertyCallback	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C function-pointer typedef with @convention(c); C probe installs and invokes the callback.
+c:@T@JSObjectGetPropertyNamesCallback	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C function-pointer typedef with @convention(c); C probe installs and invokes the callback.
+c:@T@JSObjectHasInstanceCallback	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C function-pointer typedef with @convention(c); C probe installs and invokes the callback.
+c:@T@JSObjectHasPropertyCallback	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C function-pointer typedef with @convention(c); C probe installs and invokes the callback.
+c:@T@JSObjectInitializeCallback	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C function-pointer typedef with @convention(c); C probe installs and invokes the callback.
+c:@T@JSObjectRef	implemented	JavaScriptCore.swift;include/JSBase.h;tests/agent/JavaScriptCoreCABI.c	Opaque C ref / attribute typedef imported by the headers and overlay.
+c:@T@JSObjectSetPropertyCallback	implemented	JavaScriptCore.swift;include/JSObjectRef.h;tests/agent/JavaScriptCoreCABI.c	C function-pointer typedef with @convention(c); C probe installs and invokes the callback.
+c:@T@JSPropertyAttributes	implemented	JavaScriptCore.swift;include/JSBase.h;tests/agent/JavaScriptCoreCABI.c	Opaque C ref / attribute typedef imported by the headers and overlay.
+c:@T@JSPropertyNameAccumulatorRef	implemented	JavaScriptCore.swift;include/JSBase.h;tests/agent/JavaScriptCoreCABI.c	Opaque C ref / attribute typedef imported by the headers and overlay.
+c:@T@JSPropertyNameArrayRef	implemented	JavaScriptCore.swift;include/JSBase.h;tests/agent/JavaScriptCoreCABI.c	Opaque C ref / attribute typedef imported by the headers and overlay.
+c:@T@JSStringRef	implemented	JavaScriptCore.swift;include/JSBase.h;tests/agent/JavaScriptCoreCABI.c	Opaque C ref / attribute typedef imported by the headers and overlay.
+c:@T@JSTypedArrayBytesDeallocator	implemented	JavaScriptCore.swift;include/JSTypedArray.h;tests/agent/JavaScriptCoreCABI.c	No-copy typed array / ArrayBuffer paths call the C deallocator when the buffer object is released.
+c:@T@JSValueProperty	declared	JavaScriptCore.swift	Swift typealias to AnyObject; Apple property-wrapper semantics are unobserved.
+c:@T@JSValueRef	implemented	JavaScriptCore.swift;include/JSBase.h;tests/agent/JavaScriptCoreCABI.c	Opaque C ref / attribute typedef imported by the headers and overlay.
+c:@kJSClassDefinitionEmpty	declared	JavaScriptCore.swift;include/JSObjectRef.h	Swift zero value exists; the C extern const data symbol is not emitted from Swift. C clients zero-initialize a local JSClassDefinition.
+c:@macro@JSC_OBJC_API_ENABLED	implemented	include/JSBase.h;JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Macro and Swift overlay are 0; no ObjC JSExport projection exists.
+c:objc(cs)JSContext	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSContext(cm)contextWithJSGlobalContextRef:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSContext(cm)currentArguments	declared	JSContext.swift	Thread-local slots are updated during call/evaluate; not asserted by the isolated runtime probe.
+c:objc(cs)JSContext(cm)currentCallee	declared	JSContext.swift	Thread-local slots are updated during call/evaluate; not asserted by the isolated runtime probe.
+c:objc(cs)JSContext(cm)currentContext	declared	JSContext.swift	Thread-local slots are updated during call/evaluate; not asserted by the isolated runtime probe.
+c:objc(cs)JSContext(cm)currentThis	declared	JSContext.swift	Thread-local slots are updated during call/evaluate; not asserted by the isolated runtime probe.
+c:objc(cs)JSContext(im)evaluateScript:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSContext(im)evaluateScript:withSourceURL:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSContext(im)init	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSContext(im)initWithVirtualMachine:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSContext(im)objectForKeyedSubscript:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSContext(im)setObject:forKeyedSubscript:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSContext(py)JSGlobalContextRef	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSContext(py)exception	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSContext(py)exceptionHandler	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSContext(py)globalObject	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSContext(py)inspectable	declared	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Stored flag only; remote inspector/WebKit debugging is fail-closed.
+c:objc(cs)JSContext(py)name	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSContext(py)virtualMachine	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSManagedValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSManagedValue(cm)managedValueWithValue:andOwner:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSManagedValue(im)initWithValue:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSManagedValue(py)value	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithBool:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithBool:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithDouble:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithDouble:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithInt32:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithInt32:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithJSValueRef:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewArrayInContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewArrayInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromDouble:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromDouble:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromInt64:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromInt64:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromString:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromString:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromUInt64:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromUInt64:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewErrorFromMessage:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewErrorFromMessage:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewObjectInContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewObjectInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewPromiseInContext:fromExecutor:	declared	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Promise objects exist and executors run immediately; no JSC microtask queue. Scheduling is not claimed.
+c:objc(cs)JSValue(cm)valueWithNewPromiseInContext:fromExecutor:::SYNTHESIZED::c:objc(cs)JSValue	declared	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Promise objects exist and executors run immediately; no JSC microtask queue. Scheduling is not claimed.
+c:objc(cs)JSValue(cm)valueWithNewPromiseRejectedWithReason:inContext:	declared	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Promise objects exist and executors run immediately; no JSC microtask queue. Scheduling is not claimed.
+c:objc(cs)JSValue(cm)valueWithNewPromiseRejectedWithReason:inContext:::SYNTHESIZED::c:objc(cs)JSValue	declared	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Promise objects exist and executors run immediately; no JSC microtask queue. Scheduling is not claimed.
+c:objc(cs)JSValue(cm)valueWithNewPromiseResolvedWithResult:inContext:	declared	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Promise objects exist and executors run immediately; no JSC microtask queue. Scheduling is not claimed.
+c:objc(cs)JSValue(cm)valueWithNewPromiseResolvedWithResult:inContext:::SYNTHESIZED::c:objc(cs)JSValue	declared	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Promise objects exist and executors run immediately; no JSC microtask queue. Scheduling is not claimed.
+c:objc(cs)JSValue(cm)valueWithNewRegularExpressionFromPattern:flags:inContext:	declared	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	NSRegularExpression-backed; not a claim of ECMAScript lastIndex/exec parity.
+c:objc(cs)JSValue(cm)valueWithNewRegularExpressionFromPattern:flags:inContext:::SYNTHESIZED::c:objc(cs)JSValue	declared	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	NSRegularExpression-backed; not a claim of ECMAScript lastIndex/exec parity.
+c:objc(cs)JSValue(cm)valueWithNewSymbolFromDescription:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNewSymbolFromDescription:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNullInContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithNullInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithObject:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithObject:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithPoint:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithRange:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithRect:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithSize:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithUInt32:inContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithUInt32:inContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithUndefinedInContext:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(cm)valueWithUndefinedInContext:::SYNTHESIZED::c:objc(cs)JSValue	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)callWithArguments:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)compareDouble:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)compareInt64:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)compareJSValue:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)compareUInt64:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)constructWithArguments:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)defineProperty:descriptor:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)deleteProperty:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)hasProperty:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)invokeMethod:withArguments:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)isEqualToObject:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)isEqualWithTypeCoercionToObject:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)isInstanceOf:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)objectAtIndexedSubscript:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)objectForKeyedSubscript:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)setObject:atIndexedSubscript:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)setObject:forKeyedSubscript:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)setValue:atIndex:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)setValue:forProperty:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toArray	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toBool	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toDate	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toDictionary	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toDouble	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toInt32	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toInt64	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toNumber	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toObject	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toObjectOfClass:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toPoint	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toRange	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toRect	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toSize	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toString	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toUInt32	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)toUInt64	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)valueAtIndex:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(im)valueForProperty:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(py)JSValueRef	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(py)context	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(py)isArray	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(py)isBigInt	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(py)isBoolean	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(py)isDate	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(py)isNull	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(py)isNumber	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(py)isObject	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(py)isString	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(py)isSymbol	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSValue(py)isUndefined	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSVirtualMachine	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSVirtualMachine(im)addManagedReference:withOwner:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSVirtualMachine(im)init	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(cs)JSVirtualMachine(im)removeManagedReference:withOwner:	implemented	JSContext.swift;JSValue.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay method/property exercised by tests/agent/JavaScriptCoreRuntime.swift.
+c:objc(pl)JSExport	declared	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Empty protocol so types can conform. Automatic ObjC method projection is unavailable (JSC_OBJC_API_ENABLED=0).
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@JSRelationCondition	declared	JavaScriptCore.swift	Compiler-synthesized Equatable/Hashable; not a distinct runtime feature.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@JSType	declared	JavaScriptCore.swift	Compiler-synthesized Equatable/Hashable; not a distinct runtime feature.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@JSTypedArrayType	declared	JavaScriptCore.swift	Compiler-synthesized Equatable/Hashable; not a distinct runtime feature.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@JSRelationCondition	declared	JavaScriptCore.swift	Compiler-synthesized Equatable/Hashable; not a distinct runtime feature.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@JSType	declared	JavaScriptCore.swift	Compiler-synthesized Equatable/Hashable; not a distinct runtime feature.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@JSTypedArrayType	declared	JavaScriptCore.swift	Compiler-synthesized Equatable/Hashable; not a distinct runtime feature.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@JSRelationCondition	declared	JavaScriptCore.swift	Compiler-synthesized Equatable/Hashable; not a distinct runtime feature.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@JSType	declared	JavaScriptCore.swift	Compiler-synthesized Equatable/Hashable; not a distinct runtime feature.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@JSTypedArrayType	declared	JavaScriptCore.swift	Compiler-synthesized Equatable/Hashable; not a distinct runtime feature.
+s:So13JSStaticValuea4name11getProperty03setE010attributesABSPys4Int8VGSg_s13OpaquePointerVSgAM_A2MSpyAMGSgtXCSgSbAM_A3mOtXCSgs6UInt32Vtcfc	declared	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay initializer/property compiled and constructed in the runtime probe; C layout is owned by the matching C struct.
+s:So13JSStaticValueaABycfc	declared	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay initializer/property compiled and constructed in the runtime probe; C layout is owned by the matching C struct.
+s:So16JSStaticFunctiona4name06callAsB010attributesABSPys4Int8VGSg_s13OpaquePointerVSgAL_A2LSiSPyALGSgSpyALGSgtXCSgs6UInt32Vtcfc	declared	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay initializer/property compiled and constructed in the runtime probe; C layout is owned by the matching C struct.
+s:So16JSStaticFunctionaABycfc	declared	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay initializer/property compiled and constructed in the runtime probe; C layout is owned by the matching C struct.
+s:So16JSTypedArrayTypea8rawValueABs6UInt32V_tcfc	declared	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay initializer/property compiled and constructed in the runtime probe; C layout is owned by the matching C struct.
+s:So16JSTypedArrayTypea8rawValues6UInt32Vvp	declared	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay initializer/property compiled and constructed in the runtime probe; C layout is owned by the matching C struct.
+s:So16JSTypedArrayTypeayABs6UInt32Vcfc	declared	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay initializer/property compiled and constructed in the runtime probe; C layout is owned by the matching C struct.
+s:So17JSClassDefinitiona7version10attributes9className11parentClass12staticValues0I9Functions10initialize8finalize11hasProperty03getO003setO006deleteO00pO5Names14callAsFunction0tU11Constructor0N8Instance13convertToTypeABs5Int32V_s6UInt32VSPys4Int8VGSgs13OpaquePointerVSgSPySo13JSStaticValueaGSgSPySo08JSStaticV0aGSgyA2__A2_tXCSgyA2_XCSgSbA2__A2_A2_tXCSgA2_A2__A2_A2_SpyA2_GSgtXCSgSbA2__A2_A2_A2_A15_tXCSgSbA2__A2_A2_A15_tXCSgyA2__A2_A2_tXCSgA2_A2__A2_A2_SiSPyA2_GSgA15_tXCSgA2_A2__A2_SiA21_A15_tXCSgA18_A2_A2__A2_So6JSTypeaA15_tXCSgtcfc	declared	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay initializer/property compiled and constructed in the runtime probe; C layout is owned by the matching C struct.
+s:So17JSClassDefinitionaABycfc	declared	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay initializer/property compiled and constructed in the runtime probe; C layout is owned by the matching C struct.
+s:So19JSRelationConditionV8rawValueABSgs6UInt32V_tcfc	declared	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay initializer/property compiled and constructed in the runtime probe; C layout is owned by the matching C struct.
+s:So6JSTypea8rawValueABs6UInt32V_tcfc	declared	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay initializer/property compiled and constructed in the runtime probe; C layout is owned by the matching C struct.
+s:So6JSTypea8rawValues6UInt32Vvp	declared	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay initializer/property compiled and constructed in the runtime probe; C layout is owned by the matching C struct.
+s:So6JSTypeayABs6UInt32Vcfc	declared	JavaScriptCore.swift;tests/agent/JavaScriptCoreRuntime.swift	Swift overlay initializer/property compiled and constructed in the runtime probe; C layout is owned by the matching C struct.
