@@ -1,0 +1,7 @@
+full/visionkit/DataScannerViewController.swift
+full/visionkit/ImageAnalysisInteraction.swift
+full/visionkit/ImageAnalyzer.swift
+full/visionkit/RecognizedItem.swift
+full/visionkit/VNDocumentCamera.swift
+full/visionkit/VisionKit.swift
+full/visionkit/VisionKitCompatibility.swift
