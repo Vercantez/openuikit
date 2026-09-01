@@ -365,8 +365,9 @@ done
 # ---- libSystem / libc++ umbrellas -----------------------------------------
 # ONE umbrella per library, over machorun's CURRENT dylib, carrying BOTH sets
 # of additions:
-#   spike/syspatch.c   + spike/cxxpatch.cpp   the 47+5 symbols the staged Apple
-#                                             Swift runtime needs (docs/RUNTIME.md §4)
+#   spike/syspatch.c + full/shims/libsystem_math_compat.c + spike/cxxpatch.cpp
+#                                             the staged Apple Swift runtime and
+#                                             CGFloat tgmath symbols
 #   full/shims/concpatch.c + conccxx.cpp      the 22 more libswift_Concurrency needs
 #
 # Building one umbrella rather than stacking mine on top of the spike's is not
@@ -413,6 +414,8 @@ done
     retarget_runtime_macho "$LIB/libc++.real.dylib"
 
     "${CC[@]}" -O1 -c -o "$OUT/syspatch.o"  "$W/spike/syspatch.c"
+    "${CC[@]}" -O1 -c -o "$OUT/mathpatch.o" \
+        "$W/full/shims/libsystem_math_compat.c"
     "${CC[@]}" -O1 -c -o "$OUT/concpatch.o" "$W/full/shims/concpatch.c"
     clang-18 -target "$TARGET" -isysroot "$SYS" -O1 -std=c++17 \
         -fno-exceptions -nostdinc++ -isystem /usr/lib/llvm-18/include/c++/v1 \
@@ -423,7 +426,7 @@ done
 
     ld64.lld-18 -arch arm64 -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
-        -o "$LIB/libSystem.B.dylib" "$OUT/syspatch.o" "$OUT/concpatch.o" \
+        -o "$LIB/libSystem.B.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
     ld64.lld-18 -arch arm64 -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libc++.1.dylib -undefined dynamic_lookup \
@@ -436,7 +439,7 @@ done
     "${CC[@]}" -O1 -c -o "$OUT/lowheap.o" "$W/full/shims/lowheap.c"
     ld64.lld-18 -arch arm64 -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$ROOTDIR/darwin" \
         -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
-        -o "$LIB/libSystem.B.lowheap.dylib" "$OUT/syspatch.o" "$OUT/concpatch.o" "$OUT/lowheap.o" \
+        -o "$LIB/libSystem.B.lowheap.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" "$OUT/concpatch.o" "$OUT/lowheap.o" \
         -reexport_library "$LIB/libSystem.real.dylib"
 
     # The umbrella must DEFINE the symbols that are its whole reason to exist.
@@ -445,7 +448,7 @@ done
     # full/shims/concpatch.c, and every scene dies at load without it. That is
     # exactly the state a `MRROOT_REFRESH=1` left this root in for most of
     # 2026-08-27 -- so the property is asserted here, at the moment it is built.
-    for sym in __NSGetMachExecuteHeader; do
+    for sym in __NSGetMachExecuteHeader _nan _remquo; do
         llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" 2>/dev/null \
             | awk '{print $NF}' | grep -qx "$sym" || {
             echo "build_full: the libSystem umbrella does not define $sym -- it is not an umbrella, it is a copy" >&2
@@ -516,7 +519,7 @@ echo "== manifest ($ROOTDIR/.manifest)"
     done
     printf 'renamed\tdarwin/usr/lib/libSystem.real.dylib\tdarwin/usr/lib/libSystem.B.dylib\n'
     printf 'renamed\tdarwin/usr/lib/libc++.real.dylib\tdarwin/usr/lib/libc++.1.dylib\n'
-    printf 'umbrella\tdarwin/usr/lib/libSystem.B.dylib\t-\t__NSGetMachExecuteHeader\tdarwin/usr/lib/libSystem.real.dylib\tspike/syspatch.c\tfull/shims/concpatch.c\n'
+    printf 'umbrella\tdarwin/usr/lib/libSystem.B.dylib\t-\t__NSGetMachExecuteHeader,_nan,_remquo\tdarwin/usr/lib/libSystem.real.dylib\tspike/syspatch.c\tfull/shims/libsystem_math_compat.c\tfull/shims/concpatch.c\n'
     printf 'umbrella\tdarwin/usr/lib/libc++.1.dylib\t-\t-\tdarwin/usr/lib/libc++.real.dylib\tspike/cxxpatch.cpp\tfull/shims/conccxx.cpp\n'
     printf 'local\tdarwin/usr/lib/libquartz.dylib\tdarwin/usr/lib/libquartz.dylib\tbuilt from /uikit Sources/CQuartz; machorun'"'"'s copy is an older sync without the codec entry points\n'
     printf 'local\tdarwin/usr/lib/libSystem.B.lowheap.dylib\t-\ta FAILED experiment kept deliberately; see full/shims/lowheap.c\n'

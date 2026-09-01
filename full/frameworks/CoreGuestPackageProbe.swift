@@ -939,6 +939,11 @@ struct CoreGuestPackageProbe {
         chartRoot.frame = CGRect(x: 0, y: 0, width: 160, height: 90)
         chartRoot.layoutIfNeeded()
         precondition(!chartRoot.subviews.isEmpty)
+        let tgmathRemainder = remquo(CGFloat(257), CGFloat(1))
+        precondition(
+            tgmathRemainder.0 == CGFloat.zero && tgmathRemainder.1 == 1
+        )
+        precondition(nan("0x42").isNaN)
         let addController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
         precondition(
             type(of: addController).presentationCapability == .hostDriven
@@ -966,7 +971,7 @@ struct CoreGuestPackageProbe {
                 + "internationalization=icu-fr,number,idna "
                 + "data-platform=\(dataPlatform) "
                 + "observation=\(observationPlatform) "
-                + "graphics=coreimage,quartzcore "
+                + "graphics=coreimage,quartzcore,tgmath "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
                 + "first-party=portable-28 oslog=standard-error,signposts "

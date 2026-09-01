@@ -18,8 +18,9 @@
 #       libc++ lacks: __libcpp_verbose_abort, __cxa_demangle, __gxx_personality_v0,
 #       thread::hardware_concurrency, operator+(const char*, string).
 #
-#   libSystem.B.dylib UMBRELLA  (syspatch.c + reexport of machorun's libSystem)
-#       47 libSystem symbols the sim swift dylibs import that machorun lacks:
+#   libSystem.B.dylib UMBRELLA  (syspatch.c + libsystem_math_compat.c +
+#                                reexport of machorun's libSystem)
+#       The sim Swift dylib closure plus C99 nan/remquo that CGFloat tgmath uses:
 #       compiler-rt 128-bit divide, dispatch_once_f, getsectiondata, malloc_type_*,
 #       the strtod_l family, real pthread stack bounds, the reserved-key TLS the
 #       Swift runtime claims (key 100), the correct-enum _dyld_lookup_section_info,
@@ -66,8 +67,10 @@ llvm-install-name-tool-18 -id /usr/lib/libc++.real.dylib "$OUT/libc++.real.dylib
 cp "$REAL_LIBSYSTEM" "$OUT/libSystem.real.dylib"
 llvm-install-name-tool-18 -id /usr/lib/libSystem.real.dylib "$OUT/libSystem.real.dylib"
 "${CC[@]}" -O1 -c -o "$OUT/syspatch.o" "$ROOT/spike/syspatch.c"
+"${CC[@]}" -O1 -c -o "$OUT/mathpatch.o" \
+    "$ROOT/full/shims/libsystem_math_compat.c"
 "${LD[@]}" -dylib -install_name /usr/lib/libSystem.B.dylib -undefined dynamic_lookup \
-    -o "$OUT/libSystem.B.umbrella.dylib" "$OUT/syspatch.o" \
+    -o "$OUT/libSystem.B.umbrella.dylib" "$OUT/syspatch.o" "$OUT/mathpatch.o" \
     -reexport_library "$OUT/libSystem.real.dylib"
 
 echo "built shims into $OUT:"
