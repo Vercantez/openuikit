@@ -2169,11 +2169,14 @@ class ShellContractTests(unittest.TestCase):
             '"${CORE_PREVIEW_PROBE_FLAGS[@]}"',
         ):
             self.assertIn(token, source)
-        self.assertIn(
-            "#if OPENUIKIT_PREVIEW_ENABLED && "
-            "canImport(DeveloperToolsSupport)",
-            probe,
+        self.assertEqual(
+            probe.count(
+                "#if OPENUIKIT_PREVIEW_ENABLED && "
+                "canImport(DeveloperToolsSupport)"
+            ),
+            2,
         )
+        self.assertNotIn("#if canImport(DeveloperToolsSupport)", probe)
         self.assertIn('Text("Core package Preview")', probe)
         self.assertNotIn("static let retainedView = UIView()", probe)
 

@@ -1047,7 +1047,7 @@ struct CoreGuestPackageProbe {
             type(of: addController).presentationCapability == .hostDriven
         )
 
-        #if canImport(DeveloperToolsSupport)
+        #if OPENUIKIT_PREVIEW_ENABLED && canImport(DeveloperToolsSupport)
         if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *) {
             let value = try! CorePreviewRegistry.makePreview()
             precondition(
