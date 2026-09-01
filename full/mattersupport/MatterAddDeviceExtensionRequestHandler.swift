@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(Matter)
+import Matter
+#endif
 
 /// The object that handles configuration and commissioning of a device into an
 /// ecosystem.
@@ -9,6 +12,9 @@ import Foundation
 /// attestation, network selection, and commissioning. `rooms(in:)` returns an
 /// empty list and `configureDevice(named:in:)` is inert, matching the
 /// documented empty-topology behavior rather than fabricating homes or rooms.
+///
+/// `WiFiScanResult.security`, `band`, and the Matter-typed initializer exist
+/// only when Matter can be imported, and they use Matter's nominal types.
 @available(iOS 16.1, macOS 14.0, *)
 open class MatterAddDeviceExtensionRequestHandler: NSObject {
     public override init() {
@@ -21,7 +27,7 @@ open class MatterAddDeviceExtensionRequestHandler: NSObject {
         _ deviceCredential: DeviceCredential
     ) async throws {
         _ = deviceCredential
-        throw _matterSupportUnsupported("validateDeviceCredential")
+        throw _matterSupportFailClosed()
     }
 
     /// Selects a Wi-Fi network for the accessory. Linux has no system Wi-Fi
@@ -31,7 +37,7 @@ open class MatterAddDeviceExtensionRequestHandler: NSObject {
         from wifiScanResults: [WiFiScanResult]
     ) async throws -> WiFiNetworkAssociation {
         _ = wifiScanResults
-        throw _matterSupportUnsupported("selectWiFiNetwork")
+        throw _matterSupportFailClosed()
     }
 
     /// Selects a Thread network for the accessory. Linux has no ThreadNetwork
@@ -40,7 +46,7 @@ open class MatterAddDeviceExtensionRequestHandler: NSObject {
         from threadScanResults: [ThreadScanResult]
     ) async throws -> ThreadNetworkAssociation {
         _ = threadScanResults
-        throw _matterSupportUnsupported("selectThreadNetwork")
+        throw _matterSupportFailClosed()
     }
 
     /// Commissions the device with the onboarding payload. Always fails closed
@@ -51,7 +57,7 @@ open class MatterAddDeviceExtensionRequestHandler: NSObject {
         commissioningID: UUID
     ) async throws {
         _ = (home, onboardingPayload, commissioningID)
-        throw _matterSupportUnsupported("commissionDevice")
+        throw _matterSupportFailClosed()
     }
 
     /// Rooms for the Select Room card. Empty means no picker and a nil room.
@@ -85,12 +91,15 @@ extension MatterAddDeviceExtensionRequestHandler {
     }
 
     /// A result of a Wi-Fi-scan operation performed on the device.
-    public struct WiFiScanResult: Hashable, Codable, Sendable {
+    public struct WiFiScanResult: Hashable, Sendable {
         public var ssid: Data
         public var rssi: Int8
+        #if canImport(Matter)
         public var security: MTRNetworkCommissioningWiFiSecurity
         public var band: MTRNetworkCommissioningWiFiBand
+        #endif
 
+        #if canImport(Matter)
         public init(
             ssid: Data,
             rssi: Int8,
@@ -101,6 +110,33 @@ extension MatterAddDeviceExtensionRequestHandler {
             self.rssi = rssi
             self.security = security
             self.band = band
+        }
+        #else
+        public init(ssid: Data, rssi: Int8) {
+            self.ssid = ssid
+            self.rssi = rssi
+        }
+        #endif
+
+        public static func == (a: WiFiScanResult, b: WiFiScanResult) -> Bool {
+            guard a.ssid == b.ssid && a.rssi == b.rssi else {
+                return false
+            }
+            #if canImport(Matter)
+            return a.security.rawValue == b.security.rawValue
+                && a.band.rawValue == b.band.rawValue
+            #else
+            return true
+            #endif
+        }
+
+        public func hash(into hasher: inout Hasher) {
+            hasher.combine(ssid)
+            hasher.combine(rssi)
+            #if canImport(Matter)
+            hasher.combine(security.rawValue)
+            hasher.combine(band.rawValue)
+            #endif
         }
     }
 
@@ -198,6 +234,48 @@ extension MatterAddDeviceExtensionRequestHandler {
         public func hash(into hasher: inout Hasher) {
             hasher.combine(kind)
         }
+    }
+}
+
+@available(iOS 16.1, macOS 14.0, *)
+extension MatterAddDeviceExtensionRequestHandler.WiFiScanResult: Codable {
+    enum CodingKeys: String, CodingKey {
+        case ssid
+        case rssi
+        #if canImport(Matter)
+        case security
+        case band
+        #endif
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(ssid, forKey: .ssid)
+        try container.encode(rssi, forKey: .rssi)
+        #if canImport(Matter)
+        try container.encode(security.rawValue, forKey: .security)
+        try container.encode(band.rawValue, forKey: .band)
+        #endif
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        ssid = try container.decode(Data.self, forKey: .ssid)
+        rssi = try container.decode(Int8.self, forKey: .rssi)
+        #if canImport(Matter)
+        security = MTRNetworkCommissioningWiFiSecurity(
+            rawValue: try container.decode(
+                MTRNetworkCommissioningWiFiSecurity.RawValue.self,
+                forKey: .security
+            )
+        )
+        band = MTRNetworkCommissioningWiFiBand(
+            rawValue: try container.decode(
+                MTRNetworkCommissioningWiFiBand.RawValue.self,
+                forKey: .band
+            )
+        )
+        #endif
     }
 }
 

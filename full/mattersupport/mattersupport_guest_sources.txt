@@ -1,4 +1,3 @@
 full/mattersupport/MatterAddDeviceExtensionRequestHandler.swift
 full/mattersupport/MatterAddDeviceRequest.swift
-full/mattersupport/MatterInterop.swift
 full/mattersupport/MatterSupport.swift

@@ -1,18 +1,19 @@
 import Foundation
+#if canImport(Matter)
+import Matter
+#endif
 
 /// A request that adds and sets up a device into an ecosystem.
 ///
 /// Linux has no Apple Matter commissioning UI, Home picker, or setup-payload
 /// entitlement. `isSupported` is therefore `false`, and `perform()` always
-/// throws `MatterSupportError`. Value types still construct, compare, hash,
-/// and round-trip through a local `Codable` representation.
+/// throws. `setupPayload` and the Matter-typed initializers exist only when
+/// the Matter module can be imported; they use Matter's nominal types, never
+/// module-local substitutes.
 @available(iOS 16.1, macOS 14.0, *)
 public struct MatterAddDeviceRequest: Hashable, @unchecked Sendable {
     /// A configuration object representing the topology of the initiating ecosystem.
     public var topology: Topology
-
-    /// Optional Matter setup payload. Stored only; never interpreted.
-    public var setupPayload: MTRSetupPayload?
 
     /// A predicate that filters what devices appear in the picker.
     public var showDeviceCriteria: DeviceCriteria
@@ -22,6 +23,10 @@ public struct MatterAddDeviceRequest: Hashable, @unchecked Sendable {
 
     /// Linux cannot present Apple's add-device UI or talk to a Matter fabric.
     public static var isSupported: Bool { false }
+
+    #if canImport(Matter)
+    /// Optional Matter setup payload. Stored only; never interpreted.
+    public var setupPayload: MTRSetupPayload?
 
     /// Create the request. `shouldScanNetworks` defaults to `true`, matching
     /// the iOS 16.4 designated initializer.
@@ -50,25 +55,45 @@ public struct MatterAddDeviceRequest: Hashable, @unchecked Sendable {
         self.showDeviceCriteria = deviceCriteria
         self.shouldScanNetworks = shouldScanNetworks
     }
+    #else
+    public init(
+        topology: Topology,
+        showing deviceCriteria: DeviceCriteria = .allDevices,
+        shouldScanNetworks: Bool = true
+    ) {
+        self.topology = topology
+        self.showDeviceCriteria = deviceCriteria
+        self.shouldScanNetworks = shouldScanNetworks
+    }
+    #endif
 
     /// Launch the user interface to set up a Matter device in the ecosystem.
     /// Always fails closed on Linux.
     public func perform() async throws {
-        throw _matterSupportUnsupported("MatterAddDeviceRequest.perform")
+        throw _matterSupportFailClosed()
     }
 
     public static func == (a: MatterAddDeviceRequest, b: MatterAddDeviceRequest) -> Bool {
-        a.topology == b.topology
+        guard a.topology == b.topology
             && a.showDeviceCriteria == b.showDeviceCriteria
             && a.shouldScanNetworks == b.shouldScanNetworks
-            && a.setupPayload === b.setupPayload
+        else {
+            return false
+        }
+        #if canImport(Matter)
+        return a.setupPayload === b.setupPayload
+        #else
+        return true
+        #endif
     }
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(topology)
         hasher.combine(showDeviceCriteria)
         hasher.combine(shouldScanNetworks)
+        #if canImport(Matter)
         hasher.combine(setupPayload.map { ObjectIdentifier($0) })
+        #endif
     }
 }
 
@@ -80,14 +105,16 @@ extension MatterAddDeviceRequest: Codable {
         case shouldScanNetworks
     }
 
-    /// Local round-trip encoding. `setupPayload` is omitted because Apple's
-    /// encoding of `MTRSetupPayload` is not in the pinned corpus.
+    /// Source-compatible Codable. Keyed layout and setupPayload encoding are
+    /// unobserved on Apple and are not claimed here.
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         topology = try container.decode(Topology.self, forKey: .topology)
         showDeviceCriteria = try container.decode(DeviceCriteria.self, forKey: .showDeviceCriteria)
         shouldScanNetworks = try container.decode(Bool.self, forKey: .shouldScanNetworks)
+        #if canImport(Matter)
         setupPayload = nil
+        #endif
     }
 
     public func encode(to encoder: Encoder) throws {
