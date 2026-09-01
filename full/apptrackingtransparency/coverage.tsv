@@ -4,8 +4,8 @@ c:@E@ATTrackingManagerAuthorizationStatus@ATTrackingManagerAuthorizationStatusAu
 c:@E@ATTrackingManagerAuthorizationStatus@ATTrackingManagerAuthorizationStatusDenied	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Fail-closed Linux status
 c:@E@ATTrackingManagerAuthorizationStatus@ATTrackingManagerAuthorizationStatusNotDetermined	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Constructible; manager does not report pending prompt
 c:@E@ATTrackingManagerAuthorizationStatus@ATTrackingManagerAuthorizationStatusRestricted	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Constructible; not the Linux default
-c:objc(cs)ATTrackingManager	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Open NSObject subclass with class APIs
-c:objc(cs)ATTrackingManager(cm)requestTrackingAuthorizationWithCompletionHandler:	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Callback and async overloads complete once with denied
+c:objc(cs)ATTrackingManager	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Open NSObject subclass; Foundation identity also in DependencyIdentity probe
+c:objc(cs)ATTrackingManager(cm)requestTrackingAuthorizationWithCompletionHandler:	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Returns first; denied exactly once on serial queue; async uses same path
 c:objc(cs)ATTrackingManager(cpy)trackingAuthorizationStatus	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Always denied; never authorized
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ATTrackingManagerAuthorizationStatus	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Equatable synthesized !=
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ATTrackingManagerAuthorizationStatus	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Hashable synthesized hashValue
