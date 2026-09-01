@@ -686,7 +686,8 @@ not a macro-expansion proof.
 `run_core_guest_package_docker.sh` is the production host-side cold wrapper.
 It requires an exact lowercase SHA-256 Linux/ARM64 container image ID, exact
 support, UIKit, and machorun commit/tree pins, an exact SHA-256 for machorun's
-ignored prebuilt loader, a new output path, and a staged-input root containing:
+ignored prebuilt loader, exact SHA-256 identities for the staged Swift and
+Objective-C runtimes, a new output path, and a staged-input root containing:
 
 ```text
 sysroot_fe4/  mrroot/  mrroot_fe/  swift-foundation/
@@ -709,6 +710,8 @@ bash full/frameworks/run_core_guest_package_docker.sh \
   --expected-machorun-commit 40_HEX \
   --expected-machorun-tree 40_HEX \
   --expected-machorun-loader-sha256 64_HEX \
+  --expected-machorun-swift-core-sha256 64_HEX \
+  --expected-machorun-objc-sha256 64_HEX \
   --output-root /path/to/new/core-package
 ```
 
@@ -721,7 +724,10 @@ new destination file for every regular file, proves that it shares no source
 inode, preserves directories, modes, and symlink targets, and rejects sockets,
 FIFOs, and device nodes. Ignored build outputs from the three source checkouts
 are therefore never inherited; only machorun's explicitly required ignored
-runtime inputs enter the replay.
+runtime inputs enter the replay. The wrapper verifies `libobjc.A.dylib` before
+and after that physical copy, and the package independently checks its hash,
+ARM64 Mach-O identity, `/usr/lib/libobjc.A.dylib` install name, and the one
+direct load from canonical `libswiftCore` before any cold executable runs.
 
 Docker receives exactly one host bind, the fresh replay root at `/replay:rw`.
 The bind must be writable because `/replay/w/build` carries the validated

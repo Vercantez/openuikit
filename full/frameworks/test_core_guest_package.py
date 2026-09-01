@@ -276,13 +276,17 @@ def validate_swift_core_runtime_contract(builder: str, wrapper: str) -> None:
     builder_required = (
         f"SWIFT_CORE_REQUIRED_AVAILABILITY_SYMBOL='{SWIFT_CORE_AVAILABILITY_SYMBOL}'",
         "--expected-machorun-swift-core-sha256",
+        "--expected-machorun-objc-sha256",
         'SWIFT_CORE_RUNTIME=$RUNTIME/darwin/usr/lib/swift/libswiftCore.dylib',
+        'OBJC_RUNTIME=$RUNTIME/darwin/usr/lib/libobjc.A.dylib',
         'SWIFT_CORE_TBD=$STAGE/sdk/usr/lib/swift/libswiftCore.tbd',
         'require_hash "$SWIFT_CORE_RUNTIME" "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256"',
         'swift_core_tbd_symbol_count=$(awk',
         'swift_core_runtime_symbol_count=$(nm_symbol_count --defined-only',
         '[ "$swift_core_tbd_symbol_count" -eq 1 ]',
         '[ "$swift_core_runtime_symbol_count" -eq 1 ]',
+        '[ "$swift_core_objc_load_count" -eq 1 ]',
+        'require_hash "$OBJC_RUNTIME" "$EXPECTED_MACHORUN_OBJC_SHA256"',
         "format\\tswift-core-runtime-contract-v1",
         "attestation/swift-core-runtime.tsv",
         "attestation/build-full-swift-core-stage.json",
@@ -290,11 +294,15 @@ def validate_swift_core_runtime_contract(builder: str, wrapper: str) -> None:
     )
     wrapper_required = (
         "--expected-machorun-swift-core-sha256",
+        "--expected-machorun-objc-sha256",
         'MACHORUN_SWIFT_CORE=$MACHORUN_RUNTIME/lib/swift/libswiftCore.dylib',
+        'MACHORUN_OBJC=$MACHORUN_RUNTIME/lib/libobjc.A.dylib',
         "ACTUAL_MACHORUN_SWIFT_CORE_SHA256=",
         "COPIED_MACHORUN_SWIFT_CORE_SHA256=",
+        "COPIED_MACHORUN_OBJC_SHA256=",
         "physically copied machorun Swift core hash differs",
         "machorun-swift-core\\tsha256=",
+        "machorun-objc\\tsha256=",
         "darwin/usr/lib/swift/libswiftCore.dylib",
     )
     missing = [token for token in builder_required if token not in builder]
@@ -2762,6 +2770,8 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("COPIED_MACHORUN_LOADER_SHA256", source)
         self.assertIn("expected-machorun-swift-core-sha256", source)
         self.assertIn("COPIED_MACHORUN_SWIFT_CORE_SHA256", source)
+        self.assertIn("expected-machorun-objc-sha256", source)
+        self.assertIn("COPIED_MACHORUN_OBJC_SHA256", source)
         for preview_report in (
             "copy-preview-module.json",
             "copy-preview-object.json",
@@ -2813,6 +2823,14 @@ class ShellContractTests(unittest.TestCase):
                 wrapper.replace(
                     "COPIED_MACHORUN_SWIFT_CORE_SHA256=",
                     "UNATTESTED_MACHORUN_SWIFT_CORE_SHA256=",
+                    1,
+                ),
+            ),
+            (
+                builder,
+                wrapper.replace(
+                    "COPIED_MACHORUN_OBJC_SHA256=",
+                    "UNATTESTED_MACHORUN_OBJC_SHA256=",
                     1,
                 ),
             ),
@@ -4067,6 +4085,8 @@ class ShellContractTests(unittest.TestCase):
                     "--expected-machorun-loader-sha256",
                     "0" * 64,
                     "--expected-machorun-swift-core-sha256",
+                    "0" * 64,
+                    "--expected-machorun-objc-sha256",
                     "0" * 64,
                     "--output-root",
                     "/new-output",
