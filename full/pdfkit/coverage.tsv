@@ -1,680 +1,680 @@
 precise	status	evidence	notes
-c:@E@PDFAccessPermissions	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAccessPermissions@PDFAllowsCommenting	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAccessPermissions@PDFAllowsContentAccessibility	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAccessPermissions@PDFAllowsContentCopying	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAccessPermissions@PDFAllowsDocumentAssembly	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAccessPermissions@PDFAllowsDocumentChanges	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAccessPermissions@PDFAllowsFormFieldEntry	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAccessPermissions@PDFAllowsHighQualityPrinting	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAccessPermissions@PDFAllowsLowQualityPrinting	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFActionNamedName	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFActionNamedName@kPDFActionNamedFind	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFActionNamedName@kPDFActionNamedFirstPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFActionNamedName@kPDFActionNamedGoBack	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFActionNamedName@kPDFActionNamedGoForward	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFActionNamedName@kPDFActionNamedGoToPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFActionNamedName@kPDFActionNamedLastPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFActionNamedName@kPDFActionNamedNextPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFActionNamedName@kPDFActionNamedNone	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFActionNamedName@kPDFActionNamedPreviousPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFActionNamedName@kPDFActionNamedPrint	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFActionNamedName@kPDFActionNamedZoomIn	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFActionNamedName@kPDFActionNamedZoomOut	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAreaOfInterest@kPDFAnnotationArea	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAreaOfInterest@kPDFAnyArea	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAreaOfInterest@kPDFControlArea	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAreaOfInterest@kPDFIconArea	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAreaOfInterest@kPDFImageArea	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAreaOfInterest@kPDFLinkArea	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAreaOfInterest@kPDFPageArea	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAreaOfInterest@kPDFPopupArea	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAreaOfInterest@kPDFTextArea	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFAreaOfInterest@kPDFTextFieldArea	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFBorderStyle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFBorderStyle@kPDFBorderStyleBeveled	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFBorderStyle@kPDFBorderStyleDashed	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFBorderStyle@kPDFBorderStyleInset	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFBorderStyle@kPDFBorderStyleSolid	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFBorderStyle@kPDFBorderStyleUnderline	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFDisplayBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFDisplayBox@kPDFDisplayBoxArtBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFDisplayBox@kPDFDisplayBoxBleedBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFDisplayBox@kPDFDisplayBoxCropBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFDisplayBox@kPDFDisplayBoxMediaBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFDisplayBox@kPDFDisplayBoxTrimBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFDisplayDirection	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFDisplayDirection@kPDFDisplayDirectionHorizontal	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFDisplayDirection@kPDFDisplayDirectionVertical	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFDisplayMode	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFDisplayMode@kPDFDisplaySinglePage	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFDisplayMode@kPDFDisplaySinglePageContinuous	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFDisplayMode@kPDFDisplayTwoUp	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFDisplayMode@kPDFDisplayTwoUpContinuous	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFDocumentPermissions	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFDocumentPermissions@kPDFDocumentPermissionsNone	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFDocumentPermissions@kPDFDocumentPermissionsOwner	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFDocumentPermissions@kPDFDocumentPermissionsUser	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFInterpolationQuality	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFInterpolationQuality@kPDFInterpolationQualityHigh	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFInterpolationQuality@kPDFInterpolationQualityLow	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFInterpolationQuality@kPDFInterpolationQualityNone	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFLineStyle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFLineStyle@kPDFLineStyleCircle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFLineStyle@kPDFLineStyleClosedArrow	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFLineStyle@kPDFLineStyleDiamond	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFLineStyle@kPDFLineStyleNone	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFLineStyle@kPDFLineStyleOpenArrow	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFLineStyle@kPDFLineStyleSquare	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@E@PDFMarkupType	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFMarkupType@kPDFMarkupTypeHighlight	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFMarkupType@kPDFMarkupTypeRedact	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFMarkupType@kPDFMarkupTypeStrikeOut	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFMarkupType@kPDFMarkupTypeUnderline	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFSelectionGranularity	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@E@PDFSelectionGranularity@PDFSelectionGranularityCharacter	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@E@PDFSelectionGranularity@PDFSelectionGranularityLine	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@E@PDFSelectionGranularity@PDFSelectionGranularityWord	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@E@PDFTextAnnotationIconType	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconComment	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconHelp	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconInsert	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconKey	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconNewParagraph	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconNote	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconParagraph	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFThumbnailLayoutMode	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFThumbnailLayoutMode@PDFThumbnailLayoutModeHorizontal	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFThumbnailLayoutMode@PDFThumbnailLayoutModeVertical	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFWidgetCellState	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFWidgetCellState@kPDFWidgetMixedState	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFWidgetCellState@kPDFWidgetOffState	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFWidgetCellState@kPDFWidgetOnState	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFWidgetControlType	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFWidgetControlType@kPDFWidgetCheckBoxControl	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFWidgetControlType@kPDFWidgetPushButtonControl	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFWidgetControlType@kPDFWidgetRadioButtonControl	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@E@PDFWidgetControlType@kPDFWidgetUnknownControl	implemented	full/pdfkit/PDFKitEnums.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationHighlightingModeInvert	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationHighlightingModeNone	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationHighlightingModeOutline	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationHighlightingModePush	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationKeyAction	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyAdditionalActions	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyAppearanceDictionary	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyAppearanceState	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyBorder	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyBorderStyle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyColor	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyContents	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyDate	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyDefaultAppearance	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyDestination	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyFlags	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyHighlightingMode	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyIconName	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyInklist	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyInteriorColor	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyLineEndingStyles	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyLinePoints	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyName	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyOpen	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyParent	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyPopup	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyQuadPoints	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyQuadding	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyRect	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeySubtype	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyTextLabel	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyWidgetAppearanceDictionary	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyWidgetBackgroundColor	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyWidgetBorderColor	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyWidgetCaption	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyWidgetDefaultValue	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyWidgetDownCaption	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyWidgetFieldFlags	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyWidgetFieldType	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyWidgetMaxLen	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyWidgetOptions	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyWidgetRolloverCaption	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyWidgetRotation	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyWidgetTextLabelUI	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationKeyWidgetValue	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationLineEndingStyleCircle	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationLineEndingStyleClosedArrow	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationLineEndingStyleDiamond	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationLineEndingStyleNone	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationLineEndingStyleOpenArrow	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationLineEndingStyleSquare	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationSubtypeCircle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationSubtypeFreeText	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationSubtypeHighlight	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationSubtypeInk	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationSubtypeLine	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationSubtypeLink	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationSubtypePopup	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationSubtypeSquare	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationSubtypeStamp	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationSubtypeStrikeOut	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationSubtypeText	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationSubtypeUnderline	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationSubtypeWidget	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFAnnotationTextIconTypeComment	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationTextIconTypeHelp	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationTextIconTypeInsert	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationTextIconTypeKey	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationTextIconTypeNewParagraph	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationTextIconTypeNote	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationTextIconTypeParagraph	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationWidgetSubtypeButton	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationWidgetSubtypeChoice	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationWidgetSubtypeSignature	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAnnotationWidgetSubtypeText	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@PDFAppearanceCharacteristicsKeyBackgroundColor	implemented	full/pdfkit/PDFAction.swift	Value-type surface with pinned raw values
-c:@PDFAppearanceCharacteristicsKeyBorderColor	implemented	full/pdfkit/PDFAction.swift	Value-type surface with pinned raw values
-c:@PDFAppearanceCharacteristicsKeyCaption	implemented	full/pdfkit/PDFAction.swift	Value-type surface with pinned raw values
-c:@PDFAppearanceCharacteristicsKeyDownCaption	implemented	full/pdfkit/PDFAction.swift	Value-type surface with pinned raw values
-c:@PDFAppearanceCharacteristicsKeyRolloverCaption	implemented	full/pdfkit/PDFAction.swift	Value-type surface with pinned raw values
-c:@PDFAppearanceCharacteristicsKeyRotation	implemented	full/pdfkit/PDFAction.swift	Value-type surface with pinned raw values
-c:@PDFBorderKeyDashPattern	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFBorderKeyLineWidth	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFBorderKeyStyle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFDocumentAccessPermissionsOption	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@PDFDocumentAuthorAttribute	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFDocumentBurnInAnnotationsOption	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@PDFDocumentCreationDateAttribute	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFDocumentCreatorAttribute	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFDocumentDidBeginFindNotification	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFDocumentDidBeginPageFindNotification	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFDocumentDidBeginPageWriteNotification	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFDocumentDidBeginWriteNotification	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFDocumentDidEndFindNotification	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFDocumentDidEndPageFindNotification	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFDocumentDidEndPageWriteNotification	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFDocumentDidEndWriteNotification	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFDocumentDidFindMatchNotification	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFDocumentDidUnlockNotification	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFDocumentFoundSelectionKey	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@PDFDocumentKeywordsAttribute	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFDocumentModificationDateAttribute	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFDocumentOptimizeImagesForScreenOption	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@PDFDocumentOwnerPasswordOption	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@PDFDocumentPageIndexKey	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@PDFDocumentProducerAttribute	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFDocumentSaveImagesAsJPEGOption	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@PDFDocumentSaveTextFromOCROption	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@PDFDocumentSubjectAttribute	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFDocumentTitleAttribute	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFDocumentUserPasswordOption	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@PDFPageImageInitializationOptionCompressionQuality	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@PDFPageImageInitializationOptionMediaBox	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@PDFPageImageInitializationOptionRotation	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@PDFPageImageInitializationOptionUpscaleIfSmaller	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@PDFThumbnailViewDocumentEditedNotification	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFViewAnnotationHitNotification	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFViewAnnotationWillHitNotification	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFViewChangedHistoryNotification	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFViewCopyPermissionNotification	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFViewDisplayBoxChangedNotification	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFViewDisplayModeChangedNotification	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFViewDocumentChangedNotification	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@PDFViewPageChangedNotification	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFViewPrintPermissionNotification	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFViewScaleChangedNotification	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFViewSelectionChangedNotification	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@PDFViewVisiblePagesChangedNotification	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:@T@PDFAnnotationHighlightingMode	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@T@PDFAnnotationKey	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@T@PDFAnnotationLineEndingStyle	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@T@PDFAnnotationSubtype	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@T@PDFAnnotationTextIconType	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@T@PDFAnnotationWidgetSubtype	implemented	full/pdfkit/PDFAnnotation.swift	Value-type surface with pinned raw values
-c:@T@PDFAppearanceCharacteristicsKey	implemented	full/pdfkit/PDFAction.swift	Value-type surface with pinned raw values
-c:@T@PDFBorderKey	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@T@PDFDocumentAttribute	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:@T@PDFDocumentWriteOption	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@T@PDFPageImageInitializationOption	implemented	full/pdfkit/PDFDocument.swift	Value-type surface with pinned raw values
-c:@kPDFDestinationUnspecifiedValue	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFAction	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAction(py)type	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFActionGoTo	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionGoTo(im)initWithDestination:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFActionGoTo(py)destination	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionNamed	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionNamed(im)initWithName:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFActionNamed(py)name	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFActionRemoteGoTo	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionRemoteGoTo(im)initWithPageIndex:atPoint:fileURL:	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionRemoteGoTo(im)initWithPageIndex:atPoint:fileURL:::SYNTHESIZED::c:objc(cs)PDFActionRemoteGoTo	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionRemoteGoTo(py)URL	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionRemoteGoTo(py)pageIndex	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionRemoteGoTo(py)point	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionResetForm	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionResetForm(im)init	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionResetForm(py)fields	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionResetForm(py)fieldsIncludedAreCleared	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionURL	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionURL(im)initWithURL:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFActionURL(im)initWithURL:::SYNTHESIZED::c:objc(cs)PDFActionURL	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFActionURL(py)URL	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFAnnotation	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(cm)lineStyleFromName:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFAnnotation(cm)nameForLineStyle:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFAnnotation(im)addBezierPath:	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(im)drawWithBox:inContext:	declared	full/pdfkit/PDFAnnotation.swift	Fail-closed or inert on Linux; not pixel-accurate Apple rendering
-c:objc(cs)PDFAnnotation(im)initWithBounds:forType:withProperties:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFAnnotation(im)removeBezierPath:	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(im)removeValueForAnnotationKey:	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(im)setBoolean:forAnnotationKey:	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(im)setRect:forAnnotationKey:	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(im)setValue:forAnnotationKey:	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(im)valueForAnnotationKey:	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)URL	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)action	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)activatableTextField	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)alignment	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)allowsToggleToOff	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)annotationKeyValues	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)backgroundColor	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)border	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)bounds	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)buttonWidgetState	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)buttonWidgetStateString	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)caption	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)choices	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)color	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)comb	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)contents	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)destination	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)endLineStyle	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)endPoint	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)fieldName	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)font	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)fontColor	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)hasAppearanceStream	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)highlighted	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)iconType	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)interiorColor	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)isPasswordField	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)listChoice	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)markupType	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFAnnotation(py)maximumLength	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)modificationDate	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)multiline	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)open	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)page	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)paths	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)popup	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)quadrilateralPoints	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)radiosInUnison	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)readOnly	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)shouldDisplay	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)shouldPrint	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)stampName	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)startLineStyle	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)startPoint	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)type	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)userName	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)values	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)widgetControlType	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)widgetDefaultStringValue	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)widgetFieldType	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAnnotation(py)widgetStringValue	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAppearanceCharacteristics	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAppearanceCharacteristics(py)appearanceCharacteristicsKeyValues	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAppearanceCharacteristics(py)backgroundColor	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAppearanceCharacteristics(py)borderColor	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAppearanceCharacteristics(py)caption	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAppearanceCharacteristics(py)controlType	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAppearanceCharacteristics(py)downCaption	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAppearanceCharacteristics(py)rolloverCaption	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFAppearanceCharacteristics(py)rotation	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFBorder	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFBorder(im)drawInRect:	declared	full/pdfkit/PDFAction.swift	Fail-closed or inert on Linux; not pixel-accurate Apple rendering
-c:objc(cs)PDFBorder(py)borderKeyValues	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFBorder(py)dashPattern	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFBorder(py)lineWidth	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFBorder(py)style	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDestination	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDestination(im)compare:	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDestination(im)initWithPage:atPoint:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDestination(im)initWithPage:atPoint:::SYNTHESIZED::c:objc(cs)PDFDestination	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDestination(py)page	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDestination(py)point	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDestination(py)zoom	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)beginFindString:withOptions:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)beginFindStrings:withOptions:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)cancelFindString	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)dataRepresentation	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(im)dataRepresentationWithOptions:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)exchangePageAtIndex:withPageAtIndex:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)findString:fromSelection:withOptions:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)findString:withOptions:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(im)indexForPage:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(im)init	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(im)initWithData:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(im)initWithURL:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(im)initWithURL:::SYNTHESIZED::c:objc(cs)PDFDocument	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)insertPage:atIndex:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(im)outlineItemForSelection:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)pageAtIndex:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(im)removePageAtIndex:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)selectionFromPage:atCharacterIndex:toPage:atCharacterIndex:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)selectionFromPage:atPoint:toPage:atPoint:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)selectionFromPage:atPoint:toPage:atPoint:withGranularity:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)unlockWithPassword:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(im)writeToFile:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)writeToFile:withOptions:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(im)writeToURL:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(im)writeToURL:withOptions:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)accessPermissions	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)allowsCommenting	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)allowsContentAccessibility	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)allowsCopying	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(py)allowsDocumentAssembly	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)allowsDocumentChanges	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)allowsFormFieldEntry	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)allowsPrinting	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)delegate	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)documentAttributes	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(py)documentRef	declared	full/pdfkit/PDFDocument.swift	Fail-closed or inert on Linux; not pixel-accurate Apple rendering
-c:objc(cs)PDFDocument(py)documentURL	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)isEncrypted	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(py)isFinding	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)isLocked	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(py)majorVersion	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)minorVersion	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)outlineRoot	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(py)pageClass	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)pageCount	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(py)permissionsStatus	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFDocument(py)selectionForEntireDocument	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFDocument(py)string	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFOutline	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFOutline(im)childAtIndex:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFOutline(im)init	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFOutline(im)insertChild:atIndex:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFOutline(im)removeFromParent	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFOutline(py)action	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFOutline(py)destination	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFOutline(py)document	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFOutline(py)index	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFOutline(py)isOpen	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFOutline(py)label	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFOutline(py)numberOfChildren	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFOutline(py)parent	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(im)addAnnotation:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFPage(im)annotationAtPoint:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFPage(im)boundsForBox:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFPage(im)characterBoundsAtIndex:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(im)characterIndexAtPoint:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(im)drawWithBox:toContext:	declared	full/pdfkit/PDFDocument.swift	Fail-closed or inert on Linux; not pixel-accurate Apple rendering
-c:objc(cs)PDFPage(im)init	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFPage(im)initWithImage:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFPage(im)initWithImage:options:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(im)removeAnnotation:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(im)selectionForLineAtPoint:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(im)selectionForRange:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(im)selectionForRect:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(im)selectionForWordAtPoint:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(im)selectionFromPoint:toPoint:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(im)setBounds:forBox:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFPage(im)thumbnailOfSize:forBox:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFPage(im)transformContext:forBox:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(im)transformForBox:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(py)annotations	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFPage(py)attributedString	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(py)dataRepresentation	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(py)displaysAnnotations	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(py)document	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(py)label	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFPage(py)numberOfCharacters	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(py)pageRef	declared	full/pdfkit/PDFDocument.swift	Fail-closed or inert on Linux; not pixel-accurate Apple rendering
-c:objc(cs)PDFPage(py)rotation	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFPage(py)string	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFSelection	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFSelection(im)addSelection:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFSelection(im)addSelections:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFSelection(im)boundsForPage:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFSelection(im)drawForPage:active:	declared	full/pdfkit/PDFDocument.swift	Fail-closed or inert on Linux; not pixel-accurate Apple rendering
-c:objc(cs)PDFSelection(im)drawForPage:withBox:active:	declared	full/pdfkit/PDFDocument.swift	Fail-closed or inert on Linux; not pixel-accurate Apple rendering
-c:objc(cs)PDFSelection(im)extendSelectionAtEnd:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFSelection(im)extendSelectionAtStart:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFSelection(im)extendSelectionForLineBoundaries	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFSelection(im)initWithDocument:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFSelection(im)numberOfTextRangesOnPage:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFSelection(im)rangeAtIndex:onPage:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFSelection(im)selectionsByLine	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFSelection(py)attributedString	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFSelection(py)color	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFSelection(py)pages	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFSelection(py)string	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFThumbnailView	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFThumbnailView(py)PDFView	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFThumbnailView(py)backgroundColor	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFThumbnailView(py)contentInset	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFThumbnailView(py)layoutMode	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFThumbnailView(py)selectedPages	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFThumbnailView(py)thumbnailSize	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)annotationsChangedOnPage:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)areaOfInterestForMouse:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)areaOfInterestForPoint:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)clearSelection	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFView(im)convertPoint:fromPage:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFView(im)convertPoint:toPage:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)convertRect:fromPage:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFView(im)convertRect:toPage:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)copy:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)drawPage:toContext:	declared	full/pdfkit/PDFView.swift	Fail-closed or inert on Linux; not pixel-accurate Apple rendering
-c:objc(cs)PDFView(im)drawPagePost:toContext:	declared	full/pdfkit/PDFView.swift	Fail-closed or inert on Linux; not pixel-accurate Apple rendering
-c:objc(cs)PDFView(im)goBack:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)goForward:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)goToDestination:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)goToFirstPage:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFView(im)goToLastPage:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)goToNextPage:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)goToPage:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)goToPreviousPage:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)goToRect:onPage:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)goToSelection:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)layoutDocumentView	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)pageForPoint:nearest:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)performAction:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFView(im)rowSizeForPage:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)scrollSelectionToVisible:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)selectAll:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFView(im)setCurrentSelection:animate:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)usePageViewController:withViewOptions:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(im)zoomIn:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFView(im)zoomOut:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)autoScales	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)backgroundColor	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)canGoBack	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)canGoForward	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)canGoToFirstPage	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)canGoToLastPage	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)canGoToNextPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFView(py)canGoToPreviousPage	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)canZoomIn	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFView(py)canZoomOut	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)currentDestination	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)currentPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFView(py)currentSelection	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFView(py)delegate	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)displayBox	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)displayDirection	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)displayMode	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)displaysAsBook	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)displaysPageBreaks	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)displaysRTL	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)document	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFView(py)documentView	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)enableDataDetectors	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)findInteraction	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)findInteractionEnabled	declared	full/pdfkit/PDFView.swift	Fail-closed or inert on Linux; not pixel-accurate Apple rendering
-c:objc(cs)PDFView(py)highlightedSelections	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)inMarkupMode	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)interpolationQuality	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)isUsingPageViewController	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)maxScaleFactor	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)minScaleFactor	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)pageBreakMargins	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)pageOverlayViewProvider	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)pageShadowsEnabled	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)scaleFactor	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(cs)PDFView(py)scaleFactorForSizeToFit	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(cs)PDFView(py)visiblePages	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)PDFAnnotation	declared	full/pdfkit/PDFAnnotation.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)PDFBorder	declared	full/pdfkit/PDFAction.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFDocumentDelegate	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFDocumentDelegate(im)classForAnnotationType:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFDocumentDelegate(im)classForPage	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFDocumentDelegate(im)didMatchString:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFDocumentDelegate(im)documentDidBeginDocumentFind:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFDocumentDelegate(im)documentDidBeginPageFind:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFDocumentDelegate(im)documentDidEndDocumentFind:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFDocumentDelegate(im)documentDidEndPageFind:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFDocumentDelegate(im)documentDidFindMatch:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFDocumentDelegate(im)documentDidUnlock:	declared	full/pdfkit/PDFDocument.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFPageOverlayViewProvider	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFPageOverlayViewProvider(im)pdfView:overlayViewForPage:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFPageOverlayViewProvider(im)pdfView:willDisplayOverlayView:forPage:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFPageOverlayViewProvider(im)pdfView:willEndDisplayingOverlayView:forPage:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFViewDelegate	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFViewDelegate(im)PDFViewOpenPDF:forRemoteGoToAction:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFViewDelegate(im)PDFViewParentViewController	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFViewDelegate(im)PDFViewPerformFind:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFViewDelegate(im)PDFViewPerformGoToPage:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-c:objc(pl)PDFViewDelegate(im)PDFViewWillClickOnLink:withURL:	declared	full/pdfkit/PDFView.swift	Source-compatible declaration compiled into libPDFKit.dylib
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFAccessPermissions	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFActionNamedName	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFBorderStyle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFDisplayBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFDisplayDirection	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFDisplayMode	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFDocumentPermissions	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFInterpolationQuality	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFLineStyle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFMarkupType	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFSelectionGranularity	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFTextAnnotationIconType	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFThumbnailLayoutMode	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFWidgetCellState	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFWidgetControlType	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationHighlightingMode	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationKey	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationLineEndingStyle	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationSubtype	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationTextIconType	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationWidgetSubtype	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAppearanceCharacteristicsKey	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFBorderKey	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFDocumentAttribute	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFDocumentWriteOption	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFPageImageInitializationOption	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFAccessPermissions	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFActionNamedName	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFBorderStyle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFDisplayBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFDisplayDirection	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFDisplayMode	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFDocumentPermissions	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFInterpolationQuality	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFLineStyle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFMarkupType	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFSelectionGranularity	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFTextAnnotationIconType	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFThumbnailLayoutMode	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFWidgetCellState	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFWidgetControlType	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFAccessPermissions	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFActionNamedName	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFBorderStyle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFDisplayBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFDisplayDirection	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFDisplayMode	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFDocumentPermissions	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFInterpolationQuality	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFLineStyle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFMarkupType	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFSelectionGranularity	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFTextAnnotationIconType	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFThumbnailLayoutMode	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFWidgetCellState	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFWidgetControlType	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:So12PDFBorderKeya8rawValueABSS_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:So12PDFLineStyleV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:So13PDFDisplayBoxV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:So13PDFMarkupTypeV8rawValueABSgSi_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So14PDFBorderStyleV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:So14PDFDisplayModeV8rawValueABSgSi_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So16PDFAnnotationKeya8rawValueABSS_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:So17PDFAreaOfInterestV8rawValueABSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:So18PDFActionNamedNameV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:So18PDFWidgetCellStateV8rawValueABSgSi_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So19PDFDisplayDirectionV8rawValueABSgSi_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So20PDFAccessPermissionsV8rawValueABSgSu_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:So20PDFAnnotationSubtypea8rawValueABSS_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:So20PDFDocumentAttributea8rawValueABSS_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:So20PDFWidgetControlTypeV8rawValueABSgSi_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So22PDFDocumentPermissionsV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:So22PDFDocumentWriteOptiona8rawValueABSS_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So22PDFThumbnailLayoutModeV8rawValueABSgSi_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So23PDFInterpolationQualityV8rawValueABSgSi_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So23PDFSelectionGranularityV8rawValueABSgSu_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So25PDFAnnotationTextIconTypea8rawValueABSS_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So25PDFTextAnnotationIconTypeV8rawValueABSgSi_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So26PDFAnnotationWidgetSubtypea8rawValueABSS_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So28PDFAnnotationLineEndingStylea8rawValueABSS_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So29PDFAnnotationHighlightingModea8rawValueABSS_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So31PDFAppearanceCharacteristicsKeya8rawValueABSS_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:So32PDFPageImageInitializationOptiona8rawValueABSS_tcfc	implemented	full/pdfkit/PDFKitEnums.swift	RawRepresentable initializer
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationHighlightingMode	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationKey	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationLineEndingStyle	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationSubtype	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationTextIconType	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationWidgetSubtype	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAppearanceCharacteristicsKey	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFBorderKey	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFDocumentAttribute	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFDocumentWriteOption	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFPageImageInitializationOption	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationHighlightingMode	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationKey	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationLineEndingStyle	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationSubtype	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationTextIconType	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationWidgetSubtype	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAppearanceCharacteristicsKey	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFBorderKey	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFDocumentAttribute	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFDocumentWriteOption	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFPageImageInitializationOption	implemented	full/pdfkit/PDFKitEnums.swift	Swift Hashable/Equatable/OptionSet synthesis
-s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by the agent runtime probe
+c:@E@PDFAccessPermissions	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFAccessPermissions@PDFAllowsCommenting	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFAccessPermissions@PDFAllowsContentAccessibility	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFAccessPermissions@PDFAllowsContentCopying	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFAccessPermissions@PDFAllowsDocumentAssembly	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFAccessPermissions@PDFAllowsDocumentChanges	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFAccessPermissions@PDFAllowsFormFieldEntry	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFAccessPermissions@PDFAllowsHighQualityPrinting	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFAccessPermissions@PDFAllowsLowQualityPrinting	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFActionNamedName	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFActionNamedName@kPDFActionNamedFind	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFActionNamedName@kPDFActionNamedFirstPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFActionNamedName@kPDFActionNamedGoBack	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFActionNamedName@kPDFActionNamedGoForward	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFActionNamedName@kPDFActionNamedGoToPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFActionNamedName@kPDFActionNamedLastPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFActionNamedName@kPDFActionNamedNextPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFActionNamedName@kPDFActionNamedNone	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFActionNamedName@kPDFActionNamedPreviousPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFActionNamedName@kPDFActionNamedPrint	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFActionNamedName@kPDFActionNamedZoomIn	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFActionNamedName@kPDFActionNamedZoomOut	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFAreaOfInterest@kPDFAnnotationArea	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFAreaOfInterest@kPDFAnyArea	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFAreaOfInterest@kPDFControlArea	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFAreaOfInterest@kPDFIconArea	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFAreaOfInterest@kPDFImageArea	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFAreaOfInterest@kPDFLinkArea	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFAreaOfInterest@kPDFPageArea	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFAreaOfInterest@kPDFPopupArea	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFAreaOfInterest@kPDFTextArea	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFAreaOfInterest@kPDFTextFieldArea	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFBorderStyle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFBorderStyle@kPDFBorderStyleBeveled	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFBorderStyle@kPDFBorderStyleDashed	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFBorderStyle@kPDFBorderStyleInset	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFBorderStyle@kPDFBorderStyleSolid	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFBorderStyle@kPDFBorderStyleUnderline	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFDisplayBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFDisplayBox@kPDFDisplayBoxArtBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFDisplayBox@kPDFDisplayBoxBleedBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFDisplayBox@kPDFDisplayBoxCropBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFDisplayBox@kPDFDisplayBoxMediaBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFDisplayBox@kPDFDisplayBoxTrimBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFDisplayDirection	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFDisplayDirection@kPDFDisplayDirectionHorizontal	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFDisplayDirection@kPDFDisplayDirectionVertical	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFDisplayMode	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFDisplayMode@kPDFDisplaySinglePage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFDisplayMode@kPDFDisplaySinglePageContinuous	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFDisplayMode@kPDFDisplayTwoUp	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFDisplayMode@kPDFDisplayTwoUpContinuous	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFDocumentPermissions	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFDocumentPermissions@kPDFDocumentPermissionsNone	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFDocumentPermissions@kPDFDocumentPermissionsOwner	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFDocumentPermissions@kPDFDocumentPermissionsUser	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFInterpolationQuality	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFInterpolationQuality@kPDFInterpolationQualityHigh	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFInterpolationQuality@kPDFInterpolationQualityLow	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFInterpolationQuality@kPDFInterpolationQualityNone	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFLineStyle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFLineStyle@kPDFLineStyleCircle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFLineStyle@kPDFLineStyleClosedArrow	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFLineStyle@kPDFLineStyleDiamond	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFLineStyle@kPDFLineStyleNone	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFLineStyle@kPDFLineStyleOpenArrow	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFLineStyle@kPDFLineStyleSquare	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFMarkupType	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFMarkupType@kPDFMarkupTypeHighlight	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFMarkupType@kPDFMarkupTypeRedact	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFMarkupType@kPDFMarkupTypeStrikeOut	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFMarkupType@kPDFMarkupTypeUnderline	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFSelectionGranularity	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFSelectionGranularity@PDFSelectionGranularityCharacter	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFSelectionGranularity@PDFSelectionGranularityLine	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFSelectionGranularity@PDFSelectionGranularityWord	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFTextAnnotationIconType	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconComment	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconHelp	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconInsert	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconKey	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconNewParagraph	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconNote	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconParagraph	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFThumbnailLayoutMode	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFThumbnailLayoutMode@PDFThumbnailLayoutModeHorizontal	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFThumbnailLayoutMode@PDFThumbnailLayoutModeVertical	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFWidgetCellState	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFWidgetCellState@kPDFWidgetMixedState	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFWidgetCellState@kPDFWidgetOffState	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFWidgetCellState@kPDFWidgetOnState	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFWidgetControlType	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFWidgetControlType@kPDFWidgetCheckBoxControl	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@E@PDFWidgetControlType@kPDFWidgetPushButtonControl	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFWidgetControlType@kPDFWidgetRadioButtonControl	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@E@PDFWidgetControlType@kPDFWidgetUnknownControl	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationHighlightingModeInvert	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFAnnotationHighlightingModeNone	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationHighlightingModeOutline	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationHighlightingModePush	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyAction	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyAdditionalActions	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyAppearanceDictionary	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyAppearanceState	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyBorder	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyBorderStyle	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyColor	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyContents	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFAnnotationKeyDate	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyDefaultAppearance	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyDestination	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyFlags	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyHighlightingMode	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyIconName	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyInklist	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyInteriorColor	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyLineEndingStyles	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyLinePoints	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyName	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyOpen	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFAnnotationKeyPage	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyParent	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyPopup	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyQuadPoints	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyQuadding	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyRect	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFAnnotationKeySubtype	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFAnnotationKeyTextLabel	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyWidgetAppearanceDictionary	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyWidgetBackgroundColor	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyWidgetBorderColor	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyWidgetCaption	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyWidgetDefaultValue	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyWidgetDownCaption	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyWidgetFieldFlags	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyWidgetFieldType	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyWidgetMaxLen	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyWidgetOptions	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyWidgetRolloverCaption	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyWidgetRotation	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyWidgetTextLabelUI	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationKeyWidgetValue	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationLineEndingStyleCircle	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationLineEndingStyleClosedArrow	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationLineEndingStyleDiamond	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationLineEndingStyleNone	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationLineEndingStyleOpenArrow	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationLineEndingStyleSquare	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationSubtypeCircle	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationSubtypeFreeText	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationSubtypeHighlight	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFAnnotationSubtypeInk	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationSubtypeLine	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationSubtypeLink	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationSubtypePopup	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationSubtypeSquare	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationSubtypeStamp	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationSubtypeStrikeOut	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationSubtypeText	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationSubtypeUnderline	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationSubtypeWidget	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationTextIconTypeComment	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationTextIconTypeHelp	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationTextIconTypeInsert	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationTextIconTypeKey	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationTextIconTypeNewParagraph	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationTextIconTypeNote	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationTextIconTypeParagraph	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationWidgetSubtypeButton	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationWidgetSubtypeChoice	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationWidgetSubtypeSignature	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAnnotationWidgetSubtypeText	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAppearanceCharacteristicsKeyBackgroundColor	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAppearanceCharacteristicsKeyBorderColor	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAppearanceCharacteristicsKeyCaption	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFAppearanceCharacteristicsKeyDownCaption	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAppearanceCharacteristicsKeyRolloverCaption	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFAppearanceCharacteristicsKeyRotation	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFBorderKeyDashPattern	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFBorderKeyLineWidth	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFBorderKeyStyle	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFDocumentAccessPermissionsOption	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentAuthorAttribute	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentBurnInAnnotationsOption	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentCreationDateAttribute	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentCreatorAttribute	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentDidBeginFindNotification	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFDocumentDidBeginPageFindNotification	declared	full/pdfkit/PDFKit.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentDidBeginPageWriteNotification	declared	full/pdfkit/PDFKit.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentDidBeginWriteNotification	declared	full/pdfkit/PDFKit.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentDidEndFindNotification	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFDocumentDidEndPageFindNotification	declared	full/pdfkit/PDFKit.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentDidEndPageWriteNotification	declared	full/pdfkit/PDFKit.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentDidEndWriteNotification	declared	full/pdfkit/PDFKit.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentDidFindMatchNotification	declared	full/pdfkit/PDFKit.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentDidUnlockNotification	declared	full/pdfkit/PDFKit.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentFoundSelectionKey	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentKeywordsAttribute	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentModificationDateAttribute	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentOptimizeImagesForScreenOption	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentOwnerPasswordOption	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFDocumentPageIndexKey	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentProducerAttribute	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentSaveImagesAsJPEGOption	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentSaveTextFromOCROption	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentSubjectAttribute	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFDocumentTitleAttribute	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFDocumentUserPasswordOption	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFPageImageInitializationOptionCompressionQuality	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFPageImageInitializationOptionMediaBox	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFPageImageInitializationOptionRotation	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFPageImageInitializationOptionUpscaleIfSmaller	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFThumbnailViewDocumentEditedNotification	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFViewAnnotationHitNotification	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFViewAnnotationWillHitNotification	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFViewChangedHistoryNotification	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFViewCopyPermissionNotification	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFViewDisplayBoxChangedNotification	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFViewDisplayModeChangedNotification	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFViewDocumentChangedNotification	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFViewPageChangedNotification	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFViewPrintPermissionNotification	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@PDFViewScaleChangedNotification	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFViewSelectionChangedNotification	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@PDFViewVisiblePagesChangedNotification	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:@T@PDFAnnotationHighlightingMode	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@T@PDFAnnotationKey	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@T@PDFAnnotationLineEndingStyle	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@T@PDFAnnotationSubtype	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@T@PDFAnnotationTextIconType	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@T@PDFAnnotationWidgetSubtype	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@T@PDFAppearanceCharacteristicsKey	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@T@PDFBorderKey	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@T@PDFDocumentAttribute	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@T@PDFDocumentWriteOption	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@T@PDFPageImageInitializationOption	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:@kPDFDestinationUnspecifiedValue	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAction	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAction(py)type	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionGoTo	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionGoTo(im)initWithDestination:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionGoTo(py)destination	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionNamed	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionNamed(im)initWithName:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionNamed(py)name	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionRemoteGoTo	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionRemoteGoTo(im)initWithPageIndex:atPoint:fileURL:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionRemoteGoTo(im)initWithPageIndex:atPoint:fileURL:::SYNTHESIZED::c:objc(cs)PDFActionRemoteGoTo	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFActionRemoteGoTo(py)URL	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFActionRemoteGoTo(py)pageIndex	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionRemoteGoTo(py)point	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFActionResetForm	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionResetForm(im)init	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionResetForm(py)fields	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionResetForm(py)fieldsIncludedAreCleared	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFActionURL	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionURL(im)initWithURL:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFActionURL(im)initWithURL:::SYNTHESIZED::c:objc(cs)PDFActionURL	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFActionURL(py)URL	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAnnotation	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAnnotation(cm)lineStyleFromName:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAnnotation(cm)nameForLineStyle:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAnnotation(im)addBezierPath:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFAnnotation(im)drawWithBox:inContext:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFAnnotation(im)initWithBounds:forType:withProperties:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAnnotation(im)removeBezierPath:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFAnnotation(im)removeValueForAnnotationKey:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAnnotation(im)setBoolean:forAnnotationKey:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAnnotation(im)setRect:forAnnotationKey:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAnnotation(im)setValue:forAnnotationKey:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAnnotation(im)valueForAnnotationKey:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAnnotation(py)URL	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)action	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)activatableTextField	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)alignment	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFAnnotation(py)allowsToggleToOff	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)annotationKeyValues	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)backgroundColor	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFAnnotation(py)border	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)bounds	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAnnotation(py)buttonWidgetState	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)buttonWidgetStateString	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)caption	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)choices	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)color	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFAnnotation(py)comb	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)contents	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAnnotation(py)destination	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)endLineStyle	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)endPoint	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)fieldName	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)font	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFAnnotation(py)fontColor	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFAnnotation(py)hasAppearanceStream	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)highlighted	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)iconType	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)interiorColor	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFAnnotation(py)isPasswordField	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)listChoice	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)markupType	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAnnotation(py)maximumLength	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)modificationDate	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)multiline	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)open	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAnnotation(py)page	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)paths	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFAnnotation(py)popup	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)quadrilateralPoints	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)radiosInUnison	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)readOnly	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)shouldDisplay	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)shouldPrint	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)stampName	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)startLineStyle	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)startPoint	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)type	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)userName	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)values	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)widgetControlType	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)widgetDefaultStringValue	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)widgetFieldType	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAnnotation(py)widgetStringValue	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAppearanceCharacteristics	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAppearanceCharacteristics(py)appearanceCharacteristicsKeyValues	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAppearanceCharacteristics(py)backgroundColor	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFAppearanceCharacteristics(py)borderColor	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFAppearanceCharacteristics(py)caption	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFAppearanceCharacteristics(py)controlType	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAppearanceCharacteristics(py)downCaption	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAppearanceCharacteristics(py)rolloverCaption	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFAppearanceCharacteristics(py)rotation	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFBorder	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFBorder(im)drawInRect:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFBorder(py)borderKeyValues	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFBorder(py)dashPattern	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFBorder(py)lineWidth	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFBorder(py)style	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDestination	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDestination(im)compare:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDestination(im)initWithPage:atPoint:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDestination(im)initWithPage:atPoint:::SYNTHESIZED::c:objc(cs)PDFDestination	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDestination(py)page	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDestination(py)point	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDestination(py)zoom	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDocument	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)beginFindString:withOptions:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)beginFindStrings:withOptions:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDocument(im)cancelFindString	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)dataRepresentation	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)dataRepresentationWithOptions:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)exchangePageAtIndex:withPageAtIndex:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)findString:fromSelection:withOptions:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)findString:withOptions:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)indexForPage:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)init	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)initWithData:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)initWithURL:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)initWithURL:::SYNTHESIZED::c:objc(cs)PDFDocument	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDocument(im)insertPage:atIndex:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)outlineItemForSelection:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDocument(im)pageAtIndex:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)removePageAtIndex:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)selectionFromPage:atCharacterIndex:toPage:atCharacterIndex:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)selectionFromPage:atPoint:toPage:atPoint:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDocument(im)selectionFromPage:atPoint:toPage:atPoint:withGranularity:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDocument(im)unlockWithPassword:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)writeToFile:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)writeToFile:withOptions:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)writeToURL:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(im)writeToURL:withOptions:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)accessPermissions	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)allowsCommenting	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)allowsContentAccessibility	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDocument(py)allowsCopying	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)allowsDocumentAssembly	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDocument(py)allowsDocumentChanges	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDocument(py)allowsFormFieldEntry	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDocument(py)allowsPrinting	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)delegate	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDocument(py)documentAttributes	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)documentRef	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFDocument(py)documentURL	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)isEncrypted	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)isFinding	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)isLocked	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)majorVersion	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)minorVersion	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)outlineRoot	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)pageClass	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFDocument(py)pageCount	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)permissionsStatus	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)selectionForEntireDocument	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFDocument(py)string	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFOutline	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFOutline(im)childAtIndex:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFOutline(im)init	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFOutline(im)insertChild:atIndex:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFOutline(im)removeFromParent	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFOutline(py)action	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFOutline(py)destination	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFOutline(py)document	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFOutline(py)index	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFOutline(py)isOpen	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFOutline(py)label	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFOutline(py)numberOfChildren	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFOutline(py)parent	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(im)addAnnotation:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(im)annotationAtPoint:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(im)boundsForBox:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(im)characterBoundsAtIndex:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFPage(im)characterIndexAtPoint:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFPage(im)drawWithBox:toContext:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFPage(im)init	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(im)initWithImage:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFPage(im)initWithImage:options:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFPage(im)removeAnnotation:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(im)selectionForLineAtPoint:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(im)selectionForRange:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(im)selectionForRect:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFPage(im)selectionForWordAtPoint:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(im)selectionFromPoint:toPoint:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFPage(im)setBounds:forBox:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(im)thumbnailOfSize:forBox:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFPage(im)transformContext:forBox:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFPage(im)transformForBox:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFPage(py)annotations	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(py)attributedString	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(py)dataRepresentation	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(py)displaysAnnotations	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFPage(py)document	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(py)label	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(py)numberOfCharacters	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(py)pageRef	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFPage(py)rotation	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFPage(py)string	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFSelection	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFSelection(im)addSelection:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFSelection(im)addSelections:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFSelection(im)boundsForPage:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFSelection(im)drawForPage:active:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFSelection(im)drawForPage:withBox:active:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFSelection(im)extendSelectionAtEnd:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFSelection(im)extendSelectionAtStart:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFSelection(im)extendSelectionForLineBoundaries	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFSelection(im)initWithDocument:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFSelection(im)numberOfTextRangesOnPage:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFSelection(im)rangeAtIndex:onPage:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFSelection(im)selectionsByLine	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFSelection(py)attributedString	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFSelection(py)color	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFSelection(py)pages	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFSelection(py)string	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFThumbnailView	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFThumbnailView(py)PDFView	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFThumbnailView(py)backgroundColor	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFThumbnailView(py)contentInset	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFThumbnailView(py)layoutMode	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFThumbnailView(py)selectedPages	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFThumbnailView(py)thumbnailSize	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)annotationsChangedOnPage:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)areaOfInterestForMouse:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFView(im)areaOfInterestForPoint:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)clearSelection	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)convertPoint:fromPage:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)convertPoint:toPage:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(im)convertRect:fromPage:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)convertRect:toPage:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(im)copy:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)drawPage:toContext:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFView(im)drawPagePost:toContext:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFView(im)goBack:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(im)goForward:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(im)goToDestination:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(im)goToFirstPage:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)goToLastPage:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(im)goToNextPage:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(im)goToPage:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)goToPreviousPage:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(im)goToRect:onPage:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(im)goToSelection:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(im)layoutDocumentView	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)pageForPoint:nearest:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(im)performAction:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)rowSizeForPage:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)scrollSelectionToVisible:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)selectAll:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)setCurrentSelection:animate:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)usePageViewController:withViewOptions:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)zoomIn:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(im)zoomOut:	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(py)autoScales	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)backgroundColor	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFView(py)canGoBack	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)canGoForward	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)canGoToFirstPage	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)canGoToLastPage	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)canGoToNextPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(py)canGoToPreviousPage	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)canZoomIn	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(py)canZoomOut	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)currentDestination	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)currentPage	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(py)currentSelection	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(py)delegate	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)displayBox	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)displayDirection	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)displayMode	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(py)displaysAsBook	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)displaysPageBreaks	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)displaysRTL	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)document	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(py)documentView	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFView(py)enableDataDetectors	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)findInteraction	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFView(py)findInteractionEnabled	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)highlightedSelections	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)inMarkupMode	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)interpolationQuality	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)isUsingPageViewController	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(py)maxScaleFactor	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)minScaleFactor	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)pageBreakMargins	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(cs)PDFView(py)pageOverlayViewProvider	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)pageShadowsEnabled	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(cs)PDFView(py)scaleFactor	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(py)scaleFactorForSizeToFit	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(cs)PDFView(py)visiblePages	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)PDFAnnotation	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)PDFBorder	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFDocumentDelegate	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFDocumentDelegate(im)classForAnnotationType:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFDocumentDelegate(im)classForPage	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFDocumentDelegate(im)didMatchString:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFDocumentDelegate(im)documentDidBeginDocumentFind:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFDocumentDelegate(im)documentDidBeginPageFind:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFDocumentDelegate(im)documentDidEndDocumentFind:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFDocumentDelegate(im)documentDidEndPageFind:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFDocumentDelegate(im)documentDidFindMatch:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFDocumentDelegate(im)documentDidUnlock:	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFPageOverlayViewProvider	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFPageOverlayViewProvider(im)pdfView:overlayViewForPage:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(pl)PDFPageOverlayViewProvider(im)pdfView:willDisplayOverlayView:forPage:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(pl)PDFPageOverlayViewProvider(im)pdfView:willEndDisplayingOverlayView:forPage:	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(pl)PDFViewDelegate	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFViewDelegate(im)PDFViewOpenPDF:forRemoteGoToAction:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFViewDelegate(im)PDFViewParentViewController	deferred	full/pdfkit/README.md	UIKit/CoreGraphics or rendering path is not compiled or not observed on the isolated host
+c:objc(pl)PDFViewDelegate(im)PDFViewPerformFind:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFViewDelegate(im)PDFViewPerformGoToPage:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+c:objc(pl)PDFViewDelegate(im)PDFViewWillClickOnLink:withURL:	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFAccessPermissions	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFActionNamedName	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFBorderStyle	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFDisplayBox	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFDisplayDirection	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFDisplayMode	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFDocumentPermissions	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFInterpolationQuality	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFLineStyle	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFMarkupType	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFSelectionGranularity	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFTextAnnotationIconType	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFThumbnailLayoutMode	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFWidgetCellState	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFWidgetControlType	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationHighlightingMode	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationKey	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationLineEndingStyle	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationSubtype	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationTextIconType	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationWidgetSubtype	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAppearanceCharacteristicsKey	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFBorderKey	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFDocumentAttribute	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFDocumentWriteOption	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFPageImageInitializationOption	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFAccessPermissions	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFActionNamedName	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFBorderStyle	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFDisplayBox	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFDisplayDirection	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFDisplayMode	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFDocumentPermissions	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFInterpolationQuality	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFLineStyle	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFMarkupType	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFSelectionGranularity	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFTextAnnotationIconType	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFThumbnailLayoutMode	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFWidgetCellState	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFWidgetControlType	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFAccessPermissions	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFActionNamedName	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFBorderStyle	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFDisplayBox	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFDisplayDirection	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFDisplayMode	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFDocumentPermissions	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFInterpolationQuality	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFLineStyle	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFMarkupType	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFSelectionGranularity	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFTextAnnotationIconType	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFThumbnailLayoutMode	declared	full/pdfkit/PDFView.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFWidgetCellState	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFWidgetControlType	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:So12PDFBorderKeya8rawValueABSS_tcfc	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:So12PDFLineStyleV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So13PDFDisplayBoxV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So13PDFMarkupTypeV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So14PDFBorderStyleV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So14PDFDisplayModeV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So16PDFAnnotationKeya8rawValueABSS_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So17PDFAreaOfInterestV8rawValueABSi_tcfc	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:So18PDFActionNamedNameV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So18PDFWidgetCellStateV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So19PDFDisplayDirectionV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So20PDFAccessPermissionsV8rawValueABSgSu_tcfc	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:So20PDFAnnotationSubtypea8rawValueABSS_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So20PDFDocumentAttributea8rawValueABSS_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So20PDFWidgetControlTypeV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So22PDFDocumentPermissionsV8rawValueABSgSi_tcfc	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:So22PDFDocumentWriteOptiona8rawValueABSS_tcfc	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:So22PDFThumbnailLayoutModeV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So23PDFInterpolationQualityV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So23PDFSelectionGranularityV8rawValueABSgSu_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So25PDFAnnotationTextIconTypea8rawValueABSS_tcfc	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:So25PDFTextAnnotationIconTypeV8rawValueABSgSi_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So26PDFAnnotationWidgetSubtypea8rawValueABSS_tcfc	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:So28PDFAnnotationLineEndingStylea8rawValueABSS_tcfc	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:So29PDFAnnotationHighlightingModea8rawValueABSS_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So31PDFAppearanceCharacteristicsKeya8rawValueABSS_tcfc	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:So32PDFPageImageInitializationOptiona8rawValueABSS_tcfc	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationHighlightingMode	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationKey	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationLineEndingStyle	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationSubtype	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationTextIconType	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationWidgetSubtype	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAppearanceCharacteristicsKey	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFBorderKey	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFDocumentAttribute	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFDocumentWriteOption	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFPageImageInitializationOption	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationHighlightingMode	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationKey	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationLineEndingStyle	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationSubtype	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationTextIconType	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationWidgetSubtype	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAppearanceCharacteristicsKey	declared	full/pdfkit/PDFAnnotation.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFBorderKey	declared	full/pdfkit/PDFAction.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFDocumentAttribute	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFDocumentWriteOption	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFPageImageInitializationOption	declared	full/pdfkit/PDFDocument.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	implemented	tests/agent/PDFKitRuntime.swift	Exercised by tests/agent/PDFKitRuntime.swift
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@PDFAreaOfInterest	declared	full/pdfkit/PDFKitEnums.swift	Compiles on the isolated Foundation host; behavior was not focused-tested
