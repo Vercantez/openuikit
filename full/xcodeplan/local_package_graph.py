@@ -36,6 +36,12 @@ class _Token:
 
 _IDENTIFIER = re.compile(r"[A-Za-z_][A-Za-z0-9_]*\Z")
 _SEMVER = re.compile(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\Z")
+_TOOLS_VERSION_DIRECTIVE = re.compile(
+    r"^[ \t]*//[ \t]*swift-tools-version[ \t]*:[ \t]*"
+    r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)"
+    r"(?:\.(0|[1-9][0-9]*))?[ \t]*$",
+    re.MULTILINE,
+)
 _C_SOURCE_LANGUAGES = {
     ".c": "c",
     ".cc": "cxx",
@@ -87,6 +93,31 @@ def canonical_json(value: Any) -> bytes:
     return (json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n").encode(
         "utf-8"
     )
+
+
+def _manifest_tools_version(text: str, label: str) -> tuple[str, str]:
+    matches = list(_TOOLS_VERSION_DIRECTIVE.finditer(text))
+    if len(matches) != 1:
+        raise PackageGraphError(
+            f"{label} must contain exactly one static swift-tools-version directive"
+        )
+    major = int(matches[0].group(1))
+    minor = int(matches[0].group(2))
+    patch = int(matches[0].group(3) or "0")
+    if major < 4:
+        raise PackageGraphError(
+            f"{label} uses unsupported Swift tools version {major}.{minor}.{patch}"
+        )
+    if major == 4:
+        language_mode = "4" if minor < 2 else "4.2"
+    elif major == 5:
+        language_mode = "5"
+    else:
+        # SwiftPM deliberately maps every tools major above 5 to the latest
+        # released language mode.  This remains Swift 6 for the pinned 6.2
+        # compiler profile, including future 6.x manifest declarations.
+        language_mode = "6"
+    return f"{major}.{minor}.{patch}", language_mode
 
 
 def _json_no_duplicates(data: bytes, label: str) -> Any:
@@ -901,6 +932,43 @@ def _static_member_array(tokens: list[_Token], label: str) -> list[str]:
     return result
 
 
+def _package_swift_language_mode(
+    arguments: Mapping[str, list[_Token]], default: str, label: str
+) -> str:
+    keys = [
+        key
+        for key in ("swiftLanguageModes", "swiftLanguageVersions")
+        if key in arguments
+    ]
+    if not keys:
+        return default
+    if len(keys) != 1:
+        raise PackageGraphError(
+            f"{label} declares both swiftLanguageModes and swiftLanguageVersions"
+        )
+    key = keys[0]
+    members = _static_member_array(arguments[key], f"{label}.{key}")
+    if not members:
+        raise PackageGraphError(f"{label}.{key} must not be empty")
+    modes = {"v4": "4", "v4_2": "4.2", "v5": "5", "v6": "6"}
+    rank = {"4": 0, "4.2": 1, "5": 2, "6": 3}
+    values: list[str] = []
+    for index, member in enumerate(members):
+        value = modes.get(member)
+        if value is None:
+            raise PackageGraphError(
+                f"{label}.{key}[{index}] uses unsupported Swift language mode {member!r}"
+            )
+        if value in values:
+            raise PackageGraphError(
+                f"{label}.{key} repeats Swift language mode {value!r}"
+            )
+        values.append(value)
+    # Match SwiftPM's package-level resolution: use the newest language mode
+    # declared by the package that the pinned toolchain supports.
+    return max(values, key=rank.__getitem__)
+
+
 def _target_dependency_condition_active(tokens: list[_Token], label: str) -> bool:
     kind, arguments = _call(tokens, label)
     if kind != "when" or not arguments or set(arguments) - {"platforms", "traits"}:
@@ -1338,6 +1406,7 @@ def _parse_manifest(
         text = data.decode("utf-8")
     except UnicodeDecodeError as exc:
         raise PackageGraphError(f"{label} is not UTF-8: {exc}") from exc
+    tools_version, default_swift_language_mode = _manifest_tools_version(text, label)
     text = _preprocess_manifest_conditions(text, label)
     tokens = _tokenize(text, label)
     candidates: list[int] = []
@@ -1387,6 +1456,11 @@ def _parse_manifest(
         )
     _, arguments = _call(package_tokens, f"{label} Package")
     name = _literal(arguments.get("name", []), f"{label} Package.name")
+    swift_language_mode = _package_swift_language_mode(
+        arguments,
+        default_swift_language_mode,
+        f"{label} Package",
+    )
     products = [
         _parse_product(item, f"{label} products[{index}]")
         for index, item in enumerate(
@@ -1436,7 +1510,9 @@ def _parse_manifest(
         "dependencies": dependencies,
         "name": name,
         "products": products,
+        "swift_language_mode": swift_language_mode,
         "targets": targets,
+        "tools_version": tools_version,
     }
 
 
@@ -1583,7 +1659,9 @@ class _Planner:
             "path": graph_path,
             "products": products,
             "source_prefix": source_prefix,
+            "swift_language_mode": parsed["swift_language_mode"],
             "targets": targets,
+            "tools_version": parsed["tools_version"],
         }
         self.packages[graph_path] = model
         return model
@@ -2693,8 +2771,24 @@ class _Planner:
                 "target_type": target_files["target_type"],
                 "target_id": target_id,
             }
-            if target_files["target_type"] == "swift" and model["target"]["swift_settings"]:
-                target_record["swift_settings"] = model["target"]["swift_settings"]
+            if target_files["target_type"] == "swift":
+                swift_settings = list(model["target"]["swift_settings"])
+                if not any(
+                    setting.get("kind") == "swift_language_mode"
+                    for setting in swift_settings
+                ):
+                    swift_settings.insert(
+                        0,
+                        {
+                            "kind": "swift_language_mode",
+                            "value": model["package"]["swift_language_mode"],
+                        },
+                    )
+                _swift_setting_arguments(
+                    swift_settings,
+                    f"reachable target {target_id!r} effective Swift settings",
+                )
+                target_record["swift_settings"] = swift_settings
             if resources:
                 bundle_stem = (
                     f"{self._module_name(model['package']['name'])}_{module}"
@@ -2762,6 +2856,8 @@ class _Planner:
                 "name": package["name"],
                 "path": path,
                 "remote_dependencies": remote_dependencies,
+                "swift_language_mode": package["swift_language_mode"],
+                "tools_version": package["tools_version"],
             }
             if self.source_external_graph is not None:
                 package_record["origin"] = package["origin"]
