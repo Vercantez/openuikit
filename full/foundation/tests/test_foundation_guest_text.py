@@ -207,6 +207,7 @@ class FoundationGuestTextTests(unittest.TestCase):
             "public func _convertErrorToNSError(_ error: any Error) -> NSError",
             "public func _convertNSErrorToError(_ error: NSError?) -> any Error",
             "public protocol _ObjectiveCBridgeableError: Error",
+            "@_silgen_name(\"$s10Foundation21_bridgeNSErrorToError_3outSbSo0C0C_",
             "public func _bridgeNSErrorToError<T: _ObjectiveCBridgeableError>",
             "out.initialize(to: bridged)",
             "error._getEmbeddedNSError() as? NSError",

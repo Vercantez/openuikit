@@ -210,6 +210,12 @@ public protocol _ObjectiveCBridgeableError: Error {
 /// Runtime entry point for dynamically bridging an `NSError` into a concrete
 /// Swift error.  On failure `out` remains uninitialized, matching the standard
 /// Foundation overlay contract.
+///
+/// Apple's overlay uses a Clang-imported `NSError`, whose type component is
+/// encoded as `So0C0C` in this compiler-known ABI symbol.  Our implementation
+/// is a native Foundation class with the same object-reference calling
+/// convention, so pin the entry point to the runtime spelling explicitly.
+@_silgen_name("$s10Foundation21_bridgeNSErrorToError_3outSbSo0C0C_SpyxGtAA021_ObjectiveCBridgeableE0RzlF")
 public func _bridgeNSErrorToError<T: _ObjectiveCBridgeableError>(
     _ error: NSError,
     out: UnsafeMutablePointer<T>
