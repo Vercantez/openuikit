@@ -1,0 +1,1159 @@
+@_exported import Foundation
+@preconcurrency import Dispatch
+
+public typealias CLLocationDegrees = Double
+public typealias CLLocationDistance = Double
+public typealias CLLocationAccuracy = Double
+public typealias CLLocationSpeed = Double
+public typealias CLLocationDirection = Double
+public typealias CLTimeInterval = Double
+public typealias CLBeaconMajorValue = UInt16
+public typealias CLBeaconMinorValue = UInt16
+
+public let CLLocationDistanceMax = Double.greatestFiniteMagnitude
+public let kCLDistanceFilterNone: CLLocationDistance = -1
+public let kCLLocationAccuracyBestForNavigation: CLLocationAccuracy = -2
+public let kCLLocationAccuracyBest: CLLocationAccuracy = -1
+public let kCLLocationAccuracyNearestTenMeters: CLLocationAccuracy = 10
+public let kCLLocationAccuracyHundredMeters: CLLocationAccuracy = 100
+public let kCLLocationAccuracyKilometer: CLLocationAccuracy = 1_000
+public let kCLLocationAccuracyThreeKilometers: CLLocationAccuracy = 3_000
+public let kCLLocationAccuracyReduced: CLLocationAccuracy = 6_380_000
+public let kCLErrorDomain = "kCLErrorDomain"
+
+public struct CLLocationCoordinate2D: Hashable, Sendable {
+  public var latitude: CLLocationDegrees
+  public var longitude: CLLocationDegrees
+
+  public init(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
+    self.latitude = latitude
+    self.longitude = longitude
+  }
+}
+
+public let kCLLocationCoordinate2DInvalid = CLLocationCoordinate2D(
+  latitude: .infinity,
+  longitude: .infinity
+)
+
+public func CLLocationCoordinate2DMake(
+  _ latitude: CLLocationDegrees,
+  _ longitude: CLLocationDegrees
+) -> CLLocationCoordinate2D {
+  CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+}
+
+public func CLLocationCoordinate2DIsValid(
+  _ coordinate: CLLocationCoordinate2D
+) -> Bool {
+  coordinate.latitude.isFinite
+    && coordinate.longitude.isFinite
+    && (-90.0...90.0).contains(coordinate.latitude)
+    && (-180.0...180.0).contains(coordinate.longitude)
+}
+
+@objc public enum CLAuthorizationStatus: Int, Sendable {
+  case notDetermined = 0
+  case restricted = 1
+  case denied = 2
+  case authorizedAlways = 3
+  case authorizedWhenInUse = 4
+}
+
+@objc public enum CLAccuracyAuthorization: Int, Sendable {
+  case fullAccuracy = 0
+  case reducedAccuracy = 1
+}
+
+@objc public enum CLActivityType: Int, Sendable {
+  case other = 1
+  case automotiveNavigation = 2
+  case fitness = 3
+  case otherNavigation = 4
+  case airborne = 5
+}
+
+@objc public enum CLDeviceOrientation: Int, Sendable {
+  case unknown = 0
+  case portrait = 1
+  case portraitUpsideDown = 2
+  case landscapeLeft = 3
+  case landscapeRight = 4
+  case faceUp = 5
+  case faceDown = 6
+}
+
+@objc public enum CLRegionState: Int, Sendable {
+  case unknown = 0
+  case inside = 1
+  case outside = 2
+}
+
+@objc public enum CLProximity: Int, Sendable {
+  case unknown = 0
+  case immediate = 1
+  case near = 2
+  case far = 3
+}
+
+public struct CLError: Error, Equatable, Sendable, CustomNSError,
+  LocalizedError
+{
+  public enum Code: Int, Sendable {
+    case locationUnknown = 0
+    case denied = 1
+    case network = 2
+    case headingFailure = 3
+    case regionMonitoringDenied = 4
+    case regionMonitoringFailure = 5
+    case regionMonitoringSetupDelayed = 6
+    case regionMonitoringResponseDelayed = 7
+    case geocodeFoundNoResult = 8
+    case geocodeFoundPartialResult = 9
+    case geocodeCanceled = 10
+    case deferredFailed = 11
+    case deferredNotUpdatingLocation = 12
+    case deferredAccuracyTooLow = 13
+    case deferredDistanceFiltered = 14
+    case deferredCanceled = 15
+    case rangingUnavailable = 16
+    case rangingFailure = 17
+    case promptDeclined = 18
+    case historicalLocationError = 19
+  }
+
+  public static let locationUnknown: Code = .locationUnknown
+  public static let denied: Code = .denied
+  public static let network: Code = .network
+  public static let headingFailure: Code = .headingFailure
+  public static let regionMonitoringDenied: Code = .regionMonitoringDenied
+  public static let regionMonitoringFailure: Code = .regionMonitoringFailure
+  public static let regionMonitoringSetupDelayed: Code = .regionMonitoringSetupDelayed
+  public static let regionMonitoringResponseDelayed: Code = .regionMonitoringResponseDelayed
+  public static let geocodeFoundNoResult: Code = .geocodeFoundNoResult
+  public static let geocodeFoundPartialResult: Code = .geocodeFoundPartialResult
+  public static let geocodeCanceled: Code = .geocodeCanceled
+  public static let deferredFailed: Code = .deferredFailed
+  public static let deferredNotUpdatingLocation: Code = .deferredNotUpdatingLocation
+  public static let deferredAccuracyTooLow: Code = .deferredAccuracyTooLow
+  public static let deferredDistanceFiltered: Code = .deferredDistanceFiltered
+  public static let deferredCanceled: Code = .deferredCanceled
+  public static let rangingUnavailable: Code = .rangingUnavailable
+  public static let rangingFailure: Code = .rangingFailure
+
+  public let code: Code
+
+  public init(_ code: Code) {
+    self.code = code
+  }
+
+  public static var errorDomain: String { kCLErrorDomain }
+  public var errorCode: Int { code.rawValue }
+  public var errorDescription: String? {
+    switch code {
+    case .locationUnknown: "The location is currently unknown"
+    case .denied: "Location access is denied or unavailable"
+    case .network: "A network service required for location is unavailable"
+    case .headingFailure: "Heading data is unavailable"
+    case .geocodeFoundNoResult: "No geocoding result is available"
+    case .geocodeCanceled: "The geocoding request was canceled"
+    default: "CoreLocation error \(code.rawValue)"
+    }
+  }
+}
+
+@objc(CLFloor)
+open class CLFloor: NSObject, @unchecked Sendable {
+  @objc public let level: Int
+
+  @_spi(OpenUIKitHost)
+  public init(level: Int) {
+    self.level = level
+    super.init()
+  }
+}
+
+@objc(CLLocation)
+open class CLLocation: NSObject, NSCopying, @unchecked Sendable {
+  public let coordinate: CLLocationCoordinate2D
+  @objc public let altitude: CLLocationDistance
+  @objc public let horizontalAccuracy: CLLocationAccuracy
+  @objc public let verticalAccuracy: CLLocationAccuracy
+  @objc public let course: CLLocationDirection
+  @objc public let courseAccuracy: CLLocationDirection
+  @objc public let speed: CLLocationSpeed
+  @objc public let speedAccuracy: CLLocationSpeed
+  @objc public let timestamp: Date
+  @objc public let floor: CLFloor?
+
+  @objc public convenience init(
+    latitude: CLLocationDegrees,
+    longitude: CLLocationDegrees
+  ) {
+    self.init(
+      coordinate: .init(latitude: latitude, longitude: longitude),
+      altitude: 0,
+      horizontalAccuracy: -1,
+      verticalAccuracy: -1,
+      course: -1,
+      courseAccuracy: -1,
+      speed: -1,
+      speedAccuracy: -1,
+      timestamp: Date()
+    )
+  }
+
+  public convenience init(
+    coordinate: CLLocationCoordinate2D,
+    altitude: CLLocationDistance,
+    horizontalAccuracy hAccuracy: CLLocationAccuracy,
+    verticalAccuracy vAccuracy: CLLocationAccuracy,
+    timestamp: Date
+  ) {
+    self.init(
+      coordinate: coordinate,
+      altitude: altitude,
+      horizontalAccuracy: hAccuracy,
+      verticalAccuracy: vAccuracy,
+      course: -1,
+      courseAccuracy: -1,
+      speed: -1,
+      speedAccuracy: -1,
+      timestamp: timestamp
+    )
+  }
+
+  public convenience init(
+    coordinate: CLLocationCoordinate2D,
+    altitude: CLLocationDistance,
+    horizontalAccuracy hAccuracy: CLLocationAccuracy,
+    verticalAccuracy vAccuracy: CLLocationAccuracy,
+    course: CLLocationDirection,
+    speed: CLLocationSpeed,
+    timestamp: Date
+  ) {
+    self.init(
+      coordinate: coordinate,
+      altitude: altitude,
+      horizontalAccuracy: hAccuracy,
+      verticalAccuracy: vAccuracy,
+      course: course,
+      courseAccuracy: -1,
+      speed: speed,
+      speedAccuracy: -1,
+      timestamp: timestamp
+    )
+  }
+
+  public init(
+    coordinate: CLLocationCoordinate2D,
+    altitude: CLLocationDistance,
+    horizontalAccuracy hAccuracy: CLLocationAccuracy,
+    verticalAccuracy vAccuracy: CLLocationAccuracy,
+    course: CLLocationDirection,
+    courseAccuracy: CLLocationDirection,
+    speed: CLLocationSpeed,
+    speedAccuracy: CLLocationSpeed,
+    timestamp: Date
+  ) {
+    self.coordinate = coordinate
+    self.altitude = altitude
+    horizontalAccuracy = hAccuracy
+    verticalAccuracy = vAccuracy
+    self.course = course
+    self.courseAccuracy = courseAccuracy
+    self.speed = speed
+    self.speedAccuracy = speedAccuracy
+    self.timestamp = timestamp
+    floor = nil
+    super.init()
+  }
+
+  @objc(distanceFromLocation:)
+  open func distance(from location: CLLocation) -> CLLocationDistance {
+    guard CLLocationCoordinate2DIsValid(coordinate),
+      CLLocationCoordinate2DIsValid(location.coordinate)
+    else { return .greatestFiniteMagnitude }
+
+    return _openGeodesicDistance(coordinate, location.coordinate)
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return self
+  }
+
+  open override func isEqual(_ object: Any?) -> Bool {
+    guard let other = object as? CLLocation else { return false }
+    return coordinate == other.coordinate
+      && altitude == other.altitude
+      && horizontalAccuracy == other.horizontalAccuracy
+      && verticalAccuracy == other.verticalAccuracy
+      && course == other.course
+      && courseAccuracy == other.courseAccuracy
+      && speed == other.speed
+      && speedAccuracy == other.speedAccuracy
+      && timestamp == other.timestamp
+  }
+
+  open override var hash: Int {
+    var hasher = Hasher()
+    hasher.combine(coordinate)
+    hasher.combine(altitude)
+    hasher.combine(horizontalAccuracy)
+    hasher.combine(verticalAccuracy)
+    hasher.combine(course)
+    hasher.combine(courseAccuracy)
+    hasher.combine(speed)
+    hasher.combine(speedAccuracy)
+    hasher.combine(timestamp)
+    return hasher.finalize()
+  }
+
+  open override var description: String {
+    "<CLLocation \(coordinate.latitude),\(coordinate.longitude) ±\(horizontalAccuracy)m>"
+  }
+
+  @objc(_openLatitude)
+  public var _openLatitude: CLLocationDegrees { coordinate.latitude }
+
+  @objc(_openLongitude)
+  public var _openLongitude: CLLocationDegrees { coordinate.longitude }
+}
+
+private func _openGeodesicDistance(
+  _ source: CLLocationCoordinate2D,
+  _ destination: CLLocationCoordinate2D
+) -> CLLocationDistance {
+  if source == destination { return 0 }
+
+  // Vincenty's inverse solution on WGS-84. CoreLocation reports ellipsoidal
+  // distances rather than a spherical haversine approximation; this keeps
+  // long-haul and equatorial results aligned with Apple's public behavior.
+  let majorAxis = 6_378_137.0
+  let flattening = 1.0 / 298.257_223_563
+  let minorAxis = (1 - flattening) * majorAxis
+  let radians = Double.pi / 180
+  let reducedLatitude1 = atan((1 - flattening) * tan(source.latitude * radians))
+  let reducedLatitude2 = atan((1 - flattening) * tan(destination.latitude * radians))
+  let sinU1 = sin(reducedLatitude1)
+  let cosU1 = cos(reducedLatitude1)
+  let sinU2 = sin(reducedLatitude2)
+  let cosU2 = cos(reducedLatitude2)
+  let longitudeDelta = (destination.longitude - source.longitude) * radians
+  var lambda = longitudeDelta
+  var sigma = 0.0
+  var sinSigma = 0.0
+  var cosSigma = 0.0
+  var sinAlpha = 0.0
+  var cosSquaredAlpha = 0.0
+  var cosTwoSigmaM = 0.0
+  var converged = false
+
+  for _ in 0..<100 {
+    let sinLambda = sin(lambda)
+    let cosLambda = cos(lambda)
+    let first = cosU2 * sinLambda
+    let second = cosU1 * sinU2 - sinU1 * cosU2 * cosLambda
+    sinSigma = sqrt(first * first + second * second)
+    if sinSigma == 0 { return 0 }
+    cosSigma = sinU1 * sinU2 + cosU1 * cosU2 * cosLambda
+    sigma = atan2(sinSigma, cosSigma)
+    sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma
+    cosSquaredAlpha = max(0, 1 - sinAlpha * sinAlpha)
+    cosTwoSigmaM = cosSquaredAlpha == 0
+      ? 0
+      : cosSigma - 2 * sinU1 * sinU2 / cosSquaredAlpha
+    let coefficient = flattening / 16 * cosSquaredAlpha
+      * (4 + flattening * (4 - 3 * cosSquaredAlpha))
+    let previous = lambda
+    lambda = longitudeDelta + (1 - coefficient) * flattening * sinAlpha
+      * (sigma + coefficient * sinSigma
+        * (cosTwoSigmaM + coefficient * cosSigma
+          * (-1 + 2 * cosTwoSigmaM * cosTwoSigmaM)))
+    if abs(lambda - previous) <= 1e-12 {
+      converged = true
+      break
+    }
+  }
+
+  guard converged else {
+    let latitude1 = source.latitude * radians
+    let latitude2 = destination.latitude * radians
+    let deltaLatitude = (destination.latitude - source.latitude) * radians
+    let deltaLongitude = (destination.longitude - source.longitude) * radians
+    let haversine = sin(deltaLatitude / 2) * sin(deltaLatitude / 2)
+      + cos(latitude1) * cos(latitude2)
+      * sin(deltaLongitude / 2) * sin(deltaLongitude / 2)
+    return 6_371_008.8 * 2
+      * atan2(sqrt(haversine), sqrt(max(0, 1 - haversine)))
+  }
+
+  let uSquared = cosSquaredAlpha
+    * (majorAxis * majorAxis - minorAxis * minorAxis)
+    / (minorAxis * minorAxis)
+  let aCoefficient = 1 + uSquared / 16_384
+    * (4_096 + uSquared * (-768 + uSquared * (320 - 175 * uSquared)))
+  let bCoefficient = uSquared / 1_024
+    * (256 + uSquared * (-128 + uSquared * (74 - 47 * uSquared)))
+  let deltaSigma = bCoefficient * sinSigma
+    * (cosTwoSigmaM + bCoefficient / 4
+      * (cosSigma * (-1 + 2 * cosTwoSigmaM * cosTwoSigmaM)
+        - bCoefficient / 6 * cosTwoSigmaM
+        * (-3 + 4 * sinSigma * sinSigma)
+        * (-3 + 4 * cosTwoSigmaM * cosTwoSigmaM)))
+  return minorAxis * aCoefficient * (sigma - deltaSigma)
+}
+
+@objc(CLHeading)
+open class CLHeading: NSObject, NSCopying, @unchecked Sendable {
+  @objc public let magneticHeading: CLLocationDirection
+  @objc public let trueHeading: CLLocationDirection
+  @objc public let headingAccuracy: CLLocationDirection
+  @objc public let x: Double
+  @objc public let y: Double
+  @objc public let z: Double
+  @objc public let timestamp: Date
+
+  @_spi(OpenUIKitHost)
+  public init(
+    magneticHeading: CLLocationDirection,
+    trueHeading: CLLocationDirection,
+    headingAccuracy: CLLocationDirection,
+    x: Double = 0,
+    y: Double = 0,
+    z: Double = 0,
+    timestamp: Date = Date()
+  ) {
+    self.magneticHeading = magneticHeading
+    self.trueHeading = trueHeading
+    self.headingAccuracy = headingAccuracy
+    self.x = x
+    self.y = y
+    self.z = z
+    self.timestamp = timestamp
+    super.init()
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return self
+  }
+}
+
+@objc(CLRegion)
+open class CLRegion: NSObject, NSCopying, @unchecked Sendable {
+  @objc public let identifier: String
+  @objc open var notifyOnEntry: Bool = true
+  @objc open var notifyOnExit: Bool = true
+
+  @objc public init(identifier: String) {
+    self.identifier = identifier
+    super.init()
+  }
+
+  open func contains(_ coordinate: CLLocationCoordinate2D) -> Bool {
+    _ = coordinate
+    return false
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return self
+  }
+
+  open override func isEqual(_ object: Any?) -> Bool {
+    guard let other = object as? CLRegion else { return false }
+    return type(of: self) == type(of: other) && identifier == other.identifier
+  }
+
+  open override var hash: Int { identifier.hashValue }
+}
+
+@objc(CLCircularRegion)
+open class CLCircularRegion: CLRegion, @unchecked Sendable {
+  public let center: CLLocationCoordinate2D
+  @objc public let radius: CLLocationDistance
+
+  public init(
+    center: CLLocationCoordinate2D,
+    radius: CLLocationDistance,
+    identifier: String
+  ) {
+    self.center = center
+    self.radius = max(0, radius)
+    super.init(identifier: identifier)
+  }
+
+  open override func contains(_ coordinate: CLLocationCoordinate2D) -> Bool {
+    CLLocation(latitude: center.latitude, longitude: center.longitude)
+      .distance(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
+      <= radius
+  }
+
+  open override func isEqual(_ object: Any?) -> Bool {
+    guard let other = object as? CLCircularRegion else { return false }
+    return identifier == other.identifier && center == other.center && radius == other.radius
+  }
+
+  open override var hash: Int {
+    var hasher = Hasher()
+    hasher.combine(identifier)
+    hasher.combine(center)
+    hasher.combine(radius)
+    return hasher.finalize()
+  }
+
+  @objc(_openCenterLatitude)
+  public var _openCenterLatitude: CLLocationDegrees { center.latitude }
+
+  @objc(_openCenterLongitude)
+  public var _openCenterLongitude: CLLocationDegrees { center.longitude }
+
+  @objc(_openContainsLatitude:longitude:)
+  public func _openContains(
+    latitude: CLLocationDegrees,
+    longitude: CLLocationDegrees
+  ) -> Bool {
+    contains(.init(latitude: latitude, longitude: longitude))
+  }
+}
+
+@objc(CLBeaconIdentityConstraint)
+open class CLBeaconIdentityConstraint: NSObject, NSCopying,
+  @unchecked Sendable
+{
+  @objc public let uuid: UUID
+  @objc public let major: NSNumber?
+  @objc public let minor: NSNumber?
+
+  @objc public init(uuid: UUID) {
+    self.uuid = uuid
+    major = nil
+    minor = nil
+    super.init()
+  }
+
+  @objc public init(uuid: UUID, major: CLBeaconMajorValue) {
+    self.uuid = uuid
+    self.major = NSNumber(value: major)
+    minor = nil
+    super.init()
+  }
+
+  @objc public init(
+    uuid: UUID,
+    major: CLBeaconMajorValue,
+    minor: CLBeaconMinorValue
+  ) {
+    self.uuid = uuid
+    self.major = NSNumber(value: major)
+    self.minor = NSNumber(value: minor)
+    super.init()
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return self
+  }
+}
+
+@objc(CLBeaconRegion)
+open class CLBeaconRegion: CLRegion, @unchecked Sendable {
+  @objc public let uuid: UUID
+  @objc public let major: NSNumber?
+  @objc public let minor: NSNumber?
+  @objc open var notifyEntryStateOnDisplay = false
+
+  @objc public init(uuid: UUID, identifier: String) {
+    self.uuid = uuid
+    major = nil
+    minor = nil
+    super.init(identifier: identifier)
+  }
+
+  @objc public init(
+    uuid: UUID,
+    major: CLBeaconMajorValue,
+    identifier: String
+  ) {
+    self.uuid = uuid
+    self.major = NSNumber(value: major)
+    minor = nil
+    super.init(identifier: identifier)
+  }
+
+  @objc public init(
+    uuid: UUID,
+    major: CLBeaconMajorValue,
+    minor: CLBeaconMinorValue,
+    identifier: String
+  ) {
+    self.uuid = uuid
+    self.major = NSNumber(value: major)
+    self.minor = NSNumber(value: minor)
+    super.init(identifier: identifier)
+  }
+
+  @objc public convenience init(
+    beaconIdentityConstraint: CLBeaconIdentityConstraint,
+    identifier: String
+  ) {
+    let major = beaconIdentityConstraint.major?.uint16Value
+    let minor = beaconIdentityConstraint.minor?.uint16Value
+    if let major, let minor {
+      self.init(
+        uuid: beaconIdentityConstraint.uuid,
+        major: major,
+        minor: minor,
+        identifier: identifier
+      )
+    } else if let major {
+      self.init(
+        uuid: beaconIdentityConstraint.uuid,
+        major: major,
+        identifier: identifier
+      )
+    } else {
+      self.init(uuid: beaconIdentityConstraint.uuid, identifier: identifier)
+    }
+  }
+
+  @objc public var beaconIdentityConstraint: CLBeaconIdentityConstraint {
+    if let major, let minor {
+      return CLBeaconIdentityConstraint(
+        uuid: uuid,
+        major: major.uint16Value,
+        minor: minor.uint16Value
+      )
+    }
+    if let major {
+      return CLBeaconIdentityConstraint(uuid: uuid, major: major.uint16Value)
+    }
+    return CLBeaconIdentityConstraint(uuid: uuid)
+  }
+}
+
+@objc(CLBeacon)
+open class CLBeacon: NSObject, @unchecked Sendable {
+  @objc public let uuid: UUID
+  @objc public let major: NSNumber
+  @objc public let minor: NSNumber
+  @objc public let proximity: CLProximity
+  @objc public let accuracy: CLLocationAccuracy
+  @objc public let rssi: Int
+  @objc public let timestamp: Date
+
+  @_spi(OpenUIKitHost)
+  public init(
+    uuid: UUID,
+    major: CLBeaconMajorValue,
+    minor: CLBeaconMinorValue,
+    proximity: CLProximity,
+    accuracy: CLLocationAccuracy,
+    rssi: Int,
+    timestamp: Date = Date()
+  ) {
+    self.uuid = uuid
+    self.major = NSNumber(value: major)
+    self.minor = NSNumber(value: minor)
+    self.proximity = proximity
+    self.accuracy = accuracy
+    self.rssi = rssi
+    self.timestamp = timestamp
+    super.init()
+  }
+}
+
+@objc(CLVisit)
+open class CLVisit: NSObject, @unchecked Sendable {
+  public let coordinate: CLLocationCoordinate2D
+  @objc public let horizontalAccuracy: CLLocationAccuracy
+  @objc public let arrivalDate: Date
+  @objc public let departureDate: Date
+
+  @_spi(OpenUIKitHost)
+  public init(
+    coordinate: CLLocationCoordinate2D,
+    horizontalAccuracy: CLLocationAccuracy,
+    arrivalDate: Date,
+    departureDate: Date
+  ) {
+    self.coordinate = coordinate
+    self.horizontalAccuracy = horizontalAccuracy
+    self.arrivalDate = arrivalDate
+    self.departureDate = departureDate
+    super.init()
+  }
+
+  @objc(_openLatitude)
+  public var _openLatitude: CLLocationDegrees { coordinate.latitude }
+
+  @objc(_openLongitude)
+  public var _openLongitude: CLLocationDegrees { coordinate.longitude }
+}
+
+@objc(CLPlacemark)
+open class CLPlacemark: NSObject, NSCopying, @unchecked Sendable {
+  @objc public let location: CLLocation?
+  @objc public let region: CLRegion?
+  @objc public let timeZone: TimeZone?
+  @objc public let name: String?
+  @objc public let thoroughfare: String?
+  @objc public let subThoroughfare: String?
+  @objc public let locality: String?
+  @objc public let subLocality: String?
+  @objc public let administrativeArea: String?
+  @objc public let subAdministrativeArea: String?
+  @objc public let postalCode: String?
+  @objc public let isoCountryCode: String?
+  @objc public let country: String?
+  @objc public let inlandWater: String?
+  @objc public let ocean: String?
+  @objc public let areasOfInterest: [String]?
+
+  @_spi(OpenUIKitHost)
+  public init(
+    location: CLLocation?,
+    region: CLRegion? = nil,
+    timeZone: TimeZone? = nil,
+    name: String? = nil,
+    thoroughfare: String? = nil,
+    subThoroughfare: String? = nil,
+    locality: String? = nil,
+    subLocality: String? = nil,
+    administrativeArea: String? = nil,
+    subAdministrativeArea: String? = nil,
+    postalCode: String? = nil,
+    isoCountryCode: String? = nil,
+    country: String? = nil,
+    inlandWater: String? = nil,
+    ocean: String? = nil,
+    areasOfInterest: [String]? = nil
+  ) {
+    self.location = location
+    self.region = region
+    self.timeZone = timeZone
+    self.name = name
+    self.thoroughfare = thoroughfare
+    self.subThoroughfare = subThoroughfare
+    self.locality = locality
+    self.subLocality = subLocality
+    self.administrativeArea = administrativeArea
+    self.subAdministrativeArea = subAdministrativeArea
+    self.postalCode = postalCode
+    self.isoCountryCode = isoCountryCode
+    self.country = country
+    self.inlandWater = inlandWater
+    self.ocean = ocean
+    self.areasOfInterest = areasOfInterest
+    super.init()
+  }
+
+  public func copy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    return self
+  }
+}
+
+@objc public protocol CLLocationManagerDelegate: NSObjectProtocol {
+  @objc optional func locationManager(
+    _ manager: CLLocationManager,
+    didUpdateLocations locations: [CLLocation]
+  )
+  @objc optional func locationManager(
+    _ manager: CLLocationManager,
+    didUpdateHeading newHeading: CLHeading
+  )
+  @objc optional func locationManager(
+    _ manager: CLLocationManager,
+    didFailWithError error: Error
+  )
+  @objc optional func locationManagerDidChangeAuthorization(
+    _ manager: CLLocationManager
+  )
+  @objc optional func locationManager(
+    _ manager: CLLocationManager,
+    didChangeAuthorization status: CLAuthorizationStatus
+  )
+  @objc optional func locationManager(
+    _ manager: CLLocationManager,
+    didEnterRegion region: CLRegion
+  )
+  @objc optional func locationManager(
+    _ manager: CLLocationManager,
+    didExitRegion region: CLRegion
+  )
+  @objc optional func locationManager(
+    _ manager: CLLocationManager,
+    didDetermineState state: CLRegionState,
+    for region: CLRegion
+  )
+  @objc optional func locationManager(
+    _ manager: CLLocationManager,
+    monitoringDidFailFor region: CLRegion?,
+    withError error: Error
+  )
+  @objc optional func locationManager(
+    _ manager: CLLocationManager,
+    didStartMonitoringFor region: CLRegion
+  )
+  @objc optional func locationManagerDidPauseLocationUpdates(
+    _ manager: CLLocationManager
+  )
+  @objc optional func locationManagerDidResumeLocationUpdates(
+    _ manager: CLLocationManager
+  )
+  @objc optional func locationManager(
+    _ manager: CLLocationManager,
+    didVisit visit: CLVisit
+  )
+}
+
+@objc(CLLocationManager)
+open class CLLocationManager: NSObject, @unchecked Sendable {
+  private let portableLock = NSLock()
+  private weak var portableDelegate: CLLocationManagerDelegate?
+  private var portableLocation: CLLocation?
+  private var portableHeading: CLHeading?
+  private var portableAuthorizationStatus: CLAuthorizationStatus = .notDetermined
+  private var portableAccuracyAuthorization: CLAccuracyAuthorization = .fullAccuracy
+  private var portableUpdatingLocation = false
+  private var portableUpdatingHeading = false
+  private var portableMonitoringSignificantChanges = false
+  private var portableMonitoredRegions: Set<CLRegion> = []
+
+  @objc open weak var delegate: CLLocationManagerDelegate? {
+    get {
+      portableLock.lock()
+      defer { portableLock.unlock() }
+      return portableDelegate
+    }
+    set {
+      portableLock.lock()
+      portableDelegate = newValue
+      portableLock.unlock()
+    }
+  }
+
+  @objc open var location: CLLocation? {
+    portableLock.lock()
+    defer { portableLock.unlock() }
+    return portableLocation
+  }
+
+  @objc open var heading: CLHeading? {
+    portableLock.lock()
+    defer { portableLock.unlock() }
+    return portableHeading
+  }
+
+  @objc open var authorizationStatus: CLAuthorizationStatus {
+    portableLock.lock()
+    defer { portableLock.unlock() }
+    return portableAuthorizationStatus
+  }
+
+  @objc open var accuracyAuthorization: CLAccuracyAuthorization {
+    portableLock.lock()
+    defer { portableLock.unlock() }
+    return portableAccuracyAuthorization
+  }
+
+  @objc open var desiredAccuracy: CLLocationAccuracy = kCLLocationAccuracyBest
+  @objc open var distanceFilter: CLLocationDistance = kCLDistanceFilterNone
+  @objc open var activityType: CLActivityType = .other
+  @objc open var pausesLocationUpdatesAutomatically = true
+  @objc open var allowsBackgroundLocationUpdates = false
+  @objc open var showsBackgroundLocationIndicator = false
+  @objc open var headingFilter: CLLocationDegrees = 1
+  @objc open var headingOrientation: CLDeviceOrientation = .portrait
+
+  @objc open var monitoredRegions: Set<CLRegion> {
+    portableLock.lock()
+    defer { portableLock.unlock() }
+    return portableMonitoredRegions
+  }
+
+  @objc open class func locationServicesEnabled() -> Bool { true }
+  @objc open class func headingAvailable() -> Bool { true }
+  @objc open class func significantLocationChangeMonitoringAvailable() -> Bool { true }
+  @objc open class func regionMonitoringAvailable() -> Bool { true }
+  @objc open class func regionMonitoringEnabled() -> Bool { true }
+  @objc open class func isMonitoringAvailable(for regionClass: AnyClass) -> Bool {
+    regionClass is CLRegion.Type
+  }
+  @objc open class func authorizationStatus() -> CLAuthorizationStatus {
+    .notDetermined
+  }
+
+  @objc open var maximumRegionMonitoringDistance: CLLocationDistance {
+    CLLocationDistanceMax
+  }
+
+  @objc open func startUpdatingLocation() {
+    portableLock.lock()
+    portableUpdatingLocation = true
+    portableLock.unlock()
+  }
+
+  @objc open func stopUpdatingLocation() {
+    portableLock.lock()
+    portableUpdatingLocation = false
+    portableLock.unlock()
+  }
+
+  @objc open func requestLocation() {
+    portableLock.lock()
+    let delegate = portableDelegate
+    let status = portableAuthorizationStatus
+    let location = portableLocation
+    portableLock.unlock()
+    guard status == .authorizedAlways || status == .authorizedWhenInUse else {
+      delegate?.locationManager?(self, didFailWithError: CLError(.denied))
+      return
+    }
+    guard let location else {
+      delegate?.locationManager?(self, didFailWithError: CLError(.locationUnknown))
+      return
+    }
+    delegate?.locationManager?(self, didUpdateLocations: [location])
+  }
+
+  @objc open func startUpdatingHeading() {
+    portableLock.lock()
+    portableUpdatingHeading = true
+    portableLock.unlock()
+  }
+
+  @objc open func stopUpdatingHeading() {
+    portableLock.lock()
+    portableUpdatingHeading = false
+    portableLock.unlock()
+  }
+
+  @objc open func dismissHeadingCalibrationDisplay() {}
+
+  @objc open func requestWhenInUseAuthorization() {
+    portableRequestAuthorization()
+  }
+
+  @objc open func requestAlwaysAuthorization() {
+    portableRequestAuthorization()
+  }
+
+  private func portableRequestAuthorization() {
+    portableLock.lock()
+    if portableAuthorizationStatus == .notDetermined {
+      portableAuthorizationStatus = .denied
+    }
+    let status = portableAuthorizationStatus
+    let delegate = portableDelegate
+    portableLock.unlock()
+    delegate?.locationManager?(self, didChangeAuthorization: status)
+    delegate?.locationManagerDidChangeAuthorization?(self)
+  }
+
+  @objc open func startMonitoringSignificantLocationChanges() {
+    portableLock.lock()
+    portableMonitoringSignificantChanges = true
+    portableLock.unlock()
+  }
+
+  @objc open func stopMonitoringSignificantLocationChanges() {
+    portableLock.lock()
+    portableMonitoringSignificantChanges = false
+    portableLock.unlock()
+  }
+
+  @objc open func startMonitoring(for region: CLRegion) {
+    portableLock.lock()
+    portableMonitoredRegions.insert(region)
+    let delegate = portableDelegate
+    portableLock.unlock()
+    delegate?.locationManager?(self, didStartMonitoringFor: region)
+  }
+
+  @objc open func stopMonitoring(for region: CLRegion) {
+    portableLock.lock()
+    portableMonitoredRegions.remove(region)
+    portableLock.unlock()
+  }
+
+  @objc open func requestState(for region: CLRegion) {
+    portableLock.lock()
+    let delegate = portableDelegate
+    let location = portableLocation
+    portableLock.unlock()
+    let state: CLRegionState
+    if let circular = region as? CLCircularRegion, let location {
+      state = circular.contains(location.coordinate) ? .inside : .outside
+    } else {
+      state = .unknown
+    }
+    delegate?.locationManager?(self, didDetermineState: state, for: region)
+  }
+
+  @_spi(OpenUIKitHost)
+  public func _portableSetAuthorization(
+    _ status: CLAuthorizationStatus,
+    accuracy: CLAccuracyAuthorization = .fullAccuracy
+  ) {
+    portableLock.lock()
+    let changed = status != portableAuthorizationStatus
+      || accuracy != portableAccuracyAuthorization
+    portableAuthorizationStatus = status
+    portableAccuracyAuthorization = accuracy
+    let delegate = portableDelegate
+    portableLock.unlock()
+    guard changed else { return }
+    delegate?.locationManager?(self, didChangeAuthorization: status)
+    delegate?.locationManagerDidChangeAuthorization?(self)
+  }
+
+  @_spi(OpenUIKitHost)
+  public func _portableInject(locations: [CLLocation]) {
+    guard let latest = locations.last else { return }
+    portableLock.lock()
+    portableLocation = latest
+    let delegate = portableDelegate
+    let authorized = portableAuthorizationStatus == .authorizedAlways
+      || portableAuthorizationStatus == .authorizedWhenInUse
+    let deliver = authorized
+      && (portableUpdatingLocation || portableMonitoringSignificantChanges)
+    let regions = portableMonitoredRegions
+    portableLock.unlock()
+    guard deliver else { return }
+    delegate?.locationManager?(self, didUpdateLocations: locations)
+    for region in regions {
+      guard let circular = region as? CLCircularRegion else { continue }
+      let state: CLRegionState = circular.contains(latest.coordinate) ? .inside : .outside
+      delegate?.locationManager?(self, didDetermineState: state, for: region)
+    }
+  }
+
+  @_spi(OpenUIKitHost)
+  public func _portableInject(heading: CLHeading) {
+    portableLock.lock()
+    portableHeading = heading
+    let delegate = portableDelegate
+    let deliver = portableUpdatingHeading
+    portableLock.unlock()
+    if deliver {
+      delegate?.locationManager?(self, didUpdateHeading: heading)
+    }
+  }
+
+  @_spi(OpenUIKitHost)
+  public func _portableInject(error: Error) {
+    portableLock.lock()
+    let delegate = portableDelegate
+    portableLock.unlock()
+    delegate?.locationManager?(self, didFailWithError: error)
+  }
+}
+
+@objc(CLGeocoder)
+open class CLGeocoder: NSObject, @unchecked Sendable {
+  public typealias PortableReverseGeocodeHandler = @Sendable (
+    CLLocation
+  ) -> Result<[CLPlacemark], Error>
+  public typealias PortableForwardGeocodeHandler = @Sendable (
+    String
+  ) -> Result<[CLPlacemark], Error>
+
+  private let portableLock = NSLock()
+  private var portableCanceled = false
+  private var reverseHandler: PortableReverseGeocodeHandler?
+  private var forwardHandler: PortableForwardGeocodeHandler?
+
+  @objc open var isGeocoding: Bool {
+    portableLock.lock()
+    defer { portableLock.unlock() }
+    return false
+  }
+
+  @objc open func reverseGeocodeLocation(
+    _ location: CLLocation,
+    completionHandler: @escaping ([CLPlacemark]?, Error?) -> Void
+  ) {
+    portableLock.lock()
+    let canceled = portableCanceled
+    portableCanceled = false
+    let handler = reverseHandler
+    portableLock.unlock()
+    if canceled {
+      completionHandler(nil, CLError(.geocodeCanceled))
+      return
+    }
+    switch handler?(location) ?? .failure(CLError(.geocodeFoundNoResult)) {
+    case .success(let placemarks): completionHandler(placemarks, nil)
+    case .failure(let error): completionHandler(nil, error)
+    }
+  }
+
+  @objc open func geocodeAddressString(
+    _ addressString: String,
+    completionHandler: @escaping ([CLPlacemark]?, Error?) -> Void
+  ) {
+    portableLock.lock()
+    let canceled = portableCanceled
+    portableCanceled = false
+    let handler = forwardHandler
+    portableLock.unlock()
+    if canceled {
+      completionHandler(nil, CLError(.geocodeCanceled))
+      return
+    }
+    switch handler?(addressString) ?? .failure(CLError(.geocodeFoundNoResult)) {
+    case .success(let placemarks): completionHandler(placemarks, nil)
+    case .failure(let error): completionHandler(nil, error)
+    }
+  }
+
+  open func reverseGeocodeLocation(
+    _ location: CLLocation
+  ) async throws -> [CLPlacemark] {
+    try await withCheckedThrowingContinuation { continuation in
+      reverseGeocodeLocation(location) { placemarks, error in
+        if let error { continuation.resume(throwing: error) }
+        else { continuation.resume(returning: placemarks ?? []) }
+      }
+    }
+  }
+
+  open func geocodeAddressString(
+    _ addressString: String
+  ) async throws -> [CLPlacemark] {
+    try await withCheckedThrowingContinuation { continuation in
+      geocodeAddressString(addressString) { placemarks, error in
+        if let error { continuation.resume(throwing: error) }
+        else { continuation.resume(returning: placemarks ?? []) }
+      }
+    }
+  }
+
+  @objc open func cancelGeocode() {
+    portableLock.lock()
+    portableCanceled = true
+    portableLock.unlock()
+  }
+
+  @_spi(OpenUIKitHost)
+  public func _portableSetReverseGeocodeHandler(
+    _ handler: PortableReverseGeocodeHandler?
+  ) {
+    portableLock.lock()
+    reverseHandler = handler
+    portableLock.unlock()
+  }
+
+  @_spi(OpenUIKitHost)
+  public func _portableSetForwardGeocodeHandler(
+    _ handler: PortableForwardGeocodeHandler?
+  ) {
+    portableLock.lock()
+    forwardHandler = handler
+    portableLock.unlock()
+  }
+}

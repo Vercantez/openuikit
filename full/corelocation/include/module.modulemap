@@ -1,0 +1,5 @@
+framework module CoreLocation {
+  umbrella header "CoreLocation.h"
+  export *
+  module * { export * }
+}

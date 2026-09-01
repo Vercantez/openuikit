@@ -1,0 +1,6 @@
+coordinate-layout=size:16,stride:16,alignment:8
+coordinate=12.5,-45.25 valid=true invalid=false
+accuracy=nav:-2.0,best:-1.0,ten:10.0,hundred:100.0,kilometer:1000.0,three-kilometers:3000.0,reduced:6380000.0
+authorization=not-determined:0,restricted:1,denied:2,always:3
+state=unknown:0,inside:1,outside:2
+distance=zero:0,nyc-london:5585234,equator-degree:111319
