@@ -1,7 +1,7 @@
 precise	status	evidence	notes
 s:16AdAttributionKit0abC5ErrorO	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit0abC5ErrorO07missingB4ViewyA2CmF	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit0abC5ErrorO11descriptionSSvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
+s:16AdAttributionKit0abC5ErrorO11descriptionSSvp	declared	AdAttributionKitError.swift	Linux case-name description; Apple copy unobserved.
 s:16AdAttributionKit0abC5ErrorO17impressionExpiredyA2CmF	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit0abC5ErrorO20invalidConversionTagyA2CmF	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit0abC5ErrorO25conversionTagNotSupportedyA2CmF	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
@@ -13,44 +13,44 @@ s:16AdAttributionKit0abC5ErrorO30invalidImpressionJWSComponentsyA2CmF	implemente
 s:16AdAttributionKit0abC5ErrorO4hash4intoys6HasherVz_tF	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit0abC5ErrorO7unknownyA2CmF	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit0abC5ErrorO9hashValueSivp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit13AppImpressionV	implemented	tests/agent/AdAttributionKitRuntime.swift	Hashable Identifiable value type; Linux decodes documented JWS claims only.
-s:16AdAttributionKit13AppImpressionV10compactJWSACSS_tYaKcfc	implemented	tests/agent/AdAttributionKitRuntime.swift	Parses compact JWS claims; does not verify Apple ES256 keys.
-s:16AdAttributionKit13AppImpressionV11adNetworkIDSSvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
+s:16AdAttributionKit13AppImpressionV	implemented	tests/agent/AdAttributionKitRuntime.swift	Type compiles; instances cannot be constructed without ES256 verification.
+s:16AdAttributionKit13AppImpressionV10compactJWSACSS_tYaKcfc	implemented	tests/agent/AdAttributionKitRuntime.swift	Always throws; malformed structural errors, forged JWS -> invalidImpressionJWSSignature.
+s:16AdAttributionKit13AppImpressionV11adNetworkIDSSvp	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
 s:16AdAttributionKit13AppImpressionV11isSupportedSbvpZ	implemented	tests/agent/AdAttributionKitRuntime.swift	Always false on Linux.
-s:16AdAttributionKit13AppImpressionV15publisherItemIDs6UInt64Vvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit13AppImpressionV16advertisedItemIDs6UInt64Vvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit13AppImpressionV23eligibleForReengagementSbvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit13AppImpressionV24compactJWSRepresentationSSvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit13AppImpressionV2IDa	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit13AppImpressionV2eeoiySbAC_ACtFZ	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit13AppImpressionV2id10Foundation4UUIDVvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit13AppImpressionV4hash4intoys6HasherVz_tF	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit13AppImpressionV5keyIDSSvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit13AppImpressionV7endViewyyYaKF	implemented	tests/agent/AdAttributionKitRuntime.swift	Fail-closed: missingAttributionView.
-s:16AdAttributionKit13AppImpressionV8sourceIDSivp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit13AppImpressionV9beginViewyyYaKF	implemented	tests/agent/AdAttributionKitRuntime.swift	Fail-closed: missingAttributionView.
-s:16AdAttributionKit13AppImpressionV9handleTap15reengagementURLy10Foundation0I0V_tYaKF	implemented	tests/agent/AdAttributionKitRuntime.swift	Fail-closed; never opens the URL.
-s:16AdAttributionKit13AppImpressionV9handleTapyyYaKF	implemented	tests/agent/AdAttributionKitRuntime.swift	Fail-closed: missingAttributionView.
-s:16AdAttributionKit13AppImpressionV9hashValueSivp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit13AppImpressionV9timestamp10Foundation4DateVvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
+s:16AdAttributionKit13AppImpressionV15publisherItemIDs6UInt64Vvp	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV16advertisedItemIDs6UInt64Vvp	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV23eligibleForReengagementSbvp	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV24compactJWSRepresentationSSvp	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV2IDa	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV2eeoiySbAC_ACtFZ	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV2id10Foundation4UUIDVvp	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV4hash4intoys6HasherVz_tF	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV5keyIDSSvp	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV7endViewyyYaKF	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV8sourceIDSivp	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV9beginViewyyYaKF	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV9handleTap15reengagementURLy10Foundation0I0V_tYaKF	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV9handleTapyyYaKF	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV9hashValueSivp	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
+s:16AdAttributionKit13AppImpressionV9timestamp10Foundation4DateVvp	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
 s:16AdAttributionKit14PostbackUpdateV	implemented	tests/agent/AdAttributionKitRuntime.swift	Stores caller-supplied update fields; send is fail-closed.
 s:16AdAttributionKit14PostbackUpdateV04lockD0Sbvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit14PostbackUpdateV13conversionTagSSSgvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO12reengagementyA2EmF	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO7installyA2EmF	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO8RawValuea	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO8rawValueAESgSS_tcfc	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO8rawValueSSvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
+s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO8RawValuea	declared	Postback.swift	Swift String RawValue alias; Apple raw literals unobserved.
+s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO8rawValueAESgSS_tcfc	declared	Postback.swift	Swift String enum case names; Apple raw literals unobserved.
+s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO8rawValueSSvp	declared	Postback.swift	Swift String enum case names; Apple raw literals unobserved.
 s:16AdAttributionKit14PostbackUpdateV15conversionTypesSayAC14ConversionTypeOGSgvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit14PostbackUpdateV19fineConversionValue04lockD006coarsegH015conversionTypesACSi_SbAA06CoarsegH0OSgSayAC0G4TypeOGSgtcfc	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit14PostbackUpdateV19fineConversionValue04lockD013conversionTag06coarsegH00J5TypesACSi_SbSSAA06CoarsegH0OSgSayAC0G4TypeOGSgtcfc	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit14PostbackUpdateV19fineConversionValueSivp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit14PostbackUpdateV21coarseConversionValueAA06CoarsegH0OSgvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit21CoarseConversionValueO	implemented	tests/agent/AdAttributionKitRuntime.swift	String raw values low/medium/high; Codable.
-s:16AdAttributionKit21CoarseConversionValueO03RawF0a	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit21CoarseConversionValueO03rawF0ACSgSS_tcfc	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:16AdAttributionKit21CoarseConversionValueO03rawF0SSvp	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
+s:16AdAttributionKit21CoarseConversionValueO	implemented	tests/agent/AdAttributionKitRuntime.swift	Cases low/medium/high; Codable round-trip exercised.
+s:16AdAttributionKit21CoarseConversionValueO03RawF0a	declared	CoarseConversionValue.swift	Swift String RawValue alias; Apple raw literals unobserved.
+s:16AdAttributionKit21CoarseConversionValueO03rawF0ACSgSS_tcfc	declared	CoarseConversionValue.swift	Swift String enum case names; Apple raw literals unobserved.
+s:16AdAttributionKit21CoarseConversionValueO03rawF0SSvp	declared	CoarseConversionValue.swift	Swift String enum case names; Apple raw literals unobserved.
 s:16AdAttributionKit21CoarseConversionValueO3lowyA2CmF	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit21CoarseConversionValueO4highyA2CmF	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:16AdAttributionKit21CoarseConversionValueO6mediumyA2CmF	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
@@ -61,7 +61,7 @@ s:16AdAttributionKit8PostbackV21updateConversionValue_06coarsefG004lockD0ySi_AA0
 s:16AdAttributionKit8PostbackV21updateConversionValueyyAA0D6UpdateVYaKFZ	implemented	tests/agent/AdAttributionKitRuntime.swift	Untagged updates throw unknown; tagged updates throw conversionTagNotSupported.
 s:16AdAttributionKit8PostbackV28reengagementOpenURLParameterSSvpZ	implemented	tests/agent/AdAttributionKitRuntime.swift	Documented query key AdAttributionKitReengagementOpen.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16AdAttributionKit0abC5ErrorO	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16AdAttributionKit13AppImpressionV	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16AdAttributionKit13AppImpressionV	declared	AppImpression.swift	Unreachable without a verified AppImpression; init never succeeds on Linux.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16AdAttributionKit14PostbackUpdateV14ConversionTypeO	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:16AdAttributionKit21CoarseConversionValueO	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
 s:SYsSERzSS8RawValueSYRtzrlE6encode2toys7Encoder_p_tKF::SYNTHESIZED::s:16AdAttributionKit21CoarseConversionValueO	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
@@ -74,4 +74,4 @@ s:So25SKOverlayAppConfigurationC023_AdAttributionKit_StoreF0E02adE15Reengagement
 s:So25SKOverlayAppConfigurationC023_AdAttributionKit_StoreF0E13appImpression0deF00bI0VSgvp	unavailable		StoreKit bystander API; Foundation-only Linux leaf has no SKOverlay or SKStoreProductViewController.
 s:So28SKStoreProductViewControllerC023_AdAttributionKit_StoreG0E04loadB010parameters10impression15reengagementURLySDySSypG_0efG013AppImpressionV10Foundation0M0VtYaKF	unavailable		StoreKit bystander API; Foundation-only Linux leaf has no SKOverlay or SKStoreProductViewController.
 s:So28SKStoreProductViewControllerC023_AdAttributionKit_StoreG0E04loadB010parameters10impressionySDySSypG_0efG013AppImpressionVtYaKF	unavailable		StoreKit bystander API; Foundation-only Linux leaf has no SKOverlay or SKStoreProductViewController.
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:16AdAttributionKit0abC5ErrorO	implemented	tests/agent/AdAttributionKitRuntime.swift	Exercised by the agent runtime probe.
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:16AdAttributionKit0abC5ErrorO	declared	AdAttributionKitError.swift	Foundation Error mapping; Apple localized text unobserved.

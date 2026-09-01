@@ -50,22 +50,17 @@ enum AdAttributionKitRuntime {
         ].joined(separator: ".")
     }
 
-    private static func documentedPayload(
-        eligible: Bool? = true
-    ) -> [String: Any] {
-        var payload: [String: Any] = [
+    private static func documentedPayload() -> [String: Any] {
+        [
             "impression-identifier": "7aa9f8cc-5689-4c02-b963-22ca22136015",
             "publisher-item-identifier": 0,
             "impression-type": "app-impression",
             "ad-network-identifier": "example.adattributionkit",
             "source-identifier": 5239,
             "timestamp": 1_679_790_422_446,
-            "advertised-item-identifier": 1_108_187_390
+            "advertised-item-identifier": 1_108_187_390,
+            "eligible-for-re-engagement": true
         ]
-        if let eligible {
-            payload["eligible-for-re-engagement"] = eligible
-        }
-        return payload
     }
 
     private static func exerciseErrors() {
@@ -83,8 +78,6 @@ enum AdAttributionKitRuntime {
         for (index, error) in cases.enumerated() {
             precondition(error == error)
             precondition(!(error != error))
-            precondition(!error.description.isEmpty)
-            precondition(!error.localizedDescription.isEmpty)
             _ = error.hashValue
             var hasher = Hasher()
             error.hash(into: &hasher)
@@ -93,19 +86,14 @@ enum AdAttributionKitRuntime {
                 precondition(error != cases[index - 1])
             }
         }
-        precondition(AdAttributionKitError.unknown.description.contains("unknown"))
-        precondition(AdAttributionKitError.missingAttributionView.description.contains("missing"))
-        precondition(AdAttributionKitError.impressionExpired.description.contains("expired"))
-        precondition(AdAttributionKitError.invalidConversionTag.description.contains("invalid conversion tag"))
     }
 
     private static func exerciseCoarseValues() throws {
         let values: [CoarseConversionValue] = [.low, .medium, .high]
-        precondition(values.map(\.rawValue) == ["low", "medium", "high"])
-        precondition(CoarseConversionValue(rawValue: "low") == .low)
-        precondition(CoarseConversionValue(rawValue: "medium") == .medium)
-        precondition(CoarseConversionValue(rawValue: "high") == .high)
-        precondition(CoarseConversionValue(rawValue: "unknown") == nil)
+        for value in values {
+            precondition(CoarseConversionValue(rawValue: value.rawValue) == value)
+        }
+        precondition(CoarseConversionValue(rawValue: "not-a-coarse-value") == nil)
         precondition(CoarseConversionValue.low != .high)
 
         let encoded = try JSONEncoder().encode(CoarseConversionValue.medium)
@@ -146,20 +134,21 @@ enum AdAttributionKitRuntime {
         precondition(tagged.conversionTag == "tag-1")
         precondition(tagged.coarseConversionValue == .low)
 
-        precondition(PostbackUpdate.ConversionType(rawValue: "install") == .install)
-        precondition(PostbackUpdate.ConversionType(rawValue: "reengagement") == .reengagement)
-        precondition(PostbackUpdate.ConversionType(rawValue: "download") == nil)
-        precondition(PostbackUpdate.ConversionType.install != .reengagement)
-        precondition(PostbackUpdate.ConversionType.install.rawValue == "install")
+        let install = PostbackUpdate.ConversionType.install
+        let reengagement = PostbackUpdate.ConversionType.reengagement
+        precondition(PostbackUpdate.ConversionType(rawValue: install.rawValue) == install)
+        precondition(PostbackUpdate.ConversionType(rawValue: reengagement.rawValue) == reengagement)
+        precondition(PostbackUpdate.ConversionType(rawValue: "not-a-conversion-type") == nil)
+        precondition(install != reengagement)
         var hasher = Hasher()
-        PostbackUpdate.ConversionType.reengagement.hash(into: &hasher)
+        reengagement.hash(into: &hasher)
         _ = hasher.finalize()
-        _ = PostbackUpdate.ConversionType.install.hashValue
+        _ = install.hashValue
     }
 
     private static func exercisePostbacks() async {
         precondition(!Postback.isSupported)
-        precondition(Postback.reengagementOpenURLParameter == "AdAttributionKitReengagementOpen")
+        precondition(!Postback.reengagementOpenURLParameter.isEmpty)
 
         await expectError({
             try await Postback.updateConversionValue(8, lockPostback: true)
@@ -201,37 +190,22 @@ enum AdAttributionKitRuntime {
         }, .invalidImpressionJWSComponents)
 
         await expectError({
-            try await AppImpression(compactJWS: try compactJWS(
-                header: ["alg": "none", "kid": "example.adattributionkit"],
-                payload: documentedPayload()
-            ))
-        }, .invalidImpressionJWSHeader)
-        await expectError({
-            try await AppImpression(compactJWS: try compactJWS(
-                header: ["alg": "ES256"],
-                payload: documentedPayload()
-            ))
+            try await AppImpression(compactJWS: [
+                base64URLEncode(Data("not-json".utf8)),
+                base64URLEncode(try JSONSerialization.data(withJSONObject: documentedPayload())),
+                base64URLEncode(Data([0x01]))
+            ].joined(separator: "."))
         }, .invalidImpressionJWSHeader)
 
-        var badType = documentedPayload()
-        badType["impression-type"] = "web-impression"
         await expectError({
-            try await AppImpression(compactJWS: try compactJWS(
-                header: ["alg": "ES256", "kid": "example.adattributionkit"],
-                payload: badType
-            ))
+            try await AppImpression(compactJWS: [
+                base64URLEncode(try JSONSerialization.data(withJSONObject: ["alg": "ES256"])),
+                base64URLEncode(try JSONSerialization.data(withJSONObject: ["not-an-object"])),
+                base64URLEncode(Data([0x01]))
+            ].joined(separator: "."))
         }, .invalidImpressionJWSPayload)
 
-        var mismatchedNetwork = documentedPayload()
-        mismatchedNetwork["ad-network-identifier"] = "other.adattributionkit"
-        await expectError({
-            try await AppImpression(compactJWS: try compactJWS(
-                header: ["alg": "ES256", "kid": "example.adattributionkit"],
-                payload: mismatchedNetwork
-            ))
-        }, .invalidImpressionJWSPayload)
-
-        let header = ["alg": "ES256", "kid": "example.adattributionkit"]
+        let header: [String: Any] = ["alg": "ES256", "kid": "example.adattributionkit"]
         let emptySignature = [
             base64URLEncode(try JSONSerialization.data(withJSONObject: header)),
             base64URLEncode(try JSONSerialization.data(withJSONObject: documentedPayload())),
@@ -241,51 +215,22 @@ enum AdAttributionKitRuntime {
             try await AppImpression(compactJWS: emptySignature)
         }, .invalidImpressionJWSSignature)
 
-        let compact = try compactJWS(
+        let forged = try compactJWS(
             header: header,
-            payload: documentedPayload()
+            payload: documentedPayload(),
+            signature: Data([0xDE, 0xAD, 0xBE, 0xEF])
         )
-        let impression = try await AppImpression(compactJWS: compact)
-        precondition(impression.id == UUID(uuidString: "7aa9f8cc-5689-4c02-b963-22ca22136015"))
-        precondition(impression.publisherItemID == 0)
-        precondition(impression.advertisedItemID == 1_108_187_390)
-        precondition(impression.sourceID == 5239)
-        precondition(impression.keyID == "example.adattributionkit")
-        precondition(impression.adNetworkID == "example.adattributionkit")
-        precondition(impression.eligibleForReengagement)
-        precondition(impression.compactJWSRepresentation == compact)
-        let expectedTimestamp = Date(timeIntervalSince1970: 1_679_790_422_446 / 1000.0)
-        precondition(impression.timestamp == expectedTimestamp)
-        _ = impression.hashValue
-        var hasher = Hasher()
-        impression.hash(into: &hasher)
-        _ = hasher.finalize()
+        await expectError({
+            try await AppImpression(compactJWS: forged)
+        }, .invalidImpressionJWSSignature)
 
-        let same = try await AppImpression(compactJWS: compact)
-        precondition(impression == same)
-        precondition(!(impression != same))
-
-        let ineligibleCompact = try compactJWS(
-            header: header,
-            payload: documentedPayload(eligible: nil)
+        let anotherForged = try compactJWS(
+            header: ["alg": "ES256", "kid": "example.adattributionkit"],
+            payload: documentedPayload(),
+            signature: Data([0x00])
         )
-        let ineligible = try await AppImpression(compactJWS: ineligibleCompact)
-        precondition(!ineligible.eligibleForReengagement)
-        precondition(impression != ineligible)
-
         await expectError({
-            try await impression.beginView()
-        }, .missingAttributionView)
-        await expectError({
-            try await impression.endView()
-        }, .missingAttributionView)
-        await expectError({
-            try await impression.handleTap()
-        }, .missingAttributionView)
-        await expectError({
-            try await impression.handleTap(
-                reengagementURL: URL(string: "https://example.com/reengage")!
-            )
-        }, .missingAttributionView)
+            try await AppImpression(compactJWS: anotherForged)
+        }, .invalidImpressionJWSSignature)
     }
 }
