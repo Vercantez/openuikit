@@ -1,3 +1,32 @@
+#if canImport(Foundation)
+import Foundation
+#elseif canImport(FoundationEssentials)
+import FoundationEssentials
+#endif
+
+/// The stable, bundle-qualified identity emitted by Xcode's asset compiler.
+/// Keeping this in DeveloperToolsSupport matches Apple's nominal module and
+/// lets generated asset-symbol code cross the SwiftUI boundary unchanged.
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
+public struct ImageResource: Hashable, @unchecked Sendable {
+    public let name: String
+    public let bundle: Bundle
+
+    public init(name: String, bundle: Bundle) {
+        self.name = name
+        self.bundle = bundle
+    }
+
+    public static func == (lhs: ImageResource, rhs: ImageResource) -> Bool {
+        lhs.name == rhs.name && lhs.bundle.bundleURL == rhs.bundle.bundleURL
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(bundle.bundleURL)
+    }
+}
+
 /// Target-side metadata produced by an OpenUIKit `#Preview` expansion.
 ///
 /// OpenUIKit does not yet ship a live preview host. The body remains retained

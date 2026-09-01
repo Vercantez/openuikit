@@ -131,6 +131,15 @@ let package = Package(
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
             ]
         ),
+        .macro(
+            name: "OpenSwiftUIMacros",
+            dependencies: [
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxBuilder", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+            ]
+        ),
         .target(name: "DeveloperToolsSupport"),
         // Build the replacement resiliently on Darwin too. AppKit's prebuilt
         // module references Apple's resilient Symbols ABI; matching that
@@ -145,7 +154,12 @@ let package = Package(
         // Combine symbols.
         .target(
             name: "SwiftUI",
-            dependencies: ["OpenUIKit", "Symbols"] + swiftUICombineDependencies
+            dependencies: [
+                "OpenUIKit",
+                "Symbols",
+                "DeveloperToolsSupport",
+                "OpenSwiftUIMacros",
+            ] + swiftUICombineDependencies
         ),
         // M7.5 demo app: a multi-screen Settings-style app written against
         // OpenUIKit exactly like a normal UIKit app (UIViewController

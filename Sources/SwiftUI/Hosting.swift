@@ -1473,7 +1473,7 @@ private enum _ViewRenderer {
                  .scrollVisibility, .scrollGeometry, .geometryObserver,
                  .refreshable, .scrollIndicators, .toolbarVisibility,
                  .toolbarBackgroundVisibility, .swipeActions,
-                 .listRowSeparator, .searchToolbarBehavior:
+                 .listRowSeparator, .searchToolbarBehavior, .projection:
                 return measure(content, proposed: proposed, environment: environment)
             case .listStyle(let style):
                 var next = environment
@@ -2277,6 +2277,20 @@ private enum _ViewRenderer {
                 scaleHost.accessibilityIdentifier = "SwiftUI.ScaleEffect"
                 surface.addSubview(scaleHost)
                 place(content, in: scaleHost.bounds, on: scaleHost, environment: environment)
+            case .projection(let resolve):
+                let projectionHost = _SwiftUIPassthroughView(frame: rect)
+                let projection = resolve(rect.size)
+                if let transform = projection.affineTransform {
+                    projectionHost.transform = transform
+                }
+                projectionHost.accessibilityIdentifier = "SwiftUI.GeometryEffect"
+                surface.addSubview(projectionHost)
+                place(
+                    content,
+                    in: projectionHost.bounds,
+                    on: projectionHost,
+                    environment: environment
+                )
             case .layoutPriority:
                 // Stack placement reads priority from the structural node;
                 // outside a stack it is intentionally layout-transparent.

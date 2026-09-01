@@ -300,6 +300,7 @@ enum _OpenViewModification {
     case searchable(_OpenSearchConfiguration)
     case searchToolbarBehavior(SearchToolbarBehavior)
     case menuIndicator(Visibility)
+    case projection(@MainActor (CGSize) -> ProjectionTransform)
     case effect
 }
 
@@ -411,6 +412,7 @@ fileprivate enum _OpenViewModifier {
     case searchable(_OpenSearchConfiguration)
     case searchToolbarBehavior(SearchToolbarBehavior)
     case menuIndicator(Visibility)
+    case projection(@MainActor (CGSize) -> ProjectionTransform)
     case effect
     case onChange(@MainActor () -> Void)
     case animation(@MainActor () -> Void)
@@ -581,6 +583,7 @@ fileprivate enum _OpenViewModifier {
         case .searchToolbarBehavior(let behavior):
             return .searchToolbarBehavior(behavior)
         case .menuIndicator(let visibility): return .menuIndicator(visibility)
+        case .projection(let resolve): return .projection(resolve)
         case .effect: return .effect
         case .onChange(let install):
             _OpenGraphContext.withStructuralScope(.onChange) { install() }
@@ -968,7 +971,7 @@ public struct _OpenImage: _OpenView {
         source = .system(name: systemName)
     }
 
-    public init(_ name: String, bundle: Bundle? = nil) {
+    nonisolated public init(_ name: String, bundle: Bundle? = nil) {
         source = .named(name: name, bundle: bundle)
     }
 
@@ -1441,6 +1444,14 @@ public struct _OpenAppliedViewModifier<Source: _OpenView, Modifier: _OpenViewMod
     public func _makeOpenUIKitNode() -> _OpenViewNode {
         let sourceNode = _OpenGraphContext.withStructuralScope(.modifiedContent) {
             source._makeOpenUIKitNode()
+        }
+        if let effect = modifier as? any GeometryEffect {
+            return _OpenViewNode(
+                .modified(
+                    sourceNode,
+                    .projection { size in effect.effectValue(size: size) }
+                )
+            )
         }
         return modifier.body(
             content: _OpenViewModifierContent<Modifier>(node: sourceNode)
