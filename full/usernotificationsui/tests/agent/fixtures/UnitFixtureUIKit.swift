@@ -1,8 +1,12 @@
 @_exported import Foundation
+#if canImport(UnitFixtureFoundation)
 @_exported import UnitFixtureFoundation
+#endif
 
 /// Isolated unit-fixture UIColor compiled as module UIKit so `#if canImport(UIKit)`
 /// can build the protocol. This is not platform UIKit and is not identity evidence.
+/// UnitFixtureFoundation is imported only when the unit-fixture script compiled
+/// the lookalike context because Foundation.NSExtensionContext is absent.
 public final class UIColor: NSObject, NSCopying {
     public let red: CGFloat
     public let green: CGFloat

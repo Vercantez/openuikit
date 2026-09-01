@@ -36,9 +36,14 @@ extension are compiled out. The sealed runtime prints
 `USERNOTIFICATIONSUI_STANDALONE_ONLY`.
 
 Isolated unit-fixture mode (`tests/agent/run_unit_fixture.sh`) compiles a
-lookalike `NSExtensionContext` and a test-owned module named UIKit only so
-`#if canImport(UIKit)` can build the protocol. It compiles the repository
-`UserNotifications` sources, runs existential dispatch, and prints
+test-owned module named UIKit only so `#if canImport(UIKit)` can build the
+protocol, plus repository `UserNotifications`. It probes
+`Foundation.NSExtensionContext` first. When that type exists, the fixture omits
+the lookalike context, extends the real Foundation type, and prints
+`USERNOTIFICATIONSUI_UNIT_FIXTURE_FOUNDATION_CONTEXT_OK`. When Foundation does
+not supply it, the fixture compiles a test-owned `NSExtensionContext` as
+`UnitFixtureFoundation` (never named `Foundation`) and prints
+`USERNOTIFICATIONSUI_UNIT_FIXTURE_LOOKALIKE_CONTEXT_OK`. It always prints
 `USERNOTIFICATIONSUI_UNIT_FIXTURE_OK`. That is not platform identity and does
 not substantiate `Foundation.NSExtensionContext` or `UIKit.UIColor` coverage.
 

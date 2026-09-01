@@ -6,6 +6,9 @@ import UserNotifications
 #endif
 #if canImport(UIKit) && canImport(UserNotifications)
 import Foundation
+#if USERNOTIFICATIONSUI_UNIT_FIXTURE_LOOKALIKE_CONTEXT
+import UnitFixtureFoundation
+#endif
 #endif
 
 // MARK: - Host availability
@@ -124,12 +127,12 @@ extension UNNotificationContentExtension {
 // MARK: - NSExtensionContext
 //
 // UserNotificationsUI does not own `NSExtensionContext`. The Apple surface
-// extends Foundation.NSExtensionContext. This extension is compiled only when
-// UIKit and UserNotifications are importable; it binds to whichever
-// NSExtensionContext those imports bring into scope. Linux platform Foundation
-// currently lacks that nominal — a central blocker for real integration.
-// Isolated unit-fixture builds may supply a lookalike so protocol/host code
-// typechecks; that lookalike is not Foundation.NSExtensionContext.
+// extends Foundation.NSExtensionContext. Isolated unit-fixture builds probe
+// that Foundation nominal first and omit any lookalike when it exists. When
+// Linux Foundation lacks it, the unit-fixture runner passes
+// USERNOTIFICATIONSUI_UNIT_FIXTURE_LOOKALIKE_CONTEXT and this file extends
+// UnitFixtureFoundation.NSExtensionContext. Never both, and never a module
+// named Foundation.
 
 private final class _UNNotificationContentExtensionHostState {
     var actions: [UNNotificationAction] = []
@@ -139,11 +142,20 @@ private final class _UNNotificationContentExtensionHostState {
     var hostEvents: [UserNotificationsUIHostEvent] = []
 }
 
+#if USERNOTIFICATIONSUI_UNIT_FIXTURE_LOOKALIKE_CONTEXT
+private typealias _UNNotificationContentExtensionContext =
+    UnitFixtureFoundation.NSExtensionContext
+#else
+private typealias _UNNotificationContentExtensionContext = Foundation.NSExtensionContext
+#endif
+
 private enum _UNNotificationContentExtensionHostStorage {
     private static let lock = NSLock()
     private static var states: [ObjectIdentifier: _UNNotificationContentExtensionHostState] = [:]
 
-    static func state(for context: NSExtensionContext) -> _UNNotificationContentExtensionHostState {
+    static func state(
+        for context: _UNNotificationContentExtensionContext
+    ) -> _UNNotificationContentExtensionHostState {
         lock.lock()
         defer { lock.unlock() }
         let key = ObjectIdentifier(context)
@@ -156,7 +168,7 @@ private enum _UNNotificationContentExtensionHostStorage {
     }
 }
 
-extension NSExtensionContext {
+extension _UNNotificationContentExtensionContext {
     public var notificationActions: [UNNotificationAction] {
         get { _UNNotificationContentExtensionHostStorage.state(for: self).actions }
         set {
