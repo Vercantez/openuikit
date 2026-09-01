@@ -1,50 +1,45 @@
 # GameplayKit for Linux
 
 This directory is a clean-room starting implementation of Apple's public
-`GameplayKit` module for the OpenUIKit Linux campaign. It compiles to
-`libGameplayKit.dylib` and is exercised by `tests/agent/GameplayKitRuntime.swift`.
+`GameplayKit` module. Isolated host compilation produces `libGameplayKit.dylib`
+without SceneKit, SpriteKit, or the Darwin `simd` module.
 
-## What is real
+Vector public APIs use Swift standard-library `SIMD2`/`SIMD3` types, which are
+the nominal identity behind Darwin `vector_floatN` once `simd` is imported.
+This module does not declare public `vector_*` or `matrix_float3x3` shadows.
+`GKAgent3D.rotation` is compiled only when `simd` provides `matrix_float3x3`.
 
-The Linux module implements the algorithmic core that does not require
-SpriteKit, SceneKit, or UIKit:
+`GK_VERSION` is not published: the macro has no numeric payload in the pinned
+graphs.
 
-- Random sources (`GKARC4RandomSource`, `GKLinearCongruentialRandomSource`,
-  `GKMersenneTwisterRandomSource`), distributions, and `NSArray` shuffling
-- Entity/component (`GKEntity`, `GKComponent`, `GKComponentSystem`)
-- State machines (`GKState`, `GKStateMachine`) — the surface used by the
-  Mastodon onboarding/report state types in the roadmap corpus
-- Steering agents, goals, behaviors, paths, and obstacles
-- Graphs, A* pathfinding, grid graphs, obstacle visibility graphs, and a
-  Bowyer–Watson mesh triangulation
-- Noise sources, `GKNoise` combinators, and `GKNoiseMap` sampling
-- Quadtree / octree / R-tree spatial queries
-- Rule systems, decision trees, minimax and Monte Carlo strategists
-- `GKScene` entity/graph bookkeeping constructed in code
+## What is real (this isolated compile)
 
-Seeded random sources, Perlin-style coherent noise, and graph search are
-deterministic on this implementation and covered by the agent runtime.
+- Random sources and distributions: construction, seed storage, `nextInt(upperBound:)`
+  range, Linux-deterministic replay, copy independence. Apple stream identity is
+  unobserved (`declared` for unbounded `nextInt`/`nextUniform`/`nextBool`).
+- Entity/component ownership: attach, two-entity transfer, same-class
+  replacement, removal, deallocation of the host entity
+- State machines, including nested `enter` from `didEnter`
+- Graph connectivity and A* on explicit connections (cycle, start=goal empty,
+  disconnected empty)
+- Grid graph lookup and 4-neighbor paths
+- Spatial queries, rule-system facts, option-set/enum values, `GKScene`
+  in-memory bookkeeping
+- `init?(coder:)` is present and fail-closed (`nil` / unarchiver throw). Types
+  do not advertise `NSSecureCoding` or encode state.
 
-## Fail-closed boundaries
+## Fail-closed / deferred
 
-- `GKScene(fileNamed:)` returns `nil`. Apple `.gkscene` archives are not in
-  the pinned corpus, so they are not invented.
-- `GKDecisionTree` URL import/export does not read or write an Apple archive
-  format; `export(to:error:)` returns `false`.
-- `NSCoder` paths compile but do not restore Apple-encoded objects.
-- `NSPredicate(format:)` is unavailable in swift-corelibs-foundation.
-  Predicate rules evaluate block/value predicates against `GKRuleSystem.state`.
-- SpriteKit / SceneKit overlays (`GKSKNodeComponent`, `GKSCNNodeComponent`,
-  `SKNode` obstacle helpers, `SKTexture(noiseMap:)`, `SCNNode.entity`,
-  `SKTileMapNode` noise construction) are deferred until those modules exist
-  in this isolated compile.
-- `GKNoise` gradient-color APIs that require `UIColor` are deferred.
+- No `.gkscene` loader (`sceneWithFileNamed:` returns `nil`)
+- Decision-tree URL import/export does not invent an Apple archive
+- `NSPredicate(format:)` is unavailable in swift-corelibs-foundation
+- SpriteKit / SceneKit overlays compile only with those modules
+- `UIColor` gradient APIs remain deferred
+- Steering, noise samples, mesh triangulation, and strategist search are Linux
+  algorithms (`declared` where Apple-exact behavior is unobserved)
 
-Steering, noise, triangulation, and PRNG constants are useful Linux
-equivalents, not claimed Apple-bit-identical.
-
-## Deferred / unavailable
-
-See `coverage.tsv`. SceneKit, SpriteKit, and UIColor-dependent identifiers are
-`deferred`. Everything else in `reference/public-surface.tsv` is `implemented`
-or `declared` with evidence.
+Do not treat this isolated host run as an integrated Linux product proof.
+`tests/agent/GameplayKitDependencyIdentity.swift` is the future EC2 probe: it
+prints `GAMEPLAYKIT_DEPENDENCY_IDENTITY_OK` only after real Foundation, simd,
+SceneKit, SpriteKit, and GameplayKit modules pass identity, coding, ownership,
+overlay, and dylib assertions.

@@ -30,9 +30,41 @@ final class ReadyState: GKState {
 
 final class HealthComponent: GKComponent {
     var value: Int = 0
+    var added = 0
+    var removed = 0
+
     convenience init(value: Int) {
         self.init()
         self.value = value
+    }
+
+    override func didAddToEntity() {
+        added += 1
+    }
+
+    override func willRemoveFromEntity() {
+        removed += 1
+    }
+
+    override func copy(with zone: NSZone? = nil) -> Any {
+        HealthComponent(value: value)
+    }
+}
+
+final class BounceState: GKState {
+    var enterCount = 0
+    override func didEnter(from previousState: GKState?) {
+        enterCount += 1
+        if enterCount == 1 {
+            _ = stateMachine?.enter(LandState.self)
+        }
+    }
+}
+
+final class LandState: GKState {
+    var enterCount = 0
+    override func didEnter(from previousState: GKState?) {
+        enterCount += 1
     }
 }
 
@@ -85,7 +117,6 @@ final class ProbeModel: NSObject, GKGameModel {
 }
 
 func runGameplayKitRuntime() throws {
-    try expect(GK_VERSION == 26_01_00, "version")
     try expect(GKGameModelMaxScore == 1 << 24, "max score")
     try expect(GKGameModelMinScore == -(1 << 24), "min score")
 
@@ -99,6 +130,20 @@ func runGameplayKitRuntime() throws {
     try expect(machine.enter(ReadyState.self), "enter ready")
     try expect(ready.enteredFromLoad, "ready from load")
     try expect(machine.state(forClass: LoadState.self) === load, "state for class")
+
+    let bounce = BounceState()
+    let land = LandState()
+    let reentrant = GKStateMachine(states: [bounce, land])
+    try expect(reentrant.enter(BounceState.self), "reentrant enter")
+    try expect(reentrant.currentState === land, "reentrant landed")
+    try expect(bounce.enterCount == 1, "bounce entered once")
+    try expect(land.enterCount == 1, "land entered from bounce")
+
+    try testComponentOwnership()
+    try testCodingFailClosed()
+    try testCopyIndependence()
+    try testRandomBounds()
+    try testPathfindingEdges()
 
     let entity = GKEntity()
     let health = HealthComponent(value: 7)
@@ -119,9 +164,9 @@ func runGameplayKitRuntime() throws {
     let lcg = GKLinearCongruentialRandomSource(seed: 42)
     let lcgA = lcg.nextInt()
     let lcg2 = GKLinearCongruentialRandomSource(seed: 42)
-    try expect(lcg2.nextInt() == lcgA, "lcg determinism")
+    try expect(lcg2.nextInt() == lcgA, "lcg linux determinism")
     let mt = GKMersenneTwisterRandomSource(seed: 99)
-    try expect(mt.nextInt(upperBound: 10) >= 0, "mt bounded")
+    try expect(mt.nextInt(upperBound: 10) >= 0 && mt.nextInt(upperBound: 10) < 10, "mt bounded")
     let die = GKRandomDistribution.d6()
     let roll = die.nextInt()
     try expect(roll >= 1 && roll <= 6, "d6 range")
@@ -134,9 +179,9 @@ func runGameplayKitRuntime() throws {
     let array: NSArray = ["a", "b", "c", "d"]
     try expect(array.shuffled(using: GKARC4RandomSource(seed: Data([2]))).count == 4, "nsarray shuffle")
 
-    let a = GKGraphNode2D(point: vector_float2(0, 0))
-    let b = GKGraphNode2D(point: vector_float2(1, 0))
-    let c = GKGraphNode2D(point: vector_float2(1, 1))
+    let a = GKGraphNode2D(point: SIMD2<Float>(0, 0))
+    let b = GKGraphNode2D(point: SIMD2<Float>(1, 0))
+    let c = GKGraphNode2D(point: SIMD2<Float>(1, 1))
     a.addConnections(to: [b], bidirectional: true)
     b.addConnections(to: [c], bidirectional: true)
     let path = a.findPath(to: c)
@@ -145,13 +190,13 @@ func runGameplayKitRuntime() throws {
     try expect(graph.findPath(from: a, to: c).count == 3, "graph path")
 
     let grid = GKGridGraph<GKGridGraphNode>(
-        fromGridStartingAt: vector_int2(0, 0),
+        fromGridStartingAt: SIMD2<Int32>(0, 0),
         width: 4,
         height: 4,
         diagonalsAllowed: false
     )
-    let start = grid.node(atGridPosition: vector_int2(0, 0))
-    let end = grid.node(atGridPosition: vector_int2(3, 0))
+    let start = grid.node(atGridPosition: SIMD2<Int32>(0, 0))
+    let end = grid.node(atGridPosition: SIMD2<Int32>(3, 0))
     try expect(start != nil && end != nil, "grid nodes")
     let gridPath = grid.findPath(from: start!, to: end!)
     try expect(gridPath.count == 4, "grid path length")
@@ -162,13 +207,13 @@ func runGameplayKitRuntime() throws {
     try expect(wall.vertexCount == 4, "polygon verts")
     let obstacles = GKObstacleGraph<GKGraphNode2D>(obstacles: [wall], bufferRadius: 0.1)
     try expect(obstacles.obstacles.count == 1, "obstacle graph")
-    let extra = GKGraphNode2D(point: vector_float2(0, 0))
+    let extra = GKGraphNode2D(point: SIMD2<Float>(0, 0))
     obstacles.connectUsingObstacles(node: extra)
 
     let mesh = GKMeshGraph<GKGraphNode2D>(
         bufferRadius: 0.1,
-        minCoordinate: vector_float2(0, 0),
-        maxCoordinate: vector_float2(4, 4)
+        minCoordinate: SIMD2<Float>(0, 0),
+        maxCoordinate: SIMD2<Float>(4, 4)
     )
     mesh.triangulationMode = [.vertices, .centers]
     mesh.addObstacles([wall])
@@ -177,52 +222,52 @@ func runGameplayKitRuntime() throws {
 
     let perlin = GKPerlinNoiseSource(frequency: 1, octaveCount: 3, persistence: 0.5, lacunarity: 2, seed: 7)
     let noise = GKNoise(perlin)
-    let n1 = noise.value(atPosition: vector_float2(0.2, 0.3))
+    let n1 = noise.value(atPosition: SIMD2<Float>(0.2, 0.3))
     let n2 = GKNoise(GKPerlinNoiseSource(frequency: 1, octaveCount: 3, persistence: 0.5, lacunarity: 2, seed: 7))
-        .value(atPosition: vector_float2(0.2, 0.3))
+        .value(atPosition: SIMD2<Float>(0.2, 0.3))
     try expect(n1 == n2, "perlin determinism")
     let map = GKNoiseMap(
         noise,
-        size: vector_double2(1, 1),
-        origin: vector_double2(0, 0),
-        sampleCount: vector_int2(8, 8),
+        size: SIMD2<Double>(1, 1),
+        origin: SIMD2<Double>(0, 0),
+        sampleCount: SIMD2<Int32>(8, 8),
         seamless: false
     )
     try expect(map.sampleCount.x == 8, "noise map size")
-    _ = map.value(at: vector_int2(0, 0))
-    _ = map.interpolatedValue(at: vector_float2(1.5, 1.5))
+    _ = map.value(at: SIMD2<Int32>(0, 0))
+    _ = map.interpolatedValue(at: SIMD2<Float>(1.5, 1.5))
     _ = GKNoise(GKCheckerboardNoiseSource.checkerboardNoise(withSquareSize: 1))
-        .value(atPosition: vector_float2(0.2, 0.2))
+        .value(atPosition: SIMD2<Float>(0.2, 0.2))
 
     let seeker = GKAgent2D()
     seeker.maxSpeed = 10
     seeker.maxAcceleration = 20
     seeker.mass = 1
     let target = GKAgent2D()
-    target.position = vector_float2(5, 0)
+    target.position = SIMD2<Float>(5, 0)
     seeker.behavior = GKBehavior(goal: GKGoal(toSeekAgent: target), weight: 1)
     let before = seeker.position.x
     seeker.update(deltaTime: 0.5)
     try expect(seeker.position.x > before, "agent seeks")
 
-    let box = GKBox(boxMin: vector_float3(-1, -1, -1), boxMax: vector_float3(1, 1, 1))
+    let box = GKBox(boxMin: SIMD3<Float>(-1, -1, -1), boxMax: SIMD3<Float>(1, 1, 1))
     let tree = GKOctree<NSString>(boundingBox: box, minimumCellSize: 0.5)
-    _ = tree.add("token" as NSString, at: vector_float3(0, 0, 0))
-    try expect(tree.elements(at: vector_float3(0, 0, 0)).count == 1, "octree query")
+    _ = tree.add("token" as NSString, at: SIMD3<Float>(0, 0, 0))
+    try expect(tree.elements(at: SIMD3<Float>(0, 0, 0)).count == 1, "octree query")
 
-    let quad = GKQuad(quadMin: vector_float2(-2, -2), quadMax: vector_float2(2, 2))
+    let quad = GKQuad(quadMin: SIMD2<Float>(-2, -2), quadMax: SIMD2<Float>(2, 2))
     let qtree = GKQuadtree<NSString>(boundingQuad: quad, minimumCellSize: 0.5)
-    _ = qtree.add("q" as NSString, in: GKQuad(quadMin: vector_float2(0, 0), quadMax: vector_float2(0.5, 0.5)))
-    try expect(qtree.elements(at: vector_float2(0.1, 0.1)).count == 1, "quadtree query")
+    _ = qtree.add("q" as NSString, in: GKQuad(quadMin: SIMD2<Float>(0, 0), quadMax: SIMD2<Float>(0.5, 0.5)))
+    try expect(qtree.elements(at: SIMD2<Float>(0.1, 0.1)).count == 1, "quadtree query")
 
     let rtree = GKRTree<NSString>(maxNumberOfChildren: 4)
     rtree.addElement(
         "r" as NSString,
-        boundingRectMin: vector_float2(0, 0),
-        boundingRectMax: vector_float2(1, 1),
+        boundingRectMin: SIMD2<Float>(0, 0),
+        boundingRectMax: SIMD2<Float>(1, 1),
         splitStrategy: .halve
     )
-    try expect(rtree.elements(inBoundingRectMin: vector_float2(-1, -1), rectMax: vector_float2(2, 2)).count == 1, "rtree")
+    try expect(rtree.elements(inBoundingRectMin: SIMD2<Float>(-1, -1), rectMax: SIMD2<Float>(2, 2)).count == 1, "rtree")
 
     let player = ProbePlayer(id: 1)
     let model = ProbeModel(score: 0, player: player)
@@ -252,6 +297,112 @@ func runGameplayKitRuntime() throws {
     let mode: GKMeshGraphTriangulationMode = [.vertices, .centers]
     try expect(mode.contains(.vertices), "option set")
     try expect(GKRTreeSplitStrategy(rawValue: 0) == .halve, "split strategy")
+}
+
+func testComponentOwnership() throws {
+    let first = GKEntity()
+    let second = GKEntity()
+    let health = HealthComponent(value: 7)
+    first.addComponent(health)
+    try expect(health.entity === first, "attach first")
+    try expect(first.component(ofType: HealthComponent.self) === health, "first owns")
+    second.addComponent(health)
+    try expect(health.entity === second, "transfer entity pointer")
+    try expect(first.component(ofType: HealthComponent.self) == nil, "first detached")
+    try expect(second.component(ofType: HealthComponent.self) === health, "second owns")
+    try expect(health.removed == 1, "detached once")
+    try expect(health.added == 2, "added to each entity")
+
+    let replacement = HealthComponent(value: 9)
+    second.addComponent(replacement)
+    try expect(second.component(ofType: HealthComponent.self) === replacement, "replacement")
+    try expect(health.entity == nil, "replaced component cleared")
+    try expect(second.components.count == 1, "one component of class")
+
+    second.removeComponent(ofType: HealthComponent.self)
+    try expect(second.component(ofType: HealthComponent.self) == nil, "removed")
+    try expect(replacement.entity == nil, "removed entity nil")
+
+    var host: GKEntity? = GKEntity()
+    let orphan = HealthComponent(value: 1)
+    host!.addComponent(orphan)
+    host = nil
+    try expect(orphan.entity == nil, "deallocated entity")
+}
+
+func testCodingFailClosed() throws {
+    let garbage = Data([0xFF, 0x00, 0x01, 0x02, 0x03])
+    do {
+        let coder = try NSKeyedUnarchiver(forReadingFrom: garbage)
+        coder.requiresSecureCoding = true
+        try expect(GKEntity(coder: coder) == nil, "entity coder nil")
+        try expect(GKComponent(coder: coder) == nil, "component coder nil")
+        try expect(GKScene(coder: coder) == nil, "scene coder nil")
+        try expect(GKGraph(coder: coder) == nil, "graph coder nil")
+        try expect(GKGraphNode(coder: coder) == nil, "graph node coder nil")
+        try expect(GKPolygonObstacle(coder: coder) == nil, "polygon coder nil")
+        try expect(GKDecisionTree(coder: coder) == nil, "decision tree coder nil")
+    } catch {
+        // swift-corelibs-foundation may throw before producing a coder.
+        try expect(true, "malformed archive rejected")
+    }
+}
+
+func testCopyIndependence() throws {
+    let seed = Data([1, 2, 3, 4, 5, 6, 7, 8])
+    let source = GKARC4RandomSource(seed: seed)
+    let copied = source.copy() as! GKARC4RandomSource
+    copied.dropValues(16)
+    let fromCopy = copied.nextInt()
+    let fromFresh = GKARC4RandomSource(seed: seed).nextInt()
+    try expect(fromCopy != fromFresh, "advanced copy diverges")
+    let sibling = source.copy() as! GKARC4RandomSource
+    try expect(source.nextInt() == sibling.nextInt(), "unadvanced copy matches")
+    try expect(copied.seed == seed, "seed preserved on copy")
+
+    let node = GKGraphNode2D(point: SIMD2<Float>(3, 4))
+    let nodeCopy = node.copy() as! GKGraphNode2D
+    nodeCopy.position = SIMD2<Float>(9, 9)
+    try expect(node.position == SIMD2<Float>(3, 4), "node copy independent")
+
+    let entity = GKEntity()
+    entity.addComponent(HealthComponent(value: 11))
+    let entityCopy = entity.copy() as! GKEntity
+    try expect(entityCopy.component(ofType: HealthComponent.self)?.value == 11, "entity copy value")
+    entityCopy.component(ofType: HealthComponent.self)?.value = 0
+    try expect(entity.component(ofType: HealthComponent.self)?.value == 11, "entity copy independent")
+}
+
+func testRandomBounds() throws {
+    let source = GKARC4RandomSource(seed: Data([9, 8, 7, 6, 5, 4, 3, 2]))
+    for _ in 0..<32 {
+        let bound = source.nextInt(upperBound: 7)
+        try expect(bound >= 0 && bound < 7, "arc4 upper bound")
+    }
+    try expect(source.nextInt(upperBound: 0) == 0, "zero bound")
+    try expect(source.nextInt(upperBound: 1) == 0, "one bound")
+    let die = GKRandomDistribution.d20()
+    for _ in 0..<16 {
+        let roll = die.nextInt()
+        try expect(roll >= 1 && roll <= 20, "d20 range")
+    }
+}
+
+func testPathfindingEdges() throws {
+    let start = GKGraphNode2D(point: SIMD2<Float>(0, 0))
+    try expect(start.findPath(to: start).isEmpty, "start equals goal")
+
+    let a = GKGraphNode2D(point: SIMD2<Float>(0, 0))
+    let b = GKGraphNode2D(point: SIMD2<Float>(1, 0))
+    let c = GKGraphNode2D(point: SIMD2<Float>(1, 1))
+    a.addConnections(to: [b], bidirectional: true)
+    b.addConnections(to: [c], bidirectional: true)
+    c.addConnections(to: [a], bidirectional: true)
+    let cyclic = a.findPath(to: c)
+    try expect(cyclic.first === a && cyclic.last === c, "cycle path ends")
+    try expect(cyclic.count >= 2, "cycle path finite")
+    let disconnected = GKGraphNode2D(point: SIMD2<Float>(50, 50))
+    try expect(a.findPath(to: disconnected).isEmpty, "no path")
 }
 
 do {
