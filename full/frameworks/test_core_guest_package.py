@@ -2010,7 +2010,7 @@ class ShellContractTests(unittest.TestCase):
             builder,
         )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 3
+            builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 4
         )
         self.assertEqual(
             builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 24
@@ -2333,17 +2333,17 @@ class ShellContractTests(unittest.TestCase):
         validate_core_single_bind_contract(source)
         self.assertIn(
             "EXPECTED_MACHORUN_COMMIT="
-            "edb99a8574255ddc4c979b2f0cf2615033ff14fd",
+            "dd18e0b5e51e26d4673193d341e7c9a864db2fb8",
             builder,
         )
         self.assertIn(
             "EXPECTED_MACHORUN_TREE="
-            "19b2308f300ef4006acf526e599fad9265e7664c",
+            "42d42ace9c6ff7a4ae7c25c3a8e466f82d5f70c8",
             builder,
         )
         self.assertNotIn(
             "EXPECTED_MACHORUN_COMMIT="
-            "e6b1745bef09ac8f1e2d6e6c83f7c70d6dbe49a5",
+            "edb99a8574255ddc4c979b2f0cf2615033ff14fd",
             builder,
         )
         for token in (
@@ -2563,7 +2563,7 @@ class ShellContractTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(result.stdout.strip(), marker)
 
-    def test_foundation_uses_proven_libsystem_group_and_xattr_adapters(self) -> None:
+    def test_foundation_uses_proven_libsystem_group_xattr_and_fts_adapters(self) -> None:
         builder = BUILDER.read_text(encoding="utf-8")
         stubs = (REPO / "full/foundation/fm_unimplemented.c").read_text(
             encoding="utf-8"
@@ -2576,6 +2576,10 @@ class ShellContractTests(unittest.TestCase):
             "MR_STUB(getxattr)",
             "MR_STUB(listxattr)",
             "MR_STUB(setxattr)",
+            "MR_STUB(fts_close)",
+            "MR_STUB(fts_open)",
+            "MR_STUB(fts_read)",
+            "MR_STUB(fts_set)",
             "MR_STUB(quotactl)",
             "MR_STUB(uname)",
         ):
@@ -2587,6 +2591,13 @@ class ShellContractTests(unittest.TestCase):
             "EXPECTED_MACHORUN_XATTR_FIXTURE_SHA=",
             "EXPECTED_MACHORUN_XATTR_GOLDEN_SHA=",
             "EXPECTED_MACHORUN_XATTR_SOURCE_SHA=",
+            "EXPECTED_MACHORUN_FTS_FIXTURE_SHA=",
+            "EXPECTED_MACHORUN_FTS_GOLDEN_SHA=",
+            "EXPECTED_MACHORUN_FTS_STDERR_SHA=",
+            "EXPECTED_MACHORUN_FTS_EXIT_SHA=",
+            "EXPECTED_MACHORUN_FTS_SOURCE_SHA=",
+            "EXPECTED_MACHORUN_FTS_SUMMARY_SHA=",
+            "EXPECTED_MACHORUN_FTS_LIBSYSTEM_SOURCE_SHA=",
             "EXPECTED_MACHORUN_QUOTA_FIXTURE_SHA=",
             "EXPECTED_MACHORUN_QUOTA_GOLDEN_SHA=",
             "EXPECTED_MACHORUN_QUOTA_SOURCE_SHA=",
@@ -2599,12 +2610,22 @@ class ShellContractTests(unittest.TestCase):
             "tests/bin/xattr",
             "tests/expected/xattr.stdout",
             "tests/src/xattr.c",
+            "tests/bin/fts",
+            "tests/expected/fts.stdout",
+            "tests/expected/fts.stderr",
+            "tests/expected/fts.exit",
+            "tests/src/fts.c",
+            "tests/meta/fts.summary.txt",
             "OPEN_FOUNDATION_GROUP_LOOKUP_OK",
             "OPEN_FOUNDATION_XATTR_OK",
+            "OPEN_FOUNDATION_FTS_OK",
             "OPEN_FOUNDATION_LIBSYSTEM_COMPAT_OK",
             '$(NF - 1) == "libSystem.real"',
             "group-lookup-macho.log",
             "xattr-macho.log",
+            "fts-apple.txt",
+            "fts-apple-summary.txt",
+            "fts-macho.log",
             "libsystem-compat-macho.log",
             "native Linux group static-storage contract drifted",
             "group-lookup-native.normalized.log",
@@ -2620,6 +2641,11 @@ class ShellContractTests(unittest.TestCase):
             "_getxattr",
             "_listxattr",
             "_setxattr",
+            "_fts_close",
+            "_fts_open",
+            "_fts_read",
+            "_fts_children",
+            "_fts_set",
             "_quotactl",
             "_uname",
         ):
