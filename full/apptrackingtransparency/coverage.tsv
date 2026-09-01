@@ -1,0 +1,13 @@
+precise	status	evidence	notes
+c:@E@ATTrackingManagerAuthorizationStatus	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Nested UInt enum; all four cases constructible
+c:@E@ATTrackingManagerAuthorizationStatus@ATTrackingManagerAuthorizationStatusAuthorized	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Case exists for switch completeness; manager never returns it
+c:@E@ATTrackingManagerAuthorizationStatus@ATTrackingManagerAuthorizationStatusDenied	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Fail-closed Linux status
+c:@E@ATTrackingManagerAuthorizationStatus@ATTrackingManagerAuthorizationStatusNotDetermined	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Constructible; manager does not report pending prompt
+c:@E@ATTrackingManagerAuthorizationStatus@ATTrackingManagerAuthorizationStatusRestricted	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Constructible; not the Linux default
+c:objc(cs)ATTrackingManager	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Open NSObject subclass with class APIs
+c:objc(cs)ATTrackingManager(cm)requestTrackingAuthorizationWithCompletionHandler:	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Callback and async overloads complete once with denied
+c:objc(cs)ATTrackingManager(cpy)trackingAuthorizationStatus	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Always denied; never authorized
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ATTrackingManagerAuthorizationStatus	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Equatable synthesized !=
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ATTrackingManagerAuthorizationStatus	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Hashable synthesized hashValue
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ATTrackingManagerAuthorizationStatus	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Hashable synthesized hash(into:)
+s:So36ATTrackingManagerAuthorizationStatusV8rawValueABSgSu_tcfc	implemented	tests/agent/AppTrackingTransparencyRuntime.swift	Failable UInt raw-value initializer
