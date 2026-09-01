@@ -39,3 +39,22 @@ package and the clean pinned checkout. It accepts either a complete typecheck
 or a later compiler wall, but refuses the old AppKit import error, missing
 surface diagnostics, source drift, package drift, or any non-versioned runtime
 identity.
+
+`tests/build_appkit_focused_guest.sh` is the isolated publication proof used
+before merging AppKit into the monolithic platform builder. It consumes a
+completed portable core package without changing it, normalizes every
+relocatable compile path to one absolute package identity, and emits the
+versioned framework, module, runtime-root copy, two Mach-O consumer probes,
+and attestations into a new narrowly named output. The current pinned contract
+is 198 exact exports, an exact undefined-import hash, and the 16 load
+identities in `tests/appkit-load-identities.txt`.
+
+`tests/validate_appkit_focused_guest.sh` independently regenerates the binary
+exports, imports, and load closure; checks framework symlinks, install name,
+ARM64 Mach-O kinds, byte identity, module/interface presence, probe load
+commands, Apple transcript, cold runtime marker, and every completion-record
+hash. `tests/test_validate_appkit_focused_guest_mutations.sh` proves rejection
+of ten independent corruptions, including framework/runtime bytes, missing
+module, export/load attestations, Apple transcript, completion record,
+framework link, install identity, and binary load closure. Its temporary
+copies are removed exactly after the proof.

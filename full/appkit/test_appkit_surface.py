@@ -119,6 +119,64 @@ class AppKitSurfaceTests(unittest.TestCase):
         self.assertNotIn("sed -i", driver)
         self.assertNotIn("Sources/AppKit.swift", driver)
 
+    def test_focused_builder_requires_a_real_versioned_framework(self):
+        builder = (TESTS / "build_appkit_focused_guest.sh").read_text(
+            encoding="utf-8"
+        )
+        for token in (
+            "-module-name AppKit -module-link-name AppKit",
+            "-enable-library-evolution",
+            "AppKit.framework/Versions/C/AppKit",
+            "arm64-apple-macos.swiftmodule",
+            "-install_name \"$APPKIT_ID\"",
+            "llvm-nm-18 --defined-only",
+            "llvm-nm-18 --undefined-only",
+            "llvm-otool-18 -L",
+            "EXPECTED_EXPORT_COUNT=198",
+            "EXPECTED_EXPORT_SHA=dd9b850d2dcf4deb398752a950248a229",
+            "absolute_compile_arguments",
+            "appkit-load-identities.txt",
+            "AppKitGuestRuntime",
+            "AppKitInterfaceOracle",
+            "MACHORUN_ROOT",
+            "APPKIT_FOCUSED_GUEST_OK",
+        ):
+            self.assertIn(token, builder)
+        self.assertIn("cmp \"$versioned/AppKit\"", builder)
+        self.assertIn("AppKit guest interface differs from Apple", builder)
+
+    def test_validator_and_mutations_cover_every_material_boundary(self):
+        validator = (
+            TESTS / "validate_appkit_focused_guest.sh"
+        ).read_text(encoding="utf-8")
+        mutations = (
+            TESTS / "test_validate_appkit_focused_guest_mutations.sh"
+        ).read_text(encoding="utf-8")
+        for token in (
+            "compile and cold-runtime AppKit binaries differ",
+            "AppKit exact export contract drifted",
+            "AppKit exact import contract drifted",
+            "AppKit binary load closure drifted",
+            "AppKit cold oracle differs from Apple",
+            "proof module hash drifted",
+            "APPKIT_FOCUSED_VALIDATE_OK",
+        ):
+            self.assertIn(token, validator)
+        for mutation in (
+            "framework-byte",
+            "runtime-byte",
+            "module-missing",
+            "export-attestation",
+            "load-attestation",
+            "oracle-log",
+            "completion-record",
+            "framework-link",
+            "install-identity",
+            "load-closure",
+        ):
+            self.assertIn(mutation, mutations)
+        self.assertIn("APPKIT_VALIDATOR_MUTATIONS_OK", mutations)
+
 
 if __name__ == "__main__":
     unittest.main()
