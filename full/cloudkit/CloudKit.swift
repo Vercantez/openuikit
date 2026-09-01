@@ -50,6 +50,17 @@ enum CloudKitHost {
     static let unsupportedDescription =
         "CloudKit Apple identity, network, and database services are unavailable on this Linux host."
 
+    /// Real Foundation queue used to run fail-closed `CKOperation` instances.
+    /// This is not Apple's CloudKit daemon queue and does not invent QoS or
+    /// callback-thread pairing observed on an Apple host.
+    static let failClosedQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.name = "CloudKit.LinuxFailClosed"
+        queue.maxConcurrentOperationCount = 4
+        queue.qualityOfService = .utility
+        return queue
+    }()
+
     static func unsupportedError(
         _ code: CKError.Code = .notAuthenticated
     ) -> CKError {
@@ -73,5 +84,9 @@ enum CloudKitHost {
 
     static func fail<T>() throws -> T {
         throw unsupportedError()
+    }
+
+    static func schedule(_ operation: Operation) {
+        failClosedQueue.addOperation(operation)
     }
 }

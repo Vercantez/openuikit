@@ -76,7 +76,7 @@ open class CKContainer: NSObject, @unchecked Sendable {
 
     open func add(_ operation: CKOperation) {
         operation.container = self
-        operation.start()
+        CloudKitHost.schedule(operation)
     }
 
     open func accountStatus(

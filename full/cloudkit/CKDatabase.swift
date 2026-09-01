@@ -86,7 +86,7 @@ open class CKDatabase: NSObject, @unchecked Sendable {
     open func add(_ operation: CKDatabaseOperation) {
         operation.database = self
         operation.container = container
-        operation.start()
+        CloudKitHost.schedule(operation)
     }
 
     open func delete(

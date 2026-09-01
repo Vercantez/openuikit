@@ -88,7 +88,8 @@ open class CKRecord: NSObject, NSSecureCoding, @unchecked Sendable {
     }
 
     open func allTokens() -> [String] {
-        store.pairs().compactMap { _, value in value as? String }
+        // Apple full-text token extraction is unobserved on this host.
+        []
     }
 
     open func object(forKey key: CKRecord.FieldKey) -> (any CKRecordValue)? {

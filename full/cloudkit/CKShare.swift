@@ -96,7 +96,7 @@ open class CKShare: CKRecord, @unchecked Sendable {
     }
 
     public init(rootRecord: CKRecord, shareID: CKRecord.ID) {
-        let owner = CKShare.Participant.makeLocalOwner()
+        let owner = CKShare.Participant.makeLocalPlaceholderParticipant()
         self.owner = owner
         self.participants = [owner]
         super.init(_recordType: CKRecordTypeShare, recordID: shareID)
@@ -104,7 +104,7 @@ open class CKShare: CKRecord, @unchecked Sendable {
     }
 
     public init(rootRecord: CKRecord, share shareID: CKRecord.ID) {
-        let owner = CKShare.Participant.makeLocalOwner()
+        let owner = CKShare.Participant.makeLocalPlaceholderParticipant()
         self.owner = owner
         self.participants = [owner]
         super.init(_recordType: CKRecordTypeShare, recordID: shareID)
@@ -112,7 +112,7 @@ open class CKShare: CKRecord, @unchecked Sendable {
     }
 
     public init(recordZoneID: CKRecordZone.ID) {
-        let owner = CKShare.Participant.makeLocalOwner()
+        let owner = CKShare.Participant.makeLocalPlaceholderParticipant()
         self.owner = owner
         self.participants = [owner]
         super.init(
@@ -275,12 +275,12 @@ open class CKShare: CKRecord, @unchecked Sendable {
             )
         }
 
-        static func makeLocalOwner() -> CKShare.Participant {
+        static func makeLocalPlaceholderParticipant() -> CKShare.Participant {
             CKShare.Participant(
                 userIdentity: CKUserIdentity.unresolved(),
-                role: .owner,
-                permission: .readWrite,
-                acceptanceStatus: .accepted
+                role: .unknown,
+                permission: .none,
+                acceptanceStatus: .unknown
             )
         }
     }
