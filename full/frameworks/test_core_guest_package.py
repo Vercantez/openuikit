@@ -1579,7 +1579,8 @@ class ShellContractTests(unittest.TestCase):
             self.assertIn(token, resource_key_patch)
         for token in (
             'PATCHED_SOURCE_DIR=$W/build/foundationessentials-port-sources',
-            'patch -s -o "$PATCHED_URL_SOURCE"',
+            'PATCHED_URL_RESOURCE_SOURCE=$PATCHED_SOURCE_DIR/URL-resource-key.swift',
+            'patch --batch --forward --fuzz=0 -s -o "$PATCHED_URL_RESOURCE_SOURCE"',
             'SRCS[$source_index]=$PATCHED_URL_SOURCE',
             'patched_url_count" -eq 1',
         ):

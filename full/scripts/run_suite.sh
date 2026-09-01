@@ -15,6 +15,7 @@ set -uo pipefail
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
 UIKIT=${UIKIT:-$HOME/uikit}
 SUITE=${SUITE:-suite}
+CONTAINER_IMAGE=${CONTAINER_IMAGE:-swift-macho-spike:noble}
 # MRROOT lets a run use an alternative guest root -- e.g. one with a different
 # Swift runtime. The runtime turned out to be the discriminator for most of the
 # failures, so comparing roots is a first-class operation, not a hack.
@@ -94,6 +95,7 @@ SCENE_TIMEOUT=${SCENE_TIMEOUT:-120}
 suite_fingerprint() {
     { echo "$ROOT/build/full/render_full"
       find "$MRROOT_HOST/darwin/usr/lib" -name '*.dylib' -type f 2>/dev/null | LC_ALL=C sort
+      find "$MRROOT_HOST/host" -name '*.so' -type f 2>/dev/null | LC_ALL=C sort
       echo "$MRROOT_HOST/machorun"
     } | while IFS= read -r f; do
         [ -f "$f" ] && shasum -a 256 <"$f" | cut -d' ' -f1
@@ -102,6 +104,19 @@ suite_fingerprint() {
 # MRROOT is a path INSIDE the container (/w/...). Map it back to this host so the
 # bracket can read the same files the guests will load.
 MRROOT_HOST=${MRROOT/#\/w/$ROOT}
+HOSTOPT=()
+if [ -f "$MRROOT_HOST/host/libOpenDispatchHost.so" ]; then
+    HOST_PRELOAD="$MRROOT/host/libOpenDispatchHost.so:$MRROOT/host/libOpenFoundationInternationalizationHost.so:$MRROOT/host/libOpenURLTransportHost.so:$MRROOT/host/libOpenRelativeTimeHost.so"
+    for helper in libdispatch.so libBlocksRuntime.so libOpenDispatchHost.so \
+                  libOpenFoundationInternationalizationHost.so \
+                  libOpenURLTransportHost.so libOpenRelativeTimeHost.so; do
+        [ -f "$MRROOT_HOST/host/$helper" ] || {
+            echo "run_suite: incomplete staged host runtime: $helper" >&2
+            exit 2
+        }
+    done
+    HOSTOPT=(-e "LD_LIBRARY_PATH=$MRROOT/host" -e "LD_PRELOAD=$HOST_PRELOAD")
+fi
 FP_BEFORE=$(suite_fingerprint)
 [ "$FP_BEFORE" != "$(printf '' | shasum -a 256 | cut -c1-12)" ] || {
     echo "run_suite: REFUSING -- fingerprinted nothing under $MRROOT_HOST; is the root populated?" >&2; exit 2; }
@@ -131,7 +146,8 @@ for s in "${scenes[@]}"; do
         -e OPENUIKIT_RESOURCE_ROOT=/uikit/Sources/OpenUIKit/Resources \
         -e OPENUIKIT_FONT_DIR=/w/scratch/fonts \
         -e OPENUIKIT_BACKEND="${OPENUIKIT_BACKEND:-quartz}" \
-        swift-macho-spike:noble \
+        ${HOSTOPT[@]+"${HOSTOPT[@]}"} \
+        "$CONTAINER_IMAGE" \
         "$MRROOT/machorun" ./render_full "/w/build/full/$SUITE" "/uikit/fixtures/scenes/$name.json" 2>&1)
     st=$?
     if [ $st -eq 0 ]; then

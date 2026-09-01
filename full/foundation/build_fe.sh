@@ -34,13 +34,16 @@ SYS=${SYS:-$W/scratch/sysroot_fe4}
 PINNED_INPUTS_TOOL=${PINNED_INPUTS_TOOL:-$W/full/foundation/pinned_inputs.pl}
 URL_RESOURCE_KEY_PATCH=${URL_RESOURCE_KEY_PATCH:-$W/full/foundation/patches/FoundationEssentials-URLResourceKey.patch}
 PREDICATE_KEYPATH_PATCH=${PREDICATE_KEYPATH_PATCH:-$W/full/foundation/patches/FoundationEssentials-PredicateFinalClassKeyPath.patch}
+IOS_HOME_DIRECTORY_PATCH=${IOS_HOME_DIRECTORY_PATCH:-$W/full/foundation/patches/FoundationEssentials-URLIOSHomeDirectory.patch}
 EXPECTED_PREDICATE_KEYPATH_SOURCE_SHA=835ca09d5d0bf757abc02af0ca4294cc58bcad3d455ef71c1026746ad7ba08f7
 EXPECTED_PREDICATE_KEYPATH_PATCH_SHA=ecf4e8045d42fb196705f37fbf723f75e11c20d9d6b2adc251210ed87e1464de
+EXPECTED_IOS_HOME_DIRECTORY_PATCH_SHA=37ec5f335225bb8ae6860d50305975827f9b4228abe8c4ec0303b97fb8e45848
 [ -d "$SF/Sources/FoundationEssentials" ] || { echo "no $SF" >&2; exit 1; }
 [ -d "$SYS/usr/include" ] || { echo "no sysroot $SYS -- run stage_fe_sysroot.sh on macOS" >&2; exit 1; }
 [ -f "$PINNED_INPUTS_TOOL" ] || { echo "no pinned-input tool $PINNED_INPUTS_TOOL" >&2; exit 1; }
 [ -f "$URL_RESOURCE_KEY_PATCH" ] || { echo "no URLResourceKey patch $URL_RESOURCE_KEY_PATCH" >&2; exit 1; }
 [ -f "$PREDICATE_KEYPATH_PATCH" ] || { echo "no Predicate key-path patch $PREDICATE_KEYPATH_PATCH" >&2; exit 1; }
+[ -f "$IOS_HOME_DIRECTORY_PATCH" ] || { echo "no iOS home-directory patch $IOS_HOME_DIRECTORY_PATCH" >&2; exit 1; }
 
 # ALL 202 FILES.  The old recipe filtered out five by name --
 # URL_Bridge / URL_ObjC / URL_Swift / URLComponents_ObjC / String+Bridging --
@@ -85,6 +88,7 @@ done <<<"$SOURCE_LIST"
 # unchanged and is still bracketed by the package builder's input attestation.
 FOUNDATION_URL_SOURCE=$SF/Sources/FoundationEssentials/URL/URL.swift
 PATCHED_SOURCE_DIR=$W/build/foundationessentials-port-sources
+PATCHED_URL_RESOURCE_SOURCE=$PATCHED_SOURCE_DIR/URL-resource-key.swift
 PATCHED_URL_SOURCE=$PATCHED_SOURCE_DIR/URL.swift
 FOUNDATION_PREDICATE_KEYPATH_SOURCE=$SF/Sources/FoundationEssentials/Predicate/KeyPath+Inspection.swift
 PATCHED_PREDICATE_KEYPATH_SOURCE=$PATCHED_SOURCE_DIR/KeyPath+Inspection.swift
@@ -98,10 +102,24 @@ PATCHED_PREDICATE_KEYPATH_SOURCE=$PATCHED_SOURCE_DIR/KeyPath+Inspection.swift
         echo "build_fe: Predicate key-path patch hash drifted" >&2
         exit 2
     }
+[ "$(sha256sum "$IOS_HOME_DIRECTORY_PATCH" | awk '{print $1}')" = \
+    "$EXPECTED_IOS_HOME_DIRECTORY_PATCH_SHA" ] || {
+        echo "build_fe: iOS home-directory patch hash drifted" >&2
+        exit 2
+    }
 rm -rf -- "$PATCHED_SOURCE_DIR"
 mkdir -p "$PATCHED_SOURCE_DIR"
-patch -s -o "$PATCHED_URL_SOURCE" \
+patch --batch --forward --fuzz=0 -s -o "$PATCHED_URL_RESOURCE_SOURCE" \
     "$FOUNDATION_URL_SOURCE" "$URL_RESOURCE_KEY_PATCH"
+case "${TARGET:-arm64-apple-macos15.0}" in
+    *-apple-ios*-simulator)
+        patch --batch --forward --fuzz=0 -s -o "$PATCHED_URL_SOURCE" \
+            "$PATCHED_URL_RESOURCE_SOURCE" "$IOS_HOME_DIRECTORY_PATCH"
+        ;;
+    *)
+        cp "$PATCHED_URL_RESOURCE_SOURCE" "$PATCHED_URL_SOURCE"
+        ;;
+esac
 patch --batch --forward --fuzz=0 -s -o "$PATCHED_PREDICATE_KEYPATH_SOURCE" \
     "$FOUNDATION_PREDICATE_KEYPATH_SOURCE" "$PREDICATE_KEYPATH_PATCH"
 patched_url_count=0
@@ -129,6 +147,15 @@ grep -F 'public struct URLResourceKey: RawRepresentable, Hashable, Sendable' \
         echo "build_fe: derived URLResourceKey source is incomplete" >&2
         exit 2
     }
+case "${TARGET:-arm64-apple-macos15.0}" in
+    *-apple-ios*-simulator)
+        grep -F 'URL(filePath: String.homeDirectoryPath(), directoryHint: .isDirectory)' \
+            "$PATCHED_URL_SOURCE" >/dev/null || {
+                echo "build_fe: derived iOS home-directory source is incomplete" >&2
+                exit 2
+            }
+        ;;
+esac
 grep -F 'STORED_COMPONENT_PAYLOAD_MAXIMUM_INLINE_OFFSET' \
     "$PATCHED_PREDICATE_KEYPATH_SOURCE" >/dev/null || {
         echo "build_fe: derived Predicate key-path source is incomplete" >&2
