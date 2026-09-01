@@ -1,26 +1,21 @@
-import CoreFoundation
 import CoreServices
 import Foundation
 
-func sameIdentity<T>(_: T.Type, _: T.Type) {}
+// Staged Foundation aliases CFString to String. These assignments are the
+// exact representable public queries. They are not a CoreFoundation lookalike
+// and they do not stand in for Unmanaged Copy/Create.
+let equal: (String, String) -> Bool = UTTypeEqual
+let conforms: (String, String) -> Bool = UTTypeConformsTo
+let isDeclared: (String) -> Bool = UTTypeIsDeclared
+let isDynamic: (String) -> Bool = UTTypeIsDynamic
 
-sameIdentity(String.self, CFString.self)
-sameIdentity(URL.self, CFURL.self)
-sameIdentity([String: Any].self, CFDictionary.self)
-
-let _: (CFString, CFString) -> Bool = UTTypeEqual
-let _: (CFString, CFString) -> Bool = UTTypeConformsTo
-let _: (CFString) -> Bool = UTTypeIsDeclared
-let _: (CFString) -> Bool = UTTypeIsDynamic
-let _: (CFString, CFString) -> CFString? = UTTypeCopyPreferredTagWithClass
-let _: (CFString, CFString) -> [CFString]? = UTTypeCopyAllTagsWithClass
-let _: (CFString) -> CFDictionary? = UTTypeCopyDeclaration
-let _: (CFString) -> CFURL? = UTTypeCopyDeclaringBundleURL
-let _: (CFString) -> CFString? = UTTypeCopyDescription
-let _: (CFString, CFString, CFString?) -> CFString? = UTTypeCreatePreferredIdentifierForTag
-let _: (CFString, CFString, CFString?) -> [CFString]? = UTTypeCreateAllIdentifiersForTag
-
-let _: CFString = kUTTypePNG
-let _: CFString = kUTTagClassFilenameExtension
+precondition(equal(kUTTypePNG, "public.png"))
+precondition(conforms(kUTTypePNG, kUTTypeImage))
+precondition(isDeclared(kUTTypePNG))
+precondition(!isDynamic(kUTTypePNG))
+precondition(isDynamic("dyn.example"))
+precondition(kUTTypePNG == "public.png")
+precondition(kUTTagClassFilenameExtension == "public.filename-extension")
 
 print("CORESERVICES_CF_IDENTITY_OK")
+print("CORESERVICES_UNMANAGED_SURFACE_BLOCKED")

@@ -1,12 +1,12 @@
 precise	status	evidence	notes
 c:@F@UTTypeConformsTo	implemented	full/coreservices/CoreServices.swift;tests/agent/CoreServicesRuntime.swift	runtime-exercised parent-graph conformance; unknown IDs only self-conform
-c:@F@UTTypeCopyAllTagsWithClass	implemented	full/coreservices/CoreServices.swift;tests/agent/CoreServicesRuntime.swift	runtime-exercised declared filename-extension and MIME tags; nil when empty
-c:@F@UTTypeCopyDeclaration	implemented	full/coreservices/CoreServices.swift;tests/agent/CoreServicesRuntime.swift	runtime-exercised portable declaration dictionary; nil for unknown/dynamic
-c:@F@UTTypeCopyDeclaringBundleURL	implemented	full/coreservices/CoreServices.swift;tests/agent/CoreServicesRuntime.swift	runtime-exercised fail-closed nil; no Launch Services bundle database
-c:@F@UTTypeCopyDescription	implemented	full/coreservices/CoreServices.swift;tests/agent/CoreServicesRuntime.swift	runtime-exercised fail-closed nil; no Apple localized descriptions
-c:@F@UTTypeCopyPreferredTagWithClass	implemented	full/coreservices/CoreServices.swift;tests/agent/CoreServicesRuntime.swift	runtime-exercised first declared tag of the requested class
-c:@F@UTTypeCreateAllIdentifiersForTag	implemented	full/coreservices/CoreServices.swift;tests/agent/CoreServicesRuntime.swift	runtime-exercised declared matches; unknown tags fail-closed partial nil
-c:@F@UTTypeCreatePreferredIdentifierForTag	implemented	full/coreservices/CoreServices.swift;tests/agent/CoreServicesRuntime.swift	runtime-exercised most-general declared match; no dyn.* synthesis
+c:@F@UTTypeCopyAllTagsWithClass	deferred		pinned Unmanaged<CFArray>? is unrepresentable: staged Foundation has no ownership-capable CFArray; host SPI is not this overlay
+c:@F@UTTypeCopyDeclaration	deferred		pinned Unmanaged<CFDictionary>? needs class-typed CFDictionary; Foundation aliases CFDictionary to [String:Any]; host SPI is not this overlay
+c:@F@UTTypeCopyDeclaringBundleURL	deferred		pinned Unmanaged<CFURL>? needs class-typed CFURL; Foundation aliases CFURL to URL; host SPI fail-closed nil is not this overlay
+c:@F@UTTypeCopyDescription	deferred		pinned Unmanaged<CFString>? needs class-typed CFString; Foundation aliases CFString to String; host SPI fail-closed nil is not this overlay
+c:@F@UTTypeCopyPreferredTagWithClass	deferred		pinned Unmanaged<CFString>? needs class-typed CFString; Foundation aliases CFString to String; host SPI is not this overlay
+c:@F@UTTypeCreateAllIdentifiersForTag	deferred		pinned Unmanaged<CFArray>? is unrepresentable without CFArray; unknown-tag dyn.* remains oracle; host SPI is not this overlay
+c:@F@UTTypeCreatePreferredIdentifierForTag	deferred		pinned Unmanaged<CFString>? needs class-typed CFString; unknown-tag dyn.* remains oracle; host SPI is not this overlay
 c:@F@UTTypeEqual	implemented	full/coreservices/CoreServices.swift;tests/agent/CoreServicesRuntime.swift	runtime-exercised case-insensitive identifier equality
 c:@F@UTTypeIsDeclared	implemented	full/coreservices/CoreServices.swift;tests/agent/CoreServicesRuntime.swift	runtime-exercised declared-registry test
 c:@F@UTTypeIsDynamic	implemented	full/coreservices/CoreServices.swift;tests/agent/CoreServicesRuntime.swift	runtime-exercised dyn. prefix test; Create* dyn encoding still open

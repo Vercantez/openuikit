@@ -1,4 +1,4 @@
-import CoreServices
+@_spi(OpenUIKitHost) import CoreServices
 import Foundation
 
 precondition(kUTTypePNG == "public.png")
@@ -37,33 +37,113 @@ precondition(!UTTypeIsDynamic(kUTTypePNG))
 precondition(UTTypeIsDynamic("dyn.example"))
 precondition(!UTTypeIsDeclared("dyn.example"))
 
-precondition(UTTypeCopyPreferredTagWithClass(kUTTypePNG, kUTTagClassFilenameExtension) == "png")
-precondition(UTTypeCopyPreferredTagWithClass(kUTTypePNG, kUTTagClassMIMEType) == "image/png")
-precondition(UTTypeCopyPreferredTagWithClass(kUTTypeJPEG, kUTTagClassFilenameExtension) == "jpeg")
-precondition(UTTypeCopyAllTagsWithClass(kUTTypeJPEG, kUTTagClassFilenameExtension) == ["jpeg", "jpg", "jpe"])
-precondition(UTTypeCopyPreferredTagWithClass(kUTTypeItem, kUTTagClassFilenameExtension) == nil)
-precondition(UTTypeCopyAllTagsWithClass("com.example.unknown-type", kUTTagClassMIMEType) == nil)
-
-precondition(UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, "png", nil) == "public.png")
-precondition(UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ".PNG", nil) == "public.png")
-precondition(UTTypeCreatePreferredIdentifierForTag(kUTTagClassMIMEType, "image/jpeg", nil) == "public.jpeg")
-precondition(UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, "jpg", kUTTypeImage) == "public.jpeg")
-precondition(UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, "plist", nil) == "com.apple.property-list")
-precondition(UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, "not-a-real-extension", nil) == nil)
-precondition(UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, "png", kUTTypeAudio) == nil)
-
 precondition(
-    UTTypeCreateAllIdentifiersForTag(kUTTagClassFilenameExtension, "png", nil) == ["public.png"]
+    OpenUIKitHostUTType.copyPreferredTag(
+        for: kUTTypePNG,
+        tagClass: kUTTagClassFilenameExtension
+    ) == "png"
 )
 precondition(
-    UTTypeCreateAllIdentifiersForTag(kUTTagClassFilenameExtension, "plist", nil) == [
+    OpenUIKitHostUTType.copyPreferredTag(
+        for: kUTTypePNG,
+        tagClass: kUTTagClassMIMEType
+    ) == "image/png"
+)
+precondition(
+    OpenUIKitHostUTType.copyPreferredTag(
+        for: kUTTypeJPEG,
+        tagClass: kUTTagClassFilenameExtension
+    ) == "jpeg"
+)
+precondition(
+    OpenUIKitHostUTType.copyAllTags(
+        for: kUTTypeJPEG,
+        tagClass: kUTTagClassFilenameExtension
+    ) == ["jpeg", "jpg", "jpe"]
+)
+precondition(
+    OpenUIKitHostUTType.copyPreferredTag(
+        for: kUTTypeItem,
+        tagClass: kUTTagClassFilenameExtension
+    ) == nil
+)
+precondition(
+    OpenUIKitHostUTType.copyAllTags(
+        for: "com.example.unknown-type",
+        tagClass: kUTTagClassMIMEType
+    ) == nil
+)
+
+precondition(
+    OpenUIKitHostUTType.createPreferredIdentifier(
+        tagClass: kUTTagClassFilenameExtension,
+        tag: "png",
+        conformingTo: nil
+    ) == "public.png"
+)
+precondition(
+    OpenUIKitHostUTType.createPreferredIdentifier(
+        tagClass: kUTTagClassFilenameExtension,
+        tag: ".PNG",
+        conformingTo: nil
+    ) == "public.png"
+)
+precondition(
+    OpenUIKitHostUTType.createPreferredIdentifier(
+        tagClass: kUTTagClassMIMEType,
+        tag: "image/jpeg",
+        conformingTo: nil
+    ) == "public.jpeg"
+)
+precondition(
+    OpenUIKitHostUTType.createPreferredIdentifier(
+        tagClass: kUTTagClassFilenameExtension,
+        tag: "jpg",
+        conformingTo: kUTTypeImage
+    ) == "public.jpeg"
+)
+precondition(
+    OpenUIKitHostUTType.createPreferredIdentifier(
+        tagClass: kUTTagClassFilenameExtension,
+        tag: "plist",
+        conformingTo: nil
+    ) == "com.apple.property-list"
+)
+precondition(
+    OpenUIKitHostUTType.createPreferredIdentifier(
+        tagClass: kUTTagClassFilenameExtension,
+        tag: "not-a-real-extension",
+        conformingTo: nil
+    ) == nil
+)
+precondition(
+    OpenUIKitHostUTType.createPreferredIdentifier(
+        tagClass: kUTTagClassFilenameExtension,
+        tag: "png",
+        conformingTo: kUTTypeAudio
+    ) == nil
+)
+
+precondition(
+    OpenUIKitHostUTType.createAllIdentifiers(
+        tagClass: kUTTagClassFilenameExtension,
+        tag: "png",
+        conformingTo: nil
+    ) == ["public.png"]
+)
+precondition(
+    OpenUIKitHostUTType.createAllIdentifiers(
+        tagClass: kUTTagClassFilenameExtension,
+        tag: "plist",
+        conformingTo: nil
+    ) == [
         "com.apple.binary-property-list",
         "com.apple.property-list",
         "com.apple.xml-property-list",
     ]
 )
 
-guard let declaration = UTTypeCopyDeclaration(kUTTypePNG) else {
+guard let declaration = OpenUIKitHostUTType.copyDeclaration(for: kUTTypePNG) else {
     fatalError("declared PNG type must produce a declaration dictionary")
 }
 precondition(declaration[kUTTypeIdentifierKey] as? String == "public.png")
@@ -73,13 +153,13 @@ guard let tags = declaration[kUTTypeTagSpecificationKey] as? [String: Any] else 
 }
 precondition(tags[kUTTagClassFilenameExtension] as? String == "png")
 precondition(tags[kUTTagClassMIMEType] as? String == "image/png")
-precondition(UTTypeCopyDeclaration("com.example.unknown-type") == nil)
-precondition(UTTypeCopyDeclaration("dyn.example") == nil)
+precondition(OpenUIKitHostUTType.copyDeclaration(for: "com.example.unknown-type") == nil)
+precondition(OpenUIKitHostUTType.copyDeclaration(for: "dyn.example") == nil)
 
-precondition(UTTypeCopyDeclaringBundleURL(kUTTypePNG) == nil)
-precondition(UTTypeCopyDeclaringBundleURL("dyn.example") == nil)
-precondition(UTTypeCopyDescription(kUTTypePNG) == nil)
-precondition(UTTypeCopyDescription(kUTTypeItem) == nil)
+precondition(OpenUIKitHostUTType.copyDeclaringBundleURL(for: kUTTypePNG) == nil)
+precondition(OpenUIKitHostUTType.copyDeclaringBundleURL(for: "dyn.example") == nil)
+precondition(OpenUIKitHostUTType.copyDescription(for: kUTTypePNG) == nil)
+precondition(OpenUIKitHostUTType.copyDescription(for: kUTTypeItem) == nil)
 
 precondition(UTTypeConformsTo("com.example.unknown-type", "com.example.unknown-type"))
 precondition(!UTTypeConformsTo("com.example.unknown-type", kUTTypeItem))
