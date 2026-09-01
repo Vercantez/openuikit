@@ -80,6 +80,8 @@ _REQUIRED_ATTESTATION = {
     "foundation-internationalization-abi.tsv",
     "foundation-internationalization-host.tsv",
     "foundation-internationalization-sources.tsv",
+    "foundation-runtime-exports.txt",
+    "foundation-runtime-undefineds.txt",
     "framework-module-loading.log",
     "opencombine-sources.json",
     "opencombine-sources.nul",
@@ -87,6 +89,17 @@ _REQUIRED_ATTESTATION = {
     "source-subject.after.sha256",
     "source-subject.before.sha256",
     "symlinks.tsv",
+}
+_REQUIRED_FOUNDATION_RUNTIME_EXPORTS = {
+    "_$s10Foundation24_getErrorDefaultUserInfoyyXlSgxs0C0RzlF",
+    "_$s10Foundation21_bridgeNSErrorToError_3outSbSo0C0C_SpyxGtAA021_ObjectiveCBridgeableE0RzlF",
+    "_$s10Foundation26_ObjectiveCBridgeableErrorMp",
+    "_$sSo10CFErrorRefas5Error10FoundationMc",
+}
+_FORBIDDEN_FOUNDATION_CFERROR_IMPORTS = {
+    "_CFErrorGetDomain",
+    "_CFErrorGetCode",
+    "_CFErrorCopyUserInfo",
 }
 _REQUIRED_HOST_LIBRARIES = {
     "libBlocksRuntime.so",
@@ -469,6 +482,39 @@ def _validate_compiler_plugins(root: Path) -> None:
         _regular(root, f"host-tools/swift/linux/{name}", "plugin Linux dependency")
 
 
+def _symbol_attestation(root: Path, relative: str, label: str) -> set[str]:
+    path = _regular(root, relative, label)
+    lines = path.read_text(encoding="utf-8").splitlines()
+    if any(not line or line.strip() != line or "\t" in line for line in lines):
+        raise TrueIOSPlatformError(f"malformed {label}")
+    if lines != sorted(set(lines)):
+        raise TrueIOSPlatformError(f"{label} is not sorted and unique")
+    return set(lines)
+
+
+def _validate_foundation_runtime_bridge(root: Path) -> None:
+    exports = _symbol_attestation(
+        root,
+        "attestation/foundation-runtime-exports.txt",
+        "Foundation runtime export attestation",
+    )
+    missing = sorted(_REQUIRED_FOUNDATION_RUNTIME_EXPORTS - exports)
+    if missing:
+        raise TrueIOSPlatformError(
+            f"Foundation runtime bridge exports are missing: {missing}"
+        )
+    undefineds = _symbol_attestation(
+        root,
+        "attestation/foundation-runtime-undefineds.txt",
+        "Foundation runtime undefined-symbol attestation",
+    )
+    forbidden = sorted(_FORBIDDEN_FOUNDATION_CFERROR_IMPORTS & undefineds)
+    if forbidden:
+        raise TrueIOSPlatformError(
+            f"Foundation CFError bridge imports absent C APIs: {forbidden}"
+        )
+
+
 def _compile_arguments() -> list[str]:
     include = "platform-include"
     return [
@@ -606,6 +652,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
 
     _validate_sdk_inputs(root)
     _validate_compiler_plugins(root)
+    _validate_foundation_runtime_bridge(root)
     if (root / "sdk/usr/local").exists() or (root / "sdk/usr/local").is_symlink():
         raise TrueIOSPlatformError("SDK contains forbidden implicit usr/local inputs")
     overlay_directories = {

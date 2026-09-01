@@ -339,6 +339,23 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             (self.root / f"attestation/{name}").write_text(
                 f"format\t{name}\n", encoding="utf-8"
             )
+        (self.root / "attestation/foundation-runtime-exports.txt").write_text(
+            "\n".join(
+                sorted(
+                    (
+                        "_$s10Foundation24_getErrorDefaultUserInfoyyXlSgxs0C0RzlF",
+                        "_$s10Foundation21_bridgeNSErrorToError_3outSbSo0C0C_SpyxGtAA021_ObjectiveCBridgeableE0RzlF",
+                        "_$s10Foundation26_ObjectiveCBridgeableErrorMp",
+                        "_$sSo10CFErrorRefas5Error10FoundationMc",
+                    )
+                )
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        (self.root / "attestation/foundation-runtime-undefineds.txt").write_text(
+            "_objc_msgSend\n", encoding="utf-8"
+        )
         self.seal()
 
     def tearDown(self) -> None:
@@ -432,6 +449,33 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(
             platform_package.TrueIOSPlatformError,
             "artifact|CFError opaque header",
+        ):
+            platform_package.validate(self.root)
+
+    def test_resealed_missing_cferror_error_conformance_is_rejected(self) -> None:
+        exports = self.root / "attestation/foundation-runtime-exports.txt"
+        exports.write_text(
+            exports.read_text(encoding="utf-8").replace(
+                "_$sSo10CFErrorRefas5Error10FoundationMc\n", ""
+            ),
+            encoding="utf-8",
+        )
+        self.seal()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "Foundation runtime bridge exports are missing",
+        ):
+            platform_package.validate(self.root)
+
+    def test_resealed_absent_cferror_c_api_import_is_rejected(self) -> None:
+        undefineds = self.root / "attestation/foundation-runtime-undefineds.txt"
+        undefineds.write_text(
+            "_CFErrorGetDomain\n_objc_msgSend\n", encoding="utf-8"
+        )
+        self.seal()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "Foundation CFError bridge imports absent C APIs",
         ):
             platform_package.validate(self.root)
 
