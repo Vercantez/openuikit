@@ -1,4 +1,5 @@
 import CoreML
+import Dispatch
 import Foundation
 
 private func requireError(_ error: Error, _ code: MLModelError.Code) {
@@ -8,6 +9,7 @@ private func requireError(_ error: Error, _ code: MLModelError.Code) {
     precondition(modelError.code == code, "unexpected MLModelError.Code \(modelError.code)")
     precondition(modelError.errorCode == code.rawValue)
     precondition(MLModelError.errorDomain == MLModelErrorDomain)
+    precondition(MLModelErrorDomain == "com.apple.CoreML")
 }
 
 private func requireThrows(_ code: MLModelError.Code, _ body: () throws -> Void) {
@@ -19,15 +21,21 @@ private func requireThrows(_ code: MLModelError.Code, _ body: () throws -> Void)
     }
 }
 
+private func waitFor(_ semaphore: DispatchSemaphore) {
+    precondition(semaphore.wait(timeout: .now() + 5) == .success, "completion was not delivered")
+}
+
 enum CoreMLRuntime {
     static func main() async {
         testErrors()
         testEnums()
         testMultiArray()
+        testMultiArrayConcatAndTransfer()
         testFeatureValues()
         testProviders()
         testConfiguration()
         testFailClosedModel()
+        testCompletionDelivery()
         await testFailClosedAsync()
         testShapedArray()
         testComputeDevices()
@@ -39,7 +47,8 @@ enum CoreMLRuntime {
     }
 
     static func testErrors() {
-        precondition(MLModelErrorDomain == "com.apple.CoreML.ErrorDomain")
+        precondition(MLModelErrorDomain == "com.apple.CoreML")
+        precondition(MLModelError.errorDomain == "com.apple.CoreML")
         precondition(MLModelError.generic.rawValue == 0)
         precondition(MLModelError.featureType.rawValue == 1)
         precondition(MLModelError.io.rawValue == 3)
@@ -131,6 +140,131 @@ enum CoreMLRuntime {
         precondition(MLMultiArray(coder: NSCoder()) == nil)
     }
 
+    static func testMultiArrayConcatAndTransfer() {
+        let left = try! MLMultiArray(shape: [2, 2], dataType: .float32)
+        left[[NSNumber(value: 0), NSNumber(value: 0)]] = 1
+        left[[NSNumber(value: 0), NSNumber(value: 1)]] = 2
+        left[[NSNumber(value: 1), NSNumber(value: 0)]] = 3
+        left[[NSNumber(value: 1), NSNumber(value: 1)]] = 4
+        let right = try! MLMultiArray(shape: [2, 1], dataType: .int32)
+        right[[NSNumber(value: 0), NSNumber(value: 0)]] = 5
+        right[[NSNumber(value: 1), NSNumber(value: 0)]] = 6
+
+        let axisOne = MLMultiArray(
+            byConcatenatingMultiArrays: [left, right],
+            alongAxis: 1,
+            dataType: .float32
+        )
+        precondition(axisOne.shape.map(\.intValue) == [2, 3])
+        precondition(axisOne[[NSNumber(value: 0), NSNumber(value: 0)]].floatValue == 1)
+        precondition(axisOne[[NSNumber(value: 0), NSNumber(value: 1)]].floatValue == 2)
+        precondition(axisOne[[NSNumber(value: 0), NSNumber(value: 2)]].floatValue == 5)
+        precondition(axisOne[[NSNumber(value: 1), NSNumber(value: 0)]].floatValue == 3)
+        precondition(axisOne[[NSNumber(value: 1), NSNumber(value: 1)]].floatValue == 4)
+        precondition(axisOne[[NSNumber(value: 1), NSNumber(value: 2)]].floatValue == 6)
+
+        let wrapped = MLMultiArray(
+            byConcatenatingMultiArrays: [left, right],
+            alongAxis: -1,
+            dataType: .double
+        )
+        precondition(wrapped.shape.map(\.intValue) == [2, 3])
+        precondition(wrapped[[NSNumber(value: 0), NSNumber(value: 2)]].doubleValue == 5)
+        precondition(wrapped[[NSNumber(value: 1), NSNumber(value: 2)]].doubleValue == 6)
+
+        let mixed = MLMultiArray(
+            byConcatenatingMultiArrays: [
+                try! MLMultiArray([Float(1.5), Float(2.25)]),
+                try! MLMultiArray([Int32(3), Int32(4)])
+            ],
+            alongAxis: 0,
+            dataType: .double
+        )
+        precondition(mixed.dataType == .double)
+        precondition(mixed[0].doubleValue == 1.5)
+        precondition(mixed[1].doubleValue == 2.25)
+        precondition(mixed[2].doubleValue == 3)
+        precondition(mixed[3].doubleValue == 4)
+
+        let padded = MLMultiArray(shape: [2, 2], dataType: .float32, strides: [8, 1])
+        precondition(padded.strides.map(\.intValue) == [8, 1])
+        padded[[NSNumber(value: 0), NSNumber(value: 0)]] = 10
+        padded[[NSNumber(value: 0), NSNumber(value: 1)]] = 11
+        padded[[NSNumber(value: 1), NSNumber(value: 0)]] = 12
+        padded[[NSNumber(value: 1), NSNumber(value: 1)]] = 13
+        let packed = try! MLMultiArray(shape: [2, 2], dataType: .int32)
+        padded.transfer(to: packed)
+        precondition(packed[0].int32Value == 10)
+        precondition(packed[1].int32Value == 11)
+        precondition(packed[2].int32Value == 12)
+        precondition(packed[3].int32Value == 13)
+
+        let zero = try! MLMultiArray(shape: [2, 0, 3], dataType: .int8)
+        precondition(zero.count == 0)
+        let zeroDest = try! MLMultiArray(shape: [2, 0, 3], dataType: .float16)
+        zero.transfer(to: zeroDest)
+        let zeroConcat = MLMultiArray(
+            byConcatenatingMultiArrays: [zero, zero],
+            alongAxis: 1,
+            dataType: .int8
+        )
+        precondition(zeroConcat.shape.map(\.intValue) == [2, 0, 3])
+        precondition(zeroConcat.count == 0)
+
+        requireThrows(.io) {
+            _ = try MLMultiArray(shape: [NSNumber(value: -1)], dataType: .float32)
+        }
+        let scratch = UnsafeMutableRawPointer.allocate(byteCount: 16, alignment: 8)
+        scratch.initializeMemory(as: UInt8.self, repeating: 0, count: 16)
+        requireThrows(.featureType) {
+            _ = try MLMultiArray(
+                dataPointer: scratch,
+                shape: [NSNumber(value: 2), NSNumber(value: 2)],
+                dataType: .float32,
+                strides: [NSNumber(value: 1)],
+                deallocator: { _ in }
+            )
+        }
+        requireThrows(.io) {
+            _ = try MLMultiArray(
+                dataPointer: scratch,
+                shape: [NSNumber(value: 2)],
+                dataType: .int32,
+                strides: [NSNumber(value: -1)],
+                deallocator: { _ in }
+            )
+        }
+        requireThrows(.io) {
+            _ = try MLMultiArray(
+                shape: [NSNumber(value: Int.max), NSNumber(value: 4)],
+                dataType: .int8
+            )
+        }
+        scratch.deallocate()
+
+        var deallocatorCount = 0
+        let owned = UnsafeMutableRawPointer.allocate(byteCount: 16, alignment: 4)
+        owned.initializeMemory(as: UInt8.self, repeating: 0, count: 16)
+        do {
+            let array = try MLMultiArray(
+                dataPointer: owned,
+                shape: [NSNumber(value: 4)],
+                dataType: .int32,
+                strides: [NSNumber(value: 1)],
+                deallocator: { pointer in
+                    deallocatorCount += 1
+                    pointer.deallocate()
+                }
+            )
+            precondition(deallocatorCount == 0)
+            array[0] = 8
+            precondition(array[0].int32Value == 8)
+        } catch {
+            fatalError("owned MLMultiArray must construct: \(error)")
+        }
+        precondition(deallocatorCount == 1)
+    }
+
     static func testFeatureValues() {
         let intValue = MLFeatureValue(int64: 42)
         precondition(intValue.type == .int64)
@@ -183,18 +317,20 @@ enum CoreMLRuntime {
 
     static func testConfiguration() {
         let configuration = MLModelConfiguration()
-        precondition(configuration.computeUnits == .cpuOnly)
-        configuration.computeUnits = .all
+        precondition(configuration.computeUnits == .all)
+        precondition(configuration.computeUnits.rawValue == 2)
+        precondition(configuration.allowLowPrecisionAccumulationOnGPU == false)
+        configuration.computeUnits = .cpuOnly
         configuration.allowLowPrecisionAccumulationOnGPU = true
         configuration.functionName = "main"
         configuration.modelDisplayName = "AgeNet"
         configuration.optimizationHints.reshapeFrequency = .infrequent
         configuration.optimizationHints.specializationStrategy = .fastPrediction
         let copy = configuration.copy() as! MLModelConfiguration
-        precondition(copy.computeUnits == .all)
+        precondition(copy.computeUnits == .cpuOnly)
         precondition(copy.functionName == "main")
         let options = MLPredictionOptions()
-        precondition(options.usesCPUOnly)
+        precondition(options.usesCPUOnly == false)
         options.usesCPUOnly = true
         options.outputBackings = ["out": 1]
         precondition(options.outputBackings["out"] as? Int == 1)
@@ -217,28 +353,150 @@ enum CoreMLRuntime {
         requireThrows(.io) {
             _ = try MLModel.compileModel(at: url)
         }
-        requireThrows(.io) {
-            _ = try MLModelAsset(url: url)
+        let asset = try! MLModelAsset(url: url)
+        let fromSpec = try! MLModelAsset(specification: Data([0, 1, 2]))
+        _ = try! MLModelAsset(specification: Data([0]), blobMapping: [:])
+        _ = (asset, fromSpec)
+    }
+
+    static func testCompletionDelivery() {
+        let url = URL(fileURLWithPath: "/tmp/missing.mlmodelc")
+        let asset = try! MLModelAsset(url: url)
+
+        func assertReturnedBeforeCallback(_ start: (@escaping () -> Void) -> Void) {
+            let lock = NSLock()
+            var returned = false
+            var calledInline = false
+            let delivered = DispatchSemaphore(value: 0)
+            start {
+                lock.lock()
+                if !returned {
+                    calledInline = true
+                }
+                lock.unlock()
+                delivered.signal()
+            }
+            lock.lock()
+            returned = true
+            let inline = calledInline
+            lock.unlock()
+            precondition(!inline, "completion must not run inline on the caller")
+            waitFor(delivered)
         }
-        requireThrows(.io) {
-            _ = try MLModelAsset(specification: Data([0, 1, 2]))
-        }
-        MLModel.load(contentsOf: url) { result in
-            switch result {
-            case .failure(let error):
-                requireError(error, .io)
-            case .success:
-                fatalError("load must fail closed")
+
+        assertReturnedBeforeCallback { finish in
+            MLModel.load(contentsOf: url) { result in
+                switch result {
+                case .failure(let error):
+                    requireError(error, .generic)
+                case .success:
+                    fatalError("load must fail closed")
+                }
+                finish()
             }
         }
-        MLModel.compileModel(at: url) { result in
-            switch result {
-            case .failure(let error):
-                requireError(error, .io)
-            case .success:
-                fatalError("compile must fail closed")
+
+        assertReturnedBeforeCallback { finish in
+            MLModel.compileModel(at: url) { result in
+                switch result {
+                case .failure(let error):
+                    requireError(error, .io)
+                case .success:
+                    fatalError("compile must fail closed")
+                }
+                finish()
             }
         }
+
+        assertReturnedBeforeCallback { finish in
+            MLModel.load(asset, configuration: MLModelConfiguration()) { model, error in
+                precondition(model == nil)
+                requireError(error!, .generic)
+                finish()
+            }
+        }
+
+        assertReturnedBeforeCallback { finish in
+            asset.functionNames { names, error in
+                precondition(names == nil)
+                requireError(error!, .generic)
+                finish()
+            }
+        }
+
+        assertReturnedBeforeCallback { finish in
+            asset.modelDescription { description, error in
+                precondition(description == nil)
+                requireError(error!, .generic)
+                finish()
+            }
+        }
+
+        assertReturnedBeforeCallback { finish in
+            asset.modelDescription(of: "main") { description, error in
+                precondition(description == nil)
+                requireError(error!, .generic)
+                finish()
+            }
+        }
+
+        var loadCount = 0
+        let loadOnce = DispatchSemaphore(value: 0)
+        MLModel.load(contentsOf: url) { _ in
+            loadCount += 1
+            loadOnce.signal()
+        }
+        waitFor(loadOnce)
+        Thread.sleep(forTimeInterval: 0.05)
+        precondition(loadCount == 1, "load completion must run exactly once")
+
+        var compileCount = 0
+        let compileOnce = DispatchSemaphore(value: 0)
+        MLModel.compileModel(at: url) { _ in
+            compileCount += 1
+            compileOnce.signal()
+        }
+        waitFor(compileOnce)
+        Thread.sleep(forTimeInterval: 0.05)
+        precondition(compileCount == 1, "compile completion must run exactly once")
+
+        var assetCount = 0
+        let assetOnce = DispatchSemaphore(value: 0)
+        asset.functionNames { _, _ in
+            assetCount += 1
+            assetOnce.signal()
+        }
+        waitFor(assetOnce)
+        Thread.sleep(forTimeInterval: 0.05)
+        precondition(assetCount == 1, "asset completion must run exactly once")
+
+        let group = DispatchGroup()
+        let countLock = NSLock()
+        var genericLoads = 0
+        var ioCompiles = 0
+        for _ in 0..<8 {
+            group.enter()
+            MLModel.load(contentsOf: url) { result in
+                if case .failure(let error) = result, (error as? MLModelError)?.code == .generic {
+                    countLock.lock()
+                    genericLoads += 1
+                    countLock.unlock()
+                }
+                group.leave()
+            }
+            group.enter()
+            MLModel.compileModel(at: url) { result in
+                if case .failure(let error) = result, (error as? MLModelError)?.code == .io {
+                    countLock.lock()
+                    ioCompiles += 1
+                    countLock.unlock()
+                }
+                group.leave()
+            }
+        }
+        precondition(group.wait(timeout: .now() + 5) == .success, "concurrent completions must finish")
+        precondition(genericLoads == 8)
+        precondition(ioCompiles == 8)
     }
 
     static func testFailClosedAsync() async {
@@ -247,13 +505,20 @@ enum CoreMLRuntime {
             _ = try await MLModel.load(contentsOf: url)
             fatalError("async load must fail closed")
         } catch {
-            requireError(error, .io)
+            requireError(error, .generic)
         }
         do {
             _ = try await MLModel.compileModel(at: url)
             fatalError("async compile must fail closed")
         } catch {
             requireError(error, .io)
+        }
+        let asset = try! MLModelAsset(url: url)
+        do {
+            _ = try await asset.modelDescription(of: "main")
+            fatalError("async asset description must fail closed")
+        } catch {
+            requireError(error, .generic)
         }
         do {
             _ = try await MLModelStructure.load(contentsOf: url)
@@ -322,6 +587,11 @@ enum CoreMLRuntime {
         precondition(policy.description.contains("cpuOnly"))
         _ = MLCPUComputeDevice()
         _ = MLGPUComputeDevice()
+        let configuration = MLModelConfiguration()
+        precondition(configuration.computeUnits == .all)
+        guard case .cpu = MLComputeDevice.allComputeDevices[0] else {
+            fatalError("MLComputeUnits.all is every available Linux backend, which is CPU-only")
+        }
     }
 
     static func testKeys() {
