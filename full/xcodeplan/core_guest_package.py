@@ -486,6 +486,36 @@ def _require_systemconfiguration_framework_contract(
         )
 
 
+def _require_corelocation_framework_contract(
+    compile_arguments: list[str], link_arguments: list[str]
+) -> None:
+    compile_pair = ["-F", "frameworks"]
+    compile_count = sum(
+        compile_arguments[index : index + 2] == compile_pair
+        for index in range(len(compile_arguments) - 1)
+    )
+    if compile_count != 1:
+        raise CorePackageError(
+            "swift_compile_arguments must contain the CoreLocation framework "
+            "search pair exactly once: -F frameworks"
+        )
+    link_pair = ["-framework", "CoreLocation"]
+    link_count = sum(
+        link_arguments[index : index + 2] == link_pair
+        for index in range(len(link_arguments) - 1)
+    )
+    if link_count != 1:
+        raise CorePackageError(
+            "executable_link_arguments must contain the CoreLocation framework "
+            "pair exactly once: -framework CoreLocation"
+        )
+    if "-lCoreLocation" in link_arguments:
+        raise CorePackageError(
+            "executable_link_arguments must use -framework CoreLocation, not "
+            "-lCoreLocation"
+        )
+
+
 def _require_cross_import_compile_contract(arguments: list[str]) -> None:
     pair = ["-Xfrontend", "-enable-cross-import-overlays"]
     count = sum(
@@ -748,6 +778,10 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         manifest["swift_compile_arguments"],
         manifest["executable_link_arguments"],
     )
+    _require_corelocation_framework_contract(
+        manifest["swift_compile_arguments"],
+        manifest["executable_link_arguments"],
+    )
     if manifest["executable_link_arguments"].count("-Llib") != 1:
         raise CorePackageError("executable_link_arguments must contain -Llib exactly once")
     for required in _REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
@@ -821,6 +855,38 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     if f"{paths['libraries']}/libAppKit.dylib" in artifact_records:
         raise CorePackageError(
             "AppKit must use its versioned framework identity, not libAppKit"
+        )
+
+    corelocation_compile_path = (
+        f"{paths['frameworks']}/CoreLocation.framework/CoreLocation"
+    )
+    corelocation_runtime_path = (
+        f"{paths['guest_root']}/darwin/System/Library/Frameworks/"
+        "CoreLocation.framework/CoreLocation"
+    )
+    corelocation_required_records = {
+        corelocation_compile_path: ("framework", "CoreLocation", "mixed-dylib"),
+        corelocation_runtime_path: ("runtime", "CoreLocation", "framework-dylib"),
+    }
+    for relative, expected_record in corelocation_required_records.items():
+        record = artifact_records.get(relative)
+        if record is None or (
+            record["category"], record["name"], record["role"]
+        ) != expected_record:
+            raise CorePackageError(
+                f"CoreLocation framework artifact contract differs: {relative}"
+            )
+    if (
+        artifact_records[corelocation_compile_path]["sha256"]
+        != artifact_records[corelocation_runtime_path]["sha256"]
+    ):
+        raise CorePackageError(
+            "CoreLocation compile/runtime framework identities differ"
+        )
+    if f"{paths['libraries']}/libCoreLocation.dylib" in artifact_records:
+        raise CorePackageError(
+            "CoreLocation must use its canonical framework identity, not "
+            "libCoreLocation"
         )
 
     raw_plugins = _array(manifest.get("compiler_plugins"), "compiler_plugins")
@@ -1090,6 +1156,16 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"{paths['frameworks']}/SystemConfiguration.framework/Modules/module.modulemap",
             f"{paths['frameworks']}/SystemConfiguration.framework/SystemConfiguration",
             f"{paths['guest_root']}/darwin/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration",
+            f"{paths['frameworks']}/CoreLocation.framework/Headers/CoreLocation.h",
+            f"{paths['frameworks']}/CoreLocation.framework/Modules/module.modulemap",
+            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.abi.json",
+            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.private.swiftinterface",
+            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftdoc",
+            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftinterface",
+            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftmodule",
+            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftsourceinfo",
+            corelocation_compile_path,
+            corelocation_runtime_path,
         }
     )
     if preview is not None:

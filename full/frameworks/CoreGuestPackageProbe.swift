@@ -52,6 +52,7 @@ import AuthenticationServices
 import FoundationModels
 import WebKit
 import SystemConfiguration
+@_spi(OpenUIKitHost) import CoreLocation
 
 private func coreRequireIndefiniteSymbolEffect<Effect>(_: Effect)
 where Effect: SymbolEffect & IndefiniteSymbolEffect {}
@@ -1318,6 +1319,35 @@ struct CoreGuestPackageProbe {
                 &currentReachabilityFlags
             ) && currentReachabilityFlags.contains(.isLocalAddress)
         )
+        let coreLocationOrigin = CLLocation(
+            latitude: 40.7128,
+            longitude: -74.0060
+        )
+        let coreLocationDestination = CLLocation(
+            latitude: 51.5074,
+            longitude: -0.1278
+        )
+        precondition(
+            coreLocationOrigin.distance(from: coreLocationDestination)
+                .rounded() == 5_585_234
+        )
+        let deniedLocationManager = CLLocationManager()
+        deniedLocationManager.requestWhenInUseAuthorization()
+        precondition(deniedLocationManager.authorizationStatus == .denied)
+        let hostLocationManager = CLLocationManager()
+        hostLocationManager._portableSetAuthorization(.authorizedWhenInUse)
+        hostLocationManager.startUpdatingLocation()
+        hostLocationManager._portableInject(locations: [coreLocationOrigin])
+        precondition(hostLocationManager.location == coreLocationOrigin)
+        let failClosedGeocoder = CLGeocoder()
+        var failClosedGeocoderCode: CLError.Code?
+        failClosedGeocoder.reverseGeocodeLocation(coreLocationOrigin) {
+            placemarks,
+            error in
+            precondition(placemarks == nil)
+            failClosedGeocoderCode = (error as? CLError)?.code
+        }
+        precondition(failClosedGeocoderCode == .geocodeFoundNoResult)
 
         #if canImport(DeveloperToolsSupport)
         if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *) {
@@ -1368,6 +1398,7 @@ struct CoreGuestPackageProbe {
                 + "naturallanguage=deterministic,confidence-gated "
                 + "authenticationservices=host-driven,fail-closed "
                 + "systemconfiguration=reachability,host-driven,loopback "
+                + "corelocation=geometry,host-driven,fail-closed "
                 + "webkit=state,kvo,engine-unavailable preview=\(preview)"
         )
     }

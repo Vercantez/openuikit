@@ -29,9 +29,11 @@ runtime contract supplied by a separate `libswiftIOKit.dylib`. AppKit is
 published with its canonical
 versioned framework identity rather than as a flat `libAppKit.dylib`.
 `SystemConfiguration.framework` is an independent Objective-C-compatible
-framework carrying the Apple-shaped reachability C ABI. Together these are
-sixty-three reusable ARM64 Mach-O platform binaries (fifty-eight Swift
-framework dylibs, IOKit, SystemConfiguration, `libswiftIOKit`, ICU, and zlib),
+framework carrying the Apple-shaped reachability C ABI. `CoreLocation.framework`
+is one mixed Swift/Objective-C framework identity with Apple-shaped Swift, C,
+and Objective-C surfaces. Together these are sixty-four reusable ARM64 Mach-O
+platform binaries (fifty-nine Swift framework dylibs, IOKit,
+SystemConfiguration, `libswiftIOKit`, ICU, and zlib),
 including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
@@ -339,6 +341,29 @@ package inputs or artifacts. The compile contract carries the shared
 `-F frameworks` pair and the link contract carries exactly one
 `-framework SystemConfiguration` pair.
 
+`CoreLocation.framework` publishes a canonical framework module and install
+name at `/System/Library/Frameworks/CoreLocation.framework/CoreLocation`.
+Swift owns the nominal coordinate, location, manager, region, heading,
+placemark, and geocoder identities; the Objective-C companion supplies the C
+coordinate/constants ABI and categories that expose coordinate structs from
+those same Swift-emitted classes. This prevents a second shadow class or value
+model from appearing at the language boundary. The geometry implementation
+uses WGS-84 distance, including the Apple-matched New York–London and equatorial
+oracle values. With no host provider, authorization and geocoding fail closed
+and no position is fabricated. The `OpenUIKitHost` SPI provides deterministic
+authorization, location, heading, region-state, error, and geocoder injection.
+
+Publication requires the header, module map, all six architecture-qualified
+Swift module artifacts, byte-identical compile/runtime framework binaries, the
+37-symbol C/Objective-C boundary, the complete 676-export public closure, and
+three cold Mach-O probes: Swift runtime semantics, the six-row Xcode 26.1
+interface differential, and a mixed Clang/Swift consumer proving one Objective-C
+class identity. The focused host gate also compiles exact untouched Home
+Assistant and Wikipedia sources at pinned commits and records Firefox's true
+zero-import state. Both package validators require one `-framework CoreLocation`
+pair, refuse `-lCoreLocation`, and reject missing artifacts, a competing flat
+dylib, or compile/runtime identity drift.
+
 `full/adservices/tests/test_revenuecat_frontier_guest.sh` additionally hashes
 and compiles the exact untouched RevenueCat 5.86.0 attribution, RCContainer,
 and `MacDevice.swift` sources from commit
@@ -591,7 +616,7 @@ The package is self-contained under these directories:
 sdk/                 copied compile sysroot
 modules/             target Swift modules
 lib/                 reusable ARM64 Mach-O dylibs
-frameworks/          IOKit/SystemConfiguration C frameworks and versioned AppKit
+frameworks/          IOKit, SystemConfiguration, CoreLocation, and versioned AppKit
 include/             C module maps and headers
 objects/             optional executable-layer objects
 resources/OpenUIKit/ exact runtime JSON/resources plus fonts/

@@ -70,6 +70,12 @@ SYSTEMCONFIGURATION_ORACLE=$W/full/systemconfiguration/tests/SystemConfiguration
 SYSTEMCONFIGURATION_GOLDEN=$W/full/systemconfiguration/tests/systemconfiguration-interface-apple-2026-09-01.txt
 SYSTEMCONFIGURATION_RUNTIME_TEST=$W/full/systemconfiguration/tests/SystemConfigurationGuestRuntime.m
 SYSTEMCONFIGURATION_EXPORTS=$W/full/systemconfiguration/tests/systemconfiguration-expected.exports
+CORELOCATION_ORACLE=$W/full/corelocation/tests/CoreLocationInterfaceOracle.swift
+CORELOCATION_GOLDEN=$W/full/corelocation/tests/corelocation-interface-apple-xcode-26.1.txt
+CORELOCATION_RUNTIME_TEST=$W/full/corelocation/tests/CoreLocationGuestRuntime.swift
+CORELOCATION_MIXED_OBJC=$W/full/corelocation/tests/CoreLocationMixedConsumer.m
+CORELOCATION_MIXED_SWIFT=$W/full/corelocation/tests/CoreLocationMixedConsumer.swift
+CORELOCATION_EXPORTS=$W/full/corelocation/tests/corelocation-boundary-expected.exports
 FIRST_PARTY_PROVENANCE_TOOL=$W/full/first-party-frameworks/first_party_provenance.py
 FIRST_PARTY_PROVENANCE_POLICY=$W/full/first-party-frameworks/first-party-provenance.json
 SDK_DANGLING_EXCLUSIONS=$W/full/frameworks/sdk_dangling_symlink_exclusions.tsv
@@ -1408,11 +1414,41 @@ append_frontier_sources() {
         printf 'frontier-input\t37\tSystemConfiguration\t%s\t%s\n' \
             "$relative" "$(hash_file "$W/$relative")" >> "$output"
     done
+    for relative in full/corelocation/CoreLocation.swift \
+        full/corelocation/CoreLocationObjC.m; do
+        printf 'frontier-source\t38\tCoreLocation\t%s\t%s\n' \
+            "$relative" "$(hash_file "$W/$relative")" >> "$output"
+    done
+    printf 'frontier-manifest\t38\tCoreLocation\t%s\t%s\n' \
+        full/corelocation/corelocation_guest_sources.txt \
+        "$(hash_file "$W/full/corelocation/corelocation_guest_sources.txt")" \
+        >> "$output"
+    corelocation_inputs=(
+        full/corelocation/README.md
+        full/corelocation/include/CoreLocation.h
+        full/corelocation/include/module.modulemap
+        full/corelocation/tests/CoreLocationGuestRuntime.swift
+        full/corelocation/tests/CoreLocationInterfaceOracle.swift
+        full/corelocation/tests/CoreLocationMixedConsumer.m
+        full/corelocation/tests/CoreLocationMixedConsumer.swift
+        full/corelocation/tests/corelocation-boundary-expected.exports
+        full/corelocation/tests/corelocation-corpus-2026-09-01.tsv
+        full/corelocation/tests/corelocation-interface-apple-xcode-26.1.txt
+        full/corelocation/tests/test_corelocation_host.sh
+    )
+    for relative in "${corelocation_inputs[@]}"; do
+        [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+            || die "CoreLocation frontier input is missing or linked: $relative"
+        git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+            || die "CoreLocation frontier input is not tracked: $relative"
+        printf 'frontier-input\t38\tCoreLocation\t%s\t%s\n' \
+            "$relative" "$(hash_file "$W/$relative")" >> "$output"
+    done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 36 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 38 ] \
     || die 'frontier framework source count drifted'
-[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 121 ] \
+[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 132 ] \
     || die 'frontier underlying input count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
@@ -2167,6 +2203,19 @@ printf 'local\tdarwin%s\t%s\tbuilt from full/systemconfiguration/SystemConfigura
     "$SYSTEMCONFIGURATION_INSTALL_NAME" \
     "$(hash_file "$SYSTEMCONFIGURATION_RUNTIME_BINARY")" \
     >> "$RUNTIME/.manifest"
+
+CORELOCATION_INSTALL_NAME=/System/Library/Frameworks/CoreLocation.framework/CoreLocation
+CORELOCATION_FRAMEWORK=$STAGE/frameworks/CoreLocation.framework
+CORELOCATION_FRAMEWORK_BINARY=$CORELOCATION_FRAMEWORK/CoreLocation
+CORELOCATION_MODULE_DIR=$CORELOCATION_FRAMEWORK/Modules/CoreLocation.swiftmodule
+CORELOCATION_RUNTIME_FRAMEWORK=$RUNTIME/darwin/System/Library/Frameworks/CoreLocation.framework
+CORELOCATION_RUNTIME_BINARY=$CORELOCATION_RUNTIME_FRAMEWORK/CoreLocation
+mkdir -p "$CORELOCATION_FRAMEWORK/Headers" "$CORELOCATION_MODULE_DIR" \
+    "$CORELOCATION_RUNTIME_FRAMEWORK"
+cp "$W/full/corelocation/include/CoreLocation.h" \
+    "$CORELOCATION_FRAMEWORK/Headers/CoreLocation.h"
+cp "$W/full/corelocation/include/module.modulemap" \
+    "$CORELOCATION_FRAMEWORK/Modules/module.modulemap"
 
 echo '== build and audit the fixed-ABI Linux URL transport boundary'
 URL_TRANSPORT_DARWIN=$RUNTIME/darwin/usr/lib/libOpenURLTransport.dylib
@@ -3346,6 +3395,23 @@ printf 'Foundation facade direct undefineds: StringProcessing=%s Synchronization
     "$foundation_regex_parser_undefineds" \
     "$foundation_darwin_undefineds"
 
+echo '== compile the canonical mixed Swift/Objective-C CoreLocation framework'
+clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -x objective-c \
+    -fobjc-arc -O2 -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$W/full/corelocation/include" \
+    -c "$W/full/corelocation/CoreLocationObjC.m" \
+    -o "$WORK/corelocation-objc.o"
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name CoreLocation -module-link-name CoreLocation \
+    -enable-library-evolution -no-verify-emitted-module-interface \
+    -emit-module \
+    -emit-module-path \
+        "$CORELOCATION_MODULE_DIR/arm64-apple-macos.swiftmodule" \
+    -emit-module-interface-path \
+        "$CORELOCATION_MODULE_DIR/arm64-apple-macos.swiftinterface" \
+    -emit-object -o "$WORK/corelocation.o" \
+    "$W/full/corelocation/CoreLocation.swift"
+
 echo '== compile the versioned AppKit framework module against portable Foundation'
 APPKIT_SOURCE_PATHS=()
 for relative in "${APPKIT_SOURCES[@]}"; do
@@ -4335,6 +4401,94 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         >> "$FIRST_PARTY_LOAD_AUDIT"
 done
 
+echo '== link and audit the canonical CoreLocation framework identity'
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name "$CORELOCATION_INSTALL_NAME" \
+    -o "$CORELOCATION_FRAMEWORK_BINARY" \
+    "$WORK/corelocation.o" "$WORK/corelocation-objc.o" \
+    "${COMMON_LINK[@]}" -lFoundation -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
+cp "$CORELOCATION_FRAMEWORK_BINARY" "$CORELOCATION_RUNTIME_BINARY"
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$CORELOCATION_FRAMEWORK_BINARY" | LC_ALL=C sort -u \
+    > "$WORK/corelocation-all-exports.txt"
+grep -E '^_(CLLocationCoordinate2D|CLLocationDistanceMax|kCL|OBJC_(CLASS|METACLASS)_\$_CL)' \
+    "$WORK/corelocation-all-exports.txt" \
+    > "$WORK/corelocation-boundary-exports.txt"
+cmp "$CORELOCATION_EXPORTS" "$WORK/corelocation-boundary-exports.txt" \
+    || die 'CoreLocation C/Objective-C boundary exports drifted'
+corelocation_total_exports=$(wc -l \
+    < "$WORK/corelocation-all-exports.txt" | tr -d '[:space:]')
+[ "$corelocation_total_exports" -eq 676 ] \
+    || die "CoreLocation total export count $corelocation_total_exports, expected 676"
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$CORELOCATION_FRAMEWORK_BINARY" | LC_ALL=C sort -u \
+    > "$WORK/corelocation-imports.txt"
+[ "$(grep -c '^___CFConstantStringClassReference$' \
+        "$WORK/corelocation-imports.txt" || true)" -eq 0 ] \
+    || die 'CoreLocation embeds an unsupported CF constant string'
+llvm-otool-18 -L "$CORELOCATION_FRAMEWORK_BINARY" \
+    | awk 'NR > 2 { print $1 }' | LC_ALL=C sort -u \
+    > "$WORK/corelocation-loads.txt"
+corelocation_self_id_count=$(llvm-otool-18 -L \
+    "$CORELOCATION_FRAMEWORK_BINARY" \
+    | awk -v expected="$CORELOCATION_INSTALL_NAME" \
+        '$1 == expected { count++ } END { print count + 0 }')
+[ "$corelocation_self_id_count" -eq 1 ] \
+    || die "CoreLocation framework identity count $corelocation_self_id_count, expected 1"
+for corelocation_dependency in \
+    @rpath/libFoundation.dylib \
+    @rpath/libFoundationEssentials.dylib \
+    "$SWIFTUI_RUNTIME_INSTALL_NAME"; do
+    corelocation_dependency_count=$(llvm-otool-18 -L \
+        "$CORELOCATION_FRAMEWORK_BINARY" \
+        | awk -v expected="$corelocation_dependency" \
+            '$1 == expected { count++ } END { print count + 0 }')
+    [ "$corelocation_dependency_count" -eq 1 ] \
+        || die "CoreLocation dependency $corelocation_dependency count $corelocation_dependency_count, expected 1"
+done
+if llvm-otool-18 -L "$CORELOCATION_FRAMEWORK_BINARY" \
+    | grep -Fq '@rpath/libCoreLocation.dylib'; then
+    die 'CoreLocation framework acquired a competing flat dylib identity'
+fi
+for corelocation_binary in "$CORELOCATION_FRAMEWORK_BINARY" \
+    "$CORELOCATION_RUNTIME_BINARY"; do
+    llvm-otool-18 -hv "$corelocation_binary" \
+        | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
+        || die "CoreLocation is not an ARM64 Mach-O dylib: $corelocation_binary"
+    [ "$(llvm-otool-18 -D "$corelocation_binary" | tail -n 1)" = \
+        "$CORELOCATION_INSTALL_NAME" ] \
+        || die "CoreLocation install name drifted: $corelocation_binary"
+done
+cmp "$CORELOCATION_FRAMEWORK_BINARY" "$CORELOCATION_RUNTIME_BINARY" \
+    || die 'CoreLocation compile/runtime framework copies differ'
+{
+    printf 'format\tcorelocation-framework-v1\n'
+    printf 'compile-framework\tframeworks/CoreLocation.framework/CoreLocation\tsha256=%s\n' \
+        "$(hash_file "$CORELOCATION_FRAMEWORK_BINARY")"
+    printf 'runtime-framework\tguest-root/darwin%s\tsha256=%s\n' \
+        "$CORELOCATION_INSTALL_NAME" \
+        "$(hash_file "$CORELOCATION_RUNTIME_BINARY")"
+    printf 'install-name\t%s\n' "$CORELOCATION_INSTALL_NAME"
+    printf 'architecture\tarm64\n'
+    printf 'boundary-exports\tcount=37\tsha256=%s\n' \
+        "$(hash_file "$WORK/corelocation-boundary-exports.txt")"
+    printf 'total-exports\tcount=%s\tsha256=%s\n' \
+        "$corelocation_total_exports" \
+        "$(hash_file "$WORK/corelocation-all-exports.txt")"
+    printf 'undefined-imports\tcount=%s\tsha256=%s\n' \
+        "$(wc -l < "$WORK/corelocation-imports.txt" | tr -d '[:space:]')" \
+        "$(hash_file "$WORK/corelocation-imports.txt")"
+    printf 'external-loads\tcount=%s\tsha256=%s\n' \
+        "$(wc -l < "$WORK/corelocation-loads.txt" | tr -d '[:space:]')" \
+        "$(hash_file "$WORK/corelocation-loads.txt")"
+    printf 'semantics\tgeometry=wgs84\tauthorization=fail-closed,host-driven\tdelivery=deterministic\tgeocoder=fail-closed,host-driven\n'
+} > "$STAGE/attestation/corelocation-framework.tsv"
+printf 'local\tdarwin%s\t%s\tbuilt from full/corelocation/CoreLocation.swift and CoreLocationObjC.m\n' \
+    "$CORELOCATION_INSTALL_NAME" \
+    "$(hash_file "$CORELOCATION_RUNTIME_BINARY")" \
+    >> "$RUNTIME/.manifest"
+
 [ "$(llvm-nm-18 --defined-only --extern-only --just-symbol-name \
     "$STAGE/lib/libAccelerate.dylib" \
     | awk '$0 == "_vImageBoxConvolve_ARGB8888" { count++ } END { print count + 0 }')" \
@@ -5193,11 +5347,57 @@ clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -x objective-c \
     -lFoundationEssentials "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
 
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name CoreLocationGuestRuntime -emit-object \
+    -o "$WORK/corelocation-guest-runtime.o" "$CORELOCATION_RUNTIME_TEST"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/CoreLocationGuestRuntime" \
+    "$WORK/corelocation-guest-runtime.o" "${COMMON_LINK[@]}" \
+    "$CORELOCATION_FRAMEWORK_BINARY" \
+    -lDispatch -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials "$SWIFTUI_RUNTIME_LINK_FLAG" \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name CoreLocationInterfaceOracle -emit-object \
+    -o "$WORK/corelocation-interface-oracle.o" "$CORELOCATION_ORACLE"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/CoreLocationInterfaceOracle" \
+    "$WORK/corelocation-interface-oracle.o" "${COMMON_LINK[@]}" \
+    "$CORELOCATION_FRAMEWORK_BINARY" \
+    -lDispatch -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials "$SWIFTUI_RUNTIME_LINK_FLAG" \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+
+clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -x objective-c \
+    -fobjc-arc -O2 -Wall -Wextra -Werror -F "$STAGE/frameworks" \
+    -c "$CORELOCATION_MIXED_OBJC" \
+    -o "$WORK/corelocation-mixed-consumer-objc.o"
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name CoreLocationMixedConsumer -emit-object \
+    -o "$WORK/corelocation-mixed-consumer-swift.o" \
+    "$CORELOCATION_MIXED_SWIFT"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header \
+    -exported_symbol _OpenCoreLocationMixedDistance \
+    -rpath @loader_path/../lib \
+    -o "$STAGE/probe/CoreLocationMixedConsumer" \
+    "$WORK/corelocation-mixed-consumer-swift.o" \
+    "$WORK/corelocation-mixed-consumer-objc.o" "${COMMON_LINK[@]}" \
+    "$CORELOCATION_FRAMEWORK_BINARY" \
+    -lDispatch -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials "$SWIFTUI_RUNTIME_LINK_FLAG" \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+
 for frontier_probe in AccelerateGuestRuntime CompressionGuestRuntime \
     CoreTextGuestRuntime CoreTextFontManagerOracle AdServicesGuestRuntime \
     AdServicesInterfaceOracle ZlibGuestRuntime ZlibGzipOracle \
     IOKitGuestRuntime IOKitInterfaceOracle \
-    SystemConfigurationGuestRuntime SystemConfigurationInterfaceOracle; do
+    SystemConfigurationGuestRuntime SystemConfigurationInterfaceOracle \
+    CoreLocationGuestRuntime CoreLocationInterfaceOracle \
+    CoreLocationMixedConsumer; do
     llvm-otool-18 -hv "$STAGE/probe/$frontier_probe" \
         | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
         || die "$frontier_probe is not an ARM64 Mach-O executable"
@@ -5218,6 +5418,8 @@ cp "$IOKIT_PORTABLE_GOLDEN" \
     "$STAGE/attestation/iokit-interface-portable.txt"
 cp "$SYSTEMCONFIGURATION_GOLDEN" \
     "$STAGE/attestation/systemconfiguration-interface-apple.txt"
+cp "$CORELOCATION_GOLDEN" \
+    "$STAGE/attestation/corelocation-interface-apple.txt"
 
 for iokit_probe in IOKitGuestRuntime IOKitInterfaceOracle; do
     iokit_load_count=$(llvm-otool-18 -L "$STAGE/probe/$iokit_probe" \
@@ -5571,6 +5773,49 @@ cmp "$STAGE/attestation/systemconfiguration-interface-runtime.log" \
     "$STAGE/attestation/systemconfiguration-interface-apple.txt" \
     || die 'SystemConfiguration guest interface differs from Apple'
 
+for corelocation_probe in CoreLocationGuestRuntime \
+    CoreLocationInterfaceOracle CoreLocationMixedConsumer; do
+    corelocation_load_count=$(llvm-otool-18 -L \
+        "$STAGE/probe/$corelocation_probe" \
+        | awk -v expected="$CORELOCATION_INSTALL_NAME" \
+            '$1 == expected { count++ } END { print count + 0 }')
+    [ "$corelocation_load_count" -eq 1 ] \
+        || die "$corelocation_probe CoreLocation load count $corelocation_load_count, expected 1"
+    if llvm-otool-18 -L "$STAGE/probe/$corelocation_probe" \
+        | grep -Fq '@rpath/libCoreLocation.dylib'; then
+        die "$corelocation_probe acquired a competing flat CoreLocation load"
+    fi
+done
+
+for corelocation_probe in CoreLocationGuestRuntime \
+    CoreLocationInterfaceOracle CoreLocationMixedConsumer; do
+    (
+        cd "$STAGE"
+        LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+        LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+            MACHORUN_ROOT="$RUNTIME" \
+            "$RUNTIME/machorun" "./probe/$corelocation_probe"
+    ) | tee "$STAGE/attestation/$corelocation_probe.log"
+done
+grep -Fxq \
+    'CORELOCATION_GUEST_OK geometry=coordinate,distance,region authorization=fail-closed,host-driven delivery=location,heading,region,deterministic geocoder=fail-closed,host-driven' \
+    "$STAGE/attestation/CoreLocationGuestRuntime.log" \
+    || die 'CoreLocation Mach-O runtime marker is missing'
+cmp "$STAGE/attestation/CoreLocationInterfaceOracle.log" \
+    "$STAGE/attestation/corelocation-interface-apple.txt" \
+    || die 'CoreLocation guest interface differs from Apple'
+grep -Fxq \
+    'CORELOCATION_MIXED_ABI_OK c=coordinate,constants,objc swift=module,class identity=one-dylib' \
+    "$STAGE/attestation/CoreLocationMixedConsumer.log" \
+    || die 'CoreLocation mixed C/Swift runtime marker is missing'
+{
+    printf 'apple-differential\trows=6\tsha256=%s\n' \
+        "$(hash_file "$STAGE/attestation/CoreLocationInterfaceOracle.log")"
+    printf 'cold-runtime\tswift=%s\tmixed=%s\n' \
+        "$(hash_file "$STAGE/attestation/CoreLocationGuestRuntime.log")" \
+        "$(hash_file "$STAGE/attestation/CoreLocationMixedConsumer.log")"
+} >> "$STAGE/attestation/corelocation-framework.tsv"
+
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${OBSERVATION_PLUGIN_FLAGS[@]}" "${FOUNDATION_PLUGIN_FLAGS[@]}" \
@@ -5622,6 +5867,7 @@ fi
     -lAccelerate -lCompression -lCoreText -lAdServices -lz \
     -lAuthenticationServices -l_AuthenticationServices_SwiftUI \
     "$SYSTEMCONFIGURATION_FRAMEWORK_BINARY" \
+    "$CORELOCATION_FRAMEWORK_BINARY" \
     "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "$OBSERVATION_DYLIB"
 
@@ -5688,6 +5934,12 @@ probe_systemconfiguration_load_count=$(llvm-otool-18 -L \
         '$1 == expected { count++ } END { print count + 0 }')
 [ "$probe_systemconfiguration_load_count" -eq 1 ] \
     || die "core probe SystemConfiguration load count $probe_systemconfiguration_load_count, expected 1"
+probe_corelocation_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/CoreGuestPackageProbe" \
+    | awk -v expected="$CORELOCATION_INSTALL_NAME" \
+        '$1 == expected { count++ } END { print count + 0 }')
+[ "$probe_corelocation_load_count" -eq 1 ] \
+    || die "core probe CoreLocation load count $probe_corelocation_load_count, expected 1"
 
 perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 --executable "$STAGE/probe/CoreGuestPackageProbe" \
@@ -5703,7 +5955,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model localization=literal,interpolation,placeholders,codable observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath imageio=static,incremental,animated-gif symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-38 zlib=gzip-host-v1 foundationmodels=generated-content,fail-closed naturallanguage=classifier,apple-29 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile backgroundtasks=scheduler,host-driven corespotlight=index,query,app-entities quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed widgetkit=timelines,process-local,host-driven coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven naturallanguage=deterministic,confidence-gated authenticationservices=host-driven,fail-closed systemconfiguration=reachability,host-driven,loopback webkit=state,kvo,engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model localization=literal,interpolation,placeholders,codable observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore,tgmath imageio=static,incremental,animated-gif symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-38 zlib=gzip-host-v1 foundationmodels=generated-content,fail-closed naturallanguage=classifier,apple-29 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile backgroundtasks=scheduler,host-driven corespotlight=index,query,app-entities quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed widgetkit=timelines,process-local,host-driven coretransferable=data,file,fail-closed photos=authorization,volatile,host-driven photosui=transfer,binding,host-driven naturallanguage=deterministic,confidence-gated authenticationservices=host-driven,fail-closed systemconfiguration=reachability,host-driven,loopback corelocation=geometry,host-driven,fail-closed webkit=state,kvo,engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -5923,7 +6175,7 @@ COMPILE_ARGUMENTS=(
 LINK_ARGUMENTS=(
     -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS" -syslibroot sdk
     -F frameworks -framework AppKit -framework IOKit \
-    -framework SystemConfiguration
+    -framework SystemConfiguration -framework CoreLocation
     -Llib -Lguest-root/darwin/usr/lib -Lsdk/usr/lib/swift
     -lswiftCore -lswiftObjectiveC -lswiftIOKit "${SWIFTUI_RUNTIME_LINK_FLAG}"
     guest-root/darwin/usr/lib/swift/libswiftObservation.dylib
@@ -6159,7 +6411,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'foundation-byte-count\toracle=%s\tapple-golden=%s\trows=86\n' \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_ORACLE")" \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_GOLDEN")"
-    printf 'frontier-frameworks\tframeworks=32\tsources=36\tinputs=121\n'
+    printf 'frontier-frameworks\tframeworks=33\tsources=38\tinputs=132\n'
     printf 'quicklook-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'photosui-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
@@ -6221,6 +6473,18 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$(hash_file "$SYSTEMCONFIGURATION_GOLDEN")" \
         "$(hash_file "$SYSTEMCONFIGURATION_EXPORTS")" \
         "$(hash_file "$W/full/systemconfiguration/tests/systemconfiguration-corpus-2026-09-01.tsv")"
+    printf 'corelocation\theader=%s\tmodule-map=%s\tswift=%s\tobjc=%s\truntime-test=%s\toracle=%s\tmixed-objc=%s\tmixed-swift=%s\tapple-golden=%s\texports=%s\tcorpus=%s\tpolicy=host-driven,fail-closed\n' \
+        "$(hash_file "$W/full/corelocation/include/CoreLocation.h")" \
+        "$(hash_file "$W/full/corelocation/include/module.modulemap")" \
+        "$(hash_file "$W/full/corelocation/CoreLocation.swift")" \
+        "$(hash_file "$W/full/corelocation/CoreLocationObjC.m")" \
+        "$(hash_file "$CORELOCATION_RUNTIME_TEST")" \
+        "$(hash_file "$CORELOCATION_ORACLE")" \
+        "$(hash_file "$CORELOCATION_MIXED_OBJC")" \
+        "$(hash_file "$CORELOCATION_MIXED_SWIFT")" \
+        "$(hash_file "$CORELOCATION_GOLDEN")" \
+        "$(hash_file "$CORELOCATION_EXPORTS")" \
+        "$(hash_file "$W/full/corelocation/tests/corelocation-corpus-2026-09-01.tsv")"
     printf 'toolchain\tswiftc\t%s\n' "$(swiftc --version | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
     printf 'toolchain\tclang\t%s\n' "$(clang-18 --version | head -1)"
     [ "$PREVIEW_ENABLED" -eq 0 ] || printf 'preview\tmodule=%s\tobject=%s\tplugin=%s\n' \
@@ -6345,6 +6609,24 @@ record_artifact include SystemConfiguration framework-module-map \
     frameworks/SystemConfiguration.framework/Modules/module.modulemap
 record_artifact framework SystemConfiguration objc-dylib \
     frameworks/SystemConfiguration.framework/SystemConfiguration
+record_artifact include CoreLocation framework-header \
+    frameworks/CoreLocation.framework/Headers/CoreLocation.h
+record_artifact include CoreLocation framework-module-map \
+    frameworks/CoreLocation.framework/Modules/module.modulemap
+record_artifact framework CoreLocation abi-json \
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.abi.json
+record_artifact framework CoreLocation private-swiftinterface \
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.private.swiftinterface
+record_artifact framework CoreLocation swiftdoc \
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftdoc
+record_artifact framework CoreLocation swiftinterface \
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftinterface
+record_artifact framework CoreLocation swiftmodule \
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftmodule
+record_artifact framework CoreLocation swiftsourceinfo \
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftsourceinfo
+record_artifact framework CoreLocation mixed-dylib \
+    frameworks/CoreLocation.framework/CoreLocation
 record_artifact include COpenFoundationCore opaque-header \
     include/COpenFoundationCore/OpenFoundationCFError.h
 record_artifact include COpenFoundationCore module-map \
@@ -6390,6 +6672,8 @@ record_artifact runtime SwiftIOKit overlay-dylib \
     guest-root/darwin/usr/lib/swift/libswiftIOKit.dylib
 record_artifact runtime SystemConfiguration framework-dylib \
     guest-root/darwin/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration
+record_artifact runtime CoreLocation framework-dylib \
+    guest-root/darwin/System/Library/Frameworks/CoreLocation.framework/CoreLocation
 record_artifact runtime OpenFoundationInternationalization darwin-bridge \
     guest-root/darwin/usr/lib/libOpenFoundationInternationalization.dylib
 record_artifact runtime OpenFoundationInternationalization linux-helper \
@@ -6457,6 +6741,12 @@ record_artifact probe SystemConfigurationGuestRuntime executable \
     probe/SystemConfigurationGuestRuntime
 record_artifact probe SystemConfigurationInterfaceOracle executable \
     probe/SystemConfigurationInterfaceOracle
+record_artifact probe CoreLocationGuestRuntime executable \
+    probe/CoreLocationGuestRuntime
+record_artifact probe CoreLocationInterfaceOracle executable \
+    probe/CoreLocationInterfaceOracle
+record_artifact probe CoreLocationMixedConsumer executable \
+    probe/CoreLocationMixedConsumer
 record_artifact probe NaturalLanguageGuestRuntime executable \
     probe/NaturalLanguageGuestRuntime
 record_artifact probe AuthenticationServicesGuestRuntime executable \
@@ -6577,6 +6867,16 @@ record_artifact attestation SystemConfiguration runtime-log \
     attestation/systemconfiguration-runtime.log
 record_artifact attestation SystemConfiguration apple-differential-log \
     attestation/systemconfiguration-interface-runtime.log
+record_artifact attestation CoreLocation framework-contract \
+    attestation/corelocation-framework.tsv
+record_artifact attestation CoreLocation apple-golden \
+    attestation/corelocation-interface-apple.txt
+record_artifact attestation CoreLocation runtime-log \
+    attestation/CoreLocationGuestRuntime.log
+record_artifact attestation CoreLocation apple-differential-log \
+    attestation/CoreLocationInterfaceOracle.log
+record_artifact attestation CoreLocation mixed-runtime-log \
+    attestation/CoreLocationMixedConsumer.log
 record_artifact attestation NaturalLanguage runtime-log \
     attestation/naturallanguage-runtime.log
 record_artifact attestation AuthenticationServices runtime-log \

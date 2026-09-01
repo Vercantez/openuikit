@@ -357,8 +357,9 @@ def validate_swiftui_runtime_link(source: str) -> None:
     # Observation, SwiftUI, AppKit, cross-import overlays, WebKit, first-party
     # gates, the reusable link loop, executable probes, all C/frontier
     # executables, AuthenticationServices' overlay/runtime gate, and the
-    # SystemConfiguration Apple-interface oracle share this pinned runtime.
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 32:
+    # SystemConfiguration and CoreLocation framework/oracle/mixed gates share
+    # this pinned runtime.
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 36:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
     swiftui_link_end = source.index(
@@ -757,6 +758,8 @@ class PackageFixture:
             "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule",
             "frameworks/SystemConfiguration.framework/Headers",
             "frameworks/SystemConfiguration.framework/Modules",
+            "frameworks/CoreLocation.framework/Headers",
+            "frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule",
             "include",
             "include/CoreImage",
             "include/COpenFoundationCore",
@@ -771,6 +774,7 @@ class PackageFixture:
             "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A",
             "guest-root/darwin/System/Library/Frameworks/AppKit.framework/Versions/C",
             "guest-root/darwin/System/Library/Frameworks/SystemConfiguration.framework",
+            "guest-root/darwin/System/Library/Frameworks/CoreLocation.framework",
             "guest-root/host",
             "host-tools/swift/host/plugins",
             "host-tools/swift/linux",
@@ -942,6 +946,38 @@ class PackageFixture:
             "SystemConfiguration.framework/SystemConfiguration",
             "SystemConfiguration Mach-O",
         )
+        write_file(
+            root / "frameworks/CoreLocation.framework/Headers/CoreLocation.h",
+            "portable CoreLocation ABI\n",
+        )
+        write_file(
+            root / "frameworks/CoreLocation.framework/Modules/module.modulemap",
+            "framework module CoreLocation {}\n",
+        )
+        for suffix in (
+            "abi.json",
+            "private.swiftinterface",
+            "swiftdoc",
+            "swiftinterface",
+            "swiftmodule",
+            "swiftsourceinfo",
+        ):
+            write_file(
+                root
+                / "frameworks/CoreLocation.framework/Modules/"
+                f"CoreLocation.swiftmodule/arm64-apple-macos.{suffix}",
+                f"CoreLocation:{suffix}\n",
+            )
+        write_file(
+            root / "frameworks/CoreLocation.framework/CoreLocation",
+            "CoreLocation mixed Mach-O",
+        )
+        write_file(
+            root
+            / "guest-root/darwin/System/Library/Frameworks/"
+            "CoreLocation.framework/CoreLocation",
+            "CoreLocation mixed Mach-O",
+        )
         write_file(root / "guest-root/machorun", "loader")
         write_file(root / "guest-root/.manifest", "fixture-root\n")
         write_file(
@@ -1061,6 +1097,8 @@ class PackageFixture:
             "IOKit",
             "-framework",
             "SystemConfiguration",
+            "-framework",
+            "CoreLocation",
             "-lswiftIOKit",
             "-Llib",
             "-lUIKit",
@@ -1456,6 +1494,47 @@ class PackageFixture:
         )
         records.append(
             self._artifact(
+                "include",
+                "CoreLocation",
+                "framework-header",
+                "frameworks/CoreLocation.framework/Headers/CoreLocation.h",
+            )
+        )
+        records.append(
+            self._artifact(
+                "include",
+                "CoreLocation",
+                "framework-module-map",
+                "frameworks/CoreLocation.framework/Modules/module.modulemap",
+            )
+        )
+        for role, suffix in (
+            ("abi-json", "abi.json"),
+            ("private-swiftinterface", "private.swiftinterface"),
+            ("swiftdoc", "swiftdoc"),
+            ("swiftinterface", "swiftinterface"),
+            ("swiftmodule", "swiftmodule"),
+            ("swiftsourceinfo", "swiftsourceinfo"),
+        ):
+            records.append(
+                self._artifact(
+                    "framework",
+                    "CoreLocation",
+                    role,
+                    "frameworks/CoreLocation.framework/Modules/"
+                    f"CoreLocation.swiftmodule/arm64-apple-macos.{suffix}",
+                )
+            )
+        records.append(
+            self._artifact(
+                "framework",
+                "CoreLocation",
+                "mixed-dylib",
+                "frameworks/CoreLocation.framework/CoreLocation",
+            )
+        )
+        records.append(
+            self._artifact(
                 "runtime", "CQuartz", "dylib", "guest-root/darwin/usr/lib/libquartz.dylib"
             )
         )
@@ -1533,6 +1612,15 @@ class PackageFixture:
                 "framework-dylib",
                 "guest-root/darwin/System/Library/Frameworks/"
                 "SystemConfiguration.framework/SystemConfiguration",
+            )
+        )
+        records.append(
+            self._artifact(
+                "runtime",
+                "CoreLocation",
+                "framework-dylib",
+                "guest-root/darwin/System/Library/Frameworks/"
+                "CoreLocation.framework/CoreLocation",
             )
         )
         records.append(self._artifact("runtime", "machorun", "executable", "guest-root/machorun"))
@@ -2289,6 +2377,99 @@ class PackageContractTests(unittest.TestCase):
             refusal = fixture.write_manifest(expected=2)
             self.assertIn("SystemConfiguration framework pair", refusal.stderr)
 
+    def test_corelocation_identity_boundary_and_link_mutations_are_refused(
+        self,
+    ) -> None:
+        paths = (
+            "frameworks/CoreLocation.framework/Headers/CoreLocation.h",
+            "frameworks/CoreLocation.framework/Modules/module.modulemap",
+            "frameworks/CoreLocation.framework/Modules/"
+            "CoreLocation.swiftmodule/arm64-apple-macos.swiftmodule",
+            "frameworks/CoreLocation.framework/CoreLocation",
+            "guest-root/darwin/System/Library/Frameworks/"
+            "CoreLocation.framework/CoreLocation",
+        )
+        for relative in paths:
+            with (
+                self.subTest(relative=relative),
+                tempfile.TemporaryDirectory() as temporary,
+            ):
+                fixture = PackageFixture(Path(temporary) / "package", preview=False)
+                ledger = fixture.root / "attestation/artifacts.tsv"
+                ledger.write_text(
+                    "\n".join(
+                        line
+                        for line in ledger.read_text(encoding="utf-8").splitlines()
+                        if relative not in line
+                    )
+                    + "\n",
+                    encoding="utf-8",
+                )
+                refusal = fixture.write_manifest(expected=2)
+                self.assertIn(
+                    "CoreLocation framework boundary artifacts",
+                    refusal.stderr,
+                )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = PackageFixture(Path(temporary) / "package", preview=False)
+            runtime = (
+                fixture.root
+                / "guest-root/darwin/System/Library/Frameworks/"
+                "CoreLocation.framework/CoreLocation"
+            )
+            write_file(runtime, "different CoreLocation runtime")
+            fixture._write_ledger()
+            refusal = fixture.write_manifest(expected=2)
+            self.assertIn(
+                "CoreLocation compile/runtime framework identities differ",
+                refusal.stderr,
+            )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = PackageFixture(Path(temporary) / "package", preview=False)
+            write_file(
+                fixture.root / "lib/libCoreLocation.dylib",
+                "competing flat CoreLocation",
+            )
+            fixture._write_ledger()
+            ledger = fixture.root / "attestation/artifacts.tsv"
+            with ledger.open("a", encoding="utf-8", newline="\n") as handle:
+                handle.write(
+                    fixture._artifact(
+                        "framework",
+                        "CoreLocation",
+                        "dylib",
+                        "lib/libCoreLocation.dylib",
+                    )
+                    + "\n"
+                )
+            refusal = fixture.write_manifest(expected=2)
+            self.assertIn("not libCoreLocation", refusal.stderr)
+
+        for replacement in ("missing", "flat"):
+            with (
+                self.subTest(link=replacement),
+                tempfile.TemporaryDirectory() as temporary,
+            ):
+                fixture = PackageFixture(Path(temporary) / "package", preview=False)
+                pair = ["-framework", "CoreLocation"]
+                index = next(
+                    index
+                    for index in range(len(fixture.link_arguments) - 1)
+                    if fixture.link_arguments[index : index + 2] == pair
+                )
+                del fixture.link_arguments[index : index + 2]
+                if replacement == "flat":
+                    fixture.link_arguments.append("-lCoreLocation")
+                (fixture.root / "link-inputs.rsp").write_bytes(
+                    b"".join(
+                        token.encode() + b"\0" for token in fixture.link_arguments
+                    )
+                )
+                refusal = fixture.write_manifest(expected=2)
+                self.assertIn("CoreLocation framework pair", refusal.stderr)
+
     def test_unattested_host_tool_is_refused(self) -> None:
         fixture = self.fixture(False)
         write_file(fixture.root / "host-tools/swift/host/libStale.so", "stale")
@@ -2775,7 +2956,7 @@ class ShellContractTests(unittest.TestCase):
             builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 7
         )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 36
+            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 37
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -4124,15 +4305,15 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("portable install ID count", source)
         self.assertIn("apple-self-load=0", source)
         self.assertIn(
-            "frontier-frameworks\\tframeworks=32\\tsources=36\\tinputs=121",
+            "frontier-frameworks\\tframeworks=33\\tsources=38\\tinputs=132",
             source,
         )
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 36",
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 38",
             source,
         )
         self.assertIn(
-            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 121",
+            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 132",
             source,
         )
         self.assertIn(

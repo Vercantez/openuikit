@@ -34,6 +34,8 @@ class CoreGuestPackageTests(unittest.TestCase):
             "frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule",
             "frameworks/SystemConfiguration.framework/Headers",
             "frameworks/SystemConfiguration.framework/Modules",
+            "frameworks/CoreLocation.framework/Headers",
+            "frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule",
             "include",
             "include/CPortableIO",
             "include/CoreImage",
@@ -52,6 +54,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A",
             "guest-root/darwin/System/Library/Frameworks/AppKit.framework/Versions/C",
             "guest-root/darwin/System/Library/Frameworks/SystemConfiguration.framework",
+            "guest-root/darwin/System/Library/Frameworks/CoreLocation.framework",
             "guest-root/host",
             "guest-root",
             "host-tools/swift/host/plugins",
@@ -98,6 +101,16 @@ class CoreGuestPackageTests(unittest.TestCase):
             "frameworks/SystemConfiguration.framework/Modules/module.modulemap",
             "frameworks/SystemConfiguration.framework/SystemConfiguration",
             "guest-root/darwin/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration",
+            "frameworks/CoreLocation.framework/Headers/CoreLocation.h",
+            "frameworks/CoreLocation.framework/Modules/module.modulemap",
+            "frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.abi.json",
+            "frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.private.swiftinterface",
+            "frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftdoc",
+            "frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftinterface",
+            "frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftmodule",
+            "frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftsourceinfo",
+            "frameworks/CoreLocation.framework/CoreLocation",
+            "guest-root/darwin/System/Library/Frameworks/CoreLocation.framework/CoreLocation",
             "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay",
             "modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay",
             "modules/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay",
@@ -246,6 +259,10 @@ class CoreGuestPackageTests(unittest.TestCase):
         (self.root / "guest-root/darwin/System/Library/Frameworks/"
          "AppKit.framework/Versions/C/AppKit").write_bytes(
             (self.root / "frameworks/AppKit.framework/Versions/C/AppKit").read_bytes()
+        )
+        (self.root / "guest-root/darwin/System/Library/Frameworks/"
+         "CoreLocation.framework/CoreLocation").write_bytes(
+            (self.root / "frameworks/CoreLocation.framework/CoreLocation").read_bytes()
         )
         os.symlink(
             "C", self.root / "frameworks/AppKit.framework/Versions/Current"
@@ -439,6 +456,58 @@ class CoreGuestPackageTests(unittest.TestCase):
                     "SystemConfiguration",
                     "framework-dylib",
                 )
+            elif relative == "frameworks/CoreLocation.framework/Headers/CoreLocation.h":
+                category, name, role = (
+                    "include",
+                    "CoreLocation",
+                    "framework-header",
+                )
+            elif relative == (
+                "frameworks/CoreLocation.framework/Modules/module.modulemap"
+            ):
+                category, name, role = (
+                    "include",
+                    "CoreLocation",
+                    "framework-module-map",
+                )
+            elif relative.startswith(
+                "frameworks/CoreLocation.framework/Modules/"
+                "CoreLocation.swiftmodule/"
+            ):
+                category, name = "framework", "CoreLocation"
+                role = {
+                    ".abi.json": "abi-json",
+                    ".private.swiftinterface": "private-swiftinterface",
+                    ".swiftdoc": "swiftdoc",
+                    ".swiftinterface": "swiftinterface",
+                    ".swiftmodule": "swiftmodule",
+                    ".swiftsourceinfo": "swiftsourceinfo",
+                }[
+                    next(
+                        suffix
+                        for suffix in (
+                            ".private.swiftinterface",
+                            ".swiftinterface",
+                            ".swiftsourceinfo",
+                            ".swiftmodule",
+                            ".swiftdoc",
+                            ".abi.json",
+                        )
+                        if relative.endswith(suffix)
+                    )
+                ]
+            elif relative == "frameworks/CoreLocation.framework/CoreLocation":
+                category, name, role = (
+                    "framework",
+                    "CoreLocation",
+                    "mixed-dylib",
+                )
+            elif relative.endswith("/CoreLocation.framework/CoreLocation"):
+                category, name, role = (
+                    "runtime",
+                    "CoreLocation",
+                    "framework-dylib",
+                )
             artifacts.append(
                 {
                     "category": category,
@@ -469,6 +538,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "IOKit",
                 "-framework",
                 "SystemConfiguration",
+                "-framework",
+                "CoreLocation",
                 "-lswiftIOKit",
                 "-Llib",
                 "-lFoundationEssentials",
@@ -914,6 +985,100 @@ class CoreGuestPackageTests(unittest.TestCase):
             "SystemConfiguration framework pair",
         ):
             core_guest_package.validate(self.root)
+        self.write_manifest(self.manifest)
+
+    def test_refuses_corelocation_boundary_identity_and_link_drift(self) -> None:
+        for relative in (
+            "frameworks/CoreLocation.framework/Headers/CoreLocation.h",
+            "frameworks/CoreLocation.framework/Modules/module.modulemap",
+            "frameworks/CoreLocation.framework/Modules/"
+            "CoreLocation.swiftmodule/arm64-apple-macos.swiftmodule",
+            "frameworks/CoreLocation.framework/CoreLocation",
+            "guest-root/darwin/System/Library/Frameworks/"
+            "CoreLocation.framework/CoreLocation",
+        ):
+            with self.subTest(relative=relative):
+                changed = copy.deepcopy(self.manifest)
+                changed["artifacts"] = [
+                    artifact
+                    for artifact in changed["artifacts"]
+                    if artifact["path"] != relative
+                ]
+                target = self.root / relative
+                payload = target.read_bytes()
+                target.unlink()
+                self.write_manifest(changed)
+                with self.assertRaisesRegex(
+                    core_guest_package.CorePackageError,
+                    "CoreLocation framework artifact|required artifact",
+                ):
+                    core_guest_package.validate(self.root)
+                target.write_bytes(payload)
+                self.write_manifest(self.manifest)
+
+        runtime_relative = (
+            "guest-root/darwin/System/Library/Frameworks/"
+            "CoreLocation.framework/CoreLocation"
+        )
+        runtime = self.root / runtime_relative
+        runtime.write_bytes(b"different CoreLocation runtime\n")
+        changed = copy.deepcopy(self.manifest)
+        runtime_record = next(
+            artifact
+            for artifact in changed["artifacts"]
+            if artifact["path"] == runtime_relative
+        )
+        runtime_record["sha256"] = sha256(runtime)
+        runtime_record["size"] = runtime.stat().st_size
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "CoreLocation compile/runtime framework identities differ",
+        ):
+            core_guest_package.validate(self.root)
+        runtime.write_bytes(
+            (self.root / "frameworks/CoreLocation.framework/CoreLocation").read_bytes()
+        )
+        self.write_manifest(self.manifest)
+
+        changed = copy.deepcopy(self.manifest)
+        values = changed["executable_link_arguments"]
+        pair = ["-framework", "CoreLocation"]
+        index = next(
+            index
+            for index in range(len(values) - 1)
+            if values[index : index + 2] == pair
+        )
+        del values[index : index + 2]
+        values.append("-lCoreLocation")
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "CoreLocation framework pair",
+        ):
+            core_guest_package.validate(self.root)
+        self.write_manifest(self.manifest)
+
+        flat = self.root / "lib/libCoreLocation.dylib"
+        flat.write_bytes(b"competing flat CoreLocation\n")
+        changed = copy.deepcopy(self.manifest)
+        changed["artifacts"].append(
+            {
+                "category": "framework",
+                "name": "CoreLocation",
+                "role": "dylib",
+                "path": "lib/libCoreLocation.dylib",
+                "sha256": sha256(flat),
+                "size": flat.stat().st_size,
+            }
+        )
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "not libCoreLocation",
+        ):
+            core_guest_package.validate(self.root)
+        flat.unlink()
         self.write_manifest(self.manifest)
 
     def test_refuses_artifact_mutation_and_path_symlink(self) -> None:

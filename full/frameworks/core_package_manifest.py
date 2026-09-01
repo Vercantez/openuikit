@@ -961,6 +961,80 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
                 path for _category, _role, path in missing_systemconfiguration
             )
         )
+    required_corelocation = {
+        (
+            "include",
+            "framework-header",
+            "frameworks/CoreLocation.framework/Headers/CoreLocation.h",
+        ),
+        (
+            "include",
+            "framework-module-map",
+            "frameworks/CoreLocation.framework/Modules/module.modulemap",
+        ),
+        *(
+            (
+                "framework",
+                role,
+                "frameworks/CoreLocation.framework/Modules/"
+                "CoreLocation.swiftmodule/arm64-apple-macos." + suffix,
+            )
+            for role, suffix in (
+                ("abi-json", "abi.json"),
+                ("private-swiftinterface", "private.swiftinterface"),
+                ("swiftdoc", "swiftdoc"),
+                ("swiftinterface", "swiftinterface"),
+                ("swiftmodule", "swiftmodule"),
+                ("swiftsourceinfo", "swiftsourceinfo"),
+            )
+        ),
+        (
+            "framework",
+            "mixed-dylib",
+            "frameworks/CoreLocation.framework/CoreLocation",
+        ),
+        (
+            "runtime",
+            "framework-dylib",
+            "guest-root/darwin/System/Library/Frameworks/"
+            "CoreLocation.framework/CoreLocation",
+        ),
+    }
+    actual_corelocation = {
+        (str(item["category"]), str(item["role"]), str(item["path"]))
+        for item in artifacts
+        if item["name"] == "CoreLocation"
+    }
+    missing_corelocation = sorted(required_corelocation - actual_corelocation)
+    if missing_corelocation:
+        refuse(
+            "CoreLocation framework boundary artifacts are absent: "
+            + ", ".join(
+                path for _category, _role, path in missing_corelocation
+            )
+        )
+    corelocation_compile = next(
+        item
+        for item in artifacts
+        if item["path"] == "frameworks/CoreLocation.framework/CoreLocation"
+    )
+    corelocation_runtime = next(
+        item
+        for item in artifacts
+        if item["path"]
+        == "guest-root/darwin/System/Library/Frameworks/"
+        "CoreLocation.framework/CoreLocation"
+    )
+    if (
+        corelocation_compile["sha256"] != corelocation_runtime["sha256"]
+        or corelocation_compile["size"] != corelocation_runtime["size"]
+    ):
+        refuse("CoreLocation compile/runtime framework identities differ")
+    if any(item["path"] == "lib/libCoreLocation.dylib" for item in artifacts):
+        refuse(
+            "CoreLocation must use its canonical framework identity, not "
+            "libCoreLocation"
+        )
     if not any(
         item["category"] == "runtime"
         and item["name"] == "CQuartz"
@@ -1185,6 +1259,35 @@ def require_systemconfiguration_framework_contract(
         refuse(
             "link inputs must contain the SystemConfiguration framework pair "
             "exactly once: -framework SystemConfiguration"
+        )
+
+
+def require_corelocation_framework_contract(
+    compile_tokens: list[str], link_tokens: list[str]
+) -> None:
+    compile_pair = ["-F", "frameworks"]
+    compile_count = sum(
+        compile_tokens[index : index + 2] == compile_pair
+        for index in range(len(compile_tokens) - 1)
+    )
+    if compile_count != 1:
+        refuse(
+            "compile flags must contain the CoreLocation framework search "
+            "pair exactly once: -F frameworks"
+        )
+    link_pair = ["-framework", "CoreLocation"]
+    link_count = sum(
+        link_tokens[index : index + 2] == link_pair
+        for index in range(len(link_tokens) - 1)
+    )
+    if link_count != 1:
+        refuse(
+            "link inputs must contain the CoreLocation framework pair "
+            "exactly once: -framework CoreLocation"
+        )
+    if "-lCoreLocation" in link_tokens:
+        refuse(
+            "link inputs must use -framework CoreLocation, not -lCoreLocation"
         )
 
 
@@ -1484,6 +1587,7 @@ def validate_document(
     require_iokit_framework_contract(compile_tokens, link_tokens)
     require_appkit_framework_contract(compile_tokens, link_tokens)
     require_systemconfiguration_framework_contract(compile_tokens, link_tokens)
+    require_corelocation_framework_contract(compile_tokens, link_tokens)
     require_cross_import_compile_contract(compile_tokens)
     for required in REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
         if link_tokens.count(required) != 1:
@@ -1638,6 +1742,7 @@ def write_command(args: argparse.Namespace) -> None:
     require_iokit_framework_contract(compile_tokens, link_tokens)
     require_appkit_framework_contract(compile_tokens, link_tokens)
     require_systemconfiguration_framework_contract(compile_tokens, link_tokens)
+    require_corelocation_framework_contract(compile_tokens, link_tokens)
     require_cross_import_compile_contract(compile_tokens)
     if link_tokens.count("-Llib") != 1:
         refuse("link inputs must contain -Llib exactly once")
