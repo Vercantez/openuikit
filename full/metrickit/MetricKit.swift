@@ -1,23 +1,24 @@
 @_exported import Foundation
 
-/// Linux-local value of `MXErrorDomain`. Apple's exact domain string is not in
-/// the pinned public inputs; see `oracle-questions.tsv`.
+/// Observed on the pinned Apple iOS 26.1 oracle: `MXErrorDomain` is the
+/// string `MXErrorDomain`.
 public let MXErrorDomain = "MXErrorDomain"
 
 /// Portable counterpart of MetricKit's bridged `NS_ERROR_ENUM`.
 ///
-/// Numeric codes follow the public sequential `MXErrorCode` enumeration from
-/// Xcode 26.1 `MXError.h` (`launchTaskUnknown = 0` through
-/// `launchTaskPastDeadline = 5`). Confirm on an Apple runtime before treating
-/// these integers as ABI-stable.
+/// Raw values match the pinned Apple iOS 26.1 oracle
+/// (`experiment/apple-framework-oracle-20260901` @ `39c0286`):
+/// `launchTaskUnknown=4`, `launchTaskInvalidID=0`, `launchTaskDuplicated=3`,
+/// `launchTaskInternalFailure=5`, `launchTaskMaxCount=1`,
+/// `launchTaskPastDeadline=2`.
 public struct MXError: Error, CustomNSError, Hashable, Equatable, @unchecked Sendable {
     public enum Code: Int, Hashable, Sendable {
-        case launchTaskUnknown = 0
-        case launchTaskInvalidID = 1
-        case launchTaskDuplicated = 2
-        case launchTaskInternalFailure = 3
-        case launchTaskMaxCount = 4
-        case launchTaskPastDeadline = 5
+        case launchTaskInvalidID = 0
+        case launchTaskMaxCount = 1
+        case launchTaskPastDeadline = 2
+        case launchTaskDuplicated = 3
+        case launchTaskUnknown = 4
+        case launchTaskInternalFailure = 5
     }
 
     public let code: Code
@@ -89,16 +90,24 @@ extension MXMetricManagerSubscriber {
 
 /// Shared MetricKit manager.
 ///
-/// Linux has no MetricKit daemon, so `pastPayloads` and
-/// `pastDiagnosticPayloads` are always empty, subscribers are recorded but
-/// never invoked, and launch-measurement APIs fail closed.
+/// Linux has no MetricKit daemon. `pastPayloads` and `pastDiagnosticPayloads`
+/// stay empty and subscribers are never invoked. `add(_:)` retains strongly
+/// and identity-deduplicates, matching the pinned simulator observation that
+/// `MXMetricManager` retained an added subscriber strongly.
+///
+/// Launch measurement stays fail-closed because Linux has no MetricKit
+/// service. On the pinned simulator, extend of an empty task ID returned
+/// success, while an immediate finish of that ID and of a never-started ID
+/// threw domain `MXErrorDomain` code 5. That finite observation is not a
+/// universal daemon contract; Linux does not fabricate extend success and
+/// throws `MXError.launchTaskInternalFailure` (raw value 5) for both APIs.
 open class MXMetricManager: NSObject, @unchecked Sendable {
     private static let _shared = MXMetricManager()
 
     open class var shared: MXMetricManager { _shared }
 
     private let lock = NSLock()
-    private var subscribers: [WeakMXSubscriber] = []
+    private var subscribers: [any MXMetricManagerSubscriber] = []
 
     private override init() {
         super.init()
@@ -111,44 +120,58 @@ open class MXMetricManager: NSObject, @unchecked Sendable {
     open func add(_ subscriber: any MXMetricManagerSubscriber) {
         let object = subscriber as AnyObject
         lock.lock()
-        subscribers.removeAll { $0.object == nil || $0.object === object }
-        subscribers.append(WeakMXSubscriber(object))
+        if !subscribers.contains(where: { ($0 as AnyObject) === object }) {
+            subscribers.append(subscriber)
+        }
         lock.unlock()
     }
 
     open func remove(_ subscriber: any MXMetricManagerSubscriber) {
         let object = subscriber as AnyObject
         lock.lock()
-        subscribers.removeAll { $0.object == nil || $0.object === object }
+        subscribers.removeAll { ($0 as AnyObject) === object }
         lock.unlock()
     }
 
-    /// Linux has no launch-measurement OS service. Always fails closed.
+    /// Linux has no launch-measurement OS service. Fails closed with the
+    /// oracle's observed finish identity (`MXErrorDomain` code 5) rather than
+    /// fabricating the pinned simulator empty-ID extend success.
     open class func extendLaunchMeasurement(forTaskID taskID: MXLaunchTaskID) throws {
         _ = taskID
         throw MXError(.launchTaskInternalFailure)
     }
 
-    /// Linux never successfully starts an extended launch measurement.
+    /// Linux has no launch-measurement OS service. Fails closed with
+    /// `MXError.launchTaskInternalFailure` (raw value 5), the identity an
+    /// immediate finish of an empty ID and of a never-started ID threw on the
+    /// pinned simulator. That finite observation is not a later-task-state
+    /// contract.
     open class func finishExtendedLaunchMeasurement(forTaskID taskID: MXLaunchTaskID) throws {
         _ = taskID
-        throw MXError(.launchTaskUnknown)
+        throw MXError(.launchTaskInternalFailure)
     }
 
     @_spi(OpenUIKitHost)
     public var _portableSubscriberCount: Int {
         lock.lock()
-        subscribers.removeAll { $0.object == nil }
         let count = subscribers.count
         lock.unlock()
         return count
     }
-}
 
-private final class WeakMXSubscriber {
-    weak var object: AnyObject?
+    @_spi(OpenUIKitHost)
+    public func _portableContains(_ subscriber: any MXMetricManagerSubscriber) -> Bool {
+        let object = subscriber as AnyObject
+        lock.lock()
+        let contained = subscribers.contains { ($0 as AnyObject) === object }
+        lock.unlock()
+        return contained
+    }
 
-    init(_ object: AnyObject) {
-        self.object = object
+    @_spi(OpenUIKitHost)
+    public func _portableRemoveAllSubscribers() {
+        lock.lock()
+        subscribers.removeAll()
+        lock.unlock()
     }
 }
