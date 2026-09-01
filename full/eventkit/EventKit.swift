@@ -24,6 +24,15 @@ enum EKCallbackDelivery {
     /// on the caller. Isolated tests assert the token/call returns before the
     /// block runs rather than a specific queue identity.
     static func asynchronously(_ body: @escaping () -> Void) {
-        DispatchQueue.global(qos: .utility).async(execute: body)
+        let work = UncheckedWork(body: body)
+        DispatchQueue.global(qos: .utility).async {
+            work.run()
+        }
+    }
+
+    /// EventKit completions are not `@Sendable` in the public overlay.
+    private struct UncheckedWork: @unchecked Sendable {
+        let body: () -> Void
+        func run() { body() }
     }
 }
