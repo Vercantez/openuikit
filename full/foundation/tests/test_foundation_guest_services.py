@@ -97,9 +97,21 @@ class FoundationGuestServicesTests(unittest.TestCase):
         self.assertIn("JSONEncoder", source)
         self.assertIn("JSONDecoder", source)
         self.assertIn("Mutex<", source)
+        self.assertIn("open class UserDefaults: @unchecked Sendable", source)
         self.assertIn("case data(Data)", source)
         self.assertIn("case date(Date)", source)
         self.assertNotIn("static var storage", source)
+
+        oracle = (
+            ROOT
+            / "full/oracle-userdefaults/darwin-sendability-2026-08-31.txt"
+        ).read_text()
+        self.assertIn("xcrun swiftc -swift-version 6 -typecheck", oracle)
+        self.assertIn("compiler exits 0 with empty diagnostics", oracle)
+        self.assertIn(
+            "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            oracle,
+        )
 
     def test_notification_publisher_uses_the_canonical_opencombine_identity(self) -> None:
         source = (

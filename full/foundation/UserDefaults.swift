@@ -40,7 +40,7 @@ private func _userDefaultsUnlink(_ path: UnsafePointer<CChar>) -> Int32 {
 #endif
 }
 
-open class UserDefaults {
+open class UserDefaults: @unchecked Sendable {
     private static let _domains = Mutex<[String: [String: _UDStored]]>([:])
     private static let _registered = Mutex<[String: _UDStored]>([:])
     private static let _standard = UserDefaults()
