@@ -141,12 +141,60 @@ class AppKitSurfaceTests(unittest.TestCase):
             '"$REVENUECAT:/revenuecat:ro"',
             "test_revenuecat_appkit_frontier_guest.sh",
             "test_revenuecat_frontier_guest.sh",
+            "test_revenuecat_library_product_guest.sh",
+            'if [ "$typecheck_result" = complete ]',
+            "skipped-not-complete",
             ".INVALID-DO-NOT-USE",
             "source_census_sha",
             "HOST_PROOF_COMPLETE",
         ):
             self.assertIn(token, driver)
         self.assertNotIn("docker run --rm -it", driver)
+
+    def test_revenuecat_library_product_is_wmo_public_api_and_cold(self):
+        driver = (
+            TESTS / "test_revenuecat_library_product_guest.sh"
+        ).read_text(encoding="utf-8")
+        consumer = (TESTS / "RevenueCatLibraryRuntime.swift").read_text(
+            encoding="utf-8"
+        )
+        for token in (
+            "530-source frontier did not complete successfully",
+            "-wmo -parse-as-library -module-name RevenueCat",
+            "-module-link-name RevenueCat",
+            "-dylib -dead_strip -dead_strip_dylibs -ignore_auto_link",
+            "@rpath/libRevenueCat.dylib",
+            "package-allowed-load-identities.txt",
+            "unapproved Apple framework identity",
+            "forbidden host ABI import",
+            "@rpath/libFoundation.dylib",
+            "@rpath/libStoreKit.dylib",
+            "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit",
+            "MACHORUN_ROOT",
+            "REVENUECAT_LIBRARY_PRODUCT_OK",
+        ):
+            self.assertIn(token, driver)
+        for public_api in (
+            "import RevenueCat",
+            "LogLevel.allCases",
+            "Store.allCases.count == 12",
+            "PeriodType.allCases.count == 4",
+            "REVENUECAT_LIBRARY_MACHO_OK",
+        ):
+            self.assertIn(public_api, consumer)
+        self.assertNotIn("@_spi", consumer)
+        self.assertNotIn("@testable", consumer)
+        mutations = (
+            TESTS / "test_revenuecat_library_product_gate_mutations.sh"
+        ).read_text(encoding="utf-8")
+        for mutation in (
+            "incomplete-status",
+            "incomplete-result",
+            "repository-drift",
+            "source-drift",
+            "compiler-invocations=0",
+        ):
+            self.assertIn(mutation, mutations)
 
     def test_focused_builder_requires_a_real_versioned_framework(self):
         builder = (TESTS / "build_appkit_focused_guest.sh").read_text(

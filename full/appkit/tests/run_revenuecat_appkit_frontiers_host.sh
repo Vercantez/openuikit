@@ -19,6 +19,8 @@ EXPECTED_SOURCE_CENSUS_SHA=74b74c5b1c4d0acd99cd0535e20dfeb0a8db751f6bf01ddb3d69e
 EXPECTED_APPKIT_DRIVER_SHA=ae52748a4c7a6437245d008d80f6acd4305b1704d8ff30ce4a164659099e5728
 EXPECTED_RUNTIME_DRIVER_SHA=8c9459746c354819b361682942b3b3614191f2c5e624f2a68fcd72c384d3d0b6
 EXPECTED_MANIFEST_TOOL_SHA=26a9bfc26bd4b36aa357437874b608583894d16a2d3a13314e70dccec6947f7a
+EXPECTED_LIBRARY_DRIVER_SHA=052b599edea7e65108c0ff9c48d429009f4ddf4d53f8a9279972d614fb3d0f89
+EXPECTED_LIBRARY_CONSUMER_SHA=2b706e20f65f7a9ff3565c5dae70bcdc99e24ebcd418c767c708f86f6259f523
 
 die() {
     printf 'revenuecat_appkit_host: REFUSING -- %s\n' "$*" >&2
@@ -76,6 +78,10 @@ require_hash "$ROOT/full/adservices/tests/test_revenuecat_frontier_guest.sh" \
     "$EXPECTED_RUNTIME_DRIVER_SHA" 'runtime frontier driver'
 require_hash "$ROOT/full/frameworks/core_package_manifest.py" \
     "$EXPECTED_MANIFEST_TOOL_SHA" 'package manifest verifier'
+require_hash "$ROOT/full/appkit/tests/test_revenuecat_library_product_guest.sh" \
+    "$EXPECTED_LIBRARY_DRIVER_SHA" 'RevenueCat library product driver'
+require_hash "$ROOT/full/appkit/tests/RevenueCatLibraryRuntime.swift" \
+    "$EXPECTED_LIBRARY_CONSUMER_SHA" 'RevenueCat public API consumer'
 
 source_count=$(git -C "$REVENUECAT" ls-files -z -- \
     'Sources/*.swift' 'Sources/**/*.swift' | LC_ALL=C sort -zu \
@@ -128,6 +134,15 @@ docker run --rm --pull never --platform linux/arm64 \
         set -euo pipefail
         W=/w /w/full/appkit/tests/test_revenuecat_appkit_frontier_guest.sh \
             /package /revenuecat /proof/revenuecat-appkit-frontier
+        typecheck_result=$(awk -F "\t" '\''$1 == "typecheck" { \
+            sub(/^result=/, "", $3); print $3 }'\'' \
+            /proof/revenuecat-appkit-frontier/PROOF_COMPLETE)
+        if [ "$typecheck_result" = complete ]; then
+            W=/w /w/full/appkit/tests/test_revenuecat_library_product_guest.sh \
+                /package /revenuecat \
+                /proof/revenuecat-appkit-frontier \
+                /proof/revenuecat-library-proof
+        fi
         W=/w /w/full/adservices/tests/test_revenuecat_frontier_guest.sh \
             /package /revenuecat /proof/revenuecat-frontier-proof
     ' > "$RESULT/docker.stdout" 2> "$RESULT/docker.stderr"
@@ -158,6 +173,25 @@ grep -Fxq $'sources\ttracked=531\tselected=530' \
 typecheck_result=$(awk -F '\t' '$1 == "typecheck" { sub(/^result=/, "", $3); print $3 }' \
     "$APPKIT_PROOF/PROOF_COMPLETE")
 case "$typecheck_result" in complete|advanced) ;; *) die 'typecheck result is invalid' ;; esac
+library_result=skipped-not-complete
+if [ "$typecheck_result" = complete ]; then
+    for regular in \
+        "$RESULT/revenuecat-library-proof/PROOF_COMPLETE" \
+        "$RESULT/revenuecat-library-proof/lib/libRevenueCat.dylib" \
+        "$RESULT/revenuecat-library-proof/modules/RevenueCat.swiftmodule" \
+        "$RESULT/revenuecat-library-proof/probe/RevenueCatLibraryRuntime" \
+        "$RESULT/revenuecat-library-proof/RevenueCatLibraryRuntime.log"; do
+        [ -f "$regular" ] && [ ! -L "$regular" ] \
+            || die "required RevenueCat library artifact is missing or linked: $regular"
+    done
+    grep -Fxq $'format\trevenuecat-library-product-proof-v1' \
+        "$RESULT/revenuecat-library-proof/PROOF_COMPLETE" \
+        || die 'RevenueCat library product proof format drifted'
+    library_result=complete
+else
+    [ ! -e "$RESULT/revenuecat-library-proof" ] \
+        || die 'RevenueCat library stage ran before the 530-source product completed'
+fi
 grep -Fxq $'format\trevenuecat-frontier-proof-v1' \
     "$RUNTIME_PROOF/PROOF_COMPLETE" || die 'runtime proof format drifted'
 grep -Fxq $'repository\tcommit=57043e7e0173c48d64e171944ac76a34d2467fa1\ttree=72a2e1e9b6986fadca9b863d235c4a52aab38fb4' \
@@ -175,6 +209,12 @@ grep -Fxq $'repository\tcommit=57043e7e0173c48d64e171944ac76a34d2467fa1\ttree=72
         "$source_census_sha"
     printf 'appkit-frontier\tresult=%s\tproof-sha256=%s\n' \
         "$typecheck_result" "$(hash_file "$APPKIT_PROOF/PROOF_COMPLETE")"
+    if [ "$library_result" = complete ]; then
+        printf 'library-product\tresult=complete\tproof-sha256=%s\n' \
+            "$(hash_file "$RESULT/revenuecat-library-proof/PROOF_COMPLETE")"
+    else
+        printf 'library-product\tresult=%s\n' "$library_result"
+    fi
     printf 'runtime-frontier\tconsumers=adservices,zlib,iokit\tproof-sha256=%s\n' \
         "$(hash_file "$RUNTIME_PROOF/PROOF_COMPLETE")"
     printf 'docker\tstdout-sha256=%s\tstderr-sha256=%s\n' \
@@ -187,5 +227,5 @@ mv -- "$RESULT" "$OUTPUT_ROOT"
 rmdir "$RUN_ROOT"
 RUN_SUCCESS=1
 trap - EXIT INT TERM
-printf 'REVENUECAT_APPKIT_HOST_OK commit=%s sources=530 result=%s runtime=adservices,zlib,iokit output=%s\n' \
-    "$EXPECTED_REVENUECAT_COMMIT" "$typecheck_result" "$OUTPUT_ROOT"
+printf 'REVENUECAT_APPKIT_HOST_OK commit=%s sources=530 result=%s library=%s runtime=adservices,zlib,iokit output=%s\n' \
+    "$EXPECTED_REVENUECAT_COMMIT" "$typecheck_result" "$library_result" "$OUTPUT_ROOT"
