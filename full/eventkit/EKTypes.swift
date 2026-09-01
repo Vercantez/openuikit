@@ -1,4 +1,4 @@
-@_exported import Foundation
+import Foundation
 
 /// Geographic alarm proximity. Raw values match public `EKAlarm.h`.
 public enum EKAlarmProximity: Int, Sendable {
@@ -179,13 +179,3 @@ public enum EKSpan: Int, Sendable {
     public static var EKFriday: EKWeekday { .friday }
     public static var EKSaturday: EKWeekday { .saturday }
 }
-
-/// Linux has no AddressBook. These names exist so the deprecated participant
-/// lookup signature still type-checks; they are opaque object references, matching
-/// this toolchain's `CFTypeRef` (`AnyObject`) overlay.
-public typealias ABAddressBook = AnyObject
-public typealias ABRecord = AnyObject
-
-public typealias EKEventSearchCallback = (EKEvent, UnsafeMutablePointer<ObjCBool>) -> Void
-public typealias EKEventStoreRequestAccessCompletionHandler = (Bool, (any Error)?) -> Void
-public typealias EKVirtualConferenceRoomTypeIdentifier = String

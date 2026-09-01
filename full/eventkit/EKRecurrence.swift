@@ -107,6 +107,7 @@ open class EKRecurrenceRule: EKObject, NSCopying {
     public var firstDayOfTheWeek: Int { _firstDayOfTheWeek }
 
     private var _recurrenceEnd: EKRecurrenceEnd?
+    private var _committedRecurrenceEnd: EKRecurrenceEnd?
     private var _firstDayOfTheWeek: Int = 0
 
     public init(
@@ -118,6 +119,7 @@ open class EKRecurrenceRule: EKObject, NSCopying {
         self.interval = max(1, interval)
         _recurrenceEnd = end.flatMap { $0.copy() as? EKRecurrenceEnd }
         super.init()
+        finishInitialization()
     }
 
     public init(
@@ -129,6 +131,7 @@ open class EKRecurrenceRule: EKObject, NSCopying {
         self.interval = max(1, interval)
         _recurrenceEnd = end.flatMap { $0.copy() as? EKRecurrenceEnd }
         super.init()
+        finishInitialization()
     }
 
     public init(
@@ -152,6 +155,7 @@ open class EKRecurrenceRule: EKObject, NSCopying {
         self.setPositions = setPositions
         _recurrenceEnd = end.flatMap { $0.copy() as? EKRecurrenceEnd }
         super.init()
+        finishInitialization()
     }
 
     public init(
@@ -175,6 +179,15 @@ open class EKRecurrenceRule: EKObject, NSCopying {
         self.setPositions = setPositions
         _recurrenceEnd = end.flatMap { $0.copy() as? EKRecurrenceEnd }
         super.init()
+        finishInitialization()
+    }
+
+    override func captureCommittedState() {
+        _committedRecurrenceEnd = _recurrenceEnd.flatMap { $0.copy() as? EKRecurrenceEnd }
+    }
+
+    override func restoreCommittedState() {
+        _recurrenceEnd = _committedRecurrenceEnd.flatMap { $0.copy() as? EKRecurrenceEnd }
     }
 
     open func copy(with zone: NSZone? = nil) -> Any {

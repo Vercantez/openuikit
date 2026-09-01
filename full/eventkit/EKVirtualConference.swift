@@ -61,20 +61,19 @@ open class EKVirtualConferenceDescriptor: NSObject {
 
 /// Linux has no EventKit virtual-conference extension host. Fetch APIs fail closed.
 open class EKVirtualConferenceProvider: NSObject {
-    public override init() {
-        super.init()
-    }
-
     open func fetchAvailableRoomTypes(
         completionHandler: @escaping ([EKVirtualConferenceRoomTypeDescriptor]?, (any Error)?) -> Void
     ) {
-        completionHandler(nil, EKMakeError(.osNotSupported))
+        EKCallbackDelivery.asynchronously {
+            completionHandler(nil, EKMakeError(.osNotSupported))
+        }
     }
 
     open func fetchVirtualConference(
         identifier: EKVirtualConferenceRoomTypeIdentifier
     ) async throws -> EKVirtualConferenceDescriptor {
         _ = identifier
+        await Task.yield()
         throw EKMakeError(.osNotSupported)
     }
 }

@@ -6,13 +6,32 @@ extension Notification.Name {
     public static let EKEventStoreChanged = Notification.Name("EKEventStoreChangedNotification")
 }
 
+/// Opaque fetch token. EventKit's header returns `id`; cancel maps onto this object.
+final class EKReminderFetchRequest: NSObject, @unchecked Sendable {
+    private let lock = NSLock()
+    private var cancelled = false
+
+    func cancel() {
+        lock.lock()
+        cancelled = true
+        lock.unlock()
+    }
+
+    var isCancelled: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return cancelled
+    }
+}
+
 /// Process-local EventKit store.
 ///
 /// Linux has no Calendar/Reminders privacy prompt and no Apple calendar
-/// database. Authorization is fail-closed (`denied`). Save/remove/commit throw
-/// `EKError.eventStoreNotAuthorized`. Fetch APIs return empty results. In-memory
-/// object construction (events, reminders, alarms, recurrence) still works so
-/// callers can assemble values without claiming a successful host write.
+/// database. `authorizationStatus(for:)` is `.denied`. Access-request
+/// completions follow the header contract: denied yields `(false, nil)` on an
+/// arbitrary queue. Save/remove/commit throw `EKError.eventStoreNotAuthorized`.
+/// `fetchReminders` completes asynchronously with `nil` (unauthorized or
+/// cancelled). In-memory object construction still works.
 open class EKEventStore: NSObject {
     public let eventStoreIdentifier: String
     public private(set) var sources: [EKSource]
@@ -39,27 +58,36 @@ open class EKEventStore: NSObject {
         return .denied
     }
 
+    /// Swift overlay of `requestAccessToEntityType:completion:`. Denied access
+    /// returns `false` without throwing (`granted == NO`, `error == nil`).
     open func requestAccess(to entityType: EKEntityType) async throws -> Bool {
         _ = entityType
-        throw EKMakeError(.osNotSupported)
+        await Task.yield()
+        return false
     }
 
     open func requestFullAccessToEvents(
-        completion: @escaping (Bool, (any Error)?) -> Void
+        completion: @escaping EKEventStoreRequestAccessCompletionHandler
     ) {
-        completion(false, EKMakeError(.osNotSupported))
+        EKCallbackDelivery.asynchronously {
+            completion(false, nil)
+        }
     }
 
     open func requestFullAccessToReminders(
-        completion: @escaping (Bool, (any Error)?) -> Void
+        completion: @escaping EKEventStoreRequestAccessCompletionHandler
     ) {
-        completion(false, EKMakeError(.osNotSupported))
+        EKCallbackDelivery.asynchronously {
+            completion(false, nil)
+        }
     }
 
     open func requestWriteOnlyAccessToEvents(
-        completion: @escaping (Bool, (any Error)?) -> Void
+        completion: @escaping EKEventStoreRequestAccessCompletionHandler
     ) {
-        completion(false, EKMakeError(.osNotSupported))
+        EKCallbackDelivery.asynchronously {
+            completion(false, nil)
+        }
     }
 
     open func defaultCalendarForNewReminders() -> EKCalendar? {
@@ -112,12 +140,15 @@ open class EKEventStore: NSObject {
         completion: @escaping ([EKReminder]?) -> Void
     ) -> Any {
         _ = predicate
-        completion(nil)
-        return NSObject()
+        let request = EKReminderFetchRequest()
+        EKCallbackDelivery.asynchronously {
+            completion(nil)
+        }
+        return request
     }
 
     open func cancelFetchRequest(_ fetchIdentifier: Any) {
-        _ = fetchIdentifier
+        (fetchIdentifier as? EKReminderFetchRequest)?.cancel()
     }
 
     open func predicateForEvents(
@@ -125,7 +156,7 @@ open class EKEventStore: NSObject {
         end endDate: Date,
         calendars: [EKCalendar]?
     ) -> NSPredicate {
-        let calendarIDs = Set((calendars ?? []).map(\.calendarIdentifier))
+        let calendarFilter = Self.calendarFilter(calendars)
         return NSPredicate { object, _ in
             guard let event = object as? EKEvent else { return false }
             guard let eventStart = event.startDate, let eventEnd = event.endDate else {
@@ -134,28 +165,15 @@ open class EKEventStore: NSObject {
             if eventEnd <= startDate || eventStart >= endDate {
                 return false
             }
-            if !calendarIDs.isEmpty {
-                guard let calendar = event.calendar,
-                      calendarIDs.contains(calendar.calendarIdentifier)
-                else {
-                    return false
-                }
-            }
-            return true
+            return calendarFilter.matches(event.calendar)
         }
     }
 
     open func predicateForReminders(in calendars: [EKCalendar]?) -> NSPredicate {
-        let calendarIDs = Set((calendars ?? []).map(\.calendarIdentifier))
+        let calendarFilter = Self.calendarFilter(calendars)
         return NSPredicate { object, _ in
             guard let reminder = object as? EKReminder else { return false }
-            if calendarIDs.isEmpty { return true }
-            guard let calendar = reminder.calendar,
-                  calendarIDs.contains(calendar.calendarIdentifier)
-            else {
-                return false
-            }
-            return true
+            return calendarFilter.matches(reminder.calendar)
         }
     }
 
@@ -164,7 +182,7 @@ open class EKEventStore: NSObject {
         ending endDate: Date?,
         calendars: [EKCalendar]?
     ) -> NSPredicate {
-        let calendarIDs = Set((calendars ?? []).map(\.calendarIdentifier))
+        let calendarFilter = Self.calendarFilter(calendars)
         return NSPredicate { object, _ in
             guard let reminder = object as? EKReminder, !reminder.isCompleted else {
                 return false
@@ -172,13 +190,7 @@ open class EKEventStore: NSObject {
             if !Self.dueDate(reminder.dueDateComponents, starts: startDate, ends: endDate) {
                 return false
             }
-            if calendarIDs.isEmpty { return true }
-            guard let calendar = reminder.calendar,
-                  calendarIDs.contains(calendar.calendarIdentifier)
-            else {
-                return false
-            }
-            return true
+            return calendarFilter.matches(reminder.calendar)
         }
     }
 
@@ -187,7 +199,7 @@ open class EKEventStore: NSObject {
         ending endDate: Date?,
         calendars: [EKCalendar]?
     ) -> NSPredicate {
-        let calendarIDs = Set((calendars ?? []).map(\.calendarIdentifier))
+        let calendarFilter = Self.calendarFilter(calendars)
         return NSPredicate { object, _ in
             guard let reminder = object as? EKReminder, reminder.isCompleted else {
                 return false
@@ -198,13 +210,7 @@ open class EKEventStore: NSObject {
             } else if startDate != nil || endDate != nil {
                 return false
             }
-            if calendarIDs.isEmpty { return true }
-            guard let calendar = reminder.calendar,
-                  calendarIDs.contains(calendar.calendarIdentifier)
-            else {
-                return false
-            }
-            return true
+            return calendarFilter.matches(reminder.calendar)
         }
     }
 
@@ -254,6 +260,26 @@ open class EKEventStore: NSObject {
 
     open func reset() {}
 
+    private struct CalendarFilter {
+        let restrict: Bool
+        let identifiers: Set<String>
+
+        func matches(_ calendar: EKCalendar?) -> Bool {
+            guard restrict else { return true }
+            guard let calendar, identifiers.contains(calendar.calendarIdentifier) else {
+                return false
+            }
+            return true
+        }
+    }
+
+    private static func calendarFilter(_ calendars: [EKCalendar]?) -> CalendarFilter {
+        CalendarFilter(
+            restrict: calendars != nil,
+            identifiers: Set((calendars ?? []).map(\.calendarIdentifier))
+        )
+    }
+
     private static func dueDate(
         _ components: DateComponents?,
         starts startDate: Date?,
@@ -262,9 +288,12 @@ open class EKEventStore: NSObject {
         if startDate == nil && endDate == nil {
             return true
         }
-        guard let components,
-              let due = Calendar.current.date(from: components)
-        else {
+        guard let components else { return false }
+        var calendar = components.calendar ?? Calendar.current
+        if let timeZone = components.timeZone {
+            calendar.timeZone = timeZone
+        }
+        guard let due = calendar.date(from: components) else {
             return false
         }
         if let startDate, due < startDate { return false }
@@ -273,11 +302,9 @@ open class EKEventStore: NSObject {
     }
 }
 
+#if os(iOS) || os(macOS) || os(tvOS) || os(watchOS) || os(visionOS)
 extension EKEventStore {
-    /// Typed notification payload. Linux Foundation does not provide
-    /// `NotificationCenter.MainActorMessage`, so this type is a standalone
-    /// value with the same public members.
-    public struct EventStoreChanged: Sendable {
+    public struct EventStoreChanged: NotificationCenter.MainActorMessage {
         public typealias Subject = EKEventStore
 
         public static var name: Notification.Name { .EKEventStoreChanged }
@@ -301,3 +328,11 @@ extension EKEventStore {
         }
     }
 }
+
+extension NotificationCenter.MessageIdentifier
+where Self == NotificationCenter.BaseMessageIdentifier<EKEventStore.EventStoreChanged> {
+    public static var changed: NotificationCenter.BaseMessageIdentifier<EKEventStore.EventStoreChanged> {
+        .init()
+    }
+}
+#endif

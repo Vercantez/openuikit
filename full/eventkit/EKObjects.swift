@@ -5,7 +5,9 @@ open class EKObject: NSObject {
     private var _isNew = true
     private var _hasChanges = false
 
-    public override init() {
+    /// Not a public EventKit constructor. NSObject's inherited `init` is hidden
+    /// so callers cannot mint bare `EKObject` instances.
+    internal override init() {
         super.init()
     }
 
@@ -38,6 +40,11 @@ open class EKObject: NSObject {
     func captureCommittedState() {}
 
     func restoreCommittedState() {}
+
+    func finishInitialization() {
+        captureCommittedState()
+        _hasChanges = false
+    }
 }
 
 /// Named location attached to an event or geofenced alarm. Core Location /
@@ -63,14 +70,15 @@ open class EKStructuredLocation: EKObject, NSCopying {
     private var _committedTitle: String?
     private var _committedRadius: Double = 0
 
-    public override init() {
+    internal override init() {
         super.init()
-        captureCommittedState()
+        finishInitialization()
     }
 
     public convenience init(title: String) {
         self.init()
-        self.title = title
+        _title = title
+        finishInitialization()
     }
 
     open func copy(with zone: NSZone? = nil) -> Any {
@@ -136,21 +144,21 @@ open class EKAlarm: EKObject, NSCopying {
     private var _committedProximity: EKAlarmProximity = .none
     private var _committedStructuredLocation: EKStructuredLocation?
 
-    public override init() {
+    internal override init() {
         super.init()
-        captureCommittedState()
+        finishInitialization()
     }
 
     public init(absoluteDate date: Date) {
         _absoluteDate = date
         super.init()
-        captureCommittedState()
+        finishInitialization()
     }
 
     public init(relativeOffset offset: TimeInterval) {
         _relativeOffset = offset
         super.init()
-        captureCommittedState()
+        finishInitialization()
     }
 
     open func copy(with zone: NSZone? = nil) -> Any {
@@ -186,12 +194,14 @@ open class EKSource: EKObject {
     public private(set) var isDelegate: Bool
     private weak var store: EKEventStore?
 
+    @_spi(OpenUIKitHost)
     public override init() {
         sourceIdentifier = UUID().uuidString
         sourceType = .local
         title = ""
         isDelegate = false
         super.init()
+        finishInitialization()
     }
 
     func bind(to store: EKEventStore) {
@@ -236,7 +246,7 @@ open class EKCalendar: EKObject {
     private var _committedSource: EKSource?
     private weak var eventStore: EKEventStore?
 
-    public override init() {
+    internal override init() {
         calendarIdentifier = UUID().uuidString
         type = .local
         allowedEntityTypes = [.event, .reminder]
@@ -245,7 +255,7 @@ open class EKCalendar: EKObject {
         isSubscribed = false
         supportedEventAvailabilities = [.busy, .free]
         super.init()
-        captureCommittedState()
+        finishInitialization()
     }
 
     public init(for entityType: EKEntityType, eventStore: EKEventStore) {
@@ -263,7 +273,7 @@ open class EKCalendar: EKObject {
         supportedEventAvailabilities = entityType == .event ? [.busy, .free] : []
         self.eventStore = eventStore
         super.init()
-        captureCommittedState()
+        finishInitialization()
     }
 
     public init(forEntityType entityType: EKEntityType, eventStore: EKEventStore) {
@@ -281,7 +291,7 @@ open class EKCalendar: EKObject {
         supportedEventAvailabilities = entityType == .event ? [.busy, .free] : []
         self.eventStore = eventStore
         super.init()
-        captureCommittedState()
+        finishInitialization()
     }
 
     override func captureCommittedState() {
@@ -383,13 +393,13 @@ open class EKCalendarItem: EKObject {
     private var _committedAlarms: [EKAlarm] = []
     private var _committedRecurrenceRules: [EKRecurrenceRule] = []
 
-    public override init() {
+    internal override init() {
         calendarItemIdentifier = UUID().uuidString
         calendarItemExternalIdentifier = calendarItemIdentifier
         creationDate = Date()
         lastModifiedDate = creationDate
         super.init()
-        captureCommittedState()
+        finishInitialization()
     }
 
     open func addAlarm(_ alarm: EKAlarm) {
@@ -442,6 +452,9 @@ open class EKEvent: EKCalendarItem {
         get { _startDate }
         set {
             _startDate = newValue
+            if !isDetached {
+                occurrenceDate = newValue
+            }
             markChanged()
         }
     }
@@ -493,14 +506,15 @@ open class EKEvent: EKCalendarItem {
     private var _committedIsAllDay = false
     private var _committedAvailability: EKEventAvailability = .busy
     private var _committedStructuredLocation: EKStructuredLocation?
+    private var _committedOccurrenceDate: Date!
 
-    public override init() {
+    internal override init() {
         eventIdentifier = UUID().uuidString
         status = .none
         isDetached = false
         birthdayPersonID = -1
         super.init()
-        captureCommittedState()
+        finishInitialization()
     }
 
     public init(eventStore: EKEventStore) {
@@ -510,8 +524,8 @@ open class EKEvent: EKCalendarItem {
         birthdayPersonID = -1
         super.init()
         owningStore = eventStore
-        calendar = eventStore.defaultCalendarForNewEvents
-        captureCommittedState()
+        _calendar = eventStore.defaultCalendarForNewEvents
+        finishInitialization()
     }
 
     open func compareStartDate(with other: EKEvent) -> ComparisonResult {
@@ -531,9 +545,7 @@ open class EKEvent: EKCalendarItem {
         _committedIsAllDay = _isAllDay
         _committedAvailability = _availability
         _committedStructuredLocation = _structuredLocation.flatMap { $0.copy() as? EKStructuredLocation }
-        if occurrenceDate == nil {
-            occurrenceDate = _startDate
-        }
+        _committedOccurrenceDate = occurrenceDate
     }
 
     override func restoreCommittedState() {
@@ -543,6 +555,7 @@ open class EKEvent: EKCalendarItem {
         _isAllDay = _committedIsAllDay
         _availability = _committedAvailability
         _structuredLocation = _committedStructuredLocation.flatMap { $0.copy() as? EKStructuredLocation }
+        occurrenceDate = _committedOccurrenceDate
     }
 }
 
@@ -599,16 +612,16 @@ open class EKReminder: EKCalendarItem {
     private var _committedPriority: Int = Int(EKReminderPriority.none.rawValue)
     private var _committedCompletionDate: Date?
 
-    public override init() {
+    internal override init() {
         super.init()
-        captureCommittedState()
+        finishInitialization()
     }
 
     public init(eventStore: EKEventStore) {
         super.init()
         owningStore = eventStore
-        calendar = eventStore.defaultCalendarForNewReminders()
-        captureCommittedState()
+        _calendar = eventStore.defaultCalendarForNewReminders()
+        finishInitialization()
     }
 
     override func captureCommittedState() {
@@ -640,6 +653,7 @@ open class EKParticipant: EKObject, NSCopying {
         NSPredicate { _, _ in false }
     }
 
+    @_spi(OpenUIKitHost)
     public override init() {
         url = URL(string: "mailto:")!
         participantStatus = .unknown
@@ -647,6 +661,7 @@ open class EKParticipant: EKObject, NSCopying {
         participantType = .unknown
         isCurrentUser = false
         super.init()
+        finishInitialization()
     }
 
     open func abRecord(with addressBook: ABAddressBook) -> ABRecord? {
