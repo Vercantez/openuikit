@@ -95,10 +95,6 @@ open class CXCallDirectoryExtensionContext: NSObject, @unchecked Sendable {
         label: String?
     ) {
         _ = label
-        if phoneNumber > CXCallDirectoryPhoneNumberMax || phoneNumber < 0 {
-            pendingError = CXErrorCodeCallDirectoryManagerError(.unknown)
-            return
-        }
         if let last = numbers.last {
             if phoneNumber == last {
                 pendingError = CXErrorCodeCallDirectoryManagerError(.duplicateEntries)
@@ -116,10 +112,6 @@ open class CXCallDirectoryExtensionContext: NSObject, @unchecked Sendable {
         _ phoneNumber: CXCallDirectoryPhoneNumber,
         intoIdentification label: String
     ) {
-        if phoneNumber > CXCallDirectoryPhoneNumberMax || phoneNumber < 0 {
-            pendingError = CXErrorCodeCallDirectoryManagerError(.unknown)
-            return
-        }
         if let last = identification.last {
             if phoneNumber == last.0 {
                 pendingError = CXErrorCodeCallDirectoryManagerError(.duplicateEntries)

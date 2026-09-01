@@ -104,18 +104,11 @@ open class CXCallObserver: NSObject, @unchecked Sendable {
     func portableCallChanged(_ call: CXCall) {
         stateLock.lock()
         let delegate = self.delegate
-        let queue = self.delegateQueue
+        let queue = CXCallKitCallbackQueue(self.delegateQueue)
         stateLock.unlock()
         guard let delegate else { return }
-        let deliver = {
+        queue.async {
             delegate.callObserver(self, callChanged: call)
-        }
-        if let queue {
-            queue.async {
-                deliver()
-            }
-        } else {
-            deliver()
         }
     }
 }

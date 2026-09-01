@@ -8,6 +8,11 @@ open class CXAction: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
     public let timeoutDate: Date
 
     private let stateLock = NSLock()
+    weak var portableProvider: CXProvider?
+    private var portableSucceeded: Bool?
+
+    @_spi(OpenUIKitHost)
+    public var _portableDidFulfill: Bool? { portableSucceeded }
 
     public override init() {
         self.uuid = UUID()
@@ -52,17 +57,30 @@ open class CXAction: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
     }
 
     open func fulfill() {
-        finish()
+        complete(success: true)
     }
 
     open func fail() {
-        finish()
+        complete(success: false)
     }
 
-    private func finish() {
+    func portableReject() {
+        complete(success: false, notify: false)
+    }
+
+    private func complete(success: Bool, notify: Bool = true) {
         stateLock.lock()
+        if isComplete {
+            stateLock.unlock()
+            return
+        }
         isComplete = true
+        portableSucceeded = success
+        let provider = portableProvider
         stateLock.unlock()
+        if notify {
+            provider?.portableActionDidComplete(self, success: success)
+        }
     }
 }
 
