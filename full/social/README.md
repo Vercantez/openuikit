@@ -72,6 +72,8 @@ SOCIAL_AGENT_RUNTIME_OK
 SOCIAL_MULTIPART_HARDENING_OK
 SOCIAL_PRODUCTION_MISSING_DEPENDENCY_BLOCKER_OK
 SOCIAL_UNIT_FIXTURE_LOOKALIKE_NOT_PLATFORM_IDENTITY
+SOCIAL_PRODUCTION_MISSING_ACCOUNTS_BLOCKER_OK
+SOCIAL_PRODUCTION_HOST_ACCOUNTS_DEPRECATION_BLOCKER_OK
 SOCIAL_STANDALONE_UNIT_FIXTURE_GATE_OK
 ```
 
@@ -84,6 +86,9 @@ marker: `SOCIAL_REAL_INTEGRATION_OK`.
 
 Accounts is not staged in the shared platform. That is an integration blocker
 (`SOCIAL_REAL_INTEGRATION_BLOCKED dependency=Accounts reason=not-staged-in-shared-platform`).
+A UIKit-only production compile that finds deprecated host Accounts is also an
+expected blocker (`SOCIAL_PRODUCTION_HOST_ACCOUNTS_DEPRECATION_BLOCKER_OK`); it
+is not treated as unexpected and is not turned green with a lookalike.
 Lookalike `tests/agent/staging` modules are unit fixtures only and must not
 turn that blocker green.
 

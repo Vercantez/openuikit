@@ -207,12 +207,22 @@ if [ "$accounts_status" -eq 0 ]; then
     fi
     printf 'SOCIAL_PRODUCTION_HOST_ACCOUNTS_AVAILABLE\n'
 else
-    if ! grep -Eq 'Accounts module|integration blocker|Social.ACAccount' \
-        "$uikit_only/accounts-missing.log"
-    then
-        die "UIKit-without-Accounts compile failed unexpectedly: $(cat "$uikit_only/accounts-missing.log")"
+    accounts_log=$uikit_only/accounts-missing.log
+    deprecated_host=0
+    missing_accounts=0
+    grep -Eq "'ACAccount' is deprecated|ACAccount is deprecated|deprecated: Accounts|ACAccount.*deprecated" \
+        "$accounts_log" && deprecated_host=1
+    grep -Eq 'Accounts module|integration blocker|Social.ACAccount' \
+        "$accounts_log" && missing_accounts=1
+    if [ "$deprecated_host" -eq 0 ] && [ "$missing_accounts" -eq 0 ]; then
+        die "UIKit-without-Accounts compile failed unexpectedly: $(cat "$accounts_log")"
     fi
-    printf 'SOCIAL_PRODUCTION_MISSING_ACCOUNTS_BLOCKER_OK\n'
+    if [ "$deprecated_host" -eq 1 ]; then
+        printf 'SOCIAL_PRODUCTION_HOST_ACCOUNTS_DEPRECATION_BLOCKER_OK\n'
+    fi
+    if [ "$missing_accounts" -eq 1 ]; then
+        printf 'SOCIAL_PRODUCTION_MISSING_ACCOUNTS_BLOCKER_OK\n'
+    fi
 fi
 rm -rf -- "$uikit_only"
 
