@@ -278,6 +278,10 @@ struct CoreGuestPackageProbe {
             _openUIKitQuartzCoreLayerIdentity(layerOwner.layer) ==
                 ObjectIdentifier(layerOwner.layer)
         )
+        layerOwner.layer.setValue(CGFloat(2), forKey: "scale")
+        precondition(
+            layerOwner.layer.value(forKey: "scale") as? CGFloat == CGFloat(2)
+        )
 
         let foundationNotification: Foundation.Notification.Type =
             Foundation.Notification.self

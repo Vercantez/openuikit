@@ -166,6 +166,11 @@ public func NSStringFromSelector(_ aSelector: Selector) -> String {
 // platforms. An unsupported key therefore remains an Objective-C runtime
 // failure instead of being silently ignored by the facade.
 public extension ObjectiveC.NSObject {
+    // This overlay is the general NSObject fallback. Concrete subclasses such
+    // as OpenUIKit.CALayer own bounded KVC implementations even though they
+    // are compiled before this Foundation facade exists; prefer those members
+    // when both become visible to an ordinary app client.
+    @_disfavoredOverload
     func setValue(_ value: Any?, forKey key: String) {
         _ = perform(
             Selector("setValue:forKey:"),
@@ -174,6 +179,7 @@ public extension ObjectiveC.NSObject {
         )
     }
 
+    @_disfavoredOverload
     func value(forKey key: String) -> Any? {
         perform(
             Selector("valueForKey:"),

@@ -2915,6 +2915,29 @@ class ShellContractTests(unittest.TestCase):
         ):
             self.assertIn(token, manifest_source + canonical_source + source)
 
+    def test_foundation_kvc_fallback_prefers_concrete_calayer_members(self) -> None:
+        facade = (
+            REPO / "full/appshim/FoundationOpenUIKitValueAliases.swift"
+        ).read_text(encoding="utf-8")
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
+        self.assertEqual(facade.count("@_disfavoredOverload"), 2)
+        self.assertIn(
+            '@_disfavoredOverload\n    func setValue(_ value: Any?, forKey key: String)',
+            facade,
+        )
+        self.assertIn(
+            '@_disfavoredOverload\n    func value(forKey key: String) -> Any?',
+            facade,
+        )
+        self.assertIn(
+            'layerOwner.layer.setValue(CGFloat(2), forKey: "scale")',
+            probe,
+        )
+        self.assertIn(
+            'layerOwner.layer.value(forKey: "scale") as? CGFloat == CGFloat(2)',
+            probe,
+        )
+
     def test_foundation_runtime_undefineds_are_exact_and_mutation_is_refused(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         validate_foundation_runtime_undefineds(source)
