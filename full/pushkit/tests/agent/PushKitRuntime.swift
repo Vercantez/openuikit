@@ -4,7 +4,7 @@ import Foundation
 
 private final class RecordingDelegate: NSObject, PKPushRegistryDelegate, @unchecked Sendable {
     private let stateLock = NSLock()
-    private var updates: [(type: PKPushType, token: Data)] = []
+    private var updates: [(type: PKPushType, token: Foundation.Data)] = []
     private var invalidations: [PKPushType] = []
     private var incomingTypes: [PKPushType] = []
     private var incomingDictionaries: [[AnyHashable: Any]] = []
@@ -21,7 +21,7 @@ private final class RecordingDelegate: NSObject, PKPushRegistryDelegate, @unchec
         return body()
     }
 
-    func recordedUpdates() -> [(type: PKPushType, token: Data)] {
+    func recordedUpdates() -> [(type: PKPushType, token: Foundation.Data)] {
         withState { updates }
     }
 
@@ -133,34 +133,41 @@ private final class RequiredOnlyDelegate: NSObject, PKPushRegistryDelegate, @unc
 private func exercisePushTypes() {
     let voip = PKPushType.voIP
     let fileProvider = PKPushType.fileProvider
-    let complication = PKPushType(rawValue: "PKPushTypeComplication")
+    let complication = PKPushType.complication
 
-    precondition(voip.rawValue == "PKPushTypeVoIP")
-    precondition(fileProvider.rawValue == "PKPushTypeFileProvider")
-    precondition(complication.rawValue == PKPushType.complication.rawValue)
-    precondition(voip == PKPushType(rawValue: "PKPushTypeVoIP"))
+    precondition(voip == PKPushType.voIP)
+    precondition(fileProvider == PKPushType.fileProvider)
+    precondition(complication == PKPushType.complication)
     precondition(voip != fileProvider)
     precondition(voip != complication)
-    precondition(voip.hashValue == PKPushType(rawValue: voip.rawValue).hashValue)
+    precondition(fileProvider != complication)
+    precondition(voip.hashValue == PKPushType.voIP.hashValue)
 
     var hasher = Hasher()
     voip.hash(into: &hasher)
     var hasher2 = Hasher()
-    PKPushType(rawValue: "PKPushTypeVoIP").hash(into: &hasher2)
+    PKPushType.voIP.hash(into: &hasher2)
     precondition(hasher.finalize() == hasher2.finalize())
 
-    let types: Set<PKPushType> = [voip, fileProvider, voip]
-    precondition(types.count == 2)
+    let types: Set<PKPushType> = [voip, fileProvider, voip, complication]
+    precondition(types.count == 3)
     precondition(types.contains(.voIP))
     precondition(types.contains(.fileProvider))
-    precondition(!types.contains(PKPushType(rawValue: "unknown")))
+    precondition(types.contains(.complication))
+
+    let hostLocal = PKPushType(rawValue: "host-local-push-type")
+    precondition(hostLocal.rawValue == "host-local-push-type")
+    precondition(hostLocal != voip)
+    precondition(!types.contains(hostLocal))
 }
 
 private func exerciseFailClosedRegistry() {
     let queue = DispatchQueue(label: "pushkit.fail-closed")
     let registry = PKPushRegistry(queue: queue)
     let delegate = RecordingDelegate()
-    registry.delegate = delegate
+    let existential: any PKPushRegistryDelegate = delegate
+    registry.delegate = existential
+    precondition(registry.delegate === delegate)
 
     precondition(registry.desiredPushTypes == nil)
     precondition(registry.pushToken(for: .voIP) == nil)
@@ -178,8 +185,8 @@ private func exerciseFailClosedRegistry() {
     precondition(delegate.recordedInvalidations().isEmpty)
 
     let stray = PKPushCredentials(
-        type: PKPushType(rawValue: "PKPushTypeUserNotifications"),
-        token: Data([0xFF])
+        type: PKPushType(rawValue: "host-unrequested"),
+        token: Foundation.Data([0xFF])
     )
     precondition(!registry._portableInstallCredentials(stray))
     precondition(registry.pushToken(for: stray.type) == nil)
@@ -204,10 +211,11 @@ private func exerciseHostInjectedDispatch() {
     delegate.invalidateSignal = invalidated
     delegate.incomingSignal = incoming
     delegate.deprecatedSignal = deprecated
-    registry.delegate = delegate
+    let existential: any PKPushRegistryDelegate = delegate
+    registry.delegate = existential
     registry.desiredPushTypes = [.voIP]
 
-    let token = Data([0x0A, 0x0B, 0x0C, 0x0D])
+    let token = Foundation.Data([0x0A, 0x0B, 0x0C, 0x0D])
     let credentials = PKPushCredentials(type: .voIP, token: token)
     precondition(credentials.type == .voIP)
     precondition(credentials.token == token)
@@ -237,9 +245,10 @@ private func exerciseHostInjectedDispatch() {
 
     let requiredOnly = RequiredOnlyDelegate()
     let requiredRegistry = PKPushRegistry(queue: queue)
-    requiredRegistry.delegate = requiredOnly
+    let requiredExistential: any PKPushRegistryDelegate = requiredOnly
+    requiredRegistry.delegate = requiredExistential
     requiredRegistry.desiredPushTypes = [.fileProvider]
-    let fileToken = Data([0x11])
+    let fileToken = Foundation.Data([0x11])
     precondition(
         requiredRegistry._portableInstallCredentials(
             PKPushCredentials(type: .fileProvider, token: fileToken)

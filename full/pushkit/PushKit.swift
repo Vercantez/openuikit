@@ -3,9 +3,12 @@ import Foundation
 
 /// Portable `PKPushType` newtype. The public graph models this as a Swift
 /// `RawRepresentable` string wrapper (`init(rawValue:)`, `Hashable`,
-/// `Equatable`, `Sendable`). Exact Apple `NSString` payloads are not in the
-/// pinned corpus; the C export names from `tbd-exports.tsv` are used until an
-/// Apple-oracle probe records the runtime bytes.
+/// `Equatable`, `Sendable`). Darwin `NSString` payloads for the public
+/// constants are **not** in the pinned corpus and are not claimed here.
+///
+/// The constant `rawValue` strings below are a **Linux-local** source-compatible
+/// fallback so `.voIP` / `.complication` / `.fileProvider` compile. They are
+/// not Apple-observed bytes; compare typed constants, not guessed strings.
 public struct PKPushType: RawRepresentable, Hashable, Equatable, Sendable {
     public let rawValue: String
 
@@ -13,11 +16,11 @@ public struct PKPushType: RawRepresentable, Hashable, Equatable, Sendable {
         self.rawValue = rawValue
     }
 
-    /// Voice-over-IP call invitations.
+    /// Voice-over-IP call invitations. Linux-local placeholder raw value.
     public static let voIP = PKPushType(rawValue: "PKPushTypeVoIP")
 
     /// WatchOS complication pushes. Deprecated on iOS in favor of delivering
-    /// complication updates directly on watchOS.
+    /// complication updates directly on watchOS. Linux-local placeholder raw value.
     @available(
         iOS,
         introduced: 9.0,
@@ -26,7 +29,7 @@ public struct PKPushType: RawRepresentable, Hashable, Equatable, Sendable {
     )
     public static let complication = PKPushType(rawValue: "PKPushTypeComplication")
 
-    /// File-provider change signaling.
+    /// File-provider change signaling. Linux-local placeholder raw value.
     public static let fileProvider = PKPushType(rawValue: "PKPushTypeFileProvider")
 }
 
@@ -35,15 +38,15 @@ public struct PKPushType: RawRepresentable, Hashable, Equatable, Sendable {
 /// through `@_spi(OpenUIKitHost)` without claiming Apple provenance.
 open class PKPushCredentials: NSObject, @unchecked Sendable {
     private let storedType: PKPushType
-    private let storedToken: Data
+    private let storedToken: Foundation.Data
 
     open var type: PKPushType { storedType }
-    open var token: Data { storedToken }
+    open var token: Foundation.Data { storedToken }
 
     @_spi(OpenUIKitHost)
-    public init(type: PKPushType, token: Data) {
+    public init(type: PKPushType, token: Foundation.Data) {
         storedType = type
-        storedToken = Data(token)
+        storedToken = Foundation.Data(token)
         super.init()
     }
 }
@@ -171,7 +174,7 @@ open class PKPushRegistry: NSObject, @unchecked Sendable {
     private let stateLock = NSLock()
     private weak var storedDelegate: (any PKPushRegistryDelegate)?
     private var storedDesiredPushTypes: Set<PKPushType>?
-    private var tokens: [PKPushType: Data] = [:]
+    private var tokens: [PKPushType: Foundation.Data] = [:]
 
     public init(queue: DispatchQueue?) {
         usesMainCallbackQueue = queue == nil
@@ -209,7 +212,7 @@ open class PKPushRegistry: NSObject, @unchecked Sendable {
         }
     }
 
-    open func pushToken(for type: PKPushType) -> Data? {
+    open func pushToken(for type: PKPushType) -> Foundation.Data? {
         stateLock.lock()
         defer { stateLock.unlock() }
         guard storedDesiredPushTypes?.contains(type) == true else { return nil }
