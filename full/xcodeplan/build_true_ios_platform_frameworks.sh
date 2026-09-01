@@ -533,7 +533,7 @@ FOUNDATION_RUNTIME_FLAGS=(
     -current_version 1.0 -compatibility_version 1.0 \
     -L"$PRODUCTS" -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics \
     -lCombine -lOpenCombine -lDispatch \
-    "${COMMON_RUNTIME[@]}" -lswiftObjectiveC \
+    "${COMMON_RUNTIME[@]}" -lswiftObjectiveC -lobjc \
     "${FOUNDATION_RUNTIME_FLAGS[@]}" \
     "$URL_TRANSPORT_DARWIN" "$RELATIVE_TIME_DARWIN" \
     -reexport_library "$PRODUCTS/libFoundationInternationalization.dylib" \
