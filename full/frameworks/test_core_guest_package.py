@@ -354,6 +354,7 @@ def validate_core_preview_export_contract(source: str) -> None:
         'PROBE_EXPORT_FLAGS+=(-exported_symbol "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")',
         "preview_export_definition_count=$(nm_symbol_count --defined-only",
         "staged_preview_definition_count=$(nm_symbol_count --defined-only",
+        "swiftui_preview_import_count=$(nm_symbol_count --undefined-only",
         "uikit_preview_import_count=$(nm_symbol_count --undefined-only",
         "probe_preview_export_count=$(nm_symbol_count --defined-only",
         "libUIKit-preview-initializer-import-count",
@@ -1779,7 +1780,10 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("@Entry var portableCompilerPluginProbe", probe)
         self.assertEqual(probe.count("#Preview"), 2)
         self.assertIn("probe_dts_count", source)
-        self.assertIn("UIKIT_UNDEFINED_FLAGS=(-undefined dynamic_lookup)", source)
+        self.assertIn(
+            "PREVIEW_EXECUTABLE_RESOLUTION_FLAGS=(-undefined dynamic_lookup)",
+            source,
+        )
         self.assertNotIn("LINK_ARGUMENTS+=(objects/developertoolsupport.o)", source)
 
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
