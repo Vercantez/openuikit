@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(AppKit)
+@_exported import AppKit
+#endif
 #if canImport(UIKit)
 import UIKit
 #elseif canImport(OpenUIKit)
@@ -394,6 +397,18 @@ public struct Product: Identifiable, Sendable {
     ) async throws -> PurchaseResult {
         throw StoreKitPortableError(.paymentsUnavailable)
     }
+
+    #if canImport(AppKit)
+    @available(macOS 15.2, *)
+    public func purchase(
+        confirmIn window: NSWindow,
+        options: Set<PurchaseOption> = []
+    ) async throws -> PurchaseResult {
+        _ = window
+        _ = options
+        throw StoreKitPortableError(.paymentsUnavailable)
+    }
+    #endif
 }
 
 public struct Transaction: Identifiable, Sendable {
