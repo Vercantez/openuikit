@@ -12,9 +12,9 @@ OpenCombine, Dispatch, Combine, Symbols, SwiftUI, the app-facing Foundation faca
 Foundation-visible UIKit, CoreImage, QuartzCore, Intents, IntentsUI, WebKit,
 LocalAuthentication, SafariServices, Network, StoreKit, AudioToolbox,
 CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI,
-MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog, and
-UniformTypeIdentifiers. These are thirty-four reusable ARM64 Mach-O platform
-binaries (thirty-three frameworks plus ICU), including real
+MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog,
+UniformTypeIdentifiers, and SwiftData. These are thirty-six reusable ARM64
+Mach-O platform binaries (thirty-five frameworks plus ICU), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
@@ -68,12 +68,12 @@ The semantic build order is deliberate:
    donation, resolution, and host-driven controller state.
 8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-9. Compile and link eighteen app-facing first-party modules as independent ARM64
+9. Compile and link nineteen app-facing first-party modules as independent ARM64
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
-10. Link all thirty-four reusable dylibs (thirty-three frameworks plus ICU)
-   and run the package's Mach-O
+10. Link all thirty-six reusable platform dylibs (thirty-five frameworks plus
+   ICU) and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.
 11. Run a real asynchronous Mach-O gate covering async main, TaskGroup,
@@ -138,6 +138,22 @@ packaged Linux runtime. The pinned `ld64.lld-18` represents that framework
 reexport with one ordinary FoundationEssentials load and one
 `LC_REEXPORT_DYLIB` command for the same install name. The package audits the
 two command kinds independently and still requires exactly one reexport.
+
+`libSwiftData.dylib` is a volatile persistence engine with a real native
+`SwiftDataMacros` attached-macro plugin. It implements model identity,
+schema-checked contexts, insert/delete/save/rollback, Foundation Predicate
+evaluation, sorting, limits, live Query reads, and SwiftUI environment/model
+container integration. The default SwiftUI convenience modifier uses a
+process-lifetime in-memory container and emits one diagnostic instead of
+crashing an unchanged app at launch. Explicit durable configurations still
+throw; disk stores, CloudKit, migrations, and undo are not claimed. A separate
+ARM64 Mach-O gate expands `@Model` and `#Predicate`, executes compound fetches
+and mutations, and rejects accidental linkage to Apple's SwiftData framework.
+
+The pinned swift-foundation revision has an upstream-corrected final-class
+Predicate key-path bug. The builder verifies exact source and patch hashes,
+applies the backport only to a derived build copy, and leaves the pinned
+checkout untouched.
 
 The current production OpenUIKit source-set contract is 105 Swift files. The
 increase from 102 is the canonical Focus launch-core tranche's independent
@@ -342,6 +358,23 @@ The pinned container fonts are then added at
 `DejaVuSans-Bold.ttf`. The app materializer copies this directory to
 `<App>.app/Contents/Resources/OpenUIKit`; generated host code sets
 `OpenUIKitRuntime.resourceRoot` and `fontPaths` to those bundle locations.
+
+## Packaged compiler plugins
+
+`compiler_plugins` in `attestation/core-package.json` is the structured
+transport contract for production library plugins. Each entry records the
+external macro module, package-relative native ELF path and hash, sorted macro
+registrations, allowed consumer scopes (`app`, `framework`, and `package`),
+whether serialized compiler jobs are required, and the complete attested host
+Swift/SwiftSyntax closure. The matching `-load-plugin-library` pair must occur
+exactly once in the relocatable compile response. Both manifest validators
+rebuild and check this relationship, and mutation tests reject omitted closure
+members, narrowed/expanded scopes, bad hashes, and missing load pairs.
+
+The initial set is `ObservationMacros`, `FoundationMacros`, and
+`SwiftDataMacros`. The same rooted compile contract reaches Swift-package
+targets, framework targets, and the application compile; it is not a
+SwiftData-specific driver side channel.
 
 ## Optional Preview seam
 

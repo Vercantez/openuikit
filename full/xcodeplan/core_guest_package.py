@@ -105,6 +105,7 @@ _REQUIRED_FRAMEWORKS = (
     "AppIntents",
     "OSLog",
     "UniformTypeIdentifiers",
+    "SwiftData",
 )
 _REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
     f"-l{name}" for name in _REQUIRED_FRAMEWORKS
@@ -126,6 +127,13 @@ _REQUIRED_MANIFESTS = {
     "guest_root_tree",
     "openuikit_resources_tree",
     "runtime_closure",
+    "compiler_plugins",
+}
+
+_REQUIRED_COMPILER_PLUGIN_MODULES = {
+    "ObservationMacros",
+    "FoundationMacros",
+    "SwiftDataMacros",
 }
 
 
@@ -569,6 +577,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         raise CorePackageError("artifacts must not be empty")
     seen: set[str] = set()
     verified_artifacts: list[dict[str, Any]] = []
+    artifact_records: dict[str, dict[str, Any]] = {}
     for index, raw in enumerate(artifacts):
         artifact = _mapping(raw, f"artifacts[{index}]")
         relative, physical = _regular_file(
@@ -588,8 +597,181 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             raise CorePackageError(f"artifacts[{index}].size must be a nonnegative integer")
         if physical.stat().st_size != size:
             raise CorePackageError(f"core package artifact size changed: {relative}")
+        category = _string(artifact.get("category"), f"artifacts[{index}].category")
+        role = _string(artifact.get("role"), f"artifacts[{index}].role")
+        name = _string(artifact.get("name"), f"artifacts[{index}].name")
+        artifact_records[relative] = {
+            "category": category,
+            "name": name,
+            "role": role,
+            "sha256": actual,
+        }
         verified_artifacts.append({"path": relative, "sha256": actual, "size": size})
     manifest["artifacts"] = verified_artifacts
+
+    raw_plugins = _array(manifest.get("compiler_plugins"), "compiler_plugins")
+    if not raw_plugins:
+        raise CorePackageError("compiler_plugins must not be empty")
+    dependency_paths = sorted(
+        path
+        for path, record in artifact_records.items()
+        if record["category"] == "host-tool" and record["role"] == "dependency"
+    )
+    seen_plugin_modules: set[str] = set()
+    seen_plugin_paths: set[str] = set()
+    verified_plugins: list[dict[str, Any]] = []
+    for index, raw_plugin in enumerate(raw_plugins):
+        plugin = _mapping(raw_plugin, f"compiler_plugins[{index}]")
+        required_keys = {
+            "module", "load_kind", "path", "sha256", "registrations",
+            "consumer_scopes", "serialized_jobs", "host_closure",
+        }
+        if set(plugin) != required_keys:
+            raise CorePackageError(
+                f"compiler_plugins[{index}] keys differ: "
+                f"missing={sorted(required_keys - set(plugin))} "
+                f"extra={sorted(set(plugin) - required_keys)}"
+            )
+        module = _string(plugin.get("module"), f"compiler_plugins[{index}].module")
+        if not module.isidentifier() or module in seen_plugin_modules:
+            raise CorePackageError(f"unsafe or duplicate compiler plugin module: {module}")
+        seen_plugin_modules.add(module)
+        kind = _string(plugin.get("load_kind"), f"compiler_plugins[{index}].load_kind")
+        if kind not in ("library", "executable"):
+            raise CorePackageError(f"unsupported compiler plugin load kind: {kind}")
+        plugin_relative, _plugin_file = _regular_file(
+            root, plugin.get("path"), f"compiler_plugins[{index}].path"
+        )
+        if plugin_relative in seen_plugin_paths:
+            raise CorePackageError(f"duplicate compiler plugin path: {plugin_relative}")
+        seen_plugin_paths.add(plugin_relative)
+        plugin_digest = _string(
+            plugin.get("sha256"), f"compiler_plugins[{index}].sha256"
+        )
+        record = artifact_records.get(plugin_relative)
+        if (
+            record is None
+            or record["category"] != "host-tool"
+            or record["role"] != "plugin"
+            or record["sha256"] != plugin_digest
+        ):
+            raise CorePackageError(
+                f"compiler plugin artifact/hash differs: {plugin_relative}"
+            )
+        registrations = _array(
+            plugin.get("registrations"), f"compiler_plugins[{index}].registrations"
+        )
+        if (
+            not registrations
+            or not all(isinstance(value, str) and value.isidentifier() for value in registrations)
+            or registrations != sorted(set(registrations))
+        ):
+            raise CorePackageError(f"{module} registrations are malformed or unsorted")
+        scopes = _array(
+            plugin.get("consumer_scopes"), f"compiler_plugins[{index}].consumer_scopes"
+        )
+        if scopes != ["app", "framework", "package"]:
+            raise CorePackageError(
+                f"{module} consumer scopes must be app,framework,package"
+            )
+        serialized = plugin.get("serialized_jobs")
+        if not isinstance(serialized, bool):
+            raise CorePackageError(f"{module} serialized_jobs must be Boolean")
+        raw_closure = _array(
+            plugin.get("host_closure"), f"compiler_plugins[{index}].host_closure"
+        )
+        verified_closure: list[dict[str, str]] = []
+        for closure_index, raw_item in enumerate(raw_closure):
+            item = _mapping(
+                raw_item,
+                f"compiler_plugins[{index}].host_closure[{closure_index}]",
+            )
+            if set(item) != {"path", "sha256"}:
+                raise CorePackageError(f"{module} host closure record keys drifted")
+            relative, _physical = _regular_file(
+                root,
+                item.get("path"),
+                f"compiler_plugins[{index}].host_closure[{closure_index}].path",
+            )
+            digest = _string(
+                item.get("sha256"),
+                f"compiler_plugins[{index}].host_closure[{closure_index}].sha256",
+            )
+            closure_record = artifact_records.get(relative)
+            if (
+                closure_record is None
+                or closure_record["category"] != "host-tool"
+                or closure_record["role"] != "dependency"
+                or closure_record["sha256"] != digest
+            ):
+                raise CorePackageError(f"{module} host closure differs: {relative}")
+            verified_closure.append({"path": relative, "sha256": digest})
+        if [item["path"] for item in verified_closure] != dependency_paths:
+            raise CorePackageError(f"{module} native host closure is incomplete")
+        option = "-load-plugin-library" if kind == "library" else "-load-plugin-executable"
+        value = plugin_relative if kind == "library" else f"{plugin_relative}#{module}"
+        occurrences = sum(
+            manifest["swift_compile_arguments"][cursor : cursor + 2]
+            == [option, value]
+            for cursor in range(len(manifest["swift_compile_arguments"]) - 1)
+        )
+        if occurrences != 1:
+            raise CorePackageError(
+                f"{module} compiler plugin load pair count {occurrences}, expected 1"
+            )
+        verified_plugins.append(
+            {
+                "module": module,
+                "load_kind": kind,
+                "path": plugin_relative,
+                "sha256": plugin_digest,
+                "registrations": registrations,
+                "consumer_scopes": scopes,
+                "serialized_jobs": serialized,
+                "host_closure": verified_closure,
+            }
+        )
+    missing_plugins = sorted(_REQUIRED_COMPILER_PLUGIN_MODULES - seen_plugin_modules)
+    if missing_plugins:
+        raise CorePackageError(
+            "core package omits required compiler plugins: " + ", ".join(missing_plugins)
+        )
+    compiler_plugin_manifest = manifest_files.get("compiler_plugins")
+    if compiler_plugin_manifest is None:
+        raise CorePackageError("manifests.compiler_plugins is required")
+    expected_plugin_lines = ["format\tcore-compiler-plugins-v1"]
+    for plugin in verified_plugins:
+        expected_plugin_lines.append(
+            "\t".join(
+                (
+                    "plugin",
+                    plugin["module"],
+                    plugin["load_kind"],
+                    plugin["path"],
+                    plugin["sha256"],
+                    ",".join(plugin["registrations"]),
+                    ",".join(plugin["consumer_scopes"]),
+                    "serialized=yes" if plugin["serialized_jobs"] else "serialized=no",
+                )
+            )
+        )
+    for plugin in verified_plugins:
+        for item in plugin["host_closure"]:
+            expected_plugin_lines.append(
+                "\t".join(
+                    ("closure", plugin["module"], item["path"], item["sha256"])
+                )
+            )
+    expected_plugin_payload = "\n".join(expected_plugin_lines) + "\n"
+    try:
+        actual_plugin_payload = compiler_plugin_manifest.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        raise CorePackageError(f"cannot read compiler-plugin manifest: {exc}") from exc
+    if actual_plugin_payload != expected_plugin_payload:
+        raise CorePackageError(
+            "compiler_plugins JSON differs from manifests.compiler_plugins"
+        )
+    manifest["compiler_plugins"] = verified_plugins
 
     preview = manifest.get("preview")
     if preview is not None:

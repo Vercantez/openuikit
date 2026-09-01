@@ -29,6 +29,7 @@ import CommonCrypto
 import AppIntents
 import OSLog
 import UniformTypeIdentifiers
+import SwiftData
 import WebKit
 
 private func coreRequireIndefiniteSymbolEffect<Effect>(_: Effect)
@@ -804,6 +805,8 @@ struct CoreGuestPackageProbe {
         precondition(UTType.jpeg.supertypes.contains(.image))
         precondition(UTType.jpeg.conforms(to: .content))
         precondition(UTType.usdz.conforms(to: .threeDContent))
+        precondition(!SwiftDataPortable.supportsDurableStorage)
+        precondition(!SwiftDataPortable.supportsCloudKit)
         let addController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
         precondition(
             type(of: addController).presentationCapability == .hostDriven
@@ -834,11 +837,12 @@ struct CoreGuestPackageProbe {
                 + "graphics=coreimage,quartzcore "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-18 oslog=standard-error,signposts "
+                + "first-party=portable-19 oslog=standard-error,signposts "
                 + "security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "
                 + "commoncrypto=sha256 "
                 + "uniform-types=tags,conformance "
+                + "swiftdata=volatile,fail-closed-durable "
                 + "webkit=engine-unavailable preview=\(preview)"
         )
     }

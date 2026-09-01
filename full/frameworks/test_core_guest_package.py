@@ -162,6 +162,7 @@ FRAMEWORKS = (
     "AppIntents",
     "OSLog",
     "UniformTypeIdentifiers",
+    "SwiftData",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -262,8 +263,9 @@ def validate_swiftui_runtime_link(source: str) -> None:
     if missing:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
     # Observation and SwiftUI each link Concurrency, while the reusable
-    # first-party link loop and executable probe each carry the same token.
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 4:
+    # first-party link loop, executable probe, and SwiftData runtime gate each
+    # carry the same token.
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 5:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
     swiftui_link_end = source.index(
@@ -614,6 +616,14 @@ class PackageFixture:
             "observation macros",
         )
         write_file(
+            root / "host-tools/swift/host/plugins/libFoundationMacros.so",
+            "foundation macros",
+        )
+        write_file(
+            root / "host-tools/swift/host/plugins/libSwiftDataMacros.so",
+            "swiftdata macros",
+        )
+        write_file(
             root / "host-tools/swift/linux/libswiftCore.so",
             "host Swift runtime",
         )
@@ -655,6 +665,12 @@ class PackageFixture:
             "-fmodule-map-file=include/CoreImage/module.modulemap",
             "-Xcc",
             "-Iinclude/CoreImage",
+            "-load-plugin-library",
+            "host-tools/swift/host/plugins/libObservationMacros.so",
+            "-load-plugin-library",
+            "host-tools/swift/host/plugins/libFoundationMacros.so",
+            "-load-plugin-library",
+            "host-tools/swift/host/plugins/libSwiftDataMacros.so",
         ]
         self.link_arguments = [
             "-arch",
@@ -700,12 +716,56 @@ class PackageFixture:
             "-lAppIntents",
             "-lOSLog",
             "-lUniformTypeIdentifiers",
+            "-lSwiftData",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
         )
         (root / "link-inputs.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.link_arguments)
+        )
+        closure_path = "host-tools/swift/linux/libswiftCore.so"
+        plugin_rows = (
+            (
+                "ObservationMacros",
+                "libObservationMacros.so",
+                "ObservableMacro,ObservationIgnoredMacro,ObservationTrackedMacro",
+            ),
+            (
+                "FoundationMacros",
+                "libFoundationMacros.so",
+                "ExpressionMacro,PredicateMacro",
+            ),
+            (
+                "SwiftDataMacros",
+                "libSwiftDataMacros.so",
+                "PersistentModelMacro",
+            ),
+        )
+        compiler_plugin_lines = ["format\tcore-compiler-plugins-v1"]
+        for module, basename, registrations in plugin_rows:
+            relative = f"host-tools/swift/host/plugins/{basename}"
+            compiler_plugin_lines.append(
+                "\t".join(
+                    (
+                        "plugin", module, "library", relative,
+                        sha256(root / relative), registrations,
+                        "app,framework,package", "serialized=no",
+                    )
+                )
+            )
+        for module, _basename, _registrations in plugin_rows:
+            compiler_plugin_lines.append(
+                "\t".join(
+                    (
+                        "closure", module, closure_path,
+                        sha256(root / closure_path),
+                    )
+                )
+            )
+        write_file(
+            root / "attestation/compiler-plugins.tsv",
+            "\n".join(compiler_plugin_lines) + "\n",
         )
         self.plugin: Path | None = None
         if preview:
@@ -840,6 +900,22 @@ class PackageFixture:
         records.append(
             self._artifact(
                 "host-tool",
+                "FoundationMacros",
+                "plugin",
+                "host-tools/swift/host/plugins/libFoundationMacros.so",
+            )
+        )
+        records.append(
+            self._artifact(
+                "host-tool",
+                "SwiftDataMacros",
+                "plugin",
+                "host-tools/swift/host/plugins/libSwiftDataMacros.so",
+            )
+        )
+        records.append(
+            self._artifact(
+                "host-tool",
                 "ObservationMacros",
                 "dependency",
                 "host-tools/swift/linux/libswiftCore.so",
@@ -916,6 +992,8 @@ class PackageFixture:
             "attestation/openuikit-resources-tree.tsv",
             "--runtime-closure",
             "attestation/runtime-closure.tsv",
+            "--compiler-plugins",
+            "attestation/compiler-plugins.tsv",
             "--compile-rsp",
             "compile-flags.rsp",
             "--link-rsp",
@@ -962,6 +1040,63 @@ class PackageContractTests(unittest.TestCase):
         run_tool("verify", "--package-root", str(relocated))
         summary = run_canonical(relocated)
         self.assertIn("preview=no", summary.stdout)
+
+    def test_compiler_plugin_manifest_is_structured_and_relocatable(self) -> None:
+        fixture = self.fixture(False)
+        document = json.loads(
+            (fixture.root / "attestation/core-package.json").read_text()
+        )
+        plugins = document["compiler_plugins"]
+        self.assertEqual(
+            [plugin["module"] for plugin in plugins],
+            ["ObservationMacros", "FoundationMacros", "SwiftDataMacros"],
+        )
+        for plugin in plugins:
+            self.assertEqual(plugin["load_kind"], "library")
+            self.assertEqual(
+                plugin["consumer_scopes"], ["app", "framework", "package"]
+            )
+            self.assertFalse(plugin["serialized_jobs"])
+            self.assertEqual(
+                [item["path"] for item in plugin["host_closure"]],
+                ["host-tools/swift/linux/libswiftCore.so"],
+            )
+
+    def test_compiler_plugin_closure_scope_and_load_mutations_are_refused(self) -> None:
+        for mutation, expected in (
+            (
+                lambda text: "\n".join(
+                    line
+                    for line in text.splitlines()
+                    if not line.startswith("closure\tFoundationMacros\t")
+                )
+                + "\n",
+                "native host closure is incomplete",
+            ),
+            (
+                lambda text: text.replace(
+                    "\tapp,framework,package\t", "\tapp,package\t", 1
+                ),
+                "consumer scopes",
+            ),
+        ):
+            with self.subTest(expected=expected), tempfile.TemporaryDirectory() as temporary:
+                fixture = PackageFixture(Path(temporary) / "package", preview=False)
+                path = fixture.root / "attestation/compiler-plugins.tsv"
+                path.write_text(mutation(path.read_text(encoding="utf-8")), encoding="utf-8")
+                refusal = fixture.write_manifest(expected=2)
+                self.assertIn(expected, refusal.stderr)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = PackageFixture(Path(temporary) / "package", preview=False)
+            value = "host-tools/swift/host/plugins/libSwiftDataMacros.so"
+            index = fixture.compile_arguments.index(value)
+            del fixture.compile_arguments[index - 1 : index + 1]
+            (fixture.root / "compile-flags.rsp").write_bytes(
+                b"".join(token.encode() + b"\0" for token in fixture.compile_arguments)
+            )
+            refusal = fixture.write_manifest(expected=2)
+            self.assertIn("SwiftDataMacros compiler-plugin load pair count 0", refusal.stderr)
 
     def test_preview_is_external_and_dts_is_driver_owned(self) -> None:
         fixture = self.fixture(True)
@@ -1135,7 +1270,8 @@ class PackageContractTests(unittest.TestCase):
     def test_coreimage_compile_pairs_are_mandatory(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             fixture = PackageFixture(Path(temporary) / "package", preview=False)
-            fixture.compile_arguments = fixture.compile_arguments[:-2]
+            pair_end = fixture.compile_arguments.index("-Iinclude/CoreImage") + 1
+            del fixture.compile_arguments[pair_end - 2 : pair_end]
             (fixture.root / "compile-flags.rsp").write_bytes(
                 b"".join(token.encode() + b"\0" for token in fixture.compile_arguments)
             )
@@ -1382,7 +1518,7 @@ class ShellContractTests(unittest.TestCase):
                 'LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:'
                 '$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST'
             ),
-            4,
+            5,
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -1550,7 +1686,7 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 34)
+        self.assertEqual(len(FRAMEWORKS), 35)
         self.assertEqual(FRAMEWORKS.index("WebKit"), 15)
         for token in (
             "-module-name WebKit -emit-module",
@@ -2107,7 +2243,7 @@ class ShellContractTests(unittest.TestCase):
                         source.replace(predicate, "deleted-predicate", 1)
                     )
 
-    def test_eighteen_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_nineteen_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -2131,8 +2267,9 @@ class ShellContractTests(unittest.TestCase):
             "AppIntents",
             "OSLog",
             "UniformTypeIdentifiers",
+            "SwiftData",
         )
-        self.assertEqual(FRAMEWORKS[-18:], first_party)
+        self.assertEqual(FRAMEWORKS[-19:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -2144,13 +2281,13 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertIn("first-party-dylib-loads-v1", source)
         self.assertIn("apple-self-load=0", source)
-        self.assertIn("frontier-frameworks\\tframeworks=11\\tsources=11", source)
+        self.assertIn("frontier-frameworks\\tframeworks=12\\tsources=13", source)
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 11",
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 13",
             source,
         )
         self.assertIn(
-            "compile eighteen independent first-party framework modules", source
+            "compile nineteen independent first-party framework modules", source
         )
         self.assertIn("network_string_processing_undefineds", source)
         self.assertIn("direct StringProcessing undefineds, expected 0", source)
@@ -2158,7 +2295,7 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=portable-18", probe)
+        self.assertIn("first-party=portable-19", probe)
         self.assertIn("oslog=standard-error,signposts", probe)
         self.assertIn("uniform-types=tags,conformance", probe)
         self.assertIn("security=keychain,random", probe)

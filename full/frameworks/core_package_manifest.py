@@ -76,6 +76,7 @@ REQUIRED_MANIFESTS = {
     "guest_root_tree",
     "openuikit_resources_tree",
     "runtime_closure",
+    "compiler_plugins",
 }
 FRAMEWORKS = (
     "FoundationEssentials",
@@ -112,6 +113,7 @@ FRAMEWORKS = (
     "AppIntents",
     "OSLog",
     "UniformTypeIdentifiers",
+    "SwiftData",
 )
 REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(f"-l{name}" for name in FRAMEWORKS)
 MODULE_DEPENDENCIES = (
@@ -527,6 +529,131 @@ def checked_manifest(package: Path, relative: str, what: str) -> dict[str, str]:
     return {"path": relative, "sha256": sha256_file(path)}
 
 
+def compiler_plugins_json(
+    package: Path,
+    artifacts: list[dict[str, str]],
+    relative: str,
+    compile_tokens: list[str],
+) -> list[dict[str, object]]:
+    """Parse and prove the relocatable, production compiler-plugin contract.
+
+    Every packaged library plugin is declared once, carries its external-macro
+    registrations and consumer scopes, and names a complete packaged native
+    host closure.  Keeping this separate from Preview's externally supplied
+    executable plugin lets package, framework, and app compiles share one
+    ordinary `-load-plugin-library` transport.
+    """
+    path = require_regular_beneath(
+        package, safe_relative(relative, "compiler-plugin manifest path"),
+        "compiler-plugin manifest",
+    )
+    lines = path.read_text(encoding="utf-8").splitlines()
+    if not lines or lines[0] != "format\tcore-compiler-plugins-v1":
+        refuse("compiler-plugin manifest format drifted")
+    plugin_rows: list[tuple[str, str, str, str, str, str, str]] = []
+    closure_rows: dict[str, list[tuple[str, str]]] = {}
+    saw_closure = False
+    for number, line in enumerate(lines[1:], 2):
+        fields = line.split("\t")
+        if fields[0] == "plugin":
+            if saw_closure or len(fields) != 8:
+                refuse(f"malformed or unordered compiler-plugin row {number}")
+            plugin_rows.append(tuple(fields[1:]))  # type: ignore[arg-type]
+        elif fields[0] == "closure":
+            saw_closure = True
+            if len(fields) != 4:
+                refuse(f"malformed compiler-plugin closure row {number}")
+            closure_rows.setdefault(fields[1], []).append((fields[2], fields[3]))
+        else:
+            refuse(f"unknown compiler-plugin record on line {number}")
+    if not plugin_rows:
+        refuse("compiler-plugin manifest contains no plugins")
+
+    artifact_by_path = {str(item["path"]): item for item in artifacts}
+    dependency_paths = sorted(
+        str(item["path"])
+        for item in artifacts
+        if item["category"] == "host-tool" and item["role"] == "dependency"
+    )
+    if not dependency_paths:
+        refuse("compiler-plugin packaged host closure is empty")
+    expected_scopes = ["app", "framework", "package"]
+    seen_modules: set[str] = set()
+    seen_paths: set[str] = set()
+    result: list[dict[str, object]] = []
+    for module, kind, plugin_relative, digest, raw_registrations, raw_scopes, raw_serialized in plugin_rows:
+        if not module.isidentifier() or module in seen_modules:
+            refuse(f"unsafe or duplicate compiler-plugin module: {module}")
+        seen_modules.add(module)
+        if kind not in ("library", "executable"):
+            refuse(f"unsupported compiler-plugin load kind: {kind}")
+        safe_relative(plugin_relative, f"{module} plugin path")
+        if plugin_relative in seen_paths:
+            refuse(f"duplicate compiler-plugin path: {plugin_relative}")
+        seen_paths.add(plugin_relative)
+        artifact = artifact_by_path.get(plugin_relative)
+        if (
+            artifact is None
+            or artifact["category"] != "host-tool"
+            or artifact["role"] != "plugin"
+            or artifact["sha256"] != digest
+        ):
+            refuse(f"{module} plugin artifact/hash differs from its ledger")
+        registrations = raw_registrations.split(",")
+        if (
+            not registrations
+            or registrations != sorted(set(registrations))
+            or any(not value.isidentifier() for value in registrations)
+        ):
+            refuse(f"{module} macro registrations are malformed or unsorted")
+        scopes = raw_scopes.split(",")
+        if scopes != expected_scopes:
+            refuse(f"{module} consumer scopes must be app,framework,package")
+        if raw_serialized not in ("serialized=yes", "serialized=no"):
+            refuse(f"{module} serialized-job requirement is malformed")
+        closure = closure_rows.get(module, [])
+        if [value[0] for value in closure] != dependency_paths:
+            refuse(f"{module} native host closure is incomplete or unordered")
+        closure_json: list[dict[str, str]] = []
+        for closure_relative, closure_digest in closure:
+            item = artifact_by_path.get(closure_relative)
+            if (
+                item is None
+                or item["category"] != "host-tool"
+                or item["role"] != "dependency"
+                or item["sha256"] != closure_digest
+            ):
+                refuse(f"{module} closure artifact/hash differs: {closure_relative}")
+            closure_json.append(
+                {"path": closure_relative, "sha256": closure_digest}
+            )
+        option = "-load-plugin-library" if kind == "library" else "-load-plugin-executable"
+        expected_argument = plugin_relative if kind == "library" else f"{plugin_relative}#{module}"
+        occurrences = sum(
+            compile_tokens[index : index + 2] == [option, expected_argument]
+            for index in range(len(compile_tokens) - 1)
+        )
+        if occurrences != 1:
+            refuse(
+                f"{module} compiler-plugin load pair count {occurrences}, expected 1"
+            )
+        result.append(
+            {
+                "module": module,
+                "load_kind": kind,
+                "path": plugin_relative,
+                "sha256": digest,
+                "registrations": registrations,
+                "consumer_scopes": scopes,
+                "serialized_jobs": raw_serialized == "serialized=yes",
+                "host_closure": closure_json,
+            }
+        )
+    if set(closure_rows) != seen_modules:
+        refuse("compiler-plugin closure names differ from declared plugins")
+    return result
+
+
 def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
     for framework in FRAMEWORKS:
         selected = [item for item in artifacts if item["category"] == "framework" and item["name"] == framework]
@@ -879,6 +1006,19 @@ def validate_document(
     for required in REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
         if link_tokens.count(required) != 1:
             refuse(f"link inputs must contain required token exactly once: {required}")
+    compiler_plugin_manifest = manifests.get("compiler_plugins")
+    if not isinstance(compiler_plugin_manifest, dict) or not isinstance(
+        compiler_plugin_manifest.get("path"), str
+    ):
+        refuse("core package has no compiler-plugin manifest")
+    rebuilt_compiler_plugins = compiler_plugins_json(
+        package,
+        ledger_artifacts,
+        str(compiler_plugin_manifest["path"]),
+        compile_tokens,
+    )
+    if document.get("compiler_plugins") != rebuilt_compiler_plugins:
+        refuse("compiler_plugins JSON differs from its attested manifest")
 
     preview = document.get("preview", "missing")
     if preview == "missing":
@@ -1022,6 +1162,9 @@ def write_command(args: argparse.Namespace) -> None:
         args.preview_attestation,
         args.external_preview_plugin,
     )
+    compiler_plugins = compiler_plugins_json(
+        package, artifacts, args.compiler_plugins, compile_tokens
+    )
     dts_object_count = link_tokens.count("objects/developertoolsupport.o")
     if dts_object_count != 0:
         refuse(
@@ -1085,6 +1228,9 @@ def write_command(args: argparse.Namespace) -> None:
             "guest_root_tree": checked_manifest(package, args.guest_inventory, "guest-root inventory"),
             "openuikit_resources_tree": checked_manifest(package, args.resource_inventory, "OpenUIKit resource inventory"),
             "runtime_closure": checked_manifest(package, args.runtime_closure, "runtime closure"),
+            "compiler_plugins": checked_manifest(
+                package, args.compiler_plugins, "compiler plugins"
+            ),
         },
         "response_files": {
             "encoding": "nul-delimited-utf8",
@@ -1094,6 +1240,7 @@ def write_command(args: argparse.Namespace) -> None:
         },
         "swift_compile_arguments": compile_tokens,
         "executable_link_arguments": link_tokens,
+        "compiler_plugins": compiler_plugins,
         "openuikit_runtime": {
             "resource_root": "resources/OpenUIKit",
             "font_paths": fonts,
@@ -1175,6 +1322,7 @@ def parser() -> argparse.ArgumentParser:
     write.add_argument("--guest-inventory", required=True)
     write.add_argument("--resource-inventory", required=True)
     write.add_argument("--runtime-closure", required=True)
+    write.add_argument("--compiler-plugins", required=True)
     write.add_argument("--compile-rsp", required=True)
     write.add_argument("--link-rsp", required=True)
     write.add_argument("--preview-attestation")

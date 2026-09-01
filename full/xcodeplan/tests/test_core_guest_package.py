@@ -52,6 +52,8 @@ class CoreGuestPackageTests(unittest.TestCase):
             "include/CoreImage/CIFilterBuiltins.h",
             "include/CoreImage/module.modulemap",
             "host-tools/swift/host/plugins/libObservationMacros.so",
+            "host-tools/swift/host/plugins/libFoundationMacros.so",
+            "host-tools/swift/host/plugins/libSwiftDataMacros.so",
             "host-tools/swift/linux/libswiftCore.so",
         ]
         required_files.extend(
@@ -90,6 +92,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "AppIntents",
                 "OSLog",
                 "UniformTypeIdentifiers",
+                "SwiftData",
                 "DeveloperToolsSupport",
             )
         )
@@ -129,6 +132,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "AppIntents",
                 "OSLog",
                 "UniformTypeIdentifiers",
+                "SwiftData",
             )
         )
         for relative in required_files:
@@ -154,19 +158,93 @@ class CoreGuestPackageTests(unittest.TestCase):
             "guest-root-tree",
             "openuikit-resources-tree",
             "runtime-closure",
+            "compiler-plugins",
         )
         self.manifest_files = {}
         for name in manifest_names:
             path = self.root / f"attestation/{name}.tsv"
             path.write_bytes(f"format\t{name}-v1\n".encode("utf-8"))
             self.manifest_files[name.replace("-", "_")] = path
+        plugin_specs = (
+            (
+                "ObservationMacros",
+                "libObservationMacros.so",
+                ["ObservableMacro", "ObservationIgnoredMacro", "ObservationTrackedMacro"],
+            ),
+            (
+                "FoundationMacros",
+                "libFoundationMacros.so",
+                ["ExpressionMacro", "PredicateMacro"],
+            ),
+            (
+                "SwiftDataMacros",
+                "libSwiftDataMacros.so",
+                ["PersistentModelMacro"],
+            ),
+        )
+        closure_relative = "host-tools/swift/linux/libswiftCore.so"
+        compiler_plugins = []
+        for module, basename, registrations in plugin_specs:
+            relative = f"host-tools/swift/host/plugins/{basename}"
+            compiler_plugins.append(
+                {
+                    "module": module,
+                    "load_kind": "library",
+                    "path": relative,
+                    "sha256": sha256(self.root / relative),
+                    "registrations": registrations,
+                    "consumer_scopes": ["app", "framework", "package"],
+                    "serialized_jobs": False,
+                    "host_closure": [
+                        {
+                            "path": closure_relative,
+                            "sha256": sha256(self.root / closure_relative),
+                        }
+                    ],
+                }
+            )
+        plugin_lines = ["format\tcore-compiler-plugins-v1"]
+        for plugin in compiler_plugins:
+            plugin_lines.append(
+                "\t".join(
+                    (
+                        "plugin", plugin["module"], plugin["load_kind"],
+                        plugin["path"], plugin["sha256"],
+                        ",".join(plugin["registrations"]),
+                        ",".join(plugin["consumer_scopes"]), "serialized=no",
+                    )
+                )
+            )
+        for plugin in compiler_plugins:
+            for item in plugin["host_closure"]:
+                plugin_lines.append(
+                    "\t".join(
+                        ("closure", plugin["module"], item["path"], item["sha256"])
+                    )
+                )
+        self.manifest_files["compiler_plugins"].write_text(
+            "\n".join(plugin_lines) + "\n", encoding="utf-8"
+        )
         artifacts = []
         for relative in required_files:
             if relative.startswith("guest-root/"):
                 continue
             path = self.root / relative
+            category, name, role = "framework", "Fixture", "fixture"
+            if "/plugins/lib" in relative:
+                category, role = "host-tool", "plugin"
+                name = Path(relative).stem.removeprefix("lib")
+            elif relative.startswith("host-tools/"):
+                category, name, role = "host-tool", "CompilerPluginClosure", "dependency"
             artifacts.append(
-                {"path": relative, "sha256": sha256(path), "size": path.stat().st_size}
+                {
+                    "category": category,
+                    "name": name,
+                    "role": role,
+                    "path": relative,
+                    "sha256": sha256(path),
+                    "size": path.stat().st_size,
+                }
             )
         self.manifest = {
             "artifacts": artifacts,
@@ -214,8 +292,10 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lAppIntents",
                 "-lOSLog",
                 "-lUniformTypeIdentifiers",
+                "-lSwiftData",
             ],
             "format_version": 1,
+            "compiler_plugins": compiler_plugins,
             "manifests": {
                 **{
                     name: {
@@ -255,6 +335,10 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "sdk",
                 "-load-plugin-library",
                 "host-tools/swift/host/plugins/libObservationMacros.so",
+                "-load-plugin-library",
+                "host-tools/swift/host/plugins/libFoundationMacros.so",
+                "-load-plugin-library",
+                "host-tools/swift/host/plugins/libSwiftDataMacros.so",
                 "-I",
                 "modules",
                 "-Xcc",
@@ -295,6 +379,16 @@ class CoreGuestPackageTests(unittest.TestCase):
         self.assertEqual(
             core_guest_package.main([os.fspath(self.root), "--emit-summary"]), 0
         )
+
+    def test_compiler_plugin_json_cannot_diverge_from_attested_transport(self) -> None:
+        changed = copy.deepcopy(self.manifest)
+        changed["compiler_plugins"][2]["registrations"] = ["DifferentMacro"]
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "differs from manifests.compiler_plugins",
+        ):
+            core_guest_package.validate(self.root)
 
     def test_roots_every_package_compile_path_for_pcm_identity(self) -> None:
         root, manifest = core_guest_package.validate(self.root)

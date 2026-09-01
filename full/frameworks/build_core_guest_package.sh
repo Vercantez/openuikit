@@ -35,6 +35,7 @@ INTENTSUI_SOURCES_MANIFEST=$W/full/intentsui/intentsui_guest_sources.txt
 WEBKIT_SOURCES_MANIFEST=$W/full/webkit/webkit_guest_sources.txt
 COREIMAGE_SOURCES_MANIFEST=$W/full/coreimage/coreimage_guest_sources.txt
 QUARTZCORE_SOURCES_MANIFEST=$W/full/quartzcore/quartzcore_guest_sources.txt
+SWIFTDATA_SOURCES_MANIFEST=$W/full/swiftdata/swiftdata_guest_sources.txt
 WEBKIT_PROVENANCE_TOOL=$W/full/webkit/webkit_provenance.py
 WEBKIT_PROVENANCE_POLICY=$W/full/webkit/webkit-provenance.json
 FIRST_PARTY_PROVENANCE_TOOL=$W/full/first-party-frameworks/first_party_provenance.py
@@ -69,6 +70,7 @@ FIRST_PARTY_FRAMEWORKS=(
     AppIntents
     OSLog
     UniformTypeIdentifiers
+    SwiftData
 )
 FIRST_PARTY_SOURCE_DIRS=(
     localauthentication
@@ -89,6 +91,7 @@ FIRST_PARTY_SOURCE_DIRS=(
     appintents
     oslog
     uniformtypeidentifiers
+    swiftdata
 )
 FRONTIER_FRAMEWORKS=(
     CoreGraphics
@@ -102,6 +105,7 @@ FRONTIER_FRAMEWORKS=(
     AppIntents
     OSLog
     UniformTypeIdentifiers
+    SwiftData
 )
 FRONTIER_SOURCE_DIRS=(
     coregraphics
@@ -115,6 +119,7 @@ FRONTIER_SOURCE_DIRS=(
     appintents
     oslog
     uniformtypeidentifiers
+    swiftdata
 )
 
 EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
@@ -130,6 +135,7 @@ EXPECTED_INTENTSUI_SOURCE_COUNT=1
 EXPECTED_WEBKIT_SOURCE_COUNT=5
 EXPECTED_COREIMAGE_SOURCE_COUNT=1
 EXPECTED_QUARTZCORE_SOURCE_COUNT=1
+EXPECTED_SWIFTDATA_SOURCE_COUNT=2
 EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=19
 EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS=2
 EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS=0
@@ -164,6 +170,8 @@ PREVIEW_EXECUTABLE_EXPORT_SYMBOL='_$s21DeveloperToolsSupport7PreviewV14_openUIKi
 EXPECTED_OBSERVATION_UPSTREAM_COMMIT=ee343b46aef81c3ac7c5d7960cb35a41a88c5a9b
 OBSERVATION_MACRO_PLUGIN=/usr/lib/swift/host/plugins/libObservationMacros.so
 EXPECTED_OBSERVATION_PLUGIN_SHA=ea6510afdd0a9e4808229c52441e9a67ca24e8ce186fccfd082547a5ee1c1229
+FOUNDATION_MACRO_PLUGIN=/usr/lib/swift/host/plugins/libFoundationMacros.so
+EXPECTED_FOUNDATION_PLUGIN_SHA=babded9fc050d13aed1d1716e668a6fae7748fea13f49ec0b1087b0fb7f65fd4
 
 OBSERVATION_SOURCE_HASHES=(
     a679f8ccd75265030d6cd28b81cb49e810bc97e8d9c42c78626cce7c3ea66b2d
@@ -198,6 +206,9 @@ OBSERVATION_PLUGIN_LINUX_LIBS=(
     libdispatch.so
     libswift_Builtin_float.so
     libBlocksRuntime.so
+    libswiftSwiftOnoneSupport.so
+    libswift_StringProcessing.so
+    libswift_RegexParser.so
 )
 OBSERVATION_PLUGIN_LINUX_HASHES=(
     8fdbbfbf6cda36870e97fe46af2bf21eff39253d97e878aaae003f5be0127f92
@@ -206,6 +217,9 @@ OBSERVATION_PLUGIN_LINUX_HASHES=(
     39e502b3a8b016073947574a932172c1dafff8c41abd15b9b9f11bef7aaf1b6b
     62e2a42b1a98c56af695b154cbd01892d5c64acda3ee376950d960057d7c68af
     47a4f774ed1f4c094f8510c50d0006fde89a837ae785236e2ed669b8db9d002d
+    f0cb31b7c80b93bb0e848cbb631a07ba0997d70c908c9bff2f90b1d64592dee7
+    5a0365eda46c207fa588e08e8c863d6c34ad6d988e261e5539781a93dc2d9541
+    6cfdce2d756f761b11df923e6458a8095ad3dd9909bb7cc74381e930be1e12c9
 )
 
 EXPECTED_OPENCOMBINE_RESULT=c6fe4fa173f27fad0e30d1931c5ffead0aa267d55730a5885c1142bc7502b104
@@ -644,7 +658,7 @@ python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production \
 [ "$(grep -c '^source' "$WORK/first-party-sources.pre.tsv")" -eq 7 ] \
     || die 'first-party production source count drifted'
 append_frontier_sources() {
-    local output=$1 index framework source_dir source_manifest relative
+    local output=$1 index framework source_dir source_manifest relative expected_count
     local -a frontier_sources frontier_inputs
     for index in "${!FRONTIER_FRAMEWORKS[@]}"; do
         framework=${FRONTIER_FRAMEWORKS[$index]}
@@ -653,19 +667,28 @@ append_frontier_sources() {
         [ -f "$source_manifest" ] && [ ! -L "$source_manifest" ] \
             || die "$framework frontier source manifest is missing or linked"
         mapfile -t frontier_sources < "$source_manifest"
-        [ "${#frontier_sources[@]}" -eq 1 ] \
+        expected_count=1
+        [ "$framework" != SwiftData ] || expected_count=$EXPECTED_SWIFTDATA_SOURCE_COUNT
+        [ "${#frontier_sources[@]}" -eq "$expected_count" ] \
             || die "$framework frontier source manifest cardinality drifted"
-        relative=${frontier_sources[0]}
-        [ "$relative" = "full/$source_dir/$framework.swift" ] \
-            || die "$framework frontier source path drifted: $relative"
-        [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
-            || die "$framework frontier source is missing or linked"
+        if [ "$framework" = SwiftData ]; then
+            [ "${frontier_sources[*]}" = \
+                'full/swiftdata/SwiftData.swift full/swiftdata/SwiftDataSwiftUI.swift' ] \
+                || die 'SwiftData frontier source paths drifted'
+        else
+            [ "${frontier_sources[0]}" = "full/$source_dir/$framework.swift" ] \
+                || die "$framework frontier source path drifted: ${frontier_sources[0]}"
+        fi
         git -C "$W" ls-files --error-unmatch \
-            "${source_manifest#"$W"/}" "$relative" >/dev/null \
+            "${source_manifest#"$W"/}" "${frontier_sources[@]}" >/dev/null \
             || die "$framework frontier inputs are not tracked"
-        printf 'frontier-source\t%s\t%s\t%s\t%s\n' \
-            "$((index + 1))" "$framework" "$relative" \
-            "$(hash_file "$W/$relative")" >> "$output"
+        for relative in "${frontier_sources[@]}"; do
+            [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                || die "$framework frontier source is missing or linked"
+            printf 'frontier-source\t%s\t%s\t%s\t%s\n' \
+                "$((index + 1))" "$framework" "$relative" \
+                "$(hash_file "$W/$relative")" >> "$output"
+        done
         printf 'frontier-manifest\t%s\t%s\t%s\t%s\n' \
             "$((index + 1))" "$framework" "${source_manifest#"$W"/}" \
             "$(hash_file "$source_manifest")" >> "$output"
@@ -685,12 +708,28 @@ append_frontier_sources() {
                     "$(hash_file "$W/$relative")" >> "$output"
             done
         fi
+        if [ "$framework" = SwiftData ]; then
+            frontier_inputs=(
+                full/swiftdata/SwiftDataMacros.swift
+                full/swiftdata/tests/SwiftDataGuestRuntime.swift
+                full/foundation/patches/FoundationEssentials-PredicateFinalClassKeyPath.patch
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "SwiftData supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "SwiftData supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
     done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 11 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 13 ] \
     || die 'frontier framework source count drifted'
-[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 3 ] \
+[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 6 ] \
     || die 'frontier underlying input count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
@@ -734,6 +773,8 @@ require_hash "$BOLD_FONT" "$EXPECTED_BOLD_FONT" bold-font
     || die 'Observation Linux plugin closure cardinality drifted'
 require_hash "$OBSERVATION_MACRO_PLUGIN" "$EXPECTED_OBSERVATION_PLUGIN_SHA" \
     Observation-macro-plugin
+require_hash "$FOUNDATION_MACRO_PLUGIN" "$EXPECTED_FOUNDATION_PLUGIN_SHA" \
+    Foundation-macro-plugin
 file "$OBSERVATION_MACRO_PLUGIN" | grep -Eq 'ELF 64-bit.*(ARM aarch64|aarch64)' \
     || die 'Observation macro plugin is not native ELF64/aarch64'
 readelf -h "$OBSERVATION_MACRO_PLUGIN" \
@@ -849,6 +890,8 @@ cp "$BOLD_FONT" "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 
 cp "$OBSERVATION_MACRO_PLUGIN" \
     "$STAGE/host-tools/swift/host/plugins/libObservationMacros.so"
+cp "$FOUNDATION_MACRO_PLUGIN" \
+    "$STAGE/host-tools/swift/host/plugins/libFoundationMacros.so"
 for library in "${OBSERVATION_PLUGIN_HOST_LIBS[@]}"; do
     cp "/usr/lib/swift/host/$library" "$STAGE/host-tools/swift/host/$library"
 done
@@ -857,9 +900,27 @@ for library in "${OBSERVATION_PLUGIN_LINUX_LIBS[@]}"; do
 done
 STAGED_OBSERVATION_PLUGIN=$STAGE/host-tools/swift/host/plugins/libObservationMacros.so
 OBSERVATION_PLUGIN_FLAGS=(-load-plugin-library "$STAGED_OBSERVATION_PLUGIN")
+STAGED_FOUNDATION_PLUGIN=$STAGE/host-tools/swift/host/plugins/libFoundationMacros.so
+FOUNDATION_PLUGIN_FLAGS=(-load-plugin-library "$STAGED_FOUNDATION_PLUGIN")
+STAGED_SWIFTDATA_PLUGIN=$STAGE/host-tools/swift/host/plugins/libSwiftDataMacros.so
+swiftc -parse-as-library -emit-library -module-name SwiftDataMacros \
+    -no-toolchain-stdlib-rpath -I /usr/lib/swift/host -L /usr/lib/swift/host \
+    -Xlinker -rpath -Xlinker '$ORIGIN/..' \
+    -Xlinker -rpath -Xlinker '$ORIGIN/../../../swift/linux' \
+    "$W/full/swiftdata/SwiftDataMacros.swift" -o "$STAGED_SWIFTDATA_PLUGIN"
+SWIFTDATA_PLUGIN_FLAGS=(-load-plugin-library "$STAGED_SWIFTDATA_PLUGIN")
 if ldd "$STAGED_OBSERVATION_PLUGIN" | grep -Fq 'not found'; then
     die 'packaged Observation macro plugin closure is incomplete'
 fi
+for plugin in "$STAGED_FOUNDATION_PLUGIN" "$STAGED_SWIFTDATA_PLUGIN"; do
+    file "$plugin" | grep -Eq 'ELF 64-bit.*(ARM aarch64|aarch64)' \
+        || die "packaged compiler plugin is not native ELF64/aarch64: $plugin"
+    readelf -h "$plugin" | grep -Eq 'Machine:[[:space:]]+AArch64' \
+        || die "packaged compiler plugin ELF machine is not AArch64: $plugin"
+    LD_LIBRARY_PATH="$STAGE/host-tools/swift/host:$STAGE/host-tools/swift/linux" \
+        ldd "$plugin" | grep -Fq 'not found' \
+        && die "packaged compiler plugin closure is incomplete: $plugin"
+done
 {
     printf 'format\tobservation-macro-plugin-v1\n'
     printf 'toolchain\t%s\n' "$OBSERVATION_TOOLCHAIN"
@@ -883,6 +944,31 @@ fi
             /^[[:space:]]*\// { print $1 "\t" $1 }' \
         | LC_ALL=C sort -u)
 } > "$STAGE/attestation/observation-macro-plugin.tsv"
+
+PLUGIN_CLOSURE_PATHS=()
+for library in "${OBSERVATION_PLUGIN_HOST_LIBS[@]}"; do
+    PLUGIN_CLOSURE_PATHS+=("host-tools/swift/host/$library")
+done
+for library in "${OBSERVATION_PLUGIN_LINUX_LIBS[@]}"; do
+    PLUGIN_CLOSURE_PATHS+=("host-tools/swift/linux/$library")
+done
+mapfile -t PLUGIN_CLOSURE_PATHS < <(printf '%s\n' \
+    "${PLUGIN_CLOSURE_PATHS[@]}" | LC_ALL=C sort)
+{
+    printf 'format\tcore-compiler-plugins-v1\n'
+    printf 'plugin\tObservationMacros\tlibrary\thost-tools/swift/host/plugins/libObservationMacros.so\t%s\tObservableMacro,ObservationIgnoredMacro,ObservationTrackedMacro\tapp,framework,package\tserialized=no\n' \
+        "$(hash_file "$STAGED_OBSERVATION_PLUGIN")"
+    printf 'plugin\tFoundationMacros\tlibrary\thost-tools/swift/host/plugins/libFoundationMacros.so\t%s\tExpressionMacro,PredicateMacro\tapp,framework,package\tserialized=no\n' \
+        "$(hash_file "$STAGED_FOUNDATION_PLUGIN")"
+    printf 'plugin\tSwiftDataMacros\tlibrary\thost-tools/swift/host/plugins/libSwiftDataMacros.so\t%s\tPersistentModelMacro\tapp,framework,package\tserialized=no\n' \
+        "$(hash_file "$STAGED_SWIFTDATA_PLUGIN")"
+    for module in ObservationMacros FoundationMacros SwiftDataMacros; do
+        for relative in "${PLUGIN_CLOSURE_PATHS[@]}"; do
+            printf 'closure\t%s\t%s\t%s\n' "$module" "$relative" \
+                "$(hash_file "$STAGE/$relative")"
+        done
+    done
+} > "$STAGE/attestation/compiler-plugins.tsv"
 
 cp -a "$FULL/inc/CPortableIO" "$STAGE/include/"
 cp -a "$FULL/inc/CSTBTrueType" "$STAGE/include/"
@@ -1741,7 +1827,7 @@ done
     -emit-module-path "$STAGE/modules/WebKit.swiftmodule" \
     -emit-object -o "$WORK/webkit.o" "${WEBKIT_SOURCE_PATHS[@]}"
 
-echo '== compile eighteen independent first-party framework modules'
+echo '== compile nineteen independent first-party framework modules'
 clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -fvisibility=hidden -Wall -Wextra -Werror \
     -I "$STAGE/include/CCommonCrypto" \
@@ -1752,7 +1838,10 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     source_dir=${FIRST_PARTY_SOURCE_DIRS[$index]}
     source_manifest=$W/full/$source_dir/${source_dir}_guest_sources.txt
     mapfile -t framework_sources < "$source_manifest"
-    [ "${#framework_sources[@]}" -eq 1 ] \
+    expected_framework_source_count=1
+    [ "$framework" != SwiftData ] \
+        || expected_framework_source_count=$EXPECTED_SWIFTDATA_SOURCE_COUNT
+    [ "${#framework_sources[@]}" -eq "$expected_framework_source_count" ] \
         || die "$framework source manifest cardinality drifted"
     framework_source_paths=()
     for relative in "${framework_sources[@]}"; do
@@ -1761,6 +1850,13 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     framework_compile_flags=()
     if [ "$framework" = Security ]; then
         framework_compile_flags+=(-D OPENUIKIT_PORTABLE_FOUNDATION)
+    fi
+    if [ "$framework" = SwiftData ]; then
+        framework_compile_flags+=(
+            -D OPENUIKIT_PORTABLE_SWIFTUI
+            "${FOUNDATION_PLUGIN_FLAGS[@]}"
+            "${SWIFTDATA_PLUGIN_FLAGS[@]}"
+        )
     fi
     "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
         "${framework_compile_flags[@]}" \
@@ -1787,7 +1883,7 @@ echo '== prove SwiftUI publicly reexports full Foundation, Combine and Dispatch'
     -module-name SwiftUIFoundationReexportProbe -typecheck \
     "$W/full/frameworks/SwiftUIFoundationReexportProbe.swift"
 
-echo '== link thirty-four reusable platform dylibs (thirty-three frameworks plus ICU)'
+echo '== link thirty-six reusable platform dylibs (thirty-five frameworks plus ICU)'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
     -o "$STAGE/lib/libDispatch.dylib" \
@@ -2053,6 +2149,12 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
                 -reexport_library "$STAGE/lib/libFoundationEssentials.dylib"
             )
             ;;
+        SwiftData)
+            framework_link_dependencies+=(
+                -lSwiftUI
+                "$OBSERVATION_DYLIB"
+            )
+            ;;
     esac
     framework_objects=("$WORK/$source_dir.o")
     if [ "$framework" = CommonCrypto ]; then
@@ -2109,6 +2211,21 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         >> "$FIRST_PARTY_LOAD_AUDIT"
 done
 
+swiftdata_swiftui_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/libSwiftData.dylib" \
+    | awk '$1 == "@rpath/libSwiftUI.dylib" { count++ } END { print count + 0 }')
+swiftdata_observation_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/libSwiftData.dylib" \
+    | awk '$1 == "/usr/lib/swift/libswiftObservation.dylib" { count++ } END { print count + 0 }')
+[ "$swiftdata_swiftui_load_count" -eq 1 ] \
+    || die "libSwiftData SwiftUI load count $swiftdata_swiftui_load_count, expected 1"
+[ "$swiftdata_observation_load_count" -eq 1 ] \
+    || die "libSwiftData Observation load count $swiftdata_observation_load_count, expected 1"
+if llvm-otool-18 -L "$STAGE/lib/libSwiftData.dylib" \
+    | grep -Fq '/System/Library/Frameworks/SwiftData.framework/'; then
+    die 'portable libSwiftData must not load Apple SwiftData.framework'
+fi
+
 echo '== compile/link/run standalone OSLog re-export gate'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     -module-name OSLogGuestRuntime -emit-object \
@@ -2162,9 +2279,43 @@ grep -Fq \
     "$STAGE/attestation/oslog-runtime.log" \
     || die 'standalone OSLog signpost diagnostic is missing'
 
+echo '== compile/link/run the standalone SwiftData macro and persistence gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    "${FOUNDATION_PLUGIN_FLAGS[@]}" "${SWIFTDATA_PLUGIN_FLAGS[@]}" \
+    -module-name SwiftDataGuestRuntime -emit-object \
+    -o "$WORK/swiftdata-guest-runtime.o" \
+    "$W/full/swiftdata/tests/SwiftDataGuestRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/SwiftDataGuestRuntime" \
+    "$WORK/swiftdata-guest-runtime.o" "${COMMON_LINK[@]}" \
+    -lSwiftData -lSwiftUI -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials "$SWIFTUI_RUNTIME_LINK_FLAG" "$OBSERVATION_DYLIB" \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+llvm-otool-18 -hv "$STAGE/probe/SwiftDataGuestRuntime" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+    || die 'SwiftData runtime gate is not an ARM64 Mach-O executable'
+swiftdata_gate_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/SwiftDataGuestRuntime" \
+    | awk '$1 == "@rpath/libSwiftData.dylib" { count++ } END { print count + 0 }')
+[ "$swiftdata_gate_load_count" -eq 1 ] \
+    || die "SwiftData gate load count $swiftdata_gate_load_count, expected 1"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/SwiftDataGuestRuntime
+) | tee "$STAGE/attestation/swiftdata-runtime.log"
+grep -Fxq \
+    'SWIFTDATA_GUEST_MACHO_OK macro=attached predicate=compound sort=reverse mutation=insert-delete query=live durable=fail-closed' \
+    "$STAGE/attestation/swiftdata-runtime.log" \
+    || die 'standalone SwiftData runtime marker is missing'
+
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
-    "${OBSERVATION_PLUGIN_FLAGS[@]}" "${PREVIEW_FLAGS[@]}" \
+    "${OBSERVATION_PLUGIN_FLAGS[@]}" "${FOUNDATION_PLUGIN_FLAGS[@]}" \
+    "${SWIFTDATA_PLUGIN_FLAGS[@]}" "${PREVIEW_FLAGS[@]}" \
     -module-name CoreGuestPackageProbe \
     -emit-object -o "$WORK/core-probe.o" \
     "$W/full/frameworks/CoreGuestPackageProbe.swift" \
@@ -2200,7 +2351,7 @@ fi
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit \
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO \
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit \
-    -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers \
+    -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData \
     "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "$OBSERVATION_DYLIB"
 
@@ -2267,7 +2418,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-18 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-19 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -2408,6 +2559,8 @@ COMPILE_ARGUMENTS=(
     -Xfrontend -disable-implicit-string-processing-module-import
     -Xfrontend -disable-objc-attr-requires-foundation-module
     -load-plugin-library host-tools/swift/host/plugins/libObservationMacros.so
+    -load-plugin-library host-tools/swift/host/plugins/libFoundationMacros.so
+    -load-plugin-library host-tools/swift/host/plugins/libSwiftDataMacros.so
     -I modules
     -Xcc -Iinclude/CPortableIO
     -Xcc -Iinclude/CSTBTrueType
@@ -2444,7 +2597,7 @@ LINK_ARGUMENTS=(
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit
-    -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers
+    -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData
 )
 printf '%s\0' "${COMPILE_ARGUMENTS[@]}" > "$STAGE/compile-flags.rsp"
 printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"
@@ -2562,6 +2715,14 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$EXPECTED_OBSERVATION_UPSTREAM_COMMIT" \
         "$(hash_file "$OBSERVATION_SOURCES_MANIFEST")" \
         "$EXPECTED_OBSERVATION_PLUGIN_SHA" "$OBSERVATION_TOOLCHAIN"
+    printf 'compiler-plugins\tObservationMacros=%s\tFoundationMacros=%s\tSwiftDataMacros=%s\tmanifest=%s\n' \
+        "$(hash_file "$STAGED_OBSERVATION_PLUGIN")" \
+        "$(hash_file "$STAGED_FOUNDATION_PLUGIN")" \
+        "$(hash_file "$STAGED_SWIFTDATA_PLUGIN")" \
+        "$(hash_file "$STAGE/attestation/compiler-plugins.tsv")"
+    printf 'FoundationEssentials-predicate-keypath\tpatch=%s\tupstream=%s\n' \
+        "$(hash_file "$W/full/foundation/patches/FoundationEssentials-PredicateFinalClassKeyPath.patch")" \
+        'swiftlang/swift-foundation#92b1b021'
     printf 'machorun\tcommit=%s\ttree=%s\tloader-sha256=%s\n' \
         "$EXPECTED_MACHORUN_COMMIT" "$EXPECTED_MACHORUN_TREE" \
         "$(hash_file "$MACHORUN/build/machorun")"
@@ -2581,7 +2742,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'foundation-cache\toracle=%s\tapple-golden=%s\trows=43\n' \
         "$(hash_file "$FOUNDATION_CACHE_ORACLE")" \
         "$(hash_file "$FOUNDATION_CACHE_GOLDEN")"
-    printf 'frontier-frameworks\tframeworks=11\tsources=11\n'
+    printf 'frontier-frameworks\tframeworks=12\tsources=13\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
         "$(hash_file "$W/full/relativetime/include/OpenRelativeTimeABI.h")" \
         "$(hash_file "$W/full/relativetime/OpenRelativeTimeBridge.c")" \
@@ -2637,6 +2798,10 @@ record_artifact runtime Observation dylib \
     guest-root/darwin/usr/lib/swift/libswiftObservation.dylib
 record_artifact host-tool ObservationMacros plugin \
     host-tools/swift/host/plugins/libObservationMacros.so
+record_artifact host-tool FoundationMacros plugin \
+    host-tools/swift/host/plugins/libFoundationMacros.so
+record_artifact host-tool SwiftDataMacros plugin \
+    host-tools/swift/host/plugins/libSwiftDataMacros.so
 for library in "${OBSERVATION_PLUGIN_HOST_LIBS[@]}"; do
     record_artifact host-tool ObservationMacros dependency \
         "host-tools/swift/host/$library"
@@ -2703,6 +2868,8 @@ while IFS= read -r resource; do
 done < <(find "$STAGE/resources/OpenUIKit" -type f | LC_ALL=C sort)
 record_artifact probe CoreGuestPackageProbe executable probe/CoreGuestPackageProbe
 record_artifact probe OSLogGuestRuntime executable probe/OSLogGuestRuntime
+record_artifact probe SwiftDataGuestRuntime executable \
+    probe/SwiftDataGuestRuntime
 record_artifact probe DispatchMachORuntime executable \
     probe/DispatchMachORuntime
 record_artifact probe SwiftUIFoundationReexportProbe executable \
@@ -2715,6 +2882,8 @@ record_artifact attestation runtime runtime-log attestation/runtime.log
 record_artifact attestation OSLog runtime-log attestation/oslog-runtime.log
 record_artifact attestation OSLog link-audit \
     attestation/oslog-standalone-link.tsv
+record_artifact attestation SwiftData runtime-log \
+    attestation/swiftdata-runtime.log
 record_artifact attestation dispatch host \
     attestation/open-dispatch-host.tsv
 record_artifact attestation dispatch host-test-log \
@@ -2738,6 +2907,8 @@ record_artifact attestation observation-sources manifest \
     attestation/observation-sources.tsv
 record_artifact attestation observation-macro-plugin closure \
     attestation/observation-macro-plugin.tsv
+record_artifact attestation compiler-plugins manifest \
+    attestation/compiler-plugins.tsv
 record_artifact attestation intents-sources manifest \
     attestation/intents-sources.tsv
 record_artifact attestation graphics-sources manifest \
@@ -2872,6 +3043,8 @@ require_hash "$FOUNDATION_CACHE_GOLDEN" \
     "$EXPECTED_FOUNDATION_CACHE_GOLDEN_SHA256" post-Foundation-cache-Apple-golden
 require_hash "$OBSERVATION_MACRO_PLUGIN" "$EXPECTED_OBSERVATION_PLUGIN_SHA" \
     post-Observation-macro-plugin
+require_hash "$FOUNDATION_MACRO_PLUGIN" "$EXPECTED_FOUNDATION_PLUGIN_SHA" \
+    post-Foundation-macro-plugin
 for index in "${!OBSERVATION_PLUGIN_HOST_LIBS[@]}"; do
     library=${OBSERVATION_PLUGIN_HOST_LIBS[$index]}
     require_hash "/usr/lib/swift/host/$library" \
@@ -2909,6 +3082,7 @@ WRITE_ARGS=(
     --guest-inventory attestation/guest-root-tree.tsv
     --resource-inventory attestation/openuikit-resources-tree.tsv
     --runtime-closure attestation/runtime-closure.tsv
+    --compiler-plugins attestation/compiler-plugins.tsv
     --compile-rsp compile-flags.rsp --link-rsp link-inputs.rsp
 )
 [ "$PREVIEW_ENABLED" -eq 0 ] \
