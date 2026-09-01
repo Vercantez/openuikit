@@ -22,7 +22,8 @@ let package = Package(
             name: "WebKit",
             dependencies: [
                 .product(name: "OpenUIKit", package: "OpenUIKitSource"),
-            ]
+            ],
+            swiftSettings: [.define("PORTABLE_WEBKIT_HOST")]
         ),
     ]
 )

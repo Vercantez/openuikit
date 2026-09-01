@@ -98,6 +98,24 @@ private func compileFocusSurface(
     _ = webView.backForwardList.backList
     _ = webView.backForwardList.forwardList
     _ = webView.scrollView
+    webView.setAllMediaPlaybackSuspended(true) {}
+    var obscuredContentInsets = webView.obscuredContentInsets
+    obscuredContentInsets.bottom = 24
+    webView.obscuredContentInsets = obscuredContentInsets
+    webView.underPageBackgroundColor = .clear
+    _ = webView.underPageBackgroundColor
+    let observations: [NSKeyValueObservation] = [
+        webView.observe(\.url, options: [.initial, .old, .new]) { _, _ in },
+        webView.observe(\.title, options: [.new]) { _, _ in },
+        webView.observe(\.canGoBack, options: [.new]) { _, _ in },
+        webView.observe(\.canGoForward, options: [.new]) { _, _ in },
+        webView.observe(\.isLoading, options: [.new]) { _, _ in },
+        webView.observe(
+            \.underPageBackgroundColor,
+            options: [.initial, .new]
+        ) { _, _ in },
+    ]
+    withExtendedLifetime(observations) {}
 }
 
 @main

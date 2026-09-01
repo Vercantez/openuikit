@@ -85,9 +85,12 @@ platform `CGFloat` and `os_unfair_lock` APIs. The thirty-one-source facade adds:
   posts, and removes its observer immediately on idempotent cancellation.
 - `Progress` with Darwin-compatible determinate/indeterminate fraction rules,
   cancellation, pause/resume, completion, and typed key-path observation.
+  The same process-local typed observation substrate is available to every
+  portable `NSObject` subclass: framework owners bracket real mutations and
+  receive synchronous Apple-shaped initial/prior/old/new delivery.
   `NSKeyValueObservation` tokens have identity hashing, weakly attach to the
-  observed progress, invalidate idempotently, and deliver Apple-shaped
-  initial/prior/old/new changes without depending on automatic Objective-C KVO.
+  observed object, invalidate idempotently, and never depend on an unavailable
+  automatic Objective-C KVO runtime.
 - A shared `NSNumber`/`NSError`/`NSNull` value and error bridge,
   `JSONSerialization`, and UTF-16 `NSRegularExpression` surface. Its exact
   behavior and bounded exclusions are documented in

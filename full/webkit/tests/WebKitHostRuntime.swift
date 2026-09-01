@@ -137,7 +137,7 @@ private final class ErrorPageDelegate: WKNavigationDelegate {
 @main
 private struct WebKitHostRuntime {
     @MainActor
-    static func main() {
+    static func main() async {
         precondition(WKWebsiteDataStore.default() === WKWebsiteDataStore.default())
         let ephemeral = WKWebsiteDataStore.nonPersistent()
         precondition(!ephemeral.isPersistent)
@@ -220,6 +220,38 @@ private struct WebKitHostRuntime {
         precondition(!webView.hasOnlySecureContent)
         precondition(webView.allowsLinkPreview)
         precondition(webView.customUserAgent == "")
+        precondition(webView.obscuredContentInsets == .zero)
+        precondition(webView.underPageBackgroundColor == .white)
+
+        webView.obscuredContentInsets = UIEdgeInsets(
+            top: 1, left: 2, bottom: 31, right: 4
+        )
+        precondition(
+            webView.obscuredContentInsets == UIEdgeInsets(
+                top: 1, left: 2, bottom: 31, right: 4
+            )
+        )
+        let pageColor = UIColor(
+            red: 0.125, green: 0.25, blue: 0.5, alpha: 0.75
+        )
+        webView.underPageBackgroundColor = pageColor
+        precondition(webView.underPageBackgroundColor == pageColor)
+        webView.underPageBackgroundColor = nil
+        precondition(webView.underPageBackgroundColor == .white)
+        var mediaCompletions = 0
+        await withCheckedContinuation { continuation in
+            webView.setAllMediaPlaybackSuspended(true) {
+                mediaCompletions += 1
+                continuation.resume()
+            }
+        }
+        await withCheckedContinuation { continuation in
+            webView.setAllMediaPlaybackSuspended(false) {
+                mediaCompletions += 1
+                continuation.resume()
+            }
+        }
+        precondition(mediaCompletions == 2)
 
         let allowing = AllowingDelegate()
         webView.navigationDelegate = allowing
@@ -271,7 +303,8 @@ private struct WebKitHostRuntime {
 
         print(
             "WEBKIT_HOST_RUNTIME_OK "
-                + "configuration=copied state=retained policies=honored "
+                + "configuration=copied state=retained media=paired "
+                + "insets=retained background=retained policies=honored "
                 + "navigation=engine-unavailable rendering=absent"
         )
     }
