@@ -742,6 +742,43 @@ struct CoreGuestPackageProbe {
         precondition(decoded.pixels == bitmap.pixels)
         precondition(CGImageSourceCreateImageAtIndex(imageSource, 1, nil) == nil)
 
+        // ImageIO incremental sources consume the caller's accumulated byte
+        // buffer. Match the native status/count/type frontier: a short PNG
+        // prefix is invalid data, a recognized header exposes one incomplete
+        // image, and the final complete payload publishes decoded pixels.
+        precondition(encoded.count > 34)
+        let incremental = CGImageSourceCreateIncremental(nil)
+        precondition(CGImageSourceGetStatus(incremental) == .statusInvalidData)
+        precondition(CGImageSourceGetCount(incremental) == 0)
+        precondition(CGImageSourceGetType(incremental) == nil)
+        CGImageSourceUpdateData(
+            incremental, Data(encoded.prefix(4)) as CFData, false
+        )
+        precondition(CGImageSourceGetStatus(incremental) == .statusInvalidData)
+        precondition(CGImageSourceGetCount(incremental) == 0)
+        CGImageSourceUpdateData(
+            incremental, Data(encoded.prefix(16)) as CFData, false
+        )
+        precondition(CGImageSourceGetStatus(incremental) == .statusIncomplete)
+        precondition(CGImageSourceGetCount(incremental) == 1)
+        precondition(CGImageSourceGetType(incremental) == "public.png")
+        precondition(
+            CGImageSourceCreateImageAtIndex(incremental, 0, nil) == nil
+        )
+        CGImageSourceUpdateData(
+            incremental, Data(encoded.prefix(34)) as CFData, false
+        )
+        precondition(CGImageSourceGetStatus(incremental) == .statusIncomplete)
+        precondition(
+            CGImageSourceCreateImageAtIndex(incremental, 0, nil) == nil
+        )
+        CGImageSourceUpdateData(incremental, encoded as CFData, true)
+        precondition(CGImageSourceGetStatus(incremental) == .statusComplete)
+        let incrementalImage = CGImageSourceCreateImageAtIndex(
+            incremental, 0, nil
+        )!
+        precondition(incrementalImage.pixels == bitmap.pixels)
+
         let metadata = LPLinkMetadata()
         metadata.title = "Core package"
         metadata.url = URL(string: "https://core.invalid/share")
