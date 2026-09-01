@@ -394,10 +394,15 @@ oracle remains rooted at Apple's `/tmp`; the cold package executes that same
 Apple-linked fixture against the physical `/replay` host bind. Docker Desktop's
 `virtiofs` and `fakeowner` identities therefore receive `MNT_DOVOLFS` only on a
 durable pathname-bearing production volume, while the `/dev` pseudo-filesystem
-control remains clear. The cold marker is:
+control remains clear. Acceptance reads the authoritative mount type from
+`/proc/self/mountinfo` and independently records the statfs magic. This matters
+because current Docker Desktop reports its `fakeowner` magic, `6a656a63`, as
+`UNKNOWN` through GNU `stat`; the gate accepts only the exact
+`fakeowner:6a656a63` pair or an explicitly named `virtiofs` mount. The cold
+marker is:
 
 ```text
-OPEN_FOUNDATION_STATFS_OK primary=/replay bind-filesystem=fakeowner|virtiofs abi=2168 path-fd=exact mounts=root,nested flags=translated errno=darwin oracle=apple-exact
+OPEN_FOUNDATION_STATFS_OK primary=/replay bind-filesystem=fakeowner bind-magic=6a656a63 abi=2168 path-fd=exact mounts=root,nested flags=translated errno=darwin oracle=apple-exact
 ```
 
 Provenance key

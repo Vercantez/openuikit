@@ -3202,14 +3202,17 @@ class ShellContractTests(unittest.TestCase):
             "copyfile-xattr-unavailable-probe",
             "xattr-unavailable fallback=success",
             "OPEN_FOUNDATION_COPYFILE_XATTR_UNAVAILABLE_OK",
-            'stat -f -c %T "$STATFS_PRODUCTION_PATH"',
-            "fakeowner|virtiofs",
-            "primary=%s bind-filesystem=%s abi=2168",
+            'awk -v target="$STATFS_PRODUCTION_PATH"',
+            "/proc/self/mountinfo",
+            'stat -f -c %t "$STATFS_PRODUCTION_PATH"',
+            "fakeowner:6a656a63|virtiofs:*",
+            "primary=%s bind-filesystem=%s bind-magic=%s abi=2168",
             "OPEN_FOUNDATION_STATFS_OK",
             "OPEN_FOUNDATION_GROUP_LOOKUP_OK",
             "OPEN_FOUNDATION_XATTR_OK",
             "OPEN_FOUNDATION_FTS_OK",
-            "OPEN_FOUNDATION_STATFS_OK primary=%s bind-filesystem=%s abi=2168 "
+            "OPEN_FOUNDATION_STATFS_OK primary=%s bind-filesystem=%s "
+            "bind-magic=%s abi=2168 "
             "path-fd=exact mounts=root,nested flags=translated errno=darwin "
             "oracle=apple-exact",
             "OPEN_FOUNDATION_COPYFILE_OK",

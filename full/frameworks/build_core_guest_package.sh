@@ -2721,11 +2721,24 @@ require_hash "$MACHORUN/darwin/src/posix.c" \
     machorun-statfs-libsystem-source
 [ -d "$STATFS_PRODUCTION_PATH" ] && [ ! -L "$STATFS_PRODUCTION_PATH" ] \
     || die 'production replay mount for the statfs gate is missing or linked'
-statfs_primary_type=$(stat -f -c %T "$STATFS_PRODUCTION_PATH") \
-    || die "cannot identify the production $STATFS_PRODUCTION_PATH filesystem"
-case "$statfs_primary_type" in
-    fakeowner|virtiofs) ;;
-    *) die "production $STATFS_PRODUCTION_PATH filesystem $statfs_primary_type is not a pinned Docker Desktop bind type" ;;
+statfs_primary_type=$(awk -v target="$STATFS_PRODUCTION_PATH" '
+    $5 == target {
+        for (field = 6; field < NF; field++) {
+            if ($field == "-") {
+                print $(field + 1)
+                found = 1
+                exit
+            }
+        }
+    }
+    END { if (!found) exit 1 }
+' /proc/self/mountinfo) \
+    || die "cannot identify the production $STATFS_PRODUCTION_PATH mount type"
+statfs_primary_magic=$(stat -f -c %t "$STATFS_PRODUCTION_PATH") \
+    || die "cannot identify the production $STATFS_PRODUCTION_PATH filesystem magic"
+case "$statfs_primary_type:$statfs_primary_magic" in
+    fakeowner:6a656a63|virtiofs:*) ;;
+    *) die "production $STATFS_PRODUCTION_PATH filesystem $statfs_primary_type/$statfs_primary_magic is not a pinned Docker Desktop bind type" ;;
 esac
 for symbol in _statfs _fstatfs '_statfs$INODE64' '_fstatfs$INODE64'; do
     definition_count=$(llvm-nm-18 --defined-only --extern-only --just-symbol-name \
@@ -2750,8 +2763,8 @@ cmp "$STATFS_STDERR" "$WORK/statfs-macho.stderr" \
 cmp "$STATFS_EXIT" "$WORK/statfs-macho.exit" \
     || die 'Mach-O Darwin statfs translation produced the wrong exit status'
 cp "$WORK/statfs-macho.stdout" "$WORK/statfs-macho.log"
-printf 'OPEN_FOUNDATION_STATFS_OK primary=%s bind-filesystem=%s abi=2168 path-fd=exact mounts=root,nested flags=translated errno=darwin oracle=apple-exact\n' \
-    "$STATFS_PRODUCTION_PATH" "$statfs_primary_type" \
+printf 'OPEN_FOUNDATION_STATFS_OK primary=%s bind-filesystem=%s bind-magic=%s abi=2168 path-fd=exact mounts=root,nested flags=translated errno=darwin oracle=apple-exact\n' \
+    "$STATFS_PRODUCTION_PATH" "$statfs_primary_type" "$statfs_primary_magic" \
     >> "$WORK/statfs-macho.log"
 
 echo '== prove genuine Darwin copyfile and fcopyfile semantics'
