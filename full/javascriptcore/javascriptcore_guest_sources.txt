@@ -1,0 +1,6 @@
+full/javascriptcore/JSCAPI.swift
+full/javascriptcore/JSContext.swift
+full/javascriptcore/JSEngine.swift
+full/javascriptcore/JSParser.swift
+full/javascriptcore/JSValue.swift
+full/javascriptcore/JavaScriptCore.swift
