@@ -1,0 +1,37 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/ContactsUI.symbols.json",
+      "relationshipCount": 889,
+      "sha256": "1a8f826d6cd752294fe321579081ccbc770fb98b0409da1ffcf3ad4ea4bfd40f",
+      "symbolCount": 842
+    },
+    {
+      "path": "reference/symbol-graphs/ContactsUI@Contacts.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "8f2682e874984350ce6fdc29a9d5ada4d8e874132891a58372ad6f88dd45cd2d",
+      "symbolCount": 1
+    },
+    {
+      "path": "reference/symbol-graphs/ContactsUI@SwiftUICore.symbols.json",
+      "relationshipCount": 3,
+      "sha256": "4a97aeb0e1cbbafff1513d1659a138e2c07a61c678e8396ab01dad5bc23b6ae3",
+      "symbolCount": 3
+    },
+    {
+      "path": "reference/symbol-graphs/ContactsUI@UIKit.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "ce01d60df266cc61c5859da15c3caf7919180c199013db41dda423c1ee6749a1",
+      "symbolCount": 1
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "ContactsUI",
+  "relationshipCount": 895,
+  "schema": 1,
+  "symbolCount": 847,
+  "target": "arm64-apple-ios26.0"
+}

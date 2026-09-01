@@ -1,0 +1,18 @@
+symbol	sourceSDKRelativePath
+/System/Library/Frameworks/PushKit.framework/PushKit (for architecture arm64):	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_OBJC_CLASS_$_PKPublicChannel	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_OBJC_CLASS_$_PKPushCredentials	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_OBJC_CLASS_$_PKPushPayload	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_OBJC_CLASS_$_PKPushRegistry	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_OBJC_CLASS_$_PKUserNotificationsRemoteNotificationServiceConnection	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_OBJC_METACLASS_$_PKPublicChannel	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_OBJC_METACLASS_$_PKPushCredentials	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_OBJC_METACLASS_$_PKPushPayload	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_OBJC_METACLASS_$_PKPushRegistry	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_OBJC_METACLASS_$_PKUserNotificationsRemoteNotificationServiceConnection	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_PKNonMacTokenName	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_PKPushIncomingCallReportedNotification	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_PKPushTypeComplication	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_PKPushTypeFileProvider	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_PKPushTypeUserNotifications	System/Library/Frameworks/PushKit.framework/PushKit.tbd
+_PKPushTypeVoIP	System/Library/Frameworks/PushKit.framework/PushKit.tbd

@@ -1,0 +1,58 @@
+{
+  "module": "NotificationCenter",
+  "moduleRecord": {
+    "app_coverage_count": 3,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 3,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 78,
+    "iphoneos_runtime_focus_launch_build_rank": 74,
+    "module": "NotificationCenter",
+    "occurrence_count": 3,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "f2741abe07a6b6506152b68b1bf04830b2ace0543f48166415b5cf1aab4454e9",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Telegram/WidgetKitWidget/TodayViewController.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "d256820a4689f392e7bf5958787fa66737d73562cbbce0ecc2c82ad1d7909ef2",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "DuckDuckGo/AppServices/VPNService.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "88a72d2f7b8a5834757a6a27766e6588567580ac95fb98382ba2ca5cbc59f561",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "ContinueReadingWidget/WMFTodayContinueReadingWidgetViewController.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 78,
+    "byFocusLaunchBuildRelevance": 74
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

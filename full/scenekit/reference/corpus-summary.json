@@ -1,0 +1,72 @@
+{
+  "module": "SceneKit",
+  "moduleRecord": {
+    "app_coverage_count": 3,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 19,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 66,
+    "iphoneos_runtime_focus_launch_build_rank": 76,
+    "module": "SceneKit",
+    "occurrence_count": 19,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "de2cd21d1074d08c536540a6cbd0f0f10565ed2e1425424ef9d9672322274d5a",
+        "file_count": 10,
+        "occurrence_count": 10,
+        "sample_paths": [
+          "submodules/PremiumUI/Sources/BadgeBusinessView.swift",
+          "submodules/PremiumUI/Sources/BadgeStarsView.swift",
+          "submodules/PremiumUI/Sources/BoostHeaderBackgroundComponent.swift",
+          "submodules/PremiumUI/Sources/FasterStarsView.swift",
+          "submodules/PremiumUI/Sources/PhoneDemoComponent.swift",
+          "submodules/PremiumUI/Sources/SwirlStarsView.swift",
+          "submodules/TelegramUI/Components/Premium/PremiumCoinComponent/Sources/PremiumCoinComponent.swift",
+          "submodules/TelegramUI/Components/Premium/PremiumDiamondComponent/Sources/PremiumDiamondComponent.swift"
+        ]
+      },
+      "eigen": {
+        "evidence_sha256": "71d4cf24f60c99cacc9508387816b423557675241a3d9bf6e195087195c8377a",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "ios/Artsy/View_Controllers/ARVIR/AR/ARVIRHorizontalPlaneInteractionController.m",
+          "ios/Artsy/View_Controllers/ARVIR/Nodes/ARSCNWallNode.h",
+          "ios/Artsy/View_Controllers/ARVIR/Nodes/AppleARCode/FocusSquareSegment.swift",
+          "ios/Artsy/View_Controllers/ARVIR/Nodes/SCNArtworkNode.h",
+          "ios/Artsy/View_Controllers/ARVIR/Nodes/VirtualArtwork.swift",
+          "ios/Artsy/View_Controllers/ARVIR/VCs/ARAugmentedFloorBasedVIRViewController.m"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "b089724588a8e8c7fd065d16ab0752a4d5af0e217946bd0ce9ea1e9e047a5d3c",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "RiotSwiftUI/Modules/Common/EffectsScene/EffectsScene.swift",
+          "RiotSwiftUI/Modules/Common/EffectsScene/EffectsView.swift",
+          "RiotSwiftUI/Modules/Onboarding/Celebration/View/OnboardingCelebrationScreen.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 66,
+    "byFocusLaunchBuildRelevance": 76
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

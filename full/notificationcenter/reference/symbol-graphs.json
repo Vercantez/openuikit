@@ -1,0 +1,31 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 1,
+  "duplicateOccurrenceCount": 1,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/NotificationCenter.symbols.json",
+      "relationshipCount": 38,
+      "sha256": "e2976ff11e0437d05c0202aff37dfc1ba54e4ba0090186d9636a11e87cf46e87",
+      "symbolCount": 22
+    },
+    {
+      "path": "reference/symbol-graphs/NotificationCenter@Foundation.symbols.json",
+      "relationshipCount": 3,
+      "sha256": "23883721697aa70f209bfd63d421fef208389482e17f661a1fdfbc07ad408fa3",
+      "symbolCount": 3
+    },
+    {
+      "path": "reference/symbol-graphs/NotificationCenter@UIKit.symbols.json",
+      "relationshipCount": 4,
+      "sha256": "381dde7e9b2a45e0c645958756375a47a835152795de5686c5e20aa4f25139c8",
+      "symbolCount": 4
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "NotificationCenter",
+  "relationshipCount": 45,
+  "schema": 1,
+  "symbolCount": 28,
+  "target": "arm64-apple-ios26.0"
+}

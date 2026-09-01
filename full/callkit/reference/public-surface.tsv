@@ -1,0 +1,367 @@
+precise	kind	title	path	declaration
+c:@CXCallDirectoryPhoneNumberMax	swift.var	CXCallDirectoryPhoneNumberMax	CXCallDirectoryPhoneNumberMax	let CXCallDirectoryPhoneNumberMax: CXCallDirectoryPhoneNumber
+c:@CXErrorDomain	swift.var	CXErrorDomain	CXErrorDomain	let CXErrorDomain: String
+c:@CXErrorDomainCallDirectoryManager	swift.var	CXErrorDomainCallDirectoryManager	CXErrorDomainCallDirectoryManager	let CXErrorDomainCallDirectoryManager: String
+c:@CXErrorDomainIncomingCall	swift.var	CXErrorDomainIncomingCall	CXErrorDomainIncomingCall	let CXErrorDomainIncomingCall: String
+c:@CXErrorDomainNotificationServiceExtension	swift.var	CXErrorDomainNotificationServiceExtension	CXErrorDomainNotificationServiceExtension	let CXErrorDomainNotificationServiceExtension: String
+c:@CXErrorDomainRequestTransaction	swift.var	CXErrorDomainRequestTransaction	CXErrorDomainRequestTransaction	let CXErrorDomainRequestTransaction: String
+c:@E@CXCallDirectoryEnabledStatus	swift.enum	CXCallDirectoryManager.EnabledStatus	CXCallDirectoryManager.EnabledStatus	enum EnabledStatus
+c:@E@CXCallDirectoryEnabledStatus@CXCallDirectoryEnabledStatusDisabled	swift.enum.case	CXCallDirectoryManager.EnabledStatus.disabled	CXCallDirectoryManager.EnabledStatus.disabled	case disabled
+c:@E@CXCallDirectoryEnabledStatus@CXCallDirectoryEnabledStatusEnabled	swift.enum.case	CXCallDirectoryManager.EnabledStatus.enabled	CXCallDirectoryManager.EnabledStatus.enabled	case enabled
+c:@E@CXCallDirectoryEnabledStatus@CXCallDirectoryEnabledStatusUnknown	swift.enum.case	CXCallDirectoryManager.EnabledStatus.unknown	CXCallDirectoryManager.EnabledStatus.unknown	case unknown
+c:@E@CXCallEndedReason	swift.enum	CXCallEndedReason	CXCallEndedReason	enum CXCallEndedReason
+c:@E@CXCallEndedReason@CXCallEndedReasonAnsweredElsewhere	swift.enum.case	CXCallEndedReason.answeredElsewhere	CXCallEndedReason.answeredElsewhere	case answeredElsewhere
+c:@E@CXCallEndedReason@CXCallEndedReasonDeclinedElsewhere	swift.enum.case	CXCallEndedReason.declinedElsewhere	CXCallEndedReason.declinedElsewhere	case declinedElsewhere
+c:@E@CXCallEndedReason@CXCallEndedReasonFailed	swift.enum.case	CXCallEndedReason.failed	CXCallEndedReason.failed	case failed
+c:@E@CXCallEndedReason@CXCallEndedReasonRemoteEnded	swift.enum.case	CXCallEndedReason.remoteEnded	CXCallEndedReason.remoteEnded	case remoteEnded
+c:@E@CXCallEndedReason@CXCallEndedReasonUnanswered	swift.enum.case	CXCallEndedReason.unanswered	CXCallEndedReason.unanswered	case unanswered
+c:@E@CXErrorCode	swift.enum	CXError.Code	CXError.Code	enum Code
+c:@E@CXErrorCode@CXErrorCodeInvalidArgument	swift.enum.case	CXError.Code.invalidArgument	CXError.Code.invalidArgument	case invalidArgument
+c:@E@CXErrorCode@CXErrorCodeMissingVoIPBackgroundMode	swift.enum.case	CXError.Code.missingVoIPBackgroundMode	CXError.Code.missingVoIPBackgroundMode	case missingVoIPBackgroundMode
+c:@E@CXErrorCode@CXErrorCodeUnentitled	swift.enum.case	CXError.Code.unentitled	CXError.Code.unentitled	case unentitled
+c:@E@CXErrorCode@CXErrorCodeUnknownError	swift.enum.case	CXError.Code.unknownError	CXError.Code.unknownError	case unknownError
+c:@E@CXErrorCodeCallDirectoryManagerError	swift.enum	CXErrorCodeCallDirectoryManagerError.Code	CXErrorCodeCallDirectoryManagerError.Code	enum Code
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorCurrentlyLoading	swift.enum.case	CXErrorCodeCallDirectoryManagerError.Code.currentlyLoading	CXErrorCodeCallDirectoryManagerError.Code.currentlyLoading	case currentlyLoading
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorDuplicateEntries	swift.enum.case	CXErrorCodeCallDirectoryManagerError.Code.duplicateEntries	CXErrorCodeCallDirectoryManagerError.Code.duplicateEntries	case duplicateEntries
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorEntriesOutOfOrder	swift.enum.case	CXErrorCodeCallDirectoryManagerError.Code.entriesOutOfOrder	CXErrorCodeCallDirectoryManagerError.Code.entriesOutOfOrder	case entriesOutOfOrder
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorExtensionDisabled	swift.enum.case	CXErrorCodeCallDirectoryManagerError.Code.extensionDisabled	CXErrorCodeCallDirectoryManagerError.Code.extensionDisabled	case extensionDisabled
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorLoadingInterrupted	swift.enum.case	CXErrorCodeCallDirectoryManagerError.Code.loadingInterrupted	CXErrorCodeCallDirectoryManagerError.Code.loadingInterrupted	case loadingInterrupted
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorMaximumEntriesExceeded	swift.enum.case	CXErrorCodeCallDirectoryManagerError.Code.maximumEntriesExceeded	CXErrorCodeCallDirectoryManagerError.Code.maximumEntriesExceeded	case maximumEntriesExceeded
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorNoExtensionFound	swift.enum.case	CXErrorCodeCallDirectoryManagerError.Code.noExtensionFound	CXErrorCodeCallDirectoryManagerError.Code.noExtensionFound	case noExtensionFound
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorUnexpectedIncrementalRemoval	swift.enum.case	CXErrorCodeCallDirectoryManagerError.Code.unexpectedIncrementalRemoval	CXErrorCodeCallDirectoryManagerError.Code.unexpectedIncrementalRemoval	case unexpectedIncrementalRemoval
+c:@E@CXErrorCodeCallDirectoryManagerError@CXErrorCodeCallDirectoryManagerErrorUnknown	swift.enum.case	CXErrorCodeCallDirectoryManagerError.Code.unknown	CXErrorCodeCallDirectoryManagerError.Code.unknown	case unknown
+c:@E@CXErrorCodeIncomingCallError	swift.enum	CXErrorCodeIncomingCallError.Code	CXErrorCodeIncomingCallError.Code	enum Code
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorCallIsProtected	swift.enum.case	CXErrorCodeIncomingCallError.Code.callIsProtected	CXErrorCodeIncomingCallError.Code.callIsProtected	case callIsProtected
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorCallUUIDAlreadyExists	swift.enum.case	CXErrorCodeIncomingCallError.Code.callUUIDAlreadyExists	CXErrorCodeIncomingCallError.Code.callUUIDAlreadyExists	case callUUIDAlreadyExists
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorFilteredByBlockList	swift.enum.case	CXErrorCodeIncomingCallError.Code.filteredByBlockList	CXErrorCodeIncomingCallError.Code.filteredByBlockList	case filteredByBlockList
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorFilteredByDoNotDisturb	swift.enum.case	CXErrorCodeIncomingCallError.Code.filteredByDoNotDisturb	CXErrorCodeIncomingCallError.Code.filteredByDoNotDisturb	case filteredByDoNotDisturb
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorFilteredBySensitiveParticipants	swift.enum.case	CXErrorCodeIncomingCallError.Code.filteredBySensitiveParticipants	CXErrorCodeIncomingCallError.Code.filteredBySensitiveParticipants	case filteredBySensitiveParticipants
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorFilteredDuringRestrictedSharingMode	swift.enum.case	CXErrorCodeIncomingCallError.Code.filteredDuringRestrictedSharingMode	CXErrorCodeIncomingCallError.Code.filteredDuringRestrictedSharingMode	case filteredDuringRestrictedSharingMode
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorUnentitled	swift.enum.case	CXErrorCodeIncomingCallError.Code.unentitled	CXErrorCodeIncomingCallError.Code.unentitled	case unentitled
+c:@E@CXErrorCodeIncomingCallError@CXErrorCodeIncomingCallErrorUnknown	swift.enum.case	CXErrorCodeIncomingCallError.Code.unknown	CXErrorCodeIncomingCallError.Code.unknown	case unknown
+c:@E@CXErrorCodeNotificationServiceExtensionError	swift.enum	CXErrorCodeNotificationServiceExtensionError.Code	CXErrorCodeNotificationServiceExtensionError.Code	enum Code
+c:@E@CXErrorCodeNotificationServiceExtensionError@CXErrorCodeNotificationServiceExtensionErrorInvalidClientProcess	swift.enum.case	CXErrorCodeNotificationServiceExtensionError.Code.invalidClientProcess	CXErrorCodeNotificationServiceExtensionError.Code.invalidClientProcess	case invalidClientProcess
+c:@E@CXErrorCodeNotificationServiceExtensionError@CXErrorCodeNotificationServiceExtensionErrorMissingNotificationFilteringEntitlement	swift.enum.case	CXErrorCodeNotificationServiceExtensionError.Code.missingNotificationFilteringEntitlement	CXErrorCodeNotificationServiceExtensionError.Code.missingNotificationFilteringEntitlement	case missingNotificationFilteringEntitlement
+c:@E@CXErrorCodeNotificationServiceExtensionError@CXErrorCodeNotificationServiceExtensionErrorUnknown	swift.enum.case	CXErrorCodeNotificationServiceExtensionError.Code.unknown	CXErrorCodeNotificationServiceExtensionError.Code.unknown	case unknown
+c:@E@CXErrorCodeRequestTransactionError	swift.enum	CXErrorCodeRequestTransactionError.Code	CXErrorCodeRequestTransactionError.Code	enum Code
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorCallIsProtected	swift.enum.case	CXErrorCodeRequestTransactionError.Code.callIsProtected	CXErrorCodeRequestTransactionError.Code.callIsProtected	case callIsProtected
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorCallUUIDAlreadyExists	swift.enum.case	CXErrorCodeRequestTransactionError.Code.callUUIDAlreadyExists	CXErrorCodeRequestTransactionError.Code.callUUIDAlreadyExists	case callUUIDAlreadyExists
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorEmptyTransaction	swift.enum.case	CXErrorCodeRequestTransactionError.Code.emptyTransaction	CXErrorCodeRequestTransactionError.Code.emptyTransaction	case emptyTransaction
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorInvalidAction	swift.enum.case	CXErrorCodeRequestTransactionError.Code.invalidAction	CXErrorCodeRequestTransactionError.Code.invalidAction	case invalidAction
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorMaximumCallGroupsReached	swift.enum.case	CXErrorCodeRequestTransactionError.Code.maximumCallGroupsReached	CXErrorCodeRequestTransactionError.Code.maximumCallGroupsReached	case maximumCallGroupsReached
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorUnentitled	swift.enum.case	CXErrorCodeRequestTransactionError.Code.unentitled	CXErrorCodeRequestTransactionError.Code.unentitled	case unentitled
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorUnknown	swift.enum.case	CXErrorCodeRequestTransactionError.Code.unknown	CXErrorCodeRequestTransactionError.Code.unknown	case unknown
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorUnknownCallProvider	swift.enum.case	CXErrorCodeRequestTransactionError.Code.unknownCallProvider	CXErrorCodeRequestTransactionError.Code.unknownCallProvider	case unknownCallProvider
+c:@E@CXErrorCodeRequestTransactionError@CXErrorCodeRequestTransactionErrorUnknownCallUUID	swift.enum.case	CXErrorCodeRequestTransactionError.Code.unknownCallUUID	CXErrorCodeRequestTransactionError.Code.unknownCallUUID	case unknownCallUUID
+c:@E@CXHandleType	swift.enum	CXHandle.HandleType	CXHandle.HandleType	enum HandleType
+c:@E@CXHandleType@CXHandleTypeEmailAddress	swift.enum.case	CXHandle.HandleType.emailAddress	CXHandle.HandleType.emailAddress	case emailAddress
+c:@E@CXHandleType@CXHandleTypeGeneric	swift.enum.case	CXHandle.HandleType.generic	CXHandle.HandleType.generic	case generic
+c:@E@CXHandleType@CXHandleTypePhoneNumber	swift.enum.case	CXHandle.HandleType.phoneNumber	CXHandle.HandleType.phoneNumber	case phoneNumber
+c:@E@CXPlayDTMFCallActionType	swift.enum	CXPlayDTMFCallAction.ActionType	CXPlayDTMFCallAction.ActionType	enum ActionType
+c:@E@CXPlayDTMFCallActionType@CXPlayDTMFCallActionTypeHardPause	swift.enum.case	CXPlayDTMFCallAction.ActionType.hardPause	CXPlayDTMFCallAction.ActionType.hardPause	case hardPause
+c:@E@CXPlayDTMFCallActionType@CXPlayDTMFCallActionTypeSingleTone	swift.enum.case	CXPlayDTMFCallAction.ActionType.singleTone	CXPlayDTMFCallAction.ActionType.singleTone	case singleTone
+c:@E@CXPlayDTMFCallActionType@CXPlayDTMFCallActionTypeSoftPause	swift.enum.case	CXPlayDTMFCallAction.ActionType.softPause	CXPlayDTMFCallAction.ActionType.softPause	case softPause
+c:@E@CXTranslationEngine	swift.enum	CXTranslationEngine	CXTranslationEngine	enum CXTranslationEngine
+c:@E@CXTranslationEngine@CXTranslationEngineCustom	swift.enum.case	CXTranslationEngine.custom	CXTranslationEngine.custom	case custom
+c:@E@CXTranslationEngine@CXTranslationEngineDefault	swift.enum.case	CXTranslationEngine.default	CXTranslationEngine.default	case `default`
+c:@T@CXCallDirectoryPhoneNumber	swift.typealias	CXCallDirectoryPhoneNumber	CXCallDirectoryPhoneNumber	typealias CXCallDirectoryPhoneNumber = Int64
+c:objc(cs)CXAction	swift.class	CXAction	CXAction	class CXAction
+c:objc(cs)CXAction(im)fail	swift.method	fail()	CXAction.fail()	func fail()
+c:objc(cs)CXAction(im)fulfill	swift.method	fulfill()	CXAction.fulfill()	func fulfill()
+c:objc(cs)CXAction(im)init	swift.init	init()	CXAction.init()	init()
+c:objc(cs)CXAction(im)initWithCoder:	swift.init	init(coder:)	CXAction.init(coder:)	init?(coder aDecoder: NSCoder)
+c:objc(cs)CXAction(py)UUID	swift.property	uuid	CXAction.uuid	var uuid: UUID { get }
+c:objc(cs)CXAction(py)complete	swift.property	isComplete	CXAction.isComplete	var isComplete: Bool { get }
+c:objc(cs)CXAction(py)timeoutDate	swift.property	timeoutDate	CXAction.timeoutDate	var timeoutDate: Date { get }
+c:objc(cs)CXAnswerCallAction	swift.class	CXAnswerCallAction	CXAnswerCallAction	class CXAnswerCallAction
+c:objc(cs)CXAnswerCallAction(im)fulfillWithDateConnected:	swift.method	fulfill(withDateConnected:)	CXAnswerCallAction.fulfill(withDateConnected:)	func fulfill(withDateConnected dateConnected: Date)
+c:objc(cs)CXCall	swift.class	CXCall	CXCall	class CXCall
+c:objc(cs)CXCall(py)UUID	swift.property	uuid	CXCall.uuid	var uuid: UUID { get }
+c:objc(cs)CXCall(py)hasConnected	swift.property	hasConnected	CXCall.hasConnected	var hasConnected: Bool { get }
+c:objc(cs)CXCall(py)hasEnded	swift.property	hasEnded	CXCall.hasEnded	var hasEnded: Bool { get }
+c:objc(cs)CXCall(py)onHold	swift.property	isOnHold	CXCall.isOnHold	var isOnHold: Bool { get }
+c:objc(cs)CXCall(py)outgoing	swift.property	isOutgoing	CXCall.isOutgoing	var isOutgoing: Bool { get }
+c:objc(cs)CXCallAction	swift.class	CXCallAction	CXCallAction	class CXCallAction
+c:objc(cs)CXCallAction(im)initWithCallUUID:	swift.init	init(call:)	CXCallAction.init(call:)	init(call callUUID: UUID)
+c:objc(cs)CXCallAction(im)initWithCallUUID:::SYNTHESIZED::c:objc(cs)CXCallAction	swift.init	init(callUUID:)	CXCallAction.init(callUUID:)	init(callUUID: UUID)
+c:objc(cs)CXCallAction(im)initWithCoder:	swift.init	init(coder:)	CXCallAction.init(coder:)	init?(coder aDecoder: NSCoder)
+c:objc(cs)CXCallAction(py)callUUID	swift.property	callUUID	CXCallAction.callUUID	var callUUID: UUID { get }
+c:objc(cs)CXCallController	swift.class	CXCallController	CXCallController	class CXCallController
+c:objc(cs)CXCallController(im)init	swift.init	init()	CXCallController.init()	convenience init()
+c:objc(cs)CXCallController(im)initWithQueue:	swift.init	init(queue:)	CXCallController.init(queue:)	init(queue: dispatch_queue_t)
+c:objc(cs)CXCallController(im)requestTransaction:completion:	swift.method	request(_:)	CXCallController.request(_:)	func request(_ transaction: CXTransaction) async throws
+c:objc(cs)CXCallController(im)requestTransactionWithAction:completion:	swift.method	requestTransaction(with:)	CXCallController.requestTransaction(with:)	func requestTransaction(with action: CXAction) async throws
+c:objc(cs)CXCallController(im)requestTransactionWithActions:completion:	swift.method	requestTransaction(with:)	CXCallController.requestTransaction(with:)	func requestTransaction(with actions: [CXAction]) async throws
+c:objc(cs)CXCallController(py)callObserver	swift.property	callObserver	CXCallController.callObserver	var callObserver: CXCallObserver { get }
+c:objc(cs)CXCallDirectoryExtensionContext	swift.class	CXCallDirectoryExtensionContext	CXCallDirectoryExtensionContext	class CXCallDirectoryExtensionContext
+c:objc(cs)CXCallDirectoryExtensionContext(im)addBlockingEntryWithNextSequentialPhoneNumber:	swift.method	addBlockingEntry(withNextSequentialPhoneNumber:)	CXCallDirectoryExtensionContext.addBlockingEntry(withNextSequentialPhoneNumber:)	func addBlockingEntry(withNextSequentialPhoneNumber phoneNumber: CXCallDirectoryPhoneNumber)
+c:objc(cs)CXCallDirectoryExtensionContext(im)addIdentificationEntryWithNextSequentialPhoneNumber:label:	swift.method	addIdentificationEntry(withNextSequentialPhoneNumber:label:)	CXCallDirectoryExtensionContext.addIdentificationEntry(withNextSequentialPhoneNumber:label:)	func addIdentificationEntry(withNextSequentialPhoneNumber phoneNumber: CXCallDirectoryPhoneNumber, label: String)
+c:objc(cs)CXCallDirectoryExtensionContext(im)completeRequestWithCompletionHandler:	swift.method	completeRequest(completionHandler:)	CXCallDirectoryExtensionContext.completeRequest(completionHandler:)	func completeRequest(completionHandler completion: ((Bool) -> Void)? = nil)
+c:objc(cs)CXCallDirectoryExtensionContext(im)removeAllBlockingEntries	swift.method	removeAllBlockingEntries()	CXCallDirectoryExtensionContext.removeAllBlockingEntries()	func removeAllBlockingEntries()
+c:objc(cs)CXCallDirectoryExtensionContext(im)removeAllIdentificationEntries	swift.method	removeAllIdentificationEntries()	CXCallDirectoryExtensionContext.removeAllIdentificationEntries()	func removeAllIdentificationEntries()
+c:objc(cs)CXCallDirectoryExtensionContext(im)removeBlockingEntryWithPhoneNumber:	swift.method	removeBlockingEntry(withPhoneNumber:)	CXCallDirectoryExtensionContext.removeBlockingEntry(withPhoneNumber:)	func removeBlockingEntry(withPhoneNumber phoneNumber: CXCallDirectoryPhoneNumber)
+c:objc(cs)CXCallDirectoryExtensionContext(im)removeIdentificationEntryWithPhoneNumber:	swift.method	removeIdentificationEntry(withPhoneNumber:)	CXCallDirectoryExtensionContext.removeIdentificationEntry(withPhoneNumber:)	func removeIdentificationEntry(withPhoneNumber phoneNumber: CXCallDirectoryPhoneNumber)
+c:objc(cs)CXCallDirectoryExtensionContext(py)delegate	swift.property	delegate	CXCallDirectoryExtensionContext.delegate	weak var delegate: (any CXCallDirectoryExtensionContextDelegate)? { get set }
+c:objc(cs)CXCallDirectoryExtensionContext(py)incremental	swift.property	isIncremental	CXCallDirectoryExtensionContext.isIncremental	var isIncremental: Bool { get }
+c:objc(cs)CXCallDirectoryManager	swift.class	CXCallDirectoryManager	CXCallDirectoryManager	class CXCallDirectoryManager
+c:objc(cs)CXCallDirectoryManager(cpy)sharedInstance	swift.type.property	sharedInstance	CXCallDirectoryManager.sharedInstance	class var sharedInstance: CXCallDirectoryManager { get }
+c:objc(cs)CXCallDirectoryManager(im)getEnabledStatusForExtensionWithIdentifier:completionHandler:	swift.method	enabledStatusForExtension(withIdentifier:)	CXCallDirectoryManager.enabledStatusForExtension(withIdentifier:)	func enabledStatusForExtension(withIdentifier identifier: String) async throws -> CXCallDirectoryManager.EnabledStatus
+c:objc(cs)CXCallDirectoryManager(im)openSettingsWithCompletionHandler:	swift.method	openSettings(completionHandler:)	CXCallDirectoryManager.openSettings(completionHandler:)	func openSettings(completionHandler completion: (((any Error)?) -> Void)? = nil)
+c:objc(cs)CXCallDirectoryManager(im)reloadExtensionWithIdentifier:completionHandler:	swift.method	reloadExtension(withIdentifier:)	CXCallDirectoryManager.reloadExtension(withIdentifier:)	func reloadExtension(withIdentifier identifier: String) async throws
+c:objc(cs)CXCallDirectoryProvider	swift.class	CXCallDirectoryProvider	CXCallDirectoryProvider	class CXCallDirectoryProvider
+c:objc(cs)CXCallDirectoryProvider(im)beginRequestWithExtensionContext:	swift.method	beginRequest(with:)	CXCallDirectoryProvider.beginRequest(with:)	func beginRequest(with context: CXCallDirectoryExtensionContext)
+c:objc(cs)CXCallObserver	swift.class	CXCallObserver	CXCallObserver	class CXCallObserver
+c:objc(cs)CXCallObserver(im)setDelegate:queue:	swift.method	setDelegate(_:queue:)	CXCallObserver.setDelegate(_:queue:)	func setDelegate(_ delegate: (any CXCallObserverDelegate)?, queue: dispatch_queue_t?)
+c:objc(cs)CXCallObserver(py)calls	swift.property	calls	CXCallObserver.calls	var calls: [CXCall] { get }
+c:objc(cs)CXCallUpdate	swift.class	CXCallUpdate	CXCallUpdate	class CXCallUpdate
+c:objc(cs)CXCallUpdate(py)hasVideo	swift.property	hasVideo	CXCallUpdate.hasVideo	var hasVideo: Bool { get set }
+c:objc(cs)CXCallUpdate(py)localizedCallerName	swift.property	localizedCallerName	CXCallUpdate.localizedCallerName	var localizedCallerName: String? { get set }
+c:objc(cs)CXCallUpdate(py)remoteHandle	swift.property	remoteHandle	CXCallUpdate.remoteHandle	@NSCopying var remoteHandle: CXHandle? { get set }
+c:objc(cs)CXCallUpdate(py)supportsDTMF	swift.property	supportsDTMF	CXCallUpdate.supportsDTMF	var supportsDTMF: Bool { get set }
+c:objc(cs)CXCallUpdate(py)supportsGrouping	swift.property	supportsGrouping	CXCallUpdate.supportsGrouping	var supportsGrouping: Bool { get set }
+c:objc(cs)CXCallUpdate(py)supportsHolding	swift.property	supportsHolding	CXCallUpdate.supportsHolding	var supportsHolding: Bool { get set }
+c:objc(cs)CXCallUpdate(py)supportsUngrouping	swift.property	supportsUngrouping	CXCallUpdate.supportsUngrouping	var supportsUngrouping: Bool { get set }
+c:objc(cs)CXEndCallAction	swift.class	CXEndCallAction	CXEndCallAction	class CXEndCallAction
+c:objc(cs)CXEndCallAction(im)fulfillWithDateEnded:	swift.method	fulfill(withDateEnded:)	CXEndCallAction.fulfill(withDateEnded:)	func fulfill(withDateEnded dateEnded: Date)
+c:objc(cs)CXHandle	swift.class	CXHandle	CXHandle	class CXHandle
+c:objc(cs)CXHandle(im)initWithType:value:	swift.init	init(type:value:)	CXHandle.init(type:value:)	init(type: CXHandle.HandleType, value: String)
+c:objc(cs)CXHandle(py)type	swift.property	type	CXHandle.type	var type: CXHandle.HandleType { get }
+c:objc(cs)CXHandle(py)value	swift.property	value	CXHandle.value	var value: String { get }
+c:objc(cs)CXPlayDTMFCallAction	swift.class	CXPlayDTMFCallAction	CXPlayDTMFCallAction	class CXPlayDTMFCallAction
+c:objc(cs)CXPlayDTMFCallAction(im)initWithCallUUID:digits:type:	swift.init	init(call:digits:type:)	CXPlayDTMFCallAction.init(call:digits:type:)	init(call callUUID: UUID, digits: String, type: CXPlayDTMFCallAction.ActionType)
+c:objc(cs)CXPlayDTMFCallAction(im)initWithCallUUID:digits:type:::SYNTHESIZED::c:objc(cs)CXPlayDTMFCallAction	swift.init	init(callUUID:digits:type:)	CXPlayDTMFCallAction.init(callUUID:digits:type:)	init(callUUID: UUID, digits: String, type: CXPlayDTMFCallAction.ActionType)
+c:objc(cs)CXPlayDTMFCallAction(im)initWithCoder:	swift.init	init(coder:)	CXPlayDTMFCallAction.init(coder:)	init?(coder aDecoder: NSCoder)
+c:objc(cs)CXPlayDTMFCallAction(py)digits	swift.property	digits	CXPlayDTMFCallAction.digits	var digits: String { get set }
+c:objc(cs)CXPlayDTMFCallAction(py)type	swift.property	type	CXPlayDTMFCallAction.type	var type: CXPlayDTMFCallAction.ActionType { get set }
+c:objc(cs)CXProvider	swift.class	CXProvider	CXProvider	class CXProvider
+c:objc(cs)CXProvider(cm)reportNewIncomingVoIPPushPayload:completion:	swift.type.method	reportNewIncomingVoIPPushPayload(_:)	CXProvider.reportNewIncomingVoIPPushPayload(_:)	class func reportNewIncomingVoIPPushPayload(_ dictionaryPayload: [AnyHashable : Any]) async throws
+c:objc(cs)CXProvider(im)initWithConfiguration:	swift.init	init(configuration:)	CXProvider.init(configuration:)	init(configuration: CXProviderConfiguration)
+c:objc(cs)CXProvider(im)invalidate	swift.method	invalidate()	CXProvider.invalidate()	func invalidate()
+c:objc(cs)CXProvider(im)pendingCallActionsOfClass:withCallUUID:	swift.method	pendingCallActions(of:withCall:)	CXProvider.pendingCallActions(of:withCall:)	func pendingCallActions(of callActionClass: AnyClass, withCall callUUID: UUID) -> [CXCallAction]
+c:objc(cs)CXProvider(im)reportCallWithUUID:endedAtDate:reason:	swift.method	reportCall(with:endedAt:reason:)	CXProvider.reportCall(with:endedAt:reason:)	func reportCall(with UUID: UUID, endedAt dateEnded: Date?, reason endedReason: CXCallEndedReason)
+c:objc(cs)CXProvider(im)reportCallWithUUID:updated:	swift.method	reportCall(with:updated:)	CXProvider.reportCall(with:updated:)	func reportCall(with UUID: UUID, updated update: CXCallUpdate)
+c:objc(cs)CXProvider(im)reportNewIncomingCallWithUUID:update:completion:	swift.method	reportNewIncomingCall(with:update:)	CXProvider.reportNewIncomingCall(with:update:)	func reportNewIncomingCall(with UUID: UUID, update: CXCallUpdate) async throws
+c:objc(cs)CXProvider(im)reportOutgoingCallWithUUID:connectedAtDate:	swift.method	reportOutgoingCall(with:connectedAt:)	CXProvider.reportOutgoingCall(with:connectedAt:)	func reportOutgoingCall(with UUID: UUID, connectedAt dateConnected: Date?)
+c:objc(cs)CXProvider(im)reportOutgoingCallWithUUID:startedConnectingAtDate:	swift.method	reportOutgoingCall(with:startedConnectingAt:)	CXProvider.reportOutgoingCall(with:startedConnectingAt:)	func reportOutgoingCall(with UUID: UUID, startedConnectingAt dateStartedConnecting: Date?)
+c:objc(cs)CXProvider(im)setDelegate:queue:	swift.method	setDelegate(_:queue:)	CXProvider.setDelegate(_:queue:)	func setDelegate(_ delegate: (any CXProviderDelegate)?, queue: dispatch_queue_t?)
+c:objc(cs)CXProvider(py)configuration	swift.property	configuration	CXProvider.configuration	@NSCopying var configuration: CXProviderConfiguration { get set }
+c:objc(cs)CXProvider(py)pendingTransactions	swift.property	pendingTransactions	CXProvider.pendingTransactions	var pendingTransactions: [CXTransaction] { get }
+c:objc(cs)CXProviderConfiguration	swift.class	CXProviderConfiguration	CXProviderConfiguration	class CXProviderConfiguration
+c:objc(cs)CXProviderConfiguration(im)init	swift.init	init()	CXProviderConfiguration.init()	init()
+c:objc(cs)CXProviderConfiguration(im)initWithLocalizedName:	swift.init	init(localizedName:)	CXProviderConfiguration.init(localizedName:)	convenience init(localizedName: String)
+c:objc(cs)CXProviderConfiguration(py)iconTemplateImageData	swift.property	iconTemplateImageData	CXProviderConfiguration.iconTemplateImageData	var iconTemplateImageData: Data? { get set }
+c:objc(cs)CXProviderConfiguration(py)includesCallsInRecents	swift.property	includesCallsInRecents	CXProviderConfiguration.includesCallsInRecents	var includesCallsInRecents: Bool { get set }
+c:objc(cs)CXProviderConfiguration(py)localizedName	swift.property	localizedName	CXProviderConfiguration.localizedName	var localizedName: String? { get }
+c:objc(cs)CXProviderConfiguration(py)maximumCallGroups	swift.property	maximumCallGroups	CXProviderConfiguration.maximumCallGroups	var maximumCallGroups: Int { get set }
+c:objc(cs)CXProviderConfiguration(py)maximumCallsPerCallGroup	swift.property	maximumCallsPerCallGroup	CXProviderConfiguration.maximumCallsPerCallGroup	var maximumCallsPerCallGroup: Int { get set }
+c:objc(cs)CXProviderConfiguration(py)ringtoneSound	swift.property	ringtoneSound	CXProviderConfiguration.ringtoneSound	var ringtoneSound: String? { get set }
+c:objc(cs)CXProviderConfiguration(py)supportsAudioTranslation	swift.property	supportsAudioTranslation	CXProviderConfiguration.supportsAudioTranslation	var supportsAudioTranslation: Bool { get set }
+c:objc(cs)CXProviderConfiguration(py)supportsVideo	swift.property	supportsVideo	CXProviderConfiguration.supportsVideo	var supportsVideo: Bool { get set }
+c:objc(cs)CXSetGroupCallAction	swift.class	CXSetGroupCallAction	CXSetGroupCallAction	class CXSetGroupCallAction
+c:objc(cs)CXSetGroupCallAction(im)initWithCallUUID:callUUIDToGroupWith:	swift.init	init(call:callUUIDToGroupWith:)	CXSetGroupCallAction.init(call:callUUIDToGroupWith:)	init(call callUUID: UUID, callUUIDToGroupWith: UUID?)
+c:objc(cs)CXSetGroupCallAction(im)initWithCallUUID:callUUIDToGroupWith:::SYNTHESIZED::c:objc(cs)CXSetGroupCallAction	swift.init	init(callUUID:callUUIDToGroupWith:)	CXSetGroupCallAction.init(callUUID:callUUIDToGroupWith:)	init(callUUID: UUID, callUUIDToGroupWith: UUID?)
+c:objc(cs)CXSetGroupCallAction(im)initWithCoder:	swift.init	init(coder:)	CXSetGroupCallAction.init(coder:)	init?(coder aDecoder: NSCoder)
+c:objc(cs)CXSetGroupCallAction(py)callUUIDToGroupWith	swift.property	callUUIDToGroupWith	CXSetGroupCallAction.callUUIDToGroupWith	var callUUIDToGroupWith: UUID? { get set }
+c:objc(cs)CXSetHeldCallAction	swift.class	CXSetHeldCallAction	CXSetHeldCallAction	class CXSetHeldCallAction
+c:objc(cs)CXSetHeldCallAction(im)initWithCallUUID:onHold:	swift.init	init(call:onHold:)	CXSetHeldCallAction.init(call:onHold:)	init(call callUUID: UUID, onHold: Bool)
+c:objc(cs)CXSetHeldCallAction(im)initWithCallUUID:onHold:::SYNTHESIZED::c:objc(cs)CXSetHeldCallAction	swift.init	init(callUUID:onHold:)	CXSetHeldCallAction.init(callUUID:onHold:)	init(callUUID: UUID, onHold: Bool)
+c:objc(cs)CXSetHeldCallAction(im)initWithCoder:	swift.init	init(coder:)	CXSetHeldCallAction.init(coder:)	init?(coder aDecoder: NSCoder)
+c:objc(cs)CXSetHeldCallAction(py)onHold	swift.property	isOnHold	CXSetHeldCallAction.isOnHold	var isOnHold: Bool { get set }
+c:objc(cs)CXSetMutedCallAction	swift.class	CXSetMutedCallAction	CXSetMutedCallAction	class CXSetMutedCallAction
+c:objc(cs)CXSetMutedCallAction(im)initWithCallUUID:muted:	swift.init	init(call:muted:)	CXSetMutedCallAction.init(call:muted:)	convenience init(call callUUID: UUID, muted: Bool)
+c:objc(cs)CXSetMutedCallAction(im)initWithCallUUID:muted:::SYNTHESIZED::c:objc(cs)CXSetMutedCallAction	swift.init	init(callUUID:muted:)	CXSetMutedCallAction.init(callUUID:muted:)	convenience init(callUUID: UUID, muted: Bool)
+c:objc(cs)CXSetMutedCallAction(im)initWithCoder:	swift.init	init(coder:)	CXSetMutedCallAction.init(coder:)	init?(coder aDecoder: NSCoder)
+c:objc(cs)CXSetMutedCallAction(py)muted	swift.property	isMuted	CXSetMutedCallAction.isMuted	var isMuted: Bool { get set }
+c:objc(cs)CXSetTranslatingCallAction	swift.class	CXSetTranslatingCallAction	CXSetTranslatingCallAction	class CXSetTranslatingCallAction
+c:objc(cs)CXSetTranslatingCallAction(im)fulfillUsingTranslationEngine:	swift.method	fulfill(using:)	CXSetTranslatingCallAction.fulfill(using:)	func fulfill(using translationEngine: CXTranslationEngine)
+c:objc(cs)CXSetTranslatingCallAction(im)initWithCallUUID:isTranslating:localLanguage:remoteLanguage:	swift.init	init(call:isTranslating:localLanguage:remoteLanguage:)	CXSetTranslatingCallAction.init(call:isTranslating:localLanguage:remoteLanguage:)	init(call uuid: UUID, isTranslating: Bool, localLanguage: String, remoteLanguage: String)
+c:objc(cs)CXSetTranslatingCallAction(im)initWithCallUUID:isTranslating:localLanguage:remoteLanguage:::SYNTHESIZED::c:objc(cs)CXSetTranslatingCallAction	swift.init	init(callUUID:isTranslating:localLanguage:remoteLanguage:)	CXSetTranslatingCallAction.init(callUUID:isTranslating:localLanguage:remoteLanguage:)	init(callUUID uuid: UUID, isTranslating: Bool, localLanguage: String, remoteLanguage: String)
+c:objc(cs)CXSetTranslatingCallAction(im)initWithCoder:	swift.init	init(coder:)	CXSetTranslatingCallAction.init(coder:)	init?(coder aDecoder: NSCoder)
+c:objc(cs)CXSetTranslatingCallAction(py)isTranslating	swift.property	isTranslating	CXSetTranslatingCallAction.isTranslating	var isTranslating: Bool { get }
+c:objc(cs)CXSetTranslatingCallAction(py)localLanguage	swift.property	localLanguage	CXSetTranslatingCallAction.localLanguage	var localLanguage: String { get }
+c:objc(cs)CXSetTranslatingCallAction(py)remoteLanguage	swift.property	remoteLanguage	CXSetTranslatingCallAction.remoteLanguage	var remoteLanguage: String { get }
+c:objc(cs)CXStartCallAction	swift.class	CXStartCallAction	CXStartCallAction	class CXStartCallAction
+c:objc(cs)CXStartCallAction(im)fulfillWithDateStarted:	swift.method	fulfill(withDateStarted:)	CXStartCallAction.fulfill(withDateStarted:)	func fulfill(withDateStarted dateStarted: Date)
+c:objc(cs)CXStartCallAction(im)initWithCallUUID:handle:	swift.init	init(call:handle:)	CXStartCallAction.init(call:handle:)	init(call callUUID: UUID, handle: CXHandle)
+c:objc(cs)CXStartCallAction(im)initWithCallUUID:handle:::SYNTHESIZED::c:objc(cs)CXStartCallAction	swift.init	init(callUUID:handle:)	CXStartCallAction.init(callUUID:handle:)	init(callUUID: UUID, handle: CXHandle)
+c:objc(cs)CXStartCallAction(im)initWithCoder:	swift.init	init(coder:)	CXStartCallAction.init(coder:)	init?(coder aDecoder: NSCoder)
+c:objc(cs)CXStartCallAction(py)contactIdentifier	swift.property	contactIdentifier	CXStartCallAction.contactIdentifier	var contactIdentifier: String? { get set }
+c:objc(cs)CXStartCallAction(py)handle	swift.property	handle	CXStartCallAction.handle	@NSCopying var handle: CXHandle { get set }
+c:objc(cs)CXStartCallAction(py)video	swift.property	isVideo	CXStartCallAction.isVideo	var isVideo: Bool { get set }
+c:objc(cs)CXTransaction	swift.class	CXTransaction	CXTransaction	class CXTransaction
+c:objc(cs)CXTransaction(im)addAction:	swift.method	addAction(_:)	CXTransaction.addAction(_:)	func addAction(_ action: CXAction)
+c:objc(cs)CXTransaction(im)initWithAction:	swift.init	init(action:)	CXTransaction.init(action:)	convenience init(action: CXAction)
+c:objc(cs)CXTransaction(im)initWithActions:	swift.init	init(actions:)	CXTransaction.init(actions:)	init(actions: [CXAction])
+c:objc(cs)CXTransaction(py)UUID	swift.property	uuid	CXTransaction.uuid	var uuid: UUID { get }
+c:objc(cs)CXTransaction(py)actions	swift.property	actions	CXTransaction.actions	var actions: [CXAction] { get }
+c:objc(cs)CXTransaction(py)complete	swift.property	isComplete	CXTransaction.isComplete	var isComplete: Bool { get }
+c:objc(pl)CXCallDirectoryExtensionContextDelegate	swift.protocol	CXCallDirectoryExtensionContextDelegate	CXCallDirectoryExtensionContextDelegate	protocol CXCallDirectoryExtensionContextDelegate : NSObjectProtocol
+c:objc(pl)CXCallDirectoryExtensionContextDelegate(im)requestFailedForExtensionContext:withError:	swift.method	requestFailed(for:withError:)	CXCallDirectoryExtensionContextDelegate.requestFailed(for:withError:)	func requestFailed(for extensionContext: CXCallDirectoryExtensionContext, withError error: any Error)
+c:objc(pl)CXCallObserverDelegate	swift.protocol	CXCallObserverDelegate	CXCallObserverDelegate	protocol CXCallObserverDelegate : NSObjectProtocol
+c:objc(pl)CXCallObserverDelegate(im)callObserver:callChanged:	swift.method	callObserver(_:callChanged:)	CXCallObserverDelegate.callObserver(_:callChanged:)	func callObserver(_ callObserver: CXCallObserver, callChanged call: CXCall)
+c:objc(pl)CXProviderDelegate	swift.protocol	CXProviderDelegate	CXProviderDelegate	protocol CXProviderDelegate : NSObjectProtocol
+c:objc(pl)CXProviderDelegate(im)provider:didActivateAudioSession:	swift.method	provider(_:didActivate:)	CXProviderDelegate.provider(_:didActivate:)	optional func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession)
+c:objc(pl)CXProviderDelegate(im)provider:didDeactivateAudioSession:	swift.method	provider(_:didDeactivate:)	CXProviderDelegate.provider(_:didDeactivate:)	optional func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession)
+c:objc(pl)CXProviderDelegate(im)provider:executeTransaction:	swift.method	provider(_:execute:)	CXProviderDelegate.provider(_:execute:)	optional func provider(_ provider: CXProvider, execute transaction: CXTransaction) -> Bool
+c:objc(pl)CXProviderDelegate(im)provider:performAnswerCallAction:	swift.method	provider(_:perform:)	CXProviderDelegate.provider(_:perform:)	optional func provider(_ provider: CXProvider, perform action: CXAnswerCallAction)
+c:objc(pl)CXProviderDelegate(im)provider:performEndCallAction:	swift.method	provider(_:perform:)	CXProviderDelegate.provider(_:perform:)	optional func provider(_ provider: CXProvider, perform action: CXEndCallAction)
+c:objc(pl)CXProviderDelegate(im)provider:performPlayDTMFCallAction:	swift.method	provider(_:perform:)	CXProviderDelegate.provider(_:perform:)	optional func provider(_ provider: CXProvider, perform action: CXPlayDTMFCallAction)
+c:objc(pl)CXProviderDelegate(im)provider:performSetGroupCallAction:	swift.method	provider(_:perform:)	CXProviderDelegate.provider(_:perform:)	optional func provider(_ provider: CXProvider, perform action: CXSetGroupCallAction)
+c:objc(pl)CXProviderDelegate(im)provider:performSetHeldCallAction:	swift.method	provider(_:perform:)	CXProviderDelegate.provider(_:perform:)	optional func provider(_ provider: CXProvider, perform action: CXSetHeldCallAction)
+c:objc(pl)CXProviderDelegate(im)provider:performSetMutedCallAction:	swift.method	provider(_:perform:)	CXProviderDelegate.provider(_:perform:)	optional func provider(_ provider: CXProvider, perform action: CXSetMutedCallAction)
+c:objc(pl)CXProviderDelegate(im)provider:performSetTranslatingCallAction:	swift.method	provider(_:perform:)	CXProviderDelegate.provider(_:perform:)	optional func provider(_ provider: CXProvider, perform action: CXSetTranslatingCallAction)
+c:objc(pl)CXProviderDelegate(im)provider:performStartCallAction:	swift.method	provider(_:perform:)	CXProviderDelegate.provider(_:perform:)	optional func provider(_ provider: CXProvider, perform action: CXStartCallAction)
+c:objc(pl)CXProviderDelegate(im)provider:timedOutPerformingAction:	swift.method	provider(_:timedOutPerforming:)	CXProviderDelegate.provider(_:timedOutPerforming:)	optional func provider(_ provider: CXProvider, timedOutPerforming action: CXAction)
+c:objc(pl)CXProviderDelegate(im)providerDidBegin:	swift.method	providerDidBegin(_:)	CXProviderDelegate.providerDidBegin(_:)	optional func providerDidBegin(_ provider: CXProvider)
+c:objc(pl)CXProviderDelegate(im)providerDidReset:	swift.method	providerDidReset(_:)	CXProviderDelegate.providerDidReset(_:)	func providerDidReset(_ provider: CXProvider)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CXHandle	swift.init	init(coder:)	CXHandle.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CXTransaction	swift.init	init(coder:)	CXTransaction.init(coder:)	init?(coder: NSCoder)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CXErrorCode	swift.type.property	errorDomain	CXError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.type.property	errorDomain	CXErrorCodeCallDirectoryManagerError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.type.property	errorDomain	CXErrorCodeIncomingCallError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.type.property	errorDomain	CXErrorCodeNotificationServiceExtensionError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.type.property	errorDomain	CXErrorCodeRequestTransactionError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCode	swift.property	errorUserInfo	CXError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.property	errorUserInfo	CXErrorCodeCallDirectoryManagerError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.property	errorUserInfo	CXErrorCodeIncomingCallError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.property	errorUserInfo	CXErrorCodeNotificationServiceExtensionError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.property	errorUserInfo	CXErrorCodeRequestTransactionError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCode	swift.property	errorCode	CXError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.property	errorCode	CXErrorCodeCallDirectoryManagerError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.property	errorCode	CXErrorCodeIncomingCallError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.property	errorCode	CXErrorCodeNotificationServiceExtensionError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.property	errorCode	CXErrorCodeRequestTransactionError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CXErrorCode	swift.func.op	~=(_:_:)	CXError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.func.op	~=(_:_:)	CXErrorCodeCallDirectoryManagerError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.func.op	~=(_:_:)	CXErrorCodeIncomingCallError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.func.op	~=(_:_:)	CXErrorCodeNotificationServiceExtensionError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.func.op	~=(_:_:)	CXErrorCodeRequestTransactionError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCode	swift.property	errorUserInfo	CXError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.property	errorUserInfo	CXErrorCodeCallDirectoryManagerError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.property	errorUserInfo	CXErrorCodeIncomingCallError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.property	errorUserInfo	CXErrorCodeNotificationServiceExtensionError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.property	errorUserInfo	CXErrorCodeRequestTransactionError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCode	swift.func.op	==(_:_:)	CXError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.func.op	==(_:_:)	CXErrorCodeCallDirectoryManagerError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.func.op	==(_:_:)	CXErrorCodeIncomingCallError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.func.op	==(_:_:)	CXErrorCodeNotificationServiceExtensionError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.func.op	==(_:_:)	CXErrorCodeRequestTransactionError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CXErrorCode	swift.property	code	CXError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.property	code	CXErrorCodeCallDirectoryManagerError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.property	code	CXErrorCodeIncomingCallError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.property	code	CXErrorCodeNotificationServiceExtensionError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.property	code	CXErrorCodeRequestTransactionError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCode	swift.method	hash(into:)	CXError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.method	hash(into:)	CXErrorCodeCallDirectoryManagerError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.method	hash(into:)	CXErrorCodeIncomingCallError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.method	hash(into:)	CXErrorCodeNotificationServiceExtensionError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.method	hash(into:)	CXErrorCodeRequestTransactionError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCode	swift.property	userInfo	CXError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.property	userInfo	CXErrorCodeCallDirectoryManagerError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.property	userInfo	CXErrorCodeIncomingCallError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.property	userInfo	CXErrorCodeNotificationServiceExtensionError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.property	userInfo	CXErrorCodeRequestTransactionError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCode	swift.property	errorCode	CXError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.property	errorCode	CXErrorCodeCallDirectoryManagerError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.property	errorCode	CXErrorCodeIncomingCallError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.property	errorCode	CXErrorCodeNotificationServiceExtensionError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.property	errorCode	CXErrorCodeRequestTransactionError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CXErrorCode	swift.property	hashValue	CXError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.property	hashValue	CXErrorCodeCallDirectoryManagerError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.property	hashValue	CXErrorCodeIncomingCallError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.property	hashValue	CXErrorCodeNotificationServiceExtensionError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.property	hashValue	CXErrorCodeRequestTransactionError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CXErrorCode	swift.init	init(_:userInfo:)	CXError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.init	init(_:userInfo:)	CXErrorCodeCallDirectoryManagerError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.init	init(_:userInfo:)	CXErrorCodeIncomingCallError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.init	init(_:userInfo:)	CXErrorCodeNotificationServiceExtensionError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.init	init(_:userInfo:)	CXErrorCodeRequestTransactionError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC11CXErrorCodeLeV	swift.struct	CXError	CXError	struct CXError
+s:SC11CXErrorCodeLeV10unentitledSoAAVvpZ	swift.type.property	unentitled	CXError.unentitled	static var unentitled: CXError.Code { get }
+s:SC11CXErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	CXError.errorDomain	static var errorDomain: String { get }
+s:SC11CXErrorCodeLeV12unknownErrorSoAAVvpZ	swift.type.property	unknownError	CXError.unknownError	static var unknownError: CXError.Code { get }
+s:SC11CXErrorCodeLeV15invalidArgumentSoAAVvpZ	swift.type.property	invalidArgument	CXError.invalidArgument	static var invalidArgument: CXError.Code { get }
+s:SC11CXErrorCodeLeV25missingVoIPBackgroundModeSoAAVvpZ	swift.type.property	missingVoIPBackgroundMode	CXError.missingVoIPBackgroundMode	static var missingVoIPBackgroundMode: CXError.Code { get }
+s:SC28CXErrorCodeIncomingCallErrorLeV	swift.struct	CXErrorCodeIncomingCallError	CXErrorCodeIncomingCallError	struct CXErrorCodeIncomingCallError
+s:SC28CXErrorCodeIncomingCallErrorLeV10unentitledSoAAVvpZ	swift.type.property	unentitled	CXErrorCodeIncomingCallError.unentitled	static var unentitled: CXErrorCodeIncomingCallError.Code { get }
+s:SC28CXErrorCodeIncomingCallErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	CXErrorCodeIncomingCallError.errorDomain	static var errorDomain: String { get }
+s:SC28CXErrorCodeIncomingCallErrorLeV15callIsProtectedSoAAVvpZ	swift.type.property	callIsProtected	CXErrorCodeIncomingCallError.callIsProtected	static var callIsProtected: CXErrorCodeIncomingCallError.Code { get }
+s:SC28CXErrorCodeIncomingCallErrorLeV19filteredByBlockListSoAAVvpZ	swift.type.property	filteredByBlockList	CXErrorCodeIncomingCallError.filteredByBlockList	static var filteredByBlockList: CXErrorCodeIncomingCallError.Code { get }
+s:SC28CXErrorCodeIncomingCallErrorLeV21callUUIDAlreadyExistsSoAAVvpZ	swift.type.property	callUUIDAlreadyExists	CXErrorCodeIncomingCallError.callUUIDAlreadyExists	static var callUUIDAlreadyExists: CXErrorCodeIncomingCallError.Code { get }
+s:SC28CXErrorCodeIncomingCallErrorLeV22filteredByDoNotDisturbSoAAVvpZ	swift.type.property	filteredByDoNotDisturb	CXErrorCodeIncomingCallError.filteredByDoNotDisturb	static var filteredByDoNotDisturb: CXErrorCodeIncomingCallError.Code { get }
+s:SC28CXErrorCodeIncomingCallErrorLeV31filteredBySensitiveParticipantsSoAAVvpZ	swift.type.property	filteredBySensitiveParticipants	CXErrorCodeIncomingCallError.filteredBySensitiveParticipants	static var filteredBySensitiveParticipants: CXErrorCodeIncomingCallError.Code { get }
+s:SC28CXErrorCodeIncomingCallErrorLeV35filteredDuringRestrictedSharingModeSoAAVvpZ	swift.type.property	filteredDuringRestrictedSharingMode	CXErrorCodeIncomingCallError.filteredDuringRestrictedSharingMode	static var filteredDuringRestrictedSharingMode: CXErrorCodeIncomingCallError.Code { get }
+s:SC28CXErrorCodeIncomingCallErrorLeV7unknownSoAAVvpZ	swift.type.property	unknown	CXErrorCodeIncomingCallError.unknown	static var unknown: CXErrorCodeIncomingCallError.Code { get }
+s:SC34CXErrorCodeRequestTransactionErrorLeV	swift.struct	CXErrorCodeRequestTransactionError	CXErrorCodeRequestTransactionError	struct CXErrorCodeRequestTransactionError
+s:SC34CXErrorCodeRequestTransactionErrorLeV05emptyD0SoAAVvpZ	swift.type.property	emptyTransaction	CXErrorCodeRequestTransactionError.emptyTransaction	static var emptyTransaction: CXErrorCodeRequestTransactionError.Code { get }
+s:SC34CXErrorCodeRequestTransactionErrorLeV10unentitledSoAAVvpZ	swift.type.property	unentitled	CXErrorCodeRequestTransactionError.unentitled	static var unentitled: CXErrorCodeRequestTransactionError.Code { get }
+s:SC34CXErrorCodeRequestTransactionErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	CXErrorCodeRequestTransactionError.errorDomain	static var errorDomain: String { get }
+s:SC34CXErrorCodeRequestTransactionErrorLeV13invalidActionSoAAVvpZ	swift.type.property	invalidAction	CXErrorCodeRequestTransactionError.invalidAction	static var invalidAction: CXErrorCodeRequestTransactionError.Code { get }
+s:SC34CXErrorCodeRequestTransactionErrorLeV15callIsProtectedSoAAVvpZ	swift.type.property	callIsProtected	CXErrorCodeRequestTransactionError.callIsProtected	static var callIsProtected: CXErrorCodeRequestTransactionError.Code { get }
+s:SC34CXErrorCodeRequestTransactionErrorLeV15unknownCallUUIDSoAAVvpZ	swift.type.property	unknownCallUUID	CXErrorCodeRequestTransactionError.unknownCallUUID	static var unknownCallUUID: CXErrorCodeRequestTransactionError.Code { get }
+s:SC34CXErrorCodeRequestTransactionErrorLeV19unknownCallProviderSoAAVvpZ	swift.type.property	unknownCallProvider	CXErrorCodeRequestTransactionError.unknownCallProvider	static var unknownCallProvider: CXErrorCodeRequestTransactionError.Code { get }
+s:SC34CXErrorCodeRequestTransactionErrorLeV21callUUIDAlreadyExistsSoAAVvpZ	swift.type.property	callUUIDAlreadyExists	CXErrorCodeRequestTransactionError.callUUIDAlreadyExists	static var callUUIDAlreadyExists: CXErrorCodeRequestTransactionError.Code { get }
+s:SC34CXErrorCodeRequestTransactionErrorLeV24maximumCallGroupsReachedSoAAVvpZ	swift.type.property	maximumCallGroupsReached	CXErrorCodeRequestTransactionError.maximumCallGroupsReached	static var maximumCallGroupsReached: CXErrorCodeRequestTransactionError.Code { get }
+s:SC34CXErrorCodeRequestTransactionErrorLeV7unknownSoAAVvpZ	swift.type.property	unknown	CXErrorCodeRequestTransactionError.unknown	static var unknown: CXErrorCodeRequestTransactionError.Code { get }
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV	swift.struct	CXErrorCodeCallDirectoryManagerError	CXErrorCodeCallDirectoryManagerError	struct CXErrorCodeCallDirectoryManagerError
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	CXErrorCodeCallDirectoryManagerError.errorDomain	static var errorDomain: String { get }
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV16currentlyLoadingSoAAVvpZ	swift.type.property	currentlyLoading	CXErrorCodeCallDirectoryManagerError.currentlyLoading	static var currentlyLoading: CXErrorCodeCallDirectoryManagerError.Code { get }
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV16duplicateEntriesSoAAVvpZ	swift.type.property	duplicateEntries	CXErrorCodeCallDirectoryManagerError.duplicateEntries	static var duplicateEntries: CXErrorCodeCallDirectoryManagerError.Code { get }
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV16noExtensionFoundSoAAVvpZ	swift.type.property	noExtensionFound	CXErrorCodeCallDirectoryManagerError.noExtensionFound	static var noExtensionFound: CXErrorCodeCallDirectoryManagerError.Code { get }
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV17entriesOutOfOrderSoAAVvpZ	swift.type.property	entriesOutOfOrder	CXErrorCodeCallDirectoryManagerError.entriesOutOfOrder	static var entriesOutOfOrder: CXErrorCodeCallDirectoryManagerError.Code { get }
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV17extensionDisabledSoAAVvpZ	swift.type.property	extensionDisabled	CXErrorCodeCallDirectoryManagerError.extensionDisabled	static var extensionDisabled: CXErrorCodeCallDirectoryManagerError.Code { get }
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV18loadingInterruptedSoAAVvpZ	swift.type.property	loadingInterrupted	CXErrorCodeCallDirectoryManagerError.loadingInterrupted	static var loadingInterrupted: CXErrorCodeCallDirectoryManagerError.Code { get }
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV22maximumEntriesExceededSoAAVvpZ	swift.type.property	maximumEntriesExceeded	CXErrorCodeCallDirectoryManagerError.maximumEntriesExceeded	static var maximumEntriesExceeded: CXErrorCodeCallDirectoryManagerError.Code { get }
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV28unexpectedIncrementalRemovalSoAAVvpZ	swift.type.property	unexpectedIncrementalRemoval	CXErrorCodeCallDirectoryManagerError.unexpectedIncrementalRemoval	static var unexpectedIncrementalRemoval: CXErrorCodeCallDirectoryManagerError.Code { get }
+s:SC36CXErrorCodeCallDirectoryManagerErrorLeV7unknownSoAAVvpZ	swift.type.property	unknown	CXErrorCodeCallDirectoryManagerError.unknown	static var unknown: CXErrorCodeCallDirectoryManagerError.Code { get }
+s:SC44CXErrorCodeNotificationServiceExtensionErrorLeV	swift.struct	CXErrorCodeNotificationServiceExtensionError	CXErrorCodeNotificationServiceExtensionError	struct CXErrorCodeNotificationServiceExtensionError
+s:SC44CXErrorCodeNotificationServiceExtensionErrorLeV07missingC20FilteringEntitlementSoAAVvpZ	swift.type.property	missingNotificationFilteringEntitlement	CXErrorCodeNotificationServiceExtensionError.missingNotificationFilteringEntitlement	static var missingNotificationFilteringEntitlement: CXErrorCodeNotificationServiceExtensionError.Code { get }
+s:SC44CXErrorCodeNotificationServiceExtensionErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	CXErrorCodeNotificationServiceExtensionError.errorDomain	static var errorDomain: String { get }
+s:SC44CXErrorCodeNotificationServiceExtensionErrorLeV20invalidClientProcessSoAAVvpZ	swift.type.property	invalidClientProcess	CXErrorCodeNotificationServiceExtensionError.invalidClientProcess	static var invalidClientProcess: CXErrorCodeNotificationServiceExtensionError.Code { get }
+s:SC44CXErrorCodeNotificationServiceExtensionErrorLeV7unknownSoAAVvpZ	swift.type.property	unknown	CXErrorCodeNotificationServiceExtensionError.unknown	static var unknown: CXErrorCodeNotificationServiceExtensionError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXCallDirectoryEnabledStatus	swift.func.op	!=(_:_:)	CXCallDirectoryManager.EnabledStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXCallEndedReason	swift.func.op	!=(_:_:)	CXCallEndedReason.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCode	swift.func.op	!=(_:_:)	CXError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.func.op	!=(_:_:)	CXErrorCodeCallDirectoryManagerError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.func.op	!=(_:_:)	CXErrorCodeIncomingCallError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.func.op	!=(_:_:)	CXErrorCodeNotificationServiceExtensionError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.func.op	!=(_:_:)	CXErrorCodeRequestTransactionError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXHandleType	swift.func.op	!=(_:_:)	CXHandle.HandleType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXPlayDTMFCallActionType	swift.func.op	!=(_:_:)	CXPlayDTMFCallAction.ActionType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CXTranslationEngine	swift.func.op	!=(_:_:)	CXTranslationEngine.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXCallDirectoryEnabledStatus	swift.property	hashValue	CXCallDirectoryManager.EnabledStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXCallEndedReason	swift.property	hashValue	CXCallEndedReason.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXErrorCode	swift.property	hashValue	CXError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.property	hashValue	CXErrorCodeCallDirectoryManagerError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.property	hashValue	CXErrorCodeIncomingCallError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.property	hashValue	CXErrorCodeNotificationServiceExtensionError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.property	hashValue	CXErrorCodeRequestTransactionError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXHandleType	swift.property	hashValue	CXHandle.HandleType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXPlayDTMFCallActionType	swift.property	hashValue	CXPlayDTMFCallAction.ActionType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CXTranslationEngine	swift.property	hashValue	CXTranslationEngine.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXCallDirectoryEnabledStatus	swift.method	hash(into:)	CXCallDirectoryManager.EnabledStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXCallEndedReason	swift.method	hash(into:)	CXCallEndedReason.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCode	swift.method	hash(into:)	CXError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.method	hash(into:)	CXErrorCodeCallDirectoryManagerError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.method	hash(into:)	CXErrorCodeIncomingCallError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.method	hash(into:)	CXErrorCodeNotificationServiceExtensionError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.method	hash(into:)	CXErrorCodeRequestTransactionError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXHandleType	swift.method	hash(into:)	CXHandle.HandleType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXPlayDTMFCallActionType	swift.method	hash(into:)	CXPlayDTMFCallAction.ActionType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CXTranslationEngine	swift.method	hash(into:)	CXTranslationEngine.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11CXErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CXError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So12CXHandleTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CXHandle.HandleType.init(rawValue:)	init?(rawValue: Int)
+s:So17CXCallEndedReasonV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CXCallEndedReason.init(rawValue:)	init?(rawValue: Int)
+s:So19CXTranslationEngineV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CXTranslationEngine.init(rawValue:)	init?(rawValue: Int)
+s:So23CXProviderConfigurationC7CallKitE20supportedHandleTypesShySo12CXHandleTypeVGvp	swift.property	supportedHandleTypes	CXProviderConfiguration.supportedHandleTypes	@nonobjc final var supportedHandleTypes: Set<CXHandle.HandleType> { get set }
+s:So24CXPlayDTMFCallActionTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CXPlayDTMFCallAction.ActionType.init(rawValue:)	init?(rawValue: Int)
+s:So28CXCallDirectoryEnabledStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CXCallDirectoryManager.EnabledStatus.init(rawValue:)	init?(rawValue: Int)
+s:So28CXErrorCodeIncomingCallErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CXErrorCodeIncomingCallError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So34CXErrorCodeRequestTransactionErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CXErrorCodeRequestTransactionError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So36CXErrorCodeCallDirectoryManagerErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CXErrorCodeCallDirectoryManagerError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So44CXErrorCodeNotificationServiceExtensionErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CXErrorCodeNotificationServiceExtensionError.Code.init(rawValue:)	init?(rawValue: Int)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CXErrorCode	swift.property	localizedDescription	CXError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CXErrorCodeCallDirectoryManagerError	swift.property	localizedDescription	CXErrorCodeCallDirectoryManagerError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CXErrorCodeIncomingCallError	swift.property	localizedDescription	CXErrorCodeIncomingCallError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CXErrorCodeNotificationServiceExtensionError	swift.property	localizedDescription	CXErrorCodeNotificationServiceExtensionError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CXErrorCodeRequestTransactionError	swift.property	localizedDescription	CXErrorCodeRequestTransactionError.localizedDescription	var localizedDescription: String { get }

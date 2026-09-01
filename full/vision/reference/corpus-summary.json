@@ -1,0 +1,74 @@
+{
+  "module": "Vision",
+  "moduleRecord": {
+    "app_coverage_count": 4,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 13,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 61,
+    "iphoneos_runtime_focus_launch_build_rank": 62,
+    "module": "Vision",
+    "occurrence_count": 13,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "f17d59f3348756e9e4b26088e1035706881445e5048c6c1d9f57072283228bce",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "SignalUI/ImageEditor/ImageEditorViewController+Blur.swift",
+          "SignalUI/ViewControllers/ScanQRCodeViewController.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "73b2f3069a8fbc9b17bd51b8100fde927a935e7f149b3dd96f77b14d61265265",
+        "file_count": 9,
+        "occurrence_count": 9,
+        "sample_paths": [
+          "submodules/Camera/Sources/CameraOutput.swift",
+          "submodules/Camera/Sources/CameraPreviewView.swift",
+          "submodules/ImageContentAnalysis/Sources/ImageContentAnalysis.swift",
+          "submodules/LegacyComponents/Sources/PGRectangleDetector.m",
+          "submodules/LegacyComponents/Sources/TGPassportOCR.mm",
+          "submodules/TelegramUI/Components/FaceScanScreen/Sources/FaceScanScreen.swift",
+          "submodules/TelegramUI/Components/MediaEditor/ImageObjectSeparation/Sources/ImageObjectSeparation.swift",
+          "submodules/TelegramUI/Components/MediaEditor/Sources/ImageObjectClassification.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "56fb7dac5ece106e93ed17de74d663ebae25d9d22815360b674812006f42ef1e",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Modules/Sources/AsyncImageKit/Helpers/ImageSaliencyService.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "50de696c49fe9de9a81c6a9daab978a9867b17bd0c5a61c62a61ef7fd59bc53a",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "iOSClient/Scan document/NCUploadScanDocument.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 61,
+    "byFocusLaunchBuildRelevance": 62
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

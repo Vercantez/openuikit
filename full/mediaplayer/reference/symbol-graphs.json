@@ -1,0 +1,37 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 12,
+  "duplicateOccurrenceCount": 12,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/MediaPlayer.symbols.json",
+      "relationshipCount": 1342,
+      "sha256": "9eda0895d8e5bea6f8a316e82bc5f07cbdb2f699b0cd0539ecd347b0d801ffed",
+      "symbolCount": 876
+    },
+    {
+      "path": "reference/symbol-graphs/MediaPlayer@AVFoundation.symbols.json",
+      "relationshipCount": 3,
+      "sha256": "f62f2081c58429dc856536be91dbb38260cab6476eab18f4ebe2045a9ac80d0a",
+      "symbolCount": 3
+    },
+    {
+      "path": "reference/symbol-graphs/MediaPlayer@Foundation.symbols.json",
+      "relationshipCount": 26,
+      "sha256": "058eb2704191ee93c9de85d1dd8da2f3219da71f0a8a743ffd44300460cd4893",
+      "symbolCount": 26
+    },
+    {
+      "path": "reference/symbol-graphs/MediaPlayer@UIKit.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "05744b761dc7ab7ec0cdc59557ec89663c2150120ad39e828f962142e982320f",
+      "symbolCount": 2
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "MediaPlayer",
+  "relationshipCount": 1373,
+  "schema": 1,
+  "symbolCount": 895,
+  "target": "arm64-apple-ios26.0"
+}

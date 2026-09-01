@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CoreMotion.symbols.json",
+      "relationshipCount": 755,
+      "sha256": "b09b5edeb7ecc917addc4bcfe6723a54753c35649309539f6187e440e83960ce",
+      "symbolCount": 435
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CoreMotion",
+  "relationshipCount": 755,
+  "schema": 1,
+  "symbolCount": 435,
+  "target": "arm64-apple-ios26.0"
+}

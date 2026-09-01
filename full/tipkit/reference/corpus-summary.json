@@ -1,0 +1,86 @@
+{
+  "module": "TipKit",
+  "moduleRecord": {
+    "app_coverage_count": 4,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 24,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 55,
+    "iphoneos_runtime_focus_launch_build_rank": 61,
+    "module": "TipKit",
+    "occurrence_count": 24,
+    "per_app": {
+      "WordPress-iOS": {
+        "evidence_sha256": "5bc689439a25921577dd80b091088945bb40f47706333cea0ef1f6dbbeef4ecc",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Modules/Sources/JetpackStats/Views/LegacyFloatingDateControl.swift",
+          "WordPress/Classes/ViewRelated/Me/App Settings/DebugMenuViewController.swift",
+          "WordPress/Classes/ViewRelated/Stats/SiteStatsDashboardViewController.swift",
+          "WordPress/Classes/ViewRelated/Tips/AppTips.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "7be5b223d58f087500fcdb22019dad7d37fcaaae708a52406d9f96eb7304d5b2",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "DuckDuckGo/NetworkProtectionStatusView.swift",
+          "DuckDuckGo/NetworkProtectionStatusViewModel.swift",
+          "DuckDuckGo/TipKit/TipKitController.swift",
+          "DuckDuckGo/VPNAddWidgetTip.swift",
+          "DuckDuckGo/VPNGeoswitchingTip.swift",
+          "DuckDuckGo/VPNSnoozeTip.swift",
+          "DuckDuckGo/VPNTipsModel.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "afa56574ad39b9fae094f035bcd711a4ebe858ea20cd766bc48fb259085e4177",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "firefox-ios/Client/Application/AppDelegate.swift",
+          "firefox-ios/Client/Frontend/Browser/BrowserViewController/Extensions/BrowserViewController+ToolBarActionMenuDelegate.swift",
+          "firefox-ios/Client/Frontend/GoogleLens/GoogleLensTip.swift",
+          "firefox-ios/Client/Frontend/Home/Homepage/Header/HomepageHeaderCell.swift",
+          "firefox-ios/Client/Frontend/QuickAnswers/QuickAnswersTip.swift",
+          "firefox-ios/Client/Frontend/Settings/Main/Debug/ResetTipsSetting.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "57edd8d4f9a12350b86bb887703e66f7786bc8e91743fdbe9b2d846d47b6b76d",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "WMFComponents/Sources/WMFComponents/Components/Suggested Edits/Image Recommendations/WMFImageRecommendationsViewController.swift",
+          "Wikipedia/Code/AppViewControllerTipWrapper.swift",
+          "Wikipedia/Code/ArticleViewController+Tooltips.swift",
+          "Wikipedia/Code/ArticleViewController.swift",
+          "Wikipedia/Code/SearchLanguagesBarViewController.swift",
+          "Wikipedia/Code/WMFAppViewController+Extensions.swift",
+          "Wikipedia/Code/WMFAppViewControllerTipWrapper.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 55,
+    "byFocusLaunchBuildRelevance": 61
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 7,
+  "duplicateOccurrenceCount": 7,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/EventKit.symbols.json",
+      "relationshipCount": 732,
+      "sha256": "c7ad54808b528e73f37963f4a77bbca14e4d3825a7f2d9b9b28b1c8ef09dd592",
+      "symbolCount": 516
+    },
+    {
+      "path": "reference/symbol-graphs/EventKit@Foundation.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "a084264b47793289ba0d127c11191d7a56e9ba9463018658d6b1ce7cd4f36e24",
+      "symbolCount": 2
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "EventKit",
+  "relationshipCount": 734,
+  "schema": 1,
+  "symbolCount": 511,
+  "target": "arm64-apple-ios26.0"
+}

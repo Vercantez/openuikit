@@ -1,0 +1,358 @@
+precise	kind	title	path	declaration
+c:@E@JSRelationCondition	swift.enum	JSRelationCondition	JSRelationCondition	enum JSRelationCondition
+c:@E@JSRelationCondition@kJSRelationConditionEqual	swift.enum.case	JSRelationCondition.equal	JSRelationCondition.equal	case equal
+c:@E@JSRelationCondition@kJSRelationConditionGreaterThan	swift.enum.case	JSRelationCondition.greaterThan	JSRelationCondition.greaterThan	case greaterThan
+c:@E@JSRelationCondition@kJSRelationConditionLessThan	swift.enum.case	JSRelationCondition.lessThan	JSRelationCondition.lessThan	case lessThan
+c:@E@JSRelationCondition@kJSRelationConditionUndefined	swift.enum.case	JSRelationCondition.undefined	JSRelationCondition.undefined	case undefined
+c:@EA@JSType	swift.struct	JSType	JSType	struct JSType
+c:@EA@JSType@kJSTypeBigInt	swift.var	kJSTypeBigInt	kJSTypeBigInt	var kJSTypeBigInt: JSType { get }
+c:@EA@JSType@kJSTypeBoolean	swift.var	kJSTypeBoolean	kJSTypeBoolean	var kJSTypeBoolean: JSType { get }
+c:@EA@JSType@kJSTypeNull	swift.var	kJSTypeNull	kJSTypeNull	var kJSTypeNull: JSType { get }
+c:@EA@JSType@kJSTypeNumber	swift.var	kJSTypeNumber	kJSTypeNumber	var kJSTypeNumber: JSType { get }
+c:@EA@JSType@kJSTypeObject	swift.var	kJSTypeObject	kJSTypeObject	var kJSTypeObject: JSType { get }
+c:@EA@JSType@kJSTypeString	swift.var	kJSTypeString	kJSTypeString	var kJSTypeString: JSType { get }
+c:@EA@JSType@kJSTypeSymbol	swift.var	kJSTypeSymbol	kJSTypeSymbol	var kJSTypeSymbol: JSType { get }
+c:@EA@JSType@kJSTypeUndefined	swift.var	kJSTypeUndefined	kJSTypeUndefined	var kJSTypeUndefined: JSType { get }
+c:@EA@JSTypedArrayType	swift.struct	JSTypedArrayType	JSTypedArrayType	struct JSTypedArrayType
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeArrayBuffer	swift.var	kJSTypedArrayTypeArrayBuffer	kJSTypedArrayTypeArrayBuffer	var kJSTypedArrayTypeArrayBuffer: JSTypedArrayType { get }
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeBigInt64Array	swift.var	kJSTypedArrayTypeBigInt64Array	kJSTypedArrayTypeBigInt64Array	var kJSTypedArrayTypeBigInt64Array: JSTypedArrayType { get }
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeBigUint64Array	swift.var	kJSTypedArrayTypeBigUint64Array	kJSTypedArrayTypeBigUint64Array	var kJSTypedArrayTypeBigUint64Array: JSTypedArrayType { get }
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeFloat32Array	swift.var	kJSTypedArrayTypeFloat32Array	kJSTypedArrayTypeFloat32Array	var kJSTypedArrayTypeFloat32Array: JSTypedArrayType { get }
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeFloat64Array	swift.var	kJSTypedArrayTypeFloat64Array	kJSTypedArrayTypeFloat64Array	var kJSTypedArrayTypeFloat64Array: JSTypedArrayType { get }
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt16Array	swift.var	kJSTypedArrayTypeInt16Array	kJSTypedArrayTypeInt16Array	var kJSTypedArrayTypeInt16Array: JSTypedArrayType { get }
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt32Array	swift.var	kJSTypedArrayTypeInt32Array	kJSTypedArrayTypeInt32Array	var kJSTypedArrayTypeInt32Array: JSTypedArrayType { get }
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeInt8Array	swift.var	kJSTypedArrayTypeInt8Array	kJSTypedArrayTypeInt8Array	var kJSTypedArrayTypeInt8Array: JSTypedArrayType { get }
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeNone	swift.var	kJSTypedArrayTypeNone	kJSTypedArrayTypeNone	var kJSTypedArrayTypeNone: JSTypedArrayType { get }
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint16Array	swift.var	kJSTypedArrayTypeUint16Array	kJSTypedArrayTypeUint16Array	var kJSTypedArrayTypeUint16Array: JSTypedArrayType { get }
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint32Array	swift.var	kJSTypedArrayTypeUint32Array	kJSTypedArrayTypeUint32Array	var kJSTypedArrayTypeUint32Array: JSTypedArrayType { get }
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint8Array	swift.var	kJSTypedArrayTypeUint8Array	kJSTypedArrayTypeUint8Array	var kJSTypedArrayTypeUint8Array: JSTypedArrayType { get }
+c:@EA@JSTypedArrayType@kJSTypedArrayTypeUint8ClampedArray	swift.var	kJSTypedArrayTypeUint8ClampedArray	kJSTypedArrayTypeUint8ClampedArray	var kJSTypedArrayTypeUint8ClampedArray: JSTypedArrayType { get }
+c:@Ea@kJSClassAttributeNone@kJSClassAttributeNoAutomaticPrototype	swift.var	kJSClassAttributeNoAutomaticPrototype	kJSClassAttributeNoAutomaticPrototype	var kJSClassAttributeNoAutomaticPrototype: Int { get }
+c:@Ea@kJSClassAttributeNone@kJSClassAttributeNone	swift.var	kJSClassAttributeNone	kJSClassAttributeNone	var kJSClassAttributeNone: Int { get }
+c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeDontDelete	swift.var	kJSPropertyAttributeDontDelete	kJSPropertyAttributeDontDelete	var kJSPropertyAttributeDontDelete: Int { get }
+c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeDontEnum	swift.var	kJSPropertyAttributeDontEnum	kJSPropertyAttributeDontEnum	var kJSPropertyAttributeDontEnum: Int { get }
+c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeNone	swift.var	kJSPropertyAttributeNone	kJSPropertyAttributeNone	var kJSPropertyAttributeNone: Int { get }
+c:@Ea@kJSPropertyAttributeNone@kJSPropertyAttributeReadOnly	swift.var	kJSPropertyAttributeReadOnly	kJSPropertyAttributeReadOnly	var kJSPropertyAttributeReadOnly: Int { get }
+c:@F@JSBigIntCreateWithDouble	swift.func	JSBigIntCreateWithDouble(_:_:_:)	JSBigIntCreateWithDouble(_:_:_:)	func JSBigIntCreateWithDouble(_ ctx: JSContextRef, _ value: Double, _ exception: UnsafeMutablePointer<JSValueRef?>?) -> JSValueRef
+c:@F@JSBigIntCreateWithInt64	swift.func	JSBigIntCreateWithInt64(_:_:_:)	JSBigIntCreateWithInt64(_:_:_:)	func JSBigIntCreateWithInt64(_ ctx: JSContextRef, _ integer: Int64, _ exception: UnsafeMutablePointer<JSValueRef?>?) -> JSValueRef
+c:@F@JSBigIntCreateWithString	swift.func	JSBigIntCreateWithString(_:_:_:)	JSBigIntCreateWithString(_:_:_:)	func JSBigIntCreateWithString(_ ctx: JSContextRef, _ string: JSStringRef, _ exception: UnsafeMutablePointer<JSValueRef?>?) -> JSValueRef
+c:@F@JSBigIntCreateWithUInt64	swift.func	JSBigIntCreateWithUInt64(_:_:_:)	JSBigIntCreateWithUInt64(_:_:_:)	func JSBigIntCreateWithUInt64(_ ctx: JSContextRef, _ integer: UInt64, _ exception: UnsafeMutablePointer<JSValueRef?>?) -> JSValueRef
+c:@F@JSCheckScriptSyntax	swift.func	JSCheckScriptSyntax(_:_:_:_:_:)	JSCheckScriptSyntax(_:_:_:_:_:)	func JSCheckScriptSyntax(_ ctx: JSContextRef!, _ script: JSStringRef!, _ sourceURL: JSStringRef!, _ startingLineNumber: Int32, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> Bool
+c:@F@JSClassCreate	swift.func	JSClassCreate(_:)	JSClassCreate(_:)	func JSClassCreate(_ definition: UnsafePointer<JSClassDefinition>!) -> JSClassRef!
+c:@F@JSClassRelease	swift.func	JSClassRelease(_:)	JSClassRelease(_:)	func JSClassRelease(_ jsClass: JSClassRef!)
+c:@F@JSClassRetain	swift.func	JSClassRetain(_:)	JSClassRetain(_:)	func JSClassRetain(_ jsClass: JSClassRef!) -> JSClassRef!
+c:@F@JSContextGetGlobalContext	swift.func	JSContextGetGlobalContext(_:)	JSContextGetGlobalContext(_:)	func JSContextGetGlobalContext(_ ctx: JSContextRef!) -> JSGlobalContextRef!
+c:@F@JSContextGetGlobalObject	swift.func	JSContextGetGlobalObject(_:)	JSContextGetGlobalObject(_:)	func JSContextGetGlobalObject(_ ctx: JSContextRef!) -> JSObjectRef!
+c:@F@JSContextGetGroup	swift.func	JSContextGetGroup(_:)	JSContextGetGroup(_:)	func JSContextGetGroup(_ ctx: JSContextRef!) -> JSContextGroupRef!
+c:@F@JSContextGroupCreate	swift.func	JSContextGroupCreate()	JSContextGroupCreate()	func JSContextGroupCreate() -> JSContextGroupRef!
+c:@F@JSContextGroupRelease	swift.func	JSContextGroupRelease(_:)	JSContextGroupRelease(_:)	func JSContextGroupRelease(_ group: JSContextGroupRef!)
+c:@F@JSContextGroupRetain	swift.func	JSContextGroupRetain(_:)	JSContextGroupRetain(_:)	func JSContextGroupRetain(_ group: JSContextGroupRef!) -> JSContextGroupRef!
+c:@F@JSEvaluateScript	swift.func	JSEvaluateScript(_:_:_:_:_:_:)	JSEvaluateScript(_:_:_:_:_:_:)	func JSEvaluateScript(_ ctx: JSContextRef!, _ script: JSStringRef!, _ thisObject: JSObjectRef!, _ sourceURL: JSStringRef!, _ startingLineNumber: Int32, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSValueRef!
+c:@F@JSGarbageCollect	swift.func	JSGarbageCollect(_:)	JSGarbageCollect(_:)	func JSGarbageCollect(_ ctx: JSContextRef!)
+c:@F@JSGlobalContextCopyName	swift.func	JSGlobalContextCopyName(_:)	JSGlobalContextCopyName(_:)	func JSGlobalContextCopyName(_ ctx: JSGlobalContextRef!) -> JSStringRef!
+c:@F@JSGlobalContextCreate	swift.func	JSGlobalContextCreate(_:)	JSGlobalContextCreate(_:)	func JSGlobalContextCreate(_ globalObjectClass: JSClassRef!) -> JSGlobalContextRef!
+c:@F@JSGlobalContextCreateInGroup	swift.func	JSGlobalContextCreateInGroup(_:_:)	JSGlobalContextCreateInGroup(_:_:)	func JSGlobalContextCreateInGroup(_ group: JSContextGroupRef!, _ globalObjectClass: JSClassRef!) -> JSGlobalContextRef!
+c:@F@JSGlobalContextIsInspectable	swift.func	JSGlobalContextIsInspectable(_:)	JSGlobalContextIsInspectable(_:)	func JSGlobalContextIsInspectable(_ ctx: JSGlobalContextRef!) -> Bool
+c:@F@JSGlobalContextRelease	swift.func	JSGlobalContextRelease(_:)	JSGlobalContextRelease(_:)	func JSGlobalContextRelease(_ ctx: JSGlobalContextRef!)
+c:@F@JSGlobalContextRetain	swift.func	JSGlobalContextRetain(_:)	JSGlobalContextRetain(_:)	func JSGlobalContextRetain(_ ctx: JSGlobalContextRef!) -> JSGlobalContextRef!
+c:@F@JSGlobalContextSetInspectable	swift.func	JSGlobalContextSetInspectable(_:_:)	JSGlobalContextSetInspectable(_:_:)	func JSGlobalContextSetInspectable(_ ctx: JSGlobalContextRef!, _ inspectable: Bool)
+c:@F@JSGlobalContextSetName	swift.func	JSGlobalContextSetName(_:_:)	JSGlobalContextSetName(_:_:)	func JSGlobalContextSetName(_ ctx: JSGlobalContextRef!, _ name: JSStringRef!)
+c:@F@JSObjectCallAsConstructor	swift.func	JSObjectCallAsConstructor(_:_:_:_:_:)	JSObjectCallAsConstructor(_:_:_:_:_:)	func JSObjectCallAsConstructor(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ argumentCount: Int, _ arguments: UnsafePointer<JSValueRef?>!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSObjectRef!
+c:@F@JSObjectCallAsFunction	swift.func	JSObjectCallAsFunction(_:_:_:_:_:_:)	JSObjectCallAsFunction(_:_:_:_:_:_:)	func JSObjectCallAsFunction(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ thisObject: JSObjectRef!, _ argumentCount: Int, _ arguments: UnsafePointer<JSValueRef?>!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSValueRef!
+c:@F@JSObjectCopyPropertyNames	swift.func	JSObjectCopyPropertyNames(_:_:)	JSObjectCopyPropertyNames(_:_:)	func JSObjectCopyPropertyNames(_ ctx: JSContextRef!, _ object: JSObjectRef!) -> JSPropertyNameArrayRef!
+c:@F@JSObjectDeleteProperty	swift.func	JSObjectDeleteProperty(_:_:_:_:)	JSObjectDeleteProperty(_:_:_:_:)	func JSObjectDeleteProperty(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ propertyName: JSStringRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> Bool
+c:@F@JSObjectDeletePropertyForKey	swift.func	JSObjectDeletePropertyForKey(_:_:_:_:)	JSObjectDeletePropertyForKey(_:_:_:_:)	func JSObjectDeletePropertyForKey(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ propertyKey: JSValueRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> Bool
+c:@F@JSObjectGetArrayBufferByteLength	swift.func	JSObjectGetArrayBufferByteLength(_:_:_:)	JSObjectGetArrayBufferByteLength(_:_:_:)	func JSObjectGetArrayBufferByteLength(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> Int
+c:@F@JSObjectGetArrayBufferBytesPtr	swift.func	JSObjectGetArrayBufferBytesPtr(_:_:_:)	JSObjectGetArrayBufferBytesPtr(_:_:_:)	func JSObjectGetArrayBufferBytesPtr(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> UnsafeMutableRawPointer!
+c:@F@JSObjectGetPrivate	swift.func	JSObjectGetPrivate(_:)	JSObjectGetPrivate(_:)	func JSObjectGetPrivate(_ object: JSObjectRef!) -> UnsafeMutableRawPointer!
+c:@F@JSObjectGetProperty	swift.func	JSObjectGetProperty(_:_:_:_:)	JSObjectGetProperty(_:_:_:_:)	func JSObjectGetProperty(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ propertyName: JSStringRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSValueRef!
+c:@F@JSObjectGetPropertyAtIndex	swift.func	JSObjectGetPropertyAtIndex(_:_:_:_:)	JSObjectGetPropertyAtIndex(_:_:_:_:)	func JSObjectGetPropertyAtIndex(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ propertyIndex: UInt32, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSValueRef!
+c:@F@JSObjectGetPropertyForKey	swift.func	JSObjectGetPropertyForKey(_:_:_:_:)	JSObjectGetPropertyForKey(_:_:_:_:)	func JSObjectGetPropertyForKey(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ propertyKey: JSValueRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSValueRef!
+c:@F@JSObjectGetPrototype	swift.func	JSObjectGetPrototype(_:_:)	JSObjectGetPrototype(_:_:)	func JSObjectGetPrototype(_ ctx: JSContextRef!, _ object: JSObjectRef!) -> JSValueRef!
+c:@F@JSObjectGetTypedArrayBuffer	swift.func	JSObjectGetTypedArrayBuffer(_:_:_:)	JSObjectGetTypedArrayBuffer(_:_:_:)	func JSObjectGetTypedArrayBuffer(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSObjectRef!
+c:@F@JSObjectGetTypedArrayByteLength	swift.func	JSObjectGetTypedArrayByteLength(_:_:_:)	JSObjectGetTypedArrayByteLength(_:_:_:)	func JSObjectGetTypedArrayByteLength(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> Int
+c:@F@JSObjectGetTypedArrayByteOffset	swift.func	JSObjectGetTypedArrayByteOffset(_:_:_:)	JSObjectGetTypedArrayByteOffset(_:_:_:)	func JSObjectGetTypedArrayByteOffset(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> Int
+c:@F@JSObjectGetTypedArrayBytesPtr	swift.func	JSObjectGetTypedArrayBytesPtr(_:_:_:)	JSObjectGetTypedArrayBytesPtr(_:_:_:)	func JSObjectGetTypedArrayBytesPtr(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> UnsafeMutableRawPointer!
+c:@F@JSObjectGetTypedArrayLength	swift.func	JSObjectGetTypedArrayLength(_:_:_:)	JSObjectGetTypedArrayLength(_:_:_:)	func JSObjectGetTypedArrayLength(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> Int
+c:@F@JSObjectHasProperty	swift.func	JSObjectHasProperty(_:_:_:)	JSObjectHasProperty(_:_:_:)	func JSObjectHasProperty(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ propertyName: JSStringRef!) -> Bool
+c:@F@JSObjectHasPropertyForKey	swift.func	JSObjectHasPropertyForKey(_:_:_:_:)	JSObjectHasPropertyForKey(_:_:_:_:)	func JSObjectHasPropertyForKey(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ propertyKey: JSValueRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> Bool
+c:@F@JSObjectIsConstructor	swift.func	JSObjectIsConstructor(_:_:)	JSObjectIsConstructor(_:_:)	func JSObjectIsConstructor(_ ctx: JSContextRef!, _ object: JSObjectRef!) -> Bool
+c:@F@JSObjectIsFunction	swift.func	JSObjectIsFunction(_:_:)	JSObjectIsFunction(_:_:)	func JSObjectIsFunction(_ ctx: JSContextRef!, _ object: JSObjectRef!) -> Bool
+c:@F@JSObjectMake	swift.func	JSObjectMake(_:_:_:)	JSObjectMake(_:_:_:)	func JSObjectMake(_ ctx: JSContextRef!, _ jsClass: JSClassRef!, _ data: UnsafeMutableRawPointer!) -> JSObjectRef!
+c:@F@JSObjectMakeArray	swift.func	JSObjectMakeArray(_:_:_:_:)	JSObjectMakeArray(_:_:_:_:)	func JSObjectMakeArray(_ ctx: JSContextRef!, _ argumentCount: Int, _ arguments: UnsafePointer<JSValueRef?>!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSObjectRef!
+c:@F@JSObjectMakeArrayBufferWithBytesNoCopy	swift.func	JSObjectMakeArrayBufferWithBytesNoCopy(_:_:_:_:_:_:)	JSObjectMakeArrayBufferWithBytesNoCopy(_:_:_:_:_:_:)	func JSObjectMakeArrayBufferWithBytesNoCopy(_ ctx: JSContextRef!, _ bytes: UnsafeMutableRawPointer!, _ byteLength: Int, _ bytesDeallocator: JSTypedArrayBytesDeallocator!, _ deallocatorContext: UnsafeMutableRawPointer!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSObjectRef!
+c:@F@JSObjectMakeConstructor	swift.func	JSObjectMakeConstructor(_:_:_:)	JSObjectMakeConstructor(_:_:_:)	func JSObjectMakeConstructor(_ ctx: JSContextRef!, _ jsClass: JSClassRef!, _ callAsConstructor: JSObjectCallAsConstructorCallback!) -> JSObjectRef!
+c:@F@JSObjectMakeDate	swift.func	JSObjectMakeDate(_:_:_:_:)	JSObjectMakeDate(_:_:_:_:)	func JSObjectMakeDate(_ ctx: JSContextRef!, _ argumentCount: Int, _ arguments: UnsafePointer<JSValueRef?>!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSObjectRef!
+c:@F@JSObjectMakeDeferredPromise	swift.func	JSObjectMakeDeferredPromise(_:_:_:_:)	JSObjectMakeDeferredPromise(_:_:_:_:)	func JSObjectMakeDeferredPromise(_ ctx: JSContextRef!, _ resolve: UnsafeMutablePointer<JSObjectRef?>!, _ reject: UnsafeMutablePointer<JSObjectRef?>!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSObjectRef!
+c:@F@JSObjectMakeError	swift.func	JSObjectMakeError(_:_:_:_:)	JSObjectMakeError(_:_:_:_:)	func JSObjectMakeError(_ ctx: JSContextRef!, _ argumentCount: Int, _ arguments: UnsafePointer<JSValueRef?>!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSObjectRef!
+c:@F@JSObjectMakeFunction	swift.func	JSObjectMakeFunction(_:_:_:_:_:_:_:_:)	JSObjectMakeFunction(_:_:_:_:_:_:_:_:)	func JSObjectMakeFunction(_ ctx: JSContextRef!, _ name: JSStringRef!, _ parameterCount: UInt32, _ parameterNames: UnsafePointer<JSStringRef?>!, _ body: JSStringRef!, _ sourceURL: JSStringRef!, _ startingLineNumber: Int32, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSObjectRef!
+c:@F@JSObjectMakeFunctionWithCallback	swift.func	JSObjectMakeFunctionWithCallback(_:_:_:)	JSObjectMakeFunctionWithCallback(_:_:_:)	func JSObjectMakeFunctionWithCallback(_ ctx: JSContextRef!, _ name: JSStringRef!, _ callAsFunction: JSObjectCallAsFunctionCallback!) -> JSObjectRef!
+c:@F@JSObjectMakeRegExp	swift.func	JSObjectMakeRegExp(_:_:_:_:)	JSObjectMakeRegExp(_:_:_:_:)	func JSObjectMakeRegExp(_ ctx: JSContextRef!, _ argumentCount: Int, _ arguments: UnsafePointer<JSValueRef?>!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSObjectRef!
+c:@F@JSObjectMakeTypedArray	swift.func	JSObjectMakeTypedArray(_:_:_:_:)	JSObjectMakeTypedArray(_:_:_:_:)	func JSObjectMakeTypedArray(_ ctx: JSContextRef!, _ arrayType: JSTypedArrayType, _ length: Int, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSObjectRef!
+c:@F@JSObjectMakeTypedArrayWithArrayBuffer	swift.func	JSObjectMakeTypedArrayWithArrayBuffer(_:_:_:_:)	JSObjectMakeTypedArrayWithArrayBuffer(_:_:_:_:)	func JSObjectMakeTypedArrayWithArrayBuffer(_ ctx: JSContextRef!, _ arrayType: JSTypedArrayType, _ buffer: JSObjectRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSObjectRef!
+c:@F@JSObjectMakeTypedArrayWithArrayBufferAndOffset	swift.func	JSObjectMakeTypedArrayWithArrayBufferAndOffset(_:_:_:_:_:_:)	JSObjectMakeTypedArrayWithArrayBufferAndOffset(_:_:_:_:_:_:)	func JSObjectMakeTypedArrayWithArrayBufferAndOffset(_ ctx: JSContextRef!, _ arrayType: JSTypedArrayType, _ buffer: JSObjectRef!, _ byteOffset: Int, _ length: Int, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSObjectRef!
+c:@F@JSObjectMakeTypedArrayWithBytesNoCopy	swift.func	JSObjectMakeTypedArrayWithBytesNoCopy(_:_:_:_:_:_:_:)	JSObjectMakeTypedArrayWithBytesNoCopy(_:_:_:_:_:_:_:)	func JSObjectMakeTypedArrayWithBytesNoCopy(_ ctx: JSContextRef!, _ arrayType: JSTypedArrayType, _ bytes: UnsafeMutableRawPointer!, _ byteLength: Int, _ bytesDeallocator: JSTypedArrayBytesDeallocator!, _ deallocatorContext: UnsafeMutableRawPointer!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSObjectRef!
+c:@F@JSObjectSetPrivate	swift.func	JSObjectSetPrivate(_:_:)	JSObjectSetPrivate(_:_:)	func JSObjectSetPrivate(_ object: JSObjectRef!, _ data: UnsafeMutableRawPointer!) -> Bool
+c:@F@JSObjectSetProperty	swift.func	JSObjectSetProperty(_:_:_:_:_:_:)	JSObjectSetProperty(_:_:_:_:_:_:)	func JSObjectSetProperty(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ propertyName: JSStringRef!, _ value: JSValueRef!, _ attributes: JSPropertyAttributes, _ exception: UnsafeMutablePointer<JSValueRef?>!)
+c:@F@JSObjectSetPropertyAtIndex	swift.func	JSObjectSetPropertyAtIndex(_:_:_:_:_:)	JSObjectSetPropertyAtIndex(_:_:_:_:_:)	func JSObjectSetPropertyAtIndex(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ propertyIndex: UInt32, _ value: JSValueRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!)
+c:@F@JSObjectSetPropertyForKey	swift.func	JSObjectSetPropertyForKey(_:_:_:_:_:_:)	JSObjectSetPropertyForKey(_:_:_:_:_:_:)	func JSObjectSetPropertyForKey(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ propertyKey: JSValueRef!, _ value: JSValueRef!, _ attributes: JSPropertyAttributes, _ exception: UnsafeMutablePointer<JSValueRef?>!)
+c:@F@JSObjectSetPrototype	swift.func	JSObjectSetPrototype(_:_:_:)	JSObjectSetPrototype(_:_:_:)	func JSObjectSetPrototype(_ ctx: JSContextRef!, _ object: JSObjectRef!, _ value: JSValueRef!)
+c:@F@JSPropertyNameAccumulatorAddName	swift.func	JSPropertyNameAccumulatorAddName(_:_:)	JSPropertyNameAccumulatorAddName(_:_:)	func JSPropertyNameAccumulatorAddName(_ accumulator: JSPropertyNameAccumulatorRef!, _ propertyName: JSStringRef!)
+c:@F@JSPropertyNameArrayGetCount	swift.func	JSPropertyNameArrayGetCount(_:)	JSPropertyNameArrayGetCount(_:)	func JSPropertyNameArrayGetCount(_ array: JSPropertyNameArrayRef!) -> Int
+c:@F@JSPropertyNameArrayGetNameAtIndex	swift.func	JSPropertyNameArrayGetNameAtIndex(_:_:)	JSPropertyNameArrayGetNameAtIndex(_:_:)	func JSPropertyNameArrayGetNameAtIndex(_ array: JSPropertyNameArrayRef!, _ index: Int) -> JSStringRef!
+c:@F@JSPropertyNameArrayRelease	swift.func	JSPropertyNameArrayRelease(_:)	JSPropertyNameArrayRelease(_:)	func JSPropertyNameArrayRelease(_ array: JSPropertyNameArrayRef!)
+c:@F@JSPropertyNameArrayRetain	swift.func	JSPropertyNameArrayRetain(_:)	JSPropertyNameArrayRetain(_:)	func JSPropertyNameArrayRetain(_ array: JSPropertyNameArrayRef!) -> JSPropertyNameArrayRef!
+c:@F@JSStringCopyCFString	swift.func	JSStringCopyCFString(_:_:)	JSStringCopyCFString(_:_:)	func JSStringCopyCFString(_ alloc: CFAllocator!, _ string: JSStringRef!) -> CFString!
+c:@F@JSStringCreateWithCFString	swift.func	JSStringCreateWithCFString(_:)	JSStringCreateWithCFString(_:)	func JSStringCreateWithCFString(_ string: CFString!) -> JSStringRef!
+c:@F@JSStringCreateWithCharacters	swift.func	JSStringCreateWithCharacters(_:_:)	JSStringCreateWithCharacters(_:_:)	func JSStringCreateWithCharacters(_ chars: UnsafePointer<JSChar>!, _ numChars: Int) -> JSStringRef!
+c:@F@JSStringCreateWithUTF8CString	swift.func	JSStringCreateWithUTF8CString(_:)	JSStringCreateWithUTF8CString(_:)	func JSStringCreateWithUTF8CString(_ string: UnsafePointer<CChar>!) -> JSStringRef!
+c:@F@JSStringGetCharactersPtr	swift.func	JSStringGetCharactersPtr(_:)	JSStringGetCharactersPtr(_:)	func JSStringGetCharactersPtr(_ string: JSStringRef!) -> UnsafePointer<JSChar>!
+c:@F@JSStringGetLength	swift.func	JSStringGetLength(_:)	JSStringGetLength(_:)	func JSStringGetLength(_ string: JSStringRef!) -> Int
+c:@F@JSStringGetMaximumUTF8CStringSize	swift.func	JSStringGetMaximumUTF8CStringSize(_:)	JSStringGetMaximumUTF8CStringSize(_:)	func JSStringGetMaximumUTF8CStringSize(_ string: JSStringRef!) -> Int
+c:@F@JSStringGetUTF8CString	swift.func	JSStringGetUTF8CString(_:_:_:)	JSStringGetUTF8CString(_:_:_:)	func JSStringGetUTF8CString(_ string: JSStringRef!, _ buffer: UnsafeMutablePointer<CChar>!, _ bufferSize: Int) -> Int
+c:@F@JSStringIsEqual	swift.func	JSStringIsEqual(_:_:)	JSStringIsEqual(_:_:)	func JSStringIsEqual(_ a: JSStringRef!, _ b: JSStringRef!) -> Bool
+c:@F@JSStringIsEqualToUTF8CString	swift.func	JSStringIsEqualToUTF8CString(_:_:)	JSStringIsEqualToUTF8CString(_:_:)	func JSStringIsEqualToUTF8CString(_ a: JSStringRef!, _ b: UnsafePointer<CChar>!) -> Bool
+c:@F@JSStringRelease	swift.func	JSStringRelease(_:)	JSStringRelease(_:)	func JSStringRelease(_ string: JSStringRef!)
+c:@F@JSStringRetain	swift.func	JSStringRetain(_:)	JSStringRetain(_:)	func JSStringRetain(_ string: JSStringRef!) -> JSStringRef!
+c:@F@JSValueCompare	swift.func	JSValueCompare(_:_:_:_:)	JSValueCompare(_:_:_:_:)	func JSValueCompare(_ ctx: JSContextRef, _ left: JSValueRef, _ right: JSValueRef, _ exception: UnsafeMutablePointer<JSValueRef?>?) -> JSRelationCondition
+c:@F@JSValueCompareDouble	swift.func	JSValueCompareDouble(_:_:_:_:)	JSValueCompareDouble(_:_:_:_:)	func JSValueCompareDouble(_ ctx: JSContextRef, _ left: JSValueRef, _ right: Double, _ exception: UnsafeMutablePointer<JSValueRef?>?) -> JSRelationCondition
+c:@F@JSValueCompareInt64	swift.func	JSValueCompareInt64(_:_:_:_:)	JSValueCompareInt64(_:_:_:_:)	func JSValueCompareInt64(_ ctx: JSContextRef, _ left: JSValueRef, _ right: Int64, _ exception: UnsafeMutablePointer<JSValueRef?>?) -> JSRelationCondition
+c:@F@JSValueCompareUInt64	swift.func	JSValueCompareUInt64(_:_:_:_:)	JSValueCompareUInt64(_:_:_:_:)	func JSValueCompareUInt64(_ ctx: JSContextRef, _ left: JSValueRef, _ right: UInt64, _ exception: UnsafeMutablePointer<JSValueRef?>?) -> JSRelationCondition
+c:@F@JSValueCreateJSONString	swift.func	JSValueCreateJSONString(_:_:_:_:)	JSValueCreateJSONString(_:_:_:_:)	func JSValueCreateJSONString(_ ctx: JSContextRef!, _ value: JSValueRef!, _ indent: UInt32, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSStringRef!
+c:@F@JSValueGetType	swift.func	JSValueGetType(_:_:)	JSValueGetType(_:_:)	func JSValueGetType(_ ctx: JSContextRef!, _ value: JSValueRef!) -> JSType
+c:@F@JSValueGetTypedArrayType	swift.func	JSValueGetTypedArrayType(_:_:_:)	JSValueGetTypedArrayType(_:_:_:)	func JSValueGetTypedArrayType(_ ctx: JSContextRef!, _ value: JSValueRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSTypedArrayType
+c:@F@JSValueIsArray	swift.func	JSValueIsArray(_:_:)	JSValueIsArray(_:_:)	func JSValueIsArray(_ ctx: JSContextRef!, _ value: JSValueRef!) -> Bool
+c:@F@JSValueIsBigInt	swift.func	JSValueIsBigInt(_:_:)	JSValueIsBigInt(_:_:)	func JSValueIsBigInt(_ ctx: JSContextRef, _ value: JSValueRef) -> Bool
+c:@F@JSValueIsBoolean	swift.func	JSValueIsBoolean(_:_:)	JSValueIsBoolean(_:_:)	func JSValueIsBoolean(_ ctx: JSContextRef!, _ value: JSValueRef!) -> Bool
+c:@F@JSValueIsDate	swift.func	JSValueIsDate(_:_:)	JSValueIsDate(_:_:)	func JSValueIsDate(_ ctx: JSContextRef!, _ value: JSValueRef!) -> Bool
+c:@F@JSValueIsEqual	swift.func	JSValueIsEqual(_:_:_:_:)	JSValueIsEqual(_:_:_:_:)	func JSValueIsEqual(_ ctx: JSContextRef!, _ a: JSValueRef!, _ b: JSValueRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> Bool
+c:@F@JSValueIsInstanceOfConstructor	swift.func	JSValueIsInstanceOfConstructor(_:_:_:_:)	JSValueIsInstanceOfConstructor(_:_:_:_:)	func JSValueIsInstanceOfConstructor(_ ctx: JSContextRef!, _ value: JSValueRef!, _ constructor: JSObjectRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> Bool
+c:@F@JSValueIsNull	swift.func	JSValueIsNull(_:_:)	JSValueIsNull(_:_:)	func JSValueIsNull(_ ctx: JSContextRef!, _ value: JSValueRef!) -> Bool
+c:@F@JSValueIsNumber	swift.func	JSValueIsNumber(_:_:)	JSValueIsNumber(_:_:)	func JSValueIsNumber(_ ctx: JSContextRef!, _ value: JSValueRef!) -> Bool
+c:@F@JSValueIsObject	swift.func	JSValueIsObject(_:_:)	JSValueIsObject(_:_:)	func JSValueIsObject(_ ctx: JSContextRef!, _ value: JSValueRef!) -> Bool
+c:@F@JSValueIsObjectOfClass	swift.func	JSValueIsObjectOfClass(_:_:_:)	JSValueIsObjectOfClass(_:_:_:)	func JSValueIsObjectOfClass(_ ctx: JSContextRef!, _ value: JSValueRef!, _ jsClass: JSClassRef!) -> Bool
+c:@F@JSValueIsStrictEqual	swift.func	JSValueIsStrictEqual(_:_:_:)	JSValueIsStrictEqual(_:_:_:)	func JSValueIsStrictEqual(_ ctx: JSContextRef!, _ a: JSValueRef!, _ b: JSValueRef!) -> Bool
+c:@F@JSValueIsString	swift.func	JSValueIsString(_:_:)	JSValueIsString(_:_:)	func JSValueIsString(_ ctx: JSContextRef!, _ value: JSValueRef!) -> Bool
+c:@F@JSValueIsSymbol	swift.func	JSValueIsSymbol(_:_:)	JSValueIsSymbol(_:_:)	func JSValueIsSymbol(_ ctx: JSContextRef!, _ value: JSValueRef!) -> Bool
+c:@F@JSValueIsUndefined	swift.func	JSValueIsUndefined(_:_:)	JSValueIsUndefined(_:_:)	func JSValueIsUndefined(_ ctx: JSContextRef!, _ value: JSValueRef!) -> Bool
+c:@F@JSValueMakeBoolean	swift.func	JSValueMakeBoolean(_:_:)	JSValueMakeBoolean(_:_:)	func JSValueMakeBoolean(_ ctx: JSContextRef!, _ boolean: Bool) -> JSValueRef!
+c:@F@JSValueMakeFromJSONString	swift.func	JSValueMakeFromJSONString(_:_:)	JSValueMakeFromJSONString(_:_:)	func JSValueMakeFromJSONString(_ ctx: JSContextRef!, _ string: JSStringRef!) -> JSValueRef!
+c:@F@JSValueMakeNull	swift.func	JSValueMakeNull(_:)	JSValueMakeNull(_:)	func JSValueMakeNull(_ ctx: JSContextRef!) -> JSValueRef!
+c:@F@JSValueMakeNumber	swift.func	JSValueMakeNumber(_:_:)	JSValueMakeNumber(_:_:)	func JSValueMakeNumber(_ ctx: JSContextRef!, _ number: Double) -> JSValueRef!
+c:@F@JSValueMakeString	swift.func	JSValueMakeString(_:_:)	JSValueMakeString(_:_:)	func JSValueMakeString(_ ctx: JSContextRef!, _ string: JSStringRef!) -> JSValueRef!
+c:@F@JSValueMakeSymbol	swift.func	JSValueMakeSymbol(_:_:)	JSValueMakeSymbol(_:_:)	func JSValueMakeSymbol(_ ctx: JSContextRef!, _ description: JSStringRef!) -> JSValueRef!
+c:@F@JSValueMakeUndefined	swift.func	JSValueMakeUndefined(_:)	JSValueMakeUndefined(_:)	func JSValueMakeUndefined(_ ctx: JSContextRef!) -> JSValueRef!
+c:@F@JSValueProtect	swift.func	JSValueProtect(_:_:)	JSValueProtect(_:_:)	func JSValueProtect(_ ctx: JSContextRef!, _ value: JSValueRef!)
+c:@F@JSValueToBoolean	swift.func	JSValueToBoolean(_:_:)	JSValueToBoolean(_:_:)	func JSValueToBoolean(_ ctx: JSContextRef!, _ value: JSValueRef!) -> Bool
+c:@F@JSValueToInt32	swift.func	JSValueToInt32(_:_:_:)	JSValueToInt32(_:_:_:)	func JSValueToInt32(_ ctx: JSContextRef, _ value: JSValueRef, _ exception: UnsafeMutablePointer<JSValueRef?>?) -> Int32
+c:@F@JSValueToInt64	swift.func	JSValueToInt64(_:_:_:)	JSValueToInt64(_:_:_:)	func JSValueToInt64(_ ctx: JSContextRef, _ value: JSValueRef, _ exception: UnsafeMutablePointer<JSValueRef?>?) -> Int64
+c:@F@JSValueToNumber	swift.func	JSValueToNumber(_:_:_:)	JSValueToNumber(_:_:_:)	func JSValueToNumber(_ ctx: JSContextRef!, _ value: JSValueRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> Double
+c:@F@JSValueToObject	swift.func	JSValueToObject(_:_:_:)	JSValueToObject(_:_:_:)	func JSValueToObject(_ ctx: JSContextRef!, _ value: JSValueRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSObjectRef!
+c:@F@JSValueToStringCopy	swift.func	JSValueToStringCopy(_:_:_:)	JSValueToStringCopy(_:_:_:)	func JSValueToStringCopy(_ ctx: JSContextRef!, _ value: JSValueRef!, _ exception: UnsafeMutablePointer<JSValueRef?>!) -> JSStringRef!
+c:@F@JSValueToUInt32	swift.func	JSValueToUInt32(_:_:_:)	JSValueToUInt32(_:_:_:)	func JSValueToUInt32(_ ctx: JSContextRef, _ value: JSValueRef, _ exception: UnsafeMutablePointer<JSValueRef?>?) -> UInt32
+c:@F@JSValueToUInt64	swift.func	JSValueToUInt64(_:_:_:)	JSValueToUInt64(_:_:_:)	func JSValueToUInt64(_ ctx: JSContextRef, _ value: JSValueRef, _ exception: UnsafeMutablePointer<JSValueRef?>?) -> UInt64
+c:@F@JSValueUnprotect	swift.func	JSValueUnprotect(_:_:)	JSValueUnprotect(_:_:)	func JSValueUnprotect(_ ctx: JSContextRef!, _ value: JSValueRef!)
+c:@JSPropertyDescriptorConfigurableKey	swift.var	JSPropertyDescriptorConfigurableKey	JSPropertyDescriptorConfigurableKey	let JSPropertyDescriptorConfigurableKey: String
+c:@JSPropertyDescriptorEnumerableKey	swift.var	JSPropertyDescriptorEnumerableKey	JSPropertyDescriptorEnumerableKey	let JSPropertyDescriptorEnumerableKey: String
+c:@JSPropertyDescriptorGetKey	swift.var	JSPropertyDescriptorGetKey	JSPropertyDescriptorGetKey	let JSPropertyDescriptorGetKey: String
+c:@JSPropertyDescriptorSetKey	swift.var	JSPropertyDescriptorSetKey	JSPropertyDescriptorSetKey	let JSPropertyDescriptorSetKey: String
+c:@JSPropertyDescriptorValueKey	swift.var	JSPropertyDescriptorValueKey	JSPropertyDescriptorValueKey	let JSPropertyDescriptorValueKey: String
+c:@JSPropertyDescriptorWritableKey	swift.var	JSPropertyDescriptorWritableKey	JSPropertyDescriptorWritableKey	let JSPropertyDescriptorWritableKey: String
+c:@SA@JSClassDefinition	swift.struct	JSClassDefinition	JSClassDefinition	struct JSClassDefinition
+c:@SA@JSClassDefinition@FI@attributes	swift.property	attributes	JSClassDefinition.attributes	var attributes: JSClassAttributes
+c:@SA@JSClassDefinition@FI@callAsConstructor	swift.property	callAsConstructor	JSClassDefinition.callAsConstructor	var callAsConstructor: JSObjectCallAsConstructorCallback!
+c:@SA@JSClassDefinition@FI@callAsFunction	swift.property	callAsFunction	JSClassDefinition.callAsFunction	var callAsFunction: JSObjectCallAsFunctionCallback!
+c:@SA@JSClassDefinition@FI@className	swift.property	className	JSClassDefinition.className	var className: UnsafePointer<CChar>!
+c:@SA@JSClassDefinition@FI@convertToType	swift.property	convertToType	JSClassDefinition.convertToType	var convertToType: JSObjectConvertToTypeCallback!
+c:@SA@JSClassDefinition@FI@deleteProperty	swift.property	deleteProperty	JSClassDefinition.deleteProperty	var deleteProperty: JSObjectDeletePropertyCallback!
+c:@SA@JSClassDefinition@FI@finalize	swift.property	finalize	JSClassDefinition.finalize	var finalize: JSObjectFinalizeCallback!
+c:@SA@JSClassDefinition@FI@getProperty	swift.property	getProperty	JSClassDefinition.getProperty	var getProperty: JSObjectGetPropertyCallback!
+c:@SA@JSClassDefinition@FI@getPropertyNames	swift.property	getPropertyNames	JSClassDefinition.getPropertyNames	var getPropertyNames: JSObjectGetPropertyNamesCallback!
+c:@SA@JSClassDefinition@FI@hasInstance	swift.property	hasInstance	JSClassDefinition.hasInstance	var hasInstance: JSObjectHasInstanceCallback!
+c:@SA@JSClassDefinition@FI@hasProperty	swift.property	hasProperty	JSClassDefinition.hasProperty	var hasProperty: JSObjectHasPropertyCallback!
+c:@SA@JSClassDefinition@FI@initialize	swift.property	initialize	JSClassDefinition.initialize	var initialize: JSObjectInitializeCallback!
+c:@SA@JSClassDefinition@FI@parentClass	swift.property	parentClass	JSClassDefinition.parentClass	var parentClass: JSClassRef!
+c:@SA@JSClassDefinition@FI@setProperty	swift.property	setProperty	JSClassDefinition.setProperty	var setProperty: JSObjectSetPropertyCallback!
+c:@SA@JSClassDefinition@FI@staticFunctions	swift.property	staticFunctions	JSClassDefinition.staticFunctions	var staticFunctions: UnsafePointer<JSStaticFunction>!
+c:@SA@JSClassDefinition@FI@staticValues	swift.property	staticValues	JSClassDefinition.staticValues	var staticValues: UnsafePointer<JSStaticValue>!
+c:@SA@JSClassDefinition@FI@version	swift.property	version	JSClassDefinition.version	var version: Int32
+c:@SA@JSStaticFunction	swift.struct	JSStaticFunction	JSStaticFunction	struct JSStaticFunction
+c:@SA@JSStaticFunction@FI@attributes	swift.property	attributes	JSStaticFunction.attributes	var attributes: JSPropertyAttributes
+c:@SA@JSStaticFunction@FI@callAsFunction	swift.property	callAsFunction	JSStaticFunction.callAsFunction	var callAsFunction: JSObjectCallAsFunctionCallback!
+c:@SA@JSStaticFunction@FI@name	swift.property	name	JSStaticFunction.name	var name: UnsafePointer<CChar>!
+c:@SA@JSStaticValue	swift.struct	JSStaticValue	JSStaticValue	struct JSStaticValue
+c:@SA@JSStaticValue@FI@attributes	swift.property	attributes	JSStaticValue.attributes	var attributes: JSPropertyAttributes
+c:@SA@JSStaticValue@FI@getProperty	swift.property	getProperty	JSStaticValue.getProperty	var getProperty: JSObjectGetPropertyCallback!
+c:@SA@JSStaticValue@FI@name	swift.property	name	JSStaticValue.name	var name: UnsafePointer<CChar>!
+c:@SA@JSStaticValue@FI@setProperty	swift.property	setProperty	JSStaticValue.setProperty	var setProperty: JSObjectSetPropertyCallback!
+c:@T@JSChar	swift.typealias	JSChar	JSChar	typealias JSChar = UInt16
+c:@T@JSClassAttributes	swift.typealias	JSClassAttributes	JSClassAttributes	typealias JSClassAttributes = UInt32
+c:@T@JSClassRef	swift.typealias	JSClassRef	JSClassRef	typealias JSClassRef = OpaquePointer
+c:@T@JSContextGroupRef	swift.typealias	JSContextGroupRef	JSContextGroupRef	typealias JSContextGroupRef = OpaquePointer
+c:@T@JSContextRef	swift.typealias	JSContextRef	JSContextRef	typealias JSContextRef = OpaquePointer
+c:@T@JSGlobalContextRef	swift.typealias	JSGlobalContextRef	JSGlobalContextRef	typealias JSGlobalContextRef = OpaquePointer
+c:@T@JSObjectCallAsConstructorCallback	swift.typealias	JSObjectCallAsConstructorCallback	JSObjectCallAsConstructorCallback	typealias JSObjectCallAsConstructorCallback = (JSContextRef?, JSObjectRef?, Int, UnsafePointer<JSValueRef?>?, UnsafeMutablePointer<JSValueRef?>?) -> JSObjectRef?
+c:@T@JSObjectCallAsFunctionCallback	swift.typealias	JSObjectCallAsFunctionCallback	JSObjectCallAsFunctionCallback	typealias JSObjectCallAsFunctionCallback = (JSContextRef?, JSObjectRef?, JSObjectRef?, Int, UnsafePointer<JSValueRef?>?, UnsafeMutablePointer<JSValueRef?>?) -> JSValueRef?
+c:@T@JSObjectConvertToTypeCallback	swift.typealias	JSObjectConvertToTypeCallback	JSObjectConvertToTypeCallback	typealias JSObjectConvertToTypeCallback = (JSContextRef?, JSObjectRef?, JSType, UnsafeMutablePointer<JSValueRef?>?) -> JSValueRef?
+c:@T@JSObjectDeletePropertyCallback	swift.typealias	JSObjectDeletePropertyCallback	JSObjectDeletePropertyCallback	typealias JSObjectDeletePropertyCallback = (JSContextRef?, JSObjectRef?, JSStringRef?, UnsafeMutablePointer<JSValueRef?>?) -> Bool
+c:@T@JSObjectFinalizeCallback	swift.typealias	JSObjectFinalizeCallback	JSObjectFinalizeCallback	typealias JSObjectFinalizeCallback = (JSObjectRef?) -> Void
+c:@T@JSObjectGetPropertyCallback	swift.typealias	JSObjectGetPropertyCallback	JSObjectGetPropertyCallback	typealias JSObjectGetPropertyCallback = (JSContextRef?, JSObjectRef?, JSStringRef?, UnsafeMutablePointer<JSValueRef?>?) -> JSValueRef?
+c:@T@JSObjectGetPropertyNamesCallback	swift.typealias	JSObjectGetPropertyNamesCallback	JSObjectGetPropertyNamesCallback	typealias JSObjectGetPropertyNamesCallback = (JSContextRef?, JSObjectRef?, JSPropertyNameAccumulatorRef?) -> Void
+c:@T@JSObjectHasInstanceCallback	swift.typealias	JSObjectHasInstanceCallback	JSObjectHasInstanceCallback	typealias JSObjectHasInstanceCallback = (JSContextRef?, JSObjectRef?, JSValueRef?, UnsafeMutablePointer<JSValueRef?>?) -> Bool
+c:@T@JSObjectHasPropertyCallback	swift.typealias	JSObjectHasPropertyCallback	JSObjectHasPropertyCallback	typealias JSObjectHasPropertyCallback = (JSContextRef?, JSObjectRef?, JSStringRef?) -> Bool
+c:@T@JSObjectInitializeCallback	swift.typealias	JSObjectInitializeCallback	JSObjectInitializeCallback	typealias JSObjectInitializeCallback = (JSContextRef?, JSObjectRef?) -> Void
+c:@T@JSObjectRef	swift.typealias	JSObjectRef	JSObjectRef	typealias JSObjectRef = OpaquePointer
+c:@T@JSObjectSetPropertyCallback	swift.typealias	JSObjectSetPropertyCallback	JSObjectSetPropertyCallback	typealias JSObjectSetPropertyCallback = (JSContextRef?, JSObjectRef?, JSStringRef?, JSValueRef?, UnsafeMutablePointer<JSValueRef?>?) -> Bool
+c:@T@JSPropertyAttributes	swift.typealias	JSPropertyAttributes	JSPropertyAttributes	typealias JSPropertyAttributes = UInt32
+c:@T@JSPropertyNameAccumulatorRef	swift.typealias	JSPropertyNameAccumulatorRef	JSPropertyNameAccumulatorRef	typealias JSPropertyNameAccumulatorRef = OpaquePointer
+c:@T@JSPropertyNameArrayRef	swift.typealias	JSPropertyNameArrayRef	JSPropertyNameArrayRef	typealias JSPropertyNameArrayRef = OpaquePointer
+c:@T@JSStringRef	swift.typealias	JSStringRef	JSStringRef	typealias JSStringRef = OpaquePointer
+c:@T@JSTypedArrayBytesDeallocator	swift.typealias	JSTypedArrayBytesDeallocator	JSTypedArrayBytesDeallocator	typealias JSTypedArrayBytesDeallocator = (UnsafeMutableRawPointer?, UnsafeMutableRawPointer?) -> Void
+c:@T@JSValueProperty	swift.typealias	JSValueProperty	JSValueProperty	typealias JSValueProperty = AnyObject
+c:@T@JSValueRef	swift.typealias	JSValueRef	JSValueRef	typealias JSValueRef = OpaquePointer
+c:@kJSClassDefinitionEmpty	swift.var	kJSClassDefinitionEmpty	kJSClassDefinitionEmpty	let kJSClassDefinitionEmpty: JSClassDefinition
+c:@macro@JSC_OBJC_API_ENABLED	swift.var	JSC_OBJC_API_ENABLED	JSC_OBJC_API_ENABLED	var JSC_OBJC_API_ENABLED: Int32 { get }
+c:objc(cs)JSContext	swift.class	JSContext	JSContext	class JSContext
+c:objc(cs)JSContext(cm)contextWithJSGlobalContextRef:	swift.init	init(JSGlobalContextRef:)	JSContext.init(JSGlobalContextRef:)	init!(JSGlobalContextRef jsGlobalContextRef: JSGlobalContextRef!)
+c:objc(cs)JSContext(cm)currentArguments	swift.type.method	currentArguments()	JSContext.currentArguments()	class func currentArguments() -> [Any]!
+c:objc(cs)JSContext(cm)currentCallee	swift.type.method	currentCallee()	JSContext.currentCallee()	class func currentCallee() -> JSValue!
+c:objc(cs)JSContext(cm)currentContext	swift.type.method	current()	JSContext.current()	class func current() -> JSContext!
+c:objc(cs)JSContext(cm)currentThis	swift.type.method	currentThis()	JSContext.currentThis()	class func currentThis() -> JSValue!
+c:objc(cs)JSContext(im)evaluateScript:	swift.method	evaluateScript(_:)	JSContext.evaluateScript(_:)	func evaluateScript(_ script: String!) -> JSValue!
+c:objc(cs)JSContext(im)evaluateScript:withSourceURL:	swift.method	evaluateScript(_:withSourceURL:)	JSContext.evaluateScript(_:withSourceURL:)	func evaluateScript(_ script: String!, withSourceURL sourceURL: URL!) -> JSValue!
+c:objc(cs)JSContext(im)init	swift.init	init()	JSContext.init()	init!()
+c:objc(cs)JSContext(im)initWithVirtualMachine:	swift.init	init(virtualMachine:)	JSContext.init(virtualMachine:)	init!(virtualMachine: JSVirtualMachine!)
+c:objc(cs)JSContext(im)objectForKeyedSubscript:	swift.method	objectForKeyedSubscript(_:)	JSContext.objectForKeyedSubscript(_:)	func objectForKeyedSubscript(_ key: Any!) -> JSValue!
+c:objc(cs)JSContext(im)setObject:forKeyedSubscript:	swift.method	setObject(_:forKeyedSubscript:)	JSContext.setObject(_:forKeyedSubscript:)	func setObject(_ object: Any!, forKeyedSubscript key: (any NSCopying & NSObjectProtocol)!)
+c:objc(cs)JSContext(py)JSGlobalContextRef	swift.property	jsGlobalContextRef	JSContext.jsGlobalContextRef	var jsGlobalContextRef: JSGlobalContextRef! { get }
+c:objc(cs)JSContext(py)exception	swift.property	exception	JSContext.exception	var exception: JSValue! { get set }
+c:objc(cs)JSContext(py)exceptionHandler	swift.property	exceptionHandler	JSContext.exceptionHandler	var exceptionHandler: ((JSContext?, JSValue?) -> Void)! { get set }
+c:objc(cs)JSContext(py)globalObject	swift.property	globalObject	JSContext.globalObject	var globalObject: JSValue! { get }
+c:objc(cs)JSContext(py)inspectable	swift.property	isInspectable	JSContext.isInspectable	var isInspectable: Bool { get set }
+c:objc(cs)JSContext(py)name	swift.property	name	JSContext.name	var name: String! { get set }
+c:objc(cs)JSContext(py)virtualMachine	swift.property	virtualMachine	JSContext.virtualMachine	var virtualMachine: JSVirtualMachine! { get }
+c:objc(cs)JSManagedValue	swift.class	JSManagedValue	JSManagedValue	class JSManagedValue
+c:objc(cs)JSManagedValue(cm)managedValueWithValue:andOwner:	swift.init	init(value:andOwner:)	JSManagedValue.init(value:andOwner:)	init!(value: JSValue!, andOwner owner: Any!)
+c:objc(cs)JSManagedValue(im)initWithValue:	swift.init	init(value:)	JSManagedValue.init(value:)	init!(value: JSValue!)
+c:objc(cs)JSManagedValue(py)value	swift.property	value	JSManagedValue.value	var value: JSValue! { get }
+c:objc(cs)JSValue	swift.class	JSValue	JSValue	class JSValue
+c:objc(cs)JSValue(cm)valueWithBool:inContext:	swift.init	init(bool:in:)	JSValue.init(bool:in:)	init!(bool value: Bool, in context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithBool:inContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(bool:inContext:)	JSValue.init(bool:inContext:)	init!(bool value: Bool, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithDouble:inContext:	swift.init	init(double:in:)	JSValue.init(double:in:)	init!(double value: Double, in context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithDouble:inContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(double:inContext:)	JSValue.init(double:inContext:)	init!(double value: Double, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithInt32:inContext:	swift.init	init(int32:in:)	JSValue.init(int32:in:)	init!(int32 value: Int32, in context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithInt32:inContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(int32:inContext:)	JSValue.init(int32:inContext:)	init!(int32 value: Int32, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithJSValueRef:inContext:	swift.init	init(JSValueRef:inContext:)	JSValue.init(JSValueRef:inContext:)	init!(JSValueRef value: JSValueRef!, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNewArrayInContext:	swift.init	init(newArrayIn:)	JSValue.init(newArrayIn:)	init!(newArrayIn context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNewArrayInContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(newArrayInContext:)	JSValue.init(newArrayInContext:)	init!(newArrayInContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromDouble:inContext:	swift.init	init(newBigIntFrom:in:)	JSValue.init(newBigIntFrom:in:)	init?(newBigIntFrom value: Double, in context: JSContext)
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromDouble:inContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(newBigIntFromDouble:inContext:)	JSValue.init(newBigIntFromDouble:inContext:)	init?(newBigIntFromDouble value: Double, inContext context: JSContext)
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromInt64:inContext:	swift.init	init(newBigIntFrom:in:)	JSValue.init(newBigIntFrom:in:)	init?(newBigIntFrom int64: Int64, in context: JSContext)
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromInt64:inContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(newBigIntFromInt64:inContext:)	JSValue.init(newBigIntFromInt64:inContext:)	init?(newBigIntFromInt64 int64: Int64, inContext context: JSContext)
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromString:inContext:	swift.init	init(newBigIntFrom:in:)	JSValue.init(newBigIntFrom:in:)	init?(newBigIntFrom string: String, in context: JSContext)
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromString:inContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(newBigIntFromString:inContext:)	JSValue.init(newBigIntFromString:inContext:)	init?(newBigIntFromString string: String, inContext context: JSContext)
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromUInt64:inContext:	swift.init	init(newBigIntFrom:in:)	JSValue.init(newBigIntFrom:in:)	init?(newBigIntFrom uint64: UInt64, in context: JSContext)
+c:objc(cs)JSValue(cm)valueWithNewBigIntFromUInt64:inContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(newBigIntFromUInt64:inContext:)	JSValue.init(newBigIntFromUInt64:inContext:)	init?(newBigIntFromUInt64 uint64: UInt64, inContext context: JSContext)
+c:objc(cs)JSValue(cm)valueWithNewErrorFromMessage:inContext:	swift.init	init(newErrorFromMessage:in:)	JSValue.init(newErrorFromMessage:in:)	init!(newErrorFromMessage message: String!, in context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNewErrorFromMessage:inContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(newErrorFromMessage:inContext:)	JSValue.init(newErrorFromMessage:inContext:)	init!(newErrorFromMessage message: String!, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNewObjectInContext:	swift.init	init(newObjectIn:)	JSValue.init(newObjectIn:)	init!(newObjectIn context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNewObjectInContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(newObjectInContext:)	JSValue.init(newObjectInContext:)	init!(newObjectInContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNewPromiseInContext:fromExecutor:	swift.init	init(newPromiseIn:fromExecutor:)	JSValue.init(newPromiseIn:fromExecutor:)	init!(newPromiseIn context: JSContext!, fromExecutor callback: ((JSValue?, JSValue?) -> Void)!)
+c:objc(cs)JSValue(cm)valueWithNewPromiseInContext:fromExecutor:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(newPromiseInContext:fromExecutor:)	JSValue.init(newPromiseInContext:fromExecutor:)	init!(newPromiseInContext context: JSContext!, fromExecutor callback: ((JSValue?, JSValue?) -> Void)!)
+c:objc(cs)JSValue(cm)valueWithNewPromiseRejectedWithReason:inContext:	swift.init	init(newPromiseRejectedWithReason:in:)	JSValue.init(newPromiseRejectedWithReason:in:)	init!(newPromiseRejectedWithReason reason: Any!, in context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNewPromiseRejectedWithReason:inContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(newPromiseRejectedWithReason:inContext:)	JSValue.init(newPromiseRejectedWithReason:inContext:)	init!(newPromiseRejectedWithReason reason: Any!, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNewPromiseResolvedWithResult:inContext:	swift.init	init(newPromiseResolvedWithResult:in:)	JSValue.init(newPromiseResolvedWithResult:in:)	init!(newPromiseResolvedWithResult result: Any!, in context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNewPromiseResolvedWithResult:inContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(newPromiseResolvedWithResult:inContext:)	JSValue.init(newPromiseResolvedWithResult:inContext:)	init!(newPromiseResolvedWithResult result: Any!, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNewRegularExpressionFromPattern:flags:inContext:	swift.init	init(newRegularExpressionFromPattern:flags:in:)	JSValue.init(newRegularExpressionFromPattern:flags:in:)	init!(newRegularExpressionFromPattern pattern: String!, flags: String!, in context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNewRegularExpressionFromPattern:flags:inContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(newRegularExpressionFromPattern:flags:inContext:)	JSValue.init(newRegularExpressionFromPattern:flags:inContext:)	init!(newRegularExpressionFromPattern pattern: String!, flags: String!, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNewSymbolFromDescription:inContext:	swift.init	init(newSymbolFromDescription:in:)	JSValue.init(newSymbolFromDescription:in:)	init!(newSymbolFromDescription description: String!, in context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNewSymbolFromDescription:inContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(newSymbolFromDescription:inContext:)	JSValue.init(newSymbolFromDescription:inContext:)	init!(newSymbolFromDescription description: String!, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNullInContext:	swift.init	init(nullIn:)	JSValue.init(nullIn:)	init!(nullIn context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithNullInContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(nullInContext:)	JSValue.init(nullInContext:)	init!(nullInContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithObject:inContext:	swift.init	init(object:in:)	JSValue.init(object:in:)	init!(object value: Any!, in context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithObject:inContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(object:inContext:)	JSValue.init(object:inContext:)	init!(object value: Any!, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithPoint:inContext:	swift.init	init(point:inContext:)	JSValue.init(point:inContext:)	init!(point: CGPoint, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithRange:inContext:	swift.init	init(range:inContext:)	JSValue.init(range:inContext:)	init!(range: NSRange, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithRect:inContext:	swift.init	init(rect:inContext:)	JSValue.init(rect:inContext:)	init!(rect: CGRect, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithSize:inContext:	swift.init	init(size:inContext:)	JSValue.init(size:inContext:)	init!(size: CGSize, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithUInt32:inContext:	swift.init	init(uInt32:in:)	JSValue.init(uInt32:in:)	init!(uInt32 value: UInt32, in context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithUInt32:inContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(UInt32:inContext:)	JSValue.init(UInt32:inContext:)	init!(UInt32 value: UInt32, inContext context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithUndefinedInContext:	swift.init	init(undefinedIn:)	JSValue.init(undefinedIn:)	init!(undefinedIn context: JSContext!)
+c:objc(cs)JSValue(cm)valueWithUndefinedInContext:::SYNTHESIZED::c:objc(cs)JSValue	swift.init	init(undefinedInContext:)	JSValue.init(undefinedInContext:)	init!(undefinedInContext context: JSContext!)
+c:objc(cs)JSValue(im)callWithArguments:	swift.method	call(withArguments:)	JSValue.call(withArguments:)	func call(withArguments arguments: [Any]!) -> JSValue!
+c:objc(cs)JSValue(im)compareDouble:	swift.method	compare(_:)	JSValue.compare(_:)	func compare(_ other: Double) -> JSRelationCondition
+c:objc(cs)JSValue(im)compareInt64:	swift.method	compare(_:)	JSValue.compare(_:)	func compare(_ other: Int64) -> JSRelationCondition
+c:objc(cs)JSValue(im)compareJSValue:	swift.method	compare(_:)	JSValue.compare(_:)	func compare(_ other: JSValue) -> JSRelationCondition
+c:objc(cs)JSValue(im)compareUInt64:	swift.method	compare(_:)	JSValue.compare(_:)	func compare(_ other: UInt64) -> JSRelationCondition
+c:objc(cs)JSValue(im)constructWithArguments:	swift.method	construct(withArguments:)	JSValue.construct(withArguments:)	func construct(withArguments arguments: [Any]!) -> JSValue!
+c:objc(cs)JSValue(im)defineProperty:descriptor:	swift.method	defineProperty(_:descriptor:)	JSValue.defineProperty(_:descriptor:)	func defineProperty(_ property: Any!, descriptor: Any!)
+c:objc(cs)JSValue(im)deleteProperty:	swift.method	deleteProperty(_:)	JSValue.deleteProperty(_:)	func deleteProperty(_ property: Any!) -> Bool
+c:objc(cs)JSValue(im)hasProperty:	swift.method	hasProperty(_:)	JSValue.hasProperty(_:)	func hasProperty(_ property: Any!) -> Bool
+c:objc(cs)JSValue(im)invokeMethod:withArguments:	swift.method	invokeMethod(_:withArguments:)	JSValue.invokeMethod(_:withArguments:)	func invokeMethod(_ method: String!, withArguments arguments: [Any]!) -> JSValue!
+c:objc(cs)JSValue(im)isEqualToObject:	swift.method	isEqual(to:)	JSValue.isEqual(to:)	func isEqual(to value: Any!) -> Bool
+c:objc(cs)JSValue(im)isEqualWithTypeCoercionToObject:	swift.method	isEqualWithTypeCoercion(to:)	JSValue.isEqualWithTypeCoercion(to:)	func isEqualWithTypeCoercion(to value: Any!) -> Bool
+c:objc(cs)JSValue(im)isInstanceOf:	swift.method	isInstance(of:)	JSValue.isInstance(of:)	func isInstance(of value: Any!) -> Bool
+c:objc(cs)JSValue(im)objectAtIndexedSubscript:	swift.method	objectAtIndexedSubscript(_:)	JSValue.objectAtIndexedSubscript(_:)	func objectAtIndexedSubscript(_ index: Int) -> JSValue!
+c:objc(cs)JSValue(im)objectForKeyedSubscript:	swift.method	objectForKeyedSubscript(_:)	JSValue.objectForKeyedSubscript(_:)	func objectForKeyedSubscript(_ key: Any!) -> JSValue!
+c:objc(cs)JSValue(im)setObject:atIndexedSubscript:	swift.method	setObject(_:atIndexedSubscript:)	JSValue.setObject(_:atIndexedSubscript:)	func setObject(_ object: Any!, atIndexedSubscript index: Int)
+c:objc(cs)JSValue(im)setObject:forKeyedSubscript:	swift.method	setObject(_:forKeyedSubscript:)	JSValue.setObject(_:forKeyedSubscript:)	func setObject(_ object: Any!, forKeyedSubscript key: Any!)
+c:objc(cs)JSValue(im)setValue:atIndex:	swift.method	setValue(_:at:)	JSValue.setValue(_:at:)	func setValue(_ value: Any!, at index: Int)
+c:objc(cs)JSValue(im)setValue:forProperty:	swift.method	setValue(_:forProperty:)	JSValue.setValue(_:forProperty:)	func setValue(_ value: Any!, forProperty property: Any!)
+c:objc(cs)JSValue(im)toArray	swift.method	toArray()	JSValue.toArray()	func toArray() -> [Any]!
+c:objc(cs)JSValue(im)toBool	swift.method	toBool()	JSValue.toBool()	func toBool() -> Bool
+c:objc(cs)JSValue(im)toDate	swift.method	toDate()	JSValue.toDate()	func toDate() -> Date!
+c:objc(cs)JSValue(im)toDictionary	swift.method	toDictionary()	JSValue.toDictionary()	func toDictionary() -> [AnyHashable : Any]!
+c:objc(cs)JSValue(im)toDouble	swift.method	toDouble()	JSValue.toDouble()	func toDouble() -> Double
+c:objc(cs)JSValue(im)toInt32	swift.method	toInt32()	JSValue.toInt32()	func toInt32() -> Int32
+c:objc(cs)JSValue(im)toInt64	swift.method	toInt64()	JSValue.toInt64()	func toInt64() -> Int64
+c:objc(cs)JSValue(im)toNumber	swift.method	toNumber()	JSValue.toNumber()	func toNumber() -> NSNumber!
+c:objc(cs)JSValue(im)toObject	swift.method	toObject()	JSValue.toObject()	func toObject() -> Any!
+c:objc(cs)JSValue(im)toObjectOfClass:	swift.method	toObjectOf(_:)	JSValue.toObjectOf(_:)	func toObjectOf(_ expectedClass: AnyClass!) -> Any!
+c:objc(cs)JSValue(im)toPoint	swift.method	toPoint()	JSValue.toPoint()	func toPoint() -> CGPoint
+c:objc(cs)JSValue(im)toRange	swift.method	toRange()	JSValue.toRange()	func toRange() -> NSRange
+c:objc(cs)JSValue(im)toRect	swift.method	toRect()	JSValue.toRect()	func toRect() -> CGRect
+c:objc(cs)JSValue(im)toSize	swift.method	toSize()	JSValue.toSize()	func toSize() -> CGSize
+c:objc(cs)JSValue(im)toString	swift.method	toString()	JSValue.toString()	func toString() -> String!
+c:objc(cs)JSValue(im)toUInt32	swift.method	toUInt32()	JSValue.toUInt32()	func toUInt32() -> UInt32
+c:objc(cs)JSValue(im)toUInt64	swift.method	toUInt64()	JSValue.toUInt64()	func toUInt64() -> UInt64
+c:objc(cs)JSValue(im)valueAtIndex:	swift.method	atIndex(_:)	JSValue.atIndex(_:)	func atIndex(_ index: Int) -> JSValue!
+c:objc(cs)JSValue(im)valueForProperty:	swift.method	forProperty(_:)	JSValue.forProperty(_:)	func forProperty(_ property: Any!) -> JSValue!
+c:objc(cs)JSValue(py)JSValueRef	swift.property	jsValueRef	JSValue.jsValueRef	var jsValueRef: JSValueRef! { get }
+c:objc(cs)JSValue(py)context	swift.property	context	JSValue.context	var context: JSContext! { get }
+c:objc(cs)JSValue(py)isArray	swift.property	isArray	JSValue.isArray	var isArray: Bool { get }
+c:objc(cs)JSValue(py)isBigInt	swift.property	isBigInt	JSValue.isBigInt	var isBigInt: Bool { get }
+c:objc(cs)JSValue(py)isBoolean	swift.property	isBoolean	JSValue.isBoolean	var isBoolean: Bool { get }
+c:objc(cs)JSValue(py)isDate	swift.property	isDate	JSValue.isDate	var isDate: Bool { get }
+c:objc(cs)JSValue(py)isNull	swift.property	isNull	JSValue.isNull	var isNull: Bool { get }
+c:objc(cs)JSValue(py)isNumber	swift.property	isNumber	JSValue.isNumber	var isNumber: Bool { get }
+c:objc(cs)JSValue(py)isObject	swift.property	isObject	JSValue.isObject	var isObject: Bool { get }
+c:objc(cs)JSValue(py)isString	swift.property	isString	JSValue.isString	var isString: Bool { get }
+c:objc(cs)JSValue(py)isSymbol	swift.property	isSymbol	JSValue.isSymbol	var isSymbol: Bool { get }
+c:objc(cs)JSValue(py)isUndefined	swift.property	isUndefined	JSValue.isUndefined	var isUndefined: Bool { get }
+c:objc(cs)JSVirtualMachine	swift.class	JSVirtualMachine	JSVirtualMachine	class JSVirtualMachine
+c:objc(cs)JSVirtualMachine(im)addManagedReference:withOwner:	swift.method	addManagedReference(_:withOwner:)	JSVirtualMachine.addManagedReference(_:withOwner:)	func addManagedReference(_ object: Any!, withOwner owner: Any!)
+c:objc(cs)JSVirtualMachine(im)init	swift.init	init()	JSVirtualMachine.init()	init!()
+c:objc(cs)JSVirtualMachine(im)removeManagedReference:withOwner:	swift.method	removeManagedReference(_:withOwner:)	JSVirtualMachine.removeManagedReference(_:withOwner:)	func removeManagedReference(_ object: Any!, withOwner owner: Any!)
+c:objc(pl)JSExport	swift.protocol	JSExport	JSExport	protocol JSExport
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@JSRelationCondition	swift.func.op	!=(_:_:)	JSRelationCondition.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@JSType	swift.func.op	!=(_:_:)	JSType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@JSTypedArrayType	swift.func.op	!=(_:_:)	JSTypedArrayType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@JSRelationCondition	swift.property	hashValue	JSRelationCondition.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@JSType	swift.property	hashValue	JSType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@JSTypedArrayType	swift.property	hashValue	JSTypedArrayType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@JSRelationCondition	swift.method	hash(into:)	JSRelationCondition.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@JSType	swift.method	hash(into:)	JSType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@JSTypedArrayType	swift.method	hash(into:)	JSTypedArrayType.hash(into:)	func hash(into hasher: inout Hasher)
+s:So13JSStaticValuea4name11getProperty03setE010attributesABSPys4Int8VGSg_s13OpaquePointerVSgAM_A2MSpyAMGSgtXCSgSbAM_A3mOtXCSgs6UInt32Vtcfc	swift.init	init(name:getProperty:setProperty:attributes:)	JSStaticValue.init(name:getProperty:setProperty:attributes:)	init(name: UnsafePointer<CChar>!, getProperty: JSObjectGetPropertyCallback!, setProperty: JSObjectSetPropertyCallback!, attributes: JSPropertyAttributes)
+s:So13JSStaticValueaABycfc	swift.init	init()	JSStaticValue.init()	init()
+s:So16JSStaticFunctiona4name06callAsB010attributesABSPys4Int8VGSg_s13OpaquePointerVSgAL_A2LSiSPyALGSgSpyALGSgtXCSgs6UInt32Vtcfc	swift.init	init(name:callAsFunction:attributes:)	JSStaticFunction.init(name:callAsFunction:attributes:)	init(name: UnsafePointer<CChar>!, callAsFunction: JSObjectCallAsFunctionCallback!, attributes: JSPropertyAttributes)
+s:So16JSStaticFunctionaABycfc	swift.init	init()	JSStaticFunction.init()	init()
+s:So16JSTypedArrayTypea8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	JSTypedArrayType.init(rawValue:)	init(rawValue: UInt32)
+s:So16JSTypedArrayTypea8rawValues6UInt32Vvp	swift.property	rawValue	JSTypedArrayType.rawValue	var rawValue: UInt32
+s:So16JSTypedArrayTypeayABs6UInt32Vcfc	swift.init	init(_:)	JSTypedArrayType.init(_:)	init(_ rawValue: UInt32)
+s:So17JSClassDefinitiona7version10attributes9className11parentClass12staticValues0I9Functions10initialize8finalize11hasProperty03getO003setO006deleteO00pO5Names14callAsFunction0tU11Constructor0N8Instance13convertToTypeABs5Int32V_s6UInt32VSPys4Int8VGSgs13OpaquePointerVSgSPySo13JSStaticValueaGSgSPySo08JSStaticV0aGSgyA2__A2_tXCSgyA2_XCSgSbA2__A2_A2_tXCSgA2_A2__A2_A2_SpyA2_GSgtXCSgSbA2__A2_A2_A2_A15_tXCSgSbA2__A2_A2_A15_tXCSgyA2__A2_A2_tXCSgA2_A2__A2_A2_SiSPyA2_GSgA15_tXCSgA2_A2__A2_SiA21_A15_tXCSgA18_A2_A2__A2_So6JSTypeaA15_tXCSgtcfc	swift.init	init(version:attributes:className:parentClass:staticValues:staticFunctions:initialize:finalize:hasProperty:getProperty:setProperty:deleteProperty:getPropertyNames:callAsFunction:callAsConstructor:hasInstance:convertToType:)	JSClassDefinition.init(version:attributes:className:parentClass:staticValues:staticFunctions:initialize:finalize:hasProperty:getProperty:setProperty:deleteProperty:getPropertyNames:callAsFunction:callAsConstructor:hasInstance:convertToType:)	init(version: Int32, attributes: JSClassAttributes, className: UnsafePointer<CChar>!, parentClass: JSClassRef!, staticValues: UnsafePointer<JSStaticValue>!, staticFunctions: UnsafePointer<JSStaticFunction>!, initialize: JSObjectInitializeCallback!, finalize: JSObjectFinalizeCallback!, hasProperty: JSObjectHasPropertyCallback!, getProperty: JSObjectGetPropertyCallback!, setProperty: JSObjectSetPropertyCallback!, deleteProperty: JSObjectDeletePropertyCallback!, getPropertyNames: JSObjectGetPropertyNamesCallback!, callAsFunction: JSObjectCallAsFunctionCallback!, callAsConstructor: JSObjectCallAsConstructorCallback!, hasInstance: JSObjectHasInstanceCallback!, convertToType: JSObjectConvertToTypeCallback!)
+s:So17JSClassDefinitionaABycfc	swift.init	init()	JSClassDefinition.init()	init()
+s:So19JSRelationConditionV8rawValueABSgs6UInt32V_tcfc	swift.init	init(rawValue:)	JSRelationCondition.init(rawValue:)	init?(rawValue: UInt32)
+s:So6JSTypea8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	JSType.init(rawValue:)	init(rawValue: UInt32)
+s:So6JSTypea8rawValues6UInt32Vvp	swift.property	rawValue	JSType.rawValue	var rawValue: UInt32
+s:So6JSTypeayABs6UInt32Vcfc	swift.init	init(_:)	JSType.init(_:)	init(_ rawValue: UInt32)

@@ -1,0 +1,123 @@
+{
+  "module": "CoreServices",
+  "moduleRecord": {
+    "app_coverage_count": 9,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 29,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 30,
+    "iphoneos_runtime_focus_launch_build_rank": 34,
+    "module": "CoreServices",
+    "occurrence_count": 29,
+    "per_app": {
+      "NetNewsWire": {
+        "evidence_sha256": "52e69e3edec5c21feb4707402430dd69de703aa2f3a28996b8b64af822125668",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Modules/Images/Sources/Images/FaviconDownloader.swift",
+          "Shared/Activity/ActivityManager.swift",
+          "iOS/Settings/SettingsViewController.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "2aa1cb110a0566c78f80133a124d384d1e7570b6c33e57e5eb3f0833340b39e0",
+        "file_count": 11,
+        "occurrence_count": 11,
+        "sample_paths": [
+          "Signal/ConversationView/ConversationViewController+ConversationInputToolbarDelegate.swift",
+          "Signal/ConversationView/VoiceMessage/VoiceMessageSendableDraft.swift",
+          "Signal/src/ViewControllers/Avatars/AvatarSettingsViewController.swift",
+          "Signal/src/ViewControllers/LocationPicker.swift",
+          "Signal/src/ViewControllers/Photos/CameraCaptureSession.swift",
+          "Signal/src/ViewControllers/Photos/PhotoLibrary.swift",
+          "Signal/src/ViewControllers/Wallpapers/SetWallpaperViewController.swift",
+          "SignalServiceKit/Profiles/BadgeAssets.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "536eba18ac95cad0c2739c4d41c828b7cdd5be321f4fa2f7fb83d18be4678a3c",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Telegram/NotificationService/Sources/NotificationService.swift",
+          "submodules/DrawingUI/Sources/DrawingScreen.swift",
+          "submodules/MtProtoKit/Sources/PingFoundation.h",
+          "submodules/TelegramCore/Sources/WebpagePreview.swift",
+          "submodules/TelegramUI/Components/MediaEditorScreen/Sources/MediaEditorScreen.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "506efa54ad5b8ca2061f4e2949c7a149af2fec74920560bdd35e08aecdc5aa7f",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Modules/Sources/TextBundle/TextBundleWrapper.m",
+          "WordPress/Classes/ViewRelated/Gutenberg/GutenbergMediaInserterHelper.swift",
+          "WordPress/Classes/ViewRelated/Gutenberg/GutenbergMediaPickerHelper.swift"
+        ]
+      },
+      "eigen": {
+        "evidence_sha256": "7b06cfc8b106570517f363c9ed91d3817fbbbc1b4d118503ddb014f42aff546a",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "ios/Artsy/View_Controllers/Web_Browsing/ARExternalWebBrowserViewController.m"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "c9d6c7a7a4dda43cc439eaebd8e7cbcbbedc6f30905076e9b195763651c42a04",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Riot/Modules/MatrixKit/Libs/SwiftUTI/UTI.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "46d47a7d3575a1269a30b326e2f726f246f840115dfc8971f772b8bf7273d37c",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Sources/Extensions/Share/ShareViewController.swift",
+          "Sources/Shared/Common/Extensions/NSItemProvider+Additions.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "81857b15a7aa65675d335fdc6df89888034a918ec7f95798b38feec199523f39",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "podcasts/AppDelegate+UrlHandling.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "e45f35367bd26a5bb11fbf12aa75c4f73fb79e50ada89284c804c29c1eef1d18",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Wikipedia/Code/WMFImageGalleryViewController.m",
+          "Wikipedia/Code/WMFNotificationsController.m"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 30,
+    "byFocusLaunchBuildRelevance": 34
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

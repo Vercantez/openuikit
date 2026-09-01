@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CoreServices.symbols.json",
+      "relationshipCount": 0,
+      "sha256": "a85879e7fbe62d4e719a444948dec01e76d5a4f98ca2b0d04aceab7fde8ea680",
+      "symbolCount": 150
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CoreServices",
+  "relationshipCount": 0,
+  "schema": 1,
+  "symbolCount": 150,
+  "target": "arm64-apple-ios26.0"
+}

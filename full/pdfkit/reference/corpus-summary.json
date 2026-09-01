@@ -1,0 +1,76 @@
+{
+  "module": "PDFKit",
+  "moduleRecord": {
+    "app_coverage_count": 4,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS SDK/system-module runtime-port allowlist",
+    "file_count": 14,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 59,
+    "iphoneos_runtime_focus_launch_build_rank": 59,
+    "module": "PDFKit",
+    "occurrence_count": 14,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "f2eae5c4553cb142bc7df0d3805dbd47eaa110450ed91c28527992f729c1c3d0",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "submodules/BrowserUI/Sources/BrowserPdfContent.swift",
+          "submodules/TelegramUI/Sources/Chat/ChatControllerOpenDocumentScanner.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "b8503de6f918a94638be4969cb402b9b58ee378810b26c97aaad649c98ec4ea0",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Modules/Sources/Support/UI/Support Conversations/AttachmentListView.swift",
+          "WordPress/Classes/ViewRelated/Aztec/ViewControllers/AztecPostViewController.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "f64b4dc9cbc2f3b832a26793d41aa46b6e1839b6ac728db612a551535599f28d",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "firefox-ios/Client/Coordinators/Browser/BrowserCoordinator.swift",
+          "firefox-ios/Client/Extensions/PDFDocument+Extension.swift",
+          "firefox-ios/Client/Extensions/UIImage+RenderingUtilities.swift",
+          "firefox-ios/Client/Frontend/Browser/WebCompat/WebCompatReportDataCollector.swift",
+          "firefox-ios/RustFxA/FxAWebViewModel.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "c879a166612927510086f8ba88fd5575c314624b45234e32d358486682df0230",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "iOSClient/Scan document/NCUploadScanDocument.swift",
+          "iOSClient/Utility/NCUtility+Image.swift",
+          "iOSClient/Utility/NCUtility.swift",
+          "iOSClient/Viewer/NCViewerPDF/NCViewerPDF.swift",
+          "iOSClient/Viewer/NCViewerPDF/NCViewerPDFSearch.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 59,
+    "byFocusLaunchBuildRelevance": 59
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

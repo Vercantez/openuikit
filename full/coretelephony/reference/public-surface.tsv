@@ -1,0 +1,113 @@
+precise	kind	title	path	declaration
+c:@CTCallStateConnected	swift.var	CTCallStateConnected	CTCallStateConnected	let CTCallStateConnected: String
+c:@CTCallStateDialing	swift.var	CTCallStateDialing	CTCallStateDialing	let CTCallStateDialing: String
+c:@CTCallStateDisconnected	swift.var	CTCallStateDisconnected	CTCallStateDisconnected	let CTCallStateDisconnected: String
+c:@CTCallStateIncoming	swift.var	CTCallStateIncoming	CTCallStateIncoming	let CTCallStateIncoming: String
+c:@CTRadioAccessTechnologyCDMA1x	swift.var	CTRadioAccessTechnologyCDMA1x	CTRadioAccessTechnologyCDMA1x	let CTRadioAccessTechnologyCDMA1x: String
+c:@CTRadioAccessTechnologyCDMAEVDORev0	swift.var	CTRadioAccessTechnologyCDMAEVDORev0	CTRadioAccessTechnologyCDMAEVDORev0	let CTRadioAccessTechnologyCDMAEVDORev0: String
+c:@CTRadioAccessTechnologyCDMAEVDORevA	swift.var	CTRadioAccessTechnologyCDMAEVDORevA	CTRadioAccessTechnologyCDMAEVDORevA	let CTRadioAccessTechnologyCDMAEVDORevA: String
+c:@CTRadioAccessTechnologyCDMAEVDORevB	swift.var	CTRadioAccessTechnologyCDMAEVDORevB	CTRadioAccessTechnologyCDMAEVDORevB	let CTRadioAccessTechnologyCDMAEVDORevB: String
+c:@CTRadioAccessTechnologyDidChangeNotification	swift.type.property	CTRadioAccessTechnologyDidChange	NSNotification.Name.CTRadioAccessTechnologyDidChange	static let CTRadioAccessTechnologyDidChange: NSNotification.Name
+c:@CTRadioAccessTechnologyEdge	swift.var	CTRadioAccessTechnologyEdge	CTRadioAccessTechnologyEdge	let CTRadioAccessTechnologyEdge: String
+c:@CTRadioAccessTechnologyGPRS	swift.var	CTRadioAccessTechnologyGPRS	CTRadioAccessTechnologyGPRS	let CTRadioAccessTechnologyGPRS: String
+c:@CTRadioAccessTechnologyHSDPA	swift.var	CTRadioAccessTechnologyHSDPA	CTRadioAccessTechnologyHSDPA	let CTRadioAccessTechnologyHSDPA: String
+c:@CTRadioAccessTechnologyHSUPA	swift.var	CTRadioAccessTechnologyHSUPA	CTRadioAccessTechnologyHSUPA	let CTRadioAccessTechnologyHSUPA: String
+c:@CTRadioAccessTechnologyLTE	swift.var	CTRadioAccessTechnologyLTE	CTRadioAccessTechnologyLTE	let CTRadioAccessTechnologyLTE: String
+c:@CTRadioAccessTechnologyNR	swift.var	CTRadioAccessTechnologyNR	CTRadioAccessTechnologyNR	let CTRadioAccessTechnologyNR: String
+c:@CTRadioAccessTechnologyNRNSA	swift.var	CTRadioAccessTechnologyNRNSA	CTRadioAccessTechnologyNRNSA	let CTRadioAccessTechnologyNRNSA: String
+c:@CTRadioAccessTechnologyWCDMA	swift.var	CTRadioAccessTechnologyWCDMA	CTRadioAccessTechnologyWCDMA	let CTRadioAccessTechnologyWCDMA: String
+c:@CTRadioAccessTechnologyeHRPD	swift.var	CTRadioAccessTechnologyeHRPD	CTRadioAccessTechnologyeHRPD	let CTRadioAccessTechnologyeHRPD: String
+c:@CTServiceRadioAccessTechnologyDidChangeNotification	swift.type.property	CTServiceRadioAccessTechnologyDidChange	NSNotification.Name.CTServiceRadioAccessTechnologyDidChange	static let CTServiceRadioAccessTechnologyDidChange: NSNotification.Name
+c:@CTSubscriberTokenRefreshed	swift.var	CTSubscriberTokenRefreshed	CTSubscriberTokenRefreshed	let CTSubscriberTokenRefreshed: String
+c:@E@CTCellularDataRestrictedState	swift.enum	CTCellularDataRestrictedState	CTCellularDataRestrictedState	enum CTCellularDataRestrictedState
+c:@E@CTCellularDataRestrictedState@kCTCellularDataNotRestricted	swift.enum.case	CTCellularDataRestrictedState.notRestricted	CTCellularDataRestrictedState.notRestricted	case notRestricted
+c:@E@CTCellularDataRestrictedState@kCTCellularDataRestricted	swift.enum.case	CTCellularDataRestrictedState.restricted	CTCellularDataRestrictedState.restricted	case restricted
+c:@E@CTCellularDataRestrictedState@kCTCellularDataRestrictedStateUnknown	swift.enum.case	CTCellularDataRestrictedState.restrictedStateUnknown	CTCellularDataRestrictedState.restrictedStateUnknown	case restrictedStateUnknown
+c:@E@CTCellularPlanCapability	swift.enum	CTCellularPlanCapability	CTCellularPlanCapability	enum CTCellularPlanCapability
+c:@E@CTCellularPlanCapability@CTCellularPlanCapabilityDataAndVoice	swift.enum.case	CTCellularPlanCapability.dataAndVoice	CTCellularPlanCapability.dataAndVoice	case dataAndVoice
+c:@E@CTCellularPlanCapability@CTCellularPlanCapabilityDataOnly	swift.enum.case	CTCellularPlanCapability.dataOnly	CTCellularPlanCapability.dataOnly	case dataOnly
+c:@E@CTCellularPlanProvisioningAddPlanResult	swift.enum	CTCellularPlanProvisioningAddPlanResult	CTCellularPlanProvisioningAddPlanResult	enum CTCellularPlanProvisioningAddPlanResult
+c:@E@CTCellularPlanProvisioningAddPlanResult@CTCellularPlanProvisioningAddPlanResultCancel	swift.enum.case	CTCellularPlanProvisioningAddPlanResult.cancel	CTCellularPlanProvisioningAddPlanResult.cancel	case cancel
+c:@E@CTCellularPlanProvisioningAddPlanResult@CTCellularPlanProvisioningAddPlanResultFail	swift.enum.case	CTCellularPlanProvisioningAddPlanResult.fail	CTCellularPlanProvisioningAddPlanResult.fail	case fail
+c:@E@CTCellularPlanProvisioningAddPlanResult@CTCellularPlanProvisioningAddPlanResultSuccess	swift.enum.case	CTCellularPlanProvisioningAddPlanResult.success	CTCellularPlanProvisioningAddPlanResult.success	case success
+c:@E@CTCellularPlanProvisioningAddPlanResult@CTCellularPlanProvisioningAddPlanResultUnknown	swift.enum.case	CTCellularPlanProvisioningAddPlanResult.unknown	CTCellularPlanProvisioningAddPlanResult.unknown	case unknown
+c:@Ea@kCTErrorDomainNoError@kCTErrorDomainMach	swift.var	kCTErrorDomainMach	kCTErrorDomainMach	var kCTErrorDomainMach: Int { get }
+c:@Ea@kCTErrorDomainNoError@kCTErrorDomainNoError	swift.var	kCTErrorDomainNoError	kCTErrorDomainNoError	var kCTErrorDomainNoError: Int { get }
+c:@Ea@kCTErrorDomainNoError@kCTErrorDomainPOSIX	swift.var	kCTErrorDomainPOSIX	kCTErrorDomainPOSIX	var kCTErrorDomainPOSIX: Int { get }
+c:@SA@CTError	swift.struct	CTError	CTError	struct CTError
+c:@SA@CTError@FI@domain	swift.property	domain	CTError.domain	var domain: Int32
+c:@SA@CTError@FI@error	swift.property	error	CTError.error	var error: Int32
+c:@T@CellularDataRestrictionDidUpdateNotifier	swift.typealias	CellularDataRestrictionDidUpdateNotifier	CellularDataRestrictionDidUpdateNotifier	typealias CellularDataRestrictionDidUpdateNotifier = (CTCellularDataRestrictedState) -> Void
+c:objc(cs)CTCall	swift.class	CTCall	CTCall	class CTCall
+c:objc(cs)CTCall(py)callID	swift.property	callID	CTCall.callID	var callID: String { get }
+c:objc(cs)CTCall(py)callState	swift.property	callState	CTCall.callState	var callState: String { get }
+c:objc(cs)CTCallCenter	swift.class	CTCallCenter	CTCallCenter	class CTCallCenter
+c:objc(cs)CTCallCenter(py)callEventHandler	swift.property	callEventHandler	CTCallCenter.callEventHandler	var callEventHandler: ((CTCall) -> Void)? { get set }
+c:objc(cs)CTCallCenter(py)currentCalls	swift.property	currentCalls	CTCallCenter.currentCalls	var currentCalls: Set<CTCall>? { get }
+c:objc(cs)CTCarrier	swift.class	CTCarrier	CTCarrier	class CTCarrier
+c:objc(cs)CTCarrier(py)allowsVOIP	swift.property	allowsVOIP	CTCarrier.allowsVOIP	var allowsVOIP: Bool { get }
+c:objc(cs)CTCarrier(py)carrierName	swift.property	carrierName	CTCarrier.carrierName	var carrierName: String? { get }
+c:objc(cs)CTCarrier(py)isoCountryCode	swift.property	isoCountryCode	CTCarrier.isoCountryCode	var isoCountryCode: String? { get }
+c:objc(cs)CTCarrier(py)mobileCountryCode	swift.property	mobileCountryCode	CTCarrier.mobileCountryCode	var mobileCountryCode: String? { get }
+c:objc(cs)CTCarrier(py)mobileNetworkCode	swift.property	mobileNetworkCode	CTCarrier.mobileNetworkCode	var mobileNetworkCode: String? { get }
+c:objc(cs)CTCellularData	swift.class	CTCellularData	CTCellularData	class CTCellularData
+c:objc(cs)CTCellularData(py)cellularDataRestrictionDidUpdateNotifier	swift.property	cellularDataRestrictionDidUpdateNotifier	CTCellularData.cellularDataRestrictionDidUpdateNotifier	var cellularDataRestrictionDidUpdateNotifier: CellularDataRestrictionDidUpdateNotifier? { get set }
+c:objc(cs)CTCellularData(py)restrictedState	swift.property	restrictedState	CTCellularData.restrictedState	var restrictedState: CTCellularDataRestrictedState { get }
+c:objc(cs)CTCellularPlanProperties	swift.class	CTCellularPlanProperties	CTCellularPlanProperties	class CTCellularPlanProperties
+c:objc(cs)CTCellularPlanProperties(py)associatedIccid	swift.property	associatedIccid	CTCellularPlanProperties.associatedIccid	var associatedIccid: String? { get set }
+c:objc(cs)CTCellularPlanProperties(py)simCapability	swift.property	simCapability	CTCellularPlanProperties.simCapability	var simCapability: CTCellularPlanCapability { get set }
+c:objc(cs)CTCellularPlanProvisioning	swift.class	CTCellularPlanProvisioning	CTCellularPlanProvisioning	class CTCellularPlanProvisioning
+c:objc(cs)CTCellularPlanProvisioning(im)addPlanWith:completionHandler:	swift.method	addPlan(with:)	CTCellularPlanProvisioning.addPlan(with:)	func addPlan(with request: CTCellularPlanProvisioningRequest) async -> CTCellularPlanProvisioningAddPlanResult
+c:objc(cs)CTCellularPlanProvisioning(im)addPlanWithRequest:properties:completionHandler:	swift.method	addPlan(request:properties:)	CTCellularPlanProvisioning.addPlan(request:properties:)	func addPlan(request: CTCellularPlanProvisioningRequest, properties: CTCellularPlanProperties?) async -> CTCellularPlanProvisioningAddPlanResult
+c:objc(cs)CTCellularPlanProvisioning(im)supportsCellularPlan	swift.method	supportsCellularPlan()	CTCellularPlanProvisioning.supportsCellularPlan()	func supportsCellularPlan() -> Bool
+c:objc(cs)CTCellularPlanProvisioning(im)updateCellularPlanProperties:completionHandler:	swift.method	update(_:)	CTCellularPlanProvisioning.update(_:)	func update(_ properties: CTCellularPlanProperties) async throws
+c:objc(cs)CTCellularPlanProvisioning(py)supportsEmbeddedSIM	swift.property	supportsEmbeddedSIM	CTCellularPlanProvisioning.supportsEmbeddedSIM	var supportsEmbeddedSIM: Bool { get }
+c:objc(cs)CTCellularPlanProvisioningRequest	swift.class	CTCellularPlanProvisioningRequest	CTCellularPlanProvisioningRequest	class CTCellularPlanProvisioningRequest
+c:objc(cs)CTCellularPlanProvisioningRequest(py)EID	swift.property	eid	CTCellularPlanProvisioningRequest.eid	var eid: String? { get set }
+c:objc(cs)CTCellularPlanProvisioningRequest(py)ICCID	swift.property	iccid	CTCellularPlanProvisioningRequest.iccid	var iccid: String? { get set }
+c:objc(cs)CTCellularPlanProvisioningRequest(py)OID	swift.property	oid	CTCellularPlanProvisioningRequest.oid	var oid: String? { get set }
+c:objc(cs)CTCellularPlanProvisioningRequest(py)address	swift.property	address	CTCellularPlanProvisioningRequest.address	var address: String { get set }
+c:objc(cs)CTCellularPlanProvisioningRequest(py)confirmationCode	swift.property	confirmationCode	CTCellularPlanProvisioningRequest.confirmationCode	var confirmationCode: String? { get set }
+c:objc(cs)CTCellularPlanProvisioningRequest(py)matchingID	swift.property	matchingID	CTCellularPlanProvisioningRequest.matchingID	var matchingID: String? { get set }
+c:objc(cs)CTCellularPlanStatus	swift.class	CTCellularPlanStatus	CTCellularPlanStatus	class CTCellularPlanStatus
+c:objc(cs)CTCellularPlanStatus(cm)checkValidityOfToken:completionHandler:	swift.type.method	checkValidity(ofToken:)	CTCellularPlanStatus.checkValidity(ofToken:)	class func checkValidity(ofToken token: String) async throws -> Bool
+c:objc(cs)CTCellularPlanStatus(cm)getTokenWithCompletion:	swift.type.method	getTokenWithCompletion(_:)	CTCellularPlanStatus.getTokenWithCompletion(_:)	class func getTokenWithCompletion(_ completionHandler: @escaping (String?, (any Error)?) -> Void)
+c:objc(cs)CTSubscriber	swift.class	CTSubscriber	CTSubscriber	class CTSubscriber
+c:objc(cs)CTSubscriber(im)refreshCarrierToken	swift.method	refreshCarrierToken()	CTSubscriber.refreshCarrierToken()	func refreshCarrierToken() -> Bool
+c:objc(cs)CTSubscriber(py)SIMInserted	swift.property	isSIMInserted	CTSubscriber.isSIMInserted	var isSIMInserted: Bool { get }
+c:objc(cs)CTSubscriber(py)carrierToken	swift.property	carrierToken	CTSubscriber.carrierToken	var carrierToken: Data? { get }
+c:objc(cs)CTSubscriber(py)delegate	swift.property	delegate	CTSubscriber.delegate	weak var delegate: (any CTSubscriberDelegate)? { get set }
+c:objc(cs)CTSubscriber(py)identifier	swift.property	identifier	CTSubscriber.identifier	var identifier: String { get }
+c:objc(cs)CTSubscriberInfo	swift.class	CTSubscriberInfo	CTSubscriberInfo	class CTSubscriberInfo
+c:objc(cs)CTSubscriberInfo(cm)subscriber	swift.type.method	subscriber()	CTSubscriberInfo.subscriber()	class func subscriber() -> CTSubscriber
+c:objc(cs)CTSubscriberInfo(cm)subscribers	swift.type.method	subscribers()	CTSubscriberInfo.subscribers()	class func subscribers() -> [CTSubscriber]
+c:objc(cs)CTTelephonyNetworkInfo	swift.class	CTTelephonyNetworkInfo	CTTelephonyNetworkInfo	class CTTelephonyNetworkInfo
+c:objc(cs)CTTelephonyNetworkInfo(py)currentRadioAccessTechnology	swift.property	currentRadioAccessTechnology	CTTelephonyNetworkInfo.currentRadioAccessTechnology	var currentRadioAccessTechnology: String? { get }
+c:objc(cs)CTTelephonyNetworkInfo(py)dataServiceIdentifier	swift.property	dataServiceIdentifier	CTTelephonyNetworkInfo.dataServiceIdentifier	var dataServiceIdentifier: String? { get }
+c:objc(cs)CTTelephonyNetworkInfo(py)delegate	swift.property	delegate	CTTelephonyNetworkInfo.delegate	weak var delegate: (any CTTelephonyNetworkInfoDelegate)? { get set }
+c:objc(cs)CTTelephonyNetworkInfo(py)serviceCurrentRadioAccessTechnology	swift.property	serviceCurrentRadioAccessTechnology	CTTelephonyNetworkInfo.serviceCurrentRadioAccessTechnology	var serviceCurrentRadioAccessTechnology: [String : String]? { get }
+c:objc(cs)CTTelephonyNetworkInfo(py)serviceSubscriberCellularProviders	swift.property	serviceSubscriberCellularProviders	CTTelephonyNetworkInfo.serviceSubscriberCellularProviders	var serviceSubscriberCellularProviders: [String : CTCarrier]? { get }
+c:objc(cs)CTTelephonyNetworkInfo(py)serviceSubscriberCellularProvidersDidUpdateNotifier	swift.property	serviceSubscriberCellularProvidersDidUpdateNotifier	CTTelephonyNetworkInfo.serviceSubscriberCellularProvidersDidUpdateNotifier	var serviceSubscriberCellularProvidersDidUpdateNotifier: ((String) -> Void)? { get set }
+c:objc(cs)CTTelephonyNetworkInfo(py)subscriberCellularProvider	swift.property	subscriberCellularProvider	CTTelephonyNetworkInfo.subscriberCellularProvider	var subscriberCellularProvider: CTCarrier? { get }
+c:objc(cs)CTTelephonyNetworkInfo(py)subscriberCellularProviderDidUpdateNotifier	swift.property	subscriberCellularProviderDidUpdateNotifier	CTTelephonyNetworkInfo.subscriberCellularProviderDidUpdateNotifier	var subscriberCellularProviderDidUpdateNotifier: ((CTCarrier) -> Void)? { get set }
+c:objc(pl)CTSubscriberDelegate	swift.protocol	CTSubscriberDelegate	CTSubscriberDelegate	protocol CTSubscriberDelegate
+c:objc(pl)CTSubscriberDelegate(im)subscriberTokenRefreshed:	swift.method	subscriberTokenRefreshed(_:)	CTSubscriberDelegate.subscriberTokenRefreshed(_:)	func subscriberTokenRefreshed(_ subscriber: CTSubscriber)
+c:objc(pl)CTTelephonyNetworkInfoDelegate	swift.protocol	CTTelephonyNetworkInfoDelegate	CTTelephonyNetworkInfoDelegate	protocol CTTelephonyNetworkInfoDelegate : NSObjectProtocol
+c:objc(pl)CTTelephonyNetworkInfoDelegate(im)dataServiceIdentifierDidChange:	swift.method	dataServiceIdentifierDidChange(_:)	CTTelephonyNetworkInfoDelegate.dataServiceIdentifierDidChange(_:)	optional func dataServiceIdentifierDidChange(_ identifier: String)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CTCellularPlanProperties	swift.init	init(coder:)	CTCellularPlanProperties.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CTCellularPlanProvisioningRequest	swift.init	init(coder:)	CTCellularPlanProvisioningRequest.init(coder:)	init?(coder: NSCoder)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CTCellularDataRestrictedState	swift.func.op	!=(_:_:)	CTCellularDataRestrictedState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CTCellularPlanCapability	swift.func.op	!=(_:_:)	CTCellularPlanCapability.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CTCellularPlanProvisioningAddPlanResult	swift.func.op	!=(_:_:)	CTCellularPlanProvisioningAddPlanResult.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CTCellularDataRestrictedState	swift.property	hashValue	CTCellularDataRestrictedState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CTCellularPlanCapability	swift.property	hashValue	CTCellularPlanCapability.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CTCellularPlanProvisioningAddPlanResult	swift.property	hashValue	CTCellularPlanProvisioningAddPlanResult.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CTCellularDataRestrictedState	swift.method	hash(into:)	CTCellularDataRestrictedState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CTCellularPlanCapability	swift.method	hash(into:)	CTCellularPlanCapability.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CTCellularPlanProvisioningAddPlanResult	swift.method	hash(into:)	CTCellularPlanProvisioningAddPlanResult.hash(into:)	func hash(into hasher: inout Hasher)
+s:So029CTCellularPlanProvisioningAddB6ResultV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	CTCellularPlanProvisioningAddPlanResult.init(rawValue:)	init?(rawValue: UInt)
+s:So24CTCellularPlanCapabilityV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CTCellularPlanCapability.init(rawValue:)	init?(rawValue: Int)
+s:So24CTCellularPlanPropertiesC13CoreTelephonyE20supportedRegionCodesSay10Foundation6LocaleV0G0VGvp	swift.property	supportedRegionCodes	CTCellularPlanProperties.supportedRegionCodes	var supportedRegionCodes: [Locale.Region] { get set }
+s:So29CTCellularDataRestrictedStateV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	CTCellularDataRestrictedState.init(rawValue:)	init?(rawValue: UInt)
+s:So7CTErrora6domain5errorABs5Int32V_AFtcfc	swift.init	init(domain:error:)	CTError.init(domain:error:)	init(domain: Int32, error: Int32)
+s:So7CTErroraABycfc	swift.init	init()	CTError.init()	init()

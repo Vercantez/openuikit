@@ -1,0 +1,95 @@
+{
+  "module": "UserNotificationsUI",
+  "moduleRecord": {
+    "app_coverage_count": 3,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 10,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 70,
+    "iphoneos_runtime_focus_launch_build_rank": 77,
+    "module": "UserNotificationsUI",
+    "occurrence_count": 10,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "2592181ffbaf63e1a42589881624746ecac87aa2fed75265d7f149917c45ad6b",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Telegram/NotificationContent/NotificationViewController.swift",
+          "submodules/TelegramUI/Sources/NotificationContentContext.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "af99f2127d4566ac04b7decbe7a1303b657f44705c622446775a0cc11fcfccee",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "Sources/Extensions/NotificationContent/CameraViewController.swift",
+          "Sources/Extensions/NotificationContent/ImageAttachmentViewController.swift",
+          "Sources/Extensions/NotificationContent/MapViewController.swift",
+          "Sources/Extensions/NotificationContent/NotificationErrorViewController.swift",
+          "Sources/Extensions/NotificationContent/NotificationLoadingViewController.swift",
+          "Sources/Extensions/NotificationContent/NotificationViewController.swift",
+          "Sources/Extensions/NotificationContent/VideoAudioAttachmentViewController.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "0a63fc216eab0cd6e0997fdbeddc4611d98ec5199f7b01c3856a69930ecc779d",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "NotificationContent/NotificationViewController.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 70,
+    "byFocusLaunchBuildRelevance": 77
+  },
+  "requestedFamilies": [
+    {
+      "app_coverage_count": 15,
+      "apps": [
+        "NetNewsWire",
+        "ProtonMail-ios",
+        "Signal-iOS",
+        "Telegram-iOS",
+        "WordPress-iOS",
+        "duckduckgo-ios",
+        "eigen",
+        "element-ios",
+        "firefox-ios",
+        "home-assistant-ios",
+        "ios-oss",
+        "mastodon-ios",
+        "nextcloud-ios",
+        "pocket-casts-ios",
+        "wikipedia-ios"
+      ],
+      "family": "UserNotifications",
+      "file_count": 137,
+      "focus_main_target_file_count": 0,
+      "focus_repository_file_count": 0,
+      "modules": [
+        "UserNotifications",
+        "UserNotificationsUI"
+      ],
+      "note": "notification delivery and extension UI"
+    }
+  ],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

@@ -1,0 +1,120 @@
+precise	kind	title	path	declaration
+c:@E@WCErrorCode	swift.enum	WCError.Code	WCError.Code	enum Code
+c:@E@WCErrorCode@WCErrorCodeCompanionAppNotInstalled	swift.enum.case	WCError.Code.companionAppNotInstalled	WCError.Code.companionAppNotInstalled	case companionAppNotInstalled
+c:@E@WCErrorCode@WCErrorCodeDeliveryFailed	swift.enum.case	WCError.Code.deliveryFailed	WCError.Code.deliveryFailed	case deliveryFailed
+c:@E@WCErrorCode@WCErrorCodeDeviceNotPaired	swift.enum.case	WCError.Code.deviceNotPaired	WCError.Code.deviceNotPaired	case deviceNotPaired
+c:@E@WCErrorCode@WCErrorCodeFileAccessDenied	swift.enum.case	WCError.Code.fileAccessDenied	WCError.Code.fileAccessDenied	case fileAccessDenied
+c:@E@WCErrorCode@WCErrorCodeGenericError	swift.enum.case	WCError.Code.genericError	WCError.Code.genericError	case genericError
+c:@E@WCErrorCode@WCErrorCodeInsufficientSpace	swift.enum.case	WCError.Code.insufficientSpace	WCError.Code.insufficientSpace	case insufficientSpace
+c:@E@WCErrorCode@WCErrorCodeInvalidParameter	swift.enum.case	WCError.Code.invalidParameter	WCError.Code.invalidParameter	case invalidParameter
+c:@E@WCErrorCode@WCErrorCodeMessageReplyFailed	swift.enum.case	WCError.Code.messageReplyFailed	WCError.Code.messageReplyFailed	case messageReplyFailed
+c:@E@WCErrorCode@WCErrorCodeMessageReplyTimedOut	swift.enum.case	WCError.Code.messageReplyTimedOut	WCError.Code.messageReplyTimedOut	case messageReplyTimedOut
+c:@E@WCErrorCode@WCErrorCodeNotReachable	swift.enum.case	WCError.Code.notReachable	WCError.Code.notReachable	case notReachable
+c:@E@WCErrorCode@WCErrorCodePayloadTooLarge	swift.enum.case	WCError.Code.payloadTooLarge	WCError.Code.payloadTooLarge	case payloadTooLarge
+c:@E@WCErrorCode@WCErrorCodePayloadUnsupportedTypes	swift.enum.case	WCError.Code.payloadUnsupportedTypes	WCError.Code.payloadUnsupportedTypes	case payloadUnsupportedTypes
+c:@E@WCErrorCode@WCErrorCodeSessionInactive	swift.enum.case	WCError.Code.sessionInactive	WCError.Code.sessionInactive	case sessionInactive
+c:@E@WCErrorCode@WCErrorCodeSessionMissingDelegate	swift.enum.case	WCError.Code.sessionMissingDelegate	WCError.Code.sessionMissingDelegate	case sessionMissingDelegate
+c:@E@WCErrorCode@WCErrorCodeSessionNotActivated	swift.enum.case	WCError.Code.sessionNotActivated	WCError.Code.sessionNotActivated	case sessionNotActivated
+c:@E@WCErrorCode@WCErrorCodeSessionNotSupported	swift.enum.case	WCError.Code.sessionNotSupported	WCError.Code.sessionNotSupported	case sessionNotSupported
+c:@E@WCErrorCode@WCErrorCodeTransferTimedOut	swift.enum.case	WCError.Code.transferTimedOut	WCError.Code.transferTimedOut	case transferTimedOut
+c:@E@WCErrorCode@WCErrorCodeWatchAppNotInstalled	swift.enum.case	WCError.Code.watchAppNotInstalled	WCError.Code.watchAppNotInstalled	case watchAppNotInstalled
+c:@E@WCErrorCode@WCErrorCodeWatchOnlyApp	swift.enum.case	WCError.Code.watchOnlyApp	WCError.Code.watchOnlyApp	case watchOnlyApp
+c:@E@WCSessionActivationState	swift.enum	WCSessionActivationState	WCSessionActivationState	enum WCSessionActivationState
+c:@E@WCSessionActivationState@WCSessionActivationStateActivated	swift.enum.case	WCSessionActivationState.activated	WCSessionActivationState.activated	case activated
+c:@E@WCSessionActivationState@WCSessionActivationStateInactive	swift.enum.case	WCSessionActivationState.inactive	WCSessionActivationState.inactive	case inactive
+c:@E@WCSessionActivationState@WCSessionActivationStateNotActivated	swift.enum.case	WCSessionActivationState.notActivated	WCSessionActivationState.notActivated	case notActivated
+c:@WCErrorDomain	swift.var	WCErrorDomain	WCErrorDomain	let WCErrorDomain: String
+c:objc(cs)WCSession	swift.class	WCSession	WCSession	class WCSession
+c:objc(cs)WCSession(cm)isSupported	swift.type.method	isSupported()	WCSession.isSupported()	class func isSupported() -> Bool
+c:objc(cs)WCSession(cpy)defaultSession	swift.type.property	default	WCSession.default	class var `default`: WCSession { get }
+c:objc(cs)WCSession(im)activateSession	swift.method	activate()	WCSession.activate()	func activate()
+c:objc(cs)WCSession(im)sendMessage:replyHandler:errorHandler:	swift.method	sendMessage(_:replyHandler:errorHandler:)	WCSession.sendMessage(_:replyHandler:errorHandler:)	func sendMessage(_ message: [String : Any], replyHandler: (([String : Any]) -> Void)?, errorHandler: ((any Error) -> Void)? = nil)
+c:objc(cs)WCSession(im)sendMessageData:replyHandler:errorHandler:	swift.method	sendMessageData(_:replyHandler:errorHandler:)	WCSession.sendMessageData(_:replyHandler:errorHandler:)	func sendMessageData(_ data: Data, replyHandler: ((Data) -> Void)?, errorHandler: ((any Error) -> Void)? = nil)
+c:objc(cs)WCSession(im)transferCurrentComplicationUserInfo:	swift.method	transferCurrentComplicationUserInfo(_:)	WCSession.transferCurrentComplicationUserInfo(_:)	func transferCurrentComplicationUserInfo(_ userInfo: [String : Any] = [:]) -> WCSessionUserInfoTransfer
+c:objc(cs)WCSession(im)transferFile:metadata:	swift.method	transferFile(_:metadata:)	WCSession.transferFile(_:metadata:)	func transferFile(_ file: URL, metadata: [String : Any]?) -> WCSessionFileTransfer
+c:objc(cs)WCSession(im)transferUserInfo:	swift.method	transferUserInfo(_:)	WCSession.transferUserInfo(_:)	func transferUserInfo(_ userInfo: [String : Any] = [:]) -> WCSessionUserInfoTransfer
+c:objc(cs)WCSession(im)updateApplicationContext:error:	swift.method	updateApplicationContext(_:)	WCSession.updateApplicationContext(_:)	func updateApplicationContext(_ applicationContext: [String : Any]) throws
+c:objc(cs)WCSession(py)activationState	swift.property	activationState	WCSession.activationState	var activationState: WCSessionActivationState { get }
+c:objc(cs)WCSession(py)applicationContext	swift.property	applicationContext	WCSession.applicationContext	var applicationContext: [String : Any] { get }
+c:objc(cs)WCSession(py)complicationEnabled	swift.property	isComplicationEnabled	WCSession.isComplicationEnabled	var isComplicationEnabled: Bool { get }
+c:objc(cs)WCSession(py)delegate	swift.property	delegate	WCSession.delegate	weak var delegate: (any WCSessionDelegate)? { get set }
+c:objc(cs)WCSession(py)hasContentPending	swift.property	hasContentPending	WCSession.hasContentPending	var hasContentPending: Bool { get }
+c:objc(cs)WCSession(py)outstandingFileTransfers	swift.property	outstandingFileTransfers	WCSession.outstandingFileTransfers	var outstandingFileTransfers: [WCSessionFileTransfer] { get }
+c:objc(cs)WCSession(py)outstandingUserInfoTransfers	swift.property	outstandingUserInfoTransfers	WCSession.outstandingUserInfoTransfers	var outstandingUserInfoTransfers: [WCSessionUserInfoTransfer] { get }
+c:objc(cs)WCSession(py)paired	swift.property	isPaired	WCSession.isPaired	var isPaired: Bool { get }
+c:objc(cs)WCSession(py)reachable	swift.property	isReachable	WCSession.isReachable	var isReachable: Bool { get }
+c:objc(cs)WCSession(py)receivedApplicationContext	swift.property	receivedApplicationContext	WCSession.receivedApplicationContext	var receivedApplicationContext: [String : Any] { get }
+c:objc(cs)WCSession(py)remainingComplicationUserInfoTransfers	swift.property	remainingComplicationUserInfoTransfers	WCSession.remainingComplicationUserInfoTransfers	var remainingComplicationUserInfoTransfers: Int { get }
+c:objc(cs)WCSession(py)watchAppInstalled	swift.property	isWatchAppInstalled	WCSession.isWatchAppInstalled	var isWatchAppInstalled: Bool { get }
+c:objc(cs)WCSession(py)watchDirectoryURL	swift.property	watchDirectoryURL	WCSession.watchDirectoryURL	var watchDirectoryURL: URL? { get }
+c:objc(cs)WCSessionFile	swift.class	WCSessionFile	WCSessionFile	class WCSessionFile
+c:objc(cs)WCSessionFile(py)fileURL	swift.property	fileURL	WCSessionFile.fileURL	var fileURL: URL { get }
+c:objc(cs)WCSessionFile(py)metadata	swift.property	metadata	WCSessionFile.metadata	var metadata: [String : Any]? { get }
+c:objc(cs)WCSessionFileTransfer	swift.class	WCSessionFileTransfer	WCSessionFileTransfer	class WCSessionFileTransfer
+c:objc(cs)WCSessionFileTransfer(im)cancel	swift.method	cancel()	WCSessionFileTransfer.cancel()	func cancel()
+c:objc(cs)WCSessionFileTransfer(py)file	swift.property	file	WCSessionFileTransfer.file	var file: WCSessionFile { get }
+c:objc(cs)WCSessionFileTransfer(py)progress	swift.property	progress	WCSessionFileTransfer.progress	var progress: Progress { get }
+c:objc(cs)WCSessionFileTransfer(py)transferring	swift.property	isTransferring	WCSessionFileTransfer.isTransferring	var isTransferring: Bool { get }
+c:objc(cs)WCSessionUserInfoTransfer	swift.class	WCSessionUserInfoTransfer	WCSessionUserInfoTransfer	class WCSessionUserInfoTransfer
+c:objc(cs)WCSessionUserInfoTransfer(im)cancel	swift.method	cancel()	WCSessionUserInfoTransfer.cancel()	func cancel()
+c:objc(cs)WCSessionUserInfoTransfer(py)currentComplicationInfo	swift.property	isCurrentComplicationInfo	WCSessionUserInfoTransfer.isCurrentComplicationInfo	var isCurrentComplicationInfo: Bool { get }
+c:objc(cs)WCSessionUserInfoTransfer(py)transferring	swift.property	isTransferring	WCSessionUserInfoTransfer.isTransferring	var isTransferring: Bool { get }
+c:objc(cs)WCSessionUserInfoTransfer(py)userInfo	swift.property	userInfo	WCSessionUserInfoTransfer.userInfo	var userInfo: [String : Any] { get }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)WCSessionUserInfoTransfer	swift.init	init(coder:)	WCSessionUserInfoTransfer.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)WCSessionDelegate	swift.protocol	WCSessionDelegate	WCSessionDelegate	protocol WCSessionDelegate : NSObjectProtocol
+c:objc(pl)WCSessionDelegate(im)session:activationDidCompleteWithState:error:	swift.method	session(_:activationDidCompleteWith:error:)	WCSessionDelegate.session(_:activationDidCompleteWith:error:)	func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: (any Error)?)
+c:objc(pl)WCSessionDelegate(im)session:didFinishFileTransfer:error:	swift.method	session(_:didFinish:error:)	WCSessionDelegate.session(_:didFinish:error:)	optional func session(_ session: WCSession, didFinish fileTransfer: WCSessionFileTransfer, error: (any Error)?)
+c:objc(pl)WCSessionDelegate(im)session:didFinishUserInfoTransfer:error:	swift.method	session(_:didFinish:error:)	WCSessionDelegate.session(_:didFinish:error:)	optional func session(_ session: WCSession, didFinish userInfoTransfer: WCSessionUserInfoTransfer, error: (any Error)?)
+c:objc(pl)WCSessionDelegate(im)session:didReceiveApplicationContext:	swift.method	session(_:didReceiveApplicationContext:)	WCSessionDelegate.session(_:didReceiveApplicationContext:)	optional func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any])
+c:objc(pl)WCSessionDelegate(im)session:didReceiveFile:	swift.method	session(_:didReceive:)	WCSessionDelegate.session(_:didReceive:)	optional func session(_ session: WCSession, didReceive file: WCSessionFile)
+c:objc(pl)WCSessionDelegate(im)session:didReceiveMessage:	swift.method	session(_:didReceiveMessage:)	WCSessionDelegate.session(_:didReceiveMessage:)	optional func session(_ session: WCSession, didReceiveMessage message: [String : Any])
+c:objc(pl)WCSessionDelegate(im)session:didReceiveMessage:replyHandler:	swift.method	session(_:didReceiveMessage:replyHandler:)	WCSessionDelegate.session(_:didReceiveMessage:replyHandler:)	optional func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void)
+c:objc(pl)WCSessionDelegate(im)session:didReceiveMessageData:	swift.method	session(_:didReceiveMessageData:)	WCSessionDelegate.session(_:didReceiveMessageData:)	optional func session(_ session: WCSession, didReceiveMessageData messageData: Data)
+c:objc(pl)WCSessionDelegate(im)session:didReceiveMessageData:replyHandler:	swift.method	session(_:didReceiveMessageData:replyHandler:)	WCSessionDelegate.session(_:didReceiveMessageData:replyHandler:)	optional func session(_ session: WCSession, didReceiveMessageData messageData: Data, replyHandler: @escaping (Data) -> Void)
+c:objc(pl)WCSessionDelegate(im)session:didReceiveUserInfo:	swift.method	session(_:didReceiveUserInfo:)	WCSessionDelegate.session(_:didReceiveUserInfo:)	optional func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any] = [:])
+c:objc(pl)WCSessionDelegate(im)sessionDidBecomeInactive:	swift.method	sessionDidBecomeInactive(_:)	WCSessionDelegate.sessionDidBecomeInactive(_:)	func sessionDidBecomeInactive(_ session: WCSession)
+c:objc(pl)WCSessionDelegate(im)sessionDidDeactivate:	swift.method	sessionDidDeactivate(_:)	WCSessionDelegate.sessionDidDeactivate(_:)	func sessionDidDeactivate(_ session: WCSession)
+c:objc(pl)WCSessionDelegate(im)sessionReachabilityDidChange:	swift.method	sessionReachabilityDidChange(_:)	WCSessionDelegate.sessionReachabilityDidChange(_:)	optional func sessionReachabilityDidChange(_ session: WCSession)
+c:objc(pl)WCSessionDelegate(im)sessionWatchStateDidChange:	swift.method	sessionWatchStateDidChange(_:)	WCSessionDelegate.sessionWatchStateDidChange(_:)	optional func sessionWatchStateDidChange(_ session: WCSession)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@WCErrorCode	swift.type.property	errorDomain	WCError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@WCErrorCode	swift.property	errorUserInfo	WCError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@WCErrorCode	swift.property	errorCode	WCError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@WCErrorCode	swift.func.op	~=(_:_:)	WCError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@WCErrorCode	swift.property	errorUserInfo	WCError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@WCErrorCode	swift.func.op	==(_:_:)	WCError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@WCErrorCode	swift.property	code	WCError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@WCErrorCode	swift.method	hash(into:)	WCError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@WCErrorCode	swift.property	userInfo	WCError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@WCErrorCode	swift.property	errorCode	WCError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@WCErrorCode	swift.property	hashValue	WCError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@WCErrorCode	swift.init	init(_:userInfo:)	WCError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC11WCErrorCodeLeV	swift.struct	WCError	WCError	struct WCError
+s:SC11WCErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	WCError.errorDomain	static var errorDomain: String { get }
+s:SC11WCErrorCodeLeV12genericErrorSoAAVvpZ	swift.type.property	genericError	WCError.genericError	static var genericError: WCError.Code { get }
+s:SC11WCErrorCodeLeV12notReachableSoAAVvpZ	swift.type.property	notReachable	WCError.notReachable	static var notReachable: WCError.Code { get }
+s:SC11WCErrorCodeLeV12watchOnlyAppSoAAVvpZ	swift.type.property	watchOnlyApp	WCError.watchOnlyApp	static var watchOnlyApp: WCError.Code { get }
+s:SC11WCErrorCodeLeV14deliveryFailedSoAAVvpZ	swift.type.property	deliveryFailed	WCError.deliveryFailed	static var deliveryFailed: WCError.Code { get }
+s:SC11WCErrorCodeLeV15deviceNotPairedSoAAVvpZ	swift.type.property	deviceNotPaired	WCError.deviceNotPaired	static var deviceNotPaired: WCError.Code { get }
+s:SC11WCErrorCodeLeV15payloadTooLargeSoAAVvpZ	swift.type.property	payloadTooLarge	WCError.payloadTooLarge	static var payloadTooLarge: WCError.Code { get }
+s:SC11WCErrorCodeLeV15sessionInactiveSoAAVvpZ	swift.type.property	sessionInactive	WCError.sessionInactive	static var sessionInactive: WCError.Code { get }
+s:SC11WCErrorCodeLeV16fileAccessDeniedSoAAVvpZ	swift.type.property	fileAccessDenied	WCError.fileAccessDenied	static var fileAccessDenied: WCError.Code { get }
+s:SC11WCErrorCodeLeV16invalidParameterSoAAVvpZ	swift.type.property	invalidParameter	WCError.invalidParameter	static var invalidParameter: WCError.Code { get }
+s:SC11WCErrorCodeLeV16transferTimedOutSoAAVvpZ	swift.type.property	transferTimedOut	WCError.transferTimedOut	static var transferTimedOut: WCError.Code { get }
+s:SC11WCErrorCodeLeV17insufficientSpaceSoAAVvpZ	swift.type.property	insufficientSpace	WCError.insufficientSpace	static var insufficientSpace: WCError.Code { get }
+s:SC11WCErrorCodeLeV18messageReplyFailedSoAAVvpZ	swift.type.property	messageReplyFailed	WCError.messageReplyFailed	static var messageReplyFailed: WCError.Code { get }
+s:SC11WCErrorCodeLeV19sessionNotActivatedSoAAVvpZ	swift.type.property	sessionNotActivated	WCError.sessionNotActivated	static var sessionNotActivated: WCError.Code { get }
+s:SC11WCErrorCodeLeV19sessionNotSupportedSoAAVvpZ	swift.type.property	sessionNotSupported	WCError.sessionNotSupported	static var sessionNotSupported: WCError.Code { get }
+s:SC11WCErrorCodeLeV20messageReplyTimedOutSoAAVvpZ	swift.type.property	messageReplyTimedOut	WCError.messageReplyTimedOut	static var messageReplyTimedOut: WCError.Code { get }
+s:SC11WCErrorCodeLeV20watchAppNotInstalledSoAAVvpZ	swift.type.property	watchAppNotInstalled	WCError.watchAppNotInstalled	static var watchAppNotInstalled: WCError.Code { get }
+s:SC11WCErrorCodeLeV22sessionMissingDelegateSoAAVvpZ	swift.type.property	sessionMissingDelegate	WCError.sessionMissingDelegate	static var sessionMissingDelegate: WCError.Code { get }
+s:SC11WCErrorCodeLeV23payloadUnsupportedTypesSoAAVvpZ	swift.type.property	payloadUnsupportedTypes	WCError.payloadUnsupportedTypes	static var payloadUnsupportedTypes: WCError.Code { get }
+s:SC11WCErrorCodeLeV24companionAppNotInstalledSoAAVvpZ	swift.type.property	companionAppNotInstalled	WCError.companionAppNotInstalled	static var companionAppNotInstalled: WCError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@WCErrorCode	swift.func.op	!=(_:_:)	WCError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@WCSessionActivationState	swift.func.op	!=(_:_:)	WCSessionActivationState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@WCErrorCode	swift.property	hashValue	WCError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@WCSessionActivationState	swift.property	hashValue	WCSessionActivationState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@WCErrorCode	swift.method	hash(into:)	WCError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@WCSessionActivationState	swift.method	hash(into:)	WCSessionActivationState.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11WCErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	WCError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So24WCSessionActivationStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	WCSessionActivationState.init(rawValue:)	init?(rawValue: Int)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@WCErrorCode	swift.property	localizedDescription	WCError.localizedDescription	var localizedDescription: String { get }

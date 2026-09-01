@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 1,
+  "duplicateOccurrenceCount": 1,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/UserNotificationsUI.symbols.json",
+      "relationshipCount": 35,
+      "sha256": "8c37c8f2517263911eb1fcf8a501497de49a012eff9a763c288a09a9cf0041d8",
+      "symbolCount": 25
+    },
+    {
+      "path": "reference/symbol-graphs/UserNotificationsUI@Foundation.symbols.json",
+      "relationshipCount": 5,
+      "sha256": "73d048110005c152938042358e7644c9115378f29ae06bdaebc201b7ba700a7f",
+      "symbolCount": 5
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "UserNotificationsUI",
+  "relationshipCount": 40,
+  "schema": 1,
+  "symbolCount": 29,
+  "target": "arm64-apple-ios26.0"
+}

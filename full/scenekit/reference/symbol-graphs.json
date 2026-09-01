@@ -1,0 +1,49 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 8,
+  "duplicateOccurrenceCount": 8,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/SceneKit.symbols.json",
+      "relationshipCount": 2648,
+      "sha256": "bd566bf2913e93849708f102dda783d8db714f277b3cb6751b1e5cf99073aa20",
+      "symbolCount": 1789
+    },
+    {
+      "path": "reference/symbol-graphs/SceneKit@Foundation.symbols.json",
+      "relationshipCount": 9,
+      "sha256": "09c51a1b0be010aeaddcf90131a04c135bb3bd177c75638e573eb84984f497f5",
+      "symbolCount": 9
+    },
+    {
+      "path": "reference/symbol-graphs/SceneKit@QuartzCore.symbols.json",
+      "relationshipCount": 9,
+      "sha256": "f1da255436fddcac6770e989a434b9cdcdca9ca2f9ce008ffb31321563109fc4",
+      "symbolCount": 6
+    },
+    {
+      "path": "reference/symbol-graphs/SceneKit@Swift.symbols.json",
+      "relationshipCount": 4,
+      "sha256": "3c57995d845103e1c23ab8432701b7a6005daa489772c2d48413e1b78bb79525",
+      "symbolCount": 4
+    },
+    {
+      "path": "reference/symbol-graphs/SceneKit@simd.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "94c1fda9506fd7bf807a7156e09be948bbc8b9004e02636908d76b6b3aee93c1",
+      "symbolCount": 2
+    },
+    {
+      "path": "reference/symbol-graphs/_SceneKit_SwiftUI@SceneKit.symbols.json",
+      "relationshipCount": 816,
+      "sha256": "52f5248ffa2543c3adc784137835e7361f56857b27ec10a7c9374474f9e9237a",
+      "symbolCount": 809
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "SceneKit",
+  "relationshipCount": 3488,
+  "schema": 1,
+  "symbolCount": 2611,
+  "target": "arm64-apple-ios26.0"
+}

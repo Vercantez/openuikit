@@ -1,0 +1,512 @@
+precise	kind	title	path	declaration
+c:@E@EKAlarmProximity	swift.enum	EKAlarmProximity	EKAlarmProximity	enum EKAlarmProximity
+c:@E@EKAlarmProximity@EKAlarmProximityEnter	swift.enum.case	EKAlarmProximity.enter	EKAlarmProximity.enter	case enter
+c:@E@EKAlarmProximity@EKAlarmProximityLeave	swift.enum.case	EKAlarmProximity.leave	EKAlarmProximity.leave	case leave
+c:@E@EKAlarmProximity@EKAlarmProximityNone	swift.enum.case	EKAlarmProximity.none	EKAlarmProximity.none	case none
+c:@E@EKAlarmType	swift.enum	EKAlarmType	EKAlarmType	enum EKAlarmType
+c:@E@EKAlarmType@EKAlarmTypeAudio	swift.enum.case	EKAlarmType.audio	EKAlarmType.audio	case audio
+c:@E@EKAlarmType@EKAlarmTypeDisplay	swift.enum.case	EKAlarmType.display	EKAlarmType.display	case display
+c:@E@EKAlarmType@EKAlarmTypeEmail	swift.enum.case	EKAlarmType.email	EKAlarmType.email	case email
+c:@E@EKAlarmType@EKAlarmTypeProcedure	swift.enum.case	EKAlarmType.procedure	EKAlarmType.procedure	case procedure
+c:@E@EKAuthorizationStatus	swift.enum	EKAuthorizationStatus	EKAuthorizationStatus	enum EKAuthorizationStatus
+c:@E@EKAuthorizationStatus@EKAuthorizationStatusAuthorized	swift.type.property	authorized	EKAuthorizationStatus.authorized	static var authorized: EKAuthorizationStatus { get }
+c:@E@EKAuthorizationStatus@EKAuthorizationStatusDenied	swift.enum.case	EKAuthorizationStatus.denied	EKAuthorizationStatus.denied	case denied
+c:@E@EKAuthorizationStatus@EKAuthorizationStatusFullAccess	swift.enum.case	EKAuthorizationStatus.fullAccess	EKAuthorizationStatus.fullAccess	case fullAccess
+c:@E@EKAuthorizationStatus@EKAuthorizationStatusNotDetermined	swift.enum.case	EKAuthorizationStatus.notDetermined	EKAuthorizationStatus.notDetermined	case notDetermined
+c:@E@EKAuthorizationStatus@EKAuthorizationStatusRestricted	swift.enum.case	EKAuthorizationStatus.restricted	EKAuthorizationStatus.restricted	case restricted
+c:@E@EKAuthorizationStatus@EKAuthorizationStatusWriteOnly	swift.enum.case	EKAuthorizationStatus.writeOnly	EKAuthorizationStatus.writeOnly	case writeOnly
+c:@E@EKCalendarEventAvailabilityMask	swift.struct	EKCalendarEventAvailabilityMask	EKCalendarEventAvailabilityMask	struct EKCalendarEventAvailabilityMask
+c:@E@EKCalendarEventAvailabilityMask@EKCalendarEventAvailabilityBusy	swift.type.property	busy	EKCalendarEventAvailabilityMask.busy	static var busy: EKCalendarEventAvailabilityMask { get }
+c:@E@EKCalendarEventAvailabilityMask@EKCalendarEventAvailabilityFree	swift.type.property	free	EKCalendarEventAvailabilityMask.free	static var free: EKCalendarEventAvailabilityMask { get }
+c:@E@EKCalendarEventAvailabilityMask@EKCalendarEventAvailabilityTentative	swift.type.property	tentative	EKCalendarEventAvailabilityMask.tentative	static var tentative: EKCalendarEventAvailabilityMask { get }
+c:@E@EKCalendarEventAvailabilityMask@EKCalendarEventAvailabilityUnavailable	swift.type.property	unavailable	EKCalendarEventAvailabilityMask.unavailable	static var unavailable: EKCalendarEventAvailabilityMask { get }
+c:@E@EKCalendarType	swift.enum	EKCalendarType	EKCalendarType	enum EKCalendarType
+c:@E@EKCalendarType@EKCalendarTypeBirthday	swift.enum.case	EKCalendarType.birthday	EKCalendarType.birthday	case birthday
+c:@E@EKCalendarType@EKCalendarTypeCalDAV	swift.enum.case	EKCalendarType.calDAV	EKCalendarType.calDAV	case calDAV
+c:@E@EKCalendarType@EKCalendarTypeExchange	swift.enum.case	EKCalendarType.exchange	EKCalendarType.exchange	case exchange
+c:@E@EKCalendarType@EKCalendarTypeLocal	swift.enum.case	EKCalendarType.local	EKCalendarType.local	case local
+c:@E@EKCalendarType@EKCalendarTypeSubscription	swift.enum.case	EKCalendarType.subscription	EKCalendarType.subscription	case subscription
+c:@E@EKEntityMask	swift.struct	EKEntityMask	EKEntityMask	struct EKEntityMask
+c:@E@EKEntityMask@EKEntityMaskEvent	swift.type.property	event	EKEntityMask.event	static var event: EKEntityMask { get }
+c:@E@EKEntityMask@EKEntityMaskReminder	swift.type.property	reminder	EKEntityMask.reminder	static var reminder: EKEntityMask { get }
+c:@E@EKEntityType	swift.enum	EKEntityType	EKEntityType	enum EKEntityType
+c:@E@EKEntityType@EKEntityTypeEvent	swift.enum.case	EKEntityType.event	EKEntityType.event	case event
+c:@E@EKEntityType@EKEntityTypeReminder	swift.enum.case	EKEntityType.reminder	EKEntityType.reminder	case reminder
+c:@E@EKErrorCode	swift.enum	EKError.Code	EKError.Code	enum Code
+c:@E@EKErrorCode@EKErrorAlarmGreaterThanRecurrence	swift.enum.case	EKError.Code.alarmGreaterThanRecurrence	EKError.Code.alarmGreaterThanRecurrence	case alarmGreaterThanRecurrence
+c:@E@EKErrorCode@EKErrorAlarmProximityNotSupported	swift.enum.case	EKError.Code.alarmProximityNotSupported	EKError.Code.alarmProximityNotSupported	case alarmProximityNotSupported
+c:@E@EKErrorCode@EKErrorCalendarDoesNotAllowEvents	swift.enum.case	EKError.Code.calendarDoesNotAllowEvents	EKError.Code.calendarDoesNotAllowEvents	case calendarDoesNotAllowEvents
+c:@E@EKErrorCode@EKErrorCalendarDoesNotAllowReminders	swift.enum.case	EKError.Code.calendarDoesNotAllowReminders	EKError.Code.calendarDoesNotAllowReminders	case calendarDoesNotAllowReminders
+c:@E@EKErrorCode@EKErrorCalendarHasNoSource	swift.enum.case	EKError.Code.calendarHasNoSource	EKError.Code.calendarHasNoSource	case calendarHasNoSource
+c:@E@EKErrorCode@EKErrorCalendarIsImmutable	swift.enum.case	EKError.Code.calendarIsImmutable	EKError.Code.calendarIsImmutable	case calendarIsImmutable
+c:@E@EKErrorCode@EKErrorCalendarReadOnly	swift.enum.case	EKError.Code.calendarReadOnly	EKError.Code.calendarReadOnly	case calendarReadOnly
+c:@E@EKErrorCode@EKErrorCalendarSourceCannotBeModified	swift.enum.case	EKError.Code.calendarSourceCannotBeModified	EKError.Code.calendarSourceCannotBeModified	case calendarSourceCannotBeModified
+c:@E@EKErrorCode@EKErrorDatesInverted	swift.enum.case	EKError.Code.datesInverted	EKError.Code.datesInverted	case datesInverted
+c:@E@EKErrorCode@EKErrorDurationGreaterThanRecurrence	swift.enum.case	EKError.Code.durationGreaterThanRecurrence	EKError.Code.durationGreaterThanRecurrence	case durationGreaterThanRecurrence
+c:@E@EKErrorCode@EKErrorEventNotMutable	swift.enum.case	EKError.Code.eventNotMutable	EKError.Code.eventNotMutable	case eventNotMutable
+c:@E@EKErrorCode@EKErrorEventStoreNotAuthorized	swift.enum.case	EKError.Code.eventStoreNotAuthorized	EKError.Code.eventStoreNotAuthorized	case eventStoreNotAuthorized
+c:@E@EKErrorCode@EKErrorInternalFailure	swift.enum.case	EKError.Code.internalFailure	EKError.Code.internalFailure	case internalFailure
+c:@E@EKErrorCode@EKErrorInvalidEntityType	swift.enum.case	EKError.Code.invalidEntityType	EKError.Code.invalidEntityType	case invalidEntityType
+c:@E@EKErrorCode@EKErrorInvalidInviteReplyCalendar	swift.enum.case	EKError.Code.invalidInviteReplyCalendar	EKError.Code.invalidInviteReplyCalendar	case invalidInviteReplyCalendar
+c:@E@EKErrorCode@EKErrorInvalidSpan	swift.enum.case	EKError.Code.invalidSpan	EKError.Code.invalidSpan	case invalidSpan
+c:@E@EKErrorCode@EKErrorInvitesCannotBeMoved	swift.enum.case	EKError.Code.invitesCannotBeMoved	EKError.Code.invitesCannotBeMoved	case invitesCannotBeMoved
+c:@E@EKErrorCode@EKErrorLast	swift.enum.case	EKError.Code.last	EKError.Code.last	case last
+c:@E@EKErrorCode@EKErrorNoCalendar	swift.enum.case	EKError.Code.noCalendar	EKError.Code.noCalendar	case noCalendar
+c:@E@EKErrorCode@EKErrorNoEndDate	swift.enum.case	EKError.Code.noEndDate	EKError.Code.noEndDate	case noEndDate
+c:@E@EKErrorCode@EKErrorNoStartDate	swift.enum.case	EKError.Code.noStartDate	EKError.Code.noStartDate	case noStartDate
+c:@E@EKErrorCode@EKErrorNotificationCollectionMismatch	swift.enum.case	EKError.Code.notificationCollectionMismatch	EKError.Code.notificationCollectionMismatch	case notificationCollectionMismatch
+c:@E@EKErrorCode@EKErrorNotificationSavedWithoutCollection	swift.enum.case	EKError.Code.notificationSavedWithoutCollection	EKError.Code.notificationSavedWithoutCollection	case notificationSavedWithoutCollection
+c:@E@EKErrorCode@EKErrorNotificationsCollectionFlagNotSet	swift.enum.case	EKError.Code.notificationsCollectionFlagNotSet	EKError.Code.notificationsCollectionFlagNotSet	case notificationsCollectionFlagNotSet
+c:@E@EKErrorCode@EKErrorOSNotSupported	swift.enum.case	EKError.Code.osNotSupported	EKError.Code.osNotSupported	case osNotSupported
+c:@E@EKErrorCode@EKErrorObjectBelongsToDifferentStore	swift.enum.case	EKError.Code.objectBelongsToDifferentStore	EKError.Code.objectBelongsToDifferentStore	case objectBelongsToDifferentStore
+c:@E@EKErrorCode@EKErrorPriorityIsInvalid	swift.enum.case	EKError.Code.priorityIsInvalid	EKError.Code.priorityIsInvalid	case priorityIsInvalid
+c:@E@EKErrorCode@EKErrorProcedureAlarmsNotMutable	swift.enum.case	EKError.Code.procedureAlarmsNotMutable	EKError.Code.procedureAlarmsNotMutable	case procedureAlarmsNotMutable
+c:@E@EKErrorCode@EKErrorRecurringReminderRequiresDueDate	swift.enum.case	EKError.Code.recurringReminderRequiresDueDate	EKError.Code.recurringReminderRequiresDueDate	case recurringReminderRequiresDueDate
+c:@E@EKErrorCode@EKErrorReminderAlarmContainsEmailOrUrl	swift.enum.case	EKError.Code.reminderAlarmContainsEmailOrUrl	EKError.Code.reminderAlarmContainsEmailOrUrl	case reminderAlarmContainsEmailOrUrl
+c:@E@EKErrorCode@EKErrorReminderLocationsNotSupported	swift.enum.case	EKError.Code.reminderLocationsNotSupported	EKError.Code.reminderLocationsNotSupported	case reminderLocationsNotSupported
+c:@E@EKErrorCode@EKErrorSourceDoesNotAllowCalendarAddDelete	swift.enum.case	EKError.Code.sourceDoesNotAllowCalendarAddDelete	EKError.Code.sourceDoesNotAllowCalendarAddDelete	case sourceDoesNotAllowCalendarAddDelete
+c:@E@EKErrorCode@EKErrorSourceDoesNotAllowEvents	swift.enum.case	EKError.Code.sourceDoesNotAllowEvents	EKError.Code.sourceDoesNotAllowEvents	case sourceDoesNotAllowEvents
+c:@E@EKErrorCode@EKErrorSourceDoesNotAllowReminders	swift.enum.case	EKError.Code.sourceDoesNotAllowReminders	EKError.Code.sourceDoesNotAllowReminders	case sourceDoesNotAllowReminders
+c:@E@EKErrorCode@EKErrorSourceMismatch	swift.enum.case	EKError.Code.sourceMismatch	EKError.Code.sourceMismatch	case sourceMismatch
+c:@E@EKErrorCode@EKErrorStartDateCollidesWithOtherOccurrence	swift.enum.case	EKError.Code.startDateCollidesWithOtherOccurrence	EKError.Code.startDateCollidesWithOtherOccurrence	case startDateCollidesWithOtherOccurrence
+c:@E@EKErrorCode@EKErrorStartDateTooFarInFuture	swift.enum.case	EKError.Code.startDateTooFarInFuture	EKError.Code.startDateTooFarInFuture	case startDateTooFarInFuture
+c:@E@EKErrorCode@EKErrorStructuredLocationsNotSupported	swift.enum.case	EKError.Code.structuredLocationsNotSupported	EKError.Code.structuredLocationsNotSupported	case structuredLocationsNotSupported
+c:@E@EKEventAvailability	swift.enum	EKEventAvailability	EKEventAvailability	enum EKEventAvailability
+c:@E@EKEventAvailability@EKEventAvailabilityBusy	swift.enum.case	EKEventAvailability.busy	EKEventAvailability.busy	case busy
+c:@E@EKEventAvailability@EKEventAvailabilityFree	swift.enum.case	EKEventAvailability.free	EKEventAvailability.free	case free
+c:@E@EKEventAvailability@EKEventAvailabilityNotSupported	swift.enum.case	EKEventAvailability.notSupported	EKEventAvailability.notSupported	case notSupported
+c:@E@EKEventAvailability@EKEventAvailabilityTentative	swift.enum.case	EKEventAvailability.tentative	EKEventAvailability.tentative	case tentative
+c:@E@EKEventAvailability@EKEventAvailabilityUnavailable	swift.enum.case	EKEventAvailability.unavailable	EKEventAvailability.unavailable	case unavailable
+c:@E@EKEventStatus	swift.enum	EKEventStatus	EKEventStatus	enum EKEventStatus
+c:@E@EKEventStatus@EKEventStatusCanceled	swift.enum.case	EKEventStatus.canceled	EKEventStatus.canceled	case canceled
+c:@E@EKEventStatus@EKEventStatusConfirmed	swift.enum.case	EKEventStatus.confirmed	EKEventStatus.confirmed	case confirmed
+c:@E@EKEventStatus@EKEventStatusNone	swift.enum.case	EKEventStatus.none	EKEventStatus.none	case none
+c:@E@EKEventStatus@EKEventStatusTentative	swift.enum.case	EKEventStatus.tentative	EKEventStatus.tentative	case tentative
+c:@E@EKParticipantRole	swift.enum	EKParticipantRole	EKParticipantRole	enum EKParticipantRole
+c:@E@EKParticipantRole@EKParticipantRoleChair	swift.enum.case	EKParticipantRole.chair	EKParticipantRole.chair	case chair
+c:@E@EKParticipantRole@EKParticipantRoleNonParticipant	swift.enum.case	EKParticipantRole.nonParticipant	EKParticipantRole.nonParticipant	case nonParticipant
+c:@E@EKParticipantRole@EKParticipantRoleOptional	swift.enum.case	EKParticipantRole.optional	EKParticipantRole.optional	case optional
+c:@E@EKParticipantRole@EKParticipantRoleRequired	swift.enum.case	EKParticipantRole.required	EKParticipantRole.required	case required
+c:@E@EKParticipantRole@EKParticipantRoleUnknown	swift.enum.case	EKParticipantRole.unknown	EKParticipantRole.unknown	case unknown
+c:@E@EKParticipantScheduleStatus	swift.enum	EKParticipantScheduleStatus	EKParticipantScheduleStatus	enum EKParticipantScheduleStatus
+c:@E@EKParticipantScheduleStatus@EKParticipantScheduleStatusCannotDeliver	swift.enum.case	EKParticipantScheduleStatus.cannotDeliver	EKParticipantScheduleStatus.cannotDeliver	case cannotDeliver
+c:@E@EKParticipantScheduleStatus@EKParticipantScheduleStatusDelivered	swift.enum.case	EKParticipantScheduleStatus.delivered	EKParticipantScheduleStatus.delivered	case delivered
+c:@E@EKParticipantScheduleStatus@EKParticipantScheduleStatusDeliveryFailed	swift.enum.case	EKParticipantScheduleStatus.deliveryFailed	EKParticipantScheduleStatus.deliveryFailed	case deliveryFailed
+c:@E@EKParticipantScheduleStatus@EKParticipantScheduleStatusNoPrivileges	swift.enum.case	EKParticipantScheduleStatus.noPrivileges	EKParticipantScheduleStatus.noPrivileges	case noPrivileges
+c:@E@EKParticipantScheduleStatus@EKParticipantScheduleStatusNone	swift.enum.case	EKParticipantScheduleStatus.none	EKParticipantScheduleStatus.none	case none
+c:@E@EKParticipantScheduleStatus@EKParticipantScheduleStatusPending	swift.enum.case	EKParticipantScheduleStatus.pending	EKParticipantScheduleStatus.pending	case pending
+c:@E@EKParticipantScheduleStatus@EKParticipantScheduleStatusRecipientNotAllowed	swift.enum.case	EKParticipantScheduleStatus.recipientNotAllowed	EKParticipantScheduleStatus.recipientNotAllowed	case recipientNotAllowed
+c:@E@EKParticipantScheduleStatus@EKParticipantScheduleStatusRecipientNotRecognized	swift.enum.case	EKParticipantScheduleStatus.recipientNotRecognized	EKParticipantScheduleStatus.recipientNotRecognized	case recipientNotRecognized
+c:@E@EKParticipantScheduleStatus@EKParticipantScheduleStatusSent	swift.enum.case	EKParticipantScheduleStatus.sent	EKParticipantScheduleStatus.sent	case sent
+c:@E@EKParticipantStatus	swift.enum	EKParticipantStatus	EKParticipantStatus	enum EKParticipantStatus
+c:@E@EKParticipantStatus@EKParticipantStatusAccepted	swift.enum.case	EKParticipantStatus.accepted	EKParticipantStatus.accepted	case accepted
+c:@E@EKParticipantStatus@EKParticipantStatusCompleted	swift.enum.case	EKParticipantStatus.completed	EKParticipantStatus.completed	case completed
+c:@E@EKParticipantStatus@EKParticipantStatusDeclined	swift.enum.case	EKParticipantStatus.declined	EKParticipantStatus.declined	case declined
+c:@E@EKParticipantStatus@EKParticipantStatusDelegated	swift.enum.case	EKParticipantStatus.delegated	EKParticipantStatus.delegated	case delegated
+c:@E@EKParticipantStatus@EKParticipantStatusInProcess	swift.enum.case	EKParticipantStatus.inProcess	EKParticipantStatus.inProcess	case inProcess
+c:@E@EKParticipantStatus@EKParticipantStatusPending	swift.enum.case	EKParticipantStatus.pending	EKParticipantStatus.pending	case pending
+c:@E@EKParticipantStatus@EKParticipantStatusTentative	swift.enum.case	EKParticipantStatus.tentative	EKParticipantStatus.tentative	case tentative
+c:@E@EKParticipantStatus@EKParticipantStatusUnknown	swift.enum.case	EKParticipantStatus.unknown	EKParticipantStatus.unknown	case unknown
+c:@E@EKParticipantType	swift.enum	EKParticipantType	EKParticipantType	enum EKParticipantType
+c:@E@EKParticipantType@EKParticipantTypeGroup	swift.enum.case	EKParticipantType.group	EKParticipantType.group	case group
+c:@E@EKParticipantType@EKParticipantTypePerson	swift.enum.case	EKParticipantType.person	EKParticipantType.person	case person
+c:@E@EKParticipantType@EKParticipantTypeResource	swift.enum.case	EKParticipantType.resource	EKParticipantType.resource	case resource
+c:@E@EKParticipantType@EKParticipantTypeRoom	swift.enum.case	EKParticipantType.room	EKParticipantType.room	case room
+c:@E@EKParticipantType@EKParticipantTypeUnknown	swift.enum.case	EKParticipantType.unknown	EKParticipantType.unknown	case unknown
+c:@E@EKRecurrenceFrequency	swift.enum	EKRecurrenceFrequency	EKRecurrenceFrequency	enum EKRecurrenceFrequency
+c:@E@EKRecurrenceFrequency@EKRecurrenceFrequencyDaily	swift.enum.case	EKRecurrenceFrequency.daily	EKRecurrenceFrequency.daily	case daily
+c:@E@EKRecurrenceFrequency@EKRecurrenceFrequencyMonthly	swift.enum.case	EKRecurrenceFrequency.monthly	EKRecurrenceFrequency.monthly	case monthly
+c:@E@EKRecurrenceFrequency@EKRecurrenceFrequencyWeekly	swift.enum.case	EKRecurrenceFrequency.weekly	EKRecurrenceFrequency.weekly	case weekly
+c:@E@EKRecurrenceFrequency@EKRecurrenceFrequencyYearly	swift.enum.case	EKRecurrenceFrequency.yearly	EKRecurrenceFrequency.yearly	case yearly
+c:@E@EKReminderPriority	swift.enum	EKReminderPriority	EKReminderPriority	enum EKReminderPriority
+c:@E@EKReminderPriority@EKReminderPriorityHigh	swift.enum.case	EKReminderPriority.high	EKReminderPriority.high	case high
+c:@E@EKReminderPriority@EKReminderPriorityLow	swift.enum.case	EKReminderPriority.low	EKReminderPriority.low	case low
+c:@E@EKReminderPriority@EKReminderPriorityMedium	swift.enum.case	EKReminderPriority.medium	EKReminderPriority.medium	case medium
+c:@E@EKReminderPriority@EKReminderPriorityNone	swift.enum.case	EKReminderPriority.none	EKReminderPriority.none	case none
+c:@E@EKSourceType	swift.enum	EKSourceType	EKSourceType	enum EKSourceType
+c:@E@EKSourceType@EKSourceTypeBirthdays	swift.enum.case	EKSourceType.birthdays	EKSourceType.birthdays	case birthdays
+c:@E@EKSourceType@EKSourceTypeCalDAV	swift.enum.case	EKSourceType.calDAV	EKSourceType.calDAV	case calDAV
+c:@E@EKSourceType@EKSourceTypeExchange	swift.enum.case	EKSourceType.exchange	EKSourceType.exchange	case exchange
+c:@E@EKSourceType@EKSourceTypeLocal	swift.enum.case	EKSourceType.local	EKSourceType.local	case local
+c:@E@EKSourceType@EKSourceTypeMobileMe	swift.enum.case	EKSourceType.mobileMe	EKSourceType.mobileMe	case mobileMe
+c:@E@EKSourceType@EKSourceTypeSubscribed	swift.enum.case	EKSourceType.subscribed	EKSourceType.subscribed	case subscribed
+c:@E@EKSpan	swift.enum	EKSpan	EKSpan	enum EKSpan
+c:@E@EKSpan@EKSpanFutureEvents	swift.enum.case	EKSpan.futureEvents	EKSpan.futureEvents	case futureEvents
+c:@E@EKSpan@EKSpanThisEvent	swift.enum.case	EKSpan.thisEvent	EKSpan.thisEvent	case thisEvent
+c:@E@EKWeekday	swift.enum	EKWeekday	EKWeekday	@frozen enum EKWeekday
+c:@E@EKWeekday@EKFriday	swift.type.property	EKFriday	EKWeekday.EKFriday	static var EKFriday: EKWeekday { get }
+c:@E@EKWeekday@EKMonday	swift.type.property	EKMonday	EKWeekday.EKMonday	static var EKMonday: EKWeekday { get }
+c:@E@EKWeekday@EKSaturday	swift.type.property	EKSaturday	EKWeekday.EKSaturday	static var EKSaturday: EKWeekday { get }
+c:@E@EKWeekday@EKSunday	swift.type.property	EKSunday	EKWeekday.EKSunday	static var EKSunday: EKWeekday { get }
+c:@E@EKWeekday@EKThursday	swift.type.property	EKThursday	EKWeekday.EKThursday	static var EKThursday: EKWeekday { get }
+c:@E@EKWeekday@EKTuesday	swift.type.property	EKTuesday	EKWeekday.EKTuesday	static var EKTuesday: EKWeekday { get }
+c:@E@EKWeekday@EKWednesday	swift.type.property	EKWednesday	EKWeekday.EKWednesday	static var EKWednesday: EKWeekday { get }
+c:@E@EKWeekday@EKWeekdayFriday	swift.enum.case	EKWeekday.friday	EKWeekday.friday	case friday
+c:@E@EKWeekday@EKWeekdayMonday	swift.enum.case	EKWeekday.monday	EKWeekday.monday	case monday
+c:@E@EKWeekday@EKWeekdaySaturday	swift.enum.case	EKWeekday.saturday	EKWeekday.saturday	case saturday
+c:@E@EKWeekday@EKWeekdaySunday	swift.enum.case	EKWeekday.sunday	EKWeekday.sunday	case sunday
+c:@E@EKWeekday@EKWeekdayThursday	swift.enum.case	EKWeekday.thursday	EKWeekday.thursday	case thursday
+c:@E@EKWeekday@EKWeekdayTuesday	swift.enum.case	EKWeekday.tuesday	EKWeekday.tuesday	case tuesday
+c:@E@EKWeekday@EKWeekdayWednesday	swift.enum.case	EKWeekday.wednesday	EKWeekday.wednesday	case wednesday
+c:@EKErrorDomain	swift.var	EKErrorDomain	EKErrorDomain	let EKErrorDomain: String
+c:@EKEventStoreChangedNotification	swift.type.property	EKEventStoreChanged	NSNotification.Name.EKEventStoreChanged	static let EKEventStoreChanged: NSNotification.Name
+c:@T@ABAddressBookRef	swift.typealias	ABAddressBook	ABAddressBook	typealias ABAddressBook = CFTypeRef
+c:@T@ABRecordRef	swift.typealias	ABRecord	ABRecord	typealias ABRecord = CFTypeRef
+c:@T@EKEventSearchCallback	swift.typealias	EKEventSearchCallback	EKEventSearchCallback	typealias EKEventSearchCallback = (EKEvent, UnsafeMutablePointer<ObjCBool>) -> Void
+c:@T@EKEventStoreRequestAccessCompletionHandler	swift.typealias	EKEventStoreRequestAccessCompletionHandler	EKEventStoreRequestAccessCompletionHandler	typealias EKEventStoreRequestAccessCompletionHandler = (Bool, (any Error)?) -> Void
+c:@T@EKVirtualConferenceRoomTypeIdentifier	swift.typealias	EKVirtualConferenceRoomTypeIdentifier	EKVirtualConferenceRoomTypeIdentifier	typealias EKVirtualConferenceRoomTypeIdentifier = String
+c:objc(cs)EKAlarm	swift.class	EKAlarm	EKAlarm	class EKAlarm
+c:objc(cs)EKAlarm(cm)alarmWithAbsoluteDate:	swift.init	init(absoluteDate:)	EKAlarm.init(absoluteDate:)	init(absoluteDate date: Date)
+c:objc(cs)EKAlarm(cm)alarmWithRelativeOffset:	swift.init	init(relativeOffset:)	EKAlarm.init(relativeOffset:)	init(relativeOffset offset: TimeInterval)
+c:objc(cs)EKAlarm(py)absoluteDate	swift.property	absoluteDate	EKAlarm.absoluteDate	var absoluteDate: Date? { get set }
+c:objc(cs)EKAlarm(py)proximity	swift.property	proximity	EKAlarm.proximity	var proximity: EKAlarmProximity { get set }
+c:objc(cs)EKAlarm(py)relativeOffset	swift.property	relativeOffset	EKAlarm.relativeOffset	var relativeOffset: TimeInterval { get set }
+c:objc(cs)EKAlarm(py)structuredLocation	swift.property	structuredLocation	EKAlarm.structuredLocation	@NSCopying var structuredLocation: EKStructuredLocation? { get set }
+c:objc(cs)EKCalendar	swift.class	EKCalendar	EKCalendar	class EKCalendar
+c:objc(cs)EKCalendar(cm)calendarForEntityType:eventStore:	swift.init	init(for:eventStore:)	EKCalendar.init(for:eventStore:)	init(for entityType: EKEntityType, eventStore: EKEventStore)
+c:objc(cs)EKCalendar(cm)calendarForEntityType:eventStore:::SYNTHESIZED::c:objc(cs)EKCalendar	swift.init	init(forEntityType:eventStore:)	EKCalendar.init(forEntityType:eventStore:)	init(forEntityType entityType: EKEntityType, eventStore: EKEventStore)
+c:objc(cs)EKCalendar(py)CGColor	swift.property	cgColor	EKCalendar.cgColor	var cgColor: CGColor! { get set }
+c:objc(cs)EKCalendar(py)allowedEntityTypes	swift.property	allowedEntityTypes	EKCalendar.allowedEntityTypes	var allowedEntityTypes: EKEntityMask { get }
+c:objc(cs)EKCalendar(py)allowsContentModifications	swift.property	allowsContentModifications	EKCalendar.allowsContentModifications	var allowsContentModifications: Bool { get }
+c:objc(cs)EKCalendar(py)calendarIdentifier	swift.property	calendarIdentifier	EKCalendar.calendarIdentifier	var calendarIdentifier: String { get }
+c:objc(cs)EKCalendar(py)immutable	swift.property	isImmutable	EKCalendar.isImmutable	var isImmutable: Bool { get }
+c:objc(cs)EKCalendar(py)source	swift.property	source	EKCalendar.source	var source: EKSource! { get set }
+c:objc(cs)EKCalendar(py)subscribed	swift.property	isSubscribed	EKCalendar.isSubscribed	var isSubscribed: Bool { get }
+c:objc(cs)EKCalendar(py)supportedEventAvailabilities	swift.property	supportedEventAvailabilities	EKCalendar.supportedEventAvailabilities	var supportedEventAvailabilities: EKCalendarEventAvailabilityMask { get }
+c:objc(cs)EKCalendar(py)title	swift.property	title	EKCalendar.title	var title: String { get set }
+c:objc(cs)EKCalendar(py)type	swift.property	type	EKCalendar.type	var type: EKCalendarType { get }
+c:objc(cs)EKCalendarItem	swift.class	EKCalendarItem	EKCalendarItem	class EKCalendarItem
+c:objc(cs)EKCalendarItem(im)addAlarm:	swift.method	addAlarm(_:)	EKCalendarItem.addAlarm(_:)	func addAlarm(_ alarm: EKAlarm)
+c:objc(cs)EKCalendarItem(im)addRecurrenceRule:	swift.method	addRecurrenceRule(_:)	EKCalendarItem.addRecurrenceRule(_:)	func addRecurrenceRule(_ rule: EKRecurrenceRule)
+c:objc(cs)EKCalendarItem(im)removeAlarm:	swift.method	removeAlarm(_:)	EKCalendarItem.removeAlarm(_:)	func removeAlarm(_ alarm: EKAlarm)
+c:objc(cs)EKCalendarItem(im)removeRecurrenceRule:	swift.method	removeRecurrenceRule(_:)	EKCalendarItem.removeRecurrenceRule(_:)	func removeRecurrenceRule(_ rule: EKRecurrenceRule)
+c:objc(cs)EKCalendarItem(py)URL	swift.property	url	EKCalendarItem.url	var url: URL? { get set }
+c:objc(cs)EKCalendarItem(py)alarms	swift.property	alarms	EKCalendarItem.alarms	var alarms: [EKAlarm]? { get set }
+c:objc(cs)EKCalendarItem(py)attendees	swift.property	attendees	EKCalendarItem.attendees	var attendees: [EKParticipant]? { get }
+c:objc(cs)EKCalendarItem(py)calendar	swift.property	calendar	EKCalendarItem.calendar	var calendar: EKCalendar! { get set }
+c:objc(cs)EKCalendarItem(py)calendarItemExternalIdentifier	swift.property	calendarItemExternalIdentifier	EKCalendarItem.calendarItemExternalIdentifier	var calendarItemExternalIdentifier: String! { get }
+c:objc(cs)EKCalendarItem(py)calendarItemIdentifier	swift.property	calendarItemIdentifier	EKCalendarItem.calendarItemIdentifier	var calendarItemIdentifier: String { get }
+c:objc(cs)EKCalendarItem(py)creationDate	swift.property	creationDate	EKCalendarItem.creationDate	var creationDate: Date? { get }
+c:objc(cs)EKCalendarItem(py)hasAlarms	swift.property	hasAlarms	EKCalendarItem.hasAlarms	var hasAlarms: Bool { get }
+c:objc(cs)EKCalendarItem(py)hasAttendees	swift.property	hasAttendees	EKCalendarItem.hasAttendees	var hasAttendees: Bool { get }
+c:objc(cs)EKCalendarItem(py)hasNotes	swift.property	hasNotes	EKCalendarItem.hasNotes	var hasNotes: Bool { get }
+c:objc(cs)EKCalendarItem(py)hasRecurrenceRules	swift.property	hasRecurrenceRules	EKCalendarItem.hasRecurrenceRules	var hasRecurrenceRules: Bool { get }
+c:objc(cs)EKCalendarItem(py)lastModifiedDate	swift.property	lastModifiedDate	EKCalendarItem.lastModifiedDate	var lastModifiedDate: Date? { get }
+c:objc(cs)EKCalendarItem(py)location	swift.property	location	EKCalendarItem.location	var location: String? { get set }
+c:objc(cs)EKCalendarItem(py)notes	swift.property	notes	EKCalendarItem.notes	var notes: String? { get set }
+c:objc(cs)EKCalendarItem(py)recurrenceRules	swift.property	recurrenceRules	EKCalendarItem.recurrenceRules	var recurrenceRules: [EKRecurrenceRule]? { get set }
+c:objc(cs)EKCalendarItem(py)timeZone	swift.property	timeZone	EKCalendarItem.timeZone	var timeZone: TimeZone? { get set }
+c:objc(cs)EKCalendarItem(py)title	swift.property	title	EKCalendarItem.title	var title: String! { get set }
+c:objc(cs)EKEvent	swift.class	EKEvent	EKEvent	class EKEvent
+c:objc(cs)EKEvent(cm)eventWithEventStore:	swift.init	init(eventStore:)	EKEvent.init(eventStore:)	init(eventStore: EKEventStore)
+c:objc(cs)EKEvent(im)compareStartDateWithEvent:	swift.method	compareStartDate(with:)	EKEvent.compareStartDate(with:)	func compareStartDate(with other: EKEvent) -> ComparisonResult
+c:objc(cs)EKEvent(im)refresh	swift.method	refresh()	EKEvent.refresh()	func refresh() -> Bool
+c:objc(cs)EKEvent(py)allDay	swift.property	isAllDay	EKEvent.isAllDay	var isAllDay: Bool { get set }
+c:objc(cs)EKEvent(py)availability	swift.property	availability	EKEvent.availability	var availability: EKEventAvailability { get set }
+c:objc(cs)EKEvent(py)birthdayContactIdentifier	swift.property	birthdayContactIdentifier	EKEvent.birthdayContactIdentifier	var birthdayContactIdentifier: String? { get }
+c:objc(cs)EKEvent(py)birthdayPersonID	swift.property	birthdayPersonID	EKEvent.birthdayPersonID	var birthdayPersonID: Int { get }
+c:objc(cs)EKEvent(py)endDate	swift.property	endDate	EKEvent.endDate	var endDate: Date! { get set }
+c:objc(cs)EKEvent(py)eventIdentifier	swift.property	eventIdentifier	EKEvent.eventIdentifier	var eventIdentifier: String! { get }
+c:objc(cs)EKEvent(py)isDetached	swift.property	isDetached	EKEvent.isDetached	var isDetached: Bool { get }
+c:objc(cs)EKEvent(py)occurrenceDate	swift.property	occurrenceDate	EKEvent.occurrenceDate	var occurrenceDate: Date! { get }
+c:objc(cs)EKEvent(py)organizer	swift.property	organizer	EKEvent.organizer	var organizer: EKParticipant? { get }
+c:objc(cs)EKEvent(py)startDate	swift.property	startDate	EKEvent.startDate	var startDate: Date! { get set }
+c:objc(cs)EKEvent(py)status	swift.property	status	EKEvent.status	var status: EKEventStatus { get }
+c:objc(cs)EKEvent(py)structuredLocation	swift.property	structuredLocation	EKEvent.structuredLocation	@NSCopying var structuredLocation: EKStructuredLocation? { get set }
+c:objc(cs)EKEventStore	swift.class	EKEventStore	EKEventStore	class EKEventStore
+c:objc(cs)EKEventStore(cm)authorizationStatusForEntityType:	swift.type.method	authorizationStatus(for:)	EKEventStore.authorizationStatus(for:)	class func authorizationStatus(for entityType: EKEntityType) -> EKAuthorizationStatus
+c:objc(cs)EKEventStore(im)calendarItemWithIdentifier:	swift.method	calendarItem(withIdentifier:)	EKEventStore.calendarItem(withIdentifier:)	func calendarItem(withIdentifier identifier: String) -> EKCalendarItem?
+c:objc(cs)EKEventStore(im)calendarItemsWithExternalIdentifier:	swift.method	calendarItems(withExternalIdentifier:)	EKEventStore.calendarItems(withExternalIdentifier:)	func calendarItems(withExternalIdentifier externalIdentifier: String) -> [EKCalendarItem]
+c:objc(cs)EKEventStore(im)calendarWithIdentifier:	swift.method	calendar(withIdentifier:)	EKEventStore.calendar(withIdentifier:)	func calendar(withIdentifier identifier: String) -> EKCalendar?
+c:objc(cs)EKEventStore(im)calendarsForEntityType:	swift.method	calendars(for:)	EKEventStore.calendars(for:)	func calendars(for entityType: EKEntityType) -> [EKCalendar]
+c:objc(cs)EKEventStore(im)cancelFetchRequest:	swift.method	cancelFetchRequest(_:)	EKEventStore.cancelFetchRequest(_:)	func cancelFetchRequest(_ fetchIdentifier: Any)
+c:objc(cs)EKEventStore(im)commit:	swift.method	commit()	EKEventStore.commit()	func commit() throws
+c:objc(cs)EKEventStore(im)defaultCalendarForNewReminders	swift.method	defaultCalendarForNewReminders()	EKEventStore.defaultCalendarForNewReminders()	func defaultCalendarForNewReminders() -> EKCalendar?
+c:objc(cs)EKEventStore(im)enumerateEventsMatchingPredicate:usingBlock:	swift.method	enumerateEvents(matching:using:)	EKEventStore.enumerateEvents(matching:using:)	func enumerateEvents(matching predicate: NSPredicate, using block: @escaping EKEventSearchCallback)
+c:objc(cs)EKEventStore(im)eventWithIdentifier:	swift.method	event(withIdentifier:)	EKEventStore.event(withIdentifier:)	func event(withIdentifier identifier: String) -> EKEvent?
+c:objc(cs)EKEventStore(im)eventsMatchingPredicate:	swift.method	events(matching:)	EKEventStore.events(matching:)	func events(matching predicate: NSPredicate) -> [EKEvent]
+c:objc(cs)EKEventStore(im)fetchRemindersMatchingPredicate:completion:	swift.method	fetchReminders(matching:completion:)	EKEventStore.fetchReminders(matching:completion:)	func fetchReminders(matching predicate: NSPredicate, completion: @escaping ([EKReminder]?) -> Void) -> Any
+c:objc(cs)EKEventStore(im)init	swift.init	init()	EKEventStore.init()	init()
+c:objc(cs)EKEventStore(im)initWithSources:	swift.init	init(sources:)	EKEventStore.init(sources:)	init(sources: [EKSource])
+c:objc(cs)EKEventStore(im)predicateForCompletedRemindersWithCompletionDateStarting:ending:calendars:	swift.method	predicateForCompletedReminders(withCompletionDateStarting:ending:calendars:)	EKEventStore.predicateForCompletedReminders(withCompletionDateStarting:ending:calendars:)	func predicateForCompletedReminders(withCompletionDateStarting startDate: Date?, ending endDate: Date?, calendars: [EKCalendar]?) -> NSPredicate
+c:objc(cs)EKEventStore(im)predicateForEventsWithStartDate:endDate:calendars:	swift.method	predicateForEvents(withStart:end:calendars:)	EKEventStore.predicateForEvents(withStart:end:calendars:)	func predicateForEvents(withStart startDate: Date, end endDate: Date, calendars: [EKCalendar]?) -> NSPredicate
+c:objc(cs)EKEventStore(im)predicateForIncompleteRemindersWithDueDateStarting:ending:calendars:	swift.method	predicateForIncompleteReminders(withDueDateStarting:ending:calendars:)	EKEventStore.predicateForIncompleteReminders(withDueDateStarting:ending:calendars:)	func predicateForIncompleteReminders(withDueDateStarting startDate: Date?, ending endDate: Date?, calendars: [EKCalendar]?) -> NSPredicate
+c:objc(cs)EKEventStore(im)predicateForRemindersInCalendars:	swift.method	predicateForReminders(in:)	EKEventStore.predicateForReminders(in:)	func predicateForReminders(in calendars: [EKCalendar]?) -> NSPredicate
+c:objc(cs)EKEventStore(im)refreshSourcesIfNecessary	swift.method	refreshSourcesIfNecessary()	EKEventStore.refreshSourcesIfNecessary()	func refreshSourcesIfNecessary()
+c:objc(cs)EKEventStore(im)removeCalendar:commit:error:	swift.method	removeCalendar(_:commit:)	EKEventStore.removeCalendar(_:commit:)	func removeCalendar(_ calendar: EKCalendar, commit: Bool) throws
+c:objc(cs)EKEventStore(im)removeEvent:span:commit:error:	swift.method	remove(_:span:commit:)	EKEventStore.remove(_:span:commit:)	func remove(_ event: EKEvent, span: EKSpan, commit: Bool) throws
+c:objc(cs)EKEventStore(im)removeEvent:span:error:	swift.method	remove(_:span:)	EKEventStore.remove(_:span:)	func remove(_ event: EKEvent, span: EKSpan) throws
+c:objc(cs)EKEventStore(im)removeReminder:commit:error:	swift.method	remove(_:commit:)	EKEventStore.remove(_:commit:)	func remove(_ reminder: EKReminder, commit: Bool) throws
+c:objc(cs)EKEventStore(im)requestAccessToEntityType:completion:	swift.method	requestAccess(to:)	EKEventStore.requestAccess(to:)	func requestAccess(to entityType: EKEntityType) async throws -> Bool
+c:objc(cs)EKEventStore(im)requestFullAccessToEventsWithCompletion:	swift.method	requestFullAccessToEvents(completion:)	EKEventStore.requestFullAccessToEvents(completion:)	func requestFullAccessToEvents(completion: @escaping (Bool, (any Error)?) -> Void)
+c:objc(cs)EKEventStore(im)requestFullAccessToRemindersWithCompletion:	swift.method	requestFullAccessToReminders(completion:)	EKEventStore.requestFullAccessToReminders(completion:)	func requestFullAccessToReminders(completion: @escaping (Bool, (any Error)?) -> Void)
+c:objc(cs)EKEventStore(im)requestWriteOnlyAccessToEventsWithCompletion:	swift.method	requestWriteOnlyAccessToEvents(completion:)	EKEventStore.requestWriteOnlyAccessToEvents(completion:)	func requestWriteOnlyAccessToEvents(completion: @escaping (Bool, (any Error)?) -> Void)
+c:objc(cs)EKEventStore(im)reset	swift.method	reset()	EKEventStore.reset()	func reset()
+c:objc(cs)EKEventStore(im)saveCalendar:commit:error:	swift.method	saveCalendar(_:commit:)	EKEventStore.saveCalendar(_:commit:)	func saveCalendar(_ calendar: EKCalendar, commit: Bool) throws
+c:objc(cs)EKEventStore(im)saveEvent:span:commit:error:	swift.method	save(_:span:commit:)	EKEventStore.save(_:span:commit:)	func save(_ event: EKEvent, span: EKSpan, commit: Bool) throws
+c:objc(cs)EKEventStore(im)saveEvent:span:error:	swift.method	save(_:span:)	EKEventStore.save(_:span:)	func save(_ event: EKEvent, span: EKSpan) throws
+c:objc(cs)EKEventStore(im)saveReminder:commit:error:	swift.method	save(_:commit:)	EKEventStore.save(_:commit:)	func save(_ reminder: EKReminder, commit: Bool) throws
+c:objc(cs)EKEventStore(im)sourceWithIdentifier:	swift.method	source(withIdentifier:)	EKEventStore.source(withIdentifier:)	func source(withIdentifier identifier: String) -> EKSource?
+c:objc(cs)EKEventStore(py)defaultCalendarForNewEvents	swift.property	defaultCalendarForNewEvents	EKEventStore.defaultCalendarForNewEvents	var defaultCalendarForNewEvents: EKCalendar? { get }
+c:objc(cs)EKEventStore(py)delegateSources	swift.property	delegateSources	EKEventStore.delegateSources	var delegateSources: [EKSource] { get }
+c:objc(cs)EKEventStore(py)eventStoreIdentifier	swift.property	eventStoreIdentifier	EKEventStore.eventStoreIdentifier	var eventStoreIdentifier: String { get }
+c:objc(cs)EKEventStore(py)sources	swift.property	sources	EKEventStore.sources	var sources: [EKSource] { get }
+c:objc(cs)EKObject	swift.class	EKObject	EKObject	class EKObject
+c:objc(cs)EKObject(im)refresh	swift.method	refresh()	EKObject.refresh()	func refresh() -> Bool
+c:objc(cs)EKObject(im)reset	swift.method	reset()	EKObject.reset()	func reset()
+c:objc(cs)EKObject(im)rollback	swift.method	rollback()	EKObject.rollback()	func rollback()
+c:objc(cs)EKObject(py)hasChanges	swift.property	hasChanges	EKObject.hasChanges	var hasChanges: Bool { get }
+c:objc(cs)EKObject(py)new	swift.property	isNew	EKObject.isNew	var isNew: Bool { get }
+c:objc(cs)EKParticipant	swift.class	EKParticipant	EKParticipant	class EKParticipant
+c:objc(cs)EKParticipant(im)ABRecordWithAddressBook:	swift.method	abRecord(with:)	EKParticipant.abRecord(with:)	func abRecord(with addressBook: ABAddressBook) -> ABRecord?
+c:objc(cs)EKParticipant(py)URL	swift.property	url	EKParticipant.url	var url: URL { get }
+c:objc(cs)EKParticipant(py)contactPredicate	swift.property	contactPredicate	EKParticipant.contactPredicate	var contactPredicate: NSPredicate { get }
+c:objc(cs)EKParticipant(py)currentUser	swift.property	isCurrentUser	EKParticipant.isCurrentUser	var isCurrentUser: Bool { get }
+c:objc(cs)EKParticipant(py)name	swift.property	name	EKParticipant.name	var name: String? { get }
+c:objc(cs)EKParticipant(py)participantRole	swift.property	participantRole	EKParticipant.participantRole	var participantRole: EKParticipantRole { get }
+c:objc(cs)EKParticipant(py)participantStatus	swift.property	participantStatus	EKParticipant.participantStatus	var participantStatus: EKParticipantStatus { get }
+c:objc(cs)EKParticipant(py)participantType	swift.property	participantType	EKParticipant.participantType	var participantType: EKParticipantType { get }
+c:objc(cs)EKRecurrenceDayOfWeek	swift.class	EKRecurrenceDayOfWeek	EKRecurrenceDayOfWeek	class EKRecurrenceDayOfWeek
+c:objc(cs)EKRecurrenceDayOfWeek(cm)dayOfWeek:	swift.init	init(_:)	EKRecurrenceDayOfWeek.init(_:)	convenience init(_ dayOfTheWeek: EKWeekday)
+c:objc(cs)EKRecurrenceDayOfWeek(cm)dayOfWeek:weekNumber:	swift.init	init(_:weekNumber:)	EKRecurrenceDayOfWeek.init(_:weekNumber:)	convenience init(_ dayOfTheWeek: EKWeekday, weekNumber: Int)
+c:objc(cs)EKRecurrenceDayOfWeek(im)initWithDayOfTheWeek:weekNumber:	swift.init	init(dayOfTheWeek:weekNumber:)	EKRecurrenceDayOfWeek.init(dayOfTheWeek:weekNumber:)	init(dayOfTheWeek: EKWeekday, weekNumber: Int)
+c:objc(cs)EKRecurrenceDayOfWeek(py)dayOfTheWeek	swift.property	dayOfTheWeek	EKRecurrenceDayOfWeek.dayOfTheWeek	var dayOfTheWeek: EKWeekday { get }
+c:objc(cs)EKRecurrenceDayOfWeek(py)weekNumber	swift.property	weekNumber	EKRecurrenceDayOfWeek.weekNumber	var weekNumber: Int { get }
+c:objc(cs)EKRecurrenceEnd	swift.class	EKRecurrenceEnd	EKRecurrenceEnd	class EKRecurrenceEnd
+c:objc(cs)EKRecurrenceEnd(cm)recurrenceEndWithEndDate:	swift.init	init(end:)	EKRecurrenceEnd.init(end:)	convenience init(end endDate: Date)
+c:objc(cs)EKRecurrenceEnd(cm)recurrenceEndWithEndDate:::SYNTHESIZED::c:objc(cs)EKRecurrenceEnd	swift.init	init(endDate:)	EKRecurrenceEnd.init(endDate:)	convenience init(endDate: Date)
+c:objc(cs)EKRecurrenceEnd(cm)recurrenceEndWithOccurrenceCount:	swift.init	init(occurrenceCount:)	EKRecurrenceEnd.init(occurrenceCount:)	convenience init(occurrenceCount: Int)
+c:objc(cs)EKRecurrenceEnd(py)endDate	swift.property	endDate	EKRecurrenceEnd.endDate	var endDate: Date? { get }
+c:objc(cs)EKRecurrenceEnd(py)occurrenceCount	swift.property	occurrenceCount	EKRecurrenceEnd.occurrenceCount	var occurrenceCount: Int { get }
+c:objc(cs)EKRecurrenceRule	swift.class	EKRecurrenceRule	EKRecurrenceRule	class EKRecurrenceRule
+c:objc(cs)EKRecurrenceRule(im)initRecurrenceWithFrequency:interval:daysOfTheWeek:daysOfTheMonth:monthsOfTheYear:weeksOfTheYear:daysOfTheYear:setPositions:end:	swift.init	init(recurrenceWith:interval:daysOfTheWeek:daysOfTheMonth:monthsOfTheYear:weeksOfTheYear:daysOfTheYear:setPositions:end:)	EKRecurrenceRule.init(recurrenceWith:interval:daysOfTheWeek:daysOfTheMonth:monthsOfTheYear:weeksOfTheYear:daysOfTheYear:setPositions:end:)	init(recurrenceWith type: EKRecurrenceFrequency, interval: Int, daysOfTheWeek days: [EKRecurrenceDayOfWeek]?, daysOfTheMonth monthDays: [NSNumber]?, monthsOfTheYear months: [NSNumber]?, weeksOfTheYear: [NSNumber]?, daysOfTheYear: [NSNumber]?, setPositions: [NSNumber]?, end: EKRecurrenceEnd?)
+c:objc(cs)EKRecurrenceRule(im)initRecurrenceWithFrequency:interval:daysOfTheWeek:daysOfTheMonth:monthsOfTheYear:weeksOfTheYear:daysOfTheYear:setPositions:end:::SYNTHESIZED::c:objc(cs)EKRecurrenceRule	swift.init	init(recurrenceWithFrequency:interval:daysOfTheWeek:daysOfTheMonth:monthsOfTheYear:weeksOfTheYear:daysOfTheYear:setPositions:end:)	EKRecurrenceRule.init(recurrenceWithFrequency:interval:daysOfTheWeek:daysOfTheMonth:monthsOfTheYear:weeksOfTheYear:daysOfTheYear:setPositions:end:)	init(recurrenceWithFrequency type: EKRecurrenceFrequency, interval: Int, daysOfTheWeek days: [EKRecurrenceDayOfWeek]?, daysOfTheMonth monthDays: [NSNumber]?, monthsOfTheYear months: [NSNumber]?, weeksOfTheYear: [NSNumber]?, daysOfTheYear: [NSNumber]?, setPositions: [NSNumber]?, end: EKRecurrenceEnd?)
+c:objc(cs)EKRecurrenceRule(im)initRecurrenceWithFrequency:interval:end:	swift.init	init(recurrenceWith:interval:end:)	EKRecurrenceRule.init(recurrenceWith:interval:end:)	init(recurrenceWith type: EKRecurrenceFrequency, interval: Int, end: EKRecurrenceEnd?)
+c:objc(cs)EKRecurrenceRule(im)initRecurrenceWithFrequency:interval:end:::SYNTHESIZED::c:objc(cs)EKRecurrenceRule	swift.init	init(recurrenceWithFrequency:interval:end:)	EKRecurrenceRule.init(recurrenceWithFrequency:interval:end:)	init(recurrenceWithFrequency type: EKRecurrenceFrequency, interval: Int, end: EKRecurrenceEnd?)
+c:objc(cs)EKRecurrenceRule(py)calendarIdentifier	swift.property	calendarIdentifier	EKRecurrenceRule.calendarIdentifier	var calendarIdentifier: String { get }
+c:objc(cs)EKRecurrenceRule(py)daysOfTheMonth	swift.property	daysOfTheMonth	EKRecurrenceRule.daysOfTheMonth	var daysOfTheMonth: [NSNumber]? { get }
+c:objc(cs)EKRecurrenceRule(py)daysOfTheWeek	swift.property	daysOfTheWeek	EKRecurrenceRule.daysOfTheWeek	var daysOfTheWeek: [EKRecurrenceDayOfWeek]? { get }
+c:objc(cs)EKRecurrenceRule(py)daysOfTheYear	swift.property	daysOfTheYear	EKRecurrenceRule.daysOfTheYear	var daysOfTheYear: [NSNumber]? { get }
+c:objc(cs)EKRecurrenceRule(py)firstDayOfTheWeek	swift.property	firstDayOfTheWeek	EKRecurrenceRule.firstDayOfTheWeek	var firstDayOfTheWeek: Int { get }
+c:objc(cs)EKRecurrenceRule(py)frequency	swift.property	frequency	EKRecurrenceRule.frequency	var frequency: EKRecurrenceFrequency { get }
+c:objc(cs)EKRecurrenceRule(py)interval	swift.property	interval	EKRecurrenceRule.interval	var interval: Int { get }
+c:objc(cs)EKRecurrenceRule(py)monthsOfTheYear	swift.property	monthsOfTheYear	EKRecurrenceRule.monthsOfTheYear	var monthsOfTheYear: [NSNumber]? { get }
+c:objc(cs)EKRecurrenceRule(py)recurrenceEnd	swift.property	recurrenceEnd	EKRecurrenceRule.recurrenceEnd	@NSCopying var recurrenceEnd: EKRecurrenceEnd? { get set }
+c:objc(cs)EKRecurrenceRule(py)setPositions	swift.property	setPositions	EKRecurrenceRule.setPositions	var setPositions: [NSNumber]? { get }
+c:objc(cs)EKRecurrenceRule(py)weeksOfTheYear	swift.property	weeksOfTheYear	EKRecurrenceRule.weeksOfTheYear	var weeksOfTheYear: [NSNumber]? { get }
+c:objc(cs)EKReminder	swift.class	EKReminder	EKReminder	class EKReminder
+c:objc(cs)EKReminder(cm)reminderWithEventStore:	swift.init	init(eventStore:)	EKReminder.init(eventStore:)	init(eventStore: EKEventStore)
+c:objc(cs)EKReminder(py)completed	swift.property	isCompleted	EKReminder.isCompleted	var isCompleted: Bool { get set }
+c:objc(cs)EKReminder(py)completionDate	swift.property	completionDate	EKReminder.completionDate	var completionDate: Date? { get set }
+c:objc(cs)EKReminder(py)dueDateComponents	swift.property	dueDateComponents	EKReminder.dueDateComponents	var dueDateComponents: DateComponents? { get set }
+c:objc(cs)EKReminder(py)priority	swift.property	priority	EKReminder.priority	var priority: Int { get set }
+c:objc(cs)EKReminder(py)startDateComponents	swift.property	startDateComponents	EKReminder.startDateComponents	var startDateComponents: DateComponents? { get set }
+c:objc(cs)EKSource	swift.class	EKSource	EKSource	class EKSource
+c:objc(cs)EKSource(im)calendarsForEntityType:	swift.method	calendars(for:)	EKSource.calendars(for:)	func calendars(for entityType: EKEntityType) -> Set<EKCalendar>
+c:objc(cs)EKSource(py)isDelegate	swift.property	isDelegate	EKSource.isDelegate	var isDelegate: Bool { get }
+c:objc(cs)EKSource(py)sourceIdentifier	swift.property	sourceIdentifier	EKSource.sourceIdentifier	var sourceIdentifier: String { get }
+c:objc(cs)EKSource(py)sourceType	swift.property	sourceType	EKSource.sourceType	var sourceType: EKSourceType { get }
+c:objc(cs)EKSource(py)title	swift.property	title	EKSource.title	var title: String { get }
+c:objc(cs)EKStructuredLocation	swift.class	EKStructuredLocation	EKStructuredLocation	class EKStructuredLocation
+c:objc(cs)EKStructuredLocation(cm)locationWithMapItem:	swift.init	init(mapItem:)	EKStructuredLocation.init(mapItem:)	convenience init(mapItem: MKMapItem)
+c:objc(cs)EKStructuredLocation(cm)locationWithTitle:	swift.init	init(title:)	EKStructuredLocation.init(title:)	convenience init(title: String)
+c:objc(cs)EKStructuredLocation(py)geoLocation	swift.property	geoLocation	EKStructuredLocation.geoLocation	var geoLocation: CLLocation? { get set }
+c:objc(cs)EKStructuredLocation(py)radius	swift.property	radius	EKStructuredLocation.radius	var radius: Double { get set }
+c:objc(cs)EKStructuredLocation(py)title	swift.property	title	EKStructuredLocation.title	var title: String? { get set }
+c:objc(cs)EKVirtualConferenceDescriptor	swift.class	EKVirtualConferenceDescriptor	EKVirtualConferenceDescriptor	class EKVirtualConferenceDescriptor
+c:objc(cs)EKVirtualConferenceDescriptor(im)initWithTitle:URLDescriptors:conferenceDetails:	swift.init	init(title:urlDescriptors:conferenceDetails:)	EKVirtualConferenceDescriptor.init(title:urlDescriptors:conferenceDetails:)	init(title: String?, urlDescriptors URLDescriptors: [EKVirtualConferenceURLDescriptor], conferenceDetails: String?)
+c:objc(cs)EKVirtualConferenceDescriptor(im)initWithTitle:URLDescriptors:conferenceDetails:::SYNTHESIZED::c:objc(cs)EKVirtualConferenceDescriptor	swift.init	init(title:URLDescriptors:conferenceDetails:)	EKVirtualConferenceDescriptor.init(title:URLDescriptors:conferenceDetails:)	init(title: String?, URLDescriptors: [EKVirtualConferenceURLDescriptor], conferenceDetails: String?)
+c:objc(cs)EKVirtualConferenceDescriptor(py)URLDescriptors	swift.property	urlDescriptors	EKVirtualConferenceDescriptor.urlDescriptors	var urlDescriptors: [EKVirtualConferenceURLDescriptor] { get }
+c:objc(cs)EKVirtualConferenceDescriptor(py)conferenceDetails	swift.property	conferenceDetails	EKVirtualConferenceDescriptor.conferenceDetails	var conferenceDetails: String? { get }
+c:objc(cs)EKVirtualConferenceDescriptor(py)title	swift.property	title	EKVirtualConferenceDescriptor.title	var title: String? { get }
+c:objc(cs)EKVirtualConferenceProvider	swift.class	EKVirtualConferenceProvider	EKVirtualConferenceProvider	class EKVirtualConferenceProvider
+c:objc(cs)EKVirtualConferenceProvider(im)fetchAvailableRoomTypesWithCompletionHandler:	swift.method	fetchAvailableRoomTypes(completionHandler:)	EKVirtualConferenceProvider.fetchAvailableRoomTypes(completionHandler:)	func fetchAvailableRoomTypes(completionHandler: @escaping ([EKVirtualConferenceRoomTypeDescriptor]?, (any Error)?) -> Void)
+c:objc(cs)EKVirtualConferenceProvider(im)fetchVirtualConferenceForIdentifier:completionHandler:	swift.method	fetchVirtualConference(identifier:)	EKVirtualConferenceProvider.fetchVirtualConference(identifier:)	func fetchVirtualConference(identifier: EKVirtualConferenceRoomTypeIdentifier) async throws -> EKVirtualConferenceDescriptor
+c:objc(cs)EKVirtualConferenceRoomTypeDescriptor	swift.class	EKVirtualConferenceRoomTypeDescriptor	EKVirtualConferenceRoomTypeDescriptor	class EKVirtualConferenceRoomTypeDescriptor
+c:objc(cs)EKVirtualConferenceRoomTypeDescriptor(im)initWithTitle:identifier:	swift.init	init(title:identifier:)	EKVirtualConferenceRoomTypeDescriptor.init(title:identifier:)	init(title: String, identifier: EKVirtualConferenceRoomTypeIdentifier)
+c:objc(cs)EKVirtualConferenceRoomTypeDescriptor(py)identifier	swift.property	identifier	EKVirtualConferenceRoomTypeDescriptor.identifier	var identifier: EKVirtualConferenceRoomTypeIdentifier { get }
+c:objc(cs)EKVirtualConferenceRoomTypeDescriptor(py)title	swift.property	title	EKVirtualConferenceRoomTypeDescriptor.title	var title: String { get }
+c:objc(cs)EKVirtualConferenceURLDescriptor	swift.class	EKVirtualConferenceURLDescriptor	EKVirtualConferenceURLDescriptor	class EKVirtualConferenceURLDescriptor
+c:objc(cs)EKVirtualConferenceURLDescriptor(im)initWithTitle:URL:	swift.init	init(title:url:)	EKVirtualConferenceURLDescriptor.init(title:url:)	init(title: String?, url URL: URL)
+c:objc(cs)EKVirtualConferenceURLDescriptor(im)initWithTitle:URL:::SYNTHESIZED::c:objc(cs)EKVirtualConferenceURLDescriptor	swift.init	init(title:URL:)	EKVirtualConferenceURLDescriptor.init(title:URL:)	init(title: String?, URL: URL)
+c:objc(cs)EKVirtualConferenceURLDescriptor(py)URL	swift.property	url	EKVirtualConferenceURLDescriptor.url	var url: URL { get }
+c:objc(cs)EKVirtualConferenceURLDescriptor(py)title	swift.property	title	EKVirtualConferenceURLDescriptor.title	var title: String? { get }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)EKRecurrenceDayOfWeek	swift.init	init(coder:)	EKRecurrenceDayOfWeek.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)EKRecurrenceEnd	swift.init	init(coder:)	EKRecurrenceEnd.init(coder:)	init?(coder: NSCoder)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@EKErrorCode	swift.type.property	errorDomain	EKError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@EKErrorCode	swift.property	errorUserInfo	EKError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@EKErrorCode	swift.property	errorCode	EKError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@EKErrorCode	swift.func.op	~=(_:_:)	EKError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@EKErrorCode	swift.property	errorUserInfo	EKError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@EKErrorCode	swift.func.op	==(_:_:)	EKError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@EKErrorCode	swift.property	code	EKError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKErrorCode	swift.method	hash(into:)	EKError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@EKErrorCode	swift.property	userInfo	EKError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@EKErrorCode	swift.property	errorCode	EKError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@EKErrorCode	swift.property	hashValue	EKError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@EKErrorCode	swift.init	init(_:userInfo:)	EKError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC11EKErrorCodeLeV	swift.struct	EKError	EKError	struct EKError
+s:SC11EKErrorCodeLeV10noCalendarSoAAVvpZ	swift.type.property	noCalendar	EKError.noCalendar	static var noCalendar: EKError.Code { get }
+s:SC11EKErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	EKError.errorDomain	static var errorDomain: String { get }
+s:SC11EKErrorCodeLeV11invalidSpanSoAAVvpZ	swift.type.property	invalidSpan	EKError.invalidSpan	static var invalidSpan: EKError.Code { get }
+s:SC11EKErrorCodeLeV11noStartDateSoAAVvpZ	swift.type.property	noStartDate	EKError.noStartDate	static var noStartDate: EKError.Code { get }
+s:SC11EKErrorCodeLeV13datesInvertedSoAAVvpZ	swift.type.property	datesInverted	EKError.datesInverted	static var datesInverted: EKError.Code { get }
+s:SC11EKErrorCodeLeV14osNotSupportedSoAAVvpZ	swift.type.property	osNotSupported	EKError.osNotSupported	static var osNotSupported: EKError.Code { get }
+s:SC11EKErrorCodeLeV14sourceMismatchSoAAVvpZ	swift.type.property	sourceMismatch	EKError.sourceMismatch	static var sourceMismatch: EKError.Code { get }
+s:SC11EKErrorCodeLeV15eventNotMutableSoAAVvpZ	swift.type.property	eventNotMutable	EKError.eventNotMutable	static var eventNotMutable: EKError.Code { get }
+s:SC11EKErrorCodeLeV15internalFailureSoAAVvpZ	swift.type.property	internalFailure	EKError.internalFailure	static var internalFailure: EKError.Code { get }
+s:SC11EKErrorCodeLeV16calendarReadOnlySoAAVvpZ	swift.type.property	calendarReadOnly	EKError.calendarReadOnly	static var calendarReadOnly: EKError.Code { get }
+s:SC11EKErrorCodeLeV17invalidEntityTypeSoAAVvpZ	swift.type.property	invalidEntityType	EKError.invalidEntityType	static var invalidEntityType: EKError.Code { get }
+s:SC11EKErrorCodeLeV17priorityIsInvalidSoAAVvpZ	swift.type.property	priorityIsInvalid	EKError.priorityIsInvalid	static var priorityIsInvalid: EKError.Code { get }
+s:SC11EKErrorCodeLeV19calendarHasNoSourceSoAAVvpZ	swift.type.property	calendarHasNoSource	EKError.calendarHasNoSource	static var calendarHasNoSource: EKError.Code { get }
+s:SC11EKErrorCodeLeV19calendarIsImmutableSoAAVvpZ	swift.type.property	calendarIsImmutable	EKError.calendarIsImmutable	static var calendarIsImmutable: EKError.Code { get }
+s:SC11EKErrorCodeLeV20invitesCannotBeMovedSoAAVvpZ	swift.type.property	invitesCannotBeMoved	EKError.invitesCannotBeMoved	static var invitesCannotBeMoved: EKError.Code { get }
+s:SC11EKErrorCodeLeV23eventStoreNotAuthorizedSoAAVvpZ	swift.type.property	eventStoreNotAuthorized	EKError.eventStoreNotAuthorized	static var eventStoreNotAuthorized: EKError.Code { get }
+s:SC11EKErrorCodeLeV23startDateTooFarInFutureSoAAVvpZ	swift.type.property	startDateTooFarInFuture	EKError.startDateTooFarInFuture	static var startDateTooFarInFuture: EKError.Code { get }
+s:SC11EKErrorCodeLeV24sourceDoesNotAllowEventsSoAAVvpZ	swift.type.property	sourceDoesNotAllowEvents	EKError.sourceDoesNotAllowEvents	static var sourceDoesNotAllowEvents: EKError.Code { get }
+s:SC11EKErrorCodeLeV25procedureAlarmsNotMutableSoAAVvpZ	swift.type.property	procedureAlarmsNotMutable	EKError.procedureAlarmsNotMutable	static var procedureAlarmsNotMutable: EKError.Code { get }
+s:SC11EKErrorCodeLeV26alarmGreaterThanRecurrenceSoAAVvpZ	swift.type.property	alarmGreaterThanRecurrence	EKError.alarmGreaterThanRecurrence	static var alarmGreaterThanRecurrence: EKError.Code { get }
+s:SC11EKErrorCodeLeV26alarmProximityNotSupportedSoAAVvpZ	swift.type.property	alarmProximityNotSupported	EKError.alarmProximityNotSupported	static var alarmProximityNotSupported: EKError.Code { get }
+s:SC11EKErrorCodeLeV26calendarDoesNotAllowEventsSoAAVvpZ	swift.type.property	calendarDoesNotAllowEvents	EKError.calendarDoesNotAllowEvents	static var calendarDoesNotAllowEvents: EKError.Code { get }
+s:SC11EKErrorCodeLeV26invalidInviteReplyCalendarSoAAVvpZ	swift.type.property	invalidInviteReplyCalendar	EKError.invalidInviteReplyCalendar	static var invalidInviteReplyCalendar: EKError.Code { get }
+s:SC11EKErrorCodeLeV27sourceDoesNotAllowRemindersSoAAVvpZ	swift.type.property	sourceDoesNotAllowReminders	EKError.sourceDoesNotAllowReminders	static var sourceDoesNotAllowReminders: EKError.Code { get }
+s:SC11EKErrorCodeLeV29calendarDoesNotAllowRemindersSoAAVvpZ	swift.type.property	calendarDoesNotAllowReminders	EKError.calendarDoesNotAllowReminders	static var calendarDoesNotAllowReminders: EKError.Code { get }
+s:SC11EKErrorCodeLeV29durationGreaterThanRecurrenceSoAAVvpZ	swift.type.property	durationGreaterThanRecurrence	EKError.durationGreaterThanRecurrence	static var durationGreaterThanRecurrence: EKError.Code { get }
+s:SC11EKErrorCodeLeV29objectBelongsToDifferentStoreSoAAVvpZ	swift.type.property	objectBelongsToDifferentStore	EKError.objectBelongsToDifferentStore	static var objectBelongsToDifferentStore: EKError.Code { get }
+s:SC11EKErrorCodeLeV29reminderLocationsNotSupportedSoAAVvpZ	swift.type.property	reminderLocationsNotSupported	EKError.reminderLocationsNotSupported	static var reminderLocationsNotSupported: EKError.Code { get }
+s:SC11EKErrorCodeLeV30calendarSourceCannotBeModifiedSoAAVvpZ	swift.type.property	calendarSourceCannotBeModified	EKError.calendarSourceCannotBeModified	static var calendarSourceCannotBeModified: EKError.Code { get }
+s:SC11EKErrorCodeLeV30notificationCollectionMismatchSoAAVvpZ	swift.type.property	notificationCollectionMismatch	EKError.notificationCollectionMismatch	static var notificationCollectionMismatch: EKError.Code { get }
+s:SC11EKErrorCodeLeV31reminderAlarmContainsEmailOrUrlSoAAVvpZ	swift.type.property	reminderAlarmContainsEmailOrUrl	EKError.reminderAlarmContainsEmailOrUrl	static var reminderAlarmContainsEmailOrUrl: EKError.Code { get }
+s:SC11EKErrorCodeLeV31structuredLocationsNotSupportedSoAAVvpZ	swift.type.property	structuredLocationsNotSupported	EKError.structuredLocationsNotSupported	static var structuredLocationsNotSupported: EKError.Code { get }
+s:SC11EKErrorCodeLeV32recurringReminderRequiresDueDateSoAAVvpZ	swift.type.property	recurringReminderRequiresDueDate	EKError.recurringReminderRequiresDueDate	static var recurringReminderRequiresDueDate: EKError.Code { get }
+s:SC11EKErrorCodeLeV33notificationsCollectionFlagNotSetSoAAVvpZ	swift.type.property	notificationsCollectionFlagNotSet	EKError.notificationsCollectionFlagNotSet	static var notificationsCollectionFlagNotSet: EKError.Code { get }
+s:SC11EKErrorCodeLeV34notificationSavedWithoutCollectionSoAAVvpZ	swift.type.property	notificationSavedWithoutCollection	EKError.notificationSavedWithoutCollection	static var notificationSavedWithoutCollection: EKError.Code { get }
+s:SC11EKErrorCodeLeV35sourceDoesNotAllowCalendarAddDeleteSoAAVvpZ	swift.type.property	sourceDoesNotAllowCalendarAddDelete	EKError.sourceDoesNotAllowCalendarAddDelete	static var sourceDoesNotAllowCalendarAddDelete: EKError.Code { get }
+s:SC11EKErrorCodeLeV36startDateCollidesWithOtherOccurrenceSoAAVvpZ	swift.type.property	startDateCollidesWithOtherOccurrence	EKError.startDateCollidesWithOtherOccurrence	static var startDateCollidesWithOtherOccurrence: EKError.Code { get }
+s:SC11EKErrorCodeLeV4lastSoAAVvpZ	swift.type.property	last	EKError.last	static var last: EKError.Code { get }
+s:SC11EKErrorCodeLeV9noEndDateSoAAVvpZ	swift.type.property	noEndDate	EKError.noEndDate	static var noEndDate: EKError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKAlarmProximity	swift.func.op	!=(_:_:)	EKAlarmProximity.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKAlarmType	swift.func.op	!=(_:_:)	EKAlarmType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKAuthorizationStatus	swift.func.op	!=(_:_:)	EKAuthorizationStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.func.op	!=(_:_:)	EKCalendarEventAvailabilityMask.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKCalendarType	swift.func.op	!=(_:_:)	EKCalendarType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKEntityMask	swift.func.op	!=(_:_:)	EKEntityMask.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKEntityType	swift.func.op	!=(_:_:)	EKEntityType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKErrorCode	swift.func.op	!=(_:_:)	EKError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKEventAvailability	swift.func.op	!=(_:_:)	EKEventAvailability.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKEventStatus	swift.func.op	!=(_:_:)	EKEventStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKParticipantRole	swift.func.op	!=(_:_:)	EKParticipantRole.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKParticipantScheduleStatus	swift.func.op	!=(_:_:)	EKParticipantScheduleStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKParticipantStatus	swift.func.op	!=(_:_:)	EKParticipantStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKParticipantType	swift.func.op	!=(_:_:)	EKParticipantType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKRecurrenceFrequency	swift.func.op	!=(_:_:)	EKRecurrenceFrequency.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKReminderPriority	swift.func.op	!=(_:_:)	EKReminderPriority.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKSourceType	swift.func.op	!=(_:_:)	EKSourceType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKSpan	swift.func.op	!=(_:_:)	EKSpan.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKWeekday	swift.func.op	!=(_:_:)	EKWeekday.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKAlarmProximity	swift.property	hashValue	EKAlarmProximity.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKAlarmType	swift.property	hashValue	EKAlarmType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKAuthorizationStatus	swift.property	hashValue	EKAuthorizationStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKCalendarType	swift.property	hashValue	EKCalendarType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKEntityType	swift.property	hashValue	EKEntityType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKErrorCode	swift.property	hashValue	EKError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKEventAvailability	swift.property	hashValue	EKEventAvailability.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKEventStatus	swift.property	hashValue	EKEventStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKParticipantRole	swift.property	hashValue	EKParticipantRole.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKParticipantScheduleStatus	swift.property	hashValue	EKParticipantScheduleStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKParticipantStatus	swift.property	hashValue	EKParticipantStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKParticipantType	swift.property	hashValue	EKParticipantType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKRecurrenceFrequency	swift.property	hashValue	EKRecurrenceFrequency.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKReminderPriority	swift.property	hashValue	EKReminderPriority.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKSourceType	swift.property	hashValue	EKSourceType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKSpan	swift.property	hashValue	EKSpan.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKWeekday	swift.property	hashValue	EKWeekday.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKAlarmProximity	swift.method	hash(into:)	EKAlarmProximity.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKAlarmType	swift.method	hash(into:)	EKAlarmType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKAuthorizationStatus	swift.method	hash(into:)	EKAuthorizationStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKCalendarType	swift.method	hash(into:)	EKCalendarType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKEntityType	swift.method	hash(into:)	EKEntityType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKErrorCode	swift.method	hash(into:)	EKError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKEventAvailability	swift.method	hash(into:)	EKEventAvailability.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKEventStatus	swift.method	hash(into:)	EKEventStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKParticipantRole	swift.method	hash(into:)	EKParticipantRole.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKParticipantScheduleStatus	swift.method	hash(into:)	EKParticipantScheduleStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKParticipantStatus	swift.method	hash(into:)	EKParticipantStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKParticipantType	swift.method	hash(into:)	EKParticipantType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKRecurrenceFrequency	swift.method	hash(into:)	EKRecurrenceFrequency.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKReminderPriority	swift.method	hash(into:)	EKReminderPriority.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKSourceType	swift.method	hash(into:)	EKSourceType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKSpan	swift.method	hash(into:)	EKSpan.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKWeekday	swift.method	hash(into:)	EKWeekday.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11EKAlarmTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKAlarmType.init(rawValue:)	init?(rawValue: Int)
+s:So11EKErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So12EKEntityMaskV8rawValueABSu_tcfc	swift.init	init(rawValue:)	EKEntityMask.init(rawValue:)	init(rawValue: UInt)
+s:So12EKEntityTypeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	EKEntityType.init(rawValue:)	init?(rawValue: UInt)
+s:So12EKEventStoreC8EventKitE0cB7ChangedV	swift.struct	EKEventStore.EventStoreChanged	EKEventStore.EventStoreChanged	struct EventStoreChanged
+s:So12EKEventStoreC8EventKitE0cB7ChangedV11makeMessageyAESg10Foundation12NotificationVFZ	swift.type.method	makeMessage(_:)	EKEventStore.EventStoreChanged.makeMessage(_:)	@MainActor static func makeMessage(_ notification: Notification) -> EKEventStore.EventStoreChanged?
+s:So12EKEventStoreC8EventKitE0cB7ChangedV16makeNotificationy10Foundation0G0VAEFZ	swift.type.method	makeNotification(_:)	EKEventStore.EventStoreChanged.makeNotification(_:)	@MainActor static func makeNotification(_ message: EKEventStore.EventStoreChanged) -> Notification
+s:So12EKEventStoreC8EventKitE0cB7ChangedV4nameSo18NSNotificationNameavpZ	swift.type.property	name	EKEventStore.EventStoreChanged.name	static var name: Notification.Name { get }
+s:So12EKEventStoreC8EventKitE0cB7ChangedV7Subjecta	swift.typealias	EKEventStore.EventStoreChanged.Subject	EKEventStore.EventStoreChanged.Subject	typealias Subject = EKEventStore
+s:So12EKEventStoreC8EventKitE0cB7ChangedVAEycfc	swift.init	init()	EKEventStore.EventStoreChanged.init()	init()
+s:So12EKSourceTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKSourceType.init(rawValue:)	init?(rawValue: Int)
+s:So13EKEventStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKEventStatus.init(rawValue:)	init?(rawValue: Int)
+s:So14EKCalendarTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKCalendarType.init(rawValue:)	init?(rawValue: Int)
+s:So16EKAlarmProximityV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKAlarmProximity.init(rawValue:)	init?(rawValue: Int)
+s:So17EKParticipantRoleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKParticipantRole.init(rawValue:)	init?(rawValue: Int)
+s:So17EKParticipantTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKParticipantType.init(rawValue:)	init?(rawValue: Int)
+s:So18EKReminderPriorityV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	EKReminderPriority.init(rawValue:)	init?(rawValue: UInt)
+s:So19EKEventAvailabilityV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKEventAvailability.init(rawValue:)	init?(rawValue: Int)
+s:So19EKParticipantStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKParticipantStatus.init(rawValue:)	init?(rawValue: Int)
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE04makeF0yxSgAC12NotificationVFZ::SYNTHESIZED::s:So12EKEventStoreC8EventKitE0cB7ChangedV	swift.type.method	makeMessage(_:)	EKEventStore.EventStoreChanged.makeMessage(_:)	@MainActor static func makeMessage(_ notification: Notification) -> Self?
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE16makeNotificationyAC0H0VxFZ::SYNTHESIZED::s:So12EKEventStoreC8EventKitE0cB7ChangedV	swift.type.method	makeNotification(_:)	EKEventStore.EventStoreChanged.makeNotification(_:)	@MainActor static func makeNotification(_ message: Self) -> Notification
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE4nameSo0A4NameavpZ::SYNTHESIZED::s:So12EKEventStoreC8EventKitE0cB7ChangedV	swift.type.property	name	EKEventStore.EventStoreChanged.name	static var name: Notification.Name { get }
+s:So20NSNotificationCenterC10FoundationE17MessageIdentifierP8EventKitAbCE04BasedE0Vy_So12EKEventStoreCAFE0fJ7ChangedVGRszrlE7changedAMvpZ	swift.type.property	changed	NotificationCenter.MessageIdentifier.changed	static var changed: NotificationCenter.BaseMessageIdentifier<EKEventStore.EventStoreChanged> { get }
+s:So21EKAuthorizationStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKAuthorizationStatus.init(rawValue:)	init?(rawValue: Int)
+s:So21EKRecurrenceFrequencyV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKRecurrenceFrequency.init(rawValue:)	init?(rawValue: Int)
+s:So27EKParticipantScheduleStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKParticipantScheduleStatus.init(rawValue:)	init?(rawValue: Int)
+s:So31EKCalendarEventAvailabilityMaskV8rawValueABSu_tcfc	swift.init	init(rawValue:)	EKCalendarEventAvailabilityMask.init(rawValue:)	init(rawValue: UInt)
+s:So6EKSpanV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKSpan.init(rawValue:)	init?(rawValue: Int)
+s:So9EKWeekdayV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	EKWeekday.init(rawValue:)	init?(rawValue: Int)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.init	init(arrayLiteral:)	EKCalendarEventAvailabilityMask.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@EKEntityMask	swift.init	init(arrayLiteral:)	EKEntityMask.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	isDisjoint(with:)	EKCalendarEventAvailabilityMask.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	isDisjoint(with:)	EKEntityMask.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	isSuperset(of:)	EKCalendarEventAvailabilityMask.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	isSuperset(of:)	EKEntityMask.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	subtracting(_:)	EKCalendarEventAvailabilityMask.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	subtracting(_:)	EKEntityMask.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	isStrictSubset(of:)	EKCalendarEventAvailabilityMask.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	isStrictSubset(of:)	EKEntityMask.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	isStrictSuperset(of:)	EKCalendarEventAvailabilityMask.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	isStrictSuperset(of:)	EKEntityMask.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.property	isEmpty	EKCalendarEventAvailabilityMask.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@EKEntityMask	swift.property	isEmpty	EKEntityMask.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	isSubset(of:)	EKCalendarEventAvailabilityMask.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	isSubset(of:)	EKEntityMask.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	subtract(_:)	EKCalendarEventAvailabilityMask.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	subtract(_:)	EKEntityMask.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.init	init(_:)	EKCalendarEventAvailabilityMask.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@EKEntityMask	swift.init	init(_:)	EKEntityMask.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@EKErrorCode	swift.property	localizedDescription	EKError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	insert(_:)	EKCalendarEventAvailabilityMask.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	insert(_:)	EKEntityMask.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	remove(_:)	EKCalendarEventAvailabilityMask.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	remove(_:)	EKEntityMask.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	update(with:)	EKCalendarEventAvailabilityMask.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	update(with:)	EKEntityMask.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	contains(_:)	EKCalendarEventAvailabilityMask.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	contains(_:)	EKEntityMask.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	intersection(_:)	EKCalendarEventAvailabilityMask.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	intersection(_:)	EKEntityMask.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	symmetricDifference(_:)	EKCalendarEventAvailabilityMask.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	symmetricDifference(_:)	EKEntityMask.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	union(_:)	EKCalendarEventAvailabilityMask.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	union(_:)	EKEntityMask.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	formIntersection(_:)	EKCalendarEventAvailabilityMask.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	formIntersection(_:)	EKEntityMask.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	formSymmetricDifference(_:)	EKCalendarEventAvailabilityMask.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	formSymmetricDifference(_:)	EKEntityMask.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.method	formUnion(_:)	EKCalendarEventAvailabilityMask.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@EKEntityMask	swift.method	formUnion(_:)	EKEntityMask.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@EKCalendarEventAvailabilityMask	swift.init	init()	EKCalendarEventAvailabilityMask.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@EKEntityMask	swift.init	init()	EKEntityMask.init()	init()

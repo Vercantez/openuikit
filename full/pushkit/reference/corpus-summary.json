@@ -1,0 +1,59 @@
+{
+  "module": "PushKit",
+  "moduleRecord": {
+    "app_coverage_count": 3,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 4,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 75,
+    "iphoneos_runtime_focus_launch_build_rank": 75,
+    "module": "PushKit",
+    "occurrence_count": 4,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "9d663639ce057e42a51c3bbc8e8341a6a1c0eb3baa0686c10ef7b8eb481fe010",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Signal/Notifications/PushRegistrationManager.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "e3576250e90697b4e77b861e85ae3ac2d21e886271aeee7f37a4b33f639aa256",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "submodules/TelegramUI/Sources/AppDelegate.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "58fb9460b6b814b9b2c2f763396bd214a24c441c67b476d095c3ae2808f29066",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Riot/Managers/PushNotification/PushNotificationService.m",
+          "Riot/Modules/Application/AppDelegate.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 75,
+    "byFocusLaunchBuildRelevance": 75
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

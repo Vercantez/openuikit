@@ -1,0 +1,78 @@
+{
+  "module": "ActivityKit",
+  "moduleRecord": {
+    "app_coverage_count": 4,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 18,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 57,
+    "iphoneos_runtime_focus_launch_build_rank": 57,
+    "module": "ActivityKit",
+    "occurrence_count": 18,
+    "per_app": {
+      "duckduckgo-ios": {
+        "evidence_sha256": "90acc83c8426d63a848c65730433b4486e717bd7c5b165d48f8986c9fa8ba28f",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "DuckDuckGo/VPNSnoozeActivityAttributes.swift",
+          "DuckDuckGo/VPNSnoozeLiveActivityManager.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "1422d2c486b535af3c14435c62a9be20722dc36d5823228c6833cbb829b85364",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "firefox-ios/Client/Frontend/Browser/BrowserViewController/Views/BrowserViewController.swift",
+          "firefox-ios/Client/Frontend/Browser/DownloadHelper/DownloadLiveActivityWrapper.swift",
+          "firefox-ios/WidgetKit/DownloadManager/DownloadLiveActivity.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "fd0d05cb0573300057250741317a97e3fd4bc7029c66a83493eea9ce9765e571",
+        "file_count": 10,
+        "occurrence_count": 10,
+        "sample_paths": [
+          "Sources/App/Settings/LiveActivity/LiveActivitySettingsView.swift",
+          "Sources/Extensions/Widgets/LiveActivity/HADynamicIsland.swift",
+          "Sources/Extensions/Widgets/LiveActivity/HALiveActivityCompactView.swift",
+          "Sources/Extensions/Widgets/LiveActivity/HALiveActivityConfiguration.swift",
+          "Sources/Extensions/Widgets/LiveActivity/HALiveActivityConfigurationSupplemental.swift",
+          "Sources/Extensions/Widgets/LiveActivity/HALiveActivityLockScreenRouterView.swift",
+          "Sources/Extensions/Widgets/LiveActivity/HALockScreenView.swift",
+          "Sources/Shared/LiveActivity/HALiveActivityAttributes.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "abfecfeedef813ad5e38dd31e7bc57fc1faff70207d89adb3a54bc2cd8828db2",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "WidgetExtension/Sleep Timer/SleepTimerLiveActivityWidget.swift",
+          "podcasts/LiveActivity/SleepTimerActivityAttributes.swift",
+          "podcasts/LiveActivity/SleepTimerLiveActivityController.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 57,
+    "byFocusLaunchBuildRelevance": 57
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

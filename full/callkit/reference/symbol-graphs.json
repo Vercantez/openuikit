@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 14,
+  "duplicateOccurrenceCount": 14,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CallKit.symbols.json",
+      "relationshipCount": 635,
+      "sha256": "906c0209bbb51d9d011cfe961a68c9e156fd5fff788138527fc8d5c64c262d29",
+      "symbolCount": 380
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CallKit",
+  "relationshipCount": 635,
+  "schema": 1,
+  "symbolCount": 366,
+  "target": "arm64-apple-ios26.0"
+}

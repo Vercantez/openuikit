@@ -1,0 +1,120 @@
+{
+  "module": "CoreData",
+  "moduleRecord": {
+    "app_coverage_count": 6,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 288,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 44,
+    "iphoneos_runtime_focus_launch_build_rank": 47,
+    "module": "CoreData",
+    "occurrence_count": 288,
+    "per_app": {
+      "WordPress-iOS": {
+        "evidence_sha256": "67d77049364e87cd5d194dc4efa8b0cae698939695b4868b82aab4dc4ba5acb2",
+        "file_count": 177,
+        "occurrence_count": 177,
+        "sample_paths": [
+          "Modules/Sources/ShareExtensionCore/Data/MediaUploadOperation.swift",
+          "Modules/Sources/ShareExtensionCore/Data/PostUploadOperation.swift",
+          "Modules/Sources/ShareExtensionCore/Data/SharedCoreDataStack.swift",
+          "Modules/Sources/ShareExtensionCore/Data/UploadOperation.swift",
+          "Modules/Sources/WordPressData/Blog+Extensions.swift",
+          "Modules/Sources/WordPressData/Mapping/ReaderPost+Mapping.swift",
+          "Modules/Sources/WordPressData/Swift/AbstractPost+CoreDataProperties.swift",
+          "Modules/Sources/WordPressData/Swift/AbstractPost+Local.swift"
+        ]
+      },
+      "duckduckgo-ios": {
+        "evidence_sha256": "91573d5dc41cc633e46d626f5f79cbb5082a2031bcac4acd3a27f5526d2488ae",
+        "file_count": 25,
+        "occurrence_count": 25,
+        "sample_paths": [
+          "Core/BookmarkObjects.swift",
+          "Core/BookmarksCachingSearch.swift",
+          "Core/BookmarksModelsErrorHandling.swift",
+          "Core/BookmarksStateRepair.swift",
+          "Core/BookmarksStateValidation.swift",
+          "Core/DDGPersistenceContainer.swift",
+          "Core/Database.swift",
+          "Core/HistoryManager.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "839906f2ecb27c4589e979d916229d6998f86c133ab0cdd4ccd3af0051069375",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Riot/Managers/URLPreviews/Core Data/URLPreviewDataMO.swift",
+          "Riot/Managers/URLPreviews/Core Data/URLPreviewImageTransformer.swift",
+          "Riot/Managers/URLPreviews/Core Data/URLPreviewStore.swift",
+          "Riot/Managers/URLPreviews/Core Data/URLPreviewUserDataMO.swift"
+        ]
+      },
+      "mastodon-ios": {
+        "evidence_sha256": "2d4b3f09d989228a405b6a2922dfdf9adac15c8298bff3677b80c88204f3334e",
+        "file_count": 26,
+        "occurrence_count": 26,
+        "sample_paths": [
+          "Mastodon/Diffable/Report/ReportSection.swift",
+          "Mastodon/Diffable/Status/StatusSection.swift",
+          "MastodonSDK/Sources/CoreDataStack/CoreDataStack.swift",
+          "MastodonSDK/Sources/CoreDataStack/Entity/App/Setting.swift",
+          "MastodonSDK/Sources/CoreDataStack/Entity/Mastodon/Subscription.swift",
+          "MastodonSDK/Sources/CoreDataStack/Entity/Mastodon/SubscriptionAlerts.swift",
+          "MastodonSDK/Sources/CoreDataStack/Extension/Collection.swift",
+          "MastodonSDK/Sources/CoreDataStack/Extension/NSManagedObjectContext.swift"
+        ]
+      },
+      "simplenote-ios": {
+        "evidence_sha256": "6c8b7d939b51e802e341a396f02977b7e86b94c7c1ee98298d38a7fb039d2d97",
+        "file_count": 10,
+        "occurrence_count": 10,
+        "sample_paths": [
+          "Simplenote/Classes/NSManagedObjectContext+CoreDataExtensions.h",
+          "Simplenote/CoreDataManager.swift",
+          "Simplenote/Preferences.m",
+          "Simplenote/RecoveryUnarchiver.swift",
+          "Simplenote/SharedStorageMigrator.swift",
+          "Simplenote/Supporting Files/Simplenote-Prefix.pch",
+          "SimplenoteIntents/IntentHandler.swift",
+          "SimplenoteWidgets/Models/Note+Widget.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "18a3fe197e600e578df3a5753f2d277c1a4c4224554cac700d64fb52799b54ba",
+        "file_count": 46,
+        "occurrence_count": 46,
+        "sample_paths": [
+          "WMF Framework/CacheGroup+CoreDataClass.swift",
+          "WMF Framework/CacheGroup+CoreDataProperties.swift",
+          "WMF Framework/CacheItem+CoreDataClass.swift",
+          "WMF Framework/CacheItem+CoreDataProperties.swift",
+          "WMF Framework/Event Platform/EPEventRecord+CoreDataClass.swift",
+          "WMF Framework/Event Platform/EPEventRecord+CoreDataProperties.swift",
+          "WMF Framework/NSManagedObjectContext+NavigationState.swift",
+          "WMF Framework/NSManagedObjectContext+WMFKeyValue.h"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 44,
+    "byFocusLaunchBuildRelevance": 47
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

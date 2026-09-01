@@ -1,0 +1,136 @@
+precise	kind	title	path	declaration
+c:@E@RPCameraPosition	swift.enum	RPCameraPosition	RPCameraPosition	enum RPCameraPosition
+c:@E@RPCameraPosition@RPCameraPositionBack	swift.enum.case	RPCameraPosition.back	RPCameraPosition.back	case back
+c:@E@RPCameraPosition@RPCameraPositionFront	swift.enum.case	RPCameraPosition.front	RPCameraPosition.front	case front
+c:@E@RPRecordingErrorCode	swift.enum	RPRecordingErrorCode	RPRecordingErrorCode	enum RPRecordingErrorCode
+c:@E@RPRecordingErrorCode@RPRecordingErrorActivePhoneCall	swift.enum.case	RPRecordingErrorCode.activePhoneCall	RPRecordingErrorCode.activePhoneCall	case activePhoneCall
+c:@E@RPRecordingErrorCode@RPRecordingErrorAttemptToStartInRecordingState	swift.enum.case	RPRecordingErrorCode.attemptToStartInRecordingState	RPRecordingErrorCode.attemptToStartInRecordingState	case attemptToStartInRecordingState
+c:@E@RPRecordingErrorCode@RPRecordingErrorAttemptToStopNonRecording	swift.enum.case	RPRecordingErrorCode.attemptToStopNonRecording	RPRecordingErrorCode.attemptToStopNonRecording	case attemptToStopNonRecording
+c:@E@RPRecordingErrorCode@RPRecordingErrorBroadcastInvalidSession	swift.enum.case	RPRecordingErrorCode.broadcastInvalidSession	RPRecordingErrorCode.broadcastInvalidSession	case broadcastInvalidSession
+c:@E@RPRecordingErrorCode@RPRecordingErrorBroadcastSetupFailed	swift.enum.case	RPRecordingErrorCode.broadcastSetupFailed	RPRecordingErrorCode.broadcastSetupFailed	case broadcastSetupFailed
+c:@E@RPRecordingErrorCode@RPRecordingErrorCarPlay	swift.enum.case	RPRecordingErrorCode.carPlay	RPRecordingErrorCode.carPlay	case carPlay
+c:@E@RPRecordingErrorCode@RPRecordingErrorCodeSuccessful	swift.enum.case	RPRecordingErrorCode.codeSuccessful	RPRecordingErrorCode.codeSuccessful	case codeSuccessful
+c:@E@RPRecordingErrorCode@RPRecordingErrorContentResize	swift.enum.case	RPRecordingErrorCode.contentResize	RPRecordingErrorCode.contentResize	case contentResize
+c:@E@RPRecordingErrorCode@RPRecordingErrorDisabled	swift.enum.case	RPRecordingErrorCode.disabled	RPRecordingErrorCode.disabled	case disabled
+c:@E@RPRecordingErrorCode@RPRecordingErrorEntitlements	swift.enum.case	RPRecordingErrorCode.entitlements	RPRecordingErrorCode.entitlements	case entitlements
+c:@E@RPRecordingErrorCode@RPRecordingErrorExportClipToURLInProgress	swift.enum.case	RPRecordingErrorCode.exportClipToURLInProgress	RPRecordingErrorCode.exportClipToURLInProgress	case exportClipToURLInProgress
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailed	swift.enum.case	RPRecordingErrorCode.failed	RPRecordingErrorCode.failed	case failed
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedApplicationConnectionInterrupted	swift.enum.case	RPRecordingErrorCode.failedApplicationConnectionInterrupted	RPRecordingErrorCode.failedApplicationConnectionInterrupted	case failedApplicationConnectionInterrupted
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedApplicationConnectionInvalid	swift.enum.case	RPRecordingErrorCode.failedApplicationConnectionInvalid	RPRecordingErrorCode.failedApplicationConnectionInvalid	case failedApplicationConnectionInvalid
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedAssetWriterExportCanceled	swift.enum.case	RPRecordingErrorCode.failedAssetWriterExportCanceled	RPRecordingErrorCode.failedAssetWriterExportCanceled	case failedAssetWriterExportCanceled
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedAssetWriterExportFailed	swift.enum.case	RPRecordingErrorCode.failedAssetWriterExportFailed	RPRecordingErrorCode.failedAssetWriterExportFailed	case failedAssetWriterExportFailed
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedAssetWriterFailedToSave	swift.enum.case	RPRecordingErrorCode.failedAssetWriterFailedToSave	RPRecordingErrorCode.failedAssetWriterFailedToSave	case failedAssetWriterFailedToSave
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedAssetWriterInWrongState	swift.enum.case	RPRecordingErrorCode.failedAssetWriterInWrongState	RPRecordingErrorCode.failedAssetWriterInWrongState	case failedAssetWriterInWrongState
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedIncorrectTimeStamps	swift.enum.case	RPRecordingErrorCode.failedIncorrectTimeStamps	RPRecordingErrorCode.failedIncorrectTimeStamps	case failedIncorrectTimeStamps
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedMediaServicesFailure	swift.enum.case	RPRecordingErrorCode.failedMediaServicesFailure	RPRecordingErrorCode.failedMediaServicesFailure	case failedMediaServicesFailure
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedNoAssetWriter	swift.enum.case	RPRecordingErrorCode.failedNoAssetWriter	RPRecordingErrorCode.failedNoAssetWriter	case failedNoAssetWriter
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedNoMatchingApplicationContext	swift.enum.case	RPRecordingErrorCode.failedNoMatchingApplicationContext	RPRecordingErrorCode.failedNoMatchingApplicationContext	case failedNoMatchingApplicationContext
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedToObtainURL	swift.enum.case	RPRecordingErrorCode.failedToObtainURL	RPRecordingErrorCode.failedToObtainURL	case failedToObtainURL
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedToProcessFirstSample	swift.enum.case	RPRecordingErrorCode.failedToProcessFirstSample	RPRecordingErrorCode.failedToProcessFirstSample	case failedToProcessFirstSample
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedToRemoveFile	swift.enum.case	RPRecordingErrorCode.failedToRemoveFile	RPRecordingErrorCode.failedToRemoveFile	case failedToRemoveFile
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedToSave	swift.enum.case	RPRecordingErrorCode.failedToSave	RPRecordingErrorCode.failedToSave	case failedToSave
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedToStart	swift.enum.case	RPRecordingErrorCode.failedToStart	RPRecordingErrorCode.failedToStart	case failedToStart
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedToStartCaptureStack	swift.enum.case	RPRecordingErrorCode.failedToStartCaptureStack	RPRecordingErrorCode.failedToStartCaptureStack	case failedToStartCaptureStack
+c:@E@RPRecordingErrorCode@RPRecordingErrorFilePermissions	swift.enum.case	RPRecordingErrorCode.filePermissions	RPRecordingErrorCode.filePermissions	case filePermissions
+c:@E@RPRecordingErrorCode@RPRecordingErrorInsufficientStorage	swift.enum.case	RPRecordingErrorCode.insufficientStorage	RPRecordingErrorCode.insufficientStorage	case insufficientStorage
+c:@E@RPRecordingErrorCode@RPRecordingErrorInterrupted	swift.enum.case	RPRecordingErrorCode.interrupted	RPRecordingErrorCode.interrupted	case interrupted
+c:@E@RPRecordingErrorCode@RPRecordingErrorInvalidParameter	swift.enum.case	RPRecordingErrorCode.invalidParameter	RPRecordingErrorCode.invalidParameter	case invalidParameter
+c:@E@RPRecordingErrorCode@RPRecordingErrorPhotoFailure	swift.enum.case	RPRecordingErrorCode.photoFailure	RPRecordingErrorCode.photoFailure	case photoFailure
+c:@E@RPRecordingErrorCode@RPRecordingErrorRecordingInvalidSession	swift.enum.case	RPRecordingErrorCode.recordingInvalidSession	RPRecordingErrorCode.recordingInvalidSession	case recordingInvalidSession
+c:@E@RPRecordingErrorCode@RPRecordingErrorSystemDormancy	swift.enum.case	RPRecordingErrorCode.systemDormancy	RPRecordingErrorCode.systemDormancy	case systemDormancy
+c:@E@RPRecordingErrorCode@RPRecordingErrorUnknown	swift.enum.case	RPRecordingErrorCode.unknown	RPRecordingErrorCode.unknown	case unknown
+c:@E@RPRecordingErrorCode@RPRecordingErrorUserDeclined	swift.enum.case	RPRecordingErrorCode.userDeclined	RPRecordingErrorCode.userDeclined	case userDeclined
+c:@E@RPRecordingErrorCode@RPRecordingErrorVideoMixingFailure	swift.enum.case	RPRecordingErrorCode.videoMixingFailure	RPRecordingErrorCode.videoMixingFailure	case videoMixingFailure
+c:@E@RPSampleBufferType	swift.enum	RPSampleBufferType	RPSampleBufferType	enum RPSampleBufferType
+c:@E@RPSampleBufferType@RPSampleBufferTypeAudioApp	swift.enum.case	RPSampleBufferType.audioApp	RPSampleBufferType.audioApp	case audioApp
+c:@E@RPSampleBufferType@RPSampleBufferTypeAudioMic	swift.enum.case	RPSampleBufferType.audioMic	RPSampleBufferType.audioMic	case audioMic
+c:@E@RPSampleBufferType@RPSampleBufferTypeVideo	swift.enum.case	RPSampleBufferType.video	RPSampleBufferType.video	case video
+c:@RPApplicationInfoBundleIdentifierKey	swift.var	RPApplicationInfoBundleIdentifierKey	RPApplicationInfoBundleIdentifierKey	let RPApplicationInfoBundleIdentifierKey: String
+c:@RPRecordingErrorDomain	swift.var	RPRecordingErrorDomain	RPRecordingErrorDomain	let RPRecordingErrorDomain: String
+c:@RPVideoSampleOrientationKey	swift.var	RPVideoSampleOrientationKey	RPVideoSampleOrientationKey	let RPVideoSampleOrientationKey: String
+c:@SCStreamErrorDomain	swift.var	SCStreamErrorDomain	SCStreamErrorDomain	let SCStreamErrorDomain: String
+c:objc(cs)NSExtensionContext(im)completeRequestWithBroadcastURL:broadcastConfiguration:setupInfo:	swift.method	completeRequest(withBroadcast:broadcastConfiguration:setupInfo:)	NSExtensionContext.completeRequest(withBroadcast:broadcastConfiguration:setupInfo:)	func completeRequest(withBroadcast broadcastURL: URL, broadcastConfiguration: RPBroadcastConfiguration, setupInfo: [String : any NSCoding & NSObjectProtocol]?)
+c:objc(cs)NSExtensionContext(im)completeRequestWithBroadcastURL:setupInfo:	swift.method	completeRequest(withBroadcast:setupInfo:)	NSExtensionContext.completeRequest(withBroadcast:setupInfo:)	func completeRequest(withBroadcast broadcastURL: URL, setupInfo: [String : any NSCoding & NSObjectProtocol]?)
+c:objc(cs)NSExtensionContext(im)loadBroadcastingApplicationInfoWithCompletion:	swift.method	loadBroadcastingApplicationInfo(completion:)	NSExtensionContext.loadBroadcastingApplicationInfo(completion:)	func loadBroadcastingApplicationInfo(completion handler: @escaping (String, String, UIImage?) -> Void)
+c:objc(cs)RPBroadcastActivityViewController	swift.class	RPBroadcastActivityViewController	RPBroadcastActivityViewController	@MainActor class RPBroadcastActivityViewController
+c:objc(cs)RPBroadcastActivityViewController(cm)loadBroadcastActivityViewControllerWithHandler:	swift.type.method	load(handler:)	RPBroadcastActivityViewController.load(handler:)	@MainActor class func load(handler: @escaping (RPBroadcastActivityViewController?, (any Error)?) -> Void)
+c:objc(cs)RPBroadcastActivityViewController(cm)loadBroadcastActivityViewControllerWithPreferredExtension:handler:	swift.type.method	load(withPreferredExtension:handler:)	RPBroadcastActivityViewController.load(withPreferredExtension:handler:)	@MainActor class func load(withPreferredExtension preferredExtension: String?, handler: @escaping (RPBroadcastActivityViewController?, (any Error)?) -> Void)
+c:objc(cs)RPBroadcastActivityViewController(py)delegate	swift.property	delegate	RPBroadcastActivityViewController.delegate	@MainActor weak var delegate: (any RPBroadcastActivityViewControllerDelegate)? { get set }
+c:objc(cs)RPBroadcastConfiguration	swift.class	RPBroadcastConfiguration	RPBroadcastConfiguration	class RPBroadcastConfiguration
+c:objc(cs)RPBroadcastConfiguration(py)clipDuration	swift.property	clipDuration	RPBroadcastConfiguration.clipDuration	var clipDuration: TimeInterval { get set }
+c:objc(cs)RPBroadcastConfiguration(py)videoCompressionProperties	swift.property	videoCompressionProperties	RPBroadcastConfiguration.videoCompressionProperties	var videoCompressionProperties: [String : any NSSecureCoding & NSObjectProtocol]? { get set }
+c:objc(cs)RPBroadcastController	swift.class	RPBroadcastController	RPBroadcastController	class RPBroadcastController
+c:objc(cs)RPBroadcastController(im)finishBroadcastWithHandler:	swift.method	finishBroadcast(handler:)	RPBroadcastController.finishBroadcast(handler:)	func finishBroadcast(handler: @escaping ((any Error)?) -> Void)
+c:objc(cs)RPBroadcastController(im)pauseBroadcast	swift.method	pauseBroadcast()	RPBroadcastController.pauseBroadcast()	func pauseBroadcast()
+c:objc(cs)RPBroadcastController(im)resumeBroadcast	swift.method	resumeBroadcast()	RPBroadcastController.resumeBroadcast()	func resumeBroadcast()
+c:objc(cs)RPBroadcastController(im)startBroadcastWithHandler:	swift.method	startBroadcast(handler:)	RPBroadcastController.startBroadcast(handler:)	func startBroadcast(handler: @escaping ((any Error)?) -> Void)
+c:objc(cs)RPBroadcastController(py)broadcastExtensionBundleID	swift.property	broadcastExtensionBundleID	RPBroadcastController.broadcastExtensionBundleID	var broadcastExtensionBundleID: String? { get }
+c:objc(cs)RPBroadcastController(py)broadcastURL	swift.property	broadcastURL	RPBroadcastController.broadcastURL	var broadcastURL: URL { get }
+c:objc(cs)RPBroadcastController(py)broadcasting	swift.property	isBroadcasting	RPBroadcastController.isBroadcasting	var isBroadcasting: Bool { get }
+c:objc(cs)RPBroadcastController(py)delegate	swift.property	delegate	RPBroadcastController.delegate	weak var delegate: (any RPBroadcastControllerDelegate)? { get set }
+c:objc(cs)RPBroadcastController(py)paused	swift.property	isPaused	RPBroadcastController.isPaused	var isPaused: Bool { get }
+c:objc(cs)RPBroadcastController(py)serviceInfo	swift.property	serviceInfo	RPBroadcastController.serviceInfo	var serviceInfo: [String : any NSCoding & NSObjectProtocol]? { get }
+c:objc(cs)RPBroadcastHandler	swift.class	RPBroadcastHandler	RPBroadcastHandler	class RPBroadcastHandler
+c:objc(cs)RPBroadcastHandler(im)updateBroadcastURL:	swift.method	updateBroadcast(_:)	RPBroadcastHandler.updateBroadcast(_:)	func updateBroadcast(_ broadcastURL: URL)
+c:objc(cs)RPBroadcastHandler(im)updateServiceInfo:	swift.method	updateServiceInfo(_:)	RPBroadcastHandler.updateServiceInfo(_:)	func updateServiceInfo(_ serviceInfo: [String : any NSCoding & NSObjectProtocol])
+c:objc(cs)RPBroadcastMP4ClipHandler	swift.class	RPBroadcastMP4ClipHandler	RPBroadcastMP4ClipHandler	class RPBroadcastMP4ClipHandler
+c:objc(cs)RPBroadcastMP4ClipHandler(im)finishedProcessingMP4ClipWithUpdatedBroadcastConfiguration:error:	swift.method	finishedProcessingMP4Clip(withUpdatedBroadcastConfiguration:error:)	RPBroadcastMP4ClipHandler.finishedProcessingMP4Clip(withUpdatedBroadcastConfiguration:error:)	func finishedProcessingMP4Clip(withUpdatedBroadcastConfiguration broadcastConfiguration: RPBroadcastConfiguration?, error: (any Error)?)
+c:objc(cs)RPBroadcastMP4ClipHandler(im)processMP4ClipWithURL:setupInfo:finished:	swift.method	processMP4Clip(with:setupInfo:finished:)	RPBroadcastMP4ClipHandler.processMP4Clip(with:setupInfo:finished:)	func processMP4Clip(with mp4ClipURL: URL?, setupInfo: [String : NSObject]?, finished: Bool)
+c:objc(cs)RPBroadcastSampleHandler	swift.class	RPBroadcastSampleHandler	RPBroadcastSampleHandler	class RPBroadcastSampleHandler
+c:objc(cs)RPBroadcastSampleHandler(im)broadcastAnnotatedWithApplicationInfo:	swift.method	broadcastAnnotated(withApplicationInfo:)	RPBroadcastSampleHandler.broadcastAnnotated(withApplicationInfo:)	func broadcastAnnotated(withApplicationInfo applicationInfo: [AnyHashable : Any])
+c:objc(cs)RPBroadcastSampleHandler(im)broadcastFinished	swift.method	broadcastFinished()	RPBroadcastSampleHandler.broadcastFinished()	func broadcastFinished()
+c:objc(cs)RPBroadcastSampleHandler(im)broadcastPaused	swift.method	broadcastPaused()	RPBroadcastSampleHandler.broadcastPaused()	func broadcastPaused()
+c:objc(cs)RPBroadcastSampleHandler(im)broadcastResumed	swift.method	broadcastResumed()	RPBroadcastSampleHandler.broadcastResumed()	func broadcastResumed()
+c:objc(cs)RPBroadcastSampleHandler(im)broadcastStartedWithSetupInfo:	swift.method	broadcastStarted(withSetupInfo:)	RPBroadcastSampleHandler.broadcastStarted(withSetupInfo:)	func broadcastStarted(withSetupInfo setupInfo: [String : NSObject]?)
+c:objc(cs)RPBroadcastSampleHandler(im)finishBroadcastWithError:	swift.method	finishBroadcastWithError(_:)	RPBroadcastSampleHandler.finishBroadcastWithError(_:)	func finishBroadcastWithError(_ error: any Error)
+c:objc(cs)RPBroadcastSampleHandler(im)processSampleBuffer:withType:	swift.method	processSampleBuffer(_:with:)	RPBroadcastSampleHandler.processSampleBuffer(_:with:)	func processSampleBuffer(_ sampleBuffer: CMSampleBuffer, with sampleBufferType: RPSampleBufferType)
+c:objc(cs)RPPreviewViewController	swift.class	RPPreviewViewController	RPPreviewViewController	@MainActor class RPPreviewViewController
+c:objc(cs)RPPreviewViewController(py)previewControllerDelegate	swift.property	previewControllerDelegate	RPPreviewViewController.previewControllerDelegate	@MainActor weak var previewControllerDelegate: (any RPPreviewViewControllerDelegate)? { get set }
+c:objc(cs)RPScreenRecorder	swift.class	RPScreenRecorder	RPScreenRecorder	class RPScreenRecorder
+c:objc(cs)RPScreenRecorder(cm)sharedRecorder	swift.type.method	shared()	RPScreenRecorder.shared()	class func shared() -> RPScreenRecorder
+c:objc(cs)RPScreenRecorder(im)discardRecordingWithHandler:	swift.method	discardRecording(handler:)	RPScreenRecorder.discardRecording(handler:)	func discardRecording(handler: @escaping () -> Void)
+c:objc(cs)RPScreenRecorder(im)exportClipToURL:duration:completionHandler:	swift.method	exportClip(to:duration:)	RPScreenRecorder.exportClip(to:duration:)	func exportClip(to url: URL, duration: TimeInterval) async throws
+c:objc(cs)RPScreenRecorder(im)startCaptureWithHandler:completionHandler:	swift.method	startCapture(handler:)	RPScreenRecorder.startCapture(handler:)	func startCapture(handler captureHandler: ((CMSampleBuffer, RPSampleBufferType, (any Error)?) -> Void)?) async throws
+c:objc(cs)RPScreenRecorder(im)startClipBufferingWithCompletionHandler:	swift.method	startClipBuffering(completionHandler:)	RPScreenRecorder.startClipBuffering(completionHandler:)	func startClipBuffering(completionHandler: (((any Error)?) -> Void)? = nil)
+c:objc(cs)RPScreenRecorder(im)startRecordingWithHandler:	swift.method	startRecording(handler:)	RPScreenRecorder.startRecording(handler:)	func startRecording(handler: (((any Error)?) -> Void)? = nil)
+c:objc(cs)RPScreenRecorder(im)startRecordingWithMicrophoneEnabled:handler:	swift.method	startRecording(withMicrophoneEnabled:handler:)	RPScreenRecorder.startRecording(withMicrophoneEnabled:handler:)	func startRecording(withMicrophoneEnabled microphoneEnabled: Bool, handler: (((any Error)?) -> Void)? = nil)
+c:objc(cs)RPScreenRecorder(im)stopCaptureWithHandler:	swift.method	stopCapture(handler:)	RPScreenRecorder.stopCapture(handler:)	func stopCapture(handler: (((any Error)?) -> Void)? = nil)
+c:objc(cs)RPScreenRecorder(im)stopClipBufferingWithCompletionHandler:	swift.method	stopClipBuffering(completionHandler:)	RPScreenRecorder.stopClipBuffering(completionHandler:)	func stopClipBuffering(completionHandler: (((any Error)?) -> Void)? = nil)
+c:objc(cs)RPScreenRecorder(im)stopRecordingWithHandler:	swift.method	stopRecording(handler:)	RPScreenRecorder.stopRecording(handler:)	func stopRecording(handler: ((RPPreviewViewController?, (any Error)?) -> Void)? = nil)
+c:objc(cs)RPScreenRecorder(im)stopRecordingWithOutputURL:completionHandler:	swift.method	stopRecording(withOutput:)	RPScreenRecorder.stopRecording(withOutput:)	func stopRecording(withOutput url: URL) async throws
+c:objc(cs)RPScreenRecorder(py)available	swift.property	isAvailable	RPScreenRecorder.isAvailable	var isAvailable: Bool { get }
+c:objc(cs)RPScreenRecorder(py)cameraEnabled	swift.property	isCameraEnabled	RPScreenRecorder.isCameraEnabled	var isCameraEnabled: Bool { get set }
+c:objc(cs)RPScreenRecorder(py)cameraPosition	swift.property	cameraPosition	RPScreenRecorder.cameraPosition	var cameraPosition: RPCameraPosition { get set }
+c:objc(cs)RPScreenRecorder(py)cameraPreviewView	swift.property	cameraPreviewView	RPScreenRecorder.cameraPreviewView	var cameraPreviewView: UIView? { get }
+c:objc(cs)RPScreenRecorder(py)delegate	swift.property	delegate	RPScreenRecorder.delegate	weak var delegate: (any RPScreenRecorderDelegate)? { get set }
+c:objc(cs)RPScreenRecorder(py)microphoneEnabled	swift.property	isMicrophoneEnabled	RPScreenRecorder.isMicrophoneEnabled	var isMicrophoneEnabled: Bool { get set }
+c:objc(cs)RPScreenRecorder(py)recording	swift.property	isRecording	RPScreenRecorder.isRecording	var isRecording: Bool { get }
+c:objc(cs)RPSystemBroadcastPickerView	swift.class	RPSystemBroadcastPickerView	RPSystemBroadcastPickerView	@MainActor class RPSystemBroadcastPickerView
+c:objc(cs)RPSystemBroadcastPickerView(py)preferredExtension	swift.property	preferredExtension	RPSystemBroadcastPickerView.preferredExtension	@MainActor var preferredExtension: String? { get set }
+c:objc(cs)RPSystemBroadcastPickerView(py)showsMicrophoneButton	swift.property	showsMicrophoneButton	RPSystemBroadcastPickerView.showsMicrophoneButton	@MainActor var showsMicrophoneButton: Bool { get set }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)RPBroadcastConfiguration	swift.init	init(coder:)	RPBroadcastConfiguration.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)RPBroadcastActivityViewControllerDelegate	swift.protocol	RPBroadcastActivityViewControllerDelegate	RPBroadcastActivityViewControllerDelegate	protocol RPBroadcastActivityViewControllerDelegate : NSObjectProtocol
+c:objc(pl)RPBroadcastActivityViewControllerDelegate(im)broadcastActivityViewController:didFinishWithBroadcastController:error:	swift.method	broadcastActivityViewController(_:didFinishWith:error:)	RPBroadcastActivityViewControllerDelegate.broadcastActivityViewController(_:didFinishWith:error:)	func broadcastActivityViewController(_ broadcastActivityViewController: RPBroadcastActivityViewController, didFinishWith broadcastController: RPBroadcastController?, error: (any Error)?)
+c:objc(pl)RPBroadcastControllerDelegate	swift.protocol	RPBroadcastControllerDelegate	RPBroadcastControllerDelegate	protocol RPBroadcastControllerDelegate : NSObjectProtocol
+c:objc(pl)RPBroadcastControllerDelegate(im)broadcastController:didFinishWithError:	swift.method	broadcastController(_:didFinishWithError:)	RPBroadcastControllerDelegate.broadcastController(_:didFinishWithError:)	optional func broadcastController(_ broadcastController: RPBroadcastController, didFinishWithError error: (any Error)?)
+c:objc(pl)RPBroadcastControllerDelegate(im)broadcastController:didUpdateBroadcastURL:	swift.method	broadcastController(_:didUpdateBroadcast:)	RPBroadcastControllerDelegate.broadcastController(_:didUpdateBroadcast:)	optional func broadcastController(_ broadcastController: RPBroadcastController, didUpdateBroadcast broadcastURL: URL)
+c:objc(pl)RPBroadcastControllerDelegate(im)broadcastController:didUpdateServiceInfo:	swift.method	broadcastController(_:didUpdateServiceInfo:)	RPBroadcastControllerDelegate.broadcastController(_:didUpdateServiceInfo:)	optional func broadcastController(_ broadcastController: RPBroadcastController, didUpdateServiceInfo serviceInfo: [String : any NSCoding & NSObjectProtocol])
+c:objc(pl)RPPreviewViewControllerDelegate	swift.protocol	RPPreviewViewControllerDelegate	RPPreviewViewControllerDelegate	protocol RPPreviewViewControllerDelegate : NSObjectProtocol
+c:objc(pl)RPPreviewViewControllerDelegate(im)previewController:didFinishWithActivityTypes:	swift.method	previewController(_:didFinishWithActivityTypes:)	RPPreviewViewControllerDelegate.previewController(_:didFinishWithActivityTypes:)	optional func previewController(_ previewController: RPPreviewViewController, didFinishWithActivityTypes activityTypes: Set<String>)
+c:objc(pl)RPPreviewViewControllerDelegate(im)previewControllerDidFinish:	swift.method	previewControllerDidFinish(_:)	RPPreviewViewControllerDelegate.previewControllerDidFinish(_:)	optional func previewControllerDidFinish(_ previewController: RPPreviewViewController)
+c:objc(pl)RPScreenRecorderDelegate	swift.protocol	RPScreenRecorderDelegate	RPScreenRecorderDelegate	protocol RPScreenRecorderDelegate : NSObjectProtocol
+c:objc(pl)RPScreenRecorderDelegate(im)screenRecorder:didStopRecordingWithError:previewViewController:	swift.method	screenRecorder(_:didStopRecordingWithError:previewViewController:)	RPScreenRecorderDelegate.screenRecorder(_:didStopRecordingWithError:previewViewController:)	optional func screenRecorder(_ screenRecorder: RPScreenRecorder, didStopRecordingWithError error: any Error, previewViewController: RPPreviewViewController?)
+c:objc(pl)RPScreenRecorderDelegate(im)screenRecorder:didStopRecordingWithPreviewViewController:error:	swift.method	screenRecorder(_:didStopRecordingWith:error:)	RPScreenRecorderDelegate.screenRecorder(_:didStopRecordingWith:error:)	optional func screenRecorder(_ screenRecorder: RPScreenRecorder, didStopRecordingWith previewViewController: RPPreviewViewController?, error: (any Error)?)
+c:objc(pl)RPScreenRecorderDelegate(im)screenRecorderDidChangeAvailability:	swift.method	screenRecorderDidChangeAvailability(_:)	RPScreenRecorderDelegate.screenRecorderDidChangeAvailability(_:)	optional func screenRecorderDidChangeAvailability(_ screenRecorder: RPScreenRecorder)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@RPCameraPosition	swift.func.op	!=(_:_:)	RPCameraPosition.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@RPRecordingErrorCode	swift.func.op	!=(_:_:)	RPRecordingErrorCode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@RPSampleBufferType	swift.func.op	!=(_:_:)	RPSampleBufferType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@RPCameraPosition	swift.property	hashValue	RPCameraPosition.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@RPRecordingErrorCode	swift.property	hashValue	RPRecordingErrorCode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@RPSampleBufferType	swift.property	hashValue	RPSampleBufferType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@RPCameraPosition	swift.method	hash(into:)	RPCameraPosition.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@RPRecordingErrorCode	swift.method	hash(into:)	RPRecordingErrorCode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@RPSampleBufferType	swift.method	hash(into:)	RPSampleBufferType.hash(into:)	func hash(into hasher: inout Hasher)
+s:So16RPCameraPositionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	RPCameraPosition.init(rawValue:)	init?(rawValue: Int)
+s:So18RPSampleBufferTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	RPSampleBufferType.init(rawValue:)	init?(rawValue: Int)
+s:So20RPRecordingErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	RPRecordingErrorCode.init(rawValue:)	init?(rawValue: Int)

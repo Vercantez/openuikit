@@ -1,0 +1,81 @@
+{
+  "module": "WatchConnectivity",
+  "moduleRecord": {
+    "app_coverage_count": 4,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 23,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 56,
+    "iphoneos_runtime_focus_launch_build_rank": 63,
+    "module": "WatchConnectivity",
+    "occurrence_count": 23,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "c5c385d83fcebfcbdeacd2aff682b41bcab5bf6a7be7a8d6acad99c1cf4ce8c8",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Telegram/Watch/Bridge/TGBridgeClient.m",
+          "Telegram/Watch/Extension/TGNotificationController.m"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "6ef375416b2723e456a63b483a5d8df16c26d69973430ec9a51167bdd029d0df",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Sources/Shared/Watch/Connectivity/HAWatchConnectivityError.swift",
+          "Sources/Shared/Watch/Connectivity/WCSessionProtocol.swift",
+          "Sources/Shared/Watch/Connectivity/WatchConnectivityManager+Delegate.swift",
+          "Sources/Shared/Watch/Connectivity/WatchConnectivityManager.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "61c0f2e2e30bc2c4ab2da62f0b88327a50aa34a60f6eda8d364202fc4214c88e",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Pocket Casts Watch App/Data & Communication/SessionManager+Send.swift",
+          "Pocket Casts Watch App/Data & Communication/SessionManager.swift",
+          "podcasts/SettingsViewController.swift",
+          "podcasts/Watch Communication/WatchManager+Send.swift",
+          "podcasts/Watch Communication/WatchManager.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "1c0f8700d2115d774e19a6ed2abdf29b01d400f05f4767e0e23ecc212e9279f9",
+        "file_count": 12,
+        "occurrence_count": 12,
+        "sample_paths": [
+          "Sources/App/iOS/VLCAppDelegate.m",
+          "Sources/App/watchOS/VLCWatchAppDelegate.swift",
+          "Sources/App/watchOS/VLCWatchOSApp.swift",
+          "Sources/App/watchOS/Views/Temp/CommandView.swift",
+          "Sources/App/watchOS/Views/Temp/FileTransfersView.swift",
+          "Sources/App/watchOS/Views/Temp/TimedColor.swift",
+          "Sources/App/watchOS/Views/Temp/UserInfoTransfersView.swift",
+          "Sources/App/watchOS/WatchConnectivity/FileTransferObservers.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 56,
+    "byFocusLaunchBuildRelevance": 63
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

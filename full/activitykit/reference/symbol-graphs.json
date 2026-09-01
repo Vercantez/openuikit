@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/ActivityKit.symbols.json",
+      "relationshipCount": 364,
+      "sha256": "127edbcf2495cb86da357da64738d6c30fca22da6cc07e1e7db17deea3ae3040",
+      "symbolCount": 320
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "ActivityKit",
+  "relationshipCount": 364,
+  "schema": 1,
+  "symbolCount": 320,
+  "target": "arm64-apple-ios26.0"
+}

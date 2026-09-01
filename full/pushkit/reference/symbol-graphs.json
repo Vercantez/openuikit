@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 1,
+  "duplicateOccurrenceCount": 1,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/PushKit.symbols.json",
+      "relationshipCount": 47,
+      "sha256": "2da49939e48613e64b966f88bcf40183ede070683e0ff8819867dbb9e00348b9",
+      "symbolCount": 25
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "PushKit",
+  "relationshipCount": 47,
+  "schema": 1,
+  "symbolCount": 24,
+  "target": "arm64-apple-ios26.0"
+}

@@ -1,0 +1,82 @@
+{
+  "module": "CoreTelephony",
+  "moduleRecord": {
+    "app_coverage_count": 5,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 13,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 53,
+    "iphoneos_runtime_focus_launch_build_rank": 55,
+    "module": "CoreTelephony",
+    "occurrence_count": 15,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "88bf40d9c9a3969473cde199665e1bc9bc873277fa4c2fcfbf75c7581052d5b1",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "SignalServiceKit/Registration/RegistrationSessionManagerImpl.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "fc12cdeeef6f5c4a1b1f6179d46bf33c421ec0bba60774695818d244d2d34a11",
+        "file_count": 6,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "submodules/AuthorizationUI/Sources/AuthorizationSequenceController.swift",
+          "submodules/AuthorizationUI/Sources/AuthorizationSequencePaymentScreen.swift",
+          "submodules/DeviceAccess/Sources/DeviceAccess.swift",
+          "submodules/SettingsUI/Sources/ChangePhoneNumberController.swift",
+          "submodules/TelegramCore/Sources/Network/NetworkType.swift",
+          "submodules/libphonenumber/Sources/NBPhoneNumberUtil.m"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "34b76daead9d79658eeab2f895a596ecddbe26a74598676c14ab9a28e6ff01c8",
+        "file_count": 1,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Riot/Modules/MatrixKit/Models/MXKAppSettings.m"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "df1191b4cbb7108b9b9665856364106812277d18521e203735336bc071cd0118",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Sources/Shared/API/Webhook/Sensors/ConnectivitySensor.swift",
+          "Sources/Shared/Common/Extensions/Reachability+NetworkType.swift",
+          "Sources/Shared/Environment/ConnectivityWrapper.swift"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "0b943a899d17315bebab0371ac650b79556144f0cd786aa9c9936f6b1d27f13c",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Library/Sources/Library/Library/CoreTelephonyNetworkInfoType.swift",
+          "Library/Sources/Library/Library/Environment.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 53,
+    "byFocusLaunchBuildRelevance": 55
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

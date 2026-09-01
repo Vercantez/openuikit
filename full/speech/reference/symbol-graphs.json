@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 5,
+  "duplicateOccurrenceCount": 5,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/Speech.symbols.json",
+      "relationshipCount": 865,
+      "sha256": "89c0c55301d9a190d10ec6ce20f7f1ddea84652b25a6bbb34f9a24a8b4634d93",
+      "symbolCount": 579
+    },
+    {
+      "path": "reference/symbol-graphs/Speech@Foundation.symbols.json",
+      "relationshipCount": 37,
+      "sha256": "c812d702809ed6c40f12d6fa7b3e2a9f259856ef1b8a27ecce9eee83fedefc73",
+      "symbolCount": 28
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "Speech",
+  "relationshipCount": 902,
+  "schema": 1,
+  "symbolCount": 602,
+  "target": "arm64-apple-ios26.0"
+}

@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 1,
+  "duplicateOccurrenceCount": 1,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/WatchConnectivity.symbols.json",
+      "relationshipCount": 161,
+      "sha256": "f5edc829299fe120b1b5cdf0b52acdc50a7877406c15fc3058625a0a2804861d",
+      "symbolCount": 120
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "WatchConnectivity",
+  "relationshipCount": 161,
+  "schema": 1,
+  "symbolCount": 119,
+  "target": "arm64-apple-ios26.0"
+}

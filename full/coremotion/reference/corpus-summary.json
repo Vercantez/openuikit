@@ -1,0 +1,93 @@
+{
+  "module": "CoreMotion",
+  "moduleRecord": {
+    "app_coverage_count": 6,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 22,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 46,
+    "iphoneos_runtime_focus_launch_build_rank": 48,
+    "module": "CoreMotion",
+    "occurrence_count": 22,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "65f0d6425d87d5b587de45f1eb0b6664b43d26499d0ef452f0b116b56f827595",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Signal/src/ViewControllers/Photos/CameraCaptureSession.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "05b7a1b72e0c3620332fed70b1e990b4709c6667a5e4da66c4790f1efc8c17c6",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "submodules/LegacyComponents/Sources/PGCameraDeviceAngleSampler.m",
+          "submodules/LegacyComponents/Sources/TGModernGalleryDefaultInterfaceView.m",
+          "submodules/LegacyComponents/Sources/TGNavigationBar.m",
+          "submodules/WebUI/Sources/WebAppController.swift"
+        ]
+      },
+      "WordPress-iOS": {
+        "evidence_sha256": "95f62696102730e7a0a97043c758dc3f92631005613229b424988768481178e3",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "WordPress/Classes/Jetpack/NUX/JetpackPrologueViewController.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "4900a010a303260a552f52079153780a89236ecb558a56c6fce0d86bb42cb087",
+        "file_count": 13,
+        "occurrence_count": 13,
+        "sample_paths": [
+          "Sources/App/FlightGreetings/CabinPressureMonitor.swift",
+          "Sources/App/Settings/Sensors/Permissions/SensorPermissionStatus.swift",
+          "Sources/App/Settings/Sensors/Permissions/SensorPermissionsViewModel.swift",
+          "Sources/App/Utilities/Permissions.swift",
+          "Sources/Shared/API/Models/WebhookUpdateLocation.swift",
+          "Sources/Shared/API/Webhook/Sensors/ActivitySensor.swift",
+          "Sources/Shared/API/Webhook/Sensors/BarometerObserver.swift",
+          "Sources/Shared/API/Webhook/Sensors/BarometerSensor.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "58b5ebdcc33f1b9ecacf8b5548862dddf8fa176a5d60a463594fd1bb3949c1c3",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "podcasts/BackgroundShakeObserver.swift",
+          "podcasts/Utilities/SwiftUI/Motion.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "b9ff6a4d5663978f56440122831b5d49a1702e91572a43423eee41a1219412c6",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/Playback/DeviceMotion.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 46,
+    "byFocusLaunchBuildRelevance": 48
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

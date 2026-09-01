@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 6,
+  "duplicateOccurrenceCount": 6,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/JavaScriptCore.symbols.json",
+      "relationshipCount": 222,
+      "sha256": "491bdc4937634c25023b18c443ce0d225d78501c757bfc86763c2b56edb677c7",
+      "symbolCount": 363
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "JavaScriptCore",
+  "relationshipCount": 222,
+  "schema": 1,
+  "symbolCount": 357,
+  "target": "arm64-apple-ios26.0"
+}

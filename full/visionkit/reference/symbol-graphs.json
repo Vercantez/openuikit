@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/VisionKit.symbols.json",
+      "relationshipCount": 359,
+      "sha256": "c2c5a159371ddb0361ad3de19ae9bdada11fa2738a7cff6d044cf35e422b4d33",
+      "symbolCount": 256
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "VisionKit",
+  "relationshipCount": 359,
+  "schema": 1,
+  "symbolCount": 256,
+  "target": "arm64-apple-ios26.0"
+}
