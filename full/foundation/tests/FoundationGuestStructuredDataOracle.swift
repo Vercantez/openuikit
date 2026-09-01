@@ -129,6 +129,11 @@ private func jsonOracle() throws {
 }
 
 private func errorOracle() {
+    let defaultError = NSError()
+    field("error.default.domain-empty", defaultError.domain.isEmpty)
+    field("error.default.code", defaultError.code)
+    field("error.default.user-info-count", defaultError.userInfo.count)
+
     let plain = NSError(domain: "D", code: 42)
     field("error.domain", plain.domain)
     field("error.code", plain.code)

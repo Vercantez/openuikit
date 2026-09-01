@@ -82,6 +82,20 @@ open class NSError: NSObject, Error, CustomStringConvertible,
     public let code: Int
     public let userInfo: [String: Any]
 
+    /// Creates the empty-domain error used by source-compatible call sites
+    /// such as `throw NSError() as Error`.
+    ///
+    /// Darwin exposes this initializer with an empty domain, zero code, and
+    /// empty user-info dictionary. Its textual description is intentionally
+    /// not specialized here: asking Darwin Foundation to describe this
+    /// invalid-domain sentinel is not a stable operation.
+    public override init() {
+        self.domain = ""
+        self.code = 0
+        self.userInfo = [:]
+        super.init()
+    }
+
     public init(domain: String, code: Int, userInfo dict: [String: Any]? = nil) {
         self.domain = domain
         self.code = code

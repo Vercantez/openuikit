@@ -20,9 +20,9 @@ STRUCTURED_GOLDEN=$ROOT/full/foundation/tests/foundation-guest-structured-data-a
 NSSTRING_GOLDEN=$ROOT/full/foundation/tests/foundation-guest-nsstring-apple-2026-08-30.txt
 EXPECTED_GOLDEN_SHA=d238c2ea2e2b252a433a56660e1e7c2a23b2851a665874db7d432b4e573c40e0
 EXPECTED_COMPAT_GOLDEN_SHA=07a1d25c7707614ae7cf8b18d847f7da2fd008e4c3879ded01830085985611ac
-EXPECTED_STRUCTURED_GOLDEN_SHA=5ceca8b4b92d4fe59ecee2751bb0996cc20b453309f6a9d75105e7517ac8d46e
+EXPECTED_STRUCTURED_GOLDEN_SHA=28d3b8fab24ad0c5bb1faaf89e4454516d84aa84d3e2ac2149514e68d83dc017
 EXPECTED_NSSTRING_GOLDEN_SHA=472ce641b97e460a14b19e80a10bb60af3fa532df6d0383799a9e58ba2d87486
-EXPECTED_SOURCE_DIGEST=ab4e9061c186f59bd0ccd95c24aadc4a95e2d848ce461540a552c1d1741c7614
+EXPECTED_SOURCE_DIGEST=9e05ef7e5ddcfbcaf199a10a316f7d65377ee9c0383a156070405ab7f1c33ab4
 
 FOUNDATION_SOURCES=(
     "$ROOT/full/foundation/NSString.swift"
@@ -58,6 +58,7 @@ ATTESTED_SOURCES=(
     full/foundation/tests/FoundationGuestServiceIdentityProbe.swift
     full/foundation/tests/FoundationGuestStructuredDataOracle.swift
     full/foundation/tests/FoundationGuestStructuredDataNegative.swift
+    full/foundation/tests/FoundationGuestNSErrorDefaultClient.swift
     full/foundation/tests/FoundationGuestNSStringOracle.swift
     full/foundation/tests/FoundationGuestNSStringNegative.swift
     full/foundation/tests/foundation-guest-text-apple-2026-08-30.txt
@@ -398,6 +399,17 @@ xcrun swiftc -target "$TARGET" \
 cmp "$STRUCTURED_GOLDEN" "$OUT/port-structured-output.txt" \
     || die "portable structured-data output differs from Apple golden"
 
+# Compile the exact unchanged ButtonKit throw shape against both Apple and the
+# portable Foundation module. Description is deliberately outside this gate:
+# Darwin does not define a stable textual rendering for an empty error domain.
+xcrun swiftc -target "$TARGET" -typecheck \
+    -module-cache-path "$OUT/apple-nserror-default-module-cache" \
+    "$ROOT/full/foundation/tests/FoundationGuestNSErrorDefaultClient.swift"
+xcrun swiftc -target "$TARGET" -typecheck \
+    -module-cache-path "$OUT/port-nserror-default-module-cache" \
+    -I "$STRUCTURED" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    "$ROOT/full/foundation/tests/FoundationGuestNSErrorDefaultClient.swift"
+
 xcrun swiftc -target "$TARGET" -parse-as-library \
     -module-cache-path "$OUT/port-structured-negative-module-cache" \
     -I "$STRUCTURED" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
@@ -483,6 +495,7 @@ for symbol in \
     'Foundation.NSString.substring(with:' \
     'Foundation.NSString.copy(with:' \
     'Swift.String._bridgeToObjectiveC()' \
+    'Foundation.NSError.init()' \
     'Foundation.NSError.init(domain:' \
     'Foundation._convertErrorToNSError' \
     'Foundation.NSNumber.__allocating_init<A where A: Swift.BinaryInteger>(value:' \
@@ -555,7 +568,7 @@ final_source_digest=$(source_digest)
 
 printf '%s\n' \
     "FOUNDATION_GUEST_TEXT_HOST_OK rows=86 characters=26 "\
-"runtime=2 identity=8 structured=77 structured-negatives=4 nsstring=46 nsstring-negatives=3 uikit-reexport=1 adversarial=4 sha256=$initial_source_digest"
+"runtime=2 identity=8 structured=80 structured-negatives=4 nsstring=46 nsstring-negatives=3 uikit-reexport=1 adversarial=4 sha256=$initial_source_digest"
 if [ "${FOUNDATION_GUEST_TEXT_KEEP_OUTPUT:-0}" = 1 ]; then
     printf 'output-root\t%s\n' "$OUT"
 fi

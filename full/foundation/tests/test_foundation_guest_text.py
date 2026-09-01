@@ -48,6 +48,7 @@ ATTESTED = PRODUCTION + (NSSTRING,) + STRUCTURED_PRODUCTION + (
     TESTS / "FoundationGuestServiceIdentityProbe.swift",
     TESTS / "FoundationGuestStructuredDataOracle.swift",
     TESTS / "FoundationGuestStructuredDataNegative.swift",
+    TESTS / "FoundationGuestNSErrorDefaultClient.swift",
     TESTS / "FoundationGuestNSStringOracle.swift",
     TESTS / "FoundationGuestNSStringNegative.swift",
     GOLDEN,
@@ -89,9 +90,9 @@ class FoundationGuestTextTests(unittest.TestCase):
         self.assertEqual(len(COMPAT_GOLDEN.read_text().splitlines()), 35)
         self.assertEqual(
             hashlib.sha256(STRUCTURED_GOLDEN.read_bytes()).hexdigest(),
-            "5ceca8b4b92d4fe59ecee2751bb0996cc20b453309f6a9d75105e7517ac8d46e",
+            "28d3b8fab24ad0c5bb1faaf89e4454516d84aa84d3e2ac2149514e68d83dc017",
         )
-        self.assertEqual(len(STRUCTURED_GOLDEN.read_text().splitlines()), 77)
+        self.assertEqual(len(STRUCTURED_GOLDEN.read_text().splitlines()), 80)
         self.assertEqual(
             hashlib.sha256(NSSTRING_GOLDEN.read_bytes()).hexdigest(),
             "472ce641b97e460a14b19e80a10bb60af3fa532df6d0383799a9e58ba2d87486",
@@ -201,6 +202,8 @@ class FoundationGuestTextTests(unittest.TestCase):
             "public let domain: String",
             "public let code: Int",
             "public let userInfo: [String: Any]",
+            "public override init()",
+            "self.domain = \"\"",
             "public func _convertErrorToNSError(_ error: any Error) -> NSError",
             "public func _convertNSErrorToError(_ error: NSError?) -> any Error",
             "error._getEmbeddedNSError() as? NSError",
@@ -211,6 +214,11 @@ class FoundationGuestTextTests(unittest.TestCase):
         ):
             self.assertIn(token, source)
         self.assertNotRegex(source, r"return\s+error\s+as\s+NSError")
+
+        client = (TESTS / "FoundationGuestNSErrorDefaultClient.swift").read_text()
+        self.assertIn("throw NSError() as Error", client)
+        self.assertIn("error.domain.isEmpty", client)
+        self.assertNotIn("error.description", client)
 
     def test_nsstring_is_a_real_immutable_reference_bridge(self) -> None:
         source = NSSTRING.read_text()
