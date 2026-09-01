@@ -1,5 +1,6 @@
 import Foundation
 import XCTest
+import CQuartz
 #if canImport(CoreGraphics)
 import CoreGraphics
 #endif
@@ -24,6 +25,67 @@ final class UIImageCompatibilityTests: XCTestCase {
         XCTAssertEqual(image?.bitmap.pixels, source.pixels)
         XCTAssertEqual(image?.scale, 2)
         XCTAssertEqual(image?.size, CGSize(width: 1, height: 0.5))
+    }
+
+    func testCGImageInitializerIsZeroCopyAndPreservesMetadata() {
+        let backing = Bitmap(width: 6, height: 4)
+        let image = UIImage(cgImage: backing, scale: 2, orientation: .right)
+
+        XCTAssertTrue(image.cgImage === backing)
+        XCTAssertTrue(image.bitmap === backing)
+        XCTAssertEqual(image.scale, 2)
+        XCTAssertEqual(image.size, CGSize(width: 3, height: 2))
+        XCTAssertEqual(image.imageOrientation, .right)
+        XCTAssertEqual(image.withRenderingMode(.alwaysTemplate).imageOrientation,
+                       .right)
+        XCTAssertEqual(image.withTintColor(.red).imageOrientation, .right)
+    }
+
+    func testImageOrientationRawValuesMatchUIKit() {
+        XCTAssertEqual(UIImage.Orientation.up.rawValue, 0)
+        XCTAssertEqual(UIImage.Orientation.down.rawValue, 1)
+        XCTAssertEqual(UIImage.Orientation.left.rawValue, 2)
+        XCTAssertEqual(UIImage.Orientation.right.rawValue, 3)
+        XCTAssertEqual(UIImage.Orientation.upMirrored.rawValue, 4)
+        XCTAssertEqual(UIImage.Orientation.downMirrored.rawValue, 5)
+        XCTAssertEqual(UIImage.Orientation.leftMirrored.rawValue, 6)
+        XCTAssertEqual(UIImage.Orientation.rightMirrored.rawValue, 7)
+    }
+
+    func testCQuartzDecodesEveryGIFFrameAndDelay() {
+        // Two 1x1 GIF89a frames with 0.10s and 0.20s graphic-control delays.
+        let bytes: [UInt8] = [
+            0x47, 0x49, 0x46, 0x38, 0x39, 0x61,
+            0x01, 0x00, 0x01, 0x00, 0x80, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0xff, 0xff, 0xff,
+            0x21, 0xf9, 0x04, 0x00, 0x0a, 0x00, 0x00, 0x00,
+            0x2c, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00,
+            0x02, 0x01, 0x4c, 0x00,
+            0x21, 0xf9, 0x04, 0x00, 0x14, 0x00, 0x00, 0x00,
+            0x2c, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00,
+            0x02, 0x01, 0x4c, 0x00, 0x3b,
+        ]
+        var width: Int32 = 0
+        var height: Int32 = 0
+        var frameCount: Int32 = 0
+        var delays: UnsafeMutablePointer<Int32>?
+        let pixels = bytes.withUnsafeBufferPointer { buffer in
+            QZImageDecodeGIFRGBA(
+                buffer.baseAddress, buffer.count, &width, &height,
+                &frameCount, &delays
+            )
+        }
+        defer {
+            QZImageFreeRGBA(pixels)
+            QZImageFreeGIFDelays(delays)
+        }
+        XCTAssertNotNil(pixels)
+        XCTAssertEqual(width, 1)
+        XCTAssertEqual(height, 1)
+        XCTAssertEqual(frameCount, 2)
+        XCTAssertEqual(delays?[0], 100)
+        XCTAssertEqual(delays?[1], 200)
+        XCTAssertNotNil(UIImage(data: bytes))
     }
 
     func testDrawAtBlendModeNormalAppliesGlobalAlphaOnce() {

@@ -86,10 +86,31 @@ public enum CGBlendMode: Int32, Sendable {
 #endif
 
 public final class UIImage {
+    /// The relationship between the image's pixel rows and its intended
+    /// display orientation. Raw values match UIKit exactly; keeping this as
+    /// metadata (rather than eagerly rotating pixels) is important to image
+    /// pipelines which preserve EXIF orientation through processing steps.
+    public enum Orientation: Int, Sendable {
+        case up = 0
+        case down = 1
+        case left = 2
+        case right = 3
+        case upMirrored = 4
+        case downMirrored = 5
+        case leftMirrored = 6
+        case rightMirrored = 7
+    }
+
     /// Pixel backing store (width/height are in PIXELS at `scale`).
     public let bitmap: Bitmap
     /// Pixels-per-point of the backing store (like UIImage.scale).
     public let scale: CGFloat
+    /// Orientation metadata carried by the image, like UIImage.imageOrientation.
+    public let imageOrientation: Orientation
+
+    /// The Core Graphics backing image. OpenCoreGraphics' `Bitmap` is the
+    /// platform's concrete `CGImage`, so this is a zero-copy identity view.
+    public var cgImage: Bitmap? { bitmap }
 
     /// Logical size in points (pixel size / scale), like UIImage.size.
     public var size: CGSize {
@@ -126,6 +147,16 @@ public final class UIImage {
     public init(bitmap: Bitmap, scale: CGFloat = 1) {
         self.bitmap = bitmap
         self.scale = scale > 0 ? scale : 1
+        self.imageOrientation = .up
+    }
+
+    /// Create an image around an existing Core Graphics image without
+    /// copying its pixels. The default scale and orientation match UIKit.
+    public convenience init(cgImage: Bitmap, scale: CGFloat = 1,
+                            orientation: Orientation = .up) {
+        self.init(bitmap: cgImage, scale: scale,
+                  renderingMode: .automatic, isSystemSymbol: false,
+                  imageOrientation: orientation)
     }
 
     /// UIKit's empty image initializer. The resulting image has zero logical
@@ -137,11 +168,13 @@ public final class UIImage {
 
     private init(bitmap: Bitmap, scale: CGFloat,
                  renderingMode: UIImageRenderingMode,
-                 isSystemSymbol: Bool) {
+                 isSystemSymbol: Bool,
+                 imageOrientation: Orientation) {
         self.bitmap = bitmap
         self.scale = scale > 0 ? scale : 1
         self.renderingMode = renderingMode
         self._isSystemSymbol = isSystemSymbol
+        self.imageOrientation = imageOrientation
     }
 
     // MARK: Rendering mode / tinting
@@ -150,7 +183,8 @@ public final class UIImage {
     /// backing store (UIKit does the same — images are immutable).
     public func withRenderingMode(_ mode: UIImageRenderingMode) -> UIImage {
         UIImage(bitmap: bitmap, scale: scale, renderingMode: mode,
-                isSystemSymbol: _isSystemSymbol)
+                isSystemSymbol: _isSystemSymbol,
+                imageOrientation: imageOrientation)
     }
 
     /// A copy whose pixels are recolored with `color`, keeping the original
@@ -195,7 +229,8 @@ public final class UIImage {
             }
         }
         return UIImage(bitmap: out, scale: scale, renderingMode: mode,
-                       isSystemSymbol: _isSystemSymbol)
+                       isSystemSymbol: _isSystemSymbol,
+                       imageOrientation: imageOrientation)
     }
 
     // MARK: Loading (PNG / JPEG plus indexed vector PDF via ImageCodec)
@@ -317,7 +352,8 @@ public final class UIImage {
         guard let img = UIImage.named(name) else { return nil }
         self.init(bitmap: img.bitmap, scale: img.scale,
                   renderingMode: img.renderingMode,
-                  isSystemSymbol: img._isSystemSymbol)
+                  isSystemSymbol: img._isSystemSymbol,
+                  imageOrientation: img.imageOrientation)
     }
 
     /// UIKit's bundle-selecting named-image initializer.
@@ -343,7 +379,8 @@ public final class UIImage {
         ) else { return nil }
         self.init(bitmap: img.bitmap, scale: img.scale,
                   renderingMode: img.renderingMode,
-                  isSystemSymbol: img._isSystemSymbol)
+                  isSystemSymbol: img._isSystemSymbol,
+                  imageOrientation: img.imageOrientation)
     }
 
     /// Drop every cached `named:` lookup (hosts call this after changing
@@ -373,7 +410,8 @@ public final class UIImage {
         }
         self.init(bitmap: image.bitmap, scale: image.scale,
                   renderingMode: image.renderingMode,
-                  isSystemSymbol: image._isSystemSymbol)
+                  isSystemSymbol: image._isSystemSymbol,
+                  imageOrientation: image.imageOrientation)
     }
 
     /// "…@2x.png" → 2, "…@3x" → 3, anything else → 1.

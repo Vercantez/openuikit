@@ -12,7 +12,6 @@
 #define STBI_NO_BMP
 #define STBI_NO_PSD
 #define STBI_NO_TGA
-#define STBI_NO_GIF
 #define STBI_NO_PIC
 #define STBI_NO_PNM
 #if defined(__GNUC__)
@@ -33,6 +32,9 @@ static int sniff_kind(const uint8_t *d, size_t n) {
         return 1; /* PNG */
     if (n >= 2 && d[0] == 0xFF && d[1] == 0xD8)
         return 2; /* JPEG */
+    if (n >= 6 && d[0] == 'G' && d[1] == 'I' && d[2] == 'F' &&
+        d[3] == '8' && (d[4] == '7' || d[4] == '9') && d[5] == 'a')
+        return 3; /* GIF87a / GIF89a */
     return 0;
 }
 
@@ -70,7 +72,7 @@ static QZImageRef image_from_stbi_rgba(int w, int h, uint8_t *rgba) {
     return img;
 }
 
-/* want: 0 = PNG or JPEG, 1 = PNG only, 2 = JPEG only. */
+/* want: 0 = any supported image, 1 = PNG only, 2 = JPEG only. */
 static QZImageRef load_mem(const uint8_t *data, size_t length, int want) {
     if (!data || length == 0) return nullptr;
     int kind = sniff_kind(data, length);
@@ -144,6 +146,46 @@ uint8_t *QZImageDecodeRGBA(const uint8_t *data, size_t length, int *out_width,
 
 void QZImageFreeRGBA(uint8_t *pixels) {
     if (pixels) free(pixels);
+}
+
+uint8_t *QZImageDecodeGIFRGBA(const uint8_t *data, size_t length,
+                              int *out_width, int *out_height,
+                              int *out_frame_count, int **out_delays_ms) {
+    if (out_width) *out_width = 0;
+    if (out_height) *out_height = 0;
+    if (out_frame_count) *out_frame_count = 0;
+    if (out_delays_ms) *out_delays_ms = nullptr;
+    if (!data || length == 0 || length > (size_t)INT_MAX ||
+        sniff_kind(data, length) != 3) return nullptr;
+
+    int width = 0, height = 0, frames = 0, components = 0;
+    int *delays = nullptr;
+    uint8_t *pixels = stbi_load_gif_from_memory(
+        data, (int)length, &delays, &width, &height, &frames,
+        &components, 4
+    );
+    if (!pixels || width <= 0 || height <= 0 || frames <= 0 ||
+        (size_t)width > SIZE_MAX / 4 ||
+        (size_t)height > SIZE_MAX / ((size_t)width * 4) ||
+        (size_t)frames > SIZE_MAX / ((size_t)width * (size_t)height * 4)) {
+        if (pixels) stbi_image_free(pixels);
+        if (delays) STBI_FREE(delays);
+        return nullptr;
+    }
+
+    if (out_width) *out_width = width;
+    if (out_height) *out_height = height;
+    if (out_frame_count) *out_frame_count = frames;
+    if (out_delays_ms) {
+        *out_delays_ms = delays;
+    } else if (delays) {
+        STBI_FREE(delays);
+    }
+    return pixels;
+}
+
+void QZImageFreeGIFDelays(int *delays_ms) {
+    if (delays_ms) STBI_FREE(delays_ms);
 }
 
 static void encode_sink(void *context, void *data, int size) {
