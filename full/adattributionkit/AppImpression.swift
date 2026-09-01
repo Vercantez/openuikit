@@ -2,11 +2,12 @@ import Foundation
 
 /// An attributable impression produced from a compact JSON Web Signature (JWS).
 ///
-/// Linux decodes documented JWS header and payload claims so callers can inspect
-/// impression metadata. It does not verify the ES256 signature against Apple
-/// ad-network keys, does not record view-through or click-through attribution,
-/// and does not open reengagement URLs. `isSupported` is `false`, and every
-/// recording method throws `AdAttributionKitError.missingAttributionView`.
+/// Linux has no trusted Apple ad-network key source and does not implement
+/// ES256 verification. `init(compactJWS:)` therefore never returns an instance:
+/// malformed compact JWS values throw a structural `AdAttributionKitError`, and
+/// every structurally valid value — including a forged nonempty signature — is
+/// rejected with `invalidImpressionJWSSignature`. `isSupported` is `false`.
+/// View and tap methods remain fail-closed if an instance is ever constructed.
 public struct AppImpression: Hashable, Identifiable, Sendable {
     public typealias ID = UUID
 
@@ -34,35 +35,10 @@ public struct AppImpression: Hashable, Identifiable, Sendable {
         LinuxAdAttributionBoundary.isSupported
     }
 
-    /// Creates an impression by decoding documented compact-JWS claims.
-    ///
-    /// This initializer validates compact JWS structure and the documented
-    /// header/payload fields. It does not contact Apple services and does not
-    /// verify the ES256 signature.
+    /// Rejects every compact JWS. Does not verify signatures and does not
+    /// return an impression after parsing header/payload JSON.
     public init(compactJWS: String) async throws {
-        self = try Self.decodeClaims(compactJWS: compactJWS)
-    }
-
-    private init(
-        id: UUID,
-        publisherItemID: UInt64,
-        advertisedItemID: UInt64,
-        sourceID: Int,
-        keyID: String,
-        adNetworkID: String,
-        timestamp: Date,
-        eligibleForReengagement: Bool,
-        compactJWSRepresentation: String
-    ) {
-        self.id = id
-        self.publisherItemID = publisherItemID
-        self.advertisedItemID = advertisedItemID
-        self.sourceID = sourceID
-        self.keyID = keyID
-        self.adNetworkID = adNetworkID
-        self.timestamp = timestamp
-        self.eligibleForReengagement = eligibleForReengagement
-        self.compactJWSRepresentation = compactJWSRepresentation
+        try Self.rejectUnverifiedCompactJWS(compactJWS)
     }
 
     /// Begins recording a view-through impression.
@@ -94,100 +70,54 @@ public struct AppImpression: Hashable, Identifiable, Sendable {
         throw LinuxAdAttributionBoundary.missingAttributionView()
     }
 
-    private struct JWSHeader: Decodable {
-        let alg: String
-        let kid: String
-    }
-
-    private struct JWSPayload: Decodable {
-        let impressionIdentifier: UUID
-        let publisherItemIdentifier: UInt64
-        let impressionType: String
-        let adNetworkIdentifier: String
-        let sourceIdentifier: Int
-        let timestamp: Int64
-        let advertisedItemIdentifier: UInt64
-        let eligibleForReengagement: Bool?
-
-        enum CodingKeys: String, CodingKey {
-            case impressionIdentifier = "impression-identifier"
-            case publisherItemIdentifier = "publisher-item-identifier"
-            case impressionType = "impression-type"
-            case adNetworkIdentifier = "ad-network-identifier"
-            case sourceIdentifier = "source-identifier"
-            case timestamp
-            case advertisedItemIdentifier = "advertised-item-identifier"
-            case eligibleForReengagement = "eligible-for-re-engagement"
-        }
-    }
-
-    private static func decodeClaims(compactJWS: String) throws -> AppImpression {
+    private static func rejectUnverifiedCompactJWS(_ compactJWS: String) throws -> Never {
         let parts = compactJWS.split(separator: ".", omittingEmptySubsequences: false)
         guard parts.count == 3 else {
             throw AdAttributionKitError.invalidImpressionJWSComponents
         }
 
-        let headerData = try decodeBase64URL(
-            String(parts[0]),
+        _ = try jsonObject(
+            fromBase64URL: String(parts[0]),
             or: .invalidImpressionJWSHeader
         )
-        let payloadData = try decodeBase64URL(
-            String(parts[1]),
+        _ = try jsonObject(
+            fromBase64URL: String(parts[1]),
             or: .invalidImpressionJWSPayload
         )
-        let signatureData = try decodeBase64URL(
+        let signature = try decodeBase64URL(
             String(parts[2]),
             or: .invalidImpressionJWSSignature
         )
-        guard !signatureData.isEmpty else {
+        guard !signature.isEmpty else {
             throw AdAttributionKitError.invalidImpressionJWSSignature
         }
 
-        let decoder = JSONDecoder()
-        let header: JWSHeader
-        do {
-            header = try decoder.decode(JWSHeader.self, from: headerData)
-        } catch {
-            throw AdAttributionKitError.invalidImpressionJWSHeader
-        }
-        guard header.alg == "ES256", !header.kid.isEmpty else {
-            throw AdAttributionKitError.invalidImpressionJWSHeader
-        }
+        // No trusted key source and no ES256 verifier: never succeed.
+        throw AdAttributionKitError.invalidImpressionJWSSignature
+    }
 
-        let payload: JWSPayload
+    private static func jsonObject(
+        fromBase64URL string: String,
+        or failure: AdAttributionKitError
+    ) throws -> [String: Any] {
+        let data = try decodeBase64URL(string, or: failure)
+        let object: Any
         do {
-            payload = try decoder.decode(JWSPayload.self, from: payloadData)
+            object = try JSONSerialization.jsonObject(with: data)
         } catch {
-            throw AdAttributionKitError.invalidImpressionJWSPayload
+            throw failure
         }
-        guard payload.impressionType == "app-impression" else {
-            throw AdAttributionKitError.invalidImpressionJWSPayload
+        if let dictionary = object as? [String: Any] {
+            return dictionary
         }
-        guard payload.adNetworkIdentifier == header.kid else {
-            throw AdAttributionKitError.invalidImpressionJWSPayload
-        }
-
-        let timestamp = Date(
-            timeIntervalSince1970: TimeInterval(payload.timestamp) / 1000.0
-        )
-        return AppImpression(
-            id: payload.impressionIdentifier,
-            publisherItemID: payload.publisherItemIdentifier,
-            advertisedItemID: payload.advertisedItemIdentifier,
-            sourceID: payload.sourceIdentifier,
-            keyID: header.kid,
-            adNetworkID: payload.adNetworkIdentifier,
-            timestamp: timestamp,
-            eligibleForReengagement: payload.eligibleForReengagement ?? false,
-            compactJWSRepresentation: compactJWS
-        )
+        throw failure
     }
 
     private static func decodeBase64URL(
         _ string: String,
-        or error: AdAttributionKitError
+        or failure: AdAttributionKitError
     ) throws -> Data {
-        guard !string.isEmpty else { throw error }
+        guard !string.isEmpty else { throw failure }
         var encoded = string
             .replacingOccurrences(of: "-", with: "+")
             .replacingOccurrences(of: "_", with: "/")
@@ -199,10 +129,10 @@ public struct AppImpression: Hashable, Identifiable, Sendable {
         case 3:
             encoded += "="
         default:
-            throw error
+            throw failure
         }
         guard let data = Data(base64Encoded: encoded) else {
-            throw error
+            throw failure
         }
         return data
     }

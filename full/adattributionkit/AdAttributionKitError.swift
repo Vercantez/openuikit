@@ -1,6 +1,9 @@
 import Foundation
 
 /// Values that describe ad attribution error conditions.
+///
+/// `description` returns the case name. Apple's shipped CustomStringConvertible
+/// text is unobserved in this seed and is not claimed.
 public enum AdAttributionKitError: Error, CustomStringConvertible, Hashable, Sendable {
     /// The attribution failed due to an unknown, unrecoverable error.
     case unknown
@@ -21,27 +24,27 @@ public enum AdAttributionKitError: Error, CustomStringConvertible, Hashable, Sen
     /// The postback update failed due to an invalid conversion tag.
     case invalidConversionTag
 
-    /// A string that describes the error.
+    /// A string that names the error case. Not Apple description copy.
     public var description: String {
         switch self {
         case .unknown:
-            return "The attribution failed due to an unknown, unrecoverable error."
+            return "unknown"
         case .missingAttributionView:
-            return "The attribution failed due to a missing attribution view."
+            return "missingAttributionView"
         case .impressionExpired:
-            return "The attribution failed because the impression expired."
+            return "impressionExpired"
         case .invalidImpressionJWSHeader:
-            return "The attribution failed due to an invalid JWS header."
+            return "invalidImpressionJWSHeader"
         case .invalidImpressionJWSPayload:
-            return "The attribution failed due to an invalid JWS payload."
+            return "invalidImpressionJWSPayload"
         case .invalidImpressionJWSSignature:
-            return "The attribution failed due to an invalid JWS signature."
+            return "invalidImpressionJWSSignature"
         case .invalidImpressionJWSComponents:
-            return "The attribution failed due to invalid JWS components."
+            return "invalidImpressionJWSComponents"
         case .conversionTagNotSupported:
-            return "The postback update failed due to an unsupported use of conversion tag."
+            return "conversionTagNotSupported"
         case .invalidConversionTag:
-            return "The postback update failed due to an invalid conversion tag."
+            return "invalidConversionTag"
         }
     }
 }
