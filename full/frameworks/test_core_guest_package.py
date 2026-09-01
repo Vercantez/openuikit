@@ -2246,7 +2246,7 @@ class ShellContractTests(unittest.TestCase):
             builder,
         )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 4
+            builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 5
         )
         self.assertEqual(
             builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 26
@@ -2572,17 +2572,17 @@ class ShellContractTests(unittest.TestCase):
         validate_build_full_swift_core_source(build_full)
         self.assertIn(
             "EXPECTED_MACHORUN_COMMIT="
-            "dd18e0b5e51e26d4673193d341e7c9a864db2fb8",
+            "74f46d3b02b372e14f9ca9cee3d8a76ccc96fccb",
             builder,
         )
         self.assertIn(
             "EXPECTED_MACHORUN_TREE="
-            "42d42ace9c6ff7a4ae7c25c3a8e466f82d5f70c8",
+            "902fdd27b904f88b86b58f61efa73785235d83ad",
             builder,
         )
         self.assertNotIn(
             "EXPECTED_MACHORUN_COMMIT="
-            "edb99a8574255ddc4c979b2f0cf2615033ff14fd",
+            "dd18e0b5e51e26d4673193d341e7c9a864db2fb8",
             builder,
         )
         for token in (
@@ -2930,7 +2930,7 @@ class ShellContractTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(result.stdout.strip(), marker)
 
-    def test_foundation_uses_proven_libsystem_group_xattr_and_fts_adapters(self) -> None:
+    def test_foundation_uses_proven_libsystem_group_xattr_fts_and_copyfile_adapters(self) -> None:
         builder = BUILDER.read_text(encoding="utf-8")
         stubs = (REPO / "full/foundation/fm_unimplemented.c").read_text(
             encoding="utf-8"
@@ -2947,6 +2947,8 @@ class ShellContractTests(unittest.TestCase):
             "MR_STUB(fts_open)",
             "MR_STUB(fts_read)",
             "MR_STUB(fts_set)",
+            "MR_STUB(copyfile)",
+            "MR_STUB(fcopyfile)",
             "MR_STUB(quotactl)",
             "MR_STUB(uname)",
         ):
@@ -2965,6 +2967,13 @@ class ShellContractTests(unittest.TestCase):
             "EXPECTED_MACHORUN_FTS_SOURCE_SHA=",
             "EXPECTED_MACHORUN_FTS_SUMMARY_SHA=",
             "EXPECTED_MACHORUN_FTS_LIBSYSTEM_SOURCE_SHA=",
+            "EXPECTED_MACHORUN_COPYFILE_FIXTURE_SHA=",
+            "EXPECTED_MACHORUN_COPYFILE_GOLDEN_SHA=",
+            "EXPECTED_MACHORUN_COPYFILE_STDERR_SHA=",
+            "EXPECTED_MACHORUN_COPYFILE_EXIT_SHA=",
+            "EXPECTED_MACHORUN_COPYFILE_SOURCE_SHA=",
+            "EXPECTED_MACHORUN_COPYFILE_SUMMARY_SHA=",
+            "EXPECTED_MACHORUN_COPYFILE_LIBSYSTEM_SOURCE_SHA=",
             "EXPECTED_MACHORUN_QUOTA_FIXTURE_SHA=",
             "EXPECTED_MACHORUN_QUOTA_GOLDEN_SHA=",
             "EXPECTED_MACHORUN_QUOTA_SOURCE_SHA=",
@@ -2983,9 +2992,16 @@ class ShellContractTests(unittest.TestCase):
             "tests/expected/fts.exit",
             "tests/src/fts.c",
             "tests/meta/fts.summary.txt",
+            "tests/bin/copyfile",
+            "tests/expected/copyfile.stdout",
+            "tests/expected/copyfile.stderr",
+            "tests/expected/copyfile.exit",
+            "tests/src/copyfile.c",
+            "tests/meta/copyfile.summary.txt",
             "OPEN_FOUNDATION_GROUP_LOOKUP_OK",
             "OPEN_FOUNDATION_XATTR_OK",
             "OPEN_FOUNDATION_FTS_OK",
+            "OPEN_FOUNDATION_COPYFILE_OK",
             "OPEN_FOUNDATION_LIBSYSTEM_COMPAT_OK",
             '$(NF - 1) == "libSystem.real"',
             "group-lookup-macho.log",
@@ -2993,6 +3009,9 @@ class ShellContractTests(unittest.TestCase):
             "fts-apple.txt",
             "fts-apple-summary.txt",
             "fts-macho.log",
+            "copyfile-apple.txt",
+            "copyfile-apple-summary.txt",
+            "copyfile-macho.log",
             "libsystem-compat-macho.log",
             "native Linux group static-storage contract drifted",
             "group-lookup-native.normalized.log",
@@ -3013,6 +3032,12 @@ class ShellContractTests(unittest.TestCase):
             "_fts_read",
             "_fts_children",
             "_fts_set",
+            "_copyfile",
+            "_copyfile_state_alloc",
+            "_copyfile_state_free",
+            "_copyfile_state_get",
+            "_copyfile_state_set",
+            "_fcopyfile",
             "_quotactl",
             "_uname",
         ):

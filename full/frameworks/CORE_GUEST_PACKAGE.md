@@ -334,6 +334,19 @@ callbacks, and stream-device projection. All five `fts` entry points must be
 defined exactly once by the staged real libSystem, while FoundationEssentials'
 four actual imports must bind to that image exactly once.
 
+FileManager copying now follows the same ownership rule: the package-local
+`copyfile` and `fcopyfile` traps are gone, and both imports bind exactly once to
+machorun's real Darwin copy engine. The pinned Apple-built arm64 fixture proves
+state allocation, private filename ownership and the documented NULL-source
+route, callback/context pointer ABI, regular-file contents, owner/mode/time and
+xattr metadata, exclusive/no-follow behavior, symlink identity, empty-directory
+creation, descriptor copying, byte progress, and the documented best-effort
+`CLONE` fallback. Its stdout, empty stderr, zero exit status, source, binary and
+Mach-O summary are independently hashed, cold-run, and artifact-attested.
+Unsupported recursive, forced-clone, AppleDouble and quarantined
+`RUN_IN_PLACE` cases remain fail-closed in libSystem rather than being reported
+as successful Linux copies.
+
 The app-facing Foundation facade deliberately keeps linker auto-linking
 disabled. Its manual closure therefore names exactly
 `libswift_StringProcessing` (used by `DateFormatter` and the bounded string
