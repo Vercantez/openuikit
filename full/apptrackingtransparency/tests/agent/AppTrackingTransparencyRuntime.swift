@@ -79,9 +79,8 @@ func testRequestTrackingAuthorizationAsyncFailClosed() async {
 }
 
 func testManagerIdentity() {
-    let manager = ATTrackingManager()
-    _ = manager
-    precondition(ATTrackingManager() is NSObject)
+    let manager: NSObject = ATTrackingManager()
+    _ = String(describing: manager)
 }
 
 testAuthorizationStatusSurface()
