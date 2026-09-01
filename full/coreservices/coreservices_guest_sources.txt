@@ -1,3 +1,4 @@
 full/coreservices/CoreServices.swift
+full/coreservices/CoreServicesHostSPI.swift
 full/coreservices/UTCoreTypes.swift
 full/coreservices/UTTypeDatabase.swift
