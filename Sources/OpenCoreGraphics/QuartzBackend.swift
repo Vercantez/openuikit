@@ -37,11 +37,32 @@ final class QuartzBackend: CanvasBackend {
     /// groups. `nil` is an ordinary, unmasked group.
     private var layerMasks: [[UInt8]?] = []
 
-    init?(canvas: Canvas) {
+    convenience init?(canvas: Canvas) {
+        self.init(
+            canvas: canvas,
+            data: nil,
+            bytesPerRow: canvas.bitmap.width * 4,
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue
+        )
+    }
+
+    init?(
+        canvas: Canvas,
+        data: UnsafeMutableRawPointer?,
+        bytesPerRow requestedBytesPerRow: Int,
+        bitmapInfo: UInt32
+    ) {
         let bitmap = canvas.bitmap
         guard bitmap.width > 0, bitmap.height > 0,
-              let ctx = QZBitmapContextCreate(nil, bitmap.width, bitmap.height,
-                                              8, bitmap.width * 4, 1)
+              requestedBytesPerRow >= bitmap.width * 4,
+              let ctx = QZBitmapContextCreate(
+                  data,
+                  bitmap.width,
+                  bitmap.height,
+                  8,
+                  requestedBytesPerRow,
+                  bitmapInfo
+              )
         else { return nil }
         self.canvas = canvas
         self.bitmap = bitmap
@@ -50,9 +71,11 @@ final class QuartzBackend: CanvasBackend {
         self.height = bitmap.height
         self.bytesPerRow = QZBitmapContextGetBytesPerRow(ctx)
 
-        // Seed the premultiplied backing from the (straight-alpha) bitmap.
-        if let data = QZBitmapContextGetData(ctx) {
-            let dst = data.assumingMemoryBound(to: UInt8.self)
+        // Seed a newly allocated backing from the straight-alpha Bitmap. An
+        // externally supplied backing is already authoritative; rewriting it
+        // here would violate CGBitmapContext's caller-owned storage contract.
+        if data == nil, let backing = QZBitmapContextGetData(ctx) {
+            let dst = backing.assumingMemoryBound(to: UInt8.self)
             bitmap.pixels.withUnsafeBufferPointer { src in
                 for y in 0..<height {
                     let srow = y * width * 4

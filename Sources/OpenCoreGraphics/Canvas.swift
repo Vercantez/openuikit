@@ -38,6 +38,38 @@ public struct CGColor: Equatable, Sendable {
     }
 }
 
+/// Color-space identity accepted by bitmap graphics contexts.
+///
+/// The current renderer is an 8-bit sRGB pipeline, so device RGB is the one
+/// truthful writable space. Keeping it as a reference value matches the
+/// CoreGraphics ownership shape and leaves room for calibrated spaces without
+/// pretending that they are already implemented.
+public final class CGColorSpace: @unchecked Sendable {
+    enum Model: Equatable { case deviceRGB }
+    let model: Model
+
+    fileprivate init(model: Model) {
+        self.model = model
+    }
+}
+
+/// Creates the writable device-RGB space used by RGBA bitmap contexts.
+public func CGColorSpaceCreateDeviceRGB() -> CGColorSpace {
+    CGColorSpace(model: .deviceRGB)
+}
+
+/// Alpha placement values in the low five bits of a bitmap-info word.
+public enum CGImageAlphaInfo: UInt32, Sendable {
+    case none = 0
+    case premultipliedLast = 1
+    case premultipliedFirst = 2
+    case last = 3
+    case first = 4
+    case noneSkipLast = 5
+    case noneSkipFirst = 6
+    case alphaOnly = 7
+}
+
 /// RGBA8 bitmap, non-premultiplied sRGB, row-major, 4 bytes/pixel.
 public final class Bitmap {
     public let width: Int
@@ -160,6 +192,8 @@ public final class Canvas {
     /// Rendering backend (Backend.swift), chosen at creation from
     /// `CanvasBackendSelection.current`. All drawing ops dispatch through it.
     var backend: CanvasBackend!
+    private var externalBitmapData: UnsafeMutableRawPointer?
+    private var externalBitmapBytesPerRow = 0
 
     public init(bitmap: Bitmap, scale: CGFloat) {
         self.bitmap = bitmap
@@ -173,6 +207,108 @@ public final class Canvas {
         case .swift:
             self.backend = SwiftRasterizerBackend(canvas: self)
         }
+    }
+
+    /// Creates an 8-bit premultiplied-last device-RGB bitmap context.
+    ///
+    /// A non-nil data pointer remains the live Quartz backing for the context;
+    /// callers retain ownership and must keep it valid for this object's
+    /// lifetime, matching CoreGraphics. Unsupported component/layout choices
+    /// fail closed instead of being silently reinterpreted.
+    public convenience init?(
+        data: UnsafeMutableRawPointer?,
+        width: Int,
+        height: Int,
+        bitsPerComponent: Int,
+        bytesPerRow: Int,
+        space: CGColorSpace,
+        bitmapInfo: UInt32
+    ) {
+        let (minimumBytesPerRow, rowWidthOverflow) = width.multipliedReportingOverflow(by: 4)
+        let (_, bitmapSizeOverflow) = minimumBytesPerRow.multipliedReportingOverflow(by: height)
+        let (_, backingSizeOverflow) = bytesPerRow.multipliedReportingOverflow(by: height)
+        guard width > 0, height > 0,
+              width <= Int(Int32.max), height <= Int(Int32.max),
+              !rowWidthOverflow, !bitmapSizeOverflow, !backingSizeOverflow,
+              bitsPerComponent == 8,
+              bytesPerRow >= minimumBytesPerRow,
+              space.model == .deviceRGB,
+              bitmapInfo == CGImageAlphaInfo.premultipliedLast.rawValue
+        else { return nil }
+
+        let bitmap = Bitmap(width: width, height: height)
+        if let data {
+            let source = data.assumingMemoryBound(to: UInt8.self)
+            for y in 0..<height {
+                let sourceRow = y * bytesPerRow
+                let destinationRow = y * width * 4
+                for x in 0..<width {
+                    let sourceOffset = sourceRow + x * 4
+                    let destinationOffset = destinationRow + x * 4
+                    let alpha = Int(source[sourceOffset + 3])
+                    bitmap.pixels[destinationOffset + 3] = UInt8(alpha)
+                    if alpha == 0 {
+                        bitmap.pixels[destinationOffset] = 0
+                        bitmap.pixels[destinationOffset + 1] = 0
+                        bitmap.pixels[destinationOffset + 2] = 0
+                    } else if alpha == 255 {
+                        bitmap.pixels[destinationOffset] = source[sourceOffset]
+                        bitmap.pixels[destinationOffset + 1] = source[sourceOffset + 1]
+                        bitmap.pixels[destinationOffset + 2] = source[sourceOffset + 2]
+                    } else {
+                        bitmap.pixels[destinationOffset] = UInt8(Swift.min(
+                            255, (Int(source[sourceOffset]) * 255 + alpha / 2) / alpha
+                        ))
+                        bitmap.pixels[destinationOffset + 1] = UInt8(Swift.min(
+                            255, (Int(source[sourceOffset + 1]) * 255 + alpha / 2) / alpha
+                        ))
+                        bitmap.pixels[destinationOffset + 2] = UInt8(Swift.min(
+                            255, (Int(source[sourceOffset + 2]) * 255 + alpha / 2) / alpha
+                        ))
+                    }
+                }
+            }
+        }
+
+        self.init(bitmap: bitmap, scale: 1)
+        guard let context = QuartzBackend(
+            canvas: self,
+            data: data,
+            bytesPerRow: bytesPerRow,
+            bitmapInfo: bitmapInfo
+        ) else { return nil }
+        externalBitmapData = data
+        externalBitmapBytesPerRow = bytesPerRow
+        backend = context
+    }
+
+    /// Returns an immutable-by-value snapshot of the context's current image.
+    public func makeImage() -> Bitmap? {
+        if let data = externalBitmapData {
+            let source = data.assumingMemoryBound(to: UInt8.self)
+            for y in 0..<bitmap.height {
+                let sourceRow = y * externalBitmapBytesPerRow
+                let destinationRow = y * bitmap.width * 4
+                for x in 0..<bitmap.width {
+                    let sourceOffset = sourceRow + x * 4
+                    let destinationOffset = destinationRow + x * 4
+                    let alpha = Int(source[sourceOffset + 3])
+                    bitmap.pixels[destinationOffset + 3] = UInt8(alpha)
+                    for component in 0..<3 {
+                        bitmap.pixels[destinationOffset + component] = alpha == 0
+                            ? 0
+                            : UInt8(Swift.min(
+                                255,
+                                (Int(source[sourceOffset + component]) * 255
+                                    + alpha / 2) / alpha
+                            ))
+                    }
+                }
+            }
+        }
+        let image = Bitmap(width: bitmap.width, height: bitmap.height)
+        image.pixels = bitmap.pixels
+        return image
     }
 
     public func save() { _save(); backend.saveState() }
