@@ -1,0 +1,4 @@
+module COpenAccelerate {
+    header "Accelerate.h"
+    export *
+}

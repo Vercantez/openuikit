@@ -1,0 +1,7 @@
+domain=com.apple.CoreText.CTFontManagerErrorDomain
+codes=already:105,duplicate:305
+first=true,domain:nil,code:nil
+repeat=false,domain:com.apple.CoreText.CTFontManagerErrorDomain,code:105
+duplicate=true,domain:nil,code:nil
+invalid=false,domain:com.apple.CoreText.CTFontManagerErrorDomain,code:103
+missing=false,domain:com.apple.CoreText.CTFontManagerErrorDomain,code:101

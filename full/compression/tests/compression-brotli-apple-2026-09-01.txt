@@ -1,0 +1,3 @@
+algorithm=compression_algorithm(rawValue: 2818)
+encoded=iyaASWNlQ3ViZXMgdW50b3VjaGVkIFJldmVudWVDYXQgQnJvdGxpIHJlc3BvbnNlOiBwb3J0YWJsZSBNYWNoLU8gZ3Vlc3RzIG9uIExpbnV4Aw==
+decoded=IceCubes untouched RevenueCat Brotli response: portable Mach-O guests on Linux

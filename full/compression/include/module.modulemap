@@ -1,0 +1,4 @@
+module COpenCompression {
+    header "OpenCompressionABI.h"
+    export *
+}
