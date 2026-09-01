@@ -1845,6 +1845,14 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("SWIFTUI_COMPILER_PLUGINS_OK", source)
         self.assertIn("BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE=''", source)
         self.assertIn("BUILD_FULL_PREVIEW_MACRO_PLUGIN=''", source)
+        self.assertIn(
+            "BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE=disabled", source
+        )
+        self.assertIn(
+            "BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_DISABLED_OWNER="
+            "core-package-post-foundation",
+            source,
+        )
         self.assertIn("Foundation-hidden build_full output", source)
         self.assertIn("@Entry var portableCompilerPluginProbe", probe)
         self.assertEqual(probe.count("#Preview"), 2)

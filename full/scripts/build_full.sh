@@ -49,6 +49,8 @@ PINNED_INPUTS_TOOL=$W/full/foundation/pinned_inputs.pl
 BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE=${BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE:-}
 BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT=${BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT:-}
 BUILD_FULL_PREVIEW_MACRO_PLUGIN=${BUILD_FULL_PREVIEW_MACRO_PLUGIN:-}
+BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE=${BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE:-standalone}
+BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_DISABLED_OWNER=${BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_DISABLED_OWNER:-}
 
 # ---- pinned upstream compile inputs ---------------------------------------
 # This preflight happens before outputs or success markers are touched. The
@@ -99,10 +101,10 @@ SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS" "${APPLE_SWIFT_OVERLAY_FLAGS[@]}" -
 LD=(ld64.lld-18 -arch arm64 -platform_version "$LINK_PLATFORM" "$MINOS" "$LINK_SDK_VERSION" -syslibroot "$SYS" -rpath /usr/lib/swift)
 CC=(clang-18 -target "$TARGET" -isysroot "$SYS" -O2)
 
-# Optional, purpose-specific Preview seam used by the cold core-package build.
-# All inputs stay external to this build's UIKit module: the target DTS module
-# is visible during UIKit/app compiles, its object is linked exactly once into
-# each executable, and the native host plugin is loaded but never target-linked.
+# The DTS route is explicit and fail-closed. Standalone mode builds the
+# canonical target source, external mode consumes an all-or-none attested trio,
+# and disabled mode is reserved for the core package's Foundation-hidden stage,
+# whose post-Foundation phase owns DTS and both compiler-library plugins.
 PREVIEW_INPUT_COUNT=0
 [ -n "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE" ] \
     && PREVIEW_INPUT_COUNT=$((PREVIEW_INPUT_COUNT + 1))
@@ -110,14 +112,43 @@ PREVIEW_INPUT_COUNT=0
     && PREVIEW_INPUT_COUNT=$((PREVIEW_INPUT_COUNT + 1))
 [ -n "$BUILD_FULL_PREVIEW_MACRO_PLUGIN" ] \
     && PREVIEW_INPUT_COUNT=$((PREVIEW_INPUT_COUNT + 1))
-[ "$PREVIEW_INPUT_COUNT" -eq 0 ] || [ "$PREVIEW_INPUT_COUNT" -eq 3 ] || {
-    echo 'build_full: Preview inputs are all-or-none' >&2
-    exit 2
-}
+case "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE" in
+    standalone)
+        [ "$PREVIEW_INPUT_COUNT" -eq 0 ] || {
+            echo 'build_full: standalone DTS mode refuses external Preview inputs' >&2
+            exit 2
+        }
+        [ -z "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_DISABLED_OWNER" ] || {
+            echo 'build_full: standalone DTS mode refuses a disabled-owner token' >&2
+            exit 2
+        } ;;
+    external)
+        [ "$PREVIEW_INPUT_COUNT" -eq 3 ] || {
+            echo 'build_full: external DTS mode requires all three Preview inputs' >&2
+            exit 2
+        }
+        [ -z "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_DISABLED_OWNER" ] || {
+            echo 'build_full: external DTS mode refuses a disabled-owner token' >&2
+            exit 2
+        } ;;
+    disabled)
+        [ "$PREVIEW_INPUT_COUNT" -eq 0 ] || {
+            echo 'build_full: disabled DTS mode refuses external Preview inputs' >&2
+            exit 2
+        }
+        [ "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_DISABLED_OWNER" = \
+            core-package-post-foundation ] || {
+            echo 'build_full: disabled DTS mode lacks the core-package ownership token' >&2
+            exit 2
+        } ;;
+    *)
+        echo "build_full: invalid DTS mode: $BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE" >&2
+        exit 2 ;;
+esac
 PREVIEW_SWIFT_FLAGS=()
 PREVIEW_LINK_OBJECTS=()
 PREVIEW_INPUT_STATE_BEFORE='disabled'
-if [ "$PREVIEW_INPUT_COUNT" -eq 3 ]; then
+if [ "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE" = external ]; then
     [ "$(basename "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE")" = \
         DeveloperToolsSupport.swiftmodule ] || {
         echo 'build_full: Preview target module basename drifted' >&2; exit 2; }
@@ -569,11 +600,12 @@ CINC=(-Xcc -I"$OUT/inc/CPortableIO" -Xcc -I"$OUT/inc/CSTBTrueType"
       -Xcc -I"$UIKIT/Sources/CQuartz/include")
 
 # DeveloperToolsSupport is a real target-side framework dependency of the
-# canonical UIKit shim. A package builder may inject an already-attested
-# module/object plus its matching host macro plugin. The standalone full build
-# still has to be complete when no plugin transport is requested, so compile
-# the exact canonical target source here and link it into both proof binaries.
-if [ "$PREVIEW_INPUT_COUNT" -eq 0 ]; then
+# canonical UIKit shim. External mode injects an already-attested module/object
+# plus its matching host macro plugin. Standalone mode compiles the exact
+# canonical target source here and links it into both proof binaries. Disabled
+# mode intentionally does neither; its ownership token is accepted only for the
+# core-package route that builds DTS after the Foundation visibility boundary.
+if [ "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE" = standalone ]; then
     DTS_OUT=$OUT/developertoolsupport
     mkdir -p "$DTS_OUT"
     echo "== DeveloperToolsSupport (canonical target module)"
@@ -861,7 +893,7 @@ if [ "$PINNED_SOURCE_STATE_BEFORE" != "$PINNED_SOURCE_STATE_AFTER" ]; then
     exit 2
 fi
 PREVIEW_INPUT_STATE_AFTER='disabled'
-if [ "$PREVIEW_INPUT_COUNT" -eq 3 ]; then
+if [ "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE" = external ]; then
     PREVIEW_INPUT_STATE_AFTER=$(
         sha256sum "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE" \
             "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT" \
@@ -888,7 +920,7 @@ fi
         "$(sha256sum "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib" | awk '{print $1}')"
     printf 'libc++.1.dylib\t%s\n' \
         "$(sha256sum "$ROOTDIR/darwin/usr/lib/libc++.1.dylib" | awk '{print $1}')"
-    if [ "$PREVIEW_INPUT_COUNT" -eq 3 ]; then
+    if [ "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE" = external ]; then
         printf 'DeveloperToolsSupport.swiftmodule\t%s\n' \
             "$(sha256sum "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE" | awk '{print $1}')"
         printf 'developertoolsupport.o\t%s\n' \

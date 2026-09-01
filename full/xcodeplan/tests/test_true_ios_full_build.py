@@ -117,7 +117,17 @@ class TrueIOSFullBuildContractTests(unittest.TestCase):
 
     def test_developer_tools_support_is_a_standalone_full_build_dependency(self) -> None:
         builder = BUILD_FULL_PATH.read_text(encoding="utf-8")
-        self.assertIn('if [ "$PREVIEW_INPUT_COUNT" -eq 0 ]; then', builder)
+        self.assertIn(
+            "BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE="
+            "${BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE:-standalone}",
+            builder,
+        )
+        self.assertIn(
+            'case "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE" in', builder
+        )
+        self.assertIn('if [ "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE" = standalone ]; then', builder)
+        self.assertIn('if [ "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE" = external ]; then', builder)
+        self.assertIn("disabled DTS mode lacks the core-package ownership token", builder)
         self.assertIn('-module-name DeveloperToolsSupport', builder)
         self.assertIn('$UIKIT/Sources/DeveloperToolsSupport/Preview.swift', builder)
         self.assertIn('PREVIEW_LINK_OBJECTS=("$DTS_OUT/developertoolsupport.o")', builder)
