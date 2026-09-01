@@ -1,0 +1,775 @@
+import Foundation
+
+open class GKGraphNode: NSObject, NSCopying, NSSecureCoding {
+    private var connections: [GKGraphNode] = []
+
+    public var connectedNodes: [GKGraphNode] { connections }
+
+    public static var supportsSecureCoding: Bool { true }
+
+    public override init() {
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init()
+    }
+
+    public func encode(with coder: NSCoder) {}
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        GKGraphNode()
+    }
+
+    open func addConnections(to nodes: [GKGraphNode], bidirectional: Bool) {
+        for node in nodes where node !== self {
+            if !connections.contains(where: { $0 === node }) {
+                connections.append(node)
+            }
+            if bidirectional {
+                node.addConnections(to: [self], bidirectional: false)
+            }
+        }
+    }
+
+    open func removeConnections(to nodes: [GKGraphNode], bidirectional: Bool) {
+        connections.removeAll { candidate in
+            nodes.contains(where: { $0 === candidate })
+        }
+        if bidirectional {
+            for node in nodes {
+                node.removeConnections(to: [self], bidirectional: false)
+            }
+        }
+    }
+
+    open func cost(to node: GKGraphNode) -> Float {
+        if node === self { return 0 }
+        if connections.contains(where: { $0 === node }) {
+            return 1
+        }
+        return Float.greatestFiniteMagnitude
+    }
+
+    open func estimatedCost(to node: GKGraphNode) -> Float {
+        0
+    }
+
+    open func findPath(to goalNode: GKGraphNode) -> [GKGraphNode] {
+        gkAStar(from: self, to: goalNode)
+    }
+
+    open func findPath(from startNode: GKGraphNode) -> [GKGraphNode] {
+        startNode.findPath(to: self)
+    }
+}
+
+open class GKGraphNode2D: GKGraphNode {
+    public var position: vector_float2
+
+    public required init(point: vector_float2) {
+        self.position = point
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        position = vector_float2(0, 0)
+        super.init(coder: coder)
+    }
+
+    open class func node(withPoint point: vector_float2) -> Self {
+        Self(point: point)
+    }
+
+    public override func copy(with zone: NSZone? = nil) -> Any {
+        GKGraphNode2D(point: position)
+    }
+
+    open override func cost(to node: GKGraphNode) -> Float {
+        if node === self { return 0 }
+        guard connectedNodes.contains(where: { $0 === node }) else {
+            return Float.greatestFiniteMagnitude
+        }
+        if let other = node as? GKGraphNode2D {
+            return gkDistance(position, other.position)
+        }
+        return super.cost(to: node)
+    }
+
+    open override func estimatedCost(to node: GKGraphNode) -> Float {
+        if let other = node as? GKGraphNode2D {
+            return gkDistance(position, other.position)
+        }
+        return 0
+    }
+}
+
+open class GKGraphNode3D: GKGraphNode {
+    public var position: vector_float3
+
+    public required init(point: vector_float3) {
+        self.position = point
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        position = vector_float3(0, 0, 0)
+        super.init(coder: coder)
+    }
+
+    open class func node(withPoint point: vector_float3) -> Self {
+        Self(point: point)
+    }
+
+    public override func copy(with zone: NSZone? = nil) -> Any {
+        GKGraphNode3D(point: position)
+    }
+
+    open override func cost(to node: GKGraphNode) -> Float {
+        if node === self { return 0 }
+        guard connectedNodes.contains(where: { $0 === node }) else {
+            return Float.greatestFiniteMagnitude
+        }
+        if let other = node as? GKGraphNode3D {
+            return gkDistance(position, other.position)
+        }
+        return super.cost(to: node)
+    }
+
+    open override func estimatedCost(to node: GKGraphNode) -> Float {
+        if let other = node as? GKGraphNode3D {
+            return gkDistance(position, other.position)
+        }
+        return 0
+    }
+}
+
+open class GKGridGraphNode: GKGraphNode {
+    public private(set) var gridPosition: vector_int2
+
+    public required init(gridPosition: vector_int2) {
+        self.gridPosition = gridPosition
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        gridPosition = vector_int2(0, 0)
+        super.init(coder: coder)
+    }
+
+    public override func copy(with zone: NSZone? = nil) -> Any {
+        GKGridGraphNode(gridPosition: gridPosition)
+    }
+
+    open override func cost(to node: GKGraphNode) -> Float {
+        if node === self { return 0 }
+        guard connectedNodes.contains(where: { $0 === node }) else {
+            return Float.greatestFiniteMagnitude
+        }
+        if let other = node as? GKGridGraphNode {
+            let dx = abs(Int(gridPosition.x) - Int(other.gridPosition.x))
+            let dy = abs(Int(gridPosition.y) - Int(other.gridPosition.y))
+            if dx == 1 && dy == 1 {
+                return 1.4142135
+            }
+            return Float(dx + dy)
+        }
+        return super.cost(to: node)
+    }
+
+    open override func estimatedCost(to node: GKGraphNode) -> Float {
+        guard let other = node as? GKGridGraphNode else { return 0 }
+        let dx = Float(abs(Int(gridPosition.x) - Int(other.gridPosition.x)))
+        let dy = Float(abs(Int(gridPosition.y) - Int(other.gridPosition.y)))
+        return (dx * dx + dy * dy).squareRoot()
+    }
+}
+
+open class GKGraph: NSObject, NSCopying, NSSecureCoding {
+    private var nodeStorage: [GKGraphNode] = []
+
+    public var nodes: [GKGraphNode]? { nodeStorage.isEmpty ? nil : nodeStorage }
+
+    public static var supportsSecureCoding: Bool { true }
+
+    public init(_ nodes: [GKGraphNode]) {
+        self.nodeStorage = nodes
+        super.init()
+    }
+
+    public convenience init(nodes: [GKGraphNode]) {
+        self.init(nodes)
+    }
+
+    public override init() {
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init()
+    }
+
+    public func encode(with coder: NSCoder) {}
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        GKGraph(nodeStorage)
+    }
+
+    open func add(_ nodes: [GKGraphNode]) {
+        for node in nodes where !nodeStorage.contains(where: { $0 === node }) {
+            nodeStorage.append(node)
+        }
+    }
+
+    open func remove(_ nodes: [GKGraphNode]) {
+        nodeStorage.removeAll { candidate in
+            nodes.contains(where: { $0 === candidate })
+        }
+        for remaining in nodeStorage {
+            remaining.removeConnections(to: nodes, bidirectional: false)
+        }
+    }
+
+    open func connectToLowestCostNode(node: GKGraphNode, bidirectional: Bool) {
+        guard !nodeStorage.isEmpty else {
+            add([node])
+            return
+        }
+        var best: GKGraphNode?
+        var bestCost = Float.greatestFiniteMagnitude
+        for existing in nodeStorage where existing !== node {
+            let cost = node.estimatedCost(to: existing)
+            if cost < bestCost {
+                bestCost = cost
+                best = existing
+            }
+        }
+        add([node])
+        if let best {
+            node.addConnections(to: [best], bidirectional: bidirectional)
+        }
+    }
+
+    open func findPath(from startNode: GKGraphNode, to endNode: GKGraphNode) -> [GKGraphNode] {
+        startNode.findPath(to: endNode)
+    }
+}
+
+open class GKGridGraph<NodeType: GKGridGraphNode>: GKGraph {
+    public let gridOrigin: vector_int2
+    public let gridWidth: Int
+    public let gridHeight: Int
+    public let diagonalsAllowed: Bool
+    private var grid: [vector_int2: NodeType] = [:]
+    private let nodeType: NodeType.Type
+
+    public init(
+        fromGridStartingAt position: vector_int2,
+        width: Int32,
+        height: Int32,
+        diagonalsAllowed: Bool
+    ) {
+        self.gridOrigin = position
+        self.gridWidth = Int(width)
+        self.gridHeight = Int(height)
+        self.diagonalsAllowed = diagonalsAllowed
+        self.nodeType = NodeType.self
+        super.init([])
+        buildGrid()
+    }
+
+    public init(
+        fromGridStartingAt position: vector_int2,
+        width: Int32,
+        height: Int32,
+        diagonalsAllowed: Bool,
+        nodeClass: AnyClass
+    ) {
+        self.gridOrigin = position
+        self.gridWidth = Int(width)
+        self.gridHeight = Int(height)
+        self.diagonalsAllowed = diagonalsAllowed
+        self.nodeType = (nodeClass as? NodeType.Type) ?? NodeType.self
+        super.init([])
+        buildGrid()
+    }
+
+    public convenience init(nodes: [GKGraphNode]) {
+        self.init(fromGridStartingAt: vector_int2(0, 0), width: 0, height: 0, diagonalsAllowed: false)
+        add(nodes)
+    }
+
+    public required init?(coder: NSCoder) {
+        self.gridOrigin = vector_int2(0, 0)
+        self.gridWidth = 0
+        self.gridHeight = 0
+        self.diagonalsAllowed = false
+        self.nodeType = NodeType.self
+        super.init(coder: coder)
+    }
+
+    private func buildGrid() {
+        var created: [NodeType] = []
+        if gridWidth <= 0 || gridHeight <= 0 { return }
+        for y in 0..<gridHeight {
+            for x in 0..<gridWidth {
+                let pos = vector_int2(gridOrigin.x + Int32(x), gridOrigin.y + Int32(y))
+                let node = nodeType.init(gridPosition: pos)
+                grid[pos] = node
+                created.append(node)
+            }
+        }
+        add(created)
+        for node in created {
+            connectToAdjacentNodes(node: node)
+        }
+    }
+
+    open func node(atGridPosition position: vector_int2) -> NodeType? {
+        grid[position]
+    }
+
+    open func connectToAdjacentNodes(node: GKGridGraphNode) {
+        let x = Int(node.gridPosition.x)
+        let y = Int(node.gridPosition.y)
+        var neighbors: [GKGraphNode] = []
+        let cardinal = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        let diagonal = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
+        let offsets = diagonalsAllowed ? cardinal + diagonal : cardinal
+        for (dx, dy) in offsets {
+            let pos = vector_int2(Int32(x + dx), Int32(y + dy))
+            if let other = grid[pos] {
+                neighbors.append(other)
+            }
+        }
+        node.addConnections(to: neighbors, bidirectional: true)
+        if grid[node.gridPosition] == nil, let typed = node as? NodeType {
+            grid[node.gridPosition] = typed
+            add([typed])
+        }
+    }
+
+    open func classForGenericArgument(at index: Int) -> AnyClass {
+        NodeType.self
+    }
+}
+
+open class GKObstacleGraph<NodeType: GKGraphNode2D>: GKGraph {
+    public let bufferRadius: Float
+    private var obstacleStorage: [GKPolygonObstacle] = []
+    private var locked: Set<LockedPair> = []
+    private let nodeType: NodeType.Type
+
+    private struct LockedPair: Hashable {
+        let a: ObjectIdentifier
+        let b: ObjectIdentifier
+        init(_ x: GKGraphNode, _ y: GKGraphNode) {
+            let ix = ObjectIdentifier(x)
+            let iy = ObjectIdentifier(y)
+            if ix.hashValue <= iy.hashValue {
+                a = ix
+                b = iy
+            } else {
+                a = iy
+                b = ix
+            }
+        }
+    }
+
+    public var obstacles: [GKPolygonObstacle] { obstacleStorage }
+
+    public init(obstacles: [GKPolygonObstacle], bufferRadius: Float) {
+        self.bufferRadius = bufferRadius
+        self.nodeType = NodeType.self
+        super.init([])
+        addObstacles(obstacles)
+    }
+
+    public init(obstacles: [GKPolygonObstacle], bufferRadius: Float, nodeClass: AnyClass) {
+        self.bufferRadius = bufferRadius
+        self.nodeType = (nodeClass as? NodeType.Type) ?? NodeType.self
+        super.init([])
+        addObstacles(obstacles)
+    }
+
+    public convenience init(nodes: [GKGraphNode]) {
+        self.init(obstacles: [], bufferRadius: 0)
+        add(nodes)
+    }
+
+    public required init?(coder: NSCoder) {
+        self.bufferRadius = 0
+        self.nodeType = NodeType.self
+        super.init(coder: coder)
+    }
+
+    open func addObstacles(_ obstacles: [GKPolygonObstacle]) {
+        obstacleStorage.append(contentsOf: obstacles)
+        rebuildVisibility()
+    }
+
+    open func removeObstacles(_ obstacles: [GKPolygonObstacle]) {
+        obstacleStorage.removeAll { candidate in
+            obstacles.contains(where: { $0 === candidate })
+        }
+        rebuildVisibility()
+    }
+
+    open func removeAllObstacles() {
+        obstacleStorage.removeAll()
+        rebuildVisibility()
+    }
+
+    open func nodes(for obstacle: GKPolygonObstacle) -> [NodeType] {
+        let verts = obstacle.allVertices()
+        return (nodes ?? []).compactMap { node in
+            guard let typed = node as? NodeType else { return nil }
+            return verts.contains(where: { gkDistance($0, typed.position) < bufferRadius * 2 + 1e-3 }) ? typed : nil
+        }
+    }
+
+    open func connectUsingObstacles(node: NodeType) {
+        connectUsingObstacles(node: node, ignoring: [])
+    }
+
+    open func connectUsingObstacles(node: NodeType, ignoring obstaclesToIgnore: [GKPolygonObstacle]) {
+        add([node])
+        let ignored = Set(obstaclesToIgnore.map { ObjectIdentifier($0) })
+        for existing in nodes ?? [] {
+            guard let other = existing as? NodeType, other !== node else { continue }
+            if lineOfSight(node.position, other.position, ignoring: ignored) {
+                node.addConnections(to: [other], bidirectional: true)
+            }
+        }
+    }
+
+    open func connectUsingObstacles(node: NodeType, ignoringBufferRadiusOf obstaclesBufferRadiusToIgnore: [GKPolygonObstacle]) {
+        connectUsingObstacles(node: node, ignoring: obstaclesBufferRadiusToIgnore)
+    }
+
+    open func lockConnection(from startNode: NodeType, to endNode: NodeType) {
+        locked.insert(LockedPair(startNode, endNode))
+        startNode.addConnections(to: [endNode], bidirectional: true)
+    }
+
+    open func unlockConnection(from startNode: NodeType, to endNode: NodeType) {
+        locked.remove(LockedPair(startNode, endNode))
+    }
+
+    open func isConnectionLocked(from startNode: NodeType, to endNode: NodeType) -> Bool {
+        locked.contains(LockedPair(startNode, endNode))
+    }
+
+    open func classForGenericArgument(at index: Int) -> AnyClass {
+        NodeType.self
+    }
+
+    private func rebuildVisibility() {
+        let previous = (nodes ?? []).compactMap { $0 as? NodeType }
+        if let all = nodes {
+            remove(all)
+        }
+        var created: [NodeType] = []
+        for obstacle in obstacleStorage {
+            let verts = obstacle.allVertices()
+            for vertex in verts {
+                let node = nodeType.init(point: vertex)
+                created.append(node)
+            }
+        }
+        add(created)
+        for i in 0..<created.count {
+            for j in (i + 1)..<created.count {
+                let a = created[i]
+                let b = created[j]
+                if locked.contains(LockedPair(a, b)) || lineOfSight(a.position, b.position, ignoring: []) {
+                    a.addConnections(to: [b], bidirectional: true)
+                }
+            }
+        }
+        for leftover in previous {
+            connectUsingObstacles(node: leftover)
+        }
+    }
+
+    private func lineOfSight(_ a: vector_float2, _ b: vector_float2, ignoring: Set<ObjectIdentifier>) -> Bool {
+        for obstacle in obstacleStorage {
+            if ignoring.contains(ObjectIdentifier(obstacle)) { continue }
+            let verts = obstacle.allVertices()
+            guard verts.count >= 2 else { continue }
+            for i in 0..<verts.count {
+                let v1 = verts[i]
+                let v2 = verts[(i + 1) % verts.count]
+                if gkSegmentsIntersect(a, b, v1, v2) {
+                    let sharesEndpoint =
+                        gkDistance(a, v1) < 1e-4 || gkDistance(a, v2) < 1e-4
+                        || gkDistance(b, v1) < 1e-4 || gkDistance(b, v2) < 1e-4
+                    if !sharesEndpoint {
+                        return false
+                    }
+                }
+            }
+        }
+        return true
+    }
+}
+
+open class GKMeshGraph<NodeType: GKGraphNode2D>: GKGraph {
+    public let bufferRadius: Float
+    public var triangulationMode: GKMeshGraphTriangulationMode = [.vertices]
+    private var obstacleStorage: [GKPolygonObstacle] = []
+    private var triangles: [GKTriangle] = []
+    private let minCoordinate: vector_float2
+    private let maxCoordinate: vector_float2
+    private let nodeType: NodeType.Type
+
+    public var obstacles: [GKPolygonObstacle] { obstacleStorage }
+    public var triangleCount: Int { triangles.count }
+
+    public init(bufferRadius: Float, minCoordinate min: vector_float2, maxCoordinate max: vector_float2) {
+        self.bufferRadius = bufferRadius
+        self.minCoordinate = min
+        self.maxCoordinate = max
+        self.nodeType = NodeType.self
+        super.init([])
+    }
+
+    public init(
+        bufferRadius: Float,
+        minCoordinate min: vector_float2,
+        maxCoordinate max: vector_float2,
+        nodeClass: AnyClass
+    ) {
+        self.bufferRadius = bufferRadius
+        self.minCoordinate = min
+        self.maxCoordinate = max
+        self.nodeType = (nodeClass as? NodeType.Type) ?? NodeType.self
+        super.init([])
+    }
+
+    public convenience init(nodes: [GKGraphNode]) {
+        self.init(bufferRadius: 0, minCoordinate: vector_float2(0, 0), maxCoordinate: vector_float2(1, 1))
+        add(nodes)
+    }
+
+    public required init?(coder: NSCoder) {
+        self.bufferRadius = 0
+        self.minCoordinate = vector_float2(0, 0)
+        self.maxCoordinate = vector_float2(1, 1)
+        self.nodeType = NodeType.self
+        super.init(coder: coder)
+    }
+
+    open func addObstacles(_ obstacles: [GKPolygonObstacle]) {
+        obstacleStorage.append(contentsOf: obstacles)
+    }
+
+    open func removeObstacles(_ obstacles: [GKPolygonObstacle]) {
+        obstacleStorage.removeAll { candidate in
+            obstacles.contains(where: { $0 === candidate })
+        }
+    }
+
+    open func triangle(at index: Int) -> GKTriangle {
+        triangles[index]
+    }
+
+    open func triangulate() {
+        var points: [vector_float2] = [
+            minCoordinate,
+            vector_float2(maxCoordinate.x, minCoordinate.y),
+            maxCoordinate,
+            vector_float2(minCoordinate.x, maxCoordinate.y)
+        ]
+        for obstacle in obstacleStorage {
+            points.append(contentsOf: obstacle.allVertices())
+        }
+        triangles = gkBowyerWatson(points)
+        if let existing = nodes {
+            remove(existing)
+        }
+        var created: [NodeType] = []
+        for triangle in triangles {
+            if triangulationMode.contains(.vertices) {
+                let p0 = vector_float2(triangle.points.0.x, triangle.points.0.y)
+                let p1 = vector_float2(triangle.points.1.x, triangle.points.1.y)
+                let p2 = vector_float2(triangle.points.2.x, triangle.points.2.y)
+                created.append(nodeType.init(point: p0))
+                created.append(nodeType.init(point: p1))
+                created.append(nodeType.init(point: p2))
+            }
+            if triangulationMode.contains(.centers) {
+                let c = (triangle.points.0 + triangle.points.1 + triangle.points.2) / 3
+                created.append(nodeType.init(point: vector_float2(c.x, c.y)))
+            }
+            if triangulationMode.contains(.edgeMidpoints) {
+                let m01 = (triangle.points.0 + triangle.points.1) / 2
+                let m12 = (triangle.points.1 + triangle.points.2) / 2
+                let m20 = (triangle.points.2 + triangle.points.0) / 2
+                created.append(nodeType.init(point: vector_float2(m01.x, m01.y)))
+                created.append(nodeType.init(point: vector_float2(m12.x, m12.y)))
+                created.append(nodeType.init(point: vector_float2(m20.x, m20.y)))
+            }
+        }
+        var unique: [NodeType] = []
+        for node in created {
+            if !unique.contains(where: { gkDistance($0.position, node.position) < 1e-4 }) {
+                unique.append(node)
+            }
+        }
+        add(unique)
+        for i in 0..<unique.count {
+            var near: [GKGraphNode] = []
+            for j in 0..<unique.count where i != j {
+                if gkDistance(unique[i].position, unique[j].position) <= (maxCoordinate.x - minCoordinate.x) * 0.35 + bufferRadius {
+                    near.append(unique[j])
+                }
+            }
+            unique[i].addConnections(to: near, bidirectional: true)
+        }
+    }
+
+    open func connectUsingObstacles(node: NodeType) {
+        add([node])
+        for existing in nodes ?? [] {
+            guard let other = existing as? NodeType, other !== node else { continue }
+            var blocked = false
+            for obstacle in obstacleStorage {
+                let verts = obstacle.allVertices()
+                for i in 0..<verts.count {
+                    if gkSegmentsIntersect(node.position, other.position, verts[i], verts[(i + 1) % verts.count]) {
+                        blocked = true
+                    }
+                }
+            }
+            if !blocked {
+                node.addConnections(to: [other], bidirectional: true)
+            }
+        }
+    }
+
+    open func classForGenericArgument(at index: Int) -> AnyClass {
+        NodeType.self
+    }
+}
+
+private struct GKCircumcircle {
+    let center: vector_float2
+    let radius: Float
+}
+
+private func gkCircumcircle(_ a: vector_float2, _ b: vector_float2, _ c: vector_float2) -> GKCircumcircle? {
+    let d = 2 * (a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y))
+    if abs(d) < 1e-8 { return nil }
+    let a2 = a.x * a.x + a.y * a.y
+    let b2 = b.x * b.x + b.y * b.y
+    let c2 = c.x * c.x + c.y * c.y
+    let ux = (a2 * (b.y - c.y) + b2 * (c.y - a.y) + c2 * (a.y - b.y)) / d
+    let uy = (a2 * (c.x - b.x) + b2 * (a.x - c.x) + c2 * (b.x - a.x)) / d
+    let center = vector_float2(ux, uy)
+    return GKCircumcircle(center: center, radius: gkDistance(center, a))
+}
+
+private func gkBowyerWatson(_ input: [vector_float2]) -> [GKTriangle] {
+    guard input.count >= 3 else { return [] }
+    var minX = input[0].x
+    var minY = input[0].y
+    var maxX = input[0].x
+    var maxY = input[0].y
+    for p in input {
+        minX = min(minX, p.x)
+        minY = min(minY, p.y)
+        maxX = max(maxX, p.x)
+        maxY = max(maxY, p.y)
+    }
+    let dx = max(maxX - minX, 1)
+    let dy = max(maxY - minY, 1)
+    let superA = vector_float2(minX - dx, minY - dy)
+    let superB = vector_float2(maxX + dx * 3, minY - dy)
+    let superC = vector_float2(minX - dx, maxY + dy * 3)
+    var tris: [(vector_float2, vector_float2, vector_float2)] = [(superA, superB, superC)]
+    for point in input {
+        var bad: [(vector_float2, vector_float2, vector_float2)] = []
+        var good: [(vector_float2, vector_float2, vector_float2)] = []
+        for tri in tris {
+            if let circle = gkCircumcircle(tri.0, tri.1, tri.2), gkDistance(circle.center, point) <= circle.radius + 1e-5 {
+                bad.append(tri)
+            } else {
+                good.append(tri)
+            }
+        }
+        var edges: [(vector_float2, vector_float2)] = []
+        func same(_ x: vector_float2, _ y: vector_float2) -> Bool {
+            gkDistance(x, y) < 1e-5
+        }
+        func addEdge(_ e: (vector_float2, vector_float2)) {
+            if let idx = edges.firstIndex(where: { (same($0.0, e.0) && same($0.1, e.1)) || (same($0.0, e.1) && same($0.1, e.0)) }) {
+                edges.remove(at: idx)
+            } else {
+                edges.append(e)
+            }
+        }
+        for tri in bad {
+            addEdge((tri.0, tri.1))
+            addEdge((tri.1, tri.2))
+            addEdge((tri.2, tri.0))
+        }
+        var next = good
+        for edge in edges {
+            next.append((edge.0, edge.1, point))
+        }
+        tris = next
+    }
+    let superPoints = [superA, superB, superC]
+    func isSuper(_ p: vector_float2) -> Bool {
+        superPoints.contains(where: { gkDistance($0, p) < 1e-4 })
+    }
+    return tris.compactMap { tri in
+        if isSuper(tri.0) || isSuper(tri.1) || isSuper(tri.2) { return nil }
+        return GKTriangle(points: (
+            vector_float3(tri.0.x, tri.0.y, 0),
+            vector_float3(tri.1.x, tri.1.y, 0),
+            vector_float3(tri.2.x, tri.2.y, 0)
+        ))
+    }
+}
+
+func gkAStar(from start: GKGraphNode, to goal: GKGraphNode) -> [GKGraphNode] {
+    if start === goal { return [] }
+    var open: [GKGraphNode] = [start]
+    var cameFrom: [ObjectIdentifier: GKGraphNode] = [:]
+    var gScore: [ObjectIdentifier: Float] = [ObjectIdentifier(start): 0]
+    var fScore: [ObjectIdentifier: Float] = [ObjectIdentifier(start): start.estimatedCost(to: goal)]
+    var closed = Set<ObjectIdentifier>()
+
+    while !open.isEmpty {
+        open.sort { a, b in
+            (fScore[ObjectIdentifier(a)] ?? Float.greatestFiniteMagnitude)
+                < (fScore[ObjectIdentifier(b)] ?? Float.greatestFiniteMagnitude)
+        }
+        let current = open.removeFirst()
+        if current === goal {
+            var path = [current]
+            var cursor = current
+            while let previous = cameFrom[ObjectIdentifier(cursor)] {
+                path.insert(previous, at: 0)
+                cursor = previous
+            }
+            return path
+        }
+        closed.insert(ObjectIdentifier(current))
+        for neighbor in current.connectedNodes {
+            let id = ObjectIdentifier(neighbor)
+            if closed.contains(id) { continue }
+            let tentative = (gScore[ObjectIdentifier(current)] ?? Float.greatestFiniteMagnitude) + current.cost(to: neighbor)
+            if tentative >= (gScore[id] ?? Float.greatestFiniteMagnitude) { continue }
+            cameFrom[id] = current
+            gScore[id] = tentative
+            fScore[id] = tentative + neighbor.estimatedCost(to: goal)
+            if !open.contains(where: { $0 === neighbor }) {
+                open.append(neighbor)
+            }
+        }
+    }
+    return []
+}
