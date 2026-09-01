@@ -1,7 +1,8 @@
 @_exported import Foundation
-@_exported import StagedFoundation
+@_exported import UnitFixtureFoundation
 
-/// Test-only EC2 staging UIColor. Not part of the UserNotificationsUI product.
+/// Isolated unit-fixture UIColor compiled as module UIKit so `#if canImport(UIKit)`
+/// can build the protocol. This is not platform UIKit and is not identity evidence.
 public final class UIColor: NSObject, NSCopying {
     public let red: CGFloat
     public let green: CGFloat

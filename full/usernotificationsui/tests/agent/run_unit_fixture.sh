@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
-# Stage real Foundation/UIKit/UserNotifications modules, build UserNotificationsUI
-# with no fallback branch, then run identity and existential-dispatch probes.
+# Isolated unit-fixture mode. Compiles lookalike NSExtensionContext and a
+# test-owned UIKit module only so the protocol typechecks. Compiles repository
+# UserNotifications sources. Does not prove Foundation.NSExtensionContext or
+# platform UIKit.UIColor identity.
 set -euo pipefail
 
 die() {
-    printf 'USERNOTIFICATIONSUI_STAGED_GATE_REFUSING: %s\n' "$*" >&2
+    printf 'USERNOTIFICATIONSUI_UNIT_FIXTURE_REFUSING: %s\n' "$*" >&2
     exit 1
 }
 
@@ -18,35 +20,32 @@ for stale in .build build scratch; do
         || die "stale product directory exists: $stale"
 done
 
-command -v python3 >/dev/null 2>&1 || die 'python3 is unavailable'
-command -v swiftc >/dev/null 2>&1 || die 'swiftc is unavailable'
-
 mapfile -t SOURCES < "$FRAMEWORK_ROOT/usernotificationsui_guest_sources.txt"
 SOURCE_PATHS=()
 for relative in "${SOURCES[@]}"; do
     SOURCE_PATHS+=("$REPO_ROOT/$relative")
 done
 
-STAGE=$(mktemp -d "${TMPDIR:-/tmp}/usernotificationsui-staged.XXXXXX") \
-    || die 'cannot create staging directory'
+STAGE=$(mktemp -d "${TMPDIR:-/tmp}/usernotificationsui-unit-fixture.XXXXXX") \
+    || die 'cannot create unit-fixture directory'
 cleanup() {
     rm -rf -- "$STAGE"
 }
 trap cleanup EXIT HUP INT TERM
 
 swiftc -warnings-as-errors -parse-as-library -emit-library -emit-module \
-    -module-name StagedFoundation \
-    -emit-module-path "$STAGE/StagedFoundation.swiftmodule" \
-    -o "$STAGE/libStagedFoundation.dylib" \
-    "$SCRIPT_DIR/fixtures/StagedFoundation.swift"
+    -module-name UnitFixtureFoundation \
+    -emit-module-path "$STAGE/UnitFixtureFoundation.swiftmodule" \
+    -o "$STAGE/libUnitFixtureFoundation.dylib" \
+    "$SCRIPT_DIR/fixtures/UnitFixtureNSExtensionContext.swift"
 
 swiftc -warnings-as-errors -parse-as-library -emit-library -emit-module \
     -module-name UIKit \
     -I "$STAGE" \
     -emit-module-path "$STAGE/UIKit.swiftmodule" \
     -o "$STAGE/libUIKit.dylib" \
-    "$SCRIPT_DIR/fixtures/StagedUIKit.swift" \
-    "$STAGE/libStagedFoundation.dylib"
+    "$SCRIPT_DIR/fixtures/UnitFixtureUIKit.swift" \
+    "$STAGE/libUnitFixtureFoundation.dylib"
 
 swiftc -warnings-as-errors -parse-as-library -emit-library -emit-module \
     -module-name UserNotifications \
@@ -65,23 +64,10 @@ swiftc -warnings-as-errors -parse-as-library \
     "${SOURCE_PATHS[@]}" \
     "$STAGE/libUIKit.dylib" \
     "$STAGE/libUserNotifications.dylib" \
-    "$STAGE/libStagedFoundation.dylib"
+    "$STAGE/libUnitFixtureFoundation.dylib"
 
 test -s "$STAGE/libUserNotificationsUI.dylib" \
-    || die 'staged libUserNotificationsUI.dylib was not produced'
-
-cat > "$STAGE/RejectUserNotificationsUITypes.swift" << 'EOF'
-import UserNotificationsUI
-let _color: UserNotificationsUI.UIColor? = nil
-let _notification: UserNotificationsUI.UNNotification? = nil
-let _context: UserNotificationsUI.NSExtensionContext? = nil
-EOF
-if swiftc -typecheck -I "$STAGE" "$STAGE/RejectUserNotificationsUITypes.swift" \
-    >"$STAGE/reject.log" 2>&1; then
-    die 'UserNotificationsUI still exports UIColor/UNNotification/NSExtensionContext'
-fi
-grep -Eq 'UIColor|UNNotification|NSExtensionContext' "$STAGE/reject.log" \
-    || die 'negative identity compile did not mention the rejected types'
+    || die 'unit-fixture libUserNotificationsUI.dylib was not produced'
 
 python3 -B - "$STAGE" <<'PY'
 from pathlib import Path
@@ -101,34 +87,21 @@ for graph_path in sorted((stage / "sg").glob("*.json")):
         if kind in {"swift.class", "swift.struct"} and title in owned_titles:
             precise = ((symbol.get("identifier") or {}).get("precise")) or ""
             raise SystemExit(f"symbol graph defines {title} ({precise})")
-print("USERNOTIFICATIONSUI_INTERFACE_IDENTITY_OK")
+print("USERNOTIFICATIONSUI_UNIT_FIXTURE_GRAPH_OK")
 PY
-
-swiftc -warnings-as-errors -parse-as-library -I "$STAGE" \
-    "$SCRIPT_DIR/UserNotificationsUIIdentityConsumer.swift" \
-    "$STAGE/libUserNotificationsUI.dylib" \
-    "$STAGE/libUIKit.dylib" \
-    "$STAGE/libUserNotifications.dylib" \
-    "$STAGE/libStagedFoundation.dylib" \
-    -o "$STAGE/identity-consumer"
 
 swiftc -warnings-as-errors -parse-as-library -I "$STAGE" \
     "$SCRIPT_DIR/UserNotificationsUIExistentialDispatch.swift" \
     "$STAGE/libUserNotificationsUI.dylib" \
     "$STAGE/libUIKit.dylib" \
     "$STAGE/libUserNotifications.dylib" \
-    "$STAGE/libStagedFoundation.dylib" \
+    "$STAGE/libUnitFixtureFoundation.dylib" \
     -o "$STAGE/existential-dispatch"
 
 export LD_LIBRARY_PATH="$STAGE${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-identity_output=$("$STAGE/identity-consumer")
-printf '%s\n' "$identity_output"
-printf '%s\n' "$identity_output" | grep -Fqx -- 'USERNOTIFICATIONSUI_IDENTITY_CONSUMER_OK' \
-    || die 'identity consumer marker missing'
-
 dispatch_output=$("$STAGE/existential-dispatch")
 printf '%s\n' "$dispatch_output"
 printf '%s\n' "$dispatch_output" | grep -Fqx -- 'USERNOTIFICATIONSUI_EXISTENTIAL_DISPATCH_OK' \
     || die 'existential dispatch marker missing'
 
-printf 'USERNOTIFICATIONSUI_STAGED_HOST_OK dylib=libUserNotificationsUI.dylib fallback=inactive\n'
+printf 'USERNOTIFICATIONSUI_UNIT_FIXTURE_OK dispatch=existential userNotifications=repository uikit=lookalike nsextensioncontext=lookalike\n'

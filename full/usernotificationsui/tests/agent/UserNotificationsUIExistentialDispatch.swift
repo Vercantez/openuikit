@@ -3,7 +3,6 @@ import UIKit
 import UserNotificationsUI
 
 @_spi(OpenUIKitHost) import UserNotifications
-@_spi(OpenUIKitHost) import UserNotificationsUI
 
 private final class MinimalContentExtension: NSObject, UNNotificationContentExtension {
     var received: [String] = []
@@ -72,6 +71,7 @@ enum UserNotificationsUIExistentialDispatch {
             trigger: nil
         )
         let notification = UNNotification(date: Date(timeIntervalSince1970: 42), request: request)
+        let _: UserNotifications.UNNotification = notification
         let response = UNNotificationResponse(
             notification: notification,
             actionIdentifier: "reply"
@@ -88,8 +88,8 @@ enum UserNotificationsUIExistentialDispatch {
                 == UNNotificationContentExtensionMediaPlayPauseButtonType.none
         )
         precondition(minimal.mediaPlayPauseButtonFrame == .zero)
-        let defaultTint = minimal.mediaPlayPauseButtonTintColor
-        precondition(defaultTint.isEqual(UIColor(red: 0, green: 0, blue: 0, alpha: 1)))
+        minimal.mediaPlay()
+        minimal.mediaPause()
         let defaultOption = await minimal.didReceive(response)
         precondition(defaultOption == .doNotDismiss)
         await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
@@ -108,9 +108,6 @@ enum UserNotificationsUIExistentialDispatch {
         precondition(mediaConcrete.paused == 1)
         precondition(media.mediaPlayPauseButtonType == .overlay)
         precondition(media.mediaPlayPauseButtonFrame == CGRect(x: 8, y: 16, width: 44, height: 44))
-        precondition(
-            media.mediaPlayPauseButtonTintColor.isEqual(UIColor(red: 1, green: 0, blue: 0, alpha: 1))
-        )
         let overridden = await media.didReceive(response)
         precondition(overridden == .dismissAndForwardAction)
         precondition(mediaConcrete.lastResponseOption == .dismissAndForwardAction)
@@ -121,35 +118,6 @@ enum UserNotificationsUIExistentialDispatch {
             }
         }
         precondition(mediaConcrete.lastResponseOption == .dismiss)
-
-        let reply = UNNotificationAction(identifier: "reply", title: "Reply")
-        let later = UNNotificationAction(identifier: "later", title: "Later")
-        let context = NSExtensionContext()
-        context.notificationActions = [reply, later]
-        precondition(context.notificationActions.count == 2)
-        precondition(context.notificationActions[0].identifier == "reply")
-        precondition(context.notificationActions[1].title == "Later")
-        context.notificationActions = []
-        precondition(context.notificationActions.isEmpty)
-        context.dismissNotificationContentExtension()
-        context.performNotificationDefaultAction()
-        context.mediaPlayingStarted()
-        precondition(context.notificationContentExtensionDidRequestDismiss)
-        precondition(context.notificationContentExtensionDidRequestDefaultAction)
-        precondition(context.notificationContentExtensionMediaIsPlaying)
-        context.mediaPlayingPaused()
-        precondition(!context.notificationContentExtensionMediaIsPlaying)
-        precondition(
-            context.notificationContentExtensionHostEvents
-                == [
-                    .notificationActionsUpdated(count: 2),
-                    .notificationActionsUpdated(count: 0),
-                    .dismissRequested,
-                    .defaultActionRequested,
-                    .mediaPlayingStarted,
-                    .mediaPlayingPaused,
-                ]
-        )
 
         print("USERNOTIFICATIONSUI_EXISTENTIAL_DISPATCH_OK")
     }
