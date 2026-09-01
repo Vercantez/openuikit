@@ -12,9 +12,12 @@ sources. `SLRequest` imports `Accounts`. `FoundationNetworking` is imported
 only where URL types live on Linux.
 
 Ordinary production compilation without UIKit or Accounts fails with a
-dependency blocker. Fallback `Social.UIView*` / `Social.ACAccount` types are
-emitted only when compiling with `-D SOCIAL_STANDALONE_TEST_FIXTURES`. That
-dylib is `standalone-unit-fixture-only` and is not production Social ABI.
+dependency blocker. Fallback `Social.UIView*` types are emitted only when
+compiling with `-D SOCIAL_STANDALONE_TEST_FIXTURES` and UIKit is absent.
+The same flag takes precedence over `canImport(Accounts)` so the fixture
+`Social.ACAccount` is used instead of a deprecated system Accounts import.
+That dylib is `standalone-unit-fixture-only` and is not production Social ABI.
+Without the flag, Social imports real Accounts when available.
 
 Host-only types (`SocialServiceError`, `SocialServiceType`,
 `SLRequest.MultipartPart`, `host*` draft inspectors, `completeDraft`,

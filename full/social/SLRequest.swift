@@ -4,15 +4,18 @@ import Foundation
 import FoundationNetworking
 #endif
 
-#if canImport(Accounts)
-import Accounts
-#elseif SOCIAL_STANDALONE_TEST_FIXTURES
+#if SOCIAL_STANDALONE_TEST_FIXTURES
 /// standalone-unit-fixture-only. Not production Social ABI.
+/// The explicit fixture flag takes precedence over `canImport(Accounts)` so
+/// Apple-host isolated tests do not import the deprecated system Accounts
+/// module. This type is not `Accounts.ACAccount` identity evidence.
 open class ACAccount: NSObject {
     public override init() {
         super.init()
     }
 }
+#elseif canImport(Accounts)
+import Accounts
 #else
 #error(
     "Social requires the Accounts module for SLRequest.account. Accounts is not staged in the shared platform. This is an integration blocker. Isolated tests must compile with -D SOCIAL_STANDALONE_TEST_FIXTURES; that configuration is standalone-unit-fixture-only. Social.ACAccount is forbidden as production ABI."

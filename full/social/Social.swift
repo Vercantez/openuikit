@@ -8,10 +8,12 @@ import Foundation
 /// compose UI are fail-closed or partial host hooks.
 ///
 /// Production Social imports the canonical `UIKit` module and `Accounts`.
-/// Fallback UIKit/Accounts types exist only when compiling with
-/// `-D SOCIAL_STANDALONE_TEST_FIXTURES` (standalone-unit-fixture-only).
-/// Ordinary production compilation without those modules is a dependency
-/// blocker and must not publish Social-owned UIKit or Accounts identities.
+/// `-D SOCIAL_STANDALONE_TEST_FIXTURES` emits standalone-unit-fixture-only
+/// types: UIKit fallbacks only when UIKit is absent, and fixture `ACAccount`
+/// even if `canImport(Accounts)` is true, so Apple hosts do not import the
+/// deprecated system Accounts module. Ordinary production compilation
+/// without those modules is a dependency blocker and must not publish
+/// Social-owned UIKit or Accounts identities.
 
 #if SOCIAL_STANDALONE_TEST_FIXTURES
 /// Present only in the isolated fixture compile. Not production Social ABI.
