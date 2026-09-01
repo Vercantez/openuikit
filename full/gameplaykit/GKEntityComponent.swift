@@ -5,7 +5,7 @@ open class GKComponent: NSObject, NSCopying, NSSecureCoding {
 
     public weak var entity: GKEntity?
 
-    public required override init() {
+    public override init() {
         super.init()
     }
 
@@ -19,7 +19,7 @@ open class GKComponent: NSObject, NSCopying, NSSecureCoding {
     }
 
     open func copy(with zone: NSZone? = nil) -> Any {
-        type(of: self).init()
+        GKComponent()
     }
 
     open func didAddToEntity() {}

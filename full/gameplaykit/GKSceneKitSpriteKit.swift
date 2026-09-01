@@ -45,6 +45,10 @@ open class GKSKNodeComponent: GKComponent {
     public required init?(coder: NSCoder) {
         return nil
     }
+
+    open override func copy(with zone: NSZone? = nil) -> Any {
+        GKSKNodeComponent(node: node)
+    }
 }
 
 extension SKNode {
@@ -54,7 +58,7 @@ extension SKNode {
     }
 
     @MainActor
-    open class func obstacles(fromNodeBounds nodes: [SKNode]) -> [GKPolygonObstacle] {
+    public class func obstacles(fromNodeBounds nodes: [SKNode]) -> [GKPolygonObstacle] {
         nodes.map { node in
             let frame = node.frame
             return GKPolygonObstacle(points: [
@@ -67,12 +71,12 @@ extension SKNode {
     }
 
     @MainActor
-    open class func obstacles(fromNodePhysicsBodies nodes: [SKNode]) -> [GKPolygonObstacle] {
+    public class func obstacles(fromNodePhysicsBodies nodes: [SKNode]) -> [GKPolygonObstacle] {
         obstacles(fromNodeBounds: nodes)
     }
 
     @MainActor
-    open class func obstacles(fromSpriteTextures sprites: [SKNode], accuracy: Float) -> [GKPolygonObstacle] {
+    public class func obstacles(fromSpriteTextures sprites: [SKNode], accuracy: Float) -> [GKPolygonObstacle] {
         _ = accuracy
         return obstacles(fromNodeBounds: sprites)
     }
@@ -90,6 +94,10 @@ open class GKSCNNodeComponent: GKComponent {
 
     public required init?(coder: NSCoder) {
         return nil
+    }
+
+    open override func copy(with zone: NSZone? = nil) -> Any {
+        GKSCNNodeComponent(node: node)
     }
 }
 
