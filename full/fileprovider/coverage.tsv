@@ -1,0 +1,571 @@
+precise	status	evidence	notes
+c:@E@NSFileProviderContentPolicy	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderContentPolicy@NSFileProviderContentPolicyDownloadLazilyAndEvictOnRemoteUpdate	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderContentPolicy@NSFileProviderContentPolicyInherited	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderCreateItemOptions	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderCreateItemOptions@NSFileProviderCreateItemDeletionConflicted	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderCreateItemOptions@NSFileProviderCreateItemMayAlreadyExist	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderDeleteItemOptions	implemented	full/fileprovider/FileProviderOptionSets.swift	Portable Linux implementation
+c:@E@NSFileProviderDeleteItemOptions@NSFileProviderDeleteItemRecursive	implemented	full/fileprovider/FileProviderOptionSets.swift	Portable Linux implementation
+c:@E@NSFileProviderDomainRemovalMode	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderDomainRemovalMode@NSFileProviderDomainRemovalModeRemoveAll	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderDomainTestingModes	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderDomainTestingModes@NSFileProviderDomainTestingModeAlwaysEnabled	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderDomainTestingModes@NSFileProviderDomainTestingModeInteractive	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorApplicationExtensionNotFound	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorCannotSynchronize	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorDeletionRejected	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorDirectoryNotEmpty	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorDomainDisabled	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorExcludedFromSync	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorFilenameCollision	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorInsufficientQuota	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorLocalVersionConflictingWithServer	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorNoSuchItem	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorNonEvictable	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorNonEvictableChildren	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorNotAuthenticated	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorProviderDomainNotFound	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorProviderDomainTemporarilyUnavailable	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorProviderNotFound	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorServerUnreachable	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorSyncAnchorExpired	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderErrorCode@NSFileProviderErrorUnsyncedEdits	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderFileSystemFlags	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderFileSystemFlags@NSFileProviderFileSystemHidden	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderFileSystemFlags@NSFileProviderFileSystemPathExtensionHidden	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderFileSystemFlags@NSFileProviderFileSystemUserExecutable	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderFileSystemFlags@NSFileProviderFileSystemUserReadable	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderFileSystemFlags@NSFileProviderFileSystemUserWritable	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemCapabilities	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsAddingSubItems	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsAll	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsContentEnumerating	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsDeleting	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsEvicting	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsReading	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsRenaming	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsReparenting	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsTrashing	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemCapabilities@NSFileProviderItemCapabilitiesAllowsWriting	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemFields	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemFields@NSFileProviderItemContentModificationDate	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemFields@NSFileProviderItemContents	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemFields@NSFileProviderItemCreationDate	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemFields@NSFileProviderItemExtendedAttributes	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemFields@NSFileProviderItemFavoriteRank	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemFields@NSFileProviderItemFileSystemFlags	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemFields@NSFileProviderItemFilename	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemFields@NSFileProviderItemLastUsedDate	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemFields@NSFileProviderItemParentItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemFields@NSFileProviderItemTagData	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderItemFields@NSFileProviderItemTypeAndCreator	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderModifyItemOptions	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderModifyItemOptions@NSFileProviderModifyItemFailOnConflict	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderModifyItemOptions@NSFileProviderModifyItemIsImmediateUploadRequestByPresentingApplication	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderModifyItemOptions@NSFileProviderModifyItemMayAlreadyExist	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderTestingOperationSide	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderTestingOperationSide@NSFileProviderTestingOperationSideDisk	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderTestingOperationSide@NSFileProviderTestingOperationSideFileProvider	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderTestingOperationType	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeChildrenEnumeration	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeCollisionResolution	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeContentFetch	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeCreation	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeDeletion	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeIngestion	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeLookup	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@E@NSFileProviderTestingOperationType@NSFileProviderTestingOperationTypeModification	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@NSFileProviderDomainDidChange	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@NSFileProviderErrorCollidingItemKey	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@NSFileProviderErrorDomain	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@NSFileProviderErrorItemKey	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@NSFileProviderErrorNonExistentItemIdentifierKey	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@NSFileProviderFavoriteRankUnranked	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@NSFileProviderInitialPageSortedByDate	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@NSFileProviderInitialPageSortedByName	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@NSFileProviderMaterializedSetDidChange	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@NSFileProviderPendingSetDidChange	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@NSFileProviderRootContainerItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@NSFileProviderTrashContainerItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@NSFileProviderUserInfoExperimentIDKey	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@NSFileProviderWorkingSetContainerItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@S@NSFileProviderTypeAndCreator	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@S@NSFileProviderTypeAndCreator@FI@creator	declared	full/fileprovider/FileProviderItem.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:@S@NSFileProviderTypeAndCreator@FI@type	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@T@NSFileProviderDomainIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@T@NSFileProviderExtensionActionIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@T@NSFileProviderItem	implemented	full/fileprovider/FileProviderItem.swift	Portable Linux implementation
+c:@T@NSFileProviderItemDecorationIdentifier	implemented	full/fileprovider/FileProviderItem.swift	Portable Linux implementation
+c:@T@NSFileProviderItemIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@T@NSFileProviderPage	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@T@NSFileProviderSyncAnchor	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:@T@NSFileProviderUserInfoKey	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSError(cm)fileProviderErrorForCollisionWithItem:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSError(cm)fileProviderErrorForNonExistentItemWithIdentifier:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSError(cm)fileProviderErrorForRejectedDeletionOfItem:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderDomain	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderDomain(im)initWithIdentifier:displayName:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderDomain(im)initWithIdentifier:displayName:pathRelativeToDocumentStorage:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderDomain(py)backingStoreIdentity	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(cs)NSFileProviderDomain(py)displayName	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderDomain(py)identifier	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderDomain(py)pathRelativeToDocumentStorage	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderDomain(py)replicated	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(cs)NSFileProviderDomain(py)supportsSyncingTrash	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderDomain(py)testingModes	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderDomain(py)userEnabled	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderDomainVersion(im)next	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderExtension	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderExtension(cm)placeholderURLForURL:	declared	full/fileprovider/FileProviderExtension.swift	Overridable extension API compiles and fail-closes; not directly asserted by the runtime
+c:objc(cs)NSFileProviderExtension(cm)writePlaceholderAtURL:withMetadata:error:	declared	full/fileprovider/FileProviderExtension.swift	Overridable extension API compiles and fail-closes; not directly asserted by the runtime
+c:objc(cs)NSFileProviderExtension(im)URLForItemWithPersistentIdentifier:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderExtension(im)createDirectoryWithName:inParentItemIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Overridable extension API compiles and fail-closes; not directly asserted by the runtime
+c:objc(cs)NSFileProviderExtension(im)deleteItemWithIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Overridable extension API compiles and fail-closes; not directly asserted by the runtime
+c:objc(cs)NSFileProviderExtension(im)enumeratorForContainerItemIdentifier:error:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderExtension(im)fetchThumbnailsForItemIdentifiers:requestedSize:perThumbnailCompletionHandler:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderExtension(im)importDocumentAtURL:toParentItemIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Overridable extension API compiles and fail-closes; not directly asserted by the runtime
+c:objc(cs)NSFileProviderExtension(im)itemChangedAtURL:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderExtension(im)itemForIdentifier:error:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderExtension(im)persistentIdentifierForItemAtURL:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderExtension(im)providePlaceholderAtURL:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderExtension(im)renameItemWithIdentifier:toName:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Overridable extension API compiles and fail-closes; not directly asserted by the runtime
+c:objc(cs)NSFileProviderExtension(im)reparentItemWithIdentifier:toParentItemWithIdentifier:newName:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Overridable extension API compiles and fail-closes; not directly asserted by the runtime
+c:objc(cs)NSFileProviderExtension(im)setFavoriteRank:forItemIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Overridable extension API compiles and fail-closes; not directly asserted by the runtime
+c:objc(cs)NSFileProviderExtension(im)setLastUsedDate:forItemIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Overridable extension API compiles and fail-closes; not directly asserted by the runtime
+c:objc(cs)NSFileProviderExtension(im)setTagData:forItemIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Overridable extension API compiles and fail-closes; not directly asserted by the runtime
+c:objc(cs)NSFileProviderExtension(im)startProvidingItemAtURL:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderExtension(im)stopProvidingItemAtURL:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderExtension(im)supportedServiceSourcesForItemIdentifier:error:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderExtension(im)trashItemWithIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Overridable extension API compiles and fail-closes; not directly asserted by the runtime
+c:objc(cs)NSFileProviderExtension(im)untrashItemWithIdentifier:toParentItemIdentifier:completionHandler:	declared	full/fileprovider/FileProviderExtension.swift	Overridable extension API compiles and fail-closes; not directly asserted by the runtime
+c:objc(cs)NSFileProviderExtension(py)documentStorageURL	declared	full/fileprovider/FileProviderExtension.swift	Overridable extension API compiles and fail-closes; not directly asserted by the runtime
+c:objc(cs)NSFileProviderExtension(py)domain	declared	full/fileprovider/FileProviderExtension.swift	Overridable extension API compiles and fail-closes; not directly asserted by the runtime
+c:objc(cs)NSFileProviderExtension(py)providerIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderItemVersion	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderItemVersion(cpy)beforeFirstSyncComponent	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderItemVersion(im)initWithContentVersion:metadataVersion:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderItemVersion(py)contentVersion	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderItemVersion(py)metadataVersion	declared	full/fileprovider/FileProviderItem.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(cs)NSFileProviderManager	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(cm)addDomain:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(cm)getDomainsWithCompletionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(cm)getIdentifierForUserVisibleFileAtURL:completionHandler:	declared	full/fileprovider/FileProviderManager.swift	Fail-closed host-service API compiles; not exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(cm)importDomain:fromDirectoryAtURL:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(cm)managerForDomain:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(cm)managerForDomain:::SYNTHESIZED::c:objc(cs)NSFileProviderManager	declared	full/fileprovider/FileProviderManager.swift	Fail-closed host-service API compiles; not exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(cm)placeholderURLForURL:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(cm)removeAllDomainsWithCompletionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(cm)removeDomain:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(cm)removeDomain:mode:completionHandler:	declared	full/fileprovider/FileProviderManager.swift	Fail-closed host-service API compiles; not exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(cm)writePlaceholderAtURL:withMetadata:error:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(cpy)defaultManager	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)enumeratorForMaterializedItems	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)enumeratorForPendingItems	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)evictItemWithIdentifier:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)getServiceWithName:itemIdentifier:completionHandler:	declared	full/fileprovider/FileProviderManager.swift	Fail-closed host-service API compiles; not exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)getUserVisibleURLForItemIdentifier:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)globalProgressForKind:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)listAvailableTestingOperationsWithError:	declared	full/fileprovider/FileProviderManager.swift	Fail-closed host-service API compiles; not exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)registerURLSessionTask:forItemWithIdentifier:completionHandler:	declared	full/fileprovider/FileProviderManager.swift	Fail-closed host-service API compiles; not exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)reimportItemsBelowItemWithIdentifier:completionHandler:	declared	full/fileprovider/FileProviderManager.swift	Fail-closed host-service API compiles; not exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)requestModificationOfFields:forItemWithIdentifier:options:completionHandler:	declared	full/fileprovider/FileProviderManager.swift	Fail-closed host-service API compiles; not exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)runTestingOperations:error:	declared	full/fileprovider/FileProviderManager.swift	Fail-closed host-service API compiles; not exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)signalEnumeratorForContainerItemIdentifier:completionHandler:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)signalErrorResolved:completionHandler:	declared	full/fileprovider/FileProviderManager.swift	Fail-closed host-service API compiles; not exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)temporaryDirectoryURLWithError:	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)waitForChangesOnItemsBelowItemWithIdentifier:completionHandler:	declared	full/fileprovider/FileProviderManager.swift	Fail-closed host-service API compiles; not exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(im)waitForStabilizationWithCompletionHandler:	declared	full/fileprovider/FileProviderManager.swift	Fail-closed host-service API compiles; not exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(py)documentStorageURL	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderManager(py)providerIdentifier	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+c:objc(cs)NSFileProviderRequest	implemented	full/fileprovider/FileProvider.swift	Portable Linux implementation
+c:objc(cs)NSFileProviderRequest(py)domainVersion	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(cs)NSFileProviderRequest(py)isFileViewerRequest	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(cs)NSFileProviderRequest(py)isSystemRequest	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderChangeObserver	implemented	full/fileprovider/FileProviderEnumerating.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderChangeObserver(im)didDeleteItemsWithIdentifiers:	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderChangeObserver(im)didUpdateItems:	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderChangeObserver(im)finishEnumeratingChangesUpToSyncAnchor:moreComing:	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderChangeObserver(im)finishEnumeratingWithError:	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderChangeObserver(py)suggestedBatchSize	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderCustomAction	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderCustomAction(im)performActionWithIdentifier:onItemsWithIdentifiers:completionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderDomainState	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderDomainState(py)domainVersion	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderDomainState(py)userInfo	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderEnumerating	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderEnumerating(im)enumeratorForContainerItemIdentifier:request:error:	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderEnumerationObserver	implemented	full/fileprovider/FileProviderEnumerating.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderEnumerationObserver(im)didEnumerateItems:	implemented	full/fileprovider/FileProviderEnumerating.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderEnumerationObserver(im)finishEnumeratingUpToPage:	implemented	full/fileprovider/FileProviderEnumerating.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderEnumerationObserver(im)finishEnumeratingWithError:	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderEnumerationObserver(py)suggestedPageSize	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderEnumerator	implemented	full/fileprovider/FileProviderEnumerating.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderEnumerator(im)currentSyncAnchorWithCompletionHandler:	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderEnumerator(im)enumerateChangesForObserver:fromSyncAnchor:	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderEnumerator(im)enumerateItemsForObserver:startingAtPage:	implemented	full/fileprovider/FileProviderEnumerating.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderEnumerator(im)invalidate	declared	full/fileprovider/FileProviderEnumerating.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderIncrementalContentFetching	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderIncrementalContentFetching(im)fetchContentsForItemWithIdentifier:version:usingExistingContentsAtURL:existingVersion:request:completionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderItem	implemented	full/fileprovider/FileProviderItem.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderItem(py)capabilities	implemented	full/fileprovider/FileProviderItem.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderItem(py)childItemCount	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)contentModificationDate	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)contentPolicy	implemented	full/fileprovider/FileProviderItem.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderItem(py)contentType	deferred	full/fileprovider/README.md	UTType is not a seed dependency and is not importable on the host-gate compile line
+c:objc(pl)NSFileProviderItem(py)creationDate	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)documentSize	implemented	full/fileprovider/FileProviderItem.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderItem(py)downloaded	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)downloading	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)downloadingError	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)extendedAttributes	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)favoriteRank	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)fileSystemFlags	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)filename	implemented	full/fileprovider/FileProviderItem.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderItem(py)itemIdentifier	implemented	full/fileprovider/FileProviderItem.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderItem(py)itemVersion	implemented	full/fileprovider/FileProviderItem.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderItem(py)lastUsedDate	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)mostRecentEditorNameComponents	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)mostRecentVersionDownloaded	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)ownerNameComponents	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)parentItemIdentifier	implemented	full/fileprovider/FileProviderItem.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderItem(py)shared	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)sharedByCurrentUser	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)symlinkTargetPath	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)tagData	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)trashed	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)typeAndCreator	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)typeIdentifier	implemented	full/fileprovider/FileProviderItem.swift	Portable Linux implementation
+c:objc(pl)NSFileProviderItem(py)uploaded	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)uploading	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)uploadingError	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)userInfo	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItem(py)versionIdentifier	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+c:objc(pl)NSFileProviderItemDecorating	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderItemDecorating(py)decorations	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderPendingSetEnumerator	declared	full/fileprovider/FileProviderEnumerating.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderPendingSetEnumerator(py)domainVersion	declared	full/fileprovider/FileProviderEnumerating.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderPendingSetEnumerator(py)maximumSizeReached	declared	full/fileprovider/FileProviderEnumerating.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderPendingSetEnumerator(py)refreshInterval	declared	full/fileprovider/FileProviderEnumerating.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderReplicatedExtension	declared	full/fileprovider/FileProviderProtocols.swift	Replicated extension protocol compiles; Linux has no replicator host
+c:objc(pl)NSFileProviderReplicatedExtension(im)createItemBasedOnTemplate:fields:contents:options:request:completionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Replicated extension protocol compiles; Linux has no replicator host
+c:objc(pl)NSFileProviderReplicatedExtension(im)deleteItemWithIdentifier:baseVersion:options:request:completionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Replicated extension protocol compiles; Linux has no replicator host
+c:objc(pl)NSFileProviderReplicatedExtension(im)fetchContentsForItemWithIdentifier:version:request:completionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Replicated extension protocol compiles; Linux has no replicator host
+c:objc(pl)NSFileProviderReplicatedExtension(im)importDidFinishWithCompletionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Replicated extension protocol compiles; Linux has no replicator host
+c:objc(pl)NSFileProviderReplicatedExtension(im)initWithDomain:	declared	full/fileprovider/FileProviderProtocols.swift	Replicated extension protocol compiles; Linux has no replicator host
+c:objc(pl)NSFileProviderReplicatedExtension(im)invalidate	declared	full/fileprovider/FileProviderProtocols.swift	Replicated extension protocol compiles; Linux has no replicator host
+c:objc(pl)NSFileProviderReplicatedExtension(im)itemForIdentifier:request:completionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Replicated extension protocol compiles; Linux has no replicator host
+c:objc(pl)NSFileProviderReplicatedExtension(im)materializedItemsDidChangeWithCompletionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Replicated extension protocol compiles; Linux has no replicator host
+c:objc(pl)NSFileProviderReplicatedExtension(im)modifyItem:baseVersion:changedFields:contents:options:request:completionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Replicated extension protocol compiles; Linux has no replicator host
+c:objc(pl)NSFileProviderReplicatedExtension(im)pendingItemsDidChangeWithCompletionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Replicated extension protocol compiles; Linux has no replicator host
+c:objc(pl)NSFileProviderServiceSource	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderServiceSource(im)makeListenerEndpointAndReturnError:	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderServiceSource(py)restricted	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderServiceSource(py)serviceName	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderServicing	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderServicing(im)supportedServiceSourcesForItemIdentifier:completionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderTestingChildrenEnumeration	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingChildrenEnumeration(py)itemIdentifier	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingChildrenEnumeration(py)side	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingCollisionResolution	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingCollisionResolution(py)renamedItem	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingCollisionResolution(py)side	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingContentFetch	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingContentFetch(py)itemIdentifier	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingContentFetch(py)side	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingCreation	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingCreation(py)domainVersion	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingCreation(py)sourceItem	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingCreation(py)targetSide	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingDeletion	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingDeletion(py)domainVersion	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingDeletion(py)sourceItemIdentifier	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingDeletion(py)targetItemBaseVersion	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingDeletion(py)targetItemIdentifier	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingDeletion(py)targetSide	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingIngestion	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingIngestion(py)item	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingIngestion(py)itemIdentifier	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingIngestion(py)side	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingLookup	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingLookup(py)itemIdentifier	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingLookup(py)side	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingModification	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingModification(py)changedFields	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingModification(py)domainVersion	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingModification(py)sourceItem	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingModification(py)targetItemBaseVersion	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingModification(py)targetItemIdentifier	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingModification(py)targetSide	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingOperation	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderTestingOperation(py)type	declared	full/fileprovider/FileProviderProtocols.swift	Apple replicated-provider test harness is not hosted; protocol surface compiles
+c:objc(pl)NSFileProviderThumbnailing	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+c:objc(pl)NSFileProviderThumbnailing(im)fetchThumbnailsForItemIdentifiers:requestedSize:perThumbnailCompletionHandler:completionHandler:	declared	full/fileprovider/FileProviderProtocols.swift	Protocol compiles; Apple host behavior is not claimed
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	declared	full/fileprovider/FileProviderError.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	declared	full/fileprovider/FileProviderError.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	declared	full/fileprovider/FileProviderError.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	declared	full/fileprovider/FileProviderError.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFileProviderErrorCode	declared	full/fileprovider/FileProviderError.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	declared	full/fileprovider/FileProviderError.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	declared	full/fileprovider/FileProviderError.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	declared	full/fileprovider/FileProviderError.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV10noSuchItemSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV11errorDomainSSvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV11pageExpiredSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV12nonEvictableSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV13unsyncedEditsSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV14domainDisabledSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV16deletionRejectedSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV16excludedFromSyncSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV16notAuthenticatedSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV16providerNotFoundSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV17cannotSynchronizeSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV17directoryNotEmptySoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV17filenameCollisionSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV17insufficientQuotaSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV17serverUnreachableSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV17syncAnchorExpiredSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV20nonEvictableChildrenSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV22providerDomainNotFoundSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV28applicationExtensionNotFoundSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV33localVersionConflictingWithServerSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SC23NSFileProviderErrorCodeLeV36providerDomainTemporarilyUnavailableSoAAVvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::c:objc(cs)NSFileProviderDomainVersion	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderContentPolicy	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderDomainRemovalMode	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderErrorCode	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderTestingOperationSide	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NSFileProviderTestingOperationType	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderDomainIdentifier	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderExtensionActionIdentifier	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderItemDecorationIdentifier	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderItemIdentifier	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderPage	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderSyncAnchor	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@NSFileProviderUserInfoKey	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSFileProviderContentPolicy	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSFileProviderDomainRemovalMode	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	declared	full/fileprovider/FileProviderError.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSFileProviderTestingOperationSide	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NSFileProviderTestingOperationType	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFileProviderContentPolicy	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFileProviderDomainRemovalMode	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFileProviderErrorCode	declared	full/fileprovider/FileProviderError.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFileProviderTestingOperationSide	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NSFileProviderTestingOperationType	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:So18NSFileProviderPagea8rawValueAB10Foundation4DataV_tcfc	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:So18NSFileProviderPageayAB10Foundation4DataVcfc	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:So21NSFileProviderManagerC04FileB0E22requestDownloadForItem14withIdentifier14requestedRange17completionHandlerySo0abhJ0a_So8_NSRangeVSgys5Error_pSgctF	declared	full/fileprovider/FileProviderManager.swift	Fail-closed host-service API compiles; not exercised by the agent runtime
+s:So21NSFileProviderManagerC04FileB0E22requestDownloadForItem14withIdentifier14requestedRangeySo0abhJ0a_So8_NSRangeVSgtYaKF	declared	full/fileprovider/FileProviderManager.swift	Fail-closed host-service API compiles; not exercised by the agent runtime
+s:So23NSFileProviderErrorCodeV11pageExpiredABvpZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So23NSFileProviderErrorCodeV8rawValueABSgSi_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So24NSFileProviderItemFieldsV8rawValueABSu_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So24NSFileProviderSyncAnchora8rawValueAB10Foundation4DataV_tcfc	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:So24NSFileProviderSyncAnchorayAB10Foundation4DataVcfc	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:So25NSFileProviderUserInfoKeya8rawValueABSS_tcfc	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:So25NSFileProviderUserInfoKeyayABSScfc	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:So27NSFileProviderContentPolicyV8rawValueABSgSi_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So27NSFileProviderDomainVersionC04FileB0E1loiySbAB_ABtFZ	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So28NSFileProviderItemIdentifiera8rawValueABSS_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So28NSFileProviderItemIdentifierayABSScfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So28NSFileProviderTypeAndCreatorV4type7creatorABs6UInt32V_AFtcfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So28NSFileProviderTypeAndCreatorVABycfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So29NSFileProviderFileSystemFlagsV8rawValueABSu_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So30NSFileProviderDomainIdentifiera8rawValueABSS_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So30NSFileProviderDomainIdentifierayABSScfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So30NSFileProviderItemCapabilitiesV8rawValueABSu_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So31NSFileProviderCreateItemOptionsV8rawValueABSu_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So31NSFileProviderDeleteItemOptionsV8rawValueABSu_tcfc	implemented	full/fileprovider/FileProviderOptionSets.swift	Portable Linux implementation
+s:So31NSFileProviderDomainRemovalModeV8rawValueABSgSi_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So31NSFileProviderModifyItemOptionsV8rawValueABSu_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So32NSFileProviderDomainTestingModesV8rawValueABSu_tcfc	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:So34NSFileProviderTestingOperationSideV8rawValueABSgSu_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So34NSFileProviderTestingOperationTypeV8rawValueABSgSi_tcfc	implemented	tests/agent/FileProviderRuntime.swift	Exercised by the agent runtime
+s:So38NSFileProviderItemDecorationIdentifiera8rawValueABSS_tcfc	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:So38NSFileProviderItemDecorationIdentifierayABSScfc	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:So39NSFileProviderExtensionActionIdentifiera8rawValueABSS_tcfc	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:So39NSFileProviderExtensionActionIdentifierayABSScfc	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	implemented	tests/agent/FileProviderRuntime.swift	OptionSet operation exercised by the agent runtime
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@NSFileProviderDomainIdentifier	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@NSFileProviderExtensionActionIdentifier	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@NSFileProviderItemDecorationIdentifier	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@NSFileProviderItemIdentifier	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@NSFileProviderPage	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@NSFileProviderSyncAnchor	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@NSFileProviderUserInfoKey	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NSFileProviderDomainIdentifier	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NSFileProviderExtensionActionIdentifier	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NSFileProviderItemDecorationIdentifier	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NSFileProviderItemIdentifier	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NSFileProviderPage	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NSFileProviderSyncAnchor	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NSFileProviderUserInfoKey	declared	full/fileprovider/FileProviderIdentifiers.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@NSFileProviderErrorCode	declared	full/fileprovider/FileProviderError.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	implemented	tests/agent/FileProviderRuntime.swift	OptionSet operation exercised by the agent runtime
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	implemented	tests/agent/FileProviderRuntime.swift	OptionSet operation exercised by the agent runtime
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	implemented	tests/agent/FileProviderRuntime.swift	OptionSet operation exercised by the agent runtime
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	implemented	tests/agent/FileProviderRuntime.swift	OptionSet operation exercised by the agent runtime
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	implemented	tests/agent/FileProviderRuntime.swift	OptionSet operation exercised by the agent runtime
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	implemented	tests/agent/FileProviderRuntime.swift	OptionSet operation exercised by the agent runtime
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	implemented	tests/agent/FileProviderRuntime.swift	OptionSet operation exercised by the agent runtime
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	implemented	tests/agent/FileProviderRuntime.swift	OptionSet operation exercised by the agent runtime
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSFileProviderCreateItemOptions	implemented	tests/agent/FileProviderRuntime.swift	OptionSet operation exercised by the agent runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSFileProviderDeleteItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSFileProviderDomainTestingModes	declared	full/fileprovider/FileProviderDomain.swift	Compiles as part of the public surface; not individually asserted by the runtime
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSFileProviderFileSystemFlags	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSFileProviderItemCapabilities	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSFileProviderItemFields	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@NSFileProviderModifyItemOptions	declared	full/fileprovider/FileProviderOptionSets.swift	Swift OptionSet default; type is implemented and compiles
