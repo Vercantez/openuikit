@@ -1,15 +1,17 @@
 import Foundation
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
 /// In-app social compose sheet.
 ///
 /// Linux has no Twitter/Facebook/Weibo/LinkedIn account integration.
-/// `isAvailable(forServiceType:)` is therefore always `false`. The
-/// initializer still produces a local draft so callers can record text,
-/// images, and URLs; posting those attachments to an Apple social service
-/// is not implemented.
+/// `isAvailable(forServiceType:)` is always `false`. The initializer still
+/// produces a local draft so callers can record text, images, and URLs.
 @MainActor
 open class SLComposeViewController: UIViewController {
-    public init?(forServiceType serviceType: String?) {
+    public init!(forServiceType serviceType: String!) {
         guard let serviceType, !serviceType.isEmpty else { return nil }
         self.serviceType = serviceType
         super.init(nibName: nil, bundle: nil)
@@ -19,15 +21,14 @@ open class SLComposeViewController: UIViewController {
 
     open var completionHandler: SLComposeViewControllerCompletionHandler!
 
-    /// Local draft text. Not an Apple property; exposed so hosts and tests
-    /// can inspect `setInitialText(_:)` without fabricating a post.
-    public private(set) var portableInitialText: String = ""
+    @_spi(OpenUIKitHost)
+    public private(set) var hostInitialText: String = ""
 
-    /// Local draft images accepted by `add(_:)`.
-    public private(set) var portableImages: [UIImage] = []
+    @_spi(OpenUIKitHost)
+    public private(set) var hostImages: [UIImage] = []
 
-    /// Local draft URLs accepted by `add(_:)`.
-    public private(set) var portableURLs: [URL] = []
+    @_spi(OpenUIKitHost)
+    public private(set) var hostURLs: [URL] = []
 
     /// Always `false` on Linux: no Apple social account is configured.
     open class func isAvailable(forServiceType serviceType: String!) -> Bool {
@@ -37,35 +38,37 @@ open class SLComposeViewController: UIViewController {
 
     open func setInitialText(_ text: String!) -> Bool {
         guard let text else { return false }
-        portableInitialText = text
+        hostInitialText = text
         return true
     }
 
     open func add(_ image: UIImage!) -> Bool {
         guard let image else { return false }
-        portableImages.append(image)
+        hostImages.append(image)
         return true
     }
 
     open func add(_ url: URL!) -> Bool {
         guard let url else { return false }
-        portableURLs.append(url)
+        hostURLs.append(url)
         return true
     }
 
     open func removeAllImages() -> Bool {
-        portableImages.removeAll()
+        hostImages.removeAll()
         return true
     }
 
     open func removeAllURLs() -> Bool {
-        portableURLs.removeAll()
+        hostURLs.removeAll()
         return true
     }
 
-    /// Invoke the completion handler without claiming an Apple-network post.
-    /// Hosts should pass `.cancelled` unless they have independently posted.
+    /// Invoke and clear the completion handler. Does not post to a network.
+    @_spi(OpenUIKitHost)
     open func completeDraft(with result: SLComposeViewControllerResult) {
-        completionHandler?(result)
+        let handler = completionHandler
+        completionHandler = nil
+        handler?(result)
     }
 }

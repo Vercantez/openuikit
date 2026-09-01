@@ -5,6 +5,9 @@ import Foundation
 /// Title, value, pending flag, and tap handler are local state. Tapping is
 /// host-driven: this type never presents Apple settings UI.
 open class SLComposeSheetConfigurationItem: NSObject {
+    /// Pinned overlay is `init!()`. Swift forbids a failable override of
+    /// nonfailable `NSObject.init()`, so this is a stronger nonfailable
+    /// `override init()`.
     public override init() {
         super.init()
     }

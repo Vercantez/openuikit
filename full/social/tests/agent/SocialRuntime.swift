@@ -1,10 +1,11 @@
+@_spi(OpenUIKitHost) import Social
 import Foundation
-import Social
 
 @MainActor
 final class AgentShareSheet: SLComposeServiceViewController {
     var configurationLoadCount = 0
     var postSelected = false
+    var didSelectCancelCount = 0
 
     override func isContentValid() -> Bool {
         let text = contentText ?? ""
@@ -24,6 +25,11 @@ final class AgentShareSheet: SLComposeServiceViewController {
         postSelected = true
         super.didSelectPost()
     }
+
+    override func didSelectCancel() {
+        didSelectCancelCount += 1
+        super.didSelectCancel()
+    }
 }
 
 func require(_ condition: Bool, _ message: String) {
@@ -34,27 +40,26 @@ func require(_ condition: Bool, _ message: String) {
 }
 
 await MainActor.run {
+    print("SOCIAL_AGENT_RUNTIME_STANDALONE_ONLY")
+
+    require(!SLServiceTypeTwitter.isEmpty, "twitter constant nonempty")
+    require(!SLServiceTypeFacebook.isEmpty, "facebook constant nonempty")
+    require(!SLServiceTypeSinaWeibo.isEmpty, "sina weibo constant nonempty")
+    require(!SLServiceTypeTencentWeibo.isEmpty, "tencent weibo constant nonempty")
+    require(!SLServiceTypeLinkedIn.isEmpty, "linkedin constant nonempty")
     require(
-        SLServiceTypeTwitter == "com.apple.social.twitter",
-        "twitter service type"
+        Set(
+            [
+                SLServiceTypeTwitter,
+                SLServiceTypeFacebook,
+                SLServiceTypeSinaWeibo,
+                SLServiceTypeTencentWeibo,
+                SLServiceTypeLinkedIn,
+            ]
+        ).count == 5,
+        "service constants distinct"
     )
-    require(
-        SLServiceTypeFacebook == "com.apple.social.facebook",
-        "facebook service type"
-    )
-    require(
-        SLServiceTypeSinaWeibo == "com.apple.social.sinaweibo",
-        "sina weibo service type"
-    )
-    require(
-        SLServiceTypeTencentWeibo == "com.apple.social.tencentweibo",
-        "tencent weibo service type"
-    )
-    require(
-        SLServiceTypeLinkedIn == "com.apple.social.linkedin",
-        "linkedin service type"
-    )
-    require(Set(SocialServiceType.all).count == 5, "unique service types")
+    require(SocialServiceType.all.count == 5, "host service list")
     require(SocialServiceType.isKnown(SLServiceTypeTwitter), "known twitter")
     require(!SocialServiceType.isKnown("not.a.service"), "unknown service")
 
@@ -112,23 +117,30 @@ await MainActor.run {
     guard let composer else { return }
     require(composer.serviceType == SLServiceTypeTwitter, "composer serviceType")
     require(composer.setInitialText("Draft from Linux") == true, "setInitialText")
-    require(composer.portableInitialText == "Draft from Linux", "draft text")
+    require(composer.hostInitialText == "Draft from Linux", "draft text")
     require(composer.setInitialText(nil) == false, "nil initial text")
     require(composer.add(URL(string: "https://example.com/item")) == true, "add url")
-    require(composer.portableURLs.count == 1, "url count")
+    require(composer.hostURLs.count == 1, "url count")
     require(composer.add(UIImage()) == true, "add image")
-    require(composer.portableImages.count == 1, "image count")
+    require(composer.hostImages.count == 1, "image count")
     require(composer.add(nil as UIImage?) == false, "nil image")
     require(composer.add(nil as URL?) == false, "nil url")
     require(composer.removeAllImages() == true, "remove images")
-    require(composer.portableImages.isEmpty, "images cleared")
+    require(composer.hostImages.isEmpty, "images cleared")
     require(composer.removeAllURLs() == true, "remove urls")
-    require(composer.portableURLs.isEmpty, "urls cleared")
+    require(composer.hostURLs.isEmpty, "urls cleared")
 
+    var completionCount = 0
     var completion: SLComposeViewControllerResult?
-    composer.completionHandler = { completion = $0 }
+    composer.completionHandler = {
+        completionCount += 1
+        completion = $0
+    }
     composer.completeDraft(with: .cancelled)
     require(completion == .cancelled, "completion cancelled, never posted")
+    require(composer.completionHandler == nil, "completionHandler cleared")
+    composer.completeDraft(with: .done)
+    require(completionCount == 1, "completionHandler invoked at most once")
 
     let item = SLComposeSheetConfigurationItem()
     item.title = "Visibility"
@@ -146,6 +158,7 @@ await MainActor.run {
     require(item.valuePending == false, "config pending cleared")
 
     let sheet = AgentShareSheet()
+    _ = sheet as any UITextViewDelegate
     require(sheet.contentText == "", "empty content")
     sheet.placeholder = "What's happening?"
     require(sheet.placeholder == "What's happening?", "placeholder")
@@ -154,10 +167,10 @@ await MainActor.run {
     sheet.textView.text = "Share extension draft"
     require(sheet.contentText == "Share extension draft", "contentText")
     sheet.validateContent()
-    require(sheet.portableContentIsValid, "valid content")
+    require(sheet.hostContentIsValid, "valid content")
     sheet.textView.text = ""
     sheet.validateContent()
-    require(sheet.portableContentIsValid == false, "invalid empty content")
+    require(sheet.hostContentIsValid == false, "invalid empty content")
     sheet.textView.text = "Share extension draft"
 
     let loaded = sheet.configurationItems() as? [SLComposeSheetConfigurationItem]
@@ -173,19 +186,30 @@ await MainActor.run {
 
     let pushed = UIViewController(nibName: nil, bundle: nil)
     sheet.pushConfigurationViewController(pushed)
-    require(sheet.portableConfigurationStackCount == 1, "push config")
+    require(sheet.hostConfigurationControllerCount == 1, "push config")
+    sheet.pushConfigurationViewController(UIViewController(nibName: nil, bundle: nil))
+    require(sheet.hostConfigurationControllerCount == 1, "second push rejected")
     sheet.pushConfigurationViewController(nil)
-    require(sheet.portableConfigurationStackCount == 1, "nil push ignored")
+    require(sheet.hostConfigurationControllerCount == 1, "nil push ignored")
     sheet.popConfigurationViewController()
-    require(sheet.portableConfigurationStackCount == 0, "pop config")
+    require(sheet.hostConfigurationControllerCount == 0, "pop config")
     sheet.popConfigurationViewController()
-    require(sheet.portableConfigurationStackCount == 0, "pop empty")
+    require(sheet.hostConfigurationControllerCount == 0, "pop empty")
 
     sheet.didSelectPost()
     require(sheet.postSelected, "didSelectPost overridable")
-    require(sheet.portableDidCancel == false, "post is not cancel")
-    sheet.didSelectCancel()
-    require(sheet.portableDidCancel, "didSelectCancel calls cancel")
+    require(
+        sheet.hostExtensionCompletion == .postedWithoutExtensionContext,
+        "post completion is partial without extension context"
+    )
+    sheet.cancel()
+    require(sheet.didSelectCancelCount == 1, "cancel triggers didSelectCancel")
+    require(
+        sheet.hostExtensionCompletion == .cancelledWithoutExtensionContext,
+        "cancel completion is partial without extension context"
+    )
+    sheet.cancel()
+    require(sheet.didSelectCancelCount == 2, "second cancel still one-way")
 
     let missingURL = SLRequest(
         forServiceType: SLServiceTypeTwitter,
@@ -207,7 +231,7 @@ await MainActor.run {
     require(get.requestMethod == .GET, "GET method")
     require(get.url == getURL, "GET url")
     require((get.parameters["count"] as? String) == "1", "GET parameters")
-    require(get.portableServiceType == SLServiceTypeTwitter, "GET service")
+    require(get.hostServiceType == SLServiceTypeTwitter, "GET service")
     let preparedGET = get.preparedURLRequest()
     require(preparedGET != nil, "prepared GET")
     require(preparedGET?.httpMethod == "GET", "GET http method")
@@ -233,7 +257,8 @@ await MainActor.run {
     let preparedPOST = post.preparedURLRequest()!
     require(preparedPOST.httpMethod == "POST", "POST method")
     let postBody = String(data: preparedPOST.httpBody ?? Data(), encoding: .utf8) ?? ""
-    require(postBody.contains("status=hello"), "POST form body")
+    require(postBody.contains("status=hello+world"), "POST form body uses plus")
+    require(!postBody.contains("hello%20world"), "POST form body does not use %20")
     require(
         preparedPOST.value(forHTTPHeaderField: "Content-Type")?
             .contains("application/x-www-form-urlencoded") == true,
@@ -254,19 +279,43 @@ await MainActor.run {
         type: "image/png",
         filename: "draft.png"
     )
-    require(post.portableMultipartParts.count == 1, "multipart stored")
+    require(post.hostMultipartParts.count == 1, "multipart stored")
     let multipart = post.preparedURLRequest()!
     require(
         multipart.value(forHTTPHeaderField: "Content-Type")?
             .contains("multipart/form-data") == true,
         "multipart content type"
     )
+    let multipartHeader = multipart.value(forHTTPHeaderField: "Content-Type") ?? ""
+    require(multipartHeader.contains("boundary="), "multipart boundary")
     let multipartBody = String(data: multipart.httpBody ?? Data(), encoding: .utf8) ?? ""
     require(multipartBody.contains("draft.png"), "multipart filename")
     require(multipartBody.contains("image-bytes"), "multipart payload")
 
+    let beforeReject = post.hostMultipartParts.count
+    post.addMultipartData(
+        Data("bad".utf8),
+        withName: "na\nme",
+        type: "text/plain",
+        filename: "ok.txt"
+    )
+    post.addMultipartData(
+        Data("bad".utf8),
+        withName: "name",
+        type: "text/pla\"in",
+        filename: "ok.txt"
+    )
+    post.addMultipartData(
+        Data("bad".utf8),
+        withName: "name",
+        type: "text/plain",
+        filename: "ok\r.txt"
+    )
+    require(post.hostMultipartParts.count == beforeReject, "multipart metadata rejected")
+
     post.account = ACAccount()
-    require(post.account != nil, "account placeholder assignable")
+    require(post.account != nil, "account assignable")
+    require(post.preparedURLRequest() == nil, "account without OAuth signer fails closed")
 
     var performCalls = 0
     post.perform { data, response, error in
@@ -281,6 +330,9 @@ await MainActor.run {
     }
     require(performCalls == 1, "perform invoked synchronously")
     post.perform(handler: nil)
+
+    post.account = nil
+    require(post.preparedURLRequest() != nil, "unsigned request when account is nil")
 
     print("SOCIAL_AGENT_RUNTIME_OK")
 }

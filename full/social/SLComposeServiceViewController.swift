@@ -1,18 +1,25 @@
 import Foundation
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
 /// Share-extension compose controller used by the 20-app corpus.
 ///
-/// Text, placeholder, character-count, configuration items, and a local
-/// configuration-view stack are implemented. Preview loading has no
-/// `NSExtensionContext` attachments on this host, so `loadPreviewView()`
-/// returns `nil`. `didSelectPost()` does not send to a social network.
+/// Text, placeholder, character count, validity, configuration items, and a
+/// single pushed configuration controller are implemented. Preview loading
+/// has no extension attachments, so `loadPreviewView()` returns `nil`.
+/// `didSelectPost()` / `didSelectCancel()` are partial host hooks: they do
+/// not complete an Apple `NSExtensionContext`.
 @MainActor
-open class SLComposeServiceViewController: UIViewController {
+open class SLComposeServiceViewController: UIViewController, UITextViewDelegate {
     private let composeTextView = UITextView()
-    private var configurationStack: [UIViewController] = []
+    private var pushedConfigurationController: UIViewController?
 
     public init() {
         super.init(nibName: nil, bundle: nil)
+        composeTextView.delegate = self
+        _ = Self.uiTextViewDelegateWitness(self)
     }
 
     open var textView: UITextView! { composeTextView }
@@ -25,29 +32,34 @@ open class SLComposeServiceViewController: UIViewController {
 
     open var autoCompletionViewController: UIViewController!
 
-    /// Depth of `pushConfigurationViewController` / `popConfigurationViewController`.
-    public var portableConfigurationStackCount: Int { configurationStack.count }
+    @_spi(OpenUIKitHost)
+    public var hostConfigurationControllerCount: Int {
+        pushedConfigurationController == nil ? 0 : 1
+    }
 
-    /// Set by the default `cancel()` implementation.
-    public private(set) var portableDidCancel = false
+    @_spi(OpenUIKitHost)
+    public private(set) var hostExtensionCompletion: SocialHostExtensionCompletion = .none
 
-    /// Last `isContentValid()` result observed by `validateContent()`.
-    public private(set) var portableContentIsValid = true
+    @_spi(OpenUIKitHost)
+    public private(set) var hostContentIsValid = true
 
     open func presentationAnimationDidFinish() {}
 
-    /// Default Apple behavior is empty; subclasses perform the post.
-    /// This starting point does not contact a social network.
-    open func didSelectPost() {}
-
-    /// Default Apple behavior forwards to `cancel()`.
-    open func didSelectCancel() {
-        cancel()
+    /// Partial host hook. Apple's default is empty; subclasses post.
+    /// This does not complete an extension request.
+    open func didSelectPost() {
+        hostExtensionCompletion = .postedWithoutExtensionContext
     }
 
-    /// Marks the local sheet cancelled. There is no extension host to notify.
+    /// Partial host hook. Records cancellation without `NSExtensionContext`
+    /// completion. Does not call `cancel()` (avoids recursion).
+    open func didSelectCancel() {
+        hostExtensionCompletion = .cancelledWithoutExtensionContext
+    }
+
+    /// Triggers `didSelectCancel()`. There is no extension host to notify.
     open func cancel() {
-        portableDidCancel = true
+        didSelectCancel()
     }
 
     /// Default Apple behavior returns `true`.
@@ -57,7 +69,7 @@ open class SLComposeServiceViewController: UIViewController {
 
     /// Recomputes validity from `isContentValid()`.
     open func validateContent() {
-        portableContentIsValid = isContentValid()
+        hostContentIsValid = isContentValid()
     }
 
     /// Default Apple behavior returns `nil`.
@@ -69,18 +81,30 @@ open class SLComposeServiceViewController: UIViewController {
         _ = configurationItems()
     }
 
+    /// At most one configuration controller is retained.
     open func pushConfigurationViewController(_ viewController: UIViewController!) {
         guard let viewController else { return }
-        configurationStack.append(viewController)
+        guard pushedConfigurationController == nil else { return }
+        pushedConfigurationController = viewController
     }
 
     open func popConfigurationViewController() {
-        guard !configurationStack.isEmpty else { return }
-        configurationStack.removeLast()
+        pushedConfigurationController = nil
     }
 
-    /// No extension preview attachments are available on Linux.
+    /// No extension preview attachments are available on this host.
     open func loadPreviewView() -> UIView! {
         nil
+    }
+
+    open func textViewDidChange(_ textView: UITextView) {
+        _ = textView
+        validateContent()
+    }
+
+    private static func uiTextViewDelegateWitness(
+        _ controller: SLComposeServiceViewController
+    ) -> any UITextViewDelegate {
+        controller
     }
 }

@@ -1,38 +1,43 @@
 import Foundation
-import FoundationNetworking
 
 /// Linux starting point for Apple's public `Social` module.
 ///
 /// Share-extension compose state, configuration items, and unsigned
-/// `URLRequest` assembly are real. Apple account services, OAuth signing,
-/// and system compose UI are fail-closed: availability is `false` and
-/// `SLRequest.perform(handler:)` never contacts a social network.
+/// `URLRequest` assembly (when no account is attached) are real. Apple
+/// account posting, OAuth signing, extension-host completion, and system
+/// compose UI are fail-closed or partial host hooks.
 ///
-/// UIKit is a declared dependency. This leaf compile does not receive the
-/// shared UIKit module, so `SocialHostTypes.swift` supplies local
-/// `UIViewController` / `UIImage` / `UITextView` stand-ins until central
-/// review links OpenUIKit.
+/// Production Social imports the canonical `UIKit` module and `Accounts`.
+/// Fallback UIKit/Accounts types exist only in the sealed standalone host
+/// compile, where `canImport(UIKit)` is false; they are not production ABI.
 
 /// Identifies Facebook as an `SLRequest` / compose service type.
 ///
-/// Long-standing public constant value; confirm on an Apple runtime before
-/// treating byte-for-byte equality with a hardcoded string as ABI.
+/// Declared pending an Apple-runtime dump of the exact constant string.
 public let SLServiceTypeFacebook = "com.apple.social.facebook"
 
 /// Identifies LinkedIn as an `SLRequest` / compose service type.
+///
+/// Declared pending an Apple-runtime dump of the exact constant string.
 public let SLServiceTypeLinkedIn = "com.apple.social.linkedin"
 
 /// Identifies Sina Weibo as an `SLRequest` / compose service type.
+///
+/// Declared pending an Apple-runtime dump of the exact constant string.
 public let SLServiceTypeSinaWeibo = "com.apple.social.sinaweibo"
 
 /// Identifies Tencent Weibo as an `SLRequest` / compose service type.
+///
+/// Declared pending an Apple-runtime dump of the exact constant string.
 public let SLServiceTypeTencentWeibo = "com.apple.social.tencentweibo"
 
 /// Identifies Twitter as an `SLRequest` / compose service type.
+///
+/// Declared pending an Apple-runtime dump of the exact constant string.
 public let SLServiceTypeTwitter = "com.apple.social.twitter"
 
-/// HTTP verb used by `SLRequest`. Raw values follow the historical
-/// `NS_ENUM` order in `SLRequest.h` (`GET`, `POST`, `DELETE`, `PUT`).
+/// HTTP verb used by `SLRequest`. Raw values follow historical `NS_ENUM`
+/// declaration order (`GET`, `POST`, `DELETE`, `PUT`).
 public enum SLRequestMethod: Int, Sendable, Equatable, Hashable {
     case GET = 0
     case POST = 1
@@ -42,8 +47,7 @@ public enum SLRequestMethod: Int, Sendable, Equatable, Hashable {
 
 /// Result delivered to `SLComposeViewController.completionHandler`.
 ///
-/// Linux never reports `.done` as a successful Apple-network post. Hosts
-/// may invoke the handler with `.cancelled` after local draft dismissal.
+/// Linux never reports `.done` as a successful Apple-network post.
 public enum SLComposeViewControllerResult: Int, Sendable, Equatable, Hashable {
     case cancelled = 0
     case done = 1
@@ -56,21 +60,13 @@ public typealias SLComposeViewControllerCompletionHandler =
 /// Tap action for a share-extension configuration row.
 public typealias SLComposeSheetConfigurationItemTapHandler = () -> Void
 
-/// Completion callback for `SLRequest.perform(handler:)`.
+/// Host-only fail-closed error for Social account and request services.
 ///
-/// On Linux the handler is invoked synchronously with `nil` data, `nil`
-/// response, and `SocialServiceError.accountServiceUnavailable`.
-public typealias SLRequestHandler = (Data?, HTTPURLResponse?, (any Error)?) -> Void
-
-/// Portable fail-closed error for Social account and request services.
-///
-/// This is not Apple's `_SLErrorDomain` payload; that string is not in the
-/// public Swift surface and is queued for an Apple-oracle probe.
+/// This is not Apple's `_SLErrorDomain` payload.
+@_spi(OpenUIKitHost)
 public struct SocialServiceError: Error, Equatable, Hashable, Sendable {
     public enum Code: Int, Sendable, Equatable, Hashable {
         case accountServiceUnavailable = 1
-        case missingRequestHandler = 2
-        case missingURL = 3
     }
 
     public let code: Code
@@ -84,7 +80,8 @@ public struct SocialServiceError: Error, Equatable, Hashable, Sendable {
     )
 }
 
-/// Service-type strings known to this starting point.
+/// Host-only service-type helpers. Not Apple surface.
+@_spi(OpenUIKitHost)
 public enum SocialServiceType {
     public static let all: [String] = [
         SLServiceTypeTwitter,
@@ -98,4 +95,13 @@ public enum SocialServiceType {
         guard let serviceType else { return false }
         return all.contains(serviceType)
     }
+}
+
+/// Partial host completion for share-extension cancel/post. Not an
+/// Apple-equivalent `NSExtensionContext` completion.
+@_spi(OpenUIKitHost)
+public enum SocialHostExtensionCompletion: Equatable, Sendable {
+    case none
+    case cancelledWithoutExtensionContext
+    case postedWithoutExtensionContext
 }

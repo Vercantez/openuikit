@@ -1,68 +1,68 @@
 precise	status	evidence	notes
-c:@E@SLComposeViewControllerResult	implemented	tests/agent/SocialRuntime.swift	Int enum case/raw value asserted by the guest runtime.
-c:@E@SLComposeViewControllerResult@SLComposeViewControllerResultCancelled	implemented	tests/agent/SocialRuntime.swift	Int enum case/raw value asserted by the guest runtime.
-c:@E@SLComposeViewControllerResult@SLComposeViewControllerResultDone	implemented	tests/agent/SocialRuntime.swift	Int enum case/raw value asserted by the guest runtime.
-c:@E@SLRequestMethod	implemented	tests/agent/SocialRuntime.swift	Int enum case/raw value asserted by the guest runtime.
-c:@E@SLRequestMethod@SLRequestMethodDELETE	implemented	tests/agent/SocialRuntime.swift	Int enum case/raw value asserted by the guest runtime.
-c:@E@SLRequestMethod@SLRequestMethodGET	implemented	tests/agent/SocialRuntime.swift	Int enum case/raw value asserted by the guest runtime.
-c:@E@SLRequestMethod@SLRequestMethodPOST	implemented	tests/agent/SocialRuntime.swift	Int enum case/raw value asserted by the guest runtime.
-c:@E@SLRequestMethod@SLRequestMethodPUT	implemented	tests/agent/SocialRuntime.swift	Int enum case/raw value asserted by the guest runtime.
-c:@SLServiceTypeFacebook	implemented	tests/agent/SocialRuntime.swift	Public service-type constant; identity asserted by the guest runtime.
-c:@SLServiceTypeLinkedIn	implemented	tests/agent/SocialRuntime.swift	Public service-type constant; identity asserted by the guest runtime.
-c:@SLServiceTypeSinaWeibo	implemented	tests/agent/SocialRuntime.swift	Public service-type constant; identity asserted by the guest runtime.
-c:@SLServiceTypeTencentWeibo	implemented	tests/agent/SocialRuntime.swift	Public service-type constant; identity asserted by the guest runtime.
-c:@SLServiceTypeTwitter	implemented	tests/agent/SocialRuntime.swift	Public service-type constant; identity asserted by the guest runtime.
-c:@T@SLComposeSheetConfigurationItemTapHandler	implemented	full/social/Social.swift	Public callback typealias used by the guest runtime.
-c:@T@SLComposeViewControllerCompletionHandler	implemented	full/social/Social.swift	Public callback typealias used by the guest runtime.
-c:@T@SLRequestHandler	implemented	full/social/Social.swift	Public callback typealias used by the guest runtime.
-c:objc(cs)SLComposeServiceViewController	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(im)cancel	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(im)configurationItems	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(im)didSelectCancel	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(im)didSelectPost	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(im)isContentValid	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(im)loadPreviewView	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(im)popConfigurationViewController	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(im)presentationAnimationDidFinish	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(im)pushConfigurationViewController:	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(im)reloadConfigurationItems	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(im)validateContent	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(py)autoCompletionViewController	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(py)charactersRemaining	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(py)contentText	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(py)placeholder	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeServiceViewController(py)textView	implemented	full/social/SLComposeServiceViewController.swift	Share-extension compose state exercised by the guest runtime.
-c:objc(cs)SLComposeSheetConfigurationItem	implemented	full/social/SLComposeSheetConfigurationItem.swift	Local configuration-row state exercised by the guest runtime.
-c:objc(cs)SLComposeSheetConfigurationItem(im)init	implemented	full/social/SLComposeSheetConfigurationItem.swift	Local configuration-row state exercised by the guest runtime.
-c:objc(cs)SLComposeSheetConfigurationItem(py)tapHandler	implemented	full/social/SLComposeSheetConfigurationItem.swift	Local configuration-row state exercised by the guest runtime.
-c:objc(cs)SLComposeSheetConfigurationItem(py)title	implemented	full/social/SLComposeSheetConfigurationItem.swift	Local configuration-row state exercised by the guest runtime.
-c:objc(cs)SLComposeSheetConfigurationItem(py)value	implemented	full/social/SLComposeSheetConfigurationItem.swift	Local configuration-row state exercised by the guest runtime.
-c:objc(cs)SLComposeSheetConfigurationItem(py)valuePending	implemented	full/social/SLComposeSheetConfigurationItem.swift	Local configuration-row state exercised by the guest runtime.
-c:objc(cs)SLComposeViewController	implemented	full/social/SLComposeViewController.swift	Local draft composer; isAvailable is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLComposeViewController(cm)composeViewControllerForServiceType:	implemented	full/social/SLComposeViewController.swift	Local draft composer; isAvailable is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLComposeViewController(cm)isAvailableForServiceType:	implemented	full/social/SLComposeViewController.swift	Local draft composer; isAvailable is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLComposeViewController(im)addImage:	implemented	full/social/SLComposeViewController.swift	Local draft composer; isAvailable is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLComposeViewController(im)addURL:	implemented	full/social/SLComposeViewController.swift	Local draft composer; isAvailable is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLComposeViewController(im)removeAllImages	implemented	full/social/SLComposeViewController.swift	Local draft composer; isAvailable is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLComposeViewController(im)removeAllURLs	implemented	full/social/SLComposeViewController.swift	Local draft composer; isAvailable is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLComposeViewController(im)setInitialText:	implemented	full/social/SLComposeViewController.swift	Local draft composer; isAvailable is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLComposeViewController(py)completionHandler	implemented	full/social/SLComposeViewController.swift	Local draft composer; isAvailable is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLComposeViewController(py)serviceType	implemented	full/social/SLComposeViewController.swift	Local draft composer; isAvailable is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLRequest	implemented	full/social/SLRequest.swift	Local request assembly; perform(handler:) is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLRequest(cm)requestForServiceType:requestMethod:URL:parameters:	implemented	full/social/SLRequest.swift	Local request assembly; perform(handler:) is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLRequest(cm)requestForServiceType:requestMethod:URL:parameters:::SYNTHESIZED::c:objc(cs)SLRequest	implemented	full/social/SLRequest.swift	Local request assembly; perform(handler:) is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLRequest(im)addMultipartData:withName:type:filename:	implemented	full/social/SLRequest.swift	Local request assembly; perform(handler:) is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLRequest(im)performRequestWithHandler:	implemented	full/social/SLRequest.swift	Local request assembly; perform(handler:) is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLRequest(im)preparedURLRequest	implemented	full/social/SLRequest.swift	Local request assembly; perform(handler:) is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLRequest(py)URL	implemented	full/social/SLRequest.swift	Local request assembly; perform(handler:) is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLRequest(py)account	implemented	full/social/SLRequest.swift	Local request assembly; perform(handler:) is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLRequest(py)parameters	implemented	full/social/SLRequest.swift	Local request assembly; perform(handler:) is fail-closed. Exercised by the guest runtime.
-c:objc(cs)SLRequest(py)requestMethod	implemented	full/social/SLRequest.swift	Local request assembly; perform(handler:) is fail-closed. Exercised by the guest runtime.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SLComposeViewControllerResult	implemented	tests/agent/SocialRuntime.swift	Hashable/Equatable synthesis (hashValue, hash(into:), !=, init(rawValue:)) asserted by the guest runtime.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SLRequestMethod	implemented	tests/agent/SocialRuntime.swift	Hashable/Equatable synthesis (hashValue, hash(into:), !=, init(rawValue:)) asserted by the guest runtime.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SLComposeViewControllerResult	implemented	tests/agent/SocialRuntime.swift	Hashable/Equatable synthesis (hashValue, hash(into:), !=, init(rawValue:)) asserted by the guest runtime.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SLRequestMethod	implemented	tests/agent/SocialRuntime.swift	Hashable/Equatable synthesis (hashValue, hash(into:), !=, init(rawValue:)) asserted by the guest runtime.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SLComposeViewControllerResult	implemented	tests/agent/SocialRuntime.swift	Hashable/Equatable synthesis (hashValue, hash(into:), !=, init(rawValue:)) asserted by the guest runtime.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SLRequestMethod	implemented	tests/agent/SocialRuntime.swift	Hashable/Equatable synthesis (hashValue, hash(into:), !=, init(rawValue:)) asserted by the guest runtime.
-s:So15SLRequestMethodV8rawValueABSgSi_tcfc	implemented	tests/agent/SocialRuntime.swift	Hashable/Equatable synthesis (hashValue, hash(into:), !=, init(rawValue:)) asserted by the guest runtime.
-s:So29SLComposeViewControllerResultV8rawValueABSgSi_tcfc	implemented	tests/agent/SocialRuntime.swift	Hashable/Equatable synthesis (hashValue, hash(into:), !=, init(rawValue:)) asserted by the guest runtime.
+c:@E@SLComposeViewControllerResult	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+c:@E@SLComposeViewControllerResult@SLComposeViewControllerResultCancelled	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+c:@E@SLComposeViewControllerResult@SLComposeViewControllerResultDone	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+c:@E@SLRequestMethod	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+c:@E@SLRequestMethod@SLRequestMethodDELETE	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+c:@E@SLRequestMethod@SLRequestMethodGET	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+c:@E@SLRequestMethod@SLRequestMethodPOST	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+c:@E@SLRequestMethod@SLRequestMethodPUT	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+c:@SLServiceTypeFacebook	declared	full/social/Social.swift	Constant is declared; exact Apple string is pending oracle and is not proven by standalone tests.
+c:@SLServiceTypeLinkedIn	declared	full/social/Social.swift	Constant is declared; exact Apple string is pending oracle and is not proven by standalone tests.
+c:@SLServiceTypeSinaWeibo	declared	full/social/Social.swift	Constant is declared; exact Apple string is pending oracle and is not proven by standalone tests.
+c:@SLServiceTypeTencentWeibo	declared	full/social/Social.swift	Constant is declared; exact Apple string is pending oracle and is not proven by standalone tests.
+c:@SLServiceTypeTwitter	declared	full/social/Social.swift	Constant is declared; exact Apple string is pending oracle and is not proven by standalone tests.
+c:@T@SLComposeSheetConfigurationItemTapHandler	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+c:@T@SLComposeViewControllerCompletionHandler	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+c:@T@SLRequestHandler	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+c:objc(cs)SLComposeServiceViewController	declared	full/social/SLComposeServiceViewController.swift	UIKit type identity is declared pending the staged platform identity gate; standalone fallbacks are not evidence.
+c:objc(cs)SLComposeServiceViewController(im)cancel	implemented	full/social/SLComposeServiceViewController.swift	Local compose-sheet behavior exercised by the standalone runtime. Host cancel/post is partial, not Apple extension completion.
+c:objc(cs)SLComposeServiceViewController(im)configurationItems	implemented	full/social/SLComposeServiceViewController.swift	Local compose-sheet behavior exercised by the standalone runtime. Host cancel/post is partial, not Apple extension completion.
+c:objc(cs)SLComposeServiceViewController(im)didSelectCancel	implemented	full/social/SLComposeServiceViewController.swift	Local compose-sheet behavior exercised by the standalone runtime. Host cancel/post is partial, not Apple extension completion.
+c:objc(cs)SLComposeServiceViewController(im)didSelectPost	implemented	full/social/SLComposeServiceViewController.swift	Local compose-sheet behavior exercised by the standalone runtime. Host cancel/post is partial, not Apple extension completion.
+c:objc(cs)SLComposeServiceViewController(im)isContentValid	implemented	full/social/SLComposeServiceViewController.swift	Local compose-sheet behavior exercised by the standalone runtime. Host cancel/post is partial, not Apple extension completion.
+c:objc(cs)SLComposeServiceViewController(im)loadPreviewView	declared	full/social/SLComposeServiceViewController.swift	UIKit type identity is declared pending the staged platform identity gate; standalone fallbacks are not evidence.
+c:objc(cs)SLComposeServiceViewController(im)popConfigurationViewController	declared	full/social/SLComposeServiceViewController.swift	UIKit type identity is declared pending the staged platform identity gate; standalone fallbacks are not evidence.
+c:objc(cs)SLComposeServiceViewController(im)presentationAnimationDidFinish	implemented	full/social/SLComposeServiceViewController.swift	Local compose-sheet behavior exercised by the standalone runtime. Host cancel/post is partial, not Apple extension completion.
+c:objc(cs)SLComposeServiceViewController(im)pushConfigurationViewController:	declared	full/social/SLComposeServiceViewController.swift	UIKit type identity is declared pending the staged platform identity gate; standalone fallbacks are not evidence.
+c:objc(cs)SLComposeServiceViewController(im)reloadConfigurationItems	implemented	full/social/SLComposeServiceViewController.swift	Local compose-sheet behavior exercised by the standalone runtime. Host cancel/post is partial, not Apple extension completion.
+c:objc(cs)SLComposeServiceViewController(im)validateContent	implemented	full/social/SLComposeServiceViewController.swift	Local compose-sheet behavior exercised by the standalone runtime. Host cancel/post is partial, not Apple extension completion.
+c:objc(cs)SLComposeServiceViewController(py)autoCompletionViewController	declared	full/social/SLComposeServiceViewController.swift	UIKit type identity is declared pending the staged platform identity gate; standalone fallbacks are not evidence.
+c:objc(cs)SLComposeServiceViewController(py)charactersRemaining	implemented	full/social/SLComposeServiceViewController.swift	Local compose-sheet behavior exercised by the standalone runtime. Host cancel/post is partial, not Apple extension completion.
+c:objc(cs)SLComposeServiceViewController(py)contentText	implemented	full/social/SLComposeServiceViewController.swift	Local compose-sheet behavior exercised by the standalone runtime. Host cancel/post is partial, not Apple extension completion.
+c:objc(cs)SLComposeServiceViewController(py)placeholder	implemented	full/social/SLComposeServiceViewController.swift	Local compose-sheet behavior exercised by the standalone runtime. Host cancel/post is partial, not Apple extension completion.
+c:objc(cs)SLComposeServiceViewController(py)textView	declared	full/social/SLComposeServiceViewController.swift	UIKit type identity is declared pending the staged platform identity gate; standalone fallbacks are not evidence.
+c:objc(cs)SLComposeSheetConfigurationItem	implemented	full/social/SLComposeSheetConfigurationItem.swift	Local configuration-row state exercised by the standalone runtime.
+c:objc(cs)SLComposeSheetConfigurationItem(im)init	implemented	full/social/SLComposeSheetConfigurationItem.swift	Local configuration-row state exercised by the standalone runtime.
+c:objc(cs)SLComposeSheetConfigurationItem(py)tapHandler	implemented	full/social/SLComposeSheetConfigurationItem.swift	Local configuration-row state exercised by the standalone runtime.
+c:objc(cs)SLComposeSheetConfigurationItem(py)title	implemented	full/social/SLComposeSheetConfigurationItem.swift	Local configuration-row state exercised by the standalone runtime.
+c:objc(cs)SLComposeSheetConfigurationItem(py)value	implemented	full/social/SLComposeSheetConfigurationItem.swift	Local configuration-row state exercised by the standalone runtime.
+c:objc(cs)SLComposeSheetConfigurationItem(py)valuePending	implemented	full/social/SLComposeSheetConfigurationItem.swift	Local configuration-row state exercised by the standalone runtime.
+c:objc(cs)SLComposeViewController	declared	full/social/SLComposeViewController.swift	UIKit type identity is declared pending the staged platform identity gate; standalone fallbacks are not evidence.
+c:objc(cs)SLComposeViewController(cm)composeViewControllerForServiceType:	declared	full/social/SLComposeViewController.swift	UIKit type identity is declared pending the staged platform identity gate; standalone fallbacks are not evidence.
+c:objc(cs)SLComposeViewController(cm)isAvailableForServiceType:	implemented	full/social/SLComposeViewController.swift	Local draft behavior or fail-closed availability exercised by the standalone runtime. Not Apple host UI.
+c:objc(cs)SLComposeViewController(im)addImage:	declared	full/social/SLComposeViewController.swift	UIKit type identity is declared pending the staged platform identity gate; standalone fallbacks are not evidence.
+c:objc(cs)SLComposeViewController(im)addURL:	implemented	full/social/SLComposeViewController.swift	Local draft behavior or fail-closed availability exercised by the standalone runtime. Not Apple host UI.
+c:objc(cs)SLComposeViewController(im)removeAllImages	implemented	full/social/SLComposeViewController.swift	Local draft behavior or fail-closed availability exercised by the standalone runtime. Not Apple host UI.
+c:objc(cs)SLComposeViewController(im)removeAllURLs	implemented	full/social/SLComposeViewController.swift	Local draft behavior or fail-closed availability exercised by the standalone runtime. Not Apple host UI.
+c:objc(cs)SLComposeViewController(im)setInitialText:	implemented	full/social/SLComposeViewController.swift	Local draft behavior or fail-closed availability exercised by the standalone runtime. Not Apple host UI.
+c:objc(cs)SLComposeViewController(py)completionHandler	implemented	full/social/SLComposeViewController.swift	Local draft behavior or fail-closed availability exercised by the standalone runtime. Not Apple host UI.
+c:objc(cs)SLComposeViewController(py)serviceType	implemented	full/social/SLComposeViewController.swift	Local draft behavior or fail-closed availability exercised by the standalone runtime. Not Apple host UI.
+c:objc(cs)SLRequest	implemented	full/social/SLRequest.swift	Local request assembly or fail-closed non-networking perform exercised by the standalone runtime. Not Apple OAuth/host behavior.
+c:objc(cs)SLRequest(cm)requestForServiceType:requestMethod:URL:parameters:	implemented	full/social/SLRequest.swift	Local request assembly or fail-closed non-networking perform exercised by the standalone runtime. Not Apple OAuth/host behavior.
+c:objc(cs)SLRequest(cm)requestForServiceType:requestMethod:URL:parameters:::SYNTHESIZED::c:objc(cs)SLRequest	implemented	full/social/SLRequest.swift	Local request assembly or fail-closed non-networking perform exercised by the standalone runtime. Not Apple OAuth/host behavior.
+c:objc(cs)SLRequest(im)addMultipartData:withName:type:filename:	implemented	full/social/SLRequest.swift	Local request assembly or fail-closed non-networking perform exercised by the standalone runtime. Not Apple OAuth/host behavior.
+c:objc(cs)SLRequest(im)performRequestWithHandler:	implemented	full/social/SLRequest.swift	Local request assembly or fail-closed non-networking perform exercised by the standalone runtime. Not Apple OAuth/host behavior.
+c:objc(cs)SLRequest(im)preparedURLRequest	implemented	full/social/SLRequest.swift	Local request assembly or fail-closed non-networking perform exercised by the standalone runtime. Not Apple OAuth/host behavior.
+c:objc(cs)SLRequest(py)URL	implemented	full/social/SLRequest.swift	Local request assembly or fail-closed non-networking perform exercised by the standalone runtime. Not Apple OAuth/host behavior.
+c:objc(cs)SLRequest(py)account	declared	full/social/SLRequest.swift	Accounts.ACAccount identity is declared pending the staged platform identity gate; standalone fallbacks are not evidence.
+c:objc(cs)SLRequest(py)parameters	implemented	full/social/SLRequest.swift	Local request assembly or fail-closed non-networking perform exercised by the standalone runtime. Not Apple OAuth/host behavior.
+c:objc(cs)SLRequest(py)requestMethod	implemented	full/social/SLRequest.swift	Local request assembly or fail-closed non-networking perform exercised by the standalone runtime. Not Apple OAuth/host behavior.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SLComposeViewControllerResult	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SLRequestMethod	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SLComposeViewControllerResult	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SLRequestMethod	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SLComposeViewControllerResult	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SLRequestMethod	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+s:So15SLRequestMethodV8rawValueABSgSi_tcfc	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.
+s:So29SLComposeViewControllerResultV8rawValueABSgSi_tcfc	implemented	tests/agent/SocialRuntime.swift	Enum, typealias, or Hashable synthesis exercised by the standalone runtime without claiming Apple host behavior.

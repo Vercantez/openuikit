@@ -1,15 +1,4 @@
-#if canImport(UIKit)
-import UIKit
-#elseif canImport(OpenUIKit)
-#error(
-    "Social imports the canonical UIKit module; OpenUIKit is only a staged implementation dependency. Stage OpenUIKit as UIKit before compiling Social."
-)
-#else
 import Foundation
-
-// Isolated standalone-host configuration.
-// These types exist only when the canonical UIKit module is absent. They are
-// not production Social ABI. The sealed leaf gate result is standalone-only.
 
 @MainActor
 public protocol UITextViewDelegate: AnyObject {
@@ -46,4 +35,3 @@ open class UITextView: UIView {
     public weak var delegate: UITextViewDelegate?
     public var text: String = ""
 }
-#endif

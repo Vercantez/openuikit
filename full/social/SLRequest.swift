@@ -1,13 +1,38 @@
 import Foundation
+
+#if canImport(FoundationNetworking)
 import FoundationNetworking
+#endif
+
+#if canImport(Accounts)
+import Accounts
+#elseif canImport(UIKit)
+#error(
+    "Accounts is not staged. Refusing to declare Social.ACAccount. This is an integration blocker."
+)
+#else
+/// Isolated standalone-host configuration only. Not production Social ABI.
+open class ACAccount: NSObject {
+    public override init() {
+        super.init()
+    }
+}
+#endif
+
+/// Completion callback for `SLRequest.perform(handler:)`.
+///
+/// On this host the handler is invoked synchronously with `nil` data, `nil`
+/// response, and a host-only error. The request is never sent.
+public typealias SLRequestHandler = (Data?, HTTPURLResponse?, (any Error)?) -> Void
 
 /// Signed-account social HTTP request.
 ///
-/// Construction, parameter encoding, multipart bookkeeping, and
-/// `preparedURLRequest()` assembly are local. OAuth signing and network
-/// I/O are fail-closed: `account` never authorizes a call, and
-/// `perform(handler:)` does not send.
+/// Construction, parameter encoding, multipart bookkeeping, and unsigned
+/// `preparedURLRequest()` assembly (when `account` is nil) are local. If
+/// `account` is non-nil and no OAuth signer exists, `preparedURLRequest()`
+/// returns nil. `perform(handler:)` never networks.
 open class SLRequest: NSObject {
+    @_spi(OpenUIKitHost)
     public struct MultipartPart: Equatable {
         public var data: Data
         public var name: String
@@ -15,32 +40,36 @@ open class SLRequest: NSObject {
         public var filename: String?
     }
 
-    public private(set) var portableServiceType: String?
+    @_spi(OpenUIKitHost)
+    public private(set) var hostServiceType: String?
+
     open private(set) var requestMethod: SLRequestMethod
     open private(set) var url: URL!
     open private(set) var parameters: [AnyHashable: Any]!
     open var account: ACAccount!
-    public private(set) var portableMultipartParts: [MultipartPart] = []
 
-    public init?(
-        forServiceType serviceType: String?,
+    @_spi(OpenUIKitHost)
+    public private(set) var hostMultipartParts: [MultipartPart] = []
+
+    public init!(
+        forServiceType serviceType: String!,
         requestMethod: SLRequestMethod,
-        url: URL?,
-        parameters: [AnyHashable: Any]?
+        url: URL!,
+        parameters: [AnyHashable: Any]!
     ) {
         guard let url else { return nil }
-        portableServiceType = serviceType
+        hostServiceType = serviceType
         self.requestMethod = requestMethod
         self.url = url
         self.parameters = parameters
         super.init()
     }
 
-    public convenience init?(
-        forServiceType serviceType: String?,
+    public convenience init!(
+        forServiceType serviceType: String!,
         requestMethod: SLRequestMethod,
-        URL url: URL?,
-        parameters: [AnyHashable: Any]?
+        URL url: URL!,
+        parameters: [AnyHashable: Any]!
     ) {
         self.init(
             forServiceType: serviceType,
@@ -57,25 +86,33 @@ open class SLRequest: NSObject {
         filename: String!
     ) {
         guard let data, let name, !name.isEmpty else { return }
-        portableMultipartParts.append(
+        guard Self.isSafeMultipartToken(name) else { return }
+        if let type, !Self.isSafeMultipartToken(type) { return }
+        if let filename, !Self.isSafeMultipartToken(filename) { return }
+        hostMultipartParts.append(
             MultipartPart(data: data, name: name, type: type, filename: filename)
         )
     }
 
-    /// Builds an unsigned `URLRequest`.
+    /// Builds an unsigned `URLRequest` when no account is attached.
     ///
     /// GET/DELETE encode parameters in the query string. POST/PUT encode
     /// parameters in the body as `application/x-www-form-urlencoded`, or as
-    /// `multipart/form-data` when multipart parts exist. No OAuth headers
-    /// are added, even if `account` is non-nil.
+    /// `multipart/form-data` when multipart parts exist.
+    ///
+    /// If `account` is non-nil, returns nil: no OAuth signer/token backend
+    /// exists on this host, so an unsigned request would be dishonest.
     open func preparedURLRequest() -> URLRequest! {
+        if account != nil {
+            return nil
+        }
         guard let url else { return nil }
         var request = URLRequest(url: url)
         request.httpMethod = Self.httpMethodName(requestMethod)
 
         let items = queryItems()
         let useMultipart =
-            !portableMultipartParts.isEmpty
+            !hostMultipartParts.isEmpty
             && (requestMethod == .POST || requestMethod == .PUT)
 
         switch requestMethod {
@@ -85,7 +122,10 @@ open class SLRequest: NSObject {
             }
         case .POST, .PUT:
             if useMultipart {
-                let boundary = "SocialLinuxBoundary"
+                let boundary = Self.multipartBoundary(
+                    parameters: items,
+                    parts: hostMultipartParts
+                )
                 request.setValue(
                     "multipart/form-data; boundary=\(boundary)",
                     forHTTPHeaderField: "Content-Type"
@@ -93,7 +133,7 @@ open class SLRequest: NSObject {
                 request.httpBody = Self.multipartBody(
                     boundary: boundary,
                     parameters: items,
-                    parts: portableMultipartParts
+                    parts: hostMultipartParts
                 )
             } else if !items.isEmpty {
                 let encoded = items.map {
@@ -149,11 +189,16 @@ open class SLRequest: NSObject {
     }
 
     private static func formEncode(_ string: String) -> String {
-        var allowed = CharacterSet.alphanumerics
-        allowed.insert(charactersIn: "-._*")
-        let encoded =
-            string.addingPercentEncoding(withAllowedCharacters: allowed) ?? string
-        return encoded.replacingOccurrences(of: " ", with: "+")
+        var allowed = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._*")
+        allowed.insert(charactersIn: "+")
+        let plusForSpace = string.replacingOccurrences(of: " ", with: "+")
+        return plusForSpace.addingPercentEncoding(withAllowedCharacters: allowed) ?? plusForSpace
+    }
+
+    private static func isSafeMultipartToken(_ string: String) -> Bool {
+        !string.contains(where: { character in
+            character == "\r" || character == "\n" || character == "\""
+        })
     }
 
     private static func urlByAppendingQueryItems(
@@ -168,6 +213,37 @@ open class SLRequest: NSObject {
         existing.append(contentsOf: items)
         components.queryItems = existing
         return components.url ?? url
+    }
+
+    private static func multipartBoundary(
+        parameters: [URLQueryItem],
+        parts: [MultipartPart]
+    ) -> String {
+        var haystack = Data()
+        for item in parameters {
+            haystack.append(Data(item.name.utf8))
+            if let value = item.value {
+                haystack.append(Data(value.utf8))
+            }
+        }
+        for part in parts {
+            haystack.append(part.data)
+            haystack.append(Data(part.name.utf8))
+            if let type = part.type {
+                haystack.append(Data(type.utf8))
+            }
+            if let filename = part.filename {
+                haystack.append(Data(filename.utf8))
+            }
+        }
+        for attempt in 0..<16 {
+            let token = UUID().uuidString.replacingOccurrences(of: "-", with: "")
+            let boundary = "Boundary\(token)\(attempt)"
+            if haystack.range(of: Data(boundary.utf8)) == nil {
+                return boundary
+            }
+        }
+        return "Boundary\(UUID().uuidString.replacingOccurrences(of: "-", with: ""))\(haystack.count)"
     }
 
     private static func multipartBody(
