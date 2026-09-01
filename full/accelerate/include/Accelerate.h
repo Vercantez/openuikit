@@ -8,6 +8,12 @@
 extern "C" {
 #endif
 
+#if defined(__GNUC__)
+#define OPENUI_ACCELERATE_API __attribute__((visibility("default")))
+#else
+#define OPENUI_ACCELERATE_API
+#endif
+
 typedef unsigned long vImagePixelCount;
 typedef long vImage_Error;
 typedef uint32_t vImage_Flags;
@@ -43,7 +49,7 @@ enum {
     kvImageGetTempBufferSize = 128
 };
 
-vImage_Error vImageBoxConvolve_ARGB8888(
+OPENUI_ACCELERATE_API vImage_Error vImageBoxConvolve_ARGB8888(
     const vImage_Buffer *src,
     const vImage_Buffer *dest,
     void *tempBuffer,

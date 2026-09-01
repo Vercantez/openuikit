@@ -2925,6 +2925,13 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn(
             "compile thirty-three independent first-party framework modules", source
         )
+        accelerate_header = (
+            REPO / "full/accelerate/include/Accelerate.h"
+        ).read_text(encoding="utf-8")
+        self.assertIn(
+            "OPENUI_ACCELERATE_API vImage_Error vImageBoxConvolve_ARGB8888",
+            accelerate_header,
+        )
         self.assertIn("network_string_processing_undefineds", source)
         self.assertIn("direct StringProcessing undefineds, expected 0", source)
         network_source = (REPO / "full/network/Network.swift").read_text(
