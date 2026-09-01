@@ -364,6 +364,53 @@ def validate_core_preview_export_contract(source: str) -> None:
         raise AssertionError("core Preview export must remain one exact symbol")
 
 
+def validate_preview_standalone_link_contract(source: str) -> None:
+    required = (
+        "PREVIEW_STANDALONE_LINK_INPUTS=()",
+        "PREVIEW_STANDALONE_EXPORT_FLAGS=()",
+        'PREVIEW_STANDALONE_LINK_INPUTS+=("$STAGE/objects/developertoolsupport.o")',
+        'preview_standalone_dts_input_count=$((preview_standalone_dts_input_count + 1))',
+        '"${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}"',
+        '"${PREVIEW_STANDALONE_LINK_INPUTS[@]}"',
+    )
+    missing = [token for token in required if token not in source]
+    if missing:
+        raise AssertionError(
+            f"standalone SwiftUI Preview link contract drifted: {missing}"
+        )
+    if source.count('"${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}"') != 2:
+        raise AssertionError("standalone SwiftUI Preview export use count drifted")
+    if source.count('"${PREVIEW_STANDALONE_LINK_INPUTS[@]}"') != 3:
+        # One use audits the source object and two uses link executables.
+        raise AssertionError("standalone SwiftUI Preview link-input use count drifted")
+    slices = (
+        (
+            "compile/link/run the standalone SwiftData macro and persistence gate",
+            "compile/link/run the core package probe",
+            "swiftdata_preview_export_count=$(nm_symbol_count --defined-only",
+        ),
+        (
+            "compile/link/run the SwiftUI-only Foundation/Combine/Dispatch reexport gate",
+            "compile/link/run the full async Foundation URLSession cold gate",
+            "swiftui_reexport_preview_export_count=$(nm_symbol_count --defined-only",
+        ),
+    )
+    for start_marker, end_marker, audit in slices:
+        start = source.index(start_marker)
+        end = source.index(end_marker, start)
+        link_slice = source[start:end]
+        for token in (
+            '"${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}"',
+            '"${PREVIEW_STANDALONE_LINK_INPUTS[@]}"',
+            audit,
+            '"$PREVIEW_EXECUTABLE_EXPORT_SYMBOL"',
+        ):
+            if token not in link_slice:
+                raise AssertionError(
+                    f"standalone SwiftUI Preview link slice drifted: {token}"
+                )
+
+
 def validate_preview_plugin_single_job_contract(
     builder: str, build_full: str
 ) -> None:
@@ -1779,6 +1826,21 @@ class ShellContractTests(unittest.TestCase):
             source,
         )
         self.assertNotIn("LINK_ARGUMENTS+=(objects/developertoolsupport.o)", source)
+        validate_preview_standalone_link_contract(source)
+
+    def test_every_standalone_swiftui_executable_owns_preview_metadata(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        validate_preview_standalone_link_contract(source)
+        for token in (
+            'PREVIEW_STANDALONE_LINK_INPUTS+=("$STAGE/objects/developertoolsupport.o")',
+            "swiftdata_preview_export_count=$(nm_symbol_count --defined-only",
+            "swiftui_reexport_preview_export_count=$(nm_symbol_count --defined-only",
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "standalone SwiftUI Preview"):
+                    validate_preview_standalone_link_contract(
+                        source.replace(token, "", 1)
+                    )
 
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
