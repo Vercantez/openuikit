@@ -289,30 +289,30 @@ c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:willRestoreState:	dec
 c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerDidStartAdvertising:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerDidUpdateState:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerIsReadyToUpdateSubscribers:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
-s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; NSError as? CBATTError is nil
-s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; NSError as? CBError is nil
-s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; NSError as? CBATTError is nil
-s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; NSError as? CBError is nil
-s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; NSError as? CBATTError is nil
-s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; NSError as? CBError is nil
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; typed-origin as? may preserve the value; fresh NSError is not _BridgedStoredNSError
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; typed-origin as? may preserve the value; fresh NSError is not _BridgedStoredNSError
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; typed-origin as? may preserve the value; fresh NSError is not _BridgedStoredNSError
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; typed-origin as? may preserve the value; fresh NSError is not _BridgedStoredNSError
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; typed-origin as? may preserve the value; fresh NSError is not _BridgedStoredNSError
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; typed-origin as? may preserve the value; fresh NSError is not _BridgedStoredNSError
 s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
-s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
-s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; not Apple _BridgedStoredNSError; fresh NSError as? stays nil
 s:SC10CBATTErrorLeV	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 s:SC10CBATTErrorLeV10invalidPduSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
 s:SC10CBATTErrorLeV11errorDomainSSvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence

@@ -15,22 +15,28 @@ let _: CoreBluetooth.CBATTError.Type = CBATTError.self
 let _: CoreBluetooth.CBCentralManager.Type = CBCentralManager.self
 let _: CoreBluetooth.CBMutableService.Type = CBMutableService.self
 
-private func typedCBError(from error: any Error) -> CBError? {
-    if let typed = error as? CBError { return typed }
-    let nsError = error as NSError
+private func rehydrateCBError(from nsError: NSError) -> CBError? {
     guard nsError.domain == CBErrorDomain, let code = CBError.Code(rawValue: nsError.code) else {
         return nil
     }
     return CBError(code, userInfo: nsError.userInfo)
 }
 
-private func typedCBATTError(from error: any Error) -> CBATTError? {
-    if let typed = error as? CBATTError { return typed }
-    let nsError = error as NSError
+private func rehydrateCBATTError(from nsError: NSError) -> CBATTError? {
     guard nsError.domain == CBATTErrorDomain, let code = CBATTError.Code(rawValue: nsError.code) else {
         return nil
     }
     return CBATTError(code, userInfo: nsError.userInfo)
+}
+
+private func typedCBError(from error: any Error) -> CBError? {
+    if let typed = error as? CBError { return typed }
+    return rehydrateCBError(from: error as NSError)
+}
+
+private func typedCBATTError(from error: any Error) -> CBATTError? {
+    if let typed = error as? CBATTError { return typed }
+    return rehydrateCBATTError(from: error as NSError)
 }
 
 private func drain(_ queue: DispatchQueue) {
@@ -103,12 +109,18 @@ private func exerciseNSErrorBridging() {
     precondition(nsError.domain == CBErrorDomain)
     precondition(nsError.code == CBError.connectionFailed.rawValue)
     precondition(nsError.userInfo["probe"] as? String == "identity")
-    precondition((nsError as? CBError) == nil)
+    if let preserved = nsError as? CBError {
+        precondition(preserved.code == .connectionFailed)
+        precondition(preserved.userInfo["probe"] as? String == "identity")
+    } else {
+        let rebuilt = rehydrateCBError(from: nsError)
+        precondition(rebuilt?.code == .connectionFailed)
+        precondition(rebuilt?.userInfo["probe"] as? String == "identity")
+    }
     precondition(CBError.connectionFailed ~= nsError)
     precondition(CBError.connectionFailed ~= typed)
-    let rebuilt = typedCBError(from: nsError)
-    precondition(rebuilt?.code == .connectionFailed)
-    precondition(rebuilt?.userInfo["probe"] as? String == "identity")
+    precondition(typedCBError(from: nsError)?.code == .connectionFailed)
+    precondition(typedCBError(from: nsError)?.userInfo["probe"] as? String == "identity")
     precondition(typed.hashValue == CBError(.connectionFailed, userInfo: ["other": 0]).hashValue)
     precondition(typed != CBError(.connectionFailed))
 
@@ -119,16 +131,30 @@ private func exerciseNSErrorBridging() {
     )
     precondition((fresh as? CBError) == nil)
     precondition(CBError.invalidParameters ~= fresh)
+    precondition(rehydrateCBError(from: fresh)?.userInfo["fresh"] as? Bool == true)
     precondition(typedCBError(from: fresh)?.userInfo["fresh"] as? Bool == true)
 
     let att = CBATTError(.invalidHandle, userInfo: ["att": "x"])
     let attNS = att as NSError
     precondition(attNS.domain == CBATTErrorDomain)
     precondition(attNS.code == 1)
-    precondition((attNS as? CBATTError) == nil)
+    if let preserved = attNS as? CBATTError {
+        precondition(preserved.code == .invalidHandle)
+        precondition(preserved.userInfo["att"] as? String == "x")
+    } else {
+        precondition(rehydrateCBATTError(from: attNS)?.code == .invalidHandle)
+    }
     precondition(CBATTError.invalidHandle ~= attNS)
     precondition(CBATTError.invalidHandle ~= att)
     precondition(typedCBATTError(from: attNS)?.code == .invalidHandle)
+
+    let freshATT = NSError(
+        domain: CBATTErrorDomain,
+        code: CBATTError.invalidHandle.rawValue,
+        userInfo: ["att": "x"]
+    )
+    precondition((freshATT as? CBATTError) == nil)
+    precondition(rehydrateCBATTError(from: freshATT)?.code == .invalidHandle)
 }
 
 private func exerciseUUIDIdentity() {
