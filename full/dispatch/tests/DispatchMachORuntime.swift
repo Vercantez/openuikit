@@ -99,6 +99,13 @@ private enum DispatchMachORuntime {
         }
         require(barrierCount == 17, "concurrent barrier did not drain prior work")
 
+        let targeted = DispatchQueue(
+            label: "org.openui.dispatch.runtime.targeted",
+            target: serial
+        )
+        let targetedValue = targeted.sync { 44 }
+        require(targetedValue == 44, "custom queue target execution")
+
         let pressureSource = DispatchSource.makeMemoryPressureSource(
             eventMask: [.warning, .critical],
             queue: serial
@@ -203,6 +210,6 @@ private enum DispatchMachORuntime {
         require(receivedValue == 41, "OpenCombine receive(on:) delivery")
         cancellable.value?.cancel()
 
-        print("OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 main=23 after=29 custom=serial,concurrent sync=ordered,barrier,rethrows sources=memory-pressure,timer,cancelled scheduler=immediate,delayed,cancelled,receive-on vouchers=null")
+        print("OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 main=23 after=29 custom=serial,concurrent,targeted sync=ordered,barrier,rethrows sources=memory-pressure,timer,cancelled scheduler=immediate,delayed,cancelled,receive-on vouchers=null")
     }
 }

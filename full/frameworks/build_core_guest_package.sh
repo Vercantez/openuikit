@@ -1600,7 +1600,7 @@ clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
 LD_LIBRARY_PATH="$RUNTIME/host" "$WORK/open-dispatch-host-tests" \
     > "$WORK/open-dispatch-host-test.log" 2>&1
 grep -Fx \
-    'OPEN_DISPATCH_HOST_OK global=minted custom=serial,concurrent sync=ordered,barrier memory-pressure=cgroup,proc,override async=worker after=timer main-token=contained glibc>=2.38' \
+    'OPEN_DISPATCH_HOST_OK global=minted custom=serial,concurrent,targeted sync=ordered,barrier memory-pressure=cgroup,proc,override async=worker after=timer main-token=contained glibc>=2.38' \
     "$WORK/open-dispatch-host-test.log" >/dev/null \
     || die 'native Dispatch host semantic marker is missing'
 
@@ -3229,7 +3229,7 @@ llvm-otool-18 -hv "$STAGE/probe/DispatchMachORuntime" \
         "$RUNTIME/machorun" ./probe/DispatchMachORuntime
 ) | tee "$STAGE/attestation/dispatch-runtime.log"
 grep -Fx \
-    'OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 main=23 after=29 custom=serial,concurrent sync=ordered,barrier,rethrows sources=memory-pressure,timer,cancelled scheduler=immediate,delayed,cancelled,receive-on vouchers=null' \
+    'OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 main=23 after=29 custom=serial,concurrent,targeted sync=ordered,barrier,rethrows sources=memory-pressure,timer,cancelled scheduler=immediate,delayed,cancelled,receive-on vouchers=null' \
     "$STAGE/attestation/dispatch-runtime.log" >/dev/null \
     || die 'real Dispatch/Swift-concurrency Mach-O runtime marker is missing'
 

@@ -71,6 +71,8 @@ int main(void)
     void *queue;
     void *serial_queue;
     void *concurrent_queue;
+    void *target_queue;
+    void *targeted_queue;
     uint64_t before;
     uint64_t after;
     unsigned index;
@@ -133,6 +135,23 @@ int main(void)
     if (state.count != 21) fail("barrier sync did not drain preceding work");
     openui_dispatch_host_v1_release_queue(concurrent_queue);
 
+    target_queue = openui_dispatch_host_v1_create_queue(
+        "org.openui.tests.target", 0, 0, 0, NULL
+    );
+    targeted_queue = openui_dispatch_host_v1_create_queue(
+        "org.openui.tests.targeted", 0, 0,
+        OPENUI_DISPATCH_QUEUE_CUSTOM_V1, target_queue
+    );
+    openui_dispatch_host_v1_async(
+        OPENUI_DISPATCH_QUEUE_CUSTOM_V1, targeted_queue, &state, increment
+    );
+    openui_dispatch_host_v1_sync(
+        OPENUI_DISPATCH_QUEUE_CUSTOM_V1, targeted_queue, 0, &state, increment
+    );
+    if (state.count != 23) fail("targeted custom queue did not execute");
+    openui_dispatch_host_v1_release_queue(targeted_queue);
+    openui_dispatch_host_v1_release_queue(target_queue);
+
     if (setenv("OPENUI_DISPATCH_MEMORY_PRESSURE", "normal", 1) != 0) {
         fail("setenv normal failed");
     }
@@ -158,6 +177,6 @@ int main(void)
         fail("unsetenv pressure failed");
     }
 
-    puts("OPEN_DISPATCH_HOST_OK global=minted custom=serial,concurrent sync=ordered,barrier memory-pressure=cgroup,proc,override async=worker after=timer main-token=contained glibc>=2.38");
+    puts("OPEN_DISPATCH_HOST_OK global=minted custom=serial,concurrent,targeted sync=ordered,barrier memory-pressure=cgroup,proc,override async=worker after=timer main-token=contained glibc>=2.38");
     return 0;
 }

@@ -1943,7 +1943,7 @@ class ShellContractTests(unittest.TestCase):
             "EXPECTED_HOST_DISPATCH_SHA256",
             "GLIBC_2.38",
             "OPEN_DISPATCH_MACHO_OK async-main=drained",
-            "custom=serial,concurrent sync=ordered,barrier,rethrows",
+            "custom=serial,concurrent,targeted sync=ordered,barrier,rethrows",
             "sources=memory-pressure,timer,cancelled",
             "OPENUI_DISPATCH_MEMORY_PRESSURE=critical",
             "openui_dispatch_host_v1_create_queue",

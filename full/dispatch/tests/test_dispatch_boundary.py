@@ -71,6 +71,7 @@ class DispatchBoundaryTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         for token in (
             "attributes: .concurrent",
+            "target: serial",
             "sync(flags: .barrier)",
             "throw ExpectedSyncError.value",
             "pressureSource.activate()",
