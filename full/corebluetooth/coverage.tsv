@@ -1,475 +1,475 @@
 precise	status	evidence	notes
-c:@CBATTErrorDomain	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBAdvertisementDataIsConnectable	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBAdvertisementDataLocalNameKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBAdvertisementDataManufacturerDataKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBAdvertisementDataOverflowServiceUUIDsKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBAdvertisementDataServiceDataKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBAdvertisementDataServiceUUIDsKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBAdvertisementDataSolicitedServiceUUIDsKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBAdvertisementDataTxPowerLevelKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBCentralManagerOptionDeviceAccessForMedia	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBCentralManagerOptionRestoreIdentifierKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBCentralManagerOptionShowPowerAlertKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBCentralManagerRestoredStatePeripheralsKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBCentralManagerRestoredStateScanOptionsKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBCentralManagerRestoredStateScanServicesKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBCentralManagerScanOptionAllowDuplicatesKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBCentralManagerScanOptionSolicitedServiceUUIDsKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBConnectPeripheralOptionEnableAutoReconnect	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBConnectPeripheralOptionEnableTransportBridgingKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBConnectPeripheralOptionNotifyOnConnectionKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBConnectPeripheralOptionNotifyOnDisconnectionKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBConnectPeripheralOptionNotifyOnNotificationKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBConnectPeripheralOptionRequiresANCS	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBConnectPeripheralOptionStartDelayKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBConnectionEventMatchingOptionPeripheralUUIDs	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBConnectionEventMatchingOptionServiceUUIDs	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBErrorDomain	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBPeripheralManagerOptionRestoreIdentifierKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBPeripheralManagerOptionShowPowerAlertKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBPeripheralManagerRestoredStateAdvertisementDataKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBPeripheralManagerRestoredStateServicesKey	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBUUIDCharacteristicAggregateFormatString	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBUUIDCharacteristicExtendedPropertiesString	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBUUIDCharacteristicFormatString	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBUUIDCharacteristicObservationScheduleString	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBUUIDCharacteristicUserDescriptionString	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBUUIDCharacteristicValidRangeString	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBUUIDClientCharacteristicConfigurationString	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBUUIDL2CAPPSMCharacteristicString	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@CBUUIDServerCharacteristicConfigurationString	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorAttributeNotFound	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorAttributeNotLong	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorInsufficientAuthentication	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorInsufficientAuthorization	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorInsufficientEncryption	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorInsufficientEncryptionKeySize	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorInsufficientResources	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorInvalidAttributeValueLength	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorInvalidHandle	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorInvalidOffset	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorInvalidPdu	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorPrepareQueueFull	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorReadNotPermitted	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorRequestNotSupported	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorSuccess	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorUnlikelyError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorUnsupportedGroupType	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBATTError@CBATTErrorWriteNotPermitted	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBAttributePermissions@CBAttributePermissionsReadEncryptionRequired	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBAttributePermissions@CBAttributePermissionsReadable	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBAttributePermissions@CBAttributePermissionsWriteEncryptionRequired	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBAttributePermissions@CBAttributePermissionsWriteable	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCentralManagerFeature@CBCentralManagerFeatureExtendedScanAndConnect	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCentralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCentralManagerState@CBCentralManagerStatePoweredOff	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCentralManagerState@CBCentralManagerStatePoweredOn	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCentralManagerState@CBCentralManagerStateResetting	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCentralManagerState@CBCentralManagerStateUnauthorized	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCentralManagerState@CBCentralManagerStateUnknown	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCentralManagerState@CBCentralManagerStateUnsupported	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCharacteristicProperties@CBCharacteristicPropertyAuthenticatedSignedWrites	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCharacteristicProperties@CBCharacteristicPropertyBroadcast	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCharacteristicProperties@CBCharacteristicPropertyExtendedProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCharacteristicProperties@CBCharacteristicPropertyIndicate	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCharacteristicProperties@CBCharacteristicPropertyIndicateEncryptionRequired	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCharacteristicProperties@CBCharacteristicPropertyNotify	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCharacteristicProperties@CBCharacteristicPropertyNotifyEncryptionRequired	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCharacteristicProperties@CBCharacteristicPropertyRead	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCharacteristicProperties@CBCharacteristicPropertyWrite	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCharacteristicProperties@CBCharacteristicPropertyWriteWithoutResponse	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCharacteristicWriteType	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCharacteristicWriteType@CBCharacteristicWriteWithResponse	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBCharacteristicWriteType@CBCharacteristicWriteWithoutResponse	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBConnectionEvent	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBConnectionEvent@CBConnectionEventPeerConnected	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBConnectionEvent@CBConnectionEventPeerDisconnected	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorAlreadyAdvertising	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorConnectionFailed	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorConnectionLimitReached	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorConnectionTimeout	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorEncryptionTimedOut	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorInvalidHandle	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorInvalidParameters	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorNotConnected	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorOperationCancelled	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorOperationNotSupported	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorOutOfSpace	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorPeerRemovedPairingInformation	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorPeripheralDisconnected	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorTooManyLEPairedDevices	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorUUIDNotAllowed	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorUnknown	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBError@CBErrorUnkownDevice	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBManagerAuthorization	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBManagerAuthorization@CBManagerAuthorizationAllowedAlways	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBManagerAuthorization@CBManagerAuthorizationDenied	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBManagerAuthorization@CBManagerAuthorizationNotDetermined	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBManagerAuthorization@CBManagerAuthorizationRestricted	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBManagerState@CBManagerStatePoweredOff	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBManagerState@CBManagerStatePoweredOn	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBManagerState@CBManagerStateResetting	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBManagerState@CBManagerStateUnauthorized	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBManagerState@CBManagerStateUnknown	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBManagerState@CBManagerStateUnsupported	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerAuthorizationStatus	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerAuthorizationStatus@CBPeripheralManagerAuthorizationStatusAuthorized	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerAuthorizationStatus@CBPeripheralManagerAuthorizationStatusDenied	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerAuthorizationStatus@CBPeripheralManagerAuthorizationStatusNotDetermined	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerAuthorizationStatus@CBPeripheralManagerAuthorizationStatusRestricted	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerConnectionLatency	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerConnectionLatency@CBPeripheralManagerConnectionLatencyHigh	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerConnectionLatency@CBPeripheralManagerConnectionLatencyLow	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerConnectionLatency@CBPeripheralManagerConnectionLatencyMedium	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerState@CBPeripheralManagerStatePoweredOff	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerState@CBPeripheralManagerStatePoweredOn	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerState@CBPeripheralManagerStateResetting	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerState@CBPeripheralManagerStateUnauthorized	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerState@CBPeripheralManagerStateUnknown	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralManagerState@CBPeripheralManagerStateUnsupported	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralState@CBPeripheralStateConnected	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralState@CBPeripheralStateConnecting	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralState@CBPeripheralStateDisconnected	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@E@CBPeripheralState@CBPeripheralStateDisconnecting	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@T@CBConnectionEventMatchingOption	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:@T@CBL2CAPPSM	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBATTRequest	declared	CBGATT.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBATTRequest(py)central	declared	CBGATT.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBATTRequest(py)characteristic	declared	CBGATT.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBATTRequest(py)offset	declared	CBGATT.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBATTRequest(py)value	declared	CBGATT.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBAttribute	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBAttribute(py)UUID	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCentral	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBCentral(py)maximumUpdateValueLength	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBCentralManager	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCentralManager(cm)supportsFeatures:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCentralManager(im)cancelPeripheralConnection:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBCentralManager(im)connectPeripheral:options:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBCentralManager(im)init	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCentralManager(im)initWithDelegate:queue:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCentralManager(im)initWithDelegate:queue:options:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCentralManager(im)registerForConnectionEventsWithOptions:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCentralManager(im)retrieveConnectedPeripheralsWithServices:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCentralManager(im)retrievePeripheralsWithIdentifiers:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCentralManager(im)scanForPeripheralsWithServices:options:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCentralManager(im)stopScan	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCentralManager(py)delegate	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCentralManager(py)isScanning	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCharacteristic	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCharacteristic(py)descriptors	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCharacteristic(py)isBroadcasted	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCharacteristic(py)isNotifying	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCharacteristic(py)properties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCharacteristic(py)service	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBCharacteristic(py)value	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBDescriptor	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBDescriptor(py)characteristic	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBDescriptor(py)value	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBL2CAPChannel	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBL2CAPChannel(py)PSM	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBL2CAPChannel(py)inputStream	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBL2CAPChannel(py)outputStream	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBL2CAPChannel(py)peer	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBManager	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBManager(cpy)authorization	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBManager(py)authorization	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBManager(py)state	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBMutableCharacteristic	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBMutableCharacteristic(im)initWithType:properties:value:permissions:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBMutableCharacteristic(py)descriptors	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBMutableCharacteristic(py)permissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBMutableCharacteristic(py)properties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBMutableCharacteristic(py)subscribedCentrals	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBMutableCharacteristic(py)value	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBMutableDescriptor	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBMutableDescriptor(im)initWithType:value:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBMutableService	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBMutableService(im)initWithType:primary:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBMutableService(py)characteristics	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBMutableService(py)includedServices	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeer	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeer(py)identifier	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(im)discoverCharacteristics:forService:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(im)discoverDescriptorsForCharacteristic:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(im)discoverIncludedServices:forService:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(im)discoverServices:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(im)maximumWriteValueLengthForType:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(im)openL2CAPChannel:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(im)readRSSI	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(im)readValueForCharacteristic:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(im)readValueForDescriptor:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(im)setNotifyValue:forCharacteristic:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(im)writeValue:forCharacteristic:type:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(im)writeValue:forDescriptor:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(py)RSSI	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(py)ancsAuthorized	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(py)canSendWriteWithoutResponse	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(py)delegate	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(py)name	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(py)services	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheral(py)state	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheralManager	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeripheralManager(cm)authorizationStatus	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeripheralManager(im)addService:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeripheralManager(im)init	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeripheralManager(im)initWithDelegate:queue:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeripheralManager(im)initWithDelegate:queue:options:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeripheralManager(im)publishL2CAPChannelWithEncryption:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeripheralManager(im)removeAllServices	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeripheralManager(im)removeService:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeripheralManager(im)respondToRequest:withResult:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheralManager(im)setDesiredConnectionLatency:forCentral:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(cs)CBPeripheralManager(im)startAdvertising:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeripheralManager(im)stopAdvertising	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeripheralManager(im)unpublishL2CAPChannel:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeripheralManager(im)updateValue:forCharacteristic:onSubscribedCentrals:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeripheralManager(py)delegate	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBPeripheralManager(py)isAdvertising	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBService	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBService(py)characteristics	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBService(py)includedServices	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBService(py)isPrimary	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBService(py)peripheral	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBUUID	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBUUID(cm)UUIDWithCFUUID:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBUUID(cm)UUIDWithCFUUID:::SYNTHESIZED::c:objc(cs)CBUUID	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBUUID(cm)UUIDWithData:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBUUID(cm)UUIDWithNSUUID:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBUUID(cm)UUIDWithNSUUID:::SYNTHESIZED::c:objc(cs)CBUUID	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBUUID(cm)UUIDWithString:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBUUID(py)UUIDString	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(cs)CBUUID(py)data	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(pl)CBCentralManagerDelegate	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:connectionEventDidOccur:forPeripheral:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:didConnectPeripheral:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDisconnectPeripheral:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDisconnectPeripheral:timestamp:isReconnecting:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDiscoverPeripheral:advertisementData:RSSI:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:didFailToConnectPeripheral:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:didUpdateANCSAuthorizationForPeripheral:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBCentralManagerDelegate(im)centralManager:willRestoreState:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBCentralManagerDelegate(im)centralManagerDidUpdateState:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(pl)CBPeripheralDelegate	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverCharacteristicsForService:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverDescriptorsForCharacteristic:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverIncludedServicesForService:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverServices:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didModifyServices:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didOpenL2CAPChannel:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didReadRSSI:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateNotificationStateForCharacteristic:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateValueForCharacteristic:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateValueForDescriptor:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didWriteValueForCharacteristic:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheral:didWriteValueForDescriptor:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheralDidUpdateName:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheralDidUpdateRSSI:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralDelegate(im)peripheralIsReadyToSendWriteWithoutResponse:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralManagerDelegate	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:central:didSubscribeToCharacteristic:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:central:didUnsubscribeFromCharacteristic:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didAddService:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didOpenL2CAPChannel:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didPublishL2CAPChannel:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didReceiveReadRequest:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didReceiveWriteRequests:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didUnpublishL2CAPChannel:error:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:willRestoreState:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerDidStartAdvertising:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerDidUpdateState:	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerIsReadyToUpdateSubscribers:	declared	CBManagers.swift	compiles in the Linux module; radio path not exercised
-s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV10invalidPduSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV11errorDomainSSvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV13invalidHandleSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV13invalidOffsetSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV13unlikelyErrorSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV16attributeNotLongSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV16prepareQueueFullSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV16readNotPermittedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV17attributeNotFoundSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV17writeNotPermittedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV19requestNotSupportedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV20unsupportedGroupTypeSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV21insufficientResourcesSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV22insufficientEncryptionSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV25insufficientAuthorizationSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV26insufficientAuthenticationSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV27invalidAttributeValueLengthSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV29insufficientEncryptionKeySizeSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC10CBATTErrorLeV7successSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV10outOfSpaceSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV11errorDomainSSvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV12notConnectedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV12unkownDeviceSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV13invalidHandleSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV13unknownDeviceSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV14uuidNotAllowedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV16connectionFailedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV17connectionTimeoutSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV17invalidParametersSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV18alreadyAdvertisingSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV18encryptionTimedOutSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV18operationCancelledSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV21operationNotSupportedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV22connectionLimitReachedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV22peripheralDisconnectedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV22tooManyLEPairedDevicesSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV29peerRemovedPairingInformationSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SC7CBErrorLeV7unknownSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBCentralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBCharacteristicWriteType	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBConnectionEvent	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBManagerAuthorization	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBPeripheralManagerAuthorizationStatus	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBPeripheralManagerConnectionLatency	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBPeripheralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBPeripheralState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CBConnectionEventMatchingOption	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBCentralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBCharacteristicWriteType	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBConnectionEvent	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBManagerAuthorization	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBPeripheralManagerAuthorizationStatus	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBPeripheralManagerConnectionLatency	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBPeripheralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBPeripheralState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBCentralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBCharacteristicWriteType	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBConnectionEvent	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBManagerAuthorization	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBPeripheralManagerAuthorizationStatus	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBPeripheralManagerConnectionLatency	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBPeripheralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBPeripheralState	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So10CBATTErrorV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So14CBManagerStateV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So17CBConnectionEventV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So17CBPeripheralStateV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So21CBCentralManagerStateV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So22CBAttributePermissionsV8rawValueABSu_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So22CBManagerAuthorizationV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So23CBCentralManagerFeatureV8rawValueABSu_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So24CBPeripheralManagerStateV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So25CBCharacteristicWriteTypeV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So26CBCharacteristicPropertiesV8rawValueABSu_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So31CBConnectionEventMatchingOptiona8rawValueABSS_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So36CBPeripheralManagerConnectionLatencyV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So38CBPeripheralManagerAuthorizationStatusV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So7CBErrorV13unknownDeviceABvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:So7CBErrorV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CBConnectionEventMatchingOption	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CBConnectionEventMatchingOption	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
-s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	exercised by the Linux runtime probe
+c:@CBATTErrorDomain	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@CBAdvertisementDataIsConnectable	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBAdvertisementDataLocalNameKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBAdvertisementDataManufacturerDataKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBAdvertisementDataOverflowServiceUUIDsKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBAdvertisementDataServiceDataKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBAdvertisementDataServiceUUIDsKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBAdvertisementDataSolicitedServiceUUIDsKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBAdvertisementDataTxPowerLevelKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBCentralManagerOptionDeviceAccessForMedia	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBCentralManagerOptionRestoreIdentifierKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBCentralManagerOptionShowPowerAlertKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBCentralManagerRestoredStatePeripheralsKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBCentralManagerRestoredStateScanOptionsKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBCentralManagerRestoredStateScanServicesKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBCentralManagerScanOptionAllowDuplicatesKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBCentralManagerScanOptionSolicitedServiceUUIDsKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBConnectPeripheralOptionEnableAutoReconnect	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBConnectPeripheralOptionEnableTransportBridgingKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBConnectPeripheralOptionNotifyOnConnectionKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBConnectPeripheralOptionNotifyOnDisconnectionKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBConnectPeripheralOptionNotifyOnNotificationKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBConnectPeripheralOptionRequiresANCS	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBConnectPeripheralOptionStartDelayKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBConnectionEventMatchingOptionPeripheralUUIDs	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBConnectionEventMatchingOptionServiceUUIDs	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBErrorDomain	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@CBPeripheralManagerOptionRestoreIdentifierKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBPeripheralManagerOptionShowPowerAlertKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBPeripheralManagerRestoredStateAdvertisementDataKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBPeripheralManagerRestoredStateServicesKey	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBUUIDCharacteristicAggregateFormatString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@CBUUIDCharacteristicExtendedPropertiesString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@CBUUIDCharacteristicFormatString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@CBUUIDCharacteristicObservationScheduleString	declared	CoreBluetooth.swift	symbol compiles; Apple binary payload is unobserved
+c:@CBUUIDCharacteristicUserDescriptionString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@CBUUIDCharacteristicValidRangeString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@CBUUIDClientCharacteristicConfigurationString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@CBUUIDL2CAPPSMCharacteristicString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@CBUUIDServerCharacteristicConfigurationString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorAttributeNotFound	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorAttributeNotLong	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorInsufficientAuthentication	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorInsufficientAuthorization	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorInsufficientEncryption	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorInsufficientEncryptionKeySize	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorInsufficientResources	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorInvalidAttributeValueLength	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorInvalidHandle	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorInvalidOffset	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorInvalidPdu	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorPrepareQueueFull	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorReadNotPermitted	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorRequestNotSupported	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorSuccess	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorUnlikelyError	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorUnsupportedGroupType	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBATTError@CBATTErrorWriteNotPermitted	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBAttributePermissions@CBAttributePermissionsReadEncryptionRequired	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBAttributePermissions@CBAttributePermissionsReadable	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBAttributePermissions@CBAttributePermissionsWriteEncryptionRequired	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBAttributePermissions@CBAttributePermissionsWriteable	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCentralManagerFeature@CBCentralManagerFeatureExtendedScanAndConnect	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCentralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCentralManagerState@CBCentralManagerStatePoweredOff	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCentralManagerState@CBCentralManagerStatePoweredOn	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCentralManagerState@CBCentralManagerStateResetting	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCentralManagerState@CBCentralManagerStateUnauthorized	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCentralManagerState@CBCentralManagerStateUnknown	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCentralManagerState@CBCentralManagerStateUnsupported	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyAuthenticatedSignedWrites	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyBroadcast	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyExtendedProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyIndicate	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyIndicateEncryptionRequired	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyNotify	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyNotifyEncryptionRequired	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyRead	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyWrite	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCharacteristicProperties@CBCharacteristicPropertyWriteWithoutResponse	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCharacteristicWriteType	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCharacteristicWriteType@CBCharacteristicWriteWithResponse	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBCharacteristicWriteType@CBCharacteristicWriteWithoutResponse	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBConnectionEvent	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBConnectionEvent@CBConnectionEventPeerConnected	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBConnectionEvent@CBConnectionEventPeerDisconnected	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorAlreadyAdvertising	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorConnectionFailed	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorConnectionLimitReached	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorConnectionTimeout	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorEncryptionTimedOut	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorInvalidHandle	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorInvalidParameters	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorNotConnected	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorOperationCancelled	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorOperationNotSupported	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorOutOfSpace	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorPeerRemovedPairingInformation	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorPeripheralDisconnected	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorTooManyLEPairedDevices	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorUUIDNotAllowed	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorUnknown	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBError@CBErrorUnkownDevice	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBManagerAuthorization	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBManagerAuthorization@CBManagerAuthorizationAllowedAlways	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBManagerAuthorization@CBManagerAuthorizationDenied	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBManagerAuthorization@CBManagerAuthorizationNotDetermined	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBManagerAuthorization@CBManagerAuthorizationRestricted	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBManagerState@CBManagerStatePoweredOff	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBManagerState@CBManagerStatePoweredOn	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBManagerState@CBManagerStateResetting	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBManagerState@CBManagerStateUnauthorized	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBManagerState@CBManagerStateUnknown	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBManagerState@CBManagerStateUnsupported	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerAuthorizationStatus	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerAuthorizationStatus@CBPeripheralManagerAuthorizationStatusAuthorized	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerAuthorizationStatus@CBPeripheralManagerAuthorizationStatusDenied	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerAuthorizationStatus@CBPeripheralManagerAuthorizationStatusNotDetermined	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerAuthorizationStatus@CBPeripheralManagerAuthorizationStatusRestricted	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerConnectionLatency	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerConnectionLatency@CBPeripheralManagerConnectionLatencyHigh	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerConnectionLatency@CBPeripheralManagerConnectionLatencyLow	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerConnectionLatency@CBPeripheralManagerConnectionLatencyMedium	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerState@CBPeripheralManagerStatePoweredOff	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerState@CBPeripheralManagerStatePoweredOn	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerState@CBPeripheralManagerStateResetting	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerState@CBPeripheralManagerStateUnauthorized	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerState@CBPeripheralManagerStateUnknown	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralManagerState@CBPeripheralManagerStateUnsupported	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralState@CBPeripheralStateConnected	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralState@CBPeripheralStateConnecting	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralState@CBPeripheralStateDisconnected	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@E@CBPeripheralState@CBPeripheralStateDisconnecting	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@T@CBConnectionEventMatchingOption	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:@T@CBL2CAPPSM	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBATTRequest	declared	CBGATT.swift	compiles; instance path not exercised
+c:objc(cs)CBATTRequest(py)central	declared	CBGATT.swift	compiles; instance path not exercised
+c:objc(cs)CBATTRequest(py)characteristic	declared	CBGATT.swift	compiles; instance path not exercised
+c:objc(cs)CBATTRequest(py)offset	declared	CBGATT.swift	compiles; instance path not exercised
+c:objc(cs)CBATTRequest(py)value	declared	CBGATT.swift	compiles; instance path not exercised
+c:objc(cs)CBAttribute	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBAttribute(py)UUID	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCentral	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBCentral(py)maximumUpdateValueLength	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBCentralManager	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCentralManager(cm)supportsFeatures:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCentralManager(im)cancelPeripheralConnection:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCentralManager(im)connectPeripheral:options:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCentralManager(im)init	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCentralManager(im)initWithDelegate:queue:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCentralManager(im)initWithDelegate:queue:options:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCentralManager(im)registerForConnectionEventsWithOptions:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCentralManager(im)retrieveConnectedPeripheralsWithServices:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCentralManager(im)retrievePeripheralsWithIdentifiers:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCentralManager(im)scanForPeripheralsWithServices:options:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCentralManager(im)stopScan	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCentralManager(py)delegate	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCentralManager(py)isScanning	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCharacteristic	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCharacteristic(py)descriptors	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCharacteristic(py)isBroadcasted	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCharacteristic(py)isNotifying	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCharacteristic(py)properties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCharacteristic(py)service	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBCharacteristic(py)value	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBDescriptor	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBDescriptor(py)characteristic	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBDescriptor(py)value	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBL2CAPChannel	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBL2CAPChannel(py)PSM	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBL2CAPChannel(py)inputStream	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBL2CAPChannel(py)outputStream	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBL2CAPChannel(py)peer	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBManager	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBManager(cpy)authorization	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBManager(py)authorization	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBManager(py)state	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBMutableCharacteristic	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBMutableCharacteristic(im)initWithType:properties:value:permissions:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBMutableCharacteristic(py)descriptors	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBMutableCharacteristic(py)permissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBMutableCharacteristic(py)properties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBMutableCharacteristic(py)subscribedCentrals	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBMutableCharacteristic(py)value	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBMutableDescriptor	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBMutableDescriptor(im)initWithType:value:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBMutableService	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBMutableService(im)initWithType:primary:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBMutableService(py)characteristics	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBMutableService(py)includedServices	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeer	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeer(py)identifier	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheral	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheral(im)discoverCharacteristics:forService:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(im)discoverDescriptorsForCharacteristic:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(im)discoverIncludedServices:forService:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(im)discoverServices:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(im)maximumWriteValueLengthForType:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(im)openL2CAPChannel:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(im)readRSSI	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(im)readValueForCharacteristic:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(im)readValueForDescriptor:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(im)setNotifyValue:forCharacteristic:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(im)writeValue:forCharacteristic:type:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(im)writeValue:forDescriptor:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(py)RSSI	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(py)ancsAuthorized	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(py)canSendWriteWithoutResponse	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(py)delegate	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(py)name	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(py)services	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheral(py)state	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheralManager	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheralManager(cm)authorizationStatus	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheralManager(im)addService:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheralManager(im)init	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheralManager(im)initWithDelegate:queue:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheralManager(im)initWithDelegate:queue:options:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheralManager(im)publishL2CAPChannelWithEncryption:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheralManager(im)removeAllServices	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheralManager(im)removeService:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheralManager(im)respondToRequest:withResult:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheralManager(im)setDesiredConnectionLatency:forCentral:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheralManager(im)startAdvertising:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheralManager(im)stopAdvertising	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheralManager(im)unpublishL2CAPChannel:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(cs)CBPeripheralManager(im)updateValue:forCharacteristic:onSubscribedCentrals:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheralManager(py)delegate	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBPeripheralManager(py)isAdvertising	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBService	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBService(py)characteristics	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBService(py)includedServices	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBService(py)isPrimary	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBService(py)peripheral	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBUUID	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBUUID(cm)UUIDWithCFUUID:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBUUID(cm)UUIDWithCFUUID:::SYNTHESIZED::c:objc(cs)CBUUID	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBUUID(cm)UUIDWithData:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBUUID(cm)UUIDWithNSUUID:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBUUID(cm)UUIDWithNSUUID:::SYNTHESIZED::c:objc(cs)CBUUID	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBUUID(cm)UUIDWithString:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBUUID(py)UUIDString	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(cs)CBUUID(py)data	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CBCentralManagerDelegate	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:connectionEventDidOccur:forPeripheral:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didConnectPeripheral:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDisconnectPeripheral:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDisconnectPeripheral:timestamp:isReconnecting:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didDiscoverPeripheral:advertisementData:RSSI:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didFailToConnectPeripheral:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:didUpdateANCSAuthorizationForPeripheral:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBCentralManagerDelegate(im)centralManager:willRestoreState:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBCentralManagerDelegate(im)centralManagerDidUpdateState:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CBPeripheralDelegate	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverCharacteristicsForService:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverDescriptorsForCharacteristic:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverIncludedServicesForService:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didDiscoverServices:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didModifyServices:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didOpenL2CAPChannel:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didReadRSSI:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateNotificationStateForCharacteristic:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateValueForCharacteristic:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didUpdateValueForDescriptor:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didWriteValueForCharacteristic:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheral:didWriteValueForDescriptor:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheralDidUpdateName:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheralDidUpdateRSSI:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralDelegate(im)peripheralIsReadyToSendWriteWithoutResponse:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralManagerDelegate	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:central:didSubscribeToCharacteristic:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:central:didUnsubscribeFromCharacteristic:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didAddService:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didOpenL2CAPChannel:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didPublishL2CAPChannel:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didReceiveReadRequest:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didReceiveWriteRequests:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:didUnpublishL2CAPChannel:error:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManager:willRestoreState:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerDidStartAdvertising:error:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerDidUpdateState:	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+c:objc(pl)CBPeripheralManagerDelegate(im)peripheralManagerIsReadyToUpdateSubscribers:	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; NSError as? CBATTError is nil
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; NSError as? CBError is nil
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; NSError as? CBATTError is nil
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; NSError as? CBError is nil
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; NSError as? CBATTError is nil
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	CustomNSError typed-to-NSError; NSError as? CBError is nil
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CBATTError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CBError	declared	CoreBluetooth.swift	CustomNSError overlay; NSError as? typed rehydration is not Apple _BridgedStoredNSError
+s:SC10CBATTErrorLeV	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV10invalidPduSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV11errorDomainSSvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV13invalidHandleSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV13invalidOffsetSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV13unlikelyErrorSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV16attributeNotLongSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV16prepareQueueFullSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV16readNotPermittedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV17attributeNotFoundSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV17writeNotPermittedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV19requestNotSupportedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV20unsupportedGroupTypeSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV21insufficientResourcesSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV22insufficientEncryptionSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV25insufficientAuthorizationSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV26insufficientAuthenticationSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV27invalidAttributeValueLengthSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV29insufficientEncryptionKeySizeSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC10CBATTErrorLeV7successSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV10outOfSpaceSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV11errorDomainSSvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV12notConnectedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV12unkownDeviceSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV13invalidHandleSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV13unknownDeviceSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV14uuidNotAllowedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV16connectionFailedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV17connectionTimeoutSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV17invalidParametersSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV18alreadyAdvertisingSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV18encryptionTimedOutSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV18operationCancelledSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV21operationNotSupportedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV22connectionLimitReachedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV22peripheralDisconnectedSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV22tooManyLEPairedDevicesSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV29peerRemovedPairingInformationSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SC7CBErrorLeV7unknownSoAAVvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBCentralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBCharacteristicWriteType	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBConnectionEvent	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBManagerAuthorization	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBPeripheralManagerAuthorizationStatus	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBPeripheralManagerConnectionLatency	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBPeripheralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CBPeripheralState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CBConnectionEventMatchingOption	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBCentralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBCharacteristicWriteType	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBConnectionEvent	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBManagerAuthorization	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBPeripheralManagerAuthorizationStatus	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBPeripheralManagerConnectionLatency	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBPeripheralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CBPeripheralState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBATTError	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBCentralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBCharacteristicWriteType	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBConnectionEvent	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBError	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBManagerAuthorization	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBPeripheralManagerAuthorizationStatus	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBPeripheralManagerConnectionLatency	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBPeripheralManagerState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CBPeripheralState	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So10CBATTErrorV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So14CBManagerStateV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So17CBConnectionEventV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So17CBPeripheralStateV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So21CBCentralManagerStateV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So22CBAttributePermissionsV8rawValueABSu_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So22CBManagerAuthorizationV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So23CBCentralManagerFeatureV8rawValueABSu_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So24CBPeripheralManagerStateV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So25CBCharacteristicWriteTypeV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So26CBCharacteristicPropertiesV8rawValueABSu_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So31CBConnectionEventMatchingOptiona8rawValueABSS_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So36CBPeripheralManagerConnectionLatencyV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So38CBPeripheralManagerAuthorizationStatusV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So7CBErrorV13unknownDeviceABvpZ	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:So7CBErrorV8rawValueABSgSi_tcfc	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@CBConnectionEventMatchingOption	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CBConnectionEventMatchingOption	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CBATTError	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CBError	declared	CBManagers.swift	compiles; host Bluetooth semantics not claimed
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CBAttributePermissions	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CBCentralManagerFeature	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CBCharacteristicProperties	implemented	tests/agent/CoreBluetoothRuntime.swift	focused Linux runtime evidence
