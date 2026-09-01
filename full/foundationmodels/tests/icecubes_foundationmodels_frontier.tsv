@@ -1,0 +1,17 @@
+format	icecubes-foundationmodels-frontier-v1
+repository	https://github.com/Dimillian/IceCubesApp.git
+commit	b2db3033fbf67a97b54d25d6dac2df8a029b26b1
+tree	acecd527919ebd0c868f752b0ac73a2b45fdfcf5
+source	Packages/StatusKit/Sources/StatusKit/Editor/Components/AIPrompt.swift	f21a16b2e7422e89410b2b6852e6b6b250c4599c2f4906796748486bdf2cd3fe	105
+source	Packages/StatusKit/Sources/StatusKit/Editor/EditorStore.swift	ddbebf90c661b1a2e143f7585e578deb2633ab7bdfe28fa74bd8866875151232	979
+api	SystemLanguageModel.default	1
+api	SystemLanguageModel.init(useCase:.general)	1
+api	SystemLanguageModel.isAvailable	1
+api	LanguageModelSession.init(model:instructions:)	1
+api	LanguageModelSession.prewarm()	1
+api	LanguageModelSession.respond(to:generating:)	1
+api	LanguageModelSession.streamResponse(to:options:)	4
+api	LanguageModelSession.ResponseStream<String>	5
+api	GenerationOptions.init(temperature:)	4
+api	@Generable	1
+api	@Guide(description:.count(5))	1
