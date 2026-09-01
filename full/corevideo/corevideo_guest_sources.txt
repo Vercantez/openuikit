@@ -1,0 +1,10 @@
+full/corevideo/CVBase.swift
+full/corevideo/CVBuffer.swift
+full/corevideo/CVCompat.swift
+full/corevideo/CVError.swift
+full/corevideo/CVFormatDescription.swift
+full/corevideo/CVKeys.swift
+full/corevideo/CVPixelBufferPool.swift
+full/corevideo/CVPixelFormats.swift
+full/corevideo/CVSwiftOverlay.swift
+full/corevideo/CoreVideo.swift
