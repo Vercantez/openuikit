@@ -495,6 +495,17 @@ class ApplicationObjectContractTests(unittest.TestCase):
                 encoding="utf-8",
             )
             nm.chmod(0o755)
+            nm_link = root / "llvm-nm-link"
+            nm_link.symlink_to(nm)
+            with self.assertRaisesRegex(
+                application_object_contract.ObjectContractError,
+                "llvm-nm is not a regular file",
+            ):
+                application_object_contract.audit_cross_file_symbols(
+                    nm_link,
+                    root / "symlink-cross.json",
+                    [os.fspath(first), os.fspath(second)],
+                )
             cross = application_object_contract.audit_cross_file_symbols(
                 nm, root / "cross.json", [os.fspath(first), os.fspath(second)]
             )

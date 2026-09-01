@@ -374,7 +374,43 @@ def validate_python_invocations_are_bytecode_free(source: str) -> None:
         )
 
 
+def validate_canonical_nm_tool_contract(source: str) -> None:
+    required_once = (
+        "local llvm_nm",
+        'llvm_nm=$(canonical_existing "$(command -v llvm-nm-18)")',
+        'require_regular "$llvm_nm" "canonical llvm-nm"',
+        'canonical llvm-nm is not executable: $llvm_nm',
+    )
+    drifted = [token for token in required_once if source.count(token) != 1]
+    if drifted:
+        raise AssertionError(f"canonical llvm-nm contract drifted: {drifted}")
+    if source.count('--nm "$llvm_nm"') != 2:
+        raise AssertionError("canonical llvm-nm audit scope drifted")
+    if '--nm "$(command -v llvm-nm-18)"' in source:
+        raise AssertionError("unresolved llvm-nm symlink reached the object auditor")
+
+
 class PortableApplicationGuestDriverTests(unittest.TestCase):
+    def test_object_audits_use_one_canonical_regular_llvm_nm(self) -> None:
+        source = (XCODEPLAN / "build_portable_application_guest.sh").read_text(
+            encoding="utf-8"
+        )
+        validate_canonical_nm_tool_contract(source)
+        for token in (
+            'llvm_nm=$(canonical_existing "$(command -v llvm-nm-18)")',
+            'require_regular "$llvm_nm" "canonical llvm-nm"',
+            'canonical llvm-nm is not executable: $llvm_nm',
+        ):
+            with self.subTest(deleted=token):
+                with self.assertRaisesRegex(AssertionError, "llvm-nm"):
+                    validate_canonical_nm_tool_contract(
+                        source.replace(token, "", 1)
+                    )
+        with self.assertRaisesRegex(AssertionError, "audit scope"):
+            validate_canonical_nm_tool_contract(
+                source.replace('--nm "$llvm_nm"', '--nm /tmp/mutated', 1)
+            )
+
     def test_host_delegates_resource_binding_to_the_shared_runtime_contract(
         self,
     ) -> None:
