@@ -17,52 +17,6 @@ public typealias SCNSceneExportProgressHandler = (Float, (any Error)?, UnsafeMut
 public typealias SCNSceneSourceStatusHandler = (Float, SCNSceneSourceStatus, (any Error)?, UnsafeMutablePointer<ObjCBool>) -> Void
 public typealias dispatch_queue_t = DispatchQueue
 
-/// Linux stand-ins for the Darwin `simd` module names used by SceneKit.
-public typealias simd_float3 = SIMD3<Float>
-public typealias simd_float4 = SIMD4<Float>
-
-public struct simd_quatf: Equatable, Sendable {
-    public var vector: SIMD4<Float>
-
-    public init(_ vector: SIMD4<Float>) {
-        self.vector = vector
-    }
-
-    public init(ix: Float, iy: Float, iz: Float, r: Float) {
-        vector = SIMD4(ix, iy, iz, r)
-    }
-
-    public static var identity: simd_quatf {
-        simd_quatf(ix: 0, iy: 0, iz: 0, r: 1)
-    }
-}
-
-public struct simd_float4x4: Equatable, Sendable {
-    public var columns: (SIMD4<Float>, SIMD4<Float>, SIMD4<Float>, SIMD4<Float>)
-
-    public init(columns: (SIMD4<Float>, SIMD4<Float>, SIMD4<Float>, SIMD4<Float>)) {
-        self.columns = columns
-    }
-
-    public static var identity: simd_float4x4 {
-        simd_float4x4(
-            columns: (
-                SIMD4(1, 0, 0, 0),
-                SIMD4(0, 1, 0, 0),
-                SIMD4(0, 0, 1, 0),
-                SIMD4(0, 0, 0, 1)
-            )
-        )
-    }
-
-    public static func == (lhs: simd_float4x4, rhs: simd_float4x4) -> Bool {
-        lhs.columns.0 == rhs.columns.0
-            && lhs.columns.1 == rhs.columns.1
-            && lhs.columns.2 == rhs.columns.2
-            && lhs.columns.3 == rhs.columns.3
-    }
-}
-
 public let SCNErrorDomain = "com.apple.scenekit.error"
 public let SCNDetailedErrorsKey = "SCNDetailedErrorsKey"
 public let SCNConsistencyElementIDErrorKey = "SCNConsistencyElementIDErrorKey"

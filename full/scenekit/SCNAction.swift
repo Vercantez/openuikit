@@ -197,6 +197,8 @@ final class _SCNActionState {
     var childStates: [_SCNActionState] = []
     var sequenceIndex = 0
     var repeatRemaining: Int?
+    var continuation: CheckedContinuation<Void, Error>?
+    var didResume = false
 
     init(action: SCNAction) {
         self.action = action
@@ -211,5 +213,19 @@ final class _SCNActionState {
         default:
             break
         }
+    }
+
+    func resumeSuccess() {
+        guard !didResume else { return }
+        didResume = true
+        continuation?.resume(returning: ())
+        continuation = nil
+    }
+
+    func resumeCancel() {
+        guard !didResume else { return }
+        didResume = true
+        continuation?.resume(throwing: CancellationError())
+        continuation = nil
     }
 }

@@ -1,0 +1,4 @@
+module CSceneKit {
+    header "SceneKit/SceneKit.h"
+    export *
+}

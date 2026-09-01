@@ -1,12 +1,17 @@
 import Foundation
+#if canImport(simd)
+import simd
+#endif
 
 open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
     public class var localFront: SCNVector3 { SCNVector3(0, 0, -1) }
     public class var localRight: SCNVector3 { SCNVector3(1, 0, 0) }
     public class var localUp: SCNVector3 { SCNVector3(0, 1, 0) }
-    public class var simdLocalFront: simd_float3 { SIMD3(0, 0, -1) }
-    public class var simdLocalRight: simd_float3 { SIMD3(1, 0, 0) }
-    public class var simdLocalUp: simd_float3 { SIMD3(0, 1, 0) }
+#if canImport(simd)
+    public class var simdLocalFront: simd_float3 { simd_float3(0, 0, -1) }
+    public class var simdLocalRight: simd_float3 { simd_float3(1, 0, 0) }
+    public class var simdLocalUp: simd_float3 { simd_float3(0, 1, 0) }
+#endif
 
     public var name: String?
     public var geometry: SCNGeometry?
@@ -141,6 +146,7 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
     public var worldUp: SCNVector3 { convertVector(SCNNode.localUp, to: nil) }
     public var worldRight: SCNVector3 { convertVector(SCNNode.localRight, to: nil) }
 
+#if canImport(simd)
     public var simdPosition: simd_float3 {
         get { _scnSimd3(position) }
         set { position = _scnFromSimd3(newValue) }
@@ -184,6 +190,7 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
     public var simdWorldFront: simd_float3 { _scnSimd3(worldFront) }
     public var simdWorldUp: simd_float3 { _scnSimd3(worldUp) }
     public var simdWorldRight: simd_float3 { _scnSimd3(worldRight) }
+#endif
 
     public var presentation: SCNNode { self }
 
@@ -202,13 +209,24 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
         return (center, _scnLength(_scnSub(box.max, center)))
     }
 
+    func _wouldCreateCycle(inserting child: SCNNode) -> Bool {
+        var current: SCNNode? = self
+        while let node = current {
+            if node === child { return true }
+            current = node.parent
+        }
+        return false
+    }
+
     public func addChildNode(_ child: SCNNode) {
+        guard !_wouldCreateCycle(inserting: child) else { return }
         child.removeFromParentNode()
         child.parent = self
         _children.append(child)
     }
 
     public func insertChildNode(_ child: SCNNode, at index: Int) {
+        guard !_wouldCreateCycle(inserting: child) else { return }
         child.removeFromParentNode()
         child.parent = self
         _children.insert(child, at: index)
@@ -216,6 +234,7 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
 
     public func replaceChildNode(_ oldChild: SCNNode, with newChild: SCNNode) {
         guard let index = _children.firstIndex(where: { $0 === oldChild }) else { return }
+        guard !_wouldCreateCycle(inserting: newChild) else { return }
         oldChild.parent = nil
         newChild.removeFromParentNode()
         newChild.parent = self
@@ -359,6 +378,7 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
         return world
     }
 
+#if canImport(simd)
     public func simdConvertPosition(_ position: simd_float3, from node: SCNNode?) -> simd_float3 {
         _scnSimd3(convertPosition(_scnFromSimd3(position), from: node))
     }
@@ -377,22 +397,27 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
     public func simdConvertTransform(_ transform: simd_float4x4, to node: SCNNode?) -> simd_float4x4 {
         _scnSimdMatrix(convertTransform(_scnFromSimdMatrix(transform), to: node))
     }
+#endif
 
     public func localTranslate(by translation: SCNVector3) {
         position = _scnAdd(position, translation)
     }
 
+#if canImport(simd)
     public func simdLocalTranslate(by translation: simd_float3) {
         localTranslate(by: _scnFromSimd3(translation))
     }
+#endif
 
     public func localRotate(by rotation: SCNQuaternion) {
         orientation = _scnQuaternionMultiply(orientation, rotation)
     }
 
+#if canImport(simd)
     public func simdLocalRotate(by rotation: simd_quatf) {
         localRotate(by: _scnFromSimdQuat(rotation))
     }
+#endif
 
     public func look(at worldTarget: SCNVector3) {
         look(at: worldTarget, up: SCNNode.localUp, localFront: SCNNode.localFront)
@@ -403,6 +428,7 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
         worldOrientation = _scnLookRotation(direction: direction, up: worldUp, localFront: localFront)
     }
 
+#if canImport(simd)
     public func simdLook(at worldTarget: simd_float3) {
         look(at: _scnFromSimd3(worldTarget))
     }
@@ -410,6 +436,7 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
     public func simdLook(at worldTarget: simd_float3, up worldUp: simd_float3, localFront: simd_float3) {
         look(at: _scnFromSimd3(worldTarget), up: _scnFromSimd3(worldUp), localFront: _scnFromSimd3(localFront))
     }
+#endif
 
     public func rotate(by worldRotation: SCNQuaternion, aroundTarget worldTarget: SCNVector3) {
         let relative = _scnSub(worldPosition, worldTarget)
@@ -418,9 +445,11 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
         worldOrientation = _scnQuaternionMultiply(worldRotation, worldOrientation)
     }
 
+#if canImport(simd)
     public func simdRotate(by worldRotation: simd_quatf, aroundTarget worldTarget: simd_float3) {
         rotate(by: _scnFromSimdQuat(worldRotation), aroundTarget: _scnFromSimd3(worldTarget))
     }
+#endif
 
     public func hitTestWithSegment(from pointA: SCNVector3, to pointB: SCNVector3, options: [String: Any]? = nil) -> [SCNHitTestResult] {
         _ = options
@@ -475,36 +504,61 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
     }
 
     public func removeAction(forKey key: String) {
-        _actions.removeValue(forKey: key)
+        if let state = _actions.removeValue(forKey: key) {
+            state.resumeCancel()
+        }
     }
 
     public func removeAllActions() {
+        let states = Array(_actions.values)
         _actions.removeAll()
+        for state in states {
+            state.resumeCancel()
+        }
     }
 
     public func runAction(_ action: SCNAction) {
-        _run(action, forKey: nil)
+        _run(action, forKey: nil, continuation: nil)
     }
 
     public func runAction(_ action: SCNAction) async {
-        _run(action, forKey: nil)
+        await _runWaiting(action, forKey: nil)
     }
 
     public func runAction(_ action: SCNAction, forKey key: String?) {
-        _run(action, forKey: key)
+        _run(action, forKey: key, continuation: nil)
     }
 
     public func runAction(_ action: SCNAction, forKey key: String?) async {
-        _run(action, forKey: key)
+        await _runWaiting(action, forKey: key)
     }
 
-    func _run(_ action: SCNAction, forKey key: String?) {
+    private func _runWaiting(_ action: SCNAction, forKey key: String?) async {
         let token = key ?? UUID().uuidString
+        try? await withTaskCancellationHandler {
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                _run(action, forKey: token, continuation: continuation)
+            }
+        } onCancel: {
+            removeAction(forKey: token)
+        }
+    }
+
+    func _run(_ action: SCNAction, forKey key: String?, continuation: CheckedContinuation<Void, Error>?) {
+        let token = key ?? UUID().uuidString
+        if let previous = _actions.removeValue(forKey: token) {
+            previous.resumeCancel()
+        }
         let state = _SCNActionState(action: action)
+        state.continuation = continuation
         _actions[token] = state
-        if action.duration <= 0 || SCNTransaction.disableActions {
-            _ = _advance(state: state, deltaTime: max(action.duration, 0.0001), node: self)
-            _actions.removeValue(forKey: token)
+        // Instant actions complete immediately. SCNTransaction.disableActions
+        // applies to implicit animations, not explicit SCNAction.runAction.
+        if action.duration <= 0 {
+            if _advance(state: state, deltaTime: 0, node: self) != nil {
+                _actions.removeValue(forKey: token)
+                state.resumeSuccess()
+            }
         }
     }
 
@@ -540,8 +594,9 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
         guard !isPaused else { return }
         for key in Array(_actions.keys) {
             guard let state = _actions[key] else { continue }
-            if _advance(state: state, deltaTime: deltaTime, node: self) {
+            if _advance(state: state, deltaTime: deltaTime, node: self) != nil {
                 _actions.removeValue(forKey: key)
+                state.resumeSuccess()
             }
         }
         for child in _children {
@@ -549,10 +604,9 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
         }
     }
 
-    func _advance(state: _SCNActionState, deltaTime: TimeInterval, node: SCNNode) -> Bool {
-        var remaining = deltaTime
+    /// Returns leftover unscaled delta when the action finished; nil if still running.
+    func _advance(state: _SCNActionState, deltaTime: TimeInterval, node: SCNNode) -> TimeInterval? {
         let action = state.action
-        let speed = max(Double(action.speed), 0.0001)
         if !state.started {
             state.started = true
             state.startPosition = node.position
@@ -560,9 +614,80 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
             state.startScale = node.scale
             state.startOpacity = node.opacity
         }
-        state.elapsed += remaining * speed
+
+        switch action.kind {
+        case .sequence:
+            var remaining = deltaTime
+            while state.sequenceIndex < state.childStates.count {
+                let child = state.childStates[state.sequenceIndex]
+                if let leftover = _advance(state: child, deltaTime: remaining, node: node) {
+                    state.sequenceIndex += 1
+                    remaining = leftover
+                } else {
+                    return nil
+                }
+            }
+            return remaining
+        case .group:
+            var allDone = true
+            var minLeftover = deltaTime
+            for child in state.childStates {
+                if let leftover = _advance(state: child, deltaTime: deltaTime, node: node) {
+                    minLeftover = min(minLeftover, leftover)
+                } else {
+                    allDone = false
+                }
+            }
+            return allDone ? minLeftover : nil
+        case .repeat:
+            var remaining = deltaTime
+            var steps = 0
+            while steps < 1_000_000 {
+                if let left = state.repeatRemaining, left <= 0 {
+                    return remaining
+                }
+                steps += 1
+                if let leftover = _advance(state: state.childStates[0], deltaTime: remaining, node: node) {
+                    if var left = state.repeatRemaining {
+                        left -= 1
+                        state.repeatRemaining = left
+                        if left <= 0 { return leftover }
+                    }
+                    state.childStates = [_SCNActionState(action: state.childStates[0].action)]
+                    if leftover >= remaining && remaining >= 0 && action.duration.isInfinite {
+                        return leftover
+                    }
+                    remaining = leftover
+                } else {
+                    return nil
+                }
+            }
+            return remaining
+        default:
+            break
+        }
+
         let duration = max(action.duration, 0)
-        var t = duration == 0 ? 1 : Float(min(1, state.elapsed / duration))
+        if duration == 0 {
+            _applyLeaf(state: state, t: 1, node: node)
+            return deltaTime
+        }
+
+        let speed = Double(action.speed)
+        if speed <= 0 {
+            return nil
+        }
+
+        let scaled = deltaTime * speed
+        let needed = duration - state.elapsed
+        if scaled >= needed {
+            state.elapsed = duration
+            _applyLeaf(state: state, t: 1, node: node)
+            return (scaled - needed) / speed
+        }
+
+        state.elapsed += scaled
+        var t = Float(state.elapsed / duration)
         switch action.timingMode {
         case .linear:
             break
@@ -576,7 +701,12 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
         if let timing = action.timingFunction {
             t = timing(t)
         }
-        switch action.kind {
+        _applyLeaf(state: state, t: t, node: node)
+        return nil
+    }
+
+    func _applyLeaf(state: _SCNActionState, t: Float, node: SCNNode) {
+        switch state.action.kind {
         case .wait:
             break
         case .hide:
@@ -607,44 +737,13 @@ open class SCNNode: NSObject, SCNActionable, SCNAnimatable, SCNBoundingVolume {
             node.scale = _scnScale(state.startScale, s)
         case .scaleTo(let value):
             node.scale = _scnLerp(state.startScale, SCNVector3(value, value, value), t)
-        case .sequence:
-            while state.sequenceIndex < state.childStates.count {
-                let child = state.childStates[state.sequenceIndex]
-                if _advance(state: child, deltaTime: remaining, node: node) {
-                    state.sequenceIndex += 1
-                    remaining = 0
-                } else {
-                    return false
-                }
-            }
-            return true
-        case .group:
-            var done = true
-            for child in state.childStates {
-                if !_advance(state: child, deltaTime: remaining, node: node) {
-                    done = false
-                }
-            }
-            return done
-        case .repeat:
-            if let left = state.repeatRemaining, left <= 0 { return true }
-            if _advance(state: state.childStates[0], deltaTime: remaining, node: node) {
-                if var left = state.repeatRemaining {
-                    left -= 1
-                    state.repeatRemaining = left
-                    if left <= 0 { return true }
-                }
-                state.childStates = [_SCNActionState(action: state.childStates[0].action)]
-            }
-            return false
         case .run(let block):
             block(node)
         case .custom(let block):
             block(node, CGFloat(t))
-        case .javascript, .playAudio:
+        case .javascript, .playAudio, .sequence, .group, .repeat:
             break
         }
-        return duration == 0 || state.elapsed >= duration
     }
 }
 
@@ -681,11 +780,13 @@ public final class SCNHitTestResult: NSObject {
         self.boneNode = boneNode
     }
 
+#if canImport(simd)
     public var simdLocalCoordinates: simd_float3 { _scnSimd3(localCoordinates) }
     public var simdWorldCoordinates: simd_float3 { _scnSimd3(worldCoordinates) }
     public var simdLocalNormal: simd_float3 { _scnSimd3(localNormal) }
     public var simdWorldNormal: simd_float3 { _scnSimd3(worldNormal) }
     public var simdModelTransform: simd_float4x4 { _scnSimdMatrix(modelTransform) }
+#endif
 
     public func textureCoordinates(withMappingChannel channel: Int) -> CGPoint {
         _ = channel

@@ -1,6 +1,9 @@
 import Foundation
 
-public struct SCNVector3: Equatable, Hashable, Sendable {
+#if canImport(CSceneKit)
+@_exported import CSceneKit
+#else
+public struct SCNVector3: Sendable {
     public var x: Float
     public var y: Float
     public var z: Float
@@ -16,33 +19,9 @@ public struct SCNVector3: Equatable, Hashable, Sendable {
         self.y = y
         self.z = z
     }
-
-    public init(_ x: Float, _ y: Float, _ z: Float) {
-        self.init(x: x, y: y, z: z)
-    }
-
-    public init(_ x: Double, _ y: Double, _ z: Double) {
-        self.init(x: Float(x), y: Float(y), z: Float(z))
-    }
-
-    public init(_ x: CGFloat, _ y: CGFloat, _ z: CGFloat) {
-        self.init(x: Float(x), y: Float(y), z: Float(z))
-    }
-
-    public init(_ x: Int, _ y: Int, _ z: Int) {
-        self.init(x: Float(x), y: Float(y), z: Float(z))
-    }
-
-    public init(_ v: SIMD3<Double>) {
-        self.init(x: Float(v.x), y: Float(v.y), z: Float(v.z))
-    }
-
-    public init(_ v: SIMD3<Float>) {
-        self.init(x: v.x, y: v.y, z: v.z)
-    }
 }
 
-public struct SCNVector4: Equatable, Hashable, Sendable {
+public struct SCNVector4: Sendable {
     public var x: Float
     public var y: Float
     public var z: Float
@@ -61,33 +40,9 @@ public struct SCNVector4: Equatable, Hashable, Sendable {
         self.z = z
         self.w = w
     }
-
-    public init(_ x: Float, _ y: Float, _ z: Float, _ w: Float) {
-        self.init(x: x, y: y, z: z, w: w)
-    }
-
-    public init(_ x: Double, _ y: Double, _ z: Double, _ w: Double) {
-        self.init(x: Float(x), y: Float(y), z: Float(z), w: Float(w))
-    }
-
-    public init(_ x: CGFloat, _ y: CGFloat, _ z: CGFloat, _ w: CGFloat) {
-        self.init(x: Float(x), y: Float(y), z: Float(z), w: Float(w))
-    }
-
-    public init(_ x: Int, _ y: Int, _ z: Int, _ w: Int) {
-        self.init(x: Float(x), y: Float(y), z: Float(z), w: Float(w))
-    }
-
-    public init(_ v: SIMD4<Double>) {
-        self.init(x: Float(v.x), y: Float(v.y), z: Float(v.z), w: Float(v.w))
-    }
-
-    public init(_ v: SIMD4<Float>) {
-        self.init(x: v.x, y: v.y, z: v.z, w: v.w)
-    }
 }
 
-public struct SCNMatrix4: Equatable, Sendable {
+public struct SCNMatrix4: Sendable {
     public var m11: Float
     public var m12: Float
     public var m13: Float
@@ -123,13 +78,6 @@ public struct SCNMatrix4: Equatable, Sendable {
         self.m31 = m31; self.m32 = m32; self.m33 = m33; self.m34 = m34
         self.m41 = m41; self.m42 = m42; self.m43 = m43; self.m44 = m44
     }
-
-    public init(_ m: simd_float4x4) {
-        m11 = m.columns.0.x; m12 = m.columns.1.x; m13 = m.columns.2.x; m14 = m.columns.3.x
-        m21 = m.columns.0.y; m22 = m.columns.1.y; m23 = m.columns.2.y; m24 = m.columns.3.y
-        m31 = m.columns.0.z; m32 = m.columns.1.z; m33 = m.columns.2.z; m34 = m.columns.3.z
-        m41 = m.columns.0.w; m42 = m.columns.1.w; m43 = m.columns.2.w; m44 = m.columns.3.w
-    }
 }
 
 public let SCNVector3Zero = SCNVector3()
@@ -150,19 +98,22 @@ public func SCNVector4Make(_ x: Float, _ y: Float, _ z: Float, _ w: Float) -> SC
 }
 
 public func SCNVector3EqualToVector3(_ a: SCNVector3, _ b: SCNVector3) -> Bool {
-    a == b
+    a.x == b.x && a.y == b.y && a.z == b.z
 }
 
 public func SCNVector4EqualToVector4(_ a: SCNVector4, _ b: SCNVector4) -> Bool {
-    a == b
+    a.x == b.x && a.y == b.y && a.z == b.z && a.w == b.w
 }
 
 public func SCNMatrix4EqualToMatrix4(_ a: SCNMatrix4, _ b: SCNMatrix4) -> Bool {
-    a == b
+    a.m11 == b.m11 && a.m12 == b.m12 && a.m13 == b.m13 && a.m14 == b.m14
+        && a.m21 == b.m21 && a.m22 == b.m22 && a.m23 == b.m23 && a.m24 == b.m24
+        && a.m31 == b.m31 && a.m32 == b.m32 && a.m33 == b.m33 && a.m34 == b.m34
+        && a.m41 == b.m41 && a.m42 == b.m42 && a.m43 == b.m43 && a.m44 == b.m44
 }
 
 public func SCNMatrix4IsIdentity(_ m: SCNMatrix4) -> Bool {
-    m == SCNMatrix4Identity
+    SCNMatrix4EqualToMatrix4(m, SCNMatrix4Identity)
 }
 
 public func SCNMatrix4MakeTranslation(_ tx: Float, _ ty: Float, _ tz: Float) -> SCNMatrix4 {
@@ -274,6 +225,132 @@ public func SCNMatrix4Invert(_ m: SCNMatrix4) -> SCNMatrix4 {
         m41: inv[3][0], m42: inv[3][1], m43: inv[3][2], m44: inv[3][3]
     )
 }
+#endif
+
+extension SCNVector3: Equatable, Hashable {
+    public init(_ x: Float, _ y: Float, _ z: Float) {
+        self.init(x: x, y: y, z: z)
+    }
+
+    public init(_ x: Double, _ y: Double, _ z: Double) {
+        self.init(x: Float(x), y: Float(y), z: Float(z))
+    }
+
+    public init(_ x: CGFloat, _ y: CGFloat, _ z: CGFloat) {
+        self.init(x: Float(x), y: Float(y), z: Float(z))
+    }
+
+    public init(_ x: Int, _ y: Int, _ z: Int) {
+        self.init(x: Float(x), y: Float(y), z: Float(z))
+    }
+
+    public init(_ v: SIMD3<Double>) {
+        self.init(x: Float(v.x), y: Float(v.y), z: Float(v.z))
+    }
+
+    public init(_ v: SIMD3<Float>) {
+        self.init(x: v.x, y: v.y, z: v.z)
+    }
+
+    public static func == (lhs: SCNVector3, rhs: SCNVector3) -> Bool {
+        SCNVector3EqualToVector3(lhs, rhs)
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(x)
+        hasher.combine(y)
+        hasher.combine(z)
+    }
+}
+
+extension SCNVector4: Equatable, Hashable {
+    public init(_ x: Float, _ y: Float, _ z: Float, _ w: Float) {
+        self.init(x: x, y: y, z: z, w: w)
+    }
+
+    public init(_ x: Double, _ y: Double, _ z: Double, _ w: Double) {
+        self.init(x: Float(x), y: Float(y), z: Float(z), w: Float(w))
+    }
+
+    public init(_ x: CGFloat, _ y: CGFloat, _ z: CGFloat, _ w: CGFloat) {
+        self.init(x: Float(x), y: Float(y), z: Float(z), w: Float(w))
+    }
+
+    public init(_ x: Int, _ y: Int, _ z: Int, _ w: Int) {
+        self.init(x: Float(x), y: Float(y), z: Float(z), w: Float(w))
+    }
+
+    public init(_ v: SIMD4<Double>) {
+        self.init(x: Float(v.x), y: Float(v.y), z: Float(v.z), w: Float(v.w))
+    }
+
+    public init(_ v: SIMD4<Float>) {
+        self.init(x: v.x, y: v.y, z: v.z, w: v.w)
+    }
+
+    public static func == (lhs: SCNVector4, rhs: SCNVector4) -> Bool {
+        SCNVector4EqualToVector4(lhs, rhs)
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(x)
+        hasher.combine(y)
+        hasher.combine(z)
+        hasher.combine(w)
+    }
+}
+
+extension SCNMatrix4: Equatable {
+    public static func == (lhs: SCNMatrix4, rhs: SCNMatrix4) -> Bool {
+        SCNMatrix4EqualToMatrix4(lhs, rhs)
+    }
+}
+
+#if canImport(simd)
+import simd
+
+extension SCNMatrix4 {
+    public init(_ m: simd_float4x4) {
+        m11 = m.columns.0.x; m12 = m.columns.1.x; m13 = m.columns.2.x; m14 = m.columns.3.x
+        m21 = m.columns.0.y; m22 = m.columns.1.y; m23 = m.columns.2.y; m24 = m.columns.3.y
+        m31 = m.columns.0.z; m32 = m.columns.1.z; m33 = m.columns.2.z; m34 = m.columns.3.z
+        m41 = m.columns.0.w; m42 = m.columns.1.w; m43 = m.columns.2.w; m44 = m.columns.3.w
+    }
+}
+
+func _scnSimd3(_ v: SCNVector3) -> simd_float3 {
+    simd_float3(v.x, v.y, v.z)
+}
+
+func _scnSimd4(_ v: SCNVector4) -> simd_float4 {
+    simd_float4(v.x, v.y, v.z, v.w)
+}
+
+func _scnSimdQuat(_ q: SCNQuaternion) -> simd_quatf {
+    simd_quatf(ix: q.x, iy: q.y, iz: q.z, r: q.w)
+}
+
+func _scnFromSimd3(_ v: simd_float3) -> SCNVector3 {
+    SCNVector3(v.x, v.y, v.z)
+}
+
+func _scnFromSimdQuat(_ q: simd_quatf) -> SCNQuaternion {
+    SCNVector4(q.vector.x, q.vector.y, q.vector.z, q.vector.w)
+}
+
+func _scnSimdMatrix(_ m: SCNMatrix4) -> simd_float4x4 {
+    simd_float4x4(
+        simd_float4(m.m11, m.m21, m.m31, m.m41),
+        simd_float4(m.m12, m.m22, m.m32, m.m42),
+        simd_float4(m.m13, m.m23, m.m33, m.m43),
+        simd_float4(m.m14, m.m24, m.m34, m.m44)
+    )
+}
+
+func _scnFromSimdMatrix(_ m: simd_float4x4) -> SCNMatrix4 {
+    SCNMatrix4(m)
+}
+#endif
 
 func _scnLength(_ v: SCNVector3) -> Float {
     sqrt(v.x * v.x + v.y * v.y + v.z * v.z)
@@ -546,39 +623,4 @@ func _scnRayHitsAABB(origin: SCNVector3, direction: SCNVector3, minBound: SCNVec
     if tMax < tMin { return nil }
     if tMax < 0 { return nil }
     return tMin >= 0 ? tMin : tMax
-}
-
-func _scnSimd3(_ v: SCNVector3) -> simd_float3 {
-    SIMD3(v.x, v.y, v.z)
-}
-
-func _scnSimd4(_ v: SCNVector4) -> simd_float4 {
-    SIMD4(v.x, v.y, v.z, v.w)
-}
-
-func _scnSimdQuat(_ q: SCNQuaternion) -> simd_quatf {
-    simd_quatf(ix: q.x, iy: q.y, iz: q.z, r: q.w)
-}
-
-func _scnFromSimd3(_ v: simd_float3) -> SCNVector3 {
-    SCNVector3(v.x, v.y, v.z)
-}
-
-func _scnFromSimdQuat(_ q: simd_quatf) -> SCNQuaternion {
-    SCNVector4(q.vector.x, q.vector.y, q.vector.z, q.vector.w)
-}
-
-func _scnSimdMatrix(_ m: SCNMatrix4) -> simd_float4x4 {
-    simd_float4x4(
-        columns: (
-            SIMD4(m.m11, m.m21, m.m31, m.m41),
-            SIMD4(m.m12, m.m22, m.m32, m.m42),
-            SIMD4(m.m13, m.m23, m.m33, m.m43),
-            SIMD4(m.m14, m.m24, m.m34, m.m44)
-        )
-    )
-}
-
-func _scnFromSimdMatrix(_ m: simd_float4x4) -> SCNMatrix4 {
-    SCNMatrix4(m)
 }

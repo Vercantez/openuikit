@@ -240,6 +240,8 @@ public struct SCNBillboardAxis: OptionSet, Hashable, Sendable {
     public static let all: SCNBillboardAxis = [.X, .Y, .Z]
 }
 
+/// Color-channel mask cases compile, but the raw bit positions are not
+/// oracle-attested. Do not treat these values as ABI-stable.
 public struct SCNColorMask: OptionSet, Hashable, Sendable {
     public let rawValue: Int
 

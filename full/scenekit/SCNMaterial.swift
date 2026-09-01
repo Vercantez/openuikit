@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(simd)
+import simd
+#endif
 
 public final class SCNMaterialProperty: NSObject, SCNAnimatable {
     public var contents: Any?
@@ -307,18 +310,24 @@ public final class SCNLight: NSObject, SCNAnimatable {
     public var gobo: SCNMaterialProperty?
     public var iesProfileURL: URL?
     public var areaType = SCNLightAreaType.rectangle
-    public var areaExtents: simd_float3 = SIMD3(1, 1, 0)
+#if canImport(simd)
+    public var areaExtents: simd_float3 = simd_float3(1, 1, 0)
+#endif
     public var areaPolygonVertices: [NSValue]?
     public var doubleSided = false
     public var drawsArea = true
     public var probeType = SCNLightProbeType.irradiance
     public var probeUpdateType = SCNLightProbeUpdateType.never
-    public var probeExtents: simd_float3 = SIMD3(1, 1, 1)
-    public var probeOffset: simd_float3 = SIMD3(0, 0, 0)
+#if canImport(simd)
+    public var probeExtents: simd_float3 = simd_float3(1, 1, 1)
+    public var probeOffset: simd_float3 = simd_float3(0, 0, 0)
+#endif
     public var probeEnvironment: SCNMaterialProperty?
     public var parallaxCorrectionEnabled = false
-    public var parallaxExtentsFactor: simd_float3 = SIMD3(1, 1, 1)
-    public var parallaxCenterOffset: simd_float3 = SIMD3(0, 0, 0)
+#if canImport(simd)
+    public var parallaxExtentsFactor: simd_float3 = simd_float3(1, 1, 1)
+    public var parallaxCenterOffset: simd_float3 = simd_float3(0, 0, 0)
+#endif
     public var sphericalHarmonicsCoefficients = Data()
     var _animationPlayers: [String: SCNAnimationPlayer] = [:]
 
