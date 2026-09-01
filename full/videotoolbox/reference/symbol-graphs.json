@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 3,
+  "duplicateOccurrenceCount": 3,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/VideoToolbox.symbols.json",
+      "relationshipCount": 860,
+      "sha256": "869b9a950d697dd73e6f71c3761c7ad534ba411db95ffa2270cb13bfecbc001f",
+      "symbolCount": 960
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "VideoToolbox",
+  "relationshipCount": 860,
+  "schema": 1,
+  "symbolCount": 957,
+  "target": "arm64-apple-ios26.0"
+}

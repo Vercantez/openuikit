@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 4,
+  "duplicateOccurrenceCount": 4,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/QuickLookThumbnailing.symbols.json",
+      "relationshipCount": 173,
+      "sha256": "b6786eca40caab3df09d3316b4e27d6d70263a73c097baa442c464b8675a8228",
+      "symbolCount": 109
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "QuickLookThumbnailing",
+  "relationshipCount": 173,
+  "schema": 1,
+  "symbolCount": 105,
+  "target": "arm64-apple-ios26.0"
+}

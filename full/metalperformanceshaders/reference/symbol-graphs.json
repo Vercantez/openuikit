@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 2,
+  "duplicateOccurrenceCount": 2,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/MetalPerformanceShaders.symbols.json",
+      "relationshipCount": 7000,
+      "sha256": "f8907b3fcdc29cc2bd732a087d8f835cc8fa09851601f9881ff98f0f32f7f5ff",
+      "symbolCount": 3384
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "MetalPerformanceShaders",
+  "relationshipCount": 7000,
+  "schema": 1,
+  "symbolCount": 3382,
+  "target": "arm64-apple-ios26.0"
+}

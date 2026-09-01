@@ -1,0 +1,57 @@
+{
+  "corpusSummary": "reference/corpus-summary.json",
+  "coveragePolicy": {
+    "allowedStatuses": [
+      "implemented",
+      "declared",
+      "deferred",
+      "unavailable",
+      "not-applicable"
+    ],
+    "minimumNondeferredCount": 3208,
+    "nondeferredStatuses": [
+      "implemented",
+      "declared"
+    ],
+    "rule": "ceil(80% of exact public symbols)"
+  },
+  "dependencies": [
+    "Foundation",
+    "PassKit",
+    "SwiftUI"
+  ],
+  "guestManifest": "passkit-swiftui_guest_sources.txt",
+  "lane": "leaf-full",
+  "module": "_PassKit_SwiftUI",
+  "provenance": {
+    "arm64TBDExportCount": 225,
+    "frameworkSDKRelativePath": "System/Library/Frameworks/_PassKit_SwiftUI.framework",
+    "generatorPath": "scripts/framework-fanout/generate_seed.py",
+    "generatorSHA256": "2b8230ced5a3ed78f070607346f6a684d9e0fb74a8932b92bc0f5e38f46f0a8e",
+    "rawSDKInputCount": 3,
+    "roadmapPath": "full/framework-roadmap/framework-roadmap.json",
+    "roadmapSHA256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a",
+    "sdkName": "iphoneos",
+    "sdkPath": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk",
+    "sdkVersion": "26.1",
+    "target": "arm64-apple-ios26.0",
+    "tbdInputCount": 1,
+    "xcodeBuild": "17B55",
+    "xcodeVersion": "26.1"
+  },
+  "publicSurface": "reference/public-surface.tsv",
+  "relationshipCount": 4019,
+  "risks": [
+    "private-overlay",
+    "payments",
+    "swiftui",
+    "fail-closed"
+  ],
+  "runtimeMarker": "PASSKIT_SWIFTUI_AGENT_RUNTIME_OK",
+  "schema": 1,
+  "sdkInputs": "reference/sdk-inputs.tsv",
+  "slug": "passkit-swiftui",
+  "symbolCount": 4009,
+  "symbolGraph": "reference/symbol-graphs.json",
+  "tbdExports": "reference/tbd-exports.tsv"
+}

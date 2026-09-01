@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CoreMediaIO.symbols.json",
+      "relationshipCount": 0,
+      "sha256": "b73ccf409a5239f948caeaf9f4acae4f9bef43b957a10b807c6734f9d083f46e",
+      "symbolCount": 0
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CoreMediaIO",
+  "relationshipCount": 0,
+  "schema": 1,
+  "symbolCount": 0,
+  "target": "arm64-apple-ios26.0"
+}

@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/DeveloperToolsSupport.symbols.json",
+      "relationshipCount": 64,
+      "sha256": "79b58228a77b567168caf18684a66a06fbb708ca083098ee7e03ed1a4dc6669d",
+      "symbolCount": 59
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "DeveloperToolsSupport",
+  "relationshipCount": 64,
+  "schema": 1,
+  "symbolCount": 59,
+  "target": "arm64-apple-ios26.0"
+}

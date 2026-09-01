@@ -1,0 +1,55 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 17,
+  "duplicateOccurrenceCount": 17,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/MapKit.symbols.json",
+      "relationshipCount": 2213,
+      "sha256": "3606a4d8b55f78d5d8923ffd1a59e370ff196b2a1188956864886cc1061f7a47",
+      "symbolCount": 1161
+    },
+    {
+      "path": "reference/symbol-graphs/MapKit@Foundation.symbols.json",
+      "relationshipCount": 8,
+      "sha256": "191110a32a4a88c19a6fd594689e7377de1122d7f2eaa5329923b3729bc16f79",
+      "symbolCount": 8
+    },
+    {
+      "path": "reference/symbol-graphs/MapKit@GeoToolbox.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "95a407e74308fdd8525747d0ebb4515bdef76094dc967d2eccddd995d8abf12a",
+      "symbolCount": 1
+    },
+    {
+      "path": "reference/symbol-graphs/_MapKit_SwiftUI@MapKit.symbols.json",
+      "relationshipCount": 8314,
+      "sha256": "fe24fd5dbb5496dfc47c21188df391d5157f81d761ceab768b721b87dad89fab",
+      "symbolCount": 8271
+    },
+    {
+      "path": "reference/symbol-graphs/_MapKit_SwiftUI@Swift.symbols.json",
+      "relationshipCount": 35,
+      "sha256": "ad603555e9be23b8a757d87c7415153b3a1d670c4c58bde0bd4f971e90bbd2b0",
+      "symbolCount": 26
+    },
+    {
+      "path": "reference/symbol-graphs/_MapKit_SwiftUI@SwiftUICore.symbols.json",
+      "relationshipCount": 70,
+      "sha256": "3f268136c482ee4255a627970d123cdff17f7d1b4a7b746c9eeb555b91bed140",
+      "symbolCount": 58
+    },
+    {
+      "path": "reference/symbol-graphs/_MapKit_SwiftUI@_LocationEssentials.symbols.json",
+      "relationshipCount": 4,
+      "sha256": "3302d5496c1f82155e16d3e15083f864240cad4a984df2671f4da8e8ea730632",
+      "symbolCount": 2
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "MapKit",
+  "relationshipCount": 10645,
+  "schema": 1,
+  "symbolCount": 9510,
+  "target": "arm64-apple-ios26.0"
+}

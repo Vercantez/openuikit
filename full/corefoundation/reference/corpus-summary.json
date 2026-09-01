@@ -1,0 +1,76 @@
+{
+  "module": "CoreFoundation",
+  "moduleRecord": {
+    "app_coverage_count": 5,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 7,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 54,
+    "iphoneos_runtime_focus_launch_build_rank": 54,
+    "module": "CoreFoundation",
+    "occurrence_count": 7,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "a3d074ba4f8d33f0328665d01d8154ce1d1048a20c3dcabaae400c1302dd41b6",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "submodules/AsyncDisplayKit/Source/PublicHeaders/AsyncDisplayKit/ASAvailability.h",
+          "submodules/Reachability/LegacyReachability/Sources/LegacyReachability.m"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "55962055c628879a8cffabac0c6e74650df94c435bd68b1972874086d1e9107b",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "BrowserKit/Sources/MenuKit/MainMenuHelper.swift"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "a5fc8e54cbe8a59258e18fc84594920196192b37e14ace0983c7694339fa1a3c",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "KDS/Sources/KDS/Spacing/CoreSpacing.swift",
+          "KDS/Sources/KDS/Spacing/Dimension.swift"
+        ]
+      },
+      "simplenote-ios": {
+        "evidence_sha256": "8191e74d2bd4d009603cd0e91d9bee5cf543528563eaafedf11d605f27388921",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Simplenote/Classes/SPTextView.m"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "b51aaf0e5e0e47da5b2ed6ea5140bc2ac8334e03ae96ad87a1965d0d3d0c964d",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/Helpers/Network/Reachability.m"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 54,
+    "byFocusLaunchBuildRelevance": 54
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

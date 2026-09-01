@@ -1,0 +1,37 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/SwiftUICore.symbols.json",
+      "relationshipCount": 16711,
+      "sha256": "e39b77180621606feb48c187357d3c6b48f9637abe734986a924a1ff0f28b61e",
+      "symbolCount": 15395
+    },
+    {
+      "path": "reference/symbol-graphs/SwiftUICore@CoreFoundation.symbols.json",
+      "relationshipCount": 28,
+      "sha256": "c6010ef3b01c36985a938b2f294c68d355bd97f63e7fa22a4020c8d12bb01ac3",
+      "symbolCount": 14
+    },
+    {
+      "path": "reference/symbol-graphs/SwiftUICore@Foundation.symbols.json",
+      "relationshipCount": 222,
+      "sha256": "148feb5ccb53523ce2aded71f6aacc46e313dafab7524cfed2f34c24c0963a8b",
+      "symbolCount": 109
+    },
+    {
+      "path": "reference/symbol-graphs/SwiftUICore@Swift.symbols.json",
+      "relationshipCount": 1304,
+      "sha256": "d61634591bf07d9e12634f0674e156ca758d400b17cd8014f3ae4e6839e0fdff",
+      "symbolCount": 1252
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "SwiftUICore",
+  "relationshipCount": 18265,
+  "schema": 1,
+  "symbolCount": 16770,
+  "target": "arm64-apple-ios26.0"
+}

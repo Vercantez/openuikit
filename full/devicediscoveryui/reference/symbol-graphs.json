@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/DeviceDiscoveryUI.symbols.json",
+      "relationshipCount": 50,
+      "sha256": "447f1d9af451cb3965d6ba766c522dac40c2519180fe40882e40a8e299eb8fe8",
+      "symbolCount": 12
+    },
+    {
+      "path": "reference/symbol-graphs/_DeviceDiscoveryUI_SwiftUI@DeviceDiscoveryUI.symbols.json",
+      "relationshipCount": 1550,
+      "sha256": "b387959562127073736f3c5c062686ae7f2ea0d1760be2b0eb37646380caa439",
+      "symbolCount": 1544
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "DeviceDiscoveryUI",
+  "relationshipCount": 1600,
+  "schema": 1,
+  "symbolCount": 1556,
+  "target": "arm64-apple-ios26.0"
+}

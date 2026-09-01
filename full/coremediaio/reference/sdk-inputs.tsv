@@ -1,0 +1,4 @@
+category	sdkRelativePath	size	sha256
+tbd	System/Library/Frameworks/CoreMediaIO.framework/CoreMediaIO.tbd	10573	f1e98bbf6cfae48e1a75cf572102f1ffc63c7a208347e493769ee6b266a2b755
+header	System/Library/Frameworks/CoreMediaIO.framework/Headers/CoreMediaIO.apinotes	26	e6444342845a6036eb7ce4221a00b613dc897bb339350d8a6fa65a8683bee60d
+modulemap	System/Library/Frameworks/CoreMediaIO.framework/Modules/module.modulemap	52	29c64609f015ee5668f44289495b981be1d072819e571007be6e45d1efa36737

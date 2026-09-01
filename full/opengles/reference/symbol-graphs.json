@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/OpenGLES.symbols.json",
+      "relationshipCount": 44,
+      "sha256": "878ba4311d9389a6c058bfd33819f9e2bab623bd258f057bd20b59e8ecb44d1f",
+      "symbolCount": 1587
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "OpenGLES",
+  "relationshipCount": 44,
+  "schema": 1,
+  "symbolCount": 1587,
+  "target": "arm64-apple-ios26.0"
+}

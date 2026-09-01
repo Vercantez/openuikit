@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/AdSupport.symbols.json",
+      "relationshipCount": 10,
+      "sha256": "091784b6f2b6c8b08d3d8d35efdb9ad11aab7483941b284c76011a1a514a99d0",
+      "symbolCount": 4
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "AdSupport",
+  "relationshipCount": 10,
+  "schema": 1,
+  "symbolCount": 4,
+  "target": "arm64-apple-ios26.0"
+}

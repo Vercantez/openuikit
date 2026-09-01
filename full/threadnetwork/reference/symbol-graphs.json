@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 9,
+  "duplicateOccurrenceCount": 9,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/ThreadNetwork.symbols.json",
+      "relationshipCount": 47,
+      "sha256": "4f80b95cb31d98e99dd97537127514ae2ad0b0987986e077b55a11dcba143989",
+      "symbolCount": 32
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "ThreadNetwork",
+  "relationshipCount": 47,
+  "schema": 1,
+  "symbolCount": 23,
+  "target": "arm64-apple-ios26.0"
+}

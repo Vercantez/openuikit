@@ -1,0 +1,53 @@
+{
+  "module": "AddressBook",
+  "moduleRecord": {
+    "app_coverage_count": 2,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 5,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 88,
+    "iphoneos_runtime_focus_launch_build_rank": 80,
+    "module": "AddressBook",
+    "occurrence_count": 5,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "592abc793d27f46e6b6f121a5e36bfec65b41c2bf569c4e2822b9ead5568c009",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "submodules/ShareItems/Impl/Sources/TGItemProviderSignals.m",
+          "submodules/Stripe/PublicHeaders/Stripe/STPAddress.h",
+          "submodules/Stripe/Sources/STPAPIClient+ApplePay.m",
+          "submodules/TelegramStringFormatting/Sources/ContactInfoStrings.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "2923726296e7a47cb9f300e3993d0d527ff9cb718e5d06797bc337bff698a552",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Riot/Modules/MatrixKit/Models/Contact/MXKContact.h"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 88,
+    "byFocusLaunchBuildRelevance": 80
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

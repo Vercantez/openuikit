@@ -1,0 +1,299 @@
+precise	kind	title	path	declaration
+c:@E@IOSurfaceComponentName	swift.enum	IOSurfaceComponentName	IOSurfaceComponentName	enum IOSurfaceComponentName
+c:@E@IOSurfaceComponentName@kIOSurfaceComponentNameAlpha	swift.enum.case	IOSurfaceComponentName.alpha	IOSurfaceComponentName.alpha	case alpha
+c:@E@IOSurfaceComponentName@kIOSurfaceComponentNameBlue	swift.enum.case	IOSurfaceComponentName.blue	IOSurfaceComponentName.blue	case blue
+c:@E@IOSurfaceComponentName@kIOSurfaceComponentNameChromaBlue	swift.enum.case	IOSurfaceComponentName.chromaBlue	IOSurfaceComponentName.chromaBlue	case chromaBlue
+c:@E@IOSurfaceComponentName@kIOSurfaceComponentNameChromaRed	swift.enum.case	IOSurfaceComponentName.chromaRed	IOSurfaceComponentName.chromaRed	case chromaRed
+c:@E@IOSurfaceComponentName@kIOSurfaceComponentNameGreen	swift.enum.case	IOSurfaceComponentName.green	IOSurfaceComponentName.green	case green
+c:@E@IOSurfaceComponentName@kIOSurfaceComponentNameLuma	swift.enum.case	IOSurfaceComponentName.luma	IOSurfaceComponentName.luma	case luma
+c:@E@IOSurfaceComponentName@kIOSurfaceComponentNameRed	swift.enum.case	IOSurfaceComponentName.red	IOSurfaceComponentName.red	case red
+c:@E@IOSurfaceComponentName@kIOSurfaceComponentNameUnknown	swift.enum.case	IOSurfaceComponentName.unknown	IOSurfaceComponentName.unknown	case unknown
+c:@E@IOSurfaceComponentRange	swift.enum	IOSurfaceComponentRange	IOSurfaceComponentRange	enum IOSurfaceComponentRange
+c:@E@IOSurfaceComponentRange@kIOSurfaceComponentRangeFullRange	swift.enum.case	IOSurfaceComponentRange.fullRange	IOSurfaceComponentRange.fullRange	case fullRange
+c:@E@IOSurfaceComponentRange@kIOSurfaceComponentRangeUnknown	swift.enum.case	IOSurfaceComponentRange.unknown	IOSurfaceComponentRange.unknown	case unknown
+c:@E@IOSurfaceComponentRange@kIOSurfaceComponentRangeVideoRange	swift.enum.case	IOSurfaceComponentRange.videoRange	IOSurfaceComponentRange.videoRange	case videoRange
+c:@E@IOSurfaceComponentRange@kIOSurfaceComponentRangeWideRange	swift.enum.case	IOSurfaceComponentRange.wideRange	IOSurfaceComponentRange.wideRange	case wideRange
+c:@E@IOSurfaceComponentType	swift.enum	IOSurfaceComponentType	IOSurfaceComponentType	enum IOSurfaceComponentType
+c:@E@IOSurfaceComponentType@kIOSurfaceComponentTypeFloat	swift.enum.case	IOSurfaceComponentType.float	IOSurfaceComponentType.float	case float
+c:@E@IOSurfaceComponentType@kIOSurfaceComponentTypeSignedInteger	swift.enum.case	IOSurfaceComponentType.signedInteger	IOSurfaceComponentType.signedInteger	case signedInteger
+c:@E@IOSurfaceComponentType@kIOSurfaceComponentTypeSignedNormalized	swift.enum.case	IOSurfaceComponentType.signedNormalized	IOSurfaceComponentType.signedNormalized	case signedNormalized
+c:@E@IOSurfaceComponentType@kIOSurfaceComponentTypeUnknown	swift.enum.case	IOSurfaceComponentType.unknown	IOSurfaceComponentType.unknown	case unknown
+c:@E@IOSurfaceComponentType@kIOSurfaceComponentTypeUnsignedInteger	swift.enum.case	IOSurfaceComponentType.unsignedInteger	IOSurfaceComponentType.unsignedInteger	case unsignedInteger
+c:@E@IOSurfaceLockOptions	swift.struct	IOSurfaceLockOptions	IOSurfaceLockOptions	struct IOSurfaceLockOptions
+c:@E@IOSurfaceLockOptions@kIOSurfaceLockAvoidSync	swift.type.property	avoidSync	IOSurfaceLockOptions.avoidSync	static var avoidSync: IOSurfaceLockOptions { get }
+c:@E@IOSurfaceLockOptions@kIOSurfaceLockReadOnly	swift.type.property	readOnly	IOSurfaceLockOptions.readOnly	static var readOnly: IOSurfaceLockOptions { get }
+c:@E@IOSurfaceMemoryLedgerFlags	swift.struct	IOSurfaceMemoryLedgerFlags	IOSurfaceMemoryLedgerFlags	struct IOSurfaceMemoryLedgerFlags
+c:@E@IOSurfaceMemoryLedgerFlags@kIOSurfaceMemoryLedgerFlagNoFootprint	swift.type.property	noFootprint	IOSurfaceMemoryLedgerFlags.noFootprint	static var noFootprint: IOSurfaceMemoryLedgerFlags { get }
+c:@E@IOSurfaceMemoryLedgerTags	swift.enum	IOSurfaceMemoryLedgerTags	IOSurfaceMemoryLedgerTags	enum IOSurfaceMemoryLedgerTags
+c:@E@IOSurfaceMemoryLedgerTags@kIOSurfaceMemoryLedgerTagDefault	swift.enum.case	IOSurfaceMemoryLedgerTags.default	IOSurfaceMemoryLedgerTags.default	case `default`
+c:@E@IOSurfaceMemoryLedgerTags@kIOSurfaceMemoryLedgerTagGraphics	swift.enum.case	IOSurfaceMemoryLedgerTags.graphics	IOSurfaceMemoryLedgerTags.graphics	case graphics
+c:@E@IOSurfaceMemoryLedgerTags@kIOSurfaceMemoryLedgerTagMedia	swift.enum.case	IOSurfaceMemoryLedgerTags.media	IOSurfaceMemoryLedgerTags.media	case media
+c:@E@IOSurfaceMemoryLedgerTags@kIOSurfaceMemoryLedgerTagNetwork	swift.enum.case	IOSurfaceMemoryLedgerTags.network	IOSurfaceMemoryLedgerTags.network	case network
+c:@E@IOSurfaceMemoryLedgerTags@kIOSurfaceMemoryLedgerTagNeural	swift.enum.case	IOSurfaceMemoryLedgerTags.neural	IOSurfaceMemoryLedgerTags.neural	case neural
+c:@E@IOSurfacePurgeabilityState	swift.struct	IOSurfacePurgeabilityState	IOSurfacePurgeabilityState	struct IOSurfacePurgeabilityState
+c:@E@IOSurfacePurgeabilityState@kIOSurfacePurgeableEmpty	swift.type.property	purgeableEmpty	IOSurfacePurgeabilityState.purgeableEmpty	static var purgeableEmpty: IOSurfacePurgeabilityState { get }
+c:@E@IOSurfacePurgeabilityState@kIOSurfacePurgeableKeepCurrent	swift.type.property	purgeableKeepCurrent	IOSurfacePurgeabilityState.purgeableKeepCurrent	static var purgeableKeepCurrent: IOSurfacePurgeabilityState { get }
+c:@E@IOSurfacePurgeabilityState@kIOSurfacePurgeableVolatile	swift.type.property	purgeableVolatile	IOSurfacePurgeabilityState.purgeableVolatile	static var purgeableVolatile: IOSurfacePurgeabilityState { get }
+c:@E@IOSurfaceSubsampling	swift.enum	IOSurfaceSubsampling	IOSurfaceSubsampling	enum IOSurfaceSubsampling
+c:@E@IOSurfaceSubsampling@kIOSurfaceSubsampling411	swift.enum.case	IOSurfaceSubsampling.subsampling411	IOSurfaceSubsampling.subsampling411	case subsampling411
+c:@E@IOSurfaceSubsampling@kIOSurfaceSubsampling420	swift.enum.case	IOSurfaceSubsampling.subsampling420	IOSurfaceSubsampling.subsampling420	case subsampling420
+c:@E@IOSurfaceSubsampling@kIOSurfaceSubsampling422	swift.enum.case	IOSurfaceSubsampling.subsampling422	IOSurfaceSubsampling.subsampling422	case subsampling422
+c:@E@IOSurfaceSubsampling@kIOSurfaceSubsamplingNone	swift.enum.case	IOSurfaceSubsampling.subsamplingNone	IOSurfaceSubsampling.subsamplingNone	case subsamplingNone
+c:@E@IOSurfaceSubsampling@kIOSurfaceSubsamplingUnknown	swift.enum.case	IOSurfaceSubsampling.subsamplingUnknown	IOSurfaceSubsampling.subsamplingUnknown	case subsamplingUnknown
+c:@Ea@kIOSurfaceDefaultCache@kIOSurfaceCopybackCache	swift.var	kIOSurfaceCopybackCache	kIOSurfaceCopybackCache	var kIOSurfaceCopybackCache: Int { get }
+c:@Ea@kIOSurfaceDefaultCache@kIOSurfaceCopybackInnerCache	swift.var	kIOSurfaceCopybackInnerCache	kIOSurfaceCopybackInnerCache	var kIOSurfaceCopybackInnerCache: Int { get }
+c:@Ea@kIOSurfaceDefaultCache@kIOSurfaceDefaultCache	swift.var	kIOSurfaceDefaultCache	kIOSurfaceDefaultCache	var kIOSurfaceDefaultCache: Int { get }
+c:@Ea@kIOSurfaceDefaultCache@kIOSurfaceInhibitCache	swift.var	kIOSurfaceInhibitCache	kIOSurfaceInhibitCache	var kIOSurfaceInhibitCache: Int { get }
+c:@Ea@kIOSurfaceDefaultCache@kIOSurfaceWriteCombineCache	swift.var	kIOSurfaceWriteCombineCache	kIOSurfaceWriteCombineCache	var kIOSurfaceWriteCombineCache: Int { get }
+c:@Ea@kIOSurfaceDefaultCache@kIOSurfaceWriteThruCache	swift.var	kIOSurfaceWriteThruCache	kIOSurfaceWriteThruCache	var kIOSurfaceWriteThruCache: Int { get }
+c:@Ea@kIOSurfaceMapCacheShift@kIOSurfaceMapCacheShift	swift.var	kIOSurfaceMapCacheShift	kIOSurfaceMapCacheShift	var kIOSurfaceMapCacheShift: Int { get }
+c:@Ea@kIOSurfaceMapCacheShift@kIOSurfaceMapCopybackCache	swift.var	kIOSurfaceMapCopybackCache	kIOSurfaceMapCopybackCache	var kIOSurfaceMapCopybackCache: Int { get }
+c:@Ea@kIOSurfaceMapCacheShift@kIOSurfaceMapCopybackInnerCache	swift.var	kIOSurfaceMapCopybackInnerCache	kIOSurfaceMapCopybackInnerCache	var kIOSurfaceMapCopybackInnerCache: Int { get }
+c:@Ea@kIOSurfaceMapCacheShift@kIOSurfaceMapDefaultCache	swift.var	kIOSurfaceMapDefaultCache	kIOSurfaceMapDefaultCache	var kIOSurfaceMapDefaultCache: Int { get }
+c:@Ea@kIOSurfaceMapCacheShift@kIOSurfaceMapInhibitCache	swift.var	kIOSurfaceMapInhibitCache	kIOSurfaceMapInhibitCache	var kIOSurfaceMapInhibitCache: Int { get }
+c:@Ea@kIOSurfaceMapCacheShift@kIOSurfaceMapWriteCombineCache	swift.var	kIOSurfaceMapWriteCombineCache	kIOSurfaceMapWriteCombineCache	var kIOSurfaceMapWriteCombineCache: Int { get }
+c:@Ea@kIOSurfaceMapCacheShift@kIOSurfaceMapWriteThruCache	swift.var	kIOSurfaceMapWriteThruCache	kIOSurfaceMapWriteThruCache	var kIOSurfaceMapWriteThruCache: Int { get }
+c:@F@IOSurfaceAlignProperty	swift.func	IOSurfaceAlignProperty(_:_:)	IOSurfaceAlignProperty(_:_:)	func IOSurfaceAlignProperty(_ property: CFString, _ value: Int) -> Int
+c:@F@IOSurfaceAllowsPixelSizeCasting	swift.func	IOSurfaceAllowsPixelSizeCasting(_:)	IOSurfaceAllowsPixelSizeCasting(_:)	func IOSurfaceAllowsPixelSizeCasting(_ buffer: IOSurfaceRef) -> Bool
+c:@F@IOSurfaceCopyAllValues	swift.func	IOSurfaceCopyAllValues(_:)	IOSurfaceCopyAllValues(_:)	func IOSurfaceCopyAllValues(_ buffer: IOSurfaceRef) -> CFDictionary?
+c:@F@IOSurfaceCopyValue	swift.func	IOSurfaceCopyValue(_:_:)	IOSurfaceCopyValue(_:_:)	func IOSurfaceCopyValue(_ buffer: IOSurfaceRef, _ key: CFString) -> CFTypeRef?
+c:@F@IOSurfaceCreate	swift.func	IOSurfaceCreate(_:)	IOSurfaceCreate(_:)	func IOSurfaceCreate(_ properties: CFDictionary) -> IOSurfaceRef?
+c:@F@IOSurfaceCreateMachPort	swift.func	IOSurfaceCreateMachPort(_:)	IOSurfaceCreateMachPort(_:)	func IOSurfaceCreateMachPort(_ buffer: IOSurfaceRef) -> mach_port_t
+c:@F@IOSurfaceDecrementUseCount	swift.func	IOSurfaceDecrementUseCount(_:)	IOSurfaceDecrementUseCount(_:)	func IOSurfaceDecrementUseCount(_ buffer: IOSurfaceRef)
+c:@F@IOSurfaceGetAllocSize	swift.func	IOSurfaceGetAllocSize(_:)	IOSurfaceGetAllocSize(_:)	func IOSurfaceGetAllocSize(_ buffer: IOSurfaceRef) -> Int
+c:@F@IOSurfaceGetBaseAddress	swift.func	IOSurfaceGetBaseAddress(_:)	IOSurfaceGetBaseAddress(_:)	func IOSurfaceGetBaseAddress(_ buffer: IOSurfaceRef) -> UnsafeMutableRawPointer
+c:@F@IOSurfaceGetBaseAddressOfPlane	swift.func	IOSurfaceGetBaseAddressOfPlane(_:_:)	IOSurfaceGetBaseAddressOfPlane(_:_:)	func IOSurfaceGetBaseAddressOfPlane(_ buffer: IOSurfaceRef, _ planeIndex: Int) -> UnsafeMutableRawPointer
+c:@F@IOSurfaceGetBitDepthOfComponentOfPlane	swift.func	IOSurfaceGetBitDepthOfComponentOfPlane(_:_:_:)	IOSurfaceGetBitDepthOfComponentOfPlane(_:_:_:)	func IOSurfaceGetBitDepthOfComponentOfPlane(_ buffer: IOSurfaceRef, _ planeIndex: Int, _ componentIndex: Int) -> Int
+c:@F@IOSurfaceGetBitOffsetOfComponentOfPlane	swift.func	IOSurfaceGetBitOffsetOfComponentOfPlane(_:_:_:)	IOSurfaceGetBitOffsetOfComponentOfPlane(_:_:_:)	func IOSurfaceGetBitOffsetOfComponentOfPlane(_ buffer: IOSurfaceRef, _ planeIndex: Int, _ componentIndex: Int) -> Int
+c:@F@IOSurfaceGetBytesPerElement	swift.func	IOSurfaceGetBytesPerElement(_:)	IOSurfaceGetBytesPerElement(_:)	func IOSurfaceGetBytesPerElement(_ buffer: IOSurfaceRef) -> Int
+c:@F@IOSurfaceGetBytesPerElementOfPlane	swift.func	IOSurfaceGetBytesPerElementOfPlane(_:_:)	IOSurfaceGetBytesPerElementOfPlane(_:_:)	func IOSurfaceGetBytesPerElementOfPlane(_ buffer: IOSurfaceRef, _ planeIndex: Int) -> Int
+c:@F@IOSurfaceGetBytesPerRow	swift.func	IOSurfaceGetBytesPerRow(_:)	IOSurfaceGetBytesPerRow(_:)	func IOSurfaceGetBytesPerRow(_ buffer: IOSurfaceRef) -> Int
+c:@F@IOSurfaceGetBytesPerRowOfPlane	swift.func	IOSurfaceGetBytesPerRowOfPlane(_:_:)	IOSurfaceGetBytesPerRowOfPlane(_:_:)	func IOSurfaceGetBytesPerRowOfPlane(_ buffer: IOSurfaceRef, _ planeIndex: Int) -> Int
+c:@F@IOSurfaceGetElementHeight	swift.func	IOSurfaceGetElementHeight(_:)	IOSurfaceGetElementHeight(_:)	func IOSurfaceGetElementHeight(_ buffer: IOSurfaceRef) -> Int
+c:@F@IOSurfaceGetElementHeightOfPlane	swift.func	IOSurfaceGetElementHeightOfPlane(_:_:)	IOSurfaceGetElementHeightOfPlane(_:_:)	func IOSurfaceGetElementHeightOfPlane(_ buffer: IOSurfaceRef, _ planeIndex: Int) -> Int
+c:@F@IOSurfaceGetElementWidth	swift.func	IOSurfaceGetElementWidth(_:)	IOSurfaceGetElementWidth(_:)	func IOSurfaceGetElementWidth(_ buffer: IOSurfaceRef) -> Int
+c:@F@IOSurfaceGetElementWidthOfPlane	swift.func	IOSurfaceGetElementWidthOfPlane(_:_:)	IOSurfaceGetElementWidthOfPlane(_:_:)	func IOSurfaceGetElementWidthOfPlane(_ buffer: IOSurfaceRef, _ planeIndex: Int) -> Int
+c:@F@IOSurfaceGetHeight	swift.func	IOSurfaceGetHeight(_:)	IOSurfaceGetHeight(_:)	func IOSurfaceGetHeight(_ buffer: IOSurfaceRef) -> Int
+c:@F@IOSurfaceGetHeightOfPlane	swift.func	IOSurfaceGetHeightOfPlane(_:_:)	IOSurfaceGetHeightOfPlane(_:_:)	func IOSurfaceGetHeightOfPlane(_ buffer: IOSurfaceRef, _ planeIndex: Int) -> Int
+c:@F@IOSurfaceGetID	swift.func	IOSurfaceGetID(_:)	IOSurfaceGetID(_:)	func IOSurfaceGetID(_ buffer: IOSurfaceRef) -> IOSurfaceID
+c:@F@IOSurfaceGetNameOfComponentOfPlane	swift.func	IOSurfaceGetNameOfComponentOfPlane(_:_:_:)	IOSurfaceGetNameOfComponentOfPlane(_:_:_:)	func IOSurfaceGetNameOfComponentOfPlane(_ buffer: IOSurfaceRef, _ planeIndex: Int, _ componentIndex: Int) -> IOSurfaceComponentName
+c:@F@IOSurfaceGetNumberOfComponentsOfPlane	swift.func	IOSurfaceGetNumberOfComponentsOfPlane(_:_:)	IOSurfaceGetNumberOfComponentsOfPlane(_:_:)	func IOSurfaceGetNumberOfComponentsOfPlane(_ buffer: IOSurfaceRef, _ planeIndex: Int) -> Int
+c:@F@IOSurfaceGetPixelFormat	swift.func	IOSurfaceGetPixelFormat(_:)	IOSurfaceGetPixelFormat(_:)	func IOSurfaceGetPixelFormat(_ buffer: IOSurfaceRef) -> OSType
+c:@F@IOSurfaceGetPlaneCount	swift.func	IOSurfaceGetPlaneCount(_:)	IOSurfaceGetPlaneCount(_:)	func IOSurfaceGetPlaneCount(_ buffer: IOSurfaceRef) -> Int
+c:@F@IOSurfaceGetPropertyAlignment	swift.func	IOSurfaceGetPropertyAlignment(_:)	IOSurfaceGetPropertyAlignment(_:)	func IOSurfaceGetPropertyAlignment(_ property: CFString) -> Int
+c:@F@IOSurfaceGetPropertyMaximum	swift.func	IOSurfaceGetPropertyMaximum(_:)	IOSurfaceGetPropertyMaximum(_:)	func IOSurfaceGetPropertyMaximum(_ property: CFString) -> Int
+c:@F@IOSurfaceGetRangeOfComponentOfPlane	swift.func	IOSurfaceGetRangeOfComponentOfPlane(_:_:_:)	IOSurfaceGetRangeOfComponentOfPlane(_:_:_:)	func IOSurfaceGetRangeOfComponentOfPlane(_ buffer: IOSurfaceRef, _ planeIndex: Int, _ componentIndex: Int) -> IOSurfaceComponentRange
+c:@F@IOSurfaceGetSeed	swift.func	IOSurfaceGetSeed(_:)	IOSurfaceGetSeed(_:)	func IOSurfaceGetSeed(_ buffer: IOSurfaceRef) -> UInt32
+c:@F@IOSurfaceGetSubsampling	swift.func	IOSurfaceGetSubsampling(_:)	IOSurfaceGetSubsampling(_:)	func IOSurfaceGetSubsampling(_ buffer: IOSurfaceRef) -> IOSurfaceSubsampling
+c:@F@IOSurfaceGetTypeID	swift.func	IOSurfaceGetTypeID()	IOSurfaceGetTypeID()	func IOSurfaceGetTypeID() -> CFTypeID
+c:@F@IOSurfaceGetTypeOfComponentOfPlane	swift.func	IOSurfaceGetTypeOfComponentOfPlane(_:_:_:)	IOSurfaceGetTypeOfComponentOfPlane(_:_:_:)	func IOSurfaceGetTypeOfComponentOfPlane(_ buffer: IOSurfaceRef, _ planeIndex: Int, _ componentIndex: Int) -> IOSurfaceComponentType
+c:@F@IOSurfaceGetUseCount	swift.func	IOSurfaceGetUseCount(_:)	IOSurfaceGetUseCount(_:)	func IOSurfaceGetUseCount(_ buffer: IOSurfaceRef) -> Int32
+c:@F@IOSurfaceGetWidth	swift.func	IOSurfaceGetWidth(_:)	IOSurfaceGetWidth(_:)	func IOSurfaceGetWidth(_ buffer: IOSurfaceRef) -> Int
+c:@F@IOSurfaceGetWidthOfPlane	swift.func	IOSurfaceGetWidthOfPlane(_:_:)	IOSurfaceGetWidthOfPlane(_:_:)	func IOSurfaceGetWidthOfPlane(_ buffer: IOSurfaceRef, _ planeIndex: Int) -> Int
+c:@F@IOSurfaceIncrementUseCount	swift.func	IOSurfaceIncrementUseCount(_:)	IOSurfaceIncrementUseCount(_:)	func IOSurfaceIncrementUseCount(_ buffer: IOSurfaceRef)
+c:@F@IOSurfaceIsInUse	swift.func	IOSurfaceIsInUse(_:)	IOSurfaceIsInUse(_:)	func IOSurfaceIsInUse(_ buffer: IOSurfaceRef) -> Bool
+c:@F@IOSurfaceLock	swift.func	IOSurfaceLock(_:_:_:)	IOSurfaceLock(_:_:_:)	func IOSurfaceLock(_ buffer: IOSurfaceRef, _ options: IOSurfaceLockOptions, _ seed: UnsafeMutablePointer<UInt32>?) -> kern_return_t
+c:@F@IOSurfaceLookup	swift.func	IOSurfaceLookup(_:)	IOSurfaceLookup(_:)	func IOSurfaceLookup(_ csid: IOSurfaceID) -> IOSurfaceRef?
+c:@F@IOSurfaceLookupFromMachPort	swift.func	IOSurfaceLookupFromMachPort(_:)	IOSurfaceLookupFromMachPort(_:)	func IOSurfaceLookupFromMachPort(_ port: mach_port_t) -> IOSurfaceRef?
+c:@F@IOSurfaceRemoveAllValues	swift.func	IOSurfaceRemoveAllValues(_:)	IOSurfaceRemoveAllValues(_:)	func IOSurfaceRemoveAllValues(_ buffer: IOSurfaceRef)
+c:@F@IOSurfaceRemoveValue	swift.func	IOSurfaceRemoveValue(_:_:)	IOSurfaceRemoveValue(_:_:)	func IOSurfaceRemoveValue(_ buffer: IOSurfaceRef, _ key: CFString)
+c:@F@IOSurfaceSetOwnershipIdentity	swift.func	IOSurfaceSetOwnershipIdentity(_:_:_:_:)	IOSurfaceSetOwnershipIdentity(_:_:_:_:)	func IOSurfaceSetOwnershipIdentity(_ buffer: IOSurfaceRef, _ task_id_token: task_id_token_t, _ newLedgerTag: Int32, _ newLedgerOptions: UInt32) -> kern_return_t
+c:@F@IOSurfaceSetPurgeable	swift.func	IOSurfaceSetPurgeable(_:_:_:)	IOSurfaceSetPurgeable(_:_:_:)	func IOSurfaceSetPurgeable(_ buffer: IOSurfaceRef, _ newState: UInt32, _ oldState: UnsafeMutablePointer<UInt32>?) -> kern_return_t
+c:@F@IOSurfaceSetValue	swift.func	IOSurfaceSetValue(_:_:_:)	IOSurfaceSetValue(_:_:_:)	func IOSurfaceSetValue(_ buffer: IOSurfaceRef, _ key: CFString, _ value: CFTypeRef)
+c:@F@IOSurfaceSetValues	swift.func	IOSurfaceSetValues(_:_:)	IOSurfaceSetValues(_:_:)	func IOSurfaceSetValues(_ buffer: IOSurfaceRef, _ keysAndValues: CFDictionary)
+c:@F@IOSurfaceUnlock	swift.func	IOSurfaceUnlock(_:_:_:)	IOSurfaceUnlock(_:_:_:)	func IOSurfaceUnlock(_ buffer: IOSurfaceRef, _ options: IOSurfaceLockOptions, _ seed: UnsafeMutablePointer<UInt32>?) -> kern_return_t
+c:@F@_IOSurfaceObjToRef	swift.init	init(_:)	IOSurfaceRef.init(_:)	init(_ obj: IOSurface)
+c:@F@_IOSurfaceRefToObj	swift.init	init(_:)	IOSurface.init(_:)	init(_ ref: IOSurfaceRef)
+c:@IOSurfacePropertyAllocSizeKey	swift.type.property	allocSizeKey	IOSurfacePropertyKey.allocSizeKey	static let allocSizeKey: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyAllocSize	swift.type.property	allocSize	IOSurfacePropertyKey.allocSize	static let allocSize: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyBytesPerElement	swift.type.property	bytesPerElement	IOSurfacePropertyKey.bytesPerElement	static let bytesPerElement: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyBytesPerRow	swift.type.property	bytesPerRow	IOSurfacePropertyKey.bytesPerRow	static let bytesPerRow: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyCacheMode	swift.type.property	cacheMode	IOSurfacePropertyKey.cacheMode	static let cacheMode: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyElementHeight	swift.type.property	elementHeight	IOSurfacePropertyKey.elementHeight	static let elementHeight: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyElementWidth	swift.type.property	elementWidth	IOSurfacePropertyKey.elementWidth	static let elementWidth: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyHeight	swift.type.property	height	IOSurfacePropertyKey.height	static let height: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyName	swift.type.property	name	IOSurfacePropertyKey.name	static let name: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyOffset	swift.type.property	offset	IOSurfacePropertyKey.offset	static let offset: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyPixelFormat	swift.type.property	pixelFormat	IOSurfacePropertyKey.pixelFormat	static let pixelFormat: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyPixelSizeCastingAllowed	swift.type.property	pixelSizeCastingAllowed	IOSurfacePropertyKey.pixelSizeCastingAllowed	static let pixelSizeCastingAllowed: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyPlaneBase	swift.type.property	planeBase	IOSurfacePropertyKey.planeBase	static let planeBase: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyPlaneBytesPerElement	swift.type.property	planeBytesPerElement	IOSurfacePropertyKey.planeBytesPerElement	static let planeBytesPerElement: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyPlaneBytesPerRow	swift.type.property	planeBytesPerRow	IOSurfacePropertyKey.planeBytesPerRow	static let planeBytesPerRow: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyPlaneElementHeight	swift.type.property	planeElementHeight	IOSurfacePropertyKey.planeElementHeight	static let planeElementHeight: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyPlaneElementWidth	swift.type.property	planeElementWidth	IOSurfacePropertyKey.planeElementWidth	static let planeElementWidth: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyPlaneHeight	swift.type.property	planeHeight	IOSurfacePropertyKey.planeHeight	static let planeHeight: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyPlaneInfo	swift.type.property	planeInfo	IOSurfacePropertyKey.planeInfo	static let planeInfo: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyPlaneOffset	swift.type.property	planeOffset	IOSurfacePropertyKey.planeOffset	static let planeOffset: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyPlaneSize	swift.type.property	planeSize	IOSurfacePropertyKey.planeSize	static let planeSize: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyPlaneWidth	swift.type.property	planeWidth	IOSurfacePropertyKey.planeWidth	static let planeWidth: IOSurfacePropertyKey
+c:@IOSurfacePropertyKeyWidth	swift.type.property	width	IOSurfacePropertyKey.width	static let width: IOSurfacePropertyKey
+c:@T@IOSurfaceID	swift.typealias	IOSurfaceID	IOSurfaceID	typealias IOSurfaceID = UInt32
+c:@T@IOSurfacePropertyKey	swift.struct	IOSurfacePropertyKey	IOSurfacePropertyKey	struct IOSurfacePropertyKey
+c:@T@IOSurfaceRef	swift.class	IOSurfaceRef	IOSurfaceRef	class IOSurfaceRef
+c:@kIOSurfaceAllocSize	swift.var	kIOSurfaceAllocSize	kIOSurfaceAllocSize	let kIOSurfaceAllocSize: CFString
+c:@kIOSurfaceBytesPerElement	swift.var	kIOSurfaceBytesPerElement	kIOSurfaceBytesPerElement	let kIOSurfaceBytesPerElement: CFString
+c:@kIOSurfaceBytesPerRow	swift.var	kIOSurfaceBytesPerRow	kIOSurfaceBytesPerRow	let kIOSurfaceBytesPerRow: CFString
+c:@kIOSurfaceCacheMode	swift.var	kIOSurfaceCacheMode	kIOSurfaceCacheMode	let kIOSurfaceCacheMode: CFString
+c:@kIOSurfaceColorSpace	swift.var	kIOSurfaceColorSpace	kIOSurfaceColorSpace	let kIOSurfaceColorSpace: CFString
+c:@kIOSurfaceContentHeadroom	swift.var	kIOSurfaceContentHeadroom	kIOSurfaceContentHeadroom	let kIOSurfaceContentHeadroom: CFString
+c:@kIOSurfaceElementHeight	swift.var	kIOSurfaceElementHeight	kIOSurfaceElementHeight	let kIOSurfaceElementHeight: CFString
+c:@kIOSurfaceElementWidth	swift.var	kIOSurfaceElementWidth	kIOSurfaceElementWidth	let kIOSurfaceElementWidth: CFString
+c:@kIOSurfaceHeight	swift.var	kIOSurfaceHeight	kIOSurfaceHeight	let kIOSurfaceHeight: CFString
+c:@kIOSurfaceICCProfile	swift.var	kIOSurfaceICCProfile	kIOSurfaceICCProfile	let kIOSurfaceICCProfile: CFString
+c:@kIOSurfaceIsGlobal	swift.var	kIOSurfaceIsGlobal	kIOSurfaceIsGlobal	let kIOSurfaceIsGlobal: CFString
+c:@kIOSurfaceName	swift.var	kIOSurfaceName	kIOSurfaceName	let kIOSurfaceName: CFString
+c:@kIOSurfaceOffset	swift.var	kIOSurfaceOffset	kIOSurfaceOffset	let kIOSurfaceOffset: CFString
+c:@kIOSurfacePixelFormat	swift.var	kIOSurfacePixelFormat	kIOSurfacePixelFormat	let kIOSurfacePixelFormat: CFString
+c:@kIOSurfacePixelSizeCastingAllowed	swift.var	kIOSurfacePixelSizeCastingAllowed	kIOSurfacePixelSizeCastingAllowed	let kIOSurfacePixelSizeCastingAllowed: CFString
+c:@kIOSurfacePlaneBase	swift.var	kIOSurfacePlaneBase	kIOSurfacePlaneBase	let kIOSurfacePlaneBase: CFString
+c:@kIOSurfacePlaneBitsPerElement	swift.var	kIOSurfacePlaneBitsPerElement	kIOSurfacePlaneBitsPerElement	let kIOSurfacePlaneBitsPerElement: CFString
+c:@kIOSurfacePlaneBytesPerElement	swift.var	kIOSurfacePlaneBytesPerElement	kIOSurfacePlaneBytesPerElement	let kIOSurfacePlaneBytesPerElement: CFString
+c:@kIOSurfacePlaneBytesPerRow	swift.var	kIOSurfacePlaneBytesPerRow	kIOSurfacePlaneBytesPerRow	let kIOSurfacePlaneBytesPerRow: CFString
+c:@kIOSurfacePlaneComponentBitDepths	swift.var	kIOSurfacePlaneComponentBitDepths	kIOSurfacePlaneComponentBitDepths	let kIOSurfacePlaneComponentBitDepths: CFString
+c:@kIOSurfacePlaneComponentBitOffsets	swift.var	kIOSurfacePlaneComponentBitOffsets	kIOSurfacePlaneComponentBitOffsets	let kIOSurfacePlaneComponentBitOffsets: CFString
+c:@kIOSurfacePlaneComponentNames	swift.var	kIOSurfacePlaneComponentNames	kIOSurfacePlaneComponentNames	let kIOSurfacePlaneComponentNames: CFString
+c:@kIOSurfacePlaneComponentRanges	swift.var	kIOSurfacePlaneComponentRanges	kIOSurfacePlaneComponentRanges	let kIOSurfacePlaneComponentRanges: CFString
+c:@kIOSurfacePlaneComponentTypes	swift.var	kIOSurfacePlaneComponentTypes	kIOSurfacePlaneComponentTypes	let kIOSurfacePlaneComponentTypes: CFString
+c:@kIOSurfacePlaneElementHeight	swift.var	kIOSurfacePlaneElementHeight	kIOSurfacePlaneElementHeight	let kIOSurfacePlaneElementHeight: CFString
+c:@kIOSurfacePlaneElementWidth	swift.var	kIOSurfacePlaneElementWidth	kIOSurfacePlaneElementWidth	let kIOSurfacePlaneElementWidth: CFString
+c:@kIOSurfacePlaneHeight	swift.var	kIOSurfacePlaneHeight	kIOSurfacePlaneHeight	let kIOSurfacePlaneHeight: CFString
+c:@kIOSurfacePlaneInfo	swift.var	kIOSurfacePlaneInfo	kIOSurfacePlaneInfo	let kIOSurfacePlaneInfo: CFString
+c:@kIOSurfacePlaneOffset	swift.var	kIOSurfacePlaneOffset	kIOSurfacePlaneOffset	let kIOSurfacePlaneOffset: CFString
+c:@kIOSurfacePlaneSize	swift.var	kIOSurfacePlaneSize	kIOSurfacePlaneSize	let kIOSurfacePlaneSize: CFString
+c:@kIOSurfacePlaneWidth	swift.var	kIOSurfacePlaneWidth	kIOSurfacePlaneWidth	let kIOSurfacePlaneWidth: CFString
+c:@kIOSurfaceSubsampling	swift.var	kIOSurfaceSubsampling	kIOSurfaceSubsampling	let kIOSurfaceSubsampling: CFString
+c:@kIOSurfaceWidth	swift.var	kIOSurfaceWidth	kIOSurfaceWidth	let kIOSurfaceWidth: CFString
+c:@macro@kIOSurfaceSuccess	swift.var	kIOSurfaceSuccess	kIOSurfaceSuccess	var kIOSurfaceSuccess: Int32 { get }
+c:objc(cs)IOSurface	swift.class	IOSurface	IOSurface	class IOSurface
+c:objc(cs)IOSurface(im)allAttachments	swift.method	allAttachments()	IOSurface.allAttachments()	func allAttachments() -> [String : any Sendable]?
+c:objc(cs)IOSurface(im)attachmentForKey:	swift.method	attachment(forKey:)	IOSurface.attachment(forKey:)	func attachment(forKey key: String) -> (any Sendable)?
+c:objc(cs)IOSurface(im)baseAddressOfPlaneAtIndex:	swift.method	baseAddressOfPlane(at:)	IOSurface.baseAddressOfPlane(at:)	func baseAddressOfPlane(at planeIndex: Int) -> UnsafeMutableRawPointer
+c:objc(cs)IOSurface(im)bytesPerElementOfPlaneAtIndex:	swift.method	bytesPerElementOfPlane(at:)	IOSurface.bytesPerElementOfPlane(at:)	func bytesPerElementOfPlane(at planeIndex: Int) -> Int
+c:objc(cs)IOSurface(im)bytesPerRowOfPlaneAtIndex:	swift.method	bytesPerRowOfPlane(at:)	IOSurface.bytesPerRowOfPlane(at:)	func bytesPerRowOfPlane(at planeIndex: Int) -> Int
+c:objc(cs)IOSurface(im)decrementUseCount	swift.method	decrementUseCount()	IOSurface.decrementUseCount()	func decrementUseCount()
+c:objc(cs)IOSurface(im)elementHeightOfPlaneAtIndex:	swift.method	elementHeightOfPlane(at:)	IOSurface.elementHeightOfPlane(at:)	func elementHeightOfPlane(at planeIndex: Int) -> Int
+c:objc(cs)IOSurface(im)elementWidthOfPlaneAtIndex:	swift.method	elementWidthOfPlane(at:)	IOSurface.elementWidthOfPlane(at:)	func elementWidthOfPlane(at planeIndex: Int) -> Int
+c:objc(cs)IOSurface(im)heightOfPlaneAtIndex:	swift.method	heightOfPlane(at:)	IOSurface.heightOfPlane(at:)	func heightOfPlane(at planeIndex: Int) -> Int
+c:objc(cs)IOSurface(im)incrementUseCount	swift.method	incrementUseCount()	IOSurface.incrementUseCount()	func incrementUseCount()
+c:objc(cs)IOSurface(im)initWithProperties:	swift.init	init(properties:)	IOSurface.init(properties:)	init?(properties: [IOSurfacePropertyKey : any Sendable])
+c:objc(cs)IOSurface(im)lockWithOptions:seed:	swift.method	lock(options:seed:)	IOSurface.lock(options:seed:)	func lock(options: IOSurfaceLockOptions = [], seed: UnsafeMutablePointer<UInt32>?) -> kern_return_t
+c:objc(cs)IOSurface(im)removeAllAttachments	swift.method	removeAllAttachments()	IOSurface.removeAllAttachments()	func removeAllAttachments()
+c:objc(cs)IOSurface(im)removeAttachmentForKey:	swift.method	removeAttachment(forKey:)	IOSurface.removeAttachment(forKey:)	func removeAttachment(forKey key: String)
+c:objc(cs)IOSurface(im)setAllAttachments:	swift.method	setAllAttachments(_:)	IOSurface.setAllAttachments(_:)	func setAllAttachments(_ dict: [String : any Sendable])
+c:objc(cs)IOSurface(im)setAttachment:forKey:	swift.method	setAttachment(_:forKey:)	IOSurface.setAttachment(_:forKey:)	func setAttachment(_ anObject: any Sendable, forKey key: String)
+c:objc(cs)IOSurface(im)setPurgeable:oldState:	swift.method	setPurgeable(_:oldState:)	IOSurface.setPurgeable(_:oldState:)	func setPurgeable(_ newState: IOSurfacePurgeabilityState, oldState: UnsafeMutablePointer<IOSurfacePurgeabilityState>?) -> kern_return_t
+c:objc(cs)IOSurface(im)unlockWithOptions:seed:	swift.method	unlock(options:seed:)	IOSurface.unlock(options:seed:)	func unlock(options: IOSurfaceLockOptions = [], seed: UnsafeMutablePointer<UInt32>?) -> kern_return_t
+c:objc(cs)IOSurface(im)widthOfPlaneAtIndex:	swift.method	widthOfPlane(at:)	IOSurface.widthOfPlane(at:)	func widthOfPlane(at planeIndex: Int) -> Int
+c:objc(cs)IOSurface(py)allocationSize	swift.property	allocationSize	IOSurface.allocationSize	var allocationSize: Int { get }
+c:objc(cs)IOSurface(py)allowsPixelSizeCasting	swift.property	allowsPixelSizeCasting	IOSurface.allowsPixelSizeCasting	var allowsPixelSizeCasting: Bool { get }
+c:objc(cs)IOSurface(py)baseAddress	swift.property	baseAddress	IOSurface.baseAddress	var baseAddress: UnsafeMutableRawPointer { get }
+c:objc(cs)IOSurface(py)bytesPerElement	swift.property	bytesPerElement	IOSurface.bytesPerElement	var bytesPerElement: Int { get }
+c:objc(cs)IOSurface(py)bytesPerRow	swift.property	bytesPerRow	IOSurface.bytesPerRow	var bytesPerRow: Int { get }
+c:objc(cs)IOSurface(py)elementHeight	swift.property	elementHeight	IOSurface.elementHeight	var elementHeight: Int { get }
+c:objc(cs)IOSurface(py)elementWidth	swift.property	elementWidth	IOSurface.elementWidth	var elementWidth: Int { get }
+c:objc(cs)IOSurface(py)height	swift.property	height	IOSurface.height	var height: Int { get }
+c:objc(cs)IOSurface(py)inUse	swift.property	isInUse	IOSurface.isInUse	var isInUse: Bool { get }
+c:objc(cs)IOSurface(py)localUseCount	swift.property	localUseCount	IOSurface.localUseCount	var localUseCount: Int32 { get }
+c:objc(cs)IOSurface(py)pixelFormat	swift.property	pixelFormat	IOSurface.pixelFormat	var pixelFormat: OSType { get }
+c:objc(cs)IOSurface(py)planeCount	swift.property	planeCount	IOSurface.planeCount	var planeCount: Int { get }
+c:objc(cs)IOSurface(py)seed	swift.property	seed	IOSurface.seed	var seed: UInt32 { get }
+c:objc(cs)IOSurface(py)surfaceID	swift.property	surfaceID	IOSurface.surfaceID	var surfaceID: UInt32 { get }
+c:objc(cs)IOSurface(py)width	swift.property	width	IOSurface.width	var width: Int { get }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)IOSurface	swift.init	init(coder:)	IOSurface.init(coder:)	init?(coder: NSCoder)
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@IOSurfaceRef	swift.func.op	==(_:_:)	IOSurfaceRef.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@IOSurfaceRef	swift.method	hash(into:)	IOSurfaceRef.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@IOSurfaceRef	swift.property	hashValue	IOSurfaceRef.hashValue	var hashValue: Int { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@IOSurfaceComponentName	swift.func.op	!=(_:_:)	IOSurfaceComponentName.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@IOSurfaceComponentRange	swift.func.op	!=(_:_:)	IOSurfaceComponentRange.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@IOSurfaceComponentType	swift.func.op	!=(_:_:)	IOSurfaceComponentType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.func.op	!=(_:_:)	IOSurfaceLockOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.func.op	!=(_:_:)	IOSurfaceMemoryLedgerFlags.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerTags	swift.func.op	!=(_:_:)	IOSurfaceMemoryLedgerTags.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.func.op	!=(_:_:)	IOSurfacePurgeabilityState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@IOSurfaceSubsampling	swift.func.op	!=(_:_:)	IOSurfaceSubsampling.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@IOSurfacePropertyKey	swift.func.op	!=(_:_:)	IOSurfacePropertyKey.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@IOSurfaceRef	swift.func.op	!=(_:_:)	IOSurfaceRef.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@IOSurfaceComponentName	swift.property	hashValue	IOSurfaceComponentName.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@IOSurfaceComponentRange	swift.property	hashValue	IOSurfaceComponentRange.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@IOSurfaceComponentType	swift.property	hashValue	IOSurfaceComponentType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerTags	swift.property	hashValue	IOSurfaceMemoryLedgerTags.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@IOSurfaceSubsampling	swift.property	hashValue	IOSurfaceSubsampling.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@IOSurfaceComponentName	swift.method	hash(into:)	IOSurfaceComponentName.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@IOSurfaceComponentRange	swift.method	hash(into:)	IOSurfaceComponentRange.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@IOSurfaceComponentType	swift.method	hash(into:)	IOSurfaceComponentType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerTags	swift.method	hash(into:)	IOSurfaceMemoryLedgerTags.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@IOSurfaceSubsampling	swift.method	hash(into:)	IOSurfaceSubsampling.hash(into:)	func hash(into hasher: inout Hasher)
+s:So20IOSurfaceLockOptionsV8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	IOSurfaceLockOptions.init(rawValue:)	init(rawValue: UInt32)
+s:So20IOSurfacePropertyKeya8rawValueABSS_tcfc	swift.init	init(rawValue:)	IOSurfacePropertyKey.init(rawValue:)	init(rawValue: String)
+s:So20IOSurfaceSubsamplingV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	IOSurfaceSubsampling.init(rawValue:)	init?(rawValue: Int32)
+s:So22IOSurfaceComponentNameV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	IOSurfaceComponentName.init(rawValue:)	init?(rawValue: Int32)
+s:So22IOSurfaceComponentTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	IOSurfaceComponentType.init(rawValue:)	init?(rawValue: Int32)
+s:So23IOSurfaceComponentRangeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	IOSurfaceComponentRange.init(rawValue:)	init?(rawValue: Int32)
+s:So25IOSurfaceMemoryLedgerTagsV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	IOSurfaceMemoryLedgerTags.init(rawValue:)	init?(rawValue: Int32)
+s:So26IOSurfaceMemoryLedgerFlagsV8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	IOSurfaceMemoryLedgerFlags.init(rawValue:)	init(rawValue: UInt32)
+s:So26IOSurfacePurgeabilityStateV8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	IOSurfacePurgeabilityState.init(rawValue:)	init(rawValue: UInt32)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.init	init(arrayLiteral:)	IOSurfaceLockOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.init	init(arrayLiteral:)	IOSurfaceMemoryLedgerFlags.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.init	init(arrayLiteral:)	IOSurfacePurgeabilityState.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	isDisjoint(with:)	IOSurfaceLockOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	isDisjoint(with:)	IOSurfaceMemoryLedgerFlags.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	isDisjoint(with:)	IOSurfacePurgeabilityState.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	isSuperset(of:)	IOSurfaceLockOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	isSuperset(of:)	IOSurfaceMemoryLedgerFlags.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	isSuperset(of:)	IOSurfacePurgeabilityState.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	subtracting(_:)	IOSurfaceLockOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	subtracting(_:)	IOSurfaceMemoryLedgerFlags.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	subtracting(_:)	IOSurfacePurgeabilityState.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	isStrictSubset(of:)	IOSurfaceLockOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	isStrictSubset(of:)	IOSurfaceMemoryLedgerFlags.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	isStrictSubset(of:)	IOSurfacePurgeabilityState.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	isStrictSuperset(of:)	IOSurfaceLockOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	isStrictSuperset(of:)	IOSurfaceMemoryLedgerFlags.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	isStrictSuperset(of:)	IOSurfacePurgeabilityState.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.property	isEmpty	IOSurfaceLockOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.property	isEmpty	IOSurfaceMemoryLedgerFlags.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.property	isEmpty	IOSurfacePurgeabilityState.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	isSubset(of:)	IOSurfaceLockOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	isSubset(of:)	IOSurfaceMemoryLedgerFlags.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	isSubset(of:)	IOSurfacePurgeabilityState.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	subtract(_:)	IOSurfaceLockOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	subtract(_:)	IOSurfaceMemoryLedgerFlags.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	subtract(_:)	IOSurfacePurgeabilityState.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.init	init(_:)	IOSurfaceLockOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.init	init(_:)	IOSurfaceMemoryLedgerFlags.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.init	init(_:)	IOSurfacePurgeabilityState.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@IOSurfacePropertyKey	swift.property	hashValue	IOSurfacePropertyKey.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@IOSurfacePropertyKey	swift.method	hash(into:)	IOSurfacePropertyKey.hash(into:)	func hash(into hasher: inout Hasher)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	insert(_:)	IOSurfaceLockOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	insert(_:)	IOSurfaceMemoryLedgerFlags.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	insert(_:)	IOSurfacePurgeabilityState.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	remove(_:)	IOSurfaceLockOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	remove(_:)	IOSurfaceMemoryLedgerFlags.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	remove(_:)	IOSurfacePurgeabilityState.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	update(with:)	IOSurfaceLockOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	update(with:)	IOSurfaceMemoryLedgerFlags.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	update(with:)	IOSurfacePurgeabilityState.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	contains(_:)	IOSurfaceLockOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	contains(_:)	IOSurfaceMemoryLedgerFlags.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	contains(_:)	IOSurfacePurgeabilityState.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	intersection(_:)	IOSurfaceLockOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	intersection(_:)	IOSurfaceMemoryLedgerFlags.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	intersection(_:)	IOSurfacePurgeabilityState.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	symmetricDifference(_:)	IOSurfaceLockOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	symmetricDifference(_:)	IOSurfaceMemoryLedgerFlags.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	symmetricDifference(_:)	IOSurfacePurgeabilityState.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	union(_:)	IOSurfaceLockOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	union(_:)	IOSurfaceMemoryLedgerFlags.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	union(_:)	IOSurfacePurgeabilityState.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	formIntersection(_:)	IOSurfaceLockOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	formIntersection(_:)	IOSurfaceMemoryLedgerFlags.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	formIntersection(_:)	IOSurfacePurgeabilityState.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	formSymmetricDifference(_:)	IOSurfaceLockOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	formSymmetricDifference(_:)	IOSurfaceMemoryLedgerFlags.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	formSymmetricDifference(_:)	IOSurfacePurgeabilityState.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.method	formUnion(_:)	IOSurfaceLockOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.method	formUnion(_:)	IOSurfaceMemoryLedgerFlags.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.method	formUnion(_:)	IOSurfacePurgeabilityState.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@IOSurfaceLockOptions	swift.init	init()	IOSurfaceLockOptions.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@IOSurfaceMemoryLedgerFlags	swift.init	init()	IOSurfaceMemoryLedgerFlags.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@IOSurfacePurgeabilityState	swift.init	init()	IOSurfacePurgeabilityState.init()	init()

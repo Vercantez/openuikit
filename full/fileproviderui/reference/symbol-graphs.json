@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/FileProviderUI.symbols.json",
+      "relationshipCount": 58,
+      "sha256": "ac592d9280bcced1e370efc29339a3df174214dd678a5d20be6d7b4aac35ed06",
+      "symbolCount": 22
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "FileProviderUI",
+  "relationshipCount": 58,
+  "schema": 1,
+  "symbolCount": 22,
+  "target": "arm64-apple-ios26.0"
+}

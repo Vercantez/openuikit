@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/IOSurface.symbols.json",
+      "relationshipCount": 262,
+      "sha256": "4e5b09d5cc0882a5e6d156ae2af218b367686cb84ac6f4c51daa0708eea49d29",
+      "symbolCount": 298
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "IOSurface",
+  "relationshipCount": 262,
+  "schema": 1,
+  "symbolCount": 298,
+  "target": "arm64-apple-ios26.0"
+}

@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/_PassKit_SwiftUI@PassKit.symbols.json",
+      "relationshipCount": 4009,
+      "sha256": "43f355449e64eb1dcdc92f56703e247b24500dbf291ab462ef579548c663e250",
+      "symbolCount": 3999
+    },
+    {
+      "path": "reference/symbol-graphs/_PassKit_SwiftUI@SwiftUICore.symbols.json",
+      "relationshipCount": 10,
+      "sha256": "7b4c0bd919432337057c6ff64c9e24872fbad5c3db4022608a7220dab99454ea",
+      "symbolCount": 10
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "_PassKit_SwiftUI",
+  "relationshipCount": 4019,
+  "schema": 1,
+  "symbolCount": 4009,
+  "target": "arm64-apple-ios26.0"
+}

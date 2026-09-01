@@ -1,0 +1,698 @@
+precise	kind	title	path	declaration
+c:@E@AVAudioSessionErrorCode	swift.enum	AVAudioSession.ErrorCode	AVAudioSession.ErrorCode	enum ErrorCode
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeBadParam	swift.enum.case	AVAudioSession.ErrorCode.badParam	AVAudioSession.ErrorCode.badParam	case badParam
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeCannotInterruptOthers	swift.enum.case	AVAudioSession.ErrorCode.cannotInterruptOthers	AVAudioSession.ErrorCode.cannotInterruptOthers	case cannotInterruptOthers
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeCannotStartPlaying	swift.enum.case	AVAudioSession.ErrorCode.cannotStartPlaying	AVAudioSession.ErrorCode.cannotStartPlaying	case cannotStartPlaying
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeCannotStartRecording	swift.enum.case	AVAudioSession.ErrorCode.cannotStartRecording	AVAudioSession.ErrorCode.cannotStartRecording	case cannotStartRecording
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeExpiredSession	swift.enum.case	AVAudioSession.ErrorCode.expiredSession	AVAudioSession.ErrorCode.expiredSession	case expiredSession
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeIncompatibleCategory	swift.enum.case	AVAudioSession.ErrorCode.incompatibleCategory	AVAudioSession.ErrorCode.incompatibleCategory	case incompatibleCategory
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeInsufficientPriority	swift.enum.case	AVAudioSession.ErrorCode.insufficientPriority	AVAudioSession.ErrorCode.insufficientPriority	case insufficientPriority
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeIsBusy	swift.enum.case	AVAudioSession.ErrorCode.isBusy	AVAudioSession.ErrorCode.isBusy	case isBusy
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeMediaServicesFailed	swift.enum.case	AVAudioSession.ErrorCode.mediaServicesFailed	AVAudioSession.ErrorCode.mediaServicesFailed	case mediaServicesFailed
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeMissingEntitlement	swift.enum.case	AVAudioSession.ErrorCode.missingEntitlement	AVAudioSession.ErrorCode.missingEntitlement	case missingEntitlement
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeNone	swift.enum.case	AVAudioSession.ErrorCode.none	AVAudioSession.ErrorCode.none	case none
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeResourceNotAvailable	swift.enum.case	AVAudioSession.ErrorCode.resourceNotAvailable	AVAudioSession.ErrorCode.resourceNotAvailable	case resourceNotAvailable
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeSessionNotActive	swift.enum.case	AVAudioSession.ErrorCode.sessionNotActive	AVAudioSession.ErrorCode.sessionNotActive	case sessionNotActive
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeSiriIsRecording	swift.enum.case	AVAudioSession.ErrorCode.siriIsRecording	AVAudioSession.ErrorCode.siriIsRecording	case siriIsRecording
+c:@E@AVAudioSessionErrorCode@AVAudioSessionErrorCodeUnspecified	swift.enum.case	AVAudioSession.ErrorCode.unspecified	AVAudioSession.ErrorCode.unspecified	case unspecified
+c:@E@AudioChannelBitmap	swift.struct	AudioChannelBitmap	AudioChannelBitmap	struct AudioChannelBitmap
+c:@E@AudioChannelBitmap@kAudioChannelBit_Center	swift.type.property	bit_Center	AudioChannelBitmap.bit_Center	static var bit_Center: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_CenterSurround	swift.type.property	bit_CenterSurround	AudioChannelBitmap.bit_CenterSurround	static var bit_CenterSurround: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_CenterTopFront	swift.type.property	bit_CenterTopFront	AudioChannelBitmap.bit_CenterTopFront	static var bit_CenterTopFront: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_CenterTopMiddle	swift.type.property	bit_CenterTopMiddle	AudioChannelBitmap.bit_CenterTopMiddle	static var bit_CenterTopMiddle: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_CenterTopRear	swift.type.property	bit_CenterTopRear	AudioChannelBitmap.bit_CenterTopRear	static var bit_CenterTopRear: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_LFEScreen	swift.type.property	bit_LFEScreen	AudioChannelBitmap.bit_LFEScreen	static var bit_LFEScreen: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_Left	swift.type.property	bit_Left	AudioChannelBitmap.bit_Left	static var bit_Left: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_LeftCenter	swift.type.property	bit_LeftCenter	AudioChannelBitmap.bit_LeftCenter	static var bit_LeftCenter: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_LeftSurround	swift.type.property	bit_LeftSurround	AudioChannelBitmap.bit_LeftSurround	static var bit_LeftSurround: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_LeftSurroundDirect	swift.type.property	bit_LeftSurroundDirect	AudioChannelBitmap.bit_LeftSurroundDirect	static var bit_LeftSurroundDirect: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_LeftTopFront	swift.type.property	bit_LeftTopFront	AudioChannelBitmap.bit_LeftTopFront	static var bit_LeftTopFront: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_LeftTopMiddle	swift.type.property	bit_LeftTopMiddle	AudioChannelBitmap.bit_LeftTopMiddle	static var bit_LeftTopMiddle: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_LeftTopRear	swift.type.property	bit_LeftTopRear	AudioChannelBitmap.bit_LeftTopRear	static var bit_LeftTopRear: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_Right	swift.type.property	bit_Right	AudioChannelBitmap.bit_Right	static var bit_Right: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_RightCenter	swift.type.property	bit_RightCenter	AudioChannelBitmap.bit_RightCenter	static var bit_RightCenter: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_RightSurround	swift.type.property	bit_RightSurround	AudioChannelBitmap.bit_RightSurround	static var bit_RightSurround: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_RightSurroundDirect	swift.type.property	bit_RightSurroundDirect	AudioChannelBitmap.bit_RightSurroundDirect	static var bit_RightSurroundDirect: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_RightTopFront	swift.type.property	bit_RightTopFront	AudioChannelBitmap.bit_RightTopFront	static var bit_RightTopFront: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_RightTopMiddle	swift.type.property	bit_RightTopMiddle	AudioChannelBitmap.bit_RightTopMiddle	static var bit_RightTopMiddle: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_RightTopRear	swift.type.property	bit_RightTopRear	AudioChannelBitmap.bit_RightTopRear	static var bit_RightTopRear: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_TopBackCenter	swift.type.property	bit_TopBackCenter	AudioChannelBitmap.bit_TopBackCenter	static var bit_TopBackCenter: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_TopBackLeft	swift.type.property	bit_TopBackLeft	AudioChannelBitmap.bit_TopBackLeft	static var bit_TopBackLeft: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_TopBackRight	swift.type.property	bit_TopBackRight	AudioChannelBitmap.bit_TopBackRight	static var bit_TopBackRight: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_TopCenterSurround	swift.type.property	bit_TopCenterSurround	AudioChannelBitmap.bit_TopCenterSurround	static var bit_TopCenterSurround: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_VerticalHeightCenter	swift.type.property	bit_VerticalHeightCenter	AudioChannelBitmap.bit_VerticalHeightCenter	static var bit_VerticalHeightCenter: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_VerticalHeightLeft	swift.type.property	bit_VerticalHeightLeft	AudioChannelBitmap.bit_VerticalHeightLeft	static var bit_VerticalHeightLeft: AudioChannelBitmap { get }
+c:@E@AudioChannelBitmap@kAudioChannelBit_VerticalHeightRight	swift.type.property	bit_VerticalHeightRight	AudioChannelBitmap.bit_VerticalHeightRight	static var bit_VerticalHeightRight: AudioChannelBitmap { get }
+c:@E@AudioChannelCoordinateIndex	swift.enum	AudioChannelCoordinateIndex	AudioChannelCoordinateIndex	enum AudioChannelCoordinateIndex
+c:@E@AudioChannelCoordinateIndex@kAudioChannelCoordinates_Azimuth	swift.type.property	coordinates_Azimuth	AudioChannelCoordinateIndex.coordinates_Azimuth	static var coordinates_Azimuth: AudioChannelCoordinateIndex { get }
+c:@E@AudioChannelCoordinateIndex@kAudioChannelCoordinates_BackFront	swift.enum.case	AudioChannelCoordinateIndex.coordinates_BackFront	AudioChannelCoordinateIndex.coordinates_BackFront	case coordinates_BackFront
+c:@E@AudioChannelCoordinateIndex@kAudioChannelCoordinates_Distance	swift.type.property	coordinates_Distance	AudioChannelCoordinateIndex.coordinates_Distance	static var coordinates_Distance: AudioChannelCoordinateIndex { get }
+c:@E@AudioChannelCoordinateIndex@kAudioChannelCoordinates_DownUp	swift.enum.case	AudioChannelCoordinateIndex.coordinates_DownUp	AudioChannelCoordinateIndex.coordinates_DownUp	case coordinates_DownUp
+c:@E@AudioChannelCoordinateIndex@kAudioChannelCoordinates_Elevation	swift.type.property	coordinates_Elevation	AudioChannelCoordinateIndex.coordinates_Elevation	static var coordinates_Elevation: AudioChannelCoordinateIndex { get }
+c:@E@AudioChannelCoordinateIndex@kAudioChannelCoordinates_LeftRight	swift.enum.case	AudioChannelCoordinateIndex.coordinates_LeftRight	AudioChannelCoordinateIndex.coordinates_LeftRight	case coordinates_LeftRight
+c:@E@AudioChannelFlags	swift.struct	AudioChannelFlags	AudioChannelFlags	struct AudioChannelFlags
+c:@E@AudioChannelFlags@kAudioChannelFlags_Meters	swift.type.property	meters	AudioChannelFlags.meters	static var meters: AudioChannelFlags { get }
+c:@E@AudioChannelFlags@kAudioChannelFlags_RectangularCoordinates	swift.type.property	rectangularCoordinates	AudioChannelFlags.rectangularCoordinates	static var rectangularCoordinates: AudioChannelFlags { get }
+c:@E@AudioChannelFlags@kAudioChannelFlags_SphericalCoordinates	swift.type.property	sphericalCoordinates	AudioChannelFlags.sphericalCoordinates	static var sphericalCoordinates: AudioChannelFlags { get }
+c:@E@AudioTimeStampFlags	swift.struct	AudioTimeStampFlags	AudioTimeStampFlags	struct AudioTimeStampFlags
+c:@E@AudioTimeStampFlags@kAudioTimeStampHostTimeValid	swift.type.property	hostTimeValid	AudioTimeStampFlags.hostTimeValid	static var hostTimeValid: AudioTimeStampFlags { get }
+c:@E@AudioTimeStampFlags@kAudioTimeStampRateScalarValid	swift.type.property	rateScalarValid	AudioTimeStampFlags.rateScalarValid	static var rateScalarValid: AudioTimeStampFlags { get }
+c:@E@AudioTimeStampFlags@kAudioTimeStampSMPTETimeValid	swift.type.property	smpteTimeValid	AudioTimeStampFlags.smpteTimeValid	static var smpteTimeValid: AudioTimeStampFlags { get }
+c:@E@AudioTimeStampFlags@kAudioTimeStampSampleHostTimeValid	swift.type.property	sampleHostTimeValid	AudioTimeStampFlags.sampleHostTimeValid	static var sampleHostTimeValid: AudioTimeStampFlags { get }
+c:@E@AudioTimeStampFlags@kAudioTimeStampSampleTimeValid	swift.type.property	sampleTimeValid	AudioTimeStampFlags.sampleTimeValid	static var sampleTimeValid: AudioTimeStampFlags { get }
+c:@E@AudioTimeStampFlags@kAudioTimeStampWordClockTimeValid	swift.type.property	wordClockTimeValid	AudioTimeStampFlags.wordClockTimeValid	static var wordClockTimeValid: AudioTimeStampFlags { get }
+c:@E@MPEG4ObjectID	swift.enum	MPEG4ObjectID	MPEG4ObjectID	enum MPEG4ObjectID
+c:@E@MPEG4ObjectID@kMPEG4Object_AAC_LC	swift.enum.case	MPEG4ObjectID.AAC_LC	MPEG4ObjectID.AAC_LC	case AAC_LC
+c:@E@MPEG4ObjectID@kMPEG4Object_AAC_LTP	swift.enum.case	MPEG4ObjectID.AAC_LTP	MPEG4ObjectID.AAC_LTP	case AAC_LTP
+c:@E@MPEG4ObjectID@kMPEG4Object_AAC_Main	swift.enum.case	MPEG4ObjectID.aac_Main	MPEG4ObjectID.aac_Main	case aac_Main
+c:@E@MPEG4ObjectID@kMPEG4Object_AAC_SBR	swift.enum.case	MPEG4ObjectID.AAC_SBR	MPEG4ObjectID.AAC_SBR	case AAC_SBR
+c:@E@MPEG4ObjectID@kMPEG4Object_AAC_SSR	swift.enum.case	MPEG4ObjectID.AAC_SSR	MPEG4ObjectID.AAC_SSR	case AAC_SSR
+c:@E@MPEG4ObjectID@kMPEG4Object_AAC_Scalable	swift.enum.case	MPEG4ObjectID.aac_Scalable	MPEG4ObjectID.aac_Scalable	case aac_Scalable
+c:@E@MPEG4ObjectID@kMPEG4Object_CELP	swift.enum.case	MPEG4ObjectID.CELP	MPEG4ObjectID.CELP	case CELP
+c:@E@MPEG4ObjectID@kMPEG4Object_HVXC	swift.enum.case	MPEG4ObjectID.HVXC	MPEG4ObjectID.HVXC	case HVXC
+c:@E@MPEG4ObjectID@kMPEG4Object_TwinVQ	swift.enum.case	MPEG4ObjectID.twinVQ	MPEG4ObjectID.twinVQ	case twinVQ
+c:@E@SMPTETimeFlags	swift.struct	SMPTETimeFlags	SMPTETimeFlags	struct SMPTETimeFlags
+c:@E@SMPTETimeFlags@kSMPTETimeRunning	swift.type.property	running	SMPTETimeFlags.running	static var running: SMPTETimeFlags { get }
+c:@E@SMPTETimeFlags@kSMPTETimeValid	swift.type.property	valid	SMPTETimeFlags.valid	static var valid: SMPTETimeFlags { get }
+c:@E@SMPTETimeType	swift.enum	SMPTETimeType	SMPTETimeType	enum SMPTETimeType
+c:@E@SMPTETimeType@kSMPTETimeType2398	swift.enum.case	SMPTETimeType.type2398	SMPTETimeType.type2398	case type2398
+c:@E@SMPTETimeType@kSMPTETimeType24	swift.enum.case	SMPTETimeType.type24	SMPTETimeType.type24	case type24
+c:@E@SMPTETimeType@kSMPTETimeType25	swift.enum.case	SMPTETimeType.type25	SMPTETimeType.type25	case type25
+c:@E@SMPTETimeType@kSMPTETimeType2997	swift.enum.case	SMPTETimeType.type2997	SMPTETimeType.type2997	case type2997
+c:@E@SMPTETimeType@kSMPTETimeType2997Drop	swift.enum.case	SMPTETimeType.type2997Drop	SMPTETimeType.type2997Drop	case type2997Drop
+c:@E@SMPTETimeType@kSMPTETimeType30	swift.enum.case	SMPTETimeType.type30	SMPTETimeType.type30	case type30
+c:@E@SMPTETimeType@kSMPTETimeType30Drop	swift.enum.case	SMPTETimeType.type30Drop	SMPTETimeType.type30Drop	case type30Drop
+c:@E@SMPTETimeType@kSMPTETimeType50	swift.enum.case	SMPTETimeType.type50	SMPTETimeType.type50	case type50
+c:@E@SMPTETimeType@kSMPTETimeType5994	swift.enum.case	SMPTETimeType.type5994	SMPTETimeType.type5994	case type5994
+c:@E@SMPTETimeType@kSMPTETimeType5994Drop	swift.enum.case	SMPTETimeType.type5994Drop	SMPTETimeType.type5994Drop	case type5994Drop
+c:@E@SMPTETimeType@kSMPTETimeType60	swift.enum.case	SMPTETimeType.type60	SMPTETimeType.type60	case type60
+c:@E@SMPTETimeType@kSMPTETimeType60Drop	swift.enum.case	SMPTETimeType.type60Drop	SMPTETimeType.type60Drop	case type60Drop
+c:@Ea@AVAudioSessionErrorInsufficientPriority@AVAudioSessionErrorInsufficientPriority	swift.var	AVAudioSessionErrorInsufficientPriority	AVAudioSessionErrorInsufficientPriority	var AVAudioSessionErrorInsufficientPriority: Int { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Ambisonic_W	swift.var	kAudioChannelLabel_Ambisonic_W	kAudioChannelLabel_Ambisonic_W	var kAudioChannelLabel_Ambisonic_W: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Ambisonic_X	swift.var	kAudioChannelLabel_Ambisonic_X	kAudioChannelLabel_Ambisonic_X	var kAudioChannelLabel_Ambisonic_X: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Ambisonic_Y	swift.var	kAudioChannelLabel_Ambisonic_Y	kAudioChannelLabel_Ambisonic_Y	var kAudioChannelLabel_Ambisonic_Y: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Ambisonic_Z	swift.var	kAudioChannelLabel_Ambisonic_Z	kAudioChannelLabel_Ambisonic_Z	var kAudioChannelLabel_Ambisonic_Z: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_BeginReserved	swift.var	kAudioChannelLabel_BeginReserved	kAudioChannelLabel_BeginReserved	var kAudioChannelLabel_BeginReserved: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_BinauralLeft	swift.var	kAudioChannelLabel_BinauralLeft	kAudioChannelLabel_BinauralLeft	var kAudioChannelLabel_BinauralLeft: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_BinauralRight	swift.var	kAudioChannelLabel_BinauralRight	kAudioChannelLabel_BinauralRight	var kAudioChannelLabel_BinauralRight: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Center	swift.var	kAudioChannelLabel_Center	kAudioChannelLabel_Center	var kAudioChannelLabel_Center: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_CenterBottom	swift.var	kAudioChannelLabel_CenterBottom	kAudioChannelLabel_CenterBottom	var kAudioChannelLabel_CenterBottom: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_CenterSurround	swift.var	kAudioChannelLabel_CenterSurround	kAudioChannelLabel_CenterSurround	var kAudioChannelLabel_CenterSurround: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_CenterSurroundDirect	swift.var	kAudioChannelLabel_CenterSurroundDirect	kAudioChannelLabel_CenterSurroundDirect	var kAudioChannelLabel_CenterSurroundDirect: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_CenterTopFront	swift.var	kAudioChannelLabel_CenterTopFront	kAudioChannelLabel_CenterTopFront	var kAudioChannelLabel_CenterTopFront: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_CenterTopMiddle	swift.var	kAudioChannelLabel_CenterTopMiddle	kAudioChannelLabel_CenterTopMiddle	var kAudioChannelLabel_CenterTopMiddle: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_CenterTopRear	swift.var	kAudioChannelLabel_CenterTopRear	kAudioChannelLabel_CenterTopRear	var kAudioChannelLabel_CenterTopRear: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_ClickTrack	swift.var	kAudioChannelLabel_ClickTrack	kAudioChannelLabel_ClickTrack	var kAudioChannelLabel_ClickTrack: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_DialogCentricMix	swift.var	kAudioChannelLabel_DialogCentricMix	kAudioChannelLabel_DialogCentricMix	var kAudioChannelLabel_DialogCentricMix: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete	swift.var	kAudioChannelLabel_Discrete	kAudioChannelLabel_Discrete	var kAudioChannelLabel_Discrete: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_0	swift.var	kAudioChannelLabel_Discrete_0	kAudioChannelLabel_Discrete_0	var kAudioChannelLabel_Discrete_0: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_1	swift.var	kAudioChannelLabel_Discrete_1	kAudioChannelLabel_Discrete_1	var kAudioChannelLabel_Discrete_1: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_10	swift.var	kAudioChannelLabel_Discrete_10	kAudioChannelLabel_Discrete_10	var kAudioChannelLabel_Discrete_10: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_11	swift.var	kAudioChannelLabel_Discrete_11	kAudioChannelLabel_Discrete_11	var kAudioChannelLabel_Discrete_11: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_12	swift.var	kAudioChannelLabel_Discrete_12	kAudioChannelLabel_Discrete_12	var kAudioChannelLabel_Discrete_12: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_13	swift.var	kAudioChannelLabel_Discrete_13	kAudioChannelLabel_Discrete_13	var kAudioChannelLabel_Discrete_13: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_14	swift.var	kAudioChannelLabel_Discrete_14	kAudioChannelLabel_Discrete_14	var kAudioChannelLabel_Discrete_14: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_15	swift.var	kAudioChannelLabel_Discrete_15	kAudioChannelLabel_Discrete_15	var kAudioChannelLabel_Discrete_15: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_2	swift.var	kAudioChannelLabel_Discrete_2	kAudioChannelLabel_Discrete_2	var kAudioChannelLabel_Discrete_2: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_3	swift.var	kAudioChannelLabel_Discrete_3	kAudioChannelLabel_Discrete_3	var kAudioChannelLabel_Discrete_3: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_4	swift.var	kAudioChannelLabel_Discrete_4	kAudioChannelLabel_Discrete_4	var kAudioChannelLabel_Discrete_4: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_5	swift.var	kAudioChannelLabel_Discrete_5	kAudioChannelLabel_Discrete_5	var kAudioChannelLabel_Discrete_5: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_6	swift.var	kAudioChannelLabel_Discrete_6	kAudioChannelLabel_Discrete_6	var kAudioChannelLabel_Discrete_6: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_65535	swift.var	kAudioChannelLabel_Discrete_65535	kAudioChannelLabel_Discrete_65535	var kAudioChannelLabel_Discrete_65535: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_7	swift.var	kAudioChannelLabel_Discrete_7	kAudioChannelLabel_Discrete_7	var kAudioChannelLabel_Discrete_7: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_8	swift.var	kAudioChannelLabel_Discrete_8	kAudioChannelLabel_Discrete_8	var kAudioChannelLabel_Discrete_8: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Discrete_9	swift.var	kAudioChannelLabel_Discrete_9	kAudioChannelLabel_Discrete_9	var kAudioChannelLabel_Discrete_9: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_EndReserved	swift.var	kAudioChannelLabel_EndReserved	kAudioChannelLabel_EndReserved	var kAudioChannelLabel_EndReserved: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_ForeignLanguage	swift.var	kAudioChannelLabel_ForeignLanguage	kAudioChannelLabel_ForeignLanguage	var kAudioChannelLabel_ForeignLanguage: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN	swift.var	kAudioChannelLabel_HOA_ACN	kAudioChannelLabel_HOA_ACN	var kAudioChannelLabel_HOA_ACN: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_0	swift.var	kAudioChannelLabel_HOA_ACN_0	kAudioChannelLabel_HOA_ACN_0	var kAudioChannelLabel_HOA_ACN_0: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_1	swift.var	kAudioChannelLabel_HOA_ACN_1	kAudioChannelLabel_HOA_ACN_1	var kAudioChannelLabel_HOA_ACN_1: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_10	swift.var	kAudioChannelLabel_HOA_ACN_10	kAudioChannelLabel_HOA_ACN_10	var kAudioChannelLabel_HOA_ACN_10: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_11	swift.var	kAudioChannelLabel_HOA_ACN_11	kAudioChannelLabel_HOA_ACN_11	var kAudioChannelLabel_HOA_ACN_11: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_12	swift.var	kAudioChannelLabel_HOA_ACN_12	kAudioChannelLabel_HOA_ACN_12	var kAudioChannelLabel_HOA_ACN_12: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_13	swift.var	kAudioChannelLabel_HOA_ACN_13	kAudioChannelLabel_HOA_ACN_13	var kAudioChannelLabel_HOA_ACN_13: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_14	swift.var	kAudioChannelLabel_HOA_ACN_14	kAudioChannelLabel_HOA_ACN_14	var kAudioChannelLabel_HOA_ACN_14: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_15	swift.var	kAudioChannelLabel_HOA_ACN_15	kAudioChannelLabel_HOA_ACN_15	var kAudioChannelLabel_HOA_ACN_15: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_2	swift.var	kAudioChannelLabel_HOA_ACN_2	kAudioChannelLabel_HOA_ACN_2	var kAudioChannelLabel_HOA_ACN_2: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_3	swift.var	kAudioChannelLabel_HOA_ACN_3	kAudioChannelLabel_HOA_ACN_3	var kAudioChannelLabel_HOA_ACN_3: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_4	swift.var	kAudioChannelLabel_HOA_ACN_4	kAudioChannelLabel_HOA_ACN_4	var kAudioChannelLabel_HOA_ACN_4: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_5	swift.var	kAudioChannelLabel_HOA_ACN_5	kAudioChannelLabel_HOA_ACN_5	var kAudioChannelLabel_HOA_ACN_5: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_6	swift.var	kAudioChannelLabel_HOA_ACN_6	kAudioChannelLabel_HOA_ACN_6	var kAudioChannelLabel_HOA_ACN_6: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_65024	swift.var	kAudioChannelLabel_HOA_ACN_65024	kAudioChannelLabel_HOA_ACN_65024	var kAudioChannelLabel_HOA_ACN_65024: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_7	swift.var	kAudioChannelLabel_HOA_ACN_7	kAudioChannelLabel_HOA_ACN_7	var kAudioChannelLabel_HOA_ACN_7: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_8	swift.var	kAudioChannelLabel_HOA_ACN_8	kAudioChannelLabel_HOA_ACN_8	var kAudioChannelLabel_HOA_ACN_8: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_ACN_9	swift.var	kAudioChannelLabel_HOA_ACN_9	kAudioChannelLabel_HOA_ACN_9	var kAudioChannelLabel_HOA_ACN_9: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_N3D	swift.var	kAudioChannelLabel_HOA_N3D	kAudioChannelLabel_HOA_N3D	var kAudioChannelLabel_HOA_N3D: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HOA_SN3D	swift.var	kAudioChannelLabel_HOA_SN3D	kAudioChannelLabel_HOA_SN3D	var kAudioChannelLabel_HOA_SN3D: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Haptic	swift.var	kAudioChannelLabel_Haptic	kAudioChannelLabel_Haptic	var kAudioChannelLabel_Haptic: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HeadphonesLeft	swift.var	kAudioChannelLabel_HeadphonesLeft	kAudioChannelLabel_HeadphonesLeft	var kAudioChannelLabel_HeadphonesLeft: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HeadphonesRight	swift.var	kAudioChannelLabel_HeadphonesRight	kAudioChannelLabel_HeadphonesRight	var kAudioChannelLabel_HeadphonesRight: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_HearingImpaired	swift.var	kAudioChannelLabel_HearingImpaired	kAudioChannelLabel_HearingImpaired	var kAudioChannelLabel_HearingImpaired: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LFE2	swift.var	kAudioChannelLabel_LFE2	kAudioChannelLabel_LFE2	var kAudioChannelLabel_LFE2: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LFE3	swift.var	kAudioChannelLabel_LFE3	kAudioChannelLabel_LFE3	var kAudioChannelLabel_LFE3: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LFEScreen	swift.var	kAudioChannelLabel_LFEScreen	kAudioChannelLabel_LFEScreen	var kAudioChannelLabel_LFEScreen: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Left	swift.var	kAudioChannelLabel_Left	kAudioChannelLabel_Left	var kAudioChannelLabel_Left: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LeftBackSurround	swift.var	kAudioChannelLabel_LeftBackSurround	kAudioChannelLabel_LeftBackSurround	var kAudioChannelLabel_LeftBackSurround: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LeftBottom	swift.var	kAudioChannelLabel_LeftBottom	kAudioChannelLabel_LeftBottom	var kAudioChannelLabel_LeftBottom: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LeftCenter	swift.var	kAudioChannelLabel_LeftCenter	kAudioChannelLabel_LeftCenter	var kAudioChannelLabel_LeftCenter: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LeftEdgeOfScreen	swift.var	kAudioChannelLabel_LeftEdgeOfScreen	kAudioChannelLabel_LeftEdgeOfScreen	var kAudioChannelLabel_LeftEdgeOfScreen: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LeftSideSurround	swift.var	kAudioChannelLabel_LeftSideSurround	kAudioChannelLabel_LeftSideSurround	var kAudioChannelLabel_LeftSideSurround: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LeftSurround	swift.var	kAudioChannelLabel_LeftSurround	kAudioChannelLabel_LeftSurround	var kAudioChannelLabel_LeftSurround: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LeftSurroundDirect	swift.var	kAudioChannelLabel_LeftSurroundDirect	kAudioChannelLabel_LeftSurroundDirect	var kAudioChannelLabel_LeftSurroundDirect: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LeftTopFront	swift.var	kAudioChannelLabel_LeftTopFront	kAudioChannelLabel_LeftTopFront	var kAudioChannelLabel_LeftTopFront: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LeftTopMiddle	swift.var	kAudioChannelLabel_LeftTopMiddle	kAudioChannelLabel_LeftTopMiddle	var kAudioChannelLabel_LeftTopMiddle: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LeftTopRear	swift.var	kAudioChannelLabel_LeftTopRear	kAudioChannelLabel_LeftTopRear	var kAudioChannelLabel_LeftTopRear: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LeftTopSurround	swift.var	kAudioChannelLabel_LeftTopSurround	kAudioChannelLabel_LeftTopSurround	var kAudioChannelLabel_LeftTopSurround: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LeftTotal	swift.var	kAudioChannelLabel_LeftTotal	kAudioChannelLabel_LeftTotal	var kAudioChannelLabel_LeftTotal: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_LeftWide	swift.var	kAudioChannelLabel_LeftWide	kAudioChannelLabel_LeftWide	var kAudioChannelLabel_LeftWide: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_MS_Mid	swift.var	kAudioChannelLabel_MS_Mid	kAudioChannelLabel_MS_Mid	var kAudioChannelLabel_MS_Mid: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_MS_Side	swift.var	kAudioChannelLabel_MS_Side	kAudioChannelLabel_MS_Side	var kAudioChannelLabel_MS_Side: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Mono	swift.var	kAudioChannelLabel_Mono	kAudioChannelLabel_Mono	var kAudioChannelLabel_Mono: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Narration	swift.var	kAudioChannelLabel_Narration	kAudioChannelLabel_Narration	var kAudioChannelLabel_Narration: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Object	swift.var	kAudioChannelLabel_Object	kAudioChannelLabel_Object	var kAudioChannelLabel_Object: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RearSurroundLeft	swift.var	kAudioChannelLabel_RearSurroundLeft	kAudioChannelLabel_RearSurroundLeft	var kAudioChannelLabel_RearSurroundLeft: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RearSurroundRight	swift.var	kAudioChannelLabel_RearSurroundRight	kAudioChannelLabel_RearSurroundRight	var kAudioChannelLabel_RearSurroundRight: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Right	swift.var	kAudioChannelLabel_Right	kAudioChannelLabel_Right	var kAudioChannelLabel_Right: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RightBackSurround	swift.var	kAudioChannelLabel_RightBackSurround	kAudioChannelLabel_RightBackSurround	var kAudioChannelLabel_RightBackSurround: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RightBottom	swift.var	kAudioChannelLabel_RightBottom	kAudioChannelLabel_RightBottom	var kAudioChannelLabel_RightBottom: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RightCenter	swift.var	kAudioChannelLabel_RightCenter	kAudioChannelLabel_RightCenter	var kAudioChannelLabel_RightCenter: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RightEdgeOfScreen	swift.var	kAudioChannelLabel_RightEdgeOfScreen	kAudioChannelLabel_RightEdgeOfScreen	var kAudioChannelLabel_RightEdgeOfScreen: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RightSideSurround	swift.var	kAudioChannelLabel_RightSideSurround	kAudioChannelLabel_RightSideSurround	var kAudioChannelLabel_RightSideSurround: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RightSurround	swift.var	kAudioChannelLabel_RightSurround	kAudioChannelLabel_RightSurround	var kAudioChannelLabel_RightSurround: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RightSurroundDirect	swift.var	kAudioChannelLabel_RightSurroundDirect	kAudioChannelLabel_RightSurroundDirect	var kAudioChannelLabel_RightSurroundDirect: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RightTopFront	swift.var	kAudioChannelLabel_RightTopFront	kAudioChannelLabel_RightTopFront	var kAudioChannelLabel_RightTopFront: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RightTopMiddle	swift.var	kAudioChannelLabel_RightTopMiddle	kAudioChannelLabel_RightTopMiddle	var kAudioChannelLabel_RightTopMiddle: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RightTopRear	swift.var	kAudioChannelLabel_RightTopRear	kAudioChannelLabel_RightTopRear	var kAudioChannelLabel_RightTopRear: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RightTopSurround	swift.var	kAudioChannelLabel_RightTopSurround	kAudioChannelLabel_RightTopSurround	var kAudioChannelLabel_RightTopSurround: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RightTotal	swift.var	kAudioChannelLabel_RightTotal	kAudioChannelLabel_RightTotal	var kAudioChannelLabel_RightTotal: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_RightWide	swift.var	kAudioChannelLabel_RightWide	kAudioChannelLabel_RightWide	var kAudioChannelLabel_RightWide: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_TopBackCenter	swift.var	kAudioChannelLabel_TopBackCenter	kAudioChannelLabel_TopBackCenter	var kAudioChannelLabel_TopBackCenter: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_TopBackLeft	swift.var	kAudioChannelLabel_TopBackLeft	kAudioChannelLabel_TopBackLeft	var kAudioChannelLabel_TopBackLeft: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_TopBackRight	swift.var	kAudioChannelLabel_TopBackRight	kAudioChannelLabel_TopBackRight	var kAudioChannelLabel_TopBackRight: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_TopCenterSurround	swift.var	kAudioChannelLabel_TopCenterSurround	kAudioChannelLabel_TopCenterSurround	var kAudioChannelLabel_TopCenterSurround: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Unknown	swift.var	kAudioChannelLabel_Unknown	kAudioChannelLabel_Unknown	var kAudioChannelLabel_Unknown: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_Unused	swift.var	kAudioChannelLabel_Unused	kAudioChannelLabel_Unused	var kAudioChannelLabel_Unused: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_UseCoordinates	swift.var	kAudioChannelLabel_UseCoordinates	kAudioChannelLabel_UseCoordinates	var kAudioChannelLabel_UseCoordinates: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_VerticalHeightCenter	swift.var	kAudioChannelLabel_VerticalHeightCenter	kAudioChannelLabel_VerticalHeightCenter	var kAudioChannelLabel_VerticalHeightCenter: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_VerticalHeightLeft	swift.var	kAudioChannelLabel_VerticalHeightLeft	kAudioChannelLabel_VerticalHeightLeft	var kAudioChannelLabel_VerticalHeightLeft: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_VerticalHeightRight	swift.var	kAudioChannelLabel_VerticalHeightRight	kAudioChannelLabel_VerticalHeightRight	var kAudioChannelLabel_VerticalHeightRight: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_XY_X	swift.var	kAudioChannelLabel_XY_X	kAudioChannelLabel_XY_X	var kAudioChannelLabel_XY_X: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLabel_Unknown@kAudioChannelLabel_XY_Y	swift.var	kAudioChannelLabel_XY_Y	kAudioChannelLabel_XY_Y	var kAudioChannelLabel_XY_Y: AudioChannelLabel { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AAC_3_0	swift.var	kAudioChannelLayoutTag_AAC_3_0	kAudioChannelLayoutTag_AAC_3_0	var kAudioChannelLayoutTag_AAC_3_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AAC_4_0	swift.var	kAudioChannelLayoutTag_AAC_4_0	kAudioChannelLayoutTag_AAC_4_0	var kAudioChannelLayoutTag_AAC_4_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AAC_5_0	swift.var	kAudioChannelLayoutTag_AAC_5_0	kAudioChannelLayoutTag_AAC_5_0	var kAudioChannelLayoutTag_AAC_5_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AAC_5_1	swift.var	kAudioChannelLayoutTag_AAC_5_1	kAudioChannelLayoutTag_AAC_5_1	var kAudioChannelLayoutTag_AAC_5_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AAC_6_0	swift.var	kAudioChannelLayoutTag_AAC_6_0	kAudioChannelLayoutTag_AAC_6_0	var kAudioChannelLayoutTag_AAC_6_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AAC_6_1	swift.var	kAudioChannelLayoutTag_AAC_6_1	kAudioChannelLayoutTag_AAC_6_1	var kAudioChannelLayoutTag_AAC_6_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AAC_7_0	swift.var	kAudioChannelLayoutTag_AAC_7_0	kAudioChannelLayoutTag_AAC_7_0	var kAudioChannelLayoutTag_AAC_7_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AAC_7_1	swift.var	kAudioChannelLayoutTag_AAC_7_1	kAudioChannelLayoutTag_AAC_7_1	var kAudioChannelLayoutTag_AAC_7_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AAC_7_1_B	swift.var	kAudioChannelLayoutTag_AAC_7_1_B	kAudioChannelLayoutTag_AAC_7_1_B	var kAudioChannelLayoutTag_AAC_7_1_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AAC_7_1_C	swift.var	kAudioChannelLayoutTag_AAC_7_1_C	kAudioChannelLayoutTag_AAC_7_1_C	var kAudioChannelLayoutTag_AAC_7_1_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AAC_Octagonal	swift.var	kAudioChannelLayoutTag_AAC_Octagonal	kAudioChannelLayoutTag_AAC_Octagonal	var kAudioChannelLayoutTag_AAC_Octagonal: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AAC_Quadraphonic	swift.var	kAudioChannelLayoutTag_AAC_Quadraphonic	kAudioChannelLayoutTag_AAC_Quadraphonic	var kAudioChannelLayoutTag_AAC_Quadraphonic: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AC3_1_0_1	swift.var	kAudioChannelLayoutTag_AC3_1_0_1	kAudioChannelLayoutTag_AC3_1_0_1	var kAudioChannelLayoutTag_AC3_1_0_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AC3_2_1_1	swift.var	kAudioChannelLayoutTag_AC3_2_1_1	kAudioChannelLayoutTag_AC3_2_1_1	var kAudioChannelLayoutTag_AC3_2_1_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AC3_3_0	swift.var	kAudioChannelLayoutTag_AC3_3_0	kAudioChannelLayoutTag_AC3_3_0	var kAudioChannelLayoutTag_AC3_3_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AC3_3_0_1	swift.var	kAudioChannelLayoutTag_AC3_3_0_1	kAudioChannelLayoutTag_AC3_3_0_1	var kAudioChannelLayoutTag_AC3_3_0_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AC3_3_1	swift.var	kAudioChannelLayoutTag_AC3_3_1	kAudioChannelLayoutTag_AC3_3_1	var kAudioChannelLayoutTag_AC3_3_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AC3_3_1_1	swift.var	kAudioChannelLayoutTag_AC3_3_1_1	kAudioChannelLayoutTag_AC3_3_1_1	var kAudioChannelLayoutTag_AC3_3_1_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Ambisonic_B_Format	swift.var	kAudioChannelLayoutTag_Ambisonic_B_Format	kAudioChannelLayoutTag_Ambisonic_B_Format	var kAudioChannelLayoutTag_Ambisonic_B_Format: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Atmos_5_1_2	swift.var	kAudioChannelLayoutTag_Atmos_5_1_2	kAudioChannelLayoutTag_Atmos_5_1_2	var kAudioChannelLayoutTag_Atmos_5_1_2: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Atmos_5_1_4	swift.var	kAudioChannelLayoutTag_Atmos_5_1_4	kAudioChannelLayoutTag_Atmos_5_1_4	var kAudioChannelLayoutTag_Atmos_5_1_4: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Atmos_7_1_2	swift.var	kAudioChannelLayoutTag_Atmos_7_1_2	kAudioChannelLayoutTag_Atmos_7_1_2	var kAudioChannelLayoutTag_Atmos_7_1_2: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Atmos_7_1_4	swift.var	kAudioChannelLayoutTag_Atmos_7_1_4	kAudioChannelLayoutTag_Atmos_7_1_4	var kAudioChannelLayoutTag_Atmos_7_1_4: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Atmos_9_1_6	swift.var	kAudioChannelLayoutTag_Atmos_9_1_6	kAudioChannelLayoutTag_Atmos_9_1_6	var kAudioChannelLayoutTag_Atmos_9_1_6: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AudioUnit_4	swift.var	kAudioChannelLayoutTag_AudioUnit_4	kAudioChannelLayoutTag_AudioUnit_4	var kAudioChannelLayoutTag_AudioUnit_4: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AudioUnit_5	swift.var	kAudioChannelLayoutTag_AudioUnit_5	kAudioChannelLayoutTag_AudioUnit_5	var kAudioChannelLayoutTag_AudioUnit_5: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AudioUnit_5_0	swift.var	kAudioChannelLayoutTag_AudioUnit_5_0	kAudioChannelLayoutTag_AudioUnit_5_0	var kAudioChannelLayoutTag_AudioUnit_5_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AudioUnit_5_1	swift.var	kAudioChannelLayoutTag_AudioUnit_5_1	kAudioChannelLayoutTag_AudioUnit_5_1	var kAudioChannelLayoutTag_AudioUnit_5_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AudioUnit_6	swift.var	kAudioChannelLayoutTag_AudioUnit_6	kAudioChannelLayoutTag_AudioUnit_6	var kAudioChannelLayoutTag_AudioUnit_6: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AudioUnit_6_0	swift.var	kAudioChannelLayoutTag_AudioUnit_6_0	kAudioChannelLayoutTag_AudioUnit_6_0	var kAudioChannelLayoutTag_AudioUnit_6_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AudioUnit_6_1	swift.var	kAudioChannelLayoutTag_AudioUnit_6_1	kAudioChannelLayoutTag_AudioUnit_6_1	var kAudioChannelLayoutTag_AudioUnit_6_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AudioUnit_7_0	swift.var	kAudioChannelLayoutTag_AudioUnit_7_0	kAudioChannelLayoutTag_AudioUnit_7_0	var kAudioChannelLayoutTag_AudioUnit_7_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AudioUnit_7_0_Front	swift.var	kAudioChannelLayoutTag_AudioUnit_7_0_Front	kAudioChannelLayoutTag_AudioUnit_7_0_Front	var kAudioChannelLayoutTag_AudioUnit_7_0_Front: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AudioUnit_7_1	swift.var	kAudioChannelLayoutTag_AudioUnit_7_1	kAudioChannelLayoutTag_AudioUnit_7_1	var kAudioChannelLayoutTag_AudioUnit_7_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AudioUnit_7_1_Front	swift.var	kAudioChannelLayoutTag_AudioUnit_7_1_Front	kAudioChannelLayoutTag_AudioUnit_7_1_Front	var kAudioChannelLayoutTag_AudioUnit_7_1_Front: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_AudioUnit_8	swift.var	kAudioChannelLayoutTag_AudioUnit_8	kAudioChannelLayoutTag_AudioUnit_8	var kAudioChannelLayoutTag_AudioUnit_8: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_BeginReserved	swift.var	kAudioChannelLayoutTag_BeginReserved	kAudioChannelLayoutTag_BeginReserved	var kAudioChannelLayoutTag_BeginReserved: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Binaural	swift.var	kAudioChannelLayoutTag_Binaural	kAudioChannelLayoutTag_Binaural	var kAudioChannelLayoutTag_Binaural: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_1	swift.var	kAudioChannelLayoutTag_CICP_1	kAudioChannelLayoutTag_CICP_1	var kAudioChannelLayoutTag_CICP_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_10	swift.var	kAudioChannelLayoutTag_CICP_10	kAudioChannelLayoutTag_CICP_10	var kAudioChannelLayoutTag_CICP_10: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_11	swift.var	kAudioChannelLayoutTag_CICP_11	kAudioChannelLayoutTag_CICP_11	var kAudioChannelLayoutTag_CICP_11: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_12	swift.var	kAudioChannelLayoutTag_CICP_12	kAudioChannelLayoutTag_CICP_12	var kAudioChannelLayoutTag_CICP_12: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_13	swift.var	kAudioChannelLayoutTag_CICP_13	kAudioChannelLayoutTag_CICP_13	var kAudioChannelLayoutTag_CICP_13: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_14	swift.var	kAudioChannelLayoutTag_CICP_14	kAudioChannelLayoutTag_CICP_14	var kAudioChannelLayoutTag_CICP_14: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_15	swift.var	kAudioChannelLayoutTag_CICP_15	kAudioChannelLayoutTag_CICP_15	var kAudioChannelLayoutTag_CICP_15: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_16	swift.var	kAudioChannelLayoutTag_CICP_16	kAudioChannelLayoutTag_CICP_16	var kAudioChannelLayoutTag_CICP_16: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_17	swift.var	kAudioChannelLayoutTag_CICP_17	kAudioChannelLayoutTag_CICP_17	var kAudioChannelLayoutTag_CICP_17: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_18	swift.var	kAudioChannelLayoutTag_CICP_18	kAudioChannelLayoutTag_CICP_18	var kAudioChannelLayoutTag_CICP_18: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_19	swift.var	kAudioChannelLayoutTag_CICP_19	kAudioChannelLayoutTag_CICP_19	var kAudioChannelLayoutTag_CICP_19: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_2	swift.var	kAudioChannelLayoutTag_CICP_2	kAudioChannelLayoutTag_CICP_2	var kAudioChannelLayoutTag_CICP_2: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_20	swift.var	kAudioChannelLayoutTag_CICP_20	kAudioChannelLayoutTag_CICP_20	var kAudioChannelLayoutTag_CICP_20: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_3	swift.var	kAudioChannelLayoutTag_CICP_3	kAudioChannelLayoutTag_CICP_3	var kAudioChannelLayoutTag_CICP_3: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_4	swift.var	kAudioChannelLayoutTag_CICP_4	kAudioChannelLayoutTag_CICP_4	var kAudioChannelLayoutTag_CICP_4: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_5	swift.var	kAudioChannelLayoutTag_CICP_5	kAudioChannelLayoutTag_CICP_5	var kAudioChannelLayoutTag_CICP_5: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_6	swift.var	kAudioChannelLayoutTag_CICP_6	kAudioChannelLayoutTag_CICP_6	var kAudioChannelLayoutTag_CICP_6: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_7	swift.var	kAudioChannelLayoutTag_CICP_7	kAudioChannelLayoutTag_CICP_7	var kAudioChannelLayoutTag_CICP_7: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_CICP_9	swift.var	kAudioChannelLayoutTag_CICP_9	kAudioChannelLayoutTag_CICP_9	var kAudioChannelLayoutTag_CICP_9: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Cube	swift.var	kAudioChannelLayoutTag_Cube	kAudioChannelLayoutTag_Cube	var kAudioChannelLayoutTag_Cube: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_3_1	swift.var	kAudioChannelLayoutTag_DTS_3_1	kAudioChannelLayoutTag_DTS_3_1	var kAudioChannelLayoutTag_DTS_3_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_4_1	swift.var	kAudioChannelLayoutTag_DTS_4_1	kAudioChannelLayoutTag_DTS_4_1	var kAudioChannelLayoutTag_DTS_4_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_6_0_A	swift.var	kAudioChannelLayoutTag_DTS_6_0_A	kAudioChannelLayoutTag_DTS_6_0_A	var kAudioChannelLayoutTag_DTS_6_0_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_6_0_B	swift.var	kAudioChannelLayoutTag_DTS_6_0_B	kAudioChannelLayoutTag_DTS_6_0_B	var kAudioChannelLayoutTag_DTS_6_0_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_6_0_C	swift.var	kAudioChannelLayoutTag_DTS_6_0_C	kAudioChannelLayoutTag_DTS_6_0_C	var kAudioChannelLayoutTag_DTS_6_0_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_6_1_A	swift.var	kAudioChannelLayoutTag_DTS_6_1_A	kAudioChannelLayoutTag_DTS_6_1_A	var kAudioChannelLayoutTag_DTS_6_1_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_6_1_B	swift.var	kAudioChannelLayoutTag_DTS_6_1_B	kAudioChannelLayoutTag_DTS_6_1_B	var kAudioChannelLayoutTag_DTS_6_1_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_6_1_C	swift.var	kAudioChannelLayoutTag_DTS_6_1_C	kAudioChannelLayoutTag_DTS_6_1_C	var kAudioChannelLayoutTag_DTS_6_1_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_6_1_D	swift.var	kAudioChannelLayoutTag_DTS_6_1_D	kAudioChannelLayoutTag_DTS_6_1_D	var kAudioChannelLayoutTag_DTS_6_1_D: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_7_0	swift.var	kAudioChannelLayoutTag_DTS_7_0	kAudioChannelLayoutTag_DTS_7_0	var kAudioChannelLayoutTag_DTS_7_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_7_1	swift.var	kAudioChannelLayoutTag_DTS_7_1	kAudioChannelLayoutTag_DTS_7_1	var kAudioChannelLayoutTag_DTS_7_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_8_0_A	swift.var	kAudioChannelLayoutTag_DTS_8_0_A	kAudioChannelLayoutTag_DTS_8_0_A	var kAudioChannelLayoutTag_DTS_8_0_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_8_0_B	swift.var	kAudioChannelLayoutTag_DTS_8_0_B	kAudioChannelLayoutTag_DTS_8_0_B	var kAudioChannelLayoutTag_DTS_8_0_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_8_1_A	swift.var	kAudioChannelLayoutTag_DTS_8_1_A	kAudioChannelLayoutTag_DTS_8_1_A	var kAudioChannelLayoutTag_DTS_8_1_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DTS_8_1_B	swift.var	kAudioChannelLayoutTag_DTS_8_1_B	kAudioChannelLayoutTag_DTS_8_1_B	var kAudioChannelLayoutTag_DTS_8_1_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_0	swift.var	kAudioChannelLayoutTag_DVD_0	kAudioChannelLayoutTag_DVD_0	var kAudioChannelLayoutTag_DVD_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_1	swift.var	kAudioChannelLayoutTag_DVD_1	kAudioChannelLayoutTag_DVD_1	var kAudioChannelLayoutTag_DVD_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_10	swift.var	kAudioChannelLayoutTag_DVD_10	kAudioChannelLayoutTag_DVD_10	var kAudioChannelLayoutTag_DVD_10: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_11	swift.var	kAudioChannelLayoutTag_DVD_11	kAudioChannelLayoutTag_DVD_11	var kAudioChannelLayoutTag_DVD_11: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_12	swift.var	kAudioChannelLayoutTag_DVD_12	kAudioChannelLayoutTag_DVD_12	var kAudioChannelLayoutTag_DVD_12: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_13	swift.var	kAudioChannelLayoutTag_DVD_13	kAudioChannelLayoutTag_DVD_13	var kAudioChannelLayoutTag_DVD_13: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_14	swift.var	kAudioChannelLayoutTag_DVD_14	kAudioChannelLayoutTag_DVD_14	var kAudioChannelLayoutTag_DVD_14: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_15	swift.var	kAudioChannelLayoutTag_DVD_15	kAudioChannelLayoutTag_DVD_15	var kAudioChannelLayoutTag_DVD_15: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_16	swift.var	kAudioChannelLayoutTag_DVD_16	kAudioChannelLayoutTag_DVD_16	var kAudioChannelLayoutTag_DVD_16: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_17	swift.var	kAudioChannelLayoutTag_DVD_17	kAudioChannelLayoutTag_DVD_17	var kAudioChannelLayoutTag_DVD_17: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_18	swift.var	kAudioChannelLayoutTag_DVD_18	kAudioChannelLayoutTag_DVD_18	var kAudioChannelLayoutTag_DVD_18: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_19	swift.var	kAudioChannelLayoutTag_DVD_19	kAudioChannelLayoutTag_DVD_19	var kAudioChannelLayoutTag_DVD_19: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_2	swift.var	kAudioChannelLayoutTag_DVD_2	kAudioChannelLayoutTag_DVD_2	var kAudioChannelLayoutTag_DVD_2: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_20	swift.var	kAudioChannelLayoutTag_DVD_20	kAudioChannelLayoutTag_DVD_20	var kAudioChannelLayoutTag_DVD_20: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_3	swift.var	kAudioChannelLayoutTag_DVD_3	kAudioChannelLayoutTag_DVD_3	var kAudioChannelLayoutTag_DVD_3: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_4	swift.var	kAudioChannelLayoutTag_DVD_4	kAudioChannelLayoutTag_DVD_4	var kAudioChannelLayoutTag_DVD_4: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_5	swift.var	kAudioChannelLayoutTag_DVD_5	kAudioChannelLayoutTag_DVD_5	var kAudioChannelLayoutTag_DVD_5: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_6	swift.var	kAudioChannelLayoutTag_DVD_6	kAudioChannelLayoutTag_DVD_6	var kAudioChannelLayoutTag_DVD_6: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_7	swift.var	kAudioChannelLayoutTag_DVD_7	kAudioChannelLayoutTag_DVD_7	var kAudioChannelLayoutTag_DVD_7: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_8	swift.var	kAudioChannelLayoutTag_DVD_8	kAudioChannelLayoutTag_DVD_8	var kAudioChannelLayoutTag_DVD_8: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DVD_9	swift.var	kAudioChannelLayoutTag_DVD_9	kAudioChannelLayoutTag_DVD_9	var kAudioChannelLayoutTag_DVD_9: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_DiscreteInOrder	swift.var	kAudioChannelLayoutTag_DiscreteInOrder	kAudioChannelLayoutTag_DiscreteInOrder	var kAudioChannelLayoutTag_DiscreteInOrder: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_EAC3_6_1_A	swift.var	kAudioChannelLayoutTag_EAC3_6_1_A	kAudioChannelLayoutTag_EAC3_6_1_A	var kAudioChannelLayoutTag_EAC3_6_1_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_EAC3_6_1_B	swift.var	kAudioChannelLayoutTag_EAC3_6_1_B	kAudioChannelLayoutTag_EAC3_6_1_B	var kAudioChannelLayoutTag_EAC3_6_1_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_EAC3_6_1_C	swift.var	kAudioChannelLayoutTag_EAC3_6_1_C	kAudioChannelLayoutTag_EAC3_6_1_C	var kAudioChannelLayoutTag_EAC3_6_1_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_EAC3_7_1_A	swift.var	kAudioChannelLayoutTag_EAC3_7_1_A	kAudioChannelLayoutTag_EAC3_7_1_A	var kAudioChannelLayoutTag_EAC3_7_1_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_EAC3_7_1_B	swift.var	kAudioChannelLayoutTag_EAC3_7_1_B	kAudioChannelLayoutTag_EAC3_7_1_B	var kAudioChannelLayoutTag_EAC3_7_1_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_EAC3_7_1_C	swift.var	kAudioChannelLayoutTag_EAC3_7_1_C	kAudioChannelLayoutTag_EAC3_7_1_C	var kAudioChannelLayoutTag_EAC3_7_1_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_EAC3_7_1_D	swift.var	kAudioChannelLayoutTag_EAC3_7_1_D	kAudioChannelLayoutTag_EAC3_7_1_D	var kAudioChannelLayoutTag_EAC3_7_1_D: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_EAC3_7_1_E	swift.var	kAudioChannelLayoutTag_EAC3_7_1_E	kAudioChannelLayoutTag_EAC3_7_1_E	var kAudioChannelLayoutTag_EAC3_7_1_E: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_EAC3_7_1_F	swift.var	kAudioChannelLayoutTag_EAC3_7_1_F	kAudioChannelLayoutTag_EAC3_7_1_F	var kAudioChannelLayoutTag_EAC3_7_1_F: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_EAC3_7_1_G	swift.var	kAudioChannelLayoutTag_EAC3_7_1_G	kAudioChannelLayoutTag_EAC3_7_1_G	var kAudioChannelLayoutTag_EAC3_7_1_G: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_EAC3_7_1_H	swift.var	kAudioChannelLayoutTag_EAC3_7_1_H	kAudioChannelLayoutTag_EAC3_7_1_H	var kAudioChannelLayoutTag_EAC3_7_1_H: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_EAC_6_0_A	swift.var	kAudioChannelLayoutTag_EAC_6_0_A	kAudioChannelLayoutTag_EAC_6_0_A	var kAudioChannelLayoutTag_EAC_6_0_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_EAC_7_0_A	swift.var	kAudioChannelLayoutTag_EAC_7_0_A	kAudioChannelLayoutTag_EAC_7_0_A	var kAudioChannelLayoutTag_EAC_7_0_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Emagic_Default_7_1	swift.var	kAudioChannelLayoutTag_Emagic_Default_7_1	kAudioChannelLayoutTag_Emagic_Default_7_1	var kAudioChannelLayoutTag_Emagic_Default_7_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_EndReserved	swift.var	kAudioChannelLayoutTag_EndReserved	kAudioChannelLayoutTag_EndReserved	var kAudioChannelLayoutTag_EndReserved: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_HOA_ACN_N3D	swift.var	kAudioChannelLayoutTag_HOA_ACN_N3D	kAudioChannelLayoutTag_HOA_ACN_N3D	var kAudioChannelLayoutTag_HOA_ACN_N3D: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_HOA_ACN_SN3D	swift.var	kAudioChannelLayoutTag_HOA_ACN_SN3D	kAudioChannelLayoutTag_HOA_ACN_SN3D	var kAudioChannelLayoutTag_HOA_ACN_SN3D: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Hexagonal	swift.var	kAudioChannelLayoutTag_Hexagonal	kAudioChannelLayoutTag_Hexagonal	var kAudioChannelLayoutTag_Hexagonal: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_ITU_1_0	swift.var	kAudioChannelLayoutTag_ITU_1_0	kAudioChannelLayoutTag_ITU_1_0	var kAudioChannelLayoutTag_ITU_1_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_ITU_2_0	swift.var	kAudioChannelLayoutTag_ITU_2_0	kAudioChannelLayoutTag_ITU_2_0	var kAudioChannelLayoutTag_ITU_2_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_ITU_2_1	swift.var	kAudioChannelLayoutTag_ITU_2_1	kAudioChannelLayoutTag_ITU_2_1	var kAudioChannelLayoutTag_ITU_2_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_ITU_2_2	swift.var	kAudioChannelLayoutTag_ITU_2_2	kAudioChannelLayoutTag_ITU_2_2	var kAudioChannelLayoutTag_ITU_2_2: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_ITU_3_0	swift.var	kAudioChannelLayoutTag_ITU_3_0	kAudioChannelLayoutTag_ITU_3_0	var kAudioChannelLayoutTag_ITU_3_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_ITU_3_1	swift.var	kAudioChannelLayoutTag_ITU_3_1	kAudioChannelLayoutTag_ITU_3_1	var kAudioChannelLayoutTag_ITU_3_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_ITU_3_2	swift.var	kAudioChannelLayoutTag_ITU_3_2	kAudioChannelLayoutTag_ITU_3_2	var kAudioChannelLayoutTag_ITU_3_2: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_ITU_3_2_1	swift.var	kAudioChannelLayoutTag_ITU_3_2_1	kAudioChannelLayoutTag_ITU_3_2_1	var kAudioChannelLayoutTag_ITU_3_2_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_ITU_3_4_1	swift.var	kAudioChannelLayoutTag_ITU_3_4_1	kAudioChannelLayoutTag_ITU_3_4_1	var kAudioChannelLayoutTag_ITU_3_4_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_4_0_A	swift.var	kAudioChannelLayoutTag_Logic_4_0_A	kAudioChannelLayoutTag_Logic_4_0_A	var kAudioChannelLayoutTag_Logic_4_0_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_4_0_B	swift.var	kAudioChannelLayoutTag_Logic_4_0_B	kAudioChannelLayoutTag_Logic_4_0_B	var kAudioChannelLayoutTag_Logic_4_0_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_4_0_C	swift.var	kAudioChannelLayoutTag_Logic_4_0_C	kAudioChannelLayoutTag_Logic_4_0_C	var kAudioChannelLayoutTag_Logic_4_0_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_5_0_A	swift.var	kAudioChannelLayoutTag_Logic_5_0_A	kAudioChannelLayoutTag_Logic_5_0_A	var kAudioChannelLayoutTag_Logic_5_0_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_5_0_B	swift.var	kAudioChannelLayoutTag_Logic_5_0_B	kAudioChannelLayoutTag_Logic_5_0_B	var kAudioChannelLayoutTag_Logic_5_0_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_5_0_C	swift.var	kAudioChannelLayoutTag_Logic_5_0_C	kAudioChannelLayoutTag_Logic_5_0_C	var kAudioChannelLayoutTag_Logic_5_0_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_5_0_D	swift.var	kAudioChannelLayoutTag_Logic_5_0_D	kAudioChannelLayoutTag_Logic_5_0_D	var kAudioChannelLayoutTag_Logic_5_0_D: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_5_1_A	swift.var	kAudioChannelLayoutTag_Logic_5_1_A	kAudioChannelLayoutTag_Logic_5_1_A	var kAudioChannelLayoutTag_Logic_5_1_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_5_1_B	swift.var	kAudioChannelLayoutTag_Logic_5_1_B	kAudioChannelLayoutTag_Logic_5_1_B	var kAudioChannelLayoutTag_Logic_5_1_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_5_1_C	swift.var	kAudioChannelLayoutTag_Logic_5_1_C	kAudioChannelLayoutTag_Logic_5_1_C	var kAudioChannelLayoutTag_Logic_5_1_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_5_1_D	swift.var	kAudioChannelLayoutTag_Logic_5_1_D	kAudioChannelLayoutTag_Logic_5_1_D	var kAudioChannelLayoutTag_Logic_5_1_D: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_6_0_A	swift.var	kAudioChannelLayoutTag_Logic_6_0_A	kAudioChannelLayoutTag_Logic_6_0_A	var kAudioChannelLayoutTag_Logic_6_0_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_6_0_B	swift.var	kAudioChannelLayoutTag_Logic_6_0_B	kAudioChannelLayoutTag_Logic_6_0_B	var kAudioChannelLayoutTag_Logic_6_0_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_6_0_C	swift.var	kAudioChannelLayoutTag_Logic_6_0_C	kAudioChannelLayoutTag_Logic_6_0_C	var kAudioChannelLayoutTag_Logic_6_0_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_6_1_A	swift.var	kAudioChannelLayoutTag_Logic_6_1_A	kAudioChannelLayoutTag_Logic_6_1_A	var kAudioChannelLayoutTag_Logic_6_1_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_6_1_B	swift.var	kAudioChannelLayoutTag_Logic_6_1_B	kAudioChannelLayoutTag_Logic_6_1_B	var kAudioChannelLayoutTag_Logic_6_1_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_6_1_C	swift.var	kAudioChannelLayoutTag_Logic_6_1_C	kAudioChannelLayoutTag_Logic_6_1_C	var kAudioChannelLayoutTag_Logic_6_1_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_6_1_D	swift.var	kAudioChannelLayoutTag_Logic_6_1_D	kAudioChannelLayoutTag_Logic_6_1_D	var kAudioChannelLayoutTag_Logic_6_1_D: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_7_1_A	swift.var	kAudioChannelLayoutTag_Logic_7_1_A	kAudioChannelLayoutTag_Logic_7_1_A	var kAudioChannelLayoutTag_Logic_7_1_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_7_1_B	swift.var	kAudioChannelLayoutTag_Logic_7_1_B	kAudioChannelLayoutTag_Logic_7_1_B	var kAudioChannelLayoutTag_Logic_7_1_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_7_1_C	swift.var	kAudioChannelLayoutTag_Logic_7_1_C	kAudioChannelLayoutTag_Logic_7_1_C	var kAudioChannelLayoutTag_Logic_7_1_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_7_1_SDDS_A	swift.var	kAudioChannelLayoutTag_Logic_7_1_SDDS_A	kAudioChannelLayoutTag_Logic_7_1_SDDS_A	var kAudioChannelLayoutTag_Logic_7_1_SDDS_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_7_1_SDDS_B	swift.var	kAudioChannelLayoutTag_Logic_7_1_SDDS_B	kAudioChannelLayoutTag_Logic_7_1_SDDS_B	var kAudioChannelLayoutTag_Logic_7_1_SDDS_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_7_1_SDDS_C	swift.var	kAudioChannelLayoutTag_Logic_7_1_SDDS_C	kAudioChannelLayoutTag_Logic_7_1_SDDS_C	var kAudioChannelLayoutTag_Logic_7_1_SDDS_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_Atmos_5_1_2	swift.var	kAudioChannelLayoutTag_Logic_Atmos_5_1_2	kAudioChannelLayoutTag_Logic_Atmos_5_1_2	var kAudioChannelLayoutTag_Logic_Atmos_5_1_2: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_Atmos_5_1_4	swift.var	kAudioChannelLayoutTag_Logic_Atmos_5_1_4	kAudioChannelLayoutTag_Logic_Atmos_5_1_4	var kAudioChannelLayoutTag_Logic_Atmos_5_1_4: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_Atmos_7_1_2	swift.var	kAudioChannelLayoutTag_Logic_Atmos_7_1_2	kAudioChannelLayoutTag_Logic_Atmos_7_1_2	var kAudioChannelLayoutTag_Logic_Atmos_7_1_2: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_Atmos_7_1_4_A	swift.var	kAudioChannelLayoutTag_Logic_Atmos_7_1_4_A	kAudioChannelLayoutTag_Logic_Atmos_7_1_4_A	var kAudioChannelLayoutTag_Logic_Atmos_7_1_4_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_Atmos_7_1_4_B	swift.var	kAudioChannelLayoutTag_Logic_Atmos_7_1_4_B	kAudioChannelLayoutTag_Logic_Atmos_7_1_4_B	var kAudioChannelLayoutTag_Logic_Atmos_7_1_4_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_Atmos_7_1_6	swift.var	kAudioChannelLayoutTag_Logic_Atmos_7_1_6	kAudioChannelLayoutTag_Logic_Atmos_7_1_6	var kAudioChannelLayoutTag_Logic_Atmos_7_1_6: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_Mono	swift.var	kAudioChannelLayoutTag_Logic_Mono	kAudioChannelLayoutTag_Logic_Mono	var kAudioChannelLayoutTag_Logic_Mono: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_Quadraphonic	swift.var	kAudioChannelLayoutTag_Logic_Quadraphonic	kAudioChannelLayoutTag_Logic_Quadraphonic	var kAudioChannelLayoutTag_Logic_Quadraphonic: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Logic_Stereo	swift.var	kAudioChannelLayoutTag_Logic_Stereo	kAudioChannelLayoutTag_Logic_Stereo	var kAudioChannelLayoutTag_Logic_Stereo: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_1_0	swift.var	kAudioChannelLayoutTag_MPEG_1_0	kAudioChannelLayoutTag_MPEG_1_0	var kAudioChannelLayoutTag_MPEG_1_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_2_0	swift.var	kAudioChannelLayoutTag_MPEG_2_0	kAudioChannelLayoutTag_MPEG_2_0	var kAudioChannelLayoutTag_MPEG_2_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_3_0_A	swift.var	kAudioChannelLayoutTag_MPEG_3_0_A	kAudioChannelLayoutTag_MPEG_3_0_A	var kAudioChannelLayoutTag_MPEG_3_0_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_3_0_B	swift.var	kAudioChannelLayoutTag_MPEG_3_0_B	kAudioChannelLayoutTag_MPEG_3_0_B	var kAudioChannelLayoutTag_MPEG_3_0_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_4_0_A	swift.var	kAudioChannelLayoutTag_MPEG_4_0_A	kAudioChannelLayoutTag_MPEG_4_0_A	var kAudioChannelLayoutTag_MPEG_4_0_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_4_0_B	swift.var	kAudioChannelLayoutTag_MPEG_4_0_B	kAudioChannelLayoutTag_MPEG_4_0_B	var kAudioChannelLayoutTag_MPEG_4_0_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_5_0_A	swift.var	kAudioChannelLayoutTag_MPEG_5_0_A	kAudioChannelLayoutTag_MPEG_5_0_A	var kAudioChannelLayoutTag_MPEG_5_0_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_5_0_B	swift.var	kAudioChannelLayoutTag_MPEG_5_0_B	kAudioChannelLayoutTag_MPEG_5_0_B	var kAudioChannelLayoutTag_MPEG_5_0_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_5_0_C	swift.var	kAudioChannelLayoutTag_MPEG_5_0_C	kAudioChannelLayoutTag_MPEG_5_0_C	var kAudioChannelLayoutTag_MPEG_5_0_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_5_0_D	swift.var	kAudioChannelLayoutTag_MPEG_5_0_D	kAudioChannelLayoutTag_MPEG_5_0_D	var kAudioChannelLayoutTag_MPEG_5_0_D: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_5_0_E	swift.var	kAudioChannelLayoutTag_MPEG_5_0_E	kAudioChannelLayoutTag_MPEG_5_0_E	var kAudioChannelLayoutTag_MPEG_5_0_E: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_5_1_A	swift.var	kAudioChannelLayoutTag_MPEG_5_1_A	kAudioChannelLayoutTag_MPEG_5_1_A	var kAudioChannelLayoutTag_MPEG_5_1_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_5_1_B	swift.var	kAudioChannelLayoutTag_MPEG_5_1_B	kAudioChannelLayoutTag_MPEG_5_1_B	var kAudioChannelLayoutTag_MPEG_5_1_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_5_1_C	swift.var	kAudioChannelLayoutTag_MPEG_5_1_C	kAudioChannelLayoutTag_MPEG_5_1_C	var kAudioChannelLayoutTag_MPEG_5_1_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_5_1_D	swift.var	kAudioChannelLayoutTag_MPEG_5_1_D	kAudioChannelLayoutTag_MPEG_5_1_D	var kAudioChannelLayoutTag_MPEG_5_1_D: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_5_1_E	swift.var	kAudioChannelLayoutTag_MPEG_5_1_E	kAudioChannelLayoutTag_MPEG_5_1_E	var kAudioChannelLayoutTag_MPEG_5_1_E: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_6_1_A	swift.var	kAudioChannelLayoutTag_MPEG_6_1_A	kAudioChannelLayoutTag_MPEG_6_1_A	var kAudioChannelLayoutTag_MPEG_6_1_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_6_1_B	swift.var	kAudioChannelLayoutTag_MPEG_6_1_B	kAudioChannelLayoutTag_MPEG_6_1_B	var kAudioChannelLayoutTag_MPEG_6_1_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_7_1_A	swift.var	kAudioChannelLayoutTag_MPEG_7_1_A	kAudioChannelLayoutTag_MPEG_7_1_A	var kAudioChannelLayoutTag_MPEG_7_1_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_7_1_B	swift.var	kAudioChannelLayoutTag_MPEG_7_1_B	kAudioChannelLayoutTag_MPEG_7_1_B	var kAudioChannelLayoutTag_MPEG_7_1_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_7_1_C	swift.var	kAudioChannelLayoutTag_MPEG_7_1_C	kAudioChannelLayoutTag_MPEG_7_1_C	var kAudioChannelLayoutTag_MPEG_7_1_C: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MPEG_7_1_D	swift.var	kAudioChannelLayoutTag_MPEG_7_1_D	kAudioChannelLayoutTag_MPEG_7_1_D	var kAudioChannelLayoutTag_MPEG_7_1_D: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MatrixStereo	swift.var	kAudioChannelLayoutTag_MatrixStereo	kAudioChannelLayoutTag_MatrixStereo	var kAudioChannelLayoutTag_MatrixStereo: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_MidSide	swift.var	kAudioChannelLayoutTag_MidSide	kAudioChannelLayoutTag_MidSide	var kAudioChannelLayoutTag_MidSide: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Mono	swift.var	kAudioChannelLayoutTag_Mono	kAudioChannelLayoutTag_Mono	var kAudioChannelLayoutTag_Mono: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Octagonal	swift.var	kAudioChannelLayoutTag_Octagonal	kAudioChannelLayoutTag_Octagonal	var kAudioChannelLayoutTag_Octagonal: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Ogg_3_0	swift.var	kAudioChannelLayoutTag_Ogg_3_0	kAudioChannelLayoutTag_Ogg_3_0	var kAudioChannelLayoutTag_Ogg_3_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Ogg_4_0	swift.var	kAudioChannelLayoutTag_Ogg_4_0	kAudioChannelLayoutTag_Ogg_4_0	var kAudioChannelLayoutTag_Ogg_4_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Ogg_5_0	swift.var	kAudioChannelLayoutTag_Ogg_5_0	kAudioChannelLayoutTag_Ogg_5_0	var kAudioChannelLayoutTag_Ogg_5_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Ogg_5_1	swift.var	kAudioChannelLayoutTag_Ogg_5_1	kAudioChannelLayoutTag_Ogg_5_1	var kAudioChannelLayoutTag_Ogg_5_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Ogg_6_1	swift.var	kAudioChannelLayoutTag_Ogg_6_1	kAudioChannelLayoutTag_Ogg_6_1	var kAudioChannelLayoutTag_Ogg_6_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Ogg_7_1	swift.var	kAudioChannelLayoutTag_Ogg_7_1	kAudioChannelLayoutTag_Ogg_7_1	var kAudioChannelLayoutTag_Ogg_7_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Pentagonal	swift.var	kAudioChannelLayoutTag_Pentagonal	kAudioChannelLayoutTag_Pentagonal	var kAudioChannelLayoutTag_Pentagonal: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Quadraphonic	swift.var	kAudioChannelLayoutTag_Quadraphonic	kAudioChannelLayoutTag_Quadraphonic	var kAudioChannelLayoutTag_Quadraphonic: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_SMPTE_DTV	swift.var	kAudioChannelLayoutTag_SMPTE_DTV	kAudioChannelLayoutTag_SMPTE_DTV	var kAudioChannelLayoutTag_SMPTE_DTV: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Stereo	swift.var	kAudioChannelLayoutTag_Stereo	kAudioChannelLayoutTag_Stereo	var kAudioChannelLayoutTag_Stereo: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_StereoHeadphones	swift.var	kAudioChannelLayoutTag_StereoHeadphones	kAudioChannelLayoutTag_StereoHeadphones	var kAudioChannelLayoutTag_StereoHeadphones: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_TMH_10_2_full	swift.var	kAudioChannelLayoutTag_TMH_10_2_full	kAudioChannelLayoutTag_TMH_10_2_full	var kAudioChannelLayoutTag_TMH_10_2_full: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_TMH_10_2_std	swift.var	kAudioChannelLayoutTag_TMH_10_2_std	kAudioChannelLayoutTag_TMH_10_2_std	var kAudioChannelLayoutTag_TMH_10_2_std: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_Unknown	swift.var	kAudioChannelLayoutTag_Unknown	kAudioChannelLayoutTag_Unknown	var kAudioChannelLayoutTag_Unknown: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_UseChannelBitmap	swift.var	kAudioChannelLayoutTag_UseChannelBitmap	kAudioChannelLayoutTag_UseChannelBitmap	var kAudioChannelLayoutTag_UseChannelBitmap: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_UseChannelDescriptions	swift.var	kAudioChannelLayoutTag_UseChannelDescriptions	kAudioChannelLayoutTag_UseChannelDescriptions	var kAudioChannelLayoutTag_UseChannelDescriptions: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_WAVE_2_1	swift.var	kAudioChannelLayoutTag_WAVE_2_1	kAudioChannelLayoutTag_WAVE_2_1	var kAudioChannelLayoutTag_WAVE_2_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_WAVE_3_0	swift.var	kAudioChannelLayoutTag_WAVE_3_0	kAudioChannelLayoutTag_WAVE_3_0	var kAudioChannelLayoutTag_WAVE_3_0: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_WAVE_4_0_A	swift.var	kAudioChannelLayoutTag_WAVE_4_0_A	kAudioChannelLayoutTag_WAVE_4_0_A	var kAudioChannelLayoutTag_WAVE_4_0_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_WAVE_4_0_B	swift.var	kAudioChannelLayoutTag_WAVE_4_0_B	kAudioChannelLayoutTag_WAVE_4_0_B	var kAudioChannelLayoutTag_WAVE_4_0_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_WAVE_5_0_A	swift.var	kAudioChannelLayoutTag_WAVE_5_0_A	kAudioChannelLayoutTag_WAVE_5_0_A	var kAudioChannelLayoutTag_WAVE_5_0_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_WAVE_5_0_B	swift.var	kAudioChannelLayoutTag_WAVE_5_0_B	kAudioChannelLayoutTag_WAVE_5_0_B	var kAudioChannelLayoutTag_WAVE_5_0_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_WAVE_5_1_A	swift.var	kAudioChannelLayoutTag_WAVE_5_1_A	kAudioChannelLayoutTag_WAVE_5_1_A	var kAudioChannelLayoutTag_WAVE_5_1_A: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_WAVE_5_1_B	swift.var	kAudioChannelLayoutTag_WAVE_5_1_B	kAudioChannelLayoutTag_WAVE_5_1_B	var kAudioChannelLayoutTag_WAVE_5_1_B: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_WAVE_6_1	swift.var	kAudioChannelLayoutTag_WAVE_6_1	kAudioChannelLayoutTag_WAVE_6_1	var kAudioChannelLayoutTag_WAVE_6_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_WAVE_7_1	swift.var	kAudioChannelLayoutTag_WAVE_7_1	kAudioChannelLayoutTag_WAVE_7_1	var kAudioChannelLayoutTag_WAVE_7_1: AudioChannelLayoutTag { get }
+c:@Ea@kAudioChannelLayoutTag_UseChannelDescriptions@kAudioChannelLayoutTag_XY	swift.var	kAudioChannelLayoutTag_XY	kAudioChannelLayoutTag_XY	var kAudioChannelLayoutTag_XY: AudioChannelLayoutTag { get }
+c:@Ea@kAudioFormatFlagIsFloat@kAppleLosslessFormatFlag_16BitSourceData	swift.var	kAppleLosslessFormatFlag_16BitSourceData	kAppleLosslessFormatFlag_16BitSourceData	var kAppleLosslessFormatFlag_16BitSourceData: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kAppleLosslessFormatFlag_20BitSourceData	swift.var	kAppleLosslessFormatFlag_20BitSourceData	kAppleLosslessFormatFlag_20BitSourceData	var kAppleLosslessFormatFlag_20BitSourceData: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kAppleLosslessFormatFlag_24BitSourceData	swift.var	kAppleLosslessFormatFlag_24BitSourceData	kAppleLosslessFormatFlag_24BitSourceData	var kAppleLosslessFormatFlag_24BitSourceData: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kAppleLosslessFormatFlag_32BitSourceData	swift.var	kAppleLosslessFormatFlag_32BitSourceData	kAppleLosslessFormatFlag_32BitSourceData	var kAppleLosslessFormatFlag_32BitSourceData: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kAudioFormatFlagIsAlignedHigh	swift.var	kAudioFormatFlagIsAlignedHigh	kAudioFormatFlagIsAlignedHigh	var kAudioFormatFlagIsAlignedHigh: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kAudioFormatFlagIsBigEndian	swift.var	kAudioFormatFlagIsBigEndian	kAudioFormatFlagIsBigEndian	var kAudioFormatFlagIsBigEndian: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kAudioFormatFlagIsFloat	swift.var	kAudioFormatFlagIsFloat	kAudioFormatFlagIsFloat	var kAudioFormatFlagIsFloat: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kAudioFormatFlagIsNonInterleaved	swift.var	kAudioFormatFlagIsNonInterleaved	kAudioFormatFlagIsNonInterleaved	var kAudioFormatFlagIsNonInterleaved: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kAudioFormatFlagIsNonMixable	swift.var	kAudioFormatFlagIsNonMixable	kAudioFormatFlagIsNonMixable	var kAudioFormatFlagIsNonMixable: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kAudioFormatFlagIsPacked	swift.var	kAudioFormatFlagIsPacked	kAudioFormatFlagIsPacked	var kAudioFormatFlagIsPacked: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kAudioFormatFlagIsSignedInteger	swift.var	kAudioFormatFlagIsSignedInteger	kAudioFormatFlagIsSignedInteger	var kAudioFormatFlagIsSignedInteger: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kAudioFormatFlagsAreAllClear	swift.var	kAudioFormatFlagsAreAllClear	kAudioFormatFlagsAreAllClear	var kAudioFormatFlagsAreAllClear: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kLinearPCMFormatFlagIsAlignedHigh	swift.var	kLinearPCMFormatFlagIsAlignedHigh	kLinearPCMFormatFlagIsAlignedHigh	var kLinearPCMFormatFlagIsAlignedHigh: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kLinearPCMFormatFlagIsBigEndian	swift.var	kLinearPCMFormatFlagIsBigEndian	kLinearPCMFormatFlagIsBigEndian	var kLinearPCMFormatFlagIsBigEndian: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kLinearPCMFormatFlagIsFloat	swift.var	kLinearPCMFormatFlagIsFloat	kLinearPCMFormatFlagIsFloat	var kLinearPCMFormatFlagIsFloat: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kLinearPCMFormatFlagIsNonInterleaved	swift.var	kLinearPCMFormatFlagIsNonInterleaved	kLinearPCMFormatFlagIsNonInterleaved	var kLinearPCMFormatFlagIsNonInterleaved: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kLinearPCMFormatFlagIsNonMixable	swift.var	kLinearPCMFormatFlagIsNonMixable	kLinearPCMFormatFlagIsNonMixable	var kLinearPCMFormatFlagIsNonMixable: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kLinearPCMFormatFlagIsPacked	swift.var	kLinearPCMFormatFlagIsPacked	kLinearPCMFormatFlagIsPacked	var kLinearPCMFormatFlagIsPacked: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kLinearPCMFormatFlagIsSignedInteger	swift.var	kLinearPCMFormatFlagIsSignedInteger	kLinearPCMFormatFlagIsSignedInteger	var kLinearPCMFormatFlagIsSignedInteger: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kLinearPCMFormatFlagsAreAllClear	swift.var	kLinearPCMFormatFlagsAreAllClear	kLinearPCMFormatFlagsAreAllClear	var kLinearPCMFormatFlagsAreAllClear: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kLinearPCMFormatFlagsSampleFractionMask	swift.var	kLinearPCMFormatFlagsSampleFractionMask	kLinearPCMFormatFlagsSampleFractionMask	var kLinearPCMFormatFlagsSampleFractionMask: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagIsFloat@kLinearPCMFormatFlagsSampleFractionShift	swift.var	kLinearPCMFormatFlagsSampleFractionShift	kLinearPCMFormatFlagsSampleFractionShift	var kLinearPCMFormatFlagsSampleFractionShift: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagsNativeEndian@kAudioFormatFlagsAudioUnitCanonical	swift.var	kAudioFormatFlagsAudioUnitCanonical	kAudioFormatFlagsAudioUnitCanonical	var kAudioFormatFlagsAudioUnitCanonical: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagsNativeEndian@kAudioFormatFlagsCanonical	swift.var	kAudioFormatFlagsCanonical	kAudioFormatFlagsCanonical	var kAudioFormatFlagsCanonical: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagsNativeEndian@kAudioFormatFlagsNativeEndian	swift.var	kAudioFormatFlagsNativeEndian	kAudioFormatFlagsNativeEndian	var kAudioFormatFlagsNativeEndian: AudioFormatFlags { get }
+c:@Ea@kAudioFormatFlagsNativeEndian@kAudioFormatFlagsNativeFloatPacked	swift.var	kAudioFormatFlagsNativeFloatPacked	kAudioFormatFlagsNativeFloatPacked	var kAudioFormatFlagsNativeFloatPacked: AudioFormatFlags { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormat60958AC3	swift.var	kAudioFormat60958AC3	kAudioFormat60958AC3	var kAudioFormat60958AC3: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatAC3	swift.var	kAudioFormatAC3	kAudioFormatAC3	var kAudioFormatAC3: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatAES3	swift.var	kAudioFormatAES3	kAudioFormatAES3	var kAudioFormatAES3: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatALaw	swift.var	kAudioFormatALaw	kAudioFormatALaw	var kAudioFormatALaw: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatAMR	swift.var	kAudioFormatAMR	kAudioFormatAMR	var kAudioFormatAMR: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatAMR_WB	swift.var	kAudioFormatAMR_WB	kAudioFormatAMR_WB	var kAudioFormatAMR_WB: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatAPAC	swift.var	kAudioFormatAPAC	kAudioFormatAPAC	var kAudioFormatAPAC: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatAppleIMA4	swift.var	kAudioFormatAppleIMA4	kAudioFormatAppleIMA4	var kAudioFormatAppleIMA4: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatAppleLossless	swift.var	kAudioFormatAppleLossless	kAudioFormatAppleLossless	var kAudioFormatAppleLossless: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatAudible	swift.var	kAudioFormatAudible	kAudioFormatAudible	var kAudioFormatAudible: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatDVIIntelIMA	swift.var	kAudioFormatDVIIntelIMA	kAudioFormatDVIIntelIMA	var kAudioFormatDVIIntelIMA: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatEnhancedAC3	swift.var	kAudioFormatEnhancedAC3	kAudioFormatEnhancedAC3	var kAudioFormatEnhancedAC3: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatFLAC	swift.var	kAudioFormatFLAC	kAudioFormatFLAC	var kAudioFormatFLAC: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatLinearPCM	swift.var	kAudioFormatLinearPCM	kAudioFormatLinearPCM	var kAudioFormatLinearPCM: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMACE3	swift.var	kAudioFormatMACE3	kAudioFormatMACE3	var kAudioFormatMACE3: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMACE6	swift.var	kAudioFormatMACE6	kAudioFormatMACE6	var kAudioFormatMACE6: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMIDIStream	swift.var	kAudioFormatMIDIStream	kAudioFormatMIDIStream	var kAudioFormatMIDIStream: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEG4AAC	swift.var	kAudioFormatMPEG4AAC	kAudioFormatMPEG4AAC	var kAudioFormatMPEG4AAC: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEG4AAC_ELD	swift.var	kAudioFormatMPEG4AAC_ELD	kAudioFormatMPEG4AAC_ELD	var kAudioFormatMPEG4AAC_ELD: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEG4AAC_ELD_SBR	swift.var	kAudioFormatMPEG4AAC_ELD_SBR	kAudioFormatMPEG4AAC_ELD_SBR	var kAudioFormatMPEG4AAC_ELD_SBR: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEG4AAC_ELD_V2	swift.var	kAudioFormatMPEG4AAC_ELD_V2	kAudioFormatMPEG4AAC_ELD_V2	var kAudioFormatMPEG4AAC_ELD_V2: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEG4AAC_HE	swift.var	kAudioFormatMPEG4AAC_HE	kAudioFormatMPEG4AAC_HE	var kAudioFormatMPEG4AAC_HE: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEG4AAC_HE_V2	swift.var	kAudioFormatMPEG4AAC_HE_V2	kAudioFormatMPEG4AAC_HE_V2	var kAudioFormatMPEG4AAC_HE_V2: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEG4AAC_LD	swift.var	kAudioFormatMPEG4AAC_LD	kAudioFormatMPEG4AAC_LD	var kAudioFormatMPEG4AAC_LD: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEG4AAC_Spatial	swift.var	kAudioFormatMPEG4AAC_Spatial	kAudioFormatMPEG4AAC_Spatial	var kAudioFormatMPEG4AAC_Spatial: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEG4CELP	swift.var	kAudioFormatMPEG4CELP	kAudioFormatMPEG4CELP	var kAudioFormatMPEG4CELP: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEG4HVXC	swift.var	kAudioFormatMPEG4HVXC	kAudioFormatMPEG4HVXC	var kAudioFormatMPEG4HVXC: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEG4TwinVQ	swift.var	kAudioFormatMPEG4TwinVQ	kAudioFormatMPEG4TwinVQ	var kAudioFormatMPEG4TwinVQ: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEGD_USAC	swift.var	kAudioFormatMPEGD_USAC	kAudioFormatMPEGD_USAC	var kAudioFormatMPEGD_USAC: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEGLayer1	swift.var	kAudioFormatMPEGLayer1	kAudioFormatMPEGLayer1	var kAudioFormatMPEGLayer1: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEGLayer2	swift.var	kAudioFormatMPEGLayer2	kAudioFormatMPEGLayer2	var kAudioFormatMPEGLayer2: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMPEGLayer3	swift.var	kAudioFormatMPEGLayer3	kAudioFormatMPEGLayer3	var kAudioFormatMPEGLayer3: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatMicrosoftGSM	swift.var	kAudioFormatMicrosoftGSM	kAudioFormatMicrosoftGSM	var kAudioFormatMicrosoftGSM: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatOpus	swift.var	kAudioFormatOpus	kAudioFormatOpus	var kAudioFormatOpus: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatParameterValueStream	swift.var	kAudioFormatParameterValueStream	kAudioFormatParameterValueStream	var kAudioFormatParameterValueStream: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatQDesign	swift.var	kAudioFormatQDesign	kAudioFormatQDesign	var kAudioFormatQDesign: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatQDesign2	swift.var	kAudioFormatQDesign2	kAudioFormatQDesign2	var kAudioFormatQDesign2: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatQUALCOMM	swift.var	kAudioFormatQUALCOMM	kAudioFormatQUALCOMM	var kAudioFormatQUALCOMM: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatTimeCode	swift.var	kAudioFormatTimeCode	kAudioFormatTimeCode	var kAudioFormatTimeCode: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatULaw	swift.var	kAudioFormatULaw	kAudioFormatULaw	var kAudioFormatULaw: AudioFormatID { get }
+c:@Ea@kAudioFormatLinearPCM@kAudioFormatiLBC	swift.var	kAudioFormatiLBC	kAudioFormatiLBC	var kAudioFormatiLBC: AudioFormatID { get }
+c:@Ea@kAudio_NoError@kAudio_BadFilePathError	swift.var	kAudio_BadFilePathError	kAudio_BadFilePathError	var kAudio_BadFilePathError: OSStatus { get }
+c:@Ea@kAudio_NoError@kAudio_FileNotFoundError	swift.var	kAudio_FileNotFoundError	kAudio_FileNotFoundError	var kAudio_FileNotFoundError: OSStatus { get }
+c:@Ea@kAudio_NoError@kAudio_FilePermissionError	swift.var	kAudio_FilePermissionError	kAudio_FilePermissionError	var kAudio_FilePermissionError: OSStatus { get }
+c:@Ea@kAudio_NoError@kAudio_MemFullError	swift.var	kAudio_MemFullError	kAudio_MemFullError	var kAudio_MemFullError: OSStatus { get }
+c:@Ea@kAudio_NoError@kAudio_NoError	swift.var	kAudio_NoError	kAudio_NoError	var kAudio_NoError: OSStatus { get }
+c:@Ea@kAudio_NoError@kAudio_ParamError	swift.var	kAudio_ParamError	kAudio_ParamError	var kAudio_ParamError: OSStatus { get }
+c:@Ea@kAudio_NoError@kAudio_TooManyFilesOpenError	swift.var	kAudio_TooManyFilesOpenError	kAudio_TooManyFilesOpenError	var kAudio_TooManyFilesOpenError: OSStatus { get }
+c:@Ea@kAudio_NoError@kAudio_UnimplementedError	swift.var	kAudio_UnimplementedError	kAudio_UnimplementedError	var kAudio_UnimplementedError: OSStatus { get }
+c:@F@AudioChannelLayoutTag_GetNumberOfChannels	swift.func	AudioChannelLayoutTag_GetNumberOfChannels(_:)	AudioChannelLayoutTag_GetNumberOfChannels(_:)	func AudioChannelLayoutTag_GetNumberOfChannels(_ inLayoutTag: AudioChannelLayoutTag) -> UInt32
+c:@S@AudioBuffer	swift.struct	AudioBuffer	AudioBuffer	struct AudioBuffer
+c:@S@AudioBuffer@FI@mData	swift.property	mData	AudioBuffer.mData	var mData: UnsafeMutableRawPointer?
+c:@S@AudioBuffer@FI@mDataByteSize	swift.property	mDataByteSize	AudioBuffer.mDataByteSize	var mDataByteSize: UInt32
+c:@S@AudioBuffer@FI@mNumberChannels	swift.property	mNumberChannels	AudioBuffer.mNumberChannels	var mNumberChannels: UInt32
+c:@S@AudioBufferList	swift.struct	AudioBufferList	AudioBufferList	struct AudioBufferList
+c:@S@AudioBufferList@FI@mBuffers	swift.property	mBuffers	AudioBufferList.mBuffers	var mBuffers: AudioBuffer
+c:@S@AudioBufferList@FI@mNumberBuffers	swift.property	mNumberBuffers	AudioBufferList.mNumberBuffers	var mNumberBuffers: UInt32
+c:@S@AudioChannelDescription	swift.struct	AudioChannelDescription	AudioChannelDescription	struct AudioChannelDescription
+c:@S@AudioChannelDescription@FI@mChannelFlags	swift.property	mChannelFlags	AudioChannelDescription.mChannelFlags	var mChannelFlags: AudioChannelFlags
+c:@S@AudioChannelDescription@FI@mChannelLabel	swift.property	mChannelLabel	AudioChannelDescription.mChannelLabel	var mChannelLabel: AudioChannelLabel
+c:@S@AudioChannelDescription@FI@mCoordinates	swift.property	mCoordinates	AudioChannelDescription.mCoordinates	var mCoordinates: (Float32, Float32, Float32)
+c:@S@AudioChannelLayout	swift.struct	AudioChannelLayout	AudioChannelLayout	struct AudioChannelLayout
+c:@S@AudioChannelLayout@FI@mChannelBitmap	swift.property	mChannelBitmap	AudioChannelLayout.mChannelBitmap	var mChannelBitmap: AudioChannelBitmap
+c:@S@AudioChannelLayout@FI@mChannelDescriptions	swift.property	mChannelDescriptions	AudioChannelLayout.mChannelDescriptions	var mChannelDescriptions: AudioChannelDescription
+c:@S@AudioChannelLayout@FI@mChannelLayoutTag	swift.property	mChannelLayoutTag	AudioChannelLayout.mChannelLayoutTag	var mChannelLayoutTag: AudioChannelLayoutTag
+c:@S@AudioChannelLayout@FI@mNumberChannelDescriptions	swift.property	mNumberChannelDescriptions	AudioChannelLayout.mNumberChannelDescriptions	var mNumberChannelDescriptions: UInt32
+c:@S@AudioClassDescription	swift.struct	AudioClassDescription	AudioClassDescription	struct AudioClassDescription
+c:@S@AudioClassDescription@FI@mManufacturer	swift.property	mManufacturer	AudioClassDescription.mManufacturer	var mManufacturer: OSType
+c:@S@AudioClassDescription@FI@mSubType	swift.property	mSubType	AudioClassDescription.mSubType	var mSubType: OSType
+c:@S@AudioClassDescription@FI@mType	swift.property	mType	AudioClassDescription.mType	var mType: OSType
+c:@S@AudioFormatListItem	swift.struct	AudioFormatListItem	AudioFormatListItem	struct AudioFormatListItem
+c:@S@AudioFormatListItem@FI@mASBD	swift.property	mASBD	AudioFormatListItem.mASBD	var mASBD: AudioStreamBasicDescription
+c:@S@AudioFormatListItem@FI@mChannelLayoutTag	swift.property	mChannelLayoutTag	AudioFormatListItem.mChannelLayoutTag	var mChannelLayoutTag: AudioChannelLayoutTag
+c:@S@AudioStreamBasicDescription	swift.struct	AudioStreamBasicDescription	AudioStreamBasicDescription	struct AudioStreamBasicDescription
+c:@S@AudioStreamBasicDescription@FI@mBitsPerChannel	swift.property	mBitsPerChannel	AudioStreamBasicDescription.mBitsPerChannel	var mBitsPerChannel: UInt32
+c:@S@AudioStreamBasicDescription@FI@mBytesPerFrame	swift.property	mBytesPerFrame	AudioStreamBasicDescription.mBytesPerFrame	var mBytesPerFrame: UInt32
+c:@S@AudioStreamBasicDescription@FI@mBytesPerPacket	swift.property	mBytesPerPacket	AudioStreamBasicDescription.mBytesPerPacket	var mBytesPerPacket: UInt32
+c:@S@AudioStreamBasicDescription@FI@mChannelsPerFrame	swift.property	mChannelsPerFrame	AudioStreamBasicDescription.mChannelsPerFrame	var mChannelsPerFrame: UInt32
+c:@S@AudioStreamBasicDescription@FI@mFormatFlags	swift.property	mFormatFlags	AudioStreamBasicDescription.mFormatFlags	var mFormatFlags: AudioFormatFlags
+c:@S@AudioStreamBasicDescription@FI@mFormatID	swift.property	mFormatID	AudioStreamBasicDescription.mFormatID	var mFormatID: AudioFormatID
+c:@S@AudioStreamBasicDescription@FI@mFramesPerPacket	swift.property	mFramesPerPacket	AudioStreamBasicDescription.mFramesPerPacket	var mFramesPerPacket: UInt32
+c:@S@AudioStreamBasicDescription@FI@mReserved	swift.property	mReserved	AudioStreamBasicDescription.mReserved	var mReserved: UInt32
+c:@S@AudioStreamBasicDescription@FI@mSampleRate	swift.property	mSampleRate	AudioStreamBasicDescription.mSampleRate	var mSampleRate: Float64
+c:@S@AudioStreamPacketDependencyDescription	swift.struct	AudioStreamPacketDependencyDescription	AudioStreamPacketDependencyDescription	struct AudioStreamPacketDependencyDescription
+c:@S@AudioStreamPacketDependencyDescription@FI@mFlags	swift.property	mFlags	AudioStreamPacketDependencyDescription.mFlags	var mFlags: UInt32
+c:@S@AudioStreamPacketDependencyDescription@FI@mIsIndependentlyDecodable	swift.property	mIsIndependentlyDecodable	AudioStreamPacketDependencyDescription.mIsIndependentlyDecodable	var mIsIndependentlyDecodable: UInt32
+c:@S@AudioStreamPacketDependencyDescription@FI@mPreRollCount	swift.property	mPreRollCount	AudioStreamPacketDependencyDescription.mPreRollCount	var mPreRollCount: UInt32
+c:@S@AudioStreamPacketDependencyDescription@FI@mReserved	swift.property	mReserved	AudioStreamPacketDependencyDescription.mReserved	var mReserved: UInt32
+c:@S@AudioStreamPacketDescription	swift.struct	AudioStreamPacketDescription	AudioStreamPacketDescription	struct AudioStreamPacketDescription
+c:@S@AudioStreamPacketDescription@FI@mDataByteSize	swift.property	mDataByteSize	AudioStreamPacketDescription.mDataByteSize	var mDataByteSize: UInt32
+c:@S@AudioStreamPacketDescription@FI@mStartOffset	swift.property	mStartOffset	AudioStreamPacketDescription.mStartOffset	var mStartOffset: Int64
+c:@S@AudioStreamPacketDescription@FI@mVariableFramesInPacket	swift.property	mVariableFramesInPacket	AudioStreamPacketDescription.mVariableFramesInPacket	var mVariableFramesInPacket: UInt32
+c:@S@AudioTimeStamp	swift.struct	AudioTimeStamp	AudioTimeStamp	struct AudioTimeStamp
+c:@S@AudioTimeStamp@FI@mFlags	swift.property	mFlags	AudioTimeStamp.mFlags	var mFlags: AudioTimeStampFlags
+c:@S@AudioTimeStamp@FI@mHostTime	swift.property	mHostTime	AudioTimeStamp.mHostTime	var mHostTime: UInt64
+c:@S@AudioTimeStamp@FI@mRateScalar	swift.property	mRateScalar	AudioTimeStamp.mRateScalar	var mRateScalar: Float64
+c:@S@AudioTimeStamp@FI@mReserved	swift.property	mReserved	AudioTimeStamp.mReserved	var mReserved: UInt32
+c:@S@AudioTimeStamp@FI@mSMPTETime	swift.property	mSMPTETime	AudioTimeStamp.mSMPTETime	var mSMPTETime: SMPTETime
+c:@S@AudioTimeStamp@FI@mSampleTime	swift.property	mSampleTime	AudioTimeStamp.mSampleTime	var mSampleTime: Float64
+c:@S@AudioTimeStamp@FI@mWordClockTime	swift.property	mWordClockTime	AudioTimeStamp.mWordClockTime	var mWordClockTime: UInt64
+c:@S@AudioValueRange	swift.struct	AudioValueRange	AudioValueRange	struct AudioValueRange
+c:@S@AudioValueRange@FI@mMaximum	swift.property	mMaximum	AudioValueRange.mMaximum	var mMaximum: Float64
+c:@S@AudioValueRange@FI@mMinimum	swift.property	mMinimum	AudioValueRange.mMinimum	var mMinimum: Float64
+c:@S@AudioValueTranslation	swift.struct	AudioValueTranslation	AudioValueTranslation	struct AudioValueTranslation
+c:@S@AudioValueTranslation@FI@mInputData	swift.property	mInputData	AudioValueTranslation.mInputData	var mInputData: UnsafeMutableRawPointer
+c:@S@AudioValueTranslation@FI@mInputDataSize	swift.property	mInputDataSize	AudioValueTranslation.mInputDataSize	var mInputDataSize: UInt32
+c:@S@AudioValueTranslation@FI@mOutputData	swift.property	mOutputData	AudioValueTranslation.mOutputData	var mOutputData: UnsafeMutableRawPointer
+c:@S@AudioValueTranslation@FI@mOutputDataSize	swift.property	mOutputDataSize	AudioValueTranslation.mOutputDataSize	var mOutputDataSize: UInt32
+c:@S@SMPTETime	swift.struct	SMPTETime	SMPTETime	struct SMPTETime
+c:@S@SMPTETime@FI@mCounter	swift.property	mCounter	SMPTETime.mCounter	var mCounter: UInt32
+c:@S@SMPTETime@FI@mFlags	swift.property	mFlags	SMPTETime.mFlags	var mFlags: SMPTETimeFlags
+c:@S@SMPTETime@FI@mFrames	swift.property	mFrames	SMPTETime.mFrames	var mFrames: Int16
+c:@S@SMPTETime@FI@mHours	swift.property	mHours	SMPTETime.mHours	var mHours: Int16
+c:@S@SMPTETime@FI@mMinutes	swift.property	mMinutes	SMPTETime.mMinutes	var mMinutes: Int16
+c:@S@SMPTETime@FI@mSeconds	swift.property	mSeconds	SMPTETime.mSeconds	var mSeconds: Int16
+c:@S@SMPTETime@FI@mSubframeDivisor	swift.property	mSubframeDivisor	SMPTETime.mSubframeDivisor	var mSubframeDivisor: Int16
+c:@S@SMPTETime@FI@mSubframes	swift.property	mSubframes	SMPTETime.mSubframes	var mSubframes: Int16
+c:@S@SMPTETime@FI@mType	swift.property	mType	SMPTETime.mType	var mType: SMPTETimeType
+c:@T@AVAudioInteger	swift.typealias	AVAudioInteger	AVAudioInteger	typealias AVAudioInteger = Int
+c:@T@AVAudioUInteger	swift.typealias	AVAudioUInteger	AVAudioUInteger	typealias AVAudioUInteger = UInt
+c:@T@AudioChannelLabel	swift.typealias	AudioChannelLabel	AudioChannelLabel	typealias AudioChannelLabel = UInt32
+c:@T@AudioChannelLayoutTag	swift.typealias	AudioChannelLayoutTag	AudioChannelLayoutTag	typealias AudioChannelLayoutTag = UInt32
+c:@T@AudioFormatFlags	swift.typealias	AudioFormatFlags	AudioFormatFlags	typealias AudioFormatFlags = UInt32
+c:@T@AudioFormatID	swift.typealias	AudioFormatID	AudioFormatID	typealias AudioFormatID = UInt32
+c:@T@AudioSampleType	swift.typealias	AudioSampleType	AudioSampleType	typealias AudioSampleType = Int16
+c:@T@AudioSessionID	swift.typealias	AudioSessionID	AudioSessionID	typealias AudioSessionID = UInt32
+c:@T@AudioUnitSampleType	swift.typealias	AudioUnitSampleType	AudioUnitSampleType	typealias AudioUnitSampleType = Int32
+c:@kAudioStreamAnyRate	swift.var	kAudioStreamAnyRate	kAudioStreamAnyRate	let kAudioStreamAnyRate: Float64
+c:@macro@CA_PREFER_FIXED_POINT	swift.var	CA_PREFER_FIXED_POINT	CA_PREFER_FIXED_POINT	var CA_PREFER_FIXED_POINT: Int32 { get }
+c:@macro@COREAUDIOTYPES_VERSION	swift.var	COREAUDIOTYPES_VERSION	COREAUDIOTYPES_VERSION	var COREAUDIOTYPES_VERSION: Int32 { get }
+c:@macro@kAudioUnitSampleFractionBits	swift.var	kAudioUnitSampleFractionBits	kAudioUnitSampleFractionBits	var kAudioUnitSampleFractionBits: Int32 { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@AVAudioSessionErrorCode	swift.func.op	!=(_:_:)	AVAudioSession.ErrorCode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.func.op	!=(_:_:)	AudioChannelBitmap.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@AudioChannelCoordinateIndex	swift.func.op	!=(_:_:)	AudioChannelCoordinateIndex.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@AudioChannelFlags	swift.func.op	!=(_:_:)	AudioChannelFlags.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.func.op	!=(_:_:)	AudioTimeStampFlags.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPEG4ObjectID	swift.func.op	!=(_:_:)	MPEG4ObjectID.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.func.op	!=(_:_:)	SMPTETimeFlags.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SMPTETimeType	swift.func.op	!=(_:_:)	SMPTETimeType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioSessionErrorCode	swift.property	hashValue	AVAudioSession.ErrorCode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AudioChannelCoordinateIndex	swift.property	hashValue	AudioChannelCoordinateIndex.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPEG4ObjectID	swift.property	hashValue	MPEG4ObjectID.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SMPTETimeType	swift.property	hashValue	SMPTETimeType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioSessionErrorCode	swift.method	hash(into:)	AVAudioSession.ErrorCode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AudioChannelCoordinateIndex	swift.method	hash(into:)	AudioChannelCoordinateIndex.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPEG4ObjectID	swift.method	hash(into:)	MPEG4ObjectID.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SMPTETimeType	swift.method	hash(into:)	SMPTETimeType.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11AudioBufferV15mNumberChannels13mDataByteSize01mE0ABs6UInt32V_AGSvSgtcfc	swift.init	init(mNumberChannels:mDataByteSize:mData:)	AudioBuffer.init(mNumberChannels:mDataByteSize:mData:)	init(mNumberChannels: UInt32, mDataByteSize: UInt32, mData: UnsafeMutableRawPointer?)
+s:So11AudioBufferVABycfc	swift.init	init()	AudioBuffer.init()	init()
+s:So13MPEG4ObjectIDV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MPEG4ObjectID.init(rawValue:)	init?(rawValue: Int)
+s:So13SMPTETimeTypeV8rawValueABSgs6UInt32V_tcfc	swift.init	init(rawValue:)	SMPTETimeType.init(rawValue:)	init?(rawValue: UInt32)
+s:So14AudioTimeStampV07mSampleB005mHostB011mRateScalar010mWordClockB010mSMPTETime6mFlags9mReservedABSd_s6UInt64VSdAKSo0J0VSo0abcK0Vs6UInt32Vtcfc	swift.init	init(mSampleTime:mHostTime:mRateScalar:mWordClockTime:mSMPTETime:mFlags:mReserved:)	AudioTimeStamp.init(mSampleTime:mHostTime:mRateScalar:mWordClockTime:mSMPTETime:mFlags:mReserved:)	init(mSampleTime: Float64, mHostTime: UInt64, mRateScalar: Float64, mWordClockTime: UInt64, mSMPTETime: SMPTETime, mFlags: AudioTimeStampFlags, mReserved: UInt32)
+s:So14AudioTimeStampVABycfc	swift.init	init()	AudioTimeStamp.init()	init()
+s:So14SMPTETimeFlagsV8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	SMPTETimeFlags.init(rawValue:)	init(rawValue: UInt32)
+s:So15AudioBufferListV14mNumberBuffers01mE0ABs6UInt32V_So0aB0Vtcfc	swift.init	init(mNumberBuffers:mBuffers:)	AudioBufferList.init(mNumberBuffers:mBuffers:)	init(mNumberBuffers: UInt32, mBuffers: AudioBuffer)
+s:So15AudioBufferListVABycfc	swift.init	init()	AudioBufferList.init()	init()
+s:So15AudioValueRangeV8mMinimum8mMaximumABSd_Sdtcfc	swift.init	init(mMinimum:mMaximum:)	AudioValueRange.init(mMinimum:mMaximum:)	init(mMinimum: Float64, mMaximum: Float64)
+s:So15AudioValueRangeVABycfc	swift.init	init()	AudioValueRange.init()	init()
+s:So17AudioChannelFlagsV8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	AudioChannelFlags.init(rawValue:)	init(rawValue: UInt32)
+s:So18AudioChannelBitmapV8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	AudioChannelBitmap.init(rawValue:)	init(rawValue: UInt32)
+s:So18AudioChannelLayoutV01mbC3Tag01mB6Bitmap07mNumberB12Descriptions01mbG0ABs6UInt32V_So0abE0VAHSo0aB11DescriptionVtcfc	swift.init	init(mChannelLayoutTag:mChannelBitmap:mNumberChannelDescriptions:mChannelDescriptions:)	AudioChannelLayout.init(mChannelLayoutTag:mChannelBitmap:mNumberChannelDescriptions:mChannelDescriptions:)	init(mChannelLayoutTag: AudioChannelLayoutTag, mChannelBitmap: AudioChannelBitmap, mNumberChannelDescriptions: UInt32, mChannelDescriptions: AudioChannelDescription)
+s:So18AudioChannelLayoutVABycfc	swift.init	init()	AudioChannelLayout.init()	init()
+s:So19AudioFormatListItemV5mASBD17mChannelLayoutTagABSo0A22StreamBasicDescriptionV_s6UInt32Vtcfc	swift.init	init(mASBD:mChannelLayoutTag:)	AudioFormatListItem.init(mASBD:mChannelLayoutTag:)	init(mASBD: AudioStreamBasicDescription, mChannelLayoutTag: AudioChannelLayoutTag)
+s:So19AudioFormatListItemVABycfc	swift.init	init()	AudioFormatListItem.init()	init()
+s:So19AudioTimeStampFlagsV8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	AudioTimeStampFlags.init(rawValue:)	init(rawValue: UInt32)
+s:So21AudioClassDescriptionV5mType04mSubD013mManufacturerABs6UInt32V_A2Gtcfc	swift.init	init(mType:mSubType:mManufacturer:)	AudioClassDescription.init(mType:mSubType:mManufacturer:)	init(mType: OSType, mSubType: OSType, mManufacturer: OSType)
+s:So21AudioClassDescriptionVABycfc	swift.init	init()	AudioClassDescription.init()	init()
+s:So21AudioValueTranslationV10mInputData01mdE4Size07mOutputE001mgeF0ABSv_s6UInt32VSvAHtcfc	swift.init	init(mInputData:mInputDataSize:mOutputData:mOutputDataSize:)	AudioValueTranslation.init(mInputData:mInputDataSize:mOutputData:mOutputDataSize:)	init(mInputData: UnsafeMutableRawPointer, mInputDataSize: UInt32, mOutputData: UnsafeMutableRawPointer, mOutputDataSize: UInt32)
+s:So23AVAudioSessionErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	AVAudioSession.ErrorCode.init(rawValue:)	init?(rawValue: AVAudioInteger)
+s:So23AudioChannelDescriptionV01mB5Label01mB5Flags12mCoordinatesABs6UInt32V_So0abE0VSf_S2fttcfc	swift.init	init(mChannelLabel:mChannelFlags:mCoordinates:)	AudioChannelDescription.init(mChannelLabel:mChannelFlags:mCoordinates:)	init(mChannelLabel: AudioChannelLabel, mChannelFlags: AudioChannelFlags, mCoordinates: (Float32, Float32, Float32))
+s:So23AudioChannelDescriptionVABycfc	swift.init	init()	AudioChannelDescription.init()	init()
+s:So27AudioChannelCoordinateIndexV8rawValueABSgs6UInt32V_tcfc	swift.init	init(rawValue:)	AudioChannelCoordinateIndex.init(rawValue:)	init?(rawValue: UInt32)
+s:So27AudioStreamBasicDescriptionV11mSampleRate9mFormatID01mG5Flags15mBytesPerPacket07mFrameskL001mjK5Frame09mChannelskN005mBitsK7Channel9mReservedABSd_s6UInt32VA7Mtcfc	swift.init	init(mSampleRate:mFormatID:mFormatFlags:mBytesPerPacket:mFramesPerPacket:mBytesPerFrame:mChannelsPerFrame:mBitsPerChannel:mReserved:)	AudioStreamBasicDescription.init(mSampleRate:mFormatID:mFormatFlags:mBytesPerPacket:mFramesPerPacket:mBytesPerFrame:mChannelsPerFrame:mBitsPerChannel:mReserved:)	init(mSampleRate: Float64, mFormatID: AudioFormatID, mFormatFlags: AudioFormatFlags, mBytesPerPacket: UInt32, mFramesPerPacket: UInt32, mBytesPerFrame: UInt32, mChannelsPerFrame: UInt32, mBitsPerChannel: UInt32, mReserved: UInt32)
+s:So27AudioStreamBasicDescriptionVABycfc	swift.init	init()	AudioStreamBasicDescription.init()	init()
+s:So28AudioStreamPacketDescriptionV12mStartOffset017mVariableFramesInC013mDataByteSizeABs5Int64V_s6UInt32VAItcfc	swift.init	init(mStartOffset:mVariableFramesInPacket:mDataByteSize:)	AudioStreamPacketDescription.init(mStartOffset:mVariableFramesInPacket:mDataByteSize:)	init(mStartOffset: Int64, mVariableFramesInPacket: UInt32, mDataByteSize: UInt32)
+s:So28AudioStreamPacketDescriptionVABycfc	swift.init	init()	AudioStreamPacketDescription.init()	init()
+s:So38AudioStreamPacketDependencyDescriptionV25mIsIndependentlyDecodable13mPreRollCount6mFlags9mReservedABs6UInt32V_A3Htcfc	swift.init	init(mIsIndependentlyDecodable:mPreRollCount:mFlags:mReserved:)	AudioStreamPacketDependencyDescription.init(mIsIndependentlyDecodable:mPreRollCount:mFlags:mReserved:)	init(mIsIndependentlyDecodable: UInt32, mPreRollCount: UInt32, mFlags: UInt32, mReserved: UInt32)
+s:So38AudioStreamPacketDependencyDescriptionVABycfc	swift.init	init()	AudioStreamPacketDependencyDescription.init()	init()
+s:So9SMPTETimeV10mSubframes16mSubframeDivisor8mCounter5mType6mFlags6mHours8mMinutes8mSeconds7mFramesABs5Int16V_AMs6UInt32VSo0aF0VSo0aG0VA4Mtcfc	swift.init	init(mSubframes:mSubframeDivisor:mCounter:mType:mFlags:mHours:mMinutes:mSeconds:mFrames:)	SMPTETime.init(mSubframes:mSubframeDivisor:mCounter:mType:mFlags:mHours:mMinutes:mSeconds:mFrames:)	init(mSubframes: Int16, mSubframeDivisor: Int16, mCounter: UInt32, mType: SMPTETimeType, mFlags: SMPTETimeFlags, mHours: Int16, mMinutes: Int16, mSeconds: Int16, mFrames: Int16)
+s:So9SMPTETimeVABycfc	swift.init	init()	SMPTETime.init()	init()
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.init	init(arrayLiteral:)	AudioChannelBitmap.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@AudioChannelFlags	swift.init	init(arrayLiteral:)	AudioChannelFlags.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.init	init(arrayLiteral:)	AudioTimeStampFlags.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.init	init(arrayLiteral:)	SMPTETimeFlags.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	isDisjoint(with:)	AudioChannelBitmap.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	isDisjoint(with:)	AudioChannelFlags.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	isDisjoint(with:)	AudioTimeStampFlags.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	isDisjoint(with:)	SMPTETimeFlags.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	isSuperset(of:)	AudioChannelBitmap.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	isSuperset(of:)	AudioChannelFlags.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	isSuperset(of:)	AudioTimeStampFlags.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	isSuperset(of:)	SMPTETimeFlags.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	subtracting(_:)	AudioChannelBitmap.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	subtracting(_:)	AudioChannelFlags.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	subtracting(_:)	AudioTimeStampFlags.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	subtracting(_:)	SMPTETimeFlags.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	isStrictSubset(of:)	AudioChannelBitmap.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	isStrictSubset(of:)	AudioChannelFlags.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	isStrictSubset(of:)	AudioTimeStampFlags.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	isStrictSubset(of:)	SMPTETimeFlags.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	isStrictSuperset(of:)	AudioChannelBitmap.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	isStrictSuperset(of:)	AudioChannelFlags.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	isStrictSuperset(of:)	AudioTimeStampFlags.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	isStrictSuperset(of:)	SMPTETimeFlags.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.property	isEmpty	AudioChannelBitmap.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@AudioChannelFlags	swift.property	isEmpty	AudioChannelFlags.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.property	isEmpty	AudioTimeStampFlags.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.property	isEmpty	SMPTETimeFlags.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	isSubset(of:)	AudioChannelBitmap.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	isSubset(of:)	AudioChannelFlags.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	isSubset(of:)	AudioTimeStampFlags.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	isSubset(of:)	SMPTETimeFlags.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	subtract(_:)	AudioChannelBitmap.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	subtract(_:)	AudioChannelFlags.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	subtract(_:)	AudioTimeStampFlags.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	subtract(_:)	SMPTETimeFlags.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.init	init(_:)	AudioChannelBitmap.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@AudioChannelFlags	swift.init	init(_:)	AudioChannelFlags.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.init	init(_:)	AudioTimeStampFlags.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.init	init(_:)	SMPTETimeFlags.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	insert(_:)	AudioChannelBitmap.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	insert(_:)	AudioChannelFlags.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	insert(_:)	AudioTimeStampFlags.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	insert(_:)	SMPTETimeFlags.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	remove(_:)	AudioChannelBitmap.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	remove(_:)	AudioChannelFlags.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	remove(_:)	AudioTimeStampFlags.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	remove(_:)	SMPTETimeFlags.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	update(with:)	AudioChannelBitmap.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	update(with:)	AudioChannelFlags.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	update(with:)	AudioTimeStampFlags.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	update(with:)	SMPTETimeFlags.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	contains(_:)	AudioChannelBitmap.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	contains(_:)	AudioChannelFlags.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	contains(_:)	AudioTimeStampFlags.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	contains(_:)	SMPTETimeFlags.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	intersection(_:)	AudioChannelBitmap.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	intersection(_:)	AudioChannelFlags.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	intersection(_:)	AudioTimeStampFlags.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	intersection(_:)	SMPTETimeFlags.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	symmetricDifference(_:)	AudioChannelBitmap.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	symmetricDifference(_:)	AudioChannelFlags.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	symmetricDifference(_:)	AudioTimeStampFlags.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	symmetricDifference(_:)	SMPTETimeFlags.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	union(_:)	AudioChannelBitmap.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	union(_:)	AudioChannelFlags.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	union(_:)	AudioTimeStampFlags.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	union(_:)	SMPTETimeFlags.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	formIntersection(_:)	AudioChannelBitmap.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	formIntersection(_:)	AudioChannelFlags.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	formIntersection(_:)	AudioTimeStampFlags.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	formIntersection(_:)	SMPTETimeFlags.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	formSymmetricDifference(_:)	AudioChannelBitmap.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	formSymmetricDifference(_:)	AudioChannelFlags.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	formSymmetricDifference(_:)	AudioTimeStampFlags.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	formSymmetricDifference(_:)	SMPTETimeFlags.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.method	formUnion(_:)	AudioChannelBitmap.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@AudioChannelFlags	swift.method	formUnion(_:)	AudioChannelFlags.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.method	formUnion(_:)	AudioTimeStampFlags.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.method	formUnion(_:)	SMPTETimeFlags.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@AudioChannelBitmap	swift.init	init()	AudioChannelBitmap.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@AudioChannelFlags	swift.init	init()	AudioChannelFlags.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@AudioTimeStampFlags	swift.init	init()	AudioTimeStampFlags.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@SMPTETimeFlags	swift.init	init()	SMPTETimeFlags.init()	init()

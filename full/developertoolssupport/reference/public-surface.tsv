@@ -1,0 +1,60 @@
+precise	kind	title	path	declaration
+s:21DeveloperToolsSupport11LibraryItemV	swift.struct	LibraryItem	LibraryItem	struct LibraryItem
+s:21DeveloperToolsSupport11LibraryItemV8CategoryV	swift.struct	LibraryItem.Category	LibraryItem.Category	struct Category
+s:21DeveloperToolsSupport11LibraryItemV8CategoryV5otherAEvpZ	swift.type.property	other	LibraryItem.Category.other	static let other: LibraryItem.Category
+s:21DeveloperToolsSupport11LibraryItemV8CategoryV6effectAEvpZ	swift.type.property	effect	LibraryItem.Category.effect	static let effect: LibraryItem.Category
+s:21DeveloperToolsSupport11LibraryItemV8CategoryV6layoutAEvpZ	swift.type.property	layout	LibraryItem.Category.layout	static let layout: LibraryItem.Category
+s:21DeveloperToolsSupport11LibraryItemV8CategoryV7controlAEvpZ	swift.type.property	control	LibraryItem.Category.control	static let control: LibraryItem.Category
+s:21DeveloperToolsSupport11LibraryItemV_7visible5title8category17matchingSignatureACxyXK_SbSSSgAC8CategoryVAHtclufc	swift.init	init(_:visible:title:category:matchingSignature:)	LibraryItem.init(_:visible:title:category:matchingSignature:)	init<SnippetExpressionType>(_ snippet: @autoclosure () -> SnippetExpressionType, visible: Bool = true, title: String? = nil, category: LibraryItem.Category = .other, matchingSignature: String? = nil)
+s:21DeveloperToolsSupport12PreviewTraitV	swift.struct	PreviewTrait	PreviewTrait	@MainActor struct PreviewTrait<T>
+s:21DeveloperToolsSupport12PreviewTraitVA2A0D0V10ViewTraitsORszlE11fixedLayout5width6heightACyAGG14CoreFoundation7CGFloatV_ANtFZ	swift.type.method	fixedLayout(width:height:)	PreviewTrait.fixedLayout(width:height:)	@MainActor static func fixedLayout(width: CGFloat, height: CGFloat) -> PreviewTrait<T>
+s:21DeveloperToolsSupport12PreviewTraitVA2A0D0V10ViewTraitsORszlE13defaultLayoutACyAGGvpZ	swift.type.property	defaultLayout	PreviewTrait.defaultLayout	@MainActor static var defaultLayout: PreviewTrait<Preview.ViewTraits> { get }
+s:21DeveloperToolsSupport12PreviewTraitVA2A0D0V10ViewTraitsORszlE13landscapeLeftACyAGGvpZ	swift.type.property	landscapeLeft	PreviewTrait.landscapeLeft	@MainActor static var landscapeLeft: PreviewTrait<Preview.ViewTraits> { get }
+s:21DeveloperToolsSupport12PreviewTraitVA2A0D0V10ViewTraitsORszlE14landscapeRightACyAGGvpZ	swift.type.property	landscapeRight	PreviewTrait.landscapeRight	@MainActor static var landscapeRight: PreviewTrait<Preview.ViewTraits> { get }
+s:21DeveloperToolsSupport12PreviewTraitVA2A0D0V10ViewTraitsORszlE15assistiveAccessACyAGGvpZ	swift.type.property	assistiveAccess	PreviewTrait.assistiveAccess	@MainActor static var assistiveAccess: PreviewTrait<Preview.ViewTraits> { get }
+s:21DeveloperToolsSupport12PreviewTraitVA2A0D0V10ViewTraitsORszlE18portraitUpsideDownACyAGGvpZ	swift.type.property	portraitUpsideDown	PreviewTrait.portraitUpsideDown	@MainActor static var portraitUpsideDown: PreviewTrait<Preview.ViewTraits> { get }
+s:21DeveloperToolsSupport12PreviewTraitVA2A0D0V10ViewTraitsORszlE18sizeThatFitsLayoutACyAGGvpZ	swift.type.property	sizeThatFitsLayout	PreviewTrait.sizeThatFitsLayout	@MainActor static var sizeThatFitsLayout: PreviewTrait<Preview.ViewTraits> { get }
+s:21DeveloperToolsSupport12PreviewTraitVA2A0D0V10ViewTraitsORszlE8portraitACyAGGvpZ	swift.type.property	portrait	PreviewTrait.portrait	@MainActor static var portrait: PreviewTrait<Preview.ViewTraits> { get }
+s:21DeveloperToolsSupport12PreviewTraitVyACyxGADd_tcfc	swift.init	init(_:)	PreviewTrait.init(_:)	@MainActor init(_ traits: PreviewTrait<T>...)
+s:21DeveloperToolsSupport13ColorResourceV	swift.struct	ColorResource	ColorResource	struct ColorResource
+s:21DeveloperToolsSupport13ColorResourceV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	ColorResource.==(_:_:)	static func == (a: ColorResource, b: ColorResource) -> Bool
+s:21DeveloperToolsSupport13ColorResourceV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ColorResource.hash(into:)	func hash(into hasher: inout Hasher)
+s:21DeveloperToolsSupport13ColorResourceV4name6bundleACSS_So8NSBundleCtcfc	swift.init	init(name:bundle:)	ColorResource.init(name:bundle:)	init(name: String, bundle: Bundle)
+s:21DeveloperToolsSupport13ColorResourceV9hashValueSivp	swift.property	hashValue	ColorResource.hashValue	var hashValue: Int { get }
+s:21DeveloperToolsSupport13ImageResourceV	swift.struct	ImageResource	ImageResource	struct ImageResource
+s:21DeveloperToolsSupport13ImageResourceV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	ImageResource.==(_:_:)	static func == (a: ImageResource, b: ImageResource) -> Bool
+s:21DeveloperToolsSupport13ImageResourceV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ImageResource.hash(into:)	func hash(into hasher: inout Hasher)
+s:21DeveloperToolsSupport13ImageResourceV4name6bundleACSS_So8NSBundleCtcfc	swift.init	init(name:bundle:)	ImageResource.init(name:bundle:)	init(name: String, bundle: Bundle)
+s:21DeveloperToolsSupport13ImageResourceV9hashValueSivp	swift.property	hashValue	ImageResource.hashValue	var hashValue: Int { get }
+s:21DeveloperToolsSupport13PreviewLayoutO	swift.enum	PreviewLayout	PreviewLayout	enum PreviewLayout
+s:21DeveloperToolsSupport13PreviewLayoutO12sizeThatFitsyA2CmF	swift.enum.case	PreviewLayout.sizeThatFits	PreviewLayout.sizeThatFits	case sizeThatFits
+s:21DeveloperToolsSupport13PreviewLayoutO5fixedyAC14CoreFoundation7CGFloatV_AGtcACmF	swift.enum.case	PreviewLayout.fixed(width:height:)	PreviewLayout.fixed(width:height:)	case fixed(width: CGFloat, height: CGFloat)
+s:21DeveloperToolsSupport13PreviewLayoutO6deviceyA2CmF	swift.enum.case	PreviewLayout.device	PreviewLayout.device	case device
+s:21DeveloperToolsSupport15PreviewRegistryP	swift.protocol	PreviewRegistry	PreviewRegistry	protocol PreviewRegistry
+s:21DeveloperToolsSupport15PreviewRegistryP04makeD0AA0D0VyKFZ	swift.type.method	makePreview()	PreviewRegistry.makePreview()	@MainActor static func makePreview() throws -> Preview
+s:21DeveloperToolsSupport15PreviewRegistryP4lineSivpZ	swift.type.property	line	PreviewRegistry.line	static var line: Int { get }
+s:21DeveloperToolsSupport15PreviewRegistryP6columnSivpZ	swift.type.property	column	PreviewRegistry.column	static var column: Int { get }
+s:21DeveloperToolsSupport15PreviewRegistryP6fileIDSSvpZ	swift.type.property	fileID	PreviewRegistry.fileID	static var fileID: String { get }
+s:21DeveloperToolsSupport15PreviewRegistryP7previewAA0D0VvpZ	swift.type.property	preview	PreviewRegistry.preview	static var preview: Preview { get }
+s:21DeveloperToolsSupport15PreviewRegistryPAAE7previewAA0D0VvpZ	swift.type.property	preview	PreviewRegistry.preview	static var preview: Preview { get }
+s:21DeveloperToolsSupport18PreviewBodyBuilderV	swift.struct	PreviewBodyBuilder	PreviewBodyBuilder	@resultBuilder struct PreviewBodyBuilder<Content>
+s:21DeveloperToolsSupport18PreviewBodyBuilderV10buildBlockyxxFZ	swift.type.method	buildBlock(_:)	PreviewBodyBuilder.buildBlock(_:)	static func buildBlock(_ content: Content) -> Content
+s:21DeveloperToolsSupport18PreviewUnavailableV	swift.struct	PreviewUnavailable	PreviewUnavailable	struct PreviewUnavailable
+s:21DeveloperToolsSupport18PreviewUnavailableVACycfc	swift.init	init()	PreviewUnavailable.init()	init()
+s:21DeveloperToolsSupport21LibraryContentBuilderV	swift.struct	LibraryContentBuilder	LibraryContentBuilder	@resultBuilder struct LibraryContentBuilder
+s:21DeveloperToolsSupport21LibraryContentBuilderV10buildBlockySayAA0D4ItemVGAGd_tFZ	swift.type.method	buildBlock(_:)	LibraryContentBuilder.buildBlock(_:)	static func buildBlock(_ segments: [LibraryItem]...) -> [LibraryItem]
+s:21DeveloperToolsSupport21LibraryContentBuilderV15buildExpressionySayAA0D4ItemVGAFFZ	swift.type.method	buildExpression(_:)	LibraryContentBuilder.buildExpression(_:)	static func buildExpression(_ item: LibraryItem) -> [LibraryItem]
+s:21DeveloperToolsSupport21LibraryContentBuilderV15buildExpressionySayAA0D4ItemVGAGFZ	swift.type.method	buildExpression(_:)	LibraryContentBuilder.buildExpression(_:)	static func buildExpression(_ items: [LibraryItem]) -> [LibraryItem]
+s:21DeveloperToolsSupport22LibraryContentProviderP	swift.protocol	LibraryContentProvider	LibraryContentProvider	protocol LibraryContentProvider
+s:21DeveloperToolsSupport22LibraryContentProviderP12ModifierBaseQa	swift.associatedtype	ModifierBase	LibraryContentProvider.ModifierBase	associatedtype ModifierBase = Any
+s:21DeveloperToolsSupport22LibraryContentProviderP5viewsSayAA0D4ItemVGvp	swift.property	views	LibraryContentProvider.views	@LibraryContentBuilder var views: [LibraryItem] { get }
+s:21DeveloperToolsSupport22LibraryContentProviderP9modifiers4baseSayAA0D4ItemVG12ModifierBaseQz_tF	swift.method	modifiers(base:)	LibraryContentProvider.modifiers(base:)	@LibraryContentBuilder func modifiers(base: Self.ModifierBase) -> [LibraryItem]
+s:21DeveloperToolsSupport22LibraryContentProviderPAAE5viewsSayAA0D4ItemVGvp	swift.property	views	LibraryContentProvider.views	var views: [LibraryItem] { get }
+s:21DeveloperToolsSupport22LibraryContentProviderPAAE9modifiers4baseSayAA0D4ItemVG12ModifierBaseQz_tF	swift.method	modifiers(base:)	LibraryContentProvider.modifiers(base:)	func modifiers(base: Self.ModifierBase) -> [LibraryItem]
+s:21DeveloperToolsSupport23PreviewMacroBodyBuilderV	swift.struct	PreviewMacroBodyBuilder	PreviewMacroBodyBuilder	@resultBuilder struct PreviewMacroBodyBuilder<Content>
+s:21DeveloperToolsSupport23PreviewMacroBodyBuilderV10buildBlockyxxFZ	swift.type.method	buildBlock(_:)	PreviewMacroBodyBuilder.buildBlock(_:)	static func buildBlock(_: Content) -> Content
+s:21DeveloperToolsSupport7PreviewV	swift.struct	Preview	Preview	@MainActor struct Preview
+s:21DeveloperToolsSupport7PreviewV10ViewTraitsO	swift.enum	Preview.ViewTraits	Preview.ViewTraits	enum ViewTraits
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:21DeveloperToolsSupport13ColorResourceV	swift.func.op	!=(_:_:)	ColorResource.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:21DeveloperToolsSupport13ImageResourceV	swift.func.op	!=(_:_:)	ImageResource.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:21DeveloperToolsSupport18PreviewUnavailableV	swift.property	localizedDescription	PreviewUnavailable.localizedDescription	var localizedDescription: String { get }

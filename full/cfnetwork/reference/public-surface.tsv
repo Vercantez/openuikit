@@ -1,0 +1,473 @@
+precise	kind	title	path	declaration
+c:@E@CFHostInfoType	swift.enum	CFHostInfoType	CFHostInfoType	enum CFHostInfoType
+c:@E@CFHostInfoType@kCFHostAddresses	swift.enum.case	CFHostInfoType.addresses	CFHostInfoType.addresses	case addresses
+c:@E@CFHostInfoType@kCFHostNames	swift.enum.case	CFHostInfoType.names	CFHostInfoType.names	case names
+c:@E@CFHostInfoType@kCFHostReachability	swift.enum.case	CFHostInfoType.reachability	CFHostInfoType.reachability	case reachability
+c:@E@CFNetDiagnosticStatusValues	swift.enum	CFNetDiagnosticStatusValues	CFNetDiagnosticStatusValues	enum CFNetDiagnosticStatusValues
+c:@E@CFNetDiagnosticStatusValues@kCFNetDiagnosticConnectionDown	swift.enum.case	CFNetDiagnosticStatusValues.connectionDown	CFNetDiagnosticStatusValues.connectionDown	case connectionDown
+c:@E@CFNetDiagnosticStatusValues@kCFNetDiagnosticConnectionIndeterminate	swift.enum.case	CFNetDiagnosticStatusValues.connectionIndeterminate	CFNetDiagnosticStatusValues.connectionIndeterminate	case connectionIndeterminate
+c:@E@CFNetDiagnosticStatusValues@kCFNetDiagnosticConnectionUp	swift.enum.case	CFNetDiagnosticStatusValues.connectionUp	CFNetDiagnosticStatusValues.connectionUp	case connectionUp
+c:@E@CFNetDiagnosticStatusValues@kCFNetDiagnosticErr	swift.enum.case	CFNetDiagnosticStatusValues.err	CFNetDiagnosticStatusValues.err	case err
+c:@E@CFNetDiagnosticStatusValues@kCFNetDiagnosticNoErr	swift.enum.case	CFNetDiagnosticStatusValues.noErr	CFNetDiagnosticStatusValues.noErr	case noErr
+c:@E@CFNetServiceBrowserFlags	swift.struct	CFNetServiceBrowserFlags	CFNetServiceBrowserFlags	struct CFNetServiceBrowserFlags
+c:@E@CFNetServiceBrowserFlags@kCFNetServiceFlagIsDefault	swift.type.property	isDefault	CFNetServiceBrowserFlags.isDefault	static var isDefault: CFNetServiceBrowserFlags { get }
+c:@E@CFNetServiceBrowserFlags@kCFNetServiceFlagIsDomain	swift.type.property	isDomain	CFNetServiceBrowserFlags.isDomain	static var isDomain: CFNetServiceBrowserFlags { get }
+c:@E@CFNetServiceBrowserFlags@kCFNetServiceFlagMoreComing	swift.type.property	moreComing	CFNetServiceBrowserFlags.moreComing	static var moreComing: CFNetServiceBrowserFlags { get }
+c:@E@CFNetServiceBrowserFlags@kCFNetServiceFlagRemove	swift.type.property	remove	CFNetServiceBrowserFlags.remove	static var remove: CFNetServiceBrowserFlags { get }
+c:@E@CFNetServiceMonitorType	swift.enum	CFNetServiceMonitorType	CFNetServiceMonitorType	enum CFNetServiceMonitorType
+c:@E@CFNetServiceMonitorType@kCFNetServiceMonitorTXT	swift.enum.case	CFNetServiceMonitorType.TXT	CFNetServiceMonitorType.TXT	case TXT
+c:@E@CFNetServiceRegisterFlags	swift.struct	CFNetServiceRegisterFlags	CFNetServiceRegisterFlags	struct CFNetServiceRegisterFlags
+c:@E@CFNetServiceRegisterFlags@kCFNetServiceFlagNoAutoRename	swift.type.property	noAutoRename	CFNetServiceRegisterFlags.noAutoRename	static var noAutoRename: CFNetServiceRegisterFlags { get }
+c:@E@CFNetServicesError	swift.enum	CFNetServicesError	CFNetServicesError	enum CFNetServicesError
+c:@E@CFNetServicesError@kCFNetServicesErrorBadArgument	swift.enum.case	CFNetServicesError.badArgument	CFNetServicesError.badArgument	case badArgument
+c:@E@CFNetServicesError@kCFNetServicesErrorCancel	swift.enum.case	CFNetServicesError.cancel	CFNetServicesError.cancel	case cancel
+c:@E@CFNetServicesError@kCFNetServicesErrorCollision	swift.enum.case	CFNetServicesError.collision	CFNetServicesError.collision	case collision
+c:@E@CFNetServicesError@kCFNetServicesErrorInProgress	swift.enum.case	CFNetServicesError.inProgress	CFNetServicesError.inProgress	case inProgress
+c:@E@CFNetServicesError@kCFNetServicesErrorInvalid	swift.enum.case	CFNetServicesError.invalid	CFNetServicesError.invalid	case invalid
+c:@E@CFNetServicesError@kCFNetServicesErrorMissingRequiredConfiguration	swift.enum.case	CFNetServicesError.missingRequiredConfiguration	CFNetServicesError.missingRequiredConfiguration	case missingRequiredConfiguration
+c:@E@CFNetServicesError@kCFNetServicesErrorNotFound	swift.enum.case	CFNetServicesError.notFound	CFNetServicesError.notFound	case notFound
+c:@E@CFNetServicesError@kCFNetServicesErrorTimeout	swift.enum.case	CFNetServicesError.timeout	CFNetServicesError.timeout	case timeout
+c:@E@CFNetServicesError@kCFNetServicesErrorUnknown	swift.enum.case	CFNetServicesError.unknown	CFNetServicesError.unknown	case unknown
+c:@E@CFNetworkErrors	swift.enum	CFNetworkErrors	CFNetworkErrors	enum CFNetworkErrors
+c:@E@CFNetworkErrors@kCFErrorHTTPAuthenticationTypeUnsupported	swift.enum.case	CFNetworkErrors.cfErrorHTTPAuthenticationTypeUnsupported	CFNetworkErrors.cfErrorHTTPAuthenticationTypeUnsupported	case cfErrorHTTPAuthenticationTypeUnsupported
+c:@E@CFNetworkErrors@kCFErrorHTTPBadCredentials	swift.enum.case	CFNetworkErrors.cfErrorHTTPBadCredentials	CFNetworkErrors.cfErrorHTTPBadCredentials	case cfErrorHTTPBadCredentials
+c:@E@CFNetworkErrors@kCFErrorHTTPBadProxyCredentials	swift.enum.case	CFNetworkErrors.cfErrorHTTPBadProxyCredentials	CFNetworkErrors.cfErrorHTTPBadProxyCredentials	case cfErrorHTTPBadProxyCredentials
+c:@E@CFNetworkErrors@kCFErrorHTTPBadURL	swift.enum.case	CFNetworkErrors.cfErrorHTTPBadURL	CFNetworkErrors.cfErrorHTTPBadURL	case cfErrorHTTPBadURL
+c:@E@CFNetworkErrors@kCFErrorHTTPConnectionLost	swift.enum.case	CFNetworkErrors.cfErrorHTTPConnectionLost	CFNetworkErrors.cfErrorHTTPConnectionLost	case cfErrorHTTPConnectionLost
+c:@E@CFNetworkErrors@kCFErrorHTTPParseFailure	swift.enum.case	CFNetworkErrors.cfErrorHTTPParseFailure	CFNetworkErrors.cfErrorHTTPParseFailure	case cfErrorHTTPParseFailure
+c:@E@CFNetworkErrors@kCFErrorHTTPProxyConnectionFailure	swift.enum.case	CFNetworkErrors.cfErrorHTTPProxyConnectionFailure	CFNetworkErrors.cfErrorHTTPProxyConnectionFailure	case cfErrorHTTPProxyConnectionFailure
+c:@E@CFNetworkErrors@kCFErrorHTTPRedirectionLoopDetected	swift.enum.case	CFNetworkErrors.cfErrorHTTPRedirectionLoopDetected	CFNetworkErrors.cfErrorHTTPRedirectionLoopDetected	case cfErrorHTTPRedirectionLoopDetected
+c:@E@CFNetworkErrors@kCFErrorHTTPSProxyConnectionFailure	swift.enum.case	CFNetworkErrors.cfErrorHTTPSProxyConnectionFailure	CFNetworkErrors.cfErrorHTTPSProxyConnectionFailure	case cfErrorHTTPSProxyConnectionFailure
+c:@E@CFNetworkErrors@kCFErrorPACFileAuth	swift.enum.case	CFNetworkErrors.cfErrorPACFileAuth	CFNetworkErrors.cfErrorPACFileAuth	case cfErrorPACFileAuth
+c:@E@CFNetworkErrors@kCFErrorPACFileError	swift.enum.case	CFNetworkErrors.cfErrorPACFileError	CFNetworkErrors.cfErrorPACFileError	case cfErrorPACFileError
+c:@E@CFNetworkErrors@kCFFTPErrorUnexpectedStatusCode	swift.enum.case	CFNetworkErrors.cfftpErrorUnexpectedStatusCode	CFNetworkErrors.cfftpErrorUnexpectedStatusCode	case cfftpErrorUnexpectedStatusCode
+c:@E@CFNetworkErrors@kCFHTTPCookieCannotParseCookieFile	swift.enum.case	CFNetworkErrors.cfhttpCookieCannotParseCookieFile	CFNetworkErrors.cfhttpCookieCannotParseCookieFile	case cfhttpCookieCannotParseCookieFile
+c:@E@CFNetworkErrors@kCFHostErrorHostNotFound	swift.enum.case	CFNetworkErrors.cfHostErrorHostNotFound	CFNetworkErrors.cfHostErrorHostNotFound	case cfHostErrorHostNotFound
+c:@E@CFNetworkErrors@kCFHostErrorUnknown	swift.enum.case	CFNetworkErrors.cfHostErrorUnknown	CFNetworkErrors.cfHostErrorUnknown	case cfHostErrorUnknown
+c:@E@CFNetworkErrors@kCFNetServiceErrorBadArgument	swift.enum.case	CFNetworkErrors.cfNetServiceErrorBadArgument	CFNetworkErrors.cfNetServiceErrorBadArgument	case cfNetServiceErrorBadArgument
+c:@E@CFNetworkErrors@kCFNetServiceErrorCancel	swift.enum.case	CFNetworkErrors.cfNetServiceErrorCancel	CFNetworkErrors.cfNetServiceErrorCancel	case cfNetServiceErrorCancel
+c:@E@CFNetworkErrors@kCFNetServiceErrorCollision	swift.enum.case	CFNetworkErrors.cfNetServiceErrorCollision	CFNetworkErrors.cfNetServiceErrorCollision	case cfNetServiceErrorCollision
+c:@E@CFNetworkErrors@kCFNetServiceErrorDNSServiceFailure	swift.enum.case	CFNetworkErrors.cfNetServiceErrorDNSServiceFailure	CFNetworkErrors.cfNetServiceErrorDNSServiceFailure	case cfNetServiceErrorDNSServiceFailure
+c:@E@CFNetworkErrors@kCFNetServiceErrorInProgress	swift.enum.case	CFNetworkErrors.cfNetServiceErrorInProgress	CFNetworkErrors.cfNetServiceErrorInProgress	case cfNetServiceErrorInProgress
+c:@E@CFNetworkErrors@kCFNetServiceErrorInvalid	swift.enum.case	CFNetworkErrors.cfNetServiceErrorInvalid	CFNetworkErrors.cfNetServiceErrorInvalid	case cfNetServiceErrorInvalid
+c:@E@CFNetworkErrors@kCFNetServiceErrorNotFound	swift.enum.case	CFNetworkErrors.cfNetServiceErrorNotFound	CFNetworkErrors.cfNetServiceErrorNotFound	case cfNetServiceErrorNotFound
+c:@E@CFNetworkErrors@kCFNetServiceErrorTimeout	swift.enum.case	CFNetworkErrors.cfNetServiceErrorTimeout	CFNetworkErrors.cfNetServiceErrorTimeout	case cfNetServiceErrorTimeout
+c:@E@CFNetworkErrors@kCFNetServiceErrorUnknown	swift.enum.case	CFNetworkErrors.cfNetServiceErrorUnknown	CFNetworkErrors.cfNetServiceErrorUnknown	case cfNetServiceErrorUnknown
+c:@E@CFNetworkErrors@kCFSOCKS4ErrorIdConflict	swift.enum.case	CFNetworkErrors.cfsocks4ErrorIdConflict	CFNetworkErrors.cfsocks4ErrorIdConflict	case cfsocks4ErrorIdConflict
+c:@E@CFNetworkErrors@kCFSOCKS4ErrorIdentdFailed	swift.enum.case	CFNetworkErrors.cfsocks4ErrorIdentdFailed	CFNetworkErrors.cfsocks4ErrorIdentdFailed	case cfsocks4ErrorIdentdFailed
+c:@E@CFNetworkErrors@kCFSOCKS4ErrorRequestFailed	swift.enum.case	CFNetworkErrors.cfsocks4ErrorRequestFailed	CFNetworkErrors.cfsocks4ErrorRequestFailed	case cfsocks4ErrorRequestFailed
+c:@E@CFNetworkErrors@kCFSOCKS4ErrorUnknownStatusCode	swift.enum.case	CFNetworkErrors.cfsocks4ErrorUnknownStatusCode	CFNetworkErrors.cfsocks4ErrorUnknownStatusCode	case cfsocks4ErrorUnknownStatusCode
+c:@E@CFNetworkErrors@kCFSOCKS5ErrorBadCredentials	swift.enum.case	CFNetworkErrors.cfsocks5ErrorBadCredentials	CFNetworkErrors.cfsocks5ErrorBadCredentials	case cfsocks5ErrorBadCredentials
+c:@E@CFNetworkErrors@kCFSOCKS5ErrorBadResponseAddr	swift.enum.case	CFNetworkErrors.cfsocks5ErrorBadResponseAddr	CFNetworkErrors.cfsocks5ErrorBadResponseAddr	case cfsocks5ErrorBadResponseAddr
+c:@E@CFNetworkErrors@kCFSOCKS5ErrorBadState	swift.enum.case	CFNetworkErrors.cfsocks5ErrorBadState	CFNetworkErrors.cfsocks5ErrorBadState	case cfsocks5ErrorBadState
+c:@E@CFNetworkErrors@kCFSOCKS5ErrorNoAcceptableMethod	swift.enum.case	CFNetworkErrors.cfsocks5ErrorNoAcceptableMethod	CFNetworkErrors.cfsocks5ErrorNoAcceptableMethod	case cfsocks5ErrorNoAcceptableMethod
+c:@E@CFNetworkErrors@kCFSOCKS5ErrorUnsupportedNegotiationMethod	swift.enum.case	CFNetworkErrors.cfsocks5ErrorUnsupportedNegotiationMethod	CFNetworkErrors.cfsocks5ErrorUnsupportedNegotiationMethod	case cfsocks5ErrorUnsupportedNegotiationMethod
+c:@E@CFNetworkErrors@kCFSOCKSErrorUnknownClientVersion	swift.enum.case	CFNetworkErrors.cfsocksErrorUnknownClientVersion	CFNetworkErrors.cfsocksErrorUnknownClientVersion	case cfsocksErrorUnknownClientVersion
+c:@E@CFNetworkErrors@kCFSOCKSErrorUnsupportedServerVersion	swift.enum.case	CFNetworkErrors.cfsocksErrorUnsupportedServerVersion	CFNetworkErrors.cfsocksErrorUnsupportedServerVersion	case cfsocksErrorUnsupportedServerVersion
+c:@E@CFNetworkErrors@kCFStreamErrorHTTPSProxyFailureUnexpectedResponseToCONNECTMethod	swift.enum.case	CFNetworkErrors.cfStreamErrorHTTPSProxyFailureUnexpectedResponseToCONNECTMethod	CFNetworkErrors.cfStreamErrorHTTPSProxyFailureUnexpectedResponseToCONNECTMethod	case cfStreamErrorHTTPSProxyFailureUnexpectedResponseToCONNECTMethod
+c:@E@CFNetworkErrors@kCFURLErrorAppTransportSecurityRequiresSecureConnection	swift.enum.case	CFNetworkErrors.cfurlErrorAppTransportSecurityRequiresSecureConnection	CFNetworkErrors.cfurlErrorAppTransportSecurityRequiresSecureConnection	case cfurlErrorAppTransportSecurityRequiresSecureConnection
+c:@E@CFNetworkErrors@kCFURLErrorBackgroundSessionInUseByAnotherProcess	swift.enum.case	CFNetworkErrors.cfurlErrorBackgroundSessionInUseByAnotherProcess	CFNetworkErrors.cfurlErrorBackgroundSessionInUseByAnotherProcess	case cfurlErrorBackgroundSessionInUseByAnotherProcess
+c:@E@CFNetworkErrors@kCFURLErrorBackgroundSessionWasDisconnected	swift.enum.case	CFNetworkErrors.cfurlErrorBackgroundSessionWasDisconnected	CFNetworkErrors.cfurlErrorBackgroundSessionWasDisconnected	case cfurlErrorBackgroundSessionWasDisconnected
+c:@E@CFNetworkErrors@kCFURLErrorBadServerResponse	swift.enum.case	CFNetworkErrors.cfurlErrorBadServerResponse	CFNetworkErrors.cfurlErrorBadServerResponse	case cfurlErrorBadServerResponse
+c:@E@CFNetworkErrors@kCFURLErrorBadURL	swift.enum.case	CFNetworkErrors.cfurlErrorBadURL	CFNetworkErrors.cfurlErrorBadURL	case cfurlErrorBadURL
+c:@E@CFNetworkErrors@kCFURLErrorCallIsActive	swift.enum.case	CFNetworkErrors.cfurlErrorCallIsActive	CFNetworkErrors.cfurlErrorCallIsActive	case cfurlErrorCallIsActive
+c:@E@CFNetworkErrors@kCFURLErrorCancelled	swift.enum.case	CFNetworkErrors.cfurlErrorCancelled	CFNetworkErrors.cfurlErrorCancelled	case cfurlErrorCancelled
+c:@E@CFNetworkErrors@kCFURLErrorCannotCloseFile	swift.enum.case	CFNetworkErrors.cfurlErrorCannotCloseFile	CFNetworkErrors.cfurlErrorCannotCloseFile	case cfurlErrorCannotCloseFile
+c:@E@CFNetworkErrors@kCFURLErrorCannotConnectToHost	swift.enum.case	CFNetworkErrors.cfurlErrorCannotConnectToHost	CFNetworkErrors.cfurlErrorCannotConnectToHost	case cfurlErrorCannotConnectToHost
+c:@E@CFNetworkErrors@kCFURLErrorCannotCreateFile	swift.enum.case	CFNetworkErrors.cfurlErrorCannotCreateFile	CFNetworkErrors.cfurlErrorCannotCreateFile	case cfurlErrorCannotCreateFile
+c:@E@CFNetworkErrors@kCFURLErrorCannotDecodeContentData	swift.enum.case	CFNetworkErrors.cfurlErrorCannotDecodeContentData	CFNetworkErrors.cfurlErrorCannotDecodeContentData	case cfurlErrorCannotDecodeContentData
+c:@E@CFNetworkErrors@kCFURLErrorCannotDecodeRawData	swift.enum.case	CFNetworkErrors.cfurlErrorCannotDecodeRawData	CFNetworkErrors.cfurlErrorCannotDecodeRawData	case cfurlErrorCannotDecodeRawData
+c:@E@CFNetworkErrors@kCFURLErrorCannotFindHost	swift.enum.case	CFNetworkErrors.cfurlErrorCannotFindHost	CFNetworkErrors.cfurlErrorCannotFindHost	case cfurlErrorCannotFindHost
+c:@E@CFNetworkErrors@kCFURLErrorCannotLoadFromNetwork	swift.enum.case	CFNetworkErrors.cfurlErrorCannotLoadFromNetwork	CFNetworkErrors.cfurlErrorCannotLoadFromNetwork	case cfurlErrorCannotLoadFromNetwork
+c:@E@CFNetworkErrors@kCFURLErrorCannotMoveFile	swift.enum.case	CFNetworkErrors.cfurlErrorCannotMoveFile	CFNetworkErrors.cfurlErrorCannotMoveFile	case cfurlErrorCannotMoveFile
+c:@E@CFNetworkErrors@kCFURLErrorCannotOpenFile	swift.enum.case	CFNetworkErrors.cfurlErrorCannotOpenFile	CFNetworkErrors.cfurlErrorCannotOpenFile	case cfurlErrorCannotOpenFile
+c:@E@CFNetworkErrors@kCFURLErrorCannotParseResponse	swift.enum.case	CFNetworkErrors.cfurlErrorCannotParseResponse	CFNetworkErrors.cfurlErrorCannotParseResponse	case cfurlErrorCannotParseResponse
+c:@E@CFNetworkErrors@kCFURLErrorCannotRemoveFile	swift.enum.case	CFNetworkErrors.cfurlErrorCannotRemoveFile	CFNetworkErrors.cfurlErrorCannotRemoveFile	case cfurlErrorCannotRemoveFile
+c:@E@CFNetworkErrors@kCFURLErrorCannotWriteToFile	swift.enum.case	CFNetworkErrors.cfurlErrorCannotWriteToFile	CFNetworkErrors.cfurlErrorCannotWriteToFile	case cfurlErrorCannotWriteToFile
+c:@E@CFNetworkErrors@kCFURLErrorClientCertificateRejected	swift.enum.case	CFNetworkErrors.cfurlErrorClientCertificateRejected	CFNetworkErrors.cfurlErrorClientCertificateRejected	case cfurlErrorClientCertificateRejected
+c:@E@CFNetworkErrors@kCFURLErrorClientCertificateRequired	swift.enum.case	CFNetworkErrors.cfurlErrorClientCertificateRequired	CFNetworkErrors.cfurlErrorClientCertificateRequired	case cfurlErrorClientCertificateRequired
+c:@E@CFNetworkErrors@kCFURLErrorDNSLookupFailed	swift.enum.case	CFNetworkErrors.cfurlErrorDNSLookupFailed	CFNetworkErrors.cfurlErrorDNSLookupFailed	case cfurlErrorDNSLookupFailed
+c:@E@CFNetworkErrors@kCFURLErrorDataLengthExceedsMaximum	swift.enum.case	CFNetworkErrors.cfurlErrorDataLengthExceedsMaximum	CFNetworkErrors.cfurlErrorDataLengthExceedsMaximum	case cfurlErrorDataLengthExceedsMaximum
+c:@E@CFNetworkErrors@kCFURLErrorDataNotAllowed	swift.enum.case	CFNetworkErrors.cfurlErrorDataNotAllowed	CFNetworkErrors.cfurlErrorDataNotAllowed	case cfurlErrorDataNotAllowed
+c:@E@CFNetworkErrors@kCFURLErrorDownloadDecodingFailedMidStream	swift.enum.case	CFNetworkErrors.cfurlErrorDownloadDecodingFailedMidStream	CFNetworkErrors.cfurlErrorDownloadDecodingFailedMidStream	case cfurlErrorDownloadDecodingFailedMidStream
+c:@E@CFNetworkErrors@kCFURLErrorDownloadDecodingFailedToComplete	swift.enum.case	CFNetworkErrors.cfurlErrorDownloadDecodingFailedToComplete	CFNetworkErrors.cfurlErrorDownloadDecodingFailedToComplete	case cfurlErrorDownloadDecodingFailedToComplete
+c:@E@CFNetworkErrors@kCFURLErrorFileDoesNotExist	swift.enum.case	CFNetworkErrors.cfurlErrorFileDoesNotExist	CFNetworkErrors.cfurlErrorFileDoesNotExist	case cfurlErrorFileDoesNotExist
+c:@E@CFNetworkErrors@kCFURLErrorFileIsDirectory	swift.enum.case	CFNetworkErrors.cfurlErrorFileIsDirectory	CFNetworkErrors.cfurlErrorFileIsDirectory	case cfurlErrorFileIsDirectory
+c:@E@CFNetworkErrors@kCFURLErrorFileOutsideSafeArea	swift.enum.case	CFNetworkErrors.cfurlErrorFileOutsideSafeArea	CFNetworkErrors.cfurlErrorFileOutsideSafeArea	case cfurlErrorFileOutsideSafeArea
+c:@E@CFNetworkErrors@kCFURLErrorHTTPTooManyRedirects	swift.enum.case	CFNetworkErrors.cfurlErrorHTTPTooManyRedirects	CFNetworkErrors.cfurlErrorHTTPTooManyRedirects	case cfurlErrorHTTPTooManyRedirects
+c:@E@CFNetworkErrors@kCFURLErrorInternationalRoamingOff	swift.enum.case	CFNetworkErrors.cfurlErrorInternationalRoamingOff	CFNetworkErrors.cfurlErrorInternationalRoamingOff	case cfurlErrorInternationalRoamingOff
+c:@E@CFNetworkErrors@kCFURLErrorNetworkConnectionLost	swift.enum.case	CFNetworkErrors.cfurlErrorNetworkConnectionLost	CFNetworkErrors.cfurlErrorNetworkConnectionLost	case cfurlErrorNetworkConnectionLost
+c:@E@CFNetworkErrors@kCFURLErrorNoPermissionsToReadFile	swift.enum.case	CFNetworkErrors.cfurlErrorNoPermissionsToReadFile	CFNetworkErrors.cfurlErrorNoPermissionsToReadFile	case cfurlErrorNoPermissionsToReadFile
+c:@E@CFNetworkErrors@kCFURLErrorNotConnectedToInternet	swift.enum.case	CFNetworkErrors.cfurlErrorNotConnectedToInternet	CFNetworkErrors.cfurlErrorNotConnectedToInternet	case cfurlErrorNotConnectedToInternet
+c:@E@CFNetworkErrors@kCFURLErrorRedirectToNonExistentLocation	swift.enum.case	CFNetworkErrors.cfurlErrorRedirectToNonExistentLocation	CFNetworkErrors.cfurlErrorRedirectToNonExistentLocation	case cfurlErrorRedirectToNonExistentLocation
+c:@E@CFNetworkErrors@kCFURLErrorRequestBodyStreamExhausted	swift.enum.case	CFNetworkErrors.cfurlErrorRequestBodyStreamExhausted	CFNetworkErrors.cfurlErrorRequestBodyStreamExhausted	case cfurlErrorRequestBodyStreamExhausted
+c:@E@CFNetworkErrors@kCFURLErrorResourceUnavailable	swift.enum.case	CFNetworkErrors.cfurlErrorResourceUnavailable	CFNetworkErrors.cfurlErrorResourceUnavailable	case cfurlErrorResourceUnavailable
+c:@E@CFNetworkErrors@kCFURLErrorSecureConnectionFailed	swift.enum.case	CFNetworkErrors.cfurlErrorSecureConnectionFailed	CFNetworkErrors.cfurlErrorSecureConnectionFailed	case cfurlErrorSecureConnectionFailed
+c:@E@CFNetworkErrors@kCFURLErrorServerCertificateHasBadDate	swift.enum.case	CFNetworkErrors.cfurlErrorServerCertificateHasBadDate	CFNetworkErrors.cfurlErrorServerCertificateHasBadDate	case cfurlErrorServerCertificateHasBadDate
+c:@E@CFNetworkErrors@kCFURLErrorServerCertificateHasUnknownRoot	swift.enum.case	CFNetworkErrors.cfurlErrorServerCertificateHasUnknownRoot	CFNetworkErrors.cfurlErrorServerCertificateHasUnknownRoot	case cfurlErrorServerCertificateHasUnknownRoot
+c:@E@CFNetworkErrors@kCFURLErrorServerCertificateNotYetValid	swift.enum.case	CFNetworkErrors.cfurlErrorServerCertificateNotYetValid	CFNetworkErrors.cfurlErrorServerCertificateNotYetValid	case cfurlErrorServerCertificateNotYetValid
+c:@E@CFNetworkErrors@kCFURLErrorServerCertificateUntrusted	swift.enum.case	CFNetworkErrors.cfurlErrorServerCertificateUntrusted	CFNetworkErrors.cfurlErrorServerCertificateUntrusted	case cfurlErrorServerCertificateUntrusted
+c:@E@CFNetworkErrors@kCFURLErrorTimedOut	swift.enum.case	CFNetworkErrors.cfurlErrorTimedOut	CFNetworkErrors.cfurlErrorTimedOut	case cfurlErrorTimedOut
+c:@E@CFNetworkErrors@kCFURLErrorUnknown	swift.enum.case	CFNetworkErrors.cfurlErrorUnknown	CFNetworkErrors.cfurlErrorUnknown	case cfurlErrorUnknown
+c:@E@CFNetworkErrors@kCFURLErrorUnsupportedURL	swift.enum.case	CFNetworkErrors.cfurlErrorUnsupportedURL	CFNetworkErrors.cfurlErrorUnsupportedURL	case cfurlErrorUnsupportedURL
+c:@E@CFNetworkErrors@kCFURLErrorUserAuthenticationRequired	swift.enum.case	CFNetworkErrors.cfurlErrorUserAuthenticationRequired	CFNetworkErrors.cfurlErrorUserAuthenticationRequired	case cfurlErrorUserAuthenticationRequired
+c:@E@CFNetworkErrors@kCFURLErrorUserCancelledAuthentication	swift.enum.case	CFNetworkErrors.cfurlErrorUserCancelledAuthentication	CFNetworkErrors.cfurlErrorUserCancelledAuthentication	case cfurlErrorUserCancelledAuthentication
+c:@E@CFNetworkErrors@kCFURLErrorZeroByteResource	swift.enum.case	CFNetworkErrors.cfurlErrorZeroByteResource	CFNetworkErrors.cfurlErrorZeroByteResource	case cfurlErrorZeroByteResource
+c:@E@CFStreamErrorHTTP	swift.enum	CFStreamErrorHTTP	CFStreamErrorHTTP	enum CFStreamErrorHTTP
+c:@E@CFStreamErrorHTTP@kCFStreamErrorHTTPBadURL	swift.enum.case	CFStreamErrorHTTP.badURL	CFStreamErrorHTTP.badURL	case badURL
+c:@E@CFStreamErrorHTTP@kCFStreamErrorHTTPParseFailure	swift.enum.case	CFStreamErrorHTTP.parseFailure	CFStreamErrorHTTP.parseFailure	case parseFailure
+c:@E@CFStreamErrorHTTP@kCFStreamErrorHTTPRedirectionLoop	swift.enum.case	CFStreamErrorHTTP.redirectionLoop	CFStreamErrorHTTP.redirectionLoop	case redirectionLoop
+c:@E@CFStreamErrorHTTPAuthentication	swift.enum	CFStreamErrorHTTPAuthentication	CFStreamErrorHTTPAuthentication	enum CFStreamErrorHTTPAuthentication
+c:@E@CFStreamErrorHTTPAuthentication@kCFStreamErrorHTTPAuthenticationBadPassword	swift.enum.case	CFStreamErrorHTTPAuthentication.badPassword	CFStreamErrorHTTPAuthentication.badPassword	case badPassword
+c:@E@CFStreamErrorHTTPAuthentication@kCFStreamErrorHTTPAuthenticationBadUserName	swift.enum.case	CFStreamErrorHTTPAuthentication.badUserName	CFStreamErrorHTTPAuthentication.badUserName	case badUserName
+c:@E@CFStreamErrorHTTPAuthentication@kCFStreamErrorHTTPAuthenticationTypeUnsupported	swift.enum.case	CFStreamErrorHTTPAuthentication.typeUnsupported	CFStreamErrorHTTPAuthentication.typeUnsupported	case typeUnsupported
+c:@Ea@kCFStreamErrorSOCKS4RequestFailed@kCFStreamErrorSOCKS4IdConflict	swift.var	kCFStreamErrorSOCKS4IdConflict	kCFStreamErrorSOCKS4IdConflict	var kCFStreamErrorSOCKS4IdConflict: Int { get }
+c:@Ea@kCFStreamErrorSOCKS4RequestFailed@kCFStreamErrorSOCKS4IdentdFailed	swift.var	kCFStreamErrorSOCKS4IdentdFailed	kCFStreamErrorSOCKS4IdentdFailed	var kCFStreamErrorSOCKS4IdentdFailed: Int { get }
+c:@Ea@kCFStreamErrorSOCKS4RequestFailed@kCFStreamErrorSOCKS4RequestFailed	swift.var	kCFStreamErrorSOCKS4RequestFailed	kCFStreamErrorSOCKS4RequestFailed	var kCFStreamErrorSOCKS4RequestFailed: Int { get }
+c:@Ea@kCFStreamErrorSOCKS5BadResponseAddr@kCFStreamErrorSOCKS5BadResponseAddr	swift.var	kCFStreamErrorSOCKS5BadResponseAddr	kCFStreamErrorSOCKS5BadResponseAddr	var kCFStreamErrorSOCKS5BadResponseAddr: Int { get }
+c:@Ea@kCFStreamErrorSOCKS5BadResponseAddr@kCFStreamErrorSOCKS5BadState	swift.var	kCFStreamErrorSOCKS5BadState	kCFStreamErrorSOCKS5BadState	var kCFStreamErrorSOCKS5BadState: Int { get }
+c:@Ea@kCFStreamErrorSOCKS5BadResponseAddr@kCFStreamErrorSOCKSUnknownClientVersion	swift.var	kCFStreamErrorSOCKSUnknownClientVersion	kCFStreamErrorSOCKSUnknownClientVersion	var kCFStreamErrorSOCKSUnknownClientVersion: Int { get }
+c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKS4SubDomainResponse	swift.var	kCFStreamErrorSOCKS4SubDomainResponse	kCFStreamErrorSOCKS4SubDomainResponse	var kCFStreamErrorSOCKS4SubDomainResponse: Int { get }
+c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKS5SubDomainMethod	swift.var	kCFStreamErrorSOCKS5SubDomainMethod	kCFStreamErrorSOCKS5SubDomainMethod	var kCFStreamErrorSOCKS5SubDomainMethod: Int { get }
+c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKS5SubDomainResponse	swift.var	kCFStreamErrorSOCKS5SubDomainResponse	kCFStreamErrorSOCKS5SubDomainResponse	var kCFStreamErrorSOCKS5SubDomainResponse: Int { get }
+c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKS5SubDomainUserPass	swift.var	kCFStreamErrorSOCKS5SubDomainUserPass	kCFStreamErrorSOCKS5SubDomainUserPass	var kCFStreamErrorSOCKS5SubDomainUserPass: Int { get }
+c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKSSubDomainNone	swift.var	kCFStreamErrorSOCKSSubDomainNone	kCFStreamErrorSOCKSSubDomainNone	var kCFStreamErrorSOCKSSubDomainNone: Int { get }
+c:@Ea@kCFStreamErrorSOCKSSubDomainNone@kCFStreamErrorSOCKSSubDomainVersionCode	swift.var	kCFStreamErrorSOCKSSubDomainVersionCode	kCFStreamErrorSOCKSSubDomainVersionCode	var kCFStreamErrorSOCKSSubDomainVersionCode: Int { get }
+c:@Ea@kSOCKS5NoAcceptableMethod@kSOCKS5NoAcceptableMethod	swift.var	kSOCKS5NoAcceptableMethod	kSOCKS5NoAcceptableMethod	var kSOCKS5NoAcceptableMethod: Int { get }
+c:@F@CFFTPCreateParsedResourceListing	swift.func	CFFTPCreateParsedResourceListing(_:_:_:_:)	CFFTPCreateParsedResourceListing(_:_:_:_:)	func CFFTPCreateParsedResourceListing(_ alloc: CFAllocator?, _ buffer: UnsafePointer<UInt8>, _ bufferLength: CFIndex, _ parsed: UnsafeMutablePointer<Unmanaged<CFDictionary>?>?) -> CFIndex
+c:@F@CFHTTPAuthenticationAppliesToRequest	swift.func	CFHTTPAuthenticationAppliesToRequest(_:_:)	CFHTTPAuthenticationAppliesToRequest(_:_:)	func CFHTTPAuthenticationAppliesToRequest(_ auth: CFHTTPAuthentication, _ request: CFHTTPMessage) -> Bool
+c:@F@CFHTTPAuthenticationCopyDomains	swift.func	CFHTTPAuthenticationCopyDomains(_:)	CFHTTPAuthenticationCopyDomains(_:)	func CFHTTPAuthenticationCopyDomains(_ auth: CFHTTPAuthentication) -> Unmanaged<CFArray>
+c:@F@CFHTTPAuthenticationCopyMethod	swift.func	CFHTTPAuthenticationCopyMethod(_:)	CFHTTPAuthenticationCopyMethod(_:)	func CFHTTPAuthenticationCopyMethod(_ auth: CFHTTPAuthentication) -> Unmanaged<CFString>
+c:@F@CFHTTPAuthenticationCopyRealm	swift.func	CFHTTPAuthenticationCopyRealm(_:)	CFHTTPAuthenticationCopyRealm(_:)	func CFHTTPAuthenticationCopyRealm(_ auth: CFHTTPAuthentication) -> Unmanaged<CFString>
+c:@F@CFHTTPAuthenticationCreateFromResponse	swift.func	CFHTTPAuthenticationCreateFromResponse(_:_:)	CFHTTPAuthenticationCreateFromResponse(_:_:)	func CFHTTPAuthenticationCreateFromResponse(_ alloc: CFAllocator?, _ response: CFHTTPMessage) -> Unmanaged<CFHTTPAuthentication>
+c:@F@CFHTTPAuthenticationGetTypeID	swift.func	CFHTTPAuthenticationGetTypeID()	CFHTTPAuthenticationGetTypeID()	func CFHTTPAuthenticationGetTypeID() -> CFTypeID
+c:@F@CFHTTPAuthenticationIsValid	swift.func	CFHTTPAuthenticationIsValid(_:_:)	CFHTTPAuthenticationIsValid(_:_:)	func CFHTTPAuthenticationIsValid(_ auth: CFHTTPAuthentication, _ error: UnsafeMutablePointer<CFStreamError>?) -> Bool
+c:@F@CFHTTPAuthenticationRequiresAccountDomain	swift.func	CFHTTPAuthenticationRequiresAccountDomain(_:)	CFHTTPAuthenticationRequiresAccountDomain(_:)	func CFHTTPAuthenticationRequiresAccountDomain(_ auth: CFHTTPAuthentication) -> Bool
+c:@F@CFHTTPAuthenticationRequiresOrderedRequests	swift.func	CFHTTPAuthenticationRequiresOrderedRequests(_:)	CFHTTPAuthenticationRequiresOrderedRequests(_:)	func CFHTTPAuthenticationRequiresOrderedRequests(_ auth: CFHTTPAuthentication) -> Bool
+c:@F@CFHTTPAuthenticationRequiresUserNameAndPassword	swift.func	CFHTTPAuthenticationRequiresUserNameAndPassword(_:)	CFHTTPAuthenticationRequiresUserNameAndPassword(_:)	func CFHTTPAuthenticationRequiresUserNameAndPassword(_ auth: CFHTTPAuthentication) -> Bool
+c:@F@CFHTTPMessageAddAuthentication	swift.func	CFHTTPMessageAddAuthentication(_:_:_:_:_:_:)	CFHTTPMessageAddAuthentication(_:_:_:_:_:_:)	func CFHTTPMessageAddAuthentication(_ request: CFHTTPMessage, _ authenticationFailureResponse: CFHTTPMessage?, _ username: CFString, _ password: CFString, _ authenticationScheme: CFString?, _ forProxy: Bool) -> Bool
+c:@F@CFHTTPMessageAppendBytes	swift.func	CFHTTPMessageAppendBytes(_:_:_:)	CFHTTPMessageAppendBytes(_:_:_:)	func CFHTTPMessageAppendBytes(_ message: CFHTTPMessage, _ newBytes: UnsafePointer<UInt8>, _ numBytes: CFIndex) -> Bool
+c:@F@CFHTTPMessageApplyCredentialDictionary	swift.func	CFHTTPMessageApplyCredentialDictionary(_:_:_:_:)	CFHTTPMessageApplyCredentialDictionary(_:_:_:_:)	func CFHTTPMessageApplyCredentialDictionary(_ request: CFHTTPMessage, _ auth: CFHTTPAuthentication, _ dict: CFDictionary, _ error: UnsafeMutablePointer<CFStreamError>?) -> Bool
+c:@F@CFHTTPMessageApplyCredentials	swift.func	CFHTTPMessageApplyCredentials(_:_:_:_:_:)	CFHTTPMessageApplyCredentials(_:_:_:_:_:)	func CFHTTPMessageApplyCredentials(_ request: CFHTTPMessage, _ auth: CFHTTPAuthentication, _ username: CFString?, _ password: CFString?, _ error: UnsafeMutablePointer<CFStreamError>?) -> Bool
+c:@F@CFHTTPMessageCopyAllHeaderFields	swift.func	CFHTTPMessageCopyAllHeaderFields(_:)	CFHTTPMessageCopyAllHeaderFields(_:)	func CFHTTPMessageCopyAllHeaderFields(_ message: CFHTTPMessage) -> Unmanaged<CFDictionary>?
+c:@F@CFHTTPMessageCopyBody	swift.func	CFHTTPMessageCopyBody(_:)	CFHTTPMessageCopyBody(_:)	func CFHTTPMessageCopyBody(_ message: CFHTTPMessage) -> Unmanaged<CFData>?
+c:@F@CFHTTPMessageCopyHeaderFieldValue	swift.func	CFHTTPMessageCopyHeaderFieldValue(_:_:)	CFHTTPMessageCopyHeaderFieldValue(_:_:)	func CFHTTPMessageCopyHeaderFieldValue(_ message: CFHTTPMessage, _ headerField: CFString) -> Unmanaged<CFString>?
+c:@F@CFHTTPMessageCopyRequestMethod	swift.func	CFHTTPMessageCopyRequestMethod(_:)	CFHTTPMessageCopyRequestMethod(_:)	func CFHTTPMessageCopyRequestMethod(_ request: CFHTTPMessage) -> Unmanaged<CFString>?
+c:@F@CFHTTPMessageCopyRequestURL	swift.func	CFHTTPMessageCopyRequestURL(_:)	CFHTTPMessageCopyRequestURL(_:)	func CFHTTPMessageCopyRequestURL(_ request: CFHTTPMessage) -> Unmanaged<CFURL>?
+c:@F@CFHTTPMessageCopyResponseStatusLine	swift.func	CFHTTPMessageCopyResponseStatusLine(_:)	CFHTTPMessageCopyResponseStatusLine(_:)	func CFHTTPMessageCopyResponseStatusLine(_ response: CFHTTPMessage) -> Unmanaged<CFString>?
+c:@F@CFHTTPMessageCopySerializedMessage	swift.func	CFHTTPMessageCopySerializedMessage(_:)	CFHTTPMessageCopySerializedMessage(_:)	func CFHTTPMessageCopySerializedMessage(_ message: CFHTTPMessage) -> Unmanaged<CFData>?
+c:@F@CFHTTPMessageCopyVersion	swift.func	CFHTTPMessageCopyVersion(_:)	CFHTTPMessageCopyVersion(_:)	func CFHTTPMessageCopyVersion(_ message: CFHTTPMessage) -> Unmanaged<CFString>
+c:@F@CFHTTPMessageCreateCopy	swift.func	CFHTTPMessageCreateCopy(_:_:)	CFHTTPMessageCreateCopy(_:_:)	func CFHTTPMessageCreateCopy(_ alloc: CFAllocator?, _ message: CFHTTPMessage) -> Unmanaged<CFHTTPMessage>
+c:@F@CFHTTPMessageCreateEmpty	swift.func	CFHTTPMessageCreateEmpty(_:_:)	CFHTTPMessageCreateEmpty(_:_:)	func CFHTTPMessageCreateEmpty(_ alloc: CFAllocator?, _ isRequest: Bool) -> Unmanaged<CFHTTPMessage>
+c:@F@CFHTTPMessageCreateRequest	swift.func	CFHTTPMessageCreateRequest(_:_:_:_:)	CFHTTPMessageCreateRequest(_:_:_:_:)	func CFHTTPMessageCreateRequest(_ alloc: CFAllocator?, _ requestMethod: CFString, _ url: CFURL, _ httpVersion: CFString) -> Unmanaged<CFHTTPMessage>
+c:@F@CFHTTPMessageCreateResponse	swift.func	CFHTTPMessageCreateResponse(_:_:_:_:)	CFHTTPMessageCreateResponse(_:_:_:_:)	func CFHTTPMessageCreateResponse(_ alloc: CFAllocator?, _ statusCode: CFIndex, _ statusDescription: CFString?, _ httpVersion: CFString) -> Unmanaged<CFHTTPMessage>
+c:@F@CFHTTPMessageGetResponseStatusCode	swift.func	CFHTTPMessageGetResponseStatusCode(_:)	CFHTTPMessageGetResponseStatusCode(_:)	func CFHTTPMessageGetResponseStatusCode(_ response: CFHTTPMessage) -> CFIndex
+c:@F@CFHTTPMessageGetTypeID	swift.func	CFHTTPMessageGetTypeID()	CFHTTPMessageGetTypeID()	func CFHTTPMessageGetTypeID() -> CFTypeID
+c:@F@CFHTTPMessageIsHeaderComplete	swift.func	CFHTTPMessageIsHeaderComplete(_:)	CFHTTPMessageIsHeaderComplete(_:)	func CFHTTPMessageIsHeaderComplete(_ message: CFHTTPMessage) -> Bool
+c:@F@CFHTTPMessageIsRequest	swift.func	CFHTTPMessageIsRequest(_:)	CFHTTPMessageIsRequest(_:)	func CFHTTPMessageIsRequest(_ message: CFHTTPMessage) -> Bool
+c:@F@CFHTTPMessageSetBody	swift.func	CFHTTPMessageSetBody(_:_:)	CFHTTPMessageSetBody(_:_:)	func CFHTTPMessageSetBody(_ message: CFHTTPMessage, _ bodyData: CFData)
+c:@F@CFHTTPMessageSetHeaderFieldValue	swift.func	CFHTTPMessageSetHeaderFieldValue(_:_:_:)	CFHTTPMessageSetHeaderFieldValue(_:_:_:)	func CFHTTPMessageSetHeaderFieldValue(_ message: CFHTTPMessage, _ headerField: CFString, _ value: CFString?)
+c:@F@CFHostCancelInfoResolution	swift.func	CFHostCancelInfoResolution(_:_:)	CFHostCancelInfoResolution(_:_:)	func CFHostCancelInfoResolution(_ theHost: CFHost, _ info: CFHostInfoType)
+c:@F@CFHostCreateCopy	swift.func	CFHostCreateCopy(_:_:)	CFHostCreateCopy(_:_:)	func CFHostCreateCopy(_ alloc: CFAllocator?, _ host: CFHost) -> Unmanaged<CFHost>
+c:@F@CFHostCreateWithAddress	swift.func	CFHostCreateWithAddress(_:_:)	CFHostCreateWithAddress(_:_:)	func CFHostCreateWithAddress(_ allocator: CFAllocator?, _ addr: CFData) -> Unmanaged<CFHost>
+c:@F@CFHostCreateWithName	swift.func	CFHostCreateWithName(_:_:)	CFHostCreateWithName(_:_:)	func CFHostCreateWithName(_ allocator: CFAllocator?, _ hostname: CFString) -> Unmanaged<CFHost>
+c:@F@CFHostGetAddressing	swift.func	CFHostGetAddressing(_:_:)	CFHostGetAddressing(_:_:)	func CFHostGetAddressing(_ theHost: CFHost, _ hasBeenResolved: UnsafeMutablePointer<DarwinBoolean>?) -> Unmanaged<CFArray>?
+c:@F@CFHostGetNames	swift.func	CFHostGetNames(_:_:)	CFHostGetNames(_:_:)	func CFHostGetNames(_ theHost: CFHost, _ hasBeenResolved: UnsafeMutablePointer<DarwinBoolean>?) -> Unmanaged<CFArray>?
+c:@F@CFHostGetReachability	swift.func	CFHostGetReachability(_:_:)	CFHostGetReachability(_:_:)	func CFHostGetReachability(_ theHost: CFHost, _ hasBeenResolved: UnsafeMutablePointer<DarwinBoolean>?) -> Unmanaged<CFData>?
+c:@F@CFHostGetTypeID	swift.func	CFHostGetTypeID()	CFHostGetTypeID()	func CFHostGetTypeID() -> CFTypeID
+c:@F@CFHostScheduleWithRunLoop	swift.func	CFHostScheduleWithRunLoop(_:_:_:)	CFHostScheduleWithRunLoop(_:_:_:)	func CFHostScheduleWithRunLoop(_ theHost: CFHost, _ runLoop: CFRunLoop, _ runLoopMode: CFString)
+c:@F@CFHostSetClient	swift.func	CFHostSetClient(_:_:_:)	CFHostSetClient(_:_:_:)	func CFHostSetClient(_ theHost: CFHost, _ clientCB: CFHostClientCallBack?, _ clientContext: UnsafeMutablePointer<CFHostClientContext>?) -> Bool
+c:@F@CFHostStartInfoResolution	swift.func	CFHostStartInfoResolution(_:_:_:)	CFHostStartInfoResolution(_:_:_:)	func CFHostStartInfoResolution(_ theHost: CFHost, _ info: CFHostInfoType, _ error: UnsafeMutablePointer<CFStreamError>?) -> Bool
+c:@F@CFHostUnscheduleFromRunLoop	swift.func	CFHostUnscheduleFromRunLoop(_:_:_:)	CFHostUnscheduleFromRunLoop(_:_:_:)	func CFHostUnscheduleFromRunLoop(_ theHost: CFHost, _ runLoop: CFRunLoop, _ runLoopMode: CFString)
+c:@F@CFNetDiagnosticCopyNetworkStatusPassively	swift.func	CFNetDiagnosticCopyNetworkStatusPassively(_:_:)	CFNetDiagnosticCopyNetworkStatusPassively(_:_:)	func CFNetDiagnosticCopyNetworkStatusPassively(_ details: CFNetDiagnostic, _ description: UnsafeMutablePointer<Unmanaged<CFString>?>?) -> CFNetDiagnosticStatus
+c:@F@CFNetDiagnosticCreateWithStreams	swift.func	CFNetDiagnosticCreateWithStreams(_:_:_:)	CFNetDiagnosticCreateWithStreams(_:_:_:)	func CFNetDiagnosticCreateWithStreams(_ alloc: CFAllocator?, _ readStream: CFReadStream?, _ writeStream: CFWriteStream?) -> Unmanaged<CFNetDiagnostic>
+c:@F@CFNetDiagnosticCreateWithURL	swift.func	CFNetDiagnosticCreateWithURL(_:_:)	CFNetDiagnosticCreateWithURL(_:_:)	func CFNetDiagnosticCreateWithURL(_ alloc: CFAllocator, _ url: CFURL) -> Unmanaged<CFNetDiagnostic>
+c:@F@CFNetDiagnosticDiagnoseProblemInteractively	swift.func	CFNetDiagnosticDiagnoseProblemInteractively(_:)	CFNetDiagnosticDiagnoseProblemInteractively(_:)	func CFNetDiagnosticDiagnoseProblemInteractively(_ details: CFNetDiagnostic) -> CFNetDiagnosticStatus
+c:@F@CFNetDiagnosticSetName	swift.func	CFNetDiagnosticSetName(_:_:)	CFNetDiagnosticSetName(_:_:)	func CFNetDiagnosticSetName(_ details: CFNetDiagnostic, _ name: CFString)
+c:@F@CFNetServiceBrowserCreate	swift.func	CFNetServiceBrowserCreate(_:_:_:)	CFNetServiceBrowserCreate(_:_:_:)	func CFNetServiceBrowserCreate(_ alloc: CFAllocator?, _ clientCB: CFNetServiceBrowserClientCallBack, _ clientContext: UnsafeMutablePointer<CFNetServiceClientContext>) -> Unmanaged<CFNetServiceBrowser>
+c:@F@CFNetServiceBrowserGetTypeID	swift.func	CFNetServiceBrowserGetTypeID()	CFNetServiceBrowserGetTypeID()	func CFNetServiceBrowserGetTypeID() -> CFTypeID
+c:@F@CFNetServiceBrowserInvalidate	swift.func	CFNetServiceBrowserInvalidate(_:)	CFNetServiceBrowserInvalidate(_:)	func CFNetServiceBrowserInvalidate(_ browser: CFNetServiceBrowser)
+c:@F@CFNetServiceBrowserScheduleWithRunLoop	swift.func	CFNetServiceBrowserScheduleWithRunLoop(_:_:_:)	CFNetServiceBrowserScheduleWithRunLoop(_:_:_:)	func CFNetServiceBrowserScheduleWithRunLoop(_ browser: CFNetServiceBrowser, _ runLoop: CFRunLoop, _ runLoopMode: CFString)
+c:@F@CFNetServiceBrowserSearchForDomains	swift.func	CFNetServiceBrowserSearchForDomains(_:_:_:)	CFNetServiceBrowserSearchForDomains(_:_:_:)	func CFNetServiceBrowserSearchForDomains(_ browser: CFNetServiceBrowser, _ registrationDomains: Bool, _ error: UnsafeMutablePointer<CFStreamError>?) -> Bool
+c:@F@CFNetServiceBrowserSearchForServices	swift.func	CFNetServiceBrowserSearchForServices(_:_:_:_:)	CFNetServiceBrowserSearchForServices(_:_:_:_:)	func CFNetServiceBrowserSearchForServices(_ browser: CFNetServiceBrowser, _ domain: CFString, _ serviceType: CFString, _ error: UnsafeMutablePointer<CFStreamError>?) -> Bool
+c:@F@CFNetServiceBrowserStopSearch	swift.func	CFNetServiceBrowserStopSearch(_:_:)	CFNetServiceBrowserStopSearch(_:_:)	func CFNetServiceBrowserStopSearch(_ browser: CFNetServiceBrowser, _ error: UnsafeMutablePointer<CFStreamError>?)
+c:@F@CFNetServiceBrowserUnscheduleFromRunLoop	swift.func	CFNetServiceBrowserUnscheduleFromRunLoop(_:_:_:)	CFNetServiceBrowserUnscheduleFromRunLoop(_:_:_:)	func CFNetServiceBrowserUnscheduleFromRunLoop(_ browser: CFNetServiceBrowser, _ runLoop: CFRunLoop, _ runLoopMode: CFString)
+c:@F@CFNetServiceCancel	swift.func	CFNetServiceCancel(_:)	CFNetServiceCancel(_:)	func CFNetServiceCancel(_ theService: CFNetService)
+c:@F@CFNetServiceCreate	swift.func	CFNetServiceCreate(_:_:_:_:_:)	CFNetServiceCreate(_:_:_:_:_:)	func CFNetServiceCreate(_ alloc: CFAllocator?, _ domain: CFString, _ serviceType: CFString, _ name: CFString, _ port: Int32) -> Unmanaged<CFNetService>
+c:@F@CFNetServiceCreateCopy	swift.func	CFNetServiceCreateCopy(_:_:)	CFNetServiceCreateCopy(_:_:)	func CFNetServiceCreateCopy(_ alloc: CFAllocator?, _ service: CFNetService) -> Unmanaged<CFNetService>
+c:@F@CFNetServiceCreateDictionaryWithTXTData	swift.func	CFNetServiceCreateDictionaryWithTXTData(_:_:)	CFNetServiceCreateDictionaryWithTXTData(_:_:)	func CFNetServiceCreateDictionaryWithTXTData(_ alloc: CFAllocator?, _ txtRecord: CFData) -> Unmanaged<CFDictionary>?
+c:@F@CFNetServiceCreateTXTDataWithDictionary	swift.func	CFNetServiceCreateTXTDataWithDictionary(_:_:)	CFNetServiceCreateTXTDataWithDictionary(_:_:)	func CFNetServiceCreateTXTDataWithDictionary(_ alloc: CFAllocator?, _ keyValuePairs: CFDictionary) -> Unmanaged<CFData>?
+c:@F@CFNetServiceGetAddressing	swift.func	CFNetServiceGetAddressing(_:)	CFNetServiceGetAddressing(_:)	func CFNetServiceGetAddressing(_ theService: CFNetService) -> Unmanaged<CFArray>?
+c:@F@CFNetServiceGetDomain	swift.func	CFNetServiceGetDomain(_:)	CFNetServiceGetDomain(_:)	func CFNetServiceGetDomain(_ theService: CFNetService) -> Unmanaged<CFString>
+c:@F@CFNetServiceGetName	swift.func	CFNetServiceGetName(_:)	CFNetServiceGetName(_:)	func CFNetServiceGetName(_ theService: CFNetService) -> Unmanaged<CFString>
+c:@F@CFNetServiceGetPortNumber	swift.func	CFNetServiceGetPortNumber(_:)	CFNetServiceGetPortNumber(_:)	func CFNetServiceGetPortNumber(_ theService: CFNetService) -> Int32
+c:@F@CFNetServiceGetTXTData	swift.func	CFNetServiceGetTXTData(_:)	CFNetServiceGetTXTData(_:)	func CFNetServiceGetTXTData(_ theService: CFNetService) -> Unmanaged<CFData>?
+c:@F@CFNetServiceGetTargetHost	swift.func	CFNetServiceGetTargetHost(_:)	CFNetServiceGetTargetHost(_:)	func CFNetServiceGetTargetHost(_ theService: CFNetService) -> Unmanaged<CFString>?
+c:@F@CFNetServiceGetType	swift.func	CFNetServiceGetType(_:)	CFNetServiceGetType(_:)	func CFNetServiceGetType(_ theService: CFNetService) -> Unmanaged<CFString>
+c:@F@CFNetServiceGetTypeID	swift.func	CFNetServiceGetTypeID()	CFNetServiceGetTypeID()	func CFNetServiceGetTypeID() -> CFTypeID
+c:@F@CFNetServiceMonitorCreate	swift.func	CFNetServiceMonitorCreate(_:_:_:_:)	CFNetServiceMonitorCreate(_:_:_:_:)	func CFNetServiceMonitorCreate(_ alloc: CFAllocator?, _ theService: CFNetService, _ clientCB: CFNetServiceMonitorClientCallBack, _ clientContext: UnsafeMutablePointer<CFNetServiceClientContext>) -> Unmanaged<CFNetServiceMonitor>
+c:@F@CFNetServiceMonitorGetTypeID	swift.func	CFNetServiceMonitorGetTypeID()	CFNetServiceMonitorGetTypeID()	func CFNetServiceMonitorGetTypeID() -> CFTypeID
+c:@F@CFNetServiceMonitorInvalidate	swift.func	CFNetServiceMonitorInvalidate(_:)	CFNetServiceMonitorInvalidate(_:)	func CFNetServiceMonitorInvalidate(_ monitor: CFNetServiceMonitor)
+c:@F@CFNetServiceMonitorScheduleWithRunLoop	swift.func	CFNetServiceMonitorScheduleWithRunLoop(_:_:_:)	CFNetServiceMonitorScheduleWithRunLoop(_:_:_:)	func CFNetServiceMonitorScheduleWithRunLoop(_ monitor: CFNetServiceMonitor, _ runLoop: CFRunLoop, _ runLoopMode: CFString)
+c:@F@CFNetServiceMonitorStart	swift.func	CFNetServiceMonitorStart(_:_:_:)	CFNetServiceMonitorStart(_:_:_:)	func CFNetServiceMonitorStart(_ monitor: CFNetServiceMonitor, _ recordType: CFNetServiceMonitorType, _ error: UnsafeMutablePointer<CFStreamError>?) -> Bool
+c:@F@CFNetServiceMonitorStop	swift.func	CFNetServiceMonitorStop(_:_:)	CFNetServiceMonitorStop(_:_:)	func CFNetServiceMonitorStop(_ monitor: CFNetServiceMonitor, _ error: UnsafeMutablePointer<CFStreamError>?)
+c:@F@CFNetServiceMonitorUnscheduleFromRunLoop	swift.func	CFNetServiceMonitorUnscheduleFromRunLoop(_:_:_:)	CFNetServiceMonitorUnscheduleFromRunLoop(_:_:_:)	func CFNetServiceMonitorUnscheduleFromRunLoop(_ monitor: CFNetServiceMonitor, _ runLoop: CFRunLoop, _ runLoopMode: CFString)
+c:@F@CFNetServiceRegisterWithOptions	swift.func	CFNetServiceRegisterWithOptions(_:_:_:)	CFNetServiceRegisterWithOptions(_:_:_:)	func CFNetServiceRegisterWithOptions(_ theService: CFNetService, _ options: CFOptionFlags, _ error: UnsafeMutablePointer<CFStreamError>?) -> Bool
+c:@F@CFNetServiceResolveWithTimeout	swift.func	CFNetServiceResolveWithTimeout(_:_:_:)	CFNetServiceResolveWithTimeout(_:_:_:)	func CFNetServiceResolveWithTimeout(_ theService: CFNetService, _ timeout: CFTimeInterval, _ error: UnsafeMutablePointer<CFStreamError>?) -> Bool
+c:@F@CFNetServiceScheduleWithRunLoop	swift.func	CFNetServiceScheduleWithRunLoop(_:_:_:)	CFNetServiceScheduleWithRunLoop(_:_:_:)	func CFNetServiceScheduleWithRunLoop(_ theService: CFNetService, _ runLoop: CFRunLoop, _ runLoopMode: CFString)
+c:@F@CFNetServiceSetClient	swift.func	CFNetServiceSetClient(_:_:_:)	CFNetServiceSetClient(_:_:_:)	func CFNetServiceSetClient(_ theService: CFNetService, _ clientCB: CFNetServiceClientCallBack?, _ clientContext: UnsafeMutablePointer<CFNetServiceClientContext>?) -> Bool
+c:@F@CFNetServiceSetTXTData	swift.func	CFNetServiceSetTXTData(_:_:)	CFNetServiceSetTXTData(_:_:)	func CFNetServiceSetTXTData(_ theService: CFNetService, _ txtRecord: CFData) -> Bool
+c:@F@CFNetServiceUnscheduleFromRunLoop	swift.func	CFNetServiceUnscheduleFromRunLoop(_:_:_:)	CFNetServiceUnscheduleFromRunLoop(_:_:_:)	func CFNetServiceUnscheduleFromRunLoop(_ theService: CFNetService, _ runLoop: CFRunLoop, _ runLoopMode: CFString)
+c:@F@CFNetworkCopyProxiesForAutoConfigurationScript	swift.func	CFNetworkCopyProxiesForAutoConfigurationScript(_:_:_:)	CFNetworkCopyProxiesForAutoConfigurationScript(_:_:_:)	func CFNetworkCopyProxiesForAutoConfigurationScript(_ proxyAutoConfigurationScript: CFString, _ targetURL: CFURL, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?) -> Unmanaged<CFArray>?
+c:@F@CFNetworkCopyProxiesForURL	swift.func	CFNetworkCopyProxiesForURL(_:_:)	CFNetworkCopyProxiesForURL(_:_:)	func CFNetworkCopyProxiesForURL(_ url: CFURL, _ proxySettings: CFDictionary) -> Unmanaged<CFArray>
+c:@F@CFNetworkCopySystemProxySettings	swift.func	CFNetworkCopySystemProxySettings()	CFNetworkCopySystemProxySettings()	func CFNetworkCopySystemProxySettings() -> Unmanaged<CFDictionary>?
+c:@F@CFNetworkExecuteProxyAutoConfigurationScript	swift.func	CFNetworkExecuteProxyAutoConfigurationScript(_:_:_:_:)	CFNetworkExecuteProxyAutoConfigurationScript(_:_:_:_:)	func CFNetworkExecuteProxyAutoConfigurationScript(_ proxyAutoConfigurationScript: CFString, _ targetURL: CFURL, _ cb: CFProxyAutoConfigurationResultCallback, _ clientContext: UnsafeMutablePointer<CFStreamClientContext>) -> CFRunLoopSource
+c:@F@CFNetworkExecuteProxyAutoConfigurationURL	swift.func	CFNetworkExecuteProxyAutoConfigurationURL(_:_:_:_:)	CFNetworkExecuteProxyAutoConfigurationURL(_:_:_:_:)	func CFNetworkExecuteProxyAutoConfigurationURL(_ proxyAutoConfigURL: CFURL, _ targetURL: CFURL, _ cb: CFProxyAutoConfigurationResultCallback, _ clientContext: UnsafeMutablePointer<CFStreamClientContext>) -> CFRunLoopSource
+c:@F@CFReadStreamCreateForHTTPRequest	swift.func	CFReadStreamCreateForHTTPRequest(_:_:)	CFReadStreamCreateForHTTPRequest(_:_:)	func CFReadStreamCreateForHTTPRequest(_ alloc: CFAllocator?, _ request: CFHTTPMessage) -> Unmanaged<CFReadStream>
+c:@F@CFReadStreamCreateForStreamedHTTPRequest	swift.func	CFReadStreamCreateForStreamedHTTPRequest(_:_:_:)	CFReadStreamCreateForStreamedHTTPRequest(_:_:_:)	func CFReadStreamCreateForStreamedHTTPRequest(_ alloc: CFAllocator?, _ requestHeaders: CFHTTPMessage, _ requestBody: CFReadStream) -> Unmanaged<CFReadStream>
+c:@F@CFReadStreamCreateWithFTPURL	swift.func	CFReadStreamCreateWithFTPURL(_:_:)	CFReadStreamCreateWithFTPURL(_:_:)	func CFReadStreamCreateWithFTPURL(_ alloc: CFAllocator?, _ ftpURL: CFURL) -> Unmanaged<CFReadStream>
+c:@F@CFSocketStreamSOCKSGetError	swift.func	CFSocketStreamSOCKSGetError(_:)	CFSocketStreamSOCKSGetError(_:)	func CFSocketStreamSOCKSGetError(_ error: UnsafePointer<CFStreamError>) -> Int32
+c:@F@CFSocketStreamSOCKSGetErrorSubdomain	swift.func	CFSocketStreamSOCKSGetErrorSubdomain(_:)	CFSocketStreamSOCKSGetErrorSubdomain(_:)	func CFSocketStreamSOCKSGetErrorSubdomain(_ error: UnsafePointer<CFStreamError>) -> Int32
+c:@F@CFStreamCreatePairWithSocketToCFHost	swift.func	CFStreamCreatePairWithSocketToCFHost(_:_:_:_:_:)	CFStreamCreatePairWithSocketToCFHost(_:_:_:_:_:)	func CFStreamCreatePairWithSocketToCFHost(_ alloc: CFAllocator?, _ host: CFHost, _ port: Int32, _ readStream: UnsafeMutablePointer<Unmanaged<CFReadStream>?>?, _ writeStream: UnsafeMutablePointer<Unmanaged<CFWriteStream>?>?)
+c:@F@CFStreamCreatePairWithSocketToNetService	swift.func	CFStreamCreatePairWithSocketToNetService(_:_:_:_:)	CFStreamCreatePairWithSocketToNetService(_:_:_:_:)	func CFStreamCreatePairWithSocketToNetService(_ alloc: CFAllocator?, _ service: CFNetService, _ readStream: UnsafeMutablePointer<Unmanaged<CFReadStream>?>?, _ writeStream: UnsafeMutablePointer<Unmanaged<CFWriteStream>?>?)
+c:@F@CFWriteStreamCreateWithFTPURL	swift.func	CFWriteStreamCreateWithFTPURL(_:_:)	CFWriteStreamCreateWithFTPURL(_:_:)	func CFWriteStreamCreateWithFTPURL(_ alloc: CFAllocator?, _ ftpURL: CFURL) -> Unmanaged<CFWriteStream>
+c:@S@CFHostClientContext	swift.struct	CFHostClientContext	CFHostClientContext	struct CFHostClientContext
+c:@S@CFHostClientContext@FI@copyDescription	swift.property	copyDescription	CFHostClientContext.copyDescription	var copyDescription: CFAllocatorCopyDescriptionCallBack?
+c:@S@CFHostClientContext@FI@info	swift.property	info	CFHostClientContext.info	var info: UnsafeMutableRawPointer?
+c:@S@CFHostClientContext@FI@release	swift.property	release	CFHostClientContext.release	var release: CFAllocatorReleaseCallBack?
+c:@S@CFHostClientContext@FI@retain	swift.property	retain	CFHostClientContext.retain	var retain: CFAllocatorRetainCallBack?
+c:@S@CFHostClientContext@FI@version	swift.property	version	CFHostClientContext.version	var version: CFIndex
+c:@S@CFNetServiceClientContext	swift.struct	CFNetServiceClientContext	CFNetServiceClientContext	struct CFNetServiceClientContext
+c:@S@CFNetServiceClientContext@FI@copyDescription	swift.property	copyDescription	CFNetServiceClientContext.copyDescription	var copyDescription: CFAllocatorCopyDescriptionCallBack?
+c:@S@CFNetServiceClientContext@FI@info	swift.property	info	CFNetServiceClientContext.info	var info: UnsafeMutableRawPointer?
+c:@S@CFNetServiceClientContext@FI@release	swift.property	release	CFNetServiceClientContext.release	var release: CFAllocatorReleaseCallBack?
+c:@S@CFNetServiceClientContext@FI@retain	swift.property	retain	CFNetServiceClientContext.retain	var retain: CFAllocatorRetainCallBack?
+c:@S@CFNetServiceClientContext@FI@version	swift.property	version	CFNetServiceClientContext.version	var version: CFIndex
+c:@T@CFHTTPAuthenticationRef	swift.class	CFHTTPAuthentication	CFHTTPAuthentication	class CFHTTPAuthentication
+c:@T@CFHTTPMessageRef	swift.class	CFHTTPMessage	CFHTTPMessage	class CFHTTPMessage
+c:@T@CFHostClientCallBack	swift.typealias	CFHostClientCallBack	CFHostClientCallBack	typealias CFHostClientCallBack = (CFHost, CFHostInfoType, UnsafePointer<CFStreamError>?, UnsafeMutableRawPointer?) -> Void
+c:@T@CFHostRef	swift.class	CFHost	CFHost	class CFHost
+c:@T@CFNetDiagnosticRef	swift.class	CFNetDiagnostic	CFNetDiagnostic	class CFNetDiagnostic
+c:@T@CFNetDiagnosticStatus	swift.typealias	CFNetDiagnosticStatus	CFNetDiagnosticStatus	typealias CFNetDiagnosticStatus = CFIndex
+c:@T@CFNetServiceBrowserClientCallBack	swift.typealias	CFNetServiceBrowserClientCallBack	CFNetServiceBrowserClientCallBack	typealias CFNetServiceBrowserClientCallBack = (CFNetServiceBrowser, CFOptionFlags, CFTypeRef?, UnsafeMutablePointer<CFStreamError>?, UnsafeMutableRawPointer?) -> Void
+c:@T@CFNetServiceBrowserRef	swift.class	CFNetServiceBrowser	CFNetServiceBrowser	class CFNetServiceBrowser
+c:@T@CFNetServiceClientCallBack	swift.typealias	CFNetServiceClientCallBack	CFNetServiceClientCallBack	typealias CFNetServiceClientCallBack = (CFNetService, UnsafeMutablePointer<CFStreamError>?, UnsafeMutableRawPointer?) -> Void
+c:@T@CFNetServiceMonitorClientCallBack	swift.typealias	CFNetServiceMonitorClientCallBack	CFNetServiceMonitorClientCallBack	typealias CFNetServiceMonitorClientCallBack = (CFNetServiceMonitor, CFNetService?, CFNetServiceMonitorType, CFData?, UnsafeMutablePointer<CFStreamError>?, UnsafeMutableRawPointer?) -> Void
+c:@T@CFNetServiceMonitorRef	swift.class	CFNetServiceMonitor	CFNetServiceMonitor	class CFNetServiceMonitor
+c:@T@CFNetServiceRef	swift.class	CFNetService	CFNetService	class CFNetService
+c:@T@CFProxyAutoConfigurationResultCallback	swift.typealias	CFProxyAutoConfigurationResultCallback	CFProxyAutoConfigurationResultCallback	typealias CFProxyAutoConfigurationResultCallback = (UnsafeMutableRawPointer, CFArray, CFError?) -> Void
+c:@kCFDNSServiceFailureKey	swift.var	kCFDNSServiceFailureKey	kCFDNSServiceFailureKey	let kCFDNSServiceFailureKey: CFString
+c:@kCFErrorDomainCFNetwork	swift.var	kCFErrorDomainCFNetwork	kCFErrorDomainCFNetwork	let kCFErrorDomainCFNetwork: CFString
+c:@kCFErrorDomainWinSock	swift.var	kCFErrorDomainWinSock	kCFErrorDomainWinSock	let kCFErrorDomainWinSock: CFString
+c:@kCFFTPResourceGroup	swift.var	kCFFTPResourceGroup	kCFFTPResourceGroup	let kCFFTPResourceGroup: CFString
+c:@kCFFTPResourceLink	swift.var	kCFFTPResourceLink	kCFFTPResourceLink	let kCFFTPResourceLink: CFString
+c:@kCFFTPResourceModDate	swift.var	kCFFTPResourceModDate	kCFFTPResourceModDate	let kCFFTPResourceModDate: CFString
+c:@kCFFTPResourceMode	swift.var	kCFFTPResourceMode	kCFFTPResourceMode	let kCFFTPResourceMode: CFString
+c:@kCFFTPResourceName	swift.var	kCFFTPResourceName	kCFFTPResourceName	let kCFFTPResourceName: CFString
+c:@kCFFTPResourceOwner	swift.var	kCFFTPResourceOwner	kCFFTPResourceOwner	let kCFFTPResourceOwner: CFString
+c:@kCFFTPResourceSize	swift.var	kCFFTPResourceSize	kCFFTPResourceSize	let kCFFTPResourceSize: CFString
+c:@kCFFTPResourceType	swift.var	kCFFTPResourceType	kCFFTPResourceType	let kCFFTPResourceType: CFString
+c:@kCFFTPStatusCodeKey	swift.var	kCFFTPStatusCodeKey	kCFFTPStatusCodeKey	let kCFFTPStatusCodeKey: CFString
+c:@kCFGetAddrInfoFailureKey	swift.var	kCFGetAddrInfoFailureKey	kCFGetAddrInfoFailureKey	let kCFGetAddrInfoFailureKey: CFString
+c:@kCFHTTPAuthenticationAccountDomain	swift.var	kCFHTTPAuthenticationAccountDomain	kCFHTTPAuthenticationAccountDomain	let kCFHTTPAuthenticationAccountDomain: CFString
+c:@kCFHTTPAuthenticationPassword	swift.var	kCFHTTPAuthenticationPassword	kCFHTTPAuthenticationPassword	let kCFHTTPAuthenticationPassword: CFString
+c:@kCFHTTPAuthenticationSchemeBasic	swift.var	kCFHTTPAuthenticationSchemeBasic	kCFHTTPAuthenticationSchemeBasic	let kCFHTTPAuthenticationSchemeBasic: CFString
+c:@kCFHTTPAuthenticationSchemeDigest	swift.var	kCFHTTPAuthenticationSchemeDigest	kCFHTTPAuthenticationSchemeDigest	let kCFHTTPAuthenticationSchemeDigest: CFString
+c:@kCFHTTPAuthenticationSchemeKerberos	swift.var	kCFHTTPAuthenticationSchemeKerberos	kCFHTTPAuthenticationSchemeKerberos	let kCFHTTPAuthenticationSchemeKerberos: CFString
+c:@kCFHTTPAuthenticationSchemeNTLM	swift.var	kCFHTTPAuthenticationSchemeNTLM	kCFHTTPAuthenticationSchemeNTLM	let kCFHTTPAuthenticationSchemeNTLM: CFString
+c:@kCFHTTPAuthenticationSchemeNegotiate	swift.var	kCFHTTPAuthenticationSchemeNegotiate	kCFHTTPAuthenticationSchemeNegotiate	let kCFHTTPAuthenticationSchemeNegotiate: CFString
+c:@kCFHTTPAuthenticationSchemeNegotiate2	swift.var	kCFHTTPAuthenticationSchemeNegotiate2	kCFHTTPAuthenticationSchemeNegotiate2	let kCFHTTPAuthenticationSchemeNegotiate2: CFString
+c:@kCFHTTPAuthenticationSchemeXMobileMeAuthToken	swift.var	kCFHTTPAuthenticationSchemeXMobileMeAuthToken	kCFHTTPAuthenticationSchemeXMobileMeAuthToken	let kCFHTTPAuthenticationSchemeXMobileMeAuthToken: CFString
+c:@kCFHTTPAuthenticationUsername	swift.var	kCFHTTPAuthenticationUsername	kCFHTTPAuthenticationUsername	let kCFHTTPAuthenticationUsername: CFString
+c:@kCFHTTPVersion1_0	swift.var	kCFHTTPVersion1_0	kCFHTTPVersion1_0	let kCFHTTPVersion1_0: CFString
+c:@kCFHTTPVersion1_1	swift.var	kCFHTTPVersion1_1	kCFHTTPVersion1_1	let kCFHTTPVersion1_1: CFString
+c:@kCFHTTPVersion2_0	swift.var	kCFHTTPVersion2_0	kCFHTTPVersion2_0	let kCFHTTPVersion2_0: CFString
+c:@kCFHTTPVersion3_0	swift.var	kCFHTTPVersion3_0	kCFHTTPVersion3_0	let kCFHTTPVersion3_0: CFString
+c:@kCFNetworkProxiesHTTPEnable	swift.var	kCFNetworkProxiesHTTPEnable	kCFNetworkProxiesHTTPEnable	let kCFNetworkProxiesHTTPEnable: CFString
+c:@kCFNetworkProxiesHTTPPort	swift.var	kCFNetworkProxiesHTTPPort	kCFNetworkProxiesHTTPPort	let kCFNetworkProxiesHTTPPort: CFString
+c:@kCFNetworkProxiesHTTPProxy	swift.var	kCFNetworkProxiesHTTPProxy	kCFNetworkProxiesHTTPProxy	let kCFNetworkProxiesHTTPProxy: CFString
+c:@kCFNetworkProxiesProxyAutoConfigEnable	swift.var	kCFNetworkProxiesProxyAutoConfigEnable	kCFNetworkProxiesProxyAutoConfigEnable	let kCFNetworkProxiesProxyAutoConfigEnable: CFString
+c:@kCFNetworkProxiesProxyAutoConfigJavaScript	swift.var	kCFNetworkProxiesProxyAutoConfigJavaScript	kCFNetworkProxiesProxyAutoConfigJavaScript	let kCFNetworkProxiesProxyAutoConfigJavaScript: CFString
+c:@kCFNetworkProxiesProxyAutoConfigURLString	swift.var	kCFNetworkProxiesProxyAutoConfigURLString	kCFNetworkProxiesProxyAutoConfigURLString	let kCFNetworkProxiesProxyAutoConfigURLString: CFString
+c:@kCFProxyAutoConfigurationHTTPResponseKey	swift.var	kCFProxyAutoConfigurationHTTPResponseKey	kCFProxyAutoConfigurationHTTPResponseKey	let kCFProxyAutoConfigurationHTTPResponseKey: CFString
+c:@kCFProxyAutoConfigurationJavaScriptKey	swift.var	kCFProxyAutoConfigurationJavaScriptKey	kCFProxyAutoConfigurationJavaScriptKey	let kCFProxyAutoConfigurationJavaScriptKey: CFString
+c:@kCFProxyAutoConfigurationURLKey	swift.var	kCFProxyAutoConfigurationURLKey	kCFProxyAutoConfigurationURLKey	let kCFProxyAutoConfigurationURLKey: CFString
+c:@kCFProxyHostNameKey	swift.var	kCFProxyHostNameKey	kCFProxyHostNameKey	let kCFProxyHostNameKey: CFString
+c:@kCFProxyPasswordKey	swift.var	kCFProxyPasswordKey	kCFProxyPasswordKey	let kCFProxyPasswordKey: CFString
+c:@kCFProxyPortNumberKey	swift.var	kCFProxyPortNumberKey	kCFProxyPortNumberKey	let kCFProxyPortNumberKey: CFString
+c:@kCFProxyTypeAutoConfigurationJavaScript	swift.var	kCFProxyTypeAutoConfigurationJavaScript	kCFProxyTypeAutoConfigurationJavaScript	let kCFProxyTypeAutoConfigurationJavaScript: CFString
+c:@kCFProxyTypeAutoConfigurationURL	swift.var	kCFProxyTypeAutoConfigurationURL	kCFProxyTypeAutoConfigurationURL	let kCFProxyTypeAutoConfigurationURL: CFString
+c:@kCFProxyTypeFTP	swift.var	kCFProxyTypeFTP	kCFProxyTypeFTP	let kCFProxyTypeFTP: CFString
+c:@kCFProxyTypeHTTP	swift.var	kCFProxyTypeHTTP	kCFProxyTypeHTTP	let kCFProxyTypeHTTP: CFString
+c:@kCFProxyTypeHTTPS	swift.var	kCFProxyTypeHTTPS	kCFProxyTypeHTTPS	let kCFProxyTypeHTTPS: CFString
+c:@kCFProxyTypeKey	swift.var	kCFProxyTypeKey	kCFProxyTypeKey	let kCFProxyTypeKey: CFString
+c:@kCFProxyTypeNone	swift.var	kCFProxyTypeNone	kCFProxyTypeNone	let kCFProxyTypeNone: CFString
+c:@kCFProxyTypeSOCKS	swift.var	kCFProxyTypeSOCKS	kCFProxyTypeSOCKS	let kCFProxyTypeSOCKS: CFString
+c:@kCFProxyUsernameKey	swift.var	kCFProxyUsernameKey	kCFProxyUsernameKey	let kCFProxyUsernameKey: CFString
+c:@kCFSOCKSNegotiationMethodKey	swift.var	kCFSOCKSNegotiationMethodKey	kCFSOCKSNegotiationMethodKey	let kCFSOCKSNegotiationMethodKey: CFString
+c:@kCFSOCKSStatusCodeKey	swift.var	kCFSOCKSStatusCodeKey	kCFSOCKSStatusCodeKey	let kCFSOCKSStatusCodeKey: CFString
+c:@kCFSOCKSVersionKey	swift.var	kCFSOCKSVersionKey	kCFSOCKSVersionKey	let kCFSOCKSVersionKey: CFString
+c:@kCFStreamErrorDomainFTP	swift.var	kCFStreamErrorDomainFTP	kCFStreamErrorDomainFTP	let kCFStreamErrorDomainFTP: Int32
+c:@kCFStreamErrorDomainHTTP	swift.var	kCFStreamErrorDomainHTTP	kCFStreamErrorDomainHTTP	let kCFStreamErrorDomainHTTP: Int32
+c:@kCFStreamErrorDomainMach	swift.var	kCFStreamErrorDomainMach	kCFStreamErrorDomainMach	let kCFStreamErrorDomainMach: Int32
+c:@kCFStreamErrorDomainNetDB	swift.var	kCFStreamErrorDomainNetDB	kCFStreamErrorDomainNetDB	let kCFStreamErrorDomainNetDB: Int32
+c:@kCFStreamErrorDomainNetServices	swift.var	kCFStreamErrorDomainNetServices	kCFStreamErrorDomainNetServices	let kCFStreamErrorDomainNetServices: Int32
+c:@kCFStreamErrorDomainSystemConfiguration	swift.var	kCFStreamErrorDomainSystemConfiguration	kCFStreamErrorDomainSystemConfiguration	let kCFStreamErrorDomainSystemConfiguration: Int32
+c:@kCFStreamErrorDomainWinSock	swift.var	kCFStreamErrorDomainWinSock	kCFStreamErrorDomainWinSock	let kCFStreamErrorDomainWinSock: CFIndex
+c:@kCFStreamNetworkServiceType	swift.var	kCFStreamNetworkServiceType	kCFStreamNetworkServiceType	let kCFStreamNetworkServiceType: CFString
+c:@kCFStreamNetworkServiceTypeAVStreaming	swift.var	kCFStreamNetworkServiceTypeAVStreaming	kCFStreamNetworkServiceTypeAVStreaming	let kCFStreamNetworkServiceTypeAVStreaming: CFString
+c:@kCFStreamNetworkServiceTypeBackground	swift.var	kCFStreamNetworkServiceTypeBackground	kCFStreamNetworkServiceTypeBackground	let kCFStreamNetworkServiceTypeBackground: CFString
+c:@kCFStreamNetworkServiceTypeCallSignaling	swift.var	kCFStreamNetworkServiceTypeCallSignaling	kCFStreamNetworkServiceTypeCallSignaling	let kCFStreamNetworkServiceTypeCallSignaling: CFString
+c:@kCFStreamNetworkServiceTypeResponsiveAV	swift.var	kCFStreamNetworkServiceTypeResponsiveAV	kCFStreamNetworkServiceTypeResponsiveAV	let kCFStreamNetworkServiceTypeResponsiveAV: CFString
+c:@kCFStreamNetworkServiceTypeResponsiveData	swift.var	kCFStreamNetworkServiceTypeResponsiveData	kCFStreamNetworkServiceTypeResponsiveData	let kCFStreamNetworkServiceTypeResponsiveData: CFString
+c:@kCFStreamNetworkServiceTypeVideo	swift.var	kCFStreamNetworkServiceTypeVideo	kCFStreamNetworkServiceTypeVideo	let kCFStreamNetworkServiceTypeVideo: CFString
+c:@kCFStreamNetworkServiceTypeVoIP	swift.var	kCFStreamNetworkServiceTypeVoIP	kCFStreamNetworkServiceTypeVoIP	let kCFStreamNetworkServiceTypeVoIP: CFString
+c:@kCFStreamNetworkServiceTypeVoice	swift.var	kCFStreamNetworkServiceTypeVoice	kCFStreamNetworkServiceTypeVoice	let kCFStreamNetworkServiceTypeVoice: CFString
+c:@kCFStreamPropertyAllowConstrainedNetworkAccess	swift.var	kCFStreamPropertyAllowConstrainedNetworkAccess	kCFStreamPropertyAllowConstrainedNetworkAccess	let kCFStreamPropertyAllowConstrainedNetworkAccess: CFString
+c:@kCFStreamPropertyAllowExpensiveNetworkAccess	swift.var	kCFStreamPropertyAllowExpensiveNetworkAccess	kCFStreamPropertyAllowExpensiveNetworkAccess	let kCFStreamPropertyAllowExpensiveNetworkAccess: CFString
+c:@kCFStreamPropertyConnectionIsCellular	swift.var	kCFStreamPropertyConnectionIsCellular	kCFStreamPropertyConnectionIsCellular	let kCFStreamPropertyConnectionIsCellular: CFString
+c:@kCFStreamPropertyConnectionIsExpensive	swift.var	kCFStreamPropertyConnectionIsExpensive	kCFStreamPropertyConnectionIsExpensive	let kCFStreamPropertyConnectionIsExpensive: CFString
+c:@kCFStreamPropertyFTPAttemptPersistentConnection	swift.var	kCFStreamPropertyFTPAttemptPersistentConnection	kCFStreamPropertyFTPAttemptPersistentConnection	let kCFStreamPropertyFTPAttemptPersistentConnection: CFString
+c:@kCFStreamPropertyFTPFetchResourceInfo	swift.var	kCFStreamPropertyFTPFetchResourceInfo	kCFStreamPropertyFTPFetchResourceInfo	let kCFStreamPropertyFTPFetchResourceInfo: CFString
+c:@kCFStreamPropertyFTPFileTransferOffset	swift.var	kCFStreamPropertyFTPFileTransferOffset	kCFStreamPropertyFTPFileTransferOffset	let kCFStreamPropertyFTPFileTransferOffset: CFString
+c:@kCFStreamPropertyFTPPassword	swift.var	kCFStreamPropertyFTPPassword	kCFStreamPropertyFTPPassword	let kCFStreamPropertyFTPPassword: CFString
+c:@kCFStreamPropertyFTPProxy	swift.var	kCFStreamPropertyFTPProxy	kCFStreamPropertyFTPProxy	let kCFStreamPropertyFTPProxy: CFString
+c:@kCFStreamPropertyFTPProxyHost	swift.var	kCFStreamPropertyFTPProxyHost	kCFStreamPropertyFTPProxyHost	let kCFStreamPropertyFTPProxyHost: CFString
+c:@kCFStreamPropertyFTPProxyPassword	swift.var	kCFStreamPropertyFTPProxyPassword	kCFStreamPropertyFTPProxyPassword	let kCFStreamPropertyFTPProxyPassword: CFString
+c:@kCFStreamPropertyFTPProxyPort	swift.var	kCFStreamPropertyFTPProxyPort	kCFStreamPropertyFTPProxyPort	let kCFStreamPropertyFTPProxyPort: CFString
+c:@kCFStreamPropertyFTPProxyUser	swift.var	kCFStreamPropertyFTPProxyUser	kCFStreamPropertyFTPProxyUser	let kCFStreamPropertyFTPProxyUser: CFString
+c:@kCFStreamPropertyFTPResourceSize	swift.var	kCFStreamPropertyFTPResourceSize	kCFStreamPropertyFTPResourceSize	let kCFStreamPropertyFTPResourceSize: CFString
+c:@kCFStreamPropertyFTPUsePassiveMode	swift.var	kCFStreamPropertyFTPUsePassiveMode	kCFStreamPropertyFTPUsePassiveMode	let kCFStreamPropertyFTPUsePassiveMode: CFString
+c:@kCFStreamPropertyFTPUserName	swift.var	kCFStreamPropertyFTPUserName	kCFStreamPropertyFTPUserName	let kCFStreamPropertyFTPUserName: CFString
+c:@kCFStreamPropertyHTTPAttemptPersistentConnection	swift.var	kCFStreamPropertyHTTPAttemptPersistentConnection	kCFStreamPropertyHTTPAttemptPersistentConnection	let kCFStreamPropertyHTTPAttemptPersistentConnection: CFString
+c:@kCFStreamPropertyHTTPFinalRequest	swift.var	kCFStreamPropertyHTTPFinalRequest	kCFStreamPropertyHTTPFinalRequest	let kCFStreamPropertyHTTPFinalRequest: CFString
+c:@kCFStreamPropertyHTTPFinalURL	swift.var	kCFStreamPropertyHTTPFinalURL	kCFStreamPropertyHTTPFinalURL	let kCFStreamPropertyHTTPFinalURL: CFString
+c:@kCFStreamPropertyHTTPProxy	swift.var	kCFStreamPropertyHTTPProxy	kCFStreamPropertyHTTPProxy	let kCFStreamPropertyHTTPProxy: CFString
+c:@kCFStreamPropertyHTTPProxyHost	swift.var	kCFStreamPropertyHTTPProxyHost	kCFStreamPropertyHTTPProxyHost	let kCFStreamPropertyHTTPProxyHost: CFString
+c:@kCFStreamPropertyHTTPProxyPort	swift.var	kCFStreamPropertyHTTPProxyPort	kCFStreamPropertyHTTPProxyPort	let kCFStreamPropertyHTTPProxyPort: CFString
+c:@kCFStreamPropertyHTTPRequestBytesWrittenCount	swift.var	kCFStreamPropertyHTTPRequestBytesWrittenCount	kCFStreamPropertyHTTPRequestBytesWrittenCount	let kCFStreamPropertyHTTPRequestBytesWrittenCount: CFString
+c:@kCFStreamPropertyHTTPResponseHeader	swift.var	kCFStreamPropertyHTTPResponseHeader	kCFStreamPropertyHTTPResponseHeader	let kCFStreamPropertyHTTPResponseHeader: CFString
+c:@kCFStreamPropertyHTTPSProxyHost	swift.var	kCFStreamPropertyHTTPSProxyHost	kCFStreamPropertyHTTPSProxyHost	let kCFStreamPropertyHTTPSProxyHost: CFString
+c:@kCFStreamPropertyHTTPSProxyPort	swift.var	kCFStreamPropertyHTTPSProxyPort	kCFStreamPropertyHTTPSProxyPort	let kCFStreamPropertyHTTPSProxyPort: CFString
+c:@kCFStreamPropertyHTTPShouldAutoredirect	swift.var	kCFStreamPropertyHTTPShouldAutoredirect	kCFStreamPropertyHTTPShouldAutoredirect	let kCFStreamPropertyHTTPShouldAutoredirect: CFString
+c:@kCFStreamPropertyNoCellular	swift.var	kCFStreamPropertyNoCellular	kCFStreamPropertyNoCellular	let kCFStreamPropertyNoCellular: CFString
+c:@kCFStreamPropertyProxyLocalBypass	swift.var	kCFStreamPropertyProxyLocalBypass	kCFStreamPropertyProxyLocalBypass	let kCFStreamPropertyProxyLocalBypass: CFString
+c:@kCFStreamPropertySSLContext	swift.var	kCFStreamPropertySSLContext	kCFStreamPropertySSLContext	let kCFStreamPropertySSLContext: CFString
+c:@kCFStreamPropertySSLPeerTrust	swift.var	kCFStreamPropertySSLPeerTrust	kCFStreamPropertySSLPeerTrust	let kCFStreamPropertySSLPeerTrust: CFString
+c:@kCFStreamPropertySSLSettings	swift.var	kCFStreamPropertySSLSettings	kCFStreamPropertySSLSettings	let kCFStreamPropertySSLSettings: CFString
+c:@kCFStreamPropertySocketExtendedBackgroundIdleMode	swift.var	kCFStreamPropertySocketExtendedBackgroundIdleMode	kCFStreamPropertySocketExtendedBackgroundIdleMode	let kCFStreamPropertySocketExtendedBackgroundIdleMode: CFString
+c:@kCFStreamPropertySocketRemoteHost	swift.var	kCFStreamPropertySocketRemoteHost	kCFStreamPropertySocketRemoteHost	let kCFStreamPropertySocketRemoteHost: CFString
+c:@kCFStreamPropertySocketRemoteNetService	swift.var	kCFStreamPropertySocketRemoteNetService	kCFStreamPropertySocketRemoteNetService	let kCFStreamPropertySocketRemoteNetService: CFString
+c:@kCFStreamSSLCertificates	swift.var	kCFStreamSSLCertificates	kCFStreamSSLCertificates	let kCFStreamSSLCertificates: CFString
+c:@kCFStreamSSLIsServer	swift.var	kCFStreamSSLIsServer	kCFStreamSSLIsServer	let kCFStreamSSLIsServer: CFString
+c:@kCFStreamSSLLevel	swift.var	kCFStreamSSLLevel	kCFStreamSSLLevel	let kCFStreamSSLLevel: CFString
+c:@kCFStreamSSLPeerName	swift.var	kCFStreamSSLPeerName	kCFStreamSSLPeerName	let kCFStreamSSLPeerName: CFString
+c:@kCFStreamSSLValidatesCertificateChain	swift.var	kCFStreamSSLValidatesCertificateChain	kCFStreamSSLValidatesCertificateChain	let kCFStreamSSLValidatesCertificateChain: CFString
+c:@kCFURLErrorFailingURLErrorKey	swift.var	kCFURLErrorFailingURLErrorKey	kCFURLErrorFailingURLErrorKey	let kCFURLErrorFailingURLErrorKey: CFString
+c:@kCFURLErrorFailingURLStringErrorKey	swift.var	kCFURLErrorFailingURLStringErrorKey	kCFURLErrorFailingURLStringErrorKey	let kCFURLErrorFailingURLStringErrorKey: CFString
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHTTPAuthenticationRef	swift.func.op	==(_:_:)	CFHTTPAuthentication.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHTTPMessageRef	swift.func.op	==(_:_:)	CFHTTPMessage.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHostRef	swift.func.op	==(_:_:)	CFHost.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetDiagnosticRef	swift.func.op	==(_:_:)	CFNetDiagnostic.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceBrowserRef	swift.func.op	==(_:_:)	CFNetServiceBrowser.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceMonitorRef	swift.func.op	==(_:_:)	CFNetServiceMonitor.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceRef	swift.func.op	==(_:_:)	CFNetService.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFHTTPAuthenticationRef	swift.method	hash(into:)	CFHTTPAuthentication.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFHTTPMessageRef	swift.method	hash(into:)	CFHTTPMessage.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFHostRef	swift.method	hash(into:)	CFHost.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFNetDiagnosticRef	swift.method	hash(into:)	CFNetDiagnostic.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFNetServiceBrowserRef	swift.method	hash(into:)	CFNetServiceBrowser.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFNetServiceMonitorRef	swift.method	hash(into:)	CFNetServiceMonitor.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@CFNetServiceRef	swift.method	hash(into:)	CFNetService.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFHTTPAuthenticationRef	swift.property	hashValue	CFHTTPAuthentication.hashValue	var hashValue: Int { get }
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFHTTPMessageRef	swift.property	hashValue	CFHTTPMessage.hashValue	var hashValue: Int { get }
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFHostRef	swift.property	hashValue	CFHost.hashValue	var hashValue: Int { get }
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFNetDiagnosticRef	swift.property	hashValue	CFNetDiagnostic.hashValue	var hashValue: Int { get }
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFNetServiceBrowserRef	swift.property	hashValue	CFNetServiceBrowser.hashValue	var hashValue: Int { get }
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFNetServiceMonitorRef	swift.property	hashValue	CFNetServiceMonitor.hashValue	var hashValue: Int { get }
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@CFNetServiceRef	swift.property	hashValue	CFNetService.hashValue	var hashValue: Int { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFHostInfoType	swift.func.op	!=(_:_:)	CFHostInfoType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetDiagnosticStatusValues	swift.func.op	!=(_:_:)	CFNetDiagnosticStatusValues.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.func.op	!=(_:_:)	CFNetServiceBrowserFlags.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetServiceMonitorType	swift.func.op	!=(_:_:)	CFNetServiceMonitorType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.func.op	!=(_:_:)	CFNetServiceRegisterFlags.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetServicesError	swift.func.op	!=(_:_:)	CFNetServicesError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFNetworkErrors	swift.func.op	!=(_:_:)	CFNetworkErrors.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFStreamErrorHTTP	swift.func.op	!=(_:_:)	CFStreamErrorHTTP.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CFStreamErrorHTTPAuthentication	swift.func.op	!=(_:_:)	CFStreamErrorHTTPAuthentication.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHTTPAuthenticationRef	swift.func.op	!=(_:_:)	CFHTTPAuthentication.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHTTPMessageRef	swift.func.op	!=(_:_:)	CFHTTPMessage.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFHostRef	swift.func.op	!=(_:_:)	CFHost.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetDiagnosticRef	swift.func.op	!=(_:_:)	CFNetDiagnostic.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceBrowserRef	swift.func.op	!=(_:_:)	CFNetServiceBrowser.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceMonitorRef	swift.func.op	!=(_:_:)	CFNetServiceMonitor.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@CFNetServiceRef	swift.func.op	!=(_:_:)	CFNetService.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFHostInfoType	swift.property	hashValue	CFHostInfoType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFNetDiagnosticStatusValues	swift.property	hashValue	CFNetDiagnosticStatusValues.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFNetServiceMonitorType	swift.property	hashValue	CFNetServiceMonitorType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFNetServicesError	swift.property	hashValue	CFNetServicesError.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFNetworkErrors	swift.property	hashValue	CFNetworkErrors.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFStreamErrorHTTP	swift.property	hashValue	CFStreamErrorHTTP.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CFStreamErrorHTTPAuthentication	swift.property	hashValue	CFStreamErrorHTTPAuthentication.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFHostInfoType	swift.method	hash(into:)	CFHostInfoType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFNetDiagnosticStatusValues	swift.method	hash(into:)	CFNetDiagnosticStatusValues.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFNetServiceMonitorType	swift.method	hash(into:)	CFNetServiceMonitorType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFNetServicesError	swift.method	hash(into:)	CFNetServicesError.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFNetworkErrors	swift.method	hash(into:)	CFNetworkErrors.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFStreamErrorHTTP	swift.method	hash(into:)	CFStreamErrorHTTP.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CFStreamErrorHTTPAuthentication	swift.method	hash(into:)	CFStreamErrorHTTPAuthentication.hash(into:)	func hash(into hasher: inout Hasher)
+s:So14CFHostInfoTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	CFHostInfoType.init(rawValue:)	init?(rawValue: Int32)
+s:So15CFNetworkErrorsV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	CFNetworkErrors.init(rawValue:)	init?(rawValue: Int32)
+s:So17CFStreamErrorHTTPV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	CFStreamErrorHTTP.init(rawValue:)	init?(rawValue: Int32)
+s:So18CFNetServicesErrorV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	CFNetServicesError.init(rawValue:)	init?(rawValue: Int32)
+s:So19CFHostClientContextV7version4info6retain7release15copyDescriptionABSi_SvSgSVSgAIXCSgyAIXCSgs9UnmanagedVySo11CFStringRefaGSgAIXCSgtcfc	swift.init	init(version:info:retain:release:copyDescription:)	CFHostClientContext.init(version:info:retain:release:copyDescription:)	init(version: CFIndex, info: UnsafeMutableRawPointer?, retain: CFAllocatorRetainCallBack?, release: CFAllocatorReleaseCallBack?, copyDescription: CFAllocatorCopyDescriptionCallBack?)
+s:So19CFHostClientContextVABycfc	swift.init	init()	CFHostClientContext.init()	init()
+s:So23CFNetServiceMonitorTypeV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	CFNetServiceMonitorType.init(rawValue:)	init?(rawValue: Int32)
+s:So24CFNetServiceBrowserFlagsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	CFNetServiceBrowserFlags.init(rawValue:)	init(rawValue: CFOptionFlags)
+s:So25CFNetServiceClientContextV7version4info6retain7release15copyDescriptionABSi_SvSgSVSgAIXCSgyAIXCSgs9UnmanagedVySo11CFStringRefaGSgAIXCSgtcfc	swift.init	init(version:info:retain:release:copyDescription:)	CFNetServiceClientContext.init(version:info:retain:release:copyDescription:)	init(version: CFIndex, info: UnsafeMutableRawPointer?, retain: CFAllocatorRetainCallBack?, release: CFAllocatorReleaseCallBack?, copyDescription: CFAllocatorCopyDescriptionCallBack?)
+s:So25CFNetServiceClientContextVABycfc	swift.init	init()	CFNetServiceClientContext.init()	init()
+s:So25CFNetServiceRegisterFlagsV8rawValueABSu_tcfc	swift.init	init(rawValue:)	CFNetServiceRegisterFlags.init(rawValue:)	init(rawValue: CFOptionFlags)
+s:So27CFNetDiagnosticStatusValuesV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	CFNetDiagnosticStatusValues.init(rawValue:)	init?(rawValue: Int32)
+s:So31CFStreamErrorHTTPAuthenticationV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	CFStreamErrorHTTPAuthentication.init(rawValue:)	init?(rawValue: Int32)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.init	init(arrayLiteral:)	CFNetServiceBrowserFlags.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.init	init(arrayLiteral:)	CFNetServiceRegisterFlags.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	isDisjoint(with:)	CFNetServiceBrowserFlags.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	isDisjoint(with:)	CFNetServiceRegisterFlags.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	isSuperset(of:)	CFNetServiceBrowserFlags.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	isSuperset(of:)	CFNetServiceRegisterFlags.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	subtracting(_:)	CFNetServiceBrowserFlags.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	subtracting(_:)	CFNetServiceRegisterFlags.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	isStrictSubset(of:)	CFNetServiceBrowserFlags.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	isStrictSubset(of:)	CFNetServiceRegisterFlags.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	isStrictSuperset(of:)	CFNetServiceBrowserFlags.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	isStrictSuperset(of:)	CFNetServiceRegisterFlags.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.property	isEmpty	CFNetServiceBrowserFlags.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.property	isEmpty	CFNetServiceRegisterFlags.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	isSubset(of:)	CFNetServiceBrowserFlags.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	isSubset(of:)	CFNetServiceRegisterFlags.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	subtract(_:)	CFNetServiceBrowserFlags.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	subtract(_:)	CFNetServiceRegisterFlags.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.init	init(_:)	CFNetServiceBrowserFlags.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.init	init(_:)	CFNetServiceRegisterFlags.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	insert(_:)	CFNetServiceBrowserFlags.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	insert(_:)	CFNetServiceRegisterFlags.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	remove(_:)	CFNetServiceBrowserFlags.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	remove(_:)	CFNetServiceRegisterFlags.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	update(with:)	CFNetServiceBrowserFlags.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	update(with:)	CFNetServiceRegisterFlags.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	contains(_:)	CFNetServiceBrowserFlags.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	contains(_:)	CFNetServiceRegisterFlags.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	intersection(_:)	CFNetServiceBrowserFlags.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	intersection(_:)	CFNetServiceRegisterFlags.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	symmetricDifference(_:)	CFNetServiceBrowserFlags.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	symmetricDifference(_:)	CFNetServiceRegisterFlags.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	union(_:)	CFNetServiceBrowserFlags.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	union(_:)	CFNetServiceRegisterFlags.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	formIntersection(_:)	CFNetServiceBrowserFlags.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	formIntersection(_:)	CFNetServiceRegisterFlags.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	formSymmetricDifference(_:)	CFNetServiceBrowserFlags.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	formSymmetricDifference(_:)	CFNetServiceRegisterFlags.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.method	formUnion(_:)	CFNetServiceBrowserFlags.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.method	formUnion(_:)	CFNetServiceRegisterFlags.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CFNetServiceBrowserFlags	swift.init	init()	CFNetServiceBrowserFlags.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CFNetServiceRegisterFlags	swift.init	init()	CFNetServiceRegisterFlags.init()	init()

@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CFNetwork.symbols.json",
+      "relationshipCount": 303,
+      "sha256": "bd7f41d2c613e2c9967dec84013c21fb0bf990002badda90bb76436f8c990c9a",
+      "symbolCount": 472
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CFNetwork",
+  "relationshipCount": 303,
+  "schema": 1,
+  "symbolCount": 472,
+  "target": "arm64-apple-ios26.0"
+}

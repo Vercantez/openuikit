@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/AddressBook.symbols.json",
+      "relationshipCount": 25,
+      "sha256": "f77e9a93f7068e4e7c6ba83ce495db62d180a46f4cf6fa3482e09d081d7c60db",
+      "symbolCount": 225
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "AddressBook",
+  "relationshipCount": 25,
+  "schema": 1,
+  "symbolCount": 225,
+  "target": "arm64-apple-ios26.0"
+}
