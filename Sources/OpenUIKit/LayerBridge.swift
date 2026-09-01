@@ -232,6 +232,11 @@ public enum LayerBridge {
         h.combine(v.clipsToBounds)
 
         let lay = v.layer
+        if let contents = lay.contents as? Bitmap {
+            h.combine(ObjectIdentifier(contents))
+        } else {
+            h.combine(lay.contents == nil)
+        }
         h.combine(lay.cornerRadius)
         h.combine(lay.maskedCorners.rawValue)
         let traits = v.traitCollection
@@ -556,9 +561,12 @@ public enum LayerBridge {
             }
         }
 
-        if let g = gradient, isGradientLayer {
+        if let contents = lay.contents as? Bitmap {
+            setContents(contents, scale: lay.contentsScale,
+                        on: l, arena: &arena)
+        } else if lay.contents == nil, let g = gradient, isGradientLayer {
             configureGradient(l, view: g, traits: traits)
-        } else if let content = contentLayer(
+        } else if lay.contents == nil, let content = contentLayer(
             for: v, bounds: b, scale: scale, arena: &arena) {
             QZLayerAddSublayer(l, content)
         }
@@ -665,6 +673,10 @@ public enum LayerBridge {
         if let gradient, gradientColors.count >= 2 {
             configureGradient(qz, layer: gradient, colors: gradientColors,
                               locations: presentation.locations)
+        }
+        if let contents = layer.contents as? Bitmap {
+            setContents(contents, scale: layer.contentsScale,
+                        on: qz, arena: &arena)
         }
         if let mask = layer.mask,
            let maskLayer = buildExplicitLayer(mask, arena: &arena) {
@@ -1166,6 +1178,34 @@ public enum LayerBridge {
         QZLayerSetPosition(l, QZPoint(x: extent.midX, y: extent.midY))
         QZLayerSetContents(l, box.ref)
         return l
+    }
+
+    /// Copy a straight-alpha OpenCoreGraphics CGImage into the retained QZ
+    /// image representation used by the CQuartz layer compositor. QZ draws
+    /// layer images beneath a top-down CTM, so rows are reversed exactly as
+    /// they are for UIView's cached drawContent images.
+    static func setContents(_ bitmap: Bitmap, scale: CGFloat,
+                            on layer: QZLayerRef, arena: inout Arena) {
+        let width = bitmap.width
+        let height = bitmap.height
+        guard width > 0, height > 0,
+              width <= Int.max / 4,
+              height <= Int.max / (width * 4) else { return }
+        let rowBytes = width * 4
+        var flipped = [UInt8](repeating: 0, count: bitmap.pixels.count)
+        for y in 0..<height {
+            let source = (height - 1 - y) * rowBytes
+            let destination = y * rowBytes
+            flipped.replaceSubrange(destination..<(destination + rowBytes),
+                                    with: bitmap.pixels[source..<(source + rowBytes)])
+        }
+        guard let image = flipped.withUnsafeBufferPointer({
+            QZImageCreate(width, height, $0.baseAddress)
+        }) else { return }
+        let box = QZImageBox(image)
+        arena.imageBoxes.append(box)
+        QZLayerSetContents(layer, box.ref)
+        QZLayerSetContentsScale(layer, QZFloat(scale > 0 ? scale : 1))
     }
 
     // MARK: Backing conversion

@@ -100,6 +100,68 @@ final class LayerContextCompatibilityTests: XCTestCase {
         XCTAssertNil(layer.value(forKeyPath: "filters.gaussianBlur.inputRadius"))
     }
 
+    func testLayerContentsRetainsExactCGImageIdentityAndClearsIt() throws {
+        let layer = PortableLayer()
+        weak var weakImage: Bitmap?
+
+        do {
+            let image = Bitmap(width: 2, height: 1)
+            weakImage = image
+            layer.contents = image
+            XCTAssertTrue((layer.contents as? Bitmap) === image)
+            XCTAssertTrue((layer.value(forKey: "contents") as? Bitmap) === image)
+        }
+        XCTAssertNotNil(weakImage, "CALayer.contents strongly retains its CGImage")
+
+        layer.setValue(nil, forKey: "contents")
+        XCTAssertNil(layer.contents)
+        XCTAssertNil(weakImage, "clearing contents releases the CGImage")
+    }
+
+    func testLayerContentsRendersThroughBothCompositors() throws {
+        let image = Bitmap(width: 2, height: 1)
+        image.pixels = [
+            255, 0, 0, 255,
+            0, 0, 255, 255,
+        ]
+
+        for (backend, compositor) in [
+            (RenderBackend.swift, RenderCompositor.renderPass),
+            (RenderBackend.quartz, RenderCompositor.layers),
+        ] {
+            CanvasBackendSelection.current = backend
+            OpenUIKitRuntime.compositor = compositor
+            let root = UIView(frame: CGRect(x: 0, y: 0, width: 4, height: 2))
+            root.layer.contents = image
+
+            let rendered = UIRenderer.render(root, scale: 1)
+            XCTAssertEqual(pixel(rendered, x: 0, y: 0), [255, 0, 0, 255],
+                           "left contents pixel via \(backend)/\(compositor)")
+            XCTAssertEqual(pixel(rendered, x: 3, y: 1), [0, 0, 255, 255],
+                           "right contents pixel via \(backend)/\(compositor)")
+        }
+    }
+
+    func testExplicitLayerContentsPaintsBeforeSublayers() {
+        CanvasBackendSelection.current = .swift
+        let root = PortableLayer()
+        root.bounds = CGRect(x: 0, y: 0, width: 4, height: 2)
+        let image = Bitmap(width: 1, height: 1)
+        image.pixels = [255, 0, 0, 255]
+        root.contents = image
+
+        let front = PortableLayer()
+        front.frame = CGRect(x: 2, y: 0, width: 2, height: 2)
+        front.backgroundColor = PortableColor(red: 0, green: 1, blue: 0,
+                                              alpha: 1)
+        root.addSublayer(front)
+
+        let rendered = Bitmap(width: 4, height: 2)
+        root.render(in: Canvas(bitmap: rendered, scale: 1))
+        XCTAssertEqual(pixel(rendered, x: 0, y: 1), [255, 0, 0, 255])
+        XCTAssertEqual(pixel(rendered, x: 3, y: 1), [0, 255, 0, 255])
+    }
+
     func testBlurEffectPublishesCanonicalGaussianFilterLayer() throws {
         let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
         effectView.frame = CGRect(x: 0, y: 0, width: 100, height: 40)

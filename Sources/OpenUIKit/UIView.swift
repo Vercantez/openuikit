@@ -292,6 +292,14 @@ open class CALayer: NSObject {
     /// composited pixels by itself; renderers may use it to skip alpha work
     /// once they can prove the layer's contents are opaque.
     public var isOpaque: Bool = false
+    /// The layer's retained backing object. Core Animation accepts `Any?`
+    /// here, but only a `CGImage` is drawable; OpenCoreGraphics' concrete
+    /// `Bitmap` is that image identity on the portable platform. Assigning
+    /// another object is retained and exposed unchanged while rendering it
+    /// fail-closed as transparent.
+    public var contents: Any? {
+        didSet { _invalidateRenderedContents() }
+    }
     /// Scale of the layer's backing contents. OpenUIKit's UIView renderer
     /// derives its raster scale from the host surface, but this public state
     /// is retained because app and framework code configures it directly.
@@ -367,6 +375,22 @@ open class CALayer: NSObject {
 
     // MARK: Bounded key-value compatibility
 
+    /// A layer can be several explicit descendants below a UIView backing
+    /// layer. Bubble a contents mutation to that nearest view so retained
+    /// subtree/content caches cannot reuse the previous CGImage. This does
+    /// not call `CALayer.setNeedsDisplay()`: assigning contents is itself the
+    /// display result and must not recursively schedule its delegate again.
+    private func _invalidateRenderedContents() {
+        var candidate: CALayer? = self
+        while let layer = candidate {
+            if let owner = layer.owner {
+                owner.setNeedsDisplay()
+                return
+            }
+            candidate = layer.superlayer
+        }
+    }
+
     /// Retain dynamically addressed Core Animation properties used by
     /// open-source visual-effect implementations. NSObject identity is real;
     /// this bounded CALayer-owned store deliberately does not claim complete
@@ -374,6 +398,8 @@ open class CALayer: NSObject {
     /// filter inputs retain their exact values under their keys.
     private func _setCompatibilityValue(_ value: Any?, forKey key: String) {
         switch key {
+        case "contents":
+            contents = value
         case "isOpaque":
             if let value = value as? Bool { isOpaque = value }
         case "contentsScale":
@@ -389,6 +415,7 @@ open class CALayer: NSObject {
 
     private func _compatibilityValue(forKey key: String) -> Any? {
         switch key {
+        case "contents": return contents
         case "isOpaque": return isOpaque
         case "contentsScale": return contentsScale
         default: return storedCompatibilityValues[key]

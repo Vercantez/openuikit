@@ -265,7 +265,11 @@ public enum UIRenderer {
             c.restore()
         }
 
-        v.drawContent(in: c, bounds: bounds)
+        if let contents = v.layer.contents as? Bitmap {
+            c.draw(contents, in: bounds)
+        } else if v.layer.contents == nil {
+            v.drawContent(in: c, bounds: bounds)
+        }
 
         // App-installed backing-layer children sit above the view's own
         // contents and below its UIView sublayers. Focus inserts gradients
@@ -362,6 +366,10 @@ public enum UIRenderer {
             renderGradientLayer(gradient, bounds: bounds,
                                 locations: presentation.locations, into: c)
             c.restore()
+        }
+
+        if let contents = layer.contents as? Bitmap {
+            c.draw(contents, in: bounds)
         }
 
         renderSublayers(of: layer, into: c,
