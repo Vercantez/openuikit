@@ -213,26 +213,6 @@ enum ActivityKitRuntime {
         requireTrue(PushType.channel("sports") == PushType.channel("sports"), "channel equality")
         requireTrue(PushType.channel("a") != PushType.channel("b"), "channel names")
 
-        let alert = AlertConfiguration(
-            title: "Title",
-            body: LocalizedStringResource("Body"),
-            sound: .default
-        )
-        let namedAlert = AlertConfiguration(
-            title: "Title",
-            body: "Body",
-            sound: .named("chime")
-        )
-        requireTrue(
-            alert == AlertConfiguration(title: "Title", body: "Body", sound: .default),
-            "alert equality"
-        )
-        requireTrue(alert != namedAlert, "alert sound inequality")
-        requireTrue(
-            AlertConfiguration.AlertSound.default != .named("default"),
-            "default sound identity"
-        )
-
         let errors: [ActivityAuthorizationError] = [
             .attributesTooLarge,
             .unsupported,
@@ -260,7 +240,6 @@ enum ActivityKitRuntime {
             "entitlement cases"
         )
 
-        let start = Date(timeIntervalSince1970: 1)
         requireRequestFailure {
             try Activity.request(attributes: attributes, contentState: contentState)
         }
@@ -294,44 +273,6 @@ enum ActivityKitRuntime {
                 content: content,
                 pushType: .token,
                 style: .transient
-            )
-        }
-        requireRequestFailure {
-            try Activity.request(
-                attributes: attributes,
-                content: content,
-                style: .standard,
-                alertConfiguration: alert,
-                start: start
-            )
-        }
-        requireRequestFailure {
-            try Activity.request(
-                attributes: attributes,
-                content: content,
-                pushType: nil,
-                style: .transient,
-                alertConfiguration: namedAlert,
-                start: start
-            )
-        }
-        requireRequestFailure {
-            try Activity.request(
-                attributes: attributes,
-                content: content,
-                style: .standard,
-                alertConfiguration: alert,
-                startDate: start
-            )
-        }
-        requireRequestFailure {
-            try Activity.request(
-                attributes: attributes,
-                content: content,
-                pushType: .token,
-                style: .transient,
-                alertConfiguration: namedAlert,
-                startDate: start
             )
         }
 

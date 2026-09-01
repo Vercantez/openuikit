@@ -1,26 +1,5 @@
 @_exported import Foundation
 
-/// Linux stand-in for Foundation.`LocalizedStringResource`.
-///
-/// The isolated host gate compiles ActivityKit against toolchain Foundation,
-/// which does not yet publish this type. Guest Foundation already has a real
-/// implementation; central integration should switch `AlertConfiguration` to
-/// that type and drop this stand-in. String literals remain source-compatible
-/// with Apple call sites.
-public struct LocalizedStringResource: Equatable, Hashable, Sendable,
-    ExpressibleByStringLiteral
-{
-    public var key: String
-
-    public init(_ key: String) {
-        self.key = key
-    }
-
-    public init(stringLiteral value: String) {
-        self.key = value
-    }
-}
-
 /// The protocol you implement to describe the content of a Live Activity.
 public protocol ActivityAttributes: Decodable, Encodable {
     associatedtype ContentState: Decodable, Encodable, Hashable
@@ -114,10 +93,14 @@ public struct PushType: Equatable {
     }
 }
 
+#if OPENUIKIT_GUEST
 /// Alert shown when a Live Activity updates.
 ///
-/// Linux never presents the alert. The configuration is retained as data so
-/// callers can construct the public type.
+/// Title and body are Foundation.`LocalizedStringResource` from the guest
+/// Foundation module. This type is compiled only with `-D OPENUIKIT_GUEST`
+/// against that module; isolated toolchain Foundation does not publish the
+/// type, and ActivityKit does not ship a same-named fallback. Linux never
+/// presents the alert.
 public struct AlertConfiguration: Equatable, Sendable {
     public struct AlertSound: Equatable, Sendable {
         private enum Kind: Equatable, Sendable {
@@ -140,13 +123,13 @@ public struct AlertConfiguration: Equatable, Sendable {
         }
     }
 
-    public var title: LocalizedStringResource
-    public var body: LocalizedStringResource
+    public var title: Foundation.LocalizedStringResource
+    public var body: Foundation.LocalizedStringResource
     public var sound: AlertSound
 
     public init(
-        title: LocalizedStringResource,
-        body: LocalizedStringResource,
+        title: Foundation.LocalizedStringResource,
+        body: Foundation.LocalizedStringResource,
         sound: AlertSound
     ) {
         self.title = title
@@ -154,6 +137,7 @@ public struct AlertConfiguration: Equatable, Sendable {
         self.sound = sound
     }
 }
+#endif
 
 /// Why a request to start a Live Activity failed.
 ///
@@ -435,6 +419,7 @@ public class Activity<Attributes: ActivityAttributes>: Identifiable {
         return try unsupportedRequest()
     }
 
+#if OPENUIKIT_GUEST
     public static func request(
         attributes: Attributes,
         content: ActivityContent<Activity<Attributes>.ContentState>,
@@ -458,28 +443,36 @@ public class Activity<Attributes: ActivityAttributes>: Identifiable {
         _ = (attributes, content, pushType, style, alertConfiguration, startDate)
         return try unsupportedRequest()
     }
+#endif
 
-    public func update(using contentState: Activity<Attributes>.ContentState) async {
-        await update(
-            ActivityContent(state: contentState, staleDate: storedContent.staleDate),
-            alertConfiguration: nil
-        )
+    private func applyContentUpdate(
+        _ content: ActivityContent<ContentState>
+    ) {
+        storedContent = content
+        if storedActivityState == .pending {
+            storedActivityState = .active
+        }
     }
 
-    public func update(
-        using contentState: Activity<Attributes>.ContentState,
-        alertConfiguration: AlertConfiguration? = nil
-    ) async {
-        await update(
-            ActivityContent(state: contentState, staleDate: storedContent.staleDate),
-            alertConfiguration: alertConfiguration
+    public func update(using contentState: Activity<Attributes>.ContentState) async {
+        applyContentUpdate(
+            ActivityContent(state: contentState, staleDate: storedContent.staleDate)
         )
     }
 
     public func update(
         _ content: ActivityContent<Activity<Attributes>.ContentState>
     ) async {
-        await update(content, alertConfiguration: nil)
+        applyContentUpdate(content)
+    }
+
+#if OPENUIKIT_GUEST
+    public func update(
+        using contentState: Activity<Attributes>.ContentState,
+        alertConfiguration: AlertConfiguration? = nil
+    ) async {
+        _ = alertConfiguration
+        await update(using: contentState)
     }
 
     public func update(
@@ -495,11 +488,9 @@ public class Activity<Attributes: ActivityAttributes>: Identifiable {
         timestamp: Date
     ) async {
         _ = (alertConfiguration, timestamp)
-        storedContent = content
-        if storedActivityState == .pending {
-            storedActivityState = .active
-        }
+        applyContentUpdate(content)
     }
+#endif
 
     public func end(
         using contentState: Activity<Attributes>.ContentState? = nil,
