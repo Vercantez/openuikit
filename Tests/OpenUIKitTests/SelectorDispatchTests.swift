@@ -502,6 +502,8 @@ final class GenuineObjCSelectorTests: XCTestCase {
         weak var picker: UIDatePicker?
         weak var sender: AnyObject?
         weak var event: AnyObject?
+        weak var panSender: UIPanGestureRecognizer?
+        var panStates: [String] = []
 
         @objc func noArguments() { log.append("runtime-0") }
 
@@ -514,6 +516,21 @@ final class GenuineObjCSelectorTests: XCTestCase {
             log.append("runtime-2")
             self.sender = sender
             self.event = event
+        }
+
+        // Exact parameter shape used by Hackers/PostCommentsSheet.swift.
+        // Compiling this @objc method proves UIPanGestureRecognizer is part of
+        // the Objective-C-representable UIKit object hierarchy.
+        @objc func handlePan(_ recognizer: UIPanGestureRecognizer) {
+            panSender = recognizer
+            switch recognizer.state {
+            case .began: panStates.append("began")
+            case .changed: panStates.append("changed")
+            case .ended: panStates.append("ended")
+            case .cancelled: panStates.append("cancelled")
+            case .failed: panStates.append("failed")
+            case .possible: panStates.append("possible")
+            }
         }
     }
 
@@ -576,6 +593,26 @@ final class GenuineObjCSelectorTests: XCTestCase {
         window.sendTouch(.began, at: CGPoint(x: 50, y: 50), timestamp: 0)
         window.sendTouch(.ended, at: CGPoint(x: 50, y: 50), timestamp: 0.05)
         XCTAssertEqual(target.log, ["valueChanged"])
+    }
+
+    func testTypedPanSelectorDispatchesEveryContinuousState() {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 400, height: 300))
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+        window.addSubview(view)
+        let target = RuntimeTarget()
+        let pan = UIPanGestureRecognizer(
+            target: target,
+            action: #selector(RuntimeTarget.handlePan(_:))
+        )
+        view.addGestureRecognizer(pan)
+
+        window.sendTouch(.began, at: CGPoint(x: 20, y: 20), timestamp: 0)
+        window.sendTouch(.moved, at: CGPoint(x: 20, y: 50), timestamp: 0.1)
+        window.sendTouch(.moved, at: CGPoint(x: 20, y: 80), timestamp: 0.2)
+        window.sendTouch(.ended, at: CGPoint(x: 20, y: 100), timestamp: 0.3)
+
+        XCTAssertTrue(target.panSender === pan)
+        XCTAssertEqual(target.panStates, ["began", "changed", "ended"])
     }
 
     func testNSObjectRuntimeDispatchesZeroOneAndTwoArgumentActions() {

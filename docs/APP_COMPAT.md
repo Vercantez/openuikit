@@ -369,10 +369,12 @@ registry remains the fallback and the only native-ELF route. Runtime metadata
 wins when a target supplies both. Targets remain weak. A live unresolved
 explicit selector is still reported nonfatally through `onUnresolved`, unlike
 UIKit's measured exception; OpenUIKit prunes dead weak targets, while broader
-UIKit nil-target responder routing is not claimed. This slice does not move
-`UIGestureRecognizer` or `UIEvent` under NSObject, and OpenUIKit Notification
-and Timer selector delivery remains registry-only. Notification identity and
-selector delivery are intentionally isolated to the next slice.
+UIKit nil-target responder routing is not claimed. That historical slice did
+not move `UIGestureRecognizer` or `UIEvent` under NSObject. The Hackers
+pan-selector successor now gives the complete `UIGestureRecognizer` hierarchy
+the same fail-closed NSObject provider seam as UIResponder, allowing concrete
+recognizers in unchanged `@objc` action signatures. `UIEvent` remains a plain
+Swift event value, and Timer selector delivery remains registry-only.
 
 The native iOS 26.1 oracle pins responder NSObject topology, selector names,
 0/1/2 delivery, exact sender identity, order, and weak lifetime. The separate

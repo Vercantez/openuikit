@@ -24,10 +24,23 @@
 // actions such as `UIView.endEditing(_:)`. Targets are weak, as in UIKit. The
 // action's sender is the recognizer: a 1-argument selector ("handleTap:")
 // receives it, while a 0-argument one ("handleTap") does not. This slice does
-// not move UIGestureRecognizer itself under NSObject, so an @objc action must
-// still type that sender as AnyObject on Objective-C-capable OpenUIKit builds.
+// preserve UIKit's NSObject lineage, so unchanged app actions can type that
+// sender as UIGestureRecognizer or one of its concrete subclasses.
 //
 // All timing is event-timestamp based — no wall clock (deterministic).
+
+// UIKit's recognizer hierarchy is Objective-C representable. Use the same
+// fail-closed provider seam as UIResponder: Foundation's NSObject on ordinary
+// native builds, and the ObjectiveC root class in the Foundation-hidden Mach-O
+// guest build. A plain Swift root here breaks legitimate app source such as
+// `@objc func handlePan(_ recognizer: UIPanGestureRecognizer)`.
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#else
+#error("OpenUIKit requires Foundation.NSObject or ObjectiveC.NSObject")
+#endif
 
 // MARK: - Delegate (M13 delegate-protocols cluster)
 
@@ -78,7 +91,7 @@ public extension UIGestureRecognizerDelegate {
 }
 
 @preconcurrency @MainActor
-open class UIGestureRecognizer {
+open class UIGestureRecognizer: NSObject {
     public enum State: Sendable {
         case possible, began, changed, ended, cancelled, failed
     }
@@ -131,6 +144,7 @@ open class UIGestureRecognizer {
     private var nextToken = 0
 
     public init(handler: ActionHandler? = nil) {
+        super.init()
         if let handler { addTarget(handler) }
     }
 
