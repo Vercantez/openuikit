@@ -23,7 +23,16 @@ import Foundation
 enum EventKitDependencyIdentity {
     static func requireLoadedEventKitImage() {
         #if os(Linux)
-        let maps = (try? String(contentsOfFile: "/proc/self/maps", encoding: .utf8)) ?? ""
+        // /proc files report a zero size; Foundation string(contentsOfFile:) can
+        // therefore yield empty. Read until EOF instead.
+        let maps: String
+        if let handle = FileHandle(forReadingAtPath: "/proc/self/maps"),
+           let data = try? handle.readToEnd()
+        {
+            maps = String(decoding: data, as: UTF8.self)
+        } else {
+            maps = ""
+        }
         precondition(
             maps.contains("libEventKit"),
             "libEventKit.dylib/so must be mapped; isolated host is not integrated proof"

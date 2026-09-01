@@ -36,8 +36,9 @@ enum EventKitTBDAccounting {
 
     static func inventoryURL() -> URL {
         URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()
-            .deletingLastPathComponent()
+            .deletingLastPathComponent() // EventKitTBDAccounting.swift
+            .deletingLastPathComponent() // agent
+            .deletingLastPathComponent() // tests
             .appendingPathComponent("reference/tbd-exports.tsv")
     }
 
