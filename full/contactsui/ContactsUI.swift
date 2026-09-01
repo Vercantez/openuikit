@@ -1,10 +1,10 @@
 // Linux starting point for Apple's public ContactsUI module.
 //
-// Controllers preserve caller-supplied contact identity, predicates, and
-// delegate wiring. Presentation is host-driven: a Linux shell can render its
-// own picker or editor and call the report* methods. This module never reads a
-// system address book, never grants Limited Contacts Access identifiers, and
-// never claims that Apple's CNContactPicker or CNContactViewController UI ran.
+// Controllers and the Limited Access button are compiled only when their
+// first-party dependencies are importable. This isolated host has Foundation
+// alone, so those declarations are gated. Host-only presentation controls are
+// SPI. The module never reads a system address book and never grants Apple
+// Limited Contacts Access identifiers.
 
 @_exported import Foundation
 
@@ -14,11 +14,9 @@
 
 #if canImport(UIKit)
 @_exported import UIKit
-public typealias ContactsUIPresenter = UIViewController
-#else
-public typealias ContactsUIPresenter = NSObject
 #endif
 
+@_spi(OpenUIKitHost)
 public enum ContactsUIPortable {
     public enum PresentationCapability: Int, Sendable {
         case unavailable = 0
@@ -38,6 +36,7 @@ public enum ContactsUIPortable {
     public static let systemContactStoreAvailable = false
 }
 
+@_spi(OpenUIKitHost)
 public struct ContactsUIPortableError: Error, Equatable, Sendable, CustomStringConvertible {
     public enum Code: Int, Sendable {
         case contactDisabledByPredicate = 1

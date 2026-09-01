@@ -1,25 +1,13 @@
-import Foundation
-
 #if canImport(SwiftUI)
 import SwiftUI
-#endif
 
-#if !canImport(SwiftUI)
-/// Token recorded by `ContactAccessButton.Style` when SwiftUI is absent.
-/// This is not SwiftUI.Color and performs no catalog lookup.
-public struct Color: Equatable, Hashable, Sendable {
-    public let rawValue: String
-    public init(rawValue: String) {
-        self.rawValue = rawValue
-    }
-}
-#endif
-
-/// Fail-closed Limited Contacts Access control. Query strings and ignore lists
-/// are preserved for a host renderer. Approval never invents Apple-granted
-/// identifiers; a host may forward identifiers it already had authority to share.
+/// Fail-closed Limited Contacts Access control. Compiled only when SwiftUI is
+/// importable so `ContactAccessButton` is a real `SwiftUI.View`. Query strings
+/// and ignore lists are preserved. The body never presents Apple Limited Access
+/// UI and never invents granted identifiers.
 @MainActor
-public struct ContactAccessButton {
+@preconcurrency
+public struct ContactAccessButton: View {
     public let queryString: String
     public let ignoredEmails: Set<String>?
     public let ignoredPhoneNumbers: Set<String>?
@@ -27,13 +15,6 @@ public struct ContactAccessButton {
 
     public var style: Style
     public var caption: Caption
-    public internal(set) var recordedModifiers: [RecordedModifier]
-
-    public typealias Body = ContactAccessUnavailableView
-
-    public var body: ContactAccessUnavailableView {
-        ContactAccessUnavailableView()
-    }
 
     public init(
         queryString query: String,
@@ -47,37 +28,13 @@ public struct ContactAccessButton {
         self.approvalCallback = approvalCallback
         style = .automatic
         caption = .defaultText
-        recordedModifiers = []
     }
 
-    public func contactAccessButtonStyle(_ style: Style) -> ContactAccessButton {
-        var copy = self
-        copy.style = style
-        return copy
+    public var body: some View {
+        EmptyView()
     }
 
-    public func contactAccessButtonCaption(_ caption: Caption) -> ContactAccessButton {
-        var copy = self
-        copy.caption = caption
-        return copy
-    }
-
-    /// Source-compatible Limited Access picker hook. The completion always
-    /// receives an empty array unless the host later calls
-    /// `reportApproval(newlyGrantedIdentifiers:)`.
-    public func contactAccessPicker(
-        isPresented: Bool,
-        completionHandler: @escaping ([String]) -> Void = { _ in }
-    ) -> ContactAccessButton {
-        var copy = self
-        copy.recordedModifiers.append(.contactAccessPickerPresented(isPresented))
-        _ = completionHandler as Any
-        return copy
-    }
-
-    /// Host-facing approval finish. Identifiers must come from the host; this
-    /// method never consults Apple Limited Contacts Access. Passing `[]`
-    /// matches the documented empty result when authorization is not Limited.
+    @_spi(OpenUIKitHost)
     public func reportApproval(newlyGrantedIdentifiers identifiers: [String] = []) {
         approvalCallback?(identifiers)
     }
@@ -107,9 +64,63 @@ public struct ContactAccessButton {
     }
 }
 
-/// Placeholder body. There is no Apple Limited Access UI on this host.
-public struct ContactAccessUnavailableView: Equatable, Sendable {
-    public let reason = "Apple Limited Contacts Access UI is unavailable"
+extension View {
+    @MainActor
+    @preconcurrency
+    public func contactAccessButtonStyle(
+        _ style: ContactAccessButton.Style
+    ) -> some View {
+        _ = style
+        return self
+    }
 
-    public init() {}
+    @MainActor
+    @preconcurrency
+    public func contactAccessButtonCaption(
+        _ caption: ContactAccessButton.Caption
+    ) -> some View {
+        _ = caption
+        return self
+    }
+
+    @MainActor
+    @preconcurrency
+    public func contactAccessPicker(
+        isPresented: Binding<Bool>,
+        completionHandler: @escaping ([String]) -> Void = { _ in }
+    ) -> some View {
+        _ = isPresented
+        _ = completionHandler
+        return self
+    }
 }
+
+extension ContactAccessButton {
+    @MainActor
+    @preconcurrency
+    public func contactAccessButtonStyle(_ style: Style) -> some View {
+        var copy = self
+        copy.style = style
+        return copy
+    }
+
+    @MainActor
+    @preconcurrency
+    public func contactAccessButtonCaption(_ caption: Caption) -> some View {
+        var copy = self
+        copy.caption = caption
+        return copy
+    }
+
+    @MainActor
+    @preconcurrency
+    public func contactAccessPicker(
+        isPresented: Binding<Bool>,
+        completionHandler: @escaping ([String]) -> Void = { _ in }
+    ) -> some View {
+        _ = isPresented
+        _ = completionHandler
+        return self
+    }
+}
+#endif

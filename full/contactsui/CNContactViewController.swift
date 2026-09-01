@@ -1,8 +1,6 @@
-import Foundation
-
-#if canImport(UIKit)
+#if canImport(Contacts) && canImport(UIKit)
+import Contacts
 import UIKit
-#endif
 
 @MainActor
 public protocol CNContactViewControllerDelegate: AnyObject {
@@ -30,19 +28,11 @@ extension CNContactViewControllerDelegate {
     }
 }
 
-/// Host-driven contact card / editor. It preserves the supplied contact and
-/// display options. Completing or cancelling is a host action; nothing is
-/// written to an Apple system store.
+/// Host-driven contact card / editor using real UIKit and Contacts types.
+/// Completing is an SPI host action; nothing is written to an Apple system store.
 @MainActor
-open class CNContactViewController: ContactsUIPresenter {
-    public enum Mode: Int, Equatable, Sendable {
-        case existing = 0
-        case unknown = 1
-        case new = 2
-    }
-
+open class CNContactViewController: UIViewController {
     public private(set) var contact: CNContact
-    public private(set) var mode: Mode
     public weak var delegate: (any CNContactViewControllerDelegate)?
     public var contactStore: CNContactStore?
     public var displayedPropertyKeys: [Any]?
@@ -58,41 +48,23 @@ open class CNContactViewController: ContactsUIPresenter {
     public private(set) var highlightedPropertyIdentifier: String?
 
     public static func descriptorForRequiredKeys() -> any CNKeyDescriptor {
-        CNContactKeyDescriptor(keys: [
-            "identifier",
-            "givenName",
-            "familyName",
-            "organizationName",
-            "phoneNumbers",
-            "emailAddresses",
-            "imageData",
-            "thumbnailImageData",
-        ])
+        CNContact.descriptorForAllComparatorKeys()
     }
 
-#if canImport(UIKit)
-    public init(mode: Mode, contact: CNContact) {
-        self.mode = mode
+    init(contact: CNContact) {
         self.contact = contact
         super.init(nibName: nil, bundle: nil)
-        applyModeDefaults()
     }
 
     @available(*, unavailable)
     public required init?(coder: NSCoder) {
         fatalError("NSCoder loading is unavailable on this host")
     }
-#else
-    public init(mode: Mode, contact: CNContact) {
-        self.mode = mode
-        self.contact = contact
-        super.init()
-        applyModeDefaults()
-    }
-#endif
 
     public convenience init(for contact: CNContact) {
-        self.init(mode: .existing, contact: contact)
+        self.init(contact: contact)
+        allowsEditing = true
+        allowsActions = true
     }
 
     public convenience init(forContact contact: CNContact) {
@@ -100,13 +72,13 @@ open class CNContactViewController: ContactsUIPresenter {
     }
 
     public convenience init(forNewContact contact: CNContact?) {
-        self.init(mode: .new, contact: contact ?? CNMutableContact())
+        self.init(contact: contact ?? CNMutableContact())
         allowsEditing = true
         allowsActions = false
     }
 
     public convenience init(forUnknownContact contact: CNContact) {
-        self.init(mode: .unknown, contact: contact)
+        self.init(contact: contact)
         allowsEditing = false
         allowsActions = true
     }
@@ -117,7 +89,8 @@ open class CNContactViewController: ContactsUIPresenter {
     }
 
     /// Host action corresponding to Done / Create. Passing `nil` matches a
-    /// cancelled new-contact flow.
+    /// cancelled new-contact flow. Does not persist to a system store.
+    @_spi(OpenUIKitHost)
     open func reportCompletion(contact: CNContact?) {
         if let contact {
             self.contact = contact
@@ -125,23 +98,9 @@ open class CNContactViewController: ContactsUIPresenter {
         delegate?.contactViewController(self, didCompleteWith: contact)
     }
 
-    /// Asks the delegate whether a property should run its default action
-    /// (message, call, and similar). Default is `true` when no delegate is set.
+    @_spi(OpenUIKitHost)
     open func shouldPerformDefaultAction(for property: CNContactProperty) -> Bool {
         delegate?.contactViewController(self, shouldPerformDefaultActionFor: property) ?? true
     }
-
-    private func applyModeDefaults() {
-        switch mode {
-        case .existing:
-            allowsEditing = true
-            allowsActions = true
-        case .unknown:
-            allowsEditing = false
-            allowsActions = true
-        case .new:
-            allowsEditing = true
-            allowsActions = false
-        }
-    }
 }
+#endif
