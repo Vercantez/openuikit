@@ -1,38 +1,7 @@
+#if canImport(simd)
+import simd
+#endif
 import Foundation
-
-/// Linux substitutes for the Darwin `simd` C aliases used throughout GameplayKit.
-public typealias vector_float2 = SIMD2<Float>
-public typealias vector_float3 = SIMD3<Float>
-public typealias vector_int2 = SIMD2<Int32>
-public typealias vector_double2 = SIMD2<Double>
-public typealias vector_double3 = SIMD3<Double>
-
-/// Column-major 3×3 matrix used by `GKAgent3D.rotation`.
-public struct matrix_float3x3: Sendable {
-    public var columns: (vector_float3, vector_float3, vector_float3)
-
-    public init() {
-        columns = (
-            vector_float3(1, 0, 0),
-            vector_float3(0, 1, 0),
-            vector_float3(0, 0, 1)
-        )
-    }
-
-    public init(columns: (vector_float3, vector_float3, vector_float3)) {
-        self.columns = columns
-    }
-
-    public static func == (lhs: matrix_float3x3, rhs: matrix_float3x3) -> Bool {
-        lhs.columns.0 == rhs.columns.0
-            && lhs.columns.1 == rhs.columns.1
-            && lhs.columns.2 == rhs.columns.2
-    }
-}
-
-/// Packed GameplayKit version. Apple's `GK_VERSION` macro is not present as a
-/// numeric payload in the pinned graphs; this seed reports the campaign SDK.
-public var GK_VERSION: Int32 { 26_01_00 }
 
 public let GKGameModelMaxScore: Int = 1 << 24
 public let GKGameModelMinScore: Int = -(1 << 24)
@@ -57,43 +26,43 @@ public enum GKRTreeSplitStrategy: Int, Sendable {
 }
 
 public struct GKBox: Equatable, Sendable {
-    public var boxMin: vector_float3
-    public var boxMax: vector_float3
+    public var boxMin: SIMD3<Float>
+    public var boxMax: SIMD3<Float>
 
     public init() {
-        boxMin = vector_float3(0, 0, 0)
-        boxMax = vector_float3(0, 0, 0)
+        boxMin = SIMD3<Float>(0, 0, 0)
+        boxMax = SIMD3<Float>(0, 0, 0)
     }
 
-    public init(boxMin: vector_float3, boxMax: vector_float3) {
+    public init(boxMin: SIMD3<Float>, boxMax: SIMD3<Float>) {
         self.boxMin = boxMin
         self.boxMax = boxMax
     }
 }
 
 public struct GKQuad: Equatable, Sendable {
-    public var quadMin: vector_float2
-    public var quadMax: vector_float2
+    public var quadMin: SIMD2<Float>
+    public var quadMax: SIMD2<Float>
 
     public init() {
-        quadMin = vector_float2(0, 0)
-        quadMax = vector_float2(0, 0)
+        quadMin = SIMD2<Float>(0, 0)
+        quadMax = SIMD2<Float>(0, 0)
     }
 
-    public init(quadMin: vector_float2, quadMax: vector_float2) {
+    public init(quadMin: SIMD2<Float>, quadMax: SIMD2<Float>) {
         self.quadMin = quadMin
         self.quadMax = quadMax
     }
 }
 
 public struct GKTriangle: Sendable {
-    public var points: (vector_float3, vector_float3, vector_float3)
+    public var points: (SIMD3<Float>, SIMD3<Float>, SIMD3<Float>)
 
     public init() {
-        points = (vector_float3(0, 0, 0), vector_float3(0, 0, 0), vector_float3(0, 0, 0))
+        points = (SIMD3<Float>(0, 0, 0), SIMD3<Float>(0, 0, 0), SIMD3<Float>(0, 0, 0))
     }
 
-    public init(points: (vector_float3, vector_float3, vector_float3)) {
+    public init(points: (SIMD3<Float>, SIMD3<Float>, SIMD3<Float>)) {
         self.points = points
     }
 
@@ -102,39 +71,39 @@ public struct GKTriangle: Sendable {
     }
 }
 
-func gkLength(_ v: vector_float2) -> Float {
+func gkLength(_ v: SIMD2<Float>) -> Float {
     ((v.x * v.x) + (v.y * v.y)).squareRoot()
 }
 
-func gkLength(_ v: vector_float3) -> Float {
+func gkLength(_ v: SIMD3<Float>) -> Float {
     ((v.x * v.x) + (v.y * v.y) + (v.z * v.z)).squareRoot()
 }
 
-func gkNormalize(_ v: vector_float2) -> vector_float2 {
+func gkNormalize(_ v: SIMD2<Float>) -> SIMD2<Float> {
     let length = gkLength(v)
-    if length < 1e-8 { return vector_float2(0, 0) }
+    if length < 1e-8 { return SIMD2<Float>(0, 0) }
     return v / length
 }
 
-func gkNormalize(_ v: vector_float3) -> vector_float3 {
+func gkNormalize(_ v: SIMD3<Float>) -> SIMD3<Float> {
     let length = gkLength(v)
-    if length < 1e-8 { return vector_float3(0, 0, 0) }
+    if length < 1e-8 { return SIMD3<Float>(0, 0, 0) }
     return v / length
 }
 
-func gkDot(_ a: vector_float2, _ b: vector_float2) -> Float {
+func gkDot(_ a: SIMD2<Float>, _ b: SIMD2<Float>) -> Float {
     a.x * b.x + a.y * b.y
 }
 
-func gkDot(_ a: vector_float3, _ b: vector_float3) -> Float {
+func gkDot(_ a: SIMD3<Float>, _ b: SIMD3<Float>) -> Float {
     a.x * b.x + a.y * b.y + a.z * b.z
 }
 
-func gkDistance(_ a: vector_float2, _ b: vector_float2) -> Float {
+func gkDistance(_ a: SIMD2<Float>, _ b: SIMD2<Float>) -> Float {
     gkLength(a - b)
 }
 
-func gkDistance(_ a: vector_float3, _ b: vector_float3) -> Float {
+func gkDistance(_ a: SIMD3<Float>, _ b: SIMD3<Float>) -> Float {
     gkLength(a - b)
 }
 
@@ -142,7 +111,7 @@ func gkClamp(_ value: Float, _ lo: Float, _ hi: Float) -> Float {
     min(max(value, lo), hi)
 }
 
-func gkQuadContains(_ quad: GKQuad, _ point: vector_float2) -> Bool {
+func gkQuadContains(_ quad: GKQuad, _ point: SIMD2<Float>) -> Bool {
     point.x >= quad.quadMin.x && point.x <= quad.quadMax.x
         && point.y >= quad.quadMin.y && point.y <= quad.quadMax.y
 }
@@ -152,7 +121,7 @@ func gkQuadIntersects(_ a: GKQuad, _ b: GKQuad) -> Bool {
         && a.quadMin.y <= b.quadMax.y && a.quadMax.y >= b.quadMin.y
 }
 
-func gkBoxContains(_ box: GKBox, _ point: vector_float3) -> Bool {
+func gkBoxContains(_ box: GKBox, _ point: SIMD3<Float>) -> Bool {
     point.x >= box.boxMin.x && point.x <= box.boxMax.x
         && point.y >= box.boxMin.y && point.y <= box.boxMax.y
         && point.z >= box.boxMin.z && point.z <= box.boxMax.z
@@ -164,8 +133,8 @@ func gkBoxIntersects(_ a: GKBox, _ b: GKBox) -> Bool {
         && a.boxMin.z <= b.boxMax.z && a.boxMax.z >= b.boxMin.z
 }
 
-func gkSegmentsIntersect(_ a1: vector_float2, _ a2: vector_float2, _ b1: vector_float2, _ b2: vector_float2) -> Bool {
-    func cross(_ u: vector_float2, _ v: vector_float2) -> Float {
+func gkSegmentsIntersect(_ a1: SIMD2<Float>, _ a2: SIMD2<Float>, _ b1: SIMD2<Float>, _ b2: SIMD2<Float>) -> Bool {
+    func cross(_ u: SIMD2<Float>, _ v: SIMD2<Float>) -> Float {
         u.x * v.y - u.y * v.x
     }
     let r = a2 - a1
@@ -180,7 +149,7 @@ func gkSegmentsIntersect(_ a1: vector_float2, _ a2: vector_float2, _ b1: vector_
     return t >= 0 && t <= 1 && u >= 0 && u <= 1
 }
 
-func gkPointInPolygon(_ point: vector_float2, _ vertices: [vector_float2]) -> Bool {
+func gkPointInPolygon(_ point: SIMD2<Float>, _ vertices: [SIMD2<Float>]) -> Bool {
     guard vertices.count >= 3 else { return false }
     var inside = false
     var j = vertices.count - 1
@@ -195,4 +164,14 @@ func gkPointInPolygon(_ point: vector_float2, _ vertices: [vector_float2]) -> Bo
         j = i
     }
     return inside
+}
+
+@_spi(OpenUIKitHost)
+public enum GameplayKitHostArchive {
+    /// Unobserved Apple archive layouts are rejected. A `nil` result is the
+    /// documented Linux control, not a decoded object.
+    public static func rejectMalformedCoder(_ coder: NSCoder) -> Bool {
+        _ = coder
+        return true
+    }
 }

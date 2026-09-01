@@ -1,11 +1,9 @@
 import Foundation
 
-open class GKGraphNode: NSObject, NSCopying, NSSecureCoding {
+open class GKGraphNode: NSObject, NSCopying {
     private var connections: [GKGraphNode] = []
 
     public var connectedNodes: [GKGraphNode] { connections }
-
-    public static var supportsSecureCoding: Bool { true }
 
     public override init() {
         super.init()
@@ -13,11 +11,10 @@ open class GKGraphNode: NSObject, NSCopying, NSSecureCoding {
 
     public required init?(coder: NSCoder) {
         super.init()
+        return nil
     }
 
-    public func encode(with coder: NSCoder) {}
-
-    public func copy(with zone: NSZone? = nil) -> Any {
+    open func copy(with zone: NSZone? = nil) -> Any {
         GKGraphNode()
     }
 
@@ -65,19 +62,19 @@ open class GKGraphNode: NSObject, NSCopying, NSSecureCoding {
 }
 
 open class GKGraphNode2D: GKGraphNode {
-    public var position: vector_float2
+    public var position: SIMD2<Float>
 
-    public required init(point: vector_float2) {
+    public required init(point: SIMD2<Float>) {
         self.position = point
         super.init()
     }
 
     public required init?(coder: NSCoder) {
-        position = vector_float2(0, 0)
+        position = SIMD2<Float>(0, 0)
         super.init(coder: coder)
     }
 
-    open class func node(withPoint point: vector_float2) -> Self {
+    open class func node(withPoint point: SIMD2<Float>) -> Self {
         Self(point: point)
     }
 
@@ -105,19 +102,19 @@ open class GKGraphNode2D: GKGraphNode {
 }
 
 open class GKGraphNode3D: GKGraphNode {
-    public var position: vector_float3
+    public var position: SIMD3<Float>
 
-    public required init(point: vector_float3) {
+    public required init(point: SIMD3<Float>) {
         self.position = point
         super.init()
     }
 
     public required init?(coder: NSCoder) {
-        position = vector_float3(0, 0, 0)
+        position = SIMD3<Float>(0, 0, 0)
         super.init(coder: coder)
     }
 
-    open class func node(withPoint point: vector_float3) -> Self {
+    open class func node(withPoint point: SIMD3<Float>) -> Self {
         Self(point: point)
     }
 
@@ -145,15 +142,15 @@ open class GKGraphNode3D: GKGraphNode {
 }
 
 open class GKGridGraphNode: GKGraphNode {
-    public private(set) var gridPosition: vector_int2
+    public private(set) var gridPosition: SIMD2<Int32>
 
-    public required init(gridPosition: vector_int2) {
+    public required init(gridPosition: SIMD2<Int32>) {
         self.gridPosition = gridPosition
         super.init()
     }
 
     public required init?(coder: NSCoder) {
-        gridPosition = vector_int2(0, 0)
+        gridPosition = SIMD2<Int32>(0, 0)
         super.init(coder: coder)
     }
 
@@ -185,12 +182,10 @@ open class GKGridGraphNode: GKGraphNode {
     }
 }
 
-open class GKGraph: NSObject, NSCopying, NSSecureCoding {
+open class GKGraph: NSObject, NSCopying {
     private var nodeStorage: [GKGraphNode] = []
 
     public var nodes: [GKGraphNode]? { nodeStorage.isEmpty ? nil : nodeStorage }
-
-    public static var supportsSecureCoding: Bool { true }
 
     public init(_ nodes: [GKGraphNode]) {
         self.nodeStorage = nodes
@@ -207,9 +202,8 @@ open class GKGraph: NSObject, NSCopying, NSSecureCoding {
 
     public required init?(coder: NSCoder) {
         super.init()
+        return nil
     }
-
-    public func encode(with coder: NSCoder) {}
 
     public func copy(with zone: NSZone? = nil) -> Any {
         GKGraph(nodeStorage)
@@ -256,15 +250,15 @@ open class GKGraph: NSObject, NSCopying, NSSecureCoding {
 }
 
 open class GKGridGraph<NodeType: GKGridGraphNode>: GKGraph {
-    public let gridOrigin: vector_int2
+    public let gridOrigin: SIMD2<Int32>
     public let gridWidth: Int
     public let gridHeight: Int
     public let diagonalsAllowed: Bool
-    private var grid: [vector_int2: NodeType] = [:]
+    private var grid: [SIMD2<Int32>: NodeType] = [:]
     private let nodeType: NodeType.Type
 
     public init(
-        fromGridStartingAt position: vector_int2,
+        fromGridStartingAt position: SIMD2<Int32>,
         width: Int32,
         height: Int32,
         diagonalsAllowed: Bool
@@ -279,7 +273,7 @@ open class GKGridGraph<NodeType: GKGridGraphNode>: GKGraph {
     }
 
     public init(
-        fromGridStartingAt position: vector_int2,
+        fromGridStartingAt position: SIMD2<Int32>,
         width: Int32,
         height: Int32,
         diagonalsAllowed: Bool,
@@ -295,12 +289,12 @@ open class GKGridGraph<NodeType: GKGridGraphNode>: GKGraph {
     }
 
     public convenience init(nodes: [GKGraphNode]) {
-        self.init(fromGridStartingAt: vector_int2(0, 0), width: 0, height: 0, diagonalsAllowed: false)
+        self.init(fromGridStartingAt: SIMD2<Int32>(0, 0), width: 0, height: 0, diagonalsAllowed: false)
         add(nodes)
     }
 
     public required init?(coder: NSCoder) {
-        self.gridOrigin = vector_int2(0, 0)
+        self.gridOrigin = SIMD2<Int32>(0, 0)
         self.gridWidth = 0
         self.gridHeight = 0
         self.diagonalsAllowed = false
@@ -313,7 +307,7 @@ open class GKGridGraph<NodeType: GKGridGraphNode>: GKGraph {
         if gridWidth <= 0 || gridHeight <= 0 { return }
         for y in 0..<gridHeight {
             for x in 0..<gridWidth {
-                let pos = vector_int2(gridOrigin.x + Int32(x), gridOrigin.y + Int32(y))
+                let pos = SIMD2<Int32>(gridOrigin.x + Int32(x), gridOrigin.y + Int32(y))
                 let node = nodeType.init(gridPosition: pos)
                 grid[pos] = node
                 created.append(node)
@@ -325,7 +319,7 @@ open class GKGridGraph<NodeType: GKGridGraphNode>: GKGraph {
         }
     }
 
-    open func node(atGridPosition position: vector_int2) -> NodeType? {
+    open func node(atGridPosition position: SIMD2<Int32>) -> NodeType? {
         grid[position]
     }
 
@@ -337,7 +331,7 @@ open class GKGridGraph<NodeType: GKGridGraphNode>: GKGraph {
         let diagonal = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
         let offsets = diagonalsAllowed ? cardinal + diagonal : cardinal
         for (dx, dy) in offsets {
-            let pos = vector_int2(Int32(x + dx), Int32(y + dy))
+            let pos = SIMD2<Int32>(Int32(x + dx), Int32(y + dy))
             if let other = grid[pos] {
                 neighbors.append(other)
             }
@@ -492,7 +486,7 @@ open class GKObstacleGraph<NodeType: GKGraphNode2D>: GKGraph {
         }
     }
 
-    private func lineOfSight(_ a: vector_float2, _ b: vector_float2, ignoring: Set<ObjectIdentifier>) -> Bool {
+    private func lineOfSight(_ a: SIMD2<Float>, _ b: SIMD2<Float>, ignoring: Set<ObjectIdentifier>) -> Bool {
         for obstacle in obstacleStorage {
             if ignoring.contains(ObjectIdentifier(obstacle)) { continue }
             let verts = obstacle.allVertices()
@@ -519,14 +513,14 @@ open class GKMeshGraph<NodeType: GKGraphNode2D>: GKGraph {
     public var triangulationMode: GKMeshGraphTriangulationMode = [.vertices]
     private var obstacleStorage: [GKPolygonObstacle] = []
     private var triangles: [GKTriangle] = []
-    private let minCoordinate: vector_float2
-    private let maxCoordinate: vector_float2
+    private let minCoordinate: SIMD2<Float>
+    private let maxCoordinate: SIMD2<Float>
     private let nodeType: NodeType.Type
 
     public var obstacles: [GKPolygonObstacle] { obstacleStorage }
     public var triangleCount: Int { triangles.count }
 
-    public init(bufferRadius: Float, minCoordinate min: vector_float2, maxCoordinate max: vector_float2) {
+    public init(bufferRadius: Float, minCoordinate min: SIMD2<Float>, maxCoordinate max: SIMD2<Float>) {
         self.bufferRadius = bufferRadius
         self.minCoordinate = min
         self.maxCoordinate = max
@@ -536,8 +530,8 @@ open class GKMeshGraph<NodeType: GKGraphNode2D>: GKGraph {
 
     public init(
         bufferRadius: Float,
-        minCoordinate min: vector_float2,
-        maxCoordinate max: vector_float2,
+        minCoordinate min: SIMD2<Float>,
+        maxCoordinate max: SIMD2<Float>,
         nodeClass: AnyClass
     ) {
         self.bufferRadius = bufferRadius
@@ -548,14 +542,14 @@ open class GKMeshGraph<NodeType: GKGraphNode2D>: GKGraph {
     }
 
     public convenience init(nodes: [GKGraphNode]) {
-        self.init(bufferRadius: 0, minCoordinate: vector_float2(0, 0), maxCoordinate: vector_float2(1, 1))
+        self.init(bufferRadius: 0, minCoordinate: SIMD2<Float>(0, 0), maxCoordinate: SIMD2<Float>(1, 1))
         add(nodes)
     }
 
     public required init?(coder: NSCoder) {
         self.bufferRadius = 0
-        self.minCoordinate = vector_float2(0, 0)
-        self.maxCoordinate = vector_float2(1, 1)
+        self.minCoordinate = SIMD2<Float>(0, 0)
+        self.maxCoordinate = SIMD2<Float>(1, 1)
         self.nodeType = NodeType.self
         super.init(coder: coder)
     }
@@ -575,11 +569,11 @@ open class GKMeshGraph<NodeType: GKGraphNode2D>: GKGraph {
     }
 
     open func triangulate() {
-        var points: [vector_float2] = [
+        var points: [SIMD2<Float>] = [
             minCoordinate,
-            vector_float2(maxCoordinate.x, minCoordinate.y),
+            SIMD2<Float>(maxCoordinate.x, minCoordinate.y),
             maxCoordinate,
-            vector_float2(minCoordinate.x, maxCoordinate.y)
+            SIMD2<Float>(minCoordinate.x, maxCoordinate.y)
         ]
         for obstacle in obstacleStorage {
             points.append(contentsOf: obstacle.allVertices())
@@ -591,24 +585,24 @@ open class GKMeshGraph<NodeType: GKGraphNode2D>: GKGraph {
         var created: [NodeType] = []
         for triangle in triangles {
             if triangulationMode.contains(.vertices) {
-                let p0 = vector_float2(triangle.points.0.x, triangle.points.0.y)
-                let p1 = vector_float2(triangle.points.1.x, triangle.points.1.y)
-                let p2 = vector_float2(triangle.points.2.x, triangle.points.2.y)
+                let p0 = SIMD2<Float>(triangle.points.0.x, triangle.points.0.y)
+                let p1 = SIMD2<Float>(triangle.points.1.x, triangle.points.1.y)
+                let p2 = SIMD2<Float>(triangle.points.2.x, triangle.points.2.y)
                 created.append(nodeType.init(point: p0))
                 created.append(nodeType.init(point: p1))
                 created.append(nodeType.init(point: p2))
             }
             if triangulationMode.contains(.centers) {
                 let c = (triangle.points.0 + triangle.points.1 + triangle.points.2) / 3
-                created.append(nodeType.init(point: vector_float2(c.x, c.y)))
+                created.append(nodeType.init(point: SIMD2<Float>(c.x, c.y)))
             }
             if triangulationMode.contains(.edgeMidpoints) {
                 let m01 = (triangle.points.0 + triangle.points.1) / 2
                 let m12 = (triangle.points.1 + triangle.points.2) / 2
                 let m20 = (triangle.points.2 + triangle.points.0) / 2
-                created.append(nodeType.init(point: vector_float2(m01.x, m01.y)))
-                created.append(nodeType.init(point: vector_float2(m12.x, m12.y)))
-                created.append(nodeType.init(point: vector_float2(m20.x, m20.y)))
+                created.append(nodeType.init(point: SIMD2<Float>(m01.x, m01.y)))
+                created.append(nodeType.init(point: SIMD2<Float>(m12.x, m12.y)))
+                created.append(nodeType.init(point: SIMD2<Float>(m20.x, m20.y)))
             }
         }
         var unique: [NodeType] = []
@@ -654,11 +648,11 @@ open class GKMeshGraph<NodeType: GKGraphNode2D>: GKGraph {
 }
 
 private struct GKCircumcircle {
-    let center: vector_float2
+    let center: SIMD2<Float>
     let radius: Float
 }
 
-private func gkCircumcircle(_ a: vector_float2, _ b: vector_float2, _ c: vector_float2) -> GKCircumcircle? {
+private func gkCircumcircle(_ a: SIMD2<Float>, _ b: SIMD2<Float>, _ c: SIMD2<Float>) -> GKCircumcircle? {
     let d = 2 * (a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y))
     if abs(d) < 1e-8 { return nil }
     let a2 = a.x * a.x + a.y * a.y
@@ -666,11 +660,11 @@ private func gkCircumcircle(_ a: vector_float2, _ b: vector_float2, _ c: vector_
     let c2 = c.x * c.x + c.y * c.y
     let ux = (a2 * (b.y - c.y) + b2 * (c.y - a.y) + c2 * (a.y - b.y)) / d
     let uy = (a2 * (c.x - b.x) + b2 * (a.x - c.x) + c2 * (b.x - a.x)) / d
-    let center = vector_float2(ux, uy)
+    let center = SIMD2<Float>(ux, uy)
     return GKCircumcircle(center: center, radius: gkDistance(center, a))
 }
 
-private func gkBowyerWatson(_ input: [vector_float2]) -> [GKTriangle] {
+private func gkBowyerWatson(_ input: [SIMD2<Float>]) -> [GKTriangle] {
     guard input.count >= 3 else { return [] }
     var minX = input[0].x
     var minY = input[0].y
@@ -684,13 +678,13 @@ private func gkBowyerWatson(_ input: [vector_float2]) -> [GKTriangle] {
     }
     let dx = max(maxX - minX, 1)
     let dy = max(maxY - minY, 1)
-    let superA = vector_float2(minX - dx, minY - dy)
-    let superB = vector_float2(maxX + dx * 3, minY - dy)
-    let superC = vector_float2(minX - dx, maxY + dy * 3)
-    var tris: [(vector_float2, vector_float2, vector_float2)] = [(superA, superB, superC)]
+    let superA = SIMD2<Float>(minX - dx, minY - dy)
+    let superB = SIMD2<Float>(maxX + dx * 3, minY - dy)
+    let superC = SIMD2<Float>(minX - dx, maxY + dy * 3)
+    var tris: [(SIMD2<Float>, SIMD2<Float>, SIMD2<Float>)] = [(superA, superB, superC)]
     for point in input {
-        var bad: [(vector_float2, vector_float2, vector_float2)] = []
-        var good: [(vector_float2, vector_float2, vector_float2)] = []
+        var bad: [(SIMD2<Float>, SIMD2<Float>, SIMD2<Float>)] = []
+        var good: [(SIMD2<Float>, SIMD2<Float>, SIMD2<Float>)] = []
         for tri in tris {
             if let circle = gkCircumcircle(tri.0, tri.1, tri.2), gkDistance(circle.center, point) <= circle.radius + 1e-5 {
                 bad.append(tri)
@@ -698,11 +692,11 @@ private func gkBowyerWatson(_ input: [vector_float2]) -> [GKTriangle] {
                 good.append(tri)
             }
         }
-        var edges: [(vector_float2, vector_float2)] = []
-        func same(_ x: vector_float2, _ y: vector_float2) -> Bool {
+        var edges: [(SIMD2<Float>, SIMD2<Float>)] = []
+        func same(_ x: SIMD2<Float>, _ y: SIMD2<Float>) -> Bool {
             gkDistance(x, y) < 1e-5
         }
-        func addEdge(_ e: (vector_float2, vector_float2)) {
+        func addEdge(_ e: (SIMD2<Float>, SIMD2<Float>)) {
             if let idx = edges.firstIndex(where: { (same($0.0, e.0) && same($0.1, e.1)) || (same($0.0, e.1) && same($0.1, e.0)) }) {
                 edges.remove(at: idx)
             } else {
@@ -721,15 +715,15 @@ private func gkBowyerWatson(_ input: [vector_float2]) -> [GKTriangle] {
         tris = next
     }
     let superPoints = [superA, superB, superC]
-    func isSuper(_ p: vector_float2) -> Bool {
+    func isSuper(_ p: SIMD2<Float>) -> Bool {
         superPoints.contains(where: { gkDistance($0, p) < 1e-4 })
     }
     return tris.compactMap { tri in
         if isSuper(tri.0) || isSuper(tri.1) || isSuper(tri.2) { return nil }
         return GKTriangle(points: (
-            vector_float3(tri.0.x, tri.0.y, 0),
-            vector_float3(tri.1.x, tri.1.y, 0),
-            vector_float3(tri.2.x, tri.2.y, 0)
+            SIMD3<Float>(tri.0.x, tri.0.y, 0),
+            SIMD3<Float>(tri.1.x, tri.1.y, 0),
+            SIMD3<Float>(tri.2.x, tri.2.y, 0)
         ))
     }
 }

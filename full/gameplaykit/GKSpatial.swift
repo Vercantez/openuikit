@@ -11,7 +11,7 @@ open class GKQuadtreeNode: NSObject {
 
 private struct GKSpatialEntry<Element: AnyObject> {
     let element: Element
-    let point: vector_float2?
+    let point: SIMD2<Float>?
     let quad: GKQuad
     let node: GKQuadtreeNode
 }
@@ -28,7 +28,7 @@ open class GKQuadtree<ElementType: NSObject>: NSObject {
     }
 
     @discardableResult
-    open func add(_ element: ElementType, at point: vector_float2) -> GKQuadtreeNode {
+    open func add(_ element: ElementType, at point: SIMD2<Float>) -> GKQuadtreeNode {
         let quad = GKQuad(quadMin: point, quadMax: point)
         return add(element, in: quad)
     }
@@ -40,7 +40,7 @@ open class GKQuadtree<ElementType: NSObject>: NSObject {
         return node
     }
 
-    open func elements(at point: vector_float2) -> [ElementType] {
+    open func elements(at point: SIMD2<Float>) -> [ElementType] {
         elements(in: GKQuad(quadMin: point, quadMax: point))
     }
 
@@ -98,7 +98,7 @@ open class GKOctree<ElementType: NSObject>: NSObject {
     }
 
     @discardableResult
-    open func add(_ element: ElementType, at point: vector_float3) -> GKOctreeNode {
+    open func add(_ element: ElementType, at point: SIMD3<Float>) -> GKOctreeNode {
         add(element, in: GKBox(boxMin: point, boxMax: point))
     }
 
@@ -109,7 +109,7 @@ open class GKOctree<ElementType: NSObject>: NSObject {
         return node
     }
 
-    open func elements(at point: vector_float3) -> [ElementType] {
+    open func elements(at point: SIMD3<Float>) -> [ElementType] {
         elements(in: GKBox(boxMin: point, boxMax: point))
     }
 
@@ -136,8 +136,8 @@ open class GKOctree<ElementType: NSObject>: NSObject {
 
 private struct GKRTreeEntry<Element: AnyObject> {
     let element: Element
-    let min: vector_float2
-    let max: vector_float2
+    let min: SIMD2<Float>
+    let max: SIMD2<Float>
 }
 
 open class GKRTree<ElementType: NSObject>: NSObject {
@@ -152,8 +152,8 @@ open class GKRTree<ElementType: NSObject>: NSObject {
 
     open func addElement(
         _ element: ElementType,
-        boundingRectMin: vector_float2,
-        boundingRectMax: vector_float2,
+        boundingRectMin: SIMD2<Float>,
+        boundingRectMax: SIMD2<Float>,
         splitStrategy: GKRTreeSplitStrategy
     ) {
         _ = splitStrategy
@@ -163,8 +163,8 @@ open class GKRTree<ElementType: NSObject>: NSObject {
 
     open func removeElement(
         _ element: ElementType,
-        boundingRectMin: vector_float2,
-        boundingRectMax: vector_float2
+        boundingRectMin: SIMD2<Float>,
+        boundingRectMax: SIMD2<Float>
     ) {
         entries.removeAll {
             $0.element === element
@@ -173,7 +173,7 @@ open class GKRTree<ElementType: NSObject>: NSObject {
         }
     }
 
-    open func elements(inBoundingRectMin rectMin: vector_float2, rectMax: vector_float2) -> [ElementType] {
+    open func elements(inBoundingRectMin rectMin: SIMD2<Float>, rectMax: SIMD2<Float>) -> [ElementType] {
         let query = GKQuad(quadMin: rectMin, quadMax: rectMax)
         return entries.compactMap { entry in
             let quad = GKQuad(quadMin: entry.min, quadMax: entry.max)

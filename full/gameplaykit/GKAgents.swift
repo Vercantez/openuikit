@@ -1,3 +1,6 @@
+#if canImport(simd)
+import simd
+#endif
 import Foundation
 
 public protocol GKAgentDelegate: NSObjectProtocol {
@@ -262,32 +265,30 @@ open class GKObstacle: NSObject {}
 
 open class GKCircleObstacle: GKObstacle {
     public var radius: Float
-    public var position: vector_float2
+    public var position: SIMD2<Float>
 
     public init(radius: Float) {
         self.radius = radius
-        self.position = vector_float2(0, 0)
+        self.position = SIMD2<Float>(0, 0)
         super.init()
     }
 }
 
 open class GKSphereObstacle: GKObstacle {
     public var radius: Float
-    public var position: vector_float3
+    public var position: SIMD3<Float>
 
     public init(radius: Float) {
         self.radius = radius
-        self.position = vector_float3(0, 0, 0)
+        self.position = SIMD3<Float>(0, 0, 0)
         super.init()
     }
 }
 
-open class GKPolygonObstacle: GKObstacle, NSCopying, NSSecureCoding {
-    private var vertices: [vector_float2]
+open class GKPolygonObstacle: GKObstacle, NSCopying {
+    private var vertices: [SIMD2<Float>]
 
     public var vertexCount: Int { vertices.count }
-
-    public static var supportsSecureCoding: Bool { true }
 
     public init(points: [SIMD2<Float>]) {
         self.vertices = points
@@ -297,23 +298,22 @@ open class GKPolygonObstacle: GKObstacle, NSCopying, NSSecureCoding {
     public required init?(coder: NSCoder) {
         vertices = []
         super.init()
+        return nil
     }
-
-    public func encode(with coder: NSCoder) {}
 
     public func copy(with zone: NSZone? = nil) -> Any {
         GKPolygonObstacle(points: vertices)
     }
 
-    open func vertex(at index: Int) -> vector_float2 {
+    open func vertex(at index: Int) -> SIMD2<Float> {
         vertices[index]
     }
 
-    func allVertices() -> [vector_float2] { vertices }
+    func allVertices() -> [SIMD2<Float>] { vertices }
 }
 
 open class GKPath: NSObject {
-    private var points3D: [vector_float3]
+    private var points3D: [SIMD3<Float>]
     public var radius: Float
     public var isCyclical: Bool
 
@@ -324,21 +324,21 @@ open class GKPath: NSObject {
         self.isCyclical = false
         self.points3D = graphNodes.map { node in
             if let n2 = node as? GKGraphNode2D {
-                return vector_float3(n2.position.x, n2.position.y, 0)
+                return SIMD3<Float>(n2.position.x, n2.position.y, 0)
             }
             if let n3 = node as? GKGraphNode3D {
                 return n3.position
             }
             if let grid = node as? GKGridGraphNode {
-                return vector_float3(Float(grid.gridPosition.x), Float(grid.gridPosition.y), 0)
+                return SIMD3<Float>(Float(grid.gridPosition.x), Float(grid.gridPosition.y), 0)
             }
-            return vector_float3(0, 0, 0)
+            return SIMD3<Float>(0, 0, 0)
         }
         super.init()
     }
 
     public convenience init(points: [SIMD2<Float>], radius: Float, cyclical: Bool) {
-        let mapped = points.map { vector_float3($0.x, $0.y, 0) }
+        let mapped = points.map { SIMD3<Float>($0.x, $0.y, 0) }
         self.init(points3D: mapped, radius: radius, cyclical: cyclical)
     }
 
@@ -346,27 +346,27 @@ open class GKPath: NSObject {
         self.init(points3D: points, radius: radius, cyclical: cyclical)
     }
 
-    init(points3D: [vector_float3], radius: Float, cyclical: Bool) {
+    init(points3D: [SIMD3<Float>], radius: Float, cyclical: Bool) {
         self.points3D = points3D
         self.radius = radius
         self.isCyclical = cyclical
         super.init()
     }
 
-    open func float2(at index: Int) -> vector_float2 {
+    open func float2(at index: Int) -> SIMD2<Float> {
         let p = points3D[index]
-        return vector_float2(p.x, p.y)
+        return SIMD2<Float>(p.x, p.y)
     }
 
-    open func float3(at index: Int) -> vector_float3 {
+    open func float3(at index: Int) -> SIMD3<Float> {
         points3D[index]
     }
 
-    open func point(at index: Int) -> vector_float2 {
+    open func point(at index: Int) -> SIMD2<Float> {
         float2(at: index)
     }
 
-    func closestPoint(to point: vector_float2) -> (vector_float2, Int) {
+    func closestPoint(to point: SIMD2<Float>) -> (SIMD2<Float>, Int) {
         guard !points3D.isEmpty else { return (point, 0) }
         var bestIndex = 0
         var best = float2(at: 0)
@@ -394,7 +394,7 @@ open class GKAgent: GKComponent {
     public var maxSpeed: Float = 100
     var wanderTheta: Float = 0
 
-    func applySteering(_ steering: vector_float3, deltaTime: TimeInterval) -> vector_float3 {
+    func applySteering(_ steering: SIMD3<Float>, deltaTime: TimeInterval) -> SIMD3<Float> {
         var force = steering
         let forceLength = gkLength(force)
         if forceLength > maxAcceleration && forceLength > 0 {
@@ -406,16 +406,16 @@ open class GKAgent: GKComponent {
 }
 
 open class GKAgent2D: GKAgent {
-    public var position: vector_float2 = vector_float2(0, 0)
+    public var position: SIMD2<Float> = SIMD2<Float>(0, 0)
     public var rotation: Float = 0
-    public private(set) var velocity: vector_float2 = vector_float2(0, 0)
+    public private(set) var velocity: SIMD2<Float> = SIMD2<Float>(0, 0)
 
     open override func update(deltaTime seconds: TimeInterval) {
         guard seconds > 0 else { return }
         delegate?.agentWillUpdate(self)
         let steering = steeringForce(deltaTime: seconds)
-        let deltaV = applySteering(vector_float3(steering.x, steering.y, 0), deltaTime: seconds)
-        velocity += vector_float2(deltaV.x, deltaV.y)
+        let deltaV = applySteering(SIMD3<Float>(steering.x, steering.y, 0), deltaTime: seconds)
+        velocity += SIMD2<Float>(deltaV.x, deltaV.y)
         let speedLength = gkLength(velocity)
         if speedLength > maxSpeed {
             velocity = gkNormalize(velocity) * maxSpeed
@@ -428,9 +428,9 @@ open class GKAgent2D: GKAgent {
         delegate?.agentDidUpdate(self)
     }
 
-    private func steeringForce(deltaTime: TimeInterval) -> vector_float2 {
+    private func steeringForce(deltaTime: TimeInterval) -> SIMD2<Float> {
         _ = deltaTime
-        var total = vector_float2(0, 0)
+        var total = SIMD2<Float>(0, 0)
         let behaviors: [(GKBehavior, Float)]
         if let composite = behavior as? GKCompositeBehavior {
             behaviors = composite.weightedBehaviors()
@@ -447,12 +447,12 @@ open class GKAgent2D: GKAgent {
         return total
     }
 
-    private func seek(toward target: vector_float2) -> vector_float2 {
+    private func seek(toward target: SIMD2<Float>) -> SIMD2<Float> {
         let desired = gkNormalize(target - position) * maxSpeed
         return desired - velocity
     }
 
-    private func goalForce(_ goal: GKGoal, deltaTime: TimeInterval) -> vector_float2 {
+    private func goalForce(_ goal: GKGoal, deltaTime: TimeInterval) -> SIMD2<Float> {
         _ = deltaTime
         switch goal.kind {
         case .seek(let agent):
@@ -463,13 +463,13 @@ open class GKAgent2D: GKAgent {
             let current = gkLength(velocity)
             let desiredSpeed = gkClamp(targetSpeed, 0, maxSpeed)
             if current < 1e-5 {
-                let heading = vector_float2(cos(rotation), sin(rotation))
+                let heading = SIMD2<Float>(cos(rotation), sin(rotation))
                 return heading * desiredSpeed
             }
             return gkNormalize(velocity) * (desiredSpeed - current)
         case .wander(let wanderSpeed):
             wanderTheta += (GKRandomSource.sharedRandom().nextUniform() - 0.5) * 0.8
-            let heading = vector_float2(cos(rotation + wanderTheta), sin(rotation + wanderTheta))
+            let heading = SIMD2<Float>(cos(rotation + wanderTheta), sin(rotation + wanderTheta))
             return heading * wanderSpeed - velocity
         case .intercept(let agent, let prediction):
             let targetPos = agentPosition2(agent)
@@ -477,7 +477,7 @@ open class GKAgent2D: GKAgent {
             let predict = min(Float(prediction), gkDistance(position, targetPos) / max(maxSpeed, 1e-3))
             return seek(toward: targetPos + targetVel * predict)
         case .avoidAgents(let agents, let prediction):
-            var force = vector_float2(0, 0)
+            var force = SIMD2<Float>(0, 0)
             for other in agents where other !== self {
                 let relative = agentPosition2(other) + agentVelocity2(other) * Float(prediction) - position
                 let distance = gkLength(relative)
@@ -488,7 +488,7 @@ open class GKAgent2D: GKAgent {
             }
             return force * maxSpeed
         case .avoidObstacles(let obstacles, _):
-            var force = vector_float2(0, 0)
+            var force = SIMD2<Float>(0, 0)
             for obstacle in obstacles {
                 if let circle = obstacle as? GKCircleObstacle {
                     let offset = position - circle.position
@@ -500,13 +500,13 @@ open class GKAgent2D: GKAgent {
                 } else if let polygon = obstacle as? GKPolygonObstacle {
                     let verts = polygon.allVertices()
                     if gkPointInPolygon(position, verts) {
-                        force += vector_float2(cos(rotation + Float.pi), sin(rotation + Float.pi)) * maxSpeed
+                        force += SIMD2<Float>(cos(rotation + Float.pi), sin(rotation + Float.pi)) * maxSpeed
                     }
                 }
             }
             return force * maxSpeed
         case .separate(let agents, let maxDistance, _):
-            var force = vector_float2(0, 0)
+            var force = SIMD2<Float>(0, 0)
             var count: Float = 0
             for other in agents where other !== self {
                 let offset = position - agentPosition2(other)
@@ -519,7 +519,7 @@ open class GKAgent2D: GKAgent {
             if count > 0 { force /= count }
             return force * maxSpeed
         case .align(let agents, let maxDistance, _):
-            var heading = vector_float2(0, 0)
+            var heading = SIMD2<Float>(0, 0)
             var count: Float = 0
             for other in agents where other !== self {
                 if gkDistance(position, agentPosition2(other)) <= maxDistance {
@@ -527,11 +527,11 @@ open class GKAgent2D: GKAgent {
                     count += 1
                 }
             }
-            if count == 0 { return vector_float2(0, 0) }
+            if count == 0 { return SIMD2<Float>(0, 0) }
             heading /= count
             return heading - velocity
         case .cohere(let agents, let maxDistance, _):
-            var center = vector_float2(0, 0)
+            var center = SIMD2<Float>(0, 0)
             var count: Float = 0
             for other in agents where other !== self {
                 let otherPos = agentPosition2(other)
@@ -540,10 +540,10 @@ open class GKAgent2D: GKAgent {
                     count += 1
                 }
             }
-            if count == 0 { return vector_float2(0, 0) }
+            if count == 0 { return SIMD2<Float>(0, 0) }
             return seek(toward: center / count)
         case .follow(let path, _, let forward):
-            guard path.numPoints > 0 else { return vector_float2(0, 0) }
+            guard path.numPoints > 0 else { return SIMD2<Float>(0, 0) }
             let (_, index) = path.closestPoint(to: position)
             let nextIndex: Int
             if forward {
@@ -557,41 +557,48 @@ open class GKAgent2D: GKAgent {
             if gkDistance(position, closest) > path.radius {
                 return seek(toward: closest)
             }
-            return vector_float2(0, 0)
+            return SIMD2<Float>(0, 0)
         }
     }
 
-    private func agentPosition2(_ agent: GKAgent) -> vector_float2 {
+    private func agentPosition2(_ agent: GKAgent) -> SIMD2<Float> {
         if let agent2 = agent as? GKAgent2D {
             return agent2.position
         }
         if let agent3 = agent as? GKAgent3D {
-            return vector_float2(agent3.position.x, agent3.position.y)
+            return SIMD2<Float>(agent3.position.x, agent3.position.y)
         }
-        return vector_float2(0, 0)
+        return SIMD2<Float>(0, 0)
     }
 
-    private func agentVelocity2(_ agent: GKAgent) -> vector_float2 {
+    private func agentVelocity2(_ agent: GKAgent) -> SIMD2<Float> {
         if let agent2 = agent as? GKAgent2D {
             return agent2.velocity
         }
         if let agent3 = agent as? GKAgent3D {
-            return vector_float2(agent3.velocity.x, agent3.velocity.y)
+            return SIMD2<Float>(agent3.velocity.x, agent3.velocity.y)
         }
-        return vector_float2(0, 0)
+        return SIMD2<Float>(0, 0)
     }
 }
 
 open class GKAgent3D: GKAgent {
-    public var position: vector_float3 = vector_float3(0, 0, 0)
-    public var rotation: matrix_float3x3 = matrix_float3x3()
+    public var position: SIMD3<Float> = SIMD3<Float>(0, 0, 0)
     public var rightHanded: Bool = true
-    public private(set) var velocity: vector_float3 = vector_float3(0, 0, 0)
+    public private(set) var velocity: SIMD3<Float> = SIMD3<Float>(0, 0, 0)
+    var forwardAxis: SIMD3<Float> = SIMD3<Float>(0, 0, 1)
+    #if canImport(simd)
+    public var rotation = matrix_float3x3(
+        SIMD3<Float>(1, 0, 0),
+        SIMD3<Float>(0, 1, 0),
+        SIMD3<Float>(0, 0, 1)
+    )
+    #endif
 
     open override func update(deltaTime seconds: TimeInterval) {
         guard seconds > 0 else { return }
         delegate?.agentWillUpdate(self)
-        var steering = vector_float3(0, 0, 0)
+        var steering = SIMD3<Float>(0, 0, 0)
         if let behavior {
             for (goal, weight) in behavior.weightedGoals() {
                 steering += goalForce(goal) * weight
@@ -607,31 +614,34 @@ open class GKAgent3D: GKAgent {
         position += velocity * Float(seconds)
         if speed > 1e-5 {
             let forward = gkNormalize(velocity)
-            let up = vector_float3(0, 1, 0)
-            var right = vector_float3(
+            forwardAxis = forward
+            #if canImport(simd)
+            let up = SIMD3<Float>(0, 1, 0)
+            var right = SIMD3<Float>(
                 up.y * forward.z - up.z * forward.y,
                 up.z * forward.x - up.x * forward.z,
                 up.x * forward.y - up.y * forward.x
             )
             if gkLength(right) < 1e-5 {
-                right = vector_float3(1, 0, 0)
+                right = SIMD3<Float>(1, 0, 0)
             } else {
                 right = gkNormalize(right)
             }
             if !rightHanded {
                 right = -right
             }
-            let trueUp = vector_float3(
+            let trueUp = SIMD3<Float>(
                 forward.y * right.z - forward.z * right.y,
                 forward.z * right.x - forward.x * right.z,
                 forward.x * right.y - forward.y * right.x
             )
-            rotation = matrix_float3x3(columns: (right, trueUp, forward))
+            rotation = matrix_float3x3(right, trueUp, forward)
+            #endif
         }
         delegate?.agentDidUpdate(self)
     }
 
-    private func goalForce(_ goal: GKGoal) -> vector_float3 {
+    private func goalForce(_ goal: GKGoal) -> SIMD3<Float> {
         switch goal.kind {
         case .seek(let agent):
             return seek(toward: agentPosition3(agent))
@@ -640,13 +650,13 @@ open class GKAgent3D: GKAgent {
         case .reachSpeed(let targetSpeed):
             let current = gkLength(velocity)
             if current < 1e-5 {
-                return rotation.columns.2 * targetSpeed
+                return forwardAxis * targetSpeed
             }
             return gkNormalize(velocity) * (targetSpeed - current)
         case .wander(let wanderSpeed):
             wanderTheta += (GKRandomSource.sharedRandom().nextUniform() - 0.5) * 0.8
             let yaw = wanderTheta
-            let dir = vector_float3(cos(yaw), 0, sin(yaw))
+            let dir = SIMD3<Float>(cos(yaw), 0, sin(yaw))
             return dir * wanderSpeed - velocity
         case .intercept(let agent, let prediction):
             let targetPos = agentPosition3(agent)
@@ -654,31 +664,31 @@ open class GKAgent3D: GKAgent {
             let predict = min(Float(prediction), gkDistance(position, targetPos) / max(maxSpeed, 1e-3))
             return seek(toward: targetPos + targetVel * predict)
         default:
-            return vector_float3(0, 0, 0)
+            return SIMD3<Float>(0, 0, 0)
         }
     }
 
-    private func seek(toward target: vector_float3) -> vector_float3 {
+    private func seek(toward target: SIMD3<Float>) -> SIMD3<Float> {
         gkNormalize(target - position) * maxSpeed - velocity
     }
 
-    private func agentPosition3(_ agent: GKAgent) -> vector_float3 {
+    private func agentPosition3(_ agent: GKAgent) -> SIMD3<Float> {
         if let agent3 = agent as? GKAgent3D {
             return agent3.position
         }
         if let agent2 = agent as? GKAgent2D {
-            return vector_float3(agent2.position.x, agent2.position.y, 0)
+            return SIMD3<Float>(agent2.position.x, agent2.position.y, 0)
         }
-        return vector_float3(0, 0, 0)
+        return SIMD3<Float>(0, 0, 0)
     }
 
-    private func agentVelocity3(_ agent: GKAgent) -> vector_float3 {
+    private func agentVelocity3(_ agent: GKAgent) -> SIMD3<Float> {
         if let agent3 = agent as? GKAgent3D {
             return agent3.velocity
         }
         if let agent2 = agent as? GKAgent2D {
-            return vector_float3(agent2.velocity.x, agent2.velocity.y, 0)
+            return SIMD3<Float>(agent2.velocity.x, agent2.velocity.y, 0)
         }
-        return vector_float3(0, 0, 0)
+        return SIMD3<Float>(0, 0, 0)
     }
 }

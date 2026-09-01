@@ -230,7 +230,7 @@ open class GKVoronoiNoiseSource: GKNoiseSource {
         Self(frequency: frequency, displacement: displacement, distanceEnabled: distanceEnabled, seed: seed)
     }
 
-    private func cellPoint(_ ix: Int, _ iy: Int) -> vector_double2 {
+    private func cellPoint(_ ix: Int, _ iy: Int) -> SIMD2<Double> {
         var h = UInt64(bitPattern: Int64(seed))
             ^ (UInt64(bitPattern: Int64(ix)) &* 0x9E37_79B9_7F4A_7C15)
             ^ (UInt64(bitPattern: Int64(iy)) &* 0xBF58_476D_1CE4_E5B9)
@@ -239,7 +239,7 @@ open class GKVoronoiNoiseSource: GKNoiseSource {
         let fx = Double(h & 0xFFFF_FFFF) / Double(UInt32.max)
         h ^= h >> 27
         let fy = Double(h & 0xFFFF_FFFF) / Double(UInt32.max)
-        return vector_double2(Double(ix) + fx, Double(iy) + fy)
+        return SIMD2<Double>(Double(ix) + fx, Double(iy) + fy)
     }
 
     override func value(at x: Double, y: Double, z: Double) -> Double {
@@ -290,9 +290,9 @@ private enum GKNoiseOp {
 
 open class GKNoise: NSObject {
     private var op: GKNoiseOp
-    private var translation = vector_double3(0, 0, 0)
-    private var scale = vector_double3(1, 1, 1)
-    private var rotation = vector_double3(0, 0, 0)
+    private var translation = SIMD3<Double>(0, 0, 0)
+    private var scale = SIMD3<Double>(1, 1, 1)
+    private var rotation = SIMD3<Double>(0, 0, 0)
 
     public override convenience init() {
         self.init(GKConstantNoiseSource(value: 0))
@@ -331,7 +331,7 @@ open class GKNoise: NSObject {
         super.init()
     }
 
-    open func value(atPosition position: vector_float2) -> Float {
+    open func value(atPosition position: SIMD2<Float>) -> Float {
         Float(sample(Double(position.x), Double(position.y), 0))
     }
 
@@ -394,9 +394,9 @@ open class GKNoise: NSObject {
     }
     open func raiseToPower(_ power: Double) { op = .raise(GKNoise(op: op), power) }
     open func raiseToPower(_ noise: GKNoise) { op = .raiseNoise(GKNoise(op: op), noise) }
-    open func move(by delta: vector_double3) { translation = translation + delta }
-    open func scale(by factor: vector_double3) { scale = vector_double3(scale.x * factor.x, scale.y * factor.y, scale.z * factor.z) }
-    open func rotate(by radians: vector_double3) { rotation = rotation + radians }
+    open func move(by delta: SIMD3<Double>) { translation = translation + delta }
+    open func scale(by factor: SIMD3<Double>) { scale = SIMD3<Double>(scale.x * factor.x, scale.y * factor.y, scale.z * factor.z) }
+    open func rotate(by radians: SIMD3<Double>) { rotation = rotation + radians }
 
     open func applyTurbulence(frequency: Double, power: Double, roughness: Int32, seed: Int32) {
         let turbulence = GKPerlinNoiseSource(
@@ -436,9 +436,9 @@ open class GKNoise: NSObject {
 }
 
 open class GKNoiseMap: NSObject {
-    public let size: vector_double2
-    public let origin: vector_double2
-    public let sampleCount: vector_int2
+    public let size: SIMD2<Double>
+    public let origin: SIMD2<Double>
+    public let sampleCount: SIMD2<Int32>
     public let isSeamless: Bool
     private var samples: [Float]
 
@@ -447,7 +447,7 @@ open class GKNoiseMap: NSObject {
     }
 
     public convenience init(_ noise: GKNoise) {
-        self.init(noise, size: vector_double2(2, 2), origin: vector_double2(-1, -1), sampleCount: vector_int2(256, 256), seamless: false)
+        self.init(noise, size: SIMD2<Double>(2, 2), origin: SIMD2<Double>(-1, -1), sampleCount: SIMD2<Int32>(256, 256), seamless: false)
     }
 
     public convenience init(noise: GKNoise) {
@@ -456,9 +456,9 @@ open class GKNoiseMap: NSObject {
 
     public convenience init(
         noise: GKNoise,
-        size: vector_double2,
-        origin: vector_double2,
-        sampleCount: vector_int2,
+        size: SIMD2<Double>,
+        origin: SIMD2<Double>,
+        sampleCount: SIMD2<Int32>,
         seamless: Bool
     ) {
         self.init(noise, size: size, origin: origin, sampleCount: sampleCount, seamless: seamless)
@@ -466,9 +466,9 @@ open class GKNoiseMap: NSObject {
 
     public init(
         _ noise: GKNoise,
-        size: vector_double2,
-        origin: vector_double2,
-        sampleCount: vector_int2,
+        size: SIMD2<Double>,
+        origin: SIMD2<Double>,
+        sampleCount: SIMD2<Int32>,
         seamless: Bool
     ) {
         self.size = size
@@ -484,14 +484,14 @@ open class GKNoiseMap: NSObject {
                 let v = Double(y) / Double(max(height - 1, 1))
                 let px = origin.x + u * size.x
                 let py = origin.y + v * size.y
-                data[y * width + x] = noise.value(atPosition: vector_float2(Float(px), Float(py)))
+                data[y * width + x] = noise.value(atPosition: SIMD2<Float>(Float(px), Float(py)))
             }
         }
         self.samples = data
         super.init()
     }
 
-    open func value(at position: vector_int2) -> Float {
+    open func value(at position: SIMD2<Int32>) -> Float {
         let width = max(Int(sampleCount.x), 1)
         let height = max(Int(sampleCount.y), 1)
         let x = min(max(Int(position.x), 0), width - 1)
@@ -499,7 +499,7 @@ open class GKNoiseMap: NSObject {
         return samples[y * width + x]
     }
 
-    open func setValue(_ value: Float, at position: vector_int2) {
+    open func setValue(_ value: Float, at position: SIMD2<Int32>) {
         let width = max(Int(sampleCount.x), 1)
         let height = max(Int(sampleCount.y), 1)
         let x = Int(position.x)
@@ -508,7 +508,7 @@ open class GKNoiseMap: NSObject {
         samples[y * width + x] = value
     }
 
-    open func interpolatedValue(at position: vector_float2) -> Float {
+    open func interpolatedValue(at position: SIMD2<Float>) -> Float {
         let width = max(Int(sampleCount.x), 1)
         let height = max(Int(sampleCount.y), 1)
         let x = Double(position.x)
@@ -519,10 +519,10 @@ open class GKNoiseMap: NSObject {
         let y1 = min(y0 + 1, height - 1)
         let tx = Float(x - floor(x))
         let ty = Float(y - floor(y))
-        let v00 = value(at: vector_int2(Int32(max(x0, 0)), Int32(max(y0, 0))))
-        let v10 = value(at: vector_int2(Int32(x1), Int32(max(y0, 0))))
-        let v01 = value(at: vector_int2(Int32(max(x0, 0)), Int32(y1)))
-        let v11 = value(at: vector_int2(Int32(x1), Int32(y1)))
+        let v00 = value(at: SIMD2<Int32>(Int32(max(x0, 0)), Int32(max(y0, 0))))
+        let v10 = value(at: SIMD2<Int32>(Int32(x1), Int32(max(y0, 0))))
+        let v01 = value(at: SIMD2<Int32>(Int32(max(x0, 0)), Int32(y1)))
+        let v11 = value(at: SIMD2<Int32>(Int32(x1), Int32(y1)))
         let a = v00 + (v10 - v00) * tx
         let b = v01 + (v11 - v01) * tx
         return a + (b - a) * ty
