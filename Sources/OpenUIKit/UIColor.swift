@@ -148,7 +148,7 @@ public struct UITraitCollection: Equatable, Sendable {
                                                    displayScale: 2)
 }
 
-public class UIColor: Equatable {
+public class UIColor: Hashable, @unchecked Sendable {
     /// Static color, or a named semantic color resolved via traits.
     enum Storage {
         case fixed(CGColor)
@@ -255,6 +255,14 @@ public class UIColor: Equatable {
 
     public static func == (lhs: UIColor, rhs: UIColor) -> Bool {
         lhs.resolvedCGColor(with: .current) == rhs.resolvedCGColor(with: .current)
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        let color = resolvedCGColor(with: .current)
+        hasher.combine(color.red)
+        hasher.combine(color.green)
+        hasher.combine(color.blue)
+        hasher.combine(color.alpha)
     }
 
     // Fixed palette colors (values match UIKit's fixed colors).

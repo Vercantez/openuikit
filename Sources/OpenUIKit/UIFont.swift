@@ -2,8 +2,8 @@
 // Metrics are data-driven from Resources/font_metrics.json via FontEngine,
 // matching real UIKit exactly (goldens win).
 
-public struct UIFont: Equatable {
-    public enum Weight: Equatable, Sendable {
+public struct UIFont: Hashable, Sendable {
+    public enum Weight: Hashable, Sendable {
         case ultraLight, thin, light, regular, medium, semibold, bold, heavy, black
         public var name: String {
             switch self {
@@ -19,7 +19,7 @@ public struct UIFont: Equatable {
             }
         }
     }
-    public enum Design: Equatable, Sendable { case `default`, monospaced, italic }
+    public enum Design: Hashable, Sendable { case `default`, monospaced, italic }
 
     public var pointSize: CGFloat
     public var weight: Weight

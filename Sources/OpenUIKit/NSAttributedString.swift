@@ -23,7 +23,7 @@
 
 // MARK: - Underline / strikethrough style
 
-public struct NSUnderlineStyle: OptionSet, Sendable {
+public struct NSUnderlineStyle: OptionSet, Hashable, Sendable {
     public let rawValue: Int
     public init(rawValue: Int) { self.rawValue = rawValue }
 

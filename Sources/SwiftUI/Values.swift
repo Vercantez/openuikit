@@ -3,8 +3,8 @@ import Foundation
 #endif
 import OpenUIKit
 
-public struct _OpenFont: Equatable, Sendable {
-    public enum TextStyle: Equatable, Sendable {
+public struct _OpenFont: Hashable, Sendable {
+    public enum TextStyle: Hashable, Sendable {
         case largeTitle
         case title
         case title2
@@ -18,7 +18,7 @@ public struct _OpenFont: Equatable, Sendable {
         case title3
     }
 
-    public struct Weight: Equatable, Sendable {
+    public struct Weight: Hashable, Sendable {
         let value: UIFont.Weight
 
         init(_ value: UIFont.Weight) {
@@ -37,7 +37,7 @@ public struct _OpenFont: Equatable, Sendable {
     /// OpenUIKit's measured font descriptor directly.
     public typealias Design = UIFont.Design
 
-    enum Storage: Equatable, Sendable {
+    enum Storage: Hashable, Sendable {
         case textStyle(TextStyle)
         case uiFont(pointSize: CGFloat, weight: UIFont.Weight, design: UIFont.Design)
     }
@@ -169,7 +169,7 @@ public struct _OpenFont: Equatable, Sendable {
 /// so the non-Darwin representation needs no opaque CoreText object.
 public typealias CTFont = UIFont
 
-public struct _OpenColor: @unchecked Sendable {
+public struct _OpenColor: Hashable, @unchecked Sendable {
     indirect enum Storage {
         case resolved(UIColor)
         case named(String, Bundle?)
@@ -206,6 +206,46 @@ public struct _OpenColor: @unchecked Sendable {
 
     private init(storage: Storage) {
         self.storage = storage
+    }
+
+    public static func == (lhs: _OpenColor, rhs: _OpenColor) -> Bool {
+        storageEqual(lhs.storage, rhs.storage)
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        Self.hash(storage, into: &hasher)
+    }
+
+    private static func storageEqual(_ lhs: Storage, _ rhs: Storage) -> Bool {
+        switch (lhs, rhs) {
+        case (.resolved(let lhs), .resolved(let rhs)):
+            return lhs == rhs
+        case (.named(let lhsName, let lhsBundle),
+              .named(let rhsName, let rhsBundle)):
+            return lhsName == rhsName
+                && lhsBundle?.bundlePath == rhsBundle?.bundlePath
+        case (.opacity(let lhsStorage, let lhsOpacity),
+              .opacity(let rhsStorage, let rhsOpacity)):
+            return lhsOpacity == rhsOpacity && storageEqual(lhsStorage, rhsStorage)
+        default:
+            return false
+        }
+    }
+
+    private static func hash(_ storage: Storage, into hasher: inout Hasher) {
+        switch storage {
+        case .resolved(let color):
+            hasher.combine(0)
+            hasher.combine(color)
+        case .named(let name, let bundle):
+            hasher.combine(1)
+            hasher.combine(name)
+            hasher.combine(bundle?.bundlePath)
+        case .opacity(let nested, let opacity):
+            hasher.combine(2)
+            hash(nested, into: &hasher)
+            hasher.combine(opacity)
+        }
     }
 
     @MainActor

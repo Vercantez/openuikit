@@ -16,7 +16,7 @@
 // The base class is nominally immutable (Foundation shape): its properties
 // have internal setters and NSMutableParagraphStyle re-exposes them.
 
-open class NSParagraphStyle: Equatable {
+open class NSParagraphStyle: Hashable, @unchecked Sendable {
     public internal(set) var alignment: NSTextAlignment = .natural
     public internal(set) var lineSpacing: CGFloat = 0
     public internal(set) var paragraphSpacing: CGFloat = 0
@@ -60,9 +60,24 @@ open class NSParagraphStyle: Equatable {
             && a.lineBreakMode == b.lineBreakMode
             && a.hyphenationFactor == b.hyphenationFactor
     }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(alignment)
+        hasher.combine(lineSpacing)
+        hasher.combine(paragraphSpacing)
+        hasher.combine(paragraphSpacingBefore)
+        hasher.combine(lineHeightMultiple)
+        hasher.combine(minimumLineHeight)
+        hasher.combine(maximumLineHeight)
+        hasher.combine(firstLineHeadIndent)
+        hasher.combine(headIndent)
+        hasher.combine(tailIndent)
+        hasher.combine(lineBreakMode)
+        hasher.combine(hyphenationFactor)
+    }
 }
 
-open class NSMutableParagraphStyle: NSParagraphStyle {
+open class NSMutableParagraphStyle: NSParagraphStyle, @unchecked Sendable {
     public override init() { super.init() }
 
     open override var alignment: NSTextAlignment {

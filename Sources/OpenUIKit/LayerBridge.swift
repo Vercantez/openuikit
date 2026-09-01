@@ -1181,7 +1181,5 @@ public enum LayerBridge {
 // values / payloads used as cache-key components).
 extension NSTextAlignment: Hashable {}
 extension NSLineBreakMode: Hashable {}
-extension UIFont.Weight: Hashable {}
-extension UIFont.Design: Hashable {}
 extension UIViewContentMode: Hashable {}
 extension UIUserInterfaceStyle: Hashable {}

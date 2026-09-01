@@ -37,6 +37,211 @@
 #endif
 @_exported import OpenUIKit
 
+// UIKit owns the typed AttributedString keys for font and text decoration.
+// Foundation deliberately cannot define these keys because their values are
+// UIKit types.  Keep this overlay in the literal `UIKit` module so unchanged
+// application source can use `attributed.font`, `attributed.foregroundColor`,
+// and the Objective-C attribute-dictionary bridge exactly as it does on iOS.
+#if canImport(Foundation) || canImport(FoundationEssentials)
+@available(macOS 12, iOS 15, tvOS 15, watchOS 8, *)
+extension AttributeScopes {
+    public var uiKit: UIKitAttributes.Type { UIKitAttributes.self }
+
+    public struct UIKitAttributes: AttributeScope {
+        public let font: FontAttribute
+        public let paragraphStyle: ParagraphStyleAttribute
+        public let foregroundColor: ForegroundColorAttribute
+        public let backgroundColor: BackgroundColorAttribute
+        public let ligature: LigatureAttribute
+        public let kern: KernAttribute
+        public let tracking: TrackingAttribute
+        public let strikethroughStyle: StrikethroughStyleAttribute
+        public let underlineStyle: UnderlineStyleAttribute
+        public let strokeColor: StrokeColorAttribute
+        public let strokeWidth: StrokeWidthAttribute
+        public let baselineOffset: BaselineOffsetAttribute
+        public let underlineColor: UnderlineColorAttribute
+        public let strikethroughColor: StrikethroughColorAttribute
+        public let obliqueness: ObliquenessAttribute
+        public let expansion: ExpansionAttribute
+        public let textItemTag: TextItemTagAttribute
+        public let foundation: AttributeScopes.FoundationAttributes
+    }
+}
+
+@available(macOS 12, iOS 15, tvOS 15, watchOS 8, *)
+extension AttributeDynamicLookup {
+    @_disfavoredOverload
+    public subscript<T: AttributedStringKey>(
+        dynamicMember keyPath: KeyPath<AttributeScopes.UIKitAttributes, T>
+    ) -> T {
+        fatalError("AttributeDynamicLookup values are only used as key paths")
+    }
+}
+
+@available(macOS 12, iOS 15, tvOS 15, watchOS 8, *)
+extension AttributeScopes.UIKitAttributes {
+    public enum FontAttribute: AttributedStringKey, Sendable {
+        public typealias Value = OpenUIKit.UIFont
+        public static let name = "NSFont"
+    }
+
+    public enum ParagraphStyleAttribute: AttributedStringKey, Sendable {
+        public typealias Value = OpenUIKit.NSParagraphStyle
+        public static let name = "NSParagraphStyle"
+    }
+
+    public enum ForegroundColorAttribute: AttributedStringKey, Sendable {
+        public typealias Value = OpenUIKit.UIColor
+        public static let name = "NSColor"
+    }
+
+    public enum BackgroundColorAttribute: AttributedStringKey, Sendable {
+        public typealias Value = OpenUIKit.UIColor
+        public static let name = "NSBackgroundColor"
+    }
+
+    public enum LigatureAttribute: AttributedStringKey, Sendable {
+        public typealias Value = Int
+        public static let name = "NSLigature"
+    }
+
+    public enum KernAttribute: AttributedStringKey, Sendable {
+        public typealias Value = CGFloat
+        public static let name = "NSKern"
+    }
+
+    public enum TrackingAttribute: AttributedStringKey, Sendable {
+        public typealias Value = CGFloat
+        public static let name = "NSTracking"
+    }
+
+    public enum StrikethroughStyleAttribute: AttributedStringKey, Sendable {
+        public typealias Value = OpenUIKit.NSUnderlineStyle
+        public static let name = "NSStrikethrough"
+    }
+
+    public enum UnderlineStyleAttribute: AttributedStringKey, Sendable {
+        public typealias Value = OpenUIKit.NSUnderlineStyle
+        public static let name = "NSUnderline"
+    }
+
+    public enum StrokeColorAttribute: AttributedStringKey, Sendable {
+        public typealias Value = OpenUIKit.UIColor
+        public static let name = "NSStrokeColor"
+    }
+
+    public enum StrokeWidthAttribute: AttributedStringKey, Sendable {
+        public typealias Value = CGFloat
+        public static let name = "NSStrokeWidth"
+    }
+
+    public enum BaselineOffsetAttribute: AttributedStringKey, Sendable {
+        public typealias Value = CGFloat
+        public static let name = "NSBaselineOffset"
+    }
+
+    public enum UnderlineColorAttribute: AttributedStringKey, Sendable {
+        public typealias Value = OpenUIKit.UIColor
+        public static let name = "NSUnderlineColor"
+    }
+
+    public enum StrikethroughColorAttribute: AttributedStringKey, Sendable {
+        public typealias Value = OpenUIKit.UIColor
+        public static let name = "NSStrikethroughColor"
+    }
+
+    public enum ObliquenessAttribute: AttributedStringKey, Sendable {
+        public typealias Value = CGFloat
+        public static let name = "NSObliqueness"
+    }
+
+    public enum ExpansionAttribute: AttributedStringKey, Sendable {
+        public typealias Value = CGFloat
+        public static let name = "NSExpansion"
+    }
+
+    public enum TextItemTagAttribute: AttributedStringKey, Sendable {
+        public typealias Value = String
+        public static let name = "NSTextItemTag"
+    }
+}
+
+@available(macOS 12, iOS 15, tvOS 15, watchOS 8, *)
+extension AttributeContainer {
+    /// Converts OpenUIKit's Objective-C-shaped text dictionary into typed
+    /// Foundation attributes. As on Apple platforms, unknown keys and values
+    /// with the wrong dynamic type are dropped rather than trapping.
+    public init(_ dictionary: [OpenUIKit.NSAttributedString.Key: Any]) {
+        self.init()
+        for (key, value) in dictionary {
+            switch key {
+            case .font:
+                if let value = value as? OpenUIKit.UIFont {
+                    self[AttributeScopes.UIKitAttributes.FontAttribute.self] = value
+                }
+            case .paragraphStyle:
+                if let value = value as? OpenUIKit.NSParagraphStyle {
+                    self[AttributeScopes.UIKitAttributes.ParagraphStyleAttribute.self] = value
+                }
+            case .foregroundColor:
+                if let value = value as? OpenUIKit.UIColor {
+                    self[AttributeScopes.UIKitAttributes.ForegroundColorAttribute.self] = value
+                }
+            case .backgroundColor:
+                if let value = value as? OpenUIKit.UIColor {
+                    self[AttributeScopes.UIKitAttributes.BackgroundColorAttribute.self] = value
+                }
+            case .kern:
+                if let value = value as? CGFloat {
+                    self[AttributeScopes.UIKitAttributes.KernAttribute.self] = value
+                }
+            case .tracking:
+                if let value = value as? CGFloat {
+                    self[AttributeScopes.UIKitAttributes.TrackingAttribute.self] = value
+                }
+            case .underlineStyle:
+                if let value = value as? OpenUIKit.NSUnderlineStyle {
+                    self[AttributeScopes.UIKitAttributes.UnderlineStyleAttribute.self] = value
+                } else if let value = value as? Int {
+                    self[AttributeScopes.UIKitAttributes.UnderlineStyleAttribute.self] =
+                        OpenUIKit.NSUnderlineStyle(rawValue: value)
+                }
+            case .strikethroughStyle:
+                if let value = value as? OpenUIKit.NSUnderlineStyle {
+                    self[AttributeScopes.UIKitAttributes.StrikethroughStyleAttribute.self] = value
+                } else if let value = value as? Int {
+                    self[AttributeScopes.UIKitAttributes.StrikethroughStyleAttribute.self] =
+                        OpenUIKit.NSUnderlineStyle(rawValue: value)
+                }
+            case .strokeColor:
+                if let value = value as? OpenUIKit.UIColor {
+                    self[AttributeScopes.UIKitAttributes.StrokeColorAttribute.self] = value
+                }
+            case .strokeWidth:
+                if let value = value as? CGFloat {
+                    self[AttributeScopes.UIKitAttributes.StrokeWidthAttribute.self] = value
+                }
+            case .baselineOffset:
+                if let value = value as? CGFloat {
+                    self[AttributeScopes.UIKitAttributes.BaselineOffsetAttribute.self] = value
+                }
+            case .underlineColor:
+                if let value = value as? OpenUIKit.UIColor {
+                    self[AttributeScopes.UIKitAttributes.UnderlineColorAttribute.self] = value
+                }
+            case .strikethroughColor:
+                if let value = value as? OpenUIKit.UIColor {
+                    self[AttributeScopes.UIKitAttributes.StrikethroughColorAttribute.self] = value
+                }
+            default:
+                continue
+            }
+        }
+    }
+}
+#endif
+
 #if canImport(DeveloperToolsSupport)
 @_exported @_spi(OpenUIKitPreview) import DeveloperToolsSupport
 
