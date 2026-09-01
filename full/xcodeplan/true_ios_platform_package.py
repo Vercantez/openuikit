@@ -32,6 +32,9 @@ _MINIMUM_OS = 0x00120000
 _SDK_VERSION = 0x001A0100
 _MODULES = (
     "FoundationEssentials",
+    "FoundationInternationalization",
+    "Foundation",
+    "Dispatch",
     "OpenCoreGraphics",
     "OpenUIKit",
     "DeveloperToolsSupport",
@@ -40,6 +43,7 @@ _MODULES = (
     "Combine",
     "SwiftUI",
 )
+_PRIVATE_DYLIBS = ("_FoundationICU",)
 _MODULE_SUFFIXES = ("swiftmodule", "swiftdoc", "swiftsourceinfo", "abi.json")
 _OVERLAYS = (
     "Darwin",
@@ -53,6 +57,7 @@ _ROOT_ENTRIES = {
     "apple-overlays",
     "attestation",
     "internal-modules",
+    "host-tools",
     "package",
     "platform-include",
     "products",
@@ -69,6 +74,10 @@ _UNLEDGERED_REGULAR = {
 }
 _REQUIRED_ATTESTATION = {
     "artifacts.sha256",
+    "compiler-plugins.tsv",
+    "foundation-internationalization-abi.tsv",
+    "foundation-internationalization-host.tsv",
+    "foundation-internationalization-sources.tsv",
     "framework-module-loading.log",
     "opencombine-sources.json",
     "opencombine-sources.nul",
@@ -113,11 +122,41 @@ _REQUIRED_RESOURCE_FILES = (
 _REQUIRED_CLANG_MODULES = (
     "CHostClock",
     "COpenCombineHelpers",
+    "COpenDispatch",
+    "COpenRelativeTime",
+    "COpenURLTransport",
     "CPortableIO",
     "CQuartz",
     "CSTBTrueType",
     "_FoundationCShims",
 )
+_COMPILER_PLUGINS = (
+    "ObservationMacros",
+    "FoundationMacros",
+    "SwiftDataMacros",
+    "OpenUIKitPreviewMacros",
+    "OpenSwiftUIMacros",
+)
+_PLUGIN_HOST_LIBRARIES = {
+    "libSwiftSyntaxMacros.so",
+    "libSwiftSyntaxBuilder.so",
+    "libSwiftParserDiagnostics.so",
+    "libSwiftBasicFormat.so",
+    "libSwiftParser.so",
+    "libSwiftDiagnostics.so",
+    "libSwiftSyntax.so",
+}
+_PLUGIN_LINUX_LIBRARIES = {
+    "libswiftCore.so",
+    "libswift_Concurrency.so",
+    "libswiftGlibc.so",
+    "libdispatch.so",
+    "libswift_Builtin_float.so",
+    "libBlocksRuntime.so",
+    "libswiftSwiftOnoneSupport.so",
+    "libswift_StringProcessing.so",
+    "libswift_RegexParser.so",
+}
 
 
 def _sha256(path: Path) -> str:
@@ -232,7 +271,9 @@ def _completion(root: Path) -> dict[str, str]:
             f"completion keys differ: missing={sorted(expected_keys - set(values))} "
             f"extra={sorted(set(values) - expected_keys)}"
         )
-    if values["target"] != _TARGET or values["dylibs"] != str(len(_MODULES)):
+    if values["target"] != _TARGET or values["dylibs"] != str(
+        len(_MODULES) + len(_PRIVATE_DYLIBS)
+    ):
         raise TrueIOSPlatformError("completion target or dylib denominator drifted")
     try:
         swiftui_sources = int(values["swiftui_sources"])
@@ -378,6 +419,52 @@ def _validate_sdk_inputs(root: Path) -> None:
         raise TrueIOSPlatformError("SDK input ledger is empty")
 
 
+def _validate_compiler_plugins(root: Path) -> None:
+    manifest = _regular(
+        root, "attestation/compiler-plugins.tsv", "compiler plugin manifest"
+    )
+    lines = manifest.read_text(encoding="utf-8").splitlines()
+    if not lines or lines[0] != "format\ttrue-ios-compiler-plugins-v1":
+        raise TrueIOSPlatformError("compiler plugin manifest format drifted")
+    records: dict[str, tuple[str, str]] = {}
+    for index, line in enumerate(lines[1:], 2):
+        fields = line.split("\t")
+        if len(fields) != 4 or fields[0] != "plugin":
+            raise TrueIOSPlatformError(f"malformed compiler plugin line {index}")
+        module, relative, digest = fields[1:]
+        if module in records or not _SHA256.fullmatch(digest):
+            raise TrueIOSPlatformError(f"duplicate or invalid compiler plugin line {index}")
+        plugin = _regular(root, relative, f"{module} compiler plugin")
+        if plugin.name != f"lib{module}.so" or _sha256(plugin) != digest:
+            raise TrueIOSPlatformError(f"compiler plugin identity drifted: {module}")
+        header = plugin.read_bytes()[:20]
+        if (
+            len(header) < 20
+            or header[:6] != b"\x7fELF\x02\x01"
+            or struct.unpack_from("<H", header, 18)[0] != 183
+        ):
+            raise TrueIOSPlatformError(f"compiler plugin is not ELF64/AArch64: {module}")
+        records[module] = (relative, digest)
+    if set(records) != set(_COMPILER_PLUGINS):
+        raise TrueIOSPlatformError("compiler plugin module set differs")
+
+    host = root / "host-tools/swift/host"
+    linux = root / "host-tools/swift/linux"
+    plugin_directory = host / "plugins"
+    if {path.name for path in plugin_directory.iterdir()} != {
+        f"lib{module}.so" for module in _COMPILER_PLUGINS
+    }:
+        raise TrueIOSPlatformError("compiler plugin library set differs")
+    if {path.name for path in host.iterdir()} != _PLUGIN_HOST_LIBRARIES | {"plugins"}:
+        raise TrueIOSPlatformError("compiler plugin host closure differs")
+    if {path.name for path in linux.iterdir()} != _PLUGIN_LINUX_LIBRARIES:
+        raise TrueIOSPlatformError("compiler plugin Linux closure differs")
+    for name in _PLUGIN_HOST_LIBRARIES:
+        _regular(root, f"host-tools/swift/host/{name}", "plugin host dependency")
+    for name in _PLUGIN_LINUX_LIBRARIES:
+        _regular(root, f"host-tools/swift/linux/{name}", "plugin Linux dependency")
+
+
 def _compile_arguments() -> list[str]:
     include = "platform-include"
     return [
@@ -388,11 +475,24 @@ def _compile_arguments() -> list[str]:
         "-runtime-compatibility-version", "none",
         "-Xfrontend", "-disable-implicit-string-processing-module-import",
         "-Xfrontend", "-disable-objc-attr-requires-foundation-module",
+        "-load-plugin-library", "host-tools/swift/host/plugins/libObservationMacros.so",
+        "-load-plugin-library", "host-tools/swift/host/plugins/libFoundationMacros.so",
+        "-load-plugin-library", "host-tools/swift/host/plugins/libSwiftDataMacros.so",
+        "-load-plugin-library", "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
+        "-load-plugin-library", "host-tools/swift/host/plugins/libOpenSwiftUIMacros.so",
         "-Xcc", f"-I{include}/CPortableIO",
         "-Xcc", f"-I{include}/CSTBTrueType",
         "-Xcc", f"-I{include}/CHostClock",
         "-Xcc", f"-I{include}/COpenCombineHelpers",
         "-Xcc", f"-I{include}/CQuartz",
+        "-Xcc", f"-fmodule-map-file={include}/COpenDispatch/module.modulemap",
+        "-Xcc", f"-I{include}/COpenDispatch",
+        "-Xcc", f"-fmodule-map-file={include}/COpenRelativeTime/module.modulemap",
+        "-Xcc", f"-I{include}/COpenRelativeTime",
+        "-Xcc", f"-fmodule-map-file={include}/COpenURLTransport/module.modulemap",
+        "-Xcc", f"-I{include}/COpenURLTransport",
+        "-Xcc", f"-fmodule-map-file={include}/FoundationICU/_foundation_unicode/module.modulemap",
+        "-Xcc", f"-I{include}/FoundationICU",
         "-Xcc", f"-fmodule-map-file={include}/_FoundationCShims/module.modulemap",
         "-Xcc", f"-I{include}/_FoundationCShims",
     ]
@@ -407,11 +507,15 @@ def _link_arguments() -> list[str]:
         "-framework", "SwiftUI",
         "-framework", "UIKit",
         "-Lproducts",
+        "-lFoundation", "-lFoundationInternationalization", "-lDispatch",
         "-lOpenUIKit", "-lOpenCoreGraphics", "-lFoundationEssentials",
         "-lDeveloperToolsSupport", "-lCombine", "-lOpenCombine",
+        "-l_FoundationICU",
         "-Lsdk/usr/lib/swift",
         "-Lruntime-root/darwin/usr/lib/swift",
         "-lswiftCore", "-lswiftObjectiveC", "-lswift_Concurrency",
+        "-lswift_StringProcessing", "-lswiftSynchronization",
+        "-lswiftDarwin", "-lswift_errno",
         "runtime-root/darwin/usr/lib/libswiftcompat.dylib",
         "-Lruntime-root/darwin/usr/lib",
         "-Lsdk/usr/lib", "-lSystem", "-lobjc",
@@ -423,7 +527,7 @@ def _link_arguments() -> list[str]:
 def rooted_compile_arguments(root: Path, values: list[str]) -> list[str]:
     result: list[str] = []
     cursor = 0
-    path_options = {"-sdk", "-I", "-F"}
+    path_options = {"-sdk", "-I", "-F", "-load-plugin-library"}
     attached = ("-I", "-F", "-fmodule-map-file=")
     while cursor < len(values):
         token = values[cursor]
@@ -493,6 +597,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             raise TrueIOSPlatformError(f"framework module evidence is missing: {module}")
 
     _validate_sdk_inputs(root)
+    _validate_compiler_plugins(root)
     if (root / "sdk/usr/local").exists() or (root / "sdk/usr/local").is_symlink():
         raise TrueIOSPlatformError("SDK contains forbidden implicit usr/local inputs")
     overlay_directories = {
@@ -508,6 +613,11 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"platform-include/{module}/module.modulemap",
             f"{module} module map",
         )
+    _regular(
+        root,
+        "platform-include/FoundationICU/_foundation_unicode/module.modulemap",
+        "Foundation ICU module map",
+    )
     for relative in _REQUIRED_SDK_FILES:
         _regular(root, relative, "SDK link input")
     if {path.name for path in (root / "resources").iterdir()} != {"OpenUIKit"}:
@@ -521,7 +631,9 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         if actual_links.get(relative) != target:
             raise TrueIOSPlatformError(f"SDK linker alias drifted: {relative}")
 
-    expected_products = {f"lib{module}.dylib" for module in _MODULES}
+    expected_products = {
+        f"lib{module}.dylib" for module in _MODULES + _PRIVATE_DYLIBS
+    }
     if {path.name for path in (root / "products").iterdir()} != expected_products:
         raise TrueIOSPlatformError("product dylib set differs")
     frameworks = root / "sdk/System/Library/Frameworks"
@@ -563,6 +675,14 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             )
             _same_hash([raw, sdk_module, runtime_module], f"{module}.{suffix}")
 
+    for module in _PRIVATE_DYLIBS:
+        product = _regular(root, f"products/lib{module}.dylib", f"lib{module} product")
+        runtime_library = _regular(
+            root, f"runtime-root/darwin/usr/lib/lib{module}.dylib", f"runtime lib{module}"
+        )
+        _same_hash([product, runtime_library], f"lib{module}")
+        _macho(product, filetype=6, install_name=f"/usr/lib/lib{module}.dylib")
+
     for relative in _REQUIRED_RUNTIME_FILES:
         _regular(root, relative, "runtime closure file")
     host_names = {path.name for path in (root / "runtime-root/host").iterdir()}
@@ -589,6 +709,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             "sdk": "sdk",
             "frameworks": "sdk/System/Library/Frameworks",
             "libraries": "products",
+            "host_tools": "host-tools",
             "resources": "resources/OpenUIKit",
             "runtime_root": "runtime-root",
         },

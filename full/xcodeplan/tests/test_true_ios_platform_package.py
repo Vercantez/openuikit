@@ -18,6 +18,9 @@ import true_ios_platform_package as platform_package  # noqa: E402
 
 MODULES = (
     "FoundationEssentials",
+    "FoundationInternationalization",
+    "Foundation",
+    "Dispatch",
     "OpenCoreGraphics",
     "OpenUIKit",
     "DeveloperToolsSupport",
@@ -26,6 +29,7 @@ MODULES = (
     "Combine",
     "SwiftUI",
 )
+PRIVATE_DYLIBS = ("_FoundationICU",)
 SUFFIXES = ("swiftmodule", "swiftdoc", "swiftsourceinfo", "abi.json")
 VARIANT = "arm64-apple-ios-simulator"
 
@@ -71,6 +75,15 @@ def macho(*, filetype: int, install_name: str | None = None,
     return header + payload
 
 
+def elf64_aarch64(label: str) -> bytes:
+    payload = bytearray(64)
+    payload[:6] = b"\x7fELF\x02\x01"
+    struct.pack_into("<H", payload, 16, 3)
+    struct.pack_into("<H", payload, 18, 183)
+    payload.extend(label.encode("utf-8"))
+    return bytes(payload)
+
+
 class TrueIOSPlatformPackageTests(unittest.TestCase):
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory(prefix="true-ios-package-test.")
@@ -78,6 +91,8 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         for directory in (
             "apple-overlays",
             "attestation",
+            "host-tools/swift/host/plugins",
+            "host-tools/swift/linux",
             "internal-modules",
             "package",
             "platform-include",
@@ -109,6 +124,9 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         for module in (
             "CHostClock",
             "COpenCombineHelpers",
+            "COpenDispatch",
+            "COpenRelativeTime",
+            "COpenURLTransport",
             "CPortableIO",
             "CQuartz",
             "CSTBTrueType",
@@ -119,6 +137,11 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             (directory / "module.modulemap").write_text(
                 f"module {module} {{}}\n", encoding="utf-8"
             )
+        icu = self.root / "platform-include/FoundationICU/_foundation_unicode"
+        icu.mkdir(parents=True)
+        (icu / "module.modulemap").write_text(
+            "module _FoundationICU {}\n", encoding="utf-8"
+        )
 
         for relative in (
             "sdk/usr/lib/libSystem.B.tbd",
@@ -159,6 +182,13 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
                         payload
                     )
 
+        for module in PRIVATE_DYLIBS:
+            binary = macho(filetype=6, install_name=f"/usr/lib/lib{module}.dylib")
+            (self.root / f"products/lib{module}.dylib").write_bytes(binary)
+            (self.root / f"runtime-root/darwin/usr/lib/lib{module}.dylib").write_bytes(
+                binary
+            )
+
         for relative in (
             "runtime-root/darwin/usr/lib/libSystem.B.dylib",
             "runtime-root/darwin/usr/lib/libSystem.real.dylib",
@@ -183,6 +213,51 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             (self.root / f"runtime-root/host/{library}").write_text(
                 library + "\n", encoding="utf-8"
             )
+
+        plugin_modules = (
+            "ObservationMacros",
+            "FoundationMacros",
+            "SwiftDataMacros",
+            "OpenUIKitPreviewMacros",
+            "OpenSwiftUIMacros",
+        )
+        plugin_records: list[str] = ["format\ttrue-ios-compiler-plugins-v1\n"]
+        for module in plugin_modules:
+            relative = f"host-tools/swift/host/plugins/lib{module}.so"
+            plugin = self.root / relative
+            plugin.write_bytes(elf64_aarch64(module))
+            plugin_records.append(
+                f"plugin\t{module}\t{relative}\t{sha256(plugin)}\n"
+            )
+        for library in (
+            "libSwiftSyntaxMacros.so",
+            "libSwiftSyntaxBuilder.so",
+            "libSwiftParserDiagnostics.so",
+            "libSwiftBasicFormat.so",
+            "libSwiftParser.so",
+            "libSwiftDiagnostics.so",
+            "libSwiftSyntax.so",
+        ):
+            (self.root / f"host-tools/swift/host/{library}").write_bytes(
+                elf64_aarch64(library)
+            )
+        for library in (
+            "libswiftCore.so",
+            "libswift_Concurrency.so",
+            "libswiftGlibc.so",
+            "libdispatch.so",
+            "libswift_Builtin_float.so",
+            "libBlocksRuntime.so",
+            "libswiftSwiftOnoneSupport.so",
+            "libswift_StringProcessing.so",
+            "libswift_RegexParser.so",
+        ):
+            (self.root / f"host-tools/swift/linux/{library}").write_bytes(
+                elf64_aarch64(library)
+            )
+        (self.root / "attestation/compiler-plugins.tsv").write_text(
+            "".join(plugin_records), encoding="utf-8"
+        )
         loader = self.root / "runtime-root/machorun"
         loader.write_text("loader\n", encoding="utf-8")
         loader.chmod(0o755)
@@ -236,6 +311,14 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             "{}\n", encoding="utf-8"
         )
         (self.root / "attestation/opencombine-sources.nul").write_bytes(b"source.swift\0")
+        for name in (
+            "foundation-internationalization-abi.tsv",
+            "foundation-internationalization-host.tsv",
+            "foundation-internationalization-sources.tsv",
+        ):
+            (self.root / f"attestation/{name}").write_text(
+                f"format\t{name}\n", encoding="utf-8"
+            )
         self.seal()
 
     def tearDown(self) -> None:
@@ -281,7 +364,7 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         )
         (self.root / "PLATFORM_COMPLETE").write_text(
             "TRUE_IOS_PLATFORM_COMPLETE "
-            "target=arm64-apple-ios18.0-simulator dylibs=8 swiftui_sources=6 "
+            "target=arm64-apple-ios18.0-simulator dylibs=12 swiftui_sources=11 "
             f"source={self.source_subject} artifacts={sha256(artifact_ledger)} "
             f"symlinks={sha256(symlink_ledger)}\n",
             encoding="ascii",

@@ -14,6 +14,10 @@ STAGE=${STAGE:?STAGE is required}
 WORK=${WORK:?WORK is required}
 TARGET=${TARGET:-arm64-apple-macos15.0}
 MIN_OS=${MIN_OS:-15.0}
+LINK_PLATFORM=${LINK_PLATFORM:-macos}
+LINK_SDK_VERSION=${LINK_SDK_VERSION:-$MIN_OS}
+APPLE_SWIFT_USER_OVERLAYS=${APPLE_SWIFT_USER_OVERLAYS:-}
+DYLIB_INSTALL_PREFIX=${DYLIB_INSTALL_PREFIX:-@rpath}
 FOUNDATION_ICU_JOBS=${FOUNDATION_ICU_JOBS:-8}
 
 EXPECTED_FOUNDATION_COMMIT=c6793ef0c19c2cbaeba5a0e52078f129afc7dcfc
@@ -38,6 +42,16 @@ for path in "$SUPPORT_ROOT" "$SWIFT_FOUNDATION" "$SWIFT_FOUNDATION_ICU" \
     "$STAGE" "$WORK"; do
     case "$path" in /*) ;; *) die "path must be absolute: $path" ;; esac
 done
+SWIFT_OVERLAY_FLAGS=()
+if [ -n "$APPLE_SWIFT_USER_OVERLAYS" ]; then
+    case "$APPLE_SWIFT_USER_OVERLAYS" in
+        /*) ;;
+        *) die "Apple Swift overlay path must be absolute: $APPLE_SWIFT_USER_OVERLAYS" ;;
+    esac
+    [ -d "$APPLE_SWIFT_USER_OVERLAYS" ] \
+        || die "Apple Swift overlay directory is missing: $APPLE_SWIFT_USER_OVERLAYS"
+    SWIFT_OVERLAY_FLAGS=(-I "$APPLE_SWIFT_USER_OVERLAYS")
+fi
 for tool in git find cmp sha256sum swiftc clang-18 clang++-18 ld64.lld-18 \
     llvm-nm-18 llvm-otool-18 readelf xargs; do
     command -v "$tool" >/dev/null || die "required tool is missing: $tool"
@@ -204,7 +218,8 @@ clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -o "$INTL_WORK/open-foundation-internationalization-bridge.o"
 
 INTL_DARWIN=$STAGE/guest-root/darwin/usr/lib/libOpenFoundationInternationalization.dylib
-ld64.lld-18 -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS" \
+ld64.lld-18 -arch arm64 \
+    -platform_version "$LINK_PLATFORM" "$MIN_OS" "$LINK_SDK_VERSION" \
     -syslibroot "$STAGE/sdk" -dylib -dead_strip -undefined dynamic_lookup \
     -install_name /usr/lib/libOpenFoundationInternationalization.dylib \
     -o "$INTL_DARWIN" \
@@ -255,9 +270,11 @@ mapfile -d '' -t ICU_OBJECTS < <(
     find "$ICU_OBJECT_ROOT" -type f -name '*.o' -print0 | LC_ALL=C sort -z
 )
 RUNTIME_LIB=$STAGE/guest-root/darwin/usr/lib
-ld64.lld-18 -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS" \
+ld64.lld-18 -arch arm64 \
+    -platform_version "$LINK_PLATFORM" "$MIN_OS" "$LINK_SDK_VERSION" \
     -syslibroot "$STAGE/guest-root/darwin" -dylib -dead_strip \
-    -install_name @rpath/lib_FoundationICU.dylib -rpath @loader_path \
+    -install_name "$DYLIB_INSTALL_PREFIX/lib_FoundationICU.dylib" \
+    -rpath @loader_path \
     -o "$STAGE/lib/lib_FoundationICU.dylib" \
     "${ICU_OBJECTS[@]}" "$INTL_WORK/foundation-icu-cxx-threading.o" \
     "$INTL_DARWIN" "$RUNTIME_LIB/libc++.1.dylib" \
@@ -285,7 +302,7 @@ icu_bridge_load_count=$(llvm-otool-18 -L "$STAGE/lib/lib_FoundationICU.dylib" \
 [ "$icu_bridge_load_count" -eq 1 ] \
     || die "Foundation ICU runtime bridge load count $icu_bridge_load_count, expected 1"
 
-SWIFTC=(swiftc -target "$TARGET" -sdk "$STAGE/sdk"
+SWIFTC=(swiftc -target "$TARGET" -sdk "$STAGE/sdk" "${SWIFT_OVERLAY_FLAGS[@]}"
     -module-cache-path "$INTL_WORK/module-cache"
     -runtime-compatibility-version none -wmo
     -Xfrontend -disable-objc-attr-requires-foundation-module)
@@ -307,9 +324,10 @@ mapfile -d '' -t INTL_SOURCES < <(
     -emit-object -o "$INTL_WORK/FoundationInternationalization.o" \
     "${INTL_SOURCES[@]}"
 
-ld64.lld-18 -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS" \
+ld64.lld-18 -arch arm64 \
+    -platform_version "$LINK_PLATFORM" "$MIN_OS" "$LINK_SDK_VERSION" \
     -syslibroot "$STAGE/sdk" -dylib -dead_strip -ignore_auto_link \
-    -install_name @rpath/libFoundationInternationalization.dylib \
+    -install_name "$DYLIB_INSTALL_PREFIX/libFoundationInternationalization.dylib" \
     -rpath @loader_path \
     -o "$STAGE/lib/libFoundationInternationalization.dylib" \
     "$INTL_WORK/FoundationInternationalization.o" \
@@ -325,9 +343,10 @@ for dylib in lib_FoundationICU.dylib libFoundationInternationalization.dylib; do
         || die "$dylib is not an ARM64 Mach-O dylib"
 done
 [ "$(llvm-otool-18 -D "$STAGE/lib/lib_FoundationICU.dylib" | tail -n 1)" = \
-    @rpath/lib_FoundationICU.dylib ] || die 'Foundation ICU dylib ID drifted'
+    "$DYLIB_INSTALL_PREFIX/lib_FoundationICU.dylib" ] \
+    || die 'Foundation ICU dylib ID drifted'
 [ "$(llvm-otool-18 -D "$STAGE/lib/libFoundationInternationalization.dylib" | tail -n 1)" = \
-    @rpath/libFoundationInternationalization.dylib ] \
+    "$DYLIB_INSTALL_PREFIX/libFoundationInternationalization.dylib" ] \
     || die 'FoundationInternationalization dylib ID drifted'
 
 {

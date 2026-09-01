@@ -23,6 +23,9 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
     def test_builder_emits_the_split_first_party_dylib_graph(self) -> None:
         for module in (
             "FoundationEssentials",
+            "FoundationInternationalization",
+            "Foundation",
+            "Dispatch",
             "OpenCoreGraphics",
             "OpenUIKit",
             "DeveloperToolsSupport",
@@ -32,12 +35,37 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
             "SwiftUI",
         ):
             self.assertIn(f"lib{module}.dylib", self.builder)
-            self.assertIn(f"/usr/lib/lib{module}.dylib", self.builder)
+            if module != "FoundationInternationalization":
+                self.assertIn(f"/usr/lib/lib{module}.dylib", self.builder)
+        self.assertIn("PRIVATE_DYLIBS=(_FoundationICU)", self.builder)
+        self.assertIn("DYLIB_INSTALL_PREFIX=/usr/lib", self.builder)
 
         self.assertIn('TARGET=arm64-apple-ios18.0-simulator', self.builder)
         self.assertIn('PLATFORM=ios-simulator', self.builder)
         self.assertIn('SDK_VERSION=26.1', self.builder)
         self.assertIn('-framework SwiftUI -framework UIKit', self.builder)
+
+    def test_full_foundation_precedes_final_uikit_and_swiftui(self) -> None:
+        foundation = self.builder.index("32-source public Foundation facade")
+        developer_tools = self.builder.index("post-Foundation DeveloperToolsSupport")
+        swiftui = self.builder.index("-module-name SwiftUI -emit-module")
+        self.assertLess(foundation, developer_tools)
+        self.assertLess(developer_tools, swiftui)
+        self.assertIn("FOUNDATION_ICU_JOBS", self.builder)
+        self.assertIn('LINK_PLATFORM="$PLATFORM"', self.builder)
+        self.assertIn('DYLIB_INSTALL_PREFIX=/usr/lib', self.builder)
+
+    def test_platform_publishes_five_relocatable_compiler_plugins(self) -> None:
+        for module in (
+            "ObservationMacros",
+            "FoundationMacros",
+            "SwiftDataMacros",
+            "OpenUIKitPreviewMacros",
+            "OpenSwiftUIMacros",
+        ):
+            self.assertIn(f"lib{module}.so", self.builder)
+        self.assertIn("true-ios-compiler-plugins-v1", self.builder)
+        self.assertIn("host-tools", self.builder)
 
     def test_public_modules_are_consumed_from_framework_bundles(self) -> None:
         self.assertIn('FRAMEWORKS=$SDK_OUT/System/Library/Frameworks', self.builder)
