@@ -2116,18 +2116,43 @@ class PackageContractTests(unittest.TestCase):
             refusal = fixture.write_manifest(expected=2)
             self.assertIn("compile/runtime framework identities differ", refusal.stderr)
 
-        for replacement in ("missing", "Versions/C/AppKit"):
-            with self.subTest(symlink=replacement), tempfile.TemporaryDirectory() as temporary:
-                fixture = PackageFixture(Path(temporary) / "package", preview=False)
-                fixture.write_manifest()
-                link = fixture.root / "frameworks/AppKit.framework/AppKit"
-                link.unlink()
-                if replacement != "missing":
-                    os.symlink(replacement, link)
-                refusal = run_tool(
-                    "verify", "--package-root", str(fixture.root), expected=2
+        for relative, wrong_target in (
+            ("AppKit.framework/AppKit", "Versions/C/AppKit"),
+            ("AppKit.framework/Modules", "Versions/C/Modules"),
+            ("AppKit.framework/Versions/Current", "D"),
+        ):
+            for replacement in ("missing", wrong_target):
+                with (
+                    self.subTest(symlink=relative, replacement=replacement),
+                    tempfile.TemporaryDirectory() as temporary,
+                ):
+                    fixture = PackageFixture(
+                        Path(temporary) / "package", preview=False
+                    )
+                    fixture.write_manifest()
+                    link = fixture.root / "frameworks" / relative
+                    link.unlink()
+                    if replacement != "missing":
+                        os.symlink(replacement, link)
+                    refusal = run_tool(
+                        "verify", "--package-root", str(fixture.root), expected=2
+                    )
+                    self.assertIn("symlink contract drifted", refusal.stderr)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = PackageFixture(Path(temporary) / "package", preview=False)
+            write_file(fixture.root / "lib/libAppKit.dylib", "flat AppKit")
+            fixture._write_ledger()
+            ledger = fixture.root / "attestation/artifacts.tsv"
+            with ledger.open("a", encoding="utf-8", newline="\n") as handle:
+                handle.write(
+                    fixture._artifact(
+                        "framework", "AppKit", "dylib", "lib/libAppKit.dylib"
+                    )
+                    + "\n"
                 )
-                self.assertIn("symlink contract drifted", refusal.stderr)
+            refusal = fixture.write_manifest(expected=2)
+            self.assertIn("not libAppKit", refusal.stderr)
 
         for replacement in ("missing", "flat"):
             with self.subTest(link=replacement), tempfile.TemporaryDirectory() as temporary:

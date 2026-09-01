@@ -808,13 +808,22 @@ class CoreGuestPackageTests(unittest.TestCase):
             core_guest_package.validate(self.root)
         self.write_manifest(self.manifest)
 
-        link = self.root / "frameworks/AppKit.framework/AppKit"
-        link.unlink()
-        os.symlink("Versions/C/AppKit", link)
-        with self.assertRaisesRegex(
-            core_guest_package.CorePackageError, "AppKit symlink contract differs"
+        for relative, expected_target, wrong_target in (
+            ("AppKit.framework/AppKit", "Versions/Current/AppKit", "Versions/C/AppKit"),
+            ("AppKit.framework/Modules", "Versions/Current/Modules", "Versions/C/Modules"),
+            ("AppKit.framework/Versions/Current", "C", "D"),
         ):
-            core_guest_package.validate(self.root)
+            with self.subTest(symlink=relative):
+                link = self.root / "frameworks" / relative
+                link.unlink()
+                os.symlink(wrong_target, link)
+                with self.assertRaisesRegex(
+                    core_guest_package.CorePackageError,
+                    "AppKit symlink contract differs",
+                ):
+                    core_guest_package.validate(self.root)
+                link.unlink()
+                os.symlink(expected_target, link)
 
     def test_refuses_artifact_mutation_and_path_symlink(self) -> None:
         (self.root / "lib/libUIKit.dylib").write_text("changed\n", encoding="utf-8")
