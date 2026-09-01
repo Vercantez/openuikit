@@ -24,6 +24,9 @@ OPENCOMBINE_SOURCE=${OPENCOMBINE_SOURCE:-$W/scratch/opencombine-core-durable-202
 FOUNDATION_SOURCES_MANIFEST=${FOUNDATION_SOURCES_MANIFEST:-$W/full/foundation/foundation_guest_sources.txt}
 COPEN_FOUNDATION_CORE_INCLUDE=$W/full/foundation/include/COpenFoundationCore
 FOUNDATION_INTERNATIONALIZATION_BUILDER=${FOUNDATION_INTERNATIONALIZATION_BUILDER:-$W/full/foundationinternationalization/build_foundation_internationalization.sh}
+NATURAL_LANGUAGE_SOURCES_MANIFEST=${NATURAL_LANGUAGE_SOURCES_MANIFEST:-$W/full/naturallanguage/naturallanguage_guest_sources.txt}
+AUTHENTICATION_SERVICES_SOURCES_MANIFEST=${AUTHENTICATION_SERVICES_SOURCES_MANIFEST:-$W/full/authenticationservices/authenticationservices_guest_sources.txt}
+AUTHENTICATION_SERVICES_SWIFTUI_SOURCES_MANIFEST=${AUTHENTICATION_SERVICES_SWIFTUI_SOURCES_MANIFEST:-$W/full/authenticationservices/authenticationservices_swiftui_guest_sources.txt}
 OUTPUT_ROOT=${OUTPUT_ROOT:-$W/build/true-ios-platform}
 SYSTEM_FONT=${SYSTEM_FONT:-/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf}
 BOLD_FONT=${BOLD_FONT:-/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf}
@@ -98,6 +101,15 @@ grep -Fx \
 [ -f "$FOUNDATION_INTERNATIONALIZATION_BUILDER" ] \
     && [ ! -L "$FOUNDATION_INTERNATIONALIZATION_BUILDER" ] \
     || die 'FoundationInternationalization builder is missing'
+for manifest in "$NATURAL_LANGUAGE_SOURCES_MANIFEST" \
+    "$AUTHENTICATION_SERVICES_SOURCES_MANIFEST" \
+    "$AUTHENTICATION_SERVICES_SWIFTUI_SOURCES_MANIFEST"; do
+    [ -f "$manifest" ] && [ ! -L "$manifest" ] \
+        || die "first-party framework source manifest is missing: $manifest"
+done
+[ -f "$W/full/authenticationservices/SwiftUI.swiftoverlay" ] \
+    && [ ! -L "$W/full/authenticationservices/SwiftUI.swiftoverlay" ] \
+    || die 'AuthenticationServices cross-import overlay declaration is missing'
 [ -f "$SYSTEM_FONT" ] && [ ! -L "$SYSTEM_FONT" ] \
     || die "system font input is missing: $SYSTEM_FONT"
 [ -f "$BOLD_FONT" ] && [ ! -L "$BOLD_FONT" ] \
@@ -236,6 +248,17 @@ source_subject() {
             [ -n "$relative" ] || continue
             printf '%s\t%s\n' "$relative" "$(sha "$W/$relative")"
         done < "$W/full/observation/observation_guest_sources.txt"
+        for manifest in "$NATURAL_LANGUAGE_SOURCES_MANIFEST" \
+            "$AUTHENTICATION_SERVICES_SOURCES_MANIFEST" \
+            "$AUTHENTICATION_SERVICES_SWIFTUI_SOURCES_MANIFEST"; do
+            printf '%s\t%s\n' "${manifest#"$W"/}" "$(sha "$manifest")"
+            while IFS= read -r relative; do
+                [ -n "$relative" ] || continue
+                printf '%s\t%s\n' "$relative" "$(sha "$W/$relative")"
+            done < "$manifest"
+        done
+        printf '%s\t%s\n' full/authenticationservices/SwiftUI.swiftoverlay \
+            "$(sha "$W/full/authenticationservices/SwiftUI.swiftoverlay")"
         printf 'full-subject\t%s\n' "$actual_full_subject"
         printf 'opencombine-audit\t%s\n' "$(sha "$AUDIT/opencombine-sources.json")"
         printf 'true-ios-sdk-complete\t%s\n' \
@@ -678,11 +701,92 @@ mapfile -d '' -t swiftui_sources < <(
     "$OBSERVATION_DYLIB" \
     "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
 
+echo '== NaturalLanguage and AuthenticationServices first-party frameworks'
+mapfile -t natural_language_relative_sources \
+    < "$NATURAL_LANGUAGE_SOURCES_MANIFEST"
+[ "${#natural_language_relative_sources[@]}" -eq 1 ] \
+    || die 'NaturalLanguage source denominator drifted'
+natural_language_sources=()
+for relative in "${natural_language_relative_sources[@]}"; do
+    [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+        || die "NaturalLanguage source is missing or linked: $relative"
+    natural_language_sources+=("$W/$relative")
+done
+mapfile -t authentication_services_relative_sources \
+    < "$AUTHENTICATION_SERVICES_SOURCES_MANIFEST"
+[ "${#authentication_services_relative_sources[@]}" -eq 1 ] \
+    || die 'AuthenticationServices source denominator drifted'
+authentication_services_sources=()
+for relative in "${authentication_services_relative_sources[@]}"; do
+    [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+        || die "AuthenticationServices source is missing or linked: $relative"
+    authentication_services_sources+=("$W/$relative")
+done
+mapfile -t authentication_services_swiftui_relative_sources \
+    < "$AUTHENTICATION_SERVICES_SWIFTUI_SOURCES_MANIFEST"
+[ "${#authentication_services_swiftui_relative_sources[@]}" -eq 1 ] \
+    || die 'AuthenticationServices SwiftUI source denominator drifted'
+authentication_services_swiftui_sources=()
+for relative in "${authentication_services_swiftui_relative_sources[@]}"; do
+    [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+        || die "AuthenticationServices SwiftUI source is missing or linked: $relative"
+    authentication_services_swiftui_sources+=("$W/$relative")
+done
+
+"${SWIFTC[@]}" "${CFLAGS[@]}" "${FOUNDATION_CFLAGS[@]}" \
+    "${FE_FLAGS[@]}" -parse-as-library -I "$PACKAGE" \
+    -module-name NaturalLanguage -emit-module \
+    -emit-module-path "$PACKAGE/NaturalLanguage.swiftmodule" \
+    -emit-object -o "$BUILD/NaturalLanguage.o" \
+    "${natural_language_sources[@]}"
+"${SWIFTC[@]}" "${CFLAGS[@]}" "${FOUNDATION_CFLAGS[@]}" \
+    "${FE_FLAGS[@]}" -parse-as-library -I "$PACKAGE" \
+    -module-name AuthenticationServices -emit-module \
+    -emit-module-path "$PACKAGE/AuthenticationServices.swiftmodule" \
+    -emit-object -o "$BUILD/AuthenticationServices.o" \
+    "${authentication_services_sources[@]}"
+"${SWIFTC[@]}" "${CFLAGS[@]}" "${FOUNDATION_CFLAGS[@]}" \
+    "${FE_FLAGS[@]}" -parse-as-library -I "$PACKAGE" \
+    -module-name _AuthenticationServices_SwiftUI -emit-module \
+    -emit-module-path \
+        "$PACKAGE/_AuthenticationServices_SwiftUI.swiftmodule" \
+    -emit-object -o "$BUILD/AuthenticationServicesSwiftUI.o" \
+    "${authentication_services_swiftui_sources[@]}"
+mkdir -p "$PACKAGE/AuthenticationServices.swiftcrossimport"
+cp "$W/full/authenticationservices/SwiftUI.swiftoverlay" \
+    "$PACKAGE/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay"
+
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name /usr/lib/libNaturalLanguage.dylib \
+    -current_version 1.0 -compatibility_version 1.0 \
+    -L"$PRODUCTS" -lFoundation -lFoundationEssentials \
+    "${COMMON_RUNTIME[@]}" -lswiftObjectiveC -lobjc \
+    -o "$PRODUCTS/libNaturalLanguage.dylib" "$BUILD/NaturalLanguage.o" \
+    "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name /usr/lib/libAuthenticationServices.dylib \
+    -current_version 1.0 -compatibility_version 1.0 \
+    -L"$PRODUCTS" -lFoundation -lFoundationEssentials \
+    "${COMMON_RUNTIME[@]}" -lswiftObjectiveC -lswift_Concurrency -lobjc \
+    -o "$PRODUCTS/libAuthenticationServices.dylib" \
+    "$BUILD/AuthenticationServices.o" \
+    "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name /usr/lib/lib_AuthenticationServices_SwiftUI.dylib \
+    -current_version 1.0 -compatibility_version 1.0 \
+    -L"$PRODUCTS" -lAuthenticationServices -lSwiftUI -lFoundation \
+    -lFoundationEssentials "${COMMON_RUNTIME[@]}" \
+    -lswiftObjectiveC -lswift_Concurrency -lobjc \
+    -o "$PRODUCTS/lib_AuthenticationServices_SwiftUI.dylib" \
+    "$BUILD/AuthenticationServicesSwiftUI.o" \
+    "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
+
 cp -a "$INCLUDE/." "$PUBLISHED_INCLUDE/"
 PUBLIC_MODULES=(
     FoundationEssentials FoundationInternationalization Foundation Dispatch
     OpenCoreGraphics OpenUIKit DeveloperToolsSupport UIKit OpenCombine Combine
-    Symbols SwiftUI
+    Symbols SwiftUI NaturalLanguage AuthenticationServices
+    _AuthenticationServices_SwiftUI
 )
 PRIVATE_DYLIBS=(_FoundationICU)
 RUNTIME_SWIFT_MODULES=(Observation)
@@ -701,6 +805,10 @@ stage_framework() {
     done
 }
 for module in "${PUBLIC_MODULES[@]}"; do stage_framework "$module"; done
+mkdir -p \
+    "$FRAMEWORKS/AuthenticationServices.framework/Modules/AuthenticationServices.swiftcrossimport"
+cp "$PACKAGE/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay" \
+    "$FRAMEWORKS/AuthenticationServices.framework/Modules/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay"
 
 # Private transitive Swift modules live in the SDK Swift module directory; the
 # public first-party identities above remain framework modules.
@@ -776,7 +884,9 @@ if ! swiftc -target "$TARGET" -sdk "$SDK_OUT" -I "$APPLE_OVERLAYS_OUT" \
     cat "$AUDIT/framework-module-loading.log" >&2
     die 'framework-only consumer compile failed'
 fi
-for module in SwiftUI UIKit Foundation Dispatch Symbols OpenUIKit Combine OpenCombine; do
+for module in SwiftUI UIKit Foundation Dispatch Symbols OpenUIKit Combine \
+    OpenCombine NaturalLanguage AuthenticationServices \
+    _AuthenticationServices_SwiftUI; do
     expected_module_path="$FRAMEWORKS/$module.framework/Modules/$module.swiftmodule/$TARGET_VARIANT.swiftmodule"
     grep -Fq "loaded module '$module'; source: '$expected_module_path'" \
         "$AUDIT/framework-module-loading.log" \
@@ -784,6 +894,8 @@ for module in SwiftUI UIKit Foundation Dispatch Symbols OpenUIKit Combine OpenCo
 done
 "${LD[@]}" -dead_strip -exported_symbol __mh_execute_header \
     -rpath @loader_path -F"$FRAMEWORKS" -framework SwiftUI -framework UIKit \
+    -framework NaturalLanguage -framework AuthenticationServices \
+    -framework _AuthenticationServices_SwiftUI \
     -L"$PRODUCTS" -lFoundation -lFoundationInternationalization -lDispatch \
     -lOpenUIKit -lOpenCoreGraphics -lFoundationEssentials \
     -lDeveloperToolsSupport -lCombine -lOpenCombine -lSymbols -l_FoundationICU \
@@ -842,6 +954,48 @@ grep -Fq 'platform iossimulator' <<< "$probe_headers" \
 swiftui_loads=$(llvm-otool-18 -L "$stage/true-ios-swiftui-dylib-probe" \
     | awk '$1 == "/usr/lib/libSwiftUI.dylib" { count++ } END { print count + 0 }')
 [ "$swiftui_loads" -eq 1 ] || die "probe SwiftUI load count is $swiftui_loads"
+natural_language_loads=$(llvm-otool-18 -L \
+    "$stage/true-ios-swiftui-dylib-probe" \
+    | awk '$1 == "/usr/lib/libNaturalLanguage.dylib" { count++ } END { print count + 0 }')
+authentication_services_loads=$(llvm-otool-18 -L \
+    "$stage/true-ios-swiftui-dylib-probe" \
+    | awk '$1 == "/usr/lib/libAuthenticationServices.dylib" { count++ } END { print count + 0 }')
+authentication_services_overlay_loads=$(llvm-otool-18 -L \
+    "$stage/true-ios-swiftui-dylib-probe" \
+    | awk '$1 == "/usr/lib/lib_AuthenticationServices_SwiftUI.dylib" { count++ } END { print count + 0 }')
+[ "$natural_language_loads" -eq 1 ] \
+    || die "probe NaturalLanguage load count is $natural_language_loads"
+[ "$authentication_services_loads" -eq 1 ] \
+    || die "probe AuthenticationServices load count is $authentication_services_loads"
+[ "$authentication_services_overlay_loads" -eq 1 ] \
+    || die "probe AuthenticationServices overlay load count is $authentication_services_overlay_loads"
+authentication_services_overlay_base_loads=$(llvm-otool-18 -L \
+    "$PRODUCTS/lib_AuthenticationServices_SwiftUI.dylib" \
+    | awk '$1 == "/usr/lib/libAuthenticationServices.dylib" { count++ } END { print count + 0 }')
+authentication_services_overlay_swiftui_loads=$(llvm-otool-18 -L \
+    "$PRODUCTS/lib_AuthenticationServices_SwiftUI.dylib" \
+    | awk '$1 == "/usr/lib/libSwiftUI.dylib" { count++ } END { print count + 0 }')
+[ "$authentication_services_overlay_base_loads" -eq 1 ] \
+    || die 'AuthenticationServices overlay base load count drifted'
+[ "$authentication_services_overlay_swiftui_loads" -eq 1 ] \
+    || die 'AuthenticationServices overlay SwiftUI load count drifted'
+for binary in "$PRODUCTS/libNaturalLanguage.dylib" \
+    "$PRODUCTS/libAuthenticationServices.dylib" \
+    "$PRODUCTS/lib_AuthenticationServices_SwiftUI.dylib"; do
+    if llvm-otool-18 -L "$binary" \
+        | grep -Eq '/System/Library/Frameworks/(NaturalLanguage|AuthenticationServices|_AuthenticationServices_SwiftUI)\.framework/'; then
+        die "portable first-party binary loads an Apple framework: $binary"
+    fi
+done
+{
+    printf 'format\ttrue-ios-natural-auth-loads-v1\n'
+    printf 'probe\tnaturallanguage=%s\tauthenticationservices=%s\toverlay=%s\n' \
+        "$natural_language_loads" "$authentication_services_loads" \
+        "$authentication_services_overlay_loads"
+    printf 'overlay\tbase=%s\tswiftui=%s\tapple-self-load=0\n' \
+        "$authentication_services_overlay_base_loads" \
+        "$authentication_services_overlay_swiftui_loads"
+} > "$AUDIT/naturallanguage-authenticationservices-loads.tsv"
 
 HOST_LIBRARIES=(
     libdispatch.so libBlocksRuntime.so libOpenDispatchHost.so

@@ -42,6 +42,8 @@ import PhotosUI
 import Accelerate
 import Compression
 import CoreText
+import NaturalLanguage
+import AuthenticationServices
 import WebKit
 
 private func coreRequireIndefiniteSymbolEffect<Effect>(_: Effect)
@@ -881,6 +883,19 @@ struct CoreGuestPackageProbe {
                 matching: photosUIFilter
             )
         withExtendedLifetime(photosUIView) {}
+        let languageRecognizer = NLLanguageRecognizer()
+        languageRecognizer.processString(
+            "This application has excellent dark mode support and useful settings"
+        )
+        precondition(languageRecognizer.dominantLanguage == .english)
+        precondition(
+            (languageRecognizer.languageHypotheses(withMaximum: 1)[.english]
+                ?? 0) >= 0.85
+        )
+        precondition(!AuthenticationServicesPortable.isHostConfigured)
+        let webAuthenticationSession: WebAuthenticationSession =
+            EnvironmentValues().webAuthenticationSession
+        withExtendedLifetime(webAuthenticationSession) {}
         let notificationCenter = UNUserNotificationCenter.current()
         var notificationAuthorizationFailedClosed = false
         notificationCenter.requestAuthorization(options: [.alert, .sound]) {
@@ -995,7 +1010,7 @@ struct CoreGuestPackageProbe {
                 + "graphics=coreimage,quartzcore,tgmath "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-31 oslog=standard-error,signposts "
+                + "first-party=portable-33 oslog=standard-error,signposts "
                 + "security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "
                 + "commoncrypto=sha256 "
@@ -1008,6 +1023,8 @@ struct CoreGuestPackageProbe {
                 + "coretransferable=data,file,fail-closed "
                 + "photos=authorization,volatile,host-driven "
                 + "photosui=transfer,binding,host-driven "
+                + "naturallanguage=deterministic,confidence-gated "
+                + "authenticationservices=host-driven,fail-closed "
                 + "webkit=engine-unavailable preview=\(preview)"
         )
     }

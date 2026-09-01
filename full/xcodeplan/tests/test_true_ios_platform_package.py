@@ -29,6 +29,9 @@ MODULES = (
     "Combine",
     "Symbols",
     "SwiftUI",
+    "NaturalLanguage",
+    "AuthenticationServices",
+    "_AuthenticationServices_SwiftUI",
 )
 PRIVATE_DYLIBS = ("_FoundationICU",)
 SUFFIXES = ("swiftmodule", "swiftdoc", "swiftsourceinfo", "abi.json")
@@ -187,6 +190,22 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
                         payload
                     )
 
+        authentication_services_overlay = (
+            "cross-import-overlay: AuthenticationServices + SwiftUI\n"
+        )
+        overlay_relative = (
+            "AuthenticationServices.framework/Modules/"
+            "AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay"
+        )
+        for relative in (
+            "package/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay",
+            f"sdk/System/Library/Frameworks/{overlay_relative}",
+            f"runtime-root/darwin/System/Library/Frameworks/{overlay_relative}",
+        ):
+            path = self.root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(authentication_services_overlay, encoding="utf-8")
+
         for module in PRIVATE_DYLIBS:
             binary = macho(filetype=6, install_name=f"/usr/lib/lib{module}.dylib")
             (self.root / f"products/lib{module}.dylib").write_bytes(binary)
@@ -295,7 +314,13 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
 
         probe = macho(
             filetype=2,
-            loads=("/usr/lib/libSwiftUI.dylib", "/usr/lib/libUIKit.dylib"),
+            loads=(
+                "/usr/lib/libSwiftUI.dylib",
+                "/usr/lib/libUIKit.dylib",
+                "/usr/lib/libNaturalLanguage.dylib",
+                "/usr/lib/libAuthenticationServices.dylib",
+                "/usr/lib/lib_AuthenticationServices_SwiftUI.dylib",
+            ),
         )
         (self.root / "true-ios-swiftui-dylib-probe").write_bytes(probe)
 
@@ -322,7 +347,16 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         module_log = "".join(
             f"loaded module '{module}'; source: '/stage/sdk/System/Library/Frameworks/"
             f"{module}.framework/Modules/{module}.swiftmodule/{VARIANT}.swiftmodule'\n"
-            for module in ("SwiftUI", "UIKit", "OpenUIKit", "Combine", "OpenCombine")
+            for module in (
+                "SwiftUI",
+                "UIKit",
+                "OpenUIKit",
+                "Combine",
+                "OpenCombine",
+                "NaturalLanguage",
+                "AuthenticationServices",
+                "_AuthenticationServices_SwiftUI",
+            )
         )
         (self.root / "attestation/framework-module-loading.log").write_text(
             module_log, encoding="utf-8"
@@ -331,6 +365,14 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             "{}\n", encoding="utf-8"
         )
         (self.root / "attestation/opencombine-sources.nul").write_bytes(b"source.swift\0")
+        (
+            self.root / "attestation/naturallanguage-authenticationservices-loads.tsv"
+        ).write_text(
+            "format\ttrue-ios-natural-auth-loads-v1\n"
+            "probe\tnaturallanguage=1\tauthenticationservices=1\toverlay=1\n"
+            "overlay\tbase=1\tswiftui=1\tapple-self-load=0\n",
+            encoding="ascii",
+        )
         for name in (
             "foundation-internationalization-abi.tsv",
             "foundation-internationalization-host.tsv",
@@ -401,7 +443,7 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         )
         (self.root / "PLATFORM_COMPLETE").write_text(
             "TRUE_IOS_PLATFORM_COMPLETE "
-            "target=arm64-apple-ios18.0-simulator dylibs=14 swiftui_sources=11 "
+            "target=arm64-apple-ios18.0-simulator dylibs=17 swiftui_sources=11 "
             f"source={self.source_subject} artifacts={sha256(artifact_ledger)} "
             f"symlinks={sha256(symlink_ledger)}\n",
             encoding="ascii",
@@ -416,6 +458,10 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         self.assertEqual(
             metadata["swift_compile_arguments"].count("-enable-cross-import-overlays"),
             1,
+        )
+        self.assertNotIn(
+            "-disable-implicit-string-processing-module-import",
+            metadata["swift_compile_arguments"],
         )
         self.assertEqual(metadata["paths"]["resources"], "resources/OpenUIKit")
         rooted = platform_package.rooted_compile_arguments(

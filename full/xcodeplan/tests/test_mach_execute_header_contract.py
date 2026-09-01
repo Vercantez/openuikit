@@ -131,7 +131,7 @@ class MachExecuteHeaderContractTests(unittest.TestCase):
         source = TRUE_IOS_BUILDER.read_text(encoding="utf-8")
         validate_direct_link_commands(
             source,
-            expected_links=16,
+            expected_links=19,
             expected_executables=1,
             expected_linker_mentions=2,
         )
@@ -140,7 +140,7 @@ class MachExecuteHeaderContractTests(unittest.TestCase):
         ):
             validate_direct_link_commands(
                 source.replace(MACH_HEADER_EXPORT, "", 1),
-                expected_links=16,
+                expected_links=19,
                 expected_executables=1,
                 expected_linker_mentions=2,
             )
@@ -153,7 +153,7 @@ class MachExecuteHeaderContractTests(unittest.TestCase):
                     f"{MACH_HEADER_EXPORT} {MACH_HEADER_EXPORT}",
                     1,
                 ),
-                expected_links=16,
+                expected_links=19,
                 expected_executables=1,
                 expected_linker_mentions=2,
             )

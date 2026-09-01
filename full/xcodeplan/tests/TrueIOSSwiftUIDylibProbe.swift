@@ -1,6 +1,8 @@
 import SwiftUI
 import UIKit
 import Foundation
+import NaturalLanguage
+import AuthenticationServices
 
 private struct TrueIOSSwiftUIDylibView: View {
     var body: some View {
@@ -54,9 +56,24 @@ private enum TrueIOSSwiftUIDylibProbe {
         precondition(cfBridgedNSError.code == 42)
         precondition(cfBridgedNSError.userInfo["k"] as? String == "v")
 
+        let recognizer = NLLanguageRecognizer()
+        recognizer.processString(
+            "This application has excellent dark mode support and useful settings"
+        )
+        precondition(recognizer.dominantLanguage == .english)
+        precondition(
+            (recognizer.languageHypotheses(withMaximum: 1)[.english] ?? 0)
+                >= 0.85
+        )
+        precondition(!AuthenticationServicesPortable.isHostConfigured)
+        let session: WebAuthenticationSession =
+            EnvironmentValues().webAuthenticationSession
+        withExtendedLifetime(session) {}
+
         print(
             "TRUE_IOS_SWIFTUI_DYLIB_RUNTIME_OK " +
-            "descendants=\(descendants.count) text=rendered button=rendered"
+            "descendants=\(descendants.count) text=rendered button=rendered " +
+            "naturallanguage=en authenticationservices=fail-closed"
         )
     }
 }

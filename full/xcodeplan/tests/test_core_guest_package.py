@@ -35,6 +35,9 @@ class CoreGuestPackageTests(unittest.TestCase):
             "include/COpenFoundationCore",
             "include/COpenAccelerate",
             "include/COpenCompression",
+            "modules/QuickLook.swiftcrossimport",
+            "modules/PhotosUI.swiftcrossimport",
+            "modules/AuthenticationServices.swiftcrossimport",
             "objects",
             "resources/OpenUIKit/fonts",
             "guest-root/host",
@@ -62,6 +65,9 @@ class CoreGuestPackageTests(unittest.TestCase):
             "include/COpenCompression/OpenCompressionABI.h",
             "include/COpenCompression/module.modulemap",
             "guest-root/host/libOpenCompressionHost.so",
+            "modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay",
+            "modules/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay",
+            "modules/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay",
             "host-tools/swift/host/plugins/libObservationMacros.so",
             "host-tools/swift/host/plugins/libFoundationMacros.so",
             "host-tools/swift/host/plugins/libSwiftDataMacros.so",
@@ -82,6 +88,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "SwiftUI",
                 "_QuickLook_SwiftUI",
                 "_PhotosUI_SwiftUI",
+                "_AuthenticationServices_SwiftUI",
                 "Foundation",
                 "UIKit",
                 "CoreImage",
@@ -120,6 +127,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "Accelerate",
                 "Compression",
                 "CoreText",
+                "NaturalLanguage",
+                "AuthenticationServices",
                 "DeveloperToolsSupport",
             )
         )
@@ -164,6 +173,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "QuickLook",
                 "_QuickLook_SwiftUI",
                 "_PhotosUI_SwiftUI",
+                "_AuthenticationServices_SwiftUI",
                 "CoreMedia",
                 "AVFoundation",
                 "AVKit",
@@ -174,6 +184,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "Accelerate",
                 "Compression",
                 "CoreText",
+                "NaturalLanguage",
+                "AuthenticationServices",
             )
         )
         for relative in required_files:
@@ -322,6 +334,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lSwiftUI",
                 "-l_QuickLook_SwiftUI",
                 "-l_PhotosUI_SwiftUI",
+                "-l_AuthenticationServices_SwiftUI",
                 "-lFoundation",
                 "-lUIKit",
                 "-lCoreImage",
@@ -360,6 +373,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lAccelerate",
                 "-lCompression",
                 "-lCoreText",
+                "-lNaturalLanguage",
+                "-lAuthenticationServices",
             ],
             "format_version": 1,
             "compiler_plugins": compiler_plugins,
@@ -578,6 +593,9 @@ class CoreGuestPackageTests(unittest.TestCase):
             "Accelerate",
             "Compression",
             "CoreText",
+            "NaturalLanguage",
+            "AuthenticationServices",
+            "_AuthenticationServices_SwiftUI",
         ):
             for relative in (
                 f"modules/{framework}.swiftmodule",
@@ -698,6 +716,24 @@ class CoreGuestPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(
             core_guest_package.CorePackageError,
             "enable Swift cross-import overlays",
+        ):
+            core_guest_package.validate(self.root)
+
+    def test_refuses_missing_authenticationservices_cross_import_overlay(self) -> None:
+        relative = (
+            "modules/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay"
+        )
+        changed = copy.deepcopy(self.manifest)
+        changed["artifacts"] = [
+            artifact
+            for artifact in changed["artifacts"]
+            if artifact["path"] != relative
+        ]
+        (self.root / relative).unlink()
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "AuthenticationServices.swiftcrossimport",
         ):
             core_guest_package.validate(self.root)
 

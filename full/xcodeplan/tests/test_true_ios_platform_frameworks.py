@@ -34,6 +34,9 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
             "Combine",
             "Symbols",
             "SwiftUI",
+            "NaturalLanguage",
+            "AuthenticationServices",
+            "_AuthenticationServices_SwiftUI",
         ):
             self.assertIn(f"lib{module}.dylib", self.builder)
             if module != "FoundationInternationalization":
@@ -98,10 +101,14 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn('FRAMEWORKS=$SDK_OUT/System/Library/Frameworks', self.builder)
         self.assertIn('stage_framework "$module"', self.builder)
         self.assertIn('-Rmodule-loading', self.builder)
-        self.assertIn(
-            'for module in SwiftUI UIKit Foundation Dispatch Symbols OpenUIKit Combine OpenCombine',
-            self.builder,
-        )
+        for module in (
+            "SwiftUI",
+            "UIKit",
+            "NaturalLanguage",
+            "AuthenticationServices",
+            "_AuthenticationServices_SwiftUI",
+        ):
+            self.assertIn(module, self.builder)
         self.assertIn(
             'loaded module \'$module\'; source: \'$expected_module_path\'',
             self.builder,
@@ -134,6 +141,8 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
     def test_probe_exercises_swiftui_through_uikit_at_runtime(self) -> None:
         self.assertIn('import SwiftUI', self.probe)
         self.assertIn('import UIKit', self.probe)
+        self.assertIn('import NaturalLanguage', self.probe)
+        self.assertIn('import AuthenticationServices', self.probe)
         self.assertIn('UIHostingController', self.probe)
         self.assertIn('VStack(spacing:', self.probe)
         self.assertIn('Button("Advance")', self.probe)
@@ -142,6 +151,8 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn(marker, self.probe)
         self.assertIn(marker, self.builder)
         self.assertIn("let cfErrorAsError: any Error = cfError", self.probe)
+        self.assertIn("recognizer.dominantLanguage", self.probe)
+        self.assertIn("EnvironmentValues().webAuthenticationSession", self.probe)
         self.assertIn(
             "cfErrorAsError._getEmbeddedNSError() === cfError", self.probe
         )

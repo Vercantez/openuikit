@@ -43,6 +43,9 @@ _MODULES = (
     "Combine",
     "Symbols",
     "SwiftUI",
+    "NaturalLanguage",
+    "AuthenticationServices",
+    "_AuthenticationServices_SwiftUI",
 )
 _PRIVATE_DYLIBS = ("_FoundationICU",)
 _RUNTIME_SWIFT_MODULES = ("Observation",)
@@ -83,6 +86,7 @@ _REQUIRED_ATTESTATION = {
     "foundation-runtime-exports.txt",
     "foundation-runtime-undefineds.txt",
     "framework-module-loading.log",
+    "naturallanguage-authenticationservices-loads.tsv",
     "opencombine-sources.json",
     "opencombine-sources.nul",
     "runtime.log",
@@ -524,7 +528,6 @@ def _compile_arguments() -> list[str]:
         "-F", "sdk/System/Library/Frameworks",
         "-runtime-compatibility-version", "none",
         "-Xfrontend", "-enable-cross-import-overlays",
-        "-Xfrontend", "-disable-implicit-string-processing-module-import",
         "-Xfrontend", "-disable-objc-attr-requires-foundation-module",
         "-load-plugin-library", "host-tools/swift/host/plugins/libObservationMacros.so",
         "-load-plugin-library", "host-tools/swift/host/plugins/libFoundationMacros.so",
@@ -559,6 +562,9 @@ def _link_arguments() -> list[str]:
         "-F", "sdk/System/Library/Frameworks",
         "-framework", "SwiftUI",
         "-framework", "UIKit",
+        "-framework", "NaturalLanguage",
+        "-framework", "AuthenticationServices",
+        "-framework", "_AuthenticationServices_SwiftUI",
         "-Lproducts",
         "-lFoundation", "-lFoundationInternationalization", "-lDispatch",
         "-lOpenUIKit", "-lOpenCoreGraphics", "-lFoundationEssentials",
@@ -641,10 +647,28 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     )
     if "TRUE_IOS_SWIFTUI_DYLIB_RUNTIME_OK descendants=" not in runtime_log:
         raise TrueIOSPlatformError("cold SwiftUI runtime marker is missing")
+    load_attestation = _regular(
+        root,
+        "attestation/naturallanguage-authenticationservices-loads.tsv",
+        "NaturalLanguage/AuthenticationServices load attestation",
+    ).read_text(encoding="ascii")
+    expected_load_attestation = (
+        "format\ttrue-ios-natural-auth-loads-v1\n"
+        "probe\tnaturallanguage=1\tauthenticationservices=1\toverlay=1\n"
+        "overlay\tbase=1\tswiftui=1\tapple-self-load=0\n"
+    )
+    if load_attestation != expected_load_attestation:
+        raise TrueIOSPlatformError(
+            "NaturalLanguage/AuthenticationServices load attestation differs"
+        )
     module_log = _regular(
         root, "attestation/framework-module-loading.log", "module loading log"
     ).read_text(encoding="utf-8")
-    for module in ("SwiftUI", "UIKit", "OpenUIKit", "Combine", "OpenCombine"):
+    for module in (
+        "SwiftUI", "UIKit", "OpenUIKit", "Combine", "OpenCombine",
+        "NaturalLanguage", "AuthenticationServices",
+        "_AuthenticationServices_SwiftUI",
+    ):
         if f"loaded module '{module}'; source:" not in module_log or (
             f"/System/Library/Frameworks/{module}.framework/Modules/" not in module_log
         ):
@@ -735,6 +759,30 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             )
             _same_hash([raw, sdk_module, runtime_module], f"{module}.{suffix}")
 
+    overlay_relative = (
+        "AuthenticationServices.framework/Modules/"
+        "AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay"
+    )
+    overlay_source = _regular(
+        root,
+        "package/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay",
+        "AuthenticationServices cross-import overlay",
+    )
+    overlay_sdk = _regular(
+        root,
+        f"sdk/System/Library/Frameworks/{overlay_relative}",
+        "SDK AuthenticationServices cross-import overlay",
+    )
+    overlay_runtime = _regular(
+        root,
+        f"runtime-root/darwin/System/Library/Frameworks/{overlay_relative}",
+        "runtime AuthenticationServices cross-import overlay",
+    )
+    _same_hash(
+        [overlay_source, overlay_sdk, overlay_runtime],
+        "AuthenticationServices cross-import overlay",
+    )
+
     for module in _PRIVATE_DYLIBS:
         product = _regular(root, f"products/lib{module}.dylib", f"lib{module} product")
         runtime_library = _regular(
@@ -774,7 +822,13 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
 
     probe = _regular(root, "true-ios-swiftui-dylib-probe", "SwiftUI probe")
     loads = _macho(probe, filetype=2, install_name=None)
-    for required in ("/usr/lib/libSwiftUI.dylib", "/usr/lib/libUIKit.dylib"):
+    for required in (
+        "/usr/lib/libSwiftUI.dylib",
+        "/usr/lib/libUIKit.dylib",
+        "/usr/lib/libNaturalLanguage.dylib",
+        "/usr/lib/libAuthenticationServices.dylib",
+        "/usr/lib/lib_AuthenticationServices_SwiftUI.dylib",
+    ):
         if required not in loads:
             raise TrueIOSPlatformError(f"probe does not load {required}")
 

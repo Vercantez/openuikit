@@ -16,8 +16,10 @@ MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog,
 UniformTypeIdentifiers, SwiftData, UserNotifications, QuickLook, and its
 `_QuickLook_SwiftUI` cross-import overlay, CoreMedia, AVFoundation, AVKit,
 Charts, CoreTransferable, Photos, PhotosUI, and the `_PhotosUI_SwiftUI`
-cross-import overlay, Accelerate, Compression, and CoreText. These are fifty
-reusable ARM64 Mach-O platform binaries (forty-nine frameworks plus ICU), including real
+cross-import overlay, Accelerate, Compression, CoreText, NaturalLanguage,
+AuthenticationServices, and the `_AuthenticationServices_SwiftUI`
+cross-import overlay. These are fifty-three reusable ARM64 Mach-O platform
+binaries (fifty-two frameworks plus ICU), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
@@ -71,11 +73,11 @@ The semantic build order is deliberate:
    donation, resolution, and host-driven controller state.
 8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-9. Compile and link thirty-one app-facing first-party modules as independent ARM64
+9. Compile and link thirty-three app-facing first-party modules as independent ARM64
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
-10. Link all fifty reusable platform dylibs (forty-nine frameworks plus
+10. Link all fifty-three reusable platform dylibs (fifty-two frameworks plus
    ICU) and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.
@@ -209,6 +211,26 @@ single URL with the Apple-observed already-registered error, and publishes the
 URL registration API used by unchanged RevenueCat Paywalls. A native Apple
 oracle freezes the registration, duplicate-copy, invalid-file, and missing-file
 transcript used by the ARM64 Mach-O package gate.
+
+`libNaturalLanguage.dylib` publishes all measured `NLLanguage` constants and a
+stateful `NLLanguageRecognizer`. Recognition is local and deterministic: it
+combines Unicode-script classification with conservative lexical profiles,
+preserves Apple's replacement/empty-input/reset semantics, honors language
+constraints and hints, and assigns conservative confidence to ambiguous text
+so callers can apply their own threshold. It does not claim Apple's proprietary
+on-device model. Native-oracle,
+literal StatusKit/WishKit consumers, and direct Mach-O runtime gates cover the
+surface.
+
+`libAuthenticationServices.dylib` and its packaged Swift cross-import overlay
+provide the modern `WebAuthenticationSession` environment value and async
+authentication call used by unchanged applications. A startup-only host
+boundary receives browser-start/cancel events and may complete a request only
+with a callback URL whose scheme matches the request. Missing hosts,
+concurrent sessions, mismatched callbacks, cancellation, and stale completion
+all fail with typed AuthenticationServices errors; the platform never invents
+successful credentials. The overlay's direct base/SwiftUI loads and the
+consumer's three framework loads are audited exactly once.
 
 The pinned swift-foundation revision has an upstream-corrected final-class
 Predicate key-path bug. The builder verifies exact source and patch hashes,
@@ -382,6 +404,11 @@ The argument arrays are evaluated with the package root as the current working
 directory. No absolute build path is permitted. The parallel `.rsp` files are
 NUL-delimited UTF-8 for diagnostics only; consumers use the JSON arrays. Verify
 any moved package with:
+
+The published app compile contract keeps Swift's normal implicit
+StringProcessing import enabled. Platform framework compilation suppresses it
+internally to audit dependencies, but exporting that internal hygiene flag
+would break unchanged sources such as StatusKit's ordinary `Regex(...)` use.
 
 ```sh
 python3 -B full/xcodeplan/core_guest_package.py PACKAGE --emit-summary

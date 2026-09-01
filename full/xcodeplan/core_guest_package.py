@@ -82,6 +82,7 @@ _REQUIRED_FRAMEWORKS = (
     "SwiftUI",
     "_QuickLook_SwiftUI",
     "_PhotosUI_SwiftUI",
+    "_AuthenticationServices_SwiftUI",
     "Foundation",
     "UIKit",
     "CoreImage",
@@ -120,6 +121,8 @@ _REQUIRED_FRAMEWORKS = (
     "Accelerate",
     "Compression",
     "CoreText",
+    "NaturalLanguage",
+    "AuthenticationServices",
 )
 _REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(
     f"-l{name}" for name in _REQUIRED_FRAMEWORKS
@@ -899,6 +902,9 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     )
     required_artifacts.update(
         {
+            f"{paths['modules']}/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay",
+            f"{paths['modules']}/PhotosUI.swiftcrossimport/SwiftUI.swiftoverlay",
+            f"{paths['modules']}/AuthenticationServices.swiftcrossimport/SwiftUI.swiftoverlay",
             f"{paths['includes']}/CoreImage/CoreImage.h",
             f"{paths['includes']}/CoreImage/CIFilterBuiltins.h",
             f"{paths['includes']}/CoreImage/module.modulemap",
