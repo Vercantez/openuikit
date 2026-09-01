@@ -342,7 +342,11 @@ class PhysicalReplayTests(unittest.TestCase):
         runtime = machorun / "darwin/usr/lib/libSystem.B.dylib"
         runtime.parent.mkdir(parents=True)
         runtime.write_bytes(b"runtime\n")
+        swift_core = machorun / "darwin/usr/lib/swift/libswiftCore.dylib"
+        swift_core.parent.mkdir(parents=True)
+        swift_core.write_bytes(b"canonical Swift core runtime\n")
         loader_hash = hashlib.sha256(loader.read_bytes()).hexdigest()
+        swift_core_hash = hashlib.sha256(swift_core.read_bytes()).hexdigest()
 
         staged = self.root / "staged"
         for relative in ("sysroot_fe4", "mrroot", "mrroot_fe"):
@@ -430,6 +434,8 @@ class PhysicalReplayTests(unittest.TestCase):
                 machorun_tree,
                 "--expected-machorun-loader-sha256",
                 loader_hash,
+                "--expected-machorun-swift-core-sha256",
+                swift_core_hash,
                 "--developer-tools-support-module",
                 str(preview_module),
                 "--developer-tools-support-object",
@@ -476,6 +482,11 @@ class PhysicalReplayTests(unittest.TestCase):
         copied_loader = replay / "machorun/build/machorun"
         self.assertEqual(copied_loader.read_bytes(), loader.read_bytes())
         self.assertNotEqual(copied_loader.stat().st_ino, loader.stat().st_ino)
+        copied_swift_core = (
+            replay / "machorun/darwin/usr/lib/swift/libswiftCore.dylib"
+        )
+        self.assertEqual(copied_swift_core.read_bytes(), swift_core.read_bytes())
+        self.assertNotEqual(copied_swift_core.stat().st_ino, swift_core.stat().st_ino)
         copied_preview = replay / "inputs/preview/DeveloperToolsSupport.swiftmodule"
         self.assertEqual(copied_preview.read_bytes(), preview_module.read_bytes())
         self.assertNotEqual(copied_preview.stat().st_ino, preview_module.stat().st_ino)
