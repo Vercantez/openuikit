@@ -49,6 +49,20 @@ public extension CustomNSError where Self: RawRepresentable,
     var errorCode: Int { Int(truncatingIfNeeded: rawValue) }
 }
 
+/// Swift-runtime entry point for the eager portion of an Error's NSError
+/// user-info. Darwin Foundation returns exactly the CustomNSError dictionary
+/// here; LocalizedError and RecoverableError values are supplied through the
+/// overlay's separate value-provider path and must not be duplicated.
+public func _getErrorDefaultUserInfo<T: Error>(_ error: T) -> AnyObject? {
+    let userInfo: [String: Any]
+    if let custom = error as? any CustomNSError {
+        userInfo = custom.errorUserInfo
+    } else {
+        userInfo = [:]
+    }
+    return userInfo as AnyObject
+}
+
 public protocol RecoverableError: Error {
     var recoveryOptions: [String] { get }
     func attemptRecovery(optionIndex recoveryOptionIndex: Int) -> Bool

@@ -544,6 +544,7 @@ llvm-nm-18 --defined-only --extern-only --just-symbol-name \
     "$PRODUCTS/libFoundation.dylib" | LC_ALL=C sort -u \
     > "$BUILD/foundation-runtime-exports.txt"
 for symbol in \
+    '_$s10Foundation24_getErrorDefaultUserInfoyyXlSgxs0C0RzlF' \
     '_$s10Foundation21_bridgeNSErrorToError_3outSbSo0C0C_SpyxGtAA021_ObjectiveCBridgeableE0RzlF' \
     '_$s10Foundation26_ObjectiveCBridgeableErrorMp'; do
     [ "$(grep -Fxc "$symbol" "$BUILD/foundation-runtime-exports.txt")" -eq 1 ] \

@@ -170,6 +170,26 @@ private func errorOracle() {
     field("error.cocoa.localized", cocoa.localizedDescription)
     field("error.cocoa.reason", cocoa.localizedFailureReason ?? "nil")
 
+    let customDefaultInfo =
+        _getErrorDefaultUserInfo(CorpusCustomError.denied) as? [String: Any] ?? [:]
+    field("error.default-user-info.custom-count", customDefaultInfo.count)
+    field(
+        "error.default-user-info.custom-reason",
+        customDefaultInfo[NSLocalizedFailureReasonErrorKey] as? String ?? "nil"
+    )
+    field(
+        "error.default-user-info.localized-omitted",
+        customDefaultInfo[NSLocalizedDescriptionKey] == nil
+    )
+    field(
+        "error.default-user-info.plain-count",
+        (_getErrorDefaultUserInfo(PlainError.broken) as? [String: Any])?.count ?? -1
+    )
+    field(
+        "error.default-user-info.recoverable-count",
+        (_getErrorDefaultUserInfo(CorpusRecoverableError()) as? [String: Any])?.count ?? -1
+    )
+
     let plainBridge = PlainError.broken as NSError
     field("error.bridge.plain-domain-suffix", plainBridge.domain.hasSuffix("PlainError"))
     field("error.bridge.plain-code", plainBridge.code)

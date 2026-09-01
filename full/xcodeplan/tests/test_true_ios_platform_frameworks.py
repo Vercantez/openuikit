@@ -46,6 +46,10 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertLess(runtime_search, inherited_search)
         self.assertIn("DYLIB_INSTALL_PREFIX=/usr/lib", self.builder)
         self.assertIn(
+            "_$s10Foundation24_getErrorDefaultUserInfoyyXlSgxs0C0RzlF",
+            self.builder,
+        )
+        self.assertIn(
             "_$s10Foundation21_bridgeNSErrorToError_3outSbSo0C0C_"
             "SpyxGtAA021_ObjectiveCBridgeableE0RzlF",
             self.builder,

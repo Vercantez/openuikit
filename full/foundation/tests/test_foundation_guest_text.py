@@ -90,9 +90,9 @@ class FoundationGuestTextTests(unittest.TestCase):
         self.assertEqual(len(COMPAT_GOLDEN.read_text().splitlines()), 35)
         self.assertEqual(
             hashlib.sha256(STRUCTURED_GOLDEN.read_bytes()).hexdigest(),
-            "28d3b8fab24ad0c5bb1faaf89e4454516d84aa84d3e2ac2149514e68d83dc017",
+            "0c9ceb2830f41181f4b96cd90ae30a437a7d6894a1deb7c834e7a6f153d67134",
         )
-        self.assertEqual(len(STRUCTURED_GOLDEN.read_text().splitlines()), 80)
+        self.assertEqual(len(STRUCTURED_GOLDEN.read_text().splitlines()), 85)
         self.assertEqual(
             hashlib.sha256(NSSTRING_GOLDEN.read_bytes()).hexdigest(),
             "472ce641b97e460a14b19e80a10bb60af3fa532df6d0383799a9e58ba2d87486",
@@ -206,6 +206,8 @@ class FoundationGuestTextTests(unittest.TestCase):
             "self.domain = \"\"",
             "public func _convertErrorToNSError(_ error: any Error) -> NSError",
             "public func _convertNSErrorToError(_ error: NSError?) -> any Error",
+            "public func _getErrorDefaultUserInfo<T: Error>(_ error: T) -> AnyObject?",
+            "userInfo = custom.errorUserInfo",
             "public protocol _ObjectiveCBridgeableError: Error",
             "@_silgen_name(\"$s10Foundation21_bridgeNSErrorToError_3outSbSo0C0C_",
             "public func _bridgeNSErrorToError<T: _ObjectiveCBridgeableError>",

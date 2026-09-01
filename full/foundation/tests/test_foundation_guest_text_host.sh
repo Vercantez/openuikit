@@ -20,9 +20,9 @@ STRUCTURED_GOLDEN=$ROOT/full/foundation/tests/foundation-guest-structured-data-a
 NSSTRING_GOLDEN=$ROOT/full/foundation/tests/foundation-guest-nsstring-apple-2026-08-30.txt
 EXPECTED_GOLDEN_SHA=d238c2ea2e2b252a433a56660e1e7c2a23b2851a665874db7d432b4e573c40e0
 EXPECTED_COMPAT_GOLDEN_SHA=07a1d25c7707614ae7cf8b18d847f7da2fd008e4c3879ded01830085985611ac
-EXPECTED_STRUCTURED_GOLDEN_SHA=28d3b8fab24ad0c5bb1faaf89e4454516d84aa84d3e2ac2149514e68d83dc017
+EXPECTED_STRUCTURED_GOLDEN_SHA=0c9ceb2830f41181f4b96cd90ae30a437a7d6894a1deb7c834e7a6f153d67134
 EXPECTED_NSSTRING_GOLDEN_SHA=472ce641b97e460a14b19e80a10bb60af3fa532df6d0383799a9e58ba2d87486
-EXPECTED_SOURCE_DIGEST=f8ef7e22d71965b29712d78649abf8a1a0e47fd7519382f5e90f7d1734d0b804
+EXPECTED_SOURCE_DIGEST=ad708efb59f03f2e23bb1cbb0273e5e1f393414cc964efd298c9b5b98106d9d1
 
 FOUNDATION_SOURCES=(
     "$ROOT/full/foundation/NSString.swift"
@@ -489,6 +489,9 @@ done
 
 xcrun nm -gU "$STRUCTURED/Foundation.o" | \
     xcrun swift-demangle > "$OUT/structured-foundation-symbols.txt"
+xcrun nm -gU "$STRUCTURED/Foundation.o" | awk '{print $NF}' | \
+    grep -Fx '_$s10Foundation24_getErrorDefaultUserInfoyyXlSgxs0C0RzlF' \
+    >/dev/null || die "missing exact Swift-runtime error user-info entry point"
 for symbol in \
     'Foundation.NSString.init(string:' \
     'Foundation.NSString.character(at:' \
@@ -568,7 +571,7 @@ final_source_digest=$(source_digest)
 
 printf '%s\n' \
     "FOUNDATION_GUEST_TEXT_HOST_OK rows=86 characters=26 "\
-"runtime=2 identity=8 structured=80 structured-negatives=4 nsstring=46 nsstring-negatives=3 uikit-reexport=1 adversarial=4 sha256=$initial_source_digest"
+"runtime=2 identity=8 structured=85 structured-negatives=4 nsstring=46 nsstring-negatives=3 uikit-reexport=1 adversarial=4 sha256=$initial_source_digest"
 if [ "${FOUNDATION_GUEST_TEXT_KEEP_OUTPUT:-0}" = 1 ]; then
     printf 'output-root\t%s\n' "$OUT"
 fi
