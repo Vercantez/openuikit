@@ -65,31 +65,29 @@ enum _UTRegistry {
         }
     }
 
-    static func declaration(_ identifier: String) -> NSDictionary? {
+    static func declaration(_ identifier: String) -> [String: Any]? {
         guard let canonical = canonicalIdentifier(identifier),
               let record = records[canonical]
         else {
             return nil
         }
-        let declaration = NSMutableDictionary()
-        declaration.setObject(canonical as NSString, forKey: kUTTypeIdentifierKey)
+        var declaration: [String: Any] = [
+            kUTTypeIdentifierKey: canonical
+        ]
         if record.parents.count == 1 {
-            declaration.setObject(record.parents[0] as NSString, forKey: kUTTypeConformsToKey)
+            declaration[kUTTypeConformsToKey] = record.parents[0]
         } else if record.parents.count > 1 {
-            declaration.setObject(
-                record.parents.map { $0 as NSString } as NSArray,
-                forKey: kUTTypeConformsToKey
-            )
+            declaration[kUTTypeConformsToKey] = record.parents
         }
-        let tags = NSMutableDictionary()
+        var tags: [String: Any] = [:]
         if !record.filenameExtensions.isEmpty {
-            tags.setObject(tagValue(record.filenameExtensions), forKey: kUTTagClassFilenameExtension)
+            tags[kUTTagClassFilenameExtension] = tagValue(record.filenameExtensions)
         }
         if !record.mimeTypes.isEmpty {
-            tags.setObject(tagValue(record.mimeTypes), forKey: kUTTagClassMIMEType)
+            tags[kUTTagClassMIMEType] = tagValue(record.mimeTypes)
         }
-        if tags.count > 0 {
-            declaration.setObject(tags, forKey: kUTTypeTagSpecificationKey)
+        if !tags.isEmpty {
+            declaration[kUTTypeTagSpecificationKey] = tags
         }
         return declaration
     }
@@ -150,10 +148,10 @@ enum _UTRegistry {
     }
 
     private static func classify(_ tagClass: String) -> TagClass {
-        if identifiersEqual(tagClass, kUTTagClassFilenameExtension as String) {
+        if identifiersEqual(tagClass, kUTTagClassFilenameExtension) {
             return .filenameExtension
         }
-        if identifiersEqual(tagClass, kUTTagClassMIMEType as String) {
+        if identifiersEqual(tagClass, kUTTagClassMIMEType) {
             return .mimeType
         }
         return .unknown
@@ -168,10 +166,7 @@ enum _UTRegistry {
     }
 
     private static func tagValue(_ tags: [String]) -> Any {
-        if tags.count == 1 {
-            return tags[0] as NSString
-        }
-        return tags.map { $0 as NSString } as NSArray
+        tags.count == 1 ? tags[0] : tags
     }
 
     private static func record(for identifier: String) -> _UTRecord? {
