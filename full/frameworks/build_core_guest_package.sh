@@ -237,9 +237,9 @@ EXPECTED_COLLECTIONS_COMMIT=9bf03ff58ce34478e66aaee630e491823326fd06
 EXPECTED_COLLECTIONS_TREE=5e4de96f40ccf147dab967f38cb7988ecd933c27
 EXPECTED_OPENCOMBINE_COMMIT=1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b
 EXPECTED_OPENCOMBINE_TREE=66a9d91efc910c7577e40b2dec166a2de427594a
-EXPECTED_MACHORUN_COMMIT=74f46d3b02b372e14f9ca9cee3d8a76ccc96fccb
-EXPECTED_MACHORUN_TREE=902fdd27b904f88b86b58f61efa73785235d83ad
-EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA=c076cfa9f5c797d2f69f156e87fedb6c035a8747ad2055b82da9a99530ce5af4
+EXPECTED_MACHORUN_COMMIT=d359cd37ac7f12a5048f4993eab6efd8259d9890
+EXPECTED_MACHORUN_TREE=9072be6c7805264341f1b298c4f7bb0d1bd2587f
+EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA=bb73d86e8daf09c256edc469737f0c6fd6ca6642ec4480b4819f8378b403904e
 SWIFT_CORE_REQUIRED_AVAILABILITY_SYMBOL='_$ss042_stdlib_isOSVersionAtLeastOrVariantVersiondE0yBi1_Bw_BwBwBwBwBwtF'
 EXPECTED_MACHORUN_GROUP_FIXTURE_SHA=d90194ae586e14f652435e4764d4b13d338be53b95da10cf73df4d1955895624
 EXPECTED_MACHORUN_GROUP_GOLDEN_SHA=671c6a3487332fa71c9fa398de9015b37f38f97978a0ebcdd66fdce69f5562d4
@@ -254,13 +254,21 @@ EXPECTED_MACHORUN_FTS_EXIT_SHA=9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc
 EXPECTED_MACHORUN_FTS_SOURCE_SHA=dcd6ce46373dcbbf3fd9b6b413ce4f1bd2ee561bd9cb6c1d20065a62b86d7f05
 EXPECTED_MACHORUN_FTS_SUMMARY_SHA=87a60c1363f50ecaf9ba08108fd6ab0a03cde70c14449ad8c7f7c44edb677670
 EXPECTED_MACHORUN_FTS_LIBSYSTEM_SOURCE_SHA=$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA
-EXPECTED_MACHORUN_COPYFILE_FIXTURE_SHA=e4488eaa99591657f1434b8d6e4971bae8fe3b888622b37a81ef59da6d9d1a9b
+EXPECTED_MACHORUN_COPYFILE_FIXTURE_SHA=d1c2bce67013ba40f389907580c7cc87a86203e651c813e2bc068f369c4e9d2a
 EXPECTED_MACHORUN_COPYFILE_GOLDEN_SHA=d467e161e746a4bebd07f0b8bba12fa68914e59b5ef345fed6fa808bdaf6bd86
 EXPECTED_MACHORUN_COPYFILE_STDERR_SHA=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
 EXPECTED_MACHORUN_COPYFILE_EXIT_SHA=9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa
-EXPECTED_MACHORUN_COPYFILE_SOURCE_SHA=d5dd3d1c522d9cdc5d44bffc1708d52670d9d693ac17203fd4f3d145dceb50ff
-EXPECTED_MACHORUN_COPYFILE_SUMMARY_SHA=58bbbff5f040a8d63517a193d10f53bfdd6d2cf45f0c5135889ca91b7cb9976c
+EXPECTED_MACHORUN_COPYFILE_SOURCE_SHA=e8407a7753a447c89c2f93513f3ce06282020fff820169011f8dc643314b1c2b
+EXPECTED_MACHORUN_COPYFILE_SUMMARY_SHA=ced87f863ec09d0793d89641867a26e46219dbded8251e99dd824fa823e4efda
+EXPECTED_MACHORUN_COPYFILE_XATTR_GATE_SHA=23cf9bf53f83196fcb17515fe42bbd2654df5354cc24573d22a87cc712b3a7ca
 EXPECTED_MACHORUN_COPYFILE_LIBSYSTEM_SOURCE_SHA=$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA
+EXPECTED_MACHORUN_STATFS_FIXTURE_SHA=61e88ded4231e581fcbec2916e148c77375c04811b0b515682509f3fe2c66919
+EXPECTED_MACHORUN_STATFS_GOLDEN_SHA=a60e1cc80da7e784a05268a1e8a5e8a895a0b89f1d6d728a8674b13b74a1871f
+EXPECTED_MACHORUN_STATFS_STDERR_SHA=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+EXPECTED_MACHORUN_STATFS_EXIT_SHA=9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa
+EXPECTED_MACHORUN_STATFS_SOURCE_SHA=d3a5e8026d10c76f3a759d1503065a29558a5a3bc94c5dbb3928350d7a03fac5
+EXPECTED_MACHORUN_STATFS_SUMMARY_SHA=452aac764d0c73cfdb5fa3974dac358447a00a6d4dcea703bf0e6dc629705db6
+EXPECTED_MACHORUN_STATFS_LIBSYSTEM_SOURCE_SHA=$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA
 EXPECTED_MACHORUN_QUOTA_FIXTURE_SHA=79b88f72fa2f1a844aaeae05564f2da7e305080b97422ef602a040d04f57f166
 EXPECTED_MACHORUN_QUOTA_GOLDEN_SHA=13ee8b893730f6f8e9bff25be80562359006648b167d0c94c6bb9eb6ee7d2a18
 EXPECTED_MACHORUN_QUOTA_SOURCE_SHA=5b091a2842a95283bb575f01d8b6a0eaa180158b1107f61c8d4036e036848f6f
@@ -2468,6 +2476,7 @@ COPYFILE_STDERR=$MACHORUN/tests/expected/copyfile.stderr
 COPYFILE_EXIT=$MACHORUN/tests/expected/copyfile.exit
 COPYFILE_SOURCE=$MACHORUN/tests/src/copyfile.c
 COPYFILE_SUMMARY=$MACHORUN/tests/meta/copyfile.summary.txt
+COPYFILE_XATTR_GATE=$MACHORUN/scripts/copyfile_xattr_unavailable.sh
 require_hash "$COPYFILE_FIXTURE" "$EXPECTED_MACHORUN_COPYFILE_FIXTURE_SHA" \
     machorun-copyfile-fixture
 require_hash "$COPYFILE_GOLDEN" "$EXPECTED_MACHORUN_COPYFILE_GOLDEN_SHA" \
@@ -2480,6 +2489,9 @@ require_hash "$COPYFILE_SOURCE" "$EXPECTED_MACHORUN_COPYFILE_SOURCE_SHA" \
     machorun-copyfile-source
 require_hash "$COPYFILE_SUMMARY" "$EXPECTED_MACHORUN_COPYFILE_SUMMARY_SHA" \
     machorun-copyfile-summary
+require_hash "$COPYFILE_XATTR_GATE" \
+    "$EXPECTED_MACHORUN_COPYFILE_XATTR_GATE_SHA" \
+    machorun-copyfile-xattr-unavailable-gate
 require_hash "$MACHORUN/darwin/src/posix.c" \
     "$EXPECTED_MACHORUN_COPYFILE_LIBSYSTEM_SOURCE_SHA" \
     machorun-copyfile-libsystem-source
@@ -2510,6 +2522,96 @@ cp "$WORK/copyfile-macho.stdout" "$WORK/copyfile-macho.log"
 printf '%s\n' \
     'OPEN_FOUNDATION_COPYFILE_OK state=owned-paths,pointers objects=regular,symlink,directory data=byte-copy stat=owner,mode,times xattr=darwin-mapped clone=fallback oracle=apple-exact' \
     >> "$WORK/copyfile-macho.log"
+
+# The ordinary Apple differential lives on /tmp, where Linux xattrs work. The
+# production package itself is built on Docker Desktop's virtiofs bind, where
+# listxattr reports Linux EOPNOTSUPP. Exercise that real second route before a
+# Foundation runtime can discover it indirectly while copying a bundled font.
+COPYFILE_XATTR_UNAVAILABLE_ROOT=$WORK/copyfile-xattr-unavailable-probe
+[ ! -e "$COPYFILE_XATTR_UNAVAILABLE_ROOT" ] \
+    || die 'copyfile xattr-unavailable probe root already exists'
+set +e
+LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+MACHORUN_ROOT="$RUNTIME" \
+    "$RUNTIME/machorun" "$COPYFILE_FIXTURE" \
+        "$COPYFILE_XATTR_UNAVAILABLE_ROOT" \
+    > "$WORK/copyfile-xattr-unavailable.stdout" \
+    2> "$WORK/copyfile-xattr-unavailable.stderr"
+copyfile_xattr_status=$?
+set -e
+printf '%s\n' "$copyfile_xattr_status" \
+    > "$WORK/copyfile-xattr-unavailable.exit"
+[ "$copyfile_xattr_status" -eq 0 ] \
+    || die 'Mach-O copyfile failed on an xattr-unavailable source filesystem'
+cmp "$COPYFILE_STDERR" "$WORK/copyfile-xattr-unavailable.stderr" \
+    || die 'Mach-O copyfile xattr-unavailable route produced unexpected stderr'
+copyfile_xattr_marker_count=$(awk \
+    '$0 == "xattr-unavailable fallback=success run-in-place=neutral" { count++ } END { print count + 0 }' \
+    "$WORK/copyfile-xattr-unavailable.stdout")
+[ "$copyfile_xattr_marker_count" -eq 1 ] \
+    || die "copyfile xattr-unavailable marker count $copyfile_xattr_marker_count, expected 1"
+awk '$0 != "xattr-unavailable fallback=success run-in-place=neutral"' \
+    "$WORK/copyfile-xattr-unavailable.stdout" \
+    > "$WORK/copyfile-xattr-unavailable.oracle-projection"
+cmp "$COPYFILE_GOLDEN" "$WORK/copyfile-xattr-unavailable.oracle-projection" \
+    || die 'copyfile xattr-unavailable route drifted outside its explicit marker'
+[ ! -e "$COPYFILE_XATTR_UNAVAILABLE_ROOT" ] \
+    || die 'copyfile xattr-unavailable fixture left its probe root behind'
+{
+    cat "$WORK/copyfile-xattr-unavailable.stdout"
+    printf '%s\n' \
+        'OPEN_FOUNDATION_COPYFILE_XATTR_UNAVAILABLE_OK source=virtiofs errno=EOPNOTSUPP metadata=absent copy=success'
+} > "$WORK/copyfile-xattr-unavailable-macho.log"
+
+echo '== prove genuine Darwin statfs/fstatfs layout and mount translation'
+STATFS_FIXTURE=$MACHORUN/tests/bin/statfs
+STATFS_GOLDEN=$MACHORUN/tests/expected/statfs.stdout
+STATFS_STDERR=$MACHORUN/tests/expected/statfs.stderr
+STATFS_EXIT=$MACHORUN/tests/expected/statfs.exit
+STATFS_SOURCE=$MACHORUN/tests/src/statfs.c
+STATFS_SUMMARY=$MACHORUN/tests/meta/statfs.summary.txt
+require_hash "$STATFS_FIXTURE" "$EXPECTED_MACHORUN_STATFS_FIXTURE_SHA" \
+    machorun-statfs-fixture
+require_hash "$STATFS_GOLDEN" "$EXPECTED_MACHORUN_STATFS_GOLDEN_SHA" \
+    machorun-statfs-golden
+require_hash "$STATFS_STDERR" "$EXPECTED_MACHORUN_STATFS_STDERR_SHA" \
+    machorun-statfs-stderr
+require_hash "$STATFS_EXIT" "$EXPECTED_MACHORUN_STATFS_EXIT_SHA" \
+    machorun-statfs-exit
+require_hash "$STATFS_SOURCE" "$EXPECTED_MACHORUN_STATFS_SOURCE_SHA" \
+    machorun-statfs-source
+require_hash "$STATFS_SUMMARY" "$EXPECTED_MACHORUN_STATFS_SUMMARY_SHA" \
+    machorun-statfs-summary
+require_hash "$MACHORUN/darwin/src/posix.c" \
+    "$EXPECTED_MACHORUN_STATFS_LIBSYSTEM_SOURCE_SHA" \
+    machorun-statfs-libsystem-source
+for symbol in _statfs _fstatfs; do
+    definition_count=$(llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+        "$LIBSYSTEM_REAL" \
+        | awk -v expected="$symbol" '$0 == expected { count++ } END { print count + 0 }')
+    [ "$definition_count" -eq 1 ] \
+        || die "staged libSystem $symbol definition count $definition_count, expected 1"
+done
+set +e
+LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+MACHORUN_ROOT="$RUNTIME" \
+    "$RUNTIME/machorun" "$STATFS_FIXTURE" \
+    > "$WORK/statfs-macho.stdout" 2> "$WORK/statfs-macho.stderr"
+statfs_status=$?
+set -e
+printf '%s\n' "$statfs_status" > "$WORK/statfs-macho.exit"
+cmp "$STATFS_GOLDEN" "$WORK/statfs-macho.stdout" \
+    || die 'Mach-O Darwin statfs translation differs from the Apple golden stdout'
+cmp "$STATFS_STDERR" "$WORK/statfs-macho.stderr" \
+    || die 'Mach-O Darwin statfs translation produced unexpected stderr'
+cmp "$STATFS_EXIT" "$WORK/statfs-macho.exit" \
+    || die 'Mach-O Darwin statfs translation produced the wrong exit status'
+cp "$WORK/statfs-macho.stdout" "$WORK/statfs-macho.log"
+printf '%s\n' \
+    'OPEN_FOUNDATION_STATFS_OK layout=2168 mount=actual counters=sane fstatfs=all-fields flags=translated quota=mount-point oracle=apple-exact' \
+    >> "$WORK/statfs-macho.log"
 
 echo '== remove stale shadows over pinned quota and uname translations'
 : > "$WORK/libsystem-compat-macho.log"
@@ -2585,7 +2687,7 @@ echo '== link FoundationEssentials before its full internationalization layer'
 } > "$WORK/foundation-essentials-bindings.txt"
 for symbol in _getgrgid_r _getgrnam_r _fgetxattr _fsetxattr \
     _getxattr _listxattr _setxattr _fts_close _fts_open _fts_read _fts_set \
-    _copyfile _fcopyfile _quotactl _uname; do
+    _copyfile _fcopyfile _statfs _quotactl _uname; do
     binding_count=$(awk -v expected="$symbol" \
         '$NF == expected && $(NF - 1) == "libSystem.real" { count++ }
          END { print count + 0 }' "$WORK/foundation-essentials-bindings.txt")
@@ -4688,6 +4790,11 @@ cp "$WORK/fts-macho.log" "$STAGE/attestation/fts-macho.log"
 cp "$COPYFILE_GOLDEN" "$STAGE/attestation/copyfile-apple.txt"
 cp "$COPYFILE_SUMMARY" "$STAGE/attestation/copyfile-apple-summary.txt"
 cp "$WORK/copyfile-macho.log" "$STAGE/attestation/copyfile-macho.log"
+cp "$WORK/copyfile-xattr-unavailable-macho.log" \
+    "$STAGE/attestation/copyfile-xattr-unavailable-macho.log"
+cp "$STATFS_GOLDEN" "$STAGE/attestation/statfs-apple.txt"
+cp "$STATFS_SUMMARY" "$STAGE/attestation/statfs-apple-summary.txt"
+cp "$WORK/statfs-macho.log" "$STAGE/attestation/statfs-macho.log"
 cp "$WORK/libsystem-compat-macho.log" \
     "$STAGE/attestation/libsystem-compat-macho.log"
 cp "$WORK/first-party-sources.pre.tsv" \
@@ -4739,14 +4846,23 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$EXPECTED_MACHORUN_FTS_EXIT_SHA" \
         "$EXPECTED_MACHORUN_FTS_SOURCE_SHA" \
         "$EXPECTED_MACHORUN_FTS_SUMMARY_SHA"
-    printf 'FoundationEssentials-copyfile\tlibSystem-source=%s\tfixture=%s\tgolden=%s\tstderr=%s\texit=%s\tapple-source=%s\tapple-summary=%s\n' \
+    printf 'FoundationEssentials-copyfile\tlibSystem-source=%s\tfixture=%s\tgolden=%s\tstderr=%s\texit=%s\tapple-source=%s\tapple-summary=%s\txattr-unavailable-gate=%s\n' \
         "$EXPECTED_MACHORUN_COPYFILE_LIBSYSTEM_SOURCE_SHA" \
         "$EXPECTED_MACHORUN_COPYFILE_FIXTURE_SHA" \
         "$EXPECTED_MACHORUN_COPYFILE_GOLDEN_SHA" \
         "$EXPECTED_MACHORUN_COPYFILE_STDERR_SHA" \
         "$EXPECTED_MACHORUN_COPYFILE_EXIT_SHA" \
         "$EXPECTED_MACHORUN_COPYFILE_SOURCE_SHA" \
-        "$EXPECTED_MACHORUN_COPYFILE_SUMMARY_SHA"
+        "$EXPECTED_MACHORUN_COPYFILE_SUMMARY_SHA" \
+        "$EXPECTED_MACHORUN_COPYFILE_XATTR_GATE_SHA"
+    printf 'FoundationEssentials-statfs\tlibSystem-source=%s\tfixture=%s\tgolden=%s\tstderr=%s\texit=%s\tapple-source=%s\tapple-summary=%s\n' \
+        "$EXPECTED_MACHORUN_STATFS_LIBSYSTEM_SOURCE_SHA" \
+        "$EXPECTED_MACHORUN_STATFS_FIXTURE_SHA" \
+        "$EXPECTED_MACHORUN_STATFS_GOLDEN_SHA" \
+        "$EXPECTED_MACHORUN_STATFS_STDERR_SHA" \
+        "$EXPECTED_MACHORUN_STATFS_EXIT_SHA" \
+        "$EXPECTED_MACHORUN_STATFS_SOURCE_SHA" \
+        "$EXPECTED_MACHORUN_STATFS_SUMMARY_SHA"
     printf 'FoundationEssentials-libSystem-compat\tquota=%s,%s,%s\tuname=%s,%s,%s\n' \
         "$EXPECTED_MACHORUN_QUOTA_FIXTURE_SHA" \
         "$EXPECTED_MACHORUN_QUOTA_GOLDEN_SHA" \
@@ -5192,6 +5308,14 @@ record_artifact attestation FoundationEssentials copyfile-apple-binary-summary \
     attestation/copyfile-apple-summary.txt
 record_artifact attestation FoundationEssentials copyfile-runtime-semantics \
     attestation/copyfile-macho.log
+record_artifact attestation FoundationEssentials copyfile-xattr-unavailable-semantics \
+    attestation/copyfile-xattr-unavailable-macho.log
+record_artifact attestation FoundationEssentials statfs-apple-golden \
+    attestation/statfs-apple.txt
+record_artifact attestation FoundationEssentials statfs-apple-binary-summary \
+    attestation/statfs-apple-summary.txt
+record_artifact attestation FoundationEssentials statfs-runtime-semantics \
+    attestation/statfs-macho.log
 record_artifact attestation FoundationEssentials libSystem-compat-semantics \
     attestation/libsystem-compat-macho.log
 record_artifact attestation first-party-sources manifest \

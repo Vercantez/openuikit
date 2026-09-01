@@ -342,10 +342,29 @@ route, callback/context pointer ABI, regular-file contents, owner/mode/time and
 xattr metadata, exclusive/no-follow behavior, symlink identity, empty-directory
 creation, descriptor copying, byte progress, and the documented best-effort
 `CLONE` fallback. Its stdout, empty stderr, zero exit status, source, binary and
-Mach-O summary are independently hashed, cold-run, and artifact-attested.
+Mach-O summary are independently hashed, cold-run, and artifact-attested. A
+second cold route creates the same fixture on the production virtiofs bind,
+requires its `EOPNOTSUPP` xattr-discovery precondition, and proves that file
+data, mode, time and progress still succeed with exactly one explicit
+`xattr-unavailable fallback=success run-in-place=neutral` marker. Both the
+state-owned path call and descriptor call keep `RUN_IN_PLACE` enabled: Apple's
+copyfile initializes quarantine best-effort and only changes translocation
+flags when a quarantine object exists, so an xattr-incapable source is
+truthfully neutral. This is the route used by bundled resources such as
+CoreText's font fixture; it prevents a `/tmp`-only xattr test from hiding the
+real filesystem boundary.
 Unsupported recursive, forced-clone, AppleDouble and quarantined
 `RUN_IN_PLACE` cases remain fail-closed in libSystem rather than being reported
 as successful Linux copies.
+
+FoundationEssentials' `statfs` import no longer resolves to a package-local
+abort trap. The staged libSystem must own both `statfs` and `fstatfs` exactly
+once, and the pinned Apple-linked fixture cold-grades the 2,168-byte Darwin
+layout, translated flags, sane counters, actual mount-root discovery, complete
+path/descriptor agreement, nested mounts, exact error translation and the
+mount-point passed to the quota fallback. Its source, binary, golden output,
+empty stderr, exit status and Mach-O summary are independently hashed and
+attested before FoundationEssentials is linked.
 
 The app-facing Foundation facade deliberately keeps linker auto-linking
 disabled. Its manual closure therefore names exactly

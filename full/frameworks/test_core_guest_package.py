@@ -2246,7 +2246,7 @@ class ShellContractTests(unittest.TestCase):
             builder,
         )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 5
+            builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 7
         )
         self.assertEqual(
             builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 26
@@ -2572,17 +2572,17 @@ class ShellContractTests(unittest.TestCase):
         validate_build_full_swift_core_source(build_full)
         self.assertIn(
             "EXPECTED_MACHORUN_COMMIT="
-            "74f46d3b02b372e14f9ca9cee3d8a76ccc96fccb",
+            "d359cd37ac7f12a5048f4993eab6efd8259d9890",
             builder,
         )
         self.assertIn(
             "EXPECTED_MACHORUN_TREE="
-            "902fdd27b904f88b86b58f61efa73785235d83ad",
+            "9072be6c7805264341f1b298c4f7bb0d1bd2587f",
             builder,
         )
         self.assertNotIn(
             "EXPECTED_MACHORUN_COMMIT="
-            "dd18e0b5e51e26d4673193d341e7c9a864db2fb8",
+            "74f46d3b02b372e14f9ca9cee3d8a76ccc96fccb",
             builder,
         )
         for token in (
@@ -2949,13 +2949,14 @@ class ShellContractTests(unittest.TestCase):
             "MR_STUB(fts_set)",
             "MR_STUB(copyfile)",
             "MR_STUB(fcopyfile)",
+            "MR_STUB(statfs)",
             "MR_STUB(quotactl)",
             "MR_STUB(uname)",
         ):
             self.assertNotIn(removed_stub, stubs)
         for token in (
             "EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA="
-            "c076cfa9f5c797d2f69f156e87fedb6c035a8747ad2055b82da9a99530ce5af4",
+            "bb73d86e8daf09c256edc469737f0c6fd6ca6642ec4480b4819f8378b403904e",
             "EXPECTED_MACHORUN_GROUP_FIXTURE_SHA=",
             "EXPECTED_MACHORUN_GROUP_GOLDEN_SHA=",
             "EXPECTED_MACHORUN_GROUP_SOURCE_SHA=",
@@ -2975,7 +2976,15 @@ class ShellContractTests(unittest.TestCase):
             "EXPECTED_MACHORUN_COPYFILE_EXIT_SHA=",
             "EXPECTED_MACHORUN_COPYFILE_SOURCE_SHA=",
             "EXPECTED_MACHORUN_COPYFILE_SUMMARY_SHA=",
+            "EXPECTED_MACHORUN_COPYFILE_XATTR_GATE_SHA=",
             "EXPECTED_MACHORUN_COPYFILE_LIBSYSTEM_SOURCE_SHA=",
+            "EXPECTED_MACHORUN_STATFS_FIXTURE_SHA=",
+            "EXPECTED_MACHORUN_STATFS_GOLDEN_SHA=",
+            "EXPECTED_MACHORUN_STATFS_STDERR_SHA=",
+            "EXPECTED_MACHORUN_STATFS_EXIT_SHA=",
+            "EXPECTED_MACHORUN_STATFS_SOURCE_SHA=",
+            "EXPECTED_MACHORUN_STATFS_SUMMARY_SHA=",
+            "EXPECTED_MACHORUN_STATFS_LIBSYSTEM_SOURCE_SHA=",
             "EXPECTED_MACHORUN_QUOTA_FIXTURE_SHA=",
             "EXPECTED_MACHORUN_QUOTA_GOLDEN_SHA=",
             "EXPECTED_MACHORUN_QUOTA_SOURCE_SHA=",
@@ -3000,6 +3009,17 @@ class ShellContractTests(unittest.TestCase):
             "tests/expected/copyfile.exit",
             "tests/src/copyfile.c",
             "tests/meta/copyfile.summary.txt",
+            "scripts/copyfile_xattr_unavailable.sh",
+            "copyfile-xattr-unavailable-probe",
+            "xattr-unavailable fallback=success",
+            "OPEN_FOUNDATION_COPYFILE_XATTR_UNAVAILABLE_OK",
+            "tests/bin/statfs",
+            "tests/expected/statfs.stdout",
+            "tests/expected/statfs.stderr",
+            "tests/expected/statfs.exit",
+            "tests/src/statfs.c",
+            "tests/meta/statfs.summary.txt",
+            "OPEN_FOUNDATION_STATFS_OK",
             "OPEN_FOUNDATION_GROUP_LOOKUP_OK",
             "OPEN_FOUNDATION_XATTR_OK",
             "OPEN_FOUNDATION_FTS_OK",
@@ -3014,6 +3034,10 @@ class ShellContractTests(unittest.TestCase):
             "copyfile-apple.txt",
             "copyfile-apple-summary.txt",
             "copyfile-macho.log",
+            "copyfile-xattr-unavailable-macho.log",
+            "statfs-apple.txt",
+            "statfs-apple-summary.txt",
+            "statfs-macho.log",
             "libsystem-compat-macho.log",
             "native Linux group static-storage contract drifted",
             "group-lookup-native.normalized.log",
@@ -3026,6 +3050,11 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertIn(
             "EXPECTED_MACHORUN_COPYFILE_LIBSYSTEM_SOURCE_SHA="
+            "$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA",
+            builder,
+        )
+        self.assertIn(
+            "EXPECTED_MACHORUN_STATFS_LIBSYSTEM_SOURCE_SHA="
             "$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA",
             builder,
         )
@@ -3050,6 +3079,8 @@ class ShellContractTests(unittest.TestCase):
             "_copyfile_state_get",
             "_copyfile_state_set",
             "_fcopyfile",
+            "_statfs",
+            "_fstatfs",
             "_quotactl",
             "_uname",
         ):
