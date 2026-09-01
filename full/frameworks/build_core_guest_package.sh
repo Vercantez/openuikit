@@ -62,6 +62,7 @@ EXPECTED_SUPPORT_TREE=''
 UIKIT=''
 EXPECTED_UIKIT_COMMIT=''
 EXPECTED_UIKIT_TREE=''
+EXPECTED_MACHORUN_SWIFT_CORE_SHA256=''
 DEVELOPER_TOOLS_SUPPORT_MODULE=''
 DEVELOPER_TOOLS_SUPPORT_OBJECT=''
 PREVIEW_MACRO_PLUGIN=''
@@ -232,6 +233,7 @@ EXPECTED_OPENCOMBINE_COMMIT=1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b
 EXPECTED_OPENCOMBINE_TREE=66a9d91efc910c7577e40b2dec166a2de427594a
 EXPECTED_MACHORUN_COMMIT=edb99a8574255ddc4c979b2f0cf2615033ff14fd
 EXPECTED_MACHORUN_TREE=19b2308f300ef4006acf526e599fad9265e7664c
+SWIFT_CORE_REQUIRED_AVAILABILITY_SYMBOL='_$ss042_stdlib_isOSVersionAtLeastOrVariantVersiondE0yBi1_Bw_BwBwBwBwBwtF'
 EXPECTED_MACHORUN_GROUP_FIXTURE_SHA=d90194ae586e14f652435e4764d4b13d338be53b95da10cf73df4d1955895624
 EXPECTED_MACHORUN_GROUP_GOLDEN_SHA=671c6a3487332fa71c9fa398de9015b37f38f97978a0ebcdd66fdce69f5562d4
 EXPECTED_MACHORUN_GROUP_SOURCE_SHA=940c48317d4d782aaf61193f54b1a1ac216a7fa2ef718b0f3957f55889c661c3
@@ -338,6 +340,7 @@ Required:
   --uikit-checkout PATH
   --expected-uikit-commit 40_HEX
   --expected-uikit-tree 40_HEX
+  --expected-machorun-swift-core-sha256 64_HEX
 
 Foundation source contract:
   --foundation-sources-manifest PATH
@@ -379,6 +382,10 @@ while [ "$#" -gt 0 ]; do
         --expected-uikit-tree)
             [ "$#" -ge 2 ] || die '--expected-uikit-tree requires a value'
             EXPECTED_UIKIT_TREE=$2; shift 2 ;;
+        --expected-machorun-swift-core-sha256)
+            [ "$#" -ge 2 ] \
+                || die '--expected-machorun-swift-core-sha256 requires a value'
+            EXPECTED_MACHORUN_SWIFT_CORE_SHA256=$2; shift 2 ;;
         --foundation-sources-manifest)
             [ "$#" -ge 2 ] || die '--foundation-sources-manifest requires a value'
             FOUNDATION_SOURCES_MANIFEST=$2; shift 2 ;;
@@ -403,6 +410,8 @@ done
 [ -n "$UIKIT" ] || die '--uikit-checkout is required'
 [ -n "$EXPECTED_UIKIT_COMMIT" ] || die '--expected-uikit-commit is required'
 [ -n "$EXPECTED_UIKIT_TREE" ] || die '--expected-uikit-tree is required'
+[ -n "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" ] \
+    || die '--expected-machorun-swift-core-sha256 is required'
 case "$UIKIT" in /*) ;; *) die '--uikit-checkout must be absolute' ;; esac
 for expected_git_id in "$EXPECTED_SUPPORT_COMMIT" "$EXPECTED_SUPPORT_TREE" \
     "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE"; do
@@ -412,6 +421,12 @@ for expected_git_id in "$EXPECTED_SUPPORT_COMMIT" "$EXPECTED_SUPPORT_TREE" \
         *[!0-9a-f]*) die 'expected UIKit commit/tree must each be lowercase 40-hex' ;;
     esac
 done
+[ "${#EXPECTED_MACHORUN_SWIFT_CORE_SHA256}" -eq 64 ] \
+    || die 'expected machorun Swift core SHA-256 must be lowercase 64-hex'
+case "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" in
+    *[!0-9a-f]*) \
+        die 'expected machorun Swift core SHA-256 must be lowercase 64-hex' ;;
+esac
 case "$OUTPUT_ROOT" in
     /*) ;;
     *) die '--output-root must be absolute' ;;
@@ -560,6 +575,8 @@ git -C "$W" merge-base --is-ancestor "$EXPECTED_SUPPORT_BASE" "$SUPPORT_COMMIT" 
     || die 'support checkout is dirty'
 assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
 assert_clean_commit "$MACHORUN" "$EXPECTED_MACHORUN_COMMIT" "$EXPECTED_MACHORUN_TREE" machorun
+require_hash "$MACHORUN/darwin/usr/lib/swift/libswiftCore.dylib" \
+    "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" machorun-Swift-core
 assert_clean_commit "$SWIFT_FOUNDATION" "$EXPECTED_FOUNDATION_COMMIT" "$EXPECTED_FOUNDATION_TREE" swift-foundation
 assert_clean_commit "$SWIFT_FOUNDATION_ICU" "$EXPECTED_FOUNDATION_ICU_COMMIT" \
     "$EXPECTED_FOUNDATION_ICU_TREE" swift-foundation-icu
@@ -1410,6 +1427,39 @@ FE_FLAGS=(-I "$STAGE/modules"
     -Xcc -fmodule-map-file="$STAGE/include/_FoundationCShims/module.modulemap"
     -Xcc -I"$STAGE/include/_FoundationCShims")
 RUNTIME=$STAGE/guest-root
+SWIFT_CORE_RUNTIME=$RUNTIME/darwin/usr/lib/swift/libswiftCore.dylib
+SWIFT_CORE_TBD=$STAGE/sdk/usr/lib/swift/libswiftCore.tbd
+[ -f "$SWIFT_CORE_RUNTIME" ] && [ ! -L "$SWIFT_CORE_RUNTIME" ] \
+    || die 'staged Swift core runtime is missing or linked'
+[ -f "$SWIFT_CORE_TBD" ] && [ ! -L "$SWIFT_CORE_TBD" ] \
+    || die 'staged Swift core TBD is missing or linked'
+require_hash "$SWIFT_CORE_RUNTIME" "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" \
+    staged-machorun-Swift-core
+swift_core_install_name=$(llvm-otool-18 -D "$SWIFT_CORE_RUNTIME" | tail -n 1)
+[ "$swift_core_install_name" = /usr/lib/swift/libswiftCore.dylib ] \
+    || die "staged Swift core install name $swift_core_install_name is invalid"
+llvm-otool-18 -hv "$SWIFT_CORE_RUNTIME" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
+    || die 'staged Swift core is not an ARM64 Mach-O dylib'
+swift_core_tbd_symbol_count=$(awk \
+    -v symbol="$SWIFT_CORE_REQUIRED_AVAILABILITY_SYMBOL" \
+    'index($0, symbol) { count++ } END { print count + 0 }' "$SWIFT_CORE_TBD")
+[ "$swift_core_tbd_symbol_count" -eq 1 ] \
+    || die "Swift core TBD availability promise count $swift_core_tbd_symbol_count, expected 1"
+swift_core_runtime_symbol_count=$(nm_symbol_count --defined-only \
+    "$SWIFT_CORE_RUNTIME" "$SWIFT_CORE_REQUIRED_AVAILABILITY_SYMBOL")
+[ "$swift_core_runtime_symbol_count" -eq 1 ] \
+    || die "Swift core runtime availability export count $swift_core_runtime_symbol_count, expected 1"
+{
+    printf 'format\tswift-core-runtime-contract-v1\n'
+    printf 'runtime\tguest-root/darwin/usr/lib/swift/libswiftCore.dylib\tsha256=%s\tinstall-name=%s\tarchitecture=arm64\n' \
+        "$(hash_file "$SWIFT_CORE_RUNTIME")" "$swift_core_install_name"
+    printf 'link-input\tsdk/usr/lib/swift/libswiftCore.tbd\tsha256=%s\n' \
+        "$(hash_file "$SWIFT_CORE_TBD")"
+    printf 'availability-symbol\t%s\ttbd-promises=%s\truntime-exports=%s\n' \
+        "$SWIFT_CORE_REQUIRED_AVAILABILITY_SYMBOL" \
+        "$swift_core_tbd_symbol_count" "$swift_core_runtime_symbol_count"
+} > "$STAGE/attestation/swift-core-runtime.tsv"
 COMMON_LINK=(-rpath @loader_path -L"$STAGE/lib"
     -L"$RUNTIME/darwin/usr/lib" -L"$STAGE/sdk/usr/lib/swift"
     -lswiftCore -lswiftObjectiveC "$RUNTIME/darwin/usr/lib/libswiftcompat.dylib"
@@ -4249,6 +4299,9 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'machorun\tcommit=%s\ttree=%s\tloader-sha256=%s\n' \
         "$EXPECTED_MACHORUN_COMMIT" "$EXPECTED_MACHORUN_TREE" \
         "$(hash_file "$MACHORUN/build/machorun")"
+    printf 'machorun-runtime\tlibswiftCore-sha256=%s\tcontract=%s\n' \
+        "$(hash_file "$SWIFT_CORE_RUNTIME")" \
+        "$(hash_file "$STAGE/attestation/swift-core-runtime.tsv")"
     printf 'font\tsystem\tcontainer:/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf\t%s\n' \
         "$EXPECTED_SYSTEM_FONT"
     printf 'font\tbold\tcontainer:/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf\t%s\n' \
@@ -4610,6 +4663,8 @@ record_artifact attestation first-party-dylib-loads manifest \
     attestation/first-party-dylib-loads.tsv
 record_artifact attestation input-provenance manifest \
     attestation/input-provenance.tsv
+record_artifact attestation Swift-core runtime-contract \
+    attestation/swift-core-runtime.tsv
 record_artifact attestation url-transport abi \
     attestation/url-transport-abi.tsv
 record_artifact attestation url-transport host \
@@ -4644,6 +4699,8 @@ fi
 
 echo '== post-build input bracket'
 assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" post-OpenUIKit
+require_hash "$MACHORUN/darwin/usr/lib/swift/libswiftCore.dylib" \
+    "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" post-machorun-Swift-core
 assert_clean_commit "$MACHORUN" "$EXPECTED_MACHORUN_COMMIT" "$EXPECTED_MACHORUN_TREE" post-machorun
 assert_clean_commit "$SWIFT_FOUNDATION" "$EXPECTED_FOUNDATION_COMMIT" "$EXPECTED_FOUNDATION_TREE" post-swift-foundation
 assert_clean_commit "$SWIFT_FOUNDATION_ICU" "$EXPECTED_FOUNDATION_ICU_COMMIT" \

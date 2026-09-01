@@ -21,6 +21,7 @@ MACHORUN_CHECKOUT=''
 EXPECTED_MACHORUN_COMMIT=''
 EXPECTED_MACHORUN_TREE=''
 EXPECTED_MACHORUN_LOADER_SHA256=''
+EXPECTED_MACHORUN_SWIFT_CORE_SHA256=''
 OUTPUT_ROOT=''
 DEVELOPER_TOOLS_SUPPORT_MODULE=''
 DEVELOPER_TOOLS_SUPPORT_OBJECT=''
@@ -37,6 +38,7 @@ usage: run_core_guest_package_docker.sh \
   --expected-uikit-tree HASH --machorun-checkout PATH \
   --expected-machorun-commit HASH --expected-machorun-tree HASH \
   --expected-machorun-loader-sha256 HASH \
+  --expected-machorun-swift-core-sha256 HASH \
   --output-root NEW_ABSOLUTE_PATH [Preview trio]
 
 Preview is all-or-none:
@@ -79,6 +81,8 @@ while [ "$#" -gt 0 ]; do
         --expected-machorun-tree) EXPECTED_MACHORUN_TREE=${2-}; shift 2 ;;
         --expected-machorun-loader-sha256)
             EXPECTED_MACHORUN_LOADER_SHA256=${2-}; shift 2 ;;
+        --expected-machorun-swift-core-sha256)
+            EXPECTED_MACHORUN_SWIFT_CORE_SHA256=${2-}; shift 2 ;;
         --output-root) OUTPUT_ROOT=${2-}; shift 2 ;;
         --developer-tools-support-module)
             DEVELOPER_TOOLS_SUPPORT_MODULE=${2-}; shift 2 ;;
@@ -103,6 +107,7 @@ for assignment in \
     "expected machorun commit:$EXPECTED_MACHORUN_COMMIT" \
     "expected machorun tree:$EXPECTED_MACHORUN_TREE" \
     "expected machorun loader SHA-256:$EXPECTED_MACHORUN_LOADER_SHA256" \
+    "expected machorun Swift core SHA-256:$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" \
     "output root:$OUTPUT_ROOT"; do
     label=${assignment%%:*}
     value=${assignment#*:}
@@ -123,6 +128,11 @@ done
     || die 'machorun loader SHA-256 must be lowercase 64-hex'
 case "$EXPECTED_MACHORUN_LOADER_SHA256" in
     *[!0-9a-f]*) die 'machorun loader SHA-256 must be lowercase 64-hex' ;;
+esac
+[ "${#EXPECTED_MACHORUN_SWIFT_CORE_SHA256}" -eq 64 ] \
+    || die 'machorun Swift core SHA-256 must be lowercase 64-hex'
+case "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" in
+    *[!0-9a-f]*) die 'machorun Swift core SHA-256 must be lowercase 64-hex' ;;
 esac
 
 for tool in docker git mktemp python3 tee awk shasum; do
@@ -189,6 +199,14 @@ MACHORUN_RUNTIME=$MACHORUN_CHECKOUT/darwin/usr
 [ -f "$MACHORUN_RUNTIME/lib/libSystem.B.dylib" ] \
     && [ ! -L "$MACHORUN_RUNTIME/lib/libSystem.B.dylib" ] \
     || die 'machorun runtime is missing libSystem.B.dylib'
+MACHORUN_SWIFT_CORE=$MACHORUN_RUNTIME/lib/swift/libswiftCore.dylib
+[ -f "$MACHORUN_SWIFT_CORE" ] && [ ! -L "$MACHORUN_SWIFT_CORE" ] \
+    || die 'machorun runtime is missing regular libswiftCore.dylib'
+ACTUAL_MACHORUN_SWIFT_CORE_SHA256=$(shasum -a 256 "$MACHORUN_SWIFT_CORE" \
+    | awk '{print $1}')
+[ "$ACTUAL_MACHORUN_SWIFT_CORE_SHA256" = \
+    "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" ] \
+    || die "machorun Swift core SHA-256 $ACTUAL_MACHORUN_SWIFT_CORE_SHA256, expected $EXPECTED_MACHORUN_SWIFT_CORE_SHA256"
 
 STAGED_INPUTS=(
     sysroot_fe4
@@ -281,6 +299,12 @@ COPIED_MACHORUN_LOADER_SHA256=$(shasum -a 256 \
     "$REPLAY_ROOT/machorun/build/machorun" | awk '{print $1}')
 [ "$COPIED_MACHORUN_LOADER_SHA256" = "$EXPECTED_MACHORUN_LOADER_SHA256" ] \
     || die 'physically copied machorun loader hash differs'
+COPIED_MACHORUN_SWIFT_CORE_SHA256=$(shasum -a 256 \
+    "$REPLAY_ROOT/machorun/darwin/usr/lib/swift/libswiftCore.dylib" \
+    | awk '{print $1}')
+[ "$COPIED_MACHORUN_SWIFT_CORE_SHA256" = \
+    "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" ] \
+    || die 'physically copied machorun Swift core hash differs'
 assert_checkout "$REPLAY_ROOT/machorun" "$EXPECTED_MACHORUN_COMMIT" \
     "$EXPECTED_MACHORUN_TREE" staged-machorun
 
@@ -358,6 +382,8 @@ record_git_identity() {
         "$REPLAY_ROOT/w/scratch/opencombine-core-durable-20260828-r2/source" \
         OpenCombine
     printf 'machorun-loader\tsha256=%s\n' "$COPIED_MACHORUN_LOADER_SHA256"
+    printf 'machorun-swift-core\tsha256=%s\n' \
+        "$COPIED_MACHORUN_SWIFT_CORE_SHA256"
     printf 'input-manifest-pre\tsha256=%s\n' "$INPUT_MANIFEST_PRE_SHA256"
     for report in "$EVIDENCE"/copy-*.json; do
         printf 'physical-copy-report\t%s\tsha256=%s\n' "${report##*/}" \
@@ -396,6 +422,8 @@ BUILD_ARGS=(
     --uikit-checkout /replay/uikit
     --expected-uikit-commit "$EXPECTED_UIKIT_COMMIT"
     --expected-uikit-tree "$EXPECTED_UIKIT_TREE"
+    --expected-machorun-swift-core-sha256 \
+        "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256"
 )
 if [ "$preview_count" -eq 3 ]; then
     BUILD_ARGS+=(
@@ -423,6 +451,7 @@ GUEST_ROOT_PRODUCTS=(
     .manifest
     darwin/usr/lib/libSystem.real.dylib
     darwin/usr/lib/libSystem.B.dylib
+    darwin/usr/lib/swift/libswiftCore.dylib
     darwin/usr/lib/libc++.real.dylib
     darwin/usr/lib/libc++.1.dylib
     darwin/usr/lib/libquartz.dylib

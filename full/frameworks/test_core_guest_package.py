@@ -34,6 +34,9 @@ APP_DRIVER = REPO / "full/xcodeplan/build_portable_application_guest.sh"
 PREVIEW_EXECUTABLE_EXPORT_SYMBOL = (
     "_$s21DeveloperToolsSupport7PreviewV14_openUIKitBodyACypyScMYcc_tcfC"
 )
+SWIFT_CORE_AVAILABILITY_SYMBOL = (
+    "_$ss042_stdlib_isOSVersionAtLeastOrVariantVersiondE0yBi1_Bw_BwBwBwBwBwtF"
+)
 CANONICAL_VALIDATOR = REPO / "full/xcodeplan/core_guest_package.py"
 CORE_FRESH_PATHS = (
     "w/build",
@@ -260,6 +263,36 @@ def validate_core_single_bind_contract(source: str) -> None:
         raise AssertionError("core single-tmpfs contract drifted")
     if "--tmpfs /replay/" in docker_arguments:
         raise AssertionError("core nested-tmpfs contract drifted")
+
+
+def validate_swift_core_runtime_contract(builder: str, wrapper: str) -> None:
+    builder_required = (
+        f"SWIFT_CORE_REQUIRED_AVAILABILITY_SYMBOL='{SWIFT_CORE_AVAILABILITY_SYMBOL}'",
+        "--expected-machorun-swift-core-sha256",
+        'SWIFT_CORE_RUNTIME=$RUNTIME/darwin/usr/lib/swift/libswiftCore.dylib',
+        'SWIFT_CORE_TBD=$STAGE/sdk/usr/lib/swift/libswiftCore.tbd',
+        'require_hash "$SWIFT_CORE_RUNTIME" "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256"',
+        'swift_core_tbd_symbol_count=$(awk',
+        'swift_core_runtime_symbol_count=$(nm_symbol_count --defined-only',
+        '[ "$swift_core_tbd_symbol_count" -eq 1 ]',
+        '[ "$swift_core_runtime_symbol_count" -eq 1 ]',
+        "format\\tswift-core-runtime-contract-v1",
+        "attestation/swift-core-runtime.tsv",
+        "post-machorun-Swift-core",
+    )
+    wrapper_required = (
+        "--expected-machorun-swift-core-sha256",
+        'MACHORUN_SWIFT_CORE=$MACHORUN_RUNTIME/lib/swift/libswiftCore.dylib',
+        "ACTUAL_MACHORUN_SWIFT_CORE_SHA256=",
+        "COPIED_MACHORUN_SWIFT_CORE_SHA256=",
+        "physically copied machorun Swift core hash differs",
+        "machorun-swift-core\\tsha256=",
+        "darwin/usr/lib/swift/libswiftCore.dylib",
+    )
+    missing = [token for token in builder_required if token not in builder]
+    missing.extend(token for token in wrapper_required if token not in wrapper)
+    if missing:
+        raise AssertionError(f"Swift core runtime contract drifted: {missing}")
 
 
 def validate_foundation_runtime_links(source: str) -> None:
@@ -2286,6 +2319,7 @@ class ShellContractTests(unittest.TestCase):
         helper = PHYSICAL_REPLAY_TOOL.read_text(encoding="utf-8")
         builder = BUILDER.read_text(encoding="utf-8")
         validate_core_single_bind_contract(source)
+        validate_swift_core_runtime_contract(builder, source)
         self.assertIn(
             "EXPECTED_MACHORUN_COMMIT="
             "edb99a8574255ddc4c979b2f0cf2615033ff14fd",
@@ -2330,6 +2364,8 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("expected linux/arm64", source)
         self.assertIn("expected-machorun-loader-sha256", source)
         self.assertIn("COPIED_MACHORUN_LOADER_SHA256", source)
+        self.assertIn("expected-machorun-swift-core-sha256", source)
+        self.assertIn("COPIED_MACHORUN_SWIFT_CORE_SHA256", source)
         for preview_report in (
             "copy-preview-module.json",
             "copy-preview-object.json",
@@ -2354,6 +2390,43 @@ class ShellContractTests(unittest.TestCase):
             '"type": "symlink"',
         ):
             self.assertIn(semantic, helper)
+
+    def test_swift_core_runtime_contract_refuses_mutation(self) -> None:
+        builder = BUILDER.read_text(encoding="utf-8")
+        wrapper = HOST_WRAPPER.read_text(encoding="utf-8")
+        validate_swift_core_runtime_contract(builder, wrapper)
+        mutations = (
+            (
+                builder.replace(
+                    '[ "$swift_core_runtime_symbol_count" -eq 1 ]',
+                    '[ "$swift_core_runtime_symbol_count" -ge 0 ]',
+                    1,
+                ),
+                wrapper,
+            ),
+            (
+                builder.replace(
+                    "swift_core_runtime_symbol_count=$(nm_symbol_count --defined-only",
+                    "swift_core_runtime_symbol_count=$(nm_symbol_count --undefined-only",
+                    1,
+                ),
+                wrapper,
+            ),
+            (
+                builder,
+                wrapper.replace(
+                    "COPIED_MACHORUN_SWIFT_CORE_SHA256=",
+                    "UNATTESTED_MACHORUN_SWIFT_CORE_SHA256=",
+                    1,
+                ),
+            ),
+        )
+        for mutated_builder, mutated_wrapper in mutations:
+            with self.subTest():
+                with self.assertRaisesRegex(AssertionError, "Swift core"):
+                    validate_swift_core_runtime_contract(
+                        mutated_builder, mutated_wrapper
+                    )
         self.assertIn('BUILD_FE_CACHE=$W/scratch/modcache_fe4', BUILDER.read_text(encoding="utf-8"))
         self.assertIn('"$BUILD_FE_CACHE"', BUILDER.read_text(encoding="utf-8"))
         self.assertIn("sdk_dangling_symlink_exclusions.tsv", BUILDER.read_text(encoding="utf-8"))
@@ -3178,6 +3251,8 @@ class ShellContractTests(unittest.TestCase):
                     "--expected-machorun-tree",
                     zero,
                     "--expected-machorun-loader-sha256",
+                    "0" * 64,
+                    "--expected-machorun-swift-core-sha256",
                     "0" * 64,
                     "--output-root",
                     "/new-output",
