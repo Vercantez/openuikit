@@ -443,6 +443,36 @@ generated-source, dependency, package-product, and copy-product resolution:
 python3 -m unittest discover -s full/xcodeplan/tests -v
 ```
 
+## True iOS conditional-domain gate
+
+The production package is still published with its established macOS ABI
+compatibility target, but the Linux Swift compiler, LLVM linker, and machorun
+loader now have a separate end-to-end gate for a real iOS target. This matters
+for unchanged sources whose `#if os(iOS)` branches differ from macOS.
+
+`build_and_run_true_ios_target_guest.sh` copies the immutable core SDK into a
+fresh output, overlays the six target standard-library interface families and
+runtime TBDs from an iPhoneSimulator SDK, then runs the pinned Linux/arm64 image
+with no network and a read-only root. It compiles
+`TrueIOSTargetProbe.swift` as `arm64-apple-ios17.0-simulator`, links an ARM64
+Mach-O executable with `LC_BUILD_VERSION` platform 7, and cold-runs it under the
+packaged loader. Neither the core package nor an app/vendor checkout is
+modified.
+
+```sh
+full/xcodeplan/build_and_run_true_ios_target_guest.sh \
+  CORE_PACKAGE \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.1.sdk \
+  sha256:PINNED_LINUX_ARM64_IMAGE_ID \
+  /private/tmp/true-ios-target-output
+```
+
+The durable result includes the derived SDK, Mach-O object and executable,
+full load-command/runtime logs, hashes of every overlaid target input, and a
+`TARGET_COMPLETE` marker. This is the target-identity foundation for rebuilding
+the complete first-party framework graph as iOS rather than a claim that the
+existing macOS-target framework modules can be mixed into an iOS compilation.
+
 The same command also exercises a two-target Xcode 16-style synchronized
 fixture, including target-specific exclusions, explicit file types, classic
 compatibility, scheme identity, canonical output, and symlink/escape controls.
