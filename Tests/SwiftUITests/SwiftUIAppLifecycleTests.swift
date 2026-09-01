@@ -94,6 +94,41 @@ final class SwiftUIAppLifecycleTests: XCTestCase {
         _ = defaultMain
     }
 
+    func testBoundedApplicationHostTicksEveryWindowOnAPacedClockAndTerminates() {
+        let session = _OpenSwiftUIApplicationLifecycle.launch(
+            LifecycleApplication.self,
+            preparePackagedResources: false
+        )
+        var clock = 10.0
+        var deadlines: [Double] = []
+
+        let result = _OpenSwiftUIApplicationLifecycle._runApplicationHost(
+            application: session.application,
+            windows: session.windows,
+            boundedTurnCount: 3,
+            now: { clock },
+            waitUntil: { deadline in
+                deadlines.append(deadline)
+                clock = deadline
+            }
+        )
+
+        XCTAssertEqual(result.turns, 3)
+        XCTAssertEqual(result.windowTicks, 6)
+        XCTAssertEqual(result.elapsed, 2.0 / 60.0, accuracy: 1e-9)
+        XCTAssertEqual(deadlines.count, 2)
+        XCTAssertEqual(deadlines[0], 10.0 + 1.0 / 60.0, accuracy: 1e-9)
+        XCTAssertEqual(deadlines[1], 10.0 + 2.0 / 60.0, accuracy: 1e-9)
+        XCTAssertEqual(OpenUIKitRuntime.animationTime, 2.0 / 60.0, accuracy: 1e-9)
+        XCTAssertTrue(session.application.isTerminating)
+    }
+
+    func testApplicationHostTurnLimitUsesOnlyPositiveDecimalIntegers() {
+        XCTAssertNil(_OpenSwiftUIApplicationLifecycle._applicationHostTurnLimit(nil))
+        XCTAssertEqual(_OpenSwiftUIApplicationLifecycle._applicationHostTurnLimit("1"), 1)
+        XCTAssertEqual(_OpenSwiftUIApplicationLifecycle._applicationHostTurnLimit("257"), 257)
+    }
+
     func testSceneBuilderPreservesConditionalAndArrayWindowGroups() {
         let node = ConditionalSceneFixture(primary: false)
             ._makeOpenUIKitSceneNode()

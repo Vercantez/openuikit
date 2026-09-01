@@ -12,6 +12,11 @@ import ObjectiveC
 #endif
 #endif
 import OpenUIKit
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#endif
 
 @MainActor
 public protocol _OpenScene {
@@ -398,6 +403,139 @@ enum _OpenSwiftUIApplicationLifecycle {
         retainedSession = result
         return result
     }
+
+    /// Enter the production frame loop for an already launched SwiftUI App.
+    /// A normal application does not return. `OPENUIKIT_HOST_TURNS` is the
+    /// sole automation boundary and must be a positive decimal integer.
+    static func runApplicationHost(_ session: _OpenSwiftUIApplicationSession) {
+        let turnLimit = _applicationHostTurnLimit(
+            getenv("OPENUIKIT_HOST_TURNS").map { String(cString: $0) }
+        )
+        let result = _runApplicationHost(
+            application: session.application,
+            windows: session.windows,
+            boundedTurnCount: turnLimit,
+            now: _applicationHostMonotonicSeconds,
+            waitUntil: _applicationHostSleep
+        )
+        guard let turnLimit else {
+            preconditionFailure("unbounded SwiftUI application host loop returned")
+        }
+        precondition(
+            result.turns == turnLimit,
+            "bounded SwiftUI application host returned before its requested turn count"
+        )
+        print("PORTABLE_UIKIT_HOST_LOOP_OK turns=\(result.turns) paced=true")
+    }
+
+    static func _runApplicationHost(
+        application: UIApplication,
+        windows: [UIWindow],
+        boundedTurnCount: Int?,
+        frameInterval: Double = 1.0 / 60.0,
+        now: () -> Double,
+        waitUntil: (Double) -> Void
+    ) -> _OpenSwiftUIApplicationHostResult {
+        precondition(!windows.isEmpty, "SwiftUI application host requires a UIWindow")
+        precondition(
+            application.applicationState == .active,
+            "SwiftUI application host requires an active UIApplication"
+        )
+        precondition(
+            Set(windows.map(ObjectIdentifier.init)).count == windows.count,
+            "SwiftUI application host received a duplicate UIWindow"
+        )
+        precondition(
+            windows.allSatisfy { window in
+                !window.isHidden
+                    && window.windowScene?.activationState == .foregroundActive
+            },
+            "SwiftUI application host requires visible windows in active UIWindowScenes"
+        )
+        if let boundedTurnCount {
+            precondition(
+                boundedTurnCount > 0,
+                "bounded SwiftUI application host turn count must be positive"
+            )
+        }
+        precondition(
+            frameInterval.isFinite && frameInterval > 0,
+            "SwiftUI application host frame interval must be finite and positive"
+        )
+        print("PORTABLE_UIKIT_HOST_ACTIVE windows=\(windows.count)")
+
+        let start = now()
+        precondition(start.isFinite, "SwiftUI application host clock is not finite")
+        var previous = start
+        var turns = 0
+        var windowTicks = 0
+        while true {
+            let sample = now()
+            precondition(
+                sample.isFinite && sample >= previous,
+                "SwiftUI application host clock must be finite and monotonic"
+            )
+            previous = sample
+            let elapsed = sample - start
+            OpenUIKitRuntime.animationTime = elapsed
+            for window in windows {
+                window.tick(timestamp: elapsed)
+                windowTicks += 1
+            }
+            turns += 1
+
+            if let boundedTurnCount, turns >= boundedTurnCount {
+                let minimumElapsed = frameInterval
+                    * Double(Swift.max(0, boundedTurnCount - 1)) * 0.8
+                precondition(
+                    elapsed >= minimumElapsed,
+                    "bounded SwiftUI application host did not use the paced clock"
+                )
+                application._hostWillTerminate()
+                return _OpenSwiftUIApplicationHostResult(
+                    elapsed: elapsed,
+                    turns: turns,
+                    windowTicks: windowTicks
+                )
+            }
+            waitUntil(start + elapsed + frameInterval)
+        }
+    }
+
+    static func _applicationHostTurnLimit(_ value: String?) -> Int? {
+        guard let value else { return nil }
+        guard let count = Int(value), count > 0 else {
+            preconditionFailure("OPENUIKIT_HOST_TURNS must be a positive integer")
+        }
+        return count
+    }
+
+    private static func _applicationHostMonotonicSeconds() -> Double {
+        var value = timespec()
+        guard clock_gettime(CLOCK_MONOTONIC, &value) == 0 else {
+            preconditionFailure("SwiftUI application host could not read CLOCK_MONOTONIC")
+        }
+        return Double(value.tv_sec) + Double(value.tv_nsec) * 1e-9
+    }
+
+    private static func _applicationHostSleep(until deadline: Double) {
+        let delay = deadline - _applicationHostMonotonicSeconds()
+        guard delay > 0 else { return }
+        var request = timespec(
+            tv_sec: Int(delay),
+            tv_nsec: Int((delay - Double(Int(delay))) * 1e9)
+        )
+        var remainder = timespec()
+        while nanosleep(&request, &remainder) != 0 {
+            request = remainder
+        }
+    }
+}
+
+struct _OpenSwiftUIApplicationHostResult: Equatable {
+    let elapsed: Double
+    let turns: Int
+    let windowTicks: Int
 }
 
 @MainActor
@@ -411,10 +549,11 @@ public protocol _OpenApp {
 
 public extension _OpenApp {
     static func main() {
-        _OpenSwiftUIApplicationLifecycle.launch(
+        let session = _OpenSwiftUIApplicationLifecycle.launch(
             Self.self,
             preparePackagedResources: true
         )
+        _OpenSwiftUIApplicationLifecycle.runApplicationHost(session)
     }
 }
 
