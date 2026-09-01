@@ -106,6 +106,11 @@ open class UIGestureRecognizer {
     /// Standard UIKit behavior: when this recognizer recognizes, the
     /// touches it tracks are cancelled in their hit-test view.
     public var cancelsTouchesInView = true
+    /// UIKit delivery-policy flags. The event dispatcher already delays
+    /// scroll-view content through `delaysContentTouches`; standalone
+    /// recognizers retain these policies for hosts which queue touch delivery.
+    public var delaysTouchesBegan = false
+    public var delaysTouchesEnded = true
     public var name: String?
     /// M13: the app's veto on recognition / simultaneity / touch delivery.
     public weak var delegate: UIGestureRecognizerDelegate?

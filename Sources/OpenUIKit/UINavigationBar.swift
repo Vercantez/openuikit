@@ -125,11 +125,11 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// deliberately outside this compatibility step.
     private static var _appearanceProxy: UINavigationBar?
 
-    public static func appearance() -> UINavigationBar {
-        if let proxy = _appearanceProxy { return proxy }
+    public override class func appearance() -> Self {
+        if let proxy = _appearanceProxy { return proxy as! Self }
         let proxy = UINavigationBar(frame: .zero)
         _appearanceProxy = proxy
-        return proxy
+        return proxy as! Self
     }
 
     // MARK: Bar-zone metrics

@@ -739,6 +739,9 @@ enum _OpenGraphStructuralScope: Hashable {
     case forEachContent
     case forEachElement(AnyHashable)
     case navigationContent
+    case navigationPathElement(index: Int, value: AnyHashable)
+    case navigationSplitSidebar
+    case navigationSplitDetail
     case modifiedContent
     case background
     case overlay

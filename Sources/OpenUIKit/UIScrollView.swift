@@ -315,6 +315,23 @@ open class UIScrollView: UIView {
     public var contentInset: UIEdgeInsets = .zero {
         didSet { if contentInset != oldValue { setNeedsLayout() } }
     }
+    /// Effective viewport inset after the view hierarchy's safe area is
+    /// incorporated. This portable host currently models UIKit's automatic
+    /// adjustment mode, the behavior used by embedded browser shells.
+    public var adjustedContentInset: UIEdgeInsets {
+        UIEdgeInsets(
+            top: contentInset.top + safeAreaInsets.top,
+            left: contentInset.left + safeAreaInsets.left,
+            bottom: contentInset.bottom + safeAreaInsets.bottom,
+            right: contentInset.right + safeAreaInsets.right
+        )
+    }
+    public var verticalScrollIndicatorInsets: UIEdgeInsets = .zero {
+        didSet { if verticalScrollIndicatorInsets != oldValue { updateIndicators() } }
+    }
+    public var horizontalScrollIndicatorInsets: UIEdgeInsets = .zero {
+        didSet { if horizontalScrollIndicatorInsets != oldValue { updateIndicators() } }
+    }
 
     /// Storage for `refreshControl` (the API lives in UIRefreshControl.swift,
     /// which owns the control's whole measured model).
@@ -533,6 +550,12 @@ open class UIScrollView: UIView {
         }
         _layoutRefreshControl()
         updateIndicators()
+    }
+
+    open override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        delegate?.scrollViewDidChangeAdjustedContentInset(self)
+        setNeedsLayout()
     }
 
     // MARK: Drag handling
@@ -944,7 +967,9 @@ open class UIScrollView: UIView {
         if let bar = verticalIndicator {
             let range = hi.y - lo.y
             let contentLen = contentSize.height + contentInset.top + contentInset.bottom
-            let track = bounds.height - 2 * inset
+            let trackTop = inset + verticalScrollIndicatorInsets.top
+            let trackBottom = inset + verticalScrollIndicatorInsets.bottom
+            let track = bounds.height - trackTop - trackBottom
             if range > 0, contentLen > 0, track > 0 {
                 var len = max(UIScrollView.indicatorMinLength,
                               track * min(1, bounds.height / contentLen))
@@ -954,8 +979,10 @@ open class UIScrollView: UIView {
                               : off.y > hi.y ? off.y - hi.y : 0
                 len = max(thick * 2, len - overshoot)
                 let p = min(1, max(0, (off.y - lo.y) / range))
-                let y = inset + (track - len) * p
-                bar.frame = CGRect(x: off.x + bounds.width - inset - thick,
+                let y = trackTop + (track - len) * p
+                bar.frame = CGRect(
+                    x: off.x + bounds.width - inset
+                        - verticalScrollIndicatorInsets.right - thick,
                                    y: off.y + y, width: thick, height: len)
                 bar.isHidden = false
             } else {
@@ -965,7 +992,9 @@ open class UIScrollView: UIView {
         if let bar = horizontalIndicator {
             let range = hi.x - lo.x
             let contentLen = contentSize.width + contentInset.left + contentInset.right
-            let track = bounds.width - 2 * inset
+            let trackLeading = inset + horizontalScrollIndicatorInsets.left
+            let trackTrailing = inset + horizontalScrollIndicatorInsets.right
+            let track = bounds.width - trackLeading - trackTrailing
             if range > 0, contentLen > 0, track > 0 {
                 var len = max(UIScrollView.indicatorMinLength,
                               track * min(1, bounds.width / contentLen))
@@ -973,9 +1002,10 @@ open class UIScrollView: UIView {
                               : off.x > hi.x ? off.x - hi.x : 0
                 len = max(thick * 2, len - overshoot)
                 let p = min(1, max(0, (off.x - lo.x) / range))
-                let x = inset + (track - len) * p
+                let x = trackLeading + (track - len) * p
                 bar.frame = CGRect(x: off.x + x,
-                                   y: off.y + bounds.height - inset - thick,
+                                   y: off.y + bounds.height - inset
+                                    - horizontalScrollIndicatorInsets.bottom - thick,
                                    width: len, height: thick)
                 bar.isHidden = false
             } else {

@@ -186,6 +186,22 @@ public struct _OpenColor: Hashable, @unchecked Sendable {
         storage = .resolved(uiColor)
     }
 
+    public init(
+        red: Double,
+        green: Double,
+        blue: Double,
+        opacity: Double = 1
+    ) {
+        storage = .resolved(
+            UIColor(
+                red: CGFloat(red),
+                green: CGFloat(green),
+                blue: CGFloat(blue),
+                alpha: CGFloat(opacity)
+            )
+        )
+    }
+
     public init(_ uiColor: UIColor) {
         storage = .resolved(uiColor)
     }
@@ -199,6 +215,11 @@ public struct _OpenColor: Hashable, @unchecked Sendable {
     public static let gray = _OpenColor(uiColor: .gray)
     public static let primary = _OpenColor(uiColor: .label)
     public static let secondary = _OpenColor(uiColor: .secondaryLabel)
+    public static let background = _OpenColor(uiColor: .systemBackground)
+    /// SwiftUI's legacy source spelling for the environment tint. The
+    /// resolved default follows UIKit's system accent and remains dynamic
+    /// when a surrounding `accentColor`/`tint` modifier overrides it.
+    public static let accentColor = _OpenColor(uiColor: .systemBlue)
 
     public func opacity(_ opacity: Double) -> _OpenColor {
         _OpenColor(storage: .opacity(storage, CGFloat(min(max(opacity, 0), 1))))
@@ -656,6 +677,7 @@ public struct _OpenAnyTransition: Hashable, Sendable {
     indirect enum Storage: Hashable, Sendable {
         case identity
         case opacity
+        case scale
         case move(_OpenEdge)
         case offset(CGFloat, CGFloat)
         case combined(Storage, Storage)
@@ -669,6 +691,7 @@ public struct _OpenAnyTransition: Hashable, Sendable {
 
     public static let identity = _OpenAnyTransition(.identity)
     public static let opacity = _OpenAnyTransition(.opacity)
+    public static let scale = _OpenAnyTransition(.scale)
 
     public static func move(edge: _OpenEdge) -> _OpenAnyTransition {
         _OpenAnyTransition(.move(edge))
@@ -705,6 +728,15 @@ public enum _OpenPreviewLayout: Sendable {
 
 public protocol _OpenShape {}
 
+public struct _OpenSafeAreaRegions: OptionSet, Sendable {
+    public let rawValue: UInt
+    public init(rawValue: UInt) { self.rawValue = rawValue }
+
+    public static let container = _OpenSafeAreaRegions(rawValue: 1 << 0)
+    public static let keyboard = _OpenSafeAreaRegions(rawValue: 1 << 1)
+    public static let all: _OpenSafeAreaRegions = [.container, .keyboard]
+}
+
 public enum _OpenRoundedCornerStyle: Sendable {
     case circular
     case continuous
@@ -719,6 +751,28 @@ public struct _OpenRoundedRectangle: _OpenShape {
         style: _OpenRoundedCornerStyle = .circular
     ) {
         self.cornerRadius = cornerRadius
+        self.style = style
+    }
+}
+
+public struct _OpenUnevenRoundedRectangle: _OpenShape, Sendable {
+    public let topLeadingRadius: CGFloat
+    public let bottomLeadingRadius: CGFloat
+    public let bottomTrailingRadius: CGFloat
+    public let topTrailingRadius: CGFloat
+    public let style: _OpenRoundedCornerStyle
+
+    public init(
+        topLeadingRadius: CGFloat = 0,
+        bottomLeadingRadius: CGFloat = 0,
+        bottomTrailingRadius: CGFloat = 0,
+        topTrailingRadius: CGFloat = 0,
+        style: _OpenRoundedCornerStyle = .continuous
+    ) {
+        self.topLeadingRadius = max(0, topLeadingRadius)
+        self.bottomLeadingRadius = max(0, bottomLeadingRadius)
+        self.bottomTrailingRadius = max(0, bottomTrailingRadius)
+        self.topTrailingRadius = max(0, topTrailingRadius)
         self.style = style
     }
 }
@@ -778,8 +832,10 @@ public typealias ContentTransition = _OpenContentTransition
 public typealias AnyTransition = _OpenAnyTransition
 public typealias PreviewLayout = _OpenPreviewLayout
 public typealias Shape = _OpenShape
+public typealias SafeAreaRegions = _OpenSafeAreaRegions
 public typealias ShapeStyle = _OpenShapeStyle
 public typealias RoundedRectangle = _OpenRoundedRectangle
+public typealias UnevenRoundedRectangle = _OpenUnevenRoundedRectangle
 public typealias RoundedCornerStyle = _OpenRoundedCornerStyle
 public typealias Rectangle = _OpenRectangle
 public typealias Capsule = _OpenCapsule

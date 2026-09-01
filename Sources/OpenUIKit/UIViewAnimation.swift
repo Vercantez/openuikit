@@ -115,6 +115,10 @@ enum UIViewAnimationContext {
     /// runs. They are delivered only after the animation context is restored,
     /// so reentrant completion work cannot inherit the replacement transaction.
     static var interruptedEntries: [UIViewAnimationCompletionQueue.Entry] = []
+    /// Process-wide UIKit animation gate. UIKit intentionally exposes this as
+    /// global state so launch/test harnesses can make every framework-driven
+    /// transition deterministic without rewriting individual call sites.
+    static var animationsEnabled = true
 }
 
 // MARK: - Deferred completion handlers
@@ -189,6 +193,27 @@ enum UIViewAnimationCompletionQueue {
 // MARK: - UIView.animate API
 
 extension UIView {
+    /// Whether implicit `UIView` animation transactions are currently
+    /// enabled. Model changes still commit while disabled; only presentation
+    /// interpolation and delayed completion are suppressed.
+    public static var areAnimationsEnabled: Bool {
+        UIViewAnimationContext.animationsEnabled
+    }
+
+    public static func setAnimationsEnabled(_ enabled: Bool) {
+        UIViewAnimationContext.animationsEnabled = enabled
+    }
+
+    /// Scoped counterpart to `setAnimationsEnabled(_:)`. Nested scopes
+    /// restore the caller's exact prior state, including an already-disabled
+    /// process, even when the body starts additional animation transactions.
+    public static func performWithoutAnimation(_ actions: () -> Void) {
+        let previous = UIViewAnimationContext.animationsEnabled
+        UIViewAnimationContext.animationsEnabled = false
+        defer { UIViewAnimationContext.animationsEnabled = previous }
+        actions()
+    }
+
     /// Raw values are Darwin's `UIViewAnimationCurve`. The type is still
     /// used by transition-coordinator contexts even though modern animation
     /// calls express the same curves through `AnimationOptions`.
@@ -349,7 +374,8 @@ extension UIView {
     func recordAnimation(_ property: UIViewAnimation.Property,
                          from: UIViewAnimation.Value,
                          to: UIViewAnimation.Value) {
-        guard let ctx = UIViewAnimationContext.current else { return }
+        guard UIViewAnimationContext.animationsEnabled,
+              let ctx = UIViewAnimationContext.current else { return }
         UIViewAnimationContext.recordedInBlock &+= 1
         let now = OpenUIKitRuntime.animationTime
         var actualFrom = from

@@ -144,8 +144,14 @@ public struct UITraitCollection: Equatable, Sendable {
     }
 
     /// Process-wide current traits (real UIKit: UITraitCollection.current).
-    public static var current = UITraitCollection(userInterfaceStyle: .light,
-                                                   displayScale: 2)
+    /// UIKit exposes the process/thread current traits through a synchronous
+    /// nonisolated getter. The portable host updates this snapshot when it
+    /// enters a trait environment; the value itself is immutable and
+    /// Sendable, while synchronization belongs to the UI host boundary.
+    public nonisolated(unsafe) static var current = UITraitCollection(
+        userInterfaceStyle: .light,
+        displayScale: 2
+    )
 }
 
 public class UIColor: Hashable, @unchecked Sendable {
@@ -167,6 +173,43 @@ public class UIColor: Hashable, @unchecked Sendable {
     init(semantic name: String) { storage = .semantic(name: name) }
     public init(dynamicProvider: @escaping (UITraitCollection) -> UIColor) {
         storage = .dynamic { traits in dynamicProvider(traits).resolvedCGColor(with: traits) }
+    }
+
+    /// Decomposes the color resolved in the current trait environment into
+    /// extended sRGB components. OpenUIKit's CGColor representation is
+    /// normalized RGBA, so every supported color space is representable.
+    @discardableResult
+    public func getRed(
+        _ red: UnsafeMutablePointer<CGFloat>?,
+        green: UnsafeMutablePointer<CGFloat>?,
+        blue: UnsafeMutablePointer<CGFloat>?,
+        alpha: UnsafeMutablePointer<CGFloat>?
+    ) -> Bool {
+        let color = resolvedCGColor(with: .current)
+        red?.pointee = color.red
+        green?.pointee = color.green
+        blue?.pointee = color.blue
+        alpha?.pointee = color.alpha
+        return true
+    }
+
+    /// Returns a monochrome decomposition only when all resolved channels
+    /// agree. This preserves UIKit's fail-closed color-model contract instead
+    /// of silently discarding chroma.
+    @discardableResult
+    public func getWhite(
+        _ white: UnsafeMutablePointer<CGFloat>?,
+        alpha: UnsafeMutablePointer<CGFloat>?
+    ) -> Bool {
+        let color = resolvedCGColor(with: .current)
+        let tolerance: CGFloat = 1.0 / 65_535.0
+        guard (color.red - color.green).magnitude <= tolerance,
+              (color.green - color.blue).magnitude <= tolerance else {
+            return false
+        }
+        white?.pointee = color.red
+        alpha?.pointee = color.alpha
+        return true
     }
 
     /// UIKit's bundle-selecting named-color initializer.

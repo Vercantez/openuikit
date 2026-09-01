@@ -376,7 +376,17 @@ final class SwiftUISettingsTests: XCTestCase {
         let buttons = descendants(controller.view).compactMap { $0 as? UIControl }
             .filter { $0.accessibilityIdentifier == "SwiftUI.Button" }
         XCTAssertGreaterThanOrEqual(buttons.count, 4)
-        let gridButtons = Array(buttons.suffix(3))
+        // NavigationStack now owns a real UINavigationController, so its
+        // toolbar is a sibling of the content controller rather than a fake
+        // in-tree bar. Select grid controls semantically instead of relying
+        // on cross-controller traversal order.
+        let gridButtons = ["A", "B", "C"].compactMap { title in
+            buttons.first { button in
+                descendants(button).compactMap { ($0 as? UILabel)?.text }
+                    .contains(title)
+            }
+        }
+        XCTAssertEqual(gridButtons.count, 3)
         XCTAssertEqual(gridButtons[0].frame.width, gridButtons[1].frame.width, accuracy: 0.001)
         XCTAssertGreaterThan(gridButtons[1].frame.minX, gridButtons[0].frame.minX)
         XCTAssertGreaterThan(gridButtons[2].frame.minY, gridButtons[0].frame.minY)

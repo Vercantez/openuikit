@@ -11,6 +11,93 @@ import FoundationEssentials
 import Combine
 import OpenUIKit
 
+/// A centered empty-state surface with retained label, description and
+/// action subtrees. Keeping the three regions structurally distinct preserves
+/// dynamic-property identity when an unavailable view is reevaluated while
+/// still rendering through ordinary SwiftUI layout primitives.
+public struct _OpenContentUnavailableView<LabelContent: _OpenView,
+    DescriptionContent: _OpenView, ActionsContent: _OpenView>: _OpenView
+{
+    public typealias Body = Never
+    public let label: LabelContent
+    public let description: DescriptionContent?
+    public let actions: ActionsContent?
+
+    public init(
+        @_OpenViewBuilder label: () -> LabelContent,
+        @_OpenViewBuilder description: () -> DescriptionContent,
+        @_OpenViewBuilder actions: () -> ActionsContent
+    ) {
+        self.label = label()
+        self.description = description()
+        self.actions = actions()
+    }
+
+    public init(
+        @_OpenViewBuilder label: () -> LabelContent,
+        @_OpenViewBuilder description: () -> DescriptionContent
+    ) where ActionsContent == EmptyView {
+        self.label = label()
+        self.description = description()
+        actions = nil
+    }
+
+    public init(
+        @_OpenViewBuilder label: () -> LabelContent
+    ) where DescriptionContent == EmptyView, ActionsContent == EmptyView {
+        self.label = label()
+        description = nil
+        actions = nil
+    }
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        var children: [_OpenViewNode] = [_OpenViewNode(.spacer(minLength: 0))]
+        children.append(
+            _OpenGraphContext.withStructuralScope(.sectionHeader) {
+                label._makeOpenUIKitNode()
+            }
+        )
+        if let description {
+            children.append(
+                _OpenGraphContext.withStructuralScope(.sectionContent) {
+                    description._makeOpenUIKitNode()
+                }
+            )
+        }
+        if let actions {
+            children.append(
+                _OpenGraphContext.withStructuralScope(.sectionFooter) {
+                    actions._makeOpenUIKitNode()
+                }
+            )
+        }
+        children.append(_OpenViewNode(.spacer(minLength: 0)))
+        return _OpenViewNode(
+            .vStack(children: children, alignment: .center, spacing: 12)
+        )
+    }
+}
+
+public extension _OpenContentUnavailableView
+where LabelContent == _OpenLabel<_OpenText, _OpenImage>,
+      DescriptionContent == _OpenText,
+      ActionsContent == _OpenEmptyView
+{
+    init(
+        _ title: String,
+        systemImage: String,
+        description: Text? = nil
+    ) {
+        label = Label(title, systemImage: systemImage)
+        self.description = description
+        actions = nil
+    }
+}
+
+public typealias ContentUnavailableView<LabelContent: _OpenView,
+    DescriptionContent: _OpenView, ActionsContent: _OpenView> =
+    _OpenContentUnavailableView<LabelContent, DescriptionContent, ActionsContent>
+
 public struct _OpenSection<Parent: _OpenView, Content: _OpenView, Footer: _OpenView>:
     _OpenView
 {

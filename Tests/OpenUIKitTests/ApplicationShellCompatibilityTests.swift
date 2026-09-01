@@ -2,6 +2,15 @@ import XCTest
 @testable import OpenUIKit
 
 @MainActor
+private final class AdjustedInsetRecorder: UIScrollViewDelegate {
+    var values: [UIEdgeInsets] = []
+
+    func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView) {
+        values.append(scrollView.adjustedContentInset)
+    }
+}
+
+@MainActor
 final class ApplicationShellCompatibilityTests: XCTestCase {
     private final class ActivityRestorer: UIUserActivityRestoring {
         var restoredType: String?
@@ -91,6 +100,90 @@ final class ApplicationShellCompatibilityTests: XCTestCase {
         XCTAssertEqual(bar.titleLabel.textColor, .systemBlue)
         XCTAssertEqual(bar.backButton?.backLabel.textColor, .systemOrange)
         XCTAssertEqual(bar.backButton?.chevron.textColor, .systemOrange)
+    }
+
+    func testBaseViewAppearanceTintIsInheritedWithoutReplacingHierarchyTint() {
+        let proxy = UIView.appearance()
+        let original = proxy._tintColor
+        defer { proxy._tintColor = original }
+
+        proxy.tintColor = .systemOrange
+        let inherited = UIView()
+        XCTAssertEqual(inherited.tintColor, .systemOrange)
+
+        inherited.tintColor = .systemPurple
+        XCTAssertEqual(inherited.tintColor, .systemPurple)
+        XCTAssertEqual(UIView().tintColor, .systemOrange)
+    }
+
+    func testRectConversionUsesAllTransformedCornersAndRoundTripsPoints() {
+        let root = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+        let child = UIView(frame: CGRect(x: 40, y: 45, width: 20, height: 10))
+        child.transform = CGAffineTransform(rotationAngle: .pi / 2)
+        root.addSubview(child)
+
+        let converted = child.convert(child.bounds, to: root)
+        XCTAssertEqual(converted.minX, 45, accuracy: 0.001)
+        XCTAssertEqual(converted.minY, 40, accuracy: 0.001)
+        XCTAssertEqual(converted.width, 10, accuracy: 0.001)
+        XCTAssertEqual(converted.height, 20, accuracy: 0.001)
+
+        let local = CGPoint(x: 3, y: 7)
+        let inRoot = child.convert(local, to: root)
+        let roundTrip = child.convert(inRoot, from: root)
+        XCTAssertEqual(roundTrip.x, local.x, accuracy: 0.001)
+        XCTAssertEqual(roundTrip.y, local.y, accuracy: 0.001)
+    }
+
+    func testColorDecompositionAdjustedInsetsAndGestureShellDefaults() throws {
+        let previous = UITraitCollection.current
+        defer { UITraitCollection.current = previous }
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .dark,
+            displayScale: 3
+        )
+
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        let color = UIColor(red: 0.2, green: 0.4, blue: 0.6, alpha: 0.8)
+        XCTAssertTrue(color.getRed(&red, green: &green, blue: &blue, alpha: &alpha))
+        XCTAssertEqual(red, 0.2, accuracy: 0.001)
+        XCTAssertEqual(green, 0.4, accuracy: 0.001)
+        XCTAssertEqual(blue, 0.6, accuracy: 0.001)
+        XCTAssertEqual(alpha, 0.8, accuracy: 0.001)
+        var white: CGFloat = 0
+        XCTAssertFalse(color.getWhite(&white, alpha: nil))
+        XCTAssertTrue(UIColor(white: 0.3, alpha: 0.7).getWhite(&white, alpha: &alpha))
+        XCTAssertEqual(white, 0.3, accuracy: 0.001)
+        XCTAssertEqual(alpha, 0.7, accuracy: 0.001)
+
+        let recorder = AdjustedInsetRecorder()
+        let scroll = UIScrollView(frame: CGRect(x: 0, y: 0, width: 100, height: 120))
+        scroll.delegate = recorder
+        scroll.contentInset = UIEdgeInsets(top: 1, left: 2, bottom: 3, right: 4)
+        scroll._setSafeAreaInsets(UIEdgeInsets(top: 10, left: 20, bottom: 30, right: 40))
+        XCTAssertEqual(
+            scroll.adjustedContentInset,
+            UIEdgeInsets(top: 11, left: 22, bottom: 33, right: 44)
+        )
+        XCTAssertEqual(recorder.values.last, scroll.adjustedContentInset)
+        scroll.verticalScrollIndicatorInsets = UIEdgeInsets(top: 5, right: 7)
+        scroll.horizontalScrollIndicatorInsets = UIEdgeInsets(bottom: 9, right: 11)
+        XCTAssertEqual(scroll.verticalScrollIndicatorInsets.top, 5)
+        XCTAssertEqual(scroll.horizontalScrollIndicatorInsets.bottom, 9)
+
+        let recognizer = UIGestureRecognizer()
+        XCTAssertFalse(recognizer.delaysTouchesBegan)
+        XCTAssertTrue(recognizer.delaysTouchesEnded)
+
+        let navigation = UINavigationController(rootViewController: UIViewController())
+        navigation.loadViewIfNeeded()
+        XCTAssertTrue(
+            try XCTUnwrap(navigation.interactiveContentPopGestureRecognizer)
+                === navigation.interactivePopGestureRecognizer
+        )
     }
 
     func testOverlayPresentationFillsWindowWithoutRemovingPresenter() {

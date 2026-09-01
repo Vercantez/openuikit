@@ -205,23 +205,89 @@ private final class _SwiftUIScrollView: UIScrollView {
 }
 
 @MainActor
+private final class _SwiftUIOpenURLHost: UIView {
+    let action: @MainActor (URL) -> Void
+
+    init(action: @escaping @MainActor (URL) -> Void) {
+        self.action = action
+        super.init(frame: .zero)
+        isHidden = true
+        isUserInteractionEnabled = false
+        accessibilityIdentifier = "SwiftUI.OpenURLHandler"
+    }
+
+    required init?(coder: NSCoder) { nil }
+}
+
+@MainActor
+func _openDeliverURL(_ url: URL, in root: UIView) -> Bool {
+    var delivered = false
+    func visit(_ view: UIView) {
+        if let handler = view as? _SwiftUIOpenURLHost {
+            handler.action(url)
+            delivered = true
+        }
+        view.subviews.forEach(visit)
+    }
+    visit(root)
+    return delivered
+}
+
+@MainActor
 private final class _SwiftUIScrollCoordinator: UIScrollViewDelegate {
     let storage: _OpenScrollProxyStorage
     let geometryObservers: [_OpenScrollGeometryObserver]
     let visibilityObservers: [_OpenScrollVisibilityObserver]
+    let phaseObservers: [_OpenScrollPhaseObserver]
     private var previousGeometryValues: [Any] = []
+    private var phase: ScrollPhase = .idle
 
     init(
         storage: _OpenScrollProxyStorage,
         geometryObservers: [_OpenScrollGeometryObserver],
-        visibilityObservers: [_OpenScrollVisibilityObserver]
+        visibilityObservers: [_OpenScrollVisibilityObserver],
+        phaseObservers: [_OpenScrollPhaseObserver]
     ) {
         self.storage = storage
         self.geometryObservers = geometryObservers
         self.visibilityObservers = visibilityObservers
+        self.phaseObservers = phaseObservers
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) { notify(scrollView) }
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        transition(to: .interacting, scrollView: scrollView)
+    }
+
+    func scrollViewDidEndDragging(
+        _ scrollView: UIScrollView,
+        willDecelerate: Bool
+    ) {
+        if !willDecelerate { transition(to: .idle, scrollView: scrollView) }
+    }
+
+    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        transition(to: .decelerating, scrollView: scrollView)
+    }
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        transition(to: .idle, scrollView: scrollView)
+    }
+
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        transition(to: .idle, scrollView: scrollView)
+    }
+
+    private func transition(to next: ScrollPhase, scrollView: UIScrollView) {
+        guard next != phase else { return }
+        let previous = phase
+        phase = next
+        let context = ScrollPhaseChangeContext(
+            geometry: ScrollGeometry(scrollView: scrollView)
+        )
+        phaseObservers.forEach { $0.deliver(previous, next, context) }
+    }
 
     func notify(_ scrollView: UIScrollView) {
         let geometry = ScrollGeometry(scrollView: scrollView)
@@ -359,6 +425,7 @@ private final class _SwiftUIPresentationContainerController: UIViewController,
     private let dismissBridge: _SwiftUIPresentationDismissBridge
     private let contentController: UIHostingController<AnyView>
     private var attachedToNavigationStack = false
+    private var dismissalDelivered = false
 
     init(configuration: _OpenPresentationConfiguration) {
         self.configuration = configuration
@@ -419,15 +486,22 @@ private final class _SwiftUIPresentationContainerController: UIViewController,
             attachedToNavigationStack = true
         } else if parent == nil, attachedToNavigationStack {
             attachedToNavigationStack = false
-            configuration.state.dismiss()
+            finishDismissal()
         }
+    }
+
+    fileprivate func finishDismissal() {
+        guard !dismissalDelivered else { return }
+        dismissalDelivered = true
+        configuration.state.dismiss()
+        configuration.state.onDismiss()
     }
 
     func presentationControllerDidDismiss(
         _ presentationController: UIPresentationController
     ) {
         _ = presentationController
-        configuration.state.dismiss()
+        finishDismissal()
     }
 }
 
@@ -464,9 +538,13 @@ private final class _SwiftUIPresentationHost: UIView {
 
         if !configuration.state.getIsPresented() {
             if let modal, modal.matches(configuration) {
-                modal.dismiss(animated: true)
+                modal.update(configuration: configuration)
+                modal.dismiss(animated: true) { [weak modal] in
+                    modal?.finishDismissal()
+                }
             } else if let pushed,
                       navigationController?.topViewController === pushed {
+                pushed.update(configuration: configuration)
                 navigationController?.popViewController(animated: true)
             }
             return
@@ -665,6 +743,328 @@ private func _enclosingViewController(for view: UIView) -> UIViewController? {
         responder = current.next
     }
     return nil
+}
+
+/// Hosts one already-evaluated navigation node while preserving the UIKit
+/// controller/appearance boundary required by UIViewControllerRepresentable.
+/// Dynamic state remains in the parent SwiftUI graph; this controller owns
+/// only presentation identity and child-controller lifetime.
+@MainActor
+private final class _SwiftUINavigationNodeController: UIViewController {
+    private var node: _OpenViewNode
+    fileprivate private(set) var configuration: _OpenNavigationConfiguration
+    private var installedControllers: [ObjectIdentifier: UIViewController] = [:]
+    private var pendingMoves: Set<ObjectIdentifier> = []
+    private var appearanceChildren: Set<ObjectIdentifier> = []
+    private var activeAppearanceActions: [
+        _OpenAppearanceIdentity: _OpenAppearanceActions
+    ] = [:]
+    private var visibleAppearanceIdentities: Set<_OpenAppearanceIdentity> = []
+    private var hostIsVisible = false
+    private var toolbarHost: _SwiftUIHostingView?
+
+    init(node: _OpenViewNode, configuration: _OpenNavigationConfiguration) {
+        self.node = node
+        self.configuration = configuration
+        super.init()
+        applyNavigationMetadata()
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    func update(node: _OpenViewNode, configuration: _OpenNavigationConfiguration) {
+        self.node = node
+        self.configuration = configuration
+        applyNavigationMetadata()
+        guard let host = viewIfLoaded as? _SwiftUIHostingView else { return }
+        synchronizeContainedControllers()
+        updateAppearanceActions(for: node)
+        host.node = node
+        host.setNeedsLayout()
+        deliverPendingAppearActions()
+    }
+
+    override func loadView() {
+        let host = _SwiftUIHostingView(node: node)
+        host.accessibilityIdentifier = "SwiftUI.NavigationStack.content"
+        host.didCompleteLayout = { [weak self] in
+            self?.completeContainedControllerMoves()
+        }
+        view = host
+        synchronizeContainedControllers()
+        activeAppearanceActions = _openAppearanceActions(in: node)
+        applyNavigationMetadata()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        toolbarHost?.layoutIfNeeded()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        appearanceChildren.removeAll(keepingCapacity: true)
+        for (identity, controller) in installedControllers
+        where !pendingMoves.contains(identity) {
+            controller.beginAppearanceTransition(true, animated: animated)
+            appearanceChildren.insert(identity)
+        }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        for identity in appearanceChildren {
+            installedControllers[identity]?.endAppearanceTransition()
+        }
+        appearanceChildren.removeAll(keepingCapacity: true)
+        hostIsVisible = true
+        deliverPendingAppearActions()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        appearanceChildren.removeAll(keepingCapacity: true)
+        for (identity, controller) in installedControllers
+        where !pendingMoves.contains(identity) {
+            controller.beginAppearanceTransition(false, animated: animated)
+            appearanceChildren.insert(identity)
+        }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        for identity in appearanceChildren {
+            installedControllers[identity]?.endAppearanceTransition()
+        }
+        appearanceChildren.removeAll(keepingCapacity: true)
+        hostIsVisible = false
+        let disappearing = visibleAppearanceIdentities.compactMap {
+            activeAppearanceActions[$0]?.disappear
+        }
+        visibleAppearanceIdentities.removeAll(keepingCapacity: true)
+        disappearing.forEach { $0() }
+    }
+
+    private func synchronizeContainedControllers() {
+        let controllers = _openContainedControllers(in: node)
+        let next = Set(controllers.map(ObjectIdentifier.init))
+        for (identity, controller) in installedControllers where !next.contains(identity) {
+            controller.willMove(toParent: nil)
+            controller.viewIfLoaded?.removeFromSuperview()
+            controller.removeFromParent()
+            installedControllers.removeValue(forKey: identity)
+            pendingMoves.remove(identity)
+            appearanceChildren.remove(identity)
+        }
+        for controller in controllers {
+            let identity = ObjectIdentifier(controller)
+            guard installedControllers[identity] == nil else { continue }
+            addChild(controller)
+            installedControllers[identity] = controller
+            pendingMoves.insert(identity)
+        }
+    }
+
+    private func completeContainedControllerMoves() {
+        for controller in children {
+            let identity = ObjectIdentifier(controller)
+            guard pendingMoves.contains(identity),
+                  controller.viewIfLoaded?.superview != nil else { continue }
+            controller.didMove(toParent: self)
+            pendingMoves.remove(identity)
+            if hostIsVisible {
+                controller.beginAppearanceTransition(true, animated: false)
+                controller.endAppearanceTransition()
+            }
+        }
+        deliverPendingAppearActions()
+    }
+
+    private func updateAppearanceActions(for node: _OpenViewNode) {
+        let next = _openAppearanceActions(in: node)
+        guard hostIsVisible else {
+            activeAppearanceActions = next
+            visibleAppearanceIdentities.removeAll(keepingCapacity: true)
+            return
+        }
+        let removed = visibleAppearanceIdentities.subtracting(next.keys)
+        let disappearing = removed.compactMap {
+            activeAppearanceActions[$0]?.disappear
+        }
+        visibleAppearanceIdentities.subtract(removed)
+        activeAppearanceActions = next
+        disappearing.forEach { $0() }
+    }
+
+    private func deliverPendingAppearActions() {
+        guard hostIsVisible else { return }
+        for (identity, actions) in activeAppearanceActions
+        where !visibleAppearanceIdentities.contains(identity) {
+            visibleAppearanceIdentities.insert(identity)
+            actions.appear?()
+        }
+    }
+
+    private func applyNavigationMetadata() {
+        title = configuration.title
+        navigationItem.hidesBackButton = configuration.backButtonHidden
+        guard let toolbar = configuration.toolbar else {
+            toolbarHost = nil
+            navigationItem.rightBarButtonItem = nil
+            return
+        }
+        let host: _SwiftUIHostingView
+        if let existing = toolbarHost {
+            existing.node = toolbar
+            host = existing
+        } else {
+            host = _SwiftUIHostingView(node: toolbar)
+            host.accessibilityIdentifier = "SwiftUI.NavigationStack.toolbar"
+            toolbarHost = host
+        }
+        host.frame = CGRect(x: 0, y: 0, width: 120, height: 44)
+        host.layoutIfNeeded()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: host)
+    }
+}
+
+/// Stable controller backing one NavigationStack graph location. It updates
+/// the bound path after interactive/back-button pops and applies programmatic
+/// path mutations as real OpenUIKit pushes/pops without replacing surviving
+/// destination controllers along a common prefix.
+@MainActor
+final class _SwiftUINavigationStackController: UINavigationController,
+    UINavigationControllerDelegate
+{
+    private let rootNodeController: _SwiftUINavigationNodeController
+    private var destinationControllers: [_SwiftUINavigationNodeController] = []
+    private var destinationValues: [AnyHashable] = []
+    private var pathBinding: _OpenNavigationPathBinding?
+    private var isSynchronizing = false
+
+    override init() {
+        let root = _SwiftUINavigationNodeController(
+            node: _OpenViewNode(.empty),
+            configuration: _OpenNavigationConfiguration()
+        )
+        rootNodeController = root
+        super.init(rootViewController: root)
+        delegate = self
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    override func loadView() {
+        super.loadView()
+        view.accessibilityIdentifier = "SwiftUI.NavigationStack"
+        applyVisibleConfiguration(animated: false)
+    }
+
+    func update(
+        rootNode: _OpenViewNode,
+        rootConfiguration: _OpenNavigationConfiguration,
+        pathBinding: _OpenNavigationPathBinding?,
+        destinations: [_OpenNavigationResolvedDestination]
+    ) {
+        self.pathBinding = pathBinding
+        rootNodeController.update(
+            node: rootNode,
+            configuration: rootConfiguration
+        )
+
+        let nextValues = destinations.map(\.value)
+        var common = 0
+        while common < destinationValues.count,
+              common < nextValues.count,
+              destinationValues[common] == nextValues[common] {
+            destinationControllers[common].update(
+                node: destinations[common].node,
+                configuration: destinations[common].configuration
+            )
+            common += 1
+        }
+
+        isSynchronizing = true
+        while destinationControllers.count > common {
+            _ = popViewController(animated: false)
+            destinationControllers.removeLast()
+            destinationValues.removeLast()
+        }
+
+        for index in common..<destinations.count {
+            let destination = destinations[index]
+            let controller = _SwiftUINavigationNodeController(
+                node: destination.node,
+                configuration: destination.configuration
+            )
+            destinationControllers.append(controller)
+            destinationValues.append(destination.value)
+            let animate = isViewLoaded && view.window != nil
+                && UIView.areAnimationsEnabled
+                && index == destinations.index(before: destinations.endIndex)
+            pushViewController(controller, animated: animate)
+        }
+        isSynchronizing = false
+        applyVisibleConfiguration(animated: false)
+    }
+
+    func dismantleStack() {
+        delegate = nil
+        pathBinding = nil
+        destinationControllers.removeAll()
+        destinationValues.removeAll()
+    }
+
+    func navigationController(
+        _ navigationController: UINavigationController,
+        willShow viewController: UIViewController,
+        animated: Bool
+    ) {
+        _ = navigationController
+        guard let destination = viewController as? _SwiftUINavigationNodeController else {
+            return
+        }
+        setNavigationBarHidden(destination.configuration.barHidden, animated: animated)
+        navigationBar.prefersLargeTitles = destination.configuration.titleDisplayMode == .large
+    }
+
+    func navigationController(
+        _ navigationController: UINavigationController,
+        didShow viewController: UIViewController,
+        animated: Bool
+    ) {
+        _ = navigationController
+        _ = viewController
+        _ = animated
+        applyVisibleConfiguration(animated: false)
+        guard !isSynchronizing, let pathBinding else { return }
+        let visibleDepth = max(0, viewControllers.count - 1)
+        let elements = pathBinding.getElements()
+        if visibleDepth < elements.count {
+            pathBinding.setElements(Array(elements.prefix(visibleDepth)))
+        }
+    }
+
+    func navigationController(
+        _ navigationController: UINavigationController,
+        animationControllerFor operation: UINavigationController.Operation,
+        from fromVC: UIViewController,
+        to toVC: UIViewController
+    ) -> UIViewControllerAnimatedTransitioning? {
+        _ = navigationController
+        _ = operation
+        _ = fromVC
+        _ = toVC
+        return nil
+    }
+
+    private func applyVisibleConfiguration(animated: Bool) {
+        guard let controller = topViewController as? _SwiftUINavigationNodeController else {
+            return
+        }
+        setNavigationBarHidden(controller.configuration.barHidden, animated: animated)
+        navigationBar.prefersLargeTitles = controller.configuration.titleDisplayMode == .large
+    }
 }
 
 /// OpenUIKit-backed host for the SwiftUI tree and its retained dynamic state.
@@ -1198,6 +1598,8 @@ private struct _RenderEnvironment {
     var scrollStorage: _OpenScrollProxyStorage?
     var scrollVisibilityObservers: [_OpenScrollVisibilityObserver] = []
     var scrollGeometryObservers: [_OpenScrollGeometryObserver] = []
+    var scrollPhaseObservers: [_OpenScrollPhaseObserver] = []
+    var isScrollEnabled = true
     var refreshAction: (@MainActor () async -> Void)?
     var scrollIndicatorVisibility: Visibility = .automatic
     var listStyle: ListStyle = .automatic
@@ -1621,6 +2023,14 @@ private enum _ViewRenderer {
                 var next = environment
                 next.keyboardDismissMode = mode
                 return measure(content, proposed: proposed, environment: next)
+            case .scrollDisabled(let disabled):
+                var next = environment
+                next.isScrollEnabled = environment.isScrollEnabled && !disabled
+                return measure(content, proposed: proposed, environment: next)
+            case .scrollPhase(let observer):
+                var next = environment
+                next.scrollPhaseObservers.append(observer)
+                return measure(content, proposed: proposed, environment: next)
             case .controlSize(let size):
                 var next = environment
                 next.controlSize = size
@@ -1729,9 +2139,10 @@ private enum _ViewRenderer {
                 next.textAlignment = alignment
                 return measure(content, proposed: proposed, environment: next)
             case .tapAction, .simultaneousTapAction, .gesture, .onAppear,
-                 .onDisappear,
+                 .onDisappear, .openURL,
                  .shadow, .colorScheme, .safeAreaIgnored, .opacity,
-                 .scaleEffect, .layoutPriority, .accessibilityElement,
+                 .scaleEffect, .anchoredScaleEffect, .offset,
+                 .layoutPriority, .accessibilityElement,
                  .accessibilityLabel, .accessibilityHint, .accessibilityValue,
                  .accessibilityTraits, .allowsHitTesting, .zIndex,
                  .glassEffect, .contextMenu, .matchedGeometry,
@@ -1781,7 +2192,7 @@ private enum _ViewRenderer {
                 return measure(content, proposed: proposed, environment: environment)
             case .effect, .navigationTitle, .navigationBarHidden,
                  .navigationBackButtonHidden, .navigationTitleDisplayMode,
-                 .toolbar, .tag, .pageTabViewStyle:
+                 .navigationDestination, .toolbar, .tag, .pageTabViewStyle:
                 return measure(content, proposed: proposed, environment: environment)
             }
         }
@@ -2205,6 +2616,7 @@ private enum _ViewRenderer {
         case .scroll(let content):
             let scrollView = _SwiftUIScrollView(frame: rect)
             scrollView.accessibilityIdentifier = "SwiftUI.ScrollView"
+            scrollView.isScrollEnabled = environment.isScrollEnabled
             switch environment.keyboardDismissMode {
             case .immediately:
                 scrollView.keyboardDismissMode = .onDrag
@@ -2254,7 +2666,8 @@ private enum _ViewRenderer {
             let coordinator = _SwiftUIScrollCoordinator(
                 storage: storage,
                 geometryObservers: environment.scrollGeometryObservers,
-                visibilityObservers: environment.scrollVisibilityObservers
+                visibilityObservers: environment.scrollVisibilityObservers,
+                phaseObservers: environment.scrollPhaseObservers
             )
             scrollView.retainedCoordinator = coordinator
             scrollView.delegate = coordinator
@@ -2771,6 +3184,31 @@ private enum _ViewRenderer {
                 scaleHost.accessibilityIdentifier = "SwiftUI.ScaleEffect"
                 surface.addSubview(scaleHost)
                 place(content, in: scaleHost.bounds, on: scaleHost, environment: environment)
+            case .anchoredScaleEffect(let scale, let anchor):
+                let boundedScale = scale.isFinite ? scale : 1
+                let scaleHost = _SwiftUIPassthroughView(frame: rect)
+                let anchorPoint = CGPoint(
+                    x: rect.minX + rect.width * anchor.x,
+                    y: rect.minY + rect.height * anchor.y
+                )
+                scaleHost.center = CGPoint(
+                    x: rect.midX + (1 - boundedScale) * (anchorPoint.x - rect.midX),
+                    y: rect.midY + (1 - boundedScale) * (anchorPoint.y - rect.midY)
+                )
+                scaleHost.transform = CGAffineTransform(
+                    scaleX: boundedScale,
+                    y: boundedScale
+                )
+                scaleHost.accessibilityIdentifier = "SwiftUI.ScaleEffect"
+                surface.addSubview(scaleHost)
+                place(content, in: scaleHost.bounds, on: scaleHost, environment: environment)
+            case .offset(let offset):
+                let offsetHost = _SwiftUIPassthroughView(
+                    frame: rect.offsetBy(dx: offset.width, dy: offset.height)
+                )
+                offsetHost.accessibilityIdentifier = "SwiftUI.Offset"
+                surface.addSubview(offsetHost)
+                place(content, in: offsetHost.bounds, on: offsetHost, environment: environment)
             case .projection(let resolve):
                 let projectionHost = _SwiftUIPassthroughView(frame: rect)
                 let projection = resolve(rect.size)
@@ -2842,6 +3280,9 @@ private enum _ViewRenderer {
                 place(content, in: host.bounds, on: host, environment: environment)
             case .onAppear, .onDisappear:
                 place(content, in: rect, on: surface, environment: environment)
+            case .openURL(let action):
+                place(content, in: rect, on: surface, environment: environment)
+                surface.addSubview(_SwiftUIOpenURLHost(action: action))
             case .shadow(let color, let radius, let x, let y):
                 let shadowHost = _SwiftUIPassthroughView(frame: rect)
                 shadowHost.backgroundColor = .clear
@@ -2876,14 +3317,16 @@ private enum _ViewRenderer {
                 place(content, in: rect, on: surface, environment: environment)
             case .previewLayout:
                 place(content, in: rect, on: surface, environment: environment)
-            case .clipRoundedRectangle(let radius):
+            case .clipRoundedRectangle(let radius, let corners):
                 if surface is _SwiftUIHostingView, rect == surface.bounds {
                     surface.layer.cornerRadius = radius
+                    surface.layer.maskedCorners = corners
                     surface.clipsToBounds = radius > 0
                     place(content, in: rect, on: surface, environment: environment)
                 } else {
                     let clippingView = _SwiftUIPassthroughView(frame: rect)
                     clippingView.layer.cornerRadius = radius
+                    clippingView.layer.maskedCorners = corners
                     clippingView.clipsToBounds = radius > 0
                     clippingView.accessibilityIdentifier = "SwiftUI.ClipRoundedRectangle"
                     surface.addSubview(clippingView)
@@ -3068,6 +3511,14 @@ private enum _ViewRenderer {
                 var next = environment
                 next.scrollGeometryObservers.append(observer)
                 place(content, in: rect, on: surface, environment: next)
+            case .scrollDisabled(let disabled):
+                var next = environment
+                next.isScrollEnabled = environment.isScrollEnabled && !disabled
+                place(content, in: rect, on: surface, environment: next)
+            case .scrollPhase(let observer):
+                var next = environment
+                next.scrollPhaseObservers.append(observer)
+                place(content, in: rect, on: surface, environment: next)
             case .geometryObserver(let observer):
                 place(content, in: rect, on: surface, environment: environment)
                 observer.deliver(
@@ -3202,7 +3653,7 @@ private enum _ViewRenderer {
             case .effect, .toolbarVisibility, .toolbarBackgroundVisibility,
                  .navigationTitle, .navigationBarHidden,
                  .navigationBackButtonHidden, .navigationTitleDisplayMode,
-                 .toolbar, .tag, .pageTabViewStyle:
+                 .navigationDestination, .toolbar, .tag, .pageTabViewStyle:
                 // NavigationView consumes this metadata while building its
                 // node.  Outside a NavigationView it leaves content intact.
                 place(content, in: rect, on: surface, environment: environment)

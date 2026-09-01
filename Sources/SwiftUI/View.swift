@@ -202,13 +202,16 @@ enum _OpenPresentationKind: Equatable {
 final class _OpenPresentationState: @unchecked Sendable {
     let getIsPresented: @MainActor () -> Bool
     let setIsPresented: @MainActor (Bool) -> Void
+    let onDismiss: @MainActor () -> Void
 
     init(
         getIsPresented: @escaping @MainActor () -> Bool,
-        setIsPresented: @escaping @MainActor (Bool) -> Void
+        setIsPresented: @escaping @MainActor (Bool) -> Void,
+        onDismiss: @escaping @MainActor () -> Void = {}
     ) {
         self.getIsPresented = getIsPresented
         self.setIsPresented = setIsPresented
+        self.onDismiss = onDismiss
     }
 
     func dismiss() {
@@ -221,6 +224,38 @@ struct _OpenPresentationConfiguration {
     let kind: _OpenPresentationKind
     let state: _OpenPresentationState
     let makeDestination: @MainActor (DismissAction) -> AnyView
+}
+
+/// Type-erased typed destination registration carried through the rendered
+/// tree until the enclosing NavigationStack consumes it. Matching is exact:
+/// an unsupported path element never produces a placeholder controller.
+@MainActor
+struct _OpenNavigationDestinationRegistration {
+    let valueType: ObjectIdentifier
+    let matches: (AnyHashable) -> Bool
+    let makeNode: (AnyHashable) -> _OpenViewNode?
+}
+
+/// A single already-evaluated destination. Its dynamic properties belong to
+/// the parent graph, while the retained UIKit navigation controller owns only
+/// presentation and back-stack lifetime.
+@MainActor
+struct _OpenNavigationResolvedDestination {
+    let value: AnyHashable
+    let node: _OpenViewNode
+    let configuration: _OpenNavigationConfiguration
+}
+
+@MainActor
+struct _OpenNavigationPathBinding {
+    let getElements: () -> [AnyHashable]
+    let setElements: ([AnyHashable]) -> Void
+
+    func dismissDestination(at index: Int) {
+        let elements = getElements()
+        guard index >= 0, index < elements.count else { return }
+        setElements(Array(elements.prefix(index)))
+    }
 }
 
 struct _OpenSearchConfiguration {
@@ -253,6 +288,14 @@ struct _OpenScrollGeometryObserver {
     let deliver: @MainActor (Any, Any) -> Void
 }
 
+struct _OpenScrollPhaseObserver {
+    let deliver: @MainActor (
+        ScrollPhase,
+        ScrollPhase,
+        ScrollPhaseChangeContext
+    ) -> Void
+}
+
 struct _OpenGeometryObserver {
     let read: @MainActor (GeometryProxy) -> Any
     let deliver: @MainActor (Any) -> Void
@@ -267,6 +310,8 @@ enum _OpenViewModification {
     case tint(Color?)
     case opacity(CGFloat)
     case scaleEffect(CGFloat)
+    case anchoredScaleEffect(CGFloat, UnitPoint)
+    case offset(CGSize)
     case lineLimit(Int?)
     case lineLimitRange(ClosedRange<Int>)
     case truncationMode(TextTruncationMode)
@@ -293,17 +338,19 @@ enum _OpenViewModification {
     case gesture(_OpenGestureNode)
     case onAppear(identity: _OpenGraphIdentity?, action: @MainActor () -> Void)
     case onDisappear(identity: _OpenGraphIdentity?, action: @MainActor () -> Void)
+    case openURL(@MainActor (URL) -> Void)
     case shadow(color: Color, radius: CGFloat, x: CGFloat, y: CGFloat)
     case colorScheme(ColorScheme)
     case safeAreaIgnored(Edge.Set)
     case previewLayout(PreviewLayout)
-    case clipRoundedRectangle(CGFloat)
+    case clipRoundedRectangle(CGFloat, CACornerMask)
     case clipped
     case hidden
     case navigationTitle(String)
     case navigationBarHidden(Bool)
     case navigationBackButtonHidden(Bool)
     case navigationTitleDisplayMode(NavigationBarTitleDisplayMode)
+    case navigationDestination(_OpenNavigationDestinationRegistration)
     case toolbar(_OpenViewNode)
     case tag(AnyHashable)
     case pageTabViewStyle(PageTabViewStyle.IndexDisplayMode)
@@ -323,6 +370,8 @@ enum _OpenViewModification {
     case submit(@MainActor () -> Void)
     case submitLabel(SubmitLabel)
     case scrollDismissesKeyboard(ScrollDismissesKeyboardMode)
+    case scrollDisabled(Bool)
+    case scrollPhase(_OpenScrollPhaseObserver)
     case controlSize(ControlSize)
     case imageScale(ImageScale)
     case circularProgressStyle
@@ -371,6 +420,8 @@ fileprivate enum _OpenViewModifier {
     case tint(Color?)
     case opacity(CGFloat)
     case scaleEffect(CGFloat)
+    case anchoredScaleEffect(CGFloat, UnitPoint)
+    case offset(CGSize)
     case lineLimit(Int?)
     case lineLimitRange(ClosedRange<Int>)
     case truncationMode(TextTruncationMode)
@@ -397,17 +448,19 @@ fileprivate enum _OpenViewModifier {
     case gesture(_OpenGestureNode)
     case onAppear(@MainActor () -> Void)
     case onDisappear(@MainActor () -> Void)
+    case openURL(@MainActor (URL) -> Void)
     case shadow(color: Color, radius: CGFloat, x: CGFloat, y: CGFloat)
     case colorScheme(ColorScheme)
     case safeAreaIgnored(Edge.Set)
     case previewLayout(PreviewLayout)
-    case clipRoundedRectangle(CGFloat)
+    case clipRoundedRectangle(CGFloat, CACornerMask)
     case clipped
     case hidden
     case navigationTitle(String)
     case navigationBarHidden(Bool)
     case navigationBackButtonHidden(Bool)
     case navigationTitleDisplayMode(NavigationBarTitleDisplayMode)
+    case navigationDestination(_OpenNavigationDestinationRegistration)
     case toolbar(@MainActor () -> _OpenViewNode)
     case tag(AnyHashable)
     case pageTabViewStyle(PageTabViewStyle.IndexDisplayMode)
@@ -427,6 +480,8 @@ fileprivate enum _OpenViewModifier {
     case submit(@MainActor () -> Void)
     case submitLabel(SubmitLabel)
     case scrollDismissesKeyboard(ScrollDismissesKeyboardMode)
+    case scrollDisabled(Bool)
+    case scrollPhase(_OpenScrollPhaseObserver)
     case controlSize(ControlSize)
     case imageScale(ImageScale)
     case circularProgressStyle
@@ -494,6 +549,9 @@ fileprivate enum _OpenViewModifier {
         case .tint(let value): return .tint(value)
         case .opacity(let value): return .opacity(value)
         case .scaleEffect(let value): return .scaleEffect(value)
+        case .anchoredScaleEffect(let value, let anchor):
+            return .anchoredScaleEffect(value, anchor)
+        case .offset(let offset): return .offset(offset)
         case .lineLimit(let value): return .lineLimit(value)
         case .lineLimitRange(let value): return .lineLimitRange(value)
         case .truncationMode(let value): return .truncationMode(value)
@@ -542,12 +600,14 @@ fileprivate enum _OpenViewModifier {
             return _OpenGraphContext.withStructuralScope(.onDisappear) {
                 .onDisappear(identity: _OpenGraphContext.currentIdentity(), action: action)
             }
+        case .openURL(let action): return .openURL(action)
         case .shadow(let color, let radius, let x, let y):
             return .shadow(color: color, radius: radius, x: x, y: y)
         case .colorScheme(let scheme): return .colorScheme(scheme)
         case .safeAreaIgnored(let edges): return .safeAreaIgnored(edges)
         case .previewLayout(let value): return .previewLayout(value)
-        case .clipRoundedRectangle(let radius): return .clipRoundedRectangle(radius)
+        case .clipRoundedRectangle(let radius, let corners):
+            return .clipRoundedRectangle(radius, corners)
         case .clipped: return .clipped
         case .hidden: return .hidden
         case .navigationTitle(let title): return .navigationTitle(title)
@@ -556,6 +616,8 @@ fileprivate enum _OpenViewModifier {
             return .navigationBackButtonHidden(hidden)
         case .navigationTitleDisplayMode(let mode):
             return .navigationTitleDisplayMode(mode)
+        case .navigationDestination(let registration):
+            return .navigationDestination(registration)
         case .toolbar(let makeNode):
             return .toolbar(
                 _OpenGraphContext.withStructuralScope(.toolbar, operation: makeNode)
@@ -578,6 +640,8 @@ fileprivate enum _OpenViewModifier {
         case .submit(let action): return .submit(action)
         case .submitLabel(let label): return .submitLabel(label)
         case .scrollDismissesKeyboard(let mode): return .scrollDismissesKeyboard(mode)
+        case .scrollDisabled(let disabled): return .scrollDisabled(disabled)
+        case .scrollPhase(let observer): return .scrollPhase(observer)
         case .controlSize(let size): return .controlSize(size)
         case .imageScale(let scale): return .imageScale(scale)
         case .circularProgressStyle: return .circularProgressStyle
@@ -1189,6 +1253,98 @@ extension _OpenRoundedRectangle: _OpenView {
     }
 }
 
+@MainActor
+private final class _SwiftUIUnevenRoundedRectangleView: UIView {
+    let radii: (topLeading: CGFloat, bottomLeading: CGFloat,
+        bottomTrailing: CGFloat, topTrailing: CGFloat)
+    let fillColor: Color
+
+    init(shape: UnevenRoundedRectangle, color: Color) {
+        radii = (
+            shape.topLeadingRadius,
+            shape.bottomLeadingRadius,
+            shape.bottomTrailingRadius,
+            shape.topTrailingRadius
+        )
+        fillColor = color
+        super.init(frame: .zero)
+        isOpaque = false
+        backgroundColor = .clear
+        accessibilityIdentifier = "SwiftUI.UnevenRoundedRectangle"
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    override func drawContent(in canvas: Canvas, bounds: CGRect) {
+        let limit = max(0, min(bounds.width, bounds.height) / 2)
+        let tl = min(radii.topLeading, limit)
+        let bl = min(radii.bottomLeading, limit)
+        let br = min(radii.bottomTrailing, limit)
+        let tr = min(radii.topTrailing, limit)
+        var path = Path()
+        path.move(to: CGPoint(x: bounds.minX + tl, y: bounds.minY))
+        path.addLine(to: CGPoint(x: bounds.maxX - tr, y: bounds.minY))
+        if tr > 0 {
+            path.addQuad(
+                to: CGPoint(x: bounds.maxX, y: bounds.minY + tr),
+                control: CGPoint(x: bounds.maxX, y: bounds.minY)
+            )
+        }
+        path.addLine(to: CGPoint(x: bounds.maxX, y: bounds.maxY - br))
+        if br > 0 {
+            path.addQuad(
+                to: CGPoint(x: bounds.maxX - br, y: bounds.maxY),
+                control: CGPoint(x: bounds.maxX, y: bounds.maxY)
+            )
+        }
+        path.addLine(to: CGPoint(x: bounds.minX + bl, y: bounds.maxY))
+        if bl > 0 {
+            path.addQuad(
+                to: CGPoint(x: bounds.minX, y: bounds.maxY - bl),
+                control: CGPoint(x: bounds.minX, y: bounds.maxY)
+            )
+        }
+        path.addLine(to: CGPoint(x: bounds.minX, y: bounds.minY + tl))
+        if tl > 0 {
+            path.addQuad(
+                to: CGPoint(x: bounds.minX + tl, y: bounds.minY),
+                control: CGPoint(x: bounds.minX, y: bounds.minY)
+            )
+        }
+        path.close()
+        canvas.fill(
+            path,
+            color: fillColor.resolve().resolvedCGColor(with: traitCollection)
+        )
+    }
+}
+
+extension _OpenUnevenRoundedRectangle: _OpenView {
+    public typealias Body = Never
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(
+            .view(_SwiftUIUnevenRoundedRectangleView(shape: self, color: .primary))
+        )
+    }
+
+    public func fill(_ color: Color) -> some _OpenView {
+        _OpenUnevenRoundedRectangleFill(shape: self, color: color)
+    }
+}
+
+public struct _OpenUnevenRoundedRectangleFill: _OpenView {
+    public typealias Body = Never
+    public let shape: UnevenRoundedRectangle
+    public let color: Color
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(
+            .view(_SwiftUIUnevenRoundedRectangleView(shape: shape, color: color))
+        )
+    }
+}
+
 public struct _OpenFilledRoundedRectangle: _OpenView {
     public typealias Body = Never
     public let cornerRadius: CGFloat
@@ -1497,6 +1653,243 @@ public struct _OpenNavigationView<Content: _OpenView>: _OpenView {
             contentNode
         )
         return _OpenViewNode(.navigation(content: node, configuration: configuration))
+    }
+}
+
+/// Heterogeneous, value-semantic navigation state. AnyHashable preserves the
+/// exact dynamic type used to select `navigationDestination(for:)`, while the
+/// public collection operations match the NavigationPath surface used by
+/// state stores and deep-link routers.
+public struct _OpenNavigationPath: Equatable, @unchecked Sendable {
+    fileprivate var elements: [AnyHashable]
+
+    public init() { elements = [] }
+
+    public init<S>(_ elements: S) where S: Sequence, S.Element: Hashable {
+        self.elements = elements.map(AnyHashable.init)
+    }
+
+    fileprivate init(erasedElements: [AnyHashable]) {
+        elements = erasedElements
+    }
+
+    public var count: Int { elements.count }
+    public var isEmpty: Bool { elements.isEmpty }
+
+    public mutating func append<Value: Hashable>(_ value: Value) {
+        elements.append(AnyHashable(value))
+    }
+
+    public mutating func removeLast(_ count: Int = 1) {
+        precondition(count >= 0 && count <= elements.count)
+        elements.removeLast(count)
+    }
+}
+
+/// A real retained UIKit navigation stack driven in both directions by its
+/// SwiftUI path binding. Destination bodies are evaluated in the parent graph
+/// (so State/Environment/Observation identity remains intact), while the
+/// controller owns pushes, interactive pops, titles, and toolbar surfaces.
+public struct _OpenNavigationStack<Content: _OpenView>: _OpenView {
+    public typealias Body = Never
+    public let content: Content
+    private let pathBinding: _OpenNavigationPathBinding?
+
+    public init(@_OpenViewBuilder root: () -> Content) {
+        content = root()
+        pathBinding = nil
+    }
+
+    public init(
+        path: Binding<NavigationPath>,
+        @_OpenViewBuilder root: () -> Content
+    ) {
+        content = root()
+        pathBinding = _OpenNavigationPathBinding(
+            getElements: { path.wrappedValue.elements },
+            setElements: { path.wrappedValue = NavigationPath(erasedElements: $0) }
+        )
+    }
+
+    public init<Data>(
+        path: Binding<Data>,
+        @_OpenViewBuilder root: () -> Content
+    ) where Data: MutableCollection & RandomAccessCollection & RangeReplaceableCollection,
+        Data.Element: Hashable
+    {
+        content = root()
+        pathBinding = _OpenNavigationPathBinding(
+            getElements: { path.wrappedValue.map(AnyHashable.init) },
+            setElements: { erased in
+                let typed = erased.compactMap { $0.base as? Data.Element }
+                guard typed.count == erased.count else { return }
+                var value = path.wrappedValue
+                value.replaceSubrange(value.startIndex..<value.endIndex, with: typed)
+                path.wrappedValue = value
+            }
+        )
+    }
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        let contentNode = _OpenGraphContext.withStructuralScope(.navigationContent) {
+            content._makeOpenUIKitNode()
+        }
+        let (rootNode, rootConfiguration) = _openExtractNavigationConfiguration(
+            contentNode
+        )
+
+        var registrations = rootConfiguration.destinations
+        var resolved: [_OpenNavigationResolvedDestination] = []
+        if let pathBinding {
+            for (index, value) in pathBinding.getElements().enumerated() {
+                guard let registration = registrations.last(where: { $0.matches(value) })
+                else { break }
+                let dismiss = DismissAction {
+                    pathBinding.dismissDestination(at: index)
+                }
+                guard let destinationNode = _OpenGraphContext.withStructuralScope(
+                    .navigationPathElement(index: index, value: value),
+                    operation: {
+                        _OpenGraphContext.withEnvironment(
+                            \.dismiss,
+                            value: dismiss,
+                            operation: { registration.makeNode(value) }
+                        )
+                    }
+                ) else { break }
+                let (node, configuration) = _openExtractNavigationConfiguration(
+                    destinationNode
+                )
+                resolved.append(
+                    _OpenNavigationResolvedDestination(
+                        value: value,
+                        node: node,
+                        configuration: configuration
+                    )
+                )
+                registrations.append(contentsOf: configuration.destinations)
+            }
+        }
+
+        let controller = _OpenGraphContext.representedController(
+            makeCoordinator: { () },
+            make: { _ in _SwiftUINavigationStackController() },
+            update: { controller, _ in
+                controller.update(
+                    rootNode: rootNode,
+                    rootConfiguration: rootConfiguration,
+                    pathBinding: pathBinding,
+                    destinations: resolved
+                )
+            },
+            dismantle: { controller, _ in controller.dismantleStack() }
+        )
+        return _OpenViewNode(.viewController(controller))
+    }
+}
+
+public enum _OpenNavigationSplitViewVisibility: Hashable, Sendable {
+    case automatic
+    case all
+    case doubleColumn
+    case detailOnly
+}
+
+/// Two-column adaptive navigation. Wide automatic/all layouts retain both
+/// subtrees side-by-side with deterministic column geometry; compact
+/// automatic and explicit detail-only layouts keep only the detail subtree.
+public struct _OpenNavigationSplitView<Sidebar: _OpenView, Detail: _OpenView>:
+    _OpenView
+{
+    public typealias Body = Never
+    private let columnVisibility: Binding<NavigationSplitViewVisibility>?
+    public let sidebar: Sidebar
+    public let detail: Detail
+
+    public init(
+        columnVisibility: Binding<NavigationSplitViewVisibility>,
+        @_OpenViewBuilder sidebar: () -> Sidebar,
+        @_OpenViewBuilder detail: () -> Detail
+    ) {
+        self.columnVisibility = columnVisibility
+        self.sidebar = sidebar()
+        self.detail = detail()
+    }
+
+    public init(
+        @_OpenViewBuilder sidebar: () -> Sidebar,
+        @_OpenViewBuilder detail: () -> Detail
+    ) {
+        columnVisibility = nil
+        self.sidebar = sidebar()
+        self.detail = detail()
+    }
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        let sidebarNode = _OpenGraphContext.withStructuralScope(
+            .navigationSplitSidebar
+        ) { sidebar._makeOpenUIKitNode() }
+        let detailNode = _OpenGraphContext.withStructuralScope(
+            .navigationSplitDetail
+        ) { detail._makeOpenUIKitNode() }
+        let visibility = columnVisibility?.wrappedValue ?? .automatic
+        return _OpenViewNode(
+            .geometry(
+                _OpenGeometryNode { size in
+                    let showsSidebar: Bool
+                    switch visibility {
+                    case .detailOnly:
+                        showsSidebar = false
+                    case .automatic:
+                        showsSidebar = size.width >= 600
+                    case .all, .doubleColumn:
+                        showsSidebar = true
+                    }
+                    guard showsSidebar else { return detailNode }
+
+                    let dividerWidth: CGFloat = 1
+                    let preferred = min(max(size.width * 0.36, 320), 400)
+                    let sidebarWidth = min(preferred, max(0, size.width * 0.5))
+                    let detailWidth = max(0, size.width - sidebarWidth - dividerWidth)
+                    let sidebarColumn = _OpenViewNode(
+                        .modified(
+                            sidebarNode,
+                            .frame(
+                                width: sidebarWidth,
+                                height: size.height,
+                                alignment: .center
+                            )
+                        )
+                    )
+                    let detailColumn = _OpenViewNode(
+                        .modified(
+                            detailNode,
+                            .frame(
+                                width: detailWidth,
+                                height: size.height,
+                                alignment: .center
+                            )
+                        )
+                    )
+                    return _OpenViewNode(
+                        .modified(
+                            _OpenViewNode(
+                                .hStack(
+                                    children: [
+                                        sidebarColumn,
+                                        _OpenViewNode(.divider),
+                                        detailColumn,
+                                    ],
+                                    alignment: .center,
+                                    spacing: 0
+                                )
+                            ),
+                            .accessibilityIdentifier("SwiftUI.NavigationSplitView")
+                        )
+                    )
+                }
+            )
+        )
     }
 }
 
@@ -2026,6 +2419,10 @@ public extension _OpenView {
         _OpenModifiedContent(content: self, modification: .tint(color))
     }
 
+    func accentColor(_ accentColor: Color?) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .tint(accentColor))
+    }
+
     func opacity(_ opacity: Double) -> some _OpenView {
         _OpenModifiedContent(
             content: self,
@@ -2043,6 +2440,27 @@ public extension _OpenView {
 
     func scaleEffect(_ scale: CGFloat) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .scaleEffect(scale))
+    }
+
+    func scaleEffect(_ scale: CGFloat, anchor: UnitPoint) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .anchoredScaleEffect(scale, anchor)
+        )
+    }
+
+    func offset(_ offset: CGSize) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .offset(offset))
+    }
+
+    func offset(x: CGFloat = 0, y: CGFloat = 0) -> some _OpenView {
+        offset(CGSize(width: x, height: y))
+    }
+
+    /// EquatableView only changes invalidation cost. Structural graph keys
+    /// already preserve this view's state, so rendering remains transparent.
+    func equatable() -> some _OpenView where Self: Equatable {
+        _OpenModifiedContent(content: self, modification: .effect)
     }
 
     func lineLimit(_ number: Int?) -> some _OpenView {
@@ -2266,7 +2684,7 @@ public extension _OpenView {
     func cornerRadius(_ radius: CGFloat) -> some _OpenView {
         _OpenModifiedContent(
             content: self,
-            modification: .clipRoundedRectangle(max(0, radius))
+            modification: .clipRoundedRectangle(max(0, radius), ._allKnown)
         )
     }
 
@@ -2295,8 +2713,12 @@ public extension _OpenView {
         _OpenColorSchemeContent(content: self, colorScheme: colorScheme)
     }
 
-    func ignoresSafeArea(edges: Edge.Set = .all) -> some _OpenView {
-        _OpenModifiedContent(content: self, modification: .safeAreaIgnored(edges))
+    func ignoresSafeArea(
+        _ regions: SafeAreaRegions = .all,
+        edges: Edge.Set = .all
+    ) -> some _OpenView {
+        _ = regions
+        return _OpenModifiedContent(content: self, modification: .safeAreaIgnored(edges))
     }
 
     func edgesIgnoringSafeArea(_ edges: Edge.Set) -> some _OpenView {
@@ -2311,6 +2733,10 @@ public extension _OpenView {
         perform action: (@MainActor () -> Void)? = nil
     ) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .onDisappear(action ?? {}))
+    }
+
+    func onOpenURL(perform action: @escaping @MainActor (URL) -> Void) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .openURL(action))
     }
 
     func onTapGesture(perform action: @escaping @MainActor () -> Void) -> some _OpenView {
@@ -2338,6 +2764,16 @@ public extension _OpenView {
         simultaneousGesture(gesture)
     }
 
+    func highPriorityGesture<G: Gesture>(_ gesture: G) -> some _OpenView {
+        guard let provider = gesture as? any _OpenGestureNodeProviding else {
+            return _OpenModifiedContent(content: self, modification: .effect)
+        }
+        return _OpenModifiedContent(
+            content: self,
+            modification: .gesture(provider._openGestureNode)
+        )
+    }
+
     func onLongPressGesture(
         minimumDuration: Double = 0.5,
         perform action: @escaping @MainActor () -> Void
@@ -2353,10 +2789,34 @@ public extension _OpenView {
     }
 
     func clipShape<S: Shape>(_ shape: S) -> some _OpenView {
-        let radius = (shape as? RoundedRectangle)?.cornerRadius ?? 0
+        let radius: CGFloat
+        let corners: CACornerMask
+        if let rounded = shape as? RoundedRectangle {
+            radius = rounded.cornerRadius
+            corners = ._allKnown
+        } else if let uneven = shape as? UnevenRoundedRectangle {
+            radius = max(
+                uneven.topLeadingRadius,
+                uneven.bottomLeadingRadius,
+                uneven.bottomTrailingRadius,
+                uneven.topTrailingRadius
+            )
+            var selected: CACornerMask = []
+            if uneven.topLeadingRadius > 0 { selected.insert(.layerMinXMinYCorner) }
+            if uneven.topTrailingRadius > 0 { selected.insert(.layerMaxXMinYCorner) }
+            if uneven.bottomLeadingRadius > 0 { selected.insert(.layerMinXMaxYCorner) }
+            if uneven.bottomTrailingRadius > 0 { selected.insert(.layerMaxXMaxYCorner) }
+            corners = selected
+        } else if shape is Capsule || shape is Circle {
+            radius = 10_000
+            corners = ._allKnown
+        } else {
+            radius = 0
+            corners = []
+        }
         return _OpenModifiedContent(
             content: self,
-            modification: .clipRoundedRectangle(radius)
+            modification: .clipRoundedRectangle(radius, corners)
         )
     }
 
@@ -2650,9 +3110,23 @@ public extension _OpenView {
         isPresented: Binding<Bool>,
         @_OpenViewBuilder content: @escaping @MainActor () -> SheetContent
     ) -> some _OpenView {
+        sheet(isPresented: isPresented, onDismiss: nil, content: content)
+    }
+
+    /// The dismissal callback is delivered after the concrete UIKit
+    /// presentation has left its parent, including interactive swipe
+    /// dismissal and programmatic binding changes. The retained presentation
+    /// controller guards it so UIKit's delegate and containment callbacks
+    /// cannot double-deliver one presentation cycle.
+    func sheet<SheetContent: _OpenView>(
+        isPresented: Binding<Bool>,
+        onDismiss: (@MainActor () -> Void)?,
+        @_OpenViewBuilder content: @escaping @MainActor () -> SheetContent
+    ) -> some _OpenView {
         let state = _OpenPresentationState(
             getIsPresented: { isPresented.wrappedValue },
-            setIsPresented: { isPresented.wrappedValue = $0 }
+            setIsPresented: { isPresented.wrappedValue = $0 },
+            onDismiss: onDismiss ?? {}
         )
         return _OpenModifiedContent(
             content: self,
@@ -2689,6 +3163,51 @@ public extension _OpenView {
         )
     }
 
+    /// Registers an exact typed value destination for the nearest
+    /// NavigationStack. Builders remain lazy with respect to values absent
+    /// from the path and fail closed when AnyHashable's dynamic type differs.
+    func navigationDestination<Data: Hashable, Destination: _OpenView>(
+        for data: Data.Type,
+        @_OpenViewBuilder destination: @escaping @MainActor (Data) -> Destination
+    ) -> some _OpenView {
+        _ = data
+        return _OpenModifiedContent(
+            content: self,
+            modification: .navigationDestination(
+                _OpenNavigationDestinationRegistration(
+                    valueType: ObjectIdentifier(Data.self),
+                    matches: { $0.base is Data },
+                    makeNode: { value in
+                        guard let typed = value.base as? Data else { return nil }
+                        return destination(typed)._makeOpenUIKitNode()
+                    }
+                )
+            )
+        )
+    }
+
+    func navigationSplitViewColumnWidth(_ width: CGFloat) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .frame(
+                width: max(0, width),
+                height: nil,
+                alignment: .center
+            )
+        )
+    }
+
+    func navigationSplitViewColumnWidth(
+        min minimum: CGFloat? = nil,
+        ideal: CGFloat,
+        max maximum: CGFloat? = nil
+    ) -> some _OpenView {
+        let lower = max(0, minimum ?? 0)
+        let upper = max(lower, maximum ?? .greatestFiniteMagnitude)
+        let width = min(max(ideal, lower), upper)
+        return navigationSplitViewColumnWidth(width)
+    }
+
     func glassEffect() -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .glassEffect)
     }
@@ -2708,7 +3227,7 @@ public extension _OpenView {
         }
         return _OpenModifiedContent(
             content: self,
-            modification: .clipRoundedRectangle(radius)
+            modification: .clipRoundedRectangle(radius, ._allKnown)
         ).glassEffect()
     }
 
@@ -3000,6 +3519,23 @@ public extension _OpenView {
         _OpenModifiedContent(content: self, modification: .scrollIndicators(visibility))
     }
 
+    func scrollDisabled(_ disabled: Bool) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .scrollDisabled(disabled))
+    }
+
+    func onScrollPhaseChange(
+        _ action: @escaping @MainActor (
+            ScrollPhase,
+            ScrollPhase,
+            ScrollPhaseChangeContext
+        ) -> Void
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .scrollPhase(_OpenScrollPhaseObserver(deliver: action))
+        )
+    }
+
     func scrollTargetLayout() -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .effect)
     }
@@ -3154,6 +3690,7 @@ struct _OpenNavigationConfiguration {
     var backButtonHidden = false
     var titleDisplayMode: NavigationBarTitleDisplayMode = .automatic
     var toolbar: _OpenViewNode?
+    var destinations: [_OpenNavigationDestinationRegistration] = []
 }
 
 @MainActor
@@ -3172,6 +3709,8 @@ func _openExtractNavigationConfiguration(
             configuration.backButtonHidden = hidden
         case .navigationTitleDisplayMode(let displayMode):
             configuration.titleDisplayMode = displayMode
+        case .navigationDestination(let registration):
+            configuration.destinations.append(registration)
         case .toolbar(let toolbar):
             configuration.toolbar = toolbar
         default:
@@ -3248,6 +3787,7 @@ private func _extractNavigationChildren(
             configuration.titleDisplayMode = childConfiguration.titleDisplayMode
         }
         if let toolbar = childConfiguration.toolbar { configuration.toolbar = toolbar }
+        configuration.destinations.append(contentsOf: childConfiguration.destinations)
         return node
     }
     return (nodes, configuration)
@@ -3281,6 +3821,12 @@ public typealias Form<Content> = _OpenForm<Content> where Content: _OpenView
 public typealias ForEach<Data, ID, Content> = _OpenForEach<Data, ID, Content>
     where Data: RandomAccessCollection, ID: Hashable, Content: _OpenView
 public typealias NavigationView<Content> = _OpenNavigationView<Content> where Content: _OpenView
-public typealias NavigationStack<Content> = _OpenNavigationView<Content> where Content: _OpenView
+public typealias NavigationPath = _OpenNavigationPath
+public typealias NavigationStack<Content> = _OpenNavigationStack<Content>
+    where Content: _OpenView
+public typealias NavigationSplitViewVisibility = _OpenNavigationSplitViewVisibility
+public typealias NavigationSplitView<Sidebar, Detail> =
+    _OpenNavigationSplitView<Sidebar, Detail>
+    where Sidebar: _OpenView, Detail: _OpenView
 public typealias LinearGradient = _OpenLinearGradient
 public typealias PreviewProvider = _OpenPreviewProvider

@@ -729,9 +729,13 @@ final class SwiftUIDesignSystemTests: XCTestCase {
         XCTAssertEqual(scroll.keyboardDismissMode, .interactive)
         let geometryLabel = try XCTUnwrap(
             descendants(controller.view).compactMap { $0 as? UILabel }
-                .first { $0.text == "240x308" }
+                .first { $0.text == "240x296" }
         )
-        XCTAssertEqual(geometryLabel.text, "240x308")
+        XCTAssertEqual(
+            geometryLabel.text,
+            "240x296",
+            "the concrete UINavigationController reserves its measured 64pt bar"
+        )
 
         let identifierHost = try XCTUnwrap(
             descendant(controller.view, identifier: "login.username")
@@ -759,7 +763,7 @@ final class SwiftUIDesignSystemTests: XCTestCase {
         XCTAssertEqual(progress.frame.size, CGSize(width: 16, height: 16))
 
         let navigation = try XCTUnwrap(
-            descendant(controller.view, identifier: "SwiftUI.NavigationView")
+            descendant(controller.view, identifier: "SwiftUI.NavigationStack")
         )
         let closeButton = try XCTUnwrap(
             descendants(navigation).first { $0.accessibilityLabel == "Close" }

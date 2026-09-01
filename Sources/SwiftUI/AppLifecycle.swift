@@ -3,8 +3,13 @@
 
 #if canImport(Foundation)
 import Foundation
-#elseif canImport(ObjectiveC)
+#else
+#if canImport(FoundationEssentials)
+import struct FoundationEssentials.URL
+#endif
+#if canImport(ObjectiveC)
 import ObjectiveC
+#endif
 #endif
 import OpenUIKit
 
@@ -324,6 +329,17 @@ public final class _OpenSwiftUIApplicationSession {
         self.sceneDelegates = sceneDelegates
         windows = sceneDelegates.compactMap(\.window)
         rootViewControllers = sceneDelegates.compactMap(\.rootViewController)
+    }
+
+    /// Delivers an incoming universal/custom-scheme URL to the active
+    /// handlers rooted in this application session. Platform hosts invoke
+    /// this after their native URL registration accepts the event.
+    @discardableResult
+    public func openURL(_ url: URL) -> Bool {
+        rootViewControllers.reduce(false) { delivered, controller in
+            guard let view = controller.viewIfLoaded else { return delivered }
+            return _openDeliverURL(url, in: view) || delivered
+        }
     }
 }
 

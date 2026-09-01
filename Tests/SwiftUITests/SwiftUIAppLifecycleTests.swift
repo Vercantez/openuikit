@@ -71,6 +71,21 @@ private struct ConditionalSceneFixture: Scene {
 }
 
 @MainActor
+private enum IncomingURLRecorder {
+    static var values: [URL] = []
+}
+
+@MainActor
+private struct IncomingURLApplication: App {
+    var body: some Scene {
+        WindowGroup("URL Handler") {
+            Text("URL root")
+                .onOpenURL { IncomingURLRecorder.values.append($0) }
+        }
+    }
+}
+
+@MainActor
 final class SwiftUIAppLifecycleTests: XCTestCase {
     func testDefaultAppMainWitnessExistsWithoutGeneratedEntryPoint() {
         // Referencing (rather than invoking) the inherited witness proves an
@@ -141,6 +156,26 @@ final class SwiftUIAppLifecycleTests: XCTestCase {
             labels(in: try XCTUnwrap(secondaryController.view)).map(\.text),
             ["Secondary lifecycle root"]
         )
+    }
+
+    func testSessionDeliversIncomingURLsToRetainedViewHandlers() throws {
+        IncomingURLRecorder.values = []
+        let session = _OpenSwiftUIApplicationLifecycle.launch(
+            IncomingURLApplication.self,
+            preparePackagedResources: false
+        )
+        let url = try XCTUnwrap(URL(string: "icecubesapp://status/42"))
+
+        XCTAssertTrue(session.openURL(url))
+        XCTAssertEqual(IncomingURLRecorder.values, [url])
+
+        // A session without an installed handler fails closed rather than
+        // reporting a URL as consumed merely because it has a window.
+        let unhandled = _OpenSwiftUIApplicationLifecycle.launch(
+            LifecycleApplication.self,
+            preparePackagedResources: false
+        )
+        XCTAssertFalse(unhandled.openURL(url))
     }
 
     func testPackagedResourceConfigurationIsRelocatableAndExact() throws {

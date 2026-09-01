@@ -226,6 +226,24 @@ public struct _OpenScrollGeometry: Sendable {
     }
 }
 
+public enum _OpenScrollPhase: Hashable, Sendable {
+    case idle
+    case tracking
+    case interacting
+    case decelerating
+    case animating
+
+    public var isScrolling: Bool { self != .idle }
+}
+
+public struct _OpenScrollPhaseChangeContext: Sendable {
+    public let geometry: ScrollGeometry
+
+    public init(geometry: ScrollGeometry) {
+        self.geometry = geometry
+    }
+}
+
 @MainActor
 final class _OpenScrollProxyStorage {
     weak var scrollView: UIScrollView?
@@ -472,6 +490,33 @@ public struct _OpenZStack<Content: _OpenView>: _OpenView {
                     }
                 ),
                 alignment: alignment
+            )
+        )
+    }
+}
+
+/// Groups neighboring glass-effect surfaces into one compositing namespace.
+/// OpenUIKit already renders each child through the same backdrop pipeline;
+/// this retained boundary preserves source ordering and exposes the requested
+/// spacing to hosts without inserting a layout container of its own.
+public struct _OpenGlassEffectContainer<Content: _OpenView>: _OpenView {
+    public typealias Body = Never
+    public let spacing: CGFloat
+    public let content: Content
+
+    public init(
+        spacing: CGFloat = 8,
+        @_OpenViewBuilder content: () -> Content
+    ) {
+        self.spacing = max(0, spacing)
+        self.content = content()
+    }
+
+    public func _makeOpenUIKitNode() -> _OpenViewNode {
+        _OpenViewNode(
+            .modified(
+                content._makeOpenUIKitNode(),
+                .accessibilityIdentifier("SwiftUI.GlassEffectContainer.\(spacing)")
             )
         )
     }
@@ -1184,6 +1229,8 @@ public typealias EdgeInsets = _OpenEdgeInsets
 public typealias Transaction = _OpenTransaction
 public typealias PreferenceKey = _OpenPreferenceKey
 public typealias ScrollGeometry = _OpenScrollGeometry
+public typealias ScrollPhase = _OpenScrollPhase
+public typealias ScrollPhaseChangeContext = _OpenScrollPhaseChangeContext
 public typealias ScrollViewProxy = _OpenScrollViewProxy
 public typealias Gesture = _OpenGesture
 public typealias DragGesture = _OpenDragGesture
@@ -1196,6 +1243,8 @@ public typealias Subviews = _OpenLayoutSubviews
 public typealias Layout = _OpenLayout
 public typealias TapGesture = _OpenTapGesture
 public typealias ZStack<Content> = _OpenZStack<Content> where Content: _OpenView
+public typealias GlassEffectContainer<Content> = _OpenGlassEffectContainer<Content>
+    where Content: _OpenView
 public typealias Button<Label> = _OpenButton<Label> where Label: _OpenView
 public typealias ScrollView<Content> = _OpenScrollView<Content> where Content: _OpenView
 public typealias ScrollViewReader<Content> = _OpenScrollViewReader<Content> where Content: _OpenView

@@ -180,6 +180,12 @@ open class UINavigationController: UIViewController {
     /// Clipped area below the bar that hosts child VC views.
     let contentView = UIView()
     public private(set) var interactivePopGestureRecognizer: UIGestureRecognizer?
+    /// iOS 26's content-pop recognizer. OpenUIKit's measured edge recognizer
+    /// drives the same interactive transition, so both public routes expose
+    /// the identical retained recognizer rather than competing for touches.
+    public var interactiveContentPopGestureRecognizer: UIGestureRecognizer? {
+        interactivePopGestureRecognizer
+    }
 
     public init(rootViewController: UIViewController) {
         super.init()

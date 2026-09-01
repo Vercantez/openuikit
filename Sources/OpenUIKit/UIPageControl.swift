@@ -45,11 +45,11 @@ open class UIPageControl: UIControl {
     /// two tint values Focus configures before creating its SwiftUI TabView.
     private static var _appearanceProxy: UIPageControl?
 
-    public static func appearance() -> UIPageControl {
-        if let proxy = _appearanceProxy { return proxy }
+    public override class func appearance() -> Self {
+        if let proxy = _appearanceProxy { return proxy as! Self }
         let proxy = UIPageControl(frame: .zero, applyingAppearance: false)
         _appearanceProxy = proxy
-        return proxy
+        return proxy as! Self
     }
 
     static let contentHeight: CGFloat = 26

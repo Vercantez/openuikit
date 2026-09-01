@@ -48,7 +48,7 @@ public struct CACornerMask: OptionSet, Sendable {
     public static let layerMinXMaxYCorner = CACornerMask(rawValue: 1 << 2)
     public static let layerMaxXMaxYCorner = CACornerMask(rawValue: 1 << 3)
 
-    static let _allKnown: CACornerMask = [
+    public static let _allKnown: CACornerMask = [
         .layerMinXMinYCorner, .layerMaxXMinYCorner,
         .layerMinXMaxYCorner, .layerMaxXMaxYCorner,
     ]
@@ -446,6 +446,25 @@ protocol _UIViewSubviewAdmission: AnyObject {
 
 @preconcurrency @MainActor
 open class UIView: UIResponder, CALayerDelegate {
+    /// Process-wide base-view appearance proxy. New views inherit explicitly
+    /// configured values; inherited defaults remain live through the normal
+    /// superview chain. A construction guard prevents the proxy from trying
+    /// to inherit from itself.
+    private static var _appearanceProxy: UIView?
+    private static var _constructingAppearanceProxy = false
+
+    public class func appearance() -> Self {
+        precondition(
+            self == UIView.self,
+            "UIView subclasses with appearance-customizable properties must provide their own proxy"
+        )
+        if let proxy = _appearanceProxy { return proxy as! Self }
+        _constructingAppearanceProxy = true
+        let proxy = UIView(frame: .zero)
+        _constructingAppearanceProxy = false
+        _appearanceProxy = proxy
+        return proxy as! Self
+    }
     // Geometry: center/bounds/transform are source of truth (like real UIKit).
     public var center: CGPoint = .zero {
         didSet {
@@ -658,6 +677,9 @@ open class UIView: UIResponder, CALayerDelegate {
 
     public init(frame: CGRect) {
         super.init()
+        if !UIView._constructingAppearanceProxy {
+            _tintColor = UIView._appearanceProxy?._tintColor
+        }
         self.frame = frame
     }
 
@@ -1171,6 +1193,40 @@ open class UIView: UIResponder, CALayerDelegate {
         if let view { return view.convert(point, to: self) }
         let (t, _) = _transformToRoot()
         return point.applying(t.inverted())
+    }
+
+    /// Converts all four corners and returns their axis-aligned bounding box,
+    /// which is UIKit's CGRect behavior when either hierarchy contains a
+    /// transform.
+    public func convert(_ rect: CGRect, to view: UIView?) -> CGRect {
+        let corners = [
+            CGPoint(x: rect.minX, y: rect.minY),
+            CGPoint(x: rect.maxX, y: rect.minY),
+            CGPoint(x: rect.minX, y: rect.maxY),
+            CGPoint(x: rect.maxX, y: rect.maxY),
+        ].map { convert($0, to: view) }
+        guard let first = corners.first else { return .zero }
+        let minX = corners.dropFirst().reduce(first.x) { min($0, $1.x) }
+        let maxX = corners.dropFirst().reduce(first.x) { max($0, $1.x) }
+        let minY = corners.dropFirst().reduce(first.y) { min($0, $1.y) }
+        let maxY = corners.dropFirst().reduce(first.y) { max($0, $1.y) }
+        return CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
+    }
+
+    public func convert(_ rect: CGRect, from view: UIView?) -> CGRect {
+        if let view { return view.convert(rect, to: self) }
+        let corners = [
+            CGPoint(x: rect.minX, y: rect.minY),
+            CGPoint(x: rect.maxX, y: rect.minY),
+            CGPoint(x: rect.minX, y: rect.maxY),
+            CGPoint(x: rect.maxX, y: rect.maxY),
+        ].map { convert($0, from: nil) }
+        guard let first = corners.first else { return .zero }
+        let minX = corners.dropFirst().reduce(first.x) { min($0, $1.x) }
+        let maxX = corners.dropFirst().reduce(first.x) { max($0, $1.x) }
+        let minY = corners.dropFirst().reduce(first.y) { min($0, $1.y) }
+        let maxY = corners.dropFirst().reduce(first.y) { max($0, $1.y) }
+        return CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
     }
 
     // MARK: Hit testing (event module, M7 — exact UIKit semantics)
