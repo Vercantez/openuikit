@@ -1,0 +1,989 @@
+precise	status	evidence	notes
+c:@CPButtonMaximumImageSize	implemented	CarPlay.swift	Portable public constant; values recorded as oracle questions where unsigned by Apple.
+c:@CPGridTemplateMaximumItems	implemented	CarPlay.swift	Portable public constant; values recorded as oracle questions where unsigned by Apple.
+c:@CPMaximumListSectionImageSize	implemented	CarPlay.swift	Portable public constant; values recorded as oracle questions where unsigned by Apple.
+c:@CPMaximumMessageItemImageSize	implemented	CarPlay.swift	Portable public constant; values recorded as oracle questions where unsigned by Apple.
+c:@CPMaximumMessageItemLeadingDetailTextImageSize	implemented	CarPlay.swift	Portable public constant; values recorded as oracle questions where unsigned by Apple.
+c:@CPMaximumNumberOfGridImages	implemented	CarPlay.swift	Portable public constant; values recorded as oracle questions where unsigned by Apple.
+c:@CPNavigationAlertMinimumDuration	implemented	CarPlay.swift	Portable public constant; values recorded as oracle questions where unsigned by Apple.
+c:@CPNowPlayingButtonMaximumImageSize	implemented	CarPlay.swift	Portable public constant; values recorded as oracle questions where unsigned by Apple.
+c:@CPTemplateApplicationDashboardSceneSessionRoleApplication	declared	CarPlayShims.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:@CPTemplateApplicationInstrumentClusterSceneSessionRoleApplication	declared	CarPlayShims.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:@CPTemplateApplicationSceneSessionRoleApplication	declared	CarPlayShims.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:@CarPlayErrorDomain	implemented	CarPlay.swift	Portable public constant; values recorded as oracle questions where unsigned by Apple.
+c:@E@CPAlertActionStyle	implemented	CarPlayControls.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPAlertActionStyle@CPAlertActionStyleCancel	implemented	CarPlayControls.swift	Enum case implemented on the portable type.
+c:@E@CPAlertActionStyle@CPAlertActionStyleDefault	implemented	CarPlayControls.swift	Enum case implemented on the portable type.
+c:@E@CPAlertActionStyle@CPAlertActionStyleDestructive	implemented	CarPlayControls.swift	Enum case implemented on the portable type.
+c:@E@CPAssistantCellActionType	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPAssistantCellActionType@CPAssistantCellActionTypePlayMedia	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPAssistantCellActionType@CPAssistantCellActionTypeStartCall	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPAssistantCellPosition	implemented	CarPlayList.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPAssistantCellPosition@CPAssistantCellPositionBottom	implemented	CarPlayList.swift	Enum case implemented on the portable type.
+c:@E@CPAssistantCellPosition@CPAssistantCellPositionTop	implemented	CarPlayList.swift	Enum case implemented on the portable type.
+c:@E@CPAssistantCellVisibility	implemented	CarPlayList.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPAssistantCellVisibility@CPAssistantCellVisibilityAlways	implemented	CarPlayList.swift	Enum case implemented on the portable type.
+c:@E@CPAssistantCellVisibility@CPAssistantCellVisibilityOff	implemented	CarPlayList.swift	Enum case implemented on the portable type.
+c:@E@CPAssistantCellVisibility@CPAssistantCellVisibilityWhileLimitedUIActive	implemented	CarPlayList.swift	Enum case implemented on the portable type.
+c:@E@CPBarButtonStyle	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPBarButtonStyle@CPBarButtonStyleNone	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPBarButtonStyle@CPBarButtonStyleRounded	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPBarButtonType	implemented	CarPlayControls.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPBarButtonType@CPBarButtonTypeImage	implemented	CarPlayControls.swift	Enum case implemented on the portable type.
+c:@E@CPBarButtonType@CPBarButtonTypeText	implemented	CarPlayControls.swift	Enum case implemented on the portable type.
+c:@E@CPContentStyle	implemented	CarPlay.swift	OptionSet implemented with documented bit flags.
+c:@E@CPContentStyle@CPContentStyleDark	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+c:@E@CPContentStyle@CPContentStyleLight	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+c:@E@CPInformationTemplateLayout	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPInformationTemplateLayout@CPInformationTemplateLayoutLeading	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPInformationTemplateLayout@CPInformationTemplateLayoutTwoColumn	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPInstrumentClusterSetting	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPInstrumentClusterSetting@CPInstrumentClusterSettingDisabled	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPInstrumentClusterSetting@CPInstrumentClusterSettingEnabled	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPInstrumentClusterSetting@CPInstrumentClusterSettingUnspecified	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPInstrumentClusterSetting@CPInstrumentClusterSettingUserPreference	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPJunctionType	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPJunctionType@CPJunctionTypeIntersection	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPJunctionType@CPJunctionTypeRoundabout	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPLaneStatus	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPLaneStatus@CPLaneStatusGood	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPLaneStatus@CPLaneStatusNotGood	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPLaneStatus@CPLaneStatusPreferred	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	OptionSet implemented with documented bit flags.
+c:@E@CPLimitableUserInterface@CPLimitableUserInterfaceKeyboard	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+c:@E@CPLimitableUserInterface@CPLimitableUserInterfaceLists	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+c:@E@CPListImageRowItemCondensedElementShape	implemented	CarPlayList.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPListImageRowItemCondensedElementShape@CPListImageRowItemCondensedElementShapeCircular	implemented	CarPlayList.swift	Enum case implemented on the portable type.
+c:@E@CPListImageRowItemCondensedElementShape@CPListImageRowItemCondensedElementShapeRoundedRectangle	implemented	CarPlayList.swift	Enum case implemented on the portable type.
+c:@E@CPListImageRowItemImageGridElementShape	implemented	CarPlayList.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPListImageRowItemImageGridElementShape@CPListImageRowItemImageGridElementShapeCircular	implemented	CarPlayList.swift	Enum case implemented on the portable type.
+c:@E@CPListImageRowItemImageGridElementShape@CPListImageRowItemImageGridElementShapeRoundedRectangle	implemented	CarPlayList.swift	Enum case implemented on the portable type.
+c:@E@CPListItemAccessoryType	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPListItemAccessoryType@CPListItemAccessoryTypeCloud	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPListItemAccessoryType@CPListItemAccessoryTypeDisclosureIndicator	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPListItemAccessoryType@CPListItemAccessoryTypeNone	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPListItemPlayingIndicatorLocation	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPListItemPlayingIndicatorLocation@CPListItemPlayingIndicatorLocationLeading	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPListItemPlayingIndicatorLocation@CPListItemPlayingIndicatorLocationTrailing	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	OptionSet implemented with documented bit flags.
+c:@E@CPManeuverDisplayStyle@CPManeuverDisplayStyleInstructionOnly	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+c:@E@CPManeuverDisplayStyle@CPManeuverDisplayStyleLeadingSymbol	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+c:@E@CPManeuverDisplayStyle@CPManeuverDisplayStyleSymbolOnly	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+c:@E@CPManeuverDisplayStyle@CPManeuverDisplayStyleTrailingSymbol	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+c:@E@CPManeuverState	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPManeuverState@CPManeuverStateContinue	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverState@CPManeuverStateExecute	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverState@CPManeuverStateInitial	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverState@CPManeuverStatePrepare	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPManeuverType@CPManeuverTypeArriveAtDestination	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeArriveAtDestinationLeft	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeArriveAtDestinationRight	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeArriveEndOfDirections	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeArriveEndOfNavigation	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeChangeFerry	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeChangeHighway	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeChangeHighwayLeft	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeChangeHighwayRight	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeEnterRoundabout	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeEnter_Ferry	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeExitFerry	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeExitRoundabout	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeFollowRoad	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeHighwayOffRampLeft	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeHighwayOffRampRight	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeKeepLeft	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeKeepRight	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeLeftTurn	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeLeftTurnAtEnd	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeNoTurn	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeOffRamp	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeOnRamp	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRightTurn	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRightTurnAtEnd	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit1	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit10	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit11	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit12	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit13	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit14	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit15	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit16	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit17	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit18	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit19	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit2	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit3	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit4	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit5	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit6	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit7	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit8	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit9	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeSharpLeftTurn	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeSharpRightTurn	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeSlightLeftTurn	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeSlightRightTurn	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeStartRoute	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeStartRouteWithUTurn	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeStraightAhead	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeUTurn	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeUTurnAtRoundabout	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPManeuverType@CPManeuverTypeUTurnWhenPossible	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPMessageLeadingItem	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPMessageLeadingItem@CPMessageLeadingItemNone	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPMessageLeadingItem@CPMessageLeadingItemPin	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPMessageLeadingItem@CPMessageLeadingItemStar	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPMessageTrailingItem	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPMessageTrailingItem@CPMessageTrailingItemMute	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPMessageTrailingItem@CPMessageTrailingItemNone	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPNavigationAlertDismissalContext	implemented	CarPlayNavigation.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPNavigationAlertDismissalContext@CPNavigationAlertDismissalContextSystemDismissed	implemented	CarPlayNavigation.swift	Enum case implemented on the portable type.
+c:@E@CPNavigationAlertDismissalContext@CPNavigationAlertDismissalContextTimeout	implemented	CarPlayNavigation.swift	Enum case implemented on the portable type.
+c:@E@CPNavigationAlertDismissalContext@CPNavigationAlertDismissalContextUserDismissed	implemented	CarPlayNavigation.swift	Enum case implemented on the portable type.
+c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	OptionSet implemented with documented bit flags.
+c:@E@CPPanDirection@CPPanDirectionDown	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+c:@E@CPPanDirection@CPPanDirectionLeft	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+c:@E@CPPanDirection@CPPanDirectionRight	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+c:@E@CPPanDirection@CPPanDirectionUp	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+c:@E@CPTextButtonStyle	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPTextButtonStyle@CPTextButtonStyleCancel	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPTextButtonStyle@CPTextButtonStyleConfirm	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPTextButtonStyle@CPTextButtonStyleNormal	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPTimeRemainingColor	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPTimeRemainingColor@CPTimeRemainingColorDefault	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPTimeRemainingColor@CPTimeRemainingColorGreen	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPTimeRemainingColor@CPTimeRemainingColorOrange	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPTimeRemainingColor@CPTimeRemainingColorRed	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPTrafficSide	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPTrafficSide@CPTrafficSideLeft	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPTrafficSide@CPTrafficSideRight	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPTripEstimateStyle	implemented	CarPlayEnums.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPTripEstimateStyle@CPTripEstimateStyleDark	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPTripEstimateStyle@CPTripEstimateStyleLight	implemented	CarPlayEnums.swift	Enum case implemented on the portable type.
+c:@E@CPTripPauseReason	implemented	CarPlayNavigation.swift	Int/UInt-backed portable enum matching the public case set.
+c:@E@CPTripPauseReason@CPTripPauseReasonArrived	implemented	CarPlayNavigation.swift	Enum case implemented on the portable type.
+c:@E@CPTripPauseReason@CPTripPauseReasonLoading	implemented	CarPlayNavigation.swift	Enum case implemented on the portable type.
+c:@E@CPTripPauseReason@CPTripPauseReasonLocating	implemented	CarPlayNavigation.swift	Enum case implemented on the portable type.
+c:@E@CPTripPauseReason@CPTripPauseReasonProceedToRoute	implemented	CarPlayNavigation.swift	Enum case implemented on the portable type.
+c:@E@CPTripPauseReason@CPTripPauseReasonRerouting	implemented	CarPlayNavigation.swift	Enum case implemented on the portable type.
+c:@F@NSStringFromCPJunctionType	implemented	CarPlayEnums.swift	Deterministic portable NSStringFrom helper.
+c:@F@NSStringFromCPLaneStatus	implemented	CarPlayEnums.swift	Deterministic portable NSStringFrom helper.
+c:@F@NSStringFromCPManeuverType	implemented	CarPlayEnums.swift	Deterministic portable NSStringFrom helper.
+c:@F@NSStringFromCPTrafficSide	implemented	CarPlayEnums.swift	Deterministic portable NSStringFrom helper.
+c:@T@CPAlertActionHandler	implemented	CarPlay.swift	Public handler typealias.
+c:@T@CPBarButtonHandler	implemented	CarPlay.swift	Public handler typealias.
+c:objc(cs)CPActionSheetTemplate	implemented	CarPlayTemplates.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPActionSheetTemplate(im)initWithTitle:message:actions:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPActionSheetTemplate(py)actions	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPActionSheetTemplate(py)message	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPActionSheetTemplate(py)title	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPAlertAction	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPAlertAction(im)initWithTitle:color:handler:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPAlertAction(im)initWithTitle:style:handler:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPAlertAction(py)color	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPAlertAction(py)handler	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPAlertAction(py)style	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPAlertAction(py)title	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPAlertTemplate	implemented	CarPlayTemplates.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPAlertTemplate(cpy)maximumActionCount	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPAlertTemplate(im)initWithTitleVariants:actions:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPAlertTemplate(py)actions	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPAlertTemplate(py)titleVariants	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPAssistantCellConfiguration	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPAssistantCellConfiguration(im)initWithPosition:visibility:assistantAction:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPAssistantCellConfiguration(py)assistantAction	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPAssistantCellConfiguration(py)position	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPAssistantCellConfiguration(py)visibility	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPBarButton	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPBarButton(im)initWithImage:handler:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPBarButton(im)initWithTitle:handler:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPBarButton(im)initWithType:handler:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPBarButton(py)buttonStyle	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPBarButton(py)buttonType	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPBarButton(py)enabled	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPBarButton(py)image	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPBarButton(py)title	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPButton	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPButton(im)initWithImage:handler:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPButton(py)enabled	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPButton(py)image	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPButton(py)title	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPContact	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPContact(im)initWithName:image:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPContact(py)actions	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPContact(py)image	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPContact(py)informativeText	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPContact(py)name	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPContact(py)subtitle	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPContactCallButton	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPContactCallButton(im)initWithHandler:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPContactDirectionsButton	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPContactDirectionsButton(im)initWithHandler:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPContactMessageButton	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPContactMessageButton(im)initWithPhoneOrEmail:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPContactMessageButton(py)phoneOrEmail	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPContactTemplate	implemented	CarPlayTemplates.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPContactTemplate(im)initWithContact:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPContactTemplate(py)contact	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPDashboardButton	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPDashboardButton(im)initWithTitleVariants:subtitleVariants:image:handler:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPDashboardButton(py)image	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPDashboardButton(py)subtitleVariants	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPDashboardButton(py)titleVariants	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPDashboardController	declared	CarPlaySession.swift	Scene/window type exists as an inert object; vehicle connect is fail-closed.
+c:objc(cs)CPDashboardController(py)shortcutButtons	declared	CarPlaySession.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:objc(cs)CPGridButton	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPGridButton(im)initWithTitleVariants:image:handler:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPGridButton(im)initWithTitleVariants:image:messageConfiguration:handler:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPGridButton(im)updateImage:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPGridButton(im)updateTitleVariants:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPGridButton(py)enabled	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPGridButton(py)image	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPGridButton(py)messageConfiguration	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPGridButton(py)titleVariants	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPGridTemplate	implemented	CarPlayTemplates.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPGridTemplate(cpy)maximumGridButtonImageSize	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPGridTemplate(im)initWithTitle:gridButtons:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPGridTemplate(im)updateGridButtons:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPGridTemplate(im)updateTitle:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPGridTemplate(py)gridButtons	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPGridTemplate(py)title	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPImageSet	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPImageSet(im)initWithLightContentImage:darkContentImage:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPImageSet(py)darkContentImage	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPImageSet(py)lightContentImage	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInformationItem	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPInformationItem(im)initWithTitle:detail:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInformationItem(py)detail	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInformationItem(py)title	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInformationRatingItem	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPInformationRatingItem(im)initWithRating:maximumRating:title:detail:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInformationRatingItem(py)maximumRating	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInformationRatingItem(py)rating	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInformationTemplate	implemented	CarPlayTemplates.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPInformationTemplate(im)initWithTitle:layout:items:actions:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInformationTemplate(py)actions	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInformationTemplate(py)items	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInformationTemplate(py)layout	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInformationTemplate(py)title	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInstrumentClusterController	implemented	CarPlaySession.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPInstrumentClusterController(py)attributedInactiveDescriptionVariants	implemented	CarPlaySession.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInstrumentClusterController(py)compassSetting	implemented	CarPlaySession.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInstrumentClusterController(py)delegate	implemented	CarPlaySession.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInstrumentClusterController(py)inactiveDescriptionVariants	implemented	CarPlaySession.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInstrumentClusterController(py)instrumentClusterWindow	implemented	CarPlaySession.swift	Always nil; no instrument-cluster window on Linux.
+c:objc(cs)CPInstrumentClusterController(py)speedLimitSetting	implemented	CarPlaySession.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPInterfaceController	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(im)dismissTemplateAnimated:	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(im)dismissTemplateAnimated:completion:	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(im)popTemplateAnimated:	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(im)popTemplateAnimated:completion:	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(im)popToRootTemplateAnimated:	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(im)popToRootTemplateAnimated:completion:	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(im)popToTemplate:animated:	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(im)popToTemplate:animated:completion:	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(im)presentTemplate:animated:	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(im)presentTemplate:animated:completion:	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(im)pushTemplate:animated:	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(im)pushTemplate:animated:completion:	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(im)setRootTemplate:animated:	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(im)setRootTemplate:animated:completion:	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(py)carTraitCollection	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(py)delegate	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(py)prefersDarkUserInterfaceStyle	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(py)presentedTemplate	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(py)rootTemplate	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(py)templates	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPInterfaceController(py)topTemplate	implemented	CarPlaySession.swift	In-memory template stack; vehicle connection remains false.
+c:objc(cs)CPLane	implemented	CarPlayNavigation.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPLane(im)init	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPLane(im)initWithAngles:	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPLane(im)initWithAngles:highlightedAngle:isPreferred:	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPLane(py)angles	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPLane(py)highlightedAngle	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPLane(py)primaryAngle	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPLane(py)secondaryAngles	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPLane(py)status	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPLaneGuidance	implemented	CarPlayNavigation.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPLaneGuidance(py)instructionVariants	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPLaneGuidance(py)lanes	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem	implemented	CarPlayList.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPListImageRowItem(cpy)maximumImageSize	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(im)initWithText:cardElements:allowsMultipleLines:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(im)initWithText:condensedElements:allowsMultipleLines:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(im)initWithText:elements:allowsMultipleLines:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(im)initWithText:gridElements:allowsMultipleLines:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(im)initWithText:imageGridElements:allowsMultipleLines:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(im)initWithText:images:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(im)initWithText:images:imageTitles:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(im)updateImages:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(py)allowsMultipleLines	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(py)elements	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(py)enabled	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(py)gridImages	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(py)handler	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(py)imageTitles	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(py)listImageRowHandler	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(py)text	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItem(py)userInfo	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemCardElement	implemented	CarPlayList.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPListImageRowItemCardElement(cpy)maximumFullHeightImageSize	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemCardElement(cpy)maximumImageSize	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemCardElement(im)initWithImage:showsImageFullHeight:title:subtitle:tintColor:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemCardElement(py)showsImageFullHeight	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemCardElement(py)subtitle	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemCardElement(py)tintColor	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemCardElement(py)title	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemCondensedElement	implemented	CarPlayList.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPListImageRowItemCondensedElement(im)initWithImage:imageShape:title:subtitle:accessorySymbolName:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemCondensedElement(py)accessorySymbolName	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemCondensedElement(py)imageShape	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemCondensedElement(py)subtitle	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemCondensedElement(py)title	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemElement	implemented	CarPlayList.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPListImageRowItemElement(cpy)maximumImageSize	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemElement(py)enabled	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemElement(py)image	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemGridElement	implemented	CarPlayList.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPListImageRowItemGridElement(im)initWithImage:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemImageGridElement	implemented	CarPlayList.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPListImageRowItemImageGridElement(im)initWithImage:imageShape:title:accessorySymbolName:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemImageGridElement(py)accessorySymbolName	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemImageGridElement(py)imageShape	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemImageGridElement(py)title	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemRowElement	implemented	CarPlayList.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPListImageRowItemRowElement(im)initWithImage:title:subtitle:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemRowElement(py)subtitle	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListImageRowItemRowElement(py)title	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem	implemented	CarPlayList.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPListItem(cpy)maximumImageSize	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(im)initWithText:detailText:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(im)initWithText:detailText:image:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(im)initWithText:detailText:image:accessoryImage:accessoryType:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(im)initWithText:detailText:image:showsDisclosureIndicator:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(im)setAccessoryImage:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(im)setDetailText:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(im)setImage:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(im)setText:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(py)accessoryImage	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(py)accessoryType	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(py)detailText	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(py)enabled	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(py)explicitContent	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(py)handler	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(py)image	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(py)playbackProgress	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(py)playing	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(py)playingIndicatorLocation	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(py)showsDisclosureIndicator	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(py)showsExplicitLabel	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(py)text	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListItem(py)userInfo	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListSection	implemented	CarPlayList.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPListSection(im)indexOfItem:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListSection(im)initWithItems:header:headerSubtitle:headerImage:headerButton:sectionIndexTitle:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListSection(im)itemAtIndex:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListSection(py)header	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListSection(py)headerButton	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListSection(py)headerImage	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListSection(py)headerSubtitle	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListSection(py)items	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListSection(py)sectionIndexTitle	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate	implemented	CarPlayTemplates.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPListTemplate(cpy)maximumGridButtonImageSize	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(cpy)maximumHeaderGridButtonCount	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(cpy)maximumItemCount	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(cpy)maximumSectionCount	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(im)indexPathForItem:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(im)initWithTitle:sections:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(im)initWithTitle:sections:assistantCellConfiguration:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(im)initWithTitle:sections:assistantCellConfiguration:headerGridButtons:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(im)updateSections:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(py)assistantCellConfiguration	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(py)delegate	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(py)emptyViewSubtitleVariants	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(py)emptyViewTitleVariants	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(py)headerGridButtons	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(py)itemCount	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(py)sectionCount	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(py)sections	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(py)showsSpinnerWhileEmpty	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPListTemplate(py)title	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver	implemented	CarPlayNavigation.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPManeuver(py)attributedInstructionVariants	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)cardBackgroundColor	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)dashboardAttributedInstructionVariants	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)dashboardInstructionVariants	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)dashboardJunctionImage	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)dashboardSymbolImage	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)highwayExitLabel	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)initialTravelEstimates	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)instructionVariants	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)junctionElementAngles	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)junctionExitAngle	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)junctionImage	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)junctionType	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)linkedLaneGuidance	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)maneuverType	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)notificationAttributedInstructionVariants	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)notificationInstructionVariants	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)notificationSymbolImage	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)roadFollowingManeuverVariants	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)symbolImage	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)symbolSet	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)trafficSide	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPManeuver(py)userInfo	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMapButton	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPMapButton(im)initWithHandler:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMapButton(py)enabled	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMapButton(py)focusedImage	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMapButton(py)hidden	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMapButton(py)image	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMapTemplate	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(im)dismissNavigationAlertAnimated:completion:	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(im)dismissPanningInterfaceAnimated:	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(im)hideTripPreviews	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(im)presentNavigationAlert:animated:	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(im)showPanningInterfaceAnimated:	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(im)showRouteChoicesPreviewForTrip:textConfiguration:	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(im)showTripPreviews:selectedTrip:textConfiguration:	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(im)showTripPreviews:textConfiguration:	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(im)startNavigationSessionForTrip:	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(im)updateTravelEstimates:forTrip:	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(im)updateTravelEstimates:forTrip:withTimeRemainingColor:	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(py)automaticallyHidesNavigationBar	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(py)currentNavigationAlert	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(py)guidanceBackgroundColor	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(py)hidesButtonsWithNavigationBar	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(py)mapButtons	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(py)mapDelegate	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(py)panningInterfaceVisible	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMapTemplate(py)tripEstimateStyle	implemented	CarPlayNavigation.swift	In-memory trip preview/nav-alert/panning flags; no map renderer.
+c:objc(cs)CPMessageComposeBarButton	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPMessageComposeBarButton(im)init	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageComposeBarButton(im)initWithImage:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageGridItemConfiguration	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPMessageGridItemConfiguration(im)initWithConversationIdentifier:unread:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageGridItemConfiguration(py)conversationIdentifier	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageGridItemConfiguration(py)unread	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItem	implemented	CarPlayList.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPMessageListItem(im)initWithConversationIdentifier:text:leadingConfiguration:trailingConfiguration:detailText:trailingText:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItem(im)initWithFullName:phoneOrEmailAddress:leadingConfiguration:trailingConfiguration:detailText:trailingText:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItem(py)conversationIdentifier	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItem(py)detailText	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItem(py)enabled	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItem(py)leadingConfiguration	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItem(py)leadingDetailTextImage	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItem(py)phoneOrEmailAddress	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItem(py)text	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItem(py)trailingConfiguration	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItem(py)trailingText	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItem(py)userInfo	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItemLeadingConfiguration	implemented	CarPlayList.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPMessageListItemLeadingConfiguration(im)initWithLeadingItem:leadingImage:unread:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItemLeadingConfiguration(py)leadingImage	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItemLeadingConfiguration(py)leadingItem	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItemLeadingConfiguration(py)unread	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItemTrailingConfiguration	implemented	CarPlayList.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPMessageListItemTrailingConfiguration(im)initWithTrailingItem:trailingImage:	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItemTrailingConfiguration(py)trailingImage	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPMessageListItemTrailingConfiguration(py)trailingItem	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNavigationAlert	implemented	CarPlayNavigation.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPNavigationAlert(im)initWithTitleVariants:subtitleVariants:image:primaryAction:secondaryAction:duration:	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNavigationAlert(im)initWithTitleVariants:subtitleVariants:imageSet:primaryAction:secondaryAction:duration:	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNavigationAlert(im)updateTitleVariants:subtitleVariants:	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNavigationAlert(py)duration	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNavigationAlert(py)image	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNavigationAlert(py)imageSet	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNavigationAlert(py)primaryAction	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNavigationAlert(py)secondaryAction	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNavigationAlert(py)subtitleVariants	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNavigationAlert(py)titleVariants	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNavigationSession	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+c:objc(cs)CPNavigationSession(im)addLaneGuidances:	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+c:objc(cs)CPNavigationSession(im)addManeuvers:	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+c:objc(cs)CPNavigationSession(im)cancelTrip	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+c:objc(cs)CPNavigationSession(im)finishTrip	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+c:objc(cs)CPNavigationSession(im)pauseTripForReason:description:	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+c:objc(cs)CPNavigationSession(im)pauseTripForReason:description:turnCardColor:	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+c:objc(cs)CPNavigationSession(im)resumeTripWithUpdatedRouteInformation:	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+c:objc(cs)CPNavigationSession(im)updateTravelEstimates:forManeuver:	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+c:objc(cs)CPNavigationSession(py)currentLaneGuidance	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+c:objc(cs)CPNavigationSession(py)currentRoadNameVariants	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+c:objc(cs)CPNavigationSession(py)maneuverState	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+c:objc(cs)CPNavigationSession(py)trip	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+c:objc(cs)CPNavigationSession(py)upcomingManeuvers	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+c:objc(cs)CPNowPlayingAddToLibraryButton	implemented	CarPlayNowPlaying.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPNowPlayingButton	implemented	CarPlayNowPlaying.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPNowPlayingButton(im)initWithHandler:	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingButton(py)enabled	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingButton(py)selected	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingImageButton	implemented	CarPlayNowPlaying.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPNowPlayingImageButton(im)initWithImage:handler:	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingImageButton(py)image	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingMode	implemented	CarPlayNowPlaying.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPNowPlayingMode(cpy)defaultNowPlayingMode	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingModeSports	implemented	CarPlayNowPlaying.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPNowPlayingModeSports(im)initWithLeftTeam:rightTeam:eventStatus:backgroundArtwork:	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingModeSports(py)backgroundArtwork	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingModeSports(py)eventStatus	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingModeSports(py)leftTeam	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingModeSports(py)rightTeam	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingMoreButton	implemented	CarPlayNowPlaying.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPNowPlayingPlaybackRateButton	implemented	CarPlayNowPlaying.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPNowPlayingRepeatButton	implemented	CarPlayNowPlaying.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPNowPlayingShuffleButton	implemented	CarPlayNowPlaying.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPNowPlayingSportsClock	implemented	CarPlayNowPlaying.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPNowPlayingSportsClock(im)initWithElapsedTime:paused:	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsClock(im)initWithTimeRemaining:paused:	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsClock(py)countsUp	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsClock(py)paused	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsClock(py)timeValue	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsEventStatus	implemented	CarPlayNowPlaying.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPNowPlayingSportsEventStatus(im)initWithEventStatusText:eventStatusImage:eventClock:	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsEventStatus(py)eventClock	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsEventStatus(py)eventStatusImage	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsEventStatus(py)eventStatusText	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsTeam	implemented	CarPlayNowPlaying.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPNowPlayingSportsTeam(im)initWithName:logo:teamStandings:eventScore:possessionIndicator:favorite:	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsTeam(py)eventScore	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsTeam(py)favorite	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsTeam(py)logo	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsTeam(py)name	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsTeam(py)possessionIndicator	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsTeam(py)teamStandings	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsTeamLogo	implemented	CarPlayNowPlaying.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPNowPlayingSportsTeamLogo(im)initWithTeamInitials:	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsTeamLogo(im)initWithTeamLogo:	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsTeamLogo(py)initials	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingSportsTeamLogo(py)logo	implemented	CarPlayNowPlaying.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPNowPlayingTemplate	implemented	CarPlayNowPlaying.swift	Process-local shared template; no system Now Playing UI.
+c:objc(cs)CPNowPlayingTemplate(cpy)sharedTemplate	implemented	CarPlayNowPlaying.swift	Process-local shared template; no system Now Playing UI.
+c:objc(cs)CPNowPlayingTemplate(im)addObserver:	implemented	CarPlayNowPlaying.swift	Process-local shared template; no system Now Playing UI.
+c:objc(cs)CPNowPlayingTemplate(im)removeObserver:	implemented	CarPlayNowPlaying.swift	Process-local shared template; no system Now Playing UI.
+c:objc(cs)CPNowPlayingTemplate(im)updateNowPlayingButtons:	implemented	CarPlayNowPlaying.swift	Process-local shared template; no system Now Playing UI.
+c:objc(cs)CPNowPlayingTemplate(py)albumArtistButtonEnabled	implemented	CarPlayNowPlaying.swift	Process-local shared template; no system Now Playing UI.
+c:objc(cs)CPNowPlayingTemplate(py)nowPlayingButtons	implemented	CarPlayNowPlaying.swift	Process-local shared template; no system Now Playing UI.
+c:objc(cs)CPNowPlayingTemplate(py)nowPlayingMode	implemented	CarPlayNowPlaying.swift	Process-local shared template; no system Now Playing UI.
+c:objc(cs)CPNowPlayingTemplate(py)upNextButtonEnabled	implemented	CarPlayNowPlaying.swift	Process-local shared template; no system Now Playing UI.
+c:objc(cs)CPNowPlayingTemplate(py)upNextTitle	implemented	CarPlayNowPlaying.swift	Process-local shared template; no system Now Playing UI.
+c:objc(cs)CPPointOfInterest	implemented	CarPlayNavigation.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPPointOfInterest(cpy)pinImageSize	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(cpy)selectedPinImageSize	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(im)initWithLocation:title:subtitle:summary:detailTitle:detailSubtitle:detailSummary:pinImage:	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(im)initWithLocation:title:subtitle:summary:detailTitle:detailSubtitle:detailSummary:pinImage:selectedPinImage:	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(py)detailSubtitle	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(py)detailSummary	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(py)detailTitle	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(py)location	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(py)pinImage	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(py)primaryButton	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(py)secondaryButton	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(py)selectedPinImage	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(py)subtitle	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(py)summary	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(py)title	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterest(py)userInfo	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterestTemplate	implemented	CarPlayTemplates.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPPointOfInterestTemplate(im)initWithTitle:pointsOfInterest:selectedIndex:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterestTemplate(im)setPointsOfInterest:selectedIndex:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterestTemplate(py)pointOfInterestDelegate	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterestTemplate(py)pointsOfInterest	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterestTemplate(py)selectedIndex	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPPointOfInterestTemplate(py)title	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPRouteChoice	implemented	CarPlayNavigation.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPRouteChoice(im)initWithSummaryVariants:additionalInformationVariants:selectionSummaryVariants:	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPRouteChoice(py)additionalInformationVariants	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPRouteChoice(py)selectionSummaryVariants	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPRouteChoice(py)summaryVariants	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPRouteChoice(py)userInfo	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPRouteInformation	implemented	CarPlayNavigation.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPRouteInformation(im)initWithManeuvers:laneGuidances:currentManeuvers:currentLaneGuidance:tripTravelEstimates:maneuverTravelEstimates:	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPRouteInformation(im)initWithManeuvers:laneGuidances:currentManeuvers:currentLaneGuidance:tripTravelEstimates:maneuverTravelEstimates:::SYNTHESIZED::c:objc(cs)CPRouteInformation	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPRouteInformation(py)currentLaneGuidance	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPRouteInformation(py)currentManeuvers	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPRouteInformation(py)laneGuidances	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPRouteInformation(py)maneuverTravelEstimates	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPRouteInformation(py)maneuvers	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPRouteInformation(py)tripTravelEstimates	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPSearchTemplate	implemented	CarPlayTemplates.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPSearchTemplate(py)delegate	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPSessionConfiguration	implemented	CarPlaySession.swift	Reports empty content style and limited UI without a vehicle.
+c:objc(cs)CPSessionConfiguration(im)initWithDelegate:	implemented	CarPlaySession.swift	Reports empty content style and limited UI without a vehicle.
+c:objc(cs)CPSessionConfiguration(py)contentStyle	implemented	CarPlaySession.swift	Reports empty content style and limited UI without a vehicle.
+c:objc(cs)CPSessionConfiguration(py)delegate	implemented	CarPlaySession.swift	Reports empty content style and limited UI without a vehicle.
+c:objc(cs)CPSessionConfiguration(py)limitedUserInterfaces	implemented	CarPlaySession.swift	Reports empty content style and limited UI without a vehicle.
+c:objc(cs)CPTabBarTemplate	implemented	CarPlayTemplates.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPTabBarTemplate(cpy)maximumTabCount	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTabBarTemplate(im)initWithTemplates:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTabBarTemplate(im)selectTemplate:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTabBarTemplate(im)selectTemplateAtIndex:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTabBarTemplate(im)updateTemplates:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTabBarTemplate(py)delegate	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTabBarTemplate(py)selectedTemplate	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTabBarTemplate(py)templates	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTemplate	implemented	CarPlayTemplates.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPTemplate(py)showsTabBadge	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTemplate(py)tabImage	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTemplate(py)tabSystemItem	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTemplate(py)tabTitle	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTemplate(py)userInfo	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTemplateApplicationDashboardScene	declared	CarPlaySession.swift	Scene/window type exists as an inert object; vehicle connect is fail-closed.
+c:objc(cs)CPTemplateApplicationDashboardScene(py)dashboardController	declared	CarPlaySession.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:objc(cs)CPTemplateApplicationDashboardScene(py)dashboardWindow	implemented	CarPlaySession.swift	Window accessors are fail-closed (nil or unattached stub).
+c:objc(cs)CPTemplateApplicationDashboardScene(py)delegate	declared	CarPlaySession.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:objc(cs)CPTemplateApplicationInstrumentClusterScene	declared	CarPlaySession.swift	Scene/window type exists as an inert object; vehicle connect is fail-closed.
+c:objc(cs)CPTemplateApplicationInstrumentClusterScene(py)contentStyle	declared	CarPlaySession.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:objc(cs)CPTemplateApplicationInstrumentClusterScene(py)delegate	declared	CarPlaySession.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:objc(cs)CPTemplateApplicationInstrumentClusterScene(py)instrumentClusterController	declared	CarPlaySession.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:objc(cs)CPTemplateApplicationScene	declared	CarPlaySession.swift	Scene/window type exists as an inert object; vehicle connect is fail-closed.
+c:objc(cs)CPTemplateApplicationScene(py)carWindow	declared	CarPlaySession.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:objc(cs)CPTemplateApplicationScene(py)contentStyle	declared	CarPlaySession.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:objc(cs)CPTemplateApplicationScene(py)delegate	declared	CarPlaySession.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:objc(cs)CPTemplateApplicationScene(py)interfaceController	declared	CarPlaySession.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:objc(cs)CPTextButton	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPTextButton(im)initWithTitle:textStyle:handler:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTextButton(py)textStyle	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTextButton(py)title	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTravelEstimates	implemented	CarPlayNavigation.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPTravelEstimates(im)initWithDistanceRemaining:distanceRemainingToDisplay:timeRemaining:	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTravelEstimates(im)initWithDistanceRemaining:timeRemaining:	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTravelEstimates(py)distanceRemaining	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTravelEstimates(py)distanceRemainingToDisplay	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTravelEstimates(py)timeRemaining	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTrip	implemented	CarPlayNavigation.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPTrip(im)initWithOrigin:destination:routeChoices:	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTrip(py)destination	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTrip(py)destinationNameVariants	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTrip(py)origin	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTrip(py)routeChoices	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTrip(py)userInfo	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTripPreviewTextConfiguration	implemented	CarPlayNavigation.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPTripPreviewTextConfiguration(im)initWithStartButtonTitle:additionalRoutesButtonTitle:overviewButtonTitle:	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTripPreviewTextConfiguration(py)additionalRoutesButtonTitle	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTripPreviewTextConfiguration(py)overviewButtonTitle	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPTripPreviewTextConfiguration(py)startButtonTitle	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPVoiceControlState	implemented	CarPlayControls.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPVoiceControlState(im)initWithIdentifier:titleVariants:image:repeats:	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPVoiceControlState(py)identifier	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPVoiceControlState(py)image	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPVoiceControlState(py)repeats	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPVoiceControlState(py)titleVariants	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPVoiceControlTemplate	implemented	CarPlayTemplates.swift	Portable class with in-memory stored properties.
+c:objc(cs)CPVoiceControlTemplate(im)activateVoiceControlStateWithIdentifier:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPVoiceControlTemplate(im)initWithVoiceControlStates:	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPVoiceControlTemplate(py)activeStateIdentifier	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPVoiceControlTemplate(py)voiceControlStates	implemented	CarPlayTemplates.swift	In-memory portable API matching the public declaration.
+c:objc(cs)CPWindow	declared	CarPlaySession.swift	Scene/window type exists as an inert object; vehicle connect is fail-closed.
+c:objc(cs)CPWindow(py)mapButtonSafeAreaLayoutGuide	declared	CarPlaySession.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:objc(cs)CPWindow(py)templateApplicationScene	declared	CarPlaySession.swift	Scene API declared; didConnect is never fired without a host vehicle session.
+c:objc(pl)CPApplicationDelegate	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPApplicationDelegate(im)application:didConnectCarInterfaceController:toWindow:	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPApplicationDelegate(im)application:didDisconnectCarInterfaceController:fromWindow:	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPApplicationDelegate(im)application:didSelectManeuver:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPApplicationDelegate(im)application:didSelectNavigationAlert:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPBarButtonProviding	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPBarButtonProviding(py)backButton	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPBarButtonProviding(py)leadingNavigationBarButtons	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPBarButtonProviding(py)trailingNavigationBarButtons	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPInstrumentClusterControllerDelegate	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPInstrumentClusterControllerDelegate(im)instrumentClusterController:didChangeCompassSetting:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPInstrumentClusterControllerDelegate(im)instrumentClusterController:didChangeSpeedLimitSetting:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPInstrumentClusterControllerDelegate(im)instrumentClusterControllerDidConnectWindow:	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPInstrumentClusterControllerDelegate(im)instrumentClusterControllerDidDisconnectWindow:	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPInstrumentClusterControllerDelegate(im)instrumentClusterControllerDidZoomIn:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPInstrumentClusterControllerDelegate(im)instrumentClusterControllerDidZoomOut:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPInterfaceControllerDelegate	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPInterfaceControllerDelegate(im)templateDidAppear:animated:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPInterfaceControllerDelegate(im)templateDidDisappear:animated:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPInterfaceControllerDelegate(im)templateWillAppear:animated:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPInterfaceControllerDelegate(im)templateWillDisappear:animated:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPListTemplateDelegate	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPListTemplateDelegate(im)listTemplate:didSelectListItem:completionHandler:	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPListTemplateItem	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPListTemplateItem(py)enabled	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPListTemplateItem(py)text	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPListTemplateItem(py)userInfo	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPMapTemplateDelegate	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:didDismissNavigationAlert:dismissalContext:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:didEndPanGestureWithVelocity:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:didEndZoomGestureWithVelocity:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:didRotateWithCenter:rotation:velocity:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:didShowNavigationAlert:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:didUpdatePanGestureWithTranslation:velocity:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:didUpdateZoomGestureWithCenter:scale:velocity:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:displayStyleForManeuver:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:panBeganWithDirection:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:panEndedWithDirection:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:panWithDirection:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:pitchEndedWithCenter:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:pitchWithCenter:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:rotationDidEndWithVelocity:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:selectedPreviewForTrip:usingRouteChoice:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:shouldShowNotificationForManeuver:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:shouldShowNotificationForNavigationAlert:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:shouldUpdateNotificationForManeuver:withTravelEstimates:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:startedTrip:usingRouteChoice:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:willDismissNavigationAlert:dismissalContext:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:willShowNavigationAlert:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateDidBeginPanGesture:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateDidBeginPitchGesture:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateDidBeginRotationGesture:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateDidBeginZoomGesture:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateDidCancelNavigation:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateDidDismissPanningInterface:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateDidShowPanningInterface:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateShouldProvideNavigationMetadata:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateWillDismissPanningInterface:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPNowPlayingTemplateObserver	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPNowPlayingTemplateObserver(im)nowPlayingTemplateAlbumArtistButtonTapped:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPNowPlayingTemplateObserver(im)nowPlayingTemplateUpNextButtonTapped:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPPointOfInterestTemplateDelegate	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPPointOfInterestTemplateDelegate(im)pointOfInterestTemplate:didChangeMapRegion:	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPPointOfInterestTemplateDelegate(im)pointOfInterestTemplate:didSelectPointOfInterest:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPSearchTemplateDelegate	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPSearchTemplateDelegate(im)searchTemplate:selectedResult:completionHandler:	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPSearchTemplateDelegate(im)searchTemplate:updatedSearchText:completionHandler:	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPSearchTemplateDelegate(im)searchTemplateSearchButtonPressed:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPSelectableListItem	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPSelectableListItem(py)handler	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPSessionConfigurationDelegate	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPSessionConfigurationDelegate(im)sessionConfiguration:contentStyleChanged:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPSessionConfigurationDelegate(im)sessionConfiguration:limitedUserInterfacesChanged:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPTabBarTemplateDelegate	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPTabBarTemplateDelegate(im)tabBarTemplate:didSelectTemplate:	declared	CarPlayProtocols.swift	Delegate/protocol requirement declared for source compatibility.
+c:objc(pl)CPTemplateApplicationDashboardSceneDelegate	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPTemplateApplicationDashboardSceneDelegate(im)templateApplicationDashboardScene:didConnectDashboardController:toWindow:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPTemplateApplicationDashboardSceneDelegate(im)templateApplicationDashboardScene:didDisconnectDashboardController:fromWindow:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPTemplateApplicationInstrumentClusterSceneDelegate	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPTemplateApplicationInstrumentClusterSceneDelegate(im)contentStyleDidChange:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPTemplateApplicationInstrumentClusterSceneDelegate(im)templateApplicationInstrumentClusterScene:didConnectInstrumentClusterController:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPTemplateApplicationInstrumentClusterSceneDelegate(im)templateApplicationInstrumentClusterScene:didDisconnectInstrumentClusterController:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPTemplateApplicationSceneDelegate	declared	CarPlayProtocols.swift	Protocol surface with optional defaults; no Apple daemon callbacks.
+c:objc(pl)CPTemplateApplicationSceneDelegate(im)contentStyleDidChange:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPTemplateApplicationSceneDelegate(im)templateApplicationScene:didConnectInterfaceController:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPTemplateApplicationSceneDelegate(im)templateApplicationScene:didConnectInterfaceController:toWindow:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPTemplateApplicationSceneDelegate(im)templateApplicationScene:didDisconnectInterfaceController:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPTemplateApplicationSceneDelegate(im)templateApplicationScene:didDisconnectInterfaceController:fromWindow:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPTemplateApplicationSceneDelegate(im)templateApplicationScene:didSelectManeuver:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)CPTemplateApplicationSceneDelegate(im)templateApplicationScene:didSelectNavigationAlert:	declared	CarPlayProtocols.swift	Optional delegate method provided as a default empty implementation.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPAlertAction	implemented	CarPlayControls.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPAssistantCellConfiguration	implemented	CarPlayControls.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPBarButton	implemented	CarPlayControls.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPContact	implemented	CarPlayControls.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPDashboardButton	implemented	CarPlayControls.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPGridButton	implemented	CarPlayControls.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPImageSet	implemented	CarPlayControls.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPInformationItem	implemented	CarPlayControls.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPLane	implemented	CarPlayNavigation.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPLaneGuidance	implemented	CarPlayNavigation.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPListSection	implemented	CarPlayList.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPManeuver	implemented	CarPlayNavigation.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPMapButton	implemented	CarPlayControls.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPNavigationAlert	implemented	CarPlayNavigation.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPNowPlayingButton	implemented	CarPlayNowPlaying.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPNowPlayingMode	implemented	CarPlayNowPlaying.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPNowPlayingSportsClock	implemented	CarPlayNowPlaying.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPNowPlayingSportsEventStatus	implemented	CarPlayNowPlaying.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPNowPlayingSportsTeam	implemented	CarPlayNowPlaying.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPNowPlayingSportsTeamLogo	implemented	CarPlayNowPlaying.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPPointOfInterest	implemented	CarPlayNavigation.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPRouteChoice	implemented	CarPlayNavigation.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPTemplate	implemented	CarPlayTemplates.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPTravelEstimates	implemented	CarPlayNavigation.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPTrip	implemented	CarPlayNavigation.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPTripPreviewTextConfiguration	implemented	CarPlayNavigation.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPVoiceControlState	implemented	CarPlayControls.swift	Fail-closed NSSecureCoding: init(coder:) returns nil.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPAlertActionStyle	implemented	CarPlayControls.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPAssistantCellActionType	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPAssistantCellPosition	implemented	CarPlayList.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPAssistantCellVisibility	implemented	CarPlayList.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPBarButtonStyle	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPBarButtonType	implemented	CarPlayControls.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPInformationTemplateLayout	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPInstrumentClusterSetting	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPJunctionType	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPLaneStatus	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPListImageRowItemCondensedElementShape	implemented	CarPlayList.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPListImageRowItemImageGridElementShape	implemented	CarPlayList.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPListItemAccessoryType	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPListItemPlayingIndicatorLocation	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPManeuverState	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPManeuverType	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPMessageLeadingItem	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPMessageTrailingItem	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPNavigationAlertDismissalContext	implemented	CarPlayNavigation.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPTextButtonStyle	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPTimeRemainingColor	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPTrafficSide	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPTripEstimateStyle	implemented	CarPlayEnums.swift	Synthesized Equatable/OptionSet inequality.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPTripPauseReason	implemented	CarPlayNavigation.swift	Synthesized Equatable/OptionSet inequality.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPAlertActionStyle	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPAssistantCellActionType	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPAssistantCellPosition	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPAssistantCellVisibility	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPBarButtonStyle	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPBarButtonType	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPInformationTemplateLayout	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPInstrumentClusterSetting	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPJunctionType	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPLaneStatus	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPListImageRowItemCondensedElementShape	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPListImageRowItemImageGridElementShape	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPListItemAccessoryType	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPListItemPlayingIndicatorLocation	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPManeuverState	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPManeuverType	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPMessageLeadingItem	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPMessageTrailingItem	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPNavigationAlertDismissalContext	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPTextButtonStyle	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPTimeRemainingColor	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPTrafficSide	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPTripEstimateStyle	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPTripPauseReason	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPAlertActionStyle	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPAssistantCellActionType	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPAssistantCellPosition	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPAssistantCellVisibility	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPBarButtonStyle	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPBarButtonType	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPInformationTemplateLayout	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPInstrumentClusterSetting	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPJunctionType	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPLaneStatus	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPListImageRowItemCondensedElementShape	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPListImageRowItemImageGridElementShape	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPListItemAccessoryType	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPListItemPlayingIndicatorLocation	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPManeuverState	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPManeuverType	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPMessageLeadingItem	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPMessageTrailingItem	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPNavigationAlertDismissalContext	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPTextButtonStyle	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPTimeRemainingColor	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPTrafficSide	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPTripEstimateStyle	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPTripPauseReason	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+s:So018CPListImageRowItemB16GridElementShapeV8rawValueABSgSi_tcfc	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:So12CPLaneStatusV8rawValueABSgSi_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So13CPListSectionC7CarPlayE5items6header17sectionIndexTitleABSaySo0A12TemplateItem_pG_SSSgAItcfc	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:So13CPListSectionC7CarPlayE5items6header17sectionIndexTitleABSaySo0A4ItemCG_SSSgAJtcfc	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:So13CPListSectionC7CarPlayE5itemsABSaySo0A12TemplateItem_pG_tcfc	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:So13CPListSectionC7CarPlayE5itemsABSaySo0A4ItemCG_tcfc	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:So13CPTrafficSideV8rawValueABSgSu_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So14CPContentStyleV8rawValueABSu_tcfc	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:So14CPJunctionTypeV8rawValueABSgSu_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So14CPManeuverTypeV8rawValueABSgSu_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So14CPPanDirectionV8rawValueABSi_tcfc	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:So15CPBarButtonTypeV8rawValueABSgSu_tcfc	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+s:So15CPManeuverStateV8rawValueABSgSi_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So16CPBarButtonStyleV8rawValueABSgSi_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So17CPTextButtonStyleV8rawValueABSgSi_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So17CPTripPauseReasonV8rawValueABSgSu_tcfc	implemented	CarPlayNavigation.swift	Local trip state machine; no vehicle guidance session.
+s:So18CPAlertActionStyleV8rawValueABSgSu_tcfc	implemented	CarPlayControls.swift	In-memory portable API matching the public declaration.
+s:So19CPTripEstimateStyleV8rawValueABSgSu_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So20CPMessageLeadingItemV8rawValueABSgSi_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So20CPTimeRemainingColorV8rawValueABSgSu_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So21CPMessageTrailingItemV8rawValueABSgSi_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So22CPManeuverDisplayStyleV8rawValueABSi_tcfc	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:So23CPAssistantCellPositionV8rawValueABSgSi_tcfc	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:So23CPListItemAccessoryTypeV8rawValueABSgSi_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So24CPLimitableUserInterfaceV8rawValueABSu_tcfc	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:So25CPAssistantCellActionTypeV8rawValueABSgSi_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So25CPAssistantCellVisibilityV8rawValueABSgSi_tcfc	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:So26CPInstrumentClusterSettingV8rawValueABSgSu_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So27CPInformationTemplateLayoutV8rawValueABSgSi_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So33CPNavigationAlertDismissalContextV8rawValueABSgSu_tcfc	implemented	CarPlayNavigation.swift	In-memory portable API matching the public declaration.
+s:So34CPListItemPlayingIndicatorLocationV8rawValueABSgSi_tcfc	implemented	CarPlayEnums.swift	In-memory portable API matching the public declaration.
+s:So39CPListImageRowItemCondensedElementShapeV8rawValueABSgSi_tcfc	implemented	CarPlayList.swift	In-memory portable API matching the public declaration.
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CPContentStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CPLimitableUserInterface	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	implemented	CarPlay.swift	SetAlgebra members from OptionSet conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CPPanDirection	implemented	CarPlayNavigation.swift	SetAlgebra members from OptionSet conformance.
