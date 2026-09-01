@@ -880,10 +880,12 @@ asked for — the same class of bug as forwarding the flag word raw, which turns
 Darwin's `O_CREAT` into Linux's `O_TRUNC` (measured; see
 `scripts/abi_naive_probe.sh flags`).
 
-### `fts` — NOT IMPLEMENTED; **measured and handed over, not started**
+### `fts` — IMPLEMENTED as a translated libSystem boundary
 
-`fts_open`/`fts_read`/`fts_close`/`fts_set`. Measured 2026-08-27 on both sides
-so that whoever takes it starts from numbers rather than from a plan.
+`fts_open`/`fts_read`/`fts_children`/`fts_set`/`fts_close`, including a non-NULL
+guest comparator, are implemented in `darwin/src/posix.c`. The design started
+from direct measurements taken 2026-08-27 and is now graded by the native
+macOS fixture `tests/src/fts.c` rather than by a link-only assertion.
 
 **`FTS` is 72 bytes on both. `FTSENT` is 112 on Darwin and 120 on Linux**, and
 it diverges from the middle onward:
@@ -901,9 +903,13 @@ it diverges from the middle onward:
 | `fts_statp` | **96** | **104** |
 | `fts_name` | **104** | **112** |
 
-**All 23 `FTS_*` constants agree** — 7 options, 12 info codes, 4 instructions,
-0 differ. So this is a pure layout problem, and a nasty one: `fts_info` is the
-field every caller switches on, and a forward reads it out of the wrong place.
+The shared low option bits and all info/instruction values agree, but the full
+option surface does not. glibc accepts mask `0xff`; Darwin accepts `0xcff` and
+adds `FTS_COMFOLLOWDIR` (`0x400`, follow only command-line symlinks whose target
+is a directory) and `FTS_NOSTAT_TYPE` (`0x800`, use directory-entry type without
+publishing stat storage). Both are translated rather than forwarded. This is
+therefore an option-semantics boundary as well as a layout boundary, and
+`fts_info` remains the especially dangerous shifted field every caller uses.
 
 Two facts decide the design, and both are easy to miss:
 
@@ -915,24 +921,76 @@ Two facts decide the design, and both are easy to miss:
   `FTSENT` is **not sufficient**; every entry's `stat` needs the
   `stat_l2d` treatment `posix.c` already has.
 
-Two designs, both sized:
+The implementation translates over glibc's mature walker while keeping every
+returned `FTSENT`/`stat` byte and the named public stream fields below in
+Darwin layout:
 
-* **(A) Own the walker** — `opendir`/`readdir`/`lstat`, our own `FTS`/`FTSENT`,
-  the `mr_dir` pattern. **~500 lines**: pre/post-order (`FTS_D`/`FTS_DP`),
-  cycle detection (`FTS_DC`), unreadable directories (`FTS_DNR`), `FTS_SL`
-  versus `FTS_SLNONE`, `FTS_NOSTAT`/`FTS_NSOK`, `FTS_XDEV`, `FTS_SEEDOT`,
-  `fts_compar` sorting, and `fts_set(FTS_SKIP|FTS_FOLLOW|FTS_AGAIN)`.
-* **(B) Translate over glibc's `fts`** — **~150–250 lines**, and it needs a
-  per-`FTS` entry pool (variable-size because of the inline name), a reverse
-  map so `fts_set` can hand glibc back *its* entry when the guest passes
-  *ours*, and per-entry `stat` translation.
+* a per-stream pool rebuilds Apple-sized Darwin entries and translates each
+  initialized `struct stat` with `stat_l2d`;
+* the reverse map lets `fts_set` hand glibc its owning Linux entry, while
+  `fts_number` and `fts_pointer` retain their guest-owned values through the
+  `FTS_D` to `FTS_DP` lifetime;
+* glibc can free an entry and allocate the same name at the exact same address,
+  level, and parent after repeated `fts_children` or a directory `FTS_AGAIN`.
+  Each live host allocation therefore receives a private nonzero cookie in
+  glibc's initialized-but-otherwise-user-owned `fts_number`; `fts_alloc` resets
+  it to zero, so allocator reuse creates a new zeroed Darwin generation while
+  a root's one-time argv-to-basename `fts_load` keeps its original generation;
+* Darwin-only `FTS_COMFOLLOWDIR` is implemented by following command-line roots,
+  restoring non-directory symlinks from `lstat`, and sorting only after that
+  normalization. `FTS_NOSTAT_TYPE` deliberately asks glibc for full type/stat
+  classification and then hides `fts_statp`. This is semantically identical on
+  a stable tree but can observe a different side of a concurrent filesystem
+  race than Darwin's `d_type` fast path, and it trades performance for fidelity
+  of the returned classification;
+* immutable private option copies drive host safety and public stat exposure;
+  guest writes to the public `FTS` fields cannot turn later translation into a
+  read of storage the host never initialized;
+* the useful public `FTS` shell mirrors `fts_cur`, `fts_child`, `fts_dev`,
+  `fts_path`, `fts_compar`, and normalized `fts_options`; `fts_dev` is pinned
+  to the starting device across file visits as native `fts_load` requires.
+  BSD documents returned `FTSENT` fields rather than the walker bookkeeping;
+  implementation-private `fts_array`, `fts_rfd`, buffer-capacity
+  `fts_pathlen`, and `fts_nitems` are not yet emulated and remain an explicit
+  lower-priority compatibility follow-up;
+* glibc leaves `fts_cycle` indeterminate except for `FTS_DC` and `fts_link`
+  indeterminate outside an `fts_children` list. The translator reads them only
+  in those documented cases — the first differential run caught this with a
+  real SIGSEGV at the final root `FTS_DP`;
+* `FTS_NAMEONLY` is another initialized-field boundary: glibc marks entries
+  `FTS_NSOK` but leaves their stat storage indeterminate. The guest instead
+  receives Apple's zeroed Darwin stat (or NULL under `FTS_NOSTAT`), and the
+  bridge never reads those host bytes;
+* glibc 2.39 leaves its private `FTS_INIT` dummy's level uninitialized and then
+  reads it when a stream is closed before its first `fts_read`. The bridge
+  applies the same level initialization now present upstream, preserving an
+  immediate-close lifecycle without an undefined host read;
+* a pthread-local comparator thunk rebuilds both Linux entries before invoking
+  the guest's Darwin callback. The fixture recursively opens a second sorted
+  traversal from inside that callback, proving nested streams restore the
+  outer comparator context.
 
-**The consumer, so the surface can be bounded:** FoundationEssentials'
+The two ABI columns are pinned independently: `sdk/tests/glibc_abi_probe.c`
+compiles against the real Ubuntu glibc header, while the committed macOS oracle
+prints Darwin's sizes and offsets from Apple's SDK. The fixture then matches
+pre/post-order traversal, physical and explicitly followed symlinks,
+`fts_children`, invalid and valid `fts_set` instructions, translated stat
+kinds, `FTS_NOSTAT` directory identity, `FTS_NAMEONLY`/`FTS_NSOK`, logical
+option normalization, Darwin-only `FTS_COMFOLLOWDIR` and `FTS_NOSTAT_TYPE`,
+pre-read root lists, root-parent surface, explicit symlink-follow state, guest
+field persistence, exact-address generation reset after repeated children and
+directory `FTS_AGAIN`, comparator ordering, and nested comparator re-entry byte
+for byte. The same fixture is also run under Memcheck with uninitialized-value
+origins enabled.
+
+**The consumer that made the surface live:** FoundationEssentials'
 `_FTSSequence` (`FileOperations+Enumeration.swift`) opens with
 `FTS_PHYSICAL | FTS_NOCHDIR | FTS_NOSTAT`, reads `fts_info`, `fts_name` (by
 computed offset — upstream notes Swift imports the flexible array wrongly),
 `fts_path`, `fts_level` and `fts_statp`, and calls `fts_set(…, FTS_SKIP)`. It
-never uses `fts_children` or `fts_compar`.
+never uses `fts_children` or `fts_compar`; both are nevertheless implemented
+and differentially graded so the platform surface is reusable beyond that one
+caller.
 
 ### `copyfile` / `removefile` — NOT IMPLEMENTED; **measured and handed over**
 

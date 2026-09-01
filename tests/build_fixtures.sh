@@ -491,6 +491,12 @@ want xattr               && build xattr               "$CHAINED_TARGET" xattr   
 # managed, since neither machine has quotas to exercise a success path with.
 want quota               && build quota               "$CHAINED_TARGET" quota               quota.c --
 
+# fts. glibc owns the directory traversal, while libSystem rebuilds every
+# FTSENT and stat in Darwin layout and maps fts_set back to the Linux entry.
+# The fixture sorts its captured records, so filesystem enumeration order is
+# not accidentally promoted into an ABI promise.
+want fts                 && build fts                 "$CHAINED_TARGET" fts                 fts.c --
+
 # pthread_mutex_variants. Darwin publishes THREE static mutex initialisers and
 # the signature word IS the type -- a constant nothing at any call site names,
 # because the guest's compiler laid it down. CoreFoundation's CFLockInit is the

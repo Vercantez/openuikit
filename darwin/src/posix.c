@@ -540,6 +540,859 @@ EXPORT int mr_lstat64(const char *p, struct darwin_stat *o) { return lstat(p, o)
 EXPORT int mr_fstat64(int fd, struct darwin_stat *o)        __asm__("_fstat$INODE64");
 EXPORT int mr_fstat64(int fd, struct darwin_stat *o)        { return fstat(fd, o); }
 
+/* ===================================================================== *
+ * fts(3): glibc owns traversal; libSystem owns returned Darwin entry bytes.
+ *
+ * The shared low option bits and the info/instruction constants agree, but
+ * Darwin additionally accepts COMFOLLOWDIR (0x400) and NOSTAT_TYPE (0x800),
+ * giving it an option mask of 0xcff against glibc's 0xff. Those two options
+ * are emulated explicitly. The structures are also incompatible: FTS happens
+ * to be 72 bytes on both, while FTSENT is 112 bytes on Darwin and 120 on Linux,
+ * with fts_level and every field after it shifted. Returning glibc's entry
+ * would make the guest read fts_info out of Linux padding and fts_name beyond
+ * the host allocation. The stat pointer is a second incompatible structure
+ * (144 bytes versus 128), so it is translated too.
+ *
+ * A per-stream wrapper owns Darwin entry generations. glibc may free an
+ * FTSENT and reuse its address for the same name, level, and parent; rewriting
+ * the old mirror would silently transfer guest-owned number and pointer fields
+ * to a new file allocation. Every translated host object receives a private
+ * cookie in glibc's initialized-but-otherwise-user-owned fts_number field.
+ * fts_alloc resets that cookie, so exact malloc reuse starts a fresh Darwin
+ * generation. A root's one-time argv-to-basename fts_load mutation retains
+ * its cookie. fts_set maps a live guest generation back to the glibc peer,
+ * preserving FTS_SKIP/FTS_FOLLOW/FTS_AGAIN without inventing a second walker.
+ *
+ * Comparators cross through a pthread-local thunk. glibc calls the thunk with
+ * Linux FTSENT ** values; it rebuilds both entries, invokes the guest's Darwin
+ * callback, and returns the ordering result. The surrounding fts_open/read/
+ * children call installs the owning stream in thread-local state, including
+ * during fts_open's initial root sort. Nested traversals save and restore the
+ * previous stream rather than stealing the outer comparator's context.
+ * ===================================================================== */
+
+struct linux_ftsent {
+    struct linux_ftsent *fts_cycle;      /*   0 */
+    struct linux_ftsent *fts_parent;     /*   8 */
+    struct linux_ftsent *fts_link;       /*  16 */
+    long                 fts_number;     /*  24 */
+    void                *fts_pointer;    /*  32 */
+    char                *fts_accpath;    /*  40 */
+    char                *fts_path;       /*  48 */
+    int                  fts_errno;      /*  56 */
+    int                  fts_symfd;      /*  60 */
+    uint16_t             fts_pathlen;    /*  64 */
+    uint16_t             fts_namelen;    /*  66 */
+    uint32_t             _pad0;          /*  68 */
+    uint64_t             fts_ino;        /*  72 */
+    uint64_t             fts_dev;        /*  80 */
+    uint32_t             fts_nlink;      /*  88 */
+    short                fts_level;      /*  92 */
+    uint16_t             fts_info;       /*  94 */
+    uint16_t             fts_flags;      /*  96 */
+    uint16_t             fts_instr;      /*  98 */
+    uint32_t             _pad1;          /* 100 */
+    struct linux_stat   *fts_statp;      /* 104 */
+    char                 fts_name[1];    /* 112 */
+};                                         /* 120 */
+
+/* The current field repairs glibc 2.39's uninitialized FTS_INIT dummy before
+ * close-before-read. fts_compar is installed after COMFOLLOWDIR's root-only
+ * normalization and private initial sort so later directory sorts still call
+ * the guest comparator. Every observed offset is pinned against real headers. */
+struct linux_fts {
+    struct linux_ftsent  *fts_cur;         /*  0 */
+    struct linux_ftsent  *fts_child;       /*  8 */
+    struct linux_ftsent **fts_array;       /* 16 */
+    uint64_t              fts_dev;         /* 24 */
+    char                 *fts_path;        /* 32 */
+    int                   fts_rfd;         /* 40 */
+    int                   fts_pathlen;     /* 44 */
+    int                   fts_nitems;      /* 48 */
+    uint32_t              _pad0;           /* 52 */
+    glibc_fts_compar_fn    fts_compar;     /* 56 */
+    int                   fts_options;     /* 64 */
+    uint32_t              _pad1;           /* 68 */
+};                                         /* 72 */
+
+struct darwin_ftsent {
+    struct darwin_ftsent *fts_cycle;     /*   0 */
+    struct darwin_ftsent *fts_parent;    /*   8 */
+    struct darwin_ftsent *fts_link;      /*  16 */
+    long                  fts_number;    /*  24 */
+    void                 *fts_pointer;   /*  32 */
+    char                 *fts_accpath;   /*  40 */
+    char                 *fts_path;      /*  48 */
+    int                   fts_errno;     /*  56 */
+    int                   fts_symfd;     /*  60 */
+    uint16_t              fts_pathlen;   /*  64 */
+    uint16_t              fts_namelen;   /*  66 */
+    uint64_t              fts_ino;       /*  72 (four bytes of ABI padding) */
+    int32_t               fts_dev;       /*  80 */
+    uint16_t              fts_nlink;     /*  84 */
+    short                 fts_level;     /*  86 */
+    uint16_t              fts_info;      /*  88 */
+    uint16_t              fts_flags;     /*  90 */
+    uint16_t              fts_instr;     /*  92 */
+    struct darwin_stat   *fts_statp;     /*  96 */
+    char                  fts_name[1];   /* 104 */
+};                                         /* 112 */
+
+typedef int (*darwin_fts_compar)(const struct darwin_ftsent **,
+                                 const struct darwin_ftsent **);
+
+struct darwin_fts {
+    struct darwin_ftsent  *fts_cur;      /*   0 */
+    struct darwin_ftsent  *fts_child;    /*   8 */
+    struct darwin_ftsent **fts_array;    /*  16 */
+    int32_t                fts_dev;      /*  24 */
+    uint32_t               _pad0;        /*  28 */
+    char                  *fts_path;     /*  32 */
+    int                    fts_rfd;      /*  40 */
+    int                    fts_pathlen;  /*  44 */
+    int                    fts_nitems;   /*  48 */
+    uint32_t               _pad1;        /*  52 */
+    darwin_fts_compar      fts_compar;   /*  56 */
+    int                    fts_options;  /*  64 */
+    uint32_t               _pad2;        /*  68 */
+};                                         /*  72 */
+
+_Static_assert(sizeof(struct linux_ftsent) == 120,
+               "glibc aarch64 FTSENT is 120 bytes");
+_Static_assert(__builtin_offsetof(struct linux_ftsent, fts_level) == 92,
+               "glibc aarch64 FTSENT.fts_level is at 92");
+_Static_assert(__builtin_offsetof(struct linux_ftsent, fts_info) == 94,
+               "glibc aarch64 FTSENT.fts_info is at 94");
+_Static_assert(__builtin_offsetof(struct linux_ftsent, fts_statp) == 104,
+               "glibc aarch64 FTSENT.fts_statp is at 104");
+_Static_assert(__builtin_offsetof(struct linux_ftsent, fts_name) == 112,
+               "glibc aarch64 FTSENT.fts_name is at 112");
+_Static_assert(sizeof(struct linux_fts) == 72,
+               "glibc aarch64 FTS is 72 bytes");
+_Static_assert(__builtin_offsetof(struct linux_fts, fts_compar) == 56,
+               "glibc aarch64 FTS.fts_compar is at 56");
+_Static_assert(__builtin_offsetof(struct linux_fts, fts_options) == 64,
+               "glibc aarch64 FTS.fts_options is at 64");
+_Static_assert(sizeof(struct darwin_ftsent) == 112,
+               "Darwin arm64 FTSENT is 112 bytes");
+_Static_assert(__builtin_offsetof(struct darwin_ftsent, fts_level) == 86,
+               "Darwin arm64 FTSENT.fts_level is at 86");
+_Static_assert(__builtin_offsetof(struct darwin_ftsent, fts_info) == 88,
+               "Darwin arm64 FTSENT.fts_info is at 88");
+_Static_assert(__builtin_offsetof(struct darwin_ftsent, fts_statp) == 96,
+               "Darwin arm64 FTSENT.fts_statp is at 96");
+_Static_assert(__builtin_offsetof(struct darwin_ftsent, fts_name) == 104,
+               "Darwin arm64 FTSENT.fts_name is at 104");
+_Static_assert(sizeof(struct darwin_fts) == 72,
+               "Darwin arm64 FTS is 72 bytes");
+
+#define MR_FTS_MAGIC 0x4d52465453563101ULL
+#define D_FTS_OPTIONMASK 0xcff
+#define D_FTS_COMFOLLOW 0x001
+#define D_FTS_LOGICAL 0x002
+#define D_FTS_NOCHDIR 0x004
+#define D_FTS_NOSTAT 0x008
+#define D_FTS_PHYSICAL 0x010
+#define D_FTS_COMFOLLOWDIR 0x400
+#define D_FTS_NOSTAT_TYPE 0x800
+#define D_FTS_ROOTPARENTLEVEL (-1)
+#define D_FTS_D 1
+#define D_FTS_DC 2
+#define D_FTS_DEFAULT 3
+#define D_FTS_DNR 4
+#define D_FTS_DOT 5
+#define D_FTS_DP 6
+#define D_FTS_ERR 7
+#define D_FTS_F 8
+#define D_FTS_INIT 9
+#define D_FTS_NSOK 11
+#define D_FTS_SL 12
+#define D_FTS_SLNONE 13
+#define D_FTS_SYMFOLLOW 0x02
+#define D_FTS_NOINSTR 3
+#define MR_FTS_COMPARATOR_ENTRY 0x01
+#define MR_FTS_PRELOAD_ENTRY 0x02
+
+struct mr_fts_entry {
+    struct linux_ftsent *linux;
+    struct darwin_ftsent *darwin;
+    struct darwin_stat stat;
+    size_t name_capacity;
+    struct darwin_ftsent *identity_parent;
+    short identity_level;
+    long host_cookie;
+    int identity_set;
+    int preloaded_root;
+    struct mr_fts_entry *next;
+};
+
+struct mr_fts {
+    struct darwin_fts public;
+    uint64_t magic;
+    void *linux;
+    struct mr_fts_entry *entries;
+    int compar_error;
+    int started;
+    int darwin_options;
+    int host_options;
+    uint64_t next_cookie;
+    struct darwin_ftsent *device_root;
+    int32_t root_device;
+};
+
+static unsigned mr_fts_compar_key;
+static int mr_fts_compar_key_state; /* 0 = none, 1 = building, 2 = ready */
+
+static void mr_fts_compar_key_init(void)
+{
+    int expect = 0;
+    if (__atomic_load_n(&mr_fts_compar_key_state, __ATOMIC_ACQUIRE) == 2)
+        return;
+    if (__atomic_compare_exchange_n(&mr_fts_compar_key_state, &expect, 1, 0,
+                                    __ATOMIC_ACQ_REL, __ATOMIC_ACQUIRE)) {
+        if (glibc_pthread_key_create(&mr_fts_compar_key, 0) != 0)
+            mr_bail("pthread_key_create failed while setting up fts comparator");
+        __atomic_store_n(&mr_fts_compar_key_state, 2, __ATOMIC_RELEASE);
+        return;
+    }
+    while (__atomic_load_n(&mr_fts_compar_key_state, __ATOMIC_ACQUIRE) != 2)
+        glibc_sched_yield();
+}
+
+static struct mr_fts *mr_fts_compar_enter(struct mr_fts *state)
+{
+    struct mr_fts *previous;
+    mr_fts_compar_key_init();
+    previous = glibc_pthread_getspecific(mr_fts_compar_key);
+    if (glibc_pthread_setspecific(mr_fts_compar_key, state) != 0)
+        mr_bail("pthread_setspecific failed while entering fts comparator");
+    return previous;
+}
+
+static void mr_fts_compar_leave(struct mr_fts *previous)
+{
+    if (glibc_pthread_setspecific(mr_fts_compar_key, previous) != 0)
+        mr_bail("pthread_setspecific failed while leaving fts comparator");
+}
+
+static struct mr_fts *mr_fts_state(struct darwin_fts *fts)
+{
+    struct mr_fts *state = (struct mr_fts *)fts;
+    if (!state || state->magic != MR_FTS_MAGIC) {
+        *mr_errno_slot() = 22;             /* Darwin EINVAL */
+        return 0;
+    }
+    return state;
+}
+
+static struct mr_fts_entry *mr_fts_find_linux(
+    struct mr_fts *state, struct linux_ftsent *linux)
+{
+    struct mr_fts_entry *entry;
+    if (!linux) return 0;
+    for (entry = state->entries; entry; entry = entry->next)
+        if (entry->linux == linux) return entry;
+    return 0;
+}
+
+static struct mr_fts_entry *mr_fts_find_darwin(
+    struct mr_fts *state, struct darwin_ftsent *darwin)
+{
+    struct mr_fts_entry *entry;
+    if (!darwin) return 0;
+    for (entry = state->entries; entry; entry = entry->next)
+        if (entry->darwin == darwin) return entry;
+    return 0;
+}
+
+static struct mr_fts_entry *mr_fts_new_entry(
+    struct mr_fts *state, struct linux_ftsent *linux, uint16_t namelen)
+{
+    struct mr_fts_entry *entry;
+    size_t bytes;
+    if (!linux) return 0;
+    /* fts_number is initialized to zero by glibc's fts_alloc and is never
+     * consumed by the host traversal. Use it as a private live-allocation
+     * cookie. malloc can recycle the exact same address for the exact same
+     * name/parent/level after fts_children or FTS_AGAIN; the reset cookie is
+     * the only reliable way to distinguish that new native object. Guest
+     * fts_number remains exclusively in the Darwin mirror. */
+    if (state->next_cookie == 0x7fffffffffffffffULL) {
+        *mr_errno_slot() = 84;             /* Darwin EOVERFLOW */
+        return 0;
+    }
+    entry = glibc_calloc(1, sizeof *entry);
+    if (!entry) {
+        *mr_errno_slot() = 12;             /* Darwin ENOMEM */
+        return 0;
+    }
+    /* Apple's allocator uses sizeof(FTSENT)+namelen: the declared object is
+     * never underallocated for short names, while the trailing storage holds
+     * the complete NUL-terminated component. */
+    bytes = sizeof(struct darwin_ftsent) + (size_t)namelen;
+    entry->darwin = glibc_calloc(1, bytes);
+    if (!entry->darwin) {
+        glibc_free(entry);
+        *mr_errno_slot() = 12;
+        return 0;
+    }
+    entry->linux = linux;
+    entry->host_cookie = (long)++state->next_cookie;
+    linux->fts_number = entry->host_cookie;
+    entry->name_capacity = bytes
+        - __builtin_offsetof(struct darwin_ftsent, fts_name);
+    entry->next = state->entries;
+    state->entries = entry;
+    return entry;
+}
+
+static void mr_fts_retire_entry(
+    struct mr_fts *state, struct mr_fts_entry *entry)
+{
+    struct mr_fts_entry **cursor = &state->entries;
+    while (*cursor && *cursor != entry) cursor = &(*cursor)->next;
+    if (*cursor != entry) return;
+    *cursor = entry->next;
+    glibc_free(entry->darwin);
+    glibc_free(entry);
+}
+
+static struct mr_fts_entry *mr_fts_entry_for_identity(
+    struct mr_fts *state, struct linux_ftsent *linux,
+    struct darwin_ftsent *parent, int preload, int *is_new)
+{
+    struct mr_fts_entry *entry = mr_fts_find_linux(state, linux);
+    int cookie_matches = entry && entry->host_cookie != 0 &&
+        linux->fts_number == entry->host_cookie;
+    int exact = cookie_matches && entry->identity_set &&
+        entry->identity_parent == parent &&
+        entry->identity_level == linux->fts_level &&
+        entry->darwin->fts_namelen == linux->fts_namelen &&
+        glibc_strcmp(entry->darwin->fts_name, linux->fts_name) == 0;
+    int root_load = cookie_matches && entry->identity_set &&
+        entry->preloaded_root && !preload && linux->fts_level == 0 &&
+        entry->identity_parent == parent &&
+        (size_t)linux->fts_namelen + 1 <= entry->name_capacity;
+    int same = exact || root_load;
+
+    if (!same) {
+        /* A mismatching logical identity at the same glibc address means the
+         * host freed and recycled that FTSENT. Native code has invalidated the
+         * old pointer too, so retire it: retaining it would leak per visited
+         * node and a stale fts_set could target the unrelated replacement. */
+        if (entry) mr_fts_retire_entry(state, entry);
+        entry = mr_fts_new_entry(state, linux, linux->fts_namelen);
+        if (!entry) return 0;
+        entry->identity_set = 1;
+        entry->identity_parent = parent;
+        entry->identity_level = linux->fts_level;
+        entry->preloaded_root = preload && linux->fts_level == 0;
+        /* Apple's fts_alloc zeroes these guest-owned fields. The host's
+         * fts_number now contains our private cookie and must never escape. */
+        entry->darwin->fts_number = 0;
+        entry->darwin->fts_pointer = 0;
+    } else if (!preload) {
+        /* fts_load mutates a root's name from the argv spelling to its
+         * basename. It is the same native object and must retain comparator/
+         * pre-read guest state and pointer identity across that transition. */
+        entry->preloaded_root = 0;
+    }
+    entry->darwin->fts_namelen = linux->fts_namelen;
+    glibc_memcpy(entry->darwin->fts_name, linux->fts_name,
+                 (size_t)linux->fts_namelen + 1);
+    *is_new = !same;
+    return entry;
+}
+
+static struct darwin_ftsent *mr_fts_root_parent_for(
+    struct mr_fts *state, struct linux_ftsent *linux, char *root_path)
+{
+    struct mr_fts_entry *entry;
+    struct darwin_ftsent *darwin;
+    int is_new = 0;
+    entry = mr_fts_entry_for_identity(state, linux, 0, 0, &is_new);
+    if (!entry) return 0;
+    darwin = entry->darwin;
+    glibc_memset(&entry->stat, 0, sizeof entry->stat);
+    darwin->fts_cycle = 0;
+    darwin->fts_parent = 0;
+    darwin->fts_link = 0;
+    if (is_new) {
+        darwin->fts_number = 0;
+        darwin->fts_pointer = 0;
+    }
+    darwin->fts_accpath = 0;
+    darwin->fts_path = root_path;
+    darwin->fts_errno = 0;
+    darwin->fts_symfd = -1;
+    darwin->fts_pathlen = 0;
+    darwin->fts_namelen = 0;
+    darwin->fts_ino = 0;
+    darwin->fts_dev = 0;
+    darwin->fts_nlink = 0;
+    darwin->fts_level = D_FTS_ROOTPARENTLEVEL;
+    darwin->fts_info = 0;
+    darwin->fts_flags = 0;
+    darwin->fts_instr = D_FTS_NOINSTR;
+    darwin->fts_statp = (state->darwin_options & D_FTS_NOSTAT)
+        ? 0 : &entry->stat;
+    darwin->fts_name[0] = '\0';
+    return darwin;
+}
+
+static struct darwin_ftsent *mr_fts_translate(
+    struct mr_fts *state, struct linux_ftsent *linux, unsigned context)
+{
+    struct mr_fts_entry *entry;
+    struct mr_fts_entry *related_entry;
+    struct darwin_ftsent *darwin;
+    struct darwin_ftsent *parent = 0;
+    char *safe_path;
+    uint16_t safe_pathlen;
+    int is_new;
+    int preload;
+    if (!linux) return 0;
+
+    preload = (context & MR_FTS_PRELOAD_ENTRY) ||
+        ((context & MR_FTS_COMPARATOR_ENTRY) && !state->linux);
+    if (preload) {
+        /* Before fts_load, glibc's shared fts_path and fts_pathlen are
+         * indeterminate. fts_accpath is the initialized input spelling. */
+        safe_path = linux->fts_accpath;
+        safe_pathlen = 0;
+    } else {
+        safe_path = linux->fts_path;
+        safe_pathlen = linux->fts_pathlen;
+    }
+
+    if (linux->fts_parent) {
+        if (linux->fts_level == 0) {
+            parent = mr_fts_root_parent_for(
+                state, linux->fts_parent, safe_path);
+            if (!parent) return 0;
+        } else {
+            related_entry = mr_fts_find_linux(state, linux->fts_parent);
+            if (!related_entry) {
+                *mr_errno_slot() = 22;     /* impossible relation: fail closed */
+                return 0;
+            }
+            parent = related_entry->darwin;
+        }
+    }
+
+    entry = mr_fts_entry_for_identity(
+        state, linux, parent, preload, &is_new);
+    if (!entry) return 0;
+    darwin = entry->darwin;
+
+    /* glibc leaves fts_cycle indeterminate except on FTS_DC entries, and
+     * fts_link is public only on the list returned by fts_children. Reading
+     * either unconditionally turns their garbage bytes into a pointer and was
+     * caught by the fixture at the root's final FTS_DP entry. */
+    darwin->fts_cycle = 0;
+    if (linux->fts_info == D_FTS_DC && linux->fts_cycle) {
+        related_entry = mr_fts_find_linux(state, linux->fts_cycle);
+        if (!related_entry) {
+            *mr_errno_slot() = 22;
+            return 0;
+        }
+        darwin->fts_cycle = related_entry->darwin;
+    }
+    darwin->fts_parent = parent;
+    darwin->fts_link = 0;
+    darwin->fts_accpath = linux->fts_accpath;
+    darwin->fts_path = safe_path;
+    darwin->fts_pathlen = safe_pathlen;
+    darwin->fts_errno = darwin_from_linux_errno(linux->fts_errno);
+    /* SYMFOLLOW is initialized and is set only after glibc assigns symfd. It
+     * remains set through DP and DNR/ERR transitions, matching shipping
+     * Darwin's observable retained (already closed at DP) descriptor value. */
+    darwin->fts_symfd = (linux->fts_flags & D_FTS_SYMFOLLOW)
+        ? linux->fts_symfd : -1;
+    darwin->fts_namelen = linux->fts_namelen;
+    darwin->fts_level = linux->fts_level;
+    darwin->fts_info = linux->fts_info;
+    darwin->fts_flags = linux->fts_flags;
+    /* glibc consumes and resets instructions as the traversal advances.
+     * Copy on every observation; number and pointer are the only fields the
+     * guest owns and therefore the only ones retained in a generation. */
+    darwin->fts_instr = linux->fts_instr;
+    glibc_memcpy(darwin->fts_name, linux->fts_name,
+                 (size_t)linux->fts_namelen + 1);
+
+    if (state->darwin_options & D_FTS_NOSTAT) {
+        darwin->fts_statp = 0;
+    } else if (linux->fts_info == D_FTS_NSOK) {
+        /* fts_alloc deliberately leaves the host stat bytes uninitialized in
+         * a NAMEONLY/NSOK list. Apple exposes a valid zero stat in this mode. */
+        glibc_memset(&entry->stat, 0, sizeof entry->stat);
+        darwin->fts_statp = &entry->stat;
+    } else if (linux->fts_statp) {
+        stat_l2d(linux->fts_statp, &entry->stat);
+        darwin->fts_statp = &entry->stat;
+    } else {
+        darwin->fts_statp = 0;
+    }
+
+    if (linux->fts_info == D_FTS_D || linux->fts_info == D_FTS_DC ||
+        linux->fts_info == D_FTS_DOT || linux->fts_info == D_FTS_DP) {
+        /* glibc 2.39 initializes these scalar fields for directories even
+         * under FTS_NOSTAT, where fts_statp is intentionally null. They are
+         * indeterminate for non-directories, so the info guard is mandatory. */
+        darwin->fts_ino = linux->fts_ino;
+        darwin->fts_dev = (int32_t)linux->fts_dev;
+        darwin->fts_nlink = (uint16_t)linux->fts_nlink;
+    } else if (!is_new &&
+               (linux->fts_info == D_FTS_DNR ||
+                linux->fts_info == D_FTS_ERR)) {
+        /* Apple retains directory identity if the same entry transitions to
+         * DNR/ERR. The generation already carries those values. */
+    } else {
+        darwin->fts_ino = 0;
+        darwin->fts_dev = 0;
+        darwin->fts_nlink = 0;
+    }
+    return darwin;
+}
+
+static int mr_fts_compar_bridge(const void *left, const void *right)
+{
+    const struct linux_ftsent *const *linux_left = left;
+    const struct linux_ftsent *const *linux_right = right;
+    const struct darwin_ftsent *darwin_left;
+    const struct darwin_ftsent *darwin_right;
+    struct mr_fts *state;
+
+    mr_fts_compar_key_init();
+    state = glibc_pthread_getspecific(mr_fts_compar_key);
+    if (!state || !state->public.fts_compar)
+        mr_bail("fts comparator invoked without its owning stream");
+    darwin_left = mr_fts_translate(
+        state, (struct linux_ftsent *)*linux_left, MR_FTS_COMPARATOR_ENTRY);
+    darwin_right = mr_fts_translate(
+        state, (struct linux_ftsent *)*linux_right, MR_FTS_COMPARATOR_ENTRY);
+    if (!darwin_left || !darwin_right) {
+        state->compar_error = *mr_errno_slot() ? *mr_errno_slot() : 12;
+        return 0;
+    }
+    return state->public.fts_compar(&darwin_left, &darwin_right);
+}
+
+static int mr_fts_internal_stat(
+    const char *path, struct linux_stat *out, int follow)
+{
+    int saved = *mr_errno_slot();
+    int rc = follow
+        ? MR_ERRNO_CALL(glibc_stat(path, out))
+        : MR_ERRNO_CALL(glibc_lstat(path, out));
+    /* These probes implement an fts_open option; they are not a guest call and
+     * must not replace the successful open's observable errno value. */
+    *mr_errno_slot() = saved;
+    return rc;
+}
+
+static void mr_fts_normalize_comfollowdir(
+    struct mr_fts *state, void *linux_stream)
+{
+    struct linux_ftsent *initial =
+        ((struct linux_fts *)linux_stream)->fts_cur;
+    struct linux_ftsent *root;
+    struct linux_stat link_stat, target_stat;
+    const unsigned mode_mask = 0170000;
+    const unsigned mode_directory = 0040000;
+    const unsigned mode_symlink = 0120000;
+
+    if (!initial) return;
+    for (root = initial->fts_link; root; root = root->fts_link) {
+        if (mr_fts_internal_stat(root->fts_accpath, &link_stat, 0) != 0 ||
+            (link_stat.st_mode & mode_mask) != mode_symlink)
+            continue;
+        if (mr_fts_internal_stat(root->fts_accpath, &target_stat, 1) != 0)
+            continue;                       /* host already exposes SLNONE */
+        if ((target_stat.st_mode & mode_mask) == mode_directory)
+            continue;                       /* COMFOLLOW result is exact */
+
+        /* glibc's global COMFOLLOW followed a non-directory root symlink.
+         * Apple's COMFOLLOWDIR performs this lstat fallback inside fts_stat.
+         * Restore that host entry before sorting or the first fts_read. */
+        root->fts_info = D_FTS_SL;
+        root->fts_errno = 0;
+        if (!(state->host_options & D_FTS_NOSTAT) && root->fts_statp)
+            glibc_memcpy(root->fts_statp, &link_stat, sizeof link_stat);
+    }
+}
+
+static int mr_fts_sort_initial_roots(
+    struct mr_fts *state, void *linux_stream)
+{
+    struct linux_ftsent *initial =
+        ((struct linux_fts *)linux_stream)->fts_cur;
+    struct linux_ftsent *root;
+    struct linux_ftsent **array;
+    struct mr_fts *previous;
+    size_t count = 0, i = 0;
+    if (!initial) return 0;
+    for (root = initial->fts_link; root; root = root->fts_link) count++;
+    if (count < 2) return 0;
+    array = glibc_malloc(count * sizeof *array);
+    if (!array) {
+        *mr_errno_slot() = 12;
+        return -1;
+    }
+    for (root = initial->fts_link; root; root = root->fts_link)
+        array[i++] = root;
+
+    state->compar_error = 0;
+    previous = mr_fts_compar_enter(state);
+    glibc_qsort(array, count, sizeof *array, mr_fts_compar_bridge);
+    mr_fts_compar_leave(previous);
+    if (state->compar_error) {
+        glibc_free(array);
+        *mr_errno_slot() = state->compar_error;
+        return -1;
+    }
+    initial->fts_link = array[0];
+    for (i = 1; i < count; i++) array[i - 1]->fts_link = array[i];
+    array[count - 1]->fts_link = 0;
+    glibc_free(array);
+    return 0;
+}
+
+static void mr_fts_free_entries(struct mr_fts *state)
+{
+    struct mr_fts_entry *entry, *next;
+    for (entry = state->entries; entry; entry = next) {
+        next = entry->next;
+        glibc_free(entry->darwin);
+        glibc_free(entry);
+    }
+    state->entries = 0;
+}
+
+static void mr_fts_update_public_device(
+    struct mr_fts *state, struct darwin_ftsent *darwin)
+{
+    if (darwin->fts_level == 0) {
+        if (state->device_root != darwin) {
+            /* fts_load starts a new command-line root. Apple's calloc-backed
+             * stream exposes zero for file/symlink/error roots; glibc's
+             * private fts_dev is indeterminate in exactly those cases. */
+            state->device_root = darwin;
+            state->root_device = 0;
+            if (darwin->fts_info == D_FTS_D ||
+                darwin->fts_info == D_FTS_DC ||
+                darwin->fts_info == D_FTS_DOT ||
+                darwin->fts_info == D_FTS_DP)
+                state->root_device = darwin->fts_dev;
+        }
+        /* Every same-root transition retains the fts_load value, including
+         * D->DP/DNR/ERR and a followed symlink's SL->D->DP sequence. */
+    }
+    state->public.fts_dev = state->root_device;
+}
+
+EXPORT struct darwin_fts *fts_open(
+    char *const *paths, int options, darwin_fts_compar compar)
+{
+    struct mr_fts *state;
+    struct mr_fts *previous = 0;
+    void *linux;
+    int darwin_options = options;
+    int host_options = options;
+    int host_comparator;
+    int private_sort;
+
+    if (options & ~D_FTS_OPTIONMASK) {
+        *mr_errno_slot() = 22;
+        return 0;
+    }
+    state = glibc_calloc(1, sizeof *state);
+    if (!state) {
+        *mr_errno_slot() = 12;
+        return 0;
+    }
+    state->magic = MR_FTS_MAGIC;
+
+    /* Darwin's NOSTAT_TYPE is a richer d_type-based NOSTAT. glibc has no
+     * equivalent, so deliberately take the more expensive exact route: let
+     * glibc stat and classify every entry, then hide statp as Darwin requires.
+     * This preserves values and traversal at the cost of the optimization. */
+    if (options & D_FTS_NOSTAT_TYPE) {
+        darwin_options |= D_FTS_NOSTAT;
+        host_options &= ~(D_FTS_NOSTAT_TYPE | D_FTS_NOSTAT);
+    }
+    /* COMFOLLOWDIR is root-only and follows only directory targets. Ask
+     * glibc to follow roots, then lstat-normalize non-directory symlinks. */
+    if (options & D_FTS_COMFOLLOWDIR) {
+        host_options &= ~D_FTS_COMFOLLOWDIR;
+        host_options |= D_FTS_COMFOLLOW;
+    }
+    if (darwin_options & D_FTS_LOGICAL)
+        darwin_options |= D_FTS_NOCHDIR;
+
+    /* Guest code can write the public FTS structure. Safety/exposure guards
+     * use immutable copies of both the Darwin and translated host options. */
+    state->darwin_options = darwin_options;
+    state->host_options = host_options;
+    state->public.fts_options = darwin_options;
+    state->public.fts_compar = compar;
+    private_sort = compar && (options & D_FTS_COMFOLLOWDIR);
+    host_comparator = compar && !private_sort;
+    if (host_comparator) previous = mr_fts_compar_enter(state);
+    linux = MR_ERRNO_CALL(glibc_fts_open(
+        paths, host_options, host_comparator ? mr_fts_compar_bridge : 0));
+    if (host_comparator) mr_fts_compar_leave(previous);
+    if (linux) {
+        struct linux_ftsent *initial =
+            ((struct linux_fts *)linux)->fts_cur;
+        if (initial && initial->fts_info == D_FTS_INIT)
+            initial->fts_level = 1;
+        if (options & D_FTS_COMFOLLOWDIR)
+            mr_fts_normalize_comfollowdir(state, linux);
+        if (private_sort) {
+            if (mr_fts_sort_initial_roots(state, linux) != 0 &&
+                !state->compar_error)
+                state->compar_error = *mr_errno_slot()
+                    ? *mr_errno_slot() : 12;
+            if (!state->compar_error)
+                ((struct linux_fts *)linux)->fts_compar =
+                    mr_fts_compar_bridge;
+        }
+    }
+    if (!linux || state->compar_error) {
+        int saved = state->compar_error;
+        if (linux) (void)MR_ERRNO_CALL(glibc_fts_close(linux));
+        mr_fts_free_entries(state);
+        state->magic = 0;
+        glibc_free(state);
+        if (saved) *mr_errno_slot() = saved;
+        return 0;
+    }
+    state->linux = linux;
+    return &state->public;
+}
+
+EXPORT struct darwin_ftsent *fts_read(struct darwin_fts *fts)
+{
+    struct mr_fts *state = mr_fts_state(fts);
+    struct mr_fts *previous = 0;
+    struct linux_ftsent *linux;
+    struct darwin_ftsent *darwin;
+    if (!state) return 0;
+    state->compar_error = 0;
+    if (state->public.fts_compar) previous = mr_fts_compar_enter(state);
+    linux = MR_ERRNO_CALL(glibc_fts_read(state->linux));
+    if (state->public.fts_compar) mr_fts_compar_leave(previous);
+    /* A read ends the public fts_children exposure. The host may consume,
+     * retain, or replace its private list depending on the instruction, but
+     * no stale list head is published through the Darwin shell. */
+    state->public.fts_child = 0;
+    if (state->compar_error) {
+        *mr_errno_slot() = state->compar_error;
+        state->public.fts_cur = 0;
+        return 0;
+    }
+    if (!linux) {
+        state->public.fts_cur = 0;
+        return 0;
+    }
+    darwin = mr_fts_translate(state, linux, 0);
+    if (!darwin) {
+        state->public.fts_cur = 0;
+        return 0;
+    }
+    state->started = 1;
+    state->public.fts_cur = darwin;
+    state->public.fts_path = darwin->fts_path;
+    /* FTS.fts_dev is the current root's starting device, not the current
+     * entry's device. Never read glibc's field here: it is indeterminate for
+     * file/symlink roots in 2.39. */
+    mr_fts_update_public_device(state, darwin);
+    return darwin;
+}
+
+EXPORT struct darwin_ftsent *fts_children(struct darwin_fts *fts, int instr)
+{
+    struct mr_fts *state = mr_fts_state(fts);
+    struct mr_fts *previous = 0;
+    struct linux_ftsent *head, *cursor;
+    struct darwin_ftsent *darwin_head = 0;
+    unsigned context;
+    int pre_read;
+    if (!state) return 0;
+    /* The host call can free the prior list even if its replacement later
+     * fails to translate. Publish a child pointer only after both passes have
+     * completed successfully. */
+    state->public.fts_child = 0;
+    pre_read = !state->started;
+    context = pre_read ? MR_FTS_PRELOAD_ENTRY : 0;
+    state->compar_error = 0;
+    if (state->public.fts_compar) previous = mr_fts_compar_enter(state);
+    head = MR_ERRNO_CALL(glibc_fts_children(state->linux, instr));
+    if (state->public.fts_compar) mr_fts_compar_leave(previous);
+    if (state->compar_error) {
+        *mr_errno_slot() = state->compar_error;
+        state->public.fts_child = 0;
+        return 0;
+    }
+    if (!head) {
+        state->public.fts_child = 0;
+        return 0;
+    }
+    /* First establish every generation, then wire the list. If glibc has
+     * recycled an address, a one-pass translation can point an earlier item
+     * at that address's obsolete generation before the new one is discovered. */
+    for (cursor = head; cursor; cursor = cursor->fts_link) {
+        struct darwin_ftsent *translated = mr_fts_translate(
+            state, cursor, context);
+        if (!translated) return 0;
+        if (!darwin_head) darwin_head = translated;
+    }
+    for (cursor = head; cursor; cursor = cursor->fts_link) {
+        struct mr_fts_entry *source = mr_fts_find_linux(state, cursor);
+        struct mr_fts_entry *target = cursor->fts_link
+            ? mr_fts_find_linux(state, cursor->fts_link) : 0;
+        if (!source || (cursor->fts_link && !target)) {
+            *mr_errno_slot() = 22;
+            return 0;
+        }
+        source->darwin->fts_link = target ? target->darwin : 0;
+    }
+    /* Before the first read Darwin returns the root list but leaves the
+     * public fts_child field null; directory child lists populate it. */
+    if (!pre_read) state->public.fts_child = darwin_head;
+    return darwin_head;
+}
+
+EXPORT int fts_set(struct darwin_fts *fts,
+                   struct darwin_ftsent *entry, int instr)
+{
+    struct mr_fts *state = mr_fts_state(fts);
+    struct mr_fts_entry *mapped;
+    int rc;
+    if (!state) return -1;
+    mapped = mr_fts_find_darwin(state, entry);
+    if (!mapped) {
+        *mr_errno_slot() = 22;
+        return -1;
+    }
+    rc = MR_ERRNO_CALL(glibc_fts_set(state->linux, mapped->linux, instr));
+    if (rc == 0) mapped->darwin->fts_instr = (uint16_t)instr;
+    return rc;
+}
+
+EXPORT int fts_close(struct darwin_fts *fts)
+{
+    struct mr_fts *state = mr_fts_state(fts);
+    int rc;
+    if (!state) return -1;
+    rc = MR_ERRNO_CALL(glibc_fts_close(state->linux));
+    mr_fts_free_entries(state);
+    state->magic = 0;
+    glibc_free(state);
+    return rc;
+}
+
 /* ------------------------------------------------------------- the rest of
  * the file surface. Every one of these is bracketed for errno; that is the
  * only reason they are not one-line forwarders. */
@@ -549,6 +1402,7 @@ EXPORT ssize_t write(int fd, const void *b, size_t n) { return MR_ERRNO_CALL(gli
 EXPORT int     close(int fd)                          { return MR_ERRNO_CALL(glibc_close(fd)); }
 EXPORT off_t   lseek(int fd, off_t off, int whence)   { return MR_ERRNO_CALL(glibc_lseek(fd, off, whence)); }
 EXPORT int     mkdir(const char *p, unsigned m)       { return MR_ERRNO_CALL(glibc_mkdir(p, m)); }
+EXPORT int     mkfifo(const char *p, unsigned m)      { return MR_ERRNO_CALL(glibc_mkfifo(p, m)); }
 EXPORT int     rmdir(const char *p)                   { return MR_ERRNO_CALL(glibc_rmdir(p)); }
 EXPORT int     unlink(const char *p)                  { return MR_ERRNO_CALL(glibc_unlink(p)); }
 EXPORT int     rename(const char *a, const char *b)   { return MR_ERRNO_CALL(glibc_rename(a, b)); }

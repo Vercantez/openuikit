@@ -67,6 +67,7 @@
 #define _XOPEN_SOURCE 700
 
 #include <dirent.h>
+#include <fts.h>
 #include <time.h>
 #include <glob.h>
 #include <pthread.h>
@@ -164,6 +165,49 @@ _Static_assert(offsetof(struct dirent, d_type) == 18,
 _Static_assert(offsetof(struct dirent, d_name) == 19,
     "glibc struct dirent has moved d_name (Darwin puts it at 21).");
 PIN(glob_t, 72);
+
+/* fts is a live translated ABI. FTS happens to be 72 bytes on both systems,
+ * but FTSENT is 120 here versus 112 on Darwin and diverges at fts_level.
+ * darwin/src/posix.c mirrors this exact Linux layout before rebuilding the
+ * Darwin entry field by field. */
+PIN(FTS, 72);
+PIN(FTSENT, 120);
+_Static_assert(offsetof(FTS, fts_cur) == 0,
+    "glibc FTS moved fts_cur; the 2.39 close-before-read initialization in "
+    "darwin/src/posix.c depends on this first field");
+_Static_assert(offsetof(FTS, fts_compar) == 56,
+    "glibc FTS moved fts_compar; COMFOLLOWDIR's post-normalization sort "
+    "bridge depends on this field");
+_Static_assert(offsetof(FTS, fts_options) == 64,
+    "glibc FTS moved fts_options");
+_Static_assert(offsetof(FTSENT, fts_ino) == 72,
+    "glibc FTSENT moved fts_ino (Darwin also puts it at 72)");
+_Static_assert(offsetof(FTSENT, fts_dev) == 80,
+    "glibc FTSENT moved fts_dev (Darwin also puts it at 80)");
+_Static_assert(offsetof(FTSENT, fts_nlink) == 88,
+    "glibc FTSENT moved fts_nlink (Darwin puts it at 84)");
+_Static_assert(offsetof(FTSENT, fts_level) == 92,
+    "glibc FTSENT moved fts_level (Darwin puts it at 86)");
+_Static_assert(offsetof(FTSENT, fts_info) == 94,
+    "glibc FTSENT moved fts_info (Darwin puts it at 88)");
+_Static_assert(offsetof(FTSENT, fts_flags) == 96,
+    "glibc FTSENT moved fts_flags (Darwin puts it at 90)");
+_Static_assert(offsetof(FTSENT, fts_instr) == 98,
+    "glibc FTSENT moved fts_instr (Darwin puts it at 92)");
+_Static_assert(offsetof(FTSENT, fts_statp) == 104,
+    "glibc FTSENT moved fts_statp (Darwin puts it at 96)");
+_Static_assert(offsetof(FTSENT, fts_name) == 112,
+    "glibc FTSENT moved inline fts_name (Darwin puts it at 104)");
+_Static_assert(FTS_LOGICAL == 0x02 && FTS_NOCHDIR == 0x04 &&
+    FTS_NOSTAT == 0x08 && FTS_PHYSICAL == 0x10 && FTS_XDEV == 0x40 &&
+    FTS_OPTIONMASK == 0xff && FTS_ROOTPARENTLEVEL == -1,
+    "glibc FTS option/level constants moved; Darwin's option mask is 0xcff");
+_Static_assert(FTS_D == 1 && FTS_DC == 2 && FTS_DNR == 4 && FTS_DOT == 5 &&
+    FTS_DP == 6 && FTS_ERR == 7 && FTS_INIT == 9 && FTS_NSOK == 11,
+    "glibc FTS info constants no longer match Darwin");
+_Static_assert(FTS_SYMFOLLOW == 0x02 && FTS_NOINSTR == 3 && FTS_SKIP == 4 &&
+    FTS_NAMEONLY == 0x100,
+    "glibc FTS flag/instruction constants no longer match Darwin");
 
 /* struct passwd: 48 here against Darwin's 72, agreeing for the first four
  * fields and diverging after -- so posix.c translates rather than forwards.

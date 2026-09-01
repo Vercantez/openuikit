@@ -1,0 +1,43 @@
+FTS=72 FTSENT=112
+offset level=86 info=88 flags=90 instr=92 statp=96 name=104
+root parent level=-1 name=[]
+root parent surface info=0 instr=3 accpath=null path=shared statp=zero symfd=-1
+invalid set rc=1 errno=22 EINVAL=22
+physical eof current=null
+child roundtrip number=313 pointer=preserved file-identity=zero-with-stat
+skip postorder instr=3 number=77
+root roundtrip number=4242 pointer=preserved
+root-parent roundtrip number=5150 pointer=preserved
+stream device root=initialized file=retained
+children count=7 [alpha.txt] [dangling] [link-to-dir] [link-to-leaf] [nested] [pipe] [skip]
+physical records=13 skipped=1 child-marked=1
+  path=/ name=machorun_fts_fixture parent=<root> level=0 info=D kind=dir err=0 number=0
+  path=/ name=machorun_fts_fixture parent=<root> level=0 info=DP kind=dir err=0 number=4242
+  path=/alpha.txt name=alpha.txt parent=machorun_fts_fixture level=1 info=F kind=file err=0 number=313
+  path=/dangling name=dangling parent=machorun_fts_fixture level=1 info=SL kind=link err=0 number=0
+  path=/link-to-dir name=link-to-dir parent=machorun_fts_fixture level=1 info=SL kind=link err=0 number=0
+  path=/link-to-leaf name=link-to-leaf parent=machorun_fts_fixture level=1 info=SL kind=link err=0 number=0
+  path=/nested name=nested parent=machorun_fts_fixture level=1 info=D kind=dir err=0 number=0
+  path=/nested name=nested parent=machorun_fts_fixture level=1 info=DP kind=dir err=0 number=0
+  path=/nested/aardvark.txt name=aardvark.txt parent=nested level=2 info=F kind=file err=0 number=0
+  path=/nested/leaf.txt name=leaf.txt parent=nested level=2 info=F kind=file err=0 number=0
+  path=/pipe name=pipe parent=machorun_fts_fixture level=1 info=DEFAULT kind=other err=0 number=0
+  path=/skip name=skip parent=machorun_fts_fixture level=1 info=D kind=dir err=0 number=0
+  path=/skip name=skip parent=machorun_fts_fixture level=1 info=DP kind=dir err=0 number=77
+nostat records=14 statp=0 nsok=8 dir-scalars=6 dir-stable=3 nsok-zero=8
+comparator order= [/:D] [/alpha.txt:F] [/dangling:SL] [/link-to-dir:SL] [/link-to-leaf:SL] [/nested:D] [/nested/aardvark.txt:F] [/nested/leaf.txt:F] [/nested:DP] [/pipe:DEFAULT] [/skip:D] [/skip/hidden.txt:F] [/skip:DP] [/:DP]
+comparator records=14
+nested comparator=ok records=2
+nameonly count=7 nsok=7 statp=7 zero=7
+nameonly-nostat count=7 nsok=7 statp=0 zero=0
+logical public-options=0x6
+invalid-options stream=null errno=22 EINVAL=22
+nostat-type options=0x81c records=14 dirs=6 files=4 symlinks=3 default=1 nsok=0 statp=0
+comfollowdir order= [/dangling:SLNONE] [/link-to-dir:D] [/link-to-dir/aardvark.txt:F] [/link-to-dir/leaf.txt:F] [/link-to-dir:DP] [/link-to-leaf:SL]
+comfollowdir options=0x414 records=6 dirs=2 files=2 symlinks=1 dangling=1
+pre-read roots=2 public-child=null pathlen-zero=2 parent-level=2 records=2 roundtrip=preserved
+follow records=5 set=1 preorder=active postorder=retained flags=symfollow stream-dev=zero
+repeat-children generations=2 replacement=fresh
+again passes=2 first=1 second=1 descendant=fresh
+stream-device roots records=3 directory=set postorder=retained file=zero
+done
