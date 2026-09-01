@@ -5,13 +5,19 @@
 // AppIntents when those modules are actually present. This module never
 // defines lookalike Color, LocalizedStringResource, ActivityAttributes,
 // AlertConfiguration, or LiveActivityIntent types.
+//
+// canImport is not enough: ActivityKit and AppIntents can import on macOS
+// while ActivityAttributes, AlertConfiguration, and LiveActivityIntent stay
+// unavailable. The live-activity surface is compiled only on
+// os(iOS) || os(watchOS) || os(visionOS) || os(Linux), plus canImport of
+// each real module. macOS/tvOS keep a reduced module. No fallback types.
 //===----------------------------------------------------------------------===//
 
-#if canImport(ActivityKit)
+#if canImport(ActivityKit) && (os(iOS) || os(watchOS) || os(visionOS) || os(Linux))
 import ActivityKit
 #endif
 
-#if canImport(AppIntents)
+#if canImport(AppIntents) && (os(iOS) || os(watchOS) || os(visionOS) || os(Linux))
 import AppIntents
 #endif
 

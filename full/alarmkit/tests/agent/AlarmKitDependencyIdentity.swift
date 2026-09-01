@@ -1,4 +1,8 @@
-#if canImport(ActivityKit) && canImport(AppIntents) && canImport(SwiftUI)
+#if os(macOS) || os(tvOS)
+// LiveActivityIntent, AlertConfiguration, and ActivityAttributes are
+// unavailable on this platform even when ActivityKit/AppIntents import.
+// This probe is the future iOS/Linux identity client, not a macOS stand-in.
+#elseif canImport(ActivityKit) && canImport(AppIntents) && canImport(SwiftUI) && (os(iOS) || os(watchOS) || os(visionOS) || os(Linux))
 import ActivityKit
 import AlarmKit
 import AppIntents
@@ -256,5 +260,5 @@ func requireEqual<T: Equatable>(_ lhs: T, _ rhs: T) {
 
 try await run()
 #else
-#error("AlarmKitDependencyIdentity.swift requires ActivityKit, AppIntents, Foundation, and SwiftUI")
+#error("AlarmKitDependencyIdentity.swift requires ActivityKit, AppIntents, Foundation, and SwiftUI with LiveActivityIntent, AlertConfiguration, and ActivityAttributes actually available")
 #endif

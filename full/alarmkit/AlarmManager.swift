@@ -1,8 +1,8 @@
-#if canImport(ActivityKit)
+#if canImport(ActivityKit) && (os(iOS) || os(watchOS) || os(visionOS) || os(Linux))
 import ActivityKit
 #endif
 
-#if canImport(AppIntents)
+#if canImport(AppIntents) && (os(iOS) || os(watchOS) || os(visionOS) || os(Linux))
 import AppIntents
 #endif
 
@@ -110,7 +110,7 @@ public class AlarmManager: @unchecked Sendable {
         alarmBroker.publish(alarms)
     }
 
-#if canImport(SwiftUI) && canImport(ActivityKit) && canImport(AppIntents)
+#if canImport(SwiftUI) && canImport(ActivityKit) && canImport(AppIntents) && (os(iOS) || os(watchOS) || os(visionOS) || os(Linux))
     public func schedule<Metadata: AlarmMetadata>(
         id: Alarm.ID,
         configuration: AlarmConfiguration<Metadata>

@@ -2,7 +2,7 @@
 import SwiftUI
 #endif
 
-#if canImport(ActivityKit)
+#if canImport(ActivityKit) && (os(iOS) || os(watchOS) || os(visionOS) || os(Linux))
 import ActivityKit
 #endif
 
@@ -132,7 +132,7 @@ public struct AlarmPresentation: Sendable, Decodable, Encodable {
     }
 }
 
-#if canImport(ActivityKit)
+#if canImport(ActivityKit) && (os(iOS) || os(watchOS) || os(visionOS) || os(Linux))
 /// Presentation plus optional metadata used to request an alarm.
 public struct AlarmAttributes<Metadata: AlarmMetadata>: Sendable, Decodable, Encodable {
     public typealias ContentState = AlarmPresentationState

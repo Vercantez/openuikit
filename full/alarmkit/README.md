@@ -22,10 +22,14 @@ synthesized contract.
 This module does **not** define lookalike `SwiftUI.Color`,
 `Foundation.LocalizedStringResource`, `ActivityKit.ActivityAttributes`,
 `ActivityKit.AlertConfiguration`, or `AppIntents.LiveActivityIntent`
-types. Declarations that need those nominal types are wrapped in
-`canImport` and marked `deferred` in `coverage.tsv`.
+types. Declarations that need those nominal types are compiled only when the
+real module imports **and** the platform actually vends the type
+(`os(iOS) || os(watchOS) || os(visionOS) || os(Linux)`). `canImport`
+alone is not evidence: macOS can import ActivityKit and AppIntents while
+`ActivityAttributes`, `AlertConfiguration`, and `LiveActivityIntent`
+stay unavailable. Those rows stay `deferred`. No fallback types.
 
-When the real modules are linked (future EC2 cold build):
+When those real types are available on iOS or a Linux-staged cold build:
 
 - `AlarmButton`, `AlarmPresentation`, `AlarmAttributes` use SwiftUI.Color
   and Foundation.LocalizedStringResource
@@ -37,7 +41,10 @@ When the real modules are linked (future EC2 cold build):
 - Color Codable on presentation types fails closed
 
 `tests/agent/AlarmKitDependencyIdentity.swift` is the future probe for
-that build. It is not compiled by `tests/acceptance/test_host.sh`.
+that iOS/Linux-staged build. It is not compiled by
+`tests/acceptance/test_host.sh`. On macOS the guest sources still produce
+a loadable reduced module: live-activity types are omitted rather than
+replaced.
 
 ## Fail-closed host behavior
 
