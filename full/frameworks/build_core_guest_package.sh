@@ -1929,6 +1929,34 @@ cmp "$WORK/open-compression-expected-mach-imports.txt" \
     "$WORK/open-compression-mach-imports.txt" \
     || die 'Mach-O Compression host imports drifted'
 
+# Host fallback is intentionally available only to images that machorun
+# loaded from its Darwin runtime root.  Keep the `_glibc_*` imports in this
+# private runtime bridge; the app-rpath Compression framework links to the
+# bridge and therefore never asks a package-local image to cross into ELF.
+COMPRESSION_DARWIN=$RUNTIME/darwin/usr/lib/libOpenCompression.dylib
+"${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+    -install_name /usr/lib/libOpenCompression.dylib \
+    -o "$COMPRESSION_DARWIN" "$WORK/open-compression-bridge.o"
+llvm-otool-18 -hv "$COMPRESSION_DARWIN" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
+    || die 'Mach-O Compression bridge is not an ARM64 dylib'
+[ "$(llvm-otool-18 -D "$COMPRESSION_DARWIN" | tail -n 1)" = \
+    /usr/lib/libOpenCompression.dylib ] \
+    || die 'Mach-O Compression bridge install name drifted'
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$COMPRESSION_DARWIN" | LC_ALL=C sort -u \
+    > "$WORK/open-compression-darwin-exports.txt"
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$COMPRESSION_DARWIN" \
+    | awk '$0 ~ /^_glibc_openui_compression_v1_/ { print }' \
+    | LC_ALL=C sort -u > "$WORK/open-compression-darwin-host-imports.txt"
+cmp "$WORK/open-compression-expected-mach-exports.txt" \
+    "$WORK/open-compression-darwin-exports.txt" \
+    || die 'Mach-O Compression bridge dylib exports drifted'
+cmp "$WORK/open-compression-expected-mach-imports.txt" \
+    "$WORK/open-compression-darwin-host-imports.txt" \
+    || die 'Mach-O Compression bridge dylib host imports drifted'
+
 readelf --wide --dynamic "$COMPRESSION_HOST" \
     | awk '$2 == "(NEEDED)" { value=$5; gsub(/^\[|\]$/, "", value); print value }' \
     | LC_ALL=C sort -u > "$WORK/open-compression-direct-sonames.txt"
@@ -1960,8 +1988,12 @@ cp "$WORK/open-compression-host-test.log" \
     printf 'symbol\topenui_compression_v1_transform\tguest-export=_openui_compression_v1_transform\tguest-host-import=_glibc_openui_compression_v1_transform\thost-export=openui_compression_v1_transform\n'
     printf 'symbol\topenui_compression_v1_release\tguest-export=_openui_compression_v1_release\tguest-host-import=_glibc_openui_compression_v1_release\thost-export=openui_compression_v1_release\n'
 } > "$STAGE/attestation/open-compression-abi.tsv"
-printf 'local\thost/libOpenCompressionHost.so\t%s\tbuilt from full/compression/OpenCompressionHost.c\n' \
-    "$(hash_file "$COMPRESSION_HOST")" >> "$RUNTIME/.manifest"
+{
+    printf 'local\tdarwin/usr/lib/libOpenCompression.dylib\t%s\tbuilt from full/compression/OpenCompressionBridge.c\n' \
+        "$(hash_file "$COMPRESSION_DARWIN")"
+    printf 'local\thost/libOpenCompressionHost.so\t%s\tbuilt from full/compression/OpenCompressionHost.c\n' \
+        "$(hash_file "$COMPRESSION_HOST")"
+} >> "$RUNTIME/.manifest"
 
 echo '== build and audit the fixed-ABI zlib gzip boundary'
 ZLIB_NATIVE=$(readlink -f /lib/aarch64-linux-gnu/libz.so.1)
@@ -2023,6 +2055,36 @@ cmp "$WORK/open-zlib-expected-mach-imports.txt" \
     "$WORK/open-zlib-mach-imports.txt" \
     || die 'Mach-O zlib host imports drifted'
 
+# As with the other fixed host ABIs, only a Darwin-root image owns the
+# `_glibc_*` escape hatch.  libz.dylib below is an app-facing re-export facade;
+# this private bridge is the sole host-bound implementation image.
+ZLIB_DARWIN=$RUNTIME/darwin/usr/lib/libOpenZlib.dylib
+"${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+    -install_name /usr/lib/libOpenZlib.dylib \
+    -o "$ZLIB_DARWIN" "$WORK/open-zlib-bridge.o" \
+    -L"$STAGE/sdk/usr/lib" -lSystem
+llvm-otool-18 -hv "$ZLIB_DARWIN" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
+    || die 'Mach-O zlib bridge is not an ARM64 dylib'
+[ "$(llvm-otool-18 -D "$ZLIB_DARWIN" | tail -n 1)" = \
+    /usr/lib/libOpenZlib.dylib ] \
+    || die 'Mach-O zlib bridge install name drifted'
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$ZLIB_DARWIN" \
+    | awk '$0 == "_inflate" || $0 == "_inflateEnd" || \
+        $0 == "_inflateInit2_" || $0 == "_zlibVersion" { print }' \
+    | LC_ALL=C sort -u > "$WORK/open-zlib-darwin-exports.txt"
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$ZLIB_DARWIN" \
+    | awk '$0 ~ /^_glibc_open_zlib_/ { print }' | LC_ALL=C sort -u \
+    > "$WORK/open-zlib-darwin-host-imports.txt"
+cmp "$WORK/open-zlib-expected-mach-exports.txt" \
+    "$WORK/open-zlib-darwin-exports.txt" \
+    || die 'Mach-O zlib bridge dylib exports drifted'
+cmp "$WORK/open-zlib-expected-mach-imports.txt" \
+    "$WORK/open-zlib-darwin-host-imports.txt" \
+    || die 'Mach-O zlib bridge dylib host imports drifted'
+
 swiftc -module-cache-path "$WORK/zlib-native-module-cache" \
     -Xcc -fmodule-map-file="$STAGE/include/zlib/module.modulemap" \
     -Xcc -I"$STAGE/include/zlib" \
@@ -2050,8 +2112,12 @@ cp "$WORK/open-zlib-host-test.log" \
     printf 'guest-exports\tinflate,inflateEnd,inflateInit2_,zlibVersion\n'
     printf 'host-imports\t_glibc_open_zlib_abi_version,_glibc_open_zlib_inflate,_glibc_open_zlib_inflate_end,_glibc_open_zlib_inflate_init2\n'
 } > "$STAGE/attestation/open-zlib-abi.tsv"
-printf 'local\thost/libOpenZlibHost.so\t%s\tbuilt from full/zlib/OpenZlibHost.c\n' \
-    "$(hash_file "$ZLIB_HOST")" >> "$RUNTIME/.manifest"
+{
+    printf 'local\tdarwin/usr/lib/libOpenZlib.dylib\t%s\tbuilt from full/zlib/OpenZlibBridge.c\n' \
+        "$(hash_file "$ZLIB_DARWIN")"
+    printf 'local\thost/libOpenZlibHost.so\t%s\tbuilt from full/zlib/OpenZlibHost.c\n' \
+        "$(hash_file "$ZLIB_HOST")"
+} >> "$RUNTIME/.manifest"
 EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST:$COMPRESSION_HOST:$ZLIB_HOST
 
 echo '== prove pinned Darwin group lookup adapters and native ABI agreement'
@@ -2600,9 +2666,10 @@ echo '== prove SwiftUI publicly reexports full Foundation, Combine and Dispatch'
     "$W/full/frameworks/SwiftUIFoundationReexportProbe.swift"
 
 echo '== link fifty-two reusable platform dylibs (fifty frameworks, ICU, and zlib)'
-"${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libz.dylib -rpath @loader_path \
-    -o "$STAGE/lib/libz.dylib" "$WORK/open-zlib-bridge.o" \
+    -o "$STAGE/lib/libz.dylib" \
+    -reexport_library "$ZLIB_DARWIN" \
     -L"$STAGE/sdk/usr/lib" -lSystem
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
@@ -2992,7 +3059,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
             )
             ;;
         Compression)
-            framework_link_options+=(-undefined dynamic_lookup)
+            framework_link_dependencies+=("$COMPRESSION_DARWIN")
             ;;
     esac
     framework_objects=("$WORK/$source_dir.o")
@@ -3001,9 +3068,6 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     fi
     if [ "$framework" = Accelerate ]; then
         framework_objects+=("$WORK/accelerate-c.o")
-    fi
-    if [ "$framework" = Compression ]; then
-        framework_objects+=("$WORK/open-compression-bridge.o")
     fi
     "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
         "${framework_link_options[@]}" \
@@ -3132,38 +3196,42 @@ done
     "$STAGE/lib/libAccelerate.dylib" \
     | awk '$0 == "_vImageBoxConvolve_ARGB8888" { count++ } END { print count + 0 }')" \
     -eq 1 ] || die 'libAccelerate vImage export count drifted'
-llvm-nm-18 --defined-only --extern-only --just-symbol-name \
-    "$STAGE/lib/libCompression.dylib" \
-    | awk '$0 ~ /^_openui_compression_v1_/ { print }' | LC_ALL=C sort -u \
-    > "$WORK/libcompression-c-exports.txt"
 llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
     "$STAGE/lib/libCompression.dylib" \
-    | awk '$0 ~ /^_glibc_openui_compression_v1_/ { print }' | LC_ALL=C sort -u \
-    > "$WORK/libcompression-host-imports.txt"
+    | awk '$0 ~ /^_openui_compression_v1_/ { print }' | LC_ALL=C sort -u \
+    > "$WORK/libcompression-runtime-imports.txt"
 cmp "$WORK/open-compression-expected-mach-exports.txt" \
-    "$WORK/libcompression-c-exports.txt" \
-    || die 'libCompression C exports drifted'
-cmp "$WORK/open-compression-expected-mach-imports.txt" \
-    "$WORK/libcompression-host-imports.txt" \
-    || die 'libCompression host imports drifted'
+    "$WORK/libcompression-runtime-imports.txt" \
+    || die 'libCompression runtime bridge imports drifted'
+[ "$(llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$STAGE/lib/libCompression.dylib" \
+    | awk '$0 ~ /^_glibc_openui_compression_v1_/ { count++ } END { print count + 0 }')" \
+    -eq 0 ] || die 'libCompression directly imports a Linux host symbol'
+compression_bridge_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/libCompression.dylib" \
+    | awk '$1 == "/usr/lib/libOpenCompression.dylib" { count++ } END { print count + 0 }')
+[ "$compression_bridge_load_count" -eq 1 ] \
+    || die "libCompression runtime bridge load count $compression_bridge_load_count, expected 1"
 if llvm-otool-18 -L "$STAGE/lib/libCompression.dylib" | grep -Fq libbrotli; then
     die 'libCompression must cross the fixed host ABI instead of loading Brotli'
 fi
-llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+[ "$(llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
     "$STAGE/lib/libz.dylib" \
-    | awk '$0 == "_inflate" || $0 == "_inflateEnd" || \
-        $0 == "_inflateInit2_" || $0 == "_zlibVersion" { print }' \
-    | LC_ALL=C sort -u \
-    > "$WORK/libz-c-exports.txt"
-llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
-    "$STAGE/lib/libz.dylib" \
-    | awk '$0 ~ /^_glibc_open_zlib_/ { print }' | LC_ALL=C sort -u \
-    > "$WORK/libz-host-imports.txt"
-cmp "$WORK/open-zlib-expected-mach-exports.txt" "$WORK/libz-c-exports.txt" \
-    || die 'libz C exports drifted'
-cmp "$WORK/open-zlib-expected-mach-imports.txt" "$WORK/libz-host-imports.txt" \
-    || die 'libz host imports drifted'
-if llvm-otool-18 -L "$STAGE/lib/libz.dylib" | grep -Fq '/usr/lib/libz'; then
+    | awk '$0 ~ /^_glibc_open_zlib_/ { count++ } END { print count + 0 }')" \
+    -eq 0 ] || die 'libz directly imports a Linux host symbol'
+zlib_bridge_load_count=$(llvm-otool-18 -l "$STAGE/lib/libz.dylib" \
+    | awk '$1 == "cmd" { command = $2 }
+        $1 == "name" && $2 == "/usr/lib/libOpenZlib.dylib" && command == "LC_LOAD_DYLIB" { count++ }
+        END { print count + 0 }')
+zlib_bridge_reexport_count=$(llvm-otool-18 -l "$STAGE/lib/libz.dylib" \
+    | awk '$1 == "cmd" { command = $2 }
+        $1 == "name" && $2 == "/usr/lib/libOpenZlib.dylib" && command == "LC_REEXPORT_DYLIB" { count++ }
+        END { print count + 0 }')
+[ "$zlib_bridge_load_count" -eq 1 ] \
+    || die "libz runtime bridge load count $zlib_bridge_load_count, expected 1"
+[ "$zlib_bridge_reexport_count" -eq 1 ] \
+    || die "libz runtime bridge re-export count $zlib_bridge_reexport_count, expected 1"
+if llvm-otool-18 -L "$STAGE/lib/libz.dylib" | grep -Fq '/usr/lib/libz.'; then
     die 'libz must cross the fixed host ABI instead of loading Apple libz'
 fi
 
@@ -4487,7 +4555,11 @@ record_artifact runtime OpenDispatch linux-blocks-runtime \
     guest-root/host/libBlocksRuntime.so
 record_artifact runtime Compression linux-helper \
     guest-root/host/libOpenCompressionHost.so
+record_artifact runtime Compression darwin-bridge \
+    guest-root/darwin/usr/lib/libOpenCompression.dylib
 record_artifact runtime zlib darwin-dylib lib/libz.dylib
+record_artifact runtime zlib darwin-bridge \
+    guest-root/darwin/usr/lib/libOpenZlib.dylib
 record_artifact runtime zlib linux-helper guest-root/host/libOpenZlibHost.so
 record_artifact runtime OpenFoundationInternationalization darwin-bridge \
     guest-root/darwin/usr/lib/libOpenFoundationInternationalization.dylib

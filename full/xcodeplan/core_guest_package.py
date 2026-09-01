@@ -922,12 +922,14 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"{paths['includes']}/COpenAccelerate/module.modulemap",
             f"{paths['includes']}/COpenCompression/OpenCompressionABI.h",
             f"{paths['includes']}/COpenCompression/module.modulemap",
+            f"{paths['guest_root']}/darwin/usr/lib/libOpenCompression.dylib",
             f"{paths['guest_root']}/host/libOpenCompressionHost.so",
             f"{paths['includes']}/COpenZlib/OpenZlibABI.h",
             f"{paths['includes']}/COpenZlib/module.modulemap",
             f"{paths['includes']}/zlib/zlib.h",
             f"{paths['includes']}/zlib/module.modulemap",
             f"{paths['libraries']}/libz.dylib",
+            f"{paths['guest_root']}/darwin/usr/lib/libOpenZlib.dylib",
             f"{paths['guest_root']}/host/libOpenZlibHost.so",
         }
     )

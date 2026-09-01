@@ -198,11 +198,14 @@ published as part of the app compile contract rather than hidden in the build.
 `libCompression.dylib` supplies Apple's `Algorithm`, `InputFilter`, and
 `OutputFilter` streaming shapes over an explicit Darwin-to-ELF bridge. Brotli
 compression and decompression use the pinned Linux Brotli runtime through the
-attested `libOpenCompressionHost.so`; output limits are hard, malformed streams
-fail closed, and the package gate decodes an exact payload produced by Apple's
-Compression framework before round-tripping native data. The host helper and
-its complete SONAME closure are package artifacts and are included in every
-cold-run preload set.
+private Darwin-root `libOpenCompression.dylib` and attested
+`libOpenCompressionHost.so`; the app-rpath framework has no direct ELF imports.
+That route is deliberate: machorun grants host lookup only to implementation
+images staged in its Darwin root, never to an app-local dylib. Output limits are
+hard, malformed streams fail closed, and the package gate decodes an exact
+payload produced by Apple's Compression framework before round-tripping native
+data. The bridge, host helper, and complete SONAME closure are package artifacts
+and the helper is included in every cold-run preload set.
 
 `libCoreText.dylib` provides process-scoped font registration with Apple's
 CoreText error domain and observed error codes. It validates font files,
@@ -222,10 +225,12 @@ framework and then replayed byte-for-byte against the portable Mach-O dylib.
 The packaged `zlib` Clang module preserves the 112-byte ARM64 `z_stream` ABI,
 Apple's field offsets, constants, and the `inflateInit2_`/`inflate`/`inflateEnd`
 surface used by unchanged RevenueCat RCContainer gzip decoding. `libz.dylib`
-crosses only four `_glibc_` imports into an attested
-`libOpenZlibHost.so`, which in turn pins Linux `libz.so.1.3`. Valid gzip bytes
-decode through real zlib; malformed input fails closed. Native and Mach-O
-oracles must both match the frozen Apple transcript exactly.
+reexports a private Darwin-root `libOpenZlib.dylib`; only that runtime-classified
+bridge owns the four `_glibc_` imports into attested `libOpenZlibHost.so`, which
+in turn pins Linux `libz.so.1.3`. The app-facing facade therefore cannot acquire
+machorun's host fallback accidentally. Valid gzip bytes decode through real
+zlib; malformed input fails closed. Native and Mach-O oracles must both match
+the frozen Apple transcript exactly.
 
 `full/adservices/tests/test_revenuecat_frontier_guest.sh` additionally hashes
 and compiles the exact untouched RevenueCat 5.86.0 attribution and RCContainer

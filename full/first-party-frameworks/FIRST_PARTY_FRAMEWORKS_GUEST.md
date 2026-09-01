@@ -101,10 +101,13 @@ the Apple-observed `platformNotSupported` code instead of inventing a token.
 
 The same frontier adds an app-facing `zlib` Clang module and `libz.dylib`.
 Its public `z_stream` layout and four RevenueCat-used entry points match the
-Apple SDK surface; calls cross a versioned four-function guest/host ABI to the
-pinned AArch64 Linux zlib runtime. The package builder validates the 112-byte
-stream ABI, exact Mach-O imports/exports, Apple gzip transcript, valid payload,
-and malformed-input behavior. After a package succeeds,
+Apple SDK surface; the facade reexports a Darwin-root `libOpenZlib.dylib`, and
+only that runtime-classified image crosses the versioned four-function
+guest/host ABI to the pinned AArch64 Linux zlib runtime. Compression uses the
+same route split through Darwin-root `libOpenCompression.dylib`; neither
+app-rpath library directly imports ELF. The package builder validates the
+112-byte stream ABI, exact Mach-O imports/exports and routes, Apple gzip
+transcript, valid payload, and malformed-input behavior. After a package succeeds,
 `full/adservices/tests/test_revenuecat_frontier_guest.sh` compiles and runs the
 five hash-pinned RevenueCat source files without modifying the vendor checkout.
 

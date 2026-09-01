@@ -456,6 +456,8 @@ GUEST_ROOT_PRODUCTS=(
     darwin/usr/lib/libc++.1.dylib
     darwin/usr/lib/libquartz.dylib
     darwin/usr/lib/libOpenFoundationInternationalization.dylib
+    darwin/usr/lib/libOpenCompression.dylib
+    darwin/usr/lib/libOpenZlib.dylib
     host/libOpenFoundationInternationalizationHost.so
     host/libOpenCompressionHost.so
     host/libOpenZlibHost.so

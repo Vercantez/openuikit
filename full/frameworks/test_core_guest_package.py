@@ -809,7 +809,15 @@ class PackageFixture:
             root / "guest-root/host/libOpenCompressionHost.so",
             "compression host",
         )
+        write_file(
+            root / "guest-root/darwin/usr/lib/libOpenCompression.dylib",
+            "compression bridge",
+        )
         write_file(root / "lib/libz.dylib", "zlib bridge")
+        write_file(
+            root / "guest-root/darwin/usr/lib/libOpenZlib.dylib",
+            "zlib runtime bridge",
+        )
         write_file(
             root / "guest-root/host/libOpenZlibHost.so",
             "zlib host",
@@ -1213,12 +1221,28 @@ class PackageFixture:
             self._artifact(
                 "runtime",
                 "Compression",
+                "darwin-bridge",
+                "guest-root/darwin/usr/lib/libOpenCompression.dylib",
+            )
+        )
+        records.append(
+            self._artifact(
+                "runtime",
+                "Compression",
                 "linux-helper",
                 "guest-root/host/libOpenCompressionHost.so",
             )
         )
         records.append(
             self._artifact("runtime", "zlib", "darwin-dylib", "lib/libz.dylib")
+        )
+        records.append(
+            self._artifact(
+                "runtime",
+                "zlib",
+                "darwin-bridge",
+                "guest-root/darwin/usr/lib/libOpenZlib.dylib",
+            )
         )
         records.append(
             self._artifact(
@@ -3229,10 +3253,16 @@ class ShellContractTests(unittest.TestCase):
             self.assertIn(token, zlib_bridge)
         for token in (
             "/usr/lib/aarch64-linux-gnu/libz.so.1.3",
+            "libOpenCompression.dylib",
             "libOpenZlibHost.so",
+            "libOpenZlib.dylib",
             "zlib-gzip-apple-2026-09-01.txt",
             "libz.dylib",
             "-lAdServices -lz",
+            'framework_link_dependencies+=("$COMPRESSION_DARWIN")',
+            '-reexport_library "$ZLIB_DARWIN"',
+            "libCompression directly imports a Linux host symbol",
+            "libz directly imports a Linux host symbol",
         ):
             self.assertIn(token, source)
         for token in (

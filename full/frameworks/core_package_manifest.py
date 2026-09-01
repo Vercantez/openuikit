@@ -732,16 +732,23 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
         actual_internationalization_runtime
     ):
         refuse("FoundationInternationalization runtime bridge/helper is absent")
-    if not any(
-        item["category"] == "runtime"
-        and item["name"] == "Compression"
-        and item["role"] == "linux-helper"
-        and item["path"] == "guest-root/host/libOpenCompressionHost.so"
+    required_compression_runtime = {
+        (
+            "darwin-bridge",
+            "guest-root/darwin/usr/lib/libOpenCompression.dylib",
+        ),
+        ("linux-helper", "guest-root/host/libOpenCompressionHost.so"),
+    }
+    actual_compression_runtime = {
+        (str(item["role"]), str(item["path"]))
         for item in artifacts
-    ):
-        refuse("Compression Linux host helper is absent")
+        if item["category"] == "runtime" and item["name"] == "Compression"
+    }
+    if not required_compression_runtime.issubset(actual_compression_runtime):
+        refuse("Compression Darwin bridge/Linux host helper is absent")
     required_zlib_runtime = {
         ("darwin-dylib", "lib/libz.dylib"),
+        ("darwin-bridge", "guest-root/darwin/usr/lib/libOpenZlib.dylib"),
         ("linux-helper", "guest-root/host/libOpenZlibHost.so"),
     }
     actual_zlib_runtime = {
@@ -750,7 +757,7 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
         if item["category"] == "runtime" and item["name"] == "zlib"
     }
     if not required_zlib_runtime.issubset(actual_zlib_runtime):
-        refuse("zlib Mach-O bridge/Linux host helper is absent")
+        refuse("zlib facade/Darwin bridge/Linux host helper is absent")
     if not any(
         item["category"] == "runtime"
         and item["name"] == "CQuartz"
