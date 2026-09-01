@@ -2954,6 +2954,8 @@ class ShellContractTests(unittest.TestCase):
         ):
             self.assertNotIn(removed_stub, stubs)
         for token in (
+            "EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA="
+            "c076cfa9f5c797d2f69f156e87fedb6c035a8747ad2055b82da9a99530ce5af4",
             "EXPECTED_MACHORUN_GROUP_FIXTURE_SHA=",
             "EXPECTED_MACHORUN_GROUP_GOLDEN_SHA=",
             "EXPECTED_MACHORUN_GROUP_SOURCE_SHA=",
@@ -3017,6 +3019,16 @@ class ShellContractTests(unittest.TestCase):
             "group-lookup-native.normalized.log",
         ):
             self.assertIn(token, builder)
+        self.assertIn(
+            "EXPECTED_MACHORUN_FTS_LIBSYSTEM_SOURCE_SHA="
+            "$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA",
+            builder,
+        )
+        self.assertIn(
+            "EXPECTED_MACHORUN_COPYFILE_LIBSYSTEM_SOURCE_SHA="
+            "$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA",
+            builder,
+        )
         for symbol in (
             "_getgrgid",
             "_getgrgid_r",
