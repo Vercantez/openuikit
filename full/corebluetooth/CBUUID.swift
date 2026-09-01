@@ -1,12 +1,109 @@
 import Foundation
 import CoreFoundation
 
+/// Bluetooth Core Specification base UUID:
+/// `00000000-0000-1000-8000-00805F9B34FB`.
+/// 16-bit `XXXX` maps to `0000XXXX-0000-1000-8000-00805F9B34FB`.
+/// 32-bit `XXXXXXXX` maps to `XXXXXXXX-0000-1000-8000-00805F9B34FB`.
 private let _cbBluetoothBaseSuffix: [UInt8] = [
     0x00, 0x00, 0x10, 0x00, 0x80, 0x00, 0x00, 0x80, 0x5F, 0x9B, 0x34, 0xFB,
 ]
 
-/// Bluetooth SIG 16/32/128-bit UUID wrapper. Parsing, compacting, and
-/// equality are implemented in software and do not require a radio.
+enum _CBUUIDExact {
+    static func data(fromString string: String) -> Data? {
+        if let bytes = _fixedHexBytes(string, byteCount: 2)
+            ?? _fixedHexBytes(string, byteCount: 4)
+            ?? _fixedHexBytes(string, byteCount: 16)
+        {
+            return compact(expand(bytes))
+        }
+        if let bytes = _hyphenated128(string) {
+            return compact(bytes)
+        }
+        return nil
+    }
+
+    static func data(fromBytes data: Data) -> Data? {
+        switch data.count {
+        case 2, 4, 16:
+            return compact(expand(Array(data)))
+        default:
+            return nil
+        }
+    }
+
+    static func expand(_ bytes: [UInt8]) -> [UInt8] {
+        switch bytes.count {
+        case 2:
+            return [0, 0, bytes[0], bytes[1]] + _cbBluetoothBaseSuffix
+        case 4:
+            return bytes + _cbBluetoothBaseSuffix
+        case 16:
+            return bytes
+        default:
+            return bytes
+        }
+    }
+
+    static func compact(_ expanded: [UInt8]) -> Data {
+        guard expanded.count == 16 else { return Data(expanded) }
+        let suffix = Array(expanded[4..<16])
+        guard suffix == _cbBluetoothBaseSuffix else {
+            return Data(expanded)
+        }
+        if expanded[0] == 0 && expanded[1] == 0 {
+            return Data([expanded[2], expanded[3]])
+        }
+        return Data(expanded[0..<4])
+    }
+}
+
+private func _isHex(_ character: Character) -> Bool {
+    switch character {
+    case "0"..."9", "a"..."f", "A"..."F":
+        return true
+    default:
+        return false
+    }
+}
+
+private func _fixedHexBytes(_ string: String, byteCount: Int) -> [UInt8]? {
+    let expected = byteCount * 2
+    guard string.count == expected, string.allSatisfy(_isHex) else {
+        return nil
+    }
+    var bytes: [UInt8] = []
+    bytes.reserveCapacity(byteCount)
+    var index = string.startIndex
+    for _ in 0..<byteCount {
+        let next = string.index(index, offsetBy: 2)
+        guard let byte = UInt8(string[index..<next], radix: 16) else {
+            return nil
+        }
+        bytes.append(byte)
+        index = next
+    }
+    return bytes
+}
+
+private func _hyphenated128(_ string: String) -> [UInt8]? {
+    let groups = string.split(separator: "-", omittingEmptySubsequences: false)
+    guard groups.count == 5 else { return nil }
+    let widths = [8, 4, 4, 4, 12]
+    var hex = ""
+    hex.reserveCapacity(32)
+    for (group, width) in zip(groups, widths) {
+        guard group.count == width, group.allSatisfy(_isHex) else {
+            return nil
+        }
+        hex += group
+    }
+    return _fixedHexBytes(hex, byteCount: 16)
+}
+
+/// Bluetooth SIG 16/32/128-bit UUID wrapper. String and `Data` initializers
+/// accept only exact 2-, 4-, or 16-byte encodings; malformed input does not
+/// strip, pad, or truncate.
 @available(iOS 5.0, *)
 open class CBUUID: NSObject {
     private let _data: Data
@@ -15,13 +112,10 @@ open class CBUUID: NSObject {
 
     open var uuidString: String {
         switch _data.count {
-        case 2:
-            return _hex(_data).uppercased()
-        case 4:
-            return _hex(_data).uppercased()
+        case 2, 4:
+            return _hex(_data)
         default:
-            let b = [UInt8](_expandedBytes())
-            let hex = _hex(Data(b)).uppercased()
+            let hex = _hex(Data(_expandedBytes()))
             let chars = Array(hex)
             func slice(_ range: Range<Int>) -> String {
                 String(chars[range])
@@ -31,19 +125,18 @@ open class CBUUID: NSObject {
     }
 
     public init(string theString: String) {
-        _data = CBUUID._parse(theString)
+        guard let data = _CBUUIDExact.data(fromString: theString) else {
+            fatalError("CBUUID string is not a 16-, 32-, or 128-bit UUID")
+        }
+        _data = data
         super.init()
     }
 
     public init(data theData: Data) {
-        let bytes: [UInt8]
-        switch theData.count {
-        case 2, 4, 16:
-            bytes = Array(theData)
-        default:
-            bytes = Array(theData.prefix(16))
+        guard let data = _CBUUIDExact.data(fromBytes: theData) else {
+            fatalError("CBUUID data must be 2, 4, or 16 bytes")
         }
-        _data = CBUUID._compact(CBUUID._expand(bytes))
+        _data = data
         super.init()
     }
 
@@ -53,7 +146,7 @@ open class CBUUID: NSObject {
             t.0, t.1, t.2, t.3, t.4, t.5, t.6, t.7,
             t.8, t.9, t.10, t.11, t.12, t.13, t.14, t.15,
         ]
-        _data = CBUUID._compact(bytes)
+        _data = _CBUUIDExact.compact(bytes)
         super.init()
     }
 
@@ -69,7 +162,7 @@ open class CBUUID: NSObject {
             b.byte8, b.byte9, b.byte10, b.byte11,
             b.byte12, b.byte13, b.byte14, b.byte15,
         ]
-        _data = CBUUID._compact(bytes)
+        _data = _CBUUIDExact.compact(bytes)
         super.init()
     }
 
@@ -91,77 +184,20 @@ open class CBUUID: NSObject {
     open override var description: String { uuidString }
 
     func _expandedBytes() -> [UInt8] {
-        CBUUID._expand(Array(_data))
+        _CBUUIDExact.expand(Array(_data))
     }
 
-    private static func _parse(_ string: String) -> Data {
-        var filtered = string
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .replacingOccurrences(of: "-", with: "")
-            .replacingOccurrences(of: "{", with: "")
-            .replacingOccurrences(of: "}", with: "")
-        if filtered.lowercased().hasPrefix("0x") {
-            filtered = String(filtered.dropFirst(2))
-        }
-        let hex = filtered.filter { $0.isHexDigit }
-        let bytes = _bytes(fromHex: hex)
-        switch bytes.count {
-        case 2, 4, 16:
-            return _compact(_expand(bytes))
-        default:
-            return _compact(_expand(bytes))
-        }
+    @_spi(OpenUIKitHost)
+    public static func _hostData(fromString string: String) -> Data? {
+        _CBUUIDExact.data(fromString: string)
     }
 
-    private static func _bytes(fromHex hex: String) -> [UInt8] {
-        var padded = hex
-        if padded.count % 2 == 1 {
-            padded = "0" + padded
-        }
-        var bytes: [UInt8] = []
-        var index = padded.startIndex
-        while index < padded.endIndex {
-            let next = padded.index(index, offsetBy: 2, limitedBy: padded.endIndex) ?? padded.endIndex
-            let slice = padded[index..<next]
-            bytes.append(UInt8(slice, radix: 16) ?? 0)
-            index = next
-        }
-        return bytes
-    }
-
-    private static func _expand(_ bytes: [UInt8]) -> [UInt8] {
-        switch bytes.count {
-        case 2:
-            return [0, 0, bytes[0], bytes[1]] + _cbBluetoothBaseSuffix
-        case 4:
-            return bytes + _cbBluetoothBaseSuffix
-        case 16:
-            return bytes
-        default:
-            var padded = bytes
-            if padded.count > 16 {
-                padded = Array(padded.suffix(16))
-            }
-            while padded.count < 16 {
-                padded.insert(0, at: 0)
-            }
-            return padded
-        }
-    }
-
-    private static func _compact(_ expanded: [UInt8]) -> Data {
-        guard expanded.count == 16 else { return Data(expanded) }
-        let suffix = Array(expanded[4..<16])
-        if suffix == _cbBluetoothBaseSuffix {
-            if expanded[0] == 0 && expanded[1] == 0 {
-                return Data([expanded[2], expanded[3]])
-            }
-            return Data(expanded[0..<4])
-        }
-        return Data(expanded)
+    @_spi(OpenUIKitHost)
+    public static func _hostData(fromBytes data: Data) -> Data? {
+        _CBUUIDExact.data(fromBytes: data)
     }
 }
 
 private func _hex(_ data: Data) -> String {
-    data.map { String(format: "%02x", $0) }.joined()
+    data.map { String(format: "%02X", $0) }.joined()
 }

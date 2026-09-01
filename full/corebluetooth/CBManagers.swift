@@ -54,6 +54,11 @@ open class CBPeripheral: CBPeer {
         super.init(identifier: identifier)
     }
 
+    @_spi(OpenUIKitHost)
+    public convenience init(hostIdentifier identifier: UUID, queue: DispatchQueue?) {
+        self.init(identifier: identifier, queue: queue)
+    }
+
     open func discoverServices(_ serviceUUIDs: [CBUUID]?) {
         _ = serviceUUIDs
         _fail { $0.peripheral($1, didDiscoverServices: _CBUnsupportedError()) }
@@ -107,7 +112,7 @@ open class CBPeripheral: CBPeer {
     }
 
     open func readRSSI() {
-        _fail { $0.peripheral($1, didReadRSSI: 127, error: _CBUnsupportedError()) }
+        _fail { $0.peripheral($1, didReadRSSI: 0, error: _CBUnsupportedError()) }
     }
 
     open func maximumWriteValueLength(for type: CBCharacteristicWriteType) -> Int {
@@ -170,9 +175,9 @@ open class CBCentralManager: CBManager {
 
     private let _queue: DispatchQueue?
     private let _lock = NSLock()
-    private var _delegate: (any CBCentralManagerDelegate)?
+    private weak var _delegate: (any CBCentralManagerDelegate)?
     private var _isScanning = false
-    private var _didEmitState = false
+    private weak var _stateRecipient: AnyObject?
 
     open weak var delegate: (any CBCentralManagerDelegate)? {
         get {
@@ -246,7 +251,10 @@ open class CBCentralManager: CBManager {
         peripheral._state = .disconnected
         _CBDispatch(_queue) { [weak self] in
             guard let self else { return }
-            self.delegate?.centralManager(
+            self._lock.lock()
+            let delegate = self._delegate
+            self._lock.unlock()
+            delegate?.centralManager(
                 self,
                 didFailToConnect: peripheral,
                 error: _CBUnsupportedError()
@@ -255,15 +263,7 @@ open class CBCentralManager: CBManager {
     }
 
     open func cancelPeripheralConnection(_ peripheral: CBPeripheral) {
-        peripheral._state = .disconnected
-        _CBDispatch(_queue) { [weak self] in
-            guard let self else { return }
-            self.delegate?.centralManager(
-                self,
-                didDisconnectPeripheral: peripheral,
-                error: _CBUnsupportedError()
-            )
-        }
+        _ = peripheral
     }
 
     open func registerForConnectionEvents(options: [CBConnectionEventMatchingOption: Any]? = nil) {
@@ -274,11 +274,10 @@ open class CBCentralManager: CBManager {
         _CBDispatch(_queue) { [weak self] in
             guard let self else { return }
             self._lock.lock()
-            let already = self._didEmitState
             let delegate = self._delegate
-            if delegate != nil {
-                self._didEmitState = true
-            }
+            let recipient = delegate as AnyObject?
+            let already = recipient != nil && recipient === self._stateRecipient
+            self._stateRecipient = recipient
             self._lock.unlock()
             guard !already, let delegate else { return }
             delegate.centralManagerDidUpdateState(self)
@@ -290,9 +289,9 @@ open class CBCentralManager: CBManager {
 open class CBPeripheralManager: CBManager {
     private let _queue: DispatchQueue?
     private let _lock = NSLock()
-    private var _delegate: (any CBPeripheralManagerDelegate)?
+    private weak var _delegate: (any CBPeripheralManagerDelegate)?
     private var _isAdvertising = false
-    private var _didEmitState = false
+    private weak var _stateRecipient: AnyObject?
 
     open weak var delegate: (any CBPeripheralManagerDelegate)? {
         get {
@@ -344,7 +343,10 @@ open class CBPeripheralManager: CBManager {
         _lock.unlock()
         _CBDispatch(_queue) { [weak self] in
             guard let self else { return }
-            self.delegate?.peripheralManagerDidStartAdvertising(self, error: _CBUnsupportedError())
+            self._lock.lock()
+            let delegate = self._delegate
+            self._lock.unlock()
+            delegate?.peripheralManagerDidStartAdvertising(self, error: _CBUnsupportedError())
         }
     }
 
@@ -357,7 +359,10 @@ open class CBPeripheralManager: CBManager {
     open func add(_ service: CBMutableService) {
         _CBDispatch(_queue) { [weak self] in
             guard let self else { return }
-            self.delegate?.peripheralManager(self, didAdd: service, error: _CBUnsupportedError())
+            self._lock.lock()
+            let delegate = self._delegate
+            self._lock.unlock()
+            delegate?.peripheralManager(self, didAdd: service, error: _CBUnsupportedError())
         }
     }
 
@@ -414,11 +419,10 @@ open class CBPeripheralManager: CBManager {
         _CBDispatch(_queue) { [weak self] in
             guard let self else { return }
             self._lock.lock()
-            let already = self._didEmitState
             let delegate = self._delegate
-            if delegate != nil {
-                self._didEmitState = true
-            }
+            let recipient = delegate as AnyObject?
+            let already = recipient != nil && recipient === self._stateRecipient
+            self._stateRecipient = recipient
             self._lock.unlock()
             guard !already, let delegate else { return }
             delegate.peripheralManagerDidUpdateState(self)
