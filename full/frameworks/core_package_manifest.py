@@ -97,6 +97,7 @@ FRAMEWORKS = (
     "Combine",
     "Symbols",
     "SwiftUI",
+    "_QuickLook_SwiftUI",
     "Foundation",
     "UIKit",
     "CoreImage",
@@ -123,6 +124,12 @@ FRAMEWORKS = (
     "OSLog",
     "UniformTypeIdentifiers",
     "SwiftData",
+    "UserNotifications",
+    "QuickLook",
+    "CoreMedia",
+    "AVFoundation",
+    "AVKit",
+    "Charts",
 )
 REQUIRED_FRAMEWORK_LINK_ARGUMENTS = tuple(f"-l{name}" for name in FRAMEWORKS)
 MODULE_DEPENDENCIES = (
@@ -764,6 +771,19 @@ def require_coreimage_compile_contract(tokens: list[str]) -> None:
             )
 
 
+def require_cross_import_compile_contract(tokens: list[str]) -> None:
+    pair = ["-Xfrontend", "-enable-cross-import-overlays"]
+    count = sum(
+        tokens[index : index + 2] == pair
+        for index in range(len(tokens) - 1)
+    )
+    if count != 1:
+        refuse(
+            "compile flags must enable Swift cross-import overlays exactly once: "
+            "-Xfrontend -enable-cross-import-overlays"
+        )
+
+
 def require_exhaustive_artifact_tree(
     package: Path,
     artifacts: list[dict[str, object]],
@@ -1018,6 +1038,7 @@ def validate_document(
     if link_tokens.count("-Llib") != 1:
         refuse("link inputs must contain -Llib exactly once")
     require_coreimage_compile_contract(compile_tokens)
+    require_cross_import_compile_contract(compile_tokens)
     for required in REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
         if link_tokens.count(required) != 1:
             refuse(f"link inputs must contain required token exactly once: {required}")
@@ -1166,6 +1187,7 @@ def write_command(args: argparse.Namespace) -> None:
         if required not in compile_tokens:
             refuse(f"compile flags omit required token: {required}")
     require_coreimage_compile_contract(compile_tokens)
+    require_cross_import_compile_contract(compile_tokens)
     if link_tokens.count("-Llib") != 1:
         refuse("link inputs must contain -Llib exactly once")
     for required in REQUIRED_FRAMEWORK_LINK_ARGUMENTS:

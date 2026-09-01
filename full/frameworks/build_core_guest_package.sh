@@ -38,6 +38,7 @@ WEBKIT_SOURCES_MANIFEST=$W/full/webkit/webkit_guest_sources.txt
 COREIMAGE_SOURCES_MANIFEST=$W/full/coreimage/coreimage_guest_sources.txt
 QUARTZCORE_SOURCES_MANIFEST=$W/full/quartzcore/quartzcore_guest_sources.txt
 SWIFTDATA_SOURCES_MANIFEST=$W/full/swiftdata/swiftdata_guest_sources.txt
+QUICKLOOK_SWIFTUI_SOURCES_MANIFEST=$W/full/quicklook/quicklook_swiftui_guest_sources.txt
 WEBKIT_PROVENANCE_TOOL=$W/full/webkit/webkit_provenance.py
 WEBKIT_PROVENANCE_POLICY=$W/full/webkit/webkit-provenance.json
 FIRST_PARTY_PROVENANCE_TOOL=$W/full/first-party-frameworks/first_party_provenance.py
@@ -73,6 +74,12 @@ FIRST_PARTY_FRAMEWORKS=(
     OSLog
     UniformTypeIdentifiers
     SwiftData
+    UserNotifications
+    QuickLook
+    CoreMedia
+    AVFoundation
+    AVKit
+    Charts
 )
 FIRST_PARTY_SOURCE_DIRS=(
     localauthentication
@@ -94,6 +101,12 @@ FIRST_PARTY_SOURCE_DIRS=(
     oslog
     uniformtypeidentifiers
     swiftdata
+    usernotifications
+    quicklook
+    coremedia
+    avfoundation
+    avkit
+    charts
 )
 FRONTIER_FRAMEWORKS=(
     CoreGraphics
@@ -108,6 +121,12 @@ FRONTIER_FRAMEWORKS=(
     OSLog
     UniformTypeIdentifiers
     SwiftData
+    UserNotifications
+    QuickLook
+    CoreMedia
+    AVFoundation
+    AVKit
+    Charts
 )
 FRONTIER_SOURCE_DIRS=(
     coregraphics
@@ -122,6 +141,12 @@ FRONTIER_SOURCE_DIRS=(
     oslog
     uniformtypeidentifiers
     swiftdata
+    usernotifications
+    quicklook
+    coremedia
+    avfoundation
+    avkit
+    charts
 )
 
 EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
@@ -141,6 +166,11 @@ EXPECTED_WEBKIT_SOURCE_COUNT=5
 EXPECTED_COREIMAGE_SOURCE_COUNT=1
 EXPECTED_QUARTZCORE_SOURCE_COUNT=1
 EXPECTED_SWIFTDATA_SOURCE_COUNT=2
+EXPECTED_QUICKLOOK_SWIFTUI_SOURCE_COUNT=1
+EXPECTED_COREMEDIA_SOURCE_COUNT=1
+EXPECTED_AVFOUNDATION_SOURCE_COUNT=1
+EXPECTED_AVKIT_SOURCE_COUNT=1
+EXPECTED_CHARTS_SOURCE_COUNT=1
 EXPECTED_FOUNDATION_STRING_PROCESSING_UNDEFINEDS=19
 EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS=2
 EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS=0
@@ -684,7 +714,13 @@ append_frontier_sources() {
             || die "$framework frontier source manifest is missing or linked"
         mapfile -t frontier_sources < "$source_manifest"
         expected_count=1
-        [ "$framework" != SwiftData ] || expected_count=$EXPECTED_SWIFTDATA_SOURCE_COUNT
+        case "$framework" in
+            SwiftData) expected_count=$EXPECTED_SWIFTDATA_SOURCE_COUNT ;;
+            CoreMedia) expected_count=$EXPECTED_COREMEDIA_SOURCE_COUNT ;;
+            AVFoundation) expected_count=$EXPECTED_AVFOUNDATION_SOURCE_COUNT ;;
+            AVKit) expected_count=$EXPECTED_AVKIT_SOURCE_COUNT ;;
+            Charts) expected_count=$EXPECTED_CHARTS_SOURCE_COUNT ;;
+        esac
         [ "${#frontier_sources[@]}" -eq "$expected_count" ] \
             || die "$framework frontier source manifest cardinality drifted"
         if [ "$framework" = SwiftData ]; then
@@ -724,6 +760,37 @@ append_frontier_sources() {
                     "$(hash_file "$W/$relative")" >> "$output"
             done
         fi
+        if [ "$framework" = UserNotifications ]; then
+            frontier_inputs=(
+                full/usernotifications/tests/UserNotificationsHostRuntime.swift
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "UserNotifications supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "UserNotifications supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
+        if [ "$framework" = QuickLook ]; then
+            frontier_inputs=(
+                full/quicklook/QuickLookSwiftUI.swift
+                full/quicklook/quicklook_swiftui_guest_sources.txt
+                full/quicklook/SwiftUI.swiftoverlay
+                full/quicklook/tests/QuickLookGuestRuntime.swift
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "QuickLook supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "QuickLook supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
         if [ "$framework" = SwiftData ]; then
             frontier_inputs=(
                 full/swiftdata/SwiftDataMacros.swift
@@ -740,12 +807,55 @@ append_frontier_sources() {
                     "$(hash_file "$W/$relative")" >> "$output"
             done
         fi
+        if [ "$framework" = CoreMedia ]; then
+            frontier_inputs=(
+                full/coremedia/tests/CoreMediaTranscript.swift
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "CoreMedia supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "CoreMedia supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
+        if [ "$framework" = AVFoundation ]; then
+            frontier_inputs=(
+                full/avfoundation/tests/AVFoundationHostRuntime.swift
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "AVFoundation supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "AVFoundation supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
+        if [ "$framework" = Charts ]; then
+            frontier_inputs=(
+                full/charts/tests/ChartsHostRuntime.swift
+                full/charts/tests/IceCubesChartsConsumer.swift
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "Charts supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "Charts supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
     done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 13 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 19 ] \
     || die 'frontier framework source count drifted'
-[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 6 ] \
+[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 15 ] \
     || die 'frontier underlying input count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
@@ -1071,6 +1181,7 @@ MODULE_CACHE=$WORK/module-cache
 mkdir -p "$MODULE_CACHE"
 SWIFTC=(swiftc -target "$TARGET" -sdk "$STAGE/sdk"
     -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
+    -Xfrontend -enable-cross-import-overlays
     -Xfrontend -disable-implicit-string-processing-module-import
     -Xfrontend -disable-objc-attr-requires-foundation-module)
 LD=(ld64.lld-18 -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS"
@@ -1904,7 +2015,7 @@ done
     -emit-module-path "$STAGE/modules/WebKit.swiftmodule" \
     -emit-object -o "$WORK/webkit.o" "${WEBKIT_SOURCE_PATHS[@]}"
 
-echo '== compile nineteen independent first-party framework modules'
+echo '== compile twenty-five independent first-party framework modules'
 clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -fvisibility=hidden -Wall -Wextra -Werror \
     -I "$STAGE/include/CCommonCrypto" \
@@ -1916,8 +2027,13 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     source_manifest=$W/full/$source_dir/${source_dir}_guest_sources.txt
     mapfile -t framework_sources < "$source_manifest"
     expected_framework_source_count=1
-    [ "$framework" != SwiftData ] \
-        || expected_framework_source_count=$EXPECTED_SWIFTDATA_SOURCE_COUNT
+    case "$framework" in
+        SwiftData) expected_framework_source_count=$EXPECTED_SWIFTDATA_SOURCE_COUNT ;;
+        CoreMedia) expected_framework_source_count=$EXPECTED_COREMEDIA_SOURCE_COUNT ;;
+        AVFoundation) expected_framework_source_count=$EXPECTED_AVFOUNDATION_SOURCE_COUNT ;;
+        AVKit) expected_framework_source_count=$EXPECTED_AVKIT_SOURCE_COUNT ;;
+        Charts) expected_framework_source_count=$EXPECTED_CHARTS_SOURCE_COUNT ;;
+    esac
     [ "${#framework_sources[@]}" -eq "$expected_framework_source_count" ] \
         || die "$framework source manifest cardinality drifted"
     framework_source_paths=()
@@ -1942,6 +2058,27 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         -emit-object -o "$WORK/$source_dir.o" \
         "${framework_source_paths[@]}"
 done
+
+echo '== compile the QuickLook SwiftUI cross-import overlay'
+mapfile -t QUICKLOOK_SWIFTUI_SOURCES < "$QUICKLOOK_SWIFTUI_SOURCES_MANIFEST"
+[ "${#QUICKLOOK_SWIFTUI_SOURCES[@]}" -eq \
+    "$EXPECTED_QUICKLOOK_SWIFTUI_SOURCE_COUNT" ] \
+    || die 'QuickLook SwiftUI overlay source count drifted'
+[ "${QUICKLOOK_SWIFTUI_SOURCES[0]}" = \
+    full/quicklook/QuickLookSwiftUI.swift ] \
+    || die 'QuickLook SwiftUI overlay source path drifted'
+QUICKLOOK_SWIFTUI_SOURCE_PATHS=()
+for relative in "${QUICKLOOK_SWIFTUI_SOURCES[@]}"; do
+    QUICKLOOK_SWIFTUI_SOURCE_PATHS+=("$W/$relative")
+done
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name _QuickLook_SwiftUI -emit-module \
+    -emit-module-path "$STAGE/modules/_QuickLook_SwiftUI.swiftmodule" \
+    -emit-object -o "$WORK/quicklook-swiftui.o" \
+    "${QUICKLOOK_SWIFTUI_SOURCE_PATHS[@]}"
+mkdir -p "$STAGE/modules/QuickLook.swiftcrossimport"
+cp "$W/full/quicklook/SwiftUI.swiftoverlay" \
+    "$STAGE/modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay"
 network_string_processing_undefineds=$(llvm-nm-18 -u -j "$WORK/network.o" \
     | awk 'index($0, "_StringProcessing") { count++ } END { print count + 0 }')
 [ "$network_string_processing_undefineds" -eq 0 ] \
@@ -1966,7 +2103,7 @@ echo '== prove SwiftUI publicly reexports full Foundation, Combine and Dispatch'
     -module-name SwiftUIFoundationReexportProbe -typecheck \
     "$W/full/frameworks/SwiftUIFoundationReexportProbe.swift"
 
-echo '== link thirty-six reusable platform dylibs (thirty-five frameworks plus ICU)'
+echo '== link forty-three reusable platform dylibs (forty-two frameworks plus ICU)'
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined dynamic_lookup \
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
     -o "$STAGE/lib/libDispatch.dylib" \
@@ -2225,10 +2362,17 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     expected_foundation_load=1
     expected_foundation_essentials_load=1
     expected_uikit_load=0
+    expected_openuikit_load=0
+    expected_opencoregraphics_load=0
+    expected_swiftui_load=0
+    expected_coremedia_load=0
+    expected_avfoundation_load=0
     expected_os_runtime_reexport=0
     case "$framework" in
-        SafariServices|StoreKit|PassKit|MessageUI|AppIntents)
+        SafariServices|StoreKit|PassKit|MessageUI|AppIntents|QuickLook)
             expected_uikit_load=1
+            expected_openuikit_load=1
+            expected_opencoregraphics_load=1
             framework_link_dependencies+=(
                 -lUIKit
                 -lOpenUIKit
@@ -2236,11 +2380,13 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
             )
             ;;
         CoreGraphics)
+            expected_opencoregraphics_load=1
             framework_link_dependencies+=(
                 -lOpenCoreGraphics
             )
             ;;
         ImageIO)
+            expected_opencoregraphics_load=1
             framework_link_dependencies+=(
                 -lCoreGraphics
                 -lOpenCoreGraphics
@@ -2265,9 +2411,42 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
             )
             ;;
         SwiftData)
+            expected_swiftui_load=1
             framework_link_dependencies+=(
                 -lSwiftUI
                 "$OBSERVATION_DYLIB"
+            )
+            ;;
+        AVFoundation)
+            expected_coremedia_load=1
+            expected_openuikit_load=1
+            expected_opencoregraphics_load=1
+            framework_link_dependencies+=(
+                -lCoreMedia
+                -lOpenUIKit
+                -lOpenCoreGraphics
+            )
+            ;;
+        AVKit)
+            expected_uikit_load=1
+            expected_openuikit_load=1
+            expected_opencoregraphics_load=1
+            expected_swiftui_load=1
+            expected_avfoundation_load=1
+            framework_link_dependencies+=(
+                -lAVFoundation
+                -lSwiftUI
+                -lUIKit
+                -lOpenUIKit
+                -lOpenCoreGraphics
+            )
+            ;;
+        Charts)
+            expected_swiftui_load=1
+            expected_opencoregraphics_load=1
+            framework_link_dependencies+=(
+                -lSwiftUI
+                -lOpenCoreGraphics
             )
             ;;
     esac
@@ -2279,6 +2458,12 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         -install_name "@rpath/lib$framework.dylib" -rpath @loader_path \
         -o "$STAGE/lib/lib$framework.dylib" "${framework_objects[@]}" \
         "${COMMON_LINK[@]}" "${framework_link_dependencies[@]}"
+    portable_self_id_count=$(llvm-otool-18 -L \
+        "$STAGE/lib/lib$framework.dylib" \
+        | awk -v expected="@rpath/lib$framework.dylib" \
+            '$1 == expected { count++ } END { print count + 0 }')
+    [ "$portable_self_id_count" -eq 1 ] \
+        || die "lib$framework portable install ID count $portable_self_id_count, expected 1"
     foundation_load_count=$(llvm-otool-18 -L \
         "$STAGE/lib/lib$framework.dylib" \
         | awk '$1 == "@rpath/libFoundation.dylib" { count++ } END { print count + 0 }')
@@ -2287,6 +2472,28 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         | awk '$1 == "@rpath/libFoundationEssentials.dylib" { count++ } END { print count + 0 }')
     uikit_load_count=$(llvm-otool-18 -L "$STAGE/lib/lib$framework.dylib" \
         | awk '$1 == "@rpath/libUIKit.dylib" { count++ } END { print count + 0 }')
+    openuikit_load_count=$(llvm-otool-18 -L \
+        "$STAGE/lib/lib$framework.dylib" \
+        | awk '$1 == "@rpath/libOpenUIKit.dylib" { count++ } END { print count + 0 }')
+    opencoregraphics_load_count=$(llvm-otool-18 -L \
+        "$STAGE/lib/lib$framework.dylib" \
+        | awk '$1 == "@rpath/libOpenCoreGraphics.dylib" { count++ } END { print count + 0 }')
+    swiftui_load_count=$(llvm-otool-18 -L "$STAGE/lib/lib$framework.dylib" \
+        | awk '$1 == "@rpath/libSwiftUI.dylib" { count++ } END { print count + 0 }')
+    coremedia_load_count=$(llvm-otool-18 -L "$STAGE/lib/lib$framework.dylib" \
+        | awk '$1 == "@rpath/libCoreMedia.dylib" { count++ } END { print count + 0 }')
+    avfoundation_load_count=$(llvm-otool-18 -L \
+        "$STAGE/lib/lib$framework.dylib" \
+        | awk '$1 == "@rpath/libAVFoundation.dylib" { count++ } END { print count + 0 }')
+    # `otool -L` includes the dylib's LC_ID_DYLIB as its first entry.  That is
+    # an identity, not a dependency.  Exclude it when auditing the two module
+    # names that are themselves members of this first-party loop.
+    if [ "$framework" = CoreMedia ]; then
+        coremedia_load_count=$((coremedia_load_count - portable_self_id_count))
+    fi
+    if [ "$framework" = AVFoundation ]; then
+        avfoundation_load_count=$((avfoundation_load_count - portable_self_id_count))
+    fi
     concurrency_load_count=$(llvm-otool-18 -L \
         "$STAGE/lib/lib$framework.dylib" \
         | awk -v expected="$SWIFTUI_RUNTIME_INSTALL_NAME" \
@@ -2310,6 +2517,17 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         || die "lib$framework ordinary FoundationEssentials load count $foundation_essentials_ordinary_load_count, expected 1"
     [ "$uikit_load_count" -eq "$expected_uikit_load" ] \
         || die "lib$framework UIKit load count $uikit_load_count, expected $expected_uikit_load"
+    [ "$openuikit_load_count" -eq "$expected_openuikit_load" ] \
+        || die "lib$framework OpenUIKit load count $openuikit_load_count, expected $expected_openuikit_load"
+    [ "$opencoregraphics_load_count" -eq \
+        "$expected_opencoregraphics_load" ] \
+        || die "lib$framework OpenCoreGraphics load count $opencoregraphics_load_count, expected $expected_opencoregraphics_load"
+    [ "$swiftui_load_count" -eq "$expected_swiftui_load" ] \
+        || die "lib$framework SwiftUI load count $swiftui_load_count, expected $expected_swiftui_load"
+    [ "$coremedia_load_count" -eq "$expected_coremedia_load" ] \
+        || die "lib$framework CoreMedia load count $coremedia_load_count, expected $expected_coremedia_load"
+    [ "$avfoundation_load_count" -eq "$expected_avfoundation_load" ] \
+        || die "lib$framework AVFoundation load count $avfoundation_load_count, expected $expected_avfoundation_load"
     [ "$concurrency_load_count" -eq 1 ] \
         || die "lib$framework Concurrency load count $concurrency_load_count, expected 1"
     [ "$os_runtime_reexport_count" -eq "$expected_os_runtime_reexport" ] \
@@ -2318,13 +2536,41 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         | grep -Fq "/System/Library/Frameworks/$framework.framework/"; then
         die "lib$framework loads the Apple $framework framework"
     fi
-    printf '%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
-        "$framework" "$foundation_load_count" \
+    printf '%s\tportable-self-id=%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\topenuikit=%s\topencoregraphics=%s\tswiftui=%s\tcoremedia=%s\tavfoundation=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
+        "$framework" "$portable_self_id_count" "$foundation_load_count" \
         "$foundation_essentials_load_count" \
         "$foundation_essentials_ordinary_load_count" "$uikit_load_count" \
-        "$concurrency_load_count" "$os_runtime_reexport_count" \
+        "$openuikit_load_count" \
+        "$opencoregraphics_load_count" \
+        "$swiftui_load_count" "$coremedia_load_count" \
+        "$avfoundation_load_count" "$concurrency_load_count" \
+        "$os_runtime_reexport_count" \
         >> "$FIRST_PARTY_LOAD_AUDIT"
 done
+
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name @rpath/lib_QuickLook_SwiftUI.dylib -rpath @loader_path \
+    -o "$STAGE/lib/lib_QuickLook_SwiftUI.dylib" \
+    "$WORK/quicklook-swiftui.o" "${COMMON_LINK[@]}" \
+    -lQuickLook -lSwiftUI -lFoundation -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG"
+quicklook_overlay_quicklook_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/lib_QuickLook_SwiftUI.dylib" \
+    | awk '$1 == "@rpath/libQuickLook.dylib" { count++ } END { print count + 0 }')
+quicklook_overlay_swiftui_load_count=$(llvm-otool-18 -L \
+    "$STAGE/lib/lib_QuickLook_SwiftUI.dylib" \
+    | awk '$1 == "@rpath/libSwiftUI.dylib" { count++ } END { print count + 0 }')
+[ "$quicklook_overlay_quicklook_load_count" -eq 1 ] \
+    || die "QuickLook overlay base load count $quicklook_overlay_quicklook_load_count, expected 1"
+[ "$quicklook_overlay_swiftui_load_count" -eq 1 ] \
+    || die "QuickLook overlay SwiftUI load count $quicklook_overlay_swiftui_load_count, expected 1"
+if llvm-otool-18 -L "$STAGE/lib/lib_QuickLook_SwiftUI.dylib" \
+    | grep -Eq '/System/Library/Frameworks/(QuickLook|_QuickLook_SwiftUI)\.framework/'; then
+    die 'portable QuickLook overlay loads an Apple QuickLook framework'
+fi
+printf '%s\tquicklook=%s\tswiftui=%s\tapple-self-load=0\n' \
+    _QuickLook_SwiftUI "$quicklook_overlay_quicklook_load_count" \
+    "$quicklook_overlay_swiftui_load_count" >> "$FIRST_PARTY_LOAD_AUDIT"
 
 swiftdata_swiftui_load_count=$(llvm-otool-18 -L \
     "$STAGE/lib/libSwiftData.dylib" \
@@ -2434,6 +2680,172 @@ grep -Fxq \
     "$STAGE/attestation/swiftdata-runtime.log" \
     || die 'standalone SwiftData runtime marker is missing'
 
+echo '== compile/link/run the standalone UserNotifications service gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name UserNotificationsGuestRuntime -emit-object \
+    -o "$WORK/usernotifications-guest-runtime.o" \
+    "$W/full/usernotifications/tests/UserNotificationsHostRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/UserNotificationsGuestRuntime" \
+    "$WORK/usernotifications-guest-runtime.o" "${COMMON_LINK[@]}" \
+    -lUserNotifications -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+llvm-otool-18 -hv "$STAGE/probe/UserNotificationsGuestRuntime" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+    || die 'UserNotifications runtime gate is not an ARM64 Mach-O executable'
+usernotifications_gate_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/UserNotificationsGuestRuntime" \
+    | awk '$1 == "@rpath/libUserNotifications.dylib" { count++ } END { print count + 0 }')
+[ "$usernotifications_gate_load_count" -eq 1 ] \
+    || die "UserNotifications gate load count $usernotifications_gate_load_count, expected 1"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/UserNotificationsGuestRuntime
+) | tee "$STAGE/attestation/usernotifications-runtime.log"
+grep -Fxq \
+    'USERNOTIFICATIONS_HOST_OK authorization=fail-closed scheduling=volatile delegate=async response=delivered badge=validated' \
+    "$STAGE/attestation/usernotifications-runtime.log" \
+    || die 'standalone UserNotifications runtime marker is missing'
+printf '%s\n' \
+    'USERNOTIFICATIONS_GUEST_MACHO_OK authorization=fail-closed scheduling=volatile delegate=async response=delivered badge=validated' \
+    | tee -a "$STAGE/attestation/usernotifications-runtime.log"
+
+echo '== compile/link/run the standalone QuickLook controller gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name QuickLookGuestRuntime -emit-object \
+    -o "$WORK/quicklook-guest-runtime.o" \
+    "$W/full/quicklook/tests/QuickLookGuestRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header \
+    "${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
+    -o "$STAGE/probe/QuickLookGuestRuntime" \
+    "$WORK/quicklook-guest-runtime.o" \
+    "${PREVIEW_STANDALONE_LINK_INPUTS[@]}" "${COMMON_LINK[@]}" \
+    -lQuickLook -lUIKit -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials -lOpenUIKit -lOpenCoreGraphics \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+llvm-otool-18 -hv "$STAGE/probe/QuickLookGuestRuntime" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+    || die 'QuickLook runtime gate is not an ARM64 Mach-O executable'
+quicklook_gate_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/QuickLookGuestRuntime" \
+    | awk '$1 == "@rpath/libQuickLook.dylib" { count++ } END { print count + 0 }')
+[ "$quicklook_gate_load_count" -eq 1 ] \
+    || die "QuickLook gate load count $quicklook_gate_load_count, expected 1"
+quicklook_preview_export_count=$(nm_symbol_count --defined-only \
+    "$STAGE/probe/QuickLookGuestRuntime" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+[ "$quicklook_preview_export_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "QuickLook gate Preview export count $quicklook_preview_export_count, expected $PREVIEW_ENABLED"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/QuickLookGuestRuntime
+) | tee "$STAGE/attestation/quicklook-runtime.log"
+grep -Fxq \
+    'QUICKLOOK_GUEST_MACHO_OK controller=items,indexed overlay=host-driven selection=synchronized unsupported=fail-closed' \
+    "$STAGE/attestation/quicklook-runtime.log" \
+    || die 'standalone QuickLook runtime marker is missing'
+
+echo '== typecheck an ordinary QuickLook/SwiftUI cross-import consumer'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name QuickLookCrossImportConsumer -typecheck \
+    "$W/full/quicklook/tests/IceCubesQuickLookConsumer.swift"
+
+echo '== compile/link/run the standalone CoreMedia rational-time gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name CoreMediaGuestRuntime -emit-object \
+    -o "$WORK/coremedia-guest-runtime.o" \
+    "$W/full/coremedia/tests/CoreMediaTranscript.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/CoreMediaGuestRuntime" \
+    "$WORK/coremedia-guest-runtime.o" "${COMMON_LINK[@]}" -lCoreMedia
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/CoreMediaGuestRuntime
+) | tee "$STAGE/attestation/coremedia-runtime.log"
+grep -Fxq 'sum=5/6:0.8333333333333334' \
+    "$STAGE/attestation/coremedia-runtime.log" \
+    || die 'CoreMedia rational-addition marker is missing'
+grep -Fxq 'sub=2/6:0.3333333333333333' \
+    "$STAGE/attestation/coremedia-runtime.log" \
+    || die 'CoreMedia rational-subtraction marker is missing'
+grep -Fxq 'scaled=10/12:false' \
+    "$STAGE/attestation/coremedia-runtime.log" \
+    || die 'CoreMedia scale marker is missing'
+grep -Fxq 'range=true:false' \
+    "$STAGE/attestation/coremedia-runtime.log" \
+    || die 'CoreMedia range marker is missing'
+
+echo '== compile/link/run the standalone AVFoundation service gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name AVFoundationGuestRuntime -emit-object \
+    -o "$WORK/avfoundation-guest-runtime.o" \
+    "$W/full/avfoundation/tests/AVFoundationHostRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/AVFoundationGuestRuntime" \
+    "$WORK/avfoundation-guest-runtime.o" "${COMMON_LINK[@]}" \
+    -lAVFoundation -lCoreMedia -lCoreGraphics -lOpenCoreGraphics \
+    -lFoundation -lFoundationInternationalization -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG" "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/AVFoundationGuestRuntime
+) | tee "$STAGE/attestation/avfoundation-runtime.log"
+grep -Fxq \
+    'AVFOUNDATION_HOST_OK time=rational player=host-driven audio=state export=fail-closed,host-driven frame=fail-closed,host-driven' \
+    "$STAGE/attestation/avfoundation-runtime.log" \
+    || die 'standalone AVFoundation runtime marker is missing'
+
+echo '== compile/link/run the standalone Charts mark and interaction gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name ChartsGuestRuntime -emit-object \
+    -o "$WORK/charts-guest-runtime.o" \
+    "$W/full/charts/tests/ChartsHostRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    "${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}" -rpath @loader_path/../lib \
+    -o "$STAGE/probe/ChartsGuestRuntime" \
+    "$WORK/charts-guest-runtime.o" \
+    "${PREVIEW_STANDALONE_LINK_INPUTS[@]}" "${COMMON_LINK[@]}" \
+    -lCharts -lSwiftUI -lUIKit -lFoundation \
+    -lFoundationInternationalization -lFoundationEssentials \
+    -lOpenUIKit -lOpenCoreGraphics "$SWIFTUI_RUNTIME_LINK_FLAG" \
+    "${PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS[@]}" \
+    "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+charts_preview_export_count=$(nm_symbol_count --defined-only \
+    "$STAGE/probe/ChartsGuestRuntime" "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL")
+[ "$charts_preview_export_count" -eq "$PREVIEW_ENABLED" ] \
+    || die "Charts gate Preview export count $charts_preview_export_count, expected $PREVIEW_ENABLED"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/ChartsGuestRuntime
+) | tee "$STAGE/attestation/charts-runtime.log"
+grep -Fxq \
+    'CHARTS_HOST_OK marks=bar,line,area,rule scalar=numeric,date interaction=fail-closed,host-driven stroke=retained rendering=basic' \
+    "$STAGE/attestation/charts-runtime.log" \
+    || die 'standalone Charts runtime marker is missing'
+
+echo '== typecheck the exact-surface IceCubes Charts consumer'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name IceCubesChartsConsumer -typecheck \
+    "$W/full/charts/tests/IceCubesChartsConsumer.swift"
+
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${OBSERVATION_PLUGIN_FLAGS[@]}" "${FOUNDATION_PLUGIN_FLAGS[@]}" \
@@ -2475,12 +2887,14 @@ fi
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO \
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit \
     -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData \
+    -lUserNotifications -lQuickLook -l_QuickLook_SwiftUI \
+    -lCoreMedia -lAVFoundation -lAVKit -lCharts \
     "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "$OBSERVATION_DYLIB"
 
 for dylib in FoundationEssentials FoundationInternationalization \
     OpenCoreGraphics OpenUIKit OpenCombine Dispatch \
-    Combine Symbols SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
+    Combine Symbols SwiftUI _QuickLook_SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     llvm-otool-18 -hv "$STAGE/lib/lib$dylib.dylib" \
         | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
@@ -2543,7 +2957,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-19 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-25 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile quicklook=local-image,host-driven media=rational,state,host-driven,fail-closed charts=basic,fail-closed webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -2722,6 +3136,7 @@ echo 'FOUNDATION_BYTE_COUNT_MACHO_OK rows=86 apple-differential=exact'
 echo '== write relocatable compile/link contracts'
 COMPILE_ARGUMENTS=(
     -target "$TARGET" -sdk sdk -runtime-compatibility-version none
+    -Xfrontend -enable-cross-import-overlays
     -Xfrontend -disable-implicit-string-processing-module-import
     -Xfrontend -disable-objc-attr-requires-foundation-module
     -load-plugin-library host-tools/swift/host/plugins/libObservationMacros.so
@@ -2761,11 +3176,13 @@ LINK_ARGUMENTS=(
     guest-root/darwin/usr/lib/libSystem.B.dylib
     -lWebKit -lCoreImage -lQuartzCore -lDispatch -lUIKit -lFoundation
     -lFoundationInternationalization -lFoundationEssentials -lSwiftUI -lSymbols
+    -l_QuickLook_SwiftUI
     -lIntentsUI -lIntents -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
     -lLocalAuthentication -lSafariServices -lNetwork -lStoreKit
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit
     -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData
+    -lUserNotifications -lQuickLook -lCoreMedia -lAVFoundation -lAVKit -lCharts
 )
 printf '%s\0' "${COMPILE_ARGUMENTS[@]}" > "$STAGE/compile-flags.rsp"
 printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"
@@ -2918,7 +3335,8 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'foundation-byte-count\toracle=%s\tapple-golden=%s\trows=86\n' \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_ORACLE")" \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_GOLDEN")"
-    printf 'frontier-frameworks\tframeworks=12\tsources=13\n'
+    printf 'frontier-frameworks\tframeworks=18\tsources=19\n'
+    printf 'quicklook-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
         "$(hash_file "$W/full/relativetime/include/OpenRelativeTimeABI.h")" \
         "$(hash_file "$W/full/relativetime/OpenRelativeTimeBridge.c")" \
@@ -2964,11 +3382,13 @@ record_module_family() {
 }
 for framework in FoundationEssentials FoundationInternationalization \
     OpenCoreGraphics OpenUIKit OpenCombine Dispatch \
-    Combine Symbols SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
+    Combine Symbols SwiftUI _QuickLook_SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \
     "${FIRST_PARTY_FRAMEWORKS[@]}"; do
     record_module_family framework "$framework"
     record_artifact framework "$framework" dylib "lib/lib$framework.dylib"
 done
+record_artifact module-metadata QuickLook cross-import-overlay \
+    modules/QuickLook.swiftcrossimport/SwiftUI.swiftoverlay
 record_module_family framework Observation
 record_artifact runtime Observation dylib \
     guest-root/darwin/usr/lib/swift/libswiftObservation.dylib
@@ -3050,6 +3470,16 @@ record_artifact probe CoreGuestPackageProbe executable probe/CoreGuestPackagePro
 record_artifact probe OSLogGuestRuntime executable probe/OSLogGuestRuntime
 record_artifact probe SwiftDataGuestRuntime executable \
     probe/SwiftDataGuestRuntime
+record_artifact probe UserNotificationsGuestRuntime executable \
+    probe/UserNotificationsGuestRuntime
+record_artifact probe QuickLookGuestRuntime executable \
+    probe/QuickLookGuestRuntime
+record_artifact probe CoreMediaGuestRuntime executable \
+    probe/CoreMediaGuestRuntime
+record_artifact probe AVFoundationGuestRuntime executable \
+    probe/AVFoundationGuestRuntime
+record_artifact probe ChartsGuestRuntime executable \
+    probe/ChartsGuestRuntime
 record_artifact probe DispatchMachORuntime executable \
     probe/DispatchMachORuntime
 record_artifact probe SwiftUIFoundationReexportProbe executable \
@@ -3066,6 +3496,16 @@ record_artifact attestation OSLog link-audit \
     attestation/oslog-standalone-link.tsv
 record_artifact attestation SwiftData runtime-log \
     attestation/swiftdata-runtime.log
+record_artifact attestation UserNotifications runtime-log \
+    attestation/usernotifications-runtime.log
+record_artifact attestation QuickLook runtime-log \
+    attestation/quicklook-runtime.log
+record_artifact attestation CoreMedia runtime-log \
+    attestation/coremedia-runtime.log
+record_artifact attestation AVFoundation runtime-log \
+    attestation/avfoundation-runtime.log
+record_artifact attestation Charts runtime-log \
+    attestation/charts-runtime.log
 record_artifact attestation dispatch host \
     attestation/open-dispatch-host.tsv
 record_artifact attestation dispatch host-test-log \

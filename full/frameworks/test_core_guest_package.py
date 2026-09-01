@@ -139,6 +139,7 @@ FRAMEWORKS = (
     "Combine",
     "Symbols",
     "SwiftUI",
+    "_QuickLook_SwiftUI",
     "Foundation",
     "UIKit",
     "CoreImage",
@@ -165,6 +166,12 @@ FRAMEWORKS = (
     "OSLog",
     "UniformTypeIdentifiers",
     "SwiftData",
+    "UserNotifications",
+    "QuickLook",
+    "CoreMedia",
+    "AVFoundation",
+    "AVKit",
+    "Charts",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -264,10 +271,10 @@ def validate_swiftui_runtime_link(source: str) -> None:
     ]
     if missing:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
-    # Observation and SwiftUI each link Concurrency, while the reusable
-    # first-party link loop, executable probe, and SwiftData runtime gate each
-    # carry the same token.
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 5:
+    # Observation, SwiftUI, the QuickLook overlay, AVFoundation and Charts
+    # runtime gates, the reusable first-party link loop, executable probe, and
+    # SwiftData runtime gate each carry the same concurrency token.
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 8:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
     swiftui_link_end = source.index(
@@ -380,10 +387,10 @@ def validate_preview_standalone_link_contract(source: str) -> None:
         raise AssertionError(
             f"standalone SwiftUI Preview link contract drifted: {missing}"
         )
-    if source.count('"${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}"') != 2:
+    if source.count('"${PREVIEW_STANDALONE_EXPORT_FLAGS[@]}"') != 4:
         raise AssertionError("standalone SwiftUI Preview export use count drifted")
-    if source.count('"${PREVIEW_STANDALONE_LINK_INPUTS[@]}"') != 3:
-        # One use audits the source object and two uses link executables.
+    if source.count('"${PREVIEW_STANDALONE_LINK_INPUTS[@]}"') != 5:
+        # One use audits the source object and four uses link executables.
         raise AssertionError("standalone SwiftUI Preview link-input use count drifted")
     slices = (
         (
@@ -395,6 +402,16 @@ def validate_preview_standalone_link_contract(source: str) -> None:
             "compile/link/run the SwiftUI-only Foundation/Combine/Dispatch reexport gate",
             "compile/link/run the full async Foundation URLSession cold gate",
             "swiftui_reexport_preview_export_count=$(nm_symbol_count --defined-only",
+        ),
+        (
+            "compile/link/run the standalone QuickLook controller gate",
+            "typecheck an ordinary QuickLook/SwiftUI cross-import consumer",
+            "quicklook_preview_export_count=$(nm_symbol_count --defined-only",
+        ),
+        (
+            "compile/link/run the standalone Charts mark and interaction gate",
+            "typecheck the exact-surface IceCubes Charts consumer",
+            "charts_preview_export_count=$(nm_symbol_count --defined-only",
         ),
     )
     for start_marker, end_marker, audit in slices:
@@ -727,6 +744,8 @@ class PackageFixture:
             "arm64-apple-macos15.0",
             "-sdk",
             "sdk",
+            "-Xfrontend",
+            "-enable-cross-import-overlays",
             "-I",
             "modules",
             "-Xcc",
@@ -762,6 +781,7 @@ class PackageFixture:
             "-lFoundationEssentials",
             "-lSymbols",
             "-lSwiftUI",
+            "-l_QuickLook_SwiftUI",
             "-lIntentsUI",
             "-lIntents",
             "-lWebKit",
@@ -789,6 +809,12 @@ class PackageFixture:
             "-lOSLog",
             "-lUniformTypeIdentifiers",
             "-lSwiftData",
+            "-lUserNotifications",
+            "-lQuickLook",
+            "-lCoreMedia",
+            "-lAVFoundation",
+            "-lAVKit",
+            "-lCharts",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
@@ -1408,6 +1434,28 @@ class PackageContractTests(unittest.TestCase):
             refusal = fixture.write_manifest(expected=2)
             self.assertIn("CoreImage underlying-module pair", refusal.stderr)
 
+    def test_cross_import_overlay_compile_pair_is_mandatory(self) -> None:
+        for mutation in ("missing", "duplicate"):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
+                fixture = PackageFixture(Path(temporary) / "package", preview=False)
+                pair_end = fixture.compile_arguments.index(
+                    "-enable-cross-import-overlays"
+                ) + 1
+                if mutation == "missing":
+                    del fixture.compile_arguments[pair_end - 2 : pair_end]
+                else:
+                    fixture.compile_arguments[pair_end:pair_end] = [
+                        "-Xfrontend",
+                        "-enable-cross-import-overlays",
+                    ]
+                (fixture.root / "compile-flags.rsp").write_bytes(
+                    b"".join(
+                        token.encode() + b"\0" for token in fixture.compile_arguments
+                    )
+                )
+                refusal = fixture.write_manifest(expected=2)
+                self.assertIn("enable Swift cross-import overlays", refusal.stderr)
+
     def test_webkit_source_attestation_is_mandatory(self) -> None:
         fixture = self.fixture(False)
         manifest_path = fixture.root / "attestation/core-package.json"
@@ -1449,6 +1497,17 @@ class PackageContractTests(unittest.TestCase):
 
 
 class ShellContractTests(unittest.TestCase):
+    def test_builder_enables_cross_import_overlays_for_platform_and_consumers(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        self.assertEqual(
+            source.count("-Xfrontend -enable-cross-import-overlays"), 2
+        )
+        cross_import_gate = source[
+            source.index("typecheck an ordinary QuickLook/SwiftUI cross-import consumer") :
+            source.index("compile/link/run the standalone CoreMedia rational-time gate")
+        ]
+        self.assertIn('"${SWIFTC[@]}"', cross_import_gate)
+
     def test_foundation_hackers_frontier_is_foundation_only_and_runs(self) -> None:
         builder = BUILDER.read_text(encoding="utf-8")
         core_probe = (HERE / "CoreGuestPackageProbe.swift").read_text(
@@ -1650,7 +1709,7 @@ class ShellContractTests(unittest.TestCase):
                 'LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:'
                 '$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST'
             ),
-            7,
+            12,
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -1875,6 +1934,7 @@ class ShellContractTests(unittest.TestCase):
             'PREVIEW_STANDALONE_LINK_INPUTS+=("$STAGE/objects/developertoolsupport.o")',
             "PREVIEW_STANDALONE_NOMINAL_LINK_FLAGS+=(-lOpenUIKit)",
             "swiftdata_preview_export_count=$(nm_symbol_count --defined-only",
+            "quicklook_preview_export_count=$(nm_symbol_count --defined-only",
             "swiftui_reexport_preview_export_count=$(nm_symbol_count --defined-only",
         ):
             with self.subTest(deleted=token):
@@ -1886,8 +1946,8 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 35)
-        self.assertEqual(FRAMEWORKS.index("WebKit"), 15)
+        self.assertEqual(len(FRAMEWORKS), 42)
+        self.assertEqual(FRAMEWORKS.index("WebKit"), 16)
         for token in (
             "-module-name WebKit -emit-module",
             "-install_name @rpath/libWebKit.dylib",
@@ -2295,7 +2355,7 @@ class ShellContractTests(unittest.TestCase):
             source.count(
                 "\n".join(
                     (
-                        "Combine Symbols SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \\",
+                        "Combine Symbols SwiftUI _QuickLook_SwiftUI Foundation UIKit CoreImage QuartzCore Intents IntentsUI WebKit \\",
                         '    "${FIRST_PARTY_FRAMEWORKS[@]}"; do',
                     )
                 )
@@ -2453,7 +2513,7 @@ class ShellContractTests(unittest.TestCase):
                         source.replace(predicate, "deleted-predicate", 1)
                     )
 
-    def test_nineteen_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_twenty_five_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -2478,8 +2538,14 @@ class ShellContractTests(unittest.TestCase):
             "OSLog",
             "UniformTypeIdentifiers",
             "SwiftData",
+            "UserNotifications",
+            "QuickLook",
+            "CoreMedia",
+            "AVFoundation",
+            "AVKit",
+            "Charts",
         )
-        self.assertEqual(FRAMEWORKS[-19:], first_party)
+        self.assertEqual(FRAMEWORKS[-25:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -2490,14 +2556,32 @@ class ShellContractTests(unittest.TestCase):
             '-install_name "@rpath/lib$framework.dylib"', source
         )
         self.assertIn("first-party-dylib-loads-v1", source)
-        self.assertIn("apple-self-load=0", source)
-        self.assertIn("frontier-frameworks\\tframeworks=12\\tsources=13", source)
+        self.assertIn("portable-self-id=%s", source)
+        self.assertIn("openuikit=%s", source)
+        self.assertIn("opencoregraphics=%s", source)
+        self.assertIn("expected_openuikit_load=1", source)
+        self.assertIn("expected_opencoregraphics_load=1", source)
+        self.assertIn("lib$framework OpenUIKit load count", source)
+        self.assertIn("lib$framework OpenCoreGraphics load count", source)
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 13",
+            "coremedia_load_count - portable_self_id_count", source
+        )
+        self.assertIn(
+            "avfoundation_load_count - portable_self_id_count", source
+        )
+        self.assertIn("portable install ID count", source)
+        self.assertIn("apple-self-load=0", source)
+        self.assertIn("frontier-frameworks\\tframeworks=18\\tsources=19", source)
+        self.assertIn(
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 19",
             source,
         )
         self.assertIn(
-            "compile nineteen independent first-party framework modules", source
+            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 15",
+            source,
+        )
+        self.assertIn(
+            "compile twenty-five independent first-party framework modules", source
         )
         self.assertIn("network_string_processing_undefineds", source)
         self.assertIn("direct StringProcessing undefineds, expected 0", source)
@@ -2505,7 +2589,37 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=portable-19", probe)
+        self.assertIn("first-party=portable-25", probe)
+        self.assertIn("usernotifications=fail-closed,volatile", probe)
+        self.assertIn("UserNotificationsGuestRuntime", source)
+        self.assertIn("USERNOTIFICATIONS_GUEST_MACHO_OK", source)
+        self.assertIn(
+            "full/usernotifications/tests/UserNotificationsHostRuntime.swift",
+            source,
+        )
+        self.assertIn("quicklook=local-image,host-driven", probe)
+        self.assertIn("QuickLookGuestRuntime", source)
+        self.assertIn("QUICKLOOK_GUEST_MACHO_OK", source)
+        self.assertIn("QuickLook.swiftcrossimport", source)
+        self.assertIn("lib_QuickLook_SwiftUI.dylib", source)
+        self.assertIn("media=rational,state,host-driven,fail-closed", probe)
+        self.assertIn("charts=basic,fail-closed", probe)
+        self.assertIn("CoreMediaGuestRuntime", source)
+        self.assertIn("AVFoundationGuestRuntime", source)
+        self.assertIn("ChartsGuestRuntime", source)
+        self.assertIn("AVFOUNDATION_HOST_OK", source)
+        self.assertIn("CHARTS_HOST_OK", source)
+        avfoundation_source = (
+            REPO / "full/avfoundation/AVFoundation.swift"
+        ).read_text(encoding="utf-8")
+        self.assertIn("#if canImport(OpenUIKit)", avfoundation_source)
+        self.assertIn("import OpenUIKit", avfoundation_source)
+        self.assertIn("-lOpenUIKit", source)
+        charts_source = (REPO / "full/charts/Charts.swift").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("import CoreGraphics", charts_source)
+        self.assertIn("-lOpenCoreGraphics", source)
         self.assertIn("oslog=standard-error,signposts", probe)
         self.assertIn("uniform-types=tags,conformance", probe)
         self.assertIn("security=keychain,random", probe)
