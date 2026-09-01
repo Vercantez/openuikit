@@ -1,0 +1,7 @@
+full/contactsui/CNContactPickerViewController.swift
+full/contactsui/CNContactViewController.swift
+full/contactsui/ContactAccessButton.swift
+full/contactsui/ContactAccessButtonModifiers.swift
+full/contactsui/ContactsBridging.swift
+full/contactsui/ContactsUI.swift
+full/contactsui/UIApplicationShortcutIcon+Contact.swift
