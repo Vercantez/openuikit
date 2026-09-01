@@ -128,6 +128,26 @@ class AppKitSurfaceTests(unittest.TestCase):
         self.assertNotIn("sed -i", driver)
         self.assertNotIn("Sources/AppKit.swift", driver)
 
+    def test_revenuecat_host_replay_is_sterile_and_fail_closed(self):
+        driver = (
+            TESTS / "run_revenuecat_appkit_frontiers_host.sh"
+        ).read_text(encoding="utf-8")
+        for token in (
+            "sha256:138303d276d49b9b3b6aa9ee277dfb30b876e24557f80c07fd5d52044ef2d9d7",
+            "--platform linux/arm64",
+            "--network none --read-only",
+            '"$ROOT:/w:ro"',
+            '"$PACKAGE:/package:ro"',
+            '"$REVENUECAT:/revenuecat:ro"',
+            "test_revenuecat_appkit_frontier_guest.sh",
+            "test_revenuecat_frontier_guest.sh",
+            ".INVALID-DO-NOT-USE",
+            "source_census_sha",
+            "HOST_PROOF_COMPLETE",
+        ):
+            self.assertIn(token, driver)
+        self.assertNotIn("docker run --rm -it", driver)
+
     def test_focused_builder_requires_a_real_versioned_framework(self):
         builder = (TESTS / "build_appkit_focused_guest.sh").read_text(
             encoding="utf-8"
