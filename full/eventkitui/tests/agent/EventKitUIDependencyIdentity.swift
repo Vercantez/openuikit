@@ -151,7 +151,6 @@ enum EventKitUIDependencyIdentity {
     static func runControllers() {
         _ = Combine.Just(false)
         _ = SwiftUI.EmptyView()
-        _ = String(reflecting: DeveloperToolsSupport.Preview.self)
 
         let store = EKEventStore()
         let calendar = EKCalendar(for: .event, eventStore: store)
