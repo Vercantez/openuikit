@@ -3415,6 +3415,17 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         "${framework_source_paths[@]}"
 done
 
+# CoreSpotlight's portable query matcher calls String.contains.  The Swift
+# compiler lowers that operation to the toolchain-owned _StringProcessing
+# runtime rather than libswiftCore.  Keep the dependency explicit because the
+# production linker deliberately ignores autolink records: a warm object cache
+# must never be able to hide a missing runtime edge.
+corespotlight_string_processing_undefineds=$(llvm-nm-18 -u -j \
+    "$WORK/corespotlight.o" \
+    | awk 'index($0, "_StringProcessing") { count++ } END { print count + 0 }')
+[ "$corespotlight_string_processing_undefineds" -eq 1 ] \
+    || die "CoreSpotlight StringProcessing undefined count $corespotlight_string_processing_undefineds, expected 1"
+
 echo '== compile the QuickLook SwiftUI cross-import overlay'
 mapfile -t QUICKLOOK_SWIFTUI_SOURCES < "$QUICKLOOK_SWIFTUI_SOURCES_MANIFEST"
 [ "${#QUICKLOOK_SWIFTUI_SOURCES[@]}" -eq \
@@ -3881,6 +3892,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     expected_photos_load=0
     expected_dispatch_load=0
     expected_appkit_load=0
+    expected_string_processing_load=0
     expected_os_runtime_reexport=0
     case "$framework" in
         SafariServices|StoreKit|PassKit|MessageUI|AppIntents|QuickLook)
@@ -4015,8 +4027,10 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
             ;;
         CoreSpotlight)
             expected_uniformtypeidentifiers_load=1
+            expected_string_processing_load=1
             framework_link_dependencies+=(
                 -lUniformTypeIdentifiers
+                "${FOUNDATION_RUNTIME_LINK_FLAGS[0]}"
             )
             ;;
         Compression)
@@ -4077,6 +4091,10 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     appkit_load_count=$(llvm-otool-18 -L \
         "$STAGE/lib/lib$framework.dylib" \
         | awk -v expected="$APPKIT_INSTALL_NAME" \
+            '$1 == expected { count++ } END { print count + 0 }')
+    string_processing_load_count=$(llvm-otool-18 -L \
+        "$STAGE/lib/lib$framework.dylib" \
+        | awk -v expected="${FOUNDATION_RUNTIME_INSTALL_NAMES[0]}" \
             '$1 == expected { count++ } END { print count + 0 }')
     # `otool -L` includes the dylib's LC_ID_DYLIB as its first entry.  That is
     # an identity, not a dependency.  Exclude it when auditing the two module
@@ -4143,6 +4161,9 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         || die "lib$framework Dispatch load count $dispatch_load_count, expected $expected_dispatch_load"
     [ "$appkit_load_count" -eq "$expected_appkit_load" ] \
         || die "lib$framework AppKit load count $appkit_load_count, expected $expected_appkit_load"
+    [ "$string_processing_load_count" -eq \
+        "$expected_string_processing_load" ] \
+        || die "lib$framework StringProcessing load count $string_processing_load_count, expected $expected_string_processing_load"
     [ "$concurrency_load_count" -eq 1 ] \
         || die "lib$framework Concurrency load count $concurrency_load_count, expected 1"
     [ "$os_runtime_reexport_count" -eq "$expected_os_runtime_reexport" ] \
@@ -4151,7 +4172,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         | grep -Fq "/System/Library/Frameworks/$framework.framework/"; then
         die "lib$framework loads the Apple $framework framework"
     fi
-    printf '%s\tportable-self-id=%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\topenuikit=%s\topencoregraphics=%s\tswiftui=%s\tcoremedia=%s\tavfoundation=%s\tuniformtypeidentifiers=%s\timageio=%s\tphotos=%s\tdispatch=%s\tappkit=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
+    printf '%s\tportable-self-id=%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\topenuikit=%s\topencoregraphics=%s\tswiftui=%s\tcoremedia=%s\tavfoundation=%s\tuniformtypeidentifiers=%s\timageio=%s\tphotos=%s\tdispatch=%s\tappkit=%s\tstring-processing=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
         "$framework" "$portable_self_id_count" "$foundation_load_count" \
         "$foundation_essentials_load_count" \
         "$foundation_essentials_ordinary_load_count" "$uikit_load_count" \
@@ -4161,6 +4182,7 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         "$avfoundation_load_count" "$uniformtypeidentifiers_load_count" \
         "$imageio_load_count" "$photos_load_count" "$dispatch_load_count" \
         "$appkit_load_count" \
+        "$string_processing_load_count" \
         "$concurrency_load_count" \
         "$os_runtime_reexport_count" \
         >> "$FIRST_PARTY_LOAD_AUDIT"

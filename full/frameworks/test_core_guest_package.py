@@ -3935,6 +3935,7 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertIn("first-party-dylib-loads-v1", source)
         self.assertIn("portable-self-id=%s", source)
+        self.assertIn("string-processing=%s", source)
         self.assertIn("openuikit=%s", source)
         self.assertIn("opencoregraphics=%s", source)
         self.assertIn("expected_openuikit_load=1", source)
@@ -3974,6 +3975,14 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertIn("network_string_processing_undefineds", source)
         self.assertIn("direct StringProcessing undefineds, expected 0", source)
+        self.assertIn("corespotlight_string_processing_undefineds", source)
+        self.assertIn(
+            "CoreSpotlight StringProcessing undefined count", source
+        )
+        self.assertIn("expected_string_processing_load=1", source)
+        self.assertIn(
+            "lib$framework StringProcessing load count", source
+        )
         for imageio_probe_token in (
             "CGImageSourceCreateIncremental(nil)",
             "CGImageSourceGetStatus(incremental) == .statusIncomplete",
