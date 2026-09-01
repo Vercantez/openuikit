@@ -2505,6 +2505,14 @@ class ShellContractTests(unittest.TestCase):
             '-install_name "@rpath/lib$framework.dylib"', source
         )
         self.assertIn("first-party-dylib-loads-v1", source)
+        self.assertIn("portable-self-id=%s", source)
+        self.assertIn(
+            "coremedia_load_count - portable_self_id_count", source
+        )
+        self.assertIn(
+            "avfoundation_load_count - portable_self_id_count", source
+        )
+        self.assertIn("portable install ID count", source)
         self.assertIn("apple-self-load=0", source)
         self.assertIn("frontier-frameworks\\tframeworks=18\\tsources=19", source)
         self.assertIn(

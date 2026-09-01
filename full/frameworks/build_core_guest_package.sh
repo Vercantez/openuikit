@@ -2438,6 +2438,12 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         -install_name "@rpath/lib$framework.dylib" -rpath @loader_path \
         -o "$STAGE/lib/lib$framework.dylib" "${framework_objects[@]}" \
         "${COMMON_LINK[@]}" "${framework_link_dependencies[@]}"
+    portable_self_id_count=$(llvm-otool-18 -L \
+        "$STAGE/lib/lib$framework.dylib" \
+        | awk -v expected="@rpath/lib$framework.dylib" \
+            '$1 == expected { count++ } END { print count + 0 }')
+    [ "$portable_self_id_count" -eq 1 ] \
+        || die "lib$framework portable install ID count $portable_self_id_count, expected 1"
     foundation_load_count=$(llvm-otool-18 -L \
         "$STAGE/lib/lib$framework.dylib" \
         | awk '$1 == "@rpath/libFoundation.dylib" { count++ } END { print count + 0 }')
@@ -2453,6 +2459,15 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
     avfoundation_load_count=$(llvm-otool-18 -L \
         "$STAGE/lib/lib$framework.dylib" \
         | awk '$1 == "@rpath/libAVFoundation.dylib" { count++ } END { print count + 0 }')
+    # `otool -L` includes the dylib's LC_ID_DYLIB as its first entry.  That is
+    # an identity, not a dependency.  Exclude it when auditing the two module
+    # names that are themselves members of this first-party loop.
+    if [ "$framework" = CoreMedia ]; then
+        coremedia_load_count=$((coremedia_load_count - portable_self_id_count))
+    fi
+    if [ "$framework" = AVFoundation ]; then
+        avfoundation_load_count=$((avfoundation_load_count - portable_self_id_count))
+    fi
     concurrency_load_count=$(llvm-otool-18 -L \
         "$STAGE/lib/lib$framework.dylib" \
         | awk -v expected="$SWIFTUI_RUNTIME_INSTALL_NAME" \
@@ -2490,8 +2505,8 @@ for index in "${!FIRST_PARTY_FRAMEWORKS[@]}"; do
         | grep -Fq "/System/Library/Frameworks/$framework.framework/"; then
         die "lib$framework loads the Apple $framework framework"
     fi
-    printf '%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\tswiftui=%s\tcoremedia=%s\tavfoundation=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
-        "$framework" "$foundation_load_count" \
+    printf '%s\tportable-self-id=%s\tfoundation=%s\tfoundation-essentials=%s\tfoundation-essentials-ordinary=%s\tuikit=%s\tswiftui=%s\tcoremedia=%s\tavfoundation=%s\tconcurrency=%s\tos-runtime-reexport=%s\tapple-self-load=0\n' \
+        "$framework" "$portable_self_id_count" "$foundation_load_count" \
         "$foundation_essentials_load_count" \
         "$foundation_essentials_ordinary_load_count" "$uikit_load_count" \
         "$swiftui_load_count" "$coremedia_load_count" \
