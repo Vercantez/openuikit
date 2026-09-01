@@ -1,9 +1,15 @@
 import Foundation
 
+#if canImport(UIKit)
+import UIKit
+#endif
+
 /// A delegate that customizes Live Text interaction.
 @MainActor
 public protocol ImageAnalysisInteractionDelegate: AnyObject {
+#if canImport(UIKit)
     func contentView(for interaction: ImageAnalysisInteraction) -> UIView?
+#endif
     func interaction(
         _ interaction: ImageAnalysisInteraction,
         shouldBeginAt point: CGPoint,
@@ -19,14 +25,18 @@ public protocol ImageAnalysisInteractionDelegate: AnyObject {
     )
     func contentsRect(for interaction: ImageAnalysisInteraction) -> CGRect
     func textSelectionDidChange(_ interaction: ImageAnalysisInteraction)
+#if canImport(UIKit)
     func presentingViewController(for interaction: ImageAnalysisInteraction) -> UIViewController?
+#endif
 }
 
 extension ImageAnalysisInteractionDelegate {
+#if canImport(UIKit)
     @MainActor
     public func contentView(for interaction: ImageAnalysisInteraction) -> UIView? {
         interaction.view
     }
+#endif
 
     @MainActor
     public func interaction(
@@ -61,7 +71,8 @@ extension ImageAnalysisInteractionDelegate {
     @MainActor
     public func contentsRect(for interaction: ImageAnalysisInteraction) -> CGRect {
         _ = interaction
-        return CGRect(x: 0, y: 0, width: 1, height: 1)
+        // Apple's default (unit rect vs view size, nil-view) is unattested.
+        return .zero
     }
 
     @MainActor
@@ -69,6 +80,7 @@ extension ImageAnalysisInteractionDelegate {
         _ = interaction
     }
 
+#if canImport(UIKit)
     @MainActor
     public func presentingViewController(
         for interaction: ImageAnalysisInteraction
@@ -76,17 +88,19 @@ extension ImageAnalysisInteractionDelegate {
         _ = interaction
         return nil
     }
+#endif
 }
 
 /// Live Text overlay interaction. Without on-device analysis this object is
 /// inert: it stores configuration and reports no subjects, text, or detectors.
 @MainActor
-public final class ImageAnalysisInteraction: NSObject, UIInteraction {
+public final class ImageAnalysisInteraction: NSObject {
     public struct InteractionTypes: OptionSet, Hashable, Sendable {
         public typealias ArrayLiteralElement = InteractionTypes
         public typealias Element = InteractionTypes
         public typealias RawValue = UInt
 
+        /// Placeholder bits. Apple's raw layout is unattested.
         public var rawValue: UInt
 
         public init(rawValue: UInt) {
@@ -111,11 +125,13 @@ public final class ImageAnalysisInteraction: NSObject, UIInteraction {
 
         public var bounds: CGRect { storedBounds }
 
+#if canImport(UIKit)
         public var image: UIImage {
             get async throws {
                 throw SubjectUnavailable.imageUnavailable
             }
         }
+#endif
 
         @_spi(OpenUIKitHost)
         public init(bounds: CGRect, identifier: UUID = UUID()) {
@@ -132,30 +148,32 @@ public final class ImageAnalysisInteraction: NSObject, UIInteraction {
         }
     }
 
+#if canImport(UIKit)
     public private(set) weak var view: UIView?
+    public var supplementaryInterfaceFont: UIFont?
+    public var supplementaryInterfaceContentInsets: UIEdgeInsets = .zero
+#endif
     public weak var delegate: (any ImageAnalysisInteractionDelegate)?
     public var analysis: ImageAnalysis?
-    public var preferredInteractionTypes: InteractionTypes = []
+    /// Apple's zero-argument default is unattested; Linux starts empty.
+    public var preferredInteractionTypes = InteractionTypes()
     public var selectedRanges: [Range<String.Index>] = []
     public var highlightedSubjects: Set<Subject> = []
     public var selectableItemsHighlighted = false
     public var isSupplementaryInterfaceHidden = false
-    public var supplementaryInterfaceFont: UIFont?
-    public var supplementaryInterfaceContentInsets: UIEdgeInsets = .zero
     public var allowLongPressForDataDetectorsInTextMode = false
 
-    private var storedContentsRect = CGRect(x: 0, y: 0, width: 1, height: 1)
+    private var storedContentsRect: CGRect = .zero
 
     public var activeInteractionTypes: InteractionTypes {
         guard let analysis else { return [] }
         var active = InteractionTypes()
         if preferredInteractionTypes.contains(.automatic)
             || preferredInteractionTypes.contains(.automaticTextOnly)
-            || preferredInteractionTypes.contains(.textSelection)
+            || preferredInteractionTypes.contains(.textSelection),
+           analysis.hasResults(for: .text)
         {
-            if analysis.hasResults(for: .text) {
-                active.insert(.textSelection)
-            }
+            active.insert(.textSelection)
         }
         if preferredInteractionTypes.contains(.dataDetectors),
            analysis.hasResults(for: .text) || analysis.hasResults(for: .machineReadableCode)
@@ -166,12 +184,6 @@ public final class ImageAnalysisInteraction: NSObject, UIInteraction {
            analysis.hasResults(for: .visualLookUp)
         {
             active.insert(.visualLookUp)
-        }
-        if preferredInteractionTypes.contains(.imageSubject) {
-            // Subject lifting still requires Apple analysis; stay inert.
-        }
-        if preferredInteractionTypes.contains(.automatic), analysis.hasResults(for: .text) {
-            active.insert(.automatic)
         }
         return active.intersection(preferredInteractionTypes.union(active))
     }
@@ -206,6 +218,7 @@ public final class ImageAnalysisInteraction: NSObject, UIInteraction {
         self.delegate = delegate
     }
 
+#if canImport(UIKit)
     public func willMove(to view: UIView?) {
         _ = view
     }
@@ -213,6 +226,7 @@ public final class ImageAnalysisInteraction: NSObject, UIInteraction {
     public func didMove(to view: UIView?) {
         self.view = view
     }
+#endif
 
     public func analysisHasText(at point: CGPoint) -> Bool {
         _ = point
@@ -245,8 +259,7 @@ public final class ImageAnalysisInteraction: NSObject, UIInteraction {
     }
 
     public func setContentsRectNeedsUpdate() {
-        storedContentsRect = delegate?.contentsRect(for: self)
-            ?? CGRect(x: 0, y: 0, width: 1, height: 1)
+        storedContentsRect = delegate?.contentsRect(for: self) ?? .zero
     }
 
     public func setSupplementaryInterfaceHidden(_ hidden: Bool, animated: Bool) {
@@ -254,13 +267,19 @@ public final class ImageAnalysisInteraction: NSObject, UIInteraction {
         isSupplementaryInterfaceHidden = hidden
     }
 
+#if canImport(UIKit)
     public func image(for subjects: Set<Subject>) async throws -> UIImage {
         _ = subjects
         throw SubjectUnavailable.imageUnavailable
     }
+#endif
 
     public func subject(at point: CGPoint) async -> Subject? {
         _ = point
         return nil
     }
 }
+
+#if canImport(UIKit)
+extension ImageAnalysisInteraction: UIInteraction {}
+#endif

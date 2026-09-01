@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(Vision)
+import Vision
+#endif
+
 /// An item that a data scanner recognizes in camera video.
 public enum RecognizedItem: Identifiable {
     public typealias ID = UUID
@@ -59,20 +63,35 @@ public enum RecognizedItem: Identifiable {
         public let id: UUID
         public let bounds: Bounds
         public let transcript: String
+#if canImport(Vision)
         public let observation: VNRecognizedTextObservation
+#endif
 
+#if canImport(Vision)
         @_spi(OpenUIKitHost)
         public init(
             id: UUID = UUID(),
             bounds: Bounds = .zero,
             transcript: String,
-            observation: VNRecognizedTextObservation = VNRecognizedTextObservation()
+            observation: VNRecognizedTextObservation
         ) {
             self.id = id
             self.bounds = bounds
             self.transcript = transcript
             self.observation = observation
         }
+#else
+        @_spi(OpenUIKitHost)
+        public init(
+            id: UUID = UUID(),
+            bounds: Bounds = .zero,
+            transcript: String
+        ) {
+            self.id = id
+            self.bounds = bounds
+            self.transcript = transcript
+        }
+#endif
     }
 
     /// A recognized machine-readable code.
@@ -81,12 +100,17 @@ public enum RecognizedItem: Identifiable {
 
         public let id: UUID
         public let bounds: Bounds
+#if canImport(Vision)
         public let observation: VNBarcodeObservation
 
         public var payloadStringValue: String? {
             observation.payloadStringValue
         }
+#else
+        public let payloadStringValue: String?
+#endif
 
+#if canImport(Vision)
         @_spi(OpenUIKitHost)
         public init(
             id: UUID = UUID(),
@@ -97,5 +121,17 @@ public enum RecognizedItem: Identifiable {
             self.bounds = bounds
             self.observation = observation
         }
+#else
+        @_spi(OpenUIKitHost)
+        public init(
+            id: UUID = UUID(),
+            bounds: Bounds = .zero,
+            payloadStringValue: String? = nil
+        ) {
+            self.id = id
+            self.bounds = bounds
+            self.payloadStringValue = payloadStringValue
+        }
+#endif
     }
 }

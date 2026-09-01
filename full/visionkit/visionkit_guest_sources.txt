@@ -4,4 +4,3 @@ full/visionkit/ImageAnalyzer.swift
 full/visionkit/RecognizedItem.swift
 full/visionkit/VNDocumentCamera.swift
 full/visionkit/VisionKit.swift
-full/visionkit/VisionKitCompatibility.swift

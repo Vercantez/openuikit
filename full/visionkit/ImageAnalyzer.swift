@@ -1,5 +1,21 @@
 import Foundation
 
+#if canImport(UIKit)
+import UIKit
+#endif
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+#if canImport(ImageIO)
+import ImageIO
+#endif
+#if canImport(CoreImage)
+import CoreImage
+#endif
+#if canImport(CoreVideo)
+import CoreVideo
+#endif
+
 /// Results of analyzing an image for Live Text.
 public final class ImageAnalysis: Sendable {
     private let resultTypes: ImageAnalyzer.AnalysisTypes
@@ -25,13 +41,14 @@ public final class ImageAnalysis: Sendable {
 ///
 /// Linux has no A12-class Neural Engine or Apple Live Text models, so
 /// `isSupported` is `false` and every `analyze` overload throws
-/// `VisionKitAvailabilityError.imageAnalysisUnsupported`.
+/// `VisionKitHostError.imageAnalysisUnsupported`.
 public final class ImageAnalyzer: Sendable {
     public struct AnalysisTypes: OptionSet, Hashable, Sendable {
         public typealias ArrayLiteralElement = AnalysisTypes
         public typealias Element = AnalysisTypes
         public typealias RawValue = UInt
 
+        /// Placeholder bits. Apple's raw layout is unattested.
         public var rawValue: UInt
 
         public init(rawValue: UInt) {
@@ -61,13 +78,14 @@ public final class ImageAnalyzer: Sendable {
 
     public init() {}
 
+#if canImport(UIKit)
     public func analyze(
         _ image: UIImage,
         configuration: Configuration
     ) async throws -> ImageAnalysis {
         _ = image
         _ = configuration
-        throw VisionKitAvailabilityError.imageAnalysisUnsupported
+        throw VisionKitHostError.imageAnalysisUnsupported
     }
 
     public func analyze(
@@ -78,9 +96,11 @@ public final class ImageAnalyzer: Sendable {
         _ = image
         _ = orientation
         _ = configuration
-        throw VisionKitAvailabilityError.imageAnalysisUnsupported
+        throw VisionKitHostError.imageAnalysisUnsupported
     }
+#endif
 
+#if canImport(ImageIO)
     public func analyze(
         imageAt url: URL,
         orientation: CGImagePropertyOrientation,
@@ -89,9 +109,11 @@ public final class ImageAnalyzer: Sendable {
         _ = url
         _ = orientation
         _ = configuration
-        throw VisionKitAvailabilityError.imageAnalysisUnsupported
+        throw VisionKitHostError.imageAnalysisUnsupported
     }
+#endif
 
+#if canImport(CoreGraphics) && canImport(ImageIO)
     public func analyze(
         _ cgImage: CGImage,
         orientation: CGImagePropertyOrientation,
@@ -100,9 +122,11 @@ public final class ImageAnalyzer: Sendable {
         _ = cgImage
         _ = orientation
         _ = configuration
-        throw VisionKitAvailabilityError.imageAnalysisUnsupported
+        throw VisionKitHostError.imageAnalysisUnsupported
     }
+#endif
 
+#if canImport(CoreVideo) && canImport(ImageIO)
     public func analyze(
         _ pixelBuffer: CVPixelBuffer,
         orientation: CGImagePropertyOrientation,
@@ -111,9 +135,11 @@ public final class ImageAnalyzer: Sendable {
         _ = pixelBuffer
         _ = orientation
         _ = configuration
-        throw VisionKitAvailabilityError.imageAnalysisUnsupported
+        throw VisionKitHostError.imageAnalysisUnsupported
     }
+#endif
 
+#if canImport(CoreImage) && canImport(ImageIO)
     public func analyze(
         _ ciImage: CIImage,
         orientation: CGImagePropertyOrientation,
@@ -122,6 +148,7 @@ public final class ImageAnalyzer: Sendable {
         _ = ciImage
         _ = orientation
         _ = configuration
-        throw VisionKitAvailabilityError.imageAnalysisUnsupported
+        throw VisionKitHostError.imageAnalysisUnsupported
     }
+#endif
 }

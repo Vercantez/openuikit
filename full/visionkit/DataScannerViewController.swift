@@ -1,5 +1,12 @@
 import Foundation
 
+#if canImport(UIKit)
+import UIKit
+#endif
+#if canImport(Vision)
+import Vision
+#endif
+
 /// A delegate that observes data-scanner recognition events.
 @MainActor
 public protocol DataScannerViewControllerDelegate: AnyObject {
@@ -90,10 +97,16 @@ extension DataScannerViewControllerDelegate {
 /// A view controller that scans the camera for text and barcodes.
 ///
 /// Linux has no camera or A12-class scanner, so `isSupported` and
-/// `isAvailable` are `false`. `startScanning()` throws `.unsupported` and
-/// `capturePhoto()` throws `VisionKitAvailabilityError.cameraUnavailable`.
+/// `isAvailable` are `false`. `startScanning()` throws a
+/// `ScanningUnavailable` error; the Apple case precedence is unattested.
+#if canImport(UIKit)
+public typealias VisionKitHostViewControllerBase = UIViewController
+#else
+public typealias VisionKitHostViewControllerBase = NSObject
+#endif
+
 @MainActor
-open class DataScannerViewController: UIViewController {
+open class DataScannerViewController: VisionKitHostViewControllerBase {
     public struct RecognizedDataType: Hashable, Sendable {
         fileprivate enum Kind: Hashable, Sendable {
             case text(languages: [String], textContentType: TextContentType?)
@@ -111,6 +124,7 @@ open class DataScannerViewController: UIViewController {
             )
         }
 
+#if canImport(Vision)
         public static func barcode(
             symbologies: [VNBarcodeSymbology] = []
         ) -> RecognizedDataType {
@@ -118,6 +132,7 @@ open class DataScannerViewController: UIViewController {
                 kind: .barcode(symbologies: symbologies.map(\.rawValue))
             )
         }
+#endif
     }
 
     public enum QualityLevel: Hashable, Sendable {
@@ -151,7 +166,9 @@ open class DataScannerViewController: UIViewController {
     public final let isHighlightingEnabled: Bool
 
     public weak var delegate: (any DataScannerViewControllerDelegate)?
+#if canImport(UIKit)
     public private(set) var overlayContainerView = UIView()
+#endif
     public private(set) var isScanning = false
     public var regionOfInterest: CGRect?
 
@@ -203,9 +220,14 @@ open class DataScannerViewController: UIViewController {
         let (stream, continuation) = AsyncStream<[RecognizedItem]>.makeStream()
         continuation.finish()
         recognizedItemsStream = stream
+#if canImport(UIKit)
+        super.init(nibName: nil, bundle: nil)
+#else
         super.init()
+#endif
     }
 
+#if canImport(UIKit)
     open override func loadView() {
         super.loadView()
         view.addSubview(overlayContainerView)
@@ -228,8 +250,10 @@ open class DataScannerViewController: UIViewController {
         stopScanning()
         super.removeFromParent()
     }
+#endif
 
     open func startScanning() throws {
+        // Apple's unsupported-vs-cameraRestricted precedence is unattested.
         throw ScanningUnavailable.unsupported
     }
 
@@ -237,7 +261,9 @@ open class DataScannerViewController: UIViewController {
         isScanning = false
     }
 
+#if canImport(UIKit)
     open func capturePhoto() async throws -> UIImage {
-        throw VisionKitAvailabilityError.cameraUnavailable
+        throw VisionKitHostError.cameraUnavailable
     }
+#endif
 }
