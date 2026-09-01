@@ -12,13 +12,18 @@
 #include <unistd.h>
 
 #define OPENUI_DISPATCH_QUEUE_SLOTS 32
-#define OPENUI_DISPATCH_CUSTOM_QUEUE_SLOTS 256
 #define OPENUI_DISPATCH_REQUIRED_GLIBC_MAJOR 2
 #define OPENUI_DISPATCH_REQUIRED_GLIBC_MINOR 38
 
 static pthread_mutex_t queue_lock = PTHREAD_MUTEX_INITIALIZER;
 static dispatch_queue_t global_queues[OPENUI_DISPATCH_QUEUE_SLOTS];
-static dispatch_queue_t custom_queues[OPENUI_DISPATCH_CUSTOM_QUEUE_SLOTS];
+
+struct custom_queue_entry {
+    dispatch_queue_t queue;
+    struct custom_queue_entry *next;
+};
+
+static struct custom_queue_entry *custom_queue_head;
 
 __attribute__((noreturn)) static void boundary_abort(const char *message)
 {
@@ -111,35 +116,31 @@ static int is_known_global_queue(dispatch_queue_t queue)
 
 static void remember_custom_queue(dispatch_queue_t queue)
 {
-    size_t index;
+    struct custom_queue_entry *entry;
     if (queue == NULL) boundary_abort("cannot register a NULL custom queue");
+    entry = malloc(sizeof(*entry));
+    if (entry == NULL) boundary_abort("cannot allocate custom queue registry entry");
+    entry->queue = queue;
     if (pthread_mutex_lock(&queue_lock) != 0) {
         boundary_abort("cannot lock custom queue registry");
     }
-    for (index = 0; index < OPENUI_DISPATCH_CUSTOM_QUEUE_SLOTS; index++) {
-        if (custom_queues[index] == NULL) {
-            custom_queues[index] = queue;
-            break;
-        }
-    }
+    entry->next = custom_queue_head;
+    custom_queue_head = entry;
     if (pthread_mutex_unlock(&queue_lock) != 0) {
         boundary_abort("cannot unlock custom queue registry");
-    }
-    if (index == OPENUI_DISPATCH_CUSTOM_QUEUE_SLOTS) {
-        boundary_abort("custom queue registry is full");
     }
 }
 
 static int is_known_custom_queue(dispatch_queue_t queue)
 {
-    size_t index;
+    struct custom_queue_entry *entry;
     int found = 0;
     if (queue == NULL) return 0;
     if (pthread_mutex_lock(&queue_lock) != 0) {
         boundary_abort("cannot lock custom queue registry");
     }
-    for (index = 0; index < OPENUI_DISPATCH_CUSTOM_QUEUE_SLOTS; index++) {
-        if (custom_queues[index] == queue) {
+    for (entry = custom_queue_head; entry != NULL; entry = entry->next) {
+        if (entry->queue == queue) {
             found = 1;
             break;
         }
@@ -152,23 +153,24 @@ static int is_known_custom_queue(dispatch_queue_t queue)
 
 static void forget_custom_queue(dispatch_queue_t queue)
 {
-    size_t index;
-    int found = 0;
+    struct custom_queue_entry **link;
+    struct custom_queue_entry *removed = NULL;
     if (queue == NULL) boundary_abort("cannot release a NULL custom queue");
     if (pthread_mutex_lock(&queue_lock) != 0) {
         boundary_abort("cannot lock custom queue registry");
     }
-    for (index = 0; index < OPENUI_DISPATCH_CUSTOM_QUEUE_SLOTS; index++) {
-        if (custom_queues[index] == queue) {
-            custom_queues[index] = NULL;
-            found = 1;
+    for (link = &custom_queue_head; *link != NULL; link = &(*link)->next) {
+        if ((*link)->queue == queue) {
+            removed = *link;
+            *link = removed->next;
             break;
         }
     }
     if (pthread_mutex_unlock(&queue_lock) != 0) {
         boundary_abort("cannot unlock custom queue registry");
     }
-    if (!found) boundary_abort("unminted custom queue release attempted");
+    if (removed == NULL) boundary_abort("unminted custom queue release attempted");
+    free(removed);
 }
 
 void *openui_dispatch_host_v1_get_global_queue(
