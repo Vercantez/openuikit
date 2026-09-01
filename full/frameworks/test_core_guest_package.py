@@ -626,6 +626,14 @@ class PackageFixture:
             "swiftdata macros",
         )
         write_file(
+            root / "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
+            "open uikit preview macros",
+        )
+        write_file(
+            root / "host-tools/swift/host/plugins/libOpenSwiftUIMacros.so",
+            "open swiftui macros",
+        )
+        write_file(
             root / "host-tools/swift/linux/libswiftCore.so",
             "host Swift runtime",
         )
@@ -673,6 +681,10 @@ class PackageFixture:
             "host-tools/swift/host/plugins/libFoundationMacros.so",
             "-load-plugin-library",
             "host-tools/swift/host/plugins/libSwiftDataMacros.so",
+            "-load-plugin-library",
+            "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
+            "-load-plugin-library",
+            "host-tools/swift/host/plugins/libOpenSwiftUIMacros.so",
         ]
         self.link_arguments = [
             "-arch",
@@ -742,6 +754,16 @@ class PackageFixture:
                 "SwiftDataMacros",
                 "libSwiftDataMacros.so",
                 "PersistentModelMacro",
+            ),
+            (
+                "OpenUIKitPreviewMacros",
+                "libOpenUIKitPreviewMacros.so",
+                "UIKitPreviewMacro",
+            ),
+            (
+                "OpenSwiftUIMacros",
+                "libOpenSwiftUIMacros.so",
+                "EntryMacro",
             ),
         )
         compiler_plugin_lines = ["format\tcore-compiler-plugins-v1"]
@@ -918,6 +940,22 @@ class PackageFixture:
         records.append(
             self._artifact(
                 "host-tool",
+                "OpenUIKitPreviewMacros",
+                "plugin",
+                "host-tools/swift/host/plugins/libOpenUIKitPreviewMacros.so",
+            )
+        )
+        records.append(
+            self._artifact(
+                "host-tool",
+                "OpenSwiftUIMacros",
+                "plugin",
+                "host-tools/swift/host/plugins/libOpenSwiftUIMacros.so",
+            )
+        )
+        records.append(
+            self._artifact(
+                "host-tool",
                 "ObservationMacros",
                 "dependency",
                 "host-tools/swift/linux/libswiftCore.so",
@@ -1051,7 +1089,27 @@ class PackageContractTests(unittest.TestCase):
         plugins = document["compiler_plugins"]
         self.assertEqual(
             [plugin["module"] for plugin in plugins],
-            ["ObservationMacros", "FoundationMacros", "SwiftDataMacros"],
+            [
+                "ObservationMacros",
+                "FoundationMacros",
+                "SwiftDataMacros",
+                "OpenUIKitPreviewMacros",
+                "OpenSwiftUIMacros",
+            ],
+        )
+        self.assertEqual(
+            {plugin["module"]: plugin["registrations"] for plugin in plugins},
+            {
+                "ObservationMacros": [
+                    "ObservableMacro",
+                    "ObservationIgnoredMacro",
+                    "ObservationTrackedMacro",
+                ],
+                "FoundationMacros": ["ExpressionMacro", "PredicateMacro"],
+                "SwiftDataMacros": ["PersistentModelMacro"],
+                "OpenUIKitPreviewMacros": ["UIKitPreviewMacro"],
+                "OpenSwiftUIMacros": ["EntryMacro"],
+            },
         )
         for plugin in plugins:
             self.assertEqual(plugin["load_kind"], "library")
@@ -1080,6 +1138,18 @@ class PackageContractTests(unittest.TestCase):
                     "\tapp,framework,package\t", "\tapp,package\t", 1
                 ),
                 "consumer scopes",
+            ),
+            (
+                lambda text: "\n".join(
+                    line
+                    for line in text.splitlines()
+                    if not (
+                        line.startswith("plugin\tOpenSwiftUIMacros\t")
+                        or line.startswith("closure\tOpenSwiftUIMacros\t")
+                    )
+                )
+                + "\n",
+                "omits required modules: OpenSwiftUIMacros",
             ),
         ):
             with self.subTest(expected=expected), tempfile.TemporaryDirectory() as temporary:
@@ -1389,8 +1459,8 @@ class ShellContractTests(unittest.TestCase):
         self.assertEqual(source.count("EXPECTED_UIKIT_SWIFT_COUNT=105"), 1)
         self.assertNotIn("EXPECTED_UIKIT_SWIFT_COUNT=102", source)
         self.assertEqual(source.count("EXPECTED_SYMBOLS_SWIFT_COUNT=1"), 1)
-        self.assertEqual(source.count("EXPECTED_SWIFTUI_SWIFT_COUNT=9"), 1)
-        self.assertNotIn("EXPECTED_SWIFTUI_SWIFT_COUNT=8", source)
+        self.assertEqual(source.count("EXPECTED_SWIFTUI_SWIFT_COUNT=11"), 1)
+        self.assertNotIn("EXPECTED_SWIFTUI_SWIFT_COUNT=9", source)
 
     def test_foundation_links_the_cgfloat_owner_directly(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
@@ -1645,7 +1715,7 @@ class ShellContractTests(unittest.TestCase):
     def test_swiftui_app_lifecycle_is_a_real_core_product(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertIn("EXPECTED_SWIFTUI_SWIFT_COUNT=9", source)
+        self.assertIn("EXPECTED_SWIFTUI_SWIFT_COUNT=11", source)
         self.assertIn("@UIApplicationDelegateAdaptor", probe)
         self.assertIn("WindowGroup", probe)
         self.assertIn("CoreLifecycleApplication.main", probe)
@@ -1687,9 +1757,18 @@ class ShellContractTests(unittest.TestCase):
             self.assertIn(token, source)
         self.assertNotIn("EXPECTED_UIKIT_COMMIT=83fbcbe", source)
 
-    def test_preview_plugin_is_never_packaged_or_target_linked(self) -> None:
+    def test_preview_executable_stays_external_while_library_is_packaged(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
+        probe = (HERE / "SwiftUICompilerPluginsProbe.swift").read_text(
+            encoding="utf-8"
+        )
         self.assertIn("'${PREVIEW_PLUGIN}#OpenUIKitPreviewMacros'", source)
+        self.assertIn("libOpenUIKitPreviewMacros.so", source)
+        self.assertIn("libOpenSwiftUIMacros.so", source)
+        self.assertIn("SwiftUICompilerPluginsProbe.swift", source)
+        self.assertIn("SWIFTUI_COMPILER_PLUGINS_OK", source)
+        self.assertIn("@Entry var portableCompilerPluginProbe", probe)
+        self.assertEqual(probe.count("#Preview"), 2)
         self.assertIn("probe_dts_count", source)
         self.assertIn("UIKIT_UNDEFINED_FLAGS=(-undefined dynamic_lookup)", source)
         self.assertNotIn("LINK_ARGUMENTS+=(objects/developertoolsupport.o)", source)
