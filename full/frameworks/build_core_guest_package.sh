@@ -2135,6 +2135,12 @@ network_string_processing_undefineds=$(llvm-nm-18 -u -j "$WORK/network.o" \
     || die "Network has $network_string_processing_undefineds direct StringProcessing undefineds, expected 0"
 
 echo '== final Foundation/UIKit notification identity proof'
+echo '== Foundation-only notification selective-reexport proof'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -swift-version 6 -warnings-as-errors \
+    -module-name FoundationNotificationPublicImportProbe -emit-module \
+    -emit-module-path "$WORK/FoundationNotificationPublicImportProbe.swiftmodule" \
+    "$W/full/foundation/notification_foundation_extension_probe.swift"
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${PREVIEW_FLAGS[@]}" -module-name CorePackageNotificationIdentityProbe \
     -typecheck \
