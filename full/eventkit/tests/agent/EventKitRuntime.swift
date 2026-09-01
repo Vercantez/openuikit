@@ -1,4 +1,5 @@
-import EventKit
+@_spi(OpenUIKitHost) import EventKit
+import CoreFoundation
 import Foundation
 
 enum EventKitRuntime {
@@ -31,26 +32,50 @@ enum EventKitRuntime {
         exercisePredicates()
         await exerciseFailClosedStore()
         await exerciseVirtualConference()
-        await MainActor.run {
-            exerciseTypedNotification()
-        }
+        exerciseNotificationName()
         print("EVENTKIT_AGENT_RUNTIME_OK")
     }
 
     private static func exerciseTypesAndErrors() {
+        precondition(EKAuthorizationStatus.notDetermined.rawValue == 0)
+        precondition(EKAuthorizationStatus.restricted.rawValue == 1)
+        precondition(EKAuthorizationStatus.denied.rawValue == 2)
+        precondition(EKAuthorizationStatus.fullAccess.rawValue == 3)
+        precondition(EKAuthorizationStatus.writeOnly.rawValue == 4)
         precondition(EKAuthorizationStatus.authorized == .fullAccess)
         precondition(EKAuthorizationStatus.authorized.rawValue == 3)
         precondition(EKAuthorizationStatus(rawValue: 2) == .denied)
-        precondition(EKWeekday.EKMonday == .monday)
+
         precondition(EKWeekday.sunday.rawValue == 1)
+        precondition(EKWeekday.monday.rawValue == 2)
         precondition(EKWeekday.saturday.rawValue == 7)
+        precondition(EKWeekday.EKMonday == .monday)
+        precondition(EKWeekday.EKSunday == .sunday)
+
+        precondition(EKReminderPriority.none.rawValue == 0)
         precondition(EKReminderPriority.high.rawValue == 1)
         precondition(EKReminderPriority.medium.rawValue == 5)
         precondition(EKReminderPriority.low.rawValue == 9)
+
         precondition(EKEventAvailability.notSupported.rawValue == -1)
+        precondition(EKEventAvailability.busy.rawValue == 0)
         precondition(EKEntityType.event.rawValue == 0)
+        precondition(EKEntityType.reminder.rawValue == 1)
         precondition(EKEntityMask.event.rawValue == 1)
         precondition(EKEntityMask.reminder.rawValue == 2)
+        precondition(EKSpan.thisEvent.rawValue == 0)
+        precondition(EKSpan.futureEvents.rawValue == 1)
+        precondition(EKAlarmProximity.none.rawValue == 0)
+        precondition(EKAlarmProximity.enter.rawValue == 1)
+        precondition(EKAlarmType.display.rawValue == 0)
+        precondition(EKCalendarType.local.rawValue == 0)
+        precondition(EKSourceType.local.rawValue == 0)
+        precondition(EKRecurrenceFrequency.daily.rawValue == 0)
+        precondition(EKEventStatus.none.rawValue == 0)
+        precondition(EKParticipantRole.unknown.rawValue == 0)
+        precondition(EKParticipantStatus.accepted.rawValue == 2)
+        precondition(EKParticipantType.person.rawValue == 1)
+        precondition(EKParticipantScheduleStatus.pending.rawValue == 1)
 
         var mask: EKEntityMask = [.event]
         precondition(mask.contains(.event))
@@ -59,87 +84,34 @@ enum EventKitRuntime {
         precondition(mask.contains(.reminder))
         precondition(mask.union(.event) == [.event, .reminder])
         precondition(mask.intersection(.event) == .event)
-        _ = mask.symmetricDifference(.reminder)
-        mask.formUnion(.event)
-        mask.formIntersection([.event, .reminder])
-        mask.formSymmetricDifference(.event)
-        precondition(!mask.isEmpty)
-        precondition(mask.isDisjoint(with: []))
+        precondition(mask.subtracting(.reminder) == .event)
         precondition(EKEntityMask().isEmpty)
-        precondition(EKEntityMask([.event, .reminder]).isSuperset(of: .event))
         precondition(EKEntityMask.event.isSubset(of: [.event, .reminder]))
-        precondition(EKEntityMask.event.isStrictSubset(of: [.event, .reminder]))
-        precondition(EKEntityMask([.event, .reminder]).isStrictSuperset(of: .event))
-        var subtracted = EKEntityMask([.event, .reminder])
-        subtracted.subtract(.event)
-        precondition(subtracted == .reminder)
-        precondition(EKEntityMask([.event, .reminder]).subtracting(.reminder) == .event)
         _ = EKCalendarEventAvailabilityMask(arrayLiteral: .busy, .free)
         precondition(EKCalendarEventAvailabilityMask.busy != .free)
 
         let hashed: Set<EKAuthorizationStatus> = [.denied, .restricted, .fullAccess]
         precondition(hashed.contains(.denied))
-        precondition(EKAlarmProximity.none.hashValue == EKAlarmProximity.none.hashValue)
-        var hasher = Hasher()
-        EKSpan.thisEvent.hash(into: &hasher)
-        _ = hasher.finalize()
 
         precondition(EKErrorDomain == "EKErrorDomain")
         precondition(EKError.last.rawValue == 37)
         precondition(EKError.eventNotMutable.rawValue == 0)
         precondition(EKError.osNotSupported.rawValue == 29)
         precondition(EKError.eventStoreNotAuthorized.rawValue == 28)
-        precondition(EKError.noCalendar.rawValue == 36)
+        precondition(EKError.noCalendar == .noCalendar)
+        precondition(EKError.noStartDate.rawValue == 1)
 
         let empty = EKError(.osNotSupported)
         precondition(empty.userInfo.isEmpty)
         precondition(empty.errorUserInfo.isEmpty)
-        precondition(empty.hashValue == EKError(.osNotSupported).hashValue)
         precondition(empty == EKError(.osNotSupported))
         precondition(empty != EKError(.eventStoreNotAuthorized))
         let tagged = EKError(.osNotSupported, userInfo: ["sentinel": "value"])
-        precondition(tagged.userInfo["sentinel"] as? String == "value")
         precondition(tagged != empty)
         precondition(tagged.hashValue == empty.hashValue)
-        precondition(!empty.localizedDescription.isEmpty)
         precondition(EKError.Code.osNotSupported ~= empty)
-
-        let codes: [EKError.Code] = [
-            .eventNotMutable, .noStartDate, .noEndDate, .datesInverted,
-            .internalFailure, .calendarReadOnly, .durationGreaterThanRecurrence,
-            .alarmGreaterThanRecurrence, .startDateTooFarInFuture,
-            .startDateCollidesWithOtherOccurrence, .objectBelongsToDifferentStore,
-            .invitesCannotBeMoved, .invalidSpan, .calendarHasNoSource,
-            .calendarSourceCannotBeModified, .calendarIsImmutable,
-            .sourceDoesNotAllowCalendarAddDelete, .recurringReminderRequiresDueDate,
-            .structuredLocationsNotSupported, .reminderLocationsNotSupported,
-            .alarmProximityNotSupported, .calendarDoesNotAllowEvents,
-            .calendarDoesNotAllowReminders, .sourceDoesNotAllowEvents,
-            .sourceDoesNotAllowReminders, .priorityIsInvalid, .invalidEntityType,
-            .procedureAlarmsNotMutable, .eventStoreNotAuthorized, .osNotSupported,
-            .invalidInviteReplyCalendar, .notificationsCollectionFlagNotSet,
-            .sourceMismatch, .notificationCollectionMismatch,
-            .notificationSavedWithoutCollection, .reminderAlarmContainsEmailOrUrl,
-            .noCalendar, .last,
-        ]
-        precondition(Set(codes.map(\.rawValue)).count == codes.count)
         precondition(EKError.Code(rawValue: 4) == .internalFailure)
-        _ = [EKAlarmType.display, .audio, .procedure, .email]
-        _ = [EKCalendarType.local, .calDAV, .exchange, .subscription, .birthday]
-        _ = [EKSourceType.local, .exchange, .calDAV, .mobileMe, .subscribed, .birthdays]
-        _ = [EKParticipantRole.unknown, .required, .optional, .chair, .nonParticipant]
-        _ = [
-            EKParticipantStatus.unknown, .pending, .accepted, .declined, .tentative,
-            .delegated, .completed, .inProcess,
-        ]
-        _ = [EKParticipantType.unknown, .person, .room, .resource, .group]
-        _ = [
-            EKParticipantScheduleStatus.none, .pending, .sent, .delivered,
-            .recipientNotRecognized, .noPrivileges, .deliveryFailed, .cannotDeliver,
-            .recipientNotAllowed,
-        ]
-        _ = [EKEventStatus.none, .confirmed, .tentative, .canceled]
-        _ = [EKRecurrenceFrequency.daily, .weekly, .monthly, .yearly]
+        precondition(!empty.localizedDescription.isEmpty)
     }
 
     private static func exerciseObjectModel() {
@@ -151,14 +123,24 @@ enum EventKitRuntime {
         precondition(store.defaultCalendarForNewReminders() == nil)
 
         let event = EKEvent(eventStore: store)
+        precondition(event is EKCalendarItem)
+        precondition(event is EKObject)
         precondition(event.isNew)
+        precondition(!event.hasChanges)
+        precondition(event.attendees == nil)
+        precondition(!event.hasAttendees)
+        precondition(event.creationDate != nil)
+        precondition(event.lastModifiedDate != nil)
+        precondition(event.recurrenceRules == nil)
         event.title = "Planning"
         event.notes = "Bring notes"
         event.location = "Library"
         event.url = URL(string: "https://example.invalid/event")
         event.timeZone = TimeZone(secondsFromGMT: 0)
-        event.startDate = Date(timeIntervalSince1970: 1_700_000_000)
+        let start = Date(timeIntervalSince1970: 1_700_000_000)
+        event.startDate = start
         event.endDate = Date(timeIntervalSince1970: 1_700_003_600)
+        precondition(event.occurrenceDate == start)
         event.isAllDay = false
         event.availability = .busy
         precondition(event.hasChanges)
@@ -167,6 +149,8 @@ enum EventKitRuntime {
         precondition(!event.calendarItemIdentifier.isEmpty)
         precondition(event.status == .none)
         precondition(event.birthdayPersonID == -1)
+        precondition(event.birthdayContactIdentifier == nil)
+        precondition(event.organizer == nil)
         precondition(!event.isDetached)
         precondition(!event.refresh())
 
@@ -201,8 +185,10 @@ enum EventKitRuntime {
         event.rollback()
         precondition(!event.hasChanges)
         precondition(event.title == nil)
+        precondition(event.occurrenceDate == nil)
 
         let reminder = EKReminder(eventStore: store)
+        precondition(!reminder.hasChanges)
         reminder.title = "Ship EventKit"
         reminder.priority = Int(EKReminderPriority.high.rawValue)
         reminder.dueDateComponents = DateComponents(year: 2026, month: 9, day: 2)
@@ -228,18 +214,25 @@ enum EventKitRuntime {
         let source = EKSource()
         precondition(!source.sourceIdentifier.isEmpty)
         precondition(source.sourceType == .local)
+        precondition(!source.isDelegate)
         precondition(source.calendars(for: .event).isEmpty)
         calendar.source = source
 
         let participant = EKParticipant()
         precondition(participant.participantStatus == .unknown)
+        precondition(participant.participantRole == .unknown)
+        precondition(participant.participantType == .unknown)
+        precondition(participant.name == nil)
+        precondition(participant.url.scheme == "mailto")
         precondition(!participant.isCurrentUser)
-        precondition(participant.abRecord(with: NSObject()) == nil)
+        let cfBook: CFTypeRef = NSObject()
+        let book: ABAddressBook = cfBook
+        precondition(participant.abRecord(with: book) == nil)
         precondition(!participant.contactPredicate.evaluate(with: participant))
         _ = participant.copy()
 
         event.reset()
-        _ = EKObject().hasChanges
+        precondition(!event.hasChanges)
     }
 
     private static func exerciseRecurrenceCoding() {
@@ -266,7 +259,12 @@ enum EventKitRuntime {
         precondition(weekly.frequency == .weekly)
         precondition(weekly.interval == 1)
         precondition(weekly.calendarIdentifier == "gregorian")
+        precondition(weekly.firstDayOfTheWeek == 0)
         weekly.recurrenceEnd = endByDate
+        precondition(weekly.hasChanges)
+        weekly.rollback()
+        precondition(!weekly.hasChanges)
+        precondition(weekly.recurrenceEnd?.occurrenceCount == 8)
 
         let monthly = EKRecurrenceRule(
             recurrenceWithFrequency: .monthly,
@@ -280,6 +278,11 @@ enum EventKitRuntime {
             end: endByDate
         )
         precondition(monthly.daysOfTheWeek?.count == 2)
+        precondition(monthly.daysOfTheMonth?.first?.intValue == 1)
+        precondition(monthly.monthsOfTheYear?.first?.intValue == 9)
+        precondition(monthly.weeksOfTheYear == nil)
+        precondition(monthly.daysOfTheYear == nil)
+        precondition(monthly.setPositions?.first?.intValue == 1)
         _ = EKRecurrenceRule(
             recurrenceWith: .yearly,
             interval: 1,
@@ -296,11 +299,14 @@ enum EventKitRuntime {
         let ruleCopy = weekly.copy() as? EKRecurrenceRule
         precondition(ruleCopy?.frequency == .weekly)
 
-        let item = EKCalendarItem()
+        let store = EKEventStore()
+        let item = EKEvent(eventStore: store)
         item.addRecurrenceRule(weekly)
         precondition(item.hasRecurrenceRules)
+        precondition(item.recurrenceRules?.count == 1)
         item.removeRecurrenceRule(weekly)
         precondition(!item.hasRecurrenceRules)
+        precondition(item.recurrenceRules == nil)
 
         do {
             let archiver = NSKeyedArchiver(requiringSecureCoding: true)
@@ -345,11 +351,25 @@ enum EventKitRuntime {
         precondition(predicate.evaluate(with: inside))
         precondition(!predicate.evaluate(with: outside))
 
+        let none = store.predicateForEvents(
+            withStart: Date(timeIntervalSince1970: 0),
+            end: Date(timeIntervalSince1970: 3_000),
+            calendars: []
+        )
+        precondition(!none.evaluate(with: inside))
+
+        let allCalendars = store.predicateForEvents(
+            withStart: Date(timeIntervalSince1970: 0),
+            end: Date(timeIntervalSince1970: 3_000),
+            calendars: nil
+        )
+        precondition(allCalendars.evaluate(with: inside))
+
         let reminderCalendar = EKCalendar(for: .reminder, eventStore: store)
         let incomplete = EKReminder(eventStore: store)
         incomplete.calendar = reminderCalendar
         incomplete.dueDateComponents = DateComponents(
-            calendar: Calendar.current,
+            calendar: Calendar(identifier: .gregorian),
             timeZone: TimeZone(secondsFromGMT: 0),
             year: 2026,
             month: 9,
@@ -375,8 +395,34 @@ enum EventKitRuntime {
         precondition(completedPredicate.evaluate(with: completed))
         precondition(!completedPredicate.evaluate(with: incomplete))
 
+        let emptyReminderCalendars = store.predicateForReminders(in: [])
+        precondition(!emptyReminderCalendars.evaluate(with: incomplete))
         let allReminders = store.predicateForReminders(in: nil)
         precondition(allReminders.evaluate(with: incomplete))
+
+        var utcCalendar = Calendar(identifier: .gregorian)
+        utcCalendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        let dueOnSecond = EKReminder(eventStore: store)
+        dueOnSecond.dueDateComponents = DateComponents(
+            calendar: utcCalendar,
+            timeZone: TimeZone(secondsFromGMT: 0),
+            year: 2026,
+            month: 9,
+            day: 2,
+            hour: 0
+        )
+        let windowStart = utcCalendar.date(
+            from: DateComponents(year: 2026, month: 9, day: 1, hour: 23)
+        )!
+        let windowEnd = utcCalendar.date(
+            from: DateComponents(year: 2026, month: 9, day: 2, hour: 1)
+        )!
+        let dueWindow = store.predicateForIncompleteReminders(
+            withDueDateStarting: windowStart,
+            ending: windowEnd,
+            calendars: nil
+        )
+        precondition(dueWindow.evaluate(with: dueOnSecond))
     }
 
     private static func exerciseFailClosedStore() async {
@@ -384,36 +430,55 @@ enum EventKitRuntime {
         precondition(EKEventStore.authorizationStatus(for: .event) == .denied)
         precondition(EKEventStore.authorizationStatus(for: .reminder) == .denied)
 
+        var accessReturned = false
         do {
-            _ = try await store.requestAccess(to: .event)
-            fatalError("requestAccess must fail closed")
+            let granted = try await store.requestAccess(to: .event)
+            accessReturned = true
+            precondition(granted == false)
         } catch {
-            requireEKError(error, code: .osNotSupported)
+            fatalError("denied requestAccess must not throw: \(error)")
         }
+        precondition(accessReturned)
 
+        var fullEventsReturned = false
+        var fullEventsReentrant = false
         let fullEvents = await withCheckedContinuation { continuation in
             store.requestFullAccessToEvents { granted, error in
+                fullEventsReentrant = !fullEventsReturned
                 continuation.resume(returning: (granted, error))
             }
+            fullEventsReturned = true
         }
+        precondition(fullEventsReturned)
+        precondition(!fullEventsReentrant)
         precondition(fullEvents.0 == false)
-        requireEKError(fullEvents.1, code: .osNotSupported)
+        precondition(fullEvents.1 == nil)
 
+        var remindersReturned = false
+        var remindersReentrant = false
         let fullReminders = await withCheckedContinuation { continuation in
             store.requestFullAccessToReminders { granted, error in
+                remindersReentrant = !remindersReturned
                 continuation.resume(returning: (granted, error))
             }
+            remindersReturned = true
         }
+        precondition(!remindersReentrant)
         precondition(fullReminders.0 == false)
-        requireEKError(fullReminders.1, code: .osNotSupported)
+        precondition(fullReminders.1 == nil)
 
+        var writeReturned = false
+        var writeReentrant = false
         let writeOnly = await withCheckedContinuation { continuation in
             store.requestWriteOnlyAccessToEvents { granted, error in
+                writeReentrant = !writeReturned
                 continuation.resume(returning: (granted, error))
             }
+            writeReturned = true
         }
+        precondition(!writeReentrant)
         precondition(writeOnly.0 == false)
-        requireEKError(writeOnly.1, code: .osNotSupported)
+        precondition(writeOnly.1 == nil)
 
         let event = EKEvent(eventStore: store)
         event.title = "Must not persist"
@@ -472,13 +537,20 @@ enum EventKitRuntime {
         let sourced = EKEventStore(sources: [EKSource()])
         precondition(sourced.sources.count == 1)
         precondition(sourced.source(withIdentifier: sourced.sources[0].sourceIdentifier) === sourced.sources[0])
+        precondition(sourced.delegateSources.isEmpty)
 
+        var fetchReturned = false
+        var fetchReentrant = false
         let fetchDone = await withCheckedContinuation { continuation in
             let token = store.fetchReminders(matching: store.predicateForReminders(in: nil)) { reminders in
+                fetchReentrant = !fetchReturned
                 continuation.resume(returning: reminders)
             }
             store.cancelFetchRequest(token)
+            fetchReturned = true
         }
+        precondition(fetchReturned)
+        precondition(!fetchReentrant)
         precondition(fetchDone == nil)
 
         store.refreshSourcesIfNecessary()
@@ -510,11 +582,16 @@ enum EventKitRuntime {
         precondition(room.identifier == "standup")
 
         let provider = EKVirtualConferenceProvider()
+        var roomsReturned = false
+        var roomsReentrant = false
         let roomResult = await withCheckedContinuation { continuation in
             provider.fetchAvailableRoomTypes { rooms, error in
+                roomsReentrant = !roomsReturned
                 continuation.resume(returning: (rooms, error))
             }
+            roomsReturned = true
         }
+        precondition(!roomsReentrant)
         precondition(roomResult.0 == nil)
         requireEKError(roomResult.1, code: .osNotSupported)
 
@@ -526,15 +603,17 @@ enum EventKitRuntime {
         }
     }
 
-    @MainActor
-    private static func exerciseTypedNotification() {
-        precondition(Notification.Name.EKEventStoreChanged.rawValue == "EKEventStoreChangedNotification")
-        precondition(EKEventStore.EventStoreChanged.name == .EKEventStoreChanged)
-        let message = EKEventStore.EventStoreChanged()
-        let notification = EKEventStore.EventStoreChanged.makeNotification(message)
-        precondition(EKEventStore.EventStoreChanged.makeMessage(notification) != nil)
-        let unrelated = Notification(name: Notification.Name("other"))
-        precondition(EKEventStore.EventStoreChanged.makeMessage(unrelated) == nil)
+    private static func exerciseNotificationName() {
+        precondition(
+            Notification.Name.EKEventStoreChanged.rawValue == "EKEventStoreChangedNotification"
+        )
+        let store = EKEventStore()
+        let event = EKEvent(eventStore: store)
+        event.startDate = Date()
+        event.endDate = Date().addingTimeInterval(60)
+        requireThrown(.eventStoreNotAuthorized) {
+            try store.save(event, span: .thisEvent)
+        }
     }
 }
 

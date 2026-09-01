@@ -1,53 +1,58 @@
 # EventKit (Linux starting point)
 
-This directory is a Foundation-only Linux port of Apple's public `EventKit`
-surface from the Xcode 26.1 iPhoneOS SDK seed. It is not wired into a shared
-guest package; that integration is a separate review step.
+Foundation + CoreFoundation Linux port of Apple's public `EventKit` overlay
+from the Xcode 26.1 iPhoneOS seed. Isolated `tests/acceptance/test_host.sh`
+does **not** prove integrated guest-Foundation success. A future EC2 run
+must build guest Foundation and CoreFoundation first; see
+`tests/agent/EventKitDependencyIdentity.swift`.
 
-## What is real
+## What is real (Swift source overlay)
 
-- Enumerations, option sets, and `EKError`/`EKErrorDomain` match the public
-  overlay names and documented raw values (`EKError.eventNotMutable = 0`
-  through `EKError.last = 37`, `EKAuthorizationStatus.authorized` as an alias
-  of `fullAccess`, ICS weekday numbering, reminder priority bands).
-- In-memory model objects compile and behave locally: `EKEvent`, `EKReminder`,
-  `EKCalendar`, `EKSource`, `EKAlarm`, `EKCalendarItem`, `EKObject` dirty
-  state, recurrence (`EKRecurrenceRule` / `EKRecurrenceDayOfWeek` /
-  `EKRecurrenceEnd`, including `NSSecureCoding` round-trip), structured
-  location title/radius, and virtual-conference *descriptors*.
-- Predicate builders return `NSPredicate` blocks that can be evaluated against
-  constructed events and reminders (date range, calendar membership,
-  completed vs incomplete).
-- `EKAlarm` absolute dates and relative offsets clear each other, matching the
-  public header contract. Completing a reminder stamps `completionDate`;
-  clearing completion clears the date.
+- Enumerations, option sets, and `EKError` / `EKErrorDomain` with documented
+  raw values (`eventNotMutable = 0` … `last = 37`; `authorized` aliases
+  `fullAccess`).
+- In-memory `EKEvent`, `EKReminder`, `EKCalendar`, `EKAlarm`, recurrence
+  (including `NSSecureCoding`), structured-location title/radius, and
+  virtual-conference *descriptors*.
+- Predicate builders: `calendars == nil` means every calendar; `calendars == []`
+  matches nothing. Reminder due-date windows use the components' calendar and
+  time zone.
+- `EKAlarm` absolute/relative fields clear each other. Completing a reminder
+  stamps `completionDate`.
+- `ABAddressBook` / `ABRecord` are `CoreFoundation.CFTypeRef`, not EventKit-local
+  stand-in types.
 
-## Fail-closed boundaries
+`EKSource`, `EKParticipant`, `EKObject`, and `EKCalendarItem` have no public
+constructors in the canonical graph. Host fixtures use
+`@_spi(OpenUIKitHost)`.
 
-Linux has no TCC Calendar/Reminders prompt and no Apple Calendar database.
+## Fail-closed (headers)
 
-- `EKEventStore.authorizationStatus(for:)` is always `.denied`.
-- `requestAccess(to:)`, `requestFullAccessToEvents`,
-  `requestFullAccessToReminders`, and `requestWriteOnlyAccessToEvents` fail
-  with `EKError.osNotSupported` (async throws or `(false, error)`).
-- `save` / `remove` / `commit` throw `EKError.eventStoreNotAuthorized`.
-- Store queries return empty collections. `fetchReminders` completes with
-  `nil`. `EKEventStoreChanged` is never posted.
-- `EKVirtualConferenceProvider` fetch APIs fail with `osNotSupported`.
-- `EKParticipant.abRecord(with:)` returns `nil`; `contactPredicate` matches
-  nothing.
+Linux has no TCC prompt and no Calendar database.
 
-This module does not invent a granted privacy state, iCloud/CalDAV sync, or a
-host calendar write.
+- `authorizationStatus(for:)` is `.denied`.
+- `requestAccess(to:)` returns `false` without throwing (denied: granted NO,
+  error nil). Full/write-only request completions deliver `(false, nil)` on a
+  global Dispatch queue, not the caller stack.
+- `save` / `remove` / `commit` throw `eventStoreNotAuthorized`.
+- Queries return empty. `fetchReminders` returns a token immediately and
+  completes asynchronously with `nil` (unauthorized or cancelled).
+- `delegateSources` is empty (no host accounts).
+- `EKEventStoreChanged` is never posted.
+- Virtual-conference *provider* fetches fail with `osNotSupported`, also
+  asynchronously (no NSExtension host).
+- `EKParticipant.abRecord(with:)` returns `nil`.
 
-## Deferred / unavailable
+## Deferred
 
-- `EKCalendar.cgColor` needs CoreGraphics, which is not a declared dependency.
-- `EKStructuredLocation.geoLocation` and `init(mapItem:)` need Core Location
-  and MapKit.
-- `NotificationCenter.MessageIdentifier.changed` needs
-  `NotificationCenter.BaseMessageIdentifier` / `MainActorMessage`, which this
-  Linux Foundation overlay does not provide. `EKEventStore.EventStoreChanged`
-  still exists as a standalone typed payload.
+- `EKCalendar.cgColor` (CoreGraphics)
+- `EKStructuredLocation.geoLocation` / `init(mapItem:)` (Core Location / MapKit)
+- `EKEventStore.EventStoreChanged` as `NotificationCenter.MainActorMessage`
+  and `NotificationCenter.MessageIdentifier.changed` — compiled only when
+  Foundation provides that contract (Darwin). Linux does not ship a lookalike.
 
-See `oracle-questions.tsv` for Apple-oracle probes.
+Objective-C/binary TBD coverage is accounted separately in
+`tests/agent/EventKitTBDAccounting.swift`. SPI TBD classes are not part of the
+511-identifier public overlay.
+
+See `oracle-questions.tsv`.
