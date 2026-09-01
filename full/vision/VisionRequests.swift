@@ -230,9 +230,9 @@ open class VNCalculateImageAestheticsScoresRequest: VNImageBasedRequest, @unchec
 
 open class VNGeneratePersonSegmentationRequest: VNStatefulRequest, @unchecked Sendable {
     public enum QualityLevel: UInt, Sendable, Hashable {
-        case accurate = 0
-        case balanced = 1
-        case fast = 2
+        case accurate
+        case balanced
+        case fast
     }
 
     public var qualityLevel: QualityLevel = .balanced
@@ -303,10 +303,10 @@ open class VNTranslationalImageRegistrationRequest: VNImageRegistrationRequest, 
 
 open class VNGenerateOpticalFlowRequest: VNTargetedImageRequest, @unchecked Sendable {
     public enum ComputationAccuracy: UInt, Sendable, Hashable {
-        case low = 0
-        case medium = 1
-        case high = 2
-        case veryHigh = 3
+        case low
+        case medium
+        case high
+        case veryHigh
     }
 
     public var computationAccuracy: ComputationAccuracy = .medium

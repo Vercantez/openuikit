@@ -116,7 +116,9 @@ open class VNTrackingRequest: VNImageBasedRequest, @unchecked Sendable {
         super.init(completionHandler: completionHandler)
     }
 
-    public func supportedNumber(ofTrackersAndReturnError error: NSErrorPointer) -> Int {
+    public func supportedNumber(
+        ofTrackersAndReturnError error: UnsafeMutablePointer<NSError?>?
+    ) -> Int {
         if let error {
             error.pointee = visionError(
                 .notImplemented,

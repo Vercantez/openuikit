@@ -3,53 +3,53 @@
 //===----------------------------------------------------------------------===//
 
 @frozen public enum VNBarcodeCompositeType: Int, Sendable, Hashable {
-    case none = 0
-    case linked = 1
-    case gs1TypeA = 2
-    case gs1TypeB = 3
-    case gs1TypeC = 4
+    case none
+    case linked
+    case gs1TypeA
+    case gs1TypeB
+    case gs1TypeC
 }
 
 @frozen public enum VNChirality: Int, Sendable, Hashable {
-    case unknown = 0
-    case left = 1
-    case right = 2
+    case unknown
+    case left
+    case right
 }
 
 public enum VNElementType: UInt, Sendable, Hashable {
-    case unknown = 0
-    case float = 1
-    case double = 2
+    case unknown
+    case float
+    case double
 }
 
 public enum VNImageCropAndScaleOption: UInt, Sendable, Hashable {
-    case centerCrop = 0
-    case scaleFit = 1
-    case scaleFill = 2
-    case scaleFitRotate90CCW = 3
-    case scaleFillRotate90CCW = 4
+    case centerCrop
+    case scaleFit
+    case scaleFill
+    case scaleFitRotate90CCW
+    case scaleFillRotate90CCW
 }
 
 @frozen public enum VNPointsClassification: Int, Sendable, Hashable {
-    case disconnected = 0
-    case openPath = 1
-    case closedPath = 2
+    case disconnected
+    case openPath
+    case closedPath
 }
 
 public enum VNRequestFaceLandmarksConstellation: UInt, Sendable, Hashable {
-    case constellationNotDefined = 0
-    case constellation65Points = 1
-    case constellation76Points = 2
+    case constellationNotDefined
+    case constellation65Points
+    case constellation76Points
 }
 
 public enum VNRequestTextRecognitionLevel: Int, Sendable, Hashable {
-    case accurate = 0
-    case fast = 1
+    case accurate
+    case fast
 }
 
 public enum VNRequestTrackingLevel: UInt, Sendable, Hashable {
-    case accurate = 0
-    case fast = 1
+    case accurate
+    case fast
 }
 
 public struct VNBarcodeSymbology: RawRepresentable, Hashable, Sendable, Equatable {

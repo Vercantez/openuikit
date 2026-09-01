@@ -6,7 +6,8 @@
 // and hardware pose paths fail closed: they never invent Apple model output.
 // Isolated host compilation has Foundation only; CGImage / CIImage /
 // CVPixelBuffer / CMSampleBuffer entry points are omitted until those
-// modules are linked by central review.
+// modules are linked by central review. Do not introduce module-local
+// types named CGImage, CIImage, CGPoint, or CGRect.
 //===----------------------------------------------------------------------===//
 
 @_exported import Foundation
@@ -14,14 +15,12 @@
 public typealias VNAspectRatio = Float
 public typealias VNConfidence = Float
 public typealias VNDegrees = Float
-public typealias vector_float2 = SIMD2<Float>
 
 public typealias VNRequestCompletionHandler = (VNRequest, (any Error)?) -> Void
 public typealias VNRequestProgressHandler = (VNRequest, Double, (any Error)?) -> Void
-public typealias NSErrorPointer = UnsafeMutablePointer<NSError?>?
 
-/// NSError domain for Vision failures. Exact Apple string is still an oracle
-/// question; this token matches the public constant name until probed.
+/// Linux-only NSError domain fallback. The Apple VNErrorDomain string is not
+/// in the pinned graph and is not claimed here.
 public let VNErrorDomain = "VNErrorDomain"
 
 public let VNRequestRevisionUnspecified: Int = 0
@@ -81,34 +80,32 @@ public let VNTrackRectangleRequestRevision1: Int = 1
 public let VNTrackTranslationalImageRegistrationRequestRevision1: Int = 1
 public let VNTranslationalImageRegistrationRequestRevision1: Int = 1
 
-/// Bridged `NS_ERROR_ENUM` overlay. Numeric codes follow the public
-/// `VNErrorCode` case order in the pinned graph (`OK` = 0, then sequential).
-/// `turiCoreErrorCode` is isolated at 10_000 pending an Apple-oracle probe.
+/// Fail-closed Linux cases. Integer payloads are Swift's implicit `Int`
+/// assignment and are **not** Apple `VNError.h` ABI.
 public enum VNErrorCode: Int, Sendable, Hashable {
-    case OK = 0
-    case requestCancelled = 1
-    case invalidFormat = 2
-    case operationFailed = 3
-    case outOfBoundsError = 4
-    case invalidOption = 5
-    case ioError = 6
-    case missingOption = 7
-    case notImplemented = 8
-    case internalError = 9
-    case outOfMemory = 10
-    case unknownError = 11
-    case invalidOperation = 12
-    case invalidImage = 13
-    case invalidArgument = 14
-    case invalidModel = 15
-    case unsupportedRevision = 16
-    case dataUnavailable = 17
-    case timeStampNotFound = 18
-    case unsupportedRequest = 19
-    case timeout = 20
-    case unsupportedComputeStage = 21
-    case unsupportedComputeDevice = 22
-    case turiCoreErrorCode = 10_000
+    case OK
+    case requestCancelled
+    case invalidFormat
+    case operationFailed
+    case outOfBoundsError
+    case invalidOption
+    case ioError
+    case missingOption
+    case notImplemented
+    case internalError
+    case outOfMemory
+    case unknownError
+    case invalidOperation
+    case invalidImage
+    case invalidArgument
+    case invalidModel
+    case unsupportedRevision
+    case dataUnavailable
+    case timeStampNotFound
+    case unsupportedRequest
+    case timeout
+    case unsupportedComputeStage
+    case unsupportedComputeDevice
 }
 
 public struct VNError: Error, CustomNSError, Hashable, @unchecked Sendable {
@@ -268,7 +265,7 @@ public func VNNormalizedRectForImageRectUsingRegionOfInterest(
 }
 
 public func VNImagePointForFaceLandmarkPoint(
-    _ faceLandmarkPoint: vector_float2,
+    _ faceLandmarkPoint: SIMD2<Float>,
     _ faceBoundingBox: CGRect,
     _ imageWidth: Int,
     _ imageHeight: Int
@@ -283,7 +280,7 @@ public func VNImagePointForFaceLandmarkPoint(
 }
 
 public func VNNormalizedFaceBoundingBoxPointForLandmarkPoint(
-    _ faceLandmarkPoint: vector_float2,
+    _ faceLandmarkPoint: SIMD2<Float>,
     _ faceBoundingBox: CGRect,
     _ imageWidth: Int,
     _ imageHeight: Int

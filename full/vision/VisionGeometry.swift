@@ -200,27 +200,107 @@ open class VNRecognizedPoint: VNDetectedPoint, @unchecked Sendable {
 
 open class VNGeometryUtils: NSObject, @unchecked Sendable {
     public class func boundingCircle(for points: [VNPoint]) throws -> VNCircle {
-        guard !points.isEmpty else {
-            throw visionError(.invalidArgument, "boundingCircle requires at least one point")
-        }
-        if points.count == 1 {
-            return VNCircle(center: points[0], radius: 0)
-        }
-        var minX = points[0].x
-        var maxX = points[0].x
-        var minY = points[0].y
-        var maxY = points[0].y
-        for point in points {
-            minX = min(minX, point.x)
-            maxX = max(maxX, point.x)
-            minY = min(minY, point.y)
-            maxY = max(maxY, point.y)
-        }
-        let center = VNPoint(x: (minX + maxX) / 2, y: (minY + maxY) / 2)
-        var radius: Double = 0
-        for point in points {
-            radius = max(radius, VNPoint.distance(center, point))
-        }
-        return VNCircle(center: center, radius: radius)
+        try minimumEnclosingCircle(points)
     }
+}
+
+private struct _EnclosingCircle {
+    var x: Double
+    var y: Double
+    var radius: Double
+
+    func contains(_ point: VNPoint, epsilon: Double) -> Bool {
+        let dx = point.x - x
+        let dy = point.y - y
+        let limit = radius + epsilon
+        return dx * dx + dy * dy <= limit * limit
+    }
+}
+
+private func minimumEnclosingCircle(_ points: [VNPoint]) throws -> VNCircle {
+    guard !points.isEmpty else {
+        throw visionError(.invalidArgument, "boundingCircle requires at least one point")
+    }
+    var unique: [VNPoint] = []
+    for point in points {
+        if !unique.contains(where: { abs($0.x - point.x) < 1e-12 && abs($0.y - point.y) < 1e-12 }) {
+            unique.append(point)
+        }
+    }
+    if unique.count == 1 {
+        return VNCircle(center: unique[0], radius: 0)
+    }
+
+    var best: _EnclosingCircle?
+    let count = unique.count
+    for i in 0..<count {
+        for j in (i + 1)..<count {
+            let candidate = circleWithDiameter(unique[i], unique[j])
+            if covers(candidate, unique), better(candidate, than: best) {
+                best = candidate
+            }
+        }
+    }
+    for i in 0..<count {
+        for j in (i + 1)..<count {
+            for k in (j + 1)..<count {
+                guard let candidate = circleFromTriangle(unique[i], unique[j], unique[k]) else {
+                    continue
+                }
+                if covers(candidate, unique), better(candidate, than: best) {
+                    best = candidate
+                }
+            }
+        }
+    }
+    guard let best else {
+        throw visionError(.internalError, "boundingCircle failed to construct a covering circle")
+    }
+    return VNCircle(center: VNPoint(x: best.x, y: best.y), radius: best.radius)
+}
+
+private func circleWithDiameter(_ a: VNPoint, _ b: VNPoint) -> _EnclosingCircle {
+    _EnclosingCircle(
+        x: (a.x + b.x) / 2,
+        y: (a.y + b.y) / 2,
+        radius: VNPoint.distance(a, b) / 2
+    )
+}
+
+private func circleFromTriangle(_ a: VNPoint, _ b: VNPoint, _ c: VNPoint) -> _EnclosingCircle? {
+    func dist2(_ p: VNPoint, _ q: VNPoint) -> Double {
+        let dx = p.x - q.x
+        let dy = p.y - q.y
+        return dx * dx + dy * dy
+    }
+    let ab2 = dist2(a, b)
+    let bc2 = dist2(b, c)
+    let ca2 = dist2(c, a)
+    if ab2 == 0 || bc2 == 0 || ca2 == 0 {
+        return nil
+    }
+    // Obtuse or right: MEC is the diameter of the longest side.
+    if ab2 + ca2 <= bc2 { return circleWithDiameter(b, c) }
+    if ab2 + bc2 <= ca2 { return circleWithDiameter(a, c) }
+    if bc2 + ca2 <= ab2 { return circleWithDiameter(a, b) }
+
+    let det = 2 * (a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y))
+    if abs(det) < 1e-18 {
+        return nil
+    }
+    let a2 = a.x * a.x + a.y * a.y
+    let b2 = b.x * b.x + b.y * b.y
+    let c2 = c.x * c.x + c.y * c.y
+    let ux = (a2 * (b.y - c.y) + b2 * (c.y - a.y) + c2 * (a.y - b.y)) / det
+    let uy = (a2 * (c.x - b.x) + b2 * (a.x - c.x) + c2 * (b.x - a.x)) / det
+    return _EnclosingCircle(x: ux, y: uy, radius: hypot(a.x - ux, a.y - uy))
+}
+
+private func covers(_ circle: _EnclosingCircle, _ points: [VNPoint]) -> Bool {
+    points.allSatisfy { circle.contains($0, epsilon: 1e-9) }
+}
+
+private func better(_ candidate: _EnclosingCircle, than best: _EnclosingCircle?) -> Bool {
+    guard let best else { return true }
+    return candidate.radius < best.radius - 1e-12
 }
