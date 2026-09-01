@@ -42,6 +42,7 @@ FOUNDATION_MODELS_GOLDEN=$W/full/foundationmodels/tests/foundationmodels-apple-2
 NATURAL_LANGUAGE_GENERALIZATION=$W/full/naturallanguage/tests/NaturalLanguageGeneralizationOracle.swift
 NATURAL_LANGUAGE_GENERALIZATION_GOLDEN=$W/full/naturallanguage/tests/naturallanguage-generalization-apple-26.1.txt
 MACHO_DEPENDENCY_REWRITER=$W/full/xcodeplan/rewrite_macho_dependency.py
+FE_OBJECT_PROVENANCE_TOOL=$W/full/foundation/fe_object_provenance.py
 OUTPUT_ROOT=${OUTPUT_ROOT:-$W/build/true-ios-platform}
 SYSTEM_FONT=${SYSTEM_FONT:-/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf}
 BOLD_FONT=${BOLD_FONT:-/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf}
@@ -190,6 +191,12 @@ done
 git -C "$W" ls-files --error-unmatch \
     "${MACHO_DEPENDENCY_REWRITER#"$W/"}" >/dev/null \
     || die 'Mach-O dependency rewriter is not tracked'
+[ -f "$FE_OBJECT_PROVENANCE_TOOL" ] \
+    && [ ! -L "$FE_OBJECT_PROVENANCE_TOOL" ] \
+    || die 'FE object provenance tool is missing'
+git -C "$W" ls-files --error-unmatch \
+    "${FE_OBJECT_PROVENANCE_TOOL#"$W/"}" >/dev/null \
+    || die 'FE object provenance tool is not tracked'
 [ "$(sha "$SYSTEM_FONT")" = ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280 ] \
     || die 'system font input hash drifted'
 [ "$(sha "$BOLD_FONT")" = 5c1247acef7f2b8522a31742c76d6adcb5569bacc0be7ceaa4dc39dd252ce895 ] \
@@ -199,6 +206,7 @@ git -C "$W" ls-files --error-unmatch \
 
 for required in \
     "$FULL/uihelpers-subject.sha256" \
+    "$FULL/foundation-fe-object-provenance.tsv" \
     "$FULL/openuikit.o" "$FULL/opencoregraphics.o" \
     "$FULL/uikitshim.o" "$FULL/swiftcorepatch.o" \
     "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib" \
@@ -214,9 +222,17 @@ done
 # into a newer integration checkout without mutating either one.
 expected_full_subject=$(bash "$FULL_BUILD_PROJECT/full/scripts/uihelpers_subject.sh" \
     "$FULL_BUILD_PROJECT" "$UIKIT" "$SWIFT_FOUNDATION" "$SWIFT_COLLECTIONS")
+current_full_subject=$(bash "$W/full/scripts/uihelpers_subject.sh" \
+    "$W" "$UIKIT" "$SWIFT_FOUNDATION" "$SWIFT_COLLECTIONS")
 actual_full_subject=$(tr -d '[:space:]' < "$FULL/uihelpers-subject.sha256")
 [ "$actual_full_subject" = "$expected_full_subject" ] \
     || die "full build subject is stale: expected $expected_full_subject, got $actual_full_subject"
+[ "$actual_full_subject" = "$current_full_subject" ] \
+    || die "full build is incompatible with active project sources: expected $current_full_subject, got $actual_full_subject"
+python3 "$FE_OBJECT_PROVENANCE_TOOL" verify \
+    --project "$W" --full "$FULL" --subject "$actual_full_subject" \
+    --attestation "$FULL/foundation-fe-object-provenance.tsv" \
+    || die 'project-owned FE source/object provenance is stale'
 
 uikit_status=$(git -C "$UIKIT" status --porcelain=v1 --untracked-files=all -- \
     Sources/SwiftUI Sources/Combine Sources/UIKitShim \

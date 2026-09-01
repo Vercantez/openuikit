@@ -150,6 +150,17 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn('artifacts=$artifact_ledger_sha symlinks=$symlink_ledger_sha', self.builder)
         self.assertIn('true_ios_platform_package.py', self.builder)
         self.assertIn('"$stage" --emit-summary', self.builder)
+        self.assertIn(
+            'current_full_subject=$(bash "$W/full/scripts/uihelpers_subject.sh"',
+            self.builder,
+        )
+        self.assertIn(
+            '"$FULL/foundation-fe-object-provenance.tsv"', self.builder
+        )
+        self.assertIn('python3 "$FE_OBJECT_PROVENANCE_TOOL" verify', self.builder)
+        self.assertIn(
+            "full build is incompatible with active project sources", self.builder
+        )
 
     def test_probe_exercises_swiftui_through_uikit_at_runtime(self) -> None:
         self.assertIn('import SwiftUI', self.probe)

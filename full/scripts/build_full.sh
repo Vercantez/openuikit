@@ -46,6 +46,7 @@ FE_COLLECTIONS=$FE_BUILD/collections
 FE_OS=$FE_BUILD/os
 FE_CSHIMS=$FE_BUILD/cshims
 PINNED_INPUTS_TOOL=$W/full/foundation/pinned_inputs.pl
+FE_OBJECT_PROVENANCE_TOOL=$W/full/foundation/fe_object_provenance.py
 BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE=${BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE:-}
 BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT=${BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT:-}
 BUILD_FULL_PREVIEW_MACRO_PLUGIN=${BUILD_FULL_PREVIEW_MACRO_PLUGIN:-}
@@ -65,6 +66,10 @@ BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_DISABLED_OWNER=${BUILD_FULL_DEVELOPER_TOOLS_S
     echo "build_full: no pinned-input tool at $PINNED_INPUTS_TOOL" >&2
     exit 2
 }
+[ -f "$FE_OBJECT_PROVENANCE_TOOL" ] && [ ! -L "$FE_OBJECT_PROVENANCE_TOOL" ] || {
+    echo "build_full: no regular FE object provenance tool at $FE_OBJECT_PROVENANCE_TOOL" >&2
+    exit 2
+}
 echo "== verifying exact pinned upstream compile inputs"
 PINNED_SOURCE_STATE_BEFORE=$(perl "$PINNED_INPUTS_TOOL" verify \
     --swift-foundation "$SF" --swift-collections "$SC" --digest-only)
@@ -80,7 +85,11 @@ mkdir -p "$OUT" "$MC" "$FE_OUT" "$FE_COLLECTIONS" "$FE_OS" "$FE_CSHIMS"
 # These files are commit markers for a completely successful build. Remove
 # them before mutating any output, so a failed or interrupted rebuild can never
 # leave yesterday's attestation blessing today's partial binary.
-rm -f "$OUT/uihelpers-subject.sha256" "$OUT/uihelpers-artifacts.sha256"
+rm -f "$OUT/uihelpers-subject.sha256" "$OUT/uihelpers-artifacts.sha256" \
+    "$OUT/foundation-fe-object-provenance.tsv" \
+    "$OUT/uihelpers-subject.sha256.tmp" \
+    "$OUT/uihelpers-artifacts.sha256.tmp" \
+    "$OUT/foundation-fe-object-provenance.tsv.tmp"
 
 APPLE_SWIFT_OVERLAY_FLAGS=()
 if [ -n "$APPLE_SWIFT_USER_OVERLAYS" ]; then
@@ -912,6 +921,12 @@ if [ "$PREVIEW_INPUT_STATE_BEFORE" != "$PREVIEW_INPUT_STATE_AFTER" ]; then
     echo 'build_full: REFUSING -- Preview inputs changed during the build' >&2
     exit 2
 fi
+python3 "$FE_OBJECT_PROVENANCE_TOOL" attest \
+    --project "$W" --full "$OUT" --subject "$UIHELPERS_SUBJECT_AFTER" \
+    > "$OUT/foundation-fe-object-provenance.tsv.tmp"
+python3 "$FE_OBJECT_PROVENANCE_TOOL" verify \
+    --project "$W" --full "$OUT" --subject "$UIHELPERS_SUBJECT_AFTER" \
+    --attestation "$OUT/foundation-fe-object-provenance.tsv.tmp"
 {
     printf 'render_full\t%s\n' "$(sha256sum "$OUT/render_full" | awk '{print $1}')"
     printf 'indexpath_identity_probe\t%s\n' \
@@ -939,7 +954,10 @@ fi
 } > "$OUT/uihelpers-artifacts.sha256.tmp"
 printf '%s\n' "$UIHELPERS_SUBJECT_AFTER" > "$OUT/uihelpers-subject.sha256.tmp"
 # Publish the subject last: its presence is the commit marker that both the
-# build and artifact manifests reached the successful end of the bracket.
+# build and artifact/provenance manifests reached the successful end of the
+# bracket.
+mv "$OUT/foundation-fe-object-provenance.tsv.tmp" \
+    "$OUT/foundation-fe-object-provenance.tsv"
 mv "$OUT/uihelpers-artifacts.sha256.tmp" "$OUT/uihelpers-artifacts.sha256"
 mv "$OUT/uihelpers-subject.sha256.tmp" "$OUT/uihelpers-subject.sha256"
 
