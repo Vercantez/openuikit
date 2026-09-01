@@ -39,12 +39,11 @@ public struct DCError: Error, CustomNSError, Hashable, Equatable, @unchecked Sen
 
     public static func == (lhs: DCError, rhs: DCError) -> Bool {
         guard lhs.code == rhs.code else { return false }
-        return _deviceCheckUserInfoEqual(lhs.userInfo, rhs.userInfo)
+        return NSDictionary(dictionary: lhs.userInfo).isEqual(to: rhs.userInfo)
     }
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(code)
-        hasher.combine(_deviceCheckUserInfoFingerprint(userInfo))
     }
 }
 
@@ -53,25 +52,6 @@ extension DCError.Code {
     public static func ~= (match: DCError.Code, error: any Error) -> Bool {
         (error as? DCError)?.code == match
     }
-}
-
-/// Equality and hashing share one fingerprint so `==` and `hash(into:)` stay
-/// lawful for an `Any`-valued dictionary.
-private func _deviceCheckUserInfoEqual(
-    _ lhs: [String: Any],
-    _ rhs: [String: Any]
-) -> Bool {
-    _deviceCheckUserInfoFingerprint(lhs) == _deviceCheckUserInfoFingerprint(rhs)
-}
-
-private func _deviceCheckUserInfoFingerprint(_ info: [String: Any]) -> String {
-    info.keys.sorted().map { key in
-        "\(key)=\(_deviceCheckUserInfoValue(info[key]!))"
-    }.joined(separator: "\u{1e}")
-}
-
-private func _deviceCheckUserInfoValue(_ value: Any) -> String {
-    String(describing: value)
 }
 
 private func _deviceCheckUnsupportedError() -> DCError {

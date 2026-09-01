@@ -21,9 +21,10 @@ exclusions and are not part of this module.
 `com.apple.devicecheck.error`, matching the Xcode 26.1 macOS runtime.
 `DCError` preserves the caller-supplied `userInfo` on both `userInfo` and
 `errorUserInfo`; the default initializer leaves both dictionaries empty and
-does not insert a localized-description mapping. Equality includes that
-dictionary; hashing is compatible with equality. Numeric `DCError.Code`
-values follow the public header enumeration.
+does not insert a localized-description mapping. Equality uses Foundation
+dictionary value equality, so `["x": 1]` is not `["x": "1"]`. Hashing uses
+only the error code, matching the Xcode 26.1 runtime. Numeric
+`DCError.Code` values follow the public header enumeration.
 
 This cloud runner still has no Apple DeviceCheck/App Attest service, so Apple
 callback timing and cryptographic success are not claimed.

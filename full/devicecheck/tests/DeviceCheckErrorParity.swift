@@ -42,6 +42,27 @@ struct DeviceCheckErrorParity {
             DCError(.featureUnsupported, userInfo: ["sentinel": "a"]) !=
                 DCError(.featureUnsupported, userInfo: ["sentinel": "b"])
         )
+        precondition(sentinel.hashValue == empty.hashValue)
+
+        let intOne = DCError(.invalidInput, userInfo: ["x": 1])
+        let stringOne = DCError(.invalidInput, userInfo: ["x": "1"])
+        precondition(intOne != stringOne)
+        precondition(intOne.hashValue == stringOne.hashValue)
+
+        let sameCode = [
+            DCError(.invalidInput),
+            DCError(.invalidInput, userInfo: ["x": 1]),
+            DCError(.invalidInput, userInfo: ["x": 2]),
+            DCError(.invalidInput, userInfo: ["x": "1"]),
+            DCError(.invalidInput, userInfo: ["y": 1]),
+            DCError(.invalidInput, userInfo: ["nested": [1, 2]]),
+        ]
+        precondition(Set(sameCode.map(\.hashValue)).count == 1)
+        precondition(sameCode[0] != sameCode[1])
+        precondition(sameCode[1] != sameCode[2])
+        precondition(sameCode[1] != sameCode[3])
+        precondition(sameCode[1] != sameCode[4])
+        precondition(sameCode[1] != sameCode[5])
 
         var hasherA = Hasher()
         var hasherB = Hasher()
