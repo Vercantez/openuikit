@@ -1,0 +1,5 @@
+full/coremotion/CMAccessory.swift
+full/coremotion/CMData.swift
+full/coremotion/CMManagers.swift
+full/coremotion/CMRecords.swift
+full/coremotion/CoreMotion.swift
