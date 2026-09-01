@@ -320,6 +320,10 @@ extension CocoaError {
 
 // MARK: - Historical version numbers (public CoreDataDefines.h)
 
+/// Unknown on Linux. Historical `NSCoreDataVersionNumber*` constants below are
+/// the public CoreDataDefines.h values; the current iOS 26.1 numeric value was
+/// not in the Linux-visible seed inputs, so this export stays 0 and must not be
+/// treated as Apple runtime parity.
 public var NSCoreDataVersionNumber: Double = 0
 public var NSCoreDataVersionNumber10_4: Double { 185.0 }
 public var NSCoreDataVersionNumber10_4_3: Double { 185.1 }

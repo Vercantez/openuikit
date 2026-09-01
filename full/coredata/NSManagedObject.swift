@@ -60,7 +60,14 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
     public var isFault: Bool = false
     public var faultingState: Int = 0
     public var hasChanges: Bool { isInserted || isUpdated || isDeleted || !_changedValues.isEmpty }
-    public var hasPersistentChangedValues: Bool { !_committed.isEmpty && hasChanges }
+    public var hasPersistentChangedValues: Bool {
+        _changedValues.contains { key, _ in
+            if let attribute = entity.attributesByName[key], attribute.isTransient {
+                return false
+            }
+            return true
+        }
+    }
 
     var _values: [String: Any] = [:]
     var _committed: [String: Any] = [:]
@@ -107,6 +114,7 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
                 _values[name] = value
             }
         }
+        _captureCommittedSnapshot()
         if let context {
             context.insert(self)
         }
@@ -144,10 +152,10 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
         willChangeValue(forKey: key)
         setPrimitiveValue(value, forKey: key)
         didChangeValue(forKey: key)
-        if !isInserted {
-            isUpdated = true
+        if !isInserted && !isDeleted {
+            isUpdated = !_changedValues.isEmpty
         }
-        managedObjectContext?._noteUpdated(self)
+        managedObjectContext?._syncUpdated(self)
     }
 
     open func primitiveValue(forKey key: String) -> Any? {
@@ -158,17 +166,19 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
     }
 
     open func setPrimitiveValue(_ value: Any?, forKey key: String) {
-        let previous = _values[key]
-        if _committed[key] == nil, let previous {
-            _committed[key] = previous
-        }
         if let value {
             _values[key] = value
         } else {
             _values.removeValue(forKey: key)
         }
-        _changedValues[key] = value as Any
-        _eventChangedValues[key] = value as Any
+        let boxed = _CDBox(value)
+        let committed = _committed[key] ?? NSNull()
+        if _CDValuesEqual(boxed, committed) {
+            _changedValues.removeValue(forKey: key)
+        } else {
+            _changedValues[key] = boxed
+        }
+        _eventChangedValues[key] = boxed
     }
 
     open func willAccessValue(forKey key: String?) {
@@ -193,12 +203,20 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
     open func changedValuesForCurrentEvent() -> [String: Any] { _eventChangedValues }
 
     open func committedValues(forKeys keys: [String]?) -> [String: Any] {
-        guard let keys else { return _committed }
-        var result: [String: Any] = [:]
-        for key in keys {
-            if let value = _committed[key] {
-                result[key] = value
+        let selected: [String]
+        if let keys {
+            selected = keys
+        } else {
+            var names = Array(entity.attributesByName.keys)
+            names.append(contentsOf: entity.relationshipsByName.keys)
+            if names.isEmpty {
+                names = Array(_committed.keys)
             }
+            selected = names
+        }
+        var result: [String: Any] = [:]
+        for key in selected {
+            result[key] = _committed[key] ?? NSNull()
         }
         return result
     }
@@ -252,17 +270,89 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
     }
 
     func _clearChangeTracking() {
-        _committed.removeAll()
+        _captureCommittedSnapshot()
+        isUpdated = false
+    }
+
+    func _snapshotValues() -> [String: Any] { _completeBoxedSnapshot() }
+
+    func _completeBoxedSnapshot() -> [String: Any] {
+        var snapshot: [String: Any] = [:]
+        for name in entity.attributesByName.keys {
+            snapshot[name] = _CDBox(_values[name])
+        }
+        for name in entity.relationshipsByName.keys {
+            snapshot[name] = _CDBox(_values[name])
+        }
+        return snapshot
+    }
+
+    func _captureCommittedSnapshot() {
+        _committed = _completeBoxedSnapshot()
         _changedValues.removeAll()
         _eventChangedValues.removeAll()
-        isUpdated = false
     }
 
-    func _snapshotValues() -> [String: Any] { _values }
-
-    func _restoreSnapshot(_ values: [String: Any]) {
-        _values = values
-        _clearChangeTracking()
-        isUpdated = false
+    func _loadPersistentValues(_ stored: [String: Any]) {
+        _values.removeAll()
+        for (key, boxed) in stored {
+            if let value = _CDUnbox(boxed) {
+                _values[key] = value
+            }
+        }
+        _captureCommittedSnapshot()
+        isFault = false
     }
+
+    func _applyBoxedSnapshot(_ snapshot: [String: Any], trackChanges: Bool) {
+        for (key, boxed) in snapshot {
+            let value = _CDUnbox(boxed)
+            if trackChanges {
+                setValue(value, forKey: key)
+            } else if let value {
+                _values[key] = value
+            } else {
+                _values.removeValue(forKey: key)
+            }
+        }
+        if !trackChanges {
+            _changedValues.removeAll()
+            isUpdated = false
+        }
+    }
+
+    func _restoreFromCommitted() {
+        _applyBoxedSnapshot(_committed, trackChanges: false)
+        isUpdated = false
+        isDeleted = false
+    }
+}
+
+func _CDBox(_ value: Any?) -> Any {
+    value ?? NSNull()
+}
+
+func _CDUnbox(_ value: Any?) -> Any? {
+    if value == nil || value is NSNull {
+        return nil
+    }
+    return value
+}
+
+func _CDValuesEqual(_ lhs: Any?, _ rhs: Any?) -> Bool {
+    let left = _CDUnbox(lhs)
+    let right = _CDUnbox(rhs)
+    if left == nil && right == nil {
+        return true
+    }
+    guard let left, let right else {
+        return false
+    }
+    if let leftObject = left as? NSObject, let rightObject = right as? NSObject {
+        return leftObject.isEqual(rightObject)
+    }
+    if let leftHashable = left as? AnyHashable, let rightHashable = right as? AnyHashable {
+        return leftHashable == rightHashable
+    }
+    return false
 }

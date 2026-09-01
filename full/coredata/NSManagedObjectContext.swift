@@ -57,12 +57,11 @@ open class NSManagedObjectContext: NSObject, NSLocking {
 
     private let _lock = NSRecursiveLock()
     private let _queue: DispatchQueue
-    private let _queueToken = UUID()
+    private let _queueKey = DispatchSpecificKey<UInt8>()
     private var _inserted: [ObjectIdentifier: NSManagedObject] = [:]
     private var _updated: [ObjectIdentifier: NSManagedObject] = [:]
     private var _deleted: [ObjectIdentifier: NSManagedObject] = [:]
     private var _registered: [String: NSManagedObject] = [:]
-    private var _snapshots: [ObjectIdentifier: [String: Any]] = [:]
 
     public var insertedObjects: Set<NSManagedObject> { Set(_inserted.values) }
     public var updatedObjects: Set<NSManagedObject> { Set(_updated.values) }
@@ -80,9 +79,13 @@ open class NSManagedObjectContext: NSObject, NSLocking {
 
     public required init(concurrencyType ct: NSManagedObjectContextConcurrencyType) {
         self.concurrencyType = ct
-        self._queue = DispatchQueue(label: "coredata.nsmanagedobjectcontext")
+        if ct == .mainQueueConcurrencyType {
+            self._queue = DispatchQueue.main
+        } else {
+            self._queue = DispatchQueue(label: "coredata.nsmanagedobjectcontext.\(UUID().uuidString)")
+        }
         super.init()
-        _queue.setSpecific(key: _CDContextQueueKey, value: _queueToken)
+        _queue.setSpecific(key: _queueKey, value: 1)
     }
 
     public convenience init(_ type: ConcurrencyType) {
@@ -91,9 +94,9 @@ open class NSManagedObjectContext: NSObject, NSLocking {
 
     public init?(coder: NSCoder) {
         self.concurrencyType = .mainQueueConcurrencyType
-        self._queue = DispatchQueue(label: "coredata.nsmanagedobjectcontext")
+        self._queue = DispatchQueue.main
         super.init()
-        _queue.setSpecific(key: _CDContextQueueKey, value: _queueToken)
+        _queue.setSpecific(key: _queueKey, value: 1)
     }
 
     public func lock() { _lock.lock() }
@@ -101,42 +104,69 @@ open class NSManagedObjectContext: NSObject, NSLocking {
     public func tryLock() -> Bool { _lock.try() }
 
     public func perform(_ block: @escaping () -> Void) {
-        _queue.async { [weak self] in
-            guard let self else { return }
-            self.lock()
-            defer { self.unlock() }
+        _enqueue {
             block()
         }
     }
 
     public func performAndWait(_ block: () -> Void) {
-        if DispatchQueue.getSpecific(key: _CDContextQueueKey) == _queueToken {
-            block()
-            return
-        }
-        _queue.sync {
-            self.lock()
-            defer { self.unlock() }
-            block()
-        }
+        _runImmediate(block)
     }
 
     public func performAndWait<T>(_ block: () throws -> T) rethrows -> T {
-        try _withContextLock(block)
+        try _runImmediate(block)
     }
 
     public func perform<T>(
         schedule: ScheduledTaskType = .immediate,
         _ block: @escaping () throws -> T
-    ) async rethrows -> T {
-        _ = schedule
-        return try _withContextLock(block)
+    ) async throws -> T {
+        if schedule == .immediate, _isOnContextQueue() {
+            return try _runConfined(block)
+        }
+        return try await _performEnqueued(block)
     }
 
-    private func _withContextLock<T>(_ block: () throws -> T) rethrows -> T {
+    private func _isOnContextQueue() -> Bool {
+        if DispatchQueue.getSpecific(key: _queueKey) != nil {
+            return true
+        }
+        return concurrencyType == .mainQueueConcurrencyType && Thread.isMainThread
+    }
+
+    private func _runConfined<T>(_ block: () throws -> T) rethrows -> T {
         lock()
         defer { unlock() }
         return try block()
+    }
+
+    private func _runImmediate<T>(_ block: () throws -> T) rethrows -> T {
+        if _isOnContextQueue() {
+            return try _runConfined(block)
+        }
+        return try _queue.sync {
+            try self._runConfined(block)
+        }
+    }
+
+    private func _enqueue(_ block: @escaping () -> Void) {
+        _queue.async { [weak self] in
+            guard let self else { return }
+            self._runConfined(block)
+        }
+    }
+
+    private func _performEnqueued<T>(_ block: @escaping () throws -> T) async throws -> T {
+        let result: Result<T, Error> = await withCheckedContinuation { continuation in
+            self._queue.async {
+                continuation.resume(returning: Result { try self._runConfined(block) })
+            }
+        }
+        return try _cdUnwrapResult(result)
+    }
+
+    private func _withContextLock<T>(_ block: () throws -> T) rethrows -> T {
+        try _runImmediate(block)
     }
 
     public func insert(_ object: NSManagedObject) {
@@ -163,10 +193,22 @@ open class NSManagedObjectContext: NSObject, NSLocking {
     }
 
     func _noteUpdated(_ object: NSManagedObject) {
+        _syncUpdated(object)
+    }
+
+    func _syncUpdated(_ object: NSManagedObject) {
         lock()
         defer { unlock() }
-        if object.isInserted { return }
-        _updated[ObjectIdentifier(object)] = object
+        if object.isInserted || object.isDeleted {
+            return
+        }
+        if object._changedValues.isEmpty {
+            object.isUpdated = false
+            _updated.removeValue(forKey: ObjectIdentifier(object))
+        } else {
+            object.isUpdated = true
+            _updated[ObjectIdentifier(object)] = object
+        }
     }
 
     public func assign(_ object: Any, to store: NSPersistentStore) {
@@ -244,7 +286,6 @@ open class NSManagedObjectContext: NSObject, NSLocking {
         _updated.removeAll()
         _deleted.removeAll()
         _registered.removeAll()
-        _snapshots.removeAll()
     }
 
     public func rollback() {
@@ -253,19 +294,18 @@ open class NSManagedObjectContext: NSObject, NSLocking {
         for object in _inserted.values {
             object.isInserted = false
             object.managedObjectContext = nil
+            _registered.removeValue(forKey: object.objectID.uriRepresentation().absoluteString)
         }
-        for (identity, snapshot) in _snapshots {
-            if let object = _updated[identity] {
-                object._restoreSnapshot(snapshot)
-            }
+        for object in _updated.values {
+            object._restoreFromCommitted()
         }
         for object in _deleted.values {
+            object._restoreFromCommitted()
             object.isDeleted = false
         }
         _inserted.removeAll()
         _updated.removeAll()
         _deleted.removeAll()
-        _snapshots.removeAll()
     }
 
     public func undo() {}
@@ -485,8 +525,7 @@ open class NSManagedObjectContext: NSObject, NSLocking {
     func _fulfillFault(_ object: NSManagedObject) {
         guard object.isFault else { return }
         if let row = persistentStoreCoordinator?._row(for: object.objectID) {
-            object._values = row.values
-            object.isFault = false
+            object._loadPersistentValues(row.values)
             object.awakeFromFetch()
         }
     }
@@ -518,15 +557,14 @@ open class NSManagedObjectContext: NSObject, NSLocking {
         )
         if let existing = registeredObject(for: objectID) {
             if !asFault {
-                existing._values = row.values
-                existing.isFault = false
+                existing._loadPersistentValues(row.values)
             }
             return existing
         }
         let object = NSManagedObject(entity: entity, insertInto: nil)
         object.objectID = objectID
         object.managedObjectContext = self
-        object._values = row.values
+        object._loadPersistentValues(row.values)
         object.isFault = asFault
         object.isInserted = false
         _registered[objectID.uriRepresentation().absoluteString] = object
@@ -539,21 +577,63 @@ open class NSManagedObjectContext: NSObject, NSLocking {
     }
 
     private func _pushToParent(_ parent: NSManagedObjectContext) throws {
-        for object in insertedObjects {
-            parent.insert(object)
-        }
-        for object in updatedObjects {
-            parent._noteUpdated(object)
-            if let values = object._snapshotValues() as [String: Any]? {
-                for (key, value) in object.changedValues() {
-                    parent.object(with: object.objectID).setValue(value, forKey: key)
-                }
-                _ = values
+        let inserts = Array(insertedObjects)
+        let updates = Array(updatedObjects)
+        let deletes = Array(deletedObjects)
+        parent.performAndWait {
+            for object in inserts {
+                self._applyChildInsert(object, into: parent)
+            }
+            for object in updates {
+                self._applyChildUpdate(object, into: parent)
+            }
+            for object in deletes {
+                self._applyChildDelete(object, into: parent)
             }
         }
-        for object in deletedObjects {
-            parent.delete(parent.object(with: object.objectID))
+    }
+
+    private func _applyChildInsert(_ object: NSManagedObject, into parent: NSManagedObjectContext) {
+        if let existing = parent.registeredObject(for: object.objectID) {
+            _copyAttributeSnapshot(from: object, into: existing, trackChanges: true)
+            return
         }
+        let clone = NSManagedObject(entity: object.entity, insertInto: nil)
+        clone.objectID = object.objectID
+        _copyAttributeSnapshot(from: object, into: clone, trackChanges: false)
+        parent.insert(clone)
+    }
+
+    private func _applyChildUpdate(_ object: NSManagedObject, into parent: NSManagedObjectContext) {
+        let target: NSManagedObject
+        if let existing = parent.registeredObject(for: object.objectID) {
+            target = existing
+            if target.isFault {
+                parent._fulfillFault(target)
+            }
+        } else {
+            target = parent.object(with: object.objectID)
+            if target.isFault {
+                parent._fulfillFault(target)
+            }
+        }
+        _copyAttributeSnapshot(from: object, into: target, trackChanges: true)
+    }
+
+    private func _applyChildDelete(_ object: NSManagedObject, into parent: NSManagedObjectContext) {
+        parent.delete(parent.object(with: object.objectID))
+    }
+
+    private func _copyAttributeSnapshot(
+        from object: NSManagedObject,
+        into target: NSManagedObject,
+        trackChanges: Bool
+    ) {
+        var snapshot: [String: Any] = [:]
+        for name in object.entity.attributesByName.keys {
+            snapshot[name] = _CDBox(object.primitiveValue(forKey: name))
+        }
+        target._applyBoxedSnapshot(snapshot, trackChanges: trackChanges)
     }
 
     private func _pushToStore() throws {
@@ -663,7 +743,14 @@ open class NSManagedObjectContext: NSObject, NSLocking {
     }
 }
 
-private let _CDContextQueueKey = DispatchSpecificKey<UUID>()
+private func _cdUnwrapResult<T>(_ result: Result<T, Error>) throws -> T {
+    switch result {
+    case .success(let value):
+        return value
+    case .failure(let error):
+        throw error
+    }
+}
 
 extension Notification.Name {
     public static let NSManagedObjectContextDidSave = NSManagedObjectContext.didSaveObjectsNotification

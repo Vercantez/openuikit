@@ -29,9 +29,9 @@ open class NSPersistentStore: NSObject {
     public var identifier: String!
     public var metadata: [String: Any]!
     public var isReadOnly: Bool = false
-    public var type: String { NSInMemoryStoreType }
+    open var type: String { NSInMemoryStoreType }
 
-    public init(
+    public required init(
         persistentStoreCoordinator root: NSPersistentStoreCoordinator?,
         configurationName name: String?,
         at url: URL,
@@ -91,7 +91,7 @@ final class _CDInMemoryPersistentStore: NSPersistentStore {
     let backing = _CDInMemoryBacking()
     override var type: String { NSInMemoryStoreType }
 
-    override init(
+    required init(
         persistentStoreCoordinator root: NSPersistentStoreCoordinator?,
         configurationName name: String?,
         at url: URL,
@@ -190,12 +190,24 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
         try performAndWait(block)
     }
 
-    open class var registeredStoreTypes: [String: NSValue] { [:] }
+    open class var registeredStoreTypes: [String: NSValue] {
+        _registryLock.lock()
+        defer { _registryLock.unlock() }
+        var types: [String: NSValue] = [:]
+        for key in _registry.keys {
+            types[key] = NSValue()
+        }
+        return types
+    }
 
     open class func registerStoreClass(_ storeClass: AnyClass?, forStoreType storeType: String) {
         _registryLock.lock()
         defer { _registryLock.unlock() }
-        _registry[storeType] = storeClass
+        if let storeClass {
+            _registry[storeType] = storeClass
+        } else {
+            _registry.removeValue(forKey: storeType)
+        }
     }
 
     open class func registerStoreClass(_ storeClass: AnyClass?, type: NSPersistentStore.StoreType) {
@@ -272,11 +284,14 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
         at storeURL: URL?,
         options: [AnyHashable: Any]? = nil
     ) throws -> NSPersistentStore {
-        guard storeType == NSInMemoryStoreType else {
+        Self._registryLock.lock()
+        let registered: AnyClass? = Self._registry[storeType]
+        Self._registryLock.unlock()
+        guard let registered, let storeClass = registered as? NSPersistentStore.Type else {
             throw _CDUnsupportedStoreError(storeType)
         }
-        let url = storeURL ?? URL(string: "x-coredata-in-memory://\(_CDIDSource.next())")!
-        let store = _CDInMemoryPersistentStore(
+        let url = storeURL ?? URL(string: "x-coredata-\(storeType.lowercased())://\(_CDIDSource.next())")!
+        let store = storeClass.init(
             persistentStoreCoordinator: self,
             configurationName: configuration,
             at: url,
@@ -540,9 +555,7 @@ open class NSPersistentContainer: NSObject {
     open class func defaultDirectoryURL() -> URL {
         let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
             ?? FileManager.default.temporaryDirectory
-        let url = base.appendingPathComponent("CoreData", isDirectory: true)
-        try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
-        return url
+        return base.appendingPathComponent("CoreData", isDirectory: true)
     }
 
     public convenience init(name: String) {
@@ -587,7 +600,7 @@ open class NSPersistentContainer: NSObject {
 
     public func performBackgroundTask<T>(
         _ block: @escaping (NSManagedObjectContext) throws -> T
-    ) async rethrows -> T {
+    ) async throws -> T {
         let context = newBackgroundContext()
         return try await context.perform(schedule: .enqueued) {
             try block(context)
