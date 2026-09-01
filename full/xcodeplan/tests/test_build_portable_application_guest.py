@@ -252,7 +252,7 @@ def validate_c_family_package_boundary(source: str) -> None:
         'package_clang_module_cache=$package_build_root/clang-module-cache',
         'mkdir "$package_clang_module_cache"',
         'require_regular "$package_module_output" "local package Clang module map"',
-        '-target arm64-apple-macos15.0 -isysroot "$swift_sdk_root"',
+        '-target "$compiler_target" -isysroot "$swift_sdk_root"',
         '-fmodules -fmodules-cache-path="$package_clang_module_cache"',
         '-fmodule-name="$package_module"',
         'package_compiler=clang-18',
@@ -322,13 +322,14 @@ def validate_nounset_dependent_path_contract(source: str) -> None:
         "local app frameworks executable libraries",
         "app=$output/$product.app",
         "frameworks=$app/Contents/Frameworks",
-        "executable=$app/Contents/MacOS/$product",
+        "executable=$app/Contents/MacOS/$product ;;",
+        "frameworks=$app/Frameworks",
+        "executable=$app/$product ;;",
     )
-    lines = source.splitlines()
-    exact = [f"    {token}" for token in required]
-    if any(lines.count(line) != 1 for line in exact):
+    lines = [line.strip() for line in source.splitlines()]
+    if any(lines.count(token) != 1 for token in required):
         raise AssertionError("nounset-safe dependent path declaration drifted")
-    positions = [lines.index(line) for line in exact]
+    positions = [lines.index(token) for token in required]
     if positions != sorted(positions):
         raise AssertionError("nounset-safe dependent path declaration drifted")
     unsafe = (
@@ -416,7 +417,10 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
         self.assertIn("container_image\\t%s\\tplatform=%s", script)
         self.assertIn('docker_command+=("$container_image"', script)
         self.assertNotIn("docker_command+=(swift-macho-spike:noble", script)
-        self.assertIn("core_guest_package.py", script)
+        self.assertIn("application_platform_package.py", script)
+        self.assertIn('--bundle-layout "$bundle_layout"', script)
+        self.assertIn('-target "$compiler_target"', script)
+        self.assertIn('ios) application_framework_rpath=@executable_path/Frameworks', script)
         self.assertIn("materialize_application_bundle.py", script)
         self.assertEqual(
             script.count("--require-canonical-project-inventory"),
@@ -533,7 +537,7 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
             '"$swift_sdk_argument_count" -eq 1',
             '<"$package_build_root/clang-import-arguments.nul"',
             'require_regular "$package_module_output" "local package Clang module map"',
-            '-target arm64-apple-macos15.0 -isysroot "$swift_sdk_root"',
+            '-target "$compiler_target" -isysroot "$swift_sdk_root"',
             'package_command+=(-c "${package_sources[package_source_index]}"',
             '"${package_link_arguments[@]}"',
         ):
@@ -630,12 +634,19 @@ class PortableApplicationGuestDriverTests(unittest.TestCase):
             "local app frameworks executable libraries",
             "app=$output/$product.app",
             "frameworks=$app/Contents/Frameworks",
-            "executable=$app/Contents/MacOS/$product",
+            "executable=$app/Contents/MacOS/$product ;;",
+            "frameworks=$app/Frameworks",
+            "executable=$app/$product ;;",
         ):
             with self.subTest(deleted=token):
                 with self.assertRaisesRegex(AssertionError, "nounset-safe"):
+                    mutated = "\n".join(
+                        line
+                        for line in source.splitlines()
+                        if line.strip() != token
+                    )
                     validate_nounset_dependent_path_contract(
-                        source.replace(f"    {token}\n", "", 1)
+                        mutated
                     )
         with self.assertRaisesRegex(AssertionError, "chained local"):
             validate_no_chained_local_assignments(

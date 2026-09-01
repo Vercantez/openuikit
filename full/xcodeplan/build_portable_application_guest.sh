@@ -19,7 +19,7 @@ usage() {
 usage: build_portable_application_guest.sh \
   --inventory INVENTORY_JSON \
   --source-root APPLICATION_PROJECT_ROOT \
-  --platform-package CORE_GUEST_PACKAGE \
+  --platform-package PORTABLE_OR_TRUE_IOS_PLATFORM_PACKAGE \
   --container-image SHA256_IMAGE_ID \
   [--remote-package-materializations EXACT_MATERIALIZATION_SET_JSON] \
   [--remote-package-cache CONTENT_ADDRESSED_CACHE_ROOT] \
@@ -132,7 +132,7 @@ prepare_host() {
     [ -z "$remote_cache" ] || remote_cache=$(canonical_existing "$remote_cache")
     require_regular "$inventory" "inventory"
     require_directory "$source_root" "application source root"
-    require_directory "$platform" "core guest package"
+    require_directory "$platform" "platform package"
     [ -z "$plugin" ] || require_regular "$plugin" "Preview macro plugin"
     [ -z "$preview_source_list" ] \
         || require_regular "$preview_source_list" "Preview evidence source list"
@@ -150,16 +150,17 @@ prepare_host() {
     output_parent=$(canonical_existing "$output_parent")
     output=$output_parent/$output_name
 
-    python3 -B "$SCRIPT_DIR/core_guest_package.py" "$platform" --emit-summary
+    python3 -B "$SCRIPT_DIR/application_platform_package.py" \
+        "$platform" --emit-summary
     local preview_required expected_plugin_sha actual_plugin_sha
     local preview_evidence_enabled=no
     local preview_source_list_sha=
     read -r preview_required expected_plugin_sha < <(
         PYTHONPATH="$SCRIPT_DIR" python3 -B - "$platform" <<'PY'
 from pathlib import Path
-import core_guest_package
+import application_platform_package
 import sys
-_root, manifest = core_guest_package.validate(Path(sys.argv[1]))
+_root, manifest = application_platform_package.validate(Path(sys.argv[1]))
 preview = manifest["preview"]
 print("yes", preview["plugin_sha256"] if preview else "-") if preview else print("no -")
 PY
@@ -174,13 +175,13 @@ PY
                 || die "Preview macro plugin is not executable: $plugin"
             actual_plugin_sha=$(shasum -a 256 "$plugin" | awk '{print $1}')
             [ "$actual_plugin_sha" = "$expected_plugin_sha" ] \
-                || die "Preview macro plugin hash differs from core package"
+                || die "Preview macro plugin hash differs from platform package"
             preview_source_list_sha=$(shasum -a 256 \
                 "$preview_source_list" | awk '{print $1}')
             preview_evidence_enabled=yes
         fi
     elif [ -n "$plugin" ]; then
-        die "--preview-plugin supplied but core package has no Preview contract"
+        die "--preview-plugin supplied but platform package has no Preview contract"
     elif [ -n "$preview_source_list" ]; then
         die "--preview-evidence-source-list supplied without a Preview contract"
     fi
@@ -223,7 +224,7 @@ PY
             || die "copied Preview evidence source list differs"
     fi
 
-    local product platform_resources output_app
+    local product platform_resources output_app bundle_layout platform_contract
     product=$(python3 -B - "$output/application-build-plan.json" <<'PY'
 import json
 from pathlib import Path
@@ -237,10 +238,19 @@ PY
     platform_resources=$(
         PYTHONPATH="$SCRIPT_DIR" python3 -B - "$platform" <<'PY'
 from pathlib import Path
-import core_guest_package
+import application_platform_package
 import sys
-root, manifest = core_guest_package.validate(Path(sys.argv[1]))
+root, manifest = application_platform_package.validate(Path(sys.argv[1]))
 print(root / manifest["paths"]["resources"])
+PY
+    )
+    read -r bundle_layout platform_contract < <(
+        PYTHONPATH="$SCRIPT_DIR" python3 -B - "$platform" <<'PY'
+from pathlib import Path
+import application_platform_package
+import sys
+_root, contract = application_platform_package.validate(Path(sys.argv[1]))
+print(contract["bundle_layout"], contract["contract_file"])
 PY
     )
     output_app=$output/$product.app
@@ -248,14 +258,16 @@ PY
         "$output/application-build-plan.json" --source-root "$source_root" \
         --platform-resources "$platform_resources" --output-app "$output_app" \
         --attestation "$output/bundle-materialization.json" \
+        --bundle-layout "$bundle_layout" \
         "${remote_cache_arguments[@]}"
 
     {
         printf 'support_commit\t%s\n' "$support_commit"
         printf 'support_tree\t%s\n' "$support_tree"
         printf 'inventory_sha256\t%s\n' "$(shasum -a 256 "$inventory" | awk '{print $1}')"
-        printf 'core_manifest_sha256\t%s\n' \
-            "$(shasum -a 256 "$platform/attestation/core-package.json" | awk '{print $1}')"
+        printf 'platform_contract_sha256\t%s\t%s\n' \
+            "$(shasum -a 256 "$platform/$platform_contract" | awk '{print $1}')" \
+            "$platform_contract"
         printf 'container_image\t%s\tplatform=%s\n' \
             "$container_image" "$image_platform"
         if [ -n "$plugin" ]; then
@@ -348,7 +360,7 @@ build_inside() {
     for tool in python3 swiftc clang-18 clang++-18 ld64.lld-18 llvm-nm-18 llvm-otool-18 file sha256sum perl; do
         command -v "$tool" >/dev/null || die "required container tool is missing: $tool"
     done
-    PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/core_guest_package.py" \
+    PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/application_platform_package.py" \
         "$platform" --emit-summary
     local -a remote_cache_arguments=()
     [ -z "$remote_cache" ] \
@@ -358,6 +370,7 @@ build_inside() {
         "${remote_cache_arguments[@]}" --verify
 
     local module product preview_required expected_plugin_sha plugin_module dts_object
+    local compiler_target bundle_layout platform_kind
     local preview_evidence_enabled=no legacy_preview_evidence_count=0
     local -a metadata
     mapfile -d '' -t metadata < <(
@@ -365,9 +378,9 @@ build_inside() {
             "$output/application-build-plan.json" <<'PY'
 import json
 from pathlib import Path
-import core_guest_package
+import application_platform_package
 import sys
-_root, manifest = core_guest_package.validate(Path(sys.argv[1]))
+_root, manifest = application_platform_package.validate(Path(sys.argv[1]))
 plan = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
 preview = manifest["preview"]
 module = plan["module"]
@@ -381,16 +394,20 @@ if preview:
     values.extend(["yes", preview["plugin_sha256"], preview["plugin_module"], preview["developer_tools_support_object"]])
 else:
     values.extend(["no", "-", "-", "-"])
+values.extend([manifest["target_triple"], manifest["bundle_layout"], manifest["kind"]])
 sys.stdout.buffer.write(b"".join(value.encode("utf-8") + b"\0" for value in values))
 PY
     )
-    [ "${#metadata[@]}" -eq 6 ] || die "invalid application/platform metadata"
+    [ "${#metadata[@]}" -eq 9 ] || die "invalid application/platform metadata"
     module=${metadata[0]}
     product=${metadata[1]}
     preview_required=${metadata[2]}
     expected_plugin_sha=${metadata[3]}
     plugin_module=${metadata[4]}
     dts_object=${metadata[5]}
+    compiler_target=${metadata[6]}
+    bundle_layout=${metadata[7]}
+    platform_kind=${metadata[8]}
     if [ "$preview_required" = yes ]; then
         require_regular "$platform/$dts_object" "DeveloperToolsSupport target object"
         if [ -n "$plugin" ]; then
@@ -429,15 +446,15 @@ PY
 
     local -a swift_arguments link_arguments diagnostic_arguments relative_sources app_sources
     mapfile -d '' -t swift_arguments < <(
-        PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/core_guest_package.py" \
+        PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/application_platform_package.py" \
             "$platform" --emit-swift-arguments --absolute-package-paths
     )
     mapfile -d '' -t link_arguments < <(
-        PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/core_guest_package.py" \
+        PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/application_platform_package.py" \
             "$platform" --emit-link-arguments
     )
     mapfile -d '' -t diagnostic_arguments < <(
-        PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/core_guest_package.py" \
+        PYTHONPATH="$SCRIPT_DIR" python3 -B "$SCRIPT_DIR/application_platform_package.py" \
             "$platform" --emit-app-diagnostic-arguments
     )
     mapfile -d '' -t relative_sources <"$output/app-sources.nul"
@@ -731,7 +748,7 @@ PY
                             *) die "local Clang package target has unsupported source language: $package_language" ;;
                         esac
                         package_command=("$package_compiler"
-                            -target arm64-apple-macos15.0 -isysroot "$swift_sdk_root"
+                            -target "$compiler_target" -isysroot "$swift_sdk_root"
                             -fmodules -fmodules-cache-path="$package_clang_module_cache"
                             -fmodule-name="$package_module"
                             "${package_compiler_arguments[@]}")
@@ -1149,32 +1166,39 @@ PY
 
     local app frameworks executable libraries
     app=$output/$product.app
-    frameworks=$app/Contents/Frameworks
-    executable=$app/Contents/MacOS/$product
+    case "$bundle_layout" in
+        macos)
+            frameworks=$app/Contents/Frameworks
+            executable=$app/Contents/MacOS/$product ;;
+        ios)
+            frameworks=$app/Frameworks
+            executable=$app/$product ;;
+        *) die "unsupported application bundle layout: $bundle_layout" ;;
+    esac
     require_directory "$frameworks" "application Frameworks directory"
     [ ! -e "$executable" ] && [ ! -L "$executable" ] \
         || die "application executable already exists"
     libraries=$(PYTHONPATH="$SCRIPT_DIR" python3 -B - "$platform" <<'PY'
 from pathlib import Path
-import core_guest_package
+import application_platform_package
 import sys
-root, manifest = core_guest_package.validate(Path(sys.argv[1]))
+root, manifest = application_platform_package.validate(Path(sys.argv[1]))
 print(root / manifest["paths"]["libraries"])
 PY
     )
     local library basename
     while IFS= read -r -d '' library; do
-        [ ! -L "$library" ] || die "core library is a symlink: $library"
+        [ ! -L "$library" ] || die "platform library is a symlink: $library"
         basename=$(basename -- "$library")
         [ ! -e "$frameworks/$basename" ] && [ ! -L "$frameworks/$basename" ] \
             || die "framework destination already exists: $basename"
         cp "$library" "$frameworks/$basename"
         chmod 0755 "$frameworks/$basename"
         cmp -s "$library" "$frameworks/$basename" \
-            || die "copied framework differs from core package: $basename"
+            || die "copied framework differs from platform package: $basename"
     done < <(find "$libraries" -maxdepth 1 -type f -name '*.dylib' -print0 | sort -z)
     find "$frameworks" -maxdepth 1 -type f -name '*.dylib' -print -quit | grep -q . \
-        || die "core package contains no dylibs"
+        || die "platform package contains no dylibs"
 
     local -a extra_objects=()
     local uikit_preview_import_count uikit_dts_import_count
@@ -1228,11 +1252,17 @@ PY
             -exported_symbol "$PREVIEW_EXECUTABLE_EXPORT_SYMBOL"
         )
     fi
+    local application_framework_rpath
+    case "$bundle_layout" in
+        macos) application_framework_rpath=@executable_path/../Frameworks ;;
+        ios) application_framework_rpath=@executable_path/Frameworks ;;
+        *) die "unsupported application bundle layout at link: $bundle_layout" ;;
+    esac
     local -a link_command
     link_command=(ld64.lld-18 "${link_arguments[@]}" -dead_strip
         "${package_link_arguments[@]}"
         "${executable_export_arguments[@]}"
-        -rpath @executable_path/../Frameworks
+        -rpath "$application_framework_rpath"
         -o "$executable" "${application_objects[@]}" \
         "${package_objects[@]}" "${extra_objects[@]}")
     local linked_app_object_count=0
@@ -1303,10 +1333,10 @@ PY
     local guest_root
     guest_root=$(PYTHONPATH="$SCRIPT_DIR" python3 -B - "$platform" <<'PY'
 from pathlib import Path
-import core_guest_package
+import application_platform_package
 import sys
-root, manifest = core_guest_package.validate(Path(sys.argv[1]))
-print(root / manifest["paths"]["guest_root"])
+root, manifest = application_platform_package.validate(Path(sys.argv[1]))
+print(root / manifest["paths"]["runtime_root"])
 PY
     )
     local url_transport_host dispatch_host dispatch_runtime blocks_runtime relative_time_host foundation_intl_host
