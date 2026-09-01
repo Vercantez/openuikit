@@ -580,6 +580,12 @@ public struct _OpenButtonBorderShape: Hashable, Sendable {
     public static let automatic = _OpenButtonBorderShape(.automatic)
     public static let capsule = _OpenButtonBorderShape(.capsule)
     public static let circle = _OpenButtonBorderShape(.circle)
+    /// SwiftUI's no-argument rounded system button border. The eight-point
+    /// radius is the portable regular-control metric; the explicit-radius
+    /// overload remains available to callers that own a measured metric.
+    public static let roundedRectangle = _OpenButtonBorderShape(
+        .roundedRectangle(8)
+    )
     public static func roundedRectangle(radius: CGFloat) -> _OpenButtonBorderShape {
         _OpenButtonBorderShape(.roundedRectangle(radius))
     }

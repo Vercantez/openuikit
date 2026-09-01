@@ -1601,6 +1601,38 @@ public extension _OpenButtonStyleProtocol where Self == _OpenBorderedButtonStyle
     static var bordered: _OpenBorderedButtonStyle { _OpenBorderedButtonStyle() }
 }
 
+/// The filled system button style used for primary actions. The normal and
+/// highlighted graphs are retained separately by `_OpenButtonStyleContent`,
+/// so press feedback changes the concrete fill while preserving the button's
+/// action, role and accessibility identity.
+public struct _OpenBorderedProminentButtonStyle: _OpenButtonStyleProtocol, Sendable {
+    public init() {}
+
+    public func makeBody(configuration: Configuration) -> some _OpenView {
+        let fill: UIColor
+        switch configuration.role {
+        case .some(.destructive):
+            fill = .systemRed
+        default:
+            fill = .systemBlue
+        }
+        return configuration.label
+            .foregroundStyle(.white)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(Color(uiColor: fill))
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .opacity(configuration.isPressed ? 0.72 : 1)
+    }
+}
+
+public extension _OpenButtonStyleProtocol
+where Self == _OpenBorderedProminentButtonStyle {
+    static var borderedProminent: _OpenBorderedProminentButtonStyle {
+        _OpenBorderedProminentButtonStyle()
+    }
+}
+
 /// Portable rendering for the system glass button styles introduced by the
 /// newest SDK.  The normal and pressed configurations remain distinct nodes,
 /// so OpenUIKit's button control switches the real blur-backed surface while
@@ -1732,6 +1764,7 @@ private func _openApplyingButtonStyle<Style: _OpenButtonStyleProtocol>(
 public typealias ButtonStyle = _OpenButtonStyleProtocol
 public typealias PlainButtonStyle = _OpenPlainButtonStyle
 public typealias BorderedButtonStyle = _OpenBorderedButtonStyle
+public typealias BorderedProminentButtonStyle = _OpenBorderedProminentButtonStyle
 public typealias GlassButtonStyle = _OpenGlassButtonStyle
 
 public struct _OpenLabel<Title: _OpenView, Icon: _OpenView>: _OpenView {
@@ -1816,6 +1849,16 @@ public struct _OpenLinearGradient: _OpenView {
     }
 
     nonisolated public init(
+        colors: [Color],
+        startPoint: UnitPoint,
+        endPoint: UnitPoint
+    ) {
+        gradient = Gradient(colors: colors)
+        self.startPoint = startPoint
+        self.endPoint = endPoint
+    }
+
+    nonisolated public init(
         stops: [Gradient.Stop],
         startPoint: UnitPoint,
         endPoint: UnitPoint
@@ -1833,6 +1876,49 @@ public struct _OpenLinearGradient: _OpenView {
 extension _OpenLinearGradient: _OpenShapeStyle {
     public func _openResolvedForegroundColor() -> _OpenColor {
         gradient.colors.first ?? .clear
+    }
+}
+
+/// Contextual ShapeStyle constructors used by spellings such as
+/// `.foregroundStyle(.linearGradient(colors:startPoint:endPoint:))`. They
+/// build the same concrete gradient value as `LinearGradient(...)`,
+/// preserving all stop locations and the renderer's unit-coordinate
+/// direction.
+public extension _OpenShapeStyle where Self == _OpenLinearGradient {
+    nonisolated static func linearGradient(
+        _ gradient: Gradient,
+        startPoint: UnitPoint,
+        endPoint: UnitPoint
+    ) -> _OpenLinearGradient {
+        _OpenLinearGradient(
+            gradient: gradient,
+            startPoint: startPoint,
+            endPoint: endPoint
+        )
+    }
+
+    nonisolated static func linearGradient(
+        colors: [Color],
+        startPoint: UnitPoint,
+        endPoint: UnitPoint
+    ) -> _OpenLinearGradient {
+        _OpenLinearGradient(
+            colors: colors,
+            startPoint: startPoint,
+            endPoint: endPoint
+        )
+    }
+
+    nonisolated static func linearGradient(
+        stops: [Gradient.Stop],
+        startPoint: UnitPoint,
+        endPoint: UnitPoint
+    ) -> _OpenLinearGradient {
+        _OpenLinearGradient(
+            stops: stops,
+            startPoint: startPoint,
+            endPoint: endPoint
+        )
     }
 }
 

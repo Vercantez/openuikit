@@ -148,6 +148,58 @@ final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
         XCTAssertEqual(opacity.alpha, 0.35, accuracy: 0.000_001)
     }
 
+    func testProminentBorderedButtonAndColorGradientRenderConcreteSurfaces() throws {
+        _ = BorderedProminentButtonStyle()
+        let gradientStyle: LinearGradient = .linearGradient(
+            colors: [.blue, .red],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        let root = try hosted(
+            VStack {
+                Button("Continue") {}
+                    .buttonStyle(.borderedProminent)
+                    .buttonBorderShape(.roundedRectangle)
+                gradientStyle
+                    .frame(width: 80, height: 24)
+            }
+        )
+
+        let button = try XCTUnwrap(
+            descendants(including: root).first {
+                $0.accessibilityIdentifier == "SwiftUI.Button"
+            } as? UIControl
+        )
+        let border = try XCTUnwrap(
+            descendants(including: root).first {
+                $0.accessibilityIdentifier == "SwiftUI.ButtonBorderShape"
+            }
+        )
+        XCTAssertEqual(border.layer.cornerRadius, 8, accuracy: 0.001)
+        XCTAssertTrue(border.clipsToBounds)
+        let label = try XCTUnwrap(
+            descendants(including: button).compactMap { $0 as? UILabel }
+                .first { $0.text == "Continue" }
+        )
+        XCTAssertEqual(label.textColor, .white)
+        XCTAssertNotNil(
+            descendants(including: button).first {
+                $0.accessibilityIdentifier == "SwiftUI.Color"
+                    && $0.backgroundColor == .systemBlue
+            }
+        )
+
+        let gradient = try XCTUnwrap(
+            descendants(including: root).first {
+                $0.accessibilityIdentifier == "SwiftUI.LinearGradient"
+            } as? UIGradientView
+        )
+        XCTAssertEqual(gradient.colors.count, 2)
+        XCTAssertEqual(gradient.locations ?? [], [0, 1])
+        XCTAssertEqual(gradient.startPoint, CGPoint(x: 0, y: 0))
+        XCTAssertEqual(gradient.endPoint, CGPoint(x: 1, y: 1))
+    }
+
     private func hosted<Content: View>(_ content: Content) throws -> UIView {
         let controller = UIHostingController(rootView: content)
         let root = try XCTUnwrap(controller.view)
