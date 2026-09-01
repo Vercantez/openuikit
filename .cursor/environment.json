@@ -1,0 +1,8 @@
+{
+  "name": "OpenUIKit Swift 6.2.4 framework lab",
+  "user": "ubuntu",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "install": "bash .cursor/verify-cloud-environment.sh"
+}
