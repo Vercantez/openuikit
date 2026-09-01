@@ -1,0 +1,896 @@
+precise	status	evidence	notes
+c:@E@MPChangeLanguageOptionSetting	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPChangeLanguageOptionSetting@MPChangeLanguageOptionSettingNone	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPChangeLanguageOptionSetting@MPChangeLanguageOptionSettingNowPlayingItemOnly	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPChangeLanguageOptionSetting@MPChangeLanguageOptionSettingPermanent	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPErrorCode	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+c:@E@MPErrorCode@MPErrorCancelled	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+c:@E@MPErrorCode@MPErrorCloudServiceCapabilityMissing	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+c:@E@MPErrorCode@MPErrorNetworkConnectionFailed	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+c:@E@MPErrorCode@MPErrorNotFound	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+c:@E@MPErrorCode@MPErrorNotSupported	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+c:@E@MPErrorCode@MPErrorPermissionDenied	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+c:@E@MPErrorCode@MPErrorRequestTimedOut	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+c:@E@MPErrorCode@MPErrorUnknown	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+c:@E@MPMediaGrouping	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaGrouping@MPMediaGroupingAlbum	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaGrouping@MPMediaGroupingAlbumArtist	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaGrouping@MPMediaGroupingArtist	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaGrouping@MPMediaGroupingComposer	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaGrouping@MPMediaGroupingGenre	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaGrouping@MPMediaGroupingPlaylist	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaGrouping@MPMediaGroupingPodcastTitle	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaGrouping@MPMediaGroupingTitle	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaLibraryAuthorizationStatus	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaLibraryAuthorizationStatus@MPMediaLibraryAuthorizationStatusAuthorized	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaLibraryAuthorizationStatus@MPMediaLibraryAuthorizationStatusDenied	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaLibraryAuthorizationStatus@MPMediaLibraryAuthorizationStatusNotDetermined	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaLibraryAuthorizationStatus@MPMediaLibraryAuthorizationStatusRestricted	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaPlaylistAttribute	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaPlaylistAttribute@MPMediaPlaylistAttributeGenius	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaPlaylistAttribute@MPMediaPlaylistAttributeOnTheGo	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaPlaylistAttribute@MPMediaPlaylistAttributeSmart	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaPredicateComparison	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaPredicateComparison@MPMediaPredicateComparisonContains	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaPredicateComparison@MPMediaPredicateComparisonEqualTo	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaType	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaType@MPMediaTypeAny	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaType@MPMediaTypeAnyAudio	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaType@MPMediaTypeAnyVideo	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaType@MPMediaTypeAudioBook	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaType@MPMediaTypeAudioITunesU	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaType@MPMediaTypeHomeVideo	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaType@MPMediaTypeMovie	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaType@MPMediaTypeMusic	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaType@MPMediaTypeMusicVideo	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaType@MPMediaTypePodcast	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaType@MPMediaTypeTVShow	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaType@MPMediaTypeVideoITunesU	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMediaType@MPMediaTypeVideoPodcast	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieControlStyle	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieControlStyle@MPMovieControlStyleDefault	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieControlStyle@MPMovieControlStyleEmbedded	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieControlStyle@MPMovieControlStyleFullscreen	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieControlStyle@MPMovieControlStyleNone	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieFinishReason	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieFinishReason@MPMovieFinishReasonPlaybackEnded	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieFinishReason@MPMovieFinishReasonPlaybackError	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieFinishReason@MPMovieFinishReasonUserExited	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieLoadState	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieLoadState@MPMovieLoadStatePlayable	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieLoadState@MPMovieLoadStatePlaythroughOK	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieLoadState@MPMovieLoadStateStalled	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieMediaTypeMask	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieMediaTypeMask@MPMovieMediaTypeMaskAudio	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieMediaTypeMask@MPMovieMediaTypeMaskVideo	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMoviePlaybackState	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMoviePlaybackState@MPMoviePlaybackStateInterrupted	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMoviePlaybackState@MPMoviePlaybackStatePaused	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMoviePlaybackState@MPMoviePlaybackStatePlaying	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMoviePlaybackState@MPMoviePlaybackStateSeekingBackward	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMoviePlaybackState@MPMoviePlaybackStateSeekingForward	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMoviePlaybackState@MPMoviePlaybackStateStopped	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieRepeatMode	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieRepeatMode@MPMovieRepeatModeNone	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieRepeatMode@MPMovieRepeatModeOne	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieScalingMode	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieScalingMode@MPMovieScalingModeAspectFill	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieScalingMode@MPMovieScalingModeAspectFit	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieScalingMode@MPMovieScalingModeFill	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieScalingMode@MPMovieScalingModeNone	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieSourceType	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieSourceType@MPMovieSourceTypeFile	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieSourceType@MPMovieSourceTypeStreaming	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieSourceType@MPMovieSourceTypeUnknown	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieTimeOption	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieTimeOption@MPMovieTimeOptionExact	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMovieTimeOption@MPMovieTimeOptionNearestKeyFrame	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicPlaybackState	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicPlaybackState@MPMusicPlaybackStateInterrupted	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicPlaybackState@MPMusicPlaybackStatePaused	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicPlaybackState@MPMusicPlaybackStatePlaying	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicPlaybackState@MPMusicPlaybackStateSeekingBackward	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicPlaybackState@MPMusicPlaybackStateSeekingForward	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicPlaybackState@MPMusicPlaybackStateStopped	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicRepeatMode	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicRepeatMode@MPMusicRepeatModeAll	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicRepeatMode@MPMusicRepeatModeDefault	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicRepeatMode@MPMusicRepeatModeNone	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicRepeatMode@MPMusicRepeatModeOne	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicShuffleMode	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicShuffleMode@MPMusicShuffleModeAlbums	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicShuffleMode@MPMusicShuffleModeDefault	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicShuffleMode@MPMusicShuffleModeOff	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPMusicShuffleMode@MPMusicShuffleModeSongs	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPNowPlayingInfoLanguageOptionType	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPNowPlayingInfoLanguageOptionType@MPNowPlayingInfoLanguageOptionTypeAudible	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPNowPlayingInfoLanguageOptionType@MPNowPlayingInfoLanguageOptionTypeLegible	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPNowPlayingInfoMediaType	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPNowPlayingInfoMediaType@MPNowPlayingInfoMediaTypeAudio	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPNowPlayingInfoMediaType@MPNowPlayingInfoMediaTypeNone	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPNowPlayingInfoMediaType@MPNowPlayingInfoMediaTypeVideo	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPNowPlayingPlaybackState	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPNowPlayingPlaybackState@MPNowPlayingPlaybackStateInterrupted	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPNowPlayingPlaybackState@MPNowPlayingPlaybackStatePaused	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPNowPlayingPlaybackState@MPNowPlayingPlaybackStatePlaying	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPNowPlayingPlaybackState@MPNowPlayingPlaybackStateStopped	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPNowPlayingPlaybackState@MPNowPlayingPlaybackStateUnknown	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPRemoteCommandHandlerStatus	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPRemoteCommandHandlerStatus@MPRemoteCommandHandlerStatusCommandFailed	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPRemoteCommandHandlerStatus@MPRemoteCommandHandlerStatusDeviceNotFound	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPRemoteCommandHandlerStatus@MPRemoteCommandHandlerStatusNoActionableNowPlayingItem	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPRemoteCommandHandlerStatus@MPRemoteCommandHandlerStatusNoSuchContent	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPRemoteCommandHandlerStatus@MPRemoteCommandHandlerStatusSuccess	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPRepeatType	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPRepeatType@MPRepeatTypeAll	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPRepeatType@MPRepeatTypeOff	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPRepeatType@MPRepeatTypeOne	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPSeekCommandEventType	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPSeekCommandEventType@MPSeekCommandEventTypeBeginSeeking	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPSeekCommandEventType@MPSeekCommandEventTypeEndSeeking	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPShuffleType	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPShuffleType@MPShuffleTypeCollections	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPShuffleType@MPShuffleTypeItems	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@E@MPShuffleType@MPShuffleTypeOff	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+c:@F@MPVolumeSettingsAlertHide	implemented	full/mediaplayer/MediaPlayer.swift	Inert volume-HUD functions.
+c:@F@MPVolumeSettingsAlertIsVisible	implemented	full/mediaplayer/MediaPlayer.swift	Inert volume-HUD functions.
+c:@F@MPVolumeSettingsAlertShow	implemented	full/mediaplayer/MediaPlayer.swift	Inert volume-HUD functions.
+c:@MPErrorDomain	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPLanguageOptionCharacteristicContainsOnlyForcedSubtitles	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPLanguageOptionCharacteristicDescribesMusicAndSound	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPLanguageOptionCharacteristicDescribesVideo	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPLanguageOptionCharacteristicDubbedTranslation	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPLanguageOptionCharacteristicEasyToRead	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPLanguageOptionCharacteristicIsAuxiliaryContent	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPLanguageOptionCharacteristicIsMainProgramContent	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPLanguageOptionCharacteristicLanguageTranslation	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPLanguageOptionCharacteristicTranscribesSpokenDialog	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPLanguageOptionCharacteristicVoiceOverTranslation	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaEntityPropertyPersistentID	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyAlbumArtist	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyAlbumArtistPersistentID	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyAlbumPersistentID	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyAlbumTitle	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyAlbumTrackCount	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyAlbumTrackNumber	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyArtist	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyArtistPersistentID	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyArtwork	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyAssetURL	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyBeatsPerMinute	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyBookmarkTime	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyComments	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyComposer	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyComposerPersistentID	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyDateAdded	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyDiscCount	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyDiscNumber	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyGenre	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyGenrePersistentID	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyHasProtectedAsset	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyIsCloudItem	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyIsCompilation	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyIsExplicit	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyIsPreorder	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyLastPlayedDate	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyLyrics	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyMediaType	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyPersistentID	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyPlayCount	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyPlaybackDuration	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyPlaybackStoreID	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyPodcastPersistentID	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyPodcastTitle	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyRating	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyReleaseDate	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertySkipCount	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyTitle	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaItemPropertyUserGrouping	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaLibraryDidChangeNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMediaPlaybackIsPreparedToPlayDidChangeNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMediaPlaylistPropertyAuthorDisplayName	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaPlaylistPropertyCloudGlobalID	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaPlaylistPropertyDescriptionText	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaPlaylistPropertyName	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaPlaylistPropertyPersistentID	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaPlaylistPropertyPlaylistAttributes	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMediaPlaylistPropertySeedItems	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMovieDurationAvailableNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMovieMediaTypesAvailableNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMovieNaturalSizeAvailableNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMoviePlayerDidEnterFullscreenNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMoviePlayerDidExitFullscreenNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMoviePlayerFullscreenAnimationCurveUserInfoKey	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMoviePlayerFullscreenAnimationDurationUserInfoKey	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMoviePlayerLoadStateDidChangeNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMoviePlayerNowPlayingMovieDidChangeNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMoviePlayerPlaybackDidFinishNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMoviePlayerPlaybackDidFinishReasonUserInfoKey	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMoviePlayerPlaybackStateDidChangeNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMoviePlayerReadyForDisplayDidChangeNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMoviePlayerScalingModeDidChangeNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMoviePlayerThumbnailErrorKey	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMoviePlayerThumbnailImageKey	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMoviePlayerThumbnailImageRequestDidFinishNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMoviePlayerThumbnailTimeKey	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMoviePlayerTimedMetadataKeyDataType	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMoviePlayerTimedMetadataKeyInfo	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMoviePlayerTimedMetadataKeyLanguageCode	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMoviePlayerTimedMetadataKeyMIMEType	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMoviePlayerTimedMetadataKeyName	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMoviePlayerTimedMetadataUpdatedNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMoviePlayerTimedMetadataUserInfoKey	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPMoviePlayerWillEnterFullscreenNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMoviePlayerWillExitFullscreenNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMovieSourceTypeAvailableNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMusicPlayerControllerNowPlayingItemDidChangeNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMusicPlayerControllerPlaybackStateDidChangeNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMusicPlayerControllerQueueDidChangeNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPMusicPlayerControllerVolumeDidChangeNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPNowPlayingInfoCollectionIdentifier	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoProperty1x1AnimatedArtwork	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoProperty3x4AnimatedArtwork	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyAdTimeRanges	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyAssetURL	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyAvailableLanguageOptions	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyChapterCount	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyChapterNumber	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyCreditsStartTime	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyCurrentLanguageOptions	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyCurrentPlaybackDate	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyDefaultPlaybackRate	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyElapsedPlaybackTime	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyExcludeFromSuggestions	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyExternalContentIdentifier	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyExternalUserProfileIdentifier	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyInternationalStandardRecordingCode	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyIsLiveStream	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyMediaType	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyPlaybackProgress	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyPlaybackQueueCount	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyPlaybackQueueIndex	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyPlaybackRate	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPNowPlayingInfoPropertyServiceIdentifier	implemented	full/mediaplayer/MPConstants.swift	Public string constant.
+c:@MPVolumeViewWirelessRouteActiveDidChangeNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@MPVolumeViewWirelessRoutesAvailableDidChangeNotification	implemented	full/mediaplayer/MPConstants.swift	Notification name.
+c:@T@MPMediaEntityPersistentID	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)AVMediaSelectionGroup(im)makeNowPlayingInfoLanguageOptionGroup	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)AVMediaSelectionOption(im)makeNowPlayingInfoLanguageOption	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)AVPlayerItem(py)nowPlayingInfo	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)MPAdTimeRange	unavailable		Requires CoreMedia CMTimeRange.
+c:objc(cs)MPAdTimeRange(im)initWithTimeRange:	unavailable		Requires CoreMedia CMTimeRange.
+c:objc(cs)MPAdTimeRange(im)initWithTimeRange:::SYNTHESIZED::c:objc(cs)MPAdTimeRange	unavailable		Requires CoreMedia CMTimeRange.
+c:objc(cs)MPAdTimeRange(py)timeRange	unavailable		Requires CoreMedia CMTimeRange.
+c:objc(cs)MPChangeLanguageOptionCommandEvent	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangeLanguageOptionCommandEvent(py)languageOption	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangeLanguageOptionCommandEvent(py)setting	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangePlaybackPositionCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangePlaybackPositionCommandEvent	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangePlaybackPositionCommandEvent(py)positionTime	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangePlaybackRateCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangePlaybackRateCommand(py)supportedPlaybackRates	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangePlaybackRateCommandEvent	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangePlaybackRateCommandEvent(py)playbackRate	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangeRepeatModeCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangeRepeatModeCommand(py)currentRepeatType	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangeRepeatModeCommandEvent	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangeRepeatModeCommandEvent(py)preservesRepeatMode	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangeRepeatModeCommandEvent(py)repeatType	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangeShuffleModeCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangeShuffleModeCommand(py)currentShuffleType	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangeShuffleModeCommandEvent	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangeShuffleModeCommandEvent(py)preservesShuffleMode	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPChangeShuffleModeCommandEvent(py)shuffleType	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPContentItem	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPContentItem(im)initWithIdentifier:	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPContentItem(py)artwork	implemented	full/mediaplayer/MPContent.swift	Optional artwork slot; Linux never loads UIImage bitmaps.
+c:objc(cs)MPContentItem(py)container	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPContentItem(py)explicitContent	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPContentItem(py)identifier	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPContentItem(py)playable	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPContentItem(py)playbackProgress	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPContentItem(py)streamingContent	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPContentItem(py)subtitle	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPContentItem(py)title	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPFeedbackCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPFeedbackCommand(py)active	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPFeedbackCommand(py)localizedShortTitle	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPFeedbackCommand(py)localizedTitle	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPFeedbackCommandEvent	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPFeedbackCommandEvent(py)negative	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPMediaEntity	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaEntity(cm)canFilterByProperty:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaEntity(im)enumerateValuesForProperties:usingBlock:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaEntity(im)objectForKeyedSubscript:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaEntity(im)valueForProperty:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaEntity(py)persistentID	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(cm)persistentIDPropertyForGroupingType:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(cm)titlePropertyForGroupingType:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)albumArtist	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)albumArtistPersistentID	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)albumPersistentID	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)albumTitle	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)albumTrackCount	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)albumTrackNumber	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)artist	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)artistPersistentID	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)artwork	implemented	full/mediaplayer/MPMedia.swift	Optional artwork slot; Linux never loads UIImage bitmaps.
+c:objc(cs)MPMediaItem(py)assetURL	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)beatsPerMinute	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)bookmarkTime	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)cloudItem	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)comments	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)compilation	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)composer	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)composerPersistentID	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)dateAdded	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)discCount	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)discNumber	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)explicitItem	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)genre	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)genrePersistentID	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)lastPlayedDate	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)lyrics	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)mediaType	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)persistentID	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)playCount	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)playbackDuration	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)playbackStoreID	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)podcastPersistentID	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)podcastTitle	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)preorder	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)protectedAsset	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)rating	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)releaseDate	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)skipCount	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)title	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItem(py)userGrouping	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItemAnimatedArtwork	unavailable		Artwork APIs require UIImage and CoreGraphics geometry.
+c:objc(cs)MPMediaItemAnimatedArtwork(im)initWithArtworkID:previewImageRequestHandler:videoAssetFileURLRequestHandler:	unavailable		Artwork APIs require UIImage and CoreGraphics geometry.
+c:objc(cs)MPMediaItemArtwork	declared	full/mediaplayer/MPMedia.swift	Placeholder NSObject so artwork properties type-check; UIImage request APIs are unavailable.
+c:objc(cs)MPMediaItemArtwork(im)imageWithSize:	unavailable		Artwork APIs require UIImage and CoreGraphics geometry.
+c:objc(cs)MPMediaItemArtwork(im)initWithBoundsSize:requestHandler:	unavailable		Artwork APIs require UIImage and CoreGraphics geometry.
+c:objc(cs)MPMediaItemArtwork(im)initWithImage:	unavailable		Artwork APIs require UIImage and CoreGraphics geometry.
+c:objc(cs)MPMediaItemArtwork(py)bounds	unavailable		Artwork APIs require UIImage and CoreGraphics geometry.
+c:objc(cs)MPMediaItemArtwork(py)imageCropRect	unavailable		Artwork APIs require UIImage and CoreGraphics geometry.
+c:objc(cs)MPMediaItemCollection	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItemCollection(im)initWithItems:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItemCollection(py)count	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItemCollection(py)items	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItemCollection(py)mediaTypes	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaItemCollection(py)representativeItem	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaLibrary	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaLibrary(cm)authorizationStatus	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaLibrary(cm)defaultMediaLibrary	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaLibrary(cm)requestAuthorization:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaLibrary(im)addItemWithProductID:completionHandler:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaLibrary(im)beginGeneratingLibraryChangeNotifications	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaLibrary(im)endGeneratingLibraryChangeNotifications	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaLibrary(im)getPlaylistWithUUID:creationMetadata:completionHandler:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaLibrary(py)lastModifiedDate	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPickerController	unavailable		MPMediaPickerController is a UIViewController; omitted on Linux.
+c:objc(cs)MPMediaPickerController(im)initWithMediaTypes:	unavailable		MPMediaPickerController is a UIViewController; omitted on Linux.
+c:objc(cs)MPMediaPickerController(py)allowsPickingMultipleItems	unavailable		MPMediaPickerController is a UIViewController; omitted on Linux.
+c:objc(cs)MPMediaPickerController(py)delegate	unavailable		MPMediaPickerController is a UIViewController; omitted on Linux.
+c:objc(cs)MPMediaPickerController(py)mediaTypes	unavailable		MPMediaPickerController is a UIViewController; omitted on Linux.
+c:objc(cs)MPMediaPickerController(py)prompt	unavailable		MPMediaPickerController is a UIViewController; omitted on Linux.
+c:objc(cs)MPMediaPickerController(py)showsCloudItems	unavailable		MPMediaPickerController is a UIViewController; omitted on Linux.
+c:objc(cs)MPMediaPickerController(py)showsItemsWithProtectedAssets	unavailable		MPMediaPickerController is a UIViewController; omitted on Linux.
+c:objc(cs)MPMediaPlaylist	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPlaylist(im)addItemWithProductID:completionHandler:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPlaylist(im)addMediaItems:completionHandler:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPlaylist(py)authorDisplayName	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPlaylist(py)cloudGlobalID	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPlaylist(py)descriptionText	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPlaylist(py)name	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPlaylist(py)persistentID	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPlaylist(py)playlistAttributes	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPlaylist(py)seedItems	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPlaylistCreationMetadata	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPlaylistCreationMetadata(im)initWithName:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPlaylistCreationMetadata(py)authorDisplayName	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPlaylistCreationMetadata(py)descriptionText	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPlaylistCreationMetadata(py)name	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPredicate	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPropertyPredicate	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPropertyPredicate(cm)predicateWithValue:forProperty:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPropertyPredicate(cm)predicateWithValue:forProperty:comparisonType:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPropertyPredicate(py)comparisonType	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPropertyPredicate(py)property	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaPropertyPredicate(py)value	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(cm)albumsQuery	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(cm)artistsQuery	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(cm)audiobooksQuery	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(cm)compilationsQuery	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(cm)composersQuery	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(cm)genresQuery	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(cm)playlistsQuery	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(cm)podcastsQuery	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(cm)songsQuery	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(im)addFilterPredicate:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(im)initWithFilterPredicates:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(im)removeFilterPredicate:	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(py)collectionSections	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(py)collections	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(py)filterPredicates	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(py)groupingType	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(py)itemSections	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuery(py)items	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuerySection	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuerySection(py)range	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMediaQuerySection(py)title	implemented	full/mediaplayer/MPMedia.swift	Local media entity/query surface; library is empty and denied.
+c:objc(cs)MPMovieAccessLog	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLog(py)events	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLog(py)extendedLogData	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLog(py)extendedLogDataStringEncoding	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent(py)URI	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent(py)durationWatched	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent(py)indicatedBitrate	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent(py)numberOfBytesTransferred	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent(py)numberOfDroppedVideoFrames	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent(py)numberOfSegmentsDownloaded	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent(py)numberOfServerAddressChanges	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent(py)numberOfStalls	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent(py)observedBitrate	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent(py)playbackSessionID	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent(py)playbackStartDate	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent(py)playbackStartOffset	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent(py)segmentsDownloadedDuration	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieAccessLogEvent(py)serverAddress	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieErrorLog	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieErrorLog(py)events	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieErrorLog(py)extendedLogData	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieErrorLog(py)extendedLogDataStringEncoding	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieErrorLogEvent	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieErrorLogEvent(py)URI	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieErrorLogEvent(py)date	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieErrorLogEvent(py)errorComment	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieErrorLogEvent(py)errorDomain	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieErrorLogEvent(py)errorStatusCode	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieErrorLogEvent(py)playbackSessionID	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMovieErrorLogEvent(py)serverAddress	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(im)cancelAllThumbnailImageRequests	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(im)initWithContentURL:	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(im)requestThumbnailImagesAtTimes:timeOption:	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(im)setFullscreen:animated:	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(im)thumbnailImageAtTime:timeOption:	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)accessLog	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)airPlayVideoActive	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)allowsAirPlay	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)backgroundView	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)contentURL	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)controlStyle	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)duration	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)endPlaybackTime	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)errorLog	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)fullscreen	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)initialPlaybackTime	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)loadState	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)movieMediaTypes	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)movieSourceType	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)naturalSize	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)playableDuration	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)playbackState	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)readyForDisplay	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)repeatMode	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)scalingMode	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)shouldAutoplay	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)timedMetadata	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)useApplicationAudioSession	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerController(py)view	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerViewController	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerViewController(im)initWithContentURL:	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMoviePlayerViewController(py)moviePlayer	unavailable		Legacy movie player is UIView/UIImage-based; omitted on Linux.
+c:objc(cs)MPMusicPlayerApplicationController	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerApplicationController(im)performQueueTransaction:completionHandler:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(cpy)applicationMusicPlayer	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(cpy)applicationQueuePlayer	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(cpy)iPodMusicPlayer	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(cpy)systemMusicPlayer	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(im)appendQueueDescriptor:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(im)beginGeneratingPlaybackNotifications	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(im)endGeneratingPlaybackNotifications	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(im)prepareToPlayWithCompletionHandler:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(im)prependQueueDescriptor:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(im)setQueueWithDescriptor:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(im)setQueueWithItemCollection:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(im)setQueueWithQuery:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(im)setQueueWithStoreIDs:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(im)skipToBeginning	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(im)skipToNextItem	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(im)skipToPreviousItem	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(py)indexOfNowPlayingItem	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(py)nowPlayingItem	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(py)playbackState	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(py)repeatMode	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerController(py)shuffleMode	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerControllerMutableQueue	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerControllerMutableQueue(im)insertQueueDescriptor:afterItem:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerControllerMutableQueue(im)removeItem:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerControllerQueue	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerControllerQueue(py)items	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor(im)initWithItemCollection:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor(im)initWithQuery:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor(im)setEndTime:forItem:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor(im)setStartTime:forItem:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor(py)itemCollection	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor(py)query	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor(py)startItem	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerPlayParameters	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerPlayParameters(im)initWithDictionary:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerPlayParameters(py)dictionary	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerPlayParametersQueueDescriptor	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerPlayParametersQueueDescriptor(im)initWithPlayParametersQueue:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerPlayParametersQueueDescriptor(im)setEndTime:forItemWithPlayParameters:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerPlayParametersQueueDescriptor(im)setStartTime:forItemWithPlayParameters:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerPlayParametersQueueDescriptor(py)playParametersQueue	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerPlayParametersQueueDescriptor(py)startItemPlayParameters	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerQueueDescriptor	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerStoreQueueDescriptor	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerStoreQueueDescriptor(im)initWithStoreIDs:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerStoreQueueDescriptor(im)setEndTime:forItemWithStoreID:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerStoreQueueDescriptor(im)setStartTime:forItemWithStoreID:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerStoreQueueDescriptor(py)startItemID	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPMusicPlayerStoreQueueDescriptor(py)storeIDs	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(cs)MPNowPlayingInfoCenter	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoCenter(cm)defaultCenter	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoCenter(cpy)supportedAnimatedArtworkKeys	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoCenter(py)nowPlayingInfo	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoCenter(py)playbackState	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoLanguageOption	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoLanguageOption(im)initWithType:languageTag:characteristics:displayName:identifier:	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoLanguageOption(im)isAutomaticAudibleLanguageOption	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoLanguageOption(im)isAutomaticLegibleLanguageOption	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoLanguageOption(py)displayName	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoLanguageOption(py)identifier	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoLanguageOption(py)languageOptionCharacteristics	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoLanguageOption(py)languageOptionType	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoLanguageOption(py)languageTag	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoLanguageOptionGroup	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoLanguageOptionGroup(im)initWithLanguageOptions:defaultLanguageOption:allowEmptySelection:	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoLanguageOptionGroup(py)allowEmptySelection	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoLanguageOptionGroup(py)defaultLanguageOption	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingInfoLanguageOptionGroup(py)languageOptions	implemented	full/mediaplayer/MPNowPlaying.swift	In-process now-playing metadata.
+c:objc(cs)MPNowPlayingSession	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)MPNowPlayingSession(im)addPlayer:	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)MPNowPlayingSession(im)becomeActiveIfPossibleWithCompletion:	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)MPNowPlayingSession(im)initWithPlayers:	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)MPNowPlayingSession(im)removePlayer:	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)MPNowPlayingSession(py)active	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)MPNowPlayingSession(py)automaticallyPublishesNowPlayingInfo	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)MPNowPlayingSession(py)canBecomeActive	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)MPNowPlayingSession(py)delegate	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)MPNowPlayingSession(py)nowPlayingInfoCenter	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)MPNowPlayingSession(py)players	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)MPNowPlayingSession(py)remoteCommandCenter	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(cs)MPPlayableContentManager	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPPlayableContentManager(cm)sharedContentManager	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPPlayableContentManager(im)beginUpdates	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPPlayableContentManager(im)endUpdates	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPPlayableContentManager(im)reloadData	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPPlayableContentManager(py)context	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPPlayableContentManager(py)dataSource	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPPlayableContentManager(py)delegate	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPPlayableContentManager(py)nowPlayingIdentifiers	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPPlayableContentManagerContext	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPPlayableContentManagerContext(py)contentLimitsEnabled	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPPlayableContentManagerContext(py)contentLimitsEnforced	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPPlayableContentManagerContext(py)endpointAvailable	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPPlayableContentManagerContext(py)enforcedContentItemsCount	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPPlayableContentManagerContext(py)enforcedContentTreeDepth	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPRatingCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRatingCommand(py)maximumRating	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRatingCommand(py)minimumRating	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRatingCommandEvent	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRatingCommandEvent(py)rating	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommand(im)addTarget:action:	unavailable		Linux Foundation has no Selector/target-action runtime.
+c:objc(cs)MPRemoteCommand(im)addTargetWithHandler:	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommand(im)removeTarget:	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommand(im)removeTarget:action:	unavailable		Linux Foundation has no Selector/target-action runtime.
+c:objc(cs)MPRemoteCommand(py)enabled	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(cm)sharedCommandCenter	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)bookmarkCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)changePlaybackPositionCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)changePlaybackRateCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)changeRepeatModeCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)changeShuffleModeCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)disableLanguageOptionCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)dislikeCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)enableLanguageOptionCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)likeCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)nextTrackCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)pauseCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)playCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)previousTrackCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)ratingCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)seekBackwardCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)seekForwardCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)skipBackwardCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)skipForwardCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)stopCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandCenter(py)togglePlayPauseCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandEvent	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandEvent(py)command	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPRemoteCommandEvent(py)timestamp	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPSeekCommandEvent	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPSeekCommandEvent(py)type	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPSkipIntervalCommand	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPSkipIntervalCommand(py)preferredIntervals	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPSkipIntervalCommandEvent	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPSkipIntervalCommandEvent(py)interval	implemented	full/mediaplayer/MPRemoteCommand.swift	In-process remote command objects.
+c:objc(cs)MPTimedMetadata	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPTimedMetadata(py)allMetadata	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPTimedMetadata(py)key	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPTimedMetadata(py)keyspace	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPTimedMetadata(py)timestamp	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPTimedMetadata(py)value	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(cs)MPVolumeView	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(im)maximumVolumeSliderImageForState:	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(im)minimumVolumeSliderImageForState:	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(im)routeButtonImageForState:	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(im)routeButtonRectForBounds:	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(im)setMaximumVolumeSliderImage:forState:	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(im)setMinimumVolumeSliderImage:forState:	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(im)setRouteButtonImage:forState:	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(im)setVolumeThumbImage:forState:	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(im)volumeSliderRectForBounds:	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(im)volumeThumbImageForState:	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(im)volumeThumbRectForBounds:volumeSliderRect:value:	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(py)showsRouteButton	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(py)showsVolumeSlider	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(py)volumeWarningSliderImage	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(py)wirelessRouteActive	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)MPVolumeView(py)wirelessRoutesAvailable	unavailable		MPVolumeView is a UIView; Linux swiftc has no UIKit.
+c:objc(cs)NSUserActivity(py)externalMediaContentIdentifier	unavailable		Linux Foundation has no NSUserActivity type.
+c:objc(cs)UIViewController(im)dismissMoviePlayerViewControllerAnimated	unavailable		Requires UIKit, AVFoundation, CoreMedia, or Objective-C Selector; omitted on Linux rather than stubbed with fake types.
+c:objc(cs)UIViewController(im)presentMoviePlayerViewControllerAnimated:	unavailable		Requires UIKit, AVFoundation, CoreMedia, or Objective-C Selector; omitted on Linux rather than stubbed with fake types.
+c:objc(pl)MPMediaPickerControllerDelegate	unavailable		MPMediaPickerController is a UIViewController; omitted on Linux.
+c:objc(pl)MPMediaPickerControllerDelegate(im)mediaPicker:didPickMediaItems:	unavailable		MPMediaPickerController is a UIViewController; omitted on Linux.
+c:objc(pl)MPMediaPickerControllerDelegate(im)mediaPickerDidCancel:	unavailable		MPMediaPickerController is a UIViewController; omitted on Linux.
+c:objc(pl)MPMediaPlayback	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(pl)MPMediaPlayback(im)beginSeekingBackward	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(pl)MPMediaPlayback(im)beginSeekingForward	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(pl)MPMediaPlayback(im)endSeeking	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(pl)MPMediaPlayback(im)pause	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(pl)MPMediaPlayback(im)play	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(pl)MPMediaPlayback(im)prepareToPlay	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(pl)MPMediaPlayback(im)stop	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(pl)MPMediaPlayback(py)currentPlaybackRate	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(pl)MPMediaPlayback(py)currentPlaybackTime	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(pl)MPMediaPlayback(py)isPreparedToPlay	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(pl)MPNowPlayingSessionDelegate	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(pl)MPNowPlayingSessionDelegate(im)nowPlayingSessionDidChangeActive:	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(pl)MPNowPlayingSessionDelegate(im)nowPlayingSessionDidChangeCanBecomeActive:	unavailable		Requires AVFoundation types that are not part of this Linux gate.
+c:objc(pl)MPPlayableContentDataSource	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(pl)MPPlayableContentDataSource(im)beginLoadingChildItemsAtIndexPath:completionHandler:	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(pl)MPPlayableContentDataSource(im)childItemsDisplayPlaybackProgressAtIndexPath:	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(pl)MPPlayableContentDataSource(im)contentItemAtIndexPath:	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(pl)MPPlayableContentDataSource(im)contentItemForIdentifier:completionHandler:	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(pl)MPPlayableContentDataSource(im)numberOfChildItemsAtIndexPath:	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(pl)MPPlayableContentDelegate	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(pl)MPPlayableContentDelegate(im)playableContentManager:didUpdateContext:	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(pl)MPPlayableContentDelegate(im)playableContentManager:initializePlaybackQueueWithCompletionHandler:	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(pl)MPPlayableContentDelegate(im)playableContentManager:initializePlaybackQueueWithContentItems:completionHandler:	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(pl)MPPlayableContentDelegate(im)playableContentManager:initiatePlaybackOfContentItemAtIndexPath:completionHandler:	implemented	full/mediaplayer/MPContent.swift	Local content item / fail-closed playable-content manager.
+c:objc(pl)MPSystemMusicPlayerController	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(pl)MPSystemMusicPlayerController(im)openToPlayQueueDescriptor:	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MPMediaEntity	implemented	full/mediaplayer/MPMedia.swift	Fail-closed NSCoding init returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MPMediaLibrary	implemented	full/mediaplayer/MPMedia.swift	Fail-closed NSCoding init returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MPMediaPredicate	implemented	full/mediaplayer/MPMedia.swift	Fail-closed NSCoding init returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MPMediaQuery	implemented	full/mediaplayer/MPMedia.swift	Fail-closed NSCoding init returns nil.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MPMediaQuerySection	implemented	full/mediaplayer/MPMedia.swift	Fail-closed NSCoding init returns nil.
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPError.swift	Foundation error-protocol witness on MPError.
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPError.swift	Foundation error-protocol witness on MPError.
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPError.swift	Foundation error-protocol witness on MPError.
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPError.swift	Foundation error-protocol witness on MPError.
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPError.swift	Foundation error-protocol witness on MPError.
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPError.swift	Foundation error-protocol witness on MPError.
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPError.swift	Foundation error-protocol witness on MPError.
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPError.swift	Foundation error-protocol witness on MPError.
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPError.swift	Foundation error-protocol witness on MPError.
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPError.swift	Foundation error-protocol witness on MPError.
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPError.swift	Foundation error-protocol witness on MPError.
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPError.swift	Foundation error-protocol witness on MPError.
+s:SC11MPErrorCodeLeV	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+s:SC11MPErrorCodeLeV11errorDomainSSvpZ	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+s:SC11MPErrorCodeLeV12notSupportedSoAAVvpZ	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+s:SC11MPErrorCodeLeV15requestTimedOutSoAAVvpZ	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+s:SC11MPErrorCodeLeV16permissionDeniedSoAAVvpZ	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+s:SC11MPErrorCodeLeV23networkConnectionFailedSoAAVvpZ	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+s:SC11MPErrorCodeLeV29cloudServiceCapabilityMissingSoAAVvpZ	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+s:SC11MPErrorCodeLeV7unknownSoAAVvpZ	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+s:SC11MPErrorCodeLeV8notFoundSoAAVvpZ	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+s:SC11MPErrorCodeLeV9cancelledSoAAVvpZ	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPChangeLanguageOptionSetting	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMediaGrouping	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMediaLibraryAuthorizationStatus	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMediaPredicateComparison	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieControlStyle	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieFinishReason	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMoviePlaybackState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieRepeatMode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieScalingMode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieSourceType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieTimeOption	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMusicPlaybackState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMusicRepeatMode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMusicShuffleMode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPNowPlayingInfoLanguageOptionType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPNowPlayingInfoMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPNowPlayingPlaybackState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPRemoteCommandHandlerStatus	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPRepeatType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPSeekCommandEventType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPShuffleType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPChangeLanguageOptionSetting	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMediaGrouping	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMediaLibraryAuthorizationStatus	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMediaPredicateComparison	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMovieControlStyle	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMovieFinishReason	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMoviePlaybackState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMovieRepeatMode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMovieScalingMode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMovieSourceType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMovieTimeOption	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMusicPlaybackState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMusicRepeatMode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMusicShuffleMode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPNowPlayingInfoLanguageOptionType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPNowPlayingInfoMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPNowPlayingPlaybackState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPRemoteCommandHandlerStatus	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPRepeatType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPSeekCommandEventType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPShuffleType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPChangeLanguageOptionSetting	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMediaGrouping	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMediaLibraryAuthorizationStatus	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMediaPredicateComparison	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMovieControlStyle	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMovieFinishReason	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMoviePlaybackState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMovieRepeatMode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMovieScalingMode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMovieSourceType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMovieTimeOption	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMusicPlaybackState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMusicRepeatMode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMusicShuffleMode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPNowPlayingInfoLanguageOptionType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPNowPlayingInfoMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPNowPlayingPlaybackState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPRemoteCommandHandlerStatus	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPRepeatType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPSeekCommandEventType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPShuffleType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:So11MPErrorCodeV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPError.swift	Typed MPError overlay.
+s:So11MPMediaTypeV8rawValueABSu_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So12MPRepeatTypeV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So13MPShuffleTypeV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So15MPMediaGroupingV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So16MPMovieLoadStateV8rawValueABSu_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So17MPMovieRepeatModeV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So17MPMovieSourceTypeV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So17MPMovieTimeOptionV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So17MPMusicRepeatModeV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So18MPMovieScalingModeV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So18MPMusicShuffleModeV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So19MPMovieControlStyleV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So19MPMovieFinishReasonV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So20MPMovieMediaTypeMaskV8rawValueABSu_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So20MPMoviePlaybackStateV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So20MPMusicPlaybackStateV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So22MPSeekCommandEventTypeV8rawValueABSgSu_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So24MPMediaPlaylistAttributeV8rawValueABSu_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So25MPNowPlayingInfoMediaTypeV8rawValueABSgSu_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So25MPNowPlayingPlaybackStateV8rawValueABSgSu_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So26MPMediaItemAnimatedArtworkC11MediaPlayerE9artworkID26previewImageRequestHandler024videoAssetFileURLRequestL0ABSS_So7UIImageCSgSo6CGSizeVYac10Foundation3URLVSgAKYactcfc	unavailable		Artwork APIs require UIImage and CoreGraphics geometry.
+s:So26MPMediaPredicateComparisonV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So27MPMusicPlayerPlayParametersC05MediaB0E4fromABs7Decoder_p_tKcfc	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+s:So27MPMusicPlayerPlayParametersC05MediaB0E6encode2toys7Encoder_p_tKF	implemented	full/mediaplayer/MPMusicPlayer.swift	Fail-closed music player / local queue descriptors.
+s:So28MPRemoteCommandHandlerStatusV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So29MPChangeLanguageOptionSettingV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So33MPMediaLibraryAuthorizationStatusV8rawValueABSgSi_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:So34MPNowPlayingInfoLanguageOptionTypeV8rawValueABSgSu_tcfc	implemented	full/mediaplayer/MPTypes.swift	Portable enum/option-set overlay.
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MPErrorCode	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer/MPTypes.swift	Protocol witness synthesized by Hashable/Equatable/OptionSet/Error conformance.
