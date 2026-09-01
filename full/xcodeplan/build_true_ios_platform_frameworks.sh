@@ -35,7 +35,7 @@ die() {
 
 sha() { sha256sum "$1" | awk '{print $1}'; }
 
-for tool in bash git perl patch swiftc clang++-18 ld64.lld-18 \
+for tool in bash git perl patch python3 swiftc clang++-18 ld64.lld-18 \
     llvm-nm-18 llvm-objdump-18 llvm-otool-18 file sha256sum; do
     command -v "$tool" >/dev/null || die "missing required tool: $tool"
 done
@@ -481,6 +481,8 @@ symlink_ledger_sha=$(sha "$AUDIT/symlinks.tsv")
 printf '%s\n' \
     "TRUE_IOS_PLATFORM_COMPLETE target=$TARGET dylibs=${#PUBLIC_MODULES[@]} swiftui_sources=${#swiftui_sources[@]} source=$SOURCE_SUBJECT_BEFORE artifacts=$artifact_ledger_sha symlinks=$symlink_ledger_sha" \
     > "$stage/PLATFORM_COMPLETE"
+python3 -B "$W/full/xcodeplan/true_ios_platform_package.py" \
+    "$stage" --emit-summary
 
 mv "$stage" "$OUTPUT_ROOT"
 stage=''

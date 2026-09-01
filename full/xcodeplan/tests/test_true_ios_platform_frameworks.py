@@ -70,6 +70,8 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         self.assertIn('find attestation -type f', self.builder)
         self.assertIn('> "$AUDIT/symlinks.tsv"', self.builder)
         self.assertIn('artifacts=$artifact_ledger_sha symlinks=$symlink_ledger_sha', self.builder)
+        self.assertIn('true_ios_platform_package.py', self.builder)
+        self.assertIn('"$stage" --emit-summary', self.builder)
 
     def test_probe_exercises_swiftui_through_uikit_at_runtime(self) -> None:
         self.assertIn('import SwiftUI', self.probe)
