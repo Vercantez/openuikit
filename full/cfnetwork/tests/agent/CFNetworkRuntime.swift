@@ -358,12 +358,6 @@ private func exerciseNetService() {
     CFNetServiceCancel(service)
 }
 
-private func cfMutableDictionary() -> CFMutableDictionary {
-    var keyCallbacks = kCFTypeDictionaryKeyCallBacks
-    var valueCallbacks = kCFTypeDictionaryValueCallBacks
-    return CFDictionaryCreateMutable(nil, 0, &keyCallbacks, &valueCallbacks)!
-}
-
 private func exerciseDiagnostics() {
     let url = CFURLCreateWithString(nil, cfString("https://example.com/"), nil)!
     let diagnostic = CFNetDiagnosticCreateWithURL(kCFAllocatorSystemDefault!, url)
