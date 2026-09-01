@@ -38,7 +38,7 @@ final class HealthComponent: GKComponent {
         self.value = value
     }
 
-    required init() {
+    override init() {
         super.init()
     }
 
