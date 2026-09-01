@@ -1,0 +1,261 @@
+precise	status	evidence	notes
+c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+c:@E@MXErrorCode@MXErrorLaunchTaskDuplicated	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+c:@E@MXErrorCode@MXErrorLaunchTaskInternalFailure	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+c:@E@MXErrorCode@MXErrorLaunchTaskInvalidID	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+c:@E@MXErrorCode@MXErrorLaunchTaskMaxCount	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+c:@E@MXErrorCode@MXErrorLaunchTaskPastDeadline	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+c:@E@MXErrorCode@MXErrorLaunchTaskUnknown	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+c:@MXErrorDomain	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+c:@T@MXLaunchTaskID	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXLaunchTaskID implemented and exercised.
+c:objc(cs)MXAnimationMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAnimationMetric(py)hitchTimeRatio	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAnimationMetric(py)scrollHitchTimeRatio	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppExitMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppExitMetric(py)backgroundExitData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppExitMetric(py)foregroundExitData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppLaunchDiagnostic	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXAppLaunchDiagnostic(py)callStackTree	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXAppLaunchDiagnostic(py)launchDuration	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXAppLaunchMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppLaunchMetric(py)histogrammedApplicationResumeTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppLaunchMetric(py)histogrammedExtendedLaunch	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppLaunchMetric(py)histogrammedOptimizedTimeToFirstDraw	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppLaunchMetric(py)histogrammedTimeToFirstDraw	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppResponsivenessMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppResponsivenessMetric(py)histogrammedApplicationHangTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppRunTimeMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppRunTimeMetric(py)cumulativeBackgroundAudioTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppRunTimeMetric(py)cumulativeBackgroundLocationTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppRunTimeMetric(py)cumulativeBackgroundTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAppRunTimeMetric(py)cumulativeForegroundTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXAverage	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(cs)MXAverage(py)averageMeasurement	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(cs)MXAverage(py)sampleCount	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(cs)MXAverage(py)standardDeviation	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(cs)MXBackgroundExitData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXBackgroundExitData(py)cumulativeAbnormalExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXBackgroundExitData(py)cumulativeAppWatchdogExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXBackgroundExitData(py)cumulativeBackgroundTaskAssertionTimeoutExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXBackgroundExitData(py)cumulativeBadAccessExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXBackgroundExitData(py)cumulativeCPUResourceLimitExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXBackgroundExitData(py)cumulativeIllegalInstructionExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXBackgroundExitData(py)cumulativeMemoryPressureExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXBackgroundExitData(py)cumulativeMemoryResourceLimitExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXBackgroundExitData(py)cumulativeNormalAppExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXBackgroundExitData(py)cumulativeSuspendedWithLockedFileExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXCPUExceptionDiagnostic	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCPUExceptionDiagnostic(py)callStackTree	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCPUExceptionDiagnostic(py)totalCPUTime	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCPUExceptionDiagnostic(py)totalSampledTime	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCPUMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXCPUMetric(py)cumulativeCPUInstructions	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXCPUMetric(py)cumulativeCPUTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXCallStackTree	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCallStackTree(im)JSONRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCellularConditionMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXCellularConditionMetric(py)histogrammedCellularConditionTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXCrashDiagnostic	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnostic(py)callStackTree	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnostic(py)exceptionCode	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnostic(py)exceptionReason	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnostic(py)exceptionType	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnostic(py)signal	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnostic(py)terminationReason	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnostic(py)virtualMemoryRegionInfo	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(im)JSONRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(im)dictionaryRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)arguments	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)className	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)composedMessage	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)exceptionName	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)exceptionType	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason(py)formatString	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnostic	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnostic(im)JSONRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnostic(im)dictionaryRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnostic(py)applicationVersion	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnostic(py)metaData	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnostic(py)signpostData	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnosticPayload	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnosticPayload(im)JSONRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnosticPayload(im)dictionaryRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnosticPayload(py)appLaunchDiagnostics	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnosticPayload(py)cpuExceptionDiagnostics	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnosticPayload(py)crashDiagnostics	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnosticPayload(py)diskWriteExceptionDiagnostics	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnosticPayload(py)hangDiagnostics	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnosticPayload(py)timeStampBegin	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiagnosticPayload(py)timeStampEnd	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiskIOMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXDiskIOMetric(py)cumulativeLogicalWrites	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXDiskSpaceUsageMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalBinaryFileCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalBinaryFileSize	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalCacheFolderSize	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalCloneSize	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalDataFileCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalDataFileSize	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalDiskSpaceCapacity	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXDiskSpaceUsageMetric(py)totalDiskSpaceUsedSize	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXDiskWriteExceptionDiagnostic	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiskWriteExceptionDiagnostic(py)callStackTree	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDiskWriteExceptionDiagnostic(py)totalWritesCaused	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXDisplayMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXDisplayMetric(py)averagePixelLuminance	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXForegroundExitData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXForegroundExitData(py)cumulativeAbnormalExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXForegroundExitData(py)cumulativeAppWatchdogExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXForegroundExitData(py)cumulativeBadAccessExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXForegroundExitData(py)cumulativeIllegalInstructionExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXForegroundExitData(py)cumulativeMemoryResourceLimitExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXForegroundExitData(py)cumulativeNormalAppExitCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXGPUMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXGPUMetric(py)cumulativeGPUTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXHangDiagnostic	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXHangDiagnostic(py)callStackTree	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXHangDiagnostic(py)hangDuration	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXHistogram	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(cs)MXHistogram(py)bucketEnumerator	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(cs)MXHistogram(py)totalBucketCount	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(cs)MXHistogramBucket	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(cs)MXHistogramBucket(py)bucketCount	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(cs)MXHistogramBucket(py)bucketEnd	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(cs)MXHistogramBucket(py)bucketStart	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(cs)MXLocationActivityMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXLocationActivityMetric(py)cumulativeBestAccuracyForNavigationTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXLocationActivityMetric(py)cumulativeBestAccuracyTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXLocationActivityMetric(py)cumulativeHundredMetersAccuracyTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXLocationActivityMetric(py)cumulativeKilometerAccuracyTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXLocationActivityMetric(py)cumulativeNearestTenMetersAccuracyTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXLocationActivityMetric(py)cumulativeThreeKilometersAccuracyTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXMemoryMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXMemoryMetric(py)averageSuspendedMemory	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXMemoryMetric(py)peakMemoryUsage	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXMetaData	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXMetaData(im)JSONRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXMetaData(im)dictionaryRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXMetaData(py)applicationBuildVersion	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXMetaData(py)bundleIdentifier	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXMetaData(py)deviceType	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXMetaData(py)isTestFlightApp	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXMetaData(py)lowPowerModeEnabled	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXMetaData(py)osVersion	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXMetaData(py)pid	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXMetaData(py)platformArchitecture	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXMetaData(py)regionFormat	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXMetric(im)JSONRepresentation	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXMetric(im)dictionaryRepresentation	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXMetricManager	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
+c:objc(cs)MXMetricManager(cm)extendLaunchMeasurementForTaskID:error:	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
+c:objc(cs)MXMetricManager(cm)finishExtendedLaunchMeasurementForTaskID:error:	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
+c:objc(cs)MXMetricManager(cm)makeLogHandleWithCategory:	unavailable	full/metrickit/README.md	Requires OSLog; Linux Foundation has no os.log type, so the method is not declared.
+c:objc(cs)MXMetricManager(cpy)sharedManager	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
+c:objc(cs)MXMetricManager(im)addSubscriber:	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
+c:objc(cs)MXMetricManager(im)removeSubscriber:	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
+c:objc(cs)MXMetricManager(py)pastDiagnosticPayloads	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
+c:objc(cs)MXMetricManager(py)pastPayloads	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
+c:objc(cs)MXMetricPayload	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(im)JSONRepresentation	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(im)dictionaryRepresentation	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)animationMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)applicationExitMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)applicationLaunchMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)applicationResponsivenessMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)applicationTimeMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)cellularConditionMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)cpuMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)diskIOMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)diskSpaceUsageMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)displayMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)gpuMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)includesMultipleApplicationVersions	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)latestApplicationVersion	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)locationActivityMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)memoryMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)metaData	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)networkTransferMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)signpostMetrics	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)timeStampBegin	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXMetricPayload(py)timeStampEnd	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(cs)MXNetworkTransferMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXNetworkTransferMetric(py)cumulativeCellularDownload	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXNetworkTransferMetric(py)cumulativeCellularUpload	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXNetworkTransferMetric(py)cumulativeWifiDownload	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXNetworkTransferMetric(py)cumulativeWifiUpload	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXSignpostIntervalData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXSignpostIntervalData(py)averageMemory	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXSignpostIntervalData(py)cumulativeCPUTime	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXSignpostIntervalData(py)cumulativeHitchTimeRatio	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXSignpostIntervalData(py)cumulativeLogicalWrites	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXSignpostIntervalData(py)histogrammedSignpostDuration	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXSignpostMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXSignpostMetric(py)signpostCategory	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXSignpostMetric(py)signpostIntervalData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXSignpostMetric(py)signpostName	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXSignpostMetric(py)totalCount	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(cs)MXSignpostRecord	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXSignpostRecord(im)JSONRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXSignpostRecord(im)dictionaryRepresentation	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXSignpostRecord(py)beginTimeStamp	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXSignpostRecord(py)category	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXSignpostRecord(py)duration	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXSignpostRecord(py)endTimeStamp	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXSignpostRecord(py)isInterval	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXSignpostRecord(py)name	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXSignpostRecord(py)subsystem	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(cs)MXUnitAveragePixelLuminance	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(cs)MXUnitAveragePixelLuminance(cpy)apl	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(cs)MXUnitSignalBars	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(cs)MXUnitSignalBars(cpy)bars	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(pl)MXMetricManagerSubscriber	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
+c:objc(pl)MXMetricManagerSubscriber(im)didReceiveDiagnosticPayloads:	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
+c:objc(pl)MXMetricManagerSubscriber(im)didReceiveMetricPayloads:	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	Manager/subscriber fail-closed behavior exercised.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXAverage	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXBackgroundExitData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXCallStackTree	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXCrashDiagnosticObjectiveCExceptionReason	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXDiagnostic	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXDiagnosticPayload	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXForegroundExitData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXHistogram	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXHistogramBucket	implemented	full/metrickit/MXSupport.swift; tests/agent/MetricKitRuntime.swift	Units/aggregates implemented and exercised.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXMetaData	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXMetric	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXMetricPayload	implemented	full/metrickit/MXPayloads.swift; tests/agent/MetricKitRuntime.swift	Payload types implemented and exercised.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXSignpostIntervalData	implemented	full/metrickit/MXMetrics.swift; tests/agent/MetricKitRuntime.swift	Metric types implemented and exercised.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MXSignpostRecord	implemented	full/metrickit/MXDiagnostics.swift; tests/agent/MetricKitRuntime.swift	Diagnostic types implemented and exercised.
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:9MetricKit10mxSignpost_3dso3log4name10signpostID__ySo03os_H7_type_ta_SVSo03OS_j1_F0Cs12StaticStringV0J0010OSSignpostI0VALSays7CVarArg_pGtF	unavailable	full/metrickit/README.md	Requires OSLog, OSSignpostType, OSSignpostID, and _MXSignpostMetricsSnapshot.
+s:9MetricKit32mxSignpostAnimationIntervalBegin3dso3log4name10signpostID__ySV_So06OS_os_I0Cs12StaticStringV0N0010OSSignpostL0VAJSays7CVarArg_pGtF	unavailable	full/metrickit/README.md	Requires OSLog/OSSignpost; not declared on Linux.
+s:SC11MXErrorCodeLeV	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:SC11MXErrorCodeLeV11errorDomainSSvpZ	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:SC11MXErrorCodeLeV17launchTaskUnknownSoAAVvpZ	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:SC11MXErrorCodeLeV18launchTaskMaxCountSoAAVvpZ	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:SC11MXErrorCodeLeV19launchTaskInvalidIDSoAAVvpZ	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:SC11MXErrorCodeLeV20launchTaskDuplicatedSoAAVvpZ	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:SC11MXErrorCodeLeV22launchTaskPastDeadlineSoAAVvpZ	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:SC11MXErrorCodeLeV25launchTaskInternalFailureSoAAVvpZ	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MXLaunchTaskID	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXLaunchTaskID implemented and exercised.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:So11MXErrorCodeV8rawValueABSgSi_tcfc	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.
+s:So14MXLaunchTaskIDa8rawValueABSS_tcfc	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXLaunchTaskID implemented and exercised.
+s:So14MXLaunchTaskIDayABSScfc	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXLaunchTaskID implemented and exercised.
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MXLaunchTaskID	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXLaunchTaskID implemented and exercised.
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MXLaunchTaskID	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXLaunchTaskID implemented and exercised.
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MXErrorCode	implemented	full/metrickit/MetricKit.swift; tests/agent/MetricKitRuntime.swift	MXError/MXError.Code implemented and exercised.

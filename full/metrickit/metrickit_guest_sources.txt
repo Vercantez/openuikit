@@ -1,0 +1,5 @@
+full/metrickit/MXDiagnostics.swift
+full/metrickit/MXMetrics.swift
+full/metrickit/MXPayloads.swift
+full/metrickit/MXSupport.swift
+full/metrickit/MetricKit.swift
