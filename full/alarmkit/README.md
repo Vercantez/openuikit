@@ -1,52 +1,61 @@
 # AlarmKit (Linux starting point)
 
 This directory is a clean-room Linux starting point for Apple's public
-`AlarmKit` module, reconstructed from the pinned Xcode 26.1 iPhoneOS 26.1
-symbol graph (262 precise identifiers). It is not wired into the shared guest
-package; that integration is a later central-review step.
+`AlarmKit` module from the pinned Xcode 26.1 iPhoneOS 26.1 symbol graph.
+It is not an integrated platform framework. Isolated `swiftc` here has
+Foundation only; SwiftUI, ActivityKit, and AppIntents are absent.
 
-## What is real
+## What compiles in this isolated gate
 
-Value types compile and behave deterministically in-process:
+- `Alarm`, `Alarm.State`, `Alarm.Schedule`, `Alarm.CountdownDuration`
+- `AlarmPresentationState`
+- `AlarmMetadata`
+- `AlarmManager.shared`, `authorizationState`, fail-closed
+  `requestAuthorization()` (state unchanged), fail-closed scheduler
+  accessors, and ongoing `alarmUpdates` / `authorizationUpdates`
 
-- `Alarm`, `Alarm.State`, `Alarm.Schedule` (fixed and relative/weekly),
-  `Alarm.CountdownDuration`
-- `AlarmButton`, `AlarmPresentation` (alert / countdown / paused)
-- `AlarmAttributes`, `AlarmMetadata`, `AlarmPresentationState`
-- `AlarmManager.AlarmConfiguration` factories (`.alarm`, `.timer`, countdown
-  initializer)
-- Codable / Hashable / Equatable / Identifiable conformances from the graph
-- `AlarmManager.shared`, `authorizationState`, `requestAuthorization()`,
-  fail-closed scheduler methods, and one-shot async sequences
+Enums match the graph: no extra `String` raw values. Codable is the
+synthesized contract.
 
-Isolated `swiftc` has no SwiftUI, ActivityKit, or AppIntents. The module
-therefore ships named stand-ins for `Color`, `LocalizedStringResource`,
-`AlertConfiguration.AlertSound`, `LiveActivityIntent`, and
-`ActivityAttributes` so the AlarmKit surface can compile.
+## Dependency-correct omissions
 
-## Fail-closed boundaries
+This module does **not** define lookalike `SwiftUI.Color`,
+`Foundation.LocalizedStringResource`, `ActivityKit.ActivityAttributes`,
+`ActivityKit.AlertConfiguration`, or `AppIntents.LiveActivityIntent`
+types. Declarations that need those nominal types are wrapped in
+`canImport` and marked `deferred` in `coverage.tsv`.
 
-Linux has no AlarmKit entitlement, `NSAlarmKitUsageDescription` prompt, alarm
-daemon, Lock Screen UI, Dynamic Island, or system sound playback.
+When the real modules are linked (future EC2 cold build):
 
-- `authorizationState` starts as `.notDetermined`
-- `requestAuthorization()` records `.denied` and never returns `.authorized`
-- `schedule`, `alarms`, `pause`, `resume`, `stop`, `cancel`, and `countdown`
-  throw `AlarmKitUnavailableError`
-- `alarmUpdates` yields one empty snapshot and finishes
-- `authorizationUpdates` yields the current denied/not-determined state once
+- `AlarmButton`, `AlarmPresentation`, `AlarmAttributes` use SwiftUI.Color
+  and Foundation.LocalizedStringResource
+- `AlarmAttributes` conforms to ActivityKit.ActivityAttributes
+- `AlarmManager.AlarmConfiguration` uses LiveActivityIntent and
+  AlertConfiguration.AlertSound
+- `timer(duration:)` and `Alert.init(title:secondaryButton:…)` remain
+  omitted until their unobserved defaults/mappings are known
+- Color Codable on presentation types fails closed
 
-The implementation does not claim that an Apple scheduler accepted an alarm
-or that a live activity appeared.
+`tests/agent/AlarmKitDependencyIdentity.swift` is the future probe for
+that build. It is not compiled by `tests/acceptance/test_host.sh`.
 
-## Still deferred / unknown
+## Fail-closed host behavior
 
-- Exact `NSError` domain and codes for unauthorized or malformed schedules
-- Apple's default stop-button appearance for
-  `AlarmPresentation.Alert.init(title:secondaryButton:secondaryButtonBehavior:)`
-- Codable representation of `SwiftUI.Color` inside `AlarmAttributes`
-- Whether `AlarmManager.AlarmConfiguration.timer` maps duration onto
-  `preAlert` only
-- Live Activity / WidgetKit presentation of `AlarmAttributes`
+- No entitlement prompt: `requestAuthorization()` throws
+  `AlarmKitHostBoundary.authorizationPromptUnavailable` (SPI) and leaves
+  `.notDetermined`
+- No daemon: `alarms`, `pause`, `resume`, `stop`, `cancel`, `countdown`
+  throw `systemSchedulerUnavailable`
+- Observation sequences yield the current snapshot, then stay open until
+  cancelled or the manager is deallocated. They are independently
+  iterable and race-safe. They are not one-value streams that finish.
+
+Host-only sequence injection lives under `@_spi(OpenUIKitHost)` and is
+not Apple scheduler success.
+
+This isolated host gate is not integrated Linux success. That claim
+waits on a future EC2 cold build with real ActivityKit, AppIntents,
+Foundation `LocalizedStringResource`, and SwiftUI modules, plus
+`libAlarmKit.dylib` load and `AlarmKitDependencyIdentity.swift`.
 
 See `oracle-questions.tsv`.

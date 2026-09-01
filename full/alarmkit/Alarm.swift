@@ -1,7 +1,7 @@
 import Foundation
 
 /// An alarm that can alert once or on a repeating schedule.
-public struct Alarm: Identifiable, Codable, Sendable {
+public struct Alarm: Codable, Sendable {
     public typealias ID = UUID
 
     public var id: UUID
@@ -9,30 +9,17 @@ public struct Alarm: Identifiable, Codable, Sendable {
     public var state: State
     public var schedule: Schedule?
 
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
-        countdownDuration = try container.decodeIfPresent(
-            CountdownDuration.self,
-            forKey: .countdownDuration
-        )
-        state = try container.decode(State.self, forKey: .state)
-        schedule = try container.decodeIfPresent(Schedule.self, forKey: .schedule)
-    }
-
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(id, forKey: .id)
-        try container.encodeIfPresent(countdownDuration, forKey: .countdownDuration)
-        try container.encode(state, forKey: .state)
-        try container.encodeIfPresent(schedule, forKey: .schedule)
-    }
-
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case countdownDuration
-        case state
-        case schedule
+    @_spi(OpenUIKitHost)
+    public init(
+        id: UUID,
+        countdownDuration: CountdownDuration?,
+        state: State,
+        schedule: Schedule?
+    ) {
+        self.id = id
+        self.countdownDuration = countdownDuration
+        self.state = state
+        self.schedule = schedule
     }
 }
 
@@ -49,7 +36,7 @@ extension Alarm {
     }
 
     /// Lifecycle state of a scheduled alarm.
-    public enum State: String, Equatable, Hashable, Codable, Sendable {
+    public enum State: Equatable, Hashable, Codable, Sendable {
         case scheduled
         case countdown
         case paused
@@ -84,6 +71,63 @@ extension Alarm {
             public enum Recurrence: Equatable, Hashable, Codable, Sendable {
                 case never
                 case weekly([Locale.Weekday])
+            }
+        }
+    }
+}
+
+/// Snapshot of an alarm as presented in a Live Activity.
+public struct AlarmPresentationState: Equatable, Hashable, Codable, Sendable {
+    public var alarmID: Alarm.ID
+    public var mode: Mode
+
+    public init(alarmID: Alarm.ID, mode: Mode) {
+        self.alarmID = alarmID
+        self.mode = mode
+    }
+
+    public enum Mode: Equatable, Hashable, Codable, Sendable {
+        case alert(Alert)
+        case countdown(Countdown)
+        case paused(Paused)
+
+        public struct Alert: Equatable, Hashable, Codable, Sendable {
+            public var time: Alarm.Schedule.Relative.Time
+
+            public init(time: Alarm.Schedule.Relative.Time) {
+                self.time = time
+            }
+        }
+
+        public struct Countdown: Equatable, Hashable, Codable, Sendable {
+            public var totalCountdownDuration: TimeInterval
+            public var previouslyElapsedDuration: TimeInterval
+            public var startDate: Date
+            public var fireDate: Date
+
+            public init(
+                totalCountdownDuration: TimeInterval,
+                previouslyElapsedDuration: TimeInterval,
+                startDate: Date,
+                fireDate: Date
+            ) {
+                self.totalCountdownDuration = totalCountdownDuration
+                self.previouslyElapsedDuration = previouslyElapsedDuration
+                self.startDate = startDate
+                self.fireDate = fireDate
+            }
+        }
+
+        public struct Paused: Equatable, Hashable, Codable, Sendable {
+            public var totalCountdownDuration: TimeInterval
+            public var previouslyElapsedDuration: TimeInterval
+
+            public init(
+                totalCountdownDuration: TimeInterval,
+                previouslyElapsedDuration: TimeInterval
+            ) {
+                self.totalCountdownDuration = totalCountdownDuration
+                self.previouslyElapsedDuration = previouslyElapsedDuration
             }
         }
     }

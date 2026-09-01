@@ -1,17 +1,45 @@
+#if canImport(ActivityKit)
+import ActivityKit
+#endif
+
+#if canImport(AppIntents)
+import AppIntents
+#endif
+
+#if canImport(SwiftUI)
+import SwiftUI
+#endif
+
 import Foundation
 
 /// Entry point for scheduling and observing alarms.
 ///
-/// Linux has no AlarmKit entitlement or system alarm daemon. Authorization
-/// remains `.notDetermined` until `requestAuthorization()` fails closed to
-/// `.denied`. Scheduler methods throw `AlarmKitUnavailableError`.
+/// Linux has no AlarmKit entitlement prompt or system alarm daemon.
+/// `authorizationState` stays `.notDetermined` until a future observed
+/// authorization path exists. Scheduler mutations throw a host boundary
+/// error. Observation sequences stay open until cancelled or the manager
+/// is deallocated.
 public class AlarmManager: @unchecked Sendable {
     public static let shared = AlarmManager()
 
     private let lock = NSLock()
     private var storedAuthorization: AuthorizationState = .notDetermined
+    private let alarmBroker = AlarmKitUpdateBroker<[Alarm]>(initial: [])
+    private let authorizationBroker = AlarmKitUpdateBroker<AuthorizationState>(
+        initial: .notDetermined
+    )
 
     private init() {}
+
+    deinit {
+        alarmBroker.finish()
+        authorizationBroker.finish()
+    }
+
+    @_spi(OpenUIKitHost)
+    public static func hostIsolated() -> AlarmManager {
+        AlarmManager()
+    }
 
     public var authorizationState: AuthorizationState {
         lock.lock()
@@ -19,75 +47,77 @@ public class AlarmManager: @unchecked Sendable {
         return storedAuthorization
     }
 
-    /// Always resolves to `.denied` on Linux. No privacy prompt is shown and
-    /// no Apple entitlement is granted.
+    /// No usage-description prompt or entitlement decision is available.
+    /// The stored state is left unchanged.
     public func requestAuthorization() async throws -> AuthorizationState {
-        denyAuthorization()
-    }
-
-    private func denyAuthorization() -> AuthorizationState {
-        lock.lock()
-        defer { lock.unlock() }
-        storedAuthorization = .denied
-        return storedAuthorization
+        throw AlarmKitHostBoundary.authorizationPromptUnavailable
     }
 
     public var alarms: [Alarm] {
         get throws {
-            throw AlarmKitUnavailableError.systemSchedulerUnavailable
+            throw AlarmKitHostBoundary.systemSchedulerUnavailable
         }
     }
 
-    public var alarmUpdates: some AsyncSequence<[Alarm], Never> {
-        AlarmUpdates()
+    /// Ongoing snapshot sequence. Yields the current alarms, then remains
+    /// open until cancelled or this manager is deallocated. Values resume
+    /// the iterating task; there is no extra callback queue.
+    public var alarmUpdates: AlarmUpdates {
+        AlarmUpdates(broker: alarmBroker)
     }
 
-    public var authorizationUpdates: some AsyncSequence<AuthorizationState, Never> {
-        AlarmAuthorizationStateUpdates(initial: authorizationState)
+    /// Ongoing snapshot sequence. Yields the current authorization state,
+    /// then remains open until cancelled or this manager is deallocated.
+    public var authorizationUpdates: AlarmAuthorizationStateUpdates {
+        AlarmAuthorizationStateUpdates(broker: authorizationBroker)
     }
 
+    public func countdown(id: Alarm.ID) throws {
+        _ = id
+        throw AlarmKitHostBoundary.systemSchedulerUnavailable
+    }
+
+    public func cancel(id: Alarm.ID) throws {
+        _ = id
+        throw AlarmKitHostBoundary.systemSchedulerUnavailable
+    }
+
+    public func stop(id: Alarm.ID) throws {
+        _ = id
+        throw AlarmKitHostBoundary.systemSchedulerUnavailable
+    }
+
+    public func pause(id: Alarm.ID) throws {
+        _ = id
+        throw AlarmKitHostBoundary.systemSchedulerUnavailable
+    }
+
+    public func resume(id: Alarm.ID) throws {
+        _ = id
+        throw AlarmKitHostBoundary.systemSchedulerUnavailable
+    }
+
+    @_spi(OpenUIKitHost)
+    public func hostPublishAuthorization(_ state: AuthorizationState) {
+        lock.lock()
+        storedAuthorization = state
+        lock.unlock()
+        authorizationBroker.publish(state)
+    }
+
+    @_spi(OpenUIKitHost)
+    public func hostPublishAlarms(_ alarms: [Alarm]) {
+        alarmBroker.publish(alarms)
+    }
+
+#if canImport(SwiftUI) && canImport(ActivityKit) && canImport(AppIntents)
     public func schedule<Metadata: AlarmMetadata>(
         id: Alarm.ID,
         configuration: AlarmConfiguration<Metadata>
     ) async throws -> Alarm {
         _ = id
         _ = configuration
-        throw AlarmKitUnavailableError.entitlementUnavailable
-    }
-
-    public func countdown(id: Alarm.ID) throws {
-        _ = id
-        throw AlarmKitUnavailableError.systemSchedulerUnavailable
-    }
-
-    public func cancel(id: Alarm.ID) throws {
-        _ = id
-        throw AlarmKitUnavailableError.systemSchedulerUnavailable
-    }
-
-    public func stop(id: Alarm.ID) throws {
-        _ = id
-        throw AlarmKitUnavailableError.systemSchedulerUnavailable
-    }
-
-    public func pause(id: Alarm.ID) throws {
-        _ = id
-        throw AlarmKitUnavailableError.systemSchedulerUnavailable
-    }
-
-    public func resume(id: Alarm.ID) throws {
-        _ = id
-        throw AlarmKitUnavailableError.systemSchedulerUnavailable
-    }
-
-    public enum AlarmError: Error, Equatable, Hashable, Sendable {
-        case maximumLimitReached
-    }
-
-    public enum AuthorizationState: String, Equatable, Hashable, Codable, Sendable {
-        case notDetermined
-        case denied
-        case authorized
+        throw AlarmKitHostBoundary.authorizationPromptUnavailable
     }
 
     public struct AlarmConfiguration<Metadata: AlarmMetadata>: @unchecked Sendable {
@@ -130,46 +160,39 @@ public class AlarmManager: @unchecked Sendable {
                 sound: sound
             )
         }
+    }
+#endif
 
-        public static func timer(
-            duration: TimeInterval,
-            attributes: AlarmAttributes<Metadata>,
-            stopIntent: (any LiveActivityIntent)? = nil,
-            secondaryIntent: (any LiveActivityIntent)? = nil,
-            sound: AlertConfiguration.AlertSound = .default
-        ) -> AlarmConfiguration<Metadata> {
-            AlarmConfiguration(
-                countdownDuration: Alarm.CountdownDuration(
-                    preAlert: duration,
-                    postAlert: nil
-                ),
-                schedule: nil,
-                attributes: attributes,
-                stopIntent: stopIntent,
-                secondaryIntent: secondaryIntent,
-                sound: sound
-            )
-        }
+    public enum AlarmError: Error, Equatable, Hashable, Sendable {
+        case maximumLimitReached
+    }
+
+    public enum AuthorizationState: Equatable, Hashable, Codable, Sendable {
+        case notDetermined
+        case denied
+        case authorized
     }
 
     public struct AlarmUpdates: AsyncSequence, Sendable {
         public typealias Element = [Alarm]
         public typealias AsyncIterator = Iterator
 
+        let broker: AlarmKitUpdateBroker<[Alarm]>
+
         public func makeAsyncIterator() -> Iterator {
-            Iterator()
+            Iterator(stream: broker.subscribe())
         }
 
-        public struct Iterator: AsyncIteratorProtocol, Sendable {
+        public struct Iterator: AsyncIteratorProtocol {
             public typealias Element = [Alarm]
-            private var emitted = false
+            var iterator: AsyncStream<[Alarm]>.Iterator
+
+            init(stream: AsyncStream<[Alarm]>) {
+                iterator = stream.makeAsyncIterator()
+            }
 
             public mutating func next() async -> [Alarm]? {
-                if emitted {
-                    return nil
-                }
-                emitted = true
-                return []
+                await iterator.next()
             }
         }
     }
@@ -178,38 +201,23 @@ public class AlarmManager: @unchecked Sendable {
         public typealias Element = AuthorizationState
         public typealias AsyncIterator = Iterator
 
-        private let initial: AuthorizationState
-
-        init(initial: AuthorizationState) {
-            self.initial = initial
-        }
+        let broker: AlarmKitUpdateBroker<AuthorizationState>
 
         public func makeAsyncIterator() -> Iterator {
-            Iterator(initial: initial)
+            Iterator(stream: broker.subscribe())
         }
 
-        public struct Iterator: AsyncIteratorProtocol, Sendable {
+        public struct Iterator: AsyncIteratorProtocol {
             public typealias Element = AuthorizationState
-            private let initial: AuthorizationState
-            private var emitted = false
+            var iterator: AsyncStream<AuthorizationState>.Iterator
 
-            init(initial: AuthorizationState) {
-                self.initial = initial
+            init(stream: AsyncStream<AuthorizationState>) {
+                iterator = stream.makeAsyncIterator()
             }
 
             public mutating func next() async -> AuthorizationState? {
-                if emitted {
-                    return nil
-                }
-                emitted = true
-                return initial
+                await iterator.next()
             }
         }
     }
-}
-
-/// Fail-closed Linux boundary. Not an Apple `AlarmError` case.
-public enum AlarmKitUnavailableError: Error, Equatable, Sendable {
-    case entitlementUnavailable
-    case systemSchedulerUnavailable
 }
