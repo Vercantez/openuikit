@@ -901,36 +901,34 @@ if [ "$PREVIEW_ENABLED" -eq 1 ]; then
 fi
 
 echo '== rebuild the proven FoundationEssentials/OpenUIKit substrate from cold roots'
-BUILD_FULL_ENV=(W="$W" UIKIT="$UIKIT" MACHORUN="$MACHORUN")
-if [ "$PREVIEW_ENABLED" -eq 1 ]; then
-    BUILD_FULL_ENV+=(
-        BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE="$DEVELOPER_TOOLS_SUPPORT_MODULE"
-        BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT="$DEVELOPER_TOOLS_SUPPORT_OBJECT"
-        BUILD_FULL_PREVIEW_MACRO_PLUGIN="$PREVIEW_MACRO_PLUGIN"
-    )
-fi
+# build_full deliberately proves the Foundation-hidden UIKit branch. Current
+# DeveloperToolsSupport owns ImageResource's real Foundation.Bundle identity,
+# so loading that module before the Foundation facade exists would violate the
+# very visibility boundary build_full is designed to test. Preview and Entry
+# are production compiler-library plugins below, after Foundation is staged;
+# the legacy executable remains an immutable external compatibility input.
+BUILD_FULL_ENV=(
+    W="$W" UIKIT="$UIKIT" MACHORUN="$MACHORUN"
+    BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODULE=''
+    BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_OBJECT=''
+    BUILD_FULL_PREVIEW_MACRO_PLUGIN=''
+)
 env "${BUILD_FULL_ENV[@]}" bash "$W/full/scripts/build_full.sh"
 expected_subject=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" "$UIKIT")
 actual_subject=$(tr -d '[:space:]' < "$FULL/uihelpers-subject.sha256")
 [ "$actual_subject" = "$expected_subject" ] \
     || die 'build_full subject marker is stale'
-if [ "$PREVIEW_ENABLED" -eq 1 ]; then
-    awk -F '\t' -v name=DeveloperToolsSupport.swiftmodule \
-        -v sha="$PREVIEW_MODULE_SHA" \
-        '$1 == name && $2 == sha { found = 1 } END { exit !found }' \
-        "$FULL/uihelpers-artifacts.sha256" \
-        || die 'build_full did not attest the exact DTS module'
-    awk -F '\t' -v name=developertoolsupport.o -v sha="$PREVIEW_OBJECT_SHA" \
-        '$1 == name && $2 == sha { found = 1 } END { exit !found }' \
-        "$FULL/uihelpers-artifacts.sha256" \
-        || die 'build_full did not attest the exact DTS object'
-    awk -F '\t' -v name=OpenUIKitPreviewMacros-tool -v sha="$PREVIEW_PLUGIN_SHA" \
-        '$1 == name && $2 == sha { found = 1 } END { exit !found }' \
-        "$FULL/uihelpers-artifacts.sha256" \
-        || die 'build_full did not attest the exact Preview plugin'
-elif grep -Eq '^(DeveloperToolsSupport\.swiftmodule|developertoolsupport\.o|OpenUIKitPreviewMacros-tool)[[:space:]]' \
+if grep -Eq '^(DeveloperToolsSupport\.swiftmodule|developertoolsupport\.o|OpenUIKitPreviewMacros-tool)[[:space:]]' \
     "$FULL/uihelpers-artifacts.sha256"; then
-    die 'non-Preview build_full output carries Preview artifact attestations'
+    die 'Foundation-hidden build_full output carries Preview artifact attestations'
+fi
+if [ "$PREVIEW_ENABLED" -eq 1 ]; then
+    [ "$(hash_file "$DEVELOPER_TOOLS_SUPPORT_MODULE")" = "$PREVIEW_MODULE_SHA" ] \
+        || die 'external DeveloperToolsSupport module changed during build_full'
+    [ "$(hash_file "$DEVELOPER_TOOLS_SUPPORT_OBJECT")" = "$PREVIEW_OBJECT_SHA" ] \
+        || die 'external DeveloperToolsSupport object changed during build_full'
+    [ "$(hash_file "$PREVIEW_MACRO_PLUGIN")" = "$PREVIEW_PLUGIN_SHA" ] \
+        || die 'external Preview executable changed during build_full'
 fi
 
 mkdir -p "$STAGE/sdk" "$STAGE/modules" "$STAGE/lib" "$STAGE/include" \
