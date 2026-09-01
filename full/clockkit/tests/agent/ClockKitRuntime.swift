@@ -2,48 +2,97 @@ import Dispatch
 import Foundation
 import ClockKit
 
+private final class CallbackBox: @unchecked Sendable {
+    let lock = NSLock()
+    let caller: Thread
+    var calls = 0
+    var error: (any Error)?
+    var returned = false
+    var ranOnCallerBeforeReturn = false
+
+    init(caller: Thread) {
+        self.caller = caller
+    }
+}
+
 private final class AsyncErrorBox: @unchecked Sendable {
     var error: (any Error)?
     var succeeded = false
+}
+
+private final class RecordingWatchFaceLibrary: CLKWatchFaceLibrary, @unchecked Sendable {
+    private let lock = NSLock()
+    private var invocations = 0
+
+    var overrideCount: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return invocations
+    }
+
+    override func addWatchFace(
+        at fileURL: URL,
+        completionHandler handler: @escaping ((any Error)?) -> Void
+    ) {
+        lock.lock()
+        invocations += 1
+        lock.unlock()
+        super.addWatchFace(at: fileURL, completionHandler: handler)
+    }
 }
 
 private func expect(_ condition: @autoclosure () -> Bool, _ message: String) {
     precondition(condition(), message)
 }
 
-private func expectCode(
-    _ error: (any Error)?,
-    _ expected: CLKWatchFaceLibrary.ErrorCode,
-    _ label: String
-) {
+private func expectFailClosed(_ error: (any Error)?, _ label: String) {
     guard let error else {
         fatalError("\(label): expected fail-closed error, got success")
     }
     if let code = error as? CLKWatchFaceLibrary.ErrorCode {
-        expect(code == expected, "\(label): got \(code) expected \(expected)")
-    } else {
-        let nsError = error as NSError
-        expect(
-            nsError.domain == CLKWatchFaceLibrary.ErrorDomain,
-            "\(label): domain \(nsError.domain)"
-        )
-        expect(nsError.code == expected.rawValue, "\(label): code \(nsError.code)")
+        expect(code == .faceNotAvailable, "\(label): Linux sentinel \(code)")
     }
-
     let nsError = error as NSError
-    expect(nsError.domain == CLKWatchFaceLibrary.ErrorDomain, "\(label): NSError domain")
-    expect(nsError.code == expected.rawValue, "\(label): NSError code")
+    expect(
+        nsError.domain == CLKWatchFaceLibrary.ErrorDomain,
+        "\(label): NSError domain \(nsError.domain)"
+    )
+    expect(!nsError.domain.isEmpty, "\(label): NSError domain must be nonempty")
 }
 
-private func addWatchFaceSync(_ library: CLKWatchFaceLibrary, at url: URL) -> (any Error)? {
-    var captured: (any Error)?
-    var calls = 0
+private func addWatchFaceDelivered(
+    _ library: CLKWatchFaceLibrary,
+    at url: URL
+) -> (any Error)? {
+    let box = CallbackBox(caller: Thread.current)
+    let finished = DispatchSemaphore(value: 0)
     library.addWatchFace(at: url) { error in
-        calls += 1
-        captured = error
+        box.lock.lock()
+        if !box.returned && Thread.current === box.caller {
+            box.ranOnCallerBeforeReturn = true
+        }
+        box.calls += 1
+        box.error = error
+        box.lock.unlock()
+        finished.signal()
     }
-    expect(calls == 1, "completion handler must run exactly once")
-    return captured
+    box.lock.lock()
+    box.returned = true
+    let inline = box.ranOnCallerBeforeReturn
+    let callsAfterReturn = box.calls
+    box.lock.unlock()
+    expect(!inline, "addWatchFace completion must not run inline on the caller")
+    if callsAfterReturn == 0 {
+        let waitResult = finished.wait(timeout: .now() + 2)
+        expect(waitResult == .success, "addWatchFace completion timed out")
+    }
+    Thread.sleep(forTimeInterval: 0.05)
+    box.lock.lock()
+    let calls = box.calls
+    let error = box.error
+    box.lock.unlock()
+    expect(calls == 1, "addWatchFace completion must run exactly once, got \(calls)")
+    return error
 }
 
 private func addWatchFaceAsync(_ library: CLKWatchFaceLibrary, at url: URL) -> (any Error)? {
@@ -58,10 +107,9 @@ private func addWatchFaceAsync(_ library: CLKWatchFaceLibrary, at url: URL) -> (
         }
         semaphore.signal()
     }
-    semaphore.wait()
-    if box.succeeded {
-        return nil
-    }
+    let waitResult = semaphore.wait(timeout: .now() + 2)
+    expect(waitResult == .success, "async addWatchFace timed out")
+    expect(!box.succeeded, "async addWatchFace must not succeed")
     return box.error
 }
 
@@ -73,86 +121,50 @@ private func exerciseErrorCodeIdentity() {
         .faceNotAvailable,
         .noURL,
     ]
-    let rawValues = [1, 2, 3, 4, 5]
-    for (code, rawValue) in zip(codes, rawValues) {
-        expect(code.rawValue == rawValue, "raw value for \(code)")
-        expect(CLKWatchFaceLibrary.ErrorCode(rawValue: rawValue) == code, "init(rawValue: \(rawValue))")
-        let other = codes[(rawValue % codes.count)]
-        expect(code != other, "\(code) != \(other)")
+    for code in codes {
+        expect(
+            CLKWatchFaceLibrary.ErrorCode(rawValue: code.rawValue) == code,
+            "init(rawValue:) round-trip for \(code)"
+        )
     }
-    expect(CLKWatchFaceLibrary.ErrorCode(rawValue: 0) == nil, "raw value 0 must be nil")
-    expect(CLKWatchFaceLibrary.ErrorCode(rawValue: 6) == nil, "raw value 6 must be nil")
     expect(CLKWatchFaceLibrary.ErrorCode.notFileURL != .invalidFile, "notFileURL != invalidFile")
     expect(CLKWatchFaceLibrary.ErrorCode.faceNotAvailable == .faceNotAvailable, "equality")
 
     var hasher = Hasher()
     CLKWatchFaceLibrary.ErrorCode.permissionDenied.hash(into: &hasher)
     let hashValue = CLKWatchFaceLibrary.ErrorCode.permissionDenied.hashValue
-    expect(hashValue == CLKWatchFaceLibrary.ErrorCode.permissionDenied.hashValue, "hashValue is stable")
+    expect(
+        hashValue == CLKWatchFaceLibrary.ErrorCode.permissionDenied.hashValue,
+        "hashValue is stable"
+    )
     _ = hasher.finalize()
 
     let unique = Set(codes)
     expect(unique.count == codes.count, "ErrorCode hash/equality must distinguish cases")
 }
 
-private func exerciseFailClosedAdds() throws {
-    let library = CLKWatchFaceLibrary()
-    expect(CLKWatchFaceLibrary.ErrorDomain == CLKWatchFaceLibraryErrorDomain, "ErrorDomain alias")
+private func exerciseFailClosedAdds() {
+    expect(!CLKWatchFaceLibrary.ErrorDomain.isEmpty, "ErrorDomain is a nonempty class string")
     expect(
-        CLKWatchFaceLibrary.ErrorDomain == "CLKWatchFaceLibraryErrorDomain",
-        "ErrorDomain string"
+        CLKWatchFaceLibrary.ErrorCode.errorDomain == CLKWatchFaceLibrary.ErrorDomain,
+        "CustomNSError uses CLKWatchFaceLibrary.ErrorDomain"
     )
-    expect(CLKWatchFaceLibrary.ErrorCode.errorDomain == CLKWatchFaceLibrary.ErrorDomain, "CustomNSError domain")
 
+    let library = CLKWatchFaceLibrary()
     let https = URL(string: "https://example.invalid/face.watchface")!
-    expectCode(addWatchFaceSync(library, at: https), .notFileURL, "https completion")
-    expectCode(addWatchFaceAsync(library, at: https), .notFileURL, "https async")
+    expectFailClosed(addWatchFaceDelivered(library, at: https), "https completion")
+    expectFailClosed(addWatchFaceAsync(library, at: https), "https async")
 
-    let emptyFileURL = URL(string: "file://")!
-    expect(emptyFileURL.isFileURL, "file:// is a file URL")
-    expect(emptyFileURL.path.isEmpty, "file:// has an empty path")
-    expectCode(addWatchFaceSync(library, at: emptyFileURL), .noURL, "empty path completion")
-    expectCode(addWatchFaceAsync(library, at: emptyFileURL), .noURL, "empty path async")
+    let fileURL = URL(fileURLWithPath: "/tmp/clockkit-runtime-\(UUID().uuidString).watchface")
+    expectFailClosed(addWatchFaceDelivered(library, at: fileURL), "file completion")
+    expectFailClosed(addWatchFaceAsync(library, at: fileURL), "file async")
 
-    let missing = URL(fileURLWithPath: "/tmp/clockkit-missing-\(UUID().uuidString).watchface")
-    expectCode(addWatchFaceSync(library, at: missing), .invalidFile, "missing completion")
-    expectCode(addWatchFaceAsync(library, at: missing), .invalidFile, "missing async")
-
-    let directory = URL(fileURLWithPath: FileManager.default.temporaryDirectory.path, isDirectory: true)
-    expectCode(addWatchFaceSync(library, at: directory), .invalidFile, "directory completion")
-
-    let readable = FileManager.default.temporaryDirectory
-        .appendingPathComponent("clockkit-readable-\(UUID().uuidString).watchface")
-    try Data("not-a-watch-face".utf8).write(to: readable)
-    defer { try? FileManager.default.removeItem(at: readable) }
-    expectCode(addWatchFaceSync(library, at: readable), .faceNotAvailable, "readable completion")
-    expectCode(addWatchFaceAsync(library, at: readable), .faceNotAvailable, "readable async")
-
-    let unreadable = FileManager.default.temporaryDirectory
-        .appendingPathComponent("clockkit-unreadable-\(UUID().uuidString).watchface")
-    try Data("secret".utf8).write(to: unreadable)
-    defer { try? FileManager.default.removeItem(at: unreadable) }
-    try FileManager.default.setAttributes(
-        [.posixPermissions: 0o000],
-        ofItemAtPath: unreadable.path
-    )
-    if FileManager.default.isReadableFile(atPath: unreadable.path) {
-        expectCode(
-            addWatchFaceSync(library, at: unreadable),
-            .faceNotAvailable,
-            "still-readable after chmod"
-        )
-    } else {
-        expectCode(addWatchFaceSync(library, at: unreadable), .permissionDenied, "unreadable completion")
-        expectCode(addWatchFaceAsync(library, at: unreadable), .permissionDenied, "unreadable async")
-    }
+    let subclass = RecordingWatchFaceLibrary()
+    let asBase: CLKWatchFaceLibrary = subclass
+    expectFailClosed(addWatchFaceDelivered(asBase, at: fileURL), "subclass dynamic dispatch")
+    expect(subclass.overrideCount == 1, "open addWatchFace must dispatch to the subclass override")
 }
 
 exerciseErrorCodeIdentity()
-do {
-    try exerciseFailClosedAdds()
-} catch {
-    fatalError("runtime fixture failed: \(error)")
-}
-
+exerciseFailClosedAdds()
 print("CLOCKKIT_AGENT_RUNTIME_OK")

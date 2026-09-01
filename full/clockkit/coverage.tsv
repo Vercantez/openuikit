@@ -1,14 +1,14 @@
 precise	status	evidence	notes
-c:@CLKWatchFaceLibraryErrorDomain	implemented	tests/agent/ClockKitRuntime.swift	Linux uses the ObjC constant name as the string; exact Apple payload is oracle-queued.
-c:@E@CLKWatchFaceLibraryErrorCode	implemented	tests/agent/ClockKitRuntime.swift	Nested Int-backed ErrorCode with CustomNSError bridging.
-c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeFaceNotAvailable	implemented	tests/agent/ClockKitRuntime.swift	Fail-closed result for a readable file when no watch-face library exists.
-c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeInvalidFile	implemented	tests/agent/ClockKitRuntime.swift	Missing paths and directories cannot be watch-face files.
-c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeNoURL	implemented	tests/agent/ClockKitRuntime.swift	Empty file-URL path is rejected locally.
-c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeNotFileURL	implemented	tests/agent/ClockKitRuntime.swift	Non-file URLs are rejected locally.
-c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodePermissionDenied	implemented	tests/agent/ClockKitRuntime.swift	Unreadable local files fail closed without claiming a daemon check.
-c:objc(cs)CLKWatchFaceLibrary	implemented	tests/agent/ClockKitRuntime.swift	Open NSObject subclass; add never reports success.
-c:objc(cs)CLKWatchFaceLibrary(im)addWatchFaceAtURL:completionHandler:	implemented	tests/agent/ClockKitRuntime.swift	Completion-handler and async overloads; always fail-closed.
+c:@CLKWatchFaceLibraryErrorDomain	declared	full/clockkit/ClockKit.swift	CLKWatchFaceLibrary.ErrorDomain compiles as a class string; the Apple NSString payload is not in the pinned graph.
+c:@E@CLKWatchFaceLibraryErrorCode	declared	full/clockkit/ClockKit.swift	Int-backed ErrorCode compiles; Apple numeric ABI is not claimed.
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeFaceNotAvailable	implemented	tests/agent/ClockKitRuntime.swift	Linux never-success sentinel delivered by addWatchFace; not an Apple pairing-order observation.
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeInvalidFile	declared	full/clockkit/ClockKit.swift	Public case exists; Apple trigger conditions are unobserved.
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeNoURL	declared	full/clockkit/ClockKit.swift	Public case exists; Apple trigger conditions are unobserved.
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeNotFileURL	declared	full/clockkit/ClockKit.swift	Public case exists; Apple trigger conditions are unobserved.
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodePermissionDenied	declared	full/clockkit/ClockKit.swift	Public case exists; Apple trigger conditions are unobserved.
+c:objc(cs)CLKWatchFaceLibrary	implemented	tests/agent/ClockKitRuntime.swift	Open NSObject subclass; dynamic dispatch through a subclass override is exercised.
+c:objc(cs)CLKWatchFaceLibrary(im)addWatchFaceAtURL:completionHandler:	implemented	tests/agent/ClockKitRuntime.swift	Completion is scheduled off-caller, exactly once, always fail-closed; async overlay shares that path.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLKWatchFaceLibraryErrorCode	implemented	tests/agent/ClockKitRuntime.swift	Synthesized Equatable inequality for ErrorCode.
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLKWatchFaceLibraryErrorCode	implemented	tests/agent/ClockKitRuntime.swift	Synthesized Hashable.hashValue for ErrorCode.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLKWatchFaceLibraryErrorCode	implemented	tests/agent/ClockKitRuntime.swift	Synthesized Hashable.hash(into:) for ErrorCode.
-s:So28CLKWatchFaceLibraryErrorCodeV8rawValueABSgSi_tcfc	implemented	tests/agent/ClockKitRuntime.swift	Failable Int raw-value initializer; unknown codes are nil.
+s:So28CLKWatchFaceLibraryErrorCodeV8rawValueABSgSi_tcfc	declared	full/clockkit/ClockKit.swift	Failable Int raw-value initializer compiles; Apple numeric mapping is unverified.

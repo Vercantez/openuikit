@@ -1,30 +1,27 @@
+import Dispatch
 import Foundation
-
-/// ObjC `CLKWatchFaceLibraryErrorDomain`. The exact NSString payload is not in
-/// the pinned Swift graph; this starting point uses the public constant name
-/// and records an Apple-oracle question for the runtime string.
-public let CLKWatchFaceLibraryErrorDomain: String = "CLKWatchFaceLibraryErrorDomain"
 
 /// Linux starting point for Apple's `CLKWatchFaceLibrary`.
 ///
-/// The class can validate a candidate file URL locally. It never claims that a
-/// watch face was installed: Linux has no paired Apple Watch, no watch-face
-/// library UI, and no `CLKWatchFaceLibrary` XPC service.
+/// The public Swift graph exposes this class, `ErrorDomain`, `ErrorCode`, and
+/// `addWatchFace`. Linux has no paired Apple Watch, no watch-face consent UI,
+/// and no `CLKWatchFaceLibrary` XPC service, so add never reports success.
 open class CLKWatchFaceLibrary: NSObject, @unchecked Sendable {
-    /// Swift overlay of `CLKWatchFaceLibraryErrorDomain`.
-    public static let ErrorDomain: String = CLKWatchFaceLibraryErrorDomain
+    /// Swift overlay of the ObjC `CLKWatchFaceLibraryErrorDomain` constant.
+    /// The exact Apple NSString payload is not in the pinned graph.
+    public static let ErrorDomain: String = "CLKWatchFaceLibraryErrorDomain"
 
-    /// Bridged `NS_ERROR_ENUM` for watch-face library failures.
+    /// Bridged `NS_ERROR_ENUM` cases from the public Swift graph.
     ///
-    /// Raw values follow the public header order with `NS_ERROR_ENUM`
-    /// starting at 1 (`notFileURL` through `noURL`). Numeric ABI is queued
-    /// for a central Apple-oracle probe.
+    /// Integer raw values are Swift's sequential assignment for an `Int`
+    /// enum, not a verified Apple ABI table. Localized failure strings are
+    /// not invented.
     public enum ErrorCode: Int, Error, Sendable, Equatable, Hashable, CustomNSError {
-        case notFileURL = 1
-        case invalidFile = 2
-        case permissionDenied = 3
-        case faceNotAvailable = 4
-        case noURL = 5
+        case notFileURL
+        case invalidFile
+        case permissionDenied
+        case faceNotAvailable
+        case noURL
 
         public static var errorDomain: String { CLKWatchFaceLibrary.ErrorDomain }
 
@@ -32,6 +29,11 @@ open class CLKWatchFaceLibrary: NSObject, @unchecked Sendable {
 
         public var errorUserInfo: [String: Any] { [:] }
     }
+
+    private static let completionQueue = DispatchQueue(
+        label: "ClockKit.CLKWatchFaceLibrary.addWatchFace",
+        qos: .userInitiated
+    )
 
     public override init() {
         super.init()
@@ -41,55 +43,46 @@ open class CLKWatchFaceLibrary: NSObject, @unchecked Sendable {
     ///
     /// The completion-handler overload is the ObjC method
     /// `addWatchFaceAtURL:completionHandler:`. The async overload shares that
-    /// precise identifier in the Swift graph. Both paths are fail-closed.
-    /// The handler is invoked synchronously on the calling thread; Apple's
-    /// queue and any consent UI are not fabricated.
+    /// precise identifier and this delivery path. The handler is scheduled
+    /// off the caller and invoked exactly once with a fail-closed error;
+    /// Apple's queue and any consent UI are not fabricated.
     open func addWatchFace(
         at fileURL: URL,
         completionHandler handler: @escaping ((any Error)?) -> Void
     ) {
-        handler(Self.failClosedError(for: fileURL))
+        let error: any Error = Self.failClosedError(for: fileURL)
+        Self.completionQueue.async {
+            handler(error)
+        }
     }
 
-    /// Async overlay of `addWatchFace(at:completionHandler:)`. Always throws;
-    /// it never reports a successful install.
+    /// Async overlay of `addWatchFace(at:completionHandler:)`. Always throws
+    /// the same fail-closed error delivered by the completion-handler path.
     open func addWatchFace(at fileURL: URL) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in
             addWatchFace(at: fileURL) { error in
                 if let error {
                     continuation.resume(throwing: error)
                 } else {
-                    continuation.resume()
+                    continuation.resume(throwing: ErrorCode.faceNotAvailable)
                 }
             }
         }
     }
 
-    /// Maps locally observable URL/filesystem facts onto public error codes,
-    /// then fails closed. A readable regular file still cannot be installed
-    /// without Apple's watch-face library, so the result is `faceNotAvailable`.
+    /// Touches the portable `FileManager.fileExists(atPath:isDirectory:)`
+    /// signature (`ObjCBool` out-parameter) while accepting `fileURL`. The
+    /// filesystem result does not select a guessed Apple validation order;
+    /// install is always unavailable on Linux.
     private static func failClosedError(for fileURL: URL) -> ErrorCode {
-        guard fileURL.isFileURL else {
-            return .notFileURL
+        if fileURL.isFileURL {
+            var isDirectory = ObjCBool(false)
+            _ = FileManager.default.fileExists(
+                atPath: fileURL.path,
+                isDirectory: &isDirectory
+            )
+            _ = isDirectory.boolValue
         }
-        if fileURL.path.isEmpty {
-            return .noURL
-        }
-
-        var isDirectory = false
-        let exists = FileManager.default.fileExists(
-            atPath: fileURL.path,
-            isDirectory: &isDirectory
-        )
-        if exists {
-            if isDirectory {
-                return .invalidFile
-            }
-            if !FileManager.default.isReadableFile(atPath: fileURL.path) {
-                return .permissionDenied
-            }
-            return .faceNotAvailable
-        }
-        return .invalidFile
+        return .faceNotAvailable
     }
 }
