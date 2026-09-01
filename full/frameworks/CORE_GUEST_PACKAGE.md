@@ -13,8 +13,8 @@ Foundation-visible UIKit, CoreImage, QuartzCore, Intents, IntentsUI, WebKit,
 LocalAuthentication, SafariServices, Network, StoreKit, AudioToolbox,
 CoreHaptics, PassKit, CoreGraphics, ImageIO, LinkPresentation, MessageUI,
 MobileCoreServices, Security, CryptoKit, CommonCrypto, AppIntents, OSLog,
-UniformTypeIdentifiers, and SwiftData. These are thirty-six reusable ARM64
-Mach-O platform binaries (thirty-five frameworks plus ICU), including real
+UniformTypeIdentifiers, SwiftData, and UserNotifications. These are thirty-seven
+reusable ARM64 Mach-O platform binaries (thirty-six frameworks plus ICU), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
@@ -68,7 +68,7 @@ The semantic build order is deliberate:
    donation, resolution, and host-driven controller state.
 8. Compile production WebKit from its five-source attested manifest after both
    Foundation and UIKit exist.
-9. Compile and link nineteen app-facing first-party modules as independent ARM64
+9. Compile and link twenty app-facing first-party modules as independent ARM64
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
@@ -150,6 +150,12 @@ crashing an unchanged app at launch. Explicit durable configurations still
 throw; disk stores, CloudKit, migrations, and undo are not claimed. A separate
 ARM64 Mach-O gate expands `@Model` and `#Predicate`, executes compound fetches
 and mutations, and rejects accidental linkage to Apple's SwiftData framework.
+
+`libUserNotifications.dylib` supplies the Apple-shaped notification content,
+request, settings, category, center, and async delegate surface. It fails closed
+when no host authorization is provided and offers an explicitly authorized,
+process-local volatile delivery queue for portable hosts; it does not claim an
+operating-system notification daemon, push transport, or durable scheduling.
 
 The pinned swift-foundation revision has an upstream-corrected final-class
 Predicate key-path bug. The builder verifies exact source and patch hashes,

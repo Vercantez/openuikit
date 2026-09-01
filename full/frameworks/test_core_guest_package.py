@@ -165,6 +165,7 @@ FRAMEWORKS = (
     "OSLog",
     "UniformTypeIdentifiers",
     "SwiftData",
+    "UserNotifications",
 )
 DEPENDENCIES = (
     "InternalCollectionsUtilities",
@@ -719,6 +720,7 @@ class PackageFixture:
             "-lOSLog",
             "-lUniformTypeIdentifiers",
             "-lSwiftData",
+            "-lUserNotifications",
         ]
         (root / "compile-flags.rsp").write_bytes(
             b"".join(token.encode() + b"\0" for token in self.compile_arguments)
@@ -1522,7 +1524,7 @@ class ShellContractTests(unittest.TestCase):
                 'LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:'
                 '$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST'
             ),
-            5,
+            6,
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -1696,7 +1698,7 @@ class ShellContractTests(unittest.TestCase):
     def test_webkit_is_an_independent_fail_closed_framework_dylib(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")
-        self.assertEqual(len(FRAMEWORKS), 35)
+        self.assertEqual(len(FRAMEWORKS), 36)
         self.assertEqual(FRAMEWORKS.index("WebKit"), 15)
         for token in (
             "-module-name WebKit -emit-module",
@@ -2253,7 +2255,7 @@ class ShellContractTests(unittest.TestCase):
                         source.replace(predicate, "deleted-predicate", 1)
                     )
 
-    def test_nineteen_first_party_frameworks_are_real_core_products(self) -> None:
+    def test_twenty_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")
         canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
@@ -2278,8 +2280,9 @@ class ShellContractTests(unittest.TestCase):
             "OSLog",
             "UniformTypeIdentifiers",
             "SwiftData",
+            "UserNotifications",
         )
-        self.assertEqual(FRAMEWORKS[-19:], first_party)
+        self.assertEqual(FRAMEWORKS[-20:], first_party)
         self.assertEqual(
             source.count(
                 'python3 -B "$FIRST_PARTY_PROVENANCE_TOOL" production'
@@ -2291,13 +2294,17 @@ class ShellContractTests(unittest.TestCase):
         )
         self.assertIn("first-party-dylib-loads-v1", source)
         self.assertIn("apple-self-load=0", source)
-        self.assertIn("frontier-frameworks\\tframeworks=12\\tsources=13", source)
+        self.assertIn("frontier-frameworks\\tframeworks=13\\tsources=14", source)
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 13",
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 14",
             source,
         )
         self.assertIn(
-            "compile nineteen independent first-party framework modules", source
+            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 7",
+            source,
+        )
+        self.assertIn(
+            "compile twenty independent first-party framework modules", source
         )
         self.assertIn("network_string_processing_undefineds", source)
         self.assertIn("direct StringProcessing undefineds, expected 0", source)
@@ -2305,7 +2312,14 @@ class ShellContractTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertNotIn(".ranges(of:", network_source)
-        self.assertIn("first-party=portable-19", probe)
+        self.assertIn("first-party=portable-20", probe)
+        self.assertIn("usernotifications=fail-closed,volatile", probe)
+        self.assertIn("UserNotificationsGuestRuntime", source)
+        self.assertIn("USERNOTIFICATIONS_GUEST_MACHO_OK", source)
+        self.assertIn(
+            "full/usernotifications/tests/UserNotificationsHostRuntime.swift",
+            source,
+        )
         self.assertIn("oslog=standard-error,signposts", probe)
         self.assertIn("uniform-types=tags,conformance", probe)
         self.assertIn("security=keychain,random", probe)

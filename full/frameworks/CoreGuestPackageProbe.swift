@@ -30,6 +30,7 @@ import AppIntents
 import OSLog
 import UniformTypeIdentifiers
 import SwiftData
+import UserNotifications
 import WebKit
 
 private func coreRequireIndefiniteSymbolEffect<Effect>(_: Effect)
@@ -821,6 +822,17 @@ struct CoreGuestPackageProbe {
         precondition(UTType.usdz.conforms(to: .threeDContent))
         precondition(!SwiftDataPortable.supportsDurableStorage)
         precondition(!SwiftDataPortable.supportsCloudKit)
+        let notificationCenter = UNUserNotificationCenter.current()
+        var notificationAuthorizationFailedClosed = false
+        notificationCenter.requestAuthorization(options: [.alert, .sound]) {
+            granted, error in
+            precondition(!granted)
+            precondition(
+                (error as? UNError)?.code == .notificationsNotAllowed
+            )
+            notificationAuthorizationFailedClosed = true
+        }
+        precondition(notificationAuthorizationFailedClosed)
         let addController = INUIAddVoiceShortcutViewController(shortcut: shortcut)
         precondition(
             type(of: addController).presentationCapability == .hostDriven
@@ -851,12 +863,13 @@ struct CoreGuestPackageProbe {
                 + "graphics=coreimage,quartzcore "
                 + "symbols=values,markers,swiftui-render "
                 + "intentsui=host-driven swiftui-app=constructed "
-                + "first-party=portable-19 oslog=standard-error,signposts "
+                + "first-party=portable-20 oslog=standard-error,signposts "
                 + "security=keychain,random "
                 + "cryptokit=hashes,nonce,ed25519-fail-closed "
                 + "commoncrypto=sha256 "
                 + "uniform-types=tags,conformance "
                 + "swiftdata=volatile,fail-closed-durable "
+                + "usernotifications=fail-closed,volatile "
                 + "webkit=engine-unavailable preview=\(preview)"
         )
     }

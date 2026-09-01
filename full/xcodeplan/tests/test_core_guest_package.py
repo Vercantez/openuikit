@@ -93,6 +93,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "OSLog",
                 "UniformTypeIdentifiers",
                 "SwiftData",
+                "UserNotifications",
                 "DeveloperToolsSupport",
             )
         )
@@ -133,6 +134,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "OSLog",
                 "UniformTypeIdentifiers",
                 "SwiftData",
+                "UserNotifications",
             )
         )
         for relative in required_files:
@@ -293,6 +295,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-lOSLog",
                 "-lUniformTypeIdentifiers",
                 "-lSwiftData",
+                "-lUserNotifications",
             ],
             "format_version": 1,
             "compiler_plugins": compiler_plugins,

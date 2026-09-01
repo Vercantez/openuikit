@@ -73,6 +73,7 @@ FIRST_PARTY_FRAMEWORKS=(
     OSLog
     UniformTypeIdentifiers
     SwiftData
+    UserNotifications
 )
 FIRST_PARTY_SOURCE_DIRS=(
     localauthentication
@@ -94,6 +95,7 @@ FIRST_PARTY_SOURCE_DIRS=(
     oslog
     uniformtypeidentifiers
     swiftdata
+    usernotifications
 )
 FRONTIER_FRAMEWORKS=(
     CoreGraphics
@@ -108,6 +110,7 @@ FRONTIER_FRAMEWORKS=(
     OSLog
     UniformTypeIdentifiers
     SwiftData
+    UserNotifications
 )
 FRONTIER_SOURCE_DIRS=(
     coregraphics
@@ -122,6 +125,7 @@ FRONTIER_SOURCE_DIRS=(
     oslog
     uniformtypeidentifiers
     swiftdata
+    usernotifications
 )
 
 EXPECTED_SUPPORT_BASE=af37dd231dd5a31866c0c94a04a85679b0821eff
@@ -712,6 +716,20 @@ append_frontier_sources() {
                     "$(hash_file "$W/$relative")" >> "$output"
             done
         fi
+        if [ "$framework" = UserNotifications ]; then
+            frontier_inputs=(
+                full/usernotifications/tests/UserNotificationsHostRuntime.swift
+            )
+            for relative in "${frontier_inputs[@]}"; do
+                [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+                    || die "UserNotifications supporting input is missing or linked: $relative"
+                git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+                    || die "UserNotifications supporting input is not tracked: $relative"
+                printf 'frontier-input\t%s\t%s\t%s\t%s\n' \
+                    "$((index + 1))" "$framework" "$relative" \
+                    "$(hash_file "$W/$relative")" >> "$output"
+            done
+        fi
         if [ "$framework" = SwiftData ]; then
             frontier_inputs=(
                 full/swiftdata/SwiftDataMacros.swift
@@ -731,9 +749,9 @@ append_frontier_sources() {
     done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 13 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 14 ] \
     || die 'frontier framework source count drifted'
-[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 6 ] \
+[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 7 ] \
     || die 'frontier underlying input count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
@@ -1839,7 +1857,7 @@ done
     -emit-module-path "$STAGE/modules/WebKit.swiftmodule" \
     -emit-object -o "$WORK/webkit.o" "${WEBKIT_SOURCE_PATHS[@]}"
 
-echo '== compile nineteen independent first-party framework modules'
+echo '== compile twenty independent first-party framework modules'
 clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -fvisibility=hidden -Wall -Wextra -Werror \
     -I "$STAGE/include/CCommonCrypto" \
@@ -2324,6 +2342,40 @@ grep -Fxq \
     "$STAGE/attestation/swiftdata-runtime.log" \
     || die 'standalone SwiftData runtime marker is missing'
 
+echo '== compile/link/run the standalone UserNotifications service gate'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name UserNotificationsGuestRuntime -emit-object \
+    -o "$WORK/usernotifications-guest-runtime.o" \
+    "$W/full/usernotifications/tests/UserNotificationsHostRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/UserNotificationsGuestRuntime" \
+    "$WORK/usernotifications-guest-runtime.o" "${COMMON_LINK[@]}" \
+    -lUserNotifications -lFoundation -lFoundationInternationalization \
+    -lFoundationEssentials "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+llvm-otool-18 -hv "$STAGE/probe/UserNotificationsGuestRuntime" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
+    || die 'UserNotifications runtime gate is not an ARM64 Mach-O executable'
+usernotifications_gate_load_count=$(llvm-otool-18 -L \
+    "$STAGE/probe/UserNotificationsGuestRuntime" \
+    | awk '$1 == "@rpath/libUserNotifications.dylib" { count++ } END { print count + 0 }')
+[ "$usernotifications_gate_load_count" -eq 1 ] \
+    || die "UserNotifications gate load count $usernotifications_gate_load_count, expected 1"
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$URL_TRANSPORT_HOST:$RELATIVE_TIME_HOST${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$STAGE/guest-root" \
+        "$STAGE/guest-root/machorun" ./probe/UserNotificationsGuestRuntime
+) | tee "$STAGE/attestation/usernotifications-runtime.log"
+grep -Fxq \
+    'USERNOTIFICATIONS_HOST_OK authorization=fail-closed scheduling=volatile delegate=async response=delivered badge=validated' \
+    "$STAGE/attestation/usernotifications-runtime.log" \
+    || die 'standalone UserNotifications runtime marker is missing'
+printf '%s\n' \
+    'USERNOTIFICATIONS_GUEST_MACHO_OK authorization=fail-closed scheduling=volatile delegate=async response=delivered badge=validated' \
+    | tee -a "$STAGE/attestation/usernotifications-runtime.log"
+
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     "${OBSERVATION_PLUGIN_FLAGS[@]}" "${FOUNDATION_PLUGIN_FLAGS[@]}" \
@@ -2364,6 +2416,7 @@ fi
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO \
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit \
     -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData \
+    -lUserNotifications \
     "$SWIFTUI_RUNTIME_LINK_FLAG" \
     "$OBSERVATION_DYLIB"
 
@@ -2430,7 +2483,7 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans.ttf" \
         "$STAGE/resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf"
 ) | tee "$STAGE/attestation/runtime.log"
-grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-19 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable webkit=engine-unavailable preview=' \
+grep -Fq 'CORE_GUEST_PACKAGE_MACHO_OK notification=shared,publisher,userdefaults combine=delivered resources=loaded fonts=system,bold intents=donated shortcuts=stored appintents=process-local foundation=locks,filehandle,characters,strings,ranges,attributed,objc,number-bridge,data-search,cfurl,url-bridge,cache,reexports,byte-count internationalization=icu-fr,number,idna data-platform=lock,kvs,relative-time-icu,filesystem,storekit-model observation=macro,reexport,registrar,tracking,ignored,one-shot graphics=coreimage,quartzcore symbols=values,markers,swiftui-render intentsui=host-driven swiftui-app=constructed first-party=portable-20 oslog=standard-error,signposts security=keychain,random cryptokit=hashes,nonce,ed25519-fail-closed commoncrypto=sha256 uniform-types=tags,conformance swiftdata=volatile,fail-closed-durable usernotifications=fail-closed,volatile webkit=engine-unavailable preview=' \
     "$STAGE/attestation/runtime.log" || die 'core package runtime marker is missing'
 
 echo '== compile/link/run the real Dispatch and Swift-concurrency Mach-O gate'
@@ -2644,6 +2697,7 @@ LINK_ARGUMENTS=(
     -lAudioToolbox -lCoreHaptics -lPassKit -lCoreGraphics -lImageIO
     -lLinkPresentation -lMessageUI -lMobileCoreServices -lSecurity -lCryptoKit
     -lCommonCrypto -lAppIntents -lOSLog -lUniformTypeIdentifiers -lSwiftData
+    -lUserNotifications
 )
 printf '%s\0' "${COMPILE_ARGUMENTS[@]}" > "$STAGE/compile-flags.rsp"
 printf '%s\0' "${LINK_ARGUMENTS[@]}" > "$STAGE/link-inputs.rsp"
@@ -2791,7 +2845,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'foundation-byte-count\toracle=%s\tapple-golden=%s\trows=86\n' \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_ORACLE")" \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_GOLDEN")"
-    printf 'frontier-frameworks\tframeworks=12\tsources=13\n'
+    printf 'frontier-frameworks\tframeworks=13\tsources=14\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
         "$(hash_file "$W/full/relativetime/include/OpenRelativeTimeABI.h")" \
         "$(hash_file "$W/full/relativetime/OpenRelativeTimeBridge.c")" \
@@ -2919,6 +2973,8 @@ record_artifact probe CoreGuestPackageProbe executable probe/CoreGuestPackagePro
 record_artifact probe OSLogGuestRuntime executable probe/OSLogGuestRuntime
 record_artifact probe SwiftDataGuestRuntime executable \
     probe/SwiftDataGuestRuntime
+record_artifact probe UserNotificationsGuestRuntime executable \
+    probe/UserNotificationsGuestRuntime
 record_artifact probe DispatchMachORuntime executable \
     probe/DispatchMachORuntime
 record_artifact probe SwiftUIFoundationReexportProbe executable \
@@ -2935,6 +2991,8 @@ record_artifact attestation OSLog link-audit \
     attestation/oslog-standalone-link.tsv
 record_artifact attestation SwiftData runtime-log \
     attestation/swiftdata-runtime.log
+record_artifact attestation UserNotifications runtime-log \
+    attestation/usernotifications-runtime.log
 record_artifact attestation dispatch host \
     attestation/open-dispatch-host.tsv
 record_artifact attestation dispatch host-test-log \
