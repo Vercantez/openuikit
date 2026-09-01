@@ -90,7 +90,7 @@ indirect enum _OpenViewNodeKind {
     case roundedRectangle(cornerRadius: CGFloat, style: _OpenRoundedRectangleStyle)
     case capsule(_OpenRoundedRectangleStyle)
     case divider
-    case progress
+    case progress(value: Double?, total: Double)
     case slider(
         value: Double,
         minimum: Double,
@@ -375,6 +375,8 @@ enum _OpenViewModification {
     case controlSize(ControlSize)
     case imageScale(ImageScale)
     case circularProgressStyle
+    case linearProgressStyle
+    case compositingGroup
     case menuPickerStyle
     case symbolRenderingMode(SymbolRenderingMode?)
     case accessibilityIdentifier(String)
@@ -485,6 +487,8 @@ fileprivate enum _OpenViewModifier {
     case controlSize(ControlSize)
     case imageScale(ImageScale)
     case circularProgressStyle
+    case linearProgressStyle
+    case compositingGroup
     case menuPickerStyle
     case symbolRenderingMode(SymbolRenderingMode?)
     case accessibilityIdentifier(String)
@@ -645,6 +649,8 @@ fileprivate enum _OpenViewModifier {
         case .controlSize(let size): return .controlSize(size)
         case .imageScale(let scale): return .imageScale(scale)
         case .circularProgressStyle: return .circularProgressStyle
+        case .linearProgressStyle: return .linearProgressStyle
+        case .compositingGroup: return .compositingGroup
         case .menuPickerStyle: return .menuPickerStyle
         case .symbolRenderingMode(let mode): return .symbolRenderingMode(mode)
         case .accessibilityIdentifier(let identifier):
@@ -3009,6 +3015,24 @@ public extension _OpenView {
             content: self,
             modification: .circularProgressStyle
         )
+    }
+
+    func progressViewStyle(
+        _ style: LinearProgressViewStyle
+    ) -> some _OpenView {
+        _ = style
+        return _OpenModifiedContent(
+            content: self,
+            modification: .linearProgressStyle
+        )
+    }
+
+    /// Establishes a retained offscreen-compositing boundary. The renderer
+    /// materializes a dedicated transparent host, so modifiers outside this
+    /// call (notably opacity and masks) apply once to the whole descendant
+    /// result instead of being distributed across individual children.
+    func compositingGroup() -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .compositingGroup)
     }
 
     func pickerStyle(_ style: MenuPickerStyle) -> some _OpenView {

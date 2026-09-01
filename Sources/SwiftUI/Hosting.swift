@@ -1592,7 +1592,8 @@ private struct _RenderEnvironment {
     var submitLabel: SubmitLabel = .return
     var keyboardDismissMode: ScrollDismissesKeyboardMode = .automatic
     var controlSize: ControlSize = .regular
-    var usesCircularProgressStyle = true
+    var usesCircularProgressStyle = false
+    var usesLinearProgressStyle = false
     var usesMenuPickerStyle = false
     var symbolRenderingMode: SymbolRenderingMode?
     var scrollStorage: _OpenScrollProxyStorage?
@@ -1721,6 +1722,12 @@ private func _openReducedPreference(
     return result
 }
 
+private func _normalizedProgress(value: Double?, total: Double) -> Double? {
+    guard let value else { return nil }
+    guard value.isFinite, total.isFinite, total > 0 else { return 0 }
+    return min(max(value / total, 0), 1)
+}
+
 @MainActor
 private enum _ViewRenderer {
     static let defaultSpacing: CGFloat = 8
@@ -1751,7 +1758,11 @@ private enum _ViewRenderer {
             return _bounded(proposed)
         case .divider:
             return CGSize(width: _bounded(proposed).width, height: 1)
-        case .progress:
+        case .progress(let value, _):
+            if environment.usesLinearProgressStyle
+                || (value != nil && !environment.usesCircularProgressStyle) {
+                return CGSize(width: max(100, _bounded(proposed).width), height: 4)
+            }
             let extent = _controlExtent(environment.controlSize)
             return CGSize(width: extent, height: extent)
         case .slider:
@@ -2042,7 +2053,15 @@ private enum _ViewRenderer {
             case .circularProgressStyle:
                 var next = environment
                 next.usesCircularProgressStyle = true
+                next.usesLinearProgressStyle = false
                 return measure(content, proposed: proposed, environment: next)
+            case .linearProgressStyle:
+                var next = environment
+                next.usesLinearProgressStyle = true
+                next.usesCircularProgressStyle = false
+                return measure(content, proposed: proposed, environment: next)
+            case .compositingGroup:
+                return measure(content, proposed: proposed, environment: environment)
             case .menuPickerStyle:
                 var next = environment
                 next.usesMenuPickerStyle = true
@@ -2402,23 +2421,47 @@ private enum _ViewRenderer {
             view.isUserInteractionEnabled = false
             view.accessibilityIdentifier = "SwiftUI.Divider"
             surface.addSubview(view)
-        case .progress:
-            let extent = _controlExtent(environment.controlSize)
-            let indicator = UIActivityIndicatorView(style: .medium)
-            indicator.frame = CGRect(
-                x: rect.midX - extent / 2,
-                y: rect.midY - extent / 2,
-                width: extent,
-                height: extent
-            )
-            indicator.color = (environment.tintColor ?? environment.foregroundColor)?.resolve()
-                ?? UIActivityIndicatorView.defaultColor
-            indicator.accessibilityIdentifier = "SwiftUI.ProgressView"
-            if environment.usesCircularProgressStyle {
-                indicator.accessibilityValue = "style=circular"
+        case .progress(let value, let total):
+            let usesLinear = environment.usesLinearProgressStyle
+                || (value != nil && !environment.usesCircularProgressStyle)
+            if usesLinear {
+                let normalized = _normalizedProgress(value: value, total: total)
+                let progress = UIProgressView(frame: CGRect(
+                    x: rect.minX,
+                    y: rect.midY - 2,
+                    width: rect.width,
+                    height: 4
+                ))
+                progress.progress = Float(normalized ?? 0)
+                progress.progressTintColor = (
+                    environment.tintColor ?? environment.foregroundColor
+                )?.resolve()
+                progress.accessibilityIdentifier = "SwiftUI.ProgressView"
+                if let normalized {
+                    progress.accessibilityValue = "\(Int((normalized * 100).rounded()))%"
+                } else {
+                    progress.accessibilityValue = "indeterminate"
+                }
+                surface.addSubview(progress)
+            } else {
+                let extent = _controlExtent(environment.controlSize)
+                let indicator = UIActivityIndicatorView(style: .medium)
+                indicator.frame = CGRect(
+                    x: rect.midX - extent / 2,
+                    y: rect.midY - extent / 2,
+                    width: extent,
+                    height: extent
+                )
+                indicator.color = (
+                    environment.tintColor ?? environment.foregroundColor
+                )?.resolve() ?? UIActivityIndicatorView.defaultColor
+                indicator.accessibilityIdentifier = "SwiftUI.ProgressView"
+                if environment.usesCircularProgressStyle {
+                    indicator.accessibilityValue = "style=circular"
+                }
+                indicator.startAnimating()
+                surface.addSubview(indicator)
             }
-            indicator.startAnimating()
-            surface.addSubview(indicator)
         case .slider(let value, let minimum, let maximum, _, let setValue):
             let slider = UISlider(frame: rect)
             slider.minimumValue = Float(min(minimum, maximum))
@@ -3041,7 +3084,25 @@ private enum _ViewRenderer {
             case .circularProgressStyle:
                 var next = environment
                 next.usesCircularProgressStyle = true
+                next.usesLinearProgressStyle = false
                 place(content, in: rect, on: surface, environment: next)
+            case .linearProgressStyle:
+                var next = environment
+                next.usesLinearProgressStyle = true
+                next.usesCircularProgressStyle = false
+                place(content, in: rect, on: surface, environment: next)
+            case .compositingGroup:
+                let group = _SwiftUIPassthroughView(frame: rect)
+                group.backgroundColor = .clear
+                group.isOpaque = false
+                group.accessibilityIdentifier = "SwiftUI.CompositingGroup"
+                surface.addSubview(group)
+                place(
+                    content,
+                    in: group.bounds,
+                    on: group,
+                    environment: environment
+                )
             case .menuPickerStyle:
                 var next = environment
                 next.usesMenuPickerStyle = true

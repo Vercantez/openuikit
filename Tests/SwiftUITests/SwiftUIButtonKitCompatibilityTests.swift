@@ -235,6 +235,57 @@ final class SwiftUIButtonKitCompatibilityTests: XCTestCase {
         XCTAssertTrue(accessibility.accessibilityTraits.contains(.updatesFrequently))
     }
 
+    func testDeterminateLinearProgressNormalizesAndRendersNativeBars() throws {
+        let root = try hosted(
+            VStack {
+                ProgressView(value: 2.0, total: 4.0)
+                    .progressViewStyle(.linear)
+                    .tint(.red)
+                    .frame(width: 180, height: 20)
+                ProgressView(value: 3.0, total: 2.0)
+                    .progressViewStyle(.linear)
+                ProgressView(value: 1.0, total: 0.0)
+                    .progressViewStyle(.linear)
+            }
+        )
+
+        let bars = descendants(including: root).compactMap { $0 as? UIProgressView }
+        XCTAssertEqual(bars.count, 3)
+        XCTAssertEqual(bars[0].progress, 0.5, accuracy: 0.000_001)
+        XCTAssertEqual(bars[0].progressTintColor, .red)
+        XCTAssertEqual(bars[0].frame.width, 180, accuracy: 0.001)
+        XCTAssertEqual(bars[0].frame.height, 4, accuracy: 0.001)
+        XCTAssertEqual(bars[0].accessibilityValue, "50%")
+        XCTAssertEqual(bars[1].progress, 1, accuracy: 0.000_001)
+        XCTAssertEqual(bars[2].progress, 0, accuracy: 0.000_001)
+    }
+
+    func testEffectContentCompositingGroupRetainsConcreteRenderBoundary() throws {
+        let root = try hosted(
+            Text("grouped")
+                .onChange(of: 1) { _ in }
+                .compositingGroup()
+                .opacity(0.5)
+        )
+        let group = try XCTUnwrap(
+            descendants(including: root).first {
+                $0.accessibilityIdentifier == "SwiftUI.CompositingGroup"
+            }
+        )
+        XCTAssertFalse(group.isOpaque)
+        XCTAssertNotNil(
+            descendants(including: group).first {
+                $0.accessibilityIdentifier == "SwiftUI.Text"
+            }
+        )
+        let opacity = try XCTUnwrap(
+            descendants(including: root).first {
+                $0.accessibilityIdentifier == "SwiftUI.Opacity"
+            }
+        )
+        XCTAssertEqual(opacity.alpha, 0.5, accuracy: 0.001)
+    }
+
     @MainActor
     func testOnDisappearPairsEachVisibleHostAppearanceExactlyOnce() throws {
         var events: [String] = []

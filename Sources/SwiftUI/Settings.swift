@@ -314,6 +314,11 @@ public struct _OpenCircularProgressViewStyle: Hashable, Sendable {
     public static let circular = _OpenCircularProgressViewStyle()
 }
 
+public struct _OpenLinearProgressViewStyle: Hashable, Sendable {
+    public init() {}
+    public static let linear = _OpenLinearProgressViewStyle()
+}
+
 /// Legacy alert value used by `alert(item:)`. Buttons are retained actions,
 /// not labels discarded at compile time, and map to UIAlertAction roles.
 public struct _OpenAlert {
@@ -473,19 +478,49 @@ public struct _OpenSecureField: _OpenView {
     }
 }
 
-/// Indeterminate progress maps to OpenUIKit's real activity view. A string
-/// label is retained as adjacent SwiftUI text, matching the accessibility and
-/// layout contract of `ProgressView("…")` without inventing a second control.
+/// Indeterminate progress maps to OpenUIKit's real activity view; determinate
+/// progress retains its value and total for native linear-bar rendering. A
+/// string label remains adjacent SwiftUI text, matching `ProgressView("…")`
+/// without inventing a second control.
 public struct _OpenProgressView: _OpenView {
     public typealias Body = Never
     public let title: String?
+    private let value: Double?
+    private let total: Double
 
-    public init() { title = nil }
+    nonisolated public init() {
+        title = nil
+        value = nil
+        total = 1
+    }
 
-    public init(_ title: String) { self.title = title }
+    nonisolated public init(_ title: String) {
+        self.title = title
+        value = nil
+        total = 1
+    }
+
+    nonisolated public init<Value>(value: Value?, total: Value = 1.0)
+        where Value: BinaryFloatingPoint
+    {
+        title = nil
+        self.value = value.map(Double.init)
+        self.total = Double(total)
+    }
+
+    @_disfavoredOverload
+    nonisolated public init<Title, Value>(
+        _ title: Title,
+        value: Value?,
+        total: Value = 1.0
+    ) where Title: StringProtocol, Value: BinaryFloatingPoint {
+        self.title = String(title)
+        self.value = value.map(Double.init)
+        self.total = Double(total)
+    }
 
     public func _makeOpenUIKitNode() -> _OpenViewNode {
-        let progress = _OpenViewNode(.progress)
+        let progress = _OpenViewNode(.progress(value: value, total: total))
         guard let title else { return progress }
         return _OpenViewNode(
             .hStack(
@@ -584,6 +619,7 @@ public typealias Grid<Content> = _OpenGrid<Content> where Content: _OpenView
 public typealias GridRow<Content> = _OpenGridRow<Content> where Content: _OpenView
 public typealias Link<Label> = _OpenLink<Label> where Label: _OpenView
 public typealias CircularProgressViewStyle = _OpenCircularProgressViewStyle
+public typealias LinearProgressViewStyle = _OpenLinearProgressViewStyle
 public typealias Alert = _OpenAlert
 public typealias Picker<SelectionValue, Label, Content> =
     _OpenPicker<SelectionValue, Label, Content>
