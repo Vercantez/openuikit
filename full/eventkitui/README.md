@@ -1,64 +1,55 @@
-# EventKitUI Linux starting point
+# EventKitUI (Linux starting point)
 
-This directory is a clean-room Linux starting point for Apple's public
-`EventKitUI` module. It is not Apple Calendar, it is not a claim of sheet
-parity, and it is not wired into the shared guest package. Central review still
-owns EventKit integration, ABI, and any later sysroot packaging.
+`EventKitUI.swift` produces `EventKitUI.swiftmodule` and `libEventKitUI.dylib`.
 
-## What is real
+The isolated host gate compiles this module with Foundation only. Declarations
+that require EventKit or UIKit are `#if canImport(EventKit) && canImport(UIKit)`
+gated so this module never introduces lookalike `EKEventStore`, `EKCalendar`,
+`EKEvent`, `EKEntityType`, `UIViewController`, or `UINavigationController`
+types.
 
-The public EventKitUI enums, view-controller types, and delegate protocols from
-the pinned Xcode 26.1 graph compile and are exercised by
-`tests/agent/EventKitUIRuntime.swift`:
+## What is real on the isolated host
 
 - `EKCalendarChooserDisplayStyle`, `EKCalendarChooserSelectionStyle`,
   `EKEventEditViewAction` (including the `cancelled` spelling alias), and
   `EKEventViewAction`, including synthesized `Hashable` / `RawRepresentable`
-  members.
-- `EKCalendarChooser` stores selection/display style, entity type, the event
-  store identity, Done/Cancel button flags, and an in-memory
-  `selectedCalendars` set. Hosts call `finish()` / `cancel()`.
-- `EKEventViewController` stores the event and the editing/preview flags.
-  Hosts call `finish()` to emit `.done`.
-- `EKEventEditViewController.cancelEditing()` emits `.canceled` and does not
-  write a store.
-- `EKUI_IS_IOS` and `EKUI_IS_SIMULATOR` are `0` on this Linux host.
-- `EventKitUIBundle()` is `nil` because Linux has no EventKitUI.framework
-  bundle and `Bundle(for:)` is unsafe in this Foundation overlay.
+  members. Raw values follow the public `NS_ENUM` order.
+- `EKUI_IS_IOS` and `EKUI_IS_SIMULATOR` are `0` on Linux.
+- `EventKitUIBundle()` is `nil` (no EventKitUI.framework bundle).
+- `EventKitUIHost` SPI flags report that Apple Calendar sheets and EventKit
+  writes are unavailable.
 
-The isolated fan-out compiler has Foundation only. `EventKitCompatibility.swift`
-therefore supplies in-memory `EKEventStore`, `EKCalendar`, `EKEvent`, and
-`EKEntityType` so EventKitUI signatures type-check. When a real `EventKit`
-module is on the search path, that file becomes `@_exported import EventKit`.
-Controllers subclass `NSObject` in this isolated Foundation-only compile.
-`UIViewController` / `UINavigationController` subclassing waits for UIKit
-linkage.
+## What is real when EventKit and UIKit are linked
 
-## Fail-closed boundaries
+- `EKCalendarChooser` and `EKEventViewController` subclass
+  `UIKit.UIViewController`.
+- `EKEventEditViewController` subclasses `UIKit.UINavigationController`.
+- Inits and properties take real `EventKit.EKEventStore`, `EKCalendar`,
+  `EKEvent`, and `EKEntityType` values.
+- Host Done/Cancel (`finish()`, `cancel()`, viewer `finish()`) is
+  `@_spi(OpenUIKitHost)` and notifies at most once. `cancelEditing()` is the
+  public Apple cancel path and also notifies `.canceled` at most once.
+- Optional Objective-C delegate methods have empty Swift defaults except
+  `eventEditViewControllerDefaultCalendar(forNewEvents:)`, whose default does
+  not invent a calendar and is not invoked by the edit controller.
 
-- No Calendar privacy prompt, entitlement, or EventKit authorization call.
-- No read of the host calendar database and no write/save/delete through Apple
-  Calendar. `saveEditing()`, `deleteEditing()`, `deleteEvent()`, and
-  `respondToInvitation()` throw `EKUIError`.
-- `.saved`, `.deleted` (edit and view), and `.responded` are never sent to
-  delegates. Only `.canceled` / `.done` are emitted, and only from explicit
-  host/cancel paths.
-- Single-selection and writable-only filtering of `selectedCalendars` are a
-  Linux policy (keep the lexicographically first identifier; drop calendars
-  with `allowsContentModifications == false`). Apple's exact coercion is still
-  an oracle question.
-- `init(coder:)` is unavailable. There is no storyboard EventKitUI sheet.
-- Combine, DeveloperToolsSupport, and SwiftUI are declared seed dependencies
-  but have no identifiers in this 61-symbol public surface, so they are not
-  imported.
+## Fail-closed
 
-## Deferred / integration
+- No Calendar privacy prompt, EventKit authorization, or store write.
+- Delegates are never sent `.saved`, `.deleted`, or `.responded`.
+- `selectedCalendars` is stored as assigned. This overlay does not claim
+  Apple's single-selection or writable-only filtering, or selection-change
+  callback timing.
+- `init(coder:)` is unavailable.
 
-- Real `UIViewController` presentation, navigation-stack edit UI, and Calendar
-  preview chrome wait for UIKit linkage.
-- Replacing the EventKit placeholders with the EventKit fan-out module.
-- Apple's localized EventKitUI resource bundle and exact `EventKitUIBundle()`
-  identity.
-- Objective-C optional delegate dispatch vs this Swift overlay, where
-  `eventEditViewControllerDefaultCalendar(forNewEvents:)` is a protocol
-  requirement.
+The isolated Foundation gate does **not** prove integrated EventKit/UIKit
+success. `tests/agent/EventKitUIDependencyIdentity.swift` is the future EC2
+client: it imports Combine, DeveloperToolsSupport, EventKit, Foundation,
+SwiftUI, UIKit, and EventKitUI; passes real EventKit values through enabled
+APIs; checks exact UIKit inheritance; exercises weak delegates, deallocation,
+non-reentrant exactly-once callbacks, and omitted optionals; and loads
+`libEventKitUI.dylib`.
+
+## Oracle
+
+See `oracle-questions.tsv`.

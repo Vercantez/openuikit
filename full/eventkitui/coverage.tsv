@@ -1,57 +1,57 @@
 precise	status	evidence	notes
-c:@E@EKCalendarChooserDisplayStyle	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-c:@E@EKCalendarChooserDisplayStyle@EKCalendarChooserDisplayAllCalendars	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-c:@E@EKCalendarChooserDisplayStyle@EKCalendarChooserDisplayWritableCalendarsOnly	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-c:@E@EKCalendarChooserSelectionStyle	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-c:@E@EKCalendarChooserSelectionStyle@EKCalendarChooserSelectionStyleMultiple	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-c:@E@EKCalendarChooserSelectionStyle@EKCalendarChooserSelectionStyleSingle	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-c:@E@EKEventEditViewAction	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-c:@E@EKEventEditViewAction@EKEventEditViewActionCanceled	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
+c:@E@EKCalendarChooserDisplayStyle	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned NS_ENUM raw values.
+c:@E@EKCalendarChooserDisplayStyle@EKCalendarChooserDisplayAllCalendars	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned NS_ENUM raw values.
+c:@E@EKCalendarChooserDisplayStyle@EKCalendarChooserDisplayWritableCalendarsOnly	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned NS_ENUM raw values.
+c:@E@EKCalendarChooserSelectionStyle	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned NS_ENUM raw values.
+c:@E@EKCalendarChooserSelectionStyle@EKCalendarChooserSelectionStyleMultiple	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned NS_ENUM raw values.
+c:@E@EKCalendarChooserSelectionStyle@EKCalendarChooserSelectionStyleSingle	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned NS_ENUM raw values.
+c:@E@EKEventEditViewAction	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned NS_ENUM raw values.
+c:@E@EKEventEditViewAction@EKEventEditViewActionCanceled	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned NS_ENUM raw values.
 c:@E@EKEventEditViewAction@EKEventEditViewActionCancelled	implemented	tests/agent/EventKitUIRuntime.swift	British spelling alias of canceled; compared equal in the runtime probe.
-c:@E@EKEventEditViewAction@EKEventEditViewActionDeleted	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-c:@E@EKEventEditViewAction@EKEventEditViewActionSaved	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-c:@E@EKEventViewAction	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-c:@E@EKEventViewAction@EKEventViewActionDeleted	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-c:@E@EKEventViewAction@EKEventViewActionDone	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-c:@E@EKEventViewAction@EKEventViewActionResponded	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-c:@F@EventKitUIBundle	implemented	tests/agent/EventKitUIRuntime.swift	Returns nil; Linux has no EventKitUI.framework and Bundle(for:) crashes in this Foundation overlay.
+c:@E@EKEventEditViewAction@EKEventEditViewActionDeleted	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned NS_ENUM raw values.
+c:@E@EKEventEditViewAction@EKEventEditViewActionSaved	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned NS_ENUM raw values.
+c:@E@EKEventViewAction	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned NS_ENUM raw values.
+c:@E@EKEventViewAction@EKEventViewActionDeleted	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned NS_ENUM raw values.
+c:@E@EKEventViewAction@EKEventViewActionDone	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned NS_ENUM raw values.
+c:@E@EKEventViewAction@EKEventViewActionResponded	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned NS_ENUM raw values.
+c:@F@EventKitUIBundle	implemented	tests/agent/EventKitUIRuntime.swift	Returns nil; Linux has no EventKitUI.framework bundle.
 c:@macro@EKUI_IS_IOS	implemented	tests/agent/EventKitUIRuntime.swift	Linux host reports 0; iOS/simulator branches remain in source.
 c:@macro@EKUI_IS_SIMULATOR	implemented	tests/agent/EventKitUIRuntime.swift	Linux host reports 0; iOS/simulator branches remain in source.
-c:objc(cs)EKCalendarChooser	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKCalendarChooser(im)initWithSelectionStyle:displayStyle:entityType:eventStore:	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKCalendarChooser(im)initWithSelectionStyle:displayStyle:eventStore:	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKCalendarChooser(py)delegate	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKCalendarChooser(py)selectedCalendars	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKCalendarChooser(py)selectionStyle	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKCalendarChooser(py)showsCancelButton	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKCalendarChooser(py)showsDoneButton	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKEventEditViewController	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKEventEditViewController(im)cancelEditing	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKEventEditViewController(py)editViewDelegate	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKEventEditViewController(py)event	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKEventEditViewController(py)eventStore	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKEventViewController	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKEventViewController(py)allowsCalendarPreview	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKEventViewController(py)allowsEditing	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKEventViewController(py)delegate	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(cs)EKEventViewController(py)event	implemented	tests/agent/EventKitUIRuntime.swift	In-memory controller state and host-driven Done/Cancel; no EventKit persistence.
-c:objc(pl)EKCalendarChooserDelegate	implemented	tests/agent/EventKitUIRuntime.swift	Protocol surface; optional Objective-C methods use Swift defaults except defaultCalendar which is required.
-c:objc(pl)EKCalendarChooserDelegate(im)calendarChooserDidCancel:	implemented	tests/agent/EventKitUIRuntime.swift	Protocol surface; optional Objective-C methods use Swift defaults except defaultCalendar which is required.
-c:objc(pl)EKCalendarChooserDelegate(im)calendarChooserDidFinish:	implemented	tests/agent/EventKitUIRuntime.swift	Protocol surface; optional Objective-C methods use Swift defaults except defaultCalendar which is required.
-c:objc(pl)EKCalendarChooserDelegate(im)calendarChooserSelectionDidChange:	implemented	tests/agent/EventKitUIRuntime.swift	Protocol surface; optional Objective-C methods use Swift defaults except defaultCalendar which is required.
-c:objc(pl)EKEventEditViewDelegate	implemented	tests/agent/EventKitUIRuntime.swift	Protocol surface; optional Objective-C methods use Swift defaults except defaultCalendar which is required.
-c:objc(pl)EKEventEditViewDelegate(im)eventEditViewController:didCompleteWithAction:	implemented	tests/agent/EventKitUIRuntime.swift	Protocol surface; optional Objective-C methods use Swift defaults except defaultCalendar which is required.
-c:objc(pl)EKEventEditViewDelegate(im)eventEditViewControllerDefaultCalendarForNewEvents:	implemented	tests/agent/EventKitUIRuntime.swift	Protocol surface; optional Objective-C methods use Swift defaults except defaultCalendar which is required.
-c:objc(pl)EKEventViewDelegate	implemented	tests/agent/EventKitUIRuntime.swift	Protocol surface; optional Objective-C methods use Swift defaults except defaultCalendar which is required.
-c:objc(pl)EKEventViewDelegate(im)eventViewController:didCompleteWithAction:	implemented	tests/agent/EventKitUIRuntime.swift	Protocol surface; optional Objective-C methods use Swift defaults except defaultCalendar which is required.
+c:objc(cs)EKCalendarChooser	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKCalendarChooser(im)initWithSelectionStyle:displayStyle:entityType:eventStore:	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKCalendarChooser(im)initWithSelectionStyle:displayStyle:eventStore:	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKCalendarChooser(py)delegate	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKCalendarChooser(py)selectedCalendars	declared	EventKitUI.swift	Gated compile-only. Stores the assigned Set<EKCalendar>; does not claim single-selection filtering, writable-only filtering, or selectionDidChange timing.
+c:objc(cs)EKCalendarChooser(py)selectionStyle	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKCalendarChooser(py)showsCancelButton	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKCalendarChooser(py)showsDoneButton	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKEventEditViewController	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKEventEditViewController(im)cancelEditing	declared	EventKitUI.swift	Gated compile-only. Overlay cancel path notifies .canceled at most once and does not write EventKit; Apple queue/identity still unconfirmed.
+c:objc(cs)EKEventEditViewController(py)editViewDelegate	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKEventEditViewController(py)event	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKEventEditViewController(py)eventStore	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKEventViewController	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKEventViewController(py)allowsCalendarPreview	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKEventViewController(py)allowsEditing	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKEventViewController(py)delegate	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(cs)EKEventViewController(py)event	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(pl)EKCalendarChooserDelegate	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(pl)EKCalendarChooserDelegate(im)calendarChooserDidCancel:	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(pl)EKCalendarChooserDelegate(im)calendarChooserDidFinish:	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(pl)EKCalendarChooserDelegate(im)calendarChooserSelectionDidChange:	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(pl)EKEventEditViewDelegate	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(pl)EKEventEditViewDelegate(im)eventEditViewController:didCompleteWithAction:	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(pl)EKEventEditViewDelegate(im)eventEditViewControllerDefaultCalendarForNewEvents:	declared	EventKitUI.swift	Optional Swift default does not invent a calendar; the controller does not invoke the absent method. Isolated host does not compile this identifier.
+c:objc(pl)EKEventViewDelegate	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
+c:objc(pl)EKEventViewDelegate(im)eventViewController:didCompleteWithAction:	declared	EventKitUI.swift	Gated on canImport(EventKit) && canImport(UIKit); real UIKit/EventKit types. Isolated Foundation host does not compile or exercise this identifier.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKCalendarChooserDisplayStyle	implemented	tests/agent/EventKitUIRuntime.swift	Synthesized Hashable/RawRepresentable member of the public enum; exercised by the runtime probe.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKCalendarChooserSelectionStyle	implemented	tests/agent/EventKitUIRuntime.swift	Synthesized Hashable/RawRepresentable member of the public enum; exercised by the runtime probe.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKEventEditViewAction	implemented	tests/agent/EventKitUIRuntime.swift	Synthesized Hashable/RawRepresentable member of the public enum; exercised by the runtime probe.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@EKEventViewAction	implemented	tests/agent/EventKitUIRuntime.swift	Synthesized Hashable/RawRepresentable member of the public enum; exercised by the runtime probe.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKCalendarChooserDisplayStyle	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKCalendarChooserSelectionStyle	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKEventEditViewAction	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKEventViewAction	implemented	tests/agent/EventKitUIRuntime.swift	Public enum implemented with pinned raw values.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKCalendarChooserDisplayStyle	implemented	tests/agent/EventKitUIRuntime.swift	Synthesized Hashable/RawRepresentable member of the public enum; exercised by the runtime probe.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKCalendarChooserSelectionStyle	implemented	tests/agent/EventKitUIRuntime.swift	Synthesized Hashable/RawRepresentable member of the public enum; exercised by the runtime probe.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKEventEditViewAction	implemented	tests/agent/EventKitUIRuntime.swift	Synthesized Hashable/RawRepresentable member of the public enum; exercised by the runtime probe.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@EKEventViewAction	implemented	tests/agent/EventKitUIRuntime.swift	Synthesized Hashable/RawRepresentable member of the public enum; exercised by the runtime probe.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKCalendarChooserDisplayStyle	implemented	tests/agent/EventKitUIRuntime.swift	Synthesized Hashable/RawRepresentable member of the public enum; exercised by the runtime probe.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKCalendarChooserSelectionStyle	implemented	tests/agent/EventKitUIRuntime.swift	Synthesized Hashable/RawRepresentable member of the public enum; exercised by the runtime probe.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@EKEventEditViewAction	implemented	tests/agent/EventKitUIRuntime.swift	Synthesized Hashable/RawRepresentable member of the public enum; exercised by the runtime probe.

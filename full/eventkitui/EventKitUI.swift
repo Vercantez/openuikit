@@ -1,28 +1,19 @@
 @_exported import Foundation
+#if canImport(EventKit)
+@_exported import EventKit
+#endif
+#if canImport(UIKit)
+@_exported import UIKit
+#endif
 
-/// Linux presentation capability for EventKitUI controllers. Apple's Calendar
-/// sheets are not available; hosts may drive Done/Cancel themselves.
-public enum EKUIPresentationCapability: Int, Hashable, Sendable {
-    case unavailable = 0
-    case hostDriven = 1
-}
-
-/// Fail-closed errors for Calendar UI paths that would require Apple's event
-/// store, entitlements, or system sheet.
-public struct EKUIError: Error, Equatable, Hashable, Sendable {
-    public enum Code: Int, Hashable, Sendable {
-        case calendarUIUnavailable = 1
-        case eventMissing = 2
-        case invitationResponseUnavailable = 3
-        case eventDeletionUnavailable = 4
-    }
-
-    public let code: Code
-
-    public init(_ code: Code) {
-        self.code = code
-    }
-}
+// Linux starting point for Apple's public EventKitUI module.
+//
+// Enumerations, bundle lookup, and platform macros compile against Foundation
+// alone. Controllers and delegates compile only when EventKit and UIKit are
+// importable so this module never defines lookalike EKEventStore, EKCalendar,
+// EKEvent, EKEntityType, UIViewController, or UINavigationController types.
+// Host presentation controls are SPI. Nothing here requests Calendar access
+// or writes an Apple store.
 
 #if os(iOS)
 public var EKUI_IS_IOS: Int32 { 1 }
@@ -36,9 +27,7 @@ public var EKUI_IS_SIMULATOR: Int32 { 1 }
 public var EKUI_IS_SIMULATOR: Int32 { 0 }
 #endif
 
-/// Linux has no `EventKitUI.framework` resource bundle. Returning `nil` is
-/// fail-closed: `Bundle(for:)` crashes in this Foundation overlay, and
-/// `Bundle.main` would misidentify the process executable as EventKitUI.
+/// Linux has no `EventKitUI.framework` resource bundle.
 public func EventKitUIBundle() -> Bundle! {
     nil
 }
@@ -67,6 +56,40 @@ public enum EKEventViewAction: Int, Hashable, Sendable {
     case deleted = 2
 }
 
+@_spi(OpenUIKitHost)
+public enum EventKitUIHost: Sendable {
+    /// Apple Calendar chooser/editor/viewer sheets are not available here.
+    public static let calendarSheetAvailable = false
+    /// This module does not write through EventKit persistence.
+    public static let eventStoreWriteAvailable = false
+}
+
+@_spi(OpenUIKitHost)
+public struct EventKitUIHostError: Error, Equatable, Sendable, CustomStringConvertible {
+    public enum Code: Int, Sendable {
+        case calendarUIUnavailable = 1
+        case invitationResponseUnavailable = 2
+        case eventDeletionUnavailable = 3
+    }
+
+    public let code: Code
+    public let description: String
+
+    public init(_ code: Code) {
+        self.code = code
+        switch code {
+        case .calendarUIUnavailable:
+            description = "Apple Calendar UI is unavailable on this host"
+        case .invitationResponseUnavailable:
+            description = "Event invitation replies are unavailable on this host"
+        case .eventDeletionUnavailable:
+            description = "EventKit event deletion is unavailable on this host"
+        }
+    }
+}
+
+#if canImport(EventKit) && canImport(UIKit)
+
 @MainActor
 public protocol EKCalendarChooserDelegate: NSObjectProtocol {
     func calendarChooserSelectionDidChange(_ calendarChooser: EKCalendarChooser)
@@ -75,9 +98,17 @@ public protocol EKCalendarChooserDelegate: NSObjectProtocol {
 }
 
 extension EKCalendarChooserDelegate {
-    public func calendarChooserSelectionDidChange(_ calendarChooser: EKCalendarChooser) {}
-    public func calendarChooserDidFinish(_ calendarChooser: EKCalendarChooser) {}
-    public func calendarChooserDidCancel(_ calendarChooser: EKCalendarChooser) {}
+    public func calendarChooserSelectionDidChange(_ calendarChooser: EKCalendarChooser) {
+        _ = calendarChooser
+    }
+
+    public func calendarChooserDidFinish(_ calendarChooser: EKCalendarChooser) {
+        _ = calendarChooser
+    }
+
+    public func calendarChooserDidCancel(_ calendarChooser: EKCalendarChooser) {
+        _ = calendarChooser
+    }
 }
 
 @MainActor
@@ -86,12 +117,24 @@ public protocol EKEventEditViewDelegate: NSObjectProtocol {
         _ controller: EKEventEditViewController,
         didCompleteWith action: EKEventEditViewAction
     )
-    /// Optional on Apple via Objective-C. This overlay keeps the Apple
-    /// return type; Swift conformers that present a new-event editor must
-    /// supply an in-memory calendar. There is no EventKit default calendar.
+
+    /// Optional on Apple via Objective-C. Ordinary Swift conformers may omit
+    /// it. The edit controller does not invoke this default and this default
+    /// does not invent a calendar or call a missing EventKit API.
     func eventEditViewControllerDefaultCalendar(
         forNewEvents controller: EKEventEditViewController
     ) -> EKCalendar
+}
+
+extension EKEventEditViewDelegate {
+    public func eventEditViewControllerDefaultCalendar(
+        forNewEvents controller: EKEventEditViewController
+    ) -> EKCalendar {
+        _ = controller
+        preconditionFailure(
+            "eventEditViewControllerDefaultCalendar(forNewEvents:) is unimplemented and this host has no default calendar"
+        )
+    }
 }
 
 @MainActor
@@ -102,22 +145,30 @@ public protocol EKEventViewDelegate: NSObjectProtocol {
     )
 }
 
-/// Isolated compile has no UIKit module. Controllers inherit `NSObject` here;
-/// UIViewController / UINavigationController subclassing waits for UIKit linkage.
 @MainActor
-open class EKCalendarChooser: NSObject {
-    public static let presentationCapability: EKUIPresentationCapability = .hostDriven
-
+open class EKCalendarChooser: UIKit.UIViewController {
     public let selectionStyle: EKCalendarChooserSelectionStyle
-    public let displayStyle: EKCalendarChooserDisplayStyle
-    public let entityType: EKEntityType
-    public let eventStore: EKEventStore
-
     open weak var delegate: (any EKCalendarChooserDelegate)?
-    open var showsDoneButton = false
     open var showsCancelButton = false
+    open var showsDoneButton = false
+    open var selectedCalendars: Set<EKCalendar> = []
 
-    private var storedCalendars: Set<EKCalendar> = []
+    private let storedDisplayStyle: EKCalendarChooserDisplayStyle
+    private let storedEntityType: EKEntityType
+    private let storedEventStore: EKEventStore
+    private var isNotifyingFinish = false
+    private var didNotifyFinish = false
+    private var isNotifyingCancel = false
+    private var didNotifyCancel = false
+
+    @_spi(OpenUIKitHost)
+    public var displayStyle: EKCalendarChooserDisplayStyle { storedDisplayStyle }
+
+    @_spi(OpenUIKitHost)
+    public var entityType: EKEntityType { storedEntityType }
+
+    @_spi(OpenUIKitHost)
+    public var eventStore: EKEventStore { storedEventStore }
 
     public init(
         selectionStyle style: EKCalendarChooserSelectionStyle,
@@ -126,10 +177,10 @@ open class EKCalendarChooser: NSObject {
         eventStore: EKEventStore
     ) {
         self.selectionStyle = style
-        self.displayStyle = displayStyle
-        self.entityType = entityType
-        self.eventStore = eventStore
-        super.init()
+        self.storedDisplayStyle = displayStyle
+        self.storedEntityType = entityType
+        self.storedEventStore = eventStore
+        super.init(nibName: nil, bundle: nil)
     }
 
     public convenience init(
@@ -145,107 +196,88 @@ open class EKCalendarChooser: NSObject {
         )
     }
 
-    open var selectedCalendars: Set<EKCalendar> {
-        get { storedCalendars }
-        set {
-            let next = Self.normalizedSelection(
-                newValue,
-                selectionStyle: selectionStyle,
-                displayStyle: displayStyle
-            )
-            let changed = next != storedCalendars
-            storedCalendars = next
-            if changed {
-                delegate?.calendarChooserSelectionDidChange(self)
-            }
-        }
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) {
+        fatalError("NSCoder loading is unavailable on this host")
     }
 
-    /// Host action for the chooser's Done control. Selection is in-memory only.
+    /// Host Done control. Selection is in-memory; this does not persist calendars.
+    @_spi(OpenUIKitHost)
     open func finish() {
+        guard !isNotifyingFinish, !didNotifyFinish else { return }
+        isNotifyingFinish = true
+        didNotifyFinish = true
         delegate?.calendarChooserDidFinish(self)
+        isNotifyingFinish = false
     }
 
-    /// Host action for the chooser's Cancel control.
+    /// Host Cancel control. Does not mutate EventKit.
+    @_spi(OpenUIKitHost)
     open func cancel() {
+        guard !isNotifyingCancel, !didNotifyCancel else { return }
+        isNotifyingCancel = true
+        didNotifyCancel = true
         delegate?.calendarChooserDidCancel(self)
-    }
-
-    static func normalizedSelection(
-        _ calendars: Set<EKCalendar>,
-        selectionStyle: EKCalendarChooserSelectionStyle,
-        displayStyle: EKCalendarChooserDisplayStyle
-    ) -> Set<EKCalendar> {
-        var next = calendars
-        if displayStyle == .writableCalendarsOnly {
-            next = Set(next.filter(\.allowsContentModifications))
-        }
-        if selectionStyle == .single, next.count > 1 {
-            if let kept = next.sorted(by: { $0.calendarIdentifier < $1.calendarIdentifier }).first {
-                next = [kept]
-            }
-        }
-        return next
+        isNotifyingCancel = false
     }
 }
 
 @MainActor
-open class EKEventViewController: NSObject {
-    public static let presentationCapability: EKUIPresentationCapability = .hostDriven
-
+open class EKEventViewController: UIKit.UIViewController {
     open weak var delegate: (any EKEventViewDelegate)?
     open var event: EKEvent!
     open var allowsEditing = false
     open var allowsCalendarPreview = false
 
-    public override init() {
-        super.init()
+    private var isNotifyingFinish = false
+    private var didNotifyFinish = false
+
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
 
-    /// Host action for dismissing the viewer. Does not mutate EventKit.
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) {
+        fatalError("NSCoder loading is unavailable on this host")
+    }
+
+    /// Host dismiss control. Emits `.done` only; does not delete or respond.
+    @_spi(OpenUIKitHost)
     open func finish() {
+        guard !isNotifyingFinish, !didNotifyFinish else { return }
+        isNotifyingFinish = true
+        didNotifyFinish = true
         delegate?.eventViewController(self, didCompleteWith: .done)
-    }
-
-    /// Invitation replies require Apple Calendar. Always fail closed.
-    open func respondToInvitation() throws {
-        throw EKUIError(.invitationResponseUnavailable)
-    }
-
-    /// Deleting an event requires Apple Calendar persistence. Always fail closed.
-    open func deleteEvent() throws {
-        throw EKUIError(.eventDeletionUnavailable)
+        isNotifyingFinish = false
     }
 }
 
 @MainActor
-open class EKEventEditViewController: NSObject {
-    public static let presentationCapability: EKUIPresentationCapability = .hostDriven
-
+open class EKEventEditViewController: UIKit.UINavigationController {
     open weak var editViewDelegate: (any EKEventEditViewDelegate)?
     open var eventStore: EKEventStore!
     open var event: EKEvent?
 
-    public override init() {
-        super.init()
+    private var isCancelling = false
+    private var didCancel = false
+
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
 
-    /// Apple's cancel path: dismiss without claiming a store mutation.
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) {
+        fatalError("NSCoder loading is unavailable on this host")
+    }
+
+    /// Apple cancel path: notify `.canceled` and do not write the event store.
     open func cancelEditing() {
+        guard !isCancelling, !didCancel else { return }
+        isCancelling = true
+        didCancel = true
         editViewDelegate?.eventEditViewController(self, didCompleteWith: .canceled)
-    }
-
-    /// Saving would persist through EventKit. Linux has no Calendar store write.
-    open func saveEditing() throws {
-        throw EKUIError(.calendarUIUnavailable)
-    }
-
-    /// Deleting would persist through EventKit. Linux has no Calendar store write.
-    open func deleteEditing() throws {
-        throw EKUIError(.eventDeletionUnavailable)
-    }
-
-    open func defaultCalendarForNewEvents() -> EKCalendar? {
-        editViewDelegate?.eventEditViewControllerDefaultCalendar(forNewEvents: self)
+        isCancelling = false
     }
 }
+
+#endif

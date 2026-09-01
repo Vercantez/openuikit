@@ -1,62 +1,10 @@
 @_spi(OpenUIKitHost) import EventKitUI
 import Foundation
 
-private final class ChooserProbe: NSObject, EKCalendarChooserDelegate {
-    var didChange = 0
-    var didFinish = 0
-    var didCancel = 0
-
-    func calendarChooserSelectionDidChange(_ calendarChooser: EKCalendarChooser) {
-        didChange += 1
-        _ = calendarChooser
-    }
-
-    func calendarChooserDidFinish(_ calendarChooser: EKCalendarChooser) {
-        didFinish += 1
-        _ = calendarChooser
-    }
-
-    func calendarChooserDidCancel(_ calendarChooser: EKCalendarChooser) {
-        didCancel += 1
-        _ = calendarChooser
-    }
-}
-
-private final class EditProbe: NSObject, EKEventEditViewDelegate {
-    var actions: [EKEventEditViewAction] = []
-    let defaultCalendar: EKCalendar
-
-    init(defaultCalendar: EKCalendar) {
-        self.defaultCalendar = defaultCalendar
-    }
-
-    func eventEditViewController(
-        _ controller: EKEventEditViewController,
-        didCompleteWith action: EKEventEditViewAction
-    ) {
-        _ = controller
-        actions.append(action)
-    }
-
-    func eventEditViewControllerDefaultCalendar(
-        forNewEvents controller: EKEventEditViewController
-    ) -> EKCalendar {
-        _ = controller
-        return defaultCalendar
-    }
-}
-
-private final class ViewProbe: NSObject, EKEventViewDelegate {
-    var actions: [EKEventViewAction] = []
-
-    func eventViewController(
-        _ controller: EKEventViewController,
-        didCompleteWith action: EKEventViewAction
-    ) {
-        _ = controller
-        actions.append(action)
-    }
-}
+#if canImport(EventKit) && canImport(UIKit)
+import EventKit
+import UIKit
+#endif
 
 private func require(_ condition: Bool, _ message: String) {
     if !condition {
@@ -65,12 +13,30 @@ private func require(_ condition: Bool, _ message: String) {
     }
 }
 
-await MainActor.run {
+private func runFoundationSurface() {
+    require(!EventKitUIHost.calendarSheetAvailable, "calendar sheet must be unavailable")
+    require(!EventKitUIHost.eventStoreWriteAvailable, "event store writes must be unavailable")
+    require(
+        EventKitUIHostError(.calendarUIUnavailable).code == .calendarUIUnavailable,
+        "host error calendar UI"
+    )
+    require(
+        EventKitUIHostError(.invitationResponseUnavailable).code == .invitationResponseUnavailable,
+        "host error invitation"
+    )
+    require(
+        EventKitUIHostError(.eventDeletionUnavailable).code == .eventDeletionUnavailable,
+        "host error deletion"
+    )
+    require(
+        EventKitUIHostError(.calendarUIUnavailable)
+            != EventKitUIHostError(.eventDeletionUnavailable),
+        "host errors unequal"
+    )
+
     require(EKUI_IS_IOS == 0, "EKUI_IS_IOS must be 0 on Linux")
     require(EKUI_IS_SIMULATOR == 0, "EKUI_IS_SIMULATOR must be 0 on Linux")
-
-    let bundle = EventKitUIBundle()
-    require(bundle == nil, "EventKitUIBundle() must be nil without EventKitUI.framework")
+    require(EventKitUIBundle() == nil, "EventKitUIBundle() must be nil without EventKitUI.framework")
 
     require(EKCalendarChooserDisplayStyle.allCalendars.rawValue == 0, "display allCalendars raw value")
     require(EKCalendarChooserDisplayStyle.writableCalendarsOnly.rawValue == 1, "display writable raw value")
@@ -122,119 +88,295 @@ await MainActor.run {
     var viewHasher = Hasher()
     EKEventViewAction.responded.hash(into: &viewHasher)
     _ = viewHasher.finalize()
+}
 
+#if canImport(EventKit) && canImport(UIKit)
+
+@MainActor
+private final class ChooserProbe: NSObject, EKCalendarChooserDelegate {
+    var didFinish = 0
+    var didCancel = 0
+    var didChange = 0
+
+    func calendarChooserSelectionDidChange(_ calendarChooser: EKCalendarChooser) {
+        _ = calendarChooser
+        didChange += 1
+    }
+
+    func calendarChooserDidFinish(_ calendarChooser: EKCalendarChooser) {
+        didFinish += 1
+        calendarChooser.finish()
+    }
+
+    func calendarChooserDidCancel(_ calendarChooser: EKCalendarChooser) {
+        didCancel += 1
+        calendarChooser.cancel()
+    }
+}
+
+@MainActor
+private final class MinimalChooserProbe: NSObject, EKCalendarChooserDelegate {}
+
+@MainActor
+private final class EditProbe: NSObject, EKEventEditViewDelegate {
+    var actions: [EKEventEditViewAction] = []
+
+    func eventEditViewController(
+        _ controller: EKEventEditViewController,
+        didCompleteWith action: EKEventEditViewAction
+    ) {
+        actions.append(action)
+        controller.cancelEditing()
+    }
+}
+
+@MainActor
+private final class MinimalEditProbe: NSObject, EKEventEditViewDelegate {
+    var actions: [EKEventEditViewAction] = []
+
+    func eventEditViewController(
+        _ controller: EKEventEditViewController,
+        didCompleteWith action: EKEventEditViewAction
+    ) {
+        _ = controller
+        actions.append(action)
+    }
+}
+
+@MainActor
+private final class ViewProbe: NSObject, EKEventViewDelegate {
+    var actions: [EKEventViewAction] = []
+
+    func eventViewController(
+        _ controller: EKEventViewController,
+        didCompleteWith action: EKEventViewAction
+    ) {
+        actions.append(action)
+        controller.finish()
+    }
+}
+
+@MainActor
+private func runEventKitUIKitSurface() {
     let store = EKEventStore()
-    let writable = EKCalendar(for: .event, eventStore: store)
-    writable.title = "Writable"
-    let alsoWritable = EKCalendar(forEntityType: .event, eventStore: store)
-    alsoWritable.title = "Also"
-    let readOnly = EKCalendar(for: .event, eventStore: store)
-    readOnly.title = "ReadOnly"
-    readOnly.setAllowsContentModifications(false)
+    let calendar = EKCalendar(for: .event, eventStore: store)
+    calendar.title = "Work"
+    let event = EKEvent(eventStore: store)
+    event.title = "Review"
+    event.calendar = calendar
 
-    let chooserProbe = ChooserProbe()
+    require(
+        !String(reflecting: type(of: store)).hasPrefix("EventKitUI."),
+        "EKEventStore must come from EventKit"
+    )
+    require(
+        !String(reflecting: type(of: calendar)).hasPrefix("EventKitUI."),
+        "EKCalendar must come from EventKit"
+    )
+    require(
+        !String(reflecting: type(of: event)).hasPrefix("EventKitUI."),
+        "EKEvent must come from EventKit"
+    )
+
     let chooser = EKCalendarChooser(
         selectionStyle: .single,
-        displayStyle: .writableCalendarsOnly,
+        displayStyle: .allCalendars,
         entityType: .event,
         eventStore: store
     )
+    require(chooser is UIKit.UIViewController, "EKCalendarChooser must inherit UIKit.UIViewController")
+    require(
+        EKCalendarChooser.self is UIKit.UIViewController.Type,
+        "EKCalendarChooser metatype must be UIKit.UIViewController.Type"
+    )
+    require(!(chooser is UIKit.UINavigationController), "chooser is not a navigation controller")
     require(chooser.selectionStyle == .single, "chooser selectionStyle")
-    require(chooser.displayStyle == .writableCalendarsOnly, "chooser displayStyle")
+    require(chooser.eventStore === store, "chooser retains EventKit store")
     require(chooser.entityType == .event, "chooser entityType")
-    require(chooser.eventStore === store, "chooser eventStore")
-    require(EKCalendarChooser.presentationCapability == .hostDriven, "chooser capability")
-    chooser.delegate = chooserProbe
     chooser.showsDoneButton = true
     chooser.showsCancelButton = true
-    require(chooser.showsDoneButton && chooser.showsCancelButton, "chooser button flags")
+    let chooserProbe = ChooserProbe()
+    chooser.delegate = chooserProbe
+    chooser.selectedCalendars = [calendar]
+    require(chooser.selectedCalendars.contains(calendar), "selectedCalendars stores EventKit calendars")
+    require(
+        chooserProbe.didChange == 0,
+        "selectedCalendars setter does not claim selectionDidChange timing"
+    )
 
-    chooser.selectedCalendars = [writable, alsoWritable, readOnly]
-    require(chooser.selectedCalendars.count == 1, "single selection coerced")
-    require(!chooser.selectedCalendars.contains(readOnly), "writable-only dropped read-only")
-    require(chooserProbe.didChange == 1, "selection change notified")
-
-    chooser.finish()
-    chooser.cancel()
-    require(chooserProbe.didFinish == 1, "chooser finish")
-    require(chooserProbe.didCancel == 1, "chooser cancel")
-
-    let multi = EKCalendarChooser(
+    let short = EKCalendarChooser(
         selectionStyle: .multiple,
+        displayStyle: .writableCalendarsOnly,
+        eventStore: store
+    )
+    require(short.entityType == .event, "short init uses event entity type")
+    require(short is UIKit.UIViewController, "short chooser inherits UIViewController")
+
+    let chooserExistential: any EKCalendarChooserDelegate = chooserProbe
+    chooser.delegate = chooserExistential
+    chooser.finish()
+    chooser.finish()
+    require(chooserProbe.didFinish == 1, "chooser finish is exactly once and non-reentrant")
+    chooser.cancel()
+    chooser.cancel()
+    require(chooserProbe.didCancel == 1, "chooser cancel is exactly once and non-reentrant")
+
+    let minimalChooser = EKCalendarChooser(
+        selectionStyle: .single,
         displayStyle: .allCalendars,
         eventStore: store
     )
-    require(multi.entityType == .event, "short init defaults to event entity")
-    multi.selectedCalendars = [writable, alsoWritable, readOnly]
-    require(multi.selectedCalendars.count == 3, "multiple selection keeps all")
+    let omittedOptionals: any EKCalendarChooserDelegate = MinimalChooserProbe()
+    minimalChooser.delegate = omittedOptionals
+    minimalChooser.finish()
+    minimalChooser.cancel()
 
-    let event = EKEvent(eventStore: store)
-    event.title = "Review"
-    event.startDate = Date(timeIntervalSince1970: 1_000)
-    event.endDate = Date(timeIntervalSince1970: 1_800)
-    event.calendar = writable
+    weak var weakChooserDelegate: ChooserProbe? = chooserProbe
+    chooser.delegate = nil
+    require(weakChooserDelegate != nil, "probe still held by test")
+    chooser.delegate = chooserProbe
+    require(chooser.delegate != nil, "weak delegate is set")
 
-    let viewProbe = ViewProbe()
+    weak var deadChooser: EKCalendarChooser?
+    do {
+        let transient = EKCalendarChooser(
+            selectionStyle: .single,
+            displayStyle: .allCalendars,
+            eventStore: store
+        )
+        deadChooser = transient
+        require(deadChooser != nil, "transient chooser is alive inside scope")
+    }
+    require(deadChooser == nil, "chooser deallocated when unretained")
+
+    do {
+        let holder = EKCalendarChooser(
+            selectionStyle: .single,
+            displayStyle: .allCalendars,
+            eventStore: store
+        )
+        weak var deadDelegate: ChooserProbe?
+        do {
+            let probe = ChooserProbe()
+            holder.delegate = probe
+            deadDelegate = probe
+            require(holder.delegate != nil, "holder has delegate")
+        }
+        require(deadDelegate == nil, "chooser delegate deallocates when unretained")
+        require(holder.delegate == nil, "weak delegate is nil after probe release")
+        _ = holder
+    }
+
     let viewer = EKEventViewController()
-    viewer.delegate = viewProbe
+    require(viewer is UIKit.UIViewController, "EKEventViewController must inherit UIKit.UIViewController")
+    require(
+        EKEventViewController.self is UIKit.UIViewController.Type,
+        "EKEventViewController metatype must be UIKit.UIViewController.Type"
+    )
     viewer.event = event
     viewer.allowsEditing = true
-    viewer.allowsCalendarPreview = true
-    require(viewer.event.eventIdentifier == event.eventIdentifier, "viewer event")
-    require(viewer.allowsEditing && viewer.allowsCalendarPreview, "viewer flags")
-    require(EKEventViewController.presentationCapability == .hostDriven, "viewer capability")
+    viewer.allowsCalendarPreview = false
+    require(viewer.event === event, "viewer holds EventKit event")
+    let viewProbe = ViewProbe()
+    let viewExistential: any EKEventViewDelegate = viewProbe
+    viewer.delegate = viewExistential
     viewer.finish()
-    require(viewProbe.actions == [.done], "viewer finish emits done")
+    viewer.finish()
+    require(viewProbe.actions == [.done], "viewer finish is exactly once and non-reentrant")
+
+    weak var deadViewer: EKEventViewController?
+    do {
+        let transient = EKEventViewController()
+        deadViewer = transient
+        require(deadViewer != nil, "transient viewer is alive inside scope")
+    }
+    require(deadViewer == nil, "viewer deallocated when unretained")
 
     do {
-        try viewer.respondToInvitation()
-        require(false, "respondToInvitation must fail closed")
-    } catch let error as EKUIError {
-        require(error.code == .invitationResponseUnavailable, "respond error code")
-    } catch {
-        require(false, "respond must throw EKUIError")
-    }
-    do {
-        try viewer.deleteEvent()
-        require(false, "deleteEvent must fail closed")
-    } catch let error as EKUIError {
-        require(error.code == .eventDeletionUnavailable, "delete event error code")
-    } catch {
-        require(false, "deleteEvent must throw EKUIError")
+        let holder = EKEventViewController()
+        weak var deadDelegate: ViewProbe?
+        do {
+            let probe = ViewProbe()
+            holder.delegate = probe
+            deadDelegate = probe
+            require(holder.delegate != nil, "viewer holder has delegate")
+        }
+        require(deadDelegate == nil, "viewer delegate deallocates when unretained")
+        require(holder.delegate == nil, "viewer weak delegate is nil after probe release")
+        _ = holder
     }
 
-    let editProbe = EditProbe(defaultCalendar: writable)
     let editor = EKEventEditViewController()
-    editor.editViewDelegate = editProbe
+    require(
+        editor is UIKit.UINavigationController,
+        "EKEventEditViewController must inherit UIKit.UINavigationController"
+    )
+    require(
+        EKEventEditViewController.self is UIKit.UINavigationController.Type,
+        "EKEventEditViewController metatype must be UIKit.UINavigationController.Type"
+    )
+    require(editor is UIKit.UIViewController, "navigation controller is a view controller")
     editor.eventStore = store
     editor.event = event
-    require(editor.eventStore === store, "editor eventStore")
-    require(editor.event?.eventIdentifier == event.eventIdentifier, "editor event")
-    require(EKEventEditViewController.presentationCapability == .hostDriven, "editor capability")
-    require(
-        editor.defaultCalendarForNewEvents()?.calendarIdentifier == writable.calendarIdentifier,
-        "delegate default calendar"
-    )
+    require(editor.eventStore === store, "editor holds EventKit store")
+    require(editor.event === event, "editor holds EventKit event")
+
+    let editProbe = EditProbe()
+    let editExistential: any EKEventEditViewDelegate = editProbe
+    editor.editViewDelegate = editExistential
     editor.cancelEditing()
-    require(editProbe.actions == [.canceled], "cancelEditing emits canceled")
+    editor.cancelEditing()
+    require(editProbe.actions == [.canceled], "cancelEditing is exactly once and non-reentrant")
     require(editProbe.actions.first == .cancelled, "cancelled spelling matches canceled")
+    require(!editProbe.actions.contains(.saved), "cancel path must not claim save")
+    require(!editProbe.actions.contains(.deleted), "cancel path must not claim delete")
+
+    let minimalEditor = EKEventEditViewController()
+    let minimalEdit = MinimalEditProbe()
+    let omittedDefaultCalendar: any EKEventEditViewDelegate = minimalEdit
+    minimalEditor.editViewDelegate = omittedDefaultCalendar
+    minimalEditor.eventStore = store
+    minimalEditor.cancelEditing()
+    require(
+        minimalEdit.actions == [.canceled],
+        "optional default-calendar method may be omitted"
+    )
+
+    weak var weakEditDelegate: EditProbe? = editProbe
+    editor.editViewDelegate = nil
+    require(weakEditDelegate != nil, "edit probe still held by test")
+    editor.editViewDelegate = editProbe
+    require(editor.editViewDelegate != nil, "weak edit delegate is set")
+
+    weak var deadEditor: EKEventEditViewController?
+    do {
+        let transient = EKEventEditViewController()
+        deadEditor = transient
+        require(deadEditor != nil, "transient editor is alive inside scope")
+    }
+    require(deadEditor == nil, "editor deallocated when unretained")
 
     do {
-        try editor.saveEditing()
-        require(false, "saveEditing must fail closed")
-    } catch let error as EKUIError {
-        require(error.code == .calendarUIUnavailable, "save error code")
-    } catch {
-        require(false, "saveEditing must throw EKUIError")
+        let holder = EKEventEditViewController()
+        weak var deadDelegate: EditProbe?
+        do {
+            let probe = EditProbe()
+            holder.editViewDelegate = probe
+            deadDelegate = probe
+            require(holder.editViewDelegate != nil, "editor holder has delegate")
+        }
+        require(deadDelegate == nil, "editor delegate deallocates when unretained")
+        require(holder.editViewDelegate == nil, "editor weak delegate is nil after probe release")
+        _ = holder
     }
-    do {
-        try editor.deleteEditing()
-        require(false, "deleteEditing must fail closed")
-    } catch let error as EKUIError {
-        require(error.code == .eventDeletionUnavailable, "delete editing error code")
-    } catch {
-        require(false, "deleteEditing must throw EKUIError")
-    }
-
-    print("EVENTKITUI_AGENT_RUNTIME_OK")
 }
+
+#endif
+
+runFoundationSurface()
+#if canImport(EventKit) && canImport(UIKit)
+await MainActor.run {
+    runEventKitUIKitSurface()
+}
+#endif
+print("EVENTKITUI_AGENT_RUNTIME_OK")
