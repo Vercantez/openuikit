@@ -6,10 +6,13 @@ input through x11vnc + noVNC. The browser path is deliberately localhost-only.
 Mouse, drag and keyboard events arriving through noVNC enter the same X11/SDL
 event queue the application uses locally.
 
-This is the **native Linux/OpenUIKit display route**. It is immediately useful
-for playable platform and application evaluation, but it is not evidence that
-the same source has completed the true-iOS Mach-O route. Connecting this
-transport to a platform-7 Mach-O guest remains a separate integration step.
+This directory is the **native Linux/OpenUIKit display route**. It is
+immediately useful for playable platform and application evaluation, but its
+Showcase result alone is not evidence that the same source completed the
+true-iOS Mach-O route. The platform-owned bridge for that second route now
+lives in `full/live-transport`: it carries `UIRenderer` pixels and sequenced
+UIKit input between a platform-7 Mach-O guest and a native SDL host while
+reusing this Xvfb/x11vnc/noVNC display path.
 
 ## Source contract
 

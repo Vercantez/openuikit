@@ -1,0 +1,120 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 77;
+	objects = {
+		000000000000000000000001 = {
+			isa = PBXProject;
+			buildConfigurationList = 400000000000000000000001;
+			mainGroup = 000000000000000000000002;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 000000000000000000000004;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (AAAAAAAAAAAAAAAAAAAAAAAA,);
+		};
+		000000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000003,
+				000000000000000000000004,
+			);
+			sourceTree = "<group>";
+		};
+		000000000000000000000003 = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (500000000000000000000001,);
+			explicitFileTypes = {};
+			explicitFolders = ();
+			path = App;
+			sourceTree = "<group>";
+		};
+		000000000000000000000004 = {
+			isa = PBXGroup;
+			children = (100000000000000000000001,);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		100000000000000000000001 = {
+			explicitFileType = wrapper.application;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = LiveTransportProof.app;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		300000000000000000000001 = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		300000000000000000000002 = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		300000000000000000000003 = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = ();
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		400000000000000000000001 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (400000000000000000000002,);
+			defaultConfigurationName = Release;
+		};
+		400000000000000000000002 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		400000000000000000000003 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (400000000000000000000004,);
+			defaultConfigurationName = Release;
+		};
+		400000000000000000000004 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = App/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
+				PRODUCT_BUNDLE_IDENTIFIER = org.openui.LiveTransportProof;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		500000000000000000000001 = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (Info.plist,);
+			target = AAAAAAAAAAAAAAAAAAAAAAAA;
+		};
+		AAAAAAAAAAAAAAAAAAAAAAAA = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 400000000000000000000003;
+			buildPhases = (
+				300000000000000000000001,
+				300000000000000000000002,
+				300000000000000000000003,
+			);
+			buildRules = ();
+			dependencies = ();
+			fileSystemSynchronizedGroups = (000000000000000000000003,);
+			name = LiveTransportProof;
+			packageProductDependencies = ();
+			productName = LiveTransportProof;
+			productReference = 100000000000000000000001;
+			productType = "com.apple.product-type.application";
+		};
+	};
+	rootObject = 000000000000000000000001;
+}

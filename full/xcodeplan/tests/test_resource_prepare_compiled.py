@@ -141,7 +141,29 @@ public final class UIWindowScene {
 RUN_LOOP = r"""
 import UIKit
 
-struct MonotonicFrameSource {}
+struct MonotonicFrameSource {
+    func now() -> Double { 0 }
+    func wait(until deadline: Double) {}
+}
+
+@MainActor
+struct UIKitFrameDriver {
+    let frameInterval = 1.0 / 60.0
+    init(window: UIWindow) {}
+    func tick(at timestamp: Double) {}
+    func nextDeadline(after timestamp: Double) -> Double { timestamp + frameInterval }
+}
+
+@MainActor
+final class PortableUIKitLiveTransport {
+    static func attachIfRequested() -> PortableUIKitLiveTransport? { nil }
+    private(set) var quitRequested = false
+    private(set) var deliveredInputCount: UInt64 = 0
+    private(set) var publishedFrameCount: UInt64 = 0
+    func drainInput(into window: UIWindow) {}
+    func publish(window: UIWindow) {}
+    func requestQuit() { quitRequested = true }
+}
 
 struct UIKitRunLoop {
     struct Result {

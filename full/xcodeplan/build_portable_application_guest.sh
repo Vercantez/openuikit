@@ -818,8 +818,71 @@ PY
     local -a platform_sources=(
         "$output/GeneratedSceneBootstrap.swift"
         "$SCRIPT_DIR/PortableUIKitApplicationHost.swift"
+        "$SCRIPT_DIR/PortableUIKitLiveTransport.swift"
         "$SUPPORT_ROOT/full/driver/RunLoop.swift"
     )
+    local live_transport_root live_transport_include live_transport_build
+    live_transport_root=$SUPPORT_ROOT/full/live-transport
+    live_transport_include=$live_transport_root/include
+    live_transport_build=$output/live-transport-build
+    require_directory "$live_transport_root" "live transport source root"
+    require_directory "$live_transport_include" "live transport public headers"
+    require_regular "$live_transport_include/module.modulemap" \
+        "live transport Clang module map"
+    local -a live_transport_import_arguments=(
+        -Xcc -fmodule-map-file="$live_transport_include/module.modulemap"
+        -Xcc -I"$live_transport_include"
+    )
+    local -a live_transport_sources=(
+        "$live_transport_root/OpenUIKitLiveTransportCommon.c"
+        "$live_transport_root/OpenUIKitLiveTransportGuest.c"
+    )
+    local -a live_transport_objects=()
+    [ ! -e "$live_transport_build" ] && [ ! -L "$live_transport_build" ] \
+        || die "live transport build root already exists"
+    mkdir "$live_transport_build"
+    : >"$output/live-transport-compile-arguments.nul"
+    : >"$output/live-transport-compile.stdout"
+    : >"$output/live-transport-compile.stderr"
+    : >"$output/live-transport-objects.tsv"
+    local live_transport_index live_transport_source live_transport_object
+    local live_transport_status
+    local -a live_transport_command
+    for live_transport_index in "${!live_transport_sources[@]}"; do
+        live_transport_source=${live_transport_sources[live_transport_index]}
+        require_regular "$live_transport_source" "live transport C source"
+        live_transport_object=$live_transport_build/$live_transport_index.o
+        live_transport_command=(clang-18 -target "$compiler_target"
+            -isysroot "$swift_sdk_root" -std=c11 -O2
+            -Wall -Wextra -Werror -fvisibility=hidden -fno-common
+            -I "$live_transport_include" -I "$live_transport_root"
+            -c "$live_transport_source" -o "$live_transport_object")
+        printf '%s\0' "${live_transport_command[@]}" \
+            >>"$output/live-transport-compile-arguments.nul"
+        echo "== compile platform live transport [$live_transport_index]"
+        set +e
+        "${live_transport_command[@]}" \
+            >>"$output/live-transport-compile.stdout" \
+            2>>"$output/live-transport-compile.stderr"
+        live_transport_status=$?
+        set -e
+        [ "$live_transport_status" -eq 0 ] \
+            || die "live transport C compiler exited $live_transport_status"
+        require_regular "$live_transport_object" "live transport Mach-O object"
+        file "$live_transport_object" | grep -F 'Mach-O 64-bit arm64 object' >/dev/null \
+            || die "live transport object is not ARM64 Mach-O: $live_transport_object"
+        live_transport_objects+=("$live_transport_object")
+        printf 'live_transport_object\t%06d\t%s\t%s\n' \
+            "$live_transport_index" \
+            "$(sha256sum "$live_transport_object" | awk '{print $1}')" \
+            "$live_transport_object" >>"$output/live-transport-objects.tsv"
+    done
+    [ "${#live_transport_objects[@]}" -eq 2 ] \
+        || die "live transport object count drifted"
+    [ ! -s "$output/live-transport-compile.stdout" ] \
+        || die "live transport compiler emitted unexpected stdout"
+    [ ! -s "$output/live-transport-compile.stderr" ] \
+        || die "live transport compiler emitted unexpected stderr"
     # Compiler providers consume only build-plan-attested non-Swift inputs and
     # publish a fresh, independently verifiable output root. Generated Swift is
     # ordered after untouched app sources and before platform host sources.
@@ -1030,6 +1093,7 @@ PY
     compile_command=(swiftc "${swift_arguments[@]}"
         -module-cache-path "$module_cache"
         "${package_import_arguments[@]}"
+        "${live_transport_import_arguments[@]}"
         -default-isolation MainActor -module-name "$module"
         "$serial_job_argument" -emit-object
         -output-file-map "$output_map" "${compile_sources[@]}")
@@ -1265,6 +1329,10 @@ PY
             [ "$uikit_dts_import_count" -eq 0 ] \
                 || die "provider-free libUIKit imports DeveloperToolsSupport" ;;
     esac
+    [ "$dts_linkage" != application-object ] \
+        || [ "${#extra_objects[@]}" -eq 1 ] \
+        || die "DeveloperToolsSupport object link count is not one"
+    extra_objects+=("${live_transport_objects[@]}")
     local expected_dts_provider_definition_count=0
     [ "$dts_linkage" = none ] || expected_dts_provider_definition_count=1
     [ "$dts_provider_definition_count" -eq "$expected_dts_provider_definition_count" ] \
@@ -1285,12 +1353,13 @@ PY
                 "$object_path"
         done
         if [ "$dts_linkage" = application-object ]; then
-            [ "${#extra_objects[@]}" -eq 1 ] \
-                || die "DeveloperToolsSupport object link count is not one"
             printf 'developer_tools_support_object\t%s\t%s\n' \
-                "$(sha256sum "${extra_objects[0]}" | awk '{print $1}')" \
-                "${extra_objects[0]}"
+                "$(sha256sum "$platform/$dts_object" | awk '{print $1}')" \
+                "$platform/$dts_object"
         fi
+        cat "$output/live-transport-objects.tsv"
+        printf 'live_transport_object_count\t%s\n' \
+            "${#live_transport_objects[@]}"
         printf 'developer_tools_support_linkage\t%s\n' "$dts_linkage"
         printf 'developer_tools_support_link_argument_count\t%s\n' \
             "$dts_link_argument_count"
@@ -1462,6 +1531,12 @@ PY
         application-object-audit.json
         application-object-formats.txt
         application-output-file-map.json
+        live-transport-compile-arguments.nul
+        live-transport-compile.stderr
+        live-transport-compile.stdout
+        live-transport-objects.tsv
+        live-transport-build/0.o
+        live-transport-build/1.o
         runtime-closure.manifest
         runtime.log
     )

@@ -54,6 +54,15 @@ enum PortableUIKitApplicationHost {
         }
 
         print("PORTABLE_UIKIT_HOST_ACTIVE windows=\(scene.windows.count)")
+        if let liveTransport = PortableUIKitLiveTransport.attachIfRequested() {
+            runLive(application: application, window: window,
+                    transport: liveTransport)
+            return
+        }
+
+        // Keep the established headless route exact when live transport is
+        // disabled. In particular it neither renders nor polls a filesystem
+        // path, and the existing three-turn cold gate exercises this branch.
         let runLoop = UIKitRunLoop(window: window, source: MonotonicFrameSource())
         var turns = 0
         if let limit = boundedTurnCount() {
@@ -75,5 +84,47 @@ enum PortableUIKitApplicationHost {
         // clocked host loop instead of returning immediately after willConnect.
         _ = runLoop.run(timeout: .greatestFiniteMagnitude) { false }
         preconditionFailure("unbounded application host loop returned")
+    }
+
+    private static func runLive(
+        application: UIApplication,
+        window: UIWindow,
+        transport: PortableUIKitLiveTransport
+    ) {
+        let source = MonotonicFrameSource()
+        let driver = UIKitFrameDriver(window: window)
+        let limit = boundedTurnCount()
+        let start = source.now()
+        var turns = 0
+        while true {
+            let elapsed = source.now() - start
+            transport.drainInput(into: window)
+            driver.tick(at: elapsed)
+            transport.publish(window: window)
+            turns += 1
+
+            if transport.quitRequested {
+                transport.requestQuit()
+                print("PORTABLE_UIKIT_LIVE_QUIT turns=\(turns) "
+                    + "frames=\(transport.publishedFrameCount) "
+                    + "inputs=\(transport.deliveredInputCount)")
+                application._hostWillTerminate()
+                return
+            }
+            if let limit, turns >= limit {
+                let minimumElapsed = driver.frameInterval
+                    * Double(max(0, limit - 1)) * 0.8
+                precondition(elapsed >= minimumElapsed,
+                             "bounded live proof did not use the real paced host clock")
+                print("PORTABLE_UIKIT_HOST_LOOP_OK turns=\(turns) paced=true")
+                print("PORTABLE_UIKIT_LIVE_LOOP_OK turns=\(turns) "
+                    + "frames=\(transport.publishedFrameCount) "
+                    + "inputs=\(transport.deliveredInputCount)")
+                transport.requestQuit()
+                application._hostWillTerminate()
+                return
+            }
+            source.wait(until: start + driver.nextDeadline(after: elapsed))
+        }
     }
 }

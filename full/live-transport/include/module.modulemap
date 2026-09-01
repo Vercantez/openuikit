@@ -1,0 +1,4 @@
+module COpenUIKitLiveTransport {
+    header "OpenUIKitLiveTransportGuest.h"
+    export *
+}
