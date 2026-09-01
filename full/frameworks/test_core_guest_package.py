@@ -3058,6 +3058,24 @@ class ShellContractTests(unittest.TestCase):
         ):
             self.assertIn(token, exact_guest)
 
+    def test_accelerate_c_entry_point_survives_hidden_visibility_build(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        header = (
+            REPO / "full/accelerate/include/Accelerate.h"
+        ).read_text(encoding="utf-8")
+        self.assertIn(
+            '#define OPENUIKIT_ACCELERATE_EXPORT '
+            '__attribute__((visibility("default")))',
+            header,
+        )
+        self.assertIn(
+            "OPENUIKIT_ACCELERATE_EXPORT vImage_Error "
+            "vImageBoxConvolve_ARGB8888(",
+            header,
+        )
+        self.assertIn("-fvisibility=hidden", source)
+        self.assertIn("libAccelerate vImage export count drifted", source)
+
     def test_cryptokit_has_real_hashes_nonce_and_fail_closed_signing(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         probe = (HERE / "CoreGuestPackageProbe.swift").read_text(encoding="utf-8")

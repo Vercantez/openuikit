@@ -43,7 +43,13 @@ enum {
     kvImageGetTempBufferSize = 128
 };
 
-vImage_Error vImageBoxConvolve_ARGB8888(
+#if defined(__GNUC__) || defined(__clang__)
+#define OPENUIKIT_ACCELERATE_EXPORT __attribute__((visibility("default")))
+#else
+#define OPENUIKIT_ACCELERATE_EXPORT
+#endif
+
+OPENUIKIT_ACCELERATE_EXPORT vImage_Error vImageBoxConvolve_ARGB8888(
     const vImage_Buffer *src,
     const vImage_Buffer *dest,
     void *tempBuffer,
