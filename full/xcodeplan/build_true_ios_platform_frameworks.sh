@@ -21,6 +21,8 @@ SWIFT_FOUNDATION=${SWIFT_FOUNDATION:-$W/scratch/swift-foundation}
 SWIFT_COLLECTIONS=${SWIFT_COLLECTIONS:-$W/scratch/swift-collections}
 OPENCOMBINE_SOURCE=${OPENCOMBINE_SOURCE:-$W/scratch/opencombine-core-durable-20260828-r2/source}
 OUTPUT_ROOT=${OUTPUT_ROOT:-$W/build/true-ios-platform}
+SYSTEM_FONT=${SYSTEM_FONT:-/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf}
+BOLD_FONT=${BOLD_FONT:-/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf}
 
 TARGET=arm64-apple-ios18.0-simulator
 TARGET_VARIANT=arm64-apple-ios-simulator
@@ -47,6 +49,8 @@ esac
 [ "$(dirname "$OUTPUT_ROOT")" != / ] || die 'OUTPUT_ROOT parent may not be /'
 [ -d "$W/full/xcodeplan" ] || die "project root is missing: $W"
 [ -d "$UIKIT/Sources/SwiftUI" ] || die "canonical UIKit source is missing: $UIKIT"
+[ -d "$UIKIT/Sources/OpenUIKit/Resources" ] \
+    || die "canonical OpenUIKit resources are missing: $UIKIT"
 [ -d "$SYS/usr/lib/swift" ] || die "true-iOS SDK is missing: $SYS"
 [ -d "$APPLE_SWIFT_USER_OVERLAYS" ] || die 'Apple user-overlay directory is missing'
 [ "$SYS" = "$TRUE_IOS_SDK_STAGE/sdk" ] \
@@ -69,6 +73,16 @@ grep -Fx \
 ) || die 'true-iOS SDK input attestation failed'
 [ -x "$MRROOT_INPUT/machorun" ] || die 'input guest root has no machorun loader'
 [ -d "$OPENCOMBINE_SOURCE/.git" ] || die 'OpenCombine input is not a Git checkout'
+[ -f "$SYSTEM_FONT" ] && [ ! -L "$SYSTEM_FONT" ] \
+    || die "system font input is missing: $SYSTEM_FONT"
+[ -f "$BOLD_FONT" ] && [ ! -L "$BOLD_FONT" ] \
+    || die "bold font input is missing: $BOLD_FONT"
+[ "$(sha "$SYSTEM_FONT")" = ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280 ] \
+    || die 'system font input hash drifted'
+[ "$(sha "$BOLD_FONT")" = 5c1247acef7f2b8522a31742c76d6adcb5569bacc0be7ceaa4dc39dd252ce895 ] \
+    || die 'bold font input hash drifted'
+[ -z "$(find "$UIKIT/Sources/OpenUIKit/Resources" -type l -print -quit)" ] \
+    || die 'canonical OpenUIKit resources contain a symlink'
 
 for required in \
     "$FULL/uihelpers-subject.sha256" \
@@ -115,6 +129,7 @@ SDK_OUT=$stage/sdk
 FRAMEWORKS=$SDK_OUT/System/Library/Frameworks
 APPLE_OVERLAYS_OUT=$stage/apple-overlays
 RUNTIME_ROOT=$stage/runtime-root
+RESOURCES=$stage/resources/OpenUIKit
 AUDIT=$stage/attestation
 MODULE_CACHE=$BUILD/module-cache
 INCLUDE=$stage/include
@@ -123,7 +138,8 @@ SDK_PROVENANCE=$stage/sdk-provenance
 INTERNAL_MODULE_PATH=$stage/internal-modules
 mkdir -p "$BUILD" "$PACKAGE" "$PRODUCTS" "$FRAMEWORKS" \
     "$APPLE_OVERLAYS_OUT" "$AUDIT" "$MODULE_CACHE" "$INCLUDE" \
-    "$PUBLISHED_INCLUDE" "$SDK_PROVENANCE" "$INTERNAL_MODULE_PATH"
+    "$PUBLISHED_INCLUDE" "$SDK_PROVENANCE" "$INTERNAL_MODULE_PATH" \
+    "$RESOURCES/fonts"
 
 # Attest the complete pinned OpenCombine compiler subject before compiling it.
 perl "$W/full/oracle-opencombine/policy_tool.pl" attest \
@@ -149,6 +165,13 @@ source_subject() {
             | while IFS= read -r -d '' source; do
                 printf '%s\t%s\n' "${source#"$UIKIT"/}" "$(sha "$source")"
             done
+        find "$UIKIT/Sources/OpenUIKit/Resources" -type f -print0 \
+            | LC_ALL=C sort -z \
+            | while IFS= read -r -d '' resource; do
+                printf '%s\t%s\n' "${resource#"$UIKIT"/}" "$(sha "$resource")"
+            done
+        printf 'font-system\t%s\n' "$(sha "$SYSTEM_FONT")"
+        printf 'font-bold\t%s\n' "$(sha "$BOLD_FONT")"
         printf 'full-subject\t%s\n' "$actual_full_subject"
         printf 'opencombine-audit\t%s\n' "$(sha "$AUDIT/opencombine-sources.json")"
         printf 'true-ios-sdk-complete\t%s\n' \
@@ -169,6 +192,9 @@ cp -a "$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers/include" \
 cp -a "$SWIFT_FOUNDATION/Sources/_FoundationCShims/include" \
     "$INCLUDE/_FoundationCShims"
 cp -a "$INCLUDE/." "$PUBLISHED_INCLUDE/"
+cp -a "$UIKIT/Sources/OpenUIKit/Resources/." "$RESOURCES/"
+cp "$SYSTEM_FONT" "$RESOURCES/fonts/DejaVuSans.ttf"
+cp "$BOLD_FONT" "$RESOURCES/fonts/DejaVuSans-Bold.ttf"
 
 copy_module() {
     local module=$1 source_directory=$2 suffix source
@@ -452,7 +478,7 @@ rm -rf -- "$BUILD" "$INCLUDE"
 (
     cd "$stage"
     find products package internal-modules sdk apple-overlays platform-include \
-        runtime-root sdk-provenance \
+        runtime-root sdk-provenance resources \
         -type f -print0 | LC_ALL=C sort -z \
         | while IFS= read -r -d '' path; do
             printf '%s\t%s\n' "$(sha256sum "$path" | awk '{print $1}')" "$path"
@@ -468,7 +494,7 @@ rm -rf -- "$BUILD" "$INCLUDE"
 ) | LC_ALL=C sort > "$AUDIT/artifacts.sha256"
 (
     cd "$stage"
-    find sdk apple-overlays platform-include runtime-root -type l -print0 \
+    find sdk apple-overlays platform-include runtime-root resources -type l -print0 \
         | LC_ALL=C sort -z \
         | while IFS= read -r -d '' path; do
             target=$(readlink "$path")

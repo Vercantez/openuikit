@@ -181,12 +181,57 @@ class MaterializeApplicationBundleTests(unittest.TestCase):
             any(record["bundle_path"].endswith("/index.json") for record in generated)
         )
         self.assertEqual(json.loads(attestation.read_text()), result)
+        self.assertEqual(result["bundle_layout"], "macos")
 
         with self.assertRaisesRegex(
             materialize_application_bundle.BundleMaterializationError, "already exists"
         ):
             materialize_application_bundle.materialize(
                 self.plan, self.source, self.platform, output, self.parent / "other.json"
+            )
+
+    def test_materializes_flat_ios_application_bundle(self) -> None:
+        output = self.parent / "ProbeIOS.app"
+        attestation = self.parent / "ios-bundle.json"
+        result = materialize_application_bundle.materialize(
+            self.plan,
+            self.source,
+            self.platform,
+            output,
+            attestation,
+            bundle_layout="ios",
+        )
+
+        self.assertFalse((output / "Contents").exists())
+        self.assertTrue((output / "Info.plist").is_file())
+        self.assertTrue((output / "Frameworks").is_dir())
+        self.assertEqual(
+            (output / "Base.lproj/Launch.storyboard").read_bytes(),
+            b"<document/>\n",
+        )
+        self.assertEqual(
+            (output / "OpenUIKit/system_colors.json").read_bytes(),
+            b"system_colors.json\n",
+        )
+        asset_index = json.loads(
+            (output / "OpenUIKit/AssetCatalogs/index.json").read_text()
+        )
+        self.assertEqual(asset_index["catalogs"], ["Assets.xcassets"])
+        self.assertEqual(result["bundle_layout"], "ios")
+        self.assertEqual(json.loads(attestation.read_text()), result)
+
+    def test_refuses_unknown_bundle_layout(self) -> None:
+        with self.assertRaisesRegex(
+            materialize_application_bundle.BundleMaterializationError,
+            "unsupported application bundle layout",
+        ):
+            materialize_application_bundle.materialize(
+                self.plan,
+                self.source,
+                self.platform,
+                self.parent / "Unknown.app",
+                self.parent / "unknown.json",
+                bundle_layout="watchos",
             )
 
     def test_refuses_mutated_application_and_incomplete_platform(self) -> None:

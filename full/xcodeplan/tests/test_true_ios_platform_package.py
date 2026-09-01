@@ -82,6 +82,7 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             "package",
             "platform-include",
             "products",
+            "resources/OpenUIKit/fonts",
             "runtime-root/darwin/System/Library/Frameworks",
             "runtime-root/darwin/usr/lib/swift",
             "runtime-root/host",
@@ -186,6 +187,17 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         loader.write_text("loader\n", encoding="utf-8")
         loader.chmod(0o755)
 
+        for relative in (
+            "system_colors.json",
+            "font_metrics.json",
+            "text_decorations.json",
+            "fonts/DejaVuSans.ttf",
+            "fonts/DejaVuSans-Bold.ttf",
+        ):
+            (self.root / f"resources/OpenUIKit/{relative}").write_text(
+                relative + "\n", encoding="utf-8"
+            )
+
         probe = macho(
             filetype=2,
             loads=("/usr/lib/libSwiftUI.dylib", "/usr/lib/libUIKit.dylib"),
@@ -281,6 +293,7 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
         self.assertEqual(metadata["modules"], list(MODULES))
         self.assertIn("sdk", metadata["swift_compile_arguments"])
         self.assertIn("-framework", metadata["executable_link_arguments"])
+        self.assertEqual(metadata["paths"]["resources"], "resources/OpenUIKit")
         rooted = platform_package.rooted_compile_arguments(
             root, metadata["swift_compile_arguments"]
         )

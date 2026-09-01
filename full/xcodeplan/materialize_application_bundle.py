@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Materialize a relocatable macOS-style guest application bundle.
+"""Materialize a relocatable macOS- or iOS-style guest application bundle.
 
 The application and OpenUIKit trees are read-only inputs.  Every byte copied
-into ``Contents/Resources`` is checked against the frozen application build
-plan (or freshly hashed for platform resources), and output reuse is refused.
-The executable and framework closure are installed by the compiler driver in
-a later step; this tool owns only the deterministic bundle/resource skeleton.
+into the selected resource root is checked against the frozen application
+build plan (or freshly hashed for platform resources), and output reuse is
+refused.  The executable and framework closure are installed by the compiler
+driver in a later step; this tool owns only the deterministic bundle/resource
+skeleton.
 """
 
 from __future__ import annotations
@@ -501,6 +502,7 @@ def materialize(
     output_app: Path,
     attestation: Path,
     remote_cache_root: Path | None = None,
+    bundle_layout: str = "macos",
 ) -> dict[str, Any]:
     source_root = _strict_directory(source_root, "application source root")
     platform_resources = _strict_directory(
@@ -521,6 +523,10 @@ def materialize(
         raise BundleMaterializationError(
             "bundle and attestation parents must already exist"
         )
+    if bundle_layout not in {"ios", "macos"}:
+        raise BundleMaterializationError(
+            f"unsupported application bundle layout: {bundle_layout}"
+        )
 
     try:
         application_build_plan.verify(plan, source_root, remote_cache_root)
@@ -528,10 +534,16 @@ def materialize(
         raise BundleMaterializationError(str(exc)) from exc
 
     output_app.mkdir(mode=0o755)
-    contents = output_app / "Contents"
-    resources = contents / "Resources"
-    (contents / "MacOS").mkdir(mode=0o755, parents=True)
-    resources.mkdir(mode=0o755)
+    if bundle_layout == "macos":
+        contents = output_app / "Contents"
+        resources = contents / "Resources"
+        (contents / "MacOS").mkdir(mode=0o755, parents=True)
+        resources.mkdir(mode=0o755)
+    else:
+        # iOS application bundles are flat: Info.plist, the executable,
+        # Frameworks, and resources all live directly beneath the .app root.
+        contents = output_app
+        resources = output_app
     (contents / "Frameworks").mkdir(mode=0o755)
 
     records: list[dict[str, Any]] = []
@@ -590,6 +602,7 @@ def materialize(
     result = {
         "application_build_plan_sha256": _sha256(_canonical_json(plan)),
         "bundle": output_app.name,
+        "bundle_layout": bundle_layout,
         "classification": "portable-application-bundle-materialization",
         "empty_directories": empty_directories,
         "files": records,
@@ -635,6 +648,9 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-app", required=True, type=Path)
     parser.add_argument("--attestation", required=True, type=Path)
     parser.add_argument("--remote-cache-root", type=Path)
+    parser.add_argument(
+        "--bundle-layout", choices=("ios", "macos"), default="macos"
+    )
     return parser
 
 
@@ -651,6 +667,7 @@ def main(argv: list[str] | None = None) -> int:
             arguments.output_app,
             arguments.attestation,
             arguments.remote_cache_root,
+            arguments.bundle_layout,
         )
         print(
             "APPLICATION_BUNDLE_RESOURCES_OK "

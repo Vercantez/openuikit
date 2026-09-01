@@ -56,6 +56,7 @@ _ROOT_ENTRIES = {
     "package",
     "platform-include",
     "products",
+    "resources",
     "runtime-root",
     "sdk",
     "sdk-provenance",
@@ -101,6 +102,13 @@ _REQUIRED_SDK_FILES = (
     "sdk/usr/lib/swift/libswiftCore.tbd",
     "sdk/usr/lib/swift/libswiftObjectiveC.tbd",
     "sdk/usr/lib/swift/libswift_Concurrency.tbd",
+)
+_REQUIRED_RESOURCE_FILES = (
+    "resources/OpenUIKit/system_colors.json",
+    "resources/OpenUIKit/font_metrics.json",
+    "resources/OpenUIKit/text_decorations.json",
+    "resources/OpenUIKit/fonts/DejaVuSans.ttf",
+    "resources/OpenUIKit/fonts/DejaVuSans-Bold.ttf",
 )
 _REQUIRED_CLANG_MODULES = (
     "CHostClock",
@@ -502,6 +510,10 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         )
     for relative in _REQUIRED_SDK_FILES:
         _regular(root, relative, "SDK link input")
+    if {path.name for path in (root / "resources").iterdir()} != {"OpenUIKit"}:
+        raise TrueIOSPlatformError("platform resource roots differ")
+    for relative in _REQUIRED_RESOURCE_FILES:
+        _regular(root, relative, "OpenUIKit platform resource")
     for relative, target in {
         "sdk/usr/lib/libSystem.tbd": "libSystem.B.tbd",
         "sdk/usr/lib/libobjc.tbd": "libobjc.A.tbd",
@@ -577,6 +589,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             "sdk": "sdk",
             "frameworks": "sdk/System/Library/Frameworks",
             "libraries": "products",
+            "resources": "resources/OpenUIKit",
             "runtime_root": "runtime-root",
         },
     }
