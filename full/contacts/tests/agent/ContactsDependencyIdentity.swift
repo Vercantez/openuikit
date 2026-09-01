@@ -37,10 +37,11 @@ struct ContactsDependencyIdentity {
         // NSSecureCoding. Callers pass `as NSString`; Contacts does not
         // invent a same-named local descriptor type.
         let given: NSString = CNContactGivenNameKey as NSString
-        expect(given is any CNKeyDescriptor, "NSString is CNKeyDescriptor")
-        expect(given is NSCopying, "descriptor is NSCopying")
-        expect(given is NSSecureCoding, "descriptor is NSSecureCoding")
-        expect(given is NSObjectProtocol, "descriptor is NSObjectProtocol")
+        let boxed: Any = given
+        expect(boxed is any CNKeyDescriptor, "NSString is CNKeyDescriptor")
+        expect(boxed is NSCopying, "descriptor is NSCopying")
+        expect(boxed is NSSecureCoding, "descriptor is NSSecureCoding")
+        expect(boxed is NSObjectProtocol, "descriptor is NSObjectProtocol")
         expect(type(of: given) == NSString.self, "descriptor type is NSString")
 
         let copied = given.copy() as? NSString

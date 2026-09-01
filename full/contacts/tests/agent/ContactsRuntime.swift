@@ -253,10 +253,12 @@ expect(contact.imageDataAvailable, "image available")
 expect(contact.id.uuidString == contact.identifier, "identifiable id")
 expect(contact.areKeysAvailable([CNContactFormatter.descriptorForRequiredKeys(for: .fullName)]), "descriptor keys")
 let givenDescriptor: any CNKeyDescriptor = CNContactGivenNameKey as NSString
-expect(givenDescriptor is NSString, "String keys are NSString descriptors")
-expect(givenDescriptor is NSCopying, "descriptor NSCopying")
-expect(givenDescriptor is NSSecureCoding, "descriptor NSSecureCoding")
-expect(givenDescriptor is NSObjectProtocol, "descriptor NSObjectProtocol")
+let boxedDescriptor: Any = givenDescriptor
+expect(boxedDescriptor is NSString, "String keys are NSString descriptors")
+expect(boxedDescriptor is NSCopying, "descriptor NSCopying")
+expect(boxedDescriptor is NSSecureCoding, "descriptor NSSecureCoding")
+expect(boxedDescriptor is NSObjectProtocol, "descriptor NSObjectProtocol")
+_ = (givenDescriptor as NSCopying).copy(with: nil)
 
 let formatted = CNContactFormatter.string(from: contact, style: .fullName)
 expect(formatted == "Ada Lovelace", "full name \(String(describing: formatted))")
@@ -310,8 +312,8 @@ let observer = NotificationCenter.default.addObserver(
     let containers = try? store.containers(matching: nil)
     expect(containers?.count == 1, "observer reentered containers()")
     let custom = NSPredicate { object, _ in
-        _ = try? store.defaultContainerIdentifier()
-        return (object as? CNGroup) != nil || object is CNGroup
+        _ = store.defaultContainerIdentifier()
+        return object is CNGroup
     }
     _ = try? store.groups(matching: custom)
     observerQueries += 1
