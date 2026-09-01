@@ -1,0 +1,4 @@
+module COpenFoundationCore {
+  header "OpenFoundationCFError.h"
+  export *
+}

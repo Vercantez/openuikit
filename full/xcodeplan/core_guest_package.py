@@ -342,6 +342,22 @@ def _require_coreimage_compile_contract(arguments: list[str]) -> None:
             )
 
 
+def _require_cferror_compile_contract(arguments: list[str]) -> None:
+    for argument in (
+        "-fmodule-map-file=include/COpenFoundationCore/module.modulemap",
+        "-Iinclude/COpenFoundationCore",
+    ):
+        count = sum(
+            arguments[index : index + 2] == ["-Xcc", argument]
+            for index in range(len(arguments) - 1)
+        )
+        if count != 1:
+            raise CorePackageError(
+                "swift_compile_arguments must contain the Foundation CFError "
+                "Clang module pair exactly once: -Xcc " + argument
+            )
+
+
 def _require_cross_import_compile_contract(arguments: list[str]) -> None:
     pair = ["-Xfrontend", "-enable-cross-import-overlays"]
     count = sum(
@@ -584,6 +600,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         _CONTROLLED_COMPILE_OPTIONS,
     )
     _require_coreimage_compile_contract(manifest["swift_compile_arguments"])
+    _require_cferror_compile_contract(manifest["swift_compile_arguments"])
     _require_cross_import_compile_contract(manifest["swift_compile_arguments"])
     manifest["executable_link_arguments"] = _arguments(
         manifest.get("executable_link_arguments"),
@@ -864,6 +881,8 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"{paths['includes']}/CoreImage/CoreImage.h",
             f"{paths['includes']}/CoreImage/CIFilterBuiltins.h",
             f"{paths['includes']}/CoreImage/module.modulemap",
+            f"{paths['includes']}/COpenFoundationCore/OpenFoundationCFError.h",
+            f"{paths['includes']}/COpenFoundationCore/module.modulemap",
         }
     )
     if preview is not None:

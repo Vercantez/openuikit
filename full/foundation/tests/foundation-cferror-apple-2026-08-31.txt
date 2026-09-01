@@ -1,0 +1,1 @@
+FOUNDATION_CFERROR_BRIDGE_OK domain=Portable.Domain code=42 userInfo=k:v embedded=identity nserror=preserved

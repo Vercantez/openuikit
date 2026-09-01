@@ -126,6 +126,7 @@ _REQUIRED_CLANG_MODULES = (
     "CHostClock",
     "COpenCombineHelpers",
     "COpenDispatch",
+    "COpenFoundationCore",
     "COpenRelativeTime",
     "COpenURLTransport",
     "CPortableIO",
@@ -491,6 +492,8 @@ def _compile_arguments() -> list[str]:
         "-Xcc", f"-I{include}/CQuartz",
         "-Xcc", f"-fmodule-map-file={include}/COpenDispatch/module.modulemap",
         "-Xcc", f"-I{include}/COpenDispatch",
+        "-Xcc", f"-fmodule-map-file={include}/COpenFoundationCore/module.modulemap",
+        "-Xcc", f"-I{include}/COpenFoundationCore",
         "-Xcc", f"-fmodule-map-file={include}/COpenRelativeTime/module.modulemap",
         "-Xcc", f"-I{include}/COpenRelativeTime",
         "-Xcc", f"-fmodule-map-file={include}/COpenURLTransport/module.modulemap",
@@ -618,6 +621,11 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"platform-include/{module}/module.modulemap",
             f"{module} module map",
         )
+    _regular(
+        root,
+        "platform-include/COpenFoundationCore/OpenFoundationCFError.h",
+        "Foundation CFError opaque header",
+    )
     _regular(
         root,
         "platform-include/FoundationICU/_foundation_unicode/module.modulemap",

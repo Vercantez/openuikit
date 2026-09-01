@@ -18,11 +18,15 @@ GOLDEN=$ROOT/full/foundation/tests/foundation-guest-text-apple-2026-08-30.txt
 COMPAT_GOLDEN=$ROOT/full/foundation/tests/foundation-guest-compatibility-apple-2026-08-30.txt
 STRUCTURED_GOLDEN=$ROOT/full/foundation/tests/foundation-guest-structured-data-apple-2026-08-30.txt
 NSSTRING_GOLDEN=$ROOT/full/foundation/tests/foundation-guest-nsstring-apple-2026-08-30.txt
+CFERROR_GOLDEN=$ROOT/full/foundation/tests/foundation-cferror-apple-2026-08-31.txt
+APPLE_FOUNDATION_INTERFACE=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.1.sdk/System/Library/Frameworks/Foundation.framework/Modules/Foundation.swiftmodule/arm64-apple-ios-simulator.swiftinterface
 EXPECTED_GOLDEN_SHA=d238c2ea2e2b252a433a56660e1e7c2a23b2851a665874db7d432b4e573c40e0
 EXPECTED_COMPAT_GOLDEN_SHA=07a1d25c7707614ae7cf8b18d847f7da2fd008e4c3879ded01830085985611ac
 EXPECTED_STRUCTURED_GOLDEN_SHA=0c9ceb2830f41181f4b96cd90ae30a437a7d6894a1deb7c834e7a6f153d67134
 EXPECTED_NSSTRING_GOLDEN_SHA=472ce641b97e460a14b19e80a10bb60af3fa532df6d0383799a9e58ba2d87486
-EXPECTED_SOURCE_DIGEST=ad708efb59f03f2e23bb1cbb0273e5e1f393414cc964efd298c9b5b98106d9d1
+EXPECTED_CFERROR_GOLDEN_SHA=d1a24df46635db706f9540b135e914f40a3ff530d2ac1f84c2322e726942c2e9
+EXPECTED_APPLE_FOUNDATION_INTERFACE_SHA=e96e22f4ee55f25fd43b421098e72f8f9872016e84d1a60d4b6daaa255612ac9
+EXPECTED_SOURCE_DIGEST=9e58c207da8371a7916afdbf567fd76f33d1ed6c27f40e3167156dc8473c6cfd
 
 FOUNDATION_SOURCES=(
     "$ROOT/full/foundation/NSString.swift"
@@ -41,10 +45,13 @@ ATTESTED_SOURCES=(
     full/foundation/Error+LocalizedDescription.swift
     full/foundation/NSString.swift
     full/foundation/NSError.swift
+    full/foundation/CFError+Error.swift
     full/foundation/NSNumber.swift
     full/foundation/JSONSerialization.swift
     full/foundation/NSRegularExpression.swift
     full/appshim/FoundationOpenUIKitValueAliases.swift
+    full/foundation/include/COpenFoundationCore/OpenFoundationCFError.h
+    full/foundation/include/COpenFoundationCore/module.modulemap
     full/foundation/tests/FoundationGuestTextTestRoot.swift
     full/foundation/tests/FoundationGuestTextUIKit.swift
     full/foundation/tests/FoundationGuestTextUIKitClient.swift
@@ -61,10 +68,12 @@ ATTESTED_SOURCES=(
     full/foundation/tests/FoundationGuestNSErrorDefaultClient.swift
     full/foundation/tests/FoundationGuestNSStringOracle.swift
     full/foundation/tests/FoundationGuestNSStringNegative.swift
+    full/foundation/tests/FoundationCFErrorBridgeOracle.swift
     full/foundation/tests/foundation-guest-text-apple-2026-08-30.txt
     full/foundation/tests/foundation-guest-compatibility-apple-2026-08-30.txt
     full/foundation/tests/foundation-guest-structured-data-apple-2026-08-30.txt
     full/foundation/tests/foundation-guest-nsstring-apple-2026-08-30.txt
+    full/foundation/tests/foundation-cferror-apple-2026-08-31.txt
 )
 
 die() {
@@ -112,6 +121,11 @@ initial_source_digest=$(source_digest)
     "$EXPECTED_STRUCTURED_GOLDEN_SHA" ] || die "Apple structured-data golden digest changed"
 [ "$(shasum -a 256 "$NSSTRING_GOLDEN" | awk '{print $1}')" = \
     "$EXPECTED_NSSTRING_GOLDEN_SHA" ] || die "Apple NSString golden digest changed"
+[ "$(shasum -a 256 "$CFERROR_GOLDEN" | awk '{print $1}')" = \
+    "$EXPECTED_CFERROR_GOLDEN_SHA" ] || die "Apple CFError golden digest changed"
+[ "$(shasum -a 256 "$APPLE_FOUNDATION_INTERFACE" | awk '{print $1}')" = \
+    "$EXPECTED_APPLE_FOUNDATION_INTERFACE_SHA" ] \
+    || die "Apple Foundation interface digest changed"
 
 require_repo \
     "$SF" \
@@ -159,6 +173,8 @@ CSHIM_INCLUDE=$SF/Sources/_FoundationCShims/include
 CSHIM_FLAGS=(
     -Xcc -fmodule-map-file="$CSHIM_INCLUDE/module.modulemap"
     -Xcc -I"$CSHIM_INCLUDE"
+    -Xcc -fmodule-map-file="$ROOT/full/foundation/include/COpenFoundationCore/module.modulemap"
+    -Xcc -I"$ROOT/full/foundation/include/COpenFoundationCore"
 )
 
 build_collection() {
@@ -366,12 +382,25 @@ service_output=$("$OUT/service-runtime" "$OUT/service-fixture")
     "$ROOT/full/foundation/Bundle+Localization.swift" \
     "$ROOT/full/foundation/Scanner.swift" \
     "$ROOT/full/foundation/NSError.swift" \
+    "$ROOT/full/foundation/CFError+Error.swift" \
     "$ROOT/full/foundation/NSNumber.swift" \
     "$ROOT/full/foundation/Error+LocalizedDescription.swift" \
     "$ROOT/full/foundation/DateFormatter.swift" \
     "$ROOT/full/foundation/UserDefaults.swift" \
     "$ROOT/full/foundation/JSONSerialization.swift" \
     "$ROOT/full/foundation/NSRegularExpression.swift"
+
+xcrun swiftc -target "$TARGET" \
+    -module-cache-path "$OUT/apple-cferror-module-cache" \
+    "$ROOT/full/foundation/tests/FoundationCFErrorBridgeOracle.swift" \
+    -o "$OUT/apple-cferror-oracle"
+"$OUT/apple-cferror-oracle" > "$OUT/apple-cferror-output.txt"
+cmp "$CFERROR_GOLDEN" "$OUT/apple-cferror-output.txt" \
+    || die "Apple CFError oracle drifted from golden"
+otool -L "$OUT/apple-cferror-oracle" | \
+    grep -q '/System/Library/Frameworks/Foundation.framework/' || {
+        die "Apple CFError oracle did not load Apple Foundation"
+    }
 
 xcrun swiftc -target "$TARGET" \
     -module-cache-path "$OUT/apple-structured-module-cache" \
@@ -390,6 +419,15 @@ STRUCTURED_LINK_OBJECTS=(
     "$SERVICES/OpenUIKit.o"
     "${LINK_OBJECTS[@]}"
 )
+xcrun swiftc -target "$TARGET" -D FOUNDATION_GUEST_PORT \
+    -module-cache-path "$OUT/port-cferror-module-cache" \
+    -I "$STRUCTURED" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    "$ROOT/full/foundation/tests/FoundationCFErrorBridgeOracle.swift" \
+    "${STRUCTURED_LINK_OBJECTS[@]}" -o "$OUT/port-cferror-oracle"
+"$OUT/port-cferror-oracle" > "$OUT/port-cferror-output.txt"
+cmp "$CFERROR_GOLDEN" "$OUT/port-cferror-output.txt" \
+    || die "portable CFError output differs from Apple golden"
+
 xcrun swiftc -target "$TARGET" \
     -module-cache-path "$OUT/port-structured-module-cache" \
     -I "$STRUCTURED" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
@@ -480,7 +518,7 @@ uikit_output=$("$OUT/uikit-client")
 for binary in "$OUT/port-oracle" "$OUT/port-compat-oracle" "$OUT/runtime" \
     "$OUT/uikit-client" "$OUT/service-runtime" "$OUT/port-structured-oracle" \
     "$OUT/port-structured-negative" "$OUT/port-nsstring-oracle" \
-    "$OUT/port-nsstring-negative"; do
+    "$OUT/port-nsstring-negative" "$OUT/port-cferror-oracle"; do
     if otool -L "$binary" | grep -Eq \
         '/System/Library/Frameworks/(Foundation|CoreFoundation)\.framework/'; then
         die "portable binary loads Apple Foundation/CoreFoundation: $binary"
@@ -492,6 +530,13 @@ xcrun nm -gU "$STRUCTURED/Foundation.o" | \
 xcrun nm -gU "$STRUCTURED/Foundation.o" | awk '{print $NF}' | \
     grep -Fx '_$s10Foundation24_getErrorDefaultUserInfoyyXlSgxs0C0RzlF' \
     >/dev/null || die "missing exact Swift-runtime error user-info entry point"
+xcrun nm -gU "$STRUCTURED/Foundation.o" | awk '{print $NF}' | \
+    grep -Fx '_$sSo10CFErrorRefas5Error10FoundationMc' >/dev/null \
+    || die "missing exact Foundation-owned CFError Error conformance"
+for forbidden in _CFErrorGetDomain _CFErrorGetCode _CFErrorCopyUserInfo; do
+    [ "$(xcrun nm -u -j "$STRUCTURED/Foundation.o" | grep -Fxc "$forbidden")" -eq 0 ] \
+        || die "portable CFError bridge eagerly imports absent C API: $forbidden"
+done
 for symbol in \
     'Foundation.NSString.init(string:' \
     'Foundation.NSString.character(at:' \
@@ -571,7 +616,7 @@ final_source_digest=$(source_digest)
 
 printf '%s\n' \
     "FOUNDATION_GUEST_TEXT_HOST_OK rows=86 characters=26 "\
-"runtime=2 identity=8 structured=85 structured-negatives=4 nsstring=46 nsstring-negatives=3 uikit-reexport=1 adversarial=4 sha256=$initial_source_digest"
+"runtime=2 identity=8 structured=85 structured-negatives=4 nsstring=46 nsstring-negatives=3 cferror=1 uikit-reexport=1 adversarial=4 sha256=$initial_source_digest"
 if [ "${FOUNDATION_GUEST_TEXT_KEEP_OUTPUT:-0}" = 1 ]; then
     printf 'output-root\t%s\n' "$OUT"
 fi

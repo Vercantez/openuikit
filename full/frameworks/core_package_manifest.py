@@ -39,6 +39,7 @@ FOUNDATION_SOURCES = (
     "full/foundation/URLSession.swift",
     "full/foundation/Scanner.swift",
     "full/foundation/NSError.swift",
+    "full/foundation/CFError+Error.swift",
     "full/foundation/NSNumber.swift",
     "full/foundation/Error+LocalizedDescription.swift",
     "full/foundation/JSONSerialization.swift",
@@ -758,6 +759,24 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
             "CoreImage underlying-module artifacts are absent: "
             + ", ".join(path for _role, path in missing_coreimage_includes)
         )
+    required_cferror_includes = {
+        ("opaque-header", "include/COpenFoundationCore/OpenFoundationCFError.h"),
+        ("module-map", "include/COpenFoundationCore/module.modulemap"),
+    }
+    actual_cferror_includes = {
+        (str(item["role"]), str(item["path"]))
+        for item in artifacts
+        if item["category"] == "include"
+        and item["name"] == "COpenFoundationCore"
+    }
+    missing_cferror_includes = sorted(
+        required_cferror_includes - actual_cferror_includes
+    )
+    if missing_cferror_includes:
+        refuse(
+            "Foundation CFError Clang substrate is absent: "
+            + ", ".join(path for _role, path in missing_cferror_includes)
+        )
 
 
 def require_coreimage_compile_contract(tokens: list[str]) -> None:
@@ -773,6 +792,22 @@ def require_coreimage_compile_contract(tokens: list[str]) -> None:
             refuse(
                 "compile flags must contain CoreImage underlying-module pair "
                 f"exactly once: -Xcc {argument}"
+            )
+
+
+def require_cferror_compile_contract(tokens: list[str]) -> None:
+    for argument in (
+        "-fmodule-map-file=include/COpenFoundationCore/module.modulemap",
+        "-Iinclude/COpenFoundationCore",
+    ):
+        count = sum(
+            tokens[index : index + 2] == ["-Xcc", argument]
+            for index in range(len(tokens) - 1)
+        )
+        if count != 1:
+            refuse(
+                "compile flags must contain the Foundation CFError Clang "
+                f"module pair exactly once: -Xcc {argument}"
             )
 
 
@@ -1043,6 +1078,7 @@ def validate_document(
     if link_tokens.count("-Llib") != 1:
         refuse("link inputs must contain -Llib exactly once")
     require_coreimage_compile_contract(compile_tokens)
+    require_cferror_compile_contract(compile_tokens)
     require_cross_import_compile_contract(compile_tokens)
     for required in REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
         if link_tokens.count(required) != 1:

@@ -11,7 +11,7 @@ The facade re-exports FoundationEssentials and therefore uses its `Date`,
 `Data`, `URL`, `UUID`, `JSONEncoder`, `JSONDecoder`, `Calendar`, `Locale`,
 `TimeZone`, and `IndexPath` identities. It also re-exports OpenCoreGraphics and
 the guest `os` module, so a source file importing only Foundation sees the
-platform `CGFloat` and `os_unfair_lock` APIs. The thirty-one-source facade adds:
+platform `CGFloat` and `os_unfair_lock` APIs. The thirty-three-source facade adds:
 
 - `CharacterSet`, including Darwin-measured whitespace and URL component sets,
   Unicode-category-backed uppercase, lowercase, letter, alphanumeric, symbol,

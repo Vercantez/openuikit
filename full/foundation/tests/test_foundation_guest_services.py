@@ -32,6 +32,7 @@ EXPECTED = [
     "full/foundation/URLSession.swift",
     "full/foundation/Scanner.swift",
     "full/foundation/NSError.swift",
+    "full/foundation/CFError+Error.swift",
     "full/foundation/NSNumber.swift",
     "full/foundation/Error+LocalizedDescription.swift",
     "full/foundation/JSONSerialization.swift",
@@ -61,7 +62,8 @@ class FoundationGuestServicesTests(unittest.TestCase):
         source = ONBOARDING.read_text()
         self.assertIn("FOUNDATION_GUEST_MANIFEST=", source)
         self.assertIn("mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES", source)
-        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 31', source)
+        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 33', source)
+        self.assertIn("COpenFoundationCore/module.modulemap", source)
         self.assertIn('"${FOUNDATION_GUEST_SOURCES[@]}"', source)
         self.assertIn("duplicate Foundation guest source", source)
         self.assertIn("escaped production source roots", source)

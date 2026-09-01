@@ -107,6 +107,7 @@ FOUNDATION_SOURCES = (
     "full/foundation/URLSession.swift",
     "full/foundation/Scanner.swift",
     "full/foundation/NSError.swift",
+    "full/foundation/CFError+Error.swift",
     "full/foundation/NSNumber.swift",
     "full/foundation/Error+LocalizedDescription.swift",
     "full/foundation/JSONSerialization.swift",
@@ -533,14 +534,14 @@ class FoundationManifestTests(unittest.TestCase):
         self.attest()
         lines = (self.root / "attestation.tsv").read_text().splitlines()
         self.assertEqual(lines[0], "format\tfoundation-guest-sources-v1")
-        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 32)
+        self.assertEqual(len([line for line in lines if line.startswith("source\t")]), 33)
 
     def test_reordered_manifest_is_refused(self) -> None:
         reordered = list(FOUNDATION_SOURCES)
         reordered[0], reordered[1] = reordered[1], reordered[0]
         write_file(self.manifest, "\n".join(reordered) + "\n")
         refusal = self.attest(expected=2)
-        self.assertIn("exact ordered 32-path contract", refusal.stderr)
+        self.assertIn("exact ordered 33-path contract", refusal.stderr)
 
     def test_symlinked_source_is_refused(self) -> None:
         source = self.root / FOUNDATION_SOURCES[-1]
@@ -664,6 +665,7 @@ class PackageFixture:
             "lib",
             "include",
             "include/CoreImage",
+            "include/COpenFoundationCore",
             "include/FoundationICU/_foundation_unicode",
             "objects",
             "resources/OpenUIKit/fonts",
@@ -689,6 +691,14 @@ class PackageFixture:
             root / "include/CoreImage/CIFilterBuiltins.h", "generated filters"
         )
         write_file(root / "include/CoreImage/module.modulemap", "module CoreImage {}")
+        write_file(
+            root / "include/COpenFoundationCore/OpenFoundationCFError.h",
+            "typedef struct __CFError *CFErrorRef;\n",
+        )
+        write_file(
+            root / "include/COpenFoundationCore/module.modulemap",
+            "module COpenFoundationCore {}\n",
+        )
         write_file(
             root / "include/FoundationICU/_foundation_unicode/module.modulemap",
             "module _FoundationICU { export * }",
@@ -770,6 +780,10 @@ class PackageFixture:
             "-fmodule-map-file=include/CoreImage/module.modulemap",
             "-Xcc",
             "-Iinclude/CoreImage",
+            "-Xcc",
+            "-fmodule-map-file=include/COpenFoundationCore/module.modulemap",
+            "-Xcc",
+            "-Iinclude/COpenFoundationCore",
             "-load-plugin-library",
             "host-tools/swift/host/plugins/libObservationMacros.so",
             "-load-plugin-library",
@@ -1002,6 +1016,18 @@ class PackageFixture:
                     "CoreImage",
                     "module-map",
                     "include/CoreImage/module.modulemap",
+                ),
+                self._artifact(
+                    "include",
+                    "COpenFoundationCore",
+                    "opaque-header",
+                    "include/COpenFoundationCore/OpenFoundationCFError.h",
+                ),
+                self._artifact(
+                    "include",
+                    "COpenFoundationCore",
+                    "module-map",
+                    "include/COpenFoundationCore/module.modulemap",
                 ),
             )
         )
@@ -1504,6 +1530,34 @@ class PackageContractTests(unittest.TestCase):
             refusal = fixture.write_manifest(expected=2)
             self.assertIn("CoreImage underlying-module pair", refusal.stderr)
 
+    def test_cferror_clang_substrate_and_compile_pairs_are_mandatory(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = PackageFixture(Path(temporary) / "package", preview=False)
+            ledger = fixture.root / "attestation/artifacts.tsv"
+            ledger.write_text(
+                "\n".join(
+                    line
+                    for line in ledger.read_text(encoding="utf-8").splitlines()
+                    if "COpenFoundationCore/module.modulemap" not in line
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            refusal = fixture.write_manifest(expected=2)
+            self.assertIn("Foundation CFError Clang substrate", refusal.stderr)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = PackageFixture(Path(temporary) / "package", preview=False)
+            pair_end = fixture.compile_arguments.index(
+                "-Iinclude/COpenFoundationCore"
+            ) + 1
+            del fixture.compile_arguments[pair_end - 2 : pair_end]
+            (fixture.root / "compile-flags.rsp").write_bytes(
+                b"".join(token.encode() + b"\0" for token in fixture.compile_arguments)
+            )
+            refusal = fixture.write_manifest(expected=2)
+            self.assertIn("Foundation CFError Clang module pair", refusal.stderr)
+
     def test_cross_import_overlay_compile_pair_is_mandatory(self) -> None:
         for mutation in ("missing", "duplicate"):
             with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
@@ -1638,7 +1692,7 @@ class ShellContractTests(unittest.TestCase):
 
     def test_builder_pins_the_canonical_105_source_openuikit_tree(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
-        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=32"), 1)
+        self.assertEqual(source.count("EXPECTED_FOUNDATION_SOURCE_COUNT=33"), 1)
         self.assertIn(
             "-lOpenCoreGraphics -lCombine -lOpenCombine -lDispatch",
             source,
@@ -2601,6 +2655,38 @@ class ShellContractTests(unittest.TestCase):
                         source.replace(predicate, "deleted-predicate", 1)
                     )
 
+    def test_foundation_cferror_bridge_is_packaged_and_abi_gated(self) -> None:
+        source = BUILDER.read_text(encoding="utf-8")
+        manifest_source = TOOL.read_text(encoding="utf-8")
+        canonical_source = CANONICAL_VALIDATOR.read_text(encoding="utf-8")
+        bridge = (REPO / "full/foundation/CFError+Error.swift").read_text(
+            encoding="utf-8"
+        )
+        probe = (HERE / "CoreGuestPackageProbe.swift").read_text(
+            encoding="utf-8"
+        )
+        for token in (
+            "COpenFoundationCore/OpenFoundationCFError.h",
+            "COpenFoundationCore/module.modulemap",
+            "_$sSo10CFErrorRefas5Error10FoundationMc",
+            "foundation-runtime-exports.txt",
+            "_CFErrorGetDomain",
+            "_CFErrorGetCode",
+            "_CFErrorCopyUserInfo",
+        ):
+            self.assertIn(token, source)
+        for token in (
+            "-fmodule-map-file=include/COpenFoundationCore/module.modulemap",
+            "-Iinclude/COpenFoundationCore",
+        ):
+            self.assertIn(token, source)
+            self.assertIn(token, manifest_source)
+            self.assertIn(token, canonical_source)
+        self.assertIn("unsafeBitCast(self, to: NSError.self)", bridge)
+        self.assertIn("let cfErrorAsError: any Error = cfError", probe)
+        self.assertIn(
+            "cfErrorAsError._getEmbeddedNSError() === cfError", probe
+        )
     def test_twenty_eight_first_party_frameworks_are_real_core_products(self) -> None:
         source = BUILDER.read_text(encoding="utf-8")
         manifest_source = TOOL.read_text(encoding="utf-8")

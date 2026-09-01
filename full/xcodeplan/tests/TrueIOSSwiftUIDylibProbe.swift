@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import Foundation
 
 private struct TrueIOSSwiftUIDylibView: View {
     var body: some View {
@@ -33,6 +34,25 @@ private enum TrueIOSSwiftUIDylibProbe {
         let renderedButton = descendants
             .contains { $0.accessibilityIdentifier == "SwiftUI.Button" }
         precondition(renderedText && renderedButton)
+
+        let cfSourceNSError = NSError(
+            domain: "Portable.Domain",
+            code: 42,
+            userInfo: ["k": "v"]
+        )
+        let cfError = unsafeBitCast(cfSourceNSError, to: CFError.self)
+        let cfErrorAsError: any Error = cfError
+        precondition(cfErrorAsError._domain == "Portable.Domain")
+        precondition(cfErrorAsError._code == 42)
+        precondition(
+            (cfErrorAsError._userInfo as? [String: Any])?["k"] as? String
+                == "v"
+        )
+        precondition(cfErrorAsError._getEmbeddedNSError() === cfError)
+        let cfBridgedNSError = cfErrorAsError as NSError
+        precondition(cfBridgedNSError.domain == "Portable.Domain")
+        precondition(cfBridgedNSError.code == 42)
+        precondition(cfBridgedNSError.userInfo["k"] as? String == "v")
 
         print(
             "TRUE_IOS_SWIFTUI_DYLIB_RUNTIME_OK " +

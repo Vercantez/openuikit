@@ -26,6 +26,7 @@ OPENCOMBINE_ARTIFACTS=$OPENCOMBINE_ROOT/export/artifacts
 OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 MANIFEST_TOOL=$W/full/frameworks/core_package_manifest.py
 FOUNDATION_SOURCES_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
+COPEN_FOUNDATION_CORE_INCLUDE=$W/full/foundation/include/COpenFoundationCore
 FOUNDATION_CACHE_ORACLE=$W/full/foundation/tests/FoundationCacheOracle.swift
 FOUNDATION_CACHE_GOLDEN=$W/full/foundation/tests/foundation-cache-apple-2026-08-31.txt
 FOUNDATION_BYTE_COUNT_ORACLE=$W/full/foundation/tests/FoundationByteCountFormatterOracle.swift
@@ -171,7 +172,7 @@ EXPECTED_DEVELOPER_TOOLS_SUPPORT_SWIFT_COUNT=1
 EXPECTED_OPENUIKIT_PREVIEW_MACROS_SWIFT_COUNT=2
 EXPECTED_OPENSWIFTUI_MACROS_SWIFT_COUNT=2
 EXPECTED_CQUARTZ_CPP_COUNT=37
-EXPECTED_FOUNDATION_SOURCE_COUNT=32
+EXPECTED_FOUNDATION_SOURCE_COUNT=33
 EXPECTED_OBSERVATION_SOURCE_COUNT=6
 EXPECTED_INTENTS_SOURCE_COUNT=1
 EXPECTED_INTENTSUI_SOURCE_COUNT=1
@@ -422,6 +423,12 @@ done
     || die "first-party provenance policy is missing or linked: $FIRST_PARTY_PROVENANCE_POLICY"
 [ -x "$MACHORUN/build/machorun" ] || die 'current machorun input is missing'
 [ -d "$SYS/usr/include" ] || die "SDK is missing: $SYS"
+[ -f "$COPEN_FOUNDATION_CORE_INCLUDE/OpenFoundationCFError.h" ] \
+    && [ ! -L "$COPEN_FOUNDATION_CORE_INCLUDE/OpenFoundationCFError.h" ] \
+    || die 'COpenFoundationCore CFError header is missing'
+[ -f "$COPEN_FOUNDATION_CORE_INCLUDE/module.modulemap" ] \
+    && [ ! -L "$COPEN_FOUNDATION_CORE_INCLUDE/module.modulemap" ] \
+    || die 'COpenFoundationCore module map is missing'
 [ -d "$W/build" ] && [ ! -L "$W/build" ] || die '/w/build must be a real directory'
 [ ! -e "$FULL" ] && [ ! -L "$FULL" ] || die "stale build_full output exists: $FULL"
 [ ! -e "$WORK" ] && [ ! -L "$WORK" ] || die "stale core work root exists: $WORK"
@@ -1204,7 +1211,8 @@ cp -a "$FULL/inc/CSTBTrueType" "$STAGE/include/"
 mkdir -p "$STAGE/include/CHostClock" "$STAGE/include/CQuartz" \
     "$STAGE/include/COpenCombineHelpers" "$STAGE/include/COpenURLTransport" \
     "$STAGE/include/COpenRelativeTime" "$STAGE/include/COpenDispatch" \
-    "$STAGE/include/CCommonCrypto" "$STAGE/include/_FoundationCShims" \
+    "$STAGE/include/CCommonCrypto" "$STAGE/include/COpenFoundationCore" \
+    "$STAGE/include/_FoundationCShims" \
     "$STAGE/guest-root/host"
 cp -a "$W/full/hostclock/include/." "$STAGE/include/CHostClock/"
 cp -a "$UIKIT/Sources/CQuartz/include/." "$STAGE/include/CQuartz/"
@@ -1213,6 +1221,8 @@ cp -a "$W/full/urltransport/include/." "$STAGE/include/COpenURLTransport/"
 cp -a "$W/full/relativetime/include/." "$STAGE/include/COpenRelativeTime/"
 cp -a "$W/full/dispatch/include/." "$STAGE/include/COpenDispatch/"
 cp -a "$W/full/commoncrypto/include/." "$STAGE/include/CCommonCrypto/"
+cp -a "$COPEN_FOUNDATION_CORE_INCLUDE/." \
+    "$STAGE/include/COpenFoundationCore/"
 cp -a "$SWIFT_FOUNDATION/Sources/_FoundationCShims/include/." \
     "$STAGE/include/_FoundationCShims/"
 cp -a "$W/full/coreimage/include" "$STAGE/include/CoreImage"
@@ -1267,6 +1277,8 @@ C_FLAGS=(-Xcc -I"$STAGE/include/CPortableIO"
     -Xcc -I"$STAGE/include/COpenDispatch"
     -Xcc -fmodule-map-file="$STAGE/include/CCommonCrypto/module.modulemap"
     -Xcc -I"$STAGE/include/CCommonCrypto"
+    -Xcc -fmodule-map-file="$STAGE/include/COpenFoundationCore/module.modulemap"
+    -Xcc -I"$STAGE/include/COpenFoundationCore"
     -Xcc -fmodule-map-file="$STAGE/include/FoundationICU/_foundation_unicode/module.modulemap"
     -Xcc -I"$STAGE/include/FoundationICU")
 FE_FLAGS=(-I "$STAGE/modules"
@@ -1967,6 +1979,10 @@ done
     -emit-object -o "$WORK/foundation.o" "${FOUNDATION_SOURCE_PATHS[@]}"
 llvm-nm-18 -u -j "$WORK/foundation.o" | LC_ALL=C sort -u \
     > "$WORK/foundation-undefined-symbols.txt"
+for forbidden in _CFErrorGetDomain _CFErrorGetCode _CFErrorCopyUserInfo; do
+    [ "$(grep -Fxc "$forbidden" "$WORK/foundation-undefined-symbols.txt")" -eq 0 ] \
+        || die "Foundation CFError bridge eagerly imports absent C API: $forbidden"
+done
 foundation_string_processing_undefineds=$(awk \
     'index($0, "17_StringProcessing") { count++ } END { print count + 0 }' \
     "$WORK/foundation-undefined-symbols.txt")
@@ -2235,6 +2251,17 @@ echo '== link forty-seven reusable platform dylibs (forty-six frameworks plus IC
     "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}" "$URL_TRANSPORT_DARWIN" \
     "$RELATIVE_TIME_DARWIN" \
     -reexport_library "$STAGE/lib/libFoundationInternationalization.dylib"
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$STAGE/lib/libFoundation.dylib" | LC_ALL=C sort -u \
+    > "$WORK/foundation-runtime-exports.txt"
+for symbol in \
+    '_$s10Foundation24_getErrorDefaultUserInfoyyXlSgxs0C0RzlF' \
+    '_$s10Foundation21_bridgeNSErrorToError_3outSbSo0C0C_SpyxGtAA021_ObjectiveCBridgeableE0RzlF' \
+    '_$s10Foundation26_ObjectiveCBridgeableErrorMp' \
+    '_$sSo10CFErrorRefas5Error10FoundationMc'; do
+    [ "$(grep -Fxc "$symbol" "$WORK/foundation-runtime-exports.txt")" -eq 1 ] \
+        || die "Foundation runtime bridge export is missing or duplicated: $symbol"
+done
 {
     llvm-objdump-18 --macho --bind "$STAGE/lib/libFoundation.dylib"
     llvm-objdump-18 --macho --lazy-bind "$STAGE/lib/libFoundation.dylib"
@@ -3459,6 +3486,8 @@ COMPILE_ARGUMENTS=(
     -Xcc -Iinclude/COpenDispatch
     -Xcc -fmodule-map-file=include/CCommonCrypto/module.modulemap
     -Xcc -Iinclude/CCommonCrypto
+    -Xcc -fmodule-map-file=include/COpenFoundationCore/module.modulemap
+    -Xcc -Iinclude/COpenFoundationCore
     -Xcc -fmodule-map-file=include/FoundationICU/_foundation_unicode/module.modulemap
     -Xcc -Iinclude/FoundationICU
     -Xcc -fmodule-map-file=include/_FoundationCShims/module.modulemap
@@ -3537,6 +3566,8 @@ cp "$WORK/graphics-sources.pre.tsv" "$STAGE/attestation/graphics-sources.tsv"
 cp "$WORK/webkit-sources.pre.tsv" "$STAGE/attestation/webkit-sources.tsv"
 cp "$WORK/foundation-undefined-symbols.txt" \
     "$STAGE/attestation/foundation-undefined-symbols.txt"
+cp "$WORK/foundation-runtime-exports.txt" \
+    "$STAGE/attestation/foundation-runtime-exports.txt"
 cp "$WORK/foundation-bindings.txt" \
     "$STAGE/attestation/foundation-bindings.txt"
 cp "$FULL/foundation/essentials/removefile-compat-tests.log" \
@@ -3613,6 +3644,10 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'FoundationEssentials-predicate-keypath\tpatch=%s\tupstream=%s\n' \
         "$(hash_file "$W/full/foundation/patches/FoundationEssentials-PredicateFinalClassKeyPath.patch")" \
         'swiftlang/swift-foundation#92b1b021'
+    printf 'Foundation-CFError\theader=%s\tmodule-map=%s\tbridge=%s\n' \
+        "$(hash_file "$COPEN_FOUNDATION_CORE_INCLUDE/OpenFoundationCFError.h")" \
+        "$(hash_file "$COPEN_FOUNDATION_CORE_INCLUDE/module.modulemap")" \
+        "$(hash_file "$W/full/foundation/CFError+Error.swift")"
     printf 'machorun\tcommit=%s\ttree=%s\tloader-sha256=%s\n' \
         "$EXPECTED_MACHORUN_COMMIT" "$EXPECTED_MACHORUN_TREE" \
         "$(hash_file "$MACHORUN/build/machorun")"
@@ -3729,6 +3764,10 @@ record_artifact include CCommonCrypto abi-header \
     include/CCommonCrypto/CommonDigest.h
 record_artifact include CCommonCrypto module-map \
     include/CCommonCrypto/module.modulemap
+record_artifact include COpenFoundationCore opaque-header \
+    include/COpenFoundationCore/OpenFoundationCFError.h
+record_artifact include COpenFoundationCore module-map \
+    include/COpenFoundationCore/module.modulemap
 for dependency in InternalCollectionsUtilities OrderedCollections _RopeModule os; do
     record_module_family module-dependency "$dependency"
 done
@@ -3862,6 +3901,8 @@ record_artifact attestation webkit-dylib-loads manifest \
     attestation/webkit-dylib-loads.tsv
 record_artifact attestation foundation-undefined-symbols undefined-symbols \
     attestation/foundation-undefined-symbols.txt
+record_artifact attestation foundation-runtime-exports defined-symbols \
+    attestation/foundation-runtime-exports.txt
 record_artifact attestation foundation-bindings dyld-bind-audit \
     attestation/foundation-bindings.txt
 record_artifact attestation FoundationEssentials removefile-semantics \

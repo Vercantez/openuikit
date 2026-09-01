@@ -126,6 +126,7 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             "CHostClock",
             "COpenCombineHelpers",
             "COpenDispatch",
+            "COpenFoundationCore",
             "COpenRelativeTime",
             "COpenURLTransport",
             "CPortableIO",
@@ -138,6 +139,9 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             (directory / "module.modulemap").write_text(
                 f"module {module} {{}}\n", encoding="utf-8"
             )
+        (self.root / "platform-include/COpenFoundationCore/OpenFoundationCFError.h").write_text(
+            "typedef struct __CFError *CFErrorRef;\n", encoding="utf-8"
+        )
         icu = self.root / "platform-include/FoundationICU/_foundation_unicode"
         icu.mkdir(parents=True)
         (icu / "module.modulemap").write_text(
@@ -405,6 +409,10 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
             f"-I{root / 'platform-include/CPortableIO'}",
             rooted,
         )
+        self.assertIn(
+            f"-fmodule-map-file={root / 'platform-include/COpenFoundationCore/module.modulemap'}",
+            rooted,
+        )
 
     def test_changed_artifact_is_rejected(self) -> None:
         (self.root / "products/libSwiftUI.dylib").write_bytes(b"changed")
@@ -414,6 +422,17 @@ class TrueIOSPlatformPackageTests(unittest.TestCase):
     def test_unattested_stale_file_is_rejected(self) -> None:
         (self.root / "runtime-root/stale-object.o").write_bytes(b"stale")
         with self.assertRaisesRegex(platform_package.TrueIOSPlatformError, "coverage differs"):
+            platform_package.validate(self.root)
+
+    def test_cferror_clang_substrate_is_required(self) -> None:
+        (
+            self.root
+            / "platform-include/COpenFoundationCore/OpenFoundationCFError.h"
+        ).unlink()
+        with self.assertRaisesRegex(
+            platform_package.TrueIOSPlatformError,
+            "artifact|CFError opaque header",
+        ):
             platform_package.validate(self.root)
 
     def test_resealed_non_ios_macho_is_rejected(self) -> None:

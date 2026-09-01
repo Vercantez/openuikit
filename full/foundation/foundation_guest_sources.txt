@@ -20,6 +20,7 @@ full/foundation/URLLoading.swift
 full/foundation/URLSession.swift
 full/foundation/Scanner.swift
 full/foundation/NSError.swift
+full/foundation/CFError+Error.swift
 full/foundation/NSNumber.swift
 full/foundation/Error+LocalizedDescription.swift
 full/foundation/JSONSerialization.swift

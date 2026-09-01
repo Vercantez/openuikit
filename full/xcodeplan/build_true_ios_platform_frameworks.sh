@@ -22,6 +22,7 @@ SWIFT_FOUNDATION_ICU=${SWIFT_FOUNDATION_ICU:-$W/scratch/swift-foundation-icu}
 SWIFT_COLLECTIONS=${SWIFT_COLLECTIONS:-$W/scratch/swift-collections}
 OPENCOMBINE_SOURCE=${OPENCOMBINE_SOURCE:-$W/scratch/opencombine-core-durable-20260828-r2/source}
 FOUNDATION_SOURCES_MANIFEST=${FOUNDATION_SOURCES_MANIFEST:-$W/full/foundation/foundation_guest_sources.txt}
+COPEN_FOUNDATION_CORE_INCLUDE=$W/full/foundation/include/COpenFoundationCore
 FOUNDATION_INTERNATIONALIZATION_BUILDER=${FOUNDATION_INTERNATIONALIZATION_BUILDER:-$W/full/foundationinternationalization/build_foundation_internationalization.sh}
 OUTPUT_ROOT=${OUTPUT_ROOT:-$W/build/true-ios-platform}
 SYSTEM_FONT=${SYSTEM_FONT:-/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf}
@@ -88,6 +89,12 @@ grep -Fx \
     || die 'swift-foundation-icu checkout is dirty'
 [ -f "$FOUNDATION_SOURCES_MANIFEST" ] && [ ! -L "$FOUNDATION_SOURCES_MANIFEST" ] \
     || die 'Foundation source manifest is missing'
+[ -f "$COPEN_FOUNDATION_CORE_INCLUDE/OpenFoundationCFError.h" ] \
+    && [ ! -L "$COPEN_FOUNDATION_CORE_INCLUDE/OpenFoundationCFError.h" ] \
+    || die 'COpenFoundationCore CFError header is missing'
+[ -f "$COPEN_FOUNDATION_CORE_INCLUDE/module.modulemap" ] \
+    && [ ! -L "$COPEN_FOUNDATION_CORE_INCLUDE/module.modulemap" ] \
+    || die 'COpenFoundationCore module map is missing'
 [ -f "$FOUNDATION_INTERNATIONALIZATION_BUILDER" ] \
     && [ ! -L "$FOUNDATION_INTERNATIONALIZATION_BUILDER" ] \
     || die 'FoundationInternationalization builder is missing'
@@ -220,7 +227,9 @@ source_subject() {
             full/dispatch/Dispatch.swift full/dispatch/OpenDispatchBridge.c \
             full/dispatch/OpenDispatchHost.c \
             full/observation/observation_guest_sources.txt \
-            full/observation/ObservationRuntimeBridge.c; do
+            full/observation/ObservationRuntimeBridge.c \
+            full/foundation/include/COpenFoundationCore/OpenFoundationCFError.h \
+            full/foundation/include/COpenFoundationCore/module.modulemap; do
             printf '%s\t%s\n' "$support_source" "$(sha "$W/$support_source")"
         done
         while IFS= read -r relative; do
@@ -255,6 +264,7 @@ cp -a "$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers/include" \
 cp -a "$W/full/urltransport/include" "$INCLUDE/COpenURLTransport"
 cp -a "$W/full/relativetime/include" "$INCLUDE/COpenRelativeTime"
 cp -a "$W/full/dispatch/include" "$INCLUDE/COpenDispatch"
+cp -a "$COPEN_FOUNDATION_CORE_INCLUDE" "$INCLUDE/COpenFoundationCore"
 cp -a "$SWIFT_FOUNDATION/Sources/_FoundationCShims/include" \
     "$INCLUDE/_FoundationCShims"
 cp -a "$UIKIT/Sources/OpenUIKit/Resources/." "$RESOURCES/"
@@ -293,6 +303,8 @@ CFLAGS=(-Xcc -I"$INCLUDE/CPortableIO" -Xcc -I"$INCLUDE/CSTBTrueType"
     -Xcc -I"$INCLUDE/COpenRelativeTime"
     -Xcc -fmodule-map-file="$INCLUDE/COpenDispatch/module.modulemap"
     -Xcc -I"$INCLUDE/COpenDispatch"
+    -Xcc -fmodule-map-file="$INCLUDE/COpenFoundationCore/module.modulemap"
+    -Xcc -I"$INCLUDE/COpenFoundationCore"
     -Xcc -fmodule-map-file="$INCLUDE/_FoundationCShims/module.modulemap"
     -Xcc -I"$INCLUDE/_FoundationCShims")
 FE_FLAGS=(-I "$FULL/foundation/essentials"
@@ -494,7 +506,7 @@ env SUPPORT_ROOT="$W" SWIFT_FOUNDATION="$SWIFT_FOUNDATION" \
     FOUNDATION_ICU_JOBS="${FOUNDATION_ICU_JOBS:-8}" \
     bash "$FOUNDATION_INTERNATIONALIZATION_BUILDER"
 
-echo '== portable Dispatch and 32-source public Foundation facade'
+echo '== portable Dispatch and 33-source public Foundation facade'
 "${SWIFTC[@]}" "${CFLAGS[@]}" -parse-as-library -I "$PACKAGE" \
     -module-name Dispatch -module-link-name Dispatch \
     -emit-module -emit-module-path "$PACKAGE/Dispatch.swiftmodule" \
@@ -512,8 +524,8 @@ FOUNDATION_CFLAGS=(
     -Xcc -I"$INCLUDE/FoundationICU"
 )
 mapfile -t foundation_relative_sources < "$FOUNDATION_SOURCES_MANIFEST"
-[ "${#foundation_relative_sources[@]}" -eq 32 ] \
-    || die "Foundation source denominator is ${#foundation_relative_sources[@]}, expected 32"
+[ "${#foundation_relative_sources[@]}" -eq 33 ] \
+    || die "Foundation source denominator is ${#foundation_relative_sources[@]}, expected 33"
 foundation_sources=()
 for relative in "${foundation_relative_sources[@]}"; do
     [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
@@ -542,12 +554,19 @@ FOUNDATION_RUNTIME_FLAGS=(
     "$MRROOT_INPUT/darwin/usr/lib/libSystem.B.dylib"
 llvm-nm-18 --defined-only --extern-only --just-symbol-name \
     "$PRODUCTS/libFoundation.dylib" | LC_ALL=C sort -u \
-    > "$BUILD/foundation-runtime-exports.txt"
+    > "$AUDIT/foundation-runtime-exports.txt"
+llvm-nm-18 -u -j "$BUILD/Foundation.o" | LC_ALL=C sort -u \
+    > "$AUDIT/foundation-runtime-undefineds.txt"
+for forbidden in _CFErrorGetDomain _CFErrorGetCode _CFErrorCopyUserInfo; do
+    [ "$(grep -Fxc "$forbidden" "$AUDIT/foundation-runtime-undefineds.txt")" -eq 0 ] \
+        || die "Foundation CFError bridge eagerly imports absent C API: $forbidden"
+done
 for symbol in \
     '_$s10Foundation24_getErrorDefaultUserInfoyyXlSgxs0C0RzlF' \
     '_$s10Foundation21_bridgeNSErrorToError_3outSbSo0C0C_SpyxGtAA021_ObjectiveCBridgeableE0RzlF' \
-    '_$s10Foundation26_ObjectiveCBridgeableErrorMp'; do
-    [ "$(grep -Fxc "$symbol" "$BUILD/foundation-runtime-exports.txt")" -eq 1 ] \
+    '_$s10Foundation26_ObjectiveCBridgeableErrorMp' \
+    '_$sSo10CFErrorRefas5Error10FoundationMc'; do
+    [ "$(grep -Fxc "$symbol" "$AUDIT/foundation-runtime-exports.txt")" -eq 1 ] \
         || die "Foundation runtime bridge export is missing or duplicated: $symbol"
 done
 
@@ -734,6 +753,8 @@ PROBE_CFLAGS=(-Xcc -I"$PUBLISHED_INCLUDE/CPortableIO"
     -Xcc -I"$PUBLISHED_INCLUDE/COpenRelativeTime"
     -Xcc -fmodule-map-file="$PUBLISHED_INCLUDE/COpenDispatch/module.modulemap"
     -Xcc -I"$PUBLISHED_INCLUDE/COpenDispatch"
+    -Xcc -fmodule-map-file="$PUBLISHED_INCLUDE/COpenFoundationCore/module.modulemap"
+    -Xcc -I"$PUBLISHED_INCLUDE/COpenFoundationCore"
     -Xcc -fmodule-map-file="$PUBLISHED_INCLUDE/FoundationICU/_foundation_unicode/module.modulemap"
     -Xcc -I"$PUBLISHED_INCLUDE/FoundationICU"
     -Xcc -fmodule-map-file="$PUBLISHED_INCLUDE/_FoundationCShims/module.modulemap"

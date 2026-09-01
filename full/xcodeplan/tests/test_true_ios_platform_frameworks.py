@@ -55,6 +55,14 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
             self.builder,
         )
         self.assertIn("_$s10Foundation26_ObjectiveCBridgeableErrorMp", self.builder)
+        self.assertIn(
+            "_$sSo10CFErrorRefas5Error10FoundationMc", self.builder
+        )
+        self.assertIn("COpenFoundationCore/module.modulemap", self.builder)
+        for forbidden in (
+            "_CFErrorGetDomain", "_CFErrorGetCode", "_CFErrorCopyUserInfo"
+        ):
+            self.assertIn(forbidden, self.builder)
 
         self.assertIn('TARGET=arm64-apple-ios18.0-simulator', self.builder)
         self.assertIn('PLATFORM=ios-simulator', self.builder)
@@ -65,7 +73,7 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         )
 
     def test_full_foundation_precedes_final_uikit_and_swiftui(self) -> None:
-        foundation = self.builder.index("32-source public Foundation facade")
+        foundation = self.builder.index("33-source public Foundation facade")
         developer_tools = self.builder.index("post-Foundation DeveloperToolsSupport")
         swiftui = self.builder.index("-module-name SwiftUI -emit-module")
         self.assertLess(foundation, developer_tools)
@@ -133,6 +141,10 @@ class TrueIOSPlatformFrameworkTests(unittest.TestCase):
         marker = 'TRUE_IOS_SWIFTUI_DYLIB_RUNTIME_OK'
         self.assertIn(marker, self.probe)
         self.assertIn(marker, self.builder)
+        self.assertIn("let cfErrorAsError: any Error = cfError", self.probe)
+        self.assertIn(
+            "cfErrorAsError._getEmbeddedNSError() === cfError", self.probe
+        )
 
 
 if __name__ == "__main__":

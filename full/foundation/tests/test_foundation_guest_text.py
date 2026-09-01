@@ -18,6 +18,7 @@ GOLDEN = TESTS / "foundation-guest-text-apple-2026-08-30.txt"
 COMPAT_GOLDEN = TESTS / "foundation-guest-compatibility-apple-2026-08-30.txt"
 STRUCTURED_GOLDEN = TESTS / "foundation-guest-structured-data-apple-2026-08-30.txt"
 NSSTRING_GOLDEN = TESTS / "foundation-guest-nsstring-apple-2026-08-30.txt"
+CFERROR_GOLDEN = TESTS / "foundation-cferror-apple-2026-08-31.txt"
 NSSTRING = FOUNDATION / "NSString.swift"
 PRODUCTION = (
     FOUNDATION / "CharacterSet.swift",
@@ -29,12 +30,15 @@ PRODUCTION = (
 )
 STRUCTURED_PRODUCTION = (
     FOUNDATION / "NSError.swift",
+    FOUNDATION / "CFError+Error.swift",
     FOUNDATION / "NSNumber.swift",
     FOUNDATION / "JSONSerialization.swift",
     FOUNDATION / "NSRegularExpression.swift",
     ROOT / "full/appshim/FoundationOpenUIKitValueAliases.swift",
 )
 ATTESTED = PRODUCTION + (NSSTRING,) + STRUCTURED_PRODUCTION + (
+    FOUNDATION / "include/COpenFoundationCore/OpenFoundationCFError.h",
+    FOUNDATION / "include/COpenFoundationCore/module.modulemap",
     TESTS / "FoundationGuestTextTestRoot.swift",
     TESTS / "FoundationGuestTextUIKit.swift",
     TESTS / "FoundationGuestTextUIKitClient.swift",
@@ -51,10 +55,12 @@ ATTESTED = PRODUCTION + (NSSTRING,) + STRUCTURED_PRODUCTION + (
     TESTS / "FoundationGuestNSErrorDefaultClient.swift",
     TESTS / "FoundationGuestNSStringOracle.swift",
     TESTS / "FoundationGuestNSStringNegative.swift",
+    TESTS / "FoundationCFErrorBridgeOracle.swift",
     GOLDEN,
     COMPAT_GOLDEN,
     STRUCTURED_GOLDEN,
     NSSTRING_GOLDEN,
+    CFERROR_GOLDEN,
 )
 
 
@@ -98,6 +104,11 @@ class FoundationGuestTextTests(unittest.TestCase):
             "472ce641b97e460a14b19e80a10bb60af3fa532df6d0383799a9e58ba2d87486",
         )
         self.assertEqual(len(NSSTRING_GOLDEN.read_text().splitlines()), 46)
+        self.assertEqual(
+            hashlib.sha256(CFERROR_GOLDEN.read_bytes()).hexdigest(),
+            "d1a24df46635db706f9540b135e914f40a3ff530d2ac1f84c2322e726942c2e9",
+        )
+        self.assertEqual(len(CFERROR_GOLDEN.read_text().splitlines()), 1)
 
     def test_character_set_inventory_is_exact_and_not_app_specific(self) -> None:
         source = PRODUCTION[0].read_text()
@@ -226,6 +237,36 @@ class FoundationGuestTextTests(unittest.TestCase):
         self.assertIn("error.domain.isEmpty", client)
         self.assertNotIn("error.description", client)
 
+    def test_cferror_bridge_is_toll_free_and_has_no_eager_corefoundation_calls(self) -> None:
+        source = STRUCTURED_PRODUCTION[1].read_text()
+        header = (
+            FOUNDATION
+            / "include/COpenFoundationCore/OpenFoundationCFError.h"
+        ).read_text()
+        module_map = (
+            FOUNDATION / "include/COpenFoundationCore/module.modulemap"
+        ).read_text()
+        for token in (
+            "@_exported import COpenFoundationCore",
+            "extension CFError: Error, @unchecked Sendable",
+            "unsafeBitCast(self, to: NSError.self)",
+            "public var _domain: String",
+            "public var _code: Int",
+            "public var _userInfo: AnyObject?",
+            "public func _getEmbeddedNSError() -> AnyObject? { self }",
+        ):
+            self.assertIn(token, source)
+        for forbidden in (
+            "CFErrorGetDomain", "CFErrorGetCode", "CFErrorCopyUserInfo"
+        ):
+            self.assertNotIn(f"{forbidden}(", source)
+        self.assertIn("typedef struct __CFError *CFErrorRef;", header)
+        self.assertIn("module COpenFoundationCore", module_map)
+        oracle = (TESTS / "FoundationCFErrorBridgeOracle.swift").read_text()
+        self.assertIn("let error: any Error = cfError", oracle)
+        self.assertIn("error._getEmbeddedNSError() === cfError", oracle)
+        self.assertIn("let bridgedNSError = error as NSError", oracle)
+
     def test_nsstring_is_a_real_immutable_reference_bridge(self) -> None:
         source = NSSTRING.read_text()
         for token in (
@@ -252,7 +293,7 @@ class FoundationGuestTextTests(unittest.TestCase):
         self.assertNotIn("public typealias NSString = String", source)
 
     def test_nsnumber_is_a_real_reference_bridge_for_scalar_values(self) -> None:
-        source = STRUCTURED_PRODUCTION[1].read_text()
+        source = STRUCTURED_PRODUCTION[2].read_text()
         for token in (
             "open class NSNumber: NSObject",
             "public convenience init(value: Bool)",
@@ -281,7 +322,7 @@ class FoundationGuestTextTests(unittest.TestCase):
         )
 
     def test_objc_runtime_name_conversion_uses_the_real_runtime(self) -> None:
-        source = STRUCTURED_PRODUCTION[4].read_text()
+        source = STRUCTURED_PRODUCTION[5].read_text()
         for token in (
             "public func NSClassFromString(_ aClassName: String) -> AnyClass?",
             "aClassName.withCString({ objc_getClass($0) })",
@@ -301,7 +342,7 @@ class FoundationGuestTextTests(unittest.TestCase):
         self.assertNotIn('aClassName == "CAFilter"', source)
 
     def test_json_serialization_has_mutability_options_and_fails_with_nserror(self) -> None:
-        source = STRUCTURED_PRODUCTION[2].read_text()
+        source = STRUCTURED_PRODUCTION[3].read_text()
         for token in (
             "public static let mutableContainers",
             "public static let mutableLeaves",
@@ -322,7 +363,7 @@ class FoundationGuestTextTests(unittest.TestCase):
         self.assertNotIn("try!", source)
 
     def test_regex_surface_uses_utf16_ranges_and_rejects_unimplemented_options(self) -> None:
-        source = STRUCTURED_PRODUCTION[3].read_text()
+        source = STRUCTURED_PRODUCTION[4].read_text()
         for token in (
             "Regex<AnyRegexOutput>",
             "range(withName name: String)",

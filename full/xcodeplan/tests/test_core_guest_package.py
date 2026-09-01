@@ -32,6 +32,7 @@ class CoreGuestPackageTests(unittest.TestCase):
             "include",
             "include/CPortableIO",
             "include/CoreImage",
+            "include/COpenFoundationCore",
             "objects",
             "resources/OpenUIKit/fonts",
             "guest-root",
@@ -51,6 +52,8 @@ class CoreGuestPackageTests(unittest.TestCase):
             "include/CoreImage/CoreImage.h",
             "include/CoreImage/CIFilterBuiltins.h",
             "include/CoreImage/module.modulemap",
+            "include/COpenFoundationCore/OpenFoundationCFError.h",
+            "include/COpenFoundationCore/module.modulemap",
             "host-tools/swift/host/plugins/libObservationMacros.so",
             "host-tools/swift/host/plugins/libFoundationMacros.so",
             "host-tools/swift/host/plugins/libSwiftDataMacros.so",
@@ -398,6 +401,10 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "-fmodule-map-file=include/CoreImage/module.modulemap",
                 "-Xcc",
                 "-Iinclude/CoreImage",
+                "-Xcc",
+                "-fmodule-map-file=include/COpenFoundationCore/module.modulemap",
+                "-Xcc",
+                "-Iinclude/COpenFoundationCore",
             ],
             "target": {"triple": "arm64-apple-macos15.0"},
         }
@@ -460,6 +467,11 @@ class CoreGuestPackageTests(unittest.TestCase):
             arguments,
         )
         self.assertIn(f"-I{root}/include/CoreImage", arguments)
+        self.assertIn(
+            f"-fmodule-map-file={root}/include/COpenFoundationCore/module.modulemap",
+            arguments,
+        )
+        self.assertIn(f"-I{root}/include/COpenFoundationCore", arguments)
         self.assertNotIn("sdk", arguments)
         self.assertNotIn("modules", arguments)
         self.assertFalse(
@@ -580,11 +592,27 @@ class CoreGuestPackageTests(unittest.TestCase):
 
     def test_refuses_missing_coreimage_compile_contract(self) -> None:
         changed = copy.deepcopy(self.manifest)
-        changed["swift_compile_arguments"] = changed["swift_compile_arguments"][:-2]
+        pair_end = changed["swift_compile_arguments"].index(
+            "-Iinclude/CoreImage"
+        ) + 1
+        del changed["swift_compile_arguments"][pair_end - 2 : pair_end]
         self.write_manifest(changed)
         with self.assertRaisesRegex(
             core_guest_package.CorePackageError,
             "CoreImage underlying-module pair",
+        ):
+            core_guest_package.validate(self.root)
+
+    def test_refuses_missing_cferror_compile_contract(self) -> None:
+        changed = copy.deepcopy(self.manifest)
+        pair_end = changed["swift_compile_arguments"].index(
+            "-Iinclude/COpenFoundationCore"
+        ) + 1
+        del changed["swift_compile_arguments"][pair_end - 2 : pair_end]
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "Foundation CFError Clang module pair",
         ):
             core_guest_package.validate(self.root)
 

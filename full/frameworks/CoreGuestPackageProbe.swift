@@ -256,6 +256,24 @@ struct CoreGuestPackageProbe {
                 countStyle: .file
             ) == "1 MB"
         )
+        let cfSourceNSError = NSError(
+            domain: "Portable.Domain",
+            code: 42,
+            userInfo: ["k": "v"]
+        )
+        let cfError = unsafeBitCast(cfSourceNSError, to: CFError.self)
+        let cfErrorAsError: any Error = cfError
+        precondition(cfErrorAsError._domain == "Portable.Domain")
+        precondition(cfErrorAsError._code == 42)
+        precondition(
+            (cfErrorAsError._userInfo as? [String: Any])?["k"] as? String
+                == "v"
+        )
+        precondition(cfErrorAsError._getEmbeddedNSError() === cfError)
+        let cfBridgedNSError = cfErrorAsError as NSError
+        precondition(cfBridgedNSError.domain == "Portable.Domain")
+        precondition(cfBridgedNSError.code == 42)
+        precondition(cfBridgedNSError.userInfo["k"] as? String == "v")
         let observationPlatform = runObservationGuestRuntimeProbe()
         precondition(
             observationPlatform ==
