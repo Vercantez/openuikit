@@ -331,6 +331,169 @@ private final class _SwiftUIAlertPresentationHost: UIView {
 }
 
 @MainActor
+private final class _SwiftUIPresentationDismissBridge: @unchecked Sendable {
+    var state: _OpenPresentationState
+
+    init(state: _OpenPresentationState) {
+        self.state = state
+    }
+
+    func dismiss() {
+        state.dismiss()
+    }
+}
+
+/// A non-generic controller gives state-driven SwiftUI presentations a stable
+/// UIKit identity while their type-erased root view is updated in place.  It
+/// also owns the two-way dismissal bridge used by `EnvironmentValues.dismiss`.
+@MainActor
+private final class _SwiftUIPresentationContainerController: UIViewController,
+    UIAdaptivePresentationControllerDelegate
+{
+    private(set) var configuration: _OpenPresentationConfiguration
+    private let dismissBridge: _SwiftUIPresentationDismissBridge
+    private let contentController: UIHostingController<AnyView>
+    private var attachedToNavigationStack = false
+
+    init(configuration: _OpenPresentationConfiguration) {
+        self.configuration = configuration
+        let bridge = _SwiftUIPresentationDismissBridge(state: configuration.state)
+        dismissBridge = bridge
+        let dismiss = DismissAction { [bridge] in bridge.dismiss() }
+        contentController = UIHostingController(
+            rootView: configuration.makeDestination(dismiss)
+        )
+        super.init()
+        modalPresentationStyle = configuration.kind == .sheet
+            ? .pageSheet : .fullScreen
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    func matches(_ candidate: _OpenPresentationConfiguration) -> Bool {
+        configuration.kind == candidate.kind
+            && configuration.identity == candidate.identity
+    }
+
+    func update(configuration: _OpenPresentationConfiguration) {
+        self.configuration = configuration
+        dismissBridge.state = configuration.state
+        let dismiss = DismissAction { [dismissBridge] in dismissBridge.dismiss() }
+        contentController.rootView = configuration.makeDestination(dismiss)
+        contentController.loadViewIfNeeded()
+        title = contentController.title
+        navigationItem.hidesBackButton = contentController.navigationItem.hidesBackButton
+        toolbarItems = contentController.toolbarItems
+    }
+
+    override func loadView() {
+        let container = UIView(frame: CGRect(x: 0, y: 0, width: 390, height: 844))
+        container.backgroundColor = .systemBackground
+        container.accessibilityIdentifier = "SwiftUI.PresentationContainer"
+        view = container
+
+        addChild(contentController)
+        contentController.loadViewIfNeeded()
+        contentController.view.frame = container.bounds
+        contentController.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        container.addSubview(contentController.view)
+        contentController.didMove(toParent: self)
+        title = contentController.title
+        navigationItem.hidesBackButton = contentController.navigationItem.hidesBackButton
+        toolbarItems = contentController.toolbarItems
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        contentController.viewIfLoaded?.frame = view.bounds
+    }
+
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        if parent is UINavigationController {
+            attachedToNavigationStack = true
+        } else if parent == nil, attachedToNavigationStack {
+            attachedToNavigationStack = false
+            configuration.state.dismiss()
+        }
+    }
+
+    func presentationControllerDidDismiss(
+        _ presentationController: UIPresentationController
+    ) {
+        _ = presentationController
+        configuration.state.dismiss()
+    }
+}
+
+@MainActor
+private final class _SwiftUIPresentationHost: UIView {
+    let configuration: _OpenPresentationConfiguration
+
+    init(configuration: _OpenPresentationConfiguration) {
+        self.configuration = configuration
+        super.init(frame: .zero)
+        isHidden = true
+        isUserInteractionEnabled = false
+        accessibilityIdentifier = "SwiftUI.PresentationHost"
+    }
+
+    required init?(coder: NSCoder) { nil }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        synchronizePresentation()
+    }
+
+    private func synchronizePresentation() {
+        guard window != nil,
+              let presenter = _enclosingViewController(for: self) else { return }
+
+        let navigationController = (presenter as? UINavigationController)
+            ?? presenter.navigationController
+        let modal = presenter.presentedViewController
+            as? _SwiftUIPresentationContainerController
+        let pushed = navigationController?.viewControllers.compactMap {
+            $0 as? _SwiftUIPresentationContainerController
+        }.first { $0.matches(configuration) }
+
+        if !configuration.state.getIsPresented() {
+            if let modal, modal.matches(configuration) {
+                modal.dismiss(animated: true)
+            } else if let pushed,
+                      navigationController?.topViewController === pushed {
+                navigationController?.popViewController(animated: true)
+            }
+            return
+        }
+
+        if let existing = (modal?.matches(configuration) == true ? modal : nil)
+            ?? pushed {
+            existing.update(configuration: configuration)
+            return
+        }
+
+        let destination = _SwiftUIPresentationContainerController(
+            configuration: configuration
+        )
+        switch configuration.kind {
+        case .sheet:
+            guard presenter.presentedViewController == nil else { return }
+            presenter.present(destination, animated: true)
+            destination.presentationController?.delegate = destination
+        case .navigationDestination:
+            if let navigationController {
+                navigationController.pushViewController(destination, animated: true)
+            } else {
+                guard presenter.presentedViewController == nil else { return }
+                presenter.present(destination, animated: true)
+                destination.presentationController?.delegate = destination
+            }
+        }
+    }
+}
+
+@MainActor
 private func _openAccessibilityHost(frame: CGRect, identifier: String) -> UIView {
     let host = _SwiftUIPassthroughView(frame: frame)
     host.backgroundColor = .clear
@@ -396,7 +559,7 @@ private func _openMenuTokens(
     enabled: Bool
 ) -> [_OpenMenuToken] {
     switch node.kind {
-    case .group(let children):
+    case .group(let children), .grid(let children, _, _), .gridRow(let children):
         return children.flatMap { _openMenuTokens(in: $0, enabled: enabled) }
     case .divider:
         return [.divider]
@@ -427,7 +590,8 @@ private func _openMenuTitle(in node: _OpenViewNode) -> String? {
     switch node.kind {
     case .text(let title): return title
     case .group(let children), .hStack(let children, _, _),
-         .vStack(let children, _, _), .zStack(let children, _):
+         .vStack(let children, _, _), .zStack(let children, _),
+         .grid(let children, _, _), .gridRow(let children):
         return children.lazy.compactMap(_openMenuTitle).first
     case .modified(let content, _): return _openMenuTitle(in: content)
     default: return nil
@@ -439,7 +603,8 @@ private func _openMenuImage(in node: _OpenViewNode) -> UIImage? {
     switch node.kind {
     case .image(.system(let name)): return UIImage(systemName: name)
     case .group(let children), .hStack(let children, _, _),
-         .vStack(let children, _, _), .zStack(let children, _):
+         .vStack(let children, _, _), .zStack(let children, _),
+         .grid(let children, _, _), .gridRow(let children):
         return children.lazy.compactMap(_openMenuImage).first
     case .modified(let content, _): return _openMenuImage(in: content)
     default: return nil
@@ -468,7 +633,8 @@ private func _openAlertActions(
         result.isEnabled = enabled
         return [result]
     case .group(let children), .hStack(let children, _, _),
-         .vStack(let children, _, _), .zStack(let children, _):
+         .vStack(let children, _, _), .zStack(let children, _),
+         .grid(let children, _, _), .gridRow(let children):
         return children.flatMap {
             _openAlertActions(in: $0, configuration: configuration, enabled: enabled)
         }
@@ -714,7 +880,8 @@ private func _openContainedControllers(in root: _OpenViewNode) -> [UIViewControl
         case .group(let children), .hStack(let children, _, _),
              .vStack(let children, _, _), .zStack(let children, _),
              .form(let children), .list(let children),
-             .customLayout(_, let children):
+             .customLayout(_, let children), .grid(let children, _, _),
+             .gridRow(let children):
             children.forEach(visit)
         case .section(let header, let footer, let rows):
             if let header { visit(header) }
@@ -730,7 +897,8 @@ private func _openContainedControllers(in root: _OpenViewNode) -> [UIViewControl
         case .geometry(let geometry):
             visit(geometry.resolve(CGSize(width: 390, height: 844)))
         case .scroll(let label), .scrollReader(let label, _),
-             .navigationLink(let label, _), .toggle(let label, _, _):
+             .navigationLink(let label, _), .link(let label, _),
+             .toggle(let label, _, _):
             visit(label)
         case .picker(let label, let options, _, _):
             visit(label)
@@ -757,7 +925,7 @@ private func _openContainedControllers(in root: _OpenViewNode) -> [UIViewControl
                 break
             }
         case .empty, .text, .image, .color, .roundedRectangle, .capsule,
-             .divider, .progress, .spacer, .textField, .gradient:
+             .divider, .progress, .slider, .spacer, .textField, .gradient:
             break
         }
     }
@@ -780,7 +948,8 @@ private func _openContainedViews(in root: _OpenViewNode) -> [UIView] {
         case .group(let children), .hStack(let children, _, _),
              .vStack(let children, _, _), .zStack(let children, _),
              .form(let children), .list(let children),
-             .customLayout(_, let children):
+             .customLayout(_, let children), .grid(let children, _, _),
+             .gridRow(let children):
             children.forEach(visit)
         case .section(let header, let footer, let rows):
             if let header { visit(header) }
@@ -796,7 +965,8 @@ private func _openContainedViews(in root: _OpenViewNode) -> [UIView] {
         case .geometry(let geometry):
             visit(geometry.resolve(CGSize(width: 390, height: 844)))
         case .scroll(let label), .scrollReader(let label, _),
-             .navigationLink(let label, _), .toggle(let label, _, _):
+             .navigationLink(let label, _), .link(let label, _),
+             .toggle(let label, _, _):
             visit(label)
         case .picker(let label, let options, _, _):
             visit(label)
@@ -823,7 +993,8 @@ private func _openContainedViews(in root: _OpenViewNode) -> [UIView] {
                 break
             }
         case .empty, .text, .image, .color, .roundedRectangle, .capsule,
-             .divider, .progress, .spacer, .textField, .viewController, .gradient:
+             .divider, .progress, .slider, .spacer, .textField,
+             .viewController, .gradient:
             break
         }
     }
@@ -843,7 +1014,8 @@ private func _openAppearanceActions(
         case .group(let children), .hStack(let children, _, _),
              .vStack(let children, _, _), .zStack(let children, _),
              .form(let children), .list(let children),
-             .customLayout(_, let children):
+             .customLayout(_, let children), .grid(let children, _, _),
+             .gridRow(let children):
             children.forEach(visit)
         case .section(let header, let footer, let rows):
             if let header { visit(header) }
@@ -859,7 +1031,8 @@ private func _openAppearanceActions(
         case .geometry(let geometry):
             visit(geometry.resolve(CGSize(width: 390, height: 844)))
         case .scroll(let label), .scrollReader(let label, _),
-             .navigationLink(let label, _), .toggle(let label, _, _):
+             .navigationLink(let label, _), .link(let label, _),
+             .toggle(let label, _, _):
             visit(label)
         case .picker(let label, let options, _, _):
             visit(label)
@@ -891,7 +1064,8 @@ private func _openAppearanceActions(
                 break
             }
         case .empty, .text, .image, .color, .roundedRectangle, .capsule,
-             .divider, .progress, .spacer, .textField, .view, .viewController, .gradient:
+             .divider, .progress, .slider, .spacer, .textField,
+             .view, .viewController, .gradient:
             break
         }
     }
@@ -953,6 +1127,7 @@ private struct _RenderEnvironment {
     var font: _OpenFont? = .body
     var weight: _OpenFont.Weight?
     var minimumScaleFactor: CGFloat = 0
+    var allowsTightening = false
     var foregroundColor: _OpenColor?
     var tintColor: _OpenColor?
     var textAlignment: _OpenTextAlignment = .leading
@@ -960,6 +1135,7 @@ private struct _RenderEnvironment {
     var lineLimitRange: ClosedRange<Int>?
     var imageResizable = false
     var imageContentMode: _OpenContentMode = .fit
+    var imageScale: ImageScale = .medium
     var measuresUnboundedVerticalScroll = false
     var simultaneousTapActions: [@MainActor () -> Void] = []
     var isEnabled = true
@@ -974,6 +1150,8 @@ private struct _RenderEnvironment {
     var submitLabel: SubmitLabel = .return
     var keyboardDismissMode: ScrollDismissesKeyboardMode = .automatic
     var controlSize: ControlSize = .regular
+    var usesCircularProgressStyle = true
+    var usesMenuPickerStyle = false
     var symbolRenderingMode: SymbolRenderingMode?
     var scrollStorage: _OpenScrollProxyStorage?
     var scrollVisibilityObservers: [_OpenScrollVisibilityObserver] = []
@@ -1044,7 +1222,8 @@ private func _openReducedPreference(
         case .group(let children), .hStack(let children, _, _),
              .vStack(let children, _, _), .zStack(let children, _),
              .form(let children), .list(let children),
-             .customLayout(_, let children):
+             .customLayout(_, let children), .grid(let children, _, _),
+             .gridRow(let children):
             children.forEach(visit)
         case .section(let header, let footer, let rows):
             if let header { visit(header) }
@@ -1060,7 +1239,8 @@ private func _openReducedPreference(
         case .geometry(let geometry):
             visit(geometry.resolve(proposed))
         case .scroll(let content), .scrollReader(let content, _),
-             .navigationLink(let content, _), .toggle(let content, _, _):
+             .navigationLink(let content, _), .link(let content, _),
+             .toggle(let content, _, _):
             visit(content)
         case .tabView(let pages, _, _, _):
             pages.forEach { visit($0.content) }
@@ -1086,7 +1266,8 @@ private func _openReducedPreference(
             default: break
             }
         case .empty, .text, .image, .color, .roundedRectangle, .capsule,
-             .divider, .progress, .spacer, .view, .viewController, .textField,
+             .divider, .progress, .slider, .spacer, .view,
+             .viewController, .textField,
              .gradient:
             break
         }
@@ -1129,6 +1310,8 @@ private enum _ViewRenderer {
         case .progress:
             let extent = _controlExtent(environment.controlSize)
             return CGSize(width: extent, height: extent)
+        case .slider:
+            return CGSize(width: max(100, _bounded(proposed).width), height: 34)
         case .spacer(let minLength):
             let value = max(0, minLength ?? 0)
             return CGSize(width: value, height: value)
@@ -1165,6 +1348,23 @@ private enum _ViewRenderer {
                 result.width = max(result.width, size.width)
                 result.height = max(result.height, size.height)
             }
+        case .grid(let rows, let horizontalSpacing, let verticalSpacing):
+            return gridLayout(
+                rows,
+                horizontalSpacing: horizontalSpacing ?? defaultSpacing,
+                verticalSpacing: verticalSpacing ?? defaultSpacing,
+                proposed: proposed,
+                environment: environment
+            ).size
+        case .gridRow(let cells):
+            let gap = defaultSpacing * CGFloat(max(0, cells.count - 1))
+            let sizes = cells.map {
+                measure($0, proposed: proposed, environment: environment)
+            }
+            return CGSize(
+                width: sizes.reduce(gap) { $0 + $1.width },
+                height: sizes.map(\.height).max() ?? 0
+            )
         case .button(let label, _, _, _):
             return measure(label, proposed: proposed, environment: environment)
         case .menu(let label, _, _):
@@ -1295,6 +1495,8 @@ private enum _ViewRenderer {
             return CGSize(width: viewport.width, height: min(viewport.height, height))
         case .navigationLink(let label, _):
             return measure(label, proposed: proposed, environment: environment)
+        case .link(let label, _):
+            return measure(label, proposed: proposed, environment: environment)
         case .navigation(let content, let configuration):
             let hasBarContent = configuration.title != nil || configuration.toolbar != nil
             let barHeight = configuration.barHidden || !hasBarContent ? 0 : navigationBarHeight
@@ -1319,6 +1521,10 @@ private enum _ViewRenderer {
             case .minimumScaleFactor(let factor):
                 var next = environment
                 next.minimumScaleFactor = factor
+                return measure(content, proposed: proposed, environment: next)
+            case .allowsTightening(let flag):
+                var next = environment
+                next.allowsTightening = flag
                 return measure(content, proposed: proposed, environment: next)
             case .foregroundColor(let color):
                 var next = environment
@@ -1377,6 +1583,18 @@ private enum _ViewRenderer {
                 var next = environment
                 next.controlSize = size
                 return measure(content, proposed: proposed, environment: next)
+            case .imageScale(let scale):
+                var next = environment
+                next.imageScale = scale
+                return measure(content, proposed: proposed, environment: next)
+            case .circularProgressStyle:
+                var next = environment
+                next.usesCircularProgressStyle = true
+                return measure(content, proposed: proposed, environment: next)
+            case .menuPickerStyle:
+                var next = environment
+                next.usesMenuPickerStyle = true
+                return measure(content, proposed: proposed, environment: next)
             case .menuIndicator(let visibility):
                 var next = environment
                 next.menuIndicatorVisibility = visibility
@@ -1389,9 +1607,16 @@ private enum _ViewRenderer {
                 var next = environment
                 next.imageResizable = true
                 return measure(content, proposed: proposed, environment: next)
-            case .aspectRatio(let contentMode):
+            case .aspectRatio(let ratio, let contentMode):
                 var next = environment
                 next.imageContentMode = contentMode
+                if let ratio {
+                    return aspectSize(
+                        ratio: ratio,
+                        contentMode: contentMode,
+                        proposed: _bounded(proposed)
+                    )
+                }
                 return measure(content, proposed: proposed, environment: next)
             case .frame(let width, let height, _):
                 let childProposal = CGSize(
@@ -1467,7 +1692,7 @@ private enum _ViewRenderer {
                  .accessibilityLabel, .accessibilityHint, .accessibilityValue,
                  .accessibilityTraits, .allowsHitTesting, .zIndex,
                  .glassEffect, .contextMenu, .matchedGeometry,
-                 .accessibilityIdentifier, .alert, .clipped, .hidden,
+                 .accessibilityIdentifier, .alert, .presentation, .clipped, .hidden,
                  .submitLabel, .buttonBorderShape, .accessibilityAction,
                  .identifier, .preference, .preferenceListener,
                  .scrollVisibility, .scrollGeometry, .geometryObserver,
@@ -1536,6 +1761,124 @@ private enum _ViewRenderer {
                 placement: placement
             )
         })
+    }
+
+    private struct _GridLayout {
+        let cells: [[_OpenViewNode]]
+        let columnWidths: [CGFloat]
+        let rowHeights: [CGFloat]
+        let horizontalSpacing: CGFloat
+        let verticalSpacing: CGFloat
+        let size: CGSize
+    }
+
+    /// SwiftUI grids establish a shared column table across every GridRow.
+    /// The portable renderer gives each column an equal share of a finite
+    /// proposal, then derives row heights from the tallest cell at that
+    /// width. Ragged rows preserve their leading columns rather than being
+    /// flattened into an unrelated HStack.
+    private static func gridLayout(
+        _ rows: [_OpenViewNode],
+        horizontalSpacing: CGFloat,
+        verticalSpacing: CGFloat,
+        proposed: CGSize,
+        environment: _RenderEnvironment
+    ) -> _GridLayout {
+        let cells = rows.map { row -> [_OpenViewNode] in
+            if case .gridRow(let cells) = row.kind { return cells }
+            return [row]
+        }
+        let count = cells.map(\.count).max() ?? 0
+        guard count > 0 else {
+            return _GridLayout(
+                cells: cells,
+                columnWidths: [],
+                rowHeights: Array(repeating: 0, count: cells.count),
+                horizontalSpacing: horizontalSpacing,
+                verticalSpacing: verticalSpacing,
+                size: .zero
+            )
+        }
+
+        let bounded = _bounded(proposed)
+        let horizontalGaps = max(0, horizontalSpacing) * CGFloat(count - 1)
+        let available = max(0, bounded.width - horizontalGaps)
+        let columnWidth = available / CGFloat(count)
+        let columnWidths = Array(repeating: columnWidth, count: count)
+        let rowHeights = cells.map { row in
+            row.map { cell in
+                measure(
+                    cell,
+                    proposed: CGSize(width: columnWidth, height: bounded.height),
+                    environment: environment
+                ).height
+            }.max() ?? 0
+        }
+        let verticalGaps = max(0, verticalSpacing) * CGFloat(max(0, cells.count - 1))
+        return _GridLayout(
+            cells: cells,
+            columnWidths: columnWidths,
+            rowHeights: rowHeights,
+            horizontalSpacing: max(0, horizontalSpacing),
+            verticalSpacing: max(0, verticalSpacing),
+            size: CGSize(
+                width: bounded.width,
+                height: rowHeights.reduce(verticalGaps, +)
+            )
+        )
+    }
+
+    private static func placeGrid(
+        _ rows: [_OpenViewNode],
+        horizontalSpacing: CGFloat,
+        verticalSpacing: CGFloat,
+        in rect: CGRect,
+        on surface: UIView,
+        environment: _RenderEnvironment
+    ) {
+        let layout = gridLayout(
+            rows,
+            horizontalSpacing: horizontalSpacing,
+            verticalSpacing: verticalSpacing,
+            proposed: rect.size,
+            environment: environment
+        )
+        var y = rect.minY
+        for rowIndex in layout.cells.indices {
+            var x = rect.minX
+            let rowHeight = min(
+                layout.rowHeights[rowIndex],
+                max(0, rect.maxY - y)
+            )
+            for columnIndex in layout.cells[rowIndex].indices {
+                guard layout.columnWidths.indices.contains(columnIndex) else { break }
+                let width = layout.columnWidths[columnIndex]
+                place(
+                    layout.cells[rowIndex][columnIndex],
+                    in: CGRect(x: x, y: y, width: width, height: rowHeight),
+                    on: surface,
+                    environment: environment
+                )
+                x += width + layout.horizontalSpacing
+            }
+            y += rowHeight + layout.verticalSpacing
+        }
+    }
+
+    private static func aspectSize(
+        ratio: CGFloat,
+        contentMode: ContentMode,
+        proposed: CGSize
+    ) -> CGSize {
+        guard ratio.isFinite, ratio > 0 else { return proposed }
+        let widthBound = CGSize(width: proposed.width, height: proposed.width / ratio)
+        let heightBound = CGSize(width: proposed.height * ratio, height: proposed.height)
+        switch contentMode {
+        case .fit:
+            return widthBound.height <= proposed.height ? widthBound : heightBound
+        case .fill:
+            return widthBound.height >= proposed.height ? widthBound : heightBound
+        }
     }
 
     static func place(
@@ -1617,8 +1960,26 @@ private enum _ViewRenderer {
             indicator.color = (environment.tintColor ?? environment.foregroundColor)?.resolve()
                 ?? UIActivityIndicatorView.defaultColor
             indicator.accessibilityIdentifier = "SwiftUI.ProgressView"
+            if environment.usesCircularProgressStyle {
+                indicator.accessibilityValue = "style=circular"
+            }
             indicator.startAnimating()
             surface.addSubview(indicator)
+        case .slider(let value, let minimum, let maximum, _, let setValue):
+            let slider = UISlider(frame: rect)
+            slider.minimumValue = Float(min(minimum, maximum))
+            slider.maximumValue = Float(max(minimum, maximum))
+            slider.value = Float(min(max(value, minimum), maximum))
+            slider.minimumTrackTintColor = environment.tintColor?.resolve()
+            slider.isEnabled = environment.isEnabled
+            slider.accessibilityIdentifier = "SwiftUI.Slider"
+            slider.accessibilityValue = String(Double(slider.value))
+            slider.addTarget(for: .valueChanged) { control, _ in
+                guard let slider = control as? UISlider else { return }
+                setValue(Double(slider.value))
+                slider.accessibilityValue = String(Double(slider.value))
+            }
+            surface.addSubview(slider)
         case .spacer:
             return
         case .gradient(let gradient, let start, let end):
@@ -1671,6 +2032,24 @@ private enum _ViewRenderer {
                     environment: environment
                 )
             }
+        case .grid(let rows, let horizontalSpacing, let verticalSpacing):
+            placeGrid(
+                rows,
+                horizontalSpacing: horizontalSpacing ?? defaultSpacing,
+                verticalSpacing: verticalSpacing ?? defaultSpacing,
+                in: rect,
+                on: surface,
+                environment: environment
+            )
+        case .gridRow(let cells):
+            placeHStack(
+                cells,
+                alignment: .center,
+                spacing: defaultSpacing,
+                in: rect,
+                on: surface,
+                environment: environment
+            )
         case .button(let label, let pressedLabel, let role, let action):
             let control = _SwiftUIButtonControl(frame: rect)
             control.isOpaque = false
@@ -1993,7 +2372,29 @@ private enum _ViewRenderer {
             }
             surface.addSubview(field)
         case .picker(let label, let options, let selection, let setSelection):
-            let control = UIControl(frame: rect)
+            let control: UIControl
+            if environment.usesMenuPickerStyle {
+                let button = UIButton(type: .system)
+                button.frame = rect
+                button.showsMenuAsPrimaryAction = true
+                button.menu = UIMenu(
+                    options: [.singleSelection],
+                    children: options.map { option in
+                        UIAction(
+                            title: _openMenuTitle(in: option.content)
+                                ?? String(describing: option.tag),
+                            image: _openMenuImage(in: option.content),
+                            attributes: environment.isEnabled ? [] : [.disabled],
+                            state: option.tag == selection ? .on : .off
+                        ) { _ in
+                            setSelection(option.tag)
+                        }
+                    }
+                )
+                control = button
+            } else {
+                control = UIControl(frame: rect)
+            }
             control.isEnabled = environment.isEnabled
             control.backgroundColor = .clear
             control.accessibilityIdentifier = "SwiftUI.Picker"
@@ -2027,7 +2428,9 @@ private enum _ViewRenderer {
                     environment: selectedEnvironment
                 )
             }
-            let disclosure = _SystemSymbolView(name: "chevron.right")
+            let disclosure = _SystemSymbolView(
+                name: environment.usesMenuPickerStyle ? "chevron.down" : "chevron.right"
+            )
             disclosure.strokeColor = environment.isEnabled ? .secondaryLabel : .tertiaryLabel
             disclosure.frame = CGRect(
                 x: max(0, control.bounds.width - 9),
@@ -2037,10 +2440,12 @@ private enum _ViewRenderer {
             )
             disclosure.accessibilityIdentifier = "SwiftUI.Picker.disclosure"
             control.addSubview(disclosure)
-            control.addTarget(for: .touchUpInside) { _, _ in
-                guard !options.isEmpty else { return }
-                let next = options[(selectedIndex + 1) % options.count]
-                setSelection(next.tag)
+            if !environment.usesMenuPickerStyle {
+                control.addTarget(for: .touchUpInside) { _, _ in
+                    guard !options.isEmpty else { return }
+                    let next = options[(selectedIndex + 1) % options.count]
+                    setSelection(next.tag)
+                }
             }
         case .navigationLink(let label, let makeDestinationController):
             let control = UIControl(frame: rect)
@@ -2079,6 +2484,22 @@ private enum _ViewRenderer {
             )
             disclosure.accessibilityIdentifier = "SwiftUI.NavigationLink.disclosure"
             control.addSubview(disclosure)
+        case .link(let label, let destination):
+            let control = UIControl(frame: rect)
+            control.backgroundColor = .clear
+            control.isOpaque = false
+            control.isEnabled = environment.isEnabled
+            control.isAccessibilityElement = true
+            control.accessibilityTraits = [.link]
+            control.accessibilityIdentifier = "SwiftUI.Link"
+            control.accessibilityLabel = _openMenuTitle(in: label)
+            control.addTarget(for: .touchUpInside) { _, _ in
+                UIApplication.shared.open(destination.absoluteString)
+            }
+            surface.addSubview(control)
+            var next = environment
+            next.foregroundColor = environment.tintColor ?? .init(uiColor: .link)
+            place(label, in: control.bounds, on: control, environment: next)
         case .navigation(let content, let configuration):
             placeNavigation(
                 content,
@@ -2100,6 +2521,10 @@ private enum _ViewRenderer {
             case .minimumScaleFactor(let factor):
                 var next = environment
                 next.minimumScaleFactor = factor
+                place(content, in: rect, on: surface, environment: next)
+            case .allowsTightening(let flag):
+                var next = environment
+                next.allowsTightening = flag
                 place(content, in: rect, on: surface, environment: next)
             case .foregroundColor(let color):
                 var next = environment
@@ -2153,6 +2578,18 @@ private enum _ViewRenderer {
                 var next = environment
                 next.controlSize = size
                 place(content, in: rect, on: surface, environment: next)
+            case .imageScale(let scale):
+                var next = environment
+                next.imageScale = scale
+                place(content, in: rect, on: surface, environment: next)
+            case .circularProgressStyle:
+                var next = environment
+                next.usesCircularProgressStyle = true
+                place(content, in: rect, on: surface, environment: next)
+            case .menuPickerStyle:
+                var next = environment
+                next.usesMenuPickerStyle = true
+                place(content, in: rect, on: surface, environment: next)
             case .menuIndicator(let visibility):
                 var next = environment
                 next.menuIndicatorVisibility = visibility
@@ -2165,10 +2602,24 @@ private enum _ViewRenderer {
                 var next = environment
                 next.imageResizable = true
                 place(content, in: rect, on: surface, environment: next)
-            case .aspectRatio(let contentMode):
+            case .aspectRatio(let ratio, let contentMode):
                 var next = environment
                 next.imageContentMode = contentMode
-                place(content, in: rect, on: surface, environment: next)
+                let destination: CGRect
+                if let ratio {
+                    destination = alignedRect(
+                        size: aspectSize(
+                            ratio: ratio,
+                            contentMode: contentMode,
+                            proposed: rect.size
+                        ),
+                        in: rect,
+                        alignment: .center
+                    )
+                } else {
+                    destination = rect
+                }
+                place(content, in: destination, on: surface, environment: next)
             case .frame(let width, let height, let alignment):
                 let measured = measure(content, proposed: rect.size, environment: environment)
                 let size = CGSize(width: width ?? min(rect.width, measured.width),
@@ -2348,14 +2799,22 @@ private enum _ViewRenderer {
                 place(content, in: host.bounds, on: host, environment: environment)
             case .onAppear:
                 place(content, in: rect, on: surface, environment: environment)
-            case .shadow(let radius):
+            case .shadow(let color, let radius, let x, let y):
                 let shadowHost = _SwiftUIPassthroughView(frame: rect)
                 shadowHost.backgroundColor = .clear
                 shadowHost.isOpaque = false
-                shadowHost.layer.shadowColor = UIColor.black.cgColor
-                shadowHost.layer.shadowOpacity = 0.33
+                let resolved = color.resolve().resolvedCGColor(
+                    with: shadowHost.traitCollection
+                )
+                shadowHost.layer.shadowColor = CGColor(
+                    red: resolved.red,
+                    green: resolved.green,
+                    blue: resolved.blue,
+                    alpha: 1
+                )
+                shadowHost.layer.shadowOpacity = Float(resolved.alpha)
                 shadowHost.layer.shadowRadius = radius
-                shadowHost.layer.shadowOffset = .zero
+                shadowHost.layer.shadowOffset = CGSize(width: x, height: y)
                 shadowHost.accessibilityIdentifier = "SwiftUI.Shadow"
                 surface.addSubview(shadowHost)
                 place(content, in: shadowHost.bounds, on: shadowHost, environment: environment)
@@ -2535,6 +2994,11 @@ private enum _ViewRenderer {
                 place(content, in: rect, on: surface, environment: environment)
                 surface.addSubview(
                     _SwiftUIAlertPresentationHost(configuration: configuration)
+                )
+            case .presentation(let configuration):
+                place(content, in: rect, on: surface, environment: environment)
+                surface.addSubview(
+                    _SwiftUIPresentationHost(configuration: configuration)
                 )
             case .identifier(let identifier):
                 environment.scrollStorage?.targetRects[identifier] = rect
@@ -3140,6 +3604,7 @@ private enum _ViewRenderer {
         }
         label.adjustsFontSizeToFitWidth = environment.minimumScaleFactor > 0
         label.minimumScaleFactor = environment.minimumScaleFactor
+        label.allowsDefaultTighteningForTruncation = environment.allowsTightening
         label.numberOfLines = max(0, environment.lineLimit ?? 0)
         label.lineBreakMode = environment.lineLimit == 1
             ? .byTruncatingTail
@@ -3162,7 +3627,12 @@ private enum _ViewRenderer {
         case .uiImage(let image):
             natural = image.size
         }
-        guard environment.imageResizable else { return natural }
+        guard environment.imageResizable else {
+            return CGSize(
+                width: natural.width * environment.imageScale.factor,
+                height: natural.height * environment.imageScale.factor
+            )
+        }
         let bounded = _bounded(proposed)
         guard natural.width > 0, natural.height > 0 else { return bounded }
         let sx = bounded.width / natural.width
@@ -3249,8 +3719,13 @@ private enum _ViewRenderer {
             return true
         case .modified(let content, _):
             return _containsText(content)
-        case .group(let children):
+        case .group(let children), .hStack(let children, _, _),
+             .vStack(let children, _, _), .zStack(let children, _),
+             .grid(let children, _, _), .gridRow(let children):
             return children.contains(where: _containsText)
+        case .button(let label, _, _, _), .link(let label, _),
+             .navigationLink(let label, _), .toggle(let label, _, _):
+            return _containsText(label)
         default:
             return false
         }
@@ -3282,13 +3757,14 @@ private enum _ViewRenderer {
         switch node.kind {
         case .button:
             return true
-        case .navigationLink:
+        case .navigationLink, .link:
             return true
         case .modified(let content, _):
             return _containsButton(content)
         case .group(let children), .hStack(let children, _, _),
              .vStack(let children, _, _), .zStack(let children, _),
-             .form(let children), .list(let children):
+             .form(let children), .list(let children),
+             .grid(let children, _, _), .gridRow(let children):
             return children.contains(where: _containsButton)
         case .section(let header, let footer, let rows):
             return header.map(_containsButton) == true

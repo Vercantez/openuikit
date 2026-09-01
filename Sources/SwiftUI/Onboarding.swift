@@ -108,6 +108,13 @@ public struct _OpenListStyle: Hashable, Sendable {
     public static let sidebar = _OpenListStyle(.sidebar)
 }
 
+/// Legacy nominal style retained by SwiftUI for source compatibility. It is
+/// deliberately a value rather than a protocol existential so the portable
+/// renderer can select the measured grouped presentation without reflection.
+public struct _OpenGroupedListStyle: Hashable, Sendable {
+    public init() {}
+}
+
 public struct _OpenGeometryProxy: Sendable {
     public let size: CGSize
     public let safeAreaInsets: EdgeInsets
@@ -1169,6 +1176,7 @@ public typealias DefaultToolbarItemKind = _OpenDefaultToolbarItemKind
 public typealias SearchFieldPlacement = _OpenSearchFieldPlacement
 public typealias SearchToolbarBehavior = _OpenSearchToolbarBehavior
 public typealias ListStyle = _OpenListStyle
+public typealias GroupedListStyle = _OpenGroupedListStyle
 public typealias GeometryProxy = _OpenGeometryProxy
 public typealias CoordinateSpace = _OpenCoordinateSpace
 public typealias PageTabViewStyle = _OpenPageTabViewStyle

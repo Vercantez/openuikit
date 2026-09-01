@@ -63,6 +63,17 @@ open class UILabel: UIView {
             if minimumScaleFactor != oldValue { setNeedsDisplay() }
         }
     }
+    /// Permit UIKit's bounded negative tracking before a single-line label is
+    /// truncated. The public property is retained independently from font
+    /// shrinking; drawing uses at most five percent of the point size per
+    /// inter-glyph advance and never changes intrinsic measurement.
+    public var allowsDefaultTighteningForTruncation: Bool = false {
+        didSet {
+            if allowsDefaultTighteningForTruncation != oldValue {
+                setNeedsDisplay()
+            }
+        }
+    }
     /// Dynamic Type opt-in (M14). Stored so real app source compiles and so a
     /// host that changes `UITraitCollection.current.preferredContentSizeCategory`
     /// can tell which labels asked to follow it. OpenUIKit never changes the
@@ -272,6 +283,30 @@ open class UILabel: UIView {
             let full = FontEngine.measure(text, font: drawingFont)
             if full <= bounds.width + 1e-6 {
                 drawLines = [DrawLine(text: text, width: full, delta: 0)]
+            } else if allowsDefaultTighteningForTruncation,
+                      text.unicodeScalars.count > 1 {
+                let advances = CGFloat(text.unicodeScalars.count - 1)
+                let required = (bounds.width - full) / advances
+                let minimum = -drawingFont.pointSize * 0.05
+                if required >= minimum {
+                    drawLines = [
+                        DrawLine(
+                            text: text,
+                            width: full + required * advances,
+                            delta: required
+                        )
+                    ]
+                } else {
+                    let t = TextLayout.truncate(
+                        text,
+                        font: drawingFont,
+                        maxWidth: bounds.width,
+                        mode: lineBreakMode
+                    )
+                    let w = measureWith(t.text, delta: t.delta)
+                    drawLines = [DrawLine(text: t.text, width: w, delta: t.delta)]
+                    needsClip = w > bounds.width + 1e-6
+                }
             } else {
                 let t = TextLayout.truncate(text, font: drawingFont,
                                             maxWidth: bounds.width,

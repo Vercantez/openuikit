@@ -516,6 +516,23 @@ public enum _OpenSubmitLabel: UInt8, Hashable, Sendable {
     case `continue`
 }
 
+/// Relative symbol/image sizing carried through the SwiftUI render
+/// environment. The scale applies to non-resizable images and SF Symbols;
+/// explicit frames and resizable content continue to own their dimensions.
+public enum _OpenImageScale: UInt8, Hashable, Sendable {
+    case small
+    case medium
+    case large
+
+    var factor: CGFloat {
+        switch self {
+        case .small: return 0.75
+        case .medium: return 1
+        case .large: return 1.5
+        }
+    }
+}
+
 public enum _OpenTextTruncationMode: UInt8, Hashable, Sendable {
     case head
     case middle
@@ -738,6 +755,7 @@ public typealias ContentMode = _OpenContentMode
 public typealias ButtonRole = _OpenButtonRole
 public typealias Axis = _OpenAxis
 public typealias SubmitLabel = _OpenSubmitLabel
+public typealias ImageScale = _OpenImageScale
 public typealias TextTruncationMode = _OpenTextTruncationMode
 public typealias ContentShapeKinds = _OpenContentShapeKinds
 public typealias AccessibilityActionKind = _OpenAccessibilityActionKind

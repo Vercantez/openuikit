@@ -91,10 +91,23 @@ indirect enum _OpenViewNodeKind {
     case capsule(_OpenRoundedRectangleStyle)
     case divider
     case progress
+    case slider(
+        value: Double,
+        minimum: Double,
+        maximum: Double,
+        step: Double,
+        setValue: @MainActor (Double) -> Void
+    )
     case spacer(minLength: CGFloat?)
     case hStack(children: [_OpenViewNode], alignment: VerticalAlignment, spacing: CGFloat?)
     case vStack(children: [_OpenViewNode], alignment: HorizontalAlignment, spacing: CGFloat?)
     case zStack(children: [_OpenViewNode], alignment: Alignment)
+    case grid(
+        rows: [_OpenViewNode],
+        horizontalSpacing: CGFloat?,
+        verticalSpacing: CGFloat?
+    )
+    case gridRow([_OpenViewNode])
     case button(
         label: _OpenViewNode,
         pressedLabel: _OpenViewNode?,
@@ -147,6 +160,7 @@ indirect enum _OpenViewNodeKind {
         label: _OpenViewNode,
         makeDestinationController: @MainActor () -> UIViewController
     )
+    case link(label: _OpenViewNode, destination: URL)
     case navigation(content: _OpenViewNode, configuration: _OpenNavigationConfiguration)
     case gradient(Gradient, UnitPoint, UnitPoint)
     case modified(_OpenViewNode, _OpenViewModification)
@@ -173,6 +187,40 @@ struct _OpenAlertConfiguration {
     let setIsPresented: @MainActor (Bool) -> Void
     let actions: _OpenViewNode
     let message: _OpenViewNode
+}
+
+enum _OpenPresentationKind: Equatable {
+    case sheet
+    case navigationDestination
+}
+
+/// Reference storage lets an already-presented destination adopt the newest
+/// binding closures after its parent graph re-evaluates.  It is captured by
+/// `DismissAction` across Swift's sendable boundary, while every access stays
+/// on the UI actor.
+@MainActor
+final class _OpenPresentationState: @unchecked Sendable {
+    let getIsPresented: @MainActor () -> Bool
+    let setIsPresented: @MainActor (Bool) -> Void
+
+    init(
+        getIsPresented: @escaping @MainActor () -> Bool,
+        setIsPresented: @escaping @MainActor (Bool) -> Void
+    ) {
+        self.getIsPresented = getIsPresented
+        self.setIsPresented = setIsPresented
+    }
+
+    func dismiss() {
+        setIsPresented(false)
+    }
+}
+
+struct _OpenPresentationConfiguration {
+    let identity: _OpenGraphIdentity?
+    let kind: _OpenPresentationKind
+    let state: _OpenPresentationState
+    let makeDestination: @MainActor (DismissAction) -> AnyView
 }
 
 struct _OpenSearchConfiguration {
@@ -214,6 +262,7 @@ enum _OpenViewModification {
     case font(Font?)
     case fontWeight(Font.Weight?)
     case minimumScaleFactor(CGFloat)
+    case allowsTightening(Bool)
     case foregroundColor(Color?)
     case tint(Color?)
     case opacity(CGFloat)
@@ -237,13 +286,13 @@ enum _OpenViewModification {
     case overlay(_OpenViewNode, alignment: Alignment)
     case mask(_OpenViewNode, alignment: Alignment)
     case resizable
-    case aspectRatio(ContentMode)
+    case aspectRatio(CGFloat?, ContentMode)
     case multilineTextAlignment(TextAlignment)
     case tapAction(@MainActor () -> Void)
     case simultaneousTapAction(@MainActor () -> Void)
     case gesture(_OpenGestureNode)
     case onAppear(identity: _OpenGraphIdentity?, action: @MainActor () -> Void)
-    case shadow(radius: CGFloat)
+    case shadow(color: Color, radius: CGFloat, x: CGFloat, y: CGFloat)
     case colorScheme(ColorScheme)
     case safeAreaIgnored(Edge.Set)
     case previewLayout(PreviewLayout)
@@ -274,9 +323,13 @@ enum _OpenViewModification {
     case submitLabel(SubmitLabel)
     case scrollDismissesKeyboard(ScrollDismissesKeyboardMode)
     case controlSize(ControlSize)
+    case imageScale(ImageScale)
+    case circularProgressStyle
+    case menuPickerStyle
     case symbolRenderingMode(SymbolRenderingMode?)
     case accessibilityIdentifier(String)
     case alert(_OpenAlertConfiguration)
+    case presentation(_OpenPresentationConfiguration)
     case glassEffect
     case buttonBorderShape(ButtonBorderShape)
     case accessibilityAction(name: String?, action: @MainActor () -> Void)
@@ -312,6 +365,7 @@ fileprivate enum _OpenViewModifier {
     case font(Font?)
     case fontWeight(Font.Weight?)
     case minimumScaleFactor(CGFloat)
+    case allowsTightening(Bool)
     case foregroundColor(Color?)
     case tint(Color?)
     case opacity(CGFloat)
@@ -335,13 +389,13 @@ fileprivate enum _OpenViewModifier {
     case overlay(@MainActor () -> _OpenViewNode, alignment: Alignment)
     case mask(@MainActor () -> _OpenViewNode, alignment: Alignment)
     case resizable
-    case aspectRatio(ContentMode)
+    case aspectRatio(CGFloat?, ContentMode)
     case multilineTextAlignment(TextAlignment)
     case tapAction(@MainActor () -> Void)
     case simultaneousTapAction(@MainActor () -> Void)
     case gesture(_OpenGestureNode)
     case onAppear(@MainActor () -> Void)
-    case shadow(radius: CGFloat)
+    case shadow(color: Color, radius: CGFloat, x: CGFloat, y: CGFloat)
     case colorScheme(ColorScheme)
     case safeAreaIgnored(Edge.Set)
     case previewLayout(PreviewLayout)
@@ -372,6 +426,9 @@ fileprivate enum _OpenViewModifier {
     case submitLabel(SubmitLabel)
     case scrollDismissesKeyboard(ScrollDismissesKeyboardMode)
     case controlSize(ControlSize)
+    case imageScale(ImageScale)
+    case circularProgressStyle
+    case menuPickerStyle
     case symbolRenderingMode(SymbolRenderingMode?)
     case accessibilityIdentifier(String)
     case alert(
@@ -380,6 +437,11 @@ fileprivate enum _OpenViewModifier {
         setIsPresented: @MainActor (Bool) -> Void,
         actions: @MainActor () -> _OpenViewNode,
         message: @MainActor () -> _OpenViewNode
+    )
+    case presentation(
+        kind: _OpenPresentationKind,
+        state: _OpenPresentationState,
+        makeDestination: @MainActor (DismissAction) -> AnyView
     )
     case glassEffect
     case buttonBorderShape(ButtonBorderShape)
@@ -425,6 +487,7 @@ fileprivate enum _OpenViewModifier {
         case .font(let value): return .font(value)
         case .fontWeight(let value): return .fontWeight(value)
         case .minimumScaleFactor(let value): return .minimumScaleFactor(value)
+        case .allowsTightening(let value): return .allowsTightening(value)
         case .foregroundColor(let value): return .foregroundColor(value)
         case .tint(let value): return .tint(value)
         case .opacity(let value): return .opacity(value)
@@ -463,7 +526,7 @@ fileprivate enum _OpenViewModifier {
                 alignment: alignment
             )
         case .resizable: return .resizable
-        case .aspectRatio(let value): return .aspectRatio(value)
+        case .aspectRatio(let ratio, let mode): return .aspectRatio(ratio, mode)
         case .multilineTextAlignment(let alignment):
             return .multilineTextAlignment(alignment)
         case .tapAction(let action): return .tapAction(action)
@@ -473,7 +536,8 @@ fileprivate enum _OpenViewModifier {
             return _OpenGraphContext.withStructuralScope(.onAppear) {
                 .onAppear(identity: _OpenGraphContext.currentIdentity(), action: action)
             }
-        case .shadow(let radius): return .shadow(radius: radius)
+        case .shadow(let color, let radius, let x, let y):
+            return .shadow(color: color, radius: radius, x: x, y: y)
         case .colorScheme(let scheme): return .colorScheme(scheme)
         case .safeAreaIgnored(let edges): return .safeAreaIgnored(edges)
         case .previewLayout(let value): return .previewLayout(value)
@@ -509,6 +573,9 @@ fileprivate enum _OpenViewModifier {
         case .submitLabel(let label): return .submitLabel(label)
         case .scrollDismissesKeyboard(let mode): return .scrollDismissesKeyboard(mode)
         case .controlSize(let size): return .controlSize(size)
+        case .imageScale(let scale): return .imageScale(scale)
+        case .circularProgressStyle: return .circularProgressStyle
+        case .menuPickerStyle: return .menuPickerStyle
         case .symbolRenderingMode(let mode): return .symbolRenderingMode(mode)
         case .accessibilityIdentifier(let identifier):
             return .accessibilityIdentifier(identifier)
@@ -529,6 +596,17 @@ fileprivate enum _OpenViewModifier {
                     )
                 )
             )
+        case .presentation(let kind, let state, let makeDestination):
+            return _OpenGraphContext.withStructuralScope(.presentation) {
+                .presentation(
+                    _OpenPresentationConfiguration(
+                        identity: _OpenGraphContext.currentIdentity(),
+                        kind: kind,
+                        state: state,
+                        makeDestination: makeDestination
+                    )
+                )
+            }
         case .glassEffect: return .glassEffect
         case .buttonBorderShape(let shape): return .buttonBorderShape(shape)
         case .accessibilityAction(let name, let action):
@@ -1630,6 +1708,18 @@ private func _openApplyingButtonStyle<Style: _OpenButtonStyleProtocol>(
                 alignment: alignment
             )
         )
+    case .grid(let rows, let horizontalSpacing, let verticalSpacing):
+        return _OpenViewNode(
+            .grid(
+                rows: rows.map { _openApplyingButtonStyle($0, style: style) },
+                horizontalSpacing: horizontalSpacing,
+                verticalSpacing: verticalSpacing
+            )
+        )
+    case .gridRow(let cells):
+        return _OpenViewNode(
+            .gridRow(cells.map { _openApplyingButtonStyle($0, style: style) })
+        )
     case .modified(let content, let modification):
         return _OpenViewNode(
             .modified(_openApplyingButtonStyle(content, style: style), modification)
@@ -1827,6 +1917,10 @@ public extension _OpenView {
         _OpenModifiedContent(content: self, modification: .minimumScaleFactor(factor))
     }
 
+    func allowsTightening(_ flag: Bool) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .allowsTightening(flag))
+    }
+
     func foregroundColor(_ color: Color?) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .foregroundColor(color))
     }
@@ -1955,6 +2049,32 @@ public extension _OpenView {
         )
     }
 
+    func background<Style: ShapeStyle, S: Shape>(
+        _ style: Style,
+        in shape: S
+    ) -> some _OpenView {
+        let color = style._openResolvedForegroundColor()
+        let backgroundNode: _OpenViewNode
+        if let rounded = shape as? RoundedRectangle {
+            backgroundNode = _OpenViewNode(
+                .roundedRectangle(
+                    cornerRadius: max(0, rounded.cornerRadius),
+                    style: .fill(color)
+                )
+            )
+        } else if shape is Capsule || shape is Circle {
+            backgroundNode = _OpenViewNode(.capsule(.fill(color)))
+        } else {
+            backgroundNode = _OpenViewNode(
+                .roundedRectangle(cornerRadius: 0, style: .fill(color))
+            )
+        }
+        return _OpenModifiedContent(
+            content: self,
+            modification: .background({ backgroundNode }, alignment: .center)
+        )
+    }
+
     func background<Background: _OpenView>(
         alignment: Alignment = .center,
         @_OpenViewBuilder content: () -> Background
@@ -2011,7 +2131,20 @@ public extension _OpenView {
     }
 
     func aspectRatio(contentMode: ContentMode) -> some _OpenView {
-        _OpenModifiedContent(content: self, modification: .aspectRatio(contentMode))
+        _OpenModifiedContent(content: self, modification: .aspectRatio(nil, contentMode))
+    }
+
+    func aspectRatio(
+        _ aspectRatio: CGFloat?,
+        contentMode: ContentMode
+    ) -> some _OpenView {
+        let ratio = aspectRatio.flatMap { value in
+            value.isFinite && value > 0 ? value : nil
+        }
+        return _OpenModifiedContent(
+            content: self,
+            modification: .aspectRatio(ratio, contentMode)
+        )
     }
 
     func scaledToFit() -> some _OpenView {
@@ -2041,7 +2174,24 @@ public extension _OpenView {
     }
 
     func shadow(radius: CGFloat) -> some _OpenView {
-        _OpenModifiedContent(content: self, modification: .shadow(radius: max(0, radius)))
+        shadow(color: .black.opacity(0.33), radius: radius)
+    }
+
+    func shadow(
+        color: Color = .black.opacity(0.33),
+        radius: CGFloat,
+        x: CGFloat = 0,
+        y: CGFloat = 0
+    ) -> some _OpenView {
+        _OpenModifiedContent(
+            content: self,
+            modification: .shadow(
+                color: color,
+                radius: max(0, radius),
+                x: x.isFinite ? x : 0,
+                y: y.isFinite ? y : 0
+            )
+        )
     }
 
     func colorScheme(_ colorScheme: ColorScheme) -> some _OpenView {
@@ -2284,6 +2434,25 @@ public extension _OpenView {
         _OpenModifiedContent(content: self, modification: .controlSize(size))
     }
 
+    func imageScale(_ scale: ImageScale) -> some _OpenView {
+        _OpenModifiedContent(content: self, modification: .imageScale(scale))
+    }
+
+    func progressViewStyle(
+        _ style: CircularProgressViewStyle
+    ) -> some _OpenView {
+        _ = style
+        return _OpenModifiedContent(
+            content: self,
+            modification: .circularProgressStyle
+        )
+    }
+
+    func pickerStyle(_ style: MenuPickerStyle) -> some _OpenView {
+        _ = style
+        return _OpenModifiedContent(content: self, modification: .menuPickerStyle)
+    }
+
     func menuIndicator(_ visibility: Visibility) -> some _OpenView {
         _OpenModifiedContent(content: self, modification: .menuIndicator(visibility))
     }
@@ -2343,6 +2512,76 @@ public extension _OpenView {
                 setIsPresented: { isPresented.wrappedValue = $0 },
                 actions: { alertActions?._makeOpenUIKitNode() ?? _OpenViewNode(.empty) },
                 message: { alertMessage?._makeOpenUIKitNode() ?? _OpenViewNode(.empty) }
+            )
+        )
+    }
+
+    func alert<Item: Identifiable>(
+        item: Binding<Item?>,
+        content: (Item) -> Alert
+    ) -> some _OpenView {
+        let value = item.wrappedValue
+        let alert = value.map(content)
+        return _OpenModifiedContent(
+            content: self,
+            modification: .alert(
+                title: alert?.title.content ?? "",
+                getIsPresented: { item.wrappedValue != nil },
+                setIsPresented: { presented in
+                    if !presented { item.wrappedValue = nil }
+                },
+                actions: {
+                    alert?.actionNode() ?? _OpenViewNode(.empty)
+                },
+                message: {
+                    alert?.message?._makeOpenUIKitNode() ?? _OpenViewNode(.empty)
+                }
+            )
+        )
+    }
+
+    /// Presents content in OpenUIKit's measured page-sheet controller.  The
+    /// destination is intentionally deferred until presentation, matching
+    /// SwiftUI's lifecycle and avoiding state allocation for a closed sheet.
+    func sheet<SheetContent: _OpenView>(
+        isPresented: Binding<Bool>,
+        @_OpenViewBuilder content: @escaping @MainActor () -> SheetContent
+    ) -> some _OpenView {
+        let state = _OpenPresentationState(
+            getIsPresented: { isPresented.wrappedValue },
+            setIsPresented: { isPresented.wrappedValue = $0 }
+        )
+        return _OpenModifiedContent(
+            content: self,
+            modification: .presentation(
+                kind: .sheet,
+                state: state,
+                makeDestination: { dismiss in
+                    AnyView(content().environment(\.dismiss, dismiss))
+                }
+            )
+        )
+    }
+
+    /// Drives a UIKit navigation push from a Boolean binding.  When no
+    /// navigation controller encloses the host, a full-screen presentation is
+    /// used as SwiftUI's portable fallback rather than silently doing nothing.
+    func navigationDestination<Destination: _OpenView>(
+        isPresented: Binding<Bool>,
+        @_OpenViewBuilder destination: @escaping @MainActor () -> Destination
+    ) -> some _OpenView {
+        let state = _OpenPresentationState(
+            getIsPresented: { isPresented.wrappedValue },
+            setIsPresented: { isPresented.wrappedValue = $0 }
+        )
+        return _OpenModifiedContent(
+            content: self,
+            modification: .presentation(
+                kind: .navigationDestination,
+                state: state,
+                makeDestination: { dismiss in
+                    AnyView(destination().environment(\.dismiss, dismiss))
+                }
             )
         )
     }
@@ -2564,6 +2803,15 @@ public extension _OpenView {
         )
     }
 
+    func navigationBarItems<Trailing: _OpenView>(
+        trailing: Trailing
+    ) -> some _OpenView {
+        return _OpenModifiedContent(
+            content: self,
+            modification: .toolbar { trailing._makeOpenUIKitNode() }
+        )
+    }
+
     func toolbar<ToolbarContent: _OpenView>(
         @_OpenViewBuilder content: () -> ToolbarContent
     ) -> some _OpenView {
@@ -2739,6 +2987,11 @@ public extension _OpenView {
         _OpenModifiedContent(content: self, modification: .listStyle(style))
     }
 
+    func listStyle(_ style: GroupedListStyle) -> some _OpenView {
+        _ = style
+        return _OpenModifiedContent(content: self, modification: .listStyle(.grouped))
+    }
+
     func listRowBackground<Background: _OpenView>(
         _ background: Background
     ) -> some _OpenView {
@@ -2843,6 +3096,21 @@ func _openExtractNavigationConfiguration(
     case .zStack(let children, let alignment):
         let (unwrapped, configuration) = _extractNavigationChildren(children)
         return (_OpenViewNode(.zStack(children: unwrapped, alignment: alignment)), configuration)
+    case .grid(let rows, let horizontalSpacing, let verticalSpacing):
+        let (unwrapped, configuration) = _extractNavigationChildren(rows)
+        return (
+            _OpenViewNode(
+                .grid(
+                    rows: unwrapped,
+                    horizontalSpacing: horizontalSpacing,
+                    verticalSpacing: verticalSpacing
+                )
+            ),
+            configuration
+        )
+    case .gridRow(let cells):
+        let (unwrapped, configuration) = _extractNavigationChildren(cells)
+        return (_OpenViewNode(.gridRow(unwrapped)), configuration)
     case .form(let rows):
         let (unwrapped, configuration) = _extractNavigationChildren(rows)
         return (_OpenViewNode(.form(rows: unwrapped)), configuration)

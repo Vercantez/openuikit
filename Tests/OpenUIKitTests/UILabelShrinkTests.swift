@@ -26,10 +26,44 @@ final class UILabelShrinkTests: XCTestCase {
         let label = UILabel()
         XCTAssertFalse(label.adjustsFontSizeToFitWidth)
         XCTAssertEqual(label.minimumScaleFactor, 0)
+        XCTAssertFalse(label.allowsDefaultTighteningForTruncation)
         label.adjustsFontSizeToFitWidth = true
         label.minimumScaleFactor = 0.6
         XCTAssertTrue(label.adjustsFontSizeToFitWidth)
         XCTAssertEqual(label.minimumScaleFactor, 0.6)
+    }
+
+    func testDefaultTighteningUsesBoundedTrackingBeforeTruncation() {
+        let text = "Tight label"
+        let requested = UIFont.systemFont(ofSize: 20)
+        let natural = FontEngine.measure(text, font: requested)
+        let width = natural * 0.98
+        let tightened = makeLabel(
+            text: text,
+            font: requested,
+            width: width,
+            adjusts: false,
+            minimum: 0
+        )
+        tightened.numberOfLines = 1
+        tightened.allowsDefaultTighteningForTruncation = true
+        let ordinary = makeLabel(
+            text: text,
+            font: requested,
+            width: width,
+            adjusts: false,
+            minimum: 0
+        )
+        ordinary.numberOfLines = 1
+
+        XCTAssertNotEqual(render(tightened), render(ordinary))
+        XCTAssertEqual(tightened.intrinsicContentSize, ordinary.intrinsicContentSize)
+
+        // More than five percent of the font size per inter-glyph advance
+        // fails back to normal truncation rather than crushing the label.
+        tightened.frame.size.width = natural * 0.5
+        ordinary.frame.size.width = natural * 0.5
+        XCTAssertEqual(render(tightened), render(ordinary))
     }
 
     func testDisabledAdjustmentKeepsRequestedFontAndPixels() {
