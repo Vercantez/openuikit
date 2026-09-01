@@ -271,4 +271,211 @@ MPVolumeSettingsAlertShow()
 expect(!MPVolumeSettingsAlertIsVisible(), "show still hidden")
 MPVolumeSettingsAlertHide()
 
+// MARK: - Existential witness dispatch (optional ObjC callbacks)
+
+final class OverridingPlayableDataSource: NSObject, MPPlayableContentDataSource {
+    let child = MPContentItem(identifier: "child")
+    var beganLoading = false
+    var progressAsked = false
+    var identifierAsked: String?
+
+    func numberOfChildItems(at indexPath: IndexPath) -> Int {
+        _ = indexPath
+        return 1
+    }
+
+    func contentItem(at indexPath: IndexPath) -> MPContentItem? {
+        _ = indexPath
+        return child
+    }
+
+    func beginLoadingChildItems(at indexPath: IndexPath) async throws {
+        _ = indexPath
+        beganLoading = true
+    }
+
+    func childItemsDisplayPlaybackProgress(at indexPath: IndexPath) -> Bool {
+        _ = indexPath
+        progressAsked = true
+        return true
+    }
+
+    func contentItem(forIdentifier identifier: String) async throws -> MPContentItem {
+        identifierAsked = identifier
+        return child
+    }
+}
+
+final class DefaultPlayableDataSource: NSObject, MPPlayableContentDataSource {
+    func numberOfChildItems(at indexPath: IndexPath) -> Int {
+        _ = indexPath
+        return 0
+    }
+
+    func contentItem(at indexPath: IndexPath) -> MPContentItem? {
+        _ = indexPath
+        return nil
+    }
+}
+
+final class OverridingPlayableDelegate: NSObject, MPPlayableContentDelegate {
+    var didUpdate = false
+    var queueWithoutItems = false
+    var queueWithItems: [Any]?
+    var initiated: IndexPath?
+
+    func playableContentManager(
+        _ contentManager: MPPlayableContentManager,
+        didUpdate context: MPPlayableContentManagerContext
+    ) {
+        _ = (contentManager, context)
+        didUpdate = true
+    }
+
+    func playableContentManager(
+        _ contentManager: MPPlayableContentManager,
+        initializePlaybackQueueWithCompletionHandler completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = contentManager
+        queueWithoutItems = true
+        completionHandler(nil)
+    }
+
+    func playableContentManager(
+        _ contentManager: MPPlayableContentManager,
+        initializePlaybackQueueWithContentItems contentItems: [Any]?,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = contentManager
+        queueWithItems = contentItems
+        completionHandler(nil)
+    }
+
+    func playableContentManager(
+        _ contentManager: MPPlayableContentManager,
+        initiatePlaybackOfContentItemAt indexPath: IndexPath
+    ) async throws {
+        initiated = indexPath
+    }
+}
+
+final class DefaultPlayableDelegate: NSObject, MPPlayableContentDelegate {}
+
+func runAsync(_ name: String, _ body: @escaping () async throws -> Void) {
+    let sema = DispatchSemaphore(value: 0)
+    var caught: Error?
+    Task {
+        do {
+            try await body()
+        } catch {
+            caught = error
+        }
+        sema.signal()
+    }
+    expect(sema.wait(timeout: .now() + 5) == .success, "\(name) timeout")
+    if let caught {
+        FileHandle.standardError.write(
+            Data("MEDIAPLAYER_RUNTIME_FAIL: \(name): \(caught)\n".utf8)
+        )
+        exit(1)
+    }
+}
+
+let overridingSource = OverridingPlayableDataSource()
+let defaultSource = DefaultPlayableDataSource()
+let overridingDelegate = OverridingPlayableDelegate()
+let defaultDelegate = DefaultPlayableDelegate()
+let manager = MPPlayableContentManager.shared()
+manager.dataSource = overridingSource
+manager.delegate = overridingDelegate
+
+let sourceWitness: any MPPlayableContentDataSource = manager.dataSource!
+let delegateWitness: any MPPlayableContentDelegate = manager.delegate!
+let defaultSourceWitness: any MPPlayableContentDataSource = defaultSource
+let defaultDelegateWitness: any MPPlayableContentDelegate = defaultDelegate
+let childPath = IndexPath(indexes: [0, 1])
+
+expectEqual(sourceWitness.numberOfChildItems(at: childPath), 1, "override child count")
+expect(sourceWitness.contentItem(at: childPath) === overridingSource.child, "override contentItem(at:)")
+expect(sourceWitness.childItemsDisplayPlaybackProgress(at: childPath), "override progress")
+expect(overridingSource.progressAsked, "progress override ran")
+expect(!defaultSourceWitness.childItemsDisplayPlaybackProgress(at: childPath), "default progress")
+expect(defaultSourceWitness.contentItem(at: childPath) == nil, "default contentItem(at:)")
+expectEqual(defaultSourceWitness.numberOfChildItems(at: childPath), 0, "default child count")
+
+runAsync("datasource overrides") {
+    try await sourceWitness.beginLoadingChildItems(at: childPath)
+    expect(overridingSource.beganLoading, "beginLoading override ran")
+    let fetched = try await sourceWitness.contentItem(forIdentifier: "child")
+    expect(fetched === overridingSource.child, "override contentItem(forIdentifier:)")
+    expectEqual(overridingSource.identifierAsked, "child", "identifier override ran")
+}
+
+runAsync("datasource default fail-closed") {
+    try await defaultSourceWitness.beginLoadingChildItems(at: childPath)
+    do {
+        _ = try await defaultSourceWitness.contentItem(forIdentifier: "missing")
+        expect(false, "default contentItem(forIdentifier:) must fail closed")
+    } catch let error as MPError {
+        expectEqual(error.code, .notSupported, "default identifier notSupported")
+    }
+}
+
+delegateWitness.playableContentManager(manager, didUpdate: manager.context)
+expect(overridingDelegate.didUpdate, "didUpdate override ran")
+defaultDelegateWitness.playableContentManager(manager, didUpdate: manager.context)
+
+var overrideQueueError: (any Error)? = MPError(.unknown)
+delegateWitness.playableContentManager(
+    manager,
+    initializePlaybackQueueWithCompletionHandler: { overrideQueueError = $0 }
+)
+expect(overridingDelegate.queueWithoutItems, "queue completion override ran")
+expect(overrideQueueError == nil, "override queue completion")
+
+var defaultQueueError: (any Error)?
+defaultDelegateWitness.playableContentManager(
+    manager,
+    initializePlaybackQueueWithCompletionHandler: { defaultQueueError = $0 }
+)
+expect((defaultQueueError as? MPError)?.code == .notSupported, "default queue fail-closed")
+
+let seedItems: [Any] = [overridingSource.child]
+var overrideItemsError: (any Error)? = MPError(.unknown)
+delegateWitness.playableContentManager(
+    manager,
+    initializePlaybackQueueWithContentItems: seedItems,
+    completionHandler: { overrideItemsError = $0 }
+)
+expectEqual(overridingDelegate.queueWithItems?.count, 1, "queue items override ran")
+expect(overrideItemsError == nil, "override items completion")
+
+var defaultItemsError: (any Error)?
+defaultDelegateWitness.playableContentManager(
+    manager,
+    initializePlaybackQueueWithContentItems: seedItems,
+    completionHandler: { defaultItemsError = $0 }
+)
+expect((defaultItemsError as? MPError)?.code == .notSupported, "default items fail-closed")
+
+runAsync("delegate initiate override") {
+    try await delegateWitness.playableContentManager(
+        manager,
+        initiatePlaybackOfContentItemAt: childPath
+    )
+    expectEqual(overridingDelegate.initiated, childPath, "initiate override ran")
+}
+
+runAsync("delegate initiate default fail-closed") {
+    do {
+        try await defaultDelegateWitness.playableContentManager(
+            manager,
+            initiatePlaybackOfContentItemAt: childPath
+        )
+        expect(false, "default initiatePlayback must fail closed")
+    } catch let error as MPError {
+        expectEqual(error.code, .notSupported, "default initiate notSupported")
+    }
+}
+
 print("MEDIAPLAYER_AGENT_RUNTIME_OK")

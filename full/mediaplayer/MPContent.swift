@@ -29,6 +29,9 @@ open class MPPlayableContentManagerContext: NSObject, @unchecked Sendable {
 public protocol MPPlayableContentDataSource: NSObjectProtocol {
     func numberOfChildItems(at indexPath: IndexPath) -> Int
     func contentItem(at indexPath: IndexPath) -> MPContentItem?
+    func beginLoadingChildItems(at indexPath: IndexPath) async throws
+    func childItemsDisplayPlaybackProgress(at indexPath: IndexPath) -> Bool
+    func contentItem(forIdentifier identifier: String) async throws -> MPContentItem
 }
 
 extension MPPlayableContentDataSource {
@@ -47,7 +50,25 @@ extension MPPlayableContentDataSource {
     }
 }
 
-public protocol MPPlayableContentDelegate: NSObjectProtocol {}
+public protocol MPPlayableContentDelegate: NSObjectProtocol {
+    func playableContentManager(
+        _ contentManager: MPPlayableContentManager,
+        didUpdate context: MPPlayableContentManagerContext
+    )
+    func playableContentManager(
+        _ contentManager: MPPlayableContentManager,
+        initializePlaybackQueueWithCompletionHandler completionHandler: @escaping ((any Error)?) -> Void
+    )
+    func playableContentManager(
+        _ contentManager: MPPlayableContentManager,
+        initializePlaybackQueueWithContentItems contentItems: [Any]?,
+        completionHandler: @escaping ((any Error)?) -> Void
+    )
+    func playableContentManager(
+        _ contentManager: MPPlayableContentManager,
+        initiatePlaybackOfContentItemAt indexPath: IndexPath
+    ) async throws
+}
 
 extension MPPlayableContentDelegate {
     public func playableContentManager(

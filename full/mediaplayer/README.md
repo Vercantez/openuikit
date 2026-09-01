@@ -32,8 +32,11 @@ Apple-behavioral-parity claim.
   with `MPError.notSupported`. `iPodMusicPlayer` is the same instance as
   `systemMusicPlayer`. `openToPlay` cannot launch Music.app.
 - **`MPContentItem`** and **`MPPlayableContentManager`**: local metadata.
-  `context.endpointAvailable` is `false`. Delegate playback-queue APIs fail
-  closed.
+  `context.endpointAvailable` is `false`. `MPPlayableContentDataSource` and
+  `MPPlayableContentDelegate` declare Apple's optional Objective-C callbacks as
+  protocol requirements with extension defaults, so calls through `any`
+  existentials use witness-table dispatch. Default queue/identifier/playback
+  entry points fail closed with `MPError.notSupported`.
 - **Volume-settings alert functions**: inert; `MPVolumeSettingsAlertIsVisible()`
   is always `false`.
 
@@ -64,7 +67,14 @@ publication rules, media-library authorization on a real device, Music.app
 rules are listed in `oracle-questions.tsv`. Until those are observed on an
 Apple runtime, this tranche keeps the conservative Linux behavior above.
 
-The runtime probe is `tests/agent/MediaPlayerRuntime.swift` and prints
+The isolated runtime probe is `tests/agent/MediaPlayerRuntime.swift` and prints
 `MEDIAPLAYER_AGENT_RUNTIME_OK`. Run `bash tests/acceptance/test_host.sh`
-from this directory (or from the repo root with that path) to compile the
-module, link `libMediaPlayer.dylib`, and execute the probe.
+from this directory to compile the module, link `libMediaPlayer.dylib`, and
+execute that probe. That isolated gate does **not** prove an integrated guest
+Foundation + CoreGraphics link.
+
+`tests/agent/MediaPlayerDependencyIdentity.swift` is the future EC2 client: it
+imports `Foundation`, `CoreGraphics`, and `MediaPlayer`, re-checks existential
+witness dispatch, and asserts `libMediaPlayer.dylib` is loaded. Artwork APIs
+remain unavailable until UIKit exists; this module does not define `UIImage`,
+`CGSize`, or `CGRect` lookalikes.
