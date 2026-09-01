@@ -81,6 +81,72 @@ public struct _OpenLocalizedStringKey: Equatable, ExpressibleByStringLiteral,
 
 public typealias LocalizedStringKey = _OpenLocalizedStringKey
 
+/// The complete value contract that controls how a stroked path is joined,
+/// capped, and dashed.  The renderer can consume every field without losing
+/// information; keeping this as a value (rather than an inert source shim)
+/// also lets chart marks retain their authored stroke policy until drawing.
+@frozen
+public struct _OpenStrokeStyle: Hashable, Sendable {
+    public var lineWidth: CGFloat
+    public var lineCap: OpenUIKit.CGLineCap
+    public var lineJoin: OpenUIKit.CGLineJoin
+    public var miterLimit: CGFloat
+    public var dash: [CGFloat]
+    public var dashPhase: CGFloat
+
+    public init(
+        lineWidth: CGFloat = 1,
+        lineCap: OpenUIKit.CGLineCap = .butt,
+        lineJoin: OpenUIKit.CGLineJoin = .miter,
+        miterLimit: CGFloat = 10,
+        dash: [CGFloat] = [],
+        dashPhase: CGFloat = 0
+    ) {
+        self.lineWidth = lineWidth
+        self.lineCap = lineCap
+        self.lineJoin = lineJoin
+        self.miterLimit = miterLimit
+        self.dash = dash
+        self.dashPhase = dashPhase
+    }
+
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.lineWidth == rhs.lineWidth
+            && lineCapCode(lhs.lineCap) == lineCapCode(rhs.lineCap)
+            && lineJoinCode(lhs.lineJoin) == lineJoinCode(rhs.lineJoin)
+            && lhs.miterLimit == rhs.miterLimit
+            && lhs.dash == rhs.dash
+            && lhs.dashPhase == rhs.dashPhase
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(lineWidth)
+        hasher.combine(Self.lineCapCode(lineCap))
+        hasher.combine(Self.lineJoinCode(lineJoin))
+        hasher.combine(miterLimit)
+        hasher.combine(dash)
+        hasher.combine(dashPhase)
+    }
+
+    private static func lineCapCode(_ value: OpenUIKit.CGLineCap) -> UInt8 {
+        switch value {
+        case .butt: 0
+        case .round: 1
+        case .square: 2
+        }
+    }
+
+    private static func lineJoinCode(_ value: OpenUIKit.CGLineJoin) -> UInt8 {
+        switch value {
+        case .miter: 0
+        case .round: 1
+        case .bevel: 2
+        }
+    }
+}
+
+public typealias StrokeStyle = _OpenStrokeStyle
+
 /// Type erasure retains the concrete view value and defers node construction
 /// until it enters the mounted graph, so dynamic properties keep their normal
 /// preparation and invalidation semantics.
