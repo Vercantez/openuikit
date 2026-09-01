@@ -339,8 +339,8 @@ def validate_swiftui_runtime_link(source: str) -> None:
     if missing:
         raise AssertionError(f"SwiftUI runtime-link contract drifted: {missing}")
     # Observation, SwiftUI, overlays, first-party gates, the reusable link loop,
-    # executable probe, and the eight frontier executables share this token.
-    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 20:
+    # executable probe, and the ten frontier executables share this token.
+    if source.count('"$SWIFTUI_RUNTIME_LINK_FLAG"') != 22:
         raise AssertionError("SwiftUI runtime-link scope drifted")
     swiftui_link_start = source.index("-install_name @rpath/libSwiftUI.dylib")
     swiftui_link_end = source.index(
@@ -724,6 +724,8 @@ class PackageFixture:
             "sdk",
             "modules",
             "lib",
+            "frameworks/IOKit.framework/Headers",
+            "frameworks/IOKit.framework/Modules",
             "include",
             "include/CoreImage",
             "include/COpenFoundationCore",
@@ -735,6 +737,7 @@ class PackageFixture:
             "objects",
             "resources/OpenUIKit/fonts",
             "guest-root/darwin/usr/lib",
+            "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A",
             "guest-root/host",
             "host-tools/swift/host/plugins",
             "host-tools/swift/linux",
@@ -822,6 +825,25 @@ class PackageFixture:
             root / "guest-root/host/libOpenZlibHost.so",
             "zlib host",
         )
+        write_file(
+            root / "frameworks/IOKit.framework/Headers/IOKit.h",
+            "portable IOKit ABI\n",
+        )
+        write_file(
+            root / "frameworks/IOKit.framework/Modules/module.modulemap",
+            "framework module IOKit {}\n",
+        )
+        write_file(root / "modules/IOKit.swiftmodule", "portable Swift overlay")
+        write_file(root / "frameworks/IOKit.framework/IOKit", "IOKit Mach-O")
+        write_file(
+            root
+            / "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
+            "IOKit Mach-O",
+        )
+        write_file(
+            root / "guest-root/darwin/usr/lib/swift/libswiftIOKit.dylib",
+            "open Swift IOKit overlay runtime",
+        )
         write_file(root / "guest-root/machorun", "loader")
         write_file(root / "guest-root/.manifest", "fixture-root\n")
         write_file(
@@ -880,6 +902,8 @@ class PackageFixture:
             "arm64-apple-macos15.0",
             "-sdk",
             "sdk",
+            "-F",
+            "frameworks",
             "-Xfrontend",
             "-enable-cross-import-overlays",
             "-I",
@@ -924,6 +948,11 @@ class PackageFixture:
             "15.0",
             "-syslibroot",
             "sdk",
+            "-F",
+            "frameworks",
+            "-framework",
+            "IOKit",
+            "-lswiftIOKit",
             "-Llib",
             "-lUIKit",
             "-lCoreImage",
@@ -1125,6 +1154,30 @@ class PackageFixture:
         records.extend(
             (
                 self._artifact(
+                    "framework",
+                    "IOKit",
+                    "swiftmodule",
+                    "modules/IOKit.swiftmodule",
+                ),
+                self._artifact(
+                    "include",
+                    "IOKit",
+                    "framework-header",
+                    "frameworks/IOKit.framework/Headers/IOKit.h",
+                ),
+                self._artifact(
+                    "include",
+                    "IOKit",
+                    "framework-module-map",
+                    "frameworks/IOKit.framework/Modules/module.modulemap",
+                ),
+                self._artifact(
+                    "framework",
+                    "IOKit",
+                    "c-dylib",
+                    "frameworks/IOKit.framework/IOKit",
+                ),
+                self._artifact(
                     "include",
                     "CoreImage",
                     "umbrella-header",
@@ -1258,6 +1311,22 @@ class PackageFixture:
                 "OpenFoundationInternationalization",
                 "linux-helper",
                 "guest-root/host/libOpenFoundationInternationalizationHost.so",
+            )
+        )
+        records.append(
+            self._artifact(
+                "runtime",
+                "IOKit",
+                "framework-dylib",
+                "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
+            )
+        )
+        records.append(
+            self._artifact(
+                "runtime",
+                "SwiftIOKit",
+                "overlay-dylib",
+                "guest-root/darwin/usr/lib/swift/libswiftIOKit.dylib",
             )
         )
         records.append(self._artifact("runtime", "machorun", "executable", "guest-root/machorun"))
@@ -1652,6 +1721,136 @@ class PackageContractTests(unittest.TestCase):
         write_file(fixture.root / "lib/libStale.dylib", "stale")
         refusal = run_tool("verify", "--package-root", str(fixture.root), expected=2)
         self.assertIn("artifact coverage drifted under lib", refusal.stderr)
+
+    def test_iokit_framework_identity_and_contract_are_mandatory(self) -> None:
+        fixture = self.fixture(False)
+        document = json.loads(
+            (fixture.root / "attestation/core-package.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        iokit = {
+            artifact["path"]: (artifact["category"], artifact["name"], artifact["role"])
+            for artifact in document["artifacts"]
+            if artifact["name"] == "IOKit"
+        }
+        self.assertEqual(
+            iokit,
+            {
+                "modules/IOKit.swiftmodule": (
+                    "framework",
+                    "IOKit",
+                    "swiftmodule",
+                ),
+                "frameworks/IOKit.framework/Headers/IOKit.h": (
+                    "include",
+                    "IOKit",
+                    "framework-header",
+                ),
+                "frameworks/IOKit.framework/Modules/module.modulemap": (
+                    "include",
+                    "IOKit",
+                    "framework-module-map",
+                ),
+                "frameworks/IOKit.framework/IOKit": (
+                    "framework",
+                    "IOKit",
+                    "c-dylib",
+                ),
+                "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit": (
+                    "runtime",
+                    "IOKit",
+                    "framework-dylib",
+                ),
+            },
+        )
+        self.assertEqual(
+            document["swift_compile_arguments"].count("frameworks"), 1
+        )
+        self.assertEqual(
+            document["executable_link_arguments"].count("IOKit"), 1
+        )
+        self.assertEqual(
+            document["executable_link_arguments"].count("-lswiftIOKit"), 1
+        )
+        self.assertEqual(
+            [
+                artifact["path"]
+                for artifact in document["artifacts"]
+                if artifact["name"] == "SwiftIOKit"
+            ],
+            ["guest-root/darwin/usr/lib/swift/libswiftIOKit.dylib"],
+        )
+
+        write_file(
+            fixture.root / "frameworks/IOKit.framework/Headers/Stale.h",
+            "stale",
+        )
+        refusal = run_tool(
+            "verify", "--package-root", str(fixture.root), expected=2
+        )
+        self.assertIn("artifact coverage drifted under frameworks", refusal.stderr)
+
+    def test_iokit_framework_artifacts_and_flag_pairs_are_refused_when_missing(
+        self,
+    ) -> None:
+        iokit_paths = (
+            "modules/IOKit.swiftmodule",
+            "frameworks/IOKit.framework/Headers/IOKit.h",
+            "frameworks/IOKit.framework/Modules/module.modulemap",
+            "frameworks/IOKit.framework/IOKit",
+            "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
+            "guest-root/darwin/usr/lib/swift/libswiftIOKit.dylib",
+        )
+        for relative in iokit_paths:
+            with self.subTest(relative=relative), tempfile.TemporaryDirectory() as temporary:
+                fixture = PackageFixture(Path(temporary) / "package", preview=False)
+                ledger = fixture.root / "attestation/artifacts.tsv"
+                ledger.write_text(
+                    "\n".join(
+                        line
+                        for line in ledger.read_text(encoding="utf-8").splitlines()
+                        if relative not in line
+                    )
+                    + "\n",
+                    encoding="utf-8",
+                )
+                refusal = fixture.write_manifest(expected=2)
+                self.assertIn("IOKit framework boundary artifacts", refusal.stderr)
+
+        for arguments_name, pair, diagnostic in (
+            ("compile_arguments", ["-F", "frameworks"], "framework search pair"),
+            ("link_arguments", ["-F", "frameworks"], "framework pair"),
+            ("link_arguments", ["-framework", "IOKit"], "framework pair"),
+        ):
+            with self.subTest(pair=pair), tempfile.TemporaryDirectory() as temporary:
+                fixture = PackageFixture(Path(temporary) / "package", preview=False)
+                values = getattr(fixture, arguments_name)
+                index = next(
+                    index
+                    for index in range(len(values) - 1)
+                    if values[index : index + 2] == pair
+                )
+                del values[index : index + 2]
+                response = (
+                    "compile-flags.rsp"
+                    if arguments_name == "compile_arguments"
+                    else "link-inputs.rsp"
+                )
+                (fixture.root / response).write_bytes(
+                    b"".join(token.encode() + b"\0" for token in values)
+                )
+                refusal = fixture.write_manifest(expected=2)
+                self.assertIn(diagnostic, refusal.stderr)
+
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = PackageFixture(Path(temporary) / "package", preview=False)
+            fixture.link_arguments.remove("-lswiftIOKit")
+            (fixture.root / "link-inputs.rsp").write_bytes(
+                b"".join(token.encode() + b"\0" for token in fixture.link_arguments)
+            )
+            refusal = fixture.write_manifest(expected=2)
+            self.assertIn("Swift IOKit overlay runtime", refusal.stderr)
 
     def test_unattested_host_tool_is_refused(self) -> None:
         fixture = self.fixture(False)
@@ -2050,7 +2249,7 @@ class ShellContractTests(unittest.TestCase):
             builder.count('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'), 3
         )
         self.assertEqual(
-            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 24
+            builder.count('LD_PRELOAD="$PLATFORM_HOST_PRELOAD'), 26
         )
         self.assertIn("__libcpp_mutex_lock", threading)
         self.assertIn("__libcpp_condvar_wait", threading)
@@ -3099,15 +3298,15 @@ class ShellContractTests(unittest.TestCase):
         self.assertIn("portable install ID count", source)
         self.assertIn("apple-self-load=0", source)
         self.assertIn(
-            "frontier-frameworks\\tframeworks=25\\tsources=26\\tinputs=57",
+            "frontier-frameworks\\tframeworks=26\\tsources=29\\tinputs=68",
             source,
         )
         self.assertIn(
-            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 26",
+            "frontier-source' \"$WORK/first-party-sources.pre.tsv\")\" -eq 29",
             source,
         )
         self.assertIn(
-            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 57",
+            "frontier-input' \"$WORK/first-party-sources.pre.tsv\")\" -eq 68",
             source,
         )
         self.assertIn(
@@ -3212,7 +3411,7 @@ class ShellContractTests(unittest.TestCase):
         ):
             self.assertIn(token, source)
 
-    def test_revenuecat_adservices_and_zlib_frontier_is_fail_closed_and_fixed_abi(
+    def test_revenuecat_adservices_zlib_and_iokit_frontier_is_fail_closed_and_fixed_abi(
         self,
     ) -> None:
         source = BUILDER.read_text(encoding="utf-8")
@@ -3225,6 +3424,21 @@ class ShellContractTests(unittest.TestCase):
         zlib_bridge = (REPO / "full/zlib/OpenZlibBridge.c").read_text(
             encoding="utf-8"
         )
+        iokit_header = (REPO / "full/iokit/include/IOKit.h").read_text(
+            encoding="utf-8"
+        )
+        iokit_source = (REPO / "full/iokit/IOKit.c").read_text(
+            encoding="utf-8"
+        )
+        iokit_overlay = (REPO / "full/iokit/IOKit.swift").read_text(
+            encoding="utf-8"
+        )
+        iokit_golden = (
+            REPO / "full/iokit/tests/iokit-interface-apple-2026-09-01.txt"
+        ).read_text(encoding="utf-8")
+        iokit_portable_golden = (
+            REPO / "full/iokit/tests/iokit-interface-portable-2026-09-01.txt"
+        ).read_text(encoding="utf-8")
         exact_guest = (
             REPO / "full/adservices/tests/test_revenuecat_frontier_guest.sh"
         ).read_text(encoding="utf-8")
@@ -3263,17 +3477,71 @@ class ShellContractTests(unittest.TestCase):
             '-reexport_library "$ZLIB_DARWIN"',
             "libCompression directly imports a Linux host symbol",
             "libz directly imports a Linux host symbol",
+            "/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
+            "iokit-expected-exports.txt",
+            "IOKit framework exports drifted",
+            "IOKit framework has unexpected undefined imports",
+            "IOKIT_HOST_OK matching=nil services=unsupported iterator=nil properties=nil",
+            "IOKIT_GUEST_OK matching=nil services=unsupported iterator=nil properties=nil",
+            "iokit-interface-apple.txt",
+            "iokit-interface-portable.txt",
+            '-module-name IOKit -module-link-name swiftIOKit',
+            "-import-underlying-module",
+            'record_module_family framework IOKit',
+            "-F frameworks -framework IOKit",
         ):
             self.assertIn(token, source)
+        for token in (
+            "typedef mach_port_t io_object_t",
+            "kIORegistryIterateRecursively = 0x00000001",
+            "kIORegistryIterateParents = 0x00000002",
+            "kIOReturnUnsupported ((kern_return_t)0xe00002c7u)",
+            "IOServiceGetMatchingServices",
+            "IORegistryEntrySearchCFProperty",
+        ):
+            self.assertIn(token, iokit_header)
+        for token in (
+            "return kIOReturnUnsupported;",
+            "*existing = IO_OBJECT_NULL;",
+            "return NULL;",
+        ):
+            self.assertIn(token, iokit_source)
+        self.assertNotIn("_glibc_", iokit_header + iokit_source)
+        for token in (
+            "import Foundation",
+            "public func IOBSDNameMatching(",
+            "public func IOServiceGetMatchingServices(",
+            "public func IORegistryEntrySearchCFProperty(",
+            "public var kIOReturnUnsupported: IOReturn",
+        ):
+            self.assertIn(token, iokit_overlay)
+        self.assertEqual(iokit_overlay.count("public var kIOReturn"), 52)
+        self.assertNotIn("_glibc_", iokit_overlay)
+        self.assertIn("sdk=macOS26.1,xcode=17B55", iokit_golden)
+        self.assertIn(
+            "types=mach-port:4,io-object:4,io-option:4,kern-return:4",
+            iokit_golden,
+        )
+        self.assertIn(
+            "signature-bsd=(mach_port_t,UInt32,String)->CFMutableDictionary?",
+            iokit_portable_golden,
+        )
+        self.assertTrue(iokit_portable_golden.endswith("missing=matching:nil\n"))
         for token in (
             "57043e7e0173c48d64e171944ac76a34d2467fa1",
             "72a2e1e9b6986fadca9b863d235c4a52aab38fb4",
             "f15a4f4a4cab68e397fdfff4bc6b8b64838d19b968d278650834b2a837a3258a",
             "b0998e607a77f25856f7cf65aa34248e910d7157d1215b3ae5ab974579b6ecec",
+            "247a96213f5e5f005fb1619024986b38c3c276a7852b30feec049c3d529fcea9",
             '-needed_library "$PACKAGE/lib/libAdServices.dylib"',
             '-needed_library "$PACKAGE/lib/libCompression.dylib"',
             '-needed_library "$PACKAGE/lib/libz.dylib"',
             "REVENUECAT_FRONTIER_GUEST_OK",
+            '"$REVENUECAT/Sources/Misc/MacDevice.swift"',
+            "RevenueCatIOKitRuntimeSupport.swift",
+            "/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
+            "REVENUECAT_IOKIT_UNTOUCHED_MACHO_OK",
+            "consumers=3 runtime=adservices,zlib,iokit",
         ):
             self.assertIn(token, exact_guest)
 

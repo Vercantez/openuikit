@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Compile and cold-run the exact pinned RevenueCat AdServices and zlib consumers
-# against a completed relocatable core package. Run inside the pinned ARM64
-# Linux production image; neither the package nor the vendor checkout is edited.
+# Compile and cold-run the exact pinned RevenueCat AdServices, zlib, and IOKit
+# consumers against a completed relocatable core package. Run inside the pinned
+# ARM64 Linux production image; neither the package nor the vendor checkout is
+# edited.
 
 set -euo pipefail
 export GIT_OPTIONAL_LOCKS=0
@@ -51,11 +52,14 @@ require_source Sources/Attribution/ASIdManagerProxy.swift \
     874f73d1d67762b9c849dcfe8458743de58da0afdf47599061ba7bb431cd8969
 require_source Sources/Networking/RCContainer+Compression.swift \
     b0998e607a77f25856f7cf65aa34248e910d7157d1215b3ae5ab974579b6ecec
+require_source Sources/Misc/MacDevice.swift \
+    247a96213f5e5f005fb1619024986b38c3c276a7852b30feec049c3d529fcea9
 
 python3 -B "$W/full/frameworks/core_package_manifest.py" verify \
     --package-root "$PACKAGE"
 mkdir -p "$OUTPUT/objects" "$OUTPUT/probe" \
-    "$OUTPUT/module-cache/adservices" "$OUTPUT/module-cache/zlib"
+    "$OUTPUT/module-cache/adservices" "$OUTPUT/module-cache/zlib" \
+    "$OUTPUT/module-cache/iokit"
 mapfile -d '' -t compile_arguments < "$PACKAGE/compile-flags.rsp"
 mapfile -d '' -t link_arguments < "$PACKAGE/link-inputs.rsp"
 
@@ -92,9 +96,23 @@ mapfile -d '' -t link_arguments < "$PACKAGE/link-inputs.rsp"
         -o "$OUTPUT/probe/RevenueCatZlibRuntime" \
         "$OUTPUT/objects/revenuecat-zlib.o" \
         "${link_arguments[@]}"
+
+    swiftc "${compile_arguments[@]}" -swift-version 5 -wmo \
+        -module-cache-path "$OUTPUT/module-cache/iokit" \
+        -parse-as-library -module-name RevenueCatIOKitRuntime \
+        -emit-object -o "$OUTPUT/objects/revenuecat-iokit.o" \
+        "$REVENUECAT/Sources/Misc/MacDevice.swift" \
+        "$W/full/iokit/tests/RevenueCatIOKitRuntimeSupport.swift"
+    ld64.lld-18 -dead_strip -ignore_auto_link \
+        -exported_symbol __mh_execute_header \
+        -rpath "$PACKAGE/lib" \
+        -o "$OUTPUT/probe/RevenueCatIOKitRuntime" \
+        "$OUTPUT/objects/revenuecat-iokit.o" \
+        "${link_arguments[@]}"
 )
 
-for executable in RevenueCatAttributionRuntime RevenueCatZlibRuntime; do
+for executable in RevenueCatAttributionRuntime RevenueCatZlibRuntime \
+    RevenueCatIOKitRuntime; do
     llvm-otool-18 -hv "$OUTPUT/probe/$executable" \
         | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
         || die "$executable is not an ARM64 Mach-O executable"
@@ -108,10 +126,17 @@ llvm-otool-18 -L "$OUTPUT/probe/RevenueCatZlibRuntime" \
 llvm-otool-18 -L "$OUTPUT/probe/RevenueCatZlibRuntime" \
     | grep -Fq '@rpath/libz.dylib' \
     || die 'exact gzip consumer does not load portable zlib'
+iokit_install_name=/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit
+iokit_load_count=$(llvm-otool-18 -L "$OUTPUT/probe/RevenueCatIOKitRuntime" \
+    | awk -v expected="$iokit_install_name" \
+        '$1 == expected { count++ } END { print count + 0 }')
+[ "$iokit_load_count" -eq 1 ] \
+    || die "exact MacDevice consumer IOKit load count $iokit_load_count, expected 1"
 
 guest_root=$PACKAGE/guest-root
 preload=$guest_root/host/libOpenDispatchHost.so:$guest_root/host/libOpenFoundationInternationalizationHost.so:$guest_root/host/libOpenURLTransportHost.so:$guest_root/host/libOpenRelativeTimeHost.so:$guest_root/host/libOpenCompressionHost.so:$guest_root/host/libOpenZlibHost.so
-for executable in RevenueCatAttributionRuntime RevenueCatZlibRuntime; do
+for executable in RevenueCatAttributionRuntime RevenueCatZlibRuntime \
+    RevenueCatIOKitRuntime; do
     (
         cd "$OUTPUT"
         LD_LIBRARY_PATH="$guest_root/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
@@ -128,6 +153,10 @@ grep -Fxq \
     'REVENUECAT_ZLIB_UNTOUCHED_MACHO_OK commit=57043e7 source=b0998e6 gzip=exact malformed=fail-closed bytes=77' \
     "$OUTPUT/RevenueCatZlibRuntime.log" \
     || die 'exact RevenueCat gzip marker is missing'
+grep -Fxq \
+    'REVENUECAT_IOKIT_UNTOUCHED_MACHO_OK commit=57043e7 source=247a962 registry=unavailable' \
+    "$OUTPUT/RevenueCatIOKitRuntime.log" \
+    || die 'exact RevenueCat MacDevice marker is missing'
 
 {
     printf 'format\trevenuecat-frontier-proof-v1\n'
@@ -136,6 +165,8 @@ grep -Fxq \
         "$(sha256sum "$OUTPUT/RevenueCatAttributionRuntime.log" | awk '{print $1}')"
     printf 'zlib-log\t%s\n' \
         "$(sha256sum "$OUTPUT/RevenueCatZlibRuntime.log" | awk '{print $1}')"
+    printf 'iokit-log\t%s\n' \
+        "$(sha256sum "$OUTPUT/RevenueCatIOKitRuntime.log" | awk '{print $1}')"
 } > "$OUTPUT/PROOF_COMPLETE"
-printf 'REVENUECAT_FRONTIER_GUEST_OK commit=%s consumers=2 runtime=adservices,zlib\n' \
+printf 'REVENUECAT_FRONTIER_GUEST_OK commit=%s consumers=3 runtime=adservices,zlib,iokit\n' \
     "$EXPECTED_COMMIT"

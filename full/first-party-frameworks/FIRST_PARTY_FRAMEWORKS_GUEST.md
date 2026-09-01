@@ -107,9 +107,26 @@ guest/host ABI to the pinned AArch64 Linux zlib runtime. Compression uses the
 same route split through Darwin-root `libOpenCompression.dylib`; neither
 app-rpath library directly imports ELF. The package builder validates the
 112-byte stream ABI, exact Mach-O imports/exports and routes, Apple gzip
-transcript, valid payload, and malformed-input behavior. After a package succeeds,
-`full/adservices/tests/test_revenuecat_frontier_guest.sh` compiles and runs the
-five hash-pinned RevenueCat source files without modifying the vendor checkout.
+transcript, valid payload, and malformed-input behavior.
+
+It also adds a real C `IOKit.framework` boundary plus a package-owned
+`IOKit.swiftmodule` that projects the raw Apple-shaped C ABI into portable
+Foundation's `String` and collection identities. App links resolve
+`-F frameworks -framework IOKit -lswiftIOKit` to the ARM64 Mach-O framework and
+to a complete open `libswiftIOKit.dylib` with the exact 53-symbol SDK contract.
+The framework has the system install name
+`/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit`. The six symbols
+needed by RevenueCat `MacDevice.swift` preserve the Xcode 26.1 C ABI; a separate
+portable interface transcript explicitly records the Swift projection instead
+of claiming identical reflected Foundation spellings. Because Linux has no
+Apple I/O Registry, matching/property lookups and iteration fail closed instead
+of fabricating a MAC address; neither binary has host imports or `_glibc_`
+symbols.
+
+After a package succeeds,
+`full/adservices/tests/test_revenuecat_frontier_guest.sh` compiles and runs six
+hash-pinned RevenueCat source files—including untouched `MacDevice.swift`—as
+three ARM64 Mach-O probes without modifying the vendor checkout.
 
 ## Gates
 

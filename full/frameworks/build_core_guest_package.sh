@@ -53,6 +53,12 @@ ADSERVICES_GOLDEN=$W/full/adservices/tests/adservices-interface-apple-2026-09-01
 ZLIB_ORACLE=$W/full/zlib/tests/ZlibGzipOracle.swift
 ZLIB_GOLDEN=$W/full/zlib/tests/zlib-gzip-apple-2026-09-01.txt
 ZLIB_HOST_TEST=$W/full/zlib/tests/OpenZlibHostTests.c
+IOKIT_ORACLE=$W/full/iokit/tests/IOKitInterfaceOracle.swift
+IOKIT_GOLDEN=$W/full/iokit/tests/iokit-interface-apple-2026-09-01.txt
+IOKIT_PORTABLE_GOLDEN=$W/full/iokit/tests/iokit-interface-portable-2026-09-01.txt
+IOKIT_HOST_TEST=$W/full/iokit/tests/IOKitHostTests.c
+SWIFT_IOKIT_EXPORTS=$W/full/iokit/tests/libswiftIOKit-apple-2026-09-01.exports
+SWIFT_IOKIT_HOST_TEST=$W/full/iokit/tests/OpenSwiftIOKitHostTests.c
 FIRST_PARTY_PROVENANCE_TOOL=$W/full/first-party-frameworks/first_party_provenance.py
 FIRST_PARTY_PROVENANCE_POLICY=$W/full/first-party-frameworks/first-party-provenance.json
 SDK_DANGLING_EXCLUSIONS=$W/full/frameworks/sdk_dangling_symlink_exclusions.tsv
@@ -1054,11 +1060,40 @@ append_frontier_sources() {
             done
         fi
     done
+    printf 'frontier-source\t33\tIOKit\t%s\t%s\n' \
+        full/iokit/IOKit.c "$(hash_file "$W/full/iokit/IOKit.c")" >> "$output"
+    printf 'frontier-source\t34\tIOKit\t%s\t%s\n' \
+        full/iokit/IOKit.swift \
+        "$(hash_file "$W/full/iokit/IOKit.swift")" >> "$output"
+    printf 'frontier-source\t35\tSwiftIOKitRuntime\t%s\t%s\n' \
+        full/iokit/OpenSwiftIOKitRuntime.c \
+        "$(hash_file "$W/full/iokit/OpenSwiftIOKitRuntime.c")" >> "$output"
+    iokit_inputs=(
+        full/iokit/OpenSwiftIOKitRuntime.h
+        full/iokit/include/IOKit.h
+        full/iokit/include/module.modulemap
+        full/iokit/tests/IOKitHostTests.c
+        full/iokit/tests/IOKitGuestRuntime.swift
+        full/iokit/tests/IOKitInterfaceOracle.swift
+        full/iokit/tests/OpenSwiftIOKitHostTests.c
+        full/iokit/tests/RevenueCatIOKitRuntimeSupport.swift
+        full/iokit/tests/iokit-interface-apple-2026-09-01.txt
+        full/iokit/tests/iokit-interface-portable-2026-09-01.txt
+        full/iokit/tests/libswiftIOKit-apple-2026-09-01.exports
+    )
+    for relative in "${iokit_inputs[@]}"; do
+        [ -f "$W/$relative" ] && [ ! -L "$W/$relative" ] \
+            || die "IOKit frontier input is missing or linked: $relative"
+        git -C "$W" ls-files --error-unmatch "$relative" >/dev/null \
+            || die "IOKit frontier input is not tracked: $relative"
+        printf 'frontier-input\t33\tIOKit\t%s\t%s\n' "$relative" \
+            "$(hash_file "$W/$relative")" >> "$output"
+    done
 }
 append_frontier_sources "$WORK/first-party-sources.pre.tsv"
-[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 26 ] \
+[ "$(grep -c '^frontier-source' "$WORK/first-party-sources.pre.tsv")" -eq 29 ] \
     || die 'frontier framework source count drifted'
-[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 57 ] \
+[ "$(grep -c '^frontier-input' "$WORK/first-party-sources.pre.tsv")" -eq 68 ] \
     || die 'frontier underlying input count drifted'
 
 python3 "$MANIFEST_TOOL" inventory-tree \
@@ -1207,6 +1242,7 @@ if [ "$PREVIEW_ENABLED" -eq 1 ]; then
 fi
 
 mkdir -p "$STAGE/sdk" "$STAGE/modules" "$STAGE/lib" "$STAGE/include" \
+    "$STAGE/frameworks" \
     "$STAGE/objects" "$STAGE/resources/OpenUIKit/fonts" \
     "$STAGE/guest-root" "$STAGE/probe" "$STAGE/attestation" \
     "$STAGE/host-tools/swift/host/plugins" \
@@ -1394,7 +1430,7 @@ fi
 
 MODULE_CACHE=$WORK/module-cache
 mkdir -p "$MODULE_CACHE"
-SWIFTC=(swiftc -target "$TARGET" -sdk "$STAGE/sdk"
+SWIFTC=(swiftc -target "$TARGET" -sdk "$STAGE/sdk" -F "$STAGE/frameworks"
     -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
     -Xfrontend -enable-cross-import-overlays
     -Xfrontend -disable-implicit-string-processing-module-import
@@ -1519,6 +1555,165 @@ swiftui_runtime_input=$RUNTIME/darwin$SWIFTUI_RUNTIME_INSTALL_NAME
 swiftui_runtime_actual_id=$(llvm-otool-18 -D "$swiftui_runtime_input" | tail -n 1)
 [ "$swiftui_runtime_actual_id" = "$SWIFTUI_RUNTIME_INSTALL_NAME" ] \
     || die "SwiftUI staged runtime ID $swiftui_runtime_actual_id, expected $SWIFTUI_RUNTIME_INSTALL_NAME"
+
+echo '== build and audit the fail-closed IOKit C framework boundary'
+IOKIT_INSTALL_NAME=/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit
+IOKIT_FRAMEWORK=$STAGE/frameworks/IOKit.framework
+IOKIT_FRAMEWORK_BINARY=$IOKIT_FRAMEWORK/IOKit
+IOKIT_RUNTIME_FRAMEWORK=$RUNTIME/darwin/System/Library/Frameworks/IOKit.framework
+IOKIT_RUNTIME_BINARY=$IOKIT_RUNTIME_FRAMEWORK/Versions/A/IOKit
+SWIFT_IOKIT_INSTALL_NAME=/usr/lib/swift/libswiftIOKit.dylib
+SWIFT_IOKIT_TBD=$STAGE/sdk/usr/lib/swift/libswiftIOKit.tbd
+SWIFT_IOKIT_RUNTIME=$RUNTIME/darwin$SWIFT_IOKIT_INSTALL_NAME
+mkdir -p "$IOKIT_FRAMEWORK/Headers" "$IOKIT_FRAMEWORK/Modules" \
+    "$IOKIT_RUNTIME_FRAMEWORK/Versions/A"
+cp "$W/full/iokit/include/IOKit.h" "$IOKIT_FRAMEWORK/Headers/IOKit.h"
+cp "$W/full/iokit/include/module.modulemap" \
+    "$IOKIT_FRAMEWORK/Modules/module.modulemap"
+
+clang-18 -std=c11 -O2 -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$W/full/iokit/include" "$W/full/iokit/IOKit.c" \
+    "$IOKIT_HOST_TEST" -o "$WORK/iokit-host-tests"
+"$WORK/iokit-host-tests" > "$STAGE/attestation/iokit-host-test.log"
+grep -Fxq \
+    'IOKIT_HOST_OK matching=nil services=unsupported iterator=nil properties=nil' \
+    "$STAGE/attestation/iokit-host-test.log" \
+    || die 'native IOKit fail-closed marker is missing'
+
+clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$W/full/iokit/include" -c "$W/full/iokit/IOKit.c" \
+    -o "$WORK/iokit.o"
+"${LD[@]}" -dylib -dead_strip -install_name "$IOKIT_INSTALL_NAME" \
+    -o "$IOKIT_FRAMEWORK_BINARY" "$WORK/iokit.o"
+cp "$IOKIT_FRAMEWORK_BINARY" "$IOKIT_RUNTIME_BINARY"
+ln -s A "$IOKIT_RUNTIME_FRAMEWORK/Versions/Current"
+ln -s Versions/Current/IOKit "$IOKIT_RUNTIME_FRAMEWORK/IOKit"
+
+printf '%s\n' \
+    _IOBSDNameMatching \
+    _IOIteratorNext \
+    _IOObjectRelease \
+    _IORegistryEntryCreateCFProperty \
+    _IORegistryEntrySearchCFProperty \
+    _IOServiceGetMatchingServices \
+    > "$WORK/iokit-expected-exports.txt"
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$IOKIT_FRAMEWORK_BINARY" | LC_ALL=C sort -u \
+    > "$WORK/iokit-exports.txt"
+cmp "$WORK/iokit-expected-exports.txt" "$WORK/iokit-exports.txt" \
+    || die 'IOKit framework exports drifted'
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$IOKIT_FRAMEWORK_BINARY" | LC_ALL=C sort -u \
+    > "$WORK/iokit-imports.txt"
+[ ! -s "$WORK/iokit-imports.txt" ] \
+    || die 'IOKit framework has unexpected undefined imports'
+iokit_external_loads=$(llvm-otool-18 -L "$IOKIT_FRAMEWORK_BINARY" \
+    | awk 'NR > 2 { count++ } END { print count + 0 }')
+[ "$iokit_external_loads" -eq 0 ] \
+    || die "IOKit framework external load count $iokit_external_loads, expected 0"
+for iokit_binary in "$IOKIT_FRAMEWORK_BINARY" "$IOKIT_RUNTIME_BINARY"; do
+    llvm-otool-18 -hv "$iokit_binary" \
+        | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
+        || die "IOKit framework is not an ARM64 Mach-O dylib: $iokit_binary"
+    [ "$(llvm-otool-18 -D "$iokit_binary" | tail -n 1)" = \
+        "$IOKIT_INSTALL_NAME" ] \
+        || die "IOKit framework install name drifted: $iokit_binary"
+done
+cmp "$IOKIT_FRAMEWORK_BINARY" "$IOKIT_RUNTIME_BINARY" \
+    || die 'IOKit compile/runtime framework copies differ'
+{
+    printf 'format\tiokit-framework-v1\n'
+    printf 'compile-framework\tframeworks/IOKit.framework/IOKit\tsha256=%s\n' \
+        "$(hash_file "$IOKIT_FRAMEWORK_BINARY")"
+    printf 'runtime-framework\tguest-root/darwin%s\tsha256=%s\n' \
+        "$IOKIT_INSTALL_NAME" "$(hash_file "$IOKIT_RUNTIME_BINARY")"
+    printf 'install-name\t%s\n' "$IOKIT_INSTALL_NAME"
+    printf 'architecture\tarm64\n'
+    printf 'exports\tcount=6\tsha256=%s\n' \
+        "$(hash_file "$WORK/iokit-exports.txt")"
+    printf 'undefined-imports\tcount=0\n'
+    printf 'external-loads\tcount=0\n'
+    printf 'policy\tmatching=nil\tservices=unsupported\titerator=nil\tproperties=nil\n'
+} > "$STAGE/attestation/iokit-framework.tsv"
+printf 'local\tdarwin%s\t%s\tbuilt from full/iokit/IOKit.c\n' \
+    "$IOKIT_INSTALL_NAME" "$(hash_file "$IOKIT_RUNTIME_BINARY")" \
+    >> "$RUNTIME/.manifest"
+
+echo '== build and audit the complete open Swift IOKit overlay runtime'
+[ -f "$SWIFT_IOKIT_TBD" ] && [ ! -L "$SWIFT_IOKIT_TBD" ] \
+    || die 'SDK libswiftIOKit TBD is missing or linked'
+grep -Fxq "install-name:    '$SWIFT_IOKIT_INSTALL_NAME'" "$SWIFT_IOKIT_TBD" \
+    || die 'SDK libswiftIOKit TBD install name drifted'
+python3 -B - "$SWIFT_IOKIT_TBD" "$WORK/swift-iokit-tbd-exports.txt" <<'PY'
+from pathlib import Path
+import re
+import sys
+
+source = Path(sys.argv[1]).read_text(encoding="utf-8")
+symbols = sorted(
+    set(
+        symbol
+        for symbol in re.findall(r"'([^']+)'", source)
+        if symbol.startswith("_$s5IOKit")
+        or symbol == "__swift_FORCE_LOAD_$_swiftIOKit"
+    )
+)
+Path(sys.argv[2]).write_text("\n".join(symbols) + "\n", encoding="utf-8")
+PY
+cmp "$SWIFT_IOKIT_EXPORTS" "$WORK/swift-iokit-tbd-exports.txt" \
+    || die 'tracked libswiftIOKit export contract differs from the SDK TBD'
+
+clang-18 -std=c11 -O2 -fvisibility=hidden -Wall -Wextra -Werror \
+    -I "$W/full/iokit" "$W/full/iokit/OpenSwiftIOKitRuntime.c" \
+    "$SWIFT_IOKIT_HOST_TEST" -o "$WORK/swift-iokit-host-tests"
+"$WORK/swift-iokit-host-tests" \
+    > "$STAGE/attestation/swift-iokit-host-test.log"
+grep -Fxq 'SWIFT_IOKIT_HOST_OK constants=52 unsupported=0xe00002c7' \
+    "$STAGE/attestation/swift-iokit-host-test.log" \
+    || die 'native Swift IOKit overlay-runtime marker is missing'
+
+clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
+    -fvisibility=hidden -Wall -Wextra -Werror -I "$W/full/iokit" \
+    -c "$W/full/iokit/OpenSwiftIOKitRuntime.c" \
+    -o "$WORK/swift-iokit-runtime.o"
+"${LD[@]}" -dylib -dead_strip -install_name "$SWIFT_IOKIT_INSTALL_NAME" \
+    -o "$SWIFT_IOKIT_RUNTIME" "$WORK/swift-iokit-runtime.o"
+llvm-nm-18 --defined-only --extern-only --just-symbol-name \
+    "$SWIFT_IOKIT_RUNTIME" | LC_ALL=C sort -u \
+    > "$WORK/swift-iokit-runtime-exports.txt"
+cmp "$SWIFT_IOKIT_EXPORTS" "$WORK/swift-iokit-runtime-exports.txt" \
+    || die 'open libswiftIOKit exports differ from the complete SDK contract'
+llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$SWIFT_IOKIT_RUNTIME" | LC_ALL=C sort -u \
+    > "$WORK/swift-iokit-runtime-imports.txt"
+[ ! -s "$WORK/swift-iokit-runtime-imports.txt" ] \
+    || die 'open libswiftIOKit has unexpected undefined imports'
+swift_iokit_external_loads=$(llvm-otool-18 -L "$SWIFT_IOKIT_RUNTIME" \
+    | awk 'NR > 2 { count++ } END { print count + 0 }')
+[ "$swift_iokit_external_loads" -eq 0 ] \
+    || die "open libswiftIOKit external load count $swift_iokit_external_loads, expected 0"
+llvm-otool-18 -hv "$SWIFT_IOKIT_RUNTIME" \
+    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
+    || die 'open libswiftIOKit is not an ARM64 Mach-O dylib'
+[ "$(llvm-otool-18 -D "$SWIFT_IOKIT_RUNTIME" | tail -n 1)" = \
+    "$SWIFT_IOKIT_INSTALL_NAME" ] \
+    || die 'open libswiftIOKit install name drifted'
+{
+    printf 'format\tswift-iokit-runtime-v1\n'
+    printf 'runtime\tguest-root/darwin%s\tsha256=%s\n' \
+        "$SWIFT_IOKIT_INSTALL_NAME" "$(hash_file "$SWIFT_IOKIT_RUNTIME")"
+    printf 'link-input\tsdk/usr/lib/swift/libswiftIOKit.tbd\tsha256=%s\n' \
+        "$(hash_file "$SWIFT_IOKIT_TBD")"
+    printf 'exports\tcount=53\tsha256=%s\n' \
+        "$(hash_file "$WORK/swift-iokit-runtime-exports.txt")"
+    printf 'constants\tcount=52\tapple-differential=exact\n'
+    printf 'undefined-imports\tcount=0\n'
+    printf 'external-loads\tcount=0\n'
+} > "$STAGE/attestation/swift-iokit-runtime.tsv"
+printf 'local\tdarwin%s\t%s\tbuilt from full/iokit/OpenSwiftIOKitRuntime.c\n' \
+    "$SWIFT_IOKIT_INSTALL_NAME" "$(hash_file "$SWIFT_IOKIT_RUNTIME")" \
+    >> "$RUNTIME/.manifest"
 
 echo '== build and audit the fixed-ABI Linux URL transport boundary'
 URL_TRANSPORT_DARWIN=$RUNTIME/darwin/usr/lib/libOpenURLTransport.dylib
@@ -2455,6 +2650,13 @@ printf 'Foundation facade direct undefineds: StringProcessing=%s Synchronization
     "$foundation_synchronization_undefineds" \
     "$foundation_regex_parser_undefineds" \
     "$foundation_darwin_undefineds"
+
+echo '== compile the package-owned Swift IOKit overlay against portable Foundation'
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name IOKit -module-link-name swiftIOKit \
+    -import-underlying-module \
+    -emit-module -emit-module-path "$STAGE/modules/IOKit.swiftmodule" \
+    "$W/full/iokit/IOKit.swift"
 
 echo '== compile SwiftUI against the app-facing Foundation facade'
 mapfile -d '' -t SWIFTUI_SOURCES < <(
@@ -3675,7 +3877,7 @@ echo '== typecheck an ordinary IceCubes PhotosUI/SwiftUI cross-import consumer'
     -module-name IceCubesPhotosUIConsumer -typecheck \
     "$W/full/photosui/tests/IceCubesPhotosUIConsumer.swift"
 
-echo '== compile/link/run Accelerate, Compression, CoreText, AdServices, and zlib frontier gates'
+echo '== compile/link/run Accelerate, Compression, CoreText, AdServices, zlib, and IOKit frontier gates'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
     -module-name AccelerateGuestRuntime -emit-object \
     -o "$WORK/accelerate-guest-runtime.o" \
@@ -3761,9 +3963,36 @@ echo '== compile/link/run Accelerate, Compression, CoreText, AdServices, and zli
     -lz -lFoundation -lFoundationEssentials \
     "$SWIFTUI_RUNTIME_LINK_FLAG"
 
+"${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name IOKitGuestRuntime -emit-object \
+    -o "$WORK/iokit-guest-runtime.o" \
+    "$W/full/iokit/tests/IOKitGuestRuntime.swift"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/IOKitGuestRuntime" \
+    "$WORK/iokit-guest-runtime.o" "${COMMON_LINK[@]}" \
+    "$IOKIT_FRAMEWORK_BINARY" \
+    -lswiftIOKit \
+    -lFoundation -lFoundationInternationalization -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG" "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+
+"${SWIFTC[@]}" -D PORTABLE_IOKIT -parse-as-library \
+    "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
+    -module-name IOKitInterfaceOracle -emit-object \
+    -o "$WORK/iokit-interface-oracle.o" "$IOKIT_ORACLE"
+"${LD[@]}" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header -rpath @loader_path/../lib \
+    -o "$STAGE/probe/IOKitInterfaceOracle" \
+    "$WORK/iokit-interface-oracle.o" "${COMMON_LINK[@]}" \
+    "$IOKIT_FRAMEWORK_BINARY" \
+    -lswiftIOKit \
+    -lFoundation -lFoundationInternationalization -lFoundationEssentials \
+    "$SWIFTUI_RUNTIME_LINK_FLAG" "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}"
+
 for frontier_probe in AccelerateGuestRuntime CompressionGuestRuntime \
     CoreTextGuestRuntime CoreTextFontManagerOracle AdServicesGuestRuntime \
-    AdServicesInterfaceOracle ZlibGuestRuntime ZlibGzipOracle; do
+    AdServicesInterfaceOracle ZlibGuestRuntime ZlibGzipOracle \
+    IOKitGuestRuntime IOKitInterfaceOracle; do
     llvm-otool-18 -hv "$STAGE/probe/$frontier_probe" \
         | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
         || die "$frontier_probe is not an ARM64 Mach-O executable"
@@ -3779,6 +4008,22 @@ cp "$ADSERVICES_GOLDEN" "$STAGE/attestation/adservices-interface-apple.txt"
 cp "$ZLIB_GOLDEN" "$STAGE/attestation/zlib-gzip-apple.txt"
 cp "$WORK/zlib-native-oracle.log" \
     "$STAGE/attestation/zlib-native-oracle.log"
+cp "$IOKIT_GOLDEN" "$STAGE/attestation/iokit-interface-apple.txt"
+cp "$IOKIT_PORTABLE_GOLDEN" \
+    "$STAGE/attestation/iokit-interface-portable.txt"
+
+for iokit_probe in IOKitGuestRuntime IOKitInterfaceOracle; do
+    iokit_load_count=$(llvm-otool-18 -L "$STAGE/probe/$iokit_probe" \
+        | awk -v expected="$IOKIT_INSTALL_NAME" \
+            '$1 == expected { count++ } END { print count + 0 }')
+    [ "$iokit_load_count" -eq 1 ] \
+        || die "$iokit_probe IOKit framework load count $iokit_load_count, expected 1"
+    swift_iokit_load_count=$(llvm-otool-18 -L "$STAGE/probe/$iokit_probe" \
+        | awk -v expected="$SWIFT_IOKIT_INSTALL_NAME" \
+            '$1 == expected { count++ } END { print count + 0 }')
+    [ "$swift_iokit_load_count" -eq 1 ] \
+        || die "$iokit_probe Swift IOKit runtime load count $swift_iokit_load_count, expected 1"
+done
 
 (
     cd "$STAGE"
@@ -3876,6 +4121,32 @@ grep -Fxq \
 cmp "$STAGE/attestation/zlib-gzip-runtime.log" \
     "$STAGE/attestation/zlib-gzip-apple.txt" \
     || die 'zlib gzip guest output differs from Apple'
+
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/IOKitGuestRuntime
+) | tee "$STAGE/attestation/iokit-runtime.log"
+grep -Fxq \
+    'IOKIT_GUEST_OK matching=nil services=unsupported iterator=nil properties=nil' \
+    "$STAGE/attestation/iokit-runtime.log" \
+    || die 'IOKit Mach-O runtime marker is missing'
+
+(
+    cd "$STAGE"
+    LD_LIBRARY_PATH="$RUNTIME/host${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+        MACHORUN_ROOT="$RUNTIME" \
+        "$RUNTIME/machorun" ./probe/IOKitInterfaceOracle
+) | tee "$STAGE/attestation/iokit-interface-runtime.log"
+cmp "$STAGE/attestation/iokit-interface-runtime.log" \
+    "$STAGE/attestation/iokit-interface-portable.txt" \
+    || die 'IOKit portable Swift overlay interface or policy drifted'
+tail -n 1 "$STAGE/attestation/iokit-interface-runtime.log" \
+    | grep -Fxq 'missing=matching:nil' \
+    || die 'IOKit portable missing-device policy is not fail-closed'
 
 echo '== compile/link/run the core package probe'
 "${SWIFTC[@]}" -parse-as-library "${C_FLAGS[@]}" "${FE_FLAGS[@]}" \
@@ -4174,6 +4445,7 @@ echo 'FOUNDATION_BYTE_COUNT_MACHO_OK rows=86 apple-differential=exact'
 echo '== write relocatable compile/link contracts'
 COMPILE_ARGUMENTS=(
     -target "$TARGET" -sdk sdk -runtime-compatibility-version none
+    -F frameworks
     -Xfrontend -enable-cross-import-overlays
     -Xfrontend -disable-implicit-string-processing-module-import
     -Xfrontend -disable-objc-attr-requires-foundation-module
@@ -4213,8 +4485,9 @@ COMPILE_ARGUMENTS=(
 )
 LINK_ARGUMENTS=(
     -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS" -syslibroot sdk
+    -F frameworks -framework IOKit
     -Llib -Lguest-root/darwin/usr/lib -Lsdk/usr/lib/swift
-    -lswiftCore -lswiftObjectiveC "${SWIFTUI_RUNTIME_LINK_FLAG}"
+    -lswiftCore -lswiftObjectiveC -lswiftIOKit "${SWIFTUI_RUNTIME_LINK_FLAG}"
     guest-root/darwin/usr/lib/swift/libswiftObservation.dylib
     guest-root/darwin/usr/lib/libswiftcompat.dylib
     -Lsdk/usr/lib -lSystem -lobjc
@@ -4393,7 +4666,7 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'foundation-byte-count\toracle=%s\tapple-golden=%s\trows=86\n' \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_ORACLE")" \
         "$(hash_file "$FOUNDATION_BYTE_COUNT_GOLDEN")"
-    printf 'frontier-frameworks\tframeworks=25\tsources=26\tinputs=57\n'
+    printf 'frontier-frameworks\tframeworks=26\tsources=29\tinputs=68\n'
     printf 'quicklook-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'photosui-overlay\tsources=1\tcross-import-metadata=1\n'
     printf 'relative-time\theader=%s\tbridge=%s\thost=%s\thost-tests=%s\n' \
@@ -4434,6 +4707,18 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$(hash_file "$W/full/zlib/OpenZlibBridge.c")" \
         "$(hash_file "$W/full/zlib/OpenZlibHost.c")" \
         "$(hash_file "$ZLIB_GOLDEN")"
+    printf 'iokit\theader=%s\tmodule-map=%s\tc=%s\tswift-overlay=%s\thost-tests=%s\toracle=%s\tapple-golden=%s\tportable-golden=%s\tswift-runtime=%s\tswift-runtime-header=%s\tswift-runtime-exports=%s\tpolicy=fail-closed\n' \
+        "$(hash_file "$W/full/iokit/include/IOKit.h")" \
+        "$(hash_file "$W/full/iokit/include/module.modulemap")" \
+        "$(hash_file "$W/full/iokit/IOKit.c")" \
+        "$(hash_file "$W/full/iokit/IOKit.swift")" \
+        "$(hash_file "$IOKIT_HOST_TEST")" \
+        "$(hash_file "$IOKIT_ORACLE")" \
+        "$(hash_file "$IOKIT_GOLDEN")" \
+        "$(hash_file "$IOKIT_PORTABLE_GOLDEN")" \
+        "$(hash_file "$W/full/iokit/OpenSwiftIOKitRuntime.c")" \
+        "$(hash_file "$W/full/iokit/OpenSwiftIOKitRuntime.h")" \
+        "$(hash_file "$SWIFT_IOKIT_EXPORTS")"
     printf 'toolchain\tswiftc\t%s\n' "$(swiftc --version | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
     printf 'toolchain\tclang\t%s\n' "$(clang-18 --version | head -1)"
     [ "$PREVIEW_ENABLED" -eq 0 ] || printf 'preview\tmodule=%s\tobject=%s\tplugin=%s\n' \
@@ -4523,6 +4808,12 @@ record_artifact include COpenZlib module-map \
     include/COpenZlib/module.modulemap
 record_artifact include zlib abi-header include/zlib/zlib.h
 record_artifact include zlib module-map include/zlib/module.modulemap
+record_artifact include IOKit framework-header \
+    frameworks/IOKit.framework/Headers/IOKit.h
+record_artifact include IOKit framework-module-map \
+    frameworks/IOKit.framework/Modules/module.modulemap
+record_artifact framework IOKit c-dylib frameworks/IOKit.framework/IOKit
+record_module_family framework IOKit
 record_artifact include COpenFoundationCore opaque-header \
     include/COpenFoundationCore/OpenFoundationCFError.h
 record_artifact include COpenFoundationCore module-map \
@@ -4561,6 +4852,10 @@ record_artifact runtime zlib darwin-dylib lib/libz.dylib
 record_artifact runtime zlib darwin-bridge \
     guest-root/darwin/usr/lib/libOpenZlib.dylib
 record_artifact runtime zlib linux-helper guest-root/host/libOpenZlibHost.so
+record_artifact runtime IOKit framework-dylib \
+    guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit
+record_artifact runtime SwiftIOKit overlay-dylib \
+    guest-root/darwin/usr/lib/swift/libswiftIOKit.dylib
 record_artifact runtime OpenFoundationInternationalization darwin-bridge \
     guest-root/darwin/usr/lib/libOpenFoundationInternationalization.dylib
 record_artifact runtime OpenFoundationInternationalization linux-helper \
@@ -4609,6 +4904,9 @@ record_artifact probe AdServicesInterfaceOracle executable \
     probe/AdServicesInterfaceOracle
 record_artifact probe ZlibGuestRuntime executable probe/ZlibGuestRuntime
 record_artifact probe ZlibGzipOracle executable probe/ZlibGzipOracle
+record_artifact probe IOKitGuestRuntime executable probe/IOKitGuestRuntime
+record_artifact probe IOKitInterfaceOracle executable \
+    probe/IOKitInterfaceOracle
 record_artifact probe DispatchMachORuntime executable \
     probe/DispatchMachORuntime
 record_artifact probe SwiftUIFoundationReexportProbe executable \
@@ -4680,6 +4978,21 @@ record_artifact attestation zlib native-oracle-log \
 record_artifact attestation zlib runtime-log attestation/zlib-runtime.log
 record_artifact attestation zlib apple-differential-log \
     attestation/zlib-gzip-runtime.log
+record_artifact attestation IOKit apple-golden \
+    attestation/iokit-interface-apple.txt
+record_artifact attestation IOKit portable-golden \
+    attestation/iokit-interface-portable.txt
+record_artifact attestation IOKit framework-contract \
+    attestation/iokit-framework.tsv
+record_artifact attestation IOKit host-test-log \
+    attestation/iokit-host-test.log
+record_artifact attestation SwiftIOKit runtime-contract \
+    attestation/swift-iokit-runtime.tsv
+record_artifact attestation SwiftIOKit host-test-log \
+    attestation/swift-iokit-host-test.log
+record_artifact attestation IOKit runtime-log attestation/iokit-runtime.log
+record_artifact attestation IOKit portable-interface-log \
+    attestation/iokit-interface-runtime.log
 record_artifact attestation dispatch host \
     attestation/open-dispatch-host.tsv
 record_artifact attestation dispatch host-test-log \

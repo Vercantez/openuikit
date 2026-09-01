@@ -29,6 +29,8 @@ class CoreGuestPackageTests(unittest.TestCase):
             "sdk",
             "modules",
             "lib",
+            "frameworks/IOKit.framework/Headers",
+            "frameworks/IOKit.framework/Modules",
             "include",
             "include/CPortableIO",
             "include/CoreImage",
@@ -40,6 +42,8 @@ class CoreGuestPackageTests(unittest.TestCase):
             "objects",
             "resources/OpenUIKit/fonts",
             "guest-root/darwin/usr/lib",
+            "guest-root/darwin/usr/lib/swift",
+            "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A",
             "guest-root/host",
             "guest-root",
             "host-tools/swift/host/plugins",
@@ -73,6 +77,12 @@ class CoreGuestPackageTests(unittest.TestCase):
             "lib/libz.dylib",
             "guest-root/darwin/usr/lib/libOpenZlib.dylib",
             "guest-root/host/libOpenZlibHost.so",
+            "frameworks/IOKit.framework/Headers/IOKit.h",
+            "frameworks/IOKit.framework/Modules/module.modulemap",
+            "frameworks/IOKit.framework/IOKit",
+            "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
+            "guest-root/darwin/usr/lib/swift/libswiftIOKit.dylib",
+            "modules/IOKit.swiftmodule",
             "host-tools/swift/host/plugins/libObservationMacros.so",
             "host-tools/swift/host/plugins/libFoundationMacros.so",
             "host-tools/swift/host/plugins/libSwiftDataMacros.so",
@@ -302,6 +312,18 @@ class CoreGuestPackageTests(unittest.TestCase):
                 category, name, role = "host-tool", "CompilerPluginClosure", "dependency"
             elif relative.startswith("guest-root/host/"):
                 category, name, role = "host-tool", "OpenCompressionHost", "runtime"
+            elif relative == "frameworks/IOKit.framework/Headers/IOKit.h":
+                category, name, role = "include", "IOKit", "framework-header"
+            elif relative == "frameworks/IOKit.framework/Modules/module.modulemap":
+                category, name, role = "include", "IOKit", "framework-module-map"
+            elif relative == "frameworks/IOKit.framework/IOKit":
+                category, name, role = "framework", "IOKit", "c-dylib"
+            elif relative.endswith("/IOKit.framework/Versions/A/IOKit"):
+                category, name, role = "runtime", "IOKit", "framework-dylib"
+            elif relative.endswith("/usr/lib/swift/libswiftIOKit.dylib"):
+                category, name, role = "runtime", "SwiftIOKit", "overlay-dylib"
+            elif relative == "modules/IOKit.swiftmodule":
+                category, name, role = "framework", "IOKit", "swiftmodule"
             artifacts.append(
                 {
                     "category": category,
@@ -324,6 +346,11 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "/usr/lib/swift",
                 "-rpath",
                 "@executable_path/../Frameworks",
+                "-F",
+                "frameworks",
+                "-framework",
+                "IOKit",
+                "-lswiftIOKit",
                 "-Llib",
                 "-lFoundationEssentials",
                 "-lOpenCoreGraphics",
@@ -396,6 +423,7 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "host_tools": "host-tools",
                 "includes": "include",
                 "libraries": "lib",
+                "frameworks": "frameworks",
                 "modules": "modules",
                 "objects": "objects",
                 "resources": "resources/OpenUIKit",
@@ -415,6 +443,8 @@ class CoreGuestPackageTests(unittest.TestCase):
                 "arm64-apple-macos15.0",
                 "-sdk",
                 "sdk",
+                "-F",
+                "frameworks",
                 "-Xfrontend",
                 "-enable-cross-import-overlays",
                 "-load-plugin-library",
@@ -505,6 +535,9 @@ class CoreGuestPackageTests(unittest.TestCase):
         self.assertEqual(
             arguments[arguments.index("-I") + 1], os.fspath(root / "modules")
         )
+        self.assertEqual(
+            arguments[arguments.index("-F") + 1], os.fspath(root / "frameworks")
+        )
         for plugin in self.manifest["compiler_plugins"]:
             self.assertEqual(arguments.count(os.fspath(root / plugin["path"])), 1)
         self.assertIn(f"-I{root}/include/CPortableIO", arguments)
@@ -545,6 +578,72 @@ class CoreGuestPackageTests(unittest.TestCase):
             "does not attest every required artifact: host-tools/swift/host/libStale.so",
         ):
             core_guest_package.validate(self.root)
+
+    def test_refuses_missing_or_unattested_iokit_framework(self) -> None:
+        for relative in (
+            "modules/IOKit.swiftmodule",
+            "frameworks/IOKit.framework/Headers/IOKit.h",
+            "frameworks/IOKit.framework/Modules/module.modulemap",
+            "frameworks/IOKit.framework/IOKit",
+            "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
+            "guest-root/darwin/usr/lib/swift/libswiftIOKit.dylib",
+        ):
+            with self.subTest(relative=relative):
+                changed = copy.deepcopy(self.manifest)
+                changed["artifacts"] = [
+                    artifact
+                    for artifact in changed["artifacts"]
+                    if artifact["path"] != relative
+                ]
+                target = self.root / relative
+                payload = target.read_bytes()
+                target.unlink()
+                self.write_manifest(changed)
+                with self.assertRaisesRegex(
+                    core_guest_package.CorePackageError, "required artifact"
+                ):
+                    core_guest_package.validate(self.root)
+                target.write_bytes(payload)
+                self.write_manifest(self.manifest)
+
+        stale = self.root / "frameworks/IOKit.framework/Headers/Stale.h"
+        stale.write_bytes(b"stale\n")
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError,
+            "does not attest every required artifact: .*Stale.h",
+        ):
+            core_guest_package.validate(self.root)
+
+    def test_refuses_missing_iokit_compile_or_link_pair(self) -> None:
+        for key, pair in (
+            ("swift_compile_arguments", ["-F", "frameworks"]),
+            ("executable_link_arguments", ["-F", "frameworks"]),
+            ("executable_link_arguments", ["-framework", "IOKit"]),
+        ):
+            with self.subTest(key=key, pair=pair):
+                changed = copy.deepcopy(self.manifest)
+                values = changed[key]
+                index = next(
+                    index
+                    for index in range(len(values) - 1)
+                    if values[index : index + 2] == pair
+                )
+                del values[index : index + 2]
+                self.write_manifest(changed)
+                with self.assertRaisesRegex(
+                    core_guest_package.CorePackageError, "IOKit framework"
+                ):
+                    core_guest_package.validate(self.root)
+                self.write_manifest(self.manifest)
+
+        changed = copy.deepcopy(self.manifest)
+        changed["executable_link_arguments"].remove("-lswiftIOKit")
+        self.write_manifest(changed)
+        with self.assertRaisesRegex(
+            core_guest_package.CorePackageError, "Swift IOKit.*runtime"
+        ):
+            core_guest_package.validate(self.root)
+        self.write_manifest(self.manifest)
 
     def test_refuses_artifact_mutation_and_path_symlink(self) -> None:
         (self.root / "lib/libUIKit.dylib").write_text("changed\n", encoding="utf-8")

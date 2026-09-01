@@ -17,9 +17,12 @@ UniformTypeIdentifiers, SwiftData, UserNotifications, QuickLook, and its
 `_QuickLook_SwiftUI` cross-import overlay, CoreMedia, AVFoundation, AVKit,
 Charts, CoreTransferable, Photos, PhotosUI, and the `_PhotosUI_SwiftUI`
 cross-import overlay, Accelerate, Compression, CoreText, and AdServices. The
-app-facing `zlib` Clang module is backed by a separate `libz.dylib`. Together
-these are fifty-two reusable ARM64 Mach-O platform binaries (fifty frameworks,
-ICU, and zlib), including real
+app-facing `zlib` Clang module is backed by a separate `libz.dylib`. IOKit is a
+package-owned Swift overlay over a package-owned `IOKit.framework` C module and
+dylib, with its complete 53-symbol Apple Swift runtime contract supplied by a
+separate `libswiftIOKit.dylib`. Together these are fifty-four reusable ARM64
+Mach-O platform binaries (fifty Swift framework dylibs, IOKit,
+`libswiftIOKit`, ICU, and zlib), including real
 `libDispatch.dylib`, `libSymbols.dylib`, and `libSwiftUI.dylib`,
 `libCoreImage.dylib`, and
 `libQuartzCore.dylib` boundaries; they are not application-side source
@@ -60,9 +63,10 @@ The semantic build order is deliberate:
    final app-facing UIKit module.
 3. Build the portable Dispatch module, OpenCombine, Combine, and the
    first-party Symbols value model while Foundation is hidden.
-4. Compile the ordered app-facing Foundation facade, then compile SwiftUI
-   against that facade so SwiftUI publicly re-exports its overlays and
-   portable Dispatch identity while consuming Symbols.
+4. Compile the ordered app-facing Foundation facade, the package-owned IOKit
+   Swift overlay, and then SwiftUI against that facade so SwiftUI publicly
+   re-exports its overlays and portable Dispatch identity while consuming
+   Symbols.
 5. Compile final UIKit after Foundation exists, then prove cross-import
    Notification, NotificationCenter, and OperationQueue identity.
 6. Compile the CoreImage Swift overlay over its explicit Clang
@@ -77,8 +81,10 @@ The semantic build order is deliberate:
    Mach-O dylibs. Host-service boundaries fail closed, while portable metadata,
    image decoding, graphics, and composition state work locally. Every install
    ID/dependency/self-load contract is audited.
-10. Link all fifty-two reusable platform dylibs (fifty frameworks, ICU, and
-   zlib) and run the package's Mach-O
+10. Build and audit the fail-closed IOKit C framework and complete
+   `libswiftIOKit` runtime boundaries, then link all fifty-four reusable
+   platform binaries (fifty Swift framework dylibs, IOKit, `libswiftIOKit`,
+   ICU, and zlib) and run the package's Mach-O
    closure/resource/font and framework-behavior probe through the packaged
    machorun root.
 11. Run a real asynchronous Mach-O gate covering async main, TaskGroup,
@@ -232,10 +238,34 @@ machorun's host fallback accidentally. Valid gzip bytes decode through real
 zlib; malformed input fails closed. Native and Mach-O oracles must both match
 the frozen Apple transcript exactly.
 
+`IOKit.framework` supplies an Apple-shaped raw C boundary: six exported
+functions, four-byte Mach/IO ABI types, iteration flags, and the unsupported
+return code are frozen against Xcode 26.1 build 17B55. A package-owned
+`IOKit.swiftmodule` then projects that boundary into the portable Foundation
+representation used by unchanged clients (`String`, `CFDictionary`, and
+`CFAllocator`) without publishing duplicate C/CF identities. The 52 public
+`kIOReturn` getters resolve to an open `libswiftIOKit.dylib` whose exact 53
+exports match the sanitized SDK TBD; that runtime has zero undefined imports
+and zero external loads. The native Apple imported-interface transcript is
+retained as source evidence, while a distinct compile-time-typed portable
+transcript prevents falsely claiming that the two Foundation representations
+have identical reflected Swift spellings.
+
+Linux has no Apple I/O Registry, so BSD matching and property lookups return
+nil, iterators are cleared, and service acquisition and release report
+`kIOReturnUnsupported`; no device identity is fabricated. The C binary has
+install name `/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit`, no
+undefined imports, and no host or `_glibc_` route. Compile and link contracts
+carry exactly one `-F frameworks` pair; the link contract carries exactly one
+`-framework IOKit` pair and one `-lswiftIOKit`. Module metadata, compile and
+runtime framework copies, header, module map, and Swift runtime are all
+exhaustively artifact-attested.
+
 `full/adservices/tests/test_revenuecat_frontier_guest.sh` additionally hashes
-and compiles the exact untouched RevenueCat 5.86.0 attribution and RCContainer
-sources from commit `57043e7e0173c48d64e171944ac76a34d2467fa1`, links them to
-the published AdServices, Compression, and zlib dylibs, and cold-runs both
+and compiles the exact untouched RevenueCat 5.86.0 attribution, RCContainer,
+and `MacDevice.swift` sources from commit
+`57043e7e0173c48d64e171944ac76a34d2467fa1`, links them to the published
+AdServices, Compression, zlib, and IOKit binaries, and cold-runs all three
 executables on Linux through the packaged loader and host-helper closure.
 
 The pinned swift-foundation revision has an upstream-corrected final-class
@@ -384,10 +414,12 @@ The package is self-contained under these directories:
 sdk/                 copied compile sysroot
 modules/             target Swift modules
 lib/                 reusable ARM64 Mach-O dylibs
+frameworks/          compile-time C frameworks (currently IOKit.framework)
 include/             C module maps and headers
 objects/             optional executable-layer objects
 resources/OpenUIKit/ exact runtime JSON/resources plus fonts/
 guest-root/          machorun plus its attested runtime closure
+host-tools/          attested compiler plugins and native closure
 probe/               independently runnable package probe
 attestation/         provenance, exhaustive inventories, hashes, runtime log
 ```
@@ -397,12 +429,12 @@ has:
 
 - `classification: "open-uikit-core-guest-package"` and `format_version: 1`;
 - `target.triple: "arm64-apple-macos15.0"`;
-- exactly the `sdk`, `modules`, `libraries`, `includes`, `objects`,
-  `resources`, and `guest_root` path keys;
+- exactly the `sdk`, `modules`, `libraries`, `frameworks`, `includes`,
+  `objects`, `resources`, `guest_root`, and `host_tools` path keys;
 - package-root-relative `swift_compile_arguments` and
   `executable_link_arguments` arrays;
 - SHA-256 and byte size for every declared product, every library, and every
-  file below `resources/OpenUIKit`;
+  file below `frameworks`, `resources/OpenUIKit`, and `host-tools`;
 - exact tree/provenance manifests and logical OpenUIKit resource/font paths;
 - a nullable bounded `preview` record.
 

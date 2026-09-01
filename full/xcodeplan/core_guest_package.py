@@ -29,6 +29,7 @@ _PATH_KEYS = {
     "sdk",
     "modules",
     "libraries",
+    "frameworks",
     "includes",
     "objects",
     "resources",
@@ -392,6 +393,36 @@ def _require_frontier_c_compile_contract(arguments: list[str]) -> None:
             )
 
 
+def _require_iokit_framework_contract(
+    compile_arguments: list[str], link_arguments: list[str]
+) -> None:
+    compile_pair = ["-F", "frameworks"]
+    compile_count = sum(
+        compile_arguments[index : index + 2] == compile_pair
+        for index in range(len(compile_arguments) - 1)
+    )
+    if compile_count != 1:
+        raise CorePackageError(
+            "swift_compile_arguments must contain the IOKit framework search "
+            "pair exactly once: -F frameworks"
+        )
+    for pair in (["-F", "frameworks"], ["-framework", "IOKit"]):
+        count = sum(
+            link_arguments[index : index + 2] == pair
+            for index in range(len(link_arguments) - 1)
+        )
+        if count != 1:
+            raise CorePackageError(
+                "executable_link_arguments must contain the IOKit framework "
+                f"pair exactly once: {' '.join(pair)}"
+            )
+    if link_arguments.count("-lswiftIOKit") != 1:
+        raise CorePackageError(
+            "executable_link_arguments must contain the complete Swift IOKit "
+            "overlay runtime exactly once: -lswiftIOKit"
+        )
+
+
 def _require_cross_import_compile_contract(arguments: list[str]) -> None:
     pair = ["-Xfrontend", "-enable-cross-import-overlays"]
     count = sum(
@@ -641,6 +672,10 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
         manifest.get("executable_link_arguments"),
         "executable_link_arguments",
         _CONTROLLED_LINK_OPTIONS,
+    )
+    _require_iokit_framework_contract(
+        manifest["swift_compile_arguments"],
+        manifest["executable_link_arguments"],
     )
     if manifest["executable_link_arguments"].count("-Llib") != 1:
         raise CorePackageError("executable_link_arguments must contain -Llib exactly once")
@@ -931,6 +966,12 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"{paths['libraries']}/libz.dylib",
             f"{paths['guest_root']}/darwin/usr/lib/libOpenZlib.dylib",
             f"{paths['guest_root']}/host/libOpenZlibHost.so",
+            f"{paths['frameworks']}/IOKit.framework/Headers/IOKit.h",
+            f"{paths['frameworks']}/IOKit.framework/Modules/module.modulemap",
+            f"{paths['frameworks']}/IOKit.framework/IOKit",
+            f"{paths['guest_root']}/darwin/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
+            f"{paths['guest_root']}/darwin/usr/lib/swift/libswiftIOKit.dylib",
+            f"{paths['modules']}/IOKit.swiftmodule",
         }
     )
     if preview is not None:
@@ -938,7 +979,7 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"{paths['modules']}/DeveloperToolsSupport.swiftmodule"
         )
         required_artifacts.add(preview["developer_tools_support_object"])
-    for directory_key in ("libraries", "resources", "host_tools"):
+    for directory_key in ("libraries", "frameworks", "resources", "host_tools"):
         directory = physical_paths[directory_key]
         for candidate in directory.rglob("*"):
             if candidate.is_symlink():

@@ -1,0 +1,11 @@
+sdk=macOS26.1,xcode=17B55
+types=mach-port:4,io-object:4,io-option:4,kern-return:4
+constants=null:0,recursive:1,parents:2,unsupported:3758097095
+signature-bsd=(Swift.UInt32, Swift.UInt32, Swift.Optional<Swift.UnsafePointer<Swift.Int8>>) -> Swift.Optional<__C.CFMutableDictionaryRef>
+signature-services=(Swift.UInt32, Swift.Optional<__C.CFDictionaryRef>, Swift.Optional<Swift.UnsafeMutablePointer<Swift.UInt32>>) -> Swift.Int32
+signature-next=(Swift.UInt32) -> Swift.UInt32
+signature-release=(Swift.UInt32) -> Swift.Int32
+signature-property=(Swift.UInt32, Swift.Optional<__C.CFStringRef>, Swift.Optional<__C.CFAllocatorRef>, Swift.UInt32) -> Swift.Optional<Swift.Unmanaged<Swift.AnyObject>>
+signature-search=(Swift.UInt32, Swift.Optional<Swift.UnsafePointer<Swift.Int8>>, Swift.Optional<__C.CFStringRef>, Swift.Optional<__C.CFAllocatorRef>, Swift.UInt32) -> Swift.Optional<Swift.AnyObject>
+returns=aborted:3758097131,bad-argument:3758097090,bad-media:3758097105,bad-message-id:3758097094,busy:3758097109,cannot-lock:3758097100,cannot-wire:3758097118,device-error:3758097129,dma-error:3758097108,error:3758097084,exclusive-access:3758097093,internal-error:3758097097,invalid:3758096385,io-error:3758097098,ipc-error:3758097087,iso-too-new:3758097135,iso-too-old:3758097134,locked-read:3758097091,locked-write:3758097092,message-too-large:3758097121,no-bandwidth:3758097132,no-channels:3758097114,no-completion:3758097130,no-device:3758097088,no-frames:3758097120,no-interrupt:3758097119,no-media:3758097124,no-memory:3758097085,no-power:3758097123,no-resources:3758097086,no-space:3758097115,not-aligned:3758097104,not-attached:3758097113,not-found:3758097136,not-open:3758097101,not-permitted:3758097122,not-privileged:3758097089,not-readable:3758097102,not-ready:3758097112,not-responding:3758097133,not-writable:3758097103,offline:3758097111,overrun:3758097128,port-exists:3758097117,rld-error:3758097107,still-open:3758097106,timeout:3758097110,underrun:3758097127,unformatted-media:3758097125,unsupported:3758097095,unsupported-mode:3758097126,vm-error:3758097096
+missing=matching:value,status:0,iterator:null,next:null,release:0

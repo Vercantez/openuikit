@@ -1,0 +1,4 @@
+framework module IOKit [extern_c] [system] {
+    header "IOKit.h"
+    export *
+}

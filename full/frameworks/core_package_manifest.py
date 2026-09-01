@@ -55,6 +55,7 @@ PATHS = {
     "sdk": "sdk",
     "modules": "modules",
     "libraries": "lib",
+    "frameworks": "frameworks",
     "includes": "include",
     "objects": "objects",
     "resources": "resources/OpenUIKit",
@@ -758,6 +759,49 @@ def require_framework_boundary(artifacts: list[dict[str, str]]) -> None:
     }
     if not required_zlib_runtime.issubset(actual_zlib_runtime):
         refuse("zlib facade/Darwin bridge/Linux host helper is absent")
+    required_iokit = {
+        (
+            "framework",
+            "swiftmodule",
+            "modules/IOKit.swiftmodule",
+        ),
+        (
+            "include",
+            "framework-header",
+            "frameworks/IOKit.framework/Headers/IOKit.h",
+        ),
+        (
+            "include",
+            "framework-module-map",
+            "frameworks/IOKit.framework/Modules/module.modulemap",
+        ),
+        (
+            "framework",
+            "c-dylib",
+            "frameworks/IOKit.framework/IOKit",
+        ),
+        (
+            "runtime",
+            "framework-dylib",
+            "guest-root/darwin/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
+        ),
+        (
+            "runtime",
+            "overlay-dylib",
+            "guest-root/darwin/usr/lib/swift/libswiftIOKit.dylib",
+        ),
+    }
+    actual_iokit = {
+        (str(item["category"]), str(item["role"]), str(item["path"]))
+        for item in artifacts
+        if item["name"] in ("IOKit", "SwiftIOKit")
+    }
+    missing_iokit = sorted(required_iokit - actual_iokit)
+    if missing_iokit:
+        refuse(
+            "IOKit framework boundary artifacts are absent: "
+            + ", ".join(path for _category, _role, path in missing_iokit)
+        )
     if not any(
         item["category"] == "runtime"
         and item["name"] == "CQuartz"
@@ -901,6 +945,36 @@ def require_frontier_c_compile_contract(tokens: list[str]) -> None:
                 "compile flags must contain zlib pair exactly once: "
                 f"-Xcc {argument}"
             )
+
+
+def require_iokit_framework_contract(
+    compile_tokens: list[str], link_tokens: list[str]
+) -> None:
+    compile_pair = ["-F", "frameworks"]
+    compile_count = sum(
+        compile_tokens[index : index + 2] == compile_pair
+        for index in range(len(compile_tokens) - 1)
+    )
+    if compile_count != 1:
+        refuse(
+            "compile flags must contain the IOKit framework search pair "
+            "exactly once: -F frameworks"
+        )
+    for pair in (["-F", "frameworks"], ["-framework", "IOKit"]):
+        count = sum(
+            link_tokens[index : index + 2] == pair
+            for index in range(len(link_tokens) - 1)
+        )
+        if count != 1:
+            refuse(
+                "link inputs must contain the IOKit framework pair exactly "
+                f"once: {' '.join(pair)}"
+            )
+    if link_tokens.count("-lswiftIOKit") != 1:
+        refuse(
+            "link inputs must contain the complete Swift IOKit overlay runtime "
+            "exactly once: -lswiftIOKit"
+        )
 
 
 def require_cross_import_compile_contract(tokens: list[str]) -> None:
@@ -1100,6 +1174,7 @@ def validate_document(
         if path.stat().st_size != size:
             refuse(f"JSON artifact size drifted: {relative}")
     require_exhaustive_artifact_tree(package, artifacts, "lib")
+    require_exhaustive_artifact_tree(package, artifacts, "frameworks")
     require_exhaustive_artifact_tree(package, artifacts, "resources/OpenUIKit")
     require_exhaustive_artifact_tree(package, artifacts, "host-tools")
     manifests = document.get("manifests")
@@ -1172,6 +1247,7 @@ def validate_document(
     require_coreimage_compile_contract(compile_tokens)
     require_cferror_compile_contract(compile_tokens)
     require_frontier_c_compile_contract(compile_tokens)
+    require_iokit_framework_contract(compile_tokens, link_tokens)
     require_cross_import_compile_contract(compile_tokens)
     for required in REQUIRED_FRAMEWORK_LINK_ARGUMENTS:
         if link_tokens.count(required) != 1:
@@ -1323,6 +1399,7 @@ def write_command(args: argparse.Namespace) -> None:
     require_coreimage_compile_contract(compile_tokens)
     require_cferror_compile_contract(compile_tokens)
     require_frontier_c_compile_contract(compile_tokens)
+    require_iokit_framework_contract(compile_tokens, link_tokens)
     require_cross_import_compile_contract(compile_tokens)
     if link_tokens.count("-Llib") != 1:
         refuse("link inputs must contain -Llib exactly once")
