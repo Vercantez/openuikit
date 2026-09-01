@@ -16,7 +16,9 @@ It is not wired into the shared guest package.
   is an `NSObjectProtocol` whose Apple-optional members are **protocol
   requirements** with defaults. Existential (`any UNNotificationContentExtension`)
   dispatch uses the conformer's witness. Isolated unit-fixture execution proves
-  that dispatch; it does not prove platform UIKit identity.
+  that dispatch; it does not prove platform UIKit identity. The default
+  `mediaPlayPauseButtonFrame` is `CGRect(x: 0, y: 0, width: 0, height: 0)`
+  because Darwin Foundation's `CGRect` has no `.zero`.
 - This module does not declare `NSExtensionContext`, `UIColor`, or
   `UNNotification`. Notification APIs are an extension of
   `Foundation.NSExtensionContext` when that nominal exists.

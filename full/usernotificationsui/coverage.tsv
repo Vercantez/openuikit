@@ -17,7 +17,7 @@ c:objc(pl)UNNotificationContentExtension(im)didReceiveNotification:	implemented	
 c:objc(pl)UNNotificationContentExtension(im)didReceiveNotificationResponse:completionHandler:	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential async and completion-handler overrides
 c:objc(pl)UNNotificationContentExtension(im)mediaPause	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential dispatch of override; static dispatch would leave count 0
 c:objc(pl)UNNotificationContentExtension(im)mediaPlay	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential dispatch of override; static dispatch would leave count 0
-c:objc(pl)UNNotificationContentExtension(py)mediaPlayPauseButtonFrame	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential reads overlay frame; default is CGRect.zero
+c:objc(pl)UNNotificationContentExtension(py)mediaPlayPauseButtonFrame	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential reads overlay frame; default is CGRect(x: 0, y: 0, width: 0, height: 0)
 c:objc(pl)UNNotificationContentExtension(py)mediaPlayPauseButtonTintColor	declared	UserNotificationsUI.swift	Protocol requirement; UIKit.UIColor identity needs platform UIKit, not unit-fixture UIColor
 c:objc(pl)UNNotificationContentExtension(py)mediaPlayPauseButtonType	implemented	tests/agent/UserNotificationsUIExistentialDispatch.swift	Existential reads overlay; default is none
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@UNNotificationContentExtensionMediaPlayPauseButtonType	implemented	tests/agent/UserNotificationsUIRuntime.swift	Synthesized Equatable != on button type

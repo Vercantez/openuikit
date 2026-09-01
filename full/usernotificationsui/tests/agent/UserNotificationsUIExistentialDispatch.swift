@@ -87,7 +87,10 @@ enum UserNotificationsUIExistentialDispatch {
             minimal.mediaPlayPauseButtonType
                 == UNNotificationContentExtensionMediaPlayPauseButtonType.none
         )
-        precondition(minimal.mediaPlayPauseButtonFrame == .zero)
+        precondition(
+            minimal.mediaPlayPauseButtonFrame
+                == CGRect(x: 0, y: 0, width: 0, height: 0)
+        )
         minimal.mediaPlay()
         minimal.mediaPause()
         let defaultOption = await minimal.didReceive(response)

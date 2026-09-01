@@ -116,7 +116,10 @@ extension UNNotificationContentExtension {
         .none
     }
 
-    public var mediaPlayPauseButtonFrame: CGRect { .zero }
+    /// Portable empty frame. Darwin Foundation's CGRect has no `.zero`.
+    public var mediaPlayPauseButtonFrame: CGRect {
+        CGRect(x: 0, y: 0, width: 0, height: 0)
+    }
 
     /// Portable default tint. Apple's unimplemented color is not in the seed.
     public var mediaPlayPauseButtonTintColor: UIColor {

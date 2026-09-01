@@ -37,6 +37,13 @@ for relative in "${SOURCES[@]}"; do
     SOURCE_PATHS+=("$REPO_ROOT/$relative")
 done
 
+# Darwin Foundation's CGRect has no `.zero`. Keep the portable initializer.
+if grep -nE -- 'CGRect\.zero|[[:space:]]==[[:space:]]*\.zero|[[:space:]]\{[[:space:]]*\.zero[[:space:]]*\}' \
+    "${SOURCE_PATHS[@]}" \
+    "$SCRIPT_DIR/UserNotificationsUIExistentialDispatch.swift"; then
+    die 'CGRect.zero is not portable; use CGRect(x:y:width:height:)'
+fi
+
 STAGE=$(mktemp -d "${TMPDIR:-/tmp}/usernotificationsui-unit-fixture.XXXXXX") \
     || die 'cannot create unit-fixture directory'
 cleanup() {
