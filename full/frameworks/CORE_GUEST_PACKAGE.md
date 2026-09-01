@@ -373,7 +373,12 @@ four actual imports must bind to that image exactly once.
 FoundationEssentials' filesystem enumeration also consumes machorun's genuine
 Darwin `statfs` and `fstatfs` projection. The bounded Apple differential covers
 the 2,168-byte ABI, exact path/file-descriptor identity across root and nested
-mounts, translated mount flags, and Darwin errno behavior. The cold marker is:
+mounts, translated mount flags, and Darwin errno behavior. The native no-argument
+oracle remains rooted at Apple's `/tmp`; the cold package executes that same
+Apple-linked fixture against the physical `/replay` host bind. Docker Desktop's
+`virtiofs` and `fakeowner` identities therefore receive `MNT_DOVOLFS` only on a
+durable pathname-bearing production volume, while the `/dev` pseudo-filesystem
+control remains clear. The cold marker is:
 
 ```text
 OPEN_FOUNDATION_STATFS_OK abi=2168 path-fd=exact mounts=root,nested flags=translated errno=darwin oracle=apple-bounded

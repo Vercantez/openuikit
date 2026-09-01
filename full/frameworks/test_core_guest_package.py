@@ -2707,15 +2707,16 @@ class ShellContractTests(unittest.TestCase):
         validate_build_full_swift_core_source(build_full)
         self.assertIn(
             "EXPECTED_MACHORUN_COMMIT="
-            "d359cd37ac7f12a5048f4993eab6efd8259d9890",
+            "98551893760e553c14d5dbb2c28138e014290918",
             builder,
         )
         self.assertIn(
             "EXPECTED_MACHORUN_TREE="
-            "9072be6c7805264341f1b298c4f7bb0d1bd2587f",
+            "d4448ff9f8a89c5cefad8b74f16db5d8d6ccff15",
             builder,
         )
         for obsolete_machorun_pin in (
+            "d359cd37ac7f12a5048f4993eab6efd8259d9890",
             "e6b1745bef09ac8f1e2d6e6c83f7c70d6dbe49a5",
             "edb99a8574255ddc4c979b2f0cf2615033ff14fd",
             "dd18e0b5e51e26d4673193d341e7c9a864db2fb8",
@@ -3098,7 +3099,7 @@ class ShellContractTests(unittest.TestCase):
             self.assertNotIn(removed_stub, stubs)
         for token in (
             "EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA="
-            "bb73d86e8daf09c256edc469737f0c6fd6ca6642ec4480b4819f8378b403904e",
+            "0d8680f13e023c9f002fad78f1f0382c975f479595cd8cf3fa8eb6da3c42d29b",
             "EXPECTED_MACHORUN_GROUP_FIXTURE_SHA=",
             "EXPECTED_MACHORUN_GROUP_GOLDEN_SHA=",
             "EXPECTED_MACHORUN_GROUP_SOURCE_SHA=",
@@ -3150,6 +3151,8 @@ class ShellContractTests(unittest.TestCase):
             "tests/expected/statfs.exit",
             "tests/src/statfs.c",
             "tests/meta/statfs.summary.txt",
+            "STATFS_PRODUCTION_PATH=/replay",
+            '"$RUNTIME/machorun" "$STATFS_FIXTURE" "$STATFS_PRODUCTION_PATH"',
             "tests/bin/copyfile",
             "tests/expected/copyfile.stdout",
             "tests/expected/copyfile.stderr",
@@ -3183,6 +3186,16 @@ class ShellContractTests(unittest.TestCase):
             "group-lookup-native.normalized.log",
         ):
             self.assertIn(token, builder)
+        self.assertIn(
+            "EXPECTED_MACHORUN_STATFS_FIXTURE_SHA="
+            "723da2ef92cc06456c909b947950427420f1ce51ba61d71a5c5815555699970a",
+            builder,
+        )
+        self.assertIn(
+            "EXPECTED_MACHORUN_STATFS_SOURCE_SHA="
+            "86a32bb57849992c8b2ef51a3b493d834fab988c119fdc9c4fcbd61c8ef038b9",
+            builder,
+        )
         self.assertIn(
             "EXPECTED_MACHORUN_FTS_LIBSYSTEM_SOURCE_SHA="
             "$EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA",
