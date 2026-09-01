@@ -10,12 +10,16 @@
 #include <time.h>
 #include <unistd.h>
 
-#define OPENUI_DISPATCH_QUEUE_SLOTS 32
+#define OPENUI_DISPATCH_GLOBAL_QUEUE_SLOTS 32
+#define OPENUI_DISPATCH_PRIVATE_QUEUE_SLOTS 128
+#define OPENUI_DISPATCH_SEMAPHORE_SLOTS 128
 #define OPENUI_DISPATCH_REQUIRED_GLIBC_MAJOR 2
 #define OPENUI_DISPATCH_REQUIRED_GLIBC_MINOR 38
 
 static pthread_mutex_t queue_lock = PTHREAD_MUTEX_INITIALIZER;
-static dispatch_queue_t global_queues[OPENUI_DISPATCH_QUEUE_SLOTS];
+static dispatch_queue_t global_queues[OPENUI_DISPATCH_GLOBAL_QUEUE_SLOTS];
+static dispatch_queue_t private_queues[OPENUI_DISPATCH_PRIVATE_QUEUE_SLOTS];
+static dispatch_semaphore_t semaphores[OPENUI_DISPATCH_SEMAPHORE_SLOTS];
 
 __attribute__((noreturn)) static void boundary_abort(const char *message)
 {
@@ -71,7 +75,7 @@ static void remember_global_queue(dispatch_queue_t queue)
     if (pthread_mutex_lock(&queue_lock) != 0) {
         boundary_abort("cannot lock global queue registry");
     }
-    for (index = 0; index < OPENUI_DISPATCH_QUEUE_SLOTS; index++) {
+    for (index = 0; index < OPENUI_DISPATCH_GLOBAL_QUEUE_SLOTS; index++) {
         if (global_queues[index] == queue) break;
         if (global_queues[index] == NULL) {
             global_queues[index] = queue;
@@ -81,7 +85,7 @@ static void remember_global_queue(dispatch_queue_t queue)
     if (pthread_mutex_unlock(&queue_lock) != 0) {
         boundary_abort("cannot unlock global queue registry");
     }
-    if (index == OPENUI_DISPATCH_QUEUE_SLOTS) {
+    if (index == OPENUI_DISPATCH_GLOBAL_QUEUE_SLOTS) {
         boundary_abort("global queue registry is full");
     }
 }
@@ -94,7 +98,7 @@ static int is_known_global_queue(dispatch_queue_t queue)
     if (pthread_mutex_lock(&queue_lock) != 0) {
         boundary_abort("cannot lock global queue registry");
     }
-    for (index = 0; index < OPENUI_DISPATCH_QUEUE_SLOTS; index++) {
+    for (index = 0; index < OPENUI_DISPATCH_GLOBAL_QUEUE_SLOTS; index++) {
         if (global_queues[index] == queue) {
             found = 1;
             break;
@@ -102,6 +106,130 @@ static int is_known_global_queue(dispatch_queue_t queue)
     }
     if (pthread_mutex_unlock(&queue_lock) != 0) {
         boundary_abort("cannot unlock global queue registry");
+    }
+    return found;
+}
+
+static void remember_private_queue(dispatch_queue_t queue)
+{
+    size_t index;
+    if (queue == NULL) boundary_abort("cannot register a NULL private queue");
+    if (pthread_mutex_lock(&queue_lock) != 0) {
+        boundary_abort("cannot lock private queue registry");
+    }
+    for (index = 0; index < OPENUI_DISPATCH_PRIVATE_QUEUE_SLOTS; index++) {
+        if (private_queues[index] == NULL) {
+            private_queues[index] = queue;
+            break;
+        }
+    }
+    if (pthread_mutex_unlock(&queue_lock) != 0) {
+        boundary_abort("cannot unlock private queue registry");
+    }
+    if (index == OPENUI_DISPATCH_PRIVATE_QUEUE_SLOTS) {
+        boundary_abort("private queue registry is full");
+    }
+}
+
+static int is_known_private_queue(dispatch_queue_t queue)
+{
+    size_t index;
+    int found = 0;
+    if (queue == NULL) return 0;
+    if (pthread_mutex_lock(&queue_lock) != 0) {
+        boundary_abort("cannot lock private queue registry");
+    }
+    for (index = 0; index < OPENUI_DISPATCH_PRIVATE_QUEUE_SLOTS; index++) {
+        if (private_queues[index] == queue) {
+            found = 1;
+            break;
+        }
+    }
+    if (pthread_mutex_unlock(&queue_lock) != 0) {
+        boundary_abort("cannot unlock private queue registry");
+    }
+    return found;
+}
+
+static int forget_private_queue(dispatch_queue_t queue)
+{
+    size_t index;
+    int found = 0;
+    if (queue == NULL) return 0;
+    if (pthread_mutex_lock(&queue_lock) != 0) {
+        boundary_abort("cannot lock private queue registry");
+    }
+    for (index = 0; index < OPENUI_DISPATCH_PRIVATE_QUEUE_SLOTS; index++) {
+        if (private_queues[index] == queue) {
+            private_queues[index] = NULL;
+            found = 1;
+            break;
+        }
+    }
+    if (pthread_mutex_unlock(&queue_lock) != 0) {
+        boundary_abort("cannot unlock private queue registry");
+    }
+    return found;
+}
+
+static void remember_semaphore(dispatch_semaphore_t semaphore)
+{
+    size_t index;
+    if (semaphore == NULL) boundary_abort("cannot register a NULL semaphore");
+    if (pthread_mutex_lock(&queue_lock) != 0) {
+        boundary_abort("cannot lock semaphore registry");
+    }
+    for (index = 0; index < OPENUI_DISPATCH_SEMAPHORE_SLOTS; index++) {
+        if (semaphores[index] == NULL) {
+            semaphores[index] = semaphore;
+            break;
+        }
+    }
+    if (pthread_mutex_unlock(&queue_lock) != 0) {
+        boundary_abort("cannot unlock semaphore registry");
+    }
+    if (index == OPENUI_DISPATCH_SEMAPHORE_SLOTS) {
+        boundary_abort("semaphore registry is full");
+    }
+}
+
+static int is_known_semaphore(dispatch_semaphore_t semaphore)
+{
+    size_t index;
+    int found = 0;
+    if (semaphore == NULL) return 0;
+    if (pthread_mutex_lock(&queue_lock) != 0) {
+        boundary_abort("cannot lock semaphore registry");
+    }
+    for (index = 0; index < OPENUI_DISPATCH_SEMAPHORE_SLOTS; index++) {
+        if (semaphores[index] == semaphore) {
+            found = 1;
+            break;
+        }
+    }
+    if (pthread_mutex_unlock(&queue_lock) != 0) {
+        boundary_abort("cannot unlock semaphore registry");
+    }
+    return found;
+}
+
+static int forget_semaphore(dispatch_semaphore_t semaphore)
+{
+    size_t index;
+    int found = 0;
+    if (semaphore == NULL) return 0;
+    if (pthread_mutex_lock(&queue_lock) != 0) {
+        boundary_abort("cannot lock semaphore registry");
+    }
+    for (index = 0; index < OPENUI_DISPATCH_SEMAPHORE_SLOTS; index++) {
+        if (semaphores[index] == semaphore) {
+            semaphores[index] = NULL;
+            found = 1;
+            break;
+        }
+    }
+    if (pthread_mutex_unlock(&queue_lock) != 0) {
+        boundary_abort("cannot unlock semaphore registry");
     }
     return found;
 }
@@ -131,9 +259,153 @@ static dispatch_queue_t checked_queue(uint32_t queue_kind, void *opaque)
             boundary_abort("unminted global queue pointer crossed the ELF boundary");
         }
         return (dispatch_queue_t)opaque;
+    case OPENUI_DISPATCH_QUEUE_PRIVATE_V1:
+        if (!is_known_private_queue((dispatch_queue_t)opaque)) {
+            boundary_abort("unminted private queue pointer crossed the ELF boundary");
+        }
+        return (dispatch_queue_t)opaque;
     default:
         boundary_abort("unknown queue kind crossed the ELF boundary");
     }
+}
+
+void *openui_dispatch_host_v1_create_queue(
+    const char *label,
+    uint64_t flags,
+    uint32_t qos_class,
+    int32_t relative_priority,
+    uint32_t target_kind,
+    void *target_queue
+)
+{
+    dispatch_queue_attr_t attribute;
+    dispatch_queue_t queue;
+    dispatch_queue_t target = NULL;
+    require_runtime();
+    if (label == NULL) boundary_abort("NULL private queue label crossed boundary");
+    if ((flags & ~((uint64_t)OPENUI_DISPATCH_QUEUE_CONCURRENT_V1)) != 0) {
+        boundary_abort("unknown private queue flags crossed boundary");
+    }
+    if (relative_priority < -15 || relative_priority > 0) {
+        boundary_abort("private queue relative priority is outside -15...0");
+    }
+    if (target_kind != 0) {
+        target = checked_queue(target_kind, target_queue);
+    } else if (target_queue != NULL) {
+        boundary_abort("private queue target pointer has no kind");
+    }
+    attribute = (flags & OPENUI_DISPATCH_QUEUE_CONCURRENT_V1) != 0
+        ? DISPATCH_QUEUE_CONCURRENT : DISPATCH_QUEUE_SERIAL;
+    if (qos_class != 0) {
+        switch (qos_class) {
+        case 0x09: /* background */
+        case 0x11: /* utility */
+        case 0x15: /* default */
+        case 0x19: /* user initiated */
+        case 0x21: /* user interactive */
+            break;
+        default:
+            boundary_abort("unknown private queue QoS crossed boundary");
+        }
+        attribute = dispatch_queue_attr_make_with_qos_class(
+            attribute,
+            (dispatch_qos_class_t)qos_class,
+            relative_priority
+        );
+        if (attribute == NULL) boundary_abort("libdispatch refused queue QoS");
+    }
+    queue = dispatch_queue_create(label, attribute);
+    if (queue == NULL) boundary_abort("libdispatch refused private queue");
+    if (target != NULL) dispatch_set_target_queue(queue, target);
+    remember_private_queue(queue);
+    return queue;
+}
+
+void openui_dispatch_host_v1_release_queue(void *opaque)
+{
+    dispatch_queue_t queue = (dispatch_queue_t)opaque;
+    require_runtime();
+    if (!forget_private_queue(queue)) {
+        boundary_abort("unminted private queue release crossed the ELF boundary");
+    }
+    dispatch_release(queue);
+}
+
+void openui_dispatch_host_v1_queue_set_specific(
+    uint32_t queue_kind,
+    void *opaque,
+    const void *key,
+    void *context,
+    openui_dispatch_callback_v1 destructor
+)
+{
+    dispatch_queue_t queue;
+    require_runtime();
+    if (key == NULL) boundary_abort("NULL queue-specific key crossed boundary");
+    if (context != NULL && destructor == NULL) {
+        boundary_abort("queue-specific context has no destructor");
+    }
+    queue = checked_queue(queue_kind, opaque);
+    dispatch_queue_set_specific(queue, key, context, destructor);
+}
+
+void *openui_dispatch_host_v1_get_specific(const void *key)
+{
+    require_runtime();
+    if (key == NULL) boundary_abort("NULL queue-specific lookup key crossed boundary");
+    return dispatch_get_specific(key);
+}
+
+void *openui_dispatch_host_v1_semaphore_create(int64_t value)
+{
+    dispatch_semaphore_t semaphore;
+    require_runtime();
+    if (value < 0) boundary_abort("negative semaphore value crossed boundary");
+    semaphore = dispatch_semaphore_create(value);
+    if (semaphore == NULL) boundary_abort("libdispatch refused semaphore");
+    remember_semaphore(semaphore);
+    return semaphore;
+}
+
+int64_t openui_dispatch_host_v1_semaphore_signal(void *opaque)
+{
+    dispatch_semaphore_t semaphore = (dispatch_semaphore_t)opaque;
+    require_runtime();
+    if (!is_known_semaphore(semaphore)) {
+        boundary_abort("unminted semaphore signal crossed the ELF boundary");
+    }
+    return dispatch_semaphore_signal(semaphore);
+}
+
+int32_t openui_dispatch_host_v1_semaphore_wait(
+    void *opaque,
+    uint64_t delay_nanoseconds
+)
+{
+    dispatch_semaphore_t semaphore = (dispatch_semaphore_t)opaque;
+    dispatch_time_t timeout;
+    require_runtime();
+    if (!is_known_semaphore(semaphore)) {
+        boundary_abort("unminted semaphore wait crossed the ELF boundary");
+    }
+    timeout = delay_nanoseconds == UINT64_MAX
+        ? DISPATCH_TIME_FOREVER
+        : dispatch_time(
+            DISPATCH_TIME_NOW,
+            delay_nanoseconds > (uint64_t)INT64_MAX
+                ? INT64_MAX : (int64_t)delay_nanoseconds
+        );
+    return dispatch_semaphore_wait(semaphore, timeout) == 0 ? 0 : 1;
+}
+
+void openui_dispatch_host_v1_semaphore_release(void *opaque)
+{
+    dispatch_semaphore_t semaphore = (dispatch_semaphore_t)opaque;
+    require_runtime();
+    if (!forget_semaphore(semaphore)) {
+        boundary_abort("unminted semaphore release crossed the ELF boundary");
+    }
+    dispatch_release(semaphore);
 }
 
 void openui_dispatch_host_v1_async(

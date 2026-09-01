@@ -23,7 +23,11 @@ class DispatchBoundaryTests(unittest.TestCase):
         source = (ROOT / "full/dispatch/OpenDispatchHost.c").read_text(encoding="utf-8")
         self.assertIn("guest main-queue token crossed the ELF boundary", source)
         self.assertIn("unminted global queue pointer crossed the ELF boundary", source)
+        self.assertIn("unminted private queue pointer crossed the ELF boundary", source)
+        self.assertIn("unminted semaphore wait crossed the ELF boundary", source)
         self.assertIn("dispatch_async_f(checked_queue", source)
+        self.assertIn("dispatch_queue_set_specific", source)
+        self.assertIn("dispatch_semaphore_wait", source)
         self.assertIn("dispatch_main();", source)
         header = (ROOT / "full/dispatch/include/OpenDispatchABI.h").read_text(
             encoding="utf-8"
@@ -38,6 +42,9 @@ class DispatchBoundaryTests(unittest.TestCase):
         self.assertIn("public final class DispatchQueue", source)
         self.assertIn("public static let main", source)
         self.assertIn("public static func global", source)
+        self.assertIn("public init(\n        label: String", source)
+        self.assertIn("public final class DispatchSpecificKey", source)
+        self.assertIn("public final class DispatchSemaphore", source)
         self.assertIn("openui_dispatch_v1_async", source)
         self.assertIn("Unmanaged.passRetained", source)
         self.assertNotIn("work()", source)

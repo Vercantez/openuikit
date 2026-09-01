@@ -2716,6 +2716,7 @@ class ShellContractTests(unittest.TestCase):
             "EXPECTED_HOST_DISPATCH_SHA256",
             "GLIBC_2.38",
             "OPEN_DISPATCH_MACHO_OK async-main=drained",
+            "private=serial,specific semaphore=signal,timeout",
             "scheduler=immediate,delayed,cancelled,receive-on",
             "FOUNDATION_URLSESSION_MACHO_OK",
             "FOUNDATION_CACHE_MACHO_OK rows=43 apple-differential=exact",

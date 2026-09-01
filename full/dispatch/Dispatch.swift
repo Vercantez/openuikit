@@ -9,6 +9,19 @@ private func _openuiDispatchGetGlobalQueue(
     _ flags: UInt64
 ) -> UnsafeMutableRawPointer?
 
+@_silgen_name("openui_dispatch_v1_create_queue")
+private func _openuiDispatchCreateQueue(
+    _ label: UnsafePointer<CChar>,
+    _ flags: UInt64,
+    _ qosClass: UInt32,
+    _ relativePriority: Int32,
+    _ targetKind: UInt32,
+    _ targetQueue: UnsafeMutableRawPointer?
+) -> UnsafeMutableRawPointer?
+
+@_silgen_name("openui_dispatch_v1_release_queue")
+private func _openuiDispatchReleaseQueue(_ queue: UnsafeMutableRawPointer)
+
 @_silgen_name("openui_dispatch_v1_async")
 private func _openuiDispatchAsync(
     _ queueKind: UInt32,
@@ -29,8 +42,45 @@ private func _openuiDispatchAfter(
 @_silgen_name("openui_dispatch_v1_monotonic_nanoseconds")
 private func _openuiDispatchMonotonicNanoseconds() -> UInt64
 
+@_silgen_name("openui_dispatch_v1_queue_set_specific")
+private func _openuiDispatchQueueSetSpecific(
+    _ queueKind: UInt32,
+    _ queue: UnsafeMutableRawPointer?,
+    _ key: UnsafeRawPointer,
+    _ context: UnsafeMutableRawPointer?,
+    _ destructor: _OpenDispatchCallback
+)
+
+@_silgen_name("openui_dispatch_v1_get_specific")
+private func _openuiDispatchGetSpecific(
+    _ key: UnsafeRawPointer
+) -> UnsafeMutableRawPointer?
+
+@_silgen_name("openui_dispatch_v1_semaphore_create")
+private func _openuiDispatchSemaphoreCreate(
+    _ value: Int64
+) -> UnsafeMutableRawPointer?
+
+@_silgen_name("openui_dispatch_v1_semaphore_signal")
+private func _openuiDispatchSemaphoreSignal(
+    _ semaphore: UnsafeMutableRawPointer
+) -> Int64
+
+@_silgen_name("openui_dispatch_v1_semaphore_wait")
+private func _openuiDispatchSemaphoreWait(
+    _ semaphore: UnsafeMutableRawPointer,
+    _ delayNanoseconds: UInt64
+) -> Int32
+
+@_silgen_name("openui_dispatch_v1_semaphore_release")
+private func _openuiDispatchSemaphoreRelease(
+    _ semaphore: UnsafeMutableRawPointer
+)
+
 private let _openuiDispatchMainQueueKind: UInt32 = 1
 private let _openuiDispatchGlobalQueueKind: UInt32 = 2
+private let _openuiDispatchPrivateQueueKind: UInt32 = 3
+private let _openuiDispatchConcurrentQueueFlag: UInt64 = 1 << 0
 
 public enum DispatchTimeInterval: Sendable, Hashable {
     case seconds(Int)
@@ -131,25 +181,119 @@ private final class _OpenDispatchClosure: @unchecked Sendable {
     init(_ body: @escaping @Sendable () -> Void) { self.body = body }
 }
 
+private final class _OpenDispatchSpecificKeyToken: @unchecked Sendable {}
+
+private class _OpenDispatchSpecificValueBase: @unchecked Sendable {}
+
+private final class _OpenDispatchSpecificValue<Value>:
+    _OpenDispatchSpecificValueBase,
+    @unchecked Sendable {
+    let value: Value
+    init(_ value: Value) { self.value = value }
+}
+
+public final class DispatchSpecificKey<Value>: @unchecked Sendable {
+    private let token = _OpenDispatchSpecificKeyToken()
+
+    public init() {}
+
+    fileprivate var opaqueKey: UnsafeRawPointer {
+        UnsafeRawPointer(Unmanaged.passUnretained(token).toOpaque())
+    }
+}
+
 @_cdecl("openui_dispatch_swift_invoke_v1")
 private func _openuiDispatchSwiftInvoke(_ context: UnsafeMutableRawPointer?) {
     guard let context else { fatalError("Dispatch callback lost its retained context") }
     Unmanaged<_OpenDispatchClosure>.fromOpaque(context).takeRetainedValue().body()
 }
 
+@_cdecl("openui_dispatch_swift_release_specific_v1")
+private func _openuiDispatchSwiftReleaseSpecific(
+    _ context: UnsafeMutableRawPointer?
+) {
+    guard let context else { return }
+    Unmanaged<_OpenDispatchSpecificValueBase>
+        .fromOpaque(context)
+        .release()
+}
+
 public final class DispatchQueue: @unchecked Sendable {
+    public struct Attributes: OptionSet, Sendable, Hashable {
+        public let rawValue: UInt
+        public init(rawValue: UInt) { self.rawValue = rawValue }
+
+        public static let concurrent = Self(rawValue: 1 << 0)
+        public static let initiallyInactive = Self(rawValue: 1 << 1)
+    }
+
+    public enum AutoreleaseFrequency: Sendable, Hashable {
+        case inherit
+        case workItem
+        case never
+    }
+
     private let queueKind: UInt32
     private let opaqueQueue: UnsafeMutableRawPointer?
+    public let label: String
 
-    private init(queueKind: UInt32, opaqueQueue: UnsafeMutableRawPointer?) {
+    private init(
+        queueKind: UInt32,
+        opaqueQueue: UnsafeMutableRawPointer?,
+        label: String
+    ) {
         self.queueKind = queueKind
         self.opaqueQueue = opaqueQueue
+        self.label = label
     }
 
     public static let main = DispatchQueue(
         queueKind: _openuiDispatchMainQueueKind,
-        opaqueQueue: nil
+        opaqueQueue: nil,
+        label: "com.apple.main-thread"
     )
+
+    public init(
+        label: String,
+        qos: DispatchQoS = .unspecified,
+        attributes: Attributes = [],
+        autoreleaseFrequency: AutoreleaseFrequency = .inherit,
+        target: DispatchQueue? = nil
+    ) {
+        precondition(
+            !attributes.contains(.initiallyInactive),
+            "portable Dispatch does not yet support initially inactive queues"
+        )
+        _ = autoreleaseFrequency
+        let flags = attributes.contains(.concurrent)
+            ? _openuiDispatchConcurrentQueueFlag
+            : 0
+        let targetKind = target?.queueKind ?? 0
+        let targetQueue = target?.opaqueQueue
+        let queue = label.withCString { labelPointer in
+            _openuiDispatchCreateQueue(
+                labelPointer,
+                flags,
+                qos.qosClass.rawValue,
+                Int32(clamping: qos.relativePriority),
+                targetKind,
+                targetQueue
+            )
+        }
+        guard let queue else {
+            fatalError("Linux libdispatch refused private queue \(label)")
+        }
+        queueKind = _openuiDispatchPrivateQueueKind
+        opaqueQueue = queue
+        self.label = label
+    }
+
+    deinit {
+        if queueKind == _openuiDispatchPrivateQueueKind,
+           let opaqueQueue {
+            _openuiDispatchReleaseQueue(opaqueQueue)
+        }
+    }
 
     public static func global(qos: DispatchQoS.QoSClass = .default) -> DispatchQueue {
         var queue = _openuiDispatchGetGlobalQueue(Int64(qos.rawValue), 4)
@@ -161,8 +305,39 @@ public final class DispatchQueue: @unchecked Sendable {
         }
         return DispatchQueue(
             queueKind: _openuiDispatchGlobalQueueKind,
-            opaqueQueue: queue
+            opaqueQueue: queue,
+            label: "com.apple.root.\(qos)"
         )
+    }
+
+    public func setSpecific<Value>(
+        key: DispatchSpecificKey<Value>,
+        value: Value?
+    ) {
+        let context: UnsafeMutableRawPointer? = value.map {
+            let box: _OpenDispatchSpecificValueBase =
+                _OpenDispatchSpecificValue($0)
+            return Unmanaged.passRetained(box).toOpaque()
+        }
+        _openuiDispatchQueueSetSpecific(
+            queueKind,
+            opaqueQueue,
+            key.opaqueKey,
+            context,
+            _openuiDispatchSwiftReleaseSpecific
+        )
+    }
+
+    public static func getSpecific<Value>(
+        key: DispatchSpecificKey<Value>
+    ) -> Value? {
+        guard let context = _openuiDispatchGetSpecific(key.opaqueKey) else {
+            return nil
+        }
+        let base = Unmanaged<_OpenDispatchSpecificValueBase>
+            .fromOpaque(context)
+            .takeUnretainedValue()
+        return (base as? _OpenDispatchSpecificValue<Value>)?.value
     }
 
     public func async(execute work: @escaping @Sendable () -> Void) {
@@ -189,6 +364,52 @@ public final class DispatchQueue: @unchecked Sendable {
             context,
             _openuiDispatchSwiftInvoke
         )
+    }
+}
+
+public enum DispatchTimeoutResult: Sendable, Hashable {
+    case success
+    case timedOut
+}
+
+public final class DispatchSemaphore: @unchecked Sendable {
+    private let opaqueSemaphore: UnsafeMutableRawPointer
+
+    public init(value: Int) {
+        precondition(value >= 0, "DispatchSemaphore value must be nonnegative")
+        guard let semaphore = _openuiDispatchSemaphoreCreate(
+            Int64(clamping: value)
+        ) else {
+            fatalError("Linux libdispatch refused semaphore")
+        }
+        opaqueSemaphore = semaphore
+    }
+
+    deinit {
+        _openuiDispatchSemaphoreRelease(opaqueSemaphore)
+    }
+
+    @discardableResult
+    public func signal() -> Int {
+        Int(clamping: _openuiDispatchSemaphoreSignal(opaqueSemaphore))
+    }
+
+    @discardableResult
+    public func wait() -> Int {
+        Int(_openuiDispatchSemaphoreWait(opaqueSemaphore, .max))
+    }
+
+    public func wait(timeout: DispatchTime) -> DispatchTimeoutResult {
+        let now = _openuiDispatchMonotonicNanoseconds()
+        let delay: UInt64
+        if timeout == .distantFuture {
+            delay = .max
+        } else {
+            delay = timeout.rawValue > now ? timeout.rawValue - now : 0
+        }
+        return _openuiDispatchSemaphoreWait(opaqueSemaphore, delay) == 0
+            ? .success
+            : .timedOut
     }
 }
 

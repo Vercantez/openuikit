@@ -2280,7 +2280,7 @@ clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
 LD_LIBRARY_PATH="$RUNTIME/host" "$WORK/open-dispatch-host-tests" \
     > "$WORK/open-dispatch-host-test.log" 2>&1
 grep -Fx \
-    'OPEN_DISPATCH_HOST_OK global=minted async=worker after=timer main-token=contained glibc>=2.38' \
+    'OPEN_DISPATCH_HOST_OK global=minted private=serial specific=typed semaphore=signal,timeout async=worker after=timer tokens=contained glibc>=2.38' \
     "$WORK/open-dispatch-host-test.log" >/dev/null \
     || die 'native Dispatch host semantic marker is missing'
 
@@ -2289,10 +2289,18 @@ DISPATCH_HOST_EXPECTED_EXPORTS=$WORK/open-dispatch-host-expected-exports.txt
     printf '%s\n' \
         openui_dispatch_host_v1_after \
         openui_dispatch_host_v1_async \
+        openui_dispatch_host_v1_create_queue \
         openui_dispatch_host_v1_get_global_queue \
+        openui_dispatch_host_v1_get_specific \
         openui_dispatch_host_v1_main \
         openui_dispatch_host_v1_monotonic_nanoseconds \
-        openui_dispatch_host_v1_runtime_check
+        openui_dispatch_host_v1_queue_set_specific \
+        openui_dispatch_host_v1_release_queue \
+        openui_dispatch_host_v1_runtime_check \
+        openui_dispatch_host_v1_semaphore_create \
+        openui_dispatch_host_v1_semaphore_release \
+        openui_dispatch_host_v1_semaphore_signal \
+        openui_dispatch_host_v1_semaphore_wait
 } > "$DISPATCH_HOST_EXPECTED_EXPORTS"
 readelf --wide --syms "$DISPATCH_HOST" \
     | awk '$5 == "GLOBAL" && $7 != "UND" && $8 ~ /^openui_dispatch_host_v1_/ { print $8 }' \
@@ -2328,7 +2336,9 @@ done
     while IFS= read -r soname; do
         printf 'direct-soname\t%s\n' "$soname"
     done < "$WORK/open-dispatch-host-sonames.txt"
-    printf 'queue-policy\tmain=kind-only\tglobal=helper-minted-only\n'
+    printf 'queue-policy\tmain=kind-only\tglobal=helper-minted-only\tprivate=helper-minted,serial-or-concurrent\n'
+    printf 'specific-policy\tkey=opaque\tvalue=retained\tdestructor=guest-callback\n'
+    printf 'semaphore-policy\thandle=helper-minted\twait=bounded-or-forever\n'
     printf 'job-policy\tguest-callback=opaque\thost-dispatch=dispatch_async_f\n'
 } > "$STAGE/attestation/open-dispatch-host.tsv"
 cp "$WORK/open-dispatch-host-test.log" \
@@ -2347,15 +2357,31 @@ DISPATCH_DARWIN=$RUNTIME/darwin/usr/lib/libOpenDispatch.dylib
     printf '%s\n' \
         _openui_dispatch_v1_after \
         _openui_dispatch_v1_async \
+        _openui_dispatch_v1_create_queue \
         _openui_dispatch_v1_get_global_queue \
-        _openui_dispatch_v1_monotonic_nanoseconds
+        _openui_dispatch_v1_get_specific \
+        _openui_dispatch_v1_monotonic_nanoseconds \
+        _openui_dispatch_v1_queue_set_specific \
+        _openui_dispatch_v1_release_queue \
+        _openui_dispatch_v1_semaphore_create \
+        _openui_dispatch_v1_semaphore_release \
+        _openui_dispatch_v1_semaphore_signal \
+        _openui_dispatch_v1_semaphore_wait
 } > "$WORK/open-dispatch-mach-expected-exports.txt"
 {
     printf '%s\n' \
         _glibc_openui_dispatch_host_v1_after \
         _glibc_openui_dispatch_host_v1_async \
+        _glibc_openui_dispatch_host_v1_create_queue \
         _glibc_openui_dispatch_host_v1_get_global_queue \
-        _glibc_openui_dispatch_host_v1_monotonic_nanoseconds
+        _glibc_openui_dispatch_host_v1_get_specific \
+        _glibc_openui_dispatch_host_v1_monotonic_nanoseconds \
+        _glibc_openui_dispatch_host_v1_queue_set_specific \
+        _glibc_openui_dispatch_host_v1_release_queue \
+        _glibc_openui_dispatch_host_v1_semaphore_create \
+        _glibc_openui_dispatch_host_v1_semaphore_release \
+        _glibc_openui_dispatch_host_v1_semaphore_signal \
+        _glibc_openui_dispatch_host_v1_semaphore_wait
 } > "$WORK/open-dispatch-mach-expected-imports.txt"
 llvm-nm-18 --defined-only --extern-only --just-symbol-name \
     "$DISPATCH_DARWIN" | LC_ALL=C sort -u \
@@ -5513,7 +5539,7 @@ llvm-otool-18 -hv "$STAGE/probe/DispatchMachORuntime" \
         "$RUNTIME/machorun" ./probe/DispatchMachORuntime
 ) | tee "$STAGE/attestation/dispatch-runtime.log"
 grep -Fx \
-    'OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 main=23 after=29 scheduler=immediate,delayed,cancelled,receive-on vouchers=null' \
+    'OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 private=serial,specific semaphore=signal,timeout main=23 after=29 scheduler=immediate,delayed,cancelled,receive-on vouchers=null' \
     "$STAGE/attestation/dispatch-runtime.log" >/dev/null \
     || die 'real Dispatch/Swift-concurrency Mach-O runtime marker is missing'
 

@@ -35,6 +35,47 @@ private enum DispatchMachORuntime {
         }
         require(globalValue == 17, "portable Dispatch global callback")
 
+        let privateQueue = DispatchQueue(
+            label: "portable.private",
+            qos: .utility
+        )
+        let privateKey = DispatchSpecificKey<String>()
+        privateQueue.setSpecific(key: privateKey, value: "private")
+        let privateValues = Mutex<[Int]>([])
+        let privateDone = DispatchSemaphore(value: 0)
+        for value in 1 ... 2 {
+            privateQueue.async {
+                require(
+                    DispatchQueue.getSpecific(key: privateKey) == "private",
+                    "private queue specific value"
+                )
+                privateValues.withLock { $0.append(value) }
+                privateDone.signal()
+            }
+        }
+        require(
+            privateDone.wait(timeout: .now() + .seconds(2)) == .success,
+            "first private queue callback"
+        )
+        require(
+            privateDone.wait(timeout: .now() + .seconds(2)) == .success,
+            "second private queue callback"
+        )
+        require(
+            privateValues.withLock { $0 } == [1, 2],
+            "private queue serial ordering"
+        )
+        require(
+            DispatchQueue.getSpecific(key: privateKey) == nil,
+            "queue specific value escaped its callback"
+        )
+        let timeoutSemaphore = DispatchSemaphore(value: 0)
+        require(
+            timeoutSemaphore.wait(timeout: .now() + .milliseconds(1))
+                == .timedOut,
+            "semaphore timeout"
+        )
+
         let mainValue = await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
                 continuation.resume(returning: 23)
@@ -104,6 +145,6 @@ private enum DispatchMachORuntime {
         require(receivedValue == 41, "OpenCombine receive(on:) delivery")
         cancellable.value?.cancel()
 
-        print("OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 main=23 after=29 scheduler=immediate,delayed,cancelled,receive-on vouchers=null")
+        print("OPEN_DISPATCH_MACHO_OK async-main=drained taskgroup=8 detached=42 global=17 private=serial,specific semaphore=signal,timeout main=23 after=29 scheduler=immediate,delayed,cancelled,receive-on vouchers=null")
     }
 }
