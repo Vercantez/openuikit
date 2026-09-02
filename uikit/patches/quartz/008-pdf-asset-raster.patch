@@ -1,0 +1,1985 @@
+diff --git a/Sources/CQuartz/include/quartz/pdf.h b/Sources/CQuartz/include/quartz/pdf.h
+index eac204d3fd12ef13698e173a7d3b4089e949f3e6..c6d00ac2099c888aba221c2606b2d72ea1796207 100644
+--- a/Sources/CQuartz/include/quartz/pdf.h
++++ b/Sources/CQuartz/include/quartz/pdf.h
+@@ -31,12 +31,21 @@ void QZPDFContextFillPath(QZContextRef ctx);
+ void QZPDFContextStrokePath(QZContextRef ctx);
+ 
+ QZPDFDocumentRef QZPDFDocumentCreateWithFile(const char *path);
++QZPDFDocumentRef QZPDFDocumentCreateWithBytes(const uint8_t *bytes, size_t length);
+ void QZPDFDocumentRelease(QZPDFDocumentRef doc);
+ size_t QZPDFDocumentGetNumberOfPages(QZPDFDocumentRef doc);
+ QZPDFPageRef QZPDFDocumentGetPage(QZPDFDocumentRef doc, size_t index); /* 1-based */
+ QZRect QZPDFPageGetBoxRect(QZPDFPageRef page);
+ void QZContextDrawPDFPage(QZContextRef ctx, QZPDFPageRef page);
+ 
++/* Rasterise one PDF page into straight-alpha RGBA8.  This is the bounded,
++ * dependency-free entry point used by OpenUIKit's asset-catalog loader.
++ * `scale` is pixels per PDF point.  The returned buffer is
++ * width*height*4 bytes and is released with QZImageFreeRGBA.  Unsupported or
++ * malformed PDF constructs fail closed and return NULL. */
++uint8_t *QZPDFPageRasterizeRGBA(QZPDFPageRef page, QZFloat scale,
++                                int *out_width, int *out_height);
++
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/Sources/CQuartz/pkg_pdf.cpp b/Sources/CQuartz/pkg_pdf.cpp
+index a2f04ce6053463bd448453a9905e384ec931bb96..a9ce718e3068ee388e0433eaf1d432aabe8fc761 100644
+--- a/Sources/CQuartz/pkg_pdf.cpp
++++ b/Sources/CQuartz/pkg_pdf.cpp
+@@ -2,10 +2,19 @@
+ /* OWNED BY package pdf. */
+ 
+ #include <cctype>
++#include <cerrno>
+ #include <cstdio>
+ #include <cstdlib>
++#include <limits>
++#include <memory>
++#include <unordered_set>
+ #include <unordered_map>
+ 
++/* CQuartz already carries stb's public-domain zlib decoder for PNG.  Reuse
++ * that implementation for PDF Flate streams instead of introducing a host
++ * libz/runtime dependency. */
++#include "stb_image.h"
++
+ using namespace qz;
+ 
+ struct PDFPageRec {
+@@ -21,12 +30,19 @@ struct PDFWriter {
+     bool pageOpen = false;
+ };
+ 
++struct PDFFile;
++struct QZPDFDocument;
++
+ struct QZPDFPage {
+     QZRect box{{0, 0}, {0, 0}};
+-    std::string content;
++    QZPDFDocument *owner = nullptr;
++    int object_number = 0;
++    int resources_owner = 0;
++    std::vector<int> content_objects;
+ };
+ 
+ struct QZPDFDocument {
++    PDFFile *file = nullptr;
+     std::vector<QZPDFPage> pages;
+ };
+ 
+@@ -329,141 +345,679 @@ void QZPDFContextStrokePath(QZContextRef ctx) {
+     emit(writer_of(ctx), "S");
+ }
+ 
+-/* ---- reader: our uncompressed files only (rg/RG/re/f/m/l/c/h/S/w/cm/q/Q) ---- */
++/* ---- bounded PDF reader -------------------------------------------------
++ *
++ * Asset-catalog PDFs are ordinary PDFs, not merely bags of streams.  The
++ * old reader paired every MediaBox with every stream in file order; that
++ * accidentally treated ICC profiles, masks and metadata as pages.  This
++ * reader follows the traditional xref table, parses indirect objects and
++ * walks the real Catalog/Pages tree.  Object streams, encryption and exotic
++ * filters are intentionally rejected. */
++
++static constexpr size_t kPDFMaxBytes = 128u * 1024u * 1024u;
++static constexpr size_t kPDFMaxObjects = 32768;
++static constexpr size_t kPDFMaxDecodedStream = 128u * 1024u * 1024u;
++static constexpr size_t kPDFMaxContentStream = 16u * 1024u * 1024u;
++
++static bool pdf_white(unsigned char c) {
++    return c == 0 || c == 9 || c == 10 || c == 12 || c == 13 || c == 32;
++}
++
++static bool pdf_delim(unsigned char c) {
++    return pdf_white(c) || c == '(' || c == ')' || c == '<' || c == '>' ||
++           c == '[' || c == ']' || c == '{' || c == '}' || c == '/' || c == '%';
++}
++
++struct PDFValue {
++    enum Kind { Invalid, Null, Boolean, Number, Name, String, Array, Dictionary, Ref };
++    Kind kind = Invalid;
++    bool boolean = false;
++    double number = 0;
++    int reference = 0;
++    std::string text;
++    std::vector<PDFValue> array;
++    std::vector<std::pair<std::string, PDFValue>> dictionary;
++
++    static PDFValue make_number(double n) {
++        PDFValue v; v.kind = Number; v.number = n; return v;
++    }
++};
++
++static const PDFValue *pdf_dict_get(const PDFValue *value, const char *key) {
++    if (!value || value->kind != PDFValue::Dictionary) return nullptr;
++    for (const auto &entry : value->dictionary)
++        if (entry.first == key) return &entry.second;
++    return nullptr;
++}
++
++class PDFParser {
++public:
++    PDFParser(const std::string &bytes, size_t begin, size_t end)
++        : s(bytes), p(begin), limit(std::min(end, bytes.size())) {}
++
++    void skip() {
++        for (;;) {
++            while (p < limit && pdf_white((unsigned char)s[p])) p++;
++            if (p < limit && s[p] == '%') {
++                while (p < limit && s[p] != '\n' && s[p] != '\r') p++;
++                continue;
++            }
++            break;
++        }
++    }
++
++    size_t position() const { return p; }
++    void set_position(size_t value) { p = std::min(value, limit); }
++
++    bool take_keyword(const char *word) {
++        skip();
++        size_t n = strlen(word);
++        if (p + n > limit || memcmp(s.data() + p, word, n) != 0) return false;
++        if (p + n < limit && !pdf_delim((unsigned char)s[p + n])) return false;
++        p += n;
++        return true;
++    }
++
++    bool parse_integer(int64_t *out) {
++        skip();
++        size_t start = p;
++        if (p < limit && (s[p] == '+' || s[p] == '-')) p++;
++        size_t digits = p;
++        while (p < limit && std::isdigit((unsigned char)s[p])) p++;
++        if (p == digits || (p < limit && !pdf_delim((unsigned char)s[p]))) {
++            p = start;
++            return false;
++        }
++        std::string token = s.substr(start, p - start);
++        char *end = nullptr;
++        errno = 0;
++        long long value = strtoll(token.c_str(), &end, 10);
++        if (errno == ERANGE || !end || *end) { p = start; return false; }
++        *out = (int64_t)value;
++        return true;
++    }
++
++    PDFValue value(int depth = 0) {
++        PDFValue bad;
++        if (depth > 48) return bad;
++        skip();
++        if (p >= limit) return bad;
++        if (s[p] == '<' && p + 1 < limit && s[p + 1] == '<')
++            return dictionary_value(depth + 1);
++        if (s[p] == '[') return array_value(depth + 1);
++        if (s[p] == '/') return name_value();
++        if (s[p] == '(') return literal_string();
++        if (s[p] == '<') return hex_string();
++        if (take_keyword("true")) {
++            PDFValue v; v.kind = PDFValue::Boolean; v.boolean = true; return v;
++        }
++        if (take_keyword("false")) {
++            PDFValue v; v.kind = PDFValue::Boolean; return v;
++        }
++        if (take_keyword("null")) {
++            PDFValue v; v.kind = PDFValue::Null; return v;
++        }
++
++        size_t save = p;
++        double first = 0;
++        if (!parse_numeric(&first)) return bad;
++        size_t after_first = p;
++        double second = 0;
++        if (std::isfinite(first) && first == std::floor(first) &&
++            parse_numeric(&second) && std::isfinite(second) && second == std::floor(second) &&
++            take_keyword("R") && first > 0 && second == 0 &&
++            first <= std::numeric_limits<int>::max()) {
++            PDFValue v; v.kind = PDFValue::Ref; v.reference = (int)first; return v;
++        }
++        p = after_first;
++        (void)save;
++        return PDFValue::make_number(first);
++    }
++
++private:
++    const std::string &s;
++    size_t p;
++    size_t limit;
++
++    bool parse_numeric(double *out) {
++        skip();
++        size_t start = p;
++        if (p < limit && (s[p] == '+' || s[p] == '-')) p++;
++        bool digit = false;
++        while (p < limit && std::isdigit((unsigned char)s[p])) { p++; digit = true; }
++        if (p < limit && s[p] == '.') {
++            p++;
++            while (p < limit && std::isdigit((unsigned char)s[p])) { p++; digit = true; }
++        }
++        if (!digit || (p < limit && !pdf_delim((unsigned char)s[p]))) {
++            p = start;
++            return false;
++        }
++        std::string token = s.substr(start, p - start);
++        char *end = nullptr;
++        double n = strtod(token.c_str(), &end);
++        if (!end || *end != 0 || !std::isfinite(n)) { p = start; return false; }
++        *out = n;
++        return true;
++    }
++
++    PDFValue name_value() {
++        PDFValue v;
++        if (p >= limit || s[p] != '/') return v;
++        p++;
++        v.kind = PDFValue::Name;
++        while (p < limit && !pdf_delim((unsigned char)s[p])) {
++            unsigned char c = (unsigned char)s[p++];
++            if (c == '#' && p + 1 < limit && std::isxdigit((unsigned char)s[p]) &&
++                std::isxdigit((unsigned char)s[p + 1])) {
++                auto hex = [](unsigned char h) -> int {
++                    if (h >= '0' && h <= '9') return h - '0';
++                    h = (unsigned char)std::tolower(h);
++                    return 10 + h - 'a';
++                };
++                c = (unsigned char)((hex((unsigned char)s[p]) << 4) |
++                                    hex((unsigned char)s[p + 1]));
++                p += 2;
++            }
++            v.text.push_back((char)c);
++        }
++        return v;
++    }
++
++    PDFValue literal_string() {
++        PDFValue v;
++        if (p >= limit || s[p++] != '(') return v;
++        v.kind = PDFValue::String;
++        int depth = 1;
++        while (p < limit && depth > 0) {
++            unsigned char c = (unsigned char)s[p++];
++            if (c == '\\') {
++                if (p >= limit) return PDFValue{};
++                unsigned char e = (unsigned char)s[p++];
++                if (e == '\r') { if (p < limit && s[p] == '\n') p++; continue; }
++                if (e == '\n') continue;
++                if (e >= '0' && e <= '7') {
++                    int n = e - '0';
++                    for (int k = 0; k < 2 && p < limit && s[p] >= '0' && s[p] <= '7'; k++)
++                        n = n * 8 + (s[p++] - '0');
++                    v.text.push_back((char)(n & 255));
++                } else {
++                    switch (e) {
++                    case 'n': v.text.push_back('\n'); break;
++                    case 'r': v.text.push_back('\r'); break;
++                    case 't': v.text.push_back('\t'); break;
++                    case 'b': v.text.push_back('\b'); break;
++                    case 'f': v.text.push_back('\f'); break;
++                    default: v.text.push_back((char)e); break;
++                    }
++                }
++                continue;
++            }
++            if (c == '(') { depth++; v.text.push_back((char)c); }
++            else if (c == ')') { if (--depth > 0) v.text.push_back((char)c); }
++            else v.text.push_back((char)c);
++        }
++        if (depth != 0) return PDFValue{};
++        return v;
++    }
++
++    PDFValue hex_string() {
++        PDFValue v;
++        if (p >= limit || s[p++] != '<') return v;
++        v.kind = PDFValue::String;
++        int high = -1;
++        while (p < limit && s[p] != '>') {
++            unsigned char c = (unsigned char)s[p++];
++            if (pdf_white(c)) continue;
++            if (!std::isxdigit(c)) return PDFValue{};
++            int n = std::isdigit(c) ? c - '0' : 10 + std::tolower(c) - 'a';
++            if (high < 0) high = n;
++            else { v.text.push_back((char)((high << 4) | n)); high = -1; }
++        }
++        if (p >= limit || s[p++] != '>') return PDFValue{};
++        if (high >= 0) v.text.push_back((char)(high << 4));
++        return v;
++    }
++
++    PDFValue array_value(int depth) {
++        PDFValue v;
++        if (p >= limit || s[p++] != '[') return v;
++        v.kind = PDFValue::Array;
++        while (v.array.size() <= 65536) {
++            skip();
++            if (p < limit && s[p] == ']') { p++; return v; }
++            PDFValue item = value(depth);
++            if (item.kind == PDFValue::Invalid) return PDFValue{};
++            v.array.push_back(std::move(item));
++        }
++        return PDFValue{};
++    }
++
++    PDFValue dictionary_value(int depth) {
++        PDFValue v;
++        if (p + 1 >= limit || s[p] != '<' || s[p + 1] != '<') return v;
++        p += 2;
++        v.kind = PDFValue::Dictionary;
++        while (v.dictionary.size() <= 65536) {
++            skip();
++            if (p + 1 < limit && s[p] == '>' && s[p + 1] == '>') {
++                p += 2;
++                return v;
++            }
++            PDFValue key = name_value();
++            if (key.kind != PDFValue::Name) return PDFValue{};
++            for (const auto &existing : v.dictionary)
++                if (existing.first == key.text) return PDFValue{};
++            PDFValue item = value(depth);
++            if (item.kind == PDFValue::Invalid) return PDFValue{};
++            v.dictionary.emplace_back(std::move(key.text), std::move(item));
++        }
++        return PDFValue{};
++    }
++};
++
++struct PDFObject {
++    PDFValue value;
++    size_t after_value = 0;
++    size_t stream_start = 0;
++    size_t stream_length = 0;
++    bool has_stream = false;
++    bool decoded = false;
++    bool decode_ok = false;
++    std::vector<uint8_t> decoded_stream;
++};
++
++struct PDFFile {
++    std::string bytes;
++    std::unordered_map<int, PDFObject> objects;
++    std::unordered_map<int, QZImageRef> images;
++    int root_object = 0;
++};
++
++static const PDFValue *pdf_resolve(const PDFFile *file, const PDFValue *value,
++                                   int depth = 0) {
++    if (!file || !value || depth > 32) return nullptr;
++    if (value->kind != PDFValue::Ref) return value;
++    auto it = file->objects.find(value->reference);
++    if (it == file->objects.end()) return nullptr;
++    return pdf_resolve(file, &it->second.value, depth + 1);
++}
++
++static bool pdf_number(const PDFFile *file, const PDFValue *value, double *out) {
++    value = pdf_resolve(file, value);
++    if (!value || value->kind != PDFValue::Number || !std::isfinite(value->number)) return false;
++    *out = value->number;
++    return true;
++}
++
++static bool pdf_int(const PDFFile *file, const PDFValue *value, int *out) {
++    double n = 0;
++    if (!pdf_number(file, value, &n) || n != std::floor(n) ||
++        n < std::numeric_limits<int>::min() || n > std::numeric_limits<int>::max())
++        return false;
++    *out = (int)n;
++    return true;
++}
+ 
+-static bool is_ident(unsigned char c) {
+-    return std::isalnum(c) || c == '*' || c == '\'' || c == '"';
++static bool pdf_name(const PDFFile *file, const PDFValue *value, std::string *out) {
++    value = pdf_resolve(file, value);
++    if (!value || value->kind != PDFValue::Name) return false;
++    *out = value->text;
++    return true;
++}
++
++static bool pdf_array_numbers(const PDFFile *file, const PDFValue *value,
++                              size_t count, double *out) {
++    value = pdf_resolve(file, value);
++    if (!value || value->kind != PDFValue::Array || value->array.size() != count) return false;
++    for (size_t i = 0; i < count; i++)
++        if (!pdf_number(file, &value->array[i], &out[i])) return false;
++    return true;
+ }
+ 
+ static bool load_file(const char *path, std::string *out) {
+     if (!path || !out) return false;
+     FILE *fp = fopen(path, "rb");
+     if (!fp) return false;
+-    if (fseek(fp, 0, SEEK_END) != 0) {
+-        fclose(fp);
+-        return false;
+-    }
++    if (fseek(fp, 0, SEEK_END) != 0) { fclose(fp); return false; }
+     long n = ftell(fp);
+-    if (n < 0) {
+-        fclose(fp);
+-        return false;
+-    }
++    if (n < 8 || (uint64_t)n > kPDFMaxBytes) { fclose(fp); return false; }
+     rewind(fp);
+     out->assign((size_t)n, '\0');
+-    size_t nr = n ? fread(out->data(), 1, (size_t)n, fp) : 0;
++    size_t nr = fread(out->data(), 1, (size_t)n, fp);
+     fclose(fp);
+-    out->resize(nr);
+-    return nr >= 8;
+-}
+-
+-static bool keyword_at(const std::string &s, size_t i, const char *kw) {
+-    size_t n = strlen(kw);
+-    if (i + n > s.size()) return false;
+-    if (memcmp(s.data() + i, kw, n) != 0) return false;
+-    if (i > 0 && is_ident((unsigned char)s[i - 1])) return false;
+-    if (i + n < s.size() && is_ident((unsigned char)s[i + n])) return false;
++    if (nr != (size_t)n) { out->clear(); return false; }
+     return true;
+ }
+ 
+-static void skip_ws_and_comments(const std::string &s, size_t *i) {
+-    size_t n = s.size();
+-    size_t p = *i;
++static bool pdf_parse_xref(PDFFile *file, size_t offset,
++                           std::unordered_map<int, size_t> *offsets,
++                           std::unordered_set<size_t> *visited) {
++    if (!file || !offsets || !visited || offset >= file->bytes.size() ||
++        !visited->insert(offset).second || visited->size() > 32) return false;
++    PDFParser p(file->bytes, offset, file->bytes.size());
++    if (!p.take_keyword("xref")) return false; /* xref streams fail closed */
+     for (;;) {
+-        while (p < n && std::isspace((unsigned char)s[p])) p++;
+-        if (p < n && s[p] == '%') {
+-            while (p < n && s[p] != '\n' && s[p] != '\r') p++;
+-            continue;
++        p.skip();
++        size_t save = p.position();
++        if (p.take_keyword("trailer")) {
++            PDFValue trailer = p.value();
++            if (trailer.kind != PDFValue::Dictionary) return false;
++            const PDFValue *root = pdf_dict_get(&trailer, "Root");
++            if (root) {
++                if (root->kind != PDFValue::Ref) return false;
++                if (file->root_object == 0) file->root_object = root->reference;
++            }
++            if (pdf_dict_get(&trailer, "Encrypt") || pdf_dict_get(&trailer, "XRefStm"))
++                return false;
++            if (const PDFValue *size = pdf_dict_get(&trailer, "Size")) {
++                if (size->kind != PDFValue::Number || size->number < 1 ||
++                    size->number != std::floor(size->number) ||
++                    size->number > std::numeric_limits<int>::max()) return false;
++            }
++            const PDFValue *prev = pdf_dict_get(&trailer, "Prev");
++            if (prev) {
++                if (prev->kind != PDFValue::Number || prev->number <= 0 ||
++                    prev->number != std::floor(prev->number) ||
++                    prev->number >= (double)file->bytes.size()) return false;
++                return pdf_parse_xref(file, (size_t)prev->number, offsets, visited);
++            }
++            return true;
++        }
++        p.set_position(save);
++        int64_t first = 0, count = 0;
++        if (!p.parse_integer(&first) || !p.parse_integer(&count) || first < 0 ||
++            count < 0 || count > (int64_t)kPDFMaxObjects ||
++            first > std::numeric_limits<int>::max() ||
++            count > std::numeric_limits<int>::max() - first) return false;
++        for (int64_t i = 0; i < count; i++) {
++            int64_t object_offset = 0, generation = 0;
++            if (!p.parse_integer(&object_offset) || !p.parse_integer(&generation)) return false;
++            p.skip();
++            size_t flag_at = p.position();
++            if (flag_at >= file->bytes.size()) return false;
++            char flag = file->bytes[flag_at];
++            p.set_position(flag_at + 1);
++            if (flag == 'n' && generation == 0 && object_offset > 0 &&
++                object_offset < (int64_t)file->bytes.size()) {
++                int object_number = (int)(first + i);
++                if (object_number <= 0) return false;
++                if (offsets->find(object_number) == offsets->end())
++                    (*offsets)[object_number] = (size_t)object_offset;
++            } else if (flag != 'f' && flag != 'n') {
++                return false;
++            }
+         }
+-        break;
+     }
+-    *i = p;
+ }
+ 
+-static bool parse_number_at(const std::string &s, size_t *i, double *out) {
+-    skip_ws_and_comments(s, i);
+-    size_t p = *i;
+-    size_t n = s.size();
+-    if (p >= n) return false;
+-    char *end = nullptr;
+-    double v = strtod(s.data() + p, &end);
+-    if (end == s.data() + p) return false;
+-    *out = v;
+-    *i = (size_t)(end - s.data());
++static bool pdf_find_startxref(const std::string &bytes, size_t *out) {
++    size_t at = bytes.rfind("startxref");
++    if (at == std::string::npos) return false;
++    PDFParser p(bytes, at + 9, bytes.size());
++    int64_t offset = 0;
++    if (!p.parse_integer(&offset) || offset < 0 || offset >= (int64_t)bytes.size()) return false;
++    *out = (size_t)offset;
+     return true;
+ }
+ 
+-static bool extract_stream(const std::string &s, size_t stream_kw, std::string *out) {
+-    size_t i = stream_kw + 6;
+-    if (i < s.size() && s[i] == '\r') i++;
+-    if (i < s.size() && s[i] == '\n') i++;
+-    size_t e = i;
+-    while (e < s.size() && !keyword_at(s, e, "endstream")) e++;
+-    if (e >= s.size()) return false;
+-    size_t t = e;
+-    if (t > i && s[t - 1] == '\n') t--;
+-    if (t > i && s[t - 1] == '\r') t--;
+-    *out = s.substr(i, t - i);
++static bool pdf_parse_objects(PDFFile *file,
++                              const std::unordered_map<int, size_t> &offsets) {
++    if (!file || offsets.empty() || offsets.size() > kPDFMaxObjects) return false;
++    for (const auto &entry : offsets) {
++        int object_number = entry.first;
++        PDFParser p(file->bytes, entry.second, file->bytes.size());
++        int64_t parsed_number = 0, generation = 0;
++        if (!p.parse_integer(&parsed_number) || !p.parse_integer(&generation) ||
++            parsed_number != object_number || generation != 0 || !p.take_keyword("obj"))
++            return false;
++        PDFObject object;
++        object.value = p.value();
++        if (object.value.kind == PDFValue::Invalid) return false;
++        size_t after_value = p.position();
++        object.after_value = after_value;
++        p.skip();
++        if (p.take_keyword("stream")) {
++            size_t stream_at = p.position();
++            if (stream_at >= file->bytes.size()) return false;
++            if (file->bytes[stream_at] == '\r') {
++                stream_at++;
++                if (stream_at < file->bytes.size() && file->bytes[stream_at] == '\n') stream_at++;
++            } else if (file->bytes[stream_at] == '\n') {
++                stream_at++;
++            } else {
++                return false;
++            }
++            object.has_stream = true;
++            object.stream_start = stream_at;
++        } else {
++            p.set_position(after_value);
++        }
++        file->objects.emplace(object_number, std::move(object));
++    }
++
++    /* Length references can point forward, so bind streams after all object
++     * values exist.  Trust the declared byte count, then verify endstream at
++     * exactly that boundary; never search through binary payloads. */
++    for (auto &entry : file->objects) {
++        PDFObject &object = entry.second;
++        if (!object.has_stream) {
++            PDFParser tail(file->bytes, object.after_value, file->bytes.size());
++            if (!tail.take_keyword("endobj")) return false;
++            continue;
++        }
++        const PDFValue *length_value = pdf_dict_get(&object.value, "Length");
++        int length = 0;
++        if (!pdf_int(file, length_value, &length) || length < 0 ||
++            (size_t)length > kPDFMaxBytes || object.stream_start + (size_t)length > file->bytes.size())
++            return false;
++        size_t end = object.stream_start + (size_t)length;
++        size_t check = end;
++        if (check < file->bytes.size() && file->bytes[check] == '\r') check++;
++        if (check < file->bytes.size() && file->bytes[check] == '\n') check++;
++        PDFParser tail(file->bytes, check, file->bytes.size());
++        if (!tail.take_keyword("endstream") || !tail.take_keyword("endobj")) return false;
++        object.stream_length = (size_t)length;
++    }
+     return true;
+ }
+ 
+-static bool parse_our_pdf(const std::string &s, QZPDFDocument *doc) {
+-    std::vector<QZRect> boxes;
+-    std::vector<std::string> streams;
+-    size_t n = s.size();
+-    for (size_t i = 0; i < n; i++) {
+-        if (s[i] == '/' && i + 9 <= n && memcmp(s.data() + i, "/MediaBox", 9) == 0) {
+-            size_t p = i + 9;
+-            skip_ws_and_comments(s, &p);
+-            if (p < n && s[p] == '[') p++;
+-            double v[4];
+-            bool ok = true;
+-            for (int k = 0; k < 4; k++) {
+-                if (!parse_number_at(s, &p, &v[k])) {
+-                    ok = false;
+-                    break;
+-                }
+-            }
+-            if (ok) {
+-                QZRect box = QZRectMake(v[0], v[1], v[2] - v[0], v[3] - v[1]);
+-                boxes.push_back(box);
+-            }
+-            i = p;
+-            continue;
++static bool pdf_stream_filters(const PDFFile *file, const PDFObject &object,
++                               bool *flate) {
++    *flate = false;
++    const PDFValue *filter = pdf_resolve(file, pdf_dict_get(&object.value, "Filter"));
++    if (!filter || filter->kind == PDFValue::Null) return true;
++    if (filter->kind == PDFValue::Name) {
++        if (filter->text != "FlateDecode" && filter->text != "Fl") return false;
++        *flate = true;
++        return true;
++    }
++    if (filter->kind == PDFValue::Array && filter->array.size() == 1) {
++        std::string name;
++        if (!pdf_name(file, &filter->array[0], &name) ||
++            (name != "FlateDecode" && name != "Fl")) return false;
++        *flate = true;
++        return true;
++    }
++    return false;
++}
++
++static bool pdf_decode_stream(PDFFile *file, int object_number, size_t max_output,
++                              size_t exact_output, const std::vector<uint8_t> **out) {
++    if (!file || !out || max_output == 0 || max_output > kPDFMaxDecodedStream) return false;
++    auto it = file->objects.find(object_number);
++    if (it == file->objects.end() || !it->second.has_stream) return false;
++    PDFObject &object = it->second;
++    if (object.decoded) {
++        if (!object.decode_ok || object.decoded_stream.size() > max_output ||
++            (exact_output && object.decoded_stream.size() != exact_output)) return false;
++        *out = &object.decoded_stream;
++        return true;
++    }
++    object.decoded = true;
++    bool flate = false;
++    if (!pdf_stream_filters(file, object, &flate)) return false;
++    const uint8_t *raw = (const uint8_t *)file->bytes.data() + object.stream_start;
++    size_t raw_count = object.stream_length;
++    if (!flate) {
++        if (raw_count > max_output || (exact_output && raw_count != exact_output)) return false;
++        object.decoded_stream.assign(raw, raw + raw_count);
++        object.decode_ok = true;
++        *out = &object.decoded_stream;
++        return true;
++    }
++    if (raw_count == 0 || raw_count > (size_t)std::numeric_limits<int>::max()) return false;
++    size_t capacity = exact_output ? exact_output : std::max<size_t>(4096, raw_count * 3);
++    capacity = std::min(capacity, max_output);
++    for (;;) {
++        if (capacity == 0 || capacity > (size_t)std::numeric_limits<int>::max()) return false;
++        object.decoded_stream.assign(capacity, 0);
++        int count = stbi_zlib_decode_buffer((char *)object.decoded_stream.data(),
++                                            (int)capacity, (const char *)raw,
++                                            (int)raw_count);
++        if (count >= 0) {
++            if ((size_t)count > max_output || (exact_output && (size_t)count != exact_output))
++                return false;
++            object.decoded_stream.resize((size_t)count);
++            object.decode_ok = true;
++            *out = &object.decoded_stream;
++            return true;
+         }
+-        if (keyword_at(s, i, "stream")) {
+-            std::string body;
+-            if (extract_stream(s, i, &body)) {
+-                streams.push_back(std::move(body));
+-                i += 6;
+-            }
++        if (exact_output || capacity == max_output) return false;
++        size_t next = capacity > max_output / 2 ? max_output : capacity * 2;
++        if (next <= capacity) return false;
++        capacity = next;
++    }
++}
++
++static bool pdf_box(const PDFFile *file, const PDFValue *value, QZRect *out) {
++    double v[4];
++    if (!pdf_array_numbers(file, value, 4, v) || v[2] <= v[0] || v[3] <= v[1] ||
++        v[2] - v[0] > 16384 || v[3] - v[1] > 16384) return false;
++    *out = QZRectMake(v[0], v[1], v[2] - v[0], v[3] - v[1]);
++    return true;
++}
++
++static bool pdf_collect_pages(QZPDFDocument *doc, int object_number,
++                              QZRect inherited_media, bool has_inherited_media,
++                              QZRect inherited_crop, bool has_inherited_crop,
++                              int resources_owner, int depth) {
++    if (!doc || !doc->file || depth > 32 || doc->pages.size() >= 256) return false;
++    auto it = doc->file->objects.find(object_number);
++    if (it == doc->file->objects.end()) return false;
++    const PDFValue *dictionary = pdf_resolve(doc->file, &it->second.value);
++    if (!dictionary || dictionary->kind != PDFValue::Dictionary) return false;
++    std::string type;
++    if (!pdf_name(doc->file, pdf_dict_get(dictionary, "Type"), &type)) return false;
++    QZRect media = inherited_media;
++    bool has_media = has_inherited_media;
++    if (const PDFValue *media_value = pdf_dict_get(dictionary, "MediaBox")) {
++        if (!pdf_box(doc->file, media_value, &media)) return false;
++        has_media = true;
++    }
++    QZRect crop = inherited_crop;
++    bool has_crop = has_inherited_crop;
++    if (const PDFValue *crop_value = pdf_dict_get(dictionary, "CropBox")) {
++        if (!pdf_box(doc->file, crop_value, &crop)) return false;
++        has_crop = true;
++    }
++    if (const PDFValue *rotate_value = pdf_dict_get(dictionary, "Rotate")) {
++        int rotate = 0;
++        if (!pdf_int(doc->file, rotate_value, &rotate) || rotate % 360 != 0) return false;
++    }
++    if (const PDFValue *unit_value = pdf_dict_get(dictionary, "UserUnit")) {
++        double unit = 0;
++        if (!pdf_number(doc->file, unit_value, &unit) || unit != 1) return false;
++    }
++    if (pdf_dict_get(dictionary, "Resources")) resources_owner = object_number;
++    if (type == "Pages") {
++        const PDFValue *kids = pdf_resolve(doc->file, pdf_dict_get(dictionary, "Kids"));
++        if (!kids || kids->kind != PDFValue::Array || kids->array.empty()) return false;
++        for (const PDFValue &kid : kids->array) {
++            if (kid.kind != PDFValue::Ref ||
++                !pdf_collect_pages(doc, kid.reference, media, has_media,
++                                   crop, has_crop, resources_owner, depth + 1))
++                return false;
+         }
++        return true;
+     }
+-    if (streams.empty()) return false;
+-    size_t np = streams.size();
+-    if (boxes.size() < np) {
+-        while (boxes.size() < np) boxes.push_back(QZRectMake(0, 0, 1, 1));
++    if (type != "Page" || !has_media || resources_owner == 0) return false;
++    QZRect box = has_crop ? crop : media;
++    if (box.origin.x < media.origin.x || box.origin.y < media.origin.y ||
++        box.origin.x + box.size.width > media.origin.x + media.size.width ||
++        box.origin.y + box.size.height > media.origin.y + media.size.height) return false;
++    const PDFValue *contents = pdf_dict_get(dictionary, "Contents");
++    if (!contents) return false;
++    QZPDFPage page;
++    page.box = box;
++    page.owner = doc;
++    page.object_number = object_number;
++    page.resources_owner = resources_owner;
++    if (contents->kind == PDFValue::Ref) {
++        page.content_objects.push_back(contents->reference);
++    } else {
++        contents = pdf_resolve(doc->file, contents);
++        if (!contents || contents->kind != PDFValue::Array || contents->array.empty()) return false;
++        for (const PDFValue &item : contents->array) {
++            if (item.kind != PDFValue::Ref) return false;
++            page.content_objects.push_back(item.reference);
++        }
+     }
+-    doc->pages.resize(np);
+-    for (size_t i = 0; i < np; i++) {
+-        doc->pages[i].box = boxes[i];
+-        doc->pages[i].content = std::move(streams[i]);
++    for (int ref : page.content_objects) {
++        auto stream = doc->file->objects.find(ref);
++        if (stream == doc->file->objects.end() || !stream->second.has_stream) return false;
+     }
++    doc->pages.push_back(std::move(page));
++    return true;
++}
++
++static bool parse_pdf(PDFFile *file, QZPDFDocument *doc) {
++    if (!file || !doc || file->bytes.size() < 8 || file->bytes.size() > kPDFMaxBytes ||
++        memcmp(file->bytes.data(), "%PDF-", 5) != 0) return false;
++    size_t xref = 0;
++    if (!pdf_find_startxref(file->bytes, &xref)) return false;
++    std::unordered_map<int, size_t> offsets;
++    std::unordered_set<size_t> visited;
++    if (!pdf_parse_xref(file, xref, &offsets, &visited) || file->root_object == 0 ||
++        !pdf_parse_objects(file, offsets)) return false;
++    auto root_it = file->objects.find(file->root_object);
++    if (root_it == file->objects.end()) return false;
++    const PDFValue *root = pdf_resolve(file, &root_it->second.value);
++    std::string type;
++    const PDFValue *pages = root ? pdf_dict_get(root, "Pages") : nullptr;
++    if (!root || !pdf_name(file, pdf_dict_get(root, "Type"), &type) || type != "Catalog" ||
++        !pages || pages->kind != PDFValue::Ref) return false;
++    QZRect empty = QZRectMake(0, 0, 0, 0);
++    if (!pdf_collect_pages(doc, pages->reference, empty, false, empty, false, 0, 0) ||
++        doc->pages.empty()) return false;
+     return true;
+ }
+ 
++QZPDFDocumentRef QZPDFDocumentCreateWithBytes(const uint8_t *bytes, size_t length) {
++    if (!bytes || length < 8 || length > kPDFMaxBytes) return nullptr;
++    std::unique_ptr<QZPDFDocument> doc(new QZPDFDocument());
++    std::unique_ptr<PDFFile> file(new PDFFile());
++    file->bytes.assign((const char *)bytes, length);
++    doc->file = file.get();
++    if (!parse_pdf(file.get(), doc.get())) return nullptr;
++    file.release();
++    return doc.release();
++}
++
+ QZPDFDocumentRef QZPDFDocumentCreateWithFile(const char *path) {
+     std::string data;
+     if (!load_file(path, &data)) return nullptr;
+-    if (data.size() < 5 || memcmp(data.data(), "%PDF-", 5) != 0) return nullptr;
+-    auto *doc = new QZPDFDocument();
+-    if (!parse_our_pdf(data, doc) || doc->pages.empty()) {
+-        delete doc;
+-        return nullptr;
+-    }
+-    return doc;
++    return QZPDFDocumentCreateWithBytes((const uint8_t *)data.data(), data.size());
+ }
+ 
+-void QZPDFDocumentRelease(QZPDFDocumentRef doc) { delete doc; }
++void QZPDFDocumentRelease(QZPDFDocumentRef doc) {
++    if (!doc) return;
++    if (doc->file) {
++        for (auto &entry : doc->file->images) QZImageRelease(entry.second);
++        delete doc->file;
++    }
++    delete doc;
++}
+ 
+ size_t QZPDFDocumentGetNumberOfPages(QZPDFDocumentRef doc) {
+     return doc ? doc->pages.size() : 0;
+@@ -478,119 +1032,1042 @@ QZRect QZPDFPageGetBoxRect(QZPDFPageRef page) {
+     return page ? page->box : QZRectMake(0, 0, 0, 0);
+ }
+ 
+-static bool popn(std::vector<double> &st, int n, double *out) {
+-    if ((int)st.size() < n) return false;
+-    for (int i = 0; i < n; i++) out[i] = st[st.size() - (size_t)n + (size_t)i];
+-    st.resize(st.size() - (size_t)n);
+-    return true;
++/* ---- checked content replay ------------------------------------------- */
++
++static const PDFValue *pdf_object_dictionary(PDFFile *file, int object_number) {
++    if (!file) return nullptr;
++    auto it = file->objects.find(object_number);
++    if (it == file->objects.end()) return nullptr;
++    const PDFValue *value = pdf_resolve(file, &it->second.value);
++    return value && value->kind == PDFValue::Dictionary ? value : nullptr;
+ }
+ 
+-static void replay_content(QZContextRef ctx, const std::string &cs) {
+-    std::vector<double> st;
+-    st.reserve(16);
+-    size_t i = 0, n = cs.size();
+-    while (i < n) {
+-        skip_ws_and_comments(cs, &i);
+-        if (i >= n) break;
+-        unsigned char c = (unsigned char)cs[i];
+-        if (c == '+' || c == '-' || c == '.' || std::isdigit(c)) {
+-            double v;
+-            if (!parse_number_at(cs, &i, &v)) break;
+-            st.push_back(v);
+-            continue;
+-        }
++static const PDFValue *pdf_resources_for_owner(PDFFile *file, int owner) {
++    const PDFValue *dictionary = pdf_object_dictionary(file, owner);
++    const PDFValue *resources = dictionary ? pdf_dict_get(dictionary, "Resources") : nullptr;
++    resources = pdf_resolve(file, resources);
++    return resources && resources->kind == PDFValue::Dictionary ? resources : nullptr;
++}
++
++/* Return the raw resource entry so callers can retain its indirect object
++ * identity (important for image caching) before resolving the value. */
++static const PDFValue *pdf_resource(PDFFile *file, const PDFValue *resources,
++                                    const char *category, const std::string &name) {
++    resources = pdf_resolve(file, resources);
++    const PDFValue *table = resources ? pdf_dict_get(resources, category) : nullptr;
++    table = pdf_resolve(file, table);
++    return table ? pdf_dict_get(table, name.c_str()) : nullptr;
++}
++
++struct PDFOperand {
++    enum Kind { Number, Name, NumberArray, Other } kind = Other;
++    double number = 0;
++    std::string name;
++    std::vector<double> numbers;
++};
++
++class PDFContentLexer {
++public:
++    explicit PDFContentLexer(const std::vector<uint8_t> &bytes) : b(bytes) {}
++
++    /* Exactly one of operand/op is produced. */
++    bool next(PDFOperand *operand, std::string *op, bool *is_operand) {
++        skip();
++        if (p >= b.size()) return false;
++        unsigned char c = b[p];
+         if (c == '/') {
+-            i++;
+-            while (i < n && is_ident((unsigned char)cs[i])) i++;
+-            st.clear();
+-            continue;
++            p++;
++            operand->kind = PDFOperand::Name;
++            operand->name.clear();
++            while (p < b.size() && !pdf_delim(b[p])) {
++                unsigned char x = b[p++];
++                if (x == '#' && p + 1 < b.size() && std::isxdigit(b[p]) &&
++                    std::isxdigit(b[p + 1])) {
++                    auto hx = [](unsigned char h) -> int {
++                        if (h >= '0' && h <= '9') return h - '0';
++                        return 10 + std::tolower(h) - 'a';
++                    };
++                    x = (unsigned char)((hx(b[p]) << 4) | hx(b[p + 1]));
++                    p += 2;
++                }
++                operand->name.push_back((char)x);
++            }
++            *is_operand = true;
++            return true;
+         }
+-        if (c == '[' || c == ']') {
+-            i++;
+-            continue;
++        if (c == '[') {
++            p++;
++            operand->kind = PDFOperand::NumberArray;
++            operand->numbers.clear();
++            for (;;) {
++                skip();
++                if (p >= b.size()) return false;
++                if (b[p] == ']') { p++; break; }
++                double n = 0;
++                if (!number(&n) || operand->numbers.size() >= 256) return false;
++                operand->numbers.push_back(n);
++            }
++            *is_operand = true;
++            return true;
++        }
++        if (c == '(' || c == '<') {
++            /* Strings and inline dictionaries are legal marked-content
++             * operands but never influence asset drawing.  Skip them as an
++             * opaque operand; actual inline-image BI dictionaries remain
++             * unsupported and are rejected when BI is encountered. */
++            if (!skip_opaque()) return false;
++            operand->kind = PDFOperand::Other;
++            *is_operand = true;
++            return true;
++        }
++        double n = 0;
++        if (number(&n)) {
++            operand->kind = PDFOperand::Number;
++            operand->number = n;
++            *is_operand = true;
++            return true;
++        }
++        size_t start = p;
++        while (p < b.size() && !pdf_delim(b[p])) p++;
++        if (p == start) return false;
++        op->assign((const char *)b.data() + start, p - start);
++        *is_operand = false;
++        return true;
++    }
++
++private:
++    const std::vector<uint8_t> &b;
++    size_t p = 0;
++
++    void skip() {
++        for (;;) {
++            while (p < b.size() && pdf_white(b[p])) p++;
++            if (p < b.size() && b[p] == '%') {
++                while (p < b.size() && b[p] != '\n' && b[p] != '\r') p++;
++                continue;
++            }
++            break;
+         }
+-        if (c == '(') {
+-            i++;
++    }
++
++    bool number(double *out) {
++        skip();
++        size_t start = p;
++        if (p < b.size() && (b[p] == '+' || b[p] == '-')) p++;
++        bool digit = false;
++        while (p < b.size() && std::isdigit(b[p])) { p++; digit = true; }
++        if (p < b.size() && b[p] == '.') {
++            p++;
++            while (p < b.size() && std::isdigit(b[p])) { p++; digit = true; }
++        }
++        if (!digit || (p < b.size() && !pdf_delim(b[p]))) { p = start; return false; }
++        std::string token((const char *)b.data() + start, p - start);
++        char *end = nullptr;
++        double n = strtod(token.c_str(), &end);
++        if (!end || *end || !std::isfinite(n)) { p = start; return false; }
++        *out = n;
++        return true;
++    }
++
++    bool skip_opaque() {
++        if (b[p] == '(') {
++            p++;
+             int depth = 1;
+-            while (i < n && depth) {
+-                if (cs[i] == '\\') {
+-                    i += (i + 1 < n) ? 2 : 1;
+-                    continue;
+-                }
+-                if (cs[i] == '(') depth++;
+-                else if (cs[i] == ')') depth--;
+-                i++;
++            while (p < b.size() && depth) {
++                unsigned char c = b[p++];
++                if (c == '\\') { if (p < b.size()) p++; continue; }
++                if (c == '(') depth++;
++                else if (c == ')') depth--;
+             }
+-            continue;
++            return depth == 0;
+         }
+-        size_t a = i;
+-        while (i < n && is_ident((unsigned char)cs[i])) i++;
+-        if (a == i) {
+-            i++;
+-            continue;
++        if (p + 1 < b.size() && b[p] == '<' && b[p + 1] == '<') {
++            p += 2;
++            int depth = 1;
++            while (p + 1 < b.size() && depth) {
++                if (b[p] == '<' && b[p + 1] == '<') { depth++; p += 2; }
++                else if (b[p] == '>' && b[p + 1] == '>') { depth--; p += 2; }
++                else if (b[p] == '(') { if (!skip_opaque()) return false; }
++                else p++;
++            }
++            return depth == 0;
+         }
+-        std::string op(cs.data() + a, i - a);
+-        double v[6];
+-        if (op == "rg") {
+-            if (popn(st, 3, v)) QZContextSetRGBFillColor(ctx, v[0], v[1], v[2], 1);
+-        } else if (op == "RG") {
+-            if (popn(st, 3, v)) QZContextSetRGBStrokeColor(ctx, v[0], v[1], v[2], 1);
+-        } else if (op == "g") {
+-            if (popn(st, 1, v)) QZContextSetRGBFillColor(ctx, v[0], v[0], v[0], 1);
+-        } else if (op == "G") {
+-            if (popn(st, 1, v)) QZContextSetRGBStrokeColor(ctx, v[0], v[0], v[0], 1);
+-        } else if (op == "w") {
+-            if (popn(st, 1, v)) QZContextSetLineWidth(ctx, v[0]);
+-        } else if (op == "re") {
+-            if (popn(st, 4, v)) QZContextAddRect(ctx, QZRectMake(v[0], v[1], v[2], v[3]));
+-        } else if (op == "m") {
+-            if (popn(st, 2, v)) QZContextMoveToPoint(ctx, v[0], v[1]);
+-        } else if (op == "l") {
+-            if (popn(st, 2, v)) QZContextAddLineToPoint(ctx, v[0], v[1]);
+-        } else if (op == "c") {
+-            if (popn(st, 6, v))
+-                QZContextAddCurveToPoint(ctx, v[0], v[1], v[2], v[3], v[4], v[5]);
+-        } else if (op == "h") {
+-            QZContextClosePath(ctx);
+-        } else if (op == "f" || op == "F") {
+-            QZContextFillPath(ctx);
+-        } else if (op == "f*") {
+-            QZContextEOFillPath(ctx);
+-        } else if (op == "S") {
+-            QZContextStrokePath(ctx);
+-        } else if (op == "s") {
+-            QZContextClosePath(ctx);
+-            QZContextStrokePath(ctx);
+-        } else if (op == "B") {
+-            QZContextDrawPath(ctx, kQZPathFillStroke);
+-        } else if (op == "b") {
+-            QZContextClosePath(ctx);
+-            QZContextDrawPath(ctx, kQZPathFillStroke);
+-        } else if (op == "n") {
+-            QZContextBeginPath(ctx);
+-        } else if (op == "q") {
+-            QZContextSaveGState(ctx);
+-        } else if (op == "Q") {
+-            QZContextRestoreGState(ctx);
+-        } else if (op == "cm") {
+-            if (popn(st, 6, v)) {
+-                QZAffineTransform t = QZAffineTransformMake(v[0], v[1], v[2], v[3], v[4], v[5]);
+-                QZContextConcatCTM(ctx, t);
++        if (b[p] == '<') {
++            p++;
++            while (p < b.size() && b[p] != '>') p++;
++            return p < b.size() && (++p, true);
++        }
++        return false;
++    }
++};
++
++enum class PDFColorSpace { RGB, Gray, Pattern };
++
++struct PDFPaintState {
++    PDFColorSpace fill_space = PDFColorSpace::RGB;
++    PDFColorSpace stroke_space = PDFColorSpace::RGB;
++    double fill[3] = {0, 0, 0};
++    double stroke[3] = {0, 0, 0};
++    double fill_alpha = 1;
++    double stroke_alpha = 1;
++    std::string fill_pattern;
++    std::string stroke_pattern;
++    bool stroke_adjustment = false;
++    /* The bounded renderer realizes a soft mask in the current clip plane.
++     * Retain the ordinary clip so a later gs can replace/clear the mask just
++     * as PDF requires. The vector stays empty for the overwhelmingly common
++     * unmasked state, and q/Q copies it with the rest of this paint state. */
++    std::vector<uint8_t> soft_mask_base_clip;
++};
++
++/* PostScript calculator-function subset measured across the Focus corpus:
++ * arithmetic/stack operations plus nested if/ifelse procedures. */
++struct CalcItem {
++    enum Kind { Number, Operator, Procedure } kind = Operator;
++    double number = 0;
++    std::string op;
++    std::vector<CalcItem> procedure;
++};
++
++class CalcParser {
++public:
++    explicit CalcParser(const std::vector<uint8_t> &bytes) : b(bytes) {}
++
++    bool parse(std::vector<CalcItem> *out) {
++        skip();
++        if (p >= b.size() || b[p++] != '{') return false;
++        if (!sequence(out, 0)) return false;
++        skip();
++        return p == b.size();
++    }
++
++private:
++    const std::vector<uint8_t> &b;
++    size_t p = 0;
++
++    void skip() { while (p < b.size() && (pdf_white(b[p]) || b[p] == 0)) p++; }
++
++    bool sequence(std::vector<CalcItem> *out, int depth) {
++        if (depth > 24) return false;
++        while (out->size() < 8192) {
++            skip();
++            if (p >= b.size()) return false;
++            if (b[p] == '}') { p++; return true; }
++            if (b[p] == '{') {
++                p++;
++                CalcItem item; item.kind = CalcItem::Procedure;
++                if (!sequence(&item.procedure, depth + 1)) return false;
++                out->push_back(std::move(item));
++                continue;
+             }
+-        } else {
+-            st.clear();
++            size_t start = p;
++            if (b[p] == '+' || b[p] == '-') p++;
++            bool digit = false;
++            while (p < b.size() && std::isdigit(b[p])) { p++; digit = true; }
++            if (p < b.size() && b[p] == '.') {
++                p++;
++                while (p < b.size() && std::isdigit(b[p])) { p++; digit = true; }
++            }
++            if (digit) {
++                std::string token((const char *)b.data() + start, p - start);
++                char *end = nullptr;
++                double n = strtod(token.c_str(), &end);
++                if (!end || *end || !std::isfinite(n)) return false;
++                CalcItem item; item.kind = CalcItem::Number; item.number = n;
++                out->push_back(std::move(item));
++                continue;
++            }
++            p = start;
++            while (p < b.size() && std::isalpha(b[p])) p++;
++            if (p == start) return false;
++            std::string op((const char *)b.data() + start, p - start);
++            static const std::unordered_set<std::string> allowed = {
++                "dup", "exch", "pop", "add", "sub", "mul", "gt", "if", "ifelse"
++            };
++            if (!allowed.count(op)) return false;
++            CalcItem item; item.kind = CalcItem::Operator; item.op = std::move(op);
++            out->push_back(std::move(item));
++        }
++        return false;
++    }
++};
++
++struct CalcValue {
++    enum Kind { Number, Boolean, Procedure } kind = Number;
++    double number = 0;
++    bool boolean = false;
++    const std::vector<CalcItem> *procedure = nullptr;
++};
++
++static bool calc_execute(const std::vector<CalcItem> &program,
++                         std::vector<CalcValue> *stack, int depth, size_t *steps) {
++    if (depth > 24) return false;
++    for (const CalcItem &item : program) {
++        if (++*steps > 65536 || stack->size() > 256) return false;
++        if (item.kind == CalcItem::Number) {
++            CalcValue v; v.number = item.number; stack->push_back(v); continue;
+         }
++        if (item.kind == CalcItem::Procedure) {
++            CalcValue v; v.kind = CalcValue::Procedure; v.procedure = &item.procedure;
++            stack->push_back(v); continue;
++        }
++        const std::string &op = item.op;
++        if (op == "dup") {
++            if (stack->empty()) return false;
++            stack->push_back(stack->back());
++        } else if (op == "exch") {
++            if (stack->size() < 2) return false;
++            std::swap((*stack)[stack->size() - 1], (*stack)[stack->size() - 2]);
++        } else if (op == "pop") {
++            if (stack->empty()) return false;
++            stack->pop_back();
++        } else if (op == "add" || op == "sub" || op == "mul" || op == "gt") {
++            if (stack->size() < 2) return false;
++            CalcValue rhs = stack->back(); stack->pop_back();
++            CalcValue lhs = stack->back(); stack->pop_back();
++            if (lhs.kind != CalcValue::Number || rhs.kind != CalcValue::Number) return false;
++            CalcValue result;
++            if (op == "add") result.number = lhs.number + rhs.number;
++            else if (op == "sub") result.number = lhs.number - rhs.number;
++            else if (op == "mul") result.number = lhs.number * rhs.number;
++            else { result.kind = CalcValue::Boolean; result.boolean = lhs.number > rhs.number; }
++            stack->push_back(result);
++        } else if (op == "if") {
++            if (stack->size() < 2) return false;
++            CalcValue proc = stack->back(); stack->pop_back();
++            CalcValue condition = stack->back(); stack->pop_back();
++            if (proc.kind != CalcValue::Procedure || condition.kind != CalcValue::Boolean) return false;
++            if (condition.boolean && !calc_execute(*proc.procedure, stack, depth + 1, steps)) return false;
++        } else if (op == "ifelse") {
++            if (stack->size() < 3) return false;
++            CalcValue no = stack->back(); stack->pop_back();
++            CalcValue yes = stack->back(); stack->pop_back();
++            CalcValue condition = stack->back(); stack->pop_back();
++            if (no.kind != CalcValue::Procedure || yes.kind != CalcValue::Procedure ||
++                condition.kind != CalcValue::Boolean) return false;
++            const std::vector<CalcItem> *chosen = condition.boolean ? yes.procedure : no.procedure;
++            if (!calc_execute(*chosen, stack, depth + 1, steps)) return false;
++        } else return false;
+     }
++    return true;
+ }
+ 
+-void QZContextDrawPDFPage(QZContextRef ctx, QZPDFPageRef page) {
+-    if (!ctx || !page) return;
++static bool calc_evaluate(const std::vector<CalcItem> &program, double input,
++                          size_t outputs, double *out) {
++    std::vector<CalcValue> stack;
++    CalcValue in; in.number = input; stack.push_back(in);
++    size_t steps = 0;
++    if (!calc_execute(program, &stack, 0, &steps) || stack.size() < outputs) return false;
++    size_t first = stack.size() - outputs;
++    for (size_t i = 0; i < outputs; i++) {
++        if (stack[first + i].kind != CalcValue::Number ||
++            !std::isfinite(stack[first + i].number)) return false;
++        out[i] = stack[first + i].number;
++    }
++    return true;
++}
++
++struct ShadingEvalInfo {
++    const std::vector<CalcItem> *program = nullptr;
++    size_t source_outputs = 3;
++};
++
++static void pdf_shading_evaluate(void *raw, const QZFloat *input, QZFloat *out) {
++    ShadingEvalInfo *info = (ShadingEvalInfo *)raw;
++    double values[3] = {0, 0, 0};
++    if (!info || !info->program ||
++        !calc_evaluate(*info->program, input ? input[0] : 0, info->source_outputs, values)) {
++        out[0] = out[1] = out[2] = 0;
++        return;
++    }
++    if (info->source_outputs == 1) out[0] = out[1] = out[2] = (QZFloat)values[0];
++    else { out[0] = (QZFloat)values[0]; out[1] = (QZFloat)values[1]; out[2] = (QZFloat)values[2]; }
++}
++
++class PDFReplay {
++public:
++    PDFReplay(PDFFile *source, QZContextRef destination,
++              const PDFValue *resource_dictionary, int nesting = 0)
++        : file(source), ctx(destination), resources(resource_dictionary), depth(nesting) {}
++
++    bool run(const std::vector<uint8_t> &content) {
++        PDFContentLexer lexer(content);
++        PDFOperand operand;
++        std::string op;
++        bool is_operand = false;
++        while (lexer.next(&operand, &op, &is_operand)) {
++            if (is_operand) {
++                if (operands.size() >= 64) return false;
++                operands.push_back(std::move(operand));
++                operand = PDFOperand{};
++                continue;
++            }
++            if (!execute(op)) return false;
++            operands.clear();
++        }
++        return operands.empty();
++    }
++
++    bool balanced() const { return stack.empty() && pending_clip == 0; }
++
++private:
++    PDFFile *file;
++    QZContextRef ctx;
++    const PDFValue *resources;
++    int depth = 0;
++    PDFPaintState state;
++    std::vector<PDFPaintState> stack;
++    std::vector<PDFOperand> operands;
++    int pending_clip = 0; /* 1 nonzero, 2 even-odd */
++
++    bool numbers(size_t count, double *out) const {
++        if (operands.size() != count) return false;
++        for (size_t i = 0; i < count; i++) {
++            if (operands[i].kind != PDFOperand::Number || !std::isfinite(operands[i].number))
++                return false;
++            out[i] = operands[i].number;
++        }
++        return true;
++    }
++
++    bool one_name(std::string *out) const {
++        if (operands.size() != 1 || operands[0].kind != PDFOperand::Name) return false;
++        *out = operands[0].name;
++        return true;
++    }
++
++    bool resolve_color_space(const std::string &name, PDFColorSpace *out) const {
++        if (name == "DeviceRGB" || name == "RGB") { *out = PDFColorSpace::RGB; return true; }
++        if (name == "DeviceGray" || name == "G") { *out = PDFColorSpace::Gray; return true; }
++        if (name == "Pattern") { *out = PDFColorSpace::Pattern; return true; }
++        const PDFValue *entry = pdf_resource(file, resources, "ColorSpace", name);
++        entry = pdf_resolve(file, entry);
++        if (!entry) return false;
++        if (entry->kind == PDFValue::Name) return resolve_color_space(entry->text, out);
++        if (entry->kind != PDFValue::Array || entry->array.size() < 2) return false;
++        std::string family;
++        if (!pdf_name(file, &entry->array[0], &family) || family != "ICCBased") return false;
++        const PDFValue *profile = pdf_resolve(file, &entry->array[1]);
++        int components = 0;
++        if (!profile || !pdf_int(file, pdf_dict_get(profile, "N"), &components) || components != 3)
++            return false;
++        std::string alternate;
++        if (const PDFValue *a = pdf_dict_get(profile, "Alternate")) {
++            if (!pdf_name(file, a, &alternate) || alternate != "DeviceRGB") return false;
++        }
++        *out = PDFColorSpace::RGB;
++        return true;
++    }
++
++    void apply_fill() {
++        if (state.fill_space == PDFColorSpace::Gray)
++            QZContextSetRGBFillColor(ctx, state.fill[0], state.fill[0], state.fill[0], 1);
++        else
++            QZContextSetRGBFillColor(ctx, state.fill[0], state.fill[1], state.fill[2], 1);
++        QZContextSetAlpha(ctx, state.fill_alpha);
++    }
++
++    void apply_stroke() {
++        if (state.stroke_space == PDFColorSpace::Gray)
++            QZContextSetRGBStrokeColor(ctx, state.stroke[0], state.stroke[0], state.stroke[0], 1);
++        else
++            QZContextSetRGBStrokeColor(ctx, state.stroke[0], state.stroke[1], state.stroke[2], 1);
++        QZContextSetAlpha(ctx, state.stroke_alpha);
++    }
++
++    bool set_color(bool fill, bool pattern_allowed) {
++        PDFColorSpace space = fill ? state.fill_space : state.stroke_space;
++        double *color = fill ? state.fill : state.stroke;
++        std::string *pattern = fill ? &state.fill_pattern : &state.stroke_pattern;
++        if (space == PDFColorSpace::Pattern) {
++            if (!pattern_allowed || operands.empty() || operands.back().kind != PDFOperand::Name)
++                return false;
++            *pattern = operands.back().name;
++            for (size_t i = 0; i + 1 < operands.size(); i++)
++                if (operands[i].kind != PDFOperand::Number) return false;
++            return true;
++        }
++        size_t need = space == PDFColorSpace::Gray ? 1 : 3;
++        if (operands.size() != need) return false;
++        for (size_t i = 0; i < need; i++) {
++            if (operands[i].kind != PDFOperand::Number) return false;
++            color[i] = clampd(operands[i].number, 0, 1);
++        }
++        if (fill) apply_fill(); else apply_stroke();
++        return true;
++    }
++
++    bool set_ext_gstate(const std::string &name) {
++        const PDFValue *entry = pdf_resource(file, resources, "ExtGState", name);
++        const PDFValue *dictionary = pdf_resolve(file, entry);
++        if (!dictionary || dictionary->kind != PDFValue::Dictionary) return false;
++        static const std::unordered_set<std::string> harmless = {
++            "Type", "ca", "CA", "BM", "AIS", "OP", "op", "OPM", "SA", "SMask"
++        };
++        for (const auto &item : dictionary->dictionary)
++            if (!harmless.count(item.first)) return false;
++        if (const PDFValue *type = pdf_dict_get(dictionary, "Type")) {
++            std::string type_name;
++            if (!pdf_name(file, type, &type_name) || type_name != "ExtGState") return false;
++        }
++        auto boolean_setting = [&](const char *key, bool *out) -> bool {
++            const PDFValue *value = pdf_resolve(file, pdf_dict_get(dictionary, key));
++            if (!value) return true;
++            if (value->kind != PDFValue::Boolean) return false;
++            *out = value->boolean;
++            return true;
++        };
++        bool ais = false, overprint_fill = false, overprint_stroke = false;
++        if (!boolean_setting("AIS", &ais) || ais ||
++            !boolean_setting("op", &overprint_fill) || overprint_fill ||
++            !boolean_setting("OP", &overprint_stroke) || overprint_stroke ||
++            !boolean_setting("SA", &state.stroke_adjustment)) return false;
++        if (const PDFValue *opm = pdf_dict_get(dictionary, "OPM")) {
++            int mode = 0;
++            if (!pdf_int(file, opm, &mode) || (mode != 0 && mode != 1)) return false;
++        }
++        double n = 0;
++        if (const PDFValue *ca = pdf_dict_get(dictionary, "ca")) {
++            if (!pdf_number(file, ca, &n) || n < 0 || n > 1) return false;
++            state.fill_alpha = n;
++        }
++        if (const PDFValue *CA = pdf_dict_get(dictionary, "CA")) {
++            if (!pdf_number(file, CA, &n) || n < 0 || n > 1) return false;
++            state.stroke_alpha = n;
++        }
++        if (const PDFValue *blend = pdf_resolve(file, pdf_dict_get(dictionary, "BM"))) {
++            bool normal = blend->kind == PDFValue::Name && blend->text == "Normal";
++            if (blend->kind == PDFValue::Array && !blend->array.empty()) {
++                std::string first;
++                normal = pdf_name(file, &blend->array[0], &first) && first == "Normal";
++            }
++            if (!normal) return false;
++        }
++        if (const PDFValue *raw_mask = pdf_dict_get(dictionary, "SMask")) {
++            const PDFValue *mask = pdf_resolve(file, raw_mask);
++            if (!mask) return false;
++            if (!state.soft_mask_base_clip.empty())
++                ctx->gs.clip = state.soft_mask_base_clip;
++            if (mask->kind == PDFValue::Name && mask->text == "None") {
++                state.soft_mask_base_clip.clear();
++                return true;
++            }
++            if (state.soft_mask_base_clip.empty())
++                state.soft_mask_base_clip = ctx->gs.clip;
++            if (!apply_soft_mask(mask)) return false;
++        }
++        return true;
++    }
++
++    bool calculator_function(const PDFValue *reference, size_t outputs,
++                             std::vector<CalcItem> *program) const {
++        if (!reference || reference->kind != PDFValue::Ref || outputs == 0 || outputs > 3)
++            return false;
++        const PDFValue *dictionary = pdf_object_dictionary(file, reference->reference);
++        int function_type = 0;
++        if (!dictionary || !pdf_int(file, pdf_dict_get(dictionary, "FunctionType"),
++                                    &function_type) || function_type != 4) return false;
++        double domain[2] = {0, 0};
++        double range[6] = {0, 0, 0, 0, 0, 0};
++        if (!pdf_array_numbers(file, pdf_dict_get(dictionary, "Domain"), 2, domain) ||
++            domain[0] != 0 || domain[1] != 1 ||
++            !pdf_array_numbers(file, pdf_dict_get(dictionary, "Range"), outputs * 2, range))
++            return false;
++        for (size_t i = 0; i < outputs; i++)
++            if (range[i * 2] != 0 || range[i * 2 + 1] != 1) return false;
++        const std::vector<uint8_t> *bytes = nullptr;
++        if (!pdf_decode_stream(file, reference->reference, kPDFMaxContentStream, 0, &bytes) ||
++            !CalcParser(*bytes).parse(program)) return false;
++        double trial[3];
++        for (double t : {0.0, 0.25, 0.5, 0.75, 1.0})
++            if (!calc_evaluate(*program, t, outputs, trial)) return false;
++        return true;
++    }
++
++    QZImageRef image_object(int object_number) {
++        auto cached = file->images.find(object_number);
++        if (cached != file->images.end()) return cached->second;
++        const PDFValue *dictionary = pdf_object_dictionary(file, object_number);
++        std::string type, subtype, space;
++        int width = 0, height = 0, bits = 0;
++        if (!dictionary || !pdf_name(file, pdf_dict_get(dictionary, "Type"), &type) ||
++            type != "XObject" || !pdf_name(file, pdf_dict_get(dictionary, "Subtype"), &subtype) ||
++            subtype != "Image" || !pdf_int(file, pdf_dict_get(dictionary, "Width"), &width) ||
++            !pdf_int(file, pdf_dict_get(dictionary, "Height"), &height) ||
++            !pdf_int(file, pdf_dict_get(dictionary, "BitsPerComponent"), &bits) || bits != 8 ||
++            width <= 0 || height <= 0 || width > 32768 || height > 32768)
++            return nullptr;
++        for (const char *unsupported : {
++                 "Decode", "DecodeParms", "Mask", "ImageMask", "Interpolate", "Intent"
++             }) {
++            const PDFValue *value = pdf_resolve(file, pdf_dict_get(dictionary, unsupported));
++            if (value && value->kind != PDFValue::Null) return nullptr;
++        }
++        const PDFValue *cs = pdf_resolve(file, pdf_dict_get(dictionary, "ColorSpace"));
++        if (!cs || cs->kind != PDFValue::Name ||
++            (cs->text != "DeviceRGB" && cs->text != "DeviceGray")) return nullptr;
++        int components = cs->text == "DeviceRGB" ? 3 : 1;
++        size_t pixels = (size_t)width * (size_t)height;
++        if (pixels == 0 || pixels > kPDFMaxDecodedStream / 4 ||
++            pixels > std::numeric_limits<size_t>::max() / (size_t)components) return nullptr;
++        size_t sample_count = pixels * (size_t)components;
++        const std::vector<uint8_t> *samples = nullptr;
++        if (!pdf_decode_stream(file, object_number, sample_count, sample_count, &samples)) return nullptr;
++
++        const std::vector<uint8_t> *alpha = nullptr;
++        const PDFValue *smask = pdf_dict_get(dictionary, "SMask");
++        if (smask) {
++            if (smask->kind != PDFValue::Ref) return nullptr;
++            const PDFValue *mask_dict = pdf_object_dictionary(file, smask->reference);
++            int mw = 0, mh = 0, mb = 0;
++            std::string mtype, msubtype, mspace;
++            if (!mask_dict ||
++                !pdf_name(file, pdf_dict_get(mask_dict, "Type"), &mtype) ||
++                mtype != "XObject" ||
++                !pdf_name(file, pdf_dict_get(mask_dict, "Subtype"), &msubtype) ||
++                msubtype != "Image" ||
++                !pdf_int(file, pdf_dict_get(mask_dict, "Width"), &mw) ||
++                !pdf_int(file, pdf_dict_get(mask_dict, "Height"), &mh) || mw != width || mh != height ||
++                !pdf_int(file, pdf_dict_get(mask_dict, "BitsPerComponent"), &mb) || mb != 8 ||
++                !pdf_name(file, pdf_dict_get(mask_dict, "ColorSpace"), &mspace) ||
++                mspace != "DeviceGray" ||
++                !pdf_decode_stream(file, smask->reference, pixels, pixels, &alpha)) return nullptr;
++            for (const char *unsupported : {
++                     "Decode", "DecodeParms", "Mask", "SMask", "Matte",
++                     "ImageMask", "Interpolate", "Intent"
++                 }) {
++                const PDFValue *value = pdf_resolve(
++                    file, pdf_dict_get(mask_dict, unsupported)
++                );
++                if (value && value->kind != PDFValue::Null) return nullptr;
++            }
++        }
++        std::vector<uint8_t> rgba(pixels * 4);
++        for (size_t i = 0; i < pixels; i++) {
++            if (components == 3) {
++                rgba[i * 4 + 0] = (*samples)[i * 3 + 0];
++                rgba[i * 4 + 1] = (*samples)[i * 3 + 1];
++                rgba[i * 4 + 2] = (*samples)[i * 3 + 2];
++            } else {
++                rgba[i * 4 + 0] = rgba[i * 4 + 1] = rgba[i * 4 + 2] = (*samples)[i];
++            }
++            rgba[i * 4 + 3] = alpha ? (*alpha)[i] : 255;
++        }
++        QZImageRef image = QZImageCreate((size_t)width, (size_t)height, rgba.data());
++        if (!image) return nullptr;
++        file->images[object_number] = image;
++        return image;
++    }
++
++    bool draw_form_object(int object_number, QZContextRef destination,
++                          const PDFPaintState &initial_state) {
++        if (depth >= 16 || !destination) return false;
++        const PDFValue *dictionary = pdf_object_dictionary(file, object_number);
++        std::string subtype;
++        if (!dictionary || !pdf_name(file, pdf_dict_get(dictionary, "Subtype"), &subtype) ||
++            subtype != "Form") return false;
++        if (const PDFValue *raw_group = pdf_dict_get(dictionary, "Group")) {
++            const PDFValue *group = pdf_resolve(file, raw_group);
++            if (!group || group->kind != PDFValue::Dictionary) return false;
++            static const std::unordered_set<std::string> group_keys = {
++                "Type", "S", "CS", "I", "K"
++            };
++            for (const auto &item : group->dictionary)
++                if (!group_keys.count(item.first)) return false;
++            if (const PDFValue *type = pdf_dict_get(group, "Type")) {
++                std::string type_name;
++                if (!pdf_name(file, type, &type_name) || type_name != "Group") return false;
++            }
++            std::string group_subtype;
++            if (!pdf_name(file, pdf_dict_get(group, "S"), &group_subtype) ||
++                group_subtype != "Transparency") return false;
++            if (const PDFValue *cs = pdf_dict_get(group, "CS")) {
++                std::string color_space;
++                if (!pdf_name(file, cs, &color_space) ||
++                    (color_space != "DeviceRGB" && color_space != "DeviceGray")) return false;
++            }
++            for (const char *key : {"I", "K"}) {
++                if (const PDFValue *flag = pdf_resolve(file, pdf_dict_get(group, key)))
++                    if (flag->kind != PDFValue::Boolean ||
++                        (strcmp(key, "K") == 0 && flag->boolean)) return false;
++            }
++        }
++        const std::vector<uint8_t> *content = nullptr;
++        if (!pdf_decode_stream(file, object_number, kPDFMaxContentStream, 0, &content)) return false;
++        QZRect bbox;
++        if (!pdf_box(file, pdf_dict_get(dictionary, "BBox"), &bbox)) return false;
++        double matrix[6] = {1, 0, 0, 1, 0, 0};
++        if (const PDFValue *m = pdf_dict_get(dictionary, "Matrix"))
++            if (!pdf_array_numbers(file, m, 6, matrix)) return false;
++        const PDFValue *form_resources = pdf_resolve(file, pdf_dict_get(dictionary, "Resources"));
++        if (!form_resources) form_resources = resources;
++        if (!form_resources || form_resources->kind != PDFValue::Dictionary) return false;
++        Path saved_path = destination->path;
++        destination->path.clear();
++        QZContextSaveGState(destination);
++        QZContextConcatCTM(destination, QZAffineTransformMake(matrix[0], matrix[1], matrix[2],
++                                                               matrix[3], matrix[4], matrix[5]));
++        QZContextClipToRect(destination, bbox);
++        PDFReplay child(file, destination, form_resources, depth + 1);
++        child.state = initial_state;
++        bool ok = child.run(*content) && child.balanced();
++        QZContextRestoreGState(destination);
++        destination->path = std::move(saved_path);
++        return ok;
++    }
++
++    bool apply_soft_mask(const PDFValue *mask) {
++        if (!mask || mask->kind != PDFValue::Dictionary || depth >= 16) return false;
++        static const std::unordered_set<std::string> supported = {
++            "Type", "S", "G", "TR"
++        };
++        for (const auto &item : mask->dictionary)
++            if (!supported.count(item.first)) return false;
++        if (const PDFValue *type = pdf_dict_get(mask, "Type")) {
++            std::string name;
++            if (!pdf_name(file, type, &name) || name != "Mask") return false;
++        }
++        std::string subtype;
++        if (!pdf_name(file, pdf_dict_get(mask, "S"), &subtype) ||
++            (subtype != "Alpha" && subtype != "Luminosity")) return false;
++        bool luminosity = subtype == "Luminosity";
++        const PDFValue *group = pdf_dict_get(mask, "G");
++        if (!group || group->kind != PDFValue::Ref) return false;
++
++        bool identity_transfer = true;
++        std::vector<CalcItem> transfer;
++        if (const PDFValue *tr = pdf_dict_get(mask, "TR")) {
++            const PDFValue *resolved = pdf_resolve(file, tr);
++            if (resolved && resolved->kind == PDFValue::Name && resolved->text == "Identity") {
++                identity_transfer = true;
++            } else {
++                identity_transfer = false;
++                if (!calculator_function(tr, 1, &transfer)) return false;
++            }
++        }
++
++        QZContextRef mask_context = QZBitmapContextCreate(
++            nullptr, (size_t)ctx->width, (size_t)ctx->height, 8, ctx->bpr,
++            kQZImageAlphaPremultipliedLast);
++        if (!mask_context) return false;
++        /* A PDF soft-mask group is painted in the current user space but into
++         * an isolated transparent buffer.  Carry the device transform and
++         * current clip across; the mask's Form matrix/BBox are applied by the
++         * same checked Form renderer used by Do. */
++        mask_context->gs = ctx->gs;
++        bool ok = draw_form_object(group->reference, mask_context, state);
++        if (ok) {
++            const uint8_t *pixels = mask_context->pixels;
++            size_t count = (size_t)ctx->width * (size_t)ctx->height;
++            if (ctx->gs.clip.size() != count) ok = false;
++            for (size_t i = 0; ok && i < count; i++) {
++                size_t pixel = (i / (size_t)ctx->width) * mask_context->bpr +
++                               (i % (size_t)ctx->width) * 4;
++                /* The buffer is premultiplied over a transparent-black
++                 * backdrop.  For a luminosity mask that makes the weighted
++                 * premultiplied components exactly the specified group
++                 * luminosity, including coverage/alpha. */
++                double alpha = luminosity
++                    ? (0.30 * pixels[pixel] + 0.59 * pixels[pixel + 1] +
++                       0.11 * pixels[pixel + 2]) / 255.0
++                    : pixels[pixel + 3] / 255.0;
++                if (!identity_transfer) {
++                    double mapped = 0;
++                    if (!calc_evaluate(transfer, alpha, 1, &mapped)) { ok = false; break; }
++                    alpha = clampd(mapped, 0, 1);
++                }
++                ctx->gs.clip[i] = mul255(ctx->gs.clip[i], u8_from_unit(alpha));
++            }
++        }
++        QZContextRelease(mask_context);
++        return ok;
++    }
++
++    bool draw_xobject(const std::string &name) {
++        if (depth >= 16) return false;
++        const PDFValue *entry = pdf_resource(file, resources, "XObject", name);
++        if (!entry || entry->kind != PDFValue::Ref) return false;
++        int object_number = entry->reference;
++        const PDFValue *dictionary = pdf_object_dictionary(file, object_number);
++        std::string subtype;
++        if (!dictionary || !pdf_name(file, pdf_dict_get(dictionary, "Subtype"), &subtype)) return false;
++        if (subtype == "Image") {
++            QZImageRef image = image_object(object_number);
++            if (!image) return false;
++            QZContextSetAlpha(ctx, state.fill_alpha);
++            QZContextDrawImage(ctx, QZRectMake(0, 0, 1, 1), image);
++            return true;
++        }
++        return draw_form_object(object_number, ctx, state);
++    }
++
++    bool paint_pattern(bool even_odd) {
++        if (state.fill_pattern.empty()) return false;
++        const PDFValue *entry = pdf_resource(file, resources, "Pattern", state.fill_pattern);
++        const PDFValue *pattern = pdf_resolve(file, entry);
++        int pattern_type = 0, shading_type = 0;
++        if (!pattern || !pdf_int(file, pdf_dict_get(pattern, "PatternType"), &pattern_type) ||
++            pattern_type != 2) return false;
++        static const std::unordered_set<std::string> pattern_keys = {
++            "Type", "PatternType", "Shading", "Matrix"
++        };
++        for (const auto &item : pattern->dictionary)
++            if (!pattern_keys.count(item.first)) return false;
++        if (const PDFValue *type = pdf_dict_get(pattern, "Type")) {
++            std::string type_name;
++            if (!pdf_name(file, type, &type_name) || type_name != "Pattern") return false;
++        }
++        const PDFValue *shading = pdf_resolve(file, pdf_dict_get(pattern, "Shading"));
++        if (!shading || !pdf_int(file, pdf_dict_get(shading, "ShadingType"), &shading_type) ||
++            (shading_type != 2 && shading_type != 3)) return false;
++        static const std::unordered_set<std::string> shading_keys = {
++            "ShadingType", "ColorSpace", "Coords", "Domain", "Function",
++            "Extend", "AntiAlias"
++        };
++        for (const auto &item : shading->dictionary)
++            if (!shading_keys.count(item.first)) return false;
++        double shading_domain[2] = {0, 0};
++        if (const PDFValue *domain = pdf_dict_get(shading, "Domain"))
++            if (!pdf_array_numbers(file, domain, 2, shading_domain) ||
++                shading_domain[0] != 0 || shading_domain[1] != 1) return false;
++        if (const PDFValue *aa = pdf_resolve(file, pdf_dict_get(shading, "AntiAlias")))
++            if (aa->kind != PDFValue::Boolean) return false;
++        std::string color_space;
++        if (!pdf_name(file, pdf_dict_get(shading, "ColorSpace"), &color_space) ||
++            (color_space != "DeviceRGB" && color_space != "DeviceGray")) return false;
++        size_t source_outputs = color_space == "DeviceGray" ? 1 : 3;
++        const PDFValue *function_ref = pdf_dict_get(shading, "Function");
++        std::vector<CalcItem> program;
++        if (!calculator_function(function_ref, source_outputs, &program)) return false;
++        double matrix[6] = {1, 0, 0, 1, 0, 0};
++        if (const PDFValue *m = pdf_dict_get(pattern, "Matrix"))
++            if (!pdf_array_numbers(file, m, 6, matrix)) return false;
++        const PDFValue *extend = pdf_resolve(file, pdf_dict_get(shading, "Extend"));
++        bool extend0 = false, extend1 = false;
++        if (extend) {
++            if (extend->kind != PDFValue::Array || extend->array.size() != 2 ||
++                extend->array[0].kind != PDFValue::Boolean ||
++                extend->array[1].kind != PDFValue::Boolean) return false;
++            extend0 = extend->array[0].boolean;
++            extend1 = extend->array[1].boolean;
++        }
++        ShadingEvalInfo info{&program, source_outputs};
++        QZFloat domain[2] = {0, 1};
++        QZFloat range[6] = {0, 1, 0, 1, 0, 1};
++        QZFunctionRef function = QZFunctionCreate(&info, 1, domain, 3, range,
++                                                   pdf_shading_evaluate);
++        if (!function) return false;
++        QZShadingRef qz_shading = nullptr;
++        const PDFValue *coords = pdf_dict_get(shading, "Coords");
++        if (shading_type == 2) {
++            double c[4];
++            if (pdf_array_numbers(file, coords, 4, c))
++                qz_shading = QZShadingCreateAxial(QZPointMake(c[0], c[1]),
++                                                   QZPointMake(c[2], c[3]), function,
++                                                   extend0, extend1);
++        } else {
++            double c[6];
++            if (pdf_array_numbers(file, coords, 6, c))
++                qz_shading = QZShadingCreateRadial(QZPointMake(c[0], c[1]), c[2],
++                                                    QZPointMake(c[3], c[4]), c[5],
++                                                    function, extend0, extend1);
++        }
++        QZFunctionRelease(function);
++        if (!qz_shading) return false;
++        QZContextSaveGState(ctx);
++        QZContextSetAlpha(ctx, state.fill_alpha);
++        if (even_odd) QZContextEOClip(ctx); else QZContextClip(ctx);
++        QZContextConcatCTM(ctx, QZAffineTransformMake(matrix[0], matrix[1], matrix[2],
++                                                       matrix[3], matrix[4], matrix[5]));
++        QZContextDrawShading(ctx, qz_shading);
++        QZContextRestoreGState(ctx);
++        QZShadingRelease(qz_shading);
++        return true;
++    }
++
++    bool paint(QZPathDrawingMode mode, bool close_path) {
++        if (pending_clip) return false; /* corpus clips terminate with n */
++        if (close_path) QZContextClosePath(ctx);
++        bool fill = mode == kQZPathFill || mode == kQZPathEOFill ||
++                    mode == kQZPathFillStroke || mode == kQZPathEOFillStroke;
++        bool stroke = mode == kQZPathStroke || mode == kQZPathFillStroke ||
++                      mode == kQZPathEOFillStroke;
++        if (stroke && state.stroke_adjustment) return false;
++        if (fill && state.fill_space == PDFColorSpace::Pattern) {
++            if (stroke) return false;
++            return paint_pattern(mode == kQZPathEOFill);
++        }
++        if (fill && stroke && std::fabs(state.fill_alpha - state.stroke_alpha) > 1e-12)
++            return false;
++        if (fill) apply_fill(); else if (stroke) apply_stroke();
++        QZContextDrawPath(ctx, mode);
++        return true;
++    }
++
++    bool execute(const std::string &op) {
++        double v[6];
++        if (op == "q") {
++            if (!operands.empty() || stack.size() >= 64) return false;
++            QZContextSaveGState(ctx); stack.push_back(state); return true;
++        }
++        if (op == "Q") {
++            if (!operands.empty() || stack.empty() || pending_clip) return false;
++            QZContextRestoreGState(ctx); state = stack.back(); stack.pop_back(); return true;
++        }
++        if (op == "cm") {
++            if (!numbers(6, v)) return false;
++            QZContextConcatCTM(ctx, QZAffineTransformMake(v[0], v[1], v[2], v[3], v[4], v[5]));
++            return true;
++        }
++        if (op == "m") { if (!numbers(2, v)) return false; QZContextMoveToPoint(ctx,v[0],v[1]); return true; }
++        if (op == "l") { if (!numbers(2, v)) return false; QZContextAddLineToPoint(ctx,v[0],v[1]); return true; }
++        if (op == "c") { if (!numbers(6, v)) return false; QZContextAddCurveToPoint(ctx,v[0],v[1],v[2],v[3],v[4],v[5]); return true; }
++        if (op == "v") {
++            /* First control point is the current point; CQuartz has no current
++             * point getter, so this less-common shorthand stays fail-closed. */
++            return false;
++        }
++        if (op == "y") return false;
++        if (op == "re") { if (!numbers(4,v)) return false; QZContextAddRect(ctx,QZRectMake(v[0],v[1],v[2],v[3])); return true; }
++        if (op == "h") { if (!operands.empty()) return false; QZContextClosePath(ctx); return true; }
++        if (op == "W" || op == "W*") {
++            /* Replacing a realized soft mask after changing the ordinary clip
++             * would require replaying that path into the retained clip plane.
++             * The measured corpus never combines those operations; reject the
++             * ambiguous boundary instead of losing the later clip. */
++            if (!operands.empty() || pending_clip ||
++                !state.soft_mask_base_clip.empty()) return false;
++            pending_clip = op == "W" ? 1 : 2; return true;
++        }
++        if (op == "n") {
++            if (!operands.empty()) return false;
++            if (pending_clip == 1) QZContextClip(ctx);
++            else if (pending_clip == 2) QZContextEOClip(ctx);
++            else QZContextBeginPath(ctx);
++            pending_clip = 0; return true;
++        }
++        if (op == "f" || op == "F") return operands.empty() && paint(kQZPathFill, false);
++        if (op == "f*") return operands.empty() && paint(kQZPathEOFill, false);
++        if (op == "S") return operands.empty() && paint(kQZPathStroke, false);
++        if (op == "s") return operands.empty() && paint(kQZPathStroke, true);
++        if (op == "B") return operands.empty() && paint(kQZPathFillStroke, false);
++        if (op == "B*") return operands.empty() && paint(kQZPathEOFillStroke, false);
++        if (op == "b") return operands.empty() && paint(kQZPathFillStroke, true);
++        if (op == "b*") return operands.empty() && paint(kQZPathEOFillStroke, true);
++        if (op == "w") { if (!numbers(1,v) || v[0] < 0) return false; QZContextSetLineWidth(ctx,v[0]); return true; }
++        if (op == "J") { if (!numbers(1,v) || v[0] < 0 || v[0] > 2 || v[0] != floor(v[0])) return false; QZContextSetLineCap(ctx,(QZLineCap)(int)v[0]); return true; }
++        if (op == "j") { if (!numbers(1,v) || v[0] < 0 || v[0] > 2 || v[0] != floor(v[0])) return false; QZContextSetLineJoin(ctx,(QZLineJoin)(int)v[0]); return true; }
++        if (op == "M") { if (!numbers(1,v) || v[0] < 1) return false; QZContextSetMiterLimit(ctx,v[0]); return true; }
++        if (op == "i") { if (!numbers(1,v) || v[0] < 0) return false; QZContextSetFlatness(ctx,v[0]); return true; }
++        if (op == "d") {
++            if (operands.size() != 2 || operands[0].kind != PDFOperand::NumberArray ||
++                operands[1].kind != PDFOperand::Number) return false;
++            std::vector<QZFloat> dash;
++            for (double n : operands[0].numbers) { if (n < 0) return false; dash.push_back(n); }
++            QZContextSetLineDash(ctx, operands[1].number, dash.data(), dash.size()); return true;
++        }
++        if (op == "rg" || op == "RG") {
++            if (!numbers(3,v)) return false;
++            PDFPaintState &s = state;
++            double *c = op == "rg" ? s.fill : s.stroke;
++            for (int i=0;i<3;i++) c[i]=clampd(v[i],0,1);
++            if (op == "rg") { s.fill_space=PDFColorSpace::RGB; apply_fill(); }
++            else { s.stroke_space=PDFColorSpace::RGB; apply_stroke(); }
++            return true;
++        }
++        if (op == "g" || op == "G") {
++            if (!numbers(1,v)) return false;
++            if (op == "g") { state.fill_space=PDFColorSpace::Gray; state.fill[0]=clampd(v[0],0,1); apply_fill(); }
++            else { state.stroke_space=PDFColorSpace::Gray; state.stroke[0]=clampd(v[0],0,1); apply_stroke(); }
++            return true;
++        }
++        if (op == "cs" || op == "CS") {
++            std::string name; PDFColorSpace space;
++            if (!one_name(&name) || !resolve_color_space(name,&space)) return false;
++            if (op == "cs") { state.fill_space=space; state.fill_pattern.clear(); }
++            else { state.stroke_space=space; state.stroke_pattern.clear(); }
++            return true;
++        }
++        if (op == "sc" || op == "scn") return set_color(true, op == "scn");
++        if (op == "SC" || op == "SCN") return set_color(false, op == "SCN");
++        if (op == "gs") { std::string name; return one_name(&name) && set_ext_gstate(name); }
++        if (op == "Do") { std::string name; return one_name(&name) && draw_xobject(name); }
++        if (op == "BDC" || op == "BMC" || op == "EMC" || op == "MP" || op == "DP")
++            return true; /* accessibility/layer metadata only */
++        return false;
++    }
++
++    friend class PDFReplay;
++};
++
++static bool draw_pdf_page_checked(QZContextRef ctx, QZPDFPageRef page) {
++    if (!ctx || !page || !page->owner || !page->owner->file) return false;
++    PDFFile *file = page->owner->file;
++    const PDFValue *resources = pdf_resources_for_owner(file, page->resources_owner);
++    if (!resources) return false;
+     QZContextSaveGState(ctx);
+     QZContextClipToRect(ctx, page->box);
+     QZContextSetRGBFillColor(ctx, 0, 0, 0, 1);
+     QZContextSetRGBStrokeColor(ctx, 0, 0, 0, 1);
+     QZContextSetLineWidth(ctx, 1);
++    QZContextSetAlpha(ctx, 1);
+     QZContextBeginPath(ctx);
+-    replay_content(ctx, page->content);
++    PDFReplay replay(file, ctx, resources);
++    bool ok = true;
++    for (int object_number : page->content_objects) {
++        const std::vector<uint8_t> *content = nullptr;
++        if (!pdf_decode_stream(file, object_number, kPDFMaxContentStream, 0, &content) ||
++            !replay.run(*content)) { ok = false; break; }
++    }
++    if (!replay.balanced()) ok = false;
+     QZContextRestoreGState(ctx);
++    return ok;
++}
++
++void QZContextDrawPDFPage(QZContextRef ctx, QZPDFPageRef page) {
++    (void)draw_pdf_page_checked(ctx, page);
++}
++
++uint8_t *QZPDFPageRasterizeRGBA(QZPDFPageRef page, QZFloat scale,
++                                int *out_width, int *out_height) {
++    if (out_width) *out_width = 0;
++    if (out_height) *out_height = 0;
++    if (!page || !std::isfinite(scale) || scale < 0.125 || scale > 8 ||
++        page->box.size.width <= 0 || page->box.size.height <= 0) return nullptr;
++    double wd = std::ceil(page->box.size.width * scale - 1e-9);
++    double hd = std::ceil(page->box.size.height * scale - 1e-9);
++    if (wd < 1 || hd < 1 || wd > 16384 || hd > 16384 ||
++        wd * hd > (double)(kPDFMaxDecodedStream / 4)) return nullptr;
++    int width = (int)wd, height = (int)hd;
++    QZContextRef ctx = QZBitmapContextCreate(nullptr, (size_t)width, (size_t)height,
++                                             8, (size_t)width * 4,
++                                             kQZImageAlphaPremultipliedLast);
++    if (!ctx) return nullptr;
++    QZContextScaleCTM(ctx, scale, scale);
++    QZContextTranslateCTM(ctx, -page->box.origin.x, -page->box.origin.y);
++    bool ok = draw_pdf_page_checked(ctx, page);
++    const uint8_t *source = (const uint8_t *)QZBitmapContextGetData(ctx);
++    size_t count = (size_t)width * (size_t)height;
++    uint8_t *result = ok ? (uint8_t *)malloc(count * 4) : nullptr;
++    if (result) {
++        for (size_t i = 0; i < count; i++) {
++            uint8_t alpha = source[i * 4 + 3];
++            result[i * 4 + 3] = alpha;
++            if (alpha == 0) {
++                result[i * 4 + 0] = result[i * 4 + 1] = result[i * 4 + 2] = 0;
++            } else if (alpha == 255) {
++                result[i * 4 + 0] = source[i * 4 + 0];
++                result[i * 4 + 1] = source[i * 4 + 1];
++                result[i * 4 + 2] = source[i * 4 + 2];
++            } else {
++                for (int c = 0; c < 3; c++)
++                    result[i * 4 + c] = clamp8((source[i * 4 + c] * 255 + alpha / 2) / alpha);
++            }
++        }
++    }
++    QZContextRelease(ctx);
++    if (!result) return nullptr;
++    if (out_width) *out_width = width;
++    if (out_height) *out_height = height;
++    return result;
+ }

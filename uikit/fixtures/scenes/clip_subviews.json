@@ -1,0 +1,84 @@
+{
+ "name": "clip_subviews",
+ "size": [
+  320,
+  240
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [
+     20,
+     20,
+     100,
+     100
+    ],
+    "backgroundColor": "#1971C2",
+    "clipsToBounds": true,
+    "subviews": [
+     {
+      "class": "UIView",
+      "frame": [
+       60,
+       60,
+       80,
+       80
+      ],
+      "backgroundColor": "#E03131"
+     }
+    ]
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     180,
+     20,
+     100,
+     100
+    ],
+    "backgroundColor": "#1971C2",
+    "subviews": [
+     {
+      "class": "UIView",
+      "frame": [
+       60,
+       60,
+       80,
+       80
+      ],
+      "backgroundColor": "#E03131"
+     }
+    ]
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     20,
+     140,
+     100,
+     80
+    ],
+    "backgroundColor": "#FFD43B",
+    "cornerRadius": 24,
+    "clipsToBounds": true,
+    "subviews": [
+     {
+      "class": "UIView",
+      "frame": [
+       -20,
+       -20,
+       60,
+       60
+      ],
+      "backgroundColor": "#845EF7"
+     }
+    ]
+   }
+  ]
+ }
+}

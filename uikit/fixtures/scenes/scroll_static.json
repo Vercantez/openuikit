@@ -1,0 +1,52 @@
+{
+  "name": "scroll_static",
+  "size": [240, 360],
+  "scale": 2,
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 240, 360], "backgroundColor": "#EDEDF0" },
+      {
+        "class": "UIScrollView",
+        "frame": [20, 30, 200, 280],
+        "backgroundColor": "#FFFFFF",
+        "cornerRadius": 12,
+        "contentSize": [260, 630],
+        "contentOffset": [30, 155],
+        "subviews": [
+          { "class": "UIView", "frame": [10, 0, 240, 50], "backgroundColor": "#E24C4C" },
+          { "class": "UIView", "frame": [10, 70, 240, 50], "backgroundColor": "#E2A44C" },
+          { "class": "UIView", "frame": [10, 140, 240, 50], "backgroundColor": "#8FCB5A",
+            "subviews": [
+              { "class": "UIView", "frame": [8, 8, 34, 34], "backgroundColor": "#FFFFFF",
+                "cornerRadius": 8 }
+            ] },
+          { "class": "UIView", "frame": [10, 210, 240, 50], "backgroundColor": "#4CA6E2" },
+          { "class": "UIView", "frame": [10, 280, 240, 50], "backgroundColor": "#7D5AE2" },
+          { "class": "UIView", "frame": [10, 350, 240, 50], "backgroundColor": "#E25A9E" },
+          { "class": "UIView", "frame": [10, 420, 240, 50], "backgroundColor": "#50C8B4" },
+          { "class": "UIView", "frame": [10, 490, 240, 50], "backgroundColor": "#999999" },
+          { "class": "UIView", "frame": [10, 560, 240, 50], "backgroundColor": "#333344" },
+          { "class": "UIView", "frame": [40, 0, 4, 630], "backgroundColor": "#202020" }
+        ]
+      },
+      {
+        "class": "UIScrollView",
+        "frame": [20, 320, 90, 30],
+        "backgroundColor": "#DCE8FF",
+        "contentSize": [90, 30],
+        "contentOffset": [-10, -8],
+        "subviews": [
+          { "class": "UIView", "frame": [0, 0, 30, 30], "backgroundColor": "#3355FF" }
+        ]
+      }
+    ]
+  },
+  "hitTests": [
+    [110, 105],
+    [32, 175],
+    [110, 75],
+    [40, 335],
+    [5, 5]
+  ]
+}

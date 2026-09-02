@@ -1,0 +1,48 @@
+{
+  "name": "collection_flow_lines",
+  "size": [375, 460],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 375, 460], "backgroundColor": "systemGray4" },
+      {
+        "class": "UICollectionView",
+        "frame": [0, 20, 375, 420],
+        "backgroundColor": "systemBackground",
+        "itemSize": [84, 56],
+        "minimumLineSpacing": 18,
+        "minimumInteritemSpacing": 14,
+        "sectionInset": [10, 12, 10, 12],
+        "itemCornerRadius": 6,
+        "sections": [
+          {
+            "items": [
+              { "text": "A", "color": "systemBlue", "textColor": "systemBackground" },
+              { "text": "B", "color": "systemBlue", "textColor": "systemBackground" },
+              { "text": "C", "color": "systemBlue", "textColor": "systemBackground" },
+              { "text": "D", "color": "systemGreen", "textColor": "systemBackground" },
+              { "text": "E", "color": "systemGreen", "textColor": "systemBackground" },
+              { "text": "F", "color": "systemGreen", "textColor": "systemBackground" },
+              { "text": "G", "color": "systemOrange", "textColor": "systemBackground" },
+              { "text": "H", "color": "systemOrange", "textColor": "systemBackground" },
+              { "text": "I", "color": "systemOrange", "textColor": "systemBackground" },
+              { "text": "J", "color": "systemPink", "textColor": "systemBackground" },
+              { "text": "K", "color": "systemPink", "textColor": "systemBackground" }
+            ]
+          },
+          {
+            "items": [
+              { "text": "wide", "color": "systemIndigo", "textColor": "systemBackground", "size": [200, 44] },
+              { "text": "sm", "color": "systemTeal", "textColor": "systemBackground", "size": [70, 60] },
+              { "text": "mid", "color": "systemPurple", "textColor": "systemBackground", "size": [120, 44] },
+              { "text": "tall", "color": "systemBrown", "textColor": "systemBackground", "size": [90, 80] },
+              { "text": "end", "color": "systemRed", "textColor": "systemBackground", "size": [110, 44] }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

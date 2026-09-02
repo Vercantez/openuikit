@@ -1,0 +1,29 @@
+{
+  "name": "tableview_dark",
+  "size": [375, 500],
+  "scale": 2,
+  "style": "dark",
+  "window": true,
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 375, 500], "backgroundColor": "systemGroupedBackground" },
+      {
+        "class": "UITableView",
+        "frame": [0, 40, 375, 460],
+        "style": "insetGrouped",
+        "sections": [
+          {
+            "header": "Appearance",
+            "footer": "Dark chrome colors are validated here.",
+            "rows": [
+              { "style": "value1", "text": "Theme", "detailText": "Dark", "accessory": "disclosureIndicator" },
+              { "style": "default", "text": "True Black", "accessory": "checkmark" },
+              { "style": "subtitle", "text": "Accent", "detailText": "System default" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

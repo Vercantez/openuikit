@@ -1,0 +1,67 @@
+{
+ "name": "boxes_basic",
+ "size": [
+  320,
+  240
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [
+     20,
+     20,
+     120,
+     80
+    ],
+    "backgroundColor": "#E03131"
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     100,
+     60,
+     120,
+     80
+    ],
+    "backgroundColor": "#1971C2",
+    "subviews": [
+     {
+      "class": "UIView",
+      "frame": [
+       10,
+       10,
+       40,
+       30
+      ],
+      "backgroundColor": "#FFD43B"
+     },
+     {
+      "class": "UIView",
+      "frame": [
+       -20,
+       40,
+       60,
+       60
+      ],
+      "backgroundColor": "#2F9E44"
+     }
+    ]
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     240,
+     150,
+     200,
+     200
+    ],
+    "backgroundColor": "#845EF7"
+   }
+  ]
+ }
+}

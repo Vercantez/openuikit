@@ -1,0 +1,1076 @@
+// UITableView tests (M10): cell reuse (the core invariant: only visible
+// rows are ever instantiated, recycled cells come back through
+// dequeueReusableCell), measured chrome metrics (row/header/footer
+// geometry from golden/tableview_*), sticky plain headers, selection via
+// the real touch pipeline, and UITableViewController wiring.
+import XCTest
+import Foundation
+@testable import OpenUIKit
+
+// XCTest re-exports Foundation/CoreGraphics on Darwin; pin the portable types.
+
+// MARK: - Helpers
+
+/// Counts live/total instances so reuse can be proven.
+@MainActor
+private final class CountingCell: UITableViewCell {
+    static var created = 0
+    override init(style: CellStyle = .default, reuseIdentifier: String? = nil) {
+        CountingCell.created += 1
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+}
+
+/// Deliberately uses UIKit's ordinary non-required override spelling for the
+/// reuse initializer. The separate required coder path remains unavailable,
+/// as it is for a normal programmatic cell.
+private final class CountingHeader: UITableViewHeaderFooterView {
+    static var created = 0
+    override init(reuseIdentifier: String?) {
+        CountingHeader.created += 1
+        super.init(reuseIdentifier: reuseIdentifier)
+    }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+}
+
+/// Grandchildren which add designated initializers must not be forced to
+/// implement an OpenUIKit-only required initializer. Real UIKit adds no such
+/// requirement to either reusable-view hierarchy. They do still satisfy
+/// UIView's UIKit-required coder initializer separately.
+private class GrandchildBaseCell: UITableViewCell {
+    override init(style: CellStyle = .default, reuseIdentifier: String? = nil) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+}
+
+private final class CustomGrandchildCell: GrandchildBaseCell {
+    let marker: Int
+    init(marker: Int) {
+        self.marker = marker
+        super.init(style: .default, reuseIdentifier: nil)
+    }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+}
+
+private class GrandchildBaseHeader: UITableViewHeaderFooterView {
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+    }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+}
+
+private final class CustomGrandchildHeader: GrandchildBaseHeader {
+    let marker: Int
+    init(marker: Int) {
+        self.marker = marker
+        super.init(reuseIdentifier: nil)
+    }
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+}
+
+@MainActor
+private final class BigTableSource: UITableViewDataSource, UITableViewDelegate {
+    var rows = 10_000
+    var selected: [IndexPath] = []
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        rows
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "row")
+            as? CountingCell ?? CountingCell(style: .default, reuseIdentifier: "row")
+        cell.textLabel.text = "Row \(indexPath.row)"
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selected.append(indexPath)
+    }
+}
+
+/// The tableview_plain fixture's data (3 sections, 7 rows).
+@MainActor
+private final class PlainFixtureSource: UITableViewDataSource, UITableViewDelegate {
+    let sections: [(header: String, rows: [String])] = [
+        ("Fruits", ["Apple", "Banana", "Cherry"]),
+        ("Vegetables", ["Asparagus", "Beetroot"]),
+        ("Grains", ["Amaranth", "Barley"]),
+    ]
+    func numberOfSections(in tableView: UITableView) -> Int { sections.count }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        sections[section].rows.count
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        cell.textLabel.text = sections[indexPath.section].rows[indexPath.row]
+        return cell
+    }
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        sections[section].header
+    }
+}
+
+/// The tableview_grouped fixture's shape (heights only matter here).
+@MainActor
+private final class GroupedFixtureSource: UITableViewDataSource, UITableViewDelegate {
+    // (style, header, footer, row styles)
+    let sections: [(header: String, footer: String, styles: [UITableViewCell.CellStyle])] = [
+        ("Account", "Your account details are synced across devices.",
+         [.value1, .value1, .default]),
+        ("Notifications", "Alerts appear on the lock screen.",
+         [.subtitle, .default, .subtitle]),
+    ]
+    func numberOfSections(in tableView: UITableView) -> Int { sections.count }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        sections[section].styles.count
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: sections[indexPath.section].styles[indexPath.row],
+                                   reuseIdentifier: nil)
+        cell.textLabel.text = "r\(indexPath.row)"
+        return cell
+    }
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        sections[section].header
+    }
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        sections[section].footer
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        sections[indexPath.section].styles[indexPath.row] == .subtitle
+            ? UITableViewCell.subtitleRowHeight
+            : UITableView.automaticDimension
+    }
+}
+
+@MainActor
+final class TableViewReuseTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        TextTestSupport.configureResourceRoot()
+        CountingCell.created = 0
+        CountingHeader.created = 0
+    }
+
+    /// The reuse gate: sweeping a 10k-row table end to end must never
+    /// instantiate more than roughly one screenful of cells.
+    func testTenThousandRowScrollInstantiatesOnlyVisibleCells() {
+        let source = BigTableSource()
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 375, height: 600),
+                                style: .plain)
+        table.dataSource = source
+        table.delegate = source
+        table.layoutIfNeeded()
+
+        let expectedContentH = 10_000 * UITableViewCell.defaultRowHeight
+        XCTAssertEqual(table.contentSize.height, expectedContentH, accuracy: 0.001)
+
+        // Fully visible + the two partial rows at the edges.
+        let maxVisible = Int((600 / UITableViewCell.defaultRowHeight).rounded(.up)) + 1
+        XCTAssertLessThanOrEqual(table.visibleCells.count, maxVisible)
+        XCTAssertGreaterThan(table.visibleCells.count, 0)
+
+        // Sweep the whole table in screen-sized steps, then in row steps.
+        let maxOffset = expectedContentH - 600
+        var y: CGFloat = 0
+        while y < maxOffset {
+            table.contentOffset = CGPoint(x: 0, y: y)
+            XCTAssertLessThanOrEqual(table.visibleCells.count, maxVisible)
+            y += 600
+        }
+        for step in 0..<200 {
+            table.contentOffset = CGPoint(x: 0, y: CGFloat(step) * 17.25)
+        }
+        // Live cells ≈ visible + a couple of spares in the reuse pool.
+        XCTAssertLessThanOrEqual(
+            CountingCell.created, maxVisible + 2,
+            "reuse failed: \(CountingCell.created) cells created for a \(maxVisible)-row viewport")
+    }
+
+    func testDequeueRecyclesAndPreparesForReuse() {
+        let source = BigTableSource()
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 375, height: 200),
+                                style: .plain)
+        table.dataSource = source
+        table.delegate = source
+        table.layoutIfNeeded()
+
+        guard let first = table.cellForRow(at: IndexPath(row: 0, section: 0)) else {
+            return XCTFail("row 0 not tiled")
+        }
+        first.setSelected(true, animated: false)
+
+        // Push row 0 far out of the viewport: its cell is recycled and
+        // immediately dequeued (prepareForReuse) for an incoming row.
+        table.contentOffset = CGPoint(x: 0, y: 2000)
+        XCTAssertNil(table.cellForRow(at: IndexPath(row: 0, section: 0)))
+        XCTAssertTrue(table.visibleCells.contains { $0 === first },
+                      "expected the retired cell to be reused for an incoming row")
+        XCTAssertNotEqual(table.indexPath(for: first), IndexPath(row: 0, section: 0))
+        XCTAssertFalse(first.isSelected, "prepareForReuse must clear selection")
+        XCTAssertNil(table.dequeueReusableCell(withIdentifier: "unknown"))
+    }
+
+    func testRegisteredClassIsInstantiatedByDequeue() {
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 375, height: 200))
+        table.register(CountingCell.self, forCellReuseIdentifier: "counting")
+        let cell = table.dequeueReusableCell(withIdentifier: "counting")
+        XCTAssertTrue(cell is CountingCell)
+        XCTAssertEqual(cell?.reuseIdentifier, "counting")
+        XCTAssertEqual(CountingCell.created, 1)
+    }
+
+    func testRegisteredHeaderClassUsesOrdinaryOverrideInitializer() {
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 375, height: 200))
+        table.register(CountingHeader.self,
+                       forHeaderFooterViewReuseIdentifier: "header")
+        let header = table.dequeueReusableHeaderFooterView(withIdentifier: "header")
+        XCTAssertTrue(header is CountingHeader)
+        XCTAssertEqual(header?.reuseIdentifier, "header")
+        XCTAssertEqual(CountingHeader.created, 1)
+    }
+
+    func testReusableViewGrandchildrenMayAddDesignatedInitializers() {
+        XCTAssertEqual(CustomGrandchildCell(marker: 41).marker, 41)
+        XCTAssertEqual(CustomGrandchildHeader(marker: 42).marker, 42)
+    }
+}
+
+@MainActor
+final class TableViewCompatibilityTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        TextTestSupport.configureResourceRoot()
+    }
+
+    func testHeaderFooterAndBackgroundParticipateInScrollGeometry() {
+        let source = BigTableSource()
+        source.rows = 1
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 320, height: 60))
+        let background = UIView()
+        table.backgroundView = background
+        table.tableHeaderView = UIView(frame: CGRect(x: 12, y: 7, width: 20, height: 10))
+        table.tableFooterView = UIView(frame: CGRect(x: 5, y: 3, width: 20, height: 20))
+        table.dataSource = source
+        table.delegate = source
+        table.layoutIfNeeded()
+
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 0)).minY, 10)
+        XCTAssertEqual(table.contentSize.height,
+                       10 + UITableViewCell.defaultRowHeight + 20,
+                       accuracy: 0.001)
+        XCTAssertEqual(table.tableHeaderView?.frame,
+                       CGRect(x: 0, y: 0, width: 320, height: 10))
+        XCTAssertEqual(table.tableFooterView?.frame.minY ?? -1,
+                       10 + UITableViewCell.defaultRowHeight,
+                       accuracy: 0.001)
+        XCTAssertEqual(background.frame, table.bounds)
+
+        table.contentOffset = CGPoint(x: 0, y: 12)
+        XCTAssertEqual(background.frame, table.bounds,
+                       "the background remains fixed to the visible bounds")
+    }
+
+    func testBatchDeletionRebuildsAgainstTheMutatedDataSourceAtEndUpdates() {
+        let source = BigTableSource()
+        source.rows = 3
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
+        table.dataSource = source
+        table.delegate = source
+        table.layoutIfNeeded()
+        XCTAssertEqual(table.numberOfRows(inSection: 0), 3)
+
+        table.beginUpdates()
+        source.rows = 2
+        table.deleteRows(at: [IndexPath(row: 2, section: 0)], with: .fade)
+        XCTAssertEqual(table.numberOfRows(inSection: 0), 3,
+                       "a batch is committed atomically by endUpdates")
+        table.endUpdates()
+
+        XCTAssertEqual(table.numberOfRows(inSection: 0), 2)
+        XCTAssertNil(table.cellForRow(at: IndexPath(row: 2, section: 0)))
+    }
+
+    func testMultipleSelectionAndEditingStateReachVisibleCells() {
+        let source = BigTableSource()
+        source.rows = 3
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
+        table.dataSource = source
+        table.delegate = source
+        table.allowsMultipleSelection = true
+        table.layoutIfNeeded()
+
+        table.selectRow(at: IndexPath(row: 0, section: 0), animated: false)
+        table.selectRow(at: IndexPath(row: 1, section: 0), animated: false)
+        XCTAssertEqual(table.indexPathsForSelectedRows,
+                       [IndexPath(row: 0, section: 0), IndexPath(row: 1, section: 0)])
+
+        table.setEditing(true, animated: false)
+        XCTAssertTrue(table.isEditing)
+        XCTAssertTrue(table.visibleCells.allSatisfy(\.isEditing))
+        XCTAssertNil(table.indexPathsForSelectedRows,
+                     "selection is cleared when editing selection is disabled")
+    }
+
+    func testExplicitZeroSeparatorInsetOverridesStyleDefault() {
+        let source = BigTableSource()
+        source.rows = 1
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 320, height: 100))
+        table.dataSource = source
+        table.delegate = source
+        table.layoutIfNeeded()
+        let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+
+        XCTAssertEqual(cell.separatorView.frame.minX, 16)
+        cell.separatorInset = .zero
+        cell.layoutIfNeeded()
+        XCTAssertEqual(cell.separatorView.frame.minX, 0)
+        XCTAssertEqual(cell.separatorView.frame.width, 320)
+    }
+}
+
+@MainActor
+final class TableViewMetricsTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        TextTestSupport.configureResourceRoot()
+    }
+
+    /// Measured plain chrome (golden/tableview_plain.layout.json): 22 pt
+    /// padding + 40.5 pt header per section, 51.5 pt rows.
+    func testPlainRowGeometryMatchesGolden() {
+        let source = PlainFixtureSource()
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 375, height: 480),
+                                style: .plain)
+        table.dataSource = source
+        table.delegate = source
+        table.layoutIfNeeded()
+
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 0)).minY, 62.5)
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 1, section: 0)).minY, 114)
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 2, section: 0)).minY, 165.5)
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 1)).minY, 279.5)
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 1, section: 1)).minY, 331)
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 2)).minY, 445)
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 1, section: 2)).minY, 496.5)
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 0)).width, 375)
+        XCTAssertEqual(table.contentSize.height, 548, accuracy: 0.001)
+
+        // Barley (496.5) starts below the 480 pt viewport: never built.
+        XCTAssertNil(table.cellForRow(at: IndexPath(row: 1, section: 2)))
+        XCTAssertEqual(table.visibleCells.count, 6)
+    }
+
+    /// Measured inset-grouped chrome (golden/tableview_grouped.layout.json):
+    /// no top padding, 40.5 pt headers, 30 pt one-line footers, 70.5 pt
+    /// subtitle rows, 8 pt side inset.
+    func testGroupedGeometryMatchesGolden() {
+        let source = GroupedFixtureSource()
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 375, height: 620),
+                                style: .insetGrouped)
+        table.dataSource = source
+        table.delegate = source
+        table.layoutIfNeeded()
+
+        let r0 = table.rectForRow(at: IndexPath(row: 0, section: 0))
+        XCTAssertEqual(r0.minY, 40.5)
+        XCTAssertEqual(r0.minX, 8)
+        XCTAssertEqual(r0.width, 359)
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 2, section: 0)).maxY, 195)
+        // Footer 30 pt, then the next header at 225.
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 1)).minY, 265.5)
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 0, section: 1)).height, 70.5)
+        XCTAssertEqual(table.rectForRow(at: IndexPath(row: 2, section: 1)).maxY, 458)
+        XCTAssertEqual(table.contentSize.height, 488, accuracy: 0.001)
+
+        // Real-window metrics: switching the side inset re-tiles the cards.
+        table.insetGroupedSideInset = 16
+        table.layoutIfNeeded()
+        let r16 = table.rectForRow(at: IndexPath(row: 0, section: 0))
+        XCTAssertEqual(r16.minX, 16)
+        XCTAssertEqual(r16.width, 343)
+    }
+
+    func testPlainHeaderSticksToVisibleTop() {
+        let source = PlainFixtureSource()
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 375, height: 300),
+                                style: .plain)
+        table.dataSource = source
+        table.delegate = source
+        table.layoutIfNeeded()
+
+        // At rest the first header sits at its natural 22 pt.
+        XCTAssertEqual(table.headerViews[0]?.frame.minY, 22)
+
+        // Scrolled into section 0: the header pins to the offset.
+        table.contentOffset = CGPoint(x: 0, y: 100)
+        XCTAssertEqual(table.headerViews[0]?.frame.minY, 100)
+
+        // Near the section end it is pushed out by the next section
+        // (rows end 217 − 40.5 = 176.5).
+        table.contentOffset = CGPoint(x: 0, y: 190)
+        XCTAssertEqual(table.headerViews[0]?.frame.minY, 176.5)
+
+        // Past the section: header 0 is retired; header 1 pins.
+        table.contentOffset = CGPoint(x: 0, y: 248)
+        XCTAssertNil(table.headerViews[0])
+        XCTAssertEqual(table.headerViews[1]?.frame.minY, 248)
+    }
+
+    func testGroupedLastRowHasNoSeparator() {
+        let source = GroupedFixtureSource()
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 375, height: 620),
+                                style: .insetGrouped)
+        table.dataSource = source
+        table.delegate = source
+        table.layoutIfNeeded()
+
+        XCTAssertEqual(table.cellForRow(at: IndexPath(row: 0, section: 0))?
+            .separatorView.isHidden, false)
+        XCTAssertEqual(table.cellForRow(at: IndexPath(row: 2, section: 0))?
+            .separatorView.isHidden, true)
+    }
+}
+
+@MainActor
+final class TableViewSelectionTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        TextTestSupport.configureResourceRoot()
+    }
+
+    private func makeTappableTable()
+        -> (window: UIWindow, table: UITableView, source: BigTableSource) {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 600))
+        let source = BigTableSource()
+        source.rows = 20
+        let table = UITableView(frame: window.bounds, style: .plain)
+        table.dataSource = source
+        table.delegate = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+        return (window, table, source)
+    }
+
+    /// A tap: touch-down highlights (after the content-touch delay flush on
+    /// the up event — UIKit's quick-tap behavior), touch-up selects and
+    /// fires didSelectRowAt.
+    func testTapSelectsRowAndFiresDelegate() {
+        let (window, table, source) = makeTappableTable()
+        // Row 2 spans y 103..154.5.
+        window.sendTouch(.began, at: CGPoint(x: 200, y: 120), timestamp: 0)
+        window.sendTouch(.ended, at: CGPoint(x: 200, y: 120), timestamp: 0.05)
+
+        XCTAssertEqual(source.selected, [IndexPath(row: 2, section: 0)])
+        XCTAssertEqual(table.indexPathForSelectedRow, IndexPath(row: 2, section: 0))
+        let cell = table.cellForRow(at: IndexPath(row: 2, section: 0))!
+        XCTAssertTrue(cell.isSelected)
+        XCTAssertEqual(cell.selectedBackgroundView?.alpha, 1)
+        // Measured separator rule: the selected row and the one above lose
+        // their separators.
+        XCTAssertEqual(cell.separatorView.isHidden, true)
+        XCTAssertEqual(table.cellForRow(at: IndexPath(row: 1, section: 0))?
+            .separatorView.isHidden, true)
+        XCTAssertEqual(table.cellForRow(at: IndexPath(row: 0, section: 0))?
+            .separatorView.isHidden, false)
+
+        // Selecting another row deselects the first (didDeselect path).
+        window.sendTouch(.began, at: CGPoint(x: 200, y: 60), timestamp: 1.0)
+        window.sendTouch(.ended, at: CGPoint(x: 200, y: 60), timestamp: 1.05)
+        XCTAssertEqual(table.indexPathForSelectedRow, IndexPath(row: 1, section: 0))
+        XCTAssertFalse(cell.isSelected)
+
+        // deselectRow clears the highlight state.
+        table.deselectRow(at: IndexPath(row: 1, section: 0), animated: false)
+        XCTAssertNil(table.indexPathForSelectedRow)
+    }
+
+    /// Dragging along the scrollable axis cancels the press: the row
+    /// un-highlights and no selection is committed (the scroll view's
+    /// content-touch cancellation, same feel as DemoApp rows).
+    func testDragCancelsRowHighlightAndSelection() {
+        let (window, table, source) = makeTappableTable()
+        window.sendTouch(.began, at: CGPoint(x: 200, y: 300), timestamp: 0)
+        // Hold still past the content-touch delay so the touch is DELIVERED
+        // (row highlighted), then drag: the pan claims the touch.
+        window.tick(timestamp: 0.2)
+        let path = IndexPath(row: 5, section: 0)
+        XCTAssertEqual(table.cellForRow(at: path)?.isHighlighted, true)
+        for i in 1...6 {
+            window.sendTouch(.moved, at: CGPoint(x: 200, y: 300 - CGFloat(i) * 8),
+                             timestamp: 0.2 + Double(i) * 0.016)
+        }
+        XCTAssertEqual(table.cellForRow(at: path)?.isHighlighted, false)
+        window.sendTouch(.ended, at: CGPoint(x: 200, y: 252), timestamp: 0.4)
+        XCTAssertTrue(source.selected.isEmpty)
+        XCTAssertNil(table.indexPathForSelectedRow)
+        XCTAssertGreaterThan(table.contentOffset.y, 0)
+    }
+
+    /// A selected row that scrolls out and back in keeps its selection
+    /// (state lives on the table, not the recycled cell).
+    func testSelectionSurvivesRecycling() {
+        let (_, table, source) = makeTappableTable()
+        source.rows = 100
+        table.reloadData()
+        table.layoutIfNeeded()
+        table.selectRow(at: IndexPath(row: 0, section: 0), animated: false)
+        table.contentOffset = CGPoint(x: 0, y: 2000)
+        XCTAssertNil(table.cellForRow(at: IndexPath(row: 0, section: 0)))
+        table.contentOffset = .zero
+        XCTAssertEqual(table.cellForRow(at: IndexPath(row: 0, section: 0))?.isSelected, true)
+    }
+}
+
+// MARK: - UITableViewController
+
+@MainActor
+private final class TestTableController: UITableViewController {
+    var didSelect: [IndexPath] = []
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        4
+    }
+    override func tableView(_ tableView: UITableView,
+                            cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        cell.textLabel.text = "Row \(indexPath.row)"
+        return cell
+    }
+    override func tableView(_ tableView: UITableView,
+                            titleForHeaderInSection section: Int) -> String? {
+        "Header"
+    }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        didSelect.append(indexPath)
+    }
+}
+
+@MainActor
+final class TableViewControllerTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        TextTestSupport.configureResourceRoot()
+    }
+
+    /// The controller's view IS the table; subclass overrides are reached
+    /// through the protocol witnesses (the protocol-extension dispatch
+    /// pitfall this class exists to avoid).
+    func testControllerWiresTableAndDispatchesOverrides() {
+        let vc = TestTableController(style: .plain)
+        vc.view.frame = CGRect(x: 0, y: 0, width: 375, height: 400)
+        vc.view.layoutIfNeeded()
+
+        XCTAssertTrue(vc.view === vc.tableView)
+        XCTAssertTrue(vc.tableView.dataSource === vc)
+        XCTAssertEqual(vc.tableView.numberOfSections, 1)
+        XCTAssertEqual(vc.tableView.numberOfRows(inSection: 0), 4)
+        // titleForHeader override reached → measured header chrome applies.
+        XCTAssertEqual(vc.tableView.rectForRow(at: IndexPath(row: 0, section: 0)).minY,
+                       22 + 40.5)
+        XCTAssertEqual(vc.tableView.visibleCells.count, 4)
+        XCTAssertEqual(vc.tableView.visibleCells.first?.textLabel.text, "Row 0")
+
+        vc.tableView.commitRowTap(on: vc.tableView.visibleCells[2])
+        XCTAssertEqual(vc.didSelect, [IndexPath(row: 2, section: 0)])
+    }
+}
+
+// MARK: - Animated updates (identity-matched moves)
+
+/// Two sections holding reference-typed items, so an item's identity is
+/// stable while it moves between them (the Tasks app's shape).
+@MainActor
+private final class MovableSource: UITableViewDataSource, UITableViewDelegate {
+    @MainActor
+    final class Item { let name: String; init(_ n: String) { name = n } }
+    var sections: [[Item]] = [
+        [Item("a"), Item("b"), Item("c")],
+        [Item("x")],
+    ]
+
+    func numberOfSections(in tableView: UITableView) -> Int { sections.count }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection s: Int) -> Int {
+        sections[s].count
+    }
+    func tableView(_ tableView: UITableView, titleForHeaderInSection s: Int) -> String? {
+        s == 0 ? "Open" : "Done"
+    }
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "row")
+            ?? UITableViewCell(style: .default, reuseIdentifier: "row")
+        cell.textLabel.text = sections[indexPath.section][indexPath.row].name
+        return cell
+    }
+
+    func identity(_ p: IndexPath) -> AnyHashable {
+        ObjectIdentifier(sections[p.section][p.row])
+    }
+}
+
+/// Explicit row arrays for UIKit-compatible `moveRow(at:to:)` tests. The
+/// reference-typed item lets the assertions distinguish item identity from an
+/// index path whose meaning changes during the move.
+@MainActor
+private final class RowMoveSource: UITableViewDataSource {
+    @MainActor
+    final class Item {
+        let name: String
+        init(_ name: String) { self.name = name }
+    }
+
+    var sections: [[Item]]
+    var requestedPaths: [IndexPath] = []
+
+    init(_ names: [[String]]) {
+        sections = names.map { $0.map(Item.init) }
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int { sections.count }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        sections[section].count
+    }
+
+    func tableView(_ tableView: UITableView,
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        requestedPaths.append(indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "move-row")
+            ?? UITableViewCell(style: .default, reuseIdentifier: "move-row")
+        cell.textLabel.text = sections[indexPath.section][indexPath.row].name
+        return cell
+    }
+
+    func move(from source: IndexPath, to destination: IndexPath) {
+        let item = sections[source.section].remove(at: source.row)
+        sections[destination.section].insert(item, at: destination.row)
+    }
+
+    func insert(_ name: String, at destination: IndexPath) {
+        sections[destination.section].insert(Item(name), at: destination.row)
+    }
+}
+
+@MainActor
+final class TableViewRowMoveTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        TextTestSupport.configureResourceRoot()
+    }
+
+    private func makeTable(_ names: [[String]], height: CGFloat = 400)
+        -> (UIWindow, UITableView, RowMoveSource) {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: height))
+        let source = RowMoveSource(names)
+        let table = UITableView(frame: window.bounds, style: .plain)
+        table.rowHeight = 44
+        table.dataSource = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+        return (window, table, source)
+    }
+
+    private func cells(in table: UITableView, section: Int, count: Int)
+        -> [UITableViewCell] {
+        (0..<count).map {
+            table.cellForRow(at: IndexPath(row: $0, section: section))!
+        }
+    }
+
+    /// iOS 26.1 oracle: A moves 0→2, B/C shift up, D stays put, and every
+    /// visible item keeps the exact cell it had before the move.
+    func testDirectMovePreservesCellsFramesOrderAndMultipleSelection() {
+        let (window, table, source) = makeTable([["A", "B", "C", "D"]])
+        let before = cells(in: table, section: 0, count: 4)
+        let beforeFrames = before.map(\.frame)
+        table.allowsMultipleSelection = true
+        table.selectRow(at: IndexPath(row: 0, section: 0), animated: false)
+        table.selectRow(at: IndexPath(row: 2, section: 0), animated: false)
+
+        let from = IndexPath(row: 0, section: 0)
+        let to = IndexPath(row: 2, section: 0)
+        source.move(from: from, to: to)
+        table.moveRow(at: from, to: to)
+        window.layoutIfNeeded()
+
+        let after = cells(in: table, section: 0, count: 4)
+        XCTAssertTrue(after[0] === before[1])
+        XCTAssertTrue(after[1] === before[2])
+        XCTAssertTrue(after[2] === before[0])
+        XCTAssertTrue(after[3] === before[3])
+        XCTAssertEqual(after.map { $0.textLabel.text }, ["B", "C", "A", "D"])
+        XCTAssertEqual(after.map(\.frame), beforeFrames)
+        XCTAssertEqual(table.indexPathForSelectedRow, IndexPath(row: 2, section: 0))
+        XCTAssertEqual(table.indexPathsForSelectedRows,
+                       [IndexPath(row: 1, section: 0), IndexPath(row: 2, section: 0)])
+        XCTAssertTrue(after[1].isSelected)
+        XCTAssertTrue(after[2].isSelected)
+    }
+
+    func testSameSourceAndDestinationPreservesIdentityFramesAndSelection() {
+        let (window, table, source) = makeTable([["A", "B", "C", "D"]])
+        let before = cells(in: table, section: 0, count: 4)
+        let beforeFrames = before.map(\.frame)
+        table.allowsMultipleSelection = true
+        table.selectRow(at: IndexPath(row: 1, section: 0), animated: false)
+        table.selectRow(at: IndexPath(row: 2, section: 0), animated: false)
+
+        let unchanged = IndexPath(row: 1, section: 0)
+        source.move(from: unchanged, to: unchanged)
+        table.moveRow(at: unchanged, to: unchanged)
+        window.layoutIfNeeded()
+
+        let after = cells(in: table, section: 0, count: 4)
+        for index in before.indices {
+            XCTAssertTrue(after[index] === before[index])
+        }
+        XCTAssertEqual(after.map(\.frame), beforeFrames)
+        XCTAssertEqual(after.map { $0.textLabel.text }, ["A", "B", "C", "D"])
+        XCTAssertEqual(table.indexPathForSelectedRow, unchanged)
+        XCTAssertEqual(table.indexPathsForSelectedRows,
+                       [unchanged, IndexPath(row: 2, section: 0)])
+        XCTAssertTrue(after[1].isSelected)
+        XCTAssertTrue(after[2].isSelected)
+    }
+
+    /// The pure single-move fast path is deferred until the outer batch ends,
+    /// then applies the same identity/selection permutation as a direct move.
+    func testSingleMoveInsideBeginEndUpdatesIsAtomicAndIdentityPreserving() {
+        let (window, table, source) = makeTable([["A", "B", "C", "D"]])
+        let before = cells(in: table, section: 0, count: 4)
+        let beforeFrames = before.map(\.frame)
+        table.selectRow(at: IndexPath(row: 2, section: 0), animated: false)
+
+        let from = IndexPath(row: 3, section: 0)
+        let to = IndexPath(row: 1, section: 0)
+        table.beginUpdates()
+        source.move(from: from, to: to)
+        table.moveRow(at: from, to: to)
+        XCTAssertTrue(table.cellForRow(at: IndexPath(row: 1, section: 0)) === before[1],
+                      "the old slot map stays visible until endUpdates")
+        XCTAssertEqual(table.indexPathForSelectedRow, IndexPath(row: 2, section: 0))
+        table.endUpdates()
+        window.layoutIfNeeded()
+
+        let after = cells(in: table, section: 0, count: 4)
+        XCTAssertTrue(after[0] === before[0])
+        XCTAssertTrue(after[1] === before[3])
+        XCTAssertTrue(after[2] === before[1])
+        XCTAssertTrue(after[3] === before[2])
+        XCTAssertEqual(after.map { $0.textLabel.text }, ["A", "D", "B", "C"])
+        XCTAssertEqual(after.map(\.frame), beforeFrames)
+        XCTAssertEqual(table.indexPathForSelectedRow, IndexPath(row: 3, section: 0))
+        XCTAssertEqual(table.indexPathsForSelectedRows, [IndexPath(row: 3, section: 0)])
+    }
+
+    func testCrossSectionMoveRekeysBothSectionsAndSelection() {
+        let (window, table, source) = makeTable([["A", "B", "C"], ["X", "Y"]])
+        let before = Dictionary(uniqueKeysWithValues: table.visibleCells.map {
+            ($0.textLabel.text!, $0)
+        })
+        table.allowsMultipleSelection = true
+        table.selectRow(at: IndexPath(row: 1, section: 0), animated: false)
+        table.selectRow(at: IndexPath(row: 1, section: 1), animated: false)
+
+        let from = IndexPath(row: 1, section: 0)
+        let to = IndexPath(row: 1, section: 1)
+        source.move(from: from, to: to)
+        table.moveRow(at: from, to: to)
+        window.layoutIfNeeded()
+
+        let expected: [(String, IndexPath)] = [
+            ("A", IndexPath(row: 0, section: 0)),
+            ("C", IndexPath(row: 1, section: 0)),
+            ("X", IndexPath(row: 0, section: 1)),
+            ("B", IndexPath(row: 1, section: 1)),
+            ("Y", IndexPath(row: 2, section: 1)),
+        ]
+        for (name, path) in expected {
+            XCTAssertTrue(table.cellForRow(at: path) === before[name])
+        }
+        XCTAssertEqual(table.visibleCells.map { $0.textLabel.text },
+                       ["A", "C", "X", "B", "Y"])
+        XCTAssertEqual(table.indexPathForSelectedRow, IndexPath(row: 1, section: 1))
+        XCTAssertEqual(table.indexPathsForSelectedRows,
+                       [IndexPath(row: 1, section: 1), IndexPath(row: 2, section: 1)])
+    }
+
+    func testOffscreenSelectionFollowsMoveIntoVisibleViewport() {
+        let names = (0..<100).map { "R\($0)" }
+        let (window, table, source) = makeTable([names], height: 100)
+        let rowZero = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        let rowOne = table.cellForRow(at: IndexPath(row: 1, section: 0))!
+        table.selectRow(at: IndexPath(row: 80, section: 0), animated: false)
+
+        let from = IndexPath(row: 80, section: 0)
+        let to = IndexPath(row: 1, section: 0)
+        source.move(from: from, to: to)
+        table.moveRow(at: from, to: to)
+        window.layoutIfNeeded()
+
+        XCTAssertTrue(table.cellForRow(at: IndexPath(row: 0, section: 0)) === rowZero)
+        XCTAssertTrue(table.cellForRow(at: IndexPath(row: 2, section: 0)) === rowOne)
+        XCTAssertEqual(table.cellForRow(at: to)?.textLabel.text, "R80")
+        XCTAssertEqual(table.cellForRow(at: to)?.isSelected, true)
+        XCTAssertEqual(table.indexPathForSelectedRow, to)
+    }
+
+    func testMultipleMovesInOneBatchUseCoherentRebuildFallback() {
+        let (window, table, source) = makeTable([["A", "B", "C", "D"]])
+        table.beginUpdates()
+        source.move(from: IndexPath(row: 0, section: 0),
+                    to: IndexPath(row: 2, section: 0))
+        table.moveRow(at: IndexPath(row: 0, section: 0),
+                      to: IndexPath(row: 2, section: 0))
+        source.move(from: IndexPath(row: 3, section: 0),
+                    to: IndexPath(row: 1, section: 0))
+        table.moveRow(at: IndexPath(row: 3, section: 0),
+                      to: IndexPath(row: 1, section: 0))
+        table.endUpdates()
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(table.visibleCells.map { $0.textLabel.text }, ["B", "D", "C", "A"])
+        XCTAssertEqual(Set(table.visibleCells.map(ObjectIdentifier.init)).count, 4)
+        XCTAssertEqual(table.numberOfRows(inSection: 0), 4)
+    }
+
+    func testMixedMoveAndInsertBatchUsesCoherentRebuildFallback() {
+        let (window, table, source) = makeTable([["A", "B", "C", "D"]])
+        table.beginUpdates()
+        source.move(from: IndexPath(row: 0, section: 0),
+                    to: IndexPath(row: 2, section: 0))
+        table.moveRow(at: IndexPath(row: 0, section: 0),
+                      to: IndexPath(row: 2, section: 0))
+        let inserted = IndexPath(row: 1, section: 0)
+        source.insert("X", at: inserted)
+        table.insertRows(at: [inserted], with: .none)
+        table.endUpdates()
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(table.visibleCells.map { $0.textLabel.text },
+                       ["B", "X", "C", "A", "D"])
+        XCTAssertEqual(Set(table.visibleCells.map(ObjectIdentifier.init)).count, 5)
+        XCTAssertEqual(table.numberOfRows(inSection: 0), 5)
+    }
+
+    func testNestedBatchSuppressesIntermediateRetileUntilOuterMoveCommit() {
+        let names = (0..<100).map { "R\($0)" }
+        let (window, table, source) = makeTable([names], height: 100)
+        table.selectRow(at: IndexPath(row: 80, section: 0), animated: false)
+        source.requestedPaths.removeAll()
+
+        let from = IndexPath(row: 80, section: 0)
+        let to = IndexPath(row: 1, section: 0)
+        table.beginUpdates()
+        table.beginUpdates()
+        source.move(from: from, to: to)
+        table.moveRow(at: from, to: to)
+        table.contentOffset = CGPoint(x: 0, y: 40 * 44)
+        table.layoutIfNeeded()
+
+        XCTAssertEqual(source.requestedPaths, [])
+        XCTAssertEqual(table.indexPathsForVisibleRows,
+                       [IndexPath(row: 0, section: 0),
+                        IndexPath(row: 1, section: 0),
+                        IndexPath(row: 2, section: 0)])
+        table.endUpdates()
+        table.layoutIfNeeded()
+        XCTAssertEqual(source.requestedPaths, [], "inner end must not commit")
+
+        table.endUpdates()
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(table.indexPathsForVisibleRows,
+                       [IndexPath(row: 40, section: 0),
+                        IndexPath(row: 41, section: 0),
+                        IndexPath(row: 42, section: 0)])
+        XCTAssertEqual(table.visibleCells.map { $0.textLabel.text },
+                       ["R39", "R40", "R41"])
+        XCTAssertEqual(Set(table.visibleCells.map(ObjectIdentifier.init)).count, 3)
+        XCTAssertEqual(table.indexPathForSelectedRow, to)
+    }
+
+    func testQueuedMoveThenReloadUsesFallbackAndRetainsReloadSelectionClearing() {
+        let (window, table, source) = makeTable([["A", "B", "C", "D"]])
+        table.selectRow(at: IndexPath(row: 2, section: 0), animated: false)
+        source.requestedPaths.removeAll()
+
+        table.beginUpdates()
+        source.move(from: IndexPath(row: 0, section: 0),
+                    to: IndexPath(row: 2, section: 0))
+        table.moveRow(at: IndexPath(row: 0, section: 0),
+                      to: IndexPath(row: 2, section: 0))
+        table.reloadData()
+        table.layoutIfNeeded()
+        XCTAssertNil(table.indexPathForSelectedRow)
+        XCTAssertEqual(source.requestedPaths, [])
+        table.endUpdates()
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(table.visibleCells.map { $0.textLabel.text }, ["B", "C", "A", "D"])
+        XCTAssertEqual(Set(table.visibleCells.map(ObjectIdentifier.init)).count, 4)
+        XCTAssertNil(table.indexPathForSelectedRow)
+    }
+
+    func testInvalidPositiveSourceFallsBackWithoutShiftingCellsOrSelection() {
+        let (window, table, source) = makeTable([["A", "B", "C", "D"]])
+        table.selectRow(at: IndexPath(row: 1, section: 0), animated: false)
+
+        table.moveRow(at: IndexPath(row: 99, section: 0),
+                      to: IndexPath(row: 0, section: 0))
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(table.visibleCells.map { $0.textLabel.text }, ["A", "B", "C", "D"])
+        XCTAssertEqual(Set(table.visibleCells.map(ObjectIdentifier.init)).count, 4)
+        XCTAssertEqual(table.indexPathForSelectedRow, IndexPath(row: 1, section: 0))
+        XCTAssertEqual(table.cellForRow(at: IndexPath(row: 1, section: 0))?.isSelected,
+                       true)
+        _ = source
+    }
+}
+
+@MainActor
+final class TableViewAnimatedUpdateTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        TextTestSupport.configureResourceRoot()
+        OpenUIKitRuntime.animationTime = 0
+    }
+
+    override func tearDown() {
+        OpenUIKitRuntime.animationTime = 0
+        super.tearDown()
+    }
+
+    private func makeTable() -> (UIWindow, UITableView, MovableSource) {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 600))
+        let source = MovableSource()
+        let table = UITableView(frame: window.bounds, style: .insetGrouped)
+        table.dataSource = source
+        table.delegate = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+        return (window, table, source)
+    }
+
+    /// The whole point of performUpdates: a row that changes section keeps
+    /// its EXACT cell (so animations running inside it survive), and the
+    /// cell animates from the slot it used to occupy to its new one.
+    func testMovedRowKeepsItsCellAndAnimatesFromTheOldSlot() {
+        let (window, table, source) = makeTable()
+        let moving = source.sections[0][1]              // "b"
+        let cell = table.cellForRow(at: IndexPath(row: 1, section: 0))!
+        let oldFrame = cell.frame
+
+        table.performUpdates(withDuration: 0.35,
+                             identity: { source.identity($0) },
+                             updates: {
+            source.sections[0].remove(at: 1)
+            source.sections[1].insert(moving, at: 0)
+        })
+        window.layoutIfNeeded()
+
+        let newPath = IndexPath(row: 0, section: 1)
+        XCTAssertTrue(table.cellForRow(at: newPath) === cell,
+                      "the moved row must keep its cell, not be re-dequeued")
+        XCTAssertEqual(cell.textLabel.text, "b")
+        // Model frame = destination; a position animation carries it there
+        // from where it was.
+        XCTAssertEqual(cell.frame, table.rectForRow(at: newPath))
+        XCTAssertNotEqual(cell.frame, oldFrame)
+        let move = cell.animations.first { $0.property == .position }
+        XCTAssertNotNil(move, "the moved cell should animate its position")
+        if case let .point(from)? = move?.from {
+            XCTAssertEqual(from.y, oldFrame.midY, accuracy: 0.001)
+        } else {
+            XCTFail("expected a point-valued position animation")
+        }
+        // A grouped cell is transparent (the card draws the fill), so it
+        // borrows the card colour for the flight across the gap.
+        XCTAssertNotNil(cell.backgroundColor)
+    }
+
+    /// Rows that stay put still animate into their new slots, and the
+    /// section cards resize with them — one coordinated move.
+    func testNeighboursAndCardsAnimateAroundTheMove() {
+        let (window, table, source) = makeTable()
+        let moving = source.sections[0][0]              // "a", the first row
+        let follower = table.cellForRow(at: IndexPath(row: 1, section: 0))!
+        let followerOld = follower.frame
+        let cardOld = table.cardViews[0]!.frame
+
+        table.performUpdates(withDuration: 0.35,
+                             identity: { source.identity($0) },
+                             updates: {
+            source.sections[0].remove(at: 0)
+            source.sections[1].append(moving)
+        })
+        window.layoutIfNeeded()
+
+        XCTAssertTrue(table.cellForRow(at: IndexPath(row: 0, section: 0)) === follower)
+        XCTAssertEqual(follower.frame.minY, followerOld.minY - followerOld.height,
+                       accuracy: 0.001)
+        XCTAssertNotNil(follower.animations.first { $0.property == .position })
+        let card = table.cardViews[0]!
+        XCTAssertEqual(card.frame.height, cardOld.height - followerOld.height,
+                       accuracy: 0.001)
+        XCTAssertNotNil(card.animations.first { $0.property == .bounds })
+    }
+
+    /// A row with no counterpart before the update fades in; everything
+    /// settles on the model values once the clock passes the end (and the
+    /// finished animations are dropped, so later tiling can re-frame).
+    func testInsertedRowFadesInAndAnimationsAreDroppedOnCompletion() {
+        let (window, table, source) = makeTable()
+        table.performUpdates(withDuration: 0.3,
+                             identity: { source.identity($0) },
+                             updates: {
+            source.sections[0].insert(MovableSource.Item("new"), at: 0)
+        })
+        window.layoutIfNeeded()
+
+        let fresh = table.cellForRow(at: IndexPath(row: 0, section: 0))!
+        XCTAssertEqual(fresh.textLabel.text, "new")
+        XCTAssertEqual(fresh.alpha, 1, "the model alpha is the final value")
+        let fade = fresh.animations.first { $0.property == .alpha }
+        XCTAssertNotNil(fade)
+        if case let .scalar(from)? = fade?.from { XCTAssertEqual(from, 0) }
+
+        OpenUIKitRuntime.animationTime = 0.4
+        window.tick(timestamp: 0.4)
+        XCTAssertTrue(fresh.animations.isEmpty,
+                      "finished animations must be dropped or they keep "
+                      + "overriding the frames later tiling assigns")
+        let moved = table.cellForRow(at: IndexPath(row: 1, section: 0))!
+        XCTAssertTrue(moved.animations.isEmpty)
+        XCTAssertNil(moved.backgroundColor)
+    }
+
+    /// Reuse still holds across an update: nothing leaks, and a row that
+    /// disappears from the visible set goes back to the pool.
+    func testUpdateKeepsRowCountAndGeometryConsistent() {
+        let (window, table, source) = makeTable()
+        table.performUpdates(withDuration: 0.2,
+                             identity: { source.identity($0) },
+                             updates: {
+            let item = source.sections[0].removeLast()
+            source.sections[1].insert(item, at: 0)
+        })
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(table.numberOfRows(inSection: 0), 2)
+        XCTAssertEqual(table.numberOfRows(inSection: 1), 2)
+        XCTAssertEqual(table.visibleCells.count, 4)
+        XCTAssertEqual(table.visibleCells.map { $0.textLabel.text },
+                       ["a", "b", "c", "x"])
+    }
+}

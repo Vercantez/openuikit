@@ -1,0 +1,24 @@
+{
+  "name": "control_activity",
+  "size": [260, 160],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 260, 160], "backgroundColor": "#FFFFFF" },
+      { "class": "UIActivityIndicatorView", "frame": [20, 20, 20, 20], "style": "medium" },
+      { "class": "UIActivityIndicatorView", "frame": [60, 12, 37, 37], "style": "large" },
+      { "class": "UIActivityIndicatorView", "frame": [120, 20, 20, 20], "style": "medium",
+        "color": "systemBlue" },
+      { "class": "UIActivityIndicatorView", "frame": [160, 12, 37, 37], "style": "large",
+        "color": "systemRed" },
+      { "class": "UIActivityIndicatorView", "frame": [20, 70, 60, 60], "style": "large" },
+      { "class": "UIActivityIndicatorView", "frame": [100, 70, 40, 40], "style": "medium" },
+      { "class": "UIActivityIndicatorView", "frame": [160, 70, 20, 20], "style": "medium",
+        "animating": false },
+      { "class": "UIActivityIndicatorView", "frame": [200, 70, 20, 20], "style": "medium",
+        "animating": false, "hidesWhenStopped": false }
+    ]
+  }
+}

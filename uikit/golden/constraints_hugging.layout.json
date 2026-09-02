@@ -1,0 +1,87 @@
+{
+  "name" : "constraints_hugging",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        100
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        12,
+        15,
+        46.5,
+        20
+      ],
+      "intrinsic" : [
+        46.5,
+        20
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        46.5,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        67,
+        15,
+        241.5,
+        20
+      ],
+      "intrinsic" : [
+        74,
+        20
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        74,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        12,
+        65,
+        249,
+        20
+      ],
+      "intrinsic" : [
+        71,
+        20
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        71,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        269,
+        65,
+        39,
+        20
+      ],
+      "intrinsic" : [
+        39,
+        20
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        39,
+        20
+      ]
+    }
+  ]
+}

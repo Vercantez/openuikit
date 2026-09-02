@@ -1,0 +1,69 @@
+{
+ "name": "transforms",
+ "size": [
+  320,
+  240
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [
+     40,
+     40,
+     80,
+     60
+    ],
+    "backgroundColor": "#1971C2",
+    "transform": [
+     0.7071,
+     0.7071,
+     -0.7071,
+     0.7071,
+     0,
+     0
+    ]
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     160,
+     40,
+     80,
+     60
+    ],
+    "backgroundColor": "#E03131",
+    "transform": [
+     1.5,
+     0,
+     0,
+     0.5,
+     0,
+     0
+    ]
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     40,
+     140,
+     80,
+     60
+    ],
+    "backgroundColor": "#2F9E44",
+    "transform": [
+     1,
+     0,
+     0,
+     1,
+     30,
+     10
+    ]
+   }
+  ]
+ }
+}

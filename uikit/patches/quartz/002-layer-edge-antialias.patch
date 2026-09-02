@@ -1,0 +1,74 @@
+diff --git a/Sources/CQuartz/include/quartz/layer_ext.h b/Sources/CQuartz/include/quartz/layer_ext.h
+index 0b91238..9d1df2b 100644
+--- a/Sources/CQuartz/include/quartz/layer_ext.h
++++ b/Sources/CQuartz/include/quartz/layer_ext.h
+@@ -25,6 +25,11 @@ void QZLayerSetContentsRect(QZLayerRef layer, QZRect rect);
+ void QZLayerSetContentsScale(QZLayerRef layer, QZFloat scale);
+ void QZLayerSetShadow(QZLayerRef layer, QZFloat ox, QZFloat oy, QZFloat radius,
+                       QZFloat r, QZFloat g, QZFloat b, QZFloat opacity);
++/* CALayer.allowsEdgeAntialiasing: when false, the layer's background fill
++ * and border are rasterized without edge anti-aliasing (hard 0/1 coverage
++ * thresholded at pixel centers) — how iOS composites transformed layers.
++ * Default true (anti-aliased edges). */
++void QZLayerSetEdgeAntialias(QZLayerRef layer, bool antialias);
+ QZPoint QZLayerConvertPointToLayer(QZLayerRef from, QZPoint p, QZLayerRef to);
+ void QZLayerSetSublayerTransform(QZLayerRef layer, QZTransform3D t);
+ 
+diff --git a/Sources/CQuartz/pkg_layer_ext.cpp b/Sources/CQuartz/pkg_layer_ext.cpp
+index 3e884dc..d7c49a7 100644
+--- a/Sources/CQuartz/pkg_layer_ext.cpp
++++ b/Sources/CQuartz/pkg_layer_ext.cpp
+@@ -92,6 +92,9 @@ void QZLayerSetShadow(QZLayerRef layer, QZFloat ox, QZFloat oy, QZFloat radius,
+     layer->layer_shadow_color = {r, g, b, 1};
+     layer->layer_shadow_opacity = qz::clampd(opacity, 0, 1);
+ }
++void QZLayerSetEdgeAntialias(QZLayerRef layer, bool antialias) {
++    if (layer) layer->edge_antialias = antialias;
++}
+ QZPoint QZLayerConvertPointToLayer(QZLayerRef from, QZPoint p, QZLayerRef to) {
+     if (!from || from == to) return p;
+     QZLayer *anc = common_ancestor(from, to);
+diff --git a/Sources/CQuartz/qz_internal.hpp b/Sources/CQuartz/qz_internal.hpp
+index 262046c..e82eda2 100644
+--- a/Sources/CQuartz/qz_internal.hpp
++++ b/Sources/CQuartz/qz_internal.hpp
+@@ -203,6 +203,10 @@ struct QZLayer {
+     qz::Color border_color{0, 0, 0, 1};
+     bool masks_to_bounds = false;
+     bool hidden = false;
++    /* CALayer.allowsEdgeAntialiasing: iOS composites transformed layers
++     * with hard (non-anti-aliased) background/border edges by default.
++     * true (= AA on) preserves historical QZ behavior. */
++    bool edge_antialias = true;
+     QZImageRef contents = nullptr;
+     QZLayer *superlayer = nullptr;
+     QZLayer *mask = nullptr;
+diff --git a/Sources/CQuartz/qz_layer.cpp b/Sources/CQuartz/qz_layer.cpp
+index fb91f1e..524f090 100644
+--- a/Sources/CQuartz/qz_layer.cpp
++++ b/Sources/CQuartz/qz_layer.cpp
+@@ -363,6 +363,7 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
+         }
+         QZContextSetRGBFillColor(ctx, layer->background.r, layer->background.g,
+                                  layer->background.b, layer->background.a);
++        if (!layer->edge_antialias) QZContextSetShouldAntialias(ctx, false);
+         QZContextBeginPath(ctx);
+         rounded_or_rect(ctx, b, cr);
+         QZContextFillPath(ctx);
+@@ -460,6 +461,8 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
+                                   std::max(0.0, b.size.width - bw),
+                                   std::max(0.0, b.size.height - bw));
+         double inner_cr = std::max(0.0, cr - bw * 0.5);
++        QZContextSaveGState(ctx);
++        if (!layer->edge_antialias) QZContextSetShouldAntialias(ctx, false);
+         QZContextSetRGBStrokeColor(ctx, layer->border_color.r, layer->border_color.g,
+                                    layer->border_color.b, layer->border_color.a);
+         QZContextSetLineWidth(ctx, bw);
+@@ -468,6 +471,7 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
+         QZContextBeginPath(ctx);
+         rounded_or_rect(ctx, inner, inner_cr);
+         QZContextStrokePath(ctx);
++        QZContextRestoreGState(ctx);
+     }
+ 
+     if (group) {

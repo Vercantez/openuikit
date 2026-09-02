@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key><string>oracle2</string>
+	<key>CFBundleIdentifier</key><string>com.openuikit.oracle2</string>
+	<key>CFBundleName</key><string>Oracle2</string>
+	<key>CFBundlePackageType</key><string>APPL</string>
+	<key>CFBundleShortVersionString</key><string>1.0</string>
+	<key>CFBundleVersion</key><string>1</string>
+	<!-- No Dock icon / app switcher presence. Do NOT use LSBackgroundOnly:
+	     it prevents window compositing and drawHierarchy stays blank. -->
+	<key>LSUIElement</key><true/>
+	<key>NSHighResolutionCapable</key><true/>
+	<!-- Scene lifecycle is REQUIRED: a UIWindow not attached to a
+	     UIWindowScene never gets composited (drawHierarchy returns blank). -->
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key><false/>
+	</dict>
+</dict>
+</plist>

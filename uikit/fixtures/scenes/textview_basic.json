@@ -1,0 +1,28 @@
+{
+ "name": "textview_basic",
+ "size": [320, 240],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [0, 0, 320, 240],
+    "backgroundColor": "secondarySystemBackground"
+   },
+   {
+    "class": "UITextView",
+    "frame": [16, 16, 288, 140],
+    "fontSize": 17,
+    "text": "The quick brown fox jumps over the lazy dog near the river bank"
+   },
+   {
+    "class": "UITextView",
+    "frame": [16, 168, 288, 56],
+    "fontSize": 13,
+    "text": "Notes area with a second smaller text box"
+   }
+  ]
+ }
+}

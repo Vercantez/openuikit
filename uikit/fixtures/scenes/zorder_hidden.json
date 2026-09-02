@@ -1,0 +1,56 @@
+{
+ "name": "zorder_hidden",
+ "size": [
+  320,
+  240
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [
+     20,
+     20,
+     100,
+     100
+    ],
+    "backgroundColor": "#E03131"
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     60,
+     60,
+     100,
+     100
+    ],
+    "backgroundColor": "#1971C2"
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     100,
+     100,
+     100,
+     100
+    ],
+    "backgroundColor": "#2F9E44"
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     160,
+     20,
+     100,
+     100
+    ],
+    "backgroundColor": "#FFD43B",
+    "hidden": true
+   }
+  ]
+ }
+}

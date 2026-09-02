@@ -1,0 +1,72 @@
+{
+  "_comment": [
+    "M10 acceptance script for `openhost --app showcase` (docs/ROADMAP.md",
+    "M10). Deterministic timeline over all three tabs:",
+    "  0.05        Settings tab at rest — iOS 26 large title, floating tab bar",
+    "  0.30-2.60   profile card -> pageSheet profile editor: mid-present",
+    "              (sheet rising, dim fading in), settled, tap the name field",
+    "              and type, Done -> mid-dismiss, dismissed with the card's",
+    "              name written back",
+    "  3.00-4.30   large-title collapse: drag the Settings list up ->",
+    "              mid-collapse (34pt title sliding away, inline title fading",
+    "              in), momentum, settled inline title over the scroll-edge",
+    "              pocket",
+    "  4.70-4.95   tap the Tasks tab -> capsule + tint move, Tasks stack",
+    "              installed",
+    "  5.30-6.30   flick the inset-grouped UITableView: mid-momentum (with",
+    "              the scroll indicator) and settled",
+    "  6.70-8.30   press a row (measured #DCDCDC selection flash), release ->",
+    "              push the detail mid-transition and settled (the row stays",
+    "              selected underneath, like UIKit), back -> pop",
+    "  8.70-10.10  tap a checkbox: spring pop, then the row travels from",
+    "              TODAY to the top of COMPLETED while every row after it",
+    "              slides up and both cards resize",
+    "  10.40-10.70 back to the Settings tab — still scrolled, still",
+    "              collapsed, still holding the edited name (per-tab state)",
+    "Run: .build/release/openhost --app showcase --scale 2 \\",
+    "       --script scripts/showcase_demo.json --record out_showcase"
+  ],
+  "events": [
+    {"t": 0.30, "kind": "down", "x": 195, "y": 173},
+    {"t": 0.42, "kind": "up",   "x": 195, "y": 173},
+
+    {"t": 1.10, "kind": "down", "x": 195, "y": 184},
+    {"t": 1.16, "kind": "up",   "x": 195, "y": 184},
+    {"t": 1.40, "kind": "text", "string": " Jr."},
+
+    {"t": 2.00, "kind": "down", "x": 340, "y": 87},
+    {"t": 2.06, "kind": "up",   "x": 340, "y": 87},
+
+    {"t": 3.00, "kind": "down", "x": 195, "y": 620},
+    {"t": 3.06, "kind": "move", "x": 195, "y": 600},
+    {"t": 3.12, "kind": "move", "x": 195, "y": 576},
+    {"t": 3.18, "kind": "move", "x": 195, "y": 550},
+    {"t": 3.24, "kind": "move", "x": 195, "y": 525},
+    {"t": 3.30, "kind": "move", "x": 195, "y": 503},
+    {"t": 3.36, "kind": "move", "x": 195, "y": 486},
+    {"t": 3.42, "kind": "move", "x": 195, "y": 475},
+    {"t": 3.48, "kind": "up",   "x": 195, "y": 472},
+
+    {"t": 4.70, "kind": "down", "x": 195, "y": 800},
+    {"t": 4.78, "kind": "up",   "x": 195, "y": 800},
+
+    {"t": 5.30, "kind": "down", "x": 195, "y": 620},
+    {"t": 5.35, "kind": "move", "x": 195, "y": 566},
+    {"t": 5.40, "kind": "move", "x": 195, "y": 508},
+    {"t": 5.45, "kind": "move", "x": 195, "y": 448},
+    {"t": 5.45, "kind": "up",   "x": 195, "y": 448},
+
+    {"t": 6.70, "kind": "down", "x": 240, "y": 300},
+    {"t": 7.00, "kind": "up",   "x": 240, "y": 300},
+
+    {"t": 7.90, "kind": "down", "x": 35, "y": 42},
+    {"t": 7.96, "kind": "up",   "x": 35, "y": 42},
+
+    {"t": 8.70, "kind": "down", "x": 44, "y": 157},
+    {"t": 8.78, "kind": "up",   "x": 44, "y": 157},
+
+    {"t": 10.40, "kind": "down", "x": 109, "y": 800},
+    {"t": 10.48, "kind": "up",   "x": 109, "y": 800}
+  ],
+  "captures": [0.05, 0.2, 0.44, 0.5, 0.56, 0.62, 0.68, 0.74, 0.8, 0.86, 0.92, 1.05, 1.16, 1.3, 1.45, 1.6, 1.7, 2.06, 2.12, 2.18, 2.24, 2.3, 2.36, 2.42, 2.48, 2.62, 2.8, 3.02, 3.08, 3.14, 3.2, 3.26, 3.32, 3.38, 3.44, 3.56, 3.64, 3.72, 3.8, 3.88, 3.96, 4.04, 4.12, 4.2, 4.28, 4.55, 4.8, 4.9, 5.0, 5.15, 5.32, 5.365, 5.41, 5.455, 5.52, 5.58, 5.64, 5.7, 5.76, 5.82, 5.88, 5.94, 6.0, 6.06, 6.12, 6.18, 6.24, 6.3, 6.55, 6.78, 6.92, 7.01, 7.055, 7.1, 7.145, 7.19, 7.235, 7.28, 7.325, 7.37, 7.5, 7.75, 7.97, 8.015, 8.06, 8.105, 8.15, 8.195, 8.24, 8.285, 8.33, 8.5, 8.68, 8.8, 8.84, 8.88, 8.92, 8.96, 9.0, 9.04, 9.08, 9.12, 9.16, 9.2, 9.24, 9.28, 9.32, 9.36, 9.45, 9.6, 9.9, 10.2, 10.5, 10.6, 10.75, 10.95]
+}

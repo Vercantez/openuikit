@@ -1,0 +1,10 @@
+{
+  "comment": "Scripted tab switching for fixtures/scenes/tabbar_basic.json (M10 UITabBarController). Item centers: Home x=101.75, Search x=187.5, platter row y=439. Capture 0.05 = initial state (Home selected: tinted item + capsule, 'Home screen' content). Tap Search at 0.10/0.18 -> capture 0.35: capsule + tint move to Search, Home's content view is swapped out (Search tab has no content). Tap Home at 0.50/0.58 -> capture 0.80: Home restored WITH its content label (tab state preserved across the round trip).",
+  "events": [
+    { "t": 0.10, "kind": "down", "x": 187.5, "y": 439 },
+    { "t": 0.18, "kind": "up",   "x": 187.5, "y": 439 },
+    { "t": 0.50, "kind": "down", "x": 101.75, "y": 439 },
+    { "t": 0.58, "kind": "up",   "x": 101.75, "y": 439 }
+  ],
+  "captures": [0.05, 0.35, 0.80]
+}

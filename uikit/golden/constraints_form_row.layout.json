@@ -1,0 +1,75 @@
+{
+  "name" : "constraints_form_row",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        56
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        16,
+        16,
+        24,
+        24
+      ],
+      "intrinsic" : [
+        24,
+        24
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        52,
+        18,
+        157,
+        20
+      ],
+      "intrinsic" : [
+        42,
+        20
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        42,
+        20
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        217,
+        18,
+        87,
+        20
+      ],
+      "intrinsic" : [
+        87,
+        20
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        87,
+        20
+      ]
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        55,
+        304,
+        0.5
+      ],
+      "path" : "3"
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "name" : "textview_basic",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        240
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UITextView",
+      "frame" : [
+        16,
+        16,
+        288,
+        140
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "_UITextLayoutView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : "1.0"
+    },
+    {
+      "class" : "_UITextContainerView",
+      "frame" : [
+        0,
+        0,
+        288,
+        56
+      ],
+      "path" : "1.1"
+    },
+    {
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        0,
+        0,
+        288,
+        56
+      ],
+      "path" : "1.1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        288,
+        56
+      ],
+      "path" : "1.1.0.0"
+    },
+    {
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -6,
+        7,
+        309,
+        42
+      ],
+      "path" : "1.1.0.1"
+    },
+    {
+      "class" : "_UIScrollerImpContainerView",
+      "frame" : [
+        0,
+        125,
+        288,
+        15
+      ],
+      "path" : "1.2"
+    },
+    {
+      "class" : "_UIScrollerImpContainerView",
+      "frame" : [
+        273,
+        0,
+        15,
+        140
+      ],
+      "path" : "1.3"
+    },
+    {
+      "class" : "UITextView",
+      "frame" : [
+        16,
+        168,
+        288,
+        56
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "_UITextLayoutView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : "2.0"
+    },
+    {
+      "class" : "_UITextContainerView",
+      "frame" : [
+        0,
+        0,
+        288,
+        32
+      ],
+      "path" : "2.1"
+    },
+    {
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        0,
+        0,
+        288,
+        32
+      ],
+      "path" : "2.1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        288,
+        32
+      ],
+      "path" : "2.1.0.0"
+    },
+    {
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -4,
+        8,
+        298,
+        17
+      ],
+      "path" : "2.1.0.1"
+    },
+    {
+      "class" : "_UIScrollerImpContainerView",
+      "frame" : [
+        0,
+        41,
+        288,
+        15
+      ],
+      "path" : "2.2"
+    },
+    {
+      "class" : "_UIScrollerImpContainerView",
+      "frame" : [
+        273,
+        0,
+        15,
+        56
+      ],
+      "path" : "2.3"
+    }
+  ]
+}

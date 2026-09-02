@@ -1,0 +1,23 @@
+{
+  "name": "alert_destructive",
+  "size": [393, 852],
+  "scale": 2,
+  "style": "light",
+  "window": true,
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 393, 852], "backgroundColor": "systemBackground" },
+      { "class": "UILabel", "frame": [24, 80, 300, 24], "text": "Base screen", "fontSize": 20, "fontWeight": "semibold" }
+    ]
+  },
+  "alert": {
+    "style": "alert",
+    "title": "Delete File?",
+    "message": "This cannot be undone.",
+    "actions": [
+      { "title": "Cancel", "style": "cancel" },
+      { "title": "Delete", "style": "destructive" }
+    ]
+  }
+}

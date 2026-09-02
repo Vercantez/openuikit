@@ -1,0 +1,9 @@
+// quartz's package headers (include/quartz/*.h) are designed to be reached
+// through quartz.h (which includes them in dependency order), not included
+// standalone — so the module uses quartz.h as its sole entry point instead
+// of SPM's auto-generated whole-directory umbrella.
+// This file is NOT part of upstream quartz; scripts/sync_quartz.sh preserves it.
+module CQuartz {
+    header "quartz/quartz.h"
+    export *
+}

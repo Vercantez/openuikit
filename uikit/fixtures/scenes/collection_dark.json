@@ -1,0 +1,38 @@
+{
+  "name": "collection_dark",
+  "size": [375, 460],
+  "scale": 2,
+  "style": "dark",
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 375, 460], "backgroundColor": "systemGroupedBackground" },
+      {
+        "class": "UICollectionView",
+        "frame": [0, 60, 375, 380],
+        "backgroundColor": "secondarySystemBackground",
+        "itemSize": [100, 76],
+        "minimumLineSpacing": 14,
+        "minimumInteritemSpacing": 14,
+        "sectionInset": [8, 16, 8, 16],
+        "headerSize": [0, 32],
+        "footerSize": [0, 26],
+        "itemCornerRadius": 12,
+        "sections": [
+          {
+            "header": "Palette",
+            "footer": "Dark chrome colors are validated here.",
+            "items": [
+              { "text": "1", "color": "systemBlue", "textColor": "label" },
+              { "text": "2", "color": "systemGray", "textColor": "label" },
+              { "text": "3", "color": "systemGray2", "textColor": "label" },
+              { "text": "4", "color": "systemGray3", "textColor": "label" },
+              { "text": "5", "color": "systemGray4", "textColor": "label" },
+              { "text": "6", "color": "systemGray5", "textColor": "label" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

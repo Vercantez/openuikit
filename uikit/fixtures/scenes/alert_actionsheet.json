@@ -1,0 +1,25 @@
+{
+  "name": "alert_actionsheet",
+  "size": [393, 852],
+  "scale": 2,
+  "style": "light",
+  "window": true,
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 393, 852], "backgroundColor": "systemBackground" },
+      { "class": "UILabel", "frame": [24, 80, 300, 24], "text": "Base screen", "fontSize": 20, "fontWeight": "semibold" }
+    ]
+  },
+  "alert": {
+    "style": "actionSheet",
+    "title": "Photo",
+    "message": "Choose a source.",
+    "actions": [
+      { "title": "Take Photo", "style": "default" },
+      { "title": "Choose Existing", "style": "default" },
+      { "title": "Delete", "style": "destructive" },
+      { "title": "Cancel", "style": "cancel" }
+    ]
+  }
+}

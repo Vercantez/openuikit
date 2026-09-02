@@ -1,0 +1,203 @@
+# Vendored quartz patches (patches/quartz/)
+
+`Sources/CQuartz` is an exact mirror of `~/quartz` (scripts/sync_quartz.sh)
+**plus** the minimal patches below, applied by the sync script after rsync
+(`git apply`, lexical order — each patch is generated on top of the previous
+ones). They exist because M5 renders through quartz's real QZLayer
+compositor (`QZLayerRenderInContext`), and a few CoreAnimation behaviors the
+golden suite pins down were missing upstream. Each entry states the
+upstream-suggested fix so the patches can be retired by adopting them in
+`~/quartz`.
+
+Never edit `Sources/CQuartz` without regenerating the corresponding patch;
+re-running `scripts/sync_quartz.sh` reapplies exactly these patches.
+
+## 001-layer-unclamped-corner-radius.patch
+
+`src/qz_layer.cpp` — `rounded_or_rect()` (the layer background / clip /
+gradient-clip / silhouette path builder) clamped `cornerRadius` to half the
+smaller side via `QZContextAddRoundedRect`. iOS 26 CoreAnimation does NOT
+clamp: an oversized radius produces the self-intersecting kappa rounded rect
+(spikes past the corners, four-pointed star hole under non-zero winding)
+drawn outside the bounds — see `golden/corner_radius.png` (80x60 view,
+cornerRadius 100). The patch builds the unclamped kappa construction
+directly when `radius > min(w,h)/2`; below that it is byte-identical to the
+old path.
+
+Upstream fix: apply the same unclamped construction in
+`rounded_or_rect` (layer paths only — `QZPathAddRoundedRect`/CG semantics
+should keep clamping, matching CGPath).
+
+## 002-layer-edge-antialias.patch
+
+`src/qz_internal.hpp`, `include/quartz/layer_ext.h`,
+`src/pkg_layer_ext.cpp`, `src/qz_layer.cpp` — adds
+`QZLayerSetEdgeAntialias(layer, bool)` (CALayer.allowsEdgeAntialiasing).
+When false, the layer's background fill and border are rasterized with
+anti-aliasing off (QZ's non-AA rasterizer thresholds at pixel centers).
+iOS composites transformed (rotated/scaled) layers with hard edges — see
+`golden/transforms.png`; the bridge sets this for any view whose own
+transform is not a pure translation. Default `true` preserves historical QZ
+behavior for existing users.
+
+Upstream fix: adopt the field + setter as-is; consider defaulting to
+CA-accurate `false` once quartz's own harness accounts for it.
+
+## 003-layer-ca-shadow-semantics.patch
+
+`src/qz_layer.cpp` — reworks the layer shadow in `render_layer()` to match
+CoreAnimation (verified against golden/shadows_*, alpha_shadow_group):
+
+- **Blur scaling**: CA `shadowRadius` is a Gaussian sigma in layer units;
+  QZ's context shadow blur parameter is device pixels with sigma = blur/2.
+  The patch passes `2 * radius * sqrt(|det CTM|)` instead of the raw radius
+  (which was interpreted as device px and rendered ~4x too tight at 2x).
+- **Group opacity ordering**: with `opacity < 1` CA composites the shadow
+  onto the destination BENEATH the whole opacity group (it is never
+  occluded by the layer's own content and shows through a translucent
+  layer) at strength `shadowOpacity * opacity`. The patch draws the
+  shadow-only silhouette (zero-alpha fill with the shadow state set) before
+  `QZContextBeginTransparencyLayer`; previously the shadow rode the
+  background fill inside the group and was hidden by opaque content.
+- **Border-ring silhouette**: a layer with no visible background but a
+  visible border casts the shadow of the border ring (previously: no shadow
+  at all). Non-group case pre-draws the border with the shadow active (the
+  normal border pass repaints the identical ring above sublayers); group
+  case uses the even-odd outer/inner ring as the silhouette.
+- **masksToBounds hides the shadow** (CA behavior), and no silhouette
+  (no background, no border) means no shadow.
+
+Upstream fix: adopt wholesale — the old behavior disagrees with CA in all
+four aspects. `set_layer_shadow` / `add_shadow_silhouette` / `draw_border`
+are self-contained statics in qz_layer.cpp.
+
+## 004-perf-fast-paths.patch
+
+`src/qz_context.cpp`, `src/pkg_context_misc.cpp`,
+`include/quartz/context_misc.h` — CPU-compositing fast paths that make the
+M8 layer-contents caching pay off (docs/APP_FEEL.md "Performance"). All are
+output-preserving: each reproduces the generic pipeline's arithmetic
+(coverage model, floor(cov*255) application, premul rounding) for the
+special case it handles, and falls through to the generic code otherwise —
+the 56-scene golden suite is byte-stable across the patch.
+
+- **`draw_image_unit_scale`** (QZContextDrawImage): when the image→memory
+  mapping is unit-scale with no rotation/skew (`a≈1`, `d≈±1`; `d=-1` is the
+  standard layer-contents case — the top-down flip CTM composes with
+  DrawImage's bottom-up image mapping into a row mirror), the per-pixel
+  affine apply and the two per-pixel `pow()` ease-weight evaluations of the
+  interpolator collapse into row constants: a 1-tap blend for integral
+  offsets (straight premul copy for opaque runs) or a constant-weight 4-tap
+  for fractional ones. This is the path every contents blit (cached
+  composites, glyph/content images) takes.
+- **`fill_rect_fast`** (fill_polylines, after the pattern hook): a single
+  axis-aligned rectangle fill (layer backgrounds, plain views) skips the
+  full-surface float coverage buffer + kAASamples scanline passes; vertical
+  coverage uses the same kAASamples subsample quantization, horizontal the
+  same analytic span math, with a 4-byte-store run for opaque interiors.
+  Bails to generic for shadows, patterns, non-Normal blends.
+- **`clip_rect_fast`** (clip_with_path): axis-aligned rect clips (every
+  `masksToBounds` on an untransformed layer) multiply the clip mask
+  analytically — memset outside, exact fractional edges — instead of
+  rasterizing a full-surface coverage buffer.
+- **`QZBitmapContextCreateImageRowsFlipped`**: premultiplied backing
+  snapshot with rows reversed — the orientation layer contents need under a
+  top-down flip CTM. Lets the subtree composite cache reuse a rendered
+  offscreen without a lossy premul→straight→premul round trip.
+
+Upstream fix: adopt wholesale; the fast paths are self-contained statics
+plus one additive API. Consider also bbox-limiting the generic coverage
+buffers, which would shrink the remaining gap for rounded-rect fills.
+
+## 005-image-io-memory.patch
+
+`src/pkg_image_io.cpp`, `include/quartz/image_io.h` — adds four additive
+entry points that expose the vendored stb_image / stb_image_write with
+STRAIGHT (non-premultiplied) RGBA8 buffers, which is what an image object
+with an unassociated-alpha backing store (UIImage/CGImage, and OpenUIKit's
+`Bitmap`) needs:
+
+```c
+uint8_t *QZImageDecodeRGBA(const uint8_t *data, size_t len, int *w, int *h);
+void     QZImageFreeRGBA(uint8_t *pixels);
+uint8_t *QZImageEncodePNG(const uint8_t *rgba, int w, int h, size_t *len);
+uint8_t *QZImageEncodeJPEG(const uint8_t *rgba, int w, int h, int q, size_t *len);
+```
+
+The existing API can only decode INTO a `QZImage`, whose storage is
+premultiplied — decoding a translucent PNG and reading it back would lose
+color precision, and there is no way to encode to memory at all (only
+`QZImageWritePNGFile`). The new functions reuse the file's own `sniff_kind`
++ `stbi_load_from_memory` and the `*_to_func` writers, so no new decoding
+code exists anywhere in OpenUIKit (`Sources/OpenUIKit/ImageCodec.swift` is
+purely the Swift interop).
+
+Upstream fix: adopt as-is; the functions are self-contained and touch no
+existing behavior.
+
+## 006-layer-mask-group.patch
+
+`src/qz_layer.cpp` — makes `CALayer.mask` an outer alpha mask over the
+already-composited layer result. Native QuartzCore `CALayer.render(in:)` was
+measured with a sharp 20x8 probe: a 50%-opaque white layer with a black,
+zero-radius shadow and an opaque 5x8 mask produces alpha 192 only in the
+masked five columns; a 50%-opaque mask produces alpha 96 there. Thus the
+mask covers the group-opacity shadow as well as the content, and partial mask
+alpha is multiplied once after their overlap is composed.
+
+The old QZ path multiplied the drawing clip by mask alpha after emitting the
+group shadow. That let the shadow escape an opaque mask and would attenuate
+shadow and content independently for a translucent mask. The patch opens an
+outer transparency layer, renders the complete layer into it, multiplies its
+premultiplied pixels by the rendered mask alpha, then composites it back.
+
+Upstream fix: adopt the changed `apply_layer_mask` and the outer masked group
+in `render_layer()` together; either half alone retains one of the two bugs.
+
+## 007-layer-masked-corners.patch
+
+`src/qz_internal.hpp`, `include/quartz/layer_ext.h`,
+`src/pkg_layer_ext.cpp`, `src/qz_layer.cpp` — adds a four-bit
+`QZLayerSetMaskedCorners` property and uses it in every layer corner path:
+background, `masksToBounds`, gradient clipping, border, and shadow
+silhouette. Bits map to minX/minY, maxX/minY, minX/maxY, maxX/maxY and
+default to all four. The selective path uses the same unclamped kappa curves
+as patch 001, with straight line segments at unselected corners.
+
+The mapping and defaults come from a real iOS 26.1 Simulator hierarchy
+probe. In UIView's visual top-left coordinate system minY is the top edge;
+flipping a standalone layer swaps minY/maxY visually. Unknown input bits are
+discarded by OpenUIKit before the bridge reaches QZ.
+
+Upstream fix: adopt the field, setter, and path plumbing together. Keeping
+the setter without routing all five shape consumers would make background,
+clipping, borders, gradients, and shadows disagree with one another.
+
+## 008-pdf-asset-raster.patch
+
+`src/pkg_pdf.cpp`, `include/quartz/pdf.h` — replaces the old heuristic PDF
+reader (which paired every MediaBox with every stream) with a bounded,
+dependency-free asset renderer. It follows traditional xref and incremental
+`/Prev` graphs, binds declared stream lengths, walks the Catalog/Pages tree,
+and adds byte-backed document creation plus straight-RGBA page rasterization.
+Flate decoding reuses quartz's existing stb zlib implementation rather than a
+host library. The checked replay covers the measured Focus path/color/clip
+operators, Form and raw RGB/gray Image XObjects, ICCBased-RGB fallback,
+axial/radial shading patterns with a bounded Type-4 calculator interpreter,
+and image/alpha/luminosity soft masks. Parser, object, recursion, stack,
+decoded-byte and output-pixel limits are explicit; encryption, xref/object
+streams, unmeasured filters/operators and unsupported visual qualifiers fail
+closed without returning a partial bitmap.
+
+OpenUIKit's materialized asset index is the first consumer. The pinned Focus
+gate rasterizes all 106 `.imageset` PDFs, while focused adversarial fixtures
+pin page/stream association, bottom-left PDF orientation, non-zero page boxes,
+Flate, image alpha, soft-mask transfer functions, gradients, malformed xrefs,
+unsupported filters/operators, recursive Forms and the one-page UIImage
+contract.
+
+Upstream fix: adopt the parser/raster API and implementation together. Keeping
+the old page discovery with only the replay changes would again mistake ICC,
+mask or metadata streams for page content; exposing the memory API without the
+checked renderer would make malformed asset payloads indistinguishable from
+valid transparent artwork.

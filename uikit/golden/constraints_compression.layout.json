@@ -1,0 +1,87 @@
+{
+  "name" : "constraints_compression",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        100
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        12,
+        16,
+        191,
+        19
+      ],
+      "intrinsic" : [
+        191,
+        19
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        191,
+        19
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        211,
+        16,
+        97,
+        19
+      ],
+      "intrinsic" : [
+        172,
+        19
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        172,
+        19
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        12,
+        66,
+        97.5,
+        19
+      ],
+      "intrinsic" : [
+        180,
+        19
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        180,
+        19
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        118,
+        66,
+        190.5,
+        19
+      ],
+      "intrinsic" : [
+        190.5,
+        19
+      ],
+      "path" : "3",
+      "sizeThatFits200" : [
+        190.5,
+        19
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "navitem_dark",
+  "size": [393, 260],
+  "scale": 2,
+  "style": "dark",
+  "window": true,
+  "ios": true,
+  "root": {
+    "class": "UINavigationStack",
+    "title": "Dark",
+    "backgroundColor": "#000000",
+    "appearance": { "configuration": "opaque", "backgroundColor": "#000000" },
+    "contentSize": [393, 900],
+    "leftItems": [ { "title": "Back" } ],
+    "rightItems": [
+      { "image": { "kind": "solid", "size": [18, 18], "colors": ["#000000"] } },
+      { "title": "Reset", "tintColor": "#FF375F" }
+    ],
+    "subviews": [
+      { "class": "UIView", "frame": [16, 8, 361, 60], "backgroundColor": "#2C2C2E", "cornerRadius": 12 }
+    ]
+  }
+}

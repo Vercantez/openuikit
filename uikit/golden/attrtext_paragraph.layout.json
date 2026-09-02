@@ -1,0 +1,69 @@
+{
+  "name" : "attrtext_paragraph",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        20,
+        16,
+        216.5,
+        72
+      ],
+      "intrinsic" : [
+        505,
+        20
+      ],
+      "path" : "0",
+      "sizeThatFits200" : [
+        193,
+        72
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        20,
+        116,
+        240,
+        74
+      ],
+      "intrinsic" : [
+        455.5,
+        19
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        195,
+        63
+      ]
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        20,
+        200,
+        240,
+        46
+      ],
+      "intrinsic" : [
+        375,
+        20
+      ],
+      "path" : "2",
+      "sizeThatFits200" : [
+        174,
+        40
+      ]
+    }
+  ]
+}

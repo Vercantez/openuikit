@@ -1,0 +1,66 @@
+{
+ "name": "attrtext_fields",
+ "size": [
+  320,
+  200
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UITextField",
+    "frame": [
+     16,
+     16,
+     288,
+     34
+    ],
+    "borderStyle": "roundedRect",
+    "attributedText": {
+     "runs": [
+      {
+       "text": "total ",
+       "fontSize": 17
+      },
+      {
+       "text": "open",
+       "fontSize": 17,
+       "fontWeight": "semibold",
+       "color": "systemBlue"
+      }
+     ]
+    }
+   },
+   {
+    "class": "UITextView",
+    "frame": [
+     16,
+     66,
+     288,
+     120
+    ],
+    "backgroundColor": "#F1F3F5",
+    "attributedText": {
+     "runs": [
+      {
+       "text": "The quick brown fox ",
+       "fontSize": 17
+      },
+      {
+       "text": "jumps over ",
+       "fontSize": 17,
+       "fontWeight": "semibold"
+      },
+      {
+       "text": "the lazy dog near the river bank",
+       "fontSize": 13
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

@@ -1,0 +1,319 @@
+{
+  "name" : "collection_dark",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        375,
+        460
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UICollectionView",
+      "frame" : [
+        0,
+        60,
+        375,
+        380
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "SceneCollectionCell",
+      "frame" : [
+        16,
+        40,
+        100,
+        76
+      ],
+      "path" : "1.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        100,
+        76
+      ],
+      "path" : "1.0.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        0,
+        100,
+        76
+      ],
+      "intrinsic" : [
+        8,
+        20
+      ],
+      "path" : "1.0.0.0",
+      "sizeThatFits200" : [
+        8,
+        20
+      ]
+    },
+    {
+      "class" : "SceneCollectionCell",
+      "frame" : [
+        137.5,
+        40,
+        100,
+        76
+      ],
+      "path" : "1.1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        100,
+        76
+      ],
+      "path" : "1.1.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        0,
+        100,
+        76
+      ],
+      "intrinsic" : [
+        10.5,
+        20
+      ],
+      "path" : "1.1.0.0",
+      "sizeThatFits200" : [
+        10.5,
+        20
+      ]
+    },
+    {
+      "class" : "SceneCollectionCell",
+      "frame" : [
+        259,
+        40,
+        100,
+        76
+      ],
+      "path" : "1.2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        100,
+        76
+      ],
+      "path" : "1.2.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        0,
+        100,
+        76
+      ],
+      "intrinsic" : [
+        11,
+        20
+      ],
+      "path" : "1.2.0.0",
+      "sizeThatFits200" : [
+        11,
+        20
+      ]
+    },
+    {
+      "class" : "SceneCollectionCell",
+      "frame" : [
+        16,
+        130,
+        100,
+        76
+      ],
+      "path" : "1.3"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        100,
+        76
+      ],
+      "path" : "1.3.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        0,
+        100,
+        76
+      ],
+      "intrinsic" : [
+        11,
+        20
+      ],
+      "path" : "1.3.0.0",
+      "sizeThatFits200" : [
+        11,
+        20
+      ]
+    },
+    {
+      "class" : "SceneCollectionCell",
+      "frame" : [
+        137.5,
+        130,
+        100,
+        76
+      ],
+      "path" : "1.4"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        100,
+        76
+      ],
+      "path" : "1.4.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        0,
+        100,
+        76
+      ],
+      "intrinsic" : [
+        10.5,
+        20
+      ],
+      "path" : "1.4.0.0",
+      "sizeThatFits200" : [
+        10.5,
+        20
+      ]
+    },
+    {
+      "class" : "SceneCollectionCell",
+      "frame" : [
+        259,
+        130,
+        100,
+        76
+      ],
+      "path" : "1.5"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        100,
+        76
+      ],
+      "path" : "1.5.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        0,
+        100,
+        76
+      ],
+      "intrinsic" : [
+        11,
+        20
+      ],
+      "path" : "1.5.0.0",
+      "sizeThatFits200" : [
+        11,
+        20
+      ]
+    },
+    {
+      "class" : "SceneCollectionSupplementary",
+      "frame" : [
+        0,
+        214,
+        375,
+        26
+      ],
+      "path" : "1.6"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        0,
+        343,
+        26
+      ],
+      "intrinsic" : [
+        254,
+        16
+      ],
+      "path" : "1.6.0",
+      "sizeThatFits200" : [
+        254,
+        16
+      ]
+    },
+    {
+      "class" : "SceneCollectionSupplementary",
+      "frame" : [
+        0,
+        0,
+        375,
+        32
+      ],
+      "path" : "1.7"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        16,
+        0,
+        343,
+        32
+      ],
+      "intrinsic" : [
+        46.5,
+        16
+      ],
+      "path" : "1.7.0",
+      "sizeThatFits200" : [
+        46.5,
+        16
+      ]
+    }
+  ]
+}

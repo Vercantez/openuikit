@@ -1,0 +1,43 @@
+{
+  "name" : "anim_label_move",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        200,
+        200
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        20,
+        140,
+        92.5,
+        20
+      ],
+      "intrinsic" : [
+        92.5,
+        20
+      ],
+      "path" : "1",
+      "sizeThatFits200" : [
+        92.5,
+        20
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "name": "label_stack_mix",
+  "size": [320, 300],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 320, 300], "backgroundColor": "#F2F2F7" },
+      { "class": "UIView", "frame": [15, 15, 290, 120], "backgroundColor": "#FFFFFF",
+        "cornerRadius": 10, "clipsToBounds": true,
+        "subviews": [
+          { "class": "UIStackView", "frame": [12, 12, 266, 96],
+            "axis": "vertical", "spacing": 4,
+            "stackDistribution": "fillEqually", "stackAlignment": "leading",
+            "subviews": [
+              { "class": "UILabel", "text": "Title row", "fontSize": 17, "fontWeight": "semibold" },
+              { "class": "UILabel", "text": "Subtitle with more words", "fontSize": 14,
+                "textColor": "secondaryLabel" },
+              { "class": "UILabel", "text": "TERTIARY DETAIL", "fontSize": 11,
+                "textColor": "tertiaryLabel" }
+            ]
+          }
+        ]
+      },
+      { "class": "UIView", "frame": [15, 150, 290, 135], "backgroundColor": "#FFFFFF",
+        "cornerRadius": 10, "clipsToBounds": true,
+        "subviews": [
+          { "class": "UIStackView", "frame": [12, 12, 266, 111],
+            "axis": "horizontal", "spacing": 10,
+            "stackDistribution": "fillEqually", "stackAlignment": "top",
+            "subviews": [
+              { "class": "UIStackView",
+                "axis": "vertical", "spacing": 3,
+                "stackDistribution": "fill", "stackAlignment": "leading",
+                "subviews": [
+                  { "class": "UILabel", "text": "Col A", "fontSize": 15, "fontWeight": "medium" },
+                  { "class": "UILabel", "text": "alpha", "fontSize": 13 },
+                  { "class": "UILabel", "text": "beta", "fontSize": 13 }
+                ]
+              },
+              { "class": "UIStackView",
+                "axis": "vertical", "spacing": 3,
+                "stackDistribution": "fill", "stackAlignment": "trailing",
+                "subviews": [
+                  { "class": "UILabel", "text": "Col B", "fontSize": 15, "fontWeight": "medium" },
+                  { "class": "UILabel", "text": "gamma", "fontSize": 13 },
+                  { "class": "UILabel", "text": "delta epsilon", "fontSize": 13 }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

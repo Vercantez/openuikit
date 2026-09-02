@@ -1,0 +1,35 @@
+{
+  "name": "stack_mixed",
+  "size": [320, 240],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 320, 240], "backgroundColor": "#FFFFFF" },
+      { "class": "UIStackView", "frame": [10, 10, 300, 30],
+        "axis": "horizontal", "spacing": 8,
+        "stackDistribution": "fill", "stackAlignment": "center",
+        "backgroundColor": "#F1F3F5",
+        "subviews": [
+          { "class": "UILabel", "text": "Left", "fontSize": 15, "backgroundColor": "#FFC9C9" },
+          { "class": "UIView", "backgroundColor": "#D0BFFF" },
+          { "class": "UILabel", "text": "Right", "fontSize": 15, "backgroundColor": "#A5D8FF" }
+        ]
+      },
+      { "class": "UIStackView", "frame": [10, 50, 300, 180],
+        "axis": "vertical", "spacing": 10,
+        "stackDistribution": "fill", "stackAlignment": "fill",
+        "backgroundColor": "#F1F3F5",
+        "subviews": [
+          { "class": "UILabel", "text": "Header label", "fontSize": 17, "fontWeight": "semibold",
+            "backgroundColor": "#FFEC99" },
+          { "class": "UIView", "backgroundColor": "#96F2D7" },
+          { "class": "UILabel", "text": "Footer caption", "fontSize": 12, "textColor": "secondaryLabel",
+            "backgroundColor": "#FFD8A8" }
+        ]
+      }
+    ]
+  }
+}

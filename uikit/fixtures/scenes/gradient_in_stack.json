@@ -1,0 +1,34 @@
+{
+  "name": "gradient_in_stack",
+  "size": [300, 220],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 300, 220], "backgroundColor": "#FFFFFF" },
+      { "class": "UIStackView", "frame": [10, 10, 280, 90],
+        "axis": "horizontal", "spacing": 10,
+        "stackDistribution": "fillEqually", "stackAlignment": "fill",
+        "subviews": [
+          { "class": "UIGradientView", "colors": ["#E03131", "#1971C2"] },
+          { "class": "UIGradientView", "colors": ["#2F9E44", "#FFD43B"],
+            "startPoint": [0, 0.5], "endPoint": [1, 0.5] },
+          { "class": "UIGradientView", "colors": ["#845EF7", "#F76707", "#0CA678"],
+            "locations": [0, 0.5, 1] }
+        ]
+      },
+      { "class": "UIStackView", "frame": [10, 110, 280, 100],
+        "axis": "vertical", "spacing": 8,
+        "stackDistribution": "fillEqually", "stackAlignment": "fill",
+        "subviews": [
+          { "class": "UIGradientView", "colors": ["#12B886", "#1864AB"],
+            "startPoint": [0, 0.5], "endPoint": [1, 0.5] },
+          { "class": "UIGradientView", "colors": ["#FA5252", "#FFE066"],
+            "startPoint": [1, 0.5], "endPoint": [0, 0.5] }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1438 @@
+{
+ "apps": {
+  "eidolon": {
+   "files": 159,
+   "distinct_types": 44
+  },
+  "iOS": {
+   "files": 1197,
+   "distinct_types": 143
+  },
+  "ios-oss": {
+   "files": 2053,
+   "distinct_types": 108
+  }
+ },
+ "weighted_coverage": 70.19287541822476,
+ "implemented": [
+  {
+   "symbol": "UIView",
+   "apps": 3,
+   "uses": 1009
+  },
+  {
+   "symbol": "UILabel",
+   "apps": 3,
+   "uses": 958
+  },
+  {
+   "symbol": "UIColor",
+   "apps": 3,
+   "uses": 746
+  },
+  {
+   "symbol": "UIFont",
+   "apps": 3,
+   "uses": 516
+  },
+  {
+   "symbol": "UIViewController",
+   "apps": 3,
+   "uses": 466
+  },
+  {
+   "symbol": "UIButton",
+   "apps": 3,
+   "uses": 444
+  },
+  {
+   "symbol": "NSLayoutConstraint",
+   "apps": 3,
+   "uses": 356
+  },
+  {
+   "symbol": "UIImage",
+   "apps": 3,
+   "uses": 345
+  },
+  {
+   "symbol": "UIImageView",
+   "apps": 3,
+   "uses": 251
+  },
+  {
+   "symbol": "UITextField",
+   "apps": 3,
+   "uses": 150
+  },
+  {
+   "symbol": "UITextView",
+   "apps": 3,
+   "uses": 84
+  },
+  {
+   "symbol": "UINavigationController",
+   "apps": 3,
+   "uses": 79
+  },
+  {
+   "symbol": "UITapGestureRecognizer",
+   "apps": 3,
+   "uses": 47
+  },
+  {
+   "symbol": "UIWindow",
+   "apps": 3,
+   "uses": 33
+  },
+  {
+   "symbol": "UIGestureRecognizer",
+   "apps": 3,
+   "uses": 22
+  },
+  {
+   "symbol": "UIStackView",
+   "apps": 2,
+   "uses": 575
+  },
+  {
+   "symbol": "UITableView",
+   "apps": 2,
+   "uses": 349
+  },
+  {
+   "symbol": "UITableViewCell",
+   "apps": 2,
+   "uses": 327
+  },
+  {
+   "symbol": "UITraitCollection",
+   "apps": 2,
+   "uses": 70
+  },
+  {
+   "symbol": "UIScrollView",
+   "apps": 2,
+   "uses": 67
+  },
+  {
+   "symbol": "UISwitch",
+   "apps": 2,
+   "uses": 41
+  },
+  {
+   "symbol": "UITableViewController",
+   "apps": 2,
+   "uses": 38
+  },
+  {
+   "symbol": "UITableViewDelegate",
+   "apps": 2,
+   "uses": 20
+  },
+  {
+   "symbol": "UIEvent",
+   "apps": 2,
+   "uses": 20
+  },
+  {
+   "symbol": "UISheetPresentationController",
+   "apps": 2,
+   "uses": 19
+  },
+  {
+   "symbol": "UINavigationBar",
+   "apps": 2,
+   "uses": 15
+  },
+  {
+   "symbol": "UITouch",
+   "apps": 2,
+   "uses": 15
+  },
+  {
+   "symbol": "UILongPressGestureRecognizer",
+   "apps": 2,
+   "uses": 11
+  },
+  {
+   "symbol": "UITableViewHeaderFooterView",
+   "apps": 2,
+   "uses": 11
+  },
+  {
+   "symbol": "UIPanGestureRecognizer",
+   "apps": 2,
+   "uses": 8
+  },
+  {
+   "symbol": "UITableViewDataSource",
+   "apps": 2,
+   "uses": 6
+  },
+  {
+   "symbol": "UITabBarController",
+   "apps": 2,
+   "uses": 5
+  },
+  {
+   "symbol": "UIScrollViewDelegate",
+   "apps": 2,
+   "uses": 4
+  },
+  {
+   "symbol": "UIControl",
+   "apps": 1,
+   "uses": 10
+  },
+  {
+   "symbol": "UITabBarItem",
+   "apps": 1,
+   "uses": 8
+  },
+  {
+   "symbol": "UITabBar",
+   "apps": 1,
+   "uses": 6
+  },
+  {
+   "symbol": "UIProgressView",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UITabBarDelegate",
+   "apps": 1,
+   "uses": 1
+  }
+ ],
+ "missing": [
+  {
+   "symbol": "NSAttributedString",
+   "apps": 3,
+   "uses": 463
+  },
+  {
+   "symbol": "UIApplication",
+   "apps": 3,
+   "uses": 365
+  },
+  {
+   "symbol": "NSCoder",
+   "apps": 3,
+   "uses": 214
+  },
+  {
+   "symbol": "UIAlertController",
+   "apps": 3,
+   "uses": 185
+  },
+  {
+   "symbol": "UIBarButtonItem",
+   "apps": 3,
+   "uses": 150
+  },
+  {
+   "symbol": "UIAlertAction",
+   "apps": 3,
+   "uses": 147
+  },
+  {
+   "symbol": "UICollectionView",
+   "apps": 3,
+   "uses": 111
+  },
+  {
+   "symbol": "NSObject",
+   "apps": 3,
+   "uses": 105
+  },
+  {
+   "symbol": "NSString",
+   "apps": 3,
+   "uses": 70
+  },
+  {
+   "symbol": "UIStoryboard",
+   "apps": 3,
+   "uses": 60
+  },
+  {
+   "symbol": "NSMutableAttributedString",
+   "apps": 3,
+   "uses": 52
+  },
+  {
+   "symbol": "UIResponder",
+   "apps": 3,
+   "uses": 42
+  },
+  {
+   "symbol": "UICollectionViewCell",
+   "apps": 3,
+   "uses": 37
+  },
+  {
+   "symbol": "UIScreen",
+   "apps": 3,
+   "uses": 35
+  },
+  {
+   "symbol": "UIViewControllerContextTransitioning",
+   "apps": 3,
+   "uses": 25
+  },
+  {
+   "symbol": "UICollectionViewFlowLayout",
+   "apps": 3,
+   "uses": 22
+  },
+  {
+   "symbol": "UIViewControllerAnimatedTransitioning",
+   "apps": 3,
+   "uses": 21
+  },
+  {
+   "symbol": "NSMutableParagraphStyle",
+   "apps": 3,
+   "uses": 18
+  },
+  {
+   "symbol": "UICollectionViewLayout",
+   "apps": 3,
+   "uses": 15
+  },
+  {
+   "symbol": "NSValue",
+   "apps": 3,
+   "uses": 10
+  },
+  {
+   "symbol": "UICollectionViewDataSource",
+   "apps": 3,
+   "uses": 9
+  },
+  {
+   "symbol": "UICollectionViewDelegate",
+   "apps": 3,
+   "uses": 8
+  },
+  {
+   "symbol": "UITextFieldDelegate",
+   "apps": 3,
+   "uses": 8
+  },
+  {
+   "symbol": "UIViewControllerTransitioningDelegate",
+   "apps": 3,
+   "uses": 6
+  },
+  {
+   "symbol": "UIApplicationDelegate",
+   "apps": 3,
+   "uses": 3
+  },
+  {
+   "symbol": "UIDevice",
+   "apps": 2,
+   "uses": 78
+  },
+  {
+   "symbol": "UIActivityViewController",
+   "apps": 2,
+   "uses": 57
+  },
+  {
+   "symbol": "UIActivityIndicatorView",
+   "apps": 2,
+   "uses": 52
+  },
+  {
+   "symbol": "UIStoryboardSegue",
+   "apps": 2,
+   "uses": 22
+  },
+  {
+   "symbol": "UINavigationBarAppearance",
+   "apps": 2,
+   "uses": 18
+  },
+  {
+   "symbol": "UIApplicationShortcutItem",
+   "apps": 2,
+   "uses": 15
+  },
+  {
+   "symbol": "UIFontDescriptor",
+   "apps": 2,
+   "uses": 13
+  },
+  {
+   "symbol": "NSTextAttachment",
+   "apps": 2,
+   "uses": 12
+  },
+  {
+   "symbol": "UIToolbar",
+   "apps": 2,
+   "uses": 12
+  },
+  {
+   "symbol": "UIPresentationController",
+   "apps": 2,
+   "uses": 12
+  },
+  {
+   "symbol": "UINib",
+   "apps": 2,
+   "uses": 11
+  },
+  {
+   "symbol": "UITextViewDelegate",
+   "apps": 2,
+   "uses": 11
+  },
+  {
+   "symbol": "UIRefreshControl",
+   "apps": 2,
+   "uses": 11
+  },
+  {
+   "symbol": "UIBlurEffect",
+   "apps": 2,
+   "uses": 9
+  },
+  {
+   "symbol": "UIVisualEffectView",
+   "apps": 2,
+   "uses": 9
+  },
+  {
+   "symbol": "UIImpactFeedbackGenerator",
+   "apps": 2,
+   "uses": 8
+  },
+  {
+   "symbol": "UIViewControllerTransitionCoordinator",
+   "apps": 2,
+   "uses": 6
+  },
+  {
+   "symbol": "UISelectionFeedbackGenerator",
+   "apps": 2,
+   "uses": 6
+  },
+  {
+   "symbol": "UICollectionViewDelegateFlowLayout",
+   "apps": 2,
+   "uses": 6
+  },
+  {
+   "symbol": "UICollectionViewLayoutAttributes",
+   "apps": 2,
+   "uses": 5
+  },
+  {
+   "symbol": "UIGestureRecognizerDelegate",
+   "apps": 2,
+   "uses": 5
+  },
+  {
+   "symbol": "UIWindowScene",
+   "apps": 2,
+   "uses": 5
+  },
+  {
+   "symbol": "UICollectionReusableView",
+   "apps": 2,
+   "uses": 4
+  },
+  {
+   "symbol": "UIApplicationShortcutIcon",
+   "apps": 2,
+   "uses": 4
+  },
+  {
+   "symbol": "UIAdaptivePresentationControllerDelegate",
+   "apps": 2,
+   "uses": 3
+  },
+  {
+   "symbol": "UICollectionViewController",
+   "apps": 2,
+   "uses": 2
+  },
+  {
+   "symbol": "UIKeyCommand",
+   "apps": 1,
+   "uses": 64
+  },
+  {
+   "symbol": "UIAction",
+   "apps": 1,
+   "uses": 34
+  },
+  {
+   "symbol": "UIPasteboard",
+   "apps": 1,
+   "uses": 24
+  },
+  {
+   "symbol": "UIMenu",
+   "apps": 1,
+   "uses": 24
+  },
+  {
+   "symbol": "UIStepper",
+   "apps": 1,
+   "uses": 22
+  },
+  {
+   "symbol": "UIPageViewController",
+   "apps": 1,
+   "uses": 18
+  },
+  {
+   "symbol": "UIContextMenuConfiguration",
+   "apps": 1,
+   "uses": 12
+  },
+  {
+   "symbol": "UIPointerInteraction",
+   "apps": 1,
+   "uses": 10
+  },
+  {
+   "symbol": "UIMenuElement",
+   "apps": 1,
+   "uses": 10
+  },
+  {
+   "symbol": "UIGraphicsImageRenderer",
+   "apps": 1,
+   "uses": 9
+  },
+  {
+   "symbol": "UIPinchGestureRecognizer",
+   "apps": 1,
+   "uses": 9
+  },
+  {
+   "symbol": "UISearchController",
+   "apps": 1,
+   "uses": 8
+  },
+  {
+   "symbol": "UILayoutGuide",
+   "apps": 1,
+   "uses": 8
+  },
+  {
+   "symbol": "NSItemProvider",
+   "apps": 1,
+   "uses": 7
+  },
+  {
+   "symbol": "UISearchBar",
+   "apps": 1,
+   "uses": 7
+  },
+  {
+   "symbol": "UIPointerStyle",
+   "apps": 1,
+   "uses": 7
+  },
+  {
+   "symbol": "UIDropSession",
+   "apps": 1,
+   "uses": 7
+  },
+  {
+   "symbol": "UIActivityItemSource",
+   "apps": 1,
+   "uses": 6
+  },
+  {
+   "symbol": "UISheetPresentationControllerDelegate",
+   "apps": 1,
+   "uses": 6
+  },
+  {
+   "symbol": "UITargetedPreview",
+   "apps": 1,
+   "uses": 6
+  },
+  {
+   "symbol": "UIPickerView",
+   "apps": 1,
+   "uses": 6
+  },
+  {
+   "symbol": "UIMenuController",
+   "apps": 1,
+   "uses": 5
+  },
+  {
+   "symbol": "UIMenuItem",
+   "apps": 1,
+   "uses": 5
+  },
+  {
+   "symbol": "UIPointerInteractionDelegate",
+   "apps": 1,
+   "uses": 5
+  },
+  {
+   "symbol": "UIPointerRegion",
+   "apps": 1,
+   "uses": 5
+  },
+  {
+   "symbol": "UICollectionViewDropProposal",
+   "apps": 1,
+   "uses": 5
+  },
+  {
+   "symbol": "UINotificationFeedbackGenerator",
+   "apps": 1,
+   "uses": 5
+  },
+  {
+   "symbol": "UIPageControl",
+   "apps": 1,
+   "uses": 5
+  },
+  {
+   "symbol": "UISwipeActionsConfiguration",
+   "apps": 1,
+   "uses": 4
+  },
+  {
+   "symbol": "UIDragItem",
+   "apps": 1,
+   "uses": 4
+  },
+  {
+   "symbol": "UIDropInteraction",
+   "apps": 1,
+   "uses": 4
+  },
+  {
+   "symbol": "UIViewPropertyAnimator",
+   "apps": 1,
+   "uses": 4
+  },
+  {
+   "symbol": "UIImageAsset",
+   "apps": 1,
+   "uses": 4
+  },
+  {
+   "symbol": "UIEditMenuInteraction",
+   "apps": 1,
+   "uses": 4
+  },
+  {
+   "symbol": "UIPopoverPresentationControllerDelegate",
+   "apps": 1,
+   "uses": 4
+  },
+  {
+   "symbol": "NSDiffableDataSourceSnapshot",
+   "apps": 1,
+   "uses": 4
+  },
+  {
+   "symbol": "UISearchResultsUpdating",
+   "apps": 1,
+   "uses": 3
+  },
+  {
+   "symbol": "UISearchBarDelegate",
+   "apps": 1,
+   "uses": 3
+  },
+  {
+   "symbol": "UIGraphicsImageRendererFormat",
+   "apps": 1,
+   "uses": 3
+  },
+  {
+   "symbol": "UIDragSession",
+   "apps": 1,
+   "uses": 3
+  },
+  {
+   "symbol": "UICollectionViewDropCoordinator",
+   "apps": 1,
+   "uses": 3
+  },
+  {
+   "symbol": "UIPressesEvent",
+   "apps": 1,
+   "uses": 3
+  },
+  {
+   "symbol": "UIEditMenuConfiguration",
+   "apps": 1,
+   "uses": 3
+  },
+  {
+   "symbol": "UIViewControllerInteractiveTransitioning",
+   "apps": 1,
+   "uses": 3
+  },
+  {
+   "symbol": "UINavigationItem",
+   "apps": 1,
+   "uses": 3
+  },
+  {
+   "symbol": "UINavigationControllerDelegate",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UIWebView",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UILocalizedIndexedCollation",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UISegmentedControl",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UIContextualAction",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UIDocumentPickerViewController",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UICollectionViewDragDelegate",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UICollectionViewDropDelegate",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UIPrintInteractionController",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UIDropProposal",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UIDragPreview",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UIPercentDrivenInteractiveTransition",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "NSParagraphStyle",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UITableViewDiffableDataSource",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UIPageViewControllerDataSource",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UIPageViewControllerDelegate",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UIImagePickerController",
+   "apps": 1,
+   "uses": 2
+  },
+  {
+   "symbol": "UIDocumentPickerDelegate",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UIPrintInfo",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UIDropInteractionDelegate",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UIEditMenuInteractionDelegate",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UIEditMenuInteractionAnimating",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UISlider",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSIndexPath",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UIContextMenuInteractionCommitAnimating",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UIScreenshotServiceDelegate",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UIScreenshotService",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UITextInputMode",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UIViewImplicitlyAnimating",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UIFontMetrics",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UIUserActivityRestoring",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UIPickerViewDataSource",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UIPickerViewDelegate",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "NSTextContainer",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UITabBarControllerDelegate",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UITabBarAppearance",
+   "apps": 1,
+   "uses": 1
+  },
+  {
+   "symbol": "UITableViewDataSourcePrefetching",
+   "apps": 1,
+   "uses": 1
+  }
+ ],
+ "missing_members_of_implemented": [
+  {
+   "type": "UILabel",
+   "member": "lens",
+   "uses": 297
+  },
+  {
+   "type": "UIButton",
+   "member": "lens",
+   "uses": 217
+  },
+  {
+   "type": "UIView",
+   "member": "setAnimationsEnabled",
+   "uses": 92
+  },
+  {
+   "type": "UIView",
+   "member": "animate",
+   "uses": 88
+  },
+  {
+   "type": "UIView",
+   "member": "lens",
+   "uses": 74
+  },
+  {
+   "type": "UIFont",
+   "member": "ksr_body",
+   "uses": 70
+  },
+  {
+   "type": "UIFont",
+   "member": "ksr_subhead",
+   "uses": 69
+  },
+  {
+   "type": "UIStackView",
+   "member": "lens",
+   "uses": 69
+  },
+  {
+   "type": "UIImageView",
+   "member": "lens",
+   "uses": 49
+  },
+  {
+   "type": "UIColor",
+   "member": "hex",
+   "uses": 35
+  },
+  {
+   "type": "UIFont",
+   "member": "ksr_caption1",
+   "uses": 34
+  },
+  {
+   "type": "UIFont",
+   "member": "ksr_headline",
+   "uses": 34
+  },
+  {
+   "type": "UIFont",
+   "member": "ksr_footnote",
+   "uses": 33
+  },
+  {
+   "type": "UITableViewCell",
+   "member": "lens",
+   "uses": 32
+  },
+  {
+   "type": "UITextField",
+   "member": "lens",
+   "uses": 32
+  },
+  {
+   "type": "UITableView",
+   "member": "automaticDimension",
+   "uses": 26
+  },
+  {
+   "type": "UIFont",
+   "member": "ksr_callout",
+   "uses": 23
+  },
+  {
+   "type": "UIColor",
+   "member": "clear",
+   "uses": 17
+  },
+  {
+   "type": "UIFont",
+   "member": "ksr_title2",
+   "uses": 16
+  },
+  {
+   "type": "UIColor",
+   "member": "black",
+   "uses": 13
+  },
+  {
+   "type": "UIFont",
+   "member": "systemFont",
+   "uses": 13
+  },
+  {
+   "type": "UIViewController",
+   "member": "lens",
+   "uses": 13
+  },
+  {
+   "type": "UITableView",
+   "member": "lens",
+   "uses": 13
+  },
+  {
+   "type": "UIFont",
+   "member": "boldAppFont",
+   "uses": 12
+  },
+  {
+   "type": "UIView",
+   "member": "addKeyframe",
+   "uses": 12
+  },
+  {
+   "type": "UIFont",
+   "member": "appFont",
+   "uses": 12
+  },
+  {
+   "type": "UITextView",
+   "member": "lens",
+   "uses": 12
+  },
+  {
+   "type": "UIFont",
+   "member": "ksr_title3",
+   "uses": 12
+  },
+  {
+   "type": "UIFont",
+   "member": "preferredFont",
+   "uses": 10
+  },
+  {
+   "type": "UIView",
+   "member": "layoutFittingCompressedSize",
+   "uses": 10
+  },
+  {
+   "type": "UIFont",
+   "member": "ksr_title1",
+   "uses": 10
+  },
+  {
+   "type": "UIFont",
+   "member": "serifFont",
+   "uses": 8
+  },
+  {
+   "type": "UIFont",
+   "member": "sansSerifFont",
+   "uses": 7
+  },
+  {
+   "type": "UIFont",
+   "member": "ksr_caption2",
+   "uses": 7
+  },
+  {
+   "type": "UIColor",
+   "member": "white",
+   "uses": 6
+  },
+  {
+   "type": "UINavigationBar",
+   "member": "appearance",
+   "uses": 6
+  },
+  {
+   "type": "UIFont",
+   "member": "daxBodyBold",
+   "uses": 6
+  },
+  {
+   "type": "UIFont",
+   "member": "serifItalicFont",
+   "uses": 5
+  },
+  {
+   "type": "UIColor",
+   "member": "label",
+   "uses": 5
+  },
+  {
+   "type": "UIColor",
+   "member": "forDomain",
+   "uses": 5
+  },
+  {
+   "type": "UIFont",
+   "member": "semiBoldAppFont",
+   "uses": 5
+  },
+  {
+   "type": "UITableView",
+   "member": "appearance",
+   "uses": 5
+  },
+  {
+   "type": "UINavigationBar",
+   "member": "lens",
+   "uses": 5
+  },
+  {
+   "type": "UIColor",
+   "member": "red",
+   "uses": 4
+  },
+  {
+   "type": "UIColor",
+   "member": "tertiaryLabel",
+   "uses": 4
+  },
+  {
+   "type": "UIView",
+   "member": "transition",
+   "uses": 4
+  },
+  {
+   "type": "UIFont",
+   "member": "daxTitle3",
+   "uses": 4
+  },
+  {
+   "type": "UITabBarItem",
+   "member": "lens",
+   "uses": 4
+  },
+  {
+   "type": "UIImage",
+   "member": "testImage",
+   "uses": 3
+  },
+  {
+   "type": "UIFont",
+   "member": "serifBoldFont",
+   "uses": 3
+  },
+  {
+   "type": "UIFont",
+   "member": "serifSemiBoldFont",
+   "uses": 3
+  },
+  {
+   "type": "UIFont",
+   "member": "boldSystemFont",
+   "uses": 3
+  },
+  {
+   "type": "UIView",
+   "member": "animateKeyframes",
+   "uses": 3
+  },
+  {
+   "type": "UIColor",
+   "member": "yellow60",
+   "uses": 3
+  },
+  {
+   "type": "UIFont",
+   "member": "daxBodyRegular",
+   "uses": 3
+  },
+  {
+   "type": "UITraitCollection",
+   "member": "init",
+   "uses": 3
+  },
+  {
+   "type": "UIScrollView",
+   "member": "lens",
+   "uses": 3
+  },
+  {
+   "type": "UIFont",
+   "member": "ksr_bodyMD",
+   "uses": 3
+  },
+  {
+   "type": "UIImageView",
+   "member": "ksr_cacheImageWith",
+   "uses": 3
+  },
+  {
+   "type": "UISwitch",
+   "member": "lens",
+   "uses": 3
+  },
+  {
+   "type": "UIColor",
+   "member": "artsyGrayMedium",
+   "uses": 2
+  },
+  {
+   "type": "UIView",
+   "member": "animateIf",
+   "uses": 2
+  },
+  {
+   "type": "UIView",
+   "member": "alignAttribute",
+   "uses": 2
+  },
+  {
+   "type": "UIColor",
+   "member": "darkGray",
+   "uses": 2
+  },
+  {
+   "type": "UIView",
+   "member": "safeAreaInsets",
+   "uses": 2
+  },
+  {
+   "type": "UIColor",
+   "member": "greyish3",
+   "uses": 2
+  },
+  {
+   "type": "UIImage",
+   "member": "stackedIconImage",
+   "uses": 2
+  },
+  {
+   "type": "UIColor",
+   "member": "midGreen",
+   "uses": 2
+  },
+  {
+   "type": "UIView",
+   "member": "doBadSwizzleStuff",
+   "uses": 2
+  },
+  {
+   "type": "UIViewController",
+   "member": "doBadSwizzleStuff",
+   "uses": 2
+  },
+  {
+   "type": "UIViewController",
+   "member": "supportedURLSchemes",
+   "uses": 2
+  },
+  {
+   "type": "UINavigationController",
+   "member": "init",
+   "uses": 2
+  },
+  {
+   "type": "UITableViewCell",
+   "member": "self",
+   "uses": 2
+  },
+  {
+   "type": "UITableViewController",
+   "member": "lens",
+   "uses": 2
+  },
+  {
+   "type": "UIFont",
+   "member": "ksr_headingLG",
+   "uses": 2
+  },
+  {
+   "type": "UIView",
+   "member": "perform",
+   "uses": 2
+  },
+  {
+   "type": "UIView",
+   "member": "performWithoutAnimation",
+   "uses": 2
+  },
+  {
+   "type": "UIColor",
+   "member": "init",
+   "uses": 2
+  },
+  {
+   "type": "UITabBar",
+   "member": "lens",
+   "uses": 2
+  },
+  {
+   "type": "UIFont",
+   "member": "ksr_bodyLG",
+   "uses": 2
+  },
+  {
+   "type": "UIView",
+   "member": "noIntrinsicMetric",
+   "uses": 2
+  },
+  {
+   "type": "UINavigationController",
+   "member": "self",
+   "uses": 1
+  },
+  {
+   "type": "UIView",
+   "member": "animateTwoStepIf",
+   "uses": 1
+  },
+  {
+   "type": "UIColor",
+   "member": "systemRed",
+   "uses": 1
+  },
+  {
+   "type": "UIColor",
+   "member": "cornflowerBlue",
+   "uses": 1
+  },
+  {
+   "type": "UIImage",
+   "member": "self",
+   "uses": 1
+  },
+  {
+   "type": "UIColor",
+   "member": "greyishBrown2",
+   "uses": 1
+  },
+  {
+   "type": "UIView",
+   "member": "self",
+   "uses": 1
+  },
+  {
+   "type": "UIFont",
+   "member": "daxFootnoteRegular",
+   "uses": 1
+  },
+  {
+   "type": "UIColor",
+   "member": "destructive",
+   "uses": 1
+  },
+  {
+   "type": "UITextField",
+   "member": "textDidChangeNotification",
+   "uses": 1
+  },
+  {
+   "type": "UIColor",
+   "member": "systemGray3",
+   "uses": 1
+  },
+  {
+   "type": "UILabel",
+   "member": "appearance",
+   "uses": 1
+  },
+  {
+   "type": "UIColor",
+   "member": "secondaryLabel",
+   "uses": 1
+  },
+  {
+   "type": "UIViewController",
+   "member": "getCurrentViewController",
+   "uses": 1
+  },
+  {
+   "type": "UIFont",
+   "member": "lightAppFont",
+   "uses": 1
+  },
+  {
+   "type": "UIFont",
+   "member": "customFont",
+   "uses": 1
+  },
+  {
+   "type": "UIFont",
+   "member": "defaultSystemFont",
+   "uses": 1
+  },
+  {
+   "type": "UITraitCollection",
+   "member": "current",
+   "uses": 1
+  },
+  {
+   "type": "UIFont",
+   "member": "registerFontFromFileURL",
+   "uses": 1
+  },
+  {
+   "type": "UIImageView",
+   "member": "appearance",
+   "uses": 1
+  },
+  {
+   "type": "UITabBar",
+   "member": "self",
+   "uses": 1
+  },
+  {
+   "type": "UIColor",
+   "member": "cyan",
+   "uses": 1
+  },
+  {
+   "type": "UIColor",
+   "member": "magenta",
+   "uses": 1
+  },
+  {
+   "type": "UIColor",
+   "member": "orange",
+   "uses": 1
+  },
+  {
+   "type": "UITraitCollection",
+   "member": "allCases",
+   "uses": 1
+  },
+  {
+   "type": "UIImage",
+   "member": "checkmark",
+   "uses": 1
+  },
+  {
+   "type": "UIImage",
+   "member": "add",
+   "uses": 1
+  },
+  {
+   "type": "UIView",
+   "member": "areAnimationsEnabled",
+   "uses": 1
+  },
+  {
+   "type": "UIFont",
+   "member": "ksr_bodySM",
+   "uses": 1
+  },
+  {
+   "type": "UINavigationController",
+   "member": "lens",
+   "uses": 1
+  },
+  {
+   "type": "UIImageView",
+   "member": "ksr_stopFetchingImages",
+   "uses": 1
+  }
+ ]
+}

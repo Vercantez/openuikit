@@ -1,0 +1,24 @@
+{
+  "name": "progress_fractions",
+  "size": [320, 260],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 320, 260], "backgroundColor": "#FFFFFF" },
+      { "class": "UIProgressView", "frame": [20, 20, 280, 4], "progress": 0 },
+      { "class": "UIProgressView", "frame": [20, 50, 280, 4], "progress": 0.125 },
+      { "class": "UIProgressView", "frame": [20, 80, 280, 4], "progress": 0.33 },
+      { "class": "UIProgressView", "frame": [20, 110, 280, 4], "progress": 0.5 },
+      { "class": "UIProgressView", "frame": [20, 140, 280, 4], "progress": 0.66 },
+      { "class": "UIProgressView", "frame": [20, 170, 280, 4], "progress": 0.875 },
+      { "class": "UIProgressView", "frame": [20, 200, 280, 4], "progress": 1.0 },
+      { "class": "UIProgressView", "frame": [20, 230, 130, 4], "progress": 0.4,
+        "progressTintColor": "systemGreen", "trackTintColor": "#FFE066" },
+      { "class": "UIProgressView", "frame": [170, 230, 130, 4], "progress": 0.7,
+        "progressTintColor": "#E64980" }
+    ]
+  }
+}

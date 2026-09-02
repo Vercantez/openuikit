@@ -1,0 +1,28 @@
+{
+  "_comment": [
+    "Perf probe: flick-scroll the big plain table in",
+    "scripts/perf_table_scene.json, then capture 45 frames at 60 fps",
+    "spacing through the momentum phase. Each capture line prints its",
+    "full-frame render time plus the layer-cache composite hit/build/",
+    "direct counters — the M10 table gate: sustained-scroll frames stay",
+    "under 16.6 ms and cells recomposite from their cached rasters",
+    "(hits >> builds after the first frames).",
+    "Run: OPENUIKIT_BACKEND=quartz swift run -c release openhost \\",
+    "       scripts/perf_table_scene.json --scale 2 \\",
+    "       --script scripts/perf_table.json --record out_perf_table"
+  ],
+  "events": [
+    {"t": 0.50, "kind": "down", "x": 195, "y": 600},
+    {"t": 0.55, "kind": "move", "x": 195, "y": 540},
+    {"t": 0.60, "kind": "move", "x": 195, "y": 470},
+    {"t": 0.65, "kind": "move", "x": 195, "y": 390},
+    {"t": 0.65, "kind": "up",   "x": 195, "y": 390}
+  ],
+  "captures": [
+    0.667, 0.683, 0.700, 0.717, 0.733, 0.750, 0.767, 0.783, 0.800, 0.817,
+    0.833, 0.850, 0.867, 0.883, 0.900, 0.917, 0.933, 0.950, 0.967, 0.983,
+    1.000, 1.017, 1.033, 1.050, 1.067, 1.083, 1.100, 1.117, 1.133, 1.150,
+    1.167, 1.183, 1.200, 1.217, 1.233, 1.250, 1.267, 1.283, 1.300, 1.317,
+    1.333, 1.350, 1.367, 1.383, 1.400
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "name" : "tabbar_tinted",
+  "views" : [
+    {
+      "class" : "UITabBarStack",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UILayoutContainerView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UITransitionView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0.0"
+    },
+    {
+      "class" : "UIViewControllerWrapperView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0.0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0.0.0.0"
+    },
+    {
+      "class" : "UILabel",
+      "frame" : [
+        0,
+        200,
+        375,
+        30
+      ],
+      "intrinsic" : [
+        143.5,
+        24
+      ],
+      "path" : "0.0.0.0.0",
+      "sizeThatFits200" : [
+        143.5,
+        24
+      ]
+    },
+    {
+      "class" : "_UITabContainerView",
+      "frame" : [
+        0,
+        0,
+        375,
+        480
+      ],
+      "path" : "0.1"
+    }
+  ]
+}

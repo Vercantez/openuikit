@@ -1,0 +1,111 @@
+{
+ "name": "hit_testing",
+ "size": [320, 260],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [20, 20, 120, 90],
+    "backgroundColor": "#DDE3EA",
+    "subviews": [
+     { "class": "UIView", "frame": [10, 10, 50, 40], "backgroundColor": "#E03131" },
+     { "class": "UIView", "frame": [40, 30, 60, 40], "backgroundColor": "#1971C2" },
+     { "class": "UIView", "frame": [90, 60, 60, 40], "backgroundColor": "#2F9E44" }
+    ]
+   },
+   {
+    "class": "UIView",
+    "frame": [180, 30, 80, 60],
+    "backgroundColor": "#E8590C",
+    "transform": [0.8660254, 0.5, -0.5, 0.8660254, 0, 0]
+   },
+   {
+    "class": "UIView",
+    "frame": [20, 130, 60, 40],
+    "backgroundColor": "#9C36B5",
+    "hidden": true
+   },
+   {
+    "class": "UIView",
+    "frame": [100, 130, 60, 40],
+    "backgroundColor": "#0CA678",
+    "alpha": 0.005
+   },
+   {
+    "class": "UIView",
+    "frame": [180, 130, 60, 40],
+    "backgroundColor": "#D6336C",
+    "alpha": 0.02
+   },
+   {
+    "class": "UIView",
+    "frame": [20, 190, 100, 50],
+    "backgroundColor": "#868E96",
+    "userInteractionEnabled": false,
+    "subviews": [
+     { "class": "UIView", "frame": [10, 10, 40, 30], "backgroundColor": "#FAB005" }
+    ]
+   },
+   {
+    "class": "UIView",
+    "frame": [140, 190, 80, 50],
+    "backgroundColor": "#C0D0E0",
+    "clipsToBounds": true,
+    "subviews": [
+     { "class": "UIView", "frame": [60, 10, 60, 20], "backgroundColor": "#5F3DC4" }
+    ]
+   },
+   {
+    "class": "UILabel",
+    "frame": [240, 200, 70, 20],
+    "text": "Tap",
+    "fontSize": 17
+   },
+   {
+    "class": "UIView",
+    "frame": [250, 120, 60, 60],
+    "backgroundColor": "#495057",
+    "subviews": [
+     {
+      "class": "UIView",
+      "frame": [10, 10, 40, 40],
+      "backgroundColor": "#ADB5BD",
+      "subviews": [
+       { "class": "UIView", "frame": [5, 5, 20, 20], "backgroundColor": "#F03E3E" }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "hitTests": [
+  [25, 25],
+  [20, 20],
+  [35, 35],
+  [65, 45],
+  [70, 60],
+  [75, 55],
+  [130, 100],
+  [150, 100],
+  [130, 115],
+  [140, 110],
+  [220, 60],
+  [185, 32],
+  [262.8, 55.9],
+  [50, 150],
+  [130, 150],
+  [210, 150],
+  [40, 205],
+  [60, 210],
+  [210, 205],
+  [230, 205],
+  [270, 210],
+  [270, 140],
+  [295, 165],
+  [253, 123],
+  [310, 20]
+ ]
+}

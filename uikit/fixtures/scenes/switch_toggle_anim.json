@@ -1,0 +1,20 @@
+{
+ "name": "switch_toggle_anim",
+ "size": [200, 120],
+ "scale": 2,
+ "style": "light",
+ "window": true,
+ "root": {
+  "class": "UIView",
+  "subviews": [
+   {"class": "UIView", "frame": [0, 0, 200, 120], "backgroundColor": "#FFFFFF"},
+   {"class": "UISwitch", "frame": [20, 20, 0, 0], "on": false},
+   {"class": "UISwitch", "frame": [20, 70, 0, 0], "on": true}
+  ]
+ },
+ "animations": [
+  {"kind": "switch-setOn", "target": "1", "on": true},
+  {"kind": "switch-setOn", "target": "2", "on": false}
+ ],
+ "captureTimes": [0.06, 0.12, 0.2, 0.35, 1.1]
+}

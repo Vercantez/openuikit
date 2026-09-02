@@ -1,0 +1,34 @@
+{
+  "name": "constraints_inequalities",
+  "size": [320, 240],
+  "scale": 2,
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemBlue" },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemGreen" },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemOrange" }
+    ]
+  },
+  "constraints": [
+    { "item": "0", "attribute": "leading", "toItem": "", "constant": 16 },
+    { "item": "0", "attribute": "top",     "toItem": "", "constant": 16 },
+    { "item": "0", "attribute": "height",  "toItem": null, "constant": 40 },
+    { "item": "0", "attribute": "width", "relation": "ge", "toItem": null, "constant": 80 },
+    { "item": "0", "attribute": "width", "relation": "le", "toItem": null, "constant": 200 },
+    { "item": "0", "attribute": "width", "toItem": null, "constant": 300, "priority": 500 },
+
+    { "item": "1", "attribute": "leading", "toItem": "", "constant": 16 },
+    { "item": "1", "attribute": "top",     "toItem": "", "constant": 76 },
+    { "item": "1", "attribute": "height",  "toItem": null, "constant": 40 },
+    { "item": "1", "attribute": "width", "toItem": null, "constant": 60,  "priority": 750 },
+    { "item": "1", "attribute": "width", "toItem": null, "constant": 140, "priority": 749 },
+
+    { "item": "2", "attribute": "leading", "toItem": "", "constant": 16 },
+    { "item": "2", "attribute": "top",     "toItem": "", "constant": 136 },
+    { "item": "2", "attribute": "height",  "toItem": null, "constant": 40 },
+    { "item": "2", "attribute": "width", "toItem": null, "constant": 30, "priority": 999 },
+    { "item": "2", "attribute": "width", "relation": "ge", "toItem": null, "constant": 90 }
+  ]
+}

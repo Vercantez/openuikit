@@ -1,0 +1,25 @@
+{
+  "name": "navbar_appearance",
+  "size": [393, 260],
+  "scale": 2,
+  "style": "light",
+  "window": true,
+  "ios": true,
+  "root": {
+    "class": "UINavigationStack",
+    "title": "Opaque",
+    "backgroundColor": "#FFFFFF",
+    "appearance": {
+      "configuration": "opaque",
+      "backgroundColor": "#F2F2F7",
+      "shadowColor": "#00000080",
+      "titleTextAttributes": { "color": "#B32222", "fontSize": 20, "fontWeight": "bold" }
+    },
+    "contentSize": [393, 900],
+    "leftItems": [ { "title": "Back" } ],
+    "rightItems": [ { "systemItem": "save" } ],
+    "subviews": [
+      { "class": "UIView", "frame": [16, 8, 361, 60], "backgroundColor": "#E5E5EA", "cornerRadius": 12 }
+    ]
+  }
+}

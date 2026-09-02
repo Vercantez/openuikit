@@ -1,0 +1,27 @@
+surface nil-calendar=true protocols=false,false
+surface raw=4,3 defaults=2,0,2,1,0.000,true
+round toggle=800000457.000->800000157.000
+round interval-change=800001031.000
+bounds nonaligned-min=800000437.000
+bounds nonaligned-max=800001020.000
+countdown outside 0=0.000->60.000
+countdown outside 59=0.000->60.000
+countdown outside 60=0.000->60.000
+countdown outside 61=0.000->60.000
+countdown outside 3661=0.000->60.000
+countdown outside 86399=0.000->60.000
+countdown inside 0=60.000
+countdown inside 59=60.000
+countdown inside 60=60.000
+countdown inside 61=60.000
+countdown inside 3661=3660.000
+countdown inside 86399=86340.000
+countdown inside 86400=60.000
+countdown entry-current-day=true changed=true
+countdown property=800005400.000
+countdown method-false=800007200.000
+countdown method-true=800007800.000
+countdown bounds-valid=true high=800007200.000
+countdown back=800007200.000
+programmatic events=0
+default current=true not-minute-floored=true

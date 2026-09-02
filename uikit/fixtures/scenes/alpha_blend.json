@@ -1,0 +1,58 @@
+{
+ "name": "alpha_blend",
+ "size": [
+  320,
+  240
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [
+     20,
+     20,
+     120,
+     120
+    ],
+    "backgroundColor": "rgba(1,0,0,0.5)"
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     80,
+     80,
+     120,
+     120
+    ],
+    "backgroundColor": "rgba(0,0,1,0.5)"
+   },
+   {
+    "class": "UIView",
+    "frame": [
+     180,
+     20,
+     120,
+     120
+    ],
+    "backgroundColor": "#2F9E44",
+    "alpha": 0.6,
+    "subviews": [
+     {
+      "class": "UIView",
+      "frame": [
+       20,
+       20,
+       80,
+       80
+      ],
+      "backgroundColor": "#FFD43B"
+     }
+    ]
+   }
+  ]
+ }
+}

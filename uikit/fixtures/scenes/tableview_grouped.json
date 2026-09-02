@@ -1,0 +1,37 @@
+{
+  "name": "tableview_grouped",
+  "size": [375, 620],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 375, 620], "backgroundColor": "systemGroupedBackground" },
+      {
+        "class": "UITableView",
+        "frame": [0, 0, 375, 620],
+        "style": "insetGrouped",
+        "sections": [
+          {
+            "header": "Account",
+            "footer": "Your account details are synced across devices.",
+            "rows": [
+              { "style": "value1", "text": "Name", "detailText": "Miguel" },
+              { "style": "value1", "text": "Plan", "detailText": "Pro", "accessory": "disclosureIndicator" },
+              { "style": "default", "text": "Sign Out" }
+            ]
+          },
+          {
+            "header": "Notifications",
+            "footer": "Alerts appear on the lock screen.",
+            "rows": [
+              { "style": "subtitle", "text": "Email", "detailText": "miguel@example.com", "accessory": "disclosureIndicator" },
+              { "style": "default", "text": "Sounds", "accessory": "checkmark" },
+              { "style": "subtitle", "text": "Badges", "detailText": "Show unread count" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

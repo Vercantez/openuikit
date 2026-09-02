@@ -1,0 +1,171 @@
+{
+  "name" : "progress_views",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIProgressView",
+      "frame" : [
+        20,
+        20,
+        280,
+        4
+      ],
+      "intrinsic" : [
+        -1,
+        4
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIProgressViewModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        280,
+        4
+      ],
+      "path" : "0.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        280,
+        4
+      ],
+      "intrinsic" : [
+        9,
+        4
+      ],
+      "path" : "0.0.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        84,
+        4
+      ],
+      "intrinsic" : [
+        9,
+        4
+      ],
+      "path" : "0.0.1"
+    },
+    {
+      "class" : "UIProgressView",
+      "frame" : [
+        20,
+        60,
+        280,
+        4
+      ],
+      "intrinsic" : [
+        -1,
+        4
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIProgressViewModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        280,
+        4
+      ],
+      "path" : "1.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        280,
+        4
+      ],
+      "intrinsic" : [
+        9,
+        4
+      ],
+      "path" : "1.0.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        210,
+        4
+      ],
+      "intrinsic" : [
+        9,
+        4
+      ],
+      "path" : "1.0.1"
+    },
+    {
+      "class" : "UIProgressView",
+      "frame" : [
+        20,
+        100,
+        280,
+        4
+      ],
+      "intrinsic" : [
+        -1,
+        4
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "UIProgressViewModernVisualElement",
+      "frame" : [
+        0,
+        0,
+        280,
+        4
+      ],
+      "path" : "2.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        280,
+        4
+      ],
+      "intrinsic" : [
+        9,
+        4
+      ],
+      "path" : "2.0.0"
+    },
+    {
+      "class" : "UIImageView",
+      "frame" : [
+        0,
+        0,
+        280,
+        4
+      ],
+      "intrinsic" : [
+        9,
+        4
+      ],
+      "path" : "2.0.1"
+    }
+  ]
+}

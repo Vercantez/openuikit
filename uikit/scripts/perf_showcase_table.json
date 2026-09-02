@@ -1,0 +1,30 @@
+{
+  "_comment": [
+    "Perf probe: the showcase app's Tasks tab. Switch to the tab, flick",
+    "the inset-grouped table and capture 45 frames at 60 fps spacing",
+    "through the momentum phase. Each capture line prints its full-frame",
+    "render time plus the layer-cache hit/build/direct counters. This is",
+    "the WHOLE showcase window — floating tab bar, shadowed pill and nav",
+    "bar included — not a bare table, so it is the honest per-frame cost",
+    "of the app as shipped.",
+    "Run: OPENUIKIT_BACKEND=quartz .build/release/openhost --app showcase \\",
+    "       --scale 2 --script scripts/perf_showcase_table.json \\",
+    "       --record out_perf_table"
+  ],
+  "events": [
+    {"t": 0.30, "kind": "down", "x": 195, "y": 800},
+    {"t": 0.38, "kind": "up",   "x": 195, "y": 800},
+    {"t": 0.90, "kind": "down", "x": 195, "y": 620},
+    {"t": 0.95, "kind": "move", "x": 195, "y": 560},
+    {"t": 1.00, "kind": "move", "x": 195, "y": 490},
+    {"t": 1.05, "kind": "move", "x": 195, "y": 410},
+    {"t": 1.05, "kind": "up",   "x": 195, "y": 410}
+  ],
+  "captures": [
+    1.067, 1.083, 1.100, 1.117, 1.133, 1.150, 1.167, 1.183, 1.200, 1.217,
+    1.233, 1.250, 1.267, 1.283, 1.300, 1.317, 1.333, 1.350, 1.367, 1.383,
+    1.400, 1.417, 1.433, 1.450, 1.467, 1.483, 1.500, 1.517, 1.533, 1.550,
+    1.567, 1.583, 1.600, 1.617, 1.633, 1.650, 1.667, 1.683, 1.700, 1.717,
+    1.733, 1.750, 1.767, 1.783, 1.800
+  ]
+}

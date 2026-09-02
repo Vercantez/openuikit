@@ -1,0 +1,30 @@
+{
+  "name": "constraints_centery_multiplier",
+  "size": [320, 240],
+  "scale": 2,
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemBlue" },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemOrange" },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "systemPurple" }
+    ]
+  },
+  "constraints": [
+    { "item": "0", "attribute": "centerX", "toItem": "" },
+    { "item": "0", "attribute": "centerY", "toItem": "", "multiplier": 0.5 },
+    { "item": "0", "attribute": "width",  "toItem": null, "constant": 80 },
+    { "item": "0", "attribute": "height", "toItem": null, "constant": 40 },
+
+    { "item": "1", "attribute": "centerX", "toItem": "" },
+    { "item": "1", "attribute": "centerY", "toItem": "", "multiplier": 1.5 },
+    { "item": "1", "attribute": "width",  "toItem": null, "constant": 80 },
+    { "item": "1", "attribute": "height", "toItem": null, "constant": 40 },
+
+    { "item": "2", "attribute": "centerX", "toItem": "", "multiplier": 0.5, "constant": 10 },
+    { "item": "2", "attribute": "centerY", "toItem": "" },
+    { "item": "2", "attribute": "width",  "toItem": null, "constant": 40 },
+    { "item": "2", "attribute": "height", "toItem": null, "constant": 40 }
+  ]
+}

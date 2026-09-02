@@ -1,0 +1,34 @@
+{
+  "name": "imageview_aspect_edge",
+  "size": [340, 260],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 340, 260], "backgroundColor": "#FFFFFF" },
+      { "class": "UIImageView", "frame": [20, 20, 100, 60], "contentMode": "scaleAspectFit",
+        "backgroundColor": "#DEE2E6",
+        "image": { "kind": "checker", "size": [37, 53], "colors": ["#E03131", "#1971C2"], "tile": 7 } },
+      { "class": "UIImageView", "frame": [140, 20, 100, 60], "contentMode": "scaleAspectFit",
+        "backgroundColor": "#DEE2E6",
+        "image": { "kind": "checker", "size": [121, 37], "colors": ["#2F9E44", "#FFD43B"], "tile": 9 } },
+      { "class": "UIImageView", "frame": [260, 20, 60, 90], "contentMode": "scaleAspectFill",
+        "clipsToBounds": true,
+        "image": { "kind": "gradient", "size": [33, 77], "colors": ["#845EF7", "#F76707"], "direction": "vertical" } },
+      { "class": "UIImageView", "frame": [20, 100, 75, 33], "contentMode": "scaleAspectFit",
+        "backgroundColor": "#DEE2E6",
+        "image": { "kind": "checker", "size": [50, 50], "colors": ["#0CA678", "#E64980"], "tile": 10 } },
+      { "class": "UIImageView", "frame": [140, 100, 100, 61], "contentMode": "scaleAspectFill",
+        "clipsToBounds": true,
+        "image": { "kind": "checker", "size": [41, 29], "colors": ["#1971C2", "#FFFFFF"], "tile": 6 } },
+      { "class": "UIImageView", "frame": [20, 160, 95, 80], "contentMode": "scaleAspectFit",
+        "backgroundColor": "#DEE2E6",
+        "image": { "kind": "gradient", "size": [13, 90], "colors": ["#E03131", "#000000"], "direction": "vertical" } },
+      { "class": "UIImageView", "frame": [140, 180, 180, 60], "contentMode": "scaleAspectFit",
+        "backgroundColor": "#DEE2E6",
+        "image": { "kind": "checker", "size": [200, 23], "colors": ["#495057", "#FAB005"], "tile": 11 } }
+    ]
+  }
+}

@@ -1,0 +1,219 @@
+{
+  "name" : "textfield_basic",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        200
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UITextField",
+      "frame" : [
+        20,
+        16,
+        280,
+        34
+      ],
+      "intrinsic" : [
+        123,
+        34
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "_UITextFieldRoundedRectBackgroundViewNeue",
+      "frame" : [
+        0,
+        0,
+        280,
+        34
+      ],
+      "path" : "1.0"
+    },
+    {
+      "class" : "UITextFieldLabel",
+      "frame" : [
+        7,
+        7,
+        266,
+        20
+      ],
+      "intrinsic" : [
+        95,
+        20
+      ],
+      "path" : "1.1",
+      "sizeThatFits200" : [
+        95,
+        20
+      ]
+    },
+    {
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        7,
+        2,
+        266,
+        30
+      ],
+      "path" : "1.2"
+    },
+    {
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        0,
+        5,
+        0,
+        20
+      ],
+      "path" : "1.2.0"
+    },
+    {
+      "class" : "UITextField",
+      "frame" : [
+        20,
+        62,
+        280,
+        34
+      ],
+      "intrinsic" : [
+        112,
+        34
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "_UITextFieldRoundedRectBackgroundViewNeue",
+      "frame" : [
+        0,
+        0,
+        280,
+        34
+      ],
+      "path" : "2.0"
+    },
+    {
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        7,
+        2,
+        266,
+        30
+      ],
+      "path" : "2.1"
+    },
+    {
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -11,
+        4,
+        130,
+        22
+      ],
+      "path" : "2.1.0"
+    },
+    {
+      "class" : "UITextField",
+      "frame" : [
+        20,
+        108,
+        160,
+        34
+      ],
+      "intrinsic" : [
+        381,
+        34
+      ],
+      "path" : "3"
+    },
+    {
+      "class" : "_UITextFieldRoundedRectBackgroundViewNeue",
+      "frame" : [
+        0,
+        0,
+        160,
+        34
+      ],
+      "path" : "3.0"
+    },
+    {
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        7,
+        2,
+        146,
+        30
+      ],
+      "path" : "3.1"
+    },
+    {
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -11,
+        4,
+        199,
+        22
+      ],
+      "path" : "3.1.0"
+    },
+    {
+      "class" : "UITextField",
+      "frame" : [
+        20,
+        154,
+        160,
+        34
+      ],
+      "intrinsic" : [
+        122,
+        34
+      ],
+      "path" : "4"
+    },
+    {
+      "class" : "_UITextFieldRoundedRectBackgroundViewNeue",
+      "frame" : [
+        0,
+        0,
+        160,
+        34
+      ],
+      "path" : "4.0"
+    },
+    {
+      "class" : "_UITextLayoutCanvasView",
+      "frame" : [
+        7,
+        2,
+        146,
+        30
+      ],
+      "path" : "4.1"
+    },
+    {
+      "class" : "_UITextLayoutFragmentView",
+      "frame" : [
+        -9,
+        7,
+        127,
+        17
+      ],
+      "path" : "4.1.0"
+    }
+  ]
+}

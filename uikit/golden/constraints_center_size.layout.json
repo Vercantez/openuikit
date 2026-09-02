@@ -1,0 +1,45 @@
+{
+  "name" : "constraints_center_size",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        240
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        100,
+        80,
+        120,
+        80
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        220,
+        40,
+        40,
+        40
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        48,
+        108,
+        45,
+        25
+      ],
+      "path" : "2"
+    }
+  ]
+}

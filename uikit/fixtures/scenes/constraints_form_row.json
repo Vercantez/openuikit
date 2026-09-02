@@ -1,0 +1,35 @@
+{
+  "name": "constraints_form_row",
+  "size": [320, 56],
+  "scale": 2,
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIImageView", "useConstraints": true, "cornerRadius": 5, "clipsToBounds": true,
+        "image": { "kind": "gradient", "size": [24, 24], "colors": ["#3D7BFF", "#0A50E0"] } },
+      { "class": "UILabel", "useConstraints": true, "text": "Wi-Fi", "fontSize": 17 },
+      { "class": "UILabel", "useConstraints": true, "text": "Connected", "fontSize": 17,
+        "textColor": "secondaryLabel", "huggingH": 251 },
+      { "class": "UIView", "useConstraints": true, "backgroundColor": "separator" }
+    ]
+  },
+  "constraints": [
+    { "item": "0", "attribute": "leading", "toItem": "", "constant": 16 },
+    { "item": "0", "attribute": "centerY", "toItem": "" },
+    { "item": "0", "attribute": "width",  "toItem": null, "constant": 24 },
+    { "item": "0", "attribute": "height", "toItem": null, "constant": 24 },
+
+    { "item": "1", "attribute": "leading", "toItem": "0", "toAttribute": "trailing", "constant": 12 },
+    { "item": "1", "attribute": "centerY", "toItem": "" },
+    { "item": "1", "attribute": "trailing", "toItem": "2", "toAttribute": "leading", "constant": -8 },
+
+    { "item": "2", "attribute": "trailing", "toItem": "", "constant": -16 },
+    { "item": "2", "attribute": "centerY", "toItem": "" },
+
+    { "item": "3", "attribute": "leading",  "toItem": "", "constant": 16 },
+    { "item": "3", "attribute": "trailing", "toItem": "" },
+    { "item": "3", "attribute": "bottom",   "toItem": "", "constant": -0.5 },
+    { "item": "3", "attribute": "height", "toItem": null, "constant": 0.5 }
+  ]
+}

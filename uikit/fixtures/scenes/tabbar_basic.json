@@ -1,0 +1,33 @@
+{
+  "name": "tabbar_basic",
+  "size": [375, 480],
+  "scale": 2,
+  "style": "light",
+  "window": true,
+  "root": {
+    "class": "UITabBarStack",
+    "selectedIndex": 0,
+    "items": [
+      {
+        "title": "Home",
+        "image": { "kind": "solid", "size": [24, 24], "colors": ["#000000"] },
+        "content": {
+          "class": "UILabel",
+          "frame": [0, 200, 375, 30],
+          "text": "Home screen",
+          "fontSize": 20,
+          "fontWeight": "semibold",
+          "textAlignment": "center"
+        }
+      },
+      {
+        "title": "Search",
+        "image": { "kind": "checker", "size": [24, 24], "colors": ["#000000", "#000000"], "tile": 12 }
+      },
+      {
+        "title": "Profile",
+        "image": { "kind": "solid", "size": [20, 24], "colors": ["#000000"] }
+      }
+    ]
+  }
+}

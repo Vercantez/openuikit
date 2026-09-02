@@ -1,0 +1,34 @@
+{
+  "name": "tabbar_tinted",
+  "size": [375, 480],
+  "scale": 2,
+  "style": "light",
+  "window": true,
+  "root": {
+    "class": "UITabBarStack",
+    "selectedIndex": 2,
+    "tintColor": "systemPink",
+    "items": [
+      {
+        "title": "Feed",
+        "image": { "kind": "solid", "size": [24, 24], "colors": ["#000000"] }
+      },
+      {
+        "title": "Alerts",
+        "image": { "kind": "solid", "size": [22, 24], "colors": ["#000000"] }
+      },
+      {
+        "title": "Settings",
+        "image": { "kind": "solid", "size": [24, 22], "colors": ["#000000"] },
+        "content": {
+          "class": "UILabel",
+          "frame": [0, 200, 375, 30],
+          "text": "Settings screen",
+          "fontSize": 20,
+          "fontWeight": "semibold",
+          "textAlignment": "center"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "comment": "Scripted interaction for fixtures/scenes/demo_settings.json (openhost --script). Airplane Mode switch (path 3.0.2) absolute frame is (295,262,63,28) -> center (326.5,276); it starts ON, the click at t=0.1 toggles it OFF (toggle animation starts at the touch-up, t=0.10, so captures at 0.22/0.30 land on elapsed 0.12/0.20 — exactly two golden/switch_toggle_anim capture times). Sign Out button (path 7) absolute frame is (20,686,62,31) -> center (51,701.5); pressed at t=0.6 (captured dimmed at 0.65), released inside at 0.7 (fires touchUpInside).",
+  "events": [
+    { "t": 0.08, "kind": "down", "x": 326.5, "y": 276 },
+    { "t": 0.10, "kind": "up",   "x": 326.5, "y": 276 },
+    { "t": 0.60, "kind": "down", "x": 51,    "y": 701.5 },
+    { "t": 0.70, "kind": "up",   "x": 51,    "y": 701.5 }
+  ],
+  "captures": [0.05, 0.15, 0.22, 0.30, 0.50, 0.65, 0.75]
+}

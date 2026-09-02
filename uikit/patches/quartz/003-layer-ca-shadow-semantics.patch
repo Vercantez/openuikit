@@ -1,0 +1,172 @@
+diff --git a/Sources/CQuartz/qz_layer.cpp b/Sources/CQuartz/qz_layer.cpp
+index 524f090..02abb6d 100644
+--- a/Sources/CQuartz/qz_layer.cpp
++++ b/Sources/CQuartz/qz_layer.cpp
+@@ -317,6 +317,60 @@ static void apply_layer_mask(QZLayer *layer, QZContextRef ctx) {
+     QZContextRelease(mctx);
+ }
+ 
++/* CoreAnimation shadow semantics (verified against Mac Catalyst):
++ * shadowRadius is a Gaussian sigma in the layer's user-space units. QZ's
++ * shadow blur parameter is in DEVICE pixels with sigma = blur/2, so the
++ * blur is 2 * radius scaled by the CTM in effect when the casting shape
++ * is filled. */
++static double ctm_scale(QZContextRef ctx) {
++    const QZAffineTransform &m = ctx->gs.ctm;
++    return std::sqrt(std::fabs(m.a * m.d - m.b * m.c));
++}
++
++static void set_layer_shadow(QZLayer *layer, QZContextRef ctx, double extra_alpha) {
++    QZContextSetShadowWithColor(
++        ctx, QZSizeMake(layer->layer_shadow_ox, layer->layer_shadow_oy),
++        2.0 * layer->layer_shadow_radius * ctm_scale(ctx),
++        layer->layer_shadow_color.r, layer->layer_shadow_color.g,
++        layer->layer_shadow_color.b,
++        layer->layer_shadow_color.a * layer->layer_shadow_opacity * extra_alpha);
++}
++
++/* CALayer borders draw ABOVE contents and sublayers, inside the bounds. */
++static void draw_border(QZLayer *layer, QZContextRef ctx, QZRect b, double cr) {
++    double bw = layer->border_width;
++    QZRect inner = QZRectMake(b.origin.x + bw * 0.5, b.origin.y + bw * 0.5,
++                              std::max(0.0, b.size.width - bw),
++                              std::max(0.0, b.size.height - bw));
++    double inner_cr = std::max(0.0, cr - bw * 0.5);
++    QZContextSaveGState(ctx);
++    if (!layer->edge_antialias) QZContextSetShouldAntialias(ctx, false);
++    QZContextSetRGBStrokeColor(ctx, layer->border_color.r, layer->border_color.g,
++                               layer->border_color.b, layer->border_color.a);
++    QZContextSetLineWidth(ctx, bw);
++    QZContextSetLineJoin(ctx, kQZLineJoinMiter);
++    QZContextSetLineCap(ctx, kQZLineCapButt);
++    QZContextBeginPath(ctx);
++    rounded_or_rect(ctx, inner, inner_cr);
++    QZContextStrokePath(ctx);
++    QZContextRestoreGState(ctx);
++}
++
++/* The shadow-casting silhouette: the outer rounded rect when the
++ * background is visible, else the border ring (even-odd). Returns whether
++ * the built path must be filled even-odd. */
++static bool add_shadow_silhouette(QZLayer *layer, QZContextRef ctx,
++                                  QZRect b, double cr, bool bg_visible) {
++    rounded_or_rect(ctx, b, cr);
++    if (bg_visible) return false;
++    double bw = layer->border_width;
++    QZRect inner = QZRectMake(b.origin.x + bw, b.origin.y + bw,
++                              b.size.width - 2 * bw, b.size.height - 2 * bw);
++    if (inner.size.width <= 0 || inner.size.height <= 0) return false;
++    rounded_or_rect(ctx, inner, std::max(0.0, cr - bw));
++    return true;
++}
++
+ static void render_layer(QZLayer *layer, QZContextRef ctx) {
+     if (!layer || layer->hidden || layer->opacity <= 0) return;
+ 
+@@ -333,16 +387,42 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
+     QZContextTranslateCTM(ctx, -(layer->bounds.origin.x + ax),
+                           -(layer->bounds.origin.y + ay));
+ 
++    QZRect b = layer->bounds;
++    double cr = layer->corner_radius;
++
++    bool bg_visible = layer->background.a > 0.001;
++    bool border_visible = layer->border_width > 0 && layer->border_color.a > 0.001;
++    /* CA hides the layer shadow while masksToBounds is set, and there is
++     * no shadow without a casting silhouette (background or border). */
++    bool shadow_on = layer->layer_shadow && !layer->masks_to_bounds &&
++                     layer->layer_shadow_color.a * layer->layer_shadow_opacity > 0.001 &&
++                     b.size.width > 0 && b.size.height > 0 &&
++                     (bg_visible || border_visible);
++
+     bool group = layer->opacity < 0.999;
+     double saved_alpha = ctx->gs.alpha;
++
++    if (group && shadow_on) {
++        /* Group opacity: CA composites the shadow onto the destination
++         * BENEATH the whole group (never occluded by the layer's own
++         * content) at strength shadowOpacity * opacity — draw it before
++         * the transparency layer opens. The zero-alpha fill leaves exactly
++         * the shadow (QZ derives it from geometry coverage). */
++        QZContextSaveGState(ctx);
++        set_layer_shadow(layer, ctx, layer->opacity);
++        QZContextSetRGBFillColor(ctx, 0, 0, 0, 0);
++        QZContextBeginPath(ctx);
++        bool eo = add_shadow_silhouette(layer, ctx, b, cr, bg_visible);
++        if (eo) QZContextEOFillPath(ctx);
++        else QZContextFillPath(ctx);
++        QZContextRestoreGState(ctx);
++    }
++
+     if (group) {
+         ctx->gs.alpha = saved_alpha * layer->opacity;
+         QZContextBeginTransparencyLayer(ctx);
+     }
+ 
+-    QZRect b = layer->bounds;
+-    double cr = layer->corner_radius;
+-
+     if (layer->masks_to_bounds) {
+         QZContextBeginPath(ctx);
+         rounded_or_rect(ctx, b, cr);
+@@ -351,16 +431,9 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
+ 
+     if (layer->mask) apply_layer_mask(layer, ctx);
+ 
+-    if (layer->background.a > 0.001) {
++    if (bg_visible) {
+         QZContextSaveGState(ctx);
+-        if (layer->layer_shadow) {
+-            QZContextSetShadowWithColor(
+-                ctx, QZSizeMake(layer->layer_shadow_ox, layer->layer_shadow_oy),
+-                layer->layer_shadow_radius,
+-                layer->layer_shadow_color.r, layer->layer_shadow_color.g,
+-                layer->layer_shadow_color.b,
+-                layer->layer_shadow_color.a * layer->layer_shadow_opacity);
+-        }
++        if (shadow_on && !group) set_layer_shadow(layer, ctx, 1.0);
+         QZContextSetRGBFillColor(ctx, layer->background.r, layer->background.g,
+                                  layer->background.b, layer->background.a);
+         if (!layer->edge_antialias) QZContextSetShouldAntialias(ctx, false);
+@@ -368,6 +441,14 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
+         rounded_or_rect(ctx, b, cr);
+         QZContextFillPath(ctx);
+         QZContextRestoreGState(ctx);
++    } else if (shadow_on && !group && border_visible) {
++        /* No background to cast the shadow: the silhouette is the border
++         * ring alone. Pre-draw it with the shadow active; the regular
++         * border pass repaints the identical ring on top later. */
++        QZContextSaveGState(ctx);
++        set_layer_shadow(layer, ctx, 1.0);
++        draw_border(layer, ctx, b, cr);
++        QZContextRestoreGState(ctx);
+     }
+ 
+     if (layer->kind == QZLayerKindInternal::Gradient && layer->grad_colors.size() >= 2) {
+@@ -454,24 +535,8 @@ static void render_layer(QZLayer *layer, QZContextRef ctx) {
+     }
+     if (st) QZContextRestoreGState(ctx);
+ 
+-    if (layer->border_width > 0 && layer->border_color.a > 0.001) {
+-        /* CALayer borders sit inside the bounds, not centered on the edge. */
+-        double bw = layer->border_width;
+-        QZRect inner = QZRectMake(b.origin.x + bw * 0.5, b.origin.y + bw * 0.5,
+-                                  std::max(0.0, b.size.width - bw),
+-                                  std::max(0.0, b.size.height - bw));
+-        double inner_cr = std::max(0.0, cr - bw * 0.5);
+-        QZContextSaveGState(ctx);
+-        if (!layer->edge_antialias) QZContextSetShouldAntialias(ctx, false);
+-        QZContextSetRGBStrokeColor(ctx, layer->border_color.r, layer->border_color.g,
+-                                   layer->border_color.b, layer->border_color.a);
+-        QZContextSetLineWidth(ctx, bw);
+-        QZContextSetLineJoin(ctx, kQZLineJoinMiter);
+-        QZContextSetLineCap(ctx, kQZLineCapButt);
+-        QZContextBeginPath(ctx);
+-        rounded_or_rect(ctx, inner, inner_cr);
+-        QZContextStrokePath(ctx);
+-        QZContextRestoreGState(ctx);
++    if (border_visible) {
++        draw_border(layer, ctx, b, cr);
+     }
+ 
+     if (group) {

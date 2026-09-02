@@ -1,0 +1,54 @@
+fresh.base-toolbar=true
+fresh.base-tab=true
+reset.same-old=true
+reset.same-toolbar=true
+factory.same=false
+fresh.base-factory=false
+copy.same=true
+blur.same identity=false equal=true hashes=1,1
+blur.cross-style identity=false equal=false hashes=1,2
+blur.inert-vs-light identity=false equal=false hashes=0,1
+blur.archive identity=false equal=true hashes=1,1
+blur.hashes inert=0 light=1 dark=2 regular=4
+vibrancy.same identity=false equal=true hashes=1,1
+vibrancy.cross-style identity=false equal=true hashes=1,1
+vibrancy.cross-blur identity=false equal=false hashes=1,2
+vibrancy.inert identity=false equal=true hashes=7502673159197000442,7502673159197000442
+vibrancy.nil-vs-inert-blur identity=false equal=false hashes=7502673159197000442,24
+vibrancy.inert-vs-light identity=false equal=false hashes=7502673159197000442,1
+vibrancy.archive identity=false equal=true hashes=1,1
+vibrancy.hashes inert=7502673159197000442 inertBlur=24 light=1 dark=2
+nil accessFirst=false content=(7.0,9.0,200.0,110.0)
+nil accessFirst=true content=(0.0,0.0,200.0,110.0)
+base accessFirst=false content=(7.0,9.0,200.0,110.0)
+base accessFirst=true content=(0.0,0.0,200.0,110.0)
+blur accessFirst=false content=(7.0,9.0,200.0,110.0)
+blur accessFirst=true content=(0.0,0.0,200.0,110.0)
+vibrancy accessFirst=false content=(0.0,0.0,200.0,110.0)
+vibrancy accessFirst=true content=(0.0,0.0,200.0,110.0)
+nil-origin-after-access content=(0.0,0.0,120.0,80.0)
+frame-access-blur-combined content=(0.0,0.0,200.0,110.0)
+blur-to-nil-immediate content=(7.0,9.0,120.0,80.0)
+blur-to-nil=(7.0,9.0,120.0,80.0)
+blur-to-base=(7.0,9.0,120.0,80.0)
+blur-to-vibrancy=(7.0,9.0,120.0,80.0)
+blur-to-blur=(7.0,9.0,120.0,80.0)
+blur-to-same=(0.0,0.0,120.0,80.0)
+blur-to-equal=(0.0,0.0,120.0,80.0)
+nil-to-nil=(0.0,0.0,120.0,80.0)
+nil-to-base=(7.0,9.0,120.0,80.0)
+nil-to-blur=(7.0,9.0,120.0,80.0)
+nil-to-vibrancy=(7.0,9.0,120.0,80.0)
+base-to-nil=(7.0,9.0,120.0,80.0)
+base-to-base=(7.0,9.0,120.0,80.0)
+vibrancy-to-nil=(7.0,9.0,120.0,80.0)
+vibrancy-to-blur=(7.0,9.0,120.0,80.0)
+vibrancy-equal-style=(0.0,0.0,120.0,80.0)
+vibrancy-different-blur=(7.0,9.0,120.0,80.0)
+vibrancy-inert-equal=(0.0,0.0,120.0,80.0)
+vibrancy-inert-explicit=(7.0,9.0,120.0,80.0)
+lazy-nil-to-vibrancy=(7.0,9.0,200.0,110.0)
+lazy-blur-to-vibrancy=(7.0,9.0,200.0,110.0)
+lazy-base-to-vibrancy=(7.0,9.0,200.0,110.0)
+lazy-nil-to-blur=(7.0,9.0,200.0,110.0)
+lazy-nil-to-base=(7.0,9.0,200.0,110.0)

@@ -1,0 +1,1954 @@
+// SwiftUI S2: state, bindings, and observation for the OpenUIKit host.
+//
+// The reactive declarations come from exactly one platform Combine identity:
+// Apple's first-party module on Darwin, or the package's literal Combine shim
+// backed by pinned OpenCombine on Linux. Do not define lookalike
+// implementations here.
+
+@_exported import Combine
+@_exported import Observation
+import OpenUIKit
+#if canImport(Foundation)
+import struct Foundation.URL
+#elseif canImport(FoundationEssentials)
+import struct FoundationEssentials.URL
+#endif
+
+/// Owns one host-clock delivery without retaining its Timer. The timer clears
+/// its schedule before entering this object, and `take()` clears the action
+/// before calling app/graph code. Both halves matter under a nested host tick:
+/// the same one-shot timer cannot be observed again, and the action remains
+/// exactly-once even if a future Timer implementation changes its ordering.
+@MainActor
+private final class _OpenPendingInvalidation {
+    private var action: (@MainActor () -> Void)?
+
+    init(_ action: @escaping @MainActor () -> Void) {
+        self.action = action
+    }
+
+    func take() {
+        guard let action else { return }
+        self.action = nil
+        action()
+    }
+}
+
+/// Defers graph invalidation to the platform's next UI turn. Native package
+/// builds use Swift's main executor. The Foundation-hidden Mach-O guest has no
+/// usable Apple dispatch/voucher substrate, so its turn is the next explicit
+/// OpenUIKit host-clock tick instead.
+@MainActor
+enum _OpenInvalidationScheduler {
+#if canImport(Foundation)
+    static var forceHostClockForTesting = false
+#endif
+
+    static func enqueue(_ action: @escaping @MainActor () -> Void) {
+#if canImport(Foundation)
+        if !forceHostClockForTesting {
+            Task { @MainActor in action() }
+            return
+        }
+#endif
+        let pending = _OpenPendingInvalidation(action)
+        OpenUIKit.Timer.scheduledTimer(withTimeInterval: 0, repeats: false) { timer in
+            // Timer._step snapshots work before invoking it. Remove this timer
+            // from the live schedule before arbitrary graph code can re-enter
+            // the host clock and encounter that snapshot member again.
+            timer.invalidate()
+            MainActor.assumeIsolated {
+                pending.take()
+            }
+        }
+    }
+}
+
+// These source-facing declarations deliberately are not globally
+// @MainActor-isolated. Apple's SwiftUI permits Binding, State, ObservedObject,
+// and custom DynamicProperty values to be declared and initialized from
+// otherwise nonisolated code. The retained render graph is main-actor-only;
+// an attached State storage asserts that boundary when it is mutated.
+public protocol _OpenDynamicProperty {
+    mutating func update()
+}
+
+public extension _OpenDynamicProperty {
+    mutating func update() {}
+}
+
+public typealias DynamicProperty = _OpenDynamicProperty
+
+@dynamicMemberLookup
+@propertyWrapper
+public struct _OpenBinding<Value>: _OpenDynamicProperty {
+    private let getter: () -> Value
+    private let setter: (Value) -> Void
+
+    public init(
+        get: @escaping () -> Value,
+        set: @escaping (Value) -> Void
+    ) {
+        getter = get
+        setter = set
+    }
+
+    public init(projectedValue: _OpenBinding<Value>) {
+        self = projectedValue
+    }
+
+    public var wrappedValue: Value {
+        get { getter() }
+        nonmutating set { setter(newValue) }
+    }
+
+    public var projectedValue: _OpenBinding<Value> { self }
+
+    public subscript<Subject>(
+        dynamicMember keyPath: WritableKeyPath<Value, Subject>
+    ) -> _OpenBinding<Subject> {
+        _OpenBinding<Subject>(
+            get: { getter()[keyPath: keyPath] },
+            set: { newValue in
+                var root = getter()
+                root[keyPath: keyPath] = newValue
+                setter(root)
+            }
+        )
+    }
+
+    public static func constant(_ value: Value) -> _OpenBinding<Value> {
+        _OpenBinding(get: { value }, set: { _ in })
+    }
+}
+
+public typealias Binding<Value> = _OpenBinding<Value>
+
+private protocol _OpenAnyStateStorage: AnyObject {
+    func detachFromGraph()
+}
+
+private final class _OpenStateStorage<Value>: _OpenAnyStateStorage {
+    var value: Value
+    var invalidateMountedGraph: (() -> Void)?
+
+    init(value: Value) {
+        self.value = value
+    }
+
+    func set(_ newValue: Value) {
+        // The callback enters MainActor.assumeIsolated before any mutation.
+        // Local, not-yet-mounted State intentionally has no callback and may
+        // retain system SwiftUI's nonisolated value-container behavior.
+        invalidateMountedGraph?()
+        value = newValue
+    }
+
+    func detachFromGraph() {
+        invalidateMountedGraph = nil
+    }
+}
+
+private final class _OpenStateSeed<Value> {
+    let initialValue: Value
+    let localStorage: _OpenStateStorage<Value>
+
+    init(_ initialValue: Value) {
+        self.initialValue = initialValue
+        localStorage = _OpenStateStorage(value: initialValue)
+    }
+}
+
+private struct _OpenPropertyPathComponent: Hashable {
+    let inheritanceDepth: Int
+    let fieldIndex: Int
+    let label: String?
+}
+
+private protocol _OpenGraphProperty {
+    @MainActor
+    mutating func prepare(
+        in graph: _OpenGraphHost,
+        propertyPath: [_OpenPropertyPathComponent]
+    )
+}
+
+@propertyWrapper
+public struct _OpenState<Value>: _OpenDynamicProperty, _OpenGraphProperty {
+    private let seed: _OpenStateSeed<Value>
+    // Graph attachment belongs to this prepared State value, not its shared
+    // pre-mount seed. Two structural copies of one View value therefore bind
+    // to two state locations even though their initial wrappers share a seed.
+    private var graphStorage: _OpenStateStorage<Value>?
+
+    public init(wrappedValue: Value) {
+        seed = _OpenStateSeed(wrappedValue)
+        graphStorage = nil
+    }
+
+    public init(initialValue: Value) {
+        seed = _OpenStateSeed(initialValue)
+        graphStorage = nil
+    }
+
+    public var wrappedValue: Value {
+        get { storage.value }
+        nonmutating set { storage.set(newValue) }
+    }
+
+    public var projectedValue: _OpenBinding<Value> {
+        let storage = storage
+        return _OpenBinding(
+            get: { storage.value },
+            set: { storage.set($0) }
+        )
+    }
+
+    private var storage: _OpenStateStorage<Value> {
+        graphStorage ?? seed.localStorage
+    }
+
+    @MainActor
+    fileprivate mutating func prepare(
+        in graph: _OpenGraphHost,
+        propertyPath: [_OpenPropertyPathComponent]
+    ) {
+        graphStorage = graph.stateStorage(
+            propertyPath: propertyPath,
+            initialValue: seed.initialValue
+        )
+    }
+}
+
+public typealias State<Value> = _OpenState<Value>
+
+/// A graph-backed focus value. The projected binding is deliberately a
+/// distinct type from ordinary Binding so `.focused` can install two-way
+/// responder synchronization while normal value bindings remain unchanged.
+@propertyWrapper
+public struct _OpenFocusState<Value>: _OpenDynamicProperty, _OpenGraphProperty {
+    @dynamicMemberLookup
+    public struct Binding {
+        private let getter: () -> Value
+        private let setter: (Value) -> Void
+
+        fileprivate init(get: @escaping () -> Value, set: @escaping (Value) -> Void) {
+            getter = get
+            setter = set
+        }
+
+        public var wrappedValue: Value {
+            get { getter() }
+            nonmutating set { setter(newValue) }
+        }
+
+        public subscript<Subject>(
+            dynamicMember keyPath: WritableKeyPath<Value, Subject>
+        ) -> _OpenBinding<Subject> {
+            _OpenBinding(
+                get: { getter()[keyPath: keyPath] },
+                set: { value in
+                    var root = getter()
+                    root[keyPath: keyPath] = value
+                    setter(root)
+                }
+            )
+        }
+    }
+
+    private let seed: _OpenStateSeed<Value>
+    private var graphStorage: _OpenStateStorage<Value>?
+
+    public init() where Value == Bool {
+        seed = _OpenStateSeed(false)
+        graphStorage = nil
+    }
+
+    public init() where Value: ExpressibleByNilLiteral {
+        seed = _OpenStateSeed(nil)
+        graphStorage = nil
+    }
+
+    public init(wrappedValue: Value) {
+        seed = _OpenStateSeed(wrappedValue)
+        graphStorage = nil
+    }
+
+    public var wrappedValue: Value {
+        get { storage.value }
+        nonmutating set { storage.set(newValue) }
+    }
+
+    public var projectedValue: Binding {
+        let storage = storage
+        return Binding(get: { storage.value }, set: { storage.set($0) })
+    }
+
+    private var storage: _OpenStateStorage<Value> {
+        graphStorage ?? seed.localStorage
+    }
+
+    @MainActor
+    fileprivate mutating func prepare(
+        in graph: _OpenGraphHost,
+        propertyPath: [_OpenPropertyPathComponent]
+    ) {
+        graphStorage = graph.stateStorage(
+            propertyPath: propertyPath,
+            initialValue: seed.initialValue
+        )
+    }
+}
+
+public typealias FocusState<Value> = _OpenFocusState<Value>
+
+/// Namespace identity is reference-seeded so copies of a View retain the
+/// same ID until the view value itself is replaced. ObjectIdentifier gives us
+/// Foundation-free uniqueness on every supported host and guest runtime.
+@propertyWrapper
+public struct _OpenNamespace: _OpenDynamicProperty {
+    public struct ID: Hashable, @unchecked Sendable {
+        let rawValue: ObjectIdentifier
+    }
+
+    private final class Seed: @unchecked Sendable {}
+    private let seed = Seed()
+
+    public init() {}
+
+    public var wrappedValue: ID { ID(rawValue: ObjectIdentifier(seed)) }
+    public var projectedValue: ID { wrappedValue }
+}
+
+public typealias Namespace = _OpenNamespace
+
+@propertyWrapper
+public struct _OpenObservedObject<ObjectType>: _OpenDynamicProperty, _OpenGraphProperty
+    where ObjectType: Combine.ObservableObject
+{
+    @dynamicMemberLookup
+    public struct Wrapper {
+        private let object: ObjectType
+
+        fileprivate init(_ object: ObjectType) {
+            self.object = object
+        }
+
+        public subscript<Subject>(
+            dynamicMember keyPath: ReferenceWritableKeyPath<ObjectType, Subject>
+        ) -> _OpenBinding<Subject> {
+            _OpenBinding(
+                get: { object[keyPath: keyPath] },
+                set: { object[keyPath: keyPath] = $0 }
+            )
+        }
+    }
+
+    private var object: ObjectType
+
+    public init(wrappedValue: ObjectType) {
+        object = wrappedValue
+    }
+
+    public init(initialValue: ObjectType) {
+        object = initialValue
+    }
+
+    public var wrappedValue: ObjectType {
+        get { object }
+        set { object = newValue }
+    }
+
+    public var projectedValue: Wrapper { Wrapper(object) }
+
+    @MainActor
+    fileprivate mutating func prepare(
+        in graph: _OpenGraphHost,
+        propertyPath: [_OpenPropertyPathComponent]
+    ) {
+        _ = propertyPath
+        graph.observe(object)
+    }
+}
+
+public typealias ObservedObject<ObjectType> = _OpenObservedObject<ObjectType>
+    where ObjectType: Combine.ObservableObject
+
+/// A graph-owned observable object. Its initializer is evaluated once for the
+/// source value, while the first object mounted at a stable structural and
+/// property path becomes authoritative until that location leaves the graph.
+@propertyWrapper
+public struct _OpenStateObject<ObjectType>: _OpenDynamicProperty, _OpenGraphProperty
+    where ObjectType: Combine.ObservableObject
+{
+    private let seed: _OpenStateSeed<ObjectType>
+    private var graphStorage: _OpenStateStorage<ObjectType>?
+
+    public init(wrappedValue thunk: @autoclosure @escaping () -> ObjectType) {
+        seed = _OpenStateSeed(thunk())
+        graphStorage = nil
+    }
+
+    public init(initialValue thunk: @autoclosure @escaping () -> ObjectType) {
+        seed = _OpenStateSeed(thunk())
+        graphStorage = nil
+    }
+
+    public var wrappedValue: ObjectType {
+        graphStorage?.value ?? seed.localStorage.value
+    }
+
+    public var projectedValue: _OpenObservedObject<ObjectType>.Wrapper {
+        _OpenObservedObject<ObjectType>.Wrapper(wrappedValue)
+    }
+
+    @MainActor
+    fileprivate mutating func prepare(
+        in graph: _OpenGraphHost,
+        propertyPath: [_OpenPropertyPathComponent]
+    ) {
+        let storage = graph.stateStorage(
+            propertyPath: propertyPath,
+            initialValue: seed.initialValue
+        )
+        graphStorage = storage
+        graph.observe(storage.value)
+    }
+}
+
+public typealias StateObject<ObjectType> = _OpenStateObject<ObjectType>
+    where ObjectType: Combine.ObservableObject
+
+/// Bindable reference projection for Observation-backed application models.
+/// Observation invalidation is a separate runtime boundary; this wrapper owns
+/// the source-compatible writable bindings without copying the model.
+@dynamicMemberLookup
+@propertyWrapper
+public struct _OpenBindable<ObjectType: AnyObject>: _OpenDynamicProperty {
+    @dynamicMemberLookup
+    public struct Wrapper {
+        private let object: ObjectType
+
+        fileprivate init(_ object: ObjectType) {
+            self.object = object
+        }
+
+        public subscript<Subject>(
+            dynamicMember keyPath: ReferenceWritableKeyPath<ObjectType, Subject>
+        ) -> _OpenBinding<Subject> {
+            _OpenBinding(
+                get: { object[keyPath: keyPath] },
+                set: { object[keyPath: keyPath] = $0 }
+            )
+        }
+    }
+
+    private let object: ObjectType
+
+    public init(wrappedValue: ObjectType) {
+        object = wrappedValue
+    }
+
+    public var wrappedValue: ObjectType { object }
+    public var projectedValue: Wrapper { Wrapper(object) }
+
+    public subscript<Subject>(
+        dynamicMember keyPath: ReferenceWritableKeyPath<ObjectType, Subject>
+    ) -> Subject {
+        get { object[keyPath: keyPath] }
+        nonmutating set { object[keyPath: keyPath] = newValue }
+    }
+}
+
+public typealias Bindable<ObjectType> = _OpenBindable<ObjectType>
+    where ObjectType: AnyObject
+
+/// Graph-stable storage selected by an application preference key. The value
+/// participates in SwiftUI invalidation immediately; the platform Foundation
+/// facade can later bind the same key to durable UserDefaults without changing
+/// the source-facing wrapper or graph identity.
+@propertyWrapper
+public struct _OpenAppStorage<Value>: _OpenDynamicProperty, _OpenGraphProperty {
+    private let seed: _OpenStateSeed<Value>
+    private var graphStorage: _OpenStateStorage<Value>?
+    public let key: String
+
+    public init(wrappedValue: Value, _ key: String) {
+        seed = _OpenStateSeed(wrappedValue)
+        graphStorage = nil
+        self.key = key
+    }
+
+    public var wrappedValue: Value {
+        get { storage.value }
+        nonmutating set { storage.set(newValue) }
+    }
+
+    public var projectedValue: Binding<Value> {
+        let storage = storage
+        return Binding(
+            get: { storage.value },
+            set: { storage.set($0) }
+        )
+    }
+
+    private var storage: _OpenStateStorage<Value> {
+        graphStorage ?? seed.localStorage
+    }
+
+    @MainActor
+    fileprivate mutating func prepare(
+        in graph: _OpenGraphHost,
+        propertyPath: [_OpenPropertyPathComponent]
+    ) {
+        _ = propertyPath
+        graphStorage = graph.appStorageStorage(
+            key: key,
+            initialValue: seed.initialValue
+        )
+    }
+}
+
+public typealias AppStorage<Value> = _OpenAppStorage<Value>
+
+public protocol _OpenEnvironmentKey {
+    associatedtype Value
+    static var defaultValue: Value { get }
+}
+
+public typealias EnvironmentKey = _OpenEnvironmentKey
+
+public struct _OpenDismissAction: Sendable {
+    private let action: @MainActor @Sendable () -> Void
+
+    public init(_ action: @escaping @MainActor @Sendable () -> Void = {}) {
+        self.action = action
+    }
+
+    @MainActor
+    public func callAsFunction() {
+        action()
+    }
+}
+
+public typealias DismissAction = _OpenDismissAction
+
+public struct _OpenOpenURLAction: Sendable {
+    public enum Result: Sendable {
+        case handled
+        case discarded
+        case systemAction
+    }
+
+    private let handler: @MainActor @Sendable (URL) -> Result
+
+    public init(handler: @escaping @MainActor @Sendable (URL) -> Result) {
+        self.handler = handler
+    }
+
+    @MainActor
+    @discardableResult
+    public func callAsFunction(_ url: URL) -> Result {
+        handler(url)
+    }
+}
+
+public typealias OpenURLAction = _OpenOpenURLAction
+
+private enum _OpenColorSchemeEnvironmentKey: _OpenEnvironmentKey {
+    static let defaultValue = ColorScheme.light
+}
+
+private enum _OpenEnabledEnvironmentKey: _OpenEnvironmentKey {
+    static let defaultValue = true
+}
+
+private enum _OpenReduceMotionEnvironmentKey: _OpenEnvironmentKey {
+    static let defaultValue = false
+}
+
+private enum _OpenDisplayScaleEnvironmentKey: _OpenEnvironmentKey {
+    static let defaultValue: CGFloat = 1
+}
+
+private enum _OpenDismissEnvironmentKey: _OpenEnvironmentKey {
+    static let defaultValue = DismissAction()
+}
+
+private enum _OpenOpenURLEnvironmentKey: _OpenEnvironmentKey {
+    static let defaultValue = OpenURLAction(handler: { _ in .systemAction })
+}
+
+/// Type-erased environment storage with SwiftUI's public custom-key contract.
+/// Copies form nested value scopes; reference-typed environment objects retain
+/// their identity in a separate type-indexed table.
+public struct _OpenEnvironmentValues {
+    private var keyedValues: [ObjectIdentifier: Any] = [:]
+    private var typedObjects: [ObjectIdentifier: AnyObject] = [:]
+
+    public init() {}
+
+    public subscript<Key: EnvironmentKey>(_ key: Key.Type) -> Key.Value {
+        get {
+            keyedValues[ObjectIdentifier(key)] as? Key.Value ?? key.defaultValue
+        }
+        set {
+            keyedValues[ObjectIdentifier(key)] = newValue
+        }
+    }
+
+    public var colorScheme: ColorScheme {
+        get { self[_OpenColorSchemeEnvironmentKey.self] }
+        set { self[_OpenColorSchemeEnvironmentKey.self] = newValue }
+    }
+
+    public var isEnabled: Bool {
+        get { self[_OpenEnabledEnvironmentKey.self] }
+        set { self[_OpenEnabledEnvironmentKey.self] = newValue }
+    }
+
+    public var accessibilityReduceMotion: Bool {
+        get { self[_OpenReduceMotionEnvironmentKey.self] }
+        set { self[_OpenReduceMotionEnvironmentKey.self] = newValue }
+    }
+
+    public var displayScale: CGFloat {
+        get { self[_OpenDisplayScaleEnvironmentKey.self] }
+        set { self[_OpenDisplayScaleEnvironmentKey.self] = newValue }
+    }
+
+    public var dismiss: DismissAction {
+        get { self[_OpenDismissEnvironmentKey.self] }
+        set { self[_OpenDismissEnvironmentKey.self] = newValue }
+    }
+
+    public var openURL: OpenURLAction {
+        get { self[_OpenOpenURLEnvironmentKey.self] }
+        set { self[_OpenOpenURLEnvironmentKey.self] = newValue }
+    }
+
+    fileprivate mutating func setObject<Object: AnyObject>(_ object: Object) {
+        typedObjects[ObjectIdentifier(Object.self)] = object
+    }
+
+    fileprivate func object<Object: AnyObject>(ofType type: Object.Type) -> Object? {
+        typedObjects[ObjectIdentifier(type)] as? Object
+    }
+}
+
+public typealias EnvironmentValues = _OpenEnvironmentValues
+
+private enum _OpenEnvironmentResolution<Value> {
+    case unresolved
+    case resolved(Value)
+}
+
+@propertyWrapper
+public struct _OpenEnvironment<Value>: _OpenDynamicProperty, _OpenGraphProperty {
+    private enum Source {
+        case keyPath(KeyPath<EnvironmentValues, Value>)
+        case object((EnvironmentValues) -> Value?)
+    }
+
+    private let source: Source
+    private var resolution: _OpenEnvironmentResolution<Value>
+
+    public init(_ keyPath: KeyPath<EnvironmentValues, Value>) {
+        source = .keyPath(keyPath)
+        resolution = .resolved(EnvironmentValues()[keyPath: keyPath])
+    }
+
+    public init(_ objectType: Value.Type) where Value: AnyObject {
+        source = .object { values in
+            values.object(ofType: objectType)
+        }
+        resolution = .unresolved
+    }
+
+    public var wrappedValue: Value {
+        switch resolution {
+        case .resolved(let value): return value
+        case .unresolved:
+            preconditionFailure(
+                "No observable object of type \(Value.self) was found in the SwiftUI environment"
+            )
+        }
+    }
+
+    @MainActor
+    fileprivate mutating func prepare(
+        in graph: _OpenGraphHost,
+        propertyPath: [_OpenPropertyPathComponent]
+    ) {
+        _ = propertyPath
+        switch source {
+        case .keyPath(let keyPath):
+            resolution = .resolved(graph.environmentValues[keyPath: keyPath])
+        case .object(let resolve):
+            guard let object = resolve(graph.environmentValues) else {
+                preconditionFailure(
+                    "No observable object of type \(Value.self) was found in the SwiftUI environment"
+                )
+            }
+            resolution = .resolved(object)
+        }
+    }
+}
+
+// SwiftUI's wrapper is conditionally Sendable even though resolution is
+// performed on the graph's main actor.  The unchecked spelling is required
+// because the object-source closure itself is actor-confined rather than a
+// @Sendable closure; Value is still required to be safely transferable.
+extension _OpenEnvironment: @unchecked Sendable where Value: Sendable {}
+
+public typealias Environment<Value> = _OpenEnvironment<Value>
+
+@MainActor
+private final class _OpenObservationEntry {
+    let cancellation: AnyCancellable
+
+    init(_ cancellation: AnyCancellable) {
+        self.cancellation = cancellation
+    }
+}
+
+// Structural components are typed Hashable values rather than interpolated
+// strings. This makes tuple positions, conditional branches, positional
+// arrays, and explicit ForEach IDs collision-safe and independently scoped.
+enum _OpenGraphStructuralScope: Hashable {
+    case tupleElement(Int)
+    case optionalSome
+    case conditionalTrue
+    case conditionalFalse
+    case arrayElement(Int)
+    case groupContent
+    case environmentContent
+    case environmentObjectContent
+    case disabledContent
+    case colorSchemeContent
+    case hStackContent
+    case vStackContent
+    case zStackContent
+    case buttonLabel
+    case menuContent
+    case scrollContent
+    case tabViewContent
+    case formContent
+    case listContent
+    case sectionHeader
+    case sectionFooter
+    case sectionContent
+    case toggleLabel
+    case pickerLabel
+    case pickerContent
+    case navigationLinkLabel
+    case forEachContent
+    case forEachElement(AnyHashable)
+    case navigationContent
+    case navigationPathElement(index: Int, value: AnyHashable)
+    case navigationSplitSidebar
+    case navigationSplitDetail
+    case modifiedContent
+    case background
+    case overlay
+    case toolbar
+    case onAppear
+    case onDisappear
+    case presentation
+    case onChange
+    case animation
+    case onReceive
+    case task
+}
+
+private enum _OpenGraphPathComponent: Hashable {
+    case viewType(ObjectIdentifier)
+    case structural(_OpenGraphStructuralScope)
+}
+
+private struct _OpenStateKey: Hashable {
+    let viewPath: [_OpenGraphPathComponent]
+    let propertyPath: [_OpenPropertyPathComponent]
+    let valueType: ObjectIdentifier
+}
+
+private struct _OpenAppStorageKey: Hashable {
+    let key: String
+    let valueType: ObjectIdentifier
+}
+
+// Swift's public Mirror API can be replaced by CustomReflectable and always
+// returns child values as copies. DynamicProperty preparation instead needs
+// the real stored-field list plus value-semantic write-back. These runtime
+// entry points are the same cross-platform primitives used by the standard
+// library's internal Mirror implementation and Reflection SPI. Calling the
+// child accessor directly deliberately bypasses a user-supplied customMirror;
+// runtime metadata remains the authority for field count, order, type, and
+// offset. Every field is validated before writing through an offset.
+private typealias _OpenReflectionNameFree = @convention(c) (
+    UnsafePointer<CChar>?
+) -> Void
+
+private struct _OpenFieldReflectionMetadata {
+    var name: UnsafePointer<CChar>?
+    var freeFunc: _OpenReflectionNameFree?
+    var isStrong: Bool
+    var isVar: Bool
+
+    init() {
+        name = nil
+        freeFunc = nil
+        isStrong = false
+        isVar = false
+    }
+}
+
+@_silgen_name("swift_reflectionMirror_recursiveCount")
+private func _openRecursiveChildCount(_ type: Any.Type) -> Int
+
+@_silgen_name("swift_reflectionMirror_recursiveChildOffset")
+private func _openRecursiveChildOffset(_ type: Any.Type, index: Int) -> Int
+
+@_silgen_name("swift_reflectionMirror_recursiveChildMetadata")
+private func _openRecursiveChildMetadata(
+    _ type: Any.Type,
+    index: Int,
+    fieldMetadata: UnsafeMutablePointer<_OpenFieldReflectionMetadata>
+) -> Any.Type
+
+@_silgen_name("swift_getMetadataKind")
+private func _openMetadataKind(_ type: Any.Type) -> UInt
+
+@_silgen_name("swift_reflectionMirror_count")
+private func _openDirectChildCount<Container>(
+    _ value: Container,
+    type: Any.Type
+) -> Int
+
+@_silgen_name("swift_reflectionMirror_subscript")
+private func _openDirectChild<Container>(
+    of value: Container,
+    type: Any.Type,
+    index: Int,
+    outName: UnsafeMutablePointer<UnsafePointer<CChar>?>,
+    outFreeFunc: UnsafeMutablePointer<_OpenReflectionNameFree?>
+) -> Any
+
+private enum _OpenMetadataKind: UInt {
+    case `class` = 0
+    case `struct` = 0x200
+    case `enum` = 0x201
+    case optional = 0x202
+    case foreignClass = 0x203
+    case tuple = 0x301
+    case existential = 0x303
+}
+
+private func _openRuntimeChild<Container>(
+    of value: Container,
+    type: Any.Type,
+    index: Int
+) -> (label: String?, value: Any) {
+    var name: UnsafePointer<CChar>?
+    var freeName: _OpenReflectionNameFree?
+    let child = _openDirectChild(
+        of: value,
+        type: type,
+        index: index,
+        outName: &name,
+        outFreeFunc: &freeName
+    )
+    let label = name.map { String(cString: $0) }
+    freeName?(name)
+    return (label, child)
+}
+
+private struct _OpenWritableReflectedField {
+    let value: Any
+    let declaredType: Any.Type
+    let byteOffset: Int
+    let isStrong: Bool
+    let propertyPathComponent: _OpenPropertyPathComponent
+}
+
+/// Opaque, typed identity for a stable location in one host's rendered graph.
+/// The path components stay private so callers cannot manufacture identities
+/// from lossy strings or couple themselves to the graph representation.
+struct _OpenGraphIdentity: Hashable {
+    private let path: [_OpenGraphPathComponent]
+
+    fileprivate init(path: [_OpenGraphPathComponent]) {
+        self.path = path
+    }
+}
+
+private struct _OpenRepresentedControllerKey: Hashable {
+    let viewPath: [_OpenGraphPathComponent]
+    let controllerType: ObjectIdentifier
+}
+
+private struct _OpenRepresentedViewKey: Hashable {
+    let viewPath: [_OpenGraphPathComponent]
+    let viewType: ObjectIdentifier
+}
+
+@MainActor
+private protocol _OpenAnyRepresentedControllerEntry: AnyObject {
+    var controller: UIViewController { get }
+    func dismantle()
+}
+
+@MainActor
+private final class _OpenRepresentedControllerEntry<
+    Controller: UIViewController,
+    Coordinator
+>: _OpenAnyRepresentedControllerEntry {
+    let typedController: Controller
+    let coordinator: Coordinator
+    private let dismantleAction: @MainActor (Controller, Coordinator) -> Void
+
+    init(
+        controller: Controller,
+        coordinator: Coordinator,
+        dismantle: @escaping @MainActor (Controller, Coordinator) -> Void
+    ) {
+        typedController = controller
+        self.coordinator = coordinator
+        dismantleAction = dismantle
+    }
+
+    var controller: UIViewController { typedController }
+
+    func dismantle() {
+        dismantleAction(typedController, coordinator)
+    }
+}
+
+@MainActor
+private protocol _OpenAnyRepresentedViewEntry: AnyObject {
+    var view: UIView { get }
+    func dismantle()
+}
+
+@MainActor
+private final class _OpenRepresentedViewEntry<ViewType: UIView, Coordinator>:
+    _OpenAnyRepresentedViewEntry
+{
+    let typedView: ViewType
+    let coordinator: Coordinator
+    private let dismantleAction: @MainActor (ViewType, Coordinator) -> Void
+
+    init(
+        view: ViewType,
+        coordinator: Coordinator,
+        dismantle: @escaping @MainActor (ViewType, Coordinator) -> Void
+    ) {
+        typedView = view
+        self.coordinator = coordinator
+        dismantleAction = dismantle
+    }
+
+    var view: UIView { typedView }
+
+    func dismantle() {
+        dismantleAction(typedView, coordinator)
+    }
+}
+
+private enum _OpenEffectKind: Hashable {
+    case change
+    case animation
+    case subscription
+    case task
+}
+
+private struct _OpenEffectKey: Hashable {
+    let identity: _OpenGraphIdentity
+    let kind: _OpenEffectKind
+    let valueType: ObjectIdentifier
+}
+
+private protocol _OpenAnyChangeStorage: AnyObject {}
+
+private final class _OpenChangeStorage<Value>: _OpenAnyChangeStorage {
+    var value: Value
+
+    init(_ value: Value) {
+        self.value = value
+    }
+}
+
+private final class _OpenSubscriptionEntry {
+    let cancellation: AnyCancellable
+
+    init(_ cancellation: AnyCancellable) {
+        self.cancellation = cancellation
+    }
+}
+
+@MainActor
+private protocol _OpenAnyTaskEntry: AnyObject {
+    func cancel()
+}
+
+@MainActor
+private final class _OpenTaskEntry<ID: Equatable>: _OpenAnyTaskEntry {
+    let id: ID
+    private let task: Task<Void, Never>
+
+    init(
+        id: ID,
+        priority: TaskPriority?,
+        action: @escaping @MainActor () async -> Void
+    ) {
+        self.id = id
+        task = Task(priority: priority) { @MainActor in
+            await action()
+        }
+    }
+
+    func cancel() {
+        task.cancel()
+    }
+}
+
+/// Identity, rather than a wrapping integer, owns one deferred graph pass.
+/// A direct evaluation retires the current token; a later publication creates
+/// a distinct token which an already-queued callback can never consume.
+private final class _OpenGraphInvalidationToken {}
+
+/// Retained by one hosting controller. It owns dynamic-property locations and
+/// subscriptions, but never owns the controller back.
+@MainActor
+final class _OpenGraphHost {
+    private var path: [_OpenGraphPathComponent] = []
+    fileprivate var environmentValues = EnvironmentValues()
+    private var state: [_OpenStateKey: any _OpenAnyStateStorage] = [:]
+    private var appStorage: [_OpenAppStorageKey: any _OpenAnyStateStorage] = [:]
+    private var observations: [ObjectIdentifier: _OpenObservationEntry] = [:]
+    private var representedControllers: [
+        _OpenRepresentedControllerKey: any _OpenAnyRepresentedControllerEntry
+    ] = [:]
+    private var representedViews: [_OpenRepresentedViewKey: any _OpenAnyRepresentedViewEntry] = [:]
+    private var changeValues: [_OpenEffectKey: any _OpenAnyChangeStorage] = [:]
+    private var subscriptions: [_OpenEffectKey: _OpenSubscriptionEntry] = [:]
+    private var tasks: [_OpenEffectKey: any _OpenAnyTaskEntry] = [:]
+    private var activeStateKeys: Set<_OpenStateKey> = []
+    private var activeObservationKeys: Set<ObjectIdentifier> = []
+    private var activeRepresentedControllerKeys: Set<_OpenRepresentedControllerKey> = []
+    private var activeRepresentedViewKeys: Set<_OpenRepresentedViewKey> = []
+    private var activeChangeKeys: Set<_OpenEffectKey> = []
+    private var activeSubscriptionKeys: Set<_OpenEffectKey> = []
+    private var activeTaskKeys: Set<_OpenEffectKey> = []
+    private var postEvaluationActions: [@MainActor () -> Void] = []
+    private var isEvaluating = false
+    private var pendingInvalidationToken: _OpenGraphInvalidationToken?
+    private var pendingAnimation: Animation?
+    private(set) var evaluationAnimation: Animation?
+    // Observation's tracking callback is deliberately one-shot and has no
+    // cancellation handle. A root replacement therefore advances a generation
+    // so a later mutation of an object read only by the retired tree cannot
+    // invalidate the current host.
+    private var observationTrackingGeneration: UInt64 = 0
+
+    var invalidate: (@MainActor (Animation?) -> Void)?
+    private(set) var renderCount = 0
+    private(set) var invalidationCount = 0
+
+    isolated deinit {
+        for entry in representedControllers.values {
+            entry.dismantle()
+        }
+        for entry in representedViews.values {
+            entry.dismantle()
+        }
+        for entry in tasks.values {
+            entry.cancel()
+        }
+    }
+
+    var stateCount: Int { state.count }
+    var observationCount: Int { observations.count }
+    var representedControllerCount: Int { representedControllers.count }
+    var representedViewCount: Int { representedViews.count }
+    var changeCount: Int { changeValues.count }
+    var subscriptionCount: Int { subscriptions.count }
+    var taskCount: Int { tasks.count }
+
+    func evaluate<Content: _OpenView>(_ content: Content) -> _OpenViewNode {
+        precondition(!isEvaluating, "recursive SwiftUI graph evaluation")
+        isEvaluating = true
+        // A direct root replacement supersedes queued work from the previous
+        // value. Retire that work by identity: if this evaluation publishes
+        // again, the new graph receives a distinct next-turn token which the
+        // already-enqueued callback cannot steal.
+        pendingInvalidationToken = nil
+        pendingAnimation = nil
+        activeStateKeys.removeAll(keepingCapacity: true)
+        activeObservationKeys.removeAll(keepingCapacity: true)
+        activeRepresentedControllerKeys.removeAll(keepingCapacity: true)
+        activeRepresentedViewKeys.removeAll(keepingCapacity: true)
+        activeChangeKeys.removeAll(keepingCapacity: true)
+        activeSubscriptionKeys.removeAll(keepingCapacity: true)
+        activeTaskKeys.removeAll(keepingCapacity: true)
+        postEvaluationActions.removeAll(keepingCapacity: true)
+        path.removeAll(keepingCapacity: true)
+        environmentValues = EnvironmentValues()
+        evaluationAnimation = nil
+        renderCount += 1
+        observationTrackingGeneration &+= 1
+        let trackingGeneration = observationTrackingGeneration
+
+        let node: _OpenViewNode
+        if #available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *) {
+            node = withObservationTracking {
+                _OpenGraphContext.withHost(self) {
+                    content._makeOpenUIKitNode()
+                }
+            } onChange: { [weak self] in
+                // View-body reads belong to the mounted UI graph. Match the
+                // existing ObservableObject boundary: mutation must arrive on
+                // the UI actor instead of racing retained UIKit state.
+                MainActor.assumeIsolated {
+                    guard let self,
+                          self.observationTrackingGeneration == trackingGeneration
+                    else { return }
+                    self.scheduleInvalidation(
+                        animation: _OpenAnimationContext.current
+                    )
+                }
+            }
+        } else {
+            node = _OpenGraphContext.withHost(self) {
+                content._makeOpenUIKitNode()
+            }
+        }
+
+        precondition(path.isEmpty, "unbalanced SwiftUI structural graph scopes")
+
+        let staleStateKeys = state.keys.filter { !activeStateKeys.contains($0) }
+        for key in staleStateKeys {
+            state.removeValue(forKey: key)?.detachFromGraph()
+        }
+        let staleObservationKeys = observations.keys.filter {
+            !activeObservationKeys.contains($0)
+        }
+        for key in staleObservationKeys {
+            observations.removeValue(forKey: key)?.cancellation.cancel()
+        }
+        let staleControllerKeys = representedControllers.keys.filter {
+            !activeRepresentedControllerKeys.contains($0)
+        }
+        for key in staleControllerKeys {
+            let entry = representedControllers.removeValue(forKey: key)
+            entry?.dismantle()
+        }
+        let staleViewKeys = representedViews.keys.filter {
+            !activeRepresentedViewKeys.contains($0)
+        }
+        for key in staleViewKeys {
+            let entry = representedViews.removeValue(forKey: key)
+            entry?.dismantle()
+        }
+        let staleChangeKeys = changeValues.keys.filter {
+            !activeChangeKeys.contains($0)
+        }
+        for key in staleChangeKeys {
+            changeValues.removeValue(forKey: key)
+        }
+        let staleSubscriptionKeys = subscriptions.keys.filter {
+            !activeSubscriptionKeys.contains($0)
+        }
+        for key in staleSubscriptionKeys {
+            subscriptions.removeValue(forKey: key)?.cancellation.cancel()
+        }
+        let staleTaskKeys = tasks.keys.filter { !activeTaskKeys.contains($0) }
+        for key in staleTaskKeys {
+            tasks.removeValue(forKey: key)?.cancel()
+        }
+        isEvaluating = false
+        let actions = postEvaluationActions
+        postEvaluationActions.removeAll(keepingCapacity: true)
+        for action in actions { action() }
+        return node
+    }
+
+    func withView<View, Result>(
+        _ view: View,
+        makeBody: (View) -> Result
+    ) -> Result {
+        let typeID = ObjectIdentifier(View.self)
+        return withPath(.viewType(typeID)) {
+            var preparedView = view
+            var activeDynamicObjects: Set<ObjectIdentifier> = []
+            prepareFields(
+                of: &preparedView,
+                propertyPath: [],
+                activeDynamicObjects: &activeDynamicObjects
+            )
+            return makeBody(preparedView)
+        }
+    }
+
+    func withStructuralScope<Result>(
+        _ scope: _OpenGraphStructuralScope,
+        operation: () -> Result
+    ) -> Result {
+        withPath(.structural(scope), operation: operation)
+    }
+
+    func withEnvironment<Value, Result>(
+        _ keyPath: WritableKeyPath<EnvironmentValues, Value>,
+        value: Value,
+        operation: () -> Result
+    ) -> Result {
+        let previous = environmentValues
+        environmentValues[keyPath: keyPath] = value
+        defer { environmentValues = previous }
+        return operation()
+    }
+
+    func withEnvironmentObject<Object: AnyObject, Result>(
+        _ object: Object,
+        operation: () -> Result
+    ) -> Result {
+        let previous = environmentValues
+        environmentValues.setObject(object)
+        defer { environmentValues = previous }
+        return operation()
+    }
+
+    func currentIdentity() -> _OpenGraphIdentity {
+        _OpenGraphIdentity(path: path)
+    }
+
+    private func withPath<Result>(
+        _ component: _OpenGraphPathComponent,
+        operation: () -> Result
+    ) -> Result {
+        path.append(component)
+        defer { path.removeLast() }
+        return operation()
+    }
+
+    private func prepareFields<Container>(
+        of value: inout Container,
+        propertyPath: [_OpenPropertyPathComponent],
+        activeDynamicObjects: inout Set<ObjectIdentifier>
+    ) {
+        let fields = writableReflectedFields(of: value)
+        guard !fields.isEmpty else { return }
+
+        let rootAddress: UnsafeMutableRawPointer
+        switch _OpenMetadataKind(rawValue: _openMetadataKind(Container.self)) {
+        case .struct, .tuple:
+            return withUnsafeMutablePointer(to: &value) { pointer in
+                let rawPointer = UnsafeMutableRawPointer(pointer)
+                for field in fields {
+                    prepareField(
+                        field,
+                        rootAddress: rawPointer,
+                        containerSize: MemoryLayout<Container>.size,
+                        propertyPath: propertyPath,
+                        activeDynamicObjects: &activeDynamicObjects
+                    )
+                }
+            }
+        case .class, .foreignClass:
+            // Recursive class-field offsets are relative to the native Swift
+            // heap object, including its header. The runtime reports those
+            // same offsets on Darwin and Linux.
+            rootAddress = Unmanaged.passUnretained(value as AnyObject).toOpaque()
+        default:
+            fatalError(
+                "SwiftUI DynamicProperty reflection supports stored fields "
+                    + "in structs, tuples, and classes; got \(Container.self)"
+            )
+        }
+
+        for field in fields {
+            prepareField(
+                field,
+                rootAddress: rootAddress,
+                containerSize: nil,
+                propertyPath: propertyPath,
+                activeDynamicObjects: &activeDynamicObjects
+            )
+        }
+    }
+
+    private func writableReflectedFields<Container>(
+        of value: Container
+    ) -> [_OpenWritableReflectedField] {
+        let runtimeCount = _openRecursiveChildCount(Container.self)
+        guard runtimeCount >= 0 else {
+            fatalError(
+                "SwiftUI reflection returned an invalid field count for "
+                    + "\(Container.self)"
+            )
+        }
+
+        let reflectedChildren: [(
+            inheritanceDepth: Int,
+            fieldIndex: Int,
+            label: String?,
+            value: Any
+        )]
+
+        switch _OpenMetadataKind(rawValue: _openMetadataKind(Container.self)) {
+        case .struct, .tuple:
+            let directCount = _openDirectChildCount(
+                value,
+                type: Container.self
+            )
+            guard directCount == runtimeCount else {
+                fatalError(
+                    "SwiftUI reflection metadata mismatch for \(Container.self): "
+                        + "runtime reported \(runtimeCount) stored fields but "
+                        + "the runtime child accessor reported \(directCount)"
+                )
+            }
+            reflectedChildren = (0..<runtimeCount).map { index in
+                let child = _openRuntimeChild(
+                    of: value,
+                    type: Container.self,
+                    index: index
+                )
+                return (0, index, child.label, child.value)
+            }
+        case .class, .foreignClass:
+            guard let rootClass = Container.self as? AnyClass else {
+                fatalError(
+                    "SwiftUI reflection classified \(Container.self) as a class "
+                        + "without class metadata"
+                )
+            }
+            var classes: [(inheritanceDepth: Int, type: AnyClass)] = []
+            var reflectedClass: AnyClass? = rootClass
+            var inheritanceDepth = 0
+            while let current = reflectedClass {
+                classes.append((inheritanceDepth, current))
+                reflectedClass = _getSuperclass(current)
+                inheritanceDepth += 1
+            }
+
+            // Recursive metadata enumerates base storage first. Query each
+            // class's real direct children in that order while keeping the
+            // subclass-relative depth used in property-path identity.
+            reflectedChildren = classes.reversed().flatMap { entry in
+                let directCount = _openDirectChildCount(
+                    value,
+                    type: entry.type
+                )
+                guard directCount >= 0 else {
+                    fatalError(
+                        "SwiftUI reflection returned an invalid field count "
+                            + "for \(entry.type)"
+                    )
+                }
+                return (0..<directCount).map { fieldIndex in
+                    let child = _openRuntimeChild(
+                        of: value,
+                        type: entry.type,
+                        index: fieldIndex
+                    )
+                    return (
+                        entry.inheritanceDepth,
+                        fieldIndex,
+                        child.label,
+                        child.value
+                    )
+                }
+            }
+        default:
+            guard runtimeCount == 0 else {
+                fatalError(
+                    "SwiftUI DynamicProperty reflection supports stored fields "
+                        + "in structs, tuples, and classes; got \(Container.self) "
+                        + "with \(runtimeCount) runtime fields"
+                )
+            }
+            return []
+        }
+
+        guard runtimeCount == reflectedChildren.count else {
+            fatalError(
+                "SwiftUI reflection metadata mismatch for \(Container.self): "
+                    + "runtime reported \(runtimeCount) stored fields but direct "
+                    + "runtime traversal reported \(reflectedChildren.count)"
+            )
+        }
+
+        return reflectedChildren.enumerated().map { index, child in
+            var metadata = _OpenFieldReflectionMetadata()
+            let declaredType = _openRecursiveChildMetadata(
+                Container.self,
+                index: index,
+                fieldMetadata: &metadata
+            )
+            let runtimeLabel = metadata.name.map { String(cString: $0) }
+            metadata.freeFunc?(metadata.name)
+
+            guard runtimeLabel == child.label else {
+                fatalError(
+                    "SwiftUI reflection field-order mismatch for \(Container.self) "
+                        + "at index \(index)"
+                )
+            }
+            let byteOffset = _openRecursiveChildOffset(
+                Container.self,
+                index: index
+            )
+            guard byteOffset >= 0 else {
+                fatalError(
+                    "SwiftUI reflection returned an invalid field offset for "
+                        + "\(Container.self) at index \(index)"
+                )
+            }
+
+            return _OpenWritableReflectedField(
+                value: child.value,
+                declaredType: declaredType,
+                byteOffset: byteOffset,
+                isStrong: metadata.isStrong,
+                propertyPathComponent: _OpenPropertyPathComponent(
+                    inheritanceDepth: child.inheritanceDepth,
+                    fieldIndex: child.fieldIndex,
+                    label: child.label
+                )
+            )
+        }
+    }
+
+    private func prepareField(
+        _ field: _OpenWritableReflectedField,
+        rootAddress: UnsafeMutableRawPointer,
+        containerSize: Int?,
+        propertyPath: [_OpenPropertyPathComponent],
+        activeDynamicObjects: inout Set<ObjectIdentifier>
+    ) {
+        guard let dynamicProperty = field.value as? any _OpenDynamicProperty else {
+            return
+        }
+        guard field.isStrong else {
+            fatalError(
+                "SwiftUI cannot write back a non-strong DynamicProperty field "
+                    + "of type \(field.declaredType)"
+            )
+        }
+        let childPath = propertyPath + [field.propertyPathComponent]
+        prepareDynamicProperty(
+            dynamicProperty,
+            declaredType: field.declaredType,
+            address: rootAddress.advanced(by: field.byteOffset),
+            availableContainerSize: containerSize.map { $0 - field.byteOffset },
+            propertyPath: childPath,
+            activeDynamicObjects: &activeDynamicObjects
+        )
+    }
+
+    private func prepareDynamicProperty<Property: _OpenDynamicProperty>(
+        _ property: Property,
+        declaredType: Any.Type,
+        address: UnsafeMutableRawPointer,
+        availableContainerSize: Int?,
+        propertyPath: [_OpenPropertyPathComponent],
+        activeDynamicObjects: inout Set<ObjectIdentifier>
+    ) {
+        guard ObjectIdentifier(declaredType) == ObjectIdentifier(Property.self) else {
+            fatalError(
+                "SwiftUI cannot write back an existentially stored DynamicProperty "
+                    + "field (declared \(declaredType), value \(Property.self))"
+            )
+        }
+        guard Int(bitPattern: address) % MemoryLayout<Property>.alignment == 0 else {
+            fatalError(
+                "SwiftUI reflection returned a misaligned DynamicProperty field "
+                    + "for \(Property.self)"
+            )
+        }
+        if let availableContainerSize {
+            guard availableContainerSize >= 0,
+                  MemoryLayout<Property>.size <= availableContainerSize
+            else {
+                fatalError(
+                    "SwiftUI reflection returned an out-of-bounds DynamicProperty "
+                        + "field for \(Property.self)"
+                )
+            }
+        }
+
+        var preparedProperty = property
+
+        if var graphProperty = preparedProperty as? any _OpenGraphProperty {
+            graphProperty.prepare(in: self, propertyPath: propertyPath)
+            guard let typedGraphProperty = graphProperty as? Property else {
+                fatalError(
+                    "SwiftUI could not restore a prepared graph property of "
+                        + "type \(Property.self)"
+                )
+            }
+            preparedProperty = typedGraphProperty
+            preparedProperty.update()
+            address.assumingMemoryBound(to: Property.self).pointee = preparedProperty
+            return
+        }
+
+        // DynamicProperty is normally a value type, but the public protocol
+        // does not forbid classes. Track class identities only on the active
+        // recursion path: cycles terminate, while two structural fields that
+        // alias one class property still each receive update().
+        let propertyKind = _OpenMetadataKind(
+            rawValue: _openMetadataKind(Property.self)
+        )
+        var activeObjectIdentifier: ObjectIdentifier?
+        if propertyKind == .class || propertyKind == .foreignClass {
+            let identifier = ObjectIdentifier(preparedProperty as AnyObject)
+            guard activeDynamicObjects.insert(identifier).inserted else {
+                return
+            }
+            activeObjectIdentifier = identifier
+        }
+        defer {
+            if let activeObjectIdentifier {
+                activeDynamicObjects.remove(activeObjectIdentifier)
+            }
+        }
+
+        // Inner DynamicProperty values are prepared and updated before their
+        // enclosing custom property. Every prepared value is written back so
+        // ordinary stored mutations made by update() are visible to body.
+        prepareFields(
+            of: &preparedProperty,
+            propertyPath: propertyPath,
+            activeDynamicObjects: &activeDynamicObjects
+        )
+        preparedProperty.update()
+        address.assumingMemoryBound(to: Property.self).pointee = preparedProperty
+    }
+
+    fileprivate func stateStorage<Value>(
+        propertyPath: [_OpenPropertyPathComponent],
+        initialValue: Value
+    ) -> _OpenStateStorage<Value> {
+        let key = _OpenStateKey(
+            viewPath: path,
+            propertyPath: propertyPath,
+            valueType: ObjectIdentifier(Value.self)
+        )
+        activeStateKeys.insert(key)
+        if let existing = state[key] {
+            guard let typed = existing as? _OpenStateStorage<Value> else {
+                preconditionFailure("SwiftUI state type changed at a stable structural location")
+            }
+            attach(typed)
+            return typed
+        }
+        let storage = _OpenStateStorage(value: initialValue)
+        attach(storage)
+        state[key] = storage
+        return storage
+    }
+
+    fileprivate func appStorageStorage<Value>(
+        key: String,
+        initialValue: Value
+    ) -> _OpenStateStorage<Value> {
+        let storageKey = _OpenAppStorageKey(
+            key: key,
+            valueType: ObjectIdentifier(Value.self)
+        )
+        if let existing = appStorage[storageKey] {
+            guard let typed = existing as? _OpenStateStorage<Value> else {
+                preconditionFailure(
+                    "SwiftUI AppStorage value type changed for key \(key)"
+                )
+            }
+            attach(typed)
+            return typed
+        }
+        let storage = _OpenStateStorage(value: initialValue)
+        attach(storage)
+        appStorage[storageKey] = storage
+        return storage
+    }
+
+    private func attach<Value>(_ storage: _OpenStateStorage<Value>) {
+        storage.invalidateMountedGraph = { [weak self] in
+            MainActor.assumeIsolated {
+                self?.scheduleInvalidation(animation: _OpenAnimationContext.current)
+            }
+        }
+    }
+
+    fileprivate func observe<ObjectType>(_ object: ObjectType)
+        where ObjectType: Combine.ObservableObject
+    {
+        let key = ObjectIdentifier(object)
+        activeObservationKeys.insert(key)
+        guard observations[key] == nil else { return }
+
+        let cancellation = object.objectWillChange.sink { [weak self] _ in
+            // ObservableObject changes which drive a view are UI mutations.
+            // Like OpenUIKit target/action, this is an asserted boundary: an
+            // off-main publication traps instead of racing the mounted tree.
+            MainActor.assumeIsolated {
+                self?.scheduleInvalidation(animation: _OpenAnimationContext.current)
+            }
+        }
+        observations[key] = _OpenObservationEntry(cancellation)
+    }
+
+    fileprivate func trackChange<Value: Equatable>(
+        _ value: Value,
+        action: @escaping @MainActor (Value) -> Void
+    ) {
+        let key = _OpenEffectKey(
+            identity: currentIdentity(),
+            kind: .change,
+            valueType: ObjectIdentifier(Value.self)
+        )
+        activeChangeKeys.insert(key)
+        if let existing = changeValues[key] {
+            guard let storage = existing as? _OpenChangeStorage<Value> else {
+                preconditionFailure(
+                    "SwiftUI onChange value type changed at a stable structural location"
+                )
+            }
+            guard storage.value != value else { return }
+            storage.value = value
+            enqueueEffect { action(value) }
+        } else {
+            changeValues[key] = _OpenChangeStorage(value)
+        }
+    }
+
+    fileprivate func trackChange<Value: Equatable>(
+        _ value: Value,
+        action: @escaping @MainActor (Value, Value) -> Void
+    ) {
+        let key = _OpenEffectKey(
+            identity: currentIdentity(),
+            kind: .change,
+            valueType: ObjectIdentifier(Value.self)
+        )
+        activeChangeKeys.insert(key)
+        if let existing = changeValues[key] {
+            guard let storage = existing as? _OpenChangeStorage<Value> else {
+                preconditionFailure(
+                    "SwiftUI onChange value type changed at a stable structural location"
+                )
+            }
+            let previous = storage.value
+            guard previous != value else { return }
+            storage.value = value
+            enqueueEffect { action(previous, value) }
+        } else {
+            changeValues[key] = _OpenChangeStorage(value)
+        }
+    }
+
+    fileprivate func trackAnimation<Value: Equatable>(
+        _ animation: Animation?,
+        value: Value
+    ) {
+        let key = _OpenEffectKey(
+            identity: currentIdentity(),
+            kind: .animation,
+            valueType: ObjectIdentifier(Value.self)
+        )
+        activeChangeKeys.insert(key)
+        if let existing = changeValues[key] {
+            guard let storage = existing as? _OpenChangeStorage<Value> else {
+                preconditionFailure(
+                    "SwiftUI animation value type changed at a stable structural location"
+                )
+            }
+            guard storage.value != value else { return }
+            storage.value = value
+            evaluationAnimation = animation
+        } else {
+            changeValues[key] = _OpenChangeStorage(value)
+        }
+    }
+
+    fileprivate func subscribe<PublisherType: Combine.Publisher>(
+        _ publisher: PublisherType,
+        action: @escaping @MainActor (PublisherType.Output) -> Void
+    ) {
+        let key = _OpenEffectKey(
+            identity: currentIdentity(),
+            kind: .subscription,
+            valueType: ObjectIdentifier(PublisherType.self)
+        )
+        activeSubscriptionKeys.insert(key)
+        subscriptions.removeValue(forKey: key)?.cancellation.cancel()
+        let cancellation = publisher.sink(
+            receiveCompletion: { _ in },
+            receiveValue: { [weak self] value in
+                MainActor.assumeIsolated {
+                    self?.enqueueEffect { action(value) }
+                }
+            }
+        )
+        subscriptions[key] = _OpenSubscriptionEntry(cancellation)
+    }
+
+    fileprivate func installTask<ID: Equatable>(
+        id: ID,
+        priority: TaskPriority?,
+        action: @escaping @MainActor () async -> Void
+    ) {
+        let key = _OpenEffectKey(
+            identity: currentIdentity(),
+            kind: .task,
+            valueType: ObjectIdentifier(ID.self)
+        )
+        activeTaskKeys.insert(key)
+        if let existing = tasks[key] {
+            guard let typed = existing as? _OpenTaskEntry<ID> else {
+                preconditionFailure(
+                    "SwiftUI task ID type changed at a stable structural location"
+                )
+            }
+            guard typed.id != id else { return }
+            tasks.removeValue(forKey: key)?.cancel()
+        }
+        tasks[key] = _OpenTaskEntry(id: id, priority: priority, action: action)
+    }
+
+    private func enqueueEffect(_ action: @escaping @MainActor () -> Void) {
+        if isEvaluating {
+            postEvaluationActions.append(action)
+        } else {
+            action()
+        }
+    }
+
+    fileprivate func representedController<Controller: UIViewController, Coordinator>(
+        makeCoordinator: () -> Coordinator,
+        make: (Coordinator) -> Controller,
+        update: (Controller, Coordinator) -> Void,
+        dismantle: @escaping @MainActor (Controller, Coordinator) -> Void
+    ) -> Controller {
+        let key = _OpenRepresentedControllerKey(
+            viewPath: path,
+            controllerType: ObjectIdentifier(Controller.self)
+        )
+        activeRepresentedControllerKeys.insert(key)
+
+        let entry: _OpenRepresentedControllerEntry<Controller, Coordinator>
+        if let existing = representedControllers[key] {
+            guard let typed = existing as? _OpenRepresentedControllerEntry<
+                Controller,
+                Coordinator
+            > else {
+                preconditionFailure(
+                    "UIViewControllerRepresentable type changed at a stable structural location"
+                )
+            }
+            entry = typed
+        } else {
+            let coordinator = makeCoordinator()
+            let controller = make(coordinator)
+            entry = _OpenRepresentedControllerEntry(
+                controller: controller,
+                coordinator: coordinator,
+                dismantle: dismantle
+            )
+            representedControllers[key] = entry
+        }
+        update(entry.typedController, entry.coordinator)
+        return entry.typedController
+    }
+
+    fileprivate func representedView<ViewType: UIView, Coordinator>(
+        makeCoordinator: () -> Coordinator,
+        make: (Coordinator) -> ViewType,
+        update: (ViewType, Coordinator) -> Void,
+        dismantle: @escaping @MainActor (ViewType, Coordinator) -> Void
+    ) -> ViewType {
+        let key = _OpenRepresentedViewKey(
+            viewPath: path,
+            viewType: ObjectIdentifier(ViewType.self)
+        )
+        activeRepresentedViewKeys.insert(key)
+
+        let entry: _OpenRepresentedViewEntry<ViewType, Coordinator>
+        if let existing = representedViews[key] {
+            guard let typed = existing as? _OpenRepresentedViewEntry<ViewType, Coordinator> else {
+                preconditionFailure(
+                    "UIViewRepresentable type changed at a stable structural location"
+                )
+            }
+            entry = typed
+        } else {
+            let coordinator = makeCoordinator()
+            let view = make(coordinator)
+            entry = _OpenRepresentedViewEntry(
+                view: view,
+                coordinator: coordinator,
+                dismantle: dismantle
+            )
+            representedViews[key] = entry
+        }
+        update(entry.typedView, entry.coordinator)
+        return entry.typedView
+    }
+
+    fileprivate func scheduleInvalidation(animation: Animation? = nil) {
+        // Coalesced writes keep the most recent explicit animation rather than
+        // losing it merely because a non-animated write queued the UI turn
+        // first.  The transaction is consumed exactly once with that turn.
+        if let animation {
+            pendingAnimation = animation
+        }
+        guard pendingInvalidationToken == nil else { return }
+        let token = _OpenGraphInvalidationToken()
+        pendingInvalidationToken = token
+        _OpenInvalidationScheduler.enqueue { [weak self] in
+            guard let self, self.pendingInvalidationToken === token else { return }
+            self.pendingInvalidationToken = nil
+            let animation = self.pendingAnimation
+            self.pendingAnimation = nil
+            self.invalidationCount += 1
+            self.invalidate?(animation)
+        }
+    }
+}
+
+@MainActor
+enum _OpenGraphContext {
+    private static var currentHost: _OpenGraphHost?
+
+    static func withHost<Result>(_ host: _OpenGraphHost, operation: () -> Result) -> Result {
+        let previous = currentHost
+        currentHost = host
+        defer { currentHost = previous }
+        return operation()
+    }
+
+    static func withView<View, Result>(
+        _ view: View,
+        makeBody: (View) -> Result
+    ) -> Result {
+        guard let currentHost else { return makeBody(view) }
+        return currentHost.withView(view, makeBody: makeBody)
+    }
+
+    static func withStructuralScope<Result>(
+        _ scope: _OpenGraphStructuralScope,
+        operation: () -> Result
+    ) -> Result {
+        guard let currentHost else { return operation() }
+        return currentHost.withStructuralScope(scope, operation: operation)
+    }
+
+    static func withEnvironment<Value, Result>(
+        _ keyPath: WritableKeyPath<EnvironmentValues, Value>,
+        value: Value,
+        operation: () -> Result
+    ) -> Result {
+        guard let currentHost else { return operation() }
+        return currentHost.withEnvironment(
+            keyPath,
+            value: value,
+            operation: operation
+        )
+    }
+
+    static func withEnvironmentObject<Object: AnyObject, Result>(
+        _ object: Object,
+        operation: () -> Result
+    ) -> Result {
+        guard let currentHost else { return operation() }
+        return currentHost.withEnvironmentObject(object, operation: operation)
+    }
+
+    static func environmentValue<Value>(
+        _ keyPath: KeyPath<EnvironmentValues, Value>
+    ) -> Value {
+        currentHost?.environmentValues[keyPath: keyPath]
+            ?? EnvironmentValues()[keyPath: keyPath]
+    }
+
+    static func currentIdentity() -> _OpenGraphIdentity? {
+        currentHost?.currentIdentity()
+    }
+
+    static func trackAnimation<Value: Equatable>(
+        _ animation: Animation?,
+        value: Value
+    ) {
+        currentHost?.trackAnimation(animation, value: value)
+    }
+
+    static func representedController<Controller: UIViewController, Coordinator>(
+        makeCoordinator: () -> Coordinator,
+        make: (Coordinator) -> Controller,
+        update: (Controller, Coordinator) -> Void,
+        dismantle: @escaping @MainActor (Controller, Coordinator) -> Void
+    ) -> Controller {
+        guard let currentHost else {
+            let coordinator = makeCoordinator()
+            let controller = make(coordinator)
+            update(controller, coordinator)
+            return controller
+        }
+        return currentHost.representedController(
+            makeCoordinator: makeCoordinator,
+            make: make,
+            update: update,
+            dismantle: dismantle
+        )
+    }
+
+    static func representedView<ViewType: UIView, Coordinator>(
+        makeCoordinator: () -> Coordinator,
+        make: (Coordinator) -> ViewType,
+        update: (ViewType, Coordinator) -> Void,
+        dismantle: @escaping @MainActor (ViewType, Coordinator) -> Void
+    ) -> ViewType {
+        guard let currentHost else {
+            let coordinator = makeCoordinator()
+            let view = make(coordinator)
+            update(view, coordinator)
+            return view
+        }
+        return currentHost.representedView(
+            makeCoordinator: makeCoordinator,
+            make: make,
+            update: update,
+            dismantle: dismantle
+        )
+    }
+
+    static func trackChange<Value: Equatable>(
+        _ value: Value,
+        action: @escaping @MainActor (Value) -> Void
+    ) {
+        currentHost?.trackChange(value, action: action)
+    }
+
+    static func trackChange<Value: Equatable>(
+        _ value: Value,
+        action: @escaping @MainActor (Value, Value) -> Void
+    ) {
+        currentHost?.trackChange(value, action: action)
+    }
+
+    static func subscribe<PublisherType: Combine.Publisher>(
+        _ publisher: PublisherType,
+        action: @escaping @MainActor (PublisherType.Output) -> Void
+    ) {
+        currentHost?.subscribe(publisher, action: action)
+    }
+
+    static func installTask<ID: Equatable>(
+        id: ID,
+        priority: TaskPriority?,
+        action: @escaping @MainActor () async -> Void
+    ) {
+        currentHost?.installTask(id: id, priority: priority, action: action)
+    }
+}

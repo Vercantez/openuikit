@@ -1,0 +1,62 @@
+{
+ "name": "label_dark",
+ "size": [
+  320,
+  200
+ ],
+ "scale": 2,
+ "style": "dark",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "systemBackground",
+  "subviews": [
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     20,
+     0,
+     0
+    ],
+    "text": "Primary label",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     50,
+     0,
+     0
+    ],
+    "text": "Secondary label",
+    "textColor": "secondaryLabel",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     80,
+     0,
+     0
+    ],
+    "text": "Tertiary label",
+    "textColor": "tertiaryLabel",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     110,
+     0,
+     0
+    ],
+    "text": "Link colored",
+    "textColor": "link",
+    "sizeToFit": true
+   }
+  ]
+ }
+}

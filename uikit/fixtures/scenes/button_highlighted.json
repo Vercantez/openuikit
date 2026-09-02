@@ -1,0 +1,21 @@
+{
+  "name": "button_highlighted",
+  "size": [340, 200],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 340, 200], "backgroundColor": "#FFFFFF" },
+      { "class": "UIButton", "frame": [20, 15, 0, 0], "title": "Regular 17", "fontSize": 17, "sizeToFit": true },
+      { "class": "UIButton", "frame": [180, 15, 0, 0], "title": "Regular 17", "fontSize": 17, "highlighted": true, "sizeToFit": true },
+      { "class": "UIButton", "frame": [20, 60, 0, 0], "title": "Green", "titleColor": "systemGreen", "sizeToFit": true },
+      { "class": "UIButton", "frame": [180, 60, 0, 0], "title": "Green", "titleColor": "systemGreen", "highlighted": true, "sizeToFit": true },
+      { "class": "UIButton", "frame": [20, 105, 0, 0], "title": "Medium", "fontSize": 17, "fontWeight": "medium", "sizeToFit": true },
+      { "class": "UIButton", "frame": [180, 105, 0, 0], "title": "Medium", "fontSize": 17, "fontWeight": "medium", "highlighted": true, "sizeToFit": true },
+      { "class": "UIButton", "frame": [20, 150, 0, 0], "title": "Small 13", "fontSize": 13, "sizeToFit": true },
+      { "class": "UIButton", "frame": [180, 150, 0, 0], "title": "Small 13", "fontSize": 13, "highlighted": true, "sizeToFit": true }
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+ "name": "anim_spring_bounce",
+ "size": [200, 200],
+ "scale": 2,
+ "style": "light",
+ "window": true,
+ "root": {
+  "class": "UIView",
+  "subviews": [
+   {
+    "class": "UIView",
+    "frame": [0, 0, 200, 200],
+    "backgroundColor": "#F8F9FA"
+   },
+   {
+    "class": "UIView",
+    "frame": [80, 20, 40, 40],
+    "backgroundColor": "#C2255C",
+    "cornerRadius": 20
+   }
+  ]
+ },
+ "animations": [
+  {
+   "target": "1",
+   "kind": "uiview-animate",
+   "duration": 1.0,
+   "spring": { "damping": 0.35, "initialVelocity": 0 },
+   "changes": { "center": [100, 160] }
+  }
+ ],
+ "captureTimes": [0.0, 0.15, 0.3, 0.45, 0.6, 0.8, 1.0]
+}

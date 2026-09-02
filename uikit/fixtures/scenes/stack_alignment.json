@@ -1,0 +1,73 @@
+{
+  "name": "stack_alignment",
+  "size": [380, 400],
+  "scale": 2,
+  "style": "light",
+  "root": {
+    "class": "UIView",
+    "backgroundColor": "systemBackground",
+    "subviews": [
+      { "class": "UIView", "frame": [0, 0, 380, 400], "backgroundColor": "#FFFFFF" },
+      { "class": "UIStackView", "frame": [10, 10, 360, 70],
+        "axis": "horizontal", "spacing": 8,
+        "stackDistribution": "fillEqually", "stackAlignment": "top",
+        "backgroundColor": "#F1F3F5",
+        "subviews": [
+          { "class": "UILabel", "text": "Aa", "fontSize": 13, "backgroundColor": "#FFC9C9" },
+          { "class": "UILabel", "text": "Aa", "fontSize": 22, "backgroundColor": "#A5D8FF" },
+          { "class": "UILabel", "text": "Aa", "fontSize": 34, "backgroundColor": "#B2F2BB" }
+        ]
+      },
+      { "class": "UIStackView", "frame": [10, 90, 360, 70],
+        "axis": "horizontal", "spacing": 8,
+        "stackDistribution": "fillEqually", "stackAlignment": "center",
+        "backgroundColor": "#F1F3F5",
+        "subviews": [
+          { "class": "UILabel", "text": "Aa", "fontSize": 13, "backgroundColor": "#FFC9C9" },
+          { "class": "UILabel", "text": "Aa", "fontSize": 22, "backgroundColor": "#A5D8FF" },
+          { "class": "UILabel", "text": "Aa", "fontSize": 34, "backgroundColor": "#B2F2BB" }
+        ]
+      },
+      { "class": "UIStackView", "frame": [10, 170, 360, 70],
+        "axis": "horizontal", "spacing": 8,
+        "stackDistribution": "fillEqually", "stackAlignment": "bottom",
+        "backgroundColor": "#F1F3F5",
+        "subviews": [
+          { "class": "UILabel", "text": "Aa", "fontSize": 13, "backgroundColor": "#FFC9C9" },
+          { "class": "UILabel", "text": "Aa", "fontSize": 22, "backgroundColor": "#A5D8FF" },
+          { "class": "UILabel", "text": "Aa", "fontSize": 34, "backgroundColor": "#B2F2BB" }
+        ]
+      },
+      { "class": "UIStackView", "frame": [10, 260, 115, 130],
+        "axis": "vertical", "spacing": 6,
+        "stackDistribution": "fillEqually", "stackAlignment": "leading",
+        "backgroundColor": "#F1F3F5",
+        "subviews": [
+          { "class": "UILabel", "text": "Hi", "fontSize": 15, "backgroundColor": "#FFC9C9" },
+          { "class": "UILabel", "text": "Hello", "fontSize": 15, "backgroundColor": "#A5D8FF" },
+          { "class": "UILabel", "text": "Hello Wor", "fontSize": 15, "backgroundColor": "#B2F2BB" }
+        ]
+      },
+      { "class": "UIStackView", "frame": [135, 260, 115, 130],
+        "axis": "vertical", "spacing": 6,
+        "stackDistribution": "fillEqually", "stackAlignment": "center",
+        "backgroundColor": "#F1F3F5",
+        "subviews": [
+          { "class": "UILabel", "text": "Hi", "fontSize": 15, "backgroundColor": "#FFC9C9" },
+          { "class": "UILabel", "text": "Hello", "fontSize": 15, "backgroundColor": "#A5D8FF" },
+          { "class": "UILabel", "text": "Hello Wor", "fontSize": 15, "backgroundColor": "#B2F2BB" }
+        ]
+      },
+      { "class": "UIStackView", "frame": [260, 260, 115, 130],
+        "axis": "vertical", "spacing": 6,
+        "stackDistribution": "fillEqually", "stackAlignment": "trailing",
+        "backgroundColor": "#F1F3F5",
+        "subviews": [
+          { "class": "UILabel", "text": "Hi", "fontSize": 15, "backgroundColor": "#FFC9C9" },
+          { "class": "UILabel", "text": "Hello", "fontSize": 15, "backgroundColor": "#A5D8FF" },
+          { "class": "UILabel", "text": "Hello Wor", "fontSize": 15, "backgroundColor": "#B2F2BB" }
+        ]
+      }
+    ]
+  }
+}

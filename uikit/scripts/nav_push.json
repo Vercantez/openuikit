@@ -1,0 +1,10 @@
+{
+  "comment": "Scripted push/pop for `openhost --nav-demo` (M7.5 navigation). Tap the 'General' row (window y 84..128) at t=0.10/0.18: touchUpInside fires on the lift, so the 0.35s push starts at t=0.18 (ends 0.53). Capture 0.33 is the mid-transition frame at t0+0.15: eased progress u = easeInOut(0.15/0.35) = 0.365 -> incoming leading edge at x = 390*(1-u) = 247.6pt, outgoing offset -0.3*390*u = -42.7pt, scrim black at 8%*u = 2.9%, 9pt soft shadow on the incoming edge, bar titles mid-crossfade. Then tap the back button ('< Settings', bar y 20..64) at 0.80/0.88: pop runs 0.88..1.23 (capture 1.03 = mid-pop), capture 1.40 shows the restored root (post-pop state).",
+  "events": [
+    { "t": 0.10, "kind": "down", "x": 195, "y": 100 },
+    { "t": 0.18, "kind": "up",   "x": 195, "y": 100 },
+    { "t": 0.80, "kind": "down", "x": 40,  "y": 42 },
+    { "t": 0.88, "kind": "up",   "x": 40,  "y": 42 }
+  ],
+  "captures": [0.05, 0.33, 0.60, 1.03, 1.40]
+}

@@ -1,0 +1,55 @@
+{
+  "name" : "boxes_dark",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        16,
+        120,
+        60
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        92,
+        120,
+        60
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        152,
+        16,
+        120,
+        60
+      ],
+      "path" : "2"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        152,
+        92,
+        120,
+        60
+      ],
+      "path" : "3"
+    }
+  ]
+}

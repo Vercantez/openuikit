@@ -1,0 +1,28 @@
+{
+  "name": "navbar_inline",
+  "size": [375, 480],
+  "scale": 2,
+  "style": "light",
+  "window": true,
+  "root": {
+    "class": "UINavigationStack",
+    "title": "Library",
+    "largeTitle": true,
+    "contentSize": [375, 1200],
+    "contentOffset": [0, 160],
+    "subviews": [
+      { "class": "UIView", "frame": [16, 8, 343, 64], "backgroundColor": "systemGray5", "cornerRadius": 12 },
+      { "class": "UILabel", "frame": [32, 29, 200, 22], "text": "First shelf", "fontSize": 17 },
+      { "class": "UIView", "frame": [16, 84, 343, 64], "backgroundColor": "systemGray5", "cornerRadius": 12 },
+      { "class": "UILabel", "frame": [32, 105, 200, 22], "text": "Second shelf", "fontSize": 17 },
+      { "class": "UIView", "frame": [16, 160, 343, 64], "backgroundColor": "systemGray5", "cornerRadius": 12 },
+      { "class": "UILabel", "frame": [32, 181, 200, 22], "text": "Third shelf", "fontSize": 17 },
+      { "class": "UIView", "frame": [16, 236, 343, 64], "backgroundColor": "systemGray5", "cornerRadius": 12 },
+      { "class": "UILabel", "frame": [32, 257, 200, 22], "text": "Fourth shelf", "fontSize": 17 },
+      { "class": "UIView", "frame": [16, 312, 343, 64], "backgroundColor": "systemGray5", "cornerRadius": 12 },
+      { "class": "UILabel", "frame": [32, 333, 200, 22], "text": "Fifth shelf", "fontSize": 17 },
+      { "class": "UIView", "frame": [16, 388, 343, 64], "backgroundColor": "systemGray5", "cornerRadius": 12 },
+      { "class": "UILabel", "frame": [32, 409, 200, 22], "text": "Sixth shelf", "fontSize": 17 }
+    ]
+  }
+}

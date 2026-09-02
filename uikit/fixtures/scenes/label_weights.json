@@ -1,0 +1,132 @@
+{
+ "name": "label_weights",
+ "size": [
+  320,
+  300
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     12,
+     0,
+     0
+    ],
+    "text": "Weight ultraLight",
+    "fontSize": 19,
+    "fontWeight": "ultraLight",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     42,
+     0,
+     0
+    ],
+    "text": "Weight thin",
+    "fontSize": 19,
+    "fontWeight": "thin",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     72,
+     0,
+     0
+    ],
+    "text": "Weight light",
+    "fontSize": 19,
+    "fontWeight": "light",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     102,
+     0,
+     0
+    ],
+    "text": "Weight regular",
+    "fontSize": 19,
+    "fontWeight": "regular",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     132,
+     0,
+     0
+    ],
+    "text": "Weight medium",
+    "fontSize": 19,
+    "fontWeight": "medium",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     162,
+     0,
+     0
+    ],
+    "text": "Weight semibold",
+    "fontSize": 19,
+    "fontWeight": "semibold",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     192,
+     0,
+     0
+    ],
+    "text": "Weight bold",
+    "fontSize": 19,
+    "fontWeight": "bold",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     222,
+     0,
+     0
+    ],
+    "text": "Weight heavy",
+    "fontSize": 19,
+    "fontWeight": "heavy",
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     20,
+     252,
+     0,
+     0
+    ],
+    "text": "Weight black",
+    "fontSize": 19,
+    "fontWeight": "black",
+    "sizeToFit": true
+   }
+  ]
+ }
+}

@@ -1,0 +1,7 @@
+DATEPICKER_CLOCK current=800010123.75 default=800010123.75 calendar=gregorian locale=en_001 requested=en_US_POSIX timezone=0 firstWeekday=1 minimumDays=1
+DATEPICKER_BOUNDS low=800000437 high=800001020 events=0
+DATEPICKER_ROUNDING toggle=800000457->800000157
+DATEPICKER_COUNTDOWN outside=0 entering=60 hostDay=799977600 inside=3660 property=800005400 methodFalse=800007200 methodTrue=800007800 events=0
+DATEPICKER_TOUCH programmatic=0 hour=11 minute=15 events=2
+DATEPICKER_RENDER inline=2796023057706954829 wheel=4543181309005258709 repeat=identical
+DATEPICKER_FOUNDATION_HIDDEN_RUNTIME_OK

@@ -1,0 +1,45 @@
+{
+  "name" : "constraints_centery_multiplier",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        240
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        120,
+        40,
+        80,
+        40
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        120,
+        160,
+        80,
+        40
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        70,
+        100,
+        40,
+        40
+      ],
+      "path" : "2"
+    }
+  ]
+}

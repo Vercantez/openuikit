@@ -1,0 +1,22 @@
+{
+  "comment": "Scripted interaction for `openhost --app selectors` (SelectorApp.swift): every control on that screen is wired with addTarget(_:action:for:) / UITapGestureRecognizer(target:action:), never with a closure, so a visible change here proves selector dispatch ran. Window is 390x780; the nav bar is 64pt tall, so VC-view y + 64 = window y. Increment button center (104.5,230), Reset (285.5,230), the Counting Enabled switch (322.5,302), the gesture panel (195,410). Sequence: two Increment taps (counter 0->2, 'incrementTapped'), Reset (counter 2->0, 'resetTapped:'), switch off ('enabledChanged: off'), an Increment that is therefore ignored, switch back on, a panel tap ('handleTap:', +1) and a 0.7s panel press ('handleLongPress:', +10 at recognition, then the tap on lift, +1).",
+  "events": [
+    { "t": 0.10, "kind": "down", "x": 104.5, "y": 230 },
+    { "t": 0.16, "kind": "up",   "x": 104.5, "y": 230 },
+    { "t": 0.30, "kind": "down", "x": 104.5, "y": 230 },
+    { "t": 0.36, "kind": "up",   "x": 104.5, "y": 230 },
+    { "t": 0.55, "kind": "down", "x": 285.5, "y": 230 },
+    { "t": 0.61, "kind": "up",   "x": 285.5, "y": 230 },
+    { "t": 0.80, "kind": "down", "x": 322.5, "y": 302 },
+    { "t": 0.86, "kind": "up",   "x": 322.5, "y": 302 },
+    { "t": 1.15, "kind": "down", "x": 104.5, "y": 230 },
+    { "t": 1.21, "kind": "up",   "x": 104.5, "y": 230 },
+    { "t": 1.45, "kind": "down", "x": 322.5, "y": 302 },
+    { "t": 1.51, "kind": "up",   "x": 322.5, "y": 302 },
+    { "t": 1.80, "kind": "down", "x": 195,   "y": 410 },
+    { "t": 1.86, "kind": "up",   "x": 195,   "y": 410 },
+    { "t": 2.10, "kind": "down", "x": 195,   "y": 410 },
+    { "t": 2.80, "kind": "up",   "x": 195,   "y": 410 }
+  ],
+  "captures": [0.05, 0.25, 0.45, 0.70, 0.95, 1.30, 1.60, 1.95, 2.70, 2.95]
+}

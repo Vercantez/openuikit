@@ -1,0 +1,35 @@
+{
+  "name" : "anim_fade",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        200,
+        200
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        50,
+        50,
+        100,
+        100
+      ],
+      "path" : "1"
+    }
+  ]
+}

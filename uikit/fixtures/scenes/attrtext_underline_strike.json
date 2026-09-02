@@ -1,0 +1,108 @@
+{
+ "name": "attrtext_underline_strike",
+ "size": [
+  320,
+  180
+ ],
+ "scale": 2,
+ "style": "light",
+ "root": {
+  "class": "UIView",
+  "backgroundColor": "#FFFFFF",
+  "subviews": [
+   {
+    "class": "UILabel",
+    "frame": [
+     16,
+     14,
+     288,
+     0
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "underline",
+       "fontSize": 17,
+       "underline": "single"
+      }
+     ]
+    },
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     16,
+     46,
+     288,
+     0
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "strikethrough",
+       "fontSize": 17,
+       "strikethrough": "single"
+      }
+     ]
+    },
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     16,
+     78,
+     288,
+     0
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "bold",
+       "fontSize": 17,
+       "fontWeight": "semibold",
+       "underline": "single"
+      },
+      {
+       "text": " and ",
+       "fontSize": 17
+      },
+      {
+       "text": "large",
+       "fontSize": 24,
+       "underline": "single"
+      }
+     ]
+    },
+    "sizeToFit": true
+   },
+   {
+    "class": "UILabel",
+    "frame": [
+     16,
+     126,
+     288,
+     0
+    ],
+    "attributedText": {
+     "runs": [
+      {
+       "text": "linked",
+       "fontSize": 17,
+       "color": "systemBlue",
+       "underline": "single"
+      },
+      {
+       "text": " done",
+       "fontSize": 17,
+       "strikethrough": "single",
+       "strikethroughColor": "systemRed"
+      }
+     ]
+    },
+    "sizeToFit": true
+   }
+  ]
+ }
+}

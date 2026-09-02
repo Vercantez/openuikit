@@ -1,0 +1,55 @@
+{
+  "name" : "constraints_safearea",
+  "views" : [
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        0,
+        320,
+        480
+      ],
+      "path" : ""
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        0,
+        140,
+        320,
+        160
+      ],
+      "path" : "0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        24,
+        8,
+        272,
+        144
+      ],
+      "path" : "0.0"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        16,
+        59,
+        288,
+        44
+      ],
+      "path" : "1"
+    },
+    {
+      "class" : "UIView",
+      "frame" : [
+        24,
+        416,
+        272,
+        30
+      ],
+      "path" : "2"
+    }
+  ]
+}
