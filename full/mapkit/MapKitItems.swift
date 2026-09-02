@@ -1,3 +1,10 @@
+#if canImport(CoreLocation)
+#if os(Linux)
+@_spi(OpenUIKitHost) @preconcurrency import CoreLocation
+#else
+@preconcurrency import CoreLocation
+#endif
+#endif
 import Foundation
 
 open class MKAddress: NSObject {
@@ -238,6 +245,9 @@ open class MKMapItem: NSObject {
     open var address: MKAddress?
     open var addressRepresentations: MKAddressRepresentations?
     open var timeZone: TimeZone?
+#if canImport(CoreLocation)
+    var storedPlacemark = MKPlacemark(coordinate: kCLLocationCoordinate2DInvalid)
+#endif
 
     public override init() {
         self.isCurrentLocation = false

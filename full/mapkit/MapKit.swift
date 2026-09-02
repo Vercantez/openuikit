@@ -1,9 +1,12 @@
+#if canImport(CoreLocation)
+#if os(Linux)
+@_spi(OpenUIKitHost) @preconcurrency import CoreLocation
+#else
+@preconcurrency import CoreLocation
+#endif
+#endif
 import Foundation
 import Dispatch
-
-#if canImport(CoreLocation)
-import CoreLocation
-#endif
 #if canImport(CoreGraphics)
 import CoreGraphics
 #endif

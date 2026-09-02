@@ -1,3 +1,10 @@
+#if canImport(CoreLocation)
+#if os(Linux)
+@_spi(OpenUIKitHost) @preconcurrency import CoreLocation
+#else
+@preconcurrency import CoreLocation
+#endif
+#endif
 import Foundation
 import Dispatch
 
@@ -165,6 +172,12 @@ open class MKLocalSearch: NSObject {
         open var regionPriority: MKLocalSearchRegionPriority = .default
         open var addressFilter: MKAddressFilter?
         open var pointOfInterestFilter: MKPointOfInterestFilter?
+#if canImport(CoreLocation)
+        var storedRegion = MKCoordinateRegion(
+            center: kCLLocationCoordinate2DInvalid,
+            span: MKCoordinateSpan(latitudeDelta: 0, longitudeDelta: 0)
+        )
+#endif
 
         public override init() {
             super.init()
@@ -274,6 +287,12 @@ open class MKLocalSearchCompleter: NSObject {
     open var addressFilter: MKAddressFilter?
     open var pointOfInterestFilter: MKPointOfInterestFilter?
     public private(set) var results: [MKLocalSearchCompletion] = []
+#if canImport(CoreLocation)
+    var storedCompleterRegion = MKCoordinateRegion(
+        center: kCLLocationCoordinate2DInvalid,
+        span: MKCoordinateSpan(latitudeDelta: 0, longitudeDelta: 0)
+    )
+#endif
 
     private let lock = NSLock()
     private var searching = false
@@ -347,11 +366,12 @@ open class MKLocalPointsOfInterestRequest: NSObject {
 
     public private(set) var radius: Double
     open var pointOfInterestFilter: MKPointOfInterestFilter?
+    var storedCenterMapPoint = MKMapPoint(x: 0, y: 0)
 
     public init(centerMapPoint: MKMapPoint, radius: Double) {
         self.radius = min(max(radius, 0), Self.maxRadius)
+        self.storedCenterMapPoint = centerMapPoint
         super.init()
-        _ = centerMapPoint
     }
 
     public override init() {
@@ -367,6 +387,12 @@ open class MKGeocodingRequest: NSObject {
     private let lock = NSLock()
     private var cancelled = false
     private var loading = false
+#if canImport(CoreLocation)
+    var storedGeocodeRegion = MKCoordinateRegion(
+        center: kCLLocationCoordinate2DInvalid,
+        span: MKCoordinateSpan(latitudeDelta: 0, longitudeDelta: 0)
+    )
+#endif
 
     public init?(addressString: String) {
         guard !addressString.isEmpty else { return nil }
@@ -414,6 +440,9 @@ open class MKReverseGeocodingRequest: NSObject {
     private let lock = NSLock()
     private var cancelled = false
     private var loading = false
+#if canImport(CoreLocation)
+    var storedLocation: CLLocation?
+#endif
 
     public override init() {
         super.init()
@@ -567,6 +596,10 @@ open class MKLookAroundSceneRequest: NSObject {
     private var gate = MKFailClosedGate(generation: 0)
     private let lock = NSLock()
     private var loading = false
+#if canImport(CoreLocation)
+    var storedCoordinate: CLLocationCoordinate2D?
+    var storedMapItem: MKMapItem?
+#endif
 
     public override init() {
         super.init()

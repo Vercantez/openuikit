@@ -1,5 +1,9 @@
 #if canImport(CoreLocation)
-import CoreLocation
+#if os(Linux)
+@_spi(OpenUIKitHost) @preconcurrency import CoreLocation
+#else
+@preconcurrency import CoreLocation
+#endif
 import Foundation
 
 public struct MKCoordinateRegion: Sendable {
@@ -50,19 +54,31 @@ extension MKMapPoint {
     }
 }
 
-open class MKPlacemark: CLPlacemark, MKAnnotation {
-    public convenience init(coordinate: CLLocationCoordinate2D) {
-        self.init(coordinate: coordinate, addressDictionary: nil)
+open class MKPlacemark: CLPlacemark, MKAnnotation, @unchecked Sendable {
+    private let annotationCoordinate: CLLocationCoordinate2D
+
+    public init(coordinate: CLLocationCoordinate2D) {
+        self.annotationCoordinate = coordinate
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+#if os(Linux)
+        super.init(location: location)
+#else
+        super.init()
+        _ = location
+#endif
     }
 
     public convenience init(
         coordinate: CLLocationCoordinate2D,
         addressDictionary: [String: Any]?
     ) {
+        self.init(coordinate: coordinate)
         _ = addressDictionary
-        self.init()
-        _ = coordinate
     }
+
+    open var coordinate: CLLocationCoordinate2D { annotationCoordinate }
+
+    open var countryCode: String? { isoCountryCode }
 }
 
 extension MKCircle {
@@ -76,20 +92,17 @@ extension MKCircle {
     ) {
         self.init(centerMapPoint: MKMapPoint(coord), radius: radius)
     }
-
-    public var coordinate: CLLocationCoordinate2D {
-        MKMapPoint(x: boundingMapRect.midX, y: boundingMapRect.midY).coordinate
-    }
 }
 
 extension MKPointAnnotation {
-    public var coordinate: CLLocationCoordinate2D {
-        get { mapPoint.coordinate }
-        set { mapPoint = MKMapPoint(newValue) }
-    }
-
     public convenience init(coordinate: CLLocationCoordinate2D) {
         self.init(mapPoint: MKMapPoint(coordinate))
+    }
+
+    public convenience init(coordinate: CLLocationCoordinate2D, title: String?, subtitle: String?) {
+        self.init(mapPoint: MKMapPoint(coordinate))
+        self.title = title
+        self.subtitle = subtitle
     }
 }
 
@@ -97,12 +110,15 @@ extension MKMapItem {
     public convenience init(placemark: MKPlacemark) {
         self.init()
         self.name = placemark.name
+        self.storedPlacemark = placemark
     }
 
     public convenience init(location: CLLocation, address: MKAddress?) {
         self.init(address: address)
-        _ = location
+        self.storedPlacemark = MKPlacemark(coordinate: location.coordinate)
     }
+
+    public var placemark: MKPlacemark { storedPlacemark }
 }
 
 extension MKMapCamera {
@@ -152,29 +168,10 @@ extension MKLocalSearch.Request {
     }
 }
 
-private var storedRegionKey: UInt8 = 0
-
-extension MKLocalSearch.Request {
-    fileprivate var storedRegion: MKCoordinateRegion {
-        get {
-            MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
-                span: MKCoordinateSpan(latitudeDelta: 0, longitudeDelta: 0)
-            )
-        }
-        set { _ = newValue }
-    }
-}
-
 extension MKLocalSearchCompleter {
     public var region: MKCoordinateRegion {
-        get {
-            MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
-                span: MKCoordinateSpan(latitudeDelta: 0, longitudeDelta: 0)
-            )
-        }
-        set { _ = newValue }
+        get { storedCompleterRegion }
+        set { storedCompleterRegion = newValue }
     }
 }
 
@@ -193,12 +190,19 @@ extension MKLocalPointsOfInterestRequest {
             centerMapPoint: MKMapPoint(region.center),
             radius: MKLocalPointsOfInterestRequest.maxRadius
         )
-        _ = region
+    }
+
+    public convenience init(center coordinate: CLLocationCoordinate2D, radius: CLLocationDistance) {
+        self.init(centerMapPoint: MKMapPoint(coordinate), radius: radius)
+    }
+
+    public var coordinate: CLLocationCoordinate2D {
+        storedCenterMapPoint.coordinate
     }
 
     public var region: MKCoordinateRegion {
         MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+            center: coordinate,
             span: MKCoordinateSpan(latitudeDelta: 0, longitudeDelta: 0)
         )
     }
@@ -206,36 +210,31 @@ extension MKLocalPointsOfInterestRequest {
 
 extension MKGeocodingRequest {
     public var region: MKCoordinateRegion {
-        get {
-            MKCoordinateRegion(
-                center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
-                span: MKCoordinateSpan(latitudeDelta: 0, longitudeDelta: 0)
-            )
-        }
-        set { _ = newValue }
+        get { storedGeocodeRegion }
+        set { storedGeocodeRegion = newValue }
     }
 }
 
 extension MKReverseGeocodingRequest {
     public convenience init?(location: CLLocation) {
         self.init()
-        _ = location
+        storedLocation = location
     }
 
-    public var location: CLLocation {
-        CLLocation(latitude: 0, longitude: 0)
-    }
+    public var location: CLLocation? { storedLocation }
 }
 
 extension MKLookAroundSceneRequest {
     public convenience init(coordinate: CLLocationCoordinate2D) {
         self.init()
-        _ = coordinate
+        storedCoordinate = coordinate
     }
 
     public convenience init(mapItem: MKMapItem) {
         self.init()
-        _ = mapItem
+        storedMapItem = mapItem
     }
+
+    public var coordinate: CLLocationCoordinate2D? { storedCoordinate }
 }
 #endif

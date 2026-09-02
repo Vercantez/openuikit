@@ -63,13 +63,14 @@ public struct MKMapRect: Sendable {
     public var minY: Double { origin.y }
     public var width: Double { size.width }
     public var height: Double { size.height }
-    public var maxX: Double { origin.x + size.width }
-    public var maxY: Double { origin.y + size.height }
-    public var midX: Double { origin.x + size.width * 0.5 }
-    public var midY: Double { origin.y + size.height * 0.5 }
+    public var maxX: Double { mkFiniteSum(origin.x, size.width) }
+    public var maxY: Double { mkFiniteSum(origin.y, size.height) }
+    public var midX: Double { mkFiniteSum(origin.x, mkFiniteProduct(size.width, 0.5)) }
+    public var midY: Double { mkFiniteSum(origin.y, mkFiniteProduct(size.height, 0.5)) }
 
     public var isNull: Bool {
         !origin.x.isFinite || !origin.y.isFinite
+            || !size.width.isFinite || !size.height.isFinite
     }
 
     public var isEmpty: Bool {
@@ -82,9 +83,11 @@ public struct MKMapRect: Sendable {
     }
 
     public var remainder: MKMapRect {
-        guard spans180thMeridian else { return .null }
-        let overflow = maxX - MKMapSize.world.width
-        guard overflow > 0 else { return .null }
+        guard spans180thMeridian, maxX.isFinite, origin.y.isFinite, size.height.isFinite else {
+            return .null
+        }
+        let overflow = mkFiniteDifference(maxX, MKMapSize.world.width)
+        guard overflow.isFinite, overflow > 0 else { return .null }
         return MKMapRect(x: 0, y: origin.y, width: overflow, height: size.height)
     }
 
@@ -122,7 +125,11 @@ public struct MKMapRect: Sendable {
         let top = max(top1, top2)
         let bottom = min(bottom1, bottom2)
         if left > right || top > bottom { return .null }
-        return MKMapRect(x: left, y: top, width: right - left, height: bottom - top)
+        guard left.isFinite, right.isFinite, top.isFinite, bottom.isFinite else { return .null }
+        let width = mkFiniteDifference(right, left)
+        let height = mkFiniteDifference(bottom, top)
+        guard width.isFinite, height.isFinite else { return .null }
+        return MKMapRect(x: left, y: top, width: width, height: height)
     }
 
     public func union(_ rect2: MKMapRect) -> MKMapRect {
@@ -132,33 +139,43 @@ public struct MKMapRect: Sendable {
         let (left2, right2) = mkOrdered(rect2.minX, rect2.maxX)
         let (top1, bottom1) = mkOrdered(minY, maxY)
         let (top2, bottom2) = mkOrdered(rect2.minY, rect2.maxY)
+        guard left1.isFinite, right1.isFinite, left2.isFinite, right2.isFinite,
+              top1.isFinite, bottom1.isFinite, top2.isFinite, bottom2.isFinite
+        else {
+            return .null
+        }
         let left = min(left1, left2)
         let right = max(right1, right2)
         let top = min(top1, top2)
         let bottom = max(bottom1, bottom2)
-        return MKMapRect(x: left, y: top, width: right - left, height: bottom - top)
+        let width = mkFiniteDifference(right, left)
+        let height = mkFiniteDifference(bottom, top)
+        guard width.isFinite, height.isFinite else { return .null }
+        return MKMapRect(x: left, y: top, width: width, height: height)
     }
 
     public func insetBy(dx: Double, dy: Double) -> MKMapRect {
         if isNull { return .null }
         guard dx.isFinite, dy.isFinite else { return .null }
-        return MKMapRect(
-            x: origin.x + dx,
-            y: origin.y + dy,
-            width: size.width - dx * 2,
-            height: size.height - dy * 2
-        )
+        let x = mkFiniteSum(origin.x, dx)
+        let y = mkFiniteSum(origin.y, dy)
+        let width = mkFiniteDifference(size.width, mkFiniteProduct(dx, 2))
+        let height = mkFiniteDifference(size.height, mkFiniteProduct(dy, 2))
+        if !x.isFinite || !y.isFinite || !width.isFinite || !height.isFinite {
+            return .null
+        }
+        return MKMapRect(x: x, y: y, width: width, height: height)
     }
 
     public func offsetBy(dx: Double, dy: Double) -> MKMapRect {
         if isNull { return .null }
         guard dx.isFinite, dy.isFinite else { return .null }
-        return MKMapRect(
-            x: origin.x + dx,
-            y: origin.y + dy,
-            width: size.width,
-            height: size.height
-        )
+        let x = mkFiniteSum(origin.x, dx)
+        let y = mkFiniteSum(origin.y, dy)
+        if !x.isFinite || !y.isFinite {
+            return .null
+        }
+        return MKMapRect(x: x, y: y, width: size.width, height: size.height)
     }
 }
 
@@ -207,7 +224,7 @@ public func MKMapRectDivide(
     _ amount: Double,
     _ edge: CGRectEdge
 ) {
-    if rect.isNull || !amount.isFinite {
+    if rect.isNull || !amount.isFinite || !rect.size.width.isFinite || !rect.size.height.isFinite {
         slice.pointee = .null
         remainder.pointee = .null
         return
@@ -344,6 +361,24 @@ func mkClampLatitude(_ latitude: Double) -> Double {
 
 private func mkOrdered(_ a: Double, _ b: Double) -> (Double, Double) {
     a <= b ? (a, b) : (b, a)
+}
+
+func mkFiniteSum(_ a: Double, _ b: Double) -> Double {
+    guard a.isFinite, b.isFinite else { return Double.infinity }
+    let sum = a + b
+    return sum.isFinite ? sum : Double.infinity
+}
+
+func mkFiniteProduct(_ a: Double, _ b: Double) -> Double {
+    guard a.isFinite, b.isFinite else { return Double.infinity }
+    let product = a * b
+    return product.isFinite ? product : Double.infinity
+}
+
+func mkFiniteDifference(_ a: Double, _ b: Double) -> Double {
+    guard a.isFinite, b.isFinite else { return Double.infinity }
+    let difference = a - b
+    return difference.isFinite ? difference : Double.infinity
 }
 
 private func mkNonEmptyOverlap(_ a: MKMapRect, _ b: MKMapRect) -> Bool {

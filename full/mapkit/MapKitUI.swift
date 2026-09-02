@@ -1,7 +1,7 @@
 #if canImport(UIKit)
 import UIKit
 #if canImport(CoreLocation)
-import CoreLocation
+@preconcurrency import CoreLocation
 #endif
 
 @MainActor

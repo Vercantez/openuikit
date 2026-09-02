@@ -1,3 +1,10 @@
+#if canImport(CoreLocation)
+#if os(Linux)
+@_spi(OpenUIKitHost) @preconcurrency import CoreLocation
+#else
+@preconcurrency import CoreLocation
+#endif
+#endif
 import Foundation
 
 open class MKMultiPoint: MKShape, MKGeoJSONObject {
@@ -13,6 +20,11 @@ open class MKMultiPoint: MKShape, MKGeoJSONObject {
     init(points: [MKMapPoint]) {
         self.storedPoints = points
         super.init()
+#if canImport(CoreLocation)
+        if let first = points.first {
+            self.coordinate = first.coordinate
+        }
+#endif
     }
 
     deinit {
@@ -93,6 +105,9 @@ open class MKCircle: MKShape, MKOverlay {
         let mapRadius = min(abs(boundingMapRect.width), abs(boundingMapRect.height)) * 0.5
         self.radius = mapRadius * metersPerPoint
         super.init()
+#if canImport(CoreLocation)
+        self.coordinate = mid.coordinate
+#endif
     }
 
     public init(centerMapPoint: MKMapPoint, radius: Double) {
@@ -108,6 +123,9 @@ open class MKCircle: MKShape, MKOverlay {
             height: mapRadius * 2
         )
         super.init()
+#if canImport(CoreLocation)
+        self.coordinate = centerMapPoint.coordinate
+#endif
     }
 }
 
