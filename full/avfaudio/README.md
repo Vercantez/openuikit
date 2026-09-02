@@ -11,9 +11,9 @@ The current isolated host gate compiles AVFAudio without those modules on the se
 ## What has runtime evidence
 
 - **Formats and software PCM.** `AVAudioFormat` from common format, standard mono/stereo, and settings dictionaries. `AVAudioPCMBuffer` allocates zeroed planar or interleaved storage and exposes float channel pointers and stride. No-copy `AudioBufferList` ownership is compiled only when CoreAudioTypes/AudioToolbox is imported.
-- **Engine graph bookkeeping.** Attach/connect/disconnect and connection-point queries. `start()`, manual rendering, and offline render **throw** and do not set `isRunning` or produce buffers.
+- **Engine graph bookkeeping.** Attach/connect/disconnect and connection-point queries. `connect` replaces the existing edge for `(destination, inputBus)`. `start()`, manual rendering, and offline render **throw** and do not set `isRunning` or produce buffers.
 - **Session preferences.** `setCategory` stores category/mode/options. Activation, port override, and hardware configuration **throw**. Record permission is delivered **asynchronously**, exactly once, on `AVFAudio.callback`.
-- **Player / recorder / converter / sequencer.** Objects construct. Play, record, convert, and sequencer start stay fail-closed.
+- **Player / recorder / converter / sequencer.** `AVAudioPlayer` throwing URL initializers use throwing I/O. Empty or garbage payloads throw; only a narrowly validated 16-bit linear PCM WAVE construct. Play, record, convert, and sequencer start stay fail-closed.
 - **Speech.** Utterance text is stored. `speak` does not set `isSpeaking`. Personal-voice authorization is `.unsupported`, delivered asynchronously on the callback queue.
 
 ## Fail-closed boundaries
@@ -33,6 +33,7 @@ Asynchronous callbacks are non-inline, exactly-once, non-reentrant, and delivere
 ## Tests
 
 - `tests/agent/AVFAudioRuntime.swift` prints `AVFAUDIO_AGENT_RUNTIME_OK`.
+- `tests/agent/AVFAudioCorpus.swift` compiles Signal `AVSpeechSynthesizer`/delegate/utterance, Telegram `AVAudioSession.sharedInstance`/`outputVolume`, and Nextcloud `AVAudioApplication` record permission.
 - `tests/agent/AVFAudioDependencyABI.swift` (and `AVFAudioDependencyABI.c`) is a **future EC2** mixed C/Swift identity/ABI probe. It is not executed by the isolated host gate. Do not treat a green host gate as integrated Linux ABI success.
 
 Run the immutable host gate:

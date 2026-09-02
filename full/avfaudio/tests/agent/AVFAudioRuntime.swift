@@ -78,11 +78,14 @@ func run() throws {
     let host = AVAudioTime.hostTime(forSeconds: 1.5)
     let seconds = AVAudioTime.seconds(forHostTime: host)
     try require(abs(seconds - 1.5) < 0.000_001, "host time conversion")
+    try require(AVAudioTime.hostTime(forSeconds: -1.5) == 0, "negative hostTime clamped")
+    try require(AVAudioTime.hostTime(forSeconds: .nan) == 0, "non-finite hostTime clamped")
     let sampleTime = AVAudioTime(sampleTime: 44100, atRate: 44100)
     try require(sampleTime.isSampleTimeValid, "sample time valid")
     try require(!sampleTime.isHostTimeValid, "host time invalid")
     let both = AVAudioTime(hostTime: host, sampleTime: 0, atRate: 44100)
     try require(both.extrapolateTime(fromAnchor: sampleTime) != nil, "extrapolate")
+    try proveExtrapolateTime()
     try proveAudioTimeStampFlagRoundTrip()
 
     let session = AVAudioSession.sharedInstance()
@@ -97,6 +100,11 @@ func run() throws {
         try require(true, "setActive threw")
     }
     try require(session.sampleRate == 0, "no fabricated hardware sample rate")
+    try require(session.outputVolume == 0, "telegram outputVolume fail-closed")
+    try require(
+        AVAudioApplication.shared.recordPermission == .denied,
+        "nextcloud recordPermission fail-closed"
+    )
     try require(session.outputNumberOfChannels == 0, "no fabricated output channels")
     try require(session.currentRoute.outputs.isEmpty, "no fabricated route")
     try require(session.recordPermission == .denied, "record permission fail-closed")
@@ -174,6 +182,7 @@ func run() throws {
         }),
         "graph connection"
     )
+    try proveEngineConnectReplacement(format: format)
     try require(!engine.isRunning, "engine is not running")
     do {
         try engine.start()
@@ -224,15 +233,11 @@ func run() throws {
     )
     try require(vector.up.y == 1, "vector up")
 
+    try provePlayerFixtures()
+    try proveCorpusCompileSurfaces()
+    try proveGraphSendable()
     let tmp = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("avfaudio-probe.bin")
-    try Data([0, 1, 2, 3]).write(to: tmp)
-    let filePlayer = try AVAudioPlayer(contentsOf: tmp)
-    try require(filePlayer.prepareToPlay() == false, "player prepare fail-closed")
-    try require(filePlayer.play() == false, "player hardware fail-closed")
-    try require(!filePlayer.isPlaying, "player not playing")
-    filePlayer.volume = 0.5
-    try require(filePlayer.volume == 0.5, "player volume stored")
-
+    try avfaudioTestLinearPCMWAVE().write(to: tmp)
     let recorder = try AVAudioRecorder(url: tmp.appendingPathExtension("rec"), format: format)
     try require(recorder.prepareToRecord() == false, "recorder prepare fail-closed")
     try require(recorder.record() == false, "recorder hardware fail-closed")
@@ -309,6 +314,208 @@ func requireFormat(_ format: AVAudioFormat?) throws -> AVAudioFormat {
 func requireConverter(_ converter: AVAudioConverter?) throws -> AVAudioConverter {
     guard let converter else { throw RuntimeFailure.message("nil converter") }
     return converter
+}
+
+func avfaudioTestLinearPCMWAVE(
+    frames: Int = 8,
+    sampleRate: UInt32 = 44100,
+    channels: UInt16 = 2
+) -> Data {
+    let blockAlign = channels * 2
+    let dataBytes = UInt32(frames) * UInt32(blockAlign)
+    let byteRate = sampleRate * UInt32(blockAlign)
+    var data = Data()
+    func appendASCII(_ text: String) {
+        data.append(contentsOf: text.utf8)
+    }
+    func appendU16(_ value: UInt16) {
+        var little = value.littleEndian
+        withUnsafeBytes(of: &little) { data.append(contentsOf: $0) }
+    }
+    func appendU32(_ value: UInt32) {
+        var little = value.littleEndian
+        withUnsafeBytes(of: &little) { data.append(contentsOf: $0) }
+    }
+    appendASCII("RIFF")
+    appendU32(36 + dataBytes)
+    appendASCII("WAVE")
+    appendASCII("fmt ")
+    appendU32(16)
+    appendU16(1)
+    appendU16(channels)
+    appendU32(sampleRate)
+    appendU32(byteRate)
+    appendU16(blockAlign)
+    appendU16(16)
+    appendASCII("data")
+    appendU32(dataBytes)
+    data.append(contentsOf: Array(repeating: 0, count: Int(dataBytes)))
+    return data
+}
+
+func provePlayerFixtures() throws {
+    do {
+        _ = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/no/such/avfaudio-player.wav"))
+        throw RuntimeFailure.message("missing URL must throw")
+    } catch is RuntimeFailure {
+        throw RuntimeFailure.message("missing URL must throw")
+    } catch {}
+
+    let directory = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
+    do {
+        _ = try AVAudioPlayer(contentsOf: directory)
+        throw RuntimeFailure.message("unreadable directory URL must throw")
+    } catch is RuntimeFailure {
+        throw RuntimeFailure.message("unreadable directory URL must throw")
+    } catch {}
+
+    do {
+        _ = try AVAudioPlayer(data: Data())
+        throw RuntimeFailure.message("empty data must throw")
+    } catch is RuntimeFailure {
+        throw RuntimeFailure.message("empty data must throw")
+    } catch {}
+
+    do {
+        _ = try AVAudioPlayer(data: Data([0, 1, 2, 3, 4, 5, 6, 7]))
+        throw RuntimeFailure.message("garbage data must throw")
+    } catch is RuntimeFailure {
+        throw RuntimeFailure.message("garbage data must throw")
+    } catch {}
+
+    let wave = avfaudioTestLinearPCMWAVE()
+    let fromData = try AVAudioPlayer(data: wave)
+    try require(fromData.format.sampleRate == 44100, "wave sample rate")
+    try require(fromData.format.channelCount == 2, "wave channels")
+    try require(abs(fromData.duration - (8.0 / 44100.0)) < 0.000_000_1, "wave duration")
+    try require(fromData.prepareToPlay() == false, "player prepare fail-closed")
+    try require(fromData.play() == false, "player hardware fail-closed")
+    try require(!fromData.isPlaying, "player not playing")
+    fromData.volume = 0.5
+    try require(fromData.volume == 0.5, "player volume stored")
+
+    let hinted = try AVAudioPlayer(data: wave, fileTypeHint: "public.wav")
+    try require(hinted.duration == fromData.duration, "hinted wave duration")
+
+    let tmp = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("avfaudio-valid.wav")
+    try wave.write(to: tmp)
+    let fromURL = try AVAudioPlayer(contentsOf: tmp)
+    try require(fromURL.url == tmp, "wave url retained")
+    try require(fromURL.play() == false, "url player hardware fail-closed")
+    let hintedURL = try AVAudioPlayer(contentsOf: tmp, fileTypeHint: "public.wav")
+    try require(hintedURL.format.channelCount == 2, "hinted url channels")
+}
+
+func proveEngineConnectReplacement(format: AVAudioFormat) throws {
+    let engine = AVAudioEngine()
+    let sourceA = AVAudioPlayerNode()
+    let sourceB = AVAudioPlayerNode()
+    let destination = AVAudioMixerNode()
+    let unrelated = AVAudioMixerNode()
+    engine.attach(sourceA)
+    engine.attach(sourceB)
+    engine.attach(destination)
+    engine.attach(unrelated)
+
+    engine.connect(sourceA, to: destination, fromBus: 0, toBus: 0, format: format)
+    engine.connect(sourceB, to: destination, fromBus: 0, toBus: 0, format: format)
+    try require(
+        engine.inputConnectionPoint(for: destination, inputBus: 0)?.node === sourceB,
+        "competing source replaced destination bus"
+    )
+    try require(
+        engine.outputConnectionPoints(for: sourceA, outputBus: 0).isEmpty,
+        "replaced source lost destination bus 0"
+    )
+    try require(
+        engine.outputConnectionPoints(for: sourceB, outputBus: 0).contains(where: {
+            $0.node === destination && $0.bus == 0
+        }),
+        "winner remains on destination bus 0"
+    )
+
+    engine.connect(sourceA, to: unrelated, fromBus: 0, toBus: 0, format: format)
+    try require(
+        engine.inputConnectionPoint(for: destination, inputBus: 0)?.node === sourceB,
+        "unrelated same-numbered bus must not steal destination input"
+    )
+    try require(
+        engine.inputConnectionPoint(for: unrelated, inputBus: 0)?.node === sourceA,
+        "unrelated destination bus 0 stored"
+    )
+
+    engine.connect(sourceA, to: destination, fromBus: 0, toBus: 1, format: format)
+    try require(
+        engine.inputConnectionPoint(for: destination, inputBus: 0)?.node === sourceB,
+        "bus 1 connect must not replace bus 0"
+    )
+    try require(
+        engine.inputConnectionPoint(for: destination, inputBus: 1)?.node === sourceA,
+        "destination bus 1 stored independently"
+    )
+}
+
+func proveExtrapolateTime() throws {
+    let rate: Double = 44100
+    let after = AVAudioTime(hostTime: 1_000_000_000, sampleTime: 88200, atRate: rate)
+    let anchor = AVAudioTime(hostTime: 1_000_000_000, sampleTime: 44100, atRate: rate)
+    let afterResult = after.extrapolateTime(fromAnchor: anchor)
+    try require(afterResult?.isHostTimeValid == true, "after-anchor host valid")
+    try require(afterResult?.hostTime == 2_000_000_000, "after-anchor host ticks")
+    try require(afterResult?.sampleTime == 88200, "after-anchor sample")
+
+    let before = AVAudioTime(hostTime: 9, sampleTime: 0, atRate: rate)
+    let beforeResult = before.extrapolateTime(fromAnchor: anchor)
+    try require(beforeResult?.isHostTimeValid == true, "before-anchor host valid")
+    try require(beforeResult?.hostTime == 0, "before-anchor host ticks")
+    try require(beforeResult?.sampleTime == 0, "before-anchor sample")
+
+    let same = AVAudioTime(hostTime: 5, sampleTime: 44100, atRate: rate)
+    let sameResult = same.extrapolateTime(fromAnchor: anchor)
+    try require(sameResult?.hostTime == 1_000_000_000, "equal-delta host unchanged")
+
+    let overflowAnchor = AVAudioTime(hostTime: UInt64.max - 5, sampleTime: 0, atRate: 1)
+    let overflowSample = AVAudioTime(hostTime: 0, sampleTime: 1, atRate: 1)
+    try require(
+        overflowSample.extrapolateTime(fromAnchor: overflowAnchor) == nil,
+        "overflow returns nil"
+    )
+
+    let underflowAnchor = AVAudioTime(hostTime: 5, sampleTime: 1, atRate: 1)
+    let underflowSample = AVAudioTime(hostTime: 0, sampleTime: 0, atRate: 1)
+    try require(
+        underflowSample.extrapolateTime(fromAnchor: underflowAnchor) == nil,
+        "underflow returns nil"
+    )
+}
+
+final class SignalSpeechDelegate: NSObject, AVSpeechSynthesizerDelegate, @unchecked Sendable {}
+
+func proveCorpusCompileSurfaces() throws {
+    let utterance = AVSpeechUtterance(string: "signal corpus")
+    let synthesizer = AVSpeechSynthesizer()
+    let delegate = SignalSpeechDelegate()
+    synthesizer.delegate = delegate
+    synthesizer.speak(utterance)
+    try require(!synthesizer.isSpeaking, "signal speak fail-closed")
+    try require(utterance.speechString == "signal corpus", "signal utterance")
+
+    let session = AVAudioSession.sharedInstance()
+    _ = session.outputVolume
+    try require(session.outputVolume == 0, "telegram outputVolume")
+
+    try require(
+        AVAudioApplication.shared.recordPermission == .denied,
+        "nextcloud application permission"
+    )
+}
+
+func proveGraphSendable() throws {
+    let format = try requireFormat(
+        AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)
+    )
+    let send: @Sendable () -> Double = { format.sampleRate }
+    try require(send() == 44100, "graph Sendable AVAudioFormat")
 }
 
 func proveAudioTimeStampFlagRoundTrip() throws {
