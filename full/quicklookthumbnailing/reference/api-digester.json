@@ -1,0 +1,1111 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "_DarwinFoundation1.TargetConditionals",
+        "printedName": "_DarwinFoundation1.TargetConditionals"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "QuickLookThumbnailing.QLThumbnailRepresentation",
+        "printedName": "QuickLookThumbnailing.QLThumbnailRepresentation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "QuickLookThumbnailing.QLThumbnailProvider",
+        "printedName": "QuickLookThumbnailing.QLThumbnailProvider"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "QuickLookThumbnailing.QLThumbnailReply",
+        "printedName": "QuickLookThumbnailing.QLThumbnailReply"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "QuickLookThumbnailing.QLThumbnailRequest",
+        "printedName": "QuickLookThumbnailing.QLThumbnailRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "QuickLookThumbnailing.QLThumbnailGenerationRequest",
+        "printedName": "QuickLookThumbnailing.QLThumbnailGenerationRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "QuickLookThumbnailing.QLThumbnailErrors",
+        "printedName": "QuickLookThumbnailing.QLThumbnailErrors"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "QuickLookThumbnailing.QLThumbnailGenerator",
+        "printedName": "QuickLookThumbnailing.QLThumbnailGenerator"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC16QLThumbnailErrorLeV03_nsB0So7NSErrorCvg",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC16QLThumbnailErrorLeV03_nsB0So7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC16QLThumbnailErrorLeV03_nsB0So7NSErrorCvp",
+            "moduleName": "QuickLookThumbnailing",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC16QLThumbnailErrorLeV03_nsB0So7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "QLThumbnailError",
+                "printedName": "QuickLookThumbnailing.QLThumbnailError",
+                "usr": "c:@E@QLThumbnailError"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC16QLThumbnailErrorLeV03_nsB0ABSo7NSErrorC_tcfc",
+            "moduleName": "QuickLookThumbnailing",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC16QLThumbnailErrorLeV03_nsB0ABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC16QLThumbnailErrorLeV11errorDomainSSvgZ",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16QLThumbnailErrorLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC16QLThumbnailErrorLeV11errorDomainSSvpZ",
+            "moduleName": "QuickLookThumbnailing",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC16QLThumbnailErrorLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                        "usr": "c:@E@QLThumbnailError"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "QuickLookThumbnailing.QLThumbnailError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo16QLThumbnailErrorV8rawValueABSgSi_tcfc",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So16QLThumbnailErrorV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo16QLThumbnailErrorV8rawValueSivg",
+                    "moduleName": "QuickLookThumbnailing",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So16QLThumbnailErrorV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo16QLThumbnailErrorV8rawValueSivp",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So16QLThumbnailErrorV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo16QLThumbnailErrorV8RawValuea",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So16QLThumbnailErrorV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "QLThumbnailError",
+                    "printedName": "QuickLookThumbnailing.QLThumbnailError",
+                    "usr": "c:@E@QLThumbnailError"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@QLThumbnailError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                        "usr": "c:@E@QLThumbnailError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                            "usr": "c:@E@QLThumbnailError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "QuickLookThumbnailing.QLThumbnailError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(QuickLookThumbnailing.QLThumbnailError.Code.Type) -> QuickLookThumbnailing.QLThumbnailError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "generationFailed",
+                "printedName": "generationFailed",
+                "usr": "c:@E@QLThumbnailError@QLThumbnailErrorGenerationFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                        "usr": "c:@E@QLThumbnailError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                            "usr": "c:@E@QLThumbnailError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "QuickLookThumbnailing.QLThumbnailError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(QuickLookThumbnailing.QLThumbnailError.Code.Type) -> QuickLookThumbnailing.QLThumbnailError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "savingToURLFailed",
+                "printedName": "savingToURLFailed",
+                "usr": "c:@E@QLThumbnailError@QLThumbnailErrorSavingToURLFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                        "usr": "c:@E@QLThumbnailError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                            "usr": "c:@E@QLThumbnailError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "QuickLookThumbnailing.QLThumbnailError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(QuickLookThumbnailing.QLThumbnailError.Code.Type) -> QuickLookThumbnailing.QLThumbnailError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "noCachedThumbnail",
+                "printedName": "noCachedThumbnail",
+                "usr": "c:@E@QLThumbnailError@QLThumbnailErrorNoCachedThumbnail"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                        "usr": "c:@E@QLThumbnailError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                            "usr": "c:@E@QLThumbnailError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "QuickLookThumbnailing.QLThumbnailError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(QuickLookThumbnailing.QLThumbnailError.Code.Type) -> QuickLookThumbnailing.QLThumbnailError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "noCloudThumbnail",
+                "printedName": "noCloudThumbnail",
+                "usr": "c:@E@QLThumbnailError@QLThumbnailErrorNoCloudThumbnail"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                        "usr": "c:@E@QLThumbnailError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                            "usr": "c:@E@QLThumbnailError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "QuickLookThumbnailing.QLThumbnailError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(QuickLookThumbnailing.QLThumbnailError.Code.Type) -> QuickLookThumbnailing.QLThumbnailError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "requestInvalid",
+                "printedName": "requestInvalid",
+                "usr": "c:@E@QLThumbnailError@QLThumbnailErrorRequestInvalid"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                        "usr": "c:@E@QLThumbnailError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                            "usr": "c:@E@QLThumbnailError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "QuickLookThumbnailing.QLThumbnailError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(QuickLookThumbnailing.QLThumbnailError.Code.Type) -> QuickLookThumbnailing.QLThumbnailError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "requestCancelled",
+                "printedName": "requestCancelled",
+                "usr": "c:@E@QLThumbnailError@QLThumbnailErrorRequestCancelled"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "QuickLookThumbnailing.QLThumbnailError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "13.0",
+            "kind": "TypeDecl",
+            "moduleName": "QuickLookThumbnailing",
+            "name": "Code",
+            "objc_name": "QLThumbnailError",
+            "printedName": "Code",
+            "usr": "c:@E@QLThumbnailError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                    "usr": "c:@E@QLThumbnailError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC16QLThumbnailErrorLeV16generationFailedSoAAVvgZ",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16QLThumbnailErrorLeV16generationFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                "usr": "c:@E@QLThumbnailError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "QuickLookThumbnailing",
+            "name": "generationFailed",
+            "printedName": "generationFailed",
+            "static": true,
+            "usr": "c:@E@QLThumbnailError@QLThumbnailErrorGenerationFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                    "usr": "c:@E@QLThumbnailError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC16QLThumbnailErrorLeV17savingToURLFailedSoAAVvgZ",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16QLThumbnailErrorLeV17savingToURLFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                "usr": "c:@E@QLThumbnailError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "QuickLookThumbnailing",
+            "name": "savingToURLFailed",
+            "printedName": "savingToURLFailed",
+            "static": true,
+            "usr": "c:@E@QLThumbnailError@QLThumbnailErrorSavingToURLFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                    "usr": "c:@E@QLThumbnailError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC16QLThumbnailErrorLeV17noCachedThumbnailSoAAVvgZ",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16QLThumbnailErrorLeV17noCachedThumbnailSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                "usr": "c:@E@QLThumbnailError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "QuickLookThumbnailing",
+            "name": "noCachedThumbnail",
+            "printedName": "noCachedThumbnail",
+            "static": true,
+            "usr": "c:@E@QLThumbnailError@QLThumbnailErrorNoCachedThumbnail"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                    "usr": "c:@E@QLThumbnailError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC16QLThumbnailErrorLeV16noCloudThumbnailSoAAVvgZ",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16QLThumbnailErrorLeV16noCloudThumbnailSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                "usr": "c:@E@QLThumbnailError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "QuickLookThumbnailing",
+            "name": "noCloudThumbnail",
+            "printedName": "noCloudThumbnail",
+            "static": true,
+            "usr": "c:@E@QLThumbnailError@QLThumbnailErrorNoCloudThumbnail"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                    "usr": "c:@E@QLThumbnailError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC16QLThumbnailErrorLeV14requestInvalidSoAAVvgZ",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16QLThumbnailErrorLeV14requestInvalidSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                "usr": "c:@E@QLThumbnailError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "QuickLookThumbnailing",
+            "name": "requestInvalid",
+            "printedName": "requestInvalid",
+            "static": true,
+            "usr": "c:@E@QLThumbnailError@QLThumbnailErrorRequestInvalid"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                    "usr": "c:@E@QLThumbnailError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC16QLThumbnailErrorLeV16requestCancelledSoAAVvgZ",
+                "moduleName": "QuickLookThumbnailing",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC16QLThumbnailErrorLeV16requestCancelledSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "QuickLookThumbnailing.QLThumbnailError.Code",
+                "usr": "c:@E@QLThumbnailError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "QuickLookThumbnailing",
+            "name": "requestCancelled",
+            "printedName": "requestCancelled",
+            "static": true,
+            "usr": "c:@E@QLThumbnailError@QLThumbnailErrorRequestCancelled"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "13.0",
+        "kind": "TypeDecl",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "QLThumbnailError",
+        "printedName": "QLThumbnailError",
+        "usr": "c:@E@QLThumbnailError"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "CoreTransferable",
+        "printedName": "CoreTransferable"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "ExtensionFoundation",
+        "printedName": "ExtensionFoundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "QuickLookThumbnailing",
+        "printedName": "QuickLookThumbnailing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "QuickLookThumbnailing",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "QuickLookThumbnailing",
+    "printedName": "QuickLookThumbnailing"
+  }
+}
