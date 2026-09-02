@@ -3345,7 +3345,7 @@ class ShellContractTests(unittest.TestCase):
             "libquartz.dylib",
             "remove-tree",
             "assert_vendor_tree",
-            "HEAD:uikit",
+            "HEAD:$vendor_name",
             'UIKIT_CHECKOUT=$SUPPORT_CHECKOUT/uikit',
             'MACHORUN_CHECKOUT=$SUPPORT_CHECKOUT/machorun',
             "source=HEAD:",
