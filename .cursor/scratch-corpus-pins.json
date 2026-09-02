@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "pinnedImage": {
+    "reference": "swift:6.2-noble",
+    "digest": "sha256:29b983751c605c2d3102d2ab93438c6e0cadf110d9d2aa6e929b6dec9dcb7cbc",
+    "note": "Same digest as harness/Dockerfile and .cursor/Dockerfile. Cursor env attestation is valid only when the live toolchain matches this image's Swift 6.2.4 / LLVM 18 / Ubuntu 24.04 fingerprint."
+  },
+  "sources": [
+    {
+      "id": "focus-ios",
+      "repository": "https://github.com/mozilla-mobile/focus-ios.git",
+      "commit": "a2832521c1daa0c23419c73705ae043ed60c9791",
+      "tree": "065d8e374c9caa3be2915165ba7cbbe4b1d61d7e",
+      "destination": "scratch/ladder-corpus/focus-ios"
+    },
+    {
+      "id": "swift-foundation",
+      "repository": "https://github.com/apple/swift-foundation.git",
+      "commit": "c6793ef0c19c2cbaeba5a0e52078f129afc7dcfc",
+      "tree": "4651798679b98e27383ca3626434fb128f191486",
+      "destination": "scratch/swift-foundation"
+    },
+    {
+      "id": "swift-collections",
+      "repository": "https://github.com/apple/swift-collections.git",
+      "commit": "9bf03ff58ce34478e66aaee630e491823326fd06",
+      "tree": "5e4de96f40ccf147dab967f38cb7988ecd933c27",
+      "destination": "scratch/swift-collections"
+    },
+    {
+      "id": "opencombine",
+      "repository": "https://github.com/OpenCombine/OpenCombine.git",
+      "commit": "1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b",
+      "tree": "66a9d91efc910c7577e40b2dec166a2de427594a",
+      "destination": "scratch/opencombine-core-durable-20260828-r2/source"
+    }
+  ]
+}
