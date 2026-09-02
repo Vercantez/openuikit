@@ -1,4 +1,4 @@
-/* macho.h -- the on-disk Mach-O format, as arm64 Apple toolchains emit it.
+/* macho.h -- the on-disk Mach-O format, as 64-bit Apple toolchains emit it.
  *
  * Deliberately self-contained: no Apple headers, no mach-o headers at all. Every
  * constant here is one that docs/MACHO_NOTES.md measured on a real binary.
@@ -22,7 +22,22 @@
 #define CPU_TYPE_ARM64          0x0100000c
 #define CPU_SUBTYPE_ARM64_ALL   0
 #define CPU_SUBTYPE_ARM64E      2
+#define CPU_TYPE_X86_64         0x01000007
+#define CPU_SUBTYPE_X86_64_ALL  3
 #define CPU_SUBTYPE_MASK        0xff000000u
+
+#define ARM_THREAD_STATE64      6
+#define x86_THREAD_STATE64      4
+
+#if defined(__x86_64__)
+#  define MR_HOST_CPU_TYPE CPU_TYPE_X86_64
+#  define MR_HOST_CPU_NAME "x86_64"
+#elif defined(__aarch64__)
+#  define MR_HOST_CPU_TYPE CPU_TYPE_ARM64
+#  define MR_HOST_CPU_NAME "arm64"
+#else
+#  error machorun hosts only x86_64 and aarch64
+#endif
 
 /* ------------------------------------------------------------- filetype */
 #define MH_EXECUTE  0x2
