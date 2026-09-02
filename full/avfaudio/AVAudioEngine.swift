@@ -37,7 +37,7 @@ extension AVAudioMixing {
     }
 }
 
-open class AVAudioNode: NSObject, @unchecked Sendable {
+open class AVAudioNode: NSObject {
     public internal(set) weak var engine: AVAudioEngine?
     public var numberOfInputs: Int { 1 }
     public var numberOfOutputs: Int { 1 }
@@ -88,7 +88,7 @@ open class AVAudioNode: NSObject, @unchecked Sendable {
     }
 }
 
-public final class AVAudioMixingDestination: NSObject, @unchecked Sendable {
+public final class AVAudioMixingDestination: NSObject {
     public let connectionPoint: AVAudioConnectionPoint
     public init(connectionPoint: AVAudioConnectionPoint) {
         self.connectionPoint = connectionPoint
@@ -96,7 +96,7 @@ public final class AVAudioMixingDestination: NSObject, @unchecked Sendable {
     }
 }
 
-public final class AVAudioConnectionPoint: NSObject, @unchecked Sendable {
+public final class AVAudioConnectionPoint: NSObject {
     public private(set) weak var node: AVAudioNode?
     public let bus: AVAudioNodeBus
     public init(node: AVAudioNode, bus: AVAudioNodeBus) {
@@ -106,7 +106,7 @@ public final class AVAudioConnectionPoint: NSObject, @unchecked Sendable {
     }
 }
 
-open class AVAudioIONode: AVAudioNode, @unchecked Sendable {
+open class AVAudioIONode: AVAudioNode {
     #if canImport(AudioToolbox)
     public var audioUnit: AudioUnit? { nil }
     #endif
@@ -119,7 +119,7 @@ open class AVAudioIONode: AVAudioNode, @unchecked Sendable {
     }
 }
 
-public final class AVAudioInputNode: AVAudioIONode, AVAudioMixing, @unchecked Sendable {
+public final class AVAudioInputNode: AVAudioIONode, AVAudioMixing {
     public var volume: Float {
         get { storedVolume }
         set { storedVolume = newValue }
@@ -162,11 +162,11 @@ public final class AVAudioInputNode: AVAudioIONode, AVAudioMixing, @unchecked Se
     }
 }
 
-public final class AVAudioOutputNode: AVAudioIONode, @unchecked Sendable {
+public final class AVAudioOutputNode: AVAudioIONode {
     override public var numberOfOutputs: Int { 0 }
 }
 
-public final class AVAudioMixerNode: AVAudioNode, AVAudioMixing, @unchecked Sendable {
+public final class AVAudioMixerNode: AVAudioNode, AVAudioMixing {
     public var outputVolume: Float = 1
     public var volume: Float {
         get { storedVolume }
@@ -192,7 +192,7 @@ public final class AVAudioMixerNode: AVAudioNode, AVAudioMixing, @unchecked Send
     }
 }
 
-public final class AVAudioPlayerNode: AVAudioNode, AVAudioMixing, @unchecked Sendable {
+public final class AVAudioPlayerNode: AVAudioNode, AVAudioMixing {
     public private(set) var isPlaying = false
     public var volume: Float {
         get { storedVolume }
@@ -318,7 +318,7 @@ public final class AVAudioPlayerNode: AVAudioNode, AVAudioMixing, @unchecked Sen
 }
 
 #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
-public final class AVAudioSourceNode: AVAudioNode, AVAudioMixing, @unchecked Sendable {
+public final class AVAudioSourceNode: AVAudioNode, AVAudioMixing {
     public var volume: Float {
         get { storedVolume }
         set { storedVolume = newValue }
@@ -352,7 +352,7 @@ public final class AVAudioSourceNode: AVAudioNode, AVAudioMixing, @unchecked Sen
     }
 }
 
-public final class AVAudioSinkNode: AVAudioNode, @unchecked Sendable {
+public final class AVAudioSinkNode: AVAudioNode {
     private let receiver: AVAudioSinkNodeReceiverBlock
     public init(receiverBlock: @escaping AVAudioSinkNodeReceiverBlock) {
         self.receiver = receiverBlock
@@ -362,7 +362,7 @@ public final class AVAudioSinkNode: AVAudioNode, @unchecked Sendable {
 
 #endif
 
-public final class AVAudioEngine: NSObject, @unchecked Sendable {
+public final class AVAudioEngine: NSObject {
     private let lock = NSLock()
     private var nodes: [AVAudioNode] = []
     private var connections: [(AVAudioNode, AVAudioNode, AVAudioNodeBus, AVAudioNodeBus, AVAudioFormat?)] = []
@@ -449,7 +449,7 @@ public final class AVAudioEngine: NSObject, @unchecked Sendable {
         attach(node1)
         attach(node2)
         avfaudioLock(lock) {
-            connections.removeAll { $0.0 === node1 && $0.3 == bus2 }
+            connections.removeAll { $0.1 === node2 && $0.3 == bus2 }
             connections.append((node1, node2, bus1, bus2, format))
             if let format {
                 node1.storedFormat = format
@@ -636,14 +636,14 @@ public final class AVAudioEngine: NSObject, @unchecked Sendable {
     }
 }
 
-public final class AVAudioEnvironmentDistanceAttenuationParameters: NSObject, @unchecked Sendable {
+public final class AVAudioEnvironmentDistanceAttenuationParameters: NSObject {
     public var distanceAttenuationModel: AVAudioEnvironmentDistanceAttenuationModel = .inverse
     public var referenceDistance: Float = 1
     public var maximumDistance: Float = 10000
     public var rolloffFactor: Float = 1
 }
 
-public final class AVAudioEnvironmentReverbParameters: NSObject, @unchecked Sendable {
+public final class AVAudioEnvironmentReverbParameters: NSObject {
     public var enable = false
     public var level: Float = 0
     public var filterParameters = AVAudioUnitEQFilterParameters()
@@ -652,7 +652,7 @@ public final class AVAudioEnvironmentReverbParameters: NSObject, @unchecked Send
     }
 }
 
-public final class AVAudioEnvironmentNode: AVAudioNode, AVAudioMixing, @unchecked Sendable {
+public final class AVAudioEnvironmentNode: AVAudioNode, AVAudioMixing {
     public var volume: Float {
         get { storedVolume }
         set { storedVolume = newValue }
