@@ -497,6 +497,18 @@ want quota               && build quota               "$CHAINED_TARGET" quota   
 # not accidentally promoted into an ABI promise.
 want fts                 && build fts                 "$CHAINED_TARGET" fts                 fts.c --
 
+# statfs. Darwin's struct is 2168 bytes; Linux's is 120 and has no
+# f_mntonname -- FileManager.attributesOfFileSystem reads that field at
+# offset 88. The fixture pins the layout and grades the /proc/self/mounts
+# prefix property, not the host-specific mount-point string.
+want statfs              && build statfs              "$CHAINED_TARGET" statfs              statfs.c --
+
+# copyfile. Darwin-only; no glibc counterpart. Grades the transcribed
+# COPYFILE_* values, COPYFILE_ALL of a file with an xattr (a data-only copy
+# would pass the bytes and fail the attribute), EXCL -> EEXIST, CLONE as
+# success-or-fallback, and fcopyfile's EINVAL / ENOTSUP errno paths.
+want copyfile            && build copyfile            "$CHAINED_TARGET" copyfile            copyfile.c --
+
 # pthread_mutex_variants. Darwin publishes THREE static mutex initialisers and
 # the signature word IS the type -- a constant nothing at any call site names,
 # because the guest's compiler laid it down. CoreFoundation's CFLockInit is the
