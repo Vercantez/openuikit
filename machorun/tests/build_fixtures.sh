@@ -499,8 +499,9 @@ want fts                 && build fts                 "$CHAINED_TARGET" fts     
 
 # statfs. Darwin's struct is 2168 bytes; Linux's is 120 and has no
 # f_mntonname -- FileManager.attributesOfFileSystem reads that field at
-# offset 88. The fixture pins the layout and grades the /proc/self/mounts
-# prefix property, not the host-specific mount-point string.
+# offset 88. The fixture pins the layout. "/" grades the prefix property
+# (it holds on both oracles). A /tmp path does not -- that is the host's
+# mount topology -- and is graded by "a mount point names itself".
 want statfs              && build statfs              "$CHAINED_TARGET" statfs              statfs.c --
 
 # copyfile. Darwin-only; no glibc counterpart. Grades the transcribed

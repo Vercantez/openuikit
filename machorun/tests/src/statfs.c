@@ -10,9 +10,19 @@
  * FileManager.attributesOfFileSystem reads that field at Darwin offset 88
  * and passes it to quotactl. machorun fills it from /proc/self/mounts by
  * longest-prefix match. This fixture does not print the mount-point string
- * (it differs across hosts: "/" vs "/tmp" vs a bind mount); it prints
- * whether the string is an absolute path that is a prefix of the queried
- * path, which is the property both sides must keep.
+ * (it differs across hosts: "/" vs "/tmp" vs a bind mount).
+ *
+ * "/" is the one queried path whose prefix property holds on both oracles:
+ * Darwin's root volume and Linux's /proc/self/mounts both yield an
+ * f_mntonname that is a prefix of "/". A /tmp path is NOT that property --
+ * it is a property of the host's mount topology. On macOS, /tmp ->
+ * /private/tmp lives on the /System/Volumes/Data firmlink, so
+ * f_mntonname ("/System/Volumes/Data") is never a string prefix of the
+ * queried path; on Linux the longest-prefix resolution legitimately IS a
+ * prefix. Both answers are correct for their host. The /tmp lines
+ * therefore grade a topology-invariant claim: f_mntonname is absolute,
+ * and statfs(f_mntonname) returns the same f_mntonname and f_fsid -- a
+ * mount point names itself.
  *
  * f_flags ROTATE on the way back (Linux ST_NOSUID is Darwin MNT_SYNCHRONOUS)
  * and are not printed as raw numbers -- a host's mount options would make
@@ -50,20 +60,44 @@ static int is_mount_prefix(const char *mnt, const char *path)
     return strncmp(path, mnt, n) == 0 && (path[n] == 0 || path[n] == '/');
 }
 
-static void show_sfs(const char *what, const char *queried, const struct statfs *s)
+/* A mount point names itself: statfs(f_mntonname) returns the same name
+ * and the same fsid. Holds on a Darwin firmlink (/System/Volumes/Data)
+ * and on a Linux /proc/self/mounts longest-prefix hit. */
+static int mount_names_itself(const struct statfs *s)
+{
+    struct statfs self;
+    if (!s || s->f_mntonname[0] != '/') return 0;
+    memset(&self, 0, sizeof self);
+    if (statfs(s->f_mntonname, &self) != 0) return 0;
+    if (strcmp(self.f_mntonname, s->f_mntonname) != 0) return 0;
+    return self.f_fsid.val[0] == s->f_fsid.val[0]
+        && self.f_fsid.val[1] == s->f_fsid.val[1];
+}
+
+static void show_sfs_root(const struct statfs *s)
 {
     int abs = s->f_mntonname[0] == '/';
-    int pref = is_mount_prefix(s->f_mntonname, queried);
+    int pref = is_mount_prefix(s->f_mntonname, "/");
     int named = s->f_fstypename[0] != 0;
-    printf("%s rc-fields  bsize>0 %d blocks>0 %d mnton-abs %d mnton-prefix %d "
+    printf("statfs / rc-fields  bsize>0 %d blocks>0 %d mnton-abs %d mnton-prefix %d "
            "fstype-named %d flags-word-nonzero-or-ro %d\n",
-           what,
            s->f_bsize > 0, s->f_blocks > 0, abs, pref, named,
            /* A 120-byte forward leaves offset 64 as leftover guest memory,
             * not a translated flags word. Either 0 (no ST_* bits mapped) or
             * a real Darwin MNT_* bit is a translated result; we only reject
             * the "untouched" case by also checking f_mntonname above. */
            1);
+}
+
+static void show_sfs_tmp(const char *what, const struct statfs *s)
+{
+    int abs = s->f_mntonname[0] == '/';
+    int self = mount_names_itself(s);
+    int named = s->f_fstypename[0] != 0;
+    printf("%s rc-fields  bsize>0 %d blocks>0 %d mnton-abs %d mnton-self %d "
+           "fstype-named %d flags-word-nonzero-or-ro %d\n",
+           what,
+           s->f_bsize > 0, s->f_blocks > 0, abs, self, named, 1);
 }
 
 int main(void)
@@ -87,7 +121,7 @@ int main(void)
     errno = 0;
     rc = statfs("/", &a);
     printf("statfs /                rc %d errno %d\n", rc, rc < 0 ? errno : 0);
-    if (rc == 0) show_sfs("statfs /", "/", &a);
+    if (rc == 0) show_sfs_root(&a);
 
     unlink(PATH);
     fd = open(PATH, O_CREAT | O_TRUNC | O_RDWR, 0644);
@@ -98,12 +132,12 @@ int main(void)
     memset(&b, 0, sizeof b);
     rc = statfs(PATH, &a);
     printf("statfs tmp              rc %d\n", rc);
-    if (rc == 0) show_sfs("statfs tmp", PATH, &a);
+    if (rc == 0) show_sfs_tmp("statfs tmp", &a);
 
     errno = 0;
     rc = fstatfs(fd, &b);
     printf("fstatfs tmp             rc %d errno %d\n", rc, rc < 0 ? errno : 0);
-    if (rc == 0) show_sfs("fstatfs tmp", PATH, &b);
+    if (rc == 0) show_sfs_tmp("fstatfs tmp", &b);
 
     if (rc == 0) {
         printf("path-fd agree           mnton %d bsize %d blocks %d fstype %d\n",

@@ -1091,9 +1091,13 @@ and descriptor forms of the same file agree.
 The divergent hazard is that Linux's `struct statfs` is 120 bytes and has
 **no** `f_mntonname` at all — `FileManager.attributesOfFileSystem` reads
 that field and hands it to `quotactl`. machorun fills it from
-`/proc/self/mounts` by longest-prefix match. The fixture prints whether
-the string is an absolute prefix of the queried path, not the mount-point
-text (which differs across hosts).
+`/proc/self/mounts` by longest-prefix match. The fixture does not print
+the mount-point text (it differs across hosts). The `"/"` line grades
+that `f_mntonname` is an absolute prefix of `"/"`, which holds on both
+oracles. A `/tmp` path is a property of the host's mount topology — on
+macOS `/tmp` → `/private/tmp` lives on `/System/Volumes/Data`, so the
+name is never a prefix of the queried path — and is graded instead by
+self-consistency: `statfs(f_mntonname)` returns the same name and fsid.
 
 No Mach-O and no `tests/expected/statfs.*` are committed: those can only
 be recorded on Darwin. Flip the manifest cell to `run` after

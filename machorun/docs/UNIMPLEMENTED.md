@@ -1152,13 +1152,18 @@ mount). Darwin `MNT_*` bits with no Linux `ST_*` counterpart (`MNT_UNION`,
 
 **Gate.** `tests/src/statfs.c` pins the 2168-byte layout and the `MNT_*`
 values, checks `statfs` vs `fstatfs` agree, `ENOENT` on a missing path,
-and that `f_mntonname` is an absolute prefix of the queried path (the
-`/proc/self/mounts` hazard). It does **not** print host-specific mount
-names. Mach-O + expected outputs need a Darwin host
-(`norun:NEEDS_DARWIN_BASELINE`). Linux glibc layout/flag rotation is
-pinned in `sdk/tests/glibc_abi_probe.c`. `sdk/tests/fm_link_probe.c` calls
-`statfs`/`fstatfs` so the TBD surface cannot drop them without failing the
-link probe.
+and that `f_mntonname` is absolute. The `"/"` line grades that the name is
+a prefix of the queried path — that holds on both oracles. A `/tmp` path
+must not: on macOS `/tmp` → `/private/tmp` lives on the
+`/System/Volumes/Data` firmlink, so `f_mntonname` is never a string prefix
+of the queried path, while Linux's `/proc/self/mounts` longest-prefix
+resolution legitimately is. The `/tmp` lines instead grade that a mount
+point names itself (`statfs(f_mntonname)` returns the same `f_mntonname`
+and `f_fsid`). It does **not** print host-specific mount names. Mach-O +
+expected outputs need a Darwin host (`norun:NEEDS_DARWIN_BASELINE`). Linux
+glibc layout/flag rotation is pinned in `sdk/tests/glibc_abi_probe.c`.
+`sdk/tests/fm_link_probe.c` calls `statfs`/`fstatfs` so the TBD surface
+cannot drop them without failing the link probe.
 
 ### `xattr` — **DONE 2026-08-27**; four hazards, and only one of them is a struct
 
