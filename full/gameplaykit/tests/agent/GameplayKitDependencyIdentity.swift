@@ -33,46 +33,29 @@ private func require(_ condition: Bool, _ message: String) throws {
 /// present and identity/ABI assertions pass. Otherwise prints
 /// `GAMEPLAYKIT_DEPENDENCY_IDENTITY_UNAVAILABLE` and does not claim success.
 func runGameplayKitDependencyIdentity() throws {
-    #if canImport(simd) || canImport(SIMD)
-    let hasSIMD = true
+    #if canImport(simd) && canImport(SceneKit) && canImport(SpriteKit) && canImport(GameplayKit)
+    try proveVectorMatrixIdentity()
+    try proveCodingAndCopy()
+    try proveComponentOwnership()
+    try proveSceneKitSpriteKitBridging()
+    try proveDylibLoadAndSymbols()
+    print("GAMEPLAYKIT_DEPENDENCY_IDENTITY_OK")
     #else
-    let hasSIMD = false
+    var missing: [String] = []
+    #if !canImport(simd)
+    missing.append("simd")
     #endif
-    #if canImport(SceneKit)
-    let hasSceneKit = true
-    #else
-    let hasSceneKit = false
+    #if !canImport(SceneKit)
+    missing.append("SceneKit")
     #endif
-    #if canImport(SpriteKit)
-    let hasSpriteKit = true
-    #else
-    let hasSpriteKit = false
+    #if !canImport(SpriteKit)
+    missing.append("SpriteKit")
     #endif
-    #if canImport(GameplayKit)
-    let hasGameplayKit = true
-    #else
-    let hasGameplayKit = false
+    #if !canImport(GameplayKit)
+    missing.append("GameplayKit")
     #endif
-
-    if hasSIMD && hasSceneKit && hasSpriteKit && hasGameplayKit {
-        #if canImport(simd) && canImport(SceneKit) && canImport(SpriteKit) && canImport(GameplayKit)
-        try proveVectorMatrixIdentity()
-        try proveCodingAndCopy()
-        try proveComponentOwnership()
-        try proveSceneKitSpriteKitBridging()
-        try proveDylibLoadAndSymbols()
-        print("GAMEPLAYKIT_DEPENDENCY_IDENTITY_OK")
-        #else
-        print("GAMEPLAYKIT_DEPENDENCY_IDENTITY_UNAVAILABLE missing=simd")
-        #endif
-    } else {
-        var missing: [String] = []
-        if !hasSIMD { missing.append("simd") }
-        if !hasSceneKit { missing.append("SceneKit") }
-        if !hasSpriteKit { missing.append("SpriteKit") }
-        if !hasGameplayKit { missing.append("GameplayKit") }
-        print("GAMEPLAYKIT_DEPENDENCY_IDENTITY_UNAVAILABLE missing=\(missing.joined(separator: ","))")
-    }
+    print("GAMEPLAYKIT_DEPENDENCY_IDENTITY_UNAVAILABLE missing=\(missing.joined(separator: ","))")
+    #endif
 }
 
 #if canImport(simd) && canImport(SceneKit) && canImport(SpriteKit) && canImport(GameplayKit)
