@@ -30,15 +30,8 @@ mkdir -p "$PROOF/include" \
     "$PROOF/frameworks/SystemConfiguration.framework/Headers" \
     "$PROOF/frameworks/SystemConfiguration.framework/Modules" \
     "$PROOF/probe"
-while IFS= read -r header; do
-    test -n "$header" || continue
-    mkdir -p "$(dirname "$PROOF/include/$header")"
-    cp "$ROOT/full/foundation/include/$header" \
-        "$PROOF/include/$header"
-done < "$ROOT/full/foundation/foundation_objc_headers.txt"
-mkdir -p "$PROOF/include/arpa"
-cp "$ROOT/full/sdk-gaps/usr/include/arpa/inet.h" \
-    "$PROOF/include/arpa/inet.h"
+bash "$ROOT/full/foundation/stage_objc_platform_headers.sh" \
+    "$PROOF/include"
 for header in OpenSystemConfiguration.h SCNetwork.h SCNetworkReachability.h \
     SystemConfiguration.h; do
     cp "$ROOT/full/systemconfiguration/include/$header" \
