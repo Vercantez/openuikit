@@ -1,22 +1,25 @@
 #!/usr/bin/env bash
-# Build a cold, relocatable ARM64 Mach-O core-framework package for unchanged
-# application sources. Run inside the pinned Linux/arm64 production image with
-# fresh build/cache/root paths. The production host wrapper gates publication
-# on exact pre/post content manifests for every other replay input.
+# Build a cold, relocatable Mach-O core-framework package for unchanged
+# application sources. The TARGET triple follows the host (arm64-apple-macos15.0
+# or x86_64-apple-macos15.0); x86_64 output roots use a -x86_64 suffix so an
+# arm64 package is never overwritten. Run inside the pinned Linux production
+# image with fresh build/cache/root paths. The production host wrapper gates
+# publication on exact pre/post content manifests for every other replay input.
 
 set -euo pipefail
 export GIT_OPTIONAL_LOCKS=0
 
 W=${W:-/w}
+# shellcheck disable=SC1091
+. "$(cd "$(dirname "$0")" && pwd)/../scripts/guest_arch.inc"
 MACHORUN=${MACHORUN:-/machorun}
-TARGET=arm64-apple-macos15.0
 MIN_OS=15.0
 SYS=$W/scratch/sysroot_fe4
-FULL=$W/build/full
-WORK=$W/build/core-guest-work
-MRROOT=$W/scratch/mrroot_full
-BUILD_FULL_CACHE=$W/scratch/modcache_full
-BUILD_FE_CACHE=$W/scratch/modcache_fe4
+FULL=$W/build/full${FULL_OUT_SUFFIX}
+WORK=$W/build/core-guest-work${FULL_OUT_SUFFIX}
+MRROOT=$W/scratch/mrroot_full${FULL_OUT_SUFFIX}
+BUILD_FULL_CACHE=$W/scratch/modcache_full${FULL_OUT_SUFFIX}
+BUILD_FE_CACHE=$W/scratch/modcache_fe4${FULL_OUT_SUFFIX}
 SWIFT_FOUNDATION=$W/scratch/swift-foundation
 SWIFT_FOUNDATION_ICU=$W/scratch/swift-foundation-icu
 SWIFT_COLLECTIONS=$W/scratch/swift-collections
@@ -1813,7 +1816,7 @@ APP_CONSUMER_SWIFTC=(swiftc -target "$TARGET" -sdk "$STAGE/sdk"
     -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
     -Xfrontend -enable-cross-import-overlays
     -Xfrontend -disable-objc-attr-requires-foundation-module)
-LD=(ld64.lld-18 -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS"
+LD=(ld64.lld-18 -arch "$ARCH" -platform_version macos "$MIN_OS" "$MIN_OS"
     -syslibroot "$STAGE/sdk")
 C_FLAGS=(-Xcc -I"$STAGE/include/CPortableIO"
     -Xcc -I"$STAGE/include/CSTBTrueType"
@@ -3406,9 +3409,9 @@ clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -x objective-c \
     -enable-library-evolution -no-verify-emitted-module-interface \
     -emit-module \
     -emit-module-path \
-        "$CORELOCATION_MODULE_DIR/arm64-apple-macos.swiftmodule" \
+        "$CORELOCATION_MODULE_DIR/${SWIFT_MODULE_TRIPLE}.swiftmodule" \
     -emit-module-interface-path \
-        "$CORELOCATION_MODULE_DIR/arm64-apple-macos.swiftinterface" \
+        "$CORELOCATION_MODULE_DIR/${SWIFT_MODULE_TRIPLE}.swiftinterface" \
     -emit-object -o "$WORK/corelocation.o" \
     "$W/full/corelocation/CoreLocation.swift"
 
@@ -3422,9 +3425,9 @@ done
     -enable-library-evolution -no-verify-emitted-module-interface \
     -emit-module \
     -emit-module-path \
-        "$APPKIT_MODULE_DIR/arm64-apple-macos.swiftmodule" \
+        "$APPKIT_MODULE_DIR/${SWIFT_MODULE_TRIPLE}.swiftmodule" \
     -emit-module-interface-path \
-        "$APPKIT_MODULE_DIR/arm64-apple-macos.swiftinterface" \
+        "$APPKIT_MODULE_DIR/${SWIFT_MODULE_TRIPLE}.swiftinterface" \
     -emit-object -o "$WORK/appkit.o" "${APPKIT_SOURCE_PATHS[@]}"
 ln -s C "$APPKIT_FRAMEWORK/Versions/Current"
 ln -s Versions/Current/AppKit "$APPKIT_FRAMEWORK/AppKit"
@@ -6173,7 +6176,7 @@ COMPILE_ARGUMENTS=(
     -Xcc -Iinclude/_FoundationCShims
 )
 LINK_ARGUMENTS=(
-    -arch arm64 -platform_version macos "$MIN_OS" "$MIN_OS" -syslibroot sdk
+    -arch "$ARCH" -platform_version macos "$MIN_OS" "$MIN_OS" -syslibroot sdk
     -F frameworks -framework AppKit -framework IOKit \
     -framework SystemConfiguration -framework CoreLocation
     -Llib -Lguest-root/darwin/usr/lib -Lsdk/usr/lib/swift
@@ -6522,17 +6525,17 @@ for framework in FoundationEssentials FoundationInternationalization \
     record_artifact framework "$framework" dylib "lib/lib$framework.dylib"
 done
 record_artifact framework AppKit abi-json \
-    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.abi.json
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/${SWIFT_MODULE_TRIPLE}.abi.json
 record_artifact framework AppKit private-swiftinterface \
-    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.private.swiftinterface
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/${SWIFT_MODULE_TRIPLE}.private.swiftinterface
 record_artifact framework AppKit swiftdoc \
-    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftdoc
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftdoc
 record_artifact framework AppKit swiftinterface \
-    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftinterface
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftinterface
 record_artifact framework AppKit swiftmodule \
-    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftmodule
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftmodule
 record_artifact framework AppKit swiftsourceinfo \
-    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftsourceinfo
+    frameworks/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftsourceinfo
 record_artifact framework AppKit dylib \
     frameworks/AppKit.framework/Versions/C/AppKit
 record_artifact module-metadata QuickLook cross-import-overlay \
@@ -6614,17 +6617,17 @@ record_artifact include CoreLocation framework-header \
 record_artifact include CoreLocation framework-module-map \
     frameworks/CoreLocation.framework/Modules/module.modulemap
 record_artifact framework CoreLocation abi-json \
-    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.abi.json
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/${SWIFT_MODULE_TRIPLE}.abi.json
 record_artifact framework CoreLocation private-swiftinterface \
-    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.private.swiftinterface
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/${SWIFT_MODULE_TRIPLE}.private.swiftinterface
 record_artifact framework CoreLocation swiftdoc \
-    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftdoc
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftdoc
 record_artifact framework CoreLocation swiftinterface \
-    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftinterface
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftinterface
 record_artifact framework CoreLocation swiftmodule \
-    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftmodule
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftmodule
 record_artifact framework CoreLocation swiftsourceinfo \
-    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftsourceinfo
+    frameworks/CoreLocation.framework/Modules/CoreLocation.swiftmodule/${SWIFT_MODULE_TRIPLE}.swiftsourceinfo
 record_artifact framework CoreLocation mixed-dylib \
     frameworks/CoreLocation.framework/CoreLocation
 record_artifact include COpenFoundationCore opaque-header \

@@ -103,7 +103,7 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         )
         for name in names:
             self.assertIn(f"lib{name}.dylib", text)
-        self.assertIn("MH_MAGIC_64[[:space:]]+ARM64", text)
+        self.assertIn("MH_MAGIC_64[[:space:]]+${OTOOL_CPU}", text)
         self.assertIn('actual_id=$(llvm-otool-18 -D', text)
         self.assertIn('focus_widget_guest_attest.pl" closure', text)
         self.assertIn('"$MRROOT/machorun" ./focus_onboarding_guest', text)

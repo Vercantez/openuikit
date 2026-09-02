@@ -1,24 +1,28 @@
 #!/usr/bin/env bash
-# Package the local SwiftUI/OpenUIKit implementation as arm64 Mach-O dylibs,
-# link Focus's exact Widget/Assets.swift + SearchWidgetView.swift against those
-# dylibs, and run the guest. Run inside swift-macho-spike:noble with /w,
+# Package the local SwiftUI/OpenUIKit implementation as Darwin Mach-O dylibs
+# (host triple from full/scripts/guest_arch.inc), link Focus's exact
+# Widget/Assets.swift + SearchWidgetView.swift against those dylibs, and run
+# the guest. x86_64 output lives beside the arm64 tree
+# (build/swiftui-guest-x86_64). Run inside the production image with /w,
 # /uikit, /machorun, and a normalized Focus_Widget.bundle mounted.
 
 set -euo pipefail
 
 W=${W:-/w}
+# shellcheck disable=SC1091
+. "$(cd "$(dirname "$0")" && pwd)/../scripts/guest_arch.inc"
 UIKIT=${UIKIT:-/uikit}
 MACHORUN=${MACHORUN:-/machorun}
 RESOURCE_INPUT=${1:?usage: build_focus_widget_guest.sh <normalized-Focus_Widget.bundle>}
 FOCUS_REPO=$W/scratch/ladder-corpus/focus-ios/focus-ios
 FOCUS_WIDGET=$FOCUS_REPO/BlockzillaPackage/Sources/Widget
-OUT=$W/build/swiftui-guest
+OUT=$W/build/swiftui-guest${FULL_OUT_SUFFIX}
 PACKAGE=$OUT/package
 AUDIT=$OUT/audit
-FULL=$W/build/full
+FULL=$W/build/full${FULL_OUT_SUFFIX}
 SYS=$W/scratch/sysroot_fe4
-MRROOT=$W/scratch/mrroot_full
-MC=$W/scratch/modcache_swiftui_guest
+MRROOT=$W/scratch/mrroot_full${FULL_OUT_SUFFIX}
+MC=$W/scratch/modcache_swiftui_guest${FULL_OUT_SUFFIX}
 SWIFT_FOUNDATION=$W/scratch/swift-foundation
 FE_OUT=$FULL/foundation/essentials
 FE_COLLECTIONS=$FULL/foundation/collections
@@ -214,12 +218,26 @@ require_hash "$SYSTEM_FONT" "$EXPECTED_SYSTEM_FONT_SHA" DejaVuSans.ttf
 require_hash "$MEDIUM_FONT" "$EXPECTED_MEDIUM_FONT_SHA" DejaVuSans-Bold.ttf
 require_hash "$OPENCOMBINE_ROOT/export/RESULT.txt" \
     "$EXPECTED_OPENCOMBINE_RESULT_SHA" OpenCombine-RESULT.txt
-require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" \
-    "$EXPECTED_OPENCOMBINE_OBJECT_SHA" OpenCombine.o
-require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" \
-    "$EXPECTED_OPENCOMBINE_MODULE_SHA" OpenCombine.swiftmodule
-require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftdoc" \
-    "$EXPECTED_OPENCOMBINE_DOC_SHA" OpenCombine.swiftdoc
+# Object/module SHAs pin the arm64 durable OpenCombine tree. Source hashes
+# above/below still apply on every arch. On x86_64 the durable .o cannot be
+# linked; refuse until OpenCombine is rebuilt for $TARGET beside the arm64
+# artifacts. Do not rewrite the arm64 SHA to make an x86 run pass.
+if [ "$ARCH" = arm64 ]; then
+    require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" \
+        "$EXPECTED_OPENCOMBINE_OBJECT_SHA" OpenCombine.o
+    require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" \
+        "$EXPECTED_OPENCOMBINE_MODULE_SHA" OpenCombine.swiftmodule
+    require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftdoc" \
+        "$EXPECTED_OPENCOMBINE_DOC_SHA" OpenCombine.swiftdoc
+else
+    if ! llvm-otool-18 -hv "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" 2>/dev/null \
+        | grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}"; then
+        echo "focus_widget_guest: NEEDS_X86_OPENCOMBINE: OpenCombine.o is not $ARCH" >&2
+        echo "  arm64 durable SHA $EXPECTED_OPENCOMBINE_OBJECT_SHA still stands;" >&2
+        echo "  rebuild OpenCombine for $TARGET beside that tree" >&2
+        exit 2
+    fi
+fi
 require_hash "$OPENCOMBINE_HELPERS/COpenCombineHelpers.cpp" \
     "$EXPECTED_OPENCOMBINE_HELPER_SHA" COpenCombineHelpers.cpp
 require_hash "$OPENCOMBINE_HELPERS/include/COpenCombineHelpers.h" \
@@ -350,11 +368,11 @@ cp "$OPENCOMBINE_HELPERS/include/COpenCombineHelpers.h" \
 require_hash "$OUT/fonts/DejaVuSans.ttf" "$EXPECTED_SYSTEM_FONT_SHA" staged-DejaVuSans.ttf
 require_hash "$OUT/fonts/DejaVuSans-Bold.ttf" "$EXPECTED_MEDIUM_FONT_SHA" staged-DejaVuSans-Bold.ttf
 
-SWIFTC=(swiftc -target arm64-apple-macos15.0 -sdk "$SYS" -module-cache-path "$MC"
+SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS" -module-cache-path "$MC"
         -runtime-compatibility-version none -wmo
         -Xfrontend -disable-implicit-string-processing-module-import
         -Xfrontend -disable-objc-attr-requires-foundation-module)
-LD=(ld64.lld-18 -arch arm64 -platform_version macos 15.0 15.0
+LD=(ld64.lld-18 -arch "$ARCH" -platform_version macos 15.0 15.0
     -syslibroot "$SYS" -rpath /usr/lib/swift)
 CINC=(-Xcc -I"$FULL/inc/CPortableIO" -Xcc -I"$FULL/inc/CSTBTrueType"
       -Xcc -I"$W/full/hostclock/include"
@@ -391,7 +409,7 @@ FE_OBJECTS=(
 
 # A cold cache must build the SDK's textual Swift module before recursively
 # importing the pinned binary OpenCombine module's _Concurrency dependency.
-swiftc -target arm64-apple-macos15.0 -sdk "$SYS" \
+swiftc -target "$TARGET" -sdk "$SYS" \
     -module-cache-path "$MC" -parse-stdlib -typecheck -e 'import Swift'
 
 echo "== package source-built OpenCombine core as a sibling dylib"
@@ -403,7 +421,7 @@ patch --batch --forward --fuzz=0 "$OUT/COpenCombineHelpers.cpp" \
     "$W/full/oracle-opencombine/patches/COpenCombineHelpers-pthread-recursive.patch"
 require_hash "$OUT/COpenCombineHelpers.cpp" \
     "$EXPECTED_OPENCOMBINE_PATCHED_HELPER_SHA" patched-COpenCombineHelpers.cpp
-clang++-18 -target arm64-apple-macos15.0 -isysroot "$SYS" \
+clang++-18 -target "$TARGET" -isysroot "$SYS" \
     -stdlib=libc++ -std=c++17 -O2 -I "$PACKAGE/include/COpenCombineHelpers" \
     -c "$OUT/COpenCombineHelpers.cpp" -o "$OUT/copencombinehelpers.o"
 "${LD[@]}" -dylib -install_name @rpath/libOpenCombine.dylib \
@@ -493,7 +511,7 @@ echo "== package reusable libSwiftUI.dylib"
     -map "$AUDIT/libSwiftUI.link-map" \
     -o "$PACKAGE/libSwiftUI.dylib" "$OUT/swiftui.o"
 
-echo "== link arm64 Mach-O against packaged dylibs (no framework objects)"
+echo "== link Mach-O against packaged dylibs (no framework objects)"
 "${LD[@]}" -exported_symbol __mh_execute_header \
     -rpath @loader_path/package \
     -L"$PACKAGE" -lSwiftUI -lOpenUIKit -lFoundationEssentials \
@@ -506,26 +524,26 @@ echo "== link arm64 Mach-O against packaged dylibs (no framework objects)"
     "$OUT/guest-main.o" "$OUT/focuswidget.o"
 
 llvm-otool-18 -hv "$PACKAGE/libOpenUIKit.dylib" | \
-    grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' || {
-    echo "focus_widget_guest: libOpenUIKit is not an arm64 Mach-O dylib" >&2; exit 2; }
+    grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]DYLIB" || {
+    echo "focus_widget_guest: libOpenUIKit is not a $ARCH Mach-O dylib" >&2; exit 2; }
 llvm-otool-18 -hv "$PACKAGE/libFoundationEssentials.dylib" | \
-    grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' || {
-    echo "focus_widget_guest: libFoundationEssentials is not an arm64 Mach-O dylib" >&2; exit 2; }
+    grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]DYLIB" || {
+    echo "focus_widget_guest: libFoundationEssentials is not a $ARCH Mach-O dylib" >&2; exit 2; }
 llvm-otool-18 -hv "$PACKAGE/libOpenCoreGraphics.dylib" | \
-    grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' || {
-    echo "focus_widget_guest: libOpenCoreGraphics is not an arm64 Mach-O dylib" >&2; exit 2; }
+    grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]DYLIB" || {
+    echo "focus_widget_guest: libOpenCoreGraphics is not a $ARCH Mach-O dylib" >&2; exit 2; }
 llvm-otool-18 -hv "$PACKAGE/libSwiftUI.dylib" | \
-    grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' || {
-    echo "focus_widget_guest: libSwiftUI is not an arm64 Mach-O dylib" >&2; exit 2; }
+    grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]DYLIB" || {
+    echo "focus_widget_guest: libSwiftUI is not a $ARCH Mach-O dylib" >&2; exit 2; }
 llvm-otool-18 -hv "$PACKAGE/libCombine.dylib" | \
-    grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' || {
-    echo "focus_widget_guest: libCombine is not an arm64 Mach-O dylib" >&2; exit 2; }
+    grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]DYLIB" || {
+    echo "focus_widget_guest: libCombine is not a $ARCH Mach-O dylib" >&2; exit 2; }
 llvm-otool-18 -hv "$PACKAGE/libOpenCombine.dylib" | \
-    grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' || {
-    echo "focus_widget_guest: libOpenCombine is not an arm64 Mach-O dylib" >&2; exit 2; }
+    grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]DYLIB" || {
+    echo "focus_widget_guest: libOpenCombine is not a $ARCH Mach-O dylib" >&2; exit 2; }
 llvm-otool-18 -hv "$OUT/focus_widget_guest" | \
-    grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' || {
-    echo "focus_widget_guest: link output is not arm64 Mach-O" >&2; exit 2; }
+    grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]EXECUTE" || {
+    echo "focus_widget_guest: link output is not $ARCH Mach-O" >&2; exit 2; }
 
 # Close the compile/link bracket before any package byte is compared with its
 # build/full origin.  Those origins are therefore an attested cache, not a

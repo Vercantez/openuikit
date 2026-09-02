@@ -13,10 +13,19 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+import sys
 
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
+SCRIPTS = REPO / "full" / "scripts"
+if str(SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS))
+from guest_arch import guest_arch, macos15_target, swift_module_triple  # noqa: E402
+
+GUEST_ARCH = guest_arch()
+MACOS15_TARGET = macos15_target()
+SWIFT_MODULE_TRIPLE = swift_module_triple()
 TOOL = HERE / "core_package_manifest.py"
 BUILDER = HERE / "build_core_guest_package.sh"
 FOUNDATION_COMPATIBILITY_PROBE = HERE / "FoundationHackersCompatibilityProbe.swift"
@@ -901,7 +910,7 @@ class PackageFixture:
             write_file(
                 root
                 / "frameworks/AppKit.framework/Versions/C/Modules/"
-                f"AppKit.swiftmodule/arm64-apple-macos.{suffix}",
+                f"AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.{suffix}",
                 f"AppKit:{suffix}\n",
             )
         write_file(
@@ -965,7 +974,7 @@ class PackageFixture:
             write_file(
                 root
                 / "frameworks/CoreLocation.framework/Modules/"
-                f"CoreLocation.swiftmodule/arm64-apple-macos.{suffix}",
+                f"CoreLocation.swiftmodule/{SWIFT_MODULE_TRIPLE}.{suffix}",
                 f"CoreLocation:{suffix}\n",
             )
         write_file(
@@ -1038,7 +1047,7 @@ class PackageFixture:
         )
         self.compile_arguments = [
             "-target",
-            "arm64-apple-macos15.0",
+            MACOS15_TARGET,
             "-sdk",
             "sdk",
             "-F",
@@ -1082,7 +1091,7 @@ class PackageFixture:
         ]
         self.link_arguments = [
             "-arch",
-            "arm64",
+            GUEST_ARCH,
             "-platform_version",
             "macos",
             "15.0",
@@ -1334,7 +1343,7 @@ class PackageFixture:
                         "AppKit",
                         role,
                         "frameworks/AppKit.framework/Versions/C/Modules/"
-                        f"AppKit.swiftmodule/arm64-apple-macos.{suffix}",
+                        f"AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.{suffix}",
                     )
                     for role, suffix in (
                         ("abi-json", "abi.json"),
@@ -1522,7 +1531,7 @@ class PackageFixture:
                     "CoreLocation",
                     role,
                     "frameworks/CoreLocation.framework/Modules/"
-                    f"CoreLocation.swiftmodule/arm64-apple-macos.{suffix}",
+                    f"CoreLocation.swiftmodule/{SWIFT_MODULE_TRIPLE}.{suffix}",
                 )
             )
         records.append(
@@ -1791,7 +1800,7 @@ class PackageContractTests(unittest.TestCase):
         document = json.loads((fixture.root / "attestation/core-package.json").read_text())
         self.assertEqual(document["classification"], "open-uikit-core-guest-package")
         self.assertEqual(document["format_version"], 1)
-        self.assertEqual(document["target"]["triple"], "arm64-apple-macos15.0")
+        self.assertEqual(document["target"]["triple"], MACOS15_TARGET)
         self.assertEqual(document["paths"]["resources"], "resources/OpenUIKit")
         self.assertEqual(document["paths"]["host_tools"], "host-tools")
         self.assertIsNone(document["preview"])
@@ -2199,7 +2208,7 @@ class PackageContractTests(unittest.TestCase):
         }
         expected_paths = {
             "frameworks/AppKit.framework/Versions/C/Modules/"
-            f"AppKit.swiftmodule/arm64-apple-macos.{suffix}"
+            f"AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.{suffix}"
             for suffix in (
                 "abi.json",
                 "private.swiftinterface",
@@ -2241,7 +2250,7 @@ class PackageContractTests(unittest.TestCase):
     ) -> None:
         appkit_paths = (
             "frameworks/AppKit.framework/Versions/C/Modules/"
-            "AppKit.swiftmodule/arm64-apple-macos.swiftmodule",
+            f"AppKit.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftmodule",
             "frameworks/AppKit.framework/Versions/C/AppKit",
             "guest-root/darwin/System/Library/Frameworks/"
             "AppKit.framework/Versions/C/AppKit",
@@ -2384,7 +2393,7 @@ class PackageContractTests(unittest.TestCase):
             "frameworks/CoreLocation.framework/Headers/CoreLocation.h",
             "frameworks/CoreLocation.framework/Modules/module.modulemap",
             "frameworks/CoreLocation.framework/Modules/"
-            "CoreLocation.swiftmodule/arm64-apple-macos.swiftmodule",
+            f"CoreLocation.swiftmodule/{SWIFT_MODULE_TRIPLE}.swiftmodule",
             "frameworks/CoreLocation.framework/CoreLocation",
             "guest-root/darwin/System/Library/Frameworks/"
             "CoreLocation.framework/CoreLocation",
@@ -3431,7 +3440,7 @@ class ShellContractTests(unittest.TestCase):
                     validate_swift_core_runtime_contract(
                         mutated_builder, mutated_wrapper
                     )
-        self.assertIn('BUILD_FE_CACHE=$W/scratch/modcache_fe4', BUILDER.read_text(encoding="utf-8"))
+        self.assertIn('BUILD_FE_CACHE=$W/scratch/modcache_fe4${FULL_OUT_SUFFIX}', BUILDER.read_text(encoding="utf-8"))
         self.assertIn('"$BUILD_FE_CACHE"', BUILDER.read_text(encoding="utf-8"))
         self.assertIn("sdk_dangling_symlink_exclusions.tsv", BUILDER.read_text(encoding="utf-8"))
         self.assertIn("sdk-dangling-symlinks.tsv", BUILDER.read_text(encoding="utf-8"))
