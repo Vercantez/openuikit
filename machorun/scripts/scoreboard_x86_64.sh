@@ -59,13 +59,16 @@ is_arch_baseline() {
     local act="$ACTUAL/$id.stdout"
     local tmp
     tmp="$(mktemp -d)"
-    # machine field of uname; long-double sizeof; vm_copy checksums scale with
+    # machine field of uname; long-double sizeof (varargs sizeof=N and
+    # hostbound_surface's "strtold_l width"); vm_copy checksums scale with
     # Darwin's page (16 KiB arm64, 4 KiB x86_64) and the fixture uses vm_page_size.
     sed -E \
         -e 's/machine[[:space:]]+\[arm64\]/machine                 [ARCH]/' \
         -e 's/machine[[:space:]]+\[x86_64\]/machine                 [ARCH]/' \
         -e 's/sizeof=8/sizeof=ARCH/' \
         -e 's/sizeof=16/sizeof=ARCH/' \
+        -e 's/strtold_l width       8/strtold_l width       ARCH/' \
+        -e 's/strtold_l width       16/strtold_l width       ARCH/' \
         -e 's/vm_allocate aligned=(yes|no)/vm_allocate aligned=ARCH/' \
         -e 's/last=[a-z] sum=[0-9]+/last=ARCH sum=ARCH/' \
         "$exp" > "$tmp/e"
@@ -74,6 +77,8 @@ is_arch_baseline() {
         -e 's/machine[[:space:]]+\[x86_64\]/machine                 [ARCH]/' \
         -e 's/sizeof=8/sizeof=ARCH/' \
         -e 's/sizeof=16/sizeof=ARCH/' \
+        -e 's/strtold_l width       8/strtold_l width       ARCH/' \
+        -e 's/strtold_l width       16/strtold_l width       ARCH/' \
         -e 's/vm_allocate aligned=(yes|no)/vm_allocate aligned=ARCH/' \
         -e 's/last=[a-z] sum=[0-9]+/last=ARCH sum=ARCH/' \
         "$act" > "$tmp/a"

@@ -440,6 +440,10 @@ want quota               && build quota               "$CHAINED_TARGET" quota   
 want fts                 && build fts                 "$CHAINED_TARGET" fts                 fts.c --
 want pthread_mutex_variants && build pthread_mutex_variants "$CHAINED_TARGET" pthread_mutex_variants pthread_mutex_variants.c --
 want cflog_surface       && build cflog_surface       "$CHAINED_TARGET" cflog_surface       cflog_surface.c --
+want statfs              && build statfs              "$CHAINED_TARGET" statfs              statfs.c --
+want copyfile            && build copyfile            "$CHAINED_TARGET" copyfile            copyfile.c --
+want hostbound_surface   && build hostbound_surface   "$CHAINED_TARGET" hostbound_surface   hostbound_surface.c --
+want hostbound_osver     && build hostbound_osver     "$CHAINED_TARGET" hostbound_osver     hostbound_osver.c --
 want dirent              && build dirent              "$CHAINED_TARGET" dirent              dirent.c --
 
 # quartz / objc_quartz / objc_shapes live in tests/draw_manifest.tsv, not the

@@ -304,6 +304,13 @@ extern unsigned long glibc_strtoul(const char *, char **, int) GLIBCSYM(strtoul)
 extern long long glibc_strtoll(const char *, char **, int)  GLIBCSYM(strtoll);
 extern double  glibc_strtod(const char *, char **)          GLIBCSYM(strtod);
 extern float   glibc_strtof(const char *, char **)          GLIBCSYM(strtof);
+#if defined(__x86_64__)
+/* x87 80-bit in a 16-byte slot on both Darwin x86_64 and glibc x86_64.
+ * darwin/host-bound-allowed.txt records the six-family measurement.
+ * Not a host-bind: locale_t still differs for strtold_l, and _strtold stays
+ * in src/host_deny.c so the aarch64 loader object is unchanged. */
+extern long double glibc_strtold(const char *, char **)     GLIBCSYM(strtold);
+#endif
 extern void    glibc_qsort(void *, size_t, size_t, int (*)(const void *, const void *)) GLIBCSYM(qsort);
 extern char   *glibc_getenv(const char *)                   GLIBCSYM(getenv);
 extern time_t  glibc_time(time_t *)                         GLIBCSYM(time);

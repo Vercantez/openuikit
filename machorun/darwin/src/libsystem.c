@@ -1055,13 +1055,28 @@ FWDE(double, strtod, (const char *s, char **e), (s, e))
  * NULL means C where glibc NULL is invalid. So these wrap strtod/strtof,
  * after mr_require_c_locale, rather than host-binding the Darwin name.
  *
- * strtold_l is the long-double trap a second time. Darwin arm64 long double
- * is 8 bytes, LDBL_MANT_DIG 53 (float.h via the SDK); glibc aarch64 is 16
- * bytes, LDBL_MANT_DIG 113. src/host_deny.c already denies a raw `_strtold`
- * host-bind for that reason. Calling glibc's strtold / strtold_l here would
- * write 16 bytes through an 8-byte return -- so this calls strtod, which is
- * what Darwin's long double IS. */
+ * strtold_l is the long-double trap a second time, and the two guest
+ * arches invert. Darwin arm64 long double is 8 bytes, LDBL_MANT_DIG 53
+ * (float.h via the SDK); glibc aarch64 is 16 bytes, LDBL_MANT_DIG 113.
+ * src/host_deny.c already denies a raw `_strtold` host-bind for that
+ * reason. Calling glibc's strtold / strtold_l here would write 16 bytes
+ * through an 8-byte return -- so arm64 calls strtod, which is what
+ * Darwin's long double IS.
+ *
+ * Darwin x86_64 long double is the 16-byte x87 80-bit type (LDBL_MANT_DIG
+ * 64), measured identical to glibc x86_64 across the six hazard families
+ * (darwin/host-bound-allowed.txt). Wrapping through strtod would drop the
+ * extra 11 mantissa bits. locale_t still differs, so this is a labelled
+ * glibc_strtold wrapper, not a host-bind, and `_strtold` stays in the
+ * deny table so the aarch64 loader object is unchanged. */
+#if defined(__x86_64__)
+_Static_assert(sizeof(long double) == 16,
+               "Darwin x86_64 long double is x87 80-bit in a 16-byte slot");
+_Static_assert(__LDBL_MANT_DIG__ == 64,
+               "Darwin x86_64 long double mantissa is 64 bits");
+#else
 _Static_assert(sizeof(long double) == 8, "Darwin arm64 long double is IEEE binary64");
+#endif
 
 EXPORT double strtod_l(const char *s, char **e, void *loc)
 {
@@ -1073,11 +1088,23 @@ EXPORT float strtof_l(const char *s, char **e, void *loc)
     mr_require_c_locale(loc, "strtof_l");
     return MR_ERRNO_CALL(glibc_strtof(s, e));
 }
+#if defined(__x86_64__)
+EXPORT long double strtold(const char *s, char **e)
+{
+    return MR_ERRNO_CALL(glibc_strtold(s, e));
+}
+EXPORT long double strtold_l(const char *s, char **e, void *loc)
+{
+    mr_require_c_locale(loc, "strtold_l");
+    return MR_ERRNO_CALL(glibc_strtold(s, e));
+}
+#else
 EXPORT long double strtold_l(const char *s, char **e, void *loc)
 {
     mr_require_c_locale(loc, "strtold_l");
     return (long double)MR_ERRNO_CALL(glibc_strtod(s, e));
 }
+#endif
 
 /* getsectiondata(3) -- <mach-o/getsect.h>. Mach-O only. aarch64 libc.so.6
  * has no such dynsym (measured: absent next to getline@@GLIBC_2.17 which IS
