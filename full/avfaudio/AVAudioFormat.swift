@@ -380,7 +380,7 @@ func avfaudioDeallocateAudioBufferList(_ list: UnsafeMutablePointer<AudioBufferL
 }
 #endif
 
-open class AVAudioBuffer: NSObject, @unchecked Sendable {
+open class AVAudioBuffer: NSObject {
     public let format: AVAudioFormat
 
     public init(format: AVAudioFormat) {
@@ -412,7 +412,7 @@ open class AVAudioBuffer: NSObject, @unchecked Sendable {
     #endif
 }
 
-public final class AVAudioPCMBuffer: AVAudioBuffer, @unchecked Sendable {
+public final class AVAudioPCMBuffer: AVAudioBuffer {
     public let frameCapacity: AVAudioFrameCount
     public var frameLength: AVAudioFrameCount = 0 {
         didSet {
@@ -619,7 +619,7 @@ public final class AVAudioPCMBuffer: AVAudioBuffer, @unchecked Sendable {
     }
 }
 
-public final class AVAudioCompressedBuffer: AVAudioBuffer, @unchecked Sendable {
+public final class AVAudioCompressedBuffer: AVAudioBuffer {
     public let packetCapacity: AVAudioPacketCount
     public let maximumPacketSize: Int
     public var packetCount: AVAudioPacketCount = 0
@@ -697,7 +697,13 @@ public final class AVAudioTime: NSObject, @unchecked Sendable {
     }
 
     public class func hostTime(forSeconds seconds: TimeInterval) -> UInt64 {
-        UInt64((max(seconds, 0) * 1_000_000_000.0).rounded())
+        guard seconds.isFinite, seconds > 0 else { return 0 }
+        let ticks = (seconds * 1_000_000_000.0).rounded()
+        guard ticks.isFinite, ticks > 0 else { return 0 }
+        if ticks >= Double(UInt64.max) {
+            return UInt64.max
+        }
+        return UInt64(ticks)
     }
 
     public class func seconds(forHostTime hostTime: UInt64) -> TimeInterval {
@@ -705,19 +711,27 @@ public final class AVAudioTime: NSObject, @unchecked Sendable {
     }
 
     public func extrapolateTime(fromAnchor anchorTime: AVAudioTime) -> AVAudioTime? {
-        guard isSampleTimeValid, anchorTime.isSampleTimeValid, sampleRate > 0 else {
+        guard isSampleTimeValid, anchorTime.isSampleTimeValid, sampleRate > 0, sampleRate.isFinite else {
             return nil
         }
-        let delta = sampleTime - anchorTime.sampleTime
-        if anchorTime.isHostTimeValid {
-            let extra = Self.hostTime(forSeconds: TimeInterval(delta) / sampleRate)
-            return AVAudioTime(
-                hostTime: anchorTime.hostTime + extra,
-                sampleTime: sampleTime,
-                atRate: sampleRate
-            )
+        let (delta, deltaOverflow) = sampleTime.subtractingReportingOverflow(anchorTime.sampleTime)
+        if deltaOverflow {
+            return nil
         }
-        return AVAudioTime(sampleTime: sampleTime, atRate: sampleRate)
+        if !anchorTime.isHostTimeValid {
+            return AVAudioTime(sampleTime: sampleTime, atRate: sampleRate)
+        }
+        let signedSeconds = TimeInterval(delta) / sampleRate
+        guard signedSeconds.isFinite else { return nil }
+        let extra = Self.hostTime(forSeconds: abs(signedSeconds))
+        if delta >= 0 {
+            let (sum, overflow) = anchorTime.hostTime.addingReportingOverflow(extra)
+            guard !overflow else { return nil }
+            return AVAudioTime(hostTime: sum, sampleTime: sampleTime, atRate: sampleRate)
+        }
+        let (difference, underflow) = anchorTime.hostTime.subtractingReportingOverflow(extra)
+        guard !underflow else { return nil }
+        return AVAudioTime(hostTime: difference, sampleTime: sampleTime, atRate: sampleRate)
     }
 
     #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
