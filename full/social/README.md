@@ -43,9 +43,9 @@ a nonfailable superclass initializer. Other `init!` overlays stay failable.
 - `SLRequest` constructs, stores parameters, rejects CR/LF/quote multipart
   field names (including parameter-derived `Content-Disposition` names), and
   builds an unsigned `URLRequest` when `account` is nil. GET/DELETE use the
-  query string; POST/PUT use form-urlencoded (`+` for spaces) or a
-  collision-tested multipart boundary. Every returned boundary has been checked
-  against parameter names/values and part metadata/data.
+  query string; POST/PUT use form-urlencoded (spaces as `+`, literal `+` as
+  `%2B`) or a collision-tested multipart boundary. Every returned boundary
+  has been checked against parameter names/values and part metadata/data.
 
 ## Fail-closed / partial boundaries
 
@@ -70,6 +70,7 @@ SOCIAL_DYLIB_KIND=standalone-unit-fixture-only
 SOCIAL_STANDALONE_UNIT_FIXTURE_ONLY
 SOCIAL_AGENT_RUNTIME_OK
 SOCIAL_MULTIPART_HARDENING_OK
+SOCIAL_FORM_URLENCODE_OK
 SOCIAL_PRODUCTION_MISSING_DEPENDENCY_BLOCKER_OK
 SOCIAL_UNIT_FIXTURE_LOOKALIKE_NOT_PLATFORM_IDENTITY
 SOCIAL_PRODUCTION_MISSING_ACCOUNTS_BLOCKER_OK
@@ -78,11 +79,14 @@ SOCIAL_STANDALONE_UNIT_FIXTURE_GATE_OK
 ```
 
 Real integration (`bash tests/agent/test_real_integration.sh`, also invoked by
-`tests/agent/test_platform_identity.sh`) consumes staged platform Foundation,
-UIKit/OpenUIKit, and Accounts from the repository or guest layout. It never
-compiles `tests/agent/staging/` replacement APIs. Its client accepts dependency
-values without a fake zero-argument `ACAccount()` initializer. Unique success
-marker: `SOCIAL_REAL_INTEGRATION_OK`.
+`tests/agent/test_platform_identity.sh`) consumes only explicit canonical
+platform products (`SOCIAL_REAL_PLATFORM_ROOT` /
+`SOCIAL_PLATFORM_{FOUNDATION,UIKIT,OPENUIKIT,ACCOUNTS}`). It never discovers
+`HOME`, `/uikit`, toolchain Swift, or `tests/agent/staging/` lookalikes. An
+absent product emits `SOCIAL_REAL_INTEGRATION_BLOCKED` / `DEFERRED` only.
+Unique success marker `SOCIAL_REAL_INTEGRATION_OK` requires compile/link/load
+of `libSocial.dylib` plus corpus clients for Focus, Firefox, DuckDuckGo, Home
+Assistant, and import-only Pocket Casts and Simplenote.
 
 Accounts is not staged in the shared platform. That is an integration blocker
 (`SOCIAL_REAL_INTEGRATION_BLOCKED dependency=Accounts reason=not-staged-in-shared-platform`).
