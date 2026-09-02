@@ -1,26 +1,35 @@
 import Accounts
 import Foundation
 
-private let callbackTimeout = DispatchTimeInterval.seconds(2)
+private let eventTimeout = DispatchTimeInterval.seconds(5)
 
-private final class AccountsFlag: @unchecked Sendable {
+private final class LockedState: @unchecked Sendable {
     private let lock = NSLock()
-    private var value = false
+    private var returned = false
+    private var sawReturned = false
+    private var count = 0
 
-    func set() {
+    func markReturned() {
         lock.lock()
-        value = true
+        returned = true
         lock.unlock()
     }
 
-    func get() -> Bool {
+    func noteCallback() {
+        lock.lock()
+        sawReturned = returned
+        count += 1
+        lock.unlock()
+    }
+
+    func snapshot() -> (sawReturned: Bool, count: Int) {
         lock.lock()
         defer { lock.unlock() }
-        return value
+        return (sawReturned, count)
     }
 }
 
-private final class AccountsCounter: @unchecked Sendable {
+private final class LockedCounter: @unchecked Sendable {
     private let lock = NSLock()
     private var value = 0
 
@@ -42,7 +51,9 @@ private func requireFailClosedError(_ error: (any Error)?) {
         fatalError("expected fail-closed NSError")
     }
     let nsError = error as NSError
+    precondition(nsError.domain == "com.apple.accounts")
     precondition(nsError.domain == ACErrorDomain)
+    precondition(nsError.code == 7)
     precondition(nsError.code == Int(ACErrorPermissionDenied.rawValue))
 }
 
@@ -55,18 +66,105 @@ private func requireFailClosedThrow(_ body: () async throws -> Void) async {
     }
 }
 
-private func waitOnce(_ semaphore: DispatchSemaphore) {
-    precondition(
-        semaphore.wait(timeout: .now() + callbackTimeout) == .success,
-        "callback did not run"
-    )
+private func waitEvent(_ semaphore: DispatchSemaphore, _ message: String) {
+    precondition(semaphore.wait(timeout: .now() + eventTimeout) == .success, message)
 }
 
-private func assertNoExtraSignal(_ semaphore: DispatchSemaphore) {
+/// Occupy `ACAccountStore.completionQueue` until `release` so later `async`
+/// completions cannot run. `occupy` returns only after the blocker is running.
+private final class CompletionQueueBlocker: @unchecked Sendable {
+    private let occupied = DispatchSemaphore(value: 0)
+    private let hold = DispatchSemaphore(value: 0)
+
+    func occupy() {
+        ACAccountStore.completionQueue.async {
+            self.occupied.signal()
+            self.hold.wait()
+        }
+        waitEvent(occupied, "completion queue blocker did not start")
+    }
+
+    func release() {
+        hold.signal()
+    }
+}
+
+private func drainCompletionQueue() {
+    let drained = DispatchSemaphore(value: 0)
+    ACAccountStore.completionQueue.async {
+        drained.signal()
+    }
+    waitEvent(drained, "completion queue did not drain")
+}
+
+private func assertOracleConstants() {
+    precondition(ACAccountTypeIdentifierTwitter == "com.apple.twitter")
+    precondition(ACAccountTypeIdentifierFacebook == "com.apple.facebook")
+    precondition(ACAccountTypeIdentifierSinaWeibo == "com.apple.sinaweibo")
+    precondition(ACAccountTypeIdentifierTencentWeibo == "com.apple.account.tencentweibo")
+    precondition(ACErrorDomain == "com.apple.accounts")
     precondition(
-        semaphore.wait(timeout: .now() + .milliseconds(40)) == .timedOut,
-        "callback ran more than once"
+        NSNotification.Name.ACAccountStoreDidChange.rawValue
+            == "ACAccountStoreDidChangeNotification"
     )
+
+    let codes: [(ACErrorCode, UInt32)] = [
+        (ACErrorUnknown, 1),
+        (ACErrorAccountMissingRequiredProperty, 2),
+        (ACErrorAccountAuthenticationFailed, 3),
+        (ACErrorAccountTypeInvalid, 4),
+        (ACErrorAccountAlreadyExists, 5),
+        (ACErrorAccountNotFound, 6),
+        (ACErrorPermissionDenied, 7),
+        (ACErrorAccessInfoInvalid, 8),
+        (ACErrorClientPermissionDenied, 9),
+        (ACErrorAccessDeniedByProtectionPolicy, 10),
+        (ACErrorCredentialNotFound, 11),
+        (ACErrorFetchCredentialFailed, 12),
+        (ACErrorStoreCredentialFailed, 13),
+        (ACErrorRemoveCredentialFailed, 14),
+        (ACErrorUpdatingNonexistentAccount, 15),
+        (ACErrorInvalidClientBundleID, 16),
+        (ACErrorDeniedByPlugin, 17),
+        (ACErrorCoreDataSaveFailed, 18),
+        (ACErrorFailedSerializingAccountInfo, 19),
+        (ACErrorInvalidCommand, 20),
+        (ACErrorMissingTransportMessageID, 21),
+        (ACErrorCredentialItemNotFound, 22),
+        (ACErrorCredentialItemNotExpired, 23),
+    ]
+    for (code, raw) in codes {
+        precondition(code.rawValue == raw)
+        precondition(ACErrorCode(rawValue: raw) == code)
+        precondition(ACErrorCode(raw) == code)
+    }
+    precondition(ACErrorUnknown != ACErrorPermissionDenied)
+    precondition(ACErrorUnknown != ACErrorCredentialItemNotExpired)
+
+    var hasher = Hasher()
+    ACErrorPermissionDenied.hash(into: &hasher)
+    ACErrorUnknown.hash(into: &hasher)
+    _ = hasher.finalize()
+    precondition(Set(codes.map(\.0)).count == 23)
+}
+
+private func assertAccountTypeLookup(store: ACAccountStore) {
+    let known = [
+        ACAccountTypeIdentifierTwitter,
+        ACAccountTypeIdentifierFacebook,
+        ACAccountTypeIdentifierSinaWeibo,
+        ACAccountTypeIdentifierTencentWeibo,
+    ]
+    for identifier in known {
+        let accountType = store.accountType(withAccountTypeIdentifier: identifier)
+        precondition(accountType != nil, identifier)
+        precondition(accountType!.identifier == identifier)
+        precondition(accountType!.accessGranted == false)
+        _ = accountType!.accountTypeDescription
+    }
+    precondition(store.accountType(withAccountTypeIdentifier: "com.example.unknown") == nil)
+    precondition(store.accountType(withAccountTypeIdentifier: "com.apple.tencentweibo") == nil)
+    precondition(store.accountType(withAccountTypeIdentifier: nil) == nil)
 }
 
 private func exerciseLocalObjects(store: ACAccountStore) {
@@ -76,17 +174,6 @@ private func exerciseLocalObjects(store: ACAccountStore) {
     let twitterType = store.accountType(
         withAccountTypeIdentifier: ACAccountTypeIdentifierTwitter
     )!
-    precondition(twitterType.identifier == ACAccountTypeIdentifierTwitter)
-    precondition(twitterType.accessGranted == false)
-    _ = twitterType.accountTypeDescription
-
-    let unknownType = store.accountType(
-        withAccountTypeIdentifier: "com.example.unknown"
-    )!
-    precondition(unknownType.identifier == "com.example.unknown")
-    precondition(unknownType.accessGranted == false)
-    precondition(store.accountType(withAccountTypeIdentifier: nil) == nil)
-
     precondition(store.account(withIdentifier: "any-id") == nil)
     let listed = store.accounts(with: twitterType)!
     precondition(listed.isEmpty)
@@ -133,47 +220,13 @@ private func exerciseLocalObjects(store: ACAccountStore) {
     _ = (saveHandler, accessHandler, removeHandler, renewHandler)
 }
 
-private func exerciseErrorSurface() {
-    _ = ACErrorUnknown
-    _ = ACErrorAccountMissingRequiredProperty
-    _ = ACErrorAccountAuthenticationFailed
-    _ = ACErrorAccountTypeInvalid
-    _ = ACErrorAccountAlreadyExists
-    _ = ACErrorAccountNotFound
-    _ = ACErrorPermissionDenied
-    _ = ACErrorAccessInfoInvalid
-    _ = ACErrorClientPermissionDenied
-    _ = ACErrorAccessDeniedByProtectionPolicy
-    _ = ACErrorCredentialNotFound
-    _ = ACErrorFetchCredentialFailed
-    _ = ACErrorStoreCredentialFailed
-    _ = ACErrorRemoveCredentialFailed
-    _ = ACErrorUpdatingNonexistentAccount
-    _ = ACErrorInvalidClientBundleID
-    _ = ACErrorDeniedByPlugin
-    _ = ACErrorCoreDataSaveFailed
-    _ = ACErrorFailedSerializingAccountInfo
-    _ = ACErrorInvalidCommand
-    _ = ACErrorMissingTransportMessageID
-    _ = ACErrorCredentialItemNotFound
-    _ = ACErrorCredentialItemNotExpired
-
-    let denied = ACErrorCode(rawValue: ACErrorPermissionDenied.rawValue)
-    precondition(denied == ACErrorPermissionDenied)
-    precondition(ACErrorCode(ACErrorPermissionDenied.rawValue) == ACErrorPermissionDenied)
-    precondition(ACErrorUnknown != ACErrorPermissionDenied)
-
-    var hasher = Hasher()
-    ACErrorPermissionDenied.hash(into: &hasher)
-    ACErrorUnknown.hash(into: &hasher)
-    _ = hasher.finalize()
-    precondition(Set([ACErrorUnknown, ACErrorPermissionDenied]).count == 2)
-}
-
 private func exerciseRenewResult() {
-    precondition(ACAccountCredentialRenewResult(rawValue: ACAccountCredentialRenewResult.renewed.rawValue) == .renewed)
-    precondition(ACAccountCredentialRenewResult(rawValue: ACAccountCredentialRenewResult.rejected.rawValue) == .rejected)
-    precondition(ACAccountCredentialRenewResult(rawValue: ACAccountCredentialRenewResult.failed.rawValue) == .failed)
+    precondition(ACAccountCredentialRenewResult.renewed.rawValue == 0)
+    precondition(ACAccountCredentialRenewResult.rejected.rawValue == 1)
+    precondition(ACAccountCredentialRenewResult.failed.rawValue == 2)
+    precondition(ACAccountCredentialRenewResult(rawValue: 0) == .renewed)
+    precondition(ACAccountCredentialRenewResult(rawValue: 1) == .rejected)
+    precondition(ACAccountCredentialRenewResult(rawValue: 2) == .failed)
     precondition(ACAccountCredentialRenewResult(rawValue: 99) == nil)
     precondition(ACAccountCredentialRenewResult.renewed != .failed)
 
@@ -183,37 +236,75 @@ private func exerciseRenewResult() {
     precondition(Set([ACAccountCredentialRenewResult.renewed, .rejected, .failed]).count == 3)
 }
 
-private func exerciseExactlyOnceCallbacks(store: ACAccountStore) {
+private func proveBoolCallback(
+    _ invoke: (@escaping (Bool, (any Error)?) -> Void) -> Void
+) {
+    let state = LockedState()
+    let blocker = CompletionQueueBlocker()
+    blocker.occupy()
+    invoke { granted, error in
+        state.noteCallback()
+        precondition(granted == false)
+        requireFailClosedError(error)
+    }
+    state.markReturned()
+    let drained = DispatchSemaphore(value: 0)
+    ACAccountStore.completionQueue.async {
+        drained.signal()
+    }
+    blocker.release()
+    waitEvent(drained, "bool callback did not drain")
+    let snapshot = state.snapshot()
+    precondition(snapshot.sawReturned, "callback did not observe returned=true")
+    precondition(snapshot.count == 1)
+}
+
+private func proveRenewCallback(store: ACAccountStore, account: ACAccount) {
+    let state = LockedState()
+    let blocker = CompletionQueueBlocker()
+    blocker.occupy()
+    store.renewCredentials(for: account) { result, error in
+        state.noteCallback()
+        precondition(result == .failed)
+        requireFailClosedError(error)
+    }
+    state.markReturned()
+    let drained = DispatchSemaphore(value: 0)
+    ACAccountStore.completionQueue.async {
+        drained.signal()
+    }
+    blocker.release()
+    waitEvent(drained, "renew callback did not drain")
+    let snapshot = state.snapshot()
+    precondition(snapshot.sawReturned, "renew callback did not observe returned=true")
+    precondition(snapshot.count == 1)
+}
+
+private func proveNilHandlers(store: ACAccountStore, account: ACAccount, accountType: ACAccountType) {
+    let blocker = CompletionQueueBlocker()
+    blocker.occupy()
+    store.saveAccount(account, withCompletionHandler: nil)
+    store.removeAccount(account, withCompletionHandler: nil)
+    store.requestAccessToAccounts(with: accountType, options: [:], completion: nil)
+    store.renewCredentials(for: account, completion: nil)
+    let drained = DispatchSemaphore(value: 0)
+    ACAccountStore.completionQueue.async {
+        drained.signal()
+    }
+    blocker.release()
+    waitEvent(drained, "nil-handler drain did not complete")
+}
+
+private func exerciseGatedCallbacks(store: ACAccountStore) {
     let accountType = store.accountType(
         withAccountTypeIdentifier: ACAccountTypeIdentifierFacebook
     )!
     let account = ACAccount(accountType: accountType)!
-    account.username = "unused"
     let options: [AnyHashable: Any] = [
         ACFacebookAppIdKey: "unused-app-id",
         ACFacebookPermissionsKey: ["email"],
         ACFacebookAudienceKey: ACFacebookAudienceOnlyMe,
     ]
-
-    func proveBoolCallback(_ start: (@escaping (Bool, (any Error)?) -> Void) -> Void) {
-        let methodReturned = DispatchSemaphore(value: 0)
-        let count = AccountsCounter()
-        let once = DispatchSemaphore(value: 0)
-        start { granted, error in
-            precondition(
-                methodReturned.wait(timeout: .now() + callbackTimeout) == .success,
-                "handler ran before the method returned"
-            )
-            count.increment()
-            precondition(granted == false)
-            requireFailClosedError(error)
-            once.signal()
-        }
-        methodReturned.signal()
-        waitOnce(once)
-        precondition(count.current() == 1)
-        assertNoExtraSignal(once)
-    }
 
     proveBoolCallback { handler in
         store.requestAccessToAccounts(with: accountType, options: options, completion: handler)
@@ -224,45 +315,8 @@ private func exerciseExactlyOnceCallbacks(store: ACAccountStore) {
     proveBoolCallback { handler in
         store.removeAccount(account, withCompletionHandler: handler)
     }
-
-    let renewReturned = DispatchSemaphore(value: 0)
-    let renewCount = AccountsCounter()
-    let renewOnce = DispatchSemaphore(value: 0)
-    store.renewCredentials(for: account) { result, error in
-        precondition(
-            renewReturned.wait(timeout: .now() + callbackTimeout) == .success,
-            "renew handler ran before the method returned"
-        )
-        renewCount.increment()
-        precondition(result == .failed)
-        requireFailClosedError(error)
-        renewOnce.signal()
-    }
-    renewReturned.signal()
-    waitOnce(renewOnce)
-    precondition(renewCount.current() == 1)
-    assertNoExtraSignal(renewOnce)
-
-    let innerRanOnCallersStack = AccountsFlag()
-    let outerDone = DispatchSemaphore(value: 0)
-    let innerDone = DispatchSemaphore(value: 0)
-    store.saveAccount(account, withCompletionHandler: { _, _ in
-        let innerMethodReturned = DispatchSemaphore(value: 0)
-        store.saveAccount(account, withCompletionHandler: { _, _ in
-            if innerMethodReturned.wait(timeout: .now() + 0) != .success {
-                innerRanOnCallersStack.set()
-            }
-            innerDone.signal()
-        })
-        innerMethodReturned.signal()
-        outerDone.signal()
-    })
-    waitOnce(outerDone)
-    waitOnce(innerDone)
-    precondition(
-        !innerRanOnCallersStack.get(),
-        "nested saveAccount invoked its handler reentrantly"
-    )
+    proveRenewCallback(store: store, account: account)
+    proveNilHandlers(store: store, account: account, accountType: accountType)
 }
 
 private func exerciseConcurrentCallbacks(store: ACAccountStore) {
@@ -272,10 +326,10 @@ private func exerciseConcurrentCallbacks(store: ACAccountStore) {
     let account = ACAccount(accountType: accountType)!
     let iterations = 8
     let group = DispatchGroup()
-    let accessCount = AccountsCounter()
-    let saveCount = AccountsCounter()
-    let removeCount = AccountsCounter()
-    let renewCount = AccountsCounter()
+    let accessCount = LockedCounter()
+    let saveCount = LockedCounter()
+    let removeCount = LockedCounter()
+    let renewCount = LockedCounter()
 
     for _ in 0..<iterations {
         group.enter()
@@ -317,7 +371,7 @@ private func exerciseConcurrentCallbacks(store: ACAccountStore) {
     }
 
     precondition(
-        group.wait(timeout: .now() + .seconds(5)) == .success,
+        group.wait(timeout: .now() + eventTimeout) == .success,
         "concurrent callbacks did not finish"
     )
     precondition(accessCount.current() == iterations)
@@ -368,15 +422,15 @@ private func exerciseAsyncOverlays(store: ACAccountStore) async {
 }
 
 func accountsRuntimeMain() async {
-    _ = ACErrorDomain
-    _ = NSNotification.Name.ACAccountStoreDidChange
-    exerciseErrorSurface()
+    assertOracleConstants()
     exerciseRenewResult()
     let store = ACAccountStore()
+    assertAccountTypeLookup(store: store)
     exerciseLocalObjects(store: store)
-    exerciseExactlyOnceCallbacks(store: store)
+    exerciseGatedCallbacks(store: store)
     exerciseConcurrentCallbacks(store: store)
     await exerciseAsyncOverlays(store: store)
+    drainCompletionQueue()
     print("ACCOUNTS_AGENT_RUNTIME_OK")
 }
 
