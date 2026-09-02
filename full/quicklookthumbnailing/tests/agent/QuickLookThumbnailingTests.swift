@@ -1,6 +1,6 @@
 import Dispatch
 import Foundation
-import QuickLookThumbnailing
+@_spi(LinuxPort) import QuickLookThumbnailing
 
 private func qltAwait<T>(_ body: @escaping () async throws -> T) -> Result<T, Error> {
     let semaphore = DispatchSemaphore(value: 0)
@@ -21,20 +21,34 @@ private func qltAwait<T>(_ body: @escaping () async throws -> T) -> Result<T, Er
 }
 
 private func qltSampleRequest(
+    path: String = "/tmp/qlt-sample",
     types: QLThumbnailGenerator.Request.RepresentationTypes = .thumbnail
 ) -> QLThumbnailGenerator.Request {
     QLThumbnailGenerator.Request(
-        fileAt: URL(fileURLWithPath: "/tmp/qlt-sample"),
+        fileAt: URL(fileURLWithPath: path),
         size: CGSize(width: 64, height: 48),
         scale: 2,
         representationTypes: types
     )
 }
 
+private func qltNSErrorCode(_ error: (any Error)?) -> Int? {
+    (error as NSError?)?.code
+}
+
+private func qltBridgedDomain<E: Foundation._BridgedStoredNSError>(_: E.Type) -> String {
+    E._nsErrorDomain
+}
+
+private func qltErrorTypeName<C: Foundation._ErrorCodeProtocol>(_: C.Type) -> String {
+    String(describing: C._ErrorType.self)
+}
+
 func testQLThumbnailErrorDomain() {
     precondition(QLThumbnailErrorDomain == "QLThumbnailErrorDomain")
     precondition(QLThumbnailError.errorDomain == "QLThumbnailErrorDomain")
     precondition(QLThumbnailError.errorDomain == QLThumbnailErrorDomain)
+    precondition(QLThumbnailError._nsErrorDomain == QLThumbnailErrorDomain)
 }
 
 func testQLThumbnailErrorCodes() {
@@ -92,6 +106,61 @@ func testQLThumbnailErrorPatternMatch() {
     let error: any Error = QLThumbnailError(.requestCancelled)
     precondition(QLThumbnailError.Code.requestCancelled ~= error)
     precondition(!(QLThumbnailError.Code.generationFailed ~= error))
+    do {
+        throw QLThumbnailError(.requestInvalid)
+    } catch let error as QLThumbnailError where error.code == .requestInvalid {
+        ()
+    } catch {
+        preconditionFailure("expected Code.requestInvalid pattern match")
+    }
+}
+
+func testQLThumbnailErrorNSErrorBridge() {
+    let userInfo: [String: Any] = ["qlt": "bridge"]
+    let typed = QLThumbnailError(.savingToURLFailed, userInfo: userInfo)
+    precondition(typed._nsError.domain == QLThumbnailErrorDomain)
+    precondition(typed._nsError.code == 1)
+    precondition(typed._nsError.userInfo["qlt"] as? String == "bridge")
+
+    let bridged = typed as NSError
+    precondition(bridged.domain == QLThumbnailErrorDomain)
+    precondition(bridged.code == QLThumbnailError.Code.savingToURLFailed.rawValue)
+    precondition(bridged.userInfo["qlt"] as? String == "bridge")
+
+    let fromStored = QLThumbnailError(_nsError: typed._nsError)
+    precondition(fromStored.code == .savingToURLFailed)
+    precondition(fromStored.userInfo["qlt"] as? String == "bridge")
+    precondition(fromStored == typed)
+
+    do {
+        throw typed
+    } catch let caught as QLThumbnailError {
+        precondition(caught.code == .savingToURLFailed)
+        precondition(caught.userInfo["qlt"] as? String == "bridge")
+    } catch {
+        preconditionFailure("expected throw/catch QLThumbnailError round trip")
+    }
+
+    // Linux Foundation does not wrap arbitrary domains in `as? QLThumbnailError`.
+    // Do not treat a missing cast as success or invent a local bridge.
+    let nsRoundTrip = bridged as? QLThumbnailError
+    _ = nsRoundTrip
+}
+
+func testQLThumbnailErrorProtocolConformance() {
+    precondition(qltBridgedDomain(QLThumbnailError.self) == QLThumbnailErrorDomain)
+    precondition(qltErrorTypeName(QLThumbnailError.Code.self) == String(describing: QLThumbnailError.self))
+
+    let error = QLThumbnailError(.noCloudThumbnail)
+    var hasher = Hasher()
+    error.hash(into: &hasher)
+    _ = hasher.finalize()
+    _ = error.hashValue
+
+    var seen: Set<Int> = []
+    seen.insert(error.hashValue)
+    seen.insert(QLThumbnailError(.noCloudThumbnail).hashValue)
+    precondition(seen.count == 1)
 }
 
 func testRepresentationTypesOptionSet() {
@@ -204,7 +273,7 @@ func testGeneratorSharedIdentity() {
     _ = QLThumbnailGenerator()
 }
 
-func testGenerateBestRepresentationFailsClosed() {
+func testGenerateBestRepresentationCallbackAfterReturn() {
     let request = qltSampleRequest()
     let result = qltAwait {
         try await QLThumbnailGenerator.shared.generateBestRepresentation(for: request)
@@ -214,39 +283,55 @@ func testGenerateBestRepresentationFailsClosed() {
     }
     precondition(error.code == .generationFailed)
 
-    let semaphore = DispatchSemaphore(value: 0)
+    var didReturn = false
+    var callbackAfterReturn = false
+    var callbacks = 0
     var callbackError: (any Error)?
     var callbackValue: QLThumbnailRepresentation?
+    let semaphore = DispatchSemaphore(value: 0)
     QLThumbnailGenerator.shared.generateBestRepresentation(for: request) { representation, error in
+        callbackAfterReturn = didReturn
+        callbacks += 1
         callbackValue = representation
         callbackError = error
         semaphore.signal()
     }
+    didReturn = true
     semaphore.wait()
+    precondition(callbackAfterReturn)
+    precondition(callbacks == 1)
     precondition(callbackValue == nil)
     precondition((callbackError as? QLThumbnailError)?.code == .generationFailed)
 }
 
-func testGenerateRepresentationsFailsClosed() {
+func testGenerateRepresentationsCallbackAfterReturn() {
     let request = qltSampleRequest(types: [.lowQualityThumbnail, .thumbnail])
-    let semaphore = DispatchSemaphore(value: 0)
+    var didReturn = false
+    var callbackAfterReturn = false
+    var callbacks = 0
     var seenType: QLThumbnailRepresentation.RepresentationType?
     var seenRepresentation: QLThumbnailRepresentation?
     var seenError: (any Error)?
+    let semaphore = DispatchSemaphore(value: 0)
     QLThumbnailGenerator.shared.generateRepresentations(for: request) { representation, type, error in
+        callbackAfterReturn = didReturn
+        callbacks += 1
         seenRepresentation = representation
         seenType = type
         seenError = error
         semaphore.signal()
     }
+    didReturn = true
     semaphore.wait()
+    precondition(callbackAfterReturn)
+    precondition(callbacks == 1)
     precondition(seenRepresentation == nil)
     precondition(seenType == .thumbnail)
     precondition((seenError as? QLThumbnailError)?.code == .generationFailed)
     QLThumbnailGenerator.shared.generateRepresentations(for: request, update: nil)
 }
 
-func testSaveBestRepresentationStringFailsClosed() {
+func testSaveBestRepresentationCallbackAfterReturn() {
     let destination = URL(fileURLWithPath: NSTemporaryDirectory())
         .appendingPathComponent("qlt-must-not-exist-\(UUID().uuidString).png")
     let request = qltSampleRequest()
@@ -262,27 +347,183 @@ func testSaveBestRepresentationStringFailsClosed() {
     }
     precondition(error.code == .generationFailed)
     precondition(!FileManager.default.fileExists(atPath: destination.path))
+
+    var didReturn = false
+    var callbackAfterReturn = false
+    var callbacks = 0
+    var callbackError: (any Error)?
+    let semaphore = DispatchSemaphore(value: 0)
+    QLThumbnailGenerator.shared.saveBestRepresentation(
+        for: request,
+        to: destination,
+        contentType: "public.png"
+    ) { error in
+        callbackAfterReturn = didReturn
+        callbacks += 1
+        callbackError = error
+        semaphore.signal()
+    }
+    didReturn = true
+    semaphore.wait()
+    precondition(callbackAfterReturn)
+    precondition(callbacks == 1)
+    precondition((callbackError as? QLThumbnailError)?.code == .generationFailed)
+    precondition(!FileManager.default.fileExists(atPath: destination.path))
 }
 
-func testCancelThenGenerateRequestCancelled() {
-    let request = qltSampleRequest()
-    QLThumbnailGenerator.shared.cancel(request)
+func testCancelPreCancelDoesNotPoisonRequest() {
+    let generator = QLThumbnailGenerator()
+    let request = qltSampleRequest(path: "/tmp/qlt-precancel")
+    generator.cancel(request)
+
     let result = qltAwait {
-        try await QLThumbnailGenerator.shared.generateBestRepresentation(for: request)
+        try await generator.generateBestRepresentation(for: request)
     }
     guard case .failure(let error as QLThumbnailError) = result else {
         preconditionFailure("expected QLThumbnailError")
     }
-    precondition(error.code == .requestCancelled)
+    precondition(error.code == .generationFailed)
 
-    let other = qltSampleRequest()
-    let otherResult = qltAwait {
-        try await QLThumbnailGenerator.shared.generateBestRepresentation(for: other)
+    var callbacks = 0
+    var callbackCode: Int?
+    let semaphore = DispatchSemaphore(value: 0)
+    generator.generateBestRepresentation(for: request) { _, error in
+        callbacks += 1
+        callbackCode = qltNSErrorCode(error)
+        semaphore.signal()
     }
-    guard case .failure(let otherError as QLThumbnailError) = otherResult else {
-        preconditionFailure("expected QLThumbnailError")
+    semaphore.wait()
+    precondition(callbacks == 1)
+    precondition(callbackCode == QLThumbnailError.Code.generationFailed.rawValue)
+}
+
+func testCancelWhileOperationActive() {
+    let generator = QLThumbnailGenerator()
+    let request = qltSampleRequest(path: "/tmp/qlt-active-cancel")
+    generator.callbackQueue.suspend()
+
+    var didReturn = false
+    var callbackAfterReturn = false
+    var callbacks = 0
+    var callbackCode: Int?
+    let semaphore = DispatchSemaphore(value: 0)
+    generator.generateBestRepresentation(for: request) { _, error in
+        callbackAfterReturn = didReturn
+        callbacks += 1
+        callbackCode = qltNSErrorCode(error)
+        semaphore.signal()
     }
-    precondition(otherError.code == .generationFailed)
+    generator.cancel(request)
+    didReturn = true
+    generator.callbackQueue.resume()
+    semaphore.wait()
+    precondition(callbackAfterReturn)
+    precondition(callbacks == 1)
+    precondition(callbackCode == QLThumbnailError.Code.requestCancelled.rawValue)
+}
+
+func testReuseAfterTerminalDelivery() {
+    let generator = QLThumbnailGenerator()
+    let request = qltSampleRequest(path: "/tmp/qlt-reuse")
+
+    var firstCode: Int?
+    let first = DispatchSemaphore(value: 0)
+    generator.generateBestRepresentation(for: request) { _, error in
+        firstCode = qltNSErrorCode(error)
+        first.signal()
+    }
+    first.wait()
+    precondition(firstCode == QLThumbnailError.Code.generationFailed.rawValue)
+
+    generator.cancel(request)
+
+    var secondCode: Int?
+    var callbacks = 0
+    let second = DispatchSemaphore(value: 0)
+    generator.generateBestRepresentation(for: request) { _, error in
+        callbacks += 1
+        secondCode = qltNSErrorCode(error)
+        second.signal()
+    }
+    second.wait()
+    precondition(callbacks == 1)
+    precondition(secondCode == QLThumbnailError.Code.generationFailed.rawValue)
+}
+
+func testIndependentGeneratorCancellation() {
+    let first = QLThumbnailGenerator()
+    let second = QLThumbnailGenerator()
+    let request = qltSampleRequest(path: "/tmp/qlt-independent")
+    first.callbackQueue.suspend()
+    second.callbackQueue.suspend()
+
+    var firstCode: Int?
+    var secondCode: Int?
+    var firstCount = 0
+    var secondCount = 0
+    let firstDone = DispatchSemaphore(value: 0)
+    let secondDone = DispatchSemaphore(value: 0)
+    first.generateBestRepresentation(for: request) { _, error in
+        firstCount += 1
+        firstCode = qltNSErrorCode(error)
+        firstDone.signal()
+    }
+    second.generateBestRepresentation(for: request) { _, error in
+        secondCount += 1
+        secondCode = qltNSErrorCode(error)
+        secondDone.signal()
+    }
+    first.cancel(request)
+    first.callbackQueue.resume()
+    second.callbackQueue.resume()
+    firstDone.wait()
+    secondDone.wait()
+    precondition(firstCount == 1)
+    precondition(secondCount == 1)
+    precondition(firstCode == QLThumbnailError.Code.requestCancelled.rawValue)
+    precondition(secondCode == QLThumbnailError.Code.generationFailed.rawValue)
+}
+
+func testConcurrentGenerateAndCancelExactlyOnce() {
+    final class Counter: @unchecked Sendable {
+        private let lock = NSLock()
+        private var value = 0
+        func increment() {
+            lock.lock()
+            value += 1
+            lock.unlock()
+        }
+        func snapshot() -> Int {
+            lock.lock()
+            defer { lock.unlock() }
+            return value
+        }
+    }
+
+    let generator = QLThumbnailGenerator()
+    let group = DispatchGroup()
+    let counter = Counter()
+    let count = 32
+    for index in 0..<count {
+        let request = QLThumbnailGenerator.Request(
+            fileAtURL: URL(fileURLWithPath: "/tmp/qlt-conc-\(index)"),
+            size: CGSize(width: 16, height: 16),
+            scale: 1,
+            representationTypes: .all
+        )
+        group.enter()
+        DispatchQueue.global().async {
+            generator.generateBestRepresentation(for: request) { _, _ in
+                counter.increment()
+                group.leave()
+            }
+            if index % 2 == 0 {
+                generator.cancel(request)
+            }
+        }
+    }
+    group.wait()
+    precondition(counter.snapshot() == count)
 }
 
 func testReplyImageFileURLAndBadge() {
@@ -316,28 +557,40 @@ func testReplyCurrentContextDrawingDoesNotInvokeBlock() {
     _ = aliased
 }
 
-func testProviderProvideThumbnailFailsClosed() {
-    let request = QLFileThumbnailRequest(
-        fileURL: URL(fileURLWithPath: "/tmp/qlt-file"),
-        maximumSize: CGSize(width: 100, height: 100),
-        minimumSize: CGSize(width: 20, height: 20),
-        scale: 2
-    )
-    precondition(request.fileURL.path == "/tmp/qlt-file")
-    precondition(request.maximumSize.width == 100)
-    precondition(request.minimumSize.width == 20)
-    precondition(request.scale == 2)
+func testFileThumbnailRequestPublicInitPlaceholders() {
+    let request = QLFileThumbnailRequest()
+    precondition(request.maximumSize == .zero)
+    precondition(request.minimumSize == .zero)
+    precondition(request.scale == 0)
+    _ = request.fileURL
+}
 
+func testRepresentationPublicInitTypeIconContentRectZero() {
+    let representation = QLThumbnailRepresentation()
+    precondition(representation.type == .icon)
+    precondition(representation.contentRect == .zero)
+    precondition(representation.contentRect.origin.x == 0)
+    precondition(representation.contentRect.origin.y == 0)
+    precondition(representation.contentRect.size.width == 0)
+    precondition(representation.contentRect.size.height == 0)
+}
+
+func testProviderProvideThumbnailFailsClosed() {
+    let request = QLFileThumbnailRequest()
     let provider = QLThumbnailProvider()
-    let semaphore = DispatchSemaphore(value: 0)
     var reply: QLThumbnailReply?
     var error: (any Error)?
+    var didReturn = false
+    var callbackAfterReturn = false
     provider.provideThumbnail(for: request) { providedReply, providedError in
+        callbackAfterReturn = didReturn
         reply = providedReply
         error = providedError
-        semaphore.signal()
     }
-    semaphore.wait()
+    didReturn = true
     precondition(reply == nil)
     precondition((error as? QLThumbnailError)?.code == .generationFailed)
+    // Provider timing was not in the iOS 26.1 generator observation. This port
+    // keeps the handler synchronous; do not treat that as measured Apple behavior.
+    precondition(callbackAfterReturn == false)
 }

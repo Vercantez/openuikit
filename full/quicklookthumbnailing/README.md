@@ -9,8 +9,10 @@ guest package; that integration is a later central-review step.
 
 - `QLThumbnailErrorDomain` is the string `QLThumbnailErrorDomain`, matching
   the pinned `dotnet/macios` `[ErrorDomain]` annotation and Apple NSError logs.
-- `QLThumbnailError.Code` raw values are `generationFailed = 0` through
-  `requestCancelled = 5`.
+- `QLThumbnailError` is a `@frozen` `Foundation._BridgedStoredNSError` wrapper
+  around a stored `NSError`. `QLThumbnailError.Code` conforms to
+  `Foundation._ErrorCodeProtocol` with `_ErrorType = QLThumbnailError`. Raw
+  values are `generationFailed = 0` through `requestCancelled = 5`.
 - `QLThumbnailGenerator.Request.RepresentationTypes` is an `OptionSet` with
   `icon = 1 << 0`, `lowQualityThumbnail = 1 << 1`, `thumbnail = 1 << 2`, and
   `all = UInt.max`.
@@ -18,13 +20,21 @@ guest package; that integration is a later central-review step.
   `lowQualityThumbnail = 1`, `thumbnail = 2`.
 - `QLThumbnailGenerator.Request` stores the caller-supplied file URL, size,
   scale, and representation types. `iconMode` and `minimumDimension` are
-  mutable stored properties.
+  mutable stored properties. Cancellation is not stored on the request.
+- `QLThumbnailRepresentation.init()` is public. iOS 26.1 observed
+  `type == .icon` and `contentRect == .zero` for that initializer.
+- `QLFileThumbnailRequest.init()` is the inherited public initializer iOS
+  accepts. Properties are fail-closed placeholders until an extension host
+  exists. The graph-absent `init(fileURL:maximumSize:minimumSize:scale:)` is
+  not public; tests that need populated values use an internal SPI fixture.
 - `QLThumbnailReply` can be constructed from an image file URL or a
   current-context drawing block. `extensionBadge` is get/set.
-- `QLFileThumbnailRequest` exposes the documented stored properties through a
-  Linux designated initializer (Apple does not publish one).
-- Focused tests exercise error identity, option-set algebra, request storage,
-  fail-closed generate/save/cancel, and provider/reply construction.
+- Generator completion/update APIs return before their callbacks run. Linux
+  delivers those callbacks asynchronously, exactly once, on the documented
+  serial queue `com.apple.quicklookthumbnailing.QLThumbnailGenerator.callback`.
+- `cancel(_:)` before generation is a no-op. Only in-flight operations owned
+  by that generator for that request instance can become `requestCancelled`.
+  Terminal delivery removes operation state.
 
 `CGSize` / `CGFloat` / `CGRect` values are Foundation's Linux geometry types.
 On a later EC2 integration build they are the real CoreGraphics types.
@@ -32,15 +42,19 @@ On a later EC2 integration build they are the real CoreGraphics types.
 ## Fail-closed boundaries
 
 Linux has no Quick Look daemon, thumbnail cache, or iCloud thumbnail pipeline.
-The implementation never fabricates a `QLThumbnailRepresentation` and never
-writes a destination image file.
+The implementation never fabricates thumbnail pixels and never writes a
+destination image file.
 
-- `generateBestRepresentation` throws / callbacks `QLThumbnailError.generationFailed`.
-- `generateRepresentations` invokes the optional update handler once with a nil
-  representation and `generationFailed` (or `requestCancelled` after `cancel`).
+- `generateBestRepresentation` throws / callbacks `QLThumbnailError.generationFailed`
+  unless this generator cancelled the matching in-flight operation.
+- `generateRepresentations` invokes the optional update handler once after
+  return with a nil representation, the highest requested type, and
+  `generationFailed` (or `requestCancelled` for an in-flight cancel).
 - `saveBestRepresentation(for:to:contentType:)` throws the same errors and
   does not create the destination URL.
-- `QLThumbnailProvider.provideThumbnail` reports `generationFailed`.
+- `QLThumbnailProvider.provideThumbnail` reports `generationFailed`
+  synchronously. That timing was not measured on iOS 26.1 (only generator
+  completion APIs were); do not treat it as Apple's provider contract.
 - `Request.init(coder:)` returns `nil`; encoding writes no archive.
 - Current-context drawing blocks are stored and never invoked.
 
@@ -54,8 +68,12 @@ does not provide, and substituting a local lookalike is forbidden:
 - `QLThumbnailReply` drawing initializers taking `CGContext`
 - `QLThumbnailRepresentation.cgImage` / `uiImage`
 
-`QLThumbnailRepresentation.type` and `contentRect` are declared but not
-constructible from public API because generation never succeeds.
+When those modules can be imported, the overlay declares the canonical
+signatures. `cgImage` / `uiImage` still cannot return real pixels without a
+thumbnail backend; the identity probe emits UNAVAILABLE rather than a false
+success. `CoreTransferable` and `ExtensionFoundation` are imported for the
+seeded dependency list but do not participate in any exposed QuickLookThumbnailing
+type.
 
 TBD-only Swift overlays (`ThumbnailProvider`, `ThumbnailExtension`,
 `ThumbnailRequest`) and private ObjC cache/service classes are out of the
