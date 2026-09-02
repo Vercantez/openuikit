@@ -248,4 +248,3 @@ private func cmTotalDuration(_ timings: [CMSampleTimingInfo], count: Int) -> CMT
     }
     return total
 }
-
