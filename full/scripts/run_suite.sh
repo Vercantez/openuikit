@@ -13,7 +13,7 @@
 # nothing to do with machorun.
 set -uo pipefail
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
-UIKIT=${UIKIT:-$HOME/uikit}
+UIKIT=${UIKIT:-$ROOT/uikit}
 SUITE=${SUITE:-suite}
 CONTAINER_IMAGE=${CONTAINER_IMAGE:-swift-macho-spike:noble}
 # MRROOT lets a run use an alternative guest root -- e.g. one with a different

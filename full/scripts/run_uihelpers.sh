@@ -6,7 +6,7 @@
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
-UIKIT=${UIKIT:-"$(cd "$ROOT/../uikit" 2>/dev/null && pwd)"}
+UIKIT=${UIKIT:-"$ROOT/uikit"}
 MRROOT=/w/scratch/mrroot_full
 RENDERER=$ROOT/build/full/render_full
 SUBJECT_FILE=$ROOT/build/full/uihelpers-subject.sha256

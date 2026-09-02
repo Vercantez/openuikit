@@ -25,8 +25,14 @@
 #
 # Runs in swift-macho-spike:noble.  /w = ~/swift-macho-linux, /uikit = ~/uikit:ro
 set -euo pipefail
-W=${W:-/w}
-UIKIT=${UIKIT:-/uikit}
+W=${W:-$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)}
+# shellcheck source=../../scripts/vendor_tree.sh
+. "$W/scripts/vendor_tree.sh"
+die() {
+    echo "build_full: $*" >&2
+    exit 2
+}
+UIKIT=${UIKIT:-$W/uikit}
 TARGET=${TARGET:-arm64-apple-macos15.0}
 MINOS=${MINOS:-15.0}
 LINK_PLATFORM=${LINK_PLATFORM:-macos}
@@ -194,12 +200,14 @@ if [ "$BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_MODE" = external ]; then
 fi
 
 # ---- guest root ------------------------------------------------------------
-# MACHORUN=/machorun is a read-only bind mount of ~/machorun, so the guest root
-# is always staged from the CURRENT loader and userland rather than from a copy
-# that silently goes stale. That mattered once already: a guest root staged
-# before machorun's heap-below-2^47 fix (9659e73) reproduced a bug that had
-# been fixed upstream hours earlier.
-MACHORUN=${MACHORUN:-/machorun}
+# MACHORUN defaults to the in-repo machorun/ subtree. External MACHORUN=/path
+# checkouts remain overrides. The guest root is always staged from the CURRENT
+# loader and userland rather than from a copy that silently goes stale. That
+# mattered once already: a guest root staged before machorun's heap-below-2^47
+# fix (9659e73) reproduced a bug that had been fixed upstream hours earlier.
+MACHORUN=${MACHORUN:-$W/machorun}
+assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_INREPO_UIKIT_TREE" OpenUIKit
+assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
 SWIFT_CORE_RUNTIME_SOURCE=${SWIFT_CORE_RUNTIME_SOURCE:-$MACHORUN/darwin/usr/lib/swift/libswiftCore.dylib}
 SWIFT_CORE_RUNTIME_EXPECTED_SHA256=${SWIFT_CORE_RUNTIME_EXPECTED_SHA256:-}
 # REFUSE WITHOUT THE MOUNT, rather than silently building half a root.
@@ -218,16 +226,12 @@ for req in "$MACHORUN/build/machorun" \
 
 build_full: REFUSING TO BUILD -- $req is missing.
 
-  MACHORUN=$MACHORUN does not look like a machorun checkout. Without it every
+  MACHORUN=$MACHORUN does not look like a built machorun tree. Without it every
   freshness test below is silently FALSE and the loader + umbrella steps are
   skipped, producing a guest root assembled from whatever was already on disk.
 
-  Add the mount:
-    docker run --rm -v ~/swift-macho-linux:/w -v ~/uikit:/uikit:ro \\
-        -v ~/machorun:/machorun:ro -w /w \\
-        swift-macho-spike:noble bash full/scripts/build_full.sh
-
-  (If machorun is checked out elsewhere, mount it and set MACHORUN=<that path>.)
+  In-repo default is $W/machorun (build products live at machorun/build and
+  machorun/darwin/usr). Build that tree, or set MACHORUN to a built checkout.
 EOF
     exit 2
 done

@@ -5,7 +5,7 @@
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
-UIKIT=${UIKIT:-"$(cd "$ROOT/../uikit" 2>/dev/null && pwd)"}
+UIKIT=${UIKIT:-"$ROOT/uikit"}
 MRROOT=/w/scratch/mrroot_full
 PROBE=$ROOT/build/full/indexpath_identity_probe
 SUBJECT_FILE=$ROOT/build/full/uihelpers-subject.sha256
