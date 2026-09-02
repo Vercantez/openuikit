@@ -89,6 +89,7 @@ i386/signal.h	xnu:bsd/i386/signal.h
 i386/types.h	xnu:bsd/i386/types.h
 assert.h	Libc:include/assert.h
 bsm/audit.h	xnu:bsd/bsm/audit.h
+copyfile.h	copyfile:copyfile.h
 crt_externs.h	Libc:include/crt_externs.h
 ctype.h	Libc:include/ctype.h
 dirent.h	Libc:include/dirent.h

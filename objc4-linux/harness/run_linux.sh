@@ -33,6 +33,14 @@ NAME=$(basename "$TEST" .m)
 
 skip() { echo "run_linux.sh: SKIPPED $NAME: $1" >&2; exit 3; }
 
+# Runs aarch64-unknown-linux-gnu tests. That is execution, not a toolchain pin.
+# Refuse on x86_64 before any SKIPPED-for-missing-runtime so the canonical
+# marker is what downstream tooling counts.
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    bash "$(git -C "$REPO" rev-parse --show-toplevel)/.cursor/refuse-arm64-execution.sh" \
+        || exit $?
+fi
+
 [ "${OBJC4_SKIP_LINUX:-0}" = "1" ] && skip "OBJC4_SKIP_LINUX=1"
 
 # --- locate our runtime ------------------------------------------------------

@@ -320,6 +320,20 @@ void mr_constrain_heap(void)
     free(big);
     free(probe);
     heap_bounds_init();
+    /* qemu-user (and some stripped environments) never label a [heap] VMA.
+     * mallopt(M_MMAP_MAX, 0) forced every malloc onto brk, so the break we
+     * sampled before the probes IS the arena start for everything the guest
+     * will be handed. Without this, malloc_size -- and malloc_zone_from_ptr
+     * which uses it as the ownership test -- answers 0 for every heap pointer
+     * under qemu-user. Measured: MACHORUN_VERBOSE logs "no [heap] mapping yet"
+     * and a 32-byte malloc() then fails the ownership test. Native aarch64
+     * still takes the [heap] path; this is only the missing-label case. */
+    if (!heap_lo) {
+        heap_lo = (uintptr_t)brk_now;
+        heap_hi_cache = (uintptr_t)sbrk(0);
+        mr_log("heap bounds: no [heap] VMA; using brk [0x%llx, 0x%llx)",
+               (unsigned long long)heap_lo, (unsigned long long)heap_hi_cache);
+    }
     mr_log("heap constrained: brk 0x%llx, one arena, mmap disabled; %llu-byte probe "
            "also below the limit 0x%llx",
            (unsigned long long)brk_now, (unsigned long long)MR_HEAP_PROBE_LARGE,

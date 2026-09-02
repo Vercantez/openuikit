@@ -8,7 +8,8 @@
 # census row, not an abort -- stopping at the first failure is exactly the
 # behaviour that produced phase 1's "4 errors" false green.
 #
-#   1. OpenUIKit          built FRESH from a clone of ~/uikit (never written to)
+#   1. OpenUIKit          built FRESH from the in-repo uikit/ subtree (or an
+#                         external checkout override); never written to
 #   2. support modules    production WebKit plus the remaining measured Glean,
 #                         FocusAppServices, Sentry, Fuzi and MobileCoreServices
 #                         census-only modules
@@ -31,11 +32,17 @@ set -uo pipefail
 
 HERE=$(cd "$(dirname "$0")" && pwd)
 SML=$(cd "$HERE/../.." && pwd)
+# shellcheck source=../../scripts/vendor_tree.sh
+. "$SML/scripts/vendor_tree.sh"
+die() {
+    printf 'REFUSED: %s\n' "$*" >&2
+    exit 2
+}
 APP=${APP:-$SML/scratch/ladder-corpus/focus-ios/focus-ios}
 SNAPKIT=${SNAPKIT:-$SML/scratch/xcodeplan-deps/SnapKit}
 OUT=${1:-/tmp/focus-ios-census}
 REQUESTED_TARGET=${TARGET:-}
-UIKIT_SRC=${UIKIT_SRC:-$HOME/uikit}
+UIKIT_SRC=${UIKIT_SRC:-$SML/uikit}
 FIRST_PARTY_FRAMEWORKS_SRC=${FIRST_PARTY_FRAMEWORKS_SRC:-}
 FOCUS_EXPECTED_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791
 FOCUS_EXPECTED_TREE=065d8e374c9caa3be2915165ba7cbbe4b1d61d7e
@@ -132,16 +139,20 @@ write_bundle_accessor() {
 # --- 0. pins, by COMMIT ------------------------------------------------------
 hr "0. pins"
 if [ "$CENSUS_SOURCE_MODE" = exact-main ]; then
-    [ -n "$EXPECTED_SUPPORT_COMMIT" ] && [ -n "$EXPECTED_SUPPORT_TREE" ] \
-        && [ -n "$EXPECTED_UIKIT_COMMIT" ] && [ -n "$EXPECTED_UIKIT_TREE" ] || {
-            say "  REFUSED: exact-main requires expected support/UIKit commit and tree"
+    [ -n "$EXPECTED_SUPPORT_COMMIT" ] && [ -n "$EXPECTED_SUPPORT_TREE" ] || {
+            say "  REFUSED: exact-main requires expected support commit and tree"
             exit 2
         }
+    [ -z "$EXPECTED_UIKIT_TREE" ] && EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE
     assert_clean_identity "$SML" "$EXPECTED_SUPPORT_COMMIT" "$EXPECTED_SUPPORT_TREE" support
     assert_clean_identity "$APP" "$FOCUS_EXPECTED_COMMIT" "$FOCUS_EXPECTED_TREE" Focus
     assert_clean_identity "$SNAPKIT" "$SNAPKIT_EXPECTED_COMMIT" \
         "$SNAPKIT_EXPECTED_TREE" SnapKit
-    assert_clean_identity "$UIKIT_SRC" "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
+    assert_vendor_tree "$SML" uikit "$UIKIT_SRC" "$EXPECTED_UIKIT_TREE" OpenUIKit
+    if ! vendor_is_inrepo "$SML" uikit "$UIKIT_SRC"; then
+        [ -n "$EXPECTED_UIKIT_COMMIT" ] || die 'exact-main external OpenUIKit checkout requires expected UIKit commit'
+        assert_clean_identity "$UIKIT_SRC" "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
+    fi
     BASELINE_PRIMARY_SHA_BEFORE=''
     if [ -n "$BASELINE_PRIMARY" ]; then
         case "$BASELINE_PRIMARY" in /*) ;; *) say '  REFUSED: baseline primary path must be absolute'; exit 2 ;; esac
@@ -161,13 +172,23 @@ python3 -B "$WEBKIT_PROVENANCE" focus \
     || exit 4
 say "  focus-ios  $(git -C "$APP" rev-parse HEAD 2>/dev/null)"
 say "  SnapKit    $(git -C "$SNAPKIT" rev-parse HEAD 2>/dev/null)"
-say "  OpenUIKit  $(git -C "$UIKIT_SRC" rev-parse HEAD 2>/dev/null)"
+if vendor_is_inrepo "$SML" uikit "$UIKIT_SRC"; then
+    say "  OpenUIKit  HEAD:uikit=$(git -C "$SML" rev-parse HEAD:uikit)"
+else
+    say "  OpenUIKit  $(git -C "$UIKIT_SRC" rev-parse HEAD 2>/dev/null)"
+fi
 
 # --- 1. OpenUIKit, built fresh ----------------------------------------------
-hr "1. OpenUIKit (fresh clone; ~/uikit is read-only and is never written)"
+hr "1. OpenUIKit (fresh tree; in-repo uikit/ and external checkouts are never written)"
 UIKIT_CLONE=$OUT/uikit
 if [ ! -d "$UIKIT_CLONE" ]; then
-    git clone -q --no-hardlinks "$UIKIT_SRC" "$UIKIT_CLONE" || { say "  clone failed"; exit 2; }
+    if vendor_is_inrepo "$SML" uikit "$UIKIT_SRC"; then
+        mkdir -p "$UIKIT_CLONE"
+        git -C "$SML" archive HEAD:uikit | tar -x -C "$UIKIT_CLONE" \
+            || { say "  in-repo uikit archive failed"; exit 2; }
+    else
+        git clone -q --no-hardlinks "$UIKIT_SRC" "$UIKIT_CLONE" || { say "  clone failed"; exit 2; }
+    fi
 fi
 ( cd "$UIKIT_CLONE" && swift build -c release --product OpenUIKit ) \
     > "$OUT/logs/openuikit.log" 2>&1
@@ -466,7 +487,10 @@ if [ "$CENSUS_SOURCE_MODE" = exact-main ]; then
     assert_clean_identity "$APP" "$FOCUS_EXPECTED_COMMIT" "$FOCUS_EXPECTED_TREE" Focus
     assert_clean_identity "$SNAPKIT" "$SNAPKIT_EXPECTED_COMMIT" \
         "$SNAPKIT_EXPECTED_TREE" SnapKit
-    assert_clean_identity "$UIKIT_SRC" "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
+    assert_vendor_tree "$SML" uikit "$UIKIT_SRC" "$EXPECTED_UIKIT_TREE" OpenUIKit
+    if ! vendor_is_inrepo "$SML" uikit "$UIKIT_SRC"; then
+        assert_clean_identity "$UIKIT_SRC" "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
+    fi
     normalized_sha=$(shasum -a 256 "$OUT/exact-main-primary.tsv" | awk '{print $1}')
     raw_log_sha=$(shasum -a 256 "$OUT/logs/exact-main.log" | awk '{print $1}')
     delta_sha=''
@@ -484,7 +508,12 @@ if [ "$CENSUS_SOURCE_MODE" = exact-main ]; then
         printf 'format\tfocus-exact-main-census-v1\n'
         printf 'support\t%s\t%s\n' "$EXPECTED_SUPPORT_COMMIT" "$EXPECTED_SUPPORT_TREE"
         printf 'focus\t%s\t%s\n' "$FOCUS_EXPECTED_COMMIT" "$FOCUS_EXPECTED_TREE"
-        printf 'uikit\t%s\t%s\n' "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE"
+        if vendor_is_inrepo "$SML" uikit "$UIKIT_SRC"; then
+            printf 'uikit\ttree=%s\tsource=HEAD:uikit\n' "$EXPECTED_UIKIT_TREE"
+        else
+            printf 'uikit\tcommit=%s\ttree=%s\tsource=checkout\n' \
+                "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE"
+        fi
         printf 'snapkit\t%s\t%s\n' "$SNAPKIT_EXPECTED_COMMIT" "$SNAPKIT_EXPECTED_TREE"
         printf 'sources\tpresent\t129\n'
         printf 'sources\tgenerated-missing\t2\n'

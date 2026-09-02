@@ -85,6 +85,10 @@ GUEST="${1:-}"
 [ -n "$GUEST" ] || { sed -n '2,6p' "$0"; exit 64; }
 shift
 
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    bash "$(git -C "$ROOT" rev-parse --show-toplevel)/.cursor/refuse-arm64-execution.sh" \
+        || exit $?
+fi
 command -v docker >/dev/null 2>&1 || { echo "valgrind_guest: docker not installed" >&2; exit 1; }
 [ -e "$GUEST" ] || { echo "valgrind_guest: no such guest: $GUEST" >&2; exit 66; }
 

@@ -87,7 +87,7 @@
 set -uo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-MACHORUN=${MACHORUN:-$HOME/machorun}
+MACHORUN=${MACHORUN:-$ROOT/machorun}
 TARGET=${1:?usage: require_fresh_root.sh <path-to-guest-root>}
 case "$TARGET" in /*) ;; *) TARGET="$ROOT/$TARGET" ;; esac
 SHORT=${TARGET#$ROOT/}

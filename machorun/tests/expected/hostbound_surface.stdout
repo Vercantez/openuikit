@@ -1,0 +1,14 @@
+strtod                1.5
+strtod_l NULL         1.5 same=1
+strtod_l GLOBAL       1.5 same=1
+strtof_l NULL         1.25 same=1
+strtold_l width       8
+strtold_l NULL        2.5 same_as_strtod=1
+getsectiondata        found=1 size=8 match=1
+malloc_zone heap      nonzero=1 same_as_default=1
+malloc_zone stack     null=1
+malloc_zone NULL      null=1
+stackaddr             high=1
+stacksize             nonzero=1 covers_local=1
+getline               n=12 [has_nl] cap_nonzero=1
+done

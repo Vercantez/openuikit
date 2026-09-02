@@ -1,3 +1,8 @@
+// Preview is app-side machinery: DeveloperToolsSupport is built against the
+// app-facing Foundation facade. In a Foundation-hidden (FoundationEssentials-
+// only) SwiftUI build the module is absent or unloadable, so the whole #Preview
+// slice is conditional — same contract as UIKitShim (target-15).
+#if canImport(DeveloperToolsSupport) && canImport(Foundation)
 @_exported @_spi(OpenUIKitPreview) import DeveloperToolsSupport
 import OpenUIKit
 import OpenCoreGraphics
@@ -348,3 +353,4 @@ public extension _OpenLabel where Title == _OpenText, Icon == _OpenImage {
         self.init(LocalizedStringKey(String(title)), image: resource)
     }
 }
+#endif

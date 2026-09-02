@@ -17,6 +17,10 @@ IOS_SDK=$2
 CONTAINER_IMAGE=$3
 OUTPUT_ROOT=$4
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)
+W=$(cd -- "$SCRIPT_DIR/../.." && pwd -P)
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    bash "$W/.cursor/refuse-arm64-execution.sh" || exit $?
+fi
 
 [ -d "$CORE_PACKAGE/sdk" ] || die 'core package SDK is missing'
 [ -x "$CORE_PACKAGE/guest-root/machorun" ] || die 'core package machorun is missing'

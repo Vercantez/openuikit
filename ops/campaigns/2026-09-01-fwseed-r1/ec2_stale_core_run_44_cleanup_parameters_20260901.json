@@ -1,0 +1,24 @@
+{
+  "commands": [
+    "set -eu",
+    "parent=/opt/openuikit/core-cold/packages",
+    "audit=/var/lib/openuikit/audits/core-cold-r22-20260901/build-44bd5af",
+    "test \"$(find $parent -maxdepth 1 -mindepth 1 -name '.core-guest-run.*' -print | wc -l)\" -eq 1",
+    "run=$(find $parent -maxdepth 1 -mindepth 1 -name '.core-guest-run.*' -print -quit)",
+    "dest=$audit/wrapper-run-evidence",
+    "test -d $run",
+    "test ! -L $run",
+    "test -f $run/SUCCESS",
+    "grep -Fx 'output\t/opt/openuikit/core-cold/packages/core-guest-r23-44bd5af-20260901' $run/SUCCESS >/dev/null",
+    "grep -Fx 'core-package-json\tb99b06b8b4dce7c58e739ae46358f860c3598f12b9529f8f96e6b75ac9fea2b9' $run/SUCCESS >/dev/null",
+    "test ! -e $dest",
+    "test ! -L $dest",
+    "du -sb $run > $audit/stale-wrapper-run-size.txt",
+    "find $run -type f -printf '%P\\t%s\\n' | LC_ALL=C sort > $audit/stale-wrapper-run-inventory.tsv",
+    "mv -- $run $dest",
+    "find $dest -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum > $audit/stale-wrapper-run-hashes.txt",
+    "test -z \"$(find $parent -maxdepth 1 -mindepth 1 -name '.core-guest-run.*' -print -quit)\"",
+    "printf 'EC2_STALE_CORE_RUN_MOVED_TO_AUDIT source=%s destination=%s\\n' $run $dest"
+  ],
+  "executionTimeout": ["900"]
+}

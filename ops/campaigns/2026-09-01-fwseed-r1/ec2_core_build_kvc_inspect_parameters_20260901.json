@@ -1,0 +1,22 @@
+{
+  "commands": [
+    "set -u",
+    "baseline=/opt/openuikit/core-cold/baseline-r22-20260901",
+    "support=/opt/openuikit/core-cold/support-fixes/44bd5af-20260901/support",
+    "output=/opt/openuikit/core-cold/packages/core-guest-r23-44bd5af-20260901",
+    "audit=/var/lib/openuikit/audits/core-cold-r22-20260901/build-44bd5af",
+    "ls -ld /opt/openuikit/core-cold/support-fixes/44bd5af-20260901/READY $baseline/READY $support",
+    "git -C $support rev-parse HEAD HEAD^{tree}",
+    "printf 'DIRTY='",
+    "git -C $support status --porcelain=v1 --untracked-files=all | wc -l",
+    "if [ -e $output ] || [ -L $output ]; then ls -ld $output; else echo OUTPUT_ABSENT; fi",
+    "if [ -e $audit ] || [ -L $audit ]; then ls -ld $audit; find $audit -maxdepth 1 -mindepth 1 -printf '%f\\n'; else echo AUDIT_ABSENT; fi",
+    "printf 'RUN_ROOTS='",
+    "find /opt/openuikit/core-cold/packages -maxdepth 1 -mindepth 1 -name '.core-guest-run.*' -print | wc -l",
+    "printf 'JOBS='",
+    "find /var/tmp/openuikit-jobs -maxdepth 1 -mindepth 1 -print | wc -l",
+    "printf 'CONTAINERS_ALL='",
+    "docker ps -aq | wc -l"
+  ],
+  "executionTimeout": ["600"]
+}

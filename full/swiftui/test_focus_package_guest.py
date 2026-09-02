@@ -40,21 +40,23 @@ class FocusPackageGuestProofTests(unittest.TestCase):
     def test_landed_uikit_is_literal_and_base_proof_is_preserved(self) -> None:
         text = BUILD.read_text()
         self.assertIn(
-            "EXPECTED_UIKIT_COMMIT="
-            "62dea0d97a3b9074e5c016820492bd0656b9a35a",
+            "EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE",
             text,
         )
-        self.assertIn(
-            "EXPECTED_UIKIT_TREE="
-            "3dfd6024557632949c9a5036522871a36d4a0cf0",
-            text,
-        )
+        self.assertIn('assert_vendor_tree "$W" uikit', text)
+        self.assertIn("attested OpenUIKit source=HEAD:uikit", text)
         self.assertIn(
             'bash "$W/full/swiftui/build_focus_onboarding_guest.sh"', text
         )
         self.assertNotIn("EXPECTED_UIKIT_COMMIT_OVERRIDE", text)
         self.assertNotIn("${EXPECTED_UIKIT_COMMIT:?", text)
+        self.assertNotIn(
+            "EXPECTED_UIKIT_COMMIT="
+            "62dea0d97a3b9074e5c016820492bd0656b9a35a",
+            text,
+        )
         self.assertIn("printf 'uikit-tree\\t%s\\n'", text)
+        self.assertIn("HEAD:uikit", text)
         self.assertIn("FOCUS_ONBOARDING_MACHO_GUEST_OK", BASE_BUILD.read_text())
 
     def test_exact_unchanged_source_boundaries_are_pinned(self) -> None:

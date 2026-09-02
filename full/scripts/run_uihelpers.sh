@@ -6,11 +6,15 @@
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
-UIKIT=${UIKIT:-"$(cd "$ROOT/../uikit" 2>/dev/null && pwd)"}
+UIKIT=${UIKIT:-"$ROOT/uikit"}
 MRROOT=/w/scratch/mrroot_full
 RENDERER=$ROOT/build/full/render_full
 SUBJECT_FILE=$ROOT/build/full/uihelpers-subject.sha256
 ARTIFACT_FILE=$ROOT/build/full/uihelpers-artifacts.sha256
+
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    bash "$ROOT/.cursor/refuse-arm64-execution.sh" || exit $?
+fi
 
 hash_file() {
     if command -v sha256sum >/dev/null 2>&1; then

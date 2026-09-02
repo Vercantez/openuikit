@@ -13,7 +13,7 @@
 # nothing to do with machorun.
 set -uo pipefail
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
-UIKIT=${UIKIT:-$HOME/uikit}
+UIKIT=${UIKIT:-$ROOT/uikit}
 SUITE=${SUITE:-suite}
 CONTAINER_IMAGE=${CONTAINER_IMAGE:-swift-macho-spike:noble}
 # MRROOT lets a run use an alternative guest root -- e.g. one with a different
@@ -23,6 +23,10 @@ MRROOT_WAS_SET=${MRROOT+yes}
 MRROOT=${MRROOT:-/w/scratch/mrroot_full}
 MRMOUNT=${MRMOUNT:-}
 OUT=$ROOT/build/full/$SUITE
+
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    bash "$ROOT/.cursor/refuse-arm64-execution.sh" || exit $?
+fi
 
 # Freshness is asserted ONLY for the default root. scratch/mrroot_full is a COPY
 # of machorun's userland, and a copy read long after it was made is

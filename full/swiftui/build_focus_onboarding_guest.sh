@@ -2,17 +2,18 @@
 # Build Focus's exact SwiftUI Onboarding runtime sources as reusable Darwin
 # Mach-O modules/dylibs and run a project-owned interaction harness on Linux.
 # The TARGET triple follows the host; x86_64 output is
-# build/focus-onboarding-guest-x86_64. Run inside the production image with /w
-# writable, /uikit and /machorun read-only, and the reviewed resource proof's
-# bundles mounted read-only.
+# build/focus-onboarding-guest-x86_64. Defaults to the in-repo uikit/ and
+# machorun/ subtrees. External UIKIT=/path or MACHORUN=/path remain overrides.
 
 set -euo pipefail
 
-W=${W:-/w}
+W=${W:-$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)}
+# shellcheck source=../../scripts/vendor_tree.sh
+. "$W/scripts/vendor_tree.sh"
 # shellcheck disable=SC1091
 . "$(cd "$(dirname "$0")" && pwd)/../scripts/guest_arch.inc"
-UIKIT=${UIKIT:-/uikit}
-MACHORUN=${MACHORUN:-/machorun}
+UIKIT=${UIKIT:-$W/uikit}
+MACHORUN=${MACHORUN:-$W/machorun}
 RESOURCE_INPUT=${1:?usage: build_focus_onboarding_guest.sh <normalized-bundles-directory>}
 FOCUS_REPO=$W/scratch/ladder-corpus/focus-ios/focus-ios
 FOCUS_ROOT=$W/scratch/ladder-corpus/focus-ios
@@ -33,8 +34,7 @@ OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 FOUNDATION_GUEST_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
 
 EXPECTED_FOCUS_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791
-EXPECTED_UIKIT_COMMIT=62dea0d97a3b9074e5c016820492bd0656b9a35a
-EXPECTED_UIKIT_TREE=3dfd6024557632949c9a5036522871a36d4a0cf0
+EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE
 EXPECTED_FOCUS_SWIFT_COUNT=227
 EXPECTED_ONBOARDING_TREE=3db199a93294a4ea0e6549522c29e8b2e4dbfb979bd60c07cdad5d00386734f5
 EXPECTED_ONBOARDING_FILES=66
@@ -117,6 +117,18 @@ validate_bundle() {
 
 [ "$OUT" = "$W/build/focus-onboarding-guest" ] \
     || die "derived output path invariant changed"
+assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
+assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
+if vendor_is_inrepo "$W" uikit "$UIKIT"; then
+    echo "focus_onboarding_guest: attested OpenUIKit source=HEAD:uikit tree=$EXPECTED_UIKIT_TREE"
+else
+    echo "focus_onboarding_guest: attested OpenUIKit source=checkout tree=$EXPECTED_UIKIT_TREE"
+fi
+if vendor_is_inrepo "$W" machorun "$MACHORUN"; then
+    echo "focus_onboarding_guest: attested machorun source=HEAD:machorun tree=$EXPECTED_INREPO_MACHORUN_TREE"
+else
+    echo "focus_onboarding_guest: attested machorun source=checkout tree=$EXPECTED_INREPO_MACHORUN_TREE"
+fi
 for tool in git swiftc clang-18 clang++-18 ld64.lld-18 llvm-nm-18 llvm-otool-18 \
     sha256sum patch; do
     command -v "$tool" >/dev/null || die "required tool is missing: $tool"
@@ -164,8 +176,6 @@ done
     || die 'legacy Focus Foundation exclusion contract drifted'
 
 assert_clean_commit "$FOCUS_ROOT" "$EXPECTED_FOCUS_COMMIT" Focus
-assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" OpenUIKit \
-    "$EXPECTED_UIKIT_TREE"
 ONBOARDING_INPUT=$RESOURCE_INPUT/Focus_Onboarding.bundle
 WIDGET_INPUT=$RESOURCE_INPUT/Focus_Widget.bundle
 validate_bundle "$ONBOARDING_INPUT" "$EXPECTED_ONBOARDING_FILES" \
@@ -546,6 +556,11 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     > "$AUDIT/runtime-closure.manifest"
 
 echo '== run exact Focus interaction path on Linux/machorun'
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    echo "focus_onboarding_guest: compile/link may proceed on this VM; execution cannot" >&2
+    bash "${W:-$(git rev-parse --show-toplevel)}/.cursor/refuse-arm64-execution.sh" \
+        || exit $?
+fi
 (
     cd "$OUT"
     MACHORUN_ROOT="$MRROOT" "$MRROOT/machorun" ./focus_onboarding_guest \
@@ -562,8 +577,8 @@ for index in "${!SOURCE_RELATIVES[@]}"; do
         "${SOURCE_HASHES[$index]}" "post-run Focus source ${SOURCE_RELATIVES[$index]}"
 done
 assert_clean_commit "$FOCUS_ROOT" "$EXPECTED_FOCUS_COMMIT" post-run-Focus
-assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" post-run-OpenUIKit \
-    "$EXPECTED_UIKIT_TREE"
+assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" post-run-OpenUIKit
+assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" post-run-machorun
 validate_bundle "$RESOURCE_INPUT/Focus_Onboarding.bundle" "$EXPECTED_ONBOARDING_FILES" \
     "$EXPECTED_ONBOARDING_DIRECTORIES" "$EXPECTED_ONBOARDING_TREE" post-run-Onboarding-input
 validate_bundle "$RESOURCE_INPUT/Focus_Widget.bundle" "$EXPECTED_WIDGET_FILES" \

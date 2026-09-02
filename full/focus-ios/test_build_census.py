@@ -35,6 +35,9 @@ class BuildCensusTests(unittest.TestCase):
         self.assertIn('"$OUT/exact-main-delta.tsv"', build)
         self.assertIn('"$HERE/diagnostics.py" delta', build)
         self.assertIn('git clone -q --no-hardlinks', build)
+        self.assertIn('git -C "$SML" archive HEAD:uikit', build)
+        self.assertIn('assert_vendor_tree "$SML" uikit', build)
+        self.assertIn('HEAD:uikit', build)
         self.assertIn('format\\tfocus-exact-main-census-v1', build)
 
     def test_bundle_accessor_is_narrow_generated_build_support(self) -> None:

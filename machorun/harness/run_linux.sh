@@ -61,6 +61,14 @@ skip_all() {
 }
 
 # ------------------------------------------------------- preconditions
+# This gate RUNS arm64 Mach-O under machorun inside linux/arm64. Docker here
+# is not a toolchain pin: it is the aarch64 execution environment. On x86_64
+# refuse with the canonical marker rather than SKIPPED (exit 0).
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    printf 'failed\tCURSOR_ENV_CANNOT_EXECUTE_ARM64\n' > "$STATUS_FILE"
+    bash "$(git -C "$ROOT" rev-parse --show-toplevel)/.cursor/refuse-arm64-execution.sh" \
+        || exit $?
+fi
 command -v docker >/dev/null 2>&1 || skip_all "docker not installed on this host"
 docker info >/dev/null 2>&1        || skip_all "docker daemon not reachable"
 

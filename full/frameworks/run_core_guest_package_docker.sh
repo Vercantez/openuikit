@@ -35,9 +35,9 @@ usage: run_core_guest_package_docker.sh \
   --container-image SHA256_IMAGE_ID \
   --support-checkout PATH --expected-support-commit HASH \
   --expected-support-tree HASH --staged-input-root PATH \
-  --uikit-checkout PATH --expected-uikit-commit HASH \
-  --expected-uikit-tree HASH --machorun-checkout PATH \
-  --expected-machorun-commit HASH --expected-machorun-tree HASH \
+  [--uikit-checkout PATH] [--expected-uikit-commit HASH] \
+  [--expected-uikit-tree HASH] [--machorun-checkout PATH] \
+  [--expected-machorun-commit HASH] [--expected-machorun-tree HASH] \
   --expected-machorun-loader-sha256 HASH \
   --expected-machorun-swift-core-sha256 HASH \
   --expected-machorun-objc-sha256 HASH \
@@ -67,6 +67,8 @@ die() {
     echo "core_guest_package_host: REFUSING -- $*" >&2
     exit 2
 }
+# shellcheck source=../../scripts/vendor_tree.sh
+. "$SCRIPT_DIR/../../scripts/vendor_tree.sh"
 
 while [ "$#" -gt 0 ]; do
     case "$1" in
@@ -104,12 +106,6 @@ for assignment in \
     "expected support commit:$EXPECTED_SUPPORT_COMMIT" \
     "expected support tree:$EXPECTED_SUPPORT_TREE" \
     "staged input root:$STAGED_INPUT_ROOT" \
-    "UIKit checkout:$UIKIT_CHECKOUT" \
-    "expected UIKit commit:$EXPECTED_UIKIT_COMMIT" \
-    "expected UIKit tree:$EXPECTED_UIKIT_TREE" \
-    "machorun checkout:$MACHORUN_CHECKOUT" \
-    "expected machorun commit:$EXPECTED_MACHORUN_COMMIT" \
-    "expected machorun tree:$EXPECTED_MACHORUN_TREE" \
     "expected machorun loader SHA-256:$EXPECTED_MACHORUN_LOADER_SHA256" \
     "expected machorun Swift core SHA-256:$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" \
     "expected machorun Objective-C runtime SHA-256:$EXPECTED_MACHORUN_OBJC_SHA256" \
@@ -118,17 +114,38 @@ for assignment in \
     value=${assignment#*:}
     [ -n "$value" ] || die "$label is required"
 done
+[ -z "$EXPECTED_UIKIT_TREE" ] && EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE
+[ -z "$EXPECTED_MACHORUN_TREE" ] && EXPECTED_MACHORUN_TREE=$EXPECTED_INREPO_MACHORUN_TREE
+[ -z "$UIKIT_CHECKOUT" ] && UIKIT_CHECKOUT=$SUPPORT_CHECKOUT/uikit
+[ -z "$MACHORUN_CHECKOUT" ] && MACHORUN_CHECKOUT=$SUPPORT_CHECKOUT/machorun
 
 for path in "$SUPPORT_CHECKOUT" "$STAGED_INPUT_ROOT" \
     "$UIKIT_CHECKOUT" "$MACHORUN_CHECKOUT" "$OUTPUT_ROOT"; do
     case "$path" in /*) ;; *) die "path must be absolute: $path" ;; esac
 done
 for expected in "$EXPECTED_SUPPORT_COMMIT" "$EXPECTED_SUPPORT_TREE" \
-    "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" \
-    "$EXPECTED_MACHORUN_COMMIT" "$EXPECTED_MACHORUN_TREE"; do
+    "$EXPECTED_UIKIT_TREE" "$EXPECTED_MACHORUN_TREE"; do
     [ "${#expected}" -eq 40 ] || die "Git ID must be lowercase 40-hex: $expected"
     case "$expected" in *[!0-9a-f]*) die "Git ID must be lowercase 40-hex: $expected" ;; esac
 done
+if ! vendor_is_inrepo "$SUPPORT_CHECKOUT" uikit "$UIKIT_CHECKOUT"; then
+    [ -n "$EXPECTED_UIKIT_COMMIT" ] \
+        || die 'expected UIKit commit is required for an external OpenUIKit checkout'
+    [ "${#EXPECTED_UIKIT_COMMIT}" -eq 40 ] \
+        || die "Git ID must be lowercase 40-hex: $EXPECTED_UIKIT_COMMIT"
+    case "$EXPECTED_UIKIT_COMMIT" in
+        *[!0-9a-f]*) die "Git ID must be lowercase 40-hex: $EXPECTED_UIKIT_COMMIT" ;;
+    esac
+fi
+if ! vendor_is_inrepo "$SUPPORT_CHECKOUT" machorun "$MACHORUN_CHECKOUT"; then
+    [ -n "$EXPECTED_MACHORUN_COMMIT" ] \
+        || die 'expected machorun commit is required for an external machorun checkout'
+    [ "${#EXPECTED_MACHORUN_COMMIT}" -eq 40 ] \
+        || die "Git ID must be lowercase 40-hex: $EXPECTED_MACHORUN_COMMIT"
+    case "$EXPECTED_MACHORUN_COMMIT" in
+        *[!0-9a-f]*) die "Git ID must be lowercase 40-hex: $EXPECTED_MACHORUN_COMMIT" ;;
+    esac
+fi
 [ "${#EXPECTED_MACHORUN_LOADER_SHA256}" -eq 64 ] \
     || die 'machorun loader SHA-256 must be lowercase 64-hex'
 case "$EXPECTED_MACHORUN_LOADER_SHA256" in
@@ -145,6 +162,12 @@ case "$EXPECTED_MACHORUN_OBJC_SHA256" in
     *[!0-9a-f]*) die 'machorun Objective-C runtime SHA-256 must be lowercase 64-hex' ;;
 esac
 
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    # Isolation (single bind, no network, read-only root) remains required on
+    # aarch64. On x86_64 nothing can execute the guest; emit the canonical
+    # marker rather than a docker-missing skip.
+    bash "$SCRIPT_DIR/../../.cursor/refuse-arm64-execution.sh" || exit $?
+fi
 for tool in docker git mktemp python3 tee awk shasum; do
     command -v "$tool" >/dev/null || die "required host tool is missing: $tool"
 done
@@ -191,10 +214,20 @@ assert_checkout() {
 }
 assert_checkout "$SUPPORT_CHECKOUT" "$EXPECTED_SUPPORT_COMMIT" \
     "$EXPECTED_SUPPORT_TREE" support
-assert_checkout "$UIKIT_CHECKOUT" "$EXPECTED_UIKIT_COMMIT" \
+assert_vendor_tree "$SUPPORT_CHECKOUT" uikit "$UIKIT_CHECKOUT" \
     "$EXPECTED_UIKIT_TREE" OpenUIKit
-assert_checkout "$MACHORUN_CHECKOUT" "$EXPECTED_MACHORUN_COMMIT" \
+if ! vendor_is_inrepo "$SUPPORT_CHECKOUT" uikit "$UIKIT_CHECKOUT"; then
+    actual_uikit_commit=$(git -C "$UIKIT_CHECKOUT" rev-parse --verify 'HEAD^{commit}')
+    [ "$actual_uikit_commit" = "$EXPECTED_UIKIT_COMMIT" ] \
+        || die "OpenUIKit commit $actual_uikit_commit, expected $EXPECTED_UIKIT_COMMIT"
+fi
+assert_vendor_tree "$SUPPORT_CHECKOUT" machorun "$MACHORUN_CHECKOUT" \
     "$EXPECTED_MACHORUN_TREE" machorun
+if ! vendor_is_inrepo "$SUPPORT_CHECKOUT" machorun "$MACHORUN_CHECKOUT"; then
+    actual_machorun_commit=$(git -C "$MACHORUN_CHECKOUT" rev-parse --verify 'HEAD^{commit}')
+    [ "$actual_machorun_commit" = "$EXPECTED_MACHORUN_COMMIT" ] \
+        || die "machorun commit $actual_machorun_commit, expected $EXPECTED_MACHORUN_COMMIT"
+fi
 
 MACHORUN_LOADER=$MACHORUN_CHECKOUT/build/machorun
 [ -f "$MACHORUN_LOADER" ] && [ ! -L "$MACHORUN_LOADER" ] \
@@ -283,50 +316,81 @@ trap 'exit 143' TERM
 
 mkdir -p "$REPLAY_ROOT" "$EVIDENCE"
 git clone --no-hardlinks --no-local --quiet "$SUPPORT_CHECKOUT" "$REPLAY_ROOT/w"
-git clone --no-hardlinks --no-local --quiet "$UIKIT_CHECKOUT" "$REPLAY_ROOT/uikit"
-git clone --no-hardlinks --no-local --quiet "$MACHORUN_CHECKOUT" "$REPLAY_ROOT/machorun"
 assert_checkout "$REPLAY_ROOT/w" "$EXPECTED_SUPPORT_COMMIT" \
     "$EXPECTED_SUPPORT_TREE" cloned-support
-assert_checkout "$REPLAY_ROOT/uikit" "$EXPECTED_UIKIT_COMMIT" \
-    "$EXPECTED_UIKIT_TREE" cloned-OpenUIKit
-assert_checkout "$REPLAY_ROOT/machorun" "$EXPECTED_MACHORUN_COMMIT" \
-    "$EXPECTED_MACHORUN_TREE" cloned-machorun
-for copy in support OpenUIKit machorun; do
-    case "$copy" in
-        support) source_checkout=$SUPPORT_CHECKOUT; copied_checkout=$REPLAY_ROOT/w ;;
-        OpenUIKit) source_checkout=$UIKIT_CHECKOUT; copied_checkout=$REPLAY_ROOT/uikit ;;
-        machorun) source_checkout=$MACHORUN_CHECKOUT; copied_checkout=$REPLAY_ROOT/machorun ;;
-    esac
-    python3 -B "$PHYSICAL_REPLAY_TOOL" prove-git-copy \
-        --source "$source_checkout" --destination "$copied_checkout" \
-        --label "$copy" --output "$EVIDENCE/copy-$copy.json"
-done
+python3 -B "$PHYSICAL_REPLAY_TOOL" prove-git-copy \
+    --source "$SUPPORT_CHECKOUT" --destination "$REPLAY_ROOT/w" \
+    --label support --output "$EVIDENCE/copy-support.json"
 
-mkdir -p "$REPLAY_ROOT/machorun/build" "$REPLAY_ROOT/machorun/darwin"
+UIKIT_INREPO=0
+MACHORUN_INREPO=0
+vendor_is_inrepo "$SUPPORT_CHECKOUT" uikit "$UIKIT_CHECKOUT" && UIKIT_INREPO=1
+vendor_is_inrepo "$SUPPORT_CHECKOUT" machorun "$MACHORUN_CHECKOUT" && MACHORUN_INREPO=1
+
+if [ "$UIKIT_INREPO" -eq 1 ]; then
+    UIKIT_REPLAY=$REPLAY_ROOT/w/uikit
+    assert_vendor_tree "$REPLAY_ROOT/w" uikit "$UIKIT_REPLAY" \
+        "$EXPECTED_UIKIT_TREE" cloned-OpenUIKit
+    python3 -B "$PHYSICAL_REPLAY_TOOL" prove-git-copy \
+        --source "$SUPPORT_CHECKOUT" --destination "$REPLAY_ROOT/w" \
+        --label OpenUIKit --output "$EVIDENCE/copy-OpenUIKit.json"
+else
+    git clone --no-hardlinks --no-local --quiet "$UIKIT_CHECKOUT" "$REPLAY_ROOT/uikit"
+    assert_checkout "$REPLAY_ROOT/uikit" "$EXPECTED_UIKIT_COMMIT" \
+        "$EXPECTED_UIKIT_TREE" cloned-OpenUIKit
+    python3 -B "$PHYSICAL_REPLAY_TOOL" prove-git-copy \
+        --source "$UIKIT_CHECKOUT" --destination "$REPLAY_ROOT/uikit" \
+        --label OpenUIKit --output "$EVIDENCE/copy-OpenUIKit.json"
+    UIKIT_REPLAY=$REPLAY_ROOT/uikit
+fi
+
+if [ "$MACHORUN_INREPO" -eq 1 ]; then
+    MACHORUN_REPLAY=$REPLAY_ROOT/w/machorun
+    assert_vendor_tree "$REPLAY_ROOT/w" machorun "$MACHORUN_REPLAY" \
+        "$EXPECTED_MACHORUN_TREE" cloned-machorun
+    python3 -B "$PHYSICAL_REPLAY_TOOL" prove-git-copy \
+        --source "$SUPPORT_CHECKOUT" --destination "$REPLAY_ROOT/w" \
+        --label machorun --output "$EVIDENCE/copy-machorun.json"
+else
+    git clone --no-hardlinks --no-local --quiet "$MACHORUN_CHECKOUT" \
+        "$REPLAY_ROOT/machorun"
+    assert_checkout "$REPLAY_ROOT/machorun" "$EXPECTED_MACHORUN_COMMIT" \
+        "$EXPECTED_MACHORUN_TREE" cloned-machorun
+    python3 -B "$PHYSICAL_REPLAY_TOOL" prove-git-copy \
+        --source "$MACHORUN_CHECKOUT" --destination "$REPLAY_ROOT/machorun" \
+        --label machorun --output "$EVIDENCE/copy-machorun.json"
+    MACHORUN_REPLAY=$REPLAY_ROOT/machorun
+fi
+
+mkdir -p "$MACHORUN_REPLAY/build" "$MACHORUN_REPLAY/darwin"
 python3 -B "$PHYSICAL_REPLAY_TOOL" copy-file \
     --source "$MACHORUN_LOADER" \
-    --destination "$REPLAY_ROOT/machorun/build/machorun" \
+    --destination "$MACHORUN_REPLAY/build/machorun" \
     --label machorun-loader --output "$EVIDENCE/copy-machorun-loader.json"
 python3 -B "$PHYSICAL_REPLAY_TOOL" copy-tree \
     --source "$MACHORUN_RUNTIME" \
-    --destination "$REPLAY_ROOT/machorun/darwin/usr" \
+    --destination "$MACHORUN_REPLAY/darwin/usr" \
     --label machorun-runtime --output "$EVIDENCE/copy-machorun-runtime.json"
 COPIED_MACHORUN_LOADER_SHA256=$(shasum -a 256 \
-    "$REPLAY_ROOT/machorun/build/machorun" | awk '{print $1}')
+    "$MACHORUN_REPLAY/build/machorun" | awk '{print $1}')
 [ "$COPIED_MACHORUN_LOADER_SHA256" = "$EXPECTED_MACHORUN_LOADER_SHA256" ] \
     || die 'physically copied machorun loader hash differs'
 COPIED_MACHORUN_SWIFT_CORE_SHA256=$(shasum -a 256 \
-    "$REPLAY_ROOT/machorun/darwin/usr/lib/swift/libswiftCore.dylib" \
+    "$MACHORUN_REPLAY/darwin/usr/lib/swift/libswiftCore.dylib" \
     | awk '{print $1}')
 [ "$COPIED_MACHORUN_SWIFT_CORE_SHA256" = \
     "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" ] \
     || die 'physically copied machorun Swift core hash differs'
 COPIED_MACHORUN_OBJC_SHA256=$(shasum -a 256 \
-    "$REPLAY_ROOT/machorun/darwin/usr/lib/libobjc.A.dylib" | awk '{print $1}')
+    "$MACHORUN_REPLAY/darwin/usr/lib/libobjc.A.dylib" | awk '{print $1}')
 [ "$COPIED_MACHORUN_OBJC_SHA256" = "$EXPECTED_MACHORUN_OBJC_SHA256" ] \
     || die 'physically copied machorun Objective-C runtime hash differs'
-assert_checkout "$REPLAY_ROOT/machorun" "$EXPECTED_MACHORUN_COMMIT" \
+assert_vendor_tree "$REPLAY_ROOT/w" machorun "$MACHORUN_REPLAY" \
     "$EXPECTED_MACHORUN_TREE" staged-machorun
+if [ "$MACHORUN_INREPO" -ne 1 ]; then
+    assert_checkout "$MACHORUN_REPLAY" "$EXPECTED_MACHORUN_COMMIT" \
+        "$EXPECTED_MACHORUN_TREE" staged-machorun
+fi
 
 mkdir -p "$REPLAY_ROOT/w/scratch"
 for relative in "${STAGED_INPUTS[@]}"; do
@@ -387,13 +451,22 @@ record_git_identity() {
     [ -z "$status" ] || die "$label staged Git checkout is dirty: $status"
     printf 'git\t%s\tcommit=%s\ttree=%s\n' "$label" "$commit" "$tree"
 }
+record_vendor_identity() {
+    local repo_root=$1 vendor_name=$2 vendor_path=$3 label=$4 tree
+    if vendor_is_inrepo "$repo_root" "$vendor_name" "$vendor_path"; then
+        tree=$(git -C "$repo_root" rev-parse --verify "HEAD:$vendor_name")
+        printf 'git\t%s\tsource=HEAD:%s\ttree=%s\n' "$label" "$vendor_name" "$tree"
+    else
+        record_git_identity "$vendor_path" "$label"
+    fi
+}
 {
     printf 'format\tcore-guest-host-run-v2\n'
     printf 'host-cwd\t%s\n' "$(pwd -P)"
     printf 'image\t%s\tplatform=%s\n' "$CONTAINER_IMAGE" "$IMAGE_PLATFORM"
     record_git_identity "$REPLAY_ROOT/w" support
-    record_git_identity "$REPLAY_ROOT/uikit" OpenUIKit
-    record_git_identity "$REPLAY_ROOT/machorun" machorun
+    record_vendor_identity "$REPLAY_ROOT/w" uikit "$UIKIT_REPLAY" OpenUIKit
+    record_vendor_identity "$REPLAY_ROOT/w" machorun "$MACHORUN_REPLAY" machorun
     record_git_identity "$REPLAY_ROOT/w/scratch/swift-foundation" swift-foundation
     record_git_identity "$REPLAY_ROOT/w/scratch/swift-foundation-icu" \
         swift-foundation-icu
@@ -421,6 +494,16 @@ record_git_identity() {
     printf 'preview\t%s\n' "$([ "$preview_count" -eq 3 ] && printf enabled || printf disabled)"
 } > "$EVIDENCE/host-inputs.tsv"
 
+if [ "$UIKIT_INREPO" -eq 1 ]; then
+    GUEST_UIKIT=/replay/w/uikit
+else
+    GUEST_UIKIT=/replay/uikit
+fi
+if [ "$MACHORUN_INREPO" -eq 1 ]; then
+    GUEST_MACHORUN=/replay/w/machorun
+else
+    GUEST_MACHORUN=/replay/machorun
+fi
 DOCKER_ARGS=(
     run --rm --platform linux/arm64
     --network none
@@ -431,7 +514,7 @@ DOCKER_ARGS=(
     -e TMPDIR=/tmp
     -e XDG_CACHE_HOME=/tmp/xdg-cache
     -e W=/replay/w
-    -e MACHORUN=/replay/machorun
+    -e MACHORUN="$GUEST_MACHORUN"
     --tmpfs /tmp:rw,exec,nosuid,nodev,mode=1777
     -v "$REPLAY_ROOT:/replay:rw"
 )
@@ -440,13 +523,16 @@ BUILD_ARGS=(
     --output-root /replay/w/build/core-package
     --expected-support-commit "$EXPECTED_SUPPORT_COMMIT"
     --expected-support-tree "$EXPECTED_SUPPORT_TREE"
-    --uikit-checkout /replay/uikit
-    --expected-uikit-commit "$EXPECTED_UIKIT_COMMIT"
+    --uikit-checkout "$GUEST_UIKIT"
     --expected-uikit-tree "$EXPECTED_UIKIT_TREE"
+    --machorun-checkout "$GUEST_MACHORUN"
     --expected-machorun-swift-core-sha256 \
         "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256"
     --expected-machorun-objc-sha256 "$EXPECTED_MACHORUN_OBJC_SHA256"
 )
+if [ "$UIKIT_INREPO" -ne 1 ]; then
+    BUILD_ARGS+=(--expected-uikit-commit "$EXPECTED_UIKIT_COMMIT")
+fi
 if [ "$preview_count" -eq 3 ]; then
     BUILD_ARGS+=(
         --developer-tools-support-module /replay/inputs/preview/DeveloperToolsSupport.swiftmodule

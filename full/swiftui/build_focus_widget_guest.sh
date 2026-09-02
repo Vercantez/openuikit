@@ -3,16 +3,18 @@
 # (host triple from full/scripts/guest_arch.inc), link Focus's exact
 # Widget/Assets.swift + SearchWidgetView.swift against those dylibs, and run
 # the guest. x86_64 output lives beside the arm64 tree
-# (build/swiftui-guest-x86_64). Run inside the production image with /w,
-# /uikit, /machorun, and a normalized Focus_Widget.bundle mounted.
+# (build/swiftui-guest-x86_64). Defaults to the in-repo uikit/ and machorun/
+# subtrees. External UIKIT=/path or MACHORUN=/path remain overrides.
 
 set -euo pipefail
 
-W=${W:-/w}
+W=${W:-$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)}
+# shellcheck source=../../scripts/vendor_tree.sh
+. "$W/scripts/vendor_tree.sh"
 # shellcheck disable=SC1091
 . "$(cd "$(dirname "$0")" && pwd)/../scripts/guest_arch.inc"
-UIKIT=${UIKIT:-/uikit}
-MACHORUN=${MACHORUN:-/machorun}
+UIKIT=${UIKIT:-$W/uikit}
+MACHORUN=${MACHORUN:-$W/machorun}
 RESOURCE_INPUT=${1:?usage: build_focus_widget_guest.sh <normalized-Focus_Widget.bundle>}
 FOCUS_REPO=$W/scratch/ladder-corpus/focus-ios/focus-ios
 FOCUS_WIDGET=$FOCUS_REPO/BlockzillaPackage/Sources/Widget
@@ -55,8 +57,7 @@ for swiftui_source in "${SWIFTUI_SOURCES[@]}"; do
 done
 
 EXPECTED_FOCUS_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791
-EXPECTED_UIKIT_COMMIT=62dea0d97a3b9074e5c016820492bd0656b9a35a
-EXPECTED_UIKIT_TREE=3dfd6024557632949c9a5036522871a36d4a0cf0
+EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE
 EXPECTED_ASSETS_SHA=efac8d1c98b562374e54eea7540b4201523db670a6353eff8f0a0273d294526e
 EXPECTED_VIEW_SHA=721669388a4556e1609f580ed87d6065b63981770e71b0f77db292767b05f6c2
 EXPECTED_INDEX_SHA=2eb8af32cc6d69161dc35f1536682dcba2dd4db21ea0015cf241701f32468d12
@@ -85,6 +86,11 @@ EXPECTED_OPENCOMBINE_MODULEMAP_SHA=d34fdd050111a8cbf5ced89a129088fcfeb2964eea76a
 EXPECTED_OPENCOMBINE_PATCH_SHA=875cd931e95c5442775e1042a412517ab7475be0489b1a81f824a54f6872c79b
 EXPECTED_OPENCOMBINE_PATCHED_HELPER_SHA=d9fbefcdba66d892d9064c46b21b6084af217ddec1d604bcaf27b160de66083b
 EXPECTED_COMBINE_SHIM_SHA=828b05c3a47296fb7b0b9ed5a6ca1a45a5da46e245441c21028335f60511799f
+
+die() {
+    echo "focus_widget_guest: $*" >&2
+    exit 2
+}
 
 hash_file() { sha256sum "$1" | awk '{print $1}'; }
 hash_stream() { sha256sum | awk '{print $1}'; }
@@ -194,13 +200,18 @@ runtime_fingerprint() {
     } | hash_stream
 }
 
-[ "$(git -C "$UIKIT" rev-parse --verify HEAD^{commit})" = "$EXPECTED_UIKIT_COMMIT" ] || {
-    echo "focus_widget_guest: OpenUIKit revision is not pinned $EXPECTED_UIKIT_COMMIT" >&2; exit 2; }
-[ "$(git -C "$UIKIT" rev-parse --verify HEAD^{tree})" = "$EXPECTED_UIKIT_TREE" ] || {
-    echo "focus_widget_guest: OpenUIKit tree is not pinned $EXPECTED_UIKIT_TREE" >&2; exit 2; }
-uikit_status_before=$(git -C "$UIKIT" status --porcelain=v1 --untracked-files=all)
-[ -z "$uikit_status_before" ] || {
-    echo "focus_widget_guest: OpenUIKit checkout is not clean" >&2; exit 2; }
+assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
+assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
+if vendor_is_inrepo "$W" uikit "$UIKIT"; then
+    echo "focus_widget_guest: attested OpenUIKit source=HEAD:uikit tree=$EXPECTED_UIKIT_TREE"
+else
+    echo "focus_widget_guest: attested OpenUIKit source=checkout tree=$EXPECTED_UIKIT_TREE"
+fi
+if vendor_is_inrepo "$W" machorun "$MACHORUN"; then
+    echo "focus_widget_guest: attested machorun source=HEAD:machorun tree=$EXPECTED_INREPO_MACHORUN_TREE"
+else
+    echo "focus_widget_guest: attested machorun source=checkout tree=$EXPECTED_INREPO_MACHORUN_TREE"
+fi
 [ "$(git -C "$FOCUS_REPO" rev-parse HEAD)" = "$EXPECTED_FOCUS_COMMIT" ] || {
     echo "focus_widget_guest: Focus revision is not pinned $EXPECTED_FOCUS_COMMIT" >&2; exit 2; }
 focus_status_before=$(git -C "$FOCUS_REPO" status --porcelain=v1 --untracked-files=all)
@@ -1094,6 +1105,11 @@ runtime_closure_edge_count=$(grep -Ec '^(edge|weak-missing)'"$(printf '\t')" "$R
 runtime_before=$(runtime_fingerprint)
 
 echo "== run arm64 Mach-O under machorun on Linux"
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    echo "focus_widget_guest: compile/link may proceed on this VM; execution cannot" >&2
+    bash "${W:-$(git rev-parse --show-toplevel)}/.cursor/refuse-arm64-execution.sh" \
+        || exit $?
+fi
 export MACHORUN_ROOT="$MRROOT"
 cd "$OUT"
 "$MRROOT/machorun" ./focus_widget_guest \
@@ -1263,12 +1279,8 @@ current_full_subject_after=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" "$
     echo "focus_widget_guest: authoritative OpenUIKit sources changed during execution" >&2
     exit 2
 }
-[ "$(git -C "$UIKIT" rev-parse --verify HEAD^{commit})" = "$EXPECTED_UIKIT_COMMIT" ] && \
-    [ "$(git -C "$UIKIT" rev-parse --verify HEAD^{tree})" = "$EXPECTED_UIKIT_TREE" ] && \
-    [ -z "$(git -C "$UIKIT" status --porcelain=v1 --untracked-files=all)" ] || {
-    echo "focus_widget_guest: pinned OpenUIKit checkout changed during execution" >&2
-    exit 2
-}
+assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" post-OpenUIKit
+assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" post-machorun
 assert_build_input_inventory
 assert_runtime_closure
 [ -z "$(git -C "$FOCUS_REPO" status --porcelain=v1 --untracked-files=all)" ] || {
@@ -1277,8 +1289,10 @@ require_hash "$FOCUS_WIDGET/Assets.swift" "$EXPECTED_ASSETS_SHA" Assets.swift
 require_hash "$FOCUS_WIDGET/SearchWidgetView.swift" "$EXPECTED_VIEW_SHA" SearchWidgetView.swift
 
 {
-    printf 'uikit_commit\t%s\n' "$EXPECTED_UIKIT_COMMIT"
     printf 'uikit_tree\t%s\n' "$EXPECTED_UIKIT_TREE"
+    printf 'uikit_tree_source\tHEAD:uikit\n'
+    printf 'machorun_tree\t%s\n' "$EXPECTED_INREPO_MACHORUN_TREE"
+    printf 'machorun_tree_source\tHEAD:machorun\n'
     printf 'focus_commit\t%s\n' "$EXPECTED_FOCUS_COMMIT"
     printf 'Assets.swift\t%s\n' "$EXPECTED_ASSETS_SHA"
     printf 'SearchWidgetView.swift\t%s\n' "$EXPECTED_VIEW_SHA"

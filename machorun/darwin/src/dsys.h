@@ -142,6 +142,7 @@ extern size_t glibc_fwrite(const void *, size_t, size_t, void *) GLIBCSYM(fwrite
 extern size_t glibc_fread(void *, size_t, size_t, void *)   GLIBCSYM(fread);
 extern int    glibc_fflush(void *)                          GLIBCSYM(fflush);
 extern void  *glibc_fopen(const char *, const char *)       GLIBCSYM(fopen);
+extern char  *glibc_fgets(char *, int, void *)              GLIBCSYM(fgets);
 extern int    glibc_fclose(void *)                          GLIBCSYM(fclose);
 extern int    glibc_fputs(const char *, void *)             GLIBCSYM(fputs);
 extern int    glibc_fputc(int, void *)                      GLIBCSYM(fputc);
@@ -153,6 +154,10 @@ extern int    glibc_fseek(void *, long, int)                GLIBCSYM(fseek);
 extern long   glibc_ftell(void *)                           GLIBCSYM(ftell);
 extern int    glibc_ungetc(int, void *)                     GLIBCSYM(ungetc);
 extern void   glibc_rewind(void *)                          GLIBCSYM(rewind);
+/* POSIX getline. Darwin's FILE is 152 bytes (sdk/_stdio.h __sFILE) against
+ * glibc aarch64's 216, but the FILE* a guest can hold is glibc's object:
+ * fopen is forwarded and __stdinp/out/err are re-pointed at bootstrap. */
+extern ssize_t glibc_getline(char **, size_t *, void *)     GLIBCSYM(getline);
 extern void  *glibc_stdout GLIBCSYM(stdout);
 extern void  *glibc_stderr GLIBCSYM(stderr);
 extern void  *glibc_stdin  GLIBCSYM(stdin);
@@ -188,6 +193,19 @@ extern int     glibc_uname(void *)                           GLIBCSYM(uname);
 extern int     glibc_stat(const char *, void *)             GLIBCSYM(stat);
 extern int     glibc_lstat(const char *, void *)            GLIBCSYM(lstat);
 extern int     glibc_fstat(int, void *)                     GLIBCSYM(fstat);
+/* Linux's struct statfs is 120 bytes on aarch64 with a different field order
+ * AND no f_mntonname; Darwin's is 2168. Translated in posix.c, never forwarded.
+ * futimens/utimensat/fchmod/fchown/lchown are COPYFILE_METADATA's prerequisites:
+ * they are NOT re-exported to guests (the handover listed them as missing);
+ * copyfile() calls them on this side of the glibc seam. */
+extern int     glibc_statfs(const char *, void *)           GLIBCSYM(statfs);
+extern int     glibc_fstatfs(int, void *)                   GLIBCSYM(fstatfs);
+extern int     glibc_fchmod(int, unsigned)                  GLIBCSYM(fchmod);
+extern int     glibc_fchown(int, unsigned, unsigned)        GLIBCSYM(fchown);
+extern int     glibc_lchown(const char *, unsigned, unsigned) GLIBCSYM(lchown);
+extern int     glibc_futimens(int, const void *)            GLIBCSYM(futimens);
+extern int     glibc_utimensat(int, const char *, const void *, int)
+                                                            GLIBCSYM(utimensat);
 extern int     glibc_mkdir(const char *, unsigned)          GLIBCSYM(mkdir);
 extern int     glibc_mkfifo(const char *, unsigned)         GLIBCSYM(mkfifo);
 extern int     glibc_rmdir(const char *)                    GLIBCSYM(rmdir);
@@ -249,6 +267,13 @@ extern int     glibc_pthread_attr_getdetachstate(const void *, int *)
 extern int     glibc_pthread_attr_getstacksize(const void *, size_t *)
                                                             GLIBCSYM(pthread_attr_getstacksize);
 extern int     glibc_pthread_attr_setstacksize(void *, size_t) GLIBCSYM(pthread_attr_setstacksize);
+/* GNU extensions, not Darwin names. pthread_getattr_np is in aarch64
+ * libc.so.6 (pthread_getattr_np@@GLIBC_2.32); Darwin has no counterpart
+ * under that spelling. Used only to implement pthread_get_stack*_np. */
+extern int     glibc_pthread_getattr_np(unsigned long, void *)
+                                                            GLIBCSYM(pthread_getattr_np);
+extern int     glibc_pthread_attr_getstack(const void *, void **, size_t *)
+                                                            GLIBCSYM(pthread_attr_getstack);
 extern int     glibc_pthread_setschedparam(unsigned long, int, const void *)
                                                             GLIBCSYM(pthread_setschedparam);
 extern void    glibc_pthread_exit(void *)                   GLIBCSYM(pthread_exit);
@@ -278,6 +303,7 @@ extern long    glibc_strtol(const char *, char **, int)     GLIBCSYM(strtol);
 extern unsigned long glibc_strtoul(const char *, char **, int) GLIBCSYM(strtoul);
 extern long long glibc_strtoll(const char *, char **, int)  GLIBCSYM(strtoll);
 extern double  glibc_strtod(const char *, char **)          GLIBCSYM(strtod);
+extern float   glibc_strtof(const char *, char **)          GLIBCSYM(strtof);
 extern void    glibc_qsort(void *, size_t, size_t, int (*)(const void *, const void *)) GLIBCSYM(qsort);
 extern char   *glibc_getenv(const char *)                   GLIBCSYM(getenv);
 extern time_t  glibc_time(time_t *)                         GLIBCSYM(time);
@@ -337,6 +363,11 @@ HIDDEN void mr_say(const char *s);
 HIDDEN void mr_record_main_thread(void);
 HIDDEN __attribute__((noreturn)) void mr_bail(const char *what);
 HIDDEN __attribute__((noreturn)) void mr_bail2(const char *what, const char *detail);
+
+/* NULL and LC_GLOBAL_LOCALE ((void *)-1) are the only locale_t values a guest
+ * can hold: libSystem exports setlocale and no locale constructor. Both mean
+ * the C locale. Anything else is a locale we did not mint -- see snprintf_l. */
+HIDDEN void mr_require_c_locale(const void *loc, const char *who);
 
 /* The owning-thread token stored in an os_unfair_lock's four bytes. Unique per
  * live thread BY CONSTRUCTION, never 0, stable for the life of the thread.

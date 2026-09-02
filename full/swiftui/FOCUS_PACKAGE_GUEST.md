@@ -7,16 +7,18 @@ listed below:
 
 | Target | Revision | Upstream Swift files | Compiled |
 | --- | --- | ---: | ---: |
-| OpenUIKit | `62dea0d97a3b9074e5c016820492bd0656b9a35a` | 105 | 105 |
+| OpenUIKit | in-repo `HEAD:uikit` `8ce87c1aef592553336aadf9101ec2bb4ebe6aaa` | 105 | 105 |
 | SnapKit | `e74fe2a978d1216c3602b129447c7301573cc2d8` | 37 | 36 |
 | Focus DesignSystem | `a2832521c1daa0c23419c73705ae043ed60c9791` | 7 | 7 |
 | Focus Widget | same Focus revision | 2 | 2 |
 | Focus Onboarding | same Focus revision | 21 | 21 |
 | Focus Licenses | same Focus revision | 2 | 2 |
 
-The OpenUIKit commit above has exact tree
-`3dfd6024557632949c9a5036522871a36d4a0cf0`; all three Focus guest scripts
-require that clean commit/tree before and after their gates.
+The OpenUIKit pin above is the in-repo subtree tree
+`8ce87c1aef592553336aadf9101ec2bb4ebe6aaa` (`git rev-parse HEAD:uikit`); all
+three Focus guest scripts require that clean tree before and after their
+gates and refuse a dirty `uikit/` subtree. `UIKIT=/path` remains an external
+checkout override.
 
 The shared substrate remains pinned to swift-foundation
 `c6793ef0c19c2cbaeba5a0e52078f129afc7dcfc`, swift-collections
@@ -183,14 +185,14 @@ UUID, resource, and telemetry proof with a weaker compile-only claim.
 
 ## Reproduce
 
-Both build scripts require the literal exact landed OpenUIKit commit shown
-above. Environment variables cannot override this provenance boundary.
+Both build scripts require the literal exact landed in-repo OpenUIKit tree
+shown above (`git rev-parse HEAD:uikit`). Environment variables cannot
+override this provenance boundary; `UIKIT=/path` may only point at a clean
+checkout whose tree matches the pin.
 
 ```bash
 docker run --rm --platform linux/arm64 \
   -v "$PWD":/w \
-  -v /path/to/exact-uikit:/uikit:ro \
-  -v /path/to/machorun:/machorun:ro \
   -v "$RESOURCE_PROOF/output/bundles":/focus-resources:ro \
   -w /w swift-macho-spike:noble \
   bash full/swiftui/build_focus_package_guest.sh /focus-resources

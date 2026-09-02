@@ -20,6 +20,9 @@ die() {
 prepare() {
     [ "$#" -eq 2 ] || die "usage: $0 INVENTORY_JSON REMINDER_SOURCE_ROOT"
     command -v python3 >/dev/null || die "python3 is required on the host"
+    if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+        bash "$W/.cursor/refuse-arm64-execution.sh" || exit $?
+    fi
     command -v docker >/dev/null || die "docker is required on the host"
 
     local inventory source_root uikit_checkout machorun_checkout turns

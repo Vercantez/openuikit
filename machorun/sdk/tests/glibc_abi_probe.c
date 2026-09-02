@@ -86,6 +86,8 @@
 #include <signal.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/statfs.h>
+#include <sys/statvfs.h>
 #include <poll.h>
 #include <fcntl.h>
 #include <sched.h>
@@ -523,6 +525,31 @@ _Static_assert(SCHED_RR    == 2, "glibc SCHED_RR moved (Darwin's is 2 too -- the
 _Static_assert(PTHREAD_CREATE_JOINABLE == 0, "glibc PTHREAD_CREATE_JOINABLE moved "
     "(Darwin's is 1, which is THIS header's DETACHED)");
 _Static_assert(PTHREAD_CREATE_DETACHED == 1, "glibc PTHREAD_CREATE_DETACHED moved (Darwin's is 2)");
+
+/* struct statfs: 120 bytes here against Darwin's 2168, and Linux has no
+ * f_mntonname at all -- FileManager.attributesOfFileSystem reads that field
+ * off Darwin's struct at offset 88. darwin/src/posix.c mirrors this layout
+ * by hand and fills the mount-identity strings from /proc/self/mounts.
+ * f_flags ROTATE: ST_NOSUID (2) is Darwin MNT_SYNCHRONOUS. */
+PIN(struct statfs, 120);
+_Static_assert(offsetof(struct statfs, f_type)   ==  0, "glibc statfs.f_type moved");
+_Static_assert(offsetof(struct statfs, f_bsize)  ==  8, "glibc statfs.f_bsize moved");
+_Static_assert(offsetof(struct statfs, f_blocks) == 16, "glibc statfs.f_blocks moved");
+_Static_assert(offsetof(struct statfs, f_bfree)  == 24, "glibc statfs.f_bfree moved");
+_Static_assert(offsetof(struct statfs, f_bavail) == 32, "glibc statfs.f_bavail moved");
+_Static_assert(offsetof(struct statfs, f_files)  == 40, "glibc statfs.f_files moved");
+_Static_assert(offsetof(struct statfs, f_ffree)  == 48, "glibc statfs.f_ffree moved");
+_Static_assert(offsetof(struct statfs, f_fsid)   == 56, "glibc statfs.f_fsid moved");
+_Static_assert(offsetof(struct statfs, f_namelen)== 64, "glibc statfs.f_namelen moved");
+_Static_assert(offsetof(struct statfs, f_frsize) == 72, "glibc statfs.f_frsize moved");
+_Static_assert(offsetof(struct statfs, f_flags)  == 80,
+    "glibc statfs.f_flags moved; posix.c reads ST_* here and writes Darwin MNT_*");
+_Static_assert(ST_RDONLY      ==    1, "glibc ST_RDONLY moved (Darwin MNT_RDONLY is 1 too)");
+_Static_assert(ST_NOSUID      ==    2, "glibc ST_NOSUID moved (Darwin MNT_SYNCHRONOUS is THIS value)");
+_Static_assert(ST_NODEV       ==    4, "glibc ST_NODEV moved (Darwin MNT_NOEXEC is THIS value)");
+_Static_assert(ST_NOEXEC      ==    8, "glibc ST_NOEXEC moved (Darwin MNT_NOSUID is THIS value)");
+_Static_assert(ST_SYNCHRONOUS ==   16, "glibc ST_SYNCHRONOUS moved (Darwin MNT_NODEV is THIS value)");
+_Static_assert(ST_NOATIME     == 1024, "glibc ST_NOATIME moved (Darwin MNT_NOATIME is 0x10000000)");
 
 /* Compile-only. There is deliberately no main(): nothing here should run, and
  * nothing here should link. */

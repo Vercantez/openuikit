@@ -21,21 +21,40 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
     def test_build_compiles_pinned_focus_paths_directly(self) -> None:
         text = BUILD.read_text()
         self.assertIn(
+            "EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE",
+            text,
+        )
+        self.assertIn('assert_vendor_tree "$W" uikit', text)
+        self.assertIn("HEAD:uikit", text)
+        self.assertIn("attested OpenUIKit source=HEAD:uikit", text)
+        self.assertIn("printf 'uikit_tree\\t%s\\n'", text)
+        pins = (ROOT / "scripts/vendor_pins.sh").read_text()
+        self.assertIn(
+            "EXPECTED_INREPO_UIKIT_TREE="
+            "723e12da1d426aeb8815a3582eb194189b8f7b96",
+            pins,
+        )
+        self.assertNotIn(
             "EXPECTED_UIKIT_COMMIT="
             "62dea0d97a3b9074e5c016820492bd0656b9a35a",
             text,
         )
-        self.assertIn(
+        self.assertNotIn(
             "EXPECTED_UIKIT_TREE="
             "3dfd6024557632949c9a5036522871a36d4a0cf0",
             text,
         )
-        self.assertIn("OpenUIKit checkout is not clean", text)
-        self.assertIn("pinned OpenUIKit checkout changed during execution", text)
-        self.assertIn("printf 'uikit_commit\\t%s\\n'", text)
-        self.assertIn("printf 'uikit_tree\\t%s\\n'", text)
         self.assertIn('"$FOCUS_WIDGET/Assets.swift"', text)
         self.assertIn('"$FOCUS_WIDGET/SearchWidgetView.swift"', text)
+        actual_tree = subprocess.check_output(
+            ["git", "rev-parse", "HEAD:uikit"],
+            cwd=ROOT,
+            text=True,
+        ).strip()
+        self.assertEqual(
+            actual_tree,
+            "723e12da1d426aeb8815a3582eb194189b8f7b96",
+        )
         self.assertIn("efac8d1c98b562374e54eea7540b4201523db670a6353eff8f0a0273d294526e", text)
         self.assertIn("721669388a4556e1609f580ed87d6065b63981770e71b0f77db292767b05f6c2", text)
         self.assertNotRegex(text, r"(?m)^\s*(cp|sed|perl|python\d*)\b.*\$FOCUS_WIDGET/(Assets|SearchWidgetView)\.swift")

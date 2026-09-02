@@ -3,14 +3,18 @@
 # package targets: SnapKit 36 of 37, DesignSystem 7, Widget 2, Onboarding 21, and
 # Licenses 2. Run Bundle, Published, constraint-lifecycle, plist decode, and
 # SwiftUI navigation behavior under Linux/machorun.
+# Defaults to the in-repo uikit/ and machorun/ subtrees. External UIKIT=/path
+# or MACHORUN=/path checkouts remain overrides.
 
 set -euo pipefail
 
-W=${W:-/w}
+W=${W:-$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)}
+# shellcheck source=../../scripts/vendor_tree.sh
+. "$W/scripts/vendor_tree.sh"
 # shellcheck disable=SC1091
 . "$(cd "$(dirname "$0")" && pwd)/../scripts/guest_arch.inc"
-UIKIT=${UIKIT:-/uikit}
-MACHORUN=${MACHORUN:-/machorun}
+UIKIT=${UIKIT:-$W/uikit}
+MACHORUN=${MACHORUN:-$W/machorun}
 RESOURCE_INPUT=${1:?usage: build_focus_package_guest.sh <normalized-bundles-directory>}
 
 FOCUS_ROOT=$W/scratch/ladder-corpus/focus-ios
@@ -28,8 +32,7 @@ MRROOT=$W/scratch/mrroot_full${FULL_OUT_SUFFIX}
 SWIFT_FOUNDATION=$W/scratch/swift-foundation
 
 EXPECTED_FOCUS_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791
-EXPECTED_UIKIT_COMMIT=62dea0d97a3b9074e5c016820492bd0656b9a35a
-EXPECTED_UIKIT_TREE=3dfd6024557632949c9a5036522871a36d4a0cf0
+EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE
 EXPECTED_SNAPKIT_COMMIT=e74fe2a978d1216c3602b129447c7301573cc2d8
 EXPECTED_FOUNDATION_COMMIT=c6793ef0c19c2cbaeba5a0e52078f129afc7dcfc
 EXPECTED_OPENCOMBINE_COMMIT=1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b
@@ -115,6 +118,18 @@ check_source_manifest() {
 
 [ "$OUT" = "$W/build/focus-package-guest" ] \
     || die "derived output path invariant changed"
+assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
+assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
+if vendor_is_inrepo "$W" uikit "$UIKIT"; then
+    echo "focus_package_guest: attested OpenUIKit source=HEAD:uikit tree=$EXPECTED_UIKIT_TREE"
+else
+    echo "focus_package_guest: attested OpenUIKit source=checkout tree=$EXPECTED_UIKIT_TREE"
+fi
+if vendor_is_inrepo "$W" machorun "$MACHORUN"; then
+    echo "focus_package_guest: attested machorun source=HEAD:machorun tree=$EXPECTED_INREPO_MACHORUN_TREE"
+else
+    echo "focus_package_guest: attested machorun source=checkout tree=$EXPECTED_INREPO_MACHORUN_TREE"
+fi
 for tool in git swiftc ld64.lld-18 llvm-otool-18 sha256sum perl cmp; do
     command -v "$tool" >/dev/null || die "required tool is missing: $tool"
 done
@@ -123,8 +138,6 @@ done
 
 assert_clean_commit "$FOCUS_ROOT" "$EXPECTED_FOCUS_COMMIT" Focus
 assert_clean_commit "$SNAPKIT_ROOT" "$EXPECTED_SNAPKIT_COMMIT" SnapKit
-assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" OpenUIKit \
-    "$EXPECTED_UIKIT_TREE"
 assert_clean_commit "$SWIFT_FOUNDATION" "$EXPECTED_FOUNDATION_COMMIT" swift-foundation
 
 OPENCOMBINE_ROOT=${OPENCOMBINE_ROOT:-$W/scratch/opencombine-core-durable-20260828-r2}
@@ -364,6 +377,11 @@ grep -Fqx $'file\tpackage/FocusPackageProbe.framework/FocusPackageProbe\t'\
 "$(hash_file "$PROVIDER/FocusPackageProbe")" \
     "$AUDIT/package-runtime-closure.manifest" \
     || die "dynamic Bundle provider is absent from recursive runtime closure"
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    echo "focus_package_guest: compile/link may proceed on this VM; execution cannot" >&2
+    bash "${W:-$(git rev-parse --show-toplevel)}/.cursor/refuse-arm64-execution.sh" \
+        || exit $?
+fi
 (
     cd "$OUT"
     MACHORUN_ROOT="$MRROOT" "$MRROOT/machorun" \
@@ -568,14 +586,15 @@ cmp -s "$ACCESSOR_ORACLE" "$AUDIT/post-resource-accessor-provenance.tsv" \
     || die "post-run accessor provenance diverged from reviewed oracle"
 assert_clean_commit "$FOCUS_ROOT" "$EXPECTED_FOCUS_COMMIT" post-run-Focus
 assert_clean_commit "$SNAPKIT_ROOT" "$EXPECTED_SNAPKIT_COMMIT" post-run-SnapKit
-assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" post-run-OpenUIKit \
-    "$EXPECTED_UIKIT_TREE"
+assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" post-run-OpenUIKit
+assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" post-run-machorun
 assert_clean_commit "$SWIFT_FOUNDATION" "$EXPECTED_FOUNDATION_COMMIT" post-run-swift-foundation
 assert_clean_commit "$OPENCOMBINE_ROOT/source" "$EXPECTED_OPENCOMBINE_COMMIT" post-run-OpenCombine
 
 {
-    printf 'uikit-commit\t%s\n' "$EXPECTED_UIKIT_COMMIT"
     printf 'uikit-tree\t%s\n' "$EXPECTED_UIKIT_TREE"
+    printf 'uikit-tree-source\tHEAD:uikit\n'
+    printf 'machorun-tree\t%s\n' "$EXPECTED_INREPO_MACHORUN_TREE"
     printf 'snapkit-sources\t%s\n' "$(hash_file "$AUDIT/snapkit-sources.tsv")"
     printf 'snapkit-exclusions\t%s\n' "$(hash_file "$AUDIT/snapkit-exclusions.tsv")"
     printf 'designsystem-sources\t%s\n' "$(hash_file "$AUDIT/designsystem-sources.tsv")"

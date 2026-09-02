@@ -121,6 +121,10 @@ run_macos() { # run_macos <outdir>
 
 # --------------------------------------------------------------- Linux side
 run_linux() {
+    if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+        bash "$(git -C "$ROOT" rev-parse --show-toplevel)/.cursor/refuse-arm64-execution.sh" \
+            || exit $?
+    fi
     command -v docker >/dev/null 2>&1 || die "docker not installed on this host"
     docker info >/dev/null 2>&1        || die "docker daemon not reachable"
     docker image inspect "$IMAGE" >/dev/null 2>&1 || \

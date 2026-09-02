@@ -1,0 +1,7 @@
+{
+  "sourceType": ["S3"],
+  "sourceInfo": ["{\"path\":\"https://openuikit-linux-builder-transfer-00da4d9ca172eb1ff.s3.us-west-2.amazonaws.com/core-cold/20260901/openuikit-core-cold-transfer-20260901.tar.zst\"}"],
+  "commandLine": ["bash -lc 'set -euo pipefail; archive=/opt/openuikit/transfers/core-cold-20260901/openuikit-core-cold-transfer-20260901.tar.zst; test -f \"$archive\"; printf \"%s  %s\\n\" a48bf15016a1b723764b58569f1798a0ecde3b8c45abad2100c82be5f0f9e755 \"$archive\" | sha256sum -c -; tar --zstd -xpf \"$archive\" import-core-cold.sh import-script-copy.json; EXPECTED_ARCHIVE_SHA=a48bf15016a1b723764b58569f1798a0ecde3b8c45abad2100c82be5f0f9e755 bash import-core-cold.sh; find /opt/openuikit/transfers/core-cold-20260901/import-core-cold.sh -delete; find /opt/openuikit/transfers/core-cold-20260901/import-script-copy.json -delete; printf \"EC2_CORE_REMOTE_IMPORT_COMPLETE\\n\"'"],
+  "workingDirectory": ["/opt/openuikit/transfers/core-cold-20260901"],
+  "executionTimeout": ["1800"]
+}

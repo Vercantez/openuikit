@@ -6,6 +6,9 @@
 // configure a future engine without receiving fabricated browsing results.
 
 @_exported import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 #if canImport(UIKit)
 @_exported import UIKit
 #elseif canImport(OpenUIKit)
