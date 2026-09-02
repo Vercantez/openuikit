@@ -20,7 +20,9 @@ oracle and it is not a claim of integrated ARM64 package success.
   configuration objects.
 - Compile-time UIKit / CoreLocation / CoreGraphics signatures behind
   `canImport`, using the real dependency types. No `MapKit.UIView`,
-  `MapKit.CLLocation`, or `MapKit.CGRect` stand-ins.
+  `MapKit.CLLocation`, or `MapKit.CGRect` stand-ins. `MKAnnotation.coordinate`
+  and `MKPlacemark` use `CoreLocation.CLLocationCoordinate2D` / `CLPlacemark`
+  when those modules are present; they stay gated on the isolated host.
 
 ## Fail-closed
 

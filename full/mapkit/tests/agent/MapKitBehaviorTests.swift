@@ -1,6 +1,9 @@
-import MapKit
+@_spi(MapKitHostTests) import MapKit
 import Foundation
 import Dispatch
+#if canImport(CoreLocation)
+import CoreLocation
+#endif
 
 func testAddressAndFilter() {
     let missing = MKAddress(fullAddress: "", shortAddress: nil)
@@ -61,7 +64,7 @@ func testMapItemMetadata() {
     let current = MKMapItem.forCurrentLocation()
     precondition(current.isCurrentLocation)
     let annotation = MKMapItemAnnotation(mapItem: item)
-    precondition(annotation.mapItem === item)
+    precondition(annotation?.mapItem === item)
 }
 
 func testPointOfInterestFilter() {
@@ -90,6 +93,24 @@ func testShapeAndCluster() {
     precondition(user.isUpdating == false)
     let feature = MKMapFeatureAnnotation(featureType: .territory)
     precondition(feature.featureType == .territory)
+#if canImport(CoreLocation)
+    let cupertino = CLLocationCoordinate2D(latitude: 37.3349, longitude: -122.0090)
+    let located = MKPointAnnotation(coordinate: cupertino)
+    precondition(abs(located.coordinate.latitude - 37.3349) < 1e-9)
+    precondition(abs(located.coordinate.longitude + 122.0090) < 1e-9)
+    let roundTrip = MKMapPoint(cupertino).coordinate
+    precondition(abs(roundTrip.latitude - 37.3349) < 1e-6)
+    let placemark = MKPlacemark(coordinate: cupertino)
+    precondition(abs(placemark.coordinate.latitude - 37.3349) < 1e-9)
+    let item = MKMapItem(placemark: placemark)
+    precondition(abs(item.placemark.coordinate.latitude - 37.3349) < 1e-9)
+    let overlay = MKTileOverlay(urlTemplate: nil)
+    precondition(overlay.coordinate.latitude.isFinite || overlay.coordinate.latitude.isInfinite)
+    let members = MKClusterAnnotation(memberAnnotations: [located])
+    precondition(abs(members.coordinate.latitude - 37.3349) < 1e-9)
+    precondition(user.location == nil)
+    precondition(CLLocationCoordinate2DIsValid(feature.coordinate) == false)
+#endif
 }
 
 func testOverlaysFromMapPoints() {
@@ -102,6 +123,7 @@ func testOverlaysFromMapPoints() {
         MKPolyline(points: buffer.baseAddress!, count: buffer.count)
     }
     precondition(polyline.pointCount == 3)
+    precondition(polyline.points().pointee.x == 0)
     precondition(!polyline.boundingMapRect.isNull)
     precondition(polyline.intersects(MKMapRect(x: 0, y: 0, width: 5, height: 5)))
     precondition(!polyline.canReplaceMapContent())
@@ -140,6 +162,8 @@ func testTileOverlayURLTemplate() {
 func testOverlayRendererConversion() {
     let overlay = MKTileOverlay(urlTemplate: nil)
     let renderer = MKOverlayRenderer(overlay: overlay)
+    let tileRenderer = MKTileOverlayRenderer(tileOverlay: overlay)
+    precondition(tileRenderer.overlay === overlay)
     renderer.alpha = 0.5
     renderer.contentScaleFactor = 2
     precondition(renderer.alpha == 0.5)
@@ -425,4 +449,139 @@ func testLocalSearchPointsOfInterestInitializer() {
     _ = MKLocalSearch(request: request)
     search.cancel()
     precondition(!search.isSearching)
+}
+
+func testDirectionsRequestIsolationAndCancellationRaces() {
+    let first = MKDirections(request: MKDirections.Request())
+    let second = MKDirections(request: MKDirections.Request())
+    let firstSem = DispatchSemaphore(value: 0)
+    let secondSem = DispatchSemaphore(value: 0)
+    var firstCalls = 0
+    var secondCalls = 0
+    first.calculate { response, error in
+        firstCalls += 1
+        precondition(response == nil)
+        precondition(error != nil)
+        firstSem.signal()
+    }
+    second.calculate { response, error in
+        secondCalls += 1
+        precondition(response == nil)
+        precondition(error != nil)
+        secondSem.signal()
+    }
+    precondition(firstCalls == 0)
+    precondition(secondCalls == 0)
+    precondition(firstSem.wait(timeout: .now() + 5) == .success)
+    precondition(secondSem.wait(timeout: .now() + 5) == .success)
+    precondition(firstCalls == 1)
+    precondition(secondCalls == 1)
+
+    let before = MKDirections(request: MKDirections.Request())
+    before.cancel()
+    let beforeSem = DispatchSemaphore(value: 0)
+    var beforeCalls = 0
+    before.calculate { _, error in
+        beforeCalls += 1
+        precondition(error != nil)
+        beforeSem.signal()
+    }
+    precondition(beforeCalls == 0)
+    precondition(beforeSem.wait(timeout: .now() + 5) == .success)
+    precondition(beforeCalls == 1)
+
+    let overlap = MKDirections(request: MKDirections.Request())
+    let overlapA = DispatchSemaphore(value: 0)
+    let overlapB = DispatchSemaphore(value: 0)
+    var overlapCallsA = 0
+    var overlapCallsB = 0
+    overlap.calculate { _, _ in
+        overlapCallsA += 1
+        overlapA.signal()
+    }
+    overlap.calculate { _, _ in
+        overlapCallsB += 1
+        overlapB.signal()
+    }
+    precondition(overlapA.wait(timeout: .now() + 5) == .success)
+    precondition(overlapB.wait(timeout: .now() + 5) == .success)
+    precondition(overlapCallsA == 1)
+    precondition(overlapCallsB == 1)
+}
+
+func testSnapshotTileGeocodeAtMostOnce() {
+    let overlay = MKTileOverlay(urlTemplate: "https://example.test/{z}/{x}/{y}.png")
+    let tileSem = DispatchSemaphore(value: 0)
+    var tileCalls = 0
+    overlay.loadTile(at: MKTileOverlayPath(x: 1, y: 1, z: 1, contentScaleFactor: 1)) { data, error in
+        tileCalls += 1
+        precondition(data == nil)
+        precondition(error != nil)
+        tileSem.signal()
+    }
+    overlay.loadTile(at: MKTileOverlayPath(x: 2, y: 2, z: 2, contentScaleFactor: 1)) { data, error in
+        tileCalls += 1
+        precondition(data == nil)
+        precondition(error != nil)
+        tileSem.signal()
+    }
+    precondition(tileSem.wait(timeout: .now() + 5) == .success)
+    precondition(tileSem.wait(timeout: .now() + 5) == .success)
+    precondition(tileCalls == 2)
+
+    let snapshotter = MKMapSnapshotter(options: MKMapSnapshotter.Options())
+    snapshotter.cancel()
+    let snapSem = DispatchSemaphore(value: 0)
+    var snapCalls = 0
+    snapshotter.start { snapshot, error in
+        snapCalls += 1
+        precondition(snapshot == nil)
+        precondition(error != nil)
+        snapSem.signal()
+    }
+    precondition(snapCalls == 0)
+    precondition(snapSem.wait(timeout: .now() + 5) == .success)
+    precondition(snapCalls == 1)
+
+    let geocode = MKGeocodingRequest(addressString: "Cupertino")
+    geocode?.cancel()
+    let geoSem = DispatchSemaphore(value: 0)
+    var geoCalls = 0
+    geocode?.getMapItems { items, error in
+        geoCalls += 1
+        precondition(items == nil)
+        precondition(error != nil)
+        geoSem.signal()
+    }
+    precondition(geoCalls == 0)
+    precondition(geoSem.wait(timeout: .now() + 5) == .success)
+    precondition(geoCalls == 1)
+}
+
+func testSearchAndLookAroundCancellationAfterStart() {
+    let search = MKLocalSearch(request: MKLocalSearch.Request(naturalLanguageQuery: "park"))
+    let searchSem = DispatchSemaphore(value: 0)
+    var searchCalls = 0
+    search.start { response, error in
+        searchCalls += 1
+        precondition(response == nil)
+        precondition(error != nil)
+        searchSem.signal()
+    }
+    search.cancel()
+    precondition(searchSem.wait(timeout: .now() + 5) == .success)
+    precondition(searchCalls == 1)
+
+    let look = MKLookAroundSceneRequest()
+    let lookSem = DispatchSemaphore(value: 0)
+    var lookCalls = 0
+    look.getSceneWithCompletionHandler { scene, error in
+        lookCalls += 1
+        precondition(scene == nil)
+        precondition(error != nil)
+        lookSem.signal()
+    }
+    look.cancel()
+    precondition(lookSem.wait(timeout: .now() + 5) == .success)
+    precondition(lookCalls == 1)
 }

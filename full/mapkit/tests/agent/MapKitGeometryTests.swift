@@ -1,5 +1,8 @@
 @_spi(MapKitHostTests) import MapKit
 import Foundation
+#if canImport(CoreLocation)
+import CoreLocation
+#endif
 
 func testCoordinateSpanStorage() {
     let span = MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 1.25)
@@ -218,4 +221,36 @@ func testNaNInfinityPolicy() {
     let infInset = MKMapRect.world.insetBy(dx: Double.nan, dy: 0)
     precondition(infInset.isNull)
     precondition(!MKMapPointEqualToPoint(MKMapPoint(x: Double.nan, y: 0), MKMapPoint(x: Double.nan, y: 0)))
+}
+
+func testMapRectPolesAndOverflow() {
+    let north = MKMapProjection.point(latitude: 85.0511287798066, longitude: 0)
+    let south = MKMapProjection.point(latitude: -85.0511287798066, longitude: 0)
+    let backNorth = MKMapProjection.coordinate(for: north)
+    let backSouth = MKMapProjection.coordinate(for: south)
+    precondition(abs(backNorth.latitude - 85.0511287798066) < 1e-6)
+    precondition(abs(backSouth.latitude + 85.0511287798066) < 1e-6)
+    precondition(north.y.isFinite && south.y.isFinite)
+    precondition(north.y < south.y)
+
+    let overflow = MKMapRect(
+        x: Double.greatestFiniteMagnitude,
+        y: 0,
+        width: Double.greatestFiniteMagnitude,
+        height: 1
+    )
+    precondition(!overflow.maxX.isFinite)
+    let hugeUnion = overflow.union(MKMapRect.world)
+    precondition(hugeUnion.isNull || hugeUnion.width.isFinite)
+
+    let nanSize = MKMapRect(x: 0, y: 0, width: Double.nan, height: 1)
+    precondition(nanSize.isNull)
+    precondition(nanSize.isEmpty)
+    precondition(nanSize.union(MKMapRect.world).origin.x == 0)
+
+    let poleMeters = MKMetersPerMapPointAtLatitude(90)
+    precondition(poleMeters.isFinite)
+    precondition(poleMeters >= 0)
+    let infMeters = MKMetersPerMapPointAtLatitude(Double.infinity)
+    precondition(infMeters.isNaN)
 }
