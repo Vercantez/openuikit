@@ -1106,19 +1106,46 @@ EXPORT uint8_t *getsectiondata(const struct mr_mh64 *header, const char *segname
 }
 
 /* os_system_version_get_current_version. Darwin-only (not in sdk/ headers,
- * not in glibc -- measured absent from aarch64 libc.so.6 dynsym). Returns
- * struct {uint32_t major, minor, patch} BY VALUE. 12 bytes is x0+w1 on
- * Darwin arm64 and AAPCS64 alike (docs/ABI.md: struct return x0 / x0-x1);
- * both sides of this call are Darwin-compiled, so the convention is never
- * crossed. 26.1.0 is the SDK version every fixture carries in
- * LC_BUILD_VERSION (see dyld_program_sdk_at_least in src/objc_notify.c). */
+ * not in glibc -- measured absent from aarch64 libc.so.6 dynsym).
+ *
+ * THE CONVENTION WAS MEASURED FROM THE CALLER, not guessed from a C
+ * declaration. libswiftCore's `__swift_stdlib_operatingSystemVersion` lazy
+ * path (`__ZZZ36_...ENUlPvE_8__invoke`, vmaddr 0x39f9dc in the staged
+ * swift-macosx/arm64 dylib) does this:
+ *
+ *     str  wzr, [sp, #8]
+ *     str  xzr, [sp]          ; 12-byte zeroed slot
+ *     mov  x0, sp             ; OUT-POINTER in x0
+ *     bl   _os_system_version_get_current_version
+ *     ldr  x8, [sp]           ; reads MEMORY after the call
+ *     ldr  w9, [sp, #8]
+ *     str  x8, [x19]
+ *     str  w9, [x19, #8]
+ *
+ * It never consumes x0/x1 as a by-value struct. A `struct {u32,u32,u32}
+ * f(void)` declaration compiled to `lsr x8, x0, #32; stp x8, x1, ...` and
+ * SEGFAULTS on Darwin (oracle: exit 139 after the eight other names printed),
+ * because the real callee stores through x0.
+ *
+ * Bind: the C fixture names it two-level from libSystem
+ * (`nm -m`: `(undefined) external ... (from libSystem)`). libswiftCore binds
+ * it FLAT (`weak external, dynamically looked up`) -- same spelling, no
+ * two-level ordinal, which is why a second copy in libswiftcompat is a load-
+ * order hazard. We export it from libSystem so both binds land here.
+ *
+ * 26.1.0 is the SDK version the corpus carries in LC_BUILD_VERSION, not a
+ * claim about the host kernel. The fixture grades that the out-pointer was
+ * written, not the digits, because Darwin's own provider reports the Mac's
+ * OS (26.5.2 on the oracle machine). */
 struct mr_os_version { uint32_t major, minor, patch; };
 _Static_assert(sizeof(struct mr_os_version) == 12, "os_system_version is 3x u32");
 
-EXPORT struct mr_os_version os_system_version_get_current_version(void)
+EXPORT void os_system_version_get_current_version(struct mr_os_version *out)
 {
-    struct mr_os_version v = { 26, 1, 0 };
-    return v;
+    if (!out) return;
+    out->major = 26;
+    out->minor = 1;
+    out->patch = 0;
 }
 /* THE ENVIRONMENT IS TWO ARRAYS WITH ONE NAME, and it was already latent
  * before anything wrote to it.
