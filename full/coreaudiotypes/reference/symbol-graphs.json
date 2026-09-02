@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CoreAudioTypes.symbols.json",
+      "relationshipCount": 348,
+      "sha256": "64b04ed49a14769530a408acb778b93ef5f8e75a62311b591c5264ea3bfe5947",
+      "symbolCount": 697
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CoreAudioTypes",
+  "relationshipCount": 348,
+  "schema": 1,
+  "symbolCount": 697,
+  "target": "arm64-apple-ios26.0"
+}

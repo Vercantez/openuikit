@@ -1,0 +1,4 @@
+full/coreaudiotypes/CoreAudioTypes.swift
+full/coreaudiotypes/CoreAudioTypesConstants.swift
+full/coreaudiotypes/CoreAudioTypesLayouts.swift
+full/coreaudiotypes/CoreAudioTypesOptionSets.swift
