@@ -11,6 +11,11 @@ The current isolated host gate compiles AVFAudio without those modules on the se
 ## What has runtime evidence
 
 - **Formats and software PCM.** `AVAudioFormat` from common format, standard mono/stereo, and settings dictionaries. `AVAudioPCMBuffer` allocates zeroed planar or interleaved storage and exposes float channel pointers and stride. No-copy `AudioBufferList` ownership is compiled only when CoreAudioTypes/AudioToolbox is imported.
+- **Buffer copying.** `AVAudioBuffer` carries the pinned `NSCopying` and
+  `NSMutableCopying` relationships. PCM copies own independent storage, retain
+  only valid frames, and expose the first `AudioBuffer` byte capacity as
+  `frameCapacity`; compressed-buffer copies have the base `AVAudioBuffer`
+  dynamic type. These observable details are checked against iOS 26.1.
 - **Engine graph bookkeeping.** Attach/connect/disconnect and connection-point queries. `connect` replaces the existing edge for `(destination, inputBus)`. `start()`, manual rendering, and offline render **throw** and do not set `isRunning` or produce buffers.
 - **Session preferences.** `setCategory` stores category/mode/options. Activation, port override, and hardware configuration **throw**. Record permission is delivered **asynchronously**, exactly once, on `AVFAudio.callback`.
 - **Player / recorder / converter / sequencer.** `AVAudioPlayer` throwing URL initializers use throwing I/O. Empty or garbage payloads throw; only a narrowly validated 16-bit linear PCM WAVE construct. Play, record, convert, and sequencer start stay fail-closed.
@@ -36,8 +41,9 @@ Asynchronous callbacks are non-inline, exactly-once, non-reentrant, and delivere
 - `tests/agent/AVFAudioCorpus.swift` compiles Signal `AVSpeechSynthesizer`/delegate/utterance, Telegram `AVAudioSession.sharedInstance`/`outputVolume`, and Nextcloud `AVAudioApplication` record permission.
 - `tests/agent/AVFAudioDependencyABI.swift` (and `AVFAudioDependencyABI.c`) is a **future EC2** mixed C/Swift identity/ABI probe. It is not executed by the isolated host gate. Do not treat a green host gate as integrated Linux ABI success.
 
-The mixed probe is executable rather than documentary. On a host with canonical
-dependency modules and headers, it builds `AVFAudioDependencyABI.c`, links the C
+The mixed probe is executable rather than documentary. It requires canonical
+CoreAudioTypes, AudioToolbox, CoreMIDI, and CoreMedia modules and headers; a
+missing dependency is a hard failure. It builds `AVFAudioDependencyABI.c`, links the C
 object into the Swift probe, compares the C and Swift sizes, alignments, and
 `AudioBufferList` field offsets, walks a four-buffer flexible list, and verifies
 the loaded AVFAudio image:
@@ -49,8 +55,9 @@ bash tests/agent/test_avfaudio_dependency_abi.sh canonical
 Additional dependency search, library, or header arguments can be supplied as
 repeated `--swift-arg ARG` and `--clang-arg ARG` pairs. The current repository
 boundary can be checked separately with `repository` mode. That mode refuses
-until the dependency-owned `AudioToolbox` and `CoreMedia` modules provide the
-canonical CoreAudioTypes, AudioToolbox, and CoreMedia declarations; it never
+until all four dependency-owned modules exist and provide the canonical
+declarations. It rejects unclassified compiler errors instead of allowing a
+known dependency diagnostic to mask an AVFAudio-local failure, and it never
 substitutes AVFAudio-local lookalikes.
 
 Run the immutable host gate:

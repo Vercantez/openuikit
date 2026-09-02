@@ -75,6 +75,11 @@ func run() throws {
         throw RuntimeFailure.message("pcm NSCopying dynamic type")
     }
     try require(copied !== buffer, "pcm copy must be independent")
+    try require(
+        copied.frameCapacity
+            == buffer.frameCapacity * AVAudioFrameCount(MemoryLayout<Float>.stride),
+        "pcm copy capacity follows first AudioBuffer byte capacity"
+    )
     try require(copied.frameLength == buffer.frameLength, "pcm copy frame length")
     try require(copied.floatChannelData?[0][0] == 0.5, "pcm copy sample")
     planes[0][0] = 0.75
@@ -83,7 +88,41 @@ func run() throws {
         throw RuntimeFailure.message("pcm NSMutableCopying dynamic type")
     }
     try require(mutableCopied !== buffer, "pcm mutable copy must be independent")
+    try require(
+        mutableCopied.frameCapacity == copied.frameCapacity,
+        "pcm mutable copy capacity"
+    )
     try require(mutableCopied.floatChannelData?[0][0] == 0.75, "pcm mutable copy sample")
+
+    let compressed = AVAudioCompressedBuffer(
+        format: format,
+        packetCapacity: 3,
+        maximumPacketSize: 8
+    )
+    guard let compressedCopy = compressed.copy() as? AVAudioBuffer else {
+        throw RuntimeFailure.message("compressed NSCopying base type")
+    }
+    guard let compressedMutableCopy = compressed.mutableCopy() as? AVAudioBuffer else {
+        throw RuntimeFailure.message("compressed NSMutableCopying base type")
+    }
+    try require(
+        !(compressedCopy is AVAudioCompressedBuffer),
+        "compressed copy must use AVAudioBuffer dynamic type"
+    )
+    try require(
+        !(compressedMutableCopy is AVAudioCompressedBuffer),
+        "compressed mutable copy must use AVAudioBuffer dynamic type"
+    )
+    try require(compressedCopy !== compressed, "compressed copy must be independent")
+    try require(
+        compressedMutableCopy !== compressed,
+        "compressed mutable copy must be independent"
+    )
+    try require(compressedCopy.format === compressed.format, "compressed copy format identity")
+    try require(
+        compressedMutableCopy.format === compressed.format,
+        "compressed mutable copy format identity"
+    )
 
     let interleaved = try requireFormat(
         AVAudioFormat(
@@ -97,6 +136,32 @@ func run() throws {
         throw RuntimeFailure.message("interleaved pcm")
     }
     try require(interleavedBuffer.stride == 2, "interleaved stride")
+    guard let interleavedCopy = interleavedBuffer.copy() as? AVAudioPCMBuffer else {
+        throw RuntimeFailure.message("interleaved pcm copy")
+    }
+    try require(
+        interleavedCopy.frameCapacity
+            == interleavedBuffer.frameCapacity
+                * AVAudioFrameCount(MemoryLayout<Float>.stride)
+                * AVAudioFrameCount(interleavedBuffer.stride),
+        "interleaved copy capacity follows first AudioBuffer byte capacity"
+    )
+
+    let int16Format = try requireFormat(
+        AVAudioFormat(
+            commonFormat: .pcmFormatInt16,
+            sampleRate: 44_100,
+            channels: 2,
+            interleaved: false
+        )
+    )
+    guard
+        let int16Buffer = AVAudioPCMBuffer(pcmFormat: int16Format, frameCapacity: 3),
+        let int16Copy = int16Buffer.copy() as? AVAudioPCMBuffer
+    else {
+        throw RuntimeFailure.message("int16 pcm copy")
+    }
+    try require(int16Copy.frameCapacity == 6, "int16 copy byte capacity")
 
     let host = AVAudioTime.hostTime(forSeconds: 1.5)
     let seconds = AVAudioTime.seconds(forHostTime: host)

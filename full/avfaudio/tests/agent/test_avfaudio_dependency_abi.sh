@@ -15,6 +15,7 @@ MANIFEST=$FRAMEWORK_ROOT/avfaudio_guest_sources.txt
 [ -f "$MANIFEST" ] && [ ! -L "$MANIFEST" ] || die 'guest source manifest is missing or unsafe'
 command -v swiftc >/dev/null 2>&1 || die 'swiftc is unavailable'
 command -v clang >/dev/null 2>&1 || die 'clang is unavailable'
+command -v python3 >/dev/null 2>&1 || die 'python3 is unavailable'
 
 mode=${1:-canonical}
 if [ "$#" -gt 0 ]; then
@@ -77,6 +78,90 @@ build_avfaudio() {
         "${SOURCE_PATHS[@]}"
 }
 
+classify_repository_diagnostics() {
+    python3 -B - "$1" <<'PY'
+from pathlib import Path
+import re
+import sys
+
+path = Path(sys.argv[1])
+lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+wrapper = re.compile(r"^error: emit-module command failed with exit code ")
+source_error = re.compile(r"^.*:\d+:\d+: error: (.*)$")
+allowed = [
+    re.compile(
+        r"'(?:AudioStreamBasicDescription|AudioBuffer)' is ambiguous "
+        r"for type lookup in this context$"
+    ),
+    re.compile(
+        r"cannot find type '(?:CMAudioFormatDescription|MusicSequence|"
+        r"AudioComponentDescription|AudioComponentInstantiationOptions|"
+        r"AudioComponent|AudioUnit|AUAudioUnit)' in scope$"
+    ),
+    re.compile(
+        r"cannot find '(?:AudioComponentDescription|AudioUnit)' in scope$"
+    ),
+]
+boundary = []
+unexpected = []
+for line in lines:
+    if wrapper.match(line):
+        continue
+    match = source_error.match(line)
+    if match:
+        if any(pattern.fullmatch(match.group(1)) for pattern in allowed):
+            boundary.append(line)
+        else:
+            unexpected.append(line)
+    elif line.startswith("error:") or line.startswith("clang: error:"):
+        unexpected.append(line)
+    elif line and not line[0].isspace() and ": error:" in line:
+        unexpected.append(line)
+
+if not boundary or unexpected:
+    for line in unexpected:
+        print(f"UNCLASSIFIED_REPOSITORY_DIAGNOSTIC: {line}", file=sys.stderr)
+    raise SystemExit(1)
+PY
+}
+
+repo_libraries=()
+build_repository_dependency() {
+    local module=$1
+    local slug=$2
+    local dependency_manifest=$REPO_ROOT/full/$slug/${slug}_guest_sources.txt
+    local dependency_log=$TMP/$module-build.log
+    local dependency_sources=()
+    local relative source
+
+    while IFS= read -r relative; do
+        [ -n "$relative" ] || die "$module source manifest contains a blank row"
+        case "$relative" in
+            full/"$slug"/*.swift) ;;
+            *) die "$module source is outside full/$slug: $relative" ;;
+        esac
+        source=$REPO_ROOT/$relative
+        [ -f "$source" ] && [ ! -L "$source" ] \
+            || die "$module source is missing or unsafe: $relative"
+        dependency_sources+=("$source")
+    done < "$dependency_manifest"
+    [ "${#dependency_sources[@]}" -gt 0 ] || die "$module source manifest is empty"
+
+    if ! swiftc -warnings-as-errors -parse-as-library -emit-library -emit-module \
+        -I "$TMP" -L "$TMP" \
+        -module-name "$module" \
+        -emit-module-path "$TMP/$module.swiftmodule" \
+        -o "$TMP/lib$module.dylib" \
+        "${dependency_sources[@]}" "${repo_libraries[@]}" \
+        >"$dependency_log" 2>&1; then
+        sed -n '1,240p' "$dependency_log" >&2
+        printf 'AVFAUDIO_REPOSITORY_DEPENDENCY_BUILD_UNRESOLVED module=%s\n' \
+            "$module" >&2
+        die "repository dependency module failed to build: $module"
+    fi
+    repo_libraries+=("$TMP/lib$module.dylib")
+}
+
 run_canonical_probe() {
     build_avfaudio
     printf '%s\n' \
@@ -100,6 +185,23 @@ run_canonical_probe() {
         "$TMP/AVAudioBufferAbsentInitializer.swift" >"$TMP/absent-initializer.log" 2>&1; then
         die 'graph-absent AVAudioBuffer.init(format:) remains public'
     fi
+    grep -Eq \
+        "'AVAudioBuffer' initializer is inaccessible due to 'internal' protection level" \
+        "$TMP/absent-initializer.log" \
+        || die 'absent-initializer probe failed for an unexpected reason'
+
+    printf '%s\n' \
+        'import AVFAudio' \
+        'let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)!' \
+        'let buffer = AVAudioCompressedBuffer(format: format, packetCapacity: 1)' \
+        'buffer.packetDescriptions = nil' \
+        > "$TMP/AVAudioCompressedBufferGetOnly.swift"
+    if swiftc -warnings-as-errors -typecheck -I "$TMP" \
+        "$TMP/AVAudioCompressedBufferGetOnly.swift" >"$TMP/get-only.log" 2>&1; then
+        die 'graph-get-only AVAudioCompressedBuffer.packetDescriptions remains settable'
+    fi
+    grep -Eq "setter is inaccessible|cannot assign to property" "$TMP/get-only.log" \
+        || die 'get-only property probe failed for an unexpected reason'
 
     clang -Werror "${clang_args[@]}" -c \
         "$SCRIPT_DIR/AVFAudioDependencyABI.c" \
@@ -124,7 +226,7 @@ run_canonical_probe() {
     printf '%s\n' "$output" | grep -Fqx 'AVFAUDIO_DEPENDENCY_ABI_OK' \
         || die 'mixed C/Swift dependency ABI probe did not emit its success marker'
     printf '%s\n' \
-        'AVFAUDIO_CANONICAL_DEPENDENCY_ABI_GATE_OK checks=copying-surface,absent-extra-init,c-layout,flexible-abl,identity,load,fail-closed'
+        'AVFAUDIO_CANONICAL_DEPENDENCY_ABI_GATE_OK checks=all-dependencies,copying-surface,copying-semantics,absent-extra-init,get-only-surface,c-layout,flexible-abl,identity,exact-load,fail-closed'
 }
 
 run_repository_boundary() {
@@ -132,38 +234,60 @@ run_repository_boundary() {
         || die 'repository mode does not accept custom Swift arguments'
     [ "${#clang_args[@]}" -eq 0 ] \
         || die 'repository mode does not accept custom Clang arguments'
-    swiftc -warnings-as-errors -parse-as-library -emit-library -emit-module \
-        -module-name AudioToolbox \
-        -emit-module-path "$TMP/AudioToolbox.swiftmodule" \
-        -o "$TMP/libAudioToolbox.dylib" \
-        "$REPO_ROOT/full/audiotoolbox/AudioToolbox.swift"
-    swiftc -warnings-as-errors -parse-as-library -emit-library -emit-module \
-        -module-name CoreMedia \
-        -emit-module-path "$TMP/CoreMedia.swiftmodule" \
-        -o "$TMP/libCoreMedia.dylib" \
-        "$REPO_ROOT/full/coremedia/CoreMedia.swift"
+    printf '%s\n' \
+        'error: emit-module command failed with exit code 1' \
+        '/tmp/fixture.swift:1:1: error: cannot find type '\''MusicSequence'\'' in scope' \
+        > "$TMP/classifier-known.log"
+    classify_repository_diagnostics "$TMP/classifier-known.log" \
+        || die 'repository diagnostic classifier rejected a known dependency failure'
+    printf '%s\n' \
+        'error: emit-module command failed with exit code 1' \
+        '/tmp/fixture.swift:1:1: error: cannot find type '\''MusicSequence'\'' in scope' \
+        '/tmp/fixture.swift:2:1: error: AVFAudio-local sentinel failure' \
+        > "$TMP/classifier-mixed.log"
+    if classify_repository_diagnostics "$TMP/classifier-mixed.log" >/dev/null 2>&1; then
+        die 'repository diagnostic classifier accepted an AVFAudio-local failure'
+    fi
+    printf '%s\n' \
+        'AVFAUDIO_REPOSITORY_DIAGNOSTIC_CLASSIFIER_OK checks=known-accepted,mixed-local-rejected'
+    missing_modules=()
+    repo_libraries=()
+    while IFS=: read -r dependency slug; do
+        dependency_manifest=$REPO_ROOT/full/$slug/${slug}_guest_sources.txt
+        if [ -f "$dependency_manifest" ] && [ ! -L "$dependency_manifest" ]; then
+            build_repository_dependency "$dependency" "$slug"
+        else
+            missing_modules+=("$dependency")
+        fi
+    done <<'DEPENDENCIES'
+CoreAudioTypes:coreaudiotypes
+AudioToolbox:audiotoolbox
+CoreMIDI:coremidi
+CoreMedia:coremedia
+DEPENDENCIES
 
     if swiftc -warnings-as-errors -parse-as-library -emit-library -emit-module \
-        -I "$TMP" -L "$TMP" -lAudioToolbox -lCoreMedia \
+        -I "$TMP" -L "$TMP" \
         -module-name AVFAudio \
         -emit-module-path "$TMP/AVFAudio.swiftmodule" \
         -o "$TMP/libAVFAudio.dylib" \
-        "${SOURCE_PATHS[@]}" >"$TMP/repository-boundary.log" 2>&1; then
+        "${SOURCE_PATHS[@]}" "${repo_libraries[@]}" \
+        >"$TMP/repository-boundary.log" 2>&1; then
+        [ "${#missing_modules[@]}" -eq 0 ] \
+            || die "repository dependency modules are missing: ${missing_modules[*]}"
         printf '%s\n' \
-            'AVFAUDIO_REPOSITORY_DEPENDENCY_INTEGRATION_OK modules=AudioToolbox,CoreMedia'
+            'AVFAUDIO_REPOSITORY_DEPENDENCY_INTEGRATION_OK modules=CoreAudioTypes,AudioToolbox,CoreMIDI,CoreMedia'
         return
     fi
 
-    if ! grep -Eq \
-        "ambiguous for type lookup|cannot find type 'CMAudioFormatDescription'|cannot find type 'MusicSequence'|cannot find (type )?'AudioComponent|cannot find type 'AUAudioUnit'" \
-        "$TMP/repository-boundary.log"; then
+    if ! classify_repository_diagnostics "$TMP/repository-boundary.log"; then
         sed -n '1,240p' "$TMP/repository-boundary.log" >&2
         die 'repository dependency build failed outside the classified dependency boundary'
     fi
     sed -n '1,240p' "$TMP/repository-boundary.log" >&2
     printf '%s\n' \
-        'AVFAUDIO_REPOSITORY_DEPENDENCY_BOUNDARY_UNRESOLVED modules=CoreAudioTypes,AudioToolbox,CoreMedia policy=no-lookalikes' >&2
-    die 'repository AudioToolbox/CoreMedia modules do not yet provide the canonical dependency ABI'
+        'AVFAUDIO_REPOSITORY_DEPENDENCY_BOUNDARY_UNRESOLVED modules=CoreAudioTypes,AudioToolbox,CoreMIDI,CoreMedia policy=no-lookalikes' >&2
+    die 'repository dependency modules do not yet provide the canonical dependency ABI'
 }
 
 case "$mode" in

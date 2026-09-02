@@ -10,15 +10,23 @@ import AVFAudio
 
 #if canImport(CoreAudioTypes)
 import CoreAudioTypes
+#else
+#error("AVFAudio dependency ABI probe requires CoreAudioTypes")
 #endif
 #if canImport(AudioToolbox)
 import AudioToolbox
+#else
+#error("AVFAudio dependency ABI probe requires AudioToolbox")
 #endif
 #if canImport(CoreMIDI)
 import CoreMIDI
+#else
+#error("AVFAudio dependency ABI probe requires CoreMIDI")
 #endif
 #if canImport(CoreMedia)
 import CoreMedia
+#else
+#error("AVFAudio dependency ABI probe requires CoreMedia")
 #endif
 
 enum ABIFailure: Error {
@@ -210,6 +218,86 @@ func proveNoCopyDeallocatorOnce() throws {
     #endif
 }
 
+func proveCopySemantics() throws {
+    guard
+        let format = AVAudioFormat(
+            commonFormat: .pcmFormatFloat32,
+            sampleRate: 44_100,
+            channels: 2,
+            interleaved: false
+        ),
+        let original = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 4)
+    else {
+        throw ABIFailure.message("copy format")
+    }
+    original.frameLength = 2
+    guard let originalChannels = original.floatChannelData else {
+        throw ABIFailure.message("copy source channels")
+    }
+    originalChannels[0][0] = 1
+    originalChannels[0][1] = 2
+    originalChannels[0][2] = 3
+
+    guard
+        let copied = original.copy() as? AVAudioPCMBuffer,
+        let mutableCopied = original.mutableCopy() as? AVAudioPCMBuffer
+    else {
+        throw ABIFailure.message("PCM copying dynamic type")
+    }
+    try require(copied !== original, "PCM copy identity")
+    try require(mutableCopied !== original, "PCM mutable copy identity")
+    try require(copied.frameCapacity == 16, "PCM copy capacity uses first-buffer bytes")
+    try require(mutableCopied.frameCapacity == 16, "PCM mutable copy capacity")
+    try require(copied.frameLength == 2, "PCM copy frame length")
+    try require(copied.format === original.format, "PCM copy format identity")
+    try require(copied.floatChannelData?[0][0] == 1, "PCM copy valid sample 0")
+    try require(copied.floatChannelData?[0][1] == 2, "PCM copy valid sample 1")
+    try require(copied.floatChannelData?[0][2] == 0, "PCM copy excludes invalid frames")
+    originalChannels[0][0] = 9
+    try require(copied.floatChannelData?[0][0] == 1, "PCM copy storage independence")
+
+    var asbd = AudioStreamBasicDescription(
+        mSampleRate: 44_100,
+        mFormatID: kAudioFormatMPEG4AAC,
+        mFormatFlags: 0,
+        mBytesPerPacket: 0,
+        mFramesPerPacket: 1_024,
+        mBytesPerFrame: 0,
+        mChannelsPerFrame: 2,
+        mBitsPerChannel: 0,
+        mReserved: 0
+    )
+    guard let compressedFormat = AVAudioFormat(streamDescription: &asbd) else {
+        throw ABIFailure.message("compressed copy format")
+    }
+    let compressed = AVAudioCompressedBuffer(
+        format: compressedFormat,
+        packetCapacity: 3,
+        maximumPacketSize: 8
+    )
+    guard
+        let compressedCopy = compressed.copy() as? AVAudioBuffer,
+        let compressedMutableCopy = compressed.mutableCopy() as? AVAudioBuffer
+    else {
+        throw ABIFailure.message("compressed copying base type")
+    }
+    try require(
+        !(compressedCopy is AVAudioCompressedBuffer),
+        "compressed copy dynamic type"
+    )
+    try require(
+        !(compressedMutableCopy is AVAudioCompressedBuffer),
+        "compressed mutable copy dynamic type"
+    )
+    try require(compressedCopy !== compressed, "compressed copy identity")
+    try require(compressedMutableCopy !== compressed, "compressed mutable copy identity")
+    try require(compressedCopy.format === compressed.format, "compressed copy format identity")
+    try require(
+        compressedMutableCopy.format === compressed.format,
+        "compressed mutable copy format identity"
+    )
+}
+
 func proveAudioTimeStampFlagRoundTrip() throws {
     #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
     func stamp(
@@ -325,7 +413,10 @@ func inspectLoadedLibrary() throws {
         throw ABIFailure.message("AVAudioEngine metadata image lacks a filename")
     }
     let name = String(cString: filename)
-    try require(name.contains("AVFAudio"), "loaded image should be AVFAudio: \(name)")
+    try require(
+        name == "libAVFAudio.dylib" || name.hasSuffix("/libAVFAudio.dylib"),
+        "loaded image should be the staged libAVFAudio.dylib: \(name)"
+    )
 
     let shadowOSStatus = dlsym(handle, "$s8AVFAudio8OSStatusa")
     try require(shadowOSStatus == nil, "libAVFAudio must not export a module-local OSStatus alias")
@@ -384,15 +475,11 @@ func run() throws {
 
     try proveCLayoutIdentity()
     try proveNoCopyDeallocatorOnce()
+    try proveCopySemantics()
     try proveAudioTimeStampFlagRoundTrip()
 
-    #if canImport(CoreMIDI)
     try require(MemoryLayout<MIDIEventList>.size > 0, "MIDIEventList from CoreMIDI")
-    #endif
-
-    #if canImport(CoreMedia)
     try require(MemoryLayout<CMTime>.size > 0, "CMTime from CoreMedia")
-    #endif
 
     print("AVFAUDIO_DEPENDENCY_ABI_OK")
 }

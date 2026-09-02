@@ -98,7 +98,8 @@ int avfaudio_abi_fill_c_layout_report(struct AVFAudioCLayoutReport *report) {
 #endif
 
 int avfaudio_abi_c_probe_available(void) {
-#if AVFAUDIO_ABI_HAVE_COREAUDIOTYPES || AVFAUDIO_ABI_HAVE_AUDIOTOOLBOX
+#if AVFAUDIO_ABI_HAVE_COREAUDIOTYPES && AVFAUDIO_ABI_HAVE_AUDIOTOOLBOX \
+    && AVFAUDIO_ABI_HAVE_COREMIDI && AVFAUDIO_ABI_HAVE_COREMEDIA
     return 1;
 #else
     return 0;

@@ -610,7 +610,24 @@ public final class AVAudioPCMBuffer: AVAudioBuffer {
 
     public override func copy(with zone: NSZone? = nil) -> Any {
         _ = zone
-        guard let result = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCapacity) else {
+        // The pinned iOS 26.1 runtime exposes the first AudioBuffer's byte
+        // capacity as the copied PCM buffer's frameCapacity.
+        let (sampleBytes, sampleOverflow) = Int(frameCapacity).multipliedReportingOverflow(
+            by: bytesPerSample
+        )
+        let (firstBufferBytes, strideOverflow) = sampleBytes.multipliedReportingOverflow(
+            by: stride
+        )
+        guard
+            !sampleOverflow,
+            !strideOverflow,
+            firstBufferBytes > 0,
+            firstBufferBytes <= Int(AVAudioFrameCount.max),
+            let result = AVAudioPCMBuffer(
+                pcmFormat: format,
+                frameCapacity: AVAudioFrameCount(firstBufferBytes)
+            )
+        else {
             preconditionFailure("A valid AVAudioPCMBuffer format must remain copyable.")
         }
         result.frameLength = frameLength
@@ -666,10 +683,8 @@ public final class AVAudioCompressedBuffer: AVAudioBuffer {
     public let byteCapacity: UInt32
     public let data: UnsafeMutableRawPointer
     #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
-    public var packetDescriptions: UnsafeMutablePointer<AudioStreamPacketDescription>?
-    public var packetDependencies: [AudioStreamPacketDependencyDescription]?
-    private var copiedPacketDescriptionsStorage:
-        UnsafeMutablePointer<AudioStreamPacketDescription>?
+    public private(set) var packetDescriptions: UnsafeMutablePointer<AudioStreamPacketDescription>?
+    public private(set) var packetDependencies: [AudioStreamPacketDependencyDescription]?
     #endif
 
     public init(format: AVAudioFormat, packetCapacity: AVAudioPacketCount) {
@@ -698,46 +713,7 @@ public final class AVAudioCompressedBuffer: AVAudioBuffer {
         super.init(format: format)
     }
 
-    public override func copy(with zone: NSZone? = nil) -> Any {
-        _ = zone
-        let result: AVAudioCompressedBuffer
-        if maximumPacketSize == 0 {
-            result = AVAudioCompressedBuffer(format: format, packetCapacity: packetCapacity)
-        } else {
-            result = AVAudioCompressedBuffer(
-                format: format,
-                packetCapacity: packetCapacity,
-                maximumPacketSize: maximumPacketSize
-            )
-        }
-        result.packetCount = packetCount
-        result.byteLength = min(byteLength, result.byteCapacity)
-        if result.byteLength > 0 {
-            result.data.copyMemory(from: data, byteCount: Int(result.byteLength))
-        }
-        #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
-        result.packetDependencies = packetDependencies
-        if let packetDescriptions, packetCapacity > 0 {
-            let descriptions = UnsafeMutablePointer<AudioStreamPacketDescription>.allocate(
-                capacity: Int(packetCapacity)
-            )
-            descriptions.initialize(from: packetDescriptions, count: Int(packetCapacity))
-            result.copiedPacketDescriptionsStorage = descriptions
-            result.packetDescriptions = descriptions
-        }
-        #endif
-        return result
-    }
-
-    public override func mutableCopy(with zone: NSZone? = nil) -> Any {
-        copy(with: zone)
-    }
-
     deinit {
-        #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
-        copiedPacketDescriptionsStorage?.deinitialize(count: Int(packetCapacity))
-        copiedPacketDescriptionsStorage?.deallocate()
-        #endif
         data.deallocate()
     }
 }
