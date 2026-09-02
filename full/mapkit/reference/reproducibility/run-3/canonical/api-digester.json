@@ -1,0 +1,3101 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKFoundation",
+        "printedName": "MapKit.MKFoundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKAddress",
+        "printedName": "MapKit.MKAddress"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKAddressRepresentations",
+        "printedName": "MapKit.MKAddressRepresentations"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKAddressFilter",
+        "printedName": "MapKit.MKAddressFilter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKAnnotation",
+        "printedName": "MapKit.MKAnnotation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKCircle",
+        "printedName": "MapKit.MKCircle"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKDirections",
+        "printedName": "MapKit.MKDirections"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKDirectionsRequest",
+        "printedName": "MapKit.MKDirectionsRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKDirectionsResponse",
+        "printedName": "MapKit.MKDirectionsResponse"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKDistanceFormatter",
+        "printedName": "MapKit.MKDistanceFormatter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKGeocodingRequest",
+        "printedName": "MapKit.MKGeocodingRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKGeoJSONSerialization",
+        "printedName": "MapKit.MKGeoJSONSerialization"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKGeodesicPolyline",
+        "printedName": "MapKit.MKGeodesicPolyline"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKGeometry",
+        "printedName": "MapKit.MKGeometry"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKLocalPointsOfInterestRequest",
+        "printedName": "MapKit.MKLocalPointsOfInterestRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKLocalSearch",
+        "printedName": "MapKit.MKLocalSearch"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKLocalSearchCompleter",
+        "printedName": "MapKit.MKLocalSearchCompleter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKLocalSearchRequest",
+        "printedName": "MapKit.MKLocalSearchRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKLocalSearchResponse",
+        "printedName": "MapKit.MKLocalSearchResponse"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMapCamera",
+        "printedName": "MapKit.MKMapCamera"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMapConfiguration",
+        "printedName": "MapKit.MKMapConfiguration"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMapItemIdentifier",
+        "printedName": "MapKit.MKMapItemIdentifier"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMapItem",
+        "printedName": "MapKit.MKMapItem"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMapItemRequest",
+        "printedName": "MapKit.MKMapItemRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMapSnapshot",
+        "printedName": "MapKit.MKMapSnapshot"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMapSnapshotOptions",
+        "printedName": "MapKit.MKMapSnapshotOptions"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMapSnapshotter",
+        "printedName": "MapKit.MKMapSnapshotter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMultiPoint",
+        "printedName": "MapKit.MKMultiPoint"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMultiPolygon",
+        "printedName": "MapKit.MKMultiPolygon"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMultiPolyline",
+        "printedName": "MapKit.MKMultiPolyline"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKOverlay",
+        "printedName": "MapKit.MKOverlay"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKPlacemark",
+        "printedName": "MapKit.MKPlacemark"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKPointAnnotation",
+        "printedName": "MapKit.MKPointAnnotation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKPointOfInterestCategory",
+        "printedName": "MapKit.MKPointOfInterestCategory"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKPointOfInterestFilter",
+        "printedName": "MapKit.MKPointOfInterestFilter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKPolygon",
+        "printedName": "MapKit.MKPolygon"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKPolyline",
+        "printedName": "MapKit.MKPolyline"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKReverseGeocodingRequest",
+        "printedName": "MapKit.MKReverseGeocodingRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKShape",
+        "printedName": "MapKit.MKShape"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKStandardMapConfiguration",
+        "printedName": "MapKit.MKStandardMapConfiguration"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKTypes",
+        "printedName": "MapKit.MKTypes"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.NSUserActivity_MKMapItem",
+        "printedName": "MapKit.NSUserActivity_MKMapItem"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKAnnotationView",
+        "printedName": "MapKit.MKAnnotationView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMapView",
+        "printedName": "MapKit.MKMapView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMarkerAnnotationView",
+        "printedName": "MapKit.MKMarkerAnnotationView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKPinAnnotationView",
+        "printedName": "MapKit.MKPinAnnotationView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKUserLocation",
+        "printedName": "MapKit.MKUserLocation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKUserLocationView",
+        "printedName": "MapKit.MKUserLocationView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKClusterAnnotation",
+        "printedName": "MapKit.MKClusterAnnotation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKCompassButton",
+        "printedName": "MapKit.MKCompassButton"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMapItemAnnotation",
+        "printedName": "MapKit.MKMapItemAnnotation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMultiPolygonRenderer",
+        "printedName": "MapKit.MKMultiPolygonRenderer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMultiPolylineRenderer",
+        "printedName": "MapKit.MKMultiPolylineRenderer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKGradientPolylineRenderer",
+        "printedName": "MapKit.MKGradientPolylineRenderer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKOverlayRenderer",
+        "printedName": "MapKit.MKOverlayRenderer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKOverlayPathRenderer",
+        "printedName": "MapKit.MKOverlayPathRenderer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKPolygonRenderer",
+        "printedName": "MapKit.MKPolygonRenderer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKPolylineRenderer",
+        "printedName": "MapKit.MKPolylineRenderer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKCircleRenderer",
+        "printedName": "MapKit.MKCircleRenderer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKTileOverlay",
+        "printedName": "MapKit.MKTileOverlay"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKTileOverlayRenderer",
+        "printedName": "MapKit.MKTileOverlayRenderer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMapCameraZoomRange",
+        "printedName": "MapKit.MKMapCameraZoomRange"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMapCameraBoundary",
+        "printedName": "MapKit.MKMapCameraBoundary"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKPitchControl",
+        "printedName": "MapKit.MKPitchControl"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKZoomControl",
+        "printedName": "MapKit.MKZoomControl"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKHybridMapConfiguration",
+        "printedName": "MapKit.MKHybridMapConfiguration"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKImageryMapConfiguration",
+        "printedName": "MapKit.MKImageryMapConfiguration"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKReverseGeocoder",
+        "printedName": "MapKit.MKReverseGeocoder"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKOverlayView",
+        "printedName": "MapKit.MKOverlayView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKOverlayPathView",
+        "printedName": "MapKit.MKOverlayPathView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKPolygonView",
+        "printedName": "MapKit.MKPolygonView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKPolylineView",
+        "printedName": "MapKit.MKPolylineView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKCircleView",
+        "printedName": "MapKit.MKCircleView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKScaleView",
+        "printedName": "MapKit.MKScaleView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKUserTrackingBarButtonItem",
+        "printedName": "MapKit.MKUserTrackingBarButtonItem"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKUserTrackingButton",
+        "printedName": "MapKit.MKUserTrackingButton"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKIconStyle",
+        "printedName": "MapKit.MKIconStyle"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMapFeatureAnnotation",
+        "printedName": "MapKit.MKMapFeatureAnnotation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKLookAroundScene",
+        "printedName": "MapKit.MKLookAroundScene"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKLookAroundSceneRequest",
+        "printedName": "MapKit.MKLookAroundSceneRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKLookAroundSnapshot",
+        "printedName": "MapKit.MKLookAroundSnapshot"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKLookAroundSnapshotOptions",
+        "printedName": "MapKit.MKLookAroundSnapshotOptions"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKLookAroundSnapshotter",
+        "printedName": "MapKit.MKLookAroundSnapshotter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKLookAroundViewController",
+        "printedName": "MapKit.MKLookAroundViewController"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKMapItemDetailViewController",
+        "printedName": "MapKit.MKMapItemDetailViewController"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit.MKSelectionAccessory",
+        "printedName": "MapKit.MKSelectionAccessory"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11MKErrorCodeLeV8_nsErrorSo7NSErrorCvg",
+                "moduleName": "MapKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC11MKErrorCodeLeV8_nsErrorSo7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC11MKErrorCodeLeV8_nsErrorSo7NSErrorCvp",
+            "moduleName": "MapKit",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC11MKErrorCodeLeV8_nsErrorSo7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MKError",
+                "printedName": "MapKit.MKError",
+                "usr": "c:@E@MKErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC11MKErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc",
+            "moduleName": "MapKit",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC11MKErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11MKErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "MapKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11MKErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC11MKErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "MapKit",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC11MKErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "MapKit.MKError.Code",
+                        "usr": "c:@E@MKErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "MapKit.MKError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt",
+                    "printedName": "Swift.UInt",
+                    "usr": "s:Su"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo11MKErrorCodeV8rawValueABSgSu_tcfc",
+                "moduleName": "MapKit",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So11MKErrorCodeV8rawValueABSgSu_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UInt",
+                        "printedName": "Swift.UInt",
+                        "usr": "s:Su"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11MKErrorCodeV8rawValueSuvg",
+                    "moduleName": "MapKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11MKErrorCodeV8rawValueSuvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt",
+                    "printedName": "Swift.UInt",
+                    "usr": "s:Su"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo11MKErrorCodeV8rawValueSuvp",
+                "moduleName": "MapKit",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So11MKErrorCodeV8rawValueSuvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt",
+                    "printedName": "Swift.UInt",
+                    "usr": "s:Su"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11MKErrorCodeV8RawValuea",
+                "moduleName": "MapKit",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So11MKErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "MKError",
+                    "printedName": "MapKit.MKError",
+                    "usr": "c:@E@MKErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "MapKit",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@MKErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "MapKit.MKError.Code",
+                        "usr": "c:@E@MKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "MapKit.MKError.Code",
+                            "usr": "c:@E@MKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "MapKit.MKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(MapKit.MKError.Code.Type) -> MapKit.MKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "MapKit",
+                "name": "unknown",
+                "printedName": "unknown",
+                "usr": "c:@E@MKErrorCode@MKErrorUnknown"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "MapKit.MKError.Code",
+                        "usr": "c:@E@MKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "MapKit.MKError.Code",
+                            "usr": "c:@E@MKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "MapKit.MKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(MapKit.MKError.Code.Type) -> MapKit.MKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "MapKit",
+                "name": "serverFailure",
+                "printedName": "serverFailure",
+                "usr": "c:@E@MKErrorCode@MKErrorServerFailure"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "MapKit.MKError.Code",
+                        "usr": "c:@E@MKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "MapKit.MKError.Code",
+                            "usr": "c:@E@MKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "MapKit.MKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(MapKit.MKError.Code.Type) -> MapKit.MKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "MapKit",
+                "name": "loadingThrottled",
+                "printedName": "loadingThrottled",
+                "usr": "c:@E@MKErrorCode@MKErrorLoadingThrottled"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "MapKit.MKError.Code",
+                        "usr": "c:@E@MKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "MapKit.MKError.Code",
+                            "usr": "c:@E@MKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "MapKit.MKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(MapKit.MKError.Code.Type) -> MapKit.MKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "MapKit",
+                "name": "placemarkNotFound",
+                "printedName": "placemarkNotFound",
+                "usr": "c:@E@MKErrorCode@MKErrorPlacemarkNotFound"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "MapKit.MKError.Code",
+                        "usr": "c:@E@MKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "MapKit.MKError.Code",
+                            "usr": "c:@E@MKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "MapKit.MKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(MapKit.MKError.Code.Type) -> MapKit.MKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "7.0",
+                "kind": "Var",
+                "moduleName": "MapKit",
+                "name": "directionsNotFound",
+                "printedName": "directionsNotFound",
+                "usr": "c:@E@MKErrorCode@MKErrorDirectionsNotFound"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "MapKit.MKError.Code",
+                        "usr": "c:@E@MKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "MapKit.MKError.Code",
+                            "usr": "c:@E@MKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "MapKit.MKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(MapKit.MKError.Code.Type) -> MapKit.MKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "13.0",
+                "kind": "Var",
+                "moduleName": "MapKit",
+                "name": "decodingFailed",
+                "printedName": "decodingFailed",
+                "usr": "c:@E@MKErrorCode@MKErrorDecodingFailed"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "UInt",
+                            "printedName": "Swift.UInt",
+                            "usr": "s:Su"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "MapKit.MKError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "UInt",
+            "intro_iOS": "3.0",
+            "kind": "TypeDecl",
+            "moduleName": "MapKit",
+            "name": "Code",
+            "objc_name": "MKErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@MKErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "MapKit.MKError.Code",
+                    "usr": "c:@E@MKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11MKErrorCodeLeV7unknownSoAAVvgZ",
+                "moduleName": "MapKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11MKErrorCodeLeV7unknownSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "MapKit.MKError.Code",
+                "usr": "c:@E@MKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "MapKit",
+            "name": "unknown",
+            "printedName": "unknown",
+            "static": true,
+            "usr": "c:@E@MKErrorCode@MKErrorUnknown"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "MapKit.MKError.Code",
+                    "usr": "c:@E@MKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11MKErrorCodeLeV13serverFailureSoAAVvgZ",
+                "moduleName": "MapKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11MKErrorCodeLeV13serverFailureSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "MapKit.MKError.Code",
+                "usr": "c:@E@MKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "MapKit",
+            "name": "serverFailure",
+            "printedName": "serverFailure",
+            "static": true,
+            "usr": "c:@E@MKErrorCode@MKErrorServerFailure"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "MapKit.MKError.Code",
+                    "usr": "c:@E@MKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11MKErrorCodeLeV16loadingThrottledSoAAVvgZ",
+                "moduleName": "MapKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11MKErrorCodeLeV16loadingThrottledSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "MapKit.MKError.Code",
+                "usr": "c:@E@MKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "MapKit",
+            "name": "loadingThrottled",
+            "printedName": "loadingThrottled",
+            "static": true,
+            "usr": "c:@E@MKErrorCode@MKErrorLoadingThrottled"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "MapKit.MKError.Code",
+                    "usr": "c:@E@MKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11MKErrorCodeLeV17placemarkNotFoundSoAAVvgZ",
+                "moduleName": "MapKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11MKErrorCodeLeV17placemarkNotFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "MapKit.MKError.Code",
+                "usr": "c:@E@MKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "MapKit",
+            "name": "placemarkNotFound",
+            "printedName": "placemarkNotFound",
+            "static": true,
+            "usr": "c:@E@MKErrorCode@MKErrorPlacemarkNotFound"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "MapKit.MKError.Code",
+                    "usr": "c:@E@MKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11MKErrorCodeLeV18directionsNotFoundSoAAVvgZ",
+                "moduleName": "MapKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11MKErrorCodeLeV18directionsNotFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "MapKit.MKError.Code",
+                "usr": "c:@E@MKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "7.0",
+            "kind": "Var",
+            "moduleName": "MapKit",
+            "name": "directionsNotFound",
+            "printedName": "directionsNotFound",
+            "static": true,
+            "usr": "c:@E@MKErrorCode@MKErrorDirectionsNotFound"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "MapKit.MKError.Code",
+                    "usr": "c:@E@MKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11MKErrorCodeLeV14decodingFailedSoAAVvgZ",
+                "moduleName": "MapKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11MKErrorCodeLeV14decodingFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "MapKit.MKError.Code",
+                "usr": "c:@E@MKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "13.0",
+            "kind": "Var",
+            "moduleName": "MapKit",
+            "name": "decodingFailed",
+            "printedName": "decodingFailed",
+            "static": true,
+            "usr": "c:@E@MKErrorCode@MKErrorDecodingFailed"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "3.0",
+        "kind": "TypeDecl",
+        "moduleName": "MapKit",
+        "name": "MKError",
+        "printedName": "MKError",
+        "usr": "c:@E@MKErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "GeoToolbox",
+        "printedName": "GeoToolbox"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "MapKit",
+        "printedName": "MapKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "UIKit",
+        "printedName": "UIKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "MapKit",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "TypeAlias",
+            "isFromExtension": true,
+            "kind": "TypeAlias",
+            "mangledName": "$sSo19MKMapItemIdentifierC6MapKitE8RawValuea",
+            "moduleName": "MapKit",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:So19MKMapItemIdentifierC6MapKitE8RawValuea"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "MapKit.MKMapItem.Identifier.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "18.0",
+        "isExternal": true,
+        "isFromExtension": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "MapKit",
+        "name": "Identifier",
+        "objc_name": "MKMapItemIdentifier",
+        "printedName": "Identifier",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)MKMapItemIdentifier"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Region",
+                        "printedName": "Foundation.Locale.Region",
+                        "usr": "s:10Foundation6LocaleV6RegionV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.Locale.Region?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo24MKAddressRepresentationsC6MapKitE6region10Foundation6LocaleV6RegionVSgvg",
+                "moduleName": "MapKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So24MKAddressRepresentationsC6MapKitE6region10Foundation6LocaleV6RegionVSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Region",
+                    "printedName": "Foundation.Locale.Region",
+                    "usr": "s:10Foundation6LocaleV6RegionV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Locale.Region?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "26.0",
+            "intro_watchOS": "26.0",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo24MKAddressRepresentationsC6MapKitE6region10Foundation6LocaleV6RegionVSgvp",
+            "moduleName": "MapKit",
+            "name": "region",
+            "printedName": "region",
+            "usr": "s:So24MKAddressRepresentationsC6MapKitE6region10Foundation6LocaleV6RegionVSgvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "26.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "MapKit",
+        "name": "MKAddressRepresentations",
+        "objc_name": "MKAddressRepresentations",
+        "printedName": "MKAddressRepresentations",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)MKAddressRepresentations"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CGFloat",
+                        "printedName": "CoreGraphics.CGFloat",
+                        "usr": "s:14CoreFoundation7CGFloatV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[CoreGraphics.CGFloat]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo26MKGradientPolylineRendererC6MapKitE9locationsSay12CoreGraphics7CGFloatVGvg",
+                "moduleName": "MapKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So26MKGradientPolylineRendererC6MapKitE9locationsSay14CoreFoundation7CGFloatVGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CGFloat",
+                    "printedName": "CoreGraphics.CGFloat",
+                    "usr": "s:14CoreFoundation7CGFloatV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[CoreGraphics.CGFloat]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo26MKGradientPolylineRendererC6MapKitE9locationsSay12CoreGraphics7CGFloatVGvp",
+            "moduleName": "MapKit",
+            "name": "locations",
+            "printedName": "locations",
+            "usr": "s:So26MKGradientPolylineRendererC6MapKitE9locationsSay14CoreFoundation7CGFloatVGvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UIColor",
+                    "printedName": "UIKit.UIColor",
+                    "usr": "c:objc(cs)UIColor"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[UIKit.UIColor]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CGFloat",
+                    "printedName": "CoreGraphics.CGFloat",
+                    "usr": "s:14CoreFoundation7CGFloatV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[CoreGraphics.CGFloat]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo26MKGradientPolylineRendererC6MapKitE9setColors_9locationsySaySo7UIColorCG_Say12CoreGraphics7CGFloatVGtF",
+            "moduleName": "MapKit",
+            "name": "setColors",
+            "printedName": "setColors(_:locations:)",
+            "usr": "s:So26MKGradientPolylineRendererC6MapKitE9setColors_9locationsySaySo7UIColorCG_Say14CoreFoundation7CGFloatVGtF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "14.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "MapKit",
+        "name": "MKGradientPolylineRenderer",
+        "objc_name": "MKGradientPolylineRenderer",
+        "printedName": "MKGradientPolylineRenderer",
+        "superclassNames": [
+          "MapKit.MKPolylineRenderer",
+          "MapKit.MKOverlayPathRenderer",
+          "MapKit.MKOverlayRenderer",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)MKPolylineRenderer",
+        "usr": "c:objc(cs)MKGradientPolylineRenderer"
+      },
+      {
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declKind": "Struct",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "moduleName": "MapKit",
+        "name": "MKCoordinateSpan",
+        "printedName": "MKCoordinateSpan",
+        "usr": "c:@SA@MKCoordinateSpan"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MapItemDetailPresentationStyle",
+                "printedName": "MapKit.MKSelectionAccessory.MapItemDetailPresentationStyle",
+                "usr": "c:objc(cs)MKMapItemDetailSelectionAccessoryPresentationStyle"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UIViewController",
+                    "printedName": "UIKit.UIViewController",
+                    "usr": "c:objc(cs)UIViewController"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "UIKit.UIViewController?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo50MKMapItemDetailSelectionAccessoryPresentationStyleC6MapKitE9automatic26presentationViewControllerABSo06UIViewM0CSg_tFZ",
+            "moduleName": "MapKit",
+            "name": "automatic",
+            "printedName": "automatic(presentationViewController:)",
+            "static": true,
+            "usr": "s:So50MKMapItemDetailSelectionAccessoryPresentationStyleC6MapKitE9automatic26presentationViewControllerABSo06UIViewM0CSg_tFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MapItemDetailPresentationStyle",
+                "printedName": "MapKit.MKSelectionAccessory.MapItemDetailPresentationStyle",
+                "usr": "c:objc(cs)MKMapItemDetailSelectionAccessoryPresentationStyle"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "CalloutStyle",
+                "printedName": "MapKit.MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle",
+                "usr": "c:@E@MKMapItemDetailSelectionAccessoryCalloutStyle"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo50MKMapItemDetailSelectionAccessoryPresentationStyleC6MapKitE7calloutyABSo0abcde7CalloutG0VFZ",
+            "moduleName": "MapKit",
+            "name": "callout",
+            "printedName": "callout(_:)",
+            "static": true,
+            "usr": "s:So50MKMapItemDetailSelectionAccessoryPresentationStyleC6MapKitE7calloutyABSo0abcde7CalloutG0VFZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "18.0",
+        "isExternal": true,
+        "isFromExtension": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "MapKit",
+        "name": "MapItemDetailPresentationStyle",
+        "objc_name": "MKMapItemDetailSelectionAccessoryPresentationStyle",
+        "printedName": "MapItemDetailPresentationStyle",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)MKMapItemDetailSelectionAccessoryPresentationStyle"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PlaceDescriptor",
+                    "printedName": "GeoToolbox.PlaceDescriptor",
+                    "usr": "s:10GeoToolbox15PlaceDescriptorV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "GeoToolbox.PlaceDescriptor?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "MKMapItem",
+                "printedName": "MapKit.MKMapItem",
+                "usr": "c:objc(cs)MKMapItem"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "26.0",
+            "intro_watchOS": "26.0",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$s10GeoToolbox15PlaceDescriptorV6MapKitE4itemACSgSo9MKMapItemC_tcfc",
+            "moduleName": "MapKit",
+            "name": "init",
+            "printedName": "init(item:)",
+            "usr": "s:10GeoToolbox15PlaceDescriptorV6MapKitE4itemACSgSo9MKMapItemC_tcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "intro_tvOS": "26.0",
+        "intro_watchOS": "26.0",
+        "isExternal": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s10GeoToolbox15PlaceDescriptorV",
+        "moduleName": "GeoToolbox",
+        "name": "PlaceDescriptor",
+        "printedName": "PlaceDescriptor",
+        "usr": "s:10GeoToolbox15PlaceDescriptorV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CGFloat",
+                    "printedName": "CoreGraphics.CGFloat",
+                    "usr": "s:14CoreFoundation7CGFloatV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[CoreGraphics.CGFloat]",
+                "usr": "s:Sa"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "IndexSet",
+                "printedName": "Foundation.IndexSet",
+                "usr": "s:10Foundation8IndexSetV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo12MKMultiPointC6MapKitE9locations2atSay12CoreGraphics7CGFloatVG10Foundation8IndexSetV_tF",
+            "moduleName": "MapKit",
+            "name": "locations",
+            "printedName": "locations(at:)",
+            "usr": "s:So12MKMultiPointC6MapKitE9locations2atSay14CoreFoundation7CGFloatVG0H08IndexSetV_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "MKAnnotation",
+            "printedName": "MKAnnotation",
+            "usr": "c:objc(pl)MKAnnotation"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "MKGeoJSONObject",
+            "printedName": "MKGeoJSONObject",
+            "usr": "c:objc(pl)MKGeoJSONObject"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "4.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "MapKit",
+        "name": "MKMultiPoint",
+        "objc_name": "MKMultiPoint",
+        "printedName": "MKMultiPoint",
+        "superclassNames": [
+          "MapKit.MKShape",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)MKShape",
+        "usr": "c:objc(cs)MKMultiPoint"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ResultType",
+                "printedName": "MapKit.MKLocalSearch.ResultType",
+                "usr": "c:@E@MKLocalSearchResultType"
+              }
+            ],
+            "declKind": "TypeAlias",
+            "isFromExtension": true,
+            "kind": "TypeAlias",
+            "mangledName": "$sSo20MKLocalSearchRequestC6MapKitE10ResultTypea",
+            "moduleName": "MapKit",
+            "name": "ResultType",
+            "printedName": "ResultType",
+            "usr": "s:So20MKLocalSearchRequestC6MapKitE10ResultTypea"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "6.1",
+        "isExternal": true,
+        "isFromExtension": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "MapKit",
+        "name": "Request",
+        "objc_name": "MKLocalSearchRequest",
+        "printedName": "Request",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)MKLocalSearchRequest"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "MKMapItemRequest",
+                "printedName": "MapKit.MKMapItemRequest",
+                "usr": "c:objc(cs)MKMapItemRequest"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PlaceDescriptor",
+                "printedName": "GeoToolbox.PlaceDescriptor",
+                "usr": "s:10GeoToolbox15PlaceDescriptorV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Convenience",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "26.0",
+            "intro_watchOS": "26.0",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$sSo16MKMapItemRequestC6MapKitE15placeDescriptorAB10GeoToolbox05PlaceG0V_tcfc",
+            "moduleName": "MapKit",
+            "name": "init",
+            "printedName": "init(placeDescriptor:)",
+            "usr": "s:So16MKMapItemRequestC6MapKitE15placeDescriptorAB10GeoToolbox05PlaceG0V_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PlaceDescriptor",
+                        "printedName": "GeoToolbox.PlaceDescriptor",
+                        "usr": "s:10GeoToolbox15PlaceDescriptorV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "GeoToolbox.PlaceDescriptor?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo16MKMapItemRequestC6MapKitE15placeDescriptor10GeoToolbox05PlaceG0VSgvg",
+                "moduleName": "MapKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So16MKMapItemRequestC6MapKitE15placeDescriptor10GeoToolbox05PlaceG0VSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PlaceDescriptor",
+                    "printedName": "GeoToolbox.PlaceDescriptor",
+                    "usr": "s:10GeoToolbox15PlaceDescriptorV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "GeoToolbox.PlaceDescriptor?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Var",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "26.0",
+            "intro_watchOS": "26.0",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo16MKMapItemRequestC6MapKitE15placeDescriptor10GeoToolbox05PlaceG0VSgvp",
+            "moduleName": "MapKit",
+            "name": "placeDescriptor",
+            "printedName": "placeDescriptor",
+            "usr": "s:So16MKMapItemRequestC6MapKitE15placeDescriptor10GeoToolbox05PlaceG0VSgvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "16.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "MapKit",
+        "name": "MKMapItemRequest",
+        "objc_name": "MKMapItemRequest",
+        "printedName": "MKMapItemRequest",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)MKMapItemRequest"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "MapKit",
+    "printedName": "MapKit"
+  }
+}

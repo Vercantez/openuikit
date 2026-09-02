@@ -1,0 +1,1154 @@
+precise	kind	title	path	declaration
+c:@E@MKAddressFilterOption	swift.struct	MKAddressFilter.Options	MKAddressFilter.Options	struct Options
+c:@E@MKAddressFilterOption@MKAddressFilterOptionAdministrativeArea	swift.type.property	administrativeArea	MKAddressFilter.Options.administrativeArea	static var administrativeArea: MKAddressFilter.Options { get }
+c:@E@MKAddressFilterOption@MKAddressFilterOptionCountry	swift.type.property	country	MKAddressFilter.Options.country	static var country: MKAddressFilter.Options { get }
+c:@E@MKAddressFilterOption@MKAddressFilterOptionLocality	swift.type.property	locality	MKAddressFilter.Options.locality	static var locality: MKAddressFilter.Options { get }
+c:@E@MKAddressFilterOption@MKAddressFilterOptionPostalCode	swift.type.property	postalCode	MKAddressFilter.Options.postalCode	static var postalCode: MKAddressFilter.Options { get }
+c:@E@MKAddressFilterOption@MKAddressFilterOptionSubAdministrativeArea	swift.type.property	subAdministrativeArea	MKAddressFilter.Options.subAdministrativeArea	static var subAdministrativeArea: MKAddressFilter.Options { get }
+c:@E@MKAddressFilterOption@MKAddressFilterOptionSubLocality	swift.type.property	subLocality	MKAddressFilter.Options.subLocality	static var subLocality: MKAddressFilter.Options { get }
+c:@E@MKAddressRepresentationsContextStyle	swift.enum	MKAddressRepresentations.ContextStyle	MKAddressRepresentations.ContextStyle	enum ContextStyle
+c:@E@MKAddressRepresentationsContextStyle@MKAddressRepresentationsContextStyleAutomatic	swift.enum.case	MKAddressRepresentations.ContextStyle.automatic	MKAddressRepresentations.ContextStyle.automatic	case automatic
+c:@E@MKAddressRepresentationsContextStyle@MKAddressRepresentationsContextStyleFull	swift.enum.case	MKAddressRepresentations.ContextStyle.full	MKAddressRepresentations.ContextStyle.full	case full
+c:@E@MKAddressRepresentationsContextStyle@MKAddressRepresentationsContextStyleShort	swift.enum.case	MKAddressRepresentations.ContextStyle.short	MKAddressRepresentations.ContextStyle.short	case short
+c:@E@MKAnnotationViewCollisionMode	swift.enum	MKAnnotationView.CollisionMode	MKAnnotationView.CollisionMode	enum CollisionMode
+c:@E@MKAnnotationViewCollisionMode@MKAnnotationViewCollisionModeCircle	swift.enum.case	MKAnnotationView.CollisionMode.circle	MKAnnotationView.CollisionMode.circle	case circle
+c:@E@MKAnnotationViewCollisionMode@MKAnnotationViewCollisionModeNone	swift.enum.case	MKAnnotationView.CollisionMode.none	MKAnnotationView.CollisionMode.none	case none
+c:@E@MKAnnotationViewCollisionMode@MKAnnotationViewCollisionModeRectangle	swift.enum.case	MKAnnotationView.CollisionMode.rectangle	MKAnnotationView.CollisionMode.rectangle	case rectangle
+c:@E@MKAnnotationViewDragState	swift.enum	MKAnnotationView.DragState	MKAnnotationView.DragState	enum DragState
+c:@E@MKAnnotationViewDragState@MKAnnotationViewDragStateCanceling	swift.enum.case	MKAnnotationView.DragState.canceling	MKAnnotationView.DragState.canceling	case canceling
+c:@E@MKAnnotationViewDragState@MKAnnotationViewDragStateDragging	swift.enum.case	MKAnnotationView.DragState.dragging	MKAnnotationView.DragState.dragging	case dragging
+c:@E@MKAnnotationViewDragState@MKAnnotationViewDragStateEnding	swift.enum.case	MKAnnotationView.DragState.ending	MKAnnotationView.DragState.ending	case ending
+c:@E@MKAnnotationViewDragState@MKAnnotationViewDragStateNone	swift.enum.case	MKAnnotationView.DragState.none	MKAnnotationView.DragState.none	case none
+c:@E@MKAnnotationViewDragState@MKAnnotationViewDragStateStarting	swift.enum.case	MKAnnotationView.DragState.starting	MKAnnotationView.DragState.starting	case starting
+c:@E@MKDirectionsRoutePreference	swift.enum	MKDirections.RoutePreference	MKDirections.RoutePreference	enum RoutePreference
+c:@E@MKDirectionsRoutePreference@MKDirectionsRoutePreferenceAny	swift.enum.case	MKDirections.RoutePreference.any	MKDirections.RoutePreference.any	case any
+c:@E@MKDirectionsRoutePreference@MKDirectionsRoutePreferenceAvoid	swift.enum.case	MKDirections.RoutePreference.avoid	MKDirections.RoutePreference.avoid	case avoid
+c:@E@MKDirectionsTransportType	swift.struct	MKDirectionsTransportType	MKDirectionsTransportType	struct MKDirectionsTransportType
+c:@E@MKDirectionsTransportType@MKDirectionsTransportTypeAny	swift.type.property	any	MKDirectionsTransportType.any	static var any: MKDirectionsTransportType { get }
+c:@E@MKDirectionsTransportType@MKDirectionsTransportTypeAutomobile	swift.type.property	automobile	MKDirectionsTransportType.automobile	static var automobile: MKDirectionsTransportType { get }
+c:@E@MKDirectionsTransportType@MKDirectionsTransportTypeCycling	swift.type.property	cycling	MKDirectionsTransportType.cycling	static var cycling: MKDirectionsTransportType { get }
+c:@E@MKDirectionsTransportType@MKDirectionsTransportTypeTransit	swift.type.property	transit	MKDirectionsTransportType.transit	static var transit: MKDirectionsTransportType { get }
+c:@E@MKDirectionsTransportType@MKDirectionsTransportTypeWalking	swift.type.property	walking	MKDirectionsTransportType.walking	static var walking: MKDirectionsTransportType { get }
+c:@E@MKDistanceFormatterUnitStyle	swift.enum	MKDistanceFormatter.DistanceUnitStyle	MKDistanceFormatter.DistanceUnitStyle	enum DistanceUnitStyle
+c:@E@MKDistanceFormatterUnitStyle@MKDistanceFormatterUnitStyleAbbreviated	swift.enum.case	MKDistanceFormatter.DistanceUnitStyle.abbreviated	MKDistanceFormatter.DistanceUnitStyle.abbreviated	case abbreviated
+c:@E@MKDistanceFormatterUnitStyle@MKDistanceFormatterUnitStyleDefault	swift.enum.case	MKDistanceFormatter.DistanceUnitStyle.default	MKDistanceFormatter.DistanceUnitStyle.default	case `default`
+c:@E@MKDistanceFormatterUnitStyle@MKDistanceFormatterUnitStyleFull	swift.enum.case	MKDistanceFormatter.DistanceUnitStyle.full	MKDistanceFormatter.DistanceUnitStyle.full	case full
+c:@E@MKDistanceFormatterUnits	swift.enum	MKDistanceFormatter.Units	MKDistanceFormatter.Units	enum Units
+c:@E@MKDistanceFormatterUnits@MKDistanceFormatterUnitsDefault	swift.enum.case	MKDistanceFormatter.Units.default	MKDistanceFormatter.Units.default	case `default`
+c:@E@MKDistanceFormatterUnits@MKDistanceFormatterUnitsImperial	swift.enum.case	MKDistanceFormatter.Units.imperial	MKDistanceFormatter.Units.imperial	case imperial
+c:@E@MKDistanceFormatterUnits@MKDistanceFormatterUnitsImperialWithYards	swift.enum.case	MKDistanceFormatter.Units.imperialWithYards	MKDistanceFormatter.Units.imperialWithYards	case imperialWithYards
+c:@E@MKDistanceFormatterUnits@MKDistanceFormatterUnitsMetric	swift.enum.case	MKDistanceFormatter.Units.metric	MKDistanceFormatter.Units.metric	case metric
+c:@E@MKErrorCode	swift.enum	MKError.Code	MKError.Code	enum Code
+c:@E@MKErrorCode@MKErrorDecodingFailed	swift.enum.case	MKError.Code.decodingFailed	MKError.Code.decodingFailed	case decodingFailed
+c:@E@MKErrorCode@MKErrorDirectionsNotFound	swift.enum.case	MKError.Code.directionsNotFound	MKError.Code.directionsNotFound	case directionsNotFound
+c:@E@MKErrorCode@MKErrorLoadingThrottled	swift.enum.case	MKError.Code.loadingThrottled	MKError.Code.loadingThrottled	case loadingThrottled
+c:@E@MKErrorCode@MKErrorPlacemarkNotFound	swift.enum.case	MKError.Code.placemarkNotFound	MKError.Code.placemarkNotFound	case placemarkNotFound
+c:@E@MKErrorCode@MKErrorServerFailure	swift.enum.case	MKError.Code.serverFailure	MKError.Code.serverFailure	case serverFailure
+c:@E@MKErrorCode@MKErrorUnknown	swift.enum.case	MKError.Code.unknown	MKError.Code.unknown	case unknown
+c:@E@MKFeatureVisibility	swift.enum	MKFeatureVisibility	MKFeatureVisibility	enum MKFeatureVisibility
+c:@E@MKFeatureVisibility@MKFeatureVisibilityAdaptive	swift.enum.case	MKFeatureVisibility.adaptive	MKFeatureVisibility.adaptive	case adaptive
+c:@E@MKFeatureVisibility@MKFeatureVisibilityHidden	swift.enum.case	MKFeatureVisibility.hidden	MKFeatureVisibility.hidden	case hidden
+c:@E@MKFeatureVisibility@MKFeatureVisibilityVisible	swift.enum.case	MKFeatureVisibility.visible	MKFeatureVisibility.visible	case visible
+c:@E@MKLocalSearchCompleterResultType	swift.struct	MKLocalSearchCompleter.ResultType	MKLocalSearchCompleter.ResultType	struct ResultType
+c:@E@MKLocalSearchCompleterResultType@MKLocalSearchCompleterResultTypeAddress	swift.type.property	address	MKLocalSearchCompleter.ResultType.address	static var address: MKLocalSearchCompleter.ResultType { get }
+c:@E@MKLocalSearchCompleterResultType@MKLocalSearchCompleterResultTypePhysicalFeature	swift.type.property	physicalFeature	MKLocalSearchCompleter.ResultType.physicalFeature	static var physicalFeature: MKLocalSearchCompleter.ResultType { get }
+c:@E@MKLocalSearchCompleterResultType@MKLocalSearchCompleterResultTypePointOfInterest	swift.type.property	pointOfInterest	MKLocalSearchCompleter.ResultType.pointOfInterest	static var pointOfInterest: MKLocalSearchCompleter.ResultType { get }
+c:@E@MKLocalSearchCompleterResultType@MKLocalSearchCompleterResultTypeQuery	swift.type.property	query	MKLocalSearchCompleter.ResultType.query	static var query: MKLocalSearchCompleter.ResultType { get }
+c:@E@MKLocalSearchRegionPriority	swift.enum	MKLocalSearchRegionPriority	MKLocalSearchRegionPriority	enum MKLocalSearchRegionPriority
+c:@E@MKLocalSearchRegionPriority@MKLocalSearchRegionPriorityDefault	swift.enum.case	MKLocalSearchRegionPriority.default	MKLocalSearchRegionPriority.default	case `default`
+c:@E@MKLocalSearchRegionPriority@MKLocalSearchRegionPriorityRequired	swift.enum.case	MKLocalSearchRegionPriority.required	MKLocalSearchRegionPriority.required	case required
+c:@E@MKLocalSearchResultType	swift.struct	MKLocalSearch.ResultType	MKLocalSearch.ResultType	struct ResultType
+c:@E@MKLocalSearchResultType@MKLocalSearchResultTypeAddress	swift.type.property	address	MKLocalSearch.ResultType.address	static var address: MKLocalSearch.ResultType { get }
+c:@E@MKLocalSearchResultType@MKLocalSearchResultTypePhysicalFeature	swift.type.property	physicalFeature	MKLocalSearch.ResultType.physicalFeature	static var physicalFeature: MKLocalSearch.ResultType { get }
+c:@E@MKLocalSearchResultType@MKLocalSearchResultTypePointOfInterest	swift.type.property	pointOfInterest	MKLocalSearch.ResultType.pointOfInterest	static var pointOfInterest: MKLocalSearch.ResultType { get }
+c:@E@MKLookAroundBadgePosition	swift.enum	MKLookAroundBadgePosition	MKLookAroundBadgePosition	enum MKLookAroundBadgePosition
+c:@E@MKLookAroundBadgePosition@MKLookAroundBadgePositionBottomTrailing	swift.enum.case	MKLookAroundBadgePosition.bottomTrailing	MKLookAroundBadgePosition.bottomTrailing	case bottomTrailing
+c:@E@MKLookAroundBadgePosition@MKLookAroundBadgePositionTopLeading	swift.enum.case	MKLookAroundBadgePosition.topLeading	MKLookAroundBadgePosition.topLeading	case topLeading
+c:@E@MKLookAroundBadgePosition@MKLookAroundBadgePositionTopTrailing	swift.enum.case	MKLookAroundBadgePosition.topTrailing	MKLookAroundBadgePosition.topTrailing	case topTrailing
+c:@E@MKMapElevationStyle	swift.enum	MKMapConfiguration.ElevationStyle	MKMapConfiguration.ElevationStyle	enum ElevationStyle
+c:@E@MKMapElevationStyle@MKMapElevationStyleFlat	swift.enum.case	MKMapConfiguration.ElevationStyle.flat	MKMapConfiguration.ElevationStyle.flat	case flat
+c:@E@MKMapElevationStyle@MKMapElevationStyleRealistic	swift.enum.case	MKMapConfiguration.ElevationStyle.realistic	MKMapConfiguration.ElevationStyle.realistic	case realistic
+c:@E@MKMapFeatureOptions	swift.struct	MKMapFeatureOptions	MKMapFeatureOptions	struct MKMapFeatureOptions
+c:@E@MKMapFeatureOptions@MKMapFeatureOptionPhysicalFeatures	swift.type.property	physicalFeatures	MKMapFeatureOptions.physicalFeatures	static var physicalFeatures: MKMapFeatureOptions { get }
+c:@E@MKMapFeatureOptions@MKMapFeatureOptionPointsOfInterest	swift.type.property	pointsOfInterest	MKMapFeatureOptions.pointsOfInterest	static var pointsOfInterest: MKMapFeatureOptions { get }
+c:@E@MKMapFeatureOptions@MKMapFeatureOptionTerritories	swift.type.property	territories	MKMapFeatureOptions.territories	static var territories: MKMapFeatureOptions { get }
+c:@E@MKMapFeatureType	swift.enum	MKMapFeatureAnnotation.FeatureType	MKMapFeatureAnnotation.FeatureType	enum FeatureType
+c:@E@MKMapFeatureType@MKMapFeatureTypePhysicalFeature	swift.enum.case	MKMapFeatureAnnotation.FeatureType.physicalFeature	MKMapFeatureAnnotation.FeatureType.physicalFeature	case physicalFeature
+c:@E@MKMapFeatureType@MKMapFeatureTypePointOfInterest	swift.enum.case	MKMapFeatureAnnotation.FeatureType.pointOfInterest	MKMapFeatureAnnotation.FeatureType.pointOfInterest	case pointOfInterest
+c:@E@MKMapFeatureType@MKMapFeatureTypeTerritory	swift.enum.case	MKMapFeatureAnnotation.FeatureType.territory	MKMapFeatureAnnotation.FeatureType.territory	case territory
+c:@E@MKMapItemDetailSelectionAccessoryCalloutStyle	swift.enum	MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle	MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle	enum CalloutStyle
+c:@E@MKMapItemDetailSelectionAccessoryCalloutStyle@MKMapItemDetailSelectionAccessoryCalloutStyleAutomatic	swift.enum.case	MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle.automatic	MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle.automatic	case automatic
+c:@E@MKMapItemDetailSelectionAccessoryCalloutStyle@MKMapItemDetailSelectionAccessoryCalloutStyleCompact	swift.enum.case	MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle.compact	MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle.compact	case compact
+c:@E@MKMapItemDetailSelectionAccessoryCalloutStyle@MKMapItemDetailSelectionAccessoryCalloutStyleFull	swift.enum.case	MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle.full	MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle.full	case full
+c:@E@MKMapType	swift.enum	MKMapType	MKMapType	enum MKMapType
+c:@E@MKMapType@MKMapTypeHybrid	swift.enum.case	MKMapType.hybrid	MKMapType.hybrid	case hybrid
+c:@E@MKMapType@MKMapTypeHybridFlyover	swift.enum.case	MKMapType.hybridFlyover	MKMapType.hybridFlyover	case hybridFlyover
+c:@E@MKMapType@MKMapTypeMutedStandard	swift.enum.case	MKMapType.mutedStandard	MKMapType.mutedStandard	case mutedStandard
+c:@E@MKMapType@MKMapTypeSatellite	swift.enum.case	MKMapType.satellite	MKMapType.satellite	case satellite
+c:@E@MKMapType@MKMapTypeSatelliteFlyover	swift.enum.case	MKMapType.satelliteFlyover	MKMapType.satelliteFlyover	case satelliteFlyover
+c:@E@MKMapType@MKMapTypeStandard	swift.enum.case	MKMapType.standard	MKMapType.standard	case standard
+c:@E@MKOverlayLevel	swift.enum	MKOverlayLevel	MKOverlayLevel	enum MKOverlayLevel
+c:@E@MKOverlayLevel@MKOverlayLevelAboveLabels	swift.enum.case	MKOverlayLevel.aboveLabels	MKOverlayLevel.aboveLabels	case aboveLabels
+c:@E@MKOverlayLevel@MKOverlayLevelAboveRoads	swift.enum.case	MKOverlayLevel.aboveRoads	MKOverlayLevel.aboveRoads	case aboveRoads
+c:@E@MKPinAnnotationColor	swift.enum	MKPinAnnotationColor	MKPinAnnotationColor	enum MKPinAnnotationColor
+c:@E@MKPinAnnotationColor@MKPinAnnotationColorGreen	swift.enum.case	MKPinAnnotationColor.green	MKPinAnnotationColor.green	case green
+c:@E@MKPinAnnotationColor@MKPinAnnotationColorPurple	swift.enum.case	MKPinAnnotationColor.purple	MKPinAnnotationColor.purple	case purple
+c:@E@MKPinAnnotationColor@MKPinAnnotationColorRed	swift.enum.case	MKPinAnnotationColor.red	MKPinAnnotationColor.red	case red
+c:@E@MKScaleViewAlignment	swift.enum	MKScaleView.Alignment	MKScaleView.Alignment	enum Alignment
+c:@E@MKScaleViewAlignment@MKScaleViewAlignmentCenter	swift.enum.case	MKScaleView.Alignment.center	MKScaleView.Alignment.center	case center
+c:@E@MKScaleViewAlignment@MKScaleViewAlignmentLeading	swift.enum.case	MKScaleView.Alignment.leading	MKScaleView.Alignment.leading	case leading
+c:@E@MKScaleViewAlignment@MKScaleViewAlignmentTrailing	swift.enum.case	MKScaleView.Alignment.trailing	MKScaleView.Alignment.trailing	case trailing
+c:@E@MKSearchCompletionFilterType	swift.enum	MKLocalSearchCompleter.FilterType	MKLocalSearchCompleter.FilterType	enum FilterType
+c:@E@MKSearchCompletionFilterType@MKSearchCompletionFilterTypeLocationsAndQueries	swift.enum.case	MKLocalSearchCompleter.FilterType.locationsAndQueries	MKLocalSearchCompleter.FilterType.locationsAndQueries	case locationsAndQueries
+c:@E@MKSearchCompletionFilterType@MKSearchCompletionFilterTypeLocationsOnly	swift.enum.case	MKLocalSearchCompleter.FilterType.locationsOnly	MKLocalSearchCompleter.FilterType.locationsOnly	case locationsOnly
+c:@E@MKStandardMapEmphasisStyle	swift.enum	MKStandardMapConfiguration.EmphasisStyle	MKStandardMapConfiguration.EmphasisStyle	enum EmphasisStyle
+c:@E@MKStandardMapEmphasisStyle@MKStandardMapEmphasisStyleDefault	swift.enum.case	MKStandardMapConfiguration.EmphasisStyle.default	MKStandardMapConfiguration.EmphasisStyle.default	case `default`
+c:@E@MKStandardMapEmphasisStyle@MKStandardMapEmphasisStyleMuted	swift.enum.case	MKStandardMapConfiguration.EmphasisStyle.muted	MKStandardMapConfiguration.EmphasisStyle.muted	case muted
+c:@E@MKUserTrackingMode	swift.enum	MKUserTrackingMode	MKUserTrackingMode	enum MKUserTrackingMode
+c:@E@MKUserTrackingMode@MKUserTrackingModeFollow	swift.enum.case	MKUserTrackingMode.follow	MKUserTrackingMode.follow	case follow
+c:@E@MKUserTrackingMode@MKUserTrackingModeFollowWithHeading	swift.enum.case	MKUserTrackingMode.followWithHeading	MKUserTrackingMode.followWithHeading	case followWithHeading
+c:@E@MKUserTrackingMode@MKUserTrackingModeNone	swift.enum.case	MKUserTrackingMode.none	MKUserTrackingMode.none	case none
+c:@F@MKCoordinateForMapPoint	swift.property	coordinate	MKMapPoint.coordinate	var coordinate: CLLocationCoordinate2D { get }
+c:@F@MKCoordinateRegionForMapRect	swift.init	init(_:)	MKCoordinateRegion.init(_:)	init(_ rect: MKMapRect)
+c:@F@MKCoordinateRegionMakeWithDistance	swift.init	init(center:latitudinalMeters:longitudinalMeters:)	MKCoordinateRegion.init(center:latitudinalMeters:longitudinalMeters:)	init(center centerCoordinate: CLLocationCoordinate2D, latitudinalMeters: CLLocationDistance, longitudinalMeters: CLLocationDistance)
+c:@F@MKMapPointEqualToPoint	swift.func	MKMapPointEqualToPoint(_:_:)	MKMapPointEqualToPoint(_:_:)	func MKMapPointEqualToPoint(_ point1: MKMapPoint, _ point2: MKMapPoint) -> Bool
+c:@F@MKMapPointForCoordinate	swift.init	init(_:)	MKMapPoint.init(_:)	init(_ coordinate: CLLocationCoordinate2D)
+c:@F@MKMapPointsPerMeterAtLatitude	swift.func	MKMapPointsPerMeterAtLatitude(_:)	MKMapPointsPerMeterAtLatitude(_:)	func MKMapPointsPerMeterAtLatitude(_ latitude: CLLocationDegrees) -> Double
+c:@F@MKMapRectContainsPoint	swift.method	contains(_:)	MKMapRect.contains(_:)	func contains(_ point: MKMapPoint) -> Bool
+c:@F@MKMapRectContainsRect	swift.method	contains(_:)	MKMapRect.contains(_:)	func contains(_ rect2: MKMapRect) -> Bool
+c:@F@MKMapRectDivide	swift.func	MKMapRectDivide(_:_:_:_:_:)	MKMapRectDivide(_:_:_:_:_:)	func MKMapRectDivide(_ rect: MKMapRect, _ slice: UnsafeMutablePointer<MKMapRect>, _ remainder: UnsafeMutablePointer<MKMapRect>, _ amount: Double, _ edge: CGRectEdge)
+c:@F@MKMapRectEqualToRect	swift.func	MKMapRectEqualToRect(_:_:)	MKMapRectEqualToRect(_:_:)	func MKMapRectEqualToRect(_ rect1: MKMapRect, _ rect2: MKMapRect) -> Bool
+c:@F@MKMapRectGetHeight	swift.property	height	MKMapRect.height	var height: Double { get }
+c:@F@MKMapRectGetMaxX	swift.property	maxX	MKMapRect.maxX	var maxX: Double { get }
+c:@F@MKMapRectGetMaxY	swift.property	maxY	MKMapRect.maxY	var maxY: Double { get }
+c:@F@MKMapRectGetMidX	swift.property	midX	MKMapRect.midX	var midX: Double { get }
+c:@F@MKMapRectGetMidY	swift.property	midY	MKMapRect.midY	var midY: Double { get }
+c:@F@MKMapRectGetMinX	swift.property	minX	MKMapRect.minX	var minX: Double { get }
+c:@F@MKMapRectGetMinY	swift.property	minY	MKMapRect.minY	var minY: Double { get }
+c:@F@MKMapRectGetWidth	swift.property	width	MKMapRect.width	var width: Double { get }
+c:@F@MKMapRectInset	swift.method	insetBy(dx:dy:)	MKMapRect.insetBy(dx:dy:)	func insetBy(dx: Double, dy: Double) -> MKMapRect
+c:@F@MKMapRectIntersection	swift.method	intersection(_:)	MKMapRect.intersection(_:)	func intersection(_ rect2: MKMapRect) -> MKMapRect
+c:@F@MKMapRectIntersectsRect	swift.method	intersects(_:)	MKMapRect.intersects(_:)	func intersects(_ rect2: MKMapRect) -> Bool
+c:@F@MKMapRectIsEmpty	swift.property	isEmpty	MKMapRect.isEmpty	var isEmpty: Bool { get }
+c:@F@MKMapRectIsNull	swift.property	isNull	MKMapRect.isNull	var isNull: Bool { get }
+c:@F@MKMapRectMake	swift.init	init(x:y:width:height:)	MKMapRect.init(x:y:width:height:)	init(x: Double, y: Double, width: Double, height: Double)
+c:@F@MKMapRectOffset	swift.method	offsetBy(dx:dy:)	MKMapRect.offsetBy(dx:dy:)	func offsetBy(dx: Double, dy: Double) -> MKMapRect
+c:@F@MKMapRectRemainder	swift.property	remainder	MKMapRect.remainder	var remainder: MKMapRect { get }
+c:@F@MKMapRectSpans180thMeridian	swift.property	spans180thMeridian	MKMapRect.spans180thMeridian	var spans180thMeridian: Bool { get }
+c:@F@MKMapRectUnion	swift.method	union(_:)	MKMapRect.union(_:)	func union(_ rect2: MKMapRect) -> MKMapRect
+c:@F@MKMapSizeEqualToSize	swift.func	MKMapSizeEqualToSize(_:_:)	MKMapSizeEqualToSize(_:_:)	func MKMapSizeEqualToSize(_ size1: MKMapSize, _ size2: MKMapSize) -> Bool
+c:@F@MKMetersBetweenMapPoints	swift.method	distance(to:)	MKMapPoint.distance(to:)	func distance(to b: MKMapPoint) -> CLLocationDistance
+c:@F@MKMetersPerMapPointAtLatitude	swift.func	MKMetersPerMapPointAtLatitude(_:)	MKMetersPerMapPointAtLatitude(_:)	func MKMetersPerMapPointAtLatitude(_ latitude: CLLocationDegrees) -> CLLocationDistance
+c:@F@MKRoadWidthAtZoomScale	swift.func	MKRoadWidthAtZoomScale(_:)	MKRoadWidthAtZoomScale(_:)	func MKRoadWidthAtZoomScale(_ zoomScale: MKZoomScale) -> CGFloat
+c:@F@MKStringFromMapPoint	swift.func	MKStringFromMapPoint(_:)	MKStringFromMapPoint(_:)	func MKStringFromMapPoint(_ point: MKMapPoint) -> String
+c:@F@MKStringFromMapRect	swift.func	MKStringFromMapRect(_:)	MKStringFromMapRect(_:)	func MKStringFromMapRect(_ rect: MKMapRect) -> String
+c:@F@MKStringFromMapSize	swift.func	MKStringFromMapSize(_:)	MKStringFromMapSize(_:)	func MKStringFromMapSize(_ size: MKMapSize) -> String
+c:@MKAnnotationCalloutInfoDidChangeNotification	swift.type.property	MKAnnotationCalloutInfoDidChange	NSNotification.Name.MKAnnotationCalloutInfoDidChange	static let MKAnnotationCalloutInfoDidChange: NSNotification.Name
+c:@MKAnnotationViewZPriorityDefaultSelected	swift.type.property	defaultSelected	MKAnnotationViewZPriority.defaultSelected	static let defaultSelected: MKAnnotationViewZPriority
+c:@MKAnnotationViewZPriorityDefaultUnselected	swift.type.property	defaultUnselected	MKAnnotationViewZPriority.defaultUnselected	static let defaultUnselected: MKAnnotationViewZPriority
+c:@MKAnnotationViewZPriorityMax	swift.type.property	max	MKAnnotationViewZPriority.max	static let max: MKAnnotationViewZPriority
+c:@MKAnnotationViewZPriorityMin	swift.type.property	min	MKAnnotationViewZPriority.min	static let min: MKAnnotationViewZPriority
+c:@MKErrorDomain	swift.var	MKErrorDomain	MKErrorDomain	let MKErrorDomain: String
+c:@MKFeatureDisplayPriorityDefaultHigh	swift.type.property	defaultHigh	MKFeatureDisplayPriority.defaultHigh	static let defaultHigh: MKFeatureDisplayPriority
+c:@MKFeatureDisplayPriorityDefaultLow	swift.type.property	defaultLow	MKFeatureDisplayPriority.defaultLow	static let defaultLow: MKFeatureDisplayPriority
+c:@MKFeatureDisplayPriorityRequired	swift.type.property	required	MKFeatureDisplayPriority.required	static let required: MKFeatureDisplayPriority
+c:@MKLaunchOptionsCameraKey	swift.var	MKLaunchOptionsCameraKey	MKLaunchOptionsCameraKey	let MKLaunchOptionsCameraKey: String
+c:@MKLaunchOptionsDirectionsModeCycling	swift.var	MKLaunchOptionsDirectionsModeCycling	MKLaunchOptionsDirectionsModeCycling	let MKLaunchOptionsDirectionsModeCycling: String
+c:@MKLaunchOptionsDirectionsModeDefault	swift.var	MKLaunchOptionsDirectionsModeDefault	MKLaunchOptionsDirectionsModeDefault	let MKLaunchOptionsDirectionsModeDefault: String
+c:@MKLaunchOptionsDirectionsModeDriving	swift.var	MKLaunchOptionsDirectionsModeDriving	MKLaunchOptionsDirectionsModeDriving	let MKLaunchOptionsDirectionsModeDriving: String
+c:@MKLaunchOptionsDirectionsModeKey	swift.var	MKLaunchOptionsDirectionsModeKey	MKLaunchOptionsDirectionsModeKey	let MKLaunchOptionsDirectionsModeKey: String
+c:@MKLaunchOptionsDirectionsModeTransit	swift.var	MKLaunchOptionsDirectionsModeTransit	MKLaunchOptionsDirectionsModeTransit	let MKLaunchOptionsDirectionsModeTransit: String
+c:@MKLaunchOptionsDirectionsModeWalking	swift.var	MKLaunchOptionsDirectionsModeWalking	MKLaunchOptionsDirectionsModeWalking	let MKLaunchOptionsDirectionsModeWalking: String
+c:@MKLaunchOptionsMapCenterKey	swift.var	MKLaunchOptionsMapCenterKey	MKLaunchOptionsMapCenterKey	let MKLaunchOptionsMapCenterKey: String
+c:@MKLaunchOptionsMapSpanKey	swift.var	MKLaunchOptionsMapSpanKey	MKLaunchOptionsMapSpanKey	let MKLaunchOptionsMapSpanKey: String
+c:@MKLaunchOptionsMapTypeKey	swift.var	MKLaunchOptionsMapTypeKey	MKLaunchOptionsMapTypeKey	let MKLaunchOptionsMapTypeKey: String
+c:@MKLaunchOptionsShowsTrafficKey	swift.var	MKLaunchOptionsShowsTrafficKey	MKLaunchOptionsShowsTrafficKey	let MKLaunchOptionsShowsTrafficKey: String
+c:@MKMapCameraZoomDefault	swift.var	MKMapCameraZoomDefault	MKMapCameraZoomDefault	let MKMapCameraZoomDefault: CLLocationDistance
+c:@MKMapItemTypeIdentifier	swift.var	MKMapItemTypeIdentifier	MKMapItemTypeIdentifier	let MKMapItemTypeIdentifier: String
+c:@MKMapRectNull	swift.type.property	null	MKMapRect.null	static let null: MKMapRect
+c:@MKMapRectWorld	swift.type.property	world	MKMapRect.world	static let world: MKMapRect
+c:@MKMapSizeWorld	swift.type.property	world	MKMapSize.world	static let world: MKMapSize
+c:@MKMapViewDefaultAnnotationViewReuseIdentifier	swift.var	MKMapViewDefaultAnnotationViewReuseIdentifier	MKMapViewDefaultAnnotationViewReuseIdentifier	let MKMapViewDefaultAnnotationViewReuseIdentifier: String
+c:@MKMapViewDefaultClusterAnnotationViewReuseIdentifier	swift.var	MKMapViewDefaultClusterAnnotationViewReuseIdentifier	MKMapViewDefaultClusterAnnotationViewReuseIdentifier	let MKMapViewDefaultClusterAnnotationViewReuseIdentifier: String
+c:@MKPointOfInterestCategoryATM	swift.type.property	atm	MKPointOfInterestCategory.atm	static let atm: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryAirport	swift.type.property	airport	MKPointOfInterestCategory.airport	static let airport: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryAmusementPark	swift.type.property	amusementPark	MKPointOfInterestCategory.amusementPark	static let amusementPark: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryAnimalService	swift.type.property	animalService	MKPointOfInterestCategory.animalService	static let animalService: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryAquarium	swift.type.property	aquarium	MKPointOfInterestCategory.aquarium	static let aquarium: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryAutomotiveRepair	swift.type.property	automotiveRepair	MKPointOfInterestCategory.automotiveRepair	static let automotiveRepair: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryBakery	swift.type.property	bakery	MKPointOfInterestCategory.bakery	static let bakery: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryBank	swift.type.property	bank	MKPointOfInterestCategory.bank	static let bank: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryBaseball	swift.type.property	baseball	MKPointOfInterestCategory.baseball	static let baseball: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryBasketball	swift.type.property	basketball	MKPointOfInterestCategory.basketball	static let basketball: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryBeach	swift.type.property	beach	MKPointOfInterestCategory.beach	static let beach: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryBeauty	swift.type.property	beauty	MKPointOfInterestCategory.beauty	static let beauty: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryBowling	swift.type.property	bowling	MKPointOfInterestCategory.bowling	static let bowling: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryBrewery	swift.type.property	brewery	MKPointOfInterestCategory.brewery	static let brewery: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryCafe	swift.type.property	cafe	MKPointOfInterestCategory.cafe	static let cafe: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryCampground	swift.type.property	campground	MKPointOfInterestCategory.campground	static let campground: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryCarRental	swift.type.property	carRental	MKPointOfInterestCategory.carRental	static let carRental: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryCastle	swift.type.property	castle	MKPointOfInterestCategory.castle	static let castle: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryConventionCenter	swift.type.property	conventionCenter	MKPointOfInterestCategory.conventionCenter	static let conventionCenter: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryDistillery	swift.type.property	distillery	MKPointOfInterestCategory.distillery	static let distillery: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryEVCharger	swift.type.property	evCharger	MKPointOfInterestCategory.evCharger	static let evCharger: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryFairground	swift.type.property	fairground	MKPointOfInterestCategory.fairground	static let fairground: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryFireStation	swift.type.property	fireStation	MKPointOfInterestCategory.fireStation	static let fireStation: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryFishing	swift.type.property	fishing	MKPointOfInterestCategory.fishing	static let fishing: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryFitnessCenter	swift.type.property	fitnessCenter	MKPointOfInterestCategory.fitnessCenter	static let fitnessCenter: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryFoodMarket	swift.type.property	foodMarket	MKPointOfInterestCategory.foodMarket	static let foodMarket: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryFortress	swift.type.property	fortress	MKPointOfInterestCategory.fortress	static let fortress: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryGasStation	swift.type.property	gasStation	MKPointOfInterestCategory.gasStation	static let gasStation: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryGoKart	swift.type.property	goKart	MKPointOfInterestCategory.goKart	static let goKart: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryGolf	swift.type.property	golf	MKPointOfInterestCategory.golf	static let golf: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryHiking	swift.type.property	hiking	MKPointOfInterestCategory.hiking	static let hiking: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryHospital	swift.type.property	hospital	MKPointOfInterestCategory.hospital	static let hospital: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryHotel	swift.type.property	hotel	MKPointOfInterestCategory.hotel	static let hotel: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryKayaking	swift.type.property	kayaking	MKPointOfInterestCategory.kayaking	static let kayaking: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryLandmark	swift.type.property	landmark	MKPointOfInterestCategory.landmark	static let landmark: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryLaundry	swift.type.property	laundry	MKPointOfInterestCategory.laundry	static let laundry: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryLibrary	swift.type.property	library	MKPointOfInterestCategory.library	static let library: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryMailbox	swift.type.property	mailbox	MKPointOfInterestCategory.mailbox	static let mailbox: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryMarina	swift.type.property	marina	MKPointOfInterestCategory.marina	static let marina: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryMiniGolf	swift.type.property	miniGolf	MKPointOfInterestCategory.miniGolf	static let miniGolf: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryMovieTheater	swift.type.property	movieTheater	MKPointOfInterestCategory.movieTheater	static let movieTheater: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryMuseum	swift.type.property	museum	MKPointOfInterestCategory.museum	static let museum: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryMusicVenue	swift.type.property	musicVenue	MKPointOfInterestCategory.musicVenue	static let musicVenue: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryNationalMonument	swift.type.property	nationalMonument	MKPointOfInterestCategory.nationalMonument	static let nationalMonument: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryNationalPark	swift.type.property	nationalPark	MKPointOfInterestCategory.nationalPark	static let nationalPark: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryNightlife	swift.type.property	nightlife	MKPointOfInterestCategory.nightlife	static let nightlife: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryPark	swift.type.property	park	MKPointOfInterestCategory.park	static let park: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryParking	swift.type.property	parking	MKPointOfInterestCategory.parking	static let parking: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryPharmacy	swift.type.property	pharmacy	MKPointOfInterestCategory.pharmacy	static let pharmacy: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryPlanetarium	swift.type.property	planetarium	MKPointOfInterestCategory.planetarium	static let planetarium: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryPolice	swift.type.property	police	MKPointOfInterestCategory.police	static let police: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryPostOffice	swift.type.property	postOffice	MKPointOfInterestCategory.postOffice	static let postOffice: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryPublicTransport	swift.type.property	publicTransport	MKPointOfInterestCategory.publicTransport	static let publicTransport: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryRVPark	swift.type.property	rvPark	MKPointOfInterestCategory.rvPark	static let rvPark: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryRestaurant	swift.type.property	restaurant	MKPointOfInterestCategory.restaurant	static let restaurant: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryRestroom	swift.type.property	restroom	MKPointOfInterestCategory.restroom	static let restroom: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryRockClimbing	swift.type.property	rockClimbing	MKPointOfInterestCategory.rockClimbing	static let rockClimbing: MKPointOfInterestCategory
+c:@MKPointOfInterestCategorySchool	swift.type.property	school	MKPointOfInterestCategory.school	static let school: MKPointOfInterestCategory
+c:@MKPointOfInterestCategorySkatePark	swift.type.property	skatePark	MKPointOfInterestCategory.skatePark	static let skatePark: MKPointOfInterestCategory
+c:@MKPointOfInterestCategorySkating	swift.type.property	skating	MKPointOfInterestCategory.skating	static let skating: MKPointOfInterestCategory
+c:@MKPointOfInterestCategorySkiing	swift.type.property	skiing	MKPointOfInterestCategory.skiing	static let skiing: MKPointOfInterestCategory
+c:@MKPointOfInterestCategorySoccer	swift.type.property	soccer	MKPointOfInterestCategory.soccer	static let soccer: MKPointOfInterestCategory
+c:@MKPointOfInterestCategorySpa	swift.type.property	spa	MKPointOfInterestCategory.spa	static let spa: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryStadium	swift.type.property	stadium	MKPointOfInterestCategory.stadium	static let stadium: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryStore	swift.type.property	store	MKPointOfInterestCategory.store	static let store: MKPointOfInterestCategory
+c:@MKPointOfInterestCategorySurfing	swift.type.property	surfing	MKPointOfInterestCategory.surfing	static let surfing: MKPointOfInterestCategory
+c:@MKPointOfInterestCategorySwimming	swift.type.property	swimming	MKPointOfInterestCategory.swimming	static let swimming: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryTennis	swift.type.property	tennis	MKPointOfInterestCategory.tennis	static let tennis: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryTheater	swift.type.property	theater	MKPointOfInterestCategory.theater	static let theater: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryUniversity	swift.type.property	university	MKPointOfInterestCategory.university	static let university: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryVolleyball	swift.type.property	volleyball	MKPointOfInterestCategory.volleyball	static let volleyball: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryWinery	swift.type.property	winery	MKPointOfInterestCategory.winery	static let winery: MKPointOfInterestCategory
+c:@MKPointOfInterestCategoryZoo	swift.type.property	zoo	MKPointOfInterestCategory.zoo	static let zoo: MKPointOfInterestCategory
+c:@MKPointsOfInterestRequestMaxRadius	swift.type.property	maxRadius	MKLocalPointsOfInterestRequest.maxRadius	class let maxRadius: CLLocationDistance
+c:@SA@MKCoordinateRegion	swift.struct	MKCoordinateRegion	MKCoordinateRegion	struct MKCoordinateRegion
+c:@SA@MKCoordinateRegion@FI@center	swift.property	center	MKCoordinateRegion.center	var center: CLLocationCoordinate2D
+c:@SA@MKCoordinateRegion@FI@span	swift.property	span	MKCoordinateRegion.span	var span: MKCoordinateSpan
+c:@SA@MKCoordinateSpan	swift.struct	MKCoordinateSpan	MKCoordinateSpan	struct MKCoordinateSpan
+c:@SA@MKCoordinateSpan@FI@latitudeDelta	swift.property	latitudeDelta	MKCoordinateSpan.latitudeDelta	var latitudeDelta: CLLocationDegrees
+c:@SA@MKCoordinateSpan@FI@longitudeDelta	swift.property	longitudeDelta	MKCoordinateSpan.longitudeDelta	var longitudeDelta: CLLocationDegrees
+c:@SA@MKMapPoint	swift.struct	MKMapPoint	MKMapPoint	struct MKMapPoint
+c:@SA@MKMapPoint@FI@x	swift.property	x	MKMapPoint.x	var x: Double
+c:@SA@MKMapPoint@FI@y	swift.property	y	MKMapPoint.y	var y: Double
+c:@SA@MKMapRect	swift.struct	MKMapRect	MKMapRect	struct MKMapRect
+c:@SA@MKMapRect@FI@origin	swift.property	origin	MKMapRect.origin	var origin: MKMapPoint
+c:@SA@MKMapRect@FI@size	swift.property	size	MKMapRect.size	var size: MKMapSize
+c:@SA@MKMapSize	swift.struct	MKMapSize	MKMapSize	struct MKMapSize
+c:@SA@MKMapSize@FI@height	swift.property	height	MKMapSize.height	var height: Double
+c:@SA@MKMapSize@FI@width	swift.property	width	MKMapSize.width	var width: Double
+c:@SA@MKTileOverlayPath	swift.struct	MKTileOverlayPath	MKTileOverlayPath	struct MKTileOverlayPath
+c:@SA@MKTileOverlayPath@FI@contentScaleFactor	swift.property	contentScaleFactor	MKTileOverlayPath.contentScaleFactor	var contentScaleFactor: CGFloat
+c:@SA@MKTileOverlayPath@FI@x	swift.property	x	MKTileOverlayPath.x	var x: Int
+c:@SA@MKTileOverlayPath@FI@y	swift.property	y	MKTileOverlayPath.y	var y: Int
+c:@SA@MKTileOverlayPath@FI@z	swift.property	z	MKTileOverlayPath.z	var z: Int
+c:@T@MKAnnotationViewZPriority	swift.struct	MKAnnotationViewZPriority	MKAnnotationViewZPriority	struct MKAnnotationViewZPriority
+c:@T@MKDirectionsHandler	swift.typealias	MKDirections.DirectionsHandler	MKDirections.DirectionsHandler	typealias DirectionsHandler = (MKDirections.Response?, (any Error)?) -> Void
+c:@T@MKETAHandler	swift.typealias	MKDirections.ETAHandler	MKDirections.ETAHandler	typealias ETAHandler = (MKDirections.ETAResponse?, (any Error)?) -> Void
+c:@T@MKFeatureDisplayPriority	swift.struct	MKFeatureDisplayPriority	MKFeatureDisplayPriority	struct MKFeatureDisplayPriority
+c:@T@MKLocalSearchCompletionHandler	swift.typealias	MKLocalSearch.CompletionHandler	MKLocalSearch.CompletionHandler	typealias CompletionHandler = (MKLocalSearch.Response?, (any Error)?) -> Void
+c:@T@MKMapSnapshotCompletionHandler	swift.typealias	MKMapSnapshotter.CompletionHandler	MKMapSnapshotter.CompletionHandler	typealias CompletionHandler = (MKMapSnapshotter.Snapshot?, (any Error)?) -> Void
+c:@T@MKPointOfInterestCategory	swift.struct	MKPointOfInterestCategory	MKPointOfInterestCategory	struct MKPointOfInterestCategory
+c:@T@MKZoomScale	swift.typealias	MKZoomScale	MKZoomScale	typealias MKZoomScale = CGFloat
+c:objc(cs)MKAddress	swift.class	MKAddress	MKAddress	class MKAddress
+c:objc(cs)MKAddress(im)initWithFullAddress:shortAddress:	swift.init	init(fullAddress:shortAddress:)	MKAddress.init(fullAddress:shortAddress:)	init?(fullAddress: String, shortAddress: String?)
+c:objc(cs)MKAddress(py)fullAddress	swift.property	fullAddress	MKAddress.fullAddress	var fullAddress: String { get }
+c:objc(cs)MKAddress(py)shortAddress	swift.property	shortAddress	MKAddress.shortAddress	var shortAddress: String? { get }
+c:objc(cs)MKAddressFilter	swift.class	MKAddressFilter	MKAddressFilter	class MKAddressFilter
+c:objc(cs)MKAddressFilter(cpy)filterExcludingAll	swift.type.property	excludingAll	MKAddressFilter.excludingAll	class var excludingAll: MKAddressFilter { get }
+c:objc(cs)MKAddressFilter(cpy)filterIncludingAll	swift.type.property	includingAll	MKAddressFilter.includingAll	class var includingAll: MKAddressFilter { get }
+c:objc(cs)MKAddressFilter(im)excludesOptions:	swift.method	excludes(_:)	MKAddressFilter.excludes(_:)	func excludes(_ options: MKAddressFilter.Options) -> Bool
+c:objc(cs)MKAddressFilter(im)includesOptions:	swift.method	includes(_:)	MKAddressFilter.includes(_:)	func includes(_ options: MKAddressFilter.Options) -> Bool
+c:objc(cs)MKAddressFilter(im)initExcludingOptions:	swift.init	init(excluding:)	MKAddressFilter.init(excluding:)	init(excluding options: MKAddressFilter.Options)
+c:objc(cs)MKAddressFilter(im)initExcludingOptions:::SYNTHESIZED::c:objc(cs)MKAddressFilter	swift.init	init(excludingOptions:)	MKAddressFilter.init(excludingOptions:)	init(excludingOptions options: MKAddressFilter.Options)
+c:objc(cs)MKAddressFilter(im)initIncludingOptions:	swift.init	init(including:)	MKAddressFilter.init(including:)	init(including options: MKAddressFilter.Options)
+c:objc(cs)MKAddressFilter(im)initIncludingOptions:::SYNTHESIZED::c:objc(cs)MKAddressFilter	swift.init	init(includingOptions:)	MKAddressFilter.init(includingOptions:)	init(includingOptions options: MKAddressFilter.Options)
+c:objc(cs)MKAddressRepresentations	swift.class	MKAddressRepresentations	MKAddressRepresentations	class MKAddressRepresentations
+c:objc(cs)MKAddressRepresentations(im)cityWithContextUsingStyle:	swift.method	cityWithContext(_:)	MKAddressRepresentations.cityWithContext(_:)	func cityWithContext(_ style: MKAddressRepresentations.ContextStyle) -> String?
+c:objc(cs)MKAddressRepresentations(im)fullAddressIncludingRegion:singleLine:	swift.method	fullAddress(includingRegion:singleLine:)	MKAddressRepresentations.fullAddress(includingRegion:singleLine:)	func fullAddress(includingRegion: Bool, singleLine: Bool) -> String?
+c:objc(cs)MKAddressRepresentations(py)cityName	swift.property	cityName	MKAddressRepresentations.cityName	var cityName: String? { get }
+c:objc(cs)MKAddressRepresentations(py)cityWithContext	swift.property	cityWithContext	MKAddressRepresentations.cityWithContext	var cityWithContext: String? { get }
+c:objc(cs)MKAddressRepresentations(py)regionName	swift.property	regionName	MKAddressRepresentations.regionName	var regionName: String? { get }
+c:objc(cs)MKAnnotationView	swift.class	MKAnnotationView	MKAnnotationView	@MainActor class MKAnnotationView
+c:objc(cs)MKAnnotationView(im)initWithAnnotation:reuseIdentifier:	swift.init	init(annotation:reuseIdentifier:)	MKAnnotationView.init(annotation:reuseIdentifier:)	@MainActor init(annotation: (any MKAnnotation)?, reuseIdentifier: String?)
+c:objc(cs)MKAnnotationView(im)initWithCoder:	swift.init	init(coder:)	MKAnnotationView.init(coder:)	@MainActor init?(coder aDecoder: NSCoder)
+c:objc(cs)MKAnnotationView(im)prepareForDisplay	swift.method	prepareForDisplay()	MKAnnotationView.prepareForDisplay()	@MainActor func prepareForDisplay()
+c:objc(cs)MKAnnotationView(im)prepareForReuse	swift.method	prepareForReuse()	MKAnnotationView.prepareForReuse()	@MainActor func prepareForReuse()
+c:objc(cs)MKAnnotationView(im)setDragState:animated:	swift.method	setDragState(_:animated:)	MKAnnotationView.setDragState(_:animated:)	@MainActor func setDragState(_ newDragState: MKAnnotationView.DragState, animated: Bool)
+c:objc(cs)MKAnnotationView(im)setSelected:animated:	swift.method	setSelected(_:animated:)	MKAnnotationView.setSelected(_:animated:)	@MainActor func setSelected(_ selected: Bool, animated: Bool)
+c:objc(cs)MKAnnotationView(py)accessoryOffset	swift.property	accessoryOffset	MKAnnotationView.accessoryOffset	@MainActor var accessoryOffset: CGPoint { get set }
+c:objc(cs)MKAnnotationView(py)annotation	swift.property	annotation	MKAnnotationView.annotation	@MainActor var annotation: (any MKAnnotation)? { get set }
+c:objc(cs)MKAnnotationView(py)calloutOffset	swift.property	calloutOffset	MKAnnotationView.calloutOffset	@MainActor var calloutOffset: CGPoint { get set }
+c:objc(cs)MKAnnotationView(py)canShowCallout	swift.property	canShowCallout	MKAnnotationView.canShowCallout	@MainActor var canShowCallout: Bool { get set }
+c:objc(cs)MKAnnotationView(py)centerOffset	swift.property	centerOffset	MKAnnotationView.centerOffset	@MainActor var centerOffset: CGPoint { get set }
+c:objc(cs)MKAnnotationView(py)clusterAnnotationView	swift.property	cluster	MKAnnotationView.cluster	@MainActor weak var cluster: MKAnnotationView? { get }
+c:objc(cs)MKAnnotationView(py)clusteringIdentifier	swift.property	clusteringIdentifier	MKAnnotationView.clusteringIdentifier	@MainActor var clusteringIdentifier: String? { get set }
+c:objc(cs)MKAnnotationView(py)collisionMode	swift.property	collisionMode	MKAnnotationView.collisionMode	@MainActor var collisionMode: MKAnnotationView.CollisionMode { get set }
+c:objc(cs)MKAnnotationView(py)detailCalloutAccessoryView	swift.property	detailCalloutAccessoryView	MKAnnotationView.detailCalloutAccessoryView	@MainActor var detailCalloutAccessoryView: UIView? { get set }
+c:objc(cs)MKAnnotationView(py)displayPriority	swift.property	displayPriority	MKAnnotationView.displayPriority	@MainActor var displayPriority: MKFeatureDisplayPriority { get set }
+c:objc(cs)MKAnnotationView(py)dragState	swift.property	dragState	MKAnnotationView.dragState	@MainActor var dragState: MKAnnotationView.DragState { get set }
+c:objc(cs)MKAnnotationView(py)draggable	swift.property	isDraggable	MKAnnotationView.isDraggable	@MainActor var isDraggable: Bool { get set }
+c:objc(cs)MKAnnotationView(py)enabled	swift.property	isEnabled	MKAnnotationView.isEnabled	@MainActor var isEnabled: Bool { get set }
+c:objc(cs)MKAnnotationView(py)highlighted	swift.property	isHighlighted	MKAnnotationView.isHighlighted	@MainActor var isHighlighted: Bool { get set }
+c:objc(cs)MKAnnotationView(py)image	swift.property	image	MKAnnotationView.image	@MainActor var image: UIImage? { get set }
+c:objc(cs)MKAnnotationView(py)leftCalloutAccessoryView	swift.property	leftCalloutAccessoryView	MKAnnotationView.leftCalloutAccessoryView	@MainActor var leftCalloutAccessoryView: UIView? { get set }
+c:objc(cs)MKAnnotationView(py)reuseIdentifier	swift.property	reuseIdentifier	MKAnnotationView.reuseIdentifier	@MainActor var reuseIdentifier: String? { get }
+c:objc(cs)MKAnnotationView(py)rightCalloutAccessoryView	swift.property	rightCalloutAccessoryView	MKAnnotationView.rightCalloutAccessoryView	@MainActor var rightCalloutAccessoryView: UIView? { get set }
+c:objc(cs)MKAnnotationView(py)selected	swift.property	isSelected	MKAnnotationView.isSelected	@MainActor var isSelected: Bool { get set }
+c:objc(cs)MKAnnotationView(py)selectedZPriority	swift.property	selectedZPriority	MKAnnotationView.selectedZPriority	@MainActor var selectedZPriority: MKAnnotationViewZPriority { get set }
+c:objc(cs)MKAnnotationView(py)zPriority	swift.property	zPriority	MKAnnotationView.zPriority	@MainActor var zPriority: MKAnnotationViewZPriority { get set }
+c:objc(cs)MKCircle	swift.class	MKCircle	MKCircle	class MKCircle
+c:objc(cs)MKCircle(cm)circleWithCenterCoordinate:radius:	swift.init	init(center:radius:)	MKCircle.init(center:radius:)	convenience init(center coord: CLLocationCoordinate2D, radius: CLLocationDistance)
+c:objc(cs)MKCircle(cm)circleWithCenterCoordinate:radius:::SYNTHESIZED::c:objc(cs)MKCircle	swift.init	init(centerCoordinate:radius:)	MKCircle.init(centerCoordinate:radius:)	convenience init(centerCoordinate coord: CLLocationCoordinate2D, radius: CLLocationDistance)
+c:objc(cs)MKCircle(cm)circleWithMapRect:	swift.init	init(mapRect:)	MKCircle.init(mapRect:)	convenience init(mapRect: MKMapRect)
+c:objc(cs)MKCircle(py)boundingMapRect	swift.property	boundingMapRect	MKCircle.boundingMapRect	var boundingMapRect: MKMapRect { get }
+c:objc(cs)MKCircle(py)coordinate	swift.property	coordinate	MKCircle.coordinate	var coordinate: CLLocationCoordinate2D { get }
+c:objc(cs)MKCircle(py)radius	swift.property	radius	MKCircle.radius	var radius: CLLocationDistance { get }
+c:objc(cs)MKCircleRenderer	swift.class	MKCircleRenderer	MKCircleRenderer	class MKCircleRenderer
+c:objc(cs)MKCircleRenderer(im)initWithCircle:	swift.init	init(circle:)	MKCircleRenderer.init(circle:)	init(circle: MKCircle)
+c:objc(cs)MKCircleRenderer(py)circle	swift.property	circle	MKCircleRenderer.circle	var circle: MKCircle { get }
+c:objc(cs)MKCircleRenderer(py)strokeEnd	swift.property	strokeEnd	MKCircleRenderer.strokeEnd	var strokeEnd: CGFloat { get set }
+c:objc(cs)MKCircleRenderer(py)strokeStart	swift.property	strokeStart	MKCircleRenderer.strokeStart	var strokeStart: CGFloat { get set }
+c:objc(cs)MKCircleView	swift.class	MKCircleView	MKCircleView	@MainActor class MKCircleView
+c:objc(cs)MKClusterAnnotation	swift.class	MKClusterAnnotation	MKClusterAnnotation	class MKClusterAnnotation
+c:objc(cs)MKClusterAnnotation(im)initWithMemberAnnotations:	swift.init	init(memberAnnotations:)	MKClusterAnnotation.init(memberAnnotations:)	init(memberAnnotations: [any MKAnnotation])
+c:objc(cs)MKClusterAnnotation(py)memberAnnotations	swift.property	memberAnnotations	MKClusterAnnotation.memberAnnotations	var memberAnnotations: [any MKAnnotation] { get }
+c:objc(cs)MKClusterAnnotation(py)subtitle	swift.property	subtitle	MKClusterAnnotation.subtitle	var subtitle: String? { get set }
+c:objc(cs)MKClusterAnnotation(py)title	swift.property	title	MKClusterAnnotation.title	var title: String? { get set }
+c:objc(cs)MKCompassButton	swift.class	MKCompassButton	MKCompassButton	@MainActor class MKCompassButton
+c:objc(cs)MKCompassButton(cm)compassButtonWithMapView:	swift.init	init(mapView:)	MKCompassButton.init(mapView:)	@MainActor convenience init(mapView: MKMapView?)
+c:objc(cs)MKCompassButton(py)compassVisibility	swift.property	compassVisibility	MKCompassButton.compassVisibility	@MainActor var compassVisibility: MKFeatureVisibility { get set }
+c:objc(cs)MKCompassButton(py)mapView	swift.property	mapView	MKCompassButton.mapView	@MainActor weak var mapView: MKMapView? { get set }
+c:objc(cs)MKDirections	swift.class	MKDirections	MKDirections	class MKDirections
+c:objc(cs)MKDirections(im)calculateDirectionsWithCompletionHandler:	swift.method	calculate(completionHandler:)	MKDirections.calculate(completionHandler:)	func calculate(completionHandler: @escaping (MKDirections.Response?, (any Error)?) -> Void)
+c:objc(cs)MKDirections(im)calculateETAWithCompletionHandler:	swift.method	calculateETA(completionHandler:)	MKDirections.calculateETA(completionHandler:)	func calculateETA(completionHandler: @escaping (MKDirections.ETAResponse?, (any Error)?) -> Void)
+c:objc(cs)MKDirections(im)cancel	swift.method	cancel()	MKDirections.cancel()	func cancel()
+c:objc(cs)MKDirections(im)initWithRequest:	swift.init	init(request:)	MKDirections.init(request:)	init(request: MKDirections.Request)
+c:objc(cs)MKDirections(py)calculating	swift.property	isCalculating	MKDirections.isCalculating	var isCalculating: Bool { get }
+c:objc(cs)MKDirectionsRequest	swift.class	MKDirections.Request	MKDirections.Request	class Request
+c:objc(cs)MKDirectionsRequest(cm)isDirectionsRequestURL:	swift.type.method	isDirectionsRequest(_:)	MKDirections.Request.isDirectionsRequest(_:)	class func isDirectionsRequest(_ url: URL) -> Bool
+c:objc(cs)MKDirectionsRequest(im)initWithContentsOfURL:	swift.init	init(contentsOfURL:)	MKDirections.Request.init(contentsOfURL:)	init(contentsOfURL url: URL)
+c:objc(cs)MKDirectionsRequest(py)arrivalDate	swift.property	arrivalDate	MKDirections.Request.arrivalDate	var arrivalDate: Date? { get set }
+c:objc(cs)MKDirectionsRequest(py)departureDate	swift.property	departureDate	MKDirections.Request.departureDate	var departureDate: Date? { get set }
+c:objc(cs)MKDirectionsRequest(py)destination	swift.property	destination	MKDirections.Request.destination	var destination: MKMapItem? { get set }
+c:objc(cs)MKDirectionsRequest(py)highwayPreference	swift.property	highwayPreference	MKDirections.Request.highwayPreference	var highwayPreference: MKDirections.RoutePreference { get set }
+c:objc(cs)MKDirectionsRequest(py)requestsAlternateRoutes	swift.property	requestsAlternateRoutes	MKDirections.Request.requestsAlternateRoutes	var requestsAlternateRoutes: Bool { get set }
+c:objc(cs)MKDirectionsRequest(py)source	swift.property	source	MKDirections.Request.source	var source: MKMapItem? { get set }
+c:objc(cs)MKDirectionsRequest(py)tollPreference	swift.property	tollPreference	MKDirections.Request.tollPreference	var tollPreference: MKDirections.RoutePreference { get set }
+c:objc(cs)MKDirectionsRequest(py)transportType	swift.property	transportType	MKDirections.Request.transportType	var transportType: MKDirectionsTransportType { get set }
+c:objc(cs)MKDirectionsResponse	swift.class	MKDirections.Response	MKDirections.Response	class Response
+c:objc(cs)MKDirectionsResponse(py)destination	swift.property	destination	MKDirections.Response.destination	var destination: MKMapItem { get }
+c:objc(cs)MKDirectionsResponse(py)routes	swift.property	routes	MKDirections.Response.routes	var routes: [MKRoute] { get }
+c:objc(cs)MKDirectionsResponse(py)source	swift.property	source	MKDirections.Response.source	var source: MKMapItem { get }
+c:objc(cs)MKDistanceFormatter	swift.class	MKDistanceFormatter	MKDistanceFormatter	class MKDistanceFormatter
+c:objc(cs)MKDistanceFormatter(im)distanceFromString:	swift.method	distance(from:)	MKDistanceFormatter.distance(from:)	func distance(from distance: String) -> CLLocationDistance
+c:objc(cs)MKDistanceFormatter(im)stringFromDistance:	swift.method	string(fromDistance:)	MKDistanceFormatter.string(fromDistance:)	func string(fromDistance distance: CLLocationDistance) -> String
+c:objc(cs)MKDistanceFormatter(py)locale	swift.property	locale	MKDistanceFormatter.locale	var locale: Locale! { get set }
+c:objc(cs)MKDistanceFormatter(py)unitStyle	swift.property	unitStyle	MKDistanceFormatter.unitStyle	var unitStyle: MKDistanceFormatter.DistanceUnitStyle { get set }
+c:objc(cs)MKDistanceFormatter(py)units	swift.property	units	MKDistanceFormatter.units	var units: MKDistanceFormatter.Units { get set }
+c:objc(cs)MKETAResponse	swift.class	MKDirections.ETAResponse	MKDirections.ETAResponse	class ETAResponse
+c:objc(cs)MKETAResponse(py)destination	swift.property	destination	MKDirections.ETAResponse.destination	var destination: MKMapItem { get }
+c:objc(cs)MKETAResponse(py)distance	swift.property	distance	MKDirections.ETAResponse.distance	var distance: CLLocationDistance { get }
+c:objc(cs)MKETAResponse(py)expectedArrivalDate	swift.property	expectedArrivalDate	MKDirections.ETAResponse.expectedArrivalDate	var expectedArrivalDate: Date { get }
+c:objc(cs)MKETAResponse(py)expectedDepartureDate	swift.property	expectedDepartureDate	MKDirections.ETAResponse.expectedDepartureDate	var expectedDepartureDate: Date { get }
+c:objc(cs)MKETAResponse(py)expectedTravelTime	swift.property	expectedTravelTime	MKDirections.ETAResponse.expectedTravelTime	var expectedTravelTime: TimeInterval { get }
+c:objc(cs)MKETAResponse(py)source	swift.property	source	MKDirections.ETAResponse.source	var source: MKMapItem { get }
+c:objc(cs)MKETAResponse(py)transportType	swift.property	transportType	MKDirections.ETAResponse.transportType	var transportType: MKDirectionsTransportType { get }
+c:objc(cs)MKGeoJSONDecoder	swift.class	MKGeoJSONDecoder	MKGeoJSONDecoder	class MKGeoJSONDecoder
+c:objc(cs)MKGeoJSONDecoder(im)geoJSONObjectsWithData:error:	swift.method	decode(_:)	MKGeoJSONDecoder.decode(_:)	func decode(_ data: Data) throws -> [any MKGeoJSONObject]
+c:objc(cs)MKGeoJSONFeature	swift.class	MKGeoJSONFeature	MKGeoJSONFeature	class MKGeoJSONFeature
+c:objc(cs)MKGeoJSONFeature(py)geometry	swift.property	geometry	MKGeoJSONFeature.geometry	var geometry: [any MKShape & MKGeoJSONObject] { get }
+c:objc(cs)MKGeoJSONFeature(py)identifier	swift.property	identifier	MKGeoJSONFeature.identifier	var identifier: String? { get }
+c:objc(cs)MKGeoJSONFeature(py)properties	swift.property	properties	MKGeoJSONFeature.properties	var properties: Data? { get }
+c:objc(cs)MKGeocodingRequest	swift.class	MKGeocodingRequest	MKGeocodingRequest	class MKGeocodingRequest
+c:objc(cs)MKGeocodingRequest(im)cancel	swift.method	cancel()	MKGeocodingRequest.cancel()	func cancel()
+c:objc(cs)MKGeocodingRequest(im)getMapItemsWithCompletionHandler:	swift.method	getMapItems(completionHandler:)	MKGeocodingRequest.getMapItems(completionHandler:)	func getMapItems(completionHandler: @escaping @MainActor ([MKMapItem]?, (any Error)?) -> Void)
+c:objc(cs)MKGeocodingRequest(im)initWithAddressString:	swift.init	init(addressString:)	MKGeocodingRequest.init(addressString:)	init?(addressString: String)
+c:objc(cs)MKGeocodingRequest(py)addressString	swift.property	addressString	MKGeocodingRequest.addressString	var addressString: String { get }
+c:objc(cs)MKGeocodingRequest(py)cancelled	swift.property	isCancelled	MKGeocodingRequest.isCancelled	var isCancelled: Bool { get }
+c:objc(cs)MKGeocodingRequest(py)loading	swift.property	isLoading	MKGeocodingRequest.isLoading	var isLoading: Bool { get }
+c:objc(cs)MKGeocodingRequest(py)preferredLocale	swift.property	preferredLocale	MKGeocodingRequest.preferredLocale	var preferredLocale: Locale? { get set }
+c:objc(cs)MKGeocodingRequest(py)region	swift.property	region	MKGeocodingRequest.region	var region: MKCoordinateRegion { get set }
+c:objc(cs)MKGeodesicPolyline	swift.class	MKGeodesicPolyline	MKGeodesicPolyline	class MKGeodesicPolyline
+c:objc(cs)MKGeodesicPolyline(cm)polylineWithCoordinates:count:	swift.init	init(coordinates:count:)	MKGeodesicPolyline.init(coordinates:count:)	convenience init(coordinates coords: UnsafePointer<CLLocationCoordinate2D>, count: Int)
+c:objc(cs)MKGeodesicPolyline(cm)polylineWithPoints:count:	swift.init	init(points:count:)	MKGeodesicPolyline.init(points:count:)	convenience init(points: UnsafePointer<MKMapPoint>, count: Int)
+c:objc(cs)MKGradientPolylineRenderer	swift.class	MKGradientPolylineRenderer	MKGradientPolylineRenderer	class MKGradientPolylineRenderer
+c:objc(cs)MKGradientPolylineRenderer(py)colors	swift.property	colors	MKGradientPolylineRenderer.colors	var colors: [UIColor] { get }
+c:objc(cs)MKHybridMapConfiguration	swift.class	MKHybridMapConfiguration	MKHybridMapConfiguration	class MKHybridMapConfiguration
+c:objc(cs)MKHybridMapConfiguration(im)init	swift.init	init()	MKHybridMapConfiguration.init()	init()
+c:objc(cs)MKHybridMapConfiguration(im)initWithElevationStyle:	swift.init	init(elevationStyle:)	MKHybridMapConfiguration.init(elevationStyle:)	convenience init(elevationStyle: MKMapConfiguration.ElevationStyle)
+c:objc(cs)MKHybridMapConfiguration(py)pointOfInterestFilter	swift.property	pointOfInterestFilter	MKHybridMapConfiguration.pointOfInterestFilter	@NSCopying var pointOfInterestFilter: MKPointOfInterestFilter? { get set }
+c:objc(cs)MKHybridMapConfiguration(py)showsTraffic	swift.property	showsTraffic	MKHybridMapConfiguration.showsTraffic	var showsTraffic: Bool { get set }
+c:objc(cs)MKIconStyle	swift.class	MKIconStyle	MKIconStyle	class MKIconStyle
+c:objc(cs)MKIconStyle(py)backgroundColor	swift.property	backgroundColor	MKIconStyle.backgroundColor	var backgroundColor: UIColor { get }
+c:objc(cs)MKIconStyle(py)image	swift.property	image	MKIconStyle.image	var image: UIImage { get }
+c:objc(cs)MKImageryMapConfiguration	swift.class	MKImageryMapConfiguration	MKImageryMapConfiguration	class MKImageryMapConfiguration
+c:objc(cs)MKImageryMapConfiguration(im)init	swift.init	init()	MKImageryMapConfiguration.init()	init()
+c:objc(cs)MKImageryMapConfiguration(im)initWithElevationStyle:	swift.init	init(elevationStyle:)	MKImageryMapConfiguration.init(elevationStyle:)	convenience init(elevationStyle: MKMapConfiguration.ElevationStyle)
+c:objc(cs)MKLocalPointsOfInterestRequest	swift.class	MKLocalPointsOfInterestRequest	MKLocalPointsOfInterestRequest	class MKLocalPointsOfInterestRequest
+c:objc(cs)MKLocalPointsOfInterestRequest(im)initWithCenterCoordinate:radius:	swift.init	init(center:radius:)	MKLocalPointsOfInterestRequest.init(center:radius:)	init(center coordinate: CLLocationCoordinate2D, radius: CLLocationDistance)
+c:objc(cs)MKLocalPointsOfInterestRequest(im)initWithCenterCoordinate:radius:::SYNTHESIZED::c:objc(cs)MKLocalPointsOfInterestRequest	swift.init	init(centerCoordinate:radius:)	MKLocalPointsOfInterestRequest.init(centerCoordinate:radius:)	init(centerCoordinate coordinate: CLLocationCoordinate2D, radius: CLLocationDistance)
+c:objc(cs)MKLocalPointsOfInterestRequest(im)initWithCoordinateRegion:	swift.init	init(coordinateRegion:)	MKLocalPointsOfInterestRequest.init(coordinateRegion:)	init(coordinateRegion region: MKCoordinateRegion)
+c:objc(cs)MKLocalPointsOfInterestRequest(py)coordinate	swift.property	coordinate	MKLocalPointsOfInterestRequest.coordinate	var coordinate: CLLocationCoordinate2D { get }
+c:objc(cs)MKLocalPointsOfInterestRequest(py)pointOfInterestFilter	swift.property	pointOfInterestFilter	MKLocalPointsOfInterestRequest.pointOfInterestFilter	@NSCopying var pointOfInterestFilter: MKPointOfInterestFilter? { get set }
+c:objc(cs)MKLocalPointsOfInterestRequest(py)radius	swift.property	radius	MKLocalPointsOfInterestRequest.radius	var radius: CLLocationDistance { get }
+c:objc(cs)MKLocalPointsOfInterestRequest(py)region	swift.property	region	MKLocalPointsOfInterestRequest.region	var region: MKCoordinateRegion { get }
+c:objc(cs)MKLocalSearch	swift.class	MKLocalSearch	MKLocalSearch	class MKLocalSearch
+c:objc(cs)MKLocalSearch(im)cancel	swift.method	cancel()	MKLocalSearch.cancel()	func cancel()
+c:objc(cs)MKLocalSearch(im)initWithPointsOfInterestRequest:	swift.init	init(request:)	MKLocalSearch.init(request:)	init(request: MKLocalPointsOfInterestRequest)
+c:objc(cs)MKLocalSearch(im)initWithPointsOfInterestRequest:::SYNTHESIZED::c:objc(cs)MKLocalSearch	swift.init	init(pointsOfInterestRequest:)	MKLocalSearch.init(pointsOfInterestRequest:)	init(pointsOfInterestRequest request: MKLocalPointsOfInterestRequest)
+c:objc(cs)MKLocalSearch(im)initWithRequest:	swift.init	init(request:)	MKLocalSearch.init(request:)	init(request: MKLocalSearch.Request)
+c:objc(cs)MKLocalSearch(im)startWithCompletionHandler:	swift.method	start(completionHandler:)	MKLocalSearch.start(completionHandler:)	func start(completionHandler: @escaping @MainActor (MKLocalSearch.Response?, (any Error)?) -> Void)
+c:objc(cs)MKLocalSearch(py)searching	swift.property	isSearching	MKLocalSearch.isSearching	var isSearching: Bool { get }
+c:objc(cs)MKLocalSearchCompleter	swift.class	MKLocalSearchCompleter	MKLocalSearchCompleter	class MKLocalSearchCompleter
+c:objc(cs)MKLocalSearchCompleter(im)cancel	swift.method	cancel()	MKLocalSearchCompleter.cancel()	func cancel()
+c:objc(cs)MKLocalSearchCompleter(py)addressFilter	swift.property	addressFilter	MKLocalSearchCompleter.addressFilter	@NSCopying var addressFilter: MKAddressFilter? { get set }
+c:objc(cs)MKLocalSearchCompleter(py)delegate	swift.property	delegate	MKLocalSearchCompleter.delegate	weak var delegate: (any MKLocalSearchCompleterDelegate)? { get set }
+c:objc(cs)MKLocalSearchCompleter(py)filterType	swift.property	filterType	MKLocalSearchCompleter.filterType	var filterType: MKLocalSearchCompleter.FilterType { get set }
+c:objc(cs)MKLocalSearchCompleter(py)pointOfInterestFilter	swift.property	pointOfInterestFilter	MKLocalSearchCompleter.pointOfInterestFilter	@NSCopying var pointOfInterestFilter: MKPointOfInterestFilter? { get set }
+c:objc(cs)MKLocalSearchCompleter(py)queryFragment	swift.property	queryFragment	MKLocalSearchCompleter.queryFragment	var queryFragment: String { get set }
+c:objc(cs)MKLocalSearchCompleter(py)region	swift.property	region	MKLocalSearchCompleter.region	var region: MKCoordinateRegion { get set }
+c:objc(cs)MKLocalSearchCompleter(py)regionPriority	swift.property	regionPriority	MKLocalSearchCompleter.regionPriority	var regionPriority: MKLocalSearchRegionPriority { get set }
+c:objc(cs)MKLocalSearchCompleter(py)resultTypes	swift.property	resultTypes	MKLocalSearchCompleter.resultTypes	var resultTypes: MKLocalSearchCompleter.ResultType { get set }
+c:objc(cs)MKLocalSearchCompleter(py)results	swift.property	results	MKLocalSearchCompleter.results	var results: [MKLocalSearchCompletion] { get }
+c:objc(cs)MKLocalSearchCompleter(py)searching	swift.property	isSearching	MKLocalSearchCompleter.isSearching	var isSearching: Bool { get }
+c:objc(cs)MKLocalSearchCompletion	swift.class	MKLocalSearchCompletion	MKLocalSearchCompletion	class MKLocalSearchCompletion
+c:objc(cs)MKLocalSearchCompletion(py)subtitle	swift.property	subtitle	MKLocalSearchCompletion.subtitle	var subtitle: String { get }
+c:objc(cs)MKLocalSearchCompletion(py)subtitleHighlightRanges	swift.property	subtitleHighlightRanges	MKLocalSearchCompletion.subtitleHighlightRanges	var subtitleHighlightRanges: [NSValue] { get }
+c:objc(cs)MKLocalSearchCompletion(py)title	swift.property	title	MKLocalSearchCompletion.title	var title: String { get }
+c:objc(cs)MKLocalSearchCompletion(py)titleHighlightRanges	swift.property	titleHighlightRanges	MKLocalSearchCompletion.titleHighlightRanges	var titleHighlightRanges: [NSValue] { get }
+c:objc(cs)MKLocalSearchRequest	swift.class	MKLocalSearch.Request	MKLocalSearch.Request	class Request
+c:objc(cs)MKLocalSearchRequest(im)init	swift.init	init()	MKLocalSearch.Request.init()	init()
+c:objc(cs)MKLocalSearchRequest(im)initWithCompletion:	swift.init	init(completion:)	MKLocalSearch.Request.init(completion:)	init(completion: MKLocalSearchCompletion)
+c:objc(cs)MKLocalSearchRequest(im)initWithNaturalLanguageQuery:	swift.init	init(naturalLanguageQuery:)	MKLocalSearch.Request.init(naturalLanguageQuery:)	convenience init(naturalLanguageQuery: String)
+c:objc(cs)MKLocalSearchRequest(im)initWithNaturalLanguageQuery:region:	swift.init	init(naturalLanguageQuery:region:)	MKLocalSearch.Request.init(naturalLanguageQuery:region:)	convenience init(naturalLanguageQuery: String, region: MKCoordinateRegion)
+c:objc(cs)MKLocalSearchRequest(py)addressFilter	swift.property	addressFilter	MKLocalSearch.Request.addressFilter	@NSCopying var addressFilter: MKAddressFilter? { get set }
+c:objc(cs)MKLocalSearchRequest(py)naturalLanguageQuery	swift.property	naturalLanguageQuery	MKLocalSearch.Request.naturalLanguageQuery	var naturalLanguageQuery: String? { get set }
+c:objc(cs)MKLocalSearchRequest(py)pointOfInterestFilter	swift.property	pointOfInterestFilter	MKLocalSearch.Request.pointOfInterestFilter	@NSCopying var pointOfInterestFilter: MKPointOfInterestFilter? { get set }
+c:objc(cs)MKLocalSearchRequest(py)region	swift.property	region	MKLocalSearch.Request.region	var region: MKCoordinateRegion { get set }
+c:objc(cs)MKLocalSearchRequest(py)regionPriority	swift.property	regionPriority	MKLocalSearch.Request.regionPriority	var regionPriority: MKLocalSearchRegionPriority { get set }
+c:objc(cs)MKLocalSearchRequest(py)resultTypes	swift.property	resultTypes	MKLocalSearch.Request.resultTypes	var resultTypes: MKLocalSearch.ResultType { get set }
+c:objc(cs)MKLocalSearchResponse	swift.class	MKLocalSearch.Response	MKLocalSearch.Response	class Response
+c:objc(cs)MKLocalSearchResponse(py)boundingRegion	swift.property	boundingRegion	MKLocalSearch.Response.boundingRegion	var boundingRegion: MKCoordinateRegion { get }
+c:objc(cs)MKLocalSearchResponse(py)mapItems	swift.property	mapItems	MKLocalSearch.Response.mapItems	var mapItems: [MKMapItem] { get }
+c:objc(cs)MKLookAroundScene	swift.class	MKLookAroundScene	MKLookAroundScene	class MKLookAroundScene
+c:objc(cs)MKLookAroundSceneRequest	swift.class	MKLookAroundSceneRequest	MKLookAroundSceneRequest	class MKLookAroundSceneRequest
+c:objc(cs)MKLookAroundSceneRequest(im)cancel	swift.method	cancel()	MKLookAroundSceneRequest.cancel()	func cancel()
+c:objc(cs)MKLookAroundSceneRequest(im)getSceneWithCompletionHandler:	swift.method	getSceneWithCompletionHandler(_:)	MKLookAroundSceneRequest.getSceneWithCompletionHandler(_:)	func getSceneWithCompletionHandler(_ completionHandler: @escaping @MainActor (MKLookAroundScene?, (any Error)?) -> Void)
+c:objc(cs)MKLookAroundSceneRequest(im)initWithCoordinate:	swift.init	init(coordinate:)	MKLookAroundSceneRequest.init(coordinate:)	init(coordinate: CLLocationCoordinate2D)
+c:objc(cs)MKLookAroundSceneRequest(im)initWithMapItem:	swift.init	init(mapItem:)	MKLookAroundSceneRequest.init(mapItem:)	init(mapItem: MKMapItem)
+c:objc(cs)MKLookAroundSceneRequest(py)cancelled	swift.property	isCancelled	MKLookAroundSceneRequest.isCancelled	var isCancelled: Bool { get }
+c:objc(cs)MKLookAroundSceneRequest(py)coordinate	swift.property	coordinate	MKLookAroundSceneRequest.coordinate	var coordinate: CLLocationCoordinate2D { get }
+c:objc(cs)MKLookAroundSceneRequest(py)loading	swift.property	isLoading	MKLookAroundSceneRequest.isLoading	var isLoading: Bool { get }
+c:objc(cs)MKLookAroundSceneRequest(py)mapItem	swift.property	mapItem	MKLookAroundSceneRequest.mapItem	var mapItem: MKMapItem? { get }
+c:objc(cs)MKLookAroundSnapshot	swift.class	MKLookAroundSnapshotter.Snapshot	MKLookAroundSnapshotter.Snapshot	class Snapshot
+c:objc(cs)MKLookAroundSnapshot(py)image	swift.property	image	MKLookAroundSnapshotter.Snapshot.image	var image: UIImage { get }
+c:objc(cs)MKLookAroundSnapshotOptions	swift.class	MKLookAroundSnapshotter.Options	MKLookAroundSnapshotter.Options	class Options
+c:objc(cs)MKLookAroundSnapshotOptions(py)pointOfInterestFilter	swift.property	pointOfInterestFilter	MKLookAroundSnapshotter.Options.pointOfInterestFilter	@NSCopying var pointOfInterestFilter: MKPointOfInterestFilter? { get set }
+c:objc(cs)MKLookAroundSnapshotOptions(py)size	swift.property	size	MKLookAroundSnapshotter.Options.size	var size: CGSize { get set }
+c:objc(cs)MKLookAroundSnapshotOptions(py)traitCollection	swift.property	traitCollection	MKLookAroundSnapshotter.Options.traitCollection	@NSCopying var traitCollection: UITraitCollection { get set }
+c:objc(cs)MKLookAroundSnapshotter	swift.class	MKLookAroundSnapshotter	MKLookAroundSnapshotter	class MKLookAroundSnapshotter
+c:objc(cs)MKLookAroundSnapshotter(im)cancel	swift.method	cancel()	MKLookAroundSnapshotter.cancel()	func cancel()
+c:objc(cs)MKLookAroundSnapshotter(im)getSnapshotWithCompletionHandler:	swift.method	getSnapshotWithCompletionHandler(_:)	MKLookAroundSnapshotter.getSnapshotWithCompletionHandler(_:)	func getSnapshotWithCompletionHandler(_ completionHandler: @escaping @MainActor (MKLookAroundSnapshotter.Snapshot?, (any Error)?) -> Void)
+c:objc(cs)MKLookAroundSnapshotter(im)initWithScene:options:	swift.init	init(scene:options:)	MKLookAroundSnapshotter.init(scene:options:)	init(scene: MKLookAroundScene, options: MKLookAroundSnapshotter.Options)
+c:objc(cs)MKLookAroundSnapshotter(py)loading	swift.property	isLoading	MKLookAroundSnapshotter.isLoading	var isLoading: Bool { get }
+c:objc(cs)MKLookAroundViewController	swift.class	MKLookAroundViewController	MKLookAroundViewController	@MainActor class MKLookAroundViewController
+c:objc(cs)MKLookAroundViewController(im)initWithCoder:	swift.init	init(coder:)	MKLookAroundViewController.init(coder:)	@MainActor init?(coder: NSCoder)
+c:objc(cs)MKLookAroundViewController(im)initWithNibName:bundle:	swift.init	init(nibName:bundle:)	MKLookAroundViewController.init(nibName:bundle:)	@MainActor init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
+c:objc(cs)MKLookAroundViewController(im)initWithScene:	swift.init	init(scene:)	MKLookAroundViewController.init(scene:)	@MainActor init(scene: MKLookAroundScene)
+c:objc(cs)MKLookAroundViewController(py)badgePosition	swift.property	badgePosition	MKLookAroundViewController.badgePosition	@MainActor var badgePosition: MKLookAroundBadgePosition { get set }
+c:objc(cs)MKLookAroundViewController(py)delegate	swift.property	delegate	MKLookAroundViewController.delegate	@IBOutlet @MainActor weak var delegate: (any MKLookAroundViewControllerDelegate)? { get set }
+c:objc(cs)MKLookAroundViewController(py)navigationEnabled	swift.property	isNavigationEnabled	MKLookAroundViewController.isNavigationEnabled	@MainActor var isNavigationEnabled: Bool { get set }
+c:objc(cs)MKLookAroundViewController(py)pointOfInterestFilter	swift.property	pointOfInterestFilter	MKLookAroundViewController.pointOfInterestFilter	@NSCopying @MainActor var pointOfInterestFilter: MKPointOfInterestFilter? { get set }
+c:objc(cs)MKLookAroundViewController(py)scene	swift.property	scene	MKLookAroundViewController.scene	@NSCopying @MainActor var scene: MKLookAroundScene? { get set }
+c:objc(cs)MKLookAroundViewController(py)showsRoadLabels	swift.property	showsRoadLabels	MKLookAroundViewController.showsRoadLabels	@MainActor var showsRoadLabels: Bool { get set }
+c:objc(cs)MKMapCamera	swift.class	MKMapCamera	MKMapCamera	class MKMapCamera
+c:objc(cs)MKMapCamera(cm)cameraLookingAtCenterCoordinate:fromDistance:pitch:heading:	swift.init	init(lookingAtCenter:fromDistance:pitch:heading:)	MKMapCamera.init(lookingAtCenter:fromDistance:pitch:heading:)	convenience init(lookingAtCenter centerCoordinate: CLLocationCoordinate2D, fromDistance distance: CLLocationDistance, pitch: CGFloat, heading: CLLocationDirection)
+c:objc(cs)MKMapCamera(cm)cameraLookingAtCenterCoordinate:fromDistance:pitch:heading:::SYNTHESIZED::c:objc(cs)MKMapCamera	swift.init	init(lookingAtCenterCoordinate:fromDistance:pitch:heading:)	MKMapCamera.init(lookingAtCenterCoordinate:fromDistance:pitch:heading:)	convenience init(lookingAtCenterCoordinate centerCoordinate: CLLocationCoordinate2D, fromDistance distance: CLLocationDistance, pitch: CGFloat, heading: CLLocationDirection)
+c:objc(cs)MKMapCamera(cm)cameraLookingAtCenterCoordinate:fromEyeCoordinate:eyeAltitude:	swift.init	init(lookingAtCenter:fromEyeCoordinate:eyeAltitude:)	MKMapCamera.init(lookingAtCenter:fromEyeCoordinate:eyeAltitude:)	convenience init(lookingAtCenter centerCoordinate: CLLocationCoordinate2D, fromEyeCoordinate eyeCoordinate: CLLocationCoordinate2D, eyeAltitude: CLLocationDistance)
+c:objc(cs)MKMapCamera(cm)cameraLookingAtCenterCoordinate:fromEyeCoordinate:eyeAltitude:::SYNTHESIZED::c:objc(cs)MKMapCamera	swift.init	init(lookingAtCenterCoordinate:fromEyeCoordinate:eyeAltitude:)	MKMapCamera.init(lookingAtCenterCoordinate:fromEyeCoordinate:eyeAltitude:)	convenience init(lookingAtCenterCoordinate centerCoordinate: CLLocationCoordinate2D, fromEyeCoordinate eyeCoordinate: CLLocationCoordinate2D, eyeAltitude: CLLocationDistance)
+c:objc(cs)MKMapCamera(cm)cameraLookingAtMapItem:forViewSize:allowPitch:	swift.init	init(lookingAt:forViewSize:allowPitch:)	MKMapCamera.init(lookingAt:forViewSize:allowPitch:)	convenience init(lookingAt mapItem: MKMapItem, forViewSize viewSize: CGSize, allowPitch: Bool)
+c:objc(cs)MKMapCamera(cm)cameraLookingAtMapItem:forViewSize:allowPitch:::SYNTHESIZED::c:objc(cs)MKMapCamera	swift.init	init(lookingAtMapItem:forViewSize:allowPitch:)	MKMapCamera.init(lookingAtMapItem:forViewSize:allowPitch:)	convenience init(lookingAtMapItem mapItem: MKMapItem, forViewSize viewSize: CGSize, allowPitch: Bool)
+c:objc(cs)MKMapCamera(py)altitude	swift.property	altitude	MKMapCamera.altitude	var altitude: CLLocationDistance { get set }
+c:objc(cs)MKMapCamera(py)centerCoordinate	swift.property	centerCoordinate	MKMapCamera.centerCoordinate	var centerCoordinate: CLLocationCoordinate2D { get set }
+c:objc(cs)MKMapCamera(py)centerCoordinateDistance	swift.property	centerCoordinateDistance	MKMapCamera.centerCoordinateDistance	var centerCoordinateDistance: CLLocationDistance { get set }
+c:objc(cs)MKMapCamera(py)heading	swift.property	heading	MKMapCamera.heading	var heading: CLLocationDirection { get set }
+c:objc(cs)MKMapCamera(py)pitch	swift.property	pitch	MKMapCamera.pitch	var pitch: CGFloat { get set }
+c:objc(cs)MKMapCameraBoundary	swift.class	MKMapView.CameraBoundary	MKMapView.CameraBoundary	class CameraBoundary
+c:objc(cs)MKMapCameraBoundary(im)initWithCoder:	swift.init	init(coder:)	MKMapView.CameraBoundary.init(coder:)	init?(coder: NSCoder)
+c:objc(cs)MKMapCameraBoundary(im)initWithCoordinateRegion:	swift.init	init(coordinateRegion:)	MKMapView.CameraBoundary.init(coordinateRegion:)	init?(coordinateRegion region: MKCoordinateRegion)
+c:objc(cs)MKMapCameraBoundary(im)initWithMapRect:	swift.init	init(mapRect:)	MKMapView.CameraBoundary.init(mapRect:)	init?(mapRect: MKMapRect)
+c:objc(cs)MKMapCameraBoundary(py)mapRect	swift.property	mapRect	MKMapView.CameraBoundary.mapRect	var mapRect: MKMapRect { get }
+c:objc(cs)MKMapCameraBoundary(py)region	swift.property	region	MKMapView.CameraBoundary.region	var region: MKCoordinateRegion { get }
+c:objc(cs)MKMapCameraZoomRange	swift.class	MKMapView.CameraZoomRange	MKMapView.CameraZoomRange	class CameraZoomRange
+c:objc(cs)MKMapCameraZoomRange(im)initWithMaxCenterCoordinateDistance:	swift.init	init(maxCenterCoordinateDistance:)	MKMapView.CameraZoomRange.init(maxCenterCoordinateDistance:)	convenience init?(maxCenterCoordinateDistance maxDistance: CLLocationDistance)
+c:objc(cs)MKMapCameraZoomRange(im)initWithMinCenterCoordinateDistance:	swift.init	init(minCenterCoordinateDistance:)	MKMapView.CameraZoomRange.init(minCenterCoordinateDistance:)	convenience init?(minCenterCoordinateDistance minDistance: CLLocationDistance)
+c:objc(cs)MKMapCameraZoomRange(im)initWithMinCenterCoordinateDistance:maxCenterCoordinateDistance:	swift.init	init(minCenterCoordinateDistance:maxCenterCoordinateDistance:)	MKMapView.CameraZoomRange.init(minCenterCoordinateDistance:maxCenterCoordinateDistance:)	init?(minCenterCoordinateDistance minDistance: CLLocationDistance, maxCenterCoordinateDistance maxDistance: CLLocationDistance)
+c:objc(cs)MKMapCameraZoomRange(py)maxCenterCoordinateDistance	swift.property	maxCenterCoordinateDistance	MKMapView.CameraZoomRange.maxCenterCoordinateDistance	var maxCenterCoordinateDistance: CLLocationDistance { get }
+c:objc(cs)MKMapCameraZoomRange(py)minCenterCoordinateDistance	swift.property	minCenterCoordinateDistance	MKMapView.CameraZoomRange.minCenterCoordinateDistance	var minCenterCoordinateDistance: CLLocationDistance { get }
+c:objc(cs)MKMapConfiguration	swift.class	MKMapConfiguration	MKMapConfiguration	class MKMapConfiguration
+c:objc(cs)MKMapConfiguration(py)elevationStyle	swift.property	elevationStyle	MKMapConfiguration.elevationStyle	var elevationStyle: MKMapConfiguration.ElevationStyle { get set }
+c:objc(cs)MKMapFeatureAnnotation	swift.class	MKMapFeatureAnnotation	MKMapFeatureAnnotation	class MKMapFeatureAnnotation
+c:objc(cs)MKMapFeatureAnnotation(py)featureType	swift.property	featureType	MKMapFeatureAnnotation.featureType	var featureType: MKMapFeatureAnnotation.FeatureType { get }
+c:objc(cs)MKMapFeatureAnnotation(py)iconStyle	swift.property	iconStyle	MKMapFeatureAnnotation.iconStyle	var iconStyle: MKIconStyle? { get }
+c:objc(cs)MKMapFeatureAnnotation(py)pointOfInterestCategory	swift.property	pointOfInterestCategory	MKMapFeatureAnnotation.pointOfInterestCategory	var pointOfInterestCategory: MKPointOfInterestCategory? { get }
+c:objc(cs)MKMapItem	swift.class	MKMapItem	MKMapItem	class MKMapItem
+c:objc(cs)MKMapItem(cm)mapItemForCurrentLocation	swift.type.method	forCurrentLocation()	MKMapItem.forCurrentLocation()	class func forCurrentLocation() -> MKMapItem
+c:objc(cs)MKMapItem(cm)openMapsWithItems:launchOptions:	swift.type.method	openMaps(with:launchOptions:)	MKMapItem.openMaps(with:launchOptions:)	class func openMaps(with mapItems: [MKMapItem], launchOptions: [String : Any]? = nil) -> Bool
+c:objc(cs)MKMapItem(cm)openMapsWithItems:launchOptions:fromScene:completionHandler:	swift.type.method	openMaps(with:launchOptions:from:)	MKMapItem.openMaps(with:launchOptions:from:)	class func openMaps(with mapItems: [MKMapItem], launchOptions: [String : Any]? = nil, from scene: UIScene?) async -> Bool
+c:objc(cs)MKMapItem(im)initWithLocation:address:	swift.init	init(location:address:)	MKMapItem.init(location:address:)	init(location: CLLocation, address: MKAddress?)
+c:objc(cs)MKMapItem(im)initWithPlacemark:	swift.init	init(placemark:)	MKMapItem.init(placemark:)	init(placemark: MKPlacemark)
+c:objc(cs)MKMapItem(im)openInMapsWithLaunchOptions:	swift.method	openInMaps(launchOptions:)	MKMapItem.openInMaps(launchOptions:)	func openInMaps(launchOptions: [String : Any]? = nil) -> Bool
+c:objc(cs)MKMapItem(im)openInMapsWithLaunchOptions:fromScene:completionHandler:	swift.method	openInMaps(launchOptions:from:)	MKMapItem.openInMaps(launchOptions:from:)	func openInMaps(launchOptions: [String : Any]? = nil, from scene: UIScene?) async -> Bool
+c:objc(cs)MKMapItem(py)address	swift.property	address	MKMapItem.address	var address: MKAddress? { get }
+c:objc(cs)MKMapItem(py)addressRepresentations	swift.property	addressRepresentations	MKMapItem.addressRepresentations	var addressRepresentations: MKAddressRepresentations? { get }
+c:objc(cs)MKMapItem(py)alternateIdentifiers	swift.property	alternateIdentifiers	MKMapItem.alternateIdentifiers	var alternateIdentifiers: Set<MKMapItem.Identifier> { get }
+c:objc(cs)MKMapItem(py)identifier	swift.property	identifier	MKMapItem.identifier	var identifier: MKMapItem.Identifier? { get }
+c:objc(cs)MKMapItem(py)isCurrentLocation	swift.property	isCurrentLocation	MKMapItem.isCurrentLocation	var isCurrentLocation: Bool { get }
+c:objc(cs)MKMapItem(py)location	swift.property	location	MKMapItem.location	var location: CLLocation { get }
+c:objc(cs)MKMapItem(py)name	swift.property	name	MKMapItem.name	var name: String? { get set }
+c:objc(cs)MKMapItem(py)phoneNumber	swift.property	phoneNumber	MKMapItem.phoneNumber	var phoneNumber: String? { get set }
+c:objc(cs)MKMapItem(py)placemark	swift.property	placemark	MKMapItem.placemark	var placemark: MKPlacemark { get }
+c:objc(cs)MKMapItem(py)pointOfInterestCategory	swift.property	pointOfInterestCategory	MKMapItem.pointOfInterestCategory	var pointOfInterestCategory: MKPointOfInterestCategory? { get set }
+c:objc(cs)MKMapItem(py)timeZone	swift.property	timeZone	MKMapItem.timeZone	var timeZone: TimeZone? { get set }
+c:objc(cs)MKMapItem(py)url	swift.property	url	MKMapItem.url	var url: URL? { get set }
+c:objc(cs)MKMapItemAnnotation	swift.class	MKMapItemAnnotation	MKMapItemAnnotation	class MKMapItemAnnotation
+c:objc(cs)MKMapItemAnnotation(im)initWithMapItem:	swift.init	init(mapItem:)	MKMapItemAnnotation.init(mapItem:)	init?(mapItem: MKMapItem)
+c:objc(cs)MKMapItemAnnotation(py)mapItem	swift.property	mapItem	MKMapItemAnnotation.mapItem	var mapItem: MKMapItem { get }
+c:objc(cs)MKMapItemDetailSelectionAccessoryPresentationStyle	swift.class	MKSelectionAccessory.MapItemDetailPresentationStyle	MKSelectionAccessory.MapItemDetailPresentationStyle	class MapItemDetailPresentationStyle
+c:objc(cs)MKMapItemDetailSelectionAccessoryPresentationStyle(cm)sheetPresentedFromViewController:	swift.type.method	sheet(presentedFrom:)	MKSelectionAccessory.MapItemDetailPresentationStyle.sheet(presentedFrom:)	class func sheet(presentedFrom viewController: UIViewController) -> MKSelectionAccessory.MapItemDetailPresentationStyle
+c:objc(cs)MKMapItemDetailSelectionAccessoryPresentationStyle(cpy)callout	swift.type.property	callout	MKSelectionAccessory.MapItemDetailPresentationStyle.callout	class var callout: MKSelectionAccessory.MapItemDetailPresentationStyle { get }
+c:objc(cs)MKMapItemDetailSelectionAccessoryPresentationStyle(cpy)openInMaps	swift.type.property	openInMaps	MKSelectionAccessory.MapItemDetailPresentationStyle.openInMaps	class var openInMaps: MKSelectionAccessory.MapItemDetailPresentationStyle { get }
+c:objc(cs)MKMapItemDetailViewController	swift.class	MKMapItemDetailViewController	MKMapItemDetailViewController	@MainActor class MKMapItemDetailViewController
+c:objc(cs)MKMapItemDetailViewController(im)initWithMapItem:	swift.init	init(mapItem:)	MKMapItemDetailViewController.init(mapItem:)	@MainActor init(mapItem: MKMapItem?)
+c:objc(cs)MKMapItemDetailViewController(im)initWithMapItem:displaysMap:	swift.init	init(mapItem:displaysMap:)	MKMapItemDetailViewController.init(mapItem:displaysMap:)	@MainActor init(mapItem: MKMapItem?, displaysMap: Bool)
+c:objc(cs)MKMapItemDetailViewController(py)delegate	swift.property	delegate	MKMapItemDetailViewController.delegate	@MainActor weak var delegate: (any MKMapItemDetailViewControllerDelegate)? { get set }
+c:objc(cs)MKMapItemDetailViewController(py)mapItem	swift.property	mapItem	MKMapItemDetailViewController.mapItem	@MainActor var mapItem: MKMapItem? { get set }
+c:objc(cs)MKMapItemIdentifier	swift.class	MKMapItem.Identifier	MKMapItem.Identifier	class Identifier
+c:objc(cs)MKMapItemIdentifier(im)initWithIdentifierString:	swift.init	init(rawValue:)	MKMapItem.Identifier.init(rawValue:)	init?(rawValue string: String)
+c:objc(cs)MKMapItemIdentifier(im)initWithIdentifierString:::SYNTHESIZED::c:objc(cs)MKMapItemIdentifier	swift.init	init(identifierString:)	MKMapItem.Identifier.init(identifierString:)	init?(identifierString string: String)
+c:objc(cs)MKMapItemIdentifier(py)identifierString	swift.property	rawValue	MKMapItem.Identifier.rawValue	var rawValue: String { get }
+c:objc(cs)MKMapItemRequest	swift.class	MKMapItemRequest	MKMapItemRequest	class MKMapItemRequest
+c:objc(cs)MKMapItemRequest(im)cancel	swift.method	cancel()	MKMapItemRequest.cancel()	func cancel()
+c:objc(cs)MKMapItemRequest(im)getMapItemWithCompletionHandler:	swift.method	getMapItem(completionHandler:)	MKMapItemRequest.getMapItem(completionHandler:)	func getMapItem(completionHandler: @escaping @MainActor (MKMapItem?, (any Error)?) -> Void)
+c:objc(cs)MKMapItemRequest(im)initWithMapFeatureAnnotation:	swift.init	init(mapFeatureAnnotation:)	MKMapItemRequest.init(mapFeatureAnnotation:)	init(mapFeatureAnnotation: MKMapFeatureAnnotation)
+c:objc(cs)MKMapItemRequest(im)initWithMapItemIdentifier:	swift.init	init(mapItemIdentifier:)	MKMapItemRequest.init(mapItemIdentifier:)	init(mapItemIdentifier identifier: MKMapItem.Identifier)
+c:objc(cs)MKMapItemRequest(py)cancelled	swift.property	isCancelled	MKMapItemRequest.isCancelled	var isCancelled: Bool { get }
+c:objc(cs)MKMapItemRequest(py)featureAnnotation	swift.property	featureAnnotation	MKMapItemRequest.featureAnnotation	var featureAnnotation: MKMapFeatureAnnotation { get }
+c:objc(cs)MKMapItemRequest(py)loading	swift.property	isLoading	MKMapItemRequest.isLoading	var isLoading: Bool { get }
+c:objc(cs)MKMapItemRequest(py)mapFeatureAnnotation	swift.property	mapFeatureAnnotation	MKMapItemRequest.mapFeatureAnnotation	var mapFeatureAnnotation: MKMapFeatureAnnotation? { get }
+c:objc(cs)MKMapItemRequest(py)mapItemIdentifier	swift.property	mapItemIdentifier	MKMapItemRequest.mapItemIdentifier	var mapItemIdentifier: MKMapItem.Identifier? { get }
+c:objc(cs)MKMapSnapshot	swift.class	MKMapSnapshotter.Snapshot	MKMapSnapshotter.Snapshot	class Snapshot
+c:objc(cs)MKMapSnapshot(im)pointForCoordinate:	swift.method	point(for:)	MKMapSnapshotter.Snapshot.point(for:)	func point(for coordinate: CLLocationCoordinate2D) -> CGPoint
+c:objc(cs)MKMapSnapshot(py)image	swift.property	image	MKMapSnapshotter.Snapshot.image	var image: UIImage { get }
+c:objc(cs)MKMapSnapshot(py)traitCollection	swift.property	traitCollection	MKMapSnapshotter.Snapshot.traitCollection	var traitCollection: UITraitCollection { get }
+c:objc(cs)MKMapSnapshotOptions	swift.class	MKMapSnapshotter.Options	MKMapSnapshotter.Options	class Options
+c:objc(cs)MKMapSnapshotOptions(py)camera	swift.property	camera	MKMapSnapshotter.Options.camera	@NSCopying var camera: MKMapCamera { get set }
+c:objc(cs)MKMapSnapshotOptions(py)mapRect	swift.property	mapRect	MKMapSnapshotter.Options.mapRect	var mapRect: MKMapRect { get set }
+c:objc(cs)MKMapSnapshotOptions(py)mapType	swift.property	mapType	MKMapSnapshotter.Options.mapType	var mapType: MKMapType { get set }
+c:objc(cs)MKMapSnapshotOptions(py)pointOfInterestFilter	swift.property	pointOfInterestFilter	MKMapSnapshotter.Options.pointOfInterestFilter	@NSCopying var pointOfInterestFilter: MKPointOfInterestFilter? { get set }
+c:objc(cs)MKMapSnapshotOptions(py)preferredConfiguration	swift.property	preferredConfiguration	MKMapSnapshotter.Options.preferredConfiguration	@NSCopying var preferredConfiguration: MKMapConfiguration { get set }
+c:objc(cs)MKMapSnapshotOptions(py)region	swift.property	region	MKMapSnapshotter.Options.region	var region: MKCoordinateRegion { get set }
+c:objc(cs)MKMapSnapshotOptions(py)scale	swift.property	scale	MKMapSnapshotter.Options.scale	var scale: CGFloat { get set }
+c:objc(cs)MKMapSnapshotOptions(py)showsBuildings	swift.property	showsBuildings	MKMapSnapshotter.Options.showsBuildings	var showsBuildings: Bool { get set }
+c:objc(cs)MKMapSnapshotOptions(py)showsPointsOfInterest	swift.property	showsPointsOfInterest	MKMapSnapshotter.Options.showsPointsOfInterest	var showsPointsOfInterest: Bool { get set }
+c:objc(cs)MKMapSnapshotOptions(py)size	swift.property	size	MKMapSnapshotter.Options.size	var size: CGSize { get set }
+c:objc(cs)MKMapSnapshotOptions(py)traitCollection	swift.property	traitCollection	MKMapSnapshotter.Options.traitCollection	@NSCopying var traitCollection: UITraitCollection { get set }
+c:objc(cs)MKMapSnapshotter	swift.class	MKMapSnapshotter	MKMapSnapshotter	class MKMapSnapshotter
+c:objc(cs)MKMapSnapshotter(im)cancel	swift.method	cancel()	MKMapSnapshotter.cancel()	func cancel()
+c:objc(cs)MKMapSnapshotter(im)initWithOptions:	swift.init	init(options:)	MKMapSnapshotter.init(options:)	init(options: MKMapSnapshotter.Options)
+c:objc(cs)MKMapSnapshotter(im)startWithCompletionHandler:	swift.method	start(completionHandler:)	MKMapSnapshotter.start(completionHandler:)	func start(completionHandler: @escaping @MainActor (MKMapSnapshotter.Snapshot?, (any Error)?) -> Void)
+c:objc(cs)MKMapSnapshotter(im)startWithQueue:completionHandler:	swift.method	start(with:)	MKMapSnapshotter.start(with:)	func start(with queue: dispatch_queue_t) async throws -> MKMapSnapshotter.Snapshot
+c:objc(cs)MKMapSnapshotter(py)loading	swift.property	isLoading	MKMapSnapshotter.isLoading	var isLoading: Bool { get }
+c:objc(cs)MKMapView	swift.class	MKMapView	MKMapView	@MainActor class MKMapView
+c:objc(cs)MKMapView(im)addAnnotation:	swift.method	addAnnotation(_:)	MKMapView.addAnnotation(_:)	@MainActor func addAnnotation(_ annotation: any MKAnnotation)
+c:objc(cs)MKMapView(im)addAnnotations:	swift.method	addAnnotations(_:)	MKMapView.addAnnotations(_:)	@MainActor func addAnnotations(_ annotations: [any MKAnnotation])
+c:objc(cs)MKMapView(im)addOverlay:	swift.method	addOverlay(_:)	MKMapView.addOverlay(_:)	@MainActor func addOverlay(_ overlay: any MKOverlay)
+c:objc(cs)MKMapView(im)addOverlay:level:	swift.method	addOverlay(_:level:)	MKMapView.addOverlay(_:level:)	@MainActor func addOverlay(_ overlay: any MKOverlay, level: MKOverlayLevel)
+c:objc(cs)MKMapView(im)addOverlays:	swift.method	addOverlays(_:)	MKMapView.addOverlays(_:)	@MainActor func addOverlays(_ overlays: [any MKOverlay])
+c:objc(cs)MKMapView(im)addOverlays:level:	swift.method	addOverlays(_:level:)	MKMapView.addOverlays(_:level:)	@MainActor func addOverlays(_ overlays: [any MKOverlay], level: MKOverlayLevel)
+c:objc(cs)MKMapView(im)annotationsInMapRect:	swift.method	annotations(in:)	MKMapView.annotations(in:)	@MainActor func annotations(in mapRect: MKMapRect) -> Set<AnyHashable>
+c:objc(cs)MKMapView(im)convertCoordinate:toPointToView:	swift.method	convert(_:toPointTo:)	MKMapView.convert(_:toPointTo:)	@MainActor func convert(_ coordinate: CLLocationCoordinate2D, toPointTo view: UIView?) -> CGPoint
+c:objc(cs)MKMapView(im)convertPoint:toCoordinateFromView:	swift.method	convert(_:toCoordinateFrom:)	MKMapView.convert(_:toCoordinateFrom:)	@MainActor func convert(_ point: CGPoint, toCoordinateFrom view: UIView?) -> CLLocationCoordinate2D
+c:objc(cs)MKMapView(im)convertRect:toRegionFromView:	swift.method	convert(_:toRegionFrom:)	MKMapView.convert(_:toRegionFrom:)	@MainActor func convert(_ rect: CGRect, toRegionFrom view: UIView?) -> MKCoordinateRegion
+c:objc(cs)MKMapView(im)convertRegion:toRectToView:	swift.method	convert(_:toRectTo:)	MKMapView.convert(_:toRectTo:)	@MainActor func convert(_ region: MKCoordinateRegion, toRectTo view: UIView?) -> CGRect
+c:objc(cs)MKMapView(im)dequeueReusableAnnotationViewWithIdentifier:	swift.method	dequeueReusableAnnotationView(withIdentifier:)	MKMapView.dequeueReusableAnnotationView(withIdentifier:)	@MainActor func dequeueReusableAnnotationView(withIdentifier identifier: String) -> MKAnnotationView?
+c:objc(cs)MKMapView(im)dequeueReusableAnnotationViewWithIdentifier:forAnnotation:	swift.method	dequeueReusableAnnotationView(withIdentifier:for:)	MKMapView.dequeueReusableAnnotationView(withIdentifier:for:)	@MainActor func dequeueReusableAnnotationView(withIdentifier identifier: String, for annotation: any MKAnnotation) -> MKAnnotationView
+c:objc(cs)MKMapView(im)deselectAnnotation:animated:	swift.method	deselectAnnotation(_:animated:)	MKMapView.deselectAnnotation(_:animated:)	@MainActor func deselectAnnotation(_ annotation: (any MKAnnotation)?, animated: Bool)
+c:objc(cs)MKMapView(im)exchangeOverlay:withOverlay:	swift.method	exchangeOverlay(_:with:)	MKMapView.exchangeOverlay(_:with:)	@MainActor func exchangeOverlay(_ overlay1: any MKOverlay, with overlay2: any MKOverlay)
+c:objc(cs)MKMapView(im)exchangeOverlayAtIndex:withOverlayAtIndex:	swift.method	exchangeOverlay(at:withOverlayAt:)	MKMapView.exchangeOverlay(at:withOverlayAt:)	@MainActor func exchangeOverlay(at index1: Int, withOverlayAt index2: Int)
+c:objc(cs)MKMapView(im)insertOverlay:aboveOverlay:	swift.method	insertOverlay(_:above:)	MKMapView.insertOverlay(_:above:)	@MainActor func insertOverlay(_ overlay: any MKOverlay, above sibling: any MKOverlay)
+c:objc(cs)MKMapView(im)insertOverlay:atIndex:	swift.method	insertOverlay(_:at:)	MKMapView.insertOverlay(_:at:)	@MainActor func insertOverlay(_ overlay: any MKOverlay, at index: Int)
+c:objc(cs)MKMapView(im)insertOverlay:atIndex:level:	swift.method	insertOverlay(_:at:level:)	MKMapView.insertOverlay(_:at:level:)	@MainActor func insertOverlay(_ overlay: any MKOverlay, at index: Int, level: MKOverlayLevel)
+c:objc(cs)MKMapView(im)insertOverlay:belowOverlay:	swift.method	insertOverlay(_:below:)	MKMapView.insertOverlay(_:below:)	@MainActor func insertOverlay(_ overlay: any MKOverlay, below sibling: any MKOverlay)
+c:objc(cs)MKMapView(im)mapRectThatFits:	swift.method	mapRectThatFits(_:)	MKMapView.mapRectThatFits(_:)	@MainActor func mapRectThatFits(_ mapRect: MKMapRect) -> MKMapRect
+c:objc(cs)MKMapView(im)mapRectThatFits:edgePadding:	swift.method	mapRectThatFits(_:edgePadding:)	MKMapView.mapRectThatFits(_:edgePadding:)	@MainActor func mapRectThatFits(_ mapRect: MKMapRect, edgePadding insets: UIEdgeInsets) -> MKMapRect
+c:objc(cs)MKMapView(im)overlaysInLevel:	swift.method	overlays(in:)	MKMapView.overlays(in:)	@MainActor func overlays(in level: MKOverlayLevel) -> [any MKOverlay]
+c:objc(cs)MKMapView(im)regionThatFits:	swift.method	regionThatFits(_:)	MKMapView.regionThatFits(_:)	@MainActor func regionThatFits(_ region: MKCoordinateRegion) -> MKCoordinateRegion
+c:objc(cs)MKMapView(im)registerClass:forAnnotationViewWithReuseIdentifier:	swift.method	register(_:forAnnotationViewWithReuseIdentifier:)	MKMapView.register(_:forAnnotationViewWithReuseIdentifier:)	@MainActor func register(_ viewClass: AnyClass?, forAnnotationViewWithReuseIdentifier identifier: String)
+c:objc(cs)MKMapView(im)removeAnnotation:	swift.method	removeAnnotation(_:)	MKMapView.removeAnnotation(_:)	@MainActor func removeAnnotation(_ annotation: any MKAnnotation)
+c:objc(cs)MKMapView(im)removeAnnotations:	swift.method	removeAnnotations(_:)	MKMapView.removeAnnotations(_:)	@MainActor func removeAnnotations(_ annotations: [any MKAnnotation])
+c:objc(cs)MKMapView(im)removeOverlay:	swift.method	removeOverlay(_:)	MKMapView.removeOverlay(_:)	@MainActor func removeOverlay(_ overlay: any MKOverlay)
+c:objc(cs)MKMapView(im)removeOverlays:	swift.method	removeOverlays(_:)	MKMapView.removeOverlays(_:)	@MainActor func removeOverlays(_ overlays: [any MKOverlay])
+c:objc(cs)MKMapView(im)rendererForOverlay:	swift.method	renderer(for:)	MKMapView.renderer(for:)	@MainActor func renderer(for overlay: any MKOverlay) -> MKOverlayRenderer?
+c:objc(cs)MKMapView(im)selectAnnotation:animated:	swift.method	selectAnnotation(_:animated:)	MKMapView.selectAnnotation(_:animated:)	@MainActor func selectAnnotation(_ annotation: any MKAnnotation, animated: Bool)
+c:objc(cs)MKMapView(im)setCamera:animated:	swift.method	setCamera(_:animated:)	MKMapView.setCamera(_:animated:)	@MainActor func setCamera(_ camera: MKMapCamera, animated: Bool)
+c:objc(cs)MKMapView(im)setCameraBoundary:animated:	swift.method	setCameraBoundary(_:animated:)	MKMapView.setCameraBoundary(_:animated:)	@MainActor func setCameraBoundary(_ cameraBoundary: MKMapView.CameraBoundary?, animated: Bool)
+c:objc(cs)MKMapView(im)setCameraZoomRange:animated:	swift.method	setCameraZoomRange(_:animated:)	MKMapView.setCameraZoomRange(_:animated:)	@MainActor func setCameraZoomRange(_ cameraZoomRange: MKMapView.CameraZoomRange?, animated: Bool)
+c:objc(cs)MKMapView(im)setCenterCoordinate:animated:	swift.method	setCenter(_:animated:)	MKMapView.setCenter(_:animated:)	@MainActor func setCenter(_ coordinate: CLLocationCoordinate2D, animated: Bool)
+c:objc(cs)MKMapView(im)setRegion:animated:	swift.method	setRegion(_:animated:)	MKMapView.setRegion(_:animated:)	@MainActor func setRegion(_ region: MKCoordinateRegion, animated: Bool)
+c:objc(cs)MKMapView(im)setUserTrackingMode:animated:	swift.method	setUserTrackingMode(_:animated:)	MKMapView.setUserTrackingMode(_:animated:)	@MainActor func setUserTrackingMode(_ mode: MKUserTrackingMode, animated: Bool)
+c:objc(cs)MKMapView(im)setVisibleMapRect:animated:	swift.method	setVisibleMapRect(_:animated:)	MKMapView.setVisibleMapRect(_:animated:)	@MainActor func setVisibleMapRect(_ mapRect: MKMapRect, animated animate: Bool)
+c:objc(cs)MKMapView(im)setVisibleMapRect:edgePadding:animated:	swift.method	setVisibleMapRect(_:edgePadding:animated:)	MKMapView.setVisibleMapRect(_:edgePadding:animated:)	@MainActor func setVisibleMapRect(_ mapRect: MKMapRect, edgePadding insets: UIEdgeInsets, animated animate: Bool)
+c:objc(cs)MKMapView(im)showAnnotations:animated:	swift.method	showAnnotations(_:animated:)	MKMapView.showAnnotations(_:animated:)	@MainActor func showAnnotations(_ annotations: [any MKAnnotation], animated: Bool)
+c:objc(cs)MKMapView(im)viewForAnnotation:	swift.method	view(for:)	MKMapView.view(for:)	@MainActor func view(for annotation: any MKAnnotation) -> MKAnnotationView?
+c:objc(cs)MKMapView(im)viewForOverlay:	swift.method	view(for:)	MKMapView.view(for:)	@MainActor func view(for overlay: any MKOverlay) -> MKOverlayView
+c:objc(cs)MKMapView(py)annotationVisibleRect	swift.property	annotationVisibleRect	MKMapView.annotationVisibleRect	@MainActor var annotationVisibleRect: CGRect { get }
+c:objc(cs)MKMapView(py)annotations	swift.property	annotations	MKMapView.annotations	@MainActor var annotations: [any MKAnnotation] { get }
+c:objc(cs)MKMapView(py)camera	swift.property	camera	MKMapView.camera	@NSCopying @MainActor var camera: MKMapCamera { get set }
+c:objc(cs)MKMapView(py)cameraBoundary	swift.property	cameraBoundary	MKMapView.cameraBoundary	@NSCopying @MainActor var cameraBoundary: MKMapView.CameraBoundary? { get set }
+c:objc(cs)MKMapView(py)cameraZoomRange	swift.property	cameraZoomRange	MKMapView.cameraZoomRange	@NSCopying @MainActor var cameraZoomRange: MKMapView.CameraZoomRange! { get set }
+c:objc(cs)MKMapView(py)centerCoordinate	swift.property	centerCoordinate	MKMapView.centerCoordinate	@MainActor var centerCoordinate: CLLocationCoordinate2D { get set }
+c:objc(cs)MKMapView(py)delegate	swift.property	delegate	MKMapView.delegate	@IBOutlet @MainActor weak var delegate: (any MKMapViewDelegate)? { get set }
+c:objc(cs)MKMapView(py)mapType	swift.property	mapType	MKMapView.mapType	@MainActor var mapType: MKMapType { get set }
+c:objc(cs)MKMapView(py)overlays	swift.property	overlays	MKMapView.overlays	@MainActor var overlays: [any MKOverlay] { get }
+c:objc(cs)MKMapView(py)pitchButtonVisibility	swift.property	pitchButtonVisibility	MKMapView.pitchButtonVisibility	@MainActor var pitchButtonVisibility: MKFeatureVisibility { get set }
+c:objc(cs)MKMapView(py)pitchEnabled	swift.property	isPitchEnabled	MKMapView.isPitchEnabled	@MainActor var isPitchEnabled: Bool { get set }
+c:objc(cs)MKMapView(py)pointOfInterestFilter	swift.property	pointOfInterestFilter	MKMapView.pointOfInterestFilter	@NSCopying @MainActor var pointOfInterestFilter: MKPointOfInterestFilter? { get set }
+c:objc(cs)MKMapView(py)preferredConfiguration	swift.property	preferredConfiguration	MKMapView.preferredConfiguration	@NSCopying @MainActor var preferredConfiguration: MKMapConfiguration { get set }
+c:objc(cs)MKMapView(py)region	swift.property	region	MKMapView.region	@MainActor var region: MKCoordinateRegion { get set }
+c:objc(cs)MKMapView(py)rotateEnabled	swift.property	isRotateEnabled	MKMapView.isRotateEnabled	@MainActor var isRotateEnabled: Bool { get set }
+c:objc(cs)MKMapView(py)scrollEnabled	swift.property	isScrollEnabled	MKMapView.isScrollEnabled	@MainActor var isScrollEnabled: Bool { get set }
+c:objc(cs)MKMapView(py)selectableMapFeatures	swift.property	selectableMapFeatures	MKMapView.selectableMapFeatures	@MainActor var selectableMapFeatures: MKMapFeatureOptions { get set }
+c:objc(cs)MKMapView(py)selectedAnnotations	swift.property	selectedAnnotations	MKMapView.selectedAnnotations	@MainActor var selectedAnnotations: [any MKAnnotation] { get set }
+c:objc(cs)MKMapView(py)showsBuildings	swift.property	showsBuildings	MKMapView.showsBuildings	@MainActor var showsBuildings: Bool { get set }
+c:objc(cs)MKMapView(py)showsCompass	swift.property	showsCompass	MKMapView.showsCompass	@MainActor var showsCompass: Bool { get set }
+c:objc(cs)MKMapView(py)showsPointsOfInterest	swift.property	showsPointsOfInterest	MKMapView.showsPointsOfInterest	@MainActor var showsPointsOfInterest: Bool { get set }
+c:objc(cs)MKMapView(py)showsScale	swift.property	showsScale	MKMapView.showsScale	@MainActor var showsScale: Bool { get set }
+c:objc(cs)MKMapView(py)showsTraffic	swift.property	showsTraffic	MKMapView.showsTraffic	@MainActor var showsTraffic: Bool { get set }
+c:objc(cs)MKMapView(py)showsUserLocation	swift.property	showsUserLocation	MKMapView.showsUserLocation	@MainActor var showsUserLocation: Bool { get set }
+c:objc(cs)MKMapView(py)showsUserTrackingButton	swift.property	showsUserTrackingButton	MKMapView.showsUserTrackingButton	@MainActor var showsUserTrackingButton: Bool { get set }
+c:objc(cs)MKMapView(py)userLocation	swift.property	userLocation	MKMapView.userLocation	@MainActor var userLocation: MKUserLocation { get }
+c:objc(cs)MKMapView(py)userLocationVisible	swift.property	isUserLocationVisible	MKMapView.isUserLocationVisible	@MainActor var isUserLocationVisible: Bool { get }
+c:objc(cs)MKMapView(py)userTrackingMode	swift.property	userTrackingMode	MKMapView.userTrackingMode	@MainActor var userTrackingMode: MKUserTrackingMode { get set }
+c:objc(cs)MKMapView(py)visibleMapRect	swift.property	visibleMapRect	MKMapView.visibleMapRect	@MainActor var visibleMapRect: MKMapRect { get set }
+c:objc(cs)MKMapView(py)zoomEnabled	swift.property	isZoomEnabled	MKMapView.isZoomEnabled	@MainActor var isZoomEnabled: Bool { get set }
+c:objc(cs)MKMarkerAnnotationView	swift.class	MKMarkerAnnotationView	MKMarkerAnnotationView	@MainActor class MKMarkerAnnotationView
+c:objc(cs)MKMarkerAnnotationView(py)animatesWhenAdded	swift.property	animatesWhenAdded	MKMarkerAnnotationView.animatesWhenAdded	@MainActor var animatesWhenAdded: Bool { get set }
+c:objc(cs)MKMarkerAnnotationView(py)glyphImage	swift.property	glyphImage	MKMarkerAnnotationView.glyphImage	@NSCopying @MainActor var glyphImage: UIImage? { get set }
+c:objc(cs)MKMarkerAnnotationView(py)glyphText	swift.property	glyphText	MKMarkerAnnotationView.glyphText	@MainActor var glyphText: String? { get set }
+c:objc(cs)MKMarkerAnnotationView(py)glyphTintColor	swift.property	glyphTintColor	MKMarkerAnnotationView.glyphTintColor	@NSCopying @MainActor var glyphTintColor: UIColor? { get set }
+c:objc(cs)MKMarkerAnnotationView(py)markerTintColor	swift.property	markerTintColor	MKMarkerAnnotationView.markerTintColor	@NSCopying @MainActor var markerTintColor: UIColor? { get set }
+c:objc(cs)MKMarkerAnnotationView(py)selectedGlyphImage	swift.property	selectedGlyphImage	MKMarkerAnnotationView.selectedGlyphImage	@NSCopying @MainActor var selectedGlyphImage: UIImage? { get set }
+c:objc(cs)MKMarkerAnnotationView(py)subtitleVisibility	swift.property	subtitleVisibility	MKMarkerAnnotationView.subtitleVisibility	@MainActor var subtitleVisibility: MKFeatureVisibility { get set }
+c:objc(cs)MKMarkerAnnotationView(py)titleVisibility	swift.property	titleVisibility	MKMarkerAnnotationView.titleVisibility	@MainActor var titleVisibility: MKFeatureVisibility { get set }
+c:objc(cs)MKMultiPoint	swift.class	MKMultiPoint	MKMultiPoint	class MKMultiPoint
+c:objc(cs)MKMultiPoint(im)getCoordinates:range:	swift.method	getCoordinates(_:range:)	MKMultiPoint.getCoordinates(_:range:)	func getCoordinates(_ coords: UnsafeMutablePointer<CLLocationCoordinate2D>, range: NSRange)
+c:objc(cs)MKMultiPoint(im)locationAtPointIndex:	swift.method	location(atPointIndex:)	MKMultiPoint.location(atPointIndex:)	func location(atPointIndex index: Int) -> CGFloat
+c:objc(cs)MKMultiPoint(im)points	swift.method	points()	MKMultiPoint.points()	func points() -> UnsafeMutablePointer<MKMapPoint>
+c:objc(cs)MKMultiPoint(py)pointCount	swift.property	pointCount	MKMultiPoint.pointCount	var pointCount: Int { get }
+c:objc(cs)MKMultiPolygon	swift.class	MKMultiPolygon	MKMultiPolygon	class MKMultiPolygon
+c:objc(cs)MKMultiPolygon(im)initWithPolygons:	swift.init	init(_:)	MKMultiPolygon.init(_:)	init(_ polygons: [MKPolygon])
+c:objc(cs)MKMultiPolygon(im)initWithPolygons:::SYNTHESIZED::c:objc(cs)MKMultiPolygon	swift.init	init(polygons:)	MKMultiPolygon.init(polygons:)	init(polygons: [MKPolygon])
+c:objc(cs)MKMultiPolygon(py)polygons	swift.property	polygons	MKMultiPolygon.polygons	var polygons: [MKPolygon] { get }
+c:objc(cs)MKMultiPolygonRenderer	swift.class	MKMultiPolygonRenderer	MKMultiPolygonRenderer	class MKMultiPolygonRenderer
+c:objc(cs)MKMultiPolygonRenderer(im)initWithMultiPolygon:	swift.init	init(multiPolygon:)	MKMultiPolygonRenderer.init(multiPolygon:)	init(multiPolygon: MKMultiPolygon)
+c:objc(cs)MKMultiPolygonRenderer(py)multiPolygon	swift.property	multiPolygon	MKMultiPolygonRenderer.multiPolygon	var multiPolygon: MKMultiPolygon { get }
+c:objc(cs)MKMultiPolyline	swift.class	MKMultiPolyline	MKMultiPolyline	class MKMultiPolyline
+c:objc(cs)MKMultiPolyline(im)initWithPolylines:	swift.init	init(_:)	MKMultiPolyline.init(_:)	init(_ polylines: [MKPolyline])
+c:objc(cs)MKMultiPolyline(im)initWithPolylines:::SYNTHESIZED::c:objc(cs)MKMultiPolyline	swift.init	init(polylines:)	MKMultiPolyline.init(polylines:)	init(polylines: [MKPolyline])
+c:objc(cs)MKMultiPolyline(py)polylines	swift.property	polylines	MKMultiPolyline.polylines	var polylines: [MKPolyline] { get }
+c:objc(cs)MKMultiPolylineRenderer	swift.class	MKMultiPolylineRenderer	MKMultiPolylineRenderer	class MKMultiPolylineRenderer
+c:objc(cs)MKMultiPolylineRenderer(im)initWithMultiPolyline:	swift.init	init(multiPolyline:)	MKMultiPolylineRenderer.init(multiPolyline:)	init(multiPolyline: MKMultiPolyline)
+c:objc(cs)MKMultiPolylineRenderer(py)multiPolyline	swift.property	multiPolyline	MKMultiPolylineRenderer.multiPolyline	var multiPolyline: MKMultiPolyline { get }
+c:objc(cs)MKOverlayPathRenderer	swift.class	MKOverlayPathRenderer	MKOverlayPathRenderer	class MKOverlayPathRenderer
+c:objc(cs)MKOverlayPathRenderer(im)applyFillPropertiesToContext:atZoomScale:	swift.method	applyFillProperties(to:atZoomScale:)	MKOverlayPathRenderer.applyFillProperties(to:atZoomScale:)	func applyFillProperties(to context: CGContext, atZoomScale zoomScale: MKZoomScale)
+c:objc(cs)MKOverlayPathRenderer(im)applyStrokePropertiesToContext:atZoomScale:	swift.method	applyStrokeProperties(to:atZoomScale:)	MKOverlayPathRenderer.applyStrokeProperties(to:atZoomScale:)	func applyStrokeProperties(to context: CGContext, atZoomScale zoomScale: MKZoomScale)
+c:objc(cs)MKOverlayPathRenderer(im)createPath	swift.method	createPath()	MKOverlayPathRenderer.createPath()	func createPath()
+c:objc(cs)MKOverlayPathRenderer(im)fillPath:inContext:	swift.method	fillPath(_:in:)	MKOverlayPathRenderer.fillPath(_:in:)	func fillPath(_ path: CGPath, in context: CGContext)
+c:objc(cs)MKOverlayPathRenderer(im)invalidatePath	swift.method	invalidatePath()	MKOverlayPathRenderer.invalidatePath()	func invalidatePath()
+c:objc(cs)MKOverlayPathRenderer(im)strokePath:inContext:	swift.method	strokePath(_:in:)	MKOverlayPathRenderer.strokePath(_:in:)	func strokePath(_ path: CGPath, in context: CGContext)
+c:objc(cs)MKOverlayPathRenderer(py)fillColor	swift.property	fillColor	MKOverlayPathRenderer.fillColor	var fillColor: UIColor? { get set }
+c:objc(cs)MKOverlayPathRenderer(py)lineCap	swift.property	lineCap	MKOverlayPathRenderer.lineCap	var lineCap: CGLineCap { get set }
+c:objc(cs)MKOverlayPathRenderer(py)lineDashPattern	swift.property	lineDashPattern	MKOverlayPathRenderer.lineDashPattern	var lineDashPattern: [NSNumber]? { get set }
+c:objc(cs)MKOverlayPathRenderer(py)lineDashPhase	swift.property	lineDashPhase	MKOverlayPathRenderer.lineDashPhase	var lineDashPhase: CGFloat { get set }
+c:objc(cs)MKOverlayPathRenderer(py)lineJoin	swift.property	lineJoin	MKOverlayPathRenderer.lineJoin	var lineJoin: CGLineJoin { get set }
+c:objc(cs)MKOverlayPathRenderer(py)lineWidth	swift.property	lineWidth	MKOverlayPathRenderer.lineWidth	var lineWidth: CGFloat { get set }
+c:objc(cs)MKOverlayPathRenderer(py)miterLimit	swift.property	miterLimit	MKOverlayPathRenderer.miterLimit	var miterLimit: CGFloat { get set }
+c:objc(cs)MKOverlayPathRenderer(py)path	swift.property	path	MKOverlayPathRenderer.path	var path: CGPath! { get set }
+c:objc(cs)MKOverlayPathRenderer(py)shouldRasterize	swift.property	shouldRasterize	MKOverlayPathRenderer.shouldRasterize	var shouldRasterize: Bool { get set }
+c:objc(cs)MKOverlayPathRenderer(py)strokeColor	swift.property	strokeColor	MKOverlayPathRenderer.strokeColor	var strokeColor: UIColor? { get set }
+c:objc(cs)MKOverlayPathView	swift.class	MKOverlayPathView	MKOverlayPathView	@MainActor class MKOverlayPathView
+c:objc(cs)MKOverlayRenderer	swift.class	MKOverlayRenderer	MKOverlayRenderer	class MKOverlayRenderer
+c:objc(cs)MKOverlayRenderer(im)canDrawMapRect:zoomScale:	swift.method	canDraw(_:zoomScale:)	MKOverlayRenderer.canDraw(_:zoomScale:)	func canDraw(_ mapRect: MKMapRect, zoomScale: MKZoomScale) -> Bool
+c:objc(cs)MKOverlayRenderer(im)drawMapRect:zoomScale:inContext:	swift.method	draw(_:zoomScale:in:)	MKOverlayRenderer.draw(_:zoomScale:in:)	func draw(_ mapRect: MKMapRect, zoomScale: MKZoomScale, in context: CGContext)
+c:objc(cs)MKOverlayRenderer(im)initWithOverlay:	swift.init	init(overlay:)	MKOverlayRenderer.init(overlay:)	init(overlay: any MKOverlay)
+c:objc(cs)MKOverlayRenderer(im)mapPointForPoint:	swift.method	mapPoint(for:)	MKOverlayRenderer.mapPoint(for:)	func mapPoint(for point: CGPoint) -> MKMapPoint
+c:objc(cs)MKOverlayRenderer(im)mapRectForRect:	swift.method	mapRect(for:)	MKOverlayRenderer.mapRect(for:)	func mapRect(for rect: CGRect) -> MKMapRect
+c:objc(cs)MKOverlayRenderer(im)pointForMapPoint:	swift.method	point(for:)	MKOverlayRenderer.point(for:)	func point(for mapPoint: MKMapPoint) -> CGPoint
+c:objc(cs)MKOverlayRenderer(im)rectForMapRect:	swift.method	rect(for:)	MKOverlayRenderer.rect(for:)	func rect(for mapRect: MKMapRect) -> CGRect
+c:objc(cs)MKOverlayRenderer(im)setNeedsDisplay	swift.method	setNeedsDisplay()	MKOverlayRenderer.setNeedsDisplay()	func setNeedsDisplay()
+c:objc(cs)MKOverlayRenderer(im)setNeedsDisplayInMapRect:	swift.method	setNeedsDisplay(_:)	MKOverlayRenderer.setNeedsDisplay(_:)	func setNeedsDisplay(_ mapRect: MKMapRect)
+c:objc(cs)MKOverlayRenderer(im)setNeedsDisplayInMapRect:zoomScale:	swift.method	setNeedsDisplay(_:zoomScale:)	MKOverlayRenderer.setNeedsDisplay(_:zoomScale:)	func setNeedsDisplay(_ mapRect: MKMapRect, zoomScale: MKZoomScale)
+c:objc(cs)MKOverlayRenderer(py)alpha	swift.property	alpha	MKOverlayRenderer.alpha	var alpha: CGFloat { get set }
+c:objc(cs)MKOverlayRenderer(py)blendMode	swift.property	blendMode	MKOverlayRenderer.blendMode	var blendMode: CGBlendMode { get set }
+c:objc(cs)MKOverlayRenderer(py)contentScaleFactor	swift.property	contentScaleFactor	MKOverlayRenderer.contentScaleFactor	var contentScaleFactor: CGFloat { get }
+c:objc(cs)MKOverlayRenderer(py)overlay	swift.property	overlay	MKOverlayRenderer.overlay	var overlay: any MKOverlay { get }
+c:objc(cs)MKOverlayView	swift.class	MKOverlayView	MKOverlayView	@MainActor class MKOverlayView
+c:objc(cs)MKPinAnnotationView	swift.class	MKPinAnnotationView	MKPinAnnotationView	@MainActor class MKPinAnnotationView
+c:objc(cs)MKPinAnnotationView(cm)greenPinColor	swift.type.method	greenPinColor()	MKPinAnnotationView.greenPinColor()	@MainActor class func greenPinColor() -> UIColor
+c:objc(cs)MKPinAnnotationView(cm)purplePinColor	swift.type.method	purplePinColor()	MKPinAnnotationView.purplePinColor()	@MainActor class func purplePinColor() -> UIColor
+c:objc(cs)MKPinAnnotationView(cm)redPinColor	swift.type.method	redPinColor()	MKPinAnnotationView.redPinColor()	@MainActor class func redPinColor() -> UIColor
+c:objc(cs)MKPinAnnotationView(py)animatesDrop	swift.property	animatesDrop	MKPinAnnotationView.animatesDrop	@MainActor var animatesDrop: Bool { get set }
+c:objc(cs)MKPinAnnotationView(py)pinColor	swift.property	pinColor	MKPinAnnotationView.pinColor	@MainActor var pinColor: MKPinAnnotationColor { get set }
+c:objc(cs)MKPinAnnotationView(py)pinTintColor	swift.property	pinTintColor	MKPinAnnotationView.pinTintColor	@MainActor var pinTintColor: UIColor! { get set }
+c:objc(cs)MKPlacemark	swift.class	MKPlacemark	MKPlacemark	class MKPlacemark
+c:objc(cs)MKPlacemark(im)initWithCoordinate:	swift.init	init(coordinate:)	MKPlacemark.init(coordinate:)	init(coordinate: CLLocationCoordinate2D)
+c:objc(cs)MKPlacemark(im)initWithCoordinate:addressDictionary:	swift.init	init(coordinate:addressDictionary:)	MKPlacemark.init(coordinate:addressDictionary:)	init(coordinate: CLLocationCoordinate2D, addressDictionary: [String : Any]?)
+c:objc(cs)MKPlacemark(im)initWithCoordinate:postalAddress:	swift.init	init(coordinate:postalAddress:)	MKPlacemark.init(coordinate:postalAddress:)	init(coordinate: CLLocationCoordinate2D, postalAddress: CNPostalAddress)
+c:objc(cs)MKPlacemark(py)countryCode	swift.property	countryCode	MKPlacemark.countryCode	var countryCode: String? { get }
+c:objc(cs)MKPointAnnotation	swift.class	MKPointAnnotation	MKPointAnnotation	class MKPointAnnotation
+c:objc(cs)MKPointAnnotation(im)init	swift.init	init()	MKPointAnnotation.init()	init()
+c:objc(cs)MKPointAnnotation(im)initWithCoordinate:	swift.init	init(coordinate:)	MKPointAnnotation.init(coordinate:)	convenience init(coordinate: CLLocationCoordinate2D)
+c:objc(cs)MKPointAnnotation(im)initWithCoordinate:title:subtitle:	swift.init	init(coordinate:title:subtitle:)	MKPointAnnotation.init(coordinate:title:subtitle:)	convenience init(coordinate: CLLocationCoordinate2D, title: String?, subtitle: String?)
+c:objc(cs)MKPointAnnotation(py)coordinate	swift.property	coordinate	MKPointAnnotation.coordinate	var coordinate: CLLocationCoordinate2D { get set }
+c:objc(cs)MKPointOfInterestFilter	swift.class	MKPointOfInterestFilter	MKPointOfInterestFilter	class MKPointOfInterestFilter
+c:objc(cs)MKPointOfInterestFilter(cpy)filterExcludingAllCategories	swift.type.property	excludingAll	MKPointOfInterestFilter.excludingAll	class var excludingAll: MKPointOfInterestFilter { get }
+c:objc(cs)MKPointOfInterestFilter(cpy)filterIncludingAllCategories	swift.type.property	includingAll	MKPointOfInterestFilter.includingAll	class var includingAll: MKPointOfInterestFilter { get }
+c:objc(cs)MKPointOfInterestFilter(im)excludesCategory:	swift.method	excludes(_:)	MKPointOfInterestFilter.excludes(_:)	func excludes(_ category: MKPointOfInterestCategory) -> Bool
+c:objc(cs)MKPointOfInterestFilter(im)includesCategory:	swift.method	includes(_:)	MKPointOfInterestFilter.includes(_:)	func includes(_ category: MKPointOfInterestCategory) -> Bool
+c:objc(cs)MKPointOfInterestFilter(im)initExcludingCategories:	swift.init	init(excluding:)	MKPointOfInterestFilter.init(excluding:)	init(excluding categories: [MKPointOfInterestCategory])
+c:objc(cs)MKPointOfInterestFilter(im)initExcludingCategories:::SYNTHESIZED::c:objc(cs)MKPointOfInterestFilter	swift.init	init(excludingCategories:)	MKPointOfInterestFilter.init(excludingCategories:)	init(excludingCategories categories: [MKPointOfInterestCategory])
+c:objc(cs)MKPointOfInterestFilter(im)initIncludingCategories:	swift.init	init(including:)	MKPointOfInterestFilter.init(including:)	init(including categories: [MKPointOfInterestCategory])
+c:objc(cs)MKPointOfInterestFilter(im)initIncludingCategories:::SYNTHESIZED::c:objc(cs)MKPointOfInterestFilter	swift.init	init(includingCategories:)	MKPointOfInterestFilter.init(includingCategories:)	init(includingCategories categories: [MKPointOfInterestCategory])
+c:objc(cs)MKPolygon	swift.class	MKPolygon	MKPolygon	class MKPolygon
+c:objc(cs)MKPolygon(cm)polygonWithCoordinates:count:	swift.init	init(coordinates:count:)	MKPolygon.init(coordinates:count:)	convenience init(coordinates coords: UnsafePointer<CLLocationCoordinate2D>, count: Int)
+c:objc(cs)MKPolygon(cm)polygonWithCoordinates:count:interiorPolygons:	swift.init	init(coordinates:count:interiorPolygons:)	MKPolygon.init(coordinates:count:interiorPolygons:)	convenience init(coordinates coords: UnsafePointer<CLLocationCoordinate2D>, count: Int, interiorPolygons: [MKPolygon]?)
+c:objc(cs)MKPolygon(cm)polygonWithPoints:count:	swift.init	init(points:count:)	MKPolygon.init(points:count:)	convenience init(points: UnsafePointer<MKMapPoint>, count: Int)
+c:objc(cs)MKPolygon(cm)polygonWithPoints:count:interiorPolygons:	swift.init	init(points:count:interiorPolygons:)	MKPolygon.init(points:count:interiorPolygons:)	convenience init(points: UnsafePointer<MKMapPoint>, count: Int, interiorPolygons: [MKPolygon]?)
+c:objc(cs)MKPolygon(py)interiorPolygons	swift.property	interiorPolygons	MKPolygon.interiorPolygons	var interiorPolygons: [MKPolygon]? { get }
+c:objc(cs)MKPolygonRenderer	swift.class	MKPolygonRenderer	MKPolygonRenderer	class MKPolygonRenderer
+c:objc(cs)MKPolygonRenderer(im)initWithPolygon:	swift.init	init(polygon:)	MKPolygonRenderer.init(polygon:)	init(polygon: MKPolygon)
+c:objc(cs)MKPolygonRenderer(py)polygon	swift.property	polygon	MKPolygonRenderer.polygon	var polygon: MKPolygon { get }
+c:objc(cs)MKPolygonRenderer(py)strokeEnd	swift.property	strokeEnd	MKPolygonRenderer.strokeEnd	var strokeEnd: CGFloat { get set }
+c:objc(cs)MKPolygonRenderer(py)strokeStart	swift.property	strokeStart	MKPolygonRenderer.strokeStart	var strokeStart: CGFloat { get set }
+c:objc(cs)MKPolygonView	swift.class	MKPolygonView	MKPolygonView	@MainActor class MKPolygonView
+c:objc(cs)MKPolyline	swift.class	MKPolyline	MKPolyline	class MKPolyline
+c:objc(cs)MKPolyline(cm)polylineWithCoordinates:count:	swift.init	init(coordinates:count:)	MKPolyline.init(coordinates:count:)	convenience init(coordinates coords: UnsafePointer<CLLocationCoordinate2D>, count: Int)
+c:objc(cs)MKPolyline(cm)polylineWithPoints:count:	swift.init	init(points:count:)	MKPolyline.init(points:count:)	convenience init(points: UnsafePointer<MKMapPoint>, count: Int)
+c:objc(cs)MKPolylineRenderer	swift.class	MKPolylineRenderer	MKPolylineRenderer	class MKPolylineRenderer
+c:objc(cs)MKPolylineRenderer(im)initWithPolyline:	swift.init	init(polyline:)	MKPolylineRenderer.init(polyline:)	init(polyline: MKPolyline)
+c:objc(cs)MKPolylineRenderer(py)polyline	swift.property	polyline	MKPolylineRenderer.polyline	var polyline: MKPolyline { get }
+c:objc(cs)MKPolylineRenderer(py)strokeEnd	swift.property	strokeEnd	MKPolylineRenderer.strokeEnd	var strokeEnd: CGFloat { get set }
+c:objc(cs)MKPolylineRenderer(py)strokeStart	swift.property	strokeStart	MKPolylineRenderer.strokeStart	var strokeStart: CGFloat { get set }
+c:objc(cs)MKPolylineView	swift.class	MKPolylineView	MKPolylineView	@MainActor class MKPolylineView
+c:objc(cs)MKReverseGeocodingRequest	swift.class	MKReverseGeocodingRequest	MKReverseGeocodingRequest	class MKReverseGeocodingRequest
+c:objc(cs)MKReverseGeocodingRequest(im)cancel	swift.method	cancel()	MKReverseGeocodingRequest.cancel()	func cancel()
+c:objc(cs)MKReverseGeocodingRequest(im)getMapItemsWithCompletionHandler:	swift.method	getMapItems(completionHandler:)	MKReverseGeocodingRequest.getMapItems(completionHandler:)	func getMapItems(completionHandler: @escaping @MainActor ([MKMapItem]?, (any Error)?) -> Void)
+c:objc(cs)MKReverseGeocodingRequest(im)initWithLocation:	swift.init	init(location:)	MKReverseGeocodingRequest.init(location:)	init?(location: CLLocation)
+c:objc(cs)MKReverseGeocodingRequest(py)cancelled	swift.property	isCancelled	MKReverseGeocodingRequest.isCancelled	var isCancelled: Bool { get }
+c:objc(cs)MKReverseGeocodingRequest(py)loading	swift.property	isLoading	MKReverseGeocodingRequest.isLoading	var isLoading: Bool { get }
+c:objc(cs)MKReverseGeocodingRequest(py)location	swift.property	location	MKReverseGeocodingRequest.location	@NSCopying var location: CLLocation { get }
+c:objc(cs)MKReverseGeocodingRequest(py)preferredLocale	swift.property	preferredLocale	MKReverseGeocodingRequest.preferredLocale	var preferredLocale: Locale? { get set }
+c:objc(cs)MKRoute	swift.class	MKRoute	MKRoute	class MKRoute
+c:objc(cs)MKRoute(py)advisoryNotices	swift.property	advisoryNotices	MKRoute.advisoryNotices	var advisoryNotices: [String] { get }
+c:objc(cs)MKRoute(py)distance	swift.property	distance	MKRoute.distance	var distance: CLLocationDistance { get }
+c:objc(cs)MKRoute(py)expectedTravelTime	swift.property	expectedTravelTime	MKRoute.expectedTravelTime	var expectedTravelTime: TimeInterval { get }
+c:objc(cs)MKRoute(py)hasHighways	swift.property	hasHighways	MKRoute.hasHighways	var hasHighways: Bool { get }
+c:objc(cs)MKRoute(py)hasTolls	swift.property	hasTolls	MKRoute.hasTolls	var hasTolls: Bool { get }
+c:objc(cs)MKRoute(py)name	swift.property	name	MKRoute.name	var name: String { get }
+c:objc(cs)MKRoute(py)polyline	swift.property	polyline	MKRoute.polyline	var polyline: MKPolyline { get }
+c:objc(cs)MKRoute(py)steps	swift.property	steps	MKRoute.steps	var steps: [MKRoute.Step] { get }
+c:objc(cs)MKRoute(py)transportType	swift.property	transportType	MKRoute.transportType	var transportType: MKDirectionsTransportType { get }
+c:objc(cs)MKRouteStep	swift.class	MKRoute.Step	MKRoute.Step	class Step
+c:objc(cs)MKRouteStep(py)distance	swift.property	distance	MKRoute.Step.distance	var distance: CLLocationDistance { get }
+c:objc(cs)MKRouteStep(py)instructions	swift.property	instructions	MKRoute.Step.instructions	var instructions: String { get }
+c:objc(cs)MKRouteStep(py)notice	swift.property	notice	MKRoute.Step.notice	var notice: String? { get }
+c:objc(cs)MKRouteStep(py)polyline	swift.property	polyline	MKRoute.Step.polyline	var polyline: MKPolyline { get }
+c:objc(cs)MKRouteStep(py)transportType	swift.property	transportType	MKRoute.Step.transportType	var transportType: MKDirectionsTransportType { get }
+c:objc(cs)MKScaleView	swift.class	MKScaleView	MKScaleView	@MainActor class MKScaleView
+c:objc(cs)MKScaleView(cm)scaleViewWithMapView:	swift.init	init(mapView:)	MKScaleView.init(mapView:)	@MainActor convenience init(mapView: MKMapView?)
+c:objc(cs)MKScaleView(py)legendAlignment	swift.property	legendAlignment	MKScaleView.legendAlignment	@MainActor var legendAlignment: MKScaleView.Alignment { get set }
+c:objc(cs)MKScaleView(py)mapView	swift.property	mapView	MKScaleView.mapView	@MainActor weak var mapView: MKMapView? { get set }
+c:objc(cs)MKScaleView(py)scaleVisibility	swift.property	scaleVisibility	MKScaleView.scaleVisibility	@MainActor var scaleVisibility: MKFeatureVisibility { get set }
+c:objc(cs)MKSelectionAccessory	swift.class	MKSelectionAccessory	MKSelectionAccessory	class MKSelectionAccessory
+c:objc(cs)MKSelectionAccessory(cm)mapItemDetailWithPresentationStyle:	swift.type.method	mapItemDetail(_:)	MKSelectionAccessory.mapItemDetail(_:)	class func mapItemDetail(_ presentationStyle: MKSelectionAccessory.MapItemDetailPresentationStyle) -> MKSelectionAccessory
+c:objc(cs)MKShape	swift.class	MKShape	MKShape	class MKShape
+c:objc(cs)MKShape(py)subtitle	swift.property	subtitle	MKShape.subtitle	var subtitle: String? { get set }
+c:objc(cs)MKShape(py)title	swift.property	title	MKShape.title	var title: String? { get set }
+c:objc(cs)MKStandardMapConfiguration	swift.class	MKStandardMapConfiguration	MKStandardMapConfiguration	class MKStandardMapConfiguration
+c:objc(cs)MKStandardMapConfiguration(im)init	swift.init	init()	MKStandardMapConfiguration.init()	init()
+c:objc(cs)MKStandardMapConfiguration(im)initWithElevationStyle:	swift.init	init(elevationStyle:)	MKStandardMapConfiguration.init(elevationStyle:)	convenience init(elevationStyle: MKMapConfiguration.ElevationStyle)
+c:objc(cs)MKStandardMapConfiguration(im)initWithElevationStyle:emphasisStyle:	swift.init	init(elevationStyle:emphasisStyle:)	MKStandardMapConfiguration.init(elevationStyle:emphasisStyle:)	convenience init(elevationStyle: MKMapConfiguration.ElevationStyle, emphasisStyle: MKStandardMapConfiguration.EmphasisStyle)
+c:objc(cs)MKStandardMapConfiguration(im)initWithEmphasisStyle:	swift.init	init(emphasisStyle:)	MKStandardMapConfiguration.init(emphasisStyle:)	convenience init(emphasisStyle: MKStandardMapConfiguration.EmphasisStyle)
+c:objc(cs)MKStandardMapConfiguration(py)emphasisStyle	swift.property	emphasisStyle	MKStandardMapConfiguration.emphasisStyle	var emphasisStyle: MKStandardMapConfiguration.EmphasisStyle { get set }
+c:objc(cs)MKStandardMapConfiguration(py)pointOfInterestFilter	swift.property	pointOfInterestFilter	MKStandardMapConfiguration.pointOfInterestFilter	@NSCopying var pointOfInterestFilter: MKPointOfInterestFilter? { get set }
+c:objc(cs)MKStandardMapConfiguration(py)showsTraffic	swift.property	showsTraffic	MKStandardMapConfiguration.showsTraffic	var showsTraffic: Bool { get set }
+c:objc(cs)MKTileOverlay	swift.class	MKTileOverlay	MKTileOverlay	class MKTileOverlay
+c:objc(cs)MKTileOverlay(im)URLForTilePath:	swift.method	url(forTilePath:)	MKTileOverlay.url(forTilePath:)	func url(forTilePath path: MKTileOverlayPath) -> URL
+c:objc(cs)MKTileOverlay(im)initWithURLTemplate:	swift.init	init(urlTemplate:)	MKTileOverlay.init(urlTemplate:)	init(urlTemplate URLTemplate: String?)
+c:objc(cs)MKTileOverlay(im)initWithURLTemplate:::SYNTHESIZED::c:objc(cs)MKTileOverlay	swift.init	init(URLTemplate:)	MKTileOverlay.init(URLTemplate:)	init(URLTemplate: String?)
+c:objc(cs)MKTileOverlay(im)loadTileAtPath:result:	swift.method	loadTile(at:)	MKTileOverlay.loadTile(at:)	func loadTile(at path: MKTileOverlayPath) async throws -> Data
+c:objc(cs)MKTileOverlay(py)URLTemplate	swift.property	urlTemplate	MKTileOverlay.urlTemplate	var urlTemplate: String? { get }
+c:objc(cs)MKTileOverlay(py)canReplaceMapContent	swift.property	canReplaceMapContent	MKTileOverlay.canReplaceMapContent	var canReplaceMapContent: Bool { get set }
+c:objc(cs)MKTileOverlay(py)geometryFlipped	swift.property	isGeometryFlipped	MKTileOverlay.isGeometryFlipped	var isGeometryFlipped: Bool { get set }
+c:objc(cs)MKTileOverlay(py)maximumZ	swift.property	maximumZ	MKTileOverlay.maximumZ	var maximumZ: Int { get set }
+c:objc(cs)MKTileOverlay(py)minimumZ	swift.property	minimumZ	MKTileOverlay.minimumZ	var minimumZ: Int { get set }
+c:objc(cs)MKTileOverlay(py)tileSize	swift.property	tileSize	MKTileOverlay.tileSize	var tileSize: CGSize { get set }
+c:objc(cs)MKTileOverlayRenderer	swift.class	MKTileOverlayRenderer	MKTileOverlayRenderer	class MKTileOverlayRenderer
+c:objc(cs)MKTileOverlayRenderer(im)initWithTileOverlay:	swift.init	init(tileOverlay:)	MKTileOverlayRenderer.init(tileOverlay:)	init(tileOverlay overlay: MKTileOverlay)
+c:objc(cs)MKTileOverlayRenderer(im)reloadData	swift.method	reloadData()	MKTileOverlayRenderer.reloadData()	func reloadData()
+c:objc(cs)MKUserLocation	swift.class	MKUserLocation	MKUserLocation	class MKUserLocation
+c:objc(cs)MKUserLocation(py)heading	swift.property	heading	MKUserLocation.heading	var heading: CLHeading? { get }
+c:objc(cs)MKUserLocation(py)location	swift.property	location	MKUserLocation.location	var location: CLLocation? { get }
+c:objc(cs)MKUserLocation(py)subtitle	swift.property	subtitle	MKUserLocation.subtitle	var subtitle: String? { get set }
+c:objc(cs)MKUserLocation(py)title	swift.property	title	MKUserLocation.title	var title: String? { get set }
+c:objc(cs)MKUserLocation(py)updating	swift.property	isUpdating	MKUserLocation.isUpdating	var isUpdating: Bool { get }
+c:objc(cs)MKUserLocationView	swift.class	MKUserLocationView	MKUserLocationView	@MainActor class MKUserLocationView
+c:objc(cs)MKUserTrackingBarButtonItem	swift.class	MKUserTrackingBarButtonItem	MKUserTrackingBarButtonItem	@MainActor class MKUserTrackingBarButtonItem
+c:objc(cs)MKUserTrackingBarButtonItem(im)initWithMapView:	swift.init	init(mapView:)	MKUserTrackingBarButtonItem.init(mapView:)	@MainActor init(mapView: MKMapView?)
+c:objc(cs)MKUserTrackingBarButtonItem(py)mapView	swift.property	mapView	MKUserTrackingBarButtonItem.mapView	@MainActor var mapView: MKMapView? { get set }
+c:objc(cs)MKUserTrackingButton	swift.class	MKUserTrackingButton	MKUserTrackingButton	@MainActor class MKUserTrackingButton
+c:objc(cs)MKUserTrackingButton(cm)userTrackingButtonWithMapView:	swift.init	init(mapView:)	MKUserTrackingButton.init(mapView:)	@MainActor convenience init(mapView: MKMapView?)
+c:objc(cs)MKUserTrackingButton(py)mapView	swift.property	mapView	MKUserTrackingButton.mapView	@MainActor weak var mapView: MKMapView? { get set }
+c:objc(cs)NSUserActivity(py)mapItem	swift.property	mapItem	NSUserActivity.mapItem	var mapItem: MKMapItem! { get set }
+c:objc(cs)NSValue(cm)valueWithMKCoordinate:	swift.init	init(MKCoordinate:)	NSValue.init(MKCoordinate:)	init(MKCoordinate coordinate: CLLocationCoordinate2D)
+c:objc(cs)NSValue(cm)valueWithMKCoordinateSpan:	swift.init	init(MKCoordinateSpan:)	NSValue.init(MKCoordinateSpan:)	init(MKCoordinateSpan span: MKCoordinateSpan)
+c:objc(cs)NSValue(py)MKCoordinateSpanValue	swift.property	mkCoordinateSpanValue	NSValue.mkCoordinateSpanValue	var mkCoordinateSpanValue: MKCoordinateSpan { get }
+c:objc(cs)NSValue(py)MKCoordinateValue	swift.property	mkCoordinateValue	NSValue.mkCoordinateValue	var mkCoordinateValue: CLLocationCoordinate2D { get }
+c:objc(pl)MKAnnotation	swift.protocol	MKAnnotation	MKAnnotation	protocol MKAnnotation : NSObjectProtocol
+c:objc(pl)MKAnnotation(py)coordinate	swift.property	coordinate	MKAnnotation.coordinate	var coordinate: CLLocationCoordinate2D { get }
+c:objc(pl)MKAnnotation(py)subtitle	swift.property	subtitle	MKAnnotation.subtitle	optional var subtitle: String? { get }
+c:objc(pl)MKAnnotation(py)title	swift.property	title	MKAnnotation.title	optional var title: String? { get }
+c:objc(pl)MKGeoJSONObject	swift.protocol	MKGeoJSONObject	MKGeoJSONObject	protocol MKGeoJSONObject : NSObjectProtocol
+c:objc(pl)MKLocalSearchCompleterDelegate	swift.protocol	MKLocalSearchCompleterDelegate	MKLocalSearchCompleterDelegate	protocol MKLocalSearchCompleterDelegate : NSObjectProtocol
+c:objc(pl)MKLocalSearchCompleterDelegate(im)completer:didFailWithError:	swift.method	completer(_:didFailWithError:)	MKLocalSearchCompleterDelegate.completer(_:didFailWithError:)	optional func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: any Error)
+c:objc(pl)MKLocalSearchCompleterDelegate(im)completerDidUpdateResults:	swift.method	completerDidUpdateResults(_:)	MKLocalSearchCompleterDelegate.completerDidUpdateResults(_:)	optional func completerDidUpdateResults(_ completer: MKLocalSearchCompleter)
+c:objc(pl)MKLookAroundViewControllerDelegate	swift.protocol	MKLookAroundViewControllerDelegate	MKLookAroundViewControllerDelegate	protocol MKLookAroundViewControllerDelegate : NSObjectProtocol
+c:objc(pl)MKLookAroundViewControllerDelegate(im)lookAroundViewControllerDidDismissFullScreen:	swift.method	lookAroundViewControllerDidDismissFullScreen(_:)	MKLookAroundViewControllerDelegate.lookAroundViewControllerDidDismissFullScreen(_:)	optional func lookAroundViewControllerDidDismissFullScreen(_ viewController: MKLookAroundViewController)
+c:objc(pl)MKLookAroundViewControllerDelegate(im)lookAroundViewControllerDidPresentFullScreen:	swift.method	lookAroundViewControllerDidPresentFullScreen(_:)	MKLookAroundViewControllerDelegate.lookAroundViewControllerDidPresentFullScreen(_:)	optional func lookAroundViewControllerDidPresentFullScreen(_ viewController: MKLookAroundViewController)
+c:objc(pl)MKLookAroundViewControllerDelegate(im)lookAroundViewControllerDidUpdateScene:	swift.method	lookAroundViewControllerDidUpdateScene(_:)	MKLookAroundViewControllerDelegate.lookAroundViewControllerDidUpdateScene(_:)	optional func lookAroundViewControllerDidUpdateScene(_ viewController: MKLookAroundViewController)
+c:objc(pl)MKLookAroundViewControllerDelegate(im)lookAroundViewControllerWillDismissFullScreen:	swift.method	lookAroundViewControllerWillDismissFullScreen(_:)	MKLookAroundViewControllerDelegate.lookAroundViewControllerWillDismissFullScreen(_:)	optional func lookAroundViewControllerWillDismissFullScreen(_ viewController: MKLookAroundViewController)
+c:objc(pl)MKLookAroundViewControllerDelegate(im)lookAroundViewControllerWillPresentFullScreen:	swift.method	lookAroundViewControllerWillPresentFullScreen(_:)	MKLookAroundViewControllerDelegate.lookAroundViewControllerWillPresentFullScreen(_:)	optional func lookAroundViewControllerWillPresentFullScreen(_ viewController: MKLookAroundViewController)
+c:objc(pl)MKLookAroundViewControllerDelegate(im)lookAroundViewControllerWillUpdateScene:	swift.method	lookAroundViewControllerWillUpdateScene(_:)	MKLookAroundViewControllerDelegate.lookAroundViewControllerWillUpdateScene(_:)	optional func lookAroundViewControllerWillUpdateScene(_ viewController: MKLookAroundViewController)
+c:objc(pl)MKMapItemDetailViewControllerDelegate	swift.protocol	MKMapItemDetailViewControllerDelegate	MKMapItemDetailViewControllerDelegate	@MainActor protocol MKMapItemDetailViewControllerDelegate : NSObjectProtocol
+c:objc(pl)MKMapItemDetailViewControllerDelegate(im)mapItemDetailViewControllerDidFinish:	swift.method	mapItemDetailViewControllerDidFinish(_:)	MKMapItemDetailViewControllerDelegate.mapItemDetailViewControllerDidFinish(_:)	@MainActor func mapItemDetailViewControllerDidFinish(_ detailViewController: MKMapItemDetailViewController)
+c:objc(pl)MKMapViewDelegate	swift.protocol	MKMapViewDelegate	MKMapViewDelegate	@MainActor protocol MKMapViewDelegate : NSObjectProtocol
+c:objc(pl)MKMapViewDelegate(im)mapView:annotationView:calloutAccessoryControlTapped:	swift.method	mapView(_:annotationView:calloutAccessoryControlTapped:)	MKMapViewDelegate.mapView(_:annotationView:calloutAccessoryControlTapped:)	@MainActor optional func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl)
+c:objc(pl)MKMapViewDelegate(im)mapView:annotationView:didChangeDragState:fromOldState:	swift.method	mapView(_:annotationView:didChange:fromOldState:)	MKMapViewDelegate.mapView(_:annotationView:didChange:fromOldState:)	@MainActor optional func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationView.DragState, fromOldState oldState: MKAnnotationView.DragState)
+c:objc(pl)MKMapViewDelegate(im)mapView:clusterAnnotationForMemberAnnotations:	swift.method	mapView(_:clusterAnnotationForMemberAnnotations:)	MKMapViewDelegate.mapView(_:clusterAnnotationForMemberAnnotations:)	@MainActor optional func mapView(_ mapView: MKMapView, clusterAnnotationForMemberAnnotations memberAnnotations: [any MKAnnotation]) -> MKClusterAnnotation
+c:objc(pl)MKMapViewDelegate(im)mapView:didAddAnnotationViews:	swift.method	mapView(_:didAdd:)	MKMapViewDelegate.mapView(_:didAdd:)	@MainActor optional func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView])
+c:objc(pl)MKMapViewDelegate(im)mapView:didAddOverlayRenderers:	swift.method	mapView(_:didAdd:)	MKMapViewDelegate.mapView(_:didAdd:)	@MainActor optional func mapView(_ mapView: MKMapView, didAdd renderers: [MKOverlayRenderer])
+c:objc(pl)MKMapViewDelegate(im)mapView:didAddOverlayViews:	swift.method	mapView(_:didAddOverlayViews:)	MKMapViewDelegate.mapView(_:didAddOverlayViews:)	@MainActor optional func mapView(_ mapView: MKMapView, didAddOverlayViews overlayViews: [Any])
+c:objc(pl)MKMapViewDelegate(im)mapView:didChangeUserTrackingMode:animated:	swift.method	mapView(_:didChange:animated:)	MKMapViewDelegate.mapView(_:didChange:animated:)	@MainActor optional func mapView(_ mapView: MKMapView, didChange mode: MKUserTrackingMode, animated: Bool)
+c:objc(pl)MKMapViewDelegate(im)mapView:didDeselectAnnotation:	swift.method	mapView(_:didDeselect:)	MKMapViewDelegate.mapView(_:didDeselect:)	@MainActor optional func mapView(_ mapView: MKMapView, didDeselect annotation: any MKAnnotation)
+c:objc(pl)MKMapViewDelegate(im)mapView:didDeselectAnnotationView:	swift.method	mapView(_:didDeselect:)	MKMapViewDelegate.mapView(_:didDeselect:)	@MainActor optional func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView)
+c:objc(pl)MKMapViewDelegate(im)mapView:didFailToLocateUserWithError:	swift.method	mapView(_:didFailToLocateUserWithError:)	MKMapViewDelegate.mapView(_:didFailToLocateUserWithError:)	@MainActor optional func mapView(_ mapView: MKMapView, didFailToLocateUserWithError error: any Error)
+c:objc(pl)MKMapViewDelegate(im)mapView:didSelectAnnotation:	swift.method	mapView(_:didSelect:)	MKMapViewDelegate.mapView(_:didSelect:)	@MainActor optional func mapView(_ mapView: MKMapView, didSelect annotation: any MKAnnotation)
+c:objc(pl)MKMapViewDelegate(im)mapView:didSelectAnnotationView:	swift.method	mapView(_:didSelect:)	MKMapViewDelegate.mapView(_:didSelect:)	@MainActor optional func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView)
+c:objc(pl)MKMapViewDelegate(im)mapView:didUpdateUserLocation:	swift.method	mapView(_:didUpdate:)	MKMapViewDelegate.mapView(_:didUpdate:)	@MainActor optional func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation)
+c:objc(pl)MKMapViewDelegate(im)mapView:regionDidChangeAnimated:	swift.method	mapView(_:regionDidChangeAnimated:)	MKMapViewDelegate.mapView(_:regionDidChangeAnimated:)	@MainActor optional func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool)
+c:objc(pl)MKMapViewDelegate(im)mapView:regionWillChangeAnimated:	swift.method	mapView(_:regionWillChangeAnimated:)	MKMapViewDelegate.mapView(_:regionWillChangeAnimated:)	@MainActor optional func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool)
+c:objc(pl)MKMapViewDelegate(im)mapView:rendererForOverlay:	swift.method	mapView(_:rendererFor:)	MKMapViewDelegate.mapView(_:rendererFor:)	@MainActor optional func mapView(_ mapView: MKMapView, rendererFor overlay: any MKOverlay) -> MKOverlayRenderer
+c:objc(pl)MKMapViewDelegate(im)mapView:selectionAccessoryForAnnotation:	swift.method	mapView(_:selectionAccessoryFor:)	MKMapViewDelegate.mapView(_:selectionAccessoryFor:)	@MainActor optional func mapView(_ mapView: MKMapView, selectionAccessoryFor annotation: any MKAnnotation) -> MKSelectionAccessory?
+c:objc(pl)MKMapViewDelegate(im)mapView:viewForAnnotation:	swift.method	mapView(_:viewFor:)	MKMapViewDelegate.mapView(_:viewFor:)	@MainActor optional func mapView(_ mapView: MKMapView, viewFor annotation: any MKAnnotation) -> MKAnnotationView?
+c:objc(pl)MKMapViewDelegate(im)mapView:viewForOverlay:	swift.method	mapView(_:viewFor:)	MKMapViewDelegate.mapView(_:viewFor:)	@MainActor optional func mapView(_ mapView: MKMapView, viewFor overlay: any MKOverlay) -> MKOverlayView
+c:objc(pl)MKMapViewDelegate(im)mapViewDidChangeVisibleRegion:	swift.method	mapViewDidChangeVisibleRegion(_:)	MKMapViewDelegate.mapViewDidChangeVisibleRegion(_:)	@MainActor optional func mapViewDidChangeVisibleRegion(_ mapView: MKMapView)
+c:objc(pl)MKMapViewDelegate(im)mapViewDidFailLoadingMap:withError:	swift.method	mapViewDidFailLoadingMap(_:withError:)	MKMapViewDelegate.mapViewDidFailLoadingMap(_:withError:)	@MainActor optional func mapViewDidFailLoadingMap(_ mapView: MKMapView, withError error: any Error)
+c:objc(pl)MKMapViewDelegate(im)mapViewDidFinishLoadingMap:	swift.method	mapViewDidFinishLoadingMap(_:)	MKMapViewDelegate.mapViewDidFinishLoadingMap(_:)	@MainActor optional func mapViewDidFinishLoadingMap(_ mapView: MKMapView)
+c:objc(pl)MKMapViewDelegate(im)mapViewDidFinishRenderingMap:fullyRendered:	swift.method	mapViewDidFinishRenderingMap(_:fullyRendered:)	MKMapViewDelegate.mapViewDidFinishRenderingMap(_:fullyRendered:)	@MainActor optional func mapViewDidFinishRenderingMap(_ mapView: MKMapView, fullyRendered: Bool)
+c:objc(pl)MKMapViewDelegate(im)mapViewDidStopLocatingUser:	swift.method	mapViewDidStopLocatingUser(_:)	MKMapViewDelegate.mapViewDidStopLocatingUser(_:)	@MainActor optional func mapViewDidStopLocatingUser(_ mapView: MKMapView)
+c:objc(pl)MKMapViewDelegate(im)mapViewWillStartLoadingMap:	swift.method	mapViewWillStartLoadingMap(_:)	MKMapViewDelegate.mapViewWillStartLoadingMap(_:)	@MainActor optional func mapViewWillStartLoadingMap(_ mapView: MKMapView)
+c:objc(pl)MKMapViewDelegate(im)mapViewWillStartLocatingUser:	swift.method	mapViewWillStartLocatingUser(_:)	MKMapViewDelegate.mapViewWillStartLocatingUser(_:)	@MainActor optional func mapViewWillStartLocatingUser(_ mapView: MKMapView)
+c:objc(pl)MKMapViewDelegate(im)mapViewWillStartRenderingMap:	swift.method	mapViewWillStartRenderingMap(_:)	MKMapViewDelegate.mapViewWillStartRenderingMap(_:)	@MainActor optional func mapViewWillStartRenderingMap(_ mapView: MKMapView)
+c:objc(pl)MKOverlay	swift.protocol	MKOverlay	MKOverlay	protocol MKOverlay : MKAnnotation
+c:objc(pl)MKOverlay(im)canReplaceMapContent	swift.method	canReplaceMapContent()	MKOverlay.canReplaceMapContent()	optional func canReplaceMapContent() -> Bool
+c:objc(pl)MKOverlay(im)intersectsMapRect:	swift.method	intersects(_:)	MKOverlay.intersects(_:)	optional func intersects(_ mapRect: MKMapRect) -> Bool
+c:objc(pl)MKOverlay(py)boundingMapRect	swift.property	boundingMapRect	MKOverlay.boundingMapRect	var boundingMapRect: MKMapRect { get }
+c:objc(pl)MKOverlay(py)coordinate	swift.property	coordinate	MKOverlay.coordinate	var coordinate: CLLocationCoordinate2D { get }
+c:objc(pl)NSCoding(im)initWithCoder:	swift.init	init(coder:)	MKMapItem.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MKAddressFilter	swift.init	init(coder:)	MKAddressFilter.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MKMapCamera	swift.init	init(coder:)	MKMapCamera.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MKMapCameraZoomRange	swift.init	init(coder:)	MKMapView.CameraZoomRange.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MKMapConfiguration	swift.init	init(coder:)	MKMapConfiguration.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MKMapItemIdentifier	swift.init	init(coder:)	MKMapItem.Identifier.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MKPointOfInterestFilter	swift.init	init(coder:)	MKPointOfInterestFilter.init(coder:)	init?(coder: NSCoder)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@MKErrorCode	swift.type.property	errorDomain	MKError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MKErrorCode	swift.property	errorUserInfo	MKError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MKErrorCode	swift.property	errorCode	MKError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MKErrorCode	swift.func.op	~=(_:_:)	MKError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MKErrorCode	swift.property	errorUserInfo	MKError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MKErrorCode	swift.func.op	==(_:_:)	MKError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@MKErrorCode	swift.property	code	MKError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKErrorCode	swift.method	hash(into:)	MKError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@MKErrorCode	swift.property	userInfo	MKError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MKErrorCode	swift.property	errorCode	MKError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MKErrorCode	swift.property	hashValue	MKError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@MKErrorCode	swift.init	init(_:userInfo:)	MKError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10GeoToolbox15PlaceDescriptorV6MapKitE4itemACSgSo9MKMapItemC_tcfc	swift.init	init(item:)	PlaceDescriptor.init(item:)	init?(item: MKMapItem)
+s:SC11MKErrorCodeLeV	swift.struct	MKError	MKError	struct MKError
+s:SC11MKErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	MKError.errorDomain	static var errorDomain: String { get }
+s:SC11MKErrorCodeLeV13serverFailureSoAAVvpZ	swift.type.property	serverFailure	MKError.serverFailure	static var serverFailure: MKError.Code { get }
+s:SC11MKErrorCodeLeV14decodingFailedSoAAVvpZ	swift.type.property	decodingFailed	MKError.decodingFailed	static var decodingFailed: MKError.Code { get }
+s:SC11MKErrorCodeLeV16loadingThrottledSoAAVvpZ	swift.type.property	loadingThrottled	MKError.loadingThrottled	static var loadingThrottled: MKError.Code { get }
+s:SC11MKErrorCodeLeV17placemarkNotFoundSoAAVvpZ	swift.type.property	placemarkNotFound	MKError.placemarkNotFound	static var placemarkNotFound: MKError.Code { get }
+s:SC11MKErrorCodeLeV18directionsNotFoundSoAAVvpZ	swift.type.property	directionsNotFound	MKError.directionsNotFound	static var directionsNotFound: MKError.Code { get }
+s:SC11MKErrorCodeLeV7unknownSoAAVvpZ	swift.type.property	unknown	MKError.unknown	static var unknown: MKError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.func.op	!=(_:_:)	MKAddressFilter.Options.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKAddressRepresentationsContextStyle	swift.func.op	!=(_:_:)	MKAddressRepresentations.ContextStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKAnnotationViewCollisionMode	swift.func.op	!=(_:_:)	MKAnnotationView.CollisionMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKAnnotationViewDragState	swift.func.op	!=(_:_:)	MKAnnotationView.DragState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKDirectionsRoutePreference	swift.func.op	!=(_:_:)	MKDirections.RoutePreference.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.func.op	!=(_:_:)	MKDirectionsTransportType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKDistanceFormatterUnitStyle	swift.func.op	!=(_:_:)	MKDistanceFormatter.DistanceUnitStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKDistanceFormatterUnits	swift.func.op	!=(_:_:)	MKDistanceFormatter.Units.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKErrorCode	swift.func.op	!=(_:_:)	MKError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKFeatureVisibility	swift.func.op	!=(_:_:)	MKFeatureVisibility.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.func.op	!=(_:_:)	MKLocalSearchCompleter.ResultType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKLocalSearchRegionPriority	swift.func.op	!=(_:_:)	MKLocalSearchRegionPriority.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.func.op	!=(_:_:)	MKLocalSearch.ResultType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKLookAroundBadgePosition	swift.func.op	!=(_:_:)	MKLookAroundBadgePosition.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKMapElevationStyle	swift.func.op	!=(_:_:)	MKMapConfiguration.ElevationStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.func.op	!=(_:_:)	MKMapFeatureOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKMapFeatureType	swift.func.op	!=(_:_:)	MKMapFeatureAnnotation.FeatureType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKMapItemDetailSelectionAccessoryCalloutStyle	swift.func.op	!=(_:_:)	MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKMapType	swift.func.op	!=(_:_:)	MKMapType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKOverlayLevel	swift.func.op	!=(_:_:)	MKOverlayLevel.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKPinAnnotationColor	swift.func.op	!=(_:_:)	MKPinAnnotationColor.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKScaleViewAlignment	swift.func.op	!=(_:_:)	MKScaleView.Alignment.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKSearchCompletionFilterType	swift.func.op	!=(_:_:)	MKLocalSearchCompleter.FilterType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKStandardMapEmphasisStyle	swift.func.op	!=(_:_:)	MKStandardMapConfiguration.EmphasisStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MKUserTrackingMode	swift.func.op	!=(_:_:)	MKUserTrackingMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MKAnnotationViewZPriority	swift.func.op	!=(_:_:)	MKAnnotationViewZPriority.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MKFeatureDisplayPriority	swift.func.op	!=(_:_:)	MKFeatureDisplayPriority.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MKPointOfInterestCategory	swift.func.op	!=(_:_:)	MKPointOfInterestCategory.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSERzSS8RawValueSYRtzrlE6encode2toys7Encoder_p_tKF::SYNTHESIZED::c:objc(cs)MKMapItemIdentifier	swift.method	encode(to:)	MKMapItem.Identifier.encode(to:)	func encode(to encoder: any Encoder) throws
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKAddressRepresentationsContextStyle	swift.property	hashValue	MKAddressRepresentations.ContextStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKAnnotationViewCollisionMode	swift.property	hashValue	MKAnnotationView.CollisionMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKAnnotationViewDragState	swift.property	hashValue	MKAnnotationView.DragState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKDirectionsRoutePreference	swift.property	hashValue	MKDirections.RoutePreference.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKDistanceFormatterUnitStyle	swift.property	hashValue	MKDistanceFormatter.DistanceUnitStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKDistanceFormatterUnits	swift.property	hashValue	MKDistanceFormatter.Units.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKErrorCode	swift.property	hashValue	MKError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKFeatureVisibility	swift.property	hashValue	MKFeatureVisibility.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKLocalSearchRegionPriority	swift.property	hashValue	MKLocalSearchRegionPriority.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKLookAroundBadgePosition	swift.property	hashValue	MKLookAroundBadgePosition.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKMapElevationStyle	swift.property	hashValue	MKMapConfiguration.ElevationStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKMapFeatureType	swift.property	hashValue	MKMapFeatureAnnotation.FeatureType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKMapItemDetailSelectionAccessoryCalloutStyle	swift.property	hashValue	MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKMapType	swift.property	hashValue	MKMapType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKOverlayLevel	swift.property	hashValue	MKOverlayLevel.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKPinAnnotationColor	swift.property	hashValue	MKPinAnnotationColor.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKScaleViewAlignment	swift.property	hashValue	MKScaleView.Alignment.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKSearchCompletionFilterType	swift.property	hashValue	MKLocalSearchCompleter.FilterType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKStandardMapEmphasisStyle	swift.property	hashValue	MKStandardMapConfiguration.EmphasisStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MKUserTrackingMode	swift.property	hashValue	MKUserTrackingMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:objc(cs)MKMapItemIdentifier	swift.property	hashValue	MKMapItem.Identifier.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKAddressRepresentationsContextStyle	swift.method	hash(into:)	MKAddressRepresentations.ContextStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKAnnotationViewCollisionMode	swift.method	hash(into:)	MKAnnotationView.CollisionMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKAnnotationViewDragState	swift.method	hash(into:)	MKAnnotationView.DragState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKDirectionsRoutePreference	swift.method	hash(into:)	MKDirections.RoutePreference.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKDistanceFormatterUnitStyle	swift.method	hash(into:)	MKDistanceFormatter.DistanceUnitStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKDistanceFormatterUnits	swift.method	hash(into:)	MKDistanceFormatter.Units.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKErrorCode	swift.method	hash(into:)	MKError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKFeatureVisibility	swift.method	hash(into:)	MKFeatureVisibility.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKLocalSearchRegionPriority	swift.method	hash(into:)	MKLocalSearchRegionPriority.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKLookAroundBadgePosition	swift.method	hash(into:)	MKLookAroundBadgePosition.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKMapElevationStyle	swift.method	hash(into:)	MKMapConfiguration.ElevationStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKMapFeatureType	swift.method	hash(into:)	MKMapFeatureAnnotation.FeatureType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKMapItemDetailSelectionAccessoryCalloutStyle	swift.method	hash(into:)	MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKMapType	swift.method	hash(into:)	MKMapType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKOverlayLevel	swift.method	hash(into:)	MKOverlayLevel.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKPinAnnotationColor	swift.method	hash(into:)	MKPinAnnotationColor.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKScaleViewAlignment	swift.method	hash(into:)	MKScaleView.Alignment.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKSearchCompletionFilterType	swift.method	hash(into:)	MKLocalSearchCompleter.FilterType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKStandardMapEmphasisStyle	swift.method	hash(into:)	MKStandardMapConfiguration.EmphasisStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MKUserTrackingMode	swift.method	hash(into:)	MKUserTrackingMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:objc(cs)MKMapItemIdentifier	swift.method	hash(into:)	MKMapItem.Identifier.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSeRzSS8RawValueSYRtzrlE4fromxs7Decoder_p_tKcfc::SYNTHESIZED::c:objc(cs)MKMapItemIdentifier	swift.init	init(from:)	MKMapItem.Identifier.init(from:)	init(from decoder: any Decoder) throws
+s:So10MKMapPointa1x1yABSd_Sdtcfc	swift.init	init(x:y:)	MKMapPoint.init(x:y:)	init(x: Double, y: Double)
+s:So10MKMapPointaABycfc	swift.init	init()	MKMapPoint.init()	init()
+s:So11MKErrorCodeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MKError.Code.init(rawValue:)	init?(rawValue: UInt)
+s:So12MKMultiPointC6MapKitE9locations2atSay14CoreFoundation7CGFloatVG0H08IndexSetV_tF	swift.method	locations(at:)	MKMultiPoint.locations(at:)	func locations(at indexes: IndexSet) -> [CGFloat]
+s:So14MKOverlayLevelV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MKOverlayLevel.init(rawValue:)	init?(rawValue: Int)
+s:So16MKCoordinateSpana13latitudeDelta09longitudeD0ABSd_Sdtcfc	swift.init	init(latitudeDelta:longitudeDelta:)	MKCoordinateSpan.init(latitudeDelta:longitudeDelta:)	init(latitudeDelta: CLLocationDegrees, longitudeDelta: CLLocationDegrees)
+s:So16MKCoordinateSpanaABycfc	swift.init	init()	MKCoordinateSpan.init()	init()
+s:So16MKMapFeatureTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MKMapFeatureAnnotation.FeatureType.init(rawValue:)	init?(rawValue: Int)
+s:So16MKMapItemRequestC6MapKitE15placeDescriptor10GeoToolbox05PlaceG0VSgvp	swift.property	placeDescriptor	MKMapItemRequest.placeDescriptor	var placeDescriptor: PlaceDescriptor? { get }
+s:So16MKMapItemRequestC6MapKitE15placeDescriptorAB10GeoToolbox05PlaceG0V_tcfc	swift.init	init(placeDescriptor:)	MKMapItemRequest.init(placeDescriptor:)	convenience init(placeDescriptor: PlaceDescriptor)
+s:So17MKTileOverlayPatha1x1y1z18contentScaleFactorABSi_S2i14CoreFoundation7CGFloatVtcfc	swift.init	init(x:y:z:contentScaleFactor:)	MKTileOverlayPath.init(x:y:z:contentScaleFactor:)	init(x: Int, y: Int, z: Int, contentScaleFactor: CGFloat)
+s:So17MKTileOverlayPathaABycfc	swift.init	init()	MKTileOverlayPath.init()	init()
+s:So18MKCoordinateRegiona6center4spanABSo22CLLocationCoordinate2DV_So0A4Spanatcfc	swift.init	init(center:span:)	MKCoordinateRegion.init(center:span:)	init(center: CLLocationCoordinate2D, span: MKCoordinateSpan)
+s:So18MKCoordinateRegionaABycfc	swift.init	init()	MKCoordinateRegion.init()	init()
+s:So18MKUserTrackingModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MKUserTrackingMode.init(rawValue:)	init?(rawValue: Int)
+s:So19MKFeatureVisibilityV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MKFeatureVisibility.init(rawValue:)	init?(rawValue: Int)
+s:So19MKMapElevationStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MKMapConfiguration.ElevationStyle.init(rawValue:)	init?(rawValue: Int)
+s:So19MKMapFeatureOptionsV8rawValueABSi_tcfc	swift.init	init(rawValue:)	MKMapFeatureOptions.init(rawValue:)	init(rawValue: Int)
+s:So19MKMapItemIdentifierC6MapKitE8RawValuea	swift.typealias	MKMapItem.Identifier.RawValue	MKMapItem.Identifier.RawValue	typealias RawValue = String
+s:So20MKLocalSearchRequestC6MapKitE10ResultTypea	swift.typealias	MKLocalSearch.Request.ResultType	MKLocalSearch.Request.ResultType	typealias ResultType = MKLocalSearch.ResultType
+s:So20MKPinAnnotationColorV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MKPinAnnotationColor.init(rawValue:)	init?(rawValue: UInt)
+s:So20MKScaleViewAlignmentV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MKScaleView.Alignment.init(rawValue:)	init?(rawValue: Int)
+s:So21MKAddressFilterOptionV8rawValueABSu_tcfc	swift.init	init(rawValue:)	MKAddressFilter.Options.init(rawValue:)	init(rawValue: UInt)
+s:So23MKLocalSearchResultTypeV8rawValueABSu_tcfc	swift.init	init(rawValue:)	MKLocalSearch.ResultType.init(rawValue:)	init(rawValue: UInt)
+s:So24MKAddressRepresentationsC6MapKitE6region10Foundation6LocaleV6RegionVSgvp	swift.property	region	MKAddressRepresentations.region	var region: Locale.Region? { get }
+s:So24MKDistanceFormatterUnitsV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MKDistanceFormatter.Units.init(rawValue:)	init?(rawValue: UInt)
+s:So24MKFeatureDisplayPrioritya8rawValueABSf_tcfc	swift.init	init(rawValue:)	MKFeatureDisplayPriority.init(rawValue:)	init(rawValue: Float)
+s:So24MKFeatureDisplayPriorityayABSfcfc	swift.init	init(_:)	MKFeatureDisplayPriority.init(_:)	init(_ rawValue: Float)
+s:So25MKAnnotationViewDragStateV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MKAnnotationView.DragState.init(rawValue:)	init?(rawValue: UInt)
+s:So25MKAnnotationViewZPrioritya8rawValueABSf_tcfc	swift.init	init(rawValue:)	MKAnnotationViewZPriority.init(rawValue:)	init(rawValue: Float)
+s:So25MKAnnotationViewZPriorityayABSfcfc	swift.init	init(_:)	MKAnnotationViewZPriority.init(_:)	init(_ rawValue: Float)
+s:So25MKDirectionsTransportTypeV8rawValueABSu_tcfc	swift.init	init(rawValue:)	MKDirectionsTransportType.init(rawValue:)	init(rawValue: UInt)
+s:So25MKLookAroundBadgePositionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MKLookAroundBadgePosition.init(rawValue:)	init?(rawValue: Int)
+s:So25MKPointOfInterestCategorya8rawValueABSS_tcfc	swift.init	init(rawValue:)	MKPointOfInterestCategory.init(rawValue:)	init(rawValue: String)
+s:So26MKGradientPolylineRendererC6MapKitE9locationsSay14CoreFoundation7CGFloatVGvp	swift.property	locations	MKGradientPolylineRenderer.locations	var locations: [CGFloat] { get }
+s:So26MKGradientPolylineRendererC6MapKitE9setColors_9locationsySaySo7UIColorCG_Say14CoreFoundation7CGFloatVGtF	swift.method	setColors(_:locations:)	MKGradientPolylineRenderer.setColors(_:locations:)	func setColors(_ colors: [UIColor], locations: [CGFloat])
+s:So26MKStandardMapEmphasisStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MKStandardMapConfiguration.EmphasisStyle.init(rawValue:)	init?(rawValue: Int)
+s:So27MKDirectionsRoutePreferenceV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MKDirections.RoutePreference.init(rawValue:)	init?(rawValue: Int)
+s:So27MKLocalSearchRegionPriorityV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MKLocalSearchRegionPriority.init(rawValue:)	init?(rawValue: Int)
+s:So28MKDistanceFormatterUnitStyleV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MKDistanceFormatter.DistanceUnitStyle.init(rawValue:)	init?(rawValue: UInt)
+s:So28MKSearchCompletionFilterTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MKLocalSearchCompleter.FilterType.init(rawValue:)	init?(rawValue: Int)
+s:So29MKAnnotationViewCollisionModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MKAnnotationView.CollisionMode.init(rawValue:)	init?(rawValue: Int)
+s:So32MKLocalSearchCompleterResultTypeV8rawValueABSu_tcfc	swift.init	init(rawValue:)	MKLocalSearchCompleter.ResultType.init(rawValue:)	init(rawValue: UInt)
+s:So36MKAddressRepresentationsContextStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MKAddressRepresentations.ContextStyle.init(rawValue:)	init?(rawValue: Int)
+s:So45MKMapItemDetailSelectionAccessoryCalloutStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle.init(rawValue:)	init?(rawValue: Int)
+s:So50MKMapItemDetailSelectionAccessoryPresentationStyleC6MapKitE7calloutyABSo0abcde7CalloutG0VFZ	swift.type.method	callout(_:)	MKSelectionAccessory.MapItemDetailPresentationStyle.callout(_:)	static func callout(_ style: MKSelectionAccessory.MapItemDetailPresentationStyle.CalloutStyle = .automatic) -> MKSelectionAccessory.MapItemDetailPresentationStyle
+s:So50MKMapItemDetailSelectionAccessoryPresentationStyleC6MapKitE9automatic26presentationViewControllerABSo06UIViewM0CSg_tFZ	swift.type.method	automatic(presentationViewController:)	MKSelectionAccessory.MapItemDetailPresentationStyle.automatic(presentationViewController:)	static func automatic(presentationViewController: UIViewController? = nil) -> MKSelectionAccessory.MapItemDetailPresentationStyle
+s:So9MKMapRecta6origin4sizeABSo0A5Pointa_So0A4Sizeatcfc	swift.init	init(origin:size:)	MKMapRect.init(origin:size:)	init(origin: MKMapPoint, size: MKMapSize)
+s:So9MKMapRectaABycfc	swift.init	init()	MKMapRect.init()	init()
+s:So9MKMapSizea5width6heightABSd_Sdtcfc	swift.init	init(width:height:)	MKMapSize.init(width:height:)	init(width: Double, height: Double)
+s:So9MKMapSizeaABycfc	swift.init	init()	MKMapSize.init()	init()
+s:So9MKMapTypeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	MKMapType.init(rawValue:)	init?(rawValue: UInt)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.init	init(arrayLiteral:)	MKAddressFilter.Options.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.init	init(arrayLiteral:)	MKDirectionsTransportType.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.init	init(arrayLiteral:)	MKLocalSearchCompleter.ResultType.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.init	init(arrayLiteral:)	MKLocalSearch.ResultType.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.init	init(arrayLiteral:)	MKMapFeatureOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	isDisjoint(with:)	MKAddressFilter.Options.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	isDisjoint(with:)	MKDirectionsTransportType.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	isDisjoint(with:)	MKLocalSearchCompleter.ResultType.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	isDisjoint(with:)	MKLocalSearch.ResultType.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	isDisjoint(with:)	MKMapFeatureOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	isSuperset(of:)	MKAddressFilter.Options.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	isSuperset(of:)	MKDirectionsTransportType.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	isSuperset(of:)	MKLocalSearchCompleter.ResultType.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	isSuperset(of:)	MKLocalSearch.ResultType.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	isSuperset(of:)	MKMapFeatureOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	subtracting(_:)	MKAddressFilter.Options.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	subtracting(_:)	MKDirectionsTransportType.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	subtracting(_:)	MKLocalSearchCompleter.ResultType.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	subtracting(_:)	MKLocalSearch.ResultType.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	subtracting(_:)	MKMapFeatureOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	isStrictSubset(of:)	MKAddressFilter.Options.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	isStrictSubset(of:)	MKDirectionsTransportType.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	isStrictSubset(of:)	MKLocalSearchCompleter.ResultType.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	isStrictSubset(of:)	MKLocalSearch.ResultType.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	isStrictSubset(of:)	MKMapFeatureOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	isStrictSuperset(of:)	MKAddressFilter.Options.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	isStrictSuperset(of:)	MKDirectionsTransportType.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	isStrictSuperset(of:)	MKLocalSearchCompleter.ResultType.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	isStrictSuperset(of:)	MKLocalSearch.ResultType.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	isStrictSuperset(of:)	MKMapFeatureOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.property	isEmpty	MKAddressFilter.Options.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.property	isEmpty	MKDirectionsTransportType.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.property	isEmpty	MKLocalSearchCompleter.ResultType.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.property	isEmpty	MKLocalSearch.ResultType.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.property	isEmpty	MKMapFeatureOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	isSubset(of:)	MKAddressFilter.Options.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	isSubset(of:)	MKDirectionsTransportType.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	isSubset(of:)	MKLocalSearchCompleter.ResultType.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	isSubset(of:)	MKLocalSearch.ResultType.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	isSubset(of:)	MKMapFeatureOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	subtract(_:)	MKAddressFilter.Options.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	subtract(_:)	MKDirectionsTransportType.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	subtract(_:)	MKLocalSearchCompleter.ResultType.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	subtract(_:)	MKLocalSearch.ResultType.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	subtract(_:)	MKMapFeatureOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.init	init(_:)	MKAddressFilter.Options.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.init	init(_:)	MKDirectionsTransportType.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.init	init(_:)	MKLocalSearchCompleter.ResultType.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.init	init(_:)	MKLocalSearch.ResultType.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.init	init(_:)	MKMapFeatureOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MKAnnotationViewZPriority	swift.property	hashValue	MKAnnotationViewZPriority.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MKFeatureDisplayPriority	swift.property	hashValue	MKFeatureDisplayPriority.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MKPointOfInterestCategory	swift.property	hashValue	MKPointOfInterestCategory.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MKAnnotationViewZPriority	swift.method	hash(into:)	MKAnnotationViewZPriority.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MKFeatureDisplayPriority	swift.method	hash(into:)	MKFeatureDisplayPriority.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MKPointOfInterestCategory	swift.method	hash(into:)	MKPointOfInterestCategory.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MKErrorCode	swift.property	localizedDescription	MKError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	insert(_:)	MKAddressFilter.Options.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	insert(_:)	MKDirectionsTransportType.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	insert(_:)	MKLocalSearchCompleter.ResultType.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	insert(_:)	MKLocalSearch.ResultType.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	insert(_:)	MKMapFeatureOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	remove(_:)	MKAddressFilter.Options.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	remove(_:)	MKDirectionsTransportType.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	remove(_:)	MKLocalSearchCompleter.ResultType.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	remove(_:)	MKLocalSearch.ResultType.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	remove(_:)	MKMapFeatureOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	update(with:)	MKAddressFilter.Options.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	update(with:)	MKDirectionsTransportType.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	update(with:)	MKLocalSearchCompleter.ResultType.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	update(with:)	MKLocalSearch.ResultType.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	update(with:)	MKMapFeatureOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	contains(_:)	MKAddressFilter.Options.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	contains(_:)	MKDirectionsTransportType.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	contains(_:)	MKLocalSearchCompleter.ResultType.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	contains(_:)	MKLocalSearch.ResultType.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	contains(_:)	MKMapFeatureOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	intersection(_:)	MKAddressFilter.Options.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	intersection(_:)	MKDirectionsTransportType.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	intersection(_:)	MKLocalSearchCompleter.ResultType.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	intersection(_:)	MKLocalSearch.ResultType.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	intersection(_:)	MKMapFeatureOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	symmetricDifference(_:)	MKAddressFilter.Options.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	symmetricDifference(_:)	MKDirectionsTransportType.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	symmetricDifference(_:)	MKLocalSearchCompleter.ResultType.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	symmetricDifference(_:)	MKLocalSearch.ResultType.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	symmetricDifference(_:)	MKMapFeatureOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	union(_:)	MKAddressFilter.Options.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	union(_:)	MKDirectionsTransportType.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	union(_:)	MKLocalSearchCompleter.ResultType.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	union(_:)	MKLocalSearch.ResultType.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	union(_:)	MKMapFeatureOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	formIntersection(_:)	MKAddressFilter.Options.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	formIntersection(_:)	MKDirectionsTransportType.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	formIntersection(_:)	MKLocalSearchCompleter.ResultType.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	formIntersection(_:)	MKLocalSearch.ResultType.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	formIntersection(_:)	MKMapFeatureOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	formSymmetricDifference(_:)	MKAddressFilter.Options.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	formSymmetricDifference(_:)	MKDirectionsTransportType.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	formSymmetricDifference(_:)	MKLocalSearchCompleter.ResultType.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	formSymmetricDifference(_:)	MKLocalSearch.ResultType.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	formSymmetricDifference(_:)	MKMapFeatureOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.method	formUnion(_:)	MKAddressFilter.Options.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.method	formUnion(_:)	MKDirectionsTransportType.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.method	formUnion(_:)	MKLocalSearchCompleter.ResultType.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.method	formUnion(_:)	MKLocalSearch.ResultType.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.method	formUnion(_:)	MKMapFeatureOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MKAddressFilterOption	swift.init	init()	MKAddressFilter.Options.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MKDirectionsTransportType	swift.init	init()	MKDirectionsTransportType.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MKLocalSearchCompleterResultType	swift.init	init()	MKLocalSearchCompleter.ResultType.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MKLocalSearchResultType	swift.init	init()	MKLocalSearch.ResultType.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MKMapFeatureOptions	swift.init	init()	MKMapFeatureOptions.init()	init()
