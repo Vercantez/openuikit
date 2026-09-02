@@ -35,6 +35,8 @@ private var _gkNodeEntities: [ObjectIdentifier: _GKWeakEntityBox] = [:]
 
 #if canImport(SpriteKit)
 open class GKSKNodeComponent: GKComponent {
+    open override class var supportsSecureCoding: Bool { true }
+
     public var node: SKNode
 
     public init(node: SKNode) {
@@ -85,6 +87,8 @@ extension SKNode {
 
 #if canImport(SceneKit)
 open class GKSCNNodeComponent: GKComponent {
+    open override class var supportsSecureCoding: Bool { true }
+
     public let node: SCNNode
 
     public init(node: SCNNode) {

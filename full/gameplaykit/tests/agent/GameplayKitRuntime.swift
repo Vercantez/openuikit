@@ -29,6 +29,8 @@ final class ReadyState: GKState {
 }
 
 final class HealthComponent: GKComponent {
+    override class var supportsSecureCoding: Bool { true }
+
     var value: Int = 0
     var added = 0
     var removed = 0

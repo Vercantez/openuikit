@@ -8,7 +8,7 @@ public protocol GKRandom {
 }
 
 open class GKRandomSource: NSObject, GKRandom, NSCopying, NSSecureCoding {
-    public static var supportsSecureCoding: Bool { true }
+    open class var supportsSecureCoding: Bool { true }
 
     private static let shared = GKSystemRandomSource()
 
@@ -74,6 +74,8 @@ private final class GKSystemRandomSource: GKRandomSource {
 }
 
 open class GKARC4RandomSource: GKRandomSource {
+    open override class var supportsSecureCoding: Bool { true }
+
     private var state: [UInt8] = Array(0...255)
     private var si: Int = 0
     private var sj: Int = 0
@@ -164,6 +166,8 @@ open class GKARC4RandomSource: GKRandomSource {
 }
 
 open class GKLinearCongruentialRandomSource: GKRandomSource {
+    open override class var supportsSecureCoding: Bool { true }
+
     open var seed: UInt64
 
     public init(seed: UInt64) {
@@ -204,6 +208,8 @@ open class GKLinearCongruentialRandomSource: GKRandomSource {
 }
 
 open class GKMersenneTwisterRandomSource: GKRandomSource {
+    open override class var supportsSecureCoding: Bool { true }
+
     private static let n = 312
     private static let m = 156
     private static let matrixA: UInt64 = 0xB502_6F5A_A966_19E9

@@ -1,7 +1,7 @@
 import Foundation
 
 open class GKComponent: NSObject, NSCopying, NSSecureCoding {
-    public static var supportsSecureCoding: Bool { true }
+    open class var supportsSecureCoding: Bool { true }
 
     public weak var entity: GKEntity?
 

@@ -1,7 +1,7 @@
 import Foundation
 
 open class GKGraphNode: NSObject, NSCopying, NSSecureCoding {
-    public static var supportsSecureCoding: Bool { true }
+    open class var supportsSecureCoding: Bool { true }
 
     private var connections: [GKGraphNode] = []
 
@@ -72,6 +72,8 @@ open class GKGraphNode: NSObject, NSCopying, NSSecureCoding {
 }
 
 open class GKGraphNode2D: GKGraphNode {
+    open override class var supportsSecureCoding: Bool { true }
+
     public var position: SIMD2<Float>
 
     public required init(point: SIMD2<Float>) {
@@ -126,6 +128,8 @@ open class GKGraphNode2D: GKGraphNode {
 }
 
 open class GKGraphNode3D: GKGraphNode {
+    open override class var supportsSecureCoding: Bool { true }
+
     public var position: SIMD3<Float>
 
     public required init(point: SIMD3<Float>) {
@@ -183,6 +187,8 @@ open class GKGraphNode3D: GKGraphNode {
 }
 
 open class GKGridGraphNode: GKGraphNode {
+    open override class var supportsSecureCoding: Bool { true }
+
     public private(set) var gridPosition: SIMD2<Int32>
 
     public required init(gridPosition: SIMD2<Int32>) {
@@ -238,7 +244,7 @@ open class GKGridGraphNode: GKGraphNode {
 }
 
 open class GKGraph: NSObject, NSCopying, NSSecureCoding {
-    public static var supportsSecureCoding: Bool { true }
+    open class var supportsSecureCoding: Bool { true }
 
     private var nodeStorage: [GKGraphNode] = []
 
@@ -356,6 +362,8 @@ open class GKGraph: NSObject, NSCopying, NSSecureCoding {
 }
 
 open class GKGridGraph<NodeType: GKGridGraphNode>: GKGraph {
+    open override class var supportsSecureCoding: Bool { true }
+
     public let gridOrigin: SIMD2<Int32>
     public let gridWidth: Int
     public let gridHeight: Int
@@ -456,6 +464,8 @@ open class GKGridGraph<NodeType: GKGridGraphNode>: GKGraph {
 }
 
 open class GKObstacleGraph<NodeType: GKGraphNode2D>: GKGraph {
+    open override class var supportsSecureCoding: Bool { true }
+
     public let bufferRadius: Float
     private var obstacleStorage: [GKPolygonObstacle] = []
     private var locked: Set<LockedPair> = []
@@ -617,6 +627,8 @@ open class GKObstacleGraph<NodeType: GKGraphNode2D>: GKGraph {
 }
 
 open class GKMeshGraph<NodeType: GKGraphNode2D>: GKGraph {
+    open override class var supportsSecureCoding: Bool { true }
+
     public let bufferRadius: Float
     public var triangulationMode: GKMeshGraphTriangulationMode = [.vertices]
     private var obstacleStorage: [GKPolygonObstacle] = []
