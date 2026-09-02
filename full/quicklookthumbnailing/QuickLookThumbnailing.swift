@@ -88,7 +88,166 @@ public struct QLThumbnailError: Foundation._BridgedStoredNSError, @unchecked Sen
 /// the documented stable Linux delivery target; Apple's queue identity is
 /// unconfirmed. `QLThumbnailProvider.provideThumbnail(for:_:)` is a different
 /// API and was not in the measured generator set; it stays synchronous here.
+#if canImport(ObjectiveC)
+@objc(QLThumbnailGenerationRequest)
+#endif
+open class QLThumbnailGenerationRequest: NSObject, NSCopying, NSSecureCoding {
+    public struct RepresentationTypes: OptionSet, Hashable, Sendable {
+        public let rawValue: UInt
+
+        public init(rawValue: UInt) {
+            self.rawValue = rawValue
+        }
+
+        public static let icon = RepresentationTypes(rawValue: 1 << 0)
+        public static let lowQualityThumbnail = RepresentationTypes(rawValue: 1 << 1)
+        public static let thumbnail = RepresentationTypes(rawValue: 1 << 2)
+        public static let all = RepresentationTypes(rawValue: UInt.max)
+    }
+
+    /// Linux overlay keyed-archive identifiers. Apple's archive keys are
+    /// not in the pinned public inputs and remain an oracle question.
+    fileprivate enum ArchiveKey {
+        static let version = "QLThumbnailGenerator.Request.version"
+        static let fileURL = "QLThumbnailGenerator.Request.fileURL"
+        static let width = "QLThumbnailGenerator.Request.size.width"
+        static let height = "QLThumbnailGenerator.Request.size.height"
+        static let scale = "QLThumbnailGenerator.Request.scale"
+        static let representationTypes = "QLThumbnailGenerator.Request.representationTypes"
+        static let iconMode = "QLThumbnailGenerator.Request.iconMode"
+        static let minimumDimension = "QLThumbnailGenerator.Request.minimumDimension"
+    }
+
+    fileprivate static let archiveVersion: Int32 = 1
+
+    private let fileURL: URL
+    private let storedSize: CGSize
+    private let storedScale: CGFloat
+    private let storedRepresentationTypes: RepresentationTypes
+
+    /// Unconfirmed against Apple's runtime default; stored as `false` until
+    /// an Apple-oracle observation lands.
+    open var iconMode: Bool
+
+    /// Unconfirmed against Apple's runtime default; stored as `0` until an
+    /// Apple-oracle observation lands.
+    open var minimumDimension: CGFloat
+
+#if canImport(UniformTypeIdentifiers)
+    /// Seeded `contentType` surface. Isolated Linux hosts do not stage
+    /// UniformTypeIdentifiers, so this member is omitted from that dylib.
+    open var contentType: UTType!
+#endif
+
+    open var size: CGSize { storedSize }
+    open var scale: CGFloat { storedScale }
+    open var representationTypes: RepresentationTypes { storedRepresentationTypes }
+
+    public init(
+        fileAt url: URL,
+        size: CGSize,
+        scale: CGFloat,
+        representationTypes: RepresentationTypes
+    ) {
+        self.fileURL = url
+        self.storedSize = size
+        self.storedScale = scale
+        self.storedRepresentationTypes = representationTypes
+        self.iconMode = false
+        self.minimumDimension = 0
+        super.init()
+    }
+
+    public convenience init(
+        fileAtURL url: URL,
+        size: CGSize,
+        scale: CGFloat,
+        representationTypes: RepresentationTypes
+    ) {
+        self.init(
+            fileAt: url,
+            size: size,
+            scale: scale,
+            representationTypes: representationTypes
+        )
+    }
+
+    /// Bounded keyed archive of the overlay request state: file URL, size,
+    /// scale, representation flags, iconMode, and minimumDimension.
+    /// `contentType` is owned by UniformTypeIdentifiers and is not part of
+    /// this archive; when that member exists it is restored as `nil`.
+    public required init?(coder: NSCoder) {
+        guard coder.containsValue(forKey: ArchiveKey.version) else { return nil }
+        let version = coder.decodeInt32(forKey: ArchiveKey.version)
+        guard version == Self.archiveVersion else { return nil }
+        guard coder.containsValue(forKey: ArchiveKey.fileURL),
+              let fileURL = coder.decodeObject(of: NSURL.self, forKey: ArchiveKey.fileURL) as URL?
+        else { return nil }
+        guard fileURL.isFileURL else { return nil }
+        guard coder.containsValue(forKey: ArchiveKey.width),
+              coder.containsValue(forKey: ArchiveKey.height),
+              coder.containsValue(forKey: ArchiveKey.scale),
+              coder.containsValue(forKey: ArchiveKey.representationTypes),
+              coder.containsValue(forKey: ArchiveKey.iconMode),
+              coder.containsValue(forKey: ArchiveKey.minimumDimension)
+        else { return nil }
+        let width = coder.decodeDouble(forKey: ArchiveKey.width)
+        let height = coder.decodeDouble(forKey: ArchiveKey.height)
+        let scale = coder.decodeDouble(forKey: ArchiveKey.scale)
+        let minimumDimension = coder.decodeDouble(forKey: ArchiveKey.minimumDimension)
+        guard width.isFinite, height.isFinite, scale.isFinite, minimumDimension.isFinite else {
+            return nil
+        }
+        let typesRaw = UInt(truncatingIfNeeded: UInt64(bitPattern: coder.decodeInt64(forKey: ArchiveKey.representationTypes)))
+        self.fileURL = fileURL
+        self.storedSize = CGSize(width: width, height: height)
+        self.storedScale = CGFloat(scale)
+        self.storedRepresentationTypes = RepresentationTypes(rawValue: typesRaw)
+        self.iconMode = coder.decodeBool(forKey: ArchiveKey.iconMode)
+        self.minimumDimension = CGFloat(minimumDimension)
+#if canImport(UniformTypeIdentifiers)
+        self.contentType = nil
+#endif
+        super.init()
+    }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(Self.archiveVersion, forKey: ArchiveKey.version)
+        coder.encode(fileURL as NSURL, forKey: ArchiveKey.fileURL)
+        coder.encode(Double(storedSize.width), forKey: ArchiveKey.width)
+        coder.encode(Double(storedSize.height), forKey: ArchiveKey.height)
+        coder.encode(Double(storedScale), forKey: ArchiveKey.scale)
+        coder.encode(Int64(bitPattern: UInt64(storedRepresentationTypes.rawValue)), forKey: ArchiveKey.representationTypes)
+        coder.encode(iconMode, forKey: ArchiveKey.iconMode)
+        coder.encode(Double(minimumDimension), forKey: ArchiveKey.minimumDimension)
+    }
+
+    public static var supportsSecureCoding: Bool { true }
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let copied = QLThumbnailGenerationRequest(
+            fileAt: fileURL,
+            size: storedSize,
+            scale: storedScale,
+            representationTypes: storedRepresentationTypes
+        )
+        copied.iconMode = iconMode
+        copied.minimumDimension = minimumDimension
+#if canImport(UniformTypeIdentifiers)
+        copied.contentType = contentType
+#endif
+        return copied
+    }
+
+    open override var description: String {
+        "QLThumbnailGenerator.Request(fileURL: \(fileURL), size: \(storedSize), scale: \(storedScale), representationTypes: \(storedRepresentationTypes), iconMode: \(iconMode), minimumDimension: \(minimumDimension))"
+    }
+}
+
 open class QLThumbnailGenerator: NSObject {
+    public typealias Request = QLThumbnailGenerationRequest
+
     /// Serial queue used by this Linux port for completion and update
     /// delivery. Apple's callback queue is an open oracle question; do not
     /// treat this label as an Apple identity. SPI so focused tests can
@@ -122,104 +281,6 @@ open class QLThumbnailGenerator: NSObject {
         }
     }
 
-    open class Request: NSObject, NSCopying, NSSecureCoding {
-        public struct RepresentationTypes: OptionSet, Hashable, Sendable {
-            public let rawValue: UInt
-
-            public init(rawValue: UInt) {
-                self.rawValue = rawValue
-            }
-
-            public static let icon = RepresentationTypes(rawValue: 1 << 0)
-            public static let lowQualityThumbnail = RepresentationTypes(rawValue: 1 << 1)
-            public static let thumbnail = RepresentationTypes(rawValue: 1 << 2)
-            public static let all = RepresentationTypes(rawValue: UInt.max)
-        }
-
-        private let fileURL: URL
-        private let storedSize: CGSize
-        private let storedScale: CGFloat
-        private let storedRepresentationTypes: RepresentationTypes
-
-        /// Unconfirmed against Apple's runtime default; stored as `false` until
-        /// an Apple-oracle observation lands.
-        open var iconMode: Bool
-
-        /// Unconfirmed against Apple's runtime default; stored as `0` until an
-        /// Apple-oracle observation lands.
-        open var minimumDimension: CGFloat
-
-#if canImport(UniformTypeIdentifiers)
-        /// Seeded `contentType` surface. Isolated Linux hosts do not stage
-        /// UniformTypeIdentifiers, so this member is omitted from that dylib.
-        open var contentType: UTType!
-#endif
-
-        open var size: CGSize { storedSize }
-        open var scale: CGFloat { storedScale }
-        open var representationTypes: RepresentationTypes { storedRepresentationTypes }
-
-        public init(
-            fileAt url: URL,
-            size: CGSize,
-            scale: CGFloat,
-            representationTypes: RepresentationTypes
-        ) {
-            self.fileURL = url
-            self.storedSize = size
-            self.storedScale = scale
-            self.storedRepresentationTypes = representationTypes
-            self.iconMode = false
-            self.minimumDimension = 0
-            super.init()
-        }
-
-        public convenience init(
-            fileAtURL url: URL,
-            size: CGSize,
-            scale: CGFloat,
-            representationTypes: RepresentationTypes
-        ) {
-            self.init(
-                fileAt: url,
-                size: size,
-                scale: scale,
-                representationTypes: representationTypes
-            )
-        }
-
-        /// Secure-coding layout is not recorded in the pinned public inputs.
-        /// Decoding therefore fails closed instead of inventing an archive.
-        public required init?(coder: NSCoder) {
-            return nil
-        }
-
-        public func encode(with coder: NSCoder) {
-            _ = coder
-        }
-
-        public static var supportsSecureCoding: Bool { true }
-
-        public func copy(with zone: NSZone? = nil) -> Any {
-            _ = zone
-            let copied = Request(
-                fileAt: fileURL,
-                size: storedSize,
-                scale: storedScale,
-                representationTypes: storedRepresentationTypes
-            )
-            copied.iconMode = iconMode
-            copied.minimumDimension = minimumDimension
-#if canImport(UniformTypeIdentifiers)
-            copied.contentType = contentType
-#endif
-            return copied
-        }
-
-        open override var description: String {
-            "QLThumbnailGenerator.Request(fileURL: \(fileURL), size: \(storedSize), scale: \(storedScale), representationTypes: \(storedRepresentationTypes), iconMode: \(iconMode), minimumDimension: \(minimumDimension))"
-        }
-    }
 
     private static let sharedGenerator = QLThumbnailGenerator()
 
@@ -401,6 +462,8 @@ open class QLThumbnailGenerator: NSObject {
         return .icon
     }
 }
+
+// No other type in this module conforms to NSCoding / NSSecureCoding.
 
 /// Thumbnail extension provider. Linux has no Quick Look extension host, so
 /// the default implementation reports `generationFailed` and never draws.

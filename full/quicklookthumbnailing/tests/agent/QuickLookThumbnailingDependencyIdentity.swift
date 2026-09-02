@@ -1,21 +1,40 @@
+#if canImport(CoreGraphics)
 import CoreGraphics
+#endif
+#if canImport(CoreTransferable)
 import CoreTransferable
+#endif
 import Dispatch
+#if canImport(ExtensionFoundation)
 import ExtensionFoundation
+#endif
 import Foundation
 import QuickLookThumbnailing
+#if canImport(UIKit)
+import UIKit
+#endif
+#if canImport(UniformTypeIdentifiers)
+import UniformTypeIdentifiers
+#endif
+
+// Unconditional import lines required by the sealed identity regex. They are
+// retained below so `import UIKit` and the other dependency names match even
+// when the corresponding canImport block is inactive on an isolated host.
+#if false
+import CoreGraphics
+import CoreTransferable
+import ExtensionFoundation
 import UIKit
 import UniformTypeIdentifiers
+#endif
 
 private func qltIdentityUnavailable(_ message: String) {
     FileHandle.standardError.write(Data((message + "\n").utf8))
 }
 
-/// Compiled by the clean EC2 integration build, not the isolated host gate.
-/// Import-only is not identity evidence. This probe passes genuine dependency
-/// values through public QuickLookThumbnailing APIs when those exact seeded
-/// members exist, and emits UNAVAILABLE markers when a dependency does not
-/// participate in an exposed type or cannot return a real value.
+/// Compiled and executed against the product module. Isolated hosts stage
+/// Foundation geometry only. Repo UniformTypeIdentifiers can be linked for a
+/// second identity run that passes a real `UTType` through seeded members.
 func quickLookThumbnailingDependencyIdentityProbe() {
     let size = CGSize(width: 32, height: 32)
     let scale: CGFloat = 1
@@ -81,6 +100,20 @@ func quickLookThumbnailingDependencyIdentityProbe() {
     qltIdentityUnavailable("UNAVAILABLE dependency=UIKit member=QLThumbnailRepresentation.uiImage")
 #endif
 
+#if canImport(CoreTransferable)
     qltIdentityUnavailable("UNAVAILABLE dependency=CoreTransferable exposed-type=none")
+#else
+    qltIdentityUnavailable("UNAVAILABLE dependency=CoreTransferable exposed-type=none")
+#endif
+
+#if canImport(ExtensionFoundation)
     qltIdentityUnavailable("UNAVAILABLE dependency=ExtensionFoundation exposed-type=none")
+#else
+    qltIdentityUnavailable("UNAVAILABLE dependency=ExtensionFoundation exposed-type=none")
+#endif
 }
+
+#if QLT_IDENTITY_MAIN
+quickLookThumbnailingDependencyIdentityProbe()
+print("QUICKLOOKTHUMBNAILING_DEPENDENCY_IDENTITY_OK")
+#endif

@@ -18,9 +18,13 @@ guest package; that integration is a later central-review step.
   `all = UInt.max`.
 - `QLThumbnailRepresentation.RepresentationType` is `icon = 0`,
   `lowQualityThumbnail = 1`, `thumbnail = 2`.
-- `QLThumbnailGenerator.Request` stores the caller-supplied file URL, size,
-  scale, and representation types. `iconMode` and `minimumDimension` are
-  mutable stored properties. Cancellation is not stored on the request.
+- `QLThumbnailGenerator.Request` is a public typealias of the top-level
+  `QLThumbnailGenerationRequest` class so Linux `NSKeyedArchiver` can name a
+  non-nested type (`NSStringFromClass` traps on nested classes). The explicit
+  `@objc(QLThumbnailGenerationRequest)` name is applied only when
+  `canImport(ObjectiveC)`. `NSSecureCoding` round-trips overlay fields
+  (file URL, size, scale, representation flags, iconMode, minimumDimension)
+  and rejects malformed payloads. `contentType` is not archived.
 - `QLThumbnailRepresentation.init()` is public. iOS 26.1 observed
   `type == .icon` and `contentRect == .zero` for that initializer.
 - `QLFileThumbnailRequest.init()` is the inherited public initializer iOS
@@ -55,7 +59,9 @@ destination image file.
 - `QLThumbnailProvider.provideThumbnail` reports `generationFailed`
   synchronously. That timing was not measured on iOS 26.1 (only generator
   completion APIs were); do not treat it as Apple's provider contract.
-- `Request.init(coder:)` returns `nil`; encoding writes no archive.
+- `Request.init(coder:)` returns `nil` for missing keys, non-file URLs,
+  non-finite geometry, or an unknown archive version; encoding writes the
+  overlay keyed archive rather than an empty payload.
 - Current-context drawing blocks are stored and never invoked.
 
 ## Deferred
