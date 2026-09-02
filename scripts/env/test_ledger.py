@@ -124,6 +124,25 @@ class LedgerHashTests(unittest.TestCase):
             self.assertEqual(proc.stdout, "")
             self.assertEqual(proc.stderr, "")
 
+    def test_core_guest_package_delegates_hash_ledger(self) -> None:
+        text = (ROOT / "full/frameworks/build_core_guest_package.sh").read_text()
+        self.assertIn('LEDGER_TOOL=$W/scripts/env/ledger.py', text)
+        self.assertIn('python3 "$LEDGER_TOOL" --style core hash-file "$1"', text)
+        self.assertIn(
+            'python3 "$LEDGER_TOOL" --style core require-hash "$1" "$2" "$3"',
+            text,
+        )
+        self.assertIn(
+            'python3 "$LEDGER_TOOL" --style core assert-clean-commit "$1" "$2" "$3" "$4"',
+            text,
+        )
+        self.assertNotIn('hash_file() { sha256sum', text)
+        self.assertIn(
+            'require_hash "$SWIFT_CORE_RUNTIME" "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256"',
+            text,
+        )
+        self.assertIn("assert_clean_commit \"$SWIFT_FOUNDATION\"", text)
+
     def test_symlink_is_missing_regular(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             real = Path(tmp) / "real"
