@@ -10,13 +10,13 @@ This directory replaces it. **Xcode is no longer a build input.**
 
 ```
 sdk/
-  MANIFEST.tsv        387 rows: header path -> where it comes from
-  SOURCES.tsv         11 pinned apple-oss-distributions releases + licences
+  MANIFEST.tsv        413 rows: header path -> where it comes from
+  SOURCES.tsv         13 pinned apple-oss-distributions releases + licences
   CHECKSUMS.sha256    sha256 of every upstream file, with its upstream path
   patches/            2 patches, each explaining what the published tree dropped
-  local/              19 clean-room headers of ours (4,396 lines)
+  local/              22 clean-room headers of ours
   tests/              the ABI probe, and its macOS baseline
-  usr/include/        387 headers, 3.5 MB -- COMMITTED
+  usr/include/        413 headers -- COMMITTED
   usr/lib/*.tbd       3 stubs + 3 symlinks -- GENERATED, gitignored
 ```
 
@@ -36,23 +36,37 @@ Regenerate with `scripts/sdk_stage.sh`; re-derive the stubs with
 
 | source | headers | licence | redistributable |
 |---|---:|---|---|
-| **xnu** | 228 | APSL 2.0 | yes |
-| **Libc** | 74 | APSL 2.0 | yes |
+| **xnu** | 242 | APSL 2.0 | yes |
+| **Libc** | 76 | APSL 2.0 | yes |
 | **libdispatch** | 21 | Apache 2.0 | yes |
-| **libpthread** | 19 | APSL 2.0 | yes |
+| **libpthread** | 20 | APSL 2.0 | yes |
 | **libplatform** | 6 | APSL 2.0 | yes |
 | **libmalloc** | 5 | APSL 2.0 | yes |
 | **cctools** | 5 | APSL 2.0 | yes |
 | **libunwind** | 2 | Apache 2.0 w/ LLVM exception | yes |
 | **dyld** | 2 | APSL 2.0 | yes |
+| **Libinfo** | 2 | APSL 2.0 | yes |
 | **libclosure** | 1 | APSL 2.0 | yes |
+| **copyfile** | 1 | APSL 2.0 | yes |
 | **xnu, via its own published generator** | 1 | APSL 2.0 | yes |
 | **objc4** (`vendor/objc4/runtime/`) | 4 | APSL 2.0 | yes |
-| **ours, clean-room** (`sdk/local/`) | 19 | this project's | — |
-| | **387** | | |
+| **vendor** (`vendor/libunwind`, …) | 3 | LLVM exception / project | yes |
+| **ours, clean-room** (`sdk/local/`) | 22 | this project's | — |
+| | **413** | | |
 
 Exact tags are in `sdk/SOURCES.tsv`. Per-file sha256 with the upstream path is in
 `sdk/CHECKSUMS.sha256`; `scripts/sdk_stage.sh --verify` re-fetches and checks them.
+
+### The 388th header: `copyfile.h` from copyfile-240
+
+FoundationEssentials' FileManager surface calls `copyfile` / `fcopyfile`.
+The header is **not** in xnu or Libc — it is its own apple-oss-distributions
+release, which is why `SOURCES.tsv` grew a thirteenth pin (`copyfile-240`,
+APSL 2.0). The 143-line public header is the one `docs/UNIMPLEMENTED.md`
+measured (28 `COPYFILE_*` flags, 18 `COPYFILE_STATE_*` keys). Staging it
+without the matching libSystem exports would be the partial-claim hazard
+`sdk/tests/fm_link_probe.c` exists to catch; the probe now includes
+`<copyfile.h>` in the same commit that implements the functions.
 
 ### The 356th header, and the shape of hole it was
 
@@ -215,8 +229,9 @@ libdispatch does not call them; a port that does gets an undeclared-identifier
 error at its own call site, which is at least loud.
 
 Still absent, and it needs a decision rather than a row: **`netdb.h` is not in
-xnu or Libc.** Darwin's lives in `Libinfo`, which is not one of the 11 pinned
-releases, so staging it means adding a twelfth upstream source.
+xnu or Libc.** Darwin's lives in `Libinfo`. That repo is already pinned
+(`Libinfo-600`, for `pwd.h`/`grp.h`); `netdb.h` is simply not in the staged
+slice. Adding it is a MANIFEST row, not a new upstream source.
 
 **No header in this tree was copied from Apple's Xcode SDK.** A staged copy of
 MacOSX15.4's `usr/include` exists at `build/sdk/` on the machine this was
@@ -598,14 +613,14 @@ failure rather than a mystery six months from now.
 > ways.
 >
 > Two limits remain, and they are limits rather than bugs. `--verify` covers
-> **364 of 387** files: the 19 clean-room and 4 objc4 headers live in this
-> repository and only git vouches for them. And there is no purely-offline check
+> **384 of 413** files: the 22 clean-room, 4 objc4 and 3 vendored headers live
+> in this repository and only git vouches for them. And there is no purely-offline check
 > that the committed `sdk/usr/include` matches these sums, because the sums are
-> of *pristine upstream* while 12 staged headers have their `//Begin-Libc`
+> of *pristine upstream* while 14 staged headers have their `//Begin-Libc`
 > regions removed (§3.1) and 2 are patched (§3.2). The offline check that does
 > work is `scripts/sdk_stage.sh` followed by `git status sdk/usr/include`;
-> measured 2026-08-26, a restage of a clean checkout reproduces all 387 headers
-> byte-for-byte.
+> a restage of a clean checkout reproduces the staged headers byte-for-byte
+> (413 after copyfile.h landed).
 >
 > `CHECKSUMS.sha256` is also sorted with `LC_ALL=C` now. Without it a restage on
 > a differently-configured machine moved 18 rows without changing a hash, which
