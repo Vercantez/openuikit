@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
-# Build Focus's exact SwiftUI Onboarding runtime sources as reusable ARM64
+# Build Focus's exact SwiftUI Onboarding runtime sources as reusable Darwin
 # Mach-O modules/dylibs and run a project-owned interaction harness on Linux.
-# Defaults to the in-repo uikit/ and machorun/ subtrees. External UIKIT=/path
-# or MACHORUN=/path checkouts remain overrides.
+# The TARGET triple follows the host; x86_64 output is
+# build/focus-onboarding-guest-x86_64. Defaults to the in-repo uikit/ and
+# machorun/ subtrees. External UIKIT=/path or MACHORUN=/path remain overrides.
 
 set -euo pipefail
 
 W=${W:-$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)}
 # shellcheck source=../../scripts/vendor_tree.sh
 . "$W/scripts/vendor_tree.sh"
+# shellcheck disable=SC1091
+. "$(cd "$(dirname "$0")" && pwd)/../scripts/guest_arch.inc"
 UIKIT=${UIKIT:-$W/uikit}
 MACHORUN=${MACHORUN:-$W/machorun}
 RESOURCE_INPUT=${1:?usage: build_focus_onboarding_guest.sh <normalized-bundles-directory>}
@@ -16,13 +19,13 @@ FOCUS_REPO=$W/scratch/ladder-corpus/focus-ios/focus-ios
 FOCUS_ROOT=$W/scratch/ladder-corpus/focus-ios
 FOCUS_ONBOARDING=$FOCUS_REPO/BlockzillaPackage/Sources/Onboarding
 FOCUS_WIDGET=$FOCUS_REPO/BlockzillaPackage/Sources/Widget
-OUT=$W/build/focus-onboarding-guest
+OUT=$W/build/focus-onboarding-guest${FULL_OUT_SUFFIX}
 PACKAGE=$OUT/package
 MODULE_CACHE=$OUT/module-cache
 AUDIT=$OUT/audit
-FULL=$W/build/full
+FULL=$W/build/full${FULL_OUT_SUFFIX}
 SYS=$W/scratch/sysroot_fe4
-MRROOT=$W/scratch/mrroot_full
+MRROOT=$W/scratch/mrroot_full${FULL_OUT_SUFFIX}
 SWIFT_FOUNDATION=$W/scratch/swift-foundation
 OPENCOMBINE_ROOT=${OPENCOMBINE_ROOT:-$W/scratch/opencombine-core-durable-20260828-r2}
 OPENCOMBINE_ARTIFACTS=$OPENCOMBINE_ROOT/export/artifacts
@@ -231,9 +234,16 @@ for index in "${!SOURCE_RELATIVES[@]}"; do
 done
 
 require_hash "$OPENCOMBINE_ROOT/export/RESULT.txt" "$EXPECTED_OPENCOMBINE_RESULT" OpenCombine-result
-require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" "$EXPECTED_OPENCOMBINE_OBJECT" OpenCombine-object
-require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" "$EXPECTED_OPENCOMBINE_MODULE" OpenCombine-module
-require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftdoc" "$EXPECTED_OPENCOMBINE_DOC" OpenCombine-doc
+if [ "$ARCH" = arm64 ]; then
+    require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" "$EXPECTED_OPENCOMBINE_OBJECT" OpenCombine-object
+    require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" "$EXPECTED_OPENCOMBINE_MODULE" OpenCombine-module
+    require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftdoc" "$EXPECTED_OPENCOMBINE_DOC" OpenCombine-doc
+else
+    if ! llvm-otool-18 -hv "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" 2>/dev/null \
+        | grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}"; then
+        die "NEEDS_X86_OPENCOMBINE: OpenCombine.o is not $ARCH (arm64 durable SHA $EXPECTED_OPENCOMBINE_OBJECT still stands; rebuild for $TARGET beside that tree)"
+    fi
+fi
 require_hash "$OPENCOMBINE_HELPERS/COpenCombineHelpers.cpp" "$EXPECTED_OPENCOMBINE_HELPER" OpenCombine-helper
 require_hash "$OPENCOMBINE_HELPERS/include/COpenCombineHelpers.h" "$EXPECTED_OPENCOMBINE_HEADER" OpenCombine-header
 require_hash "$OPENCOMBINE_HELPERS/include/module.modulemap" "$EXPECTED_OPENCOMBINE_MODULEMAP" OpenCombine-modulemap
@@ -276,11 +286,11 @@ for module in OpenUIKit OpenCoreGraphics; do
     done
 done
 
-SWIFTC=(swiftc -target arm64-apple-macos15.0 -sdk "$SYS"
+SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS"
     -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
     -Xfrontend -disable-implicit-string-processing-module-import
     -Xfrontend -disable-objc-attr-requires-foundation-module)
-LD=(ld64.lld-18 -arch arm64 -platform_version macos 15.0 15.0
+LD=(ld64.lld-18 -arch "$ARCH" -platform_version macos 15.0 15.0
     -syslibroot "$SYS" -rpath /usr/lib/swift)
 PACKAGE_CINC=(-Xcc -I"$PACKAGE/include/CPortableIO"
     -Xcc -I"$PACKAGE/include/CSTBTrueType"
@@ -346,7 +356,7 @@ done
 # _Concurrency build.  Prewarming only Swift, with implicit stdlib imports
 # disabled by -parse-stdlib, makes the same clean-cache build deterministic.
 echo '== prewarm the Darwin Swift module cache'
-swiftc -target arm64-apple-macos15.0 -sdk "$SYS" \
+swiftc -target "$TARGET" -sdk "$SYS" \
     -module-cache-path "$MODULE_CACHE" -parse-stdlib -typecheck \
     -e 'import Swift'
 
@@ -355,7 +365,7 @@ cp "$OPENCOMBINE_HELPERS/COpenCombineHelpers.cpp" "$OUT/COpenCombineHelpers.cpp"
 patch --batch --forward --fuzz=0 "$OUT/COpenCombineHelpers.cpp" \
     "$W/full/oracle-opencombine/patches/COpenCombineHelpers-pthread-recursive.patch"
 require_hash "$OUT/COpenCombineHelpers.cpp" "$EXPECTED_OPENCOMBINE_PATCHED_HELPER" patched-OpenCombine-helper
-clang++-18 -target arm64-apple-macos15.0 -isysroot "$SYS" -stdlib=libc++ -std=c++17 -O2 \
+clang++-18 -target "$TARGET" -isysroot "$SYS" -stdlib=libc++ -std=c++17 -O2 \
     -I "$PACKAGE/include/COpenCombineHelpers" -c "$OUT/COpenCombineHelpers.cpp" \
     -o "$OUT/copencombinehelpers.o"
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
@@ -512,7 +522,7 @@ done
     -o "$PACKAGE/libOnboarding.dylib" "$OUT/onboarding.o"
 
 echo '== compile and link the project-owned guest harness'
-clang-18 -target arm64-apple-macos15.0 -isysroot "$SYS" -O2 \
+clang-18 -target "$TARGET" -isysroot "$SYS" -O2 \
     -c "$W/full/swiftui/FocusOnboardingUUIDProbe.c" -o "$OUT/uuid-probe.o"
 "${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
     -I "$PACKAGE" -module-name FocusOnboardingGuest \
@@ -530,15 +540,15 @@ clang-18 -target arm64-apple-macos15.0 -isysroot "$SYS" -O2 \
 for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit Foundation \
     OpenCombine Combine SwiftUI Widget Onboarding; do
     llvm-otool-18 -hv "$PACKAGE/lib$dylib.dylib" \
-        | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
-        || die "lib$dylib is not an ARM64 Mach-O dylib"
+        | grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]DYLIB" \
+        || die "lib$dylib is not a $ARCH Mach-O dylib"
     actual_id=$(llvm-otool-18 -D "$PACKAGE/lib$dylib.dylib" | tail -n 1)
     [ "$actual_id" = "@rpath/lib$dylib.dylib" ] \
         || die "lib$dylib install name changed: $actual_id"
 done
 llvm-otool-18 -hv "$OUT/focus_onboarding_guest" \
-    | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]EXECUTE' \
-    || die "guest is not an ARM64 Mach-O executable"
+    | grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]EXECUTE" \
+    || die "guest is not a $ARCH Mach-O executable"
 
 perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 --executable "$OUT/focus_onboarding_guest" \

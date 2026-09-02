@@ -19,6 +19,11 @@ import stat
 import sys
 from typing import Any
 
+_SCRIPTS = Path(__file__).resolve().parent.parent / "scripts"
+if str(_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS))
+from guest_arch import guest_arch, macos15_target, swift_module_triple  # noqa: E402
+
 
 class CorePackageError(RuntimeError):
     """The core guest package does not satisfy the executable-build contract."""
@@ -674,8 +679,10 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
     if manifest.get("format_version") != 1:
         raise CorePackageError("unsupported core package format_version")
     target = _mapping(manifest.get("target"), "target")
-    if _string(target.get("triple"), "target.triple") != "arm64-apple-macos15.0":
-        raise CorePackageError("core package target must be arm64-apple-macos15.0")
+    if _string(target.get("triple"), "target.triple") != macos15_target():
+        raise CorePackageError(
+            f"core package target must be {macos15_target()}"
+        )
 
     raw_paths = _mapping(manifest.get("paths"), "paths")
     if set(raw_paths) != _PATH_KEYS:
@@ -1141,12 +1148,12 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"{paths['guest_root']}/darwin/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit",
             f"{paths['guest_root']}/darwin/usr/lib/swift/libswiftIOKit.dylib",
             f"{paths['modules']}/IOKit.swiftmodule",
-            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.abi.json",
-            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.private.swiftinterface",
-            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftdoc",
-            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftinterface",
-            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftmodule",
-            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/arm64-apple-macos.swiftsourceinfo",
+            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{swift_module_triple()}.abi.json",
+            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{swift_module_triple()}.private.swiftinterface",
+            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{swift_module_triple()}.swiftdoc",
+            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{swift_module_triple()}.swiftinterface",
+            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{swift_module_triple()}.swiftmodule",
+            f"{paths['frameworks']}/AppKit.framework/Versions/C/Modules/AppKit.swiftmodule/{swift_module_triple()}.swiftsourceinfo",
             appkit_compile_path,
             appkit_runtime_path,
             f"{paths['frameworks']}/SystemConfiguration.framework/Headers/OpenSystemConfiguration.h",
@@ -1158,12 +1165,12 @@ def validate(package_root: Path) -> tuple[Path, dict[str, Any]]:
             f"{paths['guest_root']}/darwin/System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration",
             f"{paths['frameworks']}/CoreLocation.framework/Headers/CoreLocation.h",
             f"{paths['frameworks']}/CoreLocation.framework/Modules/module.modulemap",
-            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.abi.json",
-            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.private.swiftinterface",
-            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftdoc",
-            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftinterface",
-            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftmodule",
-            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/arm64-apple-macos.swiftsourceinfo",
+            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/{swift_module_triple()}.abi.json",
+            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/{swift_module_triple()}.private.swiftinterface",
+            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/{swift_module_triple()}.swiftdoc",
+            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/{swift_module_triple()}.swiftinterface",
+            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/{swift_module_triple()}.swiftmodule",
+            f"{paths['frameworks']}/CoreLocation.framework/Modules/CoreLocation.swiftmodule/{swift_module_triple()}.swiftsourceinfo",
             corelocation_compile_path,
             corelocation_runtime_path,
         }

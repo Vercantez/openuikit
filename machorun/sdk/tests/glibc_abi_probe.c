@@ -100,13 +100,31 @@
         "object fits in the storage a Darwin guest reserved.")
 
 /* The one that closes a live hole: darwin/src/posix.c mirrors this by hand. */
+#if defined(__x86_64__)
+PIN(struct stat, 144);
+_Static_assert(offsetof(struct stat, st_nlink) == 16,
+    "glibc x86_64 struct stat has moved st_nlink; it is 8 bytes here (nlink_t)");
+_Static_assert(offsetof(struct stat, st_mode) == 24,
+    "glibc x86_64 struct stat has moved st_mode");
+#else
 PIN(struct stat, 128);
+#endif
 _Static_assert(offsetof(struct stat, st_size) == 48,
     "glibc struct stat has moved st_size; stat_l2d() in darwin/src/posix.c "
     "reads it at a hard-coded offset and would now translate garbage.");
 
 /* Fit inside Darwin's footprint. adopt() in darwin/src/libsystem.c depends on
  * these staying smaller than the Darwin sizes in the table above. */
+#if defined(__x86_64__)
+PIN(pthread_mutex_t,      40);
+PIN(pthread_cond_t,       48);
+PIN(pthread_rwlock_t,     56);
+PIN(pthread_once_t,        4);
+PIN(pthread_mutexattr_t,   4);
+PIN(pthread_condattr_t,    4);
+PIN(pthread_rwlockattr_t,  8);
+PIN(pthread_attr_t,       56);
+#else
 PIN(pthread_mutex_t,      48);
 PIN(pthread_cond_t,       48);
 PIN(pthread_rwlock_t,     56);
@@ -115,6 +133,7 @@ PIN(pthread_mutexattr_t,   8);
 PIN(pthread_condattr_t,    8);
 PIN(pthread_rwlockattr_t,  8);
 PIN(pthread_attr_t,       64);
+#endif
 
 /* THE CONSTANTS ARE SWAPPED, and that is not a size problem so nothing above
  * would catch it. Darwin: NORMAL 0, ERRORCHECK 1, RECURSIVE 2. glibc: NORMAL
@@ -153,9 +172,15 @@ PIN(posix_spawn_file_actions_t,  80);
 PIN(sem_t,                       32);
 PIN(regex_t,                     64);
 PIN(sigset_t,                   128);
+#if defined(__x86_64__)
+PIN(ucontext_t,                 968);
+PIN(jmp_buf,                    200);
+PIN(sigjmp_buf,                 200);
+#else
 PIN(ucontext_t,                4560);
 PIN(jmp_buf,                    312);
 PIN(sigjmp_buf,                 312);
+#endif
 
 /* Fit, but differ in LAYOUT, which is the quieter failure: the guest reads
  * Darwin's offsets out of a glibc object. readdir() must translate, not
@@ -188,6 +213,16 @@ _Static_assert(offsetof(FTSENT, fts_dev) == 80,
     "glibc FTSENT moved fts_dev (Darwin also puts it at 80)");
 _Static_assert(offsetof(FTSENT, fts_nlink) == 88,
     "glibc FTSENT moved fts_nlink (Darwin puts it at 84)");
+#if defined(__x86_64__)
+_Static_assert(offsetof(FTSENT, fts_level) == 96,
+    "glibc x86_64 FTSENT moved fts_level (nlink_t is 8 bytes; Darwin puts it at 86)");
+_Static_assert(offsetof(FTSENT, fts_info) == 98,
+    "glibc x86_64 FTSENT moved fts_info (Darwin puts it at 88)");
+_Static_assert(offsetof(FTSENT, fts_flags) == 100,
+    "glibc x86_64 FTSENT moved fts_flags (Darwin puts it at 90)");
+_Static_assert(offsetof(FTSENT, fts_instr) == 102,
+    "glibc x86_64 FTSENT moved fts_instr (Darwin puts it at 92)");
+#else
 _Static_assert(offsetof(FTSENT, fts_level) == 92,
     "glibc FTSENT moved fts_level (Darwin puts it at 86)");
 _Static_assert(offsetof(FTSENT, fts_info) == 94,
@@ -196,6 +231,7 @@ _Static_assert(offsetof(FTSENT, fts_flags) == 96,
     "glibc FTSENT moved fts_flags (Darwin puts it at 90)");
 _Static_assert(offsetof(FTSENT, fts_instr) == 98,
     "glibc FTSENT moved fts_instr (Darwin puts it at 92)");
+#endif
 _Static_assert(offsetof(FTSENT, fts_statp) == 104,
     "glibc FTSENT moved fts_statp (Darwin puts it at 96)");
 _Static_assert(offsetof(FTSENT, fts_name) == 112,
@@ -330,7 +366,11 @@ _Static_assert(PTHREAD_CREATE_DETACHED == 1, "glibc PTHREAD_CREATE_DETACHED move
  * translated struct. Darwin's dev_t is 4 bytes and mode_t/nlink_t are 2. */
 PIN(dev_t,   8);
 PIN(mode_t,  4);
+#if defined(__x86_64__)
+PIN(nlink_t, 8);
+#else
 PIN(nlink_t, 4);
+#endif
 
 /* CLOCK IDS. darwin/src/posix.c's mr_linux_clock_id() maps Darwin's ids onto
  * these, and BOTH tables in it are hand-written -- so before this block
@@ -457,7 +497,11 @@ _Static_assert(SCHED_RR    == 2, "glibc SCHED_RR moved (Darwin's is 2 too -- the
 PIN(struct sched_param, 4);
 /* This one DOES agree, which is why pthread_attr_init/destroy are among the
  * four symbols in that census that really were plain forwards. */
+#if defined(__x86_64__)
+PIN(pthread_attr_t, 56);
+#else
 PIN(pthread_attr_t, 64);
+#endif
 
 /* SCHEDULING AND DETACH STATE, both revealed ten symbols late because
  * ld64.lld caps its diagnostics at 20 and every "20 undefined" measurement was

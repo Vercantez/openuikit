@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 # Build and run the unchanged Reminder AppDelegate + SceneDelegate as a real
-# arm64 Mach-O guest. The outer (macOS) half generates an attested build input
-# and mounts every subject read-only. The inner (Linux/arm64) half reuses the
-# exact modules and guest root produced by full/scripts/build_full.sh.
+# Mach-O guest for the host triple (full/scripts/guest_arch.inc). The outer
+# half generates an attested build input and mounts every subject read-only.
+# The inner half reuses the modules and guest root from full/scripts/build_full.sh.
+# x86_64 writes beside the arm64 tree (build/full-x86_64/scene-guest).
 set -euo pipefail
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 W=$(cd -- "$SCRIPT_DIR/../.." && pwd)
-SCENE_OUT="$W/build/full/scene-guest"
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/../scripts/guest_arch.inc"
+SCENE_OUT="$W/build/full${FULL_OUT_SUFFIX}/scene-guest"
 
 die() {
     echo "reminder-scene-guest: $*" >&2
@@ -98,7 +101,11 @@ PY
             >prepared-inputs.sha256
     )
 
-    docker run --rm --platform linux/arm64 \
+    case "$ARCH" in
+        x86_64) DOCKER_PLATFORM=linux/amd64 ;;
+        *)      DOCKER_PLATFORM=linux/arm64 ;;
+    esac
+    docker run --rm --platform "$DOCKER_PLATFORM" \
         -e OPENUIKIT_HOST_TURNS="$turns" \
         -v "$W:/w" \
         -v "$uikit_checkout:/uikit:ro" \
@@ -120,9 +127,9 @@ build_inside() {
 
     bash "$W/full/scripts/build_full.sh"
 
-    local full="$W/build/full"
+    local full="$W/build/full${FULL_OUT_SUFFIX}"
     local sys="$W/scratch/sysroot_fe4"
-    local rootdir="$W/scratch/mrroot_full"
+    local rootdir="$W/scratch/mrroot_full${FULL_OUT_SUFFIX}"
     local module turns expected_subject actual_subject
     [ -s "$full/uihelpers-subject.sha256" ] || die "build_full success marker is missing"
     expected_subject=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" /uikit)
@@ -147,7 +154,7 @@ build_inside() {
     local mc="$SCENE_OUT/module-cache"
     mkdir -p "$mc"
     local -a swiftc_flags c_flags fe_flags link_flags
-    swiftc_flags=(swiftc -target arm64-apple-macos15.0 -sdk "$sys"
+    swiftc_flags=(swiftc -target "$TARGET" -sdk "$sys"
         -module-cache-path "$mc" -runtime-compatibility-version none -wmo
         -Xfrontend -disable-implicit-string-processing-module-import
         -Xfrontend -disable-objc-attr-requires-foundation-module)
@@ -157,7 +164,7 @@ build_inside() {
         -I "$full/foundation/collections" -I "$full/foundation/os"
         -Xcc -fmodule-map-file="$W/scratch/swift-foundation/Sources/_FoundationCShims/include/module.modulemap"
         -Xcc -I"$W/scratch/swift-foundation/Sources/_FoundationCShims/include")
-    link_flags=(ld64.lld-18 -arch arm64 -platform_version macos 15.0 15.0
+    link_flags=(ld64.lld-18 -arch "$ARCH" -platform_version macos 15.0 15.0
         -syslibroot "$sys" -rpath /usr/lib/swift)
 
     # PortableUIKitApplicationHost now enforces the same relocatable resource

@@ -2,9 +2,10 @@
 # Build Apple's objc4 as a Mach-O /usr/lib/libobjc.A.dylib -- on Linux.
 #
 # The whole point of this script is that it is a NATIVE build: the target is
-# arm64-apple-macos11, so TARGET_OS_MAC is 1, __arm64__ is predefined, BOOL is
-# bool, and the assembler and inline-asm dialects are Apple's own. Every one of
-# those was a patch in the ELF port. Here they are the defaults.
+# the host Darwin triple (arm64-apple-macos11 or x86_64-apple-macos11), so
+# TARGET_OS_MAC is 1, the arch macros are predefined, BOOL is bool, and the
+# assembler and inline-asm dialects are Apple's own. Every one of those was a
+# patch in the ELF port. Here they are the defaults.
 #
 # Sources come from vendor/objc4 (PRISTINE Apple drop) with patches-macho/*
 # applied to a copy at build/objc4-macho-src. patches-macho/ is the honest
@@ -40,15 +41,17 @@
 set -eu
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
+# shellcheck disable=SC1091
+. "$ROOT/scripts/guest_arch.inc"
 SDK="${OBJC4_SDK:-$ROOT/sdk}"
 LIBCXX_INC="${LIBCXX_INC:-/usr/lib/llvm-18/include/c++/v1}"
 SRC="$ROOT/build/objc4-macho-src"
 GEN="$ROOT/build/objc4-macho-gen"
 OBJ="$ROOT/build/objc4-macho-obj"
 OUT="$ROOT/darwin/usr/lib"
-TARGET="${DARWIN_TARGET:-arm64-apple-macos11}"
+TARGET="$DARWIN_TARGET"
 
-CLANG="${DARWIN_CLANG:-clang}"
+CLANG="$DARWIN_CLANG"
 LD64="${LD64:-ld64.lld-18}"
 
 [ -d "$SDK" ] || { echo "build_objc4: no SDK at $SDK" >&2; exit 1; }
@@ -142,10 +145,22 @@ done
 for f in "$SRC"/runtime/*.m; do
     compile "$f" $OBJC
 done
-# Apple's own arm64 assembly, assembled by clang's integrated assembler in
-# DARWIN dialect. No translation step, no gen-elf-asm.py.
-compile "$SRC/runtime/Messengers.subproj/objc-msg-arm64.s" $ASFLAGS
-compile "$SRC/runtime/retain-release-helpers-arm64.s"      $ASFLAGS
+# Apple's own architecture assembly. retain-release-helpers-arm64.s is
+# arm64-only (`#if __arm64__` in NSObject.mm); x86_64 uses the C
+# objc_retain/objc_release in that file. objc-sel-table.s is arch-neutral.
+case "$LD64_ARCH" in
+    x86_64)
+        compile "$SRC/runtime/Messengers.subproj/objc-msg-x86_64.s" $ASFLAGS
+        ;;
+    arm64)
+        compile "$SRC/runtime/Messengers.subproj/objc-msg-arm64.s" $ASFLAGS
+        compile "$SRC/runtime/retain-release-helpers-arm64.s"      $ASFLAGS
+        ;;
+    *)
+        echo "build_objc4: no messenger asm for arch $LD64_ARCH" >&2
+        exit 1
+        ;;
+esac
 compile "$SRC/runtime/objc-sel-table.s"                    $ASFLAGS
 
 echo "== compiled ${#OBJS[@]} objects, $fail failures"
@@ -168,7 +183,7 @@ ABI_DYLIB="$ROOT/darwin/usr/lib/libc++abi.dylib"
 # link line re-exports it. Without it: "unable to locate re-export with install
 # name /usr/lib/libc++abi.dylib" -- ld64 has the file but not the mapping from
 # the name inside it to a path on disk.
-$LD64 -dylib -arch arm64 -platform_version macos 11.0 11.0 \
+$LD64 -dylib -arch "$LD64_ARCH" -platform_version macos 11.0 11.0 \
       -syslibroot "$ROOT/darwin" \
       -install_name /usr/lib/libobjc.A.dylib \
       -undefined dynamic_lookup \

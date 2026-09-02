@@ -34,6 +34,8 @@
 #define M1F(name) extern float  glibc_##name##f(float)        GLIBCSYM(name##f);
 #define M2(name)  extern double glibc_##name(double, double) GLIBCSYM(name);
 #define M2F(name) extern float  glibc_##name##f(float, float) GLIBCSYM(name##f);
+#define M1L(name) extern long double glibc_##name##l(long double) GLIBCSYM(name##l);
+#define M2L(name) extern long double glibc_##name##l(long double, long double) GLIBCSYM(name##l);
 
 /* ----------------------------------------------------------- glibc's libm */
 M1(sin)    M1F(sin)
@@ -80,6 +82,25 @@ M2(fmax)   M2F(fmax)
 M2(fmin)   M2F(fmin)
 M2(remainder) M2F(remainder)
 M2(nextafter) M2F(nextafter)
+
+#if defined(__x86_64__)
+/* Darwin x86_64 long double is 16 bytes (x87), matching glibc. Forward l→l. */
+M1L(sin) M1L(cos) M1L(tan)
+M1L(asin) M1L(acos) M1L(atan)
+M1L(sinh) M1L(cosh) M1L(tanh)
+M1L(asinh) M1L(acosh) M1L(atanh)
+M1L(exp) M1L(exp2) M1L(expm1)
+M1L(log) M1L(log2) M1L(log10) M1L(log1p) M1L(logb)
+M1L(cbrt) M1L(erf) M1L(erfc) M1L(tgamma) M1L(lgamma)
+M1L(sqrt) M1L(fabs)
+M1L(floor) M1L(ceil) M1L(round) M1L(trunc) M1L(rint) M1L(nearbyint)
+M2L(atan2) M2L(pow) M2L(fmod) M2L(hypot) M2L(copysign)
+M2L(fdim) M2L(fmax) M2L(fmin) M2L(remainder) M2L(nextafter)
+extern long double glibc_lgammal_r(long double, int *) GLIBCSYM(lgammal_r);
+extern long double glibc_ldexpl(long double, int) GLIBCSYM(ldexpl);
+extern long double glibc_frexpl(long double, int *) GLIBCSYM(frexpl);
+extern long double glibc_modfl(long double, long double *) GLIBCSYM(modfl);
+#endif
 
 extern double glibc_ldexp(double, int)       GLIBCSYM(ldexp);
 extern float  glibc_ldexpf(float, int)       GLIBCSYM(ldexpf);
@@ -157,6 +178,19 @@ EXPORT float  __exp10f(float x)  { return glibc_exp10f(x); }
  * These existed as DECLARATIONS in sdk/local/math.h with no definition
  * anywhere -- an unbacked promise, the same class as a .tbd advertising a
  * symbol nothing defines. A guest calling sinl() linked and then died at load. */
+#if defined(__x86_64__)
+_Static_assert(sizeof(long double) == 16,
+               "Darwin x86_64 long double must be 16 bytes; if this fires, the l-suffixed "
+               "forwarders are passing the wrong width to glibc's long-double functions");
+
+#define FWD1(name)  EXPORT double name(double x) { return glibc_##name(x); } \
+                    EXPORT float  name##f(float x) { return glibc_##name##f(x); } \
+                    EXPORT long double name##l(long double x) { return glibc_##name##l(x); }
+#define FWD2(name)  EXPORT double name(double x, double y) { return glibc_##name(x, y); } \
+                    EXPORT float  name##f(float x, float y) { return glibc_##name##f(x, y); } \
+                    EXPORT long double name##l(long double x, long double y) \
+                        { return glibc_##name##l(x, y); }
+#else
 _Static_assert(sizeof(long double) == sizeof(double),
                "Darwin arm64 long double must be a double; if this fires, the l-suffixed "
                "forwarders are passing the wrong width to glibc's double functions");
@@ -168,6 +202,7 @@ _Static_assert(sizeof(long double) == sizeof(double),
                     EXPORT float  name##f(float x, float y) { return glibc_##name##f(x, y); } \
                     EXPORT long double name##l(long double x, long double y) \
                         { return glibc_##name((double)x, (double)y); }
+#endif
 
 FWD1(sin) FWD1(cos) FWD1(tan)
 FWD1(asin) FWD1(acos) FWD1(atan)
@@ -188,7 +223,14 @@ FWD2(fdim) FWD2(fmax) FWD2(fmin) FWD2(remainder) FWD2(nextafter)
  * the same width reason as every other `l` form. */
 EXPORT double lgamma_r(double x, int *s)  { return glibc_lgamma_r(x, s); }
 EXPORT float  lgammaf_r(float x, int *s)  { return glibc_lgammaf_r(x, s); }
+#if defined(__x86_64__)
+EXPORT long double lgammal_r(long double x, int *s) { return glibc_lgammal_r(x, s); }
+EXPORT long double ldexpl(long double x, int e) { return glibc_ldexpl(x, e); }
+EXPORT long double frexpl(long double x, int *e) { return glibc_frexpl(x, e); }
+EXPORT long double modfl(long double x, long double *i) { return glibc_modfl(x, i); }
+#else
 EXPORT long double lgammal_r(long double x, int *s) { return glibc_lgamma_r((double)x, s); }
+#endif
 EXPORT double j0(double x)          { return glibc_j0(x); }
 EXPORT double j1(double x)          { return glibc_j1(x); }
 EXPORT double jn(int n, double x)   { return glibc_jn(n, x); }

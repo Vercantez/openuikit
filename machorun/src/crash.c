@@ -1,6 +1,6 @@
 /* crash.c -- turn a guest fault into a sentence instead of a bare exit code.
  *
- * A Mach-O guest that faults gives us a Linux signal with an aarch64 pc. That
+ * A Mach-O guest that faults gives us a Linux signal with a host-arch pc. That
  * pc is meaningless on its own; attributed to an image and an offset it is a
  * line of otool away from being understood. The handler also recognises the
  * one wall this project chose not to climb: a raw Darwin `svc #0x80`.
@@ -60,8 +60,24 @@ static const char *signame(int s)
     }
 }
 
+#if defined(__aarch64__)
 /* svc #imm is 0xD4000001 | (imm << 5); Darwin's is svc #0x80. */
 static int is_darwin_svc(uint32_t insn) { return insn == (0xD4000001u | (0x80u << 5)); }
+#endif
+
+#if defined(__x86_64__)
+static uint64_t ctx_pc(const ucontext_t *u) { return (uint64_t)u->uc_mcontext.gregs[REG_RIP]; }
+static uint64_t ctx_sp(const ucontext_t *u) { return (uint64_t)u->uc_mcontext.gregs[REG_RSP]; }
+static uint64_t ctx_fp(const ucontext_t *u) { return (uint64_t)u->uc_mcontext.gregs[REG_RBP]; }
+static uint64_t ctx_lr(const ucontext_t *u) { (void)u; return 0; }
+#elif defined(__aarch64__)
+static uint64_t ctx_pc(const ucontext_t *u) { return (uint64_t)u->uc_mcontext.pc; }
+static uint64_t ctx_sp(const ucontext_t *u) { return (uint64_t)u->uc_mcontext.sp; }
+static uint64_t ctx_fp(const ucontext_t *u) { return (uint64_t)u->uc_mcontext.regs[29]; }
+static uint64_t ctx_lr(const ucontext_t *u) { return (uint64_t)u->uc_mcontext.regs[30]; }
+#else
+#error crash.c: host is neither x86_64 nor aarch64
+#endif
 
 /* ------------------------------------------------------------ safe reads */
 
@@ -164,6 +180,26 @@ static void dump_registers(const ucontext_t *u)
     char d[512];
 
     emit("  registers:\n");
+#if defined(__x86_64__)
+    {
+        const greg_t *g = u->uc_mcontext.gregs;
+        emit("    rax=%016llx rbx=%016llx rcx=%016llx rdx=%016llx\n",
+             (unsigned long long)g[REG_RAX], (unsigned long long)g[REG_RBX],
+             (unsigned long long)g[REG_RCX], (unsigned long long)g[REG_RDX]);
+        emit("    rsi=%016llx rdi=%016llx rbp=%016llx rsp=%016llx\n",
+             (unsigned long long)g[REG_RSI], (unsigned long long)g[REG_RDI],
+             (unsigned long long)g[REG_RBP], (unsigned long long)g[REG_RSP]);
+        emit("    r8 =%016llx r9 =%016llx r10=%016llx r11=%016llx\n",
+             (unsigned long long)g[REG_R8],  (unsigned long long)g[REG_R9],
+             (unsigned long long)g[REG_R10], (unsigned long long)g[REG_R11]);
+        emit("    r12=%016llx r13=%016llx r14=%016llx r15=%016llx\n",
+             (unsigned long long)g[REG_R12], (unsigned long long)g[REG_R13],
+             (unsigned long long)g[REG_R14], (unsigned long long)g[REG_R15]);
+        emit("    rip=%016llx\n", (unsigned long long)g[REG_RIP]);
+        describe(d, sizeof(d), (uint64_t)g[REG_RIP]);
+        emit("    rip is %s\n", d);
+    }
+#else
     for (int i = 0; i <= 28; i += 4) {
         emit("   ");
         for (int j = i; j < i + 4 && j <= 28; j++)
@@ -177,6 +213,7 @@ static void dump_registers(const ucontext_t *u)
 
     describe_at(d, sizeof(d), (uint64_t)u->uc_mcontext.regs[30], 1);
     emit("    x30 (link register) is %s\n", d);
+#endif
 }
 
 /* AArch64 frame record: [x29] = caller's x29, [x29+8] = caller's return address.
@@ -363,10 +400,10 @@ static int guard_handled(int sig, siginfo_t *si, const ucontext_t *u)
         }
     }
 
-    describe(d, sizeof(d), (uint64_t)u->uc_mcontext.pc);
+    describe(d, sizeof(d), ctx_pc(u));
     emit("machorun: guarded page written at 0x%llx (not the watched word) from %s\n",
          (unsigned long long)fa, d);
-    guard_last_pc = (uint64_t)u->uc_mcontext.pc;
+    guard_last_pc = ctx_pc(u);
     guard_protect(1);
     guard_stale = 1;      /* re-armed by the guest's next lock operation */
     return 1;
@@ -377,7 +414,7 @@ static int guard_handled(int sig, siginfo_t *si, const ucontext_t *u)
 static void handler(int sig, siginfo_t *si, void *uc)
 {
     ucontext_t *u = uc;
-    uint64_t pc = (uint64_t)u->uc_mcontext.pc;
+    uint64_t pc = ctx_pc(u);
     mr_image *in;
 
     if (guard_handled(sig, si, u)) {
@@ -401,7 +438,7 @@ static void handler(int sig, siginfo_t *si, void *uc)
      * overflow, not a wild pointer, and the two want completely different
      * investigations. Saying so costs one comparison. */
     if (sig == SIGSEGV && si->si_addr) {
-        uint64_t sp = (uint64_t)u->uc_mcontext.sp, fa = (uint64_t)(uintptr_t)si->si_addr;
+        uint64_t sp = ctx_sp(u), fa = (uint64_t)(uintptr_t)si->si_addr;
         uint64_t d = sp > fa ? sp - fa : fa - sp;
         if (d < 65536)
             emit("  the fault address is within 0x%llx of sp, so this is a STACK OVERFLOW\n"
@@ -411,6 +448,15 @@ static void handler(int sig, siginfo_t *si, void *uc)
     }
 
     if (in) {
+#if defined(__x86_64__)
+        uint8_t bytes[2];
+        if (safe_read(pc, bytes, 2) && bytes[0] == 0x0f && bytes[1] == 0x05)
+            emit("  the faulting instruction is `syscall` (0f 05). Darwin's x86_64\n"
+                 "  syscall convention puts 0x2000000|bsd_number in rax. On Linux that\n"
+                 "  traps to the Linux kernel with Linux numbering. This is the boundary\n"
+                 "  of machorun's core bet -- we replace libSystem instead of emulating\n"
+                 "  Darwin syscalls. See docs/FIXTURES.md rung (a) and docs/UNIMPLEMENTED.md.\n");
+#else
         const uint32_t *code = (const uint32_t *)(pc & ~3ull);
         for (int back = 0; back <= 4; back++) {
             uint32_t insn;
@@ -426,13 +472,12 @@ static void handler(int sig, siginfo_t *si, void *uc)
                  "  docs/FIXTURES.md rung (a) and docs/UNIMPLEMENTED.md.\n", back);
             break;
         }
+#endif
     }
 
     dump_registers(u);
     emit("  backtrace (frame-pointer chain):\n");
-    walk_frames((uint64_t)u->uc_mcontext.pc,
-                (uint64_t)u->uc_mcontext.regs[30],
-                (uint64_t)u->uc_mcontext.regs[29]);
+    walk_frames(ctx_pc(u), ctx_lr(u), ctx_fp(u));
 
     signal(sig, SIG_DFL);
     raise(sig);

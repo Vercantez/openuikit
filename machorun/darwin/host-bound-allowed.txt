@@ -38,6 +38,41 @@ _remquo       double remquo(double, double, int *): the out parameter is an
 _remquof      int, 4 bytes and signed on both. double/float agree on arm64.
 
 _strtof       float strtof(const char *, char **): float is IEEE binary32 on
-              both sides -- unlike long double, which is 8 bytes on Darwin and
-              16 on Linux and is therefore DENIED (src/host_deny.c). Locale is
-              shared process state, not an argument, so nothing crosses.
+              both sides -- unlike long double on arm64, which is 8 bytes on
+              Darwin and 16 on Linux and is therefore DENIED (src/host_deny.c).
+              Locale is shared process state, not an argument, so nothing
+              crosses.
+
+# _strtold / _strtold_l -- NOT host-bound, on either arch. Measured 2026-09-02
+# on this x86_64 Linux host (clang-18 -target x86_64-apple-macos11 -isysroot
+# machorun/sdk vs native glibc):
+#
+#   size         sizeof(long double)==16, _Alignof==16 both sides
+#   signedness   N/A (floating); args are const char * / char ** (8-byte
+#                pointers both)
+#   width        LDBL_MANT_DIG 64 both; x87 80-bit little-endian in a 16-byte
+#                slot. Darwin 1.0L object encoding:
+#                    00 00 00 00 00 00 00 80 ff 3f + 6 pad
+#                glibc strtold("1.0"):
+#                    00 00 00 00 00 00 00 80 ff 3f + 6 pad
+#                1+2^-63 keeps bit 0 of the 64-bit significand (not
+#                representable in binary64 -- wrapping through strtod would
+#                drop it). Padding bytes are not part of the value.
+#   variadic     no: prototype is (const char *, char **)
+#   return conv. SysV AMD64 long double returns in st(0); Darwin x86_64 uses
+#                the same SysV convention
+#
+# The six families therefore AGREE on x86_64. They DISAGREE on aarch64
+# (Darwin 8 / LDBL_MANT_DIG 53 vs glibc 16 / 113), which is why
+# src/host_deny.c keeps the _strtold row -- this allow-list is not
+# arch-split, and removing the row would let aarch64 host-bind glibc's
+# binary128 strtold.
+#
+# strtold_l additionally cannot host-bind on either arch: Darwin locale_t is
+# struct _xlocale * and glibc's is struct __locale_struct *, and Darwin NULL
+# means C where glibc NULL is invalid.
+#
+# So libSystem IMPLEMENTS them rather than host-binding: aarch64 strtold_l
+# wraps glibc_strtod behind sizeof==8; x86_64 strtold and strtold_l wrap
+# labelled glibc_strtold behind sizeof==16 && LDBL_MANT_DIG==64. Never a
+# silent assert bypass.

@@ -117,10 +117,10 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         text = BUILD.read_text()
         self.assertIn("foundationessentials_import_guard.swift", text)
         self.assertIn('SYS=$W/scratch/sysroot_fe4', text)
-        self.assertIn('-target arm64-apple-macos15.0', text)
+        self.assertIn('-target "$TARGET"', text)
         self.assertIn('"${FE_FLAGS[@]}"', text)
         self.assertIn("llvm-otool-18 -hv", text)
-        self.assertIn("MH_MAGIC_64[[:space:]]+ARM64", text)
+        self.assertIn("MH_MAGIC_64[[:space:]]+${OTOOL_CPU}", text)
         self.assertIn('scripts/require_fresh_root.sh" "$MRROOT"', text)
         self.assertIn('"$MRROOT/machorun" ./focus_widget_guest', text)
         for forbidden in ("Foundation.framework", "SwiftUI.framework", "SwiftUICore.framework"):
@@ -162,7 +162,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
             self.assertNotIn('"${CINC[@]}"', compile_step)
         self.assertIn('-I "$PACKAGE/modules/FoundationEssentials"', text)
         self.assertNotIn('FE_FLAGS=(-I "$FE_OUT"', text)
-        link = text.split('echo "== link arm64 Mach-O against packaged dylibs', 1)[1]
+        link = text.split('echo "== link Mach-O against packaged dylibs', 1)[1]
         link = link.split("llvm-otool-18 -hv", 1)[0]
         self.assertIn('-L"$PACKAGE" -lSwiftUI -lOpenUIKit', link)
         self.assertNotIn('"$OUT/swiftui.o"', link)

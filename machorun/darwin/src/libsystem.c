@@ -1,6 +1,6 @@
 /* libsystem.c -- our replacement /usr/lib/libSystem.B.dylib.
  *
- * Built ON LINUX as a Mach-O arm64 dylib (clang -target arm64-apple-macos11 +
+ * Built ON LINUX as a Mach-O dylib (clang -target <host>-apple-macos11 +
  * ld64.lld-18), then loaded by machorun into the guest's address space. This
  * is the project's core bet: the guest calls _printf and lands HERE, in code
  * compiled for its own ABI, which then calls glibc. No Darwin syscall is ever
@@ -20,9 +20,12 @@
  *    printf family is implemented here, over the Darwin va_list, and only the
  *    bytes go to glibc. The one crossing we do make -- float formatting via
  *    glibc snprintf -- goes through a NON-variadic prototype, which is safe
- *    precisely because an aarch64-Linux variadic callee spills x0-x7/v0-v7 to
- *    its register save area on entry, so ordinary AAPCS64 argument passing
- *    lands exactly where its va_arg will look.
+ *    on aarch64 because a Linux variadic callee spills x0-x7/v0-v7 to its
+ *    register save area on entry, so ordinary AAPCS64 argument passing lands
+ *    exactly where its va_arg will look. On x86_64 the same prototype is NOT
+ *    safe: SysV AMD64 requires %al = XMM-arg count for a variadic callee, and
+ *    a Darwin-compiled non-variadic call leaves %al as leftover, so glibc
+ *    snprintf intermittently skips saving xmm0. mr_snprintf_d sets %al=1.
  *
  * No headers are included: -nostdinc, because there is no macOS SDK on the
  * build host and glibc's headers are not compilable for a Darwin target.
@@ -216,6 +219,30 @@ static size_t utoa(unsigned long long v, unsigned base, int upper, char *out)
 #define FLAG_SPACE 8
 #define FLAG_ALT   16
 
+#if defined(__x86_64__)
+/* glibc snprintf is variadic. SysV AMD64 uses %al as the XMM-arg count; a
+ * Darwin-compiled non-variadic prototype does not set it. noinline so -O1
+ * cannot keep remaining va_arg doubles in live XMMs across the call. */
+static __attribute__((noinline)) int mr_snprintf_d(char *dst, size_t cap, const char *spec, double v)
+{
+    int n;
+    register char *rdi __asm__("rdi") = dst;
+    register size_t rsi __asm__("rsi") = cap;
+    register const char *rdx __asm__("rdx") = spec;
+    register void *callee __asm__("r11") = (void *)glibc_snprintf_d;
+    __asm__ volatile (
+        "movsd %[v], %%xmm0\n\t"
+        "movl $1, %%eax\n\t"
+        "callq *%%r11"
+        : "=a"(n), "+D"(rdi), "+S"(rsi), "+d"(rdx), "+r"(callee)
+        : [v] "m"(v)
+        : "rcx", "r8", "r9", "r10",
+          "xmm0", "xmm1", "xmm2", "xmm3", "xmm4", "xmm5", "xmm6", "xmm7",
+          "cc", "memory");
+    return n;
+}
+#endif
+
 static int mr_vformat(struct sink *s, const char *fmt, va_list ap)
 {
     for (const char *p = fmt; *p; ) {
@@ -349,11 +376,21 @@ static int mr_vformat(struct sink *s, const char *fmt, va_list ap)
         case 'f': case 'F': case 'e': case 'E': case 'g': case 'G': case 'a': case 'A': {
             /* Float formatting is delegated to glibc through a NON-variadic
              * prototype -- see the header comment. Correct rounding of doubles
-             * is not something to reimplement for a fixture. */
-            double v = va_arg(ap, double);
+             * is not something to reimplement for a fixture.
+             *
+             * %Lf is the arch split: Darwin arm64 long double IS double, so
+             * L consumes a double (the historic va_arg below). Darwin x86_64
+             * long double is 16-byte x87 and L consumes a long double. The
+             * value is then formatted as a double -- 2.5L is exact in both. */
             char spec[32], out[512];
             size_t si = 0;
             int n;
+#if defined(__x86_64__)
+            double v = (lmod == 6) ? (double)va_arg(ap, long double)
+                                   : va_arg(ap, double);
+#else
+            double v = va_arg(ap, double);
+#endif
             spec[si++] = '%';
             if (flags & FLAG_LEFT)  spec[si++] = '-';
             if (flags & FLAG_ZERO)  spec[si++] = '0';
@@ -367,7 +404,11 @@ static int mr_vformat(struct sink *s, const char *fmt, va_list ap)
             }
             spec[si++] = conv;
             spec[si] = 0;
+#if defined(__x86_64__)
+            n = mr_snprintf_d(out, sizeof(out), spec, v);
+#else
             n = glibc_snprintf_d(out, sizeof(out), spec, v);
+#endif
             if (n < 0) n = 0;
             if ((size_t)n >= sizeof(out)) n = (int)sizeof(out) - 1;
             sink_put(s, out, (size_t)n);
@@ -811,7 +852,7 @@ FWDE(void *, realloc, (void *p, size_t n),      (p, n))
 FWDV(free, (void *p), (p))
 FWDE(int, posix_memalign, (void **p, size_t a, size_t n), (p, a, n))
 FWDE(void *, aligned_alloc, (size_t a, size_t n), (a, n))
-EXPORT void *valloc(size_t n) { void *p = NULL; glibc_posix_memalign(&p, 16384, n); return p; }
+EXPORT void *valloc(size_t n) { void *p = NULL; glibc_posix_memalign(&p, MR_DARWIN_PAGE, n); return p; }
 /* malloc_size is NOT malloc_usable_size, and the difference is load-bearing.
  *
  * Darwin's contract: "returns 0 if p was not allocated by any malloc zone".
@@ -1014,13 +1055,28 @@ FWDE(double, strtod, (const char *s, char **e), (s, e))
  * NULL means C where glibc NULL is invalid. So these wrap strtod/strtof,
  * after mr_require_c_locale, rather than host-binding the Darwin name.
  *
- * strtold_l is the long-double trap a second time. Darwin arm64 long double
- * is 8 bytes, LDBL_MANT_DIG 53 (float.h via the SDK); glibc aarch64 is 16
- * bytes, LDBL_MANT_DIG 113. src/host_deny.c already denies a raw `_strtold`
- * host-bind for that reason. Calling glibc's strtold / strtold_l here would
- * write 16 bytes through an 8-byte return -- so this calls strtod, which is
- * what Darwin's long double IS. */
+ * strtold_l is the long-double trap a second time, and the two guest
+ * arches invert. Darwin arm64 long double is 8 bytes, LDBL_MANT_DIG 53
+ * (float.h via the SDK); glibc aarch64 is 16 bytes, LDBL_MANT_DIG 113.
+ * src/host_deny.c already denies a raw `_strtold` host-bind for that
+ * reason. Calling glibc's strtold / strtold_l here would write 16 bytes
+ * through an 8-byte return -- so arm64 calls strtod, which is what
+ * Darwin's long double IS.
+ *
+ * Darwin x86_64 long double is the 16-byte x87 80-bit type (LDBL_MANT_DIG
+ * 64), measured identical to glibc x86_64 across the six hazard families
+ * (darwin/host-bound-allowed.txt). Wrapping through strtod would drop the
+ * extra 11 mantissa bits. locale_t still differs, so this is a labelled
+ * glibc_strtold wrapper, not a host-bind, and `_strtold` stays in the
+ * deny table so the aarch64 loader object is unchanged. */
+#if defined(__x86_64__)
+_Static_assert(sizeof(long double) == 16,
+               "Darwin x86_64 long double is x87 80-bit in a 16-byte slot");
+_Static_assert(__LDBL_MANT_DIG__ == 64,
+               "Darwin x86_64 long double mantissa is 64 bits");
+#else
 _Static_assert(sizeof(long double) == 8, "Darwin arm64 long double is IEEE binary64");
+#endif
 
 EXPORT double strtod_l(const char *s, char **e, void *loc)
 {
@@ -1032,11 +1088,23 @@ EXPORT float strtof_l(const char *s, char **e, void *loc)
     mr_require_c_locale(loc, "strtof_l");
     return MR_ERRNO_CALL(glibc_strtof(s, e));
 }
+#if defined(__x86_64__)
+EXPORT long double strtold(const char *s, char **e)
+{
+    return MR_ERRNO_CALL(glibc_strtold(s, e));
+}
+EXPORT long double strtold_l(const char *s, char **e, void *loc)
+{
+    mr_require_c_locale(loc, "strtold_l");
+    return MR_ERRNO_CALL(glibc_strtold(s, e));
+}
+#else
 EXPORT long double strtold_l(const char *s, char **e, void *loc)
 {
     mr_require_c_locale(loc, "strtold_l");
     return (long double)MR_ERRNO_CALL(glibc_strtod(s, e));
 }
+#endif
 
 /* getsectiondata(3) -- <mach-o/getsect.h>. Mach-O only. aarch64 libc.so.6
  * has no such dynsym (measured: absent next to getline@@GLIBC_2.17 which IS

@@ -11,15 +11,16 @@
 set -eu
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
+# shellcheck disable=SC1091
+. "$ROOT/scripts/guest_arch.inc"
 OUT="$ROOT/darwin/usr/lib"
 OBJ="$ROOT/build/darwin-obj"
 
-CLANG="${DARWIN_CLANG:-clang}"
-LD64="${LD64:-ld64.lld}"
-TARGET="${DARWIN_TARGET:-arm64-apple-macos11}"
+CLANG="$DARWIN_CLANG"
+TARGET="$DARWIN_TARGET"
 
 command -v "$CLANG" >/dev/null 2>&1 || { echo "build_darwin: no $CLANG" >&2; exit 1; }
-command -v "$LD64"  >/dev/null 2>&1 || {
+command -v "${LD64:-}" >/dev/null 2>&1 || {
     if command -v ld64.lld-18 >/dev/null 2>&1; then LD64=ld64.lld-18; else
         echo "build_darwin: no ld64.lld (apt-get install lld-18)" >&2; exit 1; fi; }
 
@@ -170,7 +171,7 @@ if [ -d "$LIBCXX_INC_FOR_UNWIND" ] && [ -f "$SDK_FOR_UNWIND/usr/include/stdio.h"
         ABI_OBJ="$ABI_OBJ $OBJ/abi_$f.o"
     done
     # shellcheck disable=SC2086
-    $LD64 -dylib -arch arm64 -platform_version macos 11.0 11.0 \
+    $LD64 -dylib -arch "$LD64_ARCH" -platform_version macos 11.0 11.0 \
           -install_name /usr/lib/libc++abi.dylib \
           -undefined dynamic_lookup \
           -o "$OUT/libc++abi.dylib" $ABI_OBJ
@@ -189,7 +190,7 @@ fi
 # how libunwind's two dyld imports -- _dyld_find_unwind_sections and
 # _dyld_register_func_for_remove_image, both in src/unwind.c -- reach the
 # loader without a bootstrap cycle through the .tbd files.
-$LD64 -dylib -arch arm64 -platform_version macos 11.0 11.0 \
+$LD64 -dylib -arch "$LD64_ARCH" -platform_version macos 11.0 11.0 \
       -install_name /usr/lib/libSystem.B.dylib \
       -undefined dynamic_lookup \
       -o "$OUT/libSystem.B.dylib" $LIBSYSTEM_OBJ $UNWIND_OBJ
@@ -246,7 +247,7 @@ else
     LIBCXX_OBJ="$OBJ/libcxx.o"
 fi
 
-$LD64 -dylib -arch arm64 -platform_version macos 11.0 11.0 \
+$LD64 -dylib -arch "$LD64_ARCH" -platform_version macos 11.0 11.0 \
       -install_name /usr/lib/libc++.1.dylib \
       -undefined dynamic_lookup \
       ${ABI_REEXPORT} \

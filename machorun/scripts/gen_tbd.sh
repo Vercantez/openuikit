@@ -61,6 +61,8 @@
 set -uo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+# shellcheck disable=SC1091
+. "$ROOT/scripts/guest_arch.inc"
 
 # THIS GATE RUNS ON LINUX ONLY, AND SAYING SO IS THE POINT (#95).
 #
@@ -153,16 +155,22 @@ imports_of() { "$NM" -u "$1" 2>/dev/null | strip_banners | awk '{print $NF}' | s
 # stubs. Absent, it is skipped with a line saying so -- never emitted empty,
 # because an empty .tbd is a promise ld64 will believe (see this script's
 # header) and the guest would then fail at run time instead of at link time.
-DYLIBS=(libSystem.B libobjc.A libc++.1 libc++abi)
-for d in "${DYLIBS[@]}"; do
-    [ -f "$DYLIB/$d.dylib" ] || die "no $DYLIB/$d.dylib -- build it first (scripts/build.sh all)"
-done
+DYLIBS=(libSystem.B libc++.1 libc++abi)
+if [ -f "$DYLIB/libobjc.A.dylib" ]; then
+    DYLIBS+=(libobjc.A)
+else
+    echo "   note: no $DYLIB/libobjc.A.dylib -- skipping libobjc.tbd (scripts/build.sh objc4)"
+    rm -f "$OUT/libobjc.A.tbd" "$OUT/libobjc.tbd"
+fi
 if [ -f "$DYLIB/libquartz.dylib" ]; then
     DYLIBS+=(libquartz)
 else
     echo "   note: no $DYLIB/libquartz.dylib -- skipping libquartz.tbd (scripts/build.sh quartz)"
     rm -f "$OUT/libquartz.tbd"
 fi
+for d in "${DYLIBS[@]}"; do
+    [ -f "$DYLIB/$d.dylib" ] || die "no $DYLIB/$d.dylib -- build it first (scripts/build.sh all)"
+done
 [ -x "$LOADER" ] || die "no loader at $LOADER -- scripts/build.sh loader"
 [ -f "$LOADER_EXPORTS" ] || die "no $LOADER_EXPORTS"
 
@@ -208,13 +216,25 @@ if [ -n "$missing" ]; then
 fi
 
 # -------------------------------------------- CHECK 2: the list is exactly right
+# "needed but not listed" is always a failure. "only in loader-exports.txt" is
+# exact-equality only when libobjc is present: that dylib is what imports the
+# dyld image-notify surface, and without it the extras look like list rot.
 comm -23 "$TMP/all_imp" "$TMP/all_exp" > "$TMP/need_from_loader"
-if ! diff -q "$TMP/need_from_loader" "$TMP/loader" >/dev/null; then
-    echo "!! darwin/loader-exports.txt does not match what our dylibs actually need:" >&2
-    diff "$TMP/loader" "$TMP/need_from_loader" \
-        | sed 's/^</     only in loader-exports.txt: /; s/^>/     needed but not listed: /' >&2
+needed_unlisted=$(comm -13 "$TMP/loader" "$TMP/need_from_loader" || true)
+if [ -n "$needed_unlisted" ]; then
+    echo "!! darwin/loader-exports.txt is missing symbols our dylibs import:" >&2
+    printf '%s\n' "$needed_unlisted" | sed 's/^/     needed but not listed: /' >&2
     echo "   Update darwin/loader-exports.txt, deliberately, and say why in its header." >&2
     fail=1
+fi
+if [ -f "$DYLIB/libobjc.A.dylib" ]; then
+    extra=$(comm -23 "$TMP/loader" "$TMP/need_from_loader" || true)
+    if [ -n "$extra" ]; then
+        echo "!! darwin/loader-exports.txt lists symbols no dylib imports:" >&2
+        printf '%s\n' "$extra" | sed 's/^/     only in loader-exports.txt: /' >&2
+        echo "   Update darwin/loader-exports.txt, deliberately, and say why in its header." >&2
+        fail=1
+    fi
 fi
 
 # ------------------------- CHECK 4: no two dylibs define the same symbol
@@ -349,12 +369,12 @@ emit_tbd() { # emit_tbd <install-name> <symbol-file> <dest>
     {
         echo "--- !tapi-tbd"
         echo "tbd-version:     4"
-        echo "targets:         [ arm64-macos ]"
+        echo "targets:         [ $TBD_TARGET ]"
         echo "install-name:    '$1'"
         echo "current-version: 1"
         echo "compatibility-version: 1"
         echo "exports:"
-        echo "  - targets:   [ arm64-macos ]"
+        echo "  - targets:   [ $TBD_TARGET ]"
         echo "    symbols:   ["
         sed "s/^/                  '/; s/\$/',/" "$2"
         echo "               ]"
@@ -369,9 +389,10 @@ emit_tbd() { # emit_tbd <install-name> <symbol-file> <dest>
 # dylibs and is therefore blind to what is actually on disk.
 mkdir -p "$TMP/out"
 emit_tbd "/usr/lib/libSystem.B.dylib" "$TMP/sym.libSystem.B" "$TMP/out/libSystem.B.tbd"
-emit_tbd "/usr/lib/libobjc.A.dylib"   "$TMP/sym.libobjc.A"   "$TMP/out/libobjc.A.tbd"
 emit_tbd "/usr/lib/libc++.1.dylib"    "$TMP/sym.libc++.1"    "$TMP/out/libc++.1.tbd"
 emit_tbd "/usr/lib/libc++abi.dylib"   "$TMP/sym.libc++abi"   "$TMP/out/libc++abi.tbd"
+[ -f "$TMP/sym.libobjc.A" ] && \
+    emit_tbd "/usr/lib/libobjc.A.dylib"   "$TMP/sym.libobjc.A"   "$TMP/out/libobjc.A.tbd"
 [ -f "$TMP/sym.libquartz" ] && \
     emit_tbd "/usr/lib/libquartz.dylib" "$TMP/sym.libquartz" "$TMP/out/libquartz.tbd"
 
@@ -381,7 +402,7 @@ if [ "$MODE" = generate ]; then
     # Apple ships libSystem.tbd and libobjc.tbd as symlinks; -lSystem looks for
     # the unsuffixed name. libquartz has no suffixed form, so no symlink.
     ln -sf libSystem.B.tbd "$OUT/libSystem.tbd"
-    ln -sf libobjc.A.tbd   "$OUT/libobjc.tbd"
+    [ -f "$OUT/libobjc.A.tbd" ] && ln -sf libobjc.A.tbd   "$OUT/libobjc.tbd"
     ln -sf libc++.1.tbd    "$OUT/libc++.tbd"
     for d in "${DYLIBS[@]}"; do
         printf '   %-18s %5d symbols  %7d bytes\n' \
@@ -447,13 +468,11 @@ else
 fi
 
 # --------------------------------- CHECK 3: the corpus resolves against the stubs
-# Every committed Mach-O binary was built by APPLE'S toolchain against APPLE'S
-# SDK -- deliberately, see docs/SDK_SURVEY.md §6.3 -- so this is a real test of
-# whether our stub covers the surface Apple's linker actually emitted.
-# Every stub we just emitted -- driven off DYLIBS rather than a hand-written
-# list, because a hand-written list is how libquartz's 507 exports got written
-# to libquartz.tbd and then ignored two lines later, which made CHECK 3 report
-# 34 phantom missing symbols on a tree where nothing was missing at all.
+if [ ! -f "$DYLIB/libobjc.A.dylib" ] || [ ! -f "$DYLIB/libquartz.dylib" ]; then
+    echo "   CHECK 3: skipped -- libobjc and/or libquartz are not built, so the"
+    echo "            committed arm64 corpus's ObjC/Quartz imports would present"
+    echo "            as phantom missing symbols. CANNOT_TBD_FULL_SURFACE."
+else
 : > "$TMP/tbd_all"
 for d in "${DYLIBS[@]}"; do cat "$TMP/sym.$d" >> "$TMP/tbd_all"; done
 sort -u "$TMP/tbd_all" -o "$TMP/tbd_all"
@@ -546,6 +565,7 @@ if [ "$n_missing" != 0 ]; then
     echo "   Implement them in darwin/src, or say in docs/UNIMPLEMENTED.md why not." >&2
     exit 1
 fi
+fi  # libobjc+libquartz present; CHECK 3 ran
 
 # --------------- CHECK 5: what the darwin root leaves to the HOST fallback
 #

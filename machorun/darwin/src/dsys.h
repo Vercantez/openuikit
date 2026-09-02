@@ -1,6 +1,7 @@
 /* dsys.h -- the shared floor of our Darwin userland.
  *
- * Every .c file under darwin/src/ is compiled for arm64-apple-macos with
+ * Every .c file under darwin/src/ is compiled for the Darwin guest triple
+ * (arm64-apple-macos or x86_64-apple-macos) with
  * -nostdinc: there is no macOS SDK on the build host, and glibc's headers are
  * not compilable for a Darwin target. So everything is declared here.
  *
@@ -303,6 +304,13 @@ extern unsigned long glibc_strtoul(const char *, char **, int) GLIBCSYM(strtoul)
 extern long long glibc_strtoll(const char *, char **, int)  GLIBCSYM(strtoll);
 extern double  glibc_strtod(const char *, char **)          GLIBCSYM(strtod);
 extern float   glibc_strtof(const char *, char **)          GLIBCSYM(strtof);
+#if defined(__x86_64__)
+/* x87 80-bit in a 16-byte slot on both Darwin x86_64 and glibc x86_64.
+ * darwin/host-bound-allowed.txt records the six-family measurement.
+ * Not a host-bind: locale_t still differs for strtold_l, and _strtold stays
+ * in src/host_deny.c so the aarch64 loader object is unchanged. */
+extern long double glibc_strtold(const char *, char **)     GLIBCSYM(strtold);
+#endif
 extern void    glibc_qsort(void *, size_t, size_t, int (*)(const void *, const void *)) GLIBCSYM(qsort);
 extern char   *glibc_getenv(const char *)                   GLIBCSYM(getenv);
 extern time_t  glibc_time(time_t *)                         GLIBCSYM(time);
@@ -393,9 +401,13 @@ HIDDEN int   mr_pthread_rc(int linux_rc);   /* a pthread RETURN value -> Darwin'
 #define MR_ERRNO_CALL(expr)  ({ mr_errno_in(); __typeof__(expr) _r = (expr); mr_errno_out(); _r; })
 #define MR_ERRNO_CALL_V(expr) do { mr_errno_in(); (expr); mr_errno_out(); } while (0)
 
-/* Darwin's page size on arm64 is 16 KiB and guests are entitled to assume it.
- * Linux/arm64 may be running 4 KiB pages, so anything we hand back as "a page"
- * is aligned to the larger of the two. */
+/* Darwin's page size is 16 KiB on arm64 and 4 KiB on x86_64; guests are
+ * entitled to assume it. Linux may be running a smaller page, so anything we
+ * hand back as "a page" is aligned to Darwin's page for this guest arch. */
+#if defined(__x86_64__)
+#define MR_DARWIN_PAGE 4096ul
+#else
 #define MR_DARWIN_PAGE 16384ul
+#endif
 
 #endif /* MACHORUN_DSYS_H */
