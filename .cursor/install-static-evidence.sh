@@ -56,8 +56,10 @@ trap cleanup_staging EXIT HUP INT TERM
 if [ ! -e "$evidence_parent" ]; then
     sudo install -d -o "$(id -u)" -g "$(id -g)" "$evidence_parent"
 fi
-[ -d "$evidence_parent" ] && [ ! -L "$evidence_parent" ] \
-    || { printf 'cursor-evidence: unsafe evidence parent\n' >&2; exit 1; }
+if [ ! -d "$evidence_parent" ] || [ -L "$evidence_parent" ]; then
+    printf 'cursor-evidence: unsafe evidence parent\n' >&2
+    exit 1
+fi
 
 new_checkout=false
 if [ ! -e "$evidence_root" ]; then
@@ -70,8 +72,10 @@ if [ ! -e "$evidence_root" ]; then
 else
     checkout_root=$evidence_root
 fi
-[ -d "$checkout_root/.git" ] && [ ! -L "$checkout_root" ] \
-    || { printf 'cursor-evidence: evidence checkout is not a Git worktree\n' >&2; exit 1; }
+if [ ! -d "$checkout_root/.git" ] || [ -L "$checkout_root" ]; then
+    printf 'cursor-evidence: evidence checkout is not a Git worktree\n' >&2
+    exit 1
+fi
 git_evidence() {
     git -c safe.directory="$checkout_root" -C "$checkout_root" "$@"
 }
@@ -102,8 +106,10 @@ sparse_paths=$(git_evidence sparse-checkout list) \
     || { printf 'cursor-evidence: cannot inspect sparse checkout\n' >&2; exit 1; }
 [ "$sparse_paths" = src ] \
     || { printf 'cursor-evidence: sparse checkout differs from required src corpus\n' >&2; exit 1; }
-[ -d "$checkout_root/src" ] && [ ! -L "$checkout_root/src" ] \
-    || { printf 'cursor-evidence: required src corpus is missing\n' >&2; exit 1; }
+if [ ! -d "$checkout_root/src" ] || [ -L "$checkout_root/src" ]; then
+    printf 'cursor-evidence: required src corpus is missing\n' >&2
+    exit 1
+fi
 [ "$(sha256sum "$checkout_root/$license_path" | awk '{print $1}')" = "$license_sha256" ] \
     || { printf 'cursor-evidence: license digest differs from lock\n' >&2; exit 1; }
 checkout_status=$(git_evidence --no-optional-locks status \
@@ -124,8 +130,10 @@ sudo chown -R root:root "$checkout_root"
 sudo chmod -R a-w "$checkout_root"
 if [ "$new_checkout" = true ]; then
     sudo mv -T -n -- "$checkout_root" "$evidence_root"
-    [ ! -e "$checkout_root" ] && [ -d "$evidence_root/.git" ] \
-        || { printf 'cursor-evidence: atomic evidence publication lost a race\n' >&2; exit 1; }
+    if [ -e "$checkout_root" ] || [ ! -d "$evidence_root/.git" ]; then
+        printf 'cursor-evidence: atomic evidence publication lost a race\n' >&2
+        exit 1
+    fi
     rmdir "$staging_root"
     staging_root=
 fi

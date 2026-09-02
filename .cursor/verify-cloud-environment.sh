@@ -35,8 +35,10 @@ evidence_lock=$repo_root/full/framework-fanout/external-evidence-sources.json
     || { printf 'cursor-environment: external evidence lock is missing\n' >&2; exit 1; }
 [ "${OPENUIKIT_MACIOS_ROOT:-}" = /opt/openuikit-evidence/dotnet-macios ] \
     || { printf 'cursor-environment: OPENUIKIT_MACIOS_ROOT differs\n' >&2; exit 1; }
-[ -d "$OPENUIKIT_MACIOS_ROOT/.git" ] && [ ! -L "$OPENUIKIT_MACIOS_ROOT" ] \
-    || { printf 'cursor-environment: macios evidence checkout is missing\n' >&2; exit 1; }
+if [ ! -d "$OPENUIKIT_MACIOS_ROOT/.git" ] || [ -L "$OPENUIKIT_MACIOS_ROOT" ]; then
+    printf 'cursor-environment: macios evidence checkout is missing\n' >&2
+    exit 1
+fi
 expected_macios_commit=$(jq -er \
     '.sources[] | select(.id == "dotnet-macios") | .commit' "$evidence_lock")
 expected_macios_repository=$(jq -er \
@@ -64,8 +66,10 @@ macios_sparse_paths=$(git_macios sparse-checkout list) \
     || { printf 'cursor-environment: cannot inspect macios sparse checkout\n' >&2; exit 1; }
 [ "$macios_sparse_paths" = src ] \
     || { printf 'cursor-environment: macios sparse checkout differs from required src corpus\n' >&2; exit 1; }
-[ -d "$OPENUIKIT_MACIOS_ROOT/src" ] && [ ! -L "$OPENUIKIT_MACIOS_ROOT/src" ] \
-    || { printf 'cursor-environment: required macios src corpus is missing\n' >&2; exit 1; }
+if [ ! -d "$OPENUIKIT_MACIOS_ROOT/src" ] || [ -L "$OPENUIKIT_MACIOS_ROOT/src" ]; then
+    printf 'cursor-environment: required macios src corpus is missing\n' >&2
+    exit 1
+fi
 [ "$(sha256sum "$OPENUIKIT_MACIOS_ROOT/$expected_license_path" | awk '{print $1}')" = "$expected_license_sha256" ] \
     || { printf 'cursor-environment: macios evidence license differs\n' >&2; exit 1; }
 macios_status=$(git_macios --no-optional-locks status \
