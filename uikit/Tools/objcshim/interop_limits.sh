@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 # Measures WHY `-enable-objc-interop` cannot be used on Linux, so the claim in
 # docs/OBJC_RUNTIME.md is reproducible rather than asserted. Companion to
 # verify.sh, which shows the part that DOES work (@objc/#selector compile and
@@ -18,14 +18,15 @@
 # The blocker is therefore the Swift *standard library*, not the ObjC runtime,
 # which is why GNUstep libobjc2 does not open this door either.
 #
-# Run from anywhere; requires Docker.
+# Run from anywhere; requires Docker or an attested Cursor cloud environment
+# matching swift:6.2-noble (Linux ELF measurements, not arm64 Mach-O execution).
 set -e
 cd "$(dirname "$0")/../.."
 W=$(mktemp -d)
 cp Tools/objcshim/objc_stub.c Tools/objcshim/ObjectiveC.swift "$W/"
 cat > "$W/run.sh" <<'INNER'
 set -e
-cd /w
+cd "${TOOLCHAIN_ROOT:-/w}"
 clang -c objc_stub.c -o objc_stub.o
 mkdir -p objclib && ar rcs objclib/libobjc.a objc_stub.o
 F="-Xfrontend -enable-objc-interop -Xfrontend -disable-objc-attr-requires-foundation-module"
@@ -67,5 +68,16 @@ swiftc $F -I . -L . -lObjectiveC -L objclib p.swift -o pOn
 SWIFT_BACKTRACE=enable=no stdbuf -o0 ./pOn || \
   echo "  ^^ CRASHED (expected): libswiftCore cannot read interop-layout metadata"
 INNER
-docker run --rm -v "$W":/w swift:6.2-noble bash /w/run.sh
+# Docker exists only to pin stock swift:6.2-noble. Attestation is sufficient:
+# these measurements compile and run Linux ELF against the stock Linux
+# libswiftCore.so, not arm64 Mach-O under machorun.
+REPO_ROOT=$(git rev-parse --show-toplevel)
+. "$REPO_ROOT/.cursor/cursor-env.sh"
+mode=$(cursor_env_toolchain_mode) || exit 2
+if [ "$mode" = docker ]; then
+  docker run --rm -v "$W":/w swift:6.2-noble bash /w/run.sh
+else
+  echo "CURSOR_ENV_TOOLCHAIN_ATTESTED running objcshim interop_limits in-VM (docker pins swift:6.2-noble only)"
+  TOOLCHAIN_ROOT=$W bash "$W/run.sh"
+fi
 rm -rf "$W"

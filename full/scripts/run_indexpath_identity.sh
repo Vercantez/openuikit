@@ -11,6 +11,10 @@ PROBE=$ROOT/build/full/indexpath_identity_probe
 SUBJECT_FILE=$ROOT/build/full/uihelpers-subject.sha256
 ARTIFACT_FILE=$ROOT/build/full/uihelpers-artifacts.sha256
 
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    bash "$ROOT/.cursor/refuse-arm64-execution.sh" || exit $?
+fi
+
 hash_file() {
     if command -v sha256sum >/dev/null 2>&1; then
         sha256sum "$1" | awk '{print $1}'

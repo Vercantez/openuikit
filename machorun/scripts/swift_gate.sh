@@ -161,6 +161,13 @@ fi
 # ============================================================ the Linux side
 skip() { printf '%sSKIPPED%s  %s\n' "$C_YEL" "$C_RESET" "$1"; exit 0; }
 
+# The Linux half compiles AND executes the guest under machorun on linux/arm64.
+# Docker is the aarch64 execution vehicle, not a toolchain pin. Refuse on
+# x86_64 with the canonical marker instead of SKIPPED.
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    bash "$(git -C "$ROOT" rev-parse --show-toplevel)/.cursor/refuse-arm64-execution.sh" \
+        || exit $?
+fi
 command -v docker >/dev/null 2>&1 || skip "docker not installed on this host"
 docker info >/dev/null 2>&1        || skip "docker daemon not reachable"
 

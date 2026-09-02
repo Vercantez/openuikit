@@ -1076,6 +1076,11 @@ runtime_closure_edge_count=$(grep -Ec '^(edge|weak-missing)'"$(printf '\t')" "$R
 runtime_before=$(runtime_fingerprint)
 
 echo "== run arm64 Mach-O under machorun on Linux"
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    echo "focus_widget_guest: compile/link may proceed on this VM; execution cannot" >&2
+    bash "${W:-$(git rev-parse --show-toplevel)}/.cursor/refuse-arm64-execution.sh" \
+        || exit $?
+fi
 export MACHORUN_ROOT="$MRROOT"
 cd "$OUT"
 "$MRROOT/machorun" ./focus_widget_guest \

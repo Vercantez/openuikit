@@ -33,6 +33,13 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 IMAGE="${MACHORUN_IMAGE:-machorun-testbed:24.04}"
 CNAME="machorun-hostdeny-$$"
 
+# Grades by compiling AND running arm64 Mach-O plus an aarch64 gcc witness
+# inside --platform linux/arm64. Docker is execution isolation + the native
+# aarch64 host, not a toolchain pin. Do not attest-skip on x86_64.
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    bash "$(git -C "$ROOT" rev-parse --show-toplevel)/.cursor/refuse-arm64-execution.sh" \
+        || exit $?
+fi
 command -v docker >/dev/null 2>&1 || die "docker not installed"
 docker info >/dev/null 2>&1 || die "docker daemon not reachable"
 
