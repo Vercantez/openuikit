@@ -1,0 +1,11 @@
+full/mapkit/MapKit.swift
+full/mapkit/MapKitAnnotations.swift
+full/mapkit/MapKitConfiguration.swift
+full/mapkit/MapKitGeometry.swift
+full/mapkit/MapKitItems.swift
+full/mapkit/MapKitLocation.swift
+full/mapkit/MapKitOverlays.swift
+full/mapkit/MapKitRenderers.swift
+full/mapkit/MapKitServices.swift
+full/mapkit/MapKitTypes.swift
+full/mapkit/MapKitUI.swift
