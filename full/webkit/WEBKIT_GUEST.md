@@ -20,19 +20,35 @@ delivered exactly once after each state commit. URL, title, loading, history,
 and under-page values participate in the portable Foundation typed-observation
 substrate. Registration and mutation delivery preserve `.initial`, `.prior`,
 `.old`, and `.new` payload semantics while observation tokens remain alive.
+Focus's classic `addObserver(_:forKeyPath:options:context:)` seam is a real
+in-process registry delivered on the same mutations.
+
+`WKBackForwardList` is a real in-memory list of `WKBackForwardListItem` values
+(`url`, `title`, `initialURL`, `backList` / `forwardList` / `item(at:)`).
+`load` never commits an item: a silent fake success puts a URL bar into
+browsing mode over a blank page. `goBack` / `goForward` / `go(to:)` consult
+that list and, when an item exists, start the same fail-closed navigation.
 
 Navigation is fail-closed. An allowed request receives
 `didStartProvisionalNavigation`, then
-`didFailProvisionalNavigation` with `WKPortableError.engineUnavailable`. It can
-never commit, finish, add history, execute JavaScript, fetch bytes, or render a
-page. JavaScript evaluation uses its completion handler to report the same
-explicit engine boundary. A reentrant local-error-page load is recorded as a
-terminal error without recursively redelivering the failure delegate.
+`didFailProvisionalNavigation` with typed `WKError.unknown` (`WKErrorDomain`,
+code 1). It can never commit, finish, add history, execute JavaScript, fetch
+bytes, or render a page. JavaScript evaluation reports the same unknown engine
+boundary. Invalid content-rule JSON fails with
+`WKError.contentRuleListStoreCompileFailed`; a missing lookup fails with
+`WKError.contentRuleListStoreLookUpFailed`. A reentrant local-error-page load
+is recorded as a terminal error without recursively redelivering the failure
+delegate.
+
+Host-only control seams (`WebKitHostControl`, `_portableLastError`,
+`_portableCopyForWebView`) are `internal` or `@_spi(WebKitHost)`. Ordinary
+`import WebKit` cannot see them; the host gate's negative typecheck proves it.
 
 `webkit_guest_sources.txt` is the exact ordered production contract. The host
-gate rebuilds those sources into a dynamic library, links a client through that
-library, exercises the state/callback contract, checks the install ID, and
-rejects any load of Apple's WebKit. The core guest-package gate additionally
+gate rebuilds those sources with `-warnings-as-errors`, links a client through
+that library, exercises the state/callback contract, checks the install ID on
+Darwin, and rejects any load of Apple's WebKit. A missing toolchain, guest
+source, or `nm` refuses loudly. The core guest-package gate additionally
 proves the ARM64 Mach-O dylib, its precise first-party dependency closure, and
 execution through the packaged loader on Linux.
 

@@ -1,0 +1,31 @@
+{
+  "commands": [
+    "set -eu",
+    "q=/opt/openuikit/core-cold/app-smokes/hackers-r22-378718c-20260901.INVALID-DO-NOT-USE",
+    "audit=/var/lib/openuikit/audits/core-cold-r22-20260901/hackers-smoke-378718c",
+    "inputs=/opt/openuikit/core-cold/app-inputs/hackers-83016de-20260901",
+    "test -d $q",
+    "test ! -L $q",
+    "test -d $audit",
+    "test ! -L $audit",
+    "test -f $audit/host-wrapper.log",
+    "test -z \"$(docker ps -aq)\"",
+    "test -z \"$(find /opt/openuikit/core-cold/app-smokes -maxdepth 1 -mindepth 1 -name '.portable-application-run.*' -print -quit)\"",
+    "test -z \"$(find /var/tmp/openuikit-jobs -maxdepth 1 -mindepth 1 -print -quit)\"",
+    "du -sb $q > $audit/quarantine-size.txt",
+    "find $q -type f -printf '%P\\t%s\\n' | LC_ALL=C sort > $audit/quarantine-file-inventory.tsv",
+    "find $q -type f -print0 | LC_ALL=C sort -z | xargs -0 sha256sum > $audit/quarantine-file-hashes.txt",
+    "cp -- $q/application-build-plan.json $audit/failed-application-build-plan.json",
+    "cp -- $q/local-package-graph.json $audit/failed-local-package-graph.json",
+    "cp -- $q/local-package-build/build-contract.json $audit/failed-local-package-build-contract.json",
+    "cp -- $q/driver.log $audit/failed-driver.log",
+    "cp -- $q/host-inputs.tsv $audit/failed-host-inputs.tsv",
+    "sha256sum $audit/host-wrapper.log $audit/failed-application-build-plan.json $audit/failed-local-package-graph.json $audit/failed-local-package-build-contract.json $audit/failed-driver.log $audit/failed-host-inputs.tsv > $audit/failure-evidence-hashes.txt",
+    "rm -rf -- $q",
+    "test ! -e $q",
+    "test -z \"$(git -C $inputs/app status --porcelain=v1 --untracked-files=all)\"",
+    "test -z \"$(docker ps -aq)\"",
+    "printf 'EC2_HACKERS_FAILURE_EVIDENCE_PRESERVED_AND_QUARANTINE_CLEANED audit=%s\\n' $audit"
+  ],
+  "executionTimeout": ["900"]
+}

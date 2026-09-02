@@ -1,0 +1,17 @@
+{
+  "commands": [
+    "set -eu",
+    "q=/opt/openuikit/core-cold/app-smokes/hackers-r22-378718c-20260901.INVALID-DO-NOT-USE",
+    "test -d $q",
+    "test ! -L $q",
+    "du -sb $q",
+    "find $q -maxdepth 2 -type f -printf '%P\\t%s\\n' | sort | head -n 120",
+    "printf 'TEMP_RUNS\\n'",
+    "find /opt/openuikit/core-cold/app-smokes -maxdepth 1 -mindepth 1 -name '.portable-application-run.*' -print || true",
+    "printf 'JOBS\\n'",
+    "find /var/tmp/openuikit-jobs -maxdepth 1 -mindepth 1 -print || true",
+    "printf 'CONTAINERS\\n'",
+    "docker ps -a --format '{{.ID}}\\t{{.Status}}\\t{{.Names}}'"
+  ],
+  "executionTimeout": ["600"]
+}

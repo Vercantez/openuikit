@@ -1,4 +1,7 @@
 @_exported import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 #if canImport(ObjectiveC)
 import class ObjectiveC.NSObject
@@ -136,6 +139,28 @@ open class WKBackForwardList: NSObject {
         let requested = current + index
         guard items.indices.contains(requested) else { return nil }
         return items[requested]
+    }
+
+    internal func _portableContains(_ item: WKBackForwardListItem) -> Bool {
+        items.contains { $0 === item }
+    }
+
+    /// Truncates the forward list and appends a committed item. History never
+    /// grows from a fail-closed `load`; only a recorded commit mutates it.
+    internal func _portableRecordCommitted(url: URL, title: String?) {
+        if let index {
+            items.removeSubrange((index + 1)...)
+        }
+        items.append(WKBackForwardListItem(url: url, title: title, initialURL: url))
+        index = items.count - 1
+    }
+
+    internal func _portableState() -> WKBackForwardListState {
+        WKBackForwardListState(
+            currentURL: currentItem?.url,
+            backURLs: backList.map(\.url),
+            forwardURLs: forwardList.map(\.url)
+        )
     }
 }
 

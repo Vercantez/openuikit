@@ -1,0 +1,31 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwseed-r2-repair-a1-wifiaware-fill",
+    "maxActive": 24,
+    "maxRuns": 1
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "wifiaware": {
+      "agentId": "bc-8e8d9bf1-7cc3-5816-81d6-5de444fbd330",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T21:59:00Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/31",
+      "expectedPriorHead": "f7b37f731362ae80fa44ec84137c8cf0188de856",
+      "idempotencyKey": "bb41e784-b410-5067-8ce2-614ccb0090ab",
+      "launchStatus": "SENT",
+      "module": "WiFiAware",
+      "promptBytes": 2975,
+      "promptSha256": "bb7a535f3e00e851bebe0df3916480c04fa493fdb6ef913e766e3524c13cffb2",
+      "runId": "run-7440205f-fb52-4b36-ba21-7adcae1bafbe",
+      "runStatus": "running",
+      "slug": "wifiaware"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

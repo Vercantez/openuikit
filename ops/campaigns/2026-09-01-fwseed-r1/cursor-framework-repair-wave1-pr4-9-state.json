@@ -1,0 +1,158 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwseed-r1-repair-a1",
+    "maxActive": 24,
+    "maxRuns": 6
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "coreservices": {
+      "agentId": "bc-17efd469-892d-569b-bb47-6713e249cf37",
+      "agentStatus": "IDLE",
+      "attemptedAt": "2026-09-01T21:17:03Z",
+      "branches": [
+        {
+          "branch": "cursor/port-coreservices-to-linux-88cd",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/8",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/8",
+      "expectedPriorHead": "697bc79d9c465dd1d2c4bcf5aa14cce6d120b552",
+      "idempotencyKey": "69ad9c88-15f1-50a7-b162-1d018c9b6c05",
+      "launchStatus": "SENT",
+      "module": "CoreServices",
+      "promptBytes": 1700,
+      "promptSha256": "dfef19824df2533d26ad605b4fa8a278d5091b6ede95fa04c1bad2de7fff208c",
+      "resultBytes": 1356,
+      "resultSha256": "c4975068ed7d99b687679411c6ded44acd7b13610b5e086d493b8d6205586ca4",
+      "runId": "run-e8c8a100-e100-4cbf-9aa3-db51643f3e55",
+      "runStatus": "FINISHED",
+      "slug": "coreservices"
+    },
+    "coretelephony": {
+      "agentId": "bc-e65d5d0d-ce52-51a0-afa6-f9fd664ec856",
+      "agentStatus": "IDLE",
+      "attemptedAt": "2026-09-01T21:17:09Z",
+      "branches": [
+        {
+          "branch": "cursor/port-coretelephony-to-linux-7cc7",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/7",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/7",
+      "expectedPriorHead": "531c192c9bac6231fc054bc6be0938155919c274",
+      "idempotencyKey": "2ec2dd6c-50f6-5592-bbb3-e9eca07fa4c4",
+      "launchStatus": "SENT",
+      "module": "CoreTelephony",
+      "promptBytes": 1344,
+      "promptSha256": "2ed63c21a21bec3b9e10b0ff55129ca445a1404755435583c84969efe7b45137",
+      "resultBytes": 1383,
+      "resultSha256": "ba600717259d2cd3109e81f80b1b4aa0d4cc414b1e884e1c0d0b5fd678481421",
+      "runId": "run-06115b7e-810c-4017-9dc0-9f13b97e1e6d",
+      "runStatus": "FINISHED",
+      "slug": "coretelephony"
+    },
+    "notificationcenter": {
+      "agentId": "bc-0ba4599a-ebe6-5f69-9ced-6f0b4cb62b95",
+      "agentStatus": "IDLE",
+      "attemptedAt": "2026-09-01T21:16:09Z",
+      "branches": [
+        {
+          "branch": "cursor/port-notificationcenter-to-linux-628b",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/4",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/4",
+      "expectedPriorHead": "8ee54d6bad3350f6e2e3d66c8a2df4e1cb6573c2",
+      "idempotencyKey": "a3fe95fc-44c9-5b33-85bf-c56512cf6bbb",
+      "launchStatus": "SENT",
+      "module": "NotificationCenter",
+      "promptBytes": 2007,
+      "promptSha256": "853b867dcf1ef6a6fb21cb3a74e5b1b7371011a9edda2665bf693975f29fae7b",
+      "resultBytes": 1580,
+      "resultSha256": "5ea69cbd48eecd2e9c1cc70757c7d49f8c81e6c33df23388da8ddaf6e0cd999e",
+      "runId": "run-6a087694-451b-4f5f-9404-45b0a53901dd",
+      "runStatus": "FINISHED",
+      "slug": "notificationcenter"
+    },
+    "social": {
+      "agentId": "bc-ae60949d-b3c1-52f5-8a79-7474c57b6ac6",
+      "agentStatus": "IDLE",
+      "attemptedAt": "2026-09-01T21:17:14Z",
+      "branches": [
+        {
+          "branch": "cursor/port-social-to-linux-fd3a",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/9",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/9",
+      "expectedPriorHead": "839827ecb83307afe5098b745c011e1f466562e9",
+      "idempotencyKey": "98c62795-5a56-5fa4-a79b-aec92534fd15",
+      "launchStatus": "SENT",
+      "module": "Social",
+      "promptBytes": 2945,
+      "promptSha256": "3382c47004fdedca8657fd22143fdc1cec7b78f36e4a2430d6d7800612dc2dc2",
+      "resultBytes": 2198,
+      "resultSha256": "5941882df6e665f0deed72ca4b52eea3932de00ef379744b3b6299cba790e131",
+      "runId": "run-c603948a-8249-40e3-a969-006195981a81",
+      "runStatus": "FINISHED",
+      "slug": "social"
+    },
+    "usernotificationsui": {
+      "agentId": "bc-c8550e2b-2685-5ce2-9837-f6b6d8f6a12d",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T21:17:19Z",
+      "branches": [
+        {
+          "branch": "cursor/port-usernotificationsui-to-linux-4b9e",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/6",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/6",
+      "expectedPriorHead": "72793c9b5130f12df5fccac68029f58a1ea91c0b",
+      "idempotencyKey": "9ab15623-4391-5f39-a8d6-737c6e38998c",
+      "launchStatus": "SENT",
+      "module": "UserNotificationsUI",
+      "promptBytes": 1927,
+      "promptSha256": "420a13fb10f45332f715f18c2da5b28e008b370d9f6364899bcb2cdf69c33e8d",
+      "runId": "run-91c296c5-ec4a-4262-872d-2e0d9457183b",
+      "runStatus": "RUNNING",
+      "slug": "usernotificationsui"
+    },
+    "watchconnectivity": {
+      "agentId": "bc-8407a27e-79b6-5977-a707-56af5b396ddb",
+      "agentStatus": "IDLE",
+      "attemptedAt": "2026-09-01T21:17:24Z",
+      "branches": [
+        {
+          "branch": "cursor/port-watchconnectivity-to-linux-7c60",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/5",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/5",
+      "expectedPriorHead": "4956d5f76f3e1e44d3ceeff1bc8b45fd5b90f16f",
+      "idempotencyKey": "3f8707f2-5fdb-5a6b-99c0-186a4e25d5af",
+      "launchStatus": "SENT",
+      "module": "WatchConnectivity",
+      "promptBytes": 1494,
+      "promptSha256": "dfedeb24ac8caa4be6bea614d967f33f748e68baaeaabade543dddb73448b5c7",
+      "resultBytes": 1329,
+      "resultSha256": "de21ccf85dcbbb55dc4f40c260a5a57a937be007e595af1454a15349313401cd",
+      "runId": "run-a7c00dff-4dfe-4512-85d1-85c2cd363591",
+      "runStatus": "FINISHED",
+      "slug": "watchconnectivity"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

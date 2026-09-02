@@ -242,7 +242,13 @@ extension AttributeContainer {
 }
 #endif
 
-#if canImport(DeveloperToolsSupport)
+// Preview is app-side machinery: the DeveloperToolsSupport module is built
+// against the app-facing Foundation facade, so re-exporting it from a
+// Foundation-hidden (FoundationEssentials-only) shim compile would drag the
+// hidden module back in. canImport(DeveloperToolsSupport) alone is not enough
+// — the module can exist while its Foundation dependency is deliberately
+// invisible (the target-15 contract), which fails at import, not at canImport.
+#if canImport(DeveloperToolsSupport) && canImport(Foundation)
 @_exported @_spi(OpenUIKitPreview) import DeveloperToolsSupport
 
 // UIKit's first bounded #Preview slice stores an unchanged UIView or

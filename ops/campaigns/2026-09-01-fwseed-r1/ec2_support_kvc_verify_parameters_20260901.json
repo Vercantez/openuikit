@@ -1,0 +1,24 @@
+{
+  "commands": [
+    "set -eu",
+    "root=/opt/openuikit/core-cold/support-fixes/44bd5af-20260901",
+    "support=$root/support",
+    "audit=/var/lib/openuikit/audits/core-cold-r22-20260901/support-kvc-44bd5af",
+    "transfer=/opt/openuikit/transfers/core-cold-support-44bd5af",
+    "test -f $root/READY",
+    "test \"$(git -C $support rev-parse HEAD)\" = 44bd5af26b94cbddff553ad52409adb57c29930a",
+    "test \"$(git -C $support rev-parse HEAD^{tree})\" = 4e121e6afc80ed3885f2d5df5905a2c7221e6f75",
+    "test -z \"$(git -C $support status --porcelain=v1 --untracked-files=all)\"",
+    "grep -F 'Ran 66 tests' $audit/support-tests.log >/dev/null",
+    "grep -F 'Ran 18 tests' $audit/support-tests.log >/dev/null",
+    "grep -F 'Ran 8 tests' $audit/support-tests.log >/dev/null",
+    "test -f $audit/import-provenance.tsv",
+    "test -f $audit/patched-input-hashes.txt",
+    "sha256sum -c $audit/patched-input-hashes.txt",
+    "test -d $transfer",
+    "test -z \"$(find $transfer -maxdepth 1 -mindepth 1 -print -quit)\"",
+    "rmdir -- $transfer",
+    "echo EC2_SUPPORT_KVC_EXTERNAL_VERIFY_OK"
+  ],
+  "executionTimeout": ["600"]
+}

@@ -1,0 +1,104 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwseed-r1-repair-a1-r2",
+    "maxActive": 24,
+    "maxRuns": 4
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "coreservices": {
+      "agentId": "bc-17efd469-892d-569b-bb47-6713e249cf37",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T22:11:31Z",
+      "branches": [
+        {
+          "branch": "cursor/port-coreservices-to-linux-88cd",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/8",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/8",
+      "expectedPriorHead": "764c2f40c1f248942fbc7a7e0242d0026e97b0ff",
+      "idempotencyKey": "222bcee6-f7ff-5674-9fc5-10e4fc105eff",
+      "launchStatus": "SENT",
+      "module": "CoreServices",
+      "promptBytes": 4385,
+      "promptSha256": "f255d386fe44744f0d2c8719fab5c526e870e929e18ee1b8a374aa2456700639",
+      "runId": "run-a870cc35-325c-438b-9a10-14a56d33cf94",
+      "runStatus": "RUNNING",
+      "slug": "coreservices"
+    },
+    "notificationcenter": {
+      "agentId": "bc-0ba4599a-ebe6-5f69-9ced-6f0b4cb62b95",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T22:10:40Z",
+      "branches": [
+        {
+          "branch": "cursor/port-notificationcenter-to-linux-628b",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/4",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/4",
+      "expectedPriorHead": "1502bb1da649a4639049b840f42d3b9a5e31c704",
+      "idempotencyKey": "2ab19c21-8769-5e15-a608-d445a04fba5e",
+      "launchStatus": "SENT",
+      "module": "NotificationCenter",
+      "promptBytes": 3795,
+      "promptSha256": "30f2b56b3170eb7d9515d4e116b0d9c73ec234db491e358e4b2b8b3ab2166910",
+      "runId": "run-c5f6617a-eea2-4f98-8e05-eb400f727189",
+      "runStatus": "RUNNING",
+      "slug": "notificationcenter"
+    },
+    "social": {
+      "agentId": "bc-ae60949d-b3c1-52f5-8a79-7474c57b6ac6",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T22:11:37Z",
+      "branches": [
+        {
+          "branch": "cursor/port-social-to-linux-fd3a",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/9",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/9",
+      "expectedPriorHead": "9730ae06982c19da584c130284ab8c421ed60d16",
+      "idempotencyKey": "6f64bf19-a6cc-52c2-90d4-04e4755a59b2",
+      "launchStatus": "SENT",
+      "module": "Social",
+      "promptBytes": 4798,
+      "promptSha256": "f7f2e2595c1087b4df4639a4ac029da2af66858f0e3bf975cacd7e3a6118869f",
+      "runId": "run-f56cb023-85a3-41dd-a46c-e7a312c8e1af",
+      "runStatus": "RUNNING",
+      "slug": "social"
+    },
+    "usernotificationsui": {
+      "agentId": "bc-c8550e2b-2685-5ce2-9837-f6b6d8f6a12d",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T22:11:43Z",
+      "branches": [
+        {
+          "branch": "cursor/port-usernotificationsui-to-linux-4b9e",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/6",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/6",
+      "expectedPriorHead": "d8574148f137c34a103ab343c5bd7147a819eb77",
+      "idempotencyKey": "5ed2aab8-ba60-59d2-bd28-17565a45f33b",
+      "launchStatus": "SENT",
+      "module": "UserNotificationsUI",
+      "promptBytes": 3874,
+      "promptSha256": "518c193c7c975ab6b09fa184c3caee2bf63886ca6e25cc7de7a5fad8c7f3eb51",
+      "runId": "run-9f1e39af-a22f-43f7-880a-2347d529430a",
+      "runStatus": "RUNNING",
+      "slug": "usernotificationsui"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

@@ -145,8 +145,8 @@ open class WKContentRuleListStore: NSObject {
         else {
             completionHandler(
                 nil,
-                WKPortableError(
-                    code: .invalidContentRuleList,
+                WKError(
+                    code: .contentRuleListStoreCompileFailed,
                     operation: "compileContentRuleList(\(identifier))"
                 )
             )
@@ -173,8 +173,8 @@ open class WKContentRuleListStore: NSObject {
         } else {
             completionHandler(
                 nil,
-                WKPortableError(
-                    code: .contentRuleListNotFound,
+                WKError(
+                    code: .contentRuleListStoreLookUpFailed,
                     operation: "lookUpContentRuleList(\(identifier))"
                 )
             )

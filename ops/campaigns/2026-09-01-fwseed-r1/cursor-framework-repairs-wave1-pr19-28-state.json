@@ -1,0 +1,236 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwseed-r1-repair-a3",
+    "maxActive": 24,
+    "maxRuns": 10
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "callkit": {
+      "agentId": "bc-843e05ee-f8fd-5fe4-a8b4-dfde6f2e9aa3",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T21:42:42Z",
+      "branches": [
+        {
+          "branch": "cursor/port-callkit-to-linux-869c",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/22",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/22",
+      "expectedPriorHead": "aa4750b9ac87f8f029bc7d5b1a3e33009e1caa90",
+      "idempotencyKey": "0698f06c-c73d-5d35-927b-f55be915b025",
+      "launchStatus": "SENT",
+      "module": "CallKit",
+      "promptBytes": 2784,
+      "promptSha256": "5ae3cd77c30544d23cc3702e37c4545d8987725ebe48ec535eb5fdcc88e609b6",
+      "runId": "run-1f06e7f2-b31a-49fa-ad11-b7ae0f3ef157",
+      "runStatus": "RUNNING",
+      "slug": "callkit"
+    },
+    "carplay": {
+      "agentId": "bc-b4b1193d-afb9-5bb4-a92e-d530d8f6d07f",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T21:42:49Z",
+      "branches": [
+        {
+          "branch": "cursor/port-carplay-to-linux-319e",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/24",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/24",
+      "expectedPriorHead": "801e3cb729b1c7d0e709d131dcc32959029d0e87",
+      "idempotencyKey": "922a452c-7d9e-51d9-ae78-7159f75c9c50",
+      "launchStatus": "SENT",
+      "module": "CarPlay",
+      "promptBytes": 2916,
+      "promptSha256": "a3f14fdc66da3870fd83074c134d8446b5972701c4671f6beef620fa2f427fad",
+      "runId": "run-7d185e8d-cded-4b57-8c7a-0fb9cea130e5",
+      "runStatus": "RUNNING",
+      "slug": "carplay"
+    },
+    "contacts": {
+      "agentId": "bc-67d16da0-a5d4-5b1c-bc7e-f59bf9a48cf9",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T21:43:26Z",
+      "branches": [
+        {
+          "branch": "cursor/port-contacts-to-linux-1163",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/21",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/21",
+      "expectedPriorHead": "0cd5e730cf8025229a0d2dffc8e5643b43a5c66b",
+      "idempotencyKey": "c968ba61-e727-5461-8277-b6a60eba0b8f",
+      "launchStatus": "SENT",
+      "module": "Contacts",
+      "promptBytes": 3007,
+      "promptSha256": "34421b87ca6d6b2befde0844609839292b5c8f32361ecd7004993663654465d1",
+      "runId": "run-4a09d629-ef2e-47f5-8277-b6d3fc4a1e92",
+      "runStatus": "RUNNING",
+      "slug": "contacts"
+    },
+    "coredata": {
+      "agentId": "bc-8d005f31-83d3-581d-8706-20aa47dcc9c4",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T21:43:30Z",
+      "branches": [
+        {
+          "branch": "cursor/port-coredata-to-linux-3372",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/26",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/26",
+      "expectedPriorHead": "e9084ac2199d0a5a494b50547f36a0c8c16b3129",
+      "idempotencyKey": "7dca2770-a546-52f3-91fb-93e8f09b9766",
+      "launchStatus": "SENT",
+      "module": "CoreData",
+      "promptBytes": 3328,
+      "promptSha256": "4068d9d68c111ab2c4ce7ab535c4a8f3e84f28916ff206303b7b627d325520be",
+      "runId": "run-c0b57e0a-5fd2-4f0e-abe5-ef7471af72fe",
+      "runStatus": "RUNNING",
+      "slug": "coredata"
+    },
+    "eventkit": {
+      "agentId": "bc-02ba5f6d-623c-5747-b119-d616f87148d0",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T21:41:46Z",
+      "branches": [
+        {
+          "branch": "cursor/port-eventkit-to-linux-09d7",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/19",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/19",
+      "expectedPriorHead": "f38873626a354d249a3aafda57b2abe5a2010b1a",
+      "idempotencyKey": "a560c6b3-a29d-5489-80f4-4e2e308d051b",
+      "launchStatus": "SENT",
+      "module": "EventKit",
+      "promptBytes": 3071,
+      "promptSha256": "ceef7d91ba325e05bb4c63afc400ac52ce39a25e64aa3ce0da44a6966db9345c",
+      "runId": "run-f7dcef17-0b4b-4b4b-9425-2dcc54601dba",
+      "runStatus": "RUNNING",
+      "slug": "eventkit"
+    },
+    "javascriptcore": {
+      "agentId": "bc-186916d3-e04e-54dc-bf2c-f56cd934b535",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T21:43:36Z",
+      "branches": [
+        {
+          "branch": "cursor/port-javascriptcore-to-linux-dde8",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/25",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/25",
+      "expectedPriorHead": "85b0f2b49f23b8d920a820f87432754f98c9d277",
+      "idempotencyKey": "ff23c513-4fd2-56e0-87b3-0e4be4daceb3",
+      "launchStatus": "SENT",
+      "module": "JavaScriptCore",
+      "promptBytes": 3123,
+      "promptSha256": "344070b1859ca79f6798680d640e6d1db21a2a6344aeaf3cfa840d6b5a4e3578",
+      "runId": "run-63979aae-b8c6-4880-9d13-f1df5f35193d",
+      "runStatus": "RUNNING",
+      "slug": "javascriptcore"
+    },
+    "pdfkit": {
+      "agentId": "bc-ff5302ad-129d-5a86-b07f-992457c539c4",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T21:43:40Z",
+      "branches": [
+        {
+          "branch": "cursor/port-pdfkit-to-linux-469e",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/23",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/23",
+      "expectedPriorHead": "56bba641bb1c8248b50ad99e140c39806acfa6fd",
+      "idempotencyKey": "cdb5db05-fa40-5a33-843d-58d717293bd8",
+      "launchStatus": "SENT",
+      "module": "PDFKit",
+      "promptBytes": 2944,
+      "promptSha256": "c511f0ea2d203320ac70038a67168d062d6564cf5daa3b62e123923d3db1b70c",
+      "runId": "run-985fd12c-6f72-4f65-86b0-a4bf6ad50ff0",
+      "runStatus": "RUNNING",
+      "slug": "pdfkit"
+    },
+    "scenekit": {
+      "agentId": "bc-aceae3d0-8ff6-517a-b602-f7101fbbdb36",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T21:43:46Z",
+      "branches": [
+        {
+          "branch": "cursor/port-scenekit-to-linux-c917",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/28",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/28",
+      "expectedPriorHead": "4465f44c12fe852568134360680180fa78a03945",
+      "idempotencyKey": "e34af88a-4179-5351-9225-792dcc5fa209",
+      "launchStatus": "SENT",
+      "module": "SceneKit",
+      "promptBytes": 3029,
+      "promptSha256": "d490d67946c39a61031e0a0fa3da686900ee448444ad7ab480a0f2c1bbdbeae3",
+      "runId": "run-791efb16-8a8e-4526-aef4-fffb902452a2",
+      "runStatus": "RUNNING",
+      "slug": "scenekit"
+    },
+    "speech": {
+      "agentId": "bc-8a448456-40ad-5c81-8457-71898d8cfb9b",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T21:43:50Z",
+      "branches": [
+        {
+          "branch": "cursor/port-speech-to-linux-a374",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/20",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/20",
+      "expectedPriorHead": "b8325dc3cd50968a8756f1a09e11029f7ca57d05",
+      "idempotencyKey": "9e01b0f5-e78a-5e2a-81ba-8512269dabcc",
+      "launchStatus": "SENT",
+      "module": "Speech",
+      "promptBytes": 3007,
+      "promptSha256": "545fb3c6cb1b396748340ee9ce546a13a125d33be5f0cb6ac0d50d9aa7b972e2",
+      "runId": "run-fc47ad95-3ddb-46c8-b248-80aeb89ad9e2",
+      "runStatus": "RUNNING",
+      "slug": "speech"
+    },
+    "visionkit": {
+      "agentId": "bc-616150cb-48df-59ff-89b9-ef98d8eca27a",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T21:43:55Z",
+      "branches": [
+        {
+          "branch": "cursor/port-visionkit-to-linux-83e2",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/27",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/27",
+      "expectedPriorHead": "e44aa6082a6090b8f8e0831167a57969ae5446c8",
+      "idempotencyKey": "d9677931-b8bd-5e11-b745-51b939965aa7",
+      "launchStatus": "SENT",
+      "module": "VisionKit",
+      "promptBytes": 2834,
+      "promptSha256": "00f07ffe51e8d206a9a5c7a4ca5d9b3eced39b6138b1904e5e5673e8a90d51b0",
+      "runId": "run-63c2ea78-feee-440e-81c0-7c0967c437f6",
+      "runStatus": "RUNNING",
+      "slug": "visionkit"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

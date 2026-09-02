@@ -1,0 +1,395 @@
+{
+  "campaign": {
+    "activeBuildId": "bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87",
+    "environmentMarker": "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+    "id": "ios26.1-fwseed-r3",
+    "manifestSha256": "bb0008819d9e8c622854fdf6c435e7285f019d867caa5fd83afcd3899a043899",
+    "startingSha": "9821f5c0f226a4f3e039ebc687d881b67ef78503"
+  },
+  "createAttemptTimestamps": [
+    "2026-09-01T21:45:10Z",
+    "2026-09-01T21:45:15Z"
+  ],
+  "createdAt": "2026-09-01T21:29:54Z",
+  "frameworks": {
+    "addressbook": {
+      "agentId": "bc-2064e4bc-f96b-50cc-b648-4e5244f278ab",
+      "agentName": "Port AddressBook to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "legacy-adapter",
+      "launchStatus": "PENDING",
+      "module": "AddressBook",
+      "priority": 82,
+      "runId": null,
+      "runStatus": null
+    },
+    "adsupport": {
+      "agentId": "bc-845e2805-b02c-57fb-b25f-6e03c78be904",
+      "agentName": "Port AdSupport to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "AdSupport",
+      "priority": 83,
+      "runId": null,
+      "runStatus": null
+    },
+    "audiounit": {
+      "agentId": "bc-4d6f61f6-a1f0-5289-99f0-90e213ba7691",
+      "agentName": "Port AudioUnit to Linux",
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-4d6f61f6-a1f0-5289-99f0-90e213ba7691",
+      "branches": [
+        {
+          "branch": "cursor/port-audiounit-to-linux-67fe",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "lane": "legacy-adapter",
+      "launchAttemptedAt": "2026-09-01T21:45:10Z",
+      "launchStatus": "CREATED",
+      "module": "AudioUnit",
+      "priority": 92,
+      "runCreatedAt": "2026-09-01T21:45:13.740Z",
+      "runId": "run-fec3961d-88fb-45ee-bcff-aa35c606cfd4",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-01T21:45:15.426Z"
+    },
+    "cfnetwork": {
+      "agentId": "bc-0794884f-5f0f-500a-8cd6-f28ea5fb296f",
+      "agentName": "Port CFNetwork to Linux",
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-0794884f-5f0f-500a-8cd6-f28ea5fb296f",
+      "branches": [
+        {
+          "branch": "cursor/port-cfnetwork-to-linux-6e8a",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "lane": "large-partitioned",
+      "launchAttemptedAt": "2026-09-01T21:30:04Z",
+      "launchStatus": "CREATED",
+      "module": "CFNetwork",
+      "priority": 98,
+      "runCreatedAt": "2026-09-01T21:30:05.936Z",
+      "runId": "run-4becc4d9-f685-4cc4-803d-ee01b332b766",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-01T21:30:06.733Z"
+    },
+    "coreaudio": {
+      "agentId": "bc-bc29f708-5893-55e8-ad63-345e8766ba0e",
+      "agentName": "Port CoreAudio to Linux",
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-bc29f708-5893-55e8-ad63-345e8766ba0e",
+      "branches": [
+        {
+          "branch": "cursor/port-coreaudio-to-linux-5fba",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/53",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "lane": "large-partitioned",
+      "launchAttemptedAt": "2026-09-01T21:33:04Z",
+      "launchStatus": "CREATED",
+      "module": "CoreAudio",
+      "priority": 93,
+      "runCreatedAt": "2026-09-01T21:33:05.882Z",
+      "runId": "run-642f5270-d95f-417f-834a-11732c14a22f",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-01T21:33:07.193Z"
+    },
+    "coreaudiotypes": {
+      "agentId": "bc-7c267709-ad7a-5bf4-a22c-7b81352ab47c",
+      "agentName": "Port CoreAudioTypes to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "medium-full",
+      "lastError": {
+        "code": "http_error",
+        "httpStatus": 400
+      },
+      "launchAttemptedAt": "2026-09-01T21:45:15Z",
+      "launchStatus": "PENDING",
+      "module": "CoreAudioTypes",
+      "priority": 91,
+      "runId": null,
+      "runStatus": null
+    },
+    "corefoundation": {
+      "agentId": "bc-c3864af5-ca2a-504c-a230-845ad59203ed",
+      "agentName": "Port CoreFoundation to Linux",
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-c3864af5-ca2a-504c-a230-845ad59203ed",
+      "branches": [
+        {
+          "branch": "cursor/port-corefoundation-to-linux-96a9",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "lane": "large-partitioned",
+      "launchAttemptedAt": "2026-09-01T21:30:01Z",
+      "launchStatus": "CREATED",
+      "module": "CoreFoundation",
+      "priority": 99,
+      "runCreatedAt": "2026-09-01T21:30:02.833Z",
+      "runId": "run-56cc7f7d-257f-4d4b-9a23-f4a33ccee828",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-01T21:30:03.725Z"
+    },
+    "coremediaio": {
+      "agentId": "bc-fc47200b-6441-5da3-b1d3-db1cad86406e",
+      "agentName": "Port CoreMediaIO to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "legacy-adapter",
+      "launchStatus": "PENDING",
+      "module": "CoreMediaIO",
+      "priority": 90,
+      "runId": null,
+      "runStatus": null
+    },
+    "corevideo": {
+      "agentId": "bc-834128fb-a131-5ae3-8624-1a2bda3644ab",
+      "agentName": "Port CoreVideo to Linux",
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-834128fb-a131-5ae3-8624-1a2bda3644ab",
+      "branches": [
+        {
+          "branch": "cursor/port-corevideo-to-linux-b4f9",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "lane": "large-partitioned",
+      "launchAttemptedAt": "2026-09-01T21:30:07Z",
+      "launchStatus": "CREATED",
+      "module": "CoreVideo",
+      "priority": 97,
+      "runCreatedAt": "2026-09-01T21:30:09.149Z",
+      "runId": "run-c4307db6-4fac-4698-b549-d4f2fb3e7ba3",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-01T21:30:09.808Z"
+    },
+    "developertoolssupport": {
+      "agentId": "bc-7e86265c-b77a-53bb-95aa-ff65c3b104d3",
+      "agentName": "Port DeveloperToolsSupport to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "DeveloperToolsSupport",
+      "priority": 80,
+      "runId": null,
+      "runStatus": null
+    },
+    "devicediscoveryui": {
+      "agentId": "bc-dc2359b9-162e-5c34-848a-40254124e7a1",
+      "agentName": "Port DeviceDiscoveryUI to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "DeviceDiscoveryUI",
+      "priority": 85,
+      "runId": null,
+      "runStatus": null
+    },
+    "fileproviderui": {
+      "agentId": "bc-72b076d7-9e8f-528b-a67b-7816dc95d765",
+      "agentName": "Port FileProviderUI to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "FileProviderUI",
+      "priority": 86,
+      "runId": null,
+      "runStatus": null
+    },
+    "iosurface": {
+      "agentId": "bc-8ee095f7-c230-5901-a80b-90cdb3d32e02",
+      "agentName": "Port IOSurface to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "medium-full",
+      "launchStatus": "PENDING",
+      "module": "IOSurface",
+      "priority": 89,
+      "runId": null,
+      "runStatus": null
+    },
+    "mapkit": {
+      "agentId": "bc-e09f93fc-9f11-5074-87f9-7865b1b2bab3",
+      "agentName": "Port MapKit to Linux",
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-e09f93fc-9f11-5074-87f9-7865b1b2bab3",
+      "branches": [
+        {
+          "branch": "cursor/port-mapkit-to-linux-967c",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "lane": "large-partitioned",
+      "launchAttemptedAt": "2026-09-01T21:29:57Z",
+      "launchStatus": "CREATED",
+      "module": "MapKit",
+      "priority": 100,
+      "runCreatedAt": "2026-09-01T21:29:59.653Z",
+      "runId": "run-c24b08ca-5eb2-4fbc-8425-8b8296e04245",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-01T21:30:00.460Z"
+    },
+    "metal": {
+      "agentId": "bc-83026fe1-136b-53d7-a464-74ace4452d97",
+      "agentName": "Port Metal to Linux",
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-83026fe1-136b-53d7-a464-74ace4452d97",
+      "branches": [
+        {
+          "branch": "cursor/port-metal-to-linux-8e66",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "lane": "large-partitioned",
+      "launchAttemptedAt": "2026-09-01T21:30:13Z",
+      "launchStatus": "CREATED",
+      "module": "Metal",
+      "priority": 95,
+      "runCreatedAt": "2026-09-01T21:30:15.866Z",
+      "runId": "run-5915d917-284f-4ccb-9c92-78c83659c6b0",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-01T21:30:16.592Z"
+    },
+    "metalperformanceshaders": {
+      "agentId": "bc-f8874c65-e4d5-547c-9636-88dafd2a67e4",
+      "agentName": "Port MetalPerformanceShaders to Linux",
+      "agentStatus": "ACTIVE",
+      "agentUrl": "https://cursor.com/agents/bc-f8874c65-e4d5-547c-9636-88dafd2a67e4",
+      "branches": [
+        {
+          "branch": "cursor/port-metalperformanceshaders-to-linux-c2f5",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "lane": "large-partitioned",
+      "launchAttemptedAt": "2026-09-01T21:30:17Z",
+      "launchStatus": "CREATED",
+      "module": "MetalPerformanceShaders",
+      "priority": 94,
+      "runCreatedAt": "2026-09-01T21:30:18.966Z",
+      "runId": "run-18947cc1-39ab-4906-b0e3-59f028afac3d",
+      "runStatus": "RUNNING",
+      "runUpdatedAt": "2026-09-01T21:30:19.766Z"
+    },
+    "opengles": {
+      "agentId": "bc-be84f5fe-1913-5976-a1c7-d27f26c0df9d",
+      "agentName": "Port OpenGLES to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "legacy-adapter",
+      "launchStatus": "PENDING",
+      "module": "OpenGLES",
+      "priority": 81,
+      "runId": null,
+      "runStatus": null
+    },
+    "passkit-swiftui": {
+      "agentId": "bc-bd1b1cf2-0297-5237-adf5-a98e6351d033",
+      "agentName": "Port _PassKit_SwiftUI to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "_PassKit_SwiftUI",
+      "priority": 79,
+      "runId": null,
+      "runStatus": null
+    },
+    "quicklookthumbnailing": {
+      "agentId": "bc-b655ae9e-0c03-5b47-aef2-c66f4e724408",
+      "agentName": "Port QuickLookThumbnailing to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "medium-full",
+      "launchStatus": "PENDING",
+      "module": "QuickLookThumbnailing",
+      "priority": 87,
+      "runId": null,
+      "runStatus": null
+    },
+    "swiftuicore": {
+      "agentId": "bc-7440f400-9a61-567b-9701-b9259eb2cce2",
+      "agentName": "Port SwiftUICore to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "large-partitioned",
+      "launchStatus": "PENDING",
+      "module": "SwiftUICore",
+      "priority": 88,
+      "runId": null,
+      "runStatus": null
+    },
+    "threadnetwork": {
+      "agentId": "bc-b626ff27-860b-537d-bed9-6176f3b819d7",
+      "agentName": "Port ThreadNetwork to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "ThreadNetwork",
+      "priority": 84,
+      "runId": null,
+      "runStatus": null
+    },
+    "videotoolbox": {
+      "agentId": "bc-bfdc9335-bc1b-5451-a0cc-753e410bbfa6",
+      "agentName": "Port VideoToolbox to Linux",
+      "agentStatus": "IDLE",
+      "agentUrl": "https://cursor.com/agents/bc-bfdc9335-bc1b-5451-a0cc-753e410bbfa6",
+      "branches": [
+        {
+          "branch": "cursor/port-videotoolbox-to-linux-6878",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/52",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "lane": "large-partitioned",
+      "launchAttemptedAt": "2026-09-01T21:30:10Z",
+      "launchStatus": "CREATED",
+      "module": "VideoToolbox",
+      "priority": 96,
+      "resultBytes": 1412,
+      "resultSha256": "4721e1af1c063381de73366d62b03bba9bfc50b05196175b2a94f69efedc20ac",
+      "runCreatedAt": "2026-09-01T21:30:12.114Z",
+      "runDurationMs": 879192,
+      "runId": "run-efd49f3e-bd9d-4dda-acea-7b6a4cd8d6e1",
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-01T21:44:51.974Z"
+    }
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repository": {
+    "startingRef": "experiment/cursor-framework-fanout-wave3-seed-20260901",
+    "url": "https://github.com/Vercantez/openuikit-linux-platform"
+  },
+  "schema": "openuikit.cursor-framework-campaign-state.v1",
+  "updatedAt": "2026-09-01T21:45:33Z"
+}

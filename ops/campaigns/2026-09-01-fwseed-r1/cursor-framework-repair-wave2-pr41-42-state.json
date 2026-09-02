@@ -1,0 +1,60 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwseed-r2-repair-a2-pr41-42",
+    "maxActive": 24,
+    "maxRuns": 2
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "coreml": {
+      "agentId": "bc-5b5444b9-ebba-5efb-8b4e-73bf0de1667b",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T22:20:50Z",
+      "branches": [
+        {
+          "branch": "cursor/port-coreml-to-linux-17f6",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/42",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/42",
+      "expectedPriorHead": "f9bb3298ec8b1e07e48f62e0dc168c57c9ff4ccd",
+      "idempotencyKey": "1abe9576-4265-52e6-82f8-fb0eff40831c",
+      "launchStatus": "SENT",
+      "module": "CoreML",
+      "promptBytes": 3832,
+      "promptSha256": "c3aef6e1ed1f971a55fdb2a12a8c9c21bddd38f1e1f0356e2c770ffbd9c9d1db",
+      "runId": "run-143448e0-6405-4429-9fcd-0295eea574a3",
+      "runStatus": "RUNNING",
+      "slug": "coreml"
+    },
+    "metrickit": {
+      "agentId": "bc-3859a4a6-3556-58f1-83d2-37de9cdd34f3",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-01T22:20:44Z",
+      "branches": [
+        {
+          "branch": "cursor/port-metrickit-to-linux-4e97",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/41",
+          "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
+        }
+      ],
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/41",
+      "expectedPriorHead": "171add94866742b345bdeb43fe652d761377eb52",
+      "idempotencyKey": "4a7c9f99-8f9f-505f-87db-ce080520d6a9",
+      "launchStatus": "SENT",
+      "module": "MetricKit",
+      "promptBytes": 2952,
+      "promptSha256": "805f3bd244978c9180d3050246846de9ad14033502a034004089526e34649f15",
+      "runId": "run-dd2ac009-77f9-4f6d-b13e-1f7914de4471",
+      "runStatus": "RUNNING",
+      "slug": "metrickit"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}
