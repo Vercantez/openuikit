@@ -58,10 +58,14 @@ git_macios() {
     git -c safe.directory="$OPENUIKIT_MACIOS_ROOT" \
         -C "$OPENUIKIT_MACIOS_ROOT" "$@"
 }
+origin_guard=$repo_root/.cursor/validate-static-evidence-origin.sh
+if [ ! -f "$origin_guard" ] || [ -L "$origin_guard" ]; then
+    printf 'cursor-environment: repository origin guard is missing or unsafe\n' >&2
+    exit 1
+fi
 [ "$(git_macios rev-parse HEAD)" = "$expected_macios_commit" ] \
     || { printf 'cursor-environment: macios evidence commit differs\n' >&2; exit 1; }
-[ "$(git_macios remote get-url origin)" = "$expected_macios_repository" ] \
-    || { printf 'cursor-environment: macios evidence origin differs\n' >&2; exit 1; }
+bash "$origin_guard" "$OPENUIKIT_MACIOS_ROOT" "$expected_macios_repository"
 macios_sparse_paths=$(git_macios sparse-checkout list) \
     || { printf 'cursor-environment: cannot inspect macios sparse checkout\n' >&2; exit 1; }
 [ "$macios_sparse_paths" = src ] \

@@ -79,6 +79,11 @@ fi
 git_evidence() {
     git -c safe.directory="$checkout_root" -C "$checkout_root" "$@"
 }
+origin_guard=$repo_root/.cursor/validate-static-evidence-origin.sh
+if [ ! -f "$origin_guard" ] || [ -L "$origin_guard" ]; then
+    printf 'cursor-evidence: repository origin guard is missing or unsafe\n' >&2
+    exit 1
+fi
 if [ "$new_checkout" = false ]; then
     checkout_status=$(git_evidence --no-optional-locks status \
         --porcelain=v1 --untracked-files=all --ignored) \
@@ -90,8 +95,7 @@ else
     git_evidence config remote.origin.promisor true
     git_evidence config remote.origin.partialclonefilter blob:none
 fi
-[ "$(git_evidence remote get-url origin)" = "$repository" ] \
-    || { printf 'cursor-evidence: evidence origin differs from lock\n' >&2; exit 1; }
+bash "$origin_guard" "$checkout_root" "$repository"
 
 if [ "$new_checkout" = true ]; then
     git_evidence sparse-checkout init --cone
