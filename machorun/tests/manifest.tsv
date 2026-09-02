@@ -4,8 +4,18 @@
 #               is the recorded macOS behaviour
 # fixups        chained | classic | none
 # oracle        run                 macOS can execute it, so a baseline exists
-#               norun:<reason>      macOS refuses to execute it; no baseline,
-#                                   the fixture is parse-only
+#               norun:<reason>      no baseline, so difftest reports NO-ORACLE
+#                                   and does not look for tests/expected/<id>.*
+#                                   or tests/bin/<id>. Reasons:
+#                 norun:macOS ...   macOS refuses to execute it (parse-only)
+#                 norun:NEEDS_DARWIN_BASELINE
+#                                   fixture SOURCE is committed; the Mach-O
+#                                   and expected outputs cannot be recorded
+#                                   on Linux (tests/build_fixtures.sh refuses)
+#                                   and must not be invented. Operator: on a
+#                                   Darwin host, build_fixtures.sh <id> then
+#                                   harness/run_macos.sh --record <id>, then
+#                                   flip this cell to `run`.
 # linux         pass                should eventually match the oracle exactly
 #               xfail:<reason>      known, documented, out-of-scope-for-now
 # what          one-line description
@@ -66,6 +76,8 @@ grp	chained	run	pass	struct group is 32 bytes with the SAME offsets on both side
 xattr	chained	run	pass	the option flags ROTATE (Darwin XATTR_CREATE 0x02 IS Linux XATTR_REPLACE 0x02, so create-if-absent performs replace-if-present), XATTR_NOFOLLOW is a flag here and a different FUNCTION there, the arity differs over Darwin's resource-fork position, and Linux refuses every name outside user./security./system./trusted.
 quota	chained	run	pass	the argument ORDER is swapped (Darwin path,cmd against Linux cmd,special) and the first argument is a mount point against a block device -- but APFS supports no quotas at all, so ENOTSUP is what Darwin itself answers and this grades that byte for byte
 fts	chained	run	pass	FTSENT is 112 bytes on Darwin and 120 on glibc; translated traversal grades children/set, NOSTAT/NAMEONLY safety, Darwin-only COMFOLLOWDIR/NOSTAT_TYPE, pre-read roots, nested comparators, root-parent and symlink-follow state, guest persistence, and fresh generations after exact-address reuse
+statfs	chained	run	pass	Darwin struct statfs is 2168 bytes and Linux's is 120 with no f_mntonname -- FileManager reads that field at offset 88; translation fills it from /proc/self/mounts by longest-prefix match; f_flags ROTATE (ST_NOSUID is Darwin MNT_SYNCHRONOUS)
+copyfile	chained	run	pass	Darwin-only copyfile/fcopyfile with state == nil: COPYFILE_ALL of a file that carries an xattr, COPYFILE_EXCL -> EEXIST, COPYFILE_CLONE as FICLONE-or-copy, fcopyfile(-1) EINVAL, fcopyfile from a pipe ENOTSUP
 pthread_mutex_variants	chained	run	pass	Darwin has THREE public static mutex initialisers and the SIGNATURE WORD IS THE TYPE -- a constant no call site names because the guest's compiler laid it down; CF's CFLockInit is the ERRORCHECK one, and adopting it as a default would lock and unlock perfectly while dropping the checking, so this grades semantics by RETURN VALUE
 cflog_surface	chained	run	pass	snprintf_l must route through OUR formatter because Darwin's varargs are on the STACK and AAPCS64's are in registers, and its locale_t is enforced by construction (libSystem exports setlocale and nothing else, so a guest cannot build one); pthread_threadid_np is graded for a real id by the cross-thread line
 hostbound_surface	chained	run	pass	eight CHECK 5 names Darwin already printed (strto*_l, getsectiondata, malloc_zone_from_ptr, pthread_get_stack*_np, getline); os_system_version is a separate row because a by-value return SEGFAULTS on Darwin

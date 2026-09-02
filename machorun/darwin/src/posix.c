@@ -3568,6 +3568,329 @@ EXPORT int quotactl(const char *path, int cmd, int uid, char *addr)
 }
 
 /* ===================================================================== *
+ * statfs / fstatfs. A translation of the struct-stat kind, surfaced by the
+ * quota work: FileManager.attributesOfFileSystem calls statfs before
+ * quotactl and passes f_mntonname -- a field Linux's struct statfs does not
+ * have at all.
+ *
+ * Darwin's INODE64 struct statfs is 2168 bytes (sdk/tests/abi_probe.c, and
+ * __DARWIN_STRUCT_STATFS64 in sdk/usr/include/sys/mount.h). Linux's is 120
+ * bytes on aarch64 (sdk/tests/glibc_abi_probe.c). Every offset disagrees.
+ * Forwarding would write 120 bytes into 2168 of guest storage -- the safe
+ * direction for SIZE, which is why it would not crash -- and then the guest
+ * would read f_mntonname at +88 out of whatever followed f_bsize.
+ *
+ * f_flags ROTATE on the way back. Linux ST_NOSUID (2) is Darwin
+ * MNT_SYNCHRONOUS; ST_NOEXEC (8) is Darwin MNT_NOSUID; ST_SYNCHRONOUS (16)
+ * is Darwin MNT_NODEV. A forwarded flags word does not report a different
+ * error, it names a different mount option.
+ *
+ * Mount identity -- f_mntonname, f_mntfromname, f_fstypename -- comes from
+ * /proc/self/mounts, longest-prefix match against the path (or against
+ * /proc/self/fd/N for fstatfs). That is the field Linux's statfs lacks and
+ * the one FileManager actually reads.
+ * ===================================================================== */
+
+#define DARWIN_STATFS_SIZE 2168
+#define DARWIN_MNAMELEN    1024     /* MAXPATHLEN; MNAMELEN for $INODE64 */
+#define DARWIN_MFSTYPENAMELEN 16
+
+/* Transcribed from sdk/usr/include/sys/mount.h __DARWIN_STRUCT_STATFS64.
+ * Offsets pinned by sdk/tests/abi_probe.c against Apple's SDK. */
+struct darwin_statfs {
+    uint32_t f_bsize;                       /*   0 */
+    int32_t  f_iosize;                      /*   4 */
+    uint64_t f_blocks;                      /*   8 */
+    uint64_t f_bfree;                       /*  16 */
+    uint64_t f_bavail;                      /*  24 */
+    uint64_t f_files;                       /*  32 */
+    uint64_t f_ffree;                       /*  40 */
+    int32_t  f_fsid[2];                     /*  48  fsid_t */
+    uint32_t f_owner;                       /*  56 */
+    uint32_t f_type;                        /*  60 */
+    uint32_t f_flags;                       /*  64 */
+    uint32_t f_fssubtype;                   /*  68 */
+    char     f_fstypename[DARWIN_MFSTYPENAMELEN]; /*  72 */
+    char     f_mntonname[DARWIN_MNAMELEN];        /*  88 */
+    char     f_mntfromname[DARWIN_MNAMELEN];      /* 1112 */
+    uint32_t f_flags_ext;                   /* 2136 */
+    uint32_t f_reserved[7];                 /* 2140 */
+};                                          /* 2168 */
+
+/* Linux aarch64, sys/statfs.h. Also measured, pinned in glibc_abi_probe.c. */
+struct linux_statfs {
+    long     f_type;                        /*   0 */
+    long     f_bsize;                       /*   8 */
+    unsigned long f_blocks;                 /*  16 */
+    unsigned long f_bfree;                  /*  24 */
+    unsigned long f_bavail;                 /*  32 */
+    unsigned long f_files;                  /*  40 */
+    unsigned long f_ffree;                  /*  48 */
+    int      f_fsid[2];                     /*  56 */
+    long     f_namelen;                     /*  64 */
+    long     f_frsize;                      /*  72 */
+    long     f_flags;                       /*  80 */
+    long     f_spare[4];                    /*  88 */
+};                                          /* 120 */
+
+_Static_assert(sizeof(struct darwin_statfs) == 2168,
+    "Darwin struct statfs is 2168 bytes (sdk/tests/abi_probe.c)");
+_Static_assert(sizeof(struct linux_statfs) == 120,
+    "Linux aarch64 struct statfs is 120 bytes");
+_Static_assert(__builtin_offsetof(struct darwin_statfs, f_mntonname) == 88,
+    "Darwin f_mntonname at 88 -- the field Linux's statfs lacks");
+_Static_assert(__builtin_offsetof(struct darwin_statfs, f_mntfromname) == 1112,
+    "Darwin f_mntfromname at 1112");
+_Static_assert(__builtin_offsetof(struct linux_statfs, f_flags) == 80,
+    "Linux f_flags at 80; darwin/src/posix.c translates ST_* -> MNT_*");
+
+/* Darwin MNT_* from sdk/usr/include/sys/mount.h. Linux ST_* from
+ * <sys/statvfs.h>, measured on the test-bed image. ST_NOSUID=2 is Darwin
+ * MNT_SYNCHRONOUS; that rotation is why this table exists. */
+#define D_MNT_RDONLY      0x00000001u
+#define D_MNT_SYNCHRONOUS 0x00000002u
+#define D_MNT_NOEXEC      0x00000004u
+#define D_MNT_NOSUID      0x00000008u
+#define D_MNT_NODEV       0x00000010u
+#define D_MNT_NOATIME     0x10000000u
+
+#define L_ST_RDONLY       1
+#define L_ST_NOSUID       2
+#define L_ST_NODEV        4
+#define L_ST_NOEXEC       8
+#define L_ST_SYNCHRONOUS  16
+#define L_ST_NOATIME      1024
+
+static uint32_t statfs_flags_l2d(long lflags)
+{
+    uint32_t d = 0;
+#define MAP(lbit, dbit) do { if (lflags & (lbit)) d |= (dbit); } while (0)
+    MAP(L_ST_RDONLY,      D_MNT_RDONLY);
+    MAP(L_ST_NOSUID,      D_MNT_NOSUID);
+    MAP(L_ST_NODEV,       D_MNT_NODEV);
+    MAP(L_ST_NOEXEC,      D_MNT_NOEXEC);
+    MAP(L_ST_SYNCHRONOUS, D_MNT_SYNCHRONOUS);
+    MAP(L_ST_NOATIME,     D_MNT_NOATIME);
+#undef MAP
+    /* ST_MANDLOCK / ST_NODIRATIME / ST_RELATIME have no Darwin names.
+     * Dropping them is the OUT direction: they describe Linux and the guest
+     * has no bit to put them in. The reverse -- a Darwin bit that would
+     * land on a real Linux bit -- is the rotation this table exists to stop. */
+    return d;
+}
+
+static void statfs_strput(char *dst, size_t dstn, const char *src)
+{
+    size_t i = 0;
+    if (!src) { dst[0] = 0; return; }
+    while (src[i] && i + 1 < dstn) { dst[i] = src[i]; i++; }
+    dst[i] = 0;
+}
+
+/* /proc/self/mounts escapes space/tab/newline/backslash as \NNN octal. */
+static size_t mounts_unescape(const char *in, char *out, size_t outn)
+{
+    size_t o = 0;
+    while (*in && o + 1 < outn) {
+        if (in[0] == '\\' && in[1] >= '0' && in[1] <= '7'
+            && in[2] >= '0' && in[2] <= '7'
+            && in[3] >= '0' && in[3] <= '7') {
+            unsigned v = (unsigned)(in[1] - '0') * 64u
+                       + (unsigned)(in[2] - '0') * 8u
+                       + (unsigned)(in[3] - '0');
+            out[o++] = (char)v;
+            in += 4;
+            continue;
+        }
+        out[o++] = *in++;
+    }
+    out[o] = 0;
+    return o;
+}
+
+static int path_has_mount_prefix(const char *path, const char *mnt, size_t n)
+{
+    if (n == 0) return 0;
+    if (n == 1 && mnt[0] == '/') return path[0] == '/';
+    if (glibc_strncmp(path, mnt, n) != 0) return 0;
+    return path[n] == 0 || path[n] == '/';
+}
+
+/* Join cwd + relative path into out. Returns 0 on success. */
+static int statfs_abspath(const char *path, char *out, size_t outn)
+{
+    size_t i = 0, j;
+    if (!path || !path[0]) return -1;
+    if (path[0] == '/') {
+        statfs_strput(out, outn, path);
+        return 0;
+    }
+    if (!MR_ERRNO_CALL(glibc_getcwd(out, outn))) return -1;
+    i = glibc_strlen(out);
+    if (i + 2 >= outn) return -1;
+    if (i == 0 || out[i - 1] != '/') out[i++] = '/';
+    for (j = 0; path[j] && i + 1 < outn; j++) out[i++] = path[j];
+    out[i] = 0;
+    return 0;
+}
+
+static void fd_proc_path(int fd, char *out, size_t outn)
+{
+    const char *p = "/proc/self/fd/";
+    size_t i = 0;
+    unsigned u;
+    char rev[16];
+    int r = 0;
+    while (p[i] && i + 1 < outn) { out[i] = p[i]; i++; }
+    if (fd < 0) { out[0] = 0; return; }
+    u = (unsigned)fd;
+    if (u == 0) {
+        if (i + 1 < outn) out[i++] = '0';
+        out[i] = 0;
+        return;
+    }
+    while (u && r < 16) { rev[r++] = (char)('0' + (u % 10u)); u /= 10u; }
+    while (r && i + 1 < outn) out[i++] = rev[--r];
+    out[i] = 0;
+}
+
+/* Longest-prefix match in /proc/self/mounts. on/from/type may be NULL. */
+static int mounts_lookup(const char *path,
+                         char *on, size_t onn,
+                         char *from, size_t fromn,
+                         char *type, size_t typen)
+{
+    void *fp;
+    char line[4096];
+    char best_on[DARWIN_MNAMELEN];
+    char best_from[DARWIN_MNAMELEN];
+    char best_type[DARWIN_MFSTYPENAMELEN];
+    size_t best_n = 0;
+    int found = 0;
+
+    best_on[0] = best_from[0] = best_type[0] = 0;
+    if (!path || path[0] != '/') return 0;
+
+    fp = MR_ERRNO_CALL(glibc_fopen("/proc/self/mounts", "r"));
+    if (!fp) return 0;
+    while (glibc_fgets(line, (int)sizeof line, fp)) {
+        const char *s = line;
+        char raw_from[DARWIN_MNAMELEN], raw_on[DARWIN_MNAMELEN], raw_type[64];
+        char un_from[DARWIN_MNAMELEN], un_on[DARWIN_MNAMELEN], un_type[64];
+        size_t k, n;
+
+        k = 0;
+        while (*s && *s != ' ' && k + 1 < sizeof raw_from) raw_from[k++] = *s++;
+        raw_from[k] = 0;
+        if (*s != ' ') continue;
+        s++;
+        k = 0;
+        while (*s && *s != ' ' && k + 1 < sizeof raw_on) raw_on[k++] = *s++;
+        raw_on[k] = 0;
+        if (*s != ' ') continue;
+        s++;
+        k = 0;
+        while (*s && *s != ' ' && k + 1 < sizeof raw_type) raw_type[k++] = *s++;
+        raw_type[k] = 0;
+
+        mounts_unescape(raw_from, un_from, sizeof un_from);
+        mounts_unescape(raw_on,   un_on,   sizeof un_on);
+        mounts_unescape(raw_type, un_type, sizeof un_type);
+        n = glibc_strlen(un_on);
+        if (!path_has_mount_prefix(path, un_on, n)) continue;
+        if (n < best_n) continue;
+        best_n = n;
+        found = 1;
+        statfs_strput(best_on,   sizeof best_on,   un_on);
+        statfs_strput(best_from, sizeof best_from, un_from);
+        statfs_strput(best_type, sizeof best_type, un_type);
+    }
+    (void)MR_ERRNO_CALL(glibc_fclose(fp));
+
+    if (!found) return 0;
+    if (on)   statfs_strput(on,   onn,   best_on);
+    if (from) statfs_strput(from, fromn, best_from);
+    if (type) statfs_strput(type, typen, best_type);
+    return 1;
+}
+
+static void statfs_l2d(const struct linux_statfs *l, struct darwin_statfs *d,
+                       const char *path_for_mount)
+{
+    long bsize;
+    glibc_memset(d, 0, sizeof *d);
+    bsize = l->f_frsize ? l->f_frsize : l->f_bsize;
+    d->f_bsize  = (uint32_t)bsize;           /* Darwin: fundamental block size */
+    d->f_iosize = (int32_t)l->f_bsize;       /* Darwin: optimal transfer size */
+    d->f_blocks = l->f_blocks;
+    d->f_bfree  = l->f_bfree;
+    d->f_bavail = l->f_bavail;
+    d->f_files  = l->f_files;
+    d->f_ffree  = l->f_ffree;
+    d->f_fsid[0] = l->f_fsid[0];
+    d->f_fsid[1] = l->f_fsid[1];
+    d->f_owner = 0;                          /* Linux statfs has no owner */
+    d->f_type  = 0;                          /* Darwin vfsconf index; not a magic */
+    d->f_flags = statfs_flags_l2d(l->f_flags);
+    d->f_fssubtype = 0;
+    if (path_for_mount && path_for_mount[0] == '/') {
+        mounts_lookup(path_for_mount,
+                      d->f_mntonname, sizeof d->f_mntonname,
+                      d->f_mntfromname, sizeof d->f_mntfromname,
+                      d->f_fstypename, sizeof d->f_fstypename);
+    }
+}
+
+EXPORT int statfs(const char *path, struct darwin_statfs *out)
+{
+    struct linux_statfs ls;
+    char abspath[DARWIN_MNAMELEN];
+    int rc;
+    if (!path || !out) { *mr_errno_slot() = 14; return -1; }  /* EFAULT */
+    rc = MR_ERRNO_CALL(glibc_statfs(path, &ls));
+    if (rc != 0) return rc;
+    if (statfs_abspath(path, abspath, sizeof abspath) != 0)
+        abspath[0] = 0;
+    statfs_l2d(&ls, out, abspath[0] ? abspath : path);
+    return 0;
+}
+
+EXPORT int fstatfs(int fd, struct darwin_statfs *out)
+{
+    struct linux_statfs ls;
+    char proc[64], tgt[DARWIN_MNAMELEN];
+    ssize_t n;
+    int rc;
+    if (!out) { *mr_errno_slot() = 14; return -1; }
+    rc = MR_ERRNO_CALL(glibc_fstatfs(fd, &ls));
+    if (rc != 0) return rc;
+    tgt[0] = 0;
+    fd_proc_path(fd, proc, sizeof proc);
+    n = MR_ERRNO_CALL(glibc_readlink(proc, tgt, sizeof tgt - 1));
+    if (n > 0) {
+        tgt[n] = 0;
+        /* /proc/self/fd/N for a deleted file is "path (deleted)". Strip it
+         * so the mount lookup still sees the directory. Pipes come back as
+         * "pipe:[...]" and fail the leading-slash check, which is honest:
+         * they have no mount identity in /proc/self/mounts. */
+        if (n > 10 && glibc_strcmp(tgt + (n - 10), " (deleted)") == 0)
+            tgt[n - 10] = 0;
+    } else {
+        tgt[0] = 0;
+    }
+    statfs_l2d(&ls, out, tgt[0] == '/' ? tgt : 0);
+    return 0;
+}
+
+/* arm64 macOS sets __DARWIN_ONLY_64_BIT_INO_T, so the public names are
+ * unsuffixed; the $INODE64 aliases exist for the same reason _stat$INODE64
+ * does -- an x86_64 or older-target guest still binds that spelling. */
+EXPORT int mr_statfs64(const char *p, struct darwin_statfs *o) __asm__("_statfs$INODE64");
+EXPORT int mr_statfs64(const char *p, struct darwin_statfs *o) { return statfs(p, o); }
+EXPORT int mr_fstatfs64(int fd, struct darwin_statfs *o)       __asm__("_fstatfs$INODE64");
+EXPORT int mr_fstatfs64(int fd, struct darwin_statfs *o)       { return fstatfs(fd, o); }
+
+/* ===================================================================== *
  * EXTENDED ATTRIBUTES. Four separate hazards in one family, and only one
  * of them is a struct.
  *
@@ -3847,6 +4170,418 @@ EXPORT long listxattr(const char *path, char *namebuff, unsigned long size, int 
 EXPORT long flistxattr(int fd, char *namebuff, unsigned long size, int options)
 {
     return xattr_list_common(0, fd, 1, namebuff, size, options);
+}
+
+/* ===================================================================== *
+ * copyfile / fcopyfile. Darwin-only; no glibc counterpart. Transcribed
+ * COPYFILE_* values are from copyfile-240's copyfile.h (143 lines, the
+ * header UNIMPLEMENTED.md measured): never inferred.
+ *
+ * FoundationEssentials calls copyfile and fcopyfile with state == nil and
+ * seven flags (DATA, METADATA, ALL, EXCL, NOFOLLOW, CLONE, RUN_IN_PLACE).
+ * A non-nil state, the callback protocol, COPYFILE_RECURSIVE, PACK/UNPACK,
+ * MOVE/UNLINK/CHECK, CLONE_FORCE, and removefile all abort by name -- they
+ * are the remainder of the handover, not a silent subset.
+ *
+ * COPYFILE_CLONE is APFS copy-on-write. Linux's closest thing is FICLONE;
+ * when that fails we fall back to a data copy, which is what Apple's
+ * copyfile.c does for the non-FORCE flag (and what FE's own non-clone
+ * branch does two lines away). COPYFILE_RUN_IN_PLACE is a CoW-avoidance
+ * hint; a full copy already satisfies it.
+ *
+ * COPYFILE_METADATA means times, mode, owner, BSD flags and xattrs. xattr
+ * translation already exists in this file. chflags has no Linux equivalent
+ * and is skipped (a Linux file has no BSD flags to copy). ACLs are skipped
+ * the same way: Darwin copyfile treats "none" as success, and Linux has no
+ * Darwin ACL to represent.
+ * ===================================================================== */
+
+/* Transcribed from copyfile-240 copyfile.h, which sdk/ stages. */
+#define COPYFILE_ACL                 (1u << 0)
+#define COPYFILE_STAT                (1u << 1)
+#define COPYFILE_XATTR               (1u << 2)
+#define COPYFILE_DATA                (1u << 3)
+#define COPYFILE_SECURITY            (COPYFILE_STAT | COPYFILE_ACL)
+#define COPYFILE_METADATA            (COPYFILE_SECURITY | COPYFILE_XATTR)
+#define COPYFILE_ALL                 (COPYFILE_METADATA | COPYFILE_DATA)
+#define COPYFILE_NOCACHE             (1u << 14)
+#define COPYFILE_RECURSIVE           (1u << 15)
+#define COPYFILE_CHECK               (1u << 16)
+#define COPYFILE_EXCL                (1u << 17)
+#define COPYFILE_NOFOLLOW_SRC        (1u << 18)
+#define COPYFILE_NOFOLLOW_DST        (1u << 19)
+#define COPYFILE_MOVE                (1u << 20)
+#define COPYFILE_UNLINK              (1u << 21)
+#define COPYFILE_NOFOLLOW            (COPYFILE_NOFOLLOW_SRC | COPYFILE_NOFOLLOW_DST)
+#define COPYFILE_PACK                (1u << 22)
+#define COPYFILE_UNPACK              (1u << 23)
+#define COPYFILE_CLONE               (1u << 24)
+#define COPYFILE_CLONE_FORCE         (1u << 25)
+#define COPYFILE_RUN_IN_PLACE        (1u << 26)
+#define COPYFILE_DATA_SPARSE         (1u << 27)
+#define COPYFILE_PRESERVE_DST_TRACKED (1u << 28)
+#define COPYFILE_VERBOSE             (1u << 30)
+
+#define COPYFILE_FE_MASK (COPYFILE_ACL | COPYFILE_STAT | COPYFILE_XATTR | \
+                          COPYFILE_DATA | COPYFILE_EXCL | COPYFILE_NOFOLLOW | \
+                          COPYFILE_CLONE | COPYFILE_RUN_IN_PLACE)
+
+#define MR_S_IFMT  0170000
+#define MR_S_IFIFO 0010000
+#define MR_S_IFDIR 0040000
+#define MR_S_IFREG 0100000
+#define MR_S_IFLNK 0120000
+#define MR_S_IRWXU 0000700
+#define MR_PERM_MASK 07777
+
+#define MR_AT_FDCWD            (-100)
+#define MR_AT_SYMLINK_NOFOLLOW 0x100
+#define MR_FICLONE             0x40049409u   /* _IOW(0x94, 9, int), aarch64 */
+#define D_EEXIST               17
+#define D_EOPNOTSUPP           102
+#define D_EBADF                9
+
+struct linux_timespec_pair {
+    long at_sec, at_nsec;
+    long mt_sec, mt_nsec;
+};
+
+static void copyfile_refuse_unhandled(unsigned flags, const void *state)
+{
+    if (state)
+        mr_bail("copyfile(state != NULL): copyfile_state_t, the 18 STATE keys "
+                "and the callback protocol are not implemented. FE passes nil. "
+                "See docs/UNIMPLEMENTED.md#copyfile-removefile.");
+    if (flags & ~COPYFILE_FE_MASK)
+        mr_bail("copyfile(): a flag outside FoundationEssentials' used subset "
+                "(COPYFILE_RECURSIVE/PACK/UNPACK/MOVE/UNLINK/CHECK/CLONE_FORCE/"
+                "NOCACHE/DATA_SPARSE/VERBOSE/...). See docs/UNIMPLEMENTED.md"
+                "#copyfile-removefile.");
+}
+
+static int copyfile_copy_data_fd(int src, int dst)
+{
+    char buf[65536];
+    for (;;) {
+        ssize_t n, off = 0;
+        n = MR_ERRNO_CALL(glibc_read(src, buf, sizeof buf));
+        if (n < 0) return -1;
+        if (n == 0) return 0;
+        while (off < n) {
+            ssize_t w = MR_ERRNO_CALL(glibc_write(dst, buf + (size_t)off,
+                                                  (size_t)(n - off)));
+            if (w <= 0) return -1;
+            off += w;
+        }
+    }
+}
+
+static int copyfile_xattr_ok_errno(int e)
+{
+    return e == D_ENOTSUP || e == D_EOPNOTSUPP || e == D_ENOATTR || e == 0;
+}
+
+static int copyfile_copy_xattrs(const char *src, const char *dst, int src_fd,
+                                int dst_fd, int use_fd, unsigned flags)
+{
+    char *names = 0, *value = 0;
+    long n, i, vs;
+    int xopt = (flags & COPYFILE_NOFOLLOW) ? D_XATTR_NOFOLLOW : 0;
+    int rc = 0;
+
+    n = use_fd ? flistxattr(src_fd, 0, 0, 0)
+               : listxattr(src, 0, 0, xopt);
+    if (n < 0) {
+        return copyfile_xattr_ok_errno(*mr_errno_slot()) ? 0 : -1;
+    }
+    if (n == 0) return 0;
+    names = glibc_malloc((unsigned long)n);
+    if (!names) { *mr_errno_slot() = 12; return -1; }
+    n = use_fd ? flistxattr(src_fd, names, (unsigned long)n, 0)
+               : listxattr(src, names, (unsigned long)n, xopt);
+    if (n < 0) {
+        rc = copyfile_xattr_ok_errno(*mr_errno_slot()) ? 0 : -1;
+        glibc_free(names);
+        return rc;
+    }
+    for (i = 0; i < n; ) {
+        const char *nm = names + i;
+        unsigned long nl = glibc_strlen(nm);
+        vs = use_fd ? fgetxattr(src_fd, nm, 0, 0, 0, 0)
+                    : getxattr(src, nm, 0, 0, 0, xopt);
+        if (vs < 0) {
+            if (!copyfile_xattr_ok_errno(*mr_errno_slot())) { rc = -1; break; }
+            i += (long)nl + 1;
+            continue;
+        }
+        value = vs ? glibc_malloc((unsigned long)vs) : 0;
+        if (vs && !value) { *mr_errno_slot() = 12; rc = -1; break; }
+        if (vs) {
+            long got = use_fd ? fgetxattr(src_fd, nm, value, (unsigned long)vs, 0, 0)
+                              : getxattr(src, nm, value, (unsigned long)vs, 0, xopt);
+            if (got < 0) { glibc_free(value); rc = -1; break; }
+            vs = got;
+        }
+        if (use_fd) {
+            if (fsetxattr(dst_fd, nm, value, (unsigned long)vs, 0, 0) < 0 &&
+                !copyfile_xattr_ok_errno(*mr_errno_slot())) {
+                glibc_free(value); rc = -1; break;
+            }
+        } else {
+            if (setxattr(dst, nm, value, (unsigned long)vs, 0, xopt) < 0 &&
+                !copyfile_xattr_ok_errno(*mr_errno_slot())) {
+                glibc_free(value); rc = -1; break;
+            }
+        }
+        glibc_free(value);
+        value = 0;
+        i += (long)nl + 1;
+    }
+    glibc_free(names);
+    return rc;
+}
+
+static int copyfile_apply_stat(const char *dst, int dst_fd, int use_fd,
+                               const struct linux_stat *st, unsigned flags)
+{
+    unsigned mode = (unsigned)st->st_mode & MR_PERM_MASK;
+    struct linux_timespec_pair ts;
+    int is_link = ((st->st_mode & MR_S_IFMT) == MR_S_IFLNK);
+
+    (void)flags;
+    ts.at_sec = st->st_atime_sec; ts.at_nsec = (long)st->st_atime_nsec;
+    ts.mt_sec = st->st_mtime_sec; ts.mt_nsec = (long)st->st_mtime_nsec;
+
+    if (use_fd) {
+        if (!is_link && MR_ERRNO_CALL(glibc_fchmod(dst_fd, mode)) != 0)
+            return -1;
+        if (MR_ERRNO_CALL(glibc_fchown(dst_fd, st->st_uid, st->st_gid)) != 0)
+            return -1;
+        if (MR_ERRNO_CALL(glibc_futimens(dst_fd, &ts)) != 0)
+            return -1;
+        return 0;
+    }
+    if (!is_link && MR_ERRNO_CALL(glibc_chmod(dst, mode)) != 0)
+        return -1;
+    if (is_link) {
+        if (MR_ERRNO_CALL(glibc_lchown(dst, st->st_uid, st->st_gid)) != 0)
+            return -1;
+        if (MR_ERRNO_CALL(glibc_utimensat(MR_AT_FDCWD, dst, &ts,
+                                          MR_AT_SYMLINK_NOFOLLOW)) != 0)
+            return -1;
+    } else {
+        if (MR_ERRNO_CALL(glibc_chown(dst, st->st_uid, st->st_gid)) != 0)
+            return -1;
+        if (MR_ERRNO_CALL(glibc_utimensat(MR_AT_FDCWD, dst, &ts, 0)) != 0)
+            return -1;
+    }
+    return 0;
+}
+
+static int copyfile_try_clone(int src_fd, int dst_fd)
+{
+    int rc = MR_ERRNO_CALL(glibc_ioctl(dst_fd, (unsigned long)MR_FICLONE,
+                                       (void *)(intptr_t)src_fd));
+    return rc == 0 ? 1 : 0;
+}
+
+static int copyfile_open_src(const char *src, unsigned flags)
+{
+    int oflags = D_O_RDONLY;
+    if (flags & COPYFILE_NOFOLLOW_SRC) oflags |= D_O_NOFOLLOW;
+    return open(src, oflags);
+}
+
+static int copyfile_open_dst(const char *dst, unsigned flags, unsigned mode)
+{
+    int oflags = D_O_WRONLY | D_O_CREAT;
+    if (flags & COPYFILE_DATA) oflags |= D_O_TRUNC;
+    if (flags & COPYFILE_EXCL) oflags |= D_O_EXCL;
+    if (flags & COPYFILE_NOFOLLOW_DST) oflags |= D_O_NOFOLLOW;
+    return open(dst, oflags, mode ? mode : 0600u);
+}
+
+EXPORT int copyfile(const char *src, const char *dst, void *state,
+                    unsigned flags)
+{
+    struct linux_stat st, dstst;
+    int src_fd = -1, dst_fd = -1, rc = -1;
+    int (*sfunc)(const char *, void *);
+    unsigned mode;
+
+    copyfile_refuse_unhandled(flags, state);
+    if (!src || !dst) { *mr_errno_slot() = DARWIN_EINVAL; return -1; }
+
+    /* COPYFILE_CLONE is "best try": FICLONE, then a regular copy. FORCE
+     * is outside FE's subset and already refused above. RUN_IN_PLACE is
+     * a no-op once we are doing a full copy rather than a CoW clone. */
+    if (flags & COPYFILE_CLONE)
+        flags |= COPYFILE_EXCL | COPYFILE_NOFOLLOW_SRC |
+                 COPYFILE_STAT | COPYFILE_XATTR | COPYFILE_DATA;
+
+    sfunc = (flags & COPYFILE_NOFOLLOW_SRC) ? glibc_lstat : glibc_stat;
+    if (MR_ERRNO_CALL(sfunc(src, &st)) != 0) return -1;
+
+    if ((flags & COPYFILE_EXCL) &&
+        MR_ERRNO_CALL(glibc_lstat(dst, &dstst)) == 0) {
+        *mr_errno_slot() = D_EEXIST;
+        return -1;
+    }
+
+    switch (st.st_mode & MR_S_IFMT) {
+    case MR_S_IFREG: {
+        int cloned = 0;
+        src_fd = copyfile_open_src(src, flags);
+        if (src_fd < 0) return -1;
+        mode = (unsigned)st.st_mode & MR_PERM_MASK;
+        dst_fd = copyfile_open_dst(dst, flags, mode ? mode : 0600u);
+        if (dst_fd < 0) { (void)close(src_fd); return -1; }
+        if ((flags & COPYFILE_CLONE) && copyfile_try_clone(src_fd, dst_fd))
+            cloned = 1;
+        if (!cloned && (flags & COPYFILE_DATA)) {
+            if (copyfile_copy_data_fd(src_fd, dst_fd) < 0) goto out;
+        }
+        break;
+    }
+    case MR_S_IFLNK: {
+        char target[DARWIN_MNAMELEN];
+        ssize_t n = MR_ERRNO_CALL(glibc_readlink(src, target, sizeof target - 1));
+        if (n < 0) return -1;
+        target[n] = 0;
+        if (MR_ERRNO_CALL(glibc_symlink(target, dst)) != 0) return -1;
+        break;
+    }
+    case MR_S_IFDIR:
+        mode = (unsigned)st.st_mode & MR_PERM_MASK;
+        if (MR_ERRNO_CALL(glibc_mkdir(dst, mode ? mode : 0755u)) != 0) {
+            if (!((flags & COPYFILE_EXCL) == 0 && *mr_errno_slot() == D_EEXIST))
+                return -1;
+        }
+        break;
+    default:
+        *mr_errno_slot() = D_ENOTSUP;
+        return -1;
+    }
+
+    if (flags & COPYFILE_XATTR) {
+        int use_fd = (src_fd >= 0 && dst_fd >= 0);
+        if (copyfile_copy_xattrs(src, dst, src_fd, dst_fd, use_fd, flags) < 0)
+            goto out;
+    }
+    if (flags & COPYFILE_STAT) {
+        int use_fd = (dst_fd >= 0) && ((st.st_mode & MR_S_IFMT) == MR_S_IFREG);
+        if (copyfile_apply_stat(dst, dst_fd, use_fd, &st, flags) < 0)
+            goto out;
+    }
+    rc = 0;
+out:
+    if (src_fd >= 0) (void)close(src_fd);
+    if (dst_fd >= 0) (void)close(dst_fd);
+    return rc;
+}
+
+EXPORT int fcopyfile(int src_fd, int dst_fd, void *state, unsigned flags)
+{
+    struct linux_stat st;
+    int cloned = 0;
+
+    copyfile_refuse_unhandled(flags, state);
+    if (src_fd < 0 || dst_fd < 0) {
+        *mr_errno_slot() = DARWIN_EINVAL;
+        return -1;
+    }
+    if (MR_ERRNO_CALL(glibc_fstat(src_fd, &st)) != 0) return -1;
+    switch (st.st_mode & MR_S_IFMT) {
+    case MR_S_IFREG:
+    case MR_S_IFLNK:
+    case MR_S_IFDIR:
+        break;
+    default:
+        *mr_errno_slot() = D_ENOTSUP;
+        return -1;
+    }
+    if (flags & COPYFILE_CLONE)
+        flags |= COPYFILE_STAT | COPYFILE_XATTR | COPYFILE_DATA;
+
+    if ((flags & COPYFILE_CLONE) &&
+        (st.st_mode & MR_S_IFMT) == MR_S_IFREG &&
+        copyfile_try_clone(src_fd, dst_fd))
+        cloned = 1;
+    if (!cloned && (flags & COPYFILE_DATA) &&
+        (st.st_mode & MR_S_IFMT) == MR_S_IFREG) {
+        if (copyfile_copy_data_fd(src_fd, dst_fd) < 0) return -1;
+    }
+    if (flags & COPYFILE_XATTR) {
+        if (copyfile_copy_xattrs(0, 0, src_fd, dst_fd, 1, flags) < 0)
+            return -1;
+    }
+    if (flags & COPYFILE_STAT) {
+        if (copyfile_apply_stat(0, dst_fd, 1, &st, flags) < 0)
+            return -1;
+    }
+    return 0;
+}
+
+EXPORT void *copyfile_state_alloc(void)
+{
+    mr_bail("copyfile_state_alloc(): the state object is not implemented. "
+            "FE passes state == nil. See docs/UNIMPLEMENTED.md#copyfile-removefile.");
+}
+
+EXPORT int copyfile_state_free(void *s)
+{
+    (void)s;
+    mr_bail("copyfile_state_free(): the state object is not implemented. "
+            "See docs/UNIMPLEMENTED.md#copyfile-removefile.");
+}
+
+EXPORT int copyfile_state_get(void *s, unsigned flag, void *dst)
+{
+    (void)s; (void)flag; (void)dst;
+    mr_bail("copyfile_state_get(): the 18 STATE keys are not implemented. "
+            "See docs/UNIMPLEMENTED.md#copyfile-removefile.");
+}
+
+EXPORT int copyfile_state_set(void *s, unsigned flag, const void *src)
+{
+    (void)s; (void)flag; (void)src;
+    mr_bail("copyfile_state_set(): the 18 STATE keys are not implemented. "
+            "See docs/UNIMPLEMENTED.md#copyfile-removefile.");
+}
+
+EXPORT int removefile(const char *path, void *state, unsigned flags)
+{
+    (void)path; (void)state; (void)flags;
+    mr_bail("removefile(): not implemented. The used subset requires the "
+            "state object and confirm/error callbacks. See "
+            "docs/UNIMPLEMENTED.md#copyfile-removefile.");
+}
+
+EXPORT void *removefile_state_alloc(void)
+{
+    mr_bail("removefile_state_alloc(): not implemented. See "
+            "docs/UNIMPLEMENTED.md#copyfile-removefile.");
+}
+
+EXPORT int removefile_state_free(void *s)
+{
+    (void)s;
+    mr_bail("removefile_state_free(): not implemented. See "
+            "docs/UNIMPLEMENTED.md#copyfile-removefile.");
+}
+
+EXPORT int removefile_state_get(void *s, unsigned key, void *dst)
+{
+    (void)s; (void)key; (void)dst;
+    mr_bail("removefile_state_get(): not implemented. See "
+            "docs/UNIMPLEMENTED.md#copyfile-removefile.");
+}
+
+EXPORT int removefile_state_set(void *s, unsigned key, const void *src)
+{
+    (void)s; (void)key; (void)src;
+    mr_bail("removefile_state_set(): not implemented. See "
+            "docs/UNIMPLEMENTED.md#copyfile-removefile.");
 }
 
 /* ----------------------------------------------------------------- uname

@@ -28,11 +28,14 @@
  *     section is a lie about coverage.
  */
 
+#include <copyfile.h>
 #include <grp.h>
 #include <mach/mach.h>
 #include <mach/vm_map.h>
 #include <pwd.h>
 #include <stddef.h>
+#include <stdint.h>
+#include <sys/mount.h>
 #include <sys/quota.h>
 #include <sys/utsname.h>
 #include <sys/xattr.h>
@@ -105,6 +108,32 @@ unsigned long fm_link_probe(void)
     {
         struct utsname uts;
         acc += (unsigned long)uname(&uts) + (unsigned char)uts.sysname[0];
+    }
+
+    /* sys/mount.h -- layout translation; f_mntonname is the field Linux's
+     * statfs does not have. Both spellings, because arm64 unsuffixed names
+     * and the $INODE64 aliases are the same function. */
+    {
+        struct statfs sfs;
+        acc += (unsigned long)statfs("/", &sfs);
+        acc += (unsigned long)fstatfs(0, &sfs);
+        acc += (unsigned char)sfs.f_mntonname[0];
+        acc += (unsigned long)sizeof(struct statfs);
+    }
+
+    /* copyfile.h -- FE's used subset. The state/callback/removefile surface
+     * is declared and defined (and aborts if called); taking the address
+     * here is what makes a missing stub a link failure rather than a
+     * runtime surprise. */
+    {
+        copyfile_state_t st = 0;
+        acc += (unsigned long)copyfile("/dev/null", "/tmp/machorun_fm_link",
+                                       st, COPYFILE_DATA);
+        acc += (unsigned long)fcopyfile(0, 1, st, COPYFILE_DATA);
+        acc += (unsigned long)(uintptr_t)copyfile_state_alloc;
+        acc += (unsigned long)(uintptr_t)copyfile_state_free;
+        acc += (unsigned long)(uintptr_t)copyfile_state_get;
+        acc += (unsigned long)(uintptr_t)copyfile_state_set;
     }
 
     return acc;

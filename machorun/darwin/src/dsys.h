@@ -141,6 +141,7 @@ extern size_t glibc_fwrite(const void *, size_t, size_t, void *) GLIBCSYM(fwrite
 extern size_t glibc_fread(void *, size_t, size_t, void *)   GLIBCSYM(fread);
 extern int    glibc_fflush(void *)                          GLIBCSYM(fflush);
 extern void  *glibc_fopen(const char *, const char *)       GLIBCSYM(fopen);
+extern char  *glibc_fgets(char *, int, void *)              GLIBCSYM(fgets);
 extern int    glibc_fclose(void *)                          GLIBCSYM(fclose);
 extern int    glibc_fputs(const char *, void *)             GLIBCSYM(fputs);
 extern int    glibc_fputc(int, void *)                      GLIBCSYM(fputc);
@@ -191,6 +192,19 @@ extern int     glibc_uname(void *)                           GLIBCSYM(uname);
 extern int     glibc_stat(const char *, void *)             GLIBCSYM(stat);
 extern int     glibc_lstat(const char *, void *)            GLIBCSYM(lstat);
 extern int     glibc_fstat(int, void *)                     GLIBCSYM(fstat);
+/* Linux's struct statfs is 120 bytes on aarch64 with a different field order
+ * AND no f_mntonname; Darwin's is 2168. Translated in posix.c, never forwarded.
+ * futimens/utimensat/fchmod/fchown/lchown are COPYFILE_METADATA's prerequisites:
+ * they are NOT re-exported to guests (the handover listed them as missing);
+ * copyfile() calls them on this side of the glibc seam. */
+extern int     glibc_statfs(const char *, void *)           GLIBCSYM(statfs);
+extern int     glibc_fstatfs(int, void *)                   GLIBCSYM(fstatfs);
+extern int     glibc_fchmod(int, unsigned)                  GLIBCSYM(fchmod);
+extern int     glibc_fchown(int, unsigned, unsigned)        GLIBCSYM(fchown);
+extern int     glibc_lchown(const char *, unsigned, unsigned) GLIBCSYM(lchown);
+extern int     glibc_futimens(int, const void *)            GLIBCSYM(futimens);
+extern int     glibc_utimensat(int, const char *, const void *, int)
+                                                            GLIBCSYM(utimensat);
 extern int     glibc_mkdir(const char *, unsigned)          GLIBCSYM(mkdir);
 extern int     glibc_mkfifo(const char *, unsigned)         GLIBCSYM(mkfifo);
 extern int     glibc_rmdir(const char *)                    GLIBCSYM(rmdir);
