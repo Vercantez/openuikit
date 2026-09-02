@@ -1,0 +1,62 @@
+# isa.h + objc-object.h + objc-runtime-new.h: aarch64 Linux user addresses are 48-bit (MEASURED), so use the wide shiftcls and widen FAST_DATA_MASK
+--- a/runtime/isa.h
++++ b/runtime/isa.h
+@@ -57,7 +57,16 @@
+ # if __arm64__
+ // ARM64 simulators have a larger address space, so use the ARM64e
+ // scheme even when simulators build for ARM64-not-e.
+-#   if   __has_feature(ptrauth_calls) || TARGET_OS_SIMULATOR
++//
++// objc4-linux: aarch64 Linux likewise has a larger address space than
++// embedded Darwin. The user VA ceiling is a kernel config (39/42/48/52-bit);
++// the 33-bit `shiftcls` used on embedded Darwin assumes MACH_VM_MAX_ADDRESS
++// 0x1000000000 and would silently truncate every class pointer. The 52-bit
++// `shiftcls_and_sig` field covers addresses up to 2^55, which subsumes even a
++// 52-bit-VA kernel. Pointer signing is off (ISA_SIGNING_SIGN_MODE is
++// SIGN_NONE because __has_feature(ptrauth_objc_isa) is false here), so the
++// "and_sig" half is simply unused high bits.
++#   if   __has_feature(ptrauth_calls) || TARGET_OS_SIMULATOR || TARGET_OS_LINUX
+ #     define ISA_MASK        0x007ffffffffffff8ULL
+ #     define ISA_MAGIC_MASK  0x0000000000000001ULL
+ #     define ISA_MAGIC_VALUE 0x0000000000000001ULL
+@@ -96,7 +105,7 @@
+ #     define RC_HALF              (1ULL<<18)
+ #   endif
+ 
+-#   if TARGET_OS_SIMULATOR
++#   if TARGET_OS_SIMULATOR || TARGET_OS_LINUX
+ #     define ISA_MASK_NOSIG ISA_MASK
+ #   elif TARGET_OS_OSX
+ #     define ISA_MASK_NOSIG 0x00007ffffffffff8ULL
+--- a/runtime/objc-object.h
++++ b/runtime/objc-object.h
+@@ -180,7 +180,9 @@
+ #endif
+ 
+     // Match the conditional in isa.h.
+-#if __has_feature(ptrauth_calls) || TARGET_OS_SIMULATOR
++    // objc4-linux: TARGET_OS_LINUX selects the same 52-bit shiftcls_and_sig
++    // layout as arm64e/simulator (see patches/0003), so this must match.
++#if __has_feature(ptrauth_calls) || TARGET_OS_SIMULATOR || TARGET_OS_LINUX
+ #   if ISA_SIGNING_SIGN_MODE == ISA_SIGNING_SIGN_NONE
+     // No signing, just use the raw pointer.
+     uintptr_t signedCls = (uintptr_t)newCls;
+--- a/runtime/objc-runtime-new.h
++++ b/runtime/objc-runtime-new.h
+@@ -132,6 +132,16 @@
+ #if   TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR
+ #define FAST_DATA_MASK          0x0f00007ffffffff8UL
+ #define DEBUG_DATA_MASK         0x0000007ffffffff8UL
++#elif TARGET_OS_LINUX
++// objc4-linux: Darwin's mask reserves bits 3..46 for the class_rw_t pointer,
++// i.e. it assumes a 2^47 user-VA ceiling. MEASURED on aarch64 Linux, every
++// user address is 48 bits wide (text 0x0000aaaa..., heap/mmap 0x0000ffff...),
++// so bit 47 of a real pointer is significant and Darwin's mask would silently
++// truncate it. Widen the pointer field by one bit. The flag bits (56..59) and
++// FAST_IS_RW_POINTER (63) are untouched; bits 48..55 remain free.
++// See compat/mach/vm_param.h for the measurement.
++#define FAST_DATA_MASK          0x0f00fffffffffff8UL
++#define DEBUG_DATA_MASK         0x0000fffffffffff8UL
+ #else
+ #define FAST_DATA_MASK          0x0f007ffffffffff8UL
+ #define DEBUG_DATA_MASK         0x00007ffffffffff8UL

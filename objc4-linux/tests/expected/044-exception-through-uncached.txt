@@ -1,0 +1,7 @@
+initialize.threw.caught=yes
+initialize.ran=1
+resolve.threw.caught=yes
+deep.threw.caught=yes
+deep.finally.count=6
+after.alive=yes
+after.dispatch=yes

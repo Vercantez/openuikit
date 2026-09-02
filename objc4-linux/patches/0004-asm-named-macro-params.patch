@@ -1,0 +1,325 @@
+# arm64-asm.h + objc-msg-arm64.s: named macro parameters instead of Apple-as positional $0, CFI hooks for ELF unwind, and real frame CFI inside SAVE_REGS
+--- a/runtime/arm64-asm.h
++++ b/runtime/arm64-asm.h
+@@ -26,7 +26,7 @@
+  *
+  ********************************************************************/
+ 
+-#if __arm64__
++#if __arm64__ || __arm64
+ 
+ #include "objc-config.h"
+ 
+@@ -136,42 +136,39 @@
+ 	brab	\IMP, \IMPAddress
+ .endmacro
+ 
+-.macro TailCallMethodListImp
+-	// $0 = method list imp, $1 = address of method list imp
+-	braa	$0, $1
++.macro TailCallMethodListImp imp, impAddress
++	braa	\imp, \impAddress
+ .endmacro
+ 
+-.macro TailCallBlockInvoke
+-	// $0 = invoke function, $1 = address of invoke function
+-	braa	$0, $1
++.macro TailCallBlockInvoke invoke, invokeAddress
++	braa	\invoke, \invokeAddress
+ .endmacro
+ 
+-.macro AuthAndResignAsIMP
+-	// $0 = cached imp, $1 = address of cached imp, $2 = SEL, $3 = isa, $4 = temp register
++.macro AuthAndResignAsIMP imp, impAddress, sel, isa, tmp
+ 	// note: assumes the imp is not nil
+-    eor $1, $1, $2          // mix SEL into ptrauth modifier
+-    eor $1, $1, $3          // mix isa into ptrauth modifier
+-    autib   $0, $1          // authenticate cached imp
+-    eor $1, $0, $0, lsl #1  // mix together the two failure bits
+-    tbz $1, #62, 0f         // if the result is zero, we authenticated
+-    brk #0xc471             // crash if authentication failed
++    eor \impAddress, \impAddress, \sel   // mix SEL into ptrauth modifier
++    eor \impAddress, \impAddress, \isa   // mix isa into ptrauth modifier
++    autib   \imp, \impAddress             // authenticate cached imp
++    eor \impAddress, \imp, \imp, lsl #1  // mix together the two failure bits
++    tbz \impAddress, #62, 0f              // if zero, we authenticated
++    brk #0xc471                            // crash if authentication failed
+ 0:
+ #ifdef IMP_SIGNING_DISCRIMINATOR
+-    mov     $4, #IMP_SIGNING_DISCRIMINATOR
+-    pacia   $0, $4         // resign cached imp as IMP
++    mov     \tmp, #IMP_SIGNING_DISCRIMINATOR
++    pacia   \imp, \tmp    // resign cached imp as IMP
+ #else
+-    paciza  $0              // resign cached imp as IMP
++    paciza  \imp           // resign cached imp as IMP
+ #endif
+ .endmacro
+ 
+-.macro ExtractISA
+-	and	$0, $1, #ISA_MASK
++.macro ExtractISA dst, src, authAddress
++	and	\dst, \src, #ISA_MASK
+ #if ISA_SIGNING_AUTH_MODE == ISA_SIGNING_STRIP
+-	xpacd	$0
++	xpacd	\dst
+ #elif ISA_SIGNING_AUTH_MODE == ISA_SIGNING_AUTH
+-	mov	x10, $2
++	mov	x10, \authAddress
+ 	movk	x10, #ISA_SIGNING_DISCRIMINATOR, LSL #48
+-	autda	$0, x10
++	autda	\dst, x10
+ #endif
+ .endmacro
+ 
+@@ -197,44 +194,39 @@
+ #else
+ // not JOP
+ 
+-.macro TailCallFunctionPointer
+-	// $0 = function pointer value
+-	br	$0
++.macro TailCallFunctionPointer fptr
++	br	\fptr
+ .endmacro
+ 
+-.macro TailCallSignedFunctionPointer
+-	br	$0
++.macro TailCallSignedFunctionPointer fptr, addressReg, discriminator
++	br	\fptr
+ .endmacro
+ 
+-.macro TailCallCachedImp
+-	// $0 = cached imp, $1 = address of cached imp, $2 = SEL, $3 = isa
+-	eor	$0, $0, $3
++.macro TailCallCachedImp imp, impAddress, sel, isa
++	eor	\imp, \imp, \isa
+ .ifndef LTailCallCachedImpIndirectBranch
+ LTailCallCachedImpIndirectBranch:
+ .endif
+-	br	$0
++	br	\imp
+ .endmacro
+ 
+-.macro TailCallMethodListImp
+-	// $0 = method list imp, $1 = address of method list imp
+-	br	$0
++.macro TailCallMethodListImp imp, impAddress
++	br	\imp
+ .endmacro
+ 
+-.macro TailCallBlockInvoke
+-	// $0 = invoke function, $1 = address of invoke function
+-	br	$0
++.macro TailCallBlockInvoke invoke, invokeAddress
++	br	\invoke
+ .endmacro
+ 
+-.macro AuthAndResignAsIMP
+-	// $0 = cached imp, $1 = address of cached imp, $2 = SEL
+-	eor	$0, $0, $3
++.macro AuthAndResignAsIMP imp, impAddress, sel, isa, tmp
++	eor	\imp, \imp, \isa
+ .endmacro
+ 
+-.macro SignAsImp
++.macro SignAsImp fptr, temporary
+ .endmacro
+ 
+-.macro ExtractISA
+-	and    $0, $1, #ISA_MASK
++.macro ExtractISA dst, src, authAddress
++	and    \dst, \src, #ISA_MASK
+ .endmacro
+ 
+ // not JOP
+--- a/runtime/Messengers.subproj/objc-msg-arm64.s
++++ b/runtime/Messengers.subproj/objc-msg-arm64.s
+@@ -50,15 +50,15 @@
+ // in the cache for dispatching.  The labels surround the asm code
+ // that do cache lookups.  The tables are zero-terminated.
+ 
+-.macro RestartableEntry
++.macro RestartableEntry name
+ #if __LP64__
+-	.quad	LLookupStart$0
++	.quad	LLookupStart\name
+ #else
+-	.long	LLookupStart$0
++	.long	LLookupStart\name
+ 	.long	0
+ #endif
+-	.short	LLookupEnd$0 - LLookupStart$0
+-	.short	LLookupRecover$0 - LLookupStart$0
++	.short	LLookupEnd\name - LLookupStart\name
++	.short	LLookupRecover\name - LLookupStart\name
+ 	.long	0
+ .endmacro
+ 
+@@ -141,35 +141,92 @@
+ .endmacro
+ 
+ 
++#if TARGET_OS_LINUX
++/*
++ * objc4-linux: ELF has no __LD,__compact_unwind. The equivalent is DWARF CFI
++ * in .eh_frame, and it is NOT optional: without it, an Objective-C or C++
++ * exception thrown through objc_msgSend cannot unwind and
++ * _Unwind_RaiseException calls std::terminate().
++ *
++ * CFI_START/CFI_END bracket every ENTRY/END_ENTRY pair. For the `NoFrame`
++ * functions -- objc_msgSend, objc_msgLookup, objc_msgSendSuper2 and friends,
++ * which never move SP and never spill LR -- the default rule (CFA = SP+0,
++ * return address in x30) is exactly right, so .cfi_startproc alone is
++ * correct and complete.
++ *
++ * The functions that go through SAVE_REGS -- _objc_msgSend_uncached,
++ * _objc_msgLookup_uncached, _method_invoke -- need more, because they build a
++ * real frame: they push {fp, lr}, set fp = sp, then subtract from SP for the
++ * spill area. Everything reached from there (+initialize, a method resolver,
++ * a class's first realization) runs on top of that frame, and an exception
++ * thrown in any of it has to unwind through it.
++ *
++ * MEASURED without the directives below: `@throw` from +initialize did not
++ * terminate, it HUNG -- the unwinder computed a CFA from the default rule
++ * (CFA = SP), read a return address out of the spill area and walked in a
++ * circle. tests/044-exception-through-uncached.m is that case.
++ *
++ * The frame is:
++ *      stp  fp, lr, [sp, #-16]!     ; CFA is now SP+16, fp at CFA-16, lr at CFA-8
++ *      mov  fp, sp                  ; switch the CFA rule to fp-relative...
++ *      sub  sp, sp, #(spill area)   ; ...so this needs no annotation
++ *
++ * Register numbers rather than names: DWARF 29 = fp, 30 = lr, 31 = sp, and
++ * the numeric spelling is accepted by every assembler.
++ *
++ * EPILOGUE CFI IS DELIBERATELY ABSENT. RESTORE_REGS is followed immediately
++ * by a tail call or a ret, so there is no call site between the frame
++ * teardown and the end of the function and therefore no synchronous throw
++ * point whose CFA would be miscomputed. (An asynchronous unwind -- a profiler
++ * sampling those two instructions -- would still get it wrong.)
++ */
++#define CFI_START .cfi_startproc
++#define CFI_END   .cfi_endproc
++#define CFI_PUSH_FRAME                                                  \
++    .cfi_def_cfa_offset 16 ;                                            \
++    .cfi_offset 29, -16 ;                                               \
++    .cfi_offset 30, -8
++#define CFI_FRAME_ESTABLISHED .cfi_def_cfa_register 29
++#else
++#define CFI_START
++#define CFI_END
++#define CFI_PUSH_FRAME
++#define CFI_FRAME_ESTABLISHED
++#endif
++
+ /********************************************************************
+  * ENTRY functionName
+  * STATIC_ENTRY functionName
+  * END_ENTRY functionName
+  ********************************************************************/
+ 
+-.macro ENTRY /* name */
++.macro ENTRY name
+ 	.text
+ 	.align 5
+-	.globl    $0
+-$0:
++	.globl    \name
++\name:
++	CFI_START
+ .endmacro
+ 
+-.macro MSG_ENTRY /*name*/
++.macro MSG_ENTRY name
+ 	.text
+ 	.align 10
+-	.globl    $0
+-$0:
++	.globl    \name
++\name:
++	CFI_START
+ .endmacro
+ 
+-.macro STATIC_ENTRY /*name*/
++.macro STATIC_ENTRY name
+ 	.text
+ 	.align 5
+-	.private_extern $0
+-$0:
++	.private_extern \name
++\name:
++	CFI_START
+ .endmacro
+ 
+-.macro END_ENTRY /* name */
+-LExit$0:
++.macro END_ENTRY name
++	CFI_END
++LExit\name:
+ .endmacro
+ 
+ 
+@@ -177,17 +234,27 @@
+  * UNWIND name, flags
+  * Unwind info generation	
+  ********************************************************************/
+-.macro UNWIND
++#if TARGET_OS_LINUX
++
++// unwind info comes from CFI_START/CFI_END (defined above); nothing to do here
++.macro UNWIND name, flags
++.endmacro
++
++#else
++
++.macro UNWIND name, flags
+ 	.section __LD,__compact_unwind,regular,debug
+-	PTR $0
+-	.set  LUnwind$0, LExit$0 - $0
+-	.long LUnwind$0
+-	.long $1
++	PTR \name
++	.set  LUnwind\name, LExit\name - \name
++	.long LUnwind\name
++	.long \flags
+ 	PTR 0	 /* no personality */
+ 	PTR 0  /* no LSDA */
+ 	.text
+ .endmacro
+ 
++#endif
++
+ #define NoFrame 0x02000000  // no frame, no SP adjustment
+ #define FrameWithNoSaves 0x04000000  // frame, no non-volatile saves
+ 
+@@ -208,7 +275,9 @@
+     // push frame
+     SignLR
+     stp    fp, lr, [sp, #-16]!
++    CFI_PUSH_FRAME
+     mov    fp, sp
++    CFI_FRAME_ESTABLISHED
+ 
+     // save parameter registers: x0..x8, q0..q7
+     sub    sp, sp,  #(10*8 + 8*16)
+@@ -313,15 +382,15 @@
+ #define LOOKUP 2
+ 
+ // CacheHit: x17 = cached IMP, x10 = address of buckets, x1 = SEL, x16 = isa
+-.macro CacheHit
+-.if $0 == NORMAL
++.macro CacheHit Mode
++.if \Mode == NORMAL
+ 	TailCallCachedImp x17, x10, x1, x16	// authenticate and call imp
+-.elseif $0 == GETIMP
++.elseif \Mode == GETIMP
+ 	mov	p0, p17
+ 	cbz	p0, 9f					// don't ptrauth a nil imp
+ 	AuthAndResignAsIMP x0, x10, x1, x16, x17	// authenticate imp and re-sign as IMP
+ 9:	ret						// return IMP
+-.elseif $0 == LOOKUP
++.elseif \Mode == LOOKUP
+ 	// No nil check for ptrauth: the caller would crash anyway when they
+ 	// jump to a nil IMP. We don't care if that jump also fails ptrauth.
+ 	AuthAndResignAsIMP x17, x10, x1, x16, x10	// authenticate imp and re-sign as IMP

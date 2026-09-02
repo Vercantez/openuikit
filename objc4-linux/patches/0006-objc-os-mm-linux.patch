@@ -1,0 +1,119 @@
+# objc-os.mm: enable the OS block on Linux; ELF image record magic; no __TEXT,__init_offsets static-initializer pass; PT_LOAD-based _headerForAddress
+--- a/runtime/objc-os.mm
++++ b/runtime/objc-os.mm
+@@ -32,7 +32,7 @@
+ 
+ 
+ 
+-#if   TARGET_OS_MAC
++#if   TARGET_OS_MAC || TARGET_OS_LINUX
+ 
+ #include "objc-file.h"
+ 
+@@ -52,8 +52,17 @@
+ **********************************************************************/
+ bool bad_magic(const headerType *mhdr)
+ {
++#if TARGET_OS_LINUX
++    // objc4-linux: `headerType` is not a Mach-O header, it is the per-image
++    // record libobjc allocates for each ELF image (compat/mach-o/loader.h).
++    // Checking Mach-O magic here would reject every image. We check our own
++    // sentinel instead, which still catches a caller passing a stale or
++    // non-image pointer.
++    return mhdr->magic != OBJC4LINUX_IMAGE_MAGIC;
++#else
+     return (mhdr->magic != MH_MAGIC  &&  mhdr->magic != MH_MAGIC_64  &&  
+             mhdr->magic != MH_CIGAM  &&  mhdr->magic != MH_CIGAM_64);
++#endif
+ }
+ 
+ 
+@@ -96,9 +105,17 @@
+ 
+         // Locate the __OBJC segment
+         size_t info_size = 0;
+-        unsigned long seg_size;
+         const objc_image_info *image_info = _getObjcImageInfo(mhdr, dyldObjCInfo, &info_size);
++#if TARGET_OS_LINUX
++        // objc4-linux: __OBJC is the pre-__OBJC2__ (32-bit macOS) segment.
++        // Nothing on ELF can emit it, and ELF has no runtime segment-by-name
++        // lookup to ask with. An image counts as Objective-C iff it has an
++        // objc_imageinfo section, which is exactly what clang and swiftc emit.
++        const uint8_t *objc_segment = nullptr;
++#else
++        unsigned long seg_size;
+         const uint8_t *objc_segment = getsegmentdata(mhdr,SEG_OBJC,&seg_size);
++#endif
+         if (!objc_segment  &&  !image_info) return NULL;
+ 
+         // Allocate a header_info entry.
+@@ -699,10 +716,38 @@
+ };
+ 
+ static const uint32_t *getLibobjcInitializerOffsets(size_t *outCount) {
++#if TARGET_OS_LINUX
++    /*
++     * objc4-linux: there is no __TEXT,__init_offsets section, and no need for
++     * one.
++     *
++     * On Darwin this exists because libSystem calls _objc_init() BEFORE dyld
++     * runs libobjc's own C++ static constructors, so the runtime has to find
++     * and run them itself (the section is produced by objc4's `markgc` build
++     * phase). Referencing the linker-synthesised `section$start$...` symbols
++     * on ELF gives an undefined symbol and libobjc.so will not even dlopen:
++     *
++     *   undefined symbol: section$end$__TEXT$__init_offsets
++     *
++     * Linux has no such privileged position for libobjc: our constructor runs
++     * from .init_array like everyone else's, after our own static
++     * constructors. So the correct count here is zero -- there is nothing
++     * left for us to run.
++     *
++     * NOTE this trades one problem for another, and the other one is not
++     * solved: on Darwin +load is guaranteed to run before ANY initializer in
++     * an image that uses Objective-C. On Linux we can only be ordered against
++     * initializers the dynamic linker happens to sort after ours. See
++     * docs/PORT_PLAN.md "Riskiest unknown".
++     */
++    *outCount = 0;
++    return nullptr;
++#else
+     extern const uint32_t sectionStart  __asm("section$start$__TEXT$__init_offsets");
+     extern const uint32_t sectionEnd  __asm("section$end$__TEXT$__init_offsets");
+     *outCount = &sectionEnd - &sectionStart;
+     return &sectionStart;
++#endif
+ }
+ 
+ 
+@@ -936,6 +981,22 @@
+ **********************************************************************/
+ const header_info *_headerForAddress(const void *addr)
+ {
++#if TARGET_OS_LINUX
++    // objc4-linux: the Darwin version asks for each __DATA*/__AUTH segment by
++    // name and tests containment. ELF images have no named segments, so the
++    // question is answered against the image's PT_LOAD ranges instead, which
++    // the ELF image registry recorded at scan time
++    // (compat/src/objc4linux-elf.cpp). Slightly broader than Darwin's --
++    // __TEXT addresses match here and would not on Darwin -- and the callers
++    // (_headerForClass, class_getImageName) only ever pass class and category
++    // pointers, which live in writable data either way.
++    for (header_info *hi = FirstHeader; hi != NULL; hi = hi->getNext()) {
++        if (objc4linux_image_contains_address((const struct mach_header *)hi->mhdr(), addr))
++            return hi;
++    }
++    return 0;
++}
++#else
+     const char *segnames[] = { "__DATA", "__DATA_CONST", "__DATA_DIRTY", "__AUTH" };
+     header_info *hi;
+ 
+@@ -955,6 +1016,7 @@
+     // Not found
+     return 0;
+ }
++#endif
+ 
+ 
+ /***********************************************************************
