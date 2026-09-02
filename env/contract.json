@@ -1,0 +1,411 @@
+{
+  "schema": 1,
+  "id": "openuikit-verify-environment",
+  "inventory": "env/INVENTORY.md",
+  "notes": [
+    "Single source for verify-tree materialization. Values are copied from the lock files listed in consume[], not invented. A later prepare.py run that disagrees with a lock is a contract bug, not a pin advance.",
+    "PR #3 .cursor scripts remain the cloud installer. prepare.py calls them; it does not rewrite them.",
+    "Do not emit NEEDS_DARWIN_BASELINE from gates until a documented behavior change. Current spellings are CURSOR_ENV_CANNOT_STAGE_XCODE_DARWIN_OVERLAYS and CURSOR_ENV_CANNOT_STAGE_SIMRUNTIME_OVERLAY_DYLIBS."
+  ],
+  "consume": [
+    {
+      "path": ".cursor/scratch-corpus-pins.json",
+      "kind": "corpus-lock",
+      "fields": ["sources.commit", "sources.tree", "sources.repository", "sources.destination", "pinnedImage.digest"]
+    },
+    {
+      "path": "scripts/vendor_pins.sh",
+      "kind": "inrepo-vendor-lock",
+      "fields": ["EXPECTED_INREPO_UIKIT_TREE", "EXPECTED_INREPO_MACHORUN_TREE"]
+    },
+    {
+      "path": "full/foundation/pinned_inputs.pl",
+      "kind": "compile-input-lock",
+      "fields": ["swift-foundation.commit", "swift-foundation.tree", "swift-collections.commit", "swift-collections.tree"]
+    },
+    {
+      "path": "full/framework-fanout/external-evidence-sources.json",
+      "kind": "evidence-lock",
+      "fields": ["dotnet-macios.commit", "dotnet-macios.repository", "dotnet-macios.licenseSHA256"]
+    },
+    {
+      "path": "full/oracle-opencombine/policy.json",
+      "kind": "swiftcore-lock",
+      "fields": ["libswiftCore.dylib sha256 dd01686e…"]
+    },
+    {
+      "path": "harness/Dockerfile",
+      "kind": "image-lock",
+      "fields": ["FROM swift:6.2-noble@sha256:29b983751c605c2d3102d2ab93438c6e0cadf110d9d2aa6e929b6dec9dcb7cbc"]
+    }
+  ],
+  "proof_split": {
+    "compile_link_static": "in-vm",
+    "execution": "arm64-ec2-authority",
+    "macos_oracle": "local-only"
+  },
+  "hosts": {
+    "cursor-x86_64": {
+      "arch": ["x86_64"],
+      "os": "Linux",
+      "role": "compile-link-static",
+      "expected_cannot": [
+        "CURSOR_ENV_CANNOT_BUILD_LOADER",
+        "CURSOR_ENV_CANNOT_GENERATE_TBD",
+        "CURSOR_ENV_CANNOT_STAGE_MRROOT_LOADER",
+        "CURSOR_ENV_CANNOT_STAGE_XCODE_DARWIN_OVERLAYS",
+        "CURSOR_ENV_CANNOT_STAGE_SIMRUNTIME_OVERLAY_DYLIBS",
+        "CURSOR_ENV_CANNOT_BUILD_OPENCOMBINE_EXPORT",
+        "CURSOR_ENV_CANNOT_BUILD_MODCACHE_SWIFTUI_GUEST",
+        "CURSOR_ENV_CANNOT_EXECUTE_ARM64"
+      ]
+    },
+    "ec2-aarch64": {
+      "arch": ["aarch64", "arm64"],
+      "os": "Linux",
+      "role": "execution-authority",
+      "expected_cannot": [
+        "CURSOR_ENV_CANNOT_STAGE_XCODE_DARWIN_OVERLAYS",
+        "CURSOR_ENV_CANNOT_STAGE_SIMRUNTIME_OVERLAY_DYLIBS"
+      ]
+    },
+    "macos-oracle": {
+      "arch": ["arm64", "x86_64"],
+      "os": "Darwin",
+      "role": "oracle-local-only",
+      "expected_cannot": []
+    }
+  },
+  "pinned_image": {
+    "reference": "swift:6.2-noble",
+    "digest": "sha256:29b983751c605c2d3102d2ab93438c6e0cadf110d9d2aa6e929b6dec9dcb7cbc",
+    "demanded_by": ["cursor-cloud", "focus-widget", "core-guest-package", "build-full"]
+  },
+  "checkouts": [
+    {
+      "id": "focus-ios",
+      "kind": "git",
+      "repository": "https://github.com/mozilla-mobile/focus-ios.git",
+      "commit": "a2832521c1daa0c23419c73705ae043ed60c9791",
+      "tree": "065d8e374c9caa3be2915165ba7cbbe4b1d61d7e",
+      "destination": "scratch/ladder-corpus/focus-ios",
+      "lock": ".cursor/scratch-corpus-pins.json",
+      "demanded_by": ["focus-widget", "focus-onboarding", "focus-package", "cursor-cloud"]
+    },
+    {
+      "id": "swift-foundation",
+      "kind": "git",
+      "repository": "https://github.com/apple/swift-foundation.git",
+      "commit": "c6793ef0c19c2cbaeba5a0e52078f129afc7dcfc",
+      "tree": "4651798679b98e27383ca3626434fb128f191486",
+      "destination": "scratch/swift-foundation",
+      "lock": ".cursor/scratch-corpus-pins.json",
+      "also_locked_by": "full/foundation/pinned_inputs.pl",
+      "demanded_by": ["focus-widget", "focus-onboarding", "focus-package", "build-full", "core-guest-package", "cursor-cloud"]
+    },
+    {
+      "id": "swift-collections",
+      "kind": "git",
+      "repository": "https://github.com/apple/swift-collections.git",
+      "commit": "9bf03ff58ce34478e66aaee630e491823326fd06",
+      "tree": "5e4de96f40ccf147dab967f38cb7988ecd933c27",
+      "destination": "scratch/swift-collections",
+      "lock": ".cursor/scratch-corpus-pins.json",
+      "also_locked_by": "full/foundation/pinned_inputs.pl",
+      "demanded_by": ["focus-widget", "focus-onboarding", "focus-package", "build-full", "core-guest-package", "cursor-cloud"]
+    },
+    {
+      "id": "opencombine",
+      "kind": "git",
+      "repository": "https://github.com/OpenCombine/OpenCombine.git",
+      "commit": "1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b",
+      "tree": "66a9d91efc910c7577e40b2dec166a2de427594a",
+      "destination": "scratch/opencombine-core-durable-20260828-r2/source",
+      "lock": ".cursor/scratch-corpus-pins.json",
+      "demanded_by": ["focus-widget", "focus-onboarding", "focus-package", "core-guest-package", "cursor-cloud"]
+    },
+    {
+      "id": "swift-foundation-icu",
+      "kind": "git",
+      "repository": "https://github.com/apple/swift-foundation-icu.git",
+      "commit": "87dbab99780e277b6a4c2a397ab1a894f877b39a",
+      "tree": "823a4a2a13f60a0fd2715db85a754dda11d5fd39",
+      "destination": "scratch/swift-foundation-icu",
+      "lock": "full/frameworks/build_core_guest_package.sh",
+      "demanded_by": ["core-guest-package"]
+    },
+    {
+      "id": "dotnet-macios",
+      "kind": "git-sparse",
+      "repository": "https://github.com/dotnet/macios.git",
+      "commit": "cd62487311dcc20a7ac183c8baa6293373b20e79",
+      "destination": "/opt/openuikit-evidence/dotnet-macios",
+      "sparse": ["src"],
+      "lock": "full/framework-fanout/external-evidence-sources.json",
+      "demanded_by": ["cursor-cloud"]
+    },
+    {
+      "id": "uikit-inrepo",
+      "kind": "in-repo-subtree",
+      "path": "uikit",
+      "tree": "719f6bcfe2a8e467426f30c91390d9c605f5a959",
+      "lock": "scripts/vendor_pins.sh",
+      "attestation": "git rev-parse HEAD:uikit",
+      "demanded_by": ["focus-widget", "focus-onboarding", "focus-package", "build-full", "core-guest-package"],
+      "notes": "Do not advance this pin to paper over a failing proof. Live HEAD:uikit may drift; that is an unsatisfied row, not a contract edit."
+    },
+    {
+      "id": "machorun-inrepo",
+      "kind": "in-repo-subtree",
+      "path": "machorun",
+      "tree": "42d42ace9c6ff7a4ae7c25c3a8e466f82d5f70c8",
+      "lock": "scripts/vendor_pins.sh",
+      "attestation": "git rev-parse HEAD:machorun",
+      "demanded_by": ["focus-widget", "focus-onboarding", "focus-package", "build-full", "core-guest-package"]
+    }
+  ],
+  "built_products": [
+    {
+      "id": "machorun-loader",
+      "path": "machorun/build/machorun",
+      "producer": "machorun/scripts/build.sh",
+      "producer_args": ["loader"],
+      "pin": "cold-build from machorun/src on aarch64",
+      "cannot_on": {
+        "x86_64": "CURSOR_ENV_CANNOT_BUILD_LOADER"
+      },
+      "demanded_by": ["focus-widget", "build-full", "core-guest-package"]
+    },
+    {
+      "id": "darwin-userland",
+      "path": "machorun/darwin/usr/lib",
+      "producer": "machorun/scripts/build.sh",
+      "producer_args": ["darwin"],
+      "pin": "cold-build arm64 Mach-O via clang-18 -target arm64-apple-macos11",
+      "demanded_by": ["focus-widget", "build-full", "core-guest-package", "cursor-cloud"]
+    },
+    {
+      "id": "sysroot_fe4",
+      "path": "scratch/sysroot_fe4",
+      "producer": "full/foundation/stage_fe_sysroot.sh",
+      "linux_producer": ".cursor/install-built-products.sh",
+      "pin": "cold-build / restage; never reuse a stale tree",
+      "cannot_on": {
+        "Linux": "CURSOR_ENV_CANNOT_STAGE_XCODE_DARWIN_OVERLAYS"
+      },
+      "demanded_by": ["focus-widget", "build-full", "core-guest-package", "cursor-cloud"]
+    },
+    {
+      "id": "mrroot_full",
+      "path": "scratch/mrroot_full",
+      "producer": "full/scripts/build_full.sh",
+      "linux_producer": ".cursor/install-built-products.sh",
+      "pin": "cold-build from current machorun userland; loader copy only on aarch64",
+      "cannot_on": {
+        "x86_64": "CURSOR_ENV_CANNOT_STAGE_MRROOT_LOADER"
+      },
+      "demanded_by": ["focus-widget", "build-full", "core-guest-package", "cursor-cloud"]
+    },
+    {
+      "id": "tbd-stubs",
+      "path": "machorun/sdk/usr/lib",
+      "producer": "machorun/scripts/gen_tbd.sh",
+      "pin": "cold-build; CHECK 1 requires loader",
+      "cannot_on": {
+        "x86_64": "CURSOR_ENV_CANNOT_GENERATE_TBD"
+      },
+      "demanded_by": ["focus-widget", "build-full", "core-guest-package"]
+    },
+    {
+      "id": "opencombine-export",
+      "path": "scratch/opencombine-core-durable-20260828-r2/export/artifacts",
+      "producer": "full/oracle-opencombine/build_and_run.sh",
+      "pin": "cold-build: compile and run under machorun",
+      "cannot_on": {
+        "x86_64": "CURSOR_ENV_CANNOT_BUILD_OPENCOMBINE_EXPORT",
+        "Linux-without-loader": "CURSOR_ENV_CANNOT_BUILD_OPENCOMBINE_EXPORT"
+      },
+      "content_hashes": {
+        "OpenCombine.o": "96558e7d31c10c4bc769e9774977b74c58dc6ee83cfbd4fca8bf17229424a914",
+        "OpenCombine.swiftmodule": "674d4d049d09b074b303822a88fcdc2c1d12c1e3cca9c9414ca30a74ee2c9de0",
+        "OpenCombine.swiftdoc": "a5a2757d33ccb621d26aea0f8ca417cf8ba748660faf1cf37eba53c5833975bc",
+        "RESULT.txt": "c6fe4fa173f27fad0e30d1931c5ffead0aa267d55730a5885c1142bc7502b104"
+      },
+      "demanded_by": ["focus-widget", "focus-onboarding", "focus-package", "core-guest-package"]
+    },
+    {
+      "id": "modcache_swiftui_guest",
+      "path": "scratch/modcache_swiftui_guest",
+      "producer": "full/swiftui/build_focus_widget_guest.sh",
+      "pin": "cold-build from a real SwiftUI guest compile; do not create empty",
+      "cannot_on": {
+        "Linux-without-overlays": "CURSOR_ENV_CANNOT_BUILD_MODCACHE_SWIFTUI_GUEST"
+      },
+      "demanded_by": ["focus-widget"]
+    }
+  ],
+  "staged_externals": [
+    {
+      "id": "libswiftCore",
+      "path": "machorun/darwin/usr/lib/swift/libswiftCore.dylib",
+      "source": "swiftcore-macho/artifacts/swift-macosx/arm64/libswiftCore.dylib",
+      "producer": "machorun/scripts/stage_swiftcore.sh",
+      "sha256": "dd01686e06c81a21755bb864b43dad446c011e6c60c6b387b3b332c0a12708cb",
+      "demanded_by": ["focus-widget", "build-full", "core-guest-package", "cursor-cloud"]
+    },
+    {
+      "id": "mrroot-base-runtime",
+      "path": "scratch/mrroot",
+      "source": "spike guest root (transferred; not rebuilt here)",
+      "pin": "present tree; overlays except libswiftCore copied by build_full.sh",
+      "demanded_by": ["focus-widget", "build-full", "core-guest-package"]
+    },
+    {
+      "id": "mrroot_fe-overlays",
+      "path": "scratch/mrroot_fe",
+      "source": "iOS CoreSimulator runtime via full/foundation/stage_swift_overlays.sh",
+      "producer": "full/foundation/stage_swift_overlays.sh",
+      "pin": "macOS only; Linux host must already hold a transferred tree",
+      "cannot_on": {
+        "Linux": "CURSOR_ENV_CANNOT_STAGE_SIMRUNTIME_OVERLAY_DYLIBS"
+      },
+      "demanded_by": ["focus-widget", "build-full", "core-guest-package"]
+    },
+    {
+      "id": "dejavu-sans",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+      "sha256": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+      "demanded_by": ["focus-widget", "core-guest-package"]
+    },
+    {
+      "id": "dejavu-sans-bold",
+      "path": "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+      "sha256": "5c1247acef7f2b8522a31742c76d6adcb5569bacc0be7ceaa4dc39dd252ce895",
+      "demanded_by": ["focus-widget", "core-guest-package"]
+    }
+  ],
+  "host_requirements": [
+    {
+      "id": "swift-6.2.4-linux",
+      "kind": "toolchain",
+      "match": "Swift version 6.2.4",
+      "target": "linux",
+      "demanded_by": ["cursor-cloud", "focus-widget", "core-guest-package"]
+    },
+    {
+      "id": "clang-18-alias",
+      "kind": "tool-alias",
+      "tools": ["clang-18", "clang++-18", "ld64.lld-18"],
+      "notes": "clang on PATH is Swift's clang 17. Darwin/objc4/quartz must set CC=clang-18 / DARWIN_CLANG=clang-18.",
+      "demanded_by": ["cursor-cloud", "focus-widget", "build-full", "core-guest-package"]
+    },
+    {
+      "id": "llvm-18-unversioned",
+      "kind": "tool-alias",
+      "tools": ["llvm-nm", "llvm-otool", "llvm-objdump"],
+      "must_resolve_to": ["llvm-nm-18", "llvm-otool-18", "llvm-objdump-18"],
+      "demanded_by": ["cursor-cloud"]
+    },
+    {
+      "id": "cursor-cloud-tools",
+      "kind": "tools",
+      "tools": ["swift", "swiftc", "perl", "patch", "jq", "sha256sum", "shasum", "cmp", "file", "git", "python3", "pkg-config"],
+      "demanded_by": ["cursor-cloud", "focus-widget"]
+    },
+    {
+      "id": "core-guest-extra-tools",
+      "kind": "tools",
+      "tools": ["readelf", "ldd", "curl-config", "find", "sort"],
+      "demanded_by": ["core-guest-package"]
+    },
+    {
+      "id": "poppler-pdftocairo",
+      "kind": "tool-pin",
+      "profiles": [
+        {
+          "id": "homebrew-poppler-25.04.0-darwin-arm64",
+          "path": "/opt/homebrew/Cellar/poppler/25.04.0/bin/pdftocairo",
+          "sha256": "963b05a5c78b2a8a32bbfb9a2a3c542a258dd7ec8e9b64d782a4d9848ed058c1"
+        },
+        {
+          "id": "ubuntu-noble-poppler-24.02.0-1ubuntu9.9-linux-aarch64",
+          "path": "/usr/bin/pdftocairo",
+          "sha256": "dec6518985e0810a886ac53a3293f2d49cf292621874501ab0a821eff666e41f"
+        }
+      ],
+      "demanded_by": ["onboarding-resources-proof"]
+    },
+    {
+      "id": "zstd",
+      "kind": "tools",
+      "tools": ["zstd"],
+      "demanded_by": ["ec2-transfer"]
+    }
+  ],
+  "filesystem_preconditions": [
+    {
+      "id": "git-safe-directory",
+      "kind": "git-safe-directory",
+      "applies_to": ["repo-root", "checkouts"],
+      "action": "git config --global --add safe.directory <path> when missing",
+      "demanded_by": ["focus-widget", "build-full", "core-guest-package", "cursor-cloud"]
+    },
+    {
+      "id": "proof-parent-0700",
+      "kind": "ownership-mode",
+      "mode": "0700",
+      "owner": "euid",
+      "demanded_by": ["onboarding-uikit-proof", "onboarding-resources-proof", "focus-widget"]
+    },
+    {
+      "id": "ancestor-trust",
+      "kind": "ancestor-trust",
+      "owners": [0, "euid"],
+      "no_cross_uid_write": true,
+      "no_extended_acl": true,
+      "demanded_by": ["onboarding-uikit-proof", "onboarding-resources-proof", "focus-widget"]
+    },
+    {
+      "id": "mktemp-root",
+      "kind": "mktemp-parent",
+      "notes": "Focus widget mktemp templates live under $W/build/full. That directory must exist and be a real non-symlink directory owned by the caller.",
+      "path": "build/full",
+      "demanded_by": ["focus-widget"]
+    },
+    {
+      "id": "macios-evidence-parent",
+      "kind": "ownership-mode",
+      "path": "/opt/openuikit-evidence",
+      "owner": "root:root",
+      "mode": "0755",
+      "demanded_by": ["cursor-cloud"]
+    }
+  ],
+  "focus_widget_attestation_pins": {
+    "notes": "Copied verbatim from full/swiftui/build_focus_widget_guest.sh so a later gate switch can prove byte-identical hashes. Changing a value here without changing the gate (or vice versa) is a contract bug.",
+    "EXPECTED_FOCUS_COMMIT": "a2832521c1daa0c23419c73705ae043ed60c9791",
+    "EXPECTED_ASSETS_SHA": "efac8d1c98b562374e54eea7540b4201523db670a6353eff8f0a0273d294526e",
+    "EXPECTED_VIEW_SHA": "721669388a4556e1609f580ed87d6065b63981770e71b0f77db292767b05f6c2",
+    "EXPECTED_INDEX_SHA": "2eb8af32cc6d69161dc35f1536682dcba2dd4db21ea0015cf241701f32468d12",
+    "EXPECTED_LOGO_SHA": "180d76a144c6e74324283e8bfb72d9d7bb32125fe57769e3403b0ca72b6ef415",
+    "EXPECTED_FIRST_SHA": "75759bdc8a68e4694bda34486c47e347ab8af010ebb8de7372b0ca443c08186b",
+    "EXPECTED_SECOND_SHA": "f71bc94e686809660d920da6f7804174097e038302a843c3533da45ceda44af2",
+    "EXPECTED_RESOURCE_TREE_SHA": "144c49c747d4689d9ca98d353cb5474b311473629383a779d99f1b705969a04d",
+    "EXPECTED_SYSTEM_FONT_SHA": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+    "EXPECTED_MEDIUM_FONT_SHA": "5c1247acef7f2b8522a31742c76d6adcb5569bacc0be7ceaa4dc39dd252ce895",
+    "EXPECTED_OPENCOMBINE_RESULT_SHA": "c6fe4fa173f27fad0e30d1931c5ffead0aa267d55730a5885c1142bc7502b104",
+    "EXPECTED_OPENCOMBINE_OBJECT_SHA": "96558e7d31c10c4bc769e9774977b74c58dc6ee83cfbd4fca8bf17229424a914",
+    "EXPECTED_OPENCOMBINE_MODULE_SHA": "674d4d049d09b074b303822a88fcdc2c1d12c1e3cca9c9414ca30a74ee2c9de0",
+    "EXPECTED_OPENCOMBINE_DOC_SHA": "a5a2757d33ccb621d26aea0f8ca417cf8ba748660faf1cf37eba53c5833975bc",
+    "EXPECTED_OPENCOMBINE_HELPER_SHA": "73dbadeff3f6cebb9f5c57e09380e3166b65e68f0b0427d97d6a8ffdce693693",
+    "EXPECTED_OPENCOMBINE_HEADER_SHA": "eb2afa8d9b46891a47ac39e43a4f94d727120acdbc0644934296c4c4ca62e935",
+    "EXPECTED_OPENCOMBINE_MODULEMAP_SHA": "d34fdd050111a8cbf5ced89a129088fcfeb2964eea76ad518fafe044966572d1",
+    "EXPECTED_OPENCOMBINE_PATCH_SHA": "875cd931e95c5442775e1042a412517ab7475be0489b1a81f824a54f6872c79b",
+    "EXPECTED_OPENCOMBINE_PATCHED_HELPER_SHA": "d9fbefcdba66d892d9064c46b21b6084af217ddec1d604bcaf27b160de66083b",
+    "EXPECTED_COMBINE_SHIM_SHA": "828b05c3a47296fb7b0b9ed5a6ca1a45a5da46e245441c21028335f60511799f",
+    "EXPECTED_RESOURCE_FILE_COUNT": 16,
+    "EXPECTED_RESOURCE_DIRECTORY_COUNT": 7,
+    "EXPECTED_PACKAGE_FILE_COUNT": 96,
+    "EXPECTED_PACKAGE_DIRECTORY_COUNT": 12
+  }
+}

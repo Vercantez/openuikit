@@ -1,0 +1,1 @@
+"""Declarative verification-environment contract."""
