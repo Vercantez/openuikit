@@ -646,6 +646,35 @@ EXPORT int vsprintf(char *dst, const char *fmt, va_list ap)
     return vsnprintf(dst, (size_t)-1, fmt, ap);
 }
 
+/* Locale construction is closed. Measured on the built dylib: libSystem
+ * exports `setlocale` and no constructor -- no `newlocale`, `duplocale`,
+ * `uselocale` or `freelocale`. A guest therefore CANNOT CONSTRUCT a locale_t.
+ * The only values it can hold are NULL and LC_GLOBAL_LOCALE ((locale_t)-1,
+ * measured on Darwin: sdk/usr/include/xlocale.h; glibc's LC_GLOBAL_LOCALE is
+ * also (locale_t)-1L in bits/locale.h). And `setlocale` itself refuses
+ * anything but "C"/"POSIX" (ctype.c), so the global locale is C as well.
+ *
+ * Both accepted values therefore MEAN the C locale. Anything else means the
+ * guest obtained a locale_t from somewhere this library does not know about
+ * -- which is exactly when acting in C would be a wrong answer, so it stops.
+ *
+ * This is shared by snprintf_l and the strto*_l family. glibc HAS strtod_l /
+ * strtof_l / strtold_l (aarch64 libc.so.6, strtod_l@@GLIBC_2.17 and friends)
+ * but Darwin's locale_t is `struct _xlocale *` (sdk/_types/_locale_t.h) and
+ * glibc's is `struct __locale_struct *` (bits/types/__locale_t.h) -- same
+ * pointer width, different pointee, and glibc treats a NULL locale_t as
+ * invalid where Darwin treats it as C. Host-binding the Darwin name to glibc's
+ * *_l would be a plausible parse of the wrong locale. */
+HIDDEN void mr_require_c_locale(const void *loc, const char *who)
+{
+    if (loc != (void *)0 && loc != (void *)-1)
+        mr_bail2(who, "locale this libSystem did not hand out: it exports "
+                 "setlocale and no locale constructor, so the only locale_t a "
+                 "guest can hold is NULL or LC_GLOBAL_LOCALE, and both mean C. "
+                 "Acting in C for an unknown locale would put the wrong bytes "
+                 "in the result and report success");
+}
+
 /* snprintf_l -- CFLog's, and the locale argument is the whole question.
  *
  * IT MUST GO THROUGH OUR OWN vsnprintf, not glibc's, and that is not a
@@ -654,36 +683,15 @@ EXPORT int vsprintf(char *dst, const char *fmt, va_list ap)
  * any variadic formatter to glibc hands it garbage. That is why this library
  * owns a formatter at all.
  *
- * THE LOCALE IS ENFORCED BY CONSTRUCTION RATHER THAN ASSUMED, which is the
- * part worth reading. The obvious implementation -- "forward to vsnprintf,
- * because the C locale is the only one this stack can be in" -- is TRUE today
- * and is a property somebody has to keep true; if a real locale ever arrives,
- * it silently formats 1.5 as "1,5" in a German locale. Plausible output, wrong
- * bytes, no error.
- *
- * So instead of a comment, a check. Measured on the built dylib: libSystem
- * exports `setlocale` and NOTHING ELSE from the locale surface -- no
- * `newlocale`, `duplocale`, `uselocale` or `freelocale`, and no other `*_l`
- * function. A guest therefore CANNOT CONSTRUCT a locale_t: the only values it
- * can hold are NULL and LC_GLOBAL_LOCALE ((locale_t)-1, measured on Darwin).
- * And `setlocale` itself refuses anything but "C"/"POSIX" (ctype.c), so the
- * global locale is C as well. Both accepted values therefore MEAN the C
- * locale, and anything else means the guest obtained a locale_t from somewhere
- * this library does not know about -- which is exactly when formatting it in
- * the C locale would be a wrong answer, so it stops instead.
- *
- * Measured on Darwin, so the two accepted cases are known to agree there too:
- * snprintf_l(buf, n, NULL, "%d %.2f %s", 42, 1.5, "x") and the same call with
- * a freshly made "C" locale both yield 9 and "42 1.50 x". */
+ * THE LOCALE IS ENFORCED BY CONSTRUCTION RATHER THAN ASSUMED -- see
+ * mr_require_c_locale. Measured on Darwin, so the two accepted cases are
+ * known to agree there too: snprintf_l(buf, n, NULL, "%d %.2f %s", 42, 1.5,
+ * "x") and the same call with a freshly made "C" locale both yield 9 and
+ * "42 1.50 x". */
 EXPORT int snprintf_l(char *dst, size_t cap, void *loc, const char *fmt, ...)
 {
     va_list ap; int n;
-    if (loc != (void *)0 && loc != (void *)-1)
-        mr_bail("snprintf_l with a locale this libSystem did not hand out: it "
-                "exports setlocale and no other locale entry point, so the only "
-                "locale_t a guest can hold is NULL or LC_GLOBAL_LOCALE, and both "
-                "mean C. Formatting in C for an unknown locale would put the "
-                "wrong bytes in the buffer and report success");
+    mr_require_c_locale(loc, "snprintf_l");
     va_start(ap, fmt);
     n = vsnprintf(dst, cap, fmt, ap);
     va_end(ap);
@@ -980,6 +988,15 @@ FWD(int, feof,    (void *f),        (f))
 FWDE(void *, fopen, (const char *p, const char *m), (p, m))
 FWDE(size_t, fwrite, (const void *p, size_t a, size_t b, void *f), (p, a, b, f))
 FWDE(size_t, fread,  (void *p, size_t a, size_t b, void *f),       (p, a, b, f))
+/* getline(3). POSIX on both sides: ssize_t getline(char **, size_t *, FILE *)
+ * (Darwin sdk/_stdio.h:461; glibc stdio.h:707). ssize_t/size_t are 8 on both
+ * (measured). Not variadic. FILE* is a pointer -- Darwin's FILE is 152 bytes
+ * against glibc's 216, but the object behind every FILE* we hand out is
+ * glibc's (fopen forward + bootstrap re-point). glibc exports getline
+ * (getline@@GLIBC_2.17); the reason this is a wrapper rather than a
+ * host-bound allow is that the FILE identity is a libSystem invariant, not a
+ * CHECK 5 coincidence. */
+FWDE(ssize_t, getline, (char **p, size_t *n, void *f), (p, n, f))
 FWD(int, ungetc,  (int c, void *f), (c, f))
 FWDV(rewind, (void *f), (f))
 EXPORT int putc(int c, void *f) { return glibc_fputc(c, f); }
@@ -989,6 +1006,147 @@ EXPORT int fputs_unlocked(const char *s, void *f) { return glibc_fputs(s, f); }
 FWD(int, getpid, (void), ())
 /* the strtol family lives in posix.c: Darwin sets EINVAL where glibc does not */
 FWDE(double, strtod, (const char *s, char **e), (s, e))
+
+/* strto*_l. glibc has the same names (strtod_l@@GLIBC_2.17, strtof_l,
+ * strtold_l in aarch64 libc.so.6) and the same (nptr, endptr, locale)
+ * arity, but the third argument is not the same object: Darwin locale_t is
+ * struct _xlocale * and glibc's is struct __locale_struct *, and Darwin
+ * NULL means C where glibc NULL is invalid. So these wrap strtod/strtof,
+ * after mr_require_c_locale, rather than host-binding the Darwin name.
+ *
+ * strtold_l is the long-double trap a second time. Darwin arm64 long double
+ * is 8 bytes, LDBL_MANT_DIG 53 (float.h via the SDK); glibc aarch64 is 16
+ * bytes, LDBL_MANT_DIG 113. src/host_deny.c already denies a raw `_strtold`
+ * host-bind for that reason. Calling glibc's strtold / strtold_l here would
+ * write 16 bytes through an 8-byte return -- so this calls strtod, which is
+ * what Darwin's long double IS. */
+_Static_assert(sizeof(long double) == 8, "Darwin arm64 long double is IEEE binary64");
+
+EXPORT double strtod_l(const char *s, char **e, void *loc)
+{
+    mr_require_c_locale(loc, "strtod_l");
+    return MR_ERRNO_CALL(glibc_strtod(s, e));
+}
+EXPORT float strtof_l(const char *s, char **e, void *loc)
+{
+    mr_require_c_locale(loc, "strtof_l");
+    return MR_ERRNO_CALL(glibc_strtof(s, e));
+}
+EXPORT long double strtold_l(const char *s, char **e, void *loc)
+{
+    mr_require_c_locale(loc, "strtold_l");
+    return (long double)MR_ERRNO_CALL(glibc_strtod(s, e));
+}
+
+/* getsectiondata(3) -- <mach-o/getsect.h>. Mach-O only. aarch64 libc.so.6
+ * has no such dynsym (measured: absent next to getline@@GLIBC_2.17 which IS
+ * present), so a host-bind is a NULL bind, not an unrelated function. Walk
+ * LC_SEGMENT_64 of an already-mapped header; slide is header - __TEXT.vmaddr,
+ * the same construction cctools and libswiftcompat use. Structs are the
+ * Mach-O on-disk layout, duplicated here because this file is -nostdinc. */
+struct mr_mh64 {
+    uint32_t magic, cputype, cpusubtype, filetype, ncmds, sizeofcmds, flags, reserved;
+};
+struct mr_lc { uint32_t cmd, cmdsize; };
+struct mr_seg64 {
+    uint32_t cmd, cmdsize; char segname[16];
+    uint64_t vmaddr, vmsize, fileoff, filesize;
+    uint32_t maxprot, initprot, nsects, flags;
+};
+struct mr_sect64 {
+    char sectname[16], segname[16];
+    uint64_t addr, size;
+    uint32_t offset, align, reloff, nreloc, flags, reserved1, reserved2, reserved3;
+};
+#define MR_MH_MAGIC_64  0xfeedfacf
+#define MR_LC_SEGMENT_64 0x19
+
+EXPORT uint8_t *getsectiondata(const struct mr_mh64 *header, const char *segname,
+                               const char *sectname, unsigned long *size)
+{
+    const uint8_t *p;
+    intptr_t slide = 0;
+    int have_slide = 0;
+    uint32_t i, j;
+    if (!header || header->magic != MR_MH_MAGIC_64 || !segname || !sectname) {
+        if (size) *size = 0;
+        return 0;
+    }
+    p = (const uint8_t *)header + sizeof(struct mr_mh64);
+    for (i = 0; i < header->ncmds; i++) {
+        const struct mr_lc *c = (const struct mr_lc *)p;
+        if (c->cmd == MR_LC_SEGMENT_64) {
+            const struct mr_seg64 *s = (const struct mr_seg64 *)c;
+            if (!have_slide && glibc_strncmp(s->segname, "__TEXT", 16) == 0) {
+                slide = (intptr_t)header - (intptr_t)s->vmaddr;
+                have_slide = 1;
+            }
+        }
+        p += c->cmdsize;
+    }
+    p = (const uint8_t *)header + sizeof(struct mr_mh64);
+    for (i = 0; i < header->ncmds; i++) {
+        const struct mr_lc *c = (const struct mr_lc *)p;
+        if (c->cmd == MR_LC_SEGMENT_64) {
+            const struct mr_seg64 *s = (const struct mr_seg64 *)c;
+            if (glibc_strncmp(s->segname, segname, 16) == 0) {
+                const struct mr_sect64 *sec = (const struct mr_sect64 *)(s + 1);
+                for (j = 0; j < s->nsects; j++, sec++) {
+                    if (glibc_strncmp(sec->sectname, sectname, 16) == 0) {
+                        if (size) *size = (unsigned long)sec->size;
+                        return (uint8_t *)(sec->addr + slide);
+                    }
+                }
+            }
+        }
+        p += c->cmdsize;
+    }
+    if (size) *size = 0;
+    return 0;
+}
+
+/* os_system_version_get_current_version. Darwin-only (not in sdk/ headers,
+ * not in glibc -- measured absent from aarch64 libc.so.6 dynsym).
+ *
+ * THE CONVENTION WAS MEASURED FROM THE CALLER, not guessed from a C
+ * declaration. libswiftCore's `__swift_stdlib_operatingSystemVersion` lazy
+ * path (`__ZZZ36_...ENUlPvE_8__invoke`, vmaddr 0x39f9dc in the staged
+ * swift-macosx/arm64 dylib) does this:
+ *
+ *     str  wzr, [sp, #8]
+ *     str  xzr, [sp]          ; 12-byte zeroed slot
+ *     mov  x0, sp             ; OUT-POINTER in x0
+ *     bl   _os_system_version_get_current_version
+ *     ldr  x8, [sp]           ; reads MEMORY after the call
+ *     ldr  w9, [sp, #8]
+ *     str  x8, [x19]
+ *     str  w9, [x19, #8]
+ *
+ * It never consumes x0/x1 as a by-value struct. A `struct {u32,u32,u32}
+ * f(void)` declaration compiled to `lsr x8, x0, #32; stp x8, x1, ...` and
+ * SEGFAULTS on Darwin (oracle: exit 139 after the eight other names printed),
+ * because the real callee stores through x0.
+ *
+ * Bind: the C fixture names it two-level from libSystem
+ * (`nm -m`: `(undefined) external ... (from libSystem)`). libswiftCore binds
+ * it FLAT (`weak external, dynamically looked up`) -- same spelling, no
+ * two-level ordinal, which is why a second copy in libswiftcompat is a load-
+ * order hazard. We export it from libSystem so both binds land here.
+ *
+ * 26.1.0 is the SDK version the corpus carries in LC_BUILD_VERSION, not a
+ * claim about the host kernel. The fixture grades that the out-pointer was
+ * written, not the digits, because Darwin's own provider reports the Mac's
+ * OS (26.5.2 on the oracle machine). */
+struct mr_os_version { uint32_t major, minor, patch; };
+_Static_assert(sizeof(struct mr_os_version) == 12, "os_system_version is 3x u32");
+
+EXPORT void os_system_version_get_current_version(struct mr_os_version *out)
+{
+    if (!out) return;
+    out->major = 26;
+    out->minor = 1;
+    out->patch = 0;
+}
 /* THE ENVIRONMENT IS TWO ARRAYS WITH ONE NAME, and it was already latent
  * before anything wrote to it.
  *
