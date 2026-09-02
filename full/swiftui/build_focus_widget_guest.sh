@@ -198,6 +198,16 @@ runtime_fingerprint() {
 
 assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
 assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
+if vendor_is_inrepo "$W" uikit "$UIKIT"; then
+    echo "focus_widget_guest: attested OpenUIKit source=HEAD:uikit tree=$EXPECTED_UIKIT_TREE"
+else
+    echo "focus_widget_guest: attested OpenUIKit source=checkout tree=$EXPECTED_UIKIT_TREE"
+fi
+if vendor_is_inrepo "$W" machorun "$MACHORUN"; then
+    echo "focus_widget_guest: attested machorun source=HEAD:machorun tree=$EXPECTED_INREPO_MACHORUN_TREE"
+else
+    echo "focus_widget_guest: attested machorun source=checkout tree=$EXPECTED_INREPO_MACHORUN_TREE"
+fi
 [ "$(git -C "$FOCUS_REPO" rev-parse HEAD)" = "$EXPECTED_FOCUS_COMMIT" ] || {
     echo "focus_widget_guest: Focus revision is not pinned $EXPECTED_FOCUS_COMMIT" >&2; exit 2; }
 focus_status_before=$(git -C "$FOCUS_REPO" status --porcelain=v1 --untracked-files=all)

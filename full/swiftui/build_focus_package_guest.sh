@@ -116,6 +116,18 @@ check_source_manifest() {
 
 [ "$OUT" = "$W/build/focus-package-guest" ] \
     || die "derived output path invariant changed"
+assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
+assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
+if vendor_is_inrepo "$W" uikit "$UIKIT"; then
+    echo "focus_package_guest: attested OpenUIKit source=HEAD:uikit tree=$EXPECTED_UIKIT_TREE"
+else
+    echo "focus_package_guest: attested OpenUIKit source=checkout tree=$EXPECTED_UIKIT_TREE"
+fi
+if vendor_is_inrepo "$W" machorun "$MACHORUN"; then
+    echo "focus_package_guest: attested machorun source=HEAD:machorun tree=$EXPECTED_INREPO_MACHORUN_TREE"
+else
+    echo "focus_package_guest: attested machorun source=checkout tree=$EXPECTED_INREPO_MACHORUN_TREE"
+fi
 for tool in git swiftc ld64.lld-18 llvm-otool-18 sha256sum perl cmp; do
     command -v "$tool" >/dev/null || die "required tool is missing: $tool"
 done
@@ -124,8 +136,6 @@ done
 
 assert_clean_commit "$FOCUS_ROOT" "$EXPECTED_FOCUS_COMMIT" Focus
 assert_clean_commit "$SNAPKIT_ROOT" "$EXPECTED_SNAPKIT_COMMIT" SnapKit
-assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
-assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
 assert_clean_commit "$SWIFT_FOUNDATION" "$EXPECTED_FOUNDATION_COMMIT" swift-foundation
 
 OPENCOMBINE_ROOT=${OPENCOMBINE_ROOT:-$W/scratch/opencombine-core-durable-20260828-r2}

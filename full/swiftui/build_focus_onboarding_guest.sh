@@ -160,9 +160,19 @@ done
     && [ "${#FOUNDATION_GUEST_SOURCES[@]}" -eq 37 ] \
     || die 'legacy Focus Foundation exclusion contract drifted'
 
-assert_clean_commit "$FOCUS_ROOT" "$EXPECTED_FOCUS_COMMIT" Focus
 assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
 assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
+if vendor_is_inrepo "$W" uikit "$UIKIT"; then
+    echo "focus_onboarding_guest: attested OpenUIKit source=HEAD:uikit tree=$EXPECTED_UIKIT_TREE"
+else
+    echo "focus_onboarding_guest: attested OpenUIKit source=checkout tree=$EXPECTED_UIKIT_TREE"
+fi
+if vendor_is_inrepo "$W" machorun "$MACHORUN"; then
+    echo "focus_onboarding_guest: attested machorun source=HEAD:machorun tree=$EXPECTED_INREPO_MACHORUN_TREE"
+else
+    echo "focus_onboarding_guest: attested machorun source=checkout tree=$EXPECTED_INREPO_MACHORUN_TREE"
+fi
+assert_clean_commit "$FOCUS_ROOT" "$EXPECTED_FOCUS_COMMIT" Focus
 ONBOARDING_INPUT=$RESOURCE_INPUT/Focus_Onboarding.bundle
 WIDGET_INPUT=$RESOURCE_INPUT/Focus_Widget.bundle
 validate_bundle "$ONBOARDING_INPUT" "$EXPECTED_ONBOARDING_FILES" \

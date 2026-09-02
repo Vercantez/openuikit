@@ -26,6 +26,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         )
         self.assertIn('assert_vendor_tree "$W" uikit', text)
         self.assertIn("HEAD:uikit", text)
+        self.assertIn("attested OpenUIKit source=HEAD:uikit", text)
         self.assertIn("printf 'uikit_tree\\t%s\\n'", text)
         pins = (ROOT / "scripts/vendor_pins.sh").read_text()
         self.assertIn(

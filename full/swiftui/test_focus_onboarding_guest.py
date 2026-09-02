@@ -77,6 +77,7 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
             "EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE",
             text,
         )
+        self.assertIn("attested OpenUIKit source=HEAD:uikit", text)
         self.assertNotIn(
             "EXPECTED_UIKIT_COMMIT="
             "62dea0d97a3b9074e5c016820492bd0656b9a35a",

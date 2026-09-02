@@ -44,6 +44,7 @@ class FocusPackageGuestProofTests(unittest.TestCase):
             text,
         )
         self.assertIn('assert_vendor_tree "$W" uikit', text)
+        self.assertIn("attested OpenUIKit source=HEAD:uikit", text)
         self.assertIn(
             'bash "$W/full/swiftui/build_focus_onboarding_guest.sh"', text
         )
