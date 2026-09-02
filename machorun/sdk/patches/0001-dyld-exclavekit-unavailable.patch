@@ -1,0 +1,33 @@
+mach-o/dyld.h: define DYLD_EXCLAVEKIT_UNAVAILABLE, which the published copy uses
+but never defines.
+
+Apple's release process deletes `#ifndef __OPEN_SOURCE__` regions on the way
+out of the tree.  In mach-o/dyld.h that region is the whole definition:
+
+    #ifndef __OPEN_SOURCE__
+     #define DYLD_EXCLAVEKIT_UNAVAILABLE
+    #endif //__OPEN_SOURCE__
+
+The eight declarations that use the macro were not deleted with it, so
+dyld-1378's mach-o/dyld.h does not compile on its own -- `expected function
+body after function declarator`, eight times, at columns 208 to 234.  Apple's
+SDK copy has the region; the published one does not.
+
+Restoring it as an empty macro is exactly what Apple's own copy expands to:
+ExclaveKit is not a platform we build for, and this SDK emits no availability
+diagnostics regardless (sdk/local/AvailabilityInternal.h).
+
+--- a/mach-o/dyld.h
++++ b/mach-o/dyld.h
+@@ -40,6 +40,11 @@
+  #define DYLD_DRIVERKIT_UNAVAILABLE
+ #endif
+ 
++/* machorun: see sdk/patches/0001-dyld-exclavekit-unavailable.patch */
++#ifndef DYLD_EXCLAVEKIT_UNAVAILABLE
++ #define DYLD_EXCLAVEKIT_UNAVAILABLE
++#endif
++
+ 
+ /*
+  * The following functions allow you to iterate through all loaded images.  

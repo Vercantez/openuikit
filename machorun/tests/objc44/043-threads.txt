@@ -1,0 +1,11 @@
+initialize.calls=1
+initialize.raced=no
+msgTotal=32000
+msgTotal.expected=yes
+lazy.realized=8
+selectors.uniqued=8
+sync.counter=16000
+sync.counter.exact=yes
+sync.nested=8
+threads.count=8
+cache.coherent=yes

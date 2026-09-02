@@ -1,0 +1,14 @@
+== _NSGetExecutablePath
+  bufsize=1  rc=-1  reported a larger size: yes
+  full buffer rc=0  non-empty: yes  absolute: yes
+  names this executable: yes
+  bufsize untouched on success: yes
+== pthread_atfork registers (glibc has no dynamic symbol for it)
+  rc=0
+  again rc=0
+== pthread_getugid_np
+  rc=-1  errno==ESRCH: yes  outputs untouched: yes
+== strlcat, which reports the length it TRIED to make
+  fits:      result="abcd" returned=4
+  truncates: result="abcdeXY" returned=8  detectable: yes
+done

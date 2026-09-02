@@ -1,0 +1,20 @@
+dladdr on a static function returns 1          ok
+  names it (symtab, not the export trie)       ok
+  dli_saddr is exactly the function            ok
+  dli_fbase is below the function              ok
+  dli_fname basename is this program           ok
+dladdr on an exported function returns 1       ok
+  names it                                     ok
+  the underscore is stripped                   ok
+dladdr on a libc function returns 1            ok
+  it is not this executable                    ok
+  names it                                     ok
+dladdr on a stack address returns 0            ok
+dladdr(NULL) returns 0                         ok
+RTLD_SELF finds a symbol in the caller         ok
+RTLD_NEXT skips the caller's own image         ok
+RTLD_NEXT finds a later image's symbol         ok
+RTLD_MAIN_ONLY finds this image's symbol       ok
+RTLD_MAIN_ONLY does not find libc's            ok
+RTLD_DEFAULT still finds a libc symbol         ok
+PASSED: 0 failure(s)

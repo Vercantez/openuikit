@@ -1,0 +1,10 @@
+entries=5
+  name=a-very-long-file-name-to-exercise-the-name-field-beyond-anything-short.txt namelen=74
+  name=alpha.txt namelen=9
+  name=beta.txt namelen=8
+  name=subdir1 namelen=7
+  name=subdir2 namelen=7
+d_type: dirs=2 regular=3 other=0
+longest=74 expected=74
+rewinddir: same count
+done

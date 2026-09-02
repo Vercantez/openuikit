@@ -1,0 +1,19 @@
+== the write end of a pipe is writable
+  events=POLLOUT                     n=1 revents=POLLOUT  stray=no
+  events=POLLOUT|POLLWRNORM          n=1 revents=POLLOUT  stray=no
+== the read end, before and after a write
+  before write                       n=0 revents=(none)  stray=no
+  after write                        n=1 revents=POLLIN  stray=no
+== POLLRDNORM is a distinct bit on both, and must survive
+  events=POLLRDNORM on a write end   n=0 revents=(none)  stray=no
+== a descriptor that is not open
+  closed fd, events=POLLIN           n=1 revents=POLLNVAL  stray=no
+== a negative descriptor is ignored, not an error
+  fd=-1                              n=0 revents=(none)  stray=no
+== 64 descriptors, past the wrapper's 32-entry stack buffer
+  n=32  POLLOUT on 32 of 32 write ends  32 of 32 read ends quiet  strays=0
+== a zero timeout with nothing to report returns 0
+  n=0
+== nfds=0 is legal and just sleeps for the timeout
+  n=0
+done

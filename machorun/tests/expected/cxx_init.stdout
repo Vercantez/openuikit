@@ -1,0 +1,7 @@
+ctor a
+ctor b
+main
+local-static=42
+std::string works len=17
+dtor b
+dtor a

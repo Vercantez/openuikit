@@ -1,0 +1,30 @@
+== __exp10 computes rather than recursing
+  10^0  = 1
+  10^1  = 10
+  10^2  = 100
+  10^3  = 1000
+  10^-1 = 0.1000
+  10^-2 = 0.0100
+  float 10^2 = 100
+  10^2 * 10^3 == 10^5: yes
+== flsl finds the LAST set bit, not the first
+  flsl(0       ) = 0
+  flsl(1       ) = 1
+  flsl(3       ) = 2
+  flsl(0x80    ) = 8
+  flsl(0x81    ) = 8
+  flsl(0xF0F0  ) = 16
+  flsl(1<<62   ) = 63
+== strnstr bounds the HAYSTACK, not the needle
+  found at start:      yes
+  found in the middle: yes
+  empty needle:        start
+  needle longer than bound: not found
+  match just past the bound: not found
+  and with one more byte:    found
+== strncasecmp and strtok
+  strncasecmp("ABC","abc",3) = 0
+  strncasecmp("ABC","abd",3) < 0: yes
+  strncasecmp("ABC","abd",2) = 0
+  strtok_r: [one] [two] [three]
+done

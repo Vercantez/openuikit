@@ -1,0 +1,6 @@
+malloc len=63 first=A last=A
+calloc zeroed sum=0
+realloc kept c[15]=225
+strdup=duplicated len=10
+posix_memalign aligned=1
+churn ok

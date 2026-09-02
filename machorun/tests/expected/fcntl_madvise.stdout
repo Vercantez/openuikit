@@ -1,0 +1,20 @@
+== F_GETFL on a fresh pipe read end
+  initial                        (none)   accmode=O_RDONLY
+== set O_NONBLOCK through F_SETFL and read it back
+  F_SETFL rc=0
+  after setting O_NONBLOCK       O_NONBLOCK   accmode=O_RDONLY
+  O_NONBLOCK survived the round trip: yes
+== and that it really took effect, not just read back
+  read on empty non-blocking pipe: rc=-1 errno=EAGAIN
+== clear it again
+  F_SETFL rc=0  O_NONBLOCK now: no
+== O_APPEND, a second flag that differs (0x0008 against 0x0400)
+  F_SETFL rc=0  O_APPEND survived: yes
+  write end now                  O_APPEND   accmode=O_WRONLY
+== madvise across the whole advice range
+  MADV_NORMAL     rc=0
+  MADV_RANDOM     rc=0
+  MADV_SEQUENTIAL rc=0
+  MADV_WILLNEED   rc=0
+  MADV_FREE       rc=0  errno=0
+done

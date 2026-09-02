@@ -1,0 +1,352 @@
+#!/bin/bash
+# sdk_stage.sh -- assemble sdk/usr/include from sdk/MANIFEST.tsv.
+#
+#   scripts/sdk_stage.sh            fetch what is missing, stage, rewrite CHECKSUMS
+#   scripts/sdk_stage.sh --verify   re-fetch EVERY upstream file, ignoring the
+#                                   cache, and prove the COMMITTED
+#                                   sdk/CHECKSUMS.sha256 still describes it.
+#                                   Writes nothing to CHECKSUMS.  Needs network.
+#   scripts/sdk_stage.sh --offline  stage from the cache only; never touch the net
+#
+# Both staging modes rewrite sdk/usr/include from scratch, and a restage of a
+# clean checkout reproduces EVERY committed header byte-for-byte -- so `git
+# status sdk/usr/include` after a restage is the offline integrity check this
+# script does not otherwise have.  Re-measured 2026-08-27: adding one manifest
+# row changed exactly one file.  (The figure that used to be here was a header
+# COUNT, which went stale twice while the property it stood for stayed true.
+# State the property; the count is `find sdk/usr/include -type f | wc -l`.)
+#
+# sdk/usr/include is COMMITTED.  This script is how it is regenerated, not how
+# it is obtained at build time -- the build must work with no network and no
+# Xcode, which is the entire point of the milestone.
+#
+# Five sources, and the manifest says which is which per header:
+#   <repo>:<path>     apple-oss-distributions/<repo> at the tag in sdk/SOURCES.tsv
+#   gen:<repo>:<path> a header that is not a blob upstream but is the OUTPUT of
+#                     a generator upstream publishes -- run it, do not transcribe
+#   objc4:<path>      vendor/objc4 (Apple's objc4 drop, already in tree)
+#   vendor:<path>     any other vendored tree in this repo -- today only
+#                     vendor/libunwind, which is LLVM's and is NOT the
+#                     apple-oss-distributions `libunwind` that SOURCES.tsv pins.
+#                     Two projects share that name; the prefix keeps them apart.
+#   local             sdk/local/<same relative path> -- clean-room, ours
+#
+# EVERY ROW'S KIND IS VALIDATED BEFORE ANYTHING IS DELETED -- see the note above
+# the check. A kind added here without a case below used to wipe the tree first
+# and fail second.
+#
+# Loud aborts, no silent stubs: a header the manifest names and this script
+# cannot produce is a hard failure here, not a confusing compile error 400
+# files later.
+set -uo pipefail
+
+ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+SDK="$ROOT/sdk"
+INC="$SDK/usr/include"
+CACHE="${SDK_CACHE:-$ROOT/build/sdk-src}"
+MANIFEST="$SDK/MANIFEST.tsv"
+SOURCES="$SDK/SOURCES.tsv"
+SUMS="$SDK/CHECKSUMS.sha256"
+RAW="https://raw.githubusercontent.com/apple-oss-distributions"
+
+MODE=stage
+case "${1:---}" in
+    --verify)  MODE=verify ;;
+    --offline) MODE=offline ;;
+    --) ;;
+    -h|--help) sed -n '2,25p' "$0"; exit 0 ;;
+    *) echo "sdk_stage: unknown option $1" >&2; exit 64 ;;
+esac
+
+die() { echo "sdk_stage: $*" >&2; exit 1; }
+
+[ -f "$MANIFEST" ] || die "no manifest at $MANIFEST"
+[ -f "$SOURCES" ]  || die "no source pins at $SOURCES"
+
+sha256() { if command -v sha256sum >/dev/null 2>&1; then sha256sum "$1" | cut -d' ' -f1
+           else shasum -a 256 "$1" | cut -d' ' -f1; fi; }
+
+# ------------------------------------------------------------------ the pins
+declare -A TAG
+while IFS=$'\t' read -r repo tag lic what; do
+    case "$repo" in ''|\#*) continue ;; esac
+    TAG[$repo]="$tag"
+done < "$SOURCES"
+echo "== pinned releases: ${#TAG[@]}"
+
+# ---------------------------------------------------------------- the fetch
+# One curl per upstream file, into a per-repo/per-tag cache.  Individual files
+# rather than tarballs: xnu's tarball is ~100 MB and we want 202 headers from it.
+#
+# --verify sets FORCE_REFETCH: a cached copy is exactly what --verify must not
+# trust, because it is the thing that was fetched when the tree was staged.
+FORCE_REFETCH=0
+[ "$MODE" = verify ] && FORCE_REFETCH=1
+fetch_one() { # fetch_one <repo> <path>
+    local repo="$1" path="$2" tag="${TAG[$1]:-}" dst
+    [ -n "$tag" ] || die "no tag pinned for repo '$repo' (sdk/SOURCES.tsv)"
+    dst="$CACHE/$repo-$tag/$path"
+    [ "$FORCE_REFETCH" = 1 ] && rm -f "$dst"
+    [ -s "$dst" ] && return 0
+    [ "$MODE" = offline ] && die "cache miss for $repo:$path and --offline was given"
+    mkdir -p "$(dirname "$dst")"
+    if ! curl -fsSL --retry 3 "$RAW/$repo/$tag/$path" -o "$dst.tmp"; then
+        rm -f "$dst.tmp"
+        die "cannot fetch $repo:$path at $tag -- check the path in sdk/MANIFEST.tsv"
+    fi
+    # GitHub serves a 200 with a text body for some error shapes; a header that
+    # is not a header is worth catching here rather than at compile time.
+    [ -s "$dst.tmp" ] || { rm -f "$dst.tmp"; die "$repo:$path came back empty"; }
+    mv "$dst.tmp" "$dst"
+}
+
+# -------------------------------------------------- source tree -> SDK tree
+# A published header is not the installed header.  Libc marks the regions that
+# exist only while Libc itself is being built, and its own install step deletes
+# them:
+#
+#   Libc/xcodescripts/headers.sh:407
+#       for i in `... grep -l '^//Begin-Libc'`; do ed - $i < strip-header.ed
+#   Libc/xcodescripts/strip-header.ed
+#       g/^\/\/Begin-Libc$/.,/^\/\/End-Libc$/d
+#
+# Skip it and _ctype.h arrives with `#include "xlocale_private.h"` at the top,
+# which is not in any SDK and stops 28 of 32 objc4 TUs dead.  This reproduces
+# Apple's rule exactly, on the same trigger, and nothing else.
+#
+# Apple's headers.sh also runs `unifdef` with arguments computed by
+# generate_features.pl.  That pass is NOT reproduced here: its inputs are
+# build-configuration flags we do not have, and its effect is to delete
+# preprocessor branches that a compiler evaluates to the same answer anyway.
+# If that ever stops being true it will be a compile error, which is the point.
+n_stripped=0
+install_header() { # install_header <src> <dst>
+    if grep -q '^//Begin-Libc$' "$1" 2>/dev/null; then
+        sed '/^\/\/Begin-Libc$/,/^\/\/End-Libc$/d' "$1" > "$2"
+        n_stripped=$((n_stripped+1))
+    else
+        cp "$1" "$2"
+    fi
+}
+
+# ------------------------------------------------- validate BEFORE destroying
+#
+# EVERY ROW IS CHECKED FOR A SOURCE KIND THIS SCRIPT KNOWS, BEFORE THE `rm -rf`.
+# Learned the hard way: `mach-o/compact_unwind_encoding.h` was given the source
+# `vendor/libunwind/include/...` in ce9a5cf -- a spelling with no `<kind>:`
+# prefix, which falls past every case below. The script deleted 300+ staged
+# headers, reached row 118, and died, leaving sdk/usr/include with 93 files and
+# only `git checkout` between that and a lost tree. A row it cannot honour is a
+# failure it can detect without touching anything.
+#
+# It also means the rot was INVISIBLE: nothing in the gates runs this script, so
+# sdk/usr/include had been unregenerable for a day while every build passed.
+# This check needs no network and no cache, so a bad row now fails at the moment
+# it is written rather than the next time someone restages.
+bad=0
+while IFS=$'\t' read -r rel src; do
+    case "$rel" in ''|\#*) continue ;; esac
+    [ -n "$src" ] || { echo "sdk_stage: row for '$rel' has no source" >&2; bad=1; continue; }
+    case "$src" in
+        local|objc4:*|vendor:*|gen:*|*:*) ;;
+        *) echo "sdk_stage: row '$rel': unrecognised source kind '$src'" >&2
+           bad=1 ;;
+    esac
+done < "$MANIFEST"
+
+# AND NO DESTINATION TWICE. The loop below is last-writer-wins and says nothing,
+# so two rows naming one header with DIFFERENT sources would stage one of them
+# and the choice would be row order. `os/workgroup.h` appeared twice with the
+# same source, which is harmless and was invisible -- it only showed up because
+# it made the row count and the file count disagree by one. The harmless version
+# is the warning for the harmful one.
+dupe="$(awk -F'\t' '!/^#/ && NF>=2 {print $1}' "$MANIFEST" | sort | uniq -d)"
+if [ -n "$dupe" ]; then
+    echo "sdk_stage: destination staged by more than one manifest row:" >&2
+    printf '     %s\n' $dupe >&2
+    echo "  Staging is last-writer-wins, so this silently picks by row order." >&2
+    bad=1
+fi
+
+if [ "$bad" != 0 ]; then
+    echo "  known kinds: <repo>:<path>  gen:<repo>:<path>  objc4:<path>  vendor:<path>  local" >&2
+    die "manifest has rows this script cannot honour; nothing was changed"
+fi
+
+# --------------------------------------------------------------- the staging
+rm -rf "$INC"
+mkdir -p "$INC" "$CACHE"
+
+n_up=0 n_local=0 n_objc=0 n_vendor=0
+: > "$SUMS.new"
+
+while IFS=$'\t' read -r rel src; do
+    case "$rel" in ''|\#*) continue ;; esac
+    [ -n "$src" ] || die "manifest row for '$rel' has no source"
+    out="$INC/$rel"
+    mkdir -p "$(dirname "$out")"
+    case "$src" in
+        local)
+            in="$SDK/local/$rel"
+            [ -f "$in" ] || die "manifest says '$rel' is local, but sdk/local/$rel does not exist"
+            cp "$in" "$out"; n_local=$((n_local+1)) ;;
+        objc4:*)
+            in="$ROOT/vendor/objc4/${src#objc4:}"
+            [ -f "$in" ] || die "manifest says '$rel' comes from $src, but $in does not exist"
+            cp "$in" "$out"; n_objc=$((n_objc+1)) ;;
+        vendor:*)
+            # A header from a vendored tree in this repo that is NOT objc4 --
+            # today that is vendor/libunwind (LLVM's), which supplies unwind.h,
+            # unwind_itanium.h and mach-o/compact_unwind_encoding.h.
+            #
+            # It needs its own kind rather than reusing `<repo>:<path>`, because
+            # `libunwind` ALREADY names an apple-oss-distributions repo in
+            # SOURCES.tsv -- a different libunwind, supplying libunwind.h and
+            # __libunwind_config.h. Two projects, one name; the prefix is what
+            # keeps them apart. Provenance is vendor/libunwind/PROVENANCE.md.
+            in="$ROOT/vendor/${src#vendor:}"
+            [ -f "$in" ] || die "manifest says '$rel' comes from $src, but $in does not exist"
+            cp "$in" "$out"; n_vendor=$((n_vendor+1)) ;;
+        gen:*)
+            # A header that is not a blob upstream but is the OUTPUT of a
+            # generator upstream publishes.  Running it beats transcribing it.
+            spec="${src#gen:}"; repo="${spec%%:*}"; path="${spec#*:}"
+            fetch_one "$repo" "$path"
+            g="$CACHE/$repo-${TAG[$repo]}/$path"
+            ( cd "$(dirname "$out")" && sh "$g" "$(basename "$out")" ) >/dev/null \
+                || die "generator $src failed for $rel"
+            [ -s "$out" ] || die "generator $src produced nothing for $rel"
+            printf '%s  %s  %s\n' "$(sha256 "$g")" "$src" "$rel" >> "$SUMS.new"
+            n_up=$((n_up+1)) ;;
+        *:*)
+            repo="${src%%:*}"; path="${src#*:}"
+            fetch_one "$repo" "$path"
+            in="$CACHE/$repo-${TAG[$repo]}/$path"
+            install_header "$in" "$out"
+            # The checksum is of the PRISTINE upstream file, not of what we
+            # wrote: that is what --verify has to be able to re-derive.
+            printf '%s  %s  %s\n' "$(sha256 "$in")" "$src" "$rel" >> "$SUMS.new"
+            n_up=$((n_up+1)) ;;
+        *) die "manifest row '$rel': unrecognised source '$src'" ;;
+    esac
+done < "$MANIFEST"
+
+echo "   upstream $n_up   clean-room $n_local   objc4 $n_objc   vendored $n_vendor   = $((n_up+n_local+n_objc+n_vendor))"
+echo "   //Begin-Libc regions stripped from $n_stripped header(s), as Libc's own install does"
+
+# ---------------------------------------------------------------- the patches
+# The second class of "published tree is not the installed header", and unlike
+# the //Begin-Libc one there is no upstream rule to reproduce: Apple's release
+# process deletes `#ifndef __OPEN_SOURCE__` regions from some headers and does
+# not delete the code that USES what those regions defined.  dyld's
+# mach-o/dyld.h references DYLD_EXCLAVEKIT_UNAVAILABLE eight times and, in the
+# published copy, defines it nowhere.
+#
+# So: one patch per header, in sdk/patches/, each with a header comment saying
+# what upstream dropped.  Small, auditable, and it fails loudly -- a patch that
+# does not apply is a pinned tag that moved, which is exactly the drift
+# docs/SDK_SURVEY.md §6.2 warns about.
+shopt -s nullglob 2>/dev/null || true
+PATCHES=("$SDK"/patches/*.patch)
+if [ ${#PATCHES[@]} -gt 0 ]; then
+    for p in "${PATCHES[@]}"; do
+        patch -p1 -d "$INC" --no-backup-if-mismatch -s < "$p" \
+            || die "sdk/patches/$(basename "$p") did not apply -- has the pinned tag moved?"
+    done
+    echo "   patches applied: ${#PATCHES[@]}"
+fi
+
+# ------------------------------------------------------------------ checksums
+# LC_ALL=C: without it `sort` uses the caller's collation, so regenerating this
+# file on a differently-configured machine produces an 18-line diff in which
+# every hash is identical and only the order moved.  Measured 2026-08-26 on a
+# clean restage; a record that cannot be regenerated byte-for-byte is not a
+# record anybody can check.
+render_sums() { # render_sums <rows-file>
+    echo "# sha256 of every UPSTREAM file staged into sdk/usr/include, with the"
+    echo "# apple-oss-distributions path it came from.  Rows for clean-room"
+    echo "# (sdk/local/) and objc4 headers are deliberately absent: those live in"
+    echo "# this repository and git already vouches for them."
+    echo "#"
+    echo "# scripts/sdk_stage.sh --verify re-fetches upstream and checks these."
+    LC_ALL=C sort -k3 "$1"
+}
+
+# --------------------------------------------------------------------- verify
+# THE ORDER HERE IS THE WHOLE POINT, and it used to be wrong.
+#
+# Until 2026-08-26 this script wrote $SUMS unconditionally and THEN "verified"
+# by re-fetching and comparing against the file it had just written -- i.e. it
+# compared a fetch against a second fetch of the same bytes.  Measured: poison
+# one row of the committed CHECKSUMS.sha256, run --verify with a cold cache, and
+# it printed "all upstream files match their pinned tag" while silently
+# replacing the poisoned row.  A tag that moved upstream would have been
+# recorded as the new truth instead of reported, which is the exact failure
+# sdk/PROVENANCE.md §7 says this mode exists to prevent.
+#
+# So: in verify mode the committed file is READ-ONLY and is the thing under
+# test.  Everything was re-fetched above (FORCE_REFETCH), so $SUMS.new is
+# independent evidence.
+if [ "$MODE" = verify ]; then
+    echo "== verify: every upstream file was re-fetched; checking the COMMITTED record"
+    [ -f "$SUMS" ] || die "no $SUMS to verify against"
+    render_sums "$SUMS.new" > "$SUMS.fresh"
+    if diff -u "$SUMS" "$SUMS.fresh" > "$SUMS.diff"; then
+        rm -f "$SUMS.new" "$SUMS.fresh" "$SUMS.diff"
+        echo "   all $n_up upstream files match the committed sha256 at their pinned tag"
+    else
+        echo "!! the committed sdk/CHECKSUMS.sha256 does NOT match upstream at the pinned tags:" >&2
+        sed -n '1,40p' "$SUMS.diff" >&2
+        rm -f "$SUMS.new" "$SUMS.fresh"
+        die "provenance mismatch -- a pinned tag moved, or the record was edited. Report it; do not regenerate it."
+    fi
+else
+    render_sums "$SUMS.new" > "$SUMS"
+    rm -f "$SUMS.new"
+fi
+
+# ---------------------------------------------------------------- closure
+# EVERY STAGED HEADER MUST BE ABLE TO INCLUDE WHAT IT INCLUDES.
+#
+# A header that includes a file we do not ship is an unbacked promise in the
+# most literal form, and it has a nasty property: it costs the person who
+# STAGED it nothing -- their own compile never took that branch -- and fails
+# for the NEXT consumer, who has no idea why. That is exactly how staging
+# sys/socket.h and spawn.h for one consumer silently blocked CFSocket,
+# CFSocketStream and uuid for another.
+#
+# This is deliberately a COMPILE and not a grep. A grep over #include lines
+# cannot see #ifdef guards or clang's own builtin headers (stdarg.h, stddef.h
+# and friends live in the compiler's resource dir, not here), and reports 106
+# edges of which 103 are noise. Preprocessing each header answers the real
+# question -- "does this resolve for the target we build?" -- with no false
+# positives. Measured: 3 real edges, 2 distinct missing files, both regressions
+# introduced by a staging commit that nobody's own build noticed.
+#
+# Skipped when no Darwin-targeting clang is present, because a restage must
+# still work on a host that only fetches.
+CLOSURE_CLANG="${DARWIN_CLANG:-clang}"
+if command -v "$CLOSURE_CLANG" >/dev/null 2>&1; then
+    nf="$(mktemp)"
+    ( cd "$INC" && find . -name '*.h' | sed 's|^\./||' | sort ) | while read -r h; do
+        printf '#include <%s>\n' "$h" > "$nf.c"
+        "$CLOSURE_CLANG" -target arm64-apple-macos11 -isysroot "$SDK" \
+            -fsyntax-only "$nf.c" 2>&1 \
+          | sed -nE "s/.*'([A-Za-z0-9_/.-]+\.h)' file not found.*/$(printf '%s' "$h" | sed 's|/|\\/|g') -> \1/p"
+    done | sort -u > "$nf.out"
+    if [ -s "$nf.out" ]; then
+        echo "!! staged headers include files this sysroot does not ship:" >&2
+        sed 's/^/   /' "$nf.out" >&2
+        echo >&2
+        echo "   Each is a compile error waiting for the next consumer. Add the missing" >&2
+        echo "   header to sdk/MANIFEST.tsv, or find why the including header is reached." >&2
+        rm -f "$nf" "$nf.c" "$nf.out"
+        die "include closure is not closed"
+    fi
+    echo "   include closure: every staged header resolves what it includes"
+    rm -f "$nf" "$nf.c" "$nf.out"
+else
+    echo "   include closure: SKIPPED (no $CLOSURE_CLANG on this host)"
+fi
+
+echo "   -> $INC"

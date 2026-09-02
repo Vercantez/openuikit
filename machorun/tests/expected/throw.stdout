@@ -1,0 +1,11 @@
+throw Derived, caught by exact type            ok
+destructors ran, innermost first               ok
+throw Derived, caught as Base &                ok
+unmatched handler was skipped                  ok
+passed-through frame still cleaned up          ok
+std::runtime_error caught as std::exception    ok
+rethrow reached the outer handler              ok
+inner handler ran before the rethrow           ok
+catch(...) caught a scalar                     ok
+no exception in flight at the end              ok
+PASSED: 0 failure(s)

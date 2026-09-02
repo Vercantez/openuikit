@@ -1,0 +1,70 @@
+sys/cdefs.h, mach/arm/vm_param.h: select XNU_PLATFORM_MacOSX.
+
+xnu's published headers carry the settings for EVERY Apple product, each
+guarded by `#ifdef XNU_PLATFORM_<name>`.  Apple's header-install step resolves
+them with unifdef -- Libc/xcodescripts/headers.sh:407 runs the same tool for
+the same reason -- so the SDK copy contains one product's block and no #ifdef.
+Nothing in a published tree does that for us, and with no XNU_PLATFORM_ defined
+the results are silently wrong rather than loud:
+
+  sys/cdefs.h        __DARWIN_ONLY_UNIX_CONFORMANCE is left UNDEFINED, so
+                     __DARWIN_SUF_UNIX03 becomes "$UNIX2003" and every
+                     __DARWIN_ALIAS'd libc function is renamed.  Measured on
+                     libobjc.A.dylib: 7 undefined symbols that no dylib on
+                     earth exports here -- _open$UNIX2003, _close$UNIX2003,
+                     _write$UNIX2003, _fsync$UNIX2003, _pread$UNIX2003,
+                     _nanosleep$UNIX2003, _strerror$UNIX2003.  On arm64 macOS
+                     the correct value is 1 and the suffix is empty.
+
+  mach/arm/vm_param.h  MACH_VM_MAX_ADDRESS_RAW falls to the embedded value
+                     0x0000000FC0000000 (64 GB) instead of macOS's
+                     0x00007FFFFE000000 (128 TB).  Nothing would have failed
+                     to compile; the number would just have been wrong, which
+                     is precisely the risk docs/SDK_SURVEY.md §6.1 named.
+
+The selection is written into the headers rather than passed as -D so that it
+cannot be forgotten by a guest build.  An iOS sysroot would be a differently
+staged tree, not a different command line.
+
+--- a/sys/cdefs.h
++++ b/sys/cdefs.h
+@@ -25,6 +25,18 @@
+  *
+  * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
+  */
++
++/* machorun: sdk/patches/0002-xnu-platform-macosx.patch -- select the product.
++ * xnu's published headers gate per-product settings on XNU_PLATFORM_<name>,
++ * which Apple's header-install step resolves with unifdef.  sdk/ IS the macOS
++ * sysroot, so it selects MacOSX here, in the header, where it cannot be
++ * forgotten on a command line. */
++#if !defined(XNU_PLATFORM_MacOSX) && !defined(XNU_PLATFORM_iPhoneOS) && \
++    !defined(XNU_PLATFORM_iPhoneSimulator) && !defined(XNU_PLATFORM_AppleTVOS) && \
++    !defined(XNU_PLATFORM_WatchOS) && !defined(XNU_PLATFORM_BridgeOS) && \
++    !defined(XNU_PLATFORM_DriverKit) && !defined(XNU_PLATFORM_XROS)
++#define XNU_PLATFORM_MacOSX 1
++#endif
+ /* Copyright 1995 NeXT Computer, Inc. All rights reserved. */
+ /*
+  * Copyright (c) 1991, 1993
+--- a/mach/arm/vm_param.h
++++ b/mach/arm/vm_param.h
+@@ -25,6 +25,18 @@
+  *
+  * @APPLE_OSREFERENCE_LICENSE_HEADER_END@
+  */
++
++/* machorun: sdk/patches/0002-xnu-platform-macosx.patch -- select the product.
++ * xnu's published headers gate per-product settings on XNU_PLATFORM_<name>,
++ * which Apple's header-install step resolves with unifdef.  sdk/ IS the macOS
++ * sysroot, so it selects MacOSX here, in the header, where it cannot be
++ * forgotten on a command line. */
++#if !defined(XNU_PLATFORM_MacOSX) && !defined(XNU_PLATFORM_iPhoneOS) && \
++    !defined(XNU_PLATFORM_iPhoneSimulator) && !defined(XNU_PLATFORM_AppleTVOS) && \
++    !defined(XNU_PLATFORM_WatchOS) && !defined(XNU_PLATFORM_BridgeOS) && \
++    !defined(XNU_PLATFORM_DriverKit) && !defined(XNU_PLATFORM_XROS)
++#define XNU_PLATFORM_MacOSX 1
++#endif
+ /*
+  * FILE_ID: vm_param.h
+  */

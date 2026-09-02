@@ -1,0 +1,43 @@
+# darwin/host-bound-allowed.txt -- plain C names permitted to reach glibc
+# through machorun's host fallback WITHOUT translation.
+#
+# src/resolve.c answers an otherwise-undefined bind from an is_runtime image
+# with glibc's symbol of the same name. Three kinds of thing land there and
+# only one of them is a decision anybody made:
+#
+#   _glibc_*          the labelled boundary. darwin/src/dsys.h spells glibc's
+#                     function `_glibc_<name>`, and the label IS the assertion
+#                     that the ABI is identical -- anything libSystem has to
+#                     translate gets a plain declaration and a wrapper instead.
+#   loader exports    darwin/loader-exports.txt, gated by gen_tbd CHECKs 1+2.
+#   plain C names     nobody's assertion. THIS FILE.
+#
+# scripts/check_undefined.sh fails on any plain name that is neither in
+# src/host_deny.c (denied: bound to a loud stub) nor listed here. So the set is
+# a decision with a date on it rather than whatever a staging script happened
+# to drag in.
+#
+# THE CHECK IS ONE-SIDED AND THAT IS DELIBERATE. An unlisted name is a hard
+# failure; a listed name that nothing imports is reported, not failed, because
+# a root's contents are configuration -- libquartz is optional, libswiftCore is
+# staged from another project, and a tree that has not staged them would
+# otherwise fail over an entry that is perfectly correct for the tree that has.
+#
+# BEFORE ADDING A ROW: measure both sides. Same size, same signedness, same
+# width, same variadic convention, same return-value CONVENTION -- the six
+# hazard families, not just the ones with structs in them. The rows below say
+# what was checked, because "looked fine" is not a measurement and vdprintf was
+# on this list's ancestor until somebody measured va_list.
+#
+# symbol      reason (what was checked)
+
+_nanf         float nanf(const char *): float/pointer in, float out. No struct,
+              no flag, no varargs, no locale. Identical on both sides.
+
+_remquo       double remquo(double, double, int *): the out parameter is an
+_remquof      int, 4 bytes and signed on both. double/float agree on arm64.
+
+_strtof       float strtof(const char *, char **): float is IEEE binary32 on
+              both sides -- unlike long double, which is 8 bytes on Darwin and
+              16 on Linux and is therefore DENIED (src/host_deny.c). Locale is
+              shared process state, not an argument, so nothing crosses.

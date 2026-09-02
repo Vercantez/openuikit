@@ -1,0 +1,16 @@
+== every resource answers, and soft never exceeds hard
+  resources that failed to answer: 0
+  resources where soft > hard: 0
+== RLIMIT_NOFILE is a descriptor count, not a byte count
+  rc=0  soft is a plausible fd count: yes
+  a descriptor below it opens: yes
+== an UNLIMITED resource must read as RLIM_INFINITY
+  RLIMIT_AS rc=0  reads as RLIM_INFINITY: yes
+  and its hard limit too: yes
+== setrlimit round trip on the soft limit
+  set rc=0  read back 128: yes
+== writev, where struct iovec agrees on both systems
+  wrote 6 bytes, read back "abcdef"
+== PTHREAD_SCOPE is off by one, and Linux supports only SYSTEM
+  set SCOPE_SYSTEM rc=0  read back SYSTEM: yes
+done

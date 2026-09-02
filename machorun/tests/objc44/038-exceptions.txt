@@ -1,0 +1,16 @@
+caught.class=Err
+caught.code=1
+finally.normal=1
+finally.during.throw=2
+outer.caught=Err
+right.handler.code=3
+catchall.class=Err
+inner.code=5
+rethrown.code=5
+replacement.class=OtherErr
+deep.caught.code=99
+finally.order=1234
+normal.path=ok
+after.exceptions.code=8
+after.exceptions.class=Thrower
+done=yes

@@ -1,0 +1,23 @@
+sizeof struct utsname   1280
+offset sysname          0
+offset nodename         256
+offset release          512
+offset version          768
+offset machine          1024
+field width             256
+uname returned          0
+sysname                 [Darwin]
+machine                 [arm64]
+nodename non-empty      1
+release  non-empty      1
+version  non-empty      1
+release starts numeric  1
+release has a dot       1
+sysname tail untouched  1
+nodename tail untouched 1
+release tail untouched  1
+version tail untouched  1
+machine tail untouched  1
+nodename != machine     1
+uname(NULL) returned    -1 errno 14
+done

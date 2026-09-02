@@ -1,0 +1,20 @@
+parentBody.before=0
+child.tag=2
+parentBody.after.child=2
+parent.tag=1
+parentBody.after.parent=2
+grandchild.tag=2
+parentBody.after.grandchild=3
+child2.tag=1
+parentBody.after.child2=3
+cascade.before=0
+cascade.after=3
+ev[0]=main
+ev[1]=initialize.body self=IParent
+ev[2]=initialize.body self=IChild
+ev[3]=initialize.body self=IGrandchild
+ev[4]=IChild2.own.initialize self=IChild2
+ev[5]=cascade self=CTop
+ev[6]=cascade self=CMid
+ev[7]=cascade self=CBot
+ev.count=8

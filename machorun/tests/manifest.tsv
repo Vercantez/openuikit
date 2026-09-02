@@ -1,0 +1,72 @@
+# machorun fixture manifest -- tab separated, one runnable fixture per line.
+#
+# id            fixture id; tests/bin/<id> is the Mach-O, tests/expected/<id>.*
+#               is the recorded macOS behaviour
+# fixups        chained | classic | none
+# oracle        run                 macOS can execute it, so a baseline exists
+#               norun:<reason>      macOS refuses to execute it; no baseline,
+#                                   the fixture is parse-only
+# linux         pass                should eventually match the oracle exactly
+#               xfail:<reason>      known, documented, out-of-scope-for-now
+# what          one-line description
+#
+# Columns are separated by a single TAB. Keep it that way; the harness splits
+# on tabs so descriptions may contain spaces.
+#
+#id	fixups	oracle	linux	what
+exit_raw	classic	run	xfail:raw Darwin svc syscalls; on Linux svc traps to the Linux kernel with Linux numbering	no libSystem calls at all - write+exit via svc #0x80
+exit_unixthread	none	norun:macOS 11+ on arm64 SIGKILLs static executables (no LC_LOAD_DYLINKER)	xfail:no oracle baseline to compare against	fully static, LC_UNIXTHREAD entry, no dyld
+main_ret	chained	run	pass	LC_MAIN entry, exit status is main's return value
+main_ret_classic	classic	run	pass	same, classic LC_DYLD_INFO_ONLY fixups
+printf	chained	run	pass	first real libSystem dependency: printf/puts + Darwin varargs
+printf_classic	classic	run	pass	same, classic fixups and __la_symbol_ptr lazy binding
+malloc	chained	run	pass	malloc/calloc/realloc/free/strdup/posix_memalign
+mod_init	chained	run	pass	initialisers via __TEXT,__init_offsets (S_INIT_FUNC_OFFSETS)
+mod_init_classic	classic	run	pass	same source, initialisers via __DATA_CONST,__mod_init_func
+cxx_init	chained	run	pass	C++ global ctors/dtors, __cxa_atexit, guarded local static
+tls	chained	run	pass	_Thread_local via __thread_vars descriptors and tlv_get_addr
+dylib	chained	run	pass	two images: @rpath dylib, data import, reverse import into the exe
+dylib_classic	classic	run	pass	same, classic fixups on both images
+pthread	chained	run	pass	pthread create/join/mutex/once plus per-thread TLS allocation
+objc	chained	run	pass	Foundation-free Objective-C: classes, selrefs, objc_msgSend
+varargs	chained	run	pass	Darwin arm64 varargs in anger: >8 args, interleaved int/double, va_copy, guest va_list into vsnprintf
+varargs_classic	classic	run	pass	same source, classic fixups -- the varargs ABI is a libSystem property, not a fixup one
+mach	chained	run	pass	mach_task_self, vm_allocate/protect/deallocate, mach_absolute_time, timebase, mach_error_string
+errno	chained	run	pass	errno numbering, O_* flag values and struct stat layout all differ between Darwin and Linux
+utility	chained	run	pass	a representative hand-built utility: ctype (a DATA table Darwin inlines into the guest), setlocale, getopt, qsort, strftime, fgets
+isa_mask	chained	run	pass	every loaded image sits below 2^47, because libswiftCore has the 47-bit isa mask compiled in
+dirent	chained	run	pass	struct dirent is 1048 bytes on Darwin and 280 on glibc, with d_type and d_name at different offsets; readdir translates rather than forwards
+pthread_cond	chained	run	pass	condition variables that really block, and the RECURSIVE/ERRORCHECK constants Darwin and glibc swap
+sysconf	chained	run	pass	all 128 _SC_* names differ between Darwin and glibc, so sysconf must translate rather than forward
+passwd	chained	run	pass	struct passwd is 72 bytes on Darwin and 48 on glibc; pw_dir falls off the end of a forwarded one
+cxx_sort	chained	run	pass	std::sort really sorts all five hand-instantiated types; the broken version recursed forever
+sigmask	chained	run	pass	sigset_t is 4 bytes on Darwin and 128 on glibc, ten signal numbers differ, and SIG_BLOCK/UNBLOCK/SETMASK are off by one
+malloc_type	chained	run	pass	Apple's typed allocator; the size argument sits in a different register in every member of the family
+unwind	chained	run	pass	walks a real stack through Apple's compact __unwind_info; the symbols resolved the whole time it was stubbed
+poll	chained	run	pass	poll(2) across the boundary: the eight agreeing flags, the counts, and the wrapper's heap path -- a regression guard, since the two flags that differ cannot be reached from a fixture
+sigaction	chained	run	pass	installing a handler: struct sigaction is 16 bytes against 152, not one sa_flags bit agrees, and the signal NUMBER has to be translated again on the way back INTO guest code
+throw	chained	run	pass	a real C++ throw across frames, caught by type; the case that matters is the handler that must NOT match
+fcntl_madvise	chained	run	pass	fcntl's command agrees and its O_* value does not; madvise's four common advice values agree and MADV_FREE, the only one libdispatch uses, does not
+pthread_attr	chained	run	pass	PTHREAD_CREATE_JOINABLE is 1 here and DETACHED there, so the safe-looking direction is the broken one; SCHED_OTHER is glibc's SCHED_FIFO
+dlopen	chained	run	pass	loading a dylib at RUN TIME: the export trie through a handle, the initialiser, the TLV, and a bind from the new image into an old one
+sysctl	chained	run	pass	the five MIBs CF needs; KERN_PROC_PID gates __CFInitialize and returns a 648-byte BSD struct CF reads one field from
+dladdr	chained	run	pass	which image and symbol an address is in, plus RTLD_NEXT/SELF/MAIN_ONLY -- one gap, not three: all of them needed THE CALLING IMAGE
+execpath	chained	run	pass	_NSGetExecutablePath must name the GUEST, not the loader -- /proc/self/exe is a real path and the wrong one; plus pthread_atfork, which glibc has no dynamic symbol for
+dyld_images	chained	run	pass	the _dyld_* image table: index 0 is the main executable, and the slide must agree with __TEXT's vmaddr -- only the loader can answer any of it
+osatomic	chained	run	pass	OSAtomic returns the NEW value, not the old -- add_fetch against fetch_add, off by exactly one operation; plus OSSpinLock excluding under eight threads
+rlimit	chained	run	pass	RLIMIT_NOFILE is 8 here and 7 there, and Darwin's 8 is Linux's MEMLOCK -- a forward returns a memory limit as a descriptor count; plus PTHREAD_SCOPE off by one
+loader_path	chained	run	pass	@loader_path in a dlopen means the CALLER's directory, so two images in two directories asking for the same string must get two different files
+environ	chained	run	pass	the environment was two arrays with one name -- environ from the loader's envp, getenv from glibc's -- agreeing until the first write
+exp10_strings	chained	run	pass	__exp10 COMPUTES rather than branching to itself -- the catalogued idiom bug -- plus flsl, which glibc has only as ffsl, one letter and a whole word apart
+dirent_r	chained	run	pass	readdir_r returns an ERRNO and signals EOF through result, not -1 -- a wrapper returning -1 makes every caller's loop terminate as an error
+sscanf	chained	run	pass	variadic, so it cannot be forwarded -- every argument is a pointer glibc would write through; the length modifier decides the WIDTH OF THE STORE
+vm_copy	chained	run	pass	Mach's in-task virtual copy: no alignment requirement at all, MEMMOVE semantics on overlap (the checksum separates that from a forward copy by 16), and unmapped/PROT_NONE/read-only all give KERN_INVALID_ADDRESS rather than KERN_PROTECTION_FAILURE
+uname	chained	run	pass	struct utsname is 1280 bytes with 256-byte fields on Darwin and 390 with 65-byte ones in glibc, so a forward is safe on SIZE and wrong on every OFFSET; plus the sentinel check for Darwin writing strlen+1 bytes and leaving the rest of the field alone
+grp	chained	run	pass	struct group is 32 bytes with the SAME offsets on both sides -- so unlike passwd there is no layout to translate, and what is left is the pthread-style errno RETURN (ERANGE is 34 on both, which is what lets an untranslated one pass) plus the not-found contract, rc 0 with *result NULL
+xattr	chained	run	pass	the option flags ROTATE (Darwin XATTR_CREATE 0x02 IS Linux XATTR_REPLACE 0x02, so create-if-absent performs replace-if-present), XATTR_NOFOLLOW is a flag here and a different FUNCTION there, the arity differs over Darwin's resource-fork position, and Linux refuses every name outside user./security./system./trusted.
+quota	chained	run	pass	the argument ORDER is swapped (Darwin path,cmd against Linux cmd,special) and the first argument is a mount point against a block device -- but APFS supports no quotas at all, so ENOTSUP is what Darwin itself answers and this grades that byte for byte
+fts	chained	run	pass	FTSENT is 112 bytes on Darwin and 120 on glibc; translated traversal grades children/set, NOSTAT/NAMEONLY safety, Darwin-only COMFOLLOWDIR/NOSTAT_TYPE, pre-read roots, nested comparators, root-parent and symlink-follow state, guest persistence, and fresh generations after exact-address reuse
+pthread_mutex_variants	chained	run	pass	Darwin has THREE public static mutex initialisers and the SIGNATURE WORD IS THE TYPE -- a constant no call site names because the guest's compiler laid it down; CF's CFLockInit is the ERRORCHECK one, and adopting it as a default would lock and unlock perfectly while dropping the checking, so this grades semantics by RETURN VALUE
+cflog_surface	chained	run	pass	snprintf_l must route through OUR formatter because Darwin's varargs are on the STACK and AAPCS64's are in registers, and its locale_t is enforced by construction (libSystem exports setlocale and nothing else, so a guest cannot build one); pthread_threadid_np is graded for a real id by the cross-thread line
+fat	chained	run	pass	universal binary (x86_64 + arm64); same output as printf, so any diff is a slice-selection bug
+dup_images	chained	run	pass	the dedupe contract, and it is an ASYMMETRY: a SYMLINK to a loaded dylib is ONE image, two DISTINCT files sharing an install name are TWO -- a loader deduping on install name fails the second half in the direction that looks like an improvement

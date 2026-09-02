@@ -1,0 +1,24 @@
+== the two call sites the census found
+  uuid-shaped n=4  bytes de ad be ef
+  version-shaped n=3  14.7.2
+== the length modifier decides the width of the store
+  %hhu -> 255  guard intact: yes
+  %hu  -> 65535  guard intact: yes
+  %u   -> 123456  guard intact: yes
+  %llu -> 4294967296  (exceeds 32 bits: yes)
+== %c does not skip whitespace, everything else does
+  leading and inner space skipped: n=2 a=42 b=7
+  %c on " x" reads '_' (a space, not 'x'): yes
+== bases, signs and widths
+  %d(-17)=-17  %x(0x1f)=31  %o(0755)=493  %i(0x2A)=42
+  width splits 123456 into n=2 123 and 456
+== strings, suppression, %n and %%
+  two strings n=2 [alpha] [beta]
+  suppression returns only the counted one: n=1
+  %n reports consumed=2 (n=1, and %n is not counted)
+  %% matches a literal percent: n=1 v=50
+== short counts and EOF are different answers
+  input shorter than format: n=1 (a=7, b untouched=yes)
+  empty input returns EOF: yes
+  non-matching input returns 0: yes
+done

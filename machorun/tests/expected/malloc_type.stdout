@@ -1,0 +1,18 @@
+ok   malloc_type_malloc(3000)                       size=3000   align=0     reported>=size
+ok   malloc_type_calloc(300, 7)                     size=2100   align=0     reported>=size
+ok   malloc_type_realloc(->5000)                    size=5000   align=0     reported>=size
+ok   malloc_type_aligned_alloc(64, 3008)            size=3008   align=64    reported>=size
+ok   malloc_type_posix_memalign(128, 4400)          size=4400   align=128   reported>=size
+ok   malloc_type_zone_malloc(zone, 3300)            size=3300   align=0     reported>=size
+ok   malloc_type_zone_calloc(zone, 130, 9)          size=1170   align=0     reported>=size
+ok   malloc_type_zone_memalign(zone, 256, 3900)     size=3900   align=256   reported>=size
+ok   ..._zone_malloc_with_options_internal(32, 6144, 0) size=6144   align=32    reported>=size
+ok   ..._with_options_internal(64, 5120, CLEAR)     size=5120   align=64    zeroed
+ok   ..._with_options_internal(64, 5120, CLEAR) block size=5120   align=64    reported>=size
+ok   aligned_alloc(64, 3000) [not a multiple]       NULL
+ok   with_options_internal(32, 6000) [not a multiple] NULL
+ok   with_options_internal(16, 6000) [align <= 16 is exempt] a pointer
+ok   zone_memalign(64, 3000) [no multiple rule]     a pointer
+ok   valloc(6000) [no multiple rule]                a pointer
+ok   malloc_type_free / malloc_type_zone_free      
+PASSED: 0 failure(s)

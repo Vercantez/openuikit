@@ -1,0 +1,93 @@
+# objc-config.h + objc-cache.mm: no restartable ranges and no thread-PC scan, so the
+# method cache never collects its garbage.
+#
+# Both of Darwin's answers to "is a thread reading cache buckets right now?" need a
+# kernel we do not have. We take the conservative branch -- "a reader may be active" --
+# which leaks the old bucket array on every cache reallocation and is the same choice,
+# for the same reason, that ~/objc4-linux made in its patches/0005.
+#
+# This one is INTERESTING: the ELF port never had to make it. objc-config.h already
+# reads `!TARGET_OS_MAC` there, so Linux got HAVE_TASK_RESTARTABLE_RANGES 0 for free.
+# Building as Mach-O sets TARGET_OS_MAC and the accident stops working -- objc4 then
+# calls task_restartable_ranges_register() and _objc_fatal()s when it fails. Measured:
+#   objc[421]: task_restartable_ranges_register failed (result 0x2e: (os/kern) not supported)
+diff -ru a/runtime/objc-cache.mm b/runtime/objc-cache.mm
+--- a/runtime/objc-cache.mm	2026-08-25 22:37:50.032543345 -0500
++++ b/runtime/objc-cache.mm	2026-08-25 22:37:50.032908722 -0500
+@@ -1141,6 +1141,31 @@
+ 
+ static int _collecting_in_critical(void)
+ {
++#if OBJC_MACHORUN
++    /*
++     * machorun: UNIMPLEMENTED -- method cache garbage is never freed.
++     *
++     * This function answers "is any thread currently executing inside the
++     * range of objc_msgSend that reads cache buckets?", so that freed buckets
++     * cannot be read after free. Darwin answers it two ways and neither is
++     * available under machorun:
++     *   - task_restartable_ranges_synchronize(); HAVE_TASK_RESTARTABLE_RANGES
++     *     is 0 (objc-config.h) because there is no XNU to do the rewinding.
++     *   - task_threads() + thread_get_state() to sample every thread's PC.
++     *     That is real Mach IPC; machorun aborts on mach_msg by design
++     *     (docs/UNIMPLEMENTED.md#mach-ipc). The Linux-native equivalent --
++     *     walk /proc/self/task, signal each thread, read uc_mcontext.pc in
++     *     the handler -- is implementable and unwritten.
++     *
++     * Returning TRUE is the CONSERVATIVE answer: "a reader may be active, do
++     * not free". The cost is that cache_collect() never reclaims, so every
++     * cache reallocation LEAKS the old bucket array. That is a leak, not a
++     * feature. Returning FALSE would be a use-after-free.
++     *
++     * Identical in substance to ~/objc4-linux's hunk in patches/0005.
++     */
++    return TRUE;
++#else
+ 
+ #if HAVE_TASK_RESTARTABLE_RANGES
+     // Only use restartable ranges if we registered them earlier.
+@@ -1231,6 +1256,7 @@
+     // Return our finding
+     return result;
+ 
++#endif // OBJC_MACHORUN
+ }
+ 
+ 
+@@ -1338,8 +1364,15 @@
+     } 
+     else {
+         // No excuses.
+-        while (_collecting_in_critical()) 
++#if OBJC_MACHORUN
++        // machorun: _collecting_in_critical() is hardwired TRUE above, so this
++        // spin would never terminate. Give up on collecting instead -- the
++        // garbage leaks, which is the cost recorded in docs/UNIMPLEMENTED.md.
++        return;
++#else
++        while (_collecting_in_critical())
+             ;
++#endif
+     }
+ 
+     // No cache readers in progress - garbage is now deletable
+diff -ru a/runtime/objc-config.h b/runtime/objc-config.h
+--- a/runtime/objc-config.h	2026-08-25 22:37:50.032264427 -0500
++++ b/runtime/objc-config.h	2026-08-25 22:37:50.032770138 -0500
+@@ -165,6 +165,16 @@
+ // task_restartable_ranges_synchronize()
+ #if   TARGET_OS_SIMULATOR || defined(__i386__) || defined(__arm__) || !TARGET_OS_MAC
+ #   define HAVE_TASK_RESTARTABLE_RANGES 0
++#elif OBJC_MACHORUN
++    // machorun: restartable ranges are an XNU service. Linux's rseq(2) is the
++    // semantic analogue but ABORTS a critical section rather than restarting
++    // it, and needs a compiler-emitted descriptor. There is no kernel here
++    // that can rewind a thread out of the cache-scan range.
++    //
++    // NOTE this is where the ELF port got the right answer by accident: on
++    // Linux `!TARGET_OS_MAC` already forced this to 0. Building as Mach-O
++    // turns TARGET_OS_MAC on, so the choice has to be made explicitly.
++#   define HAVE_TASK_RESTARTABLE_RANGES 0
+ #else
+ #   define HAVE_TASK_RESTARTABLE_RANGES 1
+ #endif

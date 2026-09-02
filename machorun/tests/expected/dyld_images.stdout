@@ -1,0 +1,16 @@
+== the image table
+  more than one image: yes
+== index 0 is the main executable
+  header non-NULL: yes  name non-NULL: yes
+  magic is MH_MAGIC_64: yes
+  filetype is MH_EXECUTE: yes
+  names this executable: yes
+== every image is well-formed, and the slide is consistent
+  images with a bad magic: 0
+  images with a NULL name: 0
+  images whose slide disagrees with __TEXT: 0
+  this executable appears in the table: yes
+== walking past the end returns NULL rather than aborting
+  header at n: NULL  name at n: NULL  slide at n: 0
+  header far past the end: NULL
+done

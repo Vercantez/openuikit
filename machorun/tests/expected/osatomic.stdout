@@ -1,0 +1,16 @@
+== the increment family returns the NEW value, not the old
+  from 10, increment returns 11
+  from 11, decrement returns 10
+  variable ended at 10
+  from 100, Add64(+7) returns 107
+  from 107, Add64(-7) returns 100
+== compare-and-swap, both outcomes and what is left behind
+  matching swap returned true, value now 9
+  mismatched swap returned false, value still 9
+  ptr matching swap: true, now points at b: yes
+  ptr mismatched swap: false, unchanged: yes
+== under real contention
+  atomic counter exact: yes
+  spinlock-guarded counter exact: yes
+  lock released: yes
+done

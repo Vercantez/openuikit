@@ -1,0 +1,14 @@
+== KERN_PROC / KERN_PROC_PID, which gates __CFInitialize
+  fetch rc=0  wrote the whole struct
+  p_svuid == getuid(): yes
+== KERN_MAXFILESPERPROC
+  rc=0  width=int  positive=yes
+== HW_NCPU and HW_AVAILCPU
+  HW_NCPU      rc=0 width=int positive=yes
+  HW_AVAILCPU  rc=0 width=int positive=yes
+  available <= configured: yes
+== HW_MEMSIZE, the one that is uint64 rather than int
+  rc=0  width=uint64  positive=yes
+  a whole number of pages: yes
+  at least 64 MiB: yes
+done

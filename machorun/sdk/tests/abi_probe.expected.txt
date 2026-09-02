@@ -1,0 +1,460 @@
+== fundamental types
+sizeof void *                       8
+sizeof long                         8
+sizeof long long                    8
+sizeof size_t                       8
+sizeof ptrdiff_t                    8
+sizeof wchar_t                      4
+sizeof time_t                       8
+sizeof off_t                        8
+sizeof ino_t                        8
+sizeof dev_t                        4
+sizeof mode_t                       2
+sizeof nlink_t                      2
+sizeof blkcnt_t                     8
+sizeof blksize_t                    4
+sizeof uid_t                        4
+sizeof gid_t                        4
+sizeof va_list                      8
+
+== struct kinfo_proc and struct tzhead  (CFUtilities, CFTimeZone)
+sizeof struct kinfo_proc            648
+offset kinfo_proc.kp_proc           0
+offset kinfo_proc.kp_eproc          296
+sizeof struct extern_proc           296
+offset extern_proc.p_pid            40
+offset extern_proc.p_stat           36
+offset extern_proc.p_comm           243
+offset extern_proc.p_starttime      0
+sizeof struct eproc                 352
+offset eproc.e_ppid                 264
+offset eproc.e_pgid                 268
+offset eproc.e_ucred                120
+offset kinfo_proc.p_svuid           396
+sizeof struct tzhead                44
+offset tzhead.tzh_magic             0
+offset tzhead.tzh_version           4
+offset tzhead.tzh_ttisgmtcnt        20
+offset tzhead.tzh_ttisstdcnt        24
+offset tzhead.tzh_leapcnt           28
+offset tzhead.tzh_timecnt           32
+offset tzhead.tzh_typecnt           36
+offset tzhead.tzh_charcnt           40
+KERN_PROC_PID 1  KERN_PROC 14  CTL_KERN 1
+
+== struct dirent and struct statfs  (CoreFoundation's, and $INODE64-sensitive)
+sizeof struct dirent                1048
+offset dirent.d_ino                 0
+offset dirent.d_seekoff             8
+offset dirent.d_reclen              16
+offset dirent.d_namlen              18
+offset dirent.d_type                20
+offset dirent.d_name                21
+sizeof struct statfs                2168
+offset statfs.f_bsize               0
+offset statfs.f_iosize              4
+offset statfs.f_blocks              8
+offset statfs.f_bfree               16
+offset statfs.f_bavail              24
+offset statfs.f_files               32
+offset statfs.f_ffree               40
+offset statfs.f_fsid                48
+offset statfs.f_owner               56
+offset statfs.f_type                60
+offset statfs.f_flags               64
+offset statfs.f_fssubtype           68
+offset statfs.f_fstypename          72
+offset statfs.f_mntonname           88
+offset statfs.f_mntfromname         1112
+
+== struct stat  (docs/ABI.md: 144 bytes on Darwin, 128 on Linux)
+sizeof struct stat                  144
+offset stat.st_dev                  0
+offset stat.st_mode                 4
+offset stat.st_nlink                6
+offset stat.st_ino                  8
+offset stat.st_uid                  16
+offset stat.st_gid                  20
+offset stat.st_rdev                 24
+offset stat.st_size                 96
+offset stat.st_blocks               104
+offset stat.st_blksize              112
+offset stat.st_flags                116
+offset stat.st_gen                  120
+offset stat.st_atimespec            32
+offset stat.st_mtimespec            48
+offset stat.st_ctimespec            64
+offset stat.st_birthtimespec        80
+sizeof struct timespec              16
+offset timespec.tv_sec              0
+offset timespec.tv_nsec             8
+
+== struct tm
+sizeof struct tm                    56
+offset tm.tm_sec                    0
+offset tm.tm_min                    4
+offset tm.tm_hour                   8
+offset tm.tm_mday                   12
+offset tm.tm_mon                    16
+offset tm.tm_year                   20
+offset tm.tm_wday                   24
+offset tm.tm_yday                   28
+offset tm.tm_isdst                  32
+offset tm.tm_gmtoff                 40
+offset tm.tm_zone                   48
+
+== errno  (54 of 87 shared names differ from Linux; EAGAIN and
+==         EDEADLK hold each other's numbers)
+value  EPERM                        1
+value  ENOENT                       2
+value  ESRCH                        3
+value  EINTR                        4
+value  EIO                          5
+value  ENXIO                        6
+value  E2BIG                        7
+value  ENOEXEC                      8
+value  EBADF                        9
+value  ECHILD                       10
+value  EDEADLK                      11
+value  ENOMEM                       12
+value  EACCES                       13
+value  EFAULT                       14
+value  EBUSY                        16
+value  EEXIST                       17
+value  EXDEV                        18
+value  ENODEV                       19
+value  ENOTDIR                      20
+value  EISDIR                       21
+value  EINVAL                       22
+value  ENFILE                       23
+value  EMFILE                       24
+value  ENOTTY                       25
+value  EFBIG                        27
+value  ENOSPC                       28
+value  ESPIPE                       29
+value  EROFS                        30
+value  EMLINK                       31
+value  EPIPE                        32
+value  EDOM                         33
+value  ERANGE                       34
+value  EAGAIN                       35
+value  EWOULDBLOCK                  35
+value  EINPROGRESS                  36
+value  ENOTSOCK                     38
+value  EOPNOTSUPP                   102
+value  ELOOP                        62
+value  ENAMETOOLONG                 63
+value  ENOTEMPTY                    66
+value  EOVERFLOW                    84
+value  ECANCELED                    89
+value  EIDRM                        90
+value  ENOTSUP                      45
+value  ETIMEDOUT                    60
+value  ENOSYS                       78
+
+== signals  (9 of 28 shared names differ from Linux, and three form a
+==           CYCLE: Darwin SIGCONT 19 / SIGCHLD 20 against Linux 18 / 17,
+==           so a forwarded number does not merely miss, it names a
+==           different real signal. Nothing forwards one today.)
+value  SIGHUP                       1
+value  SIGINT                       2
+value  SIGQUIT                      3
+value  SIGILL                       4
+value  SIGTRAP                      5
+value  SIGABRT                      6
+value  SIGFPE                       8
+value  SIGKILL                      9
+value  SIGBUS                       10
+value  SIGSEGV                      11
+value  SIGSYS                       12
+value  SIGPIPE                      13
+value  SIGALRM                      14
+value  SIGTERM                      15
+value  SIGURG                       16
+value  SIGSTOP                      17
+value  SIGTSTP                      18
+value  SIGCONT                      19
+value  SIGCHLD                      20
+value  SIGTTIN                      21
+value  SIGTTOU                      22
+value  SIGXCPU                      24
+value  SIGXFSZ                      25
+value  SIGVTALRM                    26
+value  SIGPROF                      27
+value  SIGWINCH                     28
+value  SIGUSR1                      30
+value  SIGUSR2                      31
+value  SIG_BLOCK                    1
+value  SIG_UNBLOCK                  2
+value  SIG_SETMASK                  3
+value  SA_RESTART                   2
+value  SA_SIGINFO                   64
+value  SA_NOCLDSTOP                 8
+value  SA_ONSTACK                   1
+value  SA_RESETHAND                 4
+value  SA_NODEFER                   16
+value  SA_NOCLDWAIT                 32
+value  SIG_DFL                      0
+value  SIG_IGN                      1
+sizeof struct sigaction             16
+sizeof siginfo_t                    104
+offset sigaction.sa_mask            8
+offset sigaction.sa_flags           12
+
+== clock ids  (darwin/src/posix.c translates these; both tables are hand-written)
+value  CLOCK_REALTIME               0
+value  CLOCK_MONOTONIC              6
+value  CLOCK_MONOTONIC_RAW          4
+value  CLOCK_MONOTONIC_RAW_APPROX   5
+value  CLOCK_UPTIME_RAW             8
+value  CLOCK_UPTIME_RAW_APPROX      9
+value  CLOCK_PROCESS_CPUTIME_ID     12
+value  CLOCK_THREAD_CPUTIME_ID      16
+
+== poll  (POLLWRNORM and POLLWRBAND differ from Linux, and Darwin's
+==        POLLWRBAND 0x0100 IS Linux's POLLWRNORM, so a forwarded
+==        events word subscribes to a real but different condition.
+==        nfds_t is the other half: 4 here, 8 on Linux, in a 64-bit
+==        argument slot. darwin/src/posix.c translates both.)
+value  POLLIN                       1
+value  POLLPRI                      2
+value  POLLOUT                      4
+value  POLLERR                      8
+value  POLLHUP                      16
+value  POLLNVAL                     32
+value  POLLRDNORM                   64
+value  POLLRDBAND                   128
+value  POLLWRNORM                   4
+value  POLLWRBAND                   256
+value  POLLEXTEND                   512
+value  POLLATTRIB                   1024
+value  POLLNLINK                    2048
+value  POLLWRITE                    4096
+sizeof nfds_t                       4
+sizeof struct pollfd                8
+offset pollfd.fd                    0
+offset pollfd.events                4
+offset pollfd.revents               6
+
+== socket constants  (SOL_SOCKET is 65535 on Darwin and 1 on Linux --
+==                    and 1 IS a valid level on Linux, so a forwarded
+==                    setsockopt would set an option at the wrong level
+==                    rather than failing. Every SO_* differs too.)
+value  AF_UNIX                      1
+value  AF_INET                      2
+value  AF_INET6                     30
+value  SOCK_STREAM                  1
+value  SOCK_DGRAM                   2
+value  SOL_SOCKET                   65535
+value  SO_REUSEADDR                 4
+value  SO_KEEPALIVE                 8
+value  SO_BROADCAST                 32
+value  SO_SNDBUF                    4097
+value  SO_RCVBUF                    4098
+value  SO_ERROR                     4103
+value  SO_LINGER                    128
+value  SHUT_RD                      0
+value  SHUT_WR                      1
+value  SHUT_RDWR                    2
+value  MSG_PEEK                     2
+value  MSG_OOB                      1
+value  IPPROTO_TCP                  6
+value  IPPROTO_UDP                  17
+
+== open flags  (10 of 13 differ; Darwin's O_CREAT IS Linux's O_TRUNC)
+value  O_RDONLY                     0
+value  O_WRONLY                     1
+value  O_RDWR                       2
+value  O_ACCMODE                    3
+value  O_NONBLOCK                   4
+value  O_APPEND                     8
+value  O_CREAT                      512
+value  O_TRUNC                      1024
+value  O_EXCL                       2048
+value  O_NOCTTY                     131072
+value  O_DIRECTORY                  1048576
+value  O_CLOEXEC                    16777216
+value  O_NOFOLLOW                   256
+value  O_SYNC                       128
+
+== fcntl commands  (the five a run loop uses agree; the other five are
+==                  ROTATED INTO EACH OTHER. Darwin's F_GETLK is Linux's
+==                  F_SETLKW, so ASKING whether a lock is held instead
+==                  ACQUIRES it and blocks. Not forwarded -- see
+==                  docs/UNIMPLEMENTED.md#not-a-plain-forward.)
+value  F_DUPFD                      0
+value  F_GETFD                      1
+value  F_SETFD                      2
+value  F_GETFL                      3
+value  F_SETFL                      4
+value  F_GETLK                      7
+value  F_SETLK                      8
+value  F_SETLKW                     9
+value  F_GETOWN                     5
+value  F_SETOWN                     6
+sizeof struct flock                 24
+
+== scheduling  (SCHED_OTHER is 1 here and 0 on Linux, and Darwin's 1 IS
+==              Linux's SCHED_FIFO -- so a guest asking for the NORMAL
+==              scheduler would be made real-time. Not forwarded.)
+value  SCHED_OTHER                  1
+value  SCHED_FIFO                   4
+value  SCHED_RR                     2
+sizeof struct sched_param           8
+sizeof pthread_attr_t               64
+value  PTHREAD_CREATE_JOINABLE      1
+value  PTHREAD_CREATE_DETACHED      2
+
+== stat mode bits
+value  S_IFMT                       61440
+value  S_IFREG                      32768
+value  S_IFDIR                      16384
+value  S_IFLNK                      40960
+value  S_IFBLK                      24576
+value  S_IFCHR                      8192
+value  S_IFIFO                      4096
+value  S_IFSOCK                     49152
+
+== seek / stdio
+value  SEEK_SET                     0
+value  SEEK_CUR                     1
+value  SEEK_END                     2
+value  EOF                          -1
+value  BUFSIZ                       1024
+value  FOPEN_MAX                    20
+value  FILENAME_MAX                 1024
+
+== per-product settings  (xnu gates these on XNU_PLATFORM_<name>;
+==   getting it wrong is silent -- sdk/patches/0002 selects MacOSX)
+value  MACH_VM_MIN_ADDRESS_RAW      0x0000000000000000
+value  MACH_VM_MAX_ADDRESS_RAW      0x00007ffffe000000
+value  MACH_VM_MIN_ADDRESS          0x0000000000000000
+value  MACH_VM_MAX_ADDRESS          0x00007ffffe000000
+value  VM_MIN_ADDRESS               0x0000000000000000
+value  VM_MAX_ADDRESS               0x00000000f0000000
+value  __DARWIN_ONLY_UNIX_CONFORMANCE 1
+value  __DARWIN_ONLY_64_BIT_INO_T   1
+value  __DARWIN_ONLY_VERS_1050      1
+string __DARWIN_SUF_UNIX03          ""
+string __DARWIN_SUF_64_BIT_INO_T    ""
+
+== _DefaultRuneLocale  (a DATA ABI, resolved through the .tbd)
+sizeof _RuneLocale                  3208
+magic  _DefaultRuneLocale.magic     RuneMagA
+encode _DefaultRuneLocale.encoding  NONE
+runetype[0..15]             00000200 00000200 00000200 00000200 00000200 00000200 00000200 00000200 00000200 00024200 00004200 00004200 00004200 00004200 00000200 00000200
+maplower['A'..'F']          97 98 99 100 101 102
+
+== struct passwd  (Libinfo; getpwnam_r's out parameter)
+sizeof struct passwd                72
+offset passwd.pw_name               0
+offset passwd.pw_passwd             8
+offset passwd.pw_uid                16
+offset passwd.pw_gid                20
+offset passwd.pw_change             24
+offset passwd.pw_class              32
+offset passwd.pw_gecos              40
+offset passwd.pw_dir                48
+offset passwd.pw_shell              56
+offset passwd.pw_expire             64
+
+== MacTypes  (sdk/local/MacTypes.h -- OURS. A typedef of the wrong
+==            width compiles perfectly, so Apple's header certifies
+==            these rather than a careful reading of it)
+sizeof UInt8                        1
+sizeof UInt16                       2
+sizeof UInt32                       4
+sizeof UInt64                       8
+sizeof SInt8                        1
+sizeof SInt16                       2
+sizeof SInt32                       4
+sizeof SInt64                       8
+sizeof OSErr                        2
+sizeof OSStatus                     4
+sizeof Boolean                      1
+sizeof UniChar                      2
+sizeof Fixed                        4
+sizeof UTF8Char                     1
+sizeof UTF16Char                    2
+sizeof UTF32Char                    4
+sizeof UnicodeScalarValue           4
+sizeof Str63                        64
+sizeof Str255                       256
+sizeof StrFileName                  64
+sizeof StringPtr                    8
+sizeof StringHandle                 8
+sizeof ConstStringPtr               8
+sizeof ConstStr255Param             8
+
+== quotactl  (the ARGUMENT ORDER is swapped against Linux's, and the
+==            first argument is a mount point against a block device)
+sizeof struct dqblk                 64
+value  SUBCMDSHIFT                  8
+value  SUBCMDMASK                   0x00000000000000ff
+value  USRQUOTA                     0
+value  GRPQUOTA                     1
+value  Q_QUOTAON                    0x0000000000000100
+value  Q_QUOTAOFF                   0x0000000000000200
+value  Q_GETQUOTA                   0x0000000000000300
+value  Q_SETQUOTA                   0x0000000000000400
+value  Q_SYNC                       0x0000000000000600
+value  Q_QUOTASTAT                  0x0000000000000700
+
+== xattr options  (they ROTATE: Darwin XATTR_CREATE 0x02 is Linux's
+==                 XATTR_REPLACE, so create-if-absent performs
+==                 replace-if-present -- the exact inverse)
+value  XATTR_NOFOLLOW               0x0000000000000001
+value  XATTR_CREATE                 0x0000000000000002
+value  XATTR_REPLACE                0x0000000000000004
+value  XATTR_NOSECURITY             0x0000000000000008
+value  XATTR_NODEFAULT              0x0000000000000010
+value  XATTR_SHOWCOMPRESSION        0x0000000000000020
+value  XATTR_MAXNAMELEN             127
+value  ENOATTR                      93
+
+== struct group  (getgrnam_r's out parameter -- and unlike passwd,
+==                this one AGREES with glibc field for field)
+sizeof struct group                 32
+offset group.gr_name                0
+offset group.gr_passwd              8
+offset group.gr_gid                 16
+offset group.gr_mem                 24
+
+== sysdir  (sdk/local/sysdir.h -- OUR header; nothing upstream
+==          publishes this interface, so these pin it against Apple's)
+sizeof sysdir_search_path_directory_t 4
+sizeof sysdir_search_path_domain_mask_t 4
+sizeof sysdir_search_path_enumeration_state 4
+value  SYSDIR_DIRECTORY_APPLICATION 1
+value  SYSDIR_DIRECTORY_DEMO_APPLICATION 2
+value  SYSDIR_DIRECTORY_DEVELOPER_APPLICATION 3
+value  SYSDIR_DIRECTORY_ADMIN_APPLICATION 4
+value  SYSDIR_DIRECTORY_LIBRARY     5
+value  SYSDIR_DIRECTORY_DEVELOPER   6
+value  SYSDIR_DIRECTORY_USER        7
+value  SYSDIR_DIRECTORY_DOCUMENTATION 8
+value  SYSDIR_DIRECTORY_DOCUMENT    9
+value  SYSDIR_DIRECTORY_CORESERVICE 10
+value  SYSDIR_DIRECTORY_AUTOSAVED_INFORMATION 11
+value  SYSDIR_DIRECTORY_DESKTOP     12
+value  SYSDIR_DIRECTORY_CACHES      13
+value  SYSDIR_DIRECTORY_APPLICATION_SUPPORT 14
+value  SYSDIR_DIRECTORY_DOWNLOADS   15
+value  SYSDIR_DIRECTORY_INPUT_METHODS 16
+value  SYSDIR_DIRECTORY_MOVIES      17
+value  SYSDIR_DIRECTORY_MUSIC       18
+value  SYSDIR_DIRECTORY_PICTURES    19
+value  SYSDIR_DIRECTORY_PRINTER_DESCRIPTION 20
+value  SYSDIR_DIRECTORY_SHARED_PUBLIC 21
+value  SYSDIR_DIRECTORY_PREFERENCE_PANES 22
+value  SYSDIR_DIRECTORY_ALL_APPLICATIONS 100
+value  SYSDIR_DIRECTORY_ALL_LIBRARIES 101
+value  SYSDIR_DOMAIN_MASK_USER      0x0000000000000001
+value  SYSDIR_DOMAIN_MASK_LOCAL     0x0000000000000002
+value  SYSDIR_DOMAIN_MASK_NETWORK   0x0000000000000004
+value  SYSDIR_DOMAIN_MASK_SYSTEM    0x0000000000000008
+value  SYSDIR_DOMAIN_MASK_ALL       0x000000000000ffff
+
+== variadic ABI  (Darwin passes EVERY variadic argument on the stack
+==                with an 8-byte va_list; Linux uses x1-x7/v0-v7 and 32)
+1 2 3 4.50 five 6
