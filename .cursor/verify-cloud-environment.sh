@@ -2,6 +2,18 @@
 
 set -euo pipefail
 
+started_ns=$(date +%s%N)
+phase_ns=$started_ns
+cleanup_ms=0
+tools_ms=0
+evidence_ms=0
+swift_ms=0
+finish_phase() {
+    current_ns=$(date +%s%N)
+    elapsed_ms=$(( (current_ns - phase_ns) / 1000000 ))
+    phase_ns=$current_ns
+}
+
 repo_root=$(git rev-parse --show-toplevel)
 case "$repo_root" in
     ''|/) printf 'cursor-environment: unsafe repository root: %s\n' "$repo_root" >&2; exit 1 ;;
@@ -24,11 +36,41 @@ for relative in .build build scratch; do
         rm -rf -- "$generated_root"
     fi
 done
+finish_phase
+cleanup_ms=$elapsed_ms
 
-for tool in swiftc clang-18 ld64.lld python3 pkg-config git; do
+for tool in \
+    swift swiftc \
+    clang clang++ clang-18 clang++-18 \
+    ld64.lld ld64.lld-18 \
+    llvm-nm llvm-nm-18 \
+    llvm-otool llvm-otool-18 \
+    llvm-objdump llvm-objdump-18 \
+    perl patch jq sha256sum shasum cmp file git python3 pkg-config
+do
     command -v "$tool" >/dev/null \
         || { printf 'cursor-environment: missing tool: %s\n' "$tool" >&2; exit 1; }
 done
+
+# Consumers invoke both spellings. Refuse an image where an unversioned LLVM
+# name resolves to a different toolchain instead of the pinned Ubuntu LLVM 18
+# binary installed above.
+for llvm_tool in llvm-nm llvm-otool llvm-objdump; do
+    unversioned_path=$(command -v "$llvm_tool")
+    versioned_path=$(command -v "${llvm_tool}-18")
+    [ "$(readlink -f "$unversioned_path")" = "$(readlink -f "$versioned_path")" ] \
+        || { printf 'cursor-environment: %s does not resolve to %s-18\n' \
+            "$llvm_tool" "$llvm_tool" >&2; exit 1; }
+done
+if command -v llvm-readtapi-18 >/dev/null; then
+    command -v llvm-readtapi >/dev/null \
+        || { printf 'cursor-environment: missing tool: llvm-readtapi\n' >&2; exit 1; }
+    [ "$(readlink -f "$(command -v llvm-readtapi)")" = \
+        "$(readlink -f "$(command -v llvm-readtapi-18)")" ] \
+        || { printf 'cursor-environment: llvm-readtapi does not resolve to llvm-readtapi-18\n' >&2; exit 1; }
+fi
+finish_phase
+tools_ms=$elapsed_ms
 
 evidence_lock=$repo_root/full/framework-fanout/external-evidence-sources.json
 [ -f "$evidence_lock" ] \
@@ -97,6 +139,8 @@ macios_symlink=$(find "$OPENUIKIT_MACIOS_ROOT" -type l -print -quit) \
     || { printf 'cursor-environment: cannot inspect macios links\n' >&2; exit 1; }
 [ -z "$macios_symlink" ] \
     || { printf 'cursor-environment: macios evidence contains a symbolic link\n' >&2; exit 1; }
+finish_phase
+evidence_ms=$elapsed_ms
 
 swift_version=$(swiftc --version)
 case "$swift_version" in
@@ -106,5 +150,12 @@ esac
 
 printf 'import Foundation\nfunc probeFoundation() {\n    let value = Data([0x4f, 0x4b])\n    _ = value.count\n}\n' \
     | swiftc -parse-as-library -typecheck -module-name CursorEnvironmentProbe -
+finish_phase
+swift_ms=$elapsed_ms
+finished_ns=$phase_ns
+total_ms=$(( (finished_ns - started_ns) / 1000000 ))
 
+printf 'CURSOR_TOOLCHAIN_INVENTORY_OK swift=swift,swiftc clang=clang,clang++,clang-18,clang++-18 linker=ld64.lld,ld64.lld-18 llvm=llvm-nm,llvm-nm-18,llvm-otool,llvm-otool-18,llvm-objdump,llvm-objdump-18 utilities=perl,patch,jq,sha256sum,shasum,cmp,file,git,python3,pkg-config\n'
 printf 'CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean evidence=dotnet-macios\n'
+printf 'CURSOR_ENVIRONMENT_METRICS total_ms=%d cleanup_ms=%d tools_ms=%d evidence_ms=%d swift_ms=%d\n' \
+    "$total_ms" "$cleanup_ms" "$tools_ms" "$evidence_ms" "$swift_ms"

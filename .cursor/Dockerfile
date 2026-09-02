@@ -27,6 +27,7 @@ RUN apt-get update \
         jq \
         libc++-18-dev \
         libcurl4-openssl-dev \
+        libdigest-sha-perl \
         libedit-dev \
         libfontconfig1-dev \
         libfreetype6-dev \
@@ -41,6 +42,8 @@ RUN apt-get update \
         llvm-18 \
         ninja-build \
         patchelf \
+        patch \
+        perl \
         pkg-config \
         python3 \
         python3-pip \
@@ -56,12 +59,24 @@ RUN apt-get update \
         zip \
         zlib1g-dev \
     && rm -rf /var/lib/apt/lists/* \
+    && test -x /usr/bin/ld64.lld-18 \
     && ln -sfn /usr/bin/ld64.lld-18 /usr/bin/ld64.lld \
+    && for llvm_tool in llvm-nm llvm-otool llvm-objdump; do \
+        test -x "/usr/bin/${llvm_tool}-18"; \
+        ln -sfn "/usr/bin/${llvm_tool}-18" "/usr/bin/${llvm_tool}"; \
+    done \
+    && if [ -x /usr/bin/llvm-readtapi-18 ]; then \
+        ln -sfn /usr/bin/llvm-readtapi-18 /usr/bin/llvm-readtapi; \
+    fi \
     && printf 'ubuntu ALL=(ALL) NOPASSWD:ALL\n' > /etc/sudoers.d/ubuntu \
     && chmod 0440 /etc/sudoers.d/ubuntu \
     && git lfs install --system \
     && swiftc --version \
     && ld64.lld --version \
+    && llvm-nm --version \
+    && llvm-otool --version \
+    && llvm-objdump --version \
+    && shasum --version \
     && python3 --version
 
 ENV LANG=C.UTF-8 \

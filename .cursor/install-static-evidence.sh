@@ -111,7 +111,7 @@ sparse_paths=$(git_evidence sparse-checkout list) \
 [ "$sparse_paths" = src ] \
     || { printf 'cursor-evidence: sparse checkout differs from required src corpus\n' >&2; exit 1; }
 if [ ! -d "$checkout_root/src" ] || [ -L "$checkout_root/src" ]; then
-    printf 'cursor-evidence: required src corpus is missing\n' >&2
+    printf 'cursor-evidence: required macios src corpus is missing\n' >&2
     exit 1
 fi
 [ "$(sha256sum "$checkout_root/$license_path" | awk '{print $1}')" = "$license_sha256" ] \
