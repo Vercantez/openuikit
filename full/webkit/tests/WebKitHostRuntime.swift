@@ -1,4 +1,7 @@
-import WebKit
+@_spi(WebKitHost) import WebKit
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 @MainActor
 private final class ScriptHandler: WKScriptMessageHandler {
@@ -17,7 +20,7 @@ private final class AllowingDelegate: WKNavigationDelegate {
     var provisionalFailures = 0
     var commits = 0
     var finishes = 0
-    var lastError: WKPortableError?
+    var lastError: WKError?
 
     func webView(
         _ webView: WKWebView,
@@ -47,7 +50,7 @@ private final class AllowingDelegate: WKNavigationDelegate {
         withError error: Error
     ) {
         provisionalFailures += 1
-        lastError = error as? WKPortableError
+        lastError = error as? WKError
     }
 
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation?) {
@@ -134,10 +137,52 @@ private final class ErrorPageDelegate: WKNavigationDelegate {
     }
 }
 
+@MainActor
+private final class StringKeyObserver: NSObject, WebKitHostKeyValueObserver {
+    var events: [(String, Bool, Bool)] = []
+
+    func observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [String: Any]?,
+        context: UnsafeMutableRawPointer?
+    ) {
+        events.append(
+            (
+                keyPath ?? "",
+                change?["notificationIsPrior"] as? Bool ?? false,
+                change?["new"] != nil
+            )
+        )
+    }
+}
+
 @main
 private struct WebKitHostRuntime {
     @MainActor
     static func main() async {
+        precondition(WKErrorDomain == "WKErrorDomain")
+        precondition(WKError.Code.unknown.rawValue == 1)
+        precondition(WKError.Code.webContentProcessTerminated.rawValue == 2)
+        precondition(WKError.Code.webViewInvalidated.rawValue == 3)
+        precondition(WKError.Code.javaScriptExceptionOccurred.rawValue == 4)
+        precondition(WKError.Code.javaScriptResultTypeIsUnsupported.rawValue == 5)
+        precondition(WKError.Code.contentRuleListStoreCompileFailed.rawValue == 6)
+        precondition(WKError.Code.contentRuleListStoreLookUpFailed.rawValue == 7)
+        precondition(WKError.Code.contentRuleListStoreRemoveFailed.rawValue == 8)
+        precondition(WKError.Code.contentRuleListStoreVersionMismatch.rawValue == 9)
+        precondition(WKError.Code.attributedStringContentFailedToLoad.rawValue == 10)
+        precondition(WKError.Code.attributedStringContentLoadTimedOut.rawValue == 11)
+        precondition(WKError.Code.javaScriptInvalidFrameTarget.rawValue == 12)
+        precondition(WKError.Code.navigationAppBoundDomain.rawValue == 13)
+        precondition(WKError.Code.javaScriptAppBoundDomain.rawValue == 14)
+        precondition(WKError.Code.duplicateCredential.rawValue == 15)
+        precondition(WKError.Code.malformedCredential.rawValue == 16)
+        precondition(WKError.Code.credentialNotFound.rawValue == 17)
+        let unknown = WKError(code: .unknown, operation: "probe")
+        precondition(unknown.errorCode == 1)
+        precondition(WKError.errorDomain == WKErrorDomain)
+
         precondition(WKWebsiteDataStore.default() === WKWebsiteDataStore.default())
         let ephemeral = WKWebsiteDataStore.nonPersistent()
         precondition(!ephemeral.isPersistent)
@@ -190,15 +235,21 @@ private struct WebKitHostRuntime {
         var identifiers: [String]?
         store.getAvailableContentRuleListIdentifiers { identifiers = $0 }
         precondition(identifiers == ["portable"])
-        var invalidError: WKPortableError?
+        var invalidError: WKError?
         store.compileContentRuleList(
             forIdentifier: "broken",
             encodedContentRuleList: #"[{"trigger":{}}]"#
         ) { list, error in
             precondition(list == nil)
-            invalidError = error as? WKPortableError
+            invalidError = error as? WKError
         }
-        precondition(invalidError?.code == .invalidContentRuleList)
+        precondition(invalidError?.code == .contentRuleListStoreCompileFailed)
+        var missingError: WKError?
+        store.lookUpContentRuleList(forIdentifier: "absent") { list, error in
+            precondition(list == nil)
+            missingError = error as? WKError
+        }
+        precondition(missingError?.code == .contentRuleListStoreLookUpFailed)
         store.removeContentRuleList(forIdentifier: "portable") {
             precondition($0 == nil)
         }
@@ -222,6 +273,8 @@ private struct WebKitHostRuntime {
         precondition(webView.customUserAgent == "")
         precondition(webView.obscuredContentInsets == .zero)
         precondition(webView.underPageBackgroundColor == .white)
+        precondition(webView.goBack() == nil)
+        precondition(webView.goForward() == nil)
 
         webView.obscuredContentInsets = UIEdgeInsets(
             top: 1, left: 2, bottom: 31, right: 4
@@ -253,6 +306,16 @@ private struct WebKitHostRuntime {
         }
         precondition(mediaCompletions == 2)
 
+        let stringObserver = StringKeyObserver()
+        webView.addObserver(
+            stringObserver,
+            forKeyPath: "isLoading",
+            options: [.initial, .new, .prior],
+            context: nil
+        )
+        precondition(stringObserver.events.count == 1)
+        precondition(stringObserver.events[0].0 == "isLoading")
+
         let allowing = AllowingDelegate()
         webView.navigationDelegate = allowing
         let navigation = webView.load(
@@ -263,15 +326,17 @@ private struct WebKitHostRuntime {
         precondition(allowing.policies == 1)
         precondition(allowing.starts == 1 && allowing.provisionalFailures == 1)
         precondition(allowing.commits == 0 && allowing.finishes == 0)
-        precondition(allowing.lastError?.code == .engineUnavailable)
-        precondition(webView.lastPortableError?.code == .engineUnavailable)
+        precondition(allowing.lastError?.code == .unknown)
+        precondition(WebKitHostControl.lastError(on: webView)?.code == .unknown)
         precondition(!webView.isLoading && webView.backForwardList.currentItem == nil)
+        precondition(stringObserver.events.count >= 3)
+        webView.removeObserver(stringObserver, forKeyPath: "isLoading")
 
         var javaScriptCallbacks = 0
         webView.evaluateJavaScript("document.title") { value, error in
             javaScriptCallbacks += 1
             precondition(value == nil)
-            precondition((error as? WKPortableError)?.code == .engineUnavailable)
+            precondition((error as? WKError)?.code == .unknown)
         }
         precondition(javaScriptCallbacks == 1)
 
@@ -281,14 +346,14 @@ private struct WebKitHostRuntime {
         _ = cancelled.load(URLRequest(url: URL(string: "https://cancel.invalid/")!))
         precondition(cancelling.policies == 1)
         precondition(cancelling.starts == 0 && cancelling.failures == 0)
-        precondition(cancelled.url == nil && cancelled.lastPortableError == nil)
+        precondition(cancelled.url == nil && WebKitHostControl.lastError(on: cancelled) == nil)
 
         let legacyView = WKWebView(frame: .zero)
         let legacy = LegacyDelegate()
         legacyView.navigationDelegate = legacy
         _ = legacyView.load(URLRequest(url: URL(string: "https://legacy.invalid/")!))
         precondition(legacy.policies == 1)
-        precondition(legacyView.url == nil && legacyView.lastPortableError == nil)
+        precondition(legacyView.url == nil && WebKitHostControl.lastError(on: legacyView) == nil)
 
         let errorPageView = WKWebView(frame: .zero)
         let errorPage = ErrorPageDelegate()
@@ -297,15 +362,41 @@ private struct WebKitHostRuntime {
             URLRequest(url: URL(string: "https://error-page.invalid/")!)
         )
         precondition(errorPage.starts == 1 && errorPage.failures == 1)
-        precondition(errorPageView.lastPortableError?.code == .engineUnavailable)
+        precondition(WebKitHostControl.lastError(on: errorPageView)?.code == .unknown)
         precondition(errorPageView.url?.absoluteString == "about:portable-error")
         precondition(!errorPageView.isLoading)
+        precondition(errorPageView.backForwardList.currentItem == nil)
+
+        let historyView = WKWebView(frame: .zero)
+        WebKitHostControl.recordCommittedItem(
+            on: historyView,
+            url: URL(string: "https://first.invalid/")!,
+            title: "first"
+        )
+        WebKitHostControl.recordCommittedItem(
+            on: historyView,
+            url: URL(string: "https://second.invalid/")!,
+            title: "second"
+        )
+        let snapshot = WebKitHostControl.backForwardState(of: historyView)
+        precondition(snapshot.currentURL?.absoluteString == "https://second.invalid/")
+        precondition(snapshot.backURLs.map(\.absoluteString) == ["https://first.invalid/"])
+        precondition(snapshot.forwardURLs.isEmpty)
+        precondition(historyView.canGoBack && !historyView.canGoForward)
+        precondition(historyView.backForwardList.currentItem?.title == "second")
+        precondition(historyView.backForwardList.backItem?.url.absoluteString == "https://first.invalid/")
+        let backNavigation = historyView.goBack()
+        precondition(backNavigation != nil)
+        precondition(backNavigation?.effectiveContentMode == .recommended)
+        precondition(WebKitHostControl.lastError(on: historyView)?.code == .unknown)
+        precondition(historyView.backForwardList.currentItem?.title == "second")
 
         print(
             "WEBKIT_HOST_RUNTIME_OK "
                 + "configuration=copied state=retained media=paired "
                 + "insets=retained background=retained policies=honored "
-                + "navigation=engine-unavailable rendering=absent"
+                + "navigation=engine-unavailable kvo=string-keypath "
+                + "history=in-memory error=WKError rendering=absent"
         )
     }
 }
