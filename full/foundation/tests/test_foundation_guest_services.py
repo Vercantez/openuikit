@@ -15,6 +15,10 @@ EXPECTED = [
     "full/appshim/FoundationOpenUIKitServiceAliases.swift",
     "full/appshim/FoundationOpenUIKitValueAliases.swift",
     "full/foundation/NSString.swift",
+    "full/foundation/NSCoder+KeyedCompatibility.swift",
+    "full/foundation/FoundationReferenceCollections.swift",
+    "full/foundation/NSExtensionHost.swift",
+    "full/foundation/NSPredicateCollections.swift",
     "full/foundation/CharacterSet.swift",
     "full/foundation/NSLock.swift",
     "full/foundation/NotificationCenter+Combine.swift",
@@ -22,7 +26,7 @@ EXPECTED = [
     "full/foundation/NSCache.swift",
     "full/foundation/FileHandle.swift",
     "full/foundation/Data+Searching.swift",
-    "full/foundation/CoreFoundationCompatibility.swift",
+    "full/foundation/FoundationCoreFoundationExports.swift",
     "full/foundation/NSURL.swift",
     "full/foundation/String+CharacterSet.swift",
     "full/foundation/String+FoundationCompatibility.swift",
@@ -61,9 +65,17 @@ class FoundationGuestServicesTests(unittest.TestCase):
 
     def test_onboarding_consumes_and_validates_manifest(self) -> None:
         source = ONBOARDING.read_text()
+        manifest_count = len(EXPECTED)
+        focus_count = manifest_count - 1  # The legacy harness excludes URLSession.
         self.assertIn("FOUNDATION_GUEST_MANIFEST=", source)
         self.assertIn("mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES", source)
-        self.assertIn('"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 34', source)
+        self.assertIn(
+            f'"${{#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}}" -eq {manifest_count}',
+            source,
+        )
+        self.assertIn(
+            f'"${{#FOUNDATION_GUEST_SOURCES[@]}}" -eq {focus_count}', source
+        )
         self.assertIn("COpenFoundationCore/module.modulemap", source)
         self.assertIn('"${FOUNDATION_GUEST_SOURCES[@]}"', source)
         self.assertIn("duplicate Foundation guest source", source)
