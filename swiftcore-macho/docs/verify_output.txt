@@ -1,0 +1,76 @@
+=== 1. file type ===
+/home/ubuntu/work/build/lib/swift/macosx/arm64/libswiftCore.dylib: Mach-O 64-bit arm64 dynamically linked shared library, flags:<NOUNDEFS|DYLDLINK|TWOLEVEL|NO_REEXPORTED_DYLIBS|APP_EXTENSION_SAFE>
+
+=== 2. Mach-O header (arch, filetype, platform) ===
+Mach header
+      magic cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
+ 0xfeedfacf 16777228          0  0x00           6    16       4208 0x02100085
+
+File: /home/ubuntu/work/build/lib/swift/macosx/arm64/libswiftCore.dylib
+Format: Mach-O arm64
+Arch: aarch64
+AddressSize: 64bit
+MinVersion {
+  Cmd: LC_BUILD_VERSION
+  Size: 32
+
+=== 3. install name + dependencies ===
+/home/ubuntu/work/build/lib/swift/macosx/arm64/libswiftCore.dylib:
+	/usr/lib/swift/libswiftCore.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 1.0.0)
+	/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 1.0.0)
+
+=== 4. exported swift runtime entry points (spot checks) ===
+total exported symbols: 30723
+  OK      _swift_retain
+  OK      _swift_release
+  OK      _swift_allocObject
+  OK      _swift_deallocObject
+  OK      _swift_getTypeByMangledName
+  OK      _swift_conformsToProtocol
+  OK      _swift_dynamicCast
+  OK      _swift_once
+  OK      _swift_getGenericMetadata
+  OK      _swift_errorRetain
+  OK      _swift_bridgeObjectRetain
+  OK      _OBJC_CLASS_$__TtCs12_SwiftObject
+  OK      _OBJC_METACLASS_$__TtCs12_SwiftObject
+
+=== 5. counts by family ===
+  _swift_      544
+  _$s          30137
+  _OBJC_CLASS  23
+
+=== 6. undefined imports NOT exported by our SDK's .tbd files ===
+  symbols our .tbd files export: 1471
+  undefined imports in libswiftCore: 185
+  of those, not in any .tbd: 30
+
+  --- grouped ---
+  C++ ABI / libc++ mangled: 9
+  Foundation NS classes:     0
+  plain C symbols:           21
+
+  --- plain C symbols missing (these are the real libSystem gap) ---
+__NSGetMachExecuteHeader
+___divti3
+___isPlatformOrVariantPlatformVersionAtLeast
+___isPlatformVersionAtLeast
+___modti3
+___udivti3
+___umodti3
+__dyld_is_objc_constant
+_dispatch_once_f
+_flockfile
+_funlockfile
+_getline
+_getsectiondata
+_malloc_zone_from_ptr
+_os_system_version_get_current_version
+_pthread_get_stackaddr_np
+_pthread_get_stacksize_np
+_strtod_l
+_strtof_l
+_strtold_l
+dyld_stub_binder

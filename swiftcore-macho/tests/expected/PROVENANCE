@@ -1,0 +1,9 @@
+concurrency_probe.macos.txt
+  Produced on: macOS 26.5.2 arm64, Darwin
+  Toolchain:   Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)
+  Built:       xcrun swiftc -O -swift-version 5 -parse-as-library -target arm64-apple-macos14.0
+  Executor:    Apple's default, DISPATCH-backed. This is the ORACLE.
+  Date:        2026-08-27T03:25:31Z
+
+The negative control (-DINLINE_MUTANT) fails checks 1 and 2 and exits 1 on this
+same machine, which is what makes a PASS here mean something.

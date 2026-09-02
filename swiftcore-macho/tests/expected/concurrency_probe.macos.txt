@@ -1,0 +1,7 @@
+PASS  1 suspension is observable  [A-before-suspend,B-resumer-ran,D-after-resume]
+PASS  2 resume happened out of line
+PASS  3 Task.sleep waits a measurable interval  [elapsed=0.051059542 seconds want>=0.05 seconds]
+PASS  4 @MainActor hop from a nonisolated context  [E-before-hop,F-after-hop-1]
+PASS  5 200 tasks all completed  [done=200]
+ALL CHECKS PASSED
+exit=0
