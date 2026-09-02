@@ -183,6 +183,12 @@ func runGameplayKitRuntime() throws {
     try expect(lcg2.nextInt() == lcgA, "lcg linux determinism")
     let mt = GKMersenneTwisterRandomSource(seed: 99)
     try expect(mt.nextInt(upperBound: 10) >= 0 && mt.nextInt(upperBound: 10) < 10, "mt bounded")
+    let corpusObjects: [Any] = ["alpha", "beta", "gamma"]
+    let corpusShuffle = GKMersenneTwisterRandomSource(seed: 99)
+        .arrayByShufflingObjects(in: corpusObjects)
+    let typedCorpusShuffle = corpusShuffle as? [String]
+    try expect(typedCorpusShuffle?.count == 3, "mt typed corpus shuffle cast")
+    try expect(Set(typedCorpusShuffle ?? []) == Set(["alpha", "beta", "gamma"]), "mt corpus shuffle members")
     let die = GKRandomDistribution.d6()
     let roll = die.nextInt()
     try expect(roll >= 1 && roll <= 6, "d6 range")
