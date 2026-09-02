@@ -1,3 +1,22 @@
+# OpenUIKit monorepo
+
+Everything needed to build and run real iOS apps on Linux, in one repository:
+
+| Directory | What it is |
+| --- | --- |
+| `/` (root: `full/`, `scripts/`, `slice/`, `spike/`, `harness/`, `docs/`) | The platform/integration lineage (formerly `swift-macho-linux` / `openuikit-linux-platform`): framework fan-out, app pipelines, packaging, attestation, Cursor cloud-agent infra |
+| `uikit/` | OpenUIKit + SwiftUI + Combine + the render stack, oracle-validated against real UIKit (109-scene golden suite) |
+| `machorun/` | The Mach-O loader for Linux/arm64 with its own Darwin→glibc libSystem |
+| `foundation-macho/` | The Foundation port: NS* over our CoreFoundation + the FoundationEssentials overlay |
+| `swiftcore-macho/` | libswiftCore cross-built on Linux as a Darwin Mach-O |
+| `quartz/` | Portable CoreGraphics + CoreAnimation (CQuartz backend) |
+| `objc4-linux/` | RETIRED: Apple objc4 on Linux/ELF (superseded — machorun builds objc4 as Mach-O) |
+
+Each imported directory keeps its complete git history (subtree merges). The
+platform lineage's original README follows.
+
+---
+
 # swift-macho-linux
 
 A decisive spike: **can a Linux-hosted Swift toolchain build a Mach-O dylib for
