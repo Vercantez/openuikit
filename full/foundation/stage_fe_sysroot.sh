@@ -57,6 +57,7 @@ rm -rf "$SYS/usr/lib/swift/os.swiftmodule"
 # on full/sdk-gaps/README.md's list.
 echo "== gaps staged for measurement (each is a real machorun sdk/ gap):"
 stage_absent complex.h "$ROOT/full/sdk-gaps/usr/include" "clean-room stub; clang's own tgmath.h includes it unconditionally"
+stage_absent arpa/inet.h "$ROOT/full/sdk-gaps/usr/include" "clean-room forwarding header; Darwin netinet/endian declarations already staged"
 stage_absent sysdir.h  "$SDK/usr/include" "79 lines; libSystem ALREADY exports _sysdir_start/_get_next_search_path_enumeration -- the implementation is there and only the declaration is missing"
 
 # THE FILEMANAGER SET.  108 of the errors in the first correctly-configured
@@ -103,6 +104,19 @@ module ObjectiveC [system] {
 }
 EOF
 cp "$SDK/usr/include/ObjectiveC.apinotes" "$SYS/usr/include/ObjectiveC.apinotes"
+
+# Foundation's Swift facade and the Objective-C runtime are separate package
+# identities.  Objective-C framework sources still require the canonical
+# public include spelling, so stage the bounded declarations that are backed
+# by the existing objc runtime rather than copying Apple's Foundation headers.
+FOUNDATION_OBJC_HEADERS=$ROOT/full/foundation/foundation_objc_headers.txt
+FOUNDATION_OBJC_INCLUDE=$ROOT/full/foundation/include
+while IFS= read -r header; do
+    [ -n "$header" ] || continue
+    mkdir -p "$(dirname "$SYS/usr/include/$header")"
+    cp "$FOUNDATION_OBJC_INCLUDE/$header" \
+        "$SYS/usr/include/$header"
+done < "$FOUNDATION_OBJC_HEADERS"
 
 # ---- API NOTES ARE NOT OPTIONAL, AND THE SYSROOT WAS STAGING ONE OF FIVE ----
 # `Date.swift:239` failed with "cannot find 'CLOCK_REALTIME' in scope", and the
