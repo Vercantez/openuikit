@@ -78,6 +78,7 @@ open class QLThumbnailGenerator: NSObject {
         private let storedSize: CGSize
         private let storedScale: CGFloat
         private let storedRepresentationTypes: RepresentationTypes
+        fileprivate var isCancelled = false
 
         /// Unconfirmed against Apple's runtime default; stored as `false` until
         /// an Apple-oracle observation lands.
@@ -152,7 +153,6 @@ open class QLThumbnailGenerator: NSObject {
 
     private static let sharedGenerator = QLThumbnailGenerator()
     private let stateLock = NSLock()
-    private var cancelledRequestIDs = Set<ObjectIdentifier>()
 
     open class var shared: QLThumbnailGenerator { sharedGenerator }
 
@@ -162,7 +162,7 @@ open class QLThumbnailGenerator: NSObject {
 
     open func cancel(_ request: Request) {
         stateLock.lock()
-        cancelledRequestIDs.insert(ObjectIdentifier(request))
+        request.isCancelled = true
         stateLock.unlock()
     }
 
@@ -210,7 +210,7 @@ open class QLThumbnailGenerator: NSObject {
 
     private func failure(for request: Request) -> QLThumbnailError {
         stateLock.lock()
-        let cancelled = cancelledRequestIDs.contains(ObjectIdentifier(request))
+        let cancelled = request.isCancelled
         stateLock.unlock()
         if cancelled {
             return QLThumbnailError(.requestCancelled)
