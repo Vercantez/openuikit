@@ -2,9 +2,10 @@
 # Build Apple's objc4 as a Mach-O /usr/lib/libobjc.A.dylib -- on Linux.
 #
 # The whole point of this script is that it is a NATIVE build: the target is
-# arm64-apple-macos11, so TARGET_OS_MAC is 1, __arm64__ is predefined, BOOL is
-# bool, and the assembler and inline-asm dialects are Apple's own. Every one of
-# those was a patch in the ELF port. Here they are the defaults.
+# the host Darwin triple (arm64-apple-macos11 or x86_64-apple-macos11), so
+# TARGET_OS_MAC is 1, the arch macros are predefined, BOOL is bool, and the
+# assembler and inline-asm dialects are Apple's own. Every one of those was a
+# patch in the ELF port. Here they are the defaults.
 #
 # Sources come from vendor/objc4 (PRISTINE Apple drop) with patches-macho/*
 # applied to a copy at build/objc4-macho-src. patches-macho/ is the honest
@@ -144,10 +145,22 @@ done
 for f in "$SRC"/runtime/*.m; do
     compile "$f" $OBJC
 done
-# Apple's own arm64 assembly, assembled by clang's integrated assembler in
-# DARWIN dialect. No translation step, no gen-elf-asm.py.
-compile "$SRC/runtime/Messengers.subproj/objc-msg-arm64.s" $ASFLAGS
-compile "$SRC/runtime/retain-release-helpers-arm64.s"      $ASFLAGS
+# Apple's own architecture assembly. retain-release-helpers-arm64.s is
+# arm64-only (`#if __arm64__` in NSObject.mm); x86_64 uses the C
+# objc_retain/objc_release in that file. objc-sel-table.s is arch-neutral.
+case "$LD64_ARCH" in
+    x86_64)
+        compile "$SRC/runtime/Messengers.subproj/objc-msg-x86_64.s" $ASFLAGS
+        ;;
+    arm64)
+        compile "$SRC/runtime/Messengers.subproj/objc-msg-arm64.s" $ASFLAGS
+        compile "$SRC/runtime/retain-release-helpers-arm64.s"      $ASFLAGS
+        ;;
+    *)
+        echo "build_objc4: no messenger asm for arch $LD64_ARCH" >&2
+        exit 1
+        ;;
+esac
 compile "$SRC/runtime/objc-sel-table.s"                    $ASFLAGS
 
 echo "== compiled ${#OBJS[@]} objects, $fail failures"

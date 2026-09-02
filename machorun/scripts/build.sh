@@ -145,12 +145,9 @@ stamp() {
 # symbol no stub exports -- that check is the reason to run it here rather than
 # by hand.
 build_tbd() {
-    # gen_tbd.sh now emits stubs for whichever dylibs exist and waives CHECK 3
-    # when libobjc/libquartz are absent (x86_64 has no libobjc yet; `all` never
-    # built quartz). Skipping the whole generator used to leave sdk/usr/lib
-    # stale after a libSystem rebuild — ld64 would then bind against a .tbd
-    # that lagged the dylib. Always regenerate; the script refuses loudly if
-    # libSystem/libc++ themselves are missing.
+    # gen_tbd.sh emits stubs for whichever dylibs exist and waives CHECK 3
+    # when libobjc/libquartz are absent (`all` never built those). Skipping the
+    # whole generator used to leave sdk/usr/lib stale after a libSystem rebuild.
     bash "$ROOT/scripts/gen_tbd.sh"
 }
 

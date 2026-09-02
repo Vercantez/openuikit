@@ -174,9 +174,11 @@ build() {
                 return 0
                 ;;
             *.m)
-                refuse "CANNOT_BUILD_LIBOBJC_X86" "$id" \
-                    "libobjc.A.dylib is not built (objc-object.h shiftcls_and_sig is arm64-only)"
-                return 0
+                if [ ! -f "$ROOT/darwin/usr/lib/libobjc.A.dylib" ]; then
+                    refuse "CANNOT_BUILD_LIBOBJC_X86" "$id" \
+                        "libobjc.A.dylib is not built; run scripts/build.sh objc4"
+                    return 0
+                fi
                 ;;
             *.swift)
                 refuse "CANNOT_BUILD_SWIFT_X86" "$id" "Swift fixtures are out of this phase"
@@ -278,10 +280,9 @@ fi
 
 want pthread          && build pthread          "$CHAINED_TARGET" pthread          pthread.c -- -pthread
 
-if want objc; then
-    refuse "CANNOT_BUILD_LIBOBJC_X86" "objc" \
-        "libobjc.A.dylib not built (objc-object.h shiftcls_and_sig is arm64-only)"
-fi
+want objc && build objc "$CHAINED_TARGET" objc objc.m -- \
+    -fobjc-runtime=macosx-10.15 -Wno-objc-root-class \
+    "$ROOT/darwin/usr/lib/libobjc.A.dylib"
 
 want varargs          && build varargs          "$CHAINED_TARGET" varargs          varargs.c --
 want varargs_classic && build varargs_classic "$CLASSIC_TARGET" varargs_classic varargs.c --
@@ -442,12 +443,41 @@ want cflog_surface       && build cflog_surface       "$CHAINED_TARGET" cflog_su
 want dirent              && build dirent              "$CHAINED_TARGET" dirent              dirent.c --
 
 # quartz / objc_quartz / objc_shapes live in tests/draw_manifest.tsv, not the
-# stdout difftest. Only refuse them when the caller named them.
+# stdout difftest. Build them when named and the dylibs exist; otherwise refuse.
 if [ ${#WANT[@]} -gt 0 ]; then
     for id in quartz objc_quartz objc_shapes; do
         want "$id" || continue
-        refuse "CANNOT_BUILD_QUARTZ_X86" "$id" \
-            "libquartz / libobjc x86_64 Mach-O are out of this phase"
+        if [ ! -f "$ROOT/darwin/usr/lib/libquartz.dylib" ]; then
+            refuse "CANNOT_BUILD_QUARTZ_X86" "$id" \
+                "libquartz.dylib is not built; run scripts/build.sh quartz"
+            continue
+        fi
+        if [ "$id" != quartz ] && [ ! -f "$ROOT/darwin/usr/lib/libobjc.A.dylib" ]; then
+            refuse "CANNOT_BUILD_LIBOBJC_X86" "$id" \
+                "libobjc.A.dylib is not built; run scripts/build.sh objc4"
+            continue
+        fi
+        case "$id" in
+            quartz)
+                build quartz "$CHAINED_TARGET" quartz quartz.c -- \
+                    -I"$ROOT/vendor/quartz/include" \
+                    "$ROOT/darwin/usr/lib/libquartz.dylib"
+                ;;
+            objc_quartz)
+                build objc_quartz "$CHAINED_TARGET" objc_quartz objc_quartz.m -- \
+                    -I"$ROOT/vendor/quartz/include" -fobjc-runtime=macosx-10.15 \
+                    -Wno-objc-root-class \
+                    "$ROOT/darwin/usr/lib/libobjc.A.dylib" \
+                    "$ROOT/darwin/usr/lib/libquartz.dylib"
+                ;;
+            objc_shapes)
+                build objc_shapes "$CHAINED_TARGET" objc_shapes objc_shapes.m -- \
+                    -I"$ROOT/vendor/quartz/include" -fobjc-runtime=macosx-10.15 \
+                    -Wno-objc-root-class \
+                    "$ROOT/darwin/usr/lib/libobjc.A.dylib" \
+                    "$ROOT/darwin/usr/lib/libquartz.dylib"
+                ;;
+        esac
     done
 fi
 

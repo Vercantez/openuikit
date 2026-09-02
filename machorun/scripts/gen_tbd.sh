@@ -159,7 +159,7 @@ DYLIBS=(libSystem.B libc++.1 libc++abi)
 if [ -f "$DYLIB/libobjc.A.dylib" ]; then
     DYLIBS+=(libobjc.A)
 else
-    echo "   note: no $DYLIB/libobjc.A.dylib -- skipping libobjc.tbd (CANNOT_BUILD_LIBOBJC_X86: objc4 isa layout is arm64-only until ported)"
+    echo "   note: no $DYLIB/libobjc.A.dylib -- skipping libobjc.tbd (scripts/build.sh objc4)"
     rm -f "$OUT/libobjc.A.tbd" "$OUT/libobjc.tbd"
 fi
 if [ -f "$DYLIB/libquartz.dylib" ]; then
