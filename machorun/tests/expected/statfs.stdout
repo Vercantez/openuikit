@@ -12,9 +12,9 @@ MNT_NODEV               0x10
 statfs /                rc 0 errno 0
 statfs / rc-fields  bsize>0 1 blocks>0 1 mnton-abs 1 mnton-prefix 1 fstype-named 1 flags-word-nonzero-or-ro 1
 statfs tmp              rc 0
-statfs tmp rc-fields  bsize>0 1 blocks>0 1 mnton-abs 1 mnton-prefix 0 fstype-named 1 flags-word-nonzero-or-ro 1
+statfs tmp rc-fields  bsize>0 1 blocks>0 1 mnton-abs 1 mnton-self 1 fstype-named 1 flags-word-nonzero-or-ro 1
 fstatfs tmp             rc 0 errno 0
-fstatfs tmp rc-fields  bsize>0 1 blocks>0 1 mnton-abs 1 mnton-prefix 0 fstype-named 1 flags-word-nonzero-or-ro 1
+fstatfs tmp rc-fields  bsize>0 1 blocks>0 1 mnton-abs 1 mnton-self 1 fstype-named 1 flags-word-nonzero-or-ro 1
 path-fd agree           mnton 1 bsize 1 blocks 1 fstype 1
 statfs missing          rc -1 errno 2 is ENOENT 1
 done

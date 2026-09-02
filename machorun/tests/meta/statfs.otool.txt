@@ -41,7 +41,7 @@ Section
   sectname __text
    segname __TEXT
       addr 0x0000000100000460
-      size 0x0000000000000488
+      size 0x0000000000000538
     offset 1120
      align 2^2 (4)
     reloff 0
@@ -52,9 +52,9 @@ Section
 Section
   sectname __stubs
    segname __TEXT
-      addr 0x00000001000008e8
+      addr 0x0000000100000998
       size 0x00000000000000a8
-    offset 2280
+    offset 2456
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -64,9 +64,9 @@ Section
 Section
   sectname __cstring
    segname __TEXT
-      addr 0x0000000100000990
-      size 0x0000000000000317
-    offset 2448
+      addr 0x0000000100000a40
+      size 0x0000000000000381
+    offset 2624
      align 2^0 (1)
     reloff 0
     nreloc 0
@@ -76,9 +76,9 @@ Section
 Section
   sectname __unwind_info
    segname __TEXT
-      addr 0x0000000100000ca8
+      addr 0x0000000100000dc4
       size 0x0000000000000060
-    offset 3240
+    offset 3524
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -116,7 +116,7 @@ Load command 3
    vmaddr 0x0000000100008000
    vmsize 0x0000000000004000
   fileoff 32768
- filesize 1384
+ filesize 1400
   maxprot 0x00000001
  initprot 0x00000001
    nsects 0
@@ -137,7 +137,7 @@ Load command 6
   symoff 33128
    nsyms 19
   stroff 33552
- strsize 192
+ strsize 200
 Load command 7
             cmd LC_DYSYMTAB
         cmdsize 80
@@ -166,7 +166,7 @@ Load command 8
 Load command 9
      cmd LC_UUID
  cmdsize 24
-    uuid D0528BA3-372F-3E8D-9AC6-B65DB5AE3980
+    uuid 22A3EFB6-460B-316B-92B4-5CF05719EBCF
 Load command 10
       cmd LC_BUILD_VERSION
   cmdsize 32
@@ -205,7 +205,7 @@ Load command 15
 Load command 16
       cmd LC_CODE_SIGNATURE
   cmdsize 16
-  dataoff 33744
+  dataoff 33760
  datasize 408
 
 ### undefined symbols
