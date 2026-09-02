@@ -1801,7 +1801,9 @@ equivalent, `pthread_attr_getstack`, returns the stack's LOW address; Darwin's
 returns the HIGH one. Measured on macOS: `stackaddr` `0x16b79c000` with a local
 at `0x16b799fd8`, i.e. below it, and `stackaddr - stacksize` giving the low
 bound. An alias would be off by exactly the stack size — a pointer that looks
-entirely reasonable and is at the wrong end of the right region.
+entirely reasonable and is at the wrong end of the right region. Implemented
+in `darwin/src/posix.c`: `pthread_getattr_np` + `pthread_attr_getstack`, then
+HIGH = lo + size. The names themselves are absent from glibc.
 
 **The general point, since this is the second census to arrive mis-sorted:**
 "exists in glibc under the same name" is not the same claim as "has the same
@@ -2096,12 +2098,19 @@ dylib orders and requires both to pass, which is what stops this regressing.
 
 ### `swift-compat` — a guest must link `libswiftcompat.dylib` by hand
 The `libswiftCore.dylib` we run (cross-built on Linux by `~/swiftcore-macho`)
-imports 29 symbols machorun's self-hosted Darwin userland does not carry:
-compiler-rt's 128-bit division, `getline` / `flockfile` / `strtod_l` and
-friends, `getsectiondata`, `_NSGetMachExecuteHeader`, the availability checks,
-and four `__cxxabiv1` `type_info` vtables. They are supplied by a separate
-`libswiftcompat.dylib` which **the guest** has to name on its link line —
-libswiftCore carries no `LC_LOAD_DYLIB` for it.
+imports symbols machorun's self-hosted Darwin userland did not carry. Nine of
+those -- `getline`, `getsectiondata`, `malloc_zone_from_ptr`,
+`os_system_version_get_current_version`, `pthread_get_stackaddr_np`,
+`pthread_get_stacksize_np`, `strtod_l`, `strtof_l`, `strtold_l` -- now live in
+`darwin/src/` (libSystem). They are no longer a CHECK 5 host-bind and no longer
+need `libswiftcompat.dylib` to define them; that dylib must drop the overlap
+(its own rule: never define a symbol machorun already does).
+
+What remains of the 29-symbol gap is compiler-rt's 128-bit division (`__*ti3`),
+`flockfile` / `funlockfile`, `_NSGetMachExecuteHeader`, the availability
+checks, and C++ pieces still only in the compat dylib. They are supplied by a
+separate `libswiftcompat.dylib` which **the guest** has to name on its link
+line — libswiftCore carries no `LC_LOAD_DYLIB` for it.
 
 The measured consequence: a Swift binary built by **Apple's own toolchain** does
 not run here, even though its three dependencies (`libSystem.B`, `libobjc.A`,
@@ -2117,10 +2126,11 @@ because nothing pulled the compat dylib in. That is why rung (q) is the one
 fixture whose two sides run two binaries built from one source rather than the
 same committed bytes; `scripts/swift_gate.sh`'s header says so in place.
 
-Two ways to close it, neither done: give libswiftCore an `LC_LOAD_DYLIB` on
-libswiftcompat at link time (a `~/swiftcore-macho` change), or fold the 29 into
-`darwin/src/` so machorun's own libSystem carries them (a machorun change, and
-the one that would make Apple-built Swift binaries simply work).
+Two ways to close the remainder, neither done: give libswiftCore an
+`LC_LOAD_DYLIB` on libswiftcompat at link time (a `~/swiftcore-macho` change),
+or fold the rest into `darwin/src/` so machorun's own libSystem / libc++abi
+carry them (a machorun change, and the one that would make Apple-built Swift
+binaries simply work).
 
 ### `tsd-direct-dynamic-key`
 `_pthread_getspecific_direct` / `_pthread_setspecific_direct` serve the reserved
@@ -2161,8 +2171,11 @@ per invalidation, and a swizzling workload costing macOS 4.7 MB peak RSS costs
 
 ### `malloc-zones-are-one-heap`
 `malloc_default_zone()` returns a token, and every `malloc_zone_*` call routes
-to glibc's single heap. A program that treats a zone as a separate arena --
-mass-free by zone, zone introspection, `malloc_zone_from_ptr` -- would notice;
+to glibc's single heap. `malloc_zone_from_ptr` now exists
+(`darwin/src/objcsupport.c`): it returns that token when `malloc_size` says we
+own the pointer, and NULL otherwise -- Darwin's contract (malloc.h:367-369),
+not libswiftcompat's "always NULL". A program that treats a zone as a
+separate arena -- mass-free by zone, zone introspection -- would still notice;
 objc4 only ever uses the default zone. `malloc_zone_malloc` aborts if handed a
 zone pointer we did not mint, so "someone created a zone" is visible rather
 than silent.

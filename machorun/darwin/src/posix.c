@@ -2598,6 +2598,56 @@ EXPORT int pthread_attr_getstacksize(const void *a, size_t *out)
     return glibc_pthread_attr_getstacksize(a, out);
 }
 
+/* pthread_get_stackaddr_np / pthread_get_stacksize_np. Darwin-only
+ * (sdk/usr/include/pthread.h:546,549). aarch64 libc.so.6 has neither name
+ * (measured absent); the GNU nearest is pthread_getattr_np +
+ * pthread_attr_getstack, which ARE present (pthread_getattr_np@@GLIBC_2.32,
+ * pthread_attr_getstack@@GLIBC_2.34).
+ *
+ * THE ADDRESS IS INVERTED, not merely renamed. glibc's getstack returns the
+ * stack's LOW address; Darwin's get_stackaddr_np returns the HIGH one.
+ * Measured on macOS (docs/UNIMPLEMENTED.md): stackaddr 0x16b79c000 with a
+ * local at 0x16b799fd8, i.e. below it. An alias of getstack would be off by
+ * exactly the stack size -- a pointer that looks entirely reasonable and is
+ * at the wrong end of the right region.
+ *
+ * pthread_attr_t is 64 bytes on both (Darwin SDK probe; glibc aarch64
+ * sizeof). getattr_np writes a glibc attr into that blob; we only hand it
+ * back to glibc getstack/destroy, never to Darwin attr operations.
+ *
+ * No fake 8 MiB window: libswiftcompat rounded the current frame up to 8 MiB
+ * and called that the stack, which makes heap look like stack. If getattr
+ * fails we die naming ourselves. */
+static void mr_pthread_stack(unsigned long t, void **lo, size_t *sz, const char *who)
+{
+    unsigned char attr[64];
+    *lo = 0;
+    *sz = 0;
+    if (glibc_pthread_getattr_np(t, attr) != 0)
+        mr_bail2(who, "pthread_getattr_np failed");
+    if (glibc_pthread_attr_getstack(attr, lo, sz) != 0)
+        mr_bail2(who, "pthread_attr_getstack failed");
+    glibc_pthread_attr_destroy(attr);
+    if (!*lo || *sz == 0)
+        mr_bail2(who, "empty stack");
+}
+
+EXPORT void *pthread_get_stackaddr_np(unsigned long t)
+{
+    void *lo;
+    size_t sz;
+    mr_pthread_stack(t, &lo, &sz, "pthread_get_stackaddr_np");
+    return (char *)lo + sz;
+}
+
+EXPORT size_t pthread_get_stacksize_np(unsigned long t)
+{
+    void *lo;
+    size_t sz;
+    mr_pthread_stack(t, &lo, &sz, "pthread_get_stacksize_np");
+    return sz;
+}
+
 /* THE SCHEDULING POLICY, which is the one that would not have failed.
  *
  *     SCHED_OTHER   Darwin 1   glibc 0
