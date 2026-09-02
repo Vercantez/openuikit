@@ -1,39 +1,37 @@
-/* The nine host-bound names that were CHECK 5's to-implement pile.
+/* The eight CHECK 5 names Darwin actually ran: strto*_l, getsectiondata,
+ * malloc_zone_from_ptr, pthread_get_stackaddr_np / pthread_get_stacksize_np,
+ * getline.
  *
- * libobjc.A.dylib and libquartz.dylib in this tree do not import any of them
- * (measured: nm -u; objc wants getsegmentdata/strtol, quartz wants strtod).
- * They are the documented libswiftCore gap, and they are what a host-bind of
- * the Darwin spelling would have reached glibc BY NAME for -- or failed to,
- * for the five names glibc does not export at all.
+ * Split from os_system_version_get_current_version, which is a ninth name
+ * with a different ABI (out-pointer, not a by-value struct) and lives in
+ * tests/src/hostbound_osver.c. The Darwin oracle printed the twelve lines
+ * from strtod through stacksize byte-identically, then SIGSEGV'd on the
+ * by-value os_system_version call (exit 139). These eight keep their
+ * coverage even if that ninth row stays NEEDS_DARWIN_BASELINE.
  *
- * WHAT EACH ONE IS GRADED FOR (Darwin semantics, not a self-record):
+ * No tests/expected/ files are committed for this id: a qemu/machorun run
+ * is not an oracle. The manifest says norun:NEEDS_DARWIN_BASELINE until
+ * the operator records on macOS with tests/build_fixtures.sh and
+ * harness/run_macos.sh --record.
+ *
+ * WHAT EACH ONE IS GRADED FOR (Darwin semantics):
  *
  *   strto*_l     NULL and LC_GLOBAL_LOCALE both mean C, same bytes as the
  *                non-_l converter. Locale construction is closed (setlocale
- *                only), so these are the only locale_t values a guest can
- *                hold. strtold_l's width is 8 -- Darwin arm64 long double
- *                IS double; a forward to glibc strtold_l would be 16.
+ *                only). strtold_l's width is 8 -- Darwin arm64 long double
+ *                IS double.
  *
  *   getsectiondata
- *                finds a section this binary actually contains, by matching
- *                BOTH segment and section name, and the bytes at the returned
- *                pointer are the bytes the compiler emitted. A walk that
- *                matches only the section name, or that forgets the slide,
- *                fails this.
+ *                finds a section this binary actually contains, matching
+ *                BOTH segment and section name; the bytes at the returned
+ *                pointer are the bytes the compiler emitted.
  *
  *   malloc_zone_from_ptr
  *                a malloc() pointer is in the default zone; a stack pointer
- *                and NULL are not. Always-NULL (the compat-shim answer) fails
- *                the heap line; always-default fails the stack line.
+ *                and NULL are not.
  *
  *   pthread_get_stackaddr_np
- *                the HIGH end: a local sits at lo <= &local < addr, with
- *                addr - size giving lo. glibc getstack's LOW address fails
- *                the high=1 check.
- *
- *   os_system_version
- *                26.1.0 by value -- the SDK version the corpus carries in
- *                LC_BUILD_VERSION, not a guessed 15.0.0.
+ *                the HIGH end: a local sits at lo <= &local < addr.
  *
  *   getline      POSIX: reads one line including the newline, returns the
  *                length. FILE* came from fopen, so it is glibc's object.
@@ -55,9 +53,6 @@ static const unsigned char mrchk[8]
         'h', 'o', 's', 't', 'b', 'o', 'u', 'n'
     };
 
-typedef struct { uint32_t major, minor, patch; } os_sysver_t;
-os_sysver_t os_system_version_get_current_version(void);
-
 int main(void)
 {
     char *end;
@@ -70,7 +65,6 @@ int main(void)
     char local;
     void *stk;
     size_t stsz;
-    os_sysver_t ver;
     FILE *fp;
     char *line = NULL;
     size_t cap = 0;
@@ -123,9 +117,6 @@ int main(void)
     printf("stacksize             nonzero=%d covers_local=%d\n",
            stsz != 0,
            stsz && (char *)stk - stsz <= &local && &local < (char *)stk);
-
-    ver = os_system_version_get_current_version();
-    printf("os_system_version     %u.%u.%u\n", ver.major, ver.minor, ver.patch);
 
     /* --- getline via a FILE* this library minted. */
     fd = mkstemp(path);

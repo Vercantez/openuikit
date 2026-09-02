@@ -1,4 +1,4 @@
-binary: hostbound_surface
+binary: hostbound_osver
 architectures: arm64
 filetype: EXECUTE
 header-flags: NOUNDEFS DYLDLINK TWOLEVEL PIE
@@ -10,5 +10,5 @@ rpaths:
 loader-relevant sections (segment,section,flags):
   __TEXT,__stubs,0x80000408
   __DATA_CONST,__got,0x00000006
-undefined-symbol-count: 23
+undefined-symbol-count: 4
 NOTE: linked on Linux by clang-18 + ld64.lld-18 against sdk/.tbd; tests/build_fixtures.sh is the Darwin rebuild. No tests/expected/ -- norun:NEEDS_DARWIN_BASELINE.

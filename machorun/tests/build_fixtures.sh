@@ -516,12 +516,16 @@ want pthread_mutex_variants && build pthread_mutex_variants "$CHAINED_TARGET" pt
 # is the one an implementation returning a constant cannot pass.
 want cflog_surface       && build cflog_surface       "$CHAINED_TARGET" cflog_surface       cflog_surface.c --
 
-# hostbound_surface. The nine names CHECK 5 would have host-bound into glibc
-# with nobody's assertion: strto*_l (locale_t is Darwin's, NULL means C),
-# getsectiondata / malloc_zone_from_ptr / os_system_version (Mach-O / Darwin
-# only -- glibc has no counterpart), pthread_get_stack*_np (glibc-absent;
-# getstack's LOW vs Darwin's HIGH), getline (POSIX, FILE* we minted).
+# hostbound_surface. Eight of the nine CHECK 5 names. Darwin's oracle printed
+# strtod through stacksize byte-identically and then SIGSEGV'd on a by-value
+# os_system_version call; these eight stay covered on their own. No expected
+# files -- norun:NEEDS_DARWIN_BASELINE until recorded on macOS.
 want hostbound_surface   && build hostbound_surface   "$CHAINED_TARGET" hostbound_surface   hostbound_surface.c --
+
+# hostbound_osver. The ninth name, split out. libswiftCore passes an
+# out-pointer in x0 and reads the 12-byte slot after the call; a by-value
+# struct return is the guess that crashed Darwin.
+want hostbound_osver     && build hostbound_osver     "$CHAINED_TARGET" hostbound_osver     hostbound_osver.c --
 
 # ---------------------------------------------------------------- the `pthread_cond` rung
 # Reading a directory. DIR is opaque so the pointer crosses fine, which is why

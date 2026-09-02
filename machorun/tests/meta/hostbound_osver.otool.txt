@@ -1,20 +1,20 @@
 ### file
-<machorun>/tests/bin/hostbound_surface: Mach-O 64-bit arm64 executable, flags:<NOUNDEFS|DYLDLINK|TWOLEVEL|PIE>
+<machorun>/tests/bin/hostbound_osver: Mach-O 64-bit arm64 executable, flags:<NOUNDEFS|DYLDLINK|TWOLEVEL|PIE>
 
 ### mach header
 Mach header
       magic cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
- 0xfeedfacf 16777228          0  0x00           2    17       1192 0x00200085
+ 0xfeedfacf 16777228          0  0x00           2    16       1040 0x00200085
 
 ### dependencies
-<machorun>/tests/bin/hostbound_surface:
+<machorun>/tests/bin/hostbound_osver:
 	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1.0.0)
 
 ### load commands
-<machorun>/tests/bin/hostbound_surface:
+<machorun>/tests/bin/hostbound_osver:
 Mach header
       magic cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
- 0xfeedfacf 16777228          0  0x00           2    17       1192 0x00200085
+ 0xfeedfacf 16777228          0  0x00           2    16       1040 0x00200085
 Load command 0
       cmd LC_SEGMENT_64
   cmdsize 72
@@ -42,9 +42,9 @@ Load command 1
 Section
   sectname __text
    segname __TEXT
-      addr 0x00000001000004e8
-      size 0x000000000000039c
-    offset 1256
+      addr 0x0000000100000450
+      size 0x0000000000000060
+    offset 1104
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -54,21 +54,21 @@ Section
 Section
   sectname __stubs
    segname __TEXT
-      addr 0x0000000100000884
-      size 0x0000000000000108
-    offset 2180
+      addr 0x00000001000004b0
+      size 0x0000000000000024
+    offset 1200
      align 2^2 (4)
     reloff 0
     nreloc 0
      flags 0x80000408
- reserved1 22 (index into indirect symbol table)
+ reserved1 3 (index into indirect symbol table)
  reserved2 12 (size of stubs)
 Section
   sectname __cstring
    segname __TEXT
-      addr 0x000000010000098c
-      size 0x000000000000029c
-    offset 2444
+      addr 0x00000001000004d4
+      size 0x0000000000000025
+    offset 1236
      align 2^0 (1)
     reloff 0
     nreloc 0
@@ -78,9 +78,9 @@ Section
 Section
   sectname __unwind_info
    segname __TEXT
-      addr 0x0000000100000c28
+      addr 0x00000001000004fc
       size 0x0000000000001038
-    offset 3112
+    offset 1276
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -103,7 +103,7 @@ Section
   sectname __got
    segname __DATA_CONST
       addr 0x0000000100004000
-      size 0x00000000000000b0
+      size 0x0000000000000018
     offset 16384
      align 2^3 (8)
     reloff 0
@@ -113,87 +113,63 @@ Section
  reserved2 0
 Load command 3
       cmd LC_SEGMENT_64
-  cmdsize 152
-  segname __DATA
-   vmaddr 0x0000000100008000
-   vmsize 0x0000000000004000
-  fileoff 32768
- filesize 16384
-  maxprot 0x00000003
- initprot 0x00000003
-   nsects 1
-    flags 0x0
-Section
-  sectname __mrchk
-   segname __DATA
-      addr 0x0000000100008000
-      size 0x0000000000000008
-    offset 32768
-     align 2^0 (1)
-    reloff 0
-    nreloc 0
-     flags 0x00000000
- reserved1 0
- reserved2 0
-Load command 4
-      cmd LC_SEGMENT_64
   cmdsize 72
   segname __LINKEDIT
-   vmaddr 0x000000010000c000
-   vmsize 0x00000000000007a0
-  fileoff 49152
- filesize 1952
+   vmaddr 0x0000000100008000
+   vmsize 0x0000000000000350
+  fileoff 32768
+ filesize 848
   maxprot 0x00000001
  initprot 0x00000001
    nsects 0
     flags 0x0
-Load command 5
+Load command 4
       cmd LC_DYLD_CHAINED_FIXUPS
   cmdsize 16
-  dataoff 49152
- datasize 424
-Load command 6
+  dataoff 32768
+ datasize 152
+Load command 5
       cmd LC_DYLD_EXPORTS_TRIE
   cmdsize 16
-  dataoff 49576
+  dataoff 32920
  datasize 48
-Load command 7
+Load command 6
      cmd LC_SYMTAB
  cmdsize 24
-  symoff 49632
-   nsyms 26
-  stroff 50224
- strsize 312
-Load command 8
+  symoff 32976
+   nsyms 6
+  stroff 33096
+ strsize 104
+Load command 7
             cmd LC_DYSYMTAB
         cmdsize 80
       ilocalsym 0
-      nlocalsym 1
-     iextdefsym 1
+      nlocalsym 0
+     iextdefsym 0
      nextdefsym 2
-      iundefsym 3
-      nundefsym 23
+      iundefsym 2
+      nundefsym 4
          tocoff 0
            ntoc 0
       modtaboff 0
         nmodtab 0
    extrefsymoff 0
     nextrefsyms 0
- indirectsymoff 50048
-  nindirectsyms 44
+ indirectsymoff 33072
+  nindirectsyms 6
       extreloff 0
         nextrel 0
       locreloff 0
         nlocrel 0
-Load command 9
+Load command 8
           cmd LC_LOAD_DYLINKER
       cmdsize 32
          name /usr/lib/dyld (offset 12)
-Load command 10
+Load command 9
      cmd LC_UUID
  cmdsize 24
-    uuid 4C4C44E4-5555-3144-A196-EF7EF6DA7A50
-Load command 11
+    uuid 4C4C4431-5555-3144-A1D1-B137FD4AD4E2
+Load command 10
        cmd LC_BUILD_VERSION
    cmdsize 32
   platform 1
@@ -202,59 +178,40 @@ Load command 11
     ntools 1
       tool 4
    version 18.1.3
-Load command 12
+Load command 11
        cmd LC_MAIN
    cmdsize 24
-  entryoff 1256
+  entryoff 1104
  stacksize 0
-Load command 13
+Load command 12
           cmd LC_LOAD_DYLIB
       cmdsize 56
          name /usr/lib/libSystem.B.dylib (offset 24)
    time stamp 0 Thu Jan  1 00:00:00 1970
       current version 1.0.0
 compatibility version 1.0.0
-Load command 14
+Load command 13
       cmd LC_FUNCTION_STARTS
   cmdsize 16
-  dataoff 49624
+  dataoff 32968
  datasize 8
-Load command 15
+Load command 14
       cmd LC_DATA_IN_CODE
   cmdsize 16
-  dataoff 49632
+  dataoff 32976
  datasize 0
-Load command 16
+Load command 15
       cmd LC_CODE_SIGNATURE
   cmdsize 16
-  dataoff 50544
- datasize 560
+  dataoff 33200
+ datasize 416
 
 ### undefined symbols
-_close
-_fclose
-_fopen
-_free
-_fwrite
-_getline
-_getsectiondata
-_malloc
-_malloc_default_zone
-_malloc_zone_from_ptr
-_mkstemp
+_os_system_version_get_current_version
 _printf
-_pthread_get_stackaddr_np
-_pthread_get_stacksize_np
-_pthread_self
 _puts
-_rewind
-_strtod
-_strtod_l
-_strtof_l
-_strtold_l
-_unlink
 dyld_stub_binder
 
 ### defined external symbols
 0000000100000000 T __mh_execute_header
-00000001000004e8 T _main
+0000000100000450 T _main
