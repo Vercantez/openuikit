@@ -2,16 +2,15 @@
 
 // MARK: - Public constants
 //
-// String payloads are source-compatible placeholders. They are not Darwin-probed
-// evidence; coverage records them as `declared` until an Apple-oracle run
-// confirms the exact bytes.
+// Identifier, domain, and notification payloads below are Xcode 26.1
+// Apple-oracle observations, not placeholders.
 
 public let ACErrorDomain = "com.apple.accounts"
 
 public let ACAccountTypeIdentifierTwitter = "com.apple.twitter"
 public let ACAccountTypeIdentifierFacebook = "com.apple.facebook"
 public let ACAccountTypeIdentifierSinaWeibo = "com.apple.sinaweibo"
-public let ACAccountTypeIdentifierTencentWeibo = "com.apple.tencentweibo"
+public let ACAccountTypeIdentifierTencentWeibo = "com.apple.account.tencentweibo"
 
 public let ACFacebookAppIdKey = "ACFacebookAppIdKey"
 public let ACFacebookPermissionsKey = "ACFacebookPermissionsKey"
@@ -22,8 +21,8 @@ public let ACFacebookAudienceOnlyMe = "only_me"
 public let ACTencentWeiboAppIdKey = "ACTencentWeiboAppIdKey"
 
 extension NSNotification.Name {
-    /// Source-compatible name for Apple's account-store change notification.
-    /// Linux never posts this name: the local store is empty and fail-closed.
+    /// Observed Darwin import: raw value `ACAccountStoreDidChangeNotification`.
+    /// Linux never posts this name; the store is empty and fail-closed.
     public static let ACAccountStoreDidChange = NSNotification.Name(
         "ACAccountStoreDidChangeNotification"
     )
@@ -31,9 +30,9 @@ extension NSNotification.Name {
 
 // MARK: - Error codes
 
-/// Bridged `NS_ENUM` overlay for `ACErrorCode`. Named constant raw values are
-/// a local numbering chosen so fail-closed `NSError.code` is stable; they are
-/// not a Darwin-probed mapping.
+/// Bridged `NS_ENUM` overlay for `ACErrorCode`. Named constant raw values 1...23
+/// match the Xcode 26.1 Apple-oracle declaration order (`ACErrorUnknown = 1`
+/// through `ACErrorCredentialItemNotExpired = 23`).
 public struct ACErrorCode: RawRepresentable, Hashable, Equatable, Sendable {
     public var rawValue: UInt32
 
@@ -86,19 +85,12 @@ public typealias ACAccountStoreCredentialRenewalHandler = (
 
 // MARK: - Completion delivery
 //
-// Every save / remove / requestAccess / renew completion is enqueued on the
-// serial queue `Accounts.ACAccountStore.completion`. Delivery is asynchronous
-// and exactly-once: user handlers never run on the calling stack of those
-// methods, so they cannot reenter the caller, and a nil handler is not invoked.
-// Async overlays wait on that same callback path and therefore cannot deadlock
-// on the serial queue (the callback APIs use `async`, never `sync`).
-
-private enum AccountsCompletionDelivery {
-    static let queue = DispatchQueue(
-        label: "Accounts.ACAccountStore.completion",
-        qos: .utility
-    )
-}
+// save / remove / requestAccess / renew hop once onto
+// `ACAccountStore.completionQueue` (`Accounts.ACAccountStore.completion`) with
+// `async`, never `sync`. That is enough for nested callback calls: an inner
+// `async` is queued behind the running handler. Tests occupy this serial queue
+// to prove non-inline delivery. Exactly-once is one scheduled block plus a
+// per-invocation flag.
 
 private struct AccountsUncheckedWork: @unchecked Sendable {
     let body: () -> Void
@@ -119,34 +111,6 @@ private final class AccountsOnceFlag: @unchecked Sendable {
     }
 }
 
-/// Schedules exactly-once handler delivery on `Accounts.ACAccountStore.completion`
-/// after the calling store method has returned. `finish()` must run from `defer`
-/// in that method so the completion queue never invokes the user handler on the
-/// caller's stack and never uses `sync` onto this queue.
-private final class AccountsOutboundCompletion: @unchecked Sendable {
-    private let gate = DispatchGroup()
-    private let once = AccountsOnceFlag()
-
-    init() {
-        gate.enter()
-    }
-
-    func schedule(_ body: @escaping () -> Void) {
-        let work = AccountsUncheckedWork(body: body)
-        let once = self.once
-        let gate = self.gate
-        AccountsCompletionDelivery.queue.async {
-            gate.wait()
-            guard once.take() else { return }
-            work.body()
-        }
-    }
-
-    func finish() {
-        gate.leave()
-    }
-}
-
 private func accountsFailClosedError() -> NSError {
     NSError(
         domain: ACErrorDomain,
@@ -155,21 +119,36 @@ private func accountsFailClosedError() -> NSError {
     )
 }
 
+private func accountsDeliver(_ body: @escaping () -> Void) {
+    let once = AccountsOnceFlag()
+    let work = AccountsUncheckedWork(body: body)
+    ACAccountStore.completionQueue.async {
+        guard once.take() else { return }
+        work.body()
+    }
+}
+
+private let knownAccountTypeIdentifiers: Set<String> = [
+    ACAccountTypeIdentifierTwitter,
+    ACAccountTypeIdentifierFacebook,
+    ACAccountTypeIdentifierSinaWeibo,
+    ACAccountTypeIdentifierTencentWeibo,
+]
+
 // MARK: - Account type
 
-/// Linux has no Apple account daemon. `accessGranted` is therefore always
-/// `false`. Constructed type objects are local descriptors only.
+/// Linux has no Apple account daemon. `accessGranted` is always `false`.
+/// Instances are produced only by `ACAccountStore` for the four known public
+/// identifiers.
 open class ACAccountType: NSObject {
-    private let storedIdentifier: String?
-    private let storedDescription: String?
+    private let storedIdentifier: String
 
-    init(identifier: String) {
-        self.storedIdentifier = identifier
-        self.storedDescription = identifier
+    init(knownIdentifier: String) {
+        self.storedIdentifier = knownIdentifier
         super.init()
     }
 
-    open var accountTypeDescription: String! { storedDescription }
+    open var accountTypeDescription: String! { storedIdentifier }
     open var identifier: String! { storedIdentifier }
     open var accessGranted: Bool { false }
 }
@@ -236,10 +215,16 @@ open class ACAccount: NSObject {
 // MARK: - Account store
 
 /// Fail-closed account store. Queries return empty results. Mutation, access,
-/// and credential renewal complete exactly once on
-/// `Accounts.ACAccountStore.completion` with `ACErrorPermissionDenied` and
-/// never fabricate Apple accounts or tokens.
+/// and credential renewal hop once onto `completionQueue` with
+/// `ACErrorPermissionDenied` and never fabricate Apple accounts or tokens.
 open class ACAccountStore: NSObject {
+    /// Serial queue that delivers Linux save/remove/requestAccess/renew
+    /// completions. Label: `Accounts.ACAccountStore.completion`.
+    public static let completionQueue = DispatchQueue(
+        label: "Accounts.ACAccountStore.completion",
+        qos: .utility
+    )
+
     open var accounts: NSArray! { NSArray() }
 
     open func account(withIdentifier identifier: String!) -> ACAccount! {
@@ -248,8 +233,10 @@ open class ACAccountStore: NSObject {
     }
 
     open func accountType(withAccountTypeIdentifier typeIdentifier: String!) -> ACAccountType! {
-        guard let typeIdentifier else { return nil }
-        return ACAccountType(identifier: typeIdentifier)
+        guard let typeIdentifier, knownAccountTypeIdentifiers.contains(typeIdentifier) else {
+            return nil
+        }
+        return ACAccountType(knownIdentifier: typeIdentifier)
     }
 
     open func accounts(with accountType: ACAccountType!) -> [Any]! {
@@ -261,11 +248,9 @@ open class ACAccountStore: NSObject {
         _ account: ACAccount!,
         withCompletionHandler completionHandler: ACAccountStoreSaveCompletionHandler!
     ) {
-        let outbound = AccountsOutboundCompletion()
-        defer { outbound.finish() }
         _ = account
         guard let completionHandler else { return }
-        outbound.schedule {
+        accountsDeliver {
             completionHandler(false, accountsFailClosedError())
         }
     }
@@ -287,11 +272,9 @@ open class ACAccountStore: NSObject {
         options: [AnyHashable: Any]! = [:],
         completion: ACAccountStoreRequestAccessCompletionHandler!
     ) {
-        let outbound = AccountsOutboundCompletion()
-        defer { outbound.finish() }
         _ = (accountType, options)
         guard let completion else { return }
-        outbound.schedule {
+        accountsDeliver {
             completion(false, accountsFailClosedError())
         }
     }
@@ -315,11 +298,9 @@ open class ACAccountStore: NSObject {
         for account: ACAccount!,
         completion completionHandler: ACAccountStoreCredentialRenewalHandler!
     ) {
-        let outbound = AccountsOutboundCompletion()
-        defer { outbound.finish() }
         _ = account
         guard let completionHandler else { return }
-        outbound.schedule {
+        accountsDeliver {
             completionHandler(.failed, accountsFailClosedError())
         }
     }
@@ -342,11 +323,9 @@ open class ACAccountStore: NSObject {
         _ account: ACAccount!,
         withCompletionHandler completionHandler: ACAccountStoreRemoveCompletionHandler!
     ) {
-        let outbound = AccountsOutboundCompletion()
-        defer { outbound.finish() }
         _ = account
         guard let completionHandler else { return }
-        outbound.schedule {
+        accountsDeliver {
             completionHandler(false, accountsFailClosedError())
         }
     }

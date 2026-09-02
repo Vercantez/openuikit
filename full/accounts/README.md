@@ -1,31 +1,38 @@
 # Accounts
 
 Linux starting point for Apple's public `Accounts` module, reconstructed from
-the pinned Xcode 26.1 iPhoneOS symbol graph. This directory is not wired into
-the shared guest package. A passing isolated host gate is not integrated Linux
-success.
+the pinned Xcode 26.1 iPhoneOS symbol graph plus Apple-oracle observations.
+This directory is not wired into the shared guest package. A passing isolated
+host gate is not integrated Linux success.
 
 ## What is real
 
-The public Swift surface compiles to `libAccounts.dylib`:
+The public Swift surface compiles to `libAccounts.dylib`.
 
-- Declarations for the four social account-type identifiers, Facebook /
-  Tencent option keys, `ACErrorDomain`, and
-  `NSNotification.Name.ACAccountStoreDidChange`. Exact Darwin string payloads
-  are not claimed.
-- `ACErrorCode` as a `UInt32` `RawRepresentable` struct and the 23 named
-  constants. Numeric Apple mappings are not claimed.
-- `ACAccountCredentialRenewResult` (`renewed`, `rejected`, `failed`).
+Oracle-measured constants (asserted in `AccountsRuntime.swift`):
+
+- `ACAccountTypeIdentifierTwitter == "com.apple.twitter"`
+- `ACAccountTypeIdentifierFacebook == "com.apple.facebook"`
+- `ACAccountTypeIdentifierSinaWeibo == "com.apple.sinaweibo"`
+- `ACAccountTypeIdentifierTencentWeibo == "com.apple.account.tencentweibo"`
+- `ACErrorDomain == "com.apple.accounts"`
+- `NSNotification.Name.ACAccountStoreDidChange.rawValue == "ACAccountStoreDidChangeNotification"`
+- `ACErrorCode` named constants raw values `1...23` (`ACErrorUnknown = 1` through `ACErrorCredentialItemNotExpired = 23`)
+
+Also implemented:
+
+- `ACAccountCredentialRenewResult` (`renewed`, `rejected`, `failed`)
 - Completion-handler typealiases and both callback and `async throws` overloads
   of `saveAccount`, `removeAccount`, `requestAccessToAccounts`, and
-  `renewCredentials`.
-- Local `ACAccount`, `ACAccountType`, and `ACAccountCredential` objects.
-  Username, description, account type, and OAuth tokens can be stored in
-  process. `accountType(withAccountTypeIdentifier:)` returns a descriptor
-  whose `identifier` matches the request. `accessGranted` is always `false`.
+  `renewCredentials`
+- Local `ACAccount` / `ACAccountCredential` objects and `ACAccountType`
+  descriptors obtained from the store
 
-`Hashable` / `Equatable` on `ACErrorCode` and `ACAccountCredentialRenewResult`
-come from Swift protocol synthesis recorded in the graph.
+`accountType(withAccountTypeIdentifier:)` returns a populated type whose
+`identifier` matches the request for those four known public identifiers, and
+returns `nil` for unknown identifiers and for `nil`. `accessGranted` is always
+`false`. Facebook / Tencent option-key and audience string payloads were not
+measured and remain declared.
 
 ## Fail-closed boundaries
 
@@ -37,29 +44,32 @@ identifier, renewed token, or store-changed notification.
   `account(withIdentifier:)` returns `nil`.
 - `ACAccount.identifier` and `userFullName` stay `nil` (nothing is saved).
 - Access, save, remove, and credential renewal never succeed. Callbacks report
-  `false` (renew: `.failed`) plus an `NSError` whose domain is `ACErrorDomain`
-  and whose code is `ACErrorPermissionDenied`'s local raw value.
-- Every one of those completions is delivered **exactly once** on the serial
-  queue labeled `Accounts.ACAccountStore.completion`. Handlers are not invoked
-  on the calling stack (no synchronous / reentrant delivery). A nil handler is
-  not invoked. Async overlays wait on that same callback path (`async`, never
-  `sync` onto the completion queue) so they share fail-closed behavior without
-  deadlock.
+  `false` (renew: `.failed`) plus Foundation `NSError` with domain
+  `com.apple.accounts` (`ACErrorDomain`) and code `7`
+  (`ACErrorPermissionDenied`).
+- Those completions hop once with `DispatchQueue.async` onto
+  `ACAccountStore.completionQueue` (label `Accounts.ACAccountStore.completion`).
+  Delivery is exactly-once per call. A nil handler is not invoked. Nested
+  callback calls enqueue behind the running handler (`async`, never `sync`).
+  Tests prove non-inline ordering by occupying that serial queue, recording
+  return under a lock, releasing the queue, then asserting the callback saw
+  `returned == true` and `count == 1`.
+- Async overlays wait on the same callback path and throw the same fail-closed
+  `NSError`.
 - The store never posts `ACAccountStoreDidChange`.
 
-## Still deferred / oracle
+## Still open
 
-Guessed identifier strings, notification names, error-domain bytes, display
-descriptions, and numeric `ACErrorCode` mappings are `declared` until a Darwin
-probe. See `oracle-questions.tsv`. Private TBD types remain out of scope.
+See `oracle-questions.tsv` for Darwin callback-queue / `(false, nil)` versus
+error mapping, async `renewCredentials` throw-versus-return, identifier
+assignment after a successful save, `accountTypeDescription` display strings,
+and unmeasured option-key payloads. Private TBD types remain out of scope.
 
 `tests/agent/AccountsRuntime.swift` is the isolated host probe
 (`ACCOUNTS_AGENT_RUNTIME_OK`). `tests/agent/AccountsDependencyIdentity.swift`
-is prepared for a future clean EC2 run that builds guest Foundation first,
-links this module against it, passes Foundation `NSObject` / `NSError` /
-`NSArray` / `NSString` / `Date` / `Notification` values through public APIs,
-and prints `ACCOUNTS_DEPENDENCY_IDENTITY_OK` only after assertions pass. That
-run is not this isolated gate.
+is prepared for a future clean EC2 run that builds guest Foundation first and
+prints `ACCOUNTS_DEPENDENCY_IDENTITY_OK` only after assertions pass. Compiling
+that file against toolchain Foundation is not guest-Foundation success.
 
 Run `bash tests/acceptance/test_host.sh` from this directory. Keep generated
 products out of the tree.
