@@ -311,22 +311,22 @@ echo '== link reusable package dylibs'
     -install_name @rpath/libDesignSystem.dylib -o "$PACKAGE/libDesignSystem.dylib" \
     "$OUT/designsystem.o" "${COMMON_LINK[@]}" \
     -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI -lOpenUIKit \
-    -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libWidget.dylib -o "$PACKAGE/libWidget.dylib" \
     "$OUT/widget.o" "${COMMON_LINK[@]}" \
     -lFoundation -lFoundationEssentials -lSwiftUI -lOpenUIKit \
-    -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libOnboarding.dylib -o "$PACKAGE/libOnboarding.dylib" \
     "$OUT/onboarding.o" "${COMMON_LINK[@]}" \
     -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI -lWidget \
-    -lSnapKit -lDesignSystem -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lSnapKit -lDesignSystem -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols
 "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libLicenses.dylib -o "$PACKAGE/libLicenses.dylib" \
     "$OUT/licenses.o" "${COMMON_LINK[@]}" \
     -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI -lOpenUIKit \
-    -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols
 
 echo '== link and run Bundle/Published/SnapKit lifecycle probe'
 PROBE_APP=$OUT/FocusPackageProbe.app
@@ -365,7 +365,7 @@ require_hash "$SNAPKIT_BUNDLE/PrivacyInfo.xcprivacy" \
     "$OUT/package-probe.o" "$PROVIDER/FocusPackageProbe" \
     "${COMMON_LINK[@]}" -lOnboarding -lWidget -lSnapKit -lDesignSystem \
     -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI -lOpenUIKit \
-    -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols
 perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 \
     --executable "$PROBE_APP/Contents/MacOS/FocusPackageProbe" \
@@ -423,7 +423,7 @@ require_hash "$LICENSES_BUNDLE/license-list.plist" \
     -o "$LICENSES_APP/Contents/MacOS/FocusLicensesGuest" \
     "$OUT/licenses-main.o" "${COMMON_LINK[@]}" \
     -lLicenses -lUIKit -lFoundation -lFoundationEssentials -lSwiftUI \
-    -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine
+    -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols
 perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 \
     --executable "$LICENSES_APP/Contents/MacOS/FocusLicensesGuest" \

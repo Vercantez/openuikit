@@ -75,7 +75,7 @@ class ContractLockTests(unittest.TestCase):
         notes = validate_against_locks(ROOT)
         pin_notes = [n for n in notes if n.startswith("focus_widget_attestation_pins ")]
         self.assertEqual(len(pin_notes), 1)
-        self.assertIn("24/24", pin_notes[0])
+        self.assertIn("25/25", pin_notes[0])
         print(pin_notes[0])
 
 

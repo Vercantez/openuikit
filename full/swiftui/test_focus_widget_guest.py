@@ -130,15 +130,19 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         text = BUILD.read_text()
         self.assertIn("-dylib -install_name @rpath/libOpenUIKit.dylib", text)
         self.assertIn("-dylib -install_name @rpath/libSwiftUI.dylib", text)
+        self.assertIn("-dylib -install_name @rpath/libSymbols.dylib", text)
         self.assertIn('"$PACKAGE/libOpenUIKit.dylib"', text)
         self.assertIn('"$PACKAGE/libSwiftUI.dylib"', text)
+        self.assertIn('"$PACKAGE/libSymbols.dylib"', text)
         self.assertIn('"libOpenUIKit LC_ID_DYLIB"', text)
         self.assertIn('"libSwiftUI LC_ID_DYLIB"', text)
+        self.assertIn('"libSymbols LC_ID_DYLIB"', text)
         self.assertIn('"guest LC_RPATH set"', text)
         self.assertIn("expected_openuikit_loads", text)
         self.assertIn("expected_swiftui_loads", text)
+        self.assertIn("expected_symbols_loads", text)
         self.assertIn("expected_guest_loads", text)
-        self.assertIn("EXPECTED_PACKAGE_FILE_COUNT=96", text)
+        self.assertIn("EXPECTED_PACKAGE_FILE_COUNT=101", text)
         self.assertIn("EXPECTED_PACKAGE_DIRECTORY_COUNT=12", text)
         self.assertIn('assert_exact_text "package top-level inventory"', text)
         self.assertIn('assert_exact_text "package directory inventory"', text)
@@ -172,6 +176,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("executable link map contains framework object", text)
         self.assertIn("expected_openuikit_inputs", text)
         self.assertIn("expected_swiftui_inputs", text)
+        self.assertIn("expected_symbols_inputs", text)
         self.assertIn("expected_guest_inputs", text)
         self.assertIn('assert_exact_text "guest linker inputs"', text)
 
@@ -191,6 +196,12 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn('"${SWIFTUI_SOURCES[@]}"', text)
         self.assertIn('unsupported SwiftUI source node', text)
         self.assertIn("[ \"$uikit/Sources/SwiftUI\", 'openuikit/Sources/SwiftUI' ]", helper)
+        self.assertIn('SYMBOLS_SOURCE_DIR=$UIKIT/Sources/Symbols', text)
+        self.assertIn('SYMBOLS_SOURCES=("$SYMBOLS_SOURCE_DIR"/*.swift)', text)
+        self.assertIn("EXPECTED_SYMBOLS_SWIFT_COUNT=1", text)
+        self.assertIn('"${SYMBOLS_SOURCES[@]}"', text)
+        self.assertIn('unsupported Symbols source node', text)
+        self.assertIn("[ \"$uikit/Sources/Symbols\", 'openuikit/Sources/Symbols' ]", helper)
 
     def test_observation_closes_over_sibling_combine_dylibs(self) -> None:
         text = BUILD.read_text()
@@ -198,6 +209,8 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         for dylib in ("libCombine.dylib", "libOpenCombine.dylib"):
             self.assertIn(dylib, text)
         self.assertIn("-lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine", text)
+        self.assertIn("-lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols", text)
+        self.assertIn("libSymbols Apple Symbols load count", text)
         self.assertIn("OPENCOMBINE_ROOT", text)
         self.assertIn("OpenCombine.o", helper)
         self.assertIn("COpenCombineHelpers.cpp", helper)
@@ -230,6 +243,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("missing-libOpenUIKit requester changed", text)
         self.assertIn("run_missing_observation_control combine libCombine.dylib", text)
         self.assertIn("run_missing_observation_control opencombine libOpenCombine.dylib", text)
+        self.assertIn("run_missing_observation_control symbols libSymbols.dylib", text)
         self.assertIn("missing-$missing_name requester changed", text)
 
     def test_cross_process_pixels_and_packaged_artifacts_are_bracketed(self) -> None:
@@ -239,12 +253,14 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("separate guest processes emitted different proof logs", text)
         self.assertIn("printf 'libSwiftUI\\t%s\\n'", text)
         self.assertIn("printf 'libOpenUIKit\\t%s\\n'", text)
+        self.assertIn("printf 'libSymbols\\t%s\\n'", text)
         self.assertIn("printf 'SwiftUI-module\\t%s\\n'", text)
         self.assertIn("printf 'package-tree\\t%s\\n'", text)
         self.assertIn("printf 'FocusWidgetBundle.generated.swift\\t%s\\n'", text)
         self.assertIn("printf 'SwiftUI-package/per-run-tree\\t%s\\n'", text)
         self.assertIn("printf 'libSwiftUI.dylib\\t%s\\n'", text)
         self.assertIn("printf 'libOpenUIKit.dylib\\t%s\\n'", text)
+        self.assertIn("printf 'libSymbols.dylib\\t%s\\n'", text)
 
     def test_normalized_bundle_is_hash_pinned(self) -> None:
         text = BUILD.read_text()
