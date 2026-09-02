@@ -13,6 +13,8 @@ let package = Package(
     platforms: [.macOS(.v13)],
     products: [
         .library(name: "WebKit", type: .dynamic, targets: ["WebKit"]),
+        .library(name: "HackersWebKitSurface", targets: ["HackersWebKitSurface"]),
+        .executable(name: "WebKitHostRuntime", targets: ["WebKitHostRuntime"]),
     ],
     dependencies: [
         .package(name: "OpenUIKitSource", path: openUIKitSource),
@@ -23,7 +25,24 @@ let package = Package(
             dependencies: [
                 .product(name: "OpenUIKit", package: "OpenUIKitSource"),
             ],
-            swiftSettings: [.define("PORTABLE_WEBKIT_HOST")]
+            swiftSettings: [
+                .define("PORTABLE_WEBKIT_HOST"),
+                .unsafeFlags(["-warnings-as-errors"]),
+            ]
+        ),
+        .executableTarget(
+            name: "WebKitHostRuntime",
+            dependencies: ["WebKit"],
+            swiftSettings: [
+                .unsafeFlags(["-warnings-as-errors"]),
+            ]
+        ),
+        .target(
+            name: "HackersWebKitSurface",
+            dependencies: ["WebKit"],
+            swiftSettings: [
+                .unsafeFlags(["-warnings-as-errors"]),
+            ]
         ),
     ]
 )

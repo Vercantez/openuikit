@@ -86,7 +86,7 @@ private final class CoreWebKitDelegate: WKNavigationDelegate {
     var provisionalFailures = 0
     var commits = 0
     var finishes = 0
-    var error: WKPortableError?
+    var error: WKError?
 
     func webView(
         _ webView: WKWebView,
@@ -115,7 +115,7 @@ private final class CoreWebKitDelegate: WKNavigationDelegate {
         withError error: Error
     ) {
         provisionalFailures += 1
-        self.error = error as? WKPortableError
+        self.error = error as? WKError
     }
 
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation?) {
@@ -666,8 +666,7 @@ struct CoreGuestPackageProbe {
         precondition(webDelegate.policies == 1 && webDelegate.starts == 1)
         precondition(webDelegate.provisionalFailures == 1)
         precondition(webDelegate.commits == 0 && webDelegate.finishes == 0)
-        precondition(webDelegate.error?.code == .engineUnavailable)
-        precondition(webView.lastPortableError?.code == .engineUnavailable)
+        precondition(webDelegate.error?.code == .unknown)
         precondition(!webView.isLoading)
         precondition(webView.backForwardList.currentItem == nil)
         precondition(urlChanges == 1)
@@ -694,7 +693,7 @@ struct CoreGuestPackageProbe {
         var javaScriptFailures = 0
         webView.evaluateJavaScript("document.title") { value, error in
             precondition(value == nil)
-            precondition((error as? WKPortableError)?.code == .engineUnavailable)
+            precondition((error as? WKError)?.code == .unknown)
             javaScriptFailures += 1
         }
         precondition(javaScriptFailures == 1)

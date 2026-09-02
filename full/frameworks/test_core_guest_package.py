@@ -3216,7 +3216,7 @@ class ShellContractTests(unittest.TestCase):
         ):
             self.assertIn(token, source)
         self.assertIn("import WebKit", probe)
-        self.assertIn("WKPortableError", probe)
+        self.assertIn("WKError", probe)
         self.assertIn("webDelegate.commits == 0", probe)
         self.assertIn("webView.observe(", probe)
         self.assertIn("loadingChanges.count == 5", probe)
