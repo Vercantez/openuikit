@@ -11,7 +11,7 @@
 #
 # WHERE THE LOADER ITSELF LINKS, which is load-bearing twice over.
 #
-# The loader is a Linux/aarch64 ELF linked NON-PIE at MR_LOADER_BASE (1 TiB).
+# On aarch64 the loader is a Linux ELF linked NON-PIE at MR_LOADER_BASE (1 TiB).
 # Both halves of that matter, and both obvious alternatives are wrong:
 #
 #   * plain non-PIE is wrong. An aarch64 ELF defaults to 0x400000, which is
@@ -30,6 +30,11 @@
 # the image arena (8 GiB upward, src/map.c) ~1 TiB to grow into before it could
 # meet the loader, and leaves brk ~127 TiB before it reaches 2^47. An arena
 # probe that did collide is mapped MAP_FIXED_NOREPLACE and steps past it.
+#
+# On x86_64, non-PIE at 1 TiB is impossible: small-model CRT uses R_X86_64_32
+# against __TMC_END__. PIE lands around 0x5555_xxxx_xxxx, which is above
+# __PAGEZERO and below 2^47, so the isa-mask constraint still holds. aarch64
+# PIE would land ABOVE 2^47 -- do not "simplify" both hosts to one LDFLAGS.
 #
 # --no-as-needed around -lm is not optional either, and the reason is not
 # obvious. The loader resolves every _glibc_<name> bind with
@@ -61,7 +66,22 @@ CC="${CC:-cc}"
 # land above the guest's __PAGEZERO and below 2^47, and brk grows up from here.
 MR_LOADER_BASE="${MR_LOADER_BASE:-0x10000000000}"
 CFLAGS="${CFLAGS:--O1 -g -std=gnu11 -Wall -Wextra -Wno-unused-parameter}"
-LDFLAGS="${LDFLAGS:--no-pie -rdynamic -Wl,-Ttext-segment=$MR_LOADER_BASE}"
+if [ -z "${LDFLAGS:-}" ]; then
+    case "$(uname -m)" in
+        x86_64)
+            # x86_64 small-model CRT cannot be linked at 1 TiB: crtbegin.o uses
+            # R_X86_64_32 against __TMC_END__. PIE on this ABI lands around
+            # 0x5555_xxxx, which is above __PAGEZERO (4 GiB) and below 2^47.
+            # aarch64 PIE lands ABOVE 2^47, so that host still needs the fixed
+            # non-PIE base. Do not "simplify" this to one LDFLAGS for both.
+            CFLAGS="$CFLAGS -fPIE"
+            LDFLAGS="-pie -rdynamic"
+            ;;
+        *)
+            LDFLAGS="-no-pie -rdynamic -Wl,-Ttext-segment=$MR_LOADER_BASE"
+            ;;
+    esac
+fi
 
 mkdir -p "$BUILD"
 
@@ -125,26 +145,12 @@ stamp() {
 # symbol no stub exports -- that check is the reason to run it here rather than
 # by hand.
 build_tbd() {
-    # libobjc.A.dylib is not part of `all` (it is a minute of Objective-C++), so
-    # on a tree that has never run `build.sh objc4` there is nothing to project
-    # a libobjc.tbd from. Say so and carry on rather than failing the build --
-    # harness/run_linux.sh calls this script on every difftest run, and a
-    # difftest that cannot start because a .tbd is missing helps nobody.
-    #
-    # libquartz.dylib is in the same position for the same reason (37 C++ TUs),
-    # and there is a sharper edge on it: tests/bin/quartz imports 34 _QZ*
-    # symbols, so gen_tbd.sh's CHECK 3 -- "every symbol the corpus references is
-    # exported by some stub" -- would fail hard on a tree where libquartz simply
-    # has not been built yet. That is a build-order artefact, not a missing
-    # symbol, and it must not present itself as one.
-    for d in libobjc.A libquartz; do
-        if [ ! -f "$ROOT/darwin/usr/lib/$d.dylib" ]; then
-            echo "== tbd: skipped -- darwin/usr/lib/$d.dylib is not built."
-            echo "        Build everything with 'scripts/build.sh everything',"
-            echo "        or just this one and then 'scripts/build.sh tbd'."
-            return 0
-        fi
-    done
+    # gen_tbd.sh now emits stubs for whichever dylibs exist and waives CHECK 3
+    # when libobjc/libquartz are absent (x86_64 has no libobjc yet; `all` never
+    # built quartz). Skipping the whole generator used to leave sdk/usr/lib
+    # stale after a libSystem rebuild — ld64 would then bind against a .tbd
+    # that lagged the dylib. Always regenerate; the script refuses loudly if
+    # libSystem/libc++ themselves are missing.
     bash "$ROOT/scripts/gen_tbd.sh"
 }
 
@@ -165,7 +171,7 @@ build_glibc_abi_check() {
 }
 
 not_linux() {
-    echo "== $1: skipped (needs clang -target arm64-apple-macos11 + ld64.lld-18 on Linux)"
+    echo "== $1: skipped (needs clang -target <host-arch>-apple-macos11 + ld64.lld-18 on Linux)"
 }
 
 case "$WHAT" in
