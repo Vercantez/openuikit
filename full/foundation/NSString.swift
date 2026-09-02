@@ -25,6 +25,10 @@ public protocol NSCopying: AnyObject {
     func copy(with zone: NSZone?) -> Any
 }
 
+public extension NSCopying {
+    func copy() -> Any { copy(with: nil) }
+}
+
 open class NSString: NSObject, NSCopying, CustomStringConvertible,
     CustomDebugStringConvertible, ExpressibleByStringLiteral,
     @unchecked Sendable {

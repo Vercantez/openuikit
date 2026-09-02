@@ -104,6 +104,14 @@ module ObjectiveC [system] {
 EOF
 cp "$SDK/usr/include/ObjectiveC.apinotes" "$SYS/usr/include/ObjectiveC.apinotes"
 
+# Foundation's Swift facade and the Objective-C runtime are separate package
+# identities. Objective-C framework sources still require the canonical
+# public include spelling. Use the same hash-pinned, no-overwrite staging
+# contract as the central guest-package builder; it also owns the bounded
+# arpa/inet.h SDK forwarding gap used by SystemConfiguration.
+bash "$ROOT/full/foundation/stage_objc_platform_headers.sh" \
+    "$SYS/usr/include"
+
 # ---- API NOTES ARE NOT OPTIONAL, AND THE SYSROOT WAS STAGING ONE OF FIVE ----
 # `Date.swift:239` failed with "cannot find 'CLOCK_REALTIME' in scope", and the
 # obvious readings are all wrong: the macro IS in <_time.h>, byte-identical to

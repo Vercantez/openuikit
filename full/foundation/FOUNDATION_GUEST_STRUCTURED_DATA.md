@@ -23,8 +23,9 @@ no application source or schema is embedded in it.
   validation, non-finite rejection, and Cocoa-domain error propagation are
   implemented. The two mutable reading flags produce ordinary Swift arrays
   and dictionaries, which are mutable value containers after a `var` cast;
-  Objective-C `NSMutableArray`/`NSMutableDictionary` reference identity is not
-  claimed by this slice.
+  Objective-C mutable reference containers are supplied by the canonical
+  contracts slice described in `FOUNDATION_CANONICAL_CONTRACTS.md`; this JSON
+  implementation continues to return ordinary Swift value containers.
 - `NSRegularExpression.swift` and `NSTextCheckingResult` provide UTF-16
   `NSRange` boundaries, numbered and named captures, matching/count/first/range
   queries, enumeration with stop/completion behavior, template replacement,
@@ -36,7 +37,7 @@ no application source or schema is embedded in it.
   they are never accepted as no-ops.
 
 The ordered production manifest is
-`full/foundation/foundation_guest_sources.txt`. Its 34 entries place the shared
+`full/foundation/foundation_guest_sources.txt`. Its 38 entries place the shared
 OpenUIKit value aliases before these concrete types and are consumed by both
 the Focus onboarding builder and the reusable core package builder.
 The added localized-resource surface and its separate Apple/cold-runtime proof
@@ -91,8 +92,10 @@ misreported as this facade's compile delta. The source-site inventory and
 fresh literal-module compile/oracle prove this batch now; an exact guest-module
 Focus delta remains part of the serialized ARM64 core-package replay.
 
-This slice does not implement archives/coders, networking, data detectors,
-ICU's complete regex option matrix, or Objective-C mutable collection identity.
+This slice does not implement byte archives, networking, data detectors, or
+ICU's complete regex option matrix. The standalone facade now supplies bounded
+keyed `NSCoder` operations and Objective-C mutable collection identities, but
+not a general `NSKeyedArchiver` byte format.
 The immediate successor now supplies real immutable `NSString` identity/value
 bridging for generated Intents; its exact scope is documented separately in
 `FOUNDATION_GUEST_NSSTRING.md`.

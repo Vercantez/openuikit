@@ -225,7 +225,9 @@ class FoundationGuestTextTests(unittest.TestCase):
             "@_silgen_name(\"$s10Foundation21_bridgeNSErrorToError_3outSbSo0C0C_",
             "public func _bridgeNSErrorToError<T: _ObjectiveCBridgeableError>",
             "out.initialize(to: bridged)",
-            "error._getEmbeddedNSError() as? NSError",
+            "internal protocol _FoundationGuestNSErrorIdentity: AnyObject",
+            "((error as Any) as? any _FoundationGuestNSErrorIdentity)",
+            "_foundationGuestExistingNSError(error)",
             "error as? any LocalizedError",
             "error as? any RecoverableError",
             "NSLocalizedRecoveryOptionsErrorKey",
@@ -233,6 +235,7 @@ class FoundationGuestTextTests(unittest.TestCase):
         ):
             self.assertIn(token, source)
         self.assertNotRegex(source, r"return\s+error\s+as\s+NSError")
+        self.assertNotIn("error._getEmbeddedNSError() as? NSError", source)
 
         client = (TESTS / "FoundationGuestNSErrorDefaultClient.swift").read_text()
         self.assertIn("throw NSError() as Error", client)
@@ -250,7 +253,7 @@ class FoundationGuestTextTests(unittest.TestCase):
         ).read_text()
         for token in (
             "@_exported import COpenFoundationCore",
-            "extension CFError: Error, @unchecked Sendable",
+            "extension CFError: Error, _FoundationGuestNSErrorIdentity, @unchecked Sendable",
             "unsafeBitCast(self, to: NSError.self)",
             "public var _domain: String",
             "public var _code: Int",
@@ -398,6 +401,16 @@ class FoundationGuestTextTests(unittest.TestCase):
             "stringByReplacingMatches(",
         ):
             self.assertIn(token, oracle)
+        rebridge = (
+            TESTS / "FoundationGuestNSErrorRebridgeRuntime.swift"
+        ).read_text()
+        for token in (
+            "bridgeErased(erased)",
+            "preserved === original",
+            "custom.userInfo[\"kind\"]",
+            "plain.domain.hasSuffix",
+        ):
+            self.assertIn(token, rebridge)
 
     def test_gate_rebuilds_and_has_adversarial_teeth(self) -> None:
         gate = HOST_GATE.read_text()
@@ -418,6 +431,8 @@ class FoundationGuestTextTests(unittest.TestCase):
             "portable NSString output differs from Apple golden",
             "FOUNDATION_GUEST_NSSTRING_NEGATIVE_OK",
             "FOUNDATION_GUEST_STRUCTURED_NEGATIVE_OK",
+            "FoundationGuestNSErrorRebridgeRuntime.swift",
+            "FOUNDATION_NSERROR_REBRIDGE_OK",
             "Foundation|CoreFoundation",
             "FOUNDATION_GUEST_TEXT_HOST_OK",
         ):

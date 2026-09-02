@@ -126,8 +126,8 @@ done
 [ -f "$FOUNDATION_GUEST_MANIFEST" ] && [ ! -L "$FOUNDATION_GUEST_MANIFEST" ] \
     || die "missing regular Foundation guest source manifest"
 mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES < "$FOUNDATION_GUEST_MANIFEST"
-[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 34 ] \
-    || die "Foundation guest source manifest must contain exactly 34 lines"
+[ "${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 38 ] \
+    || die "Foundation guest source manifest must contain exactly 38 lines"
 FOUNDATION_GUEST_SOURCES=()
 FOUNDATION_GUEST_EXCLUDED_URLSESSION=0
 for relative in "${FOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do
@@ -143,7 +143,7 @@ for relative in "${FOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do
         || die "Foundation guest source is not a regular file: $relative"
     # This legacy Focus-only harness runs against a read-only shared machorun
     # root and cannot stage the production Linux URL-transport helper there.
-    # The relocatable core-package builder compiles the complete 34-source
+    # The relocatable core-package builder compiles the complete 38-source
     # facade; this bounded historical harness explicitly excludes URLSession.
     if [ "$relative" = full/foundation/URLSession.swift ]; then
         FOUNDATION_GUEST_EXCLUDED_URLSESSION=$((FOUNDATION_GUEST_EXCLUDED_URLSESSION + 1))
@@ -156,7 +156,7 @@ for relative in "${FOUNDATION_GUEST_RELATIVE_SOURCES[@]}"; do
     FOUNDATION_GUEST_SOURCES+=("$W/$relative")
 done
 [ "$FOUNDATION_GUEST_EXCLUDED_URLSESSION" -eq 1 ] \
-    && [ "${#FOUNDATION_GUEST_SOURCES[@]}" -eq 32 ] \
+    && [ "${#FOUNDATION_GUEST_SOURCES[@]}" -eq 37 ] \
     || die 'legacy Focus Foundation exclusion contract drifted'
 
 assert_clean_commit "$FOCUS_ROOT" "$EXPECTED_FOCUS_COMMIT" Focus

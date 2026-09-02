@@ -15,6 +15,8 @@ public typealias CFDictionary = [CFString: Any]
 public typealias CFMutableDictionary = CFDictionary
 public typealias CFTypeRef = AnyObject
 public typealias CFBoolean = Bool
+public typealias CFTimeInterval = Double
+public typealias CFAbsoluteTime = CFTimeInterval
 @_alwaysEmitIntoClient
 public var kCFAllocatorDefault: CFAllocator? { nil }
 public let kCFBooleanTrue: CFBoolean = true
@@ -22,6 +24,112 @@ public let kCFBooleanFalse: CFBoolean = false
 
 @_alwaysEmitIntoClient
 public func CFBooleanGetValue(_ value: CFBoolean) -> Bool { value }
+
+/// CoreFoundation's ABI-stable sixteen-byte UUID carrier.
+public struct CFUUIDBytes: Sendable {
+    public var byte0: UInt8
+    public var byte1: UInt8
+    public var byte2: UInt8
+    public var byte3: UInt8
+    public var byte4: UInt8
+    public var byte5: UInt8
+    public var byte6: UInt8
+    public var byte7: UInt8
+    public var byte8: UInt8
+    public var byte9: UInt8
+    public var byte10: UInt8
+    public var byte11: UInt8
+    public var byte12: UInt8
+    public var byte13: UInt8
+    public var byte14: UInt8
+    public var byte15: UInt8
+
+    public init() {
+        self.init(
+            byte0: 0, byte1: 0, byte2: 0, byte3: 0,
+            byte4: 0, byte5: 0, byte6: 0, byte7: 0,
+            byte8: 0, byte9: 0, byte10: 0, byte11: 0,
+            byte12: 0, byte13: 0, byte14: 0, byte15: 0
+        )
+    }
+
+    public init(
+        byte0: UInt8,
+        byte1: UInt8,
+        byte2: UInt8,
+        byte3: UInt8,
+        byte4: UInt8,
+        byte5: UInt8,
+        byte6: UInt8,
+        byte7: UInt8,
+        byte8: UInt8,
+        byte9: UInt8,
+        byte10: UInt8,
+        byte11: UInt8,
+        byte12: UInt8,
+        byte13: UInt8,
+        byte14: UInt8,
+        byte15: UInt8
+    ) {
+        self.byte0 = byte0
+        self.byte1 = byte1
+        self.byte2 = byte2
+        self.byte3 = byte3
+        self.byte4 = byte4
+        self.byte5 = byte5
+        self.byte6 = byte6
+        self.byte7 = byte7
+        self.byte8 = byte8
+        self.byte9 = byte9
+        self.byte10 = byte10
+        self.byte11 = byte11
+        self.byte12 = byte12
+        self.byte13 = byte13
+        self.byte14 = byte14
+        self.byte15 = byte15
+    }
+
+    fileprivate var array: [UInt8] {
+        [
+            byte0, byte1, byte2, byte3,
+            byte4, byte5, byte6, byte7,
+            byte8, byte9, byte10, byte11,
+            byte12, byte13, byte14, byte15,
+        ]
+    }
+}
+
+/// Immutable CoreFoundation UUID identity used by CBUUID's byte bridge.
+public final class CFUUID: Hashable, @unchecked Sendable {
+    fileprivate let bytes: CFUUIDBytes
+
+    fileprivate init(bytes: CFUUIDBytes) {
+        self.bytes = bytes
+    }
+
+    public static func == (lhs: CFUUID, rhs: CFUUID) -> Bool {
+        lhs.bytes.array == rhs.bytes.array
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        for byte in bytes.array { hasher.combine(byte) }
+    }
+}
+
+public func CFUUIDCreateFromUUIDBytes(
+    _ allocator: CFAllocator?,
+    _ bytes: CFUUIDBytes
+) -> CFUUID? {
+    _ = allocator
+    return CFUUID(bytes: bytes)
+}
+
+public func CFUUIDGetUUIDBytes(_ uuid: CFUUID?) -> CFUUIDBytes {
+    guard let uuid else {
+        preconditionFailure("CFUUIDGetUUIDBytes requires a UUID")
+    }
+    return uuid.bytes
+}
 
 /// Creates a real URL while preserving valid percent escapes. CFURL accepts
 /// square brackets outside an IPv6 authority by encoding just those brackets,
