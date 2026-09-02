@@ -7,7 +7,7 @@
 
 @_exported import COpenFoundationCore
 
-extension CFError: Error, @unchecked Sendable {
+extension CFError: Error, _FoundationGuestNSErrorIdentity, @unchecked Sendable {
     private var _foundationNSError: NSError {
         unsafeBitCast(self, to: NSError.self)
     }
@@ -17,4 +17,5 @@ extension CFError: Error, @unchecked Sendable {
     public var _userInfo: AnyObject? { _foundationNSError.userInfo as AnyObject }
 
     public func _getEmbeddedNSError() -> AnyObject? { self }
+    internal var _foundationGuestNSErrorIdentity: NSError { _foundationNSError }
 }

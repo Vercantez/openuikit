@@ -248,16 +248,36 @@ open class NSNull: NSObject, CustomStringConvertible, @unchecked Sendable {
     open var description: String { "<null>" }
 }
 
+/// Private object-identity route for Error values that already own the
+/// canonical Foundation NSError object.  Casting through `Any` is deliberate:
+/// asking Error for its compiler-provided embedded NSError calls
+/// `_swift_getErrorValue`, which is not safe for this native Swift NSError
+/// class across the Mach-O dylib boundary.
+internal protocol _FoundationGuestNSErrorIdentity: AnyObject {
+    var _foundationGuestNSErrorIdentity: NSError { get }
+}
+
+extension NSError: _FoundationGuestNSErrorIdentity {
+    internal var _foundationGuestNSErrorIdentity: NSError { self }
+}
+
+@inline(__always)
+private func _foundationGuestExistingNSError<T: Error>(
+    _ error: T
+) -> NSError? {
+    ((error as Any) as? any _FoundationGuestNSErrorIdentity)?
+        ._foundationGuestNSErrorIdentity
+}
+
 @inline(__always)
 internal func _foundationGuestNSError(
     _ error: any Error,
     fallbackUserInfo: [String: Any] = [:]
 ) -> NSError {
-    // Error's compiler-provided embedded-object hook distinguishes a real
-    // NSError existential from a value error without asking Objective-C to
-    // bridge the value. `error as AnyObject` is not safe here: for a value
+    // The generic helper opens the Error existential before the private
+    // class-bound cast. `error as AnyObject` is not safe here: for a value
     // error that expression re-enters `_convertErrorToNSError` recursively.
-    if let error = error._getEmbeddedNSError() as? NSError { return error }
+    if let error = _foundationGuestExistingNSError(error) { return error }
     if let custom = error as? any CustomNSError {
         var info = custom.errorUserInfo
         if let localized = error as? any LocalizedError {
