@@ -1,0 +1,989 @@
+precise	kind	title	path	declaration
+c:@CPButtonMaximumImageSize	swift.var	CPButtonMaximumImageSize	CPButtonMaximumImageSize	let CPButtonMaximumImageSize: CGSize
+c:@CPGridTemplateMaximumItems	swift.var	CPGridTemplateMaximumItems	CPGridTemplateMaximumItems	let CPGridTemplateMaximumItems: Int
+c:@CPMaximumListSectionImageSize	swift.var	CPMaximumListSectionImageSize	CPMaximumListSectionImageSize	let CPMaximumListSectionImageSize: CGSize
+c:@CPMaximumMessageItemImageSize	swift.var	CPMaximumMessageItemImageSize	CPMaximumMessageItemImageSize	let CPMaximumMessageItemImageSize: CGSize
+c:@CPMaximumMessageItemLeadingDetailTextImageSize	swift.var	CPMaximumMessageItemLeadingDetailTextImageSize	CPMaximumMessageItemLeadingDetailTextImageSize	let CPMaximumMessageItemLeadingDetailTextImageSize: CGSize
+c:@CPMaximumNumberOfGridImages	swift.var	CPMaximumNumberOfGridImages	CPMaximumNumberOfGridImages	let CPMaximumNumberOfGridImages: Int
+c:@CPNavigationAlertMinimumDuration	swift.var	CPNavigationAlertMinimumDuration	CPNavigationAlertMinimumDuration	let CPNavigationAlertMinimumDuration: TimeInterval
+c:@CPNowPlayingButtonMaximumImageSize	swift.var	CPNowPlayingButtonMaximumImageSize	CPNowPlayingButtonMaximumImageSize	let CPNowPlayingButtonMaximumImageSize: CGSize
+c:@CPTemplateApplicationDashboardSceneSessionRoleApplication	swift.type.property	CPTemplateApplicationDashboardSceneSessionRoleApplication	UISceneSession.Role.CPTemplateApplicationDashboardSceneSessionRoleApplication	static let CPTemplateApplicationDashboardSceneSessionRoleApplication: UISceneSession.Role
+c:@CPTemplateApplicationInstrumentClusterSceneSessionRoleApplication	swift.type.property	CPTemplateApplicationInstrumentClusterSceneSessionRoleApplication	UISceneSession.Role.CPTemplateApplicationInstrumentClusterSceneSessionRoleApplication	static let CPTemplateApplicationInstrumentClusterSceneSessionRoleApplication: UISceneSession.Role
+c:@CPTemplateApplicationSceneSessionRoleApplication	swift.type.property	carTemplateApplication	UISceneSession.Role.carTemplateApplication	static let carTemplateApplication: UISceneSession.Role
+c:@CarPlayErrorDomain	swift.var	CarPlayErrorDomain	CarPlayErrorDomain	let CarPlayErrorDomain: String
+c:@E@CPAlertActionStyle	swift.enum	CPAlertAction.Style	CPAlertAction.Style	enum Style
+c:@E@CPAlertActionStyle@CPAlertActionStyleCancel	swift.enum.case	CPAlertAction.Style.cancel	CPAlertAction.Style.cancel	case cancel
+c:@E@CPAlertActionStyle@CPAlertActionStyleDefault	swift.enum.case	CPAlertAction.Style.default	CPAlertAction.Style.default	case `default`
+c:@E@CPAlertActionStyle@CPAlertActionStyleDestructive	swift.enum.case	CPAlertAction.Style.destructive	CPAlertAction.Style.destructive	case destructive
+c:@E@CPAssistantCellActionType	swift.enum	CPAssistantCellActionType	CPAssistantCellActionType	enum CPAssistantCellActionType
+c:@E@CPAssistantCellActionType@CPAssistantCellActionTypePlayMedia	swift.enum.case	CPAssistantCellActionType.playMedia	CPAssistantCellActionType.playMedia	case playMedia
+c:@E@CPAssistantCellActionType@CPAssistantCellActionTypeStartCall	swift.enum.case	CPAssistantCellActionType.startCall	CPAssistantCellActionType.startCall	case startCall
+c:@E@CPAssistantCellPosition	swift.enum	CPListItem.AssistantCellPosition	CPListItem.AssistantCellPosition	enum AssistantCellPosition
+c:@E@CPAssistantCellPosition@CPAssistantCellPositionBottom	swift.enum.case	CPListItem.AssistantCellPosition.bottom	CPListItem.AssistantCellPosition.bottom	case bottom
+c:@E@CPAssistantCellPosition@CPAssistantCellPositionTop	swift.enum.case	CPListItem.AssistantCellPosition.top	CPListItem.AssistantCellPosition.top	case top
+c:@E@CPAssistantCellVisibility	swift.enum	CPListItem.AssistantCellVisibility	CPListItem.AssistantCellVisibility	enum AssistantCellVisibility
+c:@E@CPAssistantCellVisibility@CPAssistantCellVisibilityAlways	swift.enum.case	CPListItem.AssistantCellVisibility.always	CPListItem.AssistantCellVisibility.always	case always
+c:@E@CPAssistantCellVisibility@CPAssistantCellVisibilityOff	swift.enum.case	CPListItem.AssistantCellVisibility.off	CPListItem.AssistantCellVisibility.off	case off
+c:@E@CPAssistantCellVisibility@CPAssistantCellVisibilityWhileLimitedUIActive	swift.enum.case	CPListItem.AssistantCellVisibility.whileLimitedUIActive	CPListItem.AssistantCellVisibility.whileLimitedUIActive	case whileLimitedUIActive
+c:@E@CPBarButtonStyle	swift.enum	CPBarButtonStyle	CPBarButtonStyle	enum CPBarButtonStyle
+c:@E@CPBarButtonStyle@CPBarButtonStyleNone	swift.enum.case	CPBarButtonStyle.none	CPBarButtonStyle.none	case none
+c:@E@CPBarButtonStyle@CPBarButtonStyleRounded	swift.enum.case	CPBarButtonStyle.rounded	CPBarButtonStyle.rounded	case rounded
+c:@E@CPBarButtonType	swift.enum	CPBarButton.Type	CPBarButton.Type	enum `Type`
+c:@E@CPBarButtonType@CPBarButtonTypeImage	swift.enum.case	CPBarButton.Type.image	CPBarButton.Type.image	case image
+c:@E@CPBarButtonType@CPBarButtonTypeText	swift.enum.case	CPBarButton.Type.text	CPBarButton.Type.text	case text
+c:@E@CPContentStyle	swift.struct	CPContentStyle	CPContentStyle	struct CPContentStyle
+c:@E@CPContentStyle@CPContentStyleDark	swift.type.property	dark	CPContentStyle.dark	static var dark: CPContentStyle { get }
+c:@E@CPContentStyle@CPContentStyleLight	swift.type.property	light	CPContentStyle.light	static var light: CPContentStyle { get }
+c:@E@CPInformationTemplateLayout	swift.enum	CPInformationTemplateLayout	CPInformationTemplateLayout	enum CPInformationTemplateLayout
+c:@E@CPInformationTemplateLayout@CPInformationTemplateLayoutLeading	swift.enum.case	CPInformationTemplateLayout.leading	CPInformationTemplateLayout.leading	case leading
+c:@E@CPInformationTemplateLayout@CPInformationTemplateLayoutTwoColumn	swift.enum.case	CPInformationTemplateLayout.twoColumn	CPInformationTemplateLayout.twoColumn	case twoColumn
+c:@E@CPInstrumentClusterSetting	swift.enum	CPInstrumentClusterSetting	CPInstrumentClusterSetting	enum CPInstrumentClusterSetting
+c:@E@CPInstrumentClusterSetting@CPInstrumentClusterSettingDisabled	swift.enum.case	CPInstrumentClusterSetting.disabled	CPInstrumentClusterSetting.disabled	case disabled
+c:@E@CPInstrumentClusterSetting@CPInstrumentClusterSettingEnabled	swift.enum.case	CPInstrumentClusterSetting.enabled	CPInstrumentClusterSetting.enabled	case enabled
+c:@E@CPInstrumentClusterSetting@CPInstrumentClusterSettingUnspecified	swift.enum.case	CPInstrumentClusterSetting.unspecified	CPInstrumentClusterSetting.unspecified	case unspecified
+c:@E@CPInstrumentClusterSetting@CPInstrumentClusterSettingUserPreference	swift.enum.case	CPInstrumentClusterSetting.userPreference	CPInstrumentClusterSetting.userPreference	case userPreference
+c:@E@CPJunctionType	swift.enum	CPJunctionType	CPJunctionType	enum CPJunctionType
+c:@E@CPJunctionType@CPJunctionTypeIntersection	swift.enum.case	CPJunctionType.intersection	CPJunctionType.intersection	case intersection
+c:@E@CPJunctionType@CPJunctionTypeRoundabout	swift.enum.case	CPJunctionType.roundabout	CPJunctionType.roundabout	case roundabout
+c:@E@CPLaneStatus	swift.enum	CPLaneStatus	CPLaneStatus	enum CPLaneStatus
+c:@E@CPLaneStatus@CPLaneStatusGood	swift.enum.case	CPLaneStatus.good	CPLaneStatus.good	case good
+c:@E@CPLaneStatus@CPLaneStatusNotGood	swift.enum.case	CPLaneStatus.notGood	CPLaneStatus.notGood	case notGood
+c:@E@CPLaneStatus@CPLaneStatusPreferred	swift.enum.case	CPLaneStatus.preferred	CPLaneStatus.preferred	case preferred
+c:@E@CPLimitableUserInterface	swift.struct	CPLimitableUserInterface	CPLimitableUserInterface	struct CPLimitableUserInterface
+c:@E@CPLimitableUserInterface@CPLimitableUserInterfaceKeyboard	swift.type.property	keyboard	CPLimitableUserInterface.keyboard	static var keyboard: CPLimitableUserInterface { get }
+c:@E@CPLimitableUserInterface@CPLimitableUserInterfaceLists	swift.type.property	lists	CPLimitableUserInterface.lists	static var lists: CPLimitableUserInterface { get }
+c:@E@CPListImageRowItemCondensedElementShape	swift.enum	CPListImageRowItemCondensedElement.Shape	CPListImageRowItemCondensedElement.Shape	enum Shape
+c:@E@CPListImageRowItemCondensedElementShape@CPListImageRowItemCondensedElementShapeCircular	swift.enum.case	CPListImageRowItemCondensedElement.Shape.circular	CPListImageRowItemCondensedElement.Shape.circular	case circular
+c:@E@CPListImageRowItemCondensedElementShape@CPListImageRowItemCondensedElementShapeRoundedRectangle	swift.enum.case	CPListImageRowItemCondensedElement.Shape.roundedRectangle	CPListImageRowItemCondensedElement.Shape.roundedRectangle	case roundedRectangle
+c:@E@CPListImageRowItemImageGridElementShape	swift.enum	CPListImageRowItemImageGridElement.Shape	CPListImageRowItemImageGridElement.Shape	enum Shape
+c:@E@CPListImageRowItemImageGridElementShape@CPListImageRowItemImageGridElementShapeCircular	swift.enum.case	CPListImageRowItemImageGridElement.Shape.circular	CPListImageRowItemImageGridElement.Shape.circular	case circular
+c:@E@CPListImageRowItemImageGridElementShape@CPListImageRowItemImageGridElementShapeRoundedRectangle	swift.enum.case	CPListImageRowItemImageGridElement.Shape.roundedRectangle	CPListImageRowItemImageGridElement.Shape.roundedRectangle	case roundedRectangle
+c:@E@CPListItemAccessoryType	swift.enum	CPListItemAccessoryType	CPListItemAccessoryType	enum CPListItemAccessoryType
+c:@E@CPListItemAccessoryType@CPListItemAccessoryTypeCloud	swift.enum.case	CPListItemAccessoryType.cloud	CPListItemAccessoryType.cloud	case cloud
+c:@E@CPListItemAccessoryType@CPListItemAccessoryTypeDisclosureIndicator	swift.enum.case	CPListItemAccessoryType.disclosureIndicator	CPListItemAccessoryType.disclosureIndicator	case disclosureIndicator
+c:@E@CPListItemAccessoryType@CPListItemAccessoryTypeNone	swift.enum.case	CPListItemAccessoryType.none	CPListItemAccessoryType.none	case none
+c:@E@CPListItemPlayingIndicatorLocation	swift.enum	CPListItemPlayingIndicatorLocation	CPListItemPlayingIndicatorLocation	enum CPListItemPlayingIndicatorLocation
+c:@E@CPListItemPlayingIndicatorLocation@CPListItemPlayingIndicatorLocationLeading	swift.enum.case	CPListItemPlayingIndicatorLocation.leading	CPListItemPlayingIndicatorLocation.leading	case leading
+c:@E@CPListItemPlayingIndicatorLocation@CPListItemPlayingIndicatorLocationTrailing	swift.enum.case	CPListItemPlayingIndicatorLocation.trailing	CPListItemPlayingIndicatorLocation.trailing	case trailing
+c:@E@CPManeuverDisplayStyle	swift.struct	CPManeuverDisplayStyle	CPManeuverDisplayStyle	struct CPManeuverDisplayStyle
+c:@E@CPManeuverDisplayStyle@CPManeuverDisplayStyleInstructionOnly	swift.type.property	instructionOnly	CPManeuverDisplayStyle.instructionOnly	static var instructionOnly: CPManeuverDisplayStyle { get }
+c:@E@CPManeuverDisplayStyle@CPManeuverDisplayStyleLeadingSymbol	swift.type.property	leadingSymbol	CPManeuverDisplayStyle.leadingSymbol	static var leadingSymbol: CPManeuverDisplayStyle { get }
+c:@E@CPManeuverDisplayStyle@CPManeuverDisplayStyleSymbolOnly	swift.type.property	symbolOnly	CPManeuverDisplayStyle.symbolOnly	static var symbolOnly: CPManeuverDisplayStyle { get }
+c:@E@CPManeuverDisplayStyle@CPManeuverDisplayStyleTrailingSymbol	swift.type.property	trailingSymbol	CPManeuverDisplayStyle.trailingSymbol	static var trailingSymbol: CPManeuverDisplayStyle { get }
+c:@E@CPManeuverState	swift.enum	CPManeuverState	CPManeuverState	enum CPManeuverState
+c:@E@CPManeuverState@CPManeuverStateContinue	swift.enum.case	CPManeuverState.continue	CPManeuverState.continue	case `continue`
+c:@E@CPManeuverState@CPManeuverStateExecute	swift.enum.case	CPManeuverState.execute	CPManeuverState.execute	case execute
+c:@E@CPManeuverState@CPManeuverStateInitial	swift.enum.case	CPManeuverState.initial	CPManeuverState.initial	case initial
+c:@E@CPManeuverState@CPManeuverStatePrepare	swift.enum.case	CPManeuverState.prepare	CPManeuverState.prepare	case prepare
+c:@E@CPManeuverType	swift.enum	CPManeuverType	CPManeuverType	enum CPManeuverType
+c:@E@CPManeuverType@CPManeuverTypeArriveAtDestination	swift.enum.case	CPManeuverType.arriveAtDestination	CPManeuverType.arriveAtDestination	case arriveAtDestination
+c:@E@CPManeuverType@CPManeuverTypeArriveAtDestinationLeft	swift.enum.case	CPManeuverType.arriveAtDestinationLeft	CPManeuverType.arriveAtDestinationLeft	case arriveAtDestinationLeft
+c:@E@CPManeuverType@CPManeuverTypeArriveAtDestinationRight	swift.enum.case	CPManeuverType.arriveAtDestinationRight	CPManeuverType.arriveAtDestinationRight	case arriveAtDestinationRight
+c:@E@CPManeuverType@CPManeuverTypeArriveEndOfDirections	swift.enum.case	CPManeuverType.arriveEndOfDirections	CPManeuverType.arriveEndOfDirections	case arriveEndOfDirections
+c:@E@CPManeuverType@CPManeuverTypeArriveEndOfNavigation	swift.enum.case	CPManeuverType.arriveEndOfNavigation	CPManeuverType.arriveEndOfNavigation	case arriveEndOfNavigation
+c:@E@CPManeuverType@CPManeuverTypeChangeFerry	swift.enum.case	CPManeuverType.changeFerry	CPManeuverType.changeFerry	case changeFerry
+c:@E@CPManeuverType@CPManeuverTypeChangeHighway	swift.enum.case	CPManeuverType.changeHighway	CPManeuverType.changeHighway	case changeHighway
+c:@E@CPManeuverType@CPManeuverTypeChangeHighwayLeft	swift.enum.case	CPManeuverType.changeHighwayLeft	CPManeuverType.changeHighwayLeft	case changeHighwayLeft
+c:@E@CPManeuverType@CPManeuverTypeChangeHighwayRight	swift.enum.case	CPManeuverType.changeHighwayRight	CPManeuverType.changeHighwayRight	case changeHighwayRight
+c:@E@CPManeuverType@CPManeuverTypeEnterRoundabout	swift.enum.case	CPManeuverType.enterRoundabout	CPManeuverType.enterRoundabout	case enterRoundabout
+c:@E@CPManeuverType@CPManeuverTypeEnter_Ferry	swift.enum.case	CPManeuverType.enter_Ferry	CPManeuverType.enter_Ferry	case enter_Ferry
+c:@E@CPManeuverType@CPManeuverTypeExitFerry	swift.enum.case	CPManeuverType.exitFerry	CPManeuverType.exitFerry	case exitFerry
+c:@E@CPManeuverType@CPManeuverTypeExitRoundabout	swift.enum.case	CPManeuverType.exitRoundabout	CPManeuverType.exitRoundabout	case exitRoundabout
+c:@E@CPManeuverType@CPManeuverTypeFollowRoad	swift.enum.case	CPManeuverType.followRoad	CPManeuverType.followRoad	case followRoad
+c:@E@CPManeuverType@CPManeuverTypeHighwayOffRampLeft	swift.enum.case	CPManeuverType.highwayOffRampLeft	CPManeuverType.highwayOffRampLeft	case highwayOffRampLeft
+c:@E@CPManeuverType@CPManeuverTypeHighwayOffRampRight	swift.enum.case	CPManeuverType.highwayOffRampRight	CPManeuverType.highwayOffRampRight	case highwayOffRampRight
+c:@E@CPManeuverType@CPManeuverTypeKeepLeft	swift.enum.case	CPManeuverType.keepLeft	CPManeuverType.keepLeft	case keepLeft
+c:@E@CPManeuverType@CPManeuverTypeKeepRight	swift.enum.case	CPManeuverType.keepRight	CPManeuverType.keepRight	case keepRight
+c:@E@CPManeuverType@CPManeuverTypeLeftTurn	swift.enum.case	CPManeuverType.leftTurn	CPManeuverType.leftTurn	case leftTurn
+c:@E@CPManeuverType@CPManeuverTypeLeftTurnAtEnd	swift.enum.case	CPManeuverType.leftTurnAtEnd	CPManeuverType.leftTurnAtEnd	case leftTurnAtEnd
+c:@E@CPManeuverType@CPManeuverTypeNoTurn	swift.enum.case	CPManeuverType.noTurn	CPManeuverType.noTurn	case noTurn
+c:@E@CPManeuverType@CPManeuverTypeOffRamp	swift.enum.case	CPManeuverType.offRamp	CPManeuverType.offRamp	case offRamp
+c:@E@CPManeuverType@CPManeuverTypeOnRamp	swift.enum.case	CPManeuverType.onRamp	CPManeuverType.onRamp	case onRamp
+c:@E@CPManeuverType@CPManeuverTypeRightTurn	swift.enum.case	CPManeuverType.rightTurn	CPManeuverType.rightTurn	case rightTurn
+c:@E@CPManeuverType@CPManeuverTypeRightTurnAtEnd	swift.enum.case	CPManeuverType.rightTurnAtEnd	CPManeuverType.rightTurnAtEnd	case rightTurnAtEnd
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit1	swift.enum.case	CPManeuverType.roundaboutExit1	CPManeuverType.roundaboutExit1	case roundaboutExit1
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit10	swift.enum.case	CPManeuverType.roundaboutExit10	CPManeuverType.roundaboutExit10	case roundaboutExit10
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit11	swift.enum.case	CPManeuverType.roundaboutExit11	CPManeuverType.roundaboutExit11	case roundaboutExit11
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit12	swift.enum.case	CPManeuverType.roundaboutExit12	CPManeuverType.roundaboutExit12	case roundaboutExit12
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit13	swift.enum.case	CPManeuverType.roundaboutExit13	CPManeuverType.roundaboutExit13	case roundaboutExit13
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit14	swift.enum.case	CPManeuverType.roundaboutExit14	CPManeuverType.roundaboutExit14	case roundaboutExit14
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit15	swift.enum.case	CPManeuverType.roundaboutExit15	CPManeuverType.roundaboutExit15	case roundaboutExit15
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit16	swift.enum.case	CPManeuverType.roundaboutExit16	CPManeuverType.roundaboutExit16	case roundaboutExit16
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit17	swift.enum.case	CPManeuverType.roundaboutExit17	CPManeuverType.roundaboutExit17	case roundaboutExit17
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit18	swift.enum.case	CPManeuverType.roundaboutExit18	CPManeuverType.roundaboutExit18	case roundaboutExit18
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit19	swift.enum.case	CPManeuverType.roundaboutExit19	CPManeuverType.roundaboutExit19	case roundaboutExit19
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit2	swift.enum.case	CPManeuverType.roundaboutExit2	CPManeuverType.roundaboutExit2	case roundaboutExit2
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit3	swift.enum.case	CPManeuverType.roundaboutExit3	CPManeuverType.roundaboutExit3	case roundaboutExit3
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit4	swift.enum.case	CPManeuverType.roundaboutExit4	CPManeuverType.roundaboutExit4	case roundaboutExit4
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit5	swift.enum.case	CPManeuverType.roundaboutExit5	CPManeuverType.roundaboutExit5	case roundaboutExit5
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit6	swift.enum.case	CPManeuverType.roundaboutExit6	CPManeuverType.roundaboutExit6	case roundaboutExit6
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit7	swift.enum.case	CPManeuverType.roundaboutExit7	CPManeuverType.roundaboutExit7	case roundaboutExit7
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit8	swift.enum.case	CPManeuverType.roundaboutExit8	CPManeuverType.roundaboutExit8	case roundaboutExit8
+c:@E@CPManeuverType@CPManeuverTypeRoundaboutExit9	swift.enum.case	CPManeuverType.roundaboutExit9	CPManeuverType.roundaboutExit9	case roundaboutExit9
+c:@E@CPManeuverType@CPManeuverTypeSharpLeftTurn	swift.enum.case	CPManeuverType.sharpLeftTurn	CPManeuverType.sharpLeftTurn	case sharpLeftTurn
+c:@E@CPManeuverType@CPManeuverTypeSharpRightTurn	swift.enum.case	CPManeuverType.sharpRightTurn	CPManeuverType.sharpRightTurn	case sharpRightTurn
+c:@E@CPManeuverType@CPManeuverTypeSlightLeftTurn	swift.enum.case	CPManeuverType.slightLeftTurn	CPManeuverType.slightLeftTurn	case slightLeftTurn
+c:@E@CPManeuverType@CPManeuverTypeSlightRightTurn	swift.enum.case	CPManeuverType.slightRightTurn	CPManeuverType.slightRightTurn	case slightRightTurn
+c:@E@CPManeuverType@CPManeuverTypeStartRoute	swift.enum.case	CPManeuverType.startRoute	CPManeuverType.startRoute	case startRoute
+c:@E@CPManeuverType@CPManeuverTypeStartRouteWithUTurn	swift.enum.case	CPManeuverType.startRouteWithUTurn	CPManeuverType.startRouteWithUTurn	case startRouteWithUTurn
+c:@E@CPManeuverType@CPManeuverTypeStraightAhead	swift.enum.case	CPManeuverType.straightAhead	CPManeuverType.straightAhead	case straightAhead
+c:@E@CPManeuverType@CPManeuverTypeUTurn	swift.enum.case	CPManeuverType.uTurn	CPManeuverType.uTurn	case uTurn
+c:@E@CPManeuverType@CPManeuverTypeUTurnAtRoundabout	swift.enum.case	CPManeuverType.uTurnAtRoundabout	CPManeuverType.uTurnAtRoundabout	case uTurnAtRoundabout
+c:@E@CPManeuverType@CPManeuverTypeUTurnWhenPossible	swift.enum.case	CPManeuverType.uTurnWhenPossible	CPManeuverType.uTurnWhenPossible	case uTurnWhenPossible
+c:@E@CPMessageLeadingItem	swift.enum	CPMessageLeadingItem	CPMessageLeadingItem	enum CPMessageLeadingItem
+c:@E@CPMessageLeadingItem@CPMessageLeadingItemNone	swift.enum.case	CPMessageLeadingItem.none	CPMessageLeadingItem.none	case none
+c:@E@CPMessageLeadingItem@CPMessageLeadingItemPin	swift.enum.case	CPMessageLeadingItem.pin	CPMessageLeadingItem.pin	case pin
+c:@E@CPMessageLeadingItem@CPMessageLeadingItemStar	swift.enum.case	CPMessageLeadingItem.star	CPMessageLeadingItem.star	case star
+c:@E@CPMessageTrailingItem	swift.enum	CPMessageTrailingItem	CPMessageTrailingItem	enum CPMessageTrailingItem
+c:@E@CPMessageTrailingItem@CPMessageTrailingItemMute	swift.enum.case	CPMessageTrailingItem.mute	CPMessageTrailingItem.mute	case mute
+c:@E@CPMessageTrailingItem@CPMessageTrailingItemNone	swift.enum.case	CPMessageTrailingItem.none	CPMessageTrailingItem.none	case none
+c:@E@CPNavigationAlertDismissalContext	swift.enum	CPNavigationAlert.DismissalContext	CPNavigationAlert.DismissalContext	enum DismissalContext
+c:@E@CPNavigationAlertDismissalContext@CPNavigationAlertDismissalContextSystemDismissed	swift.enum.case	CPNavigationAlert.DismissalContext.systemDismissed	CPNavigationAlert.DismissalContext.systemDismissed	case systemDismissed
+c:@E@CPNavigationAlertDismissalContext@CPNavigationAlertDismissalContextTimeout	swift.enum.case	CPNavigationAlert.DismissalContext.timeout	CPNavigationAlert.DismissalContext.timeout	case timeout
+c:@E@CPNavigationAlertDismissalContext@CPNavigationAlertDismissalContextUserDismissed	swift.enum.case	CPNavigationAlert.DismissalContext.userDismissed	CPNavigationAlert.DismissalContext.userDismissed	case userDismissed
+c:@E@CPPanDirection	swift.struct	CPMapTemplate.PanDirection	CPMapTemplate.PanDirection	struct PanDirection
+c:@E@CPPanDirection@CPPanDirectionDown	swift.type.property	down	CPMapTemplate.PanDirection.down	static var down: CPMapTemplate.PanDirection { get }
+c:@E@CPPanDirection@CPPanDirectionLeft	swift.type.property	left	CPMapTemplate.PanDirection.left	static var left: CPMapTemplate.PanDirection { get }
+c:@E@CPPanDirection@CPPanDirectionRight	swift.type.property	right	CPMapTemplate.PanDirection.right	static var right: CPMapTemplate.PanDirection { get }
+c:@E@CPPanDirection@CPPanDirectionUp	swift.type.property	up	CPMapTemplate.PanDirection.up	static var up: CPMapTemplate.PanDirection { get }
+c:@E@CPTextButtonStyle	swift.enum	CPTextButtonStyle	CPTextButtonStyle	enum CPTextButtonStyle
+c:@E@CPTextButtonStyle@CPTextButtonStyleCancel	swift.enum.case	CPTextButtonStyle.cancel	CPTextButtonStyle.cancel	case cancel
+c:@E@CPTextButtonStyle@CPTextButtonStyleConfirm	swift.enum.case	CPTextButtonStyle.confirm	CPTextButtonStyle.confirm	case confirm
+c:@E@CPTextButtonStyle@CPTextButtonStyleNormal	swift.enum.case	CPTextButtonStyle.normal	CPTextButtonStyle.normal	case normal
+c:@E@CPTimeRemainingColor	swift.enum	CPTimeRemainingColor	CPTimeRemainingColor	enum CPTimeRemainingColor
+c:@E@CPTimeRemainingColor@CPTimeRemainingColorDefault	swift.enum.case	CPTimeRemainingColor.default	CPTimeRemainingColor.default	case `default`
+c:@E@CPTimeRemainingColor@CPTimeRemainingColorGreen	swift.enum.case	CPTimeRemainingColor.green	CPTimeRemainingColor.green	case green
+c:@E@CPTimeRemainingColor@CPTimeRemainingColorOrange	swift.enum.case	CPTimeRemainingColor.orange	CPTimeRemainingColor.orange	case orange
+c:@E@CPTimeRemainingColor@CPTimeRemainingColorRed	swift.enum.case	CPTimeRemainingColor.red	CPTimeRemainingColor.red	case red
+c:@E@CPTrafficSide	swift.enum	CPTrafficSide	CPTrafficSide	enum CPTrafficSide
+c:@E@CPTrafficSide@CPTrafficSideLeft	swift.enum.case	CPTrafficSide.left	CPTrafficSide.left	case left
+c:@E@CPTrafficSide@CPTrafficSideRight	swift.enum.case	CPTrafficSide.right	CPTrafficSide.right	case right
+c:@E@CPTripEstimateStyle	swift.enum	CPTripEstimateStyle	CPTripEstimateStyle	enum CPTripEstimateStyle
+c:@E@CPTripEstimateStyle@CPTripEstimateStyleDark	swift.enum.case	CPTripEstimateStyle.dark	CPTripEstimateStyle.dark	case dark
+c:@E@CPTripEstimateStyle@CPTripEstimateStyleLight	swift.enum.case	CPTripEstimateStyle.light	CPTripEstimateStyle.light	case light
+c:@E@CPTripPauseReason	swift.enum	CPNavigationSession.PauseReason	CPNavigationSession.PauseReason	enum PauseReason
+c:@E@CPTripPauseReason@CPTripPauseReasonArrived	swift.enum.case	CPNavigationSession.PauseReason.arrived	CPNavigationSession.PauseReason.arrived	case arrived
+c:@E@CPTripPauseReason@CPTripPauseReasonLoading	swift.enum.case	CPNavigationSession.PauseReason.loading	CPNavigationSession.PauseReason.loading	case loading
+c:@E@CPTripPauseReason@CPTripPauseReasonLocating	swift.enum.case	CPNavigationSession.PauseReason.locating	CPNavigationSession.PauseReason.locating	case locating
+c:@E@CPTripPauseReason@CPTripPauseReasonProceedToRoute	swift.enum.case	CPNavigationSession.PauseReason.proceedToRoute	CPNavigationSession.PauseReason.proceedToRoute	case proceedToRoute
+c:@E@CPTripPauseReason@CPTripPauseReasonRerouting	swift.enum.case	CPNavigationSession.PauseReason.rerouting	CPNavigationSession.PauseReason.rerouting	case rerouting
+c:@F@NSStringFromCPJunctionType	swift.func	NSStringFromCPJunctionType(_:)	NSStringFromCPJunctionType(_:)	func NSStringFromCPJunctionType(_ junctionType: CPJunctionType) -> String!
+c:@F@NSStringFromCPLaneStatus	swift.func	NSStringFromCPLaneStatus(_:)	NSStringFromCPLaneStatus(_:)	func NSStringFromCPLaneStatus(_ laneStatus: CPLaneStatus) -> String!
+c:@F@NSStringFromCPManeuverType	swift.func	NSStringFromCPManeuverType(_:)	NSStringFromCPManeuverType(_:)	func NSStringFromCPManeuverType(_ maneuverType: CPManeuverType) -> String!
+c:@F@NSStringFromCPTrafficSide	swift.func	NSStringFromCPTrafficSide(_:)	NSStringFromCPTrafficSide(_:)	func NSStringFromCPTrafficSide(_ trafficSide: CPTrafficSide) -> String!
+c:@T@CPAlertActionHandler	swift.typealias	CPAlertActionHandler	CPAlertActionHandler	typealias CPAlertActionHandler = (CPAlertAction) -> Void
+c:@T@CPBarButtonHandler	swift.typealias	CPBarButtonHandler	CPBarButtonHandler	typealias CPBarButtonHandler = (CPBarButton) -> Void
+c:objc(cs)CPActionSheetTemplate	swift.class	CPActionSheetTemplate	CPActionSheetTemplate	@MainActor class CPActionSheetTemplate
+c:objc(cs)CPActionSheetTemplate(im)initWithTitle:message:actions:	swift.init	init(title:message:actions:)	CPActionSheetTemplate.init(title:message:actions:)	@MainActor init(title: String?, message: String?, actions: [CPAlertAction])
+c:objc(cs)CPActionSheetTemplate(py)actions	swift.property	actions	CPActionSheetTemplate.actions	@MainActor var actions: [CPAlertAction] { get }
+c:objc(cs)CPActionSheetTemplate(py)message	swift.property	message	CPActionSheetTemplate.message	@MainActor var message: String? { get }
+c:objc(cs)CPActionSheetTemplate(py)title	swift.property	title	CPActionSheetTemplate.title	@MainActor var title: String? { get }
+c:objc(cs)CPAlertAction	swift.class	CPAlertAction	CPAlertAction	class CPAlertAction
+c:objc(cs)CPAlertAction(im)initWithTitle:color:handler:	swift.init	init(title:color:handler:)	CPAlertAction.init(title:color:handler:)	init(title: String, color: UIColor, handler: @escaping CPAlertActionHandler)
+c:objc(cs)CPAlertAction(im)initWithTitle:style:handler:	swift.init	init(title:style:handler:)	CPAlertAction.init(title:style:handler:)	init(title: String, style: CPAlertAction.Style, handler: @escaping CPAlertActionHandler)
+c:objc(cs)CPAlertAction(py)color	swift.property	color	CPAlertAction.color	@NSCopying var color: UIColor? { get }
+c:objc(cs)CPAlertAction(py)handler	swift.property	handler	CPAlertAction.handler	var handler: CPAlertActionHandler { get }
+c:objc(cs)CPAlertAction(py)style	swift.property	style	CPAlertAction.style	var style: CPAlertAction.Style { get }
+c:objc(cs)CPAlertAction(py)title	swift.property	title	CPAlertAction.title	var title: String { get }
+c:objc(cs)CPAlertTemplate	swift.class	CPAlertTemplate	CPAlertTemplate	@MainActor class CPAlertTemplate
+c:objc(cs)CPAlertTemplate(cpy)maximumActionCount	swift.type.property	maximumActionCount	CPAlertTemplate.maximumActionCount	@MainActor class var maximumActionCount: Int { get }
+c:objc(cs)CPAlertTemplate(im)initWithTitleVariants:actions:	swift.init	init(titleVariants:actions:)	CPAlertTemplate.init(titleVariants:actions:)	@MainActor init(titleVariants: [String], actions: [CPAlertAction])
+c:objc(cs)CPAlertTemplate(py)actions	swift.property	actions	CPAlertTemplate.actions	@MainActor var actions: [CPAlertAction] { get }
+c:objc(cs)CPAlertTemplate(py)titleVariants	swift.property	titleVariants	CPAlertTemplate.titleVariants	@MainActor var titleVariants: [String] { get }
+c:objc(cs)CPAssistantCellConfiguration	swift.class	CPAssistantCellConfiguration	CPAssistantCellConfiguration	class CPAssistantCellConfiguration
+c:objc(cs)CPAssistantCellConfiguration(im)initWithPosition:visibility:assistantAction:	swift.init	init(position:visibility:assistantAction:)	CPAssistantCellConfiguration.init(position:visibility:assistantAction:)	init(position: CPListItem.AssistantCellPosition, visibility: CPListItem.AssistantCellVisibility, assistantAction: CPAssistantCellActionType)
+c:objc(cs)CPAssistantCellConfiguration(py)assistantAction	swift.property	assistantAction	CPAssistantCellConfiguration.assistantAction	var assistantAction: CPAssistantCellActionType { get }
+c:objc(cs)CPAssistantCellConfiguration(py)position	swift.property	position	CPAssistantCellConfiguration.position	var position: CPListItem.AssistantCellPosition { get }
+c:objc(cs)CPAssistantCellConfiguration(py)visibility	swift.property	visibility	CPAssistantCellConfiguration.visibility	var visibility: CPListItem.AssistantCellVisibility { get }
+c:objc(cs)CPBarButton	swift.class	CPBarButton	CPBarButton	class CPBarButton
+c:objc(cs)CPBarButton(im)initWithImage:handler:	swift.init	init(image:handler:)	CPBarButton.init(image:handler:)	init(image: UIImage, handler: CPBarButtonHandler? = nil)
+c:objc(cs)CPBarButton(im)initWithTitle:handler:	swift.init	init(title:handler:)	CPBarButton.init(title:handler:)	init(title: String, handler: CPBarButtonHandler? = nil)
+c:objc(cs)CPBarButton(im)initWithType:handler:	swift.init	init(type:handler:)	CPBarButton.init(type:handler:)	init(type: CPBarButton.Type, handler: CPBarButtonHandler? = nil)
+c:objc(cs)CPBarButton(py)buttonStyle	swift.property	buttonStyle	CPBarButton.buttonStyle	var buttonStyle: CPBarButtonStyle { get set }
+c:objc(cs)CPBarButton(py)buttonType	swift.property	buttonType	CPBarButton.buttonType	var buttonType: CPBarButton.Type { get }
+c:objc(cs)CPBarButton(py)enabled	swift.property	isEnabled	CPBarButton.isEnabled	var isEnabled: Bool { get set }
+c:objc(cs)CPBarButton(py)image	swift.property	image	CPBarButton.image	var image: UIImage? { get set }
+c:objc(cs)CPBarButton(py)title	swift.property	title	CPBarButton.title	var title: String? { get set }
+c:objc(cs)CPButton	swift.class	CPButton	CPButton	class CPButton
+c:objc(cs)CPButton(im)initWithImage:handler:	swift.init	init(image:handler:)	CPButton.init(image:handler:)	init(image: UIImage, handler: ((CPButton) -> Void)? = nil)
+c:objc(cs)CPButton(py)enabled	swift.property	isEnabled	CPButton.isEnabled	var isEnabled: Bool { get set }
+c:objc(cs)CPButton(py)image	swift.property	image	CPButton.image	@NSCopying var image: UIImage? { get }
+c:objc(cs)CPButton(py)title	swift.property	title	CPButton.title	var title: String? { get set }
+c:objc(cs)CPContact	swift.class	CPContact	CPContact	class CPContact
+c:objc(cs)CPContact(im)initWithName:image:	swift.init	init(name:image:)	CPContact.init(name:image:)	init(name: String, image: UIImage)
+c:objc(cs)CPContact(py)actions	swift.property	actions	CPContact.actions	var actions: [CPButton]? { get set }
+c:objc(cs)CPContact(py)image	swift.property	image	CPContact.image	var image: UIImage { get set }
+c:objc(cs)CPContact(py)informativeText	swift.property	informativeText	CPContact.informativeText	var informativeText: String? { get set }
+c:objc(cs)CPContact(py)name	swift.property	name	CPContact.name	var name: String { get set }
+c:objc(cs)CPContact(py)subtitle	swift.property	subtitle	CPContact.subtitle	var subtitle: String? { get set }
+c:objc(cs)CPContactCallButton	swift.class	CPContactCallButton	CPContactCallButton	class CPContactCallButton
+c:objc(cs)CPContactCallButton(im)initWithHandler:	swift.init	init(handler:)	CPContactCallButton.init(handler:)	init(handler: ((CPButton) -> Void)? = nil)
+c:objc(cs)CPContactDirectionsButton	swift.class	CPContactDirectionsButton	CPContactDirectionsButton	class CPContactDirectionsButton
+c:objc(cs)CPContactDirectionsButton(im)initWithHandler:	swift.init	init(handler:)	CPContactDirectionsButton.init(handler:)	init(handler: ((CPButton) -> Void)? = nil)
+c:objc(cs)CPContactMessageButton	swift.class	CPContactMessageButton	CPContactMessageButton	class CPContactMessageButton
+c:objc(cs)CPContactMessageButton(im)initWithPhoneOrEmail:	swift.init	init(phoneOrEmail:)	CPContactMessageButton.init(phoneOrEmail:)	init(phoneOrEmail: String)
+c:objc(cs)CPContactMessageButton(py)phoneOrEmail	swift.property	phoneOrEmail	CPContactMessageButton.phoneOrEmail	var phoneOrEmail: String { get }
+c:objc(cs)CPContactTemplate	swift.class	CPContactTemplate	CPContactTemplate	@MainActor class CPContactTemplate
+c:objc(cs)CPContactTemplate(im)initWithContact:	swift.init	init(contact:)	CPContactTemplate.init(contact:)	@MainActor init(contact: CPContact)
+c:objc(cs)CPContactTemplate(py)contact	swift.property	contact	CPContactTemplate.contact	@MainActor var contact: CPContact { get set }
+c:objc(cs)CPDashboardButton	swift.class	CPDashboardButton	CPDashboardButton	class CPDashboardButton
+c:objc(cs)CPDashboardButton(im)initWithTitleVariants:subtitleVariants:image:handler:	swift.init	init(titleVariants:subtitleVariants:image:handler:)	CPDashboardButton.init(titleVariants:subtitleVariants:image:handler:)	init(titleVariants: [String], subtitleVariants: [String], image: UIImage, handler: ((CPDashboardButton) -> Void)? = nil)
+c:objc(cs)CPDashboardButton(py)image	swift.property	image	CPDashboardButton.image	var image: UIImage { get }
+c:objc(cs)CPDashboardButton(py)subtitleVariants	swift.property	subtitleVariants	CPDashboardButton.subtitleVariants	var subtitleVariants: [String] { get }
+c:objc(cs)CPDashboardButton(py)titleVariants	swift.property	titleVariants	CPDashboardButton.titleVariants	var titleVariants: [String] { get }
+c:objc(cs)CPDashboardController	swift.class	CPDashboardController	CPDashboardController	class CPDashboardController
+c:objc(cs)CPDashboardController(py)shortcutButtons	swift.property	shortcutButtons	CPDashboardController.shortcutButtons	var shortcutButtons: [CPDashboardButton] { get set }
+c:objc(cs)CPGridButton	swift.class	CPGridButton	CPGridButton	class CPGridButton
+c:objc(cs)CPGridButton(im)initWithTitleVariants:image:handler:	swift.init	init(titleVariants:image:handler:)	CPGridButton.init(titleVariants:image:handler:)	convenience init(titleVariants: [String], image: UIImage, handler: ((CPGridButton) -> Void)? = nil)
+c:objc(cs)CPGridButton(im)initWithTitleVariants:image:messageConfiguration:handler:	swift.init	init(titleVariants:image:messageConfiguration:handler:)	CPGridButton.init(titleVariants:image:messageConfiguration:handler:)	init(titleVariants: [String], image: UIImage, messageConfiguration: CPMessageGridItemConfiguration?, handler: ((CPGridButton) -> Void)? = nil)
+c:objc(cs)CPGridButton(im)updateImage:	swift.method	updateImage(_:)	CPGridButton.updateImage(_:)	func updateImage(_ image: UIImage)
+c:objc(cs)CPGridButton(im)updateTitleVariants:	swift.method	updateTitleVariants(_:)	CPGridButton.updateTitleVariants(_:)	func updateTitleVariants(_ titleVariants: [String])
+c:objc(cs)CPGridButton(py)enabled	swift.property	isEnabled	CPGridButton.isEnabled	var isEnabled: Bool { get set }
+c:objc(cs)CPGridButton(py)image	swift.property	image	CPGridButton.image	var image: UIImage { get }
+c:objc(cs)CPGridButton(py)messageConfiguration	swift.property	messageConfiguration	CPGridButton.messageConfiguration	var messageConfiguration: CPMessageGridItemConfiguration? { get }
+c:objc(cs)CPGridButton(py)titleVariants	swift.property	titleVariants	CPGridButton.titleVariants	var titleVariants: [String] { get }
+c:objc(cs)CPGridTemplate	swift.class	CPGridTemplate	CPGridTemplate	@MainActor class CPGridTemplate
+c:objc(cs)CPGridTemplate(cpy)maximumGridButtonImageSize	swift.type.property	maximumGridButtonImageSize	CPGridTemplate.maximumGridButtonImageSize	@MainActor class var maximumGridButtonImageSize: CGSize { get }
+c:objc(cs)CPGridTemplate(im)initWithTitle:gridButtons:	swift.init	init(title:gridButtons:)	CPGridTemplate.init(title:gridButtons:)	@MainActor init(title: String?, gridButtons: [CPGridButton])
+c:objc(cs)CPGridTemplate(im)updateGridButtons:	swift.method	updateGridButtons(_:)	CPGridTemplate.updateGridButtons(_:)	@MainActor func updateGridButtons(_ gridButtons: [CPGridButton])
+c:objc(cs)CPGridTemplate(im)updateTitle:	swift.method	updateTitle(_:)	CPGridTemplate.updateTitle(_:)	@MainActor func updateTitle(_ title: String)
+c:objc(cs)CPGridTemplate(py)gridButtons	swift.property	gridButtons	CPGridTemplate.gridButtons	@MainActor var gridButtons: [CPGridButton] { get }
+c:objc(cs)CPGridTemplate(py)title	swift.property	title	CPGridTemplate.title	@MainActor var title: String { get }
+c:objc(cs)CPImageSet	swift.class	CPImageSet	CPImageSet	class CPImageSet
+c:objc(cs)CPImageSet(im)initWithLightContentImage:darkContentImage:	swift.init	init(lightContentImage:darkContentImage:)	CPImageSet.init(lightContentImage:darkContentImage:)	init(lightContentImage lightImage: UIImage, darkContentImage darkImage: UIImage)
+c:objc(cs)CPImageSet(py)darkContentImage	swift.property	darkContentImage	CPImageSet.darkContentImage	var darkContentImage: UIImage { get }
+c:objc(cs)CPImageSet(py)lightContentImage	swift.property	lightContentImage	CPImageSet.lightContentImage	var lightContentImage: UIImage { get }
+c:objc(cs)CPInformationItem	swift.class	CPInformationItem	CPInformationItem	class CPInformationItem
+c:objc(cs)CPInformationItem(im)initWithTitle:detail:	swift.init	init(title:detail:)	CPInformationItem.init(title:detail:)	init(title: String?, detail: String?)
+c:objc(cs)CPInformationItem(py)detail	swift.property	detail	CPInformationItem.detail	var detail: String? { get }
+c:objc(cs)CPInformationItem(py)title	swift.property	title	CPInformationItem.title	var title: String? { get }
+c:objc(cs)CPInformationRatingItem	swift.class	CPInformationRatingItem	CPInformationRatingItem	class CPInformationRatingItem
+c:objc(cs)CPInformationRatingItem(im)initWithRating:maximumRating:title:detail:	swift.init	init(rating:maximumRating:title:detail:)	CPInformationRatingItem.init(rating:maximumRating:title:detail:)	init(rating: NSNumber?, maximumRating: NSNumber?, title: String?, detail: String?)
+c:objc(cs)CPInformationRatingItem(py)maximumRating	swift.property	maximumRating	CPInformationRatingItem.maximumRating	var maximumRating: NSNumber? { get }
+c:objc(cs)CPInformationRatingItem(py)rating	swift.property	rating	CPInformationRatingItem.rating	var rating: NSNumber? { get }
+c:objc(cs)CPInformationTemplate	swift.class	CPInformationTemplate	CPInformationTemplate	@MainActor class CPInformationTemplate
+c:objc(cs)CPInformationTemplate(im)initWithTitle:layout:items:actions:	swift.init	init(title:layout:items:actions:)	CPInformationTemplate.init(title:layout:items:actions:)	@MainActor init(title: String, layout: CPInformationTemplateLayout, items: [CPInformationItem], actions: [CPTextButton])
+c:objc(cs)CPInformationTemplate(py)actions	swift.property	actions	CPInformationTemplate.actions	@MainActor var actions: [CPTextButton] { get set }
+c:objc(cs)CPInformationTemplate(py)items	swift.property	items	CPInformationTemplate.items	@MainActor var items: [CPInformationItem] { get set }
+c:objc(cs)CPInformationTemplate(py)layout	swift.property	layout	CPInformationTemplate.layout	@MainActor var layout: CPInformationTemplateLayout { get }
+c:objc(cs)CPInformationTemplate(py)title	swift.property	title	CPInformationTemplate.title	@MainActor var title: String { get set }
+c:objc(cs)CPInstrumentClusterController	swift.class	CPInstrumentClusterController	CPInstrumentClusterController	class CPInstrumentClusterController
+c:objc(cs)CPInstrumentClusterController(py)attributedInactiveDescriptionVariants	swift.property	attributedInactiveDescriptionVariants	CPInstrumentClusterController.attributedInactiveDescriptionVariants	var attributedInactiveDescriptionVariants: [NSAttributedString] { get set }
+c:objc(cs)CPInstrumentClusterController(py)compassSetting	swift.property	compassSetting	CPInstrumentClusterController.compassSetting	var compassSetting: CPInstrumentClusterSetting { get }
+c:objc(cs)CPInstrumentClusterController(py)delegate	swift.property	delegate	CPInstrumentClusterController.delegate	weak var delegate: (any CPInstrumentClusterControllerDelegate)? { get set }
+c:objc(cs)CPInstrumentClusterController(py)inactiveDescriptionVariants	swift.property	inactiveDescriptionVariants	CPInstrumentClusterController.inactiveDescriptionVariants	var inactiveDescriptionVariants: [String] { get set }
+c:objc(cs)CPInstrumentClusterController(py)instrumentClusterWindow	swift.property	instrumentClusterWindow	CPInstrumentClusterController.instrumentClusterWindow	var instrumentClusterWindow: UIWindow? { get }
+c:objc(cs)CPInstrumentClusterController(py)speedLimitSetting	swift.property	speedLimitSetting	CPInstrumentClusterController.speedLimitSetting	var speedLimitSetting: CPInstrumentClusterSetting { get }
+c:objc(cs)CPInterfaceController	swift.class	CPInterfaceController	CPInterfaceController	@MainActor class CPInterfaceController
+c:objc(cs)CPInterfaceController(im)dismissTemplateAnimated:	swift.method	dismissTemplate(animated:)	CPInterfaceController.dismissTemplate(animated:)	@MainActor func dismissTemplate(animated: Bool)
+c:objc(cs)CPInterfaceController(im)dismissTemplateAnimated:completion:	swift.method	dismissTemplate(animated:)	CPInterfaceController.dismissTemplate(animated:)	@MainActor func dismissTemplate(animated: Bool) async throws -> Bool
+c:objc(cs)CPInterfaceController(im)popTemplateAnimated:	swift.method	popTemplate(animated:)	CPInterfaceController.popTemplate(animated:)	@MainActor func popTemplate(animated: Bool)
+c:objc(cs)CPInterfaceController(im)popTemplateAnimated:completion:	swift.method	popTemplate(animated:)	CPInterfaceController.popTemplate(animated:)	@MainActor func popTemplate(animated: Bool) async throws -> Bool
+c:objc(cs)CPInterfaceController(im)popToRootTemplateAnimated:	swift.method	popToRootTemplate(animated:)	CPInterfaceController.popToRootTemplate(animated:)	@MainActor func popToRootTemplate(animated: Bool)
+c:objc(cs)CPInterfaceController(im)popToRootTemplateAnimated:completion:	swift.method	popToRootTemplate(animated:)	CPInterfaceController.popToRootTemplate(animated:)	@MainActor func popToRootTemplate(animated: Bool) async throws -> Bool
+c:objc(cs)CPInterfaceController(im)popToTemplate:animated:	swift.method	pop(to:animated:)	CPInterfaceController.pop(to:animated:)	@MainActor func pop(to targetTemplate: CPTemplate, animated: Bool)
+c:objc(cs)CPInterfaceController(im)popToTemplate:animated:completion:	swift.method	pop(to:animated:)	CPInterfaceController.pop(to:animated:)	@MainActor func pop(to targetTemplate: CPTemplate, animated: Bool) async throws -> Bool
+c:objc(cs)CPInterfaceController(im)presentTemplate:animated:	swift.method	presentTemplate(_:animated:)	CPInterfaceController.presentTemplate(_:animated:)	@MainActor func presentTemplate(_ templateToPresent: CPTemplate, animated: Bool)
+c:objc(cs)CPInterfaceController(im)presentTemplate:animated:completion:	swift.method	presentTemplate(_:animated:)	CPInterfaceController.presentTemplate(_:animated:)	@MainActor func presentTemplate(_ templateToPresent: CPTemplate, animated: Bool) async throws -> Bool
+c:objc(cs)CPInterfaceController(im)pushTemplate:animated:	swift.method	pushTemplate(_:animated:)	CPInterfaceController.pushTemplate(_:animated:)	@MainActor func pushTemplate(_ templateToPush: CPTemplate, animated: Bool)
+c:objc(cs)CPInterfaceController(im)pushTemplate:animated:completion:	swift.method	pushTemplate(_:animated:)	CPInterfaceController.pushTemplate(_:animated:)	@MainActor func pushTemplate(_ templateToPush: CPTemplate, animated: Bool) async throws -> Bool
+c:objc(cs)CPInterfaceController(im)setRootTemplate:animated:	swift.method	setRootTemplate(_:animated:)	CPInterfaceController.setRootTemplate(_:animated:)	@MainActor func setRootTemplate(_ rootTemplate: CPTemplate, animated: Bool)
+c:objc(cs)CPInterfaceController(im)setRootTemplate:animated:completion:	swift.method	setRootTemplate(_:animated:)	CPInterfaceController.setRootTemplate(_:animated:)	@MainActor func setRootTemplate(_ rootTemplate: CPTemplate, animated: Bool) async throws -> Bool
+c:objc(cs)CPInterfaceController(py)carTraitCollection	swift.property	carTraitCollection	CPInterfaceController.carTraitCollection	@MainActor var carTraitCollection: UITraitCollection { get }
+c:objc(cs)CPInterfaceController(py)delegate	swift.property	delegate	CPInterfaceController.delegate	@MainActor weak var delegate: (any CPInterfaceControllerDelegate)? { get set }
+c:objc(cs)CPInterfaceController(py)prefersDarkUserInterfaceStyle	swift.property	prefersDarkUserInterfaceStyle	CPInterfaceController.prefersDarkUserInterfaceStyle	@MainActor var prefersDarkUserInterfaceStyle: Bool { get set }
+c:objc(cs)CPInterfaceController(py)presentedTemplate	swift.property	presentedTemplate	CPInterfaceController.presentedTemplate	@MainActor var presentedTemplate: CPTemplate? { get }
+c:objc(cs)CPInterfaceController(py)rootTemplate	swift.property	rootTemplate	CPInterfaceController.rootTemplate	@MainActor var rootTemplate: CPTemplate { get }
+c:objc(cs)CPInterfaceController(py)templates	swift.property	templates	CPInterfaceController.templates	@MainActor var templates: [CPTemplate] { get }
+c:objc(cs)CPInterfaceController(py)topTemplate	swift.property	topTemplate	CPInterfaceController.topTemplate	@MainActor var topTemplate: CPTemplate? { get }
+c:objc(cs)CPLane	swift.class	CPLane	CPLane	class CPLane
+c:objc(cs)CPLane(im)init	swift.init	init()	CPLane.init()	init()
+c:objc(cs)CPLane(im)initWithAngles:	swift.init	init(angles:)	CPLane.init(angles:)	init(angles: [Measurement<UnitAngle>])
+c:objc(cs)CPLane(im)initWithAngles:highlightedAngle:isPreferred:	swift.init	init(angles:highlightedAngle:isPreferred:)	CPLane.init(angles:highlightedAngle:isPreferred:)	init(angles: [Measurement<UnitAngle>], highlightedAngle: Measurement<UnitAngle>, isPreferred preferred: Bool)
+c:objc(cs)CPLane(py)angles	swift.property	angles	CPLane.angles	var angles: [Measurement<UnitAngle>] { get }
+c:objc(cs)CPLane(py)highlightedAngle	swift.property	highlightedAngle	CPLane.highlightedAngle	var highlightedAngle: Measurement<UnitAngle>? { get }
+c:objc(cs)CPLane(py)primaryAngle	swift.property	primaryAngle	CPLane.primaryAngle	var primaryAngle: Measurement<UnitAngle> { get set }
+c:objc(cs)CPLane(py)secondaryAngles	swift.property	secondaryAngles	CPLane.secondaryAngles	var secondaryAngles: [Measurement<UnitAngle>] { get set }
+c:objc(cs)CPLane(py)status	swift.property	status	CPLane.status	var status: CPLaneStatus { get set }
+c:objc(cs)CPLaneGuidance	swift.class	CPLaneGuidance	CPLaneGuidance	class CPLaneGuidance
+c:objc(cs)CPLaneGuidance(py)instructionVariants	swift.property	instructionVariants	CPLaneGuidance.instructionVariants	var instructionVariants: [String] { get set }
+c:objc(cs)CPLaneGuidance(py)lanes	swift.property	lanes	CPLaneGuidance.lanes	var lanes: [CPLane] { get set }
+c:objc(cs)CPListImageRowItem	swift.class	CPListImageRowItem	CPListImageRowItem	@MainActor class CPListImageRowItem
+c:objc(cs)CPListImageRowItem(cpy)maximumImageSize	swift.type.property	maximumImageSize	CPListImageRowItem.maximumImageSize	@MainActor class var maximumImageSize: CGSize { get }
+c:objc(cs)CPListImageRowItem(im)initWithText:cardElements:allowsMultipleLines:	swift.init	init(text:cardElements:allowsMultipleLines:)	CPListImageRowItem.init(text:cardElements:allowsMultipleLines:)	@MainActor init(text: String?, cardElements elements: [CPListImageRowItemCardElement], allowsMultipleLines: Bool)
+c:objc(cs)CPListImageRowItem(im)initWithText:condensedElements:allowsMultipleLines:	swift.init	init(text:condensedElements:allowsMultipleLines:)	CPListImageRowItem.init(text:condensedElements:allowsMultipleLines:)	@MainActor init(text: String?, condensedElements elements: [CPListImageRowItemCondensedElement], allowsMultipleLines: Bool)
+c:objc(cs)CPListImageRowItem(im)initWithText:elements:allowsMultipleLines:	swift.init	init(text:elements:allowsMultipleLines:)	CPListImageRowItem.init(text:elements:allowsMultipleLines:)	@MainActor init(text: String?, elements: [CPListImageRowItemRowElement], allowsMultipleLines: Bool)
+c:objc(cs)CPListImageRowItem(im)initWithText:gridElements:allowsMultipleLines:	swift.init	init(text:gridElements:allowsMultipleLines:)	CPListImageRowItem.init(text:gridElements:allowsMultipleLines:)	@MainActor init(text: String?, gridElements elements: [CPListImageRowItemGridElement], allowsMultipleLines: Bool)
+c:objc(cs)CPListImageRowItem(im)initWithText:imageGridElements:allowsMultipleLines:	swift.init	init(text:imageGridElements:allowsMultipleLines:)	CPListImageRowItem.init(text:imageGridElements:allowsMultipleLines:)	@MainActor init(text: String?, imageGridElements elements: [CPListImageRowItemImageGridElement], allowsMultipleLines: Bool)
+c:objc(cs)CPListImageRowItem(im)initWithText:images:	swift.init	init(text:images:)	CPListImageRowItem.init(text:images:)	@MainActor init(text: String, images: [UIImage])
+c:objc(cs)CPListImageRowItem(im)initWithText:images:imageTitles:	swift.init	init(text:images:imageTitles:)	CPListImageRowItem.init(text:images:imageTitles:)	@MainActor init(text: String, images: [UIImage], imageTitles: [String])
+c:objc(cs)CPListImageRowItem(im)updateImages:	swift.method	update(_:)	CPListImageRowItem.update(_:)	@MainActor func update(_ gridImages: [UIImage])
+c:objc(cs)CPListImageRowItem(py)allowsMultipleLines	swift.property	allowsMultipleLines	CPListImageRowItem.allowsMultipleLines	@MainActor var allowsMultipleLines: Bool { get }
+c:objc(cs)CPListImageRowItem(py)elements	swift.property	elements	CPListImageRowItem.elements	@MainActor var elements: [CPListImageRowItemElement] { get set }
+c:objc(cs)CPListImageRowItem(py)enabled	swift.property	isEnabled	CPListImageRowItem.isEnabled	@MainActor var isEnabled: Bool { get set }
+c:objc(cs)CPListImageRowItem(py)gridImages	swift.property	gridImages	CPListImageRowItem.gridImages	@MainActor var gridImages: [UIImage] { get }
+c:objc(cs)CPListImageRowItem(py)handler	swift.property	handler	CPListImageRowItem.handler	@MainActor var handler: ((any CPSelectableListItem, @escaping () -> Void) -> Void)? { get set }
+c:objc(cs)CPListImageRowItem(py)imageTitles	swift.property	imageTitles	CPListImageRowItem.imageTitles	@MainActor var imageTitles: [String] { get }
+c:objc(cs)CPListImageRowItem(py)listImageRowHandler	swift.property	listImageRowHandler	CPListImageRowItem.listImageRowHandler	@MainActor var listImageRowHandler: ((CPListImageRowItem, Int, @escaping () -> Void) -> Void)? { get set }
+c:objc(cs)CPListImageRowItem(py)text	swift.property	text	CPListImageRowItem.text	@MainActor var text: String? { get set }
+c:objc(cs)CPListImageRowItem(py)userInfo	swift.property	userInfo	CPListImageRowItem.userInfo	@MainActor var userInfo: Any? { get set }
+c:objc(cs)CPListImageRowItemCardElement	swift.class	CPListImageRowItemCardElement	CPListImageRowItemCardElement	@MainActor class CPListImageRowItemCardElement
+c:objc(cs)CPListImageRowItemCardElement(cpy)maximumFullHeightImageSize	swift.type.property	maximumFullHeightImageSize	CPListImageRowItemCardElement.maximumFullHeightImageSize	@MainActor class var maximumFullHeightImageSize: CGSize { get }
+c:objc(cs)CPListImageRowItemCardElement(cpy)maximumImageSize	swift.type.property	maximumImageSize	CPListImageRowItemCardElement.maximumImageSize	@MainActor class var maximumImageSize: CGSize { get }
+c:objc(cs)CPListImageRowItemCardElement(im)initWithImage:showsImageFullHeight:title:subtitle:tintColor:	swift.init	init(image:showsImageFullHeight:title:subtitle:tintColor:)	CPListImageRowItemCardElement.init(image:showsImageFullHeight:title:subtitle:tintColor:)	@MainActor init(image: UIImage, showsImageFullHeight: Bool, title: String?, subtitle: String?, tintColor: UIColor?)
+c:objc(cs)CPListImageRowItemCardElement(py)showsImageFullHeight	swift.property	showsImageFullHeight	CPListImageRowItemCardElement.showsImageFullHeight	@MainActor var showsImageFullHeight: Bool { get }
+c:objc(cs)CPListImageRowItemCardElement(py)subtitle	swift.property	subtitle	CPListImageRowItemCardElement.subtitle	@MainActor var subtitle: String? { get set }
+c:objc(cs)CPListImageRowItemCardElement(py)tintColor	swift.property	tintColor	CPListImageRowItemCardElement.tintColor	@NSCopying @MainActor var tintColor: UIColor? { get set }
+c:objc(cs)CPListImageRowItemCardElement(py)title	swift.property	title	CPListImageRowItemCardElement.title	@MainActor var title: String { get set }
+c:objc(cs)CPListImageRowItemCondensedElement	swift.class	CPListImageRowItemCondensedElement	CPListImageRowItemCondensedElement	@MainActor class CPListImageRowItemCondensedElement
+c:objc(cs)CPListImageRowItemCondensedElement(im)initWithImage:imageShape:title:subtitle:accessorySymbolName:	swift.init	init(image:imageShape:title:subtitle:accessorySymbolName:)	CPListImageRowItemCondensedElement.init(image:imageShape:title:subtitle:accessorySymbolName:)	@MainActor init(image: UIImage, imageShape: CPListImageRowItemCondensedElement.Shape, title: String, subtitle: String?, accessorySymbolName: String?)
+c:objc(cs)CPListImageRowItemCondensedElement(py)accessorySymbolName	swift.property	accessorySymbolName	CPListImageRowItemCondensedElement.accessorySymbolName	@MainActor var accessorySymbolName: String? { get set }
+c:objc(cs)CPListImageRowItemCondensedElement(py)imageShape	swift.property	imageShape	CPListImageRowItemCondensedElement.imageShape	@MainActor var imageShape: CPListImageRowItemCondensedElement.Shape { get }
+c:objc(cs)CPListImageRowItemCondensedElement(py)subtitle	swift.property	subtitle	CPListImageRowItemCondensedElement.subtitle	@MainActor var subtitle: String? { get set }
+c:objc(cs)CPListImageRowItemCondensedElement(py)title	swift.property	title	CPListImageRowItemCondensedElement.title	@MainActor var title: String { get set }
+c:objc(cs)CPListImageRowItemElement	swift.class	CPListImageRowItemElement	CPListImageRowItemElement	@MainActor class CPListImageRowItemElement
+c:objc(cs)CPListImageRowItemElement(cpy)maximumImageSize	swift.type.property	maximumImageSize	CPListImageRowItemElement.maximumImageSize	@MainActor class var maximumImageSize: CGSize { get }
+c:objc(cs)CPListImageRowItemElement(py)enabled	swift.property	isEnabled	CPListImageRowItemElement.isEnabled	@MainActor var isEnabled: Bool { get set }
+c:objc(cs)CPListImageRowItemElement(py)image	swift.property	image	CPListImageRowItemElement.image	@NSCopying @MainActor var image: UIImage { get set }
+c:objc(cs)CPListImageRowItemGridElement	swift.class	CPListImageRowItemGridElement	CPListImageRowItemGridElement	@MainActor class CPListImageRowItemGridElement
+c:objc(cs)CPListImageRowItemGridElement(im)initWithImage:	swift.init	init(image:)	CPListImageRowItemGridElement.init(image:)	@MainActor init(image: UIImage)
+c:objc(cs)CPListImageRowItemImageGridElement	swift.class	CPListImageRowItemImageGridElement	CPListImageRowItemImageGridElement	@MainActor class CPListImageRowItemImageGridElement
+c:objc(cs)CPListImageRowItemImageGridElement(im)initWithImage:imageShape:title:accessorySymbolName:	swift.init	init(image:imageShape:title:accessorySymbolName:)	CPListImageRowItemImageGridElement.init(image:imageShape:title:accessorySymbolName:)	@MainActor init(image: UIImage, imageShape: CPListImageRowItemImageGridElement.Shape, title: String, accessorySymbolName: String?)
+c:objc(cs)CPListImageRowItemImageGridElement(py)accessorySymbolName	swift.property	accessorySymbolName	CPListImageRowItemImageGridElement.accessorySymbolName	@MainActor var accessorySymbolName: String? { get set }
+c:objc(cs)CPListImageRowItemImageGridElement(py)imageShape	swift.property	imageShape	CPListImageRowItemImageGridElement.imageShape	@MainActor var imageShape: CPListImageRowItemImageGridElement.Shape { get }
+c:objc(cs)CPListImageRowItemImageGridElement(py)title	swift.property	title	CPListImageRowItemImageGridElement.title	@MainActor var title: String { get set }
+c:objc(cs)CPListImageRowItemRowElement	swift.class	CPListImageRowItemRowElement	CPListImageRowItemRowElement	@MainActor class CPListImageRowItemRowElement
+c:objc(cs)CPListImageRowItemRowElement(im)initWithImage:title:subtitle:	swift.init	init(image:title:subtitle:)	CPListImageRowItemRowElement.init(image:title:subtitle:)	@MainActor init(image: UIImage, title: String?, subtitle: String?)
+c:objc(cs)CPListImageRowItemRowElement(py)subtitle	swift.property	subtitle	CPListImageRowItemRowElement.subtitle	@MainActor var subtitle: String? { get set }
+c:objc(cs)CPListImageRowItemRowElement(py)title	swift.property	title	CPListImageRowItemRowElement.title	@MainActor var title: String? { get set }
+c:objc(cs)CPListItem	swift.class	CPListItem	CPListItem	@MainActor class CPListItem
+c:objc(cs)CPListItem(cpy)maximumImageSize	swift.type.property	maximumImageSize	CPListItem.maximumImageSize	@MainActor class var maximumImageSize: CGSize { get }
+c:objc(cs)CPListItem(im)initWithText:detailText:	swift.init	init(text:detailText:)	CPListItem.init(text:detailText:)	@MainActor init(text: String?, detailText: String?)
+c:objc(cs)CPListItem(im)initWithText:detailText:image:	swift.init	init(text:detailText:image:)	CPListItem.init(text:detailText:image:)	@MainActor init(text: String?, detailText: String?, image: UIImage?)
+c:objc(cs)CPListItem(im)initWithText:detailText:image:accessoryImage:accessoryType:	swift.init	init(text:detailText:image:accessoryImage:accessoryType:)	CPListItem.init(text:detailText:image:accessoryImage:accessoryType:)	@MainActor init(text: String?, detailText: String?, image: UIImage?, accessoryImage: UIImage?, accessoryType: CPListItemAccessoryType)
+c:objc(cs)CPListItem(im)initWithText:detailText:image:showsDisclosureIndicator:	swift.init	init(text:detailText:image:showsDisclosureIndicator:)	CPListItem.init(text:detailText:image:showsDisclosureIndicator:)	@MainActor init(text: String?, detailText: String?, image: UIImage?, showsDisclosureIndicator: Bool)
+c:objc(cs)CPListItem(im)setAccessoryImage:	swift.method	setAccessoryImage(_:)	CPListItem.setAccessoryImage(_:)	@MainActor func setAccessoryImage(_ accessoryImage: UIImage?)
+c:objc(cs)CPListItem(im)setDetailText:	swift.method	setDetailText(_:)	CPListItem.setDetailText(_:)	@MainActor func setDetailText(_ detailText: String?)
+c:objc(cs)CPListItem(im)setImage:	swift.method	setImage(_:)	CPListItem.setImage(_:)	@MainActor func setImage(_ image: UIImage?)
+c:objc(cs)CPListItem(im)setText:	swift.method	setText(_:)	CPListItem.setText(_:)	@MainActor func setText(_ text: String)
+c:objc(cs)CPListItem(py)accessoryImage	swift.property	accessoryImage	CPListItem.accessoryImage	@MainActor var accessoryImage: UIImage? { get }
+c:objc(cs)CPListItem(py)accessoryType	swift.property	accessoryType	CPListItem.accessoryType	@MainActor var accessoryType: CPListItemAccessoryType { get set }
+c:objc(cs)CPListItem(py)detailText	swift.property	detailText	CPListItem.detailText	@MainActor var detailText: String? { get }
+c:objc(cs)CPListItem(py)enabled	swift.property	isEnabled	CPListItem.isEnabled	@MainActor var isEnabled: Bool { get set }
+c:objc(cs)CPListItem(py)explicitContent	swift.property	isExplicitContent	CPListItem.isExplicitContent	@MainActor var isExplicitContent: Bool { get set }
+c:objc(cs)CPListItem(py)handler	swift.property	handler	CPListItem.handler	@MainActor var handler: ((any CPSelectableListItem, @escaping () -> Void) -> Void)? { get set }
+c:objc(cs)CPListItem(py)image	swift.property	image	CPListItem.image	@MainActor var image: UIImage? { get }
+c:objc(cs)CPListItem(py)playbackProgress	swift.property	playbackProgress	CPListItem.playbackProgress	@MainActor var playbackProgress: CGFloat { get set }
+c:objc(cs)CPListItem(py)playing	swift.property	isPlaying	CPListItem.isPlaying	@MainActor var isPlaying: Bool { get set }
+c:objc(cs)CPListItem(py)playingIndicatorLocation	swift.property	playingIndicatorLocation	CPListItem.playingIndicatorLocation	@MainActor var playingIndicatorLocation: CPListItemPlayingIndicatorLocation { get set }
+c:objc(cs)CPListItem(py)showsDisclosureIndicator	swift.property	showsDisclosureIndicator	CPListItem.showsDisclosureIndicator	@MainActor var showsDisclosureIndicator: Bool { get }
+c:objc(cs)CPListItem(py)showsExplicitLabel	swift.property	showsExplicitLabel	CPListItem.showsExplicitLabel	@MainActor var showsExplicitLabel: Bool { get set }
+c:objc(cs)CPListItem(py)text	swift.property	text	CPListItem.text	@MainActor var text: String? { get }
+c:objc(cs)CPListItem(py)userInfo	swift.property	userInfo	CPListItem.userInfo	@MainActor var userInfo: Any? { get set }
+c:objc(cs)CPListSection	swift.class	CPListSection	CPListSection	class CPListSection
+c:objc(cs)CPListSection(im)indexOfItem:	swift.method	index(of:)	CPListSection.index(of:)	func index(of item: any CPListTemplateItem) -> Int
+c:objc(cs)CPListSection(im)initWithItems:header:headerSubtitle:headerImage:headerButton:sectionIndexTitle:	swift.init	init(items:header:headerSubtitle:headerImage:headerButton:sectionIndexTitle:)	CPListSection.init(items:header:headerSubtitle:headerImage:headerButton:sectionIndexTitle:)	init(items: [any CPListTemplateItem], header: String, headerSubtitle: String?, headerImage: UIImage?, headerButton: CPButton?, sectionIndexTitle: String?)
+c:objc(cs)CPListSection(im)itemAtIndex:	swift.method	item(at:)	CPListSection.item(at:)	func item(at index: Int) -> any CPListTemplateItem
+c:objc(cs)CPListSection(py)header	swift.property	header	CPListSection.header	var header: String? { get }
+c:objc(cs)CPListSection(py)headerButton	swift.property	headerButton	CPListSection.headerButton	@NSCopying var headerButton: CPButton? { get }
+c:objc(cs)CPListSection(py)headerImage	swift.property	headerImage	CPListSection.headerImage	@NSCopying var headerImage: UIImage? { get set }
+c:objc(cs)CPListSection(py)headerSubtitle	swift.property	headerSubtitle	CPListSection.headerSubtitle	var headerSubtitle: String? { get }
+c:objc(cs)CPListSection(py)items	swift.property	items	CPListSection.items	var items: [any CPListTemplateItem] { get }
+c:objc(cs)CPListSection(py)sectionIndexTitle	swift.property	sectionIndexTitle	CPListSection.sectionIndexTitle	var sectionIndexTitle: String? { get }
+c:objc(cs)CPListTemplate	swift.class	CPListTemplate	CPListTemplate	@MainActor class CPListTemplate
+c:objc(cs)CPListTemplate(cpy)maximumGridButtonImageSize	swift.type.property	maximumGridButtonImageSize	CPListTemplate.maximumGridButtonImageSize	@MainActor class var maximumGridButtonImageSize: CGSize { get }
+c:objc(cs)CPListTemplate(cpy)maximumHeaderGridButtonCount	swift.type.property	maximumHeaderGridButtonCount	CPListTemplate.maximumHeaderGridButtonCount	@MainActor class var maximumHeaderGridButtonCount: Int { get }
+c:objc(cs)CPListTemplate(cpy)maximumItemCount	swift.type.property	maximumItemCount	CPListTemplate.maximumItemCount	@MainActor class var maximumItemCount: Int { get }
+c:objc(cs)CPListTemplate(cpy)maximumSectionCount	swift.type.property	maximumSectionCount	CPListTemplate.maximumSectionCount	@MainActor class var maximumSectionCount: Int { get }
+c:objc(cs)CPListTemplate(im)indexPathForItem:	swift.method	indexPath(for:)	CPListTemplate.indexPath(for:)	@MainActor func indexPath(for item: any CPListTemplateItem) -> IndexPath?
+c:objc(cs)CPListTemplate(im)initWithTitle:sections:	swift.init	init(title:sections:)	CPListTemplate.init(title:sections:)	@MainActor init(title: String?, sections: [CPListSection])
+c:objc(cs)CPListTemplate(im)initWithTitle:sections:assistantCellConfiguration:	swift.init	init(title:sections:assistantCellConfiguration:)	CPListTemplate.init(title:sections:assistantCellConfiguration:)	@MainActor init(title: String?, sections: [CPListSection], assistantCellConfiguration: CPAssistantCellConfiguration?)
+c:objc(cs)CPListTemplate(im)initWithTitle:sections:assistantCellConfiguration:headerGridButtons:	swift.init	init(title:sections:assistantCellConfiguration:headerGridButtons:)	CPListTemplate.init(title:sections:assistantCellConfiguration:headerGridButtons:)	@MainActor init(title: String?, sections: [CPListSection], assistantCellConfiguration: CPAssistantCellConfiguration?, headerGridButtons: [CPGridButton]?)
+c:objc(cs)CPListTemplate(im)updateSections:	swift.method	updateSections(_:)	CPListTemplate.updateSections(_:)	@MainActor func updateSections(_ sections: [CPListSection])
+c:objc(cs)CPListTemplate(py)assistantCellConfiguration	swift.property	assistantCellConfiguration	CPListTemplate.assistantCellConfiguration	@MainActor var assistantCellConfiguration: CPAssistantCellConfiguration? { get set }
+c:objc(cs)CPListTemplate(py)delegate	swift.property	delegate	CPListTemplate.delegate	@MainActor weak var delegate: (any CPListTemplateDelegate)? { get set }
+c:objc(cs)CPListTemplate(py)emptyViewSubtitleVariants	swift.property	emptyViewSubtitleVariants	CPListTemplate.emptyViewSubtitleVariants	@MainActor var emptyViewSubtitleVariants: [String] { get set }
+c:objc(cs)CPListTemplate(py)emptyViewTitleVariants	swift.property	emptyViewTitleVariants	CPListTemplate.emptyViewTitleVariants	@MainActor var emptyViewTitleVariants: [String] { get set }
+c:objc(cs)CPListTemplate(py)headerGridButtons	swift.property	headerGridButtons	CPListTemplate.headerGridButtons	@MainActor var headerGridButtons: [CPGridButton]? { get set }
+c:objc(cs)CPListTemplate(py)itemCount	swift.property	itemCount	CPListTemplate.itemCount	@MainActor var itemCount: Int { get }
+c:objc(cs)CPListTemplate(py)sectionCount	swift.property	sectionCount	CPListTemplate.sectionCount	@MainActor var sectionCount: Int { get }
+c:objc(cs)CPListTemplate(py)sections	swift.property	sections	CPListTemplate.sections	@MainActor var sections: [CPListSection] { get }
+c:objc(cs)CPListTemplate(py)showsSpinnerWhileEmpty	swift.property	showsSpinnerWhileEmpty	CPListTemplate.showsSpinnerWhileEmpty	@MainActor var showsSpinnerWhileEmpty: Bool { get set }
+c:objc(cs)CPListTemplate(py)title	swift.property	title	CPListTemplate.title	@MainActor var title: String? { get }
+c:objc(cs)CPManeuver	swift.class	CPManeuver	CPManeuver	class CPManeuver
+c:objc(cs)CPManeuver(py)attributedInstructionVariants	swift.property	attributedInstructionVariants	CPManeuver.attributedInstructionVariants	var attributedInstructionVariants: [NSAttributedString] { get set }
+c:objc(cs)CPManeuver(py)cardBackgroundColor	swift.property	cardBackgroundColor	CPManeuver.cardBackgroundColor	var cardBackgroundColor: UIColor? { get set }
+c:objc(cs)CPManeuver(py)dashboardAttributedInstructionVariants	swift.property	dashboardAttributedInstructionVariants	CPManeuver.dashboardAttributedInstructionVariants	var dashboardAttributedInstructionVariants: [NSAttributedString] { get set }
+c:objc(cs)CPManeuver(py)dashboardInstructionVariants	swift.property	dashboardInstructionVariants	CPManeuver.dashboardInstructionVariants	var dashboardInstructionVariants: [String] { get set }
+c:objc(cs)CPManeuver(py)dashboardJunctionImage	swift.property	dashboardJunctionImage	CPManeuver.dashboardJunctionImage	var dashboardJunctionImage: UIImage? { get set }
+c:objc(cs)CPManeuver(py)dashboardSymbolImage	swift.property	dashboardSymbolImage	CPManeuver.dashboardSymbolImage	var dashboardSymbolImage: UIImage? { get set }
+c:objc(cs)CPManeuver(py)highwayExitLabel	swift.property	highwayExitLabel	CPManeuver.highwayExitLabel	var highwayExitLabel: String { get set }
+c:objc(cs)CPManeuver(py)initialTravelEstimates	swift.property	initialTravelEstimates	CPManeuver.initialTravelEstimates	var initialTravelEstimates: CPTravelEstimates? { get set }
+c:objc(cs)CPManeuver(py)instructionVariants	swift.property	instructionVariants	CPManeuver.instructionVariants	var instructionVariants: [String] { get set }
+c:objc(cs)CPManeuver(py)junctionElementAngles	swift.property	junctionElementAngles	CPManeuver.junctionElementAngles	var junctionElementAngles: Set<Measurement<UnitAngle>>? { get set }
+c:objc(cs)CPManeuver(py)junctionExitAngle	swift.property	junctionExitAngle	CPManeuver.junctionExitAngle	var junctionExitAngle: Measurement<UnitAngle>? { get set }
+c:objc(cs)CPManeuver(py)junctionImage	swift.property	junctionImage	CPManeuver.junctionImage	var junctionImage: UIImage? { get set }
+c:objc(cs)CPManeuver(py)junctionType	swift.property	junctionType	CPManeuver.junctionType	var junctionType: CPJunctionType { get set }
+c:objc(cs)CPManeuver(py)linkedLaneGuidance	swift.property	linkedLaneGuidance	CPManeuver.linkedLaneGuidance	unowned(unsafe) var linkedLaneGuidance: CPLaneGuidance { get set }
+c:objc(cs)CPManeuver(py)maneuverType	swift.property	maneuverType	CPManeuver.maneuverType	var maneuverType: CPManeuverType { get set }
+c:objc(cs)CPManeuver(py)notificationAttributedInstructionVariants	swift.property	notificationAttributedInstructionVariants	CPManeuver.notificationAttributedInstructionVariants	var notificationAttributedInstructionVariants: [NSAttributedString] { get set }
+c:objc(cs)CPManeuver(py)notificationInstructionVariants	swift.property	notificationInstructionVariants	CPManeuver.notificationInstructionVariants	var notificationInstructionVariants: [String] { get set }
+c:objc(cs)CPManeuver(py)notificationSymbolImage	swift.property	notificationSymbolImage	CPManeuver.notificationSymbolImage	var notificationSymbolImage: UIImage? { get set }
+c:objc(cs)CPManeuver(py)roadFollowingManeuverVariants	swift.property	roadFollowingManeuverVariants	CPManeuver.roadFollowingManeuverVariants	var roadFollowingManeuverVariants: [String]? { get set }
+c:objc(cs)CPManeuver(py)symbolImage	swift.property	symbolImage	CPManeuver.symbolImage	var symbolImage: UIImage? { get set }
+c:objc(cs)CPManeuver(py)symbolSet	swift.property	symbolSet	CPManeuver.symbolSet	var symbolSet: CPImageSet? { get set }
+c:objc(cs)CPManeuver(py)trafficSide	swift.property	trafficSide	CPManeuver.trafficSide	var trafficSide: CPTrafficSide { get set }
+c:objc(cs)CPManeuver(py)userInfo	swift.property	userInfo	CPManeuver.userInfo	var userInfo: Any? { get set }
+c:objc(cs)CPMapButton	swift.class	CPMapButton	CPMapButton	@MainActor class CPMapButton
+c:objc(cs)CPMapButton(im)initWithHandler:	swift.init	init(handler:)	CPMapButton.init(handler:)	@MainActor init(handler: ((CPMapButton) -> Void)? = nil)
+c:objc(cs)CPMapButton(py)enabled	swift.property	isEnabled	CPMapButton.isEnabled	@MainActor var isEnabled: Bool { get set }
+c:objc(cs)CPMapButton(py)focusedImage	swift.property	focusedImage	CPMapButton.focusedImage	@MainActor var focusedImage: UIImage? { get set }
+c:objc(cs)CPMapButton(py)hidden	swift.property	isHidden	CPMapButton.isHidden	@MainActor var isHidden: Bool { get set }
+c:objc(cs)CPMapButton(py)image	swift.property	image	CPMapButton.image	@MainActor var image: UIImage? { get set }
+c:objc(cs)CPMapTemplate	swift.class	CPMapTemplate	CPMapTemplate	@MainActor class CPMapTemplate
+c:objc(cs)CPMapTemplate(im)dismissNavigationAlertAnimated:completion:	swift.method	dismissNavigationAlert(animated:)	CPMapTemplate.dismissNavigationAlert(animated:)	@MainActor func dismissNavigationAlert(animated: Bool) async -> Bool
+c:objc(cs)CPMapTemplate(im)dismissPanningInterfaceAnimated:	swift.method	dismissPanningInterface(animated:)	CPMapTemplate.dismissPanningInterface(animated:)	@MainActor func dismissPanningInterface(animated: Bool)
+c:objc(cs)CPMapTemplate(im)hideTripPreviews	swift.method	hideTripPreviews()	CPMapTemplate.hideTripPreviews()	@MainActor func hideTripPreviews()
+c:objc(cs)CPMapTemplate(im)presentNavigationAlert:animated:	swift.method	present(navigationAlert:animated:)	CPMapTemplate.present(navigationAlert:animated:)	@MainActor func present(navigationAlert: CPNavigationAlert, animated: Bool)
+c:objc(cs)CPMapTemplate(im)showPanningInterfaceAnimated:	swift.method	showPanningInterface(animated:)	CPMapTemplate.showPanningInterface(animated:)	@MainActor func showPanningInterface(animated: Bool)
+c:objc(cs)CPMapTemplate(im)showRouteChoicesPreviewForTrip:textConfiguration:	swift.method	showRouteChoicesPreview(for:textConfiguration:)	CPMapTemplate.showRouteChoicesPreview(for:textConfiguration:)	@MainActor func showRouteChoicesPreview(for tripPreview: CPTrip, textConfiguration: CPTripPreviewTextConfiguration?)
+c:objc(cs)CPMapTemplate(im)showTripPreviews:selectedTrip:textConfiguration:	swift.method	showTripPreviews(_:selectedTrip:textConfiguration:)	CPMapTemplate.showTripPreviews(_:selectedTrip:textConfiguration:)	@MainActor func showTripPreviews(_ tripPreviews: [CPTrip], selectedTrip: CPTrip?, textConfiguration: CPTripPreviewTextConfiguration?)
+c:objc(cs)CPMapTemplate(im)showTripPreviews:textConfiguration:	swift.method	showTripPreviews(_:textConfiguration:)	CPMapTemplate.showTripPreviews(_:textConfiguration:)	@MainActor func showTripPreviews(_ tripPreviews: [CPTrip], textConfiguration: CPTripPreviewTextConfiguration?)
+c:objc(cs)CPMapTemplate(im)startNavigationSessionForTrip:	swift.method	startNavigationSession(for:)	CPMapTemplate.startNavigationSession(for:)	@MainActor func startNavigationSession(for trip: CPTrip) -> CPNavigationSession
+c:objc(cs)CPMapTemplate(im)updateTravelEstimates:forTrip:	swift.method	updateEstimates(_:for:)	CPMapTemplate.updateEstimates(_:for:)	@MainActor func updateEstimates(_ estimates: CPTravelEstimates, for trip: CPTrip)
+c:objc(cs)CPMapTemplate(im)updateTravelEstimates:forTrip:withTimeRemainingColor:	swift.method	update(_:for:with:)	CPMapTemplate.update(_:for:with:)	@MainActor func update(_ estimates: CPTravelEstimates, for trip: CPTrip, with timeRemainingColor: CPTimeRemainingColor)
+c:objc(cs)CPMapTemplate(py)automaticallyHidesNavigationBar	swift.property	automaticallyHidesNavigationBar	CPMapTemplate.automaticallyHidesNavigationBar	@MainActor var automaticallyHidesNavigationBar: Bool { get set }
+c:objc(cs)CPMapTemplate(py)currentNavigationAlert	swift.property	currentNavigationAlert	CPMapTemplate.currentNavigationAlert	@MainActor var currentNavigationAlert: CPNavigationAlert? { get }
+c:objc(cs)CPMapTemplate(py)guidanceBackgroundColor	swift.property	guidanceBackgroundColor	CPMapTemplate.guidanceBackgroundColor	@MainActor var guidanceBackgroundColor: UIColor { get set }
+c:objc(cs)CPMapTemplate(py)hidesButtonsWithNavigationBar	swift.property	hidesButtonsWithNavigationBar	CPMapTemplate.hidesButtonsWithNavigationBar	@MainActor var hidesButtonsWithNavigationBar: Bool { get set }
+c:objc(cs)CPMapTemplate(py)mapButtons	swift.property	mapButtons	CPMapTemplate.mapButtons	@MainActor var mapButtons: [CPMapButton] { get set }
+c:objc(cs)CPMapTemplate(py)mapDelegate	swift.property	mapDelegate	CPMapTemplate.mapDelegate	@MainActor weak var mapDelegate: (any CPMapTemplateDelegate)? { get set }
+c:objc(cs)CPMapTemplate(py)panningInterfaceVisible	swift.property	isPanningInterfaceVisible	CPMapTemplate.isPanningInterfaceVisible	@MainActor var isPanningInterfaceVisible: Bool { get }
+c:objc(cs)CPMapTemplate(py)tripEstimateStyle	swift.property	tripEstimateStyle	CPMapTemplate.tripEstimateStyle	@MainActor var tripEstimateStyle: CPTripEstimateStyle { get set }
+c:objc(cs)CPMessageComposeBarButton	swift.class	CPMessageComposeBarButton	CPMessageComposeBarButton	class CPMessageComposeBarButton
+c:objc(cs)CPMessageComposeBarButton(im)init	swift.init	init()	CPMessageComposeBarButton.init()	init()
+c:objc(cs)CPMessageComposeBarButton(im)initWithImage:	swift.init	init(image:)	CPMessageComposeBarButton.init(image:)	init(image: UIImage)
+c:objc(cs)CPMessageGridItemConfiguration	swift.class	CPMessageGridItemConfiguration	CPMessageGridItemConfiguration	class CPMessageGridItemConfiguration
+c:objc(cs)CPMessageGridItemConfiguration(im)initWithConversationIdentifier:unread:	swift.init	init(conversationIdentifier:unread:)	CPMessageGridItemConfiguration.init(conversationIdentifier:unread:)	init(conversationIdentifier: String, unread: Bool)
+c:objc(cs)CPMessageGridItemConfiguration(py)conversationIdentifier	swift.property	conversationIdentifier	CPMessageGridItemConfiguration.conversationIdentifier	var conversationIdentifier: String { get }
+c:objc(cs)CPMessageGridItemConfiguration(py)unread	swift.property	isUnread	CPMessageGridItemConfiguration.isUnread	var isUnread: Bool { get set }
+c:objc(cs)CPMessageListItem	swift.class	CPMessageListItem	CPMessageListItem	class CPMessageListItem
+c:objc(cs)CPMessageListItem(im)initWithConversationIdentifier:text:leadingConfiguration:trailingConfiguration:detailText:trailingText:	swift.init	init(conversationIdentifier:text:leadingConfiguration:trailingConfiguration:detailText:trailingText:)	CPMessageListItem.init(conversationIdentifier:text:leadingConfiguration:trailingConfiguration:detailText:trailingText:)	init(conversationIdentifier: String, text: String, leadingConfiguration: CPMessageListItemLeadingConfiguration, trailingConfiguration: CPMessageListItemTrailingConfiguration?, detailText: String?, trailingText: String?)
+c:objc(cs)CPMessageListItem(im)initWithFullName:phoneOrEmailAddress:leadingConfiguration:trailingConfiguration:detailText:trailingText:	swift.init	init(fullName:phoneOrEmailAddress:leadingConfiguration:trailingConfiguration:detailText:trailingText:)	CPMessageListItem.init(fullName:phoneOrEmailAddress:leadingConfiguration:trailingConfiguration:detailText:trailingText:)	init(fullName: String, phoneOrEmailAddress: String, leadingConfiguration: CPMessageListItemLeadingConfiguration, trailingConfiguration: CPMessageListItemTrailingConfiguration?, detailText: String?, trailingText: String?)
+c:objc(cs)CPMessageListItem(py)conversationIdentifier	swift.property	conversationIdentifier	CPMessageListItem.conversationIdentifier	var conversationIdentifier: String? { get set }
+c:objc(cs)CPMessageListItem(py)detailText	swift.property	detailText	CPMessageListItem.detailText	var detailText: String? { get set }
+c:objc(cs)CPMessageListItem(py)enabled	swift.property	isEnabled	CPMessageListItem.isEnabled	var isEnabled: Bool { get set }
+c:objc(cs)CPMessageListItem(py)leadingConfiguration	swift.property	leadingConfiguration	CPMessageListItem.leadingConfiguration	var leadingConfiguration: CPMessageListItemLeadingConfiguration { get set }
+c:objc(cs)CPMessageListItem(py)leadingDetailTextImage	swift.property	leadingDetailTextImage	CPMessageListItem.leadingDetailTextImage	@NSCopying var leadingDetailTextImage: UIImage? { get set }
+c:objc(cs)CPMessageListItem(py)phoneOrEmailAddress	swift.property	phoneOrEmailAddress	CPMessageListItem.phoneOrEmailAddress	var phoneOrEmailAddress: String? { get set }
+c:objc(cs)CPMessageListItem(py)text	swift.property	text	CPMessageListItem.text	var text: String? { get set }
+c:objc(cs)CPMessageListItem(py)trailingConfiguration	swift.property	trailingConfiguration	CPMessageListItem.trailingConfiguration	var trailingConfiguration: CPMessageListItemTrailingConfiguration? { get set }
+c:objc(cs)CPMessageListItem(py)trailingText	swift.property	trailingText	CPMessageListItem.trailingText	var trailingText: String? { get set }
+c:objc(cs)CPMessageListItem(py)userInfo	swift.property	userInfo	CPMessageListItem.userInfo	var userInfo: Any? { get set }
+c:objc(cs)CPMessageListItemLeadingConfiguration	swift.class	CPMessageListItemLeadingConfiguration	CPMessageListItemLeadingConfiguration	class CPMessageListItemLeadingConfiguration
+c:objc(cs)CPMessageListItemLeadingConfiguration(im)initWithLeadingItem:leadingImage:unread:	swift.init	init(leadingItem:leadingImage:unread:)	CPMessageListItemLeadingConfiguration.init(leadingItem:leadingImage:unread:)	init(leadingItem: CPMessageLeadingItem, leadingImage: UIImage?, unread: Bool)
+c:objc(cs)CPMessageListItemLeadingConfiguration(py)leadingImage	swift.property	leadingImage	CPMessageListItemLeadingConfiguration.leadingImage	var leadingImage: UIImage? { get }
+c:objc(cs)CPMessageListItemLeadingConfiguration(py)leadingItem	swift.property	leadingItem	CPMessageListItemLeadingConfiguration.leadingItem	var leadingItem: CPMessageLeadingItem { get }
+c:objc(cs)CPMessageListItemLeadingConfiguration(py)unread	swift.property	isUnread	CPMessageListItemLeadingConfiguration.isUnread	var isUnread: Bool { get }
+c:objc(cs)CPMessageListItemTrailingConfiguration	swift.class	CPMessageListItemTrailingConfiguration	CPMessageListItemTrailingConfiguration	class CPMessageListItemTrailingConfiguration
+c:objc(cs)CPMessageListItemTrailingConfiguration(im)initWithTrailingItem:trailingImage:	swift.init	init(trailingItem:trailingImage:)	CPMessageListItemTrailingConfiguration.init(trailingItem:trailingImage:)	init(trailingItem: CPMessageTrailingItem, trailingImage: UIImage?)
+c:objc(cs)CPMessageListItemTrailingConfiguration(py)trailingImage	swift.property	trailingImage	CPMessageListItemTrailingConfiguration.trailingImage	var trailingImage: UIImage? { get }
+c:objc(cs)CPMessageListItemTrailingConfiguration(py)trailingItem	swift.property	trailingItem	CPMessageListItemTrailingConfiguration.trailingItem	var trailingItem: CPMessageTrailingItem { get }
+c:objc(cs)CPNavigationAlert	swift.class	CPNavigationAlert	CPNavigationAlert	@MainActor class CPNavigationAlert
+c:objc(cs)CPNavigationAlert(im)initWithTitleVariants:subtitleVariants:image:primaryAction:secondaryAction:duration:	swift.init	init(titleVariants:subtitleVariants:image:primaryAction:secondaryAction:duration:)	CPNavigationAlert.init(titleVariants:subtitleVariants:image:primaryAction:secondaryAction:duration:)	@MainActor init(titleVariants: [String], subtitleVariants: [String]?, image: UIImage?, primaryAction: CPAlertAction, secondaryAction: CPAlertAction?, duration: TimeInterval)
+c:objc(cs)CPNavigationAlert(im)initWithTitleVariants:subtitleVariants:imageSet:primaryAction:secondaryAction:duration:	swift.init	init(titleVariants:subtitleVariants:imageSet:primaryAction:secondaryAction:duration:)	CPNavigationAlert.init(titleVariants:subtitleVariants:imageSet:primaryAction:secondaryAction:duration:)	@MainActor init(titleVariants: [String], subtitleVariants: [String]?, imageSet: CPImageSet?, primaryAction: CPAlertAction, secondaryAction: CPAlertAction?, duration: TimeInterval)
+c:objc(cs)CPNavigationAlert(im)updateTitleVariants:subtitleVariants:	swift.method	updateTitleVariants(_:subtitleVariants:)	CPNavigationAlert.updateTitleVariants(_:subtitleVariants:)	@MainActor func updateTitleVariants(_ newTitleVariants: [String], subtitleVariants newSubtitleVariants: [String])
+c:objc(cs)CPNavigationAlert(py)duration	swift.property	duration	CPNavigationAlert.duration	@MainActor var duration: TimeInterval { get }
+c:objc(cs)CPNavigationAlert(py)image	swift.property	image	CPNavigationAlert.image	@NSCopying @MainActor var image: UIImage? { get }
+c:objc(cs)CPNavigationAlert(py)imageSet	swift.property	imageSet	CPNavigationAlert.imageSet	@NSCopying @MainActor var imageSet: CPImageSet? { get }
+c:objc(cs)CPNavigationAlert(py)primaryAction	swift.property	primaryAction	CPNavigationAlert.primaryAction	@MainActor var primaryAction: CPAlertAction { get }
+c:objc(cs)CPNavigationAlert(py)secondaryAction	swift.property	secondaryAction	CPNavigationAlert.secondaryAction	@MainActor var secondaryAction: CPAlertAction? { get }
+c:objc(cs)CPNavigationAlert(py)subtitleVariants	swift.property	subtitleVariants	CPNavigationAlert.subtitleVariants	@MainActor var subtitleVariants: [String] { get }
+c:objc(cs)CPNavigationAlert(py)titleVariants	swift.property	titleVariants	CPNavigationAlert.titleVariants	@MainActor var titleVariants: [String] { get }
+c:objc(cs)CPNavigationSession	swift.class	CPNavigationSession	CPNavigationSession	@MainActor class CPNavigationSession
+c:objc(cs)CPNavigationSession(im)addLaneGuidances:	swift.method	add(_:)	CPNavigationSession.add(_:)	@MainActor func add(_ laneGuidances: [CPLaneGuidance])
+c:objc(cs)CPNavigationSession(im)addManeuvers:	swift.method	add(_:)	CPNavigationSession.add(_:)	@MainActor func add(_ maneuvers: [CPManeuver])
+c:objc(cs)CPNavigationSession(im)cancelTrip	swift.method	cancelTrip()	CPNavigationSession.cancelTrip()	@MainActor func cancelTrip()
+c:objc(cs)CPNavigationSession(im)finishTrip	swift.method	finishTrip()	CPNavigationSession.finishTrip()	@MainActor func finishTrip()
+c:objc(cs)CPNavigationSession(im)pauseTripForReason:description:	swift.method	pauseTrip(for:description:)	CPNavigationSession.pauseTrip(for:description:)	@MainActor func pauseTrip(for reason: CPNavigationSession.PauseReason, description: String?)
+c:objc(cs)CPNavigationSession(im)pauseTripForReason:description:turnCardColor:	swift.method	pauseTrip(for:description:turnCardColor:)	CPNavigationSession.pauseTrip(for:description:turnCardColor:)	@MainActor func pauseTrip(for reason: CPNavigationSession.PauseReason, description: String?, turnCardColor: UIColor?)
+c:objc(cs)CPNavigationSession(im)resumeTripWithUpdatedRouteInformation:	swift.method	resumeTrip(updatedRouteInformation:)	CPNavigationSession.resumeTrip(updatedRouteInformation:)	@MainActor func resumeTrip(updatedRouteInformation routeInformation: CPRouteInformation)
+c:objc(cs)CPNavigationSession(im)updateTravelEstimates:forManeuver:	swift.method	updateEstimates(_:for:)	CPNavigationSession.updateEstimates(_:for:)	@MainActor func updateEstimates(_ estimates: CPTravelEstimates, for maneuver: CPManeuver)
+c:objc(cs)CPNavigationSession(py)currentLaneGuidance	swift.property	currentLaneGuidance	CPNavigationSession.currentLaneGuidance	@NSCopying @MainActor var currentLaneGuidance: CPLaneGuidance? { get set }
+c:objc(cs)CPNavigationSession(py)currentRoadNameVariants	swift.property	currentRoadNameVariants	CPNavigationSession.currentRoadNameVariants	@MainActor var currentRoadNameVariants: [String] { get set }
+c:objc(cs)CPNavigationSession(py)maneuverState	swift.property	maneuverState	CPNavigationSession.maneuverState	@MainActor var maneuverState: CPManeuverState { get set }
+c:objc(cs)CPNavigationSession(py)trip	swift.property	trip	CPNavigationSession.trip	@MainActor var trip: CPTrip { get }
+c:objc(cs)CPNavigationSession(py)upcomingManeuvers	swift.property	upcomingManeuvers	CPNavigationSession.upcomingManeuvers	@MainActor var upcomingManeuvers: [CPManeuver] { get set }
+c:objc(cs)CPNowPlayingAddToLibraryButton	swift.class	CPNowPlayingAddToLibraryButton	CPNowPlayingAddToLibraryButton	@MainActor class CPNowPlayingAddToLibraryButton
+c:objc(cs)CPNowPlayingButton	swift.class	CPNowPlayingButton	CPNowPlayingButton	@MainActor class CPNowPlayingButton
+c:objc(cs)CPNowPlayingButton(im)initWithHandler:	swift.init	init(handler:)	CPNowPlayingButton.init(handler:)	@MainActor init(handler: ((CPNowPlayingButton) -> Void)? = nil)
+c:objc(cs)CPNowPlayingButton(py)enabled	swift.property	isEnabled	CPNowPlayingButton.isEnabled	@MainActor var isEnabled: Bool { get set }
+c:objc(cs)CPNowPlayingButton(py)selected	swift.property	isSelected	CPNowPlayingButton.isSelected	@MainActor var isSelected: Bool { get set }
+c:objc(cs)CPNowPlayingImageButton	swift.class	CPNowPlayingImageButton	CPNowPlayingImageButton	@MainActor class CPNowPlayingImageButton
+c:objc(cs)CPNowPlayingImageButton(im)initWithImage:handler:	swift.init	init(image:handler:)	CPNowPlayingImageButton.init(image:handler:)	@MainActor init(image: UIImage, handler: ((CPNowPlayingButton) -> Void)? = nil)
+c:objc(cs)CPNowPlayingImageButton(py)image	swift.property	image	CPNowPlayingImageButton.image	@MainActor var image: UIImage? { get }
+c:objc(cs)CPNowPlayingMode	swift.class	CPNowPlayingMode	CPNowPlayingMode	@MainActor class CPNowPlayingMode
+c:objc(cs)CPNowPlayingMode(cpy)defaultNowPlayingMode	swift.type.property	default	CPNowPlayingMode.default	@MainActor class var `default`: CPNowPlayingMode { get }
+c:objc(cs)CPNowPlayingModeSports	swift.class	CPNowPlayingModeSports	CPNowPlayingModeSports	@MainActor class CPNowPlayingModeSports
+c:objc(cs)CPNowPlayingModeSports(im)initWithLeftTeam:rightTeam:eventStatus:backgroundArtwork:	swift.init	init(leftTeam:rightTeam:eventStatus:backgroundArtwork:)	CPNowPlayingModeSports.init(leftTeam:rightTeam:eventStatus:backgroundArtwork:)	@MainActor init(leftTeam: CPNowPlayingSportsTeam, rightTeam: CPNowPlayingSportsTeam, eventStatus: CPNowPlayingSportsEventStatus?, backgroundArtwork: UIImage?)
+c:objc(cs)CPNowPlayingModeSports(py)backgroundArtwork	swift.property	backgroundArtwork	CPNowPlayingModeSports.backgroundArtwork	@NSCopying @MainActor var backgroundArtwork: UIImage? { get }
+c:objc(cs)CPNowPlayingModeSports(py)eventStatus	swift.property	eventStatus	CPNowPlayingModeSports.eventStatus	@MainActor var eventStatus: CPNowPlayingSportsEventStatus? { get }
+c:objc(cs)CPNowPlayingModeSports(py)leftTeam	swift.property	leftTeam	CPNowPlayingModeSports.leftTeam	@MainActor var leftTeam: CPNowPlayingSportsTeam { get }
+c:objc(cs)CPNowPlayingModeSports(py)rightTeam	swift.property	rightTeam	CPNowPlayingModeSports.rightTeam	@MainActor var rightTeam: CPNowPlayingSportsTeam { get }
+c:objc(cs)CPNowPlayingMoreButton	swift.class	CPNowPlayingMoreButton	CPNowPlayingMoreButton	@MainActor class CPNowPlayingMoreButton
+c:objc(cs)CPNowPlayingPlaybackRateButton	swift.class	CPNowPlayingPlaybackRateButton	CPNowPlayingPlaybackRateButton	@MainActor class CPNowPlayingPlaybackRateButton
+c:objc(cs)CPNowPlayingRepeatButton	swift.class	CPNowPlayingRepeatButton	CPNowPlayingRepeatButton	@MainActor class CPNowPlayingRepeatButton
+c:objc(cs)CPNowPlayingShuffleButton	swift.class	CPNowPlayingShuffleButton	CPNowPlayingShuffleButton	@MainActor class CPNowPlayingShuffleButton
+c:objc(cs)CPNowPlayingSportsClock	swift.class	CPNowPlayingSportsClock	CPNowPlayingSportsClock	@MainActor class CPNowPlayingSportsClock
+c:objc(cs)CPNowPlayingSportsClock(im)initWithElapsedTime:paused:	swift.init	init(elapsedTime:paused:)	CPNowPlayingSportsClock.init(elapsedTime:paused:)	@MainActor init(elapsedTime: TimeInterval, paused: Bool)
+c:objc(cs)CPNowPlayingSportsClock(im)initWithTimeRemaining:paused:	swift.init	init(timeRemaining:paused:)	CPNowPlayingSportsClock.init(timeRemaining:paused:)	@MainActor init(timeRemaining: TimeInterval, paused: Bool)
+c:objc(cs)CPNowPlayingSportsClock(py)countsUp	swift.property	countsUp	CPNowPlayingSportsClock.countsUp	@MainActor var countsUp: Bool { get }
+c:objc(cs)CPNowPlayingSportsClock(py)paused	swift.property	isPaused	CPNowPlayingSportsClock.isPaused	@MainActor var isPaused: Bool { get }
+c:objc(cs)CPNowPlayingSportsClock(py)timeValue	swift.property	timeValue	CPNowPlayingSportsClock.timeValue	@MainActor var timeValue: TimeInterval { get }
+c:objc(cs)CPNowPlayingSportsEventStatus	swift.class	CPNowPlayingSportsEventStatus	CPNowPlayingSportsEventStatus	@MainActor class CPNowPlayingSportsEventStatus
+c:objc(cs)CPNowPlayingSportsEventStatus(im)initWithEventStatusText:eventStatusImage:eventClock:	swift.init	init(eventStatusText:eventStatusImage:eventClock:)	CPNowPlayingSportsEventStatus.init(eventStatusText:eventStatusImage:eventClock:)	@MainActor init(eventStatusText: [String]?, eventStatusImage: UIImage?, eventClock: CPNowPlayingSportsClock?)
+c:objc(cs)CPNowPlayingSportsEventStatus(py)eventClock	swift.property	eventClock	CPNowPlayingSportsEventStatus.eventClock	@NSCopying @MainActor var eventClock: CPNowPlayingSportsClock? { get }
+c:objc(cs)CPNowPlayingSportsEventStatus(py)eventStatusImage	swift.property	eventStatusImage	CPNowPlayingSportsEventStatus.eventStatusImage	@NSCopying @MainActor var eventStatusImage: UIImage? { get }
+c:objc(cs)CPNowPlayingSportsEventStatus(py)eventStatusText	swift.property	eventStatusText	CPNowPlayingSportsEventStatus.eventStatusText	@MainActor var eventStatusText: [String]? { get }
+c:objc(cs)CPNowPlayingSportsTeam	swift.class	CPNowPlayingSportsTeam	CPNowPlayingSportsTeam	@MainActor class CPNowPlayingSportsTeam
+c:objc(cs)CPNowPlayingSportsTeam(im)initWithName:logo:teamStandings:eventScore:possessionIndicator:favorite:	swift.init	init(name:logo:teamStandings:eventScore:possessionIndicator:favorite:)	CPNowPlayingSportsTeam.init(name:logo:teamStandings:eventScore:possessionIndicator:favorite:)	@MainActor init(name: String, logo: CPNowPlayingSportsTeamLogo, teamStandings: String?, eventScore: String, possessionIndicator: UIImage?, favorite: Bool)
+c:objc(cs)CPNowPlayingSportsTeam(py)eventScore	swift.property	eventScore	CPNowPlayingSportsTeam.eventScore	@MainActor var eventScore: String { get }
+c:objc(cs)CPNowPlayingSportsTeam(py)favorite	swift.property	isFavorite	CPNowPlayingSportsTeam.isFavorite	@MainActor var isFavorite: Bool { get }
+c:objc(cs)CPNowPlayingSportsTeam(py)logo	swift.property	logo	CPNowPlayingSportsTeam.logo	@NSCopying @MainActor var logo: CPNowPlayingSportsTeamLogo { get }
+c:objc(cs)CPNowPlayingSportsTeam(py)name	swift.property	name	CPNowPlayingSportsTeam.name	@MainActor var name: String { get }
+c:objc(cs)CPNowPlayingSportsTeam(py)possessionIndicator	swift.property	possessionIndicator	CPNowPlayingSportsTeam.possessionIndicator	@NSCopying @MainActor var possessionIndicator: UIImage? { get }
+c:objc(cs)CPNowPlayingSportsTeam(py)teamStandings	swift.property	teamStandings	CPNowPlayingSportsTeam.teamStandings	@MainActor var teamStandings: String? { get }
+c:objc(cs)CPNowPlayingSportsTeamLogo	swift.class	CPNowPlayingSportsTeamLogo	CPNowPlayingSportsTeamLogo	@MainActor class CPNowPlayingSportsTeamLogo
+c:objc(cs)CPNowPlayingSportsTeamLogo(im)initWithTeamInitials:	swift.init	init(teamInitials:)	CPNowPlayingSportsTeamLogo.init(teamInitials:)	@MainActor init(teamInitials: String)
+c:objc(cs)CPNowPlayingSportsTeamLogo(im)initWithTeamLogo:	swift.init	init(teamLogo:)	CPNowPlayingSportsTeamLogo.init(teamLogo:)	@MainActor init(teamLogo: UIImage)
+c:objc(cs)CPNowPlayingSportsTeamLogo(py)initials	swift.property	initials	CPNowPlayingSportsTeamLogo.initials	@MainActor var initials: String? { get }
+c:objc(cs)CPNowPlayingSportsTeamLogo(py)logo	swift.property	logo	CPNowPlayingSportsTeamLogo.logo	@NSCopying @MainActor var logo: UIImage? { get }
+c:objc(cs)CPNowPlayingTemplate	swift.class	CPNowPlayingTemplate	CPNowPlayingTemplate	@MainActor class CPNowPlayingTemplate
+c:objc(cs)CPNowPlayingTemplate(cpy)sharedTemplate	swift.type.property	shared	CPNowPlayingTemplate.shared	@MainActor class var shared: CPNowPlayingTemplate { get }
+c:objc(cs)CPNowPlayingTemplate(im)addObserver:	swift.method	add(_:)	CPNowPlayingTemplate.add(_:)	@MainActor func add(_ observer: any CPNowPlayingTemplateObserver)
+c:objc(cs)CPNowPlayingTemplate(im)removeObserver:	swift.method	remove(_:)	CPNowPlayingTemplate.remove(_:)	@MainActor func remove(_ observer: any CPNowPlayingTemplateObserver)
+c:objc(cs)CPNowPlayingTemplate(im)updateNowPlayingButtons:	swift.method	updateNowPlayingButtons(_:)	CPNowPlayingTemplate.updateNowPlayingButtons(_:)	@MainActor func updateNowPlayingButtons(_ nowPlayingButtons: [CPNowPlayingButton])
+c:objc(cs)CPNowPlayingTemplate(py)albumArtistButtonEnabled	swift.property	isAlbumArtistButtonEnabled	CPNowPlayingTemplate.isAlbumArtistButtonEnabled	@MainActor var isAlbumArtistButtonEnabled: Bool { get set }
+c:objc(cs)CPNowPlayingTemplate(py)nowPlayingButtons	swift.property	nowPlayingButtons	CPNowPlayingTemplate.nowPlayingButtons	@MainActor var nowPlayingButtons: [CPNowPlayingButton] { get }
+c:objc(cs)CPNowPlayingTemplate(py)nowPlayingMode	swift.property	nowPlayingMode	CPNowPlayingTemplate.nowPlayingMode	@MainActor var nowPlayingMode: CPNowPlayingMode? { get set }
+c:objc(cs)CPNowPlayingTemplate(py)upNextButtonEnabled	swift.property	isUpNextButtonEnabled	CPNowPlayingTemplate.isUpNextButtonEnabled	@MainActor var isUpNextButtonEnabled: Bool { get set }
+c:objc(cs)CPNowPlayingTemplate(py)upNextTitle	swift.property	upNextTitle	CPNowPlayingTemplate.upNextTitle	@MainActor var upNextTitle: String { get set }
+c:objc(cs)CPPointOfInterest	swift.class	CPPointOfInterest	CPPointOfInterest	class CPPointOfInterest
+c:objc(cs)CPPointOfInterest(cpy)pinImageSize	swift.type.property	pinImageSize	CPPointOfInterest.pinImageSize	class var pinImageSize: CGSize { get }
+c:objc(cs)CPPointOfInterest(cpy)selectedPinImageSize	swift.type.property	selectedPinImageSize	CPPointOfInterest.selectedPinImageSize	class var selectedPinImageSize: CGSize { get }
+c:objc(cs)CPPointOfInterest(im)initWithLocation:title:subtitle:summary:detailTitle:detailSubtitle:detailSummary:pinImage:	swift.init	init(location:title:subtitle:summary:detailTitle:detailSubtitle:detailSummary:pinImage:)	CPPointOfInterest.init(location:title:subtitle:summary:detailTitle:detailSubtitle:detailSummary:pinImage:)	convenience init(location: MKMapItem, title: String, subtitle: String?, summary: String?, detailTitle: String?, detailSubtitle: String?, detailSummary: String?, pinImage: UIImage?)
+c:objc(cs)CPPointOfInterest(im)initWithLocation:title:subtitle:summary:detailTitle:detailSubtitle:detailSummary:pinImage:selectedPinImage:	swift.init	init(location:title:subtitle:summary:detailTitle:detailSubtitle:detailSummary:pinImage:selectedPinImage:)	CPPointOfInterest.init(location:title:subtitle:summary:detailTitle:detailSubtitle:detailSummary:pinImage:selectedPinImage:)	init(location: MKMapItem, title: String, subtitle: String?, summary: String?, detailTitle: String?, detailSubtitle: String?, detailSummary: String?, pinImage: UIImage?, selectedPinImage: UIImage?)
+c:objc(cs)CPPointOfInterest(py)detailSubtitle	swift.property	detailSubtitle	CPPointOfInterest.detailSubtitle	var detailSubtitle: String? { get set }
+c:objc(cs)CPPointOfInterest(py)detailSummary	swift.property	detailSummary	CPPointOfInterest.detailSummary	var detailSummary: String? { get set }
+c:objc(cs)CPPointOfInterest(py)detailTitle	swift.property	detailTitle	CPPointOfInterest.detailTitle	var detailTitle: String? { get set }
+c:objc(cs)CPPointOfInterest(py)location	swift.property	location	CPPointOfInterest.location	var location: MKMapItem { get set }
+c:objc(cs)CPPointOfInterest(py)pinImage	swift.property	pinImage	CPPointOfInterest.pinImage	var pinImage: UIImage? { get set }
+c:objc(cs)CPPointOfInterest(py)primaryButton	swift.property	primaryButton	CPPointOfInterest.primaryButton	var primaryButton: CPTextButton? { get set }
+c:objc(cs)CPPointOfInterest(py)secondaryButton	swift.property	secondaryButton	CPPointOfInterest.secondaryButton	var secondaryButton: CPTextButton? { get set }
+c:objc(cs)CPPointOfInterest(py)selectedPinImage	swift.property	selectedPinImage	CPPointOfInterest.selectedPinImage	var selectedPinImage: UIImage? { get set }
+c:objc(cs)CPPointOfInterest(py)subtitle	swift.property	subtitle	CPPointOfInterest.subtitle	var subtitle: String? { get set }
+c:objc(cs)CPPointOfInterest(py)summary	swift.property	summary	CPPointOfInterest.summary	var summary: String? { get set }
+c:objc(cs)CPPointOfInterest(py)title	swift.property	title	CPPointOfInterest.title	var title: String { get set }
+c:objc(cs)CPPointOfInterest(py)userInfo	swift.property	userInfo	CPPointOfInterest.userInfo	var userInfo: Any? { get set }
+c:objc(cs)CPPointOfInterestTemplate	swift.class	CPPointOfInterestTemplate	CPPointOfInterestTemplate	@MainActor class CPPointOfInterestTemplate
+c:objc(cs)CPPointOfInterestTemplate(im)initWithTitle:pointsOfInterest:selectedIndex:	swift.init	init(title:pointsOfInterest:selectedIndex:)	CPPointOfInterestTemplate.init(title:pointsOfInterest:selectedIndex:)	@MainActor init(title: String, pointsOfInterest: [CPPointOfInterest], selectedIndex: Int)
+c:objc(cs)CPPointOfInterestTemplate(im)setPointsOfInterest:selectedIndex:	swift.method	setPointsOfInterest(_:selectedIndex:)	CPPointOfInterestTemplate.setPointsOfInterest(_:selectedIndex:)	@MainActor func setPointsOfInterest(_ pointsOfInterest: [CPPointOfInterest], selectedIndex: Int)
+c:objc(cs)CPPointOfInterestTemplate(py)pointOfInterestDelegate	swift.property	pointOfInterestDelegate	CPPointOfInterestTemplate.pointOfInterestDelegate	@MainActor weak var pointOfInterestDelegate: (any CPPointOfInterestTemplateDelegate)? { get set }
+c:objc(cs)CPPointOfInterestTemplate(py)pointsOfInterest	swift.property	pointsOfInterest	CPPointOfInterestTemplate.pointsOfInterest	@MainActor var pointsOfInterest: [CPPointOfInterest] { get }
+c:objc(cs)CPPointOfInterestTemplate(py)selectedIndex	swift.property	selectedIndex	CPPointOfInterestTemplate.selectedIndex	@MainActor var selectedIndex: Int { get set }
+c:objc(cs)CPPointOfInterestTemplate(py)title	swift.property	title	CPPointOfInterestTemplate.title	@MainActor var title: String { get set }
+c:objc(cs)CPRouteChoice	swift.class	CPRouteChoice	CPRouteChoice	class CPRouteChoice
+c:objc(cs)CPRouteChoice(im)initWithSummaryVariants:additionalInformationVariants:selectionSummaryVariants:	swift.init	init(summaryVariants:additionalInformationVariants:selectionSummaryVariants:)	CPRouteChoice.init(summaryVariants:additionalInformationVariants:selectionSummaryVariants:)	init(summaryVariants: [String], additionalInformationVariants: [String], selectionSummaryVariants: [String])
+c:objc(cs)CPRouteChoice(py)additionalInformationVariants	swift.property	additionalInformationVariants	CPRouteChoice.additionalInformationVariants	var additionalInformationVariants: [String]? { get }
+c:objc(cs)CPRouteChoice(py)selectionSummaryVariants	swift.property	selectionSummaryVariants	CPRouteChoice.selectionSummaryVariants	var selectionSummaryVariants: [String]? { get }
+c:objc(cs)CPRouteChoice(py)summaryVariants	swift.property	summaryVariants	CPRouteChoice.summaryVariants	var summaryVariants: [String] { get }
+c:objc(cs)CPRouteChoice(py)userInfo	swift.property	userInfo	CPRouteChoice.userInfo	var userInfo: Any? { get set }
+c:objc(cs)CPRouteInformation	swift.class	CPRouteInformation	CPRouteInformation	class CPRouteInformation
+c:objc(cs)CPRouteInformation(im)initWithManeuvers:laneGuidances:currentManeuvers:currentLaneGuidance:tripTravelEstimates:maneuverTravelEstimates:	swift.init	init(maneuvers:laneGuidances:currentManeuvers:currentLaneGuidance:trip:maneuverTravelEstimates:)	CPRouteInformation.init(maneuvers:laneGuidances:currentManeuvers:currentLaneGuidance:trip:maneuverTravelEstimates:)	init(maneuvers: [CPManeuver], laneGuidances: [CPLaneGuidance], currentManeuvers: [CPManeuver], currentLaneGuidance: CPLaneGuidance, trip tripTravelEstimates: CPTravelEstimates, maneuverTravelEstimates: CPTravelEstimates)
+c:objc(cs)CPRouteInformation(im)initWithManeuvers:laneGuidances:currentManeuvers:currentLaneGuidance:tripTravelEstimates:maneuverTravelEstimates:::SYNTHESIZED::c:objc(cs)CPRouteInformation	swift.init	init(maneuvers:laneGuidances:currentManeuvers:currentLaneGuidance:tripTravelEstimates:maneuverTravelEstimates:)	CPRouteInformation.init(maneuvers:laneGuidances:currentManeuvers:currentLaneGuidance:tripTravelEstimates:maneuverTravelEstimates:)	init(maneuvers: [CPManeuver], laneGuidances: [CPLaneGuidance], currentManeuvers: [CPManeuver], currentLaneGuidance: CPLaneGuidance, tripTravelEstimates: CPTravelEstimates, maneuverTravelEstimates: CPTravelEstimates)
+c:objc(cs)CPRouteInformation(py)currentLaneGuidance	swift.property	currentLaneGuidance	CPRouteInformation.currentLaneGuidance	@NSCopying var currentLaneGuidance: CPLaneGuidance { get }
+c:objc(cs)CPRouteInformation(py)currentManeuvers	swift.property	currentManeuvers	CPRouteInformation.currentManeuvers	var currentManeuvers: [CPManeuver] { get }
+c:objc(cs)CPRouteInformation(py)laneGuidances	swift.property	laneGuidances	CPRouteInformation.laneGuidances	var laneGuidances: [CPLaneGuidance] { get }
+c:objc(cs)CPRouteInformation(py)maneuverTravelEstimates	swift.property	maneuverTravelEstimates	CPRouteInformation.maneuverTravelEstimates	@NSCopying var maneuverTravelEstimates: CPTravelEstimates { get }
+c:objc(cs)CPRouteInformation(py)maneuvers	swift.property	maneuvers	CPRouteInformation.maneuvers	var maneuvers: [CPManeuver] { get }
+c:objc(cs)CPRouteInformation(py)tripTravelEstimates	swift.property	tripTravelEstimates	CPRouteInformation.tripTravelEstimates	@NSCopying var tripTravelEstimates: CPTravelEstimates { get }
+c:objc(cs)CPSearchTemplate	swift.class	CPSearchTemplate	CPSearchTemplate	@MainActor class CPSearchTemplate
+c:objc(cs)CPSearchTemplate(py)delegate	swift.property	delegate	CPSearchTemplate.delegate	@MainActor weak var delegate: (any CPSearchTemplateDelegate)? { get set }
+c:objc(cs)CPSessionConfiguration	swift.class	CPSessionConfiguration	CPSessionConfiguration	class CPSessionConfiguration
+c:objc(cs)CPSessionConfiguration(im)initWithDelegate:	swift.init	init(delegate:)	CPSessionConfiguration.init(delegate:)	init(delegate: any CPSessionConfigurationDelegate)
+c:objc(cs)CPSessionConfiguration(py)contentStyle	swift.property	contentStyle	CPSessionConfiguration.contentStyle	var contentStyle: CPContentStyle { get }
+c:objc(cs)CPSessionConfiguration(py)delegate	swift.property	delegate	CPSessionConfiguration.delegate	weak var delegate: (any CPSessionConfigurationDelegate)? { get set }
+c:objc(cs)CPSessionConfiguration(py)limitedUserInterfaces	swift.property	limitedUserInterfaces	CPSessionConfiguration.limitedUserInterfaces	var limitedUserInterfaces: CPLimitableUserInterface { get }
+c:objc(cs)CPTabBarTemplate	swift.class	CPTabBarTemplate	CPTabBarTemplate	@MainActor class CPTabBarTemplate
+c:objc(cs)CPTabBarTemplate(cpy)maximumTabCount	swift.type.property	maximumTabCount	CPTabBarTemplate.maximumTabCount	@MainActor class var maximumTabCount: Int { get }
+c:objc(cs)CPTabBarTemplate(im)initWithTemplates:	swift.init	init(templates:)	CPTabBarTemplate.init(templates:)	@MainActor init(templates: [CPTemplate])
+c:objc(cs)CPTabBarTemplate(im)selectTemplate:	swift.method	select(_:)	CPTabBarTemplate.select(_:)	@MainActor func select(_ newTemplate: CPTemplate)
+c:objc(cs)CPTabBarTemplate(im)selectTemplateAtIndex:	swift.method	selectTemplate(at:)	CPTabBarTemplate.selectTemplate(at:)	@MainActor func selectTemplate(at index: Int)
+c:objc(cs)CPTabBarTemplate(im)updateTemplates:	swift.method	updateTemplates(_:)	CPTabBarTemplate.updateTemplates(_:)	@MainActor func updateTemplates(_ newTemplates: [CPTemplate])
+c:objc(cs)CPTabBarTemplate(py)delegate	swift.property	delegate	CPTabBarTemplate.delegate	@MainActor weak var delegate: (any CPTabBarTemplateDelegate)? { get set }
+c:objc(cs)CPTabBarTemplate(py)selectedTemplate	swift.property	selectedTemplate	CPTabBarTemplate.selectedTemplate	@MainActor var selectedTemplate: CPTemplate? { get }
+c:objc(cs)CPTabBarTemplate(py)templates	swift.property	templates	CPTabBarTemplate.templates	@MainActor var templates: [CPTemplate] { get }
+c:objc(cs)CPTemplate	swift.class	CPTemplate	CPTemplate	@MainActor class CPTemplate
+c:objc(cs)CPTemplate(py)showsTabBadge	swift.property	showsTabBadge	CPTemplate.showsTabBadge	@MainActor var showsTabBadge: Bool { get set }
+c:objc(cs)CPTemplate(py)tabImage	swift.property	tabImage	CPTemplate.tabImage	@MainActor var tabImage: UIImage? { get set }
+c:objc(cs)CPTemplate(py)tabSystemItem	swift.property	tabSystemItem	CPTemplate.tabSystemItem	@MainActor var tabSystemItem: UITabBarItem.SystemItem { get set }
+c:objc(cs)CPTemplate(py)tabTitle	swift.property	tabTitle	CPTemplate.tabTitle	@MainActor var tabTitle: String? { get set }
+c:objc(cs)CPTemplate(py)userInfo	swift.property	userInfo	CPTemplate.userInfo	@MainActor var userInfo: Any? { get set }
+c:objc(cs)CPTemplateApplicationDashboardScene	swift.class	CPTemplateApplicationDashboardScene	CPTemplateApplicationDashboardScene	@MainActor class CPTemplateApplicationDashboardScene
+c:objc(cs)CPTemplateApplicationDashboardScene(py)dashboardController	swift.property	dashboardController	CPTemplateApplicationDashboardScene.dashboardController	@MainActor var dashboardController: CPDashboardController { get }
+c:objc(cs)CPTemplateApplicationDashboardScene(py)dashboardWindow	swift.property	dashboardWindow	CPTemplateApplicationDashboardScene.dashboardWindow	@MainActor var dashboardWindow: UIWindow { get }
+c:objc(cs)CPTemplateApplicationDashboardScene(py)delegate	swift.property	delegate	CPTemplateApplicationDashboardScene.delegate	@MainActor var delegate: (any CPTemplateApplicationDashboardSceneDelegate)? { get set }
+c:objc(cs)CPTemplateApplicationInstrumentClusterScene	swift.class	CPTemplateApplicationInstrumentClusterScene	CPTemplateApplicationInstrumentClusterScene	@MainActor class CPTemplateApplicationInstrumentClusterScene
+c:objc(cs)CPTemplateApplicationInstrumentClusterScene(py)contentStyle	swift.property	contentStyle	CPTemplateApplicationInstrumentClusterScene.contentStyle	@MainActor var contentStyle: UIUserInterfaceStyle { get }
+c:objc(cs)CPTemplateApplicationInstrumentClusterScene(py)delegate	swift.property	delegate	CPTemplateApplicationInstrumentClusterScene.delegate	@MainActor var delegate: (any CPTemplateApplicationInstrumentClusterSceneDelegate)? { get set }
+c:objc(cs)CPTemplateApplicationInstrumentClusterScene(py)instrumentClusterController	swift.property	instrumentClusterController	CPTemplateApplicationInstrumentClusterScene.instrumentClusterController	@MainActor var instrumentClusterController: CPInstrumentClusterController { get }
+c:objc(cs)CPTemplateApplicationScene	swift.class	CPTemplateApplicationScene	CPTemplateApplicationScene	@MainActor class CPTemplateApplicationScene
+c:objc(cs)CPTemplateApplicationScene(py)carWindow	swift.property	carWindow	CPTemplateApplicationScene.carWindow	@MainActor var carWindow: CPWindow { get }
+c:objc(cs)CPTemplateApplicationScene(py)contentStyle	swift.property	contentStyle	CPTemplateApplicationScene.contentStyle	@MainActor var contentStyle: UIUserInterfaceStyle { get }
+c:objc(cs)CPTemplateApplicationScene(py)delegate	swift.property	delegate	CPTemplateApplicationScene.delegate	@MainActor var delegate: (any CPTemplateApplicationSceneDelegate)? { get set }
+c:objc(cs)CPTemplateApplicationScene(py)interfaceController	swift.property	interfaceController	CPTemplateApplicationScene.interfaceController	@MainActor var interfaceController: CPInterfaceController { get }
+c:objc(cs)CPTextButton	swift.class	CPTextButton	CPTextButton	class CPTextButton
+c:objc(cs)CPTextButton(im)initWithTitle:textStyle:handler:	swift.init	init(title:textStyle:handler:)	CPTextButton.init(title:textStyle:handler:)	init(title: String, textStyle: CPTextButtonStyle, handler: ((CPTextButton) -> Void)? = nil)
+c:objc(cs)CPTextButton(py)textStyle	swift.property	textStyle	CPTextButton.textStyle	var textStyle: CPTextButtonStyle { get set }
+c:objc(cs)CPTextButton(py)title	swift.property	title	CPTextButton.title	var title: String { get set }
+c:objc(cs)CPTravelEstimates	swift.class	CPTravelEstimates	CPTravelEstimates	class CPTravelEstimates
+c:objc(cs)CPTravelEstimates(im)initWithDistanceRemaining:distanceRemainingToDisplay:timeRemaining:	swift.init	init(distanceRemaining:distanceRemainingToDisplay:timeRemaining:)	CPTravelEstimates.init(distanceRemaining:distanceRemainingToDisplay:timeRemaining:)	init(distanceRemaining: Measurement<UnitLength>, distanceRemainingToDisplay: Measurement<UnitLength>, timeRemaining time: TimeInterval)
+c:objc(cs)CPTravelEstimates(im)initWithDistanceRemaining:timeRemaining:	swift.init	init(distanceRemaining:timeRemaining:)	CPTravelEstimates.init(distanceRemaining:timeRemaining:)	init(distanceRemaining distance: Measurement<UnitLength>, timeRemaining time: TimeInterval)
+c:objc(cs)CPTravelEstimates(py)distanceRemaining	swift.property	distanceRemaining	CPTravelEstimates.distanceRemaining	var distanceRemaining: Measurement<UnitLength> { get }
+c:objc(cs)CPTravelEstimates(py)distanceRemainingToDisplay	swift.property	distanceRemainingToDisplay	CPTravelEstimates.distanceRemainingToDisplay	var distanceRemainingToDisplay: Measurement<UnitLength> { get }
+c:objc(cs)CPTravelEstimates(py)timeRemaining	swift.property	timeRemaining	CPTravelEstimates.timeRemaining	var timeRemaining: TimeInterval { get }
+c:objc(cs)CPTrip	swift.class	CPTrip	CPTrip	class CPTrip
+c:objc(cs)CPTrip(im)initWithOrigin:destination:routeChoices:	swift.init	init(origin:destination:routeChoices:)	CPTrip.init(origin:destination:routeChoices:)	init(origin: MKMapItem, destination: MKMapItem, routeChoices: [CPRouteChoice])
+c:objc(cs)CPTrip(py)destination	swift.property	destination	CPTrip.destination	var destination: MKMapItem { get }
+c:objc(cs)CPTrip(py)destinationNameVariants	swift.property	destinationNameVariants	CPTrip.destinationNameVariants	var destinationNameVariants: [String]? { get set }
+c:objc(cs)CPTrip(py)origin	swift.property	origin	CPTrip.origin	var origin: MKMapItem { get }
+c:objc(cs)CPTrip(py)routeChoices	swift.property	routeChoices	CPTrip.routeChoices	var routeChoices: [CPRouteChoice] { get }
+c:objc(cs)CPTrip(py)userInfo	swift.property	userInfo	CPTrip.userInfo	var userInfo: Any? { get set }
+c:objc(cs)CPTripPreviewTextConfiguration	swift.class	CPTripPreviewTextConfiguration	CPTripPreviewTextConfiguration	class CPTripPreviewTextConfiguration
+c:objc(cs)CPTripPreviewTextConfiguration(im)initWithStartButtonTitle:additionalRoutesButtonTitle:overviewButtonTitle:	swift.init	init(startButtonTitle:additionalRoutesButtonTitle:overviewButtonTitle:)	CPTripPreviewTextConfiguration.init(startButtonTitle:additionalRoutesButtonTitle:overviewButtonTitle:)	init(startButtonTitle: String?, additionalRoutesButtonTitle: String?, overviewButtonTitle: String?)
+c:objc(cs)CPTripPreviewTextConfiguration(py)additionalRoutesButtonTitle	swift.property	additionalRoutesButtonTitle	CPTripPreviewTextConfiguration.additionalRoutesButtonTitle	var additionalRoutesButtonTitle: String? { get }
+c:objc(cs)CPTripPreviewTextConfiguration(py)overviewButtonTitle	swift.property	overviewButtonTitle	CPTripPreviewTextConfiguration.overviewButtonTitle	var overviewButtonTitle: String? { get }
+c:objc(cs)CPTripPreviewTextConfiguration(py)startButtonTitle	swift.property	startButtonTitle	CPTripPreviewTextConfiguration.startButtonTitle	var startButtonTitle: String? { get }
+c:objc(cs)CPVoiceControlState	swift.class	CPVoiceControlState	CPVoiceControlState	class CPVoiceControlState
+c:objc(cs)CPVoiceControlState(im)initWithIdentifier:titleVariants:image:repeats:	swift.init	init(identifier:titleVariants:image:repeats:)	CPVoiceControlState.init(identifier:titleVariants:image:repeats:)	init(identifier: String, titleVariants: [String]?, image: UIImage?, repeats: Bool)
+c:objc(cs)CPVoiceControlState(py)identifier	swift.property	identifier	CPVoiceControlState.identifier	var identifier: String { get }
+c:objc(cs)CPVoiceControlState(py)image	swift.property	image	CPVoiceControlState.image	var image: UIImage? { get }
+c:objc(cs)CPVoiceControlState(py)repeats	swift.property	repeats	CPVoiceControlState.repeats	var repeats: Bool { get }
+c:objc(cs)CPVoiceControlState(py)titleVariants	swift.property	titleVariants	CPVoiceControlState.titleVariants	var titleVariants: [String]? { get }
+c:objc(cs)CPVoiceControlTemplate	swift.class	CPVoiceControlTemplate	CPVoiceControlTemplate	@MainActor class CPVoiceControlTemplate
+c:objc(cs)CPVoiceControlTemplate(im)activateVoiceControlStateWithIdentifier:	swift.method	activateVoiceControlState(withIdentifier:)	CPVoiceControlTemplate.activateVoiceControlState(withIdentifier:)	@MainActor func activateVoiceControlState(withIdentifier identifier: String)
+c:objc(cs)CPVoiceControlTemplate(im)initWithVoiceControlStates:	swift.init	init(voiceControlStates:)	CPVoiceControlTemplate.init(voiceControlStates:)	@MainActor init(voiceControlStates: [CPVoiceControlState])
+c:objc(cs)CPVoiceControlTemplate(py)activeStateIdentifier	swift.property	activeStateIdentifier	CPVoiceControlTemplate.activeStateIdentifier	@MainActor var activeStateIdentifier: String? { get }
+c:objc(cs)CPVoiceControlTemplate(py)voiceControlStates	swift.property	voiceControlStates	CPVoiceControlTemplate.voiceControlStates	@MainActor var voiceControlStates: [CPVoiceControlState] { get }
+c:objc(cs)CPWindow	swift.class	CPWindow	CPWindow	@MainActor class CPWindow
+c:objc(cs)CPWindow(py)mapButtonSafeAreaLayoutGuide	swift.property	mapButtonSafeAreaLayoutGuide	CPWindow.mapButtonSafeAreaLayoutGuide	@MainActor var mapButtonSafeAreaLayoutGuide: UILayoutGuide { get }
+c:objc(cs)CPWindow(py)templateApplicationScene	swift.property	templateApplicationScene	CPWindow.templateApplicationScene	@MainActor weak var templateApplicationScene: CPTemplateApplicationScene? { get set }
+c:objc(pl)CPApplicationDelegate	swift.protocol	CPApplicationDelegate	CPApplicationDelegate	protocol CPApplicationDelegate : UIApplicationDelegate
+c:objc(pl)CPApplicationDelegate(im)application:didConnectCarInterfaceController:toWindow:	swift.method	application(_:didConnectCarInterfaceController:to:)	CPApplicationDelegate.application(_:didConnectCarInterfaceController:to:)	func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow)
+c:objc(pl)CPApplicationDelegate(im)application:didDisconnectCarInterfaceController:fromWindow:	swift.method	application(_:didDisconnectCarInterfaceController:from:)	CPApplicationDelegate.application(_:didDisconnectCarInterfaceController:from:)	func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow)
+c:objc(pl)CPApplicationDelegate(im)application:didSelectManeuver:	swift.method	application(_:didSelect:)	CPApplicationDelegate.application(_:didSelect:)	optional func application(_ application: UIApplication, didSelect maneuver: CPManeuver)
+c:objc(pl)CPApplicationDelegate(im)application:didSelectNavigationAlert:	swift.method	application(_:didSelect:)	CPApplicationDelegate.application(_:didSelect:)	optional func application(_ application: UIApplication, didSelect navigationAlert: CPNavigationAlert)
+c:objc(pl)CPBarButtonProviding	swift.protocol	CPBarButtonProviding	CPBarButtonProviding	protocol CPBarButtonProviding : NSObjectProtocol
+c:objc(pl)CPBarButtonProviding(py)backButton	swift.property	backButton	CPBarButtonProviding.backButton	var backButton: CPBarButton? { get set }
+c:objc(pl)CPBarButtonProviding(py)leadingNavigationBarButtons	swift.property	leadingNavigationBarButtons	CPBarButtonProviding.leadingNavigationBarButtons	var leadingNavigationBarButtons: [CPBarButton] { get set }
+c:objc(pl)CPBarButtonProviding(py)trailingNavigationBarButtons	swift.property	trailingNavigationBarButtons	CPBarButtonProviding.trailingNavigationBarButtons	var trailingNavigationBarButtons: [CPBarButton] { get set }
+c:objc(pl)CPInstrumentClusterControllerDelegate	swift.protocol	CPInstrumentClusterControllerDelegate	CPInstrumentClusterControllerDelegate	protocol CPInstrumentClusterControllerDelegate : NSObjectProtocol
+c:objc(pl)CPInstrumentClusterControllerDelegate(im)instrumentClusterController:didChangeCompassSetting:	swift.method	instrumentClusterController(_:didChangeCompassSetting:)	CPInstrumentClusterControllerDelegate.instrumentClusterController(_:didChangeCompassSetting:)	optional func instrumentClusterController(_ instrumentClusterController: CPInstrumentClusterController, didChangeCompassSetting compassSetting: CPInstrumentClusterSetting)
+c:objc(pl)CPInstrumentClusterControllerDelegate(im)instrumentClusterController:didChangeSpeedLimitSetting:	swift.method	instrumentClusterController(_:didChangeSpeedLimitSetting:)	CPInstrumentClusterControllerDelegate.instrumentClusterController(_:didChangeSpeedLimitSetting:)	optional func instrumentClusterController(_ instrumentClusterController: CPInstrumentClusterController, didChangeSpeedLimitSetting speedLimitSetting: CPInstrumentClusterSetting)
+c:objc(pl)CPInstrumentClusterControllerDelegate(im)instrumentClusterControllerDidConnectWindow:	swift.method	instrumentClusterControllerDidConnect(_:)	CPInstrumentClusterControllerDelegate.instrumentClusterControllerDidConnect(_:)	func instrumentClusterControllerDidConnect(_ instrumentClusterWindow: UIWindow)
+c:objc(pl)CPInstrumentClusterControllerDelegate(im)instrumentClusterControllerDidDisconnectWindow:	swift.method	instrumentClusterControllerDidDisconnectWindow(_:)	CPInstrumentClusterControllerDelegate.instrumentClusterControllerDidDisconnectWindow(_:)	func instrumentClusterControllerDidDisconnectWindow(_ instrumentClusterWindow: UIWindow)
+c:objc(pl)CPInstrumentClusterControllerDelegate(im)instrumentClusterControllerDidZoomIn:	swift.method	instrumentClusterControllerDidZoom(in:)	CPInstrumentClusterControllerDelegate.instrumentClusterControllerDidZoom(in:)	optional func instrumentClusterControllerDidZoom(in instrumentClusterController: CPInstrumentClusterController)
+c:objc(pl)CPInstrumentClusterControllerDelegate(im)instrumentClusterControllerDidZoomOut:	swift.method	instrumentClusterControllerDidZoomOut(_:)	CPInstrumentClusterControllerDelegate.instrumentClusterControllerDidZoomOut(_:)	optional func instrumentClusterControllerDidZoomOut(_ instrumentClusterController: CPInstrumentClusterController)
+c:objc(pl)CPInterfaceControllerDelegate	swift.protocol	CPInterfaceControllerDelegate	CPInterfaceControllerDelegate	@MainActor protocol CPInterfaceControllerDelegate : NSObjectProtocol
+c:objc(pl)CPInterfaceControllerDelegate(im)templateDidAppear:animated:	swift.method	templateDidAppear(_:animated:)	CPInterfaceControllerDelegate.templateDidAppear(_:animated:)	@MainActor optional func templateDidAppear(_ aTemplate: CPTemplate, animated: Bool)
+c:objc(pl)CPInterfaceControllerDelegate(im)templateDidDisappear:animated:	swift.method	templateDidDisappear(_:animated:)	CPInterfaceControllerDelegate.templateDidDisappear(_:animated:)	@MainActor optional func templateDidDisappear(_ aTemplate: CPTemplate, animated: Bool)
+c:objc(pl)CPInterfaceControllerDelegate(im)templateWillAppear:animated:	swift.method	templateWillAppear(_:animated:)	CPInterfaceControllerDelegate.templateWillAppear(_:animated:)	@MainActor optional func templateWillAppear(_ aTemplate: CPTemplate, animated: Bool)
+c:objc(pl)CPInterfaceControllerDelegate(im)templateWillDisappear:animated:	swift.method	templateWillDisappear(_:animated:)	CPInterfaceControllerDelegate.templateWillDisappear(_:animated:)	@MainActor optional func templateWillDisappear(_ aTemplate: CPTemplate, animated: Bool)
+c:objc(pl)CPListTemplateDelegate	swift.protocol	CPListTemplateDelegate	CPListTemplateDelegate	protocol CPListTemplateDelegate : NSObjectProtocol
+c:objc(pl)CPListTemplateDelegate(im)listTemplate:didSelectListItem:completionHandler:	swift.method	listTemplate(_:didSelect:)	CPListTemplateDelegate.listTemplate(_:didSelect:)	func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem) async
+c:objc(pl)CPListTemplateItem	swift.protocol	CPListTemplateItem	CPListTemplateItem	protocol CPListTemplateItem : NSObjectProtocol
+c:objc(pl)CPListTemplateItem(py)enabled	swift.property	isEnabled	CPListTemplateItem.isEnabled	var isEnabled: Bool { get set }
+c:objc(pl)CPListTemplateItem(py)text	swift.property	text	CPListTemplateItem.text	var text: String? { get }
+c:objc(pl)CPListTemplateItem(py)userInfo	swift.property	userInfo	CPListTemplateItem.userInfo	var userInfo: Any? { get set }
+c:objc(pl)CPMapTemplateDelegate	swift.protocol	CPMapTemplateDelegate	CPMapTemplateDelegate	@MainActor protocol CPMapTemplateDelegate : NSObjectProtocol
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:didDismissNavigationAlert:dismissalContext:	swift.method	mapTemplate(_:didDismiss:dismissalContext:)	CPMapTemplateDelegate.mapTemplate(_:didDismiss:dismissalContext:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, didDismiss navigationAlert: CPNavigationAlert, dismissalContext: CPNavigationAlert.DismissalContext)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:didEndPanGestureWithVelocity:	swift.method	mapTemplate(_:didEndPanGestureWithVelocity:)	CPMapTemplateDelegate.mapTemplate(_:didEndPanGestureWithVelocity:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:didEndZoomGestureWithVelocity:	swift.method	mapTemplate(_:didEndZoomGestureWithVelocity:)	CPMapTemplateDelegate.mapTemplate(_:didEndZoomGestureWithVelocity:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, didEndZoomGestureWithVelocity velocity: CGFloat)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:didRotateWithCenter:rotation:velocity:	swift.method	mapTemplate(_:didRotateWithCenter:rotation:velocity:)	CPMapTemplateDelegate.mapTemplate(_:didRotateWithCenter:rotation:velocity:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, didRotateWithCenter center: CGPoint, rotation: CGFloat, velocity: CGFloat)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:didShowNavigationAlert:	swift.method	mapTemplate(_:didShow:)	CPMapTemplateDelegate.mapTemplate(_:didShow:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, didShow navigationAlert: CPNavigationAlert)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:didUpdatePanGestureWithTranslation:velocity:	swift.method	mapTemplate(_:didUpdatePanGestureWithTranslation:velocity:)	CPMapTemplateDelegate.mapTemplate(_:didUpdatePanGestureWithTranslation:velocity:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithTranslation translation: CGPoint, velocity: CGPoint)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:didUpdateZoomGestureWithCenter:scale:velocity:	swift.method	mapTemplate(_:didUpdateZoomGestureWithCenter:scale:velocity:)	CPMapTemplateDelegate.mapTemplate(_:didUpdateZoomGestureWithCenter:scale:velocity:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdateZoomGestureWithCenter center: CGPoint, scale: CGFloat, velocity: CGFloat)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:displayStyleForManeuver:	swift.method	mapTemplate(_:displayStyleFor:)	CPMapTemplateDelegate.mapTemplate(_:displayStyleFor:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, displayStyleFor maneuver: CPManeuver) -> CPManeuverDisplayStyle
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:panBeganWithDirection:	swift.method	mapTemplate(_:panBeganWith:)	CPMapTemplateDelegate.mapTemplate(_:panBeganWith:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, panBeganWith direction: CPMapTemplate.PanDirection)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:panEndedWithDirection:	swift.method	mapTemplate(_:panEndedWith:)	CPMapTemplateDelegate.mapTemplate(_:panEndedWith:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, panEndedWith direction: CPMapTemplate.PanDirection)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:panWithDirection:	swift.method	mapTemplate(_:panWith:)	CPMapTemplateDelegate.mapTemplate(_:panWith:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:pitchEndedWithCenter:	swift.method	mapTemplate(_:pitchEndedWithCenter:)	CPMapTemplateDelegate.mapTemplate(_:pitchEndedWithCenter:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, pitchEndedWithCenter center: CGPoint)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:pitchWithCenter:	swift.method	mapTemplate(_:pitchWithCenter:)	CPMapTemplateDelegate.mapTemplate(_:pitchWithCenter:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, pitchWithCenter center: CGPoint)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:rotationDidEndWithVelocity:	swift.method	mapTemplate(_:rotationDidEndWithVelocity:)	CPMapTemplateDelegate.mapTemplate(_:rotationDidEndWithVelocity:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, rotationDidEndWithVelocity velocity: CGFloat)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:selectedPreviewForTrip:usingRouteChoice:	swift.method	mapTemplate(_:selectedPreviewFor:using:)	CPMapTemplateDelegate.mapTemplate(_:selectedPreviewFor:using:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:shouldShowNotificationForManeuver:	swift.method	mapTemplate(_:shouldShowNotificationFor:)	CPMapTemplateDelegate.mapTemplate(_:shouldShowNotificationFor:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, shouldShowNotificationFor maneuver: CPManeuver) -> Bool
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:shouldShowNotificationForNavigationAlert:	swift.method	mapTemplate(_:shouldShowNotificationFor:)	CPMapTemplateDelegate.mapTemplate(_:shouldShowNotificationFor:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, shouldShowNotificationFor navigationAlert: CPNavigationAlert) -> Bool
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:shouldUpdateNotificationForManeuver:withTravelEstimates:	swift.method	mapTemplate(_:shouldUpdateNotificationFor:with:)	CPMapTemplateDelegate.mapTemplate(_:shouldUpdateNotificationFor:with:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, shouldUpdateNotificationFor maneuver: CPManeuver, with travelEstimates: CPTravelEstimates) -> Bool
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:startedTrip:usingRouteChoice:	swift.method	mapTemplate(_:startedTrip:using:)	CPMapTemplateDelegate.mapTemplate(_:startedTrip:using:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:willDismissNavigationAlert:dismissalContext:	swift.method	mapTemplate(_:willDismiss:dismissalContext:)	CPMapTemplateDelegate.mapTemplate(_:willDismiss:dismissalContext:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, willDismiss navigationAlert: CPNavigationAlert, dismissalContext: CPNavigationAlert.DismissalContext)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplate:willShowNavigationAlert:	swift.method	mapTemplate(_:willShow:)	CPMapTemplateDelegate.mapTemplate(_:willShow:)	@MainActor optional func mapTemplate(_ mapTemplate: CPMapTemplate, willShow navigationAlert: CPNavigationAlert)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateDidBeginPanGesture:	swift.method	mapTemplateDidBeginPanGesture(_:)	CPMapTemplateDelegate.mapTemplateDidBeginPanGesture(_:)	@MainActor optional func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateDidBeginPitchGesture:	swift.method	mapTemplateDidBeginPitchGesture(_:)	CPMapTemplateDelegate.mapTemplateDidBeginPitchGesture(_:)	@MainActor optional func mapTemplateDidBeginPitchGesture(_ mapTemplate: CPMapTemplate)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateDidBeginRotationGesture:	swift.method	mapTemplateDidBeginRotationGesture(_:)	CPMapTemplateDelegate.mapTemplateDidBeginRotationGesture(_:)	@MainActor optional func mapTemplateDidBeginRotationGesture(_ mapTemplate: CPMapTemplate)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateDidBeginZoomGesture:	swift.method	mapTemplateDidBeginZoomGesture(_:)	CPMapTemplateDelegate.mapTemplateDidBeginZoomGesture(_:)	@MainActor optional func mapTemplateDidBeginZoomGesture(_ mapTemplate: CPMapTemplate)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateDidCancelNavigation:	swift.method	mapTemplateDidCancelNavigation(_:)	CPMapTemplateDelegate.mapTemplateDidCancelNavigation(_:)	@MainActor optional func mapTemplateDidCancelNavigation(_ mapTemplate: CPMapTemplate)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateDidDismissPanningInterface:	swift.method	mapTemplateDidDismissPanningInterface(_:)	CPMapTemplateDelegate.mapTemplateDidDismissPanningInterface(_:)	@MainActor optional func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateDidShowPanningInterface:	swift.method	mapTemplateDidShowPanningInterface(_:)	CPMapTemplateDelegate.mapTemplateDidShowPanningInterface(_:)	@MainActor optional func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate)
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateShouldProvideNavigationMetadata:	swift.method	mapTemplateShouldProvideNavigationMetadata(_:)	CPMapTemplateDelegate.mapTemplateShouldProvideNavigationMetadata(_:)	@MainActor optional func mapTemplateShouldProvideNavigationMetadata(_ mapTemplate: CPMapTemplate) -> Bool
+c:objc(pl)CPMapTemplateDelegate(im)mapTemplateWillDismissPanningInterface:	swift.method	mapTemplateWillDismissPanningInterface(_:)	CPMapTemplateDelegate.mapTemplateWillDismissPanningInterface(_:)	@MainActor optional func mapTemplateWillDismissPanningInterface(_ mapTemplate: CPMapTemplate)
+c:objc(pl)CPNowPlayingTemplateObserver	swift.protocol	CPNowPlayingTemplateObserver	CPNowPlayingTemplateObserver	protocol CPNowPlayingTemplateObserver : NSObjectProtocol
+c:objc(pl)CPNowPlayingTemplateObserver(im)nowPlayingTemplateAlbumArtistButtonTapped:	swift.method	nowPlayingTemplateAlbumArtistButtonTapped(_:)	CPNowPlayingTemplateObserver.nowPlayingTemplateAlbumArtistButtonTapped(_:)	optional func nowPlayingTemplateAlbumArtistButtonTapped(_ nowPlayingTemplate: CPNowPlayingTemplate)
+c:objc(pl)CPNowPlayingTemplateObserver(im)nowPlayingTemplateUpNextButtonTapped:	swift.method	nowPlayingTemplateUpNextButtonTapped(_:)	CPNowPlayingTemplateObserver.nowPlayingTemplateUpNextButtonTapped(_:)	optional func nowPlayingTemplateUpNextButtonTapped(_ nowPlayingTemplate: CPNowPlayingTemplate)
+c:objc(pl)CPPointOfInterestTemplateDelegate	swift.protocol	CPPointOfInterestTemplateDelegate	CPPointOfInterestTemplateDelegate	@MainActor protocol CPPointOfInterestTemplateDelegate : NSObjectProtocol
+c:objc(pl)CPPointOfInterestTemplateDelegate(im)pointOfInterestTemplate:didChangeMapRegion:	swift.method	pointOfInterestTemplate(_:didChangeMapRegion:)	CPPointOfInterestTemplateDelegate.pointOfInterestTemplate(_:didChangeMapRegion:)	@MainActor func pointOfInterestTemplate(_ pointOfInterestTemplate: CPPointOfInterestTemplate, didChangeMapRegion region: MKCoordinateRegion)
+c:objc(pl)CPPointOfInterestTemplateDelegate(im)pointOfInterestTemplate:didSelectPointOfInterest:	swift.method	pointOfInterestTemplate(_:didSelectPointOfInterest:)	CPPointOfInterestTemplateDelegate.pointOfInterestTemplate(_:didSelectPointOfInterest:)	@MainActor optional func pointOfInterestTemplate(_ pointOfInterestTemplate: CPPointOfInterestTemplate, didSelectPointOfInterest pointOfInterest: CPPointOfInterest)
+c:objc(pl)CPSearchTemplateDelegate	swift.protocol	CPSearchTemplateDelegate	CPSearchTemplateDelegate	@MainActor protocol CPSearchTemplateDelegate : NSObjectProtocol
+c:objc(pl)CPSearchTemplateDelegate(im)searchTemplate:selectedResult:completionHandler:	swift.method	searchTemplate(_:selectedResult:)	CPSearchTemplateDelegate.searchTemplate(_:selectedResult:)	@MainActor func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem) async
+c:objc(pl)CPSearchTemplateDelegate(im)searchTemplate:updatedSearchText:completionHandler:	swift.method	searchTemplate(_:updatedSearchText:)	CPSearchTemplateDelegate.searchTemplate(_:updatedSearchText:)	@MainActor func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String) async -> [CPListItem]
+c:objc(pl)CPSearchTemplateDelegate(im)searchTemplateSearchButtonPressed:	swift.method	searchTemplateSearchButtonPressed(_:)	CPSearchTemplateDelegate.searchTemplateSearchButtonPressed(_:)	@MainActor optional func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate)
+c:objc(pl)CPSelectableListItem	swift.protocol	CPSelectableListItem	CPSelectableListItem	protocol CPSelectableListItem : CPListTemplateItem
+c:objc(pl)CPSelectableListItem(py)handler	swift.property	handler	CPSelectableListItem.handler	var handler: ((any CPSelectableListItem, @escaping () -> Void) -> Void)? { get set }
+c:objc(pl)CPSessionConfigurationDelegate	swift.protocol	CPSessionConfigurationDelegate	CPSessionConfigurationDelegate	@MainActor protocol CPSessionConfigurationDelegate : NSObjectProtocol
+c:objc(pl)CPSessionConfigurationDelegate(im)sessionConfiguration:contentStyleChanged:	swift.method	sessionConfiguration(_:contentStyleChanged:)	CPSessionConfigurationDelegate.sessionConfiguration(_:contentStyleChanged:)	@MainActor optional func sessionConfiguration(_ sessionConfiguration: CPSessionConfiguration, contentStyleChanged contentStyle: CPContentStyle)
+c:objc(pl)CPSessionConfigurationDelegate(im)sessionConfiguration:limitedUserInterfacesChanged:	swift.method	sessionConfiguration(_:limitedUserInterfacesChanged:)	CPSessionConfigurationDelegate.sessionConfiguration(_:limitedUserInterfacesChanged:)	@MainActor optional func sessionConfiguration(_ sessionConfiguration: CPSessionConfiguration, limitedUserInterfacesChanged limitedUserInterfaces: CPLimitableUserInterface)
+c:objc(pl)CPTabBarTemplateDelegate	swift.protocol	CPTabBarTemplateDelegate	CPTabBarTemplateDelegate	@MainActor protocol CPTabBarTemplateDelegate : NSObjectProtocol
+c:objc(pl)CPTabBarTemplateDelegate(im)tabBarTemplate:didSelectTemplate:	swift.method	tabBarTemplate(_:didSelect:)	CPTabBarTemplateDelegate.tabBarTemplate(_:didSelect:)	@MainActor func tabBarTemplate(_ tabBarTemplate: CPTabBarTemplate, didSelect selectedTemplate: CPTemplate)
+c:objc(pl)CPTemplateApplicationDashboardSceneDelegate	swift.protocol	CPTemplateApplicationDashboardSceneDelegate	CPTemplateApplicationDashboardSceneDelegate	protocol CPTemplateApplicationDashboardSceneDelegate : UISceneDelegate
+c:objc(pl)CPTemplateApplicationDashboardSceneDelegate(im)templateApplicationDashboardScene:didConnectDashboardController:toWindow:	swift.method	templateApplicationDashboardScene(_:didConnect:to:)	CPTemplateApplicationDashboardSceneDelegate.templateApplicationDashboardScene(_:didConnect:to:)	optional func templateApplicationDashboardScene(_ templateApplicationDashboardScene: CPTemplateApplicationDashboardScene, didConnect dashboardController: CPDashboardController, to window: UIWindow)
+c:objc(pl)CPTemplateApplicationDashboardSceneDelegate(im)templateApplicationDashboardScene:didDisconnectDashboardController:fromWindow:	swift.method	templateApplicationDashboardScene(_:didDisconnect:from:)	CPTemplateApplicationDashboardSceneDelegate.templateApplicationDashboardScene(_:didDisconnect:from:)	optional func templateApplicationDashboardScene(_ templateApplicationDashboardScene: CPTemplateApplicationDashboardScene, didDisconnect dashboardController: CPDashboardController, from window: UIWindow)
+c:objc(pl)CPTemplateApplicationInstrumentClusterSceneDelegate	swift.protocol	CPTemplateApplicationInstrumentClusterSceneDelegate	CPTemplateApplicationInstrumentClusterSceneDelegate	@MainActor protocol CPTemplateApplicationInstrumentClusterSceneDelegate : UISceneDelegate
+c:objc(pl)CPTemplateApplicationInstrumentClusterSceneDelegate(im)contentStyleDidChange:	swift.method	contentStyleDidChange(_:)	CPTemplateApplicationInstrumentClusterSceneDelegate.contentStyleDidChange(_:)	@MainActor optional func contentStyleDidChange(_ contentStyle: UIUserInterfaceStyle)
+c:objc(pl)CPTemplateApplicationInstrumentClusterSceneDelegate(im)templateApplicationInstrumentClusterScene:didConnectInstrumentClusterController:	swift.method	templateApplicationInstrumentClusterScene(_:didConnect:)	CPTemplateApplicationInstrumentClusterSceneDelegate.templateApplicationInstrumentClusterScene(_:didConnect:)	@MainActor optional func templateApplicationInstrumentClusterScene(_ templateApplicationInstrumentClusterScene: CPTemplateApplicationInstrumentClusterScene, didConnect instrumentClusterController: CPInstrumentClusterController)
+c:objc(pl)CPTemplateApplicationInstrumentClusterSceneDelegate(im)templateApplicationInstrumentClusterScene:didDisconnectInstrumentClusterController:	swift.method	templateApplicationInstrumentClusterScene(_:didDisconnectInstrumentClusterController:)	CPTemplateApplicationInstrumentClusterSceneDelegate.templateApplicationInstrumentClusterScene(_:didDisconnectInstrumentClusterController:)	@MainActor optional func templateApplicationInstrumentClusterScene(_ templateApplicationInstrumentClusterScene: CPTemplateApplicationInstrumentClusterScene, didDisconnectInstrumentClusterController instrumentClusterController: CPInstrumentClusterController)
+c:objc(pl)CPTemplateApplicationSceneDelegate	swift.protocol	CPTemplateApplicationSceneDelegate	CPTemplateApplicationSceneDelegate	protocol CPTemplateApplicationSceneDelegate : UISceneDelegate
+c:objc(pl)CPTemplateApplicationSceneDelegate(im)contentStyleDidChange:	swift.method	contentStyleDidChange(_:)	CPTemplateApplicationSceneDelegate.contentStyleDidChange(_:)	optional func contentStyleDidChange(_ contentStyle: UIUserInterfaceStyle)
+c:objc(pl)CPTemplateApplicationSceneDelegate(im)templateApplicationScene:didConnectInterfaceController:	swift.method	templateApplicationScene(_:didConnect:)	CPTemplateApplicationSceneDelegate.templateApplicationScene(_:didConnect:)	optional func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene, didConnect interfaceController: CPInterfaceController)
+c:objc(pl)CPTemplateApplicationSceneDelegate(im)templateApplicationScene:didConnectInterfaceController:toWindow:	swift.method	templateApplicationScene(_:didConnect:to:)	CPTemplateApplicationSceneDelegate.templateApplicationScene(_:didConnect:to:)	optional func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene, didConnect interfaceController: CPInterfaceController, to window: CPWindow)
+c:objc(pl)CPTemplateApplicationSceneDelegate(im)templateApplicationScene:didDisconnectInterfaceController:	swift.method	templateApplicationScene(_:didDisconnectInterfaceController:)	CPTemplateApplicationSceneDelegate.templateApplicationScene(_:didDisconnectInterfaceController:)	optional func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene, didDisconnectInterfaceController interfaceController: CPInterfaceController)
+c:objc(pl)CPTemplateApplicationSceneDelegate(im)templateApplicationScene:didDisconnectInterfaceController:fromWindow:	swift.method	templateApplicationScene(_:didDisconnect:from:)	CPTemplateApplicationSceneDelegate.templateApplicationScene(_:didDisconnect:from:)	optional func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene, didDisconnect interfaceController: CPInterfaceController, from window: CPWindow)
+c:objc(pl)CPTemplateApplicationSceneDelegate(im)templateApplicationScene:didSelectManeuver:	swift.method	templateApplicationScene(_:didSelect:)	CPTemplateApplicationSceneDelegate.templateApplicationScene(_:didSelect:)	optional func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene, didSelect maneuver: CPManeuver)
+c:objc(pl)CPTemplateApplicationSceneDelegate(im)templateApplicationScene:didSelectNavigationAlert:	swift.method	templateApplicationScene(_:didSelect:)	CPTemplateApplicationSceneDelegate.templateApplicationScene(_:didSelect:)	optional func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene, didSelect navigationAlert: CPNavigationAlert)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPAlertAction	swift.init	init(coder:)	CPAlertAction.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPAssistantCellConfiguration	swift.init	init(coder:)	CPAssistantCellConfiguration.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPBarButton	swift.init	init(coder:)	CPBarButton.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPContact	swift.init	init(coder:)	CPContact.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPDashboardButton	swift.init	init(coder:)	CPDashboardButton.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPGridButton	swift.init	init(coder:)	CPGridButton.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPImageSet	swift.init	init(coder:)	CPImageSet.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPInformationItem	swift.init	init(coder:)	CPInformationItem.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPLane	swift.init	init(coder:)	CPLane.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPLaneGuidance	swift.init	init(coder:)	CPLaneGuidance.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPListSection	swift.init	init(coder:)	CPListSection.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPManeuver	swift.init	init(coder:)	CPManeuver.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPMapButton	swift.init	init(coder:)	CPMapButton.init(coder:)	@MainActor init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPNavigationAlert	swift.init	init(coder:)	CPNavigationAlert.init(coder:)	@MainActor init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPNowPlayingButton	swift.init	init(coder:)	CPNowPlayingButton.init(coder:)	@MainActor init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPNowPlayingMode	swift.init	init(coder:)	CPNowPlayingMode.init(coder:)	@MainActor init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPNowPlayingSportsClock	swift.init	init(coder:)	CPNowPlayingSportsClock.init(coder:)	@MainActor init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPNowPlayingSportsEventStatus	swift.init	init(coder:)	CPNowPlayingSportsEventStatus.init(coder:)	@MainActor init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPNowPlayingSportsTeam	swift.init	init(coder:)	CPNowPlayingSportsTeam.init(coder:)	@MainActor init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPNowPlayingSportsTeamLogo	swift.init	init(coder:)	CPNowPlayingSportsTeamLogo.init(coder:)	@MainActor init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPPointOfInterest	swift.init	init(coder:)	CPPointOfInterest.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPRouteChoice	swift.init	init(coder:)	CPRouteChoice.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPTemplate	swift.init	init(coder:)	CPTemplate.init(coder:)	@MainActor init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPTravelEstimates	swift.init	init(coder:)	CPTravelEstimates.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPTrip	swift.init	init(coder:)	CPTrip.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPTripPreviewTextConfiguration	swift.init	init(coder:)	CPTripPreviewTextConfiguration.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CPVoiceControlState	swift.init	init(coder:)	CPVoiceControlState.init(coder:)	init?(coder: NSCoder)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPAlertActionStyle	swift.func.op	!=(_:_:)	CPAlertAction.Style.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPAssistantCellActionType	swift.func.op	!=(_:_:)	CPAssistantCellActionType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPAssistantCellPosition	swift.func.op	!=(_:_:)	CPListItem.AssistantCellPosition.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPAssistantCellVisibility	swift.func.op	!=(_:_:)	CPListItem.AssistantCellVisibility.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPBarButtonStyle	swift.func.op	!=(_:_:)	CPBarButtonStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPBarButtonType	swift.func.op	!=(_:_:)	CPBarButton.Type.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPContentStyle	swift.func.op	!=(_:_:)	CPContentStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPInformationTemplateLayout	swift.func.op	!=(_:_:)	CPInformationTemplateLayout.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPInstrumentClusterSetting	swift.func.op	!=(_:_:)	CPInstrumentClusterSetting.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPJunctionType	swift.func.op	!=(_:_:)	CPJunctionType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPLaneStatus	swift.func.op	!=(_:_:)	CPLaneStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.func.op	!=(_:_:)	CPLimitableUserInterface.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPListImageRowItemCondensedElementShape	swift.func.op	!=(_:_:)	CPListImageRowItemCondensedElement.Shape.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPListImageRowItemImageGridElementShape	swift.func.op	!=(_:_:)	CPListImageRowItemImageGridElement.Shape.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPListItemAccessoryType	swift.func.op	!=(_:_:)	CPListItemAccessoryType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPListItemPlayingIndicatorLocation	swift.func.op	!=(_:_:)	CPListItemPlayingIndicatorLocation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.func.op	!=(_:_:)	CPManeuverDisplayStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPManeuverState	swift.func.op	!=(_:_:)	CPManeuverState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPManeuverType	swift.func.op	!=(_:_:)	CPManeuverType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPMessageLeadingItem	swift.func.op	!=(_:_:)	CPMessageLeadingItem.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPMessageTrailingItem	swift.func.op	!=(_:_:)	CPMessageTrailingItem.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPNavigationAlertDismissalContext	swift.func.op	!=(_:_:)	CPNavigationAlert.DismissalContext.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPPanDirection	swift.func.op	!=(_:_:)	CPMapTemplate.PanDirection.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPTextButtonStyle	swift.func.op	!=(_:_:)	CPTextButtonStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPTimeRemainingColor	swift.func.op	!=(_:_:)	CPTimeRemainingColor.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPTrafficSide	swift.func.op	!=(_:_:)	CPTrafficSide.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPTripEstimateStyle	swift.func.op	!=(_:_:)	CPTripEstimateStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CPTripPauseReason	swift.func.op	!=(_:_:)	CPNavigationSession.PauseReason.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPAlertActionStyle	swift.property	hashValue	CPAlertAction.Style.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPAssistantCellActionType	swift.property	hashValue	CPAssistantCellActionType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPAssistantCellPosition	swift.property	hashValue	CPListItem.AssistantCellPosition.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPAssistantCellVisibility	swift.property	hashValue	CPListItem.AssistantCellVisibility.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPBarButtonStyle	swift.property	hashValue	CPBarButtonStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPBarButtonType	swift.property	hashValue	CPBarButton.Type.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPInformationTemplateLayout	swift.property	hashValue	CPInformationTemplateLayout.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPInstrumentClusterSetting	swift.property	hashValue	CPInstrumentClusterSetting.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPJunctionType	swift.property	hashValue	CPJunctionType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPLaneStatus	swift.property	hashValue	CPLaneStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPListImageRowItemCondensedElementShape	swift.property	hashValue	CPListImageRowItemCondensedElement.Shape.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPListImageRowItemImageGridElementShape	swift.property	hashValue	CPListImageRowItemImageGridElement.Shape.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPListItemAccessoryType	swift.property	hashValue	CPListItemAccessoryType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPListItemPlayingIndicatorLocation	swift.property	hashValue	CPListItemPlayingIndicatorLocation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPManeuverState	swift.property	hashValue	CPManeuverState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPManeuverType	swift.property	hashValue	CPManeuverType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPMessageLeadingItem	swift.property	hashValue	CPMessageLeadingItem.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPMessageTrailingItem	swift.property	hashValue	CPMessageTrailingItem.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPNavigationAlertDismissalContext	swift.property	hashValue	CPNavigationAlert.DismissalContext.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPTextButtonStyle	swift.property	hashValue	CPTextButtonStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPTimeRemainingColor	swift.property	hashValue	CPTimeRemainingColor.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPTrafficSide	swift.property	hashValue	CPTrafficSide.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPTripEstimateStyle	swift.property	hashValue	CPTripEstimateStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CPTripPauseReason	swift.property	hashValue	CPNavigationSession.PauseReason.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPAlertActionStyle	swift.method	hash(into:)	CPAlertAction.Style.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPAssistantCellActionType	swift.method	hash(into:)	CPAssistantCellActionType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPAssistantCellPosition	swift.method	hash(into:)	CPListItem.AssistantCellPosition.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPAssistantCellVisibility	swift.method	hash(into:)	CPListItem.AssistantCellVisibility.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPBarButtonStyle	swift.method	hash(into:)	CPBarButtonStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPBarButtonType	swift.method	hash(into:)	CPBarButton.Type.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPInformationTemplateLayout	swift.method	hash(into:)	CPInformationTemplateLayout.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPInstrumentClusterSetting	swift.method	hash(into:)	CPInstrumentClusterSetting.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPJunctionType	swift.method	hash(into:)	CPJunctionType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPLaneStatus	swift.method	hash(into:)	CPLaneStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPListImageRowItemCondensedElementShape	swift.method	hash(into:)	CPListImageRowItemCondensedElement.Shape.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPListImageRowItemImageGridElementShape	swift.method	hash(into:)	CPListImageRowItemImageGridElement.Shape.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPListItemAccessoryType	swift.method	hash(into:)	CPListItemAccessoryType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPListItemPlayingIndicatorLocation	swift.method	hash(into:)	CPListItemPlayingIndicatorLocation.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPManeuverState	swift.method	hash(into:)	CPManeuverState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPManeuverType	swift.method	hash(into:)	CPManeuverType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPMessageLeadingItem	swift.method	hash(into:)	CPMessageLeadingItem.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPMessageTrailingItem	swift.method	hash(into:)	CPMessageTrailingItem.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPNavigationAlertDismissalContext	swift.method	hash(into:)	CPNavigationAlert.DismissalContext.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPTextButtonStyle	swift.method	hash(into:)	CPTextButtonStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPTimeRemainingColor	swift.method	hash(into:)	CPTimeRemainingColor.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPTrafficSide	swift.method	hash(into:)	CPTrafficSide.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPTripEstimateStyle	swift.method	hash(into:)	CPTripEstimateStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CPTripPauseReason	swift.method	hash(into:)	CPNavigationSession.PauseReason.hash(into:)	func hash(into hasher: inout Hasher)
+s:So018CPListImageRowItemB16GridElementShapeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CPListImageRowItemImageGridElement.Shape.init(rawValue:)	init?(rawValue: Int)
+s:So12CPLaneStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CPLaneStatus.init(rawValue:)	init?(rawValue: Int)
+s:So13CPListSectionC7CarPlayE5items6header17sectionIndexTitleABSaySo0A12TemplateItem_pG_SSSgAItcfc	swift.init	init(items:header:sectionIndexTitle:)	CPListSection.init(items:header:sectionIndexTitle:)	convenience init(items: [any CPListTemplateItem], header: String?, sectionIndexTitle: String?)
+s:So13CPListSectionC7CarPlayE5items6header17sectionIndexTitleABSaySo0A4ItemCG_SSSgAJtcfc	swift.init	init(items:header:sectionIndexTitle:)	CPListSection.init(items:header:sectionIndexTitle:)	convenience init(items: [CPListItem], header: String?, sectionIndexTitle: String?)
+s:So13CPListSectionC7CarPlayE5itemsABSaySo0A12TemplateItem_pG_tcfc	swift.init	init(items:)	CPListSection.init(items:)	convenience init(items: [any CPListTemplateItem])
+s:So13CPListSectionC7CarPlayE5itemsABSaySo0A4ItemCG_tcfc	swift.init	init(items:)	CPListSection.init(items:)	convenience init(items: [CPListItem])
+s:So13CPTrafficSideV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	CPTrafficSide.init(rawValue:)	init?(rawValue: UInt)
+s:So14CPContentStyleV8rawValueABSu_tcfc	swift.init	init(rawValue:)	CPContentStyle.init(rawValue:)	init(rawValue: UInt)
+s:So14CPJunctionTypeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	CPJunctionType.init(rawValue:)	init?(rawValue: UInt)
+s:So14CPManeuverTypeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	CPManeuverType.init(rawValue:)	init?(rawValue: UInt)
+s:So14CPPanDirectionV8rawValueABSi_tcfc	swift.init	init(rawValue:)	CPMapTemplate.PanDirection.init(rawValue:)	init(rawValue: Int)
+s:So15CPBarButtonTypeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	CPBarButton.Type.init(rawValue:)	init?(rawValue: UInt)
+s:So15CPManeuverStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CPManeuverState.init(rawValue:)	init?(rawValue: Int)
+s:So16CPBarButtonStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CPBarButtonStyle.init(rawValue:)	init?(rawValue: Int)
+s:So17CPTextButtonStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CPTextButtonStyle.init(rawValue:)	init?(rawValue: Int)
+s:So17CPTripPauseReasonV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	CPNavigationSession.PauseReason.init(rawValue:)	init?(rawValue: UInt)
+s:So18CPAlertActionStyleV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	CPAlertAction.Style.init(rawValue:)	init?(rawValue: UInt)
+s:So19CPTripEstimateStyleV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	CPTripEstimateStyle.init(rawValue:)	init?(rawValue: UInt)
+s:So20CPMessageLeadingItemV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CPMessageLeadingItem.init(rawValue:)	init?(rawValue: Int)
+s:So20CPTimeRemainingColorV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	CPTimeRemainingColor.init(rawValue:)	init?(rawValue: UInt)
+s:So21CPMessageTrailingItemV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CPMessageTrailingItem.init(rawValue:)	init?(rawValue: Int)
+s:So22CPManeuverDisplayStyleV8rawValueABSi_tcfc	swift.init	init(rawValue:)	CPManeuverDisplayStyle.init(rawValue:)	init(rawValue: Int)
+s:So23CPAssistantCellPositionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CPListItem.AssistantCellPosition.init(rawValue:)	init?(rawValue: Int)
+s:So23CPListItemAccessoryTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CPListItemAccessoryType.init(rawValue:)	init?(rawValue: Int)
+s:So24CPLimitableUserInterfaceV8rawValueABSu_tcfc	swift.init	init(rawValue:)	CPLimitableUserInterface.init(rawValue:)	init(rawValue: UInt)
+s:So25CPAssistantCellActionTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CPAssistantCellActionType.init(rawValue:)	init?(rawValue: Int)
+s:So25CPAssistantCellVisibilityV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CPListItem.AssistantCellVisibility.init(rawValue:)	init?(rawValue: Int)
+s:So26CPInstrumentClusterSettingV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	CPInstrumentClusterSetting.init(rawValue:)	init?(rawValue: UInt)
+s:So27CPInformationTemplateLayoutV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CPInformationTemplateLayout.init(rawValue:)	init?(rawValue: Int)
+s:So33CPNavigationAlertDismissalContextV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	CPNavigationAlert.DismissalContext.init(rawValue:)	init?(rawValue: UInt)
+s:So34CPListItemPlayingIndicatorLocationV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CPListItemPlayingIndicatorLocation.init(rawValue:)	init?(rawValue: Int)
+s:So39CPListImageRowItemCondensedElementShapeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CPListImageRowItemCondensedElement.Shape.init(rawValue:)	init?(rawValue: Int)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CPContentStyle	swift.init	init(arrayLiteral:)	CPContentStyle.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.init	init(arrayLiteral:)	CPLimitableUserInterface.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.init	init(arrayLiteral:)	CPManeuverDisplayStyle.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CPPanDirection	swift.init	init(arrayLiteral:)	CPMapTemplate.PanDirection.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	isDisjoint(with:)	CPContentStyle.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	isDisjoint(with:)	CPLimitableUserInterface.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	isDisjoint(with:)	CPManeuverDisplayStyle.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	isDisjoint(with:)	CPMapTemplate.PanDirection.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	isSuperset(of:)	CPContentStyle.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	isSuperset(of:)	CPLimitableUserInterface.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	isSuperset(of:)	CPManeuverDisplayStyle.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	isSuperset(of:)	CPMapTemplate.PanDirection.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	subtracting(_:)	CPContentStyle.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	subtracting(_:)	CPLimitableUserInterface.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	subtracting(_:)	CPManeuverDisplayStyle.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	subtracting(_:)	CPMapTemplate.PanDirection.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	isStrictSubset(of:)	CPContentStyle.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	isStrictSubset(of:)	CPLimitableUserInterface.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	isStrictSubset(of:)	CPManeuverDisplayStyle.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	isStrictSubset(of:)	CPMapTemplate.PanDirection.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	isStrictSuperset(of:)	CPContentStyle.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	isStrictSuperset(of:)	CPLimitableUserInterface.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	isStrictSuperset(of:)	CPManeuverDisplayStyle.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	isStrictSuperset(of:)	CPMapTemplate.PanDirection.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CPContentStyle	swift.property	isEmpty	CPContentStyle.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.property	isEmpty	CPLimitableUserInterface.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.property	isEmpty	CPManeuverDisplayStyle.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CPPanDirection	swift.property	isEmpty	CPMapTemplate.PanDirection.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	isSubset(of:)	CPContentStyle.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	isSubset(of:)	CPLimitableUserInterface.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	isSubset(of:)	CPManeuverDisplayStyle.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	isSubset(of:)	CPMapTemplate.PanDirection.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	subtract(_:)	CPContentStyle.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	subtract(_:)	CPLimitableUserInterface.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	subtract(_:)	CPManeuverDisplayStyle.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	subtract(_:)	CPMapTemplate.PanDirection.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CPContentStyle	swift.init	init(_:)	CPContentStyle.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.init	init(_:)	CPLimitableUserInterface.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.init	init(_:)	CPManeuverDisplayStyle.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CPPanDirection	swift.init	init(_:)	CPMapTemplate.PanDirection.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	insert(_:)	CPContentStyle.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	insert(_:)	CPLimitableUserInterface.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	insert(_:)	CPManeuverDisplayStyle.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	insert(_:)	CPMapTemplate.PanDirection.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	remove(_:)	CPContentStyle.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	remove(_:)	CPLimitableUserInterface.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	remove(_:)	CPManeuverDisplayStyle.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	remove(_:)	CPMapTemplate.PanDirection.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	update(with:)	CPContentStyle.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	update(with:)	CPLimitableUserInterface.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	update(with:)	CPManeuverDisplayStyle.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	update(with:)	CPMapTemplate.PanDirection.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	contains(_:)	CPContentStyle.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	contains(_:)	CPLimitableUserInterface.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	contains(_:)	CPManeuverDisplayStyle.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	contains(_:)	CPMapTemplate.PanDirection.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	intersection(_:)	CPContentStyle.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	intersection(_:)	CPLimitableUserInterface.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	intersection(_:)	CPManeuverDisplayStyle.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	intersection(_:)	CPMapTemplate.PanDirection.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	symmetricDifference(_:)	CPContentStyle.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	symmetricDifference(_:)	CPLimitableUserInterface.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	symmetricDifference(_:)	CPManeuverDisplayStyle.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	symmetricDifference(_:)	CPMapTemplate.PanDirection.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	union(_:)	CPContentStyle.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	union(_:)	CPLimitableUserInterface.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	union(_:)	CPManeuverDisplayStyle.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	union(_:)	CPMapTemplate.PanDirection.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	formIntersection(_:)	CPContentStyle.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	formIntersection(_:)	CPLimitableUserInterface.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	formIntersection(_:)	CPManeuverDisplayStyle.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	formIntersection(_:)	CPMapTemplate.PanDirection.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	formSymmetricDifference(_:)	CPContentStyle.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	formSymmetricDifference(_:)	CPLimitableUserInterface.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	formSymmetricDifference(_:)	CPManeuverDisplayStyle.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	formSymmetricDifference(_:)	CPMapTemplate.PanDirection.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CPContentStyle	swift.method	formUnion(_:)	CPContentStyle.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.method	formUnion(_:)	CPLimitableUserInterface.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.method	formUnion(_:)	CPManeuverDisplayStyle.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CPPanDirection	swift.method	formUnion(_:)	CPMapTemplate.PanDirection.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CPContentStyle	swift.init	init()	CPContentStyle.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CPLimitableUserInterface	swift.init	init()	CPLimitableUserInterface.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CPManeuverDisplayStyle	swift.init	init()	CPManeuverDisplayStyle.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CPPanDirection	swift.init	init()	CPMapTemplate.PanDirection.init()	init()

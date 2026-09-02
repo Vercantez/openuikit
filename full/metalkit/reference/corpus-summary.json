@@ -1,0 +1,59 @@
+{
+  "module": "MetalKit",
+  "moduleRecord": {
+    "app_coverage_count": 2,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 33,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 79,
+    "iphoneos_runtime_focus_launch_build_rank": 87,
+    "module": "MetalKit",
+    "occurrence_count": 33,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "78830f0747cc5e2954af74c7600f4ad25eaa6754812f640624709fd90d89ee0e",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Signal/Calls/UserInterface/RemoteVideoView.swift",
+          "SignalUI/Views/BodyRanges/SpoilerRendering/SpoilerParticleView.swift",
+          "SignalUI/Views/BodyRanges/SpoilerRendering/SpoilerRenderer.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "3d082871961fd9405ba8457f30901b224cee09aa2c8f8c5e35db44d728008952",
+        "file_count": 30,
+        "occurrence_count": 30,
+        "sample_paths": [
+          "submodules/AnimatedStickerNode/Sources/CompressedAnimationRenderer.swift",
+          "submodules/AnimationCompression/Sources/CompressedImageRenderer.swift",
+          "submodules/Camera/Sources/CameraPreviewView.swift",
+          "submodules/DrawingUI/Sources/DrawingMetalView.swift",
+          "submodules/PremiumUI/Sources/DataRainView.swift",
+          "submodules/TelegramUI/Components/Calls/CallScreen/Sources/CallScreen.swift",
+          "submodules/TelegramUI/Components/Calls/CallScreen/Sources/Components/CallBackgroundLayer.swift",
+          "submodules/TelegramUI/Components/Calls/CallScreen/Sources/Components/CallBlobsLayer.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 79,
+    "byFocusLaunchBuildRelevance": 87
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

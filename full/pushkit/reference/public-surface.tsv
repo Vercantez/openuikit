@@ -1,0 +1,25 @@
+precise	kind	title	path	declaration
+c:@PKPushTypeComplication	swift.type.property	complication	PKPushType.complication	static let complication: PKPushType
+c:@PKPushTypeFileProvider	swift.type.property	fileProvider	PKPushType.fileProvider	static let fileProvider: PKPushType
+c:@PKPushTypeVoIP	swift.type.property	voIP	PKPushType.voIP	static let voIP: PKPushType
+c:@T@PKPushType	swift.struct	PKPushType	PKPushType	struct PKPushType
+c:objc(cs)PKPushCredentials	swift.class	PKPushCredentials	PKPushCredentials	class PKPushCredentials
+c:objc(cs)PKPushCredentials(py)token	swift.property	token	PKPushCredentials.token	var token: Data { get }
+c:objc(cs)PKPushCredentials(py)type	swift.property	type	PKPushCredentials.type	var type: PKPushType { get }
+c:objc(cs)PKPushPayload	swift.class	PKPushPayload	PKPushPayload	class PKPushPayload
+c:objc(cs)PKPushPayload(py)dictionaryPayload	swift.property	dictionaryPayload	PKPushPayload.dictionaryPayload	var dictionaryPayload: [AnyHashable : Any] { get }
+c:objc(cs)PKPushPayload(py)type	swift.property	type	PKPushPayload.type	var type: PKPushType { get }
+c:objc(cs)PKPushRegistry	swift.class	PKPushRegistry	PKPushRegistry	class PKPushRegistry
+c:objc(cs)PKPushRegistry(im)initWithQueue:	swift.init	init(queue:)	PKPushRegistry.init(queue:)	init(queue: dispatch_queue_t?)
+c:objc(cs)PKPushRegistry(im)pushTokenForType:	swift.method	pushToken(for:)	PKPushRegistry.pushToken(for:)	func pushToken(for type: PKPushType) -> Data?
+c:objc(cs)PKPushRegistry(py)delegate	swift.property	delegate	PKPushRegistry.delegate	weak var delegate: (any PKPushRegistryDelegate)? { get set }
+c:objc(cs)PKPushRegistry(py)desiredPushTypes	swift.property	desiredPushTypes	PKPushRegistry.desiredPushTypes	var desiredPushTypes: Set<PKPushType>? { get set }
+c:objc(pl)PKPushRegistryDelegate	swift.protocol	PKPushRegistryDelegate	PKPushRegistryDelegate	protocol PKPushRegistryDelegate : NSObjectProtocol
+c:objc(pl)PKPushRegistryDelegate(im)pushRegistry:didInvalidatePushTokenForType:	swift.method	pushRegistry(_:didInvalidatePushTokenFor:)	PKPushRegistryDelegate.pushRegistry(_:didInvalidatePushTokenFor:)	optional func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType)
+c:objc(pl)PKPushRegistryDelegate(im)pushRegistry:didReceiveIncomingPushWithPayload:forType:	swift.method	pushRegistry(_:didReceiveIncomingPushWith:for:)	PKPushRegistryDelegate.pushRegistry(_:didReceiveIncomingPushWith:for:)	optional func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType)
+c:objc(pl)PKPushRegistryDelegate(im)pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:	swift.method	pushRegistry(_:didReceiveIncomingPushWith:for:)	PKPushRegistryDelegate.pushRegistry(_:didReceiveIncomingPushWith:for:)	optional func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType) async
+c:objc(pl)PKPushRegistryDelegate(im)pushRegistry:didUpdatePushCredentials:forType:	swift.method	pushRegistry(_:didUpdate:for:)	PKPushRegistryDelegate.pushRegistry(_:didUpdate:for:)	func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PKPushType	swift.func.op	!=(_:_:)	PKPushType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:So10PKPushTypea8rawValueABSS_tcfc	swift.init	init(rawValue:)	PKPushType.init(rawValue:)	init(rawValue: String)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PKPushType	swift.property	hashValue	PKPushType.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PKPushType	swift.method	hash(into:)	PKPushType.hash(into:)	func hash(into hasher: inout Hasher)

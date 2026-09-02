@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 7,
+  "duplicateOccurrenceCount": 7,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/MetalKit.symbols.json",
+      "relationshipCount": 209,
+      "sha256": "00d80842a7e8b96f61ddbe18acbe00cdeb001a1d51019fcc2b5d407e09b56b59",
+      "symbolCount": 131
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "MetalKit",
+  "relationshipCount": 209,
+  "schema": 1,
+  "symbolCount": 124,
+  "target": "arm64-apple-ios26.0"
+}

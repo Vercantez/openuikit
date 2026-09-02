@@ -1,0 +1,954 @@
+{
+  "campaign": {
+    "activeBuildId": "bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87",
+    "environmentMarker": "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+    "id": "ios26.1-fwseed-r2",
+    "startingSha": "7f14039e0a0dc3895c599e634236d2003f5e8a29"
+  },
+  "defaults": {
+    "autoCreatePR": true,
+    "createRatePerMinute": 12,
+    "effort": "high",
+    "fast": false,
+    "maxActive": 24,
+    "maxRepairRuns": 2,
+    "modelId": "grok-4.6",
+    "skipReviewerRequest": true,
+    "timeoutMinutes": 60
+  },
+  "frameworks": [
+    {
+      "agentName": "Port AVFAudio to Linux",
+      "dependencies": [
+        "AudioToolbox",
+        "CoreAudio",
+        "CoreAudioTypes",
+        "CoreMIDI",
+        "CoreMedia",
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/avfaudio/*.swift",
+        "full/avfaudio/avfaudio_guest_sources.txt",
+        "full/avfaudio/README.md",
+        "full/avfaudio/coverage.tsv",
+        "full/avfaudio/oracle-questions.tsv",
+        "full/avfaudio/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "AVFAUDIO_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=AVFAudio dylib=libAVFAudio.dylib"
+      ],
+      "gate": "bash full/avfaudio/tests/acceptance/test_host.sh",
+      "immutableDigest": "7ea7413fd959d4bcf49e69bc63d6ee019ede89fed13cfd76853abfa0da1ceeb1",
+      "lane": "large-partitioned",
+      "module": "AVFAudio",
+      "ownedPaths": [
+        "full/avfaudio/**"
+      ],
+      "priority": 100,
+      "risks": [
+        "audio",
+        "realtime",
+        "c-abi-deps"
+      ],
+      "slug": "avfaudio",
+      "symbolCount": 1638,
+      "taskPath": "full/avfaudio/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port ClockKit to Linux",
+      "dependencies": [
+        "Foundation",
+        "UIKit"
+      ],
+      "editablePaths": [
+        "full/clockkit/*.swift",
+        "full/clockkit/clockkit_guest_sources.txt",
+        "full/clockkit/README.md",
+        "full/clockkit/coverage.tsv",
+        "full/clockkit/oracle-questions.tsv",
+        "full/clockkit/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "CLOCKKIT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=ClockKit dylib=libClockKit.dylib"
+      ],
+      "gate": "bash full/clockkit/tests/acceptance/test_host.sh",
+      "immutableDigest": "806686b3f28a7890b5c66bb53d3f7c546b23fe8c976c9437e236408e0cbc8fb6",
+      "lane": "medium-full",
+      "module": "ClockKit",
+      "ownedPaths": [
+        "full/clockkit/**"
+      ],
+      "priority": 99,
+      "risks": [
+        "widget",
+        "timeline",
+        "ui",
+        "fail-closed"
+      ],
+      "slug": "clockkit",
+      "symbolCount": 13,
+      "taskPath": "full/clockkit/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port MetalKit to Linux",
+      "dependencies": [
+        "CoreGraphics",
+        "Foundation",
+        "Metal",
+        "ModelIO",
+        "QuartzCore",
+        "UIKit"
+      ],
+      "editablePaths": [
+        "full/metalkit/*.swift",
+        "full/metalkit/metalkit_guest_sources.txt",
+        "full/metalkit/README.md",
+        "full/metalkit/coverage.tsv",
+        "full/metalkit/oracle-questions.tsv",
+        "full/metalkit/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "METALKIT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=MetalKit dylib=libMetalKit.dylib"
+      ],
+      "gate": "bash full/metalkit/tests/acceptance/test_host.sh",
+      "immutableDigest": "df3954ca8fbd2033131c2e9c3e53b571cc05a6fbf7643761dfb5131b8ec76148",
+      "lane": "medium-full",
+      "module": "MetalKit",
+      "ownedPaths": [
+        "full/metalkit/**"
+      ],
+      "priority": 98,
+      "risks": [
+        "ui",
+        "gpu",
+        "central-metal"
+      ],
+      "slug": "metalkit",
+      "symbolCount": 124,
+      "taskPath": "full/metalkit/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port NetworkExtension to Linux",
+      "dependencies": [
+        "ExtensionFoundation",
+        "Foundation",
+        "Network",
+        "Security"
+      ],
+      "editablePaths": [
+        "full/networkextension/*.swift",
+        "full/networkextension/networkextension_guest_sources.txt",
+        "full/networkextension/README.md",
+        "full/networkextension/coverage.tsv",
+        "full/networkextension/oracle-questions.tsv",
+        "full/networkextension/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "NETWORKEXTENSION_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=NetworkExtension dylib=libNetworkExtension.dylib"
+      ],
+      "gate": "bash full/networkextension/tests/acceptance/test_host.sh",
+      "immutableDigest": "152a99e7f028d27b14dac223ff8ec0ba8bd2316fa774c961d1441b2a4130ad99",
+      "lane": "large-partitioned",
+      "module": "NetworkExtension",
+      "ownedPaths": [
+        "full/networkextension/**"
+      ],
+      "priority": 97,
+      "risks": [
+        "network",
+        "entitlement",
+        "vpn",
+        "fail-closed"
+      ],
+      "slug": "networkextension",
+      "symbolCount": 1192,
+      "taskPath": "full/networkextension/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port GameplayKit to Linux",
+      "dependencies": [
+        "Foundation",
+        "SceneKit",
+        "SpriteKit"
+      ],
+      "editablePaths": [
+        "full/gameplaykit/*.swift",
+        "full/gameplaykit/gameplaykit_guest_sources.txt",
+        "full/gameplaykit/README.md",
+        "full/gameplaykit/coverage.tsv",
+        "full/gameplaykit/oracle-questions.tsv",
+        "full/gameplaykit/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "GAMEPLAYKIT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=GameplayKit dylib=libGameplayKit.dylib"
+      ],
+      "gate": "bash full/gameplaykit/tests/acceptance/test_host.sh",
+      "immutableDigest": "f3749b6240939c89623a2dea5d6a4a53bf9319d0956215a95925e9aa3282b622",
+      "lane": "medium-full",
+      "module": "GameplayKit",
+      "ownedPaths": [
+        "full/gameplaykit/**"
+      ],
+      "priority": 96,
+      "risks": [
+        "algorithms",
+        "randomness",
+        "pathfinding"
+      ],
+      "slug": "gameplaykit",
+      "symbolCount": 491,
+      "taskPath": "full/gameplaykit/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port AdAttributionKit to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/adattributionkit/*.swift",
+        "full/adattributionkit/adattributionkit_guest_sources.txt",
+        "full/adattributionkit/README.md",
+        "full/adattributionkit/coverage.tsv",
+        "full/adattributionkit/oracle-questions.tsv",
+        "full/adattributionkit/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "ADATTRIBUTIONKIT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=AdAttributionKit dylib=libAdAttributionKit.dylib"
+      ],
+      "gate": "bash full/adattributionkit/tests/acceptance/test_host.sh",
+      "immutableDigest": "e01359ae93dcdd72660c1fe127d7b7e4d31c3ce07d50aa73532c23bebf916070",
+      "lane": "leaf-full",
+      "module": "AdAttributionKit",
+      "ownedPaths": [
+        "full/adattributionkit/**"
+      ],
+      "priority": 95,
+      "risks": [
+        "attribution",
+        "privacy",
+        "fail-closed"
+      ],
+      "slug": "adattributionkit",
+      "symbolCount": 76,
+      "taskPath": "full/adattributionkit/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port Translation to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/translation/*.swift",
+        "full/translation/translation_guest_sources.txt",
+        "full/translation/README.md",
+        "full/translation/coverage.tsv",
+        "full/translation/oracle-questions.tsv",
+        "full/translation/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "TRANSLATION_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=Translation dylib=libTranslation.dylib"
+      ],
+      "gate": "bash full/translation/tests/acceptance/test_host.sh",
+      "immutableDigest": "878e2816f17d63d321eee07fe9ae906af10810d0f01575379a91f62e94fbad0b",
+      "lane": "leaf-full",
+      "module": "Translation",
+      "ownedPaths": [
+        "full/translation/**"
+      ],
+      "priority": 94,
+      "risks": [
+        "language",
+        "ml-service",
+        "fail-closed"
+      ],
+      "slug": "translation",
+      "symbolCount": 89,
+      "taskPath": "full/translation/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port GameController to Linux",
+      "dependencies": [
+        "CoreServices",
+        "Foundation",
+        "UIKit"
+      ],
+      "editablePaths": [
+        "full/gamecontroller/*.swift",
+        "full/gamecontroller/gamecontroller_guest_sources.txt",
+        "full/gamecontroller/README.md",
+        "full/gamecontroller/coverage.tsv",
+        "full/gamecontroller/oracle-questions.tsv",
+        "full/gamecontroller/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "GAMECONTROLLER_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=GameController dylib=libGameController.dylib"
+      ],
+      "gate": "bash full/gamecontroller/tests/acceptance/test_host.sh",
+      "immutableDigest": "edf91150ddb5a1e22685dbf677e5bcf0040820c7ead721ca97b0153b8530eabb",
+      "lane": "large-partitioned",
+      "module": "GameController",
+      "ownedPaths": [
+        "full/gamecontroller/**"
+      ],
+      "priority": 93,
+      "risks": [
+        "input",
+        "hardware",
+        "host-driven"
+      ],
+      "slug": "gamecontroller",
+      "symbolCount": 1268,
+      "taskPath": "full/gamecontroller/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port ARKit to Linux",
+      "dependencies": [
+        "AVFoundation",
+        "CoreGraphics",
+        "CoreLocation",
+        "CoreVideo",
+        "Foundation",
+        "ImageIO",
+        "Metal",
+        "SceneKit",
+        "SpriteKit",
+        "UIKit",
+        "Vision"
+      ],
+      "editablePaths": [
+        "full/arkit/*.swift",
+        "full/arkit/arkit_guest_sources.txt",
+        "full/arkit/README.md",
+        "full/arkit/coverage.tsv",
+        "full/arkit/oracle-questions.tsv",
+        "full/arkit/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "ARKIT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=ARKit dylib=libARKit.dylib"
+      ],
+      "gate": "bash full/arkit/tests/acceptance/test_host.sh",
+      "immutableDigest": "6c632b508b1aa2d01bede3296cecc8b927d35da4b5cf55640a2ecf8ad2d0eb27",
+      "lane": "large-partitioned",
+      "module": "ARKit",
+      "ownedPaths": [
+        "full/arkit/**"
+      ],
+      "priority": 92,
+      "risks": [
+        "camera",
+        "sensors",
+        "rendering",
+        "privacy"
+      ],
+      "slug": "arkit",
+      "symbolCount": 875,
+      "taskPath": "full/arkit/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port FileProvider to Linux",
+      "dependencies": [
+        "CoreGraphics",
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/fileprovider/*.swift",
+        "full/fileprovider/fileprovider_guest_sources.txt",
+        "full/fileprovider/README.md",
+        "full/fileprovider/coverage.tsv",
+        "full/fileprovider/oracle-questions.tsv",
+        "full/fileprovider/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "FILEPROVIDER_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=FileProvider dylib=libFileProvider.dylib"
+      ],
+      "gate": "bash full/fileprovider/tests/acceptance/test_host.sh",
+      "immutableDigest": "52f6d462555a2dc655063c2c82972a35ea0f9b1509ff56bd2d78c6cb2f3f208d",
+      "lane": "large-partitioned",
+      "module": "FileProvider",
+      "ownedPaths": [
+        "full/fileprovider/**"
+      ],
+      "priority": 91,
+      "risks": [
+        "storage",
+        "extension",
+        "privacy",
+        "host-service"
+      ],
+      "slug": "fileprovider",
+      "symbolCount": 570,
+      "taskPath": "full/fileprovider/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port CoreBluetooth to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/corebluetooth/*.swift",
+        "full/corebluetooth/corebluetooth_guest_sources.txt",
+        "full/corebluetooth/README.md",
+        "full/corebluetooth/coverage.tsv",
+        "full/corebluetooth/oracle-questions.tsv",
+        "full/corebluetooth/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "COREBLUETOOTH_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=CoreBluetooth dylib=libCoreBluetooth.dylib"
+      ],
+      "gate": "bash full/corebluetooth/tests/acceptance/test_host.sh",
+      "immutableDigest": "a5a645120d047e10a224fc76b17b16bcae9aa06a69b2a282523326265d4a9712",
+      "lane": "medium-full",
+      "module": "CoreBluetooth",
+      "ownedPaths": [
+        "full/corebluetooth/**"
+      ],
+      "priority": 90,
+      "risks": [
+        "bluetooth",
+        "privacy",
+        "host-driven"
+      ],
+      "slug": "corebluetooth",
+      "symbolCount": 474,
+      "taskPath": "full/corebluetooth/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port WiFiAware to Linux",
+      "dependencies": [
+        "Foundation",
+        "Network",
+        "OSLog"
+      ],
+      "editablePaths": [
+        "full/wifiaware/*.swift",
+        "full/wifiaware/wifiaware_guest_sources.txt",
+        "full/wifiaware/README.md",
+        "full/wifiaware/coverage.tsv",
+        "full/wifiaware/oracle-questions.tsv",
+        "full/wifiaware/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "WIFIAWARE_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=WiFiAware dylib=libWiFiAware.dylib"
+      ],
+      "gate": "bash full/wifiaware/tests/acceptance/test_host.sh",
+      "immutableDigest": "3718eba5a7713e1649849272a0c32d06f44f9a7cb8a6d626d4e504c3c040943b",
+      "lane": "medium-full",
+      "module": "WiFiAware",
+      "ownedPaths": [
+        "full/wifiaware/**"
+      ],
+      "priority": 89,
+      "risks": [
+        "network",
+        "privacy",
+        "hardware",
+        "host-driven"
+      ],
+      "slug": "wifiaware",
+      "symbolCount": 260,
+      "taskPath": "full/wifiaware/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port CoreNFC to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/corenfc/*.swift",
+        "full/corenfc/corenfc_guest_sources.txt",
+        "full/corenfc/README.md",
+        "full/corenfc/coverage.tsv",
+        "full/corenfc/oracle-questions.tsv",
+        "full/corenfc/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "CORENFC_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=CoreNFC dylib=libCoreNFC.dylib"
+      ],
+      "gate": "bash full/corenfc/tests/acceptance/test_host.sh",
+      "immutableDigest": "93efa53ed6459ae56c8fb8322ce46ca67243ab7e38936fd322403ad89f52359f",
+      "lane": "large-partitioned",
+      "module": "CoreNFC",
+      "ownedPaths": [
+        "full/corenfc/**"
+      ],
+      "priority": 88,
+      "risks": [
+        "nfc",
+        "entitlement",
+        "privacy",
+        "fail-closed"
+      ],
+      "slug": "corenfc",
+      "symbolCount": 587,
+      "taskPath": "full/corenfc/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port MultipeerConnectivity to Linux",
+      "dependencies": [
+        "Foundation",
+        "UIKit"
+      ],
+      "editablePaths": [
+        "full/multipeerconnectivity/*.swift",
+        "full/multipeerconnectivity/multipeerconnectivity_guest_sources.txt",
+        "full/multipeerconnectivity/README.md",
+        "full/multipeerconnectivity/coverage.tsv",
+        "full/multipeerconnectivity/oracle-questions.tsv",
+        "full/multipeerconnectivity/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "MULTIPEERCONNECTIVITY_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=MultipeerConnectivity dylib=libMultipeerConnectivity.dylib"
+      ],
+      "gate": "bash full/multipeerconnectivity/tests/acceptance/test_host.sh",
+      "immutableDigest": "05ecbc59320ab8a83fc639145858c7504721cea1a9702c4fbf6dd7789698ab20",
+      "lane": "leaf-full",
+      "module": "MultipeerConnectivity",
+      "ownedPaths": [
+        "full/multipeerconnectivity/**"
+      ],
+      "priority": 87,
+      "risks": [
+        "network",
+        "discovery",
+        "privacy"
+      ],
+      "slug": "multipeerconnectivity",
+      "symbolCount": 132,
+      "taskPath": "full/multipeerconnectivity/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port CoreML to Linux",
+      "dependencies": [
+        "CoreGraphics",
+        "CoreVideo",
+        "Foundation",
+        "ImageIO"
+      ],
+      "editablePaths": [
+        "full/coreml/*.swift",
+        "full/coreml/coreml_guest_sources.txt",
+        "full/coreml/README.md",
+        "full/coreml/coverage.tsv",
+        "full/coreml/oracle-questions.tsv",
+        "full/coreml/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "COREML_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=CoreML dylib=libCoreML.dylib"
+      ],
+      "gate": "bash full/coreml/tests/acceptance/test_host.sh",
+      "immutableDigest": "805f3b8e8a7ea3c8fa7b4dbc0598b704762f85511b636b5420cf10d4242562a1",
+      "lane": "large-partitioned",
+      "module": "CoreML",
+      "ownedPaths": [
+        "full/coreml/**"
+      ],
+      "priority": 86,
+      "risks": [
+        "ml-backend",
+        "tensor",
+        "model-io"
+      ],
+      "slug": "coreml",
+      "symbolCount": 1686,
+      "taskPath": "full/coreml/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port ImagePlayground to Linux",
+      "dependencies": [
+        "CoreGraphics",
+        "Foundation",
+        "ImageIO",
+        "PencilKit",
+        "SwiftUI",
+        "UIKit"
+      ],
+      "editablePaths": [
+        "full/imageplayground/*.swift",
+        "full/imageplayground/imageplayground_guest_sources.txt",
+        "full/imageplayground/README.md",
+        "full/imageplayground/coverage.tsv",
+        "full/imageplayground/oracle-questions.tsv",
+        "full/imageplayground/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "IMAGEPLAYGROUND_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=ImagePlayground dylib=libImagePlayground.dylib"
+      ],
+      "gate": "bash full/imageplayground/tests/acceptance/test_host.sh",
+      "immutableDigest": "47794a79727bdc58a9d73ce39bfc6c98f78de455561ef93300331b0cd5ecd1e7",
+      "lane": "medium-full",
+      "module": "ImagePlayground",
+      "ownedPaths": [
+        "full/imageplayground/**"
+      ],
+      "priority": 85,
+      "risks": [
+        "generative-service",
+        "ui",
+        "fail-closed"
+      ],
+      "slug": "imageplayground",
+      "symbolCount": 89,
+      "taskPath": "full/imageplayground/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port AppTrackingTransparency to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/apptrackingtransparency/*.swift",
+        "full/apptrackingtransparency/apptrackingtransparency_guest_sources.txt",
+        "full/apptrackingtransparency/README.md",
+        "full/apptrackingtransparency/coverage.tsv",
+        "full/apptrackingtransparency/oracle-questions.tsv",
+        "full/apptrackingtransparency/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "APPTRACKINGTRANSPARENCY_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=AppTrackingTransparency dylib=libAppTrackingTransparency.dylib"
+      ],
+      "gate": "bash full/apptrackingtransparency/tests/acceptance/test_host.sh",
+      "immutableDigest": "4e2a5125613d3c12a0a578213de2abc652bb7e85f110836a241252ffe906065c",
+      "lane": "leaf-full",
+      "module": "AppTrackingTransparency",
+      "ownedPaths": [
+        "full/apptrackingtransparency/**"
+      ],
+      "priority": 84,
+      "risks": [
+        "privacy",
+        "consent",
+        "fail-closed"
+      ],
+      "slug": "apptrackingtransparency",
+      "symbolCount": 12,
+      "taskPath": "full/apptrackingtransparency/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port HealthKit to Linux",
+      "dependencies": [
+        "CoreLocation",
+        "Foundation",
+        "UniformTypeIdentifiers"
+      ],
+      "editablePaths": [
+        "full/healthkit/*.swift",
+        "full/healthkit/healthkit_guest_sources.txt",
+        "full/healthkit/README.md",
+        "full/healthkit/coverage.tsv",
+        "full/healthkit/oracle-questions.tsv",
+        "full/healthkit/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "HEALTHKIT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=HealthKit dylib=libHealthKit.dylib"
+      ],
+      "gate": "bash full/healthkit/tests/acceptance/test_host.sh",
+      "immutableDigest": "dbc566ce107c627aa6bce19d58559cdef9c7851142181c8fe7d9d1855ec8d2fc",
+      "lane": "large-partitioned",
+      "module": "HealthKit",
+      "ownedPaths": [
+        "full/healthkit/**"
+      ],
+      "priority": 83,
+      "risks": [
+        "health",
+        "privacy",
+        "store",
+        "fail-closed"
+      ],
+      "slug": "healthkit",
+      "symbolCount": 2645,
+      "taskPath": "full/healthkit/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port MatterSupport to Linux",
+      "dependencies": [
+        "Foundation",
+        "Matter"
+      ],
+      "editablePaths": [
+        "full/mattersupport/*.swift",
+        "full/mattersupport/mattersupport_guest_sources.txt",
+        "full/mattersupport/README.md",
+        "full/mattersupport/coverage.tsv",
+        "full/mattersupport/oracle-questions.tsv",
+        "full/mattersupport/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "MATTERSUPPORT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=MatterSupport dylib=libMatterSupport.dylib"
+      ],
+      "gate": "bash full/mattersupport/tests/acceptance/test_host.sh",
+      "immutableDigest": "79e888a6fdbb27e036aa8eefab5d9671f4b2f92c359ff2ce764806653cf4f5bd",
+      "lane": "leaf-full",
+      "module": "MatterSupport",
+      "ownedPaths": [
+        "full/mattersupport/**"
+      ],
+      "priority": 82,
+      "risks": [
+        "smart-home",
+        "commissioning",
+        "ui",
+        "fail-closed"
+      ],
+      "slug": "mattersupport",
+      "symbolCount": 124,
+      "taskPath": "full/mattersupport/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port GLKit to Linux",
+      "dependencies": [
+        "CoreFoundation",
+        "CoreGraphics",
+        "Foundation",
+        "ModelIO",
+        "OpenGLES",
+        "UIKit"
+      ],
+      "editablePaths": [
+        "full/glkit/*.swift",
+        "full/glkit/glkit_guest_sources.txt",
+        "full/glkit/README.md",
+        "full/glkit/coverage.tsv",
+        "full/glkit/oracle-questions.tsv",
+        "full/glkit/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "GLKIT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=GLKit dylib=libGLKit.dylib"
+      ],
+      "gate": "bash full/glkit/tests/acceptance/test_host.sh",
+      "immutableDigest": "d7c9accd3af593fe44d6921adb3f5e11e1fa53a9951cea832cab546ba3e3715a",
+      "lane": "legacy-adapter",
+      "module": "GLKit",
+      "ownedPaths": [
+        "full/glkit/**"
+      ],
+      "priority": 81,
+      "risks": [
+        "deprecated",
+        "gpu",
+        "compatibility"
+      ],
+      "slug": "glkit",
+      "symbolCount": 550,
+      "taskPath": "full/glkit/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port AlarmKit to Linux",
+      "dependencies": [
+        "ActivityKit",
+        "AppIntents",
+        "Foundation",
+        "SwiftUI"
+      ],
+      "editablePaths": [
+        "full/alarmkit/*.swift",
+        "full/alarmkit/alarmkit_guest_sources.txt",
+        "full/alarmkit/README.md",
+        "full/alarmkit/coverage.tsv",
+        "full/alarmkit/oracle-questions.tsv",
+        "full/alarmkit/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "ALARMKIT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=AlarmKit dylib=libAlarmKit.dylib"
+      ],
+      "gate": "bash full/alarmkit/tests/acceptance/test_host.sh",
+      "immutableDigest": "d493c0949dd8c9636f62b654e76305e785704310282804eaa77f7a4f3a20163f",
+      "lane": "medium-full",
+      "module": "AlarmKit",
+      "ownedPaths": [
+        "full/alarmkit/**"
+      ],
+      "priority": 80,
+      "risks": [
+        "entitlement",
+        "scheduling",
+        "swiftui"
+      ],
+      "slug": "alarmkit",
+      "symbolCount": 262,
+      "taskPath": "full/alarmkit/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port MetricKit to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/metrickit/*.swift",
+        "full/metrickit/metrickit_guest_sources.txt",
+        "full/metrickit/README.md",
+        "full/metrickit/coverage.tsv",
+        "full/metrickit/oracle-questions.tsv",
+        "full/metrickit/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "METRICKIT_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=MetricKit dylib=libMetricKit.dylib"
+      ],
+      "gate": "bash full/metrickit/tests/acceptance/test_host.sh",
+      "immutableDigest": "63214bcf1d22180b8ddc96b6741601d7a6f6d345453840aa2e5339eb275a83ac",
+      "lane": "medium-full",
+      "module": "MetricKit",
+      "ownedPaths": [
+        "full/metrickit/**"
+      ],
+      "priority": 79,
+      "risks": [
+        "telemetry",
+        "os-service",
+        "fail-closed"
+      ],
+      "slug": "metrickit",
+      "symbolCount": 260,
+      "taskPath": "full/metrickit/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port EventKitUI to Linux",
+      "dependencies": [
+        "Combine",
+        "DeveloperToolsSupport",
+        "EventKit",
+        "Foundation",
+        "SwiftUI",
+        "UIKit"
+      ],
+      "editablePaths": [
+        "full/eventkitui/*.swift",
+        "full/eventkitui/eventkitui_guest_sources.txt",
+        "full/eventkitui/README.md",
+        "full/eventkitui/coverage.tsv",
+        "full/eventkitui/oracle-questions.tsv",
+        "full/eventkitui/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "EVENTKITUI_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=EventKitUI dylib=libEventKitUI.dylib"
+      ],
+      "gate": "bash full/eventkitui/tests/acceptance/test_host.sh",
+      "immutableDigest": "d0bb95b7a67621b3f764d8305461b0a0afcb22638a974bfd8be6438255dfd5fd",
+      "lane": "medium-full",
+      "module": "EventKitUI",
+      "ownedPaths": [
+        "full/eventkitui/**"
+      ],
+      "priority": 78,
+      "risks": [
+        "calendar",
+        "privacy",
+        "ui"
+      ],
+      "slug": "eventkitui",
+      "symbolCount": 61,
+      "taskPath": "full/eventkitui/FANOUT_TASK.md"
+    },
+    {
+      "agentName": "Port Accounts to Linux",
+      "dependencies": [
+        "Foundation"
+      ],
+      "editablePaths": [
+        "full/accounts/*.swift",
+        "full/accounts/accounts_guest_sources.txt",
+        "full/accounts/README.md",
+        "full/accounts/coverage.tsv",
+        "full/accounts/oracle-questions.tsv",
+        "full/accounts/tests/agent/**"
+      ],
+      "expectedMarkers": [
+        "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+        "FRAMEWORK_FANOUT_REFERENCE_OK",
+        "ACCOUNTS_AGENT_RUNTIME_OK",
+        "FRAMEWORK_FANOUT_HOST_OK module=Accounts dylib=libAccounts.dylib"
+      ],
+      "gate": "bash full/accounts/tests/acceptance/test_host.sh",
+      "immutableDigest": "b6aee1329c4c330efcf0db78f668173be10920977fad12669b15e76fcc47d854",
+      "lane": "legacy-adapter",
+      "module": "Accounts",
+      "ownedPaths": [
+        "full/accounts/**"
+      ],
+      "priority": 77,
+      "risks": [
+        "deprecated",
+        "account-service",
+        "fail-closed"
+      ],
+      "slug": "accounts",
+      "symbolCount": 82,
+      "taskPath": "full/accounts/FANOUT_TASK.md"
+    }
+  ],
+  "repository": {
+    "startingRef": "experiment/cursor-framework-fanout-wave2-seed-20260901",
+    "url": "https://github.com/Vercantez/openuikit-linux-platform"
+  },
+  "schema": 1
+}

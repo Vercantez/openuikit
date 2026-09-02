@@ -1,0 +1,103 @@
+{
+  "module": "MapKit",
+  "moduleRecord": {
+    "app_coverage_count": 6,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 40,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 45,
+    "iphoneos_runtime_focus_launch_build_rank": 51,
+    "module": "MapKit",
+    "occurrence_count": 40,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "9b2031cb11cb9a3f364afc94798a32efa34760dfe06009d6ce50d779bf086712",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Signal/src/ViewControllers/LocationPicker.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "938ae928d9f3f15d27ec1d497fdec5aff50071dfbc7f75a518d1b06d1a8e911b",
+        "file_count": 14,
+        "occurrence_count": 14,
+        "sample_paths": [
+          "Telegram/WatchApp/tgwatch Watch App/Messages/LocationBubbleView.swift",
+          "Telegram/WatchApp/tgwatch Watch App/Messages/MapSnapshotRenderer.swift",
+          "submodules/AttachmentUI/Sources/AttachmentContainer.swift",
+          "submodules/Geocoding/Sources/Geocoding.swift",
+          "submodules/LocationResources/Sources/MapResources.swift",
+          "submodules/LocationUI/Sources/LocationAnnotation.swift",
+          "submodules/LocationUI/Sources/LocationMapNode.swift",
+          "submodules/LocationUI/Sources/LocationSearchContainerNode.swift"
+        ]
+      },
+      "eigen": {
+        "evidence_sha256": "8fd781ce982bd91f4022c3285bd7bfb999521933e489ffe11af8ce227f263fd9",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "ios/Artsy/App/ARUserActivity.m"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "a24fdca3bb0859f0f759bfa9da4cb4acbb36c520f58af9e3c531261723bd1f37",
+        "file_count": 11,
+        "occurrence_count": 11,
+        "sample_paths": [
+          "Sources/App/ClientEvents/LocationHistoryDetailViewController.swift",
+          "Sources/App/Settings/Location/LocationSettingsView.swift",
+          "Sources/App/Settings/Location/LocationSettingsViewModel.swift",
+          "Sources/App/Settings/Location/Zones/ZoneCardView.swift",
+          "Sources/App/Settings/Location/Zones/ZoneMapSnapshotView.swift",
+          "Sources/App/Settings/Settings/ServerSwitchingSettingsViewModel.swift",
+          "Sources/Extensions/NotificationContent/MapViewController.swift",
+          "Sources/WatchApp/Notifications/DynamicNotificationView.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "f4668af479ea3a8321a096d4e744b1a54bcd00bcd31a42e9758839373c3286d5",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "iOSClient/Viewer/NCViewerMedia/Views/NCMediaViewerDetailView.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "623f43ec7cea5303f1200f85db6ebdcf718d63793338b0fa061170739038f920",
+        "file_count": 12,
+        "occurrence_count": 12,
+        "sample_paths": [
+          "WMF Framework/WMFArticle+QuadKey.swift",
+          "WMFComponents/Sources/WMFComponents/Components/Year in Review/Views/Slide Views/WMFYearInReviewSlideLocationView.swift",
+          "Wikipedia/Code/ArticlePlaceView.swift",
+          "Wikipedia/Code/MKCoordinateRegion+Dimensions.swift",
+          "Wikipedia/Code/MapAnnotation.swift",
+          "Wikipedia/Code/MapUtilities.swift",
+          "Wikipedia/Code/MapView.swift",
+          "Wikipedia/Code/PlaceSearch.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 45,
+    "byFocusLaunchBuildRelevance": 51
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

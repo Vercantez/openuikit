@@ -1,0 +1,79 @@
+{
+  "module": "CarPlay",
+  "moduleRecord": {
+    "app_coverage_count": 3,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 42,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 64,
+    "iphoneos_runtime_focus_launch_build_rank": 67,
+    "module": "CarPlay",
+    "occurrence_count": 42,
+    "per_app": {
+      "home-assistant-ios": {
+        "evidence_sha256": "65dadc8e22f20d04d715b7638c7a4d89c9b444ad41e3ec96fadd3faf93a4642e",
+        "file_count": 24,
+        "occurrence_count": 24,
+        "sample_paths": [
+          "Sources/App/Scenes/CarPlaySceneDelegate.swift",
+          "Sources/App/Settings/CarPlay/CarPlayTabsSelectionView.swift",
+          "Sources/CarPlay/Templates/Areas/CarPlayAreasViewModel.swift",
+          "Sources/CarPlay/Templates/Areas/CarPlayAreasZonesTemplate.swift",
+          "Sources/CarPlay/Templates/CarPlayListItemProvider.swift",
+          "Sources/CarPlay/Templates/CarPlayNoServerAlert.swift",
+          "Sources/CarPlay/Templates/CarPlayPaginatedListTemplate.swift",
+          "Sources/CarPlay/Templates/CarPlayTemplateProvider.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "e30371d6b9b81ae530054010edce32130cd19777b59e0af645d06cfe3bf0ace8",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "podcasts/CarPlay/CPInterfaceController+Helpers.swift",
+          "podcasts/CarPlay/CarPlayImageHelper.swift",
+          "podcasts/CarPlay/CarPlayListData.swift",
+          "podcasts/CarPlay/CarPlaySceneDelegate+Convert.swift",
+          "podcasts/CarPlay/CarPlaySceneDelegate+Interaction.swift",
+          "podcasts/CarPlay/CarPlaySceneDelegate+Tabs.swift",
+          "podcasts/CarPlay/CarPlaySceneDelegate.swift",
+          "podcasts/Utilities/CarPlayHelper.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "4efa1aca32977844d66e863f91f835e6804b2d990b0efabe5b8e9fe46f7f02c7",
+        "file_count": 10,
+        "occurrence_count": 10,
+        "sample_paths": [
+          "Sources/CarPlay/CPListTemplate+Genres.h",
+          "Sources/CarPlay/CPListTemplate+NetworkStreams.h",
+          "Sources/CarPlay/VLCCarPlayAlbumsController.h",
+          "Sources/CarPlay/VLCCarPlayArtistsController.h",
+          "Sources/CarPlay/VLCCarPlayFoldersController.h",
+          "Sources/CarPlay/VLCCarPlayLibraryController.h",
+          "Sources/CarPlay/VLCCarPlayListLimit.h",
+          "Sources/CarPlay/VLCCarPlayPlaylistsController.h"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 64,
+    "byFocusLaunchBuildRelevance": 67
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "module": "MediaPlayer",
+  "moduleRecord": {
+    "app_coverage_count": 7,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 33,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 42,
+    "iphoneos_runtime_focus_launch_build_rank": 45,
+    "module": "MediaPlayer",
+    "occurrence_count": 33,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "e26c9dcb01a92a01c7d5006cf772bb83d9cdd389f6634fc43273cb36d0656aa7",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Signal/src/ViewControllers/CropScaleImageViewController.swift",
+          "Signal/util/VolumeButtons.swift",
+          "SignalUI/AV/AudioPlayer.swift",
+          "SignalUI/AttachmentApproval/AttachmentApprovalViewController.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "78257a74bed29beb4782551b04dd8d22f8738eab7d35919d0eb373fc6beb713b",
+        "file_count": 6,
+        "occurrence_count": 6,
+        "sample_paths": [
+          "submodules/LegacyComponents/Sources/TGMediaPickerGalleryVideoItemView.m",
+          "submodules/TelegramCallsUI/Sources/CallControllerButtonsNode.swift",
+          "submodules/TelegramCallsUI/Sources/LegacyCallControllerButtonsNode.swift",
+          "submodules/TelegramUI/Sources/MediaManager.swift",
+          "submodules/TelegramUI/Sources/OpenChatMessage.swift",
+          "submodules/Utils/VolumeButtons/Sources/VolumeButtons.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "4741ec8cbc225ee3bba2dac4cf23ab48e2a9afbb945a626107c68bc617180baf",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Riot/Modules/MatrixKit/Views/RoomInputToolbar/MXKRoomInputToolbarView.m",
+          "Riot/Modules/Room/MXKRoomViewController.m",
+          "Riot/Modules/Room/VoiceMessages/VoiceMessageMediaServiceProvider.swift",
+          "RiotSwiftUI/Modules/Room/VoiceBroadcastPlayback/MatrixSDK/VoiceBroadcastPlaybackViewModel.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "bbf4c829ac04a6595a05ba043dc59915357eb32b78ae88b6950d405f76010b41",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/App/Notifications/NotificationManager.swift"
+        ]
+      },
+      "ios-oss": {
+        "evidence_sha256": "9105babdd6816edaf6097be43a6eece421ec5dfa868a8bec70e7a0feb54dcd44",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Kickstarter-Framework/Sources/Kickstarter-Framework/Kickstarter-iOS/Features/VideoFeed/Controller/VideoFeedAudioController.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "65bd643352ca9f8313257081b12bd897c734e24dcd6ccfc3ed9bc4f0aeaacb91",
+        "file_count": 9,
+        "occurrence_count": 9,
+        "sample_paths": [
+          "PodcastsIntents/ChapterIntentHandler.swift",
+          "PodcastsIntents/ExtendSleepTimerIntentHandler.swift",
+          "PodcastsIntents/OpenFilterIntentHandler.swift",
+          "PodcastsIntents/PlayMediaIntentHandler.swift",
+          "podcasts/Extensions/MPFeedbackCommand+Title.swift",
+          "podcasts/NowPlayingHelper.swift",
+          "podcasts/PlaybackManager.swift",
+          "podcasts/VideoViewController.swift"
+        ]
+      },
+      "vlc-ios": {
+        "evidence_sha256": "52e31569bd197f24023cf4d6355f287d458870ea326bffb734489360b6a78a67",
+        "file_count": 8,
+        "occurrence_count": 8,
+        "sample_paths": [
+          "Sources/CarPlay/VLCNowPlayingTemplateObserver.m",
+          "Sources/Playback/Control/VLCPlaybackService.m",
+          "Sources/Playback/OS Integration/VLCMetadata.m",
+          "Sources/Playback/OS Integration/VLCRemoteControlService.m",
+          "Sources/Playback/Player/PlayerViewController.swift",
+          "Sources/Playback/Player/VideoPlayer-iOS/SliderInfoView.swift",
+          "Sources/Playback/Player/VideoPlayer-iOS/Subviews/MediaNavigationBar.swift",
+          "Sources/Playback/Player/VideoPlayer-iOS/VideoPlayerViewController.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 42,
+    "byFocusLaunchBuildRelevance": 45
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

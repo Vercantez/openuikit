@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 11,
+  "duplicateOccurrenceCount": 11,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CarPlay.symbols.json",
+      "relationshipCount": 1804,
+      "sha256": "b73e3caad34a95048e00e2cf61966385beee4260743d46a88607d35e62e9be03",
+      "symbolCount": 996
+    },
+    {
+      "path": "reference/symbol-graphs/CarPlay@UIKit.symbols.json",
+      "relationshipCount": 3,
+      "sha256": "d18f6d07fb280769567008d38d22d68ac6740e27edf453321b12bd0a8aa30db6",
+      "symbolCount": 3
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CarPlay",
+  "relationshipCount": 1807,
+  "schema": 1,
+  "symbolCount": 988,
+  "target": "arm64-apple-ios26.0"
+}

@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/EventKitUI.symbols.json",
+      "relationshipCount": 136,
+      "sha256": "a93f6c9538dae3ab0d41ea9e667fcde0f86e8cb089851d66afc222085a7a5ea7",
+      "symbolCount": 61
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "EventKitUI",
+  "relationshipCount": 136,
+  "schema": 1,
+  "symbolCount": 61,
+  "target": "arm64-apple-ios26.0"
+}

@@ -1,0 +1,2 @@
+module	slug	lane	priority	risks	dependencies
+QuickLookThumbnailing	quicklookthumbnailing	medium-full	100	filesystem,graphics,os-service,async,cancellation,fail-closed	CoreGraphics,CoreTransferable,ExtensionFoundation,Foundation,UIKit,UniformTypeIdentifiers

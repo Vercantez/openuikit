@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/WiFiAware.symbols.json",
+      "relationshipCount": 405,
+      "sha256": "805afa66aca5497b716c79290bfe48aca761e0849bc3bb29a7a1a1c8298f8820",
+      "symbolCount": 253
+    },
+    {
+      "path": "reference/symbol-graphs/WiFiAware@Network.symbols.json",
+      "relationshipCount": 7,
+      "sha256": "c7ee3103d90b38d9d7324d09221b7dd502977d503c663fd1b56e34be1686974a",
+      "symbolCount": 7
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "WiFiAware",
+  "relationshipCount": 412,
+  "schema": 1,
+  "symbolCount": 260,
+  "target": "arm64-apple-ios26.0"
+}

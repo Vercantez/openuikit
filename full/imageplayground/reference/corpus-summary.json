@@ -1,0 +1,44 @@
+{
+  "module": "ImagePlayground",
+  "moduleRecord": {
+    "app_coverage_count": 1,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 3,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 111,
+    "iphoneos_runtime_focus_launch_build_rank": 119,
+    "module": "ImagePlayground",
+    "occurrence_count": 3,
+    "per_app": {
+      "WordPress-iOS": {
+        "evidence_sha256": "6427edc4831a271f08302ea980c7b119d2a136e18b7700c580d340b9db92d980",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "WordPress/Classes/ViewRelated/Gutenberg/GutenbergViewController.swift",
+          "WordPress/Classes/ViewRelated/Gutenberg/Utils/GutenbergExternalMeidaPicker.swift",
+          "WordPress/Classes/ViewRelated/Media/MediaPicker/Menu/MediaPickerMenu+ImagePlayground.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 111,
+    "byFocusLaunchBuildRelevance": 119
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

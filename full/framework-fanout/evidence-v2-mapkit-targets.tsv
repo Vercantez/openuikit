@@ -1,0 +1,2 @@
+module	slug	lane	priority	risks	dependencies
+MapKit	mapkit	large-partitioned	100	graphics,location,network,os-service,async,cancellation,ui,fail-closed	CoreGraphics,CoreLocation,Foundation,UIKit

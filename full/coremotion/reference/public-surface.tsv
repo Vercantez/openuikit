@@ -1,0 +1,436 @@
+precise	kind	title	path	declaration
+c:@CMErrorDomain	swift.var	CMErrorDomain	CMErrorDomain	let CMErrorDomain: String
+c:@E@CMAttitudeReferenceFrame	swift.struct	CMAttitudeReferenceFrame	CMAttitudeReferenceFrame	struct CMAttitudeReferenceFrame
+c:@E@CMAttitudeReferenceFrame@CMAttitudeReferenceFrameXArbitraryCorrectedZVertical	swift.type.property	xArbitraryCorrectedZVertical	CMAttitudeReferenceFrame.xArbitraryCorrectedZVertical	static var xArbitraryCorrectedZVertical: CMAttitudeReferenceFrame { get }
+c:@E@CMAttitudeReferenceFrame@CMAttitudeReferenceFrameXArbitraryZVertical	swift.type.property	xArbitraryZVertical	CMAttitudeReferenceFrame.xArbitraryZVertical	static var xArbitraryZVertical: CMAttitudeReferenceFrame { get }
+c:@E@CMAttitudeReferenceFrame@CMAttitudeReferenceFrameXMagneticNorthZVertical	swift.type.property	xMagneticNorthZVertical	CMAttitudeReferenceFrame.xMagneticNorthZVertical	static var xMagneticNorthZVertical: CMAttitudeReferenceFrame { get }
+c:@E@CMAttitudeReferenceFrame@CMAttitudeReferenceFrameXTrueNorthZVertical	swift.type.property	xTrueNorthZVertical	CMAttitudeReferenceFrame.xTrueNorthZVertical	static var xTrueNorthZVertical: CMAttitudeReferenceFrame { get }
+c:@E@CMAuthorizationStatus	swift.enum	CMAuthorizationStatus	CMAuthorizationStatus	enum CMAuthorizationStatus
+c:@E@CMAuthorizationStatus@CMAuthorizationStatusAuthorized	swift.enum.case	CMAuthorizationStatus.authorized	CMAuthorizationStatus.authorized	case authorized
+c:@E@CMAuthorizationStatus@CMAuthorizationStatusDenied	swift.enum.case	CMAuthorizationStatus.denied	CMAuthorizationStatus.denied	case denied
+c:@E@CMAuthorizationStatus@CMAuthorizationStatusNotDetermined	swift.enum.case	CMAuthorizationStatus.notDetermined	CMAuthorizationStatus.notDetermined	case notDetermined
+c:@E@CMAuthorizationStatus@CMAuthorizationStatusRestricted	swift.enum.case	CMAuthorizationStatus.restricted	CMAuthorizationStatus.restricted	case restricted
+c:@E@CMDeviceMotionSensorLocation	swift.enum	CMDeviceMotion.SensorLocation	CMDeviceMotion.SensorLocation	enum SensorLocation
+c:@E@CMDeviceMotionSensorLocation@CMDeviceMotionSensorLocationDefault	swift.enum.case	CMDeviceMotion.SensorLocation.default	CMDeviceMotion.SensorLocation.default	case `default`
+c:@E@CMDeviceMotionSensorLocation@CMDeviceMotionSensorLocationHeadphoneLeft	swift.enum.case	CMDeviceMotion.SensorLocation.headphoneLeft	CMDeviceMotion.SensorLocation.headphoneLeft	case headphoneLeft
+c:@E@CMDeviceMotionSensorLocation@CMDeviceMotionSensorLocationHeadphoneRight	swift.enum.case	CMDeviceMotion.SensorLocation.headphoneRight	CMDeviceMotion.SensorLocation.headphoneRight	case headphoneRight
+c:@E@CMHeadphoneActivityStatus	swift.enum	CMHeadphoneActivityManager.Status	CMHeadphoneActivityManager.Status	enum Status
+c:@E@CMHeadphoneActivityStatus@CMHeadphoneActivityStatusConnected	swift.enum.case	CMHeadphoneActivityManager.Status.connected	CMHeadphoneActivityManager.Status.connected	case connected
+c:@E@CMHeadphoneActivityStatus@CMHeadphoneActivityStatusDisconnected	swift.enum.case	CMHeadphoneActivityManager.Status.disconnected	CMHeadphoneActivityManager.Status.disconnected	case disconnected
+c:@E@CMHighFrequencyHeartRateDataConfidence	swift.enum	CMHighFrequencyHeartRateDataConfidence	CMHighFrequencyHeartRateDataConfidence	enum CMHighFrequencyHeartRateDataConfidence
+c:@E@CMHighFrequencyHeartRateDataConfidence@CMHighFrequencyHeartRateDataConfidenceHigh	swift.enum.case	CMHighFrequencyHeartRateDataConfidence.high	CMHighFrequencyHeartRateDataConfidence.high	case high
+c:@E@CMHighFrequencyHeartRateDataConfidence@CMHighFrequencyHeartRateDataConfidenceHighest	swift.enum.case	CMHighFrequencyHeartRateDataConfidence.highest	CMHighFrequencyHeartRateDataConfidence.highest	case highest
+c:@E@CMHighFrequencyHeartRateDataConfidence@CMHighFrequencyHeartRateDataConfidenceLow	swift.enum.case	CMHighFrequencyHeartRateDataConfidence.low	CMHighFrequencyHeartRateDataConfidence.low	case low
+c:@E@CMHighFrequencyHeartRateDataConfidence@CMHighFrequencyHeartRateDataConfidenceMedium	swift.enum.case	CMHighFrequencyHeartRateDataConfidence.medium	CMHighFrequencyHeartRateDataConfidence.medium	case medium
+c:@E@CMMagneticFieldCalibrationAccuracy	swift.enum	CMMagneticFieldCalibrationAccuracy	CMMagneticFieldCalibrationAccuracy	enum CMMagneticFieldCalibrationAccuracy
+c:@E@CMMagneticFieldCalibrationAccuracy@CMMagneticFieldCalibrationAccuracyHigh	swift.enum.case	CMMagneticFieldCalibrationAccuracy.high	CMMagneticFieldCalibrationAccuracy.high	case high
+c:@E@CMMagneticFieldCalibrationAccuracy@CMMagneticFieldCalibrationAccuracyLow	swift.enum.case	CMMagneticFieldCalibrationAccuracy.low	CMMagneticFieldCalibrationAccuracy.low	case low
+c:@E@CMMagneticFieldCalibrationAccuracy@CMMagneticFieldCalibrationAccuracyMedium	swift.enum.case	CMMagneticFieldCalibrationAccuracy.medium	CMMagneticFieldCalibrationAccuracy.medium	case medium
+c:@E@CMMagneticFieldCalibrationAccuracy@CMMagneticFieldCalibrationAccuracyUncalibrated	swift.enum.case	CMMagneticFieldCalibrationAccuracy.uncalibrated	CMMagneticFieldCalibrationAccuracy.uncalibrated	case uncalibrated
+c:@E@CMMotionActivityConfidence	swift.enum	CMMotionActivityConfidence	CMMotionActivityConfidence	enum CMMotionActivityConfidence
+c:@E@CMMotionActivityConfidence@CMMotionActivityConfidenceHigh	swift.enum.case	CMMotionActivityConfidence.high	CMMotionActivityConfidence.high	case high
+c:@E@CMMotionActivityConfidence@CMMotionActivityConfidenceLow	swift.enum.case	CMMotionActivityConfidence.low	CMMotionActivityConfidence.low	case low
+c:@E@CMMotionActivityConfidence@CMMotionActivityConfidenceMedium	swift.enum.case	CMMotionActivityConfidence.medium	CMMotionActivityConfidence.medium	case medium
+c:@E@CMOdometerOriginDevice	swift.enum	CMOdometerOriginDevice	CMOdometerOriginDevice	enum CMOdometerOriginDevice
+c:@E@CMOdometerOriginDevice@CMOdometerOriginDeviceLocal	swift.enum.case	CMOdometerOriginDevice.local	CMOdometerOriginDevice.local	case local
+c:@E@CMOdometerOriginDevice@CMOdometerOriginDeviceRemote	swift.enum.case	CMOdometerOriginDevice.remote	CMOdometerOriginDevice.remote	case remote
+c:@E@CMOdometerOriginDevice@CMOdometerOriginDeviceUnknown	swift.enum.case	CMOdometerOriginDevice.unknown	CMOdometerOriginDevice.unknown	case unknown
+c:@E@CMPedometerEventType	swift.enum	CMPedometerEventType	CMPedometerEventType	enum CMPedometerEventType
+c:@E@CMPedometerEventType@CMPedometerEventTypePause	swift.enum.case	CMPedometerEventType.pause	CMPedometerEventType.pause	case pause
+c:@E@CMPedometerEventType@CMPedometerEventTypeResume	swift.enum.case	CMPedometerEventType.resume	CMPedometerEventType.resume	case resume
+c:@E@CMWaterSubmersionDepthState	swift.enum	CMWaterSubmersionMeasurement.DepthState	CMWaterSubmersionMeasurement.DepthState	enum DepthState
+c:@E@CMWaterSubmersionDepthState@CMWaterSubmersionDepthStateApproachingMaxDepth	swift.enum.case	CMWaterSubmersionMeasurement.DepthState.approachingMaxDepth	CMWaterSubmersionMeasurement.DepthState.approachingMaxDepth	case approachingMaxDepth
+c:@E@CMWaterSubmersionDepthState@CMWaterSubmersionDepthStateNotSubmerged	swift.enum.case	CMWaterSubmersionMeasurement.DepthState.notSubmerged	CMWaterSubmersionMeasurement.DepthState.notSubmerged	case notSubmerged
+c:@E@CMWaterSubmersionDepthState@CMWaterSubmersionDepthStatePastMaxDepth	swift.enum.case	CMWaterSubmersionMeasurement.DepthState.pastMaxDepth	CMWaterSubmersionMeasurement.DepthState.pastMaxDepth	case pastMaxDepth
+c:@E@CMWaterSubmersionDepthState@CMWaterSubmersionDepthStateSensorDepthError	swift.enum.case	CMWaterSubmersionMeasurement.DepthState.sensorDepthError	CMWaterSubmersionMeasurement.DepthState.sensorDepthError	case sensorDepthError
+c:@E@CMWaterSubmersionDepthState@CMWaterSubmersionDepthStateSubmergedDeep	swift.enum.case	CMWaterSubmersionMeasurement.DepthState.submergedDeep	CMWaterSubmersionMeasurement.DepthState.submergedDeep	case submergedDeep
+c:@E@CMWaterSubmersionDepthState@CMWaterSubmersionDepthStateSubmergedShallow	swift.enum.case	CMWaterSubmersionMeasurement.DepthState.submergedShallow	CMWaterSubmersionMeasurement.DepthState.submergedShallow	case submergedShallow
+c:@E@CMWaterSubmersionDepthState@CMWaterSubmersionDepthStateUnknown	swift.enum.case	CMWaterSubmersionMeasurement.DepthState.unknown	CMWaterSubmersionMeasurement.DepthState.unknown	case unknown
+c:@E@CMWaterSubmersionState	swift.enum	CMWaterSubmersionEvent.State	CMWaterSubmersionEvent.State	enum State
+c:@E@CMWaterSubmersionState@CMWaterSubmersionStateNotSubmerged	swift.enum.case	CMWaterSubmersionEvent.State.notSubmerged	CMWaterSubmersionEvent.State.notSubmerged	case notSubmerged
+c:@E@CMWaterSubmersionState@CMWaterSubmersionStateSubmerged	swift.enum.case	CMWaterSubmersionEvent.State.submerged	CMWaterSubmersionEvent.State.submerged	case submerged
+c:@E@CMWaterSubmersionState@CMWaterSubmersionStateUnknown	swift.enum.case	CMWaterSubmersionEvent.State.unknown	CMWaterSubmersionEvent.State.unknown	case unknown
+c:@EA@CMError	swift.struct	CMError	CMError	struct CMError
+c:@EA@CMError@CMErrorDeviceRequiresMovement	swift.var	CMErrorDeviceRequiresMovement	CMErrorDeviceRequiresMovement	var CMErrorDeviceRequiresMovement: CMError { get }
+c:@EA@CMError@CMErrorInvalidAction	swift.var	CMErrorInvalidAction	CMErrorInvalidAction	var CMErrorInvalidAction: CMError { get }
+c:@EA@CMError@CMErrorInvalidParameter	swift.var	CMErrorInvalidParameter	CMErrorInvalidParameter	var CMErrorInvalidParameter: CMError { get }
+c:@EA@CMError@CMErrorMotionActivityNotAuthorized	swift.var	CMErrorMotionActivityNotAuthorized	CMErrorMotionActivityNotAuthorized	var CMErrorMotionActivityNotAuthorized: CMError { get }
+c:@EA@CMError@CMErrorMotionActivityNotAvailable	swift.var	CMErrorMotionActivityNotAvailable	CMErrorMotionActivityNotAvailable	var CMErrorMotionActivityNotAvailable: CMError { get }
+c:@EA@CMError@CMErrorMotionActivityNotEntitled	swift.var	CMErrorMotionActivityNotEntitled	CMErrorMotionActivityNotEntitled	var CMErrorMotionActivityNotEntitled: CMError { get }
+c:@EA@CMError@CMErrorNULL	swift.var	CMErrorNULL	CMErrorNULL	var CMErrorNULL: CMError { get }
+c:@EA@CMError@CMErrorNilData	swift.var	CMErrorNilData	CMErrorNilData	var CMErrorNilData: CMError { get }
+c:@EA@CMError@CMErrorNotAuthorized	swift.var	CMErrorNotAuthorized	CMErrorNotAuthorized	var CMErrorNotAuthorized: CMError { get }
+c:@EA@CMError@CMErrorNotAvailable	swift.var	CMErrorNotAvailable	CMErrorNotAvailable	var CMErrorNotAvailable: CMError { get }
+c:@EA@CMError@CMErrorNotEntitled	swift.var	CMErrorNotEntitled	CMErrorNotEntitled	var CMErrorNotEntitled: CMError { get }
+c:@EA@CMError@CMErrorSize	swift.var	CMErrorSize	CMErrorSize	var CMErrorSize: CMError { get }
+c:@EA@CMError@CMErrorTrueNorthNotAvailable	swift.var	CMErrorTrueNorthNotAvailable	CMErrorTrueNorthNotAvailable	var CMErrorTrueNorthNotAvailable: CMError { get }
+c:@EA@CMError@CMErrorUnknown	swift.var	CMErrorUnknown	CMErrorUnknown	var CMErrorUnknown: CMError { get }
+c:@SA@CMAcceleration	swift.struct	CMAcceleration	CMAcceleration	struct CMAcceleration
+c:@SA@CMAcceleration@FI@x	swift.property	x	CMAcceleration.x	var x: Double
+c:@SA@CMAcceleration@FI@y	swift.property	y	CMAcceleration.y	var y: Double
+c:@SA@CMAcceleration@FI@z	swift.property	z	CMAcceleration.z	var z: Double
+c:@SA@CMCalibratedMagneticField	swift.struct	CMCalibratedMagneticField	CMCalibratedMagneticField	struct CMCalibratedMagneticField
+c:@SA@CMCalibratedMagneticField@FI@accuracy	swift.property	accuracy	CMCalibratedMagneticField.accuracy	var accuracy: CMMagneticFieldCalibrationAccuracy
+c:@SA@CMCalibratedMagneticField@FI@field	swift.property	field	CMCalibratedMagneticField.field	var field: CMMagneticField
+c:@SA@CMMagneticField	swift.struct	CMMagneticField	CMMagneticField	struct CMMagneticField
+c:@SA@CMMagneticField@FI@x	swift.property	x	CMMagneticField.x	var x: Double
+c:@SA@CMMagneticField@FI@y	swift.property	y	CMMagneticField.y	var y: Double
+c:@SA@CMMagneticField@FI@z	swift.property	z	CMMagneticField.z	var z: Double
+c:@SA@CMQuaternion	swift.struct	CMQuaternion	CMQuaternion	struct CMQuaternion
+c:@SA@CMQuaternion@FI@w	swift.property	w	CMQuaternion.w	var w: Double
+c:@SA@CMQuaternion@FI@x	swift.property	x	CMQuaternion.x	var x: Double
+c:@SA@CMQuaternion@FI@y	swift.property	y	CMQuaternion.y	var y: Double
+c:@SA@CMQuaternion@FI@z	swift.property	z	CMQuaternion.z	var z: Double
+c:@SA@CMRotationMatrix	swift.struct	CMRotationMatrix	CMRotationMatrix	struct CMRotationMatrix
+c:@SA@CMRotationMatrix@FI@m11	swift.property	m11	CMRotationMatrix.m11	var m11: Double
+c:@SA@CMRotationMatrix@FI@m12	swift.property	m12	CMRotationMatrix.m12	var m12: Double
+c:@SA@CMRotationMatrix@FI@m13	swift.property	m13	CMRotationMatrix.m13	var m13: Double
+c:@SA@CMRotationMatrix@FI@m21	swift.property	m21	CMRotationMatrix.m21	var m21: Double
+c:@SA@CMRotationMatrix@FI@m22	swift.property	m22	CMRotationMatrix.m22	var m22: Double
+c:@SA@CMRotationMatrix@FI@m23	swift.property	m23	CMRotationMatrix.m23	var m23: Double
+c:@SA@CMRotationMatrix@FI@m31	swift.property	m31	CMRotationMatrix.m31	var m31: Double
+c:@SA@CMRotationMatrix@FI@m32	swift.property	m32	CMRotationMatrix.m32	var m32: Double
+c:@SA@CMRotationMatrix@FI@m33	swift.property	m33	CMRotationMatrix.m33	var m33: Double
+c:@SA@CMRotationRate	swift.struct	CMRotationRate	CMRotationRate	struct CMRotationRate
+c:@SA@CMRotationRate@FI@x	swift.property	x	CMRotationRate.x	var x: Double
+c:@SA@CMRotationRate@FI@y	swift.property	y	CMRotationRate.y	var y: Double
+c:@SA@CMRotationRate@FI@z	swift.property	z	CMRotationRate.z	var z: Double
+c:@T@CMAbsoluteAltitudeHandler	swift.typealias	CMAbsoluteAltitudeHandler	CMAbsoluteAltitudeHandler	typealias CMAbsoluteAltitudeHandler = (CMAbsoluteAltitudeData?, (any Error)?) -> Void
+c:@T@CMAccelerometerHandler	swift.typealias	CMAccelerometerHandler	CMAccelerometerHandler	typealias CMAccelerometerHandler = (CMAccelerometerData?, (any Error)?) -> Void
+c:@T@CMAltitudeHandler	swift.typealias	CMAltitudeHandler	CMAltitudeHandler	typealias CMAltitudeHandler = (CMAltitudeData?, (any Error)?) -> Void
+c:@T@CMDeviceMotionHandler	swift.typealias	CMDeviceMotionHandler	CMDeviceMotionHandler	typealias CMDeviceMotionHandler = (CMDeviceMotion?, (any Error)?) -> Void
+c:@T@CMGyroHandler	swift.typealias	CMGyroHandler	CMGyroHandler	typealias CMGyroHandler = (CMGyroData?, (any Error)?) -> Void
+c:@T@CMHeadphoneActivityHandler	swift.typealias	CMHeadphoneActivityManager.ActivityHandler	CMHeadphoneActivityManager.ActivityHandler	typealias ActivityHandler = (CMMotionActivity?, (any Error)?) -> Void
+c:@T@CMHeadphoneActivityStatusHandler	swift.typealias	CMHeadphoneActivityManager.StatusHandler	CMHeadphoneActivityManager.StatusHandler	typealias StatusHandler = (CMHeadphoneActivityManager.Status, (any Error)?) -> Void
+c:@T@CMHeadphoneDeviceMotionHandler	swift.typealias	CMHeadphoneMotionManager.DeviceMotionHandler	CMHeadphoneMotionManager.DeviceMotionHandler	typealias DeviceMotionHandler = (CMDeviceMotion?, (any Error)?) -> Void
+c:@T@CMMagnetometerHandler	swift.typealias	CMMagnetometerHandler	CMMagnetometerHandler	typealias CMMagnetometerHandler = (CMMagnetometerData?, (any Error)?) -> Void
+c:@T@CMMotionActivityHandler	swift.typealias	CMMotionActivityHandler	CMMotionActivityHandler	typealias CMMotionActivityHandler = (CMMotionActivity?) -> Void
+c:@T@CMMotionActivityQueryHandler	swift.typealias	CMMotionActivityQueryHandler	CMMotionActivityQueryHandler	typealias CMMotionActivityQueryHandler = ([CMMotionActivity]?, (any Error)?) -> Void
+c:@T@CMPedometerEventHandler	swift.typealias	CMPedometerEventHandler	CMPedometerEventHandler	typealias CMPedometerEventHandler = (CMPedometerEvent?, (any Error)?) -> Void
+c:@T@CMPedometerHandler	swift.typealias	CMPedometerHandler	CMPedometerHandler	typealias CMPedometerHandler = (CMPedometerData?, (any Error)?) -> Void
+c:@T@CMStepQueryHandler	swift.typealias	CMStepQueryHandler	CMStepQueryHandler	typealias CMStepQueryHandler = (Int, (any Error)?) -> Void
+c:@T@CMStepUpdateHandler	swift.typealias	CMStepUpdateHandler	CMStepUpdateHandler	typealias CMStepUpdateHandler = (Int, Date, (any Error)?) -> Void
+c:objc(cs)CMAbsoluteAltitudeData	swift.class	CMAbsoluteAltitudeData	CMAbsoluteAltitudeData	class CMAbsoluteAltitudeData
+c:objc(cs)CMAbsoluteAltitudeData(py)accuracy	swift.property	accuracy	CMAbsoluteAltitudeData.accuracy	var accuracy: Double { get }
+c:objc(cs)CMAbsoluteAltitudeData(py)altitude	swift.property	altitude	CMAbsoluteAltitudeData.altitude	var altitude: Double { get }
+c:objc(cs)CMAbsoluteAltitudeData(py)precision	swift.property	precision	CMAbsoluteAltitudeData.precision	var precision: Double { get }
+c:objc(cs)CMAccelerometerData	swift.class	CMAccelerometerData	CMAccelerometerData	class CMAccelerometerData
+c:objc(cs)CMAccelerometerData(py)acceleration	swift.property	acceleration	CMAccelerometerData.acceleration	var acceleration: CMAcceleration { get }
+c:objc(cs)CMAltimeter	swift.class	CMAltimeter	CMAltimeter	class CMAltimeter
+c:objc(cs)CMAltimeter(cm)authorizationStatus	swift.type.method	authorizationStatus()	CMAltimeter.authorizationStatus()	class func authorizationStatus() -> CMAuthorizationStatus
+c:objc(cs)CMAltimeter(cm)isAbsoluteAltitudeAvailable	swift.type.method	isAbsoluteAltitudeAvailable()	CMAltimeter.isAbsoluteAltitudeAvailable()	class func isAbsoluteAltitudeAvailable() -> Bool
+c:objc(cs)CMAltimeter(cm)isRelativeAltitudeAvailable	swift.type.method	isRelativeAltitudeAvailable()	CMAltimeter.isRelativeAltitudeAvailable()	class func isRelativeAltitudeAvailable() -> Bool
+c:objc(cs)CMAltimeter(im)startAbsoluteAltitudeUpdatesToQueue:withHandler:	swift.method	startAbsoluteAltitudeUpdates(to:withHandler:)	CMAltimeter.startAbsoluteAltitudeUpdates(to:withHandler:)	func startAbsoluteAltitudeUpdates(to queue: OperationQueue, withHandler handler: @escaping CMAbsoluteAltitudeHandler)
+c:objc(cs)CMAltimeter(im)startRelativeAltitudeUpdatesToQueue:withHandler:	swift.method	startRelativeAltitudeUpdates(to:withHandler:)	CMAltimeter.startRelativeAltitudeUpdates(to:withHandler:)	func startRelativeAltitudeUpdates(to queue: OperationQueue, withHandler handler: @escaping CMAltitudeHandler)
+c:objc(cs)CMAltimeter(im)stopAbsoluteAltitudeUpdates	swift.method	stopAbsoluteAltitudeUpdates()	CMAltimeter.stopAbsoluteAltitudeUpdates()	func stopAbsoluteAltitudeUpdates()
+c:objc(cs)CMAltimeter(im)stopRelativeAltitudeUpdates	swift.method	stopRelativeAltitudeUpdates()	CMAltimeter.stopRelativeAltitudeUpdates()	func stopRelativeAltitudeUpdates()
+c:objc(cs)CMAltitudeData	swift.class	CMAltitudeData	CMAltitudeData	class CMAltitudeData
+c:objc(cs)CMAltitudeData(py)pressure	swift.property	pressure	CMAltitudeData.pressure	var pressure: NSNumber { get }
+c:objc(cs)CMAltitudeData(py)relativeAltitude	swift.property	relativeAltitude	CMAltitudeData.relativeAltitude	var relativeAltitude: NSNumber { get }
+c:objc(cs)CMAmbientPressureData	swift.class	CMAmbientPressureData	CMAmbientPressureData	class CMAmbientPressureData
+c:objc(cs)CMAmbientPressureData(py)pressure	swift.property	pressure	CMAmbientPressureData.pressure	var pressure: Measurement<UnitPressure> { get }
+c:objc(cs)CMAmbientPressureData(py)temperature	swift.property	temperature	CMAmbientPressureData.temperature	var temperature: Measurement<UnitTemperature> { get }
+c:objc(cs)CMAttitude	swift.class	CMAttitude	CMAttitude	class CMAttitude
+c:objc(cs)CMAttitude(im)multiplyByInverseOfAttitude:	swift.method	multiply(byInverseOf:)	CMAttitude.multiply(byInverseOf:)	func multiply(byInverseOf attitude: CMAttitude)
+c:objc(cs)CMAttitude(py)pitch	swift.property	pitch	CMAttitude.pitch	var pitch: Double { get }
+c:objc(cs)CMAttitude(py)quaternion	swift.property	quaternion	CMAttitude.quaternion	var quaternion: CMQuaternion { get }
+c:objc(cs)CMAttitude(py)roll	swift.property	roll	CMAttitude.roll	var roll: Double { get }
+c:objc(cs)CMAttitude(py)rotationMatrix	swift.property	rotationMatrix	CMAttitude.rotationMatrix	var rotationMatrix: CMRotationMatrix { get }
+c:objc(cs)CMAttitude(py)yaw	swift.property	yaw	CMAttitude.yaw	var yaw: Double { get }
+c:objc(cs)CMBatchedSensorManager	swift.class	CMBatchedSensorManager	CMBatchedSensorManager	class CMBatchedSensorManager
+c:objc(cs)CMBatchedSensorManager(cpy)accelerometerSupported	swift.type.property	isAccelerometerSupported	CMBatchedSensorManager.isAccelerometerSupported	class var isAccelerometerSupported: Bool { get }
+c:objc(cs)CMBatchedSensorManager(cpy)authorizationStatus	swift.type.property	authorizationStatus	CMBatchedSensorManager.authorizationStatus	class var authorizationStatus: CMAuthorizationStatus { get }
+c:objc(cs)CMBatchedSensorManager(cpy)deviceMotionSupported	swift.type.property	isDeviceMotionSupported	CMBatchedSensorManager.isDeviceMotionSupported	class var isDeviceMotionSupported: Bool { get }
+c:objc(cs)CMBatchedSensorManager(im)startAccelerometerUpdates	swift.method	startAccelerometerUpdates()	CMBatchedSensorManager.startAccelerometerUpdates()	func startAccelerometerUpdates()
+c:objc(cs)CMBatchedSensorManager(im)startAccelerometerUpdatesWithHandler:	swift.method	startAccelerometerUpdates(handler:)	CMBatchedSensorManager.startAccelerometerUpdates(handler:)	func startAccelerometerUpdates(handler: @escaping ([CMAccelerometerData]?, (any Error)?) -> Void)
+c:objc(cs)CMBatchedSensorManager(im)startDeviceMotionUpdates	swift.method	startDeviceMotionUpdates()	CMBatchedSensorManager.startDeviceMotionUpdates()	func startDeviceMotionUpdates()
+c:objc(cs)CMBatchedSensorManager(im)startDeviceMotionUpdatesWithHandler:	swift.method	startDeviceMotionUpdates(handler:)	CMBatchedSensorManager.startDeviceMotionUpdates(handler:)	func startDeviceMotionUpdates(handler: @escaping ([CMDeviceMotion]?, (any Error)?) -> Void)
+c:objc(cs)CMBatchedSensorManager(im)stopAccelerometerUpdates	swift.method	stopAccelerometerUpdates()	CMBatchedSensorManager.stopAccelerometerUpdates()	func stopAccelerometerUpdates()
+c:objc(cs)CMBatchedSensorManager(im)stopDeviceMotionUpdates	swift.method	stopDeviceMotionUpdates()	CMBatchedSensorManager.stopDeviceMotionUpdates()	func stopDeviceMotionUpdates()
+c:objc(cs)CMBatchedSensorManager(py)accelerometerActive	swift.property	isAccelerometerActive	CMBatchedSensorManager.isAccelerometerActive	var isAccelerometerActive: Bool { get }
+c:objc(cs)CMBatchedSensorManager(py)accelerometerBatch	swift.property	accelerometerBatch	CMBatchedSensorManager.accelerometerBatch	var accelerometerBatch: [CMAccelerometerData]? { get }
+c:objc(cs)CMBatchedSensorManager(py)accelerometerDataFrequency	swift.property	accelerometerDataFrequency	CMBatchedSensorManager.accelerometerDataFrequency	var accelerometerDataFrequency: Int { get }
+c:objc(cs)CMBatchedSensorManager(py)deviceMotionActive	swift.property	isDeviceMotionActive	CMBatchedSensorManager.isDeviceMotionActive	var isDeviceMotionActive: Bool { get }
+c:objc(cs)CMBatchedSensorManager(py)deviceMotionBatch	swift.property	deviceMotionBatch	CMBatchedSensorManager.deviceMotionBatch	var deviceMotionBatch: [CMDeviceMotion]? { get }
+c:objc(cs)CMBatchedSensorManager(py)deviceMotionDataFrequency	swift.property	deviceMotionDataFrequency	CMBatchedSensorManager.deviceMotionDataFrequency	var deviceMotionDataFrequency: Int { get }
+c:objc(cs)CMDeviceMotion	swift.class	CMDeviceMotion	CMDeviceMotion	class CMDeviceMotion
+c:objc(cs)CMDeviceMotion(py)attitude	swift.property	attitude	CMDeviceMotion.attitude	var attitude: CMAttitude { get }
+c:objc(cs)CMDeviceMotion(py)gravity	swift.property	gravity	CMDeviceMotion.gravity	var gravity: CMAcceleration { get }
+c:objc(cs)CMDeviceMotion(py)heading	swift.property	heading	CMDeviceMotion.heading	var heading: Double { get }
+c:objc(cs)CMDeviceMotion(py)magneticField	swift.property	magneticField	CMDeviceMotion.magneticField	var magneticField: CMCalibratedMagneticField { get }
+c:objc(cs)CMDeviceMotion(py)rotationRate	swift.property	rotationRate	CMDeviceMotion.rotationRate	var rotationRate: CMRotationRate { get }
+c:objc(cs)CMDeviceMotion(py)sensorLocation	swift.property	sensorLocation	CMDeviceMotion.sensorLocation	var sensorLocation: CMDeviceMotion.SensorLocation { get }
+c:objc(cs)CMDeviceMotion(py)userAcceleration	swift.property	userAcceleration	CMDeviceMotion.userAcceleration	var userAcceleration: CMAcceleration { get }
+c:objc(cs)CMDyskineticSymptomResult	swift.class	CMDyskineticSymptomResult	CMDyskineticSymptomResult	class CMDyskineticSymptomResult
+c:objc(cs)CMDyskineticSymptomResult(py)endDate	swift.property	endDate	CMDyskineticSymptomResult.endDate	var endDate: Date { get }
+c:objc(cs)CMDyskineticSymptomResult(py)percentLikely	swift.property	percentLikely	CMDyskineticSymptomResult.percentLikely	var percentLikely: Float { get }
+c:objc(cs)CMDyskineticSymptomResult(py)percentUnlikely	swift.property	percentUnlikely	CMDyskineticSymptomResult.percentUnlikely	var percentUnlikely: Float { get }
+c:objc(cs)CMDyskineticSymptomResult(py)startDate	swift.property	startDate	CMDyskineticSymptomResult.startDate	var startDate: Date { get }
+c:objc(cs)CMGyroData	swift.class	CMGyroData	CMGyroData	class CMGyroData
+c:objc(cs)CMGyroData(py)rotationRate	swift.property	rotationRate	CMGyroData.rotationRate	var rotationRate: CMRotationRate { get }
+c:objc(cs)CMHeadphoneActivityManager	swift.class	CMHeadphoneActivityManager	CMHeadphoneActivityManager	class CMHeadphoneActivityManager
+c:objc(cs)CMHeadphoneActivityManager(cm)authorizationStatus	swift.type.method	authorizationStatus()	CMHeadphoneActivityManager.authorizationStatus()	class func authorizationStatus() -> CMAuthorizationStatus
+c:objc(cs)CMHeadphoneActivityManager(im)startActivityUpdatesToQueue:withHandler:	swift.method	startActivityUpdates(to:withHandler:)	CMHeadphoneActivityManager.startActivityUpdates(to:withHandler:)	func startActivityUpdates(to queue: OperationQueue, withHandler handler: @escaping CMHeadphoneActivityManager.ActivityHandler)
+c:objc(cs)CMHeadphoneActivityManager(im)startStatusUpdatesToQueue:withHandler:	swift.method	startStatusUpdates(to:withHandler:)	CMHeadphoneActivityManager.startStatusUpdates(to:withHandler:)	func startStatusUpdates(to queue: OperationQueue, withHandler handler: @escaping CMHeadphoneActivityManager.StatusHandler)
+c:objc(cs)CMHeadphoneActivityManager(im)stopActivityUpdates	swift.method	stopActivityUpdates()	CMHeadphoneActivityManager.stopActivityUpdates()	func stopActivityUpdates()
+c:objc(cs)CMHeadphoneActivityManager(im)stopStatusUpdates	swift.method	stopStatusUpdates()	CMHeadphoneActivityManager.stopStatusUpdates()	func stopStatusUpdates()
+c:objc(cs)CMHeadphoneActivityManager(py)activityActive	swift.property	isActivityActive	CMHeadphoneActivityManager.isActivityActive	var isActivityActive: Bool { get }
+c:objc(cs)CMHeadphoneActivityManager(py)activityAvailable	swift.property	isActivityAvailable	CMHeadphoneActivityManager.isActivityAvailable	var isActivityAvailable: Bool { get }
+c:objc(cs)CMHeadphoneActivityManager(py)statusActive	swift.property	isStatusActive	CMHeadphoneActivityManager.isStatusActive	var isStatusActive: Bool { get }
+c:objc(cs)CMHeadphoneActivityManager(py)statusAvailable	swift.property	isStatusAvailable	CMHeadphoneActivityManager.isStatusAvailable	var isStatusAvailable: Bool { get }
+c:objc(cs)CMHeadphoneMotionManager	swift.class	CMHeadphoneMotionManager	CMHeadphoneMotionManager	class CMHeadphoneMotionManager
+c:objc(cs)CMHeadphoneMotionManager(cm)authorizationStatus	swift.type.method	authorizationStatus()	CMHeadphoneMotionManager.authorizationStatus()	class func authorizationStatus() -> CMAuthorizationStatus
+c:objc(cs)CMHeadphoneMotionManager(im)startConnectionStatusUpdates	swift.method	startConnectionStatusUpdates()	CMHeadphoneMotionManager.startConnectionStatusUpdates()	func startConnectionStatusUpdates()
+c:objc(cs)CMHeadphoneMotionManager(im)startDeviceMotionUpdates	swift.method	startDeviceMotionUpdates()	CMHeadphoneMotionManager.startDeviceMotionUpdates()	func startDeviceMotionUpdates()
+c:objc(cs)CMHeadphoneMotionManager(im)startDeviceMotionUpdatesToQueue:withHandler:	swift.method	startDeviceMotionUpdates(to:withHandler:)	CMHeadphoneMotionManager.startDeviceMotionUpdates(to:withHandler:)	func startDeviceMotionUpdates(to queue: OperationQueue, withHandler handler: @escaping CMHeadphoneMotionManager.DeviceMotionHandler)
+c:objc(cs)CMHeadphoneMotionManager(im)stopConnectionStatusUpdates	swift.method	stopConnectionStatusUpdates()	CMHeadphoneMotionManager.stopConnectionStatusUpdates()	func stopConnectionStatusUpdates()
+c:objc(cs)CMHeadphoneMotionManager(im)stopDeviceMotionUpdates	swift.method	stopDeviceMotionUpdates()	CMHeadphoneMotionManager.stopDeviceMotionUpdates()	func stopDeviceMotionUpdates()
+c:objc(cs)CMHeadphoneMotionManager(py)connectionStatusActive	swift.property	isConnectionStatusActive	CMHeadphoneMotionManager.isConnectionStatusActive	var isConnectionStatusActive: Bool { get }
+c:objc(cs)CMHeadphoneMotionManager(py)delegate	swift.property	delegate	CMHeadphoneMotionManager.delegate	weak var delegate: (any CMHeadphoneMotionManagerDelegate)? { get set }
+c:objc(cs)CMHeadphoneMotionManager(py)deviceMotion	swift.property	deviceMotion	CMHeadphoneMotionManager.deviceMotion	var deviceMotion: CMDeviceMotion? { get }
+c:objc(cs)CMHeadphoneMotionManager(py)deviceMotionActive	swift.property	isDeviceMotionActive	CMHeadphoneMotionManager.isDeviceMotionActive	var isDeviceMotionActive: Bool { get }
+c:objc(cs)CMHeadphoneMotionManager(py)deviceMotionAvailable	swift.property	isDeviceMotionAvailable	CMHeadphoneMotionManager.isDeviceMotionAvailable	var isDeviceMotionAvailable: Bool { get }
+c:objc(cs)CMHighFrequencyHeartRateData	swift.class	CMHighFrequencyHeartRateData	CMHighFrequencyHeartRateData	class CMHighFrequencyHeartRateData
+c:objc(cs)CMHighFrequencyHeartRateData(py)confidence	swift.property	confidence	CMHighFrequencyHeartRateData.confidence	var confidence: CMHighFrequencyHeartRateDataConfidence { get }
+c:objc(cs)CMHighFrequencyHeartRateData(py)date	swift.property	date	CMHighFrequencyHeartRateData.date	var date: Date? { get }
+c:objc(cs)CMHighFrequencyHeartRateData(py)heartRate	swift.property	heartRate	CMHighFrequencyHeartRateData.heartRate	var heartRate: Double { get }
+c:objc(cs)CMLogItem	swift.class	CMLogItem	CMLogItem	class CMLogItem
+c:objc(cs)CMLogItem(py)timestamp	swift.property	timestamp	CMLogItem.timestamp	var timestamp: TimeInterval { get }
+c:objc(cs)CMMagnetometerData	swift.class	CMMagnetometerData	CMMagnetometerData	class CMMagnetometerData
+c:objc(cs)CMMagnetometerData(py)magneticField	swift.property	magneticField	CMMagnetometerData.magneticField	var magneticField: CMMagneticField { get }
+c:objc(cs)CMMotionActivity	swift.class	CMMotionActivity	CMMotionActivity	class CMMotionActivity
+c:objc(cs)CMMotionActivity(py)automotive	swift.property	automotive	CMMotionActivity.automotive	var automotive: Bool { get }
+c:objc(cs)CMMotionActivity(py)confidence	swift.property	confidence	CMMotionActivity.confidence	var confidence: CMMotionActivityConfidence { get }
+c:objc(cs)CMMotionActivity(py)cycling	swift.property	cycling	CMMotionActivity.cycling	var cycling: Bool { get }
+c:objc(cs)CMMotionActivity(py)running	swift.property	running	CMMotionActivity.running	var running: Bool { get }
+c:objc(cs)CMMotionActivity(py)startDate	swift.property	startDate	CMMotionActivity.startDate	var startDate: Date { get }
+c:objc(cs)CMMotionActivity(py)stationary	swift.property	stationary	CMMotionActivity.stationary	var stationary: Bool { get }
+c:objc(cs)CMMotionActivity(py)unknown	swift.property	unknown	CMMotionActivity.unknown	var unknown: Bool { get }
+c:objc(cs)CMMotionActivity(py)walking	swift.property	walking	CMMotionActivity.walking	var walking: Bool { get }
+c:objc(cs)CMMotionActivityManager	swift.class	CMMotionActivityManager	CMMotionActivityManager	class CMMotionActivityManager
+c:objc(cs)CMMotionActivityManager(cm)authorizationStatus	swift.type.method	authorizationStatus()	CMMotionActivityManager.authorizationStatus()	class func authorizationStatus() -> CMAuthorizationStatus
+c:objc(cs)CMMotionActivityManager(cm)isActivityAvailable	swift.type.method	isActivityAvailable()	CMMotionActivityManager.isActivityAvailable()	class func isActivityAvailable() -> Bool
+c:objc(cs)CMMotionActivityManager(im)queryActivityStartingFromDate:toDate:toQueue:withHandler:	swift.method	queryActivityStarting(from:to:to:withHandler:)	CMMotionActivityManager.queryActivityStarting(from:to:to:withHandler:)	func queryActivityStarting(from start: Date, to end: Date, to queue: OperationQueue, withHandler handler: @escaping CMMotionActivityQueryHandler)
+c:objc(cs)CMMotionActivityManager(im)startActivityUpdatesToQueue:withHandler:	swift.method	startActivityUpdates(to:withHandler:)	CMMotionActivityManager.startActivityUpdates(to:withHandler:)	func startActivityUpdates(to queue: OperationQueue, withHandler handler: @escaping CMMotionActivityHandler)
+c:objc(cs)CMMotionActivityManager(im)stopActivityUpdates	swift.method	stopActivityUpdates()	CMMotionActivityManager.stopActivityUpdates()	func stopActivityUpdates()
+c:objc(cs)CMMotionManager	swift.class	CMMotionManager	CMMotionManager	class CMMotionManager
+c:objc(cs)CMMotionManager(cm)availableAttitudeReferenceFrames	swift.type.method	availableAttitudeReferenceFrames()	CMMotionManager.availableAttitudeReferenceFrames()	class func availableAttitudeReferenceFrames() -> CMAttitudeReferenceFrame
+c:objc(cs)CMMotionManager(im)startAccelerometerUpdates	swift.method	startAccelerometerUpdates()	CMMotionManager.startAccelerometerUpdates()	func startAccelerometerUpdates()
+c:objc(cs)CMMotionManager(im)startAccelerometerUpdatesToQueue:withHandler:	swift.method	startAccelerometerUpdates(to:withHandler:)	CMMotionManager.startAccelerometerUpdates(to:withHandler:)	func startAccelerometerUpdates(to queue: OperationQueue, withHandler handler: @escaping CMAccelerometerHandler)
+c:objc(cs)CMMotionManager(im)startDeviceMotionUpdates	swift.method	startDeviceMotionUpdates()	CMMotionManager.startDeviceMotionUpdates()	func startDeviceMotionUpdates()
+c:objc(cs)CMMotionManager(im)startDeviceMotionUpdatesToQueue:withHandler:	swift.method	startDeviceMotionUpdates(to:withHandler:)	CMMotionManager.startDeviceMotionUpdates(to:withHandler:)	func startDeviceMotionUpdates(to queue: OperationQueue, withHandler handler: @escaping CMDeviceMotionHandler)
+c:objc(cs)CMMotionManager(im)startDeviceMotionUpdatesUsingReferenceFrame:	swift.method	startDeviceMotionUpdates(using:)	CMMotionManager.startDeviceMotionUpdates(using:)	func startDeviceMotionUpdates(using referenceFrame: CMAttitudeReferenceFrame)
+c:objc(cs)CMMotionManager(im)startDeviceMotionUpdatesUsingReferenceFrame:toQueue:withHandler:	swift.method	startDeviceMotionUpdates(using:to:withHandler:)	CMMotionManager.startDeviceMotionUpdates(using:to:withHandler:)	func startDeviceMotionUpdates(using referenceFrame: CMAttitudeReferenceFrame, to queue: OperationQueue, withHandler handler: @escaping CMDeviceMotionHandler)
+c:objc(cs)CMMotionManager(im)startGyroUpdates	swift.method	startGyroUpdates()	CMMotionManager.startGyroUpdates()	func startGyroUpdates()
+c:objc(cs)CMMotionManager(im)startGyroUpdatesToQueue:withHandler:	swift.method	startGyroUpdates(to:withHandler:)	CMMotionManager.startGyroUpdates(to:withHandler:)	func startGyroUpdates(to queue: OperationQueue, withHandler handler: @escaping CMGyroHandler)
+c:objc(cs)CMMotionManager(im)startMagnetometerUpdates	swift.method	startMagnetometerUpdates()	CMMotionManager.startMagnetometerUpdates()	func startMagnetometerUpdates()
+c:objc(cs)CMMotionManager(im)startMagnetometerUpdatesToQueue:withHandler:	swift.method	startMagnetometerUpdates(to:withHandler:)	CMMotionManager.startMagnetometerUpdates(to:withHandler:)	func startMagnetometerUpdates(to queue: OperationQueue, withHandler handler: @escaping CMMagnetometerHandler)
+c:objc(cs)CMMotionManager(im)stopAccelerometerUpdates	swift.method	stopAccelerometerUpdates()	CMMotionManager.stopAccelerometerUpdates()	func stopAccelerometerUpdates()
+c:objc(cs)CMMotionManager(im)stopDeviceMotionUpdates	swift.method	stopDeviceMotionUpdates()	CMMotionManager.stopDeviceMotionUpdates()	func stopDeviceMotionUpdates()
+c:objc(cs)CMMotionManager(im)stopGyroUpdates	swift.method	stopGyroUpdates()	CMMotionManager.stopGyroUpdates()	func stopGyroUpdates()
+c:objc(cs)CMMotionManager(im)stopMagnetometerUpdates	swift.method	stopMagnetometerUpdates()	CMMotionManager.stopMagnetometerUpdates()	func stopMagnetometerUpdates()
+c:objc(cs)CMMotionManager(py)accelerometerActive	swift.property	isAccelerometerActive	CMMotionManager.isAccelerometerActive	var isAccelerometerActive: Bool { get }
+c:objc(cs)CMMotionManager(py)accelerometerAvailable	swift.property	isAccelerometerAvailable	CMMotionManager.isAccelerometerAvailable	var isAccelerometerAvailable: Bool { get }
+c:objc(cs)CMMotionManager(py)accelerometerData	swift.property	accelerometerData	CMMotionManager.accelerometerData	var accelerometerData: CMAccelerometerData? { get }
+c:objc(cs)CMMotionManager(py)accelerometerUpdateInterval	swift.property	accelerometerUpdateInterval	CMMotionManager.accelerometerUpdateInterval	var accelerometerUpdateInterval: TimeInterval { get set }
+c:objc(cs)CMMotionManager(py)attitudeReferenceFrame	swift.property	attitudeReferenceFrame	CMMotionManager.attitudeReferenceFrame	var attitudeReferenceFrame: CMAttitudeReferenceFrame { get }
+c:objc(cs)CMMotionManager(py)deviceMotion	swift.property	deviceMotion	CMMotionManager.deviceMotion	var deviceMotion: CMDeviceMotion? { get }
+c:objc(cs)CMMotionManager(py)deviceMotionActive	swift.property	isDeviceMotionActive	CMMotionManager.isDeviceMotionActive	var isDeviceMotionActive: Bool { get }
+c:objc(cs)CMMotionManager(py)deviceMotionAvailable	swift.property	isDeviceMotionAvailable	CMMotionManager.isDeviceMotionAvailable	var isDeviceMotionAvailable: Bool { get }
+c:objc(cs)CMMotionManager(py)deviceMotionUpdateInterval	swift.property	deviceMotionUpdateInterval	CMMotionManager.deviceMotionUpdateInterval	var deviceMotionUpdateInterval: TimeInterval { get set }
+c:objc(cs)CMMotionManager(py)gyroActive	swift.property	isGyroActive	CMMotionManager.isGyroActive	var isGyroActive: Bool { get }
+c:objc(cs)CMMotionManager(py)gyroAvailable	swift.property	isGyroAvailable	CMMotionManager.isGyroAvailable	var isGyroAvailable: Bool { get }
+c:objc(cs)CMMotionManager(py)gyroData	swift.property	gyroData	CMMotionManager.gyroData	var gyroData: CMGyroData? { get }
+c:objc(cs)CMMotionManager(py)gyroUpdateInterval	swift.property	gyroUpdateInterval	CMMotionManager.gyroUpdateInterval	var gyroUpdateInterval: TimeInterval { get set }
+c:objc(cs)CMMotionManager(py)magnetometerActive	swift.property	isMagnetometerActive	CMMotionManager.isMagnetometerActive	var isMagnetometerActive: Bool { get }
+c:objc(cs)CMMotionManager(py)magnetometerAvailable	swift.property	isMagnetometerAvailable	CMMotionManager.isMagnetometerAvailable	var isMagnetometerAvailable: Bool { get }
+c:objc(cs)CMMotionManager(py)magnetometerData	swift.property	magnetometerData	CMMotionManager.magnetometerData	var magnetometerData: CMMagnetometerData? { get }
+c:objc(cs)CMMotionManager(py)magnetometerUpdateInterval	swift.property	magnetometerUpdateInterval	CMMotionManager.magnetometerUpdateInterval	var magnetometerUpdateInterval: TimeInterval { get set }
+c:objc(cs)CMMotionManager(py)showsDeviceMovementDisplay	swift.property	showsDeviceMovementDisplay	CMMotionManager.showsDeviceMovementDisplay	var showsDeviceMovementDisplay: Bool { get set }
+c:objc(cs)CMOdometerData	swift.class	CMOdometerData	CMOdometerData	class CMOdometerData
+c:objc(cs)CMOdometerData(py)deltaAltitude	swift.property	deltaAltitude	CMOdometerData.deltaAltitude	var deltaAltitude: CLLocationDistance { get }
+c:objc(cs)CMOdometerData(py)deltaDistance	swift.property	deltaDistance	CMOdometerData.deltaDistance	var deltaDistance: CLLocationDistance { get }
+c:objc(cs)CMOdometerData(py)deltaDistanceAccuracy	swift.property	deltaDistanceAccuracy	CMOdometerData.deltaDistanceAccuracy	var deltaDistanceAccuracy: CLLocationAccuracy { get }
+c:objc(cs)CMOdometerData(py)endDate	swift.property	endDate	CMOdometerData.endDate	var endDate: Date { get }
+c:objc(cs)CMOdometerData(py)gpsDate	swift.property	gpsDate	CMOdometerData.gpsDate	var gpsDate: Date { get }
+c:objc(cs)CMOdometerData(py)originDevice	swift.property	originDevice	CMOdometerData.originDevice	var originDevice: CMOdometerOriginDevice { get }
+c:objc(cs)CMOdometerData(py)speed	swift.property	speed	CMOdometerData.speed	var speed: CLLocationSpeed { get }
+c:objc(cs)CMOdometerData(py)speedAccuracy	swift.property	speedAccuracy	CMOdometerData.speedAccuracy	var speedAccuracy: CLLocationSpeedAccuracy { get }
+c:objc(cs)CMOdometerData(py)startDate	swift.property	startDate	CMOdometerData.startDate	var startDate: Date { get }
+c:objc(cs)CMOdometerData(py)verticalAccuracy	swift.property	verticalAccuracy	CMOdometerData.verticalAccuracy	var verticalAccuracy: CLLocationAccuracy { get }
+c:objc(cs)CMPedometer	swift.class	CMPedometer	CMPedometer	class CMPedometer
+c:objc(cs)CMPedometer(cm)authorizationStatus	swift.type.method	authorizationStatus()	CMPedometer.authorizationStatus()	class func authorizationStatus() -> CMAuthorizationStatus
+c:objc(cs)CMPedometer(cm)isCadenceAvailable	swift.type.method	isCadenceAvailable()	CMPedometer.isCadenceAvailable()	class func isCadenceAvailable() -> Bool
+c:objc(cs)CMPedometer(cm)isDistanceAvailable	swift.type.method	isDistanceAvailable()	CMPedometer.isDistanceAvailable()	class func isDistanceAvailable() -> Bool
+c:objc(cs)CMPedometer(cm)isFloorCountingAvailable	swift.type.method	isFloorCountingAvailable()	CMPedometer.isFloorCountingAvailable()	class func isFloorCountingAvailable() -> Bool
+c:objc(cs)CMPedometer(cm)isPaceAvailable	swift.type.method	isPaceAvailable()	CMPedometer.isPaceAvailable()	class func isPaceAvailable() -> Bool
+c:objc(cs)CMPedometer(cm)isPedometerEventTrackingAvailable	swift.type.method	isPedometerEventTrackingAvailable()	CMPedometer.isPedometerEventTrackingAvailable()	class func isPedometerEventTrackingAvailable() -> Bool
+c:objc(cs)CMPedometer(cm)isStepCountingAvailable	swift.type.method	isStepCountingAvailable()	CMPedometer.isStepCountingAvailable()	class func isStepCountingAvailable() -> Bool
+c:objc(cs)CMPedometer(im)queryPedometerDataFromDate:toDate:withHandler:	swift.method	queryPedometerData(from:to:withHandler:)	CMPedometer.queryPedometerData(from:to:withHandler:)	func queryPedometerData(from start: Date, to end: Date, withHandler handler: @escaping CMPedometerHandler)
+c:objc(cs)CMPedometer(im)startPedometerEventUpdatesWithHandler:	swift.method	startEventUpdates(handler:)	CMPedometer.startEventUpdates(handler:)	func startEventUpdates(handler: @escaping CMPedometerEventHandler)
+c:objc(cs)CMPedometer(im)startPedometerUpdatesFromDate:withHandler:	swift.method	startUpdates(from:withHandler:)	CMPedometer.startUpdates(from:withHandler:)	func startUpdates(from start: Date, withHandler handler: @escaping CMPedometerHandler)
+c:objc(cs)CMPedometer(im)stopPedometerEventUpdates	swift.method	stopEventUpdates()	CMPedometer.stopEventUpdates()	func stopEventUpdates()
+c:objc(cs)CMPedometer(im)stopPedometerUpdates	swift.method	stopUpdates()	CMPedometer.stopUpdates()	func stopUpdates()
+c:objc(cs)CMPedometerData	swift.class	CMPedometerData	CMPedometerData	class CMPedometerData
+c:objc(cs)CMPedometerData(py)averageActivePace	swift.property	averageActivePace	CMPedometerData.averageActivePace	var averageActivePace: NSNumber? { get }
+c:objc(cs)CMPedometerData(py)currentCadence	swift.property	currentCadence	CMPedometerData.currentCadence	var currentCadence: NSNumber? { get }
+c:objc(cs)CMPedometerData(py)currentPace	swift.property	currentPace	CMPedometerData.currentPace	var currentPace: NSNumber? { get }
+c:objc(cs)CMPedometerData(py)distance	swift.property	distance	CMPedometerData.distance	var distance: NSNumber? { get }
+c:objc(cs)CMPedometerData(py)endDate	swift.property	endDate	CMPedometerData.endDate	var endDate: Date { get }
+c:objc(cs)CMPedometerData(py)floorsAscended	swift.property	floorsAscended	CMPedometerData.floorsAscended	var floorsAscended: NSNumber? { get }
+c:objc(cs)CMPedometerData(py)floorsDescended	swift.property	floorsDescended	CMPedometerData.floorsDescended	var floorsDescended: NSNumber? { get }
+c:objc(cs)CMPedometerData(py)numberOfSteps	swift.property	numberOfSteps	CMPedometerData.numberOfSteps	var numberOfSteps: NSNumber { get }
+c:objc(cs)CMPedometerData(py)startDate	swift.property	startDate	CMPedometerData.startDate	var startDate: Date { get }
+c:objc(cs)CMPedometerEvent	swift.class	CMPedometerEvent	CMPedometerEvent	class CMPedometerEvent
+c:objc(cs)CMPedometerEvent(py)date	swift.property	date	CMPedometerEvent.date	var date: Date { get }
+c:objc(cs)CMPedometerEvent(py)type	swift.property	type	CMPedometerEvent.type	var type: CMPedometerEventType { get }
+c:objc(cs)CMRecordedAccelerometerData	swift.class	CMRecordedAccelerometerData	CMRecordedAccelerometerData	class CMRecordedAccelerometerData
+c:objc(cs)CMRecordedAccelerometerData(py)identifier	swift.property	identifier	CMRecordedAccelerometerData.identifier	var identifier: UInt64 { get }
+c:objc(cs)CMRecordedAccelerometerData(py)startDate	swift.property	startDate	CMRecordedAccelerometerData.startDate	var startDate: Date { get }
+c:objc(cs)CMRecordedPressureData	swift.class	CMRecordedPressureData	CMRecordedPressureData	class CMRecordedPressureData
+c:objc(cs)CMRecordedPressureData(py)identifier	swift.property	identifier	CMRecordedPressureData.identifier	var identifier: UInt64 { get }
+c:objc(cs)CMRecordedPressureData(py)startDate	swift.property	startDate	CMRecordedPressureData.startDate	var startDate: Date { get }
+c:objc(cs)CMRecordedRotationRateData	swift.class	CMRecordedRotationRateData	CMRecordedRotationRateData	class CMRecordedRotationRateData
+c:objc(cs)CMRecordedRotationRateData(py)startDate	swift.property	startDate	CMRecordedRotationRateData.startDate	var startDate: Date { get }
+c:objc(cs)CMRotationRateData	swift.class	CMRotationRateData	CMRotationRateData	class CMRotationRateData
+c:objc(cs)CMRotationRateData(py)rotationRate	swift.property	rotationRate	CMRotationRateData.rotationRate	var rotationRate: CMRotationRate { get }
+c:objc(cs)CMSensorDataList	swift.class	CMSensorDataList	CMSensorDataList	class CMSensorDataList
+c:objc(cs)CMSensorRecorder	swift.class	CMSensorRecorder	CMSensorRecorder	class CMSensorRecorder
+c:objc(cs)CMSensorRecorder(cm)authorizationStatus	swift.type.method	authorizationStatus()	CMSensorRecorder.authorizationStatus()	class func authorizationStatus() -> CMAuthorizationStatus
+c:objc(cs)CMSensorRecorder(cm)isAccelerometerRecordingAvailable	swift.type.method	isAccelerometerRecordingAvailable()	CMSensorRecorder.isAccelerometerRecordingAvailable()	class func isAccelerometerRecordingAvailable() -> Bool
+c:objc(cs)CMSensorRecorder(cm)isAuthorizedForRecording	swift.type.method	isAuthorizedForRecording()	CMSensorRecorder.isAuthorizedForRecording()	class func isAuthorizedForRecording() -> Bool
+c:objc(cs)CMSensorRecorder(im)accelerometerDataFromDate:toDate:	swift.method	accelerometerData(from:to:)	CMSensorRecorder.accelerometerData(from:to:)	func accelerometerData(from fromDate: Date, to toDate: Date) -> CMSensorDataList?
+c:objc(cs)CMSensorRecorder(im)recordAccelerometerForDuration:	swift.method	recordAccelerometer(forDuration:)	CMSensorRecorder.recordAccelerometer(forDuration:)	func recordAccelerometer(forDuration duration: TimeInterval)
+c:objc(cs)CMStepCounter	swift.class	CMStepCounter	CMStepCounter	class CMStepCounter
+c:objc(cs)CMStepCounter(cm)isStepCountingAvailable	swift.type.method	isStepCountingAvailable()	CMStepCounter.isStepCountingAvailable()	class func isStepCountingAvailable() -> Bool
+c:objc(cs)CMStepCounter(im)queryStepCountStartingFrom:to:toQueue:withHandler:	swift.method	queryStepCountStarting(from:to:to:withHandler:)	CMStepCounter.queryStepCountStarting(from:to:to:withHandler:)	func queryStepCountStarting(from start: Date, to end: Date, to queue: OperationQueue, withHandler handler: @escaping CMStepQueryHandler)
+c:objc(cs)CMStepCounter(im)startStepCountingUpdatesToQueue:updateOn:withHandler:	swift.method	startStepCountingUpdates(to:updateOn:withHandler:)	CMStepCounter.startStepCountingUpdates(to:updateOn:withHandler:)	func startStepCountingUpdates(to queue: OperationQueue, updateOn stepCounts: Int, withHandler handler: @escaping CMStepUpdateHandler)
+c:objc(cs)CMStepCounter(im)stopStepCountingUpdates	swift.method	stopStepCountingUpdates()	CMStepCounter.stopStepCountingUpdates()	func stopStepCountingUpdates()
+c:objc(cs)CMTremorResult	swift.class	CMTremorResult	CMTremorResult	class CMTremorResult
+c:objc(cs)CMTremorResult(py)endDate	swift.property	endDate	CMTremorResult.endDate	var endDate: Date { get }
+c:objc(cs)CMTremorResult(py)percentMild	swift.property	percentMild	CMTremorResult.percentMild	var percentMild: Float { get }
+c:objc(cs)CMTremorResult(py)percentModerate	swift.property	percentModerate	CMTremorResult.percentModerate	var percentModerate: Float { get }
+c:objc(cs)CMTremorResult(py)percentNone	swift.property	percentNone	CMTremorResult.percentNone	var percentNone: Float { get }
+c:objc(cs)CMTremorResult(py)percentSlight	swift.property	percentSlight	CMTremorResult.percentSlight	var percentSlight: Float { get }
+c:objc(cs)CMTremorResult(py)percentStrong	swift.property	percentStrong	CMTremorResult.percentStrong	var percentStrong: Float { get }
+c:objc(cs)CMTremorResult(py)percentUnknown	swift.property	percentUnknown	CMTremorResult.percentUnknown	var percentUnknown: Float { get }
+c:objc(cs)CMTremorResult(py)startDate	swift.property	startDate	CMTremorResult.startDate	var startDate: Date { get }
+c:objc(cs)CMWaterSubmersionEvent	swift.class	CMWaterSubmersionEvent	CMWaterSubmersionEvent	class CMWaterSubmersionEvent
+c:objc(cs)CMWaterSubmersionEvent(py)date	swift.property	date	CMWaterSubmersionEvent.date	var date: Date { get }
+c:objc(cs)CMWaterSubmersionEvent(py)state	swift.property	state	CMWaterSubmersionEvent.state	var state: CMWaterSubmersionEvent.State { get }
+c:objc(cs)CMWaterSubmersionManager	swift.class	CMWaterSubmersionManager	CMWaterSubmersionManager	class CMWaterSubmersionManager
+c:objc(cs)CMWaterSubmersionManager(cpy)authorizationStatus	swift.type.property	authorizationStatus	CMWaterSubmersionManager.authorizationStatus	class var authorizationStatus: CMAuthorizationStatus { get }
+c:objc(cs)CMWaterSubmersionManager(cpy)waterSubmersionAvailable	swift.type.property	waterSubmersionAvailable	CMWaterSubmersionManager.waterSubmersionAvailable	class var waterSubmersionAvailable: Bool { get }
+c:objc(cs)CMWaterSubmersionManager(py)delegate	swift.property	delegate	CMWaterSubmersionManager.delegate	weak var delegate: (any CMWaterSubmersionManagerDelegate)? { get set }
+c:objc(cs)CMWaterSubmersionManager(py)maximumDepth	swift.property	maximumDepth	CMWaterSubmersionManager.maximumDepth	var maximumDepth: Measurement<UnitLength>? { get }
+c:objc(cs)CMWaterSubmersionMeasurement	swift.class	CMWaterSubmersionMeasurement	CMWaterSubmersionMeasurement	class CMWaterSubmersionMeasurement
+c:objc(cs)CMWaterSubmersionMeasurement(py)date	swift.property	date	CMWaterSubmersionMeasurement.date	var date: Date { get }
+c:objc(cs)CMWaterSubmersionMeasurement(py)depth	swift.property	depth	CMWaterSubmersionMeasurement.depth	var depth: Measurement<UnitLength>? { get }
+c:objc(cs)CMWaterSubmersionMeasurement(py)pressure	swift.property	pressure	CMWaterSubmersionMeasurement.pressure	var pressure: Measurement<UnitPressure>? { get }
+c:objc(cs)CMWaterSubmersionMeasurement(py)submersionState	swift.property	submersionState	CMWaterSubmersionMeasurement.submersionState	var submersionState: CMWaterSubmersionMeasurement.DepthState { get }
+c:objc(cs)CMWaterSubmersionMeasurement(py)surfacePressure	swift.property	surfacePressure	CMWaterSubmersionMeasurement.surfacePressure	var surfacePressure: Measurement<UnitPressure> { get }
+c:objc(cs)CMWaterTemperature	swift.class	CMWaterTemperature	CMWaterTemperature	class CMWaterTemperature
+c:objc(cs)CMWaterTemperature(py)date	swift.property	date	CMWaterTemperature.date	var date: Date { get }
+c:objc(cs)CMWaterTemperature(py)temperature	swift.property	temperature	CMWaterTemperature.temperature	var temperature: Measurement<UnitTemperature> { get }
+c:objc(cs)CMWaterTemperature(py)temperatureUncertainty	swift.property	temperatureUncertainty	CMWaterTemperature.temperatureUncertainty	var temperatureUncertainty: Measurement<UnitTemperature> { get }
+c:objc(pl)CMHeadphoneMotionManagerDelegate	swift.protocol	CMHeadphoneMotionManagerDelegate	CMHeadphoneMotionManagerDelegate	protocol CMHeadphoneMotionManagerDelegate : NSObjectProtocol
+c:objc(pl)CMHeadphoneMotionManagerDelegate(im)headphoneMotionManagerDidConnect:	swift.method	headphoneMotionManagerDidConnect(_:)	CMHeadphoneMotionManagerDelegate.headphoneMotionManagerDidConnect(_:)	optional func headphoneMotionManagerDidConnect(_ manager: CMHeadphoneMotionManager)
+c:objc(pl)CMHeadphoneMotionManagerDelegate(im)headphoneMotionManagerDidDisconnect:	swift.method	headphoneMotionManagerDidDisconnect(_:)	CMHeadphoneMotionManagerDelegate.headphoneMotionManagerDidDisconnect(_:)	optional func headphoneMotionManagerDidDisconnect(_ manager: CMHeadphoneMotionManager)
+c:objc(pl)CMWaterSubmersionManagerDelegate	swift.protocol	CMWaterSubmersionManagerDelegate	CMWaterSubmersionManagerDelegate	protocol CMWaterSubmersionManagerDelegate : NSObjectProtocol
+c:objc(pl)CMWaterSubmersionManagerDelegate(im)manager:didUpdateEvent:	swift.method	manager(_:didUpdate:)	CMWaterSubmersionManagerDelegate.manager(_:didUpdate:)	func manager(_ manager: CMWaterSubmersionManager, didUpdate event: CMWaterSubmersionEvent)
+c:objc(pl)CMWaterSubmersionManagerDelegate(im)manager:didUpdateMeasurement:	swift.method	manager(_:didUpdate:)	CMWaterSubmersionManagerDelegate.manager(_:didUpdate:)	func manager(_ manager: CMWaterSubmersionManager, didUpdate measurement: CMWaterSubmersionMeasurement)
+c:objc(pl)CMWaterSubmersionManagerDelegate(im)manager:didUpdateTemperature:	swift.method	manager(_:didUpdate:)	CMWaterSubmersionManagerDelegate.manager(_:didUpdate:)	func manager(_ manager: CMWaterSubmersionManager, didUpdate measurement: CMWaterTemperature)
+c:objc(pl)CMWaterSubmersionManagerDelegate(im)manager:errorOccurred:	swift.method	manager(_:errorOccurred:)	CMWaterSubmersionManagerDelegate.manager(_:errorOccurred:)	func manager(_ manager: CMWaterSubmersionManager, errorOccurred error: any Error)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMAttitude	swift.init	init(coder:)	CMAttitude.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMDyskineticSymptomResult	swift.init	init(coder:)	CMDyskineticSymptomResult.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMLogItem	swift.init	init(coder:)	CMLogItem.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMOdometerData	swift.init	init(coder:)	CMOdometerData.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMPedometerData	swift.init	init(coder:)	CMPedometerData.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMPedometerEvent	swift.init	init(coder:)	CMPedometerEvent.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMTremorResult	swift.init	init(coder:)	CMTremorResult.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMWaterSubmersionEvent	swift.init	init(coder:)	CMWaterSubmersionEvent.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMWaterSubmersionMeasurement	swift.init	init(coder:)	CMWaterSubmersionMeasurement.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMWaterTemperature	swift.init	init(coder:)	CMWaterTemperature.init(coder:)	init?(coder: NSCoder)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.func.op	!=(_:_:)	CMAttitudeReferenceFrame.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMAuthorizationStatus	swift.func.op	!=(_:_:)	CMAuthorizationStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMDeviceMotionSensorLocation	swift.func.op	!=(_:_:)	CMDeviceMotion.SensorLocation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMHeadphoneActivityStatus	swift.func.op	!=(_:_:)	CMHeadphoneActivityManager.Status.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMHighFrequencyHeartRateDataConfidence	swift.func.op	!=(_:_:)	CMHighFrequencyHeartRateDataConfidence.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMMagneticFieldCalibrationAccuracy	swift.func.op	!=(_:_:)	CMMagneticFieldCalibrationAccuracy.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMMotionActivityConfidence	swift.func.op	!=(_:_:)	CMMotionActivityConfidence.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMOdometerOriginDevice	swift.func.op	!=(_:_:)	CMOdometerOriginDevice.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMPedometerEventType	swift.func.op	!=(_:_:)	CMPedometerEventType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMWaterSubmersionDepthState	swift.func.op	!=(_:_:)	CMWaterSubmersionMeasurement.DepthState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMWaterSubmersionState	swift.func.op	!=(_:_:)	CMWaterSubmersionEvent.State.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@CMError	swift.func.op	!=(_:_:)	CMError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMAuthorizationStatus	swift.property	hashValue	CMAuthorizationStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMDeviceMotionSensorLocation	swift.property	hashValue	CMDeviceMotion.SensorLocation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMHeadphoneActivityStatus	swift.property	hashValue	CMHeadphoneActivityManager.Status.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMHighFrequencyHeartRateDataConfidence	swift.property	hashValue	CMHighFrequencyHeartRateDataConfidence.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMMagneticFieldCalibrationAccuracy	swift.property	hashValue	CMMagneticFieldCalibrationAccuracy.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMMotionActivityConfidence	swift.property	hashValue	CMMotionActivityConfidence.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMOdometerOriginDevice	swift.property	hashValue	CMOdometerOriginDevice.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMPedometerEventType	swift.property	hashValue	CMPedometerEventType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMWaterSubmersionDepthState	swift.property	hashValue	CMWaterSubmersionMeasurement.DepthState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMWaterSubmersionState	swift.property	hashValue	CMWaterSubmersionEvent.State.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@CMError	swift.property	hashValue	CMError.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMAuthorizationStatus	swift.method	hash(into:)	CMAuthorizationStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMDeviceMotionSensorLocation	swift.method	hash(into:)	CMDeviceMotion.SensorLocation.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMHeadphoneActivityStatus	swift.method	hash(into:)	CMHeadphoneActivityManager.Status.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMHighFrequencyHeartRateDataConfidence	swift.method	hash(into:)	CMHighFrequencyHeartRateDataConfidence.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMMagneticFieldCalibrationAccuracy	swift.method	hash(into:)	CMMagneticFieldCalibrationAccuracy.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMMotionActivityConfidence	swift.method	hash(into:)	CMMotionActivityConfidence.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMOdometerOriginDevice	swift.method	hash(into:)	CMOdometerOriginDevice.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMPedometerEventType	swift.method	hash(into:)	CMPedometerEventType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMWaterSubmersionDepthState	swift.method	hash(into:)	CMWaterSubmersionMeasurement.DepthState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMWaterSubmersionState	swift.method	hash(into:)	CMWaterSubmersionEvent.State.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@CMError	swift.method	hash(into:)	CMError.hash(into:)	func hash(into hasher: inout Hasher)
+s:So12CMQuaterniona1x1y1z1wABSd_S3dtcfc	swift.init	init(x:y:z:w:)	CMQuaternion.init(x:y:z:w:)	init(x: Double, y: Double, z: Double, w: Double)
+s:So12CMQuaternionaABycfc	swift.init	init()	CMQuaternion.init()	init()
+s:So14CMAccelerationa1x1y1zABSd_S2dtcfc	swift.init	init(x:y:z:)	CMAcceleration.init(x:y:z:)	init(x: Double, y: Double, z: Double)
+s:So14CMAccelerationaABycfc	swift.init	init()	CMAcceleration.init()	init()
+s:So14CMOdometerDataC10CoreMotionE11maxAbsSlopeSdSgvp	swift.property	maxAbsSlope	CMOdometerData.maxAbsSlope	var maxAbsSlope: Double? { get }
+s:So14CMOdometerDataC10CoreMotionE5slopeSdSgvp	swift.property	slope	CMOdometerData.slope	var slope: Double? { get }
+s:So14CMRotationRatea1x1y1zABSd_S2dtcfc	swift.init	init(x:y:z:)	CMRotationRate.init(x:y:z:)	init(x: Double, y: Double, z: Double)
+s:So14CMRotationRateaABycfc	swift.init	init()	CMRotationRate.init()	init()
+s:So15CMMagneticFielda1x1y1zABSd_S2dtcfc	swift.init	init(x:y:z:)	CMMagneticField.init(x:y:z:)	init(x: Double, y: Double, z: Double)
+s:So15CMMagneticFieldaABycfc	swift.init	init()	CMMagneticField.init()	init()
+s:So16CMRotationMatrixa3m113m123m133m213m223m233m313m323m33ABSd_S8dtcfc	swift.init	init(m11:m12:m13:m21:m22:m23:m31:m32:m33:)	CMRotationMatrix.init(m11:m12:m13:m21:m22:m23:m31:m32:m33:)	init(m11: Double, m12: Double, m13: Double, m21: Double, m22: Double, m23: Double, m31: Double, m32: Double, m33: Double)
+s:So16CMRotationMatrixaABycfc	swift.init	init()	CMRotationMatrix.init()	init()
+s:So20CMPedometerEventTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CMPedometerEventType.init(rawValue:)	init?(rawValue: Int)
+s:So21CMAuthorizationStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CMAuthorizationStatus.init(rawValue:)	init?(rawValue: Int)
+s:So22CMOdometerOriginDeviceV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CMOdometerOriginDevice.init(rawValue:)	init?(rawValue: Int)
+s:So22CMWaterSubmersionStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CMWaterSubmersionEvent.State.init(rawValue:)	init?(rawValue: Int)
+s:So24CMAttitudeReferenceFrameV8rawValueABSu_tcfc	swift.init	init(rawValue:)	CMAttitudeReferenceFrame.init(rawValue:)	init(rawValue: UInt)
+s:So25CMCalibratedMagneticFielda5field8accuracyABSo010CMMagneticC0a_So0fC19CalibrationAccuracyVtcfc	swift.init	init(field:accuracy:)	CMCalibratedMagneticField.init(field:accuracy:)	init(field: CMMagneticField, accuracy: CMMagneticFieldCalibrationAccuracy)
+s:So25CMCalibratedMagneticFieldaABycfc	swift.init	init()	CMCalibratedMagneticField.init()	init()
+s:So25CMHeadphoneActivityStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CMHeadphoneActivityManager.Status.init(rawValue:)	init?(rawValue: Int)
+s:So26CMMotionActivityConfidenceV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CMMotionActivityConfidence.init(rawValue:)	init?(rawValue: Int)
+s:So27CMWaterSubmersionDepthStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CMWaterSubmersionMeasurement.DepthState.init(rawValue:)	init?(rawValue: Int)
+s:So28CMDeviceMotionSensorLocationV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CMDeviceMotion.SensorLocation.init(rawValue:)	init?(rawValue: Int)
+s:So34CMMagneticFieldCalibrationAccuracyV8rawValueABSgs5Int32V_tcfc	swift.init	init(rawValue:)	CMMagneticFieldCalibrationAccuracy.init(rawValue:)	init?(rawValue: Int32)
+s:So38CMHighFrequencyHeartRateDataConfidenceV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CMHighFrequencyHeartRateDataConfidence.init(rawValue:)	init?(rawValue: Int)
+s:So7CMErrora8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	CMError.init(rawValue:)	init(rawValue: UInt32)
+s:So7CMErrora8rawValues6UInt32Vvp	swift.property	rawValue	CMError.rawValue	var rawValue: UInt32
+s:So7CMErrorayABs6UInt32Vcfc	swift.init	init(_:)	CMError.init(_:)	init(_ rawValue: UInt32)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.init	init(arrayLiteral:)	CMAttitudeReferenceFrame.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	isDisjoint(with:)	CMAttitudeReferenceFrame.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	isSuperset(of:)	CMAttitudeReferenceFrame.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	subtracting(_:)	CMAttitudeReferenceFrame.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	isStrictSubset(of:)	CMAttitudeReferenceFrame.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	isStrictSuperset(of:)	CMAttitudeReferenceFrame.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.property	isEmpty	CMAttitudeReferenceFrame.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	isSubset(of:)	CMAttitudeReferenceFrame.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	subtract(_:)	CMAttitudeReferenceFrame.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.init	init(_:)	CMAttitudeReferenceFrame.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	insert(_:)	CMAttitudeReferenceFrame.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	remove(_:)	CMAttitudeReferenceFrame.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	update(with:)	CMAttitudeReferenceFrame.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	contains(_:)	CMAttitudeReferenceFrame.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	intersection(_:)	CMAttitudeReferenceFrame.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	symmetricDifference(_:)	CMAttitudeReferenceFrame.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	union(_:)	CMAttitudeReferenceFrame.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	formIntersection(_:)	CMAttitudeReferenceFrame.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	formSymmetricDifference(_:)	CMAttitudeReferenceFrame.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.method	formUnion(_:)	CMAttitudeReferenceFrame.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	swift.init	init()	CMAttitudeReferenceFrame.init()	init()

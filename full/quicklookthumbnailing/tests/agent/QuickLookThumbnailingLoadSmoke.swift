@@ -1,0 +1,3 @@
+import QuickLookThumbnailing
+
+let frameworkLoadSmokeMarker = "QUICKLOOKTHUMBNAILING_AGENT_RUNTIME_OK"

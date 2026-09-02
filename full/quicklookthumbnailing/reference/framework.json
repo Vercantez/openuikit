@@ -1,0 +1,83 @@
+{
+  "apiCrosswalk": "reference/api-crosswalk.tsv",
+  "apiDigester": "reference/api-digester.json",
+  "corpusSummary": "reference/corpus-summary.json",
+  "coveragePolicy": {
+    "allowedStatuses": [
+      "implemented",
+      "declared",
+      "deferred",
+      "unavailable",
+      "not-applicable"
+    ],
+    "minimumNondeferredCount": 53,
+    "nondeferredStatuses": [
+      "implemented",
+      "declared"
+    ],
+    "rule": "ceil(50% of exact public symbols)"
+  },
+  "dependencies": [
+    "CoreGraphics",
+    "CoreTransferable",
+    "ExtensionFoundation",
+    "Foundation",
+    "UIKit",
+    "UniformTypeIdentifiers"
+  ],
+  "externalEvidence": "reference/external-evidence.json",
+  "guestManifest": "quicklookthumbnailing_guest_sources.txt",
+  "lane": "medium-full",
+  "module": "QuickLookThumbnailing",
+  "provenance": {
+    "apiCrosswalkAmbiguousCount": 0,
+    "apiCrosswalkExactUSRCount": 9,
+    "apiCrosswalkImportNameCount": 4,
+    "apiCrosswalkUnmatchedCount": 92,
+    "apiDeclarationNodeCount": 48,
+    "apiDigesterFormatVersion": 8,
+    "apiDigesterNodeCount": 123,
+    "apiDigesterPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-api-digester",
+    "apiDigesterSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+    "apiDigesterVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+    "apiOwnedDeclarationNodeCount": 45,
+    "arm64TBDExportCount": 262,
+    "externalEvidenceLockPath": "full/framework-fanout/external-evidence-sources.json",
+    "externalEvidenceLockSHA256": "a0b7ebf22affede443bc79ae75fb8ac7b9f450a407f666147efa3ba93878b752",
+    "frameworkSDKRelativePath": "System/Library/Frameworks/QuickLookThumbnailing.framework",
+    "generatorPath": "scripts/framework-fanout/generate_seed_v2.py",
+    "generatorSHA256": "e44f6bde16e79ca2275fd7b518384d4c2b860d3e5b9293e68770a53eb118923c",
+    "rawSDKInputCount": 12,
+    "roadmapPath": "full/framework-roadmap/framework-roadmap.json",
+    "roadmapSHA256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a",
+    "sdkName": "iphoneos",
+    "sdkVersion": "26.1",
+    "symbolGraphExtractorPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-symbolgraph-extract",
+    "symbolGraphExtractorSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+    "symbolGraphExtractorVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+    "symbolGraphRelationshipMultisetSHA256": "8353fa24199983dd36414e2be804569e1d34be87b8d3c130dcaf272451f9e40d",
+    "symbolGraphSymbolMultisetSHA256": "459d08964e9fe55c030678ee42d9f1bfc04a0911ac7c5fae144d54e7624dbf16",
+    "target": "arm64-apple-ios26.0",
+    "tbdInputCount": 1,
+    "xcodeBuild": "17B55",
+    "xcodeVersion": "26.1"
+  },
+  "publicSurface": "reference/public-surface.tsv",
+  "relationshipCount": 173,
+  "risks": [
+    "filesystem",
+    "graphics",
+    "os-service",
+    "async",
+    "cancellation",
+    "fail-closed"
+  ],
+  "runtimeMarker": "QUICKLOOKTHUMBNAILING_AGENT_RUNTIME_OK",
+  "schema": 2,
+  "sdkInputs": "reference/sdk-inputs.tsv",
+  "slug": "quicklookthumbnailing",
+  "symbolConflicts": "reference/symbol-conflicts.tsv",
+  "symbolCount": 105,
+  "symbolGraph": "reference/symbol-graphs.json",
+  "tbdExports": "reference/tbd-exports.tsv"
+}

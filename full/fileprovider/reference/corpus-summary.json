@@ -1,0 +1,48 @@
+{
+  "module": "FileProvider",
+  "moduleRecord": {
+    "app_coverage_count": 1,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 7,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 101,
+    "iphoneos_runtime_focus_launch_build_rank": 113,
+    "module": "FileProvider",
+    "occurrence_count": 7,
+    "per_app": {
+      "nextcloud-ios": {
+        "evidence_sha256": "f1ed0f7b1851356c2984d609b3cb9697d6d6587bbd8495f56e33236d55b0e0d1",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "File Provider Extension/FileProviderData.swift",
+          "File Provider Extension/FileProviderEnumerator.swift",
+          "File Provider Extension/FileProviderExtension+Actions.swift",
+          "File Provider Extension/FileProviderExtension+Thumbnail.swift",
+          "File Provider Extension/FileProviderExtension.swift",
+          "File Provider Extension/FileProviderItem.swift",
+          "File Provider Extension/FileProviderUtility.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 101,
+    "byFocusLaunchBuildRelevance": 113
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

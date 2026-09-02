@@ -1,0 +1,31 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/TipKit.symbols.json",
+      "relationshipCount": 1202,
+      "sha256": "ea8372b5178bd5eedbf0a70f443a35aa6ce79d334540816f7708b004474d2344",
+      "symbolCount": 1020
+    },
+    {
+      "path": "reference/symbol-graphs/TipKit@Swift.symbols.json",
+      "relationshipCount": 3,
+      "sha256": "b361045341ce30b3ef1266d8a8cb4ae2a6f1a8959b6d127b79f6f6af884866b5",
+      "symbolCount": 3
+    },
+    {
+      "path": "reference/symbol-graphs/TipKit@SwiftUICore.symbols.json",
+      "relationshipCount": 12,
+      "sha256": "f6f48d3b1031381388c83fa890eab657096e62321d3ebcc3c4132daf234568cb",
+      "symbolCount": 12
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "TipKit",
+  "relationshipCount": 1217,
+  "schema": 1,
+  "symbolCount": 1035,
+  "target": "arm64-apple-ios26.0"
+}

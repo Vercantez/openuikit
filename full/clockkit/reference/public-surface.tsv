@@ -1,0 +1,14 @@
+precise	kind	title	path	declaration
+c:@CLKWatchFaceLibraryErrorDomain	swift.type.property	ErrorDomain	CLKWatchFaceLibrary.ErrorDomain	class let ErrorDomain: String
+c:@E@CLKWatchFaceLibraryErrorCode	swift.enum	CLKWatchFaceLibrary.ErrorCode	CLKWatchFaceLibrary.ErrorCode	enum ErrorCode
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeFaceNotAvailable	swift.enum.case	CLKWatchFaceLibrary.ErrorCode.faceNotAvailable	CLKWatchFaceLibrary.ErrorCode.faceNotAvailable	case faceNotAvailable
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeInvalidFile	swift.enum.case	CLKWatchFaceLibrary.ErrorCode.invalidFile	CLKWatchFaceLibrary.ErrorCode.invalidFile	case invalidFile
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeNoURL	swift.enum.case	CLKWatchFaceLibrary.ErrorCode.noURL	CLKWatchFaceLibrary.ErrorCode.noURL	case noURL
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodeNotFileURL	swift.enum.case	CLKWatchFaceLibrary.ErrorCode.notFileURL	CLKWatchFaceLibrary.ErrorCode.notFileURL	case notFileURL
+c:@E@CLKWatchFaceLibraryErrorCode@CLKWatchFaceLibraryErrorCodePermissionDenied	swift.enum.case	CLKWatchFaceLibrary.ErrorCode.permissionDenied	CLKWatchFaceLibrary.ErrorCode.permissionDenied	case permissionDenied
+c:objc(cs)CLKWatchFaceLibrary	swift.class	CLKWatchFaceLibrary	CLKWatchFaceLibrary	class CLKWatchFaceLibrary
+c:objc(cs)CLKWatchFaceLibrary(im)addWatchFaceAtURL:completionHandler:	swift.method	addWatchFace(at:)	CLKWatchFaceLibrary.addWatchFace(at:)	func addWatchFace(at fileURL: URL) async throws
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLKWatchFaceLibraryErrorCode	swift.func.op	!=(_:_:)	CLKWatchFaceLibrary.ErrorCode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLKWatchFaceLibraryErrorCode	swift.property	hashValue	CLKWatchFaceLibrary.ErrorCode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLKWatchFaceLibraryErrorCode	swift.method	hash(into:)	CLKWatchFaceLibrary.ErrorCode.hash(into:)	func hash(into hasher: inout Hasher)
+s:So28CLKWatchFaceLibraryErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	CLKWatchFaceLibrary.ErrorCode.init(rawValue:)	init?(rawValue: Int)

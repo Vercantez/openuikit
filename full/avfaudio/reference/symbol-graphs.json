@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 13,
+  "duplicateOccurrenceCount": 13,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/AVFAudio.symbols.json",
+      "relationshipCount": 2426,
+      "sha256": "8de2c4d16af761af71ab2bae235549010bf444123b9a371de8a8dadcbbd45658",
+      "symbolCount": 1649
+    },
+    {
+      "path": "reference/symbol-graphs/AVFAudio@Foundation.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "5a0a5f27cb8fbf5cb1f68f107a5ed51a53327fdeb9eb768d3248be6580e8c0fe",
+      "symbolCount": 2
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "AVFAudio",
+  "relationshipCount": 2428,
+  "schema": 1,
+  "symbolCount": 1638,
+  "target": "arm64-apple-ios26.0"
+}

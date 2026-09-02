@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 14,
+  "duplicateOccurrenceCount": 14,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CoreML.symbols.json",
+      "relationshipCount": 1609,
+      "sha256": "8ba3cc5604536603357c94ad3f7c63bf7221a8403add8ce3f9cb29f3a8a5c5f0",
+      "symbolCount": 1112
+    },
+    {
+      "path": "reference/symbol-graphs/CoreML@Swift.symbols.json",
+      "relationshipCount": 668,
+      "sha256": "795db8ab4d81baa73e603bba1d7688d560c483e15373cf3392035763a7f8c664",
+      "symbolCount": 588
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CoreML",
+  "relationshipCount": 2277,
+  "schema": 1,
+  "symbolCount": 1686,
+  "target": "arm64-apple-ios26.0"
+}

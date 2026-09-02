@@ -1,0 +1,60 @@
+{
+  "module": "NetworkExtension",
+  "moduleRecord": {
+    "app_coverage_count": 2,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 18,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 81,
+    "iphoneos_runtime_focus_launch_build_rank": 88,
+    "module": "NetworkExtension",
+    "occurrence_count": 18,
+    "per_app": {
+      "duckduckgo-ios": {
+        "evidence_sha256": "dfa3012df4da2e186a224c8ced2f2798196d73eedf6bcbf379fc7dca30158b93",
+        "file_count": 14,
+        "occurrence_count": 14,
+        "sample_paths": [
+          "DuckDuckGo/Feedback/VPNMetadataCollector.swift",
+          "DuckDuckGo/NetworkProtectionConvenienceInitialisers.swift",
+          "DuckDuckGo/NetworkProtectionDebugUtilities.swift",
+          "DuckDuckGo/NetworkProtectionDebugViewController.swift",
+          "DuckDuckGo/NetworkProtectionTunnelController.swift",
+          "DuckDuckGo/NetworkProtectionWidgetRefreshModel.swift",
+          "DuckDuckGo/VPNShortcutIntents.swift",
+          "LocalPackages/VPNiOS/Sources/VPNWidgetSupport/VPNWidgetTunnelController.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "96b085c909e45c30b5743211f0910e5b5dc4de87ba4358a3226d1731e15b6e88",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Sources/App/Notifications/NotificationManagerLocalPushInterfaceExtension.swift",
+          "Sources/Extensions/PushProvider/PushProvider.swift",
+          "Sources/Improv/ImprovDiscoverView.swift",
+          "Sources/Shared/Environment/ConnectivityWrapper.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 81,
+    "byFocusLaunchBuildRelevance": 88
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

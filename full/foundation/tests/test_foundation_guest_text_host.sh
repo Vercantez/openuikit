@@ -26,7 +26,7 @@ EXPECTED_STRUCTURED_GOLDEN_SHA=0c9ceb2830f41181f4b96cd90ae30a437a7d6894a1deb7c83
 EXPECTED_NSSTRING_GOLDEN_SHA=472ce641b97e460a14b19e80a10bb60af3fa532df6d0383799a9e58ba2d87486
 EXPECTED_CFERROR_GOLDEN_SHA=d1a24df46635db706f9540b135e914f40a3ff530d2ac1f84c2322e726942c2e9
 EXPECTED_APPLE_FOUNDATION_INTERFACE_SHA=e96e22f4ee55f25fd43b421098e72f8f9872016e84d1a60d4b6daaa255612ac9
-EXPECTED_SOURCE_DIGEST=44c8afbc1ee2281299c6937ff2c1b29bd8fd5d9a2938079fde2402010b9cccc3
+EXPECTED_SOURCE_DIGEST=3b75e2b0a9d0184fda78bd97bb5f8a4cee2e9ea1ad42c6cf7249d61298ae4a98
 
 FOUNDATION_SOURCES=(
     "$ROOT/full/foundation/NSString.swift"
@@ -455,6 +455,25 @@ xcrun swiftc -target "$TARGET" \
 "$OUT/port-structured-oracle" > "$OUT/port-structured-output.txt"
 cmp "$STRUCTURED_GOLDEN" "$OUT/port-structured-output.txt" \
     || die "portable structured-data output differs from Apple golden"
+
+xcrun swiftc -target "$TARGET" -parse-as-library \
+    -module-cache-path "$OUT/apple-nserror-rebridge-module-cache" \
+    "$ROOT/full/foundation/tests/FoundationGuestNSErrorRebridgeRuntime.swift" \
+    -o "$OUT/apple-nserror-rebridge"
+apple_nserror_rebridge_output=$("$OUT/apple-nserror-rebridge")
+[ "$apple_nserror_rebridge_output" = \
+    'FOUNDATION_NSERROR_REBRIDGE_OK existing=identity typed=custom-user-info plain=domain-code' \
+] || die "unexpected Apple NSError rebridge marker: $apple_nserror_rebridge_output"
+
+xcrun swiftc -target "$TARGET" -parse-as-library \
+    -module-cache-path "$OUT/port-nserror-rebridge-module-cache" \
+    -I "$STRUCTURED" -I "$SERVICES" -I "$FE" "${CSHIM_FLAGS[@]}" \
+    "$ROOT/full/foundation/tests/FoundationGuestNSErrorRebridgeRuntime.swift" \
+    "${STRUCTURED_LINK_OBJECTS[@]}" -o "$OUT/port-nserror-rebridge"
+port_nserror_rebridge_output=$("$OUT/port-nserror-rebridge")
+[ "$port_nserror_rebridge_output" = \
+    'FOUNDATION_NSERROR_REBRIDGE_OK existing=identity typed=custom-user-info plain=domain-code' \
+] || die "unexpected portable NSError rebridge marker: $port_nserror_rebridge_output"
 
 # Compile the exact unchanged ButtonKit throw shape against both Apple and the
 # portable Foundation module. Description is deliberately outside this gate:

@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 1,
+  "duplicateOccurrenceCount": 1,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/ClockKit.symbols.json",
+      "relationshipCount": 26,
+      "sha256": "a6a164a8ac754fc8a327384e8fb0c63719401fe636a307299fcc538a6b51e6bc",
+      "symbolCount": 14
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "ClockKit",
+  "relationshipCount": 26,
+  "schema": 1,
+  "symbolCount": 13,
+  "target": "arm64-apple-ios26.0"
+}

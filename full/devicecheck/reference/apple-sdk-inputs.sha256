@@ -1,0 +1,9 @@
+# Xcode 26.1 / iPhoneOS 26.1 SDK inputs used to derive the committed contract.
+# Raw SDK files are not committed to this repository.
+fa36743bdc09f3fc17d34a51ee26e09c7701108a86e0513214786966044c9493  DeviceCheck.framework/Headers/DCAppAttestService.h
+db5a0fa4c95ac2fae7a0f3de79a7c1ae8897ccb7b70d7cbe6ca53e23afe08bae  DeviceCheck.framework/Headers/DCDevice.h
+f83ec96c4df2ea5e292570c8d633f97ad7d19e961a6311986f45ef9239b866aa  DeviceCheck.framework/Headers/DCError.h
+0814990d0d407f825d59428fa742eb4b43e651b0d7394520a29249f8c0ec2c5e  DeviceCheck.framework/Headers/DeviceCheck.h
+bb39b8e5ce942198498772661297d8f9f6d786d314854b3da0ba548c72cbe21e  DeviceCheck.framework/Modules/module.modulemap
+c4a0e838526a95ffef79cbd654d4d54aa8102f69081bd1b1f1de3d4d7034821f  DeviceCheck.framework/DeviceCheck.tbd
+1dfdf2eca72c60f92fa3ff4319a9a5df27d0fab38b7fb34170471553afd34edc  derived/DeviceCheck.symbols.json

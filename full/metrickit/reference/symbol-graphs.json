@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 1,
+  "duplicateOccurrenceCount": 1,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/MetricKit.symbols.json",
+      "relationshipCount": 573,
+      "sha256": "d011dfee53e3d95b67b2683e24229393fb174cb8c323eb5b0e4ab6d4e9abc792",
+      "symbolCount": 261
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "MetricKit",
+  "relationshipCount": 573,
+  "schema": 1,
+  "symbolCount": 260,
+  "target": "arm64-apple-ios26.0"
+}

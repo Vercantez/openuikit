@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/MatterSupport.symbols.json",
+      "relationshipCount": 194,
+      "sha256": "121578342ffe54ae3ae3fb2205a7dcc09c9cd838edbd943771d79c24c3c15146",
+      "symbolCount": 124
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "MatterSupport",
+  "relationshipCount": 194,
+  "schema": 1,
+  "symbolCount": 124,
+  "target": "arm64-apple-ios26.0"
+}

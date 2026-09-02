@@ -1,0 +1,82 @@
+{
+  "module": "Social",
+  "moduleRecord": {
+    "app_coverage_count": 6,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 6,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 1
+    },
+    "iphoneos_runtime_app_coverage_rank": 51,
+    "iphoneos_runtime_focus_launch_build_rank": 18,
+    "module": "Social",
+    "occurrence_count": 6,
+    "per_app": {
+      "duckduckgo-ios": {
+        "evidence_sha256": "b7329a50a0751a44ca58ebbf81bd3f689be3ba0ed0f78a7eafec567864f99a9f",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "ShareExtension/ShareViewController.swift"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "6ecf9d1135ad18f677c13510e4b715ca310952e79036df8539bfd1e38bd4cab3",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "focus-ios/OpenInFocus/ActionViewController.swift"
+        ]
+      },
+      "focus-ios": {
+        "evidence_sha256": "6ecf9d1135ad18f677c13510e4b715ca310952e79036df8539bfd1e38bd4cab3",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "focus-ios/OpenInFocus/ActionViewController.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "218980dd4a9cf064ec120f767f9e00d796e1801ba13e7402ec22005959f6f67a",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/Extensions/Share/ShareViewController.swift"
+        ]
+      },
+      "pocket-casts-ios": {
+        "evidence_sha256": "6fbe24645824058b2e4fd07637489e8468fe5cae1e66caeb8a11869ee4388922",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Share Extension/ShareViewController.swift"
+        ]
+      },
+      "simplenote-ios": {
+        "evidence_sha256": "cceeb725142f809d6c08b41d4a321424ade22e1a126bf032beb024dc08963b58",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "SimplenoteShare/ViewControllers/ShareViewController.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 51,
+    "byFocusLaunchBuildRelevance": 18
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

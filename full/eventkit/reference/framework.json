@@ -1,0 +1,54 @@
+{
+  "corpusSummary": "reference/corpus-summary.json",
+  "coveragePolicy": {
+    "allowedStatuses": [
+      "implemented",
+      "declared",
+      "deferred",
+      "unavailable",
+      "not-applicable"
+    ],
+    "minimumNondeferredCount": 256,
+    "nondeferredStatuses": [
+      "implemented",
+      "declared"
+    ],
+    "rule": "ceil(50% of exact public symbols)"
+  },
+  "dependencies": [
+    "Foundation"
+  ],
+  "guestManifest": "eventkit_guest_sources.txt",
+  "lane": "medium-full",
+  "module": "EventKit",
+  "provenance": {
+    "arm64TBDExportCount": 751,
+    "frameworkSDKRelativePath": "System/Library/Frameworks/EventKit.framework",
+    "generatorPath": "scripts/framework-fanout/generate_seed.py",
+    "generatorSHA256": "2b8230ced5a3ed78f070607346f6a684d9e0fb74a8932b92bc0f5e38f46f0a8e",
+    "rawSDKInputCount": 23,
+    "roadmapPath": "full/framework-roadmap/framework-roadmap.json",
+    "roadmapSHA256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a",
+    "sdkName": "iphoneos",
+    "sdkPath": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk",
+    "sdkVersion": "26.1",
+    "target": "arm64-apple-ios26.0",
+    "tbdInputCount": 1,
+    "xcodeBuild": "17B55",
+    "xcodeVersion": "26.1"
+  },
+  "publicSurface": "reference/public-surface.tsv",
+  "relationshipCount": 734,
+  "risks": [
+    "calendar",
+    "privacy",
+    "host-store"
+  ],
+  "runtimeMarker": "EVENTKIT_AGENT_RUNTIME_OK",
+  "schema": 1,
+  "sdkInputs": "reference/sdk-inputs.tsv",
+  "slug": "eventkit",
+  "symbolCount": 511,
+  "symbolGraph": "reference/symbol-graphs.json",
+  "tbdExports": "reference/tbd-exports.tsv"
+}

@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 2,
+  "duplicateOccurrenceCount": 2,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/MultipeerConnectivity.symbols.json",
+      "relationshipCount": 209,
+      "sha256": "dea79d5e37be7173ac3130135b366d5d5d8c72cd3cb20c5e32b2101561f42362",
+      "symbolCount": 134
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "MultipeerConnectivity",
+  "relationshipCount": 209,
+  "schema": 1,
+  "symbolCount": 132,
+  "target": "arm64-apple-ios26.0"
+}

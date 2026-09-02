@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 5,
+  "duplicateOccurrenceCount": 5,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CoreTelephony.symbols.json",
+      "relationshipCount": 178,
+      "sha256": "713168f37570fe33d6b146892cd8255ae1324e70dbbe14ad60eb50060f06e133",
+      "symbolCount": 115
+    },
+    {
+      "path": "reference/symbol-graphs/CoreTelephony@Foundation.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "0a84db36eb2a664c4fbaf6e1d8278a690bb391052ed7f5007b7b1eaf4514b08e",
+      "symbolCount": 2
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CoreTelephony",
+  "relationshipCount": 180,
+  "schema": 1,
+  "symbolCount": 112,
+  "target": "arm64-apple-ios26.0"
+}

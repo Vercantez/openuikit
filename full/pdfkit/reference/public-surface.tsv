@@ -1,0 +1,680 @@
+precise	kind	title	path	declaration
+c:@E@PDFAccessPermissions	swift.enum	PDFAccessPermissions	PDFAccessPermissions	enum PDFAccessPermissions
+c:@E@PDFAccessPermissions@PDFAllowsCommenting	swift.enum.case	PDFAccessPermissions.allowsCommenting	PDFAccessPermissions.allowsCommenting	case allowsCommenting
+c:@E@PDFAccessPermissions@PDFAllowsContentAccessibility	swift.enum.case	PDFAccessPermissions.allowsContentAccessibility	PDFAccessPermissions.allowsContentAccessibility	case allowsContentAccessibility
+c:@E@PDFAccessPermissions@PDFAllowsContentCopying	swift.enum.case	PDFAccessPermissions.allowsContentCopying	PDFAccessPermissions.allowsContentCopying	case allowsContentCopying
+c:@E@PDFAccessPermissions@PDFAllowsDocumentAssembly	swift.enum.case	PDFAccessPermissions.allowsDocumentAssembly	PDFAccessPermissions.allowsDocumentAssembly	case allowsDocumentAssembly
+c:@E@PDFAccessPermissions@PDFAllowsDocumentChanges	swift.enum.case	PDFAccessPermissions.allowsDocumentChanges	PDFAccessPermissions.allowsDocumentChanges	case allowsDocumentChanges
+c:@E@PDFAccessPermissions@PDFAllowsFormFieldEntry	swift.enum.case	PDFAccessPermissions.allowsFormFieldEntry	PDFAccessPermissions.allowsFormFieldEntry	case allowsFormFieldEntry
+c:@E@PDFAccessPermissions@PDFAllowsHighQualityPrinting	swift.enum.case	PDFAccessPermissions.allowsHighQualityPrinting	PDFAccessPermissions.allowsHighQualityPrinting	case allowsHighQualityPrinting
+c:@E@PDFAccessPermissions@PDFAllowsLowQualityPrinting	swift.enum.case	PDFAccessPermissions.allowsLowQualityPrinting	PDFAccessPermissions.allowsLowQualityPrinting	case allowsLowQualityPrinting
+c:@E@PDFActionNamedName	swift.enum	PDFActionNamedName	PDFActionNamedName	enum PDFActionNamedName
+c:@E@PDFActionNamedName@kPDFActionNamedFind	swift.enum.case	PDFActionNamedName.find	PDFActionNamedName.find	case find
+c:@E@PDFActionNamedName@kPDFActionNamedFirstPage	swift.enum.case	PDFActionNamedName.firstPage	PDFActionNamedName.firstPage	case firstPage
+c:@E@PDFActionNamedName@kPDFActionNamedGoBack	swift.enum.case	PDFActionNamedName.goBack	PDFActionNamedName.goBack	case goBack
+c:@E@PDFActionNamedName@kPDFActionNamedGoForward	swift.enum.case	PDFActionNamedName.goForward	PDFActionNamedName.goForward	case goForward
+c:@E@PDFActionNamedName@kPDFActionNamedGoToPage	swift.enum.case	PDFActionNamedName.goToPage	PDFActionNamedName.goToPage	case goToPage
+c:@E@PDFActionNamedName@kPDFActionNamedLastPage	swift.enum.case	PDFActionNamedName.lastPage	PDFActionNamedName.lastPage	case lastPage
+c:@E@PDFActionNamedName@kPDFActionNamedNextPage	swift.enum.case	PDFActionNamedName.nextPage	PDFActionNamedName.nextPage	case nextPage
+c:@E@PDFActionNamedName@kPDFActionNamedNone	swift.enum.case	PDFActionNamedName.none	PDFActionNamedName.none	case none
+c:@E@PDFActionNamedName@kPDFActionNamedPreviousPage	swift.enum.case	PDFActionNamedName.previousPage	PDFActionNamedName.previousPage	case previousPage
+c:@E@PDFActionNamedName@kPDFActionNamedPrint	swift.enum.case	PDFActionNamedName.print	PDFActionNamedName.print	case print
+c:@E@PDFActionNamedName@kPDFActionNamedZoomIn	swift.enum.case	PDFActionNamedName.zoomIn	PDFActionNamedName.zoomIn	case zoomIn
+c:@E@PDFActionNamedName@kPDFActionNamedZoomOut	swift.enum.case	PDFActionNamedName.zoomOut	PDFActionNamedName.zoomOut	case zoomOut
+c:@E@PDFAreaOfInterest	swift.struct	PDFAreaOfInterest	PDFAreaOfInterest	struct PDFAreaOfInterest
+c:@E@PDFAreaOfInterest@kPDFAnnotationArea	swift.type.property	annotationArea	PDFAreaOfInterest.annotationArea	static var annotationArea: PDFAreaOfInterest { get }
+c:@E@PDFAreaOfInterest@kPDFAnyArea	swift.type.property	anyArea	PDFAreaOfInterest.anyArea	static var anyArea: PDFAreaOfInterest { get }
+c:@E@PDFAreaOfInterest@kPDFControlArea	swift.type.property	controlArea	PDFAreaOfInterest.controlArea	static var controlArea: PDFAreaOfInterest { get }
+c:@E@PDFAreaOfInterest@kPDFIconArea	swift.type.property	iconArea	PDFAreaOfInterest.iconArea	static var iconArea: PDFAreaOfInterest { get }
+c:@E@PDFAreaOfInterest@kPDFImageArea	swift.type.property	imageArea	PDFAreaOfInterest.imageArea	static var imageArea: PDFAreaOfInterest { get }
+c:@E@PDFAreaOfInterest@kPDFLinkArea	swift.type.property	linkArea	PDFAreaOfInterest.linkArea	static var linkArea: PDFAreaOfInterest { get }
+c:@E@PDFAreaOfInterest@kPDFPageArea	swift.type.property	pageArea	PDFAreaOfInterest.pageArea	static var pageArea: PDFAreaOfInterest { get }
+c:@E@PDFAreaOfInterest@kPDFPopupArea	swift.type.property	popupArea	PDFAreaOfInterest.popupArea	static var popupArea: PDFAreaOfInterest { get }
+c:@E@PDFAreaOfInterest@kPDFTextArea	swift.type.property	textArea	PDFAreaOfInterest.textArea	static var textArea: PDFAreaOfInterest { get }
+c:@E@PDFAreaOfInterest@kPDFTextFieldArea	swift.type.property	textFieldArea	PDFAreaOfInterest.textFieldArea	static var textFieldArea: PDFAreaOfInterest { get }
+c:@E@PDFBorderStyle	swift.enum	PDFBorderStyle	PDFBorderStyle	enum PDFBorderStyle
+c:@E@PDFBorderStyle@kPDFBorderStyleBeveled	swift.enum.case	PDFBorderStyle.beveled	PDFBorderStyle.beveled	case beveled
+c:@E@PDFBorderStyle@kPDFBorderStyleDashed	swift.enum.case	PDFBorderStyle.dashed	PDFBorderStyle.dashed	case dashed
+c:@E@PDFBorderStyle@kPDFBorderStyleInset	swift.enum.case	PDFBorderStyle.inset	PDFBorderStyle.inset	case inset
+c:@E@PDFBorderStyle@kPDFBorderStyleSolid	swift.enum.case	PDFBorderStyle.solid	PDFBorderStyle.solid	case solid
+c:@E@PDFBorderStyle@kPDFBorderStyleUnderline	swift.enum.case	PDFBorderStyle.underline	PDFBorderStyle.underline	case underline
+c:@E@PDFDisplayBox	swift.enum	PDFDisplayBox	PDFDisplayBox	enum PDFDisplayBox
+c:@E@PDFDisplayBox@kPDFDisplayBoxArtBox	swift.enum.case	PDFDisplayBox.artBox	PDFDisplayBox.artBox	case artBox
+c:@E@PDFDisplayBox@kPDFDisplayBoxBleedBox	swift.enum.case	PDFDisplayBox.bleedBox	PDFDisplayBox.bleedBox	case bleedBox
+c:@E@PDFDisplayBox@kPDFDisplayBoxCropBox	swift.enum.case	PDFDisplayBox.cropBox	PDFDisplayBox.cropBox	case cropBox
+c:@E@PDFDisplayBox@kPDFDisplayBoxMediaBox	swift.enum.case	PDFDisplayBox.mediaBox	PDFDisplayBox.mediaBox	case mediaBox
+c:@E@PDFDisplayBox@kPDFDisplayBoxTrimBox	swift.enum.case	PDFDisplayBox.trimBox	PDFDisplayBox.trimBox	case trimBox
+c:@E@PDFDisplayDirection	swift.enum	PDFDisplayDirection	PDFDisplayDirection	enum PDFDisplayDirection
+c:@E@PDFDisplayDirection@kPDFDisplayDirectionHorizontal	swift.enum.case	PDFDisplayDirection.horizontal	PDFDisplayDirection.horizontal	case horizontal
+c:@E@PDFDisplayDirection@kPDFDisplayDirectionVertical	swift.enum.case	PDFDisplayDirection.vertical	PDFDisplayDirection.vertical	case vertical
+c:@E@PDFDisplayMode	swift.enum	PDFDisplayMode	PDFDisplayMode	enum PDFDisplayMode
+c:@E@PDFDisplayMode@kPDFDisplaySinglePage	swift.enum.case	PDFDisplayMode.singlePage	PDFDisplayMode.singlePage	case singlePage
+c:@E@PDFDisplayMode@kPDFDisplaySinglePageContinuous	swift.enum.case	PDFDisplayMode.singlePageContinuous	PDFDisplayMode.singlePageContinuous	case singlePageContinuous
+c:@E@PDFDisplayMode@kPDFDisplayTwoUp	swift.enum.case	PDFDisplayMode.twoUp	PDFDisplayMode.twoUp	case twoUp
+c:@E@PDFDisplayMode@kPDFDisplayTwoUpContinuous	swift.enum.case	PDFDisplayMode.twoUpContinuous	PDFDisplayMode.twoUpContinuous	case twoUpContinuous
+c:@E@PDFDocumentPermissions	swift.enum	PDFDocumentPermissions	PDFDocumentPermissions	enum PDFDocumentPermissions
+c:@E@PDFDocumentPermissions@kPDFDocumentPermissionsNone	swift.enum.case	PDFDocumentPermissions.none	PDFDocumentPermissions.none	case none
+c:@E@PDFDocumentPermissions@kPDFDocumentPermissionsOwner	swift.enum.case	PDFDocumentPermissions.owner	PDFDocumentPermissions.owner	case owner
+c:@E@PDFDocumentPermissions@kPDFDocumentPermissionsUser	swift.enum.case	PDFDocumentPermissions.user	PDFDocumentPermissions.user	case user
+c:@E@PDFInterpolationQuality	swift.enum	PDFInterpolationQuality	PDFInterpolationQuality	enum PDFInterpolationQuality
+c:@E@PDFInterpolationQuality@kPDFInterpolationQualityHigh	swift.enum.case	PDFInterpolationQuality.high	PDFInterpolationQuality.high	case high
+c:@E@PDFInterpolationQuality@kPDFInterpolationQualityLow	swift.enum.case	PDFInterpolationQuality.low	PDFInterpolationQuality.low	case low
+c:@E@PDFInterpolationQuality@kPDFInterpolationQualityNone	swift.enum.case	PDFInterpolationQuality.none	PDFInterpolationQuality.none	case none
+c:@E@PDFLineStyle	swift.enum	PDFLineStyle	PDFLineStyle	enum PDFLineStyle
+c:@E@PDFLineStyle@kPDFLineStyleCircle	swift.enum.case	PDFLineStyle.circle	PDFLineStyle.circle	case circle
+c:@E@PDFLineStyle@kPDFLineStyleClosedArrow	swift.enum.case	PDFLineStyle.closedArrow	PDFLineStyle.closedArrow	case closedArrow
+c:@E@PDFLineStyle@kPDFLineStyleDiamond	swift.enum.case	PDFLineStyle.diamond	PDFLineStyle.diamond	case diamond
+c:@E@PDFLineStyle@kPDFLineStyleNone	swift.enum.case	PDFLineStyle.none	PDFLineStyle.none	case none
+c:@E@PDFLineStyle@kPDFLineStyleOpenArrow	swift.enum.case	PDFLineStyle.openArrow	PDFLineStyle.openArrow	case openArrow
+c:@E@PDFLineStyle@kPDFLineStyleSquare	swift.enum.case	PDFLineStyle.square	PDFLineStyle.square	case square
+c:@E@PDFMarkupType	swift.enum	PDFMarkupType	PDFMarkupType	enum PDFMarkupType
+c:@E@PDFMarkupType@kPDFMarkupTypeHighlight	swift.enum.case	PDFMarkupType.highlight	PDFMarkupType.highlight	case highlight
+c:@E@PDFMarkupType@kPDFMarkupTypeRedact	swift.enum.case	PDFMarkupType.redact	PDFMarkupType.redact	case redact
+c:@E@PDFMarkupType@kPDFMarkupTypeStrikeOut	swift.enum.case	PDFMarkupType.strikeOut	PDFMarkupType.strikeOut	case strikeOut
+c:@E@PDFMarkupType@kPDFMarkupTypeUnderline	swift.enum.case	PDFMarkupType.underline	PDFMarkupType.underline	case underline
+c:@E@PDFSelectionGranularity	swift.enum	PDFSelectionGranularity	PDFSelectionGranularity	enum PDFSelectionGranularity
+c:@E@PDFSelectionGranularity@PDFSelectionGranularityCharacter	swift.enum.case	PDFSelectionGranularity.character	PDFSelectionGranularity.character	case character
+c:@E@PDFSelectionGranularity@PDFSelectionGranularityLine	swift.enum.case	PDFSelectionGranularity.line	PDFSelectionGranularity.line	case line
+c:@E@PDFSelectionGranularity@PDFSelectionGranularityWord	swift.enum.case	PDFSelectionGranularity.word	PDFSelectionGranularity.word	case word
+c:@E@PDFTextAnnotationIconType	swift.enum	PDFTextAnnotationIconType	PDFTextAnnotationIconType	enum PDFTextAnnotationIconType
+c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconComment	swift.enum.case	PDFTextAnnotationIconType.comment	PDFTextAnnotationIconType.comment	case comment
+c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconHelp	swift.enum.case	PDFTextAnnotationIconType.help	PDFTextAnnotationIconType.help	case help
+c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconInsert	swift.enum.case	PDFTextAnnotationIconType.insert	PDFTextAnnotationIconType.insert	case insert
+c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconKey	swift.enum.case	PDFTextAnnotationIconType.key	PDFTextAnnotationIconType.key	case key
+c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconNewParagraph	swift.enum.case	PDFTextAnnotationIconType.newParagraph	PDFTextAnnotationIconType.newParagraph	case newParagraph
+c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconNote	swift.enum.case	PDFTextAnnotationIconType.note	PDFTextAnnotationIconType.note	case note
+c:@E@PDFTextAnnotationIconType@kPDFTextAnnotationIconParagraph	swift.enum.case	PDFTextAnnotationIconType.paragraph	PDFTextAnnotationIconType.paragraph	case paragraph
+c:@E@PDFThumbnailLayoutMode	swift.enum	PDFThumbnailLayoutMode	PDFThumbnailLayoutMode	enum PDFThumbnailLayoutMode
+c:@E@PDFThumbnailLayoutMode@PDFThumbnailLayoutModeHorizontal	swift.enum.case	PDFThumbnailLayoutMode.horizontal	PDFThumbnailLayoutMode.horizontal	case horizontal
+c:@E@PDFThumbnailLayoutMode@PDFThumbnailLayoutModeVertical	swift.enum.case	PDFThumbnailLayoutMode.vertical	PDFThumbnailLayoutMode.vertical	case vertical
+c:@E@PDFWidgetCellState	swift.enum	PDFWidgetCellState	PDFWidgetCellState	enum PDFWidgetCellState
+c:@E@PDFWidgetCellState@kPDFWidgetMixedState	swift.enum.case	PDFWidgetCellState.mixedState	PDFWidgetCellState.mixedState	case mixedState
+c:@E@PDFWidgetCellState@kPDFWidgetOffState	swift.enum.case	PDFWidgetCellState.offState	PDFWidgetCellState.offState	case offState
+c:@E@PDFWidgetCellState@kPDFWidgetOnState	swift.enum.case	PDFWidgetCellState.onState	PDFWidgetCellState.onState	case onState
+c:@E@PDFWidgetControlType	swift.enum	PDFWidgetControlType	PDFWidgetControlType	enum PDFWidgetControlType
+c:@E@PDFWidgetControlType@kPDFWidgetCheckBoxControl	swift.enum.case	PDFWidgetControlType.checkBoxControl	PDFWidgetControlType.checkBoxControl	case checkBoxControl
+c:@E@PDFWidgetControlType@kPDFWidgetPushButtonControl	swift.enum.case	PDFWidgetControlType.pushButtonControl	PDFWidgetControlType.pushButtonControl	case pushButtonControl
+c:@E@PDFWidgetControlType@kPDFWidgetRadioButtonControl	swift.enum.case	PDFWidgetControlType.radioButtonControl	PDFWidgetControlType.radioButtonControl	case radioButtonControl
+c:@E@PDFWidgetControlType@kPDFWidgetUnknownControl	swift.enum.case	PDFWidgetControlType.unknownControl	PDFWidgetControlType.unknownControl	case unknownControl
+c:@PDFAnnotationHighlightingModeInvert	swift.type.property	invert	PDFAnnotationHighlightingMode.invert	static let invert: PDFAnnotationHighlightingMode
+c:@PDFAnnotationHighlightingModeNone	swift.type.property	none	PDFAnnotationHighlightingMode.none	static let none: PDFAnnotationHighlightingMode
+c:@PDFAnnotationHighlightingModeOutline	swift.type.property	outline	PDFAnnotationHighlightingMode.outline	static let outline: PDFAnnotationHighlightingMode
+c:@PDFAnnotationHighlightingModePush	swift.type.property	push	PDFAnnotationHighlightingMode.push	static let push: PDFAnnotationHighlightingMode
+c:@PDFAnnotationKeyAction	swift.type.property	action	PDFAnnotationKey.action	static let action: PDFAnnotationKey
+c:@PDFAnnotationKeyAdditionalActions	swift.type.property	additionalActions	PDFAnnotationKey.additionalActions	static let additionalActions: PDFAnnotationKey
+c:@PDFAnnotationKeyAppearanceDictionary	swift.type.property	appearanceDictionary	PDFAnnotationKey.appearanceDictionary	static let appearanceDictionary: PDFAnnotationKey
+c:@PDFAnnotationKeyAppearanceState	swift.type.property	appearanceState	PDFAnnotationKey.appearanceState	static let appearanceState: PDFAnnotationKey
+c:@PDFAnnotationKeyBorder	swift.type.property	border	PDFAnnotationKey.border	static let border: PDFAnnotationKey
+c:@PDFAnnotationKeyBorderStyle	swift.type.property	borderStyle	PDFAnnotationKey.borderStyle	static let borderStyle: PDFAnnotationKey
+c:@PDFAnnotationKeyColor	swift.type.property	color	PDFAnnotationKey.color	static let color: PDFAnnotationKey
+c:@PDFAnnotationKeyContents	swift.type.property	contents	PDFAnnotationKey.contents	static let contents: PDFAnnotationKey
+c:@PDFAnnotationKeyDate	swift.type.property	date	PDFAnnotationKey.date	static let date: PDFAnnotationKey
+c:@PDFAnnotationKeyDefaultAppearance	swift.type.property	defaultAppearance	PDFAnnotationKey.defaultAppearance	static let defaultAppearance: PDFAnnotationKey
+c:@PDFAnnotationKeyDestination	swift.type.property	destination	PDFAnnotationKey.destination	static let destination: PDFAnnotationKey
+c:@PDFAnnotationKeyFlags	swift.type.property	flags	PDFAnnotationKey.flags	static let flags: PDFAnnotationKey
+c:@PDFAnnotationKeyHighlightingMode	swift.type.property	highlightingMode	PDFAnnotationKey.highlightingMode	static let highlightingMode: PDFAnnotationKey
+c:@PDFAnnotationKeyIconName	swift.type.property	iconName	PDFAnnotationKey.iconName	static let iconName: PDFAnnotationKey
+c:@PDFAnnotationKeyInklist	swift.type.property	inklist	PDFAnnotationKey.inklist	static let inklist: PDFAnnotationKey
+c:@PDFAnnotationKeyInteriorColor	swift.type.property	interiorColor	PDFAnnotationKey.interiorColor	static let interiorColor: PDFAnnotationKey
+c:@PDFAnnotationKeyLineEndingStyles	swift.type.property	lineEndingStyles	PDFAnnotationKey.lineEndingStyles	static let lineEndingStyles: PDFAnnotationKey
+c:@PDFAnnotationKeyLinePoints	swift.type.property	linePoints	PDFAnnotationKey.linePoints	static let linePoints: PDFAnnotationKey
+c:@PDFAnnotationKeyName	swift.type.property	name	PDFAnnotationKey.name	static let name: PDFAnnotationKey
+c:@PDFAnnotationKeyOpen	swift.type.property	open	PDFAnnotationKey.open	static let open: PDFAnnotationKey
+c:@PDFAnnotationKeyPage	swift.type.property	page	PDFAnnotationKey.page	static let page: PDFAnnotationKey
+c:@PDFAnnotationKeyParent	swift.type.property	parent	PDFAnnotationKey.parent	static let parent: PDFAnnotationKey
+c:@PDFAnnotationKeyPopup	swift.type.property	popup	PDFAnnotationKey.popup	static let popup: PDFAnnotationKey
+c:@PDFAnnotationKeyQuadPoints	swift.type.property	quadPoints	PDFAnnotationKey.quadPoints	static let quadPoints: PDFAnnotationKey
+c:@PDFAnnotationKeyQuadding	swift.type.property	quadding	PDFAnnotationKey.quadding	static let quadding: PDFAnnotationKey
+c:@PDFAnnotationKeyRect	swift.type.property	rect	PDFAnnotationKey.rect	static let rect: PDFAnnotationKey
+c:@PDFAnnotationKeySubtype	swift.type.property	subtype	PDFAnnotationKey.subtype	static let subtype: PDFAnnotationKey
+c:@PDFAnnotationKeyTextLabel	swift.type.property	textLabel	PDFAnnotationKey.textLabel	static let textLabel: PDFAnnotationKey
+c:@PDFAnnotationKeyWidgetAppearanceDictionary	swift.type.property	widgetAppearanceDictionary	PDFAnnotationKey.widgetAppearanceDictionary	static let widgetAppearanceDictionary: PDFAnnotationKey
+c:@PDFAnnotationKeyWidgetBackgroundColor	swift.type.property	widgetBackgroundColor	PDFAnnotationKey.widgetBackgroundColor	static let widgetBackgroundColor: PDFAnnotationKey
+c:@PDFAnnotationKeyWidgetBorderColor	swift.type.property	widgetBorderColor	PDFAnnotationKey.widgetBorderColor	static let widgetBorderColor: PDFAnnotationKey
+c:@PDFAnnotationKeyWidgetCaption	swift.type.property	widgetCaption	PDFAnnotationKey.widgetCaption	static let widgetCaption: PDFAnnotationKey
+c:@PDFAnnotationKeyWidgetDefaultValue	swift.type.property	widgetDefaultValue	PDFAnnotationKey.widgetDefaultValue	static let widgetDefaultValue: PDFAnnotationKey
+c:@PDFAnnotationKeyWidgetDownCaption	swift.type.property	widgetDownCaption	PDFAnnotationKey.widgetDownCaption	static let widgetDownCaption: PDFAnnotationKey
+c:@PDFAnnotationKeyWidgetFieldFlags	swift.type.property	widgetFieldFlags	PDFAnnotationKey.widgetFieldFlags	static let widgetFieldFlags: PDFAnnotationKey
+c:@PDFAnnotationKeyWidgetFieldType	swift.type.property	widgetFieldType	PDFAnnotationKey.widgetFieldType	static let widgetFieldType: PDFAnnotationKey
+c:@PDFAnnotationKeyWidgetMaxLen	swift.type.property	widgetMaxLen	PDFAnnotationKey.widgetMaxLen	static let widgetMaxLen: PDFAnnotationKey
+c:@PDFAnnotationKeyWidgetOptions	swift.type.property	widgetOptions	PDFAnnotationKey.widgetOptions	static let widgetOptions: PDFAnnotationKey
+c:@PDFAnnotationKeyWidgetRolloverCaption	swift.type.property	widgetRolloverCaption	PDFAnnotationKey.widgetRolloverCaption	static let widgetRolloverCaption: PDFAnnotationKey
+c:@PDFAnnotationKeyWidgetRotation	swift.type.property	widgetRotation	PDFAnnotationKey.widgetRotation	static let widgetRotation: PDFAnnotationKey
+c:@PDFAnnotationKeyWidgetTextLabelUI	swift.type.property	widgetTextLabelUI	PDFAnnotationKey.widgetTextLabelUI	static let widgetTextLabelUI: PDFAnnotationKey
+c:@PDFAnnotationKeyWidgetValue	swift.type.property	widgetValue	PDFAnnotationKey.widgetValue	static let widgetValue: PDFAnnotationKey
+c:@PDFAnnotationLineEndingStyleCircle	swift.type.property	circle	PDFAnnotationLineEndingStyle.circle	static let circle: PDFAnnotationLineEndingStyle
+c:@PDFAnnotationLineEndingStyleClosedArrow	swift.type.property	closedArrow	PDFAnnotationLineEndingStyle.closedArrow	static let closedArrow: PDFAnnotationLineEndingStyle
+c:@PDFAnnotationLineEndingStyleDiamond	swift.type.property	diamond	PDFAnnotationLineEndingStyle.diamond	static let diamond: PDFAnnotationLineEndingStyle
+c:@PDFAnnotationLineEndingStyleNone	swift.type.property	none	PDFAnnotationLineEndingStyle.none	static let none: PDFAnnotationLineEndingStyle
+c:@PDFAnnotationLineEndingStyleOpenArrow	swift.type.property	openArrow	PDFAnnotationLineEndingStyle.openArrow	static let openArrow: PDFAnnotationLineEndingStyle
+c:@PDFAnnotationLineEndingStyleSquare	swift.type.property	square	PDFAnnotationLineEndingStyle.square	static let square: PDFAnnotationLineEndingStyle
+c:@PDFAnnotationSubtypeCircle	swift.type.property	circle	PDFAnnotationSubtype.circle	static let circle: PDFAnnotationSubtype
+c:@PDFAnnotationSubtypeFreeText	swift.type.property	freeText	PDFAnnotationSubtype.freeText	static let freeText: PDFAnnotationSubtype
+c:@PDFAnnotationSubtypeHighlight	swift.type.property	highlight	PDFAnnotationSubtype.highlight	static let highlight: PDFAnnotationSubtype
+c:@PDFAnnotationSubtypeInk	swift.type.property	ink	PDFAnnotationSubtype.ink	static let ink: PDFAnnotationSubtype
+c:@PDFAnnotationSubtypeLine	swift.type.property	line	PDFAnnotationSubtype.line	static let line: PDFAnnotationSubtype
+c:@PDFAnnotationSubtypeLink	swift.type.property	link	PDFAnnotationSubtype.link	static let link: PDFAnnotationSubtype
+c:@PDFAnnotationSubtypePopup	swift.type.property	popup	PDFAnnotationSubtype.popup	static let popup: PDFAnnotationSubtype
+c:@PDFAnnotationSubtypeSquare	swift.type.property	square	PDFAnnotationSubtype.square	static let square: PDFAnnotationSubtype
+c:@PDFAnnotationSubtypeStamp	swift.type.property	stamp	PDFAnnotationSubtype.stamp	static let stamp: PDFAnnotationSubtype
+c:@PDFAnnotationSubtypeStrikeOut	swift.type.property	strikeOut	PDFAnnotationSubtype.strikeOut	static let strikeOut: PDFAnnotationSubtype
+c:@PDFAnnotationSubtypeText	swift.type.property	text	PDFAnnotationSubtype.text	static let text: PDFAnnotationSubtype
+c:@PDFAnnotationSubtypeUnderline	swift.type.property	underline	PDFAnnotationSubtype.underline	static let underline: PDFAnnotationSubtype
+c:@PDFAnnotationSubtypeWidget	swift.type.property	widget	PDFAnnotationSubtype.widget	static let widget: PDFAnnotationSubtype
+c:@PDFAnnotationTextIconTypeComment	swift.type.property	comment	PDFAnnotationTextIconType.comment	static let comment: PDFAnnotationTextIconType
+c:@PDFAnnotationTextIconTypeHelp	swift.type.property	help	PDFAnnotationTextIconType.help	static let help: PDFAnnotationTextIconType
+c:@PDFAnnotationTextIconTypeInsert	swift.type.property	insert	PDFAnnotationTextIconType.insert	static let insert: PDFAnnotationTextIconType
+c:@PDFAnnotationTextIconTypeKey	swift.type.property	key	PDFAnnotationTextIconType.key	static let key: PDFAnnotationTextIconType
+c:@PDFAnnotationTextIconTypeNewParagraph	swift.type.property	newParagraph	PDFAnnotationTextIconType.newParagraph	static let newParagraph: PDFAnnotationTextIconType
+c:@PDFAnnotationTextIconTypeNote	swift.type.property	note	PDFAnnotationTextIconType.note	static let note: PDFAnnotationTextIconType
+c:@PDFAnnotationTextIconTypeParagraph	swift.type.property	paragraph	PDFAnnotationTextIconType.paragraph	static let paragraph: PDFAnnotationTextIconType
+c:@PDFAnnotationWidgetSubtypeButton	swift.type.property	button	PDFAnnotationWidgetSubtype.button	static let button: PDFAnnotationWidgetSubtype
+c:@PDFAnnotationWidgetSubtypeChoice	swift.type.property	choice	PDFAnnotationWidgetSubtype.choice	static let choice: PDFAnnotationWidgetSubtype
+c:@PDFAnnotationWidgetSubtypeSignature	swift.type.property	signature	PDFAnnotationWidgetSubtype.signature	static let signature: PDFAnnotationWidgetSubtype
+c:@PDFAnnotationWidgetSubtypeText	swift.type.property	text	PDFAnnotationWidgetSubtype.text	static let text: PDFAnnotationWidgetSubtype
+c:@PDFAppearanceCharacteristicsKeyBackgroundColor	swift.type.property	backgroundColor	PDFAppearanceCharacteristicsKey.backgroundColor	static let backgroundColor: PDFAppearanceCharacteristicsKey
+c:@PDFAppearanceCharacteristicsKeyBorderColor	swift.type.property	borderColor	PDFAppearanceCharacteristicsKey.borderColor	static let borderColor: PDFAppearanceCharacteristicsKey
+c:@PDFAppearanceCharacteristicsKeyCaption	swift.type.property	caption	PDFAppearanceCharacteristicsKey.caption	static let caption: PDFAppearanceCharacteristicsKey
+c:@PDFAppearanceCharacteristicsKeyDownCaption	swift.type.property	downCaption	PDFAppearanceCharacteristicsKey.downCaption	static let downCaption: PDFAppearanceCharacteristicsKey
+c:@PDFAppearanceCharacteristicsKeyRolloverCaption	swift.type.property	rolloverCaption	PDFAppearanceCharacteristicsKey.rolloverCaption	static let rolloverCaption: PDFAppearanceCharacteristicsKey
+c:@PDFAppearanceCharacteristicsKeyRotation	swift.type.property	rotation	PDFAppearanceCharacteristicsKey.rotation	static let rotation: PDFAppearanceCharacteristicsKey
+c:@PDFBorderKeyDashPattern	swift.type.property	dashPattern	PDFBorderKey.dashPattern	static let dashPattern: PDFBorderKey
+c:@PDFBorderKeyLineWidth	swift.type.property	lineWidth	PDFBorderKey.lineWidth	static let lineWidth: PDFBorderKey
+c:@PDFBorderKeyStyle	swift.type.property	style	PDFBorderKey.style	static let style: PDFBorderKey
+c:@PDFDocumentAccessPermissionsOption	swift.type.property	accessPermissionsOption	PDFDocumentWriteOption.accessPermissionsOption	static let accessPermissionsOption: PDFDocumentWriteOption
+c:@PDFDocumentAuthorAttribute	swift.type.property	authorAttribute	PDFDocumentAttribute.authorAttribute	static let authorAttribute: PDFDocumentAttribute
+c:@PDFDocumentBurnInAnnotationsOption	swift.type.property	burnInAnnotationsOption	PDFDocumentWriteOption.burnInAnnotationsOption	static let burnInAnnotationsOption: PDFDocumentWriteOption
+c:@PDFDocumentCreationDateAttribute	swift.type.property	creationDateAttribute	PDFDocumentAttribute.creationDateAttribute	static let creationDateAttribute: PDFDocumentAttribute
+c:@PDFDocumentCreatorAttribute	swift.type.property	creatorAttribute	PDFDocumentAttribute.creatorAttribute	static let creatorAttribute: PDFDocumentAttribute
+c:@PDFDocumentDidBeginFindNotification	swift.type.property	PDFDocumentDidBeginFind	NSNotification.Name.PDFDocumentDidBeginFind	static let PDFDocumentDidBeginFind: NSNotification.Name
+c:@PDFDocumentDidBeginPageFindNotification	swift.type.property	PDFDocumentDidBeginPageFind	NSNotification.Name.PDFDocumentDidBeginPageFind	static let PDFDocumentDidBeginPageFind: NSNotification.Name
+c:@PDFDocumentDidBeginPageWriteNotification	swift.type.property	PDFDocumentDidBeginPageWrite	NSNotification.Name.PDFDocumentDidBeginPageWrite	static let PDFDocumentDidBeginPageWrite: NSNotification.Name
+c:@PDFDocumentDidBeginWriteNotification	swift.type.property	PDFDocumentDidBeginWrite	NSNotification.Name.PDFDocumentDidBeginWrite	static let PDFDocumentDidBeginWrite: NSNotification.Name
+c:@PDFDocumentDidEndFindNotification	swift.type.property	PDFDocumentDidEndFind	NSNotification.Name.PDFDocumentDidEndFind	static let PDFDocumentDidEndFind: NSNotification.Name
+c:@PDFDocumentDidEndPageFindNotification	swift.type.property	PDFDocumentDidEndPageFind	NSNotification.Name.PDFDocumentDidEndPageFind	static let PDFDocumentDidEndPageFind: NSNotification.Name
+c:@PDFDocumentDidEndPageWriteNotification	swift.type.property	PDFDocumentDidEndPageWrite	NSNotification.Name.PDFDocumentDidEndPageWrite	static let PDFDocumentDidEndPageWrite: NSNotification.Name
+c:@PDFDocumentDidEndWriteNotification	swift.type.property	PDFDocumentDidEndWrite	NSNotification.Name.PDFDocumentDidEndWrite	static let PDFDocumentDidEndWrite: NSNotification.Name
+c:@PDFDocumentDidFindMatchNotification	swift.type.property	PDFDocumentDidFindMatch	NSNotification.Name.PDFDocumentDidFindMatch	static let PDFDocumentDidFindMatch: NSNotification.Name
+c:@PDFDocumentDidUnlockNotification	swift.type.property	PDFDocumentDidUnlock	NSNotification.Name.PDFDocumentDidUnlock	static let PDFDocumentDidUnlock: NSNotification.Name
+c:@PDFDocumentFoundSelectionKey	swift.var	PDFDocumentFoundSelectionKey	PDFDocumentFoundSelectionKey	let PDFDocumentFoundSelectionKey: String
+c:@PDFDocumentKeywordsAttribute	swift.type.property	keywordsAttribute	PDFDocumentAttribute.keywordsAttribute	static let keywordsAttribute: PDFDocumentAttribute
+c:@PDFDocumentModificationDateAttribute	swift.type.property	modificationDateAttribute	PDFDocumentAttribute.modificationDateAttribute	static let modificationDateAttribute: PDFDocumentAttribute
+c:@PDFDocumentOptimizeImagesForScreenOption	swift.type.property	optimizeImagesForScreenOption	PDFDocumentWriteOption.optimizeImagesForScreenOption	static let optimizeImagesForScreenOption: PDFDocumentWriteOption
+c:@PDFDocumentOwnerPasswordOption	swift.type.property	ownerPasswordOption	PDFDocumentWriteOption.ownerPasswordOption	static let ownerPasswordOption: PDFDocumentWriteOption
+c:@PDFDocumentPageIndexKey	swift.var	PDFDocumentPageIndexKey	PDFDocumentPageIndexKey	let PDFDocumentPageIndexKey: String
+c:@PDFDocumentProducerAttribute	swift.type.property	producerAttribute	PDFDocumentAttribute.producerAttribute	static let producerAttribute: PDFDocumentAttribute
+c:@PDFDocumentSaveImagesAsJPEGOption	swift.type.property	saveImagesAsJPEGOption	PDFDocumentWriteOption.saveImagesAsJPEGOption	static let saveImagesAsJPEGOption: PDFDocumentWriteOption
+c:@PDFDocumentSaveTextFromOCROption	swift.type.property	saveTextFromOCROption	PDFDocumentWriteOption.saveTextFromOCROption	static let saveTextFromOCROption: PDFDocumentWriteOption
+c:@PDFDocumentSubjectAttribute	swift.type.property	subjectAttribute	PDFDocumentAttribute.subjectAttribute	static let subjectAttribute: PDFDocumentAttribute
+c:@PDFDocumentTitleAttribute	swift.type.property	titleAttribute	PDFDocumentAttribute.titleAttribute	static let titleAttribute: PDFDocumentAttribute
+c:@PDFDocumentUserPasswordOption	swift.type.property	userPasswordOption	PDFDocumentWriteOption.userPasswordOption	static let userPasswordOption: PDFDocumentWriteOption
+c:@PDFPageImageInitializationOptionCompressionQuality	swift.type.property	compressionQuality	PDFPage.ImageInitializationOption.compressionQuality	static let compressionQuality: PDFPage.ImageInitializationOption
+c:@PDFPageImageInitializationOptionMediaBox	swift.type.property	mediaBox	PDFPage.ImageInitializationOption.mediaBox	static let mediaBox: PDFPage.ImageInitializationOption
+c:@PDFPageImageInitializationOptionRotation	swift.type.property	rotation	PDFPage.ImageInitializationOption.rotation	static let rotation: PDFPage.ImageInitializationOption
+c:@PDFPageImageInitializationOptionUpscaleIfSmaller	swift.type.property	upscaleIfSmaller	PDFPage.ImageInitializationOption.upscaleIfSmaller	static let upscaleIfSmaller: PDFPage.ImageInitializationOption
+c:@PDFThumbnailViewDocumentEditedNotification	swift.type.property	PDFThumbnailViewDocumentEdited	NSNotification.Name.PDFThumbnailViewDocumentEdited	static let PDFThumbnailViewDocumentEdited: NSNotification.Name
+c:@PDFViewAnnotationHitNotification	swift.type.property	PDFViewAnnotationHit	NSNotification.Name.PDFViewAnnotationHit	static let PDFViewAnnotationHit: NSNotification.Name
+c:@PDFViewAnnotationWillHitNotification	swift.type.property	PDFViewAnnotationWillHit	NSNotification.Name.PDFViewAnnotationWillHit	static let PDFViewAnnotationWillHit: NSNotification.Name
+c:@PDFViewChangedHistoryNotification	swift.type.property	PDFViewChangedHistory	NSNotification.Name.PDFViewChangedHistory	static let PDFViewChangedHistory: NSNotification.Name
+c:@PDFViewCopyPermissionNotification	swift.type.property	PDFViewCopyPermission	NSNotification.Name.PDFViewCopyPermission	static let PDFViewCopyPermission: NSNotification.Name
+c:@PDFViewDisplayBoxChangedNotification	swift.type.property	PDFViewDisplayBoxChanged	NSNotification.Name.PDFViewDisplayBoxChanged	static let PDFViewDisplayBoxChanged: NSNotification.Name
+c:@PDFViewDisplayModeChangedNotification	swift.type.property	PDFViewDisplayModeChanged	NSNotification.Name.PDFViewDisplayModeChanged	static let PDFViewDisplayModeChanged: NSNotification.Name
+c:@PDFViewDocumentChangedNotification	swift.type.property	PDFViewDocumentChanged	NSNotification.Name.PDFViewDocumentChanged	static let PDFViewDocumentChanged: NSNotification.Name
+c:@PDFViewPageChangedNotification	swift.type.property	PDFViewPageChanged	NSNotification.Name.PDFViewPageChanged	static let PDFViewPageChanged: NSNotification.Name
+c:@PDFViewPrintPermissionNotification	swift.type.property	PDFViewPrintPermission	NSNotification.Name.PDFViewPrintPermission	static let PDFViewPrintPermission: NSNotification.Name
+c:@PDFViewScaleChangedNotification	swift.type.property	PDFViewScaleChanged	NSNotification.Name.PDFViewScaleChanged	static let PDFViewScaleChanged: NSNotification.Name
+c:@PDFViewSelectionChangedNotification	swift.type.property	PDFViewSelectionChanged	NSNotification.Name.PDFViewSelectionChanged	static let PDFViewSelectionChanged: NSNotification.Name
+c:@PDFViewVisiblePagesChangedNotification	swift.type.property	PDFViewVisiblePagesChanged	NSNotification.Name.PDFViewVisiblePagesChanged	static let PDFViewVisiblePagesChanged: NSNotification.Name
+c:@T@PDFAnnotationHighlightingMode	swift.struct	PDFAnnotationHighlightingMode	PDFAnnotationHighlightingMode	struct PDFAnnotationHighlightingMode
+c:@T@PDFAnnotationKey	swift.struct	PDFAnnotationKey	PDFAnnotationKey	struct PDFAnnotationKey
+c:@T@PDFAnnotationLineEndingStyle	swift.struct	PDFAnnotationLineEndingStyle	PDFAnnotationLineEndingStyle	struct PDFAnnotationLineEndingStyle
+c:@T@PDFAnnotationSubtype	swift.struct	PDFAnnotationSubtype	PDFAnnotationSubtype	struct PDFAnnotationSubtype
+c:@T@PDFAnnotationTextIconType	swift.struct	PDFAnnotationTextIconType	PDFAnnotationTextIconType	struct PDFAnnotationTextIconType
+c:@T@PDFAnnotationWidgetSubtype	swift.struct	PDFAnnotationWidgetSubtype	PDFAnnotationWidgetSubtype	struct PDFAnnotationWidgetSubtype
+c:@T@PDFAppearanceCharacteristicsKey	swift.struct	PDFAppearanceCharacteristicsKey	PDFAppearanceCharacteristicsKey	struct PDFAppearanceCharacteristicsKey
+c:@T@PDFBorderKey	swift.struct	PDFBorderKey	PDFBorderKey	struct PDFBorderKey
+c:@T@PDFDocumentAttribute	swift.struct	PDFDocumentAttribute	PDFDocumentAttribute	struct PDFDocumentAttribute
+c:@T@PDFDocumentWriteOption	swift.struct	PDFDocumentWriteOption	PDFDocumentWriteOption	struct PDFDocumentWriteOption
+c:@T@PDFPageImageInitializationOption	swift.struct	PDFPage.ImageInitializationOption	PDFPage.ImageInitializationOption	struct ImageInitializationOption
+c:@kPDFDestinationUnspecifiedValue	swift.var	kPDFDestinationUnspecifiedValue	kPDFDestinationUnspecifiedValue	let kPDFDestinationUnspecifiedValue: CGFloat
+c:objc(cs)PDFAction	swift.class	PDFAction	PDFAction	class PDFAction
+c:objc(cs)PDFAction(py)type	swift.property	type	PDFAction.type	var type: String { get }
+c:objc(cs)PDFActionGoTo	swift.class	PDFActionGoTo	PDFActionGoTo	class PDFActionGoTo
+c:objc(cs)PDFActionGoTo(im)initWithDestination:	swift.init	init(destination:)	PDFActionGoTo.init(destination:)	init(destination: PDFDestination)
+c:objc(cs)PDFActionGoTo(py)destination	swift.property	destination	PDFActionGoTo.destination	var destination: PDFDestination { get set }
+c:objc(cs)PDFActionNamed	swift.class	PDFActionNamed	PDFActionNamed	class PDFActionNamed
+c:objc(cs)PDFActionNamed(im)initWithName:	swift.init	init(name:)	PDFActionNamed.init(name:)	init(name: PDFActionNamedName)
+c:objc(cs)PDFActionNamed(py)name	swift.property	name	PDFActionNamed.name	var name: PDFActionNamedName { get set }
+c:objc(cs)PDFActionRemoteGoTo	swift.class	PDFActionRemoteGoTo	PDFActionRemoteGoTo	class PDFActionRemoteGoTo
+c:objc(cs)PDFActionRemoteGoTo(im)initWithPageIndex:atPoint:fileURL:	swift.init	init(pageIndex:at:fileURL:)	PDFActionRemoteGoTo.init(pageIndex:at:fileURL:)	init(pageIndex: Int, at point: CGPoint, fileURL url: URL)
+c:objc(cs)PDFActionRemoteGoTo(im)initWithPageIndex:atPoint:fileURL:::SYNTHESIZED::c:objc(cs)PDFActionRemoteGoTo	swift.init	init(pageIndex:atPoint:fileURL:)	PDFActionRemoteGoTo.init(pageIndex:atPoint:fileURL:)	init(pageIndex: Int, atPoint point: CGPoint, fileURL url: URL)
+c:objc(cs)PDFActionRemoteGoTo(py)URL	swift.property	url	PDFActionRemoteGoTo.url	var url: URL { get set }
+c:objc(cs)PDFActionRemoteGoTo(py)pageIndex	swift.property	pageIndex	PDFActionRemoteGoTo.pageIndex	var pageIndex: Int { get set }
+c:objc(cs)PDFActionRemoteGoTo(py)point	swift.property	point	PDFActionRemoteGoTo.point	var point: CGPoint { get set }
+c:objc(cs)PDFActionResetForm	swift.class	PDFActionResetForm	PDFActionResetForm	class PDFActionResetForm
+c:objc(cs)PDFActionResetForm(im)init	swift.init	init()	PDFActionResetForm.init()	init()
+c:objc(cs)PDFActionResetForm(py)fields	swift.property	fields	PDFActionResetForm.fields	var fields: [String]? { get set }
+c:objc(cs)PDFActionResetForm(py)fieldsIncludedAreCleared	swift.property	fieldsIncludedAreCleared	PDFActionResetForm.fieldsIncludedAreCleared	var fieldsIncludedAreCleared: Bool { get set }
+c:objc(cs)PDFActionURL	swift.class	PDFActionURL	PDFActionURL	class PDFActionURL
+c:objc(cs)PDFActionURL(im)initWithURL:	swift.init	init(url:)	PDFActionURL.init(url:)	init(url: URL)
+c:objc(cs)PDFActionURL(im)initWithURL:::SYNTHESIZED::c:objc(cs)PDFActionURL	swift.init	init(URL:)	PDFActionURL.init(URL:)	init(URL url: URL)
+c:objc(cs)PDFActionURL(py)URL	swift.property	url	PDFActionURL.url	var url: URL? { get set }
+c:objc(cs)PDFAnnotation	swift.class	PDFAnnotation	PDFAnnotation	class PDFAnnotation
+c:objc(cs)PDFAnnotation(cm)lineStyleFromName:	swift.type.method	lineStyle(fromName:)	PDFAnnotation.lineStyle(fromName:)	class func lineStyle(fromName name: String) -> PDFLineStyle
+c:objc(cs)PDFAnnotation(cm)nameForLineStyle:	swift.type.method	name(for:)	PDFAnnotation.name(for:)	class func name(for style: PDFLineStyle) -> String
+c:objc(cs)PDFAnnotation(im)addBezierPath:	swift.method	add(_:)	PDFAnnotation.add(_:)	func add(_ path: UIBezierPath)
+c:objc(cs)PDFAnnotation(im)drawWithBox:inContext:	swift.method	draw(with:in:)	PDFAnnotation.draw(with:in:)	func draw(with box: PDFDisplayBox, in context: CGContext)
+c:objc(cs)PDFAnnotation(im)initWithBounds:forType:withProperties:	swift.init	init(bounds:forType:withProperties:)	PDFAnnotation.init(bounds:forType:withProperties:)	init(bounds: CGRect, forType annotationType: PDFAnnotationSubtype, withProperties properties: [AnyHashable : Any]?)
+c:objc(cs)PDFAnnotation(im)removeBezierPath:	swift.method	remove(_:)	PDFAnnotation.remove(_:)	func remove(_ path: UIBezierPath)
+c:objc(cs)PDFAnnotation(im)removeValueForAnnotationKey:	swift.method	removeValue(forAnnotationKey:)	PDFAnnotation.removeValue(forAnnotationKey:)	func removeValue(forAnnotationKey key: PDFAnnotationKey)
+c:objc(cs)PDFAnnotation(im)setBoolean:forAnnotationKey:	swift.method	setBoolean(_:forAnnotationKey:)	PDFAnnotation.setBoolean(_:forAnnotationKey:)	func setBoolean(_ value: Bool, forAnnotationKey key: PDFAnnotationKey) -> Bool
+c:objc(cs)PDFAnnotation(im)setRect:forAnnotationKey:	swift.method	setRect(_:forAnnotationKey:)	PDFAnnotation.setRect(_:forAnnotationKey:)	func setRect(_ value: CGRect, forAnnotationKey key: PDFAnnotationKey) -> Bool
+c:objc(cs)PDFAnnotation(im)setValue:forAnnotationKey:	swift.method	setValue(_:forAnnotationKey:)	PDFAnnotation.setValue(_:forAnnotationKey:)	func setValue(_ value: Any, forAnnotationKey key: PDFAnnotationKey) -> Bool
+c:objc(cs)PDFAnnotation(im)valueForAnnotationKey:	swift.method	value(forAnnotationKey:)	PDFAnnotation.value(forAnnotationKey:)	func value(forAnnotationKey key: PDFAnnotationKey) -> Any?
+c:objc(cs)PDFAnnotation(py)URL	swift.property	url	PDFAnnotation.url	var url: URL? { get set }
+c:objc(cs)PDFAnnotation(py)action	swift.property	action	PDFAnnotation.action	var action: PDFAction? { get set }
+c:objc(cs)PDFAnnotation(py)activatableTextField	swift.property	isActivatableTextField	PDFAnnotation.isActivatableTextField	var isActivatableTextField: Bool { get }
+c:objc(cs)PDFAnnotation(py)alignment	swift.property	alignment	PDFAnnotation.alignment	var alignment: NSTextAlignment { get set }
+c:objc(cs)PDFAnnotation(py)allowsToggleToOff	swift.property	allowsToggleToOff	PDFAnnotation.allowsToggleToOff	var allowsToggleToOff: Bool { get set }
+c:objc(cs)PDFAnnotation(py)annotationKeyValues	swift.property	annotationKeyValues	PDFAnnotation.annotationKeyValues	var annotationKeyValues: [AnyHashable : Any] { get }
+c:objc(cs)PDFAnnotation(py)backgroundColor	swift.property	backgroundColor	PDFAnnotation.backgroundColor	@NSCopying var backgroundColor: UIColor? { get set }
+c:objc(cs)PDFAnnotation(py)border	swift.property	border	PDFAnnotation.border	var border: PDFBorder? { get set }
+c:objc(cs)PDFAnnotation(py)bounds	swift.property	bounds	PDFAnnotation.bounds	var bounds: CGRect { get set }
+c:objc(cs)PDFAnnotation(py)buttonWidgetState	swift.property	buttonWidgetState	PDFAnnotation.buttonWidgetState	var buttonWidgetState: PDFWidgetCellState { get set }
+c:objc(cs)PDFAnnotation(py)buttonWidgetStateString	swift.property	buttonWidgetStateString	PDFAnnotation.buttonWidgetStateString	var buttonWidgetStateString: String { get set }
+c:objc(cs)PDFAnnotation(py)caption	swift.property	caption	PDFAnnotation.caption	var caption: String? { get set }
+c:objc(cs)PDFAnnotation(py)choices	swift.property	choices	PDFAnnotation.choices	var choices: [String]? { get set }
+c:objc(cs)PDFAnnotation(py)color	swift.property	color	PDFAnnotation.color	@NSCopying var color: UIColor { get set }
+c:objc(cs)PDFAnnotation(py)comb	swift.property	hasComb	PDFAnnotation.hasComb	var hasComb: Bool { get set }
+c:objc(cs)PDFAnnotation(py)contents	swift.property	contents	PDFAnnotation.contents	var contents: String? { get set }
+c:objc(cs)PDFAnnotation(py)destination	swift.property	destination	PDFAnnotation.destination	var destination: PDFDestination? { get set }
+c:objc(cs)PDFAnnotation(py)endLineStyle	swift.property	endLineStyle	PDFAnnotation.endLineStyle	var endLineStyle: PDFLineStyle { get set }
+c:objc(cs)PDFAnnotation(py)endPoint	swift.property	endPoint	PDFAnnotation.endPoint	var endPoint: CGPoint { get set }
+c:objc(cs)PDFAnnotation(py)fieldName	swift.property	fieldName	PDFAnnotation.fieldName	var fieldName: String? { get set }
+c:objc(cs)PDFAnnotation(py)font	swift.property	font	PDFAnnotation.font	@NSCopying var font: UIFont? { get set }
+c:objc(cs)PDFAnnotation(py)fontColor	swift.property	fontColor	PDFAnnotation.fontColor	@NSCopying var fontColor: UIColor? { get set }
+c:objc(cs)PDFAnnotation(py)hasAppearanceStream	swift.property	hasAppearanceStream	PDFAnnotation.hasAppearanceStream	var hasAppearanceStream: Bool { get }
+c:objc(cs)PDFAnnotation(py)highlighted	swift.property	isHighlighted	PDFAnnotation.isHighlighted	var isHighlighted: Bool { get set }
+c:objc(cs)PDFAnnotation(py)iconType	swift.property	iconType	PDFAnnotation.iconType	var iconType: PDFTextAnnotationIconType { get set }
+c:objc(cs)PDFAnnotation(py)interiorColor	swift.property	interiorColor	PDFAnnotation.interiorColor	@NSCopying var interiorColor: UIColor? { get set }
+c:objc(cs)PDFAnnotation(py)isPasswordField	swift.property	isPasswordField	PDFAnnotation.isPasswordField	var isPasswordField: Bool { get }
+c:objc(cs)PDFAnnotation(py)listChoice	swift.property	isListChoice	PDFAnnotation.isListChoice	var isListChoice: Bool { get set }
+c:objc(cs)PDFAnnotation(py)markupType	swift.property	markupType	PDFAnnotation.markupType	var markupType: PDFMarkupType { get set }
+c:objc(cs)PDFAnnotation(py)maximumLength	swift.property	maximumLength	PDFAnnotation.maximumLength	var maximumLength: Int { get set }
+c:objc(cs)PDFAnnotation(py)modificationDate	swift.property	modificationDate	PDFAnnotation.modificationDate	var modificationDate: Date? { get set }
+c:objc(cs)PDFAnnotation(py)multiline	swift.property	isMultiline	PDFAnnotation.isMultiline	var isMultiline: Bool { get set }
+c:objc(cs)PDFAnnotation(py)open	swift.property	isOpen	PDFAnnotation.isOpen	var isOpen: Bool { get set }
+c:objc(cs)PDFAnnotation(py)page	swift.property	page	PDFAnnotation.page	weak var page: PDFPage? { get set }
+c:objc(cs)PDFAnnotation(py)paths	swift.property	paths	PDFAnnotation.paths	var paths: [UIBezierPath]? { get }
+c:objc(cs)PDFAnnotation(py)popup	swift.property	popup	PDFAnnotation.popup	var popup: PDFAnnotation? { get set }
+c:objc(cs)PDFAnnotation(py)quadrilateralPoints	swift.property	quadrilateralPoints	PDFAnnotation.quadrilateralPoints	var quadrilateralPoints: [NSValue]? { get set }
+c:objc(cs)PDFAnnotation(py)radiosInUnison	swift.property	radiosInUnison	PDFAnnotation.radiosInUnison	var radiosInUnison: Bool { get set }
+c:objc(cs)PDFAnnotation(py)readOnly	swift.property	isReadOnly	PDFAnnotation.isReadOnly	var isReadOnly: Bool { get set }
+c:objc(cs)PDFAnnotation(py)shouldDisplay	swift.property	shouldDisplay	PDFAnnotation.shouldDisplay	var shouldDisplay: Bool { get set }
+c:objc(cs)PDFAnnotation(py)shouldPrint	swift.property	shouldPrint	PDFAnnotation.shouldPrint	var shouldPrint: Bool { get set }
+c:objc(cs)PDFAnnotation(py)stampName	swift.property	stampName	PDFAnnotation.stampName	var stampName: String? { get set }
+c:objc(cs)PDFAnnotation(py)startLineStyle	swift.property	startLineStyle	PDFAnnotation.startLineStyle	var startLineStyle: PDFLineStyle { get set }
+c:objc(cs)PDFAnnotation(py)startPoint	swift.property	startPoint	PDFAnnotation.startPoint	var startPoint: CGPoint { get set }
+c:objc(cs)PDFAnnotation(py)type	swift.property	type	PDFAnnotation.type	var type: String? { get set }
+c:objc(cs)PDFAnnotation(py)userName	swift.property	userName	PDFAnnotation.userName	var userName: String? { get set }
+c:objc(cs)PDFAnnotation(py)values	swift.property	values	PDFAnnotation.values	var values: [String]? { get set }
+c:objc(cs)PDFAnnotation(py)widgetControlType	swift.property	widgetControlType	PDFAnnotation.widgetControlType	var widgetControlType: PDFWidgetControlType { get set }
+c:objc(cs)PDFAnnotation(py)widgetDefaultStringValue	swift.property	widgetDefaultStringValue	PDFAnnotation.widgetDefaultStringValue	var widgetDefaultStringValue: String? { get set }
+c:objc(cs)PDFAnnotation(py)widgetFieldType	swift.property	widgetFieldType	PDFAnnotation.widgetFieldType	var widgetFieldType: PDFAnnotationWidgetSubtype { get set }
+c:objc(cs)PDFAnnotation(py)widgetStringValue	swift.property	widgetStringValue	PDFAnnotation.widgetStringValue	var widgetStringValue: String? { get set }
+c:objc(cs)PDFAppearanceCharacteristics	swift.class	PDFAppearanceCharacteristics	PDFAppearanceCharacteristics	class PDFAppearanceCharacteristics
+c:objc(cs)PDFAppearanceCharacteristics(py)appearanceCharacteristicsKeyValues	swift.property	appearanceCharacteristicsKeyValues	PDFAppearanceCharacteristics.appearanceCharacteristicsKeyValues	var appearanceCharacteristicsKeyValues: [AnyHashable : Any] { get }
+c:objc(cs)PDFAppearanceCharacteristics(py)backgroundColor	swift.property	backgroundColor	PDFAppearanceCharacteristics.backgroundColor	@NSCopying var backgroundColor: UIColor? { get set }
+c:objc(cs)PDFAppearanceCharacteristics(py)borderColor	swift.property	borderColor	PDFAppearanceCharacteristics.borderColor	@NSCopying var borderColor: UIColor? { get set }
+c:objc(cs)PDFAppearanceCharacteristics(py)caption	swift.property	caption	PDFAppearanceCharacteristics.caption	var caption: String? { get set }
+c:objc(cs)PDFAppearanceCharacteristics(py)controlType	swift.property	controlType	PDFAppearanceCharacteristics.controlType	var controlType: PDFWidgetControlType { get set }
+c:objc(cs)PDFAppearanceCharacteristics(py)downCaption	swift.property	downCaption	PDFAppearanceCharacteristics.downCaption	var downCaption: String? { get set }
+c:objc(cs)PDFAppearanceCharacteristics(py)rolloverCaption	swift.property	rolloverCaption	PDFAppearanceCharacteristics.rolloverCaption	var rolloverCaption: String? { get set }
+c:objc(cs)PDFAppearanceCharacteristics(py)rotation	swift.property	rotation	PDFAppearanceCharacteristics.rotation	var rotation: Int { get set }
+c:objc(cs)PDFBorder	swift.class	PDFBorder	PDFBorder	class PDFBorder
+c:objc(cs)PDFBorder(im)drawInRect:	swift.method	draw(in:)	PDFBorder.draw(in:)	func draw(in rect: CGRect)
+c:objc(cs)PDFBorder(py)borderKeyValues	swift.property	borderKeyValues	PDFBorder.borderKeyValues	var borderKeyValues: [AnyHashable : Any] { get }
+c:objc(cs)PDFBorder(py)dashPattern	swift.property	dashPattern	PDFBorder.dashPattern	var dashPattern: [Any]? { get set }
+c:objc(cs)PDFBorder(py)lineWidth	swift.property	lineWidth	PDFBorder.lineWidth	var lineWidth: CGFloat { get set }
+c:objc(cs)PDFBorder(py)style	swift.property	style	PDFBorder.style	var style: PDFBorderStyle { get set }
+c:objc(cs)PDFDestination	swift.class	PDFDestination	PDFDestination	class PDFDestination
+c:objc(cs)PDFDestination(im)compare:	swift.method	compare(_:)	PDFDestination.compare(_:)	func compare(_ destination: PDFDestination) -> ComparisonResult
+c:objc(cs)PDFDestination(im)initWithPage:atPoint:	swift.init	init(page:at:)	PDFDestination.init(page:at:)	init(page: PDFPage, at point: CGPoint)
+c:objc(cs)PDFDestination(im)initWithPage:atPoint:::SYNTHESIZED::c:objc(cs)PDFDestination	swift.init	init(page:atPoint:)	PDFDestination.init(page:atPoint:)	init(page: PDFPage, atPoint point: CGPoint)
+c:objc(cs)PDFDestination(py)page	swift.property	page	PDFDestination.page	weak var page: PDFPage? { get }
+c:objc(cs)PDFDestination(py)point	swift.property	point	PDFDestination.point	var point: CGPoint { get }
+c:objc(cs)PDFDestination(py)zoom	swift.property	zoom	PDFDestination.zoom	var zoom: CGFloat { get set }
+c:objc(cs)PDFDocument	swift.class	PDFDocument	PDFDocument	class PDFDocument
+c:objc(cs)PDFDocument(im)beginFindString:withOptions:	swift.method	beginFindString(_:withOptions:)	PDFDocument.beginFindString(_:withOptions:)	func beginFindString(_ string: String, withOptions options: NSString.CompareOptions = [])
+c:objc(cs)PDFDocument(im)beginFindStrings:withOptions:	swift.method	beginFindStrings(_:withOptions:)	PDFDocument.beginFindStrings(_:withOptions:)	func beginFindStrings(_ strings: [String], withOptions options: NSString.CompareOptions = [])
+c:objc(cs)PDFDocument(im)cancelFindString	swift.method	cancelFindString()	PDFDocument.cancelFindString()	func cancelFindString()
+c:objc(cs)PDFDocument(im)dataRepresentation	swift.method	dataRepresentation()	PDFDocument.dataRepresentation()	func dataRepresentation() -> Data?
+c:objc(cs)PDFDocument(im)dataRepresentationWithOptions:	swift.method	dataRepresentation(options:)	PDFDocument.dataRepresentation(options:)	func dataRepresentation(options: [AnyHashable : Any] = [:]) -> Data?
+c:objc(cs)PDFDocument(im)exchangePageAtIndex:withPageAtIndex:	swift.method	exchangePage(at:withPageAt:)	PDFDocument.exchangePage(at:withPageAt:)	func exchangePage(at indexA: Int, withPageAt indexB: Int)
+c:objc(cs)PDFDocument(im)findString:fromSelection:withOptions:	swift.method	findString(_:fromSelection:withOptions:)	PDFDocument.findString(_:fromSelection:withOptions:)	func findString(_ string: String, fromSelection selection: PDFSelection?, withOptions options: NSString.CompareOptions = []) -> PDFSelection?
+c:objc(cs)PDFDocument(im)findString:withOptions:	swift.method	findString(_:withOptions:)	PDFDocument.findString(_:withOptions:)	func findString(_ string: String, withOptions options: NSString.CompareOptions = []) -> [PDFSelection]
+c:objc(cs)PDFDocument(im)indexForPage:	swift.method	index(for:)	PDFDocument.index(for:)	func index(for page: PDFPage) -> Int
+c:objc(cs)PDFDocument(im)init	swift.init	init()	PDFDocument.init()	init()
+c:objc(cs)PDFDocument(im)initWithData:	swift.init	init(data:)	PDFDocument.init(data:)	init?(data: Data)
+c:objc(cs)PDFDocument(im)initWithURL:	swift.init	init(url:)	PDFDocument.init(url:)	init?(url: URL)
+c:objc(cs)PDFDocument(im)initWithURL:::SYNTHESIZED::c:objc(cs)PDFDocument	swift.init	init(URL:)	PDFDocument.init(URL:)	init?(URL url: URL)
+c:objc(cs)PDFDocument(im)insertPage:atIndex:	swift.method	insert(_:at:)	PDFDocument.insert(_:at:)	func insert(_ page: PDFPage, at index: Int)
+c:objc(cs)PDFDocument(im)outlineItemForSelection:	swift.method	outlineItem(for:)	PDFDocument.outlineItem(for:)	func outlineItem(for selection: PDFSelection) -> PDFOutline?
+c:objc(cs)PDFDocument(im)pageAtIndex:	swift.method	page(at:)	PDFDocument.page(at:)	func page(at index: Int) -> PDFPage?
+c:objc(cs)PDFDocument(im)removePageAtIndex:	swift.method	removePage(at:)	PDFDocument.removePage(at:)	func removePage(at index: Int)
+c:objc(cs)PDFDocument(im)selectionFromPage:atCharacterIndex:toPage:atCharacterIndex:	swift.method	selection(from:atCharacterIndex:to:atCharacterIndex:)	PDFDocument.selection(from:atCharacterIndex:to:atCharacterIndex:)	func selection(from startPage: PDFPage, atCharacterIndex startCharacter: Int, to endPage: PDFPage, atCharacterIndex endCharacter: Int) -> PDFSelection?
+c:objc(cs)PDFDocument(im)selectionFromPage:atPoint:toPage:atPoint:	swift.method	selection(from:at:to:at:)	PDFDocument.selection(from:at:to:at:)	func selection(from startPage: PDFPage, at startPoint: CGPoint, to endPage: PDFPage, at endPoint: CGPoint) -> PDFSelection?
+c:objc(cs)PDFDocument(im)selectionFromPage:atPoint:toPage:atPoint:withGranularity:	swift.method	selection(from:at:to:at:with:)	PDFDocument.selection(from:at:to:at:with:)	func selection(from startPage: PDFPage, at startPoint: CGPoint, to endPage: PDFPage, at endPoint: CGPoint, with granularity: PDFSelectionGranularity) -> PDFSelection?
+c:objc(cs)PDFDocument(im)unlockWithPassword:	swift.method	unlock(withPassword:)	PDFDocument.unlock(withPassword:)	func unlock(withPassword password: String) -> Bool
+c:objc(cs)PDFDocument(im)writeToFile:	swift.method	write(toFile:)	PDFDocument.write(toFile:)	func write(toFile path: String) -> Bool
+c:objc(cs)PDFDocument(im)writeToFile:withOptions:	swift.method	write(toFile:withOptions:)	PDFDocument.write(toFile:withOptions:)	func write(toFile path: String, withOptions options: [PDFDocumentWriteOption : Any]? = nil) -> Bool
+c:objc(cs)PDFDocument(im)writeToURL:	swift.method	write(to:)	PDFDocument.write(to:)	func write(to url: URL) -> Bool
+c:objc(cs)PDFDocument(im)writeToURL:withOptions:	swift.method	write(to:withOptions:)	PDFDocument.write(to:withOptions:)	func write(to url: URL, withOptions options: [PDFDocumentWriteOption : Any]? = nil) -> Bool
+c:objc(cs)PDFDocument(py)accessPermissions	swift.property	accessPermissions	PDFDocument.accessPermissions	var accessPermissions: PDFAccessPermissions { get }
+c:objc(cs)PDFDocument(py)allowsCommenting	swift.property	allowsCommenting	PDFDocument.allowsCommenting	var allowsCommenting: Bool { get }
+c:objc(cs)PDFDocument(py)allowsContentAccessibility	swift.property	allowsContentAccessibility	PDFDocument.allowsContentAccessibility	var allowsContentAccessibility: Bool { get }
+c:objc(cs)PDFDocument(py)allowsCopying	swift.property	allowsCopying	PDFDocument.allowsCopying	var allowsCopying: Bool { get }
+c:objc(cs)PDFDocument(py)allowsDocumentAssembly	swift.property	allowsDocumentAssembly	PDFDocument.allowsDocumentAssembly	var allowsDocumentAssembly: Bool { get }
+c:objc(cs)PDFDocument(py)allowsDocumentChanges	swift.property	allowsDocumentChanges	PDFDocument.allowsDocumentChanges	var allowsDocumentChanges: Bool { get }
+c:objc(cs)PDFDocument(py)allowsFormFieldEntry	swift.property	allowsFormFieldEntry	PDFDocument.allowsFormFieldEntry	var allowsFormFieldEntry: Bool { get }
+c:objc(cs)PDFDocument(py)allowsPrinting	swift.property	allowsPrinting	PDFDocument.allowsPrinting	var allowsPrinting: Bool { get }
+c:objc(cs)PDFDocument(py)delegate	swift.property	delegate	PDFDocument.delegate	weak var delegate: (any PDFDocumentDelegate)? { get set }
+c:objc(cs)PDFDocument(py)documentAttributes	swift.property	documentAttributes	PDFDocument.documentAttributes	var documentAttributes: [AnyHashable : Any]? { get set }
+c:objc(cs)PDFDocument(py)documentRef	swift.property	documentRef	PDFDocument.documentRef	var documentRef: CGPDFDocument? { get }
+c:objc(cs)PDFDocument(py)documentURL	swift.property	documentURL	PDFDocument.documentURL	var documentURL: URL? { get }
+c:objc(cs)PDFDocument(py)isEncrypted	swift.property	isEncrypted	PDFDocument.isEncrypted	var isEncrypted: Bool { get }
+c:objc(cs)PDFDocument(py)isFinding	swift.property	isFinding	PDFDocument.isFinding	var isFinding: Bool { get }
+c:objc(cs)PDFDocument(py)isLocked	swift.property	isLocked	PDFDocument.isLocked	var isLocked: Bool { get }
+c:objc(cs)PDFDocument(py)majorVersion	swift.property	majorVersion	PDFDocument.majorVersion	var majorVersion: Int { get }
+c:objc(cs)PDFDocument(py)minorVersion	swift.property	minorVersion	PDFDocument.minorVersion	var minorVersion: Int { get }
+c:objc(cs)PDFDocument(py)outlineRoot	swift.property	outlineRoot	PDFDocument.outlineRoot	var outlineRoot: PDFOutline? { get set }
+c:objc(cs)PDFDocument(py)pageClass	swift.property	pageClass	PDFDocument.pageClass	var pageClass: AnyClass { get }
+c:objc(cs)PDFDocument(py)pageCount	swift.property	pageCount	PDFDocument.pageCount	var pageCount: Int { get }
+c:objc(cs)PDFDocument(py)permissionsStatus	swift.property	permissionsStatus	PDFDocument.permissionsStatus	var permissionsStatus: PDFDocumentPermissions { get }
+c:objc(cs)PDFDocument(py)selectionForEntireDocument	swift.property	selectionForEntireDocument	PDFDocument.selectionForEntireDocument	var selectionForEntireDocument: PDFSelection? { get }
+c:objc(cs)PDFDocument(py)string	swift.property	string	PDFDocument.string	var string: String? { get }
+c:objc(cs)PDFOutline	swift.class	PDFOutline	PDFOutline	class PDFOutline
+c:objc(cs)PDFOutline(im)childAtIndex:	swift.method	child(at:)	PDFOutline.child(at:)	func child(at index: Int) -> PDFOutline?
+c:objc(cs)PDFOutline(im)init	swift.init	init()	PDFOutline.init()	init()
+c:objc(cs)PDFOutline(im)insertChild:atIndex:	swift.method	insertChild(_:at:)	PDFOutline.insertChild(_:at:)	func insertChild(_ child: PDFOutline, at index: Int)
+c:objc(cs)PDFOutline(im)removeFromParent	swift.method	removeFromParent()	PDFOutline.removeFromParent()	func removeFromParent()
+c:objc(cs)PDFOutline(py)action	swift.property	action	PDFOutline.action	var action: PDFAction? { get set }
+c:objc(cs)PDFOutline(py)destination	swift.property	destination	PDFOutline.destination	var destination: PDFDestination? { get set }
+c:objc(cs)PDFOutline(py)document	swift.property	document	PDFOutline.document	weak var document: PDFDocument? { get }
+c:objc(cs)PDFOutline(py)index	swift.property	index	PDFOutline.index	var index: Int { get }
+c:objc(cs)PDFOutline(py)isOpen	swift.property	isOpen	PDFOutline.isOpen	var isOpen: Bool { get set }
+c:objc(cs)PDFOutline(py)label	swift.property	label	PDFOutline.label	var label: String? { get set }
+c:objc(cs)PDFOutline(py)numberOfChildren	swift.property	numberOfChildren	PDFOutline.numberOfChildren	var numberOfChildren: Int { get }
+c:objc(cs)PDFOutline(py)parent	swift.property	parent	PDFOutline.parent	var parent: PDFOutline? { get }
+c:objc(cs)PDFPage	swift.class	PDFPage	PDFPage	class PDFPage
+c:objc(cs)PDFPage(im)addAnnotation:	swift.method	addAnnotation(_:)	PDFPage.addAnnotation(_:)	func addAnnotation(_ annotation: PDFAnnotation)
+c:objc(cs)PDFPage(im)annotationAtPoint:	swift.method	annotation(at:)	PDFPage.annotation(at:)	func annotation(at point: CGPoint) -> PDFAnnotation?
+c:objc(cs)PDFPage(im)boundsForBox:	swift.method	bounds(for:)	PDFPage.bounds(for:)	func bounds(for box: PDFDisplayBox) -> CGRect
+c:objc(cs)PDFPage(im)characterBoundsAtIndex:	swift.method	characterBounds(at:)	PDFPage.characterBounds(at:)	func characterBounds(at index: Int) -> CGRect
+c:objc(cs)PDFPage(im)characterIndexAtPoint:	swift.method	characterIndex(at:)	PDFPage.characterIndex(at:)	func characterIndex(at point: CGPoint) -> Int
+c:objc(cs)PDFPage(im)drawWithBox:toContext:	swift.method	draw(with:to:)	PDFPage.draw(with:to:)	func draw(with box: PDFDisplayBox, to context: CGContext)
+c:objc(cs)PDFPage(im)init	swift.init	init()	PDFPage.init()	init()
+c:objc(cs)PDFPage(im)initWithImage:	swift.init	init(image:)	PDFPage.init(image:)	convenience init?(image: UIImage)
+c:objc(cs)PDFPage(im)initWithImage:options:	swift.init	init(image:options:)	PDFPage.init(image:options:)	init?(image: UIImage, options: [PDFPage.ImageInitializationOption : Any] = [:])
+c:objc(cs)PDFPage(im)removeAnnotation:	swift.method	removeAnnotation(_:)	PDFPage.removeAnnotation(_:)	func removeAnnotation(_ annotation: PDFAnnotation)
+c:objc(cs)PDFPage(im)selectionForLineAtPoint:	swift.method	selectionForLine(at:)	PDFPage.selectionForLine(at:)	func selectionForLine(at point: CGPoint) -> PDFSelection?
+c:objc(cs)PDFPage(im)selectionForRange:	swift.method	selection(for:)	PDFPage.selection(for:)	func selection(for range: NSRange) -> PDFSelection?
+c:objc(cs)PDFPage(im)selectionForRect:	swift.method	selection(for:)	PDFPage.selection(for:)	func selection(for rect: CGRect) -> PDFSelection?
+c:objc(cs)PDFPage(im)selectionForWordAtPoint:	swift.method	selectionForWord(at:)	PDFPage.selectionForWord(at:)	func selectionForWord(at point: CGPoint) -> PDFSelection?
+c:objc(cs)PDFPage(im)selectionFromPoint:toPoint:	swift.method	selection(from:to:)	PDFPage.selection(from:to:)	func selection(from startPoint: CGPoint, to endPoint: CGPoint) -> PDFSelection?
+c:objc(cs)PDFPage(im)setBounds:forBox:	swift.method	setBounds(_:for:)	PDFPage.setBounds(_:for:)	func setBounds(_ bounds: CGRect, for box: PDFDisplayBox)
+c:objc(cs)PDFPage(im)thumbnailOfSize:forBox:	swift.method	thumbnail(of:for:)	PDFPage.thumbnail(of:for:)	func thumbnail(of size: CGSize, for box: PDFDisplayBox) -> UIImage
+c:objc(cs)PDFPage(im)transformContext:forBox:	swift.method	transform(_:for:)	PDFPage.transform(_:for:)	func transform(_ context: CGContext, for box: PDFDisplayBox)
+c:objc(cs)PDFPage(im)transformForBox:	swift.method	transform(for:)	PDFPage.transform(for:)	func transform(for box: PDFDisplayBox) -> CGAffineTransform
+c:objc(cs)PDFPage(py)annotations	swift.property	annotations	PDFPage.annotations	var annotations: [PDFAnnotation] { get }
+c:objc(cs)PDFPage(py)attributedString	swift.property	attributedString	PDFPage.attributedString	var attributedString: NSAttributedString? { get }
+c:objc(cs)PDFPage(py)dataRepresentation	swift.property	dataRepresentation	PDFPage.dataRepresentation	var dataRepresentation: Data? { get }
+c:objc(cs)PDFPage(py)displaysAnnotations	swift.property	displaysAnnotations	PDFPage.displaysAnnotations	var displaysAnnotations: Bool { get set }
+c:objc(cs)PDFPage(py)document	swift.property	document	PDFPage.document	weak var document: PDFDocument? { get }
+c:objc(cs)PDFPage(py)label	swift.property	label	PDFPage.label	var label: String? { get }
+c:objc(cs)PDFPage(py)numberOfCharacters	swift.property	numberOfCharacters	PDFPage.numberOfCharacters	var numberOfCharacters: Int { get }
+c:objc(cs)PDFPage(py)pageRef	swift.property	pageRef	PDFPage.pageRef	var pageRef: CGPDFPage? { get }
+c:objc(cs)PDFPage(py)rotation	swift.property	rotation	PDFPage.rotation	var rotation: Int { get set }
+c:objc(cs)PDFPage(py)string	swift.property	string	PDFPage.string	var string: String? { get }
+c:objc(cs)PDFSelection	swift.class	PDFSelection	PDFSelection	class PDFSelection
+c:objc(cs)PDFSelection(im)addSelection:	swift.method	add(_:)	PDFSelection.add(_:)	func add(_ selection: PDFSelection)
+c:objc(cs)PDFSelection(im)addSelections:	swift.method	add(_:)	PDFSelection.add(_:)	func add(_ selections: [PDFSelection])
+c:objc(cs)PDFSelection(im)boundsForPage:	swift.method	bounds(for:)	PDFSelection.bounds(for:)	func bounds(for page: PDFPage) -> CGRect
+c:objc(cs)PDFSelection(im)drawForPage:active:	swift.method	draw(for:active:)	PDFSelection.draw(for:active:)	func draw(for page: PDFPage, active: Bool)
+c:objc(cs)PDFSelection(im)drawForPage:withBox:active:	swift.method	draw(for:with:active:)	PDFSelection.draw(for:with:active:)	func draw(for page: PDFPage, with box: PDFDisplayBox, active: Bool)
+c:objc(cs)PDFSelection(im)extendSelectionAtEnd:	swift.method	extend(atEnd:)	PDFSelection.extend(atEnd:)	func extend(atEnd succeed: Int)
+c:objc(cs)PDFSelection(im)extendSelectionAtStart:	swift.method	extend(atStart:)	PDFSelection.extend(atStart:)	func extend(atStart precede: Int)
+c:objc(cs)PDFSelection(im)extendSelectionForLineBoundaries	swift.method	extendForLineBoundaries()	PDFSelection.extendForLineBoundaries()	func extendForLineBoundaries()
+c:objc(cs)PDFSelection(im)initWithDocument:	swift.init	init(document:)	PDFSelection.init(document:)	init(document: PDFDocument)
+c:objc(cs)PDFSelection(im)numberOfTextRangesOnPage:	swift.method	numberOfTextRanges(on:)	PDFSelection.numberOfTextRanges(on:)	func numberOfTextRanges(on page: PDFPage) -> Int
+c:objc(cs)PDFSelection(im)rangeAtIndex:onPage:	swift.method	range(at:on:)	PDFSelection.range(at:on:)	func range(at index: Int, on page: PDFPage) -> NSRange
+c:objc(cs)PDFSelection(im)selectionsByLine	swift.method	selectionsByLine()	PDFSelection.selectionsByLine()	func selectionsByLine() -> [PDFSelection]
+c:objc(cs)PDFSelection(py)attributedString	swift.property	attributedString	PDFSelection.attributedString	var attributedString: NSAttributedString? { get }
+c:objc(cs)PDFSelection(py)color	swift.property	color	PDFSelection.color	@NSCopying var color: UIColor? { get set }
+c:objc(cs)PDFSelection(py)pages	swift.property	pages	PDFSelection.pages	var pages: [PDFPage] { get }
+c:objc(cs)PDFSelection(py)string	swift.property	string	PDFSelection.string	var string: String? { get }
+c:objc(cs)PDFThumbnailView	swift.class	PDFThumbnailView	PDFThumbnailView	@MainActor class PDFThumbnailView
+c:objc(cs)PDFThumbnailView(py)PDFView	swift.property	pdfView	PDFThumbnailView.pdfView	@MainActor weak var pdfView: PDFView? { get set }
+c:objc(cs)PDFThumbnailView(py)backgroundColor	swift.property	backgroundColor	PDFThumbnailView.backgroundColor	@NSCopying @MainActor var backgroundColor: UIColor? { get set }
+c:objc(cs)PDFThumbnailView(py)contentInset	swift.property	contentInset	PDFThumbnailView.contentInset	@MainActor var contentInset: UIEdgeInsets { get set }
+c:objc(cs)PDFThumbnailView(py)layoutMode	swift.property	layoutMode	PDFThumbnailView.layoutMode	@MainActor var layoutMode: PDFThumbnailLayoutMode { get set }
+c:objc(cs)PDFThumbnailView(py)selectedPages	swift.property	selectedPages	PDFThumbnailView.selectedPages	@MainActor var selectedPages: [PDFPage]? { get }
+c:objc(cs)PDFThumbnailView(py)thumbnailSize	swift.property	thumbnailSize	PDFThumbnailView.thumbnailSize	@MainActor var thumbnailSize: CGSize { get set }
+c:objc(cs)PDFView	swift.class	PDFView	PDFView	@MainActor class PDFView
+c:objc(cs)PDFView(im)annotationsChangedOnPage:	swift.method	annotationsChanged(on:)	PDFView.annotationsChanged(on:)	@MainActor func annotationsChanged(on page: PDFPage)
+c:objc(cs)PDFView(im)areaOfInterestForMouse:	swift.method	areaOfInterest(forMouse:)	PDFView.areaOfInterest(forMouse:)	@MainActor func areaOfInterest(forMouse event: UIEvent) -> PDFAreaOfInterest
+c:objc(cs)PDFView(im)areaOfInterestForPoint:	swift.method	areaOfInterest(for:)	PDFView.areaOfInterest(for:)	@MainActor func areaOfInterest(for cursorLocation: CGPoint) -> PDFAreaOfInterest
+c:objc(cs)PDFView(im)clearSelection	swift.method	clearSelection()	PDFView.clearSelection()	@MainActor func clearSelection()
+c:objc(cs)PDFView(im)convertPoint:fromPage:	swift.method	convert(_:from:)	PDFView.convert(_:from:)	@MainActor func convert(_ point: CGPoint, from page: PDFPage) -> CGPoint
+c:objc(cs)PDFView(im)convertPoint:toPage:	swift.method	convert(_:to:)	PDFView.convert(_:to:)	@MainActor func convert(_ point: CGPoint, to page: PDFPage) -> CGPoint
+c:objc(cs)PDFView(im)convertRect:fromPage:	swift.method	convert(_:from:)	PDFView.convert(_:from:)	@MainActor func convert(_ rect: CGRect, from page: PDFPage) -> CGRect
+c:objc(cs)PDFView(im)convertRect:toPage:	swift.method	convert(_:to:)	PDFView.convert(_:to:)	@MainActor func convert(_ rect: CGRect, to page: PDFPage) -> CGRect
+c:objc(cs)PDFView(im)copy:	swift.method	copy(_:)	PDFView.copy(_:)	@IBAction @MainActor func copy(_ sender: Any?)
+c:objc(cs)PDFView(im)drawPage:toContext:	swift.method	draw(_:to:)	PDFView.draw(_:to:)	@MainActor func draw(_ page: PDFPage, to context: CGContext)
+c:objc(cs)PDFView(im)drawPagePost:toContext:	swift.method	drawPagePost(_:to:)	PDFView.drawPagePost(_:to:)	@MainActor func drawPagePost(_ page: PDFPage, to context: CGContext)
+c:objc(cs)PDFView(im)goBack:	swift.method	goBack(_:)	PDFView.goBack(_:)	@IBAction @MainActor func goBack(_ sender: Any?)
+c:objc(cs)PDFView(im)goForward:	swift.method	goForward(_:)	PDFView.goForward(_:)	@IBAction @MainActor func goForward(_ sender: Any?)
+c:objc(cs)PDFView(im)goToDestination:	swift.method	go(to:)	PDFView.go(to:)	@MainActor func go(to destination: PDFDestination)
+c:objc(cs)PDFView(im)goToFirstPage:	swift.method	goToFirstPage(_:)	PDFView.goToFirstPage(_:)	@IBAction @MainActor func goToFirstPage(_ sender: Any?)
+c:objc(cs)PDFView(im)goToLastPage:	swift.method	goToLastPage(_:)	PDFView.goToLastPage(_:)	@IBAction @MainActor func goToLastPage(_ sender: Any?)
+c:objc(cs)PDFView(im)goToNextPage:	swift.method	goToNextPage(_:)	PDFView.goToNextPage(_:)	@IBAction @MainActor func goToNextPage(_ sender: Any?)
+c:objc(cs)PDFView(im)goToPage:	swift.method	go(to:)	PDFView.go(to:)	@MainActor func go(to page: PDFPage)
+c:objc(cs)PDFView(im)goToPreviousPage:	swift.method	goToPreviousPage(_:)	PDFView.goToPreviousPage(_:)	@IBAction @MainActor func goToPreviousPage(_ sender: Any?)
+c:objc(cs)PDFView(im)goToRect:onPage:	swift.method	go(to:on:)	PDFView.go(to:on:)	@MainActor func go(to rect: CGRect, on page: PDFPage)
+c:objc(cs)PDFView(im)goToSelection:	swift.method	go(to:)	PDFView.go(to:)	@MainActor func go(to selection: PDFSelection)
+c:objc(cs)PDFView(im)layoutDocumentView	swift.method	layoutDocumentView()	PDFView.layoutDocumentView()	@MainActor func layoutDocumentView()
+c:objc(cs)PDFView(im)pageForPoint:nearest:	swift.method	page(for:nearest:)	PDFView.page(for:nearest:)	@MainActor func page(for point: CGPoint, nearest: Bool) -> PDFPage?
+c:objc(cs)PDFView(im)performAction:	swift.method	perform(_:)	PDFView.perform(_:)	@MainActor func perform(_ action: PDFAction)
+c:objc(cs)PDFView(im)rowSizeForPage:	swift.method	rowSize(for:)	PDFView.rowSize(for:)	@MainActor func rowSize(for page: PDFPage) -> CGSize
+c:objc(cs)PDFView(im)scrollSelectionToVisible:	swift.method	scrollSelectionToVisible(_:)	PDFView.scrollSelectionToVisible(_:)	@IBAction @MainActor func scrollSelectionToVisible(_ sender: Any?)
+c:objc(cs)PDFView(im)selectAll:	swift.method	selectAll(_:)	PDFView.selectAll(_:)	@IBAction @MainActor func selectAll(_ sender: Any?)
+c:objc(cs)PDFView(im)setCurrentSelection:animate:	swift.method	setCurrentSelection(_:animate:)	PDFView.setCurrentSelection(_:animate:)	@MainActor func setCurrentSelection(_ selection: PDFSelection?, animate: Bool)
+c:objc(cs)PDFView(im)usePageViewController:withViewOptions:	swift.method	usePageViewController(_:withViewOptions:)	PDFView.usePageViewController(_:withViewOptions:)	@MainActor func usePageViewController(_ enable: Bool, withViewOptions viewOptions: [AnyHashable : Any]? = nil)
+c:objc(cs)PDFView(im)zoomIn:	swift.method	zoomIn(_:)	PDFView.zoomIn(_:)	@IBAction @MainActor func zoomIn(_ sender: Any?)
+c:objc(cs)PDFView(im)zoomOut:	swift.method	zoomOut(_:)	PDFView.zoomOut(_:)	@IBAction @MainActor func zoomOut(_ sender: Any?)
+c:objc(cs)PDFView(py)autoScales	swift.property	autoScales	PDFView.autoScales	@MainActor var autoScales: Bool { get set }
+c:objc(cs)PDFView(py)backgroundColor	swift.property	backgroundColor	PDFView.backgroundColor	@MainActor var backgroundColor: UIColor { get set }
+c:objc(cs)PDFView(py)canGoBack	swift.property	canGoBack	PDFView.canGoBack	@MainActor var canGoBack: Bool { get }
+c:objc(cs)PDFView(py)canGoForward	swift.property	canGoForward	PDFView.canGoForward	@MainActor var canGoForward: Bool { get }
+c:objc(cs)PDFView(py)canGoToFirstPage	swift.property	canGoToFirstPage	PDFView.canGoToFirstPage	@MainActor var canGoToFirstPage: Bool { get }
+c:objc(cs)PDFView(py)canGoToLastPage	swift.property	canGoToLastPage	PDFView.canGoToLastPage	@MainActor var canGoToLastPage: Bool { get }
+c:objc(cs)PDFView(py)canGoToNextPage	swift.property	canGoToNextPage	PDFView.canGoToNextPage	@MainActor var canGoToNextPage: Bool { get }
+c:objc(cs)PDFView(py)canGoToPreviousPage	swift.property	canGoToPreviousPage	PDFView.canGoToPreviousPage	@MainActor var canGoToPreviousPage: Bool { get }
+c:objc(cs)PDFView(py)canZoomIn	swift.property	canZoomIn	PDFView.canZoomIn	@MainActor var canZoomIn: Bool { get }
+c:objc(cs)PDFView(py)canZoomOut	swift.property	canZoomOut	PDFView.canZoomOut	@MainActor var canZoomOut: Bool { get }
+c:objc(cs)PDFView(py)currentDestination	swift.property	currentDestination	PDFView.currentDestination	@MainActor var currentDestination: PDFDestination? { get }
+c:objc(cs)PDFView(py)currentPage	swift.property	currentPage	PDFView.currentPage	@MainActor var currentPage: PDFPage? { get }
+c:objc(cs)PDFView(py)currentSelection	swift.property	currentSelection	PDFView.currentSelection	@MainActor var currentSelection: PDFSelection? { get set }
+c:objc(cs)PDFView(py)delegate	swift.property	delegate	PDFView.delegate	@MainActor weak var delegate: (any PDFViewDelegate)? { get set }
+c:objc(cs)PDFView(py)displayBox	swift.property	displayBox	PDFView.displayBox	@MainActor var displayBox: PDFDisplayBox { get set }
+c:objc(cs)PDFView(py)displayDirection	swift.property	displayDirection	PDFView.displayDirection	@MainActor var displayDirection: PDFDisplayDirection { get set }
+c:objc(cs)PDFView(py)displayMode	swift.property	displayMode	PDFView.displayMode	@MainActor var displayMode: PDFDisplayMode { get set }
+c:objc(cs)PDFView(py)displaysAsBook	swift.property	displaysAsBook	PDFView.displaysAsBook	@MainActor var displaysAsBook: Bool { get set }
+c:objc(cs)PDFView(py)displaysPageBreaks	swift.property	displaysPageBreaks	PDFView.displaysPageBreaks	@MainActor var displaysPageBreaks: Bool { get set }
+c:objc(cs)PDFView(py)displaysRTL	swift.property	displaysRTL	PDFView.displaysRTL	@MainActor var displaysRTL: Bool { get set }
+c:objc(cs)PDFView(py)document	swift.property	document	PDFView.document	@MainActor var document: PDFDocument? { get set }
+c:objc(cs)PDFView(py)documentView	swift.property	documentView	PDFView.documentView	@MainActor var documentView: UIView? { get }
+c:objc(cs)PDFView(py)enableDataDetectors	swift.property	enableDataDetectors	PDFView.enableDataDetectors	@MainActor var enableDataDetectors: Bool { get set }
+c:objc(cs)PDFView(py)findInteraction	swift.property	findInteraction	PDFView.findInteraction	@MainActor var findInteraction: UIFindInteraction { get }
+c:objc(cs)PDFView(py)findInteractionEnabled	swift.property	isFindInteractionEnabled	PDFView.isFindInteractionEnabled	@MainActor var isFindInteractionEnabled: Bool { get set }
+c:objc(cs)PDFView(py)highlightedSelections	swift.property	highlightedSelections	PDFView.highlightedSelections	@MainActor var highlightedSelections: [PDFSelection]? { get set }
+c:objc(cs)PDFView(py)inMarkupMode	swift.property	isInMarkupMode	PDFView.isInMarkupMode	@MainActor var isInMarkupMode: Bool { get set }
+c:objc(cs)PDFView(py)interpolationQuality	swift.property	interpolationQuality	PDFView.interpolationQuality	@MainActor var interpolationQuality: PDFInterpolationQuality { get set }
+c:objc(cs)PDFView(py)isUsingPageViewController	swift.property	isUsingPageViewController	PDFView.isUsingPageViewController	@MainActor var isUsingPageViewController: Bool { get }
+c:objc(cs)PDFView(py)maxScaleFactor	swift.property	maxScaleFactor	PDFView.maxScaleFactor	@MainActor var maxScaleFactor: CGFloat { get set }
+c:objc(cs)PDFView(py)minScaleFactor	swift.property	minScaleFactor	PDFView.minScaleFactor	@MainActor var minScaleFactor: CGFloat { get set }
+c:objc(cs)PDFView(py)pageBreakMargins	swift.property	pageBreakMargins	PDFView.pageBreakMargins	@MainActor var pageBreakMargins: UIEdgeInsets { get set }
+c:objc(cs)PDFView(py)pageOverlayViewProvider	swift.property	pageOverlayViewProvider	PDFView.pageOverlayViewProvider	@MainActor weak var pageOverlayViewProvider: (any PDFPageOverlayViewProvider)? { get set }
+c:objc(cs)PDFView(py)pageShadowsEnabled	swift.property	pageShadowsEnabled	PDFView.pageShadowsEnabled	@MainActor var pageShadowsEnabled: Bool { get set }
+c:objc(cs)PDFView(py)scaleFactor	swift.property	scaleFactor	PDFView.scaleFactor	@MainActor var scaleFactor: CGFloat { get set }
+c:objc(cs)PDFView(py)scaleFactorForSizeToFit	swift.property	scaleFactorForSizeToFit	PDFView.scaleFactorForSizeToFit	@MainActor var scaleFactorForSizeToFit: CGFloat { get }
+c:objc(cs)PDFView(py)visiblePages	swift.property	visiblePages	PDFView.visiblePages	@MainActor var visiblePages: [PDFPage] { get }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)PDFAnnotation	swift.init	init(coder:)	PDFAnnotation.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)PDFBorder	swift.init	init(coder:)	PDFBorder.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)PDFDocumentDelegate	swift.protocol	PDFDocumentDelegate	PDFDocumentDelegate	protocol PDFDocumentDelegate : NSObjectProtocol
+c:objc(pl)PDFDocumentDelegate(im)classForAnnotationType:	swift.method	class(forAnnotationType:)	PDFDocumentDelegate.class(forAnnotationType:)	optional func `class`(forAnnotationType annotationType: String) -> AnyClass
+c:objc(pl)PDFDocumentDelegate(im)classForPage	swift.method	classForPage()	PDFDocumentDelegate.classForPage()	optional func classForPage() -> AnyClass
+c:objc(pl)PDFDocumentDelegate(im)didMatchString:	swift.method	didMatchString(_:)	PDFDocumentDelegate.didMatchString(_:)	optional func didMatchString(_ instance: PDFSelection)
+c:objc(pl)PDFDocumentDelegate(im)documentDidBeginDocumentFind:	swift.method	documentDidBeginDocumentFind(_:)	PDFDocumentDelegate.documentDidBeginDocumentFind(_:)	optional func documentDidBeginDocumentFind(_ notification: Notification)
+c:objc(pl)PDFDocumentDelegate(im)documentDidBeginPageFind:	swift.method	documentDidBeginPageFind(_:)	PDFDocumentDelegate.documentDidBeginPageFind(_:)	optional func documentDidBeginPageFind(_ notification: Notification)
+c:objc(pl)PDFDocumentDelegate(im)documentDidEndDocumentFind:	swift.method	documentDidEndDocumentFind(_:)	PDFDocumentDelegate.documentDidEndDocumentFind(_:)	optional func documentDidEndDocumentFind(_ notification: Notification)
+c:objc(pl)PDFDocumentDelegate(im)documentDidEndPageFind:	swift.method	documentDidEndPageFind(_:)	PDFDocumentDelegate.documentDidEndPageFind(_:)	optional func documentDidEndPageFind(_ notification: Notification)
+c:objc(pl)PDFDocumentDelegate(im)documentDidFindMatch:	swift.method	documentDidFindMatch(_:)	PDFDocumentDelegate.documentDidFindMatch(_:)	optional func documentDidFindMatch(_ notification: Notification)
+c:objc(pl)PDFDocumentDelegate(im)documentDidUnlock:	swift.method	documentDidUnlock(_:)	PDFDocumentDelegate.documentDidUnlock(_:)	optional func documentDidUnlock(_ notification: Notification)
+c:objc(pl)PDFPageOverlayViewProvider	swift.protocol	PDFPageOverlayViewProvider	PDFPageOverlayViewProvider	protocol PDFPageOverlayViewProvider : NSObjectProtocol
+c:objc(pl)PDFPageOverlayViewProvider(im)pdfView:overlayViewForPage:	swift.method	pdfView(_:overlayViewFor:)	PDFPageOverlayViewProvider.pdfView(_:overlayViewFor:)	func pdfView(_ view: PDFView, overlayViewFor page: PDFPage) -> UIView?
+c:objc(pl)PDFPageOverlayViewProvider(im)pdfView:willDisplayOverlayView:forPage:	swift.method	pdfView(_:willDisplayOverlayView:for:)	PDFPageOverlayViewProvider.pdfView(_:willDisplayOverlayView:for:)	optional func pdfView(_ pdfView: PDFView, willDisplayOverlayView overlayView: UIView, for page: PDFPage)
+c:objc(pl)PDFPageOverlayViewProvider(im)pdfView:willEndDisplayingOverlayView:forPage:	swift.method	pdfView(_:willEndDisplayingOverlayView:for:)	PDFPageOverlayViewProvider.pdfView(_:willEndDisplayingOverlayView:for:)	optional func pdfView(_ pdfView: PDFView, willEndDisplayingOverlayView overlayView: UIView, for page: PDFPage)
+c:objc(pl)PDFViewDelegate	swift.protocol	PDFViewDelegate	PDFViewDelegate	protocol PDFViewDelegate : NSObjectProtocol
+c:objc(pl)PDFViewDelegate(im)PDFViewOpenPDF:forRemoteGoToAction:	swift.method	pdfViewOpenPDF(_:forRemoteGoToAction:)	PDFViewDelegate.pdfViewOpenPDF(_:forRemoteGoToAction:)	optional func pdfViewOpenPDF(_ sender: PDFView, forRemoteGoToAction action: PDFActionRemoteGoTo)
+c:objc(pl)PDFViewDelegate(im)PDFViewParentViewController	swift.method	pdfViewParentViewController()	PDFViewDelegate.pdfViewParentViewController()	optional func pdfViewParentViewController() -> UIViewController
+c:objc(pl)PDFViewDelegate(im)PDFViewPerformFind:	swift.method	pdfViewPerformFind(_:)	PDFViewDelegate.pdfViewPerformFind(_:)	optional func pdfViewPerformFind(_ sender: PDFView)
+c:objc(pl)PDFViewDelegate(im)PDFViewPerformGoToPage:	swift.method	pdfViewPerformGo(toPage:)	PDFViewDelegate.pdfViewPerformGo(toPage:)	optional func pdfViewPerformGo(toPage sender: PDFView)
+c:objc(pl)PDFViewDelegate(im)PDFViewWillClickOnLink:withURL:	swift.method	pdfViewWillClick(onLink:with:)	PDFViewDelegate.pdfViewWillClick(onLink:with:)	optional func pdfViewWillClick(onLink sender: PDFView, with url: URL)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFAccessPermissions	swift.func.op	!=(_:_:)	PDFAccessPermissions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFActionNamedName	swift.func.op	!=(_:_:)	PDFActionNamedName.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.func.op	!=(_:_:)	PDFAreaOfInterest.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFBorderStyle	swift.func.op	!=(_:_:)	PDFBorderStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFDisplayBox	swift.func.op	!=(_:_:)	PDFDisplayBox.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFDisplayDirection	swift.func.op	!=(_:_:)	PDFDisplayDirection.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFDisplayMode	swift.func.op	!=(_:_:)	PDFDisplayMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFDocumentPermissions	swift.func.op	!=(_:_:)	PDFDocumentPermissions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFInterpolationQuality	swift.func.op	!=(_:_:)	PDFInterpolationQuality.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFLineStyle	swift.func.op	!=(_:_:)	PDFLineStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFMarkupType	swift.func.op	!=(_:_:)	PDFMarkupType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFSelectionGranularity	swift.func.op	!=(_:_:)	PDFSelectionGranularity.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFTextAnnotationIconType	swift.func.op	!=(_:_:)	PDFTextAnnotationIconType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFThumbnailLayoutMode	swift.func.op	!=(_:_:)	PDFThumbnailLayoutMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFWidgetCellState	swift.func.op	!=(_:_:)	PDFWidgetCellState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PDFWidgetControlType	swift.func.op	!=(_:_:)	PDFWidgetControlType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationHighlightingMode	swift.func.op	!=(_:_:)	PDFAnnotationHighlightingMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationKey	swift.func.op	!=(_:_:)	PDFAnnotationKey.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationLineEndingStyle	swift.func.op	!=(_:_:)	PDFAnnotationLineEndingStyle.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationSubtype	swift.func.op	!=(_:_:)	PDFAnnotationSubtype.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationTextIconType	swift.func.op	!=(_:_:)	PDFAnnotationTextIconType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAnnotationWidgetSubtype	swift.func.op	!=(_:_:)	PDFAnnotationWidgetSubtype.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFAppearanceCharacteristicsKey	swift.func.op	!=(_:_:)	PDFAppearanceCharacteristicsKey.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFBorderKey	swift.func.op	!=(_:_:)	PDFBorderKey.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFDocumentAttribute	swift.func.op	!=(_:_:)	PDFDocumentAttribute.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFDocumentWriteOption	swift.func.op	!=(_:_:)	PDFDocumentWriteOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PDFPageImageInitializationOption	swift.func.op	!=(_:_:)	PDFPage.ImageInitializationOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFAccessPermissions	swift.property	hashValue	PDFAccessPermissions.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFActionNamedName	swift.property	hashValue	PDFActionNamedName.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFBorderStyle	swift.property	hashValue	PDFBorderStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFDisplayBox	swift.property	hashValue	PDFDisplayBox.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFDisplayDirection	swift.property	hashValue	PDFDisplayDirection.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFDisplayMode	swift.property	hashValue	PDFDisplayMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFDocumentPermissions	swift.property	hashValue	PDFDocumentPermissions.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFInterpolationQuality	swift.property	hashValue	PDFInterpolationQuality.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFLineStyle	swift.property	hashValue	PDFLineStyle.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFMarkupType	swift.property	hashValue	PDFMarkupType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFSelectionGranularity	swift.property	hashValue	PDFSelectionGranularity.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFTextAnnotationIconType	swift.property	hashValue	PDFTextAnnotationIconType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFThumbnailLayoutMode	swift.property	hashValue	PDFThumbnailLayoutMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFWidgetCellState	swift.property	hashValue	PDFWidgetCellState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PDFWidgetControlType	swift.property	hashValue	PDFWidgetControlType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFAccessPermissions	swift.method	hash(into:)	PDFAccessPermissions.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFActionNamedName	swift.method	hash(into:)	PDFActionNamedName.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFBorderStyle	swift.method	hash(into:)	PDFBorderStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFDisplayBox	swift.method	hash(into:)	PDFDisplayBox.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFDisplayDirection	swift.method	hash(into:)	PDFDisplayDirection.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFDisplayMode	swift.method	hash(into:)	PDFDisplayMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFDocumentPermissions	swift.method	hash(into:)	PDFDocumentPermissions.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFInterpolationQuality	swift.method	hash(into:)	PDFInterpolationQuality.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFLineStyle	swift.method	hash(into:)	PDFLineStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFMarkupType	swift.method	hash(into:)	PDFMarkupType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFSelectionGranularity	swift.method	hash(into:)	PDFSelectionGranularity.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFTextAnnotationIconType	swift.method	hash(into:)	PDFTextAnnotationIconType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFThumbnailLayoutMode	swift.method	hash(into:)	PDFThumbnailLayoutMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFWidgetCellState	swift.method	hash(into:)	PDFWidgetCellState.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PDFWidgetControlType	swift.method	hash(into:)	PDFWidgetControlType.hash(into:)	func hash(into hasher: inout Hasher)
+s:So12PDFBorderKeya8rawValueABSS_tcfc	swift.init	init(rawValue:)	PDFBorderKey.init(rawValue:)	init(rawValue: String)
+s:So12PDFLineStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PDFLineStyle.init(rawValue:)	init?(rawValue: Int)
+s:So13PDFDisplayBoxV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PDFDisplayBox.init(rawValue:)	init?(rawValue: Int)
+s:So13PDFMarkupTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PDFMarkupType.init(rawValue:)	init?(rawValue: Int)
+s:So14PDFBorderStyleV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PDFBorderStyle.init(rawValue:)	init?(rawValue: Int)
+s:So14PDFDisplayModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PDFDisplayMode.init(rawValue:)	init?(rawValue: Int)
+s:So16PDFAnnotationKeya8rawValueABSS_tcfc	swift.init	init(rawValue:)	PDFAnnotationKey.init(rawValue:)	init(rawValue: String)
+s:So17PDFAreaOfInterestV8rawValueABSi_tcfc	swift.init	init(rawValue:)	PDFAreaOfInterest.init(rawValue:)	init(rawValue: Int)
+s:So18PDFActionNamedNameV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PDFActionNamedName.init(rawValue:)	init?(rawValue: Int)
+s:So18PDFWidgetCellStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PDFWidgetCellState.init(rawValue:)	init?(rawValue: Int)
+s:So19PDFDisplayDirectionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PDFDisplayDirection.init(rawValue:)	init?(rawValue: Int)
+s:So20PDFAccessPermissionsV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	PDFAccessPermissions.init(rawValue:)	init?(rawValue: UInt)
+s:So20PDFAnnotationSubtypea8rawValueABSS_tcfc	swift.init	init(rawValue:)	PDFAnnotationSubtype.init(rawValue:)	init(rawValue: String)
+s:So20PDFDocumentAttributea8rawValueABSS_tcfc	swift.init	init(rawValue:)	PDFDocumentAttribute.init(rawValue:)	init(rawValue: String)
+s:So20PDFWidgetControlTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PDFWidgetControlType.init(rawValue:)	init?(rawValue: Int)
+s:So22PDFDocumentPermissionsV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PDFDocumentPermissions.init(rawValue:)	init?(rawValue: Int)
+s:So22PDFDocumentWriteOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	PDFDocumentWriteOption.init(rawValue:)	init(rawValue: String)
+s:So22PDFThumbnailLayoutModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PDFThumbnailLayoutMode.init(rawValue:)	init?(rawValue: Int)
+s:So23PDFInterpolationQualityV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PDFInterpolationQuality.init(rawValue:)	init?(rawValue: Int)
+s:So23PDFSelectionGranularityV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	PDFSelectionGranularity.init(rawValue:)	init?(rawValue: UInt)
+s:So25PDFAnnotationTextIconTypea8rawValueABSS_tcfc	swift.init	init(rawValue:)	PDFAnnotationTextIconType.init(rawValue:)	init(rawValue: String)
+s:So25PDFTextAnnotationIconTypeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	PDFTextAnnotationIconType.init(rawValue:)	init?(rawValue: Int)
+s:So26PDFAnnotationWidgetSubtypea8rawValueABSS_tcfc	swift.init	init(rawValue:)	PDFAnnotationWidgetSubtype.init(rawValue:)	init(rawValue: String)
+s:So28PDFAnnotationLineEndingStylea8rawValueABSS_tcfc	swift.init	init(rawValue:)	PDFAnnotationLineEndingStyle.init(rawValue:)	init(rawValue: String)
+s:So29PDFAnnotationHighlightingModea8rawValueABSS_tcfc	swift.init	init(rawValue:)	PDFAnnotationHighlightingMode.init(rawValue:)	init(rawValue: String)
+s:So31PDFAppearanceCharacteristicsKeya8rawValueABSS_tcfc	swift.init	init(rawValue:)	PDFAppearanceCharacteristicsKey.init(rawValue:)	init(rawValue: String)
+s:So32PDFPageImageInitializationOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	PDFPage.ImageInitializationOption.init(rawValue:)	init(rawValue: String)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.init	init(arrayLiteral:)	PDFAreaOfInterest.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	isDisjoint(with:)	PDFAreaOfInterest.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	isSuperset(of:)	PDFAreaOfInterest.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	subtracting(_:)	PDFAreaOfInterest.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	isStrictSubset(of:)	PDFAreaOfInterest.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	isStrictSuperset(of:)	PDFAreaOfInterest.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.property	isEmpty	PDFAreaOfInterest.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	isSubset(of:)	PDFAreaOfInterest.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	subtract(_:)	PDFAreaOfInterest.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.init	init(_:)	PDFAreaOfInterest.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationHighlightingMode	swift.property	hashValue	PDFAnnotationHighlightingMode.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationKey	swift.property	hashValue	PDFAnnotationKey.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationLineEndingStyle	swift.property	hashValue	PDFAnnotationLineEndingStyle.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationSubtype	swift.property	hashValue	PDFAnnotationSubtype.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationTextIconType	swift.property	hashValue	PDFAnnotationTextIconType.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAnnotationWidgetSubtype	swift.property	hashValue	PDFAnnotationWidgetSubtype.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFAppearanceCharacteristicsKey	swift.property	hashValue	PDFAppearanceCharacteristicsKey.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFBorderKey	swift.property	hashValue	PDFBorderKey.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFDocumentAttribute	swift.property	hashValue	PDFDocumentAttribute.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFDocumentWriteOption	swift.property	hashValue	PDFDocumentWriteOption.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PDFPageImageInitializationOption	swift.property	hashValue	PDFPage.ImageInitializationOption.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationHighlightingMode	swift.method	hash(into:)	PDFAnnotationHighlightingMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationKey	swift.method	hash(into:)	PDFAnnotationKey.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationLineEndingStyle	swift.method	hash(into:)	PDFAnnotationLineEndingStyle.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationSubtype	swift.method	hash(into:)	PDFAnnotationSubtype.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationTextIconType	swift.method	hash(into:)	PDFAnnotationTextIconType.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAnnotationWidgetSubtype	swift.method	hash(into:)	PDFAnnotationWidgetSubtype.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFAppearanceCharacteristicsKey	swift.method	hash(into:)	PDFAppearanceCharacteristicsKey.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFBorderKey	swift.method	hash(into:)	PDFBorderKey.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFDocumentAttribute	swift.method	hash(into:)	PDFDocumentAttribute.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFDocumentWriteOption	swift.method	hash(into:)	PDFDocumentWriteOption.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PDFPageImageInitializationOption	swift.method	hash(into:)	PDFPage.ImageInitializationOption.hash(into:)	func hash(into hasher: inout Hasher)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	insert(_:)	PDFAreaOfInterest.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	remove(_:)	PDFAreaOfInterest.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	update(with:)	PDFAreaOfInterest.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	contains(_:)	PDFAreaOfInterest.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	intersection(_:)	PDFAreaOfInterest.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	symmetricDifference(_:)	PDFAreaOfInterest.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	union(_:)	PDFAreaOfInterest.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	formIntersection(_:)	PDFAreaOfInterest.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	formSymmetricDifference(_:)	PDFAreaOfInterest.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.method	formUnion(_:)	PDFAreaOfInterest.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@PDFAreaOfInterest	swift.init	init()	PDFAreaOfInterest.init()	init()

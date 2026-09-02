@@ -1,0 +1,49 @@
+{
+  "module": "ARKit",
+  "moduleRecord": {
+    "app_coverage_count": 1,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 8,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 98,
+    "iphoneos_runtime_focus_launch_build_rank": 96,
+    "module": "ARKit",
+    "occurrence_count": 9,
+    "per_app": {
+      "eigen": {
+        "evidence_sha256": "cf7ffbf85f60fab751a51e4b26667835321eed487ffc87da533c6875cd7bb0ac",
+        "file_count": 8,
+        "occurrence_count": 9,
+        "sample_paths": [
+          "ios/Artsy/NativeModules/ARCocoaConstantsModule.m",
+          "ios/Artsy/View_Controllers/ARVIR/AR/ARVIRHorizontalPlaneInteractionController.m",
+          "ios/Artsy/View_Controllers/ARVIR/Nodes/AppleARCode/FocusSquare.swift",
+          "ios/Artsy/View_Controllers/ARVIR/Nodes/AppleARCode/Utilities.swift",
+          "ios/Artsy/View_Controllers/ARVIR/Nodes/VirtualArtwork.swift",
+          "ios/Artsy/View_Controllers/ARVIR/VCs/ARAugmentedFloorBasedVIRViewController.m",
+          "ios/Artsy/View_Controllers/ARVIR/VCs/ARAugmentedVIRSetupViewController.m",
+          "ios/Artsy/View_Controllers/ARVIR/VCs/ARAugmentedWallBasedVIRViewController.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 98,
+    "byFocusLaunchBuildRelevance": 96
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

@@ -1,0 +1,68 @@
+precise	kind	title	path	declaration
+c:@E@SLComposeViewControllerResult	swift.enum	SLComposeViewControllerResult	SLComposeViewControllerResult	enum SLComposeViewControllerResult
+c:@E@SLComposeViewControllerResult@SLComposeViewControllerResultCancelled	swift.enum.case	SLComposeViewControllerResult.cancelled	SLComposeViewControllerResult.cancelled	case cancelled
+c:@E@SLComposeViewControllerResult@SLComposeViewControllerResultDone	swift.enum.case	SLComposeViewControllerResult.done	SLComposeViewControllerResult.done	case done
+c:@E@SLRequestMethod	swift.enum	SLRequestMethod	SLRequestMethod	enum SLRequestMethod
+c:@E@SLRequestMethod@SLRequestMethodDELETE	swift.enum.case	SLRequestMethod.DELETE	SLRequestMethod.DELETE	case DELETE
+c:@E@SLRequestMethod@SLRequestMethodGET	swift.enum.case	SLRequestMethod.GET	SLRequestMethod.GET	case GET
+c:@E@SLRequestMethod@SLRequestMethodPOST	swift.enum.case	SLRequestMethod.POST	SLRequestMethod.POST	case POST
+c:@E@SLRequestMethod@SLRequestMethodPUT	swift.enum.case	SLRequestMethod.PUT	SLRequestMethod.PUT	case PUT
+c:@SLServiceTypeFacebook	swift.var	SLServiceTypeFacebook	SLServiceTypeFacebook	let SLServiceTypeFacebook: String
+c:@SLServiceTypeLinkedIn	swift.var	SLServiceTypeLinkedIn	SLServiceTypeLinkedIn	let SLServiceTypeLinkedIn: String
+c:@SLServiceTypeSinaWeibo	swift.var	SLServiceTypeSinaWeibo	SLServiceTypeSinaWeibo	let SLServiceTypeSinaWeibo: String
+c:@SLServiceTypeTencentWeibo	swift.var	SLServiceTypeTencentWeibo	SLServiceTypeTencentWeibo	let SLServiceTypeTencentWeibo: String
+c:@SLServiceTypeTwitter	swift.var	SLServiceTypeTwitter	SLServiceTypeTwitter	let SLServiceTypeTwitter: String
+c:@T@SLComposeSheetConfigurationItemTapHandler	swift.typealias	SLComposeSheetConfigurationItemTapHandler	SLComposeSheetConfigurationItemTapHandler	typealias SLComposeSheetConfigurationItemTapHandler = () -> Void
+c:@T@SLComposeViewControllerCompletionHandler	swift.typealias	SLComposeViewControllerCompletionHandler	SLComposeViewControllerCompletionHandler	typealias SLComposeViewControllerCompletionHandler = (SLComposeViewControllerResult) -> Void
+c:@T@SLRequestHandler	swift.typealias	SLRequestHandler	SLRequestHandler	typealias SLRequestHandler = (Data?, HTTPURLResponse?, (any Error)?) -> Void
+c:objc(cs)SLComposeServiceViewController	swift.class	SLComposeServiceViewController	SLComposeServiceViewController	@MainActor class SLComposeServiceViewController
+c:objc(cs)SLComposeServiceViewController(im)cancel	swift.method	cancel()	SLComposeServiceViewController.cancel()	@MainActor func cancel()
+c:objc(cs)SLComposeServiceViewController(im)configurationItems	swift.method	configurationItems()	SLComposeServiceViewController.configurationItems()	@MainActor func configurationItems() -> [Any]!
+c:objc(cs)SLComposeServiceViewController(im)didSelectCancel	swift.method	didSelectCancel()	SLComposeServiceViewController.didSelectCancel()	@MainActor func didSelectCancel()
+c:objc(cs)SLComposeServiceViewController(im)didSelectPost	swift.method	didSelectPost()	SLComposeServiceViewController.didSelectPost()	@MainActor func didSelectPost()
+c:objc(cs)SLComposeServiceViewController(im)isContentValid	swift.method	isContentValid()	SLComposeServiceViewController.isContentValid()	@MainActor func isContentValid() -> Bool
+c:objc(cs)SLComposeServiceViewController(im)loadPreviewView	swift.method	loadPreviewView()	SLComposeServiceViewController.loadPreviewView()	@MainActor func loadPreviewView() -> UIView!
+c:objc(cs)SLComposeServiceViewController(im)popConfigurationViewController	swift.method	popConfigurationViewController()	SLComposeServiceViewController.popConfigurationViewController()	@MainActor func popConfigurationViewController()
+c:objc(cs)SLComposeServiceViewController(im)presentationAnimationDidFinish	swift.method	presentationAnimationDidFinish()	SLComposeServiceViewController.presentationAnimationDidFinish()	@MainActor func presentationAnimationDidFinish()
+c:objc(cs)SLComposeServiceViewController(im)pushConfigurationViewController:	swift.method	pushConfigurationViewController(_:)	SLComposeServiceViewController.pushConfigurationViewController(_:)	@MainActor func pushConfigurationViewController(_ viewController: UIViewController!)
+c:objc(cs)SLComposeServiceViewController(im)reloadConfigurationItems	swift.method	reloadConfigurationItems()	SLComposeServiceViewController.reloadConfigurationItems()	@MainActor func reloadConfigurationItems()
+c:objc(cs)SLComposeServiceViewController(im)validateContent	swift.method	validateContent()	SLComposeServiceViewController.validateContent()	@MainActor func validateContent()
+c:objc(cs)SLComposeServiceViewController(py)autoCompletionViewController	swift.property	autoCompletionViewController	SLComposeServiceViewController.autoCompletionViewController	@MainActor var autoCompletionViewController: UIViewController! { get set }
+c:objc(cs)SLComposeServiceViewController(py)charactersRemaining	swift.property	charactersRemaining	SLComposeServiceViewController.charactersRemaining	@MainActor var charactersRemaining: NSNumber! { get set }
+c:objc(cs)SLComposeServiceViewController(py)contentText	swift.property	contentText	SLComposeServiceViewController.contentText	@MainActor var contentText: String! { get }
+c:objc(cs)SLComposeServiceViewController(py)placeholder	swift.property	placeholder	SLComposeServiceViewController.placeholder	@MainActor var placeholder: String! { get set }
+c:objc(cs)SLComposeServiceViewController(py)textView	swift.property	textView	SLComposeServiceViewController.textView	@MainActor var textView: UITextView! { get }
+c:objc(cs)SLComposeSheetConfigurationItem	swift.class	SLComposeSheetConfigurationItem	SLComposeSheetConfigurationItem	class SLComposeSheetConfigurationItem
+c:objc(cs)SLComposeSheetConfigurationItem(im)init	swift.init	init()	SLComposeSheetConfigurationItem.init()	init!()
+c:objc(cs)SLComposeSheetConfigurationItem(py)tapHandler	swift.property	tapHandler	SLComposeSheetConfigurationItem.tapHandler	var tapHandler: SLComposeSheetConfigurationItemTapHandler! { get set }
+c:objc(cs)SLComposeSheetConfigurationItem(py)title	swift.property	title	SLComposeSheetConfigurationItem.title	var title: String! { get set }
+c:objc(cs)SLComposeSheetConfigurationItem(py)value	swift.property	value	SLComposeSheetConfigurationItem.value	var value: String! { get set }
+c:objc(cs)SLComposeSheetConfigurationItem(py)valuePending	swift.property	valuePending	SLComposeSheetConfigurationItem.valuePending	var valuePending: Bool { get set }
+c:objc(cs)SLComposeViewController	swift.class	SLComposeViewController	SLComposeViewController	@MainActor class SLComposeViewController
+c:objc(cs)SLComposeViewController(cm)composeViewControllerForServiceType:	swift.init	init(forServiceType:)	SLComposeViewController.init(forServiceType:)	@MainActor init!(forServiceType serviceType: String!)
+c:objc(cs)SLComposeViewController(cm)isAvailableForServiceType:	swift.type.method	isAvailable(forServiceType:)	SLComposeViewController.isAvailable(forServiceType:)	@MainActor class func isAvailable(forServiceType serviceType: String!) -> Bool
+c:objc(cs)SLComposeViewController(im)addImage:	swift.method	add(_:)	SLComposeViewController.add(_:)	@MainActor func add(_ image: UIImage!) -> Bool
+c:objc(cs)SLComposeViewController(im)addURL:	swift.method	add(_:)	SLComposeViewController.add(_:)	@MainActor func add(_ url: URL!) -> Bool
+c:objc(cs)SLComposeViewController(im)removeAllImages	swift.method	removeAllImages()	SLComposeViewController.removeAllImages()	@MainActor func removeAllImages() -> Bool
+c:objc(cs)SLComposeViewController(im)removeAllURLs	swift.method	removeAllURLs()	SLComposeViewController.removeAllURLs()	@MainActor func removeAllURLs() -> Bool
+c:objc(cs)SLComposeViewController(im)setInitialText:	swift.method	setInitialText(_:)	SLComposeViewController.setInitialText(_:)	@MainActor func setInitialText(_ text: String!) -> Bool
+c:objc(cs)SLComposeViewController(py)completionHandler	swift.property	completionHandler	SLComposeViewController.completionHandler	@MainActor var completionHandler: SLComposeViewControllerCompletionHandler! { get set }
+c:objc(cs)SLComposeViewController(py)serviceType	swift.property	serviceType	SLComposeViewController.serviceType	@MainActor var serviceType: String! { get }
+c:objc(cs)SLRequest	swift.class	SLRequest	SLRequest	class SLRequest
+c:objc(cs)SLRequest(cm)requestForServiceType:requestMethod:URL:parameters:	swift.init	init(forServiceType:requestMethod:url:parameters:)	SLRequest.init(forServiceType:requestMethod:url:parameters:)	init!(forServiceType serviceType: String!, requestMethod: SLRequestMethod, url: URL!, parameters: [AnyHashable : Any]!)
+c:objc(cs)SLRequest(cm)requestForServiceType:requestMethod:URL:parameters:::SYNTHESIZED::c:objc(cs)SLRequest	swift.init	init(forServiceType:requestMethod:URL:parameters:)	SLRequest.init(forServiceType:requestMethod:URL:parameters:)	init!(forServiceType serviceType: String!, requestMethod: SLRequestMethod, URL url: URL!, parameters: [AnyHashable : Any]!)
+c:objc(cs)SLRequest(im)addMultipartData:withName:type:filename:	swift.method	addMultipartData(_:withName:type:filename:)	SLRequest.addMultipartData(_:withName:type:filename:)	func addMultipartData(_ data: Data!, withName name: String!, type: String!, filename: String!)
+c:objc(cs)SLRequest(im)performRequestWithHandler:	swift.method	perform(handler:)	SLRequest.perform(handler:)	func perform(handler: SLRequestHandler!)
+c:objc(cs)SLRequest(im)preparedURLRequest	swift.method	preparedURLRequest()	SLRequest.preparedURLRequest()	func preparedURLRequest() -> URLRequest!
+c:objc(cs)SLRequest(py)URL	swift.property	url	SLRequest.url	var url: URL! { get }
+c:objc(cs)SLRequest(py)account	swift.property	account	SLRequest.account	var account: ACAccount! { get set }
+c:objc(cs)SLRequest(py)parameters	swift.property	parameters	SLRequest.parameters	var parameters: [AnyHashable : Any]! { get }
+c:objc(cs)SLRequest(py)requestMethod	swift.property	requestMethod	SLRequest.requestMethod	var requestMethod: SLRequestMethod { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SLComposeViewControllerResult	swift.func.op	!=(_:_:)	SLComposeViewControllerResult.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SLRequestMethod	swift.func.op	!=(_:_:)	SLRequestMethod.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SLComposeViewControllerResult	swift.property	hashValue	SLComposeViewControllerResult.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SLRequestMethod	swift.property	hashValue	SLRequestMethod.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SLComposeViewControllerResult	swift.method	hash(into:)	SLComposeViewControllerResult.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SLRequestMethod	swift.method	hash(into:)	SLRequestMethod.hash(into:)	func hash(into hasher: inout Hasher)
+s:So15SLRequestMethodV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SLRequestMethod.init(rawValue:)	init?(rawValue: Int)
+s:So29SLComposeViewControllerResultV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	SLComposeViewControllerResult.init(rawValue:)	init?(rawValue: Int)

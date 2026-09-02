@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 2,
+  "duplicateOccurrenceCount": 2,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CoreBluetooth.symbols.json",
+      "relationshipCount": 637,
+      "sha256": "001494075c5973e4b418fe6b743bf50afadfe02f7c909a384bdaec7b5e523a69",
+      "symbolCount": 476
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CoreBluetooth",
+  "relationshipCount": 637,
+  "schema": 1,
+  "symbolCount": 474,
+  "target": "arm64-apple-ios26.0"
+}

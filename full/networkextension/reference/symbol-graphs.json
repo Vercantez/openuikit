@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 52,
+  "duplicateOccurrenceCount": 52,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/NetworkExtension.symbols.json",
+      "relationshipCount": 2087,
+      "sha256": "3f2e90c474eebcadc877991982af065af427922f2a9fe01a025d366d79101814",
+      "symbolCount": 1235
+    },
+    {
+      "path": "reference/symbol-graphs/NetworkExtension@Foundation.symbols.json",
+      "relationshipCount": 9,
+      "sha256": "10efcc7515c3caff40e6aa2a984aa8a2212f267433995c57688f96a88a233973",
+      "symbolCount": 9
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "NetworkExtension",
+  "relationshipCount": 2096,
+  "schema": 1,
+  "symbolCount": 1192,
+  "target": "arm64-apple-ios26.0"
+}

@@ -1,0 +1,115 @@
+{
+  "module": "Contacts",
+  "moduleRecord": {
+    "app_coverage_count": 7,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 49,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 41,
+    "iphoneos_runtime_focus_launch_build_rank": 44,
+    "module": "Contacts",
+    "occurrence_count": 49,
+    "per_app": {
+      "ProtonMail-ios": {
+        "evidence_sha256": "c2d9c5a769fd5a9dc32b4df747193f8be96ad397a5e83451965b180f27fd7350",
+        "file_count": 7,
+        "occurrence_count": 7,
+        "sample_paths": [
+          "Modules/InboxComposer/Sources/Composer/Views/ComposerView/ComposerModel.swift",
+          "Modules/InboxComposer/Sources/Composer/Views/ComposerView/ComposerView.swift",
+          "Modules/InboxContacts/Sources/DeviceContacts/CNContactStore+CNContactStoring.swift",
+          "Modules/InboxContacts/Sources/DeviceContacts/ContactPermissionsHandler.swift",
+          "Modules/InboxContacts/Sources/DeviceContacts/ContactSuggestionsRepository.swift",
+          "Modules/InboxContacts/Sources/Screens/ContactDetails/Formatters/ContactFormatter.swift",
+          "Modules/InboxContacts/Sources/Screens/Contacts/Logic/RustContactsWrappers.swift"
+        ]
+      },
+      "Signal-iOS": {
+        "evidence_sha256": "dd9bd55647a51930e7a79479fd5388b015b7f75bcd1ab97cb4d76159b166d94d",
+        "file_count": 23,
+        "occurrence_count": 23,
+        "sample_paths": [
+          "Signal/Megaphones/ExperienceUpgradeManager.swift",
+          "Signal/Registration/RegistrationCoodinatorShims.swift",
+          "Signal/Registration/RegistrationCoordinatorImpl.swift",
+          "Signal/src/ViewControllers/LocationPicker.swift",
+          "SignalServiceKit/Contacts/ContactManager.swift",
+          "SignalServiceKit/Contacts/ContactSyncAttachmentBuilder.swift",
+          "SignalServiceKit/Contacts/DisplayName.swift",
+          "SignalServiceKit/Contacts/OWSContactsManager.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "ee99f1cadcde443d647e1acea5443c088c7eb8acf6d73d6c08a10abb7641c4d8",
+        "file_count": 10,
+        "occurrence_count": 10,
+        "sample_paths": [
+          "Telegram/SiriIntents/IntentContacts.swift",
+          "Telegram/SiriIntents/IntentHandler.swift",
+          "Telegram/SiriIntents/IntentMessages.swift",
+          "submodules/AccountContext/Sources/DeviceContactData.swift",
+          "submodules/ContactsHelper/PublicHeaders/ContactsHelper/ContactsHelper.h",
+          "submodules/DeviceAccess/Sources/DeviceAccess.swift",
+          "submodules/Geocoding/Sources/Geocoding.swift",
+          "submodules/TelegramPresentationData/Sources/PresentationData.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "e1581409a40f33e911c668af1bf6736bd73ca6169dd7ec4d656b0a3b7dca3387",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Riot/Modules/Application/LegacyAppDelegate.m",
+          "Riot/Modules/Contacts/ContactsTableViewController.m",
+          "Riot/Modules/Contacts/DataSources/ContactsDataSource.m",
+          "Riot/Modules/MatrixKit/Models/Contact/MXKContactManager.h",
+          "Riot/Modules/MatrixKit/Utils/MXKTools.m"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "55f4e44fba05e30f0712bb90bd9d970e9f4ebcecca4855335814f2d90ba8b2db",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "Sources/Shared/API/Webhook/Sensors/GeocoderSensor.swift"
+        ]
+      },
+      "simplenote-ios": {
+        "evidence_sha256": "07c9ee9c44f36fe3cb044baeac9e9a1edb0a6886f58190ea65a1b1591d29a9cc",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Simplenote/Classes/SPContactsManager.swift",
+          "Simplenote/SPAppDelegate.m"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "fc27a7da56b4ad75b9ae7381c8e407fa50414ba00f1442462998d5d43a214581",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "WMFData/Sources/WMFData/Data Controllers/Donor Experience/WMFDonateDataController.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 41,
+    "byFocusLaunchBuildRelevance": 44
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

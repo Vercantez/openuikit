@@ -1,0 +1,29 @@
+precise	kind	title	path	declaration
+c:@E@NCUpdateResult	swift.enum	NCUpdateResult	NCUpdateResult	enum NCUpdateResult
+c:@E@NCUpdateResult@NCUpdateResultFailed	swift.enum.case	NCUpdateResult.failed	NCUpdateResult.failed	case failed
+c:@E@NCUpdateResult@NCUpdateResultNewData	swift.enum.case	NCUpdateResult.newData	NCUpdateResult.newData	case newData
+c:@E@NCUpdateResult@NCUpdateResultNoData	swift.enum.case	NCUpdateResult.noData	NCUpdateResult.noData	case noData
+c:@E@NCWidgetDisplayMode	swift.enum	NCWidgetDisplayMode	NCWidgetDisplayMode	enum NCWidgetDisplayMode
+c:@E@NCWidgetDisplayMode@NCWidgetDisplayModeCompact	swift.enum.case	NCWidgetDisplayMode.compact	NCWidgetDisplayMode.compact	case compact
+c:@E@NCWidgetDisplayMode@NCWidgetDisplayModeExpanded	swift.enum.case	NCWidgetDisplayMode.expanded	NCWidgetDisplayMode.expanded	case expanded
+c:objc(cs)NCWidgetController	swift.class	NCWidgetController	NCWidgetController	class NCWidgetController
+c:objc(cs)NCWidgetController(im)setHasContent:forWidgetWithBundleIdentifier:	swift.method	setHasContent(_:forWidgetWithBundleIdentifier:)	NCWidgetController.setHasContent(_:forWidgetWithBundleIdentifier:)	func setHasContent(_ flag: Bool, forWidgetWithBundleIdentifier bundleID: String)
+c:objc(cs)NSExtensionContext(im)widgetMaximumSizeForDisplayMode:	swift.method	widgetMaximumSize(for:)	NSExtensionContext.widgetMaximumSize(for:)	func widgetMaximumSize(for displayMode: NCWidgetDisplayMode) -> CGSize
+c:objc(cs)NSExtensionContext(py)widgetActiveDisplayMode	swift.property	widgetActiveDisplayMode	NSExtensionContext.widgetActiveDisplayMode	var widgetActiveDisplayMode: NCWidgetDisplayMode { get }
+c:objc(cs)NSExtensionContext(py)widgetLargestAvailableDisplayMode	swift.property	widgetLargestAvailableDisplayMode	NSExtensionContext.widgetLargestAvailableDisplayMode	var widgetLargestAvailableDisplayMode: NCWidgetDisplayMode { get set }
+c:objc(cs)UIVibrancyEffect(cm)notificationCenterVibrancyEffect	swift.type.method	notificationCenter()	UIVibrancyEffect.notificationCenter()	@MainActor class func notificationCenter() -> UIVibrancyEffect
+c:objc(cs)UIVibrancyEffect(cm)widgetEffectForVibrancyStyle:	swift.type.method	widgetEffect(forVibrancyStyle:)	UIVibrancyEffect.widgetEffect(forVibrancyStyle:)	@MainActor class func widgetEffect(forVibrancyStyle vibrancyStyle: UIVibrancyEffectStyle) -> UIVibrancyEffect
+c:objc(cs)UIVibrancyEffect(cm)widgetPrimaryVibrancyEffect	swift.type.method	widgetPrimary()	UIVibrancyEffect.widgetPrimary()	@MainActor class func widgetPrimary() -> UIVibrancyEffect
+c:objc(cs)UIVibrancyEffect(cm)widgetSecondaryVibrancyEffect	swift.type.method	widgetSecondary()	UIVibrancyEffect.widgetSecondary()	@MainActor class func widgetSecondary() -> UIVibrancyEffect
+c:objc(pl)NCWidgetProviding	swift.protocol	NCWidgetProviding	NCWidgetProviding	protocol NCWidgetProviding : NSObjectProtocol
+c:objc(pl)NCWidgetProviding(im)widgetActiveDisplayModeDidChange:withMaximumSize:	swift.method	widgetActiveDisplayModeDidChange(_:withMaximumSize:)	NCWidgetProviding.widgetActiveDisplayModeDidChange(_:withMaximumSize:)	optional func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, withMaximumSize maxSize: CGSize)
+c:objc(pl)NCWidgetProviding(im)widgetMarginInsetsForProposedMarginInsets:	swift.method	widgetMarginInsets(forProposedMarginInsets:)	NCWidgetProviding.widgetMarginInsets(forProposedMarginInsets:)	optional func widgetMarginInsets(forProposedMarginInsets defaultMarginInsets: UIEdgeInsets) -> UIEdgeInsets
+c:objc(pl)NCWidgetProviding(im)widgetPerformUpdateWithCompletionHandler:	swift.method	widgetPerformUpdate(completionHandler:)	NCWidgetProviding.widgetPerformUpdate(completionHandler:)	optional func widgetPerformUpdate(completionHandler: @escaping (NCUpdateResult) -> Void)
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NCUpdateResult	swift.func.op	!=(_:_:)	NCUpdateResult.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@NCWidgetDisplayMode	swift.func.op	!=(_:_:)	NCWidgetDisplayMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NCUpdateResult	swift.property	hashValue	NCUpdateResult.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@NCWidgetDisplayMode	swift.property	hashValue	NCWidgetDisplayMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NCUpdateResult	swift.method	hash(into:)	NCUpdateResult.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@NCWidgetDisplayMode	swift.method	hash(into:)	NCWidgetDisplayMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:So14NCUpdateResultV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	NCUpdateResult.init(rawValue:)	init?(rawValue: UInt)
+s:So19NCWidgetDisplayModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	NCWidgetDisplayMode.init(rawValue:)	init?(rawValue: Int)

@@ -1,0 +1,57 @@
+{
+  "module": "GameplayKit",
+  "moduleRecord": {
+    "app_coverage_count": 2,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 11,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 83,
+    "iphoneos_runtime_focus_launch_build_rank": 86,
+    "module": "GameplayKit",
+    "occurrence_count": 11,
+    "per_app": {
+      "mastodon-ios": {
+        "evidence_sha256": "5d2ab94419bf2a69532be7ca0d326100b29976725ad57e4bbdec46ce41779240",
+        "file_count": 10,
+        "occurrence_count": 10,
+        "sample_paths": [
+          "Mastodon/Scene/Onboarding/PickServer/MastodonPickServerViewModel+LoadIndexedServerState.swift",
+          "Mastodon/Scene/Onboarding/PickServer/MastodonPickServerViewModel.swift",
+          "Mastodon/Scene/Report/ReportStatus/ReportStatusViewModel+State.swift",
+          "Mastodon/Scene/Report/ReportStatus/ReportStatusViewModel.swift",
+          "MastodonSDK/Sources/MastodonCore/Service/Emoji/EmojiService+CustomEmojiViewModel+LoadState.swift",
+          "MastodonSDK/Sources/MastodonCore/Service/Emoji/EmojiService+CustomEmojiViewModel.swift",
+          "MastodonSDK/Sources/MastodonCore/Service/MastodonAttachment/MastodonAttachmentService+UploadState.swift",
+          "MastodonSDK/Sources/MastodonCore/Service/MastodonAttachment/MastodonAttachmentService.swift"
+        ]
+      },
+      "wikipedia-ios": {
+        "evidence_sha256": "87a2f8f010589a9d4488d10e46fdf927f62a2553b568a9132e276f25bd39227c",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "WMFData/Sources/WMFData/Data Controllers/Games/WMFGamesDataController.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 83,
+    "byFocusLaunchBuildRelevance": 86
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

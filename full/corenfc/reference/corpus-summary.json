@@ -1,0 +1,45 @@
+{
+  "module": "CoreNFC",
+  "moduleRecord": {
+    "app_coverage_count": 1,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 4,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 106,
+    "iphoneos_runtime_focus_launch_build_rank": 108,
+    "module": "CoreNFC",
+    "occurrence_count": 4,
+    "per_app": {
+      "home-assistant-ios": {
+        "evidence_sha256": "0697d20b387cdf7da47c505b7b86ee2db47189efb29e00cb03da4dd4126a8e01",
+        "file_count": 4,
+        "occurrence_count": 4,
+        "sample_paths": [
+          "Sources/App/Settings/NFC/NFCNDEFPayload+Additions.swift",
+          "Sources/App/Settings/NFC/NFCReader.swift",
+          "Sources/App/Settings/NFC/NFCWriter.swift",
+          "Sources/App/Settings/NFC/iOSTagManager.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 106,
+    "byFocusLaunchBuildRelevance": 108
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

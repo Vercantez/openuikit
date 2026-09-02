@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 39,
+  "duplicateOccurrenceCount": 39,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/HealthKit.symbols.json",
+      "relationshipCount": 4189,
+      "sha256": "164ed248b09757613671ce2c6dc579b7d049f92145c0d103cee46f47d08bcf93",
+      "symbolCount": 2683
+    },
+    {
+      "path": "reference/symbol-graphs/HealthKit@Foundation.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "fdb7d52a87355cac5b82f016a337ad4e7a563505905ddca0e86c562fe91c6d40",
+      "symbolCount": 1
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "HealthKit",
+  "relationshipCount": 4190,
+  "schema": 1,
+  "symbolCount": 2645,
+  "target": "arm64-apple-ios26.0"
+}

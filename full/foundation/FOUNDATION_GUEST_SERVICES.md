@@ -1,7 +1,9 @@
 # Foundation guest services
 
-`foundation_guest_sources.txt` is the single production source manifest for
-the app-facing `Foundation` facade. Entries are ordered, repository-relative
+`foundation_guest_sources.txt` is the production source manifest for the
+app-facing `Foundation` facade. `corefoundation_guest_sources.txt` is the
+separate manifest for the canonical `CoreFoundation` module that Foundation
+reexports. Entries are ordered, repository-relative
 regular Swift files. The manifest has no comments, blank lines, probes, tests,
 or generated sources. `build_focus_onboarding_guest.sh` rejects any change to
 that grammar before compiling it; reusable package builders consume the same
@@ -11,7 +13,7 @@ The facade re-exports FoundationEssentials and therefore uses its `Date`,
 `Data`, `URL`, `UUID`, `JSONEncoder`, `JSONDecoder`, `Calendar`, `Locale`,
 `TimeZone`, and `IndexPath` identities. It also re-exports OpenCoreGraphics and
 the guest `os` module, so a source file importing only Foundation sees the
-platform `CGFloat` and `os_unfair_lock` APIs. The thirty-three-source facade adds:
+platform `CGFloat` and `os_unfair_lock` APIs. The 38-source facade adds:
 
 - `CharacterSet`, including Darwin-measured whitespace and URL component sets,
   Unicode-category-backed uppercase, lowercase, letter, alphanumeric, symbol,
@@ -57,11 +59,14 @@ platform `CGFloat` and `os_unfair_lock` APIs. The thirty-three-source facade add
 - `Data.range(of:options:in:)` over the real FoundationEssentials `Data`
   storage, including forward, backward, anchored, and bounded byte searches.
   Empty needles fail to match, consistent with Darwin Foundation.
-- The narrow CoreFoundation spellings used by SwiftSoup:
-  `CFString`, `CFURL`, and `CFURLCreateWithString`. They bridge directly to the
-  FoundationEssentials `String` and `URL` values, preserve valid percent
-  escapes, encode CFURL-compatible query brackets, and reject other invalid
-  input instead of inventing a URL or loading Apple's CoreFoundation.
+- A separately built CoreFoundation module with the narrow spellings used by
+  SwiftSoup and CoreBluetooth: `CFString`, `CFURL`, `CFAbsoluteTime`,
+  `CFUUID`, `CFUUIDBytes`, and the URL/UUID creation and extraction functions.
+  Foundation reexports that module instead of redefining the symbols, which
+  preserves identities such as `Foundation.CFUUID == CoreFoundation.CFUUID`.
+  The URL bridge preserves valid percent escapes, encodes CFURL-compatible
+  query brackets, and rejects other invalid input instead of inventing a URL
+  or loading Apple's CoreFoundation.
 - `DateFormatter`, backed by FoundationEssentials `Calendar` and `TimeZone`.
   It implements Gregorian `G y Y M L d D E e c H k K h m s S a Z X x z`
   pattern fields, quoted literals, English and French month/weekday names, and
@@ -99,6 +104,10 @@ platform `CGFloat` and `os_unfair_lock` APIs. The thirty-three-source facade add
   bridging, UTF-16 indexing/substrings, comparison/equality/hash, UTF-8, path,
   and NSCopying-style behavior. Its Apple differential and UTF-8-only boundary
   are documented in `FOUNDATION_GUEST_NSSTRING.md`.
+- Canonical extension-host, predicate, keyed-coder, reference collection/data,
+  and output-stream contracts used unchanged by first-party framework sources.
+  The exact implemented boundary and its fail-closed exclusions are documented
+  in `FOUNDATION_CANONICAL_CONTRACTS.md` and `FOUNDATION_EXTENSION_HOST.md`.
 
 ## Reproduce the host gates
 
@@ -130,5 +139,6 @@ services exist. `FileHandle` is intentionally synchronous and descriptor
 backed; asynchronous readability/writeability handlers and Objective-C
 exception behavior remain outside this slice. The lock slice does not yet
 claim `NSRecursiveLock`, `NSCondition`, or `NSConditionLock`. The CoreFoundation
-surface supports only the nil/default allocator and the URL creation spelling
-above; it is not a general CoreFoundation object model.
+surface supports only the nil/default allocator plus the URL, time, Boolean,
+and UUID spellings documented above; it is not a general CoreFoundation object
+model.

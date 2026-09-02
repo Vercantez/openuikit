@@ -1,0 +1,37 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 24,
+  "duplicateOccurrenceCount": 24,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CloudKit.symbols.json",
+      "relationshipCount": 2140,
+      "sha256": "bbd9dc182a570c095d6a2432a8f2cea4b9e4e23d75805ae9fd6e29ac9d28efef",
+      "symbolCount": 1287
+    },
+    {
+      "path": "reference/symbol-graphs/CloudKit@Foundation.symbols.json",
+      "relationshipCount": 183,
+      "sha256": "54fd239836444915e97c3d76b88f1332f4ab30a1abe396395a797c9b09f97e8f",
+      "symbolCount": 159
+    },
+    {
+      "path": "reference/symbol-graphs/CloudKit@Swift.symbols.json",
+      "relationshipCount": 853,
+      "sha256": "948f8b0cf30aef3d3c7322d723f1ca80113aab1b3d930f64dc6ae78aa9e74cc9",
+      "symbolCount": 823
+    },
+    {
+      "path": "reference/symbol-graphs/CloudKit@_LocationEssentials.symbols.json",
+      "relationshipCount": 4,
+      "sha256": "1eb651ededb90ea9dd9bad354cfbeea7e3847ec69e1c7bece58112bb4e97ed49",
+      "symbolCount": 0
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CloudKit",
+  "relationshipCount": 3180,
+  "schema": 1,
+  "symbolCount": 2245,
+  "target": "arm64-apple-ios26.0"
+}

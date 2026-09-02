@@ -1,0 +1,125 @@
+precise	kind	title	path	declaration
+c:@F@MTKMetalVertexDescriptorFromModelIO	swift.func	MTKMetalVertexDescriptorFromModelIO(_:)	MTKMetalVertexDescriptorFromModelIO(_:)	func MTKMetalVertexDescriptorFromModelIO(_ modelIODescriptor: MDLVertexDescriptor) -> MTLVertexDescriptor?
+c:@F@MTKMetalVertexFormatFromModelIO	swift.func	MTKMetalVertexFormatFromModelIO(_:)	MTKMetalVertexFormatFromModelIO(_:)	func MTKMetalVertexFormatFromModelIO(_ vertexFormat: MDLVertexFormat) -> MTLVertexFormat
+c:@F@MTKModelIOVertexDescriptorFromMetal	swift.func	MTKModelIOVertexDescriptorFromMetal(_:)	MTKModelIOVertexDescriptorFromMetal(_:)	func MTKModelIOVertexDescriptorFromMetal(_ metalDescriptor: MTLVertexDescriptor) -> MDLVertexDescriptor
+c:@F@MTKModelIOVertexFormatFromMetal	swift.func	MTKModelIOVertexFormatFromMetal(_:)	MTKModelIOVertexFormatFromMetal(_:)	func MTKModelIOVertexFormatFromMetal(_ vertexFormat: MTLVertexFormat) -> MDLVertexFormat
+c:@MTKModelErrorDomain	swift.type.property	domain	MTKModelError.domain	static let domain: MTKModelError
+c:@MTKModelErrorKey	swift.type.property	key	MTKModelError.key	static let key: MTKModelError
+c:@MTKTextureLoaderCubeLayoutVertical	swift.type.property	vertical	MTKTextureLoader.CubeLayout.vertical	static let vertical: MTKTextureLoader.CubeLayout
+c:@MTKTextureLoaderErrorDomain	swift.type.property	domain	MTKTextureLoader.Error.domain	static let domain: MTKTextureLoader.Error
+c:@MTKTextureLoaderErrorKey	swift.type.property	key	MTKTextureLoader.Error.key	static let key: MTKTextureLoader.Error
+c:@MTKTextureLoaderOptionAllocateMipmaps	swift.type.property	allocateMipmaps	MTKTextureLoader.Option.allocateMipmaps	static let allocateMipmaps: MTKTextureLoader.Option
+c:@MTKTextureLoaderOptionCubeLayout	swift.type.property	cubeLayout	MTKTextureLoader.Option.cubeLayout	static let cubeLayout: MTKTextureLoader.Option
+c:@MTKTextureLoaderOptionGenerateMipmaps	swift.type.property	generateMipmaps	MTKTextureLoader.Option.generateMipmaps	static let generateMipmaps: MTKTextureLoader.Option
+c:@MTKTextureLoaderOptionLoadAsArray	swift.type.property	loadAsArray	MTKTextureLoader.Option.loadAsArray	static let loadAsArray: MTKTextureLoader.Option
+c:@MTKTextureLoaderOptionOrigin	swift.type.property	origin	MTKTextureLoader.Option.origin	static let origin: MTKTextureLoader.Option
+c:@MTKTextureLoaderOptionSRGB	swift.type.property	SRGB	MTKTextureLoader.Option.SRGB	static let SRGB: MTKTextureLoader.Option
+c:@MTKTextureLoaderOptionTextureCPUCacheMode	swift.type.property	textureCPUCacheMode	MTKTextureLoader.Option.textureCPUCacheMode	static let textureCPUCacheMode: MTKTextureLoader.Option
+c:@MTKTextureLoaderOptionTextureStorageMode	swift.type.property	textureStorageMode	MTKTextureLoader.Option.textureStorageMode	static let textureStorageMode: MTKTextureLoader.Option
+c:@MTKTextureLoaderOptionTextureUsage	swift.type.property	textureUsage	MTKTextureLoader.Option.textureUsage	static let textureUsage: MTKTextureLoader.Option
+c:@MTKTextureLoaderOriginBottomLeft	swift.type.property	bottomLeft	MTKTextureLoader.Origin.bottomLeft	static let bottomLeft: MTKTextureLoader.Origin
+c:@MTKTextureLoaderOriginFlippedVertically	swift.type.property	flippedVertically	MTKTextureLoader.Origin.flippedVertically	static let flippedVertically: MTKTextureLoader.Origin
+c:@MTKTextureLoaderOriginTopLeft	swift.type.property	topLeft	MTKTextureLoader.Origin.topLeft	static let topLeft: MTKTextureLoader.Origin
+c:@T@MTKModelError	swift.struct	MTKModelError	MTKModelError	struct MTKModelError
+c:@T@MTKTextureLoaderArrayCallback	swift.typealias	MTKTextureLoader.ArrayCallback	MTKTextureLoader.ArrayCallback	typealias ArrayCallback = ([any MTLTexture], (any Error)?) -> Void
+c:@T@MTKTextureLoaderCallback	swift.typealias	MTKTextureLoader.Callback	MTKTextureLoader.Callback	typealias Callback = ((any MTLTexture)?, (any Error)?) -> Void
+c:@T@MTKTextureLoaderCubeLayout	swift.struct	MTKTextureLoader.CubeLayout	MTKTextureLoader.CubeLayout	struct CubeLayout
+c:@T@MTKTextureLoaderError	swift.struct	MTKTextureLoader.Error	MTKTextureLoader.Error	struct Error
+c:@T@MTKTextureLoaderOption	swift.struct	MTKTextureLoader.Option	MTKTextureLoader.Option	struct Option
+c:@T@MTKTextureLoaderOrigin	swift.struct	MTKTextureLoader.Origin	MTKTextureLoader.Origin	struct Origin
+c:objc(cs)MTKMesh	swift.class	MTKMesh	MTKMesh	class MTKMesh
+c:objc(cs)MTKMesh(im)initWithMesh:device:error:	swift.init	init(mesh:device:)	MTKMesh.init(mesh:device:)	init(mesh: MDLMesh, device: any MTLDevice) throws
+c:objc(cs)MTKMesh(py)name	swift.property	name	MTKMesh.name	var name: String { get set }
+c:objc(cs)MTKMesh(py)submeshes	swift.property	submeshes	MTKMesh.submeshes	var submeshes: [MTKSubmesh] { get }
+c:objc(cs)MTKMesh(py)vertexBuffers	swift.property	vertexBuffers	MTKMesh.vertexBuffers	var vertexBuffers: [MTKMeshBuffer] { get }
+c:objc(cs)MTKMesh(py)vertexCount	swift.property	vertexCount	MTKMesh.vertexCount	var vertexCount: Int { get }
+c:objc(cs)MTKMesh(py)vertexDescriptor	swift.property	vertexDescriptor	MTKMesh.vertexDescriptor	var vertexDescriptor: MDLVertexDescriptor { get }
+c:objc(cs)MTKMeshBuffer	swift.class	MTKMeshBuffer	MTKMeshBuffer	class MTKMeshBuffer
+c:objc(cs)MTKMeshBuffer(im)zone	swift.method	zone()	MTKMeshBuffer.zone()	func zone() -> (any MDLMeshBufferZone)?
+c:objc(cs)MTKMeshBuffer(py)allocator	swift.property	allocator	MTKMeshBuffer.allocator	var allocator: MTKMeshBufferAllocator { get }
+c:objc(cs)MTKMeshBuffer(py)buffer	swift.property	buffer	MTKMeshBuffer.buffer	var buffer: any MTLBuffer { get }
+c:objc(cs)MTKMeshBuffer(py)length	swift.property	length	MTKMeshBuffer.length	var length: Int { get }
+c:objc(cs)MTKMeshBuffer(py)offset	swift.property	offset	MTKMeshBuffer.offset	var offset: Int { get }
+c:objc(cs)MTKMeshBuffer(py)type	swift.property	type	MTKMeshBuffer.type	var type: MDLMeshBufferType { get }
+c:objc(cs)MTKMeshBufferAllocator	swift.class	MTKMeshBufferAllocator	MTKMeshBufferAllocator	class MTKMeshBufferAllocator
+c:objc(cs)MTKMeshBufferAllocator(im)initWithDevice:	swift.init	init(device:)	MTKMeshBufferAllocator.init(device:)	init(device: any MTLDevice)
+c:objc(cs)MTKMeshBufferAllocator(py)device	swift.property	device	MTKMeshBufferAllocator.device	var device: any MTLDevice { get }
+c:objc(cs)MTKSubmesh	swift.class	MTKSubmesh	MTKSubmesh	class MTKSubmesh
+c:objc(cs)MTKSubmesh(py)indexBuffer	swift.property	indexBuffer	MTKSubmesh.indexBuffer	var indexBuffer: MTKMeshBuffer { get }
+c:objc(cs)MTKSubmesh(py)indexCount	swift.property	indexCount	MTKSubmesh.indexCount	var indexCount: Int { get }
+c:objc(cs)MTKSubmesh(py)indexType	swift.property	indexType	MTKSubmesh.indexType	var indexType: MTLIndexType { get }
+c:objc(cs)MTKSubmesh(py)mesh	swift.property	mesh	MTKSubmesh.mesh	weak var mesh: MTKMesh? { get }
+c:objc(cs)MTKSubmesh(py)name	swift.property	name	MTKSubmesh.name	var name: String { get set }
+c:objc(cs)MTKSubmesh(py)primitiveType	swift.property	primitiveType	MTKSubmesh.primitiveType	var primitiveType: MTLPrimitiveType { get }
+c:objc(cs)MTKTextureLoader	swift.class	MTKTextureLoader	MTKTextureLoader	class MTKTextureLoader
+c:objc(cs)MTKTextureLoader(im)initWithDevice:	swift.init	init(device:)	MTKTextureLoader.init(device:)	init(device: any MTLDevice)
+c:objc(cs)MTKTextureLoader(im)newTextureWithCGImage:options:completionHandler:	swift.method	newTexture(cgImage:options:)	MTKTextureLoader.newTexture(cgImage:options:)	func newTexture(cgImage: CGImage, options: [MTKTextureLoader.Option : Any]? = nil) async throws -> any MTLTexture
+c:objc(cs)MTKTextureLoader(im)newTextureWithCGImage:options:error:	swift.method	newTexture(cgImage:options:)	MTKTextureLoader.newTexture(cgImage:options:)	func newTexture(cgImage: CGImage, options: [MTKTextureLoader.Option : Any]? = nil) throws -> any MTLTexture
+c:objc(cs)MTKTextureLoader(im)newTextureWithContentsOfURL:options:completionHandler:	swift.method	newTexture(URL:options:)	MTKTextureLoader.newTexture(URL:options:)	func newTexture(URL: URL, options: [MTKTextureLoader.Option : Any]? = nil) async throws -> any MTLTexture
+c:objc(cs)MTKTextureLoader(im)newTextureWithContentsOfURL:options:error:	swift.method	newTexture(URL:options:)	MTKTextureLoader.newTexture(URL:options:)	func newTexture(URL: URL, options: [MTKTextureLoader.Option : Any]? = nil) throws -> any MTLTexture
+c:objc(cs)MTKTextureLoader(im)newTextureWithData:options:completionHandler:	swift.method	newTexture(data:options:)	MTKTextureLoader.newTexture(data:options:)	func newTexture(data: Data, options: [MTKTextureLoader.Option : Any]? = nil) async throws -> any MTLTexture
+c:objc(cs)MTKTextureLoader(im)newTextureWithData:options:error:	swift.method	newTexture(data:options:)	MTKTextureLoader.newTexture(data:options:)	func newTexture(data: Data, options: [MTKTextureLoader.Option : Any]? = nil) throws -> any MTLTexture
+c:objc(cs)MTKTextureLoader(im)newTextureWithMDLTexture:options:completionHandler:	swift.method	newTexture(texture:options:)	MTKTextureLoader.newTexture(texture:options:)	func newTexture(texture: MDLTexture, options: [MTKTextureLoader.Option : Any]? = nil) async throws -> any MTLTexture
+c:objc(cs)MTKTextureLoader(im)newTextureWithMDLTexture:options:error:	swift.method	newTexture(texture:options:)	MTKTextureLoader.newTexture(texture:options:)	func newTexture(texture: MDLTexture, options: [MTKTextureLoader.Option : Any]? = nil) throws -> any MTLTexture
+c:objc(cs)MTKTextureLoader(im)newTextureWithName:scaleFactor:bundle:options:completionHandler:	swift.method	newTexture(name:scaleFactor:bundle:options:)	MTKTextureLoader.newTexture(name:scaleFactor:bundle:options:)	func newTexture(name: String, scaleFactor: CGFloat, bundle: Bundle?, options: [MTKTextureLoader.Option : Any]? = nil) async throws -> any MTLTexture
+c:objc(cs)MTKTextureLoader(im)newTextureWithName:scaleFactor:bundle:options:error:	swift.method	newTexture(name:scaleFactor:bundle:options:)	MTKTextureLoader.newTexture(name:scaleFactor:bundle:options:)	func newTexture(name: String, scaleFactor: CGFloat, bundle: Bundle?, options: [MTKTextureLoader.Option : Any]? = nil) throws -> any MTLTexture
+c:objc(cs)MTKTextureLoader(im)newTexturesWithContentsOfURLs:options:completionHandler:	swift.method	newTextures(URLs:options:)	MTKTextureLoader.newTextures(URLs:options:)	func newTextures(URLs: [URL], options: [MTKTextureLoader.Option : Any]? = nil) async throws -> [any MTLTexture]
+c:objc(cs)MTKTextureLoader(im)newTexturesWithContentsOfURLs:options:error:	swift.method	newTextures(URLs:options:error:)	MTKTextureLoader.newTextures(URLs:options:error:)	func newTextures(URLs: [URL], options: [MTKTextureLoader.Option : Any]? = nil, error: NSErrorPointer) -> [any MTLTexture]
+c:objc(cs)MTKTextureLoader(im)newTexturesWithNames:scaleFactor:bundle:options:completionHandler:	swift.method	newTextures(names:scaleFactor:bundle:options:)	MTKTextureLoader.newTextures(names:scaleFactor:bundle:options:)	func newTextures(names: [String], scaleFactor: CGFloat, bundle: Bundle?, options: [MTKTextureLoader.Option : Any]? = nil) async throws -> [any MTLTexture]
+c:objc(cs)MTKTextureLoader(py)device	swift.property	device	MTKTextureLoader.device	var device: any MTLDevice { get }
+c:objc(cs)MTKView	swift.class	MTKView	MTKView	@MainActor class MTKView
+c:objc(cs)MTKView(im)draw	swift.method	draw()	MTKView.draw()	@MainActor func draw()
+c:objc(cs)MTKView(im)initWithCoder:	swift.init	init(coder:)	MTKView.init(coder:)	@MainActor init(coder: NSCoder)
+c:objc(cs)MTKView(im)initWithFrame:device:	swift.init	init(frame:device:)	MTKView.init(frame:device:)	@MainActor init(frame frameRect: CGRect, device: (any MTLDevice)?)
+c:objc(cs)MTKView(im)releaseDrawables	swift.method	releaseDrawables()	MTKView.releaseDrawables()	@MainActor func releaseDrawables()
+c:objc(cs)MTKView(py)autoResizeDrawable	swift.property	autoResizeDrawable	MTKView.autoResizeDrawable	@MainActor var autoResizeDrawable: Bool { get set }
+c:objc(cs)MTKView(py)clearColor	swift.property	clearColor	MTKView.clearColor	@MainActor var clearColor: MTLClearColor { get set }
+c:objc(cs)MTKView(py)clearDepth	swift.property	clearDepth	MTKView.clearDepth	@MainActor var clearDepth: Double { get set }
+c:objc(cs)MTKView(py)clearStencil	swift.property	clearStencil	MTKView.clearStencil	@MainActor var clearStencil: UInt32 { get set }
+c:objc(cs)MTKView(py)colorPixelFormat	swift.property	colorPixelFormat	MTKView.colorPixelFormat	@MainActor var colorPixelFormat: MTLPixelFormat { get set }
+c:objc(cs)MTKView(py)currentDrawable	swift.property	currentDrawable	MTKView.currentDrawable	@MainActor var currentDrawable: (any CAMetalDrawable)? { get }
+c:objc(cs)MTKView(py)currentMTL4RenderPassDescriptor	swift.property	currentMTL4RenderPassDescriptor	MTKView.currentMTL4RenderPassDescriptor	@MainActor var currentMTL4RenderPassDescriptor: MTL4RenderPassDescriptor? { get }
+c:objc(cs)MTKView(py)currentRenderPassDescriptor	swift.property	currentRenderPassDescriptor	MTKView.currentRenderPassDescriptor	@MainActor var currentRenderPassDescriptor: MTLRenderPassDescriptor? { get }
+c:objc(cs)MTKView(py)delegate	swift.property	delegate	MTKView.delegate	@MainActor weak var delegate: (any MTKViewDelegate)? { get set }
+c:objc(cs)MTKView(py)depthStencilAttachmentTextureUsage	swift.property	depthStencilAttachmentTextureUsage	MTKView.depthStencilAttachmentTextureUsage	@MainActor var depthStencilAttachmentTextureUsage: MTLTextureUsage { get set }
+c:objc(cs)MTKView(py)depthStencilPixelFormat	swift.property	depthStencilPixelFormat	MTKView.depthStencilPixelFormat	@MainActor var depthStencilPixelFormat: MTLPixelFormat { get set }
+c:objc(cs)MTKView(py)depthStencilStorageMode	swift.property	depthStencilStorageMode	MTKView.depthStencilStorageMode	@MainActor var depthStencilStorageMode: MTLStorageMode { get set }
+c:objc(cs)MTKView(py)depthStencilTexture	swift.property	depthStencilTexture	MTKView.depthStencilTexture	@MainActor var depthStencilTexture: (any MTLTexture)? { get }
+c:objc(cs)MTKView(py)device	swift.property	device	MTKView.device	@MainActor var device: (any MTLDevice)? { get set }
+c:objc(cs)MTKView(py)drawableSize	swift.property	drawableSize	MTKView.drawableSize	@MainActor var drawableSize: CGSize { get set }
+c:objc(cs)MTKView(py)enableSetNeedsDisplay	swift.property	enableSetNeedsDisplay	MTKView.enableSetNeedsDisplay	@MainActor var enableSetNeedsDisplay: Bool { get set }
+c:objc(cs)MTKView(py)framebufferOnly	swift.property	framebufferOnly	MTKView.framebufferOnly	@MainActor var framebufferOnly: Bool { get set }
+c:objc(cs)MTKView(py)multisampleColorAttachmentTextureUsage	swift.property	multisampleColorAttachmentTextureUsage	MTKView.multisampleColorAttachmentTextureUsage	@MainActor var multisampleColorAttachmentTextureUsage: MTLTextureUsage { get set }
+c:objc(cs)MTKView(py)multisampleColorTexture	swift.property	multisampleColorTexture	MTKView.multisampleColorTexture	@MainActor var multisampleColorTexture: (any MTLTexture)? { get }
+c:objc(cs)MTKView(py)paused	swift.property	isPaused	MTKView.isPaused	@MainActor var isPaused: Bool { get set }
+c:objc(cs)MTKView(py)preferredDevice	swift.property	preferredDevice	MTKView.preferredDevice	@MainActor var preferredDevice: (any MTLDevice)? { get }
+c:objc(cs)MTKView(py)preferredDrawableSize	swift.property	preferredDrawableSize	MTKView.preferredDrawableSize	@MainActor var preferredDrawableSize: CGSize { get }
+c:objc(cs)MTKView(py)preferredFramesPerSecond	swift.property	preferredFramesPerSecond	MTKView.preferredFramesPerSecond	@MainActor var preferredFramesPerSecond: Int { get set }
+c:objc(cs)MTKView(py)presentsWithTransaction	swift.property	presentsWithTransaction	MTKView.presentsWithTransaction	@MainActor var presentsWithTransaction: Bool { get set }
+c:objc(cs)MTKView(py)sampleCount	swift.property	sampleCount	MTKView.sampleCount	@MainActor var sampleCount: Int { get set }
+c:objc(pl)MTKViewDelegate	swift.protocol	MTKViewDelegate	MTKViewDelegate	protocol MTKViewDelegate : NSObjectProtocol
+c:objc(pl)MTKViewDelegate(im)drawInMTKView:	swift.method	draw(in:)	MTKViewDelegate.draw(in:)	@MainActor func draw(in view: MTKView)
+c:objc(pl)MTKViewDelegate(im)mtkView:drawableSizeWillChange:	swift.method	mtkView(_:drawableSizeWillChange:)	MTKViewDelegate.mtkView(_:drawableSizeWillChange:)	@MainActor func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize)
+s:8MetalKit030MTKModelIOVertexDescriptorFromA9WithErrorySo09MDLVertexE0CSo09MTLVertexE0CKF	swift.func	MTKModelIOVertexDescriptorFromMetalWithError(_:)	MTKModelIOVertexDescriptorFromMetalWithError(_:)	func MTKModelIOVertexDescriptorFromMetalWithError(_ metalDescriptor: MTLVertexDescriptor) throws -> MDLVertexDescriptor
+s:8MetalKit44MTKMetalVertexDescriptorFromModelIOWithErrorySo09MTLVertexE0CSgSo09MDLVertexE0CKF	swift.func	MTKMetalVertexDescriptorFromModelIOWithError(_:)	MTKMetalVertexDescriptorFromModelIOWithError(_:)	func MTKMetalVertexDescriptorFromModelIOWithError(_ modelIODescriptor: MDLVertexDescriptor) throws -> MTLVertexDescriptor?
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKModelError	swift.func.op	!=(_:_:)	MTKModelError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKTextureLoaderCubeLayout	swift.func.op	!=(_:_:)	MTKTextureLoader.CubeLayout.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKTextureLoaderError	swift.func.op	!=(_:_:)	MTKTextureLoader.Error.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKTextureLoaderOption	swift.func.op	!=(_:_:)	MTKTextureLoader.Option.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@MTKTextureLoaderOrigin	swift.func.op	!=(_:_:)	MTKTextureLoader.Origin.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:So13MTKModelErrora8rawValueABSS_tcfc	swift.init	init(rawValue:)	MTKModelError.init(rawValue:)	init(rawValue: String)
+s:So21MTKTextureLoaderErrora8rawValueABSS_tcfc	swift.init	init(rawValue:)	MTKTextureLoader.Error.init(rawValue:)	init(rawValue: String)
+s:So22MTKTextureLoaderOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	MTKTextureLoader.Option.init(rawValue:)	init(rawValue: String)
+s:So22MTKTextureLoaderOrigina8rawValueABSS_tcfc	swift.init	init(rawValue:)	MTKTextureLoader.Origin.init(rawValue:)	init(rawValue: String)
+s:So26MTKTextureLoaderCubeLayouta8rawValueABSS_tcfc	swift.init	init(rawValue:)	MTKTextureLoader.CubeLayout.init(rawValue:)	init(rawValue: String)
+s:So7MTKMeshC8MetalKitE9newMeshes5asset6deviceSaySo7MDLMeshCG13modelIOMeshes_SayABG05metalcE0tSo8MDLAssetC_So9MTLDevice_ptKFZ	swift.type.method	newMeshes(asset:device:)	MTKMesh.newMeshes(asset:device:)	class func newMeshes(asset: MDLAsset, device: any MTLDevice) throws -> (modelIOMeshes: [MDLMesh], metalKitMeshes: [MTKMesh])
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKModelError	swift.property	hashValue	MTKModelError.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKTextureLoaderCubeLayout	swift.property	hashValue	MTKTextureLoader.CubeLayout.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKTextureLoaderError	swift.property	hashValue	MTKTextureLoader.Error.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKTextureLoaderOption	swift.property	hashValue	MTKTextureLoader.Option.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@MTKTextureLoaderOrigin	swift.property	hashValue	MTKTextureLoader.Origin.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKModelError	swift.method	hash(into:)	MTKModelError.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKTextureLoaderCubeLayout	swift.method	hash(into:)	MTKTextureLoader.CubeLayout.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKTextureLoaderError	swift.method	hash(into:)	MTKTextureLoader.Error.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKTextureLoaderOption	swift.method	hash(into:)	MTKTextureLoader.Option.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@MTKTextureLoaderOrigin	swift.method	hash(into:)	MTKTextureLoader.Origin.hash(into:)	func hash(into hasher: inout Hasher)

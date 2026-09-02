@@ -1,0 +1,52 @@
+{
+  "module": "EventKit",
+  "moduleRecord": {
+    "app_coverage_count": 2,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 4,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 90,
+    "iphoneos_runtime_focus_launch_build_rank": 84,
+    "module": "EventKit",
+    "occurrence_count": 4,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "3ba5258fd9994d25efe56094fd31c62a8138b60a21d9fc9306e6c86c15fee82a",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "submodules/TelegramUI/Sources/Chat/ChatControllerOpenDateContextMenu.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "0dcc433c2029fccdb1f516acf5ed905dcebbd2de2fe8565e49d43b6e8593a3b2",
+        "file_count": 3,
+        "occurrence_count": 3,
+        "sample_paths": [
+          "Sources/App/Utilities/RemindersSync/RemindersSyncAddViewModel.swift",
+          "Sources/App/Utilities/RemindersSync/RemindersSyncItemSnapshot.swift",
+          "Sources/App/Utilities/RemindersSync/RemindersSyncManager.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 90,
+    "byFocusLaunchBuildRelevance": 84
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

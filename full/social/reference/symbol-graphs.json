@@ -1,0 +1,19 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/Social.symbols.json",
+      "relationshipCount": 122,
+      "sha256": "ac2e2febf9e208202d01c94da02388530b5e37aa99d49facc5ae59272a03da86",
+      "symbolCount": 67
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "Social",
+  "relationshipCount": 122,
+  "schema": 1,
+  "symbolCount": 67,
+  "target": "arm64-apple-ios26.0"
+}

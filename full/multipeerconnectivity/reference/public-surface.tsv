@@ -1,0 +1,133 @@
+precise	kind	title	path	declaration
+c:@E@MCEncryptionPreference	swift.enum	MCEncryptionPreference	MCEncryptionPreference	enum MCEncryptionPreference
+c:@E@MCEncryptionPreference@MCEncryptionNone	swift.enum.case	MCEncryptionPreference.none	MCEncryptionPreference.none	case none
+c:@E@MCEncryptionPreference@MCEncryptionOptional	swift.enum.case	MCEncryptionPreference.optional	MCEncryptionPreference.optional	case optional
+c:@E@MCEncryptionPreference@MCEncryptionRequired	swift.enum.case	MCEncryptionPreference.required	MCEncryptionPreference.required	case required
+c:@E@MCErrorCode	swift.enum	MCError.Code	MCError.Code	enum Code
+c:@E@MCErrorCode@MCErrorCancelled	swift.enum.case	MCError.Code.cancelled	MCError.Code.cancelled	case cancelled
+c:@E@MCErrorCode@MCErrorInvalidParameter	swift.enum.case	MCError.Code.invalidParameter	MCError.Code.invalidParameter	case invalidParameter
+c:@E@MCErrorCode@MCErrorNotConnected	swift.enum.case	MCError.Code.notConnected	MCError.Code.notConnected	case notConnected
+c:@E@MCErrorCode@MCErrorTimedOut	swift.enum.case	MCError.Code.timedOut	MCError.Code.timedOut	case timedOut
+c:@E@MCErrorCode@MCErrorUnavailable	swift.enum.case	MCError.Code.unavailable	MCError.Code.unavailable	case unavailable
+c:@E@MCErrorCode@MCErrorUnknown	swift.enum.case	MCError.Code.unknown	MCError.Code.unknown	case unknown
+c:@E@MCErrorCode@MCErrorUnsupported	swift.enum.case	MCError.Code.unsupported	MCError.Code.unsupported	case unsupported
+c:@E@MCSessionSendDataMode	swift.enum	MCSessionSendDataMode	MCSessionSendDataMode	enum MCSessionSendDataMode
+c:@E@MCSessionSendDataMode@MCSessionSendDataReliable	swift.enum.case	MCSessionSendDataMode.reliable	MCSessionSendDataMode.reliable	case reliable
+c:@E@MCSessionSendDataMode@MCSessionSendDataUnreliable	swift.enum.case	MCSessionSendDataMode.unreliable	MCSessionSendDataMode.unreliable	case unreliable
+c:@E@MCSessionState	swift.enum	MCSessionState	MCSessionState	enum MCSessionState
+c:@E@MCSessionState@MCSessionStateConnected	swift.enum.case	MCSessionState.connected	MCSessionState.connected	case connected
+c:@E@MCSessionState@MCSessionStateConnecting	swift.enum.case	MCSessionState.connecting	MCSessionState.connecting	case connecting
+c:@E@MCSessionState@MCSessionStateNotConnected	swift.enum.case	MCSessionState.notConnected	MCSessionState.notConnected	case notConnected
+c:@MCErrorDomain	swift.var	MCErrorDomain	MCErrorDomain	let MCErrorDomain: String
+c:@kMCSessionMaximumNumberOfPeers	swift.var	kMCSessionMaximumNumberOfPeers	kMCSessionMaximumNumberOfPeers	let kMCSessionMaximumNumberOfPeers: Int
+c:@kMCSessionMinimumNumberOfPeers	swift.var	kMCSessionMinimumNumberOfPeers	kMCSessionMinimumNumberOfPeers	let kMCSessionMinimumNumberOfPeers: Int
+c:objc(cs)MCAdvertiserAssistant	swift.class	MCAdvertiserAssistant	MCAdvertiserAssistant	class MCAdvertiserAssistant
+c:objc(cs)MCAdvertiserAssistant(im)initWithServiceType:discoveryInfo:session:	swift.init	init(serviceType:discoveryInfo:session:)	MCAdvertiserAssistant.init(serviceType:discoveryInfo:session:)	init(serviceType: String, discoveryInfo info: [String : String]?, session: MCSession)
+c:objc(cs)MCAdvertiserAssistant(im)start	swift.method	start()	MCAdvertiserAssistant.start()	func start()
+c:objc(cs)MCAdvertiserAssistant(im)stop	swift.method	stop()	MCAdvertiserAssistant.stop()	func stop()
+c:objc(cs)MCAdvertiserAssistant(py)delegate	swift.property	delegate	MCAdvertiserAssistant.delegate	weak var delegate: (any MCAdvertiserAssistantDelegate)? { get set }
+c:objc(cs)MCAdvertiserAssistant(py)discoveryInfo	swift.property	discoveryInfo	MCAdvertiserAssistant.discoveryInfo	var discoveryInfo: [String : String]? { get }
+c:objc(cs)MCAdvertiserAssistant(py)serviceType	swift.property	serviceType	MCAdvertiserAssistant.serviceType	var serviceType: String { get }
+c:objc(cs)MCAdvertiserAssistant(py)session	swift.property	session	MCAdvertiserAssistant.session	var session: MCSession { get }
+c:objc(cs)MCBrowserViewController	swift.class	MCBrowserViewController	MCBrowserViewController	@MainActor class MCBrowserViewController
+c:objc(cs)MCBrowserViewController(im)initWithBrowser:session:	swift.init	init(browser:session:)	MCBrowserViewController.init(browser:session:)	@MainActor init(browser: MCNearbyServiceBrowser, session: MCSession)
+c:objc(cs)MCBrowserViewController(im)initWithServiceType:session:	swift.init	init(serviceType:session:)	MCBrowserViewController.init(serviceType:session:)	@MainActor convenience init(serviceType: String, session: MCSession)
+c:objc(cs)MCBrowserViewController(py)browser	swift.property	browser	MCBrowserViewController.browser	@MainActor var browser: MCNearbyServiceBrowser? { get }
+c:objc(cs)MCBrowserViewController(py)delegate	swift.property	delegate	MCBrowserViewController.delegate	@MainActor weak var delegate: (any MCBrowserViewControllerDelegate)? { get set }
+c:objc(cs)MCBrowserViewController(py)maximumNumberOfPeers	swift.property	maximumNumberOfPeers	MCBrowserViewController.maximumNumberOfPeers	@MainActor var maximumNumberOfPeers: Int { get set }
+c:objc(cs)MCBrowserViewController(py)minimumNumberOfPeers	swift.property	minimumNumberOfPeers	MCBrowserViewController.minimumNumberOfPeers	@MainActor var minimumNumberOfPeers: Int { get set }
+c:objc(cs)MCBrowserViewController(py)session	swift.property	session	MCBrowserViewController.session	@MainActor var session: MCSession { get }
+c:objc(cs)MCNearbyServiceAdvertiser	swift.class	MCNearbyServiceAdvertiser	MCNearbyServiceAdvertiser	class MCNearbyServiceAdvertiser
+c:objc(cs)MCNearbyServiceAdvertiser(im)initWithPeer:discoveryInfo:serviceType:	swift.init	init(peer:discoveryInfo:serviceType:)	MCNearbyServiceAdvertiser.init(peer:discoveryInfo:serviceType:)	init(peer myPeerID: MCPeerID, discoveryInfo info: [String : String]?, serviceType: String)
+c:objc(cs)MCNearbyServiceAdvertiser(im)startAdvertisingPeer	swift.method	startAdvertisingPeer()	MCNearbyServiceAdvertiser.startAdvertisingPeer()	func startAdvertisingPeer()
+c:objc(cs)MCNearbyServiceAdvertiser(im)stopAdvertisingPeer	swift.method	stopAdvertisingPeer()	MCNearbyServiceAdvertiser.stopAdvertisingPeer()	func stopAdvertisingPeer()
+c:objc(cs)MCNearbyServiceAdvertiser(py)delegate	swift.property	delegate	MCNearbyServiceAdvertiser.delegate	weak var delegate: (any MCNearbyServiceAdvertiserDelegate)? { get set }
+c:objc(cs)MCNearbyServiceAdvertiser(py)discoveryInfo	swift.property	discoveryInfo	MCNearbyServiceAdvertiser.discoveryInfo	var discoveryInfo: [String : String]? { get }
+c:objc(cs)MCNearbyServiceAdvertiser(py)myPeerID	swift.property	myPeerID	MCNearbyServiceAdvertiser.myPeerID	var myPeerID: MCPeerID { get }
+c:objc(cs)MCNearbyServiceAdvertiser(py)serviceType	swift.property	serviceType	MCNearbyServiceAdvertiser.serviceType	var serviceType: String { get }
+c:objc(cs)MCNearbyServiceBrowser	swift.class	MCNearbyServiceBrowser	MCNearbyServiceBrowser	class MCNearbyServiceBrowser
+c:objc(cs)MCNearbyServiceBrowser(im)initWithPeer:serviceType:	swift.init	init(peer:serviceType:)	MCNearbyServiceBrowser.init(peer:serviceType:)	init(peer myPeerID: MCPeerID, serviceType: String)
+c:objc(cs)MCNearbyServiceBrowser(im)invitePeer:toSession:withContext:timeout:	swift.method	invitePeer(_:to:withContext:timeout:)	MCNearbyServiceBrowser.invitePeer(_:to:withContext:timeout:)	func invitePeer(_ peerID: MCPeerID, to session: MCSession, withContext context: Data?, timeout: TimeInterval)
+c:objc(cs)MCNearbyServiceBrowser(im)startBrowsingForPeers	swift.method	startBrowsingForPeers()	MCNearbyServiceBrowser.startBrowsingForPeers()	func startBrowsingForPeers()
+c:objc(cs)MCNearbyServiceBrowser(im)stopBrowsingForPeers	swift.method	stopBrowsingForPeers()	MCNearbyServiceBrowser.stopBrowsingForPeers()	func stopBrowsingForPeers()
+c:objc(cs)MCNearbyServiceBrowser(py)delegate	swift.property	delegate	MCNearbyServiceBrowser.delegate	weak var delegate: (any MCNearbyServiceBrowserDelegate)? { get set }
+c:objc(cs)MCNearbyServiceBrowser(py)myPeerID	swift.property	myPeerID	MCNearbyServiceBrowser.myPeerID	var myPeerID: MCPeerID { get }
+c:objc(cs)MCNearbyServiceBrowser(py)serviceType	swift.property	serviceType	MCNearbyServiceBrowser.serviceType	var serviceType: String { get }
+c:objc(cs)MCPeerID	swift.class	MCPeerID	MCPeerID	class MCPeerID
+c:objc(cs)MCPeerID(im)initWithDisplayName:	swift.init	init(displayName:)	MCPeerID.init(displayName:)	init(displayName myDisplayName: String)
+c:objc(cs)MCPeerID(py)displayName	swift.property	displayName	MCPeerID.displayName	var displayName: String { get }
+c:objc(cs)MCSession	swift.class	MCSession	MCSession	class MCSession
+c:objc(cs)MCSession(im)cancelConnectPeer:	swift.method	cancelConnectPeer(_:)	MCSession.cancelConnectPeer(_:)	func cancelConnectPeer(_ peerID: MCPeerID)
+c:objc(cs)MCSession(im)connectPeer:withNearbyConnectionData:	swift.method	connectPeer(_:withNearbyConnectionData:)	MCSession.connectPeer(_:withNearbyConnectionData:)	func connectPeer(_ peerID: MCPeerID, withNearbyConnectionData data: Data)
+c:objc(cs)MCSession(im)disconnect	swift.method	disconnect()	MCSession.disconnect()	func disconnect()
+c:objc(cs)MCSession(im)initWithPeer:	swift.init	init(peer:)	MCSession.init(peer:)	convenience init(peer myPeerID: MCPeerID)
+c:objc(cs)MCSession(im)initWithPeer:securityIdentity:encryptionPreference:	swift.init	init(peer:securityIdentity:encryptionPreference:)	MCSession.init(peer:securityIdentity:encryptionPreference:)	init(peer myPeerID: MCPeerID, securityIdentity identity: [Any]?, encryptionPreference: MCEncryptionPreference)
+c:objc(cs)MCSession(im)nearbyConnectionDataForPeer:withCompletionHandler:	swift.method	nearbyConnectionData(forPeer:)	MCSession.nearbyConnectionData(forPeer:)	func nearbyConnectionData(forPeer peerID: MCPeerID) async throws -> Data
+c:objc(cs)MCSession(im)sendData:toPeers:withMode:error:	swift.method	send(_:toPeers:with:)	MCSession.send(_:toPeers:with:)	func send(_ data: Data, toPeers peerIDs: [MCPeerID], with mode: MCSessionSendDataMode) throws
+c:objc(cs)MCSession(im)sendResourceAtURL:withName:toPeer:withCompletionHandler:	swift.method	sendResource(at:withName:toPeer:withCompletionHandler:)	MCSession.sendResource(at:withName:toPeer:withCompletionHandler:)	func sendResource(at resourceURL: URL, withName resourceName: String, toPeer peerID: MCPeerID, withCompletionHandler completionHandler: (((any Error)?) -> Void)? = nil) -> Progress?
+c:objc(cs)MCSession(im)startStreamWithName:toPeer:error:	swift.method	startStream(withName:toPeer:)	MCSession.startStream(withName:toPeer:)	func startStream(withName streamName: String, toPeer peerID: MCPeerID) throws -> OutputStream
+c:objc(cs)MCSession(py)connectedPeers	swift.property	connectedPeers	MCSession.connectedPeers	var connectedPeers: [MCPeerID] { get }
+c:objc(cs)MCSession(py)delegate	swift.property	delegate	MCSession.delegate	weak var delegate: (any MCSessionDelegate)? { get set }
+c:objc(cs)MCSession(py)encryptionPreference	swift.property	encryptionPreference	MCSession.encryptionPreference	var encryptionPreference: MCEncryptionPreference { get }
+c:objc(cs)MCSession(py)myPeerID	swift.property	myPeerID	MCSession.myPeerID	var myPeerID: MCPeerID { get }
+c:objc(cs)MCSession(py)securityIdentity	swift.property	securityIdentity	MCSession.securityIdentity	var securityIdentity: [Any]? { get }
+c:objc(pl)MCAdvertiserAssistantDelegate	swift.protocol	MCAdvertiserAssistantDelegate	MCAdvertiserAssistantDelegate	protocol MCAdvertiserAssistantDelegate : NSObjectProtocol
+c:objc(pl)MCAdvertiserAssistantDelegate(im)advertiserAssistantDidDismissInvitation:	swift.method	advertiserAssistantDidDismissInvitation(_:)	MCAdvertiserAssistantDelegate.advertiserAssistantDidDismissInvitation(_:)	optional func advertiserAssistantDidDismissInvitation(_ advertiserAssistant: MCAdvertiserAssistant)
+c:objc(pl)MCAdvertiserAssistantDelegate(im)advertiserAssistantWillPresentInvitation:	swift.method	advertiserAssistantWillPresentInvitation(_:)	MCAdvertiserAssistantDelegate.advertiserAssistantWillPresentInvitation(_:)	optional func advertiserAssistantWillPresentInvitation(_ advertiserAssistant: MCAdvertiserAssistant)
+c:objc(pl)MCBrowserViewControllerDelegate	swift.protocol	MCBrowserViewControllerDelegate	MCBrowserViewControllerDelegate	protocol MCBrowserViewControllerDelegate : NSObjectProtocol
+c:objc(pl)MCBrowserViewControllerDelegate(im)browserViewController:shouldPresentNearbyPeer:withDiscoveryInfo:	swift.method	browserViewController(_:shouldPresentNearbyPeer:withDiscoveryInfo:)	MCBrowserViewControllerDelegate.browserViewController(_:shouldPresentNearbyPeer:withDiscoveryInfo:)	optional func browserViewController(_ browserViewController: MCBrowserViewController, shouldPresentNearbyPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) -> Bool
+c:objc(pl)MCBrowserViewControllerDelegate(im)browserViewControllerDidFinish:	swift.method	browserViewControllerDidFinish(_:)	MCBrowserViewControllerDelegate.browserViewControllerDidFinish(_:)	func browserViewControllerDidFinish(_ browserViewController: MCBrowserViewController)
+c:objc(pl)MCBrowserViewControllerDelegate(im)browserViewControllerWasCancelled:	swift.method	browserViewControllerWasCancelled(_:)	MCBrowserViewControllerDelegate.browserViewControllerWasCancelled(_:)	func browserViewControllerWasCancelled(_ browserViewController: MCBrowserViewController)
+c:objc(pl)MCNearbyServiceAdvertiserDelegate	swift.protocol	MCNearbyServiceAdvertiserDelegate	MCNearbyServiceAdvertiserDelegate	protocol MCNearbyServiceAdvertiserDelegate : NSObjectProtocol
+c:objc(pl)MCNearbyServiceAdvertiserDelegate(im)advertiser:didNotStartAdvertisingPeer:	swift.method	advertiser(_:didNotStartAdvertisingPeer:)	MCNearbyServiceAdvertiserDelegate.advertiser(_:didNotStartAdvertisingPeer:)	optional func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: any Error)
+c:objc(pl)MCNearbyServiceAdvertiserDelegate(im)advertiser:didReceiveInvitationFromPeer:withContext:invitationHandler:	swift.method	advertiser(_:didReceiveInvitationFromPeer:withContext:invitationHandler:)	MCNearbyServiceAdvertiserDelegate.advertiser(_:didReceiveInvitationFromPeer:withContext:invitationHandler:)	func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void)
+c:objc(pl)MCNearbyServiceBrowserDelegate	swift.protocol	MCNearbyServiceBrowserDelegate	MCNearbyServiceBrowserDelegate	protocol MCNearbyServiceBrowserDelegate : NSObjectProtocol
+c:objc(pl)MCNearbyServiceBrowserDelegate(im)browser:didNotStartBrowsingForPeers:	swift.method	browser(_:didNotStartBrowsingForPeers:)	MCNearbyServiceBrowserDelegate.browser(_:didNotStartBrowsingForPeers:)	optional func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: any Error)
+c:objc(pl)MCNearbyServiceBrowserDelegate(im)browser:foundPeer:withDiscoveryInfo:	swift.method	browser(_:foundPeer:withDiscoveryInfo:)	MCNearbyServiceBrowserDelegate.browser(_:foundPeer:withDiscoveryInfo:)	func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?)
+c:objc(pl)MCNearbyServiceBrowserDelegate(im)browser:lostPeer:	swift.method	browser(_:lostPeer:)	MCNearbyServiceBrowserDelegate.browser(_:lostPeer:)	func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID)
+c:objc(pl)MCSessionDelegate	swift.protocol	MCSessionDelegate	MCSessionDelegate	protocol MCSessionDelegate : NSObjectProtocol
+c:objc(pl)MCSessionDelegate(im)session:didFinishReceivingResourceWithName:fromPeer:atURL:withError:	swift.method	session(_:didFinishReceivingResourceWithName:fromPeer:at:withError:)	MCSessionDelegate.session(_:didFinishReceivingResourceWithName:fromPeer:at:withError:)	func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: (any Error)?)
+c:objc(pl)MCSessionDelegate(im)session:didReceiveCertificate:fromPeer:certificateHandler:	swift.method	session(_:didReceiveCertificate:fromPeer:certificateHandler:)	MCSessionDelegate.session(_:didReceiveCertificate:fromPeer:certificateHandler:)	optional func session(_ session: MCSession, didReceiveCertificate certificate: [Any]?, fromPeer peerID: MCPeerID, certificateHandler: @escaping (Bool) -> Void)
+c:objc(pl)MCSessionDelegate(im)session:didReceiveData:fromPeer:	swift.method	session(_:didReceive:fromPeer:)	MCSessionDelegate.session(_:didReceive:fromPeer:)	func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID)
+c:objc(pl)MCSessionDelegate(im)session:didReceiveStream:withName:fromPeer:	swift.method	session(_:didReceive:withName:fromPeer:)	MCSessionDelegate.session(_:didReceive:withName:fromPeer:)	func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID)
+c:objc(pl)MCSessionDelegate(im)session:didStartReceivingResourceWithName:fromPeer:withProgress:	swift.method	session(_:didStartReceivingResourceWithName:fromPeer:with:)	MCSessionDelegate.session(_:didStartReceivingResourceWithName:fromPeer:with:)	func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress)
+c:objc(pl)MCSessionDelegate(im)session:peer:didChangeState:	swift.method	session(_:peer:didChange:)	MCSessionDelegate.session(_:peer:didChange:)	func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MCPeerID	swift.init	init(coder:)	MCPeerID.init(coder:)	init?(coder: NSCoder)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@MCErrorCode	swift.type.property	errorDomain	MCError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MCErrorCode	swift.property	errorUserInfo	MCError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MCErrorCode	swift.property	errorCode	MCError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MCErrorCode	swift.func.op	~=(_:_:)	MCError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MCErrorCode	swift.property	errorUserInfo	MCError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MCErrorCode	swift.func.op	==(_:_:)	MCError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@MCErrorCode	swift.property	code	MCError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MCErrorCode	swift.method	hash(into:)	MCError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@MCErrorCode	swift.property	userInfo	MCError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MCErrorCode	swift.property	errorCode	MCError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MCErrorCode	swift.property	hashValue	MCError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@MCErrorCode	swift.init	init(_:userInfo:)	MCError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC11MCErrorCodeLeV	swift.struct	MCError	MCError	struct MCError
+s:SC11MCErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	MCError.errorDomain	static var errorDomain: String { get }
+s:SC11MCErrorCodeLeV11unavailableSoAAVvpZ	swift.type.property	unavailable	MCError.unavailable	static var unavailable: MCError.Code { get }
+s:SC11MCErrorCodeLeV11unsupportedSoAAVvpZ	swift.type.property	unsupported	MCError.unsupported	static var unsupported: MCError.Code { get }
+s:SC11MCErrorCodeLeV12notConnectedSoAAVvpZ	swift.type.property	notConnected	MCError.notConnected	static var notConnected: MCError.Code { get }
+s:SC11MCErrorCodeLeV16invalidParameterSoAAVvpZ	swift.type.property	invalidParameter	MCError.invalidParameter	static var invalidParameter: MCError.Code { get }
+s:SC11MCErrorCodeLeV7unknownSoAAVvpZ	swift.type.property	unknown	MCError.unknown	static var unknown: MCError.Code { get }
+s:SC11MCErrorCodeLeV8timedOutSoAAVvpZ	swift.type.property	timedOut	MCError.timedOut	static var timedOut: MCError.Code { get }
+s:SC11MCErrorCodeLeV9cancelledSoAAVvpZ	swift.type.property	cancelled	MCError.cancelled	static var cancelled: MCError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MCEncryptionPreference	swift.func.op	!=(_:_:)	MCEncryptionPreference.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MCErrorCode	swift.func.op	!=(_:_:)	MCError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MCSessionSendDataMode	swift.func.op	!=(_:_:)	MCSessionSendDataMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MCSessionState	swift.func.op	!=(_:_:)	MCSessionState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MCEncryptionPreference	swift.property	hashValue	MCEncryptionPreference.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MCErrorCode	swift.property	hashValue	MCError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MCSessionSendDataMode	swift.property	hashValue	MCSessionSendDataMode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MCSessionState	swift.property	hashValue	MCSessionState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MCEncryptionPreference	swift.method	hash(into:)	MCEncryptionPreference.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MCErrorCode	swift.method	hash(into:)	MCError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MCSessionSendDataMode	swift.method	hash(into:)	MCSessionSendDataMode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MCSessionState	swift.method	hash(into:)	MCSessionState.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11MCErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MCError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So14MCSessionStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MCSessionState.init(rawValue:)	init?(rawValue: Int)
+s:So21MCSessionSendDataModeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MCSessionSendDataMode.init(rawValue:)	init?(rawValue: Int)
+s:So22MCEncryptionPreferenceV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	MCEncryptionPreference.init(rawValue:)	init?(rawValue: Int)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MCErrorCode	swift.property	localizedDescription	MCError.localizedDescription	var localizedDescription: String { get }
