@@ -1,0 +1,12 @@
+full/networkextension/NetworkExtension.swift
+full/networkextension/NetworkExtensionCopying.swift
+full/networkextension/NetworkExtensionEnums.swift
+full/networkextension/NetworkExtensionErrors.swift
+full/networkextension/NetworkExtensionFilter.swift
+full/networkextension/NetworkExtensionHost.swift
+full/networkextension/NetworkExtensionHotspot.swift
+full/networkextension/NetworkExtensionNetwork.swift
+full/networkextension/NetworkExtensionPushFilter.swift
+full/networkextension/NetworkExtensionSettings.swift
+full/networkextension/NetworkExtensionTunnel.swift
+full/networkextension/NetworkExtensionVPN.swift
