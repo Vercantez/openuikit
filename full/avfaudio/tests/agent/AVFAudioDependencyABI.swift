@@ -29,6 +29,36 @@ func require(_ condition: Bool, _ message: String) throws {
     if !condition { throw ABIFailure.message(message) }
 }
 
+func requireThrows(_ message: String, _ operation: () throws -> Void) throws {
+    var didThrow = false
+    do {
+        try operation()
+    } catch {
+        didThrow = true
+    }
+    try require(didThrow, message)
+}
+
+struct AVFAudioCLayoutReport {
+    var audioBufferSize: UInt = 0
+    var audioBufferAlign: UInt = 0
+    var audioBufferListSize: UInt = 0
+    var audioBufferListAlign: UInt = 0
+    var audioBufferListNumberBuffersOffset: UInt = 0
+    var audioBufferListBuffersOffset: UInt = 0
+    var asbdSize: UInt = 0
+    var asbdAlign: UInt = 0
+    var walkedBuffers: UInt32 = 0
+}
+
+@_silgen_name("avfaudio_abi_fill_c_layout_report")
+func avfaudioABIFillCLayoutReport(
+    _ report: UnsafeMutablePointer<AVFAudioCLayoutReport>?
+) -> CInt
+
+@_silgen_name("avfaudio_abi_c_probe_available")
+func avfaudioABICProbeAvailable() -> CInt
+
 #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
 func audioBufferPointer(
     _ list: UnsafeMutablePointer<AudioBufferList>
@@ -52,23 +82,78 @@ func allocateFlexibleList(bufferCount: Int) -> UnsafeMutablePointer<AudioBufferL
 }
 #endif
 
+func proveCLayoutIdentity() throws {
+    #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
+    try require(avfaudioABICProbeAvailable() == 1, "C dependency headers are unavailable")
+    var report = AVFAudioCLayoutReport()
+    try require(
+        avfaudioABIFillCLayoutReport(&report) == 0,
+        "C flexible AudioBufferList walk failed"
+    )
+    try require(
+        report.audioBufferSize == UInt(MemoryLayout<AudioBuffer>.size),
+        "AudioBuffer size"
+    )
+    try require(
+        report.audioBufferAlign == UInt(MemoryLayout<AudioBuffer>.alignment),
+        "AudioBuffer alignment"
+    )
+    try require(
+        report.audioBufferListSize == UInt(MemoryLayout<AudioBufferList>.size),
+        "AudioBufferList size"
+    )
+    try require(
+        report.audioBufferListAlign == UInt(MemoryLayout<AudioBufferList>.alignment),
+        "AudioBufferList alignment"
+    )
+    guard
+        let numberBuffersOffset = MemoryLayout<AudioBufferList>.offset(of: \.mNumberBuffers),
+        let buffersOffset = MemoryLayout<AudioBufferList>.offset(of: \.mBuffers)
+    else {
+        throw ABIFailure.message("Swift AudioBufferList field offsets are unavailable")
+    }
+    try require(
+        report.audioBufferListNumberBuffersOffset == UInt(numberBuffersOffset),
+        "AudioBufferList.mNumberBuffers offset"
+    )
+    try require(
+        report.audioBufferListBuffersOffset == UInt(buffersOffset),
+        "AudioBufferList.mBuffers offset"
+    )
+    try require(
+        report.asbdSize == UInt(MemoryLayout<AudioStreamBasicDescription>.size),
+        "AudioStreamBasicDescription size"
+    )
+    try require(
+        report.asbdAlign == UInt(MemoryLayout<AudioStreamBasicDescription>.alignment),
+        "AudioStreamBasicDescription alignment"
+    )
+    try require(report.walkedBuffers == 4, "C flexible AudioBufferList buffer count")
+    #else
+    try require(avfaudioABICProbeAvailable() == 0, "C and Swift dependency visibility differ")
+    throw ABIFailure.message("canonical CoreAudioTypes/AudioToolbox dependencies are unavailable")
+    #endif
+}
+
 func awaitDeniedPermission() throws {
     var count = 0
     var inline = false
     var granted = true
     let lock = NSLock()
     let sem = DispatchSemaphore(value: 0)
-    AVAudioSession.sharedInstance().requestRecordPermission { value in
-        dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
+    AVFAudioHostAvailability.callbackQueue.sync {
+        AVAudioSession.sharedInstance().requestRecordPermission { value in
+            dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
+            lock.lock()
+            count += 1
+            granted = value
+            lock.unlock()
+            sem.signal()
+        }
         lock.lock()
-        count += 1
-        granted = value
+        inline = count != 0
         lock.unlock()
-        sem.signal()
     }
-    lock.lock()
-    inline = count != 0
-    lock.unlock()
     try require(!inline, "ABI permission callback ran inline")
     try require(sem.wait(timeout: .now() + 2) == .success, "ABI permission timeout")
     try require(count == 1, "ABI permission not exactly once")
@@ -232,12 +317,15 @@ func inspectLoadedLibrary() throws {
     defer { if let handle { dlclose(handle) } }
 
     var info = Dl_info()
-    let symbol = dlsym(handle, "$s8AVFAudio14AVAudioEngineCMa")
+    let symbol = dlsym(handle, "$s8AVFAudio13AVAudioEngineCMa")
         ?? dlsym(handle, "OBJC_CLASS_$_AVAudioEngine")
-    if let symbol, dladdr(symbol, &info) != 0, let filename = info.dli_fname {
-        let name = String(cString: filename)
-        try require(name.contains("AVFAudio"), "loaded image should be AVFAudio: \(name)")
+    try require(symbol != nil, "AVAudioEngine metadata symbol is missing")
+    try require(dladdr(symbol, &info) != 0, "AVAudioEngine metadata image is unknown")
+    guard let filename = info.dli_fname else {
+        throw ABIFailure.message("AVAudioEngine metadata image lacks a filename")
     }
+    let name = String(cString: filename)
+    try require(name.contains("AVFAudio"), "loaded image should be AVFAudio: \(name)")
 
     let shadowOSStatus = dlsym(handle, "$s8AVFAudio8OSStatusa")
     try require(shadowOSStatus == nil, "libAVFAudio must not export a module-local OSStatus alias")
@@ -251,44 +339,50 @@ func run() throws {
 
     var appCount = 0
     var appInline = false
+    var appGranted = true
     let appSem = DispatchSemaphore(value: 0)
-    AVAudioApplication.requestRecordPermission { granted in
-        dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
-        appCount += 1
-        try? require(granted == false, "application permission denied")
-        appSem.signal()
+    AVFAudioHostAvailability.callbackQueue.sync {
+        AVAudioApplication.requestRecordPermission { granted in
+            dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
+            appCount += 1
+            appGranted = granted
+            appSem.signal()
+        }
+        appInline = appCount != 0
     }
-    appInline = appCount != 0
     try require(!appInline, "application permission ran inline")
     try require(appSem.wait(timeout: .now() + 2) == .success, "application permission timeout")
     try require(appCount == 1, "application permission exactly once")
+    try require(appGranted == false, "application permission denied")
 
     var voiceCount = 0
     var voiceInline = false
+    var voiceStatus: AVSpeechSynthesizer.PersonalVoiceAuthorizationStatus?
     let voiceSem = DispatchSemaphore(value: 0)
-    AVSpeechSynthesizer.requestPersonalVoiceAuthorization { status in
-        dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
-        voiceCount += 1
-        try? require(status == .unsupported, "personal voice unsupported")
-        voiceSem.signal()
+    AVFAudioHostAvailability.callbackQueue.sync {
+        AVSpeechSynthesizer.requestPersonalVoiceAuthorization { status in
+            dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
+            voiceCount += 1
+            voiceStatus = status
+            voiceSem.signal()
+        }
+        voiceInline = voiceCount != 0
     }
-    voiceInline = voiceCount != 0
     try require(!voiceInline, "personal voice ran inline")
     try require(voiceSem.wait(timeout: .now() + 2) == .success, "personal voice timeout")
     try require(voiceCount == 1, "personal voice exactly once")
+    try require(voiceStatus == .unsupported, "personal voice unsupported")
 
     let engine = AVAudioEngine()
-    do {
+    try requireThrows("ABI engine.start succeeded without a host") {
         try engine.start()
-        throw ABIFailure.message("ABI engine.start succeeded without a host")
-    } catch {
-        try require(!engine.isRunning, "ABI engine running after failed start")
     }
-    do {
+    try require(!engine.isRunning, "ABI engine running after failed start")
+    try requireThrows("ABI setActive succeeded without a host") {
         try AVAudioSession.sharedInstance().setActive(true)
-        throw ABIFailure.message("ABI setActive succeeded without a host")
-    } catch {}
+    }
 
+    try proveCLayoutIdentity()
     try proveNoCopyDeallocatorOnce()
     try proveAudioTimeStampFlagRoundTrip()
 

@@ -16,6 +16,16 @@ func require(_ condition: Bool, _ message: String) throws {
     if !condition { throw RuntimeFailure.message(message) }
 }
 
+func requireThrows(_ message: String, _ operation: () throws -> Void) throws {
+    var didThrow = false
+    do {
+        try operation()
+    } catch {
+        didThrow = true
+    }
+    try require(didThrow, message)
+}
+
 func run() throws {
     let format = try requireFormat(
         AVAudioFormat(
@@ -61,6 +71,19 @@ func run() throws {
     planes[1][0] = -0.25
     try require(planes[0][0] == 0.5, "channel 0 write")
     try require(planes[1][0] == -0.25, "channel 1 write")
+    guard let copied = buffer.copy() as? AVAudioPCMBuffer else {
+        throw RuntimeFailure.message("pcm NSCopying dynamic type")
+    }
+    try require(copied !== buffer, "pcm copy must be independent")
+    try require(copied.frameLength == buffer.frameLength, "pcm copy frame length")
+    try require(copied.floatChannelData?[0][0] == 0.5, "pcm copy sample")
+    planes[0][0] = 0.75
+    try require(copied.floatChannelData?[0][0] == 0.5, "pcm copy storage independence")
+    guard let mutableCopied = buffer.mutableCopy() as? AVAudioPCMBuffer else {
+        throw RuntimeFailure.message("pcm NSMutableCopying dynamic type")
+    }
+    try require(mutableCopied !== buffer, "pcm mutable copy must be independent")
+    try require(mutableCopied.floatChannelData?[0][0] == 0.75, "pcm mutable copy sample")
 
     let interleaved = try requireFormat(
         AVAudioFormat(
@@ -93,11 +116,8 @@ func run() throws {
     try require(session.category == .playback, "session category")
     try require(session.mode == .moviePlayback, "session mode")
     try require(session.categoryOptions.contains(.mixWithOthers), "session options")
-    do {
+    try requireThrows("setActive must fail closed without a host service") {
         try session.setActive(true)
-        throw RuntimeFailure.message("setActive must fail closed without a host service")
-    } catch {
-        try require(true, "setActive threw")
     }
     try require(session.sampleRate == 0, "no fabricated hardware sample rate")
     try require(session.outputVolume == 0, "telegram outputVolume fail-closed")
@@ -110,15 +130,13 @@ func run() throws {
     try require(session.recordPermission == .denied, "record permission fail-closed")
     try require(!session.isInputAvailable, "no input hardware")
     try require(!session.isMicrophoneInjectionAvailable, "no mic injection")
-    do {
+    try requireThrows("setPreferredSampleRate must fail closed") {
         try session.setPreferredSampleRate(48000)
-        throw RuntimeFailure.message("setPreferredSampleRate must fail closed")
-    } catch {}
+    }
     try require(session.sampleRate == 0, "preferred rate did not become hardware rate")
-    do {
+    try requireThrows("overrideOutputAudioPort must fail closed") {
         try session.overrideOutputAudioPort(.speaker)
-        throw RuntimeFailure.message("overrideOutputAudioPort must fail closed")
-    } catch {}
+    }
 
     var permissionCalls = 0
     var permissionGranted = true
@@ -127,18 +145,20 @@ func run() throws {
     var outerFinished = false
     let permissionSem = DispatchSemaphore(value: 0)
     let nestedSem = DispatchSemaphore(value: 0)
-    session.requestRecordPermission { granted in
-        dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
-        permissionCalls += 1
-        permissionGranted = granted
-        session.requestRecordPermission { _ in
-            if !outerFinished { nestedDuringOuter = true }
-            nestedSem.signal()
+    AVFAudioHostAvailability.callbackQueue.sync {
+        session.requestRecordPermission { granted in
+            dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
+            permissionCalls += 1
+            permissionGranted = granted
+            session.requestRecordPermission { _ in
+                if !outerFinished { nestedDuringOuter = true }
+                nestedSem.signal()
+            }
+            outerFinished = true
+            permissionSem.signal()
         }
-        outerFinished = true
-        permissionSem.signal()
+        permissionInline = permissionCalls != 0
     }
-    permissionInline = permissionCalls != 0
     try require(!permissionInline, "record permission callback must not run inline")
     try require(permissionSem.wait(timeout: .now() + 2) == .success, "permission callback timeout")
     try require(permissionCalls == 1, "record permission exactly once")
@@ -150,13 +170,15 @@ func run() throws {
     var appInline = false
     var appCount = 0
     let appSem = DispatchSemaphore(value: 0)
-    AVAudioApplication.requestRecordPermission { granted in
-        dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
-        appCount += 1
-        appPermission = granted
-        appSem.signal()
+    AVFAudioHostAvailability.callbackQueue.sync {
+        AVAudioApplication.requestRecordPermission { granted in
+            dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
+            appCount += 1
+            appPermission = granted
+            appSem.signal()
+        }
+        appInline = appCount != 0
     }
-    appInline = appCount != 0
     try require(!appInline, "application permission must not run inline")
     try require(appSem.wait(timeout: .now() + 2) == .success, "application permission timeout")
     try require(appCount == 1, "application permission exactly once")
@@ -165,10 +187,9 @@ func run() throws {
         AVAudioApplication.shared.microphoneInjectionPermission == .serviceDisabled,
         "injection disabled"
     )
-    do {
+    try requireThrows("setInputMuted must fail closed") {
         try AVAudioApplication.shared.setInputMuted(true)
-        throw RuntimeFailure.message("setInputMuted must fail closed")
-    } catch {}
+    }
     try require(AVAudioApplication.shared.isInputMuted, "input remains fail-closed muted")
 
     let engine = AVAudioEngine()
@@ -184,27 +205,21 @@ func run() throws {
     )
     try proveEngineConnectReplacement(format: format)
     try require(!engine.isRunning, "engine is not running")
-    do {
+    try requireThrows("engine.start must fail closed without a device") {
         try engine.start()
-        throw RuntimeFailure.message("engine.start must fail closed without a device")
-    } catch {
-        try require(!engine.isRunning, "start must not set running")
     }
-    do {
+    try require(!engine.isRunning, "start must not set running")
+    try requireThrows("enableManualRenderingMode must fail closed") {
         try engine.enableManualRenderingMode(.offline, format: format, maximumFrameCount: 512)
-        throw RuntimeFailure.message("enableManualRenderingMode must fail closed")
-    } catch {
-        try require(!engine.isInManualRenderingMode, "manual rendering must stay disabled")
     }
+    try require(!engine.isInManualRenderingMode, "manual rendering must stay disabled")
     guard let rendered = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 256) else {
         throw RuntimeFailure.message("render buffer")
     }
-    do {
+    try requireThrows("renderOffline must fail closed") {
         _ = try engine.renderOffline(256, to: rendered)
-        throw RuntimeFailure.message("renderOffline must fail closed")
-    } catch {
-        try require(rendered.frameLength == 0, "failed render must not claim frames")
     }
+    try require(rendered.frameLength == 0, "failed render must not claim frames")
     player.play()
     try require(player.isPlaying, "player node local transport")
     engine.stop()
@@ -218,10 +233,9 @@ func run() throws {
         throw RuntimeFailure.message("converter src")
     }
     source.frameLength = 4
-    do {
+    try requireThrows("converter must fail closed without a codec host") {
         try converter.convert(to: converted, from: source)
-        throw RuntimeFailure.message("converter must fail closed without a codec host")
-    } catch {}
+    }
 
     let point = AVAudioMake3DPoint(1, 2, 3)
     try require(point.x == 1 && point.y == 2 && point.z == 3, "3d point")
@@ -236,9 +250,16 @@ func run() throws {
     try provePlayerFixtures()
     try proveCorpusCompileSurfaces()
     try proveGraphSendable()
-    let tmp = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("avfaudio-probe.bin")
+    let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(
+        "avfaudio-probe-\(UUID().uuidString).bin"
+    )
+    let recordingURL = tmp.appendingPathExtension("rec")
+    defer {
+        try? FileManager.default.removeItem(at: tmp)
+        try? FileManager.default.removeItem(at: recordingURL)
+    }
     try avfaudioTestLinearPCMWAVE().write(to: tmp)
-    let recorder = try AVAudioRecorder(url: tmp.appendingPathExtension("rec"), format: format)
+    let recorder = try AVAudioRecorder(url: recordingURL, format: format)
     try require(recorder.prepareToRecord() == false, "recorder prepare fail-closed")
     try require(recorder.record() == false, "recorder hardware fail-closed")
     try require(!recorder.isRecording, "recorder not recording")
@@ -257,13 +278,15 @@ func run() throws {
     var voiceInline = false
     var voiceCount = 0
     let voiceSem = DispatchSemaphore(value: 0)
-    AVSpeechSynthesizer.requestPersonalVoiceAuthorization { status in
-        dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
-        voiceCount += 1
-        voiceStatus = status
-        voiceSem.signal()
+    AVFAudioHostAvailability.callbackQueue.sync {
+        AVSpeechSynthesizer.requestPersonalVoiceAuthorization { status in
+            dispatchPrecondition(condition: .onQueue(AVFAudioHostAvailability.callbackQueue))
+            voiceCount += 1
+            voiceStatus = status
+            voiceSem.signal()
+        }
+        voiceInline = voiceCount != 0
     }
-    voiceInline = voiceCount != 0
     try require(!voiceInline, "personal voice callback must not run inline")
     try require(voiceSem.wait(timeout: .now() + 2) == .success, "personal voice timeout")
     try require(voiceCount == 1, "personal voice exactly once")
@@ -275,12 +298,10 @@ func run() throws {
     let track = sequencer.createAndAppendTrack()
     track.addEvent(AVMIDINoteEvent(channel: 0, key: 60, velocity: 100, duration: 1), at: 0)
     try require(sequencer.tracks.count == 1, "sequencer track")
-    do {
+    try requireThrows("sequencer.start must fail closed") {
         try sequencer.start()
-        throw RuntimeFailure.message("sequencer.start must fail closed")
-    } catch {
-        try require(!sequencer.isPlaying, "sequencer must not claim playback")
     }
+    try require(!sequencer.isPlaying, "sequencer must not claim playback")
     sequencer.stop()
 
     let delay = AVAudioUnitDelay()
@@ -354,34 +375,22 @@ func avfaudioTestLinearPCMWAVE(
 }
 
 func provePlayerFixtures() throws {
-    do {
+    try requireThrows("missing URL must throw") {
         _ = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: "/no/such/avfaudio-player.wav"))
-        throw RuntimeFailure.message("missing URL must throw")
-    } catch is RuntimeFailure {
-        throw RuntimeFailure.message("missing URL must throw")
-    } catch {}
+    }
 
     let directory = URL(fileURLWithPath: NSTemporaryDirectory(), isDirectory: true)
-    do {
+    try requireThrows("unreadable directory URL must throw") {
         _ = try AVAudioPlayer(contentsOf: directory)
-        throw RuntimeFailure.message("unreadable directory URL must throw")
-    } catch is RuntimeFailure {
-        throw RuntimeFailure.message("unreadable directory URL must throw")
-    } catch {}
+    }
 
-    do {
+    try requireThrows("empty data must throw") {
         _ = try AVAudioPlayer(data: Data())
-        throw RuntimeFailure.message("empty data must throw")
-    } catch is RuntimeFailure {
-        throw RuntimeFailure.message("empty data must throw")
-    } catch {}
+    }
 
-    do {
+    try requireThrows("garbage data must throw") {
         _ = try AVAudioPlayer(data: Data([0, 1, 2, 3, 4, 5, 6, 7]))
-        throw RuntimeFailure.message("garbage data must throw")
-    } catch is RuntimeFailure {
-        throw RuntimeFailure.message("garbage data must throw")
-    } catch {}
+    }
 
     let wave = avfaudioTestLinearPCMWAVE()
     let fromData = try AVAudioPlayer(data: wave)
@@ -397,7 +406,10 @@ func provePlayerFixtures() throws {
     let hinted = try AVAudioPlayer(data: wave, fileTypeHint: "public.wav")
     try require(hinted.duration == fromData.duration, "hinted wave duration")
 
-    let tmp = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("avfaudio-valid.wav")
+    let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(
+        "avfaudio-valid-\(UUID().uuidString).wav"
+    )
+    defer { try? FileManager.default.removeItem(at: tmp) }
     try wave.write(to: tmp)
     let fromURL = try AVAudioPlayer(contentsOf: tmp)
     try require(fromURL.url == tmp, "wave url retained")

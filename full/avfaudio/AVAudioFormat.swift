@@ -380,12 +380,21 @@ func avfaudioDeallocateAudioBufferList(_ list: UnsafeMutablePointer<AudioBufferL
 }
 #endif
 
-open class AVAudioBuffer: NSObject {
+open class AVAudioBuffer: NSObject, NSCopying, NSMutableCopying {
     public let format: AVAudioFormat
 
-    public init(format: AVAudioFormat) {
+    init(format: AVAudioFormat) {
         self.format = format
         super.init()
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        return AVAudioBuffer(format: format)
+    }
+
+    open func mutableCopy(with zone: NSZone? = nil) -> Any {
+        copy(with: zone)
     }
 
     #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
@@ -599,6 +608,36 @@ public final class AVAudioPCMBuffer: AVAudioBuffer {
         }
     }
 
+    public override func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        guard let result = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCapacity) else {
+            preconditionFailure("A valid AVAudioPCMBuffer format must remain copyable.")
+        }
+        result.frameLength = frameLength
+        let frames = Int(frameLength)
+        if format.isInterleaved {
+            let byteCount = bytesPerSample * frames * max(channelCount, 1)
+            if byteCount > 0 {
+                result.channelPointers[0].copyMemory(from: channelPointers[0], byteCount: byteCount)
+            }
+        } else {
+            let planeBytes = bytesPerSample * frames
+            if planeBytes > 0 {
+                for index in 0..<max(channelCount, 1) {
+                    result.channelPointers[index].copyMemory(
+                        from: channelPointers[index],
+                        byteCount: planeBytes
+                    )
+                }
+            }
+        }
+        return result
+    }
+
+    public override func mutableCopy(with zone: NSZone? = nil) -> Any {
+        copy(with: zone)
+    }
+
     deinit {
         floatPointers?.deallocate()
         int16Pointers?.deallocate()
@@ -629,6 +668,8 @@ public final class AVAudioCompressedBuffer: AVAudioBuffer {
     #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
     public var packetDescriptions: UnsafeMutablePointer<AudioStreamPacketDescription>?
     public var packetDependencies: [AudioStreamPacketDependencyDescription]?
+    private var copiedPacketDescriptionsStorage:
+        UnsafeMutablePointer<AudioStreamPacketDescription>?
     #endif
 
     public init(format: AVAudioFormat, packetCapacity: AVAudioPacketCount) {
@@ -657,7 +698,46 @@ public final class AVAudioCompressedBuffer: AVAudioBuffer {
         super.init(format: format)
     }
 
+    public override func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let result: AVAudioCompressedBuffer
+        if maximumPacketSize == 0 {
+            result = AVAudioCompressedBuffer(format: format, packetCapacity: packetCapacity)
+        } else {
+            result = AVAudioCompressedBuffer(
+                format: format,
+                packetCapacity: packetCapacity,
+                maximumPacketSize: maximumPacketSize
+            )
+        }
+        result.packetCount = packetCount
+        result.byteLength = min(byteLength, result.byteCapacity)
+        if result.byteLength > 0 {
+            result.data.copyMemory(from: data, byteCount: Int(result.byteLength))
+        }
+        #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
+        result.packetDependencies = packetDependencies
+        if let packetDescriptions, packetCapacity > 0 {
+            let descriptions = UnsafeMutablePointer<AudioStreamPacketDescription>.allocate(
+                capacity: Int(packetCapacity)
+            )
+            descriptions.initialize(from: packetDescriptions, count: Int(packetCapacity))
+            result.copiedPacketDescriptionsStorage = descriptions
+            result.packetDescriptions = descriptions
+        }
+        #endif
+        return result
+    }
+
+    public override func mutableCopy(with zone: NSZone? = nil) -> Any {
+        copy(with: zone)
+    }
+
     deinit {
+        #if canImport(CoreAudioTypes) || canImport(AudioToolbox)
+        copiedPacketDescriptionsStorage?.deinitialize(count: Int(packetCapacity))
+        copiedPacketDescriptionsStorage?.deallocate()
+        #endif
         data.deallocate()
     }
 }
