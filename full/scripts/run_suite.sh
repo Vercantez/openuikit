@@ -24,6 +24,10 @@ MRROOT=${MRROOT:-/w/scratch/mrroot_full}
 MRMOUNT=${MRMOUNT:-}
 OUT=$ROOT/build/full/$SUITE
 
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    bash "$ROOT/.cursor/refuse-arm64-execution.sh" || exit $?
+fi
+
 # Freshness is asserted ONLY for the default root. scratch/mrroot_full is a COPY
 # of machorun's userland, and a copy read long after it was made is
 # indistinguishable from a fresh one -- an enumeration on 2026-08-27 found four

@@ -162,6 +162,12 @@ case "$EXPECTED_MACHORUN_OBJC_SHA256" in
     *[!0-9a-f]*) die 'machorun Objective-C runtime SHA-256 must be lowercase 64-hex' ;;
 esac
 
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    # Isolation (single bind, no network, read-only root) remains required on
+    # aarch64. On x86_64 nothing can execute the guest; emit the canonical
+    # marker rather than a docker-missing skip.
+    bash "$SCRIPT_DIR/../../.cursor/refuse-arm64-execution.sh" || exit $?
+fi
 for tool in docker git mktemp python3 tee awk shasum; do
     command -v "$tool" >/dev/null || die "required host tool is missing: $tool"
 done

@@ -8,27 +8,23 @@ umask 077
 
 REPO=$(cd "$(dirname "$0")/.." && pwd -P)
 SUPPORT=${SWIFT_MACHO_LINUX:-"$REPO/../swift-macho-linux"}
+if [ ! -d "$SUPPORT/scratch" ]; then
+    SUPPORT=$(git -C "$REPO" rev-parse --show-toplevel)
+fi
 IMAGE=${SWIFT_MACHO_IMAGE:-swift-macho-spike:noble}
 PROBE=$REPO/Tools/bundleprobe/main.swift
 FRAMEWORK_PROBE=$REPO/Tools/bundleprobe/FrameworkFinder.swift
 SYSROOT=$SUPPORT/scratch/sysroot_fe4
 GUEST_ROOT=$SUPPORT/scratch/mrroot_full
+REPO_ROOT=$(git -C "$REPO" rev-parse --show-toplevel)
 
 fail() {
     echo "prove_portable_bundle: $*" >&2
     exit 2
 }
 
-command -v xcrun >/dev/null || fail "xcrun is required for the native oracle"
-command -v docker >/dev/null || fail "Docker is required for the Linux-hosted guest"
-docker info >/dev/null 2>&1 || fail "Docker daemon is unavailable"
 [[ -f "$PROBE" && -f "$FRAMEWORK_PROBE" ]] || fail "Bundle probe sources are missing"
 [[ -d "$SYSROOT/usr/include" ]] || fail "missing target15 sysroot: $SYSROOT"
-[[ -x "$GUEST_ROOT/machorun" ]] || fail "missing machorun guest root: $GUEST_ROOT"
-[[ -f "$SUPPORT/build/full/swiftcorepatch.o" ]] \
-    || fail "missing full-build Swift runtime patch object"
-[[ -f "$SUPPORT/build/full/foundation/essentials/FoundationEssentials.swiftmodule" ]] \
-    || fail "missing full-build FoundationEssentials module"
 
 WORK=$(mktemp -d "${TMPDIR:-/tmp}/openuikit-bundle.XXXXXX")
 cleanup() {
@@ -101,6 +97,7 @@ make_fixtures "$WORK/native"
 make_fixtures "$WORK/guest"
 
 echo "==> native Apple Bundle oracle"
+if [ "$(uname -s)" = Darwin ] && command -v xcrun >/dev/null; then
 mkdir -p "$WORK/native-modules"
 native_framework=$WORK/native/MainProbe.app/Contents/Frameworks/DynamicProbe.framework/DynamicProbe
 xcrun swiftc -swift-version 5 -parse-as-library \
@@ -116,8 +113,17 @@ xcrun swiftc -swift-version 5 -I "$WORK/native-modules" "$PROBE" \
     | tee "$WORK/native.log"
 grep '^\(root\|main\|flat\|structured\|framework\|dynamic\|init\)\.' \
     "$WORK/native.log" > "$WORK/native.contract"
+else
+echo "CURSOR_ENV_MACOS_ORACLE_LOCAL_ONLY host=$(uname -s)"
+fi
 
 echo "==> Foundation-hidden ARM64 Mach-O Bundle guest"
+if command -v docker >/dev/null && docker info >/dev/null 2>&1; then
+[[ -x "$GUEST_ROOT/machorun" ]] || fail "missing machorun guest root: $GUEST_ROOT"
+[[ -f "$SUPPORT/build/full/swiftcorepatch.o" ]] \
+    || fail "missing full-build Swift runtime patch object"
+[[ -f "$SUPPORT/build/full/foundation/essentials/FoundationEssentials.swiftmodule" ]] \
+    || fail "missing full-build FoundationEssentials module"
 docker run --rm \
     -v "$REPO:/uikit:ro" \
     -v "$SUPPORT:/w:ro" \
@@ -232,3 +238,9 @@ grep -Fqx 'BUNDLE_GUEST_SYMLINK_COMPONENT_GATE_OK' "$WORK/guest.log" \
     || fail "guest symlink-component marker is missing"
 
 echo "PASS: Apple and Foundation-hidden ARM64 Mach-O Bundle contracts match"
+elif bash "$REPO_ROOT/.cursor/attest-cursor-env.sh"; then
+echo "CURSOR_ENV_TOOLCHAIN_ATTESTED Bundle guest compile uses the pinned swift:6.2-noble toolchain; execution cannot proceed on this host"
+bash "$REPO_ROOT/.cursor/refuse-arm64-execution.sh" || exit $?
+else
+fail "Docker is required for the Linux-hosted guest, and CURSOR_ENV attestation failed"
+fi

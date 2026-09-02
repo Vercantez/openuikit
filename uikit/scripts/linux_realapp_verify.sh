@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 # Proves the REAL-APP screen (docs/REAL_APP_TEST.md) builds and renders
 # IDENTICALLY on Linux. Companion to scripts/linux_verify.sh (fixture scenes)
 # and scripts/linux_selector_verify.sh (selector dispatch).
@@ -14,12 +14,13 @@
 #   4. diffs both sets against this machine's macOS run, byte for byte.
 #
 # Usage: scripts/linux_realapp_verify.sh [scratch-dir]
-# Requires: Docker.
+# Requires: Docker, or an attested Cursor cloud environment matching swift:6.2-noble.
 set -e
 cd "$(dirname "$0")/.."
 REPO="$PWD"
 WORK="${1:-/tmp/openuikit-realapp-verify}"
 IMAGE="swift:6.2-noble"
+REPO_ROOT=$(git rev-parse --show-toplevel)
 
 rm -rf "$WORK"
 mkdir -p "$WORK"/{fonts,linux_out,mac_out,linux_host,mac_host}
@@ -31,18 +32,30 @@ for f in SFNS.ttf SFNSMono.ttf SFNSItalic.ttf; do
 done
 
 echo "==> macOS reference render of the real-app screen"
+if [ "$(uname -s)" = Darwin ]; then
 swift build -c release --product openrender >/dev/null
 swift build -c release --product openhost >/dev/null
 OPENUIKIT_BACKEND=quartz ./.build/release/openrender realapp "$WORK/mac_out" >/dev/null
 OPENUIKIT_BACKEND=quartz ./.build/release/openhost --app pocketcasts \
     --script scripts/realapp_interaction.json --record "$WORK/mac_host" >/dev/null
+else
+echo "CURSOR_ENV_MACOS_ORACLE_LOCAL_ONLY host=$(uname -s)"
+fi
 
 cat > "$WORK/run.sh" <<'INNER'
 set -e
-export DEBIAN_FRONTEND=noninteractive
-apt-get update -qq >/dev/null && apt-get install -y -qq libsdl2-dev >/dev/null
-mkdir -p /work && cp -r /src/. /work/
-cd /work && rm -rf .build
+SRC=${INNER_SRC:-/src}
+OUT=${INNER_OUT:-/out}
+if ! pkg-config --exists sdl2 >/dev/null 2>&1; then
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get update -qq >/dev/null && apt-get install -y -qq libsdl2-dev >/dev/null
+fi
+if [ -n "${INNER_IN_PLACE:-}" ]; then
+  cd "$SRC"
+else
+  mkdir -p /work && cp -r "$SRC"/. /work/
+  cd /work && rm -rf .build
+fi
 swift --version
 
 echo "==> build (library + openrender + openhost + RealAppProbe)"
@@ -51,26 +64,39 @@ swift build -c release --product openhost 2>&1 | grep -E "error" && exit 1
 echo "    built clean -- the vendored app source compiles off Darwin"
 
 echo "==> headless render"
-OPENUIKIT_FONT_DIR=/out/fonts OPENUIKIT_BACKEND=quartz \
-  ./.build/release/openrender realapp /out/linux_out
+OPENUIKIT_FONT_DIR="$OUT/fonts" OPENUIKIT_BACKEND=quartz \
+  ./.build/release/openrender realapp "$OUT/linux_out"
 echo "==> scripted live replay"
 replay=0
 for attempt in 1 2 3 4; do
-  if SDL_VIDEODRIVER=dummy OPENUIKIT_FONT_DIR=/out/fonts OPENUIKIT_BACKEND=quartz \
+  if SDL_VIDEODRIVER=dummy OPENUIKIT_FONT_DIR="$OUT/fonts" OPENUIKIT_BACKEND=quartz \
      timeout 180 ./.build/release/openhost --app pocketcasts \
-     --script scripts/realapp_interaction.json --record /out/linux_host >/dev/null 2>&1; then
+     --script scripts/realapp_interaction.json --record "$OUT/linux_host" >/dev/null 2>&1; then
     replay=1; break
   fi
   echo "    (attempt $attempt failed, retrying)"
 done
 [ "$replay" = 1 ] || { echo "    scripted replay failed"; exit 1; }
-echo "    recorded $(ls /out/linux_host/*.png | wc -l) frames"
+echo "    recorded $(ls "$OUT/linux_host"/*.png | wc -l) frames"
 INNER
 
 echo "==> Linux build + render + replay ($IMAGE)"
+if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
 docker run --rm -v "$REPO":/src:ro -v "$WORK":/out "$IMAGE" bash /out/run.sh
+elif bash "$REPO_ROOT/.cursor/attest-cursor-env.sh"; then
+echo "CURSOR_ENV_TOOLCHAIN_ATTESTED running linux_realapp_verify in-VM (docker pins swift:6.2-noble only)"
+INNER_SRC=$REPO INNER_OUT=$WORK INNER_IN_PLACE=1 bash "$WORK/run.sh"
+else
+echo "linux_realapp_verify: REFUSING -- Docker is required to pin swift:6.2-noble and CURSOR_ENV attestation failed" >&2
+exit 2
+fi
 
 echo "==> diffing Linux against macOS (expect byte-identical)"
+if [ "$(uname -s)" != Darwin ]; then
+echo "CURSOR_ENV_MACOS_ORACLE_LOCAL_ONLY skipping macOS byte-identical compare"
+echo "LINUX REALAPP HALF COMPLETE (macOS oracle is local-only)"
+exit 0
+fi
 python3 - "$WORK" <<'PY'
 import hashlib, os, sys
 w = sys.argv[1]

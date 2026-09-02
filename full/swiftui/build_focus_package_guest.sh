@@ -375,6 +375,11 @@ grep -Fqx $'file\tpackage/FocusPackageProbe.framework/FocusPackageProbe\t'\
 "$(hash_file "$PROVIDER/FocusPackageProbe")" \
     "$AUDIT/package-runtime-closure.manifest" \
     || die "dynamic Bundle provider is absent from recursive runtime closure"
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    echo "focus_package_guest: compile/link may proceed on this VM; execution cannot" >&2
+    bash "${W:-$(git rev-parse --show-toplevel)}/.cursor/refuse-arm64-execution.sh" \
+        || exit $?
+fi
 (
     cd "$OUT"
     MACHORUN_ROOT="$MRROOT" "$MRROOT/machorun" \

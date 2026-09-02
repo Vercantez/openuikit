@@ -546,6 +546,11 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     > "$AUDIT/runtime-closure.manifest"
 
 echo '== run exact Focus interaction path on Linux/machorun'
+if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    echo "focus_onboarding_guest: compile/link may proceed on this VM; execution cannot" >&2
+    bash "${W:-$(git rev-parse --show-toplevel)}/.cursor/refuse-arm64-execution.sh" \
+        || exit $?
+fi
 (
     cd "$OUT"
     MACHORUN_ROOT="$MRROOT" "$MRROOT/machorun" ./focus_onboarding_guest \

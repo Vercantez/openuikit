@@ -96,6 +96,9 @@ prepare_host() {
             || die "remote materializations and cache must be supplied together"
     fi
     command -v python3 >/dev/null || die "python3 is required"
+    if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+        bash "$SUPPORT_ROOT/.cursor/refuse-arm64-execution.sh" || exit $?
+    fi
     command -v docker >/dev/null || die "docker is required"
     command -v git >/dev/null || die "git is required"
     [ "${#container_image}" -eq 71 ] \
