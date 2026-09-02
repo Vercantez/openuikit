@@ -1,0 +1,42 @@
+{
+  "module": "CoreAudioTypes",
+  "moduleRecord": {
+    "app_coverage_count": 1,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 1,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 122,
+    "iphoneos_runtime_focus_launch_build_rank": 104,
+    "module": "CoreAudioTypes",
+    "occurrence_count": 1,
+    "per_app": {
+      "pocket-casts-ios": {
+        "evidence_sha256": "00b4e69a13e0ab81f55300cdc3d01ad92768ea069839698e8035d7f9db0595a2",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "podcasts/DefaultPlayer.swift"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 122,
+    "byFocusLaunchBuildRelevance": 104
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}
