@@ -1,0 +1,19 @@
+precise	question	risk	reason
+c:objc(cs)GKARC4RandomSource(im)initWithSeed:	What exact RC4 key-scheduling and nextInt packing does Xcode 26.1 GKARC4RandomSource use for a given NSData seed?	randomness	Linux keeps a deterministic ARC4-like stream; Apple-identical sequences are unobserved.
+c:objc(cs)GKLinearCongruentialRandomSource(py)seed	Which LCG multiplier, increment, and output shift does GKLinearCongruentialRandomSource use on iPhoneOS 26.1?	randomness	Only the seed type is in the graph; the recurrence is unobserved.
+c:objc(cs)GKMersenneTwisterRandomSource(im)initWithSeed:	Does Apple's source use MT19937 or MT19937-64, and how is a UInt64 seed expanded?	randomness	Linux uses MT19937-64; Apple tempering is unobserved.
+c:objc(pl)GKRandom(im)nextUniform	Is nextUniform inclusive of 0.0 and/or 1.0 on the Xcode 26.1 runtime?	randomness	Declared until an Apple probe records the endpoint.
+c:objc(cs)GKGraphNode(im)findPathToNode:	Does findPath(to:) return [] or [self] when start === goal on Apple's runtime?	pathfinding	Linux returns an empty array; Apple's edge case is still an oracle item.
+c:objc(cs)GKMeshGraph(im)triangulate	What constrained triangulation does GKMeshGraph.triangulate emit for each triangulationMode?	pathfinding	Linux Bowyer–Watson is not claimed to be Apple CDT.
+c:objc(cs)GKObstacleGraph(im)connectNodeUsingObstacles:	Are visibility nodes placed on expanded obstacle vertices, and is bufferRadius a Minkowski radius?	pathfinding	Connection geometry is unobserved.
+c:objc(cs)GKAgent2D(im)updateWithDeltaTime:	What integration rule and goal blending does GKAgent2D.update(deltaTime:) use?	algorithms	Linux steering exists; Apple-identical motion is unobserved.
+c:objc(cs)GKPerlinNoiseSource(im)initWithFrequency:octaveCount:persistence:lacunarity:seed:	Is Apple's coherent noise Perlin 2002, simplex, or another lattice?	algorithms	Linux fractal noise is deterministic but unverified against GameplayKit.framework.
+c:objc(cs)GKMinmaxStrategist(im)bestMoveForPlayer:	How do optional score/isWin/isLoss combine with GKGameModelMaxScore during search?	algorithms	Linux minimax is an analogue; Apple search is unobserved.
+c:objc(cs)GKScene(cm)sceneWithFileNamed:	What on-disk format does sceneWithFileNamed: parse?	algorithms	Linux returns nil; the archive layout is not in the seed.
+c:objc(cs)GKDecisionTree(im)exportToURL:error:	What schema does export(to:error:) write?	algorithms	Export returns false; format is undocumented in the pinned inputs.
+c:@macro@GK_VERSION	What integer does the Xcode 26.1 GK_VERSION macro expand to?	algorithms	No numeric payload is in the graph; the public var was removed rather than fabricated.
+c:objc(cs)GKNoise(py)gradientColors	How are UIColor gradient stops mapped onto noise values?	algorithms	UIColor is not available in this isolated compile.
+c:objc(cs)GKAgent3D(py)rotation	Is GKAgent3D.rotation exactly simd.matrix_float3x3 / simd_float3x3 column-major layout?	algorithms	Property is compiled only when the simd module is imported; identity is for the EC2 probe.
+c:objc(cs)GKSKNodeComponent(py)node	How does GKSKNodeComponent bind SKNode.entity without a retain cycle?	algorithms	SpriteKit overlays are compiled only when SpriteKit is imported.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GKEntity	What keyed-archive schema does Xcode 26.1 use for GKEntity/GKGraph/GKScene NSSecureCoding?	algorithms	Linux round-trips ouik.gk.linux keys; Apple archive bytes are unobserved.
+module	Must SceneKit and SpriteKit overlay symbols live in libGameplayKit.dylib whenever those modules are present at compile time?	algorithms	Isolated host compile has no SceneKit/SpriteKit; the identity probe records the future ABI requirement.
