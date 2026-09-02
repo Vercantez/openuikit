@@ -51,6 +51,150 @@ EXTERNAL_ENVIRONMENT_RE = re.compile(r"^OPENUIKIT_[A-Z0-9]+(?:_[A-Z0-9]+)*$")
 EXTERNAL_REPOSITORY_RE = re.compile(
     r"^https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+\.git$"
 )
+SYMBOL_GRAPH_SCOPE_PATH = "reference/symbol-graph-scope.json"
+SYMBOL_GRAPH_REPRODUCIBILITY_PATH = (
+    "reference/symbol-graph-reproducibility.json"
+)
+SCOPED_GENERATOR_PATH = "scripts/framework-fanout/generate_seed_v2_scoped.py"
+BASE_V2_GENERATOR_PATH = "scripts/framework-fanout/generate_seed_v2.py"
+SYMBOL_GRAPH_SCOPE_POLICY = (
+    "base-module-and-extension-graphs-with-exact-cross-import-overlay-"
+    "exclusions-v1"
+)
+SYMBOL_GRAPH_SCOPE_KEYS = {
+    "schema",
+    "policy",
+    "requestedModule",
+    "approvedExcludedCrossImportOverlayModules",
+    "includedFiles",
+    "excludedFiles",
+    "includedFileCount",
+    "includedSymbolOccurrenceCount",
+    "includedRelationshipOccurrenceCount",
+    "excludedFileCount",
+    "excludedSymbolOccurrenceCount",
+    "excludedRelationshipOccurrenceCount",
+    "rawExtractorFileCount",
+    "rawExtractorSymbolOccurrenceCount",
+    "rawExtractorRelationshipOccurrenceCount",
+    "sourceGenerator",
+    "baseRelationshipProjection",
+}
+SYMBOL_GRAPH_SCOPE_RECORD_KEYS = {
+    "fileName",
+    "sha256",
+    "symbolCount",
+    "relationshipCount",
+    "graphModule",
+    "bystanders",
+    "crossImportOverlayModule",
+}
+SYMBOL_GRAPH_REPRODUCIBILITY_POLICY = (
+    "three-fresh-extractions-with-raw-volatility-and-stable-derived-evidence-v1"
+)
+BASE_RELATIONSHIP_PROJECTION_POLICY = (
+    "exclude-primary-imported-objc-class-conformsTo-swift-sendable-v1"
+)
+BASE_RELATIONSHIP_PROJECTION_REASON = (
+    "Xcode 26.1 nondeterministically assigns inherited Swift Sendable "
+    "conformance relationships among imported Objective-C MapKit classes"
+)
+PROJECTED_RELATIONSHIP_MULTISET_DOMAIN = (
+    b"OpenUIKit.SymbolGraph.ScopedStableRelationshipProjection.v1\0"
+)
+EXCLUDED_RELATIONSHIP_MULTISET_DOMAIN = (
+    b"OpenUIKit.SymbolGraph.ScopedExcludedRelationshipMultiset.v1\0"
+)
+SENDABLE_TARGETS = {
+    "s:s16SendableMetatypeP": "Swift.SendableMetatype",
+    "s:s8SendableP": "Swift.Sendable",
+}
+CANONICAL_REPRODUCIBILITY_OUTPUT_PATHS = (
+    "reference/public-surface.tsv",
+    "reference/api-digester.json",
+    "reference/api-crosswalk.tsv",
+    "reference/symbol-conflicts.tsv",
+    "reference/tbd-exports.tsv",
+    "reference/sdk-inputs.tsv",
+    "reference/corpus-summary.json",
+    "reference/external-evidence.json",
+)
+BASE_RELATIONSHIP_PROJECTION_KEYS = {
+    "schema",
+    "policy",
+    "reason",
+    "primaryGraphFileName",
+    "targets",
+    "rawRelationshipOccurrenceCount",
+    "rawRelationshipMultisetSHA256",
+    "projectedRelationshipOccurrenceCount",
+    "projectedRelationshipMultisetSHA256",
+    "excludedRelationshipOccurrenceCount",
+    "excludedRelationshipMultisetSHA256",
+    "excludedRows",
+}
+BASE_RELATIONSHIP_PROJECTION_ROW_KEYS = {
+    "relationship",
+    "canonicalSHA256",
+    "source",
+    "target",
+    "targetFallback",
+    "sourceOrigin",
+    "count",
+    "multisetSHA256",
+    "reason",
+}
+REPRODUCIBILITY_KEYS = {
+    "schema",
+    "policy",
+    "requestedModule",
+    "runCount",
+    "minimumRequiredDistinctRawRelationshipHashes",
+    "observedDistinctRawRelationshipHashCount",
+    "canonicalOutputPaths",
+    "stable",
+    "runs",
+}
+REPRODUCIBILITY_RUN_KEYS = {
+    "run",
+    "graphRoot",
+    "includedFiles",
+    "excludedFiles",
+    "extraction",
+    "uniqueSymbolCount",
+    "symbolOccurrenceCount",
+    "symbolMultisetSHA256",
+    "rawRelationshipOccurrenceCount",
+    "rawRelationshipMultisetSHA256",
+    "baseRelationshipProjection",
+    "canonicalOutputs",
+}
+REPRODUCIBILITY_STABLE_KEYS = {
+    "uniqueSymbolCount",
+    "symbolOccurrenceCount",
+    "symbolMultisetSHA256",
+    "projectedRelationshipOccurrenceCount",
+    "projectedRelationshipMultisetSHA256",
+    "canonicalOutputSHA256",
+}
+REPRODUCIBILITY_CANONICAL_OUTPUT_KEYS = {
+    "sourcePath",
+    "retainedPath",
+    "sha256",
+}
+REPRODUCIBILITY_EXTRACTION_KEYS = {
+    "xcodeVersion",
+    "xcodeBuild",
+    "sdkName",
+    "sdkVersion",
+    "target",
+    "symbolGraphExtractorPath",
+    "symbolGraphExtractorSHA256",
+    "symbolGraphExtractorVersion",
+    "commandTemplate",
+    "temporaryPathPolicy",
+    "environmentPolicy",
+}
 LANES = {
     "leaf-full",
     "medium-full",
@@ -364,6 +508,157 @@ def semantic_multiset_sha256(domain: bytes, payloads: Sequence[bytes]) -> str:
     return digest.hexdigest()
 
 
+def compute_base_relationship_projection(
+    documents: Sequence[tuple[str, dict[str, Any]]], module: str
+) -> dict[str, Any]:
+    """Recompute the scoped projection from immutable retained graph objects."""
+
+    primary_name = f"{module}.symbols.json"
+    primary = next(
+        (graph for file_name, graph in documents if file_name == primary_name), None
+    )
+    if primary is None:
+        raise ValueError(f"scoped primary graph is missing: {primary_name}")
+    symbols = primary.get("symbols")
+    if not isinstance(symbols, list):
+        raise ValueError("scoped primary graph symbols must be a list")
+    imported_objc_classes: set[str] = set()
+    for index, symbol in enumerate(symbols):
+        if not isinstance(symbol, dict):
+            raise ValueError(f"scoped primary symbol[{index}] must be an object")
+        identifier = symbol.get("identifier")
+        precise = identifier.get("precise") if isinstance(identifier, dict) else None
+        kind = symbol.get("kind")
+        kind_identifier = kind.get("identifier") if isinstance(kind, dict) else None
+        if (
+            isinstance(precise, str)
+            and precise.startswith("c:objc(cs)")
+            and kind_identifier == "swift.class"
+        ):
+            imported_objc_classes.add(precise)
+
+    raw_payloads: list[bytes] = []
+    projected_payloads: list[bytes] = []
+    excluded_payloads: list[bytes] = []
+    excluded_by_payload: dict[bytes, tuple[dict[str, Any], int]] = {}
+    for file_name, graph in documents:
+        relationships = graph.get("relationships")
+        if not isinstance(relationships, list):
+            raise ValueError(f"scoped graph relationships must be a list: {file_name}")
+        for index, relationship in enumerate(relationships):
+            if not isinstance(relationship, dict):
+                raise ValueError(
+                    f"scoped relationship must be an object: {file_name}[{index}]"
+                )
+            payload = canonical_json_bytes(
+                relationship,
+                label=f"scoped relationship {file_name}[{index}]",
+            )
+            raw_payloads.append(payload)
+            is_volatile = (
+                file_name == primary_name
+                and relationship.get("kind") == "conformsTo"
+                and relationship.get("target") in SENDABLE_TARGETS
+                and relationship.get("source") in imported_objc_classes
+            )
+            if not is_volatile:
+                projected_payloads.append(payload)
+                continue
+            excluded_payloads.append(payload)
+            previous = excluded_by_payload.get(payload)
+            if previous is None:
+                excluded_by_payload[payload] = (relationship, 1)
+            else:
+                excluded_by_payload[payload] = (previous[0], previous[1] + 1)
+
+    excluded_rows: list[dict[str, Any]] = []
+    for payload in sorted(excluded_by_payload):
+        relationship, count = excluded_by_payload[payload]
+        excluded_rows.append(
+            {
+                "relationship": relationship,
+                "canonicalSHA256": hashlib.sha256(payload).hexdigest(),
+                "source": relationship["source"],
+                "target": relationship["target"],
+                "targetFallback": relationship.get("targetFallback"),
+                "sourceOrigin": relationship.get("sourceOrigin"),
+                "count": count,
+                "multisetSHA256": semantic_multiset_sha256(
+                    EXCLUDED_RELATIONSHIP_MULTISET_DOMAIN, [payload] * count
+                ),
+                "reason": BASE_RELATIONSHIP_PROJECTION_REASON,
+            }
+        )
+    return {
+        "schema": 1,
+        "policy": BASE_RELATIONSHIP_PROJECTION_POLICY,
+        "reason": BASE_RELATIONSHIP_PROJECTION_REASON,
+        "primaryGraphFileName": primary_name,
+        "targets": [
+            {"precise": precise, "fallback": SENDABLE_TARGETS[precise]}
+            for precise in sorted(SENDABLE_TARGETS)
+        ],
+        "rawRelationshipOccurrenceCount": len(raw_payloads),
+        "rawRelationshipMultisetSHA256": semantic_multiset_sha256(
+            RELATIONSHIP_MULTISET_DOMAIN, raw_payloads
+        ),
+        "projectedRelationshipOccurrenceCount": len(projected_payloads),
+        "projectedRelationshipMultisetSHA256": semantic_multiset_sha256(
+            PROJECTED_RELATIONSHIP_MULTISET_DOMAIN, projected_payloads
+        ),
+        "excludedRelationshipOccurrenceCount": len(excluded_payloads),
+        "excludedRelationshipMultisetSHA256": semantic_multiset_sha256(
+            EXCLUDED_RELATIONSHIP_MULTISET_DOMAIN, excluded_payloads
+        ),
+        "excludedRows": excluded_rows,
+    }
+
+
+def compute_scoped_graph_summary(
+    documents: Sequence[tuple[str, dict[str, Any]]], module: str
+) -> dict[str, Any]:
+    precise_ids: set[str] = set()
+    symbol_payloads: list[bytes] = []
+    symbol_occurrence_count = 0
+    for file_name, graph in documents:
+        symbols = graph.get("symbols")
+        if not isinstance(symbols, list):
+            raise ValueError(f"scoped graph symbols must be a list: {file_name}")
+        for index, symbol in enumerate(symbols):
+            if not isinstance(symbol, dict):
+                raise ValueError(
+                    f"scoped symbol must be an object: {file_name}[{index}]"
+                )
+            identifier = symbol.get("identifier")
+            precise = identifier.get("precise") if isinstance(identifier, dict) else None
+            if not isinstance(precise, str) or not precise:
+                raise ValueError(
+                    f"scoped symbol lacks precise identifier: {file_name}[{index}]"
+                )
+            precise_ids.add(precise)
+            symbol_payloads.append(
+                canonical_json_bytes(
+                    symbol, label=f"scoped symbol {file_name}[{index}]"
+                )
+            )
+            symbol_occurrence_count += 1
+    projection = compute_base_relationship_projection(documents, module)
+    return {
+        "uniqueSymbolCount": len(precise_ids),
+        "symbolOccurrenceCount": symbol_occurrence_count,
+        "symbolMultisetSHA256": semantic_multiset_sha256(
+            SYMBOL_MULTISET_DOMAIN, symbol_payloads
+        ),
+        "rawRelationshipOccurrenceCount": projection[
+            "rawRelationshipOccurrenceCount"
+        ],
+        "rawRelationshipMultisetSHA256": projection[
+            "rawRelationshipMultisetSHA256"
+        ],
+        "baseRelationshipProjection": projection,
+    }
+
+
 def symbol_surface_fields(precise: str, symbol: dict[str, Any]) -> list[str]:
     kind_object = symbol.get("kind")
     kind = kind_object.get("identifier", "") if isinstance(kind_object, dict) else ""
@@ -639,6 +934,40 @@ class Validator:
             self._framework_file("reference/external-evidence.json")
         self._validate_framework_metadata(metadata)
         graph_files = self._validate_symbol_graphs(metadata)
+        scope_candidate = self._framework_file(
+            SYMBOL_GRAPH_SCOPE_PATH, must_exist=False
+        )
+        reproducibility_candidate = self._framework_file(
+            SYMBOL_GRAPH_REPRODUCIBILITY_PATH, must_exist=False
+        )
+        has_scope = scope_candidate.exists() or scope_candidate.is_symlink()
+        has_reproducibility = (
+            reproducibility_candidate.exists()
+            or reproducibility_candidate.is_symlink()
+        )
+        provenance = metadata.get("provenance")
+        generator_path = (
+            provenance.get("generatorPath") if isinstance(provenance, dict) else None
+        )
+        if generator_path == SCOPED_GENERATOR_PATH and not has_scope:
+            self.error(
+                f"scoped generator requires {SYMBOL_GRAPH_SCOPE_PATH}"
+            )
+        elif has_scope and generator_path != SCOPED_GENERATOR_PATH:
+            self.error(
+                "symbol-graph scope provenance requires the scoped generator"
+            )
+        if generator_path == SCOPED_GENERATOR_PATH and not has_reproducibility:
+            self.error(
+                f"scoped generator requires {SYMBOL_GRAPH_REPRODUCIBILITY_PATH}"
+            )
+        elif has_reproducibility and generator_path != SCOPED_GENERATOR_PATH:
+            self.error(
+                "symbol-graph reproducibility provenance requires the scoped generator"
+            )
+        if has_scope:
+            self._framework_file(SYMBOL_GRAPH_SCOPE_PATH)
+            self._validate_symbol_graph_scope(metadata, graph_files)
         self._validate_public_surface(metadata)
         if framework_schema == 2:
             self._validate_api_digester(metadata)
@@ -1320,6 +1649,651 @@ class Validator:
                     "reference/symbol-conflicts.tsv does not match raw graph conflicts"
                 )
         return graph_paths
+
+    def _validate_symbol_graph_scope(
+        self, metadata: dict[str, Any], graph_paths: set[str]
+    ) -> None:
+        scope = self._read_strict_json(SYMBOL_GRAPH_SCOPE_PATH)
+        if not isinstance(scope, dict) or set(scope) != SYMBOL_GRAPH_SCOPE_KEYS:
+            self.fatal("symbol-graph scope provenance has the wrong schema")
+        if scope.get("schema") != 1:
+            self.error("symbol-graph scope schema must be 1")
+        if scope.get("policy") != SYMBOL_GRAPH_SCOPE_POLICY:
+            self.error("symbol-graph scope policy differs")
+        module = metadata.get("module")
+        if scope.get("requestedModule") != module:
+            self.error("symbol-graph scope requested module differs")
+
+        approved = scope.get("approvedExcludedCrossImportOverlayModules")
+        if (
+            not isinstance(approved, list)
+            or not approved
+            or any(
+                not isinstance(value, str) or not MODULE_RE.fullmatch(value)
+                for value in approved
+            )
+            or approved != sorted(set(approved))
+            or module in approved
+        ):
+            self.fatal(
+                "symbol-graph scope approved exclusions must be sorted exact modules"
+            )
+
+        source_generator = scope.get("sourceGenerator")
+        if (
+            not isinstance(source_generator, dict)
+            or set(source_generator) != {"path", "sha256"}
+            or source_generator.get("path") != BASE_V2_GENERATOR_PATH
+            or not isinstance(source_generator.get("sha256"), str)
+            or not SHA256_RE.fullmatch(source_generator["sha256"])
+        ):
+            self.fatal("symbol-graph scope source generator provenance differs")
+        try:
+            source_digest = self._sha256(
+                self._repo_file(BASE_V2_GENERATOR_PATH)
+            )
+        except InvalidSeed:
+            source_digest = None
+        if source_digest is not None and source_generator["sha256"] != source_digest:
+            self.error("symbol-graph scope source generator digest differs")
+
+        graph_manifest = self._read_json("reference/symbol-graphs.json")
+        if not isinstance(graph_manifest, dict) or not isinstance(
+            graph_manifest.get("files"), list
+        ):
+            self.fatal("symbol graph manifest is unavailable to scope validator")
+        expected_included: list[dict[str, Any]] = []
+        primary_documents: list[tuple[str, dict[str, Any]]] = []
+        for record in graph_manifest["files"]:
+            if not isinstance(record, dict):
+                self.fatal("symbol graph manifest file record is malformed")
+            relative = record.get("path")
+            if not isinstance(relative, str) or relative not in graph_paths:
+                self.fatal("symbol graph scope encountered an unknown graph path")
+            graph = self._read_strict_json(relative)
+            if not isinstance(graph, dict):
+                self.fatal(f"scoped graph root is not an object: {relative}")
+            graph_module = graph.get("module")
+            if not isinstance(graph_module, dict):
+                self.fatal(f"scoped graph module is malformed: {relative}")
+            bystanders = graph_module.get("bystanders", [])
+            if (
+                not isinstance(bystanders, list)
+                or any(
+                    not isinstance(value, str) or not MODULE_RE.fullmatch(value)
+                    for value in bystanders
+                )
+                or bystanders
+            ):
+                self.error(
+                    f"in-scope graph must not contain cross-import bystanders: {relative}"
+                )
+            file_name = PurePosixPath(relative).name
+            suffix = ".symbols.json"
+            declaring = (
+                file_name[: -len(suffix)].split("@", 1)[0]
+                if file_name.endswith(suffix)
+                else ""
+            )
+            if declaring != module:
+                self.error(
+                    f"in-scope graph is not declared by base module {module}: {relative}"
+                )
+            expected_included.append(
+                {
+                    "fileName": file_name,
+                    "sha256": record.get("sha256"),
+                    "symbolCount": record.get("symbolCount"),
+                    "relationshipCount": record.get("relationshipCount"),
+                    "graphModule": graph_module.get("name"),
+                    "bystanders": [],
+                    "crossImportOverlayModule": None,
+                }
+            )
+            primary_documents.append((file_name, graph))
+
+        included = scope.get("includedFiles")
+        if included != expected_included:
+            self.error(
+                "symbol-graph scope included records do not match retained raw graphs"
+            )
+
+        excluded = scope.get("excludedFiles")
+        if not isinstance(excluded, list) or not excluded:
+            self.fatal("symbol-graph scope must record excluded graph files")
+        excluded_names: list[str] = []
+        observed_modules: set[str] = set()
+        excluded_symbol_count = 0
+        excluded_relationship_count = 0
+        for index, record in enumerate(excluded):
+            if (
+                not isinstance(record, dict)
+                or set(record) != SYMBOL_GRAPH_SCOPE_RECORD_KEYS
+            ):
+                self.fatal(
+                    f"symbol-graph scope excluded record {index} has wrong keys"
+                )
+            file_name = record.get("fileName")
+            digest = record.get("sha256")
+            symbol_count = record.get("symbolCount")
+            relationship_count = record.get("relationshipCount")
+            graph_module = record.get("graphModule")
+            bystanders = record.get("bystanders")
+            overlay_module = record.get("crossImportOverlayModule")
+            if (
+                not isinstance(file_name, str)
+                or PurePosixPath(file_name).name != file_name
+                or not file_name.endswith(".symbols.json")
+                or "@" not in file_name
+            ):
+                self.fatal(
+                    f"symbol-graph scope excluded record {index} has unsafe name"
+                )
+            declaring = file_name[: -len(".symbols.json")].split("@", 1)[0]
+            if (
+                not isinstance(overlay_module, str)
+                or declaring != overlay_module
+                or overlay_module not in approved
+            ):
+                self.error(
+                    f"symbol-graph scope excluded record {index} is not approved"
+                )
+            if graph_module != module:
+                self.error(
+                    f"symbol-graph scope excluded record {index} graph module differs"
+                )
+            if (
+                not isinstance(bystanders, list)
+                or not bystanders
+                or any(
+                    not isinstance(value, str) or not MODULE_RE.fullmatch(value)
+                    for value in bystanders
+                )
+                or bystanders != sorted(set(bystanders))
+            ):
+                self.error(
+                    f"symbol-graph scope excluded record {index} bystanders differ"
+                )
+            if not isinstance(digest, str) or not SHA256_RE.fullmatch(digest):
+                self.error(
+                    f"symbol-graph scope excluded record {index} hash is invalid"
+                )
+            if not is_int(symbol_count) or symbol_count < 0:
+                self.error(
+                    f"symbol-graph scope excluded record {index} symbol count is invalid"
+                )
+            else:
+                excluded_symbol_count += symbol_count
+            if not is_int(relationship_count) or relationship_count < 0:
+                self.error(
+                    f"symbol-graph scope excluded record {index} relationship count is invalid"
+                )
+            else:
+                excluded_relationship_count += relationship_count
+            excluded_names.append(file_name)
+            if isinstance(overlay_module, str):
+                observed_modules.add(overlay_module)
+            excluded_path = self._framework_file(
+                f"reference/symbol-graphs/{file_name}", must_exist=False
+            )
+            if excluded_path.exists() or excluded_path.is_symlink():
+                self.error(
+                    f"excluded cross-import graph remains in base dossier: {file_name}"
+                )
+
+        if excluded_names != sorted(set(excluded_names)):
+            self.error("symbol-graph scope excluded file records must be sorted and unique")
+        if observed_modules != set(approved):
+            self.error(
+                "symbol-graph scope approved modules do not equal observed exclusions"
+            )
+
+        included_symbol_count = sum(
+            record.get("symbolCount", 0)
+            for record in expected_included
+            if is_int(record.get("symbolCount"))
+        )
+        included_relationship_count = sum(
+            record.get("relationshipCount", 0)
+            for record in expected_included
+            if is_int(record.get("relationshipCount"))
+        )
+        expected_counts = {
+            "includedFileCount": len(expected_included),
+            "includedSymbolOccurrenceCount": included_symbol_count,
+            "includedRelationshipOccurrenceCount": included_relationship_count,
+            "excludedFileCount": len(excluded),
+            "excludedSymbolOccurrenceCount": excluded_symbol_count,
+            "excludedRelationshipOccurrenceCount": excluded_relationship_count,
+            "rawExtractorFileCount": len(expected_included) + len(excluded),
+            "rawExtractorSymbolOccurrenceCount": (
+                included_symbol_count + excluded_symbol_count
+            ),
+            "rawExtractorRelationshipOccurrenceCount": (
+                included_relationship_count + excluded_relationship_count
+            ),
+        }
+        for key, expected in expected_counts.items():
+            if scope.get(key) != expected:
+                self.error(
+                    f"symbol-graph scope {key} differs: "
+                    f"expected {expected}, got {scope.get(key)!r}"
+                )
+
+        try:
+            primary_projection = compute_base_relationship_projection(
+                primary_documents, str(module)
+            )
+        except (KeyError, ValueError) as exc:
+            self.fatal(f"cannot recompute scoped relationship projection: {exc}")
+        recorded_projection = scope.get("baseRelationshipProjection")
+        if (
+            not isinstance(recorded_projection, dict)
+            or set(recorded_projection) != BASE_RELATIONSHIP_PROJECTION_KEYS
+        ):
+            self.fatal("symbol-graph scope projection has the wrong schema")
+        for index, row in enumerate(recorded_projection.get("excludedRows", [])):
+            if (
+                not isinstance(row, dict)
+                or set(row) != BASE_RELATIONSHIP_PROJECTION_ROW_KEYS
+            ):
+                self.fatal(
+                    f"symbol-graph scope projection row {index} has the wrong schema"
+                )
+        if recorded_projection != primary_projection:
+            self.error(
+                "symbol-graph scope projection does not match immutable raw graphs"
+            )
+        self._validate_symbol_graph_reproducibility(
+            metadata,
+            scope,
+            primary_documents,
+            expected_included,
+        )
+
+    def _validate_symbol_graph_reproducibility(
+        self,
+        metadata: dict[str, Any],
+        scope: dict[str, Any],
+        primary_documents: list[tuple[str, dict[str, Any]]],
+        primary_included: list[dict[str, Any]],
+    ) -> None:
+        document = self._read_strict_json(SYMBOL_GRAPH_REPRODUCIBILITY_PATH)
+        if not isinstance(document, dict) or set(document) != REPRODUCIBILITY_KEYS:
+            self.fatal("symbol-graph reproducibility provenance has the wrong schema")
+        if document.get("schema") != 1:
+            self.error("symbol-graph reproducibility schema must be 1")
+        if document.get("policy") != SYMBOL_GRAPH_REPRODUCIBILITY_POLICY:
+            self.error("symbol-graph reproducibility policy differs")
+        module = metadata.get("module")
+        if document.get("requestedModule") != module:
+            self.error("symbol-graph reproducibility module differs")
+        if document.get("canonicalOutputPaths") != list(
+            CANONICAL_REPRODUCIBILITY_OUTPUT_PATHS
+        ):
+            self.error("symbol-graph reproducibility canonical output paths differ")
+        if document.get("minimumRequiredDistinctRawRelationshipHashes") != 2:
+            self.error(
+                "symbol-graph reproducibility raw-volatility minimum must be 2"
+            )
+
+        runs = document.get("runs")
+        if not isinstance(runs, list) or len(runs) < 3:
+            self.fatal("symbol-graph reproducibility requires at least three runs")
+        if document.get("runCount") != len(runs):
+            self.error("symbol-graph reproducibility runCount differs")
+
+        provenance = metadata.get("provenance")
+        if not isinstance(provenance, dict):
+            self.fatal("framework provenance is unavailable to reproducibility validator")
+        extraction_keys = (
+            "xcodeVersion",
+            "xcodeBuild",
+            "sdkName",
+            "sdkVersion",
+            "target",
+            "symbolGraphExtractorPath",
+            "symbolGraphExtractorSHA256",
+            "symbolGraphExtractorVersion",
+        )
+        expected_extraction = {key: provenance.get(key) for key in extraction_keys}
+        expected_extraction["commandTemplate"] = [
+            "{symbolGraphExtractorPath}",
+            "-module-name",
+            module,
+            "-target",
+            provenance.get("target"),
+            "-sdk",
+            "{iPhoneOSSDKRoot}",
+            "-minimum-access-level",
+            "public",
+            "-module-cache-path",
+            "{freshTemporaryModuleCache}",
+            "-output-dir",
+            "{freshTemporaryOutputDirectory}",
+        ]
+        expected_extraction["temporaryPathPolicy"] = (
+            "fresh-private-paths-redacted-with-explicit-command-placeholders-v1"
+        )
+        expected_extraction["environmentPolicy"] = (
+            "generate_seed_v2.prepare_clean_environment-v1"
+        )
+
+        recomputed_runs: list[dict[str, Any]] = []
+        raw_hashes: set[str] = set()
+        for index, run in enumerate(runs, start=1):
+            if not isinstance(run, dict) or set(run) != REPRODUCIBILITY_RUN_KEYS:
+                self.fatal(
+                    f"symbol-graph reproducibility run {index} has the wrong schema"
+                )
+            if run.get("run") != index:
+                self.error(
+                    "symbol-graph reproducibility runs must be consecutively numbered"
+                )
+            expected_graph_root = (
+                "reference/symbol-graphs"
+                if index == 1
+                else f"reference/reproducibility/run-{index}/symbol-graphs"
+            )
+            if run.get("graphRoot") != expected_graph_root:
+                self.error(
+                    f"symbol-graph reproducibility run {index} graph root differs"
+                )
+
+            documents_for_run: list[tuple[str, dict[str, Any]]] = []
+            included = run.get("includedFiles")
+            if not isinstance(included, list) or not included:
+                self.fatal(
+                    f"symbol-graph reproducibility run {index} included files differ"
+                )
+            names: list[str] = []
+            expected_records: list[dict[str, Any]] = []
+            for record_index, record in enumerate(included):
+                if (
+                    not isinstance(record, dict)
+                    or set(record) != SYMBOL_GRAPH_SCOPE_RECORD_KEYS
+                ):
+                    self.fatal(
+                        "symbol-graph reproducibility included record has wrong schema: "
+                        f"run={index} record={record_index}"
+                    )
+                file_name = record.get("fileName")
+                if (
+                    not isinstance(file_name, str)
+                    or PurePosixPath(file_name).name != file_name
+                    or not file_name.endswith(".symbols.json")
+                ):
+                    self.fatal(
+                        f"symbol-graph reproducibility run {index} has unsafe graph name"
+                    )
+                relative = f"{expected_graph_root}/{file_name}"
+                graph_path = self._framework_file(relative)
+                graph = self._read_strict_json(relative)
+                if not isinstance(graph, dict):
+                    self.fatal(
+                        f"symbol-graph reproducibility graph is not an object: {relative}"
+                    )
+                graph_module = graph.get("module")
+                symbols = graph.get("symbols")
+                relationships = graph.get("relationships")
+                if (
+                    not isinstance(graph_module, dict)
+                    or graph_module.get("name") != module
+                    or not isinstance(symbols, list)
+                    or not isinstance(relationships, list)
+                ):
+                    self.fatal(
+                        f"symbol-graph reproducibility graph structure differs: {relative}"
+                    )
+                bystanders = graph_module.get("bystanders", [])
+                if bystanders != []:
+                    self.error(
+                        f"reproducibility base graph has cross-import bystanders: {relative}"
+                    )
+                expected_record = {
+                    "fileName": file_name,
+                    "sha256": self._sha256(graph_path),
+                    "symbolCount": len(symbols),
+                    "relationshipCount": len(relationships),
+                    "graphModule": module,
+                    "bystanders": [],
+                    "crossImportOverlayModule": None,
+                }
+                expected_records.append(expected_record)
+                documents_for_run.append((file_name, graph))
+                names.append(file_name)
+            if names != sorted(set(names)):
+                self.error(
+                    f"symbol-graph reproducibility run {index} graphs are not sorted/unique"
+                )
+            graph_directory = self.framework / expected_graph_root  # type: ignore[operator]
+            observed_names = sorted(
+                path.name for path in graph_directory.iterdir() if path.is_file()
+            )
+            if observed_names != names:
+                self.error(
+                    f"symbol-graph reproducibility run {index} graph closure differs"
+                )
+            if expected_records != included:
+                self.error(
+                    f"symbol-graph reproducibility run {index} graph records differ"
+                )
+            if index == 1:
+                if documents_for_run != primary_documents:
+                    self.error(
+                        "symbol-graph reproducibility primary documents differ from scope"
+                    )
+                if included != primary_included:
+                    self.error(
+                        "symbol-graph reproducibility primary records differ from scope"
+                    )
+
+            excluded = run.get("excludedFiles")
+            if not isinstance(excluded, list) or not excluded:
+                self.fatal(
+                    f"symbol-graph reproducibility run {index} exclusions are missing"
+                )
+            self._validate_reproducibility_exclusions(
+                excluded,
+                scope.get("approvedExcludedCrossImportOverlayModules"),
+                str(module),
+                index,
+            )
+            if index == 1 and excluded != scope.get("excludedFiles"):
+                self.error(
+                    "symbol-graph reproducibility primary exclusions differ from scope"
+                )
+
+            extraction = run.get("extraction")
+            if (
+                not isinstance(extraction, dict)
+                or set(extraction) != REPRODUCIBILITY_EXTRACTION_KEYS
+            ):
+                self.fatal(
+                    f"symbol-graph reproducibility run {index} extraction schema differs"
+                )
+            if extraction != expected_extraction:
+                self.error(
+                    f"symbol-graph reproducibility run {index} extraction provenance differs"
+                )
+
+            try:
+                summary = compute_scoped_graph_summary(
+                    documents_for_run, str(module)
+                )
+            except (KeyError, ValueError) as exc:
+                self.fatal(
+                    f"cannot recompute symbol-graph reproducibility run {index}: {exc}"
+                )
+            for key in (
+                "uniqueSymbolCount",
+                "symbolOccurrenceCount",
+                "symbolMultisetSHA256",
+                "rawRelationshipOccurrenceCount",
+                "rawRelationshipMultisetSHA256",
+                "baseRelationshipProjection",
+            ):
+                if run.get(key) != summary[key]:
+                    self.error(
+                        f"symbol-graph reproducibility run {index} {key} differs"
+                    )
+            raw_hashes.add(summary["rawRelationshipMultisetSHA256"])
+
+            outputs = run.get("canonicalOutputs")
+            if not isinstance(outputs, list):
+                self.fatal(
+                    f"symbol-graph reproducibility run {index} canonical outputs differ"
+                )
+            expected_output_records: list[dict[str, str]] = []
+            for source_path in CANONICAL_REPRODUCIBILITY_OUTPUT_PATHS:
+                retained_path = (
+                    source_path
+                    if index == 1
+                    else (
+                        f"reference/reproducibility/run-{index}/canonical/"
+                        f"{PurePosixPath(source_path).name}"
+                    )
+                )
+                retained_file = self._framework_file(retained_path)
+                expected_output_records.append(
+                    {
+                        "sourcePath": source_path,
+                        "retainedPath": retained_path,
+                        "sha256": self._sha256(retained_file),
+                    }
+                )
+            if outputs != expected_output_records:
+                self.error(
+                    f"symbol-graph reproducibility run {index} canonical output records differ"
+                )
+            recomputed_runs.append(
+                summary
+                | {
+                    "canonicalOutputSHA256": {
+                        record["sourcePath"]: record["sha256"]
+                        for record in expected_output_records
+                    }
+                }
+            )
+
+        distinct_count = len(raw_hashes)
+        if document.get("observedDistinctRawRelationshipHashCount") != distinct_count:
+            self.error(
+                "symbol-graph reproducibility distinct raw hash count differs"
+            )
+        if distinct_count < 2:
+            self.error(
+                "symbol-graph reproducibility does not prove raw relationship volatility"
+            )
+
+        first = recomputed_runs[0]
+        stable = {
+            "uniqueSymbolCount": first["uniqueSymbolCount"],
+            "symbolOccurrenceCount": first["symbolOccurrenceCount"],
+            "symbolMultisetSHA256": first["symbolMultisetSHA256"],
+            "projectedRelationshipOccurrenceCount": first[
+                "baseRelationshipProjection"
+            ]["projectedRelationshipOccurrenceCount"],
+            "projectedRelationshipMultisetSHA256": first[
+                "baseRelationshipProjection"
+            ]["projectedRelationshipMultisetSHA256"],
+            "canonicalOutputSHA256": first["canonicalOutputSHA256"],
+        }
+        for index, result in enumerate(recomputed_runs[1:], start=2):
+            for key in (
+                "uniqueSymbolCount",
+                "symbolOccurrenceCount",
+                "symbolMultisetSHA256",
+            ):
+                if result[key] != first[key]:
+                    self.error(
+                        f"symbol-graph reproducibility run {index} is unstable for {key}"
+                    )
+            if (
+                result["baseRelationshipProjection"][
+                    "projectedRelationshipOccurrenceCount"
+                ]
+                != stable["projectedRelationshipOccurrenceCount"]
+                or result["baseRelationshipProjection"][
+                    "projectedRelationshipMultisetSHA256"
+                ]
+                != stable["projectedRelationshipMultisetSHA256"]
+            ):
+                self.error(
+                    f"symbol-graph reproducibility run {index} projected relationships differ"
+                )
+            if result["canonicalOutputSHA256"] != stable["canonicalOutputSHA256"]:
+                self.error(
+                    f"symbol-graph reproducibility run {index} canonical outputs differ"
+                )
+        recorded_stable = document.get("stable")
+        if (
+            not isinstance(recorded_stable, dict)
+            or set(recorded_stable) != REPRODUCIBILITY_STABLE_KEYS
+        ):
+            self.fatal("symbol-graph reproducibility stable claim has wrong schema")
+        if recorded_stable != stable:
+            self.error(
+                "symbol-graph reproducibility stable claim does not match retained evidence"
+            )
+
+    def _validate_reproducibility_exclusions(
+        self,
+        excluded: list[Any],
+        approved_value: Any,
+        module: str,
+        run_number: int,
+    ) -> None:
+        approved = approved_value if isinstance(approved_value, list) else []
+        names: list[str] = []
+        observed_modules: set[str] = set()
+        for index, record in enumerate(excluded):
+            if (
+                not isinstance(record, dict)
+                or set(record) != SYMBOL_GRAPH_SCOPE_RECORD_KEYS
+            ):
+                self.fatal(
+                    "symbol-graph reproducibility excluded record has wrong schema: "
+                    f"run={run_number} record={index}"
+                )
+            file_name = record.get("fileName")
+            overlay = record.get("crossImportOverlayModule")
+            bystanders = record.get("bystanders")
+            if (
+                not isinstance(file_name, str)
+                or PurePosixPath(file_name).name != file_name
+                or not file_name.endswith(".symbols.json")
+                or "@" not in file_name
+                or not isinstance(overlay, str)
+                or file_name[: -len(".symbols.json")].split("@", 1)[0] != overlay
+                or overlay not in approved
+                or record.get("graphModule") != module
+                or not isinstance(bystanders, list)
+                or not bystanders
+                or bystanders != sorted(set(bystanders))
+                or any(
+                    not isinstance(value, str) or not MODULE_RE.fullmatch(value)
+                    for value in bystanders
+                )
+                or not isinstance(record.get("sha256"), str)
+                or not SHA256_RE.fullmatch(record["sha256"])
+                or not is_int(record.get("symbolCount"))
+                or record["symbolCount"] < 0
+                or not is_int(record.get("relationshipCount"))
+                or record["relationshipCount"] < 0
+            ):
+                self.error(
+                    "symbol-graph reproducibility exclusion cannot be reclassified: "
+                    f"run={run_number} record={index}"
+                )
+            if isinstance(file_name, str):
+                names.append(file_name)
+            if isinstance(overlay, str):
+                observed_modules.add(overlay)
+        if names != sorted(set(names)) or observed_modules != set(approved):
+            self.error(
+                f"symbol-graph reproducibility run {run_number} exclusion closure differs"
+            )
 
     def _validate_public_surface(self, metadata: dict[str, Any]) -> None:
         rows = self._read_tsv(str(metadata.get("publicSurface")), SURFACE_HEADER)
