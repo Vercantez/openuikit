@@ -10,13 +10,15 @@
 # list or a stale backup. So: link once to find out what is undefined, then
 # stub exactly that.
 set -uo pipefail
+# shellcheck disable=SC1091
+. "$(cd "$(dirname "$0")" && pwd)/guest_arch.inc"
 SDK=/work/sdk/MacOSX.sdk
 
-clang -target arm64-apple-macos13.0 -isysroot $SDK -Os -c /repo/tests/probe_sysctl.c \
+clang -target "$TRIPLE" -isysroot $SDK -Os -c /repo/tests/probe_sysctl.c \
   -o /work/probe_sysctl.o 2>/tmp/probe.err || { echo "PROBE BUILD FAILED"; grep -m3 error: /tmp/probe.err; exit 2; }
 
 # Pass 1: what is actually undefined, with the probe and real objects in place.
-clang -target arm64-apple-macos13.0 -isysroot $SDK -fuse-ld=lld -B /usr/lib/llvm-18/bin \
+clang -target "$TRIPLE" -isysroot $SDK -fuse-ld=lld -B /usr/lib/llvm-18/bin \
   -nostdlib -dynamiclib -Wl,--error-limit=0 \
   -L$SDK/usr/lib -L/work/lib \
   /work/probe_sysctl.o /work/cfobjc/obj/*.o /work/nscfobj/*.o \
@@ -66,10 +68,10 @@ grep -v OBJC_CLASS /work/stub-data.txt | while read s; do i=$((i+1)); echo "void
 i=0
 while read -r s; do i=$((i+1)); echo "void sf_$i(void) __asm__(\"_$s\");"; echo "void sf_$i(void){say(\"STUB CALLED: $s\n\");abort();}"; done < /work/stub-func-active.txt
 } > /work/cfstubs.m
-clang -target arm64-apple-macos13.0 -isysroot $SDK -fobjc-runtime=macosx-13.0 -fno-objc-arc \
+clang -target "$TRIPLE" -isysroot $SDK -fobjc-runtime=macosx-13.0 -fno-objc-arc \
   -Wno-objc-root-class -Os -c /work/cfstubs.m -o /work/cfstubs.o 2>/tmp/st.err || { echo "STUB BUILD FAILED"; grep -m3 error: /tmp/st.err; exit 2; }
 
-clang -target arm64-apple-macos13.0 -isysroot $SDK -fuse-ld=lld -B /usr/lib/llvm-18/bin \
+clang -target "$TRIPLE" -isysroot $SDK -fuse-ld=lld -B /usr/lib/llvm-18/bin \
   -nostdlib -dynamiclib -install_name /usr/lib/libCFTest.dylib -Wl,--error-limit=0 \
   -Wl,-undefined,dynamic_lookup -L$SDK/usr/lib -L/work/lib \
   /work/probe_sysctl.o /work/cfobjc/obj/*.o /work/nscfobj/*.o /work/cfstubs.o \

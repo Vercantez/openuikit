@@ -16,10 +16,10 @@ set -euo pipefail
 
 W=${W:-/work}
 R=${R:-/repo}
+# shellcheck disable=SC1091
+. "$(cd "$(dirname "$0")" && pwd)/guest_arch.inc"
 SDK=${SDK:-$W/fe/sysroot}
 LLD=${LLD_BIN:-/usr/lib/llvm-18/bin}
-TRIPLE=${TRIPLE:-arm64-apple-macos13.0}
-COMPILE_TRIPLE=${COMPILE_TRIPLE:-arm64-apple-macos15.0}
 OUT=${OUT:-$W/bin/ud_score_guest}
 GEN=${GEN:-$W/oracle/GuestGolden.swift}
 
