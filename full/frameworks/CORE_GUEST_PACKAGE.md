@@ -50,16 +50,15 @@ Run the builder inside the pinned Linux/aarch64 image:
 bash full/frameworks/build_core_guest_package.sh \
   --output-root /w/build/core-package-NEW \
   --expected-support-commit 40_LOWERCASE_HEX \
-  --expected-support-tree 40_LOWERCASE_HEX \
-  --uikit-checkout /uikit \
-  --expected-uikit-commit 40_LOWERCASE_HEX \
-  --expected-uikit-tree 40_LOWERCASE_HEX
+  --expected-support-tree 40_LOWERCASE_HEX
 ```
 
 `--output-root` must be a nonexistent direct child of `/w/build`. Exact support
-and UIKit commit/tree values are required inputs, not provenance inferred after
-the fact. Both source checkouts are bracketed for commit/tree and cleanliness;
-the support commit must also descend from the accepted Foundation substrate.
+commit/tree values are required inputs. OpenUIKit and machorun default to the
+in-repo `uikit/` and `machorun/` subtrees and are attested by
+`git rev-parse HEAD:uikit` / `HEAD:machorun` against the baked tree pins; a
+dirty subtree is refused. `--uikit-checkout` / `--machorun-checkout` remain
+external overrides (`--expected-uikit-commit` is required only then).
 
 The Foundation facade source list is mandatory and defaults to
 `full/foundation/foundation_guest_sources.txt`. Its thirty-three LF-terminated lines
@@ -763,7 +762,9 @@ not a macro-expansion proof.
 
 `run_core_guest_package_docker.sh` is the production host-side cold wrapper.
 It requires an exact lowercase SHA-256 Linux/ARM64 container image ID, exact
-support, UIKit, and machorun commit/tree pins, an exact SHA-256 for machorun's
+support commit/tree pins, optional UIKit/machorun checkout overrides (in-repo
+`uikit/` and `machorun/` trees are the default and are attested by
+`git rev-parse HEAD:uikit` / `HEAD:machorun`), an exact SHA-256 for machorun's
 ignored prebuilt loader, exact SHA-256 identities for the staged Swift and
 Objective-C runtimes, a new output path, and a staged-input root containing:
 
@@ -781,21 +782,20 @@ bash full/frameworks/run_core_guest_package_docker.sh \
   --expected-support-commit 40_HEX \
   --expected-support-tree 40_HEX \
   --staged-input-root /path/to/canonical/support/scratch \
-  --uikit-checkout /path/to/clean/uikit \
-  --expected-uikit-commit 40_HEX \
-  --expected-uikit-tree 40_HEX \
-  --machorun-checkout /path/to/clean/machorun \
-  --expected-machorun-commit 40_HEX \
-  --expected-machorun-tree 40_HEX \
   --expected-machorun-loader-sha256 64_HEX \
   --expected-machorun-swift-core-sha256 64_HEX \
   --expected-machorun-objc-sha256 64_HEX \
   --output-root /path/to/new/core-package
 ```
 
+`--uikit-checkout` / `--machorun-checkout` remain external overrides. Omit them
+to consume the in-repo subtrees from the support checkout.
+
 Mutable image tags and defaults are refused; the exact image ID and verified
-Linux/ARM64 platform are recorded in host evidence. The wrapper creates fresh
-`--no-local --no-hardlinks` clones for support, UIKit, and machorun. It then
+Linux/ARM64 platform are recorded in host evidence. The wrapper creates a fresh
+`--no-local --no-hardlinks` clone of the support checkout. In-repo `uikit/` and
+`machorun/` trees are consumed from that clone. External `--uikit-checkout` /
+`--machorun-checkout` still clone those repositories separately. It then
 byte-copies the ignored machorun loader and `darwin/usr` runtime closure, every
 prepared staged-input tree, and the optional Preview trio. The copier opens a
 new destination file for every regular file, proves that it shares no source

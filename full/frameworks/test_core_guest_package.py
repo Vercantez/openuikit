@@ -3135,7 +3135,9 @@ class ShellContractTests(unittest.TestCase):
             "--uikit-checkout",
             "--expected-uikit-commit",
             "--expected-uikit-tree",
-            "assert_clean_commit \"$UIKIT\"",
+            "assert_vendor_tree \"$W\" uikit",
+            "HEAD:uikit",
+            "EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE",
             "output root already exists",
             ".INVALID-DO-NOT-USE",
         ):
@@ -3308,15 +3310,10 @@ class ShellContractTests(unittest.TestCase):
         validate_swift_core_runtime_contract(builder, source)
         validate_build_full_swift_core_source(build_full)
         self.assertIn(
-            "EXPECTED_MACHORUN_COMMIT="
-            "98551893760e553c14d5dbb2c28138e014290918",
+            "EXPECTED_MACHORUN_TREE=$EXPECTED_INREPO_MACHORUN_TREE",
             builder,
         )
-        self.assertIn(
-            "EXPECTED_MACHORUN_TREE="
-            "d4448ff9f8a89c5cefad8b74f16db5d8d6ccff15",
-            builder,
-        )
+        self.assertNotIn("EXPECTED_MACHORUN_COMMIT=", builder)
         for obsolete_machorun_pin in (
             "d359cd37ac7f12a5048f4993eab6efd8259d9890",
             "e6b1745bef09ac8f1e2d6e6c83f7c70d6dbe49a5",
@@ -3347,6 +3344,11 @@ class ShellContractTests(unittest.TestCase):
             "durable guest-root product is missing after Docker",
             "libquartz.dylib",
             "remove-tree",
+            "assert_vendor_tree",
+            "HEAD:uikit",
+            'UIKIT_CHECKOUT=$SUPPORT_CHECKOUT/uikit',
+            'MACHORUN_CHECKOUT=$SUPPORT_CHECKOUT/machorun',
+            "source=HEAD:",
         ):
             self.assertIn(token, source)
         self.assertNotIn('"$STAGED_INPUT_ROOT/sysroot_fe4:/w/', source)

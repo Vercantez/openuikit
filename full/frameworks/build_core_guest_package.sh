@@ -7,8 +7,10 @@
 set -euo pipefail
 export GIT_OPTIONAL_LOCKS=0
 
-W=${W:-/w}
-MACHORUN=${MACHORUN:-/machorun}
+W=${W:-$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)}
+# shellcheck source=../../scripts/vendor_tree.sh
+. "$W/scripts/vendor_tree.sh"
+MACHORUN=${MACHORUN:-$W/machorun}
 TARGET=arm64-apple-macos15.0
 MIN_OS=15.0
 SYS=$W/scratch/sysroot_fe4
@@ -289,8 +291,7 @@ EXPECTED_COLLECTIONS_COMMIT=9bf03ff58ce34478e66aaee630e491823326fd06
 EXPECTED_COLLECTIONS_TREE=5e4de96f40ccf147dab967f38cb7988ecd933c27
 EXPECTED_OPENCOMBINE_COMMIT=1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b
 EXPECTED_OPENCOMBINE_TREE=66a9d91efc910c7577e40b2dec166a2de427594a
-EXPECTED_MACHORUN_COMMIT=98551893760e553c14d5dbb2c28138e014290918
-EXPECTED_MACHORUN_TREE=d4448ff9f8a89c5cefad8b74f16db5d8d6ccff15
+EXPECTED_MACHORUN_TREE=$EXPECTED_INREPO_MACHORUN_TREE
 EXPECTED_MACHORUN_LIBSYSTEM_SOURCE_SHA=0d8680f13e023c9f002fad78f1f0382c975f479595cd8cf3fa8eb6da3c42d29b
 SWIFT_CORE_REQUIRED_AVAILABILITY_SYMBOL='_$ss042_stdlib_isOSVersionAtLeastOrVariantVersiondE0yBi1_Bw_BwBwBwBwBwtF'
 EXPECTED_MACHORUN_GROUP_FIXTURE_SHA=d90194ae586e14f652435e4764d4b13d338be53b95da10cf73df4d1955895624
@@ -411,18 +412,24 @@ usage() {
     cat <<'EOF'
 usage: build_core_guest_package.sh --output-root /w/build/NEW_NAME \
     --expected-support-commit COMMIT --expected-support-tree TREE \
-    --uikit-checkout PATH --expected-uikit-commit COMMIT \
-    --expected-uikit-tree TREE [options]
+    [--uikit-checkout PATH] [--expected-uikit-commit COMMIT] \
+    [--expected-uikit-tree TREE] [--machorun-checkout PATH] [options]
 
 Required:
   --output-root PATH
   --expected-support-commit 40_HEX
   --expected-support-tree 40_HEX
-  --uikit-checkout PATH
-  --expected-uikit-commit 40_HEX
-  --expected-uikit-tree 40_HEX
   --expected-machorun-swift-core-sha256 64_HEX
   --expected-machorun-objc-sha256 64_HEX
+
+In-repo defaults (attested by git rev-parse HEAD:uikit / HEAD:machorun):
+  --uikit-checkout defaults to $W/uikit
+  --machorun-checkout / MACHORUN defaults to $W/machorun
+  --expected-uikit-tree defaults to the baked in-repo UIKit tree pin
+  --expected-uikit-commit is required only for an external UIKit checkout
+
+External checkout flags remain overrides. A dirty uikit/ or machorun/ subtree
+is refused.
 
 Foundation source contract:
   --foundation-sources-manifest PATH
@@ -464,6 +471,9 @@ while [ "$#" -gt 0 ]; do
         --expected-uikit-tree)
             [ "$#" -ge 2 ] || die '--expected-uikit-tree requires a value'
             EXPECTED_UIKIT_TREE=$2; shift 2 ;;
+        --machorun-checkout)
+            [ "$#" -ge 2 ] || die '--machorun-checkout requires a value'
+            MACHORUN=$2; shift 2 ;;
         --expected-machorun-swift-core-sha256)
             [ "$#" -ge 2 ] \
                 || die '--expected-machorun-swift-core-sha256 requires a value'
@@ -493,22 +503,35 @@ done
 [ -n "$OUTPUT_ROOT" ] || die '--output-root is required'
 [ -n "$EXPECTED_SUPPORT_COMMIT" ] || die '--expected-support-commit is required'
 [ -n "$EXPECTED_SUPPORT_TREE" ] || die '--expected-support-tree is required'
-[ -n "$UIKIT" ] || die '--uikit-checkout is required'
-[ -n "$EXPECTED_UIKIT_COMMIT" ] || die '--expected-uikit-commit is required'
-[ -n "$EXPECTED_UIKIT_TREE" ] || die '--expected-uikit-tree is required'
+[ -z "$UIKIT" ] && UIKIT=$W/uikit
+[ -z "$EXPECTED_UIKIT_TREE" ] && EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE
 [ -n "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" ] \
     || die '--expected-machorun-swift-core-sha256 is required'
 [ -n "$EXPECTED_MACHORUN_OBJC_SHA256" ] \
     || die '--expected-machorun-objc-sha256 is required'
 case "$UIKIT" in /*) ;; *) die '--uikit-checkout must be absolute' ;; esac
+case "$MACHORUN" in /*) ;; *) die 'MACHORUN / --machorun-checkout must be absolute' ;; esac
 for expected_git_id in "$EXPECTED_SUPPORT_COMMIT" "$EXPECTED_SUPPORT_TREE" \
-    "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE"; do
+    "$EXPECTED_UIKIT_TREE"; do
     [ "${#expected_git_id}" -eq 40 ] \
-        || die 'expected UIKit commit/tree must each be lowercase 40-hex'
+        || die 'expected support commit/tree and UIKit tree must each be lowercase 40-hex'
     case "$expected_git_id" in
-        *[!0-9a-f]*) die 'expected UIKit commit/tree must each be lowercase 40-hex' ;;
+        *[!0-9a-f]*) \
+            die 'expected support commit/tree and UIKit tree must each be lowercase 40-hex' ;;
     esac
 done
+if vendor_is_inrepo "$W" uikit "$UIKIT"; then
+    [ -z "$EXPECTED_UIKIT_COMMIT" ] \
+        || die '--expected-uikit-commit is an external-checkout pin; omit it for in-repo uikit/'
+else
+    [ -n "$EXPECTED_UIKIT_COMMIT" ] \
+        || die '--expected-uikit-commit is required for an external OpenUIKit checkout'
+    [ "${#EXPECTED_UIKIT_COMMIT}" -eq 40 ] \
+        || die 'expected UIKit commit must be lowercase 40-hex'
+    case "$EXPECTED_UIKIT_COMMIT" in
+        *[!0-9a-f]*) die 'expected UIKit commit must be lowercase 40-hex' ;;
+    esac
+fi
 [ "${#EXPECTED_MACHORUN_SWIFT_CORE_SHA256}" -eq 64 ] \
     || die 'expected machorun Swift core SHA-256 must be lowercase 64-hex'
 case "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" in
@@ -642,7 +665,7 @@ assert_clean_commit() {
 assert_exact_swift_set() {
     local repo=$1 relative=$2 expected_count=$3 label=$4 prefix=$5
     local tracked=$WORK/$prefix.tracked physical=$WORK/$prefix.physical count
-    git -C "$repo" ls-files -z -- "$relative" \
+    vendor_ls_files "$W" uikit "$repo" "$relative" \
         | while IFS= read -r -d '' path; do
             case "$path" in *.swift) printf '%s\0' "$path" ;; esac
           done | LC_ALL=C sort -z > "$tracked"
@@ -667,8 +690,13 @@ git -C "$W" merge-base --is-ancestor "$EXPECTED_SUPPORT_BASE" "$SUPPORT_COMMIT" 
     || die "support HEAD does not descend from reviewed base $EXPECTED_SUPPORT_BASE"
 [ -z "$(git -C "$W" status --porcelain=v1 --untracked-files=all)" ] \
     || die 'support checkout is dirty'
-assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
-assert_clean_commit "$MACHORUN" "$EXPECTED_MACHORUN_COMMIT" "$EXPECTED_MACHORUN_TREE" machorun
+assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
+if ! vendor_is_inrepo "$W" uikit "$UIKIT"; then
+    actual_uikit_commit=$(git -C "$UIKIT" rev-parse --verify 'HEAD^{commit}')
+    [ "$actual_uikit_commit" = "$EXPECTED_UIKIT_COMMIT" ] \
+        || die "OpenUIKit commit $actual_uikit_commit, expected $EXPECTED_UIKIT_COMMIT"
+fi
+assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_MACHORUN_TREE" machorun
 require_hash "$MACHORUN/darwin/usr/lib/swift/libswiftCore.dylib" \
     "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" machorun-Swift-core
 require_hash "$MACHORUN/darwin/usr/lib/libobjc.A.dylib" \
@@ -6289,8 +6317,9 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
     printf 'format\tcore-input-provenance-v1\n'
     printf 'support\tcommit=%s\ttree=%s\tbase=%s\n' \
         "$SUPPORT_COMMIT" "$SUPPORT_TREE" "$EXPECTED_SUPPORT_BASE"
-    printf 'OpenUIKit\tcommit=%s\ttree=%s\tSwift=%s\tOpenCoreGraphics=%s\tSymbols=%s\tSwiftUI=%s\tDeveloperToolsSupport=%s\tOpenUIKitPreviewMacros=%s\tOpenSwiftUIMacros=%s\tCQuartzCPP=%s\n' \
-        "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" \
+    printf 'OpenUIKit\tsource=%s\ttree=%s\tSwift=%s\tOpenCoreGraphics=%s\tSymbols=%s\tSwiftUI=%s\tDeveloperToolsSupport=%s\tOpenUIKitPreviewMacros=%s\tOpenSwiftUIMacros=%s\tCQuartzCPP=%s\n' \
+        "$(vendor_is_inrepo "$W" uikit "$UIKIT" && printf 'HEAD:uikit' || printf 'checkout:%s' "$EXPECTED_UIKIT_COMMIT")" \
+        "$EXPECTED_UIKIT_TREE" \
         "$EXPECTED_UIKIT_SWIFT_COUNT" "$EXPECTED_OPENCOREGRAPHICS_SWIFT_COUNT" \
         "$EXPECTED_SYMBOLS_SWIFT_COUNT" "$EXPECTED_SWIFTUI_SWIFT_COUNT" \
         "$EXPECTED_DEVELOPER_TOOLS_SUPPORT_SWIFT_COUNT" \
@@ -6384,8 +6413,9 @@ cp "$SOURCE_SET_ATTEST" "$STAGE/attestation/source-sets.tsv"
         "$(hash_file "$COPEN_FOUNDATION_CORE_INCLUDE/OpenFoundationCFError.h")" \
         "$(hash_file "$COPEN_FOUNDATION_CORE_INCLUDE/module.modulemap")" \
         "$(hash_file "$W/full/foundation/CFError+Error.swift")"
-    printf 'machorun\tcommit=%s\ttree=%s\tloader-sha256=%s\n' \
-        "$EXPECTED_MACHORUN_COMMIT" "$EXPECTED_MACHORUN_TREE" \
+    printf 'machorun\tsource=%s\ttree=%s\tloader-sha256=%s\n' \
+        "$(vendor_is_inrepo "$W" machorun "$MACHORUN" && printf 'HEAD:machorun' || printf 'checkout')" \
+        "$EXPECTED_MACHORUN_TREE" \
         "$(hash_file "$MACHORUN/build/machorun")"
     printf 'machorun-runtime\tlibswiftCore-sha256=%s\tlibobjc-sha256=%s\tcontract=%s\tbuild-full-stage=%s\n' \
         "$(hash_file "$SWIFT_CORE_RUNTIME")" \
@@ -7019,12 +7049,17 @@ if [ "$PREVIEW_ENABLED" -eq 1 ]; then
 fi
 
 echo '== post-build input bracket'
-assert_clean_commit "$UIKIT" "$EXPECTED_UIKIT_COMMIT" "$EXPECTED_UIKIT_TREE" post-OpenUIKit
+assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" post-OpenUIKit
+if ! vendor_is_inrepo "$W" uikit "$UIKIT"; then
+    actual_uikit_commit=$(git -C "$UIKIT" rev-parse --verify 'HEAD^{commit}')
+    [ "$actual_uikit_commit" = "$EXPECTED_UIKIT_COMMIT" ] \
+        || die "post-OpenUIKit commit $actual_uikit_commit, expected $EXPECTED_UIKIT_COMMIT"
+fi
 require_hash "$MACHORUN/darwin/usr/lib/swift/libswiftCore.dylib" \
     "$EXPECTED_MACHORUN_SWIFT_CORE_SHA256" post-machorun-Swift-core
 require_hash "$MACHORUN/darwin/usr/lib/libobjc.A.dylib" \
     "$EXPECTED_MACHORUN_OBJC_SHA256" post-machorun-Objective-C-runtime
-assert_clean_commit "$MACHORUN" "$EXPECTED_MACHORUN_COMMIT" "$EXPECTED_MACHORUN_TREE" post-machorun
+assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_MACHORUN_TREE" post-machorun
 assert_clean_commit "$SWIFT_FOUNDATION" "$EXPECTED_FOUNDATION_COMMIT" "$EXPECTED_FOUNDATION_TREE" post-swift-foundation
 assert_clean_commit "$SWIFT_FOUNDATION_ICU" "$EXPECTED_FOUNDATION_ICU_COMMIT" \
     "$EXPECTED_FOUNDATION_ICU_TREE" post-swift-foundation-icu
