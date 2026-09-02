@@ -1,0 +1,28 @@
+{
+  "commands": [
+    "set -eu",
+    "baseline=/opt/openuikit/core-cold/baseline-r22-20260901",
+    "support=/opt/openuikit/core-cold/support-fixes/44bd5af-20260901/support",
+    "output_parent=/opt/openuikit/core-cold/packages",
+    "output=$output_parent/core-guest-r23-44bd5af-20260901",
+    "audit=/var/lib/openuikit/audits/core-cold-r22-20260901/build-44bd5af",
+    "image=sha256:c06b69578b50ba821a778c5e63154a664da7119317966b68bcbea0a5fe7c55b3",
+    "test -f /opt/openuikit/core-cold/support-fixes/44bd5af-20260901/READY",
+    "test -f $baseline/READY",
+    "test \"$(git -C $support rev-parse HEAD)\" = 44bd5af26b94cbddff553ad52409adb57c29930a",
+    "test \"$(git -C $support rev-parse HEAD^{tree})\" = 4e121e6afc80ed3885f2d5df5905a2c7221e6f75",
+    "test -z \"$(git -C $support status --porcelain=v1 --untracked-files=all)\"",
+    "test ! -e $output",
+    "test ! -L $output",
+    "test ! -e $audit",
+    "test ! -L $audit",
+    "test -z \"$(find $output_parent -maxdepth 1 -mindepth 1 -name '.core-guest-run.*' -print -quit 2>/dev/null)\"",
+    "test -z \"$(find /var/tmp/openuikit-jobs -mindepth 1 -maxdepth 1 -print -quit)\"",
+    "test -z \"$(docker ps -aq)\"",
+    "install -d -m 0755 $output_parent $audit",
+    "printf 'image\\t%s\\nsupport\\tcommit=%s\\ttree=%s\\nOpenUIKit\\tcommit=%s\\ttree=%s\\nmachorun\\tcommit=%s\\ttree=%s\\noutput\\t%s\\npreview\\tdisabled\\n' \"$image\" 44bd5af26b94cbddff553ad52409adb57c29930a 4e121e6afc80ed3885f2d5df5905a2c7221e6f75 0315f997eba28e87f3d12e8590b2a19bdb2ce06d ebc52d14509398e659b592eff7e520c284fc5e9f edb99a8574255ddc4c979b2f0cf2615033ff14fd 19b2308f300ef4006acf526e599fad9265e7664c \"$output\" > $audit/build-launch.tsv",
+    "if bash $support/full/frameworks/run_core_guest_package_docker.sh --container-image $image --support-checkout $support --expected-support-commit 44bd5af26b94cbddff553ad52409adb57c29930a --expected-support-tree 4e121e6afc80ed3885f2d5df5905a2c7221e6f75 --staged-input-root $baseline/inputs --uikit-checkout $baseline/uikit --expected-uikit-commit 0315f997eba28e87f3d12e8590b2a19bdb2ce06d --expected-uikit-tree ebc52d14509398e659b592eff7e520c284fc5e9f --machorun-checkout $baseline/machorun --expected-machorun-commit edb99a8574255ddc4c979b2f0cf2615033ff14fd --expected-machorun-tree 19b2308f300ef4006acf526e599fad9265e7664c --expected-machorun-loader-sha256 7a56841c97ee0de74815d940d9f56447e6e658f6a80031dac9d3c52164a0204f --expected-machorun-swift-core-sha256 dd01686e06c81a21755bb864b43dad446c011e6c60c6b387b3b332c0a12708cb --output-root $output > $audit/host-wrapper.log 2>&1; then cat $audit/host-wrapper.log; else rc=$?; tail -n 400 $audit/host-wrapper.log >&2; exit $rc; fi",
+    "printf 'EC2_CORE_COLD_BUILD_KVC_COMMAND_OK output=%s\\n' \"$output\""
+  ],
+  "executionTimeout": ["28800"]
+}

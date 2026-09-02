@@ -1,0 +1,26 @@
+{
+  "commands": [
+    "set -eu",
+    "source_script=/opt/openuikit/core-cold/baseline-r22-20260901/support/harness/build_image.sh",
+    "derived_script=/var/tmp/openuikit-build-image-ec2-engine-20260901.sh",
+    "audit_parent=/var/lib/openuikit/audits/core-cold-r22-20260901",
+    "attestation=$audit_parent/image-build",
+    "test ! -e $attestation",
+    "test ! -L $attestation",
+    "test ! -e $derived_script",
+    "printf 'attempt=1\\tcommand=6903c647-c80a-4633-b7fe-4cd110885964\\tresult=FAIL_CLOSED\\treason=ec2_docker_engine_reports_manifest_digest_as_image_id\\n' > $audit_parent/image-build-attempt1.tsv",
+    "sed -e \"s|^SCRIPT_DIR=.*$|SCRIPT_DIR=/opt/openuikit/core-cold/baseline-r22-20260901/support/harness|\" -e \"s|^REPOSITORY=.*$|REPOSITORY=/opt/openuikit/core-cold/baseline-r22-20260901/support|\" -e \"s|^BASE_IMAGE_ID='sha256:b7a5862e90bdf042ed5586b26cd47135ec93c4f97d3dd4d3181fdabcccc3c6d7'$|BASE_IMAGE_ID='sha256:29b983751c605c2d3102d2ab93438c6e0cadf110d9d2aa6e929b6dec9dcb7cbc'|\" $source_script > $derived_script",
+    "chmod 0700 $derived_script",
+    "test \"$(grep -Fc \"BASE_IMAGE_ID='sha256:29b983751c605c2d3102d2ab93438c6e0cadf110d9d2aa6e929b6dec9dcb7cbc'\" $derived_script)\" -eq 1",
+    "test \"$(grep -Fc \"SCRIPT_DIR=/opt/openuikit/core-cold/baseline-r22-20260901/support/harness\" $derived_script)\" -eq 1",
+    "test \"$(grep -Fc \"REPOSITORY=/opt/openuikit/core-cold/baseline-r22-20260901/support\" $derived_script)\" -eq 1",
+    "if diff -u $source_script $derived_script > $audit_parent/ec2-docker-engine-base-id.patch; then exit 2; else test $? -eq 1; fi",
+    "sha256sum $source_script $derived_script /opt/openuikit/core-cold/baseline-r22-20260901/support/harness/Dockerfile > $audit_parent/image-build-input-hashes.txt",
+    "if bash $derived_script --tag openuikit-swift-macho:6.2.4-r22 --attestation-root $attestation > $audit_parent/image-build-wrapper.log 2>&1; then tail -n 120 $audit_parent/image-build-wrapper.log; else rc=$?; tail -n 300 $audit_parent/image-build-wrapper.log >&2; exit $rc; fi",
+    "find $derived_script -delete",
+    "test -f $attestation/SUCCESS",
+    "cat $attestation/SUCCESS",
+    "printf 'EC2_SWIFT_MACHO_IMAGE_BUILD_OK\\n'"
+  ],
+  "executionTimeout": ["3600"]
+}
