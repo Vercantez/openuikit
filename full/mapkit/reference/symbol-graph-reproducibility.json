@@ -1,0 +1,1976 @@
+{
+  "canonicalOutputPaths": [
+    "reference/public-surface.tsv",
+    "reference/api-digester.json",
+    "reference/api-crosswalk.tsv",
+    "reference/symbol-conflicts.tsv",
+    "reference/tbd-exports.tsv",
+    "reference/sdk-inputs.tsv",
+    "reference/corpus-summary.json",
+    "reference/external-evidence.json"
+  ],
+  "minimumRequiredDistinctRawRelationshipHashes": 2,
+  "observedDistinctRawRelationshipHashCount": 3,
+  "policy": "three-fresh-extractions-with-raw-volatility-and-stable-derived-evidence-v1",
+  "requestedModule": "MapKit",
+  "runCount": 3,
+  "runs": [
+    {
+      "baseRelationshipProjection": {
+        "excludedRelationshipMultisetSHA256": "edb7b3376aa7e1e4a0003e42b3b9af9b796149b294afce3c1fa3029dabd72d05",
+        "excludedRelationshipOccurrenceCount": 30,
+        "excludedRows": [
+          {
+            "canonicalSHA256": "234e9f2a073789ced381dcb42da443cd7588ec5b2e93ebfc4ecec65c50adcd6f",
+            "count": 1,
+            "multisetSHA256": "6234a381fd0fb2a2a81e8ce5467904591e4ad1a9973b179b997600eb4d866cf1",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKAnnotationView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKAnnotationView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "5b67ad36d8cc87eaced05411bd9b49892f00abfe2a1e3a8015cdd82baad5bb86",
+            "count": 1,
+            "multisetSHA256": "99d0dbcbb32e183f6ddca563b09c67c8a56925722b863805d990207d46f37039",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKAnnotationView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKAnnotationView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "515ac70ad0b9f0b62933f5b39330ef73f26fb349f28dfcc3153aa82d66dcf388",
+            "count": 1,
+            "multisetSHA256": "9910ad7c928b3a2a91391e1ece150fa0d7324abd4fdc8481e12d7eec0ccb6bea",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKCircleView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKCircleView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "64e234b3c91c7d99e7dd5585a661baf7723b18abc6e39033b850b7d90050437e",
+            "count": 1,
+            "multisetSHA256": "9333595b2113426e2e1b6235b4070b4bdf928d7be32ef7cef0ebdbbca3313b82",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKCircleView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKCircleView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "fc75163e14b449c98446c31bfe86530c170e72d7d9f8d31ec32a105d987ffeef",
+            "count": 1,
+            "multisetSHA256": "24ca8c2857b4c80734cfcf34a62aa2a61a6431900b00bb1b9d56a5edb7c477b8",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKCompassButton",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKCompassButton",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "1d86845b22237846f95089463be1e63871c4bb270a542d71924f7e0348ae73cc",
+            "count": 1,
+            "multisetSHA256": "23dd27a0ca26c3c6e017662e24cff20314045569280be50db7b7ffc4658e690b",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKCompassButton",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKCompassButton",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "6469c66d19dd32715478979c2414a2da00354ee207bc733303a9918902adc949",
+            "count": 1,
+            "multisetSHA256": "c13844365eb0f7e6d3a223cc02252f6468f183a6abe37e17ca9ddf11d988ff10",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMapItemDetailViewController",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKMapItemDetailViewController",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "979dfc9abf5c3d2f47fa4fe9222ba3e36acbf540268c9213802493456799a4b2",
+            "count": 1,
+            "multisetSHA256": "0407b0590cdaae658bfd10ce4d907d7bba135cf8f7395807916ce5f76d322e7e",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMapItemDetailViewController",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKMapItemDetailViewController",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "553a3e3ccc0b7ba46502606840c460939a1e804cb42b86101f6a561d5ed12353",
+            "count": 1,
+            "multisetSHA256": "d9223ea45224496d3a30394713bb5fa29abdd141a7054fba933099d7d8d2b5be",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMapView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKMapView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "b1d26f5ad2f8805813bd0ee91e228101fd8044b2556c365469aaf80fbe7f5848",
+            "count": 1,
+            "multisetSHA256": "c552d9a6909e2173100025c561bdb599cd6878bab3f4aa73d45159dc00093168",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMapView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKMapView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "75ac486ccf4fb1474fa89e71fc2a27f5a5faafb1d466348fb1893a3829af549b",
+            "count": 1,
+            "multisetSHA256": "d4a4c9892c78f0ae6c3a6fefa5cd3e952ee33e6d285c41f193f43e80b8e3faad",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMarkerAnnotationView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKMarkerAnnotationView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "1b901335d1753c89ac1961bb9a05c7cc1165e1d6a0373992893ff3adb7c7fe22",
+            "count": 1,
+            "multisetSHA256": "6a062d1461bce2f1c7ef9bc0180c466b690b79d1c826175fe59424d498855cdd",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMarkerAnnotationView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKMarkerAnnotationView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "d8ea944450dff275c8221635f016e18295976d3c1a758196cf0505d9d6fea12d",
+            "count": 1,
+            "multisetSHA256": "00c47a7ff225a0bdef22973d948a5905f4794d66cf099238b40534577a24bf13",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKOverlayPathView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKOverlayPathView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "739c2d40967ede1bd89fc8b18926a908f6eb718e2aff8db2eea48ef27e042882",
+            "count": 1,
+            "multisetSHA256": "fee3eb26a7b8293151b7657797e3660941008b6205076a4f358ea8dd09d17fb4",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKOverlayPathView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKOverlayPathView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "b6af4cb26f40fa88cf589909321f46420b9e49d45b245c26a8692b8b493c7bea",
+            "count": 1,
+            "multisetSHA256": "123c54bfe588fbbbb62353ac03efae579da7838c5093b72d7e36cdf045927f75",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKOverlayView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKOverlayView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "073dc27bbc9abc0e199b51d20f99c17ec0c7e789efc5411edf92fe62ba8a91f5",
+            "count": 1,
+            "multisetSHA256": "c11b15669e71ed30938ee478927a07bed331bc6b883493f4dd78d34ab89dddd0",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKOverlayView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKOverlayView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "fb4d0307c3fa7794d47ba429fc121e50622adcc3aa0300bcef236377ad902ebc",
+            "count": 1,
+            "multisetSHA256": "f8e22539244874461ba11d55cae1c7955c639eee39207dcae8913c33f7f6c210",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPinAnnotationView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKPinAnnotationView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "29751e6aebed5a154cbb755e8df0fb45b5100411ee8caaa025056afbfb172e42",
+            "count": 1,
+            "multisetSHA256": "f527c3a8ec3b3adfe259a379c50803898920247dec3ee5d65b8de388cb6ac293",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPinAnnotationView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKPinAnnotationView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "8051130cf710d8f8b0b33fb2344dc77442b48d03e25fae152515b074cb47098f",
+            "count": 1,
+            "multisetSHA256": "a548fff0257708b37e2051f1ad45e0eed673ba5ccda738c44cc9a62542242238",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPlacemark",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKPlacemark",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "32080106010c402d52ad9ecc0fbaebdfd633527b42ab7e95718b18cb9cab96d3",
+            "count": 1,
+            "multisetSHA256": "0962d36835638cb516cdf48c014826c964f06c318565b4b1ce31b11744f70cc9",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPlacemark",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKPlacemark",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "db612789d2d93229403a8a370761421b182a6b5c96cc65a494a7ce1ea9a37c7c",
+            "count": 1,
+            "multisetSHA256": "8b58719c4db2e9223834b773a9942633b4ba5ec494191b722483a60cb308ef65",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPolygonView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKPolygonView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "fba4d30fa10aa040cec33d9e96fe405535d86eb7f65b6a50f5da385633d5a5dc",
+            "count": 1,
+            "multisetSHA256": "cd6d29f32b8d57165e4b4e8fbda5fb2100584ef0c90755e113123f13f5cfbed6",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPolygonView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKPolygonView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "c1cf61158cfef238b5af3f5d10eebce32666377fd3dca9b3350d513ba96f52b4",
+            "count": 1,
+            "multisetSHA256": "94c53fcbc75e1677fa60ea99614c35fb0c0640d6859f491af8c8aac3e8d32d30",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPolylineView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKPolylineView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "4b4a0bee52f3635f49c40cc01bd25ea1d80b184957ab18bc93d11a06caa3b7b9",
+            "count": 1,
+            "multisetSHA256": "ce752c3e1159595a939e199096424807f346ee4ea3fb3a3f4361393f6bbc4b9d",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPolylineView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKPolylineView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "1f79b2cdb84743d35277bad44a0b0a5e7d3613f3e01b61ed676de92e8b4355a1",
+            "count": 1,
+            "multisetSHA256": "aa68349a1c3d6c543c7d2a414bd644140a7a09f58d320fe36a1dd02cad50e171",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKScaleView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKScaleView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "ff040d75bb724cd64e135708c39e2ef64d90444bf838db458c5566337099440e",
+            "count": 1,
+            "multisetSHA256": "36cfaca67bf6e24e896a5c7a806532763c7739fbcb760e09d65cc15353a6c1d8",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKScaleView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKScaleView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "61be597bab864814c394004dbef544eab542718ee2e0c3aae19807157bcc5e91",
+            "count": 1,
+            "multisetSHA256": "ca5083bd52518d03b0f442fbe85c3dd1d5ceeda00e6943028b0a0ebed3c84e77",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKUserLocationView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKUserLocationView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "37944cf799c9862e3f1a7d0e2fcea02a80665df169b240d13c0cb8fd1d249f90",
+            "count": 1,
+            "multisetSHA256": "b916e54a9dea842388206b851701816686f4141fb83328dc41a0eb1ce7029c13",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKUserLocationView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKUserLocationView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "044ff6056a1d51b8aa0b7f7afbfae37e9426eab82ad8c871b1a2abeb3e47421c",
+            "count": 1,
+            "multisetSHA256": "488c67fe35ee3d66046bcd3a5a0eddfe27febad9b83bf941b1ae6f98b1cf24f8",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKUserTrackingButton",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKUserTrackingButton",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "abdee14c9c8a2170a9dafdcb4fecaf55167420828274d5c68027e2926e24d3fd",
+            "count": 1,
+            "multisetSHA256": "0920f4bd530ac6b7c3570b2c5668103e4d625edf64ec8371f5d53acd938c2851",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKUserTrackingButton",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKUserTrackingButton",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          }
+        ],
+        "policy": "exclude-primary-imported-objc-class-conformsTo-swift-sendable-v1",
+        "primaryGraphFileName": "MapKit.symbols.json",
+        "projectedRelationshipMultisetSHA256": "84d82f0996324eb24afe36a10e2a75d347aa7326480e136740a2e331375a7580",
+        "projectedRelationshipOccurrenceCount": 2192,
+        "rawRelationshipMultisetSHA256": "73b44f7ffa41aaff6ad57912c7bf181e079b47c3fd8fddf68a71d3f6fe20ac9f",
+        "rawRelationshipOccurrenceCount": 2222,
+        "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+        "schema": 1,
+        "targets": [
+          {
+            "fallback": "Swift.SendableMetatype",
+            "precise": "s:s16SendableMetatypeP"
+          },
+          {
+            "fallback": "Swift.Sendable",
+            "precise": "s:s8SendableP"
+          }
+        ]
+      },
+      "canonicalOutputs": [
+        {
+          "retainedPath": "reference/public-surface.tsv",
+          "sha256": "333d26f32534e41fc64c7b37f4d81e0caeaf93ca3024da56209a029eb6b27b35",
+          "sourcePath": "reference/public-surface.tsv"
+        },
+        {
+          "retainedPath": "reference/api-digester.json",
+          "sha256": "bfe10dedc500cfd44e6805afb10feb274ab3e814405d09ab0c65c1469422be64",
+          "sourcePath": "reference/api-digester.json"
+        },
+        {
+          "retainedPath": "reference/api-crosswalk.tsv",
+          "sha256": "8326b8e3330bc06cd6dcb59aa0fb24e7f5e738512dcce0f0083534508b5e97d5",
+          "sourcePath": "reference/api-crosswalk.tsv"
+        },
+        {
+          "retainedPath": "reference/symbol-conflicts.tsv",
+          "sha256": "da49faece4a60da947502cb72b22c3505f35ad36bf71bc4e13d8468d4394b20b",
+          "sourcePath": "reference/symbol-conflicts.tsv"
+        },
+        {
+          "retainedPath": "reference/tbd-exports.tsv",
+          "sha256": "a3428ac70fa40c8860c43cfd9950523111dff218f2d9be2e8dcbe523d30e0e7e",
+          "sourcePath": "reference/tbd-exports.tsv"
+        },
+        {
+          "retainedPath": "reference/sdk-inputs.tsv",
+          "sha256": "2ae7b31ae116c8c213685be8c3889294abbb86785c9976758a2b68e1ff581fe9",
+          "sourcePath": "reference/sdk-inputs.tsv"
+        },
+        {
+          "retainedPath": "reference/corpus-summary.json",
+          "sha256": "22aa26c1729e72ba079193d76b43f4ff36d6576fe72d5b075d867bbfb04a5699",
+          "sourcePath": "reference/corpus-summary.json"
+        },
+        {
+          "retainedPath": "reference/external-evidence.json",
+          "sha256": "55f50463257458e5011feebf501a1d8a7a976b9f6ff4e0b714cec3226d19b8bc",
+          "sourcePath": "reference/external-evidence.json"
+        }
+      ],
+      "excludedFiles": [
+        {
+          "bystanders": [
+            "SwiftUI"
+          ],
+          "crossImportOverlayModule": "_MapKit_SwiftUI",
+          "fileName": "_MapKit_SwiftUI@MapKit.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 8314,
+          "sha256": "fe24fd5dbb5496dfc47c21188df391d5157f81d761ceab768b721b87dad89fab",
+          "symbolCount": 8271
+        },
+        {
+          "bystanders": [
+            "SwiftUI"
+          ],
+          "crossImportOverlayModule": "_MapKit_SwiftUI",
+          "fileName": "_MapKit_SwiftUI@Swift.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 35,
+          "sha256": "253ce276142a60a831a21d949f9a978987c2fc78bc97a396fe63286fbe19f2ce",
+          "symbolCount": 26
+        },
+        {
+          "bystanders": [
+            "SwiftUI"
+          ],
+          "crossImportOverlayModule": "_MapKit_SwiftUI",
+          "fileName": "_MapKit_SwiftUI@SwiftUICore.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 70,
+          "sha256": "3f268136c482ee4255a627970d123cdff17f7d1b4a7b746c9eeb555b91bed140",
+          "symbolCount": 58
+        },
+        {
+          "bystanders": [
+            "SwiftUI"
+          ],
+          "crossImportOverlayModule": "_MapKit_SwiftUI",
+          "fileName": "_MapKit_SwiftUI@_LocationEssentials.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 4,
+          "sha256": "3302d5496c1f82155e16d3e15083f864240cad4a984df2671f4da8e8ea730632",
+          "symbolCount": 2
+        }
+      ],
+      "extraction": {
+        "commandTemplate": [
+          "{symbolGraphExtractorPath}",
+          "-module-name",
+          "MapKit",
+          "-target",
+          "arm64-apple-ios26.0",
+          "-sdk",
+          "{iPhoneOSSDKRoot}",
+          "-minimum-access-level",
+          "public",
+          "-module-cache-path",
+          "{freshTemporaryModuleCache}",
+          "-output-dir",
+          "{freshTemporaryOutputDirectory}"
+        ],
+        "environmentPolicy": "generate_seed_v2.prepare_clean_environment-v1",
+        "sdkName": "iphoneos",
+        "sdkVersion": "26.1",
+        "symbolGraphExtractorPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-symbolgraph-extract",
+        "symbolGraphExtractorSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+        "symbolGraphExtractorVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+        "target": "arm64-apple-ios26.0",
+        "temporaryPathPolicy": "fresh-private-paths-redacted-with-explicit-command-placeholders-v1",
+        "xcodeBuild": "17B55",
+        "xcodeVersion": "26.1"
+      },
+      "graphRoot": "reference/symbol-graphs",
+      "includedFiles": [
+        {
+          "bystanders": [],
+          "crossImportOverlayModule": null,
+          "fileName": "MapKit.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 2213,
+          "sha256": "72a4aacec8b350957dae87922460d43f48a2c25114cecda7502c9dbab0f04081",
+          "symbolCount": 1161
+        },
+        {
+          "bystanders": [],
+          "crossImportOverlayModule": null,
+          "fileName": "MapKit@Foundation.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 8,
+          "sha256": "b7b07b6e4631c1b6e28e8d9a8cc2cb64a13bcc658bccbc7d59a632ab7166129c",
+          "symbolCount": 8
+        },
+        {
+          "bystanders": [],
+          "crossImportOverlayModule": null,
+          "fileName": "MapKit@GeoToolbox.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 1,
+          "sha256": "95a407e74308fdd8525747d0ebb4515bdef76094dc967d2eccddd995d8abf12a",
+          "symbolCount": 1
+        }
+      ],
+      "rawRelationshipMultisetSHA256": "73b44f7ffa41aaff6ad57912c7bf181e079b47c3fd8fddf68a71d3f6fe20ac9f",
+      "rawRelationshipOccurrenceCount": 2222,
+      "run": 1,
+      "symbolMultisetSHA256": "614a9afdb425fb4af627fdcc9fb9b459ea3cc1bdd9e1cd905cb48d0bae9cf33e",
+      "symbolOccurrenceCount": 1170,
+      "uniqueSymbolCount": 1153
+    },
+    {
+      "baseRelationshipProjection": {
+        "excludedRelationshipMultisetSHA256": "24286521615f3e617dc5fcf7090d2b20beb28ae96a11c8cd818154575dec2e10",
+        "excludedRelationshipOccurrenceCount": 28,
+        "excludedRows": [
+          {
+            "canonicalSHA256": "515ac70ad0b9f0b62933f5b39330ef73f26fb349f28dfcc3153aa82d66dcf388",
+            "count": 1,
+            "multisetSHA256": "9910ad7c928b3a2a91391e1ece150fa0d7324abd4fdc8481e12d7eec0ccb6bea",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKCircleView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKCircleView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "64e234b3c91c7d99e7dd5585a661baf7723b18abc6e39033b850b7d90050437e",
+            "count": 1,
+            "multisetSHA256": "9333595b2113426e2e1b6235b4070b4bdf928d7be32ef7cef0ebdbbca3313b82",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKCircleView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKCircleView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "fc75163e14b449c98446c31bfe86530c170e72d7d9f8d31ec32a105d987ffeef",
+            "count": 1,
+            "multisetSHA256": "24ca8c2857b4c80734cfcf34a62aa2a61a6431900b00bb1b9d56a5edb7c477b8",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKCompassButton",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKCompassButton",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "1d86845b22237846f95089463be1e63871c4bb270a542d71924f7e0348ae73cc",
+            "count": 1,
+            "multisetSHA256": "23dd27a0ca26c3c6e017662e24cff20314045569280be50db7b7ffc4658e690b",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKCompassButton",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKCompassButton",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "93ec2205f9d51b1cec550c1ba0897fb82c27d1c5c4090dfbb6735f98d7540083",
+            "count": 1,
+            "multisetSHA256": "71ffff38c4a692779dfe39958ee05c71f2ac87586d86e47d963779bc9f23e4d7",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKLookAroundViewController",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKLookAroundViewController",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "ce5ceddde830a2f56537873186211420cd7fcb6e9af7be49359e318035b674b6",
+            "count": 1,
+            "multisetSHA256": "976c98148ef8e1bd3dcb010f131c5d5913f34b3499dc4b0930db312da495ab13",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKLookAroundViewController",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKLookAroundViewController",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "6469c66d19dd32715478979c2414a2da00354ee207bc733303a9918902adc949",
+            "count": 1,
+            "multisetSHA256": "c13844365eb0f7e6d3a223cc02252f6468f183a6abe37e17ca9ddf11d988ff10",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMapItemDetailViewController",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKMapItemDetailViewController",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "979dfc9abf5c3d2f47fa4fe9222ba3e36acbf540268c9213802493456799a4b2",
+            "count": 1,
+            "multisetSHA256": "0407b0590cdaae658bfd10ce4d907d7bba135cf8f7395807916ce5f76d322e7e",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMapItemDetailViewController",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKMapItemDetailViewController",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "553a3e3ccc0b7ba46502606840c460939a1e804cb42b86101f6a561d5ed12353",
+            "count": 1,
+            "multisetSHA256": "d9223ea45224496d3a30394713bb5fa29abdd141a7054fba933099d7d8d2b5be",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMapView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKMapView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "b1d26f5ad2f8805813bd0ee91e228101fd8044b2556c365469aaf80fbe7f5848",
+            "count": 1,
+            "multisetSHA256": "c552d9a6909e2173100025c561bdb599cd6878bab3f4aa73d45159dc00093168",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMapView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKMapView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "75ac486ccf4fb1474fa89e71fc2a27f5a5faafb1d466348fb1893a3829af549b",
+            "count": 1,
+            "multisetSHA256": "d4a4c9892c78f0ae6c3a6fefa5cd3e952ee33e6d285c41f193f43e80b8e3faad",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMarkerAnnotationView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKMarkerAnnotationView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "1b901335d1753c89ac1961bb9a05c7cc1165e1d6a0373992893ff3adb7c7fe22",
+            "count": 1,
+            "multisetSHA256": "6a062d1461bce2f1c7ef9bc0180c466b690b79d1c826175fe59424d498855cdd",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMarkerAnnotationView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKMarkerAnnotationView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "d8ea944450dff275c8221635f016e18295976d3c1a758196cf0505d9d6fea12d",
+            "count": 1,
+            "multisetSHA256": "00c47a7ff225a0bdef22973d948a5905f4794d66cf099238b40534577a24bf13",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKOverlayPathView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKOverlayPathView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "739c2d40967ede1bd89fc8b18926a908f6eb718e2aff8db2eea48ef27e042882",
+            "count": 1,
+            "multisetSHA256": "fee3eb26a7b8293151b7657797e3660941008b6205076a4f358ea8dd09d17fb4",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKOverlayPathView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKOverlayPathView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "b6af4cb26f40fa88cf589909321f46420b9e49d45b245c26a8692b8b493c7bea",
+            "count": 1,
+            "multisetSHA256": "123c54bfe588fbbbb62353ac03efae579da7838c5093b72d7e36cdf045927f75",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKOverlayView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKOverlayView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "073dc27bbc9abc0e199b51d20f99c17ec0c7e789efc5411edf92fe62ba8a91f5",
+            "count": 1,
+            "multisetSHA256": "c11b15669e71ed30938ee478927a07bed331bc6b883493f4dd78d34ab89dddd0",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKOverlayView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKOverlayView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "8051130cf710d8f8b0b33fb2344dc77442b48d03e25fae152515b074cb47098f",
+            "count": 1,
+            "multisetSHA256": "a548fff0257708b37e2051f1ad45e0eed673ba5ccda738c44cc9a62542242238",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPlacemark",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKPlacemark",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "32080106010c402d52ad9ecc0fbaebdfd633527b42ab7e95718b18cb9cab96d3",
+            "count": 1,
+            "multisetSHA256": "0962d36835638cb516cdf48c014826c964f06c318565b4b1ce31b11744f70cc9",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPlacemark",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKPlacemark",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "db612789d2d93229403a8a370761421b182a6b5c96cc65a494a7ce1ea9a37c7c",
+            "count": 1,
+            "multisetSHA256": "8b58719c4db2e9223834b773a9942633b4ba5ec494191b722483a60cb308ef65",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPolygonView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKPolygonView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "fba4d30fa10aa040cec33d9e96fe405535d86eb7f65b6a50f5da385633d5a5dc",
+            "count": 1,
+            "multisetSHA256": "cd6d29f32b8d57165e4b4e8fbda5fb2100584ef0c90755e113123f13f5cfbed6",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPolygonView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKPolygonView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "c1cf61158cfef238b5af3f5d10eebce32666377fd3dca9b3350d513ba96f52b4",
+            "count": 1,
+            "multisetSHA256": "94c53fcbc75e1677fa60ea99614c35fb0c0640d6859f491af8c8aac3e8d32d30",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPolylineView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKPolylineView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "4b4a0bee52f3635f49c40cc01bd25ea1d80b184957ab18bc93d11a06caa3b7b9",
+            "count": 1,
+            "multisetSHA256": "ce752c3e1159595a939e199096424807f346ee4ea3fb3a3f4361393f6bbc4b9d",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPolylineView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKPolylineView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "1f79b2cdb84743d35277bad44a0b0a5e7d3613f3e01b61ed676de92e8b4355a1",
+            "count": 1,
+            "multisetSHA256": "aa68349a1c3d6c543c7d2a414bd644140a7a09f58d320fe36a1dd02cad50e171",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKScaleView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKScaleView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "ff040d75bb724cd64e135708c39e2ef64d90444bf838db458c5566337099440e",
+            "count": 1,
+            "multisetSHA256": "36cfaca67bf6e24e896a5c7a806532763c7739fbcb760e09d65cc15353a6c1d8",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKScaleView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKScaleView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "61be597bab864814c394004dbef544eab542718ee2e0c3aae19807157bcc5e91",
+            "count": 1,
+            "multisetSHA256": "ca5083bd52518d03b0f442fbe85c3dd1d5ceeda00e6943028b0a0ebed3c84e77",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKUserLocationView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKUserLocationView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "37944cf799c9862e3f1a7d0e2fcea02a80665df169b240d13c0cb8fd1d249f90",
+            "count": 1,
+            "multisetSHA256": "b916e54a9dea842388206b851701816686f4141fb83328dc41a0eb1ce7029c13",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKUserLocationView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKUserLocationView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "044ff6056a1d51b8aa0b7f7afbfae37e9426eab82ad8c871b1a2abeb3e47421c",
+            "count": 1,
+            "multisetSHA256": "488c67fe35ee3d66046bcd3a5a0eddfe27febad9b83bf941b1ae6f98b1cf24f8",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKUserTrackingButton",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKUserTrackingButton",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "abdee14c9c8a2170a9dafdcb4fecaf55167420828274d5c68027e2926e24d3fd",
+            "count": 1,
+            "multisetSHA256": "0920f4bd530ac6b7c3570b2c5668103e4d625edf64ec8371f5d53acd938c2851",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKUserTrackingButton",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKUserTrackingButton",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          }
+        ],
+        "policy": "exclude-primary-imported-objc-class-conformsTo-swift-sendable-v1",
+        "primaryGraphFileName": "MapKit.symbols.json",
+        "projectedRelationshipMultisetSHA256": "84d82f0996324eb24afe36a10e2a75d347aa7326480e136740a2e331375a7580",
+        "projectedRelationshipOccurrenceCount": 2192,
+        "rawRelationshipMultisetSHA256": "ab0402369741c21710d44322ee9e3de3399789682f9ea69ed1e363dc658d7ba3",
+        "rawRelationshipOccurrenceCount": 2220,
+        "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+        "schema": 1,
+        "targets": [
+          {
+            "fallback": "Swift.SendableMetatype",
+            "precise": "s:s16SendableMetatypeP"
+          },
+          {
+            "fallback": "Swift.Sendable",
+            "precise": "s:s8SendableP"
+          }
+        ]
+      },
+      "canonicalOutputs": [
+        {
+          "retainedPath": "reference/reproducibility/run-2/canonical/public-surface.tsv",
+          "sha256": "333d26f32534e41fc64c7b37f4d81e0caeaf93ca3024da56209a029eb6b27b35",
+          "sourcePath": "reference/public-surface.tsv"
+        },
+        {
+          "retainedPath": "reference/reproducibility/run-2/canonical/api-digester.json",
+          "sha256": "bfe10dedc500cfd44e6805afb10feb274ab3e814405d09ab0c65c1469422be64",
+          "sourcePath": "reference/api-digester.json"
+        },
+        {
+          "retainedPath": "reference/reproducibility/run-2/canonical/api-crosswalk.tsv",
+          "sha256": "8326b8e3330bc06cd6dcb59aa0fb24e7f5e738512dcce0f0083534508b5e97d5",
+          "sourcePath": "reference/api-crosswalk.tsv"
+        },
+        {
+          "retainedPath": "reference/reproducibility/run-2/canonical/symbol-conflicts.tsv",
+          "sha256": "da49faece4a60da947502cb72b22c3505f35ad36bf71bc4e13d8468d4394b20b",
+          "sourcePath": "reference/symbol-conflicts.tsv"
+        },
+        {
+          "retainedPath": "reference/reproducibility/run-2/canonical/tbd-exports.tsv",
+          "sha256": "a3428ac70fa40c8860c43cfd9950523111dff218f2d9be2e8dcbe523d30e0e7e",
+          "sourcePath": "reference/tbd-exports.tsv"
+        },
+        {
+          "retainedPath": "reference/reproducibility/run-2/canonical/sdk-inputs.tsv",
+          "sha256": "2ae7b31ae116c8c213685be8c3889294abbb86785c9976758a2b68e1ff581fe9",
+          "sourcePath": "reference/sdk-inputs.tsv"
+        },
+        {
+          "retainedPath": "reference/reproducibility/run-2/canonical/corpus-summary.json",
+          "sha256": "22aa26c1729e72ba079193d76b43f4ff36d6576fe72d5b075d867bbfb04a5699",
+          "sourcePath": "reference/corpus-summary.json"
+        },
+        {
+          "retainedPath": "reference/reproducibility/run-2/canonical/external-evidence.json",
+          "sha256": "55f50463257458e5011feebf501a1d8a7a976b9f6ff4e0b714cec3226d19b8bc",
+          "sourcePath": "reference/external-evidence.json"
+        }
+      ],
+      "excludedFiles": [
+        {
+          "bystanders": [
+            "SwiftUI"
+          ],
+          "crossImportOverlayModule": "_MapKit_SwiftUI",
+          "fileName": "_MapKit_SwiftUI@MapKit.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 8314,
+          "sha256": "fe24fd5dbb5496dfc47c21188df391d5157f81d761ceab768b721b87dad89fab",
+          "symbolCount": 8271
+        },
+        {
+          "bystanders": [
+            "SwiftUI"
+          ],
+          "crossImportOverlayModule": "_MapKit_SwiftUI",
+          "fileName": "_MapKit_SwiftUI@Swift.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 35,
+          "sha256": "253ce276142a60a831a21d949f9a978987c2fc78bc97a396fe63286fbe19f2ce",
+          "symbolCount": 26
+        },
+        {
+          "bystanders": [
+            "SwiftUI"
+          ],
+          "crossImportOverlayModule": "_MapKit_SwiftUI",
+          "fileName": "_MapKit_SwiftUI@SwiftUICore.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 70,
+          "sha256": "3f268136c482ee4255a627970d123cdff17f7d1b4a7b746c9eeb555b91bed140",
+          "symbolCount": 58
+        },
+        {
+          "bystanders": [
+            "SwiftUI"
+          ],
+          "crossImportOverlayModule": "_MapKit_SwiftUI",
+          "fileName": "_MapKit_SwiftUI@_LocationEssentials.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 4,
+          "sha256": "3302d5496c1f82155e16d3e15083f864240cad4a984df2671f4da8e8ea730632",
+          "symbolCount": 2
+        }
+      ],
+      "extraction": {
+        "commandTemplate": [
+          "{symbolGraphExtractorPath}",
+          "-module-name",
+          "MapKit",
+          "-target",
+          "arm64-apple-ios26.0",
+          "-sdk",
+          "{iPhoneOSSDKRoot}",
+          "-minimum-access-level",
+          "public",
+          "-module-cache-path",
+          "{freshTemporaryModuleCache}",
+          "-output-dir",
+          "{freshTemporaryOutputDirectory}"
+        ],
+        "environmentPolicy": "generate_seed_v2.prepare_clean_environment-v1",
+        "sdkName": "iphoneos",
+        "sdkVersion": "26.1",
+        "symbolGraphExtractorPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-symbolgraph-extract",
+        "symbolGraphExtractorSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+        "symbolGraphExtractorVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+        "target": "arm64-apple-ios26.0",
+        "temporaryPathPolicy": "fresh-private-paths-redacted-with-explicit-command-placeholders-v1",
+        "xcodeBuild": "17B55",
+        "xcodeVersion": "26.1"
+      },
+      "graphRoot": "reference/reproducibility/run-2/symbol-graphs",
+      "includedFiles": [
+        {
+          "bystanders": [],
+          "crossImportOverlayModule": null,
+          "fileName": "MapKit.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 2211,
+          "sha256": "7d0293874d94b55c50e473dd6bcf4101874701e57da8087de2b5d1adcaa88029",
+          "symbolCount": 1161
+        },
+        {
+          "bystanders": [],
+          "crossImportOverlayModule": null,
+          "fileName": "MapKit@Foundation.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 8,
+          "sha256": "f0c5a19f0a74717dd908f424ebe2aa4d36ced914e06fb4432b0e690ad0c4c344",
+          "symbolCount": 8
+        },
+        {
+          "bystanders": [],
+          "crossImportOverlayModule": null,
+          "fileName": "MapKit@GeoToolbox.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 1,
+          "sha256": "95a407e74308fdd8525747d0ebb4515bdef76094dc967d2eccddd995d8abf12a",
+          "symbolCount": 1
+        }
+      ],
+      "rawRelationshipMultisetSHA256": "ab0402369741c21710d44322ee9e3de3399789682f9ea69ed1e363dc658d7ba3",
+      "rawRelationshipOccurrenceCount": 2220,
+      "run": 2,
+      "symbolMultisetSHA256": "614a9afdb425fb4af627fdcc9fb9b459ea3cc1bdd9e1cd905cb48d0bae9cf33e",
+      "symbolOccurrenceCount": 1170,
+      "uniqueSymbolCount": 1153
+    },
+    {
+      "baseRelationshipProjection": {
+        "excludedRelationshipMultisetSHA256": "d0606e12abdbcce4e6b1f91c06c036dc047e5fd54b21a5b52fc6c28420b49ce6",
+        "excludedRelationshipOccurrenceCount": 30,
+        "excludedRows": [
+          {
+            "canonicalSHA256": "234e9f2a073789ced381dcb42da443cd7588ec5b2e93ebfc4ecec65c50adcd6f",
+            "count": 1,
+            "multisetSHA256": "6234a381fd0fb2a2a81e8ce5467904591e4ad1a9973b179b997600eb4d866cf1",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKAnnotationView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKAnnotationView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "5b67ad36d8cc87eaced05411bd9b49892f00abfe2a1e3a8015cdd82baad5bb86",
+            "count": 1,
+            "multisetSHA256": "99d0dbcbb32e183f6ddca563b09c67c8a56925722b863805d990207d46f37039",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKAnnotationView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKAnnotationView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "515ac70ad0b9f0b62933f5b39330ef73f26fb349f28dfcc3153aa82d66dcf388",
+            "count": 1,
+            "multisetSHA256": "9910ad7c928b3a2a91391e1ece150fa0d7324abd4fdc8481e12d7eec0ccb6bea",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKCircleView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKCircleView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "64e234b3c91c7d99e7dd5585a661baf7723b18abc6e39033b850b7d90050437e",
+            "count": 1,
+            "multisetSHA256": "9333595b2113426e2e1b6235b4070b4bdf928d7be32ef7cef0ebdbbca3313b82",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKCircleView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKCircleView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "fc75163e14b449c98446c31bfe86530c170e72d7d9f8d31ec32a105d987ffeef",
+            "count": 1,
+            "multisetSHA256": "24ca8c2857b4c80734cfcf34a62aa2a61a6431900b00bb1b9d56a5edb7c477b8",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKCompassButton",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKCompassButton",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "1d86845b22237846f95089463be1e63871c4bb270a542d71924f7e0348ae73cc",
+            "count": 1,
+            "multisetSHA256": "23dd27a0ca26c3c6e017662e24cff20314045569280be50db7b7ffc4658e690b",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKCompassButton",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKCompassButton",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "93ec2205f9d51b1cec550c1ba0897fb82c27d1c5c4090dfbb6735f98d7540083",
+            "count": 1,
+            "multisetSHA256": "71ffff38c4a692779dfe39958ee05c71f2ac87586d86e47d963779bc9f23e4d7",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKLookAroundViewController",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKLookAroundViewController",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "ce5ceddde830a2f56537873186211420cd7fcb6e9af7be49359e318035b674b6",
+            "count": 1,
+            "multisetSHA256": "976c98148ef8e1bd3dcb010f131c5d5913f34b3499dc4b0930db312da495ab13",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKLookAroundViewController",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKLookAroundViewController",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "6469c66d19dd32715478979c2414a2da00354ee207bc733303a9918902adc949",
+            "count": 1,
+            "multisetSHA256": "c13844365eb0f7e6d3a223cc02252f6468f183a6abe37e17ca9ddf11d988ff10",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMapItemDetailViewController",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKMapItemDetailViewController",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "979dfc9abf5c3d2f47fa4fe9222ba3e36acbf540268c9213802493456799a4b2",
+            "count": 1,
+            "multisetSHA256": "0407b0590cdaae658bfd10ce4d907d7bba135cf8f7395807916ce5f76d322e7e",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMapItemDetailViewController",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKMapItemDetailViewController",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "553a3e3ccc0b7ba46502606840c460939a1e804cb42b86101f6a561d5ed12353",
+            "count": 1,
+            "multisetSHA256": "d9223ea45224496d3a30394713bb5fa29abdd141a7054fba933099d7d8d2b5be",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMapView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKMapView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "b1d26f5ad2f8805813bd0ee91e228101fd8044b2556c365469aaf80fbe7f5848",
+            "count": 1,
+            "multisetSHA256": "c552d9a6909e2173100025c561bdb599cd6878bab3f4aa73d45159dc00093168",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMapView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKMapView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "75ac486ccf4fb1474fa89e71fc2a27f5a5faafb1d466348fb1893a3829af549b",
+            "count": 1,
+            "multisetSHA256": "d4a4c9892c78f0ae6c3a6fefa5cd3e952ee33e6d285c41f193f43e80b8e3faad",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMarkerAnnotationView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKMarkerAnnotationView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "1b901335d1753c89ac1961bb9a05c7cc1165e1d6a0373992893ff3adb7c7fe22",
+            "count": 1,
+            "multisetSHA256": "6a062d1461bce2f1c7ef9bc0180c466b690b79d1c826175fe59424d498855cdd",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKMarkerAnnotationView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKMarkerAnnotationView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "d8ea944450dff275c8221635f016e18295976d3c1a758196cf0505d9d6fea12d",
+            "count": 1,
+            "multisetSHA256": "00c47a7ff225a0bdef22973d948a5905f4794d66cf099238b40534577a24bf13",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKOverlayPathView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKOverlayPathView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "739c2d40967ede1bd89fc8b18926a908f6eb718e2aff8db2eea48ef27e042882",
+            "count": 1,
+            "multisetSHA256": "fee3eb26a7b8293151b7657797e3660941008b6205076a4f358ea8dd09d17fb4",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKOverlayPathView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKOverlayPathView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "b6af4cb26f40fa88cf589909321f46420b9e49d45b245c26a8692b8b493c7bea",
+            "count": 1,
+            "multisetSHA256": "123c54bfe588fbbbb62353ac03efae579da7838c5093b72d7e36cdf045927f75",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKOverlayView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKOverlayView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "073dc27bbc9abc0e199b51d20f99c17ec0c7e789efc5411edf92fe62ba8a91f5",
+            "count": 1,
+            "multisetSHA256": "c11b15669e71ed30938ee478927a07bed331bc6b883493f4dd78d34ab89dddd0",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKOverlayView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKOverlayView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "fb4d0307c3fa7794d47ba429fc121e50622adcc3aa0300bcef236377ad902ebc",
+            "count": 1,
+            "multisetSHA256": "f8e22539244874461ba11d55cae1c7955c639eee39207dcae8913c33f7f6c210",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPinAnnotationView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKPinAnnotationView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "29751e6aebed5a154cbb755e8df0fb45b5100411ee8caaa025056afbfb172e42",
+            "count": 1,
+            "multisetSHA256": "f527c3a8ec3b3adfe259a379c50803898920247dec3ee5d65b8de388cb6ac293",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPinAnnotationView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKPinAnnotationView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "8051130cf710d8f8b0b33fb2344dc77442b48d03e25fae152515b074cb47098f",
+            "count": 1,
+            "multisetSHA256": "a548fff0257708b37e2051f1ad45e0eed673ba5ccda738c44cc9a62542242238",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPlacemark",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKPlacemark",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "32080106010c402d52ad9ecc0fbaebdfd633527b42ab7e95718b18cb9cab96d3",
+            "count": 1,
+            "multisetSHA256": "0962d36835638cb516cdf48c014826c964f06c318565b4b1ce31b11744f70cc9",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPlacemark",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKPlacemark",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "db612789d2d93229403a8a370761421b182a6b5c96cc65a494a7ce1ea9a37c7c",
+            "count": 1,
+            "multisetSHA256": "8b58719c4db2e9223834b773a9942633b4ba5ec494191b722483a60cb308ef65",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPolygonView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKPolygonView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "fba4d30fa10aa040cec33d9e96fe405535d86eb7f65b6a50f5da385633d5a5dc",
+            "count": 1,
+            "multisetSHA256": "cd6d29f32b8d57165e4b4e8fbda5fb2100584ef0c90755e113123f13f5cfbed6",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPolygonView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKPolygonView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "c1cf61158cfef238b5af3f5d10eebce32666377fd3dca9b3350d513ba96f52b4",
+            "count": 1,
+            "multisetSHA256": "94c53fcbc75e1677fa60ea99614c35fb0c0640d6859f491af8c8aac3e8d32d30",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPolylineView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKPolylineView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "4b4a0bee52f3635f49c40cc01bd25ea1d80b184957ab18bc93d11a06caa3b7b9",
+            "count": 1,
+            "multisetSHA256": "ce752c3e1159595a939e199096424807f346ee4ea3fb3a3f4361393f6bbc4b9d",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKPolylineView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKPolylineView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "61be597bab864814c394004dbef544eab542718ee2e0c3aae19807157bcc5e91",
+            "count": 1,
+            "multisetSHA256": "ca5083bd52518d03b0f442fbe85c3dd1d5ceeda00e6943028b0a0ebed3c84e77",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKUserLocationView",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKUserLocationView",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "37944cf799c9862e3f1a7d0e2fcea02a80665df169b240d13c0cb8fd1d249f90",
+            "count": 1,
+            "multisetSHA256": "b916e54a9dea842388206b851701816686f4141fb83328dc41a0eb1ce7029c13",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKUserLocationView",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKUserLocationView",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          },
+          {
+            "canonicalSHA256": "044ff6056a1d51b8aa0b7f7afbfae37e9426eab82ad8c871b1a2abeb3e47421c",
+            "count": 1,
+            "multisetSHA256": "488c67fe35ee3d66046bcd3a5a0eddfe27febad9b83bf941b1ae6f98b1cf24f8",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKUserTrackingButton",
+              "target": "s:s16SendableMetatypeP",
+              "targetFallback": "Swift.SendableMetatype"
+            },
+            "source": "c:objc(cs)MKUserTrackingButton",
+            "sourceOrigin": null,
+            "target": "s:s16SendableMetatypeP",
+            "targetFallback": "Swift.SendableMetatype"
+          },
+          {
+            "canonicalSHA256": "abdee14c9c8a2170a9dafdcb4fecaf55167420828274d5c68027e2926e24d3fd",
+            "count": 1,
+            "multisetSHA256": "0920f4bd530ac6b7c3570b2c5668103e4d625edf64ec8371f5d53acd938c2851",
+            "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+            "relationship": {
+              "kind": "conformsTo",
+              "source": "c:objc(cs)MKUserTrackingButton",
+              "target": "s:s8SendableP",
+              "targetFallback": "Swift.Sendable"
+            },
+            "source": "c:objc(cs)MKUserTrackingButton",
+            "sourceOrigin": null,
+            "target": "s:s8SendableP",
+            "targetFallback": "Swift.Sendable"
+          }
+        ],
+        "policy": "exclude-primary-imported-objc-class-conformsTo-swift-sendable-v1",
+        "primaryGraphFileName": "MapKit.symbols.json",
+        "projectedRelationshipMultisetSHA256": "84d82f0996324eb24afe36a10e2a75d347aa7326480e136740a2e331375a7580",
+        "projectedRelationshipOccurrenceCount": 2192,
+        "rawRelationshipMultisetSHA256": "d6b7c6c4d37d9e84a480bd58a0a0f9a9e7538a0ad9ce77200141315307fc9c1a",
+        "rawRelationshipOccurrenceCount": 2222,
+        "reason": "Xcode 26.1 nondeterministically assigns inherited Swift Sendable conformance relationships among imported Objective-C MapKit classes",
+        "schema": 1,
+        "targets": [
+          {
+            "fallback": "Swift.SendableMetatype",
+            "precise": "s:s16SendableMetatypeP"
+          },
+          {
+            "fallback": "Swift.Sendable",
+            "precise": "s:s8SendableP"
+          }
+        ]
+      },
+      "canonicalOutputs": [
+        {
+          "retainedPath": "reference/reproducibility/run-3/canonical/public-surface.tsv",
+          "sha256": "333d26f32534e41fc64c7b37f4d81e0caeaf93ca3024da56209a029eb6b27b35",
+          "sourcePath": "reference/public-surface.tsv"
+        },
+        {
+          "retainedPath": "reference/reproducibility/run-3/canonical/api-digester.json",
+          "sha256": "bfe10dedc500cfd44e6805afb10feb274ab3e814405d09ab0c65c1469422be64",
+          "sourcePath": "reference/api-digester.json"
+        },
+        {
+          "retainedPath": "reference/reproducibility/run-3/canonical/api-crosswalk.tsv",
+          "sha256": "8326b8e3330bc06cd6dcb59aa0fb24e7f5e738512dcce0f0083534508b5e97d5",
+          "sourcePath": "reference/api-crosswalk.tsv"
+        },
+        {
+          "retainedPath": "reference/reproducibility/run-3/canonical/symbol-conflicts.tsv",
+          "sha256": "da49faece4a60da947502cb72b22c3505f35ad36bf71bc4e13d8468d4394b20b",
+          "sourcePath": "reference/symbol-conflicts.tsv"
+        },
+        {
+          "retainedPath": "reference/reproducibility/run-3/canonical/tbd-exports.tsv",
+          "sha256": "a3428ac70fa40c8860c43cfd9950523111dff218f2d9be2e8dcbe523d30e0e7e",
+          "sourcePath": "reference/tbd-exports.tsv"
+        },
+        {
+          "retainedPath": "reference/reproducibility/run-3/canonical/sdk-inputs.tsv",
+          "sha256": "2ae7b31ae116c8c213685be8c3889294abbb86785c9976758a2b68e1ff581fe9",
+          "sourcePath": "reference/sdk-inputs.tsv"
+        },
+        {
+          "retainedPath": "reference/reproducibility/run-3/canonical/corpus-summary.json",
+          "sha256": "22aa26c1729e72ba079193d76b43f4ff36d6576fe72d5b075d867bbfb04a5699",
+          "sourcePath": "reference/corpus-summary.json"
+        },
+        {
+          "retainedPath": "reference/reproducibility/run-3/canonical/external-evidence.json",
+          "sha256": "55f50463257458e5011feebf501a1d8a7a976b9f6ff4e0b714cec3226d19b8bc",
+          "sourcePath": "reference/external-evidence.json"
+        }
+      ],
+      "excludedFiles": [
+        {
+          "bystanders": [
+            "SwiftUI"
+          ],
+          "crossImportOverlayModule": "_MapKit_SwiftUI",
+          "fileName": "_MapKit_SwiftUI@MapKit.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 8314,
+          "sha256": "fe24fd5dbb5496dfc47c21188df391d5157f81d761ceab768b721b87dad89fab",
+          "symbolCount": 8271
+        },
+        {
+          "bystanders": [
+            "SwiftUI"
+          ],
+          "crossImportOverlayModule": "_MapKit_SwiftUI",
+          "fileName": "_MapKit_SwiftUI@Swift.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 35,
+          "sha256": "121ff3726f660aade2c2b84b0b5b1885973d053ccd179feb5dd4881704b208ee",
+          "symbolCount": 26
+        },
+        {
+          "bystanders": [
+            "SwiftUI"
+          ],
+          "crossImportOverlayModule": "_MapKit_SwiftUI",
+          "fileName": "_MapKit_SwiftUI@SwiftUICore.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 70,
+          "sha256": "3f268136c482ee4255a627970d123cdff17f7d1b4a7b746c9eeb555b91bed140",
+          "symbolCount": 58
+        },
+        {
+          "bystanders": [
+            "SwiftUI"
+          ],
+          "crossImportOverlayModule": "_MapKit_SwiftUI",
+          "fileName": "_MapKit_SwiftUI@_LocationEssentials.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 4,
+          "sha256": "3302d5496c1f82155e16d3e15083f864240cad4a984df2671f4da8e8ea730632",
+          "symbolCount": 2
+        }
+      ],
+      "extraction": {
+        "commandTemplate": [
+          "{symbolGraphExtractorPath}",
+          "-module-name",
+          "MapKit",
+          "-target",
+          "arm64-apple-ios26.0",
+          "-sdk",
+          "{iPhoneOSSDKRoot}",
+          "-minimum-access-level",
+          "public",
+          "-module-cache-path",
+          "{freshTemporaryModuleCache}",
+          "-output-dir",
+          "{freshTemporaryOutputDirectory}"
+        ],
+        "environmentPolicy": "generate_seed_v2.prepare_clean_environment-v1",
+        "sdkName": "iphoneos",
+        "sdkVersion": "26.1",
+        "symbolGraphExtractorPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-symbolgraph-extract",
+        "symbolGraphExtractorSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+        "symbolGraphExtractorVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+        "target": "arm64-apple-ios26.0",
+        "temporaryPathPolicy": "fresh-private-paths-redacted-with-explicit-command-placeholders-v1",
+        "xcodeBuild": "17B55",
+        "xcodeVersion": "26.1"
+      },
+      "graphRoot": "reference/reproducibility/run-3/symbol-graphs",
+      "includedFiles": [
+        {
+          "bystanders": [],
+          "crossImportOverlayModule": null,
+          "fileName": "MapKit.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 2213,
+          "sha256": "8f461ca62715ec1c21c78f12a2fc5a0706f91605184546ed81bc066b624bb527",
+          "symbolCount": 1161
+        },
+        {
+          "bystanders": [],
+          "crossImportOverlayModule": null,
+          "fileName": "MapKit@Foundation.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 8,
+          "sha256": "191110a32a4a88c19a6fd594689e7377de1122d7f2eaa5329923b3729bc16f79",
+          "symbolCount": 8
+        },
+        {
+          "bystanders": [],
+          "crossImportOverlayModule": null,
+          "fileName": "MapKit@GeoToolbox.symbols.json",
+          "graphModule": "MapKit",
+          "relationshipCount": 1,
+          "sha256": "95a407e74308fdd8525747d0ebb4515bdef76094dc967d2eccddd995d8abf12a",
+          "symbolCount": 1
+        }
+      ],
+      "rawRelationshipMultisetSHA256": "d6b7c6c4d37d9e84a480bd58a0a0f9a9e7538a0ad9ce77200141315307fc9c1a",
+      "rawRelationshipOccurrenceCount": 2222,
+      "run": 3,
+      "symbolMultisetSHA256": "614a9afdb425fb4af627fdcc9fb9b459ea3cc1bdd9e1cd905cb48d0bae9cf33e",
+      "symbolOccurrenceCount": 1170,
+      "uniqueSymbolCount": 1153
+    }
+  ],
+  "schema": 1,
+  "stable": {
+    "canonicalOutputSHA256": {
+      "reference/api-crosswalk.tsv": "8326b8e3330bc06cd6dcb59aa0fb24e7f5e738512dcce0f0083534508b5e97d5",
+      "reference/api-digester.json": "bfe10dedc500cfd44e6805afb10feb274ab3e814405d09ab0c65c1469422be64",
+      "reference/corpus-summary.json": "22aa26c1729e72ba079193d76b43f4ff36d6576fe72d5b075d867bbfb04a5699",
+      "reference/external-evidence.json": "55f50463257458e5011feebf501a1d8a7a976b9f6ff4e0b714cec3226d19b8bc",
+      "reference/public-surface.tsv": "333d26f32534e41fc64c7b37f4d81e0caeaf93ca3024da56209a029eb6b27b35",
+      "reference/sdk-inputs.tsv": "2ae7b31ae116c8c213685be8c3889294abbb86785c9976758a2b68e1ff581fe9",
+      "reference/symbol-conflicts.tsv": "da49faece4a60da947502cb72b22c3505f35ad36bf71bc4e13d8468d4394b20b",
+      "reference/tbd-exports.tsv": "a3428ac70fa40c8860c43cfd9950523111dff218f2d9be2e8dcbe523d30e0e7e"
+    },
+    "projectedRelationshipMultisetSHA256": "84d82f0996324eb24afe36a10e2a75d347aa7326480e136740a2e331375a7580",
+    "projectedRelationshipOccurrenceCount": 2192,
+    "symbolMultisetSHA256": "614a9afdb425fb4af627fdcc9fb9b459ea3cc1bdd9e1cd905cb48d0bae9cf33e",
+    "symbolOccurrenceCount": 1170,
+    "uniqueSymbolCount": 1153
+  }
+}

@@ -11,7 +11,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from validate_seed import Validator
+from validate_seed import Validator, compute_scoped_graph_summary
 
 
 def digest(path: Path) -> str:
@@ -443,6 +443,325 @@ class Fixture:
             self.reference / "immutable-files.sha256", self.immutable_files
         )
 
+    def enable_symbol_graph_scope(self) -> None:
+        scripts = self.root / "scripts" / "framework-fanout"
+        scripts.mkdir(parents=True, exist_ok=True)
+        base_generator = scripts / "generate_seed_v2.py"
+        scoped_generator = scripts / "generate_seed_v2_scoped.py"
+        base_generator.write_text("# pinned base generator\n", encoding="utf-8")
+        scoped_generator.write_text("# pinned scoped generator\n", encoding="utf-8")
+
+        primary_path = self.graph_dir / "TinyKit.symbols.json"
+        primary = json.loads(primary_path.read_text(encoding="utf-8"))
+        primary["symbols"].append(
+            {
+                "identifier": {"precise": "c:objc(cs)TinyObjC"},
+                "kind": {"identifier": "swift.class", "displayName": "Class"},
+                "names": {"title": "TinyObjC"},
+                "pathComponents": ["TinyObjC"],
+                "declarationFragments": [{"spelling": "class TinyObjC"}],
+            }
+        )
+        primary["relationships"] = [
+            {
+                "kind": "conformsTo",
+                "source": "c:objc(cs)TinyObjC",
+                "target": "s:s8SendableP",
+                "targetFallback": "Swift.Sendable",
+            }
+        ]
+        self.write_json(primary_path, primary)
+
+        overlay_path = self.graph_dir / "TinyKit@Foundation.symbols.json"
+        overlay = json.loads(overlay_path.read_text(encoding="utf-8"))
+        symbol_payloads = [
+            canonical_payload(symbol)
+            for graph in (primary, overlay)
+            for symbol in graph["symbols"]
+        ]
+        relationship_payloads = [
+            canonical_payload(relationship)
+            for graph in (primary, overlay)
+            for relationship in graph["relationships"]
+        ]
+        symbol_hash = multiset_hash(
+            b"OpenUIKit.SymbolGraph.SymbolMultiset.v1\0", symbol_payloads
+        )
+        relationship_hash = multiset_hash(
+            b"OpenUIKit.SymbolGraph.RelationshipMultiset.v1\0",
+            relationship_payloads,
+        )
+
+        manifest = json.loads(
+            (self.reference / "symbol-graphs.json").read_text(encoding="utf-8")
+        )
+        manifest["files"][0]["sha256"] = digest(primary_path)
+        manifest["files"][0]["symbolCount"] = 3
+        manifest["files"][0]["relationshipCount"] = 1
+        manifest["symbolCount"] = 3
+        manifest["relationshipCount"] = 1
+        manifest["symbolMultisetSHA256"] = symbol_hash
+        manifest["relationshipMultisetSHA256"] = relationship_hash
+        self.write_json(self.reference / "symbol-graphs.json", manifest)
+
+        surface_path = self.reference / "public-surface.tsv"
+        surface_lines = surface_path.read_text(encoding="utf-8").splitlines()
+        surface_lines.insert(
+            1,
+            "c:objc(cs)TinyObjC\tswift.class\tTinyObjC\tTinyObjC\tclass TinyObjC",
+        )
+        surface_path.write_text("\n".join(surface_lines) + "\n", encoding="utf-8")
+
+        crosswalk_path = self.reference / "api-crosswalk.tsv"
+        crosswalk_lines = crosswalk_path.read_text(encoding="utf-8").splitlines()
+        crosswalk_lines.insert(
+            1,
+            "c:objc(cs)TinyObjC\tswift.class\t[\"TinyObjC\"]\tunmatched\t"
+            "none\t0\t0\t\t[]",
+        )
+        crosswalk_path.write_text(
+            "\n".join(crosswalk_lines) + "\n", encoding="utf-8"
+        )
+
+        metadata_path = self.reference / "framework.json"
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        metadata["symbolCount"] = 3
+        metadata["relationshipCount"] = 1
+        metadata["coveragePolicy"]["minimumNondeferredCount"] = 3
+        metadata["provenance"]["apiCrosswalkUnmatchedCount"] = 2
+        metadata["provenance"]["symbolGraphSymbolMultisetSHA256"] = symbol_hash
+        metadata["provenance"][
+            "symbolGraphRelationshipMultisetSHA256"
+        ] = relationship_hash
+        self.write_json(metadata_path, metadata)
+
+        included = []
+        for record in manifest["files"]:
+            graph = json.loads(
+                (self.framework / record["path"]).read_text(encoding="utf-8")
+            )
+            included.append(
+                {
+                    "fileName": Path(record["path"]).name,
+                    "sha256": record["sha256"],
+                    "symbolCount": record["symbolCount"],
+                    "relationshipCount": record["relationshipCount"],
+                    "graphModule": graph["module"]["name"],
+                    "bystanders": [],
+                    "crossImportOverlayModule": None,
+                }
+            )
+        scope = {
+            "schema": 1,
+            "policy": (
+                "base-module-and-extension-graphs-with-exact-cross-import-"
+                "overlay-exclusions-v1"
+            ),
+            "requestedModule": "TinyKit",
+            "approvedExcludedCrossImportOverlayModules": [
+                "_TinyKit_SwiftUI"
+            ],
+            "includedFiles": included,
+            "excludedFiles": [
+                {
+                    "fileName": "_TinyKit_SwiftUI@TinyKit.symbols.json",
+                    "sha256": "5" * 64,
+                    "symbolCount": 4,
+                    "relationshipCount": 5,
+                    "graphModule": "TinyKit",
+                    "bystanders": ["SwiftUI"],
+                    "crossImportOverlayModule": "_TinyKit_SwiftUI",
+                }
+            ],
+            "includedFileCount": 2,
+            "includedSymbolOccurrenceCount": 4,
+            "includedRelationshipOccurrenceCount": 1,
+            "excludedFileCount": 1,
+            "excludedSymbolOccurrenceCount": 4,
+            "excludedRelationshipOccurrenceCount": 5,
+            "rawExtractorFileCount": 3,
+            "rawExtractorSymbolOccurrenceCount": 8,
+            "rawExtractorRelationshipOccurrenceCount": 6,
+            "sourceGenerator": {
+                "path": "scripts/framework-fanout/generate_seed_v2.py",
+                "sha256": digest(base_generator),
+            },
+        }
+        primary_documents = [
+            (
+                Path(record["path"]).name,
+                json.loads(
+                    (self.framework / record["path"]).read_text(encoding="utf-8")
+                ),
+            )
+            for record in manifest["files"]
+        ]
+        primary_summary = compute_scoped_graph_summary(
+            primary_documents, "TinyKit"
+        )
+        scope["baseRelationshipProjection"] = primary_summary[
+            "baseRelationshipProjection"
+        ]
+        scope_path = self.reference / "symbol-graph-scope.json"
+        self.write_json(scope_path, scope)
+
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        metadata["provenance"]["generatorPath"] = (
+            "scripts/framework-fanout/generate_seed_v2_scoped.py"
+        )
+        metadata["provenance"]["generatorSHA256"] = digest(scoped_generator)
+        self.write_json(metadata_path, metadata)
+
+        extraction_keys = (
+            "xcodeVersion",
+            "xcodeBuild",
+            "sdkName",
+            "sdkVersion",
+            "target",
+            "symbolGraphExtractorPath",
+            "symbolGraphExtractorSHA256",
+            "symbolGraphExtractorVersion",
+        )
+        extraction = {
+            key: metadata["provenance"][key] for key in extraction_keys
+        }
+        extraction["commandTemplate"] = [
+            "{symbolGraphExtractorPath}",
+            "-module-name",
+            "TinyKit",
+            "-target",
+            metadata["provenance"]["target"],
+            "-sdk",
+            "{iPhoneOSSDKRoot}",
+            "-minimum-access-level",
+            "public",
+            "-module-cache-path",
+            "{freshTemporaryModuleCache}",
+            "-output-dir",
+            "{freshTemporaryOutputDirectory}",
+        ]
+        extraction["temporaryPathPolicy"] = (
+            "fresh-private-paths-redacted-with-explicit-command-placeholders-v1"
+        )
+        extraction["environmentPolicy"] = (
+            "generate_seed_v2.prepare_clean_environment-v1"
+        )
+        canonical_paths = [
+            "reference/public-surface.tsv",
+            "reference/api-digester.json",
+            "reference/api-crosswalk.tsv",
+            "reference/symbol-conflicts.tsv",
+            "reference/tbd-exports.tsv",
+            "reference/sdk-inputs.tsv",
+            "reference/corpus-summary.json",
+            "reference/external-evidence.json",
+        ]
+        runs = []
+        for run_number, target, fallback in (
+            (1, "s:s8SendableP", "Swift.Sendable"),
+            (2, "s:s16SendableMetatypeP", "Swift.SendableMetatype"),
+            (3, "s:s8SendableP", "Swift.Sendable"),
+        ):
+            if run_number == 1:
+                graph_root_relative = "reference/symbol-graphs"
+                documents = primary_documents
+                run_included = included
+            else:
+                graph_root_relative = (
+                    f"reference/reproducibility/run-{run_number}/symbol-graphs"
+                )
+                graph_root = self.framework / graph_root_relative
+                graph_root.mkdir(parents=True)
+                documents = []
+                run_included = []
+                for record in included:
+                    source = self.graph_dir / record["fileName"]
+                    graph = json.loads(source.read_text(encoding="utf-8"))
+                    if record["fileName"] == "TinyKit.symbols.json":
+                        graph["relationships"][0]["target"] = target
+                        graph["relationships"][0]["targetFallback"] = fallback
+                    destination = graph_root / record["fileName"]
+                    self.write_json(destination, graph)
+                    updated = dict(record)
+                    updated["sha256"] = digest(destination)
+                    updated["relationshipCount"] = len(graph["relationships"])
+                    run_included.append(updated)
+                    documents.append((record["fileName"], graph))
+            summary = compute_scoped_graph_summary(documents, "TinyKit")
+            canonical_records = []
+            for source_relative in canonical_paths:
+                if run_number == 1:
+                    retained_relative = source_relative
+                else:
+                    retained_relative = (
+                        f"reference/reproducibility/run-{run_number}/canonical/"
+                        f"{Path(source_relative).name}"
+                    )
+                    retained = self.framework / retained_relative
+                    retained.parent.mkdir(parents=True, exist_ok=True)
+                    retained.write_bytes((self.framework / source_relative).read_bytes())
+                canonical_records.append(
+                    {
+                        "sourcePath": source_relative,
+                        "retainedPath": retained_relative,
+                        "sha256": digest(self.framework / retained_relative),
+                    }
+                )
+            runs.append(
+                {
+                    "run": run_number,
+                    "graphRoot": graph_root_relative,
+                    "includedFiles": run_included,
+                    "excludedFiles": scope["excludedFiles"],
+                    "extraction": extraction,
+                    **summary,
+                    "canonicalOutputs": canonical_records,
+                }
+            )
+        stable_outputs = {
+            record["sourcePath"]: record["sha256"]
+            for record in runs[0]["canonicalOutputs"]
+        }
+        reproducibility = {
+            "schema": 1,
+            "policy": (
+                "three-fresh-extractions-with-raw-volatility-and-stable-"
+                "derived-evidence-v1"
+            ),
+            "requestedModule": "TinyKit",
+            "runCount": 3,
+            "minimumRequiredDistinctRawRelationshipHashes": 2,
+            "observedDistinctRawRelationshipHashCount": 2,
+            "canonicalOutputPaths": canonical_paths,
+            "stable": {
+                "uniqueSymbolCount": primary_summary["uniqueSymbolCount"],
+                "symbolOccurrenceCount": primary_summary["symbolOccurrenceCount"],
+                "symbolMultisetSHA256": primary_summary["symbolMultisetSHA256"],
+                "projectedRelationshipOccurrenceCount": primary_summary[
+                    "baseRelationshipProjection"
+                ]["projectedRelationshipOccurrenceCount"],
+                "projectedRelationshipMultisetSHA256": primary_summary[
+                    "baseRelationshipProjection"
+                ]["projectedRelationshipMultisetSHA256"],
+                "canonicalOutputSHA256": stable_outputs,
+            },
+            "runs": runs,
+        }
+        repro_path = self.reference / "symbol-graph-reproducibility.json"
+        self.write_json(repro_path, reproducibility)
+        self.immutable_files.update(
+            {
+                "reference/symbol-graph-scope.json",
+                "reference/symbol-graph-reproducibility.json",
+                *(
+                    path.relative_to(self.framework).as_posix()
+                    for path in (self.reference / "reproducibility").rglob("*")
+                    if path.is_file()
+                ),
+            }
+        )
+        self.reseal()
+
     def create_deliverable(self) -> None:
         (self.framework / "TinyKit.swift").write_text(
             "public let answer = 42\npublic func meaning() -> Int { answer }\n",
@@ -493,6 +812,88 @@ class ValidatorTests(unittest.TestCase):
         self.assertEqual([], self.validate(fixture, "seed"))
         fixture.create_deliverable()
         self.assertEqual([], self.validate(fixture, "deliverable"))
+
+    def test_valid_scoped_seed(self) -> None:
+        temporary, fixture = self.make_fixture()
+        self.addCleanup(temporary.cleanup)
+        fixture.enable_symbol_graph_scope()
+        self.assertEqual([], self.validate(fixture, "seed"))
+
+    def test_scoped_seed_rejects_unapproved_excluded_module(self) -> None:
+        temporary, fixture = self.make_fixture()
+        self.addCleanup(temporary.cleanup)
+        fixture.enable_symbol_graph_scope()
+        scope_path = fixture.reference / "symbol-graph-scope.json"
+        scope = json.loads(scope_path.read_text(encoding="utf-8"))
+        scope["excludedFiles"][0]["fileName"] = (
+            "_TinyKit_Other@TinyKit.symbols.json"
+        )
+        scope["excludedFiles"][0]["crossImportOverlayModule"] = "_TinyKit_Other"
+        fixture.write_json(scope_path, scope)
+        fixture.reseal()
+        errors = self.validate(fixture, "seed")
+        self.assertTrue(any("is not approved" in error for error in errors))
+
+    def test_scoped_generator_requires_scope_provenance(self) -> None:
+        temporary, fixture = self.make_fixture()
+        self.addCleanup(temporary.cleanup)
+        fixture.enable_symbol_graph_scope()
+        scope_path = fixture.reference / "symbol-graph-scope.json"
+        scope_path.unlink()
+        fixture.immutable_files.remove("reference/symbol-graph-scope.json")
+        fixture.reseal()
+        errors = self.validate(fixture, "seed")
+        self.assertTrue(any("scoped generator requires" in error for error in errors))
+
+    def test_scoped_reproducibility_rejects_ordinary_relationship_change(self) -> None:
+        temporary, fixture = self.make_fixture()
+        self.addCleanup(temporary.cleanup)
+        fixture.enable_symbol_graph_scope()
+        graph_root = (
+            fixture.reference / "reproducibility" / "run-2" / "symbol-graphs"
+        )
+        graph_path = graph_root / "TinyKit.symbols.json"
+        graph = json.loads(graph_path.read_text(encoding="utf-8"))
+        graph["relationships"].append(
+            {
+                "kind": "memberOf",
+                "source": "s:ordinary-member",
+                "target": "s:ordinary-container",
+            }
+        )
+        fixture.write_json(graph_path, graph)
+        documents = []
+        for path in sorted(graph_root.glob("*.symbols.json")):
+            documents.append(
+                (path.name, json.loads(path.read_text(encoding="utf-8")))
+            )
+        summary = compute_scoped_graph_summary(documents, "TinyKit")
+        repro_path = fixture.reference / "symbol-graph-reproducibility.json"
+        repro = json.loads(repro_path.read_text(encoding="utf-8"))
+        run = repro["runs"][1]
+        for record in run["includedFiles"]:
+            if record["fileName"] == graph_path.name:
+                record["sha256"] = digest(graph_path)
+                record["relationshipCount"] = len(graph["relationships"])
+        for key in (
+            "uniqueSymbolCount",
+            "symbolOccurrenceCount",
+            "symbolMultisetSHA256",
+            "rawRelationshipOccurrenceCount",
+            "rawRelationshipMultisetSHA256",
+            "baseRelationshipProjection",
+        ):
+            run[key] = summary[key]
+        repro["observedDistinctRawRelationshipHashCount"] = len(
+            {item["rawRelationshipMultisetSHA256"] for item in repro["runs"]}
+        )
+        fixture.write_json(repro_path, repro)
+        fixture.reseal()
+        errors = self.validate(fixture, "seed")
+        self.assertTrue(
+            any("projected relationships differ" in error for error in errors),
+            errors,
+        )
 
     def test_immutable_mutation_is_rejected(self) -> None:
         temporary, fixture = self.make_fixture()

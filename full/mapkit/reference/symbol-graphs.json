@@ -1,0 +1,36 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 17,
+  "duplicateOccurrenceCount": 17,
+  "duplicateRelationshipOccurrenceCount": 22,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/MapKit.symbols.json",
+      "relationshipCount": 2213,
+      "sha256": "72a4aacec8b350957dae87922460d43f48a2c25114cecda7502c9dbab0f04081",
+      "symbolCount": 1161
+    },
+    {
+      "path": "reference/symbol-graphs/MapKit@Foundation.symbols.json",
+      "relationshipCount": 8,
+      "sha256": "b7b07b6e4631c1b6e28e8d9a8cc2cb64a13bcc658bccbc7d59a632ab7166129c",
+      "symbolCount": 8
+    },
+    {
+      "path": "reference/symbol-graphs/MapKit@GeoToolbox.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "95a407e74308fdd8525747d0ebb4515bdef76094dc967d2eccddd995d8abf12a",
+      "symbolCount": 1
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "MapKit",
+  "relationshipCount": 2222,
+  "relationshipMultisetSHA256": "73b44f7ffa41aaff6ad57912c7bf181e079b47c3fd8fddf68a71d3f6fe20ac9f",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 1153,
+  "symbolMultisetSHA256": "614a9afdb425fb4af627fdcc9fb9b459ea3cc1bdd9e1cd905cb48d0bae9cf33e",
+  "target": "arm64-apple-ios26.0"
+}
