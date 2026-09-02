@@ -15,35 +15,35 @@ c:@E@CMStereoViewComponents@kCMStereoView_RightEye	deferred		Not part of the can
 c:@E@CMStereoViewInterpretationOptions	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@E@CMStereoViewInterpretationOptions@kCMStereoViewInterpretation_AdditionalViews	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@E@CMStereoViewInterpretationOptions@kCMStereoViewInterpretation_StereoOrderReversed	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@E@CMTimeFlags	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFlagsOptionSet	
-c:@E@CMTimeFlags@kCMTimeFlags_HasBeenRounded	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFlagsOptionSet	
-c:@E@CMTimeFlags@kCMTimeFlags_ImpliedValueFlagsMask	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFlagsOptionSet	
-c:@E@CMTimeFlags@kCMTimeFlags_Indefinite	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFlagsOptionSet	
-c:@E@CMTimeFlags@kCMTimeFlags_NegativeInfinity	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFlagsOptionSet	
-c:@E@CMTimeFlags@kCMTimeFlags_PositiveInfinity	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFlagsOptionSet	
-c:@E@CMTimeFlags@kCMTimeFlags_Valid	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFlagsOptionSet	
-c:@E@CMTimeRoundingMethod	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	
-c:@E@CMTimeRoundingMethod@kCMTimeRoundingMethod_Default	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	
-c:@E@CMTimeRoundingMethod@kCMTimeRoundingMethod_QuickTime	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	
-c:@E@CMTimeRoundingMethod@kCMTimeRoundingMethod_RoundAwayFromZero	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	
-c:@E@CMTimeRoundingMethod@kCMTimeRoundingMethod_RoundHalfAwayFromZero	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	
-c:@E@CMTimeRoundingMethod@kCMTimeRoundingMethod_RoundTowardNegativeInfinity	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	
-c:@E@CMTimeRoundingMethod@kCMTimeRoundingMethod_RoundTowardPositiveInfinity	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	
-c:@E@CMTimeRoundingMethod@kCMTimeRoundingMethod_RoundTowardZero	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	
-c:@Ea@kCMAttachmentMode_ShouldNotPropagate@kCMAttachmentMode_ShouldNotPropagate	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testAttachmentModeConstants	
-c:@Ea@kCMAttachmentMode_ShouldNotPropagate@kCMAttachmentMode_ShouldPropagate	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testAttachmentModeConstants	
-c:@Ea@kCMAudioCodecType_AAC_LCProtected@kCMAudioCodecType_AAC_AudibleProtected	declared	source:full/coremedia/CMMediaTypes.swift#kCMAudioCodecType_AAC_AudibleProtected	
-c:@Ea@kCMAudioCodecType_AAC_LCProtected@kCMAudioCodecType_AAC_LCProtected	declared	source:full/coremedia/CMMediaTypes.swift#kCMAudioCodecType_AAC_LCProtected	
+c:@E@CMTimeFlags	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFlagsOptionSet	focused runtime assertion
+c:@E@CMTimeFlags@kCMTimeFlags_HasBeenRounded	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFlagsOptionSet	focused runtime assertion
+c:@E@CMTimeFlags@kCMTimeFlags_ImpliedValueFlagsMask	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFlagsOptionSet	focused runtime assertion
+c:@E@CMTimeFlags@kCMTimeFlags_Indefinite	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFlagsOptionSet	focused runtime assertion
+c:@E@CMTimeFlags@kCMTimeFlags_NegativeInfinity	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFlagsOptionSet	focused runtime assertion
+c:@E@CMTimeFlags@kCMTimeFlags_PositiveInfinity	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFlagsOptionSet	focused runtime assertion
+c:@E@CMTimeFlags@kCMTimeFlags_Valid	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFlagsOptionSet	focused runtime assertion
+c:@E@CMTimeRoundingMethod	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	focused runtime assertion
+c:@E@CMTimeRoundingMethod@kCMTimeRoundingMethod_Default	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	focused runtime assertion
+c:@E@CMTimeRoundingMethod@kCMTimeRoundingMethod_QuickTime	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	focused runtime assertion
+c:@E@CMTimeRoundingMethod@kCMTimeRoundingMethod_RoundAwayFromZero	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	focused runtime assertion
+c:@E@CMTimeRoundingMethod@kCMTimeRoundingMethod_RoundHalfAwayFromZero	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	focused runtime assertion
+c:@E@CMTimeRoundingMethod@kCMTimeRoundingMethod_RoundTowardNegativeInfinity	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	focused runtime assertion
+c:@E@CMTimeRoundingMethod@kCMTimeRoundingMethod_RoundTowardPositiveInfinity	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	focused runtime assertion
+c:@E@CMTimeRoundingMethod@kCMTimeRoundingMethod_RoundTowardZero	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeRoundingMethodRawValues	focused runtime assertion
+c:@Ea@kCMAttachmentMode_ShouldNotPropagate@kCMAttachmentMode_ShouldNotPropagate	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testAttachmentModeConstants	focused runtime assertion
+c:@Ea@kCMAttachmentMode_ShouldNotPropagate@kCMAttachmentMode_ShouldPropagate	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testAttachmentModeConstants	focused runtime assertion
+c:@Ea@kCMAudioCodecType_AAC_LCProtected@kCMAudioCodecType_AAC_AudibleProtected	declared	source:full/coremedia/CMMediaTypes.swift#kCMAudioCodecType_AAC_AudibleProtected	declaration compiles
+c:@Ea@kCMAudioCodecType_AAC_LCProtected@kCMAudioCodecType_AAC_LCProtected	declared	source:full/coremedia/CMMediaTypes.swift#kCMAudioCodecType_AAC_LCProtected	declaration compiles
 c:@Ea@kCMAudioFormatDescriptionMask_StreamBasicDescription@kCMAudioFormatDescriptionMask_All	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@Ea@kCMAudioFormatDescriptionMask_StreamBasicDescription@kCMAudioFormatDescriptionMask_ChannelLayout	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@Ea@kCMAudioFormatDescriptionMask_StreamBasicDescription@kCMAudioFormatDescriptionMask_Extensions	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@Ea@kCMAudioFormatDescriptionMask_StreamBasicDescription@kCMAudioFormatDescriptionMask_MagicCookie	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@Ea@kCMAudioFormatDescriptionMask_StreamBasicDescription@kCMAudioFormatDescriptionMask_StreamBasicDescription	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@Ea@kCMBlockBufferAssureMemoryNowFlag@kCMBlockBufferAlwaysCopyDataFlag	declared	source:full/coremedia/CoreMedia.swift#kCMBlockBufferAlwaysCopyDataFlag	
-c:@Ea@kCMBlockBufferAssureMemoryNowFlag@kCMBlockBufferAssureMemoryNowFlag	declared	source:full/coremedia/CoreMedia.swift#kCMBlockBufferAssureMemoryNowFlag	
-c:@Ea@kCMBlockBufferAssureMemoryNowFlag@kCMBlockBufferDontOptimizeDepthFlag	declared	source:full/coremedia/CoreMedia.swift#kCMBlockBufferDontOptimizeDepthFlag	
-c:@Ea@kCMBlockBufferAssureMemoryNowFlag@kCMBlockBufferPermitEmptyReferenceFlag	declared	source:full/coremedia/CoreMedia.swift#kCMBlockBufferPermitEmptyReferenceFlag	
-c:@Ea@kCMBlockBufferCustomBlockSourceVersion@kCMBlockBufferCustomBlockSourceVersion	declared	source:full/coremedia/CoreMedia.swift#kCMBlockBufferCustomBlockSourceVersion	
+c:@Ea@kCMBlockBufferAssureMemoryNowFlag@kCMBlockBufferAlwaysCopyDataFlag	declared	source:full/coremedia/CoreMedia.swift#kCMBlockBufferAlwaysCopyDataFlag	declaration compiles
+c:@Ea@kCMBlockBufferAssureMemoryNowFlag@kCMBlockBufferAssureMemoryNowFlag	declared	source:full/coremedia/CoreMedia.swift#kCMBlockBufferAssureMemoryNowFlag	declaration compiles
+c:@Ea@kCMBlockBufferAssureMemoryNowFlag@kCMBlockBufferDontOptimizeDepthFlag	declared	source:full/coremedia/CoreMedia.swift#kCMBlockBufferDontOptimizeDepthFlag	declaration compiles
+c:@Ea@kCMBlockBufferAssureMemoryNowFlag@kCMBlockBufferPermitEmptyReferenceFlag	declared	source:full/coremedia/CoreMedia.swift#kCMBlockBufferPermitEmptyReferenceFlag	declaration compiles
+c:@Ea@kCMBlockBufferCustomBlockSourceVersion@kCMBlockBufferCustomBlockSourceVersion	declared	source:full/coremedia/CoreMedia.swift#kCMBlockBufferCustomBlockSourceVersion	declaration compiles
 c:@Ea@kCMBlockBufferNoErr@kCMBlockBufferBadCustomBlockSourceErr	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMBlockBufferNoErr@kCMBlockBufferBadLengthParameterErr	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMBlockBufferNoErr@kCMBlockBufferBadOffsetParameterErr	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
@@ -80,9 +80,9 @@ c:@Ea@kCMClockError_MissingRequiredParameter@kCMClockError_AllocationFailed	defe
 c:@Ea@kCMClockError_MissingRequiredParameter@kCMClockError_InvalidParameter	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMClockError_MissingRequiredParameter@kCMClockError_MissingRequiredParameter	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMClockError_MissingRequiredParameter@kCMClockError_UnsupportedOperation	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@Ea@kCMClosedCaptionFormatType_CEA608@kCMClosedCaptionFormatType_ATSC	declared	source:full/coremedia/CMMediaTypes.swift#kCMClosedCaptionFormatType_ATSC	
-c:@Ea@kCMClosedCaptionFormatType_CEA608@kCMClosedCaptionFormatType_CEA608	declared	source:full/coremedia/CMMediaTypes.swift#kCMClosedCaptionFormatType_CEA608	
-c:@Ea@kCMClosedCaptionFormatType_CEA608@kCMClosedCaptionFormatType_CEA708	declared	source:full/coremedia/CMMediaTypes.swift#kCMClosedCaptionFormatType_CEA708	
+c:@Ea@kCMClosedCaptionFormatType_CEA608@kCMClosedCaptionFormatType_ATSC	declared	source:full/coremedia/CMMediaTypes.swift#kCMClosedCaptionFormatType_ATSC	declaration compiles
+c:@Ea@kCMClosedCaptionFormatType_CEA608@kCMClosedCaptionFormatType_CEA608	declared	source:full/coremedia/CMMediaTypes.swift#kCMClosedCaptionFormatType_CEA608	declaration compiles
+c:@Ea@kCMClosedCaptionFormatType_CEA608@kCMClosedCaptionFormatType_CEA708	declared	source:full/coremedia/CMMediaTypes.swift#kCMClosedCaptionFormatType_CEA708	declaration compiles
 c:@Ea@kCMFormatDescriptionBridgeError_InvalidParameter@kCMFormatDescriptionBridgeError_AllocationFailed	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMFormatDescriptionBridgeError_InvalidParameter@kCMFormatDescriptionBridgeError_IncompatibleFormatDescription	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMFormatDescriptionBridgeError_InvalidParameter@kCMFormatDescriptionBridgeError_InvalidFormatDescription	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
@@ -132,15 +132,15 @@ c:@Ea@kCMMPEG2VideoProfile_HDV_720p30@kCMMPEG2VideoProfile_XDCAM_HD_1080p30_VBR3
 c:@Ea@kCMMPEG2VideoProfile_HDV_720p30@kCMMPEG2VideoProfile_XDCAM_HD_540p	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@Ea@kCMMPEG2VideoProfile_HDV_720p30@kCMMPEG2VideoProfile_XF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@Ea@kCMMediaType_AuxiliaryPicture@kCMMediaType_AuxiliaryPicture	deferred		FourCC for kCMMediaType_AuxiliaryPicture is absent from the API digester and pinned bindings.
-c:@Ea@kCMMediaType_Video@kCMMediaType_Audio	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	
-c:@Ea@kCMMediaType_Video@kCMMediaType_ClosedCaption	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	
-c:@Ea@kCMMediaType_Video@kCMMediaType_Metadata	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	
-c:@Ea@kCMMediaType_Video@kCMMediaType_Muxed	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	
-c:@Ea@kCMMediaType_Video@kCMMediaType_Subtitle	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	
-c:@Ea@kCMMediaType_Video@kCMMediaType_TaggedBufferGroup	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	
-c:@Ea@kCMMediaType_Video@kCMMediaType_Text	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	
-c:@Ea@kCMMediaType_Video@kCMMediaType_TimeCode	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	
-c:@Ea@kCMMediaType_Video@kCMMediaType_Video	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	
+c:@Ea@kCMMediaType_Video@kCMMediaType_Audio	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	focused runtime assertion
+c:@Ea@kCMMediaType_Video@kCMMediaType_ClosedCaption	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	focused runtime assertion
+c:@Ea@kCMMediaType_Video@kCMMediaType_Metadata	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	focused runtime assertion
+c:@Ea@kCMMediaType_Video@kCMMediaType_Muxed	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	focused runtime assertion
+c:@Ea@kCMMediaType_Video@kCMMediaType_Subtitle	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	focused runtime assertion
+c:@Ea@kCMMediaType_Video@kCMMediaType_TaggedBufferGroup	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	focused runtime assertion
+c:@Ea@kCMMediaType_Video@kCMMediaType_Text	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	focused runtime assertion
+c:@Ea@kCMMediaType_Video@kCMMediaType_TimeCode	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	focused runtime assertion
+c:@Ea@kCMMediaType_Video@kCMMediaType_Video	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testMediaTypeFourCCConstants	focused runtime assertion
 c:@Ea@kCMMemoryPoolError_AllocationFailed@kCMMemoryPoolError_AllocationFailed	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMMemoryPoolError_AllocationFailed@kCMMemoryPoolError_InvalidParameter	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMMetadataDataTypeRegistryError_AllocationFailed@kCMMetadataDataTypeRegistryError_AllocationFailed	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
@@ -149,10 +149,10 @@ c:@Ea@kCMMetadataDataTypeRegistryError_AllocationFailed@kCMMetadataDataTypeRegis
 c:@Ea@kCMMetadataDataTypeRegistryError_AllocationFailed@kCMMetadataDataTypeRegistryError_MultipleConformingBaseTypes	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMMetadataDataTypeRegistryError_AllocationFailed@kCMMetadataDataTypeRegistryError_RequiredParameterMissing	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMMetadataDataTypeRegistryError_AllocationFailed@kCMMetadataDataTypeRegistryError_RequiresConformingBaseType	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@Ea@kCMMetadataFormatType_ICY@kCMMetadataFormatType_Boxed	declared	source:full/coremedia/CMMediaTypes.swift#kCMMetadataFormatType_Boxed	
-c:@Ea@kCMMetadataFormatType_ICY@kCMMetadataFormatType_EMSG	declared	source:full/coremedia/CMMediaTypes.swift#kCMMetadataFormatType_EMSG	
-c:@Ea@kCMMetadataFormatType_ICY@kCMMetadataFormatType_ICY	declared	source:full/coremedia/CMMediaTypes.swift#kCMMetadataFormatType_ICY	
-c:@Ea@kCMMetadataFormatType_ICY@kCMMetadataFormatType_ID3	declared	source:full/coremedia/CMMediaTypes.swift#kCMMetadataFormatType_ID3	
+c:@Ea@kCMMetadataFormatType_ICY@kCMMetadataFormatType_Boxed	declared	source:full/coremedia/CMMediaTypes.swift#kCMMetadataFormatType_Boxed	declaration compiles
+c:@Ea@kCMMetadataFormatType_ICY@kCMMetadataFormatType_EMSG	declared	source:full/coremedia/CMMediaTypes.swift#kCMMetadataFormatType_EMSG	declaration compiles
+c:@Ea@kCMMetadataFormatType_ICY@kCMMetadataFormatType_ICY	declared	source:full/coremedia/CMMediaTypes.swift#kCMMetadataFormatType_ICY	declaration compiles
+c:@Ea@kCMMetadataFormatType_ICY@kCMMetadataFormatType_ID3	declared	source:full/coremedia/CMMediaTypes.swift#kCMMetadataFormatType_ID3	declaration compiles
 c:@Ea@kCMMetadataIdentifierError_AllocationFailed@kCMMetadataIdentifierError_AllocationFailed	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMMetadataIdentifierError_AllocationFailed@kCMMetadataIdentifierError_BadIdentifier	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMMetadataIdentifierError_AllocationFailed@kCMMetadataIdentifierError_BadKey	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
@@ -162,28 +162,28 @@ c:@Ea@kCMMetadataIdentifierError_AllocationFailed@kCMMetadataIdentifierError_Bad
 c:@Ea@kCMMetadataIdentifierError_AllocationFailed@kCMMetadataIdentifierError_BadNumberKey	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMMetadataIdentifierError_AllocationFailed@kCMMetadataIdentifierError_NoKeyValueAvailable	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMMetadataIdentifierError_AllocationFailed@kCMMetadataIdentifierError_RequiredParameterMissing	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@Ea@kCMMuxedStreamType_MPEG1System@kCMMuxedStreamType_DV	declared	source:full/coremedia/CMMediaTypes.swift#kCMMuxedStreamType_DV	
-c:@Ea@kCMMuxedStreamType_MPEG1System@kCMMuxedStreamType_EmbeddedDeviceScreenRecording	declared	source:full/coremedia/CMMediaTypes.swift#kCMMuxedStreamType_EmbeddedDeviceScreenRecording	
-c:@Ea@kCMMuxedStreamType_MPEG1System@kCMMuxedStreamType_MPEG1System	declared	source:full/coremedia/CMMediaTypes.swift#kCMMuxedStreamType_MPEG1System	
-c:@Ea@kCMMuxedStreamType_MPEG1System@kCMMuxedStreamType_MPEG2Program	declared	source:full/coremedia/CMMediaTypes.swift#kCMMuxedStreamType_MPEG2Program	
-c:@Ea@kCMMuxedStreamType_MPEG1System@kCMMuxedStreamType_MPEG2Transport	declared	source:full/coremedia/CMMediaTypes.swift#kCMMuxedStreamType_MPEG2Transport	
-c:@Ea@kCMPersistentTrackID_Invalid@kCMPersistentTrackID_Invalid	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMPersistentTrackIDInvalid	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_16BE555	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_16BE555	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_16BE565	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_16BE565	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_16LE555	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_16LE555	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_16LE5551	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_16LE5551	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_16LE565	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_16LE565	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_24RGB	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testPixelFormatConstants	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_32ARGB	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testPixelFormatConstants	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_32BGRA	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testPixelFormatConstants	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_422YpCbCr10	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_422YpCbCr10	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_422YpCbCr16	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_422YpCbCr16	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_422YpCbCr8	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testPixelFormatConstants	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_422YpCbCr8_yuvs	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_422YpCbCr8_yuvs	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_4444YpCbCrA8	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_4444YpCbCrA8	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_444YpCbCr10	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_444YpCbCr10	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_444YpCbCr8	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_444YpCbCr8	
-c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_8IndexedGray_WhiteIsZero	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_8IndexedGray_WhiteIsZero	
+c:@Ea@kCMMuxedStreamType_MPEG1System@kCMMuxedStreamType_DV	declared	source:full/coremedia/CMMediaTypes.swift#kCMMuxedStreamType_DV	declaration compiles
+c:@Ea@kCMMuxedStreamType_MPEG1System@kCMMuxedStreamType_EmbeddedDeviceScreenRecording	declared	source:full/coremedia/CMMediaTypes.swift#kCMMuxedStreamType_EmbeddedDeviceScreenRecording	declaration compiles
+c:@Ea@kCMMuxedStreamType_MPEG1System@kCMMuxedStreamType_MPEG1System	declared	source:full/coremedia/CMMediaTypes.swift#kCMMuxedStreamType_MPEG1System	declaration compiles
+c:@Ea@kCMMuxedStreamType_MPEG1System@kCMMuxedStreamType_MPEG2Program	declared	source:full/coremedia/CMMediaTypes.swift#kCMMuxedStreamType_MPEG2Program	declaration compiles
+c:@Ea@kCMMuxedStreamType_MPEG1System@kCMMuxedStreamType_MPEG2Transport	declared	source:full/coremedia/CMMediaTypes.swift#kCMMuxedStreamType_MPEG2Transport	declaration compiles
+c:@Ea@kCMPersistentTrackID_Invalid@kCMPersistentTrackID_Invalid	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMPersistentTrackIDInvalid	focused runtime assertion
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_16BE555	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_16BE555	declaration compiles
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_16BE565	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_16BE565	declaration compiles
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_16LE555	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_16LE555	declaration compiles
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_16LE5551	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_16LE5551	declaration compiles
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_16LE565	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_16LE565	declaration compiles
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_24RGB	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testPixelFormatConstants	focused runtime assertion
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_32ARGB	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testPixelFormatConstants	focused runtime assertion
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_32BGRA	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testPixelFormatConstants	focused runtime assertion
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_422YpCbCr10	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_422YpCbCr10	declaration compiles
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_422YpCbCr16	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_422YpCbCr16	declaration compiles
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_422YpCbCr8	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testPixelFormatConstants	focused runtime assertion
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_422YpCbCr8_yuvs	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_422YpCbCr8_yuvs	declaration compiles
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_4444YpCbCrA8	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_4444YpCbCrA8	declaration compiles
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_444YpCbCr10	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_444YpCbCr10	declaration compiles
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_444YpCbCr8	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_444YpCbCr8	declaration compiles
+c:@Ea@kCMPixelFormat_32ARGB@kCMPixelFormat_8IndexedGray_WhiteIsZero	declared	source:full/coremedia/CMMediaTypes.swift#kCMPixelFormat_8IndexedGray_WhiteIsZero	declaration compiles
 c:@Ea@kCMSampleBufferError_AllocationFailed@kCMSampleBufferError_AllocationFailed	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMSampleBufferError_AllocationFailed@kCMSampleBufferError_AlreadyHasDataBuffer	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMSampleBufferError_AllocationFailed@kCMSampleBufferError_ArrayTooSmall	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
@@ -206,8 +206,8 @@ c:@Ea@kCMSimpleQueueError_AllocationFailed@kCMSimpleQueueError_AllocationFailed	
 c:@Ea@kCMSimpleQueueError_AllocationFailed@kCMSimpleQueueError_ParameterOutOfRange	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMSimpleQueueError_AllocationFailed@kCMSimpleQueueError_QueueIsFull	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMSimpleQueueError_AllocationFailed@kCMSimpleQueueError_RequiredParameterMissing	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@Ea@kCMSubtitleFormatType_3GText@kCMSubtitleFormatType_3GText	declared	source:full/coremedia/CMMediaTypes.swift#kCMSubtitleFormatType_3GText	
-c:@Ea@kCMSubtitleFormatType_3GText@kCMSubtitleFormatType_WebVTT	declared	source:full/coremedia/CMMediaTypes.swift#kCMSubtitleFormatType_WebVTT	
+c:@Ea@kCMSubtitleFormatType_3GText@kCMSubtitleFormatType_3GText	declared	source:full/coremedia/CMMediaTypes.swift#kCMSubtitleFormatType_3GText	declaration compiles
+c:@Ea@kCMSubtitleFormatType_3GText@kCMSubtitleFormatType_WebVTT	declared	source:full/coremedia/CMMediaTypes.swift#kCMSubtitleFormatType_WebVTT	declaration compiles
 c:@Ea@kCMSyncError_MissingRequiredParameter@kCMSyncError_AllocationFailed	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMSyncError_MissingRequiredParameter@kCMSyncError_InvalidParameter	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMSyncError_MissingRequiredParameter@kCMSyncError_MissingRequiredParameter	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
@@ -225,62 +225,62 @@ c:@Ea@kCMTextDisplayFlag_scrollIn@kCMTextDisplayFlag_scrollDirection_topToBottom
 c:@Ea@kCMTextDisplayFlag_scrollIn@kCMTextDisplayFlag_scrollIn	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@Ea@kCMTextDisplayFlag_scrollIn@kCMTextDisplayFlag_scrollOut	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@Ea@kCMTextDisplayFlag_scrollIn@kCMTextDisplayFlag_writeTextVertically	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@Ea@kCMTextFormatType_QTText@kCMTextFormatType_3GText	declared	source:full/coremedia/CMMediaTypes.swift#kCMTextFormatType_3GText	
-c:@Ea@kCMTextFormatType_QTText@kCMTextFormatType_QTText	declared	source:full/coremedia/CMMediaTypes.swift#kCMTextFormatType_QTText	
+c:@Ea@kCMTextFormatType_QTText@kCMTextFormatType_3GText	declared	source:full/coremedia/CMMediaTypes.swift#kCMTextFormatType_3GText	declaration compiles
+c:@Ea@kCMTextFormatType_QTText@kCMTextFormatType_QTText	declared	source:full/coremedia/CMMediaTypes.swift#kCMTextFormatType_QTText	declaration compiles
 c:@Ea@kCMTextJustification_left_top@kCMTextJustification_bottom_right	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@Ea@kCMTextJustification_left_top@kCMTextJustification_centered	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@Ea@kCMTextJustification_left_top@kCMTextJustification_left_top	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@Ea@kCMTimeCodeFlag_DropFrame@kCMTimeCodeFlag_24HourMax	declared	source:full/coremedia/CMMediaTypes.swift#kCMTimeCodeFlag_24HourMax	
-c:@Ea@kCMTimeCodeFlag_DropFrame@kCMTimeCodeFlag_DropFrame	declared	source:full/coremedia/CMMediaTypes.swift#kCMTimeCodeFlag_DropFrame	
-c:@Ea@kCMTimeCodeFlag_DropFrame@kCMTimeCodeFlag_NegTimesOK	declared	source:full/coremedia/CMMediaTypes.swift#kCMTimeCodeFlag_NegTimesOK	
-c:@Ea@kCMTimeCodeFormatType_TimeCode32@kCMTimeCodeFormatType_Counter32	declared	source:full/coremedia/CMMediaTypes.swift#kCMTimeCodeFormatType_Counter32	
-c:@Ea@kCMTimeCodeFormatType_TimeCode32@kCMTimeCodeFormatType_Counter64	declared	source:full/coremedia/CMMediaTypes.swift#kCMTimeCodeFormatType_Counter64	
-c:@Ea@kCMTimeCodeFormatType_TimeCode32@kCMTimeCodeFormatType_TimeCode32	declared	source:full/coremedia/CMMediaTypes.swift#kCMTimeCodeFormatType_TimeCode32	
-c:@Ea@kCMTimeCodeFormatType_TimeCode32@kCMTimeCodeFormatType_TimeCode64	declared	source:full/coremedia/CMMediaTypes.swift#kCMTimeCodeFormatType_TimeCode64	
+c:@Ea@kCMTimeCodeFlag_DropFrame@kCMTimeCodeFlag_24HourMax	declared	source:full/coremedia/CMMediaTypes.swift#kCMTimeCodeFlag_24HourMax	declaration compiles
+c:@Ea@kCMTimeCodeFlag_DropFrame@kCMTimeCodeFlag_DropFrame	declared	source:full/coremedia/CMMediaTypes.swift#kCMTimeCodeFlag_DropFrame	declaration compiles
+c:@Ea@kCMTimeCodeFlag_DropFrame@kCMTimeCodeFlag_NegTimesOK	declared	source:full/coremedia/CMMediaTypes.swift#kCMTimeCodeFlag_NegTimesOK	declaration compiles
+c:@Ea@kCMTimeCodeFormatType_TimeCode32@kCMTimeCodeFormatType_Counter32	declared	source:full/coremedia/CMMediaTypes.swift#kCMTimeCodeFormatType_Counter32	declaration compiles
+c:@Ea@kCMTimeCodeFormatType_TimeCode32@kCMTimeCodeFormatType_Counter64	declared	source:full/coremedia/CMMediaTypes.swift#kCMTimeCodeFormatType_Counter64	declaration compiles
+c:@Ea@kCMTimeCodeFormatType_TimeCode32@kCMTimeCodeFormatType_TimeCode32	declared	source:full/coremedia/CMMediaTypes.swift#kCMTimeCodeFormatType_TimeCode32	declaration compiles
+c:@Ea@kCMTimeCodeFormatType_TimeCode32@kCMTimeCodeFormatType_TimeCode64	declared	source:full/coremedia/CMMediaTypes.swift#kCMTimeCodeFormatType_TimeCode64	declaration compiles
 c:@Ea@kCMTimebaseError_MissingRequiredParameter@kCMTimebaseError_AllocationFailed	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMTimebaseError_MissingRequiredParameter@kCMTimebaseError_InvalidParameter	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMTimebaseError_MissingRequiredParameter@kCMTimebaseError_MissingRequiredParameter	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMTimebaseError_MissingRequiredParameter@kCMTimebaseError_ReadOnly	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@Ea@kCMTimebaseError_MissingRequiredParameter@kCMTimebaseError_TimerIntervalTooShort	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_422YpCbCr8	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_422YpCbCr8	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AV1	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testVideoCodecFourCCConstants	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_Animation	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_Animation	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProRes422	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testVideoCodecFourCCConstants	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProRes422HQ	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_AppleProRes422HQ	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProRes422LT	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_AppleProRes422LT	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProRes422Proxy	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_AppleProRes422Proxy	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProRes4444	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_AppleProRes4444	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProRes4444XQ	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_AppleProRes4444XQ	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProResRAW	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_AppleProResRAW	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProResRAWHQ	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_AppleProResRAWHQ	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_Cinepak	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_Cinepak	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCNTSC	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCNTSC	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPAL	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPAL	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPROHD1080i50	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPROHD1080i50	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPROHD1080i60	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPROHD1080i60	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPROHD1080p25	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPROHD1080p25	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPROHD1080p30	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPROHD1080p30	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPROHD720p50	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPROHD720p50	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPROHD720p60	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPROHD720p60	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPro50NTSC	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPro50NTSC	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPro50PAL	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPro50PAL	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCProPAL	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCProPAL	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DepthHEVC	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DepthHEVC	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DisparityHEVC	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DisparityHEVC	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DolbyVisionHEVC	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DolbyVisionHEVC	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_H263	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_H263	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_H264	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testVideoCodecFourCCConstants	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_HEVC	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testVideoCodecFourCCConstants	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_HEVCWithAlpha	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_HEVCWithAlpha	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_JPEG	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testVideoCodecFourCCConstants	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_JPEG_OpenDML	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_JPEG_OpenDML	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_JPEG_XL	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_JPEG_XL	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_MPEG1Video	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_MPEG1Video	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_MPEG2Video	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_MPEG2Video	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_MPEG4Video	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_MPEG4Video	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_SorensonVideo	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_SorensonVideo	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_SorensonVideo3	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_SorensonVideo3	
-c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_VP9	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_VP9	
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_422YpCbCr8	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_422YpCbCr8	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AV1	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testVideoCodecFourCCConstants	focused runtime assertion
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_Animation	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_Animation	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProRes422	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testVideoCodecFourCCConstants	focused runtime assertion
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProRes422HQ	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_AppleProRes422HQ	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProRes422LT	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_AppleProRes422LT	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProRes422Proxy	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_AppleProRes422Proxy	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProRes4444	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_AppleProRes4444	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProRes4444XQ	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_AppleProRes4444XQ	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProResRAW	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_AppleProResRAW	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_AppleProResRAWHQ	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_AppleProResRAWHQ	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_Cinepak	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_Cinepak	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCNTSC	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCNTSC	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPAL	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPAL	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPROHD1080i50	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPROHD1080i50	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPROHD1080i60	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPROHD1080i60	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPROHD1080p25	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPROHD1080p25	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPROHD1080p30	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPROHD1080p30	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPROHD720p50	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPROHD720p50	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPROHD720p60	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPROHD720p60	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPro50NTSC	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPro50NTSC	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCPro50PAL	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCPro50PAL	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DVCProPAL	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DVCProPAL	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DepthHEVC	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DepthHEVC	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DisparityHEVC	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DisparityHEVC	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_DolbyVisionHEVC	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_DolbyVisionHEVC	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_H263	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_H263	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_H264	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testVideoCodecFourCCConstants	focused runtime assertion
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_HEVC	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testVideoCodecFourCCConstants	focused runtime assertion
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_HEVCWithAlpha	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_HEVCWithAlpha	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_JPEG	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testVideoCodecFourCCConstants	focused runtime assertion
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_JPEG_OpenDML	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_JPEG_OpenDML	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_JPEG_XL	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_JPEG_XL	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_MPEG1Video	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_MPEG1Video	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_MPEG2Video	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_MPEG2Video	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_MPEG4Video	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_MPEG4Video	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_SorensonVideo	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_SorensonVideo	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_SorensonVideo3	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_SorensonVideo3	declaration compiles
+c:@Ea@kCMVideoCodecType_422YpCbCr8@kCMVideoCodecType_VP9	declared	source:full/coremedia/CMMediaTypes.swift#kCMVideoCodecType_VP9	declaration compiles
 c:@F@CMAudioClockCreate	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMAudioFormatDescriptionCopyAsBigEndianSoundDescriptionBlockBuffer	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMAudioFormatDescriptionCreate	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
@@ -307,10 +307,10 @@ c:@F@CMBlockBufferCreateEmpty	deferred		OSStatus-typed C API waits for Darwin in
 c:@F@CMBlockBufferCreateWithBufferReference	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMBlockBufferCreateWithMemoryBlock	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMBlockBufferFillDataBytes	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@F@CMBlockBufferGetDataLength	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMBlockBufferCopyOwnedBytes	
+c:@F@CMBlockBufferGetDataLength	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMBlockBufferCopyOwnedBytes	focused runtime assertion
 c:@F@CMBlockBufferGetDataPointer	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@F@CMBlockBufferGetTypeID	declared	source:full/coremedia/CMBlockBuffer.swift#CMBlockBufferGetTypeID	
-c:@F@CMBlockBufferIsEmpty	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMBlockBufferCopyOwnedBytes	
+c:@F@CMBlockBufferGetTypeID	declared	source:full/coremedia/CMBlockBuffer.swift#CMBlockBufferGetTypeID	declaration compiles
+c:@F@CMBlockBufferIsEmpty	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMBlockBufferCopyOwnedBytes	focused runtime assertion
 c:@F@CMBlockBufferIsRangeContiguous	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@F@CMBlockBufferReplaceDataBytes	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMBufferQueueCallForEachBuffer	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
@@ -365,9 +365,9 @@ c:@F@CMFormatDescriptionEqual	deferred		Not part of the canonical Linux starting
 c:@F@CMFormatDescriptionEqualIgnoringExtensionKeys	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@F@CMFormatDescriptionGetExtension	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@F@CMFormatDescriptionGetExtensions	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@F@CMFormatDescriptionGetMediaSubType	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testFormatDescriptionIdentity	
-c:@F@CMFormatDescriptionGetMediaType	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testFormatDescriptionIdentity	
-c:@F@CMFormatDescriptionGetTypeID	declared	source:full/coremedia/CMFormatDescription.swift#CMFormatDescriptionGetTypeID	
+c:@F@CMFormatDescriptionGetMediaSubType	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testFormatDescriptionIdentity	focused runtime assertion
+c:@F@CMFormatDescriptionGetMediaType	implemented	test:full/coremedia/tests/agent/CMFormatDescriptionTests.swift#testFormatDescriptionIdentity	focused runtime assertion
+c:@F@CMFormatDescriptionGetTypeID	declared	source:full/coremedia/CMFormatDescription.swift#CMFormatDescriptionGetTypeID	declaration compiles
 c:@F@CMGetAttachment	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@F@CMMemoryPoolCreate	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
 c:@F@CMMemoryPoolFlush	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
@@ -411,31 +411,31 @@ c:@F@CMSampleBufferCreateForImageBufferWithMakeDataReadyHandler	deferred		OSStat
 c:@F@CMSampleBufferCreateReady	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMSampleBufferCreateReadyWithImageBuffer	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMSampleBufferCreateWithMakeDataReadyHandler	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@F@CMSampleBufferDataIsReady	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	
+c:@F@CMSampleBufferDataIsReady	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	focused runtime assertion
 c:@F@CMSampleBufferGetAudioBufferListWithRetainedBlockBuffer	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMSampleBufferGetAudioStreamPacketDescriptions	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMSampleBufferGetAudioStreamPacketDescriptionsPtr	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@F@CMSampleBufferGetDataBuffer	declared	source:full/coremedia/CMSampleBuffer.swift#CMSampleBufferGetDataBuffer	
-c:@F@CMSampleBufferGetDecodeTimeStamp	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	
-c:@F@CMSampleBufferGetDuration	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	
-c:@F@CMSampleBufferGetFormatDescription	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	
+c:@F@CMSampleBufferGetDataBuffer	declared	source:full/coremedia/CMSampleBuffer.swift#CMSampleBufferGetDataBuffer	declaration compiles
+c:@F@CMSampleBufferGetDecodeTimeStamp	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	focused runtime assertion
+c:@F@CMSampleBufferGetDuration	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	focused runtime assertion
+c:@F@CMSampleBufferGetFormatDescription	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	focused runtime assertion
 c:@F@CMSampleBufferGetImageBuffer	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
-c:@F@CMSampleBufferGetNumSamples	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	
+c:@F@CMSampleBufferGetNumSamples	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	focused runtime assertion
 c:@F@CMSampleBufferGetOutputDecodeTimeStamp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@F@CMSampleBufferGetOutputDuration	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@F@CMSampleBufferGetOutputPresentationTimeStamp	declared	source:full/coremedia/CMSampleBuffer.swift#CMSampleBufferGetOutputPresentationTimeStamp	
+c:@F@CMSampleBufferGetOutputPresentationTimeStamp	declared	source:full/coremedia/CMSampleBuffer.swift#CMSampleBufferGetOutputPresentationTimeStamp	declaration compiles
 c:@F@CMSampleBufferGetOutputSampleTimingInfoArray	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@F@CMSampleBufferGetPresentationTimeStamp	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	
+c:@F@CMSampleBufferGetPresentationTimeStamp	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	focused runtime assertion
 c:@F@CMSampleBufferGetSampleAttachmentsArray	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@F@CMSampleBufferGetSampleSize	declared	source:full/coremedia/CMSampleBuffer.swift#CMSampleBufferGetSampleSize	
+c:@F@CMSampleBufferGetSampleSize	declared	source:full/coremedia/CMSampleBuffer.swift#CMSampleBufferGetSampleSize	declaration compiles
 c:@F@CMSampleBufferGetSampleSizeArray	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMSampleBufferGetSampleTimingInfo	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMSampleBufferGetSampleTimingInfoArray	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@F@CMSampleBufferGetTotalSampleSize	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	
-c:@F@CMSampleBufferGetTypeID	declared	source:full/coremedia/CMSampleBuffer.swift#CMSampleBufferGetTypeID	
+c:@F@CMSampleBufferGetTotalSampleSize	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	focused runtime assertion
+c:@F@CMSampleBufferGetTypeID	declared	source:full/coremedia/CMSampleBuffer.swift#CMSampleBufferGetTypeID	declaration compiles
 c:@F@CMSampleBufferHasDataFailed	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMSampleBufferInvalidate	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@F@CMSampleBufferIsValid	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	
+c:@F@CMSampleBufferIsValid	implemented	test:full/coremedia/tests/agent/CMBufferTests.swift#testCMSampleBufferTimingAndDataRead	focused runtime assertion
 c:@F@CMSampleBufferMakeDataReady	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMSampleBufferSetDataBuffer	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMSampleBufferSetDataBufferFromAudioBufferList	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
@@ -480,9 +480,9 @@ c:@F@CMTextFormatDescriptionGetDefaultTextBox	deferred		OSStatus-typed C API wai
 c:@F@CMTextFormatDescriptionGetDisplayFlags	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMTextFormatDescriptionGetFontName	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMTextFormatDescriptionGetJustification	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@F@CMTimeAbsoluteValue	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeInfinityArithmetic	
-c:@F@CMTimeAdd	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeAddCommonTimescale	
-c:@F@CMTimeClampToRange	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMapAndClamp	
+c:@F@CMTimeAbsoluteValue	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeInfinityArithmetic	focused runtime assertion
+c:@F@CMTimeAdd	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeAddCommonTimescale	focused runtime assertion
+c:@F@CMTimeClampToRange	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMapAndClamp	focused runtime assertion
 c:@F@CMTimeCodeFormatDescriptionCopyAsBigEndianTimeCodeDescriptionBlockBuffer	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMTimeCodeFormatDescriptionCreate	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMTimeCodeFormatDescriptionCreateFromBigEndianTimeCodeDescriptionBlockBuffer	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
@@ -490,43 +490,43 @@ c:@F@CMTimeCodeFormatDescriptionCreateFromBigEndianTimeCodeDescriptionData	defer
 c:@F@CMTimeCodeFormatDescriptionGetFrameDuration	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@F@CMTimeCodeFormatDescriptionGetFrameQuanta	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@F@CMTimeCodeFormatDescriptionGetTimeCodeFlags	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@F@CMTimeCompare	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeCompareEpochOrdering	
-c:@F@CMTimeConvertScale	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeConvertScaleRounding	
-c:@F@CMTimeCopyAsDictionary	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeDictionaryRoundTrip	
-c:@F@CMTimeCopyDescription	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeDescription	
-c:@F@CMTimeFoldIntoRange	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFoldIntoRange	
-c:@F@CMTimeGetSeconds	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSecondsRoundTrip	
-c:@F@CMTimeMake	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMakeValid	
-c:@F@CMTimeMakeFromDictionary	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeDictionaryRoundTrip	
-c:@F@CMTimeMakeWithEpoch	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMakeWithEpoch	
-c:@F@CMTimeMakeWithSeconds	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSecondsRoundTrip	
-c:@F@CMTimeMapDurationFromRangeToRange	declared	source:full/coremedia/CMTime.swift#CMTimeMapDurationFromRangeToRange	
-c:@F@CMTimeMapTimeFromRangeToRange	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMapAndClamp	
-c:@F@CMTimeMappingCopyAsDictionary	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	
-c:@F@CMTimeMappingCopyDescription	declared	source:full/coremedia/CMTimeRange.swift#CMTimeMappingCopyDescription	
-c:@F@CMTimeMappingMake	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	
-c:@F@CMTimeMappingMakeEmpty	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	
-c:@F@CMTimeMappingMakeFromDictionary	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	
-c:@F@CMTimeMappingShow	declared	source:full/coremedia/CMTimeRange.swift#CMTimeMappingShow	
-c:@F@CMTimeMaximum	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeCompareEpochOrdering	
-c:@F@CMTimeMinimum	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeCompareEpochOrdering	
-c:@F@CMTimeMultiply	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMultiplyAndRatio	
-c:@F@CMTimeMultiplyByFloat64	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMultiplyAndRatio	
-c:@F@CMTimeMultiplyByRatio	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMultiplyAndRatio	
-c:@F@CMTimeRangeContainsTime	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeMakeAndEnd	
-c:@F@CMTimeRangeContainsTimeRange	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeIntersectionUnion	
-c:@F@CMTimeRangeCopyAsDictionary	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeDictionaryRoundTrip	
-c:@F@CMTimeRangeCopyDescription	declared	source:full/coremedia/CMTimeRange.swift#CMTimeRangeCopyDescription	
-c:@F@CMTimeRangeEqual	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeFromStartEnd	
-c:@F@CMTimeRangeFromTimeToTime	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeFromStartEnd	
-c:@F@CMTimeRangeGetEnd	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeMakeAndEnd	
-c:@F@CMTimeRangeGetIntersection	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeIntersectionUnion	
-c:@F@CMTimeRangeGetUnion	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeIntersectionUnion	
-c:@F@CMTimeRangeMake	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeMakeAndEnd	
-c:@F@CMTimeRangeMakeFromDictionary	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeDictionaryRoundTrip	
-c:@F@CMTimeRangeShow	declared	source:full/coremedia/CMTimeRange.swift#CMTimeRangeShow	
-c:@F@CMTimeShow	declared	source:full/coremedia/CMTime.swift#CMTimeShow	
-c:@F@CMTimeSubtract	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeAddCommonTimescale	
+c:@F@CMTimeCompare	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeCompareEpochOrdering	focused runtime assertion
+c:@F@CMTimeConvertScale	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeConvertScaleRounding	focused runtime assertion
+c:@F@CMTimeCopyAsDictionary	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeDictionaryRoundTrip	focused runtime assertion
+c:@F@CMTimeCopyDescription	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeDescription	focused runtime assertion
+c:@F@CMTimeFoldIntoRange	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeFoldIntoRange	focused runtime assertion
+c:@F@CMTimeGetSeconds	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSecondsRoundTrip	focused runtime assertion
+c:@F@CMTimeMake	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMakeValid	focused runtime assertion
+c:@F@CMTimeMakeFromDictionary	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeDictionaryRoundTrip	focused runtime assertion
+c:@F@CMTimeMakeWithEpoch	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMakeWithEpoch	focused runtime assertion
+c:@F@CMTimeMakeWithSeconds	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSecondsRoundTrip	focused runtime assertion
+c:@F@CMTimeMapDurationFromRangeToRange	declared	source:full/coremedia/CMTime.swift#CMTimeMapDurationFromRangeToRange	declaration compiles
+c:@F@CMTimeMapTimeFromRangeToRange	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMapAndClamp	focused runtime assertion
+c:@F@CMTimeMappingCopyAsDictionary	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	focused runtime assertion
+c:@F@CMTimeMappingCopyDescription	declared	source:full/coremedia/CMTimeRange.swift#CMTimeMappingCopyDescription	declaration compiles
+c:@F@CMTimeMappingMake	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	focused runtime assertion
+c:@F@CMTimeMappingMakeEmpty	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	focused runtime assertion
+c:@F@CMTimeMappingMakeFromDictionary	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	focused runtime assertion
+c:@F@CMTimeMappingShow	declared	source:full/coremedia/CMTimeRange.swift#CMTimeMappingShow	declaration compiles
+c:@F@CMTimeMaximum	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeCompareEpochOrdering	focused runtime assertion
+c:@F@CMTimeMinimum	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeCompareEpochOrdering	focused runtime assertion
+c:@F@CMTimeMultiply	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMultiplyAndRatio	focused runtime assertion
+c:@F@CMTimeMultiplyByFloat64	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMultiplyAndRatio	focused runtime assertion
+c:@F@CMTimeMultiplyByRatio	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMultiplyAndRatio	focused runtime assertion
+c:@F@CMTimeRangeContainsTime	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeMakeAndEnd	focused runtime assertion
+c:@F@CMTimeRangeContainsTimeRange	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeIntersectionUnion	focused runtime assertion
+c:@F@CMTimeRangeCopyAsDictionary	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeDictionaryRoundTrip	focused runtime assertion
+c:@F@CMTimeRangeCopyDescription	declared	source:full/coremedia/CMTimeRange.swift#CMTimeRangeCopyDescription	declaration compiles
+c:@F@CMTimeRangeEqual	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeFromStartEnd	focused runtime assertion
+c:@F@CMTimeRangeFromTimeToTime	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeFromStartEnd	focused runtime assertion
+c:@F@CMTimeRangeGetEnd	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeMakeAndEnd	focused runtime assertion
+c:@F@CMTimeRangeGetIntersection	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeIntersectionUnion	focused runtime assertion
+c:@F@CMTimeRangeGetUnion	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeIntersectionUnion	focused runtime assertion
+c:@F@CMTimeRangeMake	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeMakeAndEnd	focused runtime assertion
+c:@F@CMTimeRangeMakeFromDictionary	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeDictionaryRoundTrip	focused runtime assertion
+c:@F@CMTimeRangeShow	declared	source:full/coremedia/CMTimeRange.swift#CMTimeRangeShow	declaration compiles
+c:@F@CMTimeShow	declared	source:full/coremedia/CMTime.swift#CMTimeShow	declaration compiles
+c:@F@CMTimeSubtract	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeAddCommonTimescale	focused runtime assertion
 c:@F@CMTimebaseAddTimer	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMTimebaseAddTimerDispatchSource	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@F@CMTimebaseCopyMaster	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
@@ -602,32 +602,32 @@ c:@SA@CMBufferCallbacks@FI@getSize	deferred		Not part of the canonical Linux sta
 c:@SA@CMBufferCallbacks@FI@isDataReady	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@SA@CMBufferCallbacks@FI@refcon	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@SA@CMBufferCallbacks@FI@version	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@SA@CMSampleTimingInfo	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMSampleTimingInfoFields	
-c:@SA@CMSampleTimingInfo@FI@decodeTimeStamp	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMSampleTimingInfoFields	
-c:@SA@CMSampleTimingInfo@FI@duration	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMSampleTimingInfoFields	
-c:@SA@CMSampleTimingInfo@FI@presentationTimeStamp	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMSampleTimingInfoFields	
-c:@SA@CMTime	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeLayoutFingerprint	
-c:@SA@CMTime@FI@epoch	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMakeWithEpoch	
-c:@SA@CMTime@FI@flags	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMakeValid	
-c:@SA@CMTime@FI@timescale	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMakeValid	
-c:@SA@CMTime@FI@value	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMakeValid	
-c:@SA@CMTimeMapping	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeLayoutFingerprint	
-c:@SA@CMTimeMapping@FI@source	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	
-c:@SA@CMTimeMapping@FI@target	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	
-c:@SA@CMTimeRange	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeLayoutFingerprint	
-c:@SA@CMTimeRange@FI@duration	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeMakeAndEnd	
-c:@SA@CMTimeRange@FI@start	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeMakeAndEnd	
-c:@SA@CMVideoDimensions	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMVideoDimensionsFields	
-c:@SA@CMVideoDimensions@FI@height	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMVideoDimensionsFields	
-c:@SA@CMVideoDimensions@FI@width	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMVideoDimensionsFields	
-c:@T@CMAttachmentBearerRef	declared	source:full/coremedia/CoreMedia.swift#CMAttachmentBearer	
-c:@T@CMAttachmentMode	declared	source:full/coremedia/CoreMedia.swift#CMAttachmentMode	
-c:@T@CMAudioCodecType	declared	source:full/coremedia/CoreMedia.swift#CMAudioCodecType	
-c:@T@CMAudioFormatDescriptionMask	declared	source:full/coremedia/CoreMedia.swift#CMAudioFormatDescriptionMask	
-c:@T@CMAudioFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMAudioFormatDescription	
-c:@T@CMBaseClassVersion	declared	source:full/coremedia/CoreMedia.swift#CMBaseClassVersion	
-c:@T@CMBlockBufferFlags	declared	source:full/coremedia/CoreMedia.swift#CMBlockBufferFlags	
-c:@T@CMBlockBufferRef	declared	source:full/coremedia/CMBlockBuffer.swift#CMBlockBuffer	
+c:@SA@CMSampleTimingInfo	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMSampleTimingInfoFields	focused runtime assertion
+c:@SA@CMSampleTimingInfo@FI@decodeTimeStamp	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMSampleTimingInfoFields	focused runtime assertion
+c:@SA@CMSampleTimingInfo@FI@duration	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMSampleTimingInfoFields	focused runtime assertion
+c:@SA@CMSampleTimingInfo@FI@presentationTimeStamp	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMSampleTimingInfoFields	focused runtime assertion
+c:@SA@CMTime	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeLayoutFingerprint	focused runtime assertion
+c:@SA@CMTime@FI@epoch	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMakeWithEpoch	focused runtime assertion
+c:@SA@CMTime@FI@flags	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMakeValid	focused runtime assertion
+c:@SA@CMTime@FI@timescale	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMakeValid	focused runtime assertion
+c:@SA@CMTime@FI@value	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMakeValid	focused runtime assertion
+c:@SA@CMTimeMapping	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeLayoutFingerprint	focused runtime assertion
+c:@SA@CMTimeMapping@FI@source	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	focused runtime assertion
+c:@SA@CMTimeMapping@FI@target	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	focused runtime assertion
+c:@SA@CMTimeRange	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeLayoutFingerprint	focused runtime assertion
+c:@SA@CMTimeRange@FI@duration	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeMakeAndEnd	focused runtime assertion
+c:@SA@CMTimeRange@FI@start	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeMakeAndEnd	focused runtime assertion
+c:@SA@CMVideoDimensions	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMVideoDimensionsFields	focused runtime assertion
+c:@SA@CMVideoDimensions@FI@height	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMVideoDimensionsFields	focused runtime assertion
+c:@SA@CMVideoDimensions@FI@width	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMVideoDimensionsFields	focused runtime assertion
+c:@T@CMAttachmentBearerRef	declared	source:full/coremedia/CoreMedia.swift#CMAttachmentBearer	declaration compiles
+c:@T@CMAttachmentMode	declared	source:full/coremedia/CoreMedia.swift#CMAttachmentMode	declaration compiles
+c:@T@CMAudioCodecType	declared	source:full/coremedia/CoreMedia.swift#CMAudioCodecType	declaration compiles
+c:@T@CMAudioFormatDescriptionMask	declared	source:full/coremedia/CoreMedia.swift#CMAudioFormatDescriptionMask	declaration compiles
+c:@T@CMAudioFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMAudioFormatDescription	declaration compiles
+c:@T@CMBaseClassVersion	declared	source:full/coremedia/CoreMedia.swift#CMBaseClassVersion	declaration compiles
+c:@T@CMBlockBufferFlags	declared	source:full/coremedia/CoreMedia.swift#CMBlockBufferFlags	declaration compiles
+c:@T@CMBlockBufferRef	declared	source:full/coremedia/CMBlockBuffer.swift#CMBlockBuffer	declaration compiles
 c:@T@CMBufferCompareCallback	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@T@CMBufferCompareHandler	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@T@CMBufferGetBooleanCallback	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
@@ -638,55 +638,55 @@ c:@T@CMBufferGetTimeCallback	deferred		Not part of the canonical Linux starting 
 c:@T@CMBufferGetTimeHandler	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@T@CMBufferQueueRef	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
 c:@T@CMBufferQueueTriggerCallback	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
-c:@T@CMBufferQueueTriggerCondition	declared	source:full/coremedia/CoreMedia.swift#CMBufferQueueTriggerCondition	
+c:@T@CMBufferQueueTriggerCondition	declared	source:full/coremedia/CoreMedia.swift#CMBufferQueueTriggerCondition	declaration compiles
 c:@T@CMBufferQueueTriggerHandler	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
 c:@T@CMBufferQueueTriggerToken	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
-c:@T@CMBufferRef	declared	source:full/coremedia/CoreMedia.swift#CMBuffer	
+c:@T@CMBufferRef	declared	source:full/coremedia/CoreMedia.swift#CMBuffer	declaration compiles
 c:@T@CMBufferValidationCallback	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@T@CMBufferValidationHandler	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@T@CMClockOrTimebaseRef	declared	source:full/coremedia/CoreMedia.swift#CMClockOrTimebase	
+c:@T@CMClockOrTimebaseRef	declared	source:full/coremedia/CoreMedia.swift#CMClockOrTimebase	declaration compiles
 c:@T@CMClockRef	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
 c:@T@CMClosedCaptionDescriptionFlavor	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@T@CMClosedCaptionFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMClosedCaptionFormatDescription	
-c:@T@CMClosedCaptionFormatType	declared	source:full/coremedia/CoreMedia.swift#CMClosedCaptionFormatType	
-c:@T@CMFormatDescriptionRef	declared	source:full/coremedia/CMFormatDescription.swift#CMFormatDescription	
+c:@T@CMClosedCaptionFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMClosedCaptionFormatDescription	declaration compiles
+c:@T@CMClosedCaptionFormatType	declared	source:full/coremedia/CoreMedia.swift#CMClosedCaptionFormatType	declaration compiles
+c:@T@CMFormatDescriptionRef	declared	source:full/coremedia/CMFormatDescription.swift#CMFormatDescription	declaration compiles
 c:@T@CMImageDescriptionFlavor	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@T@CMItemCount	declared	source:full/coremedia/CoreMedia.swift#CMItemCount	
-c:@T@CMItemIndex	declared	source:full/coremedia/CoreMedia.swift#CMItemIndex	
-c:@T@CMMediaType	declared	source:full/coremedia/CoreMedia.swift#CMMediaType	
+c:@T@CMItemCount	declared	source:full/coremedia/CoreMedia.swift#CMItemCount	declaration compiles
+c:@T@CMItemIndex	declared	source:full/coremedia/CoreMedia.swift#CMItemIndex	declaration compiles
+c:@T@CMMediaType	declared	source:full/coremedia/CoreMedia.swift#CMMediaType	declaration compiles
 c:@T@CMMemoryPoolRef	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
 c:@T@CMMetadataDescriptionFlavor	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@T@CMMetadataFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMMetadataFormatDescription	
-c:@T@CMMetadataFormatType	declared	source:full/coremedia/CoreMedia.swift#CMMetadataFormatType	
-c:@T@CMMuxedFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMMuxedFormatDescription	
-c:@T@CMMuxedStreamType	declared	source:full/coremedia/CoreMedia.swift#CMMuxedStreamType	
-c:@T@CMPersistentTrackID	declared	source:full/coremedia/CoreMedia.swift#CMPersistentTrackID	
-c:@T@CMPixelFormatType	declared	source:full/coremedia/CoreMedia.swift#CMPixelFormatType	
-c:@T@CMSampleBufferInvalidateCallback	declared	source:full/coremedia/CoreMedia.swift#CMSampleBufferInvalidateCallback	
-c:@T@CMSampleBufferInvalidateHandler	declared	source:full/coremedia/CoreMedia.swift#CMSampleBufferInvalidateHandler	
+c:@T@CMMetadataFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMMetadataFormatDescription	declaration compiles
+c:@T@CMMetadataFormatType	declared	source:full/coremedia/CoreMedia.swift#CMMetadataFormatType	declaration compiles
+c:@T@CMMuxedFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMMuxedFormatDescription	declaration compiles
+c:@T@CMMuxedStreamType	declared	source:full/coremedia/CoreMedia.swift#CMMuxedStreamType	declaration compiles
+c:@T@CMPersistentTrackID	declared	source:full/coremedia/CoreMedia.swift#CMPersistentTrackID	declaration compiles
+c:@T@CMPixelFormatType	declared	source:full/coremedia/CoreMedia.swift#CMPixelFormatType	declaration compiles
+c:@T@CMSampleBufferInvalidateCallback	declared	source:full/coremedia/CoreMedia.swift#CMSampleBufferInvalidateCallback	declaration compiles
+c:@T@CMSampleBufferInvalidateHandler	declared	source:full/coremedia/CoreMedia.swift#CMSampleBufferInvalidateHandler	declaration compiles
 c:@T@CMSampleBufferMakeDataReadyCallback	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
 c:@T@CMSampleBufferMakeDataReadyHandler	deferred		OSStatus-typed C API waits for Darwin in the central ARM64 build; isolated Linux has no OSStatus.
-c:@T@CMSampleBufferRef	declared	source:full/coremedia/CMSampleBuffer.swift#CMSampleBuffer	
+c:@T@CMSampleBufferRef	declared	source:full/coremedia/CMSampleBuffer.swift#CMSampleBuffer	declaration compiles
 c:@T@CMSimpleQueueRef	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
 c:@T@CMSoundDescriptionFlavor	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@T@CMStructVersion	declared	source:full/coremedia/CoreMedia.swift#CMStructVersion	
-c:@T@CMSubtitleFormatType	declared	source:full/coremedia/CoreMedia.swift#CMSubtitleFormatType	
-c:@T@CMTaggedBufferGroupFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMTaggedBufferGroupFormatDescription	
-c:@T@CMTaggedBufferGroupFormatType	declared	source:full/coremedia/CoreMedia.swift#CMTaggedBufferGroupFormatType	
+c:@T@CMStructVersion	declared	source:full/coremedia/CoreMedia.swift#CMStructVersion	declaration compiles
+c:@T@CMSubtitleFormatType	declared	source:full/coremedia/CoreMedia.swift#CMSubtitleFormatType	declaration compiles
+c:@T@CMTaggedBufferGroupFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMTaggedBufferGroupFormatDescription	declaration compiles
+c:@T@CMTaggedBufferGroupFormatType	declared	source:full/coremedia/CoreMedia.swift#CMTaggedBufferGroupFormatType	declaration compiles
 c:@T@CMTextDescriptionFlavor	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@T@CMTextDisplayFlags	declared	source:full/coremedia/CoreMedia.swift#CMTextDisplayFlags	
-c:@T@CMTextFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMTextFormatDescription	
-c:@T@CMTextFormatType	declared	source:full/coremedia/CoreMedia.swift#CMTextFormatType	
-c:@T@CMTextJustificationValue	declared	source:full/coremedia/CoreMedia.swift#CMTextJustificationValue	
+c:@T@CMTextDisplayFlags	declared	source:full/coremedia/CoreMedia.swift#CMTextDisplayFlags	declaration compiles
+c:@T@CMTextFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMTextFormatDescription	declaration compiles
+c:@T@CMTextFormatType	declared	source:full/coremedia/CoreMedia.swift#CMTextFormatType	declaration compiles
+c:@T@CMTextJustificationValue	declared	source:full/coremedia/CoreMedia.swift#CMTextJustificationValue	declaration compiles
 c:@T@CMTimeCodeDescriptionFlavor	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@T@CMTimeCodeFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMTimeCodeFormatDescription	
-c:@T@CMTimeCodeFormatType	declared	source:full/coremedia/CoreMedia.swift#CMTimeCodeFormatType	
-c:@T@CMTimeEpoch	declared	source:full/coremedia/CoreMedia.swift#CMTimeEpoch	
-c:@T@CMTimeScale	declared	source:full/coremedia/CoreMedia.swift#CMTimeScale	
-c:@T@CMTimeValue	declared	source:full/coremedia/CoreMedia.swift#CMTimeValue	
+c:@T@CMTimeCodeFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMTimeCodeFormatDescription	declaration compiles
+c:@T@CMTimeCodeFormatType	declared	source:full/coremedia/CoreMedia.swift#CMTimeCodeFormatType	declaration compiles
+c:@T@CMTimeEpoch	declared	source:full/coremedia/CoreMedia.swift#CMTimeEpoch	declaration compiles
+c:@T@CMTimeScale	declared	source:full/coremedia/CoreMedia.swift#CMTimeScale	declaration compiles
+c:@T@CMTimeValue	declared	source:full/coremedia/CoreMedia.swift#CMTimeValue	declaration compiles
 c:@T@CMTimebaseRef	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
-c:@T@CMVideoCodecType	declared	source:full/coremedia/CoreMedia.swift#CMVideoCodecType	
-c:@T@CMVideoFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMVideoFormatDescription	
+c:@T@CMVideoCodecType	declared	source:full/coremedia/CoreMedia.swift#CMVideoCodecType	declaration compiles
+c:@T@CMVideoFormatDescriptionRef	declared	source:full/coremedia/CoreMedia.swift#CMVideoFormatDescription	declaration compiles
 c:@kCMFormatDescriptionAlphaChannelMode_PremultipliedAlpha	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@kCMFormatDescriptionAlphaChannelMode_StraightAlpha	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@kCMFormatDescriptionCameraCalibrationExtrinsicOriginSource_StereoCameraSystemBaseline	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
@@ -1017,26 +1017,26 @@ c:@kCMTextVerticalLayout_RightToLeft	deferred		Not part of the canonical Linux s
 c:@kCMTimeCodeFormatDescriptionExtension_SourceReferenceName	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@kCMTimeCodeFormatDescriptionKey_LangCode	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 c:@kCMTimeCodeFormatDescriptionKey_Value	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-c:@kCMTimeEpochKey	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeDictionaryRoundTrip	
-c:@kCMTimeFlagsKey	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeDictionaryRoundTrip	
-c:@kCMTimeIndefinite	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSpecialConstants	
-c:@kCMTimeInvalid	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSpecialConstants	
-c:@kCMTimeMappingInvalid	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	
-c:@kCMTimeMappingSourceKey	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	
-c:@kCMTimeMappingTargetKey	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	
-c:@kCMTimeNegativeInfinity	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSpecialConstants	
-c:@kCMTimePositiveInfinity	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSpecialConstants	
-c:@kCMTimeRangeDurationKey	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeDictionaryRoundTrip	
-c:@kCMTimeRangeInvalid	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeEmptyInvalid	
-c:@kCMTimeRangeStartKey	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeDictionaryRoundTrip	
-c:@kCMTimeRangeZero	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeEmptyInvalid	
-c:@kCMTimeScaleKey	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeDictionaryRoundTrip	
-c:@kCMTimeValueKey	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeDictionaryRoundTrip	
-c:@kCMTimeZero	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSpecialConstants	
+c:@kCMTimeEpochKey	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeDictionaryRoundTrip	focused runtime assertion
+c:@kCMTimeFlagsKey	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeDictionaryRoundTrip	focused runtime assertion
+c:@kCMTimeIndefinite	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSpecialConstants	focused runtime assertion
+c:@kCMTimeInvalid	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSpecialConstants	focused runtime assertion
+c:@kCMTimeMappingInvalid	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	focused runtime assertion
+c:@kCMTimeMappingSourceKey	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	focused runtime assertion
+c:@kCMTimeMappingTargetKey	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeMappingMake	focused runtime assertion
+c:@kCMTimeNegativeInfinity	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSpecialConstants	focused runtime assertion
+c:@kCMTimePositiveInfinity	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSpecialConstants	focused runtime assertion
+c:@kCMTimeRangeDurationKey	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeDictionaryRoundTrip	focused runtime assertion
+c:@kCMTimeRangeInvalid	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeEmptyInvalid	focused runtime assertion
+c:@kCMTimeRangeStartKey	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeDictionaryRoundTrip	focused runtime assertion
+c:@kCMTimeRangeZero	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeEmptyInvalid	focused runtime assertion
+c:@kCMTimeScaleKey	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeDictionaryRoundTrip	focused runtime assertion
+c:@kCMTimeValueKey	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeDictionaryRoundTrip	focused runtime assertion
+c:@kCMTimeZero	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSpecialConstants	focused runtime assertion
 c:@kCMTimebaseNotificationKey_EventTime	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
 c:@kCMTimebaseNotification_EffectiveRateChanged	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
 c:@kCMTimebaseNotification_TimeJumped	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
-c:@kCMTimingInfoInvalid	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMSampleTimingInfoFields	
+c:@kCMTimingInfoInvalid	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMSampleTimingInfoFields	focused runtime assertion
 c:@macro@CMITEMCOUNT_MAX	not-applicable		C preprocessor macro; not a Linux Swift runtime surface.
 c:@macro@CMTIMEBASE_USE_SOURCE_TERMINOLOGY	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
 c:@macro@COREMEDIA_CMBASECLASS_VERSION_IS_POINTER_ALIGNED	not-applicable		C preprocessor macro; not a Linux Swift runtime surface.
@@ -1053,7 +1053,7 @@ c:@macro@COREMEDIA_FALSE	not-applicable		C preprocessor macro; not a Linux Swift
 c:@macro@COREMEDIA_TRUE	not-applicable		C preprocessor macro; not a Linux Swift runtime surface.
 c:@macro@COREMEDIA_USE_ALIGNED_CMBASECLASS_VERSION	not-applicable		C preprocessor macro; not a Linux Swift runtime surface.
 c:@macro@COREMEDIA_USE_DERIVED_ENUMS_FOR_CONSTANTS	not-applicable		C preprocessor macro; not a Linux Swift runtime surface.
-c:@macro@kCMTimeMaxTimescale	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMaxTimescale	
+c:@macro@kCMTimeMaxTimescale	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMaxTimescale	focused runtime assertion
 s:10Foundation12DataProtocolPA2A15ContiguousBytesRzrlE04copyE02to4fromySryqd__G_qd_0_tSXRd_0_5BoundQyd_0_5IndexSlRtzr0_lF::SYNTHESIZED::s:9CoreMedia24CMMutableDataBlockBufferV0E6RegionV	not-applicable		Stdlib/protocol witness synthesized against an unimplemented or Apple-only overlay host; not a CoreMedia-owned implementation.
 s:10Foundation12DataProtocolPA2A15ContiguousBytesRzrlE04copyE02to4fromySryqd__G_qd_0_tSXRd_0_5BoundQyd_0_5IndexSlRtzr0_lF::SYNTHESIZED::s:9CoreMedia25CMReadOnlyDataBlockBufferV0F6RegionV	not-applicable		Stdlib/protocol witness synthesized against an unimplemented or Apple-only overlay host; not a CoreMedia-owned implementation.
 s:10Foundation12DataProtocolPAAE10firstRange2of2inSny5IndexQzGSgqd___qd_0_tAaBRd__SXRd_0_5BoundQyd_0_AHRSr0_lF::SYNTHESIZED::s:9CoreMedia24CMMutableDataBlockBufferV0E6RegionV	not-applicable		Stdlib/protocol witness synthesized against an unimplemented or Apple-only overlay host; not a CoreMedia-owned implementation.
@@ -1374,7 +1374,7 @@ s:9CoreMedia25_CMTimebaseInitTrampolinePAAE11masterClockxSo10CMClockRefa_tKcfc::
 s:9CoreMedia25_CMTimebaseInitTrampolinePAAE11sourceClockxSo10CMClockRefa_tKcfc::SYNTHESIZED::c:@T@CMTimebaseRef	not-applicable		Stdlib/protocol witness synthesized against an unimplemented or Apple-only overlay host; not a CoreMedia-owned implementation.
 s:9CoreMedia25_CMTimebaseInitTrampolinePAAE14masterTimebasexSo0C3Refa_tKcfc::SYNTHESIZED::c:@T@CMTimebaseRef	not-applicable		Stdlib/protocol witness synthesized against an unimplemented or Apple-only overlay host; not a CoreMedia-owned implementation.
 s:9CoreMedia25_CMTimebaseInitTrampolinePAAE14sourceTimebasexSo0C3Refa_tKcfc::SYNTHESIZED::c:@T@CMTimebaseRef	not-applicable		Stdlib/protocol witness synthesized against an unimplemented or Apple-only overlay host; not a CoreMedia-owned implementation.
-s:9CoreMedia26CMAttachmentBearerProtocolP	declared	source:full/coremedia/CMFormatDescription.swift#CMAttachmentBearerProtocol	
+s:9CoreMedia26CMAttachmentBearerProtocolP	declared	source:full/coremedia/CMFormatDescription.swift#CMAttachmentBearerProtocol	declaration compiles
 s:9CoreMedia26CMAttachmentBearerProtocolP11attachmentsAA0cD11AttachmentsVvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:9CoreMedia26CMAttachmentBearerProtocolP20propagateAttachments2toyqd___tAaBRd__lF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:9CoreMedia26CMTIME_IS_NEGATIVEINFINITYySbSo6CMTimeaF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
@@ -1389,16 +1389,16 @@ s:9CoreMedia28_CMBlockBufferInitTrampolinePAAE6length9allocator5range5flagsxSi_S
 s:9CoreMedia28_CMBlockBufferInitTrampolinePAAE8capacity5flagsxSi_So0cD3RefaAAE5FlagsVtKcfc::SYNTHESIZED::c:@T@CMBlockBufferRef	not-applicable		Stdlib/protocol witness synthesized against an unimplemented or Apple-only overlay host; not a CoreMedia-owned implementation.
 s:9CoreMedia28_CMBufferQueueInitTrampolinePAAE8capacity8handlersxSi_So0cD3RefaAAE8HandlersVtKcfc::SYNTHESIZED::c:@T@CMBufferQueueRef	not-applicable		Stdlib/protocol witness synthesized against an unimplemented or Apple-only overlay host; not a CoreMedia-owned implementation.
 s:9CoreMedia28_CMSimpleQueueInitTrampolinePAAE8capacityxSi_tKcfc::SYNTHESIZED::c:@T@CMSimpleQueueRef	not-applicable		Stdlib/protocol witness synthesized against an unimplemented or Apple-only overlay host; not a CoreMedia-owned implementation.
-s:9CoreMedia29CMAttachmentBearerAttachmentsV	declared	source:full/coremedia/CMFormatDescription.swift#CMAttachmentBearerAttachments	
+s:9CoreMedia29CMAttachmentBearerAttachmentsV	declared	source:full/coremedia/CMFormatDescription.swift#CMAttachmentBearerAttachments	declaration compiles
 s:9CoreMedia29CMAttachmentBearerAttachmentsV10propagatedSDySSypGvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:9CoreMedia29CMAttachmentBearerAttachmentsV13nonPropagatedSDySSypGvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-s:9CoreMedia29CMAttachmentBearerAttachmentsV4ModeO	declared	source:full/coremedia/CMFormatDescription.swift#Mode	
-s:9CoreMedia29CMAttachmentBearerAttachmentsV4ModeO15shouldPropagateyA2EmF	declared	source:full/coremedia/CMFormatDescription.swift#shouldPropagate	
-s:9CoreMedia29CMAttachmentBearerAttachmentsV4ModeO18shouldNotPropagateyA2EmF	declared	source:full/coremedia/CMFormatDescription.swift#shouldNotPropagate	
+s:9CoreMedia29CMAttachmentBearerAttachmentsV4ModeO	declared	source:full/coremedia/CMFormatDescription.swift#Mode	declaration compiles
+s:9CoreMedia29CMAttachmentBearerAttachmentsV4ModeO15shouldPropagateyA2EmF	declared	source:full/coremedia/CMFormatDescription.swift#shouldPropagate	declaration compiles
+s:9CoreMedia29CMAttachmentBearerAttachmentsV4ModeO18shouldNotPropagateyA2EmF	declared	source:full/coremedia/CMFormatDescription.swift#shouldNotPropagate	declaration compiles
 s:9CoreMedia29CMAttachmentBearerAttachmentsV4ModeO8RawValuea	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:9CoreMedia29CMAttachmentBearerAttachmentsV4ModeO8rawValueAESgs6UInt32V_tcfc	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:9CoreMedia29CMAttachmentBearerAttachmentsV4ModeO8rawValues6UInt32Vvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-s:9CoreMedia29CMAttachmentBearerAttachmentsV5ValueO	declared	source:full/coremedia/CMFormatDescription.swift#Value	
+s:9CoreMedia29CMAttachmentBearerAttachmentsV5ValueO	declared	source:full/coremedia/CMFormatDescription.swift#Value	declaration compiles
 s:9CoreMedia29CMAttachmentBearerAttachmentsV5ValueO15shouldPropagateyAEypcAEmF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:9CoreMedia29CMAttachmentBearerAttachmentsV5ValueO18shouldNotPropagateyAEypcAEmF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:9CoreMedia29CMAttachmentBearerAttachmentsV5ValueO4modeAC4ModeOvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
@@ -2301,14 +2301,14 @@ s:So11CMTimeRangea9CoreMediaE012containsTimeB0ySbABF	deferred		Not part of the c
 s:So11CMTimeRangea9CoreMediaE12containsTimeySbSo0A0aF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So11CMTimeRangea9CoreMediaE12intersectionyA2BF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So11CMTimeRangea9CoreMediaE12isIndefiniteSbvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-s:So11CMTimeRangea9CoreMediaE2eeoiySbAB_ABtFZ	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeFromStartEnd	
+s:So11CMTimeRangea9CoreMediaE2eeoiySbAB_ABtFZ	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeFromStartEnd	focused runtime assertion
 s:So11CMTimeRangea9CoreMediaE2neoiySbAB_ABtFZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So11CMTimeRangea9CoreMediaE3endSo0A0avp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So11CMTimeRangea9CoreMediaE4hash4intoys6HasherVz_tF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So11CMTimeRangea9CoreMediaE5start3endABSo0A0a_AGtcfc	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So11CMTimeRangea9CoreMediaE5unionyA2BF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-s:So11CMTimeRangea9CoreMediaE7isEmptySbvp	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeEmptyInvalid	
-s:So11CMTimeRangea9CoreMediaE7isValidSbvp	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeEmptyInvalid	
+s:So11CMTimeRangea9CoreMediaE7isEmptySbvp	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeEmptyInvalid	focused runtime assertion
+s:So11CMTimeRangea9CoreMediaE7isValidSbvp	implemented	test:full/coremedia/tests/agent/CMTimeRangeTests.swift#testCMTimeRangeEmptyInvalid	focused runtime assertion
 s:So11CMTimeRangea9CoreMediaE9hashValueSivp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So11CMTimeRangeaABycfc	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So11CVBufferRefa9CoreMediaE11attachmentsAC29CMAttachmentBearerAttachmentsVvp	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
@@ -2366,7 +2366,7 @@ s:So13CMTimebaseRefa9CoreMediaE9farFutureSdvpZ	deferred		Requires Apple clocks/q
 s:So16CMBlockBufferRefa9CoreMediaE10startIndexSivp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So16CMBlockBufferRefa9CoreMediaE11attachmentsAC29CMAttachmentBearerAttachmentsVvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So16CMBlockBufferRefa9CoreMediaE17assureBlockMemoryyyKF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-s:So16CMBlockBufferRefa9CoreMediaE1Ta	declared	source:full/coremedia/CMBlockBuffer.swift#T	
+s:So16CMBlockBufferRefa9CoreMediaE1Ta	declared	source:full/coremedia/CMBlockBuffer.swift#T	declaration compiles
 s:So16CMBlockBufferRefa9CoreMediaE20CustomBlockAllocatora	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So16CMBlockBufferRefa9CoreMediaE20propagateAttachments2toyx_tAC26CMAttachmentBearerProtocolRzlF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So16CMBlockBufferRefa9CoreMediaE22CustomBlockDeallocatora	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
@@ -2634,7 +2634,7 @@ s:So17CMSampleBufferRefa9CoreMediaE19SingleSampleBuffersV8IteratorV	deferred		No
 s:So17CMSampleBufferRefa9CoreMediaE19SingleSampleBuffersV8IteratorV4nextABSgyF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So17CMSampleBufferRefa9CoreMediaE19SingleSampleBuffersV8IteratorV7Elementa	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So17CMSampleBufferRefa9CoreMediaE19singleSampleBuffersAbCE06SinglegH0VyKF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-s:So17CMSampleBufferRefa9CoreMediaE1Ta	declared	source:full/coremedia/CMSampleBuffer.swift#T	
+s:So17CMSampleBufferRefa9CoreMediaE1Ta	declared	source:full/coremedia/CMSampleBuffer.swift#T	declaration compiles
 s:So17CMSampleBufferRefa9CoreMediaE20propagateAttachments2toyx_tAC26CMAttachmentBearerProtocolRzlF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So17CMSampleBufferRefa9CoreMediaE20setInvalidateHandleryyyABKcKF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So17CMSampleBufferRefa9CoreMediaE21outputDecodeTimeStampSo6CMTimeavp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
@@ -2734,7 +2734,7 @@ s:So18CMSampleTimingInfoa9CoreMediaE2eeoiySbAB_ABtFZ	deferred		Not part of the c
 s:So18CMSampleTimingInfoaABycfc	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So20CMTimeRoundingMethodV8rawValueABSgs6UInt32V_tcfc	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So22CMFormatDescriptionRefa9CoreMediaE016audioStreamBasicB0So05AudioghB0VSgvp	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
-s:So22CMFormatDescriptionRefa9CoreMediaE0E4TypeV	declared	source:full/coremedia/CMFormatDescription.swift#MediaType	
+s:So22CMFormatDescriptionRefa9CoreMediaE0E4TypeV	declared	source:full/coremedia/CMFormatDescription.swift#MediaType	declaration compiles
 s:So22CMFormatDescriptionRefa9CoreMediaE0E4TypeV13closedCaptionAEvpZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So22CMFormatDescriptionRefa9CoreMediaE0E4TypeV17taggedBufferGroupAEvpZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So22CMFormatDescriptionRefa9CoreMediaE0E4TypeV4textAEvpZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
@@ -2747,7 +2747,7 @@ s:So22CMFormatDescriptionRefa9CoreMediaE0E4TypeV8rawValueAEs6UInt32V_tcfc	deferr
 s:So22CMFormatDescriptionRefa9CoreMediaE0E4TypeV8rawValues6UInt32Vvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So22CMFormatDescriptionRefa9CoreMediaE0E4TypeV8subtitleAEvpZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So22CMFormatDescriptionRefa9CoreMediaE0E4TypeV8timeCodeAEvpZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-s:So22CMFormatDescriptionRefa9CoreMediaE0E7SubTypeV	declared	source:full/coremedia/CMFormatDescription.swift#MediaSubType	
+s:So22CMFormatDescriptionRefa9CoreMediaE0E7SubTypeV	declared	source:full/coremedia/CMFormatDescription.swift#MediaSubType	declaration compiles
 s:So22CMFormatDescriptionRefa9CoreMediaE0E7SubTypeV10midiStreamAEvpZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So22CMFormatDescriptionRefa9CoreMediaE0E7SubTypeV10mobile3GPPAEvpZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So22CMFormatDescriptionRefa9CoreMediaE0E7SubTypeV10mpeg1VideoAEvpZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
@@ -3250,7 +3250,7 @@ s:So22CMFormatDescriptionRefa9CoreMediaE15withMagicCookieyxxSWSgKXEKlF	deferred	
 s:So22CMFormatDescriptionRefa9CoreMediaE18audioChannelLayout0D5Audio07ManagedigH0VSgvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So22CMFormatDescriptionRefa9CoreMediaE18matchesImageBufferySbSo08CVBufferC0aF	deferred		Requires Apple clocks/queues/hardware or CoreAudioTypes/CoreVideo modules supplied by the central build.
 s:So22CMFormatDescriptionRefa9CoreMediaE19nalUnitHeaderLengthSiSgvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-s:So22CMFormatDescriptionRefa9CoreMediaE1Ta	declared	source:full/coremedia/CMFormatDescription.swift#T	
+s:So22CMFormatDescriptionRefa9CoreMediaE1Ta	declared	source:full/coremedia/CMFormatDescription.swift#T	declaration compiles
 s:So22CMFormatDescriptionRefa9CoreMediaE20mostCompatibleFormatSo05AudioH8ListItemVSgvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So22CMFormatDescriptionRefa9CoreMediaE22ParameterSetCollectionV	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So22CMFormatDescriptionRefa9CoreMediaE22ParameterSetCollectionV10startIndexSivp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
@@ -3302,24 +3302,24 @@ s:So32CMClosedCaptionDescriptionFlavora8rawValueABSo11CFStringRefa_tcfc	deferred
 s:So32CMClosedCaptionDescriptionFlavorayABSo11CFStringRefacfc	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So33CMStereoViewInterpretationOptionsV8rawValueABs6UInt64V_tcfc	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So6CMTimea5value9timescale5flags5epochABs5Int64V_s5Int32VSo0A5FlagsVAHtcfc	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-s:So6CMTimea9CoreMediaE12convertScale_6methodABs5Int32V_So0A14RoundingMethodVtF	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeConvertScaleRounding	
+s:So6CMTimea9CoreMediaE12convertScale_6methodABs5Int32V_So0A14RoundingMethodVtF	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeConvertScaleRounding	focused runtime assertion
 s:So6CMTimea9CoreMediaE12isIndefiniteSbvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So6CMTimea9CoreMediaE14hasBeenRoundedSbvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So6CMTimea9CoreMediaE18isNegativeInfinitySbvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So6CMTimea9CoreMediaE18isPositiveInfinitySbvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So6CMTimea9CoreMediaE1goiySbAB_ABtFZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So6CMTimea9CoreMediaE1loiySbAB_ABtFZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-s:So6CMTimea9CoreMediaE1poiyA2B_ABtFZ	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeAddCommonTimescale	
+s:So6CMTimea9CoreMediaE1poiyA2B_ABtFZ	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeAddCommonTimescale	focused runtime assertion
 s:So6CMTimea9CoreMediaE1soiyA2B_ABtFZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-s:So6CMTimea9CoreMediaE2eeoiySbAB_ABtFZ	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeHashableEquatable	
+s:So6CMTimea9CoreMediaE2eeoiySbAB_ABtFZ	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeHashableEquatable	focused runtime assertion
 s:So6CMTimea9CoreMediaE2geoiySbAB_ABtFZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So6CMTimea9CoreMediaE2leoiySbAB_ABtFZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So6CMTimea9CoreMediaE2neoiySbAB_ABtFZ	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So6CMTimea9CoreMediaE4hash4intoys6HasherVz_tF	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So6CMTimea9CoreMediaE5value9timescaleABs5Int64V_s5Int32Vtcfc	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-s:So6CMTimea9CoreMediaE7isValidSbvp	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMakeValid	
+s:So6CMTimea9CoreMediaE7isValidSbvp	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeMakeValid	focused runtime assertion
 s:So6CMTimea9CoreMediaE7seconds18preferredTimescaleABSd_s5Int32Vtcfc	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
-s:So6CMTimea9CoreMediaE7secondsSdvp	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSecondsRoundTrip	
+s:So6CMTimea9CoreMediaE7secondsSdvp	implemented	test:full/coremedia/tests/agent/CMTimeTests.swift#testCMTimeSecondsRoundTrip	focused runtime assertion
 s:So6CMTimea9CoreMediaE9hashValueSivp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So6CMTimea9CoreMediaE9isNumericSbvp	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
 s:So6CMTimeaABycfc	deferred		Not part of the canonical Linux starting core; no honest implementation without inventing behavior.
