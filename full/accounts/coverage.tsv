@@ -1,0 +1,83 @@
+precise	status	evidence	notes
+c:@ACAccountStoreDidChangeNotification	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle: raw value ACAccountStoreDidChangeNotification. Store never posts.
+c:@ACAccountTypeIdentifierFacebook	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle: com.apple.facebook.
+c:@ACAccountTypeIdentifierSinaWeibo	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle: com.apple.sinaweibo.
+c:@ACAccountTypeIdentifierTencentWeibo	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle: com.apple.account.tencentweibo.
+c:@ACAccountTypeIdentifierTwitter	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle: com.apple.twitter.
+c:@ACErrorDomain	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle: com.apple.accounts. Fail-closed NSError uses this domain.
+c:@ACFacebookAppIdKey	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value ACFacebookAppIdKey.
+c:@ACFacebookAudienceEveryone	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value everyone.
+c:@ACFacebookAudienceFriends	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value friends.
+c:@ACFacebookAudienceKey	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value ACFacebookAudienceKey.
+c:@ACFacebookAudienceOnlyMe	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value me.
+c:@ACFacebookPermissionsKey	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value ACFacebookPermissionsKey.
+c:@ACTencentWeiboAppIdKey	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value ACTencentWeiboAppIdKey.
+c:@E@ACAccountCredentialRenewResult	implemented	Accounts.swift;AccountsRuntime.swift:exerciseRenewResult	Int enum; Linux never reports renewed.
+c:@E@ACAccountCredentialRenewResult@ACAccountCredentialRenewResultFailed	implemented	Accounts.swift;AccountsRuntime.swift:proveRenewCallback	Gated callback reports failed with fail-closed NSError.
+c:@E@ACAccountCredentialRenewResult@ACAccountCredentialRenewResultRejected	implemented	Accounts.swift;AccountsRuntime.swift:exerciseRenewResult	Case is constructible; Linux renew path uses failed.
+c:@E@ACAccountCredentialRenewResult@ACAccountCredentialRenewResultRenewed	implemented	Accounts.swift;AccountsRuntime.swift:exerciseRenewResult	Case is constructible; Linux never returns renewed.
+c:@E@ACErrorCode	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	UInt32 RawRepresentable struct matching the graph.
+c:@E@ACErrorCode@ACErrorAccessDeniedByProtectionPolicy	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 10.
+c:@E@ACErrorCode@ACErrorAccessInfoInvalid	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 8.
+c:@E@ACErrorCode@ACErrorAccountAlreadyExists	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 5.
+c:@E@ACErrorCode@ACErrorAccountAuthenticationFailed	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 3.
+c:@E@ACErrorCode@ACErrorAccountMissingRequiredProperty	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 2.
+c:@E@ACErrorCode@ACErrorAccountNotFound	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 6.
+c:@E@ACErrorCode@ACErrorAccountTypeInvalid	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 4.
+c:@E@ACErrorCode@ACErrorClientPermissionDenied	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 9.
+c:@E@ACErrorCode@ACErrorCoreDataSaveFailed	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 18.
+c:@E@ACErrorCode@ACErrorCredentialItemNotExpired	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 23.
+c:@E@ACErrorCode@ACErrorCredentialItemNotFound	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 22.
+c:@E@ACErrorCode@ACErrorCredentialNotFound	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 11.
+c:@E@ACErrorCode@ACErrorDeniedByPlugin	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 17.
+c:@E@ACErrorCode@ACErrorFailedSerializingAccountInfo	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 19.
+c:@E@ACErrorCode@ACErrorFetchCredentialFailed	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 12.
+c:@E@ACErrorCode@ACErrorInvalidClientBundleID	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 16.
+c:@E@ACErrorCode@ACErrorInvalidCommand	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 20.
+c:@E@ACErrorCode@ACErrorMissingTransportMessageID	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 21.
+c:@E@ACErrorCode@ACErrorPermissionDenied	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 7. Fail-closed NSError.code.
+c:@E@ACErrorCode@ACErrorRemoveCredentialFailed	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 14.
+c:@E@ACErrorCode@ACErrorStoreCredentialFailed	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 13.
+c:@E@ACErrorCode@ACErrorUnknown	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 1.
+c:@E@ACErrorCode@ACErrorUpdatingNonexistentAccount	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value 15.
+c:@T@ACAccountStoreCredentialRenewalHandler	implemented	Accounts.swift;AccountsRuntime.swift:exerciseGatedCallbacks	Typealias used by the gated renew callback.
+c:@T@ACAccountStoreRemoveCompletionHandler	implemented	Accounts.swift;AccountsRuntime.swift:exerciseGatedCallbacks	Typealias used by the gated remove callback.
+c:@T@ACAccountStoreRequestAccessCompletionHandler	implemented	Accounts.swift;AccountsRuntime.swift:exerciseGatedCallbacks	Typealias used by the gated requestAccess callback.
+c:@T@ACAccountStoreSaveCompletionHandler	implemented	Accounts.swift;AccountsRuntime.swift:exerciseGatedCallbacks	Typealias used by the gated save callback.
+c:objc(cs)ACAccount	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	In-memory NSObject; not persisted.
+c:objc(cs)ACAccount(im)initWithAccountType:	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	Local initializer; identifier stays nil.
+c:objc(cs)ACAccount(py)accountDescription	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	In-process get/set.
+c:objc(cs)ACAccount(py)accountType	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	In-process get/set.
+c:objc(cs)ACAccount(py)credential	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	In-process get/set.
+c:objc(cs)ACAccount(py)identifier	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	Always nil because save is fail-closed.
+c:objc(cs)ACAccount(py)userFullName	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	Always nil; no Apple account profile.
+c:objc(cs)ACAccount(py)username	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	In-process get/set.
+c:objc(cs)ACAccountCredential	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	In-memory token holder only.
+c:objc(cs)ACAccountCredential(im)initWithOAuth2Token:refreshToken:expiryDate:	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	Stores oauthToken locally; takes Foundation Date.
+c:objc(cs)ACAccountCredential(im)initWithOAuth2Token:refreshToken:expiryDate:::SYNTHESIZED::c:objc(cs)ACAccountCredential	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	OAuth2Token label alias of oAuth2Token initializer.
+c:objc(cs)ACAccountCredential(im)initWithOAuthToken:tokenSecret:	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	Stores oauthToken locally.
+c:objc(cs)ACAccountCredential(im)initWithOAuthToken:tokenSecret:::SYNTHESIZED::c:objc(cs)ACAccountCredential	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	OAuthToken label alias of oAuthToken initializer.
+c:objc(cs)ACAccountCredential(py)oauthToken	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	In-process get/set.
+c:objc(cs)ACAccountStore	implemented	Accounts.swift;AccountsRuntime.swift:exerciseGatedCallbacks	Fail-closed store; no Apple daemon.
+c:objc(cs)ACAccountStore(im)accountTypeWithAccountTypeIdentifier:	implemented	Accounts.swift;AccountsRuntime.swift:assertAccountTypeLookup	Known four identifiers return populated types; unknown and nil return nil.
+c:objc(cs)ACAccountStore(im)accountWithIdentifier:	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	Always nil.
+c:objc(cs)ACAccountStore(im)accountsWithAccountType:	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	Always empty.
+c:objc(cs)ACAccountStore(im)removeAccount:withCompletionHandler:	implemented	Accounts.swift;AccountsRuntime.swift:proveBoolCallback	Queue-gated exactly-once fail-closed callback and async overlay.
+c:objc(cs)ACAccountStore(im)renewCredentialsForAccount:completion:	implemented	Accounts.swift;AccountsRuntime.swift:proveRenewCallback	Queue-gated exactly-once .failed callback; async overlay throws.
+c:objc(cs)ACAccountStore(im)requestAccessToAccountsWithType:options:completion:	implemented	Accounts.swift;AccountsRuntime.swift:proveBoolCallback	Queue-gated exactly-once fail-closed callback and async overlay.
+c:objc(cs)ACAccountStore(im)saveAccount:withCompletionHandler:	implemented	Accounts.swift;AccountsRuntime.swift:proveBoolCallback	Queue-gated exactly-once fail-closed callback and async overlay.
+c:objc(cs)ACAccountStore(py)accounts	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	Always an empty NSArray.
+c:objc(cs)ACAccountType	implemented	Accounts.swift;AccountsRuntime.swift:assertAccountTypeLookup	Store-produced descriptor for known public identifiers only.
+c:objc(cs)ACAccountType(py)accessGranted	implemented	Accounts.swift;AccountsRuntime.swift:assertAccountTypeLookup	Always false.
+c:objc(cs)ACAccountType(py)accountTypeDescription	implemented	Accounts.swift;AccountsRuntime.swift:assertAccountTypeLookup	Oracle descriptions: Twitter, Facebook, Sina Weibo, Tencent Weibo.
+c:objc(cs)ACAccountType(py)identifier	implemented	Accounts.swift;AccountsRuntime.swift:assertAccountTypeLookup	Matches the known requested identifier.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	implemented	Accounts.swift;AccountsRuntime.swift:exerciseRenewResult	Synthesized Equatable !=.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ACErrorCode	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Synthesized Equatable !=.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	declared	Accounts.swift	Hashable protocol default; hashValue is not exercised under warnings-as-errors.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ACErrorCode	declared	Accounts.swift	Hashable protocol default; hashValue is not exercised under warnings-as-errors.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	implemented	Accounts.swift;AccountsRuntime.swift:exerciseRenewResult	Hashable synthesis via Hasher and Set.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ACErrorCode	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Hashable synthesis via Hasher and Set.
+s:So11ACErrorCodeV8rawValueABs6UInt32V_tcfc	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	RawRepresentable initializer.
+s:So11ACErrorCodeV8rawValues6UInt32Vvp	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Stored rawValue; fail-closed NSError.code uses 7.
+s:So11ACErrorCodeVyABs6UInt32Vcfc	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Unlabeled UInt32 initializer.
+s:So30ACAccountCredentialRenewResultV8rawValueABSgSi_tcfc	implemented	Accounts.swift;AccountsRuntime.swift:exerciseRenewResult	Failable Int raw-value initializer.
