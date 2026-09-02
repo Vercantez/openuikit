@@ -64,18 +64,18 @@ class ContractLockTests(unittest.TestCase):
         checkouts = checkouts_by_id(load_contract(ROOT))
         self.assertEqual(
             checkouts["uikit-inrepo"]["tree"],
-            "719f6bcfe2a8e467426f30c91390d9c605f5a959",
+            "723e12da1d426aeb8815a3582eb194189b8f7b96",
         )
         self.assertEqual(
             checkouts["machorun-inrepo"]["tree"],
-            "42d42ace9c6ff7a4ae7c25c3a8e466f82d5f70c8",
+            "b76a393d29b3311e4c66ff8c8f39302fcdfaf19b",
         )
 
     def test_focus_widget_gate_still_locks_all_attestation_pins(self) -> None:
         notes = validate_against_locks(ROOT)
         pin_notes = [n for n in notes if n.startswith("focus_widget_attestation_pins ")]
         self.assertEqual(len(pin_notes), 1)
-        self.assertIn("24/24", pin_notes[0])
+        self.assertIn("25/25", pin_notes[0])
         print(pin_notes[0])
 
 

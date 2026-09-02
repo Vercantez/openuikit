@@ -148,7 +148,7 @@
       "id": "uikit-inrepo",
       "kind": "in-repo-subtree",
       "path": "uikit",
-      "tree": "719f6bcfe2a8e467426f30c91390d9c605f5a959",
+      "tree": "723e12da1d426aeb8815a3582eb194189b8f7b96",
       "lock": "scripts/vendor_pins.sh",
       "attestation": "git rev-parse HEAD:uikit",
       "demanded_by": ["focus-widget", "focus-onboarding", "focus-package", "build-full", "core-guest-package"],
@@ -158,7 +158,7 @@
       "id": "machorun-inrepo",
       "kind": "in-repo-subtree",
       "path": "machorun",
-      "tree": "42d42ace9c6ff7a4ae7c25c3a8e466f82d5f70c8",
+      "tree": "b76a393d29b3311e4c66ff8c8f39302fcdfaf19b",
       "lock": "scripts/vendor_pins.sh",
       "attestation": "git rev-parse HEAD:machorun",
       "demanded_by": ["focus-widget", "focus-onboarding", "focus-package", "build-full", "core-guest-package"]
@@ -403,9 +403,10 @@
     "EXPECTED_OPENCOMBINE_PATCH_SHA": "875cd931e95c5442775e1042a412517ab7475be0489b1a81f824a54f6872c79b",
     "EXPECTED_OPENCOMBINE_PATCHED_HELPER_SHA": "d9fbefcdba66d892d9064c46b21b6084af217ddec1d604bcaf27b160de66083b",
     "EXPECTED_COMBINE_SHIM_SHA": "828b05c3a47296fb7b0b9ed5a6ca1a45a5da46e245441c21028335f60511799f",
+    "EXPECTED_SYMBOLS_SWIFT_COUNT": 1,
     "EXPECTED_RESOURCE_FILE_COUNT": 16,
     "EXPECTED_RESOURCE_DIRECTORY_COUNT": 7,
-    "EXPECTED_PACKAGE_FILE_COUNT": 96,
+    "EXPECTED_PACKAGE_FILE_COUNT": 101,
     "EXPECTED_PACKAGE_DIRECTORY_COUNT": 12
   }
 }

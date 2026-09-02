@@ -370,6 +370,7 @@ class FocusPackageGuestProofTests(unittest.TestCase):
             "UIKit", "SnapKit", "DesignSystem", "Widget", "Onboarding", "Licenses"
         ):
             self.assertIn(f"lib{name}.dylib", text)
+        self.assertIn("-lSymbols", text)
         self.assertIn("MH_MAGIC_64[[:space:]]+${OTOOL_CPU}", text)
         self.assertIn('PROBE_APP=$OUT/FocusPackageProbe.app', text)
         self.assertIn('"$PROBE_APP/Contents/MacOS/FocusPackageProbe"', text)

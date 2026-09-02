@@ -384,6 +384,34 @@ clang++-18 -target "$TARGET" -isysroot "$SYS" -stdlib=libc++ -std=c++17 -O2 \
     -o "$PACKAGE/libCombine.dylib" "$OUT/combine.o" \
     "$SYS/usr/lib/swift/libswiftCore.tbd" "$SYS/usr/lib/libSystem.tbd"
 
+echo '== compile the first-party Symbols value model while Foundation is hidden'
+symbols_sources=("$UIKIT"/Sources/Symbols/*.swift)
+[ "${#symbols_sources[@]}" -eq 1 ] || die 'Symbols source count changed before compile'
+invalid_symbols_source=$(find "$UIKIT/Sources/Symbols" -mindepth 1 -maxdepth 1 \
+    \( ! -type f -o ! -name '*.swift' \) -print -quit)
+[ -z "$invalid_symbols_source" ] || die "unsupported Symbols source node: $invalid_symbols_source"
+for symbols_source in "${symbols_sources[@]}"; do
+    [ -f "$symbols_source" ] && [ ! -L "$symbols_source" ] \
+        || die "Symbols source is not a regular non-symlink file: $symbols_source"
+done
+"${SWIFTC[@]}" -parse-as-library \
+    -I "$PACKAGE" \
+    -module-name Symbols -module-link-name Symbols \
+    -emit-module -emit-module-path "$PACKAGE/Symbols.swiftmodule" \
+    -emit-object -o "$OUT/symbols.o" \
+    "${symbols_sources[@]}"
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name @rpath/libSymbols.dylib -rpath @loader_path \
+    -o "$PACKAGE/libSymbols.dylib" "$OUT/symbols.o" \
+    "$SYS/usr/lib/swift/libswiftCore.tbd" \
+    "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
+    "$SYS/usr/lib/libSystem.tbd"
+symbols_apple_load_count=$(llvm-otool-18 -L "$PACKAGE/libSymbols.dylib" \
+    | awk '$1 ~ /^\/System\/Library\/Frameworks\/Symbols\.framework\// { count++ } \
+        END { print count + 0 }')
+[ "$symbols_apple_load_count" -eq 0 ] \
+    || die "libSymbols Apple Symbols load count $symbols_apple_load_count, expected 0"
+
 echo '== compile SwiftUI with Foundation deliberately hidden'
 swiftui_sources=("$UIKIT"/Sources/SwiftUI/*.swift)
 [ "${#swiftui_sources[@]}" -eq 7 ] || die "expected the complete seven-source SwiftUI directory"
@@ -458,7 +486,7 @@ onboarding_sources=(
     -emit-object -o "$OUT/onboarding.o" \
     "${onboarding_sources[@]}" "$W/full/swiftui/FocusOnboardingBundle.generated.swift"
 
-echo '== package nine reusable guest dylibs'
+echo '== package ten reusable guest dylibs'
 "${LD[@]}" -dylib -dead_strip -install_name @rpath/libFoundationEssentials.dylib \
     -rpath @loader_path -L"$MRROOT/darwin/usr/lib" \
     -L/usr/lib/swift -lswiftCore "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
@@ -497,7 +525,7 @@ for install_name in "${FOUNDATION_RUNTIME_INSTALL_NAMES[@]}"; do
 done
 "${LD[@]}" -dylib -dead_strip -install_name @rpath/libSwiftUI.dylib \
     -rpath @loader_path -L"$PACKAGE" \
-    -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
+    -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols \
     -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
@@ -531,14 +559,14 @@ clang-18 -target "$TARGET" -isysroot "$SYS" -O2 \
     -rpath @loader_path/package -o "$OUT/focus_onboarding_guest" \
     "$OUT/guest-main.o" "$OUT/uuid-probe.o" \
     -L"$PACKAGE" -lOnboarding -lWidget -lFoundation -lFoundationEssentials \
-    -lSwiftUI -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine \
+    -lSwiftUI -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols \
     -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift -lswiftCore \
     "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib"
 
 for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit Foundation \
-    OpenCombine Combine SwiftUI Widget Onboarding; do
+    OpenCombine Combine Symbols SwiftUI Widget Onboarding; do
     llvm-otool-18 -hv "$PACKAGE/lib$dylib.dylib" \
         | grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}.*[[:space:]]DYLIB" \
         || die "lib$dylib is not a $ARCH Mach-O dylib"
@@ -594,7 +622,7 @@ validate_bundle "$RESOURCE_INPUT/Focus_Widget.bundle" "$EXPECTED_WIDGET_FILES" \
     printf 'widget-bundle-accessor\t%s\n' \
         "$(hash_file "$W/full/swiftui/FocusWidgetBundle.generated.swift")"
     for dylib in FoundationEssentials OpenCoreGraphics OpenUIKit Foundation \
-        OpenCombine Combine SwiftUI Widget Onboarding; do
+        OpenCombine Combine Symbols SwiftUI Widget Onboarding; do
         printf 'lib%s\t%s\n' "$dylib" "$(hash_file "$PACKAGE/lib$dylib.dylib")"
     done
     printf 'onboarding-resources\t%s\n' "$(tree_digest "$OUT/Focus_Onboarding.bundle")"
