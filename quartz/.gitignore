@@ -1,0 +1,6 @@
+build/
+output/
+.DS_Store
+*.o
+*.a
+.cache/
