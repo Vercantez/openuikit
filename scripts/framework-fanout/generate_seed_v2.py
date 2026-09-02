@@ -1566,8 +1566,8 @@ die() {
     exit 1
 }
 
-SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
-FRAMEWORK_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/../.." && pwd -P)
+SCRIPT_DIR=$(unset CDPATH; cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
+FRAMEWORK_ROOT=$(unset CDPATH; cd -- "$SCRIPT_DIR/../.." && pwd -P)
 REPO_ROOT=$(git -C "$FRAMEWORK_ROOT" rev-parse --show-toplevel 2>/dev/null) \
     || die 'framework seed is not inside a Git worktree'
 [ "$(dirname -- "$FRAMEWORK_ROOT")" = "$REPO_ROOT/full" ] \
@@ -1584,8 +1584,9 @@ command -v cmp >/dev/null 2>&1 || die 'cmp is unavailable'
 command -v timeout >/dev/null 2>&1 || die 'timeout is unavailable'
 
 SHARED_VALIDATOR=$REPO_ROOT/full/framework-fanout/validate_seed.py
-[ -f "$SHARED_VALIDATOR" ] && [ ! -L "$SHARED_VALIDATOR" ] \
-    || die 'shared deliverable validator is missing or unsafe'
+if [ ! -f "$SHARED_VALIDATOR" ] || [ -L "$SHARED_VALIDATOR" ]; then
+    die 'shared deliverable validator is missing or unsafe'
+fi
 python3 -B "$SHARED_VALIDATOR" \
     --framework "$FRAMEWORK_ROOT" --phase deliverable \
     || die 'shared deliverable validator rejected framework'
