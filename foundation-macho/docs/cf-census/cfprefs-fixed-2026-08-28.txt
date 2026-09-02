@@ -1,0 +1,102 @@
+# #86 verification: all three CF-preferences findings fixed.
+# foundation-macho + machorun dc9872d, container fm-build, 2026-08-28.
+# Regenerate: scripts/build_cf_probes.sh all
+
+
+=== rebuilding the NS* surface (NSCFConstantString needs CF's headers)
+  selector implementations in the object: 3 (expected >= 2)
+libCFTest relinked (234 stubbed)
+
+=== T17 -- the mutex-signature wall, isolated from CoreFoundation
+signatures as compiled into the guest:
+  plain      0x32AAABA7
+  errorcheck 0x32AAABA1
+  recursive  0x32AAABA2
+
+locking the PLAIN mutex (machorun knows 0x32AAABA7)...
+  ok -- plain mutex locks and unlocks
+
+locking the ERRORCHECK mutex (this is CF's CFLockInit)...
+  ok -- errorcheck mutex locks and unlocks
+
+locking the RECURSIVE mutex...
+  ok -- recursive mutex locks and unlocks
+
+T17: all three static initialisers work.
+  (the errorcheck mutex ABORTS until #80 lands; that is the expected result)
+
+=== T19 -- __NSCFConstantString dispatch surface
+  OK   round-tripped the path back out
+
+T19: pass 18  fail 0
+T19 PASS
+
+=== T19 refuse -- the negative control; it MUST abort
+  the loud refusal FIRED -- the refusal is evidence, not intention
+
+=== T18 -- CFBundle identity (what decides the plist filename)
+main: line 69: 11345 Aborted                 /work/mrun "/work/bin/$n" "$@" 2>&1
+  .. CFBundleGetMainBundle()
+STUB CALLED: getsegbyname
+
+=== T16 -- CF's preferences path
+  .. CFPreferencesSetAppValue (this is CFApplicationPreferences -> CFPreferences -> CFXMLPreferencesDomain)
+  OK   CFPreferencesSetAppValue returned
+  .. CFPreferencesCopyAppValue reads it back from the in-memory domain
+  OK   value round-tripped in memory
+  .. CFPreferencesAppSynchronize -- THE FILE WRITE. This is __CFWriteBytesToFileWithAtomicity: mkstemp, write, fsync, chmod, rename.
+  OK   CFPreferencesAppSynchronize returned TRUE
+  .. CFPreferencesSetAppValue with a CFNumber (exercises CFBinaryPList's integer encoding, not just strings)
+  OK   CFNumber round-tripped
+  .. CFPreferencesCopyKeyList (this is the domain enumeration dictionaryRepresentation() sits on)
+  OK   CFPreferencesCopyKeyList -> 2 keys
+  .. CFPreferencesCopyMultiple over those keys
+  OK   CFPreferencesCopyMultiple -> 2 entries
+  OK   the value is reachable through CopyMultiple by key
+  .. CFPreferencesSetAppValue(key, NULL) removes
+  OK   removed key -> NULL
+  .. CFPreferencesAppSynchronize again (rewrites the file with one key)
+  OK   second synchronize returned TRUE
+  .. CFPreferencesAddSuitePreferencesToApp (the suite mechanism)
+  OK   CFPreferencesAddSuitePreferencesToApp returned
+
+T16 PASS -- CF's preferences path executes.
+NOTE: whether the FILE landed, where, and in what format is checked by
+      the runner around this binary -- a process that cannot see its
+      own filesystem result should not be the one reporting it.
+  --- preference files on disk:
+    /root/Library/Preferences/com.example.t16prefs.plist
+    format:   bplist00  (matches Darwin)
+    location: /root/Library/Preferences
+                            (a per-user home -- matches Darwin's
+                            shape; which home is CF's choice, not
+                            $HOME's: CFPlatform.c:370)
+
+probes run: 6
+probe teeth held.
+
+=== T21: the three-process remove test (removed vs shadowed) ===
+
+T21 write: setting both keys, then synchronising.
+2026-08-28 04:24:09.417 mrun[11396:11396] _CFGetHostUUIDString: unable to determine UUID for host. Error: 0
+  OK   synchronize returned TRUE
+
+T21 write: PASS
+
+T21 remove: a FRESH process removes one key and synchronises.
+2026-08-28 04:24:09.425 mrun[11397:11397] _CFGetHostUUIDString: unable to determine UUID for host. Error: 0
+  OK   the key was present before removing it
+  OK   synchronize returned TRUE
+
+T21 remove: PASS
+
+T21 check: a FRESH process, reading only from disk.
+2026-08-28 04:24:09.433 mrun[11398:11398] _CFGetHostUUIDString: unable to determine UUID for host. Error: 0
+  OK   the survivor key read back from disk with the right value
+  OK   the removed key is absent in a fresh process -- genuinely removed
+
+T21 check: PASS
+--- the file itself:
+    magic: bplist00
+    keys present:
+      \t21_survivorZstill-here

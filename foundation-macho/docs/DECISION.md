@@ -1,0 +1,606 @@
+# The Foundation architecture decision
+
+**Date:** 2026-08-26
+**Status:** decided, and the decisive risk is retired by a working build.
+
+---
+
+## 0. The decision in one paragraph
+
+Build Foundation as **option D — our own Foundation over a CoreFoundation we
+control — using swift-corelibs-foundation's CoreFoundation C sources as that CF
+layer, with its stubbed-out Objective-C toll-free-bridging macros restored.** The
+Objective-C `NS*` classes and the Swift overlay are ours. Deployment mode is the
+**Darwin one (ObjC runtime)**, which is not a corelibs build option but is what
+our stack already is.
+
+Options A, B and C are ruled out, each for a specific measured reason, in §4.
+
+The load-bearing reason this is tractable at all: **the Swift standard library's
+dependency on Foundation is a runtime contract, not a link-time one.** It is 128
+selectors, 6 class names, and 4 C functions found by `dlsym`. All of it is ours
+to satisfy. §1 is the measurement; §2 is the proof that satisfying it works.
+
+---
+
+## 1. What libswiftCore actually requires of Foundation
+
+Everything here is measured against
+`~/swiftcore-macho/artifacts/swift-macosx/arm64/libswiftCore.dylib` — the Swift
+6.2.4 stdlib built for `arm64-apple-macos` on Linux.
+
+### 1.1 It links no Foundation and no CoreFoundation
+
+```
+$ otool -L libswiftCore.dylib
+    /usr/lib/libSystem.B.dylib
+    /usr/lib/libobjc.A.dylib
+    /usr/lib/libc++.1.dylib
+```
+
+Of 185 undefined symbols, the only `NS` ones are `_OBJC_CLASS_$_NSObject` and
+`_OBJC_METACLASS_$_NSObject`, **which objc4 itself provides**. There is not one
+undefined `CF*` symbol. Every `CFString`-named entry point the stdlib uses
+(`_stdlib_binary_CFStringGetLength`, `_swift_stdlib_CFStringHashNSString`, …) is
+*defined inside libswiftCore* and implemented with `objc_msgSend`.
+
+This is the fact that makes the whole project possible, and it is the opposite of
+the situation that killed the Linux-target experiment in
+`~/uikit/docs/OBJC_RUNTIME.md`.
+
+### 1.2 Six classes, re-parented at runtime
+
+`swift_stdlib_connectNSBaseClasses` (disassembled) looks up exactly six classes
+with `objc_lookUpClass` and calls `class_setSuperclass` to re-parent the stdlib's
+own base classes onto them:
+
+| looked up | becomes superclass of |
+|---|---|
+| `NSArray` | `__SwiftNativeNSArrayBase` |
+| `NSMutableArray` | `__SwiftNativeNSMutableArrayBase` |
+| `NSDictionary` | `__SwiftNativeNSDictionaryBase` |
+| `NSSet` | `__SwiftNativeNSSetBase` |
+| `NSString` | `__SwiftNativeNSStringBase` |
+| `NSEnumerator` | `__SwiftNativeNSEnumeratorBase` |
+
+If any lookup fails the function returns 0, and the caller
+(`String._bridgeToObjectiveCImpl`) takes a `_fatalErrorMessage` path. So all six
+must exist before any bridging happens.
+
+**These six must have no ivars.** `class_setSuperclass` preserves the subclass's
+ivar offsets only if the new superclass has the same instance size as the old one
+(`NSObject`, 8 bytes). This is not a simplification we chose — it is *why Apple
+makes them class clusters*, and any Foundation on this stack inherits the
+constraint. Storage must live in concrete subclasses.
+
+### 1.3 128 selectors
+
+`__TEXT,__objc_methname` in libswiftCore is 2,293 bytes — 128 selectors. That is
+the entire Objective-C surface the stdlib touches. The interesting ones:
+
+- **CF identification:** `_cfTypeID`
+- **class identification SPI:** `isNSString__`, `isNSArray__`, `isNSDictionary__`,
+  `isNSSet__`, `isNSNumber__`, `isNSData__`, `isNSDate__`, `isNSValue__`,
+  `isNSTimeZone__`, `isNSOrderedSet__`, `isNSObject__`, `isNSCFConstantString__`
+- **tagged-string SPI:** `newTaggedNSStringWithASCIIBytes_:length_:`,
+  `newIndirectTaggedNSStringWithConstantNullTerminatedASCIIBytes_:length_:`
+- **`__SwiftValue` boxing:** `_swiftValue`, `_swiftTypeMetadata`, `_swiftTypeName`
+- **NSError bridging:** `_domain`, `_code`, `_userInfo`, `domain`, `code`, `userInfo`
+- **string primitives:** `length`, `characterAtIndex:`, `getCharacters:range:`,
+  `_fastCStringContents:`, `_fastCharacterContents`, `compare:options:range:locale:`,
+  `decomposedStringWithCanonicalMapping`, …
+- **collection primitives:** `count`, `objectAtIndex:`, `objectForKey:`, `member:`,
+  `countByEnumeratingWithState:objects:count:`, `getObjects:andKeys:count:`, …
+
+128 is a small, closed, enumerable number. That is the good news of this scope.
+
+### 1.4 Four CoreFoundation functions, resolved by `dlsym`
+
+This one is easy to miss and would have been a late surprise. The `swift_once`
+initialiser behind `_swift_stdlib_isNSString` does:
+
+```
+dlsym(RTLD_DEFAULT, "CFStringGetTypeID")
+dlsym(RTLD_DEFAULT, "CFGetTypeID")
+dlsym(RTLD_DEFAULT, "CFStringHashNSString")
+dlsym(RTLD_DEFAULT, "CFStringHashCString")
+```
+
+and then **calls the pointers unconditionally** — no null check. So a real
+CoreFoundation exporting these must be loaded, or the stdlib jumps to NULL.
+`isNSString(obj)` is `CFGetTypeID(obj) == CFStringGetTypeID()`.
+
+Two of the four (`CFStringHashNSString`, `CFStringHashCString`) are Apple-private
+CF SPI. **Both exist in corelibs' CF** (`CFString.c:1185`, `:1195`, declared in
+`include/ForFoundationOnly.h`). That is a meaningful point in corelibs' favour as
+the CF layer.
+
+### 1.5 The conformance the stdlib deliberately withholds
+
+`String : _ObjectiveCBridgeable` **does not appear anywhere in libswiftCore's
+`.swiftinterface`**, though the `_ObjectiveCBridgeable` protocol does, and so does
+`public func String._bridgeToObjectiveCImpl() -> AnyObject`.
+
+So the stdlib ships the entire bridging *engine* and none of the *conformance*
+that starts it. Foundation-on-this-stack is therefore two separable halves:
+
+1. Objective-C classes answering the runtime contract (§1.2–§1.4)
+2. a Swift overlay declaring the conformances
+
+Both are ours to write, and neither needs Apple's closed Foundation.
+
+---
+
+## 2. The proof
+
+`scripts/run_tests.sh`, run under machorun, diffed against baselines captured
+natively on **macOS 26.5.2 arm64 with Apple's real Foundation**
+(`scripts/oracle_macos.sh`):
+
+```
+==> t1_objc (Objective-C against the slice)
+PASS      t1_objc
+==> t2_bridge (Swift <-> ObjC bridging)
+PASS      t2_bridge
+
+pass 2  fail 0  no-oracle 0
+```
+
+Both are true differentials: the same sources compile on both sides (`t1_objc.m`
+picks up Apple's headers via `__has_include`; `t2_bridge.swift` is ordinary
+Foundation API). Byte-identical output.
+
+`t2_bridge` is the test the brief asked for, and it passes:
+
+```swift
+let s = "hi" as NSString          // nsstring.length=2
+let a = NSArray(array: [1, 2, 3]) // nsarray.count=3
+```
+
+plus the reverse direction (`NSString as String`), a non-ASCII round trip
+(`"café"`), `String` elements bridged inside an `NSArray`, and `is`/`as!` dynamic
+casts across the bridge.
+
+What is built: `libFoundationSlice.dylib` (Objective-C — NSString, NSArray,
+NSMutableArray, NSDictionary, NSSet, NSEnumerator, NSNumber, and the four CF
+functions) and `libFoundation.dylib` (the Swift overlay), both **Darwin Mach-O
+arm64, produced on Linux** with `clang`/`swiftc -target arm64-apple-macos13.0`
+and `ld64.lld-18`, against machorun's SDK, Apple's objc4 and our libswiftCore.
+
+Apple's real `CFStringGetTypeID()` is 7 and our slice returns 7 — the type-ID
+numbering we took from corelibs' `CFRuntime_Internal.h` matches Apple's.
+
+### 2.1 Four walls hit, and what each one teaches
+
+These are the substance of the scope; each is a thing the full build would have
+hit later and more expensively.
+
+**(a) `+[__StringStorage newTaggedNSStringWithASCIIBytes_:length_:]`
+unrecognized selector.** Bridging a *short ASCII* string sends this Apple-private
+SPI to the stdlib's own class, which inheritance routes to `NSString`. The stdlib
+does **not** check `respondsToSelector:`, so the method must exist. Reading the
+call site: a non-nil result is used *as the bridged object with no tag checking*,
+so returning an ordinary +1 string is valid — real tagged pointers are a
+performance question, not a correctness one. Returning **nil** is not safe: it
+takes Apple's back-deployment path (`_StringGuts.grow(16)` then recurse), which
+did not terminate on our stack.
+
+**(b) The class-cluster allocator.** Swift does not emit `+alloc`; it emits
+`objc_allocWithZone`, which objc4 only routes to a custom **`+allocWithZone:`**.
+Overriding only `+alloc` silently produced instances of the *abstract* class,
+surfacing as `-[NSArray initWithObjects:count:] unrecognized selector`. Every
+cluster class needs both.
+
+**(c) `swift_bridge` needs a fully-qualified name.** For `-isEqualToString:` to
+import as `isEqual(to: String)` the way it does on macOS, `NSString` needs
+`__attribute__((swift_bridge("Swift.String")))`. With the bare `"String"`,
+ClangImporter **silently ignores the attribute** — no diagnostic, the signature is
+just quietly wrong. Apple does not put this in the header at all; it is injected
+by `Foundation.framework/Headers/Foundation.apinotes` as `SwiftBridge:
+Swift.String`. The full Foundation should ship an apinotes file rather than
+scatter attributes.
+
+**(d) The address-space wall — see §3.** Not ours, and now fixed in machorun.
+
+---
+
+## 3. libswiftCore's inlined `ISA_MASK` vs machorun's address space — FIXED
+
+**The most important cross-cutting finding of this scope. It belonged to
+machorun, not to Foundation, and it is now fixed there: machorun `a1718a4`,
+"place every image below 2^47" (branch `fix/map-below-isa-mask`, on top of
+master `6413810`).** The reasoning is kept in full because it is what a future
+bisector will need.
+
+libswiftCore has Apple's arm64 `ISA_MASK = 0x00007ffffffffff8` (47 bits) inlined
+into `swift_unknownObjectRetain`, `swift_unknownObjectRelease`,
+`swift_getObjectType` and others, where it masks an isa and then reads
+`class->bits` at `+0x20`.
+
+machorun maps images with `mmap(NULL, …)`, and aarch64 Linux allocates top-down
+from 2^48, so classes land at `0xffff…`. Masking truncates them. Measured:
+
+```
+NSString class      = 0xffff86413c88
+raw isa word        = 0x100ffff86413cd9
+isa & ISA_MASK      = 0x7fff86413cd8     <-- wrong, bit 47 lost
+```
+
+and Swift then faults reading `0x7fff86413cd8 + 0x20`. Symptom: `SIGSEGV` in
+`swift_unknownObjectRetain` / `swift_getObjectType`.
+
+objc4 does not hit this because machorun already patches it
+(`patches-macho/0001-wide-va-isa-layout.patch`) to the wide 52-bit arm64e isa
+layout. **libswiftCore cannot be patched the same way** — the mask is baked into
+compiled code in many places, and rebuilding the stdlib with a custom mask would
+fork it from upstream permanently.
+
+**The fix (machorun `a1718a4`, `src/map.c`):** `mr_map_image` no longer takes
+whatever `mmap(NULL, …)` returns. It reserves from an arena at 8 GiB
+(`0x200000000`) walking up with `MAP_FIXED_NOREPLACE`, honours an image's
+preferred base only when that base *also* fits below 2^47, verifies the returned
+address rather than trusting the flag (a pre-4.17 kernel treats
+`MAP_FIXED_NOREPLACE` as a bare hint), and **dies with a message naming the
+constraint** rather than falling back — a fallback would trade a clear error here
+for a segfault inside libswiftCore later.
+
+Verified against this scope's tests, with the loader rebuilt from that branch and
+an explicitly *limited* 8 MB stack so the legacy mmap layout is definitely not in
+play:
+
+```
+NSString class      = 0x20000dc88
+isa & ISA_MASK      = 0x20000dcd8     <-- correct, nothing lost
+class fits <2^47    = 1
+
+pass 2  fail 0  no-oracle 0
+```
+
+**The `ulimit -s unlimited` workaround this scope originally used is gone.** It
+worked by flipping Linux to the legacy bottom-up mmap layout process-wide, but it
+is a property of how machorun was *invoked* rather than of machorun, it lapses
+across a re-exec, and it perturbs every unrelated allocation. A placement policy
+is checkable; an ambient rlimit is not.
+
+Two things worth carrying forward:
+
+- **machorun's rung (q) missed this**, because its classes are all declared in
+  the *executable*, which lands at its preferred `0x100000000` and is under the
+  ceiling by luck. **Foundation fixtures must put classes in a dylib** or they
+  test nothing about placement. Ours do, which is why the slice caught it.
+- **Generic class metadata is not in any image** — the Swift runtime builds it at
+  run time from its own allocator — so it was not obvious the fix would cover it.
+  It does: machorun's test with a generic class hierarchy, overrides and 50 heap
+  instances is byte-identical to the macOS oracle. The heap was already below the
+  ceiling; only image placement was wrong.
+
+---
+
+## 4. Why not A, B or C
+
+### A. corelibs-foundation in `DEPLOYMENT_RUNTIME_OBJC` — **not a build mode**
+
+The brief's central question. The answer is that ObjC-runtime mode is not
+something corelibs can be configured into; it is vestigial dead code from Apple's
+internal tree.
+
+1. **The build never defines it.** `DEPLOYMENT_RUNTIME_SWIFT` is passed in
+   `CMakeLists.txt:178,230` and `Package.swift:89,144`. `DEPLOYMENT_RUNTIME_OBJC`
+   is defined *nowhere* in the build system.
+2. **CF force-defines the other one.**
+   `Sources/CoreFoundation/internalInclude/CoreFoundation_Prefix.h:10`:
+   ```c
+   #ifndef DEPLOYMENT_RUNTIME_SWIFT
+   #define DEPLOYMENT_RUNTIME_SWIFT 1
+   #endif
+   ```
+3. **The ObjC dispatch is stubbed with no live branch.**
+   `internalInclude/CFInternal.h:954-958`:
+   ```c
+   #define CF_OBJC_FUNCDISPATCHV(typeID, obj, ...) do { } while (0)
+   #define CF_OBJC_RETAINED_FUNCDISPATCHV(typeID, obj, ...) do { } while (0)
+   #define CF_OBJC_CALLV(obj, ...) (0)
+   #define CF_IS_OBJC(typeID, obj) (0)
+   ```
+   Unconditional — no `#if` anywhere. Compare the Swift ones immediately above,
+   which have a real `#if DEPLOYMENT_RUNTIME_SWIFT` / `#else` pair. Apple stripped
+   CF's toll-free-bridging dispatch when open-sourcing it.
+
+So "build corelibs in ObjC mode" is ruled out **as stated**. But the investigation
+turned up the thing that makes option D cheap, so this is a productive negative:
+
+> **294 Objective-C dispatch call sites survive intact across 19 CF source files**
+> (`CFString.c` 51, `CFURL.c` 35, `CFStream.c` 28, `CFDictionary.c` 22,
+> `CFArray.c` 19, `CFSet.c` 18, …), and the supporting machinery —
+> `__CFRuntimeObjCClassTable`, `_SetCFRuntimeObjcClass`, `__CFISAForTypeID`,
+> `_CFRuntimeBridgeClasses` — is still there. Apple neutered the **macros**, not
+> the **call sites**.
+
+Restoring toll-free bridging in corelibs' CF is therefore a **~5-macro patch**
+against a codebase that is otherwise waiting for it, not a rewrite. `CFGetTypeID`
+is the canonical example: `CFRuntime.c:735` still reads
+`CFTYPE_OBJC_FUNCDISPATCH0(CFTypeID, cf, _cfTypeID);` — exactly the dispatch our
+slice implements by hand in one line, and exactly what §1.4 requires.
+
+Separately, corelibs' **Swift** Foundation is not reusable wholesale here: in
+Swift-runtime mode its `NSString`, `NSArray` etc. are *Swift classes* that would
+collide with the Objective-C ones the stdlib demands. Its pure value types are
+reusable (§6).
+
+### B. corelibs in Swift mode + a rebuilt libswiftCore — **self-defeating**
+
+This requires rebuilding the stdlib with ObjC interop **off**. Two problems, and
+the second is fatal to the project:
+
+1. The `arm64-apple-macos` target implies ObjC interop; turning it off means
+   fighting the compiler on a configuration Apple neither supports nor tests — and
+   we would be discarding a libswiftCore that already works.
+2. **It destroys `@objc` and `#selector`.** That interop is the entire reason for
+   choosing a Darwin stack, and OpenUIKit depends on it
+   (`NSStringFromClass` 343 uses, `NSSelectorFromString` 338 uses in `~/uikit`).
+   Trading it away to get Foundation would break the thing Foundation is *for*.
+
+### C. GNUstep-base against objc4 — **wrong contract, and no Swift half**
+
+GNUstep-base is a mature Objective-C Foundation, but it was built to a different
+private contract:
+
+- It does not implement `-_cfTypeID`, so `CFGetTypeID`-based identification (§1.4)
+  fails.
+- It does not implement the `isNS*__` SPI or the tagged-string SPI, so bridging
+  aborts on an unrecognized selector (measured: that is exactly how wall (a)
+  presented).
+- It exports no `CFGetTypeID` / `CFStringGetTypeID` / `CFStringHashNSString` /
+  `CFStringHashCString` to satisfy the `dlsym` set.
+- Its classes are not ivar-less clusters shaped for `class_setSuperclass`.
+- It has **no Swift overlay at all**, so §1.5 is still entirely on us.
+
+We would be writing the same bridging layer regardless, but on top of an
+unfamiliar 30-year codebase built for libobjc2's ABI, and taking on LGPL
+obligations that Apache-2.0 corelibs does not carry. The mismatch is the same one
+that made libobjc2 unusable for Swift.
+
+### D. Our own Foundation over a CF we control — **recommended**
+
+Against the brief's three criteria:
+
+- **(i) Does `String <-> NSString` bridging actually work?** Yes — built, run, and
+  matching macOS byte-for-byte (§2). This is the only option where that is a
+  measurement rather than a hope.
+- **(ii) How much Apple-closed-source does it assume?** None. corelibs' CF is
+  Apache 2.0; objc4 is Apple open source; the `NS*` classes and Swift overlay are
+  ours; the four `dlsym` symbols and the private selector contract are all
+  satisfiable by us and all now enumerated (§1.3, §1.4).
+- **(iii) Effort?** §6. Larger than A-if-A-had-worked, but A does not work, and D
+  reuses corelibs' 98K lines of CF rather than starting from zero.
+
+---
+
+## 5. The architecture
+
+```
+  Swift application code
+        |  import Foundation
+  ┌─────────────────────────────────────────┐
+  │ Foundation (Swift overlay)   ← OURS     │  _ObjectiveCBridgeable conformances,
+  │                                         │  Swift value types (Data/Date/URL/…)
+  ├─────────────────────────────────────────┤
+  │ Foundation (Objective-C)     ← OURS     │  NS* class clusters, toll-free
+  │                                         │  bridged onto CF, ivar-less bases
+  ├─────────────────────────────────────────┤
+  │ CoreFoundation               ← corelibs │  98K lines, Apache 2.0, plus the
+  │                              + our patch│  ~5 restored ObjC dispatch macros
+  ├─────────────────────────────────────────┤
+  │ libobjc (Apple objc4)  │ libswiftCore   │  both already built as Mach-O
+  ├─────────────────────────────────────────┤
+  │ libSystem.B.dylib                       │
+  ├─────────────────────────────────────────┤
+  │ machorun (Mach-O loader on Linux)       │
+  └─────────────────────────────────────────┘
+```
+
+The two-half split (ObjC classes + Swift overlay) is not our invention — it is
+Apple's, and §1.5 shows the stdlib is built expecting exactly it.
+
+---
+
+## 6. Effort to a full Foundation
+
+Sized against the census in §7, and against what the slice actually cost. The
+slice — 7 classes, the bridging contract, and 4 CF functions — took roughly a day
+including all four walls. That is the calibration point.
+
+| area | scope | basis | estimate |
+|---|---|---|---|
+| **CoreFoundation** | corelibs' 88 files / 98K lines, built as Darwin Mach-O; restore the 5 ObjC dispatch macros; `__CFRuntimeObjCClassTable` registration for each bridged class | already Linux-clean and Apache 2.0; the 294 call sites are intact; the Mach-O cross-build recipe is proven | **3–4 weeks** |
+| **Value + collection classes** | NSString/NSArray/NSDictionary/NSSet/NSNumber/NSData/NSDate/NSValue/NSNull/NSError as ivar-less clusters toll-free bridged over CF | the slice is the template; the contract is fully enumerated (§1.3) | **3–4 weeks** |
+| **The bridging layer** | `_ObjectiveCBridgeable` for String/Int/Double/Bool/Array/Dictionary/Set/Data/Date/URL…; `__SwiftValue` boxing; NSError↔Error; lazy (non-copying) NSString→String via `_bridgeCocoaString`; apinotes for `SwiftBridge` | **highest risk per line**, but the risk is now retired in the small: the mechanism is proven end-to-end | **3–4 weeks** |
+| **OS-facing classes** | FileManager, Bundle, RunLoop, Timer, Notification/NotificationCenter, Process, Pipe, Thread, Operation/OperationQueue, UserDefaults, URL/URLSession | mostly corelibs Swift sources, portable once CF is up; RunLoop and Process are the hard ones and both touch machorun's syscall surface | **4–6 weeks** |
+| **Formatters + ICU** | DateFormatter, NumberFormatter, Locale, Calendar, CharacterSet, collation | 21 CF files touch ICU; needs ICU as a Mach-O dylib or a shim. **Deprioritise** — see §7 | **3–4 weeks, deferrable** |
+
+**Total ≈ 16–22 engineer-weeks** to a Foundation that runs real app code, with
+formatters/ICU deferrable out of the critical path.
+
+Sequencing note: **do §3 (machorun's address-space fix) first.** It is small, it
+is not ours, and every Swift-object code path is exposed to it.
+
+---
+
+## 7. What to build first — the app census
+
+Foundation API actually used across `~/uikit` (Swift sources):
+
+```
+2084 IndexPath        405 Date              50 Operation
+ 794 URL              319 RunLoop           36 OperationQueue
+ 681 Data             308 Notification      22 UUID
+ 547 JSONSerialization161 NotificationCenter20 Bundle
+ 474 FileManager       89 Process            2 Locale
+ 457 DispatchQueue     64 Measurement        2 DateFormatter
+ 411 Timer             55 Pipe               2 Calendar
+```
+
+Two things fall out of this:
+
+1. **Formatters, Locale and Calendar are nearly unused (2 uses each).** They are
+   the ICU-shaped part of Foundation and the most painful to port. Deferring them
+   costs almost nothing, and that removes ICU from the critical path entirely.
+2. **The real surface is IndexPath, URL, Data, JSONSerialization, FileManager,
+   Timer, RunLoop, Notification.** JSONSerialization and IndexPath are pure
+   computation with no OS coupling and should come early. RunLoop and Timer are
+   the genuinely hard ones and should be scheduled with slack.
+
+---
+
+## 8. Compute for the full build
+
+- **CoreFoundation (98K lines C):** the heavy item. On the 64-vCPU Graviton4 used
+  for the stdlib, a full CF build is minutes, not hours; it is far smaller than
+  the Swift stdlib, which already succeeded on that box.
+- **Swift Foundation overlay:** Swift compile times dominate. `-O` whole-module
+  over ~50K lines wants **16–32 vCPU and 32–64 GB RAM**.
+- **Recommendation:** the same **Graviton4 (`c7g.8xlarge`–`c7g.16xlarge`, 32–64
+  GB)** class of box as `~/swiftcore-macho` used. Nothing here needs a bigger
+  machine than the stdlib did.
+- **Scoping and iteration need no cloud at all.** Everything in this document was
+  produced in Docker on the Apple-silicon host, arm64-native, no emulation. Keep
+  the tight loop local and use the big box only for full rebuilds.
+
+---
+
+## 9. Open risks
+
+1. ~~**§3 must be fixed properly.**~~ **Closed** — machorun `a1718a4` places every
+   image below 2^47 and the workaround is removed. Note for future fixtures: put
+   classes in a **dylib**, not the executable, or they say nothing about
+   placement.
+2. **Lazy NSString→String bridging is not done.** The slice copies eagerly. The
+   zero-copy path needs `_bridgeCocoaString`, which is `@usableFromInline
+   internal` and returns the internal `_StringGuts` — reachable by `@_silgen_name`
+   but not nameable from another module. Needs a real answer, not a workaround.
+3. **Tagged-pointer strings are not implemented.** Correct without them (measured),
+   but every short string currently heap-allocates. Performance, not correctness.
+4. **`__SwiftValue` boxing is unimplemented.** Needed the moment a non-bridged
+   Swift value crosses into an `NSArray`/`NSDictionary`.
+5. **Thread safety.** The slice has none. CF brings its own locking; our `NS*`
+   layer must not undo it.
+
+---
+
+## 12. RULING: Swift `URL` is a PORT of upstream swift-foundation, and it is PERMANENT
+
+**Recorded by existential-fix for #58, on team-lead's instruction, in
+foundation-scope's repo because this is where the architecture ruling belongs.**
+
+### The check that decided it
+
+#58 was briefed as "surface Swift APIs over CF bridge classes that already
+exist", with `URL` first. Two candidate designs: `URL` backed by CFURL, or a
+portable-Swift `URL`. Building **both** is the one outcome that must not
+happen — that is malloc_type, the libSystem umbrella and `swiftcorepatch.c`,
+three for three, where two implementations exist and one silently wins.
+
+The hinge was: **does Apple's own modern Foundation implement `URL` natively in
+Swift, or over CFURL?** Measured in upstream source rather than assumed
+(`swiftlang/swift-foundation`, `Sources/FoundationEssentials/URL/URL.swift`,
+lines 659-676):
+
+```swift
+#if FOUNDATION_FRAMEWORK
+    internal typealias _Impl = any _URLProtocol & AnyObject
+    private static var _type: any _URLProtocol.Type {
+        if URL.compatibility2            { _BridgedURL.self }   // NSURL-backed
+        else if foundation_swift_url_v2_enabled() { _URL.self } // native Swift
+        else if foundation_swift_url_enabled()    { _SwiftURL.self }
+        else                             { _BridgedURL.self }   // NSURL-backed
+    }
+#else
+    internal typealias _Impl = _URL                             // native Swift
+    private static let _type = _Impl.self
+#endif
+```
+
+**Off Darwin — which is our configuration — `URL` is unconditionally `_URL`, a
+native Swift `final class` (`URL_Impl.swift:42`), with no CoreFoundation and no
+NSURL.** `URL_Bridge.swift` is entirely inside `#if FOUNDATION_FRAMEWORK`.
+
+One precision worth keeping, because the simpler claim is not quite true: **on
+Darwin it is runtime-flag-selected and the fallback branch is still
+`_BridgedURL`.** So "Apple ships a native-Swift URL" is conditional there. "Off
+Darwin it is unconditionally native Swift" is not conditional, and that is us.
+
+### The ruling
+
+**Swift `URL` is native-Swift, ported from upstream, and this is PERMANENT.
+CoreFoundation must never grow a rival `URL`.** If a CFURL-backed `URL` is ever
+proposed, it is a deviation requiring justification against this entry, not a
+default. The Swift overlay was always a separable half of this architecture
+(§0); `URL` lives in that half.
+
+### And it reframes the work: this is a PORT, not a reimplementation
+
+swift-foundation is **Apache 2.0 with Runtime Library Exception**. The URL
+implementation is ~13,500 lines of existing, upstream, open-source Swift that
+in our configuration already compiles without CF.
+
+**That puts the model layer in the libdispatch / libc++ / CoreFoundation
+category — port from source — and NOT in the UIKit category, where no source
+exists and everything had to be oracle-harvested.** It also corrects the
+framing in `~/swiftcore-macho` docs §11 and in the #58 brief, both of which
+read as though the Swift surface had to be written here. It does not.
+
+The oracle built for it (`~/swift-macho-linux/full/oracle-url/`, 809 real URL
+literals from four shipping apps, diffed against real Foundation) remains the
+right validation either way — a port needs its differential just as much as a
+reimplementation does, and it is what will catch a porting mistake.
+
+### §12 addendum — licence, read from the artifact; and the closure, measured
+
+**LICENCE, quoted rather than inferred.** `swiftlang/swift-foundation` carries
+`LICENSE.md` (the Apache 2.0 text verbatim) and `NOTICE.txt`. The exception is
+in `LICENSE.md` at line 205:
+
+> `## Runtime Library Exception to the Apache 2.0 License: ##`
+>
+> *"As an exception, if you use this Software to compile your source code and
+> portions of this Software are embedded into the binary product as a result,
+> you may redistribute such product without providing attribution as would
+> otherwise be required by Sections 4(a), 4(b) and 4(d) of the License."*
+
+333 source headers state `Licensed under Apache License v2.0 with Runtime
+Library Exception`. So **Apache 2.0 + RLE is confirmed from the repository's
+own files**, not from what swiftlang repos generally use.
+
+**`NOTICE.txt` discloses five third-party derivations**, which matter only if
+the corresponding files are ported: Fabian Fett's `Base64.swift`, Daniel
+Lemire's `chromiumbase64`, Nick Galbreath's `base64`, **logic from ICU**, and
+**data from CLDR**. The last two are worth flagging to #48 — upstream carries
+ICU/CLDR derivations in-tree, which bears on the "which locales must we carry"
+question.
+
+**CLOSURE: `URL` is nearly self-contained — 24 of 249 FoundationEssentials
+files, about 10%.** That is the 22 URL sources a non-framework build compiles
+(25 minus `URL_Bridge.swift`, `URLComponents_ObjC.swift`, `URL_Swift.swift`,
+all framework-only) plus exactly two pulled files: `Data/Data.swift` and
+`Data/ContiguousBytes.swift`.
+
+**§6's hazard does NOT bite here.** Taking `URL` does not drag the module in.
+
+Two larger numbers were measured first and are wrong; both are recorded because
+the instrument error is the same one four times over and it always inflates:
+
+- **53 files / 21%** — counted framework-only sources and `#if
+  FOUNDATION_FRAMEWORK` blocks a non-framework port never compiles.
+- **A `Locale`/`Calendar`/ICU alarm that was not real.** Those appear in
+  **none** of the 25 URL files; they arrived on a second hop through files that
+  were themselves wrongly pulled.
+- **The entire `Predicate` subtree (4 files) was spurious**, from one ambiguous
+  token: `URLTemplate` declares its own nested `Expression`, and whole-word
+  identifier matching cannot tell it from `Predicate/Expression.swift`.
+  `PredicateExpressions`, `PredicateBindings` and `StandardPredicateExpression`
+  appear in **zero** URL files.
+
+**The lesson, four for four today: identifier matching cannot distinguish
+same-named types, and every time it guessed it guessed UPWARD.** Any closure or
+census number from a regex is an UPPER BOUND until each edge is checked
+individually.

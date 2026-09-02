@@ -1,0 +1,305 @@
+# libdispatch's REAL undefined-symbol set, from an actual link
+#
+# ###########################################################################
+# CURRENT AS OF 2026-08-27 13:07 UTC libSystem (machorun 559356b).
+#
+#   compile   25 of 25 TUs
+#   link      17 undefined, no truncation (-Wl,--error-limit=0 verified)
+#             9 loader-resolved _glibc_*, 8 GENUINE GAPS
+#
+# machorun-isamask landed 12 in one pass (53904cc) -- the 11 from the list
+# below plus pthread_attr_init, "because destroy without init is a strange
+# thing to ship". All 12 verified present in the BUILT dylib, not just master.
+#
+# THE 8 THAT REMAIN:
+#     syscall                        the futex call, see THE FUTEX PROBLEM
+#     pthread_exit
+#     pthread_setschedparam
+#     pthread_attr_setdetachstate
+#     pthread_attr_setstacksize
+#     pthread_attr_getschedparam     deliberately not done: OUT direction, and
+#                                    struct sched_param is 8 bytes vs 4
+#     pthread_attr_getschedpolicy    deliberately not done: same, plus
+#     pthread_attr_setschedpolicy    SCHED_OTHER is 1 on Darwin and glibc's 1
+#                                    is SCHED_FIFO, so a forward silently makes
+#                                    threads real-time
+#
+# CORRECTION TO MY OWN madvise NOTE BELOW, measured by machorun-isamask and
+# then re-measured here: LINUX'S MADV_REMOVE IS 9, NOT 5. Linux 5 is
+# UNASSIGNED, so forwarding Darwin's MADV_FREE (5) returns EINVAL -- loud, not
+# destructive. I wrote that it "punches a hole in the underlying object", which
+# was over-warning: right symptom, mechanism one number off. Confirmed with
+# _Static_assert against glibc: MADV_REMOVE==9, MADV_FREE==8.
+#
+# The complementary error is worth recording next to it. madvise was on the
+# SAFE-to-forward pile because advice 0..4 agree -- which is true, and
+# libdispatch calls madvise with exactly one advice, MADV_FREE, the first value
+# outside that range. PROBING THE COMMON RANGE AND GENERALISING MISSES THE ONLY
+# CASE THE CONSUMER EXERCISES.
+# ###########################################################################
+#
+# ###########################################################################
+# CORRECTION. THIS INVALIDATES EVERY COUNT BELOW THAT SAYS 20.
+#
+# THE TRUE COUNT IS 29. THE NUMBER 20 WAS THE LINKER'S ERROR LIMIT.
+#
+#     ld64.lld: error: too many errors emitted, stopping now
+#               (use --error-limit=0 to see all errors)
+#
+# ld64.lld stops after 20 diagnostics by default. Every "20 undefined symbols"
+# measurement in this file -- including the one I re-ran specifically to prove
+# a stale list wrong, then reported twice as a verified re-measurement -- was
+# reading the CEILING and calling it the COUNT.
+#
+# The tell was there and I walked past it twice: the last line of both link
+# logs says so in plain English. I grepped for "undefined symbol", counted the
+# hits, and never read the end of the file I was grepping.
+#
+# WORSE, THE CAP FORGED A CONFIRMATION. Two independent links returned exactly
+# 20 and I reported the stability as evidence -- "the count is unchanged, the
+# membership changed, that is why you re-link rather than re-quote." The
+# stability was an artefact of the cap. A SATURATED MEASUREMENT IS PERFECTLY
+# REPRODUCIBLE, and reproducibility was the thing I was treating as proof.
+# A metric pinned at its limit looks exactly like a metric that has converged.
+#
+# Re-linked with -Wl,--error-limit=0 and confirmed the log now contains no
+# "too many errors" line. 29 symbols: 9 loader-resolved _glibc_*, 20 genuine
+# libSystem gaps. Ten had been hidden the whole time, including the entire
+# pthread_attr_* family and `syscall` -- see THE FUTEX PROBLEM below, which is
+# the most consequential item in this file and was invisible at 20.
+#
+# Raw verified list: docs/cf-census/libdispatch-link-symbols-raw.txt
+# ###########################################################################
+#
+# ---------------------------------------------------------------------------
+# THE FUTEX PROBLEM -- the item behind the cap, and the one that matters most
+# ---------------------------------------------------------------------------
+# src/shims/lock.c:498
+#
+#     return (int)syscall(SYS_futex, uaddr, op | opflags, val, timeout,
+#                         uaddr2, val3);
+#
+# SEVEN ARGUMENTS THROUGH THE VARIADIC MULTIPLEXER, on libdispatch's core
+# locking path -- every lock, every thread event. syscall() is precisely what
+# machorun has said it will not forward, and it is right to refuse: Darwin's
+# arm64 ABI puts variadic arguments on the stack and AAPCS64 puts the first
+# eight in registers, so a forward reads six garbage values, one of which is a
+# pointer it then writes through.
+#
+# TURNING FUTEX OFF IS NOT THE ANSWER, AND I CHECKED RATHER THAN ASSUMED.
+# HAVE_FUTEX=0 looked attractive because the #else branch of the thread-event
+# paths falls through to _dispatch_sema4_*, our own pthread semaphore backend
+# from patch 4, already built and verified 4/4 on both platforms. Building it
+# fails 6 TUs with "define _dispatch_lock encoding scheme for your platform":
+# lock.h couples the lock-WORD ENCODING to the same flag as the futex SYSCALL.
+# It is not a config switch, it is a platform port.
+#
+# So the ask is narrow: A NON-VARIADIC futex ENTRY POINT in libSystem, six
+# fixed arguments --
+#
+#     int futex(uint32_t *uaddr, int op, uint32_t val,
+#               const struct timespec *timeout, uint32_t *uaddr2,
+#               uint32_t val3);
+#
+# -- plus a one-line patch here pointing _dispatch_futex at it instead of at
+# syscall(). Non-variadic means no ABI hazard at all. Same shape as the gettid
+# patch already in dispatch_patches.py, which replaced syscall(SYS_gettid) with
+# a direct gettid() call for exactly this reason -- that patch is why `syscall`
+# does not appear from queue.c. lock.c was never looked at, because its symbol
+# sat behind the cap.
+#
+# MEASURED 2026-08-27 ~12:20 UTC against the libSystem built 12:04:36 UTC
+# (machorun master 1f93f0b, "libSystem: sigaction"). Re-linked, not re-quoted.
+#
+# ===========================================================================
+# HEADLINE: libdispatch now COMPILES COMPLETELY AND LINKS. It does not RUN.
+# ===========================================================================
+#
+#   compile   25 of 25 TUs          (was 24 of 25; event_epoll.c was the one)
+#   link      libdispatch.dylib, 299,888 bytes, arm64 Mach-O, 413 exports
+#             including the whole core API (dispatch_semaphore_*, queue_create,
+#             async, sync, once, main, get_global_queue)
+#   run       NO -- 11 symbols absent from every loaded image
+#
+# The count is 20, the same number as the previous measurement, and that is a
+# COINCIDENCE. The membership changed almost entirely. The seven
+# _dispatch_event_loop_* entries are gone, because they were never external --
+# they are DEFINED in event_epoll.c and were undefined only because that one TU
+# did not compile. Eight _glibc_* entries took their place, which are not gaps
+# at all. An unchanged total hiding a changed set is exactly why the rule is to
+# re-link rather than re-quote.
+#
+# ---------------------------------------------------------------------------
+# WHAT ACTUALLY UNBLOCKED event_epoll.c, AND IT WAS OURS
+# ---------------------------------------------------------------------------
+# It was reported as blocked on libSystem lacking `sigaction`. libSystem does
+# now export _sigaction, but that was never the whole story and the last piece
+# was self-inflicted:
+#
+#   machorun's sdk/usr/include/signal.h is Apple's real 132-line header and
+#   HAS ALWAYS declared sigaction() at line 87. swiftcore-macho's clean-room
+#   sdk/libc/signal.h -- 62 lines, written when machorun's SDK carried no
+#   signal.h -- was copied over it by an unconditional `cp -f` in stage_sdk.sh.
+#   Ours is a strict SUBSET. It declared signal, raise, the sigset_t inlines
+#   and sigsuspend, and omitted sigaction. The declaration was hidden by us.
+#
+# A shadowing copy cannot fail. It silently produces a sysroot smaller than the
+# one it was built from, and every resulting error points at the consumer. Both
+# stage_sdk.sh copies now REFUSE to overwrite an existing header instead, and
+# sdk/libc/signal.h is deleted -- verified first by compiling a probe that uses
+# the entire surface ours declared against machorun's header alone.
+#
+# This is the umbrella-shadows-reexport shape again: the wrong definition wins
+# because it is applied last, not because it is better.
+#
+# Two more gaps behind it, both in our Linux-ABI overlay, both now fixed:
+#   SIOCOUTQ        our linux/sockios.h defined SIOCINQ and not SIOCOUTQ, while
+#                   event_epoll.c:532 uses `writer ? SIOCOUTQ : SIOCINQ`. Half
+#                   a family. Measured 0x5411 on the host.
+#   CLOCK_BOOTTIME  see the clock note below -- the one that mattered.
+#
+# ---------------------------------------------------------------------------
+# THE CLOCK BUG THE COMPILER WOULD NOT HAVE CAUGHT
+# ---------------------------------------------------------------------------
+# event_epoll.c hands three clock ids to timerfd_create, a LINUX call:
+#
+#     clock              Darwin   Linux
+#     CLOCK_REALTIME       0        0     agrees
+#     CLOCK_MONOTONIC      6        1     DOES NOT AGREE
+#     CLOCK_BOOTTIME    absent      7     absent on Darwin
+#
+# Only CLOCK_BOOTTIME is a compile error. Adding it -- the single thing the
+# compiler asked for -- makes the file build and leaves CLOCK_MONOTONIC passing
+# Darwin's 6 to Linux, where 6 is CLOCK_REALTIME_ALARM. Every
+# DISPATCH_CLOCK_UPTIME timer would then fail with EPERM (that clock wants
+# CAP_WAKE_ALARM) or, given the capability, quietly become a wall-clock alarm.
+#
+# THE COMPILER OBJECTS TO THE ABSENT CONSTANT AND NEVER TO THE PRESENT-BUT-
+# WRONG ONE. Fixed as dispatch patch 14 with explicit TFD_CLOCK_* names, values
+# measured on both sides, and a _Static_assert pinning the Darwin side so the
+# table fails loudly if the SDK ever changes.
+#
+# ===========================================================================
+# THE 20, CLASSIFIED
+# ===========================================================================
+#
+# --- 8: NOT GAPS. Resolved by the loader at runtime, by design. -------------
+# machorun's resolve.c binds _glibc_<x> via dlsym(RTLD_DEFAULT, x) for any
+# image whose is_runtime is set, which is true for dylibs loaded from a Darwin
+# absolute path. libdispatch installs at /usr/lib/system/libdispatch.dylib, so
+# it qualifies. CONFIRMED AT RUNTIME rather than assumed: machorun binds
+# eagerly, and it reported __udivti3 and _sysctl as unresolved while never
+# complaining about any of these eight -- so these eight bound successfully.
+# That also independently confirms the t6_fdwait result about runtime dylibs.
+_glibc_epoll_create1
+_glibc_epoll_ctl
+_glibc_epoll_wait
+_glibc_eventfd
+_glibc_eventfd_read
+_glibc_eventfd_write
+_glibc_timerfd_create
+_glibc_timerfd_settime
+#
+# --- 1: ALREADY SATISFIED, once linked against libswiftcompat. --------------
+# On real Darwin the compiler-rt builtins reach a program through libSystem's
+# re-export of libcompiler_rt.dylib. In this stack libswiftcompat.dylib plays
+# that role and already exports it. Referenced by benchmark.c's 128-bit
+# division in _dispatch_benchmark_init.
+___udivti3
+#
+# --- 11: GENUINE GAPS. Absent from every loaded image. ----------------------
+# Positive control run before trusting this: write, malloc, pthread_create,
+# sigaction and poll were all located by the same loop, in libSystem.
+#
+# EVERY ONE OF THESE IS FATAL AT LOAD, not at call. machorun binds eagerly, so
+# "it is only on the logging path" does not make it optional -- the process
+# will not start. It also reports them ONE AT A TIME, which is exactly the
+# serialisation this list exists to avoid; the link enumerates them in a single
+# pass, which is the whole argument for measuring at the link.
+#
+# Marked (V) where the function is VARIADIC. Darwin's arm64 ABI passes variadic
+# arguments on the STACK and AAPCS64 -- which glibc follows -- passes the first
+# eight in REGISTERS. A direct _glibc_ bind for any of these would have glibc
+# read a register as the argument and write through it: silent memory
+# corruption, not a wrong value. These need translating wrappers in libSystem.
+# Marked (C) where constants must be translated as well as the call.
+#
+_sysctl              init.c:847      fetches the OS build string into
+#                                    _dispatch_build via {CTL_KERN,
+#                                    KERN_OSVERSION}. Introspection only.
+#                                    CANNOT BE FORWARDED AT ALL: sys/sysctl.h
+#                                    is gone from glibc 2.39, Linux's sysctl(2)
+#                                    returns ENOSYS, and the symbol survives in
+#                                    libc.so.6 only as a compat stub -- exactly
+#                                    the shape that lets a link succeed and the
+#                                    call quietly do nothing. Wants an
+#                                    implementation returning a fixed build
+#                                    string, not a forward.
+_dprintf         (V) init.c:1158     only on the DISPATCH_LOGFILE debug path.
+_simple_asl_log      init.c:1209     Apple libSystem logging SPI, the fallback
+#                                    branch of _dispatch_log. Not variadic
+#                                    (level, facility, message). May be a stub.
+___strlcpy_chk       init.c:570,1328 _FORTIFY_SOURCE expansion of strlcpy. No
+#                                    Linux equivalent to forward to; implement
+#                                    directly.
+_fcntl           (V) io.c:1508-19    NOT the three-hazard case it looks like.
+#                                    MEASURED what libdispatch actually passes:
+#                                      F_GETFL         3 / 3   agree
+#                                      F_SETFL         4 / 4   agree
+#                                      F_GETNOSIGPIPE 74 / --  Darwin only
+#                                      F_SETNOSIGPIPE 73 / --  Darwin only
+#                                    The dangerous lock-command rotation
+#                                    (Darwin's F_GETLK is glibc's F_SETLKW, so a
+#                                    lock QUERY becomes a blocking acquire) is
+#                                    NOT REACHABLE from libdispatch -- no
+#                                    F_*LK* or F_*OWN anywhere in the tree. The
+#                                    real problem is the two NOSIGPIPE
+#                                    commands, which have no Linux counterpart
+#                                    at all: Linux has no per-fd SIGPIPE
+#                                    suppression, only per-send MSG_NOSIGNAL or
+#                                    a process-wide SIG_IGN. They cannot be
+#                                    forwarded or translated -- fail cleanly or
+#                                    emulate. Still variadic, so still a
+#                                    wrapper, for a smaller reason.
+_getsockopt         (C) event_epoll.c:195  SO_ACCEPTCONN on the muxnote path.
+#                                    Real, not a debug path. SOL_SOCKET and the
+#                                    SO_* numbers differ between the platforms.
+_ioctl           (V)(C) event_epoll.c:532  SIOCOUTQ/SIOCINQ. Real path. The
+#                                    declaration now exists in our overlay
+#                                    (sys/ioctl.h) and deliberately does NOT
+#                                    carry GLIBCSYM, so this fails at the link
+#                                    rather than corrupting memory.
+_madvise            (C) allocator.c:562    the allocator's page release, called
+#                                    with exactly one advice, MADV_FREE -- and
+#                                    that is precisely the one outside the
+#                                    agreeing range. MEASURED 5 on Darwin, 8 on
+#                                    Linux, and Linux's 5 is MADV_REMOVE, which
+#                                    punches a hole in the underlying object
+#                                    rather than lazily releasing a page. On
+#                                    anonymous memory that is EINVAL rather
+#                                    than damage, but this is a forward whose
+#                                    wrong constant names a DESTRUCTIVE
+#                                    operation. A general note that "madvise
+#                                    advice 0..4 agree" is true and does not
+#                                    cover this call site.
+_pwrite                 io.c:2599    off_t is 64-bit on both; a clean forward.
+_pthread_attr_destroy         queue.c:4104,6453
+_pthread_attr_setschedparam   queue.c:4068,5191
+#                                    Both on the real worker-thread path.
+#                                    pthread_attr_t was worth suspecting and is
+#                                    not a problem: MEASURED 64 bytes on both,
+#                                    _Static_assert compiles clean against
+#                                    Apple's SDK and against glibc. Provided
+#                                    init and destroy land on the same side it
+#                                    is self-consistent. Treat as plain.
+#                                    ITS NEIGHBOUR IS NOT. setschedparam takes
+#                                    const struct sched_param *, MEASURED 8
+#                                    bytes on Darwin and 4 on Linux, so glibc
+#                                    reads 4 of the 8 -- survivable only if
+#                                    sched_priority leads on both sides, which
+#                                    is worth confirming rather than assuming.
+#                                    Related trap if setschedpolicy is ever
+#                                    touched: SCHED_OTHER is 1 on Darwin and 0
+#                                    on glibc, and Darwin's 1 IS glibc's
+#                                    SCHED_FIFO -- asking for the ordinary
+#                                    scheduler makes the thread real-time.

@@ -1,0 +1,12 @@
+__exp10
+strtof
+strtold
+swprintf
+wcstod
+wcstof
+wcstol
+wcstold
+wcstoll
+wcstoul
+wcstoull
+wmemcmp

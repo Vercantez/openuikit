@@ -1,0 +1,49 @@
+### T16 -- CF preferences path under machorun
+
+=== T16: does CF's PREFERENCES path execute? ===
+Driving the six entry points UserDefaults needs, straight at CF.
+
+  .. CFStringCreateWithCString for the app domain + key
+  OK   CFStrings created
+  .. CFPreferencesCopyAppValue on a key that was never set (must be NULL)
+machorun/libSystem: a pthread object has an unexpected Darwin signature; its layout was compiled into the guest and cannot be renegotiated
+  backtrace (frame-pointer chain):
+    #0  0x20000070c  libSystem.B.dylib+0x70c
+    #1  0x200002990  libSystem.B.dylib+0x2990  (_pthread_mutex_lock+0xa8)
+    #2  0x2000d9cd0  libCFTest.dylib+0xcd0  (_CFPreferencesCopyAppValue+0xa8)
+    #3  0x2000d9c40  libCFTest.dylib+0xc40  (_CFPreferencesCopyAppValue+0x18)
+    #4  0x1000007a8  t16+0x7a8  (_main+0x100)
+    #5  0x1000000a250  <not in any Mach-O image: loader, glibc or JIT>
+    #6  0xffffa2eb84c4  <not in any Mach-O image: loader, glibc or JIT>
+    #7  0xffffa2eb8598  <not in any Mach-O image: loader, glibc or JIT>
+    #8  0x10000002a30  <not in any Mach-O image: loader, glibc or JIT>
+
+### T17 -- the same wall, isolated from CoreFoundation
+signatures as compiled into the guest:
+  plain      0x32AAABA7
+  errorcheck 0x32AAABA1
+  recursive  0x32AAABA2
+
+locking the PLAIN mutex (machorun knows 0x32AAABA7)...
+  ok -- plain mutex locks and unlocks
+
+locking the ERRORCHECK mutex (this is CF's CFLockInit)...
+machorun/libSystem: a pthread object has an unexpected Darwin signature; its layout was compiled into the guest and cannot be renegotiated
+  backtrace (frame-pointer chain):
+    #0  0x20000070c  libSystem.B.dylib+0x70c
+    #1  0x200002990  libSystem.B.dylib+0x2990  (_pthread_mutex_lock+0xa8)
+    #2  0x100000674  t17+0x674  (_main+0xdc)
+
+### T18 -- CFBundle identity (what decides the plist filename)
+  .. CFBundleGetMainBundle()
+objc[7347]: -[__NSCFConstantString _fastCStringContents:]: unrecognized selector sent to instance 0x2002704b8 (no message forward handler is installed)
+machorun/libSystem: abort_with_reason: -[__NSCFConstantString _fastCStringContents:]: unrecognized selector sent to instance 0x2002704b8 (no message forward handler is installed)
+  backtrace (frame-pointer chain):
+    #0  0x200000770  libSystem.B.dylib+0x770
+    #1  0x20000a19c  libSystem.B.dylib+0xa19c  (_abort_with_reason+0x24)
+    #2  0x20003c8e4  libobjc.A.dylib+0xa8e4  (_method_copyArgumentType+0x858)
+    #3  0x20003c834  libobjc.A.dylib+0xa834  (_method_copyArgumentType+0x7a8)
+    #4  0x20005eba4  libobjc.A.dylib+0x2cba4  (__objcInit+0x64)
+    #5  0x20015d5d0  libCFTest.dylib+0x845d0  (_CFStringFindWithOptionsAndLocale+0xf0)
+    #6  0x20017be60  libCFTest.dylib+0xa2e60  (_CFURLCreateWithFileSystemPath+0x8c)
+    #7  0x2000fa5f0  libCFTest.dylib+0x215f0  (_CFBundleGetMainBundle+0x74)

@@ -1,0 +1,88 @@
+# The libdispatch + CFRunLoop import boundary, for machorun's libSystem
+#
+# Harvested 2026-08-27 with `nm -u` over 25 objects: 23 libdispatch TUs that
+# compile, event/event_epoll.c (compiled as a PROBE with our sigset_t guard
+# neutralised, since it is otherwise blocked), and CFRunLoop.o on the epoll
+# platform layer. 335 distinct undefined symbols, 266 not currently in
+# machorun's libSystem.
+#
+# THE HEADLINE IS THAT THE EVENT FAMILY IS NOT LIBSYSTEM'S PROBLEM.
+#
+# swiftcore-macho's scripts/stage_linux_abi.sh declares these with GLIBCSYM asm
+# labels, so they appear in the objects as _glibc_epoll_wait and bind DIRECTLY
+# to glibc. They never route through libSystem, which is why nm on
+# libSystem.B.dylib correctly shows zero for all of them and why that zero is
+# not a gap:
+#
+#   epoll_create1  epoll_ctl  epoll_wait  eventfd  eventfd_read  eventfd_write
+#   ppoll  signalfd  timerfd_create  timerfd_settime
+#
+# That is the whole set libdispatch's epoll backend and CFRunLoop need. Note
+# what is ABSENT from it: epoll_pwait and pipe2 are not referenced by either.
+#
+# Of the 266, 215 are CF's own functions, dispatch internals, os_/voucher/
+# firehose symbols, or the kCF* constants -- all resolved when those libraries
+# link, none of them libSystem's.
+#
+# ---------------------------------------------------------------------------
+# THE GENUINE ASK: 16 symbols
+# ---------------------------------------------------------------------------
+#
+# Plain POSIX, present in glibc, presumably ordinary forwards:
+#
+dprintf
+fcntl
+getsockopt
+ioctl
+madvise
+pthread_kill
+pwrite
+sigaction
+sysctl
+#
+# NOT an ordinary forward -- see the note below:
+#
+syscall
+#
+# Not in glibc; Darwin/BSD-only, needs implementing:
+#
+flsl                                # find-last-set on a long; trivial
+OSAtomicCompareAndSwapPtrBarrier    # OSAtomic; foundation-macho has the family
+                                    # implemented in src/compat/OSAtomic.c
+_simple_asl_log                     # Apple logging SPI; a no-op is defensible
+qos_class_main                      # QoS; the private headers are staged
+_NSConcreteWeakBlockVariable        # blocks runtime, __weak block variables
+_voucher_atfork_child               # libdispatch's own; resolves when it links
+#
+# ---------------------------------------------------------------------------
+# syscall() MUST NOT BE A NAIVE GLIBCSYM FORWARD
+# ---------------------------------------------------------------------------
+#
+# It is VARIADIC, and Darwin's arm64 variadic ABI is not AAPCS64: a
+# Darwin-compiled caller puts varargs on the stack while glibc reads them from
+# registers. Same reason machorun owns the printf formatter rather than
+# forwarding it. Every symbol resolves and the arguments arrive as garbage.
+#
+# libdispatch reaches it only through syscall(SYS_gettid), which swiftcore-macho
+# patch 13 already routes to gettid() instead -- non-variadic, no arguments, a
+# real exported glibc symbol. So this reference may be residue from a TU the
+# patch does not cover; worth locating before implementing anything.
+#
+# ioctl is variadic in its glibc declaration too, though libdispatch calls it
+# with a fixed three-argument shape (SIOCOUTQ). Worth a fixed-arity wrapper
+# rather than a variadic forward, for the same reason.
+#
+# ---------------------------------------------------------------------------
+# THREE GAPS FOUND WHILE PROBING event_epoll.c, not visible any other way
+# ---------------------------------------------------------------------------
+#
+# The file does not compile against the current sysroot for reasons BEYOND the
+# sigset_t crossing, each of which stops it before the next appears:
+#
+#   sigaction        not declared in the sysroot
+#   CLOCK_BOOTTIME   not defined; Linux-only clock id, needs the mr_linux_clock_id
+#                    treatment rather than a raw value
+#   SIOCOUTQ         not defined; Linux ioctl request, and ioctl not declared
+#
+# These were found by shimming each in turn purely to reach the next, which is
+# why they are reported together rather than one per round trip.

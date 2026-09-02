@@ -1,0 +1,14 @@
+nsstring.length=2
+nsstring.char0=104
+longer.length=12
+roundtrip=hello, world
+roundtrip.eq=true
+unicode.length=4
+unicode.roundtrip=true
+nsarray.count=3
+nsarray.first.isNumber=true
+nsarray.0=1
+nsarray.2=3
+strarray.count=2
+strarray.0.length=5
+equal=true

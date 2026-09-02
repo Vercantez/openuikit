@@ -1,0 +1,17 @@
+glibc_epoll_create1
+glibc_epoll_ctl
+glibc_epoll_wait
+glibc_eventfd
+glibc_eventfd_read
+glibc_eventfd_write
+glibc_gettid
+glibc_timerfd_create
+glibc_timerfd_settime
+pthread_attr_getschedparam
+pthread_attr_getschedpolicy
+pthread_attr_setdetachstate
+pthread_attr_setschedpolicy
+pthread_attr_setstacksize
+pthread_exit
+pthread_setschedparam
+syscall

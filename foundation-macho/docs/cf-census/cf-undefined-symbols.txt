@@ -1,0 +1,857 @@
+# CoreFoundation — complete undefined-symbol set
+#
+# PROVENANCE. Read before implementing anything below.
+#
+#   generated        : 2026-08-27
+#   foundation-macho : 2a30e81  (scripts/cf_census.sh, scripts/cf_shims.sh)
+#   CF source        : swift-corelibs-foundation release/6.2
+#   machorun         : master bdc5dc0 sysroot (TARGET_OS_* macros from 5d64c3b)
+#   ICU headers      : apple/swift-foundation-icu 0.0.9 icuSources/include
+#   target           : arm64-apple-macos13.0
+#
+#   BUILD CONFIGURATION — the CORRECTED one:
+#     -DDEPLOYMENT_RUNTIME_SWIFT=0   (ObjC mode, the mode DECISION.md chose)
+#     -fcf-runtime-abi=objc          (NOT =swift)
+#     NO -Wno-everything             (undeclared-function calls are errors)
+#     empty translation units excluded
+#     NO -DTARGET_OS_* predefines    (machorun 5d64c3b made them unnecessary)
+#
+#   census : PASS=77 FAIL=5 EMPTY=4 (denominator 82); 77 objects
+#
+# SUPERSEDES every count in docs/CF_TRIAGE.md. Three libc counts appear there —
+# 46, then 40, then 28 — as the measurement improved. NONE is this list: those
+# were filtered subsets of smaller builds (60 and 69 objects). This is the whole
+# external set from 77.
+#
+# NOT EXHAUSTIVE. 5 files still fail, so their symbols are absent:
+#   CFRunLoop, CFSocket, CFString, CFTimeZone, CFUtilities
+# CFString and CFRunLoop are heavy libc consumers — expect this list to GROW.
+#
+# CONTAMINATION CHECK (asked for, and it found something):
+#   cf_shims.sh declares functions with nothing behind them. CF reaches
+#   13 of them — section D. For those the NAME is real (CF genuinely
+#   calls them) but the SIGNATURE is mine and the ABI is UNVERIFIED. Confirm
+#   each against real Darwin headers before implementing.
+#
+#   posix_spawn: NOT REACHED. CFPlatform.c mentions it but compiles emitting no
+#   posix_spawn* reference — the call sites are in branches not taken for our
+#   target. So the hollow spawn.h is NOT contaminating this list, and the
+#   posix_spawnattr_t 8-vs-336-byte ABI trap does not apply to CF today. It
+#   applies the moment anything does reach it.
+#
+#   totals: 1128 undefined, 443 external,
+#           104 already in libSystem, 328 genuinely absent,
+#           13 shim-declared
+
+# ======================================================================
+# SECTION A — already exported by machorun libSystem. No work needed.
+# ======================================================================
+  _Block_copy
+  _Block_object_assign
+  _Block_object_dispose
+  _Block_release
+  _DefaultRuneLocale
+  _NSConcreteGlobalBlock
+  _NSConcreteStackBlock
+  _NSGetArgc
+  _NSGetArgv
+  _Unwind_Resume
+  __assert_rtn
+  __error
+  __maskrune
+  __memcpy_chk
+  __memmove_chk
+  __sprintf_chk
+  __stack_chk_fail
+  __stack_chk_guard
+  __stderrp
+  __stdoutp
+  __tolower
+  __toupper
+  abort
+  asprintf
+  atol
+  bzero
+  calloc
+  chmod
+  close
+  dlerror
+  dlopen
+  dlsym
+  fmod
+  fprintf
+  free
+  fstat
+  fsync
+  fwrite
+  getcwd
+  getenv
+  geteuid
+  gettimeofday
+  issetugid
+  lseek
+  mach_absolute_time
+  mach_error_string
+  mach_timebase_info
+  malloc
+  malloc_default_zone
+  malloc_good_size
+  malloc_zone_calloc
+  malloc_zone_free
+  malloc_zone_malloc
+  malloc_zone_realloc
+  memcmp
+  memcpy
+  memmove
+  memset
+  mkdir
+  mkstemp
+  mmap
+  modf
+  munmap
+  nanosleep
+  open
+  os_unfair_lock_lock
+  os_unfair_lock_lock_with_options
+  os_unfair_lock_unlock
+  os_unfair_recursive_lock_lock_with_options
+  os_unfair_recursive_lock_unlock
+  pthread_create
+  pthread_getspecific
+  pthread_is_threaded_np
+  pthread_key_create
+  pthread_mutex_destroy
+  pthread_mutex_init
+  pthread_mutex_lock
+  pthread_mutex_unlock
+  pthread_self
+  pthread_setspecific
+  qsort
+  read
+  readlink
+  realloc
+  rename
+  rmdir
+  scalbn
+  snprintf
+  stat
+  strchr
+  strcmp
+  strdup
+  strerror
+  strlcpy
+  strlen
+  strncmp
+  strncpy
+  strrchr
+  strstr
+  strtol
+  strtoll
+  unlink
+  vm_page_size
+  write
+
+# ======================================================================
+# SECTION B — NOT in libSystem: the actual gap (328)
+#
+# INDEX — swift-loader-fixes wants the 'libc / pthread / locale / dirent'
+# block; the rest belong to other tracks (ICU=ours, dispatch=#47, Mach=the
+# RunLoop fork, CF_*=resolves when the 5 failing files compile).
+#
+#   ICU                                169
+#   CF (from the 5 failing files)      95
+#   libc / pthread / locale / dirent   39
+#   libdispatch                        10
+#   OSAtomic/OSSpinLock                8
+#   dyld / Mach-O introspection        7
+# ======================================================================
+
+  ## ICU (169)
+  u_charsToUChars
+  u_errorName
+  u_formatMessage
+  uameasfmt_getUnitsForUsage
+  ucal_add
+  ucal_clear
+  ucal_clone
+  ucal_close
+  ucal_get
+  ucal_getAttribute
+  ucal_getDayOfWeekType
+  ucal_getFieldDifference
+  ucal_getGregorianChange
+  ucal_getKeywordValuesForLocale
+  ucal_getLimit
+  ucal_getMillis
+  ucal_getNow
+  ucal_getTimeZoneTransitionDate
+  ucal_getWeekendTransition
+  ucal_isWeekend
+  ucal_open
+  ucal_roll
+  ucal_set
+  ucal_setAttribute
+  ucal_setGregorianChange
+  ucal_setMillis
+  ucal_setTimeZone
+  ucnv_close
+  ucnv_countAliases
+  ucnv_countAvailable
+  ucnv_fromUnicode
+  ucnv_getAlias
+  ucnv_getAvailableName
+  ucnv_getInvalidChars
+  ucnv_getInvalidUChars
+  ucnv_getStandardName
+  ucnv_open
+  ucnv_resetFromUnicode
+  ucnv_setFromUCallBack
+  ucnv_setSubstChars
+  ucnv_setToUCallBack
+  ucnv_toUnicode
+  ucol_close
+  ucol_closeElements
+  ucol_getOffset
+  ucol_next
+  ucol_open
+  ucol_openElements
+  ucol_setAttribute
+  ucol_strcoll
+  ucurr_getDefaultFractionDigits
+  ucurr_getName
+  ucurr_getRoundingIncrement
+  ucurr_openISOCurrencies
+  udat_applyPattern
+  udat_applyPatternRelative
+  udat_clone
+  udat_close
+  udat_countSymbols
+  udat_format
+  udat_formatForFields
+  udat_getCalendar
+  udat_getContext
+  udat_getSymbols
+  udat_isLenient
+  udat_open
+  udat_parseCalendar
+  udat_set2DigitYearStart
+  udat_setCalendar
+  udat_setContext
+  udat_setLenient
+  udat_setSymbols
+  udat_toPattern
+  udat_toPatternRelativeDate
+  udat_toPatternRelativeTime
+  udatpg_close
+  udatpg_getBestPattern
+  udatpg_getSkeleton
+  udatpg_open
+  udtitvfmt_close
+  udtitvfmt_format
+  udtitvfmt_open
+  udtitvfmt_setAttribute
+  uenum_close
+  uenum_next
+  uenum_unext
+  ufieldpositer_close
+  ufieldpositer_next
+  ufieldpositer_open
+  ulistfmt_close
+  ulistfmt_format
+  ulistfmt_open
+  uloc_addLikelySubtags
+  uloc_canonicalize
+  uloc_countAvailable
+  uloc_getAvailable
+  uloc_getCharacterOrientation
+  uloc_getCountry
+  uloc_getDisplayCountry
+  uloc_getDisplayKeywordValue
+  uloc_getDisplayLanguage
+  uloc_getDisplayName
+  uloc_getDisplayScript
+  uloc_getDisplayVariant
+  uloc_getISOCountries
+  uloc_getISOLanguages
+  uloc_getKeywordValue
+  uloc_getLCID
+  uloc_getLanguage
+  uloc_getLineOrientation
+  uloc_getLocaleForLCID
+  uloc_getScript
+  uloc_getVariant
+  uloc_openKeywords
+  uloc_setKeywordValue
+  ulocdata_close
+  ulocdata_getDelimiter
+  ulocdata_getExemplarSet
+  ulocdata_getMeasurementSystem
+  ulocdata_open
+  unum_applyPattern
+  unum_close
+  unum_formatDecimal
+  unum_formatDouble
+  unum_getAttribute
+  unum_getContext
+  unum_getDoubleAttribute
+  unum_getSymbol
+  unum_getTextAttribute
+  unum_open
+  unum_parseDecimal
+  unum_setAttribute
+  unum_setContext
+  unum_setDoubleAttribute
+  unum_setSymbol
+  unum_setTextAttribute
+  unum_toPattern
+  unumsys_close
+  unumsys_getName
+  unumsys_getRadix
+  unumsys_isAlgorithmic
+  unumsys_open
+  uregex_clone
+  uregex_close
+  uregex_end64
+  uregex_findNext
+  uregex_groupCount
+  uregex_groupNumberFromName
+  uregex_hitEnd
+  uregex_open
+  uregex_requireEnd
+  uregex_setFindProgressCallback
+  uregex_setMatchCallback
+  uregex_setRegion64
+  uregex_setText
+  uregex_start64
+  uregex_useAnchoringBounds
+  uregex_useTransparentBounds
+  ureldatefmt_close
+  ureldatefmt_format
+  ureldatefmt_formatNumeric
+  ureldatefmt_open
+  uset_clear
+  uset_close
+  uset_getItem
+  uset_getItemCount
+  utrans_close
+  utrans_openU
+  utrans_trans
+
+  ## CF (from the 5 failing files) (95)
+  CFHashBytes
+  CFLog
+  CFRunLoopAddSource
+  CFRunLoopContainsSource
+  CFRunLoopCopyCurrentMode
+  CFRunLoopGetCurrent
+  CFRunLoopIsWaiting
+  CFRunLoopRemoveSource
+  CFRunLoopRunInMode
+  CFRunLoopSourceCreate
+  CFRunLoopSourceInvalidate
+  CFRunLoopSourceSignal
+  CFRunLoopWakeUp
+  CFShow
+  CFStringAppend
+  CFStringAppendCString
+  CFStringAppendCharacters
+  CFStringAppendFormat
+  CFStringCompare
+  CFStringCompareWithOptions
+  CFStringCreateArrayBySeparatingStrings
+  CFStringCreateByCombiningStrings
+  CFStringCreateCopy
+  CFStringCreateExternalRepresentation
+  CFStringCreateMutable
+  CFStringCreateMutableCopy
+  CFStringCreateMutableWithExternalCharactersNoCopy
+  CFStringCreateWithBytes
+  CFStringCreateWithBytesNoCopy
+  CFStringCreateWithCString
+  CFStringCreateWithCStringNoCopy
+  CFStringCreateWithCharacters
+  CFStringCreateWithCharactersNoCopy
+  CFStringCreateWithFormat
+  CFStringCreateWithFormatAndArguments
+  CFStringCreateWithSubstring
+  CFStringDelete
+  CFStringFileSystemEncoding
+  CFStringFind
+  CFStringFindAndReplace
+  CFStringFindCharacterFromSet
+  CFStringFindWithOptions
+  CFStringGetBytes
+  CFStringGetCString
+  CFStringGetCStringPtr
+  CFStringGetCharacterAtIndex
+  CFStringGetCharacters
+  CFStringGetCharactersPtr
+  CFStringGetFastestEncoding
+  CFStringGetIntValue
+  CFStringGetLength
+  CFStringGetMaximumSizeForEncoding
+  CFStringGetPascalStringPtr
+  CFStringGetRangeOfComposedCharactersAtIndex
+  CFStringGetSystemEncoding
+  CFStringGetTypeID
+  CFStringHasPrefix
+  CFStringHasSuffix
+  CFStringInsert
+  CFStringLowercase
+  CFStringReplace
+  CFStringSetExternalCharactersNoCopy
+  CFStringTrimWhitespace
+  CFTimeZoneCopyDefault
+  CFTimeZoneGetName
+  CFTimeZoneGetSecondsFromGMT
+  _CFDataCreateFromURL
+  _CFExecutableLinkedOnOrAfter
+  _CFExtensionIsValidToAppend
+  _CFGetEUID
+  _CFGetPathExtensionRangesFromPathComponent
+  _CFLogSimple
+  _CFReadMappedFromFile
+  __CFActiveProcessorCount
+  __CFDefaultEightBitStringEncoding
+  __CFGetUGIDs
+  __CFLookupCFNetworkFunction
+  __CFMachPortClass
+  __CFRunLoopClass
+  __CFRunLoopModeClass
+  __CFRunLoopObserverClass
+  __CFRunLoopSourceClass
+  __CFRunLoopTimerClass
+  __CFSocketClass
+  __CFStringAppendBytes
+  __CFStringClass
+  __CFStringComputeEightBitStringEncoding
+  __CFStringHandleOutOfMemory
+  __CFTimeZoneClass
+  kCFDateFormatterCalendar
+  kCFGregorianCalendar
+  kCFLocaleCalendar
+  kCFLocaleLanguageCode
+  kCFLocaleScriptCode
+  kCFRunLoopDefaultMode
+
+  ## libc / pthread / locale / dirent (39)
+  UCNV_FROM_U_CALLBACK_STOP
+  UCNV_TO_U_CALLBACK_STOP
+  __gcc_personality_v0
+  __strlcat_chk
+  __strlcpy_chk
+  __udivti3
+  bsearch
+  chown
+  dlclose
+  dlopen_preflight
+  dyld_image_path_containing_address
+  fcntl
+  flsl
+  getgid
+  gethostname
+  gethostuuid
+  getuid
+  malloc_zone_memalign
+  pthread_atfork
+  pthread_attr_destroy
+  pthread_attr_init
+  pthread_attr_set_qos_class_np
+  pthread_attr_setdetachstate
+  pthread_main_np
+  pwrite
+  qos_class_main
+  setenv
+  sscanf
+  strncasecmp
+  strncasecmp_l
+  strnlen
+  strnstr
+  strtod_l
+  strtok
+  strtol_l
+  strtoll_l
+  strtoul_l
+  sysdir_get_next_search_path_enumeration
+  sysdir_start_search_path_enumeration
+
+  ## libdispatch (10)
+  _dispatch_queue_attr_concurrent
+  dispatch_apply
+  dispatch_async
+  dispatch_once
+  dispatch_queue_create
+  dispatch_release
+  dispatch_retain
+  dispatch_semaphore_create
+  dispatch_semaphore_signal
+  dispatch_semaphore_wait
+
+  ## OSAtomic/OSSpinLock (8)
+  OSAtomicAdd64
+  OSAtomicCompareAndSwap32Barrier
+  OSAtomicCompareAndSwapPtrBarrier
+  OSAtomicDecrement32
+  OSAtomicIncrement32
+  OSMemoryBarrier
+  OSSpinLockLock
+  OSSpinLockUnlock
+
+  ## dyld / Mach-O introspection (7)
+  _NSGetExecutablePath
+  _dyld_get_image_header
+  _dyld_get_image_name
+  _dyld_get_image_vmaddr_slide
+  _dyld_image_count
+  getsectbynamefromheader_64
+  getsegbyname
+
+# ======================================================================
+# SECTION C — per-object attribution for section B.
+# One file = stubbable or deferrable. Sixteen files = structural.
+# ======================================================================
+  CFHashBytes                                   4  CFCharacterSet CFData CFDateInterval CFUUID
+  CFLog                                        21  CFArray CFBag CFBundle CFBundle_Binary CFBundle_InfoPlist CFCharacterSet CFData CFDateIntervalFormatter CFDictionary CFFileUtilities CFICUConverters CFOldStylePList CFPreferences CFPropertyList CFRuntime CFSet CFSocketStream CFSortFunctions CFStream CFURL CFXMLPreferencesDomain
+  CFRunLoopAddSource                            1  CFStream
+  CFRunLoopContainsSource                       1  CFStream
+  CFRunLoopCopyCurrentMode                      1  CFStream
+  CFRunLoopGetCurrent                           1  CFStream
+  CFRunLoopIsWaiting                            1  CFStream
+  CFRunLoopRemoveSource                         1  CFStream
+  CFRunLoopRunInMode                            1  CFStream
+  CFRunLoopSourceCreate                         1  CFStream
+  CFRunLoopSourceInvalidate                     1  CFStream
+  CFRunLoopSourceSignal                         1  CFStream
+  CFRunLoopWakeUp                               1  CFStream
+  CFShow                                        2  CFBasicHash CFURL
+  CFStringAppend                               16  CFArray CFAttributedString CFBinaryHeap CFBitVector CFBundle_DebugStrings CFBundle_Resources CFCharacterSet CFData CFDateComponents CFError CFFileUtilities CFNumber CFPlatform CFPreferences CFURL CFURLComponents
+  CFStringAppendCString                         2  CFDateFormatter CFStorage
+  CFStringAppendCharacters                      8  CFBundle_Resources CFDateFormatter CFFileUtilities CFNumberFormatter CFOldStylePList CFURL CFURLComponents CFUUID
+  CFStringAppendFormat                         16  CFArray CFAttributedString CFBasicHash CFBinaryHeap CFBitVector CFBundle_DebugStrings CFCharacterSet CFData CFDateComponents CFError CFNumber CFPlatform CFRunArray CFStorage CFTree CFURL
+  CFStringCompare                              11  CFApplicationPreferences CFBinaryHeap CFBinaryPList CFBundle_Locale CFBundle_Resources CFNumberFormatter CFPlugIn CFPropertyList CFURL CFURLAccess CFXMLPreferencesDomain
+  CFStringCompareWithOptions                    4  CFBundle_InfoPlist CFBundle_Locale CFBundle_Resources CFBundle_SplitFileName
+  CFStringCreateArrayBySeparatingStrings        3  CFBundle_Resources CFPropertyList CFURL
+  CFStringCreateByCombiningStrings              1  CFURL
+  CFStringCreateCopy                           17  CFAttributedString CFBundle_DebugStrings CFBundle_Locale CFBundle_Resources CFDateFormatter CFDateIntervalFormatter CFError CFLocale CFPlugIn CFPreferences CFPropertyList CFRegularExpression CFRuntime CFURL CFURLAccess CFURLComponents CFURLComponents_URIParser
+  CFStringCreateExternalRepresentation          2  CFPropertyList CFURL
+  CFStringCreateMutable                        23  CFArray CFAttributedString CFBasicHash CFBinaryHeap CFBitVector CFBundle_DebugStrings CFCharacterSet CFData CFDateComponents CFDateFormatter CFError CFNumber CFNumberFormatter CFOldStylePList CFPlatform CFPreferences CFPropertyList CFRunArray CFStorage CFTree CFURL CFURLComponents CFUUID
+  CFStringCreateMutableCopy                    10  CFBinaryPList CFBundle_DebugStrings CFBundle_Locale CFBundle_Resources CFBundle_SplitFileName CFPreferences CFPropertyList CFRegularExpression CFURL CFURLAccess
+  CFStringCreateMutableWithExternalCharactersNoCopy  4  CFBundle CFBundle_DebugStrings CFStringTransform CFURL
+  CFStringCreateWithBytes                       8  CFBinaryPList CFDateFormatter CFLocaleIdentifier CFOldStylePList CFPropertyList CFURL CFURLComponents CFURLComponents_URIParser
+  CFStringCreateWithBytesNoCopy                 1  CFOldStylePList
+  CFStringCreateWithCString                     8  CFError CFFileUtilities CFLocale CFLocaleIdentifier CFPlatform CFRuntime CFStringEncodings CFStringUtilities
+  CFStringCreateWithCStringNoCopy               3  CFBundle_Grok CFBundle_Locale CFLocaleIdentifier
+  CFStringCreateWithCharacters                 12  CFBinaryPList CFBundle CFBundle_Executable CFCharacterSet CFDateFormatter CFDateIntervalFormatter CFListFormatter CFLocale CFNumberFormatter CFOldStylePList CFPropertyList CFRelativeDateTimeFormatter
+  CFStringCreateWithCharactersNoCopy            5  CFBundle_Executable CFCharacterSet CFLocale CFPropertyList CFURL
+  CFStringCreateWithFormat                     32  CFArray CFBase CFBasicHash CFBinaryPList CFBundle CFBundle_DebugStrings CFBundle_Executable CFBundle_InfoPlist CFBundle_Resources CFCalendar CFCharacterSet CFConcreteStreams CFData CFDate CFDateComponents CFDateFormatter CFDateInterval CFError CFFileUtilities CFListFormatter CFLocale CFNumber CFNumberFormatter CFPreferences CFPropertyList CFRelativeDateTimeFormatter CFRuntime CFStream CFTree CFURL CFURLComponents CFUUID
+  CFStringCreateWithFormatAndArguments          1  CFPropertyList
+  CFStringCreateWithSubstring                  12  CFAttributedString CFBundle CFBundle_InfoPlist CFBundle_Locale CFBundle_Resources CFBundle_SplitFileName CFFileUtilities CFPreferences CFStringTransform CFURL CFURLAccess CFURLComponents
+  CFStringDelete                                5  CFBundle_Resources CFBundle_SplitFileName CFFileUtilities CFURL CFURLAccess
+  CFStringFileSystemEncoding                    2  CFFileUtilities CFStringEncodings
+  CFStringFind                                  4  CFBundle_InfoPlist CFDateFormatter CFURL CFURLAccess
+  CFStringFindAndReplace                        2  CFBundle_DebugStrings CFURL
+  CFStringFindCharacterFromSet                  1  CFRegularExpression
+  CFStringFindWithOptions                       8  CFBundle_Binary CFBundle_InfoPlist CFBundle_Resources CFDateFormatter CFFileUtilities CFNumberFormatter CFURL CFURLAccess
+  CFStringGetBytes                             10  CFBinaryPList CFBundle_InfoPlist CFBurstTrie CFFileUtilities CFLocaleIdentifier CFPlatform CFPropertyList CFURL CFURLComponents CFURLComponents_URIParser
+  CFStringGetCString                           15  CFBinaryPList CFBundle_Binary CFBundle_Locale CFBundle_Main CFBurstTrie CFCalendar CFDateFormatter CFDateIntervalFormatter CFListFormatter CFLocale CFLocaleIdentifier CFNumberFormatter CFRelativeDateTimeFormatter CFStringUtilities CFURL
+  CFStringGetCStringPtr                        18  CFApplicationPreferences CFBinaryPList CFBundle_DebugStrings CFCalendar CFCharacterSet CFDateFormatter CFListFormatter CFLocale CFNumberFormatter CFPropertyList CFRelativeDateTimeFormatter CFStringEncodings CFStringTransform CFStringUtilities CFURL CFURLAccess CFURLComponents CFURLComponents_URIParser
+  CFStringGetCharacterAtIndex                  12  CFBundle_Locale CFBundle_Resources CFBundle_SplitFileName CFCalendar CFDateFormatter CFFileUtilities CFNumberFormatter CFStringTransform CFURL CFURLAccess CFURLComponents CFURLComponents_URIParser
+  CFStringGetCharacters                        24  CFBinaryPList CFBundle CFBundle_DebugStrings CFBundle_Executable CFBundle_InfoPlist CFCalendar CFCharacterSet CFDateFormatter CFDateIntervalFormatter CFListFormatter CFLocale CFNumberFormatter CFOldStylePList CFPropertyList CFRegularExpression CFStringEncodings CFStringScanner CFStringTransform CFStringUtilities CFURL CFURLAccess CFURLComponents CFURLComponents_URIParser CFUUID
+  CFStringGetCharactersPtr                     15  CFApplicationPreferences CFBundle_DebugStrings CFCharacterSet CFDateFormatter CFListFormatter CFNumberFormatter CFOldStylePList CFPropertyList CFRegularExpression CFStringEncodings CFStringTransform CFURL CFURLAccess CFURLComponents CFURLComponents_URIParser
+  CFStringGetFastestEncoding                    1  CFStringEncodings
+  CFStringGetIntValue                           4  CFBinaryPList CFDateFormatter CFNumberFormatter CFPropertyList
+  CFStringGetLength                            34  CFApplicationPreferences CFAttributedString CFBinaryPList CFBundle CFBundle_Binary CFBundle_DebugStrings CFBundle_Executable CFBundle_InfoPlist CFBundle_Locale CFBundle_Resources CFBundle_SplitFileName CFCalendar CFCharacterSet CFDateFormatter CFDateIntervalFormatter CFError CFFileUtilities CFListFormatter CFLocale CFLocaleIdentifier CFNumberFormatter CFOldStylePList CFPlatform CFPlugIn CFPreferences CFPropertyList CFRegularExpression CFStringEncodings CFStringTransform CFURL CFURLAccess CFURLComponents CFURLComponents_URIParser CFUUID
+  CFStringGetMaximumSizeForEncoding             4  CFPlatform CFURL CFURLComponents CFURLComponents_URIParser
+  CFStringGetPascalStringPtr                    1  CFStringEncodings
+  CFStringGetRangeOfComposedCharactersAtIndex   2  CFBundle_DebugStrings CFStringEncodings
+  CFStringGetSystemEncoding                     2  CFStorage CFStringEncodingConverter
+  CFStringGetTypeID                            11  CFApplicationPreferences CFBundle CFBundle_InfoPlist CFBundle_Locale CFBundle_Resources CFDateFormatter CFLocale CFNumberFormatter CFOldStylePList CFPlugIn CFURL
+  CFStringHasPrefix                             5  CFBundle CFBundle_Resources CFFileUtilities CFPreferences CFURL
+  CFStringHasSuffix                             7  CFBundle CFBundle_InfoPlist CFBundle_Main CFBundle_Resources CFBundle_Strings CFError CFPreferences
+  CFStringInsert                                3  CFRegularExpression CFStringTransform CFURL
+  CFStringLowercase                             2  CFPreferences CFURLAccess
+  CFStringReplace                               7  CFAttributedString CFBundle_Locale CFDateFormatter CFError CFNumberFormatter CFStringTransform CFURL
+  CFStringSetExternalCharactersNoCopy           2  CFBundle CFStringTransform
+  CFStringTrimWhitespace                        1  CFURLAccess
+  CFTimeZoneCopyDefault                         3  CFCalendar CFDateFormatter CFDateIntervalFormatter
+  CFTimeZoneGetName                             3  CFCalendar CFDateFormatter CFDateIntervalFormatter
+  CFTimeZoneGetSecondsFromGMT                   2  CFCalendar CFDate
+  OSAtomicAdd64                                 1  CFStream
+  OSAtomicCompareAndSwap32Barrier               1  CFRegularExpression
+  OSAtomicCompareAndSwapPtrBarrier              4  CFNumber CFPlatform CFPreferences CFStringEncodingConverter
+  OSAtomicDecrement32                           1  CFStorage
+  OSAtomicIncrement32                           1  CFStorage
+  OSMemoryBarrier                               2  CFBundle CFRegularExpression
+  OSSpinLockLock                                1  CFCharacterSet
+  OSSpinLockUnlock                              1  CFCharacterSet
+  UCNV_FROM_U_CALLBACK_STOP                     1  CFICUConverters
+  UCNV_TO_U_CALLBACK_STOP                       1  CFICUConverters
+  _CFDataCreateFromURL                          1  CFBundle_Strings
+  _CFExecutableLinkedOnOrAfter                  7  CFBundle CFBundle_Strings CFData CFLocale CFNumber CFNumberFormatter CFStringEncodings
+  _CFExtensionIsValidToAppend                   1  CFURL
+  _CFGetEUID                                    1  CFStringEncodings
+  _CFGetPathExtensionRangesFromPathComponent    1  CFURL
+  _CFLogSimple                                  1  CFPlatform
+  _CFReadMappedFromFile                         1  CFBundle_InfoPlist
+  _NSGetExecutablePath                          1  CFPlatform
+  __CFActiveProcessorCount                      1  CFSortFunctions
+  __CFDefaultEightBitStringEncoding             2  CFStringEncodings CFStringUtilities
+  __CFGetUGIDs                                  1  CFPlatform
+  __CFLookupCFNetworkFunction                   2  CFSocketStream CFURLAccess
+  __CFMachPortClass                             1  CFRuntime
+  __CFRunLoopClass                              1  CFRuntime
+  __CFRunLoopModeClass                          1  CFRuntime
+  __CFRunLoopObserverClass                      1  CFRuntime
+  __CFRunLoopSourceClass                        1  CFRuntime
+  __CFRunLoopTimerClass                         1  CFRuntime
+  __CFSocketClass                               1  CFRuntime
+  __CFStringAppendBytes                         1  CFURL
+  __CFStringClass                               1  CFRuntime
+  __CFStringComputeEightBitStringEncoding       2  CFStringEncodings CFStringUtilities
+  __CFStringHandleOutOfMemory                   1  CFStringUtilities
+  __CFTimeZoneClass                             1  CFRuntime
+  __gcc_personality_v0                          8  CFBinaryPList CFBundle_InfoPlist CFBundle_Locale CFBundle_Resources CFCalendar_Enumerate CFDateFormatter CFPlatform CFUUID
+  __strlcat_chk                                 5  CFFileUtilities CFLocale CFLocaleIdentifier CFStringEncodings CFSystemDirectories
+  __strlcpy_chk                                 4  CFFileUtilities CFLocale CFLocaleIdentifier CFStringEncodings
+  __udivti3                                     1  CFBigNumber
+  _dispatch_queue_attr_concurrent               1  CFSortFunctions
+  _dyld_get_image_header                        2  CFBundle_Binary CFBundle_Grok
+  _dyld_get_image_name                          1  CFBundle_Binary
+  _dyld_get_image_vmaddr_slide                  1  CFBundle_Grok
+  _dyld_image_count                             2  CFBundle_Binary CFBundle_Grok
+  bsearch                                       1  CFLocaleIdentifier
+  chown                                         1  CFXMLPreferencesDomain
+  dispatch_apply                                2  CFSortFunctions CFStorage
+  dispatch_async                                1  CFStream
+  dispatch_once                                16  CFBasicHash CFBundle CFBundle_DebugStrings CFBundle_InfoPlist CFBundle_Locale CFCharacterSet CFDateInterval CFNumber CFPlatform CFRegularExpression CFStream CFStringEncodings CFURL CFURLAccess CFURLComponents CFURLComponents_URIParser
+  dispatch_queue_create                         1  CFSortFunctions
+  dispatch_release                              3  CFDateIntervalFormatter CFSortFunctions CFStream
+  dispatch_retain                               1  CFStream
+  dispatch_semaphore_create                     2  CFDateIntervalFormatter CFStream
+  dispatch_semaphore_signal                     2  CFDateIntervalFormatter CFStream
+  dispatch_semaphore_wait                       2  CFDateIntervalFormatter CFStream
+  dlclose                                       1  CFBundle_Binary
+  dlopen_preflight                              1  CFBundle_Binary
+  dyld_image_path_containing_address            1  CFBundle_Binary
+  fcntl                                         2  CFBundle CFBundle_Resources
+  flsl                                          3  CFArray CFBinaryHeap CFData
+  getgid                                        1  CFXMLPreferencesDomain
+  gethostname                                   1  CFPlatform
+  gethostuuid                                   1  CFPreferences
+  getsectbynamefromheader_64                    1  CFBundle_Grok
+  getsegbyname                                  1  CFBundle_Grok
+  getuid                                        3  CFPlatform CFStringEncodings CFXMLPreferencesDomain
+  kCFDateFormatterCalendar                      1  CFDateIntervalFormatter
+  kCFGregorianCalendar                          2  CFCalendar_Enumerate CFDateFormatter
+  kCFLocaleCalendar                             1  CFDateIntervalFormatter
+  kCFLocaleLanguageCode                         1  CFLocale
+  kCFLocaleScriptCode                           1  CFLocale
+  kCFRunLoopDefaultMode                         1  CFStream
+  malloc_zone_memalign                          1  CFRuntime
+  pthread_atfork                                1  CFRuntime
+  pthread_attr_destroy                          1  CFStream
+  pthread_attr_init                             1  CFStream
+  pthread_attr_set_qos_class_np                 1  CFStream
+  pthread_attr_setdetachstate                   1  CFStream
+  pthread_main_np                               1  CFPlatform
+  pwrite                                        1  CFBurstTrie
+  qos_class_main                                1  CFStream
+  setenv                                        1  CFStringEncodings
+  sscanf                                        1  uuid
+  strncasecmp                                   1  CFStringUtilities
+  strncasecmp_l                                 3  CFBundle_Grok CFICUConverters CFStringEncodingDatabase
+  strnlen                                       2  CFBinaryPList CFFileUtilities
+  strnstr                                       1  CFBundle_Resources
+  strtod_l                                      2  CFNumberFormatter CFStringScanner
+  strtok                                        1  CFFileUtilities
+  strtol_l                                      2  CFCharacterSet CFStringEncodings
+  strtoll_l                                     1  CFNumberFormatter
+  strtoul_l                                     1  CFUUID
+  sysdir_get_next_search_path_enumeration       1  CFSystemDirectories
+  sysdir_start_search_path_enumeration          1  CFSystemDirectories
+  u_charsToUChars                               1  CFLocale
+  u_errorName                                   1  CFDateIntervalFormatter
+  u_formatMessage                               1  CFLocale
+  uameasfmt_getUnitsForUsage                    1  CFLocale
+  ucal_add                                      1  CFCalendar
+  ucal_clear                                    2  CFCalendar CFDateFormatter
+  ucal_clone                                    1  CFDateFormatter
+  ucal_close                                    2  CFCalendar CFDateFormatter
+  ucal_get                                      2  CFCalendar CFDateFormatter
+  ucal_getAttribute                             1  CFCalendar
+  ucal_getDayOfWeekType                         1  CFCalendar
+  ucal_getFieldDifference                       2  CFCalendar CFDateFormatter
+  ucal_getGregorianChange                       2  CFCalendar CFDateFormatter
+  ucal_getKeywordValuesForLocale                1  CFLocale
+  ucal_getLimit                                 1  CFCalendar
+  ucal_getMillis                                2  CFCalendar CFDateFormatter
+  ucal_getNow                                   1  CFDateFormatter
+  ucal_getTimeZoneTransitionDate                1  CFCalendar
+  ucal_getWeekendTransition                     1  CFCalendar
+  ucal_isWeekend                                1  CFCalendar
+  ucal_open                                     1  CFCalendar
+  ucal_roll                                     1  CFCalendar
+  ucal_set                                      2  CFCalendar CFDateFormatter
+  ucal_setAttribute                             2  CFCalendar CFDateFormatter
+  ucal_setGregorianChange                       2  CFCalendar CFDateFormatter
+  ucal_setMillis                                2  CFCalendar CFDateFormatter
+  ucal_setTimeZone                              1  CFDateFormatter
+  ucnv_close                                    1  CFICUConverters
+  ucnv_countAliases                             1  CFICUConverters
+  ucnv_countAvailable                           1  CFICUConverters
+  ucnv_fromUnicode                              1  CFICUConverters
+  ucnv_getAlias                                 1  CFICUConverters
+  ucnv_getAvailableName                         1  CFICUConverters
+  ucnv_getInvalidChars                          1  CFICUConverters
+  ucnv_getInvalidUChars                         1  CFICUConverters
+  ucnv_getStandardName                          1  CFICUConverters
+  ucnv_open                                     1  CFICUConverters
+  ucnv_resetFromUnicode                         1  CFICUConverters
+  ucnv_setFromUCallBack                         1  CFICUConverters
+  ucnv_setSubstChars                            1  CFICUConverters
+  ucnv_setToUCallBack                           1  CFICUConverters
+  ucnv_toUnicode                                1  CFICUConverters
+  ucol_close                                    1  CFStringUtilities
+  ucol_closeElements                            1  CFStringUtilities
+  ucol_getOffset                                1  CFStringUtilities
+  ucol_next                                     1  CFStringUtilities
+  ucol_open                                     1  CFStringUtilities
+  ucol_openElements                             1  CFStringUtilities
+  ucol_setAttribute                             1  CFStringUtilities
+  ucol_strcoll                                  1  CFStringUtilities
+  ucurr_getDefaultFractionDigits                1  CFNumberFormatter
+  ucurr_getName                                 1  CFLocale
+  ucurr_getRoundingIncrement                    1  CFNumberFormatter
+  ucurr_openISOCurrencies                       1  CFLocale
+  udat_applyPattern                             1  CFDateFormatter
+  udat_applyPatternRelative                     1  CFDateFormatter
+  udat_clone                                    1  CFDateFormatter
+  udat_close                                    1  CFDateFormatter
+  udat_countSymbols                             1  CFDateFormatter
+  udat_format                                   1  CFDateFormatter
+  udat_formatForFields                          1  CFDateFormatter
+  udat_getCalendar                              1  CFDateFormatter
+  udat_getContext                               1  CFDateFormatter
+  udat_getSymbols                               1  CFDateFormatter
+  udat_isLenient                                1  CFDateFormatter
+  udat_open                                     1  CFDateFormatter
+  udat_parseCalendar                            1  CFDateFormatter
+  udat_set2DigitYearStart                       1  CFDateFormatter
+  udat_setCalendar                              1  CFDateFormatter
+  udat_setContext                               1  CFDateFormatter
+  udat_setLenient                               1  CFDateFormatter
+  udat_setSymbols                               1  CFDateFormatter
+  udat_toPattern                                1  CFDateFormatter
+  udat_toPatternRelativeDate                    1  CFDateFormatter
+  udat_toPatternRelativeTime                    1  CFDateFormatter
+  udatpg_close                                  1  CFDateFormatter
+  udatpg_getBestPattern                         1  CFDateFormatter
+  udatpg_getSkeleton                            1  CFDateFormatter
+  udatpg_open                                   1  CFDateFormatter
+  udtitvfmt_close                               1  CFDateIntervalFormatter
+  udtitvfmt_format                              1  CFDateIntervalFormatter
+  udtitvfmt_open                                1  CFDateIntervalFormatter
+  udtitvfmt_setAttribute                        1  CFDateIntervalFormatter
+  uenum_close                                   2  CFLocale CFLocaleIdentifier
+  uenum_next                                    2  CFLocale CFLocaleIdentifier
+  uenum_unext                                   1  CFLocale
+  ufieldpositer_close                           1  CFDateFormatter
+  ufieldpositer_next                            1  CFDateFormatter
+  ufieldpositer_open                            1  CFDateFormatter
+  ulistfmt_close                                1  CFListFormatter
+  ulistfmt_format                               1  CFListFormatter
+  ulistfmt_open                                 1  CFListFormatter
+  uloc_addLikelySubtags                         1  CFLocale
+  uloc_canonicalize                             1  CFLocaleIdentifier
+  uloc_countAvailable                           1  CFLocale
+  uloc_getAvailable                             1  CFLocale
+  uloc_getCharacterOrientation                  1  CFLocale
+  uloc_getCountry                               1  CFLocaleIdentifier
+  uloc_getDisplayCountry                        1  CFLocale
+  uloc_getDisplayKeywordValue                   1  CFLocale
+  uloc_getDisplayLanguage                       1  CFLocale
+  uloc_getDisplayName                           1  CFLocale
+  uloc_getDisplayScript                         1  CFLocale
+  uloc_getDisplayVariant                        1  CFLocale
+  uloc_getISOCountries                          1  CFLocale
+  uloc_getISOLanguages                          1  CFLocale
+  uloc_getKeywordValue                          2  CFLocale CFLocaleIdentifier
+  uloc_getLCID                                  1  CFLocale
+  uloc_getLanguage                              1  CFLocaleIdentifier
+  uloc_getLineOrientation                       1  CFLocale
+  uloc_getLocaleForLCID                         1  CFLocale
+  uloc_getScript                                1  CFLocaleIdentifier
+  uloc_getVariant                               1  CFLocaleIdentifier
+  uloc_openKeywords                             1  CFLocaleIdentifier
+  uloc_setKeywordValue                          1  CFLocaleIdentifier
+  ulocdata_close                                1  CFLocale
+  ulocdata_getDelimiter                         1  CFLocale
+  ulocdata_getExemplarSet                       1  CFLocale
+  ulocdata_getMeasurementSystem                 1  CFLocale
+  ulocdata_open                                 1  CFLocale
+  unum_applyPattern                             1  CFNumberFormatter
+  unum_close                                    2  CFNumberFormatter CFRelativeDateTimeFormatter
+  unum_formatDecimal                            1  CFNumberFormatter
+  unum_formatDouble                             1  CFNumberFormatter
+  unum_getAttribute                             1  CFNumberFormatter
+  unum_getContext                               1  CFNumberFormatter
+  unum_getDoubleAttribute                       1  CFNumberFormatter
+  unum_getSymbol                                1  CFNumberFormatter
+  unum_getTextAttribute                         1  CFNumberFormatter
+  unum_open                                     2  CFNumberFormatter CFRelativeDateTimeFormatter
+  unum_parseDecimal                             1  CFNumberFormatter
+  unum_setAttribute                             1  CFNumberFormatter
+  unum_setContext                               1  CFNumberFormatter
+  unum_setDoubleAttribute                       1  CFNumberFormatter
+  unum_setSymbol                                1  CFNumberFormatter
+  unum_setTextAttribute                         1  CFNumberFormatter
+  unum_toPattern                                1  CFNumberFormatter
+  unumsys_close                                 1  CFLocale
+  unumsys_getName                               1  CFLocale
+  unumsys_getRadix                              1  CFLocale
+  unumsys_isAlgorithmic                         1  CFLocale
+  unumsys_open                                  1  CFLocale
+  uregex_clone                                  1  CFRegularExpression
+  uregex_close                                  1  CFRegularExpression
+  uregex_end64                                  1  CFRegularExpression
+  uregex_findNext                               1  CFRegularExpression
+  uregex_groupCount                             1  CFRegularExpression
+  uregex_groupNumberFromName                    1  CFRegularExpression
+  uregex_hitEnd                                 1  CFRegularExpression
+  uregex_open                                   1  CFRegularExpression
+  uregex_requireEnd                             1  CFRegularExpression
+  uregex_setFindProgressCallback                1  CFRegularExpression
+  uregex_setMatchCallback                       1  CFRegularExpression
+  uregex_setRegion64                            1  CFRegularExpression
+  uregex_setText                                1  CFRegularExpression
+  uregex_start64                                1  CFRegularExpression
+  uregex_useAnchoringBounds                     1  CFRegularExpression
+  uregex_useTransparentBounds                   1  CFRegularExpression
+  ureldatefmt_close                             1  CFRelativeDateTimeFormatter
+  ureldatefmt_format                            1  CFRelativeDateTimeFormatter
+  ureldatefmt_formatNumeric                     1  CFRelativeDateTimeFormatter
+  ureldatefmt_open                              1  CFRelativeDateTimeFormatter
+  uset_clear                                    1  CFLocale
+  uset_close                                    1  CFLocale
+  uset_getItem                                  1  CFLocale
+  uset_getItemCount                             1  CFLocale
+  utrans_close                                  1  CFStringTransform
+  utrans_openU                                  1  CFStringTransform
+  utrans_trans                                  1  CFStringTransform
+
+# ======================================================================
+# SECTION D — reached, but DECLARED BY MY SHIM (13). ABI UNVERIFIED.
+# ======================================================================
+  NXFindBestFatArch                             1  CFBundle_Grok
+  NXGetLocalArchInfo                            2  CFBundle_Binary CFBundle_Grok
+  _CFThreadSetName                              1  CFStream
+  _NSGetArgc                                    2  CFPlatform CFRuntime
+  _NSGetArgv                                    2  CFPlatform CFRuntime
+  _NSGetMachExecuteHeader                       2  CFBundle_Binary CFBundle_Grok
+  closedir                                      1  CFFileUtilities
+  getpwnam                                      1  CFPlatform
+  getpwuid                                      2  CFPlatform CFStringEncodings
+  getpwuid_r                                    1  CFStringEncodings
+  opendir                                       1  CFFileUtilities
+  readdir                                       1  CFFileUtilities
+  readdir_r                                     1  CFFileUtilities

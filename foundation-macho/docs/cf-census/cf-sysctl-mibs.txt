@@ -1,0 +1,65 @@
+# Every sysctl MIB CoreFoundation actually uses, and what it does with it.
+#
+# machorun-isamask implemented sysctl for three CTL_KERN MIBs and made every
+# other MIB abort, deliberately -- "an unimplemented MIB and a nonexistent one
+# are different facts" -- and asked which ones CF needs rather than guessing.
+# This is the answer, derived from CF's call sites rather than from a survey of
+# what sysctl can do.
+#
+# Found by running the CF_IS_OBJC test (tests/t8_cf_is_objc.m) and reading the
+# abort, then enumerating the rest so the list is complete in one pass instead
+# of one-at-a-time. Confirmed compiled-in rather than merely present: the two
+# CFPlatform.c sites are inside `#if defined(__OpenBSD__)` and
+# `#elif defined(__FreeBSD__)` and are NOT built for us, so they are listed as
+# excluded rather than omitted.
+#
+# ---------------------------------------------------------------------------
+# THE BLOCKER, reached during __CFInitialize itself
+# ---------------------------------------------------------------------------
+# CFUtilities.c:624  _CFGetSVUID()
+#     mib = {CTL_KERN, KERN_PROC, KERN_PROC_PID, getpid()}
+#     out = struct kinfo_proc
+#     uses exactly ONE field: kinfo.kp_eproc.e_pcred.p_svuid
+#
+# Reached from __CFInitialize -> __CFStringGetUserDefaultEncoding ->
+# __CFExecutableLinkedOnOrAfter (through dispatch_once_f), so it runs before
+# anything else CF does. Nothing gets to run until this MIB answers.
+#
+# THE IMPORTANT PART FOR WHOEVER IMPLEMENTS IT: this MIB does not return a
+# scalar, it returns a large Darwin-only struct, and CF reads a single field out
+# of it -- the saved-set user id. Linux has no kinfo_proc and no equivalent MIB,
+# so this cannot be forwarded in any form. But it also does not need the struct
+# modelled: synthesising a kinfo_proc with p_svuid filled from getresuid() and
+# the rest zeroed satisfies the only reader CF has. Modelling the whole struct
+# would be a large job done for one integer.
+#
+# CF's own fallback is informative too: on ret != 0 it sets *successful = NO and
+# returns -1, and the caller handles that. So FAILING is a supported outcome and
+# an honest ENOTSUP is safer than a plausible wrong uid -- this value feeds a
+# setuid check that decides whether CF trusts the environment.
+#
+# ---------------------------------------------------------------------------
+# THE REST, compiled in, not yet reached at runtime
+# ---------------------------------------------------------------------------
+# CFSocket.c:1664    {CTL_KERN, KERN_MAXFILESPERPROC}  -> int
+#                    Linux equivalent: RLIMIT_NOFILE via getrlimit.
+# CFUtilities.c:565  {CTL_HW, HW_AVAILCPU}             -> int32
+#                    Linux equivalent: sysconf(_SC_NPROCESSORS_ONLN).
+# CFUtilities.c:592  {CTL_HW, HW_NCPU}                 -> int32
+#                    Linux equivalent: sysconf(_SC_NPROCESSORS_CONF).
+# CFUtilities.c:610  {CTL_HW, HW_MEMSIZE}              -> uint64
+#                    Linux equivalent: sysconf(_SC_PHYS_PAGES) * page size.
+#
+# All four are scalars with real Linux counterparts, and machorun already has
+# sysconf translated -- so these are a translation table rather than new
+# machinery.
+#
+# ---------------------------------------------------------------------------
+# EXCLUDED -- present in the source, NOT compiled for our target
+# ---------------------------------------------------------------------------
+# CFPlatform.c:228   {CTL_VM, VM_PSSTRINGS}                     #if __OpenBSD__
+# CFPlatform.c:239   {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME}  #elif __FreeBSD__
+#
+# Listed so nobody implements them from a grep. Both are the BSD ways of finding
+# argv[0]; our build takes neither branch. Checking which branch is live rather
+# than counting call sites is the same discipline the runloop guards needed.

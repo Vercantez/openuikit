@@ -1,0 +1,21 @@
+# #87: the two halves of Foundation, composed.
+# machorun 3110d92 · swift-foundation c6793ef · swift-collections 9bf03ff
+# Regenerate: scripts/stage_fe_guest.sh --check && scripts/stage_fe_guest.sh
+
+== pins (compare the COMMIT, never the tag)
+  swift-foundation  c6793ef0c19c  OK
+  swift-collections  9bf03ff58ce3  OK
+== artifacts present, and NEWER than the sources they were built from
+  FoundationEssentials.o  12152024 bytes, newer than all 202 sources
+  FE references 0 CF symbols -- the halves are still disjoint
+
+check only: everything verified, nothing staged.
+
+=== one container, one sysroot, both halves ===
+  FoundationEssentials.o   12152024 bytes  (guest Mach-O)
+  libCFTest.dylib          1978048 bytes  (our CoreFoundation)
+  sysroot swift modules    62
+  sysroot CoreFoundation   present
+
+=== they IMPORT TOGETHER (the compile-level composition) ===
+  PASS -- FoundationEssentials and our CF surface compile in one module

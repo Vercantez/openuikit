@@ -1,0 +1,147 @@
+# Task #89 -- the overlay wall. MEASUREMENTS, then the fix.
+# ud_guest now LOADS AND RUNS. #87 step 4 (the scoreboard) is unblocked.
+
+=== 1. WHAT ACTUALLY BINDS FROM Foundation ===
+Instrument: dyld_info -fixups (macOS host) and llvm-nm-18 -m (container).
+Both agree. Every staged overlay, every bind site:
+
+  libswiftCore              231 libc++   199 libSystem   3 libobjc  1 flat-ns
+  libswift_Concurrency      483 libswiftCore  66 libSystem  32 libobjc  12 libc++
+  libswift_StringProcessing 619 libswiftCore  437 libswift_RegexParser  9 libSystem  5 libobjc
+  libswift_RegexParser      449 libswiftCore  4 libSystem
+  libswiftObjectiveC         96 libswiftCore  17 libobjc  5 libSystem
+  libswiftSynchronization    94 libswiftCore  2 libSystem
+  libswiftDarwin             52 libswiftCore  6 libSystem
+  libswift_DarwinFoundation1 59 libswiftCore  47 libSystem
+  libswift_DarwinFoundation2 10 libswiftCore  6 libSystem
+  libswift_DarwinFoundation3  1 libswiftCore
+  libswift_Builtin_float      (none)
+  libswift_errno              (none)
+                            ----------------------------------------
+  TOTAL                     2,858 binds
+  from Foundation                   0
+  from CoreFoundation               0
+
+FOUR dylibs carry an LC_LOAD_DYLIB on Foundation AND on CoreFoundation --
+libswift_Builtin_float, libswiftSynchronization, libswift_RegexParser,
+libswift_StringProcessing -- and NONE of them binds a single symbol through
+either. ld64 keeps an LC_LOAD_DYLIB for a framework the driver named on the
+command line whether or not anything used it.
+
+Instrument checked, not trusted: the per-image attribution accounts for every
+`nm -u` entry in all ten Darwin overlays except two, both explained --
+`_dlopen` (nm -m: "(from libSystem)", and it has no fixup site at all) and
+`__swift_FORCE_LOAD_$_swift_Builtin_float` (a weak marker for a dylib already
+in the root).
+
+=== 2. IS THAT THE ONLY MISSING DYLIB? ===
+The loader stops at the FIRST missing dylib, so the reported failure is never
+the denominator. Full transitive LC_LOAD_DYLIB closure from ud_guest:
+
+  images visited ....... 19
+  edges .................72
+  ABSENT targets ........ 1   <- /System/Library/Frameworks/Foundation.framework/Foundation
+                              named by all four overlays above
+
+Nothing was hiding behind it.
+
+=== 3. THE FIX ===
+src/placeholder/FoundationPlaceholder.c + scripts/build_foundation_placeholder.sh
+Empty dylibs, ONE export each (_machorun_foundation_placeholder, a fingerprint
+so `nm` can identify the file at that path), ZERO dependencies, at both slots.
+
+Zero exports is the safety property, not a shortcut: this project is BUILDING
+Foundation, and a file at Foundation's canonical path is a shadowing hazard by
+construction. A dylib with no usable exports has nothing a binder could prefer.
+Two-level namespace means a future real bind through either slot fails AT LOAD
+naming the symbol -- loud, never a plausible value.
+
+The script RE-DERIVES the premise every run rather than quoting this file:
+  CHECK 0  positive control -- links a dylib that really does bind a
+           Foundation symbol and requires nm -m to print "(from Foundation)".
+           Without it, CHECK 1's zero could be a blind instrument.
+  CHECK 1  sweeps every Mach-O in the root plus the guest executable, prints
+           the denominator (43 images, 8,615 undefined symbols), and refuses
+           if anything binds through a slot it is about to empty.
+  TOOTH    exactly 1 export and 0 dependencies, or refuse.
+  TOOTH    refuses to overwrite a file that is not the placeholder (REPLACE=1
+           displaces it OUT of the root, never deletes).
+
+=== 4. A SECOND DEFECT, EXPOSED BY THE FIX ===
+Once it loaded, objc reported all 22 CoreFoundation classes as duplicated:
+
+  objc: Class __NSCFString is implemented in both /usr/lib/libCFTest.dylib
+        and /usr/lib/libCFTest.dylib     <- the SAME path, twice
+
+/work/root held our CoreFoundation at TWO paths -- /usr/lib/libCFTest.dylib and
+/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation -- byte
+identical (md5 81264ef6acf23f7051aab2e40c9b5a7d), both with LC_ID_DYLIB
+/usr/lib/libCFTest.dylib. machorun keys loaded images by REQUESTED PATH, not by
+install name, so it loaded CoreFoundation twice: 22 duplicated ObjC classes and
+two copies of CF's global state (runtime class table, allocators, the
+preferences cache) in one process. That would have corrupted #87 step 4's
+scoreboard in a way no load-time check reports.
+
+Replacing that copy with the placeholder leaves exactly ONE CoreFoundation.
+After: 0 duplicate-class warnings.
+Durable fix, NOT done here and belonging to machorun: dedupe loaded images by
+LC_ID_DYLIB install name, which is what dyld does.
+
+=== 5. A THIRD DEFECT: ud_guest WAS STALE AGAINST ITS OWN INPUTS ===
+  /work/bin/ud_guest           05:10:00 UTC   the binary
+  /work/fe/UserDefaultsGuest.o 05:17:13 UTC   the PORT      (+7 min)
+  /work/fe/runner.o            05:17:56 UTC   the RUNNER    (+8 min)
+  /work/lib/libCFTest.dylib    05:14:14 UTC   CoreFoundation(+4 min)
+
+The binary predated the port it was said to contain. Commit aa63668's message
+quotes "Port compiles (90,640 bytes)" and "binary links (11,587,904 bytes)" in
+one breath; both are real, and they are numbers about two different builds. No
+committed script could rebuild it, so nothing could have caught this.
+
+scripts/link_ud_guest.sh makes the link repeatable AND refuses if any input
+postdates the output. Relinked: 11,879,072 bytes, runs 14/14.
+
+Two traps found while reconstructing that link line, both worth keeping:
+  * ld64.lld REJECTS the staged overlay dylibs outright -- "has platform iOS
+    Simulator, which is different from target platform macOS" -- and every
+    symbol they would have provided then reports as "undefined". 61 undefined
+    Swift symbols that read like a missing module were ONE rejected file. All
+    61 are defined in /work/lib and all 61 are advertised by the sysroot's
+    macOS-platform .tbd stubs, so the fix is -L ORDER: sysroot before /work/lib.
+  * `-lSystem` finds nothing because the file is libSystem.B.dylib. Symptom is
+    a wall of undefined libc symbols that reads like a sysroot problem.
+  * ld64.lld caps at 20 errors. Both walls were present in the first two
+    attempts; which one you SEE depends on where you tail the log. Use
+    --error-limit=0 before believing any error list.
+
+=== 6. RESULT, from the SHARED root and the SHARED binary ===
+  MACHORUN_ROOT=/work/root machorun /work/bin/ud_guest
+    14 pass, 0 fail, rc=0, zero objc duplicate-class warnings
+
+TEETH, because 14/14 from a suite that cannot fail is worth nothing. Seeding
+the negative-control key "never_set" into the store makes the runner report
+  FAIL absent key reads nil  got some  want nil ... pass 13 fail 1 ... rc=1
+-- a specific named case, on both the old and the relinked binary. The runner
+reads real on-disk state; it is not printing OKs.
+
+Two teeth tests that DID NOT bite, recorded because each looked valid:
+  * chmod 500 on the prefs directory -- the guest runs as root, which ignores
+    permission bits. The mutation never applied and the pass meant nothing.
+  * HOME set to a regular file -- CF resolves the home directory via getpwuid,
+    not $HOME, and wrote to /root/Library/Preferences anyway (confirmed by the
+    plist's mtime moving). Again the mutation never applied.
+Independent witness that real work happened: the on-disk bplist contains the
+UTF-8 value cafe_<CJK> and does NOT contain k_string, the key the runner
+removes.
+
+=== 7. THE SIBLING ROOT NEEDS NOTHING ===
+~/swift-macho-linux/scratch/mrroot_fe has ZERO absent dylib targets already: it
+carries 50,768-byte stubs at both slots that fprintf and abort() on call --
+correct by the project's deny-list convention. So stage_swift_overlays.sh was
+NOT changed.
+One latent difference worth knowing: those stubs EXPORT 8 real symbol names,
+two of which (_CFStringHashCString, _CFStringHashNSString) our own
+libCFTest.dylib also defines. In a root holding both, an image binding through
+the CoreFoundation.framework path would reach the aborting stub instead of the
+working implementation. It aborts rather than lying, so it is loud -- but the
+zero-export shape used here cannot collide at all.

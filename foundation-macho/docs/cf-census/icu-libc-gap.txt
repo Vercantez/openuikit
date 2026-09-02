@@ -1,0 +1,114 @@
+# ###########################################################################
+# SUPERSEDED 2026-08-27 15:22 UTC. THIS FILE'S 20-SYMBOL LIST IS STALE IN BOTH
+# DIRECTIONS: most of it landed, and what remains is a DIFFERENT KIND OF THING.
+#
+# Re-measured by actually rebuilding and re-linking ICU rather than re-reading
+# this file -- which is what I should have done before quoting "ICU 20" in
+# docs/cf-census/icu-scoping.md. I flagged 456/469 in that document as
+# recorded-not-re-run and then quoted the 20 as though it were current, in the
+# same document, arguing against stale numbers. team-lead caught it.
+#
+# CURRENT, from a real link with -Wl,--error-limit=0 and no truncation:
+#
+#     build     457 of 457 sources compile        (not 456 of 469 -- the
+#                                                  denominator differs too; our
+#                                                  staged tree has no io/)
+#     archive   libicucore.a, 40,767,664 bytes, 604 exported ICU entry points
+#     link      8 UNDEFINED
+#
+#   __exp10                                         libSystem -- absent,
+#                                                   measured 0 with nm
+#   std::__1::__call_once(...)                      \
+#   std::__1::condition_variable::notify_all()       |
+#   std::__1::condition_variable::wait(...)          |  libc++ THREADING
+#   std::__1::condition_variable::~condition_variable()  -- present in neither
+#   std::__1::mutex::lock()                          |  the dylib nor the tbd
+#   std::__1::mutex::unlock()                        |
+#   std::__1::mutex::~mutex()                       /
+#
+# SO THE STATEMENT BELOW -- "these 20 are what is left, and not one of them is
+# C++" -- IS NOW EXACTLY BACKWARDS. Seven of the eight ARE C++, and they are
+# #48's OWN remaining work (the libc++ sources machorun's stub omits), not
+# machorun's libSystem. Only __exp10 is libSystem's.
+#
+# ONE HAZARD CHECKED AND CLEARED WHILE HERE. machorun's libc++.1.tbd advertises
+# 472 symbols while the dylib exports 105, so a link against the tbd can succeed
+# for symbols that will not exist at load. Linked ICU BOTH WAYS to find out:
+# identical 8-symbol result, and zero symbols that the tbd promises and the
+# dylib lacks along any path ICU reaches. Not a hazard for this consumer. It may
+# still be one for another, since the gap is real -- it just is not here.
+# ###########################################################################
+#
+# ICU's remaining link gap: 20 libc symbols, all libSystem's
+#
+# After task #48 (scripts/build_cxxruntime.sh) supplies libc++abi, the libc++
+# sources machorun's 83-symbol stub omits, and libunwind, EVERY C++ symbol ICU
+# needs resolves -- all 31 from the original gap, plus the 6 _Unwind_* that
+# exceptions pull in behind them. These 20 are what is left, and not one of
+# them is C++.
+#
+# Provenance: llvmorg-18.1.8 (matching the sysroot's _LIBCPP_VERSION 180100),
+# arm64-apple-macos13.0, linked against machorun master bdc5dc0's libSystem.
+#
+# TWO HAZARDS FOR WHOEVER IMPLEMENTS THESE:
+#
+#   opendir / readdir / closedir -- DIR is the opaque-pointer ABI class.
+#   Darwin's DIR is a pointer to a library-owned allocation; glibc's is a
+#   different size. Forwarding naively is the posix_spawnattr_t bug again.
+#
+#   pthread_cond_* / pthread_mutexattr_* -- these come from OUR libc++ build
+#   (std::mutex, std::condition_variable), so they are load-bearing for
+#   correctness, not conveniences. A pthread_cond_wait that does not wait
+#   produces a library that works until it is used concurrently.
+#
+# pthread_mach_thread_np is Darwin-only and has no glibc equivalent; it will
+# need a real answer rather than a forward.
+#
+# STATUS 2026-08-27: 17 of the 20 have landed in machorun's libSystem. THREE
+# REMAIN -- wcslen, wmemchr, pthread_mach_thread_np -- verified both by symbol
+# table and by `git log -S <name> -- darwin/src/` returning nothing for each, so
+# this is not a build-ordering artifact.
+#
+# ICU DOES NOT CALL pthread_mach_thread_np -- measured 2026-08-27 over all 984
+# ICU source files. Zero references. And the reason is structural rather than
+# incidental: ICU makes ZERO raw pthread calls of any kind (pthread_create 0,
+# pthread_mutex_lock 0) because it uses std::mutex through its own UMutex
+# wrapper. Positive controls on the same tree: u_strlen 131 hits, umtx_lock 77,
+# so the search discriminates and the zeros are real.
+#
+# Our built libc++.1.dylib does not reference it either -- 14 undefined symbols
+# total, none of them pthread, with _glibc_malloc/_glibc_free present as the
+# control that nm is reading the file correctly.
+#
+# STILL UNMEASURED: libc++abi and libunwind. Those artifacts did not survive
+# container recreation, so this check covers ICU and libc++ only. Named rather
+# than assumed -- libunwind in particular has Darwin paths that touch thread
+# state, and "the other two probably don't either" is exactly the reasoning this
+# note exists to avoid.
+#
+# The first two are trivial wide-char forwards. The third is the one this note
+# already warned about, and it has since acquired a SIBLING: CFRunLoop needs
+# pthread_main_thread_np, absent the same way and Darwin-only for the same
+# reason. They are one work item, not two, and the design question is identical
+# -- capture the main thread's identity at init rather than forward anything.
+#
+closedir
+div
+dlclose
+getprogname
+opendir
+pthread_cond_broadcast
+pthread_cond_destroy
+pthread_cond_signal
+pthread_cond_timedwait
+pthread_cond_wait
+pthread_mach_thread_np
+pthread_mutexattr_destroy
+pthread_mutexattr_init
+pthread_mutexattr_settype
+readdir
+strncat
+timezone
+tzname
+wcslen
+wmemchr

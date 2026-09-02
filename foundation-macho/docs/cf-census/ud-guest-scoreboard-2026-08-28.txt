@@ -1,0 +1,101 @@
+== root   /work/root
+== binary /work/bin/ud_score_guest
+   Foundation: placeholder (16784 bytes, empty by design)
+   CoreFoundation: placeholder (16784 bytes, empty by design)
+
+=== corpus derived from the golden ===
+  values  26
+  strings 96
+2026-08-28 06:12:51.866 ud_score_guest[16350:16350] _CFGetHostUUIDString: unable to determine UUID for host. Error: 2
+
+=== UserDefaults differential oracle — GUEST ROUTE (#87 step 4) ===
+route:
+  port                  UserDefaults.swift            5535ab12388c686b
+  seam                  UserDefaultsBridge_Guest.swift 35ea66034d20c061
+  CoreFoundation        libCFTest.dylib          8f241c0a5133586a
+  FoundationEssentials  FoundationEssentials.o 327522648bd59fec
+  port object           UserDefaultsGuest.o           3ebf5ec67b705269
+  guest root            /work/root
+  golden                darwin-golden-2026-08-28.txt 91789734980d559a
+  golden rows           D 675 (real Foundation) · C 340 (corelibs' rules)
+
+PORT: scored 584 · pass 584 · fail 0
+
+MUST-FAIL: scored 322 · pass 254 · fail 68
+    bool("123")                                 expected true   got false
+    bool("0123")                                expected true   got false
+    bool(" 123")                                expected true   got false
+    integer("123 ")                             expected 123   got 0
+    bool("123 ")                                expected true   got false
+    integer("12.9")                             expected 12   got 0
+    bool("12.9")                                expected true   got false
+    integer("3.75")                             expected 3   got 0
+    bool("3.75")                                expected true   got false
+    bool("-7")                                  expected true   got false
+    bool("+7")                                  expected true   got false
+    bool("2")                                   expected true   got false
+    bool("-1")                                  expected true   got false
+    integer("1.0")                              expected 1   got 0
+    bool("1.0")                                 expected true   got false
+    integer("1e3")                              expected 1   got 0
+    bool("1e3")                                 expected true   got false
+    bool("Y")                                   expected true   got false
+    bool("y")                                   expected true   got false
+    bool("T")                                   expected true   got false
+    bool("t")                                   expected true   got false
+    integer("1banana")                          expected 1   got 0
+    bool("1banana")                             expected true   got false
+    integer("9223372036854775807")              expected 9223372036854775807   got 2147483647
+    bool("9223372036854775807")                 expected true   got false
+    integer("9223372036854775808")              expected 9223372036854775807   got 2147483647
+    bool("9223372036854775808")                 expected true   got false
+    bool("2147483647")                          expected true   got false
+    integer("2147483648")                       expected 2147483648   got 2147483647
+    bool("2147483648")                          expected true   got false
+    … 38 more
+
+REFUSED (not attempted — reported, not skipped): 91
+  40 rows · Array: guest CF bridge marshals Bool/String/Int/Double/Float only; Data/Date/Array/Dict abort by design (_UDUnimplemented is -> Never)
+  20 rows · Data: guest CF bridge marshals Bool/String/Int/Double/Float only; Data/Date/Array/Dict abort by design (_UDUnimplemented is -> Never)
+  20 rows · Dict: guest CF bridge marshals Bool/String/Int/Double/Float only; Data/Date/Array/Dict abort by design (_UDUnimplemented is -> Never)
+  10 rows · Date: guest CF bridge marshals Bool/String/Int/Double/Float only; Data/Date/Array/Dict abort by design (_UDUnimplemented is -> Never)
+  1 rows · persistentDomain reads through _udCopyAll, which returns [:] on the guest; this row would PASS VACUOUSLY (empty domain lacks every key)
+    roundtrip v_data [Data]                     golden Data(deadbeef)
+    roundtrip v_data_empty [Data]               golden Data()
+    roundtrip v_date [Date]                     golden Date(1000)
+    roundtrip v_arr_int [Array]                 golden [Int(1),Int(2),Int(3)]
+    roundtrip v_arr_str [Array]                 golden [String(a),String(b)]
+    roundtrip v_arr_mixed [Array]               golden [String(a),Int(1),String(b)]
+    roundtrip v_arr_empty [Array]               golden []
+    roundtrip v_dict [Dict]                     golden {x=Int(1),y=String(two)}
+    roundtrip v_dict_nested [Dict]              golden {nested={deep=[Int(1),Int(2)]}}
+    integer v_data [Data]                       golden 0
+    double v_data [Data]                        golden 0
+    float v_data [Data]                         golden 0.0
+    … 79 more
+
+=== DENOMINATOR ===
+  golden rows        675
+  scored             584
+  refused            91
+  scored + refused   675
+  unaccounted for    0
+  corelibs rows      340
+    consulted        322
+    unused: refused  18
+    unused: NO MATCH 0
+
+=== TEETH ===
+  presence: 17/17 values · 96/96 strings · 4/4 non-ASCII keys
+  witness:  last corpus string reads correctly
+  ✓ every written key is present and the witness value is exact — the
+    board is grading a populated store, not an empty one.
+  ✓ all 675 golden rows accounted for (584 scored + 91 refused).
+  ✓ every corelibs row is either consulted (322) or refused (18).
+  ✓ MUST-FAIL fails 68 of 322 rows — the guest
+    disagrees with upstream exactly where Darwin does.
+  ✓ PORT is perfect on 584 rows against real Foundation's answers.
+
+GUEST SCOREBOARD  port 584/584 · must-fail 68/322 failing (required) · refused 91 · denominator 675
+
+== exit 0   (root /work/root)

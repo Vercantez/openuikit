@@ -1,0 +1,73 @@
+
+=== rebuilding the NS* surface (NSCFConstantString needs CF's headers)
+  selector implementations in the object: 3 (expected >= 2)
+libCFTest relinked (235 stubbed)
+
+=== T17 -- the mutex-signature wall, isolated from CoreFoundation
+signatures as compiled into the guest:
+  plain      0x32AAABA7
+  errorcheck 0x32AAABA1
+  recursive  0x32AAABA2
+
+locking the PLAIN mutex (machorun knows 0x32AAABA7)...
+  ok -- plain mutex locks and unlocks
+
+locking the ERRORCHECK mutex (this is CF's CFLockInit)...
+  ok -- errorcheck mutex locks and unlocks
+
+locking the RECURSIVE mutex...
+  ok -- recursive mutex locks and unlocks
+
+T17: all three static initialisers work.
+  (the errorcheck mutex ABORTS until #80 lands; that is the expected result)
+
+=== T19 -- __NSCFConstantString dispatch surface
+  OK   round-tripped the path back out
+
+T19: pass 18  fail 0
+T19 PASS
+
+=== T19 refuse -- the negative control; it MUST abort
+  the loud refusal FIRED -- the refusal is evidence, not intention
+
+=== T18 -- CFBundle identity (what decides the plist filename)
+main: line 69: 10150 Aborted                 /work/mrun "/work/bin/$n" "$@" 2>&1
+  .. CFBundleGetMainBundle()
+STUB CALLED: OSMemoryBarrier
+
+=== T16 -- CF's preferences path
+  .. CFPreferencesSetAppValue (this is CFApplicationPreferences -> CFPreferences -> CFXMLPreferencesDomain)
+  OK   CFPreferencesSetAppValue returned
+  .. CFPreferencesCopyAppValue reads it back from the in-memory domain
+  OK   value round-tripped in memory
+  .. CFPreferencesAppSynchronize -- THE FILE WRITE. This is __CFWriteBytesToFileWithAtomicity: mkstemp, write, fsync, chmod, rename.
+  OK   CFPreferencesAppSynchronize returned TRUE
+  .. CFPreferencesSetAppValue with a CFNumber (exercises CFBinaryPList's integer encoding, not just strings)
+  OK   CFNumber round-tripped
+  .. CFPreferencesCopyKeyList (this is the domain enumeration dictionaryRepresentation() sits on)
+  OK   CFPreferencesCopyKeyList -> 2 keys
+  .. CFPreferencesCopyMultiple over those keys
+  OK   CFPreferencesCopyMultiple -> 2 entries
+  OK   the value is reachable through CopyMultiple by key
+  .. CFPreferencesSetAppValue(key, NULL) removes
+  FAIL removed key still has a value
+  .. CFPreferencesAppSynchronize again (rewrites the file with one key)
+  OK   second synchronize returned TRUE
+  .. CFPreferencesAddSuitePreferencesToApp (the suite mechanism)
+  OK   CFPreferencesAddSuitePreferencesToApp returned
+
+T16 FAIL -- 1 checks failed.
+NOTE: whether the FILE landed, where, and in what format is checked by
+      the runner around this binary -- a process that cannot see its
+      own filesystem result should not be the one reporting it.
+  --- preference files on disk:
+    /Library/Preferences/com.example.t16prefs.plist
+    format:   XML       <-- DIVERGES. Darwin writes binary;
+                            CFPreferences.c:202 defaults
+                            __CFPreferencesWritesXML = true.
+    location: /Library/Preferences  <-- the ANY-USER domain.
+                            Darwin's per-app default is
+                            $HOME/Library/Preferences.
+
+probes run: 6
+probe teeth held.
