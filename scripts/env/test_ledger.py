@@ -143,6 +143,84 @@ class LedgerHashTests(unittest.TestCase):
         )
         self.assertIn("assert_clean_commit \"$SWIFT_FOUNDATION\"", text)
 
+    def test_focus_widget_gate_delegates_hash_ledger_and_preparer(self) -> None:
+        text = (ROOT / "full/swiftui/build_focus_widget_guest.sh").read_text()
+        self.assertIn('PREPARE_TOOL=$W/scripts/env/prepare.py', text)
+        self.assertIn('LEDGER_TOOL=$W/scripts/env/ledger.py', text)
+        self.assertIn('python3 "$LEDGER_TOOL" --style focus-widget hash-file "$1"', text)
+        self.assertIn(
+            'python3 "$LEDGER_TOOL" --style focus-widget require-hash "$1" "$2" "$3"',
+            text,
+        )
+        self.assertNotIn('hash_file() { sha256sum', text)
+        self.assertIn(
+            'python3 "$PREPARE_TOOL" --contract "$W/env/contract.json" --root "$W"',
+            text,
+        )
+        self.assertLess(
+            text.index('--gate focus-widget'),
+            text.index('assert_vendor_tree "$W" uikit'),
+        )
+        self.assertNotRegex(
+            text,
+            r'python3 "\$PREPARE_TOOL"[^\n]*--strict',
+        )
+        self.assertIn(
+            'require_hash "$FOCUS_WIDGET/Assets.swift" "$EXPECTED_ASSETS_SHA"',
+            text,
+        )
+
+    def test_focus_widget_inrepo_pins_are_byte_identical_across_hashers(self) -> None:
+        gate = (ROOT / "full/swiftui/build_focus_widget_guest.sh").read_text()
+        pairs = [
+            (
+                ROOT / "full/oracle-opencombine/Combine.swift",
+                "EXPECTED_COMBINE_SHIM_SHA",
+            ),
+            (
+                ROOT
+                / "full/oracle-opencombine/patches/COpenCombineHelpers-pthread-recursive.patch",
+                "EXPECTED_OPENCOMBINE_PATCH_SHA",
+            ),
+            (
+                Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"),
+                "EXPECTED_SYSTEM_FONT_SHA",
+            ),
+            (
+                Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"),
+                "EXPECTED_MEDIUM_FONT_SHA",
+            ),
+        ]
+        compared = 0
+        for path, key in pairs:
+            if not path.is_file() or path.is_symlink():
+                continue
+            match = None
+            for line in gate.splitlines():
+                if line.startswith(f"{key}="):
+                    match = line.split("=", 1)[1]
+                    break
+            self.assertIsNotNone(match, key)
+            sha256sum = subprocess.check_output(
+                ["sha256sum", str(path)], text=True
+            ).split()[0]
+            ledger = subprocess.check_output(
+                [
+                    "python3",
+                    str(LEDGER),
+                    "--style",
+                    "focus-widget",
+                    "hash-file",
+                    str(path),
+                ],
+                text=True,
+            ).strip()
+            self.assertEqual(sha256sum, ledger, path)
+            self.assertEqual(ledger, match, f"{key} {path}")
+            compared += 1
+        self.assertGreaterEqual(compared, 2)
+        print(f"focus_widget_hasher_agreement compared={compared}/{len(pairs)}")
+
     def test_symlink_is_missing_regular(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             real = Path(tmp) / "real"

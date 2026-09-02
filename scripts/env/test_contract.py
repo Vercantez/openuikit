@@ -71,6 +71,13 @@ class ContractLockTests(unittest.TestCase):
             "42d42ace9c6ff7a4ae7c25c3a8e466f82d5f70c8",
         )
 
+    def test_focus_widget_gate_still_locks_all_attestation_pins(self) -> None:
+        notes = validate_against_locks(ROOT)
+        pin_notes = [n for n in notes if n.startswith("focus_widget_attestation_pins ")]
+        self.assertEqual(len(pin_notes), 1)
+        self.assertIn("24/24", pin_notes[0])
+        print(pin_notes[0])
+
 
 class MarkerRegistryTests(unittest.TestCase):
     def test_emitted_cannot_markers_are_the_pr3_set(self) -> None:

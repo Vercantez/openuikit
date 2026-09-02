@@ -31,6 +31,8 @@ OPENCOMBINE_ROOT=${OPENCOMBINE_ROOT:-$W/scratch/opencombine-core-durable-2026082
 OPENCOMBINE_ARTIFACTS=$OPENCOMBINE_ROOT/export/artifacts
 OPENCOMBINE_SOURCE=$OPENCOMBINE_ROOT/source
 OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
+PREPARE_TOOL=$W/scripts/env/prepare.py
+LEDGER_TOOL=$W/scripts/env/ledger.py
 
 # Package the complete authoritative SwiftUI source directory.  Keeping a
 # hand-maintained three-file list made the reusable package silently omit new
@@ -88,15 +90,15 @@ die() {
     exit 2
 }
 
-hash_file() { sha256sum "$1" | awk '{print $1}'; }
+[ -f "$PREPARE_TOOL" ] && [ ! -L "$PREPARE_TOOL" ] \
+    || die "env prepare tool is missing or linked: $PREPARE_TOOL"
+[ -f "$LEDGER_TOOL" ] && [ ! -L "$LEDGER_TOOL" ] \
+    || die "env ledger tool is missing or linked: $LEDGER_TOOL"
+
+hash_file() { python3 "$LEDGER_TOOL" --style focus-widget hash-file "$1"; }
 hash_stream() { sha256sum | awk '{print $1}'; }
 require_hash() {
-    local file=$1 expected=$2 label=$3 got
-    [ -f "$file" ] && [ ! -L "$file" ] || {
-        echo "focus_widget_guest: missing regular $label: $file" >&2; exit 2; }
-    got=$(hash_file "$file")
-    [ "$got" = "$expected" ] || {
-        echo "focus_widget_guest: $label drifted: $got" >&2; exit 2; }
+    python3 "$LEDGER_TOOL" --style focus-widget require-hash "$1" "$2" "$3" || exit $?
 }
 
 tree_digest() {
@@ -195,6 +197,14 @@ runtime_fingerprint() {
         printf 'staged-medium-font\t%s\n' "$(hash_file "$OUT/fonts/DejaVuSans-Bold.ttf")"
     } | hash_stream
 }
+
+# Materialize the verify tree from env/contract.json first. Not --strict:
+# leftover unsatisfied rows still fail with this script's original wording
+# (the 14 measured sequential refusals). Denominators print as
+# ENV_PREPARE_SUMMARY. The only artifacts.sha256 field that includes this
+# file's own bytes is SwiftUI-build-support-subject.
+python3 "$PREPARE_TOOL" --contract "$W/env/contract.json" --root "$W" \
+    --gate focus-widget || exit $?
 
 assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
 assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun

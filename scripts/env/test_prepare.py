@@ -99,6 +99,27 @@ class PrepareTests(unittest.TestCase):
         summary = [ln for ln in proc.stdout.splitlines() if ln.startswith("ENV_PREPARE_SUMMARY ")][0]
         print(summary)
 
+    def test_gate_argv_shape_is_accepted(self) -> None:
+        proc = subprocess.run(
+            [
+                "python3",
+                str(PREPARE),
+                "--contract",
+                str(ROOT / "env" / "contract.json"),
+                "--root",
+                str(ROOT),
+                "--gate",
+                "focus-widget",
+                "--verify-only",
+            ],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(proc.returncode, 0, proc.stderr + proc.stdout)
+        self.assertIn("ENV_PREPARE_SUMMARY", proc.stdout)
+        self.assertIn("gate=focus-widget", proc.stdout)
+
     def test_summarize_counts_match_outcomes(self) -> None:
         contract = load_contract(ROOT)
         outcomes = prepare(ROOT, "focus-widget", verify_only=True, fetch=False)
