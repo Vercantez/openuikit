@@ -1,4 +1,7 @@
 @_exported import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 #if canImport(UIKit)
 @_exported import UIKit
 #elseif canImport(OpenUIKit)
@@ -30,6 +33,7 @@ open class WKWebView: UIView {
             )
             _setObserved(
                 \WKWebView.obscuredContentInsets,
+                stringKey: "obscuredContentInsets",
                 storage: &_obscuredContentInsets,
                 to: newValue
             )
@@ -46,6 +50,7 @@ open class WKWebView: UIView {
             let resolvedValue: UIColor? = newValue ?? .white
             _setObservedIfChanged(
                 \WKWebView.underPageBackgroundColor,
+                stringKey: "underPageBackgroundColor",
                 storage: &_underPageBackgroundColor,
                 to: resolvedValue
             )
@@ -57,7 +62,7 @@ open class WKWebView: UIView {
     public private(set) var estimatedProgress: Double = 0
     public private(set) var isLoading = false
     public private(set) var hasOnlySecureContent = false
-    public private(set) var lastPortableError: WKPortableError?
+    internal var _portableLastError: WKError?
 
     open var canGoBack: Bool {
         backForwardList.backItem != nil
@@ -69,6 +74,7 @@ open class WKWebView: UIView {
     private var navigationGeneration: UInt64 = 0
     private var isDeliveringFailure = false
     private var isAllMediaPlaybackSuspended = false
+    private var stringObservers: [_WKStringKeyPathObserver] = []
 
     public init(frame: CGRect, configuration: WKWebViewConfiguration) {
         self.configuration = configuration._portableCopyForWebView()
@@ -143,7 +149,7 @@ open class WKWebView: UIView {
     open func stopLoading() {
         navigationGeneration &+= 1
         _setObservedIfChanged(
-            \WKWebView.isLoading, storage: &isLoading, to: false
+            \WKWebView.isLoading, stringKey: "isLoading", storage: &isLoading, to: false
         )
     }
 
@@ -198,17 +204,32 @@ open class WKWebView: UIView {
 
     @discardableResult
     open func goBack() -> WKNavigation? {
-        nil
+        guard let item = backForwardList.backItem else { return nil }
+        return _beginUnavailableNavigation(
+            request: URLRequest(url: item.url),
+            navigationType: .backForward,
+            operation: "goBack()"
+        )
     }
 
     @discardableResult
     open func goForward() -> WKNavigation? {
-        nil
+        guard let item = backForwardList.forwardItem else { return nil }
+        return _beginUnavailableNavigation(
+            request: URLRequest(url: item.url),
+            navigationType: .backForward,
+            operation: "goForward()"
+        )
     }
 
     @discardableResult
     open func go(to item: WKBackForwardListItem) -> WKNavigation? {
-        nil
+        guard backForwardList._portableContains(item) else { return nil }
+        return _beginUnavailableNavigation(
+            request: URLRequest(url: item.url),
+            navigationType: .backForward,
+            operation: "go(to:)"
+        )
     }
 
     open func evaluateJavaScript(
@@ -217,11 +238,106 @@ open class WKWebView: UIView {
     ) {
         completionHandler?(
             nil,
-            WKPortableError(
-                code: .engineUnavailable,
+            WKError(
+                code: .unknown,
                 operation: "evaluateJavaScript(_:)"
             )
         )
+    }
+
+    /// String-keypath KVO used by Focus. Typed `observe(\.url)` is delivered
+    /// through Foundation's portable observation substrate; this path delivers
+    /// the classic `addObserver` seam deterministically without an ObjC runtime.
+    #if canImport(Darwin)
+    open override func addObserver(
+        _ observer: NSObject,
+        forKeyPath keyPath: String,
+        options: NSKeyValueObservingOptions = [],
+        context: UnsafeMutableRawPointer? = nil
+    ) {
+        _portableAddObserver(
+            observer, forKeyPath: keyPath, options: options, context: context
+        )
+    }
+
+    open override func removeObserver(_ observer: NSObject, forKeyPath keyPath: String) {
+        _portableRemoveObserver(observer, forKeyPath: keyPath, context: nil, matchContext: false)
+    }
+
+    open override func removeObserver(
+        _ observer: NSObject,
+        forKeyPath keyPath: String,
+        context: UnsafeMutableRawPointer?
+    ) {
+        _portableRemoveObserver(observer, forKeyPath: keyPath, context: context, matchContext: true)
+    }
+    #else
+    open func addObserver(
+        _ observer: NSObject,
+        forKeyPath keyPath: String,
+        options: NSKeyValueObservingOptions = [],
+        context: UnsafeMutableRawPointer? = nil
+    ) {
+        _portableAddObserver(
+            observer, forKeyPath: keyPath, options: options, context: context
+        )
+    }
+
+    open func removeObserver(_ observer: NSObject, forKeyPath keyPath: String) {
+        _portableRemoveObserver(observer, forKeyPath: keyPath, context: nil, matchContext: false)
+    }
+
+    open func removeObserver(
+        _ observer: NSObject,
+        forKeyPath keyPath: String,
+        context: UnsafeMutableRawPointer?
+    ) {
+        _portableRemoveObserver(observer, forKeyPath: keyPath, context: context, matchContext: true)
+    }
+    #endif
+
+    private func _portableAddObserver(
+        _ observer: NSObject,
+        forKeyPath keyPath: String,
+        options: NSKeyValueObservingOptions,
+        context: UnsafeMutableRawPointer?
+    ) {
+        stringObservers.append(
+            _WKStringKeyPathObserver(
+                observer: observer,
+                keyPath: keyPath,
+                options: options,
+                context: context
+            )
+        )
+        if options.contains(.initial) {
+            _deliverStringKVO(
+                keyPath: keyPath,
+                oldValue: nil,
+                newValue: _portableValue(forStringKeyPath: keyPath),
+                isPrior: false,
+                forceInitial: true
+            )
+        }
+    }
+
+    private func _portableRemoveObserver(
+        _ observer: NSObject,
+        forKeyPath keyPath: String,
+        context: UnsafeMutableRawPointer?,
+        matchContext: Bool
+    ) {
+        stringObservers.removeAll {
+            $0.observer === observer && $0.keyPath == keyPath &&
+                (!matchContext || $0.context == context)
+        }
+    }
+
+    internal func _portableRecordCommittedItem(url: URL, title: String?) {
+        backForwardList._portableRecordCommitted(url: url, title: title)
+        _setObservedIfChanged(\WKWebView.url, stringKey: "url", storage: &self.url, to: Optional(url))
+        let recordedTitle: String? = title ?? ""
+        _setObservedIfChanged(\WKWebView.title, stringKey: "title", storage: &self.title, to: recordedTitle)
     }
 
     @discardableResult
@@ -244,18 +360,18 @@ open class WKWebView: UIView {
         )
         if isDeliveringFailure {
             _setObservedIfChanged(
-                \WKWebView.url, storage: &url, to: request.url
+                \WKWebView.url, stringKey: "url", storage: &url, to: request.url
             )
             _setObservedIfChanged(
-                \WKWebView.title, storage: &title, to: ""
+                \WKWebView.title, stringKey: "title", storage: &title, to: ""
             )
             estimatedProgress = 0
             hasOnlySecureContent = false
             _setObservedIfChanged(
-                \WKWebView.isLoading, storage: &isLoading, to: false
+                \WKWebView.isLoading, stringKey: "isLoading", storage: &isLoading, to: false
             )
-            lastPortableError = WKPortableError(
-                code: .engineUnavailable,
+            _portableLastError = WKError(
+                code: .unknown,
                 operation: operation,
                 requestedURL: request.url
             )
@@ -271,6 +387,7 @@ open class WKWebView: UIView {
             guard policy == .allow else {
                 self._setObservedIfChanged(
                     \WKWebView.isLoading,
+                    stringKey: "isLoading",
                     storage: &self.isLoading,
                     to: false
                 )
@@ -279,17 +396,17 @@ open class WKWebView: UIView {
 
             navigation.effectiveContentMode = selectedPreferences.preferredContentMode
             self._setObservedIfChanged(
-                \WKWebView.url, storage: &self.url, to: request.url
+                \WKWebView.url, stringKey: "url", storage: &self.url, to: request.url
             )
             self._setObservedIfChanged(
-                \WKWebView.title, storage: &self.title, to: ""
+                \WKWebView.title, stringKey: "title", storage: &self.title, to: ""
             )
             self.estimatedProgress = 0
             self.hasOnlySecureContent = false
             self._setObservedIfChanged(
-                \WKWebView.isLoading, storage: &self.isLoading, to: true
+                \WKWebView.isLoading, stringKey: "isLoading", storage: &self.isLoading, to: true
             )
-            self.lastPortableError = nil
+            self._portableLastError = nil
             self.navigationDelegate?.webView(
                 self,
                 didStartProvisionalNavigation: navigation
@@ -297,15 +414,18 @@ open class WKWebView: UIView {
 
             // No transport or renderer is linked. A provisional failure is a
             // real outcome; didCommit/didFinish are deliberately impossible.
-            let failure = WKPortableError(
-                code: .engineUnavailable,
+            // Setting the requested URL without committing history is the
+            // established inert-but-stateful load: a silent fake success would
+            // put a URL bar into browsing mode over a blank page.
+            let failure = WKError(
+                code: .unknown,
                 operation: operation,
                 requestedURL: request.url
             )
             self._setObservedIfChanged(
-                \WKWebView.isLoading, storage: &self.isLoading, to: false
+                \WKWebView.isLoading, stringKey: "isLoading", storage: &self.isLoading, to: false
             )
-            self.lastPortableError = failure
+            self._portableLastError = failure
             // Focus and many browsers respond to a provisional failure by
             // synchronously loading locally generated error-page data. There
             // is still no renderer, so that nested request cannot succeed;
@@ -336,6 +456,7 @@ open class WKWebView: UIView {
 
     private func _setObserved<Value>(
         _ keyPath: KeyPath<WKWebView, Value>,
+        stringKey: String? = nil,
         storage: inout Value,
         to newValue: Value
     ) {
@@ -343,20 +464,120 @@ open class WKWebView: UIView {
         #if !PORTABLE_WEBKIT_HOST
         _portableWillChangeValue(for: keyPath, oldValue: oldValue)
         #endif
+        if let stringKey {
+            _deliverStringKVO(
+                keyPath: stringKey,
+                oldValue: oldValue,
+                newValue: newValue,
+                isPrior: true,
+                forceInitial: false
+            )
+        }
         storage = newValue
         #if !PORTABLE_WEBKIT_HOST
         _portableDidChangeValue(
             for: keyPath, oldValue: oldValue, newValue: newValue
         )
         #endif
+        if let stringKey {
+            _deliverStringKVO(
+                keyPath: stringKey,
+                oldValue: oldValue,
+                newValue: newValue,
+                isPrior: false,
+                forceInitial: false
+            )
+        }
     }
 
     private func _setObservedIfChanged<Value: Equatable>(
         _ keyPath: KeyPath<WKWebView, Value>,
+        stringKey: String? = nil,
         storage: inout Value,
         to newValue: Value
     ) {
         guard storage != newValue else { return }
-        _setObserved(keyPath, storage: &storage, to: newValue)
+        _setObserved(keyPath, stringKey: stringKey, storage: &storage, to: newValue)
     }
+
+    private func _portableValue(forStringKeyPath keyPath: String) -> Any? {
+        switch keyPath {
+        case "url", "URL":
+            return url
+        case "title":
+            return title
+        case "isLoading", "loading":
+            return isLoading
+        case "estimatedProgress":
+            return estimatedProgress
+        case "hasOnlySecureContent":
+            return hasOnlySecureContent
+        case "canGoBack":
+            return canGoBack
+        case "canGoForward":
+            return canGoForward
+        case "underPageBackgroundColor":
+            return underPageBackgroundColor
+        case "obscuredContentInsets":
+            return obscuredContentInsets
+        default:
+            return nil
+        }
+    }
+
+    private func _deliverStringKVO(
+        keyPath: String,
+        oldValue: Any?,
+        newValue: Any?,
+        isPrior: Bool,
+        forceInitial: Bool
+    ) {
+        let aliases: [String]
+        switch keyPath {
+        case "url":
+            aliases = ["url", "URL"]
+        case "isLoading":
+            aliases = ["isLoading", "loading"]
+        default:
+            aliases = [keyPath]
+        }
+        for registration in stringObservers {
+            guard aliases.contains(registration.keyPath) else { continue }
+            guard let observer = registration.observer else { continue }
+            if forceInitial {
+                guard registration.options.contains(.initial) else { continue }
+            } else if isPrior {
+                guard registration.options.contains(.prior) else { continue }
+            }
+            var change: [String: Any] = ["kind": 1]
+            if isPrior {
+                change["notificationIsPrior"] = true
+            }
+            if registration.options.contains(.old) {
+                if let oldValue {
+                    change["old"] = oldValue
+                }
+            }
+            if forceInitial || (!isPrior && registration.options.contains(.new)) {
+                if let newValue {
+                    change["new"] = newValue
+                }
+            }
+            if let host = observer as? any WebKitHostKeyValueObserver {
+                host.observeValue(
+                    forKeyPath: registration.keyPath,
+                    of: self,
+                    change: change,
+                    context: registration.context
+                )
+            }
+        }
+    }
+}
+
+private struct _WKStringKeyPathObserver {
+    weak var observer: NSObject?
+    let keyPath: String
+    let options: NSKeyValueObservingOptions
+    let context: UnsafeMutableRawPointer?
 }
