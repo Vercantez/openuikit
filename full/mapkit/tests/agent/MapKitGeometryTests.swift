@@ -4,6 +4,10 @@ import Foundation
 import CoreLocation
 #endif
 
+private func oracleClose(_ actual: Double, _ expected: Double, tolerance: Double = 1e-9) {
+    precondition(abs(actual - expected) <= tolerance, "\(actual) != \(expected)")
+}
+
 func testCoordinateSpanStorage() {
     let span = MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 1.25)
     precondition(span.latitudeDelta == 0.5)
@@ -18,6 +22,10 @@ func testMapRectNullEmptyWorld() {
     precondition(nullRect.origin.y.isInfinite)
     precondition(nullRect.size.width == 0)
     precondition(nullRect.size.height == 0)
+    precondition(nullRect.minX == Double.infinity)
+    precondition(nullRect.midX == Double.infinity)
+    precondition(nullRect.maxX == Double.infinity)
+    precondition(!nullRect.spans180thMeridian)
 
     let empty = MKMapRect(x: 10, y: 20, width: 0, height: 5)
     precondition(empty.isEmpty)
@@ -31,6 +39,14 @@ func testMapRectNullEmptyWorld() {
     precondition(MKMapSizeEqualToSize(world.size, MKMapSize.world))
     precondition(MKMapSize.world.width == 268_435_456)
     precondition(MKMapSize.world.height == 268_435_456)
+
+    let nanOrigin = MKMapRect(x: Double.nan, y: 20, width: 30, height: 40)
+    let nanSize = MKMapRect(x: 10, y: 20, width: Double.nan, height: 40)
+    let infiniteOrigin = MKMapRect(x: Double.infinity, y: 20, width: 30, height: 40)
+    for unusual in [nanOrigin, nanSize, infiniteOrigin] {
+        precondition(!unusual.isNull)
+        precondition(!unusual.isEmpty)
+    }
 }
 
 func testMapRectInitAndEdges() {
@@ -50,16 +66,16 @@ func testMapRectInitAndEdges() {
     let made = MKMapRect(origin: MKMapPoint(x: 1, y: 2), size: MKMapSize(width: 3, height: 4))
     precondition(made.origin.x == 1)
     precondition(made.size.height == 4)
-}
 
-func testMapRectNegativeDimensions() {
-    let rect = MKMapRect(x: 50, y: 50, width: -20, height: -10)
-    precondition(rect.minX == 50)
-    precondition(rect.maxX == 30)
-    precondition(rect.minY == 50)
-    precondition(rect.maxY == 40)
-    precondition(rect.contains(MKMapPoint(x: 40, y: 45)))
-    precondition(!rect.contains(MKMapPoint(x: 51, y: 45)))
+    let negative = MKMapRect(x: 40, y: 60, width: -30, height: -40)
+    precondition(negative.minX == 40)
+    precondition(negative.midX == 25)
+    precondition(negative.maxX == 10)
+    precondition(negative.minY == 60)
+    precondition(negative.midY == 40)
+    precondition(negative.maxY == 20)
+    precondition(!negative.isNull)
+    precondition(!negative.isEmpty)
 }
 
 func testMapRectIntersectionUnion() {
@@ -82,6 +98,23 @@ func testMapRectIntersectionUnion() {
     precondition(MKMapRect.null.union(a).origin.x == 0)
     precondition(a.union(.null).size.width == 10)
     precondition(MKMapRect.null.intersection(a).isNull)
+
+    let edgeTouch = MKMapRect(x: 10, y: 2, width: 4, height: 6)
+    precondition(!a.intersects(edgeTouch))
+    let edgeIntersection = a.intersection(edgeTouch)
+    precondition(!edgeIntersection.isNull)
+    precondition(edgeIntersection.isEmpty)
+    precondition(edgeIntersection.origin.x == 10)
+    precondition(edgeIntersection.origin.y == 2)
+    precondition(edgeIntersection.size.width == 0)
+    precondition(edgeIntersection.size.height == 6)
+
+    let ordinary = MKMapRect(x: 10, y: 20, width: 30, height: 40)
+    let negativeWidth = MKMapRect(x: 40, y: 20, width: -30, height: 40)
+    let interior = MKMapRect(x: 15, y: 30, width: 10, height: 10)
+    precondition(!negativeWidth.intersects(interior))
+    precondition(negativeWidth.intersection(interior).isNull)
+    precondition(MKMapRectEqualToRect(ordinary.union(negativeWidth), ordinary))
 }
 
 func testMapRectInsetOffset() {
@@ -112,6 +145,12 @@ func testMapRectContains() {
     precondition(!inner.contains(rect))
     let empty = MKMapRect(x: 3, y: 3, width: 0, height: 0)
     precondition(rect.contains(empty))
+
+    let negativeWidth = MKMapRect(x: 40, y: 20, width: -30, height: 40)
+    precondition(!negativeWidth.contains(MKMapPoint(x: 25, y: 40)))
+    precondition(!negativeWidth.contains(MKMapPoint(x: 40, y: 20)))
+    precondition(!negativeWidth.contains(MKMapPoint(x: 10, y: 60)))
+    precondition(!negativeWidth.contains(MKMapRect(x: 15, y: 30, width: 10, height: 10)))
 }
 
 func testMapRectSpans180thMeridian() {
@@ -129,6 +168,13 @@ func testMapRectSpans180thMeridian() {
     precondition(!remainder.isNull)
     precondition(remainder.origin.x == 0)
     precondition(remainder.size.width == 15)
+    let leftSpanning = MKMapRect(x: -5, y: 0, width: 10, height: 10)
+    precondition(leftSpanning.spans180thMeridian)
+    let leftRemainder = leftSpanning.remainder
+    precondition(leftRemainder.origin.x == 268_435_451)
+    precondition(leftRemainder.origin.y == 0)
+    precondition(leftRemainder.size.width == 5)
+    precondition(leftRemainder.size.height == 10)
     let interior = MKMapRect(x: 10, y: 10, width: 20, height: 20)
     precondition(!interior.spans180thMeridian)
 }
@@ -148,6 +194,38 @@ func testMapRectDivide() {
     MKMapRectDivide(.null, &slice, &rest, 1, .minYEdge)
     precondition(slice.isNull)
     precondition(rest.isNull)
+
+    let oracleRect = MKMapRect(x: 10, y: 20, width: 30, height: 40)
+    MKMapRectDivide(oracleRect, &slice, &rest, -1, .minXEdge)
+    precondition(MKMapRectEqualToRect(slice, MKMapRect(x: 10, y: 20, width: 0, height: 40)))
+    precondition(MKMapRectEqualToRect(rest, oracleRect))
+    MKMapRectDivide(oracleRect, &slice, &rest, Double.infinity, .maxXEdge)
+    precondition(MKMapRectEqualToRect(slice, oracleRect))
+    precondition(MKMapRectEqualToRect(rest, MKMapRect(x: 10, y: 20, width: 0, height: 40)))
+    MKMapRectDivide(oracleRect, &slice, &rest, 300, .minYEdge)
+    precondition(MKMapRectEqualToRect(slice, oracleRect))
+    precondition(MKMapRectEqualToRect(rest, MKMapRect(x: 10, y: 60, width: 30, height: 0)))
+
+    MKMapRectDivide(oracleRect, &slice, &rest, Double.nan, .minXEdge)
+    precondition(slice.origin.x == 10 && slice.origin.y == 20)
+    precondition(slice.size.width.isNaN && slice.size.height == 40)
+    precondition(rest.origin.x.isNaN && rest.origin.y == 20)
+    precondition(rest.size.width.isNaN && rest.size.height == 40)
+    MKMapRectDivide(oracleRect, &slice, &rest, Double.nan, .maxXEdge)
+    precondition(slice.origin.x.isNaN && slice.origin.y == 20)
+    precondition(slice.size.width.isNaN && slice.size.height == 40)
+    precondition(rest.origin.x == 10 && rest.origin.y == 20)
+    precondition(rest.size.width.isNaN && rest.size.height == 40)
+    MKMapRectDivide(oracleRect, &slice, &rest, Double.nan, .minYEdge)
+    precondition(slice.origin.x == 10 && slice.origin.y == 20)
+    precondition(slice.size.width == 30 && slice.size.height.isNaN)
+    precondition(rest.origin.x == 10 && rest.origin.y.isNaN)
+    precondition(rest.size.width == 30 && rest.size.height.isNaN)
+    MKMapRectDivide(oracleRect, &slice, &rest, Double.nan, .maxYEdge)
+    precondition(slice.origin.x == 10 && slice.origin.y.isNaN)
+    precondition(slice.size.width == 30 && slice.size.height.isNaN)
+    precondition(rest.origin.x == 10 && rest.origin.y == 20)
+    precondition(rest.size.width == 30 && rest.size.height.isNaN)
 }
 
 func testMapPointAndSizeEquality() {
@@ -174,7 +252,7 @@ func testGeometryStrings() {
     precondition(rectText.contains("{"))
 }
 
-func testProjectionRoundTrip() {
+private func assertProjectionOracle() {
     let samples: [(Double, Double)] = [
         (0, 0),
         (37.3349, -122.0090),
@@ -192,65 +270,52 @@ func testProjectionRoundTrip() {
         let lonError = min(abs(back.longitude - lon), 360 - abs(back.longitude - lon))
         precondition(lonError < 1e-6, "lon round trip \(lon)")
     }
+
+    let equator = MKMapProjection.point(latitude: 0, longitude: 0)
+    precondition(equator.x == 134_217_728)
+    precondition(equator.y == 134_217_728)
+    let north85 = MKMapProjection.point(latitude: 85, longitude: 0)
+    let south85 = MKMapProjection.point(latitude: -85, longitude: 0)
+    oracleClose(north85.y, 439_674.402_483_537_79, tolerance: 1e-6)
+    oracleClose(south85.y, 267_995_781.597_516_48, tolerance: 1e-6)
+    precondition(MKMapPointEqualToPoint(MKMapProjection.point(latitude: 90, longitude: 0), north85))
+    precondition(MKMapPointEqualToPoint(MKMapProjection.point(latitude: -90, longitude: 0), south85))
+    precondition(MKMapProjection.point(latitude: 0, longitude: -180).x == 0)
+    precondition(MKMapProjection.point(latitude: 0, longitude: 180).x == 268_435_456)
+    precondition(MKMapPointEqualToPoint(
+        MKMapProjection.point(latitude: 0, longitude: 360),
+        MKMapPoint(x: -1, y: -1)
+    ))
+    precondition(MKMapPointEqualToPoint(
+        MKMapProjection.point(latitude: Double.nan, longitude: 0),
+        MKMapPoint(x: -1, y: -1)
+    ))
+    let invalidBack = MKMapProjection.coordinate(for: MKMapPoint(x: -1, y: -1))
+    oracleClose(invalidBack.latitude, 85.051_128_895_499_303, tolerance: 1e-12)
+    oracleClose(invalidBack.longitude, 179.999_998_658_895_49, tolerance: 1e-12)
 }
 
 func testDistanceSymmetryAndLatitudeScale() {
+    assertProjectionOracle()
     let a = MKMapProjection.point(latitude: 0, longitude: 0)
-    let b = MKMapProjection.point(latitude: 0, longitude: 1)
+    let b = MKMapPoint(x: a.x + 1, y: a.y)
     let ab = a.distance(to: b)
     let ba = b.distance(to: a)
     precondition(ab.isFinite)
     precondition(abs(ab - ba) < 1e-6)
-    let equator = MKMetersPerMapPointAtLatitude(0)
-    let mid = MKMetersPerMapPointAtLatitude(60)
-    precondition(equator > mid)
-    precondition(abs(MKMapPointsPerMeterAtLatitude(0) * equator - 1) < 1e-9)
-}
+    oracleClose(ab, 0.149_291_609_223_338_03, tolerance: 1e-6)
 
-func testNaNInfinityPolicy() {
-    let nanPoint = MKMapPoint(x: Double.nan, y: 0)
-    precondition(nanPoint.distance(to: MKMapPoint(x: 1, y: 1)).isNaN)
-    let infRect = MKMapRect(
-        origin: MKMapPoint(x: Double.infinity, y: 0),
-        size: MKMapSize(width: 1, height: 1)
-    )
-    precondition(infRect.isNull)
-    precondition(infRect.isEmpty)
-    let nanLat = MKMetersPerMapPointAtLatitude(Double.nan)
-    precondition(nanLat.isNaN)
-    let infInset = MKMapRect.world.insetBy(dx: Double.nan, dy: 0)
-    precondition(infInset.isNull)
-    precondition(!MKMapPointEqualToPoint(MKMapPoint(x: Double.nan, y: 0), MKMapPoint(x: Double.nan, y: 0)))
-}
-
-func testMapRectPolesAndOverflow() {
-    let north = MKMapProjection.point(latitude: 85.0511287798066, longitude: 0)
-    let south = MKMapProjection.point(latitude: -85.0511287798066, longitude: 0)
-    let backNorth = MKMapProjection.coordinate(for: north)
-    let backSouth = MKMapProjection.coordinate(for: south)
-    precondition(abs(backNorth.latitude - 85.0511287798066) < 1e-6)
-    precondition(abs(backSouth.latitude + 85.0511287798066) < 1e-6)
-    precondition(north.y.isFinite && south.y.isFinite)
-    precondition(north.y < south.y)
-
-    let overflow = MKMapRect(
-        x: Double.greatestFiniteMagnitude,
-        y: 0,
-        width: Double.greatestFiniteMagnitude,
-        height: 1
-    )
-    precondition(!overflow.maxX.isFinite)
-    let hugeUnion = overflow.union(MKMapRect.world)
-    precondition(hugeUnion.isNull || hugeUnion.width.isFinite)
-
-    let nanSize = MKMapRect(x: 0, y: 0, width: Double.nan, height: 1)
-    precondition(nanSize.isNull)
-    precondition(nanSize.isEmpty)
-    precondition(nanSize.union(MKMapRect.world).origin.x == 0)
-
-    let poleMeters = MKMetersPerMapPointAtLatitude(90)
-    precondition(poleMeters.isFinite)
-    precondition(poleMeters >= 0)
-    let infMeters = MKMetersPerMapPointAtLatitude(Double.infinity)
-    precondition(infMeters.isNaN)
+    let equatorMeters = MKMetersPerMapPointAtLatitude(0)
+    let midMeters = MKMetersPerMapPointAtLatitude(60)
+    oracleClose(equatorMeters, 0.148_289_773_337_725_44, tolerance: 1e-15)
+    oracleClose(midMeters, 0.074_701_090_708_174_683, tolerance: 1e-15)
+    oracleClose(MKMapPointsPerMeterAtLatitude(0), 6.743_553_365_089_650_4, tolerance: 1e-12)
+    oracleClose(MKMapPointsPerMeterAtLatitude(60), 13.386_685_395_352_174, tolerance: 1e-12)
+    oracleClose(MKMetersPerMapPointAtLatitude(90), 0.254_037_220_797_636_08, tolerance: 1e-15)
+    oracleClose(MKMapPointsPerMeterAtLatitude(90), 3.936_431_035_027_704_1, tolerance: 1e-12)
+    oracleClose(MKMetersPerMapPointAtLatitude(-90), 0.000_416_774_906_744_502_91, tolerance: 1e-18)
+    oracleClose(MKMapPointsPerMeterAtLatitude(-90), 2_399.376_699_070_402_1, tolerance: 1e-9)
+    precondition(MKMetersPerMapPointAtLatitude(Double.nan).isNaN)
+    precondition(MKMetersPerMapPointAtLatitude(Double.infinity).isNaN)
+    precondition(MKMapPoint(x: Double.nan, y: 0).distance(to: b).isNaN)
 }

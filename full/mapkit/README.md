@@ -8,12 +8,13 @@ oracle and it is not a claim of integrated ARM64 package success.
 ## What is real
 
 - Exact `MKMapPoint` / `MKMapSize` / `MKMapRect` / `MKCoordinateSpan` storage
-  and checked finite rectangle algebra, including empty/null/world rectangles,
-  negative dimensions, intersection/union/inset/offset, containment, and
-  180th-meridian remainder.
+  and iOS 26.1-oracle-pinned rectangle algebra, including the narrow null
+  sentinel, NaN/infinity classification, negative dimensions, strict
+  edge-touch intersection, divide propagation, and both 180th-meridian edges.
 - Web Mercator projection helpers used for coordinate round trips and
-  meter-per-map-point scaling. The world size is the published 2^28 map-point
-  square; live SDK constant equality remains an oracle question.
+  meter-per-map-point scaling. iOS 26.1 probes pin the 2^28 world, valid
+  coordinate bounds, 85-degree projection clamp, scale samples, and exact-pole
+  asymmetry rather than assuming a spherical cosine implementation.
 - Graph-evidenced option sets, enums, POI categories, error codes, and launch
   option constant names.
 - In-memory annotation, overlay, map item, address, filter, request, and
@@ -48,7 +49,7 @@ User location is never invented (`MKUserLocation.isUpdating == false`).
 Isolated-host coverage for the 1,153 exact public IDs is `implemented` / `declared` /
 `deferred` as recorded in `coverage.tsv`. UIKit ancestry and CoreLocation-bearing
 members are gated behind `canImport` and coverage-deferred on this host rather than
-replaced with MapKit stand-ins. Exact Apple geometry constants, POI string payloads,
-callback queues, and locale formatter copy remain oracle questions.
+replaced with MapKit stand-ins. The narrow near-pole scale transition, POI string
+payloads, callback queues, and locale formatter copy remain oracle questions.
 
 Central ARM64 package verification still owns integrated Linux success.

@@ -1,17 +1,53 @@
 import Foundation
+#if canImport(CoreLocation)
+#if os(Linux)
+@_spi(OpenUIKitHost) @preconcurrency import CoreLocation
+#else
+@preconcurrency import CoreLocation
+#endif
+#endif
 
 /// Public `MKGeometry` world size from Apple's Map Kit projection: 2^28 map
-/// points. The numeric payload is the long-published `MKMapSizeWorld` value;
-/// a central Apple-oracle probe should still confirm the live SDK constant.
+/// points. This payload and the edge-case algebra below are pinned by an iOS
+/// 26.1 simulator oracle.
 private let mkWorldDimension: Double = 268_435_456.0
 
-/// WGS-84 equatorial radius in meters, the conventional Map Kit scale used
-/// with `MKMetersPerMapPointAtLatitude`. Exact live equality is an oracle
-/// question.
+/// WGS-84 equatorial radius used for map-point distance.
 private let mkEquatorialRadiusMeters: Double = 6_378_137.0
 
-/// Mercator latitude limit implied by the Web Mercator projection.
-private let mkMercatorMaxLatitude: Double = 85.0511287798066
+/// Map Kit clamps valid coordinate input to 85 degrees before projection.
+private let mkProjectionMaxLatitude: Double = 85.0
+
+/// iOS 26.1 has stable, asymmetric results at the two exact geographic poles.
+/// Preserve those observed public-function results instead of extending the
+/// ordinary WGS-84 formula through a singularity.
+private let mkNorthPoleMetersPerPoint: Double = 0.254_037_220_797_636_08
+private let mkSouthPoleMetersPerPoint: Double = 0.000_416_774_906_744_502_91
+
+/// Five-degree iOS/macOS 26.1 oracle samples over Map Kit's projected latitude
+/// range. Linear interpolation avoids replacing the observed ellipsoidal curve
+/// with the demonstrably-wrong spherical cosine shortcut. The final 85-degree
+/// sample intentionally preserves Map Kit's near-pole discontinuity.
+private let mkMetersPerPointSamples: [Double] = [
+    0.148_289_773_337_725_44,
+    0.147_736_725_459_890_89,
+    0.146_081_030_604_107_4,
+    0.143_333_059_012_292_76,
+    0.139_510_170_788_160_61,
+    0.134_636_818_982_238_7,
+    0.128_744_671_638_204_97,
+    0.121_872_732_046_303_99,
+    0.114_067_432_628_807_27,
+    0.105_382_675_513_326_13,
+    0.095_879_792_040_637_485,
+    0.085_627_394_029_882_689,
+    0.074_701_090_708_174_683,
+    0.063_183_043_789_721_671,
+    0.051_161_318_089_686_623,
+    0.038_728_904_874_921_345,
+    0.025_981_817_044_788_295,
+    0.027_389_836_522_547_215,
+]
 
 public struct MKMapPoint: Sendable {
     public var x: Double
@@ -63,14 +99,13 @@ public struct MKMapRect: Sendable {
     public var minY: Double { origin.y }
     public var width: Double { size.width }
     public var height: Double { size.height }
-    public var maxX: Double { mkFiniteSum(origin.x, size.width) }
-    public var maxY: Double { mkFiniteSum(origin.y, size.height) }
-    public var midX: Double { mkFiniteSum(origin.x, mkFiniteProduct(size.width, 0.5)) }
-    public var midY: Double { mkFiniteSum(origin.y, mkFiniteProduct(size.height, 0.5)) }
+    public var maxX: Double { origin.x + size.width }
+    public var maxY: Double { origin.y + size.height }
+    public var midX: Double { origin.x + size.width * 0.5 }
+    public var midY: Double { origin.y + size.height * 0.5 }
 
     public var isNull: Bool {
-        !origin.x.isFinite || !origin.y.isFinite
-            || !size.width.isFinite || !size.height.isFinite
+        origin.x == Double.infinity && origin.y == Double.infinity
     }
 
     public var isEmpty: Bool {
@@ -79,35 +114,33 @@ public struct MKMapRect: Sendable {
 
     public var spans180thMeridian: Bool {
         guard !isNull else { return false }
-        return maxX > MKMapSize.world.width
+        return minX < 0 || maxX > MKMapSize.world.width
     }
 
     public var remainder: MKMapRect {
-        guard spans180thMeridian, maxX.isFinite, origin.y.isFinite, size.height.isFinite else {
-            return .null
+        guard spans180thMeridian else { return .null }
+        if minX < 0 {
+            return MKMapRect(
+                x: MKMapSize.world.width + minX,
+                y: origin.y,
+                width: -minX,
+                height: size.height
+            )
         }
-        let overflow = mkFiniteDifference(maxX, MKMapSize.world.width)
-        guard overflow.isFinite, overflow > 0 else { return .null }
+        let overflow = maxX - MKMapSize.world.width
         return MKMapRect(x: 0, y: origin.y, width: overflow, height: size.height)
     }
 
     public func contains(_ point: MKMapPoint) -> Bool {
-        guard !isNull, point.x.isFinite, point.y.isFinite else { return false }
-        let (left, right) = mkOrdered(minX, maxX)
-        let (top, bottom) = mkOrdered(minY, maxY)
-        return point.x >= left && point.x <= right && point.y >= top && point.y <= bottom
+        guard !isNull else { return false }
+        return point.x >= minX && point.x <= maxX
+            && point.y >= minY && point.y <= maxY
     }
 
     public func contains(_ rect2: MKMapRect) -> Bool {
         guard !isNull, !rect2.isNull else { return false }
-        if rect2.isEmpty {
-            return contains(rect2.origin)
-        }
-        let (left, right) = mkOrdered(minX, maxX)
-        let (top, bottom) = mkOrdered(minY, maxY)
-        let (left2, right2) = mkOrdered(rect2.minX, rect2.maxX)
-        let (top2, bottom2) = mkOrdered(rect2.minY, rect2.maxY)
-        return left <= left2 && right >= right2 && top <= top2 && bottom >= bottom2
+        return rect2.minX >= minX && rect2.maxX <= maxX
+            && rect2.minY >= minY && rect2.maxY <= maxY
     }
 
     public func intersects(_ rect2: MKMapRect) -> Bool {
@@ -116,66 +149,42 @@ public struct MKMapRect: Sendable {
 
     public func intersection(_ rect2: MKMapRect) -> MKMapRect {
         if isNull || rect2.isNull { return .null }
-        let (left1, right1) = mkOrdered(minX, maxX)
-        let (left2, right2) = mkOrdered(rect2.minX, rect2.maxX)
-        let (top1, bottom1) = mkOrdered(minY, maxY)
-        let (top2, bottom2) = mkOrdered(rect2.minY, rect2.maxY)
-        let left = max(left1, left2)
-        let right = min(right1, right2)
-        let top = max(top1, top2)
-        let bottom = min(bottom1, bottom2)
+        let left = max(minX, rect2.minX)
+        let right = min(maxX, rect2.maxX)
+        let top = max(minY, rect2.minY)
+        let bottom = min(maxY, rect2.maxY)
         if left > right || top > bottom { return .null }
-        guard left.isFinite, right.isFinite, top.isFinite, bottom.isFinite else { return .null }
-        let width = mkFiniteDifference(right, left)
-        let height = mkFiniteDifference(bottom, top)
-        guard width.isFinite, height.isFinite else { return .null }
-        return MKMapRect(x: left, y: top, width: width, height: height)
+        return MKMapRect(x: left, y: top, width: right - left, height: bottom - top)
     }
 
     public func union(_ rect2: MKMapRect) -> MKMapRect {
         if isNull { return rect2 }
         if rect2.isNull { return self }
-        let (left1, right1) = mkOrdered(minX, maxX)
-        let (left2, right2) = mkOrdered(rect2.minX, rect2.maxX)
-        let (top1, bottom1) = mkOrdered(minY, maxY)
-        let (top2, bottom2) = mkOrdered(rect2.minY, rect2.maxY)
-        guard left1.isFinite, right1.isFinite, left2.isFinite, right2.isFinite,
-              top1.isFinite, bottom1.isFinite, top2.isFinite, bottom2.isFinite
-        else {
-            return .null
-        }
-        let left = min(left1, left2)
-        let right = max(right1, right2)
-        let top = min(top1, top2)
-        let bottom = max(bottom1, bottom2)
-        let width = mkFiniteDifference(right, left)
-        let height = mkFiniteDifference(bottom, top)
-        guard width.isFinite, height.isFinite else { return .null }
-        return MKMapRect(x: left, y: top, width: width, height: height)
+        let left = min(minX, rect2.minX)
+        let right = max(maxX, rect2.maxX)
+        let top = min(minY, rect2.minY)
+        let bottom = max(maxY, rect2.maxY)
+        return MKMapRect(x: left, y: top, width: right - left, height: bottom - top)
     }
 
     public func insetBy(dx: Double, dy: Double) -> MKMapRect {
         if isNull { return .null }
-        guard dx.isFinite, dy.isFinite else { return .null }
-        let x = mkFiniteSum(origin.x, dx)
-        let y = mkFiniteSum(origin.y, dy)
-        let width = mkFiniteDifference(size.width, mkFiniteProduct(dx, 2))
-        let height = mkFiniteDifference(size.height, mkFiniteProduct(dy, 2))
-        if !x.isFinite || !y.isFinite || !width.isFinite || !height.isFinite {
-            return .null
-        }
-        return MKMapRect(x: x, y: y, width: width, height: height)
+        return MKMapRect(
+            x: origin.x + dx,
+            y: origin.y + dy,
+            width: size.width - dx * 2,
+            height: size.height - dy * 2
+        )
     }
 
     public func offsetBy(dx: Double, dy: Double) -> MKMapRect {
         if isNull { return .null }
-        guard dx.isFinite, dy.isFinite else { return .null }
-        let x = mkFiniteSum(origin.x, dx)
-        let y = mkFiniteSum(origin.y, dy)
-        if !x.isFinite || !y.isFinite {
-            return .null
-        }
-        return MKMapRect(x: x, y: y, width: size.width, height: size.height)
+        return MKMapRect(
+            x: origin.x + dx,
+            y: origin.y + dy,
+            width: size.width,
+            height: size.height
+        )
     }
 }
 
@@ -224,22 +233,21 @@ public func MKMapRectDivide(
     _ amount: Double,
     _ edge: CGRectEdge
 ) {
-    if rect.isNull || !amount.isFinite || !rect.size.width.isFinite || !rect.size.height.isFinite {
+    if rect.isNull {
         slice.pointee = .null
         remainder.pointee = .null
         return
     }
-    let amt = max(0, amount)
     switch edge {
     case .minXEdge:
-        let width = min(amt, rect.size.width)
+        let width = mkDivideAmount(amount, dimension: rect.size.width)
         slice.pointee = MKMapRect(x: rect.minX, y: rect.minY, width: width, height: rect.size.height)
         remainder.pointee = MKMapRect(
             x: rect.minX + width, y: rect.minY,
             width: rect.size.width - width, height: rect.size.height
         )
     case .maxXEdge:
-        let width = min(amt, rect.size.width)
+        let width = mkDivideAmount(amount, dimension: rect.size.width)
         slice.pointee = MKMapRect(
             x: rect.maxX - width, y: rect.minY,
             width: width, height: rect.size.height
@@ -249,14 +257,14 @@ public func MKMapRectDivide(
             width: rect.size.width - width, height: rect.size.height
         )
     case .minYEdge:
-        let height = min(amt, rect.size.height)
+        let height = mkDivideAmount(amount, dimension: rect.size.height)
         slice.pointee = MKMapRect(x: rect.minX, y: rect.minY, width: rect.size.width, height: height)
         remainder.pointee = MKMapRect(
             x: rect.minX, y: rect.minY + height,
             width: rect.size.width, height: rect.size.height - height
         )
     case .maxYEdge:
-        let height = min(amt, rect.size.height)
+        let height = mkDivideAmount(amount, dimension: rect.size.height)
         slice.pointee = MKMapRect(
             x: rect.minX, y: rect.maxY - height,
             width: rect.size.width, height: height
@@ -285,14 +293,38 @@ public func MKStringFromMapRect(_ rect: MKMapRect) -> String {
 
 public func MKMetersPerMapPointAtLatitude(_ latitude: Double) -> Double {
     guard latitude.isFinite else { return Double.nan }
-    let lat = mkClampLatitude(latitude)
-    let metersPerPoint = (Double.pi * mkEquatorialRadiusMeters * cos(lat * Double.pi / 180.0))
-        / MKMapSize.world.width
-    return metersPerPoint
+    if latitude == 90 { return mkNorthPoleMetersPerPoint }
+    if latitude == -90 { return mkSouthPoleMetersPerPoint }
+    let magnitude = abs(latitude)
+    if magnitude > 90 { return Double.infinity }
+    if magnitude >= 89.75 {
+        return latitude.sign == .minus ? mkSouthPoleMetersPerPoint : mkNorthPoleMetersPerPoint
+    }
+    if magnitude >= 85.5 { return Double.infinity }
+    if magnitude > 85 {
+        if magnitude <= 85.25 {
+            let fraction = (magnitude - 85) / 0.25
+            return mkMetersPerPointSamples[17]
+                + (0.053_509_138_661_681_242 - mkMetersPerPointSamples[17]) * fraction
+        }
+        let fraction = (magnitude - 85.25) / 0.24
+        return 0.053_509_138_661_681_242
+            + (1.306_754_000_470_966_8 - 0.053_509_138_661_681_242) * fraction
+    }
+    let position = magnitude / 5.0
+    let lower = Int(position.rounded(.down))
+    if lower >= mkMetersPerPointSamples.count - 1 {
+        return mkMetersPerPointSamples[mkMetersPerPointSamples.count - 1]
+    }
+    let fraction = position - Double(lower)
+    let low = mkMetersPerPointSamples[lower]
+    let high = mkMetersPerPointSamples[lower + 1]
+    return low + (high - low) * fraction
 }
 
 public func MKMapPointsPerMeterAtLatitude(_ latitude: Double) -> Double {
     let meters = MKMetersPerMapPointAtLatitude(latitude)
+    if meters == Double.infinity { return 0 }
     guard meters.isFinite, meters != 0 else { return Double.nan }
     return 1.0 / meters
 }
@@ -302,12 +334,37 @@ extension MKMapPoint {
         guard x.isFinite, y.isFinite, b.x.isFinite, b.y.isFinite else {
             return Double.nan
         }
-        let midY = (y + b.y) * 0.5
-        let latitude = mkCoordinate(for: MKMapPoint(x: 0, y: midY)).latitude
-        let metersPerPoint = MKMetersPerMapPointAtLatitude(latitude)
-        let dx = b.x - x
-        let dy = b.y - y
-        return hypot(dx, dy) * metersPerPoint
+        let aCoordinate = mkCoordinate(for: self)
+        let bCoordinate = mkCoordinate(for: b)
+        guard aCoordinate.latitude.isFinite, aCoordinate.longitude.isFinite,
+              bCoordinate.latitude.isFinite, bCoordinate.longitude.isFinite
+        else {
+            return Double.nan
+        }
+#if canImport(CoreLocation)
+        let source = CLLocation(
+            latitude: aCoordinate.latitude,
+            longitude: aCoordinate.longitude
+        )
+        let destination = CLLocation(
+            latitude: bCoordinate.latitude,
+            longitude: bCoordinate.longitude
+        )
+        return source.distance(from: destination)
+#else
+        let latitude1 = aCoordinate.latitude * Double.pi / 180.0
+        let latitude2 = bCoordinate.latitude * Double.pi / 180.0
+        let deltaLatitude = latitude2 - latitude1
+        var deltaLongitude = (bCoordinate.longitude - aCoordinate.longitude) * Double.pi / 180.0
+        deltaLongitude = deltaLongitude.truncatingRemainder(dividingBy: 2.0 * Double.pi)
+        if deltaLongitude > Double.pi { deltaLongitude -= 2.0 * Double.pi }
+        if deltaLongitude < -Double.pi { deltaLongitude += 2.0 * Double.pi }
+        let sinHalfLatitude = sin(deltaLatitude * 0.5)
+        let sinHalfLongitude = sin(deltaLongitude * 0.5)
+        let haversine = sinHalfLatitude * sinHalfLatitude
+            + cos(latitude1) * cos(latitude2) * sinHalfLongitude * sinHalfLongitude
+        return 2.0 * mkEquatorialRadiusMeters * asin(min(1.0, sqrt(max(0.0, haversine))))
+#endif
     }
 }
 
@@ -325,15 +382,14 @@ public enum MKMapProjection {
 }
 
 func mkMapPoint(latitude: Double, longitude: Double) -> MKMapPoint {
-    guard latitude.isFinite, longitude.isFinite else {
-        return MKMapPoint(x: Double.nan, y: Double.nan)
+    guard latitude.isFinite, longitude.isFinite,
+          latitude >= -90, latitude <= 90,
+          longitude >= -180, longitude <= 180
+    else {
+        return MKMapPoint(x: -1, y: -1)
     }
     let lat = mkClampLatitude(latitude)
-    var lon = longitude
-    lon = fmod(lon + 180.0, 360.0)
-    if lon < 0 { lon += 360.0 }
-    lon -= 180.0
-    let x = (lon + 180.0) / 360.0 * MKMapSize.world.width
+    let x = (longitude + 180.0) / 360.0 * MKMapSize.world.width
     let latRad = lat * Double.pi / 180.0
     let sinLat = sin(latRad)
     let y = (0.5 - log((1.0 + sinLat) / (1.0 - sinLat)) / (4.0 * Double.pi))
@@ -356,38 +412,20 @@ func mkCoordinate(for point: MKMapPoint) -> (latitude: Double, longitude: Double
 }
 
 func mkClampLatitude(_ latitude: Double) -> Double {
-    min(max(latitude, -mkMercatorMaxLatitude), mkMercatorMaxLatitude)
+    min(max(latitude, -mkProjectionMaxLatitude), mkProjectionMaxLatitude)
 }
 
-private func mkOrdered(_ a: Double, _ b: Double) -> (Double, Double) {
-    a <= b ? (a, b) : (b, a)
-}
-
-func mkFiniteSum(_ a: Double, _ b: Double) -> Double {
-    guard a.isFinite, b.isFinite else { return Double.infinity }
-    let sum = a + b
-    return sum.isFinite ? sum : Double.infinity
-}
-
-func mkFiniteProduct(_ a: Double, _ b: Double) -> Double {
-    guard a.isFinite, b.isFinite else { return Double.infinity }
-    let product = a * b
-    return product.isFinite ? product : Double.infinity
-}
-
-func mkFiniteDifference(_ a: Double, _ b: Double) -> Double {
-    guard a.isFinite, b.isFinite else { return Double.infinity }
-    let difference = a - b
-    return difference.isFinite ? difference : Double.infinity
+private func mkDivideAmount(_ amount: Double, dimension: Double) -> Double {
+    if amount.isNaN { return Double.nan }
+    if amount < 0 { return 0 }
+    if amount > dimension { return dimension }
+    return amount
 }
 
 private func mkNonEmptyOverlap(_ a: MKMapRect, _ b: MKMapRect) -> Bool {
     if a.isNull || b.isNull || a.isEmpty || b.isEmpty { return false }
-    let (left1, right1) = mkOrdered(a.minX, a.maxX)
-    let (left2, right2) = mkOrdered(b.minX, b.maxX)
-    let (top1, bottom1) = mkOrdered(a.minY, a.maxY)
-    let (top2, bottom2) = mkOrdered(b.minY, b.maxY)
-    return left1 <= right2 && left2 <= right1 && top1 <= bottom2 && top2 <= bottom1
+    return a.minX < b.maxX && b.minX < a.maxX
+        && a.minY < b.maxY && b.minY < a.maxY
 }
 
 private func mkFormat(_ value: Double) -> String {

@@ -100,10 +100,12 @@ func testShapeAndCluster() {
     precondition(abs(located.coordinate.longitude + 122.0090) < 1e-9)
     let roundTrip = MKMapPoint(cupertino).coordinate
     precondition(abs(roundTrip.latitude - 37.3349) < 1e-6)
+#if os(Linux)
     let placemark = MKPlacemark(coordinate: cupertino)
     precondition(abs(placemark.coordinate.latitude - 37.3349) < 1e-9)
     let item = MKMapItem(placemark: placemark)
     precondition(abs(item.placemark.coordinate.latitude - 37.3349) < 1e-9)
+#endif
     let overlay = MKTileOverlay(urlTemplate: nil)
     precondition(overlay.coordinate.latitude.isFinite || overlay.coordinate.latitude.isInfinite)
     let members = MKClusterAnnotation(memberAnnotations: [located])

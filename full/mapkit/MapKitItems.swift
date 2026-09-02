@@ -246,7 +246,11 @@ open class MKMapItem: NSObject {
     open var addressRepresentations: MKAddressRepresentations?
     open var timeZone: TimeZone?
 #if canImport(CoreLocation)
-    var storedPlacemark = MKPlacemark(coordinate: kCLLocationCoordinate2DInvalid)
+#if os(Linux)
+    var storedPlacemark: MKPlacemark? = MKPlacemark(coordinate: kCLLocationCoordinate2DInvalid)
+#else
+    var storedPlacemark: MKPlacemark?
+#endif
 #endif
 
     public override init() {

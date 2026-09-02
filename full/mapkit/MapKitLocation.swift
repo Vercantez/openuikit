@@ -59,12 +59,11 @@ open class MKPlacemark: CLPlacemark, MKAnnotation, @unchecked Sendable {
 
     public init(coordinate: CLLocationCoordinate2D) {
         self.annotationCoordinate = coordinate
-        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
 #if os(Linux)
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         super.init(location: location)
 #else
-        super.init()
-        _ = location
+        fatalError("MKPlacemark is a Linux implementation; use Apple's MapKit on Apple platforms")
 #endif
     }
 
@@ -75,6 +74,13 @@ open class MKPlacemark: CLPlacemark, MKAnnotation, @unchecked Sendable {
         self.init(coordinate: coordinate)
         _ = addressDictionary
     }
+
+#if !os(Linux)
+    public required init?(coder: NSCoder) {
+        self.annotationCoordinate = kCLLocationCoordinate2DInvalid
+        super.init(coder: coder)
+    }
+#endif
 
     open var coordinate: CLLocationCoordinate2D { annotationCoordinate }
 
@@ -118,7 +124,12 @@ extension MKMapItem {
         self.storedPlacemark = MKPlacemark(coordinate: location.coordinate)
     }
 
-    public var placemark: MKPlacemark { storedPlacemark }
+    public var placemark: MKPlacemark {
+        guard let storedPlacemark else {
+            fatalError("MKMapItem has no placemark")
+        }
+        return storedPlacemark
+    }
 }
 
 extension MKMapCamera {
