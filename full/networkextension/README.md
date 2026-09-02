@@ -17,12 +17,25 @@ step.
   counterfeit modern `Network` types.
 - Managers expose the Apple shared/singleton identity (`NEVPNManager.shared()`,
   `NEFilterManager.shared()`, and the rest). Integer enum cases compile and
-  round-trip. Error structs throw typed fail-closed codes.
+  round-trip. Audited raw values match the Xcode 26.1 Apple oracle:
+  `NEURLFilter.Verdict` is `unknown=1, allow=2, deny=3`;
+  `NEURLFilterManager.Error` is sequential `1...14` ending at `unknown=14`;
+  `NEURLFilterManager.Status` remains `0...4`; `NEVPNConnectionError` is
+  sequential `1...19` in header declaration order (client certificates before
+  `pluginFailed`). Error structs throw typed fail-closed codes.
+- Configuration families that Apple marks `NSCopying` implement
+  `copy(with:)` with class-preserving in-memory copies. `NSCoding` /
+  `NSSecureCoding` are deferred: isolated Linux Foundation has no `NSCoder`.
+- `NEURLFilter.init` is `@available(*, unavailable)`, matching the pinned
+  Apple header. Clients cannot construct `NEURLFilter`; `verdict(for:)` is a
+  class method.
 - Asynchronous completions and delegate deliveries are enqueued exactly once on
   `NetworkExtensionHostCallback.queue`
   (`org.openuikit.NetworkExtension.host-callback`) after the calling function
-  returns. That scheduler is a Linux host control. It is not Apple's
-  `nesessionmanager` queue and is not evidence of Darwin callback identity.
+  returns. Tests hold that serial delivery gate, invoke the API, record return
+  under a lock, then release and prove exactly one callback. That scheduler is a
+  Linux host control. It is not Apple's `nesessionmanager` queue and is not
+  evidence of Darwin callback identity.
 - Graph-absent public constructors for `NWPath`, `NWTCPConnection`,
   `NWUDPSession`, `NEFlowMetaData`, and `NEHotspotNetwork` are `@_spi(OpenUIKitHost)`
   only. Graph-listed inits such as `NWHostEndpoint.init(hostname:port:)` stay

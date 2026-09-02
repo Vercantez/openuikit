@@ -11,13 +11,22 @@ import AccessorySetupKit
 import ExtensionFoundation
 #endif
 
-open class NEPrivateLTENetwork: NSObject {
+open class NEPrivateLTENetwork: NSObject, NSCopying {
     open var mobileCountryCode = ""
     open var mobileNetworkCode = ""
     open var trackingAreaCode: String?
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let copy = NEPrivateLTENetwork()
+        copy.mobileCountryCode = mobileCountryCode
+        copy.mobileNetworkCode = mobileNetworkCode
+        copy.trackingAreaCode = trackingAreaCode
+        return copy
+    }
 }
 
-open class NEHotspotEAPSettings: NSObject {
+open class NEHotspotEAPSettings: NSObject, NSCopying {
     public enum TLSVersion: Int, Sendable, Hashable {
         case version1_0 = 0
         case version1_1 = 1
@@ -60,9 +69,23 @@ open class NEHotspotEAPSettings: NSObject {
         _ = certificates
         return false
     }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let copy = NEHotspotEAPSettings()
+        copy.outerIdentity = outerIdentity
+        copy.password = password
+        copy.preferredTLSVersion = preferredTLSVersion
+        copy.supportedEAPTypes = supportedEAPTypes
+        copy.isTLSClientCertificateRequired = isTLSClientCertificateRequired
+        copy.trustedServerNames = trustedServerNames
+        copy.ttlsInnerAuthenticationType = ttlsInnerAuthenticationType
+        copy.username = username
+        return copy
+    }
 }
 
-open class NEHotspotHS20Settings: NSObject {
+open class NEHotspotHS20Settings: NSObject, NSCopying {
     public let domainName: String
     open var isRoamingEnabled: Bool
     open var mccAndMNCs: [String] = []
@@ -74,9 +97,21 @@ open class NEHotspotHS20Settings: NSObject {
         isRoamingEnabled = roamingEnabled
         super.init()
     }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let copy = NEHotspotHS20Settings(
+            domainName: domainName,
+            roamingEnabled: isRoamingEnabled
+        )
+        copy.mccAndMNCs = mccAndMNCs
+        copy.naiRealmNames = naiRealmNames
+        copy.roamingConsortiumOIs = roamingConsortiumOIs
+        return copy
+    }
 }
 
-open class NEHotspotConfiguration: NSObject {
+open class NEHotspotConfiguration: NSObject, NSCopying {
     public let ssid: String
     public let ssidPrefix: String
     open var hidden = false
@@ -163,6 +198,20 @@ open class NEHotspotConfiguration: NSObject {
         ssidPrefix = ""
         super.init()
         _ = hs20Settings
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let copy: NEHotspotConfiguration
+        if !ssidPrefix.isEmpty && ssid.isEmpty {
+            copy = NEHotspotConfiguration(ssidPrefix: ssidPrefix)
+        } else {
+            copy = NEHotspotConfiguration(ssid: ssid)
+        }
+        copy.hidden = hidden
+        copy.joinOnce = joinOnce
+        copy.lifeTimeInDays = lifeTimeInDays
+        return copy
     }
 }
 

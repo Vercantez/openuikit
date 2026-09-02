@@ -3,8 +3,19 @@ import Foundation
 import FoundationNetworking
 #endif
 
-open class NEFilterVerdict: NSObject {
+open class NEFilterVerdict: NSObject, NSCopying {
     open var shouldReport = false
+
+    func populateVerdictCopy(_ copy: NEFilterVerdict) {
+        copy.shouldReport = shouldReport
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let copy = NEFilterVerdict()
+        populateVerdictCopy(copy)
+        return copy
+    }
 }
 
 open class NEFilterNewFlowVerdict: NEFilterVerdict {
@@ -34,11 +45,22 @@ open class NEFilterNewFlowVerdict: NEFilterVerdict {
         _ = urlAppendMapKey
         return NEFilterNewFlowVerdict()
     }
+
+    open override func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let copy = NEFilterNewFlowVerdict()
+        populateVerdictCopy(copy)
+        return copy
+    }
 }
 
 open class NEFilterDataVerdict: NEFilterVerdict {
+    let passBytes: Int
+    let peekBytes: Int
+
     public init(passBytes: Int, peekBytes: Int) {
-        _ = (passBytes, peekBytes)
+        self.passBytes = passBytes
+        self.peekBytes = peekBytes
         super.init()
     }
 
@@ -61,6 +83,13 @@ open class NEFilterDataVerdict: NEFilterVerdict {
         _ = (remediationURLMapKey, remediationButtonTextMapKey)
         return NEFilterDataVerdict(passBytes: 0, peekBytes: 0)
     }
+
+    open override func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let copy = NEFilterDataVerdict(passBytes: passBytes, peekBytes: peekBytes)
+        populateVerdictCopy(copy)
+        return copy
+    }
 }
 
 open class NEFilterControlVerdict: NEFilterVerdict {
@@ -75,16 +104,40 @@ open class NEFilterControlVerdict: NEFilterVerdict {
     }
 
     open class func updateRules() -> NEFilterControlVerdict { NEFilterControlVerdict() }
+
+    open override func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let copy = NEFilterControlVerdict()
+        populateVerdictCopy(copy)
+        return copy
+    }
 }
 
 open class NEFilterRemediationVerdict: NEFilterVerdict {
     open class func allow() -> NEFilterRemediationVerdict { NEFilterRemediationVerdict() }
     open class func drop() -> NEFilterRemediationVerdict { NEFilterRemediationVerdict() }
     open class func needRules() -> NEFilterRemediationVerdict { NEFilterRemediationVerdict() }
+
+    open override func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let copy = NEFilterRemediationVerdict()
+        populateVerdictCopy(copy)
+        return copy
+    }
 }
 
-open class NEFilterFlow: NSObject {
-    private let flowIdentifier = UUID()
+open class NEFilterFlow: NSObject, NSCopying {
+    private let flowIdentifier: UUID
+
+    public override init() {
+        flowIdentifier = UUID()
+        super.init()
+    }
+
+    init(copiedIdentifier: UUID) {
+        flowIdentifier = copiedIdentifier
+        super.init()
+    }
 
     open var url: URL? { nil }
     open var direction: NETrafficDirection { .any }
@@ -92,12 +145,30 @@ open class NEFilterFlow: NSObject {
     open var sourceAppIdentifier: String? { nil }
     open var sourceAppUniqueIdentifier: Data? { nil }
     open var sourceAppVersion: String? { nil }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        return NEFilterFlow(copiedIdentifier: flowIdentifier)
+    }
 }
 
 open class NEFilterBrowserFlow: NEFilterFlow {
     open var parentURL: URL? { nil }
     open var request: URLRequest? { nil }
     open var response: URLResponse? { nil }
+
+    public override init() {
+        super.init()
+    }
+
+    override init(copiedIdentifier: UUID) {
+        super.init(copiedIdentifier: copiedIdentifier)
+    }
+
+    open override func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        return NEFilterBrowserFlow(copiedIdentifier: identifier)
+    }
 }
 
 open class NEFilterSocketFlow: NEFilterFlow {
@@ -109,9 +180,22 @@ open class NEFilterSocketFlow: NEFilterFlow {
     open var socketType: Int32 { 0 }
     open var localFlowEndpoint: NWEndpoint? { localEndpoint }
     open var remoteFlowEndpoint: NWEndpoint? { remoteEndpoint }
+
+    public override init() {
+        super.init()
+    }
+
+    override init(copiedIdentifier: UUID) {
+        super.init(copiedIdentifier: copiedIdentifier)
+    }
+
+    open override func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        return NEFilterSocketFlow(copiedIdentifier: identifier)
+    }
 }
 
-open class NEFilterReport: NSObject {
+open class NEFilterReport: NSObject, NSCopying {
     public enum Event: Int, Sendable, Hashable {
         case newFlow = 1
         case dataDecision = 2
@@ -123,9 +207,14 @@ open class NEFilterReport: NSObject {
     open var bytesOutboundCount: Int { 0 }
     open var event: Event { .newFlow }
     open var flow: NEFilterFlow? { nil }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        return NEFilterReport()
+    }
 }
 
-open class NEFilterProviderConfiguration: NSObject {
+open class NEFilterProviderConfiguration: NSObject, NSCopying {
     open var filterBrowsers = false
     open var filterSockets = false
     open var identityReference: Data?
@@ -134,6 +223,20 @@ open class NEFilterProviderConfiguration: NSObject {
     open var serverAddress: String?
     open var username: String?
     open var vendorConfiguration: [String: Any]?
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let copy = NEFilterProviderConfiguration()
+        copy.filterBrowsers = filterBrowsers
+        copy.filterSockets = filterSockets
+        copy.identityReference = identityReference
+        copy.organization = organization
+        copy.passwordReference = passwordReference
+        copy.serverAddress = serverAddress
+        copy.username = username
+        copy.vendorConfiguration = _NECopiedDictionary(vendorConfiguration)
+        return copy
+    }
 }
 
 open class NEFilterManager: NSObject {

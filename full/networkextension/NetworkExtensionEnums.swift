@@ -211,17 +211,17 @@ public enum NEVPNConnectionError: Int, Sendable, Hashable, Error {
     case serverNotResponding = 6
     case serverDead = 7
     case authenticationFailed = 8
-    case pluginFailed = 9
-    case pluginDisabled = 10
-    case negotiationFailed = 11
-    case serverDisconnected = 12
-    case serverCertificateInvalid = 13
-    case serverCertificateNotYetValid = 14
-    case serverCertificateExpired = 15
-    case clientCertificateInvalid = 16
-    case clientCertificateNotYetValid = 17
-    case clientCertificateExpired = 18
-    case configurationNotFound = 19
+    case clientCertificateInvalid = 9
+    case clientCertificateNotYetValid = 10
+    case clientCertificateExpired = 11
+    case pluginFailed = 12
+    case configurationNotFound = 13
+    case pluginDisabled = 14
+    case negotiationFailed = 15
+    case serverDisconnected = 16
+    case serverCertificateInvalid = 17
+    case serverCertificateNotYetValid = 18
+    case serverCertificateExpired = 19
 }
 
 public enum NEHotspotConfigurationError: Int, Sendable, Hashable, Error {

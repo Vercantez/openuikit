@@ -10,6 +10,22 @@ private func requireVPNError(_ error: Error?, code: NEVPNError.Code) {
     precondition(NEVPNError.errorDomain == NEVPNErrorDomain)
 }
 
+private final class LockedState<T>: @unchecked Sendable {
+    private let lock = NSLock()
+    private var value: T
+
+    init(_ value: T) {
+        self.value = value
+    }
+
+    @discardableResult
+    func withLock<R>(_ body: (inout T) -> R) -> R {
+        lock.lock()
+        defer { lock.unlock() }
+        return body(&value)
+    }
+}
+
 private func drainHostQueue() async {
     await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
         NetworkExtensionHostCallback.schedule {
@@ -18,25 +34,60 @@ private func drainHostQueue() async {
     }
 }
 
-/// Wait for an asynchronous NetworkExtension completion. The probed API must
-/// return before the handler runs, and the handler must run on
-/// `NetworkExtensionHostCallback.queue`. That queue is a Linux host control,
-/// not Apple `nesessionmanager` identity.
+private struct HostCallbackProbeState {
+    var returned = false
+    var count = 0
+    var captured = false
+}
+
+/// Hold host delivery, invoke a completion API, record return under a lock,
+/// then release. The callback cannot start until after return is recorded
+/// because work stays off `NetworkExtensionHostCallback.queue` while held.
 private func awaitHostCallback<T>(
     _ body: (@escaping (T) -> Void) -> Void
 ) async -> T {
     await withCheckedContinuation { continuation in
-        var returned = false
+        let state = LockedState(HostCallbackProbeState())
+        NetworkExtensionHostCallback.holdDelivery()
         body { value in
-            precondition(returned, "asynchronous completion ran inline")
             precondition(
                 NetworkExtensionHostCallback.isCurrentQueue,
                 "completion was not delivered on NetworkExtensionHostCallback.queue"
             )
-            continuation.resume(returning: value)
+            let shouldResume = state.withLock { snapshot -> Bool in
+                precondition(snapshot.returned, "callback before API return was recorded")
+                snapshot.count += 1
+                precondition(snapshot.count == 1, "callback delivered more than once")
+                if snapshot.captured {
+                    return false
+                }
+                snapshot.captured = true
+                return true
+            }
+            if shouldResume {
+                continuation.resume(returning: value)
+            }
         }
-        returned = true
+        let countBeforeRelease = state.withLock { snapshot -> Int in
+            snapshot.returned = true
+            return snapshot.count
+        }
+        precondition(countBeforeRelease == 0, "callback ran before releaseDelivery")
+        NetworkExtensionHostCallback.releaseDelivery()
     }
+}
+
+private func requireCopy<T: NSObject & NSCopying>(
+    _ value: T,
+    as type: T.Type = T.self,
+    _ check: (T, T) -> Void
+) {
+    guard let copied = value.copy(with: nil) as? T else {
+        fatalError("copy(with:) did not return \(type)")
+    }
+    precondition(copied !== value)
+    precondition(Swift.type(of: copied) == Swift.type(of: value))
+    check(value, copied)
 }
 
 private final class PushCallDelegate: NSObject, NEAppPushDelegate {
@@ -66,8 +117,11 @@ private final class PushCallDelegate: NSObject, NEAppPushDelegate {
 struct NetworkExtensionRuntime {
     static func main() async {
         exerciseConstantsAndNotifications()
+        exerciseAuditedRawValues()
         exerciseVPNConfiguration()
+        exerciseCopying()
         await exerciseFailClosedManagers()
+        await exerciseFailClosedCompletions()
         exerciseRoutesAndSettings()
         exerciseFilterVerdicts()
         exerciseHotspotObjects()
@@ -120,6 +174,61 @@ struct NetworkExtensionRuntime {
         precondition(NEAppProxyFlowError.notConnected.rawValue == 1)
         precondition(NETunnelProviderError.networkSettingsFailed.rawValue == 3)
         precondition(NEAppPushManagerError.inactiveSession.rawValue == 4)
+    }
+
+    static func exerciseAuditedRawValues() {
+        precondition(NEURLFilter.Verdict.unknown.rawValue == 1)
+        precondition(NEURLFilter.Verdict.allow.rawValue == 2)
+        precondition(NEURLFilter.Verdict.deny.rawValue == 3)
+        precondition(NEURLFilter.Verdict(rawValue: 0) == nil)
+        precondition(NEURLFilter.Verdict(rawValue: 1) == .unknown)
+        precondition(NEURLFilter.Verdict(rawValue: 2) == .allow)
+        precondition(NEURLFilter.Verdict(rawValue: 3) == .deny)
+
+        precondition(NEURLFilterManager.Status.invalid.rawValue == 0)
+        precondition(NEURLFilterManager.Status.stopped.rawValue == 1)
+        precondition(NEURLFilterManager.Status.starting.rawValue == 2)
+        precondition(NEURLFilterManager.Status.running.rawValue == 3)
+        precondition(NEURLFilterManager.Status.stopping.rawValue == 4)
+
+        precondition(NEURLFilterManager.Error.configurationUnchanged.rawValue == 1)
+        precondition(NEURLFilterManager.Error.configurationInvalid.rawValue == 2)
+        precondition(NEURLFilterManager.Error.configurationDisabled.rawValue == 3)
+        precondition(NEURLFilterManager.Error.configurationStale.rawValue == 4)
+        precondition(NEURLFilterManager.Error.configurationCannotBeRemoved.rawValue == 5)
+        precondition(NEURLFilterManager.Error.configurationPermissionDenied.rawValue == 6)
+        precondition(NEURLFilterManager.Error.configurationInternalError.rawValue == 7)
+        precondition(NEURLFilterManager.Error.configurationNotLoaded.rawValue == 8)
+        precondition(NEURLFilterManager.Error.serverSetupIncomplete.rawValue == 9)
+        precondition(NEURLFilterManager.Error.internalError.rawValue == 10)
+        precondition(NEURLFilterManager.Error.extensionCancelled.rawValue == 11)
+        precondition(NEURLFilterManager.Error.extensionNotFound.rawValue == 12)
+        precondition(NEURLFilterManager.Error.extensionFailedToLoad.rawValue == 13)
+        precondition(NEURLFilterManager.Error.unknown.rawValue == 14)
+        precondition(NEURLFilterManager.Error(rawValue: 0) == nil)
+
+        precondition(NEVPNConnectionError.overslept.rawValue == 1)
+        precondition(NEVPNConnectionError.noNetworkAvailable.rawValue == 2)
+        precondition(NEVPNConnectionError.unrecoverableNetworkChange.rawValue == 3)
+        precondition(NEVPNConnectionError.configurationFailed.rawValue == 4)
+        precondition(NEVPNConnectionError.serverAddressResolutionFailed.rawValue == 5)
+        precondition(NEVPNConnectionError.serverNotResponding.rawValue == 6)
+        precondition(NEVPNConnectionError.serverDead.rawValue == 7)
+        precondition(NEVPNConnectionError.authenticationFailed.rawValue == 8)
+        precondition(NEVPNConnectionError.clientCertificateInvalid.rawValue == 9)
+        precondition(NEVPNConnectionError.clientCertificateNotYetValid.rawValue == 10)
+        precondition(NEVPNConnectionError.clientCertificateExpired.rawValue == 11)
+        precondition(NEVPNConnectionError.pluginFailed.rawValue == 12)
+        precondition(NEVPNConnectionError.configurationNotFound.rawValue == 13)
+        precondition(NEVPNConnectionError.pluginDisabled.rawValue == 14)
+        precondition(NEVPNConnectionError.negotiationFailed.rawValue == 15)
+        precondition(NEVPNConnectionError.serverDisconnected.rawValue == 16)
+        precondition(NEVPNConnectionError.serverCertificateInvalid.rawValue == 17)
+        precondition(NEVPNConnectionError.serverCertificateNotYetValid.rawValue == 18)
+        precondition(NEVPNConnectionError.serverCertificateExpired.rawValue == 19)
+        precondition(NEVPNConnectionError(rawValue: 0) == nil)
+        precondition(NEVPNConnectionError(rawValue: 12) == .pluginFailed)
+        precondition(NEVPNConnectionError(rawValue: 9) == .clientCertificateInvalid)
     }
 
     static func exerciseVPNConfiguration() {
@@ -232,6 +341,278 @@ struct NetworkExtensionRuntime {
         precondition(appRule.matchSigningIdentifier == "example.app")
     }
 
+    static func exerciseCopying() {
+        let appRule = NEAppRule(signingIdentifier: "example.app")
+        appRule.matchPath = "/usr/bin/false"
+        requireCopy(appRule) { original, copied in
+            precondition(copied.matchSigningIdentifier == original.matchSigningIdentifier)
+            precondition(copied.matchPath == original.matchPath)
+        }
+
+        let dns = NEDNSSettings(servers: ["1.1.1.1"])
+        dns.matchDomains = ["example.invalid"]
+        requireCopy(dns) { original, copied in
+            precondition(copied.servers == original.servers)
+            precondition(copied.matchDomains == original.matchDomains)
+            precondition(copied.dnsProtocol == .cleartext)
+        }
+        let doh = NEDNSOverHTTPSSettings(servers: ["1.1.1.1"])
+        doh.serverURL = URL(string: "https://dns.example.invalid/dns-query")
+        requireCopy(doh) { original, copied in
+            precondition(copied.serverURL == original.serverURL)
+            precondition(copied.dnsProtocol == .HTTPS)
+        }
+        let dot = NEDNSOverTLSSettings(servers: ["1.1.1.1"])
+        dot.serverName = "dns.example.invalid"
+        requireCopy(dot) { original, copied in
+            precondition(copied.serverName == original.serverName)
+            precondition(copied.dnsProtocol == .TLS)
+        }
+
+        let proxyProtocol = NEDNSProxyProviderProtocol()
+        proxyProtocol.providerBundleIdentifier = "example.dns-proxy"
+        requireCopy(proxyProtocol) { original, copied in
+            precondition(copied.providerBundleIdentifier == original.providerBundleIdentifier)
+        }
+
+        let evaluateRule = NEEvaluateConnectionRule(
+            matchDomains: ["example.invalid"],
+            andAction: .connectIfNeeded
+        )
+        evaluateRule.probeURL = URL(string: "https://probe.example.invalid")
+        requireCopy(evaluateRule) { original, copied in
+            precondition(copied.matchDomains == original.matchDomains)
+            precondition(copied.action == original.action)
+            precondition(copied.probeURL == original.probeURL)
+        }
+
+        let allow = NEFilterNewFlowVerdict.allow()
+        allow.shouldReport = true
+        requireCopy(allow) { original, copied in
+            precondition(copied.shouldReport == original.shouldReport)
+        }
+        requireCopy(NEFilterDataVerdict(passBytes: 16, peekBytes: 32)) { _, copied in
+            _ = copied
+        }
+        requireCopy(NEFilterControlVerdict.drop(withUpdateRules: false)) { _, copied in
+            _ = copied
+        }
+        requireCopy(NEFilterRemediationVerdict.drop()) { _, copied in
+            _ = copied
+        }
+        requireCopy(NEFilterVerdict()) { original, copied in
+            precondition(copied.shouldReport == original.shouldReport)
+        }
+
+        let flow = NEFilterFlow()
+        requireCopy(flow) { original, copied in
+            precondition(copied.identifier == original.identifier)
+            precondition(copied.direction == .any)
+        }
+        requireCopy(NEFilterBrowserFlow()) { original, copied in
+            precondition(copied.identifier == original.identifier)
+        }
+        requireCopy(NEFilterSocketFlow()) { original, copied in
+            precondition(copied.identifier == original.identifier)
+        }
+
+        let report = NEFilterReport()
+        requireCopy(report) { original, copied in
+            precondition(copied.action == original.action)
+            precondition(copied.event == original.event)
+        }
+
+        let filterConfig = NEFilterProviderConfiguration()
+        filterConfig.filterSockets = true
+        filterConfig.organization = "Example"
+        requireCopy(filterConfig) { original, copied in
+            precondition(copied.filterSockets == original.filterSockets)
+            precondition(copied.organization == original.organization)
+        }
+
+        let metadata = NEFlowMetaData(
+            sourceAppSigningIdentifier: "example.app",
+            sourceAppUniqueIdentifier: Data([0x01])
+        )
+        requireCopy(metadata) { original, copied in
+            precondition(copied.sourceAppSigningIdentifier == original.sourceAppSigningIdentifier)
+            precondition(copied.sourceAppUniqueIdentifier == original.sourceAppUniqueIdentifier)
+        }
+
+        let hotspot = NEHotspotConfiguration(ssid: "Cafe")
+        hotspot.joinOnce = true
+        requireCopy(hotspot) { original, copied in
+            precondition(copied.ssid == original.ssid)
+            precondition(copied.joinOnce == original.joinOnce)
+        }
+        let eap = NEHotspotEAPSettings()
+        eap.username = "user"
+        eap.preferredTLSVersion = .version1_2
+        requireCopy(eap) { original, copied in
+            precondition(copied.username == original.username)
+            precondition(copied.preferredTLSVersion == original.preferredTLSVersion)
+        }
+        let hs20 = NEHotspotHS20Settings(domainName: "example.invalid", roamingEnabled: true)
+        hs20.naiRealmNames = ["realm"]
+        requireCopy(hs20) { original, copied in
+            precondition(copied.domainName == original.domainName)
+            precondition(copied.isRoamingEnabled == original.isRoamingEnabled)
+            precondition(copied.naiRealmNames == original.naiRealmNames)
+        }
+
+        let v4Route = NEIPv4Route(destinationAddress: "10.0.0.0", subnetMask: "255.255.255.0")
+        v4Route.gatewayAddress = "10.0.0.1"
+        requireCopy(v4Route) { original, copied in
+            precondition(copied.destinationAddress == original.destinationAddress)
+            precondition(copied.gatewayAddress == original.gatewayAddress)
+        }
+        let v6Route = NEIPv6Route(destinationAddress: "fd00::", networkPrefixLength: 64)
+        requireCopy(v6Route) { original, copied in
+            precondition(copied.destinationAddress == original.destinationAddress)
+        }
+        let v4 = NEIPv4Settings(addresses: ["10.0.0.2"], subnetMasks: ["255.255.255.0"])
+        v4.includedRoutes = [v4Route]
+        requireCopy(v4) { original, copied in
+            precondition(copied.addresses == original.addresses)
+            precondition(copied.includedRoutes?.first?.destinationAddress == "10.0.0.0")
+            precondition(copied.includedRoutes?.first !== original.includedRoutes?.first)
+        }
+        let v6 = NEIPv6Settings(addresses: ["fd00::2"], networkPrefixLengths: [64])
+        requireCopy(v6) { original, copied in
+            precondition(copied.addresses == original.addresses)
+        }
+
+        let connect = NEOnDemandRuleConnect()
+        connect.interfaceTypeMatch = .wiFi
+        connect.ssidMatch = ["Example"]
+        requireCopy(connect) { original, copied in
+            precondition(copied.action == .connect)
+            precondition(copied.interfaceTypeMatch == original.interfaceTypeMatch)
+            precondition(copied.ssidMatch == original.ssidMatch)
+        }
+        requireCopy(NEOnDemandRuleDisconnect()) { _, copied in
+            precondition(copied.action == .disconnect)
+        }
+        requireCopy(NEOnDemandRuleIgnore()) { _, copied in
+            precondition(copied.action == .ignore)
+        }
+        let evaluate = NEOnDemandRuleEvaluateConnection()
+        evaluate.connectionRules = [evaluateRule]
+        requireCopy(evaluate) { original, copied in
+            precondition(copied.action == .evaluateConnection)
+            precondition(copied.connectionRules?.first?.action == .connectIfNeeded)
+            precondition(copied.connectionRules?.first !== original.connectionRules?.first)
+        }
+
+        let packet = NEPacket(data: Data([0x45]), protocolFamily: NetworkExtensionPOSIX.inetFamily)
+        requireCopy(packet) { original, copied in
+            precondition(copied.data == original.data)
+            precondition(copied.protocolFamily == original.protocolFamily)
+        }
+
+        let settings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "203.0.113.1")
+        settings.mtu = 1280
+        settings.ipv4Settings = v4
+        requireCopy(settings) { original, copied in
+            precondition(copied.tunnelRemoteAddress == original.tunnelRemoteAddress)
+            precondition(copied.mtu?.intValue == 1280)
+            precondition(copied.ipv4Settings?.addresses == original.ipv4Settings?.addresses)
+            precondition(copied.ipv4Settings !== original.ipv4Settings)
+        }
+
+        let lte = NEPrivateLTENetwork()
+        lte.mobileCountryCode = "310"
+        lte.mobileNetworkCode = "260"
+        requireCopy(lte) { original, copied in
+            precondition(copied.mobileCountryCode == original.mobileCountryCode)
+            precondition(copied.mobileNetworkCode == original.mobileNetworkCode)
+        }
+
+        let proxyServer = NEProxyServer(address: "127.0.0.1", port: 8080)
+        proxyServer.authenticationRequired = true
+        requireCopy(proxyServer) { original, copied in
+            precondition(copied.address == original.address)
+            precondition(copied.port == original.port)
+            precondition(copied.authenticationRequired == original.authenticationRequired)
+        }
+        let proxy = NEProxySettings()
+        proxy.httpsEnabled = true
+        proxy.httpsServer = proxyServer
+        requireCopy(proxy) { original, copied in
+            precondition(copied.httpsEnabled == original.httpsEnabled)
+            precondition(copied.httpsServer?.port == original.httpsServer?.port)
+            precondition(copied.httpsServer !== original.httpsServer)
+        }
+
+        let relay = NERelay()
+        relay.http3RelayURL = URL(string: "https://relay.example.invalid")
+        requireCopy(relay) { original, copied in
+            precondition(copied.http3RelayURL == original.http3RelayURL)
+        }
+
+        let tunnelProtocol = NETunnelProviderProtocol()
+        tunnelProtocol.providerBundleIdentifier = "example.packet-tunnel"
+        tunnelProtocol.serverAddress = "vpn.example.invalid"
+        requireCopy(tunnelProtocol) { original, copied in
+            precondition(copied.providerBundleIdentifier == original.providerBundleIdentifier)
+            precondition(copied.serverAddress == original.serverAddress)
+        }
+
+        let ipsec = NEVPNProtocolIPSec()
+        ipsec.authenticationMethod = .sharedSecret
+        ipsec.serverAddress = "ipsec.example.invalid"
+        requireCopy(ipsec) { original, copied in
+            precondition(copied.authenticationMethod == original.authenticationMethod)
+            precondition(copied.serverAddress == original.serverAddress)
+        }
+
+        let ike = NEVPNProtocolIKEv2()
+        ike.serverAddress = "vpn.example.invalid"
+        ike.enablePFS = true
+        ike.ikeSecurityAssociationParameters.diffieHellmanGroup = .group14
+        ike.ppkConfiguration = NEVPNIKEv2PPKConfiguration(
+            identifier: "ppk",
+            keychainReference: Data([0x01])
+        )
+        ike.ppkConfiguration?.isMandatory = false
+        requireCopy(ike) { original, copied in
+            precondition(copied.serverAddress == original.serverAddress)
+            precondition(copied.enablePFS == original.enablePFS)
+            precondition(copied.ikeSecurityAssociationParameters.diffieHellmanGroup == .group14)
+            precondition(copied.ikeSecurityAssociationParameters !== original.ikeSecurityAssociationParameters)
+            precondition(copied.ppkConfiguration?.identifier == "ppk")
+            precondition(copied.ppkConfiguration?.isMandatory == false)
+            precondition(copied.ppkConfiguration !== original.ppkConfiguration)
+        }
+
+        let ppk = NEVPNIKEv2PPKConfiguration(identifier: "ppk", keychainReference: Data([0x02]))
+        requireCopy(ppk) { original, copied in
+            precondition(copied.identifier == original.identifier)
+            precondition(copied.keychainReference == original.keychainReference)
+        }
+
+        let sa = NEVPNIKEv2SecurityAssociationParameters()
+        sa.lifetimeMinutes = 60
+        requireCopy(sa) { original, copied in
+            precondition(copied.lifetimeMinutes == original.lifetimeMinutes)
+        }
+
+        let host = NWHostEndpoint(hostname: "example.invalid", port: "443")
+        requireCopy(host) { original, copied in
+            precondition(copied.hostname == original.hostname)
+            precondition(copied.port == original.port)
+        }
+        let bonjour = NWBonjourServiceEndpoint(name: "printer", type: "_ipp._tcp", domain: "local.")
+        requireCopy(bonjour) { original, copied in
+            precondition(copied.name == original.name)
+            precondition(copied.type == original.type)
+            precondition(copied.domain == original.domain)
+        }
+        requireCopy(NWEndpoint()) { _, copied in
+            _ = copied
+        }
+    }
+
     static func exerciseFailClosedManagers() async {
         let vpnLoad = await awaitHostCallback { handler in
             NEVPNManager.shared().loadFromPreferences(completionHandler: handler)
@@ -333,14 +714,146 @@ struct NetworkExtensionRuntime {
         do {
             try await NEURLFilterManager.shared.loadFromPreferences()
             fatalError("URL filter load must fail closed")
-        } catch NEURLFilterManager.Error.configurationNotLoaded {
-            ()
+        } catch let error as NEURLFilterManager.Error {
+            precondition(error == .configurationNotLoaded)
+            precondition(error.rawValue == 8)
         } catch {
             fatalError("unexpected URL filter error \(error)")
         }
         let urlFilterStatus = await NEURLFilterManager.shared.status
         precondition(urlFilterStatus == .invalid)
         precondition(NEURLFilterManager.shared.shouldFailClosed)
+    }
+
+    static func exerciseFailClosedCompletions() async {
+        let vpnSave = await awaitHostCallback { handler in
+            NEVPNManager.shared().saveToPreferences(completionHandler: handler)
+        }
+        requireVPNError(vpnSave, code: .configurationReadWriteFailed)
+        let vpnRemove = await awaitHostCallback { handler in
+            NEVPNManager.shared().removeFromPreferences(completionHandler: handler)
+        }
+        requireVPNError(vpnRemove, code: .configurationReadWriteFailed)
+
+        let filterSave = await awaitHostCallback { handler in
+            NEFilterManager.shared().saveToPreferences(completionHandler: handler)
+        }
+        guard let filterSaveError = filterSave as? NSError else {
+            fatalError("expected NSError from filter save")
+        }
+        precondition(filterSaveError.domain == NEFilterErrorDomain)
+        precondition(
+            filterSaveError.code == NEFilterManagerError.configurationPermissionDenied.rawValue
+        )
+        let filterRemove = await awaitHostCallback { handler in
+            NEFilterManager.shared().removeFromPreferences(completionHandler: handler)
+        }
+        guard let filterRemoveError = filterRemove as? NSError else {
+            fatalError("expected NSError from filter remove")
+        }
+        precondition(
+            filterRemoveError.code == NEFilterManagerError.configurationCannotBeRemoved.rawValue
+        )
+
+        let dnsSave = await awaitHostCallback { handler in
+            NEDNSSettingsManager.shared().saveToPreferences(completionHandler: handler)
+        }
+        guard let dnsSaveError = dnsSave as? NSError else {
+            fatalError("expected NSError from DNS save")
+        }
+        precondition(dnsSaveError.domain == NEDNSSettingsErrorDomain)
+        let dnsRemove = await awaitHostCallback { handler in
+            NEDNSSettingsManager.shared().removeFromPreferences(completionHandler: handler)
+        }
+        guard let dnsRemoveError = dnsRemove as? NSError else {
+            fatalError("expected NSError from DNS remove")
+        }
+        precondition(
+            dnsRemoveError.code == NEDNSSettingsManagerError.configurationCannotBeRemoved.rawValue
+        )
+
+        let proxySave = await awaitHostCallback { handler in
+            NEDNSProxyManager.shared().saveToPreferences(completionHandler: handler)
+        }
+        guard let proxySaveError = proxySave as? NSError else {
+            fatalError("expected NSError from DNS proxy save")
+        }
+        precondition(proxySaveError.domain == NEDNSProxyErrorDomain)
+        let proxyRemove = await awaitHostCallback { handler in
+            NEDNSProxyManager.shared().removeFromPreferences(completionHandler: handler)
+        }
+        guard let proxyRemoveError = proxyRemove as? NSError else {
+            fatalError("expected NSError from DNS proxy remove")
+        }
+        precondition(
+            proxyRemoveError.code == NEDNSProxyManagerError.configurationCannotBeRemoved.rawValue
+        )
+
+        let pushSave = await awaitHostCallback { handler in
+            NEAppPushManager().saveToPreferences(completionHandler: handler)
+        }
+        guard let pushSaveError = pushSave as? NEAppPushManagerError else {
+            fatalError("expected NEAppPushManagerError from push save")
+        }
+        precondition(pushSaveError.code == .configurationInvalid)
+        let pushRemove = await awaitHostCallback { handler in
+            NEAppPushManager().removeFromPreferences(completionHandler: handler)
+        }
+        guard let pushRemoveError = pushRemove as? NEAppPushManagerError else {
+            fatalError("expected NEAppPushManagerError from push remove")
+        }
+        precondition(pushRemoveError.code == .configurationInvalid)
+
+        let relaySave = await awaitHostCallback { handler in
+            NERelayManager.shared().saveToPreferences(completionHandler: handler)
+        }
+        guard let relaySaveError = relaySave as? NSError else {
+            fatalError("expected NSError from relay save")
+        }
+        precondition(relaySaveError.domain == NERelayErrorDomain)
+        let relayRemove = await awaitHostCallback { handler in
+            NERelayManager.shared().removeFromPreferences(completionHandler: handler)
+        }
+        guard let relayRemoveError = relayRemove as? NSError else {
+            fatalError("expected NSError from relay remove")
+        }
+        precondition(
+            relayRemoveError.code == NERelayManagerError.configurationCannotBeRemoved.rawValue
+        )
+        let allRelays = await awaitHostCallback { handler in
+            NERelayManager.loadAllManagersFromPreferences { managers, error in
+                handler((managers, error))
+            }
+        }
+        precondition(allRelays.0.isEmpty)
+        let lastRelayErrors = await awaitHostCallback { handler in
+            NERelayManager.shared().getLastClientErrors(1, completionHandler: handler)
+        }
+        precondition(lastRelayErrors == nil)
+
+        let filterStart = await awaitHostCallback { handler in
+            NEFilterProvider().startFilter(completionHandler: handler)
+        }
+        guard let filterStartError = filterStart as? NSError else {
+            fatalError("expected NSError from filter start")
+        }
+        precondition(filterStartError.domain == NEFilterErrorDomain)
+
+        let proxyOpen = await awaitHostCallback { handler in
+            NEAppProxyTCPFlow().open(withLocalFlowEndpoint: nil, completionHandler: handler)
+        }
+        guard let proxyOpenError = proxyOpen as? NEAppProxyFlowError else {
+            fatalError("expected NEAppProxyFlowError from proxy open")
+        }
+        precondition(proxyOpenError.code == .notConnected)
+
+        let datagrams = await awaitHostCallback { handler in
+            NEPacketTunnelFlow().readPackets { packets, protocols in
+                handler((packets, protocols))
+            }
+        }
+        precondition(datagrams.0.isEmpty)
+        precondition(datagrams.1.isEmpty)
     }
 
     static func exerciseRoutesAndSettings() {
@@ -576,8 +1089,9 @@ struct NetworkExtensionRuntime {
                 controlProviderBundleIdentifier: "example.urlfilter"
             )
             fatalError("URL filter configuration must fail closed")
-        } catch NEURLFilterManager.Error.configurationInvalid {
-            ()
+        } catch let error as NEURLFilterManager.Error {
+            precondition(error == .configurationInvalid)
+            precondition(error.rawValue == 2)
         } catch {
             fatalError("unexpected URL filter configuration error \(error)")
         }
@@ -594,14 +1108,8 @@ struct NetworkExtensionRuntime {
     }
 
     static func exerciseReturnBeforeCallbackAndQueueIdentity() async {
-        var returned = false
-        let error = await withCheckedContinuation { continuation in
-            NEVPNManager.shared().loadFromPreferences { value in
-                precondition(returned)
-                precondition(NetworkExtensionHostCallback.isCurrentQueue)
-                continuation.resume(returning: value)
-            }
-            returned = true
+        let error = await awaitHostCallback { handler in
+            NEVPNManager.shared().loadFromPreferences(completionHandler: handler)
         }
         requireVPNError(error, code: .configurationReadWriteFailed)
 
@@ -612,19 +1120,21 @@ struct NetworkExtensionRuntime {
     }
 
     static func exerciseExactlyOnceDelivery() async {
-        final class OnceCount: @unchecked Sendable {
-            var value = 0
-        }
-        let count = OnceCount()
+        let count = LockedState(0)
         let tcp = NWTCPConnection(endpoint: NWHostEndpoint(hostname: "example.invalid", port: "443"))
+        NetworkExtensionHostCallback.holdDelivery()
         tcp.readLength(1) { _, _ in
             precondition(NetworkExtensionHostCallback.isCurrentQueue)
-            count.value += 1
+            count.withLock { $0 += 1 }
         }
         tcp.cancel()
+        let beforeRelease = count.withLock { $0 }
+        precondition(beforeRelease == 0, "callback ran before releaseDelivery")
+        NetworkExtensionHostCallback.releaseDelivery()
         await drainHostQueue()
+        precondition(count.withLock { $0 } == 1)
         await drainHostQueue()
-        precondition(count.value == 1)
+        precondition(count.withLock { $0 } == 1)
         precondition(tcp.state == .cancelled)
     }
 

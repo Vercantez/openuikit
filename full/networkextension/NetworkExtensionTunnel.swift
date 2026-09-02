@@ -7,7 +7,7 @@ import Glibc
 import Network
 #endif
 
-open class NEFlowMetaData: NSObject {
+open class NEFlowMetaData: NSObject, NSCopying {
     public let sourceAppSigningIdentifier: String
     public let sourceAppUniqueIdentifier: Data
 
@@ -17,9 +17,17 @@ open class NEFlowMetaData: NSObject {
         self.sourceAppUniqueIdentifier = sourceAppUniqueIdentifier
         super.init()
     }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        return NEFlowMetaData(
+            sourceAppSigningIdentifier: sourceAppSigningIdentifier,
+            sourceAppUniqueIdentifier: sourceAppUniqueIdentifier
+        )
+    }
 }
 
-open class NEPacket: NSObject {
+open class NEPacket: NSObject, NSCopying {
     public let data: Data
     public let protocolFamily: sa_family_t
     open var metadata: NEFlowMetaData? { nil }
@@ -28,6 +36,11 @@ open class NEPacket: NSObject {
         self.data = data
         self.protocolFamily = protocolFamily
         super.init()
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        return NEPacket(data: data, protocolFamily: protocolFamily)
     }
 }
 

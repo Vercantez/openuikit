@@ -5,7 +5,12 @@ import Network
 import Security
 #endif
 
-open class NWEndpoint: NSObject {}
+open class NWEndpoint: NSObject, NSCopying {
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        return NWEndpoint()
+    }
+}
 
 open class NWHostEndpoint: NWEndpoint {
     public let hostname: String
@@ -19,6 +24,11 @@ open class NWHostEndpoint: NWEndpoint {
         hostname = storedHostname
         port = storedPort
         super.init()
+    }
+
+    open override func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        return NWHostEndpoint(hostname: hostname, port: port)
     }
 }
 
@@ -36,6 +46,11 @@ open class NWBonjourServiceEndpoint: NWEndpoint {
         type = storedType
         domain = storedDomain
         super.init()
+    }
+
+    open override func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        return NWBonjourServiceEndpoint(name: name, type: type, domain: domain)
     }
 }
 

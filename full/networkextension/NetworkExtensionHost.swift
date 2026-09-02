@@ -25,11 +25,69 @@ public enum NetworkExtensionHostCallback {
         DispatchQueue.getSpecific(key: specificKey) == 1
     }
 
+    /// Hold scheduled host deliveries on a dedicated serial gate.
+    ///
+    /// Work enqueued while held is not submitted to `queue` until matching
+    /// `releaseDelivery()` calls drop the hold count to zero. This is a Linux
+    /// test control. It does not change Apple callback identity.
+    public static func holdDelivery() {
+        _NEHostCallbackGate.shared.hold()
+    }
+
+    public static func releaseDelivery() {
+        let released = _NEHostCallbackGate.shared.release()
+        for work in released {
+            queue.async {
+                work.run()
+            }
+        }
+    }
+
     public static func schedule(_ body: @escaping () -> Void) {
         let work = _NEUncheckedWork(body)
+        if _NEHostCallbackGate.shared.enqueueIfHeld(work) {
+            return
+        }
         queue.async {
             work.run()
         }
+    }
+}
+
+private final class _NEHostCallbackGate: @unchecked Sendable {
+    static let shared = _NEHostCallbackGate()
+
+    private let lock = NSLock()
+    private var holdCount = 0
+    private var pending: [_NEUncheckedWork] = []
+
+    func hold() {
+        lock.lock()
+        holdCount += 1
+        lock.unlock()
+    }
+
+    func enqueueIfHeld(_ work: _NEUncheckedWork) -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        if holdCount > 0 {
+            pending.append(work)
+            return true
+        }
+        return false
+    }
+
+    func release() -> [_NEUncheckedWork] {
+        lock.lock()
+        defer { lock.unlock() }
+        precondition(holdCount > 0, "releaseDelivery without holdDelivery")
+        holdCount -= 1
+        if holdCount == 0 {
+            let released = pending
+            pending = []
+            return released
+        }
+        return []
     }
 }
 

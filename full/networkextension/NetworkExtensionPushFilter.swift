@@ -128,9 +128,14 @@ public struct NEURLFilterPrefilter: Sendable {
 
 open class NEURLFilter: NSObject {
     public enum Verdict: Int, Sendable, Hashable {
-        case unknown = 0
-        case allow = 1
-        case deny = 2
+        case unknown = 1
+        case allow = 2
+        case deny = 3
+    }
+
+    @available(*, unavailable)
+    public override init() {
+        fatalError("NEURLFilter.init is unavailable")
     }
 
     open class func verdict(for url: URL) async -> Verdict {
@@ -141,20 +146,20 @@ open class NEURLFilter: NSObject {
 
 open class NEURLFilterManager: NSObject {
     public enum Error: Int, Swift.Error, Hashable, Sendable, LocalizedError {
-        case unknown = 0
-        case configurationInvalid = 1
-        case configurationDisabled = 2
-        case configurationStale = 3
-        case configurationCannotBeRemoved = 4
-        case configurationPermissionDenied = 5
-        case configurationInternalError = 6
-        case configurationNotLoaded = 7
-        case configurationUnchanged = 8
-        case internalError = 9
-        case extensionNotFound = 10
+        case configurationUnchanged = 1
+        case configurationInvalid = 2
+        case configurationDisabled = 3
+        case configurationStale = 4
+        case configurationCannotBeRemoved = 5
+        case configurationPermissionDenied = 6
+        case configurationInternalError = 7
+        case configurationNotLoaded = 8
+        case serverSetupIncomplete = 9
+        case internalError = 10
         case extensionCancelled = 11
-        case extensionFailedToLoad = 12
-        case serverSetupIncomplete = 13
+        case extensionNotFound = 12
+        case extensionFailedToLoad = 13
+        case unknown = 14
 
         public var errorDescription: String? { _NEHostBoundary.description }
         public var failureReason: String? { errorDescription }

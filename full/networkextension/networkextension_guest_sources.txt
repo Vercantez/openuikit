@@ -1,4 +1,5 @@
 full/networkextension/NetworkExtension.swift
+full/networkextension/NetworkExtensionCopying.swift
 full/networkextension/NetworkExtensionEnums.swift
 full/networkextension/NetworkExtensionErrors.swift
 full/networkextension/NetworkExtensionFilter.swift

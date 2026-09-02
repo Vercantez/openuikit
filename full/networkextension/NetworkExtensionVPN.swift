@@ -225,7 +225,7 @@ open class NEDNSProxyManager: NSObject {
     }
 }
 
-open class NERelay: NSObject {
+open class NERelay: NSObject, NSCopying {
     open var http2RelayURL: URL?
     open var http3RelayURL: URL?
     open var additionalHTTPHeaderFields: [String: String] = [:]
@@ -235,6 +235,21 @@ open class NERelay: NSObject {
     open var rawPublicKeys: [Data]?
     open var syntheticDNSAnswerIPv4Prefix: String?
     open var syntheticDNSAnswerIPv6Prefix: String?
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let copy = NERelay()
+        copy.http2RelayURL = http2RelayURL
+        copy.http3RelayURL = http3RelayURL
+        copy.additionalHTTPHeaderFields = additionalHTTPHeaderFields
+        copy.dnsOverHTTPSURL = dnsOverHTTPSURL
+        copy.identityData = identityData
+        copy.identityDataPassword = identityDataPassword
+        copy.rawPublicKeys = rawPublicKeys
+        copy.syntheticDNSAnswerIPv4Prefix = syntheticDNSAnswerIPv4Prefix
+        copy.syntheticDNSAnswerIPv6Prefix = syntheticDNSAnswerIPv6Prefix
+        return copy
+    }
 }
 
 open class NERelayManager: NSObject {
