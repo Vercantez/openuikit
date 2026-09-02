@@ -6,7 +6,7 @@ import AudioToolbox
 import CoreMIDI
 #endif
 
-public protocol AVSpeechSynthesizerDelegate: NSObjectProtocol {
+public protocol AVSpeechSynthesizerDelegate: NSObjectProtocol, Sendable {
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance)
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance)
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didPause utterance: AVSpeechUtterance)
@@ -87,7 +87,7 @@ public final class AVSpeechSynthesisVoice: NSObject, NSSecureCoding, @unchecked 
     }
 }
 
-public final class AVSpeechUtterance: NSObject, NSSecureCoding, @unchecked Sendable {
+public final class AVSpeechUtterance: NSObject, NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
 
     public let speechString: String
@@ -206,7 +206,7 @@ public final class AVSpeechSynthesisMarker: NSObject, NSSecureCoding, @unchecked
     }
 }
 
-public final class AVSpeechSynthesizer: NSObject, @unchecked Sendable {
+public final class AVSpeechSynthesizer: NSObject {
     public enum PersonalVoiceAuthorizationStatus: UInt, Hashable, Sendable {
         case notDetermined = 0
         case denied = 1
@@ -362,7 +362,7 @@ public typealias AVSpeechSynthesisProviderOutputBlock = (
 ) -> Void
 
 #if canImport(AudioToolbox)
-open class AVSpeechSynthesisProviderAudioUnit: AUAudioUnit, @unchecked Sendable {
+open class AVSpeechSynthesisProviderAudioUnit: AUAudioUnit {
     public var speechVoices: [AVSpeechSynthesisProviderVoice] = []
     public var outputChannelCount: Int = 1
     public var speechSynthesisOutputMetadataBlock: AVSpeechSynthesisProviderOutputBlock?

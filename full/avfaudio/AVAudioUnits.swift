@@ -6,7 +6,7 @@ import AudioToolbox
 import CoreMIDI
 #endif
 
-open class AVAudioUnit: AVAudioNode, @unchecked Sendable {
+open class AVAudioUnit: AVAudioNode {
     public var name: String { "AVAudioUnit" }
     public var manufacturerName: String { "" }
     public var version: Int { 0 }
@@ -32,7 +32,7 @@ open class AVAudioUnit: AVAudioNode, @unchecked Sendable {
     #endif
 }
 
-open class AVAudioUnitEffect: AVAudioUnit, @unchecked Sendable {
+open class AVAudioUnitEffect: AVAudioUnit {
     public var bypass = false
     public override init() { super.init() }
     #if canImport(AudioToolbox)
@@ -43,7 +43,7 @@ open class AVAudioUnitEffect: AVAudioUnit, @unchecked Sendable {
     #endif
 }
 
-open class AVAudioUnitTimeEffect: AVAudioUnit, @unchecked Sendable {
+open class AVAudioUnitTimeEffect: AVAudioUnit {
     public var bypass = false
     public override init() { super.init() }
     #if canImport(AudioToolbox)
@@ -54,7 +54,7 @@ open class AVAudioUnitTimeEffect: AVAudioUnit, @unchecked Sendable {
     #endif
 }
 
-open class AVAudioUnitGenerator: AVAudioUnit, AVAudioMixing, @unchecked Sendable {
+open class AVAudioUnitGenerator: AVAudioUnit, AVAudioMixing {
     public var bypass = false
     public var volume: Float {
         get { storedVolume }
@@ -81,7 +81,7 @@ open class AVAudioUnitGenerator: AVAudioUnit, AVAudioMixing, @unchecked Sendable
     #endif
 }
 
-open class AVAudioUnitMIDIInstrument: AVAudioUnit, @unchecked Sendable {
+open class AVAudioUnitMIDIInstrument: AVAudioUnit {
     public override init() { super.init() }
     #if canImport(AudioToolbox)
     public init(audioComponentDescription: AudioComponentDescription) {
@@ -135,14 +135,14 @@ open class AVAudioUnitMIDIInstrument: AVAudioUnit, @unchecked Sendable {
     #endif
 }
 
-public final class AVAudioUnitDelay: AVAudioUnitEffect, @unchecked Sendable {
+public final class AVAudioUnitDelay: AVAudioUnitEffect {
     public var delayTime: TimeInterval = 1
     public var feedback: Float = 50
     public var lowPassCutoff: Float = 15000
     public var wetDryMix: Float = 100
 }
 
-public final class AVAudioUnitDistortion: AVAudioUnitEffect, @unchecked Sendable {
+public final class AVAudioUnitDistortion: AVAudioUnitEffect {
     public var preGain: Float = -6
     public var wetDryMix: Float = 50
     public func loadFactoryPreset(_ preset: AVAudioUnitDistortionPreset) {
@@ -150,7 +150,7 @@ public final class AVAudioUnitDistortion: AVAudioUnitEffect, @unchecked Sendable
     }
 }
 
-public final class AVAudioUnitEQFilterParameters: NSObject, @unchecked Sendable {
+public final class AVAudioUnitEQFilterParameters: NSObject {
     public var filterType: AVAudioUnitEQFilterType = .parametric
     public var frequency: Float = 1000
     public var bandwidth: Float = 1
@@ -158,7 +158,7 @@ public final class AVAudioUnitEQFilterParameters: NSObject, @unchecked Sendable 
     public var bypass = false
 }
 
-public final class AVAudioUnitEQ: AVAudioUnitEffect, @unchecked Sendable {
+public final class AVAudioUnitEQ: AVAudioUnitEffect {
     public var globalGain: Float = 0
     public private(set) var bands: [AVAudioUnitEQFilterParameters]
     public init(numberOfBands: Int) {
@@ -167,24 +167,24 @@ public final class AVAudioUnitEQ: AVAudioUnitEffect, @unchecked Sendable {
     }
 }
 
-public final class AVAudioUnitReverb: AVAudioUnitEffect, @unchecked Sendable {
+public final class AVAudioUnitReverb: AVAudioUnitEffect {
     public var wetDryMix: Float = 100
     public func loadFactoryPreset(_ preset: AVAudioUnitReverbPreset) {
         _ = preset
     }
 }
 
-public final class AVAudioUnitTimePitch: AVAudioUnitTimeEffect, @unchecked Sendable {
+public final class AVAudioUnitTimePitch: AVAudioUnitTimeEffect {
     public var rate: Float = 1
     public var pitch: Float = 0
     public var overlap: Float = 8
 }
 
-public final class AVAudioUnitVarispeed: AVAudioUnitTimeEffect, @unchecked Sendable {
+public final class AVAudioUnitVarispeed: AVAudioUnitTimeEffect {
     public var rate: Float = 1
 }
 
-public final class AVAudioUnitSampler: AVAudioUnitMIDIInstrument, @unchecked Sendable {
+public final class AVAudioUnitSampler: AVAudioUnitMIDIInstrument {
     public var masterGain: Float = 0
     public var globalTuning: Float = 0
     public var stereoPan: Float = 0
@@ -207,7 +207,7 @@ public final class AVAudioUnitSampler: AVAudioUnitMIDIInstrument, @unchecked Sen
     }
 }
 
-public final class AVAudioUnitComponent: NSObject, @unchecked Sendable {
+public final class AVAudioUnitComponent: NSObject {
     public let name: String
     public let typeName: String
     public let localizedTypeName: String
@@ -244,7 +244,7 @@ public final class AVAudioUnitComponent: NSObject, @unchecked Sendable {
     }
 }
 
-public final class AVAudioUnitComponentManager: NSObject, @unchecked Sendable {
+public final class AVAudioUnitComponentManager: NSObject {
     public static let registrationsChangedNotification = NSNotification.Name(
         "AVAudioUnitComponentManagerRegistrationsChangedNotification"
     )
@@ -271,9 +271,9 @@ public final class AVAudioUnitComponentManager: NSObject, @unchecked Sendable {
     }
 }
 
-open class AVMusicEvent: NSObject, @unchecked Sendable {}
+open class AVMusicEvent: NSObject {}
 
-public final class AVAUPresetEvent: AVMusicEvent, @unchecked Sendable {
+public final class AVAUPresetEvent: AVMusicEvent {
     public var scope: UInt32
     public var element: UInt32
     public let presetDictionary: [AnyHashable: Any]
@@ -285,7 +285,7 @@ public final class AVAUPresetEvent: AVMusicEvent, @unchecked Sendable {
     }
 }
 
-public final class AVExtendedNoteOnEvent: AVMusicEvent, @unchecked Sendable {
+public final class AVExtendedNoteOnEvent: AVMusicEvent {
     public var midiNote: Float
     public var velocity: Float
     public var instrumentID: UInt32
@@ -307,7 +307,7 @@ public final class AVExtendedNoteOnEvent: AVMusicEvent, @unchecked Sendable {
     }
 }
 
-public final class AVExtendedTempoEvent: AVMusicEvent, @unchecked Sendable {
+public final class AVExtendedTempoEvent: AVMusicEvent {
     public var tempo: Double
     public init(tempo: Double) {
         self.tempo = tempo
@@ -315,7 +315,7 @@ public final class AVExtendedTempoEvent: AVMusicEvent, @unchecked Sendable {
     }
 }
 
-open class AVMIDIChannelEvent: AVMusicEvent, @unchecked Sendable {
+open class AVMIDIChannelEvent: AVMusicEvent {
     public var channel: UInt32
     public init(channel: UInt32) {
         self.channel = channel
@@ -323,7 +323,7 @@ open class AVMIDIChannelEvent: AVMusicEvent, @unchecked Sendable {
     }
 }
 
-public final class AVMIDIChannelPressureEvent: AVMIDIChannelEvent, @unchecked Sendable {
+public final class AVMIDIChannelPressureEvent: AVMIDIChannelEvent {
     public var pressure: UInt32
     public init(channel: UInt32, pressure: UInt32) {
         self.pressure = pressure
@@ -331,7 +331,7 @@ public final class AVMIDIChannelPressureEvent: AVMIDIChannelEvent, @unchecked Se
     }
 }
 
-public final class AVMIDIControlChangeEvent: AVMIDIChannelEvent, @unchecked Sendable {
+public final class AVMIDIControlChangeEvent: AVMIDIChannelEvent {
     public enum MessageType: Int, Hashable, Sendable {
         case bankSelect = 0
         case modWheel = 1
@@ -379,7 +379,7 @@ public final class AVMIDIControlChangeEvent: AVMIDIChannelEvent, @unchecked Send
     }
 }
 
-public final class AVMIDIMetaEvent: AVMusicEvent, @unchecked Sendable {
+public final class AVMIDIMetaEvent: AVMusicEvent {
     public enum EventType: Int, Hashable, Sendable {
         case sequenceNumber = 0
         case text = 1
@@ -408,7 +408,7 @@ public final class AVMIDIMetaEvent: AVMusicEvent, @unchecked Sendable {
     }
 }
 
-public final class AVMIDINoteEvent: AVMusicEvent, @unchecked Sendable {
+public final class AVMIDINoteEvent: AVMusicEvent {
     public var channel: UInt32
     public var key: UInt32
     public var velocity: UInt32
@@ -422,7 +422,7 @@ public final class AVMIDINoteEvent: AVMusicEvent, @unchecked Sendable {
     }
 }
 
-public final class AVMIDIPitchBendEvent: AVMIDIChannelEvent, @unchecked Sendable {
+public final class AVMIDIPitchBendEvent: AVMIDIChannelEvent {
     public var value: UInt32
     public init(channel: UInt32, value: UInt32) {
         self.value = value
@@ -430,7 +430,7 @@ public final class AVMIDIPitchBendEvent: AVMIDIChannelEvent, @unchecked Sendable
     }
 }
 
-public final class AVMIDIPolyPressureEvent: AVMIDIChannelEvent, @unchecked Sendable {
+public final class AVMIDIPolyPressureEvent: AVMIDIChannelEvent {
     public var key: UInt32
     public var pressure: UInt32
     public init(channel: UInt32, key: UInt32, pressure: UInt32) {
@@ -440,7 +440,7 @@ public final class AVMIDIPolyPressureEvent: AVMIDIChannelEvent, @unchecked Senda
     }
 }
 
-public final class AVMIDIProgramChangeEvent: AVMIDIChannelEvent, @unchecked Sendable {
+public final class AVMIDIProgramChangeEvent: AVMIDIChannelEvent {
     public var programNumber: UInt32
     public init(channel: UInt32, programNumber: UInt32) {
         self.programNumber = programNumber
@@ -448,7 +448,7 @@ public final class AVMIDIProgramChangeEvent: AVMIDIChannelEvent, @unchecked Send
     }
 }
 
-public final class AVMIDISysexEvent: AVMusicEvent, @unchecked Sendable {
+public final class AVMIDISysexEvent: AVMusicEvent {
     public let data: Data
     public var sizeInBytes: UInt32 { UInt32(data.count) }
     public init(data: Data) {
@@ -457,7 +457,7 @@ public final class AVMIDISysexEvent: AVMusicEvent, @unchecked Sendable {
     }
 }
 
-public final class AVMusicUserEvent: AVMusicEvent, @unchecked Sendable {
+public final class AVMusicUserEvent: AVMusicEvent {
     public let data: Data
     public var sizeInBytes: UInt32 { UInt32(data.count) }
     public init(data: Data) {
@@ -466,7 +466,7 @@ public final class AVMusicUserEvent: AVMusicEvent, @unchecked Sendable {
     }
 }
 
-public final class AVParameterEvent: AVMusicEvent, @unchecked Sendable {
+public final class AVParameterEvent: AVMusicEvent {
     public var parameterID: UInt32
     public var scope: UInt32
     public var element: UInt32
@@ -480,7 +480,7 @@ public final class AVParameterEvent: AVMusicEvent, @unchecked Sendable {
     }
 }
 
-public final class AVMusicTrack: NSObject, @unchecked Sendable {
+public final class AVMusicTrack: NSObject {
     public var destinationAudioUnit: AVAudioUnit?
     #if canImport(CoreMIDI)
     public var destinationMIDIEndpoint: MIDIEndpointRef?
@@ -543,7 +543,7 @@ public final class AVMusicTrack: NSObject, @unchecked Sendable {
     }
 }
 
-public final class AVAudioSequencer: NSObject, @unchecked Sendable {
+public final class AVAudioSequencer: NSObject {
     public struct InfoDictionaryKey: RawRepresentable, Hashable, Sendable {
         public let rawValue: String
         public init(rawValue: String) { self.rawValue = rawValue }
@@ -661,7 +661,7 @@ public final class AVAudioSequencer: NSObject, @unchecked Sendable {
     }
 }
 
-public final class AVMIDIPlayer: NSObject, @unchecked Sendable {
+public final class AVMIDIPlayer: NSObject {
     public var currentPosition: TimeInterval = 0
     public let duration: TimeInterval
     public var rate: Float = 1
