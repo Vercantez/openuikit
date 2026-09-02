@@ -6,9 +6,10 @@ clean `a2832521c1daa0c23419c73705ae043ed60c9791` checkout: the two `Widget`
 files plus the ten files that define the production onboarding views, model,
 design-system accessors, and `PortraitHostingController`. No Focus source is
 copied, patched, overlaid, generated, or conditionally rewritten.
-The framework side is pinned independently to clean OpenUIKit commit
-`62dea0d97a3b9074e5c016820492bd0656b9a35a`, tree
-`3dfd6024557632949c9a5036522871a36d4a0cf0`, before and after the build/run.
+The framework side is pinned independently to the in-repo `uikit/` subtree
+tree `8ce87c1aef592553336aadf9101ec2bb4ebe6aaa` (`git rev-parse HEAD:uikit`)
+before and after the build/run. A dirty subtree is refused. `UIKIT=/path`
+remains an external checkout override.
 
 The project-owned harness mounts the exact `OnboardingView` through Focus's
 exact `PortraitHostingController`. It finds controls through the mounted
@@ -97,8 +98,6 @@ Focus resource bundles described by `full/focus-ios/onboarding_resources_proof.p
 ```bash
 docker run --rm \
   -v "$PWD":/w \
-  -v /Users/miguelsalinas/uikit:/uikit:ro \
-  -v /Users/miguelsalinas/machorun:/machorun:ro \
   -v "$RESOURCE_PROOF/output/bundles":/focus-resources:ro \
   -w /w swift-macho-spike:noble \
   bash full/swiftui/build_focus_onboarding_guest.sh /focus-resources

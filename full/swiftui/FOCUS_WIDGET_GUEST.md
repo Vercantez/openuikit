@@ -14,8 +14,12 @@ separate guest processes, and writes a
 135-point, 270x270-pixel PNG at 2x scale.
 
 The framework checkout is independently pinned clean before and after the
-gate to OpenUIKit commit `62dea0d97a3b9074e5c016820492bd0656b9a35a`,
-tree `3dfd6024557632949c9a5036522871a36d4a0cf0`.
+gate to the in-repo `uikit/` subtree tree
+`8ce87c1aef592553336aadf9101ec2bb4ebe6aaa` (`git rev-parse HEAD:uikit`),
+which is OpenUIKit `06aaf82bc64672d269064507533e75a86e5a1da3` (30 commits
+after the old external pin `62dea0d97a3b9074e5c016820492bd0656b9a35a`).
+A dirty `uikit/` subtree is refused. `UIKIT=/path` remains an external
+checkout override and must match the same tree.
 
 No Focus source is copied, patched, overlaid, conditionally rewritten, or
 generated. `FocusWidgetBundle.generated.swift` is separately labelled
@@ -144,13 +148,15 @@ match the same reviewed bytes.
 ```bash
 docker run --rm \
   -v "$PWD":/w \
-  -v /Users/miguelsalinas/uikit:/uikit:ro \
-  -v /Users/miguelsalinas/machorun:/machorun:ro \
-  -v "$RESOURCE_PROOF/output/bundles":/focus-resources:ro \
   -w /w swift-macho-spike:noble \
   bash full/swiftui/build_focus_widget_guest.sh \
     /focus-resources/Focus_Widget.bundle
 ```
+
+The in-repo `uikit/` and `machorun/` subtrees are the default. External
+checkouts remain overrides via `UIKIT=/path` and `MACHORUN=/path`. The
+resource-proof parent is still mounted read-only when the normalized bundle
+is not already in the workspace.
 
 Generated output lives only under `build/swiftui-guest/`. This is an exact S1
 widget-slice execution proof, not a linked Focus application, WidgetKit

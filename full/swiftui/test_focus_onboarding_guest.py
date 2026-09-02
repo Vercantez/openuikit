@@ -72,13 +72,17 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
 
     def test_inputs_are_clean_and_resources_are_content_pinned(self) -> None:
         text = BUILD.read_text()
-        self.assertIn("assert_clean_commit", text)
+        self.assertIn("assert_vendor_tree", text)
         self.assertIn(
+            "EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE",
+            text,
+        )
+        self.assertNotIn(
             "EXPECTED_UIKIT_COMMIT="
             "62dea0d97a3b9074e5c016820492bd0656b9a35a",
             text,
         )
-        self.assertIn(
+        self.assertNotIn(
             "EXPECTED_UIKIT_TREE="
             "3dfd6024557632949c9a5036522871a36d4a0cf0",
             text,
