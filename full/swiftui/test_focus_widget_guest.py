@@ -85,6 +85,34 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("FocusWidgetResourceProof.exerciseUnchangedAssets()", harness)
         self.assertNotIn("OpenUIKitRuntime.imageSearchPaths", harness)
 
+    def test_gate_consumes_env_preparer_before_vendor_attestation(self) -> None:
+        text = BUILD.read_text()
+        self.assertIn('PREPARE_TOOL=$W/scripts/env/prepare.py', text)
+        self.assertIn('LEDGER_TOOL=$W/scripts/env/ledger.py', text)
+        self.assertIn(
+            'python3 "$PREPARE_TOOL" --contract "$W/env/contract.json" --root "$W"',
+            text,
+        )
+        self.assertIn('--gate focus-widget', text)
+        self.assertIn(
+            'python3 "$LEDGER_TOOL" --style focus-widget require-hash "$1" "$2" "$3"',
+            text,
+        )
+        self.assertLess(
+            text.index('--gate focus-widget'),
+            text.index('assert_vendor_tree "$W" uikit'),
+        )
+        self.assertIn("EXPECTED_UIKIT_TREE=$EXPECTED_INREPO_UIKIT_TREE", text)
+        self.assertIn("attested OpenUIKit source=HEAD:uikit", text)
+        self.assertIn(
+            "efac8d1c98b562374e54eea7540b4201523db670a6353eff8f0a0273d294526e",
+            text,
+        )
+        self.assertIn(
+            "721669388a4556e1609f580ed87d6065b63981770e71b0f77db292767b05f6c2",
+            text,
+        )
+
     def test_foundation_hidden_and_mach_o_runtime_gates_exist(self) -> None:
         text = BUILD.read_text()
         self.assertIn("foundationessentials_import_guard.swift", text)

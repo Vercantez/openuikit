@@ -27,6 +27,7 @@ OPENCOMBINE_SOURCE=$OPENCOMBINE_ROOT/source
 OPENCOMBINE_ARTIFACTS=$OPENCOMBINE_ROOT/export/artifacts
 OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 MANIFEST_TOOL=$W/full/frameworks/core_package_manifest.py
+LEDGER_TOOL=$W/scripts/env/ledger.py
 FOUNDATION_SOURCES_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
 COPEN_FOUNDATION_CORE_INCLUDE=$W/full/foundation/include/COpenFoundationCore
 FOUNDATION_CACHE_ORACLE=$W/full/foundation/tests/FoundationCacheOracle.swift
@@ -571,6 +572,8 @@ for tool in git swiftc clang-18 clang++-18 ld64.lld-18 llvm-otool-18 \
     command -v "$tool" >/dev/null || die "required tool is missing: $tool"
 done
 [ -x "$MANIFEST_TOOL" ] || die "manifest tool is missing or not executable: $MANIFEST_TOOL"
+[ -f "$LEDGER_TOOL" ] && [ ! -L "$LEDGER_TOOL" ] \
+    || die "env ledger tool is missing or linked: $LEDGER_TOOL"
 [ -x "$WEBKIT_PROVENANCE_TOOL" ] \
     || die "WebKit provenance tool is missing or not executable: $WEBKIT_PROVENANCE_TOOL"
 [ -f "$WEBKIT_PROVENANCE_POLICY" ] && [ ! -L "$WEBKIT_PROVENANCE_POLICY" ] \
@@ -627,7 +630,7 @@ trap quarantine_on_exit EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
-hash_file() { sha256sum "$1" | awk '{print $1}'; }
+hash_file() { python3 "$LEDGER_TOOL" --style core hash-file "$1"; }
 
 nm_symbol_count() {
     local mode=$1 path=$2 symbol=$3
@@ -642,24 +645,11 @@ nm_developer_tools_support_count() {
 }
 
 require_hash() {
-    local path=$1 expected=$2 label=$3 actual
-    [ -f "$path" ] && [ ! -L "$path" ] || die "missing regular $label: $path"
-    actual=$(hash_file "$path")
-    [ "$actual" = "$expected" ] || die "$label hash $actual, expected $expected"
+    python3 "$LEDGER_TOOL" --style core require-hash "$1" "$2" "$3" || exit $?
 }
 
 assert_clean_commit() {
-    local repo=$1 expected_commit=$2 expected_tree=$3 label=$4
-    local actual_commit actual_tree status
-    [ -d "$repo/.git" ] || die "$label is not a Git checkout: $repo"
-    actual_commit=$(git -C "$repo" rev-parse --verify HEAD^{commit})
-    actual_tree=$(git -C "$repo" rev-parse --verify HEAD^{tree})
-    status=$(git -C "$repo" status --porcelain=v1 --untracked-files=all)
-    [ "$actual_commit" = "$expected_commit" ] \
-        || die "$label commit $actual_commit, expected $expected_commit"
-    [ "$actual_tree" = "$expected_tree" ] \
-        || die "$label tree $actual_tree, expected $expected_tree"
-    [ -z "$status" ] || die "$label checkout is dirty: $status"
+    python3 "$LEDGER_TOOL" --style core assert-clean-commit "$1" "$2" "$3" "$4" || exit $?
 }
 
 assert_exact_swift_set() {
