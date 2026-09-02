@@ -457,7 +457,29 @@ struct darwin_stat {
     int64_t  st_qspare[2];      /* 128 */
 };                              /* 144 */
 
-/* Linux, aarch64 (asm-generic/stat.h). Also measured. */
+/* Linux, aarch64 (asm-generic/stat.h) or x86_64 (asm/stat.h). Measured. */
+#if defined(__x86_64__)
+struct linux_stat {
+    unsigned long st_dev;       /*   0 */
+    unsigned long st_ino;       /*   8 */
+    unsigned long st_nlink;     /*  16 -- 8-byte nlink_t */
+    unsigned int  st_mode;      /*  24 */
+    unsigned int  st_uid;       /*  28 */
+    unsigned int  st_gid;       /*  32 */
+    unsigned int  __pad0;       /*  36 */
+    unsigned long st_rdev;      /*  40 */
+    long          st_size;      /*  48 */
+    long          st_blksize;   /*  56 -- 8 bytes on x86_64 */
+    long          st_blocks;    /*  64 */
+    long st_atime_sec; unsigned long st_atime_nsec;   /*  72 */
+    long st_mtime_sec; unsigned long st_mtime_nsec;   /*  88 */
+    long st_ctime_sec; unsigned long st_ctime_nsec;   /* 104 */
+    long          __unused[3];  /* 120 */
+};                              /* 144 */
+_Static_assert(sizeof(struct linux_stat) == 144, "Linux x86_64 struct stat is 144 bytes");
+_Static_assert(__builtin_offsetof(struct linux_stat, st_nlink) == 16, "x86_64 st_nlink at 16");
+_Static_assert(__builtin_offsetof(struct linux_stat, st_mode) == 24, "x86_64 st_mode at 24");
+#else
 struct linux_stat {
     unsigned long st_dev;       /*   0 */
     unsigned long st_ino;       /*   8 */
@@ -476,9 +498,9 @@ struct linux_stat {
     long st_ctime_sec; unsigned long st_ctime_nsec;   /* 104 */
     unsigned int  __unused_[2]; /* 120 */
 };                              /* 128 */
-
-_Static_assert(sizeof(struct darwin_stat) == 144, "Darwin struct stat is 144 bytes");
 _Static_assert(sizeof(struct linux_stat) == 128, "Linux aarch64 struct stat is 128 bytes");
+#endif
+_Static_assert(sizeof(struct darwin_stat) == 144, "Darwin struct stat is 144 bytes");
 _Static_assert(__builtin_offsetof(struct darwin_stat, st_size) == 96, "st_size at 96");
 _Static_assert(__builtin_offsetof(struct linux_stat, st_size) == 48, "st_size at 48");
 
@@ -586,12 +608,20 @@ struct linux_ftsent {
     uint32_t             _pad0;          /*  68 */
     uint64_t             fts_ino;        /*  72 */
     uint64_t             fts_dev;        /*  80 */
+#if defined(__x86_64__)
+    uint64_t             fts_nlink;      /*  88 -- glibc x86_64 nlink_t is 8 bytes */
+    short                fts_level;      /*  96 */
+    uint16_t             fts_info;       /*  98 */
+    uint16_t             fts_flags;      /* 100 */
+    uint16_t             fts_instr;      /* 102 */
+#else
     uint32_t             fts_nlink;      /*  88 */
     short                fts_level;      /*  92 */
     uint16_t             fts_info;       /*  94 */
     uint16_t             fts_flags;      /*  96 */
     uint16_t             fts_instr;      /*  98 */
     uint32_t             _pad1;          /* 100 */
+#endif
     struct linux_stat   *fts_statp;      /* 104 */
     char                 fts_name[1];    /* 112 */
 };                                         /* 120 */
@@ -658,17 +688,24 @@ struct darwin_fts {
 };                                         /*  72 */
 
 _Static_assert(sizeof(struct linux_ftsent) == 120,
-               "glibc aarch64 FTSENT is 120 bytes");
+               "glibc FTSENT is 120 bytes");
+#if defined(__x86_64__)
+_Static_assert(__builtin_offsetof(struct linux_ftsent, fts_level) == 96,
+               "glibc x86_64 FTSENT.fts_level is at 96");
+_Static_assert(__builtin_offsetof(struct linux_ftsent, fts_info) == 98,
+               "glibc x86_64 FTSENT.fts_info is at 98");
+#else
 _Static_assert(__builtin_offsetof(struct linux_ftsent, fts_level) == 92,
                "glibc aarch64 FTSENT.fts_level is at 92");
 _Static_assert(__builtin_offsetof(struct linux_ftsent, fts_info) == 94,
                "glibc aarch64 FTSENT.fts_info is at 94");
+#endif
 _Static_assert(__builtin_offsetof(struct linux_ftsent, fts_statp) == 104,
-               "glibc aarch64 FTSENT.fts_statp is at 104");
+               "glibc FTSENT.fts_statp is at 104");
 _Static_assert(__builtin_offsetof(struct linux_ftsent, fts_name) == 112,
-               "glibc aarch64 FTSENT.fts_name is at 112");
+               "glibc FTSENT.fts_name is at 112");
 _Static_assert(sizeof(struct linux_fts) == 72,
-               "glibc aarch64 FTS is 72 bytes");
+               "glibc FTS is 72 bytes");
 _Static_assert(__builtin_offsetof(struct linux_fts, fts_compar) == 56,
                "glibc aarch64 FTS.fts_compar is at 56");
 _Static_assert(__builtin_offsetof(struct linux_fts, fts_options) == 64,
@@ -1393,6 +1430,29 @@ EXPORT int fts_close(struct darwin_fts *fts)
     return rc;
 }
 
+#if defined(__x86_64__)
+/* x86_64 Darwin headers emit _fts_*$INODE64; arm64 binds the plain names.
+ * Keep these aliases off the arm64 dylib so its export list stays as it was. */
+EXPORT struct darwin_fts *mr_fts_open64(char *const *p, int o, darwin_fts_compar c)
+    __asm__("_fts_open$INODE64");
+EXPORT struct darwin_fts *mr_fts_open64(char *const *p, int o, darwin_fts_compar c)
+    { return fts_open(p, o, c); }
+EXPORT struct darwin_ftsent *mr_fts_read64(struct darwin_fts *f)
+    __asm__("_fts_read$INODE64");
+EXPORT struct darwin_ftsent *mr_fts_read64(struct darwin_fts *f)
+    { return fts_read(f); }
+EXPORT struct darwin_ftsent *mr_fts_children64(struct darwin_fts *f, int i)
+    __asm__("_fts_children$INODE64");
+EXPORT struct darwin_ftsent *mr_fts_children64(struct darwin_fts *f, int i)
+    { return fts_children(f, i); }
+EXPORT int mr_fts_set64(struct darwin_fts *f, struct darwin_ftsent *e, int i)
+    __asm__("_fts_set$INODE64");
+EXPORT int mr_fts_set64(struct darwin_fts *f, struct darwin_ftsent *e, int i)
+    { return fts_set(f, e, i); }
+EXPORT int mr_fts_close64(struct darwin_fts *f) __asm__("_fts_close$INODE64");
+EXPORT int mr_fts_close64(struct darwin_fts *f) { return fts_close(f); }
+#endif
+
 /* ------------------------------------------------------------- the rest of
  * the file surface. Every one of these is bracketed for errno; that is the
  * only reason they are not one-line forwarders. */
@@ -1576,6 +1636,12 @@ void __assert(const char *expr, const char *file, int line)
 /* ------------------------------------------------------------ BSD stringery */
 
 EXPORT void  bzero(void *d, size_t n)                  { glibc_memset(d, 0, n); }
+#if defined(__x86_64__)
+/* clang on Darwin/x86_64 emits ___bzero for memset(,0,) rather than inlining.
+ * The arm64 backend does not. Same bytes as bzero; a distinct symbol so a
+ * guest that calls it does not die at bind time. */
+EXPORT void __bzero(void *d, size_t n)                 { glibc_memset(d, 0, n); }
+#endif
 EXPORT void  bcopy(const void *s, void *d, size_t n)   { glibc_memmove(d, s, n); }
 EXPORT int   bcmp(const void *a, const void *b, size_t n) { return glibc_memcmp(a, b, n); }
 EXPORT char *index(const char *s, int c)               { return glibc_strchr(s, c); }
@@ -1807,6 +1873,19 @@ EXPORT void rewinddir(void *dirp)
     struct mr_dir *d = dirp;
     if (d) glibc_rewinddir(d->ldir);
 }
+
+#if defined(__x86_64__)
+EXPORT void *mr_opendir64(const char *p) __asm__("_opendir$INODE64");
+EXPORT void *mr_opendir64(const char *p) { return opendir(p); }
+EXPORT void *mr_readdir64(void *d) __asm__("_readdir$INODE64");
+EXPORT void *mr_readdir64(void *d) { return readdir(d); }
+EXPORT int mr_readdir_r64(void *d, struct darwin_dirent *e, struct darwin_dirent **r)
+    __asm__("_readdir_r$INODE64");
+EXPORT int mr_readdir_r64(void *d, struct darwin_dirent *e, struct darwin_dirent **r)
+    { return readdir_r(d, e, r); }
+EXPORT void mr_rewinddir64(void *d) __asm__("_rewinddir$INODE64");
+EXPORT void mr_rewinddir64(void *d) { rewinddir(d); }
+#endif
 
 EXPORT int dirfd(void *dirp)
 {
@@ -3879,7 +3958,11 @@ EXPORT int uname(struct darwin_utsname *u)
     uts_put(u->sysname,  "Darwin");
     uts_put(u->nodename, l.nodename);
     uts_put(u->release,  l.release);
+#if defined(__x86_64__)
+    uts_put(u->machine,  "x86_64");
+#else
     uts_put(u->machine,  "arm64");
+#endif
 
     at = uts_cat(u->version, 0, "machorun: a Darwin userland on ");
     at = uts_cat(u->version, at, l.sysname);

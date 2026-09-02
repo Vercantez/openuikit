@@ -1227,6 +1227,29 @@ EXPORT int __vsnprintf_chk(char *dst, size_t maxlen, int flag, size_t slen,
  * the guard and land in unrelated memory. Linux has the same hazard and the
  * same fix, so this is a real probe loop and not a bare `ret`: touch one word
  * every 4 KiB down from sp, the smaller of the two systems' page sizes. */
+#if defined(__x86_64__)
+/* x86_64: size in rax. Probe 4 KiB pages down from rsp. Preserve every register
+ * except r11 (scratch). rax is the size on entry and is not required after. */
+__asm__(
+"    .text\n"
+"    .p2align 4\n"
+"    .globl ___chkstk_darwin\n"
+"___chkstk_darwin:\n"
+"    pushq %rcx\n"
+"    movq  %rax, %rcx\n"
+"    leaq  8(%rsp), %rax\n"
+"0:  cmpq  $4096, %rcx\n"
+"    jb    1f\n"
+"    subq  $4096, %rax\n"
+"    testq %rax, (%rax)\n"
+"    subq  $4096, %rcx\n"
+"    jmp   0b\n"
+"1:  subq  %rcx, %rax\n"
+"    testq %rax, (%rax)\n"
+"    popq  %rcx\n"
+"    ret\n"
+);
+#elif defined(__arm64__) || defined(__aarch64__)
 __asm__(
 "    .text\n"
 "    .p2align 2\n"
@@ -1241,6 +1264,9 @@ __asm__(
 "    b.ne 0b\n"
 "1:  ret\n"
 );
+#else
+#error ___chkstk_darwin: guest is neither x86_64 nor arm64
+#endif
 
 EXPORT int vm_remap(unsigned target, void **addr, size_t size, unsigned mask,
                     int flags, unsigned src_task, void *src_addr,
