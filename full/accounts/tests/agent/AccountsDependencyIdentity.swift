@@ -1,4 +1,4 @@
-import Accounts
+@_spi(OpenUIKitHost) import Accounts
 import Foundation
 
 // Future clean EC2 dependency-identity client. Isolated host-gate success
@@ -62,7 +62,7 @@ private final class CompletionQueueBlocker: @unchecked Sendable {
     private let hold = DispatchSemaphore(value: 0)
 
     func occupy() {
-        ACAccountStore.completionQueue.async {
+        AccountsHostControl.enqueueCompletionProbe {
             self.occupied.signal()
             self.hold.wait()
         }
@@ -88,6 +88,13 @@ private func assertOracleConstants() {
         NSNotification.Name.ACAccountStoreDidChange.rawValue
             == "ACAccountStoreDidChangeNotification"
     )
+    precondition(ACFacebookAppIdKey == "ACFacebookAppIdKey")
+    precondition(ACFacebookPermissionsKey == "ACFacebookPermissionsKey")
+    precondition(ACFacebookAudienceKey == "ACFacebookAudienceKey")
+    precondition(ACFacebookAudienceEveryone == "everyone")
+    precondition(ACFacebookAudienceFriends == "friends")
+    precondition(ACFacebookAudienceOnlyMe == "me")
+    precondition(ACTencentWeiboAppIdKey == "ACTencentWeiboAppIdKey")
     precondition(ACErrorUnknown.rawValue == 1)
     precondition(ACErrorAccountMissingRequiredProperty.rawValue == 2)
     precondition(ACErrorAccountAuthenticationFailed.rawValue == 3)
@@ -114,15 +121,16 @@ private func assertOracleConstants() {
 }
 
 private func assertLookups(store: ACAccountStore) {
-    for identifier in [
-        ACAccountTypeIdentifierTwitter,
-        ACAccountTypeIdentifierFacebook,
-        ACAccountTypeIdentifierSinaWeibo,
-        ACAccountTypeIdentifierTencentWeibo,
+    for (identifier, description) in [
+        (ACAccountTypeIdentifierTwitter, "Twitter"),
+        (ACAccountTypeIdentifierFacebook, "Facebook"),
+        (ACAccountTypeIdentifierSinaWeibo, "Sina Weibo"),
+        (ACAccountTypeIdentifierTencentWeibo, "Tencent Weibo"),
     ] {
         let accountType = store.accountType(withAccountTypeIdentifier: identifier)
         precondition(accountType != nil)
         precondition(accountType!.identifier == identifier)
+        precondition(accountType!.accountTypeDescription == description)
         precondition(accountType!.accessGranted == false)
     }
     precondition(store.accountType(withAccountTypeIdentifier: "com.example.unknown") == nil)
@@ -181,7 +189,7 @@ private func proveBoolCallback(
     }
     state.markReturned()
     let drained = DispatchSemaphore(value: 0)
-    ACAccountStore.completionQueue.async {
+    AccountsHostControl.enqueueCompletionProbe {
         drained.signal()
     }
     blocker.release()
@@ -216,7 +224,7 @@ private func exerciseGatedCallbacks(store: ACAccountStore) {
     }
     state.markReturned()
     let drained = DispatchSemaphore(value: 0)
-    ACAccountStore.completionQueue.async {
+    AccountsHostControl.enqueueCompletionProbe {
         drained.signal()
     }
     blocker.release()

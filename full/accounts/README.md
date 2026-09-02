@@ -17,6 +17,8 @@ Oracle-measured constants (asserted in `AccountsRuntime.swift`):
 - `ACAccountTypeIdentifierTencentWeibo == "com.apple.account.tencentweibo"`
 - `ACErrorDomain == "com.apple.accounts"`
 - `NSNotification.Name.ACAccountStoreDidChange.rawValue == "ACAccountStoreDidChangeNotification"`
+- Facebook / Tencent option keys retain their exported names; audience values
+  are `"everyone"`, `"friends"`, and `"me"`
 - `ACErrorCode` named constants raw values `1...23` (`ACErrorUnknown = 1` through `ACErrorCredentialItemNotExpired = 23`)
 
 Also implemented:
@@ -31,8 +33,8 @@ Also implemented:
 `accountType(withAccountTypeIdentifier:)` returns a populated type whose
 `identifier` matches the request for those four known public identifiers, and
 returns `nil` for unknown identifiers and for `nil`. `accessGranted` is always
-`false`. Facebook / Tencent option-key and audience string payloads were not
-measured and remain declared.
+`false`. The observed descriptions are `Twitter`, `Facebook`, `Sina Weibo`, and
+`Tencent Weibo`.
 
 ## Fail-closed boundaries
 
@@ -47,13 +49,14 @@ identifier, renewed token, or store-changed notification.
   `false` (renew: `.failed`) plus Foundation `NSError` with domain
   `com.apple.accounts` (`ACErrorDomain`) and code `7`
   (`ACErrorPermissionDenied`).
-- Those completions hop once with `DispatchQueue.async` onto
-  `ACAccountStore.completionQueue` (label `Accounts.ACAccountStore.completion`).
+- Those completions hop once with `DispatchQueue.async` onto a private serial
+  queue (label `Accounts.ACAccountStore.completion`).
   Delivery is exactly-once per call. A nil handler is not invoked. Nested
   callback calls enqueue behind the running handler (`async`, never `sync`).
-  Tests prove non-inline ordering by occupying that serial queue, recording
-  return under a lock, releasing the queue, then asserting the callback saw
-  `returned == true` and `count == 1`.
+  Tests prove non-inline ordering through an `OpenUIKitHost` SPI hook that
+  occupies the queue, records return under a lock, releases it, then asserts
+  the callback saw `returned == true` and `count == 1`. The hook is absent from
+  ordinary `import Accounts` API and from the pinned Apple surface.
 - Async overlays wait on the same callback path and throw the same fail-closed
   `NSError`.
 - The store never posts `ACAccountStoreDidChange`.
@@ -61,9 +64,8 @@ identifier, renewed token, or store-changed notification.
 ## Still open
 
 See `oracle-questions.tsv` for Darwin callback-queue / `(false, nil)` versus
-error mapping, async `renewCredentials` throw-versus-return, identifier
-assignment after a successful save, `accountTypeDescription` display strings,
-and unmeasured option-key payloads. Private TBD types remain out of scope.
+error mapping, async `renewCredentials` throw-versus-return, and identifier
+assignment after a successful save. Private TBD types remain out of scope.
 
 `tests/agent/AccountsRuntime.swift` is the isolated host probe
 (`ACCOUNTS_AGENT_RUNTIME_OK`). `tests/agent/AccountsDependencyIdentity.swift`

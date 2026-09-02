@@ -5,13 +5,13 @@ c:@ACAccountTypeIdentifierSinaWeibo	implemented	Accounts.swift;AccountsRuntime.s
 c:@ACAccountTypeIdentifierTencentWeibo	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle: com.apple.account.tencentweibo.
 c:@ACAccountTypeIdentifierTwitter	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle: com.apple.twitter.
 c:@ACErrorDomain	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle: com.apple.accounts. Fail-closed NSError uses this domain.
-c:@ACFacebookAppIdKey	declared	Accounts.swift	Option-key payload was not Apple-oracle measured.
-c:@ACFacebookAudienceEveryone	declared	Accounts.swift	Audience-value payload was not Apple-oracle measured.
-c:@ACFacebookAudienceFriends	declared	Accounts.swift	Audience-value payload was not Apple-oracle measured.
-c:@ACFacebookAudienceKey	declared	Accounts.swift	Option-key payload was not Apple-oracle measured.
-c:@ACFacebookAudienceOnlyMe	declared	Accounts.swift	Audience-value payload was not Apple-oracle measured.
-c:@ACFacebookPermissionsKey	declared	Accounts.swift	Option-key payload was not Apple-oracle measured.
-c:@ACTencentWeiboAppIdKey	declared	Accounts.swift	Option-key payload was not Apple-oracle measured.
+c:@ACFacebookAppIdKey	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value ACFacebookAppIdKey.
+c:@ACFacebookAudienceEveryone	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value everyone.
+c:@ACFacebookAudienceFriends	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value friends.
+c:@ACFacebookAudienceKey	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value ACFacebookAudienceKey.
+c:@ACFacebookAudienceOnlyMe	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value me.
+c:@ACFacebookPermissionsKey	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value ACFacebookPermissionsKey.
+c:@ACTencentWeiboAppIdKey	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Oracle raw value ACTencentWeiboAppIdKey.
 c:@E@ACAccountCredentialRenewResult	implemented	Accounts.swift;AccountsRuntime.swift:exerciseRenewResult	Int enum; Linux never reports renewed.
 c:@E@ACAccountCredentialRenewResult@ACAccountCredentialRenewResultFailed	implemented	Accounts.swift;AccountsRuntime.swift:proveRenewCallback	Gated callback reports failed with fail-closed NSError.
 c:@E@ACAccountCredentialRenewResult@ACAccountCredentialRenewResultRejected	implemented	Accounts.swift;AccountsRuntime.swift:exerciseRenewResult	Case is constructible; Linux renew path uses failed.
@@ -69,7 +69,7 @@ c:objc(cs)ACAccountStore(im)saveAccount:withCompletionHandler:	implemented	Accou
 c:objc(cs)ACAccountStore(py)accounts	implemented	Accounts.swift;AccountsRuntime.swift:exerciseLocalObjects	Always an empty NSArray.
 c:objc(cs)ACAccountType	implemented	Accounts.swift;AccountsRuntime.swift:assertAccountTypeLookup	Store-produced descriptor for known public identifiers only.
 c:objc(cs)ACAccountType(py)accessGranted	implemented	Accounts.swift;AccountsRuntime.swift:assertAccountTypeLookup	Always false.
-c:objc(cs)ACAccountType(py)accountTypeDescription	declared	Accounts.swift	Getter compiles; Darwin display string was not measured.
+c:objc(cs)ACAccountType(py)accountTypeDescription	implemented	Accounts.swift;AccountsRuntime.swift:assertAccountTypeLookup	Oracle descriptions: Twitter, Facebook, Sina Weibo, Tencent Weibo.
 c:objc(cs)ACAccountType(py)identifier	implemented	Accounts.swift;AccountsRuntime.swift:assertAccountTypeLookup	Matches the known requested identifier.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ACAccountCredentialRenewResult	implemented	Accounts.swift;AccountsRuntime.swift:exerciseRenewResult	Synthesized Equatable !=.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ACErrorCode	implemented	Accounts.swift;AccountsRuntime.swift:assertOracleConstants	Synthesized Equatable !=.

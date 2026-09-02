@@ -17,7 +17,7 @@ public let ACFacebookPermissionsKey = "ACFacebookPermissionsKey"
 public let ACFacebookAudienceKey = "ACFacebookAudienceKey"
 public let ACFacebookAudienceEveryone = "everyone"
 public let ACFacebookAudienceFriends = "friends"
-public let ACFacebookAudienceOnlyMe = "only_me"
+public let ACFacebookAudienceOnlyMe = "me"
 public let ACTencentWeiboAppIdKey = "ACTencentWeiboAppIdKey"
 
 extension NSNotification.Name {
@@ -86,8 +86,8 @@ public typealias ACAccountStoreCredentialRenewalHandler = (
 // MARK: - Completion delivery
 //
 // save / remove / requestAccess / renew hop once onto
-// `ACAccountStore.completionQueue` (`Accounts.ACAccountStore.completion`) with
-// `async`, never `sync`. That is enough for nested callback calls: an inner
+// the private `Accounts.ACAccountStore.completion` queue with `async`, never
+// `sync`. That is enough for nested callback calls: an inner
 // `async` is queued behind the running handler. Tests occupy this serial queue
 // to prove non-inline delivery. Exactly-once is one scheduled block plus a
 // per-invocation flag.
@@ -111,6 +111,22 @@ private final class AccountsOnceFlag: @unchecked Sendable {
     }
 }
 
+private let accountsCompletionQueue = DispatchQueue(
+    label: "Accounts.ACAccountStore.completion",
+    qos: .utility
+)
+
+/// Linux host-test control. This is intentionally hidden from ordinary
+/// `import Accounts` clients and is not part of Apple's public Accounts API.
+@_spi(OpenUIKitHost)
+public enum AccountsHostControl {
+    public static func enqueueCompletionProbe(
+        _ body: @escaping @Sendable () -> Void
+    ) {
+        accountsCompletionQueue.async(execute: body)
+    }
+}
+
 private func accountsFailClosedError() -> NSError {
     NSError(
         domain: ACErrorDomain,
@@ -122,17 +138,17 @@ private func accountsFailClosedError() -> NSError {
 private func accountsDeliver(_ body: @escaping () -> Void) {
     let once = AccountsOnceFlag()
     let work = AccountsUncheckedWork(body: body)
-    ACAccountStore.completionQueue.async {
+    accountsCompletionQueue.async {
         guard once.take() else { return }
         work.body()
     }
 }
 
-private let knownAccountTypeIdentifiers: Set<String> = [
-    ACAccountTypeIdentifierTwitter,
-    ACAccountTypeIdentifierFacebook,
-    ACAccountTypeIdentifierSinaWeibo,
-    ACAccountTypeIdentifierTencentWeibo,
+private let knownAccountTypeDescriptions: [String: String] = [
+    ACAccountTypeIdentifierTwitter: "Twitter",
+    ACAccountTypeIdentifierFacebook: "Facebook",
+    ACAccountTypeIdentifierSinaWeibo: "Sina Weibo",
+    ACAccountTypeIdentifierTencentWeibo: "Tencent Weibo",
 ]
 
 // MARK: - Account type
@@ -142,13 +158,15 @@ private let knownAccountTypeIdentifiers: Set<String> = [
 /// identifiers.
 open class ACAccountType: NSObject {
     private let storedIdentifier: String
+    private let storedDescription: String
 
-    init(knownIdentifier: String) {
+    init(knownIdentifier: String, description: String) {
         self.storedIdentifier = knownIdentifier
+        self.storedDescription = description
         super.init()
     }
 
-    open var accountTypeDescription: String! { storedIdentifier }
+    open var accountTypeDescription: String! { storedDescription }
     open var identifier: String! { storedIdentifier }
     open var accessGranted: Bool { false }
 }
@@ -215,16 +233,9 @@ open class ACAccount: NSObject {
 // MARK: - Account store
 
 /// Fail-closed account store. Queries return empty results. Mutation, access,
-/// and credential renewal hop once onto `completionQueue` with
+/// and credential renewal hop once onto a private serial queue with
 /// `ACErrorPermissionDenied` and never fabricate Apple accounts or tokens.
 open class ACAccountStore: NSObject {
-    /// Serial queue that delivers Linux save/remove/requestAccess/renew
-    /// completions. Label: `Accounts.ACAccountStore.completion`.
-    public static let completionQueue = DispatchQueue(
-        label: "Accounts.ACAccountStore.completion",
-        qos: .utility
-    )
-
     open var accounts: NSArray! { NSArray() }
 
     open func account(withIdentifier identifier: String!) -> ACAccount! {
@@ -233,10 +244,13 @@ open class ACAccountStore: NSObject {
     }
 
     open func accountType(withAccountTypeIdentifier typeIdentifier: String!) -> ACAccountType! {
-        guard let typeIdentifier, knownAccountTypeIdentifiers.contains(typeIdentifier) else {
+        guard
+            let typeIdentifier,
+            let description = knownAccountTypeDescriptions[typeIdentifier]
+        else {
             return nil
         }
-        return ACAccountType(knownIdentifier: typeIdentifier)
+        return ACAccountType(knownIdentifier: typeIdentifier, description: description)
     }
 
     open func accounts(with accountType: ACAccountType!) -> [Any]! {

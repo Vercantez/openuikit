@@ -1,4 +1,4 @@
-import Accounts
+@_spi(OpenUIKitHost) import Accounts
 import Foundation
 
 private let eventTimeout = DispatchTimeInterval.seconds(5)
@@ -70,14 +70,14 @@ private func waitEvent(_ semaphore: DispatchSemaphore, _ message: String) {
     precondition(semaphore.wait(timeout: .now() + eventTimeout) == .success, message)
 }
 
-/// Occupy `ACAccountStore.completionQueue` until `release` so later `async`
+/// Occupy the SPI-exposed Linux completion queue until `release` so later `async`
 /// completions cannot run. `occupy` returns only after the blocker is running.
 private final class CompletionQueueBlocker: @unchecked Sendable {
     private let occupied = DispatchSemaphore(value: 0)
     private let hold = DispatchSemaphore(value: 0)
 
     func occupy() {
-        ACAccountStore.completionQueue.async {
+        AccountsHostControl.enqueueCompletionProbe {
             self.occupied.signal()
             self.hold.wait()
         }
@@ -91,7 +91,7 @@ private final class CompletionQueueBlocker: @unchecked Sendable {
 
 private func drainCompletionQueue() {
     let drained = DispatchSemaphore(value: 0)
-    ACAccountStore.completionQueue.async {
+    AccountsHostControl.enqueueCompletionProbe {
         drained.signal()
     }
     waitEvent(drained, "completion queue did not drain")
@@ -107,6 +107,13 @@ private func assertOracleConstants() {
         NSNotification.Name.ACAccountStoreDidChange.rawValue
             == "ACAccountStoreDidChangeNotification"
     )
+    precondition(ACFacebookAppIdKey == "ACFacebookAppIdKey")
+    precondition(ACFacebookPermissionsKey == "ACFacebookPermissionsKey")
+    precondition(ACFacebookAudienceKey == "ACFacebookAudienceKey")
+    precondition(ACFacebookAudienceEveryone == "everyone")
+    precondition(ACFacebookAudienceFriends == "friends")
+    precondition(ACFacebookAudienceOnlyMe == "me")
+    precondition(ACTencentWeiboAppIdKey == "ACTencentWeiboAppIdKey")
 
     let codes: [(ACErrorCode, UInt32)] = [
         (ACErrorUnknown, 1),
@@ -150,17 +157,17 @@ private func assertOracleConstants() {
 
 private func assertAccountTypeLookup(store: ACAccountStore) {
     let known = [
-        ACAccountTypeIdentifierTwitter,
-        ACAccountTypeIdentifierFacebook,
-        ACAccountTypeIdentifierSinaWeibo,
-        ACAccountTypeIdentifierTencentWeibo,
+        (ACAccountTypeIdentifierTwitter, "Twitter"),
+        (ACAccountTypeIdentifierFacebook, "Facebook"),
+        (ACAccountTypeIdentifierSinaWeibo, "Sina Weibo"),
+        (ACAccountTypeIdentifierTencentWeibo, "Tencent Weibo"),
     ]
-    for identifier in known {
+    for (identifier, description) in known {
         let accountType = store.accountType(withAccountTypeIdentifier: identifier)
         precondition(accountType != nil, identifier)
         precondition(accountType!.identifier == identifier)
+        precondition(accountType!.accountTypeDescription == description)
         precondition(accountType!.accessGranted == false)
-        _ = accountType!.accountTypeDescription
     }
     precondition(store.accountType(withAccountTypeIdentifier: "com.example.unknown") == nil)
     precondition(store.accountType(withAccountTypeIdentifier: "com.apple.tencentweibo") == nil)
@@ -249,7 +256,7 @@ private func proveBoolCallback(
     }
     state.markReturned()
     let drained = DispatchSemaphore(value: 0)
-    ACAccountStore.completionQueue.async {
+    AccountsHostControl.enqueueCompletionProbe {
         drained.signal()
     }
     blocker.release()
@@ -270,7 +277,7 @@ private func proveRenewCallback(store: ACAccountStore, account: ACAccount) {
     }
     state.markReturned()
     let drained = DispatchSemaphore(value: 0)
-    ACAccountStore.completionQueue.async {
+    AccountsHostControl.enqueueCompletionProbe {
         drained.signal()
     }
     blocker.release()
@@ -288,7 +295,7 @@ private func proveNilHandlers(store: ACAccountStore, account: ACAccount, account
     store.requestAccessToAccounts(with: accountType, options: [:], completion: nil)
     store.renewCredentials(for: account, completion: nil)
     let drained = DispatchSemaphore(value: 0)
-    ACAccountStore.completionQueue.async {
+    AccountsHostControl.enqueueCompletionProbe {
         drained.signal()
     }
     blocker.release()
