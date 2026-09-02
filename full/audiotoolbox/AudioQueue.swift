@@ -318,4 +318,3 @@ public func AudioQueueNewOutput(
     outAQ?.pointee = ATRegistry.shared.retain(queue)
     return 0
 }
-
