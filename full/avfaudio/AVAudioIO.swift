@@ -14,7 +14,7 @@ extension AVAudioPlayerDelegate {
     public func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {}
 }
 
-public protocol AVAudioRecorderDelegate: NSObjectProtocol {
+public protocol AVAudioRecorderDelegate: NSObjectProtocol, Sendable {
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool)
     func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: (any Error)?)
     func audioRecorderBeginInterruption(_ recorder: AVAudioRecorder)
@@ -157,7 +157,7 @@ public final class AVAudioFile: NSObject, @unchecked Sendable {
     }
 }
 
-public final class AVAudioPlayer: NSObject, @unchecked Sendable {
+public final class AVAudioPlayer: NSObject {
     public private(set) var url: URL?
     public private(set) var data: Data?
     public let format: AVAudioFormat
@@ -178,51 +178,57 @@ public final class AVAudioPlayer: NSObject, @unchecked Sendable {
         ProcessInfo.processInfo.systemUptime
     }
 
-    public init(contentsOf url: URL) throws {
-        self.url = url
-        self.data = try? Data(contentsOf: url)
-        self.format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)!
-        self.settings = self.format.settings
-        self.numberOfChannels = Int(self.format.channelCount)
-        self.duration = 0
-        super.init()
+    public convenience init(contentsOf url: URL) throws {
+        try self.init(contentsOf: url, fileTypeHint: nil)
     }
 
     public convenience init(contentsOfURL url: URL) throws {
         try self.init(contentsOf: url)
     }
 
-    public init(contentsOf url: URL, fileTypeHint utiString: String?) throws {
-        _ = utiString
-        self.url = url
-        self.data = try? Data(contentsOf: url)
-        self.format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)!
-        self.settings = self.format.settings
-        self.numberOfChannels = Int(self.format.channelCount)
-        self.duration = 0
-        super.init()
+    public convenience init(contentsOf url: URL, fileTypeHint utiString: String?) throws {
+        let data = try Data(contentsOf: url)
+        try self.init(waveData: data, url: url, fileTypeHint: utiString)
     }
 
     public convenience init(contentsOfURL url: URL, fileTypeHint utiString: String?) throws {
         try self.init(contentsOf: url, fileTypeHint: utiString)
     }
 
-    public init(data: Data) throws {
-        self.data = data
-        self.format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)!
-        self.settings = self.format.settings
-        self.numberOfChannels = Int(self.format.channelCount)
-        self.duration = 0
-        super.init()
+    public convenience init(data: Data) throws {
+        try self.init(data: data, fileTypeHint: nil)
     }
 
-    public init(data: Data, fileTypeHint utiString: String?) throws {
-        _ = utiString
+    public convenience init(data: Data, fileTypeHint utiString: String?) throws {
+        try self.init(waveData: data, url: nil, fileTypeHint: utiString)
+    }
+
+    private init(waveData data: Data, url: URL?, fileTypeHint: String?) throws {
+        _ = fileTypeHint
+        guard !data.isEmpty else {
+            throw avfaudioHostUnavailableError("AVAudioPlayer refuses empty audio data.")
+        }
+        guard let parsed = avfaudioParseLinearPCMWAVE(data) else {
+            throw avfaudioHostUnavailableError(
+                "AVAudioPlayer has no decoder for this payload; only 16-bit linear PCM WAVE is accepted."
+            )
+        }
+        guard
+            let format = AVAudioFormat(
+                commonFormat: .pcmFormatInt16,
+                sampleRate: parsed.sampleRate,
+                channels: parsed.channels,
+                interleaved: true
+            )
+        else {
+            throw avfaudioHostUnavailableError("WAVE format is not representable as AVAudioFormat.")
+        }
+        self.url = url
         self.data = data
-        self.format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2)!
-        self.settings = self.format.settings
-        self.numberOfChannels = Int(self.format.channelCount)
-        self.duration = 0
+        self.format = format
+        self.settings = format.settings
+        self.numberOfChannels = Int(format.channelCount)
+        self.duration = parsed.duration
         super.init()
     }
 
@@ -395,4 +401,73 @@ public final class AVAudioConverter: NSObject, @unchecked Sendable {
         )
         return .error
     }
+}
+
+struct AVFAudioLinearPCMWAVE {
+    var sampleRate: Double
+    var channels: AVAudioChannelCount
+    var duration: TimeInterval
+}
+
+func avfaudioParseLinearPCMWAVE(_ data: Data) -> AVFAudioLinearPCMWAVE? {
+    guard data.count >= 44 else { return nil }
+    func ascii(_ offset: Int) -> String {
+        String(decoding: data[offset..<(offset + 4)], as: UTF8.self)
+    }
+    func u16(_ offset: Int) -> UInt16 {
+        UInt16(data[offset]) | (UInt16(data[offset + 1]) << 8)
+    }
+    func u32(_ offset: Int) -> UInt32 {
+        UInt32(data[offset])
+            | (UInt32(data[offset + 1]) << 8)
+            | (UInt32(data[offset + 2]) << 16)
+            | (UInt32(data[offset + 3]) << 24)
+    }
+    guard ascii(0) == "RIFF", ascii(8) == "WAVE" else { return nil }
+
+    var offset = 12
+    var audioFormat: UInt16?
+    var channels: UInt16?
+    var sampleRate: UInt32?
+    var bits: UInt16?
+    var payloadBytes: Int?
+    while offset + 8 <= data.count {
+        let chunkID = ascii(offset)
+        let chunkSize = Int(u32(offset + 4))
+        let body = offset + 8
+        guard chunkSize >= 0, body <= data.count else { return nil }
+        let next = body + chunkSize + (chunkSize & 1)
+        if chunkID == "fmt " {
+            guard chunkSize >= 16, body + 16 <= data.count else { return nil }
+            audioFormat = u16(body)
+            channels = u16(body + 2)
+            sampleRate = u32(body + 4)
+            bits = u16(body + 14)
+        } else if chunkID == "data" {
+            guard body + chunkSize <= data.count else { return nil }
+            payloadBytes = chunkSize
+        }
+        guard next > offset else { return nil }
+        offset = next
+    }
+
+    guard
+        audioFormat == 1,
+        bits == 16,
+        let channelCount = channels,
+        channelCount == 1 || channelCount == 2,
+        let rate = sampleRate,
+        rate == 8000 || rate == 16000 || rate == 22050 || rate == 44100 || rate == 48000,
+        let bytes = payloadBytes
+    else {
+        return nil
+    }
+    let frameSize = Int(channelCount) * 2
+    guard frameSize > 0, bytes >= frameSize, bytes % frameSize == 0 else { return nil }
+    let frames = bytes / frameSize
+    return AVFAudioLinearPCMWAVE(
+        sampleRate: Double(rate),
+        channels: AVAudioChannelCount(channelCount),
+        duration: TimeInterval(frames) / TimeInterval(rate)
+    )
 }
