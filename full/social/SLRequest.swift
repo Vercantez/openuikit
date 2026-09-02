@@ -204,10 +204,15 @@ open class SLRequest: NSObject {
     }
 
     private static func formEncode(_ string: String) -> String {
-        var allowed = CharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._*")
-        allowed.insert(charactersIn: "+")
-        let plusForSpace = string.replacingOccurrences(of: " ", with: "+")
-        return plusForSpace.addingPercentEncoding(withAllowedCharacters: allowed) ?? plusForSpace
+        // application/x-www-form-urlencoded: percent-encode first so literal
+        // `+` becomes %2B, then turn %20 into `+` for spaces. `+` is not in
+        // the allowed set, so an already space-substituted string is never
+        // re-encoded with `+` treated as unreserved.
+        let allowed = CharacterSet(
+            charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._*"
+        )
+        let encoded = string.addingPercentEncoding(withAllowedCharacters: allowed) ?? string
+        return encoded.replacingOccurrences(of: "%20", with: "+")
     }
 
     private static func isSafeMultipartToken(_ string: String) -> Bool {

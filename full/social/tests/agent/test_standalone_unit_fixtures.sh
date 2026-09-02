@@ -92,6 +92,16 @@ printf '%s\n' "$multipart_output"
 printf '%s\n' "$multipart_output" | grep -Fqx -- 'SOCIAL_MULTIPART_HARDENING_OK' \
     || die 'multipart hardening probe failed'
 
+swiftc -warnings-as-errors -I "$STAGE" \
+    -D SOCIAL_STANDALONE_TEST_FIXTURES \
+    "$SCRIPT_DIR/SocialFormURLEncode.swift" \
+    "$STAGE/libSocial.dylib" \
+    -o "$STAGE/form-urlencoded"
+form_output=$(run_dylib_bin "$STAGE" "$STAGE/form-urlencoded")
+printf '%s\n' "$form_output"
+printf '%s\n' "$form_output" | grep -Fqx -- 'SOCIAL_FORM_URLENCODE_OK' \
+    || die 'form-urlencoded encoding probe failed'
+
 production_status=0
 swiftc -warnings-as-errors -parse-as-library -emit-library -emit-module \
     -module-name Social \

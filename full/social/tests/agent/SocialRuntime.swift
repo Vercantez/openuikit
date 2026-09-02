@@ -278,6 +278,23 @@ await MainActor.run {
         "POST content type"
     )
 
+    func formBody(_ value: String) -> String {
+        let request = SLRequest(
+            forServiceType: SLServiceTypeTwitter,
+            requestMethod: .POST,
+            url: URL(string: "https://api.example.com/1.1/statuses/update.json")!,
+            parameters: ["q": value]
+        )!
+        return String(data: request.preparedURLRequest()!.httpBody ?? Data(), encoding: .utf8) ?? ""
+    }
+    require(formBody("C++") == "q=C%2B%2B", "literal plus encodes as %2B")
+    require(formBody("a+b c") == "q=a%2Bb+c", "plus percent-encoded then space as plus")
+    require(formBody("café") == "q=caf%C3%A9", "unicode percent-encoded")
+    require(formBody("日本語") == "q=%E6%97%A5%E6%9C%AC%E8%AA%9E", "multibyte unicode")
+    require(formBody("a&b=c%d") == "q=a%26b%3Dc%25d", "reserved bytes percent-encoded")
+    require(!formBody("C++").contains("C++"), "literal plus is not left unencoded")
+    require(!formBody("a+b c").contains("a+b+c"), "space substitution does not preserve literal plus")
+
     let put = SLRequest(
         forServiceType: SLServiceTypeFacebook,
         requestMethod: .PUT,
