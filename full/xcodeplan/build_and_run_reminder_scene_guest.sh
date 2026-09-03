@@ -214,6 +214,7 @@ build_inside() {
         "$SCENE_OUT/GeneratedSceneBootstrap.swift" \
         "$W/full/xcodeplan/ReminderSceneRuntimeSupport.swift" \
         "$W/full/xcodeplan/PortableUIKitApplicationHost.swift" \
+        "$W/full/xcodeplan/PortableUIKitLiveTransport.swift" \
         "$W/full/driver/RunLoop.swift"
 
     "${link_flags[@]}" -dead_strip -exported_symbol __mh_execute_header -rpath @loader_path \
