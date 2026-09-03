@@ -4,9 +4,10 @@
 # into a fresh directory. Stamp also keys usr/lib/*.tbd from the FE sysroot
 # (scratch/sysroot_fe4[-x86_64], phase2 / machorun gen_tbd): a tbd-only
 # source change is MISMATCH, not MATCH. Refuse-before-cmake if math.h lacks
-# fmaxl, sys/proc.h lacks extern_proc, or a Darwin Clang overlay map names a
-# header that is not on disk. libc++ usr/include/c++/v1/module.modulemap is
-# outside that closure and must not refuse.
+# fmaxl, sys/proc.h lacks extern_proc, a Darwin Clang overlay map names a
+# header that is not on disk, or an include_next wrapper (objc4-priv
+# crt_externs.h) has no later -isysroot target. libc++ usr/include/c++/v1
+# module.modulemap is outside that closure and must not refuse.
 set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
@@ -484,6 +485,190 @@ if grep -n 'rm -rf "$W/sdk"' "$SCRIPT_DIR/stage_sdk.sh"; then
   fail=1
 else
   echo "  OK  no rm -rf \$W/sdk"
+fi
+
+echo
+echo "=== stage_sdk.sh does not flatten include_next wrappers onto usr/include ==="
+if grep -nF 'install -D {} "$SDK/usr/include/{}"' "$SCRIPT_DIR/stage_sdk.sh"; then
+  echo "  FAIL stage_sdk.sh still install -D objc4-priv onto usr/include"
+  fail=1
+else
+  echo "  OK  no flatten install -D onto usr/include"
+fi
+grep -q 'overlay_sysroot_install_objc4_priv' "$SCRIPT_DIR/stage_sdk.sh" \
+  && echo "  OK  stage_sdk calls overlay_sysroot_install_objc4_priv" \
+  || { echo "  FAIL stage_sdk missing overlay_sysroot_install_objc4_priv"; fail=1; }
+
+echo
+echo "=== objc4-priv include_next wrapper at usr/include is refused ==="
+wrap=$OPENUIKIT_ROOT/machorun/vendor/objc4-priv/crt_externs.h
+pub=$OPENUIKIT_ROOT/machorun/sdk/usr/include/crt_externs.h
+need '[ -f "$wrap" ]' "objc4-priv crt_externs.h present"
+need '[ -f "$pub" ]' "machorun-sdk public crt_externs.h present"
+grep -q include_next "$wrap" \
+  && echo "  OK  objc4-priv crt_externs.h is include_next wrapper" \
+  || { echo "  FAIL wrapper lacks include_next"; fail=1; }
+grep -q include_next "$pub" \
+  && { echo "  FAIL public crt_externs.h has include_next"; fail=1; } \
+  || echo "  OK  public crt_externs.h has no include_next"
+mkdir -p "$tmp/crtwrap/usr/include" "$tmp/crtwrap/usr/lib"
+fill_required_headers "$tmp/crtwrap"
+echo '--- !tapi-tbd-v3' > "$tmp/crtwrap/usr/lib/libSystem.B.tbd"
+cp "$wrap" "$tmp/crtwrap/usr/include/crt_externs.h"
+overlay_sysroot_write_stamp "$tmp/crtwrap"
+if overlay_sysroot_tree_complete "$tmp/crtwrap"; then
+  echo "  FAIL tree_complete true with wrapper-only crt_externs.h"
+  fail=1
+else
+  echo "  OK  tree_complete false (wrapper target absent)"
+fi
+set +e
+print_wrap=$(overlay_sysroot_print_headers "$tmp/crtwrap" 2>&1)
+refuse_wrap=$(overlay_sysroot_refuse_incomplete "$tmp/crtwrap" 2>&1)
+st=$?
+set -e
+printf '%s\n' "$print_wrap" | grep -q 'include_next missing header=crt_externs.h' \
+  && echo "  OK  print names missing crt_externs.h" \
+  || { echo "  FAIL print include_next"; printf '%s\n' "$print_wrap" | tail -20; fail=1; }
+[ "$st" -eq 2 ] && echo "  OK  wrapper-only refuse rc=2" \
+  || { echo "  FAIL wrapper-only refuse rc=$st"; printf '%s\n' "$refuse_wrap"; fail=1; }
+printf '%s\n' "$refuse_wrap" | grep -q 'CANNOT_OVERLAY_SYSROOT_INCLUDE_NEXT' \
+  && echo "  OK  CANNOT_OVERLAY_SYSROOT_INCLUDE_NEXT" \
+  || { echo "  FAIL missing INCLUDE_NEXT marker"; printf '%s\n' "$refuse_wrap"; fail=1; }
+printf '%s\n' "$refuse_wrap" | grep -q 'crt_externs.h@usr/include/crt_externs.h' \
+  && echo "  OK  missing names wrapper path" \
+  || { echo "  FAIL missing attribution"; printf '%s\n' "$refuse_wrap"; fail=1; }
+
+echo
+echo "=== fill_include_next_wrappers restores public header behind wrapper ==="
+overlay_sysroot_fill_include_next_wrappers "$tmp/crtwrap" | tee "$tmp/crt.fill"
+grep -q 'usr/local/include' "$tmp/crt.fill" \
+  && echo "  OK  fill moved wrapper to usr/local/include" \
+  || { echo "  FAIL fill did not mention usr/local/include"; cat "$tmp/crt.fill"; fail=1; }
+need '[ -f "$tmp/crtwrap/usr/local/include/crt_externs.h" ]' \
+  "wrapper at usr/local/include/crt_externs.h"
+need '[ -f "$tmp/crtwrap/usr/include/crt_externs.h" ]' \
+  "public header at usr/include/crt_externs.h"
+overlay_sysroot_is_include_next_wrapper "$tmp/crtwrap/usr/local/include/crt_externs.h" \
+  && echo "  OK  usr/local/include/crt_externs.h is the wrapper" \
+  || { echo "  FAIL usr/local is not the wrapper"; fail=1; }
+overlay_sysroot_is_include_next_wrapper "$tmp/crtwrap/usr/include/crt_externs.h" \
+  && { echo "  FAIL usr/include still the wrapper"; fail=1; } \
+  || echo "  OK  usr/include/crt_externs.h is not the wrapper"
+grep -q _NSGetArgc "$tmp/crtwrap/usr/include/crt_externs.h" \
+  && echo "  OK  usr/include declares _NSGetArgc" \
+  || { echo "  FAIL public header lacks _NSGetArgc"; fail=1; }
+if overlay_sysroot_tree_complete "$tmp/crtwrap"; then
+  echo "  OK  tree_complete true after fill"
+else
+  echo "  FAIL tree_complete false after fill"
+  fail=1
+fi
+set +e
+refuse_filled=$(overlay_sysroot_refuse_incomplete "$tmp/crtwrap" 2>&1)
+st=$?
+set -e
+[ "$st" -eq 0 ] && echo "  OK  filled refuse rc=0" \
+  || { echo "  FAIL filled refuse rc=$st"; printf '%s\n' "$refuse_filled"; fail=1; }
+printf '%s\n' "$refuse_filled" | grep -q CANNOT_OVERLAY_SYSROOT_INCLUDE_NEXT \
+  && { echo "  FAIL filled still INCLUDE_NEXT"; printf '%s\n' "$refuse_filled"; fail=1; } \
+  || echo "  OK  filled is not INCLUDE_NEXT"
+
+echo
+echo "=== working copy (public header only, no wrapper) still complete ==="
+mkdir -p "$tmp/crtpub/usr/include" "$tmp/crtpub/usr/lib"
+fill_required_headers "$tmp/crtpub"
+echo '--- !tapi-tbd-v3' > "$tmp/crtpub/usr/lib/libSystem.B.tbd"
+cp "$pub" "$tmp/crtpub/usr/include/crt_externs.h"
+if overlay_sysroot_tree_complete "$tmp/crtpub"; then
+  echo "  OK  public-only tree_complete true"
+else
+  echo "  FAIL public-only tree_complete false"
+  fail=1
+fi
+set +e
+refuse_pub=$(overlay_sysroot_refuse_incomplete "$tmp/crtpub" 2>&1)
+st=$?
+set -e
+[ "$st" -eq 0 ] && echo "  OK  public-only refuse rc=0" \
+  || { echo "  FAIL public-only refuse rc=$st"; printf '%s\n' "$refuse_pub"; fail=1; }
+
+echo
+echo "=== overlay_sysroot_install_objc4_priv keeps public usr/include ==="
+mkdir -p "$tmp/privsrc" "$tmp/sdkinst/usr/include/os"
+cp "$wrap" "$tmp/privsrc/crt_externs.h"
+mkdir -p "$tmp/privsrc/os"
+echo '/* not a wrapper */' > "$tmp/privsrc/os/lock_private.h"
+echo '/* public from machorun-sdk step 1 */' > "$tmp/sdkinst/usr/include/crt_externs.h"
+echo '_NSGetArgc public' >> "$tmp/sdkinst/usr/include/crt_externs.h"
+overlay_sysroot_install_objc4_priv "$tmp/privsrc" "$tmp/sdkinst"
+need '[ -f "$tmp/sdkinst/usr/local/include/crt_externs.h" ]' \
+  "install put wrapper at usr/local/include"
+need '[ -f "$tmp/sdkinst/usr/include/os/lock_private.h" ]' \
+  "non-wrapper priv header still at usr/include"
+overlay_sysroot_is_include_next_wrapper "$tmp/sdkinst/usr/local/include/crt_externs.h" \
+  && echo "  OK  installed wrapper is include_next" \
+  || { echo "  FAIL installed usr/local is not wrapper"; fail=1; }
+overlay_sysroot_is_include_next_wrapper "$tmp/sdkinst/usr/include/crt_externs.h" \
+  && { echo "  FAIL install overwrote usr/include with wrapper"; fail=1; } \
+  || echo "  OK  usr/include crt_externs.h not overwritten"
+grep -q '_NSGetArgc public' "$tmp/sdkinst/usr/include/crt_externs.h" \
+  && echo "  OK  step-1 public header preserved" \
+  || { echo "  FAIL public header lost"; fail=1; }
+
+echo
+echo "=== clang -isysroot finds public crt_externs.h via include_next ==="
+clang18=$(command -v clang-18 || true)
+if [ -n "$clang18" ]; then
+  clang_sdk=$tmp/clangsdk
+  mkdir -p "$clang_sdk"
+  cp -a "$OPENUIKIT_ROOT/machorun/sdk/usr" "$clang_sdk/usr"
+  mkdir -p "$clang_sdk/usr/local/include"
+  cp "$pub" "$clang_sdk/usr/include/crt_externs.h"
+  cp "$wrap" "$clang_sdk/usr/local/include/crt_externs.h"
+  printf '%s\n' '#include <crt_externs.h>' > "$tmp/crt_probe.c"
+  set +e
+  pre=$("$clang18" -target x86_64-apple-macos13.0 -isysroot "$clang_sdk" \
+    -E "$tmp/crt_probe.c" 2>"$tmp/crt_probe.err")
+  st=$?
+  set -e
+  [ "$st" -eq 0 ] && echo "  OK  clang -E rc=0" \
+    || { echo "  FAIL clang -E rc=$st"; cat "$tmp/crt_probe.err"; fail=1; }
+  printf '%s\n' "$pre" | grep -q _NSGetArgc \
+    && echo "  OK  clang -E sees _NSGetArgc (public header via include_next)" \
+    || { echo "  FAIL clang -E missing _NSGetArgc"; fail=1; }
+  printf '%s\n' "$pre" | grep -q __progname \
+    && echo "  OK  clang -E sees __progname (objc4-priv wrapper)" \
+    || { echo "  FAIL clang -E missing wrapper __progname"; fail=1; }
+  printf '%s\n' "$pre" | grep -q usr/local/include/crt_externs.h \
+    && echo "  OK  -E entered usr/local/include wrapper first" \
+    || { echo "  FAIL -E did not enter usr/local/include"; fail=1; }
+  printf '%s\n' "$pre" | grep -q usr/include/crt_externs.h \
+    && echo "  OK  -E include_next'd usr/include public header" \
+    || { echo "  FAIL -E did not reach usr/include"; fail=1; }
+  # Wrapper-only (the restage bug): same -E must fail at include_next.
+  mkdir -p "$tmp/clangbad/usr/include"
+  cp "$wrap" "$tmp/clangbad/usr/include/crt_externs.h"
+  set +e
+  "$clang18" -target x86_64-apple-macos13.0 -isysroot "$tmp/clangbad" \
+    -E "$tmp/crt_probe.c" >/dev/null 2>"$tmp/crt_probe_bad.err"
+  badst=$?
+  set -e
+  if grep -q "file not found" "$tmp/crt_probe_bad.err"; then
+    echo "  OK  wrapper-only clang -E fails at include_next (operator shape)"
+  else
+    echo "  FAIL wrapper-only clang -E did not reproduce crt_externs.h file not found"
+    echo "  rc=$badst"
+    cat "$tmp/crt_probe_bad.err" | head -20
+    fail=1
+  fi
+  grep -q 'crt_externs.h:13:15' "$tmp/crt_probe_bad.err" \
+    && echo "  OK  error is crt_externs.h:13:15" \
+    || { echo "  FAIL error is not crt_externs.h:13:15"; cat "$tmp/crt_probe_bad.err"; fail=1; }
+  [ "$badst" -ne 0 ] && echo "  OK  wrapper-only clang -E rc!=0" \
+    || { echo "  FAIL wrapper-only clang -E succeeded"; fail=1; }
+else
+  echo "  skip clang -E (no clang-18)"
 fi
 
 echo

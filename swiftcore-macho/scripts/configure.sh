@@ -121,6 +121,8 @@ fi
 # from full/sdk-gaps). libc++ usr/include/c++/v1 is outside that closure.
 # Stamp keys usr/lib/*.tbd from scratch/sysroot_fe4[-x86_64] (phase2 copies
 # machorun gen_tbd there); print_headers emits source= tbd_sha=.
+# include_next wrappers (objc4-priv crt_externs.h) must have a later
+# -isysroot target (usr/local/include wrapper, usr/include public header).
 # Refuse *before* cmake bakes -DSWIFT_SDK_OSX_PATH.
 if [ "$PRINT_FLAGS" != 1 ] && [ "$SWIFTCORE_DARWIN_ARCH" = x86_64 ]; then
   overlay_sysroot_print_headers "$SDK"

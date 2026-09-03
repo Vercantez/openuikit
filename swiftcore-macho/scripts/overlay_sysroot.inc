@@ -12,8 +12,10 @@
 # Stamp covers the overlay-darwin header set + Darwin.modulemap recipe
 # (stage_overlay_darwin.sh + enumerated module headers) + machorun sys/proc.h
 # + the SDK copy's link inputs: usr/lib/*.tbd, usr/lib/swift/*.tbd,
-# usr/lib/swift/*.swiftmodule/*, and HEAD:machorun (darwin tbds originate in
-# machorun gen_tbd; phase2 copies them into scratch/sysroot_fe4[-x86_64]).
+# usr/lib/swift/*.swiftmodule/*, HEAD:machorun (darwin tbds originate in
+# machorun gen_tbd; phase2 copies them into scratch/sysroot_fe4[-x86_64]),
+# and the crt_externs.h include_next chain (objc4-priv wrapper in front of
+# the public machorun-sdk / FE header).
 # Required *staged* headers (ConditionalMacros.h included) must be present in
 # the dest tree: input-sha MATCH of the pin is not completeness. .tbd stubs
 # are copied FROM that FE sysroot (fallback: machorun gen_tbd output / the
@@ -24,6 +26,14 @@
 # overlay compiles load via -sdk (usr/include/module.modulemap + Darwin*.modulemap),
 # not libc++ usr/include/c++/v1/module.modulemap. Source Darwin headers from the
 # FE sysroot / full/sdk-gaps / machorun / overlay-darwin pins.
+#
+# clang -target x86_64-apple-macos -isysroot $SDK searches usr/local/include
+# then usr/include. objc4-priv/crt_externs.h is a wrapper (`#include_next
+# <crt_externs.h>`). Flattening it onto usr/include (stage_sdk used to) leaves
+# no later dir for the public header — Darwin.o dies at crt_externs.h:13.
+# The working (stale) copy had the public machorun-sdk / FE file at
+# usr/include/crt_externs.h. Restage puts the wrapper at usr/local/include
+# and the public header at usr/include.
 
 if [ -n "${SWIFTCORE_OVERLAY_SYSROOT_INC:-}" ]; then
     return 0 2>/dev/null || exit 0
@@ -40,9 +50,10 @@ OPENUIKIT_ROOT=${OPENUIKIT_ROOT:-$(cd "$SWIFTCORE_ROOT/.." && pwd)}
 . "$OPENUIKIT_ROOT/scripts/x86/common.inc"
 
 # Bump when staging steps, the Darwin.modulemap header list, modulemap
-# header closure, the required staged-header / tbd completeness gate, or the
-# tbd / swiftmodule / HEAD:machorun stamp inputs change.
-OVERLAY_SYSROOT_RECIPE=overlay-darwin.5
+# header closure, the required staged-header / tbd completeness gate, the
+# tbd / swiftmodule / HEAD:machorun stamp inputs, or the include_next
+# wrapper layout change.
+OVERLAY_SYSROOT_RECIPE=overlay-darwin.6
 OVERLAY_SYSROOT_STAMP=.overlay-sysroot-inputs
 
 # Same enumeration as stage_overlay_darwin.sh DARWIN_MODULE_HEADERS.
@@ -256,15 +267,213 @@ overlay_sysroot_print_stamp_diff() {
     done < <(overlay_sysroot_stamp_diff "$stamp" || true)
 }
 
+# Names from `#include_next <foo.h>` / `"foo.h"` in a header. Empty if none.
+overlay_sysroot_include_next_names() {
+    local f=$1
+    [ -f "$f" ] || return 0
+    sed -n 's/^[[:space:]]*#[[:space:]]*include_next[[:space:]]*[<"]\([^>"]*\)[>"].*/\1/p' "$f"
+}
+
+overlay_sysroot_is_include_next_wrapper() {
+    local f=$1
+    [ -f "$f" ] || return 1
+    overlay_sysroot_include_next_names "$f" | grep -q .
+}
+
+# clang -target *-apple-macos -isysroot $SDK (overlay -sdk): usr/local/include
+# then usr/include. Resource dir is not an SDK dir we stage into.
+overlay_sysroot_isysroot_include_dirs() {
+    local sdk=${1:?overlay_sysroot_isysroot_include_dirs: sdk}
+    printf '%s\n' "$sdk/usr/local/include"
+    printf '%s\n' "$sdk/usr/include"
+}
+
+overlay_sysroot_objc4_priv_crt() {
+    local cand
+    for cand in \
+        ${W:+$W/objc4-priv/crt_externs.h} \
+        "$OPENUIKIT_ROOT/machorun/vendor/objc4-priv/crt_externs.h"
+    do
+        [ -n "$cand" ] || continue
+        if [ -f "$cand" ]; then
+            printf '%s\n' "$cand"
+            return 0
+        fi
+    done
+    return 1
+}
+
+# Public Apple crt_externs.h (no include_next). Working overlay copy / FE /
+# machorun-sdk. Never the objc4-priv wrapper.
+overlay_sysroot_public_crt_externs() {
+    local root f
+    while IFS= read -r root; do
+        [ -n "$root" ] || continue
+        f=$root/crt_externs.h
+        [ -f "$f" ] || continue
+        overlay_sysroot_is_include_next_wrapper "$f" && continue
+        printf '%s\n' "$f"
+        return 0
+    done < <(overlay_sysroot_header_search_roots "")
+    return 1
+}
+
+# One "name<TAB>wrapper_rel" per include_next whose target is not in a later
+# -isysroot dir. Return 1 if any are missing.
+# overlay_sysroot_include_next_missing_entries <sdk>
+overlay_sysroot_include_next_missing_entries() {
+    local sdk=${1:?overlay_sysroot_include_next_missing_entries: sdk}
+    local dir f name later found any=0 wrapper_dir rest
+    while IFS= read -r dir; do
+        [ -n "$dir" ] || continue
+        [ -d "$dir" ] || continue
+        while IFS= read -r f; do
+            [ -n "$f" ] || continue
+            while IFS= read -r name; do
+                [ -n "$name" ] || continue
+                found=0
+                rest=0
+                while IFS= read -r later; do
+                    [ -n "$later" ] || continue
+                    if [ "$later" = "$dir" ]; then
+                        rest=1
+                        continue
+                    fi
+                    [ "$rest" -eq 1 ] || continue
+                    if [ -f "$later/$name" ]; then
+                        found=1
+                        break
+                    fi
+                done < <(overlay_sysroot_isysroot_include_dirs "$sdk")
+                if [ "$found" -eq 0 ]; then
+                    wraprel=${f#"$sdk/"}
+                    if [ "$wraprel" = "$f" ]; then
+                        wraprel=${f#"$(realpath "$sdk" 2>/dev/null || printf '%s' "$sdk")/"}
+                    fi
+                    printf '%s\t%s\n' "$name" "$wraprel"
+                    any=1
+                fi
+            done < <(overlay_sysroot_include_next_names "$f")
+        done < <(find "$dir" -name '*.h' ! -path '*/c++/v1/*' -print | LC_ALL=C sort)
+    done < <(overlay_sysroot_isysroot_include_dirs "$sdk")
+    [ "$any" -eq 0 ]
+}
+
+overlay_sysroot_include_next_ok() {
+    overlay_sysroot_include_next_missing_entries "$1" >/dev/null
+}
+
+# Restore the public header behind an include_next wrapper. clang -isysroot
+# searches usr/local/include then usr/include: wrapper in front, public
+# machorun-sdk / FE header behind. Overlay compiles pass -sdk only.
+# overlay_sysroot_fill_include_next_wrappers <dest>
+overlay_sysroot_fill_include_next_wrappers() {
+    local dest=${1:?overlay_sysroot_fill_include_next_wrappers: dest}
+    local name wraprel wrap public n=0
+    mkdir -p "$dest/usr/include" "$dest/usr/local/include"
+    while IFS=$'\t' read -r name wraprel; do
+        [ -n "$name" ] || continue
+        wrap=$dest/$wraprel
+        public=
+        if [ "$name" = crt_externs.h ]; then
+            public=$(overlay_sysroot_public_crt_externs || true)
+        else
+            while IFS= read -r src_root; do
+                [ -n "$src_root" ] || continue
+                if [ -f "$src_root/$name" ] \
+                    && ! overlay_sysroot_is_include_next_wrapper "$src_root/$name"; then
+                    public=$src_root/$name
+                    break
+                fi
+            done < <(overlay_sysroot_header_search_roots "$dest")
+        fi
+        if [ -z "$public" ] || [ ! -f "$public" ]; then
+            echo "overlay_sysroot: include_next $name wrapper=$wraprel public=ABSENT"
+            continue
+        fi
+        mkdir -p "$dest/usr/local/include/$(dirname "$name")" \
+            "$dest/usr/include/$(dirname "$name")"
+        # Wrapper in the front -isysroot dir; public header behind. Copy the
+        # wrapper away from usr/include *before* overwriting that slot.
+        if [ -f "$wrap" ] && overlay_sysroot_is_include_next_wrapper "$wrap" \
+            && [ "$wraprel" != "usr/local/include/$name" ]; then
+            cp -a "$wrap" "$dest/usr/local/include/$name"
+            echo "overlay_sysroot: include_next wrapper $name → usr/local/include (front -isysroot dir)"
+        fi
+        cp -a "$public" "$dest/usr/include/$name"
+        echo "overlay_sysroot: include_next target $name from $public → usr/include"
+        n=$((n + 1))
+    done < <(overlay_sysroot_include_next_missing_entries "$dest" || true)
+    echo "overlay_sysroot: filled $n include_next targets into $dest"
+}
+
+# objc4-priv flatten: include_next wrappers go to usr/local/include (clang
+# Darwin -isysroot front dir). Everything else stays on usr/include. Never
+# overwrite the public machorun-sdk / FE header with a wrapper.
+# overlay_sysroot_install_objc4_priv <priv_dir> <sdk>
+overlay_sysroot_install_objc4_priv() {
+    local priv=${1:?overlay_sysroot_install_objc4_priv: priv}
+    local sdk=${2:?overlay_sysroot_install_objc4_priv: sdk}
+    local rel src dest
+    [ -d "$priv" ] || return 0
+    while IFS= read -r rel; do
+        [ -n "$rel" ] || continue
+        src=$priv/$rel
+        [ -f "$src" ] || continue
+        if overlay_sysroot_is_include_next_wrapper "$src"; then
+            dest=$sdk/usr/local/include/$rel
+            echo "overlay_sysroot: objc4-priv include_next $rel → usr/local/include (public header stays at usr/include)"
+        else
+            dest=$sdk/usr/include/$rel
+        fi
+        mkdir -p "$(dirname "$dest")"
+        install -D "$src" "$dest"
+    done < <(cd "$priv" && find . -name '*.h' | sed 's|^\./||' | LC_ALL=C sort)
+}
+
+overlay_sysroot_print_include_next() {
+    local sdk=${1:?overlay_sysroot_print_include_next: sdk}
+    local name wraprel any=0
+    while IFS=$'\t' read -r name wraprel; do
+        [ -n "$name" ] || continue
+        echo "overlay_sysroot: include_next missing header=$name wrapper=$wraprel"
+        any=1
+    done < <(overlay_sysroot_include_next_missing_entries "$sdk" || true)
+    if [ "$any" -eq 0 ]; then
+        echo "overlay_sysroot: include_next complete"
+    fi
+}
+
+# Named CANNOT. Exit 2. wrapper whose include_next target is absent.
+# overlay_sysroot_refuse_include_next <sdk>
+overlay_sysroot_refuse_include_next() {
+    local sdk=${1:?overlay_sysroot_refuse_include_next: sdk}
+    local name wraprel resolved entries=""
+    while IFS=$'\t' read -r name wraprel; do
+        [ -n "$name" ] || continue
+        echo "overlay_sysroot: include_next missing header=$name wrapper=$wraprel" >&2
+        entries="${entries:+$entries,}$name@$wraprel"
+    done < <(overlay_sysroot_include_next_missing_entries "$sdk" || true)
+    if [ -z "$entries" ]; then
+        return 0
+    fi
+    resolved=$(realpath "$sdk" 2>/dev/null || printf '%s' "$sdk")
+    echo "CANNOT_OVERLAY_SYSROOT_INCLUDE_NEXT tree=$sdk realpath=$resolved missing=$entries reason=wrapper #include_next has no later -isysroot target (clang Darwin -isysroot searches usr/local/include then usr/include; overlay compiles pass -sdk only). Working copy: public machorun-sdk/FE crt_externs.h at usr/include; objc4-priv wrapper at usr/local/include." >&2
+    return 2
+}
+
 # overlay_sysroot_input_lines
 # recipe + sha of the overlay-darwin header set + modulemap recipe + proc.h
-# + source usr/lib/*.tbd + usr/lib/swift/*.tbd + swiftmodules + HEAD:machorun.
+# + source usr/lib/*.tbd + usr/lib/swift/*.tbd + swiftmodules + HEAD:machorun
+# + public crt_externs.h / objc4-priv wrapper (include_next chain).
 overlay_sysroot_input_lines() {
     local src=$SWIFTCORE_ROOT/sdk/overlay-darwin
-    local proc tbd_src tbd_rel
+    local proc tbd_src tbd_rel public_crt priv_crt
     proc=$(overlay_sysroot_proc_h || true)
     tbd_src=$(overlay_sysroot_resolve_source || true)
     [ -n "$tbd_src" ] || tbd_src=ABSENT
+    public_crt=$(overlay_sysroot_public_crt_externs || true)
+    priv_crt=$(overlay_sysroot_objc4_priv_crt || true)
     printf 'recipe=%s\n' "$OVERLAY_SYSROOT_RECIPE"
     printf 'overlay-darwin.math.h=%s\n' "$(overlay_sysroot_sha_or_absent "$src/math.h")"
     printf 'overlay-darwin.MacTypes.h=%s\n' "$(overlay_sysroot_sha_or_absent "$src/MacTypes.h")"
@@ -279,7 +488,10 @@ overlay_sysroot_input_lines() {
     printf 'required.headers=%s\n' \
         "$(printf '%s\n' "${OVERLAY_SYSROOT_REQUIRED_HEADERS[@]}" | sha256sum | awk '{print $1}')"
     printf 'modulemap.closure=darwin_clang_overlay_maps\n'
+    printf 'include_next.dirs=usr/local/include,usr/include\n'
     printf 'machorun.sys/proc.h=%s\n' "$(overlay_sysroot_sha_or_absent "${proc:-}")"
+    printf 'machorun.crt_externs.h=%s\n' "$(overlay_sysroot_sha_or_absent "${public_crt:-}")"
+    printf 'objc4-priv.crt_externs.h=%s\n' "$(overlay_sysroot_sha_or_absent "${priv_crt:-}")"
     # gen_tbd origin (darwin usr/lib/*.tbd). Not a substitute for hashing the
     # generated tbd bytes: PR #67 updated gen_tbd output without this tree
     # hash changing between overlay stamp writes.
@@ -380,6 +592,7 @@ overlay_sysroot_print_headers() {
         fi
     done
     overlay_sysroot_print_modulemap_closure "$sdk"
+    overlay_sysroot_print_include_next "$sdk"
     overlay_sysroot_print_tbds "$sdk"
     if [ -f "$sdk/$OVERLAY_SYSROOT_STAMP" ]; then
         echo "overlay_sysroot: stamp=$sdk/$OVERLAY_SYSROOT_STAMP"
@@ -399,6 +612,8 @@ overlay_sysroot_print_headers() {
 }
 
 # Return 0 if the tree has the Darwin overlay surface we refuse-before-cmake on.
+# include_next wrappers whose later -isysroot target is absent (objc4-priv
+# crt_externs.h flattened onto usr/include) are incomplete.
 # overlay_sysroot_headers_ok <sdk>
 overlay_sysroot_headers_ok() {
     local sdk=$1
@@ -412,6 +627,7 @@ overlay_sysroot_headers_ok() {
     fi
     overlay_sysroot_has_extern_proc "$sdk/usr/include/sys/proc.h" || return 1
     overlay_sysroot_modulemap_headers_ok "$sdk" || return 1
+    overlay_sysroot_include_next_ok "$sdk" || return 1
 }
 
 # Clang module maps overlay Swift compiles load via -sdk (no -fmodule-map-file).
@@ -773,6 +989,9 @@ overlay_sysroot_refuse_incomplete() {
     if ! overlay_sysroot_refuse_modulemap_headers "$sdk"; then
         rc=2
     fi
+    if ! overlay_sysroot_refuse_include_next "$sdk"; then
+        rc=2
+    fi
     return "$rc"
 }
 
@@ -859,7 +1078,7 @@ overlay_sysroot_begin() {
             overlay_sysroot_print_stamp_diff "$live/$OVERLAY_SYSROOT_STAMP"
         fi
         if ! overlay_sysroot_tree_complete "$live"; then
-            echo "overlay_sysroot: live tree incomplete (required headers or usr/lib/*.tbd)"
+            echo "overlay_sysroot: live tree incomplete (required headers, usr/lib/*.tbd, or include_next wrapper target)"
         fi
     fi
     id=$(overlay_sysroot_inputs_id)
@@ -890,6 +1109,7 @@ overlay_sysroot_finish() {
     local live=$parent/MacOSX.sdk
     overlay_sysroot_copy_tbds "$fresh" "$live"
     overlay_sysroot_fill_modulemap_headers "$fresh"
+    overlay_sysroot_fill_include_next_wrappers "$fresh"
     overlay_sysroot_write_stamp "$fresh"
     overlay_sysroot_commit_live "$live" "$fresh"
     overlay_sysroot_print_headers "$live"
