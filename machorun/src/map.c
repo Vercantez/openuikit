@@ -454,25 +454,50 @@ static void map_image_by_copy(mr_image *im)
            "dyld-shared-cache layout). Shared host pages take the union of "
            "their segments' protections.", im->path);
 
-    /* Pass 1: cover every segment's pages with anonymous RW. Two segments
-     * that share a page both land in this pass BEFORE any file bytes are
-     * copied, so a later mmap cannot zero the first segment's prefix. */
-    for (int i = 0; i < im->nsegs; i++) {
-        const mr_segment *s = &im->segs[i];
-        uint64_t addr, lo, hi, len;
-        if (strcmp(s->name, "__PAGEZERO") == 0) continue;
-        if (s->vmsize == 0) continue;
-        addr = s->vmaddr + (uint64_t)im->slide;
-        lo = mr_round_dn(addr, page);
-        hi = mr_round_up(addr + s->vmsize, page);
-        if (hi < lo) mr_die("%s: segment %s wraps the address space", im->path, s->name);
-        len = hi - lo;
-        got = mmap((void *)lo, len, PROT_READ | PROT_WRITE,
-                   MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
-        if (got == MAP_FAILED)
-            mr_die("%s: anonymous mapping for copied segment %s "
-                   "(0x%llx bytes at 0x%llx): %m",
-                   im->path, s->name, (unsigned long long)len, (unsigned long long)lo);
+    /* Pass 1: one anonymous RW mapping per merged page-run, over the
+     * PROT_NONE reservation. Merging matters: DATA_CONST and DATA in a
+     * packed cache dylib share a host page, and a second MAP_FIXED
+     * anonymous mmap of that page would zero the first. Gaps between
+     * runs stay PROT_NONE. A packed-fixture SIGSEGV at slide+0x4008 with
+     * DATA at +0x14720 is stale ADRP in TEXT (the rewriter must move it),
+     * not a missing data page — TEXT.vmsize ends at 0x4000 and the gap
+     * is the CACHE_GAP, left unmapped on purpose. */
+    {
+        uint64_t lo[MR_MAX_SEGMENTS], hi[MR_MAX_SEGMENTS];
+        int nrun = 0;
+        for (int i = 0; i < im->nsegs; i++) {
+            const mr_segment *s = &im->segs[i];
+            uint64_t addr, a, b;
+            int k;
+            if (strcmp(s->name, "__PAGEZERO") == 0) continue;
+            if (s->vmsize == 0) continue;
+            addr = s->vmaddr + (uint64_t)im->slide;
+            a = mr_round_dn(addr, page);
+            b = mr_round_up(addr + s->vmsize, page);
+            if (b < a) mr_die("%s: segment %s wraps the address space", im->path, s->name);
+            for (k = nrun; k > 0 && lo[k - 1] > a; k--) {
+                lo[k] = lo[k - 1];
+                hi[k] = hi[k - 1];
+            }
+            lo[k] = a;
+            hi[k] = b;
+            nrun++;
+        }
+        for (int i = 0; i < nrun; ) {
+            uint64_t a = lo[i], b = hi[i];
+            int j = i + 1;
+            while (j < nrun && lo[j] <= b) {
+                if (hi[j] > b) b = hi[j];
+                j++;
+            }
+            got = mmap((void *)a, (size_t)(b - a), PROT_READ | PROT_WRITE,
+                       MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+            if (got == MAP_FAILED)
+                mr_die("%s: anonymous mapping for copied pages "
+                       "(0x%llx bytes at 0x%llx): %m",
+                       im->path, (unsigned long long)(b - a), (unsigned long long)a);
+            i = j;
+        }
     }
 
     /* Pass 2: read each segment's file bytes into place. The rest of vmsize

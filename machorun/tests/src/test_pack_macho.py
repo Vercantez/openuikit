@@ -83,6 +83,52 @@ class PackMachoTests(unittest.TestCase):
             pm.oversize_bytes((BIN / "main_ret").read_bytes(), "__LINKEDIT"),
         )
 
+    def test_stubs_adrp_targets_packed_got_page(self) -> None:
+        """The 2026-09-03 packed-fixture crash: stubs still ADRP'd 0x4000."""
+        pm = _pack_mod()
+        packed = (BIN / "libcache_packed.dylib").read_bytes()
+        img = pm.Image(packed)
+        text = next(s for s in img.segs if s.name == "__TEXT")
+        data_c = next(s for s in img.segs if s.name == "__DATA_CONST")
+        stubs = next(s for s in text.sects if s["name"] == "__stubs")
+        got_page = data_c.vmaddr & ~(pm.HOST_PAGE - 1)
+        self.assertEqual(got_page, 0x14000)
+        for off in range(0, stubs["size"], 12):
+            pc = stubs["addr"] + off
+            insn = int.from_bytes(packed[stubs["offset"] + off:][:4], "little")
+            adrp = pm.decode_adrp(insn, pc)
+            self.assertIsNotNone(adrp, hex(insn))
+            self.assertEqual(adrp[1], got_page, f"stub ADRP at {pc:#x} -> {adrp[1]:#x}")
+
+    def test_copy_map_in_process(self) -> None:
+        src = ROOT / "tests" / "host" / "test_copy_map.c"
+        out = Path("/tmp/mr-test-copy-map")
+        r = subprocess.run(
+            [
+                "cc",
+                "-std=gnu11",
+                "-Wall",
+                "-Wextra",
+                "-Wno-unused-parameter",
+                "-I",
+                str(ROOT / "src"),
+                "-o",
+                str(out),
+                str(src),
+                str(ROOT / "src" / "map.c"),
+                str(ROOT / "src" / "util.c"),
+            ],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        r = subprocess.run([str(out)], capture_output=True, text=True, check=False)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("test_copy_map ok", r.stdout)
+        self.assertIn("gap +0x4008 PROT_NONE", r.stdout)
+
     def test_committed_rename_roundtrip(self) -> None:
         pm = _pack_mod()
         layout = bytearray((BIN / "cache_layout").read_bytes())

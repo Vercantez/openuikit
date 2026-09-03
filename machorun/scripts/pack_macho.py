@@ -11,7 +11,8 @@ Apple's binary.
 
 It never executes the guest. It rewrites load commands, section headers,
 LINKEDIT offsets, chained-fixup starts, export-trie image offsets, nlist
-n_value, and (format-6) rebase targets, then packs file bytes tightly.
+n_value, ARM64 ADRP/LDR/ADD page immediates, and (format-6) rebase targets,
+then packs file bytes tightly.
 
     scripts/pack_macho.py pack IN.dylib -o OUT.dylib [--id INSTALL_NAME]
     scripts/pack_macho.py rename IN -o OUT --from STR --to STR
@@ -259,6 +260,141 @@ def reloc_vm(img: Image, addr: int) -> int:
     return addr
 
 
+S_ATTR_PURE_INSTRUCTIONS = 0x80000000
+
+
+def decode_adrp(insn: int, pc: int) -> tuple[int, int] | None:
+    if (insn & 0x9F000000) != 0x90000000:
+        return None
+    rd = insn & 31
+    immlo = (insn >> 29) & 3
+    immhi = (insn >> 5) & 0x7FFFF
+    imm = (immhi << 2) | immlo
+    if imm & (1 << 20):
+        imm -= 1 << 21
+    return rd, (pc & ~0xFFF) + (imm << 12)
+
+
+def encode_adrp(rd: int, pc: int, target_page: int) -> int:
+    imm = (target_page - (pc & ~0xFFF)) >> 12
+    if imm < -(1 << 20) or imm >= (1 << 20):
+        raise ValueError(f"ADRP immediate {imm} out of range")
+    immlo = imm & 3
+    immhi = (imm >> 2) & 0x7FFFF
+    return 0x90000000 | ((immlo & 3) << 29) | (immhi << 5) | (rd & 31)
+
+
+def decode_ldst_uoff(insn: int) -> tuple[int, int, int] | None:
+    """Unsigned-offset LDR/STR. Returns (rt, rn, byte_offset) or None."""
+    if (insn & 0x3B000000) != 0x39000000:
+        return None
+    size = insn >> 30
+    imm12 = (insn >> 10) & 0xFFF
+    rn = (insn >> 5) & 31
+    rt = insn & 31
+    return rt, rn, imm12 << size
+
+
+def encode_ldst_uoff(insn: int, new_off: int) -> int:
+    size = insn >> 30
+    scale = 1 << size
+    if new_off % scale:
+        raise ValueError(f"LDR/STR offset {new_off:#x} not aligned to {scale}")
+    imm12 = new_off // scale
+    if imm12 > 0xFFF:
+        raise ValueError(f"LDR/STR offset {new_off:#x} exceeds unsigned12")
+    return (insn & ~(0xFFF << 10)) | (imm12 << 10)
+
+
+def decode_add_imm(insn: int) -> tuple[int, int, int] | None:
+    """64-bit ADD Xd, Xn, #imm12 (shift 0)."""
+    if (insn & 0xFF800000) != 0x91000000:
+        return None
+    imm12 = (insn >> 10) & 0xFFF
+    rn = (insn >> 5) & 31
+    rd = insn & 31
+    return rd, rn, imm12
+
+
+def encode_add_imm(insn: int, new_imm: int) -> int:
+    if new_imm > 0xFFF:
+        raise ValueError(f"ADD immediate {new_imm:#x} exceeds 12 bits")
+    return (insn & ~(0xFFF << 10)) | (new_imm << 10)
+
+
+def patch_arm64_page_relocs(img: Image) -> int:
+    """Rewrite ADRP+LDR/STR/ADD pairs whose page moved with the packed layout.
+
+    ld64 bakes the GOT/DATA page into the instruction stream. Moving
+    DATA_CONST from 0x4000 to 0x14720 without this leaves
+        ADRP x16, #0x4000; LDR x16, [x16, #8]
+    in __stubs, which is the 2026-09-03 packed-fixture SIGSEGV: pc at the
+    LDR, fault at slide+0x4008, while the GOT lives at +0x14720 and the
+    gap is PROT_NONE. Real cache extracts already have ADRP matching the
+    packed vmaddrs; this exists so the fixture does too.
+    """
+    n = 0
+    for seg in img.segs:
+        for sec in seg.sects:
+            if not (sec["flags"] & S_ATTR_PURE_INSTRUCTIONS):
+                continue
+            if sec["size"] < 8 or sec["offset"] == 0:
+                continue
+            start = sec["offset"]
+            size = sec["size"] & ~3
+            i = 0
+            while i + 4 <= size:
+                pc = sec["addr"] + i
+                p = start + i
+                insn = struct.unpack_from("<I", img.data, p)[0]
+                adrp = decode_adrp(insn, pc)
+                i += 4
+                if adrp is None:
+                    continue
+                rd, old_page = adrp
+                new_page = None
+                j = 0
+                while j < 32 and i + j + 4 <= size:
+                    q = start + i + j
+                    follow = struct.unpack_from("<I", img.data, q)[0]
+                    ldst = decode_ldst_uoff(follow)
+                    add = decode_add_imm(follow)
+                    old_ea = None
+                    if ldst is not None and ldst[1] == rd:
+                        old_ea = old_page + ldst[2]
+                    elif add is not None and add[1] == rd:
+                        old_ea = old_page + add[2]
+                    if old_ea is not None:
+                        new_ea = reloc_vm(img, old_ea)
+                        if new_ea != old_ea:
+                            want_page = new_ea & ~0xFFF
+                            if new_page is None:
+                                new_page = want_page
+                            elif new_page != want_page:
+                                raise ValueError(
+                                    f"ADRP x{rd} at {pc:#x} uses split pages "
+                                    f"{new_page:#x} and {want_page:#x}"
+                                )
+                            new_off = new_ea - new_page
+                            if ldst is not None:
+                                struct.pack_into("<I", img.data, q,
+                                                 encode_ldst_uoff(follow, new_off))
+                            else:
+                                struct.pack_into("<I", img.data, q,
+                                                 encode_add_imm(follow, new_off))
+                            n += 1
+                    j += 4
+                    # Stop at another ADRP that redefines this register.
+                    nxt = decode_adrp(follow, sec["addr"] + i + j - 4)
+                    if nxt is not None and nxt[0] == rd:
+                        break
+                if new_page is not None and new_page != old_page:
+                    struct.pack_into("<I", img.data, p,
+                                     encode_adrp(rd, pc, new_page))
+                    n += 1
+    return n
+
+
 def patch_nlists(img: Image) -> None:
     for off, cs in img.find_cmd(LC_SYMTAB):
         symoff, nsyms, stroff, strsize = struct.unpack_from("<IIII", img.data, off + 8)
@@ -462,6 +598,10 @@ def pack_bytes(data: bytes, install_name: str | None = None,
     img = Image(data)
     plan_pack(img, unalign=unalign, gap=gap)
 
+    # ADRP immediates live in TEXT at the old file offsets. Patch them
+    # before rebuild_file copies the used TEXT prefix out.
+    patch_arm64_page_relocs(img)
+
     # Patch LINKEDIT blobs and chained pointers while they still sit at old fileoffs.
     patch_chained(img)
     patch_nlists(img)
@@ -592,6 +732,24 @@ def _selftest() -> int:
     # Intra-segment: __got still sits at the start of DATA_CONST.
     got = next(s for s in data_c.sects if s["name"] == "__got")
     assert got["addr"] == data_c.vmaddr, (hex(got["addr"]), hex(data_c.vmaddr))
+    # Stubs must ADRP the packed GOT page, not the pre-pack 0x4000 page.
+    # Measured crash without this: pc imageoff 0x5e0, fault at slide+0x4008.
+    stubs = next(s for s in text.sects if s["name"] == "__stubs")
+    stub0 = struct.unpack_from("<I", packed, stubs["offset"])[0]
+    adrp = decode_adrp(stub0, stubs["addr"])
+    assert adrp is not None, hex(stub0)
+    got_page = data_c.vmaddr & ~(HOST_PAGE - 1)
+    assert adrp[1] == got_page, (
+        f"stub ADRP targets {adrp[1]:#x}, packed GOT page is {got_page:#x}"
+    )
+    ldr = struct.unpack_from("<I", packed, stubs["offset"] + 4)[0]
+    ldst = decode_ldst_uoff(ldr)
+    assert ldst is not None and ldst[1] == adrp[0]
+    slot = got_page + ldst[2]
+    assert data_c.vmaddr <= slot < data_c.vmaddr + data_c.vmsize, (
+        f"stub LDR lands at {slot:#x}, packed GOT is {data_c.vmaddr:#x}+{data_c.vmsize:#x}"
+    )
+
     cf = img.find_cmd(LC_DYLD_CHAINED_FIXUPS)
     assert cf, "packed dylib lost chained fixups"
     dataoff, _ = struct.unpack_from("<II", packed, cf[0][0] + 8)
