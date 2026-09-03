@@ -260,7 +260,24 @@ esac
 # crashed taken against a loader predating machorun's malloc_type fix (0f39750,
 # "the 46 scenes it was smashing"). HALF A ROOT FROM ONE VERSION AND HALF FROM
 # ANOTHER READS AS A REAL RESULT.
-if [ ! -d "$ROOTDIR" ] || [ "$MACHORUN/build/machorun" -nt "$ROOTDIR/machorun" ]; then
+# Restage when the loader OR any base runtime input is newer than its copy.
+# Measured 2026-09-03 (x86_64, main 3ed87cab): the BASE root's libswiftcompat
+# was rebuilt at 11:47 from the current source, but mrroot_full kept the 08:33
+# copy because only the loader's mtime was consulted; FoundationEssentials
+# then linked against a shim that no longer matched arm64's.
+base_runtime_newer() {
+    local f
+    [ -d "$ROOTDIR" ] || return 0
+    [ "$MACHORUN/build/machorun" -nt "$ROOTDIR/machorun" ] && return 0
+    [ "$BASE_RUNTIME_SOURCE/darwin/usr/lib/libswiftcompat.dylib" -nt "$ROOTDIR/darwin/usr/lib/libswiftcompat.dylib" ] && return 0
+    for f in "$BASE_RUNTIME_SOURCE/darwin/usr/lib/swift/"*.dylib; do
+        [ -e "$f" ] || continue
+        [ "$(basename "$f")" = libswiftCore.dylib ] && continue
+        [ "$f" -nt "$ROOTDIR/darwin/usr/lib/swift/$(basename "$f")" ] && return 0
+    done
+    return 1
+}
+if base_runtime_newer; then
     echo "== staging guest root from $MACHORUN"
     mkdir -p "$ROOTDIR/darwin/usr/lib/swift"
     cp "$MACHORUN/build/machorun" "$ROOTDIR/machorun"
