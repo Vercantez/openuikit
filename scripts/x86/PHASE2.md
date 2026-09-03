@@ -24,8 +24,20 @@ runners':
   `full/xcodeplan/build_and_run_reminder_scene_guest.sh`
 
 Exit 2 if any CANNOT. Never overwrites `scratch/sysroot_fe4`,
-`scratch/mrroot_full`, or `opencombine-…/export/`. x86 outputs land **beside**
-those trees (`sysroot_fe4-x86_64`, `mrroot_full-x86_64`, `export-x86_64/`).
+`scratch/mrroot`, `scratch/mrroot_fe`, `scratch/mrroot_full`, or
+`opencombine-…/export/`. x86 outputs land **beside** those trees
+(`sysroot_fe4-x86_64`, `mrroot-x86_64`, `mrroot_fe-x86_64`,
+`mrroot_full-x86_64`, `export-x86_64/`).
+
+Operator restage of real inputs (Focus_Widget.bundle + Reminder inventory)
+then this runner:
+
+```bash
+bash x86_stage_inputs_phase2.sh
+```
+
+(`x86_stage_inputs_phase2.sh` lives on the operator box; it sets
+`FOCUS_WIDGET_BUNDLE` and invokes `bash scripts/x86/phase2.sh`.)
 
 Do not edit `machorun/` in this phase: `EXPECTED_INREPO_MACHORUN_TREE` is a
 Focus/full-build attestation pin.
@@ -141,16 +153,33 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    a CANNOT line always names `expected=` and `observed=` (plus `git_error=`
    if git itself failed). Normalized bundles come from the committed
    `onboarding_resources_proof.py` or `FOCUS_WIDGET_BUNDLE`.
-4. `build_full.sh` / mrroot refuse to copy an arm64 `libswiftCore.dylib` into
-   an x86-named root (`require_macho_cpu`).
-5. `os-module-x86` runs `full/foundation/build_os_module.sh` with
+4. `build_full.sh` defaults `BASE_RUNTIME_SOURCE` / `FE_RUNTIME_SOURCE` to
+   `scratch/mrroot${FULL_OUT_SUFFIX}` and `scratch/mrroot_fe${FULL_OUT_SUFFIX}`
+   (empty suffix = historical arm64 paths). phase2 stages `scratch/mrroot-x86_64`
+   (x86 ELF loader + x86 darwin userland + x86 `libswiftCore` from
+   `swiftcore-macho/artifacts/swift-macosx/x86_64/`) the same role as arm64
+   `scratch/mrroot`. FE overlays are staged into `scratch/mrroot_fe-x86_64`
+   from that artifacts directory (or `$HOME/work/build/lib/swift/macosx/x86_64`)
+   when the dylibs exist as X86_64 Mach-O; otherwise
+   `CANNOT_X86_OVERLAYS_NOT_BUILT missing=libswiftDarwin.dylib,…` listing the
+   nine `FE_OVERLAYS` names. `scripts/stage_swift_runtime.sh` stays macOS-only
+   and is not used on this host. `build_full.sh` / mrroot refuse to copy an
+   arm64 `libswiftCore.dylib` into an x86-named root (`require_macho_cpu`).
+5. Widget env-prepare inherits `FULL_OUT_SUFFIX` from `guest_arch.inc`.
+   `sysroot_fe4` / `mrroot_full` / `mrroot-base-runtime` resolve the suffixed
+   trees. `tbd-stubs` tries `machorun/scripts/gen_tbd.sh` (host-independent);
+   it never emits `CURSOR_ENV_CANNOT_GENERATE_TBD` because `uname` is x86_64.
+   `opencombine-export` accepts `export-x86_64/RESULT.txt` from the real
+   `scripts/x86/build_opencombine.sh` build — it does not pin the arm64 RESULT
+   SHA and does not invent a RESULT.txt.
+6. `os-module-x86` runs `full/foundation/build_os_module.sh` with
    `TARGET=x86_64-apple-macos15.0` and `OUT=build/full-x86_64/foundation/os`
    (beside arm64 `scratch/fe4_os`). `build_fe.sh` gets `OSMOD` so
    `Calendar.swift:14 import os` resolves. Before that compile, `ENV_PREPARE
    fe-imports` probes Darwin/os/Swift/_Builtin_float/_StringProcessing/_Concurrency
    (required) and Synchronization (optional/`canImport`) in the x86 sysroot
    and refuses in one line if any required module is absent.
-6. Module cache: one canonical path per target, `scratch/modcache_fe4-x86_64`
+7. Module cache: one canonical path per target, `scratch/modcache_fe4-x86_64`
    (beside arm64 `scratch/modcache_fe4`). `phase2` resolves `W` with `pwd -P`
    and the cache with `realpath -P`, prints
    `ENV_PREPARE module-cache satisfied path=…`, and passes that `MC` into
@@ -158,7 +187,7 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    and `$W` spellings of the same cache makes clang report
    `_DarwinFoundation2` defined in both `.pcm` paths (host-w-layout's
    `ln -sfn $W /w` is the same inode).
-7. Guest harness fonts still open `/w/build/swiftui-guest/fonts`. The widget
+8. Guest harness fonts still open `/w/build/swiftui-guest/fonts`. The widget
    script stages fonts there and under `$W/build/swiftui-guest/fonts`; phase2
    tries `ln -sfn $W /w` and CANNOT if it cannot. Compiler argv never uses
    the `/w` spelling for `-module-cache-path`.

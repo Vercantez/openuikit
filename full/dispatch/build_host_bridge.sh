@@ -16,8 +16,34 @@ LEDGER_STYLE=core
 REFUSE_PREFIX='core_guest_package: REFUSING -- '
 HOST_ABI='ELF64-AArch64'
 SKIP_RUNTIME_PIN=0
-HOST_DISPATCH_SOURCE=/usr/lib/swift/linux/libdispatch.so
-HOST_BLOCKS_RUNTIME_SOURCE=/usr/lib/swift/linux/libBlocksRuntime.so
+# The host Swift runtime dir: the container image keeps the toolchain at /usr;
+# the EC2 builders keep it under /opt/swift624 (or SWIFT_TOOLCHAIN) with swiftc
+# on PATH. Resolve from swiftc so both layouts find the same pinned files; the
+# sha256 pins below still decide whether what was found is the right runtime.
+_swift_linux_lib=/usr/lib/swift/linux
+if [ -n "${SWIFT_TOOLCHAIN:-}" ] && [ -d "$SWIFT_TOOLCHAIN/usr/lib/swift/linux" ]; then
+    _swift_linux_lib=$SWIFT_TOOLCHAIN/usr/lib/swift/linux
+elif [ -n "${SWIFT_TOOLCHAIN:-}" ] && [ -d "$SWIFT_TOOLCHAIN/lib/swift/linux" ]; then
+    _swift_linux_lib=$SWIFT_TOOLCHAIN/lib/swift/linux
+elif [ ! -f "$_swift_linux_lib/libdispatch.so" ]; then
+    # Same order as full/scripts/guest_arch.inc: the pinned EC2 prefixes, then
+    # whatever swiftc is on PATH (SSM sessions carry a minimal PATH, so the
+    # prefixes must come first).
+    for _cand in /opt/swift624/usr /opt/swift/usr; do
+        if [ -f "$_cand/lib/swift/linux/libdispatch.so" ]; then
+            _swift_linux_lib=$_cand/lib/swift/linux
+            break
+        fi
+    done
+    if [ ! -f "$_swift_linux_lib/libdispatch.so" ] && command -v swiftc >/dev/null 2>&1; then
+        _swiftc_dir=$(cd "$(dirname "$(command -v swiftc)")" && pwd -P)
+        [ -f "$_swiftc_dir/../lib/swift/linux/libdispatch.so" ] \
+            && _swift_linux_lib=$(cd "$_swiftc_dir/../lib/swift/linux" && pwd -P)
+    fi
+fi
+HOST_SWIFT_INCLUDE_ROOT=$(cd "$_swift_linux_lib/.." && pwd -P)   # <toolchain>/usr/lib/swift: dispatch/dispatch.h, Block.h
+HOST_DISPATCH_SOURCE=$_swift_linux_lib/libdispatch.so
+HOST_BLOCKS_RUNTIME_SOURCE=$_swift_linux_lib/libBlocksRuntime.so
 EXPECTED_HOST_DISPATCH_SHA256=39e502b3a8b016073947574a932172c1dafff8c41abd15b9b9f11bef7aaf1b6b
 EXPECTED_HOST_BLOCKS_RUNTIME_SHA256=47a4f774ed1f4c094f8510c50d0006fde89a837ae785236e2ed669b8db9d002d
 
@@ -103,13 +129,13 @@ cp "$HOST_BLOCKS_RUNTIME_SOURCE" "$HOST_DIR/libBlocksRuntime.so"
 
 DISPATCH_HOST=$HOST_DIR/libOpenDispatchHost.so
 clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
-    -I "$W/full/dispatch/include" -I /usr/lib/swift -shared \
+    -I "$W/full/dispatch/include" -I "$HOST_SWIFT_INCLUDE_ROOT" -shared \
     "$W/full/dispatch/OpenDispatchHost.c" \
     -L "$HOST_DIR" -Wl,-rpath,'$ORIGIN' \
     -ldispatch -Wl,--no-as-needed -lBlocksRuntime -Wl,--as-needed -pthread \
     -o "$DISPATCH_HOST"
 clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
-    -I "$W/full/dispatch/include" -I /usr/lib/swift \
+    -I "$W/full/dispatch/include" -I "$HOST_SWIFT_INCLUDE_ROOT" \
     "$W/full/dispatch/OpenDispatchHost.c" \
     "$W/full/dispatch/OpenDispatchHostTests.c" \
     -L "$HOST_DIR" -Wl,-rpath,"$HOST_DIR" \

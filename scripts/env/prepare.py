@@ -56,6 +56,76 @@ def host_os() -> str:
     return os.uname().sysname
 
 
+# Same nine dylibs as full/scripts/build_full.sh FE_OVERLAYS. Keep in lockstep.
+FE_OVERLAY_DYLIBS: tuple[str, ...] = (
+    "libswiftDarwin.dylib",
+    "libswiftSynchronization.dylib",
+    "libswift_Builtin_float.dylib",
+    "libswift_DarwinFoundation1.dylib",
+    "libswift_DarwinFoundation2.dylib",
+    "libswift_DarwinFoundation3.dylib",
+    "libswift_RegexParser.dylib",
+    "libswift_StringProcessing.dylib",
+    "libswift_errno.dylib",
+)
+
+# Contract paths that grow FULL_OUT_SUFFIX (empty on arm64 → byte-identical).
+_SUFFIX_PATH_IDS = frozenset(
+    {
+        "sysroot_fe4",
+        "mrroot_full",
+        "mrroot-base-runtime",
+        "mrroot_fe-overlays",
+        "modcache_swiftui_guest",
+    }
+)
+
+
+def guest_out_suffix() -> str:
+    """FULL_OUT_SUFFIX from the gate (guest_arch.inc). Empty means arm64 paths."""
+    return os.environ.get("FULL_OUT_SUFFIX", "")
+
+
+def resolve_row_path(root: Path, row: dict) -> Path:
+    """Resolve a contract path, applying FULL_OUT_SUFFIX for x86 guest trees.
+
+    Arm64 (empty suffix) keeps the contract spelling: scratch/mrroot,
+    scratch/sysroot_fe4, scratch/mrroot_full, export/artifacts.
+    """
+    raw = row.get("path", "")
+    ident = row.get("id", "")
+    suffix = guest_out_suffix()
+    if suffix:
+        if ident == "opencombine-export":
+            raw = raw.replace("/export/", f"/export{suffix}/")
+        elif ident in _SUFFIX_PATH_IDS:
+            raw = f"{raw}{suffix}"
+    path = Path(raw)
+    if not path.is_absolute():
+        path = root / path
+    return path
+
+
+def _is_x86_macho(path: Path) -> bool:
+    if not path.is_file():
+        return False
+    probe = _run(["llvm-otool-18", "-hv", str(path)])
+    return bool(
+        probe.returncode == 0
+        and "MH_MAGIC_64" in probe.stdout
+        and "X86_64" in probe.stdout
+    )
+
+
+def try_generate_tbd(root: Path) -> subprocess.CompletedProcess[str]:
+    """gen_tbd is host-independent: nm(dylibs) UNION loader exports."""
+    gen = root / "machorun" / "scripts" / "gen_tbd.sh"
+    if gen.is_file():
+        return _run(["sh", str(gen)], cwd=root / "machorun")
+    build = root / "machorun" / "scripts" / "build.sh"
+    return _run(["sh", str(build), "tbd"], cwd=root)
+
+
 def expected_cannot_for_host(contract: dict, arch: str, system: str) -> list[str]:
     if system == "Darwin":
         return list(contract["hosts"]["macos-oracle"]["expected_cannot"])
@@ -288,22 +358,31 @@ def product_outcome(
     root: Path, row: dict, verify_only: bool, arch: str, system: str
 ) -> Outcome:
     ident = row["id"]
-    path = root / row["path"] if not Path(row["path"]).is_absolute() else Path(row["path"])
+    path = resolve_row_path(root, row)
     cannot = row.get("cannot_on", {})
+    suffix = guest_out_suffix()
     if ident == "machorun-loader":
         return maybe_build_loader(root, verify_only, arch)
-    if ident == "libswiftCore":
-        return stage_file(
-            root / row["source"] if "source" in row else path,
-            path,
-            row["sha256"],
-            ident,
-            verify_only,
-        )
     if ident == "opencombine-export":
+        if suffix:
+            obj = path / "OpenCombine.o"
+            result = path / "RESULT.txt"
+            parent_result = path.parent / "RESULT.txt"
+            missing = []
+            if not obj.is_file():
+                missing.append("OpenCombine.o")
+            if not result.is_file() and not parent_result.is_file():
+                missing.append("RESULT.txt")
+            if missing:
+                return Outcome(
+                    "unsatisfied",
+                    ident,
+                    f"missing {','.join(missing)} path={path}",
+                )
+            return Outcome("satisfied", ident, f"path={path} x86-export reused=1")
         hashes = row.get("content_hashes") or {}
         missing = []
-        export_root = root / row["path"]
+        export_root = path
         for name, digest in hashes.items():
             file_path = export_root / name
             if not file_path.is_file():
@@ -319,6 +398,24 @@ def product_outcome(
             return Outcome("unsatisfied", ident, f"missing {','.join(missing)}")
         return Outcome("satisfied", ident, f"files={len(hashes)}/{len(hashes)} reused=1")
     if ident == "tbd-stubs":
+        # gen_tbd is host-independent (nm on dylibs ∪ loader exports). With
+        # FULL_OUT_SUFFIX set, actually try it — never refuse solely because
+        # uname is x86_64. Empty suffix keeps the historical arm64/Linux
+        # cannot so existing tests stay byte-identical.
+        if suffix:
+            if path.is_dir() and any(path.glob("*.tbd")):
+                return Outcome("satisfied", ident, "tbd present reused=1")
+            if verify_only:
+                return Outcome("unsatisfied", ident, "tbd missing")
+            generated = try_generate_tbd(root)
+            if generated.returncode == 0 and path.is_dir() and any(path.glob("*.tbd")):
+                return Outcome("cold-built", ident, "gen_tbd")
+            tail = (generated.stderr or generated.stdout).strip().splitlines()
+            return Outcome(
+                "unsatisfied",
+                ident,
+                f"gen_tbd failed: {tail[-1] if tail else f'exit {generated.returncode}'}",
+            )
         if arch not in ("aarch64", "arm64"):
             return Outcome(
                 "cannot",
@@ -332,6 +429,8 @@ def product_outcome(
     if ident == "sysroot_fe4":
         if path.is_dir() and (path / "usr" / "include").is_dir():
             return Outcome("satisfied", ident, f"path={path} reused=1")
+        if suffix:
+            return Outcome("unsatisfied", ident, f"missing {path}")
         marker = cannot.get("Linux") if system == "Linux" else None
         if marker:
             return Outcome("cannot", ident, "full Xcode overlays absent", marker=marker)
@@ -339,7 +438,7 @@ def product_outcome(
     if ident == "mrroot_full":
         if path.is_dir() and (path / "darwin" / "usr" / "lib").is_dir():
             loader = path / "machorun"
-            if not loader.is_file() and arch not in ("aarch64", "arm64"):
+            if not loader.is_file() and arch not in ("aarch64", "arm64") and not suffix:
                 return Outcome(
                     "cannot",
                     ident,
@@ -347,6 +446,8 @@ def product_outcome(
                     marker="CURSOR_ENV_CANNOT_STAGE_MRROOT_LOADER",
                 )
             return Outcome("satisfied", ident, f"path={path} reused=1")
+        if suffix:
+            return Outcome("unsatisfied", ident, f"missing {path}")
         if arch not in ("aarch64", "arm64"):
             return Outcome(
                 "cannot",
@@ -379,14 +480,40 @@ def product_outcome(
 
 def staged_outcome(root: Path, row: dict, verify_only: bool, arch: str, system: str) -> Outcome:
     ident = row["id"]
+    suffix = guest_out_suffix()
     if ident == "libswiftCore":
-        source = root / row["source"]
         dest = root / row["path"]
+        if suffix:
+            x86_src = root / "swiftcore-macho/artifacts/swift-macosx/x86_64/libswiftCore.dylib"
+            if dest.is_file() and _is_x86_macho(dest):
+                return Outcome("satisfied", ident, f"path={dest} x86 reused=1")
+            if not x86_src.is_file():
+                return Outcome("unsatisfied", ident, f"missing x86 artifact {x86_src}")
+            if verify_only:
+                return Outcome("unsatisfied", ident, "x86 libswiftCore not staged")
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(x86_src, dest)
+            return Outcome("staged", ident, f"path={dest} from x86 artifact")
+        source = root / row["source"]
         return stage_file(source, dest, row["sha256"], ident, verify_only)
     if ident in ("dejavu-sans", "dejavu-sans-bold"):
         return verify_absolute_hash(Path(row["path"]), row["sha256"], ident)
     if ident == "mrroot_fe-overlays":
-        path = root / row["path"]
+        path = resolve_row_path(root, row)
+        if suffix:
+            swift_dir = path / "darwin" / "usr" / "lib" / "swift"
+            missing = [name for name in FE_OVERLAY_DYLIBS if not (swift_dir / name).is_file()]
+            if not missing:
+                return Outcome("satisfied", ident, f"path={path} reused=1")
+            # Named hole, not the macOS CoreSimulator marker. Not a PR3
+            # CURSOR_ENV_CANNOT_* token — do not add it to markers.py's
+            # currently-emitted set.
+            return Outcome(
+                "cannot",
+                ident,
+                f"missing={','.join(missing)} path={path}",
+                marker="CANNOT_X86_OVERLAYS_NOT_BUILT",
+            )
         if path.is_dir():
             return Outcome("satisfied", ident, f"path={path} reused=1")
         if system != "Darwin":
@@ -398,11 +525,11 @@ def staged_outcome(root: Path, row: dict, verify_only: bool, arch: str, system: 
             )
         return Outcome("unsatisfied", ident, f"missing {path}")
     if ident == "mrroot-base-runtime":
-        path = root / row["path"]
+        path = resolve_row_path(root, row)
         if path.is_dir():
             return Outcome("satisfied", ident, f"path={path} reused=1")
         return Outcome("unsatisfied", ident, f"missing {path}")
-    path = root / row["path"] if not Path(row.get("path", "")).is_absolute() else Path(row["path"])
+    path = resolve_row_path(root, row) if row.get("path") else Path(".")
     if path.exists():
         return Outcome("satisfied", ident, f"path={path} reused=1")
     return Outcome("unsatisfied", ident, f"missing {path}")

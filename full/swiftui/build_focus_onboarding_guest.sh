@@ -233,7 +233,12 @@ for index in "${!SOURCE_RELATIVES[@]}"; do
         "${SOURCE_HASHES[$index]}" "Focus source ${SOURCE_RELATIVES[$index]}"
 done
 
-require_hash "$OPENCOMBINE_ROOT/export/RESULT.txt" "$EXPECTED_OPENCOMBINE_RESULT" OpenCombine-result
+OPENCOMBINE_RESULT=$OPENCOMBINE_ROOT/export${FULL_OUT_SUFFIX}/RESULT.txt
+if [ -z "$FULL_OUT_SUFFIX" ]; then
+    require_hash "$OPENCOMBINE_RESULT" "$EXPECTED_OPENCOMBINE_RESULT" OpenCombine-result
+else
+    [ -s "$OPENCOMBINE_RESULT" ] || die "NEEDS_X86_OPENCOMBINE: missing $OPENCOMBINE_RESULT (phase2 writes export-x86_64/RESULT.txt from the real x86 build; arm64 export/RESULT.txt SHA $EXPECTED_OPENCOMBINE_RESULT still stands)"
+fi
 if [ "$ARCH" = arm64 ]; then
     require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" "$EXPECTED_OPENCOMBINE_OBJECT" OpenCombine-object
     require_hash "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" "$EXPECTED_OPENCOMBINE_MODULE" OpenCombine-module

@@ -6,7 +6,8 @@
 #
 # Idempotent. Prints ENV_PREPARE satisfied/cold-built/CANNOT lines and a final
 # RUNG_SCOREBOARD with the committed runners' denominators. Never fakes success,
-# never overwrites arm64 scratch/sysroot_fe4 or scratch/mrroot_full, never
+# never overwrites arm64 scratch/sysroot_fe4, scratch/mrroot, scratch/mrroot_fe,
+# or scratch/mrroot_full, never
 # rewrites durable arm64 OpenCombine object SHAs.
 #
 # Measure first: libswiftCore-for-x86 is the likeliest hard wall. That
@@ -50,6 +51,13 @@ export PATH="/usr/lib/llvm-18/bin:${PATH:-}"
 MACHORUN=$W/machorun
 SYS=$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}
 ARM_SYS=$W/scratch/sysroot_fe4
+# Base runtime (loader + x86 darwin userland + x86 libswiftCore). Same role as
+# arm64 scratch/mrroot from scripts/stage_swift_runtime.sh. build_full.sh
+# defaults BASE_RUNTIME_SOURCE here when FULL_OUT_SUFFIX=-x86_64.
+BASE_MRROOT=$W/scratch/mrroot${FULL_OUT_SUFFIX}
+ARM_BASE_MRROOT=$W/scratch/mrroot
+FE_MRROOT=$W/scratch/mrroot_fe${FULL_OUT_SUFFIX}
+ARM_FE_MRROOT=$W/scratch/mrroot_fe
 MRROOT=$W/scratch/mrroot_full${FULL_OUT_SUFFIX}
 ARM_MRROOT=$W/scratch/mrroot_full
 OPENCOMBINE_ROOT=$W/scratch/opencombine-core-durable-20260828-r2
@@ -660,7 +668,64 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# 6. mrroot_full-x86_64 beside mrroot_full
+# 6. scratch/mrroot-x86_64 (base runtime; analog of arm64 scratch/mrroot)
+#    Never write the unsuffixed arm64 tree. Overlays are a separate root.
+echo "==== mrroot-x86_64 (base runtime, beside $ARM_BASE_MRROOT) ===="
+BASE_MRROOT_OK=0
+[ "$BASE_MRROOT" != "$ARM_BASE_MRROOT" ] || {
+    cannot mrroot-base-x86 MRROOT_COLLIDES_ARM64 "x86 base mrroot path equals arm64 scratch/mrroot"
+}
+if [ -x "$BASE_MRROOT/machorun" ] && phase2_is_elf_x86_loader "$BASE_MRROOT/machorun" \
+    && [ -f "$BASE_MRROOT/darwin/usr/lib/swift/libswiftCore.dylib" ] \
+    && phase2_is_x86_macho "$BASE_MRROOT/darwin/usr/lib/swift/libswiftCore.dylib"; then
+    note mrroot-base-x86 satisfied
+    BASE_MRROOT_OK=1
+else
+    echo "== staging $BASE_MRROOT from machorun darwin + x86 libswiftCore"
+    phase2_stage_x86_base_mrroot \
+        "$BASE_MRROOT" \
+        "$MACHORUN/build/machorun" \
+        "$MACHORUN/darwin" \
+        "$x86_core"
+    if [ -x "$BASE_MRROOT/machorun" ] && phase2_is_elf_x86_loader "$BASE_MRROOT/machorun" \
+        && [ -f "$BASE_MRROOT/darwin/usr/lib/swift/libswiftCore.dylib" ] \
+        && phase2_is_x86_macho "$BASE_MRROOT/darwin/usr/lib/swift/libswiftCore.dylib"; then
+        note mrroot-base-x86 cold-built
+        BASE_MRROOT_OK=1
+    elif [ "$LIBSWIFTCORE_X86" -ne 1 ]; then
+        cannot mrroot-base-x86 BUILD_LIBSWIFTCORE_X86 \
+            "loader+x86 darwin staged at $BASE_MRROOT; libswiftCore.dylib omitted because only an arm64 artifact exists"
+    else
+        cannot mrroot-base-x86 STAGE_MRROOT \
+            "copy failed to produce x86 loader+libswiftCore at $BASE_MRROOT"
+    fi
+fi
+
+# ---------------------------------------------------------------------------
+# 6a. scratch/mrroot_fe-x86_64 — FE overlays from the x86 stdlib cross-build.
+# Emits CANNOT_X86_OVERLAYS_NOT_BUILT (phase2_cannot prefixes CANNOT_).
+# CoreSimulator overlays are arm64-only non-fat; never use that macOS marker.
+echo "==== mrroot_fe-x86_64 (FE overlays, beside $ARM_FE_MRROOT) ===="
+[ "$FE_MRROOT" != "$ARM_FE_MRROOT" ] || {
+    cannot mrroot-fe-overlays-x86 MRROOT_COLLIDES_ARM64 "x86 FE overlay path equals arm64 scratch/mrroot_fe"
+}
+overlay_report=$(phase2_stage_x86_fe_overlays "$FE_MRROOT" || true)
+case "$overlay_report" in
+    OK)
+        note mrroot-fe-overlays-x86 satisfied
+        ;;
+    MISSING=*)
+        cannot mrroot-fe-overlays-x86 X86_OVERLAYS_NOT_BUILT \
+            "$overlay_report; x86 overlays come from swiftcore-macho/artifacts/swift-macosx/x86_64 (PR #20 stdlib staging) or \$HOME/work/build/lib/swift/macosx/x86_64, not CoreSimulator"
+        ;;
+    *)
+        cannot mrroot-fe-overlays-x86 X86_OVERLAYS_NOT_BUILT \
+            "overlay stage produced '$overlay_report'"
+        ;;
+esac
+
+# ---------------------------------------------------------------------------
+# 6b. mrroot_full-x86_64 beside mrroot_full
 echo "==== mrroot_full-x86_64 (beside $ARM_MRROOT) ===="
 MRROOT_OK=0
 [ "$MRROOT" != "$ARM_MRROOT" ] || {
@@ -722,7 +787,7 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# 6b. Guest-visible /w layout (FocusWidgetGuestMain.swift fonts)
+# 6c. Guest-visible /w layout (FocusWidgetGuestMain.swift fonts)
 echo "==== /w layout (guest-visible fonts path) ===="
 W_LAYOUT=0
 w_resolved=$(readlink -f /w 2>/dev/null || true)

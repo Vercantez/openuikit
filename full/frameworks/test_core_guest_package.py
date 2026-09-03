@@ -3581,16 +3581,31 @@ class ShellContractTests(unittest.TestCase):
             "build_fe.sh",
         ):
             self.assertIn(helper, build_full)
+        default_mc = 'MC=${MC:-$W/scratch/modcache_fe4}'
+        variable_argv = '-module-cache-path "$MC"'
+        literal_argv = '-module-cache-path "$W/scratch/modcache_fe4"'
         for helper in (
             REPO / "full/foundation/build_collections.sh",
             REPO / "full/foundation/build_os_module.sh",
             REPO / "full/foundation/build_fe.sh",
         ):
-            self.assertIn(
-                '-module-cache-path "$W/scratch/modcache_fe4"',
-                helper.read_text(encoding="utf-8"),
+            text = helper.read_text(encoding="utf-8")
+            uses_literal = literal_argv in text
+            uses_variable = default_mc in text and variable_argv in text
+            self.assertTrue(
+                uses_literal or uses_variable,
+                f"{helper.name} must write the FE module cache at "
+                f"$W/scratch/modcache_fe4 (literal argv or MC default + "
+                f'-module-cache-path "$MC")',
             )
+            if uses_variable:
+                self.assertIn(default_mc, text)
+                self.assertIn(variable_argv, text)
         builder = BUILDER.read_text(encoding="utf-8")
+        self.assertIn(
+            'BUILD_FE_CACHE=$W/scratch/modcache_fe4${FULL_OUT_SUFFIX}',
+            builder,
+        )
         for cache in ("BUILD_FULL_CACHE", "BUILD_FE_CACHE"):
             self.assertIn(f'"${cache}"', builder)
             self.assertIn(f'touch "${cache}/.INVALID-DO-NOT-USE"', builder)
