@@ -1,0 +1,36 @@
+# darwin/umbrella-own-defs.txt -- Mach-O names the full/ libSystem umbrella
+# defines that machorun's dylib does not.
+#
+# gen_tbd merges these into libSystem.tbd so an overlay LINK (ld64.lld
+# NOUNDEFS) sees the same names the arm64 guest actually loads. The names are
+# NOT implemented in machorun's libSystem: a definition there would be a
+# second one, and a definition in the umbrella beats .real
+# (umbrella-shadows-reexport).
+#
+# Sources (build_full.sh links these into the umbrella, re-exporting .real):
+#   full/shims/libsystem_math_compat.c   _nan _remquo  (discriminator)
+#   full/shims/concpatch.c               dispatch_* DATA+code, dispatch_async_swift_job
+#   spike/syspatch.c                     not listed here (overlay Darwin.o does
+#                                        not import them)
+#
+# Do not put a name here that darwin/src also exports. PR #67 moved
+# _NSGetMachExecuteHeader / dispatch_once_f / flockfile into machorun and
+# deleted the umbrella copies; qos_class_self, os_release, voucher_*,
+# memset_s, clock_getres followed.
+
+_nan
+_remquo
+_dispatch_activate
+_dispatch_after_f
+_dispatch_async_f
+_dispatch_assert_queue$V2
+_dispatch_async_swift_job
+_dispatch_get_global_queue
+_dispatch_main
+_dispatch_main_q
+_dispatch_release
+_dispatch_set_context
+_dispatch_source_create
+_dispatch_source_set_event_handler_f
+_dispatch_source_set_timer
+_dispatch_source_type_timer

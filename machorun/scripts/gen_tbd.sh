@@ -4,10 +4,17 @@
 #   scripts/gen_tbd.sh          generate, then check
 #   scripts/gen_tbd.sh --check  check only; write nothing
 #
-# The point of generating rather than transcribing: the exported surface is by
-# construction exactly what darwin/usr/lib/*.dylib implements. Apple's
-# libSystem.B.tbd is 337 KB of symbols we mostly do not have; ours is a few KB
-# of symbols we certainly do.
+# The point of generating rather than transcribing: the exported surface is
+# what darwin/usr/lib/*.dylib implements, plus two lists that are not in
+# that dylib on purpose:
+#   darwin/host-bound-allowed.txt  glibc-compatible names an overlay LINK
+#                                  can import before any guest root does
+#   darwin/umbrella-own-defs.txt   names the full/ libSystem umbrella
+#                                  defines (dispatch_*, _nan, _remquo).
+# A definition of those in machorun would be a second one the umbrella
+# beats (umbrella-shadows-reexport). Apple's libSystem.B.tbd is 337 KB of
+# symbols we mostly do not have; ours is a few KB of symbols we certainly
+# do, plus the overlay LINK surface.
 #
 # RUN THIS AFTER build_darwin.sh / build_objc4.sh, NEVER BEFORE. The dylibs are
 # the source of truth and a stale .tbd is a lie the linker will believe: ld64
@@ -368,6 +375,45 @@ done
 sort -u "$TMP/sym.libSystem.B" "$TMP/loader_public" > "$TMP/sym.libSystem.B.tmp"
 mv "$TMP/sym.libSystem.B.tmp" "$TMP/sym.libSystem.B"
 
+# Host-bound-allowed names must appear in the tbd even if nothing in THIS
+# root imports them. An overlay being LINKED is not in the root yet; omitting
+# them manufactures phantom NOUNDEFS at ld64.lld. CHECK 5's "nothing in this
+# root imports" note is not a reason to drop the export.
+ALLOWED_FILE="$ROOT/darwin/host-bound-allowed.txt"
+grep -oE '^_[A-Za-z_][A-Za-z_0-9]*' "$ALLOWED_FILE" | sort -u > "$TMP/allowed_syms"
+[ -s "$TMP/allowed_syms" ] || die "parsed no names from $ALLOWED_FILE"
+
+# Umbrella own-defs: advertised so the overlay LINK matches the arm64
+# libSystem.B the guest loads. Not in machorun's dylib (a second definition
+# would lose to the umbrella). $ in _dispatch_assert_queue$V2 is a character.
+UMBRELLA_DEFS="$ROOT/darwin/umbrella-own-defs.txt"
+[ -f "$UMBRELLA_DEFS" ] || die "no $UMBRELLA_DEFS"
+grep -vE '^[[:space:]]*(#|$)' "$UMBRELLA_DEFS" | awk '{print $1}' | sort -u > "$TMP/umbrella_syms"
+[ -s "$TMP/umbrella_syms" ] || die "parsed no names from $UMBRELLA_DEFS"
+
+sort -u "$TMP/sym.libSystem.B" "$TMP/allowed_syms" "$TMP/umbrella_syms" \
+    > "$TMP/sym.libSystem.B.tmp"
+mv "$TMP/sym.libSystem.B.tmp" "$TMP/sym.libSystem.B"
+
+# TOOTH: a tbd that omits an allowed or umbrella-own-def name is a CHECK
+# failure, not a note. Overlays being linked are not "nothing in this root".
+omit=""
+while IFS= read -r s; do
+    grep -Fqx -- "$s" "$TMP/sym.libSystem.B" && continue
+    omit="$omit $s"
+done < "$TMP/allowed_syms"
+while IFS= read -r s; do
+    # -F: _dispatch_assert_queue$V2 contains a literal $.
+    grep -Fqx -- "$s" "$TMP/sym.libSystem.B" && continue
+    omit="$omit $s"
+done < "$TMP/umbrella_syms"
+if [ -n "$omit" ]; then
+    echo "!! libSystem.tbd omits allowed/umbrella-own-def name(s):$omit" >&2
+    echo "   gen_tbd must export every host-bound-allowed and umbrella-own-defs" >&2
+    echo "   name, whether or not this root already imports it." >&2
+    exit 1
+fi
+
 # Overlay NOUNDEFS: symbols the x86 Swift overlay links import from Apple's
 # libSystem / libc++ that this tree must export. A missing name here is a
 # short .tbd that manufactures phantom undefineds at ld64.lld time.
@@ -375,7 +421,7 @@ require_syms() { # require_syms <sym-file> <label> <sym...>
     local file=$1 label=$2; shift 2
     local s miss=
     for s in "$@"; do
-        grep -qx "$s" "$file" && continue
+        grep -Fqx -- "$s" "$file" && continue
         miss="$miss $s"
     done
     if [ -n "$miss" ]; then
@@ -386,7 +432,16 @@ require_syms() { # require_syms <sym-file> <label> <sym...>
 }
 require_syms "$TMP/sym.libSystem.B" "libSystem.B" \
     _fmal _flockfile _funlockfile _dispatch_once_f \
-    __dyld_is_objc_constant __NSGetMachExecuteHeader
+    __dyld_is_objc_constant __NSGetMachExecuteHeader \
+    _vdprintf _openat _sem_open _sem_close _sem_wait _sem_post \
+    _remquof _remquol _nanf _nanl \
+    _memset_s _clock_getres _qos_class_self \
+    _os_release _voucher_copy _voucher_adopt \
+    _dispatch_async_f _dispatch_after_f _dispatch_get_global_queue \
+    _dispatch_main _dispatch_activate _dispatch_set_context \
+    _dispatch_release _dispatch_source_create _dispatch_source_set_timer \
+    _dispatch_source_set_event_handler_f _dispatch_assert_queue\$V2 \
+    _dispatch_main_q _dispatch_source_type_timer
 require_syms "$TMP/sym.libc++.1" "libc++.1" \
     __ZNSt3__122__libcpp_verbose_abortEPKcz \
     __ZNSt3__16thread20hardware_concurrencyEv \

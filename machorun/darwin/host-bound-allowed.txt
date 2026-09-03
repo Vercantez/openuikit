@@ -30,20 +30,34 @@
 # a root's contents are configuration -- libquartz is optional, libswiftCore is
 # staged from another project, and a tree that has not staged them would
 # otherwise fail over an entry that is perfectly correct for the tree that has.
+# gen_tbd.sh still EMITS every allowed name into libSystem.tbd (a tbd that
+# omits one is a CHECK failure). CHECK 5's note is about this root's imports,
+# not about whether the stub advertises the name. An overlay being LINKED is
+# not in the root yet.
 #
 # BEFORE ADDING A ROW: measure both sides. Same size, same signedness, same
 # width, same variadic convention, same return-value CONVENTION -- the six
 # hazard families, not just the ones with structs in them. The rows below say
 # what was checked, because "looked fine" is not a measurement and vdprintf was
-# on this list's ancestor until somebody measured va_list.
+# on this list's ancestor until somebody measured va_list. Do not add remquol /
+# nanl / openat / sem_open / vdprintf: the allow-list is not arch-split.
+# remquol/nanl are ARCH-guarded in darwin/src/math.c (like fmal). openat /
+# sem_open / vdprintf are translating wrappers in darwin/src.
 #
 # symbol      reason (what was checked)
 
 _nanf         float nanf(const char *): float/pointer in, float out. No struct,
               no flag, no varargs, no locale. Identical on both sides.
+              Also implemented in darwin/src/math.c so the tbd export is an
+              own def, not only a host-bind. Double `_nan` is an umbrella
+              own-def (Apple NaN tag) -- darwin/umbrella-own-defs.txt.
 
 _remquo       double remquo(double, double, int *): the out parameter is an
 _remquof      int, 4 bytes and signed on both. double/float agree on arm64.
+              `_remquo` is ALSO an umbrella own-def (Apple 7-bit quotient,
+              full/shims/libsystem_math_compat.c). Host-bind is the
+              machorun-only fallback when the umbrella is not loaded.
+              `_remquof` is a machorun wrapper (math.c); not in the umbrella.
 
 _strtof       float strtof(const char *, char **): float is IEEE binary32 on
               both sides -- unlike long double on arm64, which is 8 bytes on
