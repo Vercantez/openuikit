@@ -18,29 +18,12 @@ HOST_ABI='ELF64-AArch64'
 SKIP_RUNTIME_PIN=0
 # The host Swift runtime dir: the container image keeps the toolchain at /usr;
 # the EC2 builders keep it under /opt/swift624 (or SWIFT_TOOLCHAIN) with swiftc
-# on PATH. Resolve from swiftc so both layouts find the same pinned files; the
-# sha256 pins below still decide whether what was found is the right runtime.
-_swift_linux_lib=/usr/lib/swift/linux
-if [ -n "${SWIFT_TOOLCHAIN:-}" ] && [ -d "$SWIFT_TOOLCHAIN/usr/lib/swift/linux" ]; then
-    _swift_linux_lib=$SWIFT_TOOLCHAIN/usr/lib/swift/linux
-elif [ -n "${SWIFT_TOOLCHAIN:-}" ] && [ -d "$SWIFT_TOOLCHAIN/lib/swift/linux" ]; then
-    _swift_linux_lib=$SWIFT_TOOLCHAIN/lib/swift/linux
-elif [ ! -f "$_swift_linux_lib/libdispatch.so" ]; then
-    # Same order as full/scripts/guest_arch.inc: the pinned EC2 prefixes, then
-    # whatever swiftc is on PATH (SSM sessions carry a minimal PATH, so the
-    # prefixes must come first).
-    for _cand in /opt/swift624/usr /opt/swift/usr; do
-        if [ -f "$_cand/lib/swift/linux/libdispatch.so" ]; then
-            _swift_linux_lib=$_cand/lib/swift/linux
-            break
-        fi
-    done
-    if [ ! -f "$_swift_linux_lib/libdispatch.so" ] && command -v swiftc >/dev/null 2>&1; then
-        _swiftc_dir=$(cd "$(dirname "$(command -v swiftc)")" && pwd -P)
-        [ -f "$_swiftc_dir/../lib/swift/linux/libdispatch.so" ] \
-            && _swift_linux_lib=$(cd "$_swiftc_dir/../lib/swift/linux" && pwd -P)
-    fi
-fi
+# on PATH. Shared with scripts/x86/common.inc via swift_linux_lib.inc so the
+# x86 mrroot host/ stager looks at the same place. The sha256 pins below still
+# decide whether what was found is the right runtime.
+# shellcheck source=swift_linux_lib.inc
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/swift_linux_lib.inc"
+_swift_linux_lib=$(openuikit_resolve_swift_linux_lib)
 HOST_SWIFT_INCLUDE_ROOT=$(cd "$_swift_linux_lib/.." && pwd -P)   # <toolchain>/usr/lib/swift: dispatch/dispatch.h, Block.h
 HOST_DISPATCH_SOURCE=$_swift_linux_lib/libdispatch.so
 HOST_BLOCKS_RUNTIME_SOURCE=$_swift_linux_lib/libBlocksRuntime.so

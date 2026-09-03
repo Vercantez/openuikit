@@ -66,6 +66,7 @@ copy_if_x86_macho() {
 
 rm -rf "$SYS"
 mkdir -p "$SYS/usr/include" "$SYS/usr/lib/swift"
+phase2_ensure_sdk_settings "$SYS"
 
 echo "== headers from machorun/sdk (not Xcode)"
 cp -R "$MACHORUN/sdk/usr/include/." "$SYS/usr/include/"
