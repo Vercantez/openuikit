@@ -226,10 +226,10 @@ ld64.lld-18 -arch arm64 \
     "$INTL_WORK/open-foundation-internationalization-bridge.o"
 
 INTL_HOST=$STAGE/guest-root/host/libOpenFoundationInternationalizationHost.so
-clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
-    -I "$COMPAT_INCLUDE" -shared \
-    "$SUPPORT_ROOT/full/foundationinternationalization/OpenFoundationInternationalizationHost.c" \
-    -o "$INTL_HOST"
+bash "$SUPPORT_ROOT/full/foundationinternationalization/build_host_helper.sh" \
+    --repo "$SUPPORT_ROOT" \
+    --host-dir "$STAGE/guest-root/host" \
+    --include-dir "$COMPAT_INCLUDE"
 clang-18 -std=c11 -O2 -Wall -Wextra -Werror -I "$COMPAT_INCLUDE" \
     "$SUPPORT_ROOT/full/foundationinternationalization/OpenFoundationInternationalizationHost.c" \
     "$SUPPORT_ROOT/full/foundationinternationalization/OpenFoundationInternationalizationHostTests.c" \
