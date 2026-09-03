@@ -1,0 +1,6 @@
+precise	question	risk	reason
+c:@VNErrorDomain	What are the exact UTF-8 bytes of VNErrorDomain on iOS 26.1?	machine-learning	TBD exports the symbol but this host has no Apple runtime string observation.
+c:objc(cs)VNGeometryUtils(cm)boundingCircleForPoints:error:	Does Apple's boundingCircle return the unique minimum enclosing circle (Welzl) or a looser bounding-box approximation for acute triangles?	image-processing	Linux implements Welzl; PR #17 repair required rejecting the bounding-box-center heuristic.
+c:objc(cs)VNImageRequestHandler(im)performRequests:error:	When no model is present, does perform throw VNErrorCode.notImplemented, invalidModel, or another code, and is the completion handler invoked before the throw?	machine-learning	Linux fails closed with notImplemented after invoking the completion handler; Apple ordering is unobserved.
+c:@E@VNErrorCode@VNErrorTuriCoreErrorCode	Is VNErrorCode.turiCoreErrorCode's NSInteger value -1 as in independent macios bindings, or another ABI?	machine-learning	macios Native enum is declaration evidence only; not an Apple runtime oracle.
+module	Which Vision request revisions are currentRevision on iOS 26.1 for VNDetectBarcodesRequest and VNRecognizeTextRequest?	machine-learning	Linux uses the highest macios-documented revision integers; current vs default on device is unobserved.
