@@ -658,3 +658,6 @@ phase2_stage_x86_base_mrroot() {
     done
 }
 
+# shellcheck source=ud_guest.inc
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/ud_guest.inc"
+

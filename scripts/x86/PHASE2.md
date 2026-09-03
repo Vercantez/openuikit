@@ -90,7 +90,7 @@ NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 \
 | `build_objc4.sh` / `build_quartz.sh` | yes — unblocks the `objc` fixture | same |
 | `scripts/x86/stage_fe_sysroot.sh` | headers + x86 dylibs + Darwin family modulemaps + x86 `libswiftCore`/`Swift.swiftmodule`/`_Builtin_float` into `usr/lib/swift`; restages when input shas change; `CANNOT_STAGE_XCODE_DARWIN_OVERLAYS` unless textual Darwin overlays exist in the arm64 `sysroot_fe4` | same |
 | FoundationEssentials / collections / OpenCombine / `build_full.sh` | x86 `libswiftCore` + `Swift.swiftmodule` are in artifacts; `_Concurrency` overlay is not (libdispatch wall). `os-module-x86` is built into `build/full-x86_64/foundation/os` before `build_fe.sh`. `fe-imports` names missing `_Concurrency`/`_StringProcessing`/… instead of compiling 202 files | needs x86 libswiftCore + `_Concurrency` + `_StringProcessing` + Darwin overlays + os-module |
-| rung a `run_ud_guest.sh` | cannot run a real FE guest without x86 libswiftCore + named MACHORUN_ROOT + `ud_guest` binary | smoke 14/14 + persist under the ported loader |
+| rung a `run_ud_guest.sh` | `ud-guest-x86` links `scratch/ud-guest-x86_64/bin/ud_guest` through `link_ud_guest.sh` (tbd-first). Runtime still needs the nine overlay dylibs at load. Missing CF objects: `CANNOT_UD_GUEST_LIBCFTEST file=libCFTest.dylib`. | smoke 14/14 + persist under the ported loader once overlays land |
 | rung b Focus widget + onboarding | scripts retargeted; `NEEDS_X86_OPENCOMBINE` resolved by `export-x86_64/` (arm64 SHA untouched) | same gates under the ported loader |
 | rung c Reminder scene | inner script no longer refuses x86-on-x86; still needs Reminder 22-source inventory | one `UIWindow` + three paced turns |
 
@@ -191,3 +191,22 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    script stages fonts there and under `$W/build/swiftui-guest/fonts`; phase2
    tries `ln -sfn $W /w` and CANNOT if it cannot. Compiler argv never uses
    the `/w` spelling for `-module-cache-path`.
+9. `ud-guest-x86` produces the x86_64 `#87` guest binary through
+   foundation-macho's committed pipeline rather than asking the operator to
+   hand-stage it. Work tree is `scratch/ud-guest-x86_64` (never unsuffixed
+   `scratch/ud-guest`). FE objects are **reused** from
+   `build/full-x86_64/foundation` (same `build_fe.sh` / collections / os /
+   cshims argv phase2 already ran) and staged into that tree's `$W/fe` the
+   way `stage_fe_guest.sh` laid out the arm64 #87 container. Port + runner
+   compile use `build_ud_score_guest.sh`'s argv (`COMPILE_TRIPLE` macos15,
+   `-O -wmo`, `CFPreferencesMinimal`). Link is **only**
+   `foundation-macho/scripts/link_ud_guest.sh` (macos13 `TRIPLE`, tbd-first
+   `-L` order). `fm_unimplemented.o` is compiled once into essentials/ with
+   `build_full.sh`'s clang argv. `libswiftcompat.dylib` comes from an existing
+   x86 Mach-O or `swiftcore-macho/scripts/build_compat.sh`. `libCFTest.dylib`
+   has no committed x86 object recipe (`/work/cfobjc` is shell-history only);
+   missing it is `CANNOT_UD_GUEST_LIBCFTEST file=libCFTest.dylib`. Any other
+   missing piece is `CANNOT_UD_GUEST_<FILE> file=<basename>`. On success the
+   binary is exported as `UD_GUEST_BIN` for rung a, with
+   `bin/ud_guest.otool.txt` (`MH_MAGIC_64 X86_64` + expected loads). Overlay
+   dylibs are not required at link time; rung a still needs them at load.

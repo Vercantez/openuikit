@@ -59,7 +59,8 @@ expect_file "$GUEST"
 
 echo "== bash -n"
 for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
-    "$ROOT/full/foundation/fe_sysroot_measurement.inc"; do
+    "$ROOT/full/foundation/fe_sysroot_measurement.inc" \
+    "$ROOT/scripts/x86/ud_guest.inc"; do
     if bash -n "$s"; then
         ok "bash -n $(basename "$s")"
     else
@@ -770,6 +771,147 @@ else
     ok "tbd-stubs is not host=x86_64 CANNOT_GENERATE_TBD"
 fi
 rm -rf "$PREP_FIX"
+
+echo "== ud-guest-x86 uses committed linker, suffixed tree, reused FE objects"
+UDINC=$ROOT/scripts/x86/ud_guest.inc
+expect_file "$UDINC"
+expect_grep 'ud-guest-x86' "$PHASE2" "phase2 item ud-guest-x86"
+expect_grep 'phase2_try_ud_guest' "$PHASE2" "phase2 invokes the ud-guest producer"
+expect_grep 'foundation-macho/scripts/link_ud_guest.sh' "$UDINC" \
+    "producer names the committed linker"
+expect_grep 'foundation-macho/scripts/link_ud_guest.sh' "$PHASE2" \
+    "phase2 still names the committed linker"
+if grep -E '^[^#]*build_fe\.sh' "$UDINC" >/dev/null; then
+    die_test "ud-guest-x86 invokes build_fe.sh"
+else
+    ok "ud-guest-x86 does not compile FE a second time"
+fi
+expect_grep 'scratch/ud-guest-x86_64' "$UDINC" "work tree is suffixed"
+expect_grep 'refusing unsuffixed/arm64 ud-guest work tree' "$UDINC" \
+    "unsuffixed work tree is a named CANNOT"
+expect_grep 'export UD_GUEST_BIN' "$PHASE2" "successful link exports UD_GUEST_BIN for rung a"
+expect_grep 'CANNOT_UD_GUEST_' "$UDINC" "refusal markers use CANNOT_UD_GUEST_"
+expect_grep 'LIBCFTEST libCFTest.dylib' "$UDINC" "CF hole names file=libCFTest.dylib"
+expect_grep 'USERDEFAULTSGUEST UserDefaultsGuest.o' "$UDINC" "port hole names file=UserDefaultsGuest.o"
+expect_grep 'RUNNER runner.o' "$UDINC" "runner hole names file=runner.o"
+expect_grep 'build_ud_score_guest.sh' "$UDINC" "port/runner argv follows the committed scoreboard compile"
+expect_grep 'build_full.sh argv -O1 -nostdinc' "$UDINC" \
+    "fm_unimplemented uses build_full.sh clang argv"
+expect_grep 'build_cftest_harness.sh' "$UDINC" "CF path names the committed CF linker"
+expect_grep 'Will not invent a CF compiler or a stub' "$UDINC" \
+    "does not invent a CF compiler"
+for load in libswiftCore libswiftDarwin libswift_StringProcessing \
+    libswiftSynchronization libswift_errno libobjc libSystem libCFTest libswiftcompat
+do
+    expect_grep "$load" "$UDINC" "expected load $load is in the otool census"
+done
+expect_not_grep 'Operator: stage CF+FE objects, link_ud_guest.sh, then re-run' \
+    "$PHASE2" "rung a no longer asks the operator to hand-stage the binary"
+
+echo "== ud-guest-x86 refusal + staging resolution"
+UDWORK=$(mktemp -d /tmp/phase2-ud-guest.XXXXXX)
+SYS=${SYS:-$ROOT/scratch/sysroot_fe4-x86_64}
+# shellcheck source=common.inc
+. "$COMMON"
+
+unsuf=$(phase2_ud_guest_refuse_unsuffixed "$UDWORK/scratch/ud-guest" || true)
+case "$unsuf" in
+    CANNOT_UD_GUEST_WORKTREE\ file=*reason=refusing\ unsuffixed/arm64*)
+        ok "unsuffixed work tree is CANNOT_UD_GUEST_WORKTREE"
+        ;;
+    *) die_test "unsuffixed refusal got: $unsuf" ;;
+esac
+
+wt=$(phase2_ud_guest_worktree "$UDWORK")
+if [ "$wt" = "$UDWORK/scratch/ud-guest-x86_64" ]; then
+    ok "worktree helper is scratch/ud-guest-x86_64"
+else
+    die_test "worktree helper got $wt"
+fi
+
+missing=$(phase2_ud_guest_stage_fe "$UDWORK/foundation" "$wt" || true)
+case "$missing" in
+    CANNOT_UD_GUEST_FOUNDATIONESSENTIALS\ file=FoundationEssentials.o*)
+        ok "missing FE object is CANNOT_UD_GUEST_FOUNDATIONESSENTIALS file=FoundationEssentials.o"
+        ;;
+    *) die_test "missing FE refusal got: $missing" ;;
+esac
+
+if [ -d "$SYS/usr/include" ]; then
+    fe=$UDWORK/foundation
+    mkdir -p "$fe/essentials" "$fe/collections" "$fe/os" "$fe/cshims"
+    echo 'int ud_guest_probe=1;' | clang-18 -target x86_64-apple-macos15.0 \
+        -isysroot "$SYS" -c -o "$fe/essentials/FoundationEssentials.o" -x c -
+    echo 'int ud_guest_probe=1;' | clang-18 -target x86_64-apple-macos15.0 \
+        -isysroot "$SYS" -c -o "$fe/collections/OrderedCollections.o" -x c -
+    echo 'int ud_guest_probe=1;' | clang-18 -target x86_64-apple-macos15.0 \
+        -isysroot "$SYS" -c -o "$fe/collections/InternalCollectionsUtilities.o" -x c -
+    echo 'int ud_guest_probe=1;' | clang-18 -target x86_64-apple-macos15.0 \
+        -isysroot "$SYS" -c -o "$fe/collections/_RopeModule.o" -x c -
+    echo 'int ud_guest_probe=1;' | clang-18 -target x86_64-apple-macos15.0 \
+        -isysroot "$SYS" -c -o "$fe/os/os.o" -x c -
+    echo 'int ud_guest_probe=1;' | clang-18 -target x86_64-apple-macos15.0 \
+        -isysroot "$SYS" -c -o "$fe/cshims/platform_shims.o" -x c -
+    echo 'int ud_guest_probe=1;' | clang-18 -target x86_64-apple-macos15.0 \
+        -isysroot "$SYS" -c -o "$fe/cshims/string_shims.o" -x c -
+    echo 'int ud_guest_probe=1;' | clang-18 -target x86_64-apple-macos15.0 \
+        -isysroot "$SYS" -c -o "$fe/cshims/uuid.o" -x c -
+    : > "$fe/essentials/FoundationEssentials.swiftmodule"
+    : > "$fe/os/os.swiftmodule"
+    staged=$(phase2_ud_guest_stage_fe "$fe" "$wt" || true)
+    case "$staged" in
+        OK\ fe-staged*)
+            if [ -f "$wt/fe/module/FoundationEssentials.o" ] \
+                && [ -f "$wt/fe/collections/OrderedCollections.o" ] \
+                && [ -f "$wt/fe/collections/_RopeModule.o" ] \
+                && [ -f "$wt/fe/_RopeModule.o" ] \
+                && [ -f "$wt/fe/os/os.o" ] \
+                && [ -f "$wt/fe/cshims/uuid.o" ] \
+                && phase2_is_x86_macho "$wt/fe/module/FoundationEssentials.o"; then
+                ok "staging maps build/full-x86_64/foundation into scratch/ud-guest-x86_64/fe"
+            else
+                die_test "staged layout incomplete under $wt/fe"
+            fi
+            ;;
+        *) die_test "staging resolution got: $staged" ;;
+    esac
+else
+    die_test "x86 sysroot missing; cannot compile staging fixtures"
+fi
+
+cfreport=$(phase2_ud_guest_ensure_cftest "$wt" "$ROOT" || true)
+case "$cfreport" in
+    CANNOT_UD_GUEST_LIBCFTEST\ file=libCFTest.dylib*)
+        ok "absent libCFTest.dylib is CANNOT_UD_GUEST_LIBCFTEST file=libCFTest.dylib"
+        ;;
+    *) die_test "libCFTest refusal got: $cfreport" ;;
+esac
+
+# A provided x86 dylib is accepted (resolution path for the CF hole).
+echo 'int ud_cftest=1;' | clang-18 -target x86_64-apple-macos15.0 \
+    -isysroot "$SYS" -c -o "$UDWORK/cftest.o" -x c -
+clang-18 -target x86_64-apple-macos15.0 -isysroot "$SYS" \
+    -fuse-ld=lld -B /usr/lib/llvm-18/bin -nostdlib -dynamiclib \
+    -install_name /usr/lib/libCFTest.dylib \
+    "$UDWORK/cftest.o" -o "$UDWORK/libCFTest.dylib" 2>/dev/null \
+    || clang-18 -target x86_64-apple-macos15.0 -isysroot "$SYS" \
+        -fuse-ld=lld -B /usr/lib/llvm-18/bin -dynamiclib \
+        -install_name /usr/lib/libCFTest.dylib \
+        "$UDWORK/cftest.o" -o "$UDWORK/libCFTest.dylib"
+if phase2_is_x86_macho "$UDWORK/libCFTest.dylib"; then
+    UD_CFTEST_DYLIB=$UDWORK/libCFTest.dylib
+    cfok=$(phase2_ud_guest_ensure_cftest "$wt" "$ROOT" || true)
+    if [ -z "$cfok" ] && [ -f "$wt/lib/libCFTest.dylib" ] \
+        && phase2_is_x86_macho "$wt/lib/libCFTest.dylib"; then
+        ok "UD_CFTEST_DYLIB stages an x86 libCFTest.dylib into the suffixed tree"
+    else
+        die_test "UD_CFTEST_DYLIB resolution got: '$cfok'"
+    fi
+    unset UD_CFTEST_DYLIB
+else
+    die_test "could not emit an x86 libCFTest.dylib fixture"
+fi
+rm -rf "$UDWORK"
 
 echo
 echo "test_phase2: pass=$pass fail=$fail"
