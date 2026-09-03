@@ -37,10 +37,11 @@ cxx_init	chained	run	pass	C++ global ctors/dtors, __cxa_atexit, guarded local st
 tls	chained	run	pass	_Thread_local via __thread_vars descriptors and tlv_get_addr
 dylib	chained	run	pass	two images: @rpath dylib, data import, reverse import into the exe
 dylib_classic	classic	run	pass	same, classic fixups on both images
-cache_layout	chained	run	pass	a dylib with Apple-aligned segments; the control for cache_layout_packed / cache_layout_sparse / cache_layout_nofix
+cache_layout	chained	run	pass	a dylib with Apple-aligned segments; the control for cache_layout_packed / cache_layout_sparse / cache_layout_nofix / cache_layout_emptyfix
 cache_layout_packed	chained	norun:macOS SIGKILLs non-page-aligned segments (the dyld-shared-cache layout)	pass	same program as cache_layout, dylib rewritten to packed non-page-aligned vmaddr/fileoff
 cache_layout_sparse	chained	norun:macOS SIGKILLs non-page-aligned segments (the dyld-shared-cache layout)	pass	same program as cache_layout, dylib rewritten with Apple's cache-wide TEXT-to-DATA gap (0x22256720)
 cache_layout_nofix	none	norun:cache extract has no rebase/bind tables; Darwin has no twin for the loader diagnostic	pass	refuse a dylib with DATA pointers and neither LC_DYLD_INFO nor LC_DYLD_CHAINED_FIXUPS
+cache_layout_emptyfix	classic	norun:libCombine shape (LC_DYLD_INFO_ONLY all sizes zero); Linux-graded like cache_layout_nofix; Darwin twin not required	pass	load a dylib with DATA_CONST bytes and LC_DYLD_INFO_ONLY present with every size zero
 cache_layout_oversize	chained	norun:segment filesize exceeds the file; Darwin has no twin for the loader diagnostic	pass	refuse a segment whose file bytes exceed the file
 pthread	chained	run	pass	pthread create/join/mutex/once plus per-thread TLS allocation
 objc	chained	run	pass	Foundation-free Objective-C: classes, selrefs, objc_msgSend

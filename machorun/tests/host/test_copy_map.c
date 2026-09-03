@@ -16,9 +16,11 @@
  *     - the packed-style gap +0x4008 AND a mid-cache hole are unmapped
  *     - no single VMA covers the ~546 MB union (per-segment reservation)
  *
- *   dsc-nofix: a dylib with DATA_CONST bytes and no chained/classic bind
- *   or rebase stream is refused (Apple cache extracts). The predicate is
- *   checked here; the loader _exit(74)s before mapping.
+ *   dsc-nofix: a dylib with DATA_CONST bytes and neither LC_DYLD_INFO
+ *   nor LC_DYLD_CHAINED_FIXUPS is refused (Apple cache extracts). A
+ *   dylib whose LC_DYLD_INFO_ONLY is present with every size zero is
+ *   NOT refused (libCombine.dylib). The predicate is checked here; the
+ *   loader _exit(74)s before mapping on the extract shape.
  *
  * The 2026-09-03 packed-fixture SIGSEGV was pc at imageoff 0x5e0, fault
  * at slide+0x4008: that address is the packed gap. The Reminder guest then
@@ -65,9 +67,12 @@ static void test_dsc_nofix_predicate(void)
              VM_PROT_READ | VM_PROT_WRITE, SG_READ_ONLY);
     expect_dsc("dylib DATA_CONST, no fixups", &im, 1);
 
+    im.has_chained_fixups = 1;
     im.chained_size = 64;
     expect_dsc("dylib with chained fixups", &im, 0);
     im.chained_size = 0;
+    expect_dsc("dylib with LC_DYLD_CHAINED_FIXUPS datasize 0", &im, 0);
+    im.has_chained_fixups = 0;
 
     im.filetype = MH_EXECUTE;
     expect_dsc("executable without fixups", &im, 0);
@@ -83,7 +88,9 @@ static void test_dsc_nofix_predicate(void)
     im.dyld_info = &di;
     expect_dsc("dylib with classic binds", &im, 0);
     di.bind_size = 0;
-    expect_dsc("dylib with export-only LC_DYLD_INFO", &im, 1);
+    expect_dsc("dyld_info present + zero sizes", &im, 0);
+    im.dyld_info = NULL;
+    expect_dsc("no dyld_info and no chained", &im, 1);
 }
 
 static int can_read(const void *p)

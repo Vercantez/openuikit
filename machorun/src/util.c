@@ -140,11 +140,10 @@ int mr_image_is_cache_extract_without_fixups(const mr_image *im)
     if (!im) return 0;
     if (im->filetype != MH_DYLIB && im->filetype != MH_BUNDLE)
         return 0;
-    if (im->chained_size)
-        return 0;
-    if (im->dyld_info &&
-        (im->dyld_info->rebase_size || im->dyld_info->bind_size ||
-         im->dyld_info->weak_bind_size || im->dyld_info->lazy_bind_size))
+    /* Presence of the load command, not the sizes. ld64 emits
+     * LC_DYLD_INFO_ONLY with every size zero when nothing needs
+     * fixing up; a cache extract has neither command at all. */
+    if (im->has_chained_fixups || im->dyld_info)
         return 0;
     for (int i = 0; i < im->nsegs; i++) {
         const mr_segment *s = &im->segs[i];

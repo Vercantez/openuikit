@@ -157,7 +157,7 @@ if want dylib_classic; then
     echo "==> dylib_classic"; build_dylib_pair "$CLASSIC_TARGET" libdylib_greet_classic.dylib dylib_classic; built+=(dylib_classic)
 fi
 
-# ---------------------------------------------------------------- cache_layout / cache_layout_packed / cache_layout_sparse / cache_layout_nofix / cache_layout_oversize
+# ---------------------------------------------------------------- cache_layout / cache_layout_packed / cache_layout_sparse / cache_layout_nofix / cache_layout_emptyfix / cache_layout_oversize
 # The dyld-shared-cache mapping rung. Apple-built page-aligned dylib + two
 # rewrites by scripts/pack_macho.py: packed-contiguous (small CACHE_GAP) and
 # sparse (TEXT-to-DATA 0x22256720, the libswiftObjectiveC cache-wide delta).
@@ -167,7 +167,8 @@ fi
 # oversize fixture is main_ret with one segment's filesize past EOF; Darwin
 # has no twin for the loader diagnostic. cache_layout_nofix strips the
 # rebase/bind load commands (what ipsw dyld extract leaves) so the loader
-# must refuse before mapping.
+# must refuse before mapping. cache_layout_emptyfix is the LOAD counterpart:
+# LC_DYLD_INFO_ONLY present with every size zero (libCombine.dylib).
 #
 # Packed/sparse are NEVER linked against: ld64 requires aligned segments.
 # Link the executable against the Apple-built dylib, then rewrite LC_LOAD_DYLIB
@@ -214,6 +215,31 @@ if want cache_layout || want cache_layout_packed || want cache_layout_sparse || 
         --to "@rpath/libcache_nofix.dylib"
     chmod +x "$BIN/cache_layout_nofix"
     built+=(cache_layout_nofix)
+fi
+# libCombine.dylib's shape: __DATA_CONST with file bytes, LC_DYLD_INFO_ONLY
+# present, every size zero. CLASSIC_TARGET / -no_fixup_chains is the Darwin
+# form; empty-dyld-info zeros export_size (and rewrites chained if the
+# linker still emitted LC_DYLD_CHAINED_FIXUPS). The executable LC_LOAD_DYLIBs
+# the dylib without binding a symbol from it — export_size is 0.
+if want cache_layout_emptyfix; then
+    echo "==> cache_layout_emptyfix"
+    "$CC" -target "$CLASSIC_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -c \
+        -o "$BIN/.cache_emptyfix_lib.o" "$SRC/cache_emptyfix_lib.c"
+    "$CC" -target "$CLASSIC_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -dynamiclib \
+        -o "$BIN/libcache_emptyfix.dylib" "$BIN/.cache_emptyfix_lib.o" \
+        -install_name "@rpath/libcache_emptyfix.dylib" \
+        -Wl,-no_fixup_chains
+    python3 "$ROOT/scripts/pack_macho.py" empty-dyld-info \
+        "$BIN/libcache_emptyfix.dylib" \
+        -o "$BIN/libcache_emptyfix.dylib" \
+        --id "@rpath/libcache_emptyfix.dylib"
+    "$CC" -target "$CLASSIC_TARGET" "${SDKFLAGS[@]}" -g0 -O1 \
+        -o "$BIN/cache_layout_emptyfix" "$SRC/cache_emptyfix.c" \
+        "$BIN/libcache_emptyfix.dylib" \
+        -Wl,-needed_library,"$BIN/libcache_emptyfix.dylib" \
+        -Wl,-rpath,@loader_path
+    rm -f "$BIN/.cache_emptyfix_lib.o"
+    built+=(cache_layout_emptyfix)
 fi
 if want cache_layout_oversize; then
     echo "==> cache_layout_oversize"

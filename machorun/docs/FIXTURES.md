@@ -325,7 +325,7 @@ name; two-level namespace binding (each import names its source dylib by
 ordinal); exporting the main executable's symbols; and running each image's
 initialisers in dependency order, dependencies first.
 
-### (g′) `cache_layout` / `cache_layout_packed` / `cache_layout_sparse` / `cache_layout_nofix` / `cache_layout_oversize` — dyld-shared-cache segment packing
+### (g′) `cache_layout` / `cache_layout_packed` / `cache_layout_sparse` / `cache_layout_nofix` / `cache_layout_emptyfix` / `cache_layout_oversize` — dyld-shared-cache segment packing
 `tests/src/cache_layout.c` + `cache_layout_lib.c` · chained · rewriter `scripts/pack_macho.py`
 
 The x86_64 app rung's first load of Apple's own cache-extracted Swift overlays
@@ -385,6 +385,27 @@ exit `74` (`MR_EXIT_DSC_NO_FIXUPS`). Packed/sparse fixtures keep their
 chained fixups and still load. Static executables with no DATA pointers are
 not this case.
 
+`cache_layout_emptyfix` is the LOAD counterpart, and it is why the
+discriminator is the **presence of the load command**, not the sizes. A
+linker that emits fixup tables emits `LC_DYLD_INFO(_ONLY)` or
+`LC_DYLD_CHAINED_FIXUPS` even when nothing needs fixing up. The Focus
+guest gate's `libCombine.dylib` is that shape:
+
+```
+LC_SEGMENT_64 __TEXT        filesize 16384
+LC_SEGMENT_64 __DATA_CONST  filesize 16384
+LC_SEGMENT_64 __LINKEDIT    filesize 528
+LC_DYLD_INFO_ONLY  rebase_size 0  bind_size 0  weak_bind_size 0
+                   lazy_bind_size 0  export_size 0
+```
+
+`libcache_emptyfix.dylib` is a const-table dylib rewritten by
+`pack_macho.py empty-dyld-info` to that command. The executable
+`LC_LOAD_DYLIB`s it (no symbol bind; export_size is 0) and prints one
+line. Linux-graded like `cache_layout_nofix` (`oracle=norun`); Darwin
+would execute the page-aligned image, but the thing under test is that
+machorun must not refuse. `cache_layout_nofix` must still exit 74.
+
 **Loader must implement:** when any segment's vmaddr or fileoff is not page
 aligned, map the image by COPY: one anonymous mapping per merged
 page-rounded segment run at a common slide (ADRP deltas stay valid), `pread`
@@ -396,9 +417,11 @@ lifted). Two segments that share a host page get the **union** of their
 protections (DATA_CONST `r` after fixups sharing with DATA `rw` becomes
 `rw`; TEXT `rx` sharing with DATA_CONST `rw` would become `rwx` and lose
 W^X on that page). A segment whose file bytes exceed the file is refused.
-A dylib with `__DATA`/`__DATA_CONST` file bytes and neither a chained
-fixup blob nor a classic rebase/bind stream is refused before mapping
-(`MR_EXIT_DSC_NO_FIXUPS`): that is a cache extract, not a static image.
+A dylib with `__DATA`/`__DATA_CONST` file bytes and **neither**
+`LC_DYLD_INFO`/`LC_DYLD_INFO_ONLY` **nor** `LC_DYLD_CHAINED_FIXUPS`
+(presence of the load command, not the sizes) is refused before mapping
+(`MR_EXIT_DSC_NO_FIXUPS`): that is a cache extract, not a static image
+and not a zero-sized `LC_DYLD_INFO_ONLY`.
 The mmap fast path for page-aligned segments is unchanged.
 
 ### (h) `pthread` — threads and per-thread TLS

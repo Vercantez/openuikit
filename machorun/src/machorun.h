@@ -69,6 +69,7 @@ struct mr_image {
 
     /* linkedit blobs, file offsets within the slice */
     uint32_t chained_off, chained_size;
+    int      has_chained_fixups; /* LC_DYLD_CHAINED_FIXUPS present, even if datasize is 0 */
     uint32_t trie_off, trie_size;
     const struct dyld_info_command *dyld_info;
     const struct symtab_command    *symtab;
@@ -149,12 +150,15 @@ char *mr_dirname(const char *path);
 int   mr_file_exists(const char *path);
 
 /* A dyld-shared-cache extract (ipsw dyld extract, with or without --slide)
- * has neither LC_DYLD_INFO nor LC_DYLD_CHAINED_FIXUPS: dyld already applied
- * rebases and binds inside the cache and stripped the tables. __DATA /
+ * has neither LC_DYLD_INFO / LC_DYLD_INFO_ONLY nor LC_DYLD_CHAINED_FIXUPS:
+ * dyld already applied rebases and binds inside the cache and stripped the
+ * tables. The discriminator is the absence of those load commands, not the
+ * sizes: a linker that emits fixup tables emits the command even when every
+ * size is zero (libCombine.dylib from the Focus guest gate). __DATA /
  * __DATA_CONST still hold cache VAs and cache-resident binds, so there is
  * nothing a loader can apply. True for MH_DYLIB/MH_BUNDLE with data bytes
- * and no usable fixup stream. Static executables and our packed fixtures
- * (which keep chained fixups) are false. */
+ * and neither command. Static executables, packed fixtures (chained
+ * fixups kept), and a zero-sized LC_DYLD_INFO_ONLY are false. */
 int mr_image_is_cache_extract_without_fixups(const mr_image *im);
 #define MR_EXIT_DSC_NO_FIXUPS 74
 

@@ -19,6 +19,7 @@ then packs file bytes tightly.
     scripts/pack_macho.py rename IN -o OUT --from STR --to STR
     scripts/pack_macho.py oversize IN -o OUT [--segment NAME]
     scripts/pack_macho.py strip-fixups IN.dylib -o OUT.dylib [--id INSTALL_NAME]
+    scripts/pack_macho.py empty-dyld-info IN.dylib -o OUT.dylib [--id INSTALL_NAME]
     scripts/pack_macho.py inspect FILE
     scripts/pack_macho.py --selftest
 """
@@ -849,6 +850,49 @@ def strip_fixup_lcs(data: bytes) -> bytes:
     return bytes(out)
 
 
+def empty_dyld_info_lcs(data: bytes) -> bytes:
+    """Keep or insert LC_DYLD_INFO_ONLY with every off/size field zero.
+
+    A linker that emits fixup tables emits the load command even when nothing
+    needs fixing up (libCombine.dylib: rebase/bind/weak/lazy/export all 0).
+    Cache extracts have neither LC_DYLD_INFO nor LC_DYLD_CHAINED_FIXUPS.
+    strip-fixups is the refuse fixture; this is the LOAD counterpart — same
+    DATA bytes, the command is present, every size is zero. Chained fixups
+    are dropped so the image is the classic empty-table shape.
+    """
+    img = Image(data)
+    keep: list[tuple[int, int]] = []
+    drop = {LC_DYLD_CHAINED_FIXUPS, LC_DYLD_INFO, LC_DYLD_INFO_ONLY}
+    for off, cmd, cs in img.cmd_offs:
+        if cmd in drop:
+            continue
+        keep.append((off, cs))
+    empty = struct.pack("<12I", LC_DYLD_INFO_ONLY, 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    blob = bytearray()
+    for off, cs in keep:
+        blob += data[off:off + cs]
+    blob += empty
+    ncmds = len(keep) + 1
+    orig_sizeof = img.sizeofcmds
+    text = next((s for s in img.segs if s.name == "__TEXT"), None)
+    if text is None:
+        raise ValueError("no __TEXT")
+    first_sec = min((sec["offset"] for sec in text.sects if sec["offset"]),
+                    default=text.filesize)
+    room = first_sec - 32
+    if len(blob) > room:
+        raise ValueError(
+            f"empty LC_DYLD_INFO_ONLY does not fit: need {len(blob)} bytes, "
+            f"room before first section is {room}"
+        )
+    out = bytearray(data)
+    clear_to = max(orig_sizeof, len(blob))
+    struct.pack_into("<II", out, 16, ncmds, len(blob))
+    out[32:32 + clear_to] = bytes(clear_to)
+    out[32:32 + len(blob)] = blob
+    return bytes(out)
+
+
 def inspect(path: str) -> None:
     data = open(path, "rb").read()
     img = Image(data)
@@ -920,6 +964,26 @@ def cmd_inspect(args: argparse.Namespace) -> int:
 def cmd_strip_fixups(args: argparse.Namespace) -> int:
     data = open(args.input, "rb").read()
     out = strip_fixup_lcs(data)
+    if args.id is not None:
+        buf = bytearray(out)
+        img = Image(out)
+        for off, cs in img.find_cmd(LC_ID_DYLIB):
+            name_off, = struct.unpack_from("<I", out, off + 8)
+            cur = out[off + name_off:off + cs].split(b"\0", 1)[0].decode("ascii", "replace")
+            if cur != args.id:
+                n = set_lc_string(buf, cur, args.id)
+                if n == 0:
+                    raise ValueError(f"failed to set LC_ID_DYLIB to {args.id!r}")
+        out = bytes(buf)
+    os.makedirs(os.path.dirname(os.path.abspath(args.output)) or ".", exist_ok=True)
+    open(args.output, "wb").write(out)
+    inspect(args.output)
+    return 0
+
+
+def cmd_empty_dyld_info(args: argparse.Namespace) -> int:
+    data = open(args.input, "rb").read()
+    out = empty_dyld_info_lcs(data)
     if args.id is not None:
         buf = bytearray(out)
         img = Image(out)
@@ -1060,6 +1124,22 @@ def _selftest() -> int:
     ndc = next(s for s in nimg.segs if s.name == "__DATA_CONST")
     assert ndc.filesize > 0
 
+    empty = empty_dyld_info_lcs(data)
+    eimg = Image(empty)
+    assert not eimg.find_cmd(LC_DYLD_CHAINED_FIXUPS), "empty-dyld-info left LC_DYLD_CHAINED_FIXUPS"
+    einfo = eimg.find_cmd(LC_DYLD_INFO) + eimg.find_cmd(LC_DYLD_INFO_ONLY)
+    assert einfo, "empty-dyld-info dropped LC_DYLD_INFO_ONLY"
+    eoff, ecs = einfo[0]
+    assert ecs >= 48
+    efields = struct.unpack_from("<10I", empty, eoff + 8)
+    assert efields == (0,) * 10, efields
+    edc = next(s for s in eimg.segs if s.name == "__DATA_CONST")
+    assert edc.filesize > 0
+    empty2 = empty_dyld_info_lcs(empty)
+    e2 = Image(empty2)
+    assert e2.find_cmd(LC_DYLD_INFO_ONLY)
+    assert struct.unpack_from("<10I", empty2, e2.find_cmd(LC_DYLD_INFO_ONLY)[0][0] + 8) == (0,) * 10
+
     # rename round-trip
     buf = bytearray(data)
     n = set_lc_string(buf, "@rpath/libdylib_greet.dylib", "@rpath/libcache_layout.dylib")
@@ -1114,6 +1194,14 @@ def main(argv: list[str] | None = None) -> int:
     sf.add_argument("-o", "--output", required=True)
     sf.add_argument("--id", help="set LC_ID_DYLIB to this install name")
 
+    se = sub.add_parser(
+        "empty-dyld-info",
+        help="rewrite to LC_DYLD_INFO_ONLY with all sizes zero (libCombine shape)",
+    )
+    se.add_argument("input")
+    se.add_argument("-o", "--output", required=True)
+    se.add_argument("--id", help="set LC_ID_DYLIB to this install name")
+
     si = sub.add_parser("inspect", help="print segment alignment and fixup load commands")
     si.add_argument("input")
 
@@ -1129,6 +1217,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_oversize(args)
     if args.cmd == "strip-fixups":
         return cmd_strip_fixups(args)
+    if args.cmd == "empty-dyld-info":
+        return cmd_empty_dyld_info(args)
     if args.cmd == "inspect":
         return cmd_inspect(args)
     p.print_help()

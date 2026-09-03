@@ -87,7 +87,11 @@ Measured 2026-09-03 on both `ipsw dyld extract` and `ipsw dyld extract
 `LC_DYLD_INFO` and **no** `LC_DYLD_CHAINED_FIXUPS`, only
 `LC_DYLD_EXPORTS_TRIE`. dyld already applied rebases and binds inside the
 cache. Those images are refused before mapping (`MR_EXIT_DSC_NO_FIXUPS` /
-`cache_layout_nofix`) — FIXTURES.md g′.
+`cache_layout_nofix`) — FIXTURES.md g′. The discriminator is the **absence
+of the load command**, not the sizes: a linker that emits fixup tables
+emits `LC_DYLD_INFO(_ONLY)` or `LC_DYLD_CHAINED_FIXUPS` even when every
+size is zero (`libCombine.dylib` from the Focus guest gate;
+`cache_layout_emptyfix` is that shape and must load).
 
 ### `__PAGEZERO`
 
