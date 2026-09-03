@@ -26,6 +26,9 @@ probe_lld() {
     LD64_LLD=${LD64_LLD:-}
 
     # Prefer Ubuntu llvm-18 over ${TC}/bin: the swift.org lld refuses macOS.
+    # Both ld.lld and ld64.lld live in this directory; clangxx_darwin_link.py
+    # picks one *per link* (ELF vs Darwin triple / .so vs .dylib). Do not
+    # export a single CMAKE_LINKER=ld64.lld for the whole ninja graph.
     for d in \
         ${LLD_BIN:+$LLD_BIN} \
         /usr/lib/llvm-18/bin \
