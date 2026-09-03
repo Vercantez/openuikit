@@ -133,6 +133,39 @@ if [ "$st" -eq 0 ] && [ -f "$W/bin/ud_guest" ] \
 else
     die_test "dummy link exit $st (want 0 + X86_64 Mach-O). log=$(tr '\n' ' ' < "$log")"
 fi
+if [ -f "$W/bin/ud_guest.inputs" ] && grep -q '^cftest=' "$W/bin/ud_guest.inputs" \
+    && grep -q '^argv=' "$W/bin/ud_guest.inputs" \
+    && grep -q '^obj:fe/runner.o=' "$W/bin/ud_guest.inputs"
+then
+    ok "link writes bin/ud_guest.inputs (objects, libCFTest sha, argv)"
+else
+    die_test "missing ud_guest.inputs after link"
+fi
+
+set +e
+W="$W" SDK="$SDK" OUT="$W/bin/ud_guest" LLD_BIN=/usr/lib/llvm-18/bin \
+    bash "$S" >"$log" 2>&1
+st2=$?
+set -e
+if [ "$st2" -eq 0 ] && grep -q 'ud_guest reused=1 stamp=' "$log"; then
+    ok "matching ud_guest stamp is reused=1"
+else
+    die_test "second link exit $st2 (want reused=1). log=$(tr '\n' ' ' < "$log")"
+fi
+
+echo 'int main(void){return 1;}' | clang-18 -target "$TRIPLE" -c -o "$W/fe/runner.o" -x c -
+set +e
+W="$W" SDK="$SDK" OUT="$W/bin/ud_guest" LLD_BIN=/usr/lib/llvm-18/bin \
+    bash "$S" >"$log" 2>&1
+st3=$?
+set -e
+if [ "$st3" -eq 0 ] && grep -q 'reason=inputs obj:fe/runner.o ' "$log" \
+    && grep -q 'ud_guest relink' "$log"
+then
+    ok "changed runner.o relinks with reason=inputs obj:fe/runner.o"
+else
+    die_test "changed-object link exit $st3. log=$(tr '\n' ' ' < "$log")"
+fi
 
 echo "test_link_ud_guest: pass=$pass fail=$fail"
 [ "$fail" -eq 0 ]

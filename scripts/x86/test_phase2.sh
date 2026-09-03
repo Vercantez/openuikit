@@ -1587,6 +1587,23 @@ expect_grep 'refusing unsuffixed/arm64 ud-guest work tree' "$UDINC" \
 expect_grep 'export UD_GUEST_BIN' "$PHASE2" "successful link exports UD_GUEST_BIN for rung a"
 expect_grep 'phase2_stage_cftest_into_run_root' "$UDINC" \
     "libCFTest is staged into the run root after link"
+expect_grep 'src_sha' "$UDINC" "run-root stager compares source sha to dest sha"
+expect_grep 'libCFTest.dylib.inputs' "$UDINC" \
+    "ud-guest names the libCFTest input stamp"
+expect_grep 'ud_guest.inputs' "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
+    "link_ud_guest writes bin/ud_guest.inputs"
+expect_grep 'reused=1 stamp=' "$ROOT/foundation-macho/scripts/build_cftest_harness.sh" \
+    "harness prints reused=1 stamp="
+expect_grep 'reason=inputs' "$ROOT/foundation-macho/scripts/build_cftest_harness.sh" \
+    "harness prints reason=inputs on stamp mismatch"
+expect_grep 'CANNOT_CFTEST_STALE' "$UDINC" \
+    "stub list newer than dylib is CANNOT_CFTEST_STALE"
+expect_grep 'CANNOT_CFTEST_STALE' "$PHASE2" \
+    "phase2 maps CANNOT_CFTEST_STALE to cftest-stubs"
+expect_grep 'phase2_cftest_stub_list_stale' "$PHASE2" \
+    "cftest-stubs satisfied requires the dylib not older than the stub list"
+expect_grep 'never on a present' "$ROOT/scripts/x86/PHASE2.md" \
+    "PHASE2.md documents stamp reuse, not sibling stub files"
 expect_grep 'phase2_stage_cftest_into_run_root' "$PHASE2" \
     "phase2 stages libCFTest after ud-guest link, before rung a"
 expect_grep 'libCFTest-run-root' "$PHASE2" "ENV_PREPARE item names libCFTest-run-root"
@@ -1712,6 +1729,43 @@ expect_not_grep 'Operator: stage CF+FE objects, link_ud_guest.sh, then re-run' \
 echo "== ud-guest-x86 refusal + staging resolution"
 UDWORK=$(mktemp -d /tmp/phase2-ud-guest.XXXXXX)
 SYS=${SYS:-$ROOT/scratch/sysroot_fe4-x86_64}
+if [ ! -d "$SYS/usr/include" ]; then
+    SYS=$UDWORK/fake-x86-sdk
+    mkdir -p "$SYS/usr/include" "$SYS/usr/lib"
+    emit_tbd() {
+        local dest=$1 install=$2
+        cat >"$dest" <<EOF
+--- !tapi-tbd
+tbd-version:     4
+targets:         [ x86_64-macos ]
+install-name:    '$install'
+current-version: 1
+compatibility-version: 1
+exports:
+  - targets:   [ x86_64-macos ]
+    symbols:   [ '_dummy_tbd' ]
+...
+EOF
+    }
+    emit_tbd "$SYS/usr/lib/libSystem.B.tbd" "/usr/lib/libSystem.B.dylib"
+    ln -sfn libSystem.B.tbd "$SYS/usr/lib/libSystem.tbd"
+    emit_tbd "$SYS/usr/lib/libobjc.A.tbd" "/usr/lib/libobjc.A.dylib"
+    ln -sfn libobjc.A.tbd "$SYS/usr/lib/libobjc.tbd"
+    mkdir -p "$SYS/usr/include/objc"
+    cat >"$SYS/usr/include/objc/NSObject.h" <<'EOF'
+#ifndef _TEST_NSOBJECT_H_
+#define _TEST_NSOBJECT_H_
+typedef struct objc_class *Class;
+typedef struct objc_object { Class isa; } *id;
+typedef struct objc_selector *SEL;
+@interface NSObject
++ (void)initialize;
+- (void)doesNotRecognizeSelector:(SEL)s;
+@end
+#endif
+EOF
+    echo "NOTE: scratch/sysroot_fe4-x86_64 absent; dummy Mach-O fixtures use $SYS"
+fi
 # shellcheck source=common.inc
 . "$COMMON"
 
@@ -1902,6 +1956,29 @@ if phase2_is_x86_macho "$UDWORK/libCFTest.dylib"; then
             ;;
         *) die_test "identical re-stage got: '$again'" ;;
     esac
+    echo 'int ud_cftest=2;' | clang-18 -target x86_64-apple-macos15.0 \
+        -isysroot "$SYS" -c -o "$UDWORK/cftest2.o" -x c -
+    clang-18 -target x86_64-apple-macos15.0 -isysroot "$SYS" \
+        -fuse-ld=lld -B /usr/lib/llvm-18/bin -nostdlib -dynamiclib \
+        -install_name /usr/lib/libCFTest.dylib \
+        "$UDWORK/cftest2.o" -o "$UDWORK/libCFTest2.dylib" 2>/dev/null \
+        || clang-18 -target x86_64-apple-macos15.0 -isysroot "$SYS" \
+            -fuse-ld=lld -B /usr/lib/llvm-18/bin -dynamiclib \
+            -install_name /usr/lib/libCFTest.dylib \
+            "$UDWORK/cftest2.o" -o "$UDWORK/libCFTest2.dylib"
+    src2=$(sha256sum "$UDWORK/libCFTest2.dylib" | awk '{print $1}')
+    dest1=$(sha256sum "$CFROOT/darwin/usr/lib/libCFTest.dylib" | awk '{print $1}')
+    if [ "$src2" != "$dest1" ]; then
+        changed=$(phase2_stage_cftest_into_run_root "$UDWORK/libCFTest2.dylib" "$CFROOT" || true)
+        case "$changed" in
+            status=cold-built\ path=*sha256=$src2)
+                ok "libCFTest re-stage copies when source sha differs from dest sha"
+                ;;
+            *) die_test "different-sha re-stage got: '$changed' want sha256=$src2" ;;
+        esac
+    else
+        die_test "could not emit a different-sha libCFTest fixture"
+    fi
     mkdir -p "$CFROOT/darwin/System/Library/Frameworks/CoreFoundation.framework"
     cp -f "$UDWORK/libCFTest.dylib" \
         "$CFROOT/darwin/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation"
@@ -1914,6 +1991,93 @@ if phase2_is_x86_macho "$UDWORK/libCFTest.dylib"; then
     esac
     rm -rf "$CFROOT"
     unset UD_CFTEST_DYLIB
+
+    echo "== libCFTest reuse is stamp-keyed, not sibling stub files"
+    mkdir -p "$wt/cfobjc/obj" "$wt/nscfobj" "$wt/lib"
+    echo 'int cfobjc_probe=1;' | clang-18 -target x86_64-apple-macos13.0 \
+        -c -o "$wt/cfobjc/obj/CFString.o" -x c -
+    echo 'int nscf_probe=1;' | clang-18 -target x86_64-apple-macos13.0 \
+        -c -o "$wt/nscfobj/NSCFConstantString.o" -x c -
+    cp "$ROOT/foundation-macho/docs/cf-census/cftest-stub-func-active.txt" \
+        "$wt/stub-func-active.txt"
+    cp "$ROOT/foundation-macho/docs/cf-census/cftest-stub-data.txt" \
+        "$wt/stub-data.txt"
+    rm -f "$wt/lib/libCFTest.dylib.inputs"
+    # dest from UD_CFTEST_DYLIB is present; stub files match the pin.
+    pin_sha=$(sha256sum "$wt/lib/libCFTest.dylib" | awk '{print $1}')
+    pin_report=$(phase2_ud_guest_ensure_cftest "$wt" "$ROOT" "$SYS" || true)
+    pin_sha_after=$(sha256sum "$wt/lib/libCFTest.dylib" | awk '{print $1}')
+    case "$pin_report" in
+        ''|status=satisfied*)
+            die_test "pin-matching stub files reused the dylib without an input stamp: '$pin_report'"
+            ;;
+        CANNOT_*)
+            if [ "$pin_sha" = "$pin_sha_after" ]; then
+                ok "pin-matching stub files without .inputs do not reuse (got $pin_report)"
+            else
+                die_test "pin-without-stamp mutated dest sha $pin_sha->$pin_sha_after report=$pin_report"
+            fi
+            ;;
+        *)
+            die_test "pin-without-stamp got: '$pin_report'"
+            ;;
+    esac
+
+    mkdir -p "$wt/stub-mtime/lib"
+    echo dylib > "$wt/stub-mtime/lib/libCFTest.dylib"
+    echo stubs > "$wt/stub-mtime/stub-func-active.txt"
+    touch -d '2020-01-01 00:00:00 UTC' "$wt/stub-mtime/lib/libCFTest.dylib"
+    touch "$wt/stub-mtime/stub-func-active.txt"
+    if phase2_cftest_stub_list_stale "$wt/stub-mtime"; then
+        stale_line=$(phase2_cftest_stub_stale_cannot "$wt/stub-mtime")
+        case "$stale_line" in
+            CANNOT_CFTEST_STALE\ file=libCFTest.dylib\ stub-func-active.txt=*\ libCFTest.dylib=*)
+                ok "stub list newer than dylib is CANNOT_CFTEST_STALE naming both mtimes"
+                ;;
+            *) die_test "stale-cannot line: $stale_line" ;;
+        esac
+    else
+        die_test "stub_list_stale did not detect newer stub-func-active.txt"
+    fi
+
+    echo "== ensure_cftest matching stamp is reused=1"
+    STAMPW=$(mktemp -d /tmp/phase2-cftest-stamp.XXXXXX)
+    mkdir -p "$STAMPW/cfobjc/obj" "$STAMPW/nscfobj" "$STAMPW/lib"
+    echo 'int cfobjc_probe=1;' | clang-18 -target x86_64-apple-macos13.0 \
+        -c -o "$STAMPW/cfobjc/obj/CFString.o" -x c -
+    echo 'int nscf_probe=1;' | clang-18 -target x86_64-apple-macos13.0 \
+        -c -o "$STAMPW/nscfobj/NSCFConstantString.o" -x c -
+    : > "$STAMPW/expect-func.txt"
+    : > "$STAMPW/expect-data.txt"
+    set +e
+    h1=$(W="$STAMPW" SDK="$SYS" LIB="$STAMPW/lib" \
+        CFOBJC_OBJ="$STAMPW/cfobjc/obj" NSCF_OBJ="$STAMPW/nscfobj" \
+        R="$ROOT/foundation-macho" \
+        PROBE_SRC="$ROOT/foundation-macho/tests/probe_sysctl.c" \
+        CFTEST_EXPECT_FUNC="$STAMPW/expect-func.txt" \
+        CFTEST_EXPECT_DATA="$STAMPW/expect-data.txt" \
+        TRIPLE=x86_64-apple-macos13.0 LLD_BIN=/usr/lib/llvm-18/bin \
+        bash "$ROOT/foundation-macho/scripts/build_cftest_harness.sh" 2>&1)
+    h1_st=$?
+    set -e
+    if [ "$h1_st" -ne 0 ] || [ ! -f "$STAMPW/lib/libCFTest.dylib.inputs" ]; then
+        die_test "stamp fixture harness exit $h1_st: $h1"
+    else
+        stamp_sha=$(sha256sum "$STAMPW/lib/libCFTest.dylib" | awk '{print $1}')
+        reused=$(phase2_ud_guest_ensure_cftest "$STAMPW" "$ROOT" "$SYS" || true)
+        stamp_sha2=$(sha256sum "$STAMPW/lib/libCFTest.dylib" | awk '{print $1}')
+        case "$reused" in
+            status=satisfied*\ reused=1\ stamp=*)
+                if [ "$stamp_sha" = "$stamp_sha2" ]; then
+                    ok "ensure_cftest matching stamp is reused=1 (sha unchanged)"
+                else
+                    die_test "reused=1 but sha changed $stamp_sha->$stamp_sha2"
+                fi
+                ;;
+            *) die_test "ensure_cftest stamp reuse got: '$reused'" ;;
+        esac
+    fi
+    rm -rf "$STAMPW"
 else
     die_test "could not emit an x86 libCFTest.dylib fixture"
 fi

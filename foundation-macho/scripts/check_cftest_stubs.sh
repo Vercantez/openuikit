@@ -38,8 +38,8 @@ trap cleanup EXIT
 : >>"$got_data"
 sort -u "$got_func" | grep -v '^$' >"$tmp/got-func" || true
 sort -u "$got_data" | grep -v '^$' >"$tmp/got-data" || true
-sort -u "$EXPECT_FUNC" | grep -v '^$' >"$tmp/exp-func"
-sort -u "$EXPECT_DATA" | grep -v '^$' >"$tmp/exp-data"
+sort -u "$EXPECT_FUNC" | grep -v '^$' >"$tmp/exp-func" || true
+sort -u "$EXPECT_DATA" | grep -v '^$' >"$tmp/exp-data" || true
 
 comm -13 "$tmp/exp-func" "$tmp/got-func" >"$tmp/extra-func" || true
 comm -23 "$tmp/exp-func" "$tmp/got-func" >"$tmp/miss-func" || true

@@ -11,6 +11,12 @@
 #     foundation-macho/docs/cf-census/cftest-stub-{func-active,data}.txt;
 #     a mismatch is CANNOT_CFTEST_STUBS (own ENV_PREPARE line) and does
 #     not proceed to link_ud_guest.sh.
+#   libCFTest reuse is keyed on lib/libCFTest.dylib.inputs (object shas +
+#     stub-set files + libSystem/libobjc tbds + linker argv), never on a
+#     present dylib whose sibling stub text files match the pin. A
+#     stub-func-active.txt newer than the dylib is CANNOT_CFTEST_STALE
+#     naming both mtimes, never satisfied. ud_guest reuse is
+#     bin/ud_guest.inputs (objects + libCFTest sha + argv).
 #   after link, before run: stage that dylib into
 #     scratch/mrroot_full-x86_64/darwin/usr/lib/libCFTest.dylib
 #     (arm64 analogue: build_cftest_harness.sh -> $W/root; not build_full.sh)
@@ -624,39 +630,102 @@ phase2_ud_guest_format_stub_cannot() {
         "${count:-0}" "$first" "$extra" "$miss"
 }
 
+phase2_cftest_mtime_iso() {
+    if [ -e "$1" ]; then
+        date -u -r "$1" '+%Y-%m-%dT%H:%M:%SZ'
+    else
+        printf 'ABSENT\n'
+    fi
+}
+
+# stub-func-active.txt newer than lib/libCFTest.dylib means the list was
+# regenerated without a relink. Never satisfied.
+phase2_cftest_stub_list_stale() {
+    local ud_w=$1
+    local dylib=$ud_w/lib/libCFTest.dylib
+    local stubs=$ud_w/stub-func-active.txt
+    [ -f "$dylib" ] && [ -f "$stubs" ] && [ "$stubs" -nt "$dylib" ]
+}
+
+phase2_cftest_stub_stale_cannot() {
+    local ud_w=$1
+    printf 'CANNOT_CFTEST_STALE file=libCFTest.dylib stub-func-active.txt=%s libCFTest.dylib=%s\n' \
+        "$(phase2_cftest_mtime_iso "$ud_w/stub-func-active.txt")" \
+        "$(phase2_cftest_mtime_iso "$ud_w/lib/libCFTest.dylib")"
+}
+
+phase2_ud_guest_run_cftest_harness() {
+    local ud_w=$1 repo=$2 sys=$3 cf=${4:-}
+    local dest=$ud_w/lib/libCFTest.dylib
+    local linker=$repo/foundation-macho/scripts/build_cftest_harness.sh
+    local log=$ud_w/lib/build_cftest_harness.log
+    local st
+    mkdir -p "$ud_w/lib" "$ud_w/nscfobj"
+    set +e
+    W="$ud_w" \
+        SDK="$sys" \
+        CF="${cf:-$ud_w/cfobjc/src}" \
+        CF_FALLBACK="${cf:-$ud_w/cf}" \
+        LIB="$ud_w/lib" \
+        CFOBJC_OBJ="$ud_w/cfobjc/obj" \
+        NSCF_OBJ="$ud_w/nscfobj" \
+        R="$repo/foundation-macho" \
+        PROBE_SRC="$repo/foundation-macho/tests/probe_sysctl.c" \
+        TRIPLE=x86_64-apple-macos13.0 \
+        LLD_BIN=/usr/lib/llvm-18/bin \
+        bash "$linker" >"$log" 2>&1
+    st=$?
+    set -e
+    if grep -q '^CANNOT_CFTEST_STUBS ' "$log"; then
+        phase2_ud_guest_format_stub_cannot "$(grep '^CANNOT_CFTEST_STUBS ' "$log" | tail -1)"
+        return 1
+    fi
+    if grep -q '^CANNOT_CFTEST_STALE ' "$log"; then
+        grep '^CANNOT_CFTEST_STALE ' "$log" | tail -1
+        return 1
+    fi
+    if grep -q '^CANNOT_CFTEST_INPUTS ' "$log"; then
+        grep '^CANNOT_CFTEST_INPUTS ' "$log" | tail -1
+        return 1
+    fi
+    if [ "$st" -ne 0 ] || [ ! -f "$dest" ] || ! phase2_is_x86_macho "$dest"; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "build_cftest_harness.sh exit $st (committed CF linker; objects from build_cfobjc.sh) log=$log. Will not invent a stub dylib."
+        return 1
+    fi
+    if phase2_cftest_stub_list_stale "$ud_w"; then
+        phase2_cftest_stub_stale_cannot "$ud_w"
+        return 1
+    fi
+    if grep -q 'libCFTest reused=1 stamp=' "$log"; then
+        printf 'status=satisfied %s\n' \
+            "$(grep 'libCFTest reused=1 stamp=' "$log" | tail -1)"
+    elif grep -q 'libCFTest relinked ' "$log"; then
+        printf 'status=cold-built %s\n' \
+            "$(grep 'libCFTest relinked ' "$log" | tail -1)"
+    fi
+}
+
 phase2_ud_guest_ensure_cftest() {
     local ud_w=$1 repo=$2
     local sys=${3:-$ud_w/fe/sysroot}
     local dest=$ud_w/lib/libCFTest.dylib
-    local found recipe linker cf icu log st checker stub_line
+    local found recipe linker cf icu log st
     mkdir -p "$ud_w/lib"
-    found=$(phase2_ud_guest_find_x86_dylib libCFTest.dylib \
-        "${UD_CFTEST_DYLIB:-}" \
-        "$dest" \
-        "$repo/scratch/ud-guest-x86_64/lib/libCFTest.dylib" \
-        || true)
-    checker=$repo/foundation-macho/scripts/check_cftest_stubs.sh
-    # Reuse a present dylib only when:
-    #   * stub pin files exist and match (the 80-object / 220-stub set), or
-    #   * no stub pin files exist (UD_CFTEST_DYLIB test dummy / override
-    #     without leftover stub lists).
-    # A leftover 143-name stub-func-active.txt must not count as satisfied.
-    if [ -n "$found" ]; then
-        if [ -f "$ud_w/stub-func-active.txt" ] && [ -f "$ud_w/stub-data.txt" ] \
-            && [ -f "$checker" ]
-        then
-            stub_line=$(bash "$checker" "$ud_w/stub-func-active.txt" "$ud_w/stub-data.txt" || true)
-            case "$stub_line" in
-                CFTEST_STUBS_OK*)
-                    [ "$found" = "$dest" ] || cp -a "$found" "$dest"
-                    return 0
-                    ;;
-            esac
-            # Mismatch: rebuild through the recipe. Do not reuse.
-        else
+    # Explicit override only. A present dest (or a copy from another scratch
+    # tree) is not reusable just because sibling stub text files match the
+    # pin — those files can be regenerated while the dylib stays the 143-stub
+    # build. UD_CFTEST_DYLIB is the test dummy / operator-provided Mach-O.
+    if [ -n "${UD_CFTEST_DYLIB:-}" ]; then
+        found=$(phase2_ud_guest_find_x86_dylib libCFTest.dylib \
+            "$UD_CFTEST_DYLIB" || true)
+        if [ -n "$found" ]; then
             [ "$found" = "$dest" ] || cp -a "$found" "$dest"
             return 0
         fi
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "UD_CFTEST_DYLIB=$UD_CFTEST_DYLIB is not an x86_64 Mach-O. Will not invent a stub dylib."
+        return 1
     fi
 
     recipe=$repo/foundation-macho/scripts/build_cfobjc.sh
@@ -670,6 +739,19 @@ phase2_ud_guest_ensure_cftest() {
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
             "no x86_64 Mach-O. missing committed CF linker $linker. Will not invent a stub dylib."
         return 1
+    fi
+
+    # Objects already on disk: the harness stamp decides reuse vs relink.
+    # Do not skip this just because dest + stub pin files exist.
+    if [ -d "$ud_w/cfobjc/obj" ] && [ -n "$(find "$ud_w/cfobjc/obj" -maxdepth 1 -name '*.o' -print -quit 2>/dev/null)" ]; then
+        if [ ! -d "$sys/usr/include" ]; then
+            phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+                "no x86_64 Mach-O. Darwin sysroot missing at $sys (need usr/include). Committed recipe is foundation-macho/scripts/build_cfobjc.sh; committed CF linker is foundation-macho/scripts/build_cftest_harness.sh. Will not invent a stub dylib."
+            return 1
+        fi
+        phase2_ud_guest_run_cftest_harness "$ud_w" "$repo" "$sys" \
+            "${ud_w}/cfobjc/src"
+        return $?
     fi
 
     if ! phase2_ud_guest_ensure_cf_checkout "$ud_w" "$repo"; then
@@ -718,31 +800,7 @@ phase2_ud_guest_ensure_cftest() {
         return 1
     fi
 
-    log=$ud_w/lib/build_cftest_harness.log
-    set +e
-    W="$ud_w" \
-        SDK="$sys" \
-        CF="$ud_w/cfobjc/src" \
-        CF_FALLBACK="$cf" \
-        LIB="$ud_w/lib" \
-        CFOBJC_OBJ="$ud_w/cfobjc/obj" \
-        NSCF_OBJ="$ud_w/nscfobj" \
-        R="$repo/foundation-macho" \
-        PROBE_SRC="$repo/foundation-macho/tests/probe_sysctl.c" \
-        TRIPLE=x86_64-apple-macos13.0 \
-        LLD_BIN=/usr/lib/llvm-18/bin \
-        bash "$linker" >"$log" 2>&1
-    st=$?
-    set -e
-    if grep -q '^CANNOT_CFTEST_STUBS ' "$log"; then
-        phase2_ud_guest_format_stub_cannot "$(grep '^CANNOT_CFTEST_STUBS ' "$log" | tail -1)"
-        return 1
-    fi
-    if [ "$st" -ne 0 ] || [ ! -f "$dest" ] || ! phase2_is_x86_macho "$dest"; then
-        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "build_cftest_harness.sh exit $st (committed CF linker; objects from build_cfobjc.sh) log=$log. Will not invent a stub dylib."
-        return 1
-    fi
+    phase2_ud_guest_run_cftest_harness "$ud_w" "$repo" "$sys" "$cf"
 }
 
 phase2_ud_guest_link() {
@@ -761,6 +819,10 @@ phase2_ud_guest_link() {
     st=$?
     set -e
     if [ "$st" -ne 0 ] || [ ! -f "$out" ]; then
+        if grep -q '^CANNOT_UD_GUEST_INPUTS ' "$log" 2>/dev/null; then
+            grep '^CANNOT_UD_GUEST_INPUTS ' "$log" | tail -1
+            return 1
+        fi
         # Spill to the work-tree root (same rule as the swiftc logs). Do not
         # flatten ld64 text onto the CANNOT line — the inputs listing alone
         # buries the diagnostic.
@@ -818,19 +880,27 @@ phase2_stage_cftest_into_run_root() {
     local src=$1 dest_root=$2
     local dest=$dest_root/darwin/usr/lib/libCFTest.dylib
     local cf_slot=$dest_root/darwin/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation
-    local sha a b already=0
+    local src_sha dest_sha a b already=0
     if [ ! -f "$src" ] || ! phase2_is_x86_macho "$src"; then
         printf 'CANNOT_UD_GUEST_LIBCFTEST file=libCFTest.dylib reason=no x86 Mach-O to stage into run root src=%s\n' \
             "${src:-empty}"
         return 1
     fi
     mkdir -p "$(dirname "$dest")"
-    if [ -f "$dest" ] && cmp -s "$src" "$dest"; then
+    src_sha=$(sha256sum "$src" | awk '{print $1}')
+    if [ -f "$dest" ]; then
+        dest_sha=$(sha256sum "$dest" | awk '{print $1}')
+    else
+        dest_sha=ABSENT
+    fi
+    if [ "$src_sha" = "$dest_sha" ]; then
         already=1
     else
         cp -f "$src" "$dest"
+        dest_sha=$(sha256sum "$dest" | awk '{print $1}')
     fi
-    sha=$(sha256sum "$dest" | awk '{print $1}')
+    # Decision uses the sha already printed on the ENV_PREPARE line, not
+    # existence / cmp of a dest that may be a copy of a stale source.
     if [ -f "$cf_slot" ]; then
         a=$(md5sum "$cf_slot" | awk '{print $1}')
         b=$(md5sum "$dest" | awk '{print $1}')
@@ -841,9 +911,9 @@ phase2_stage_cftest_into_run_root() {
         fi
     fi
     if [ "$already" -eq 1 ]; then
-        printf 'status=satisfied path=%s sha256=%s\n' "$dest" "$sha"
+        printf 'status=satisfied path=%s sha256=%s\n' "$dest" "$dest_sha"
     else
-        printf 'status=cold-built path=%s sha256=%s\n' "$dest" "$sha"
+        printf 'status=cold-built path=%s sha256=%s\n' "$dest" "$dest_sha"
     fi
 }
 

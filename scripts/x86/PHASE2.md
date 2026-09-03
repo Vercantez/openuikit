@@ -262,17 +262,29 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    fetch/compile is `CANNOT_UD_GUEST_LIBCFTEST file=libCFTest.dylib`. The
    harness then derives the stub set and compares it to
    `docs/cf-census/cftest-stub-func-active.txt` / `cftest-stub-data.txt`
-   (218 func + 2 data, `libCFTest relinked (220 stubbed)`). A mismatch is
+   (214 func + 2 data, `libCFTest relinked (216 stubbed)`). A mismatch is
    its own line `ENV_PREPARE cftest-stubs CANNOT_CFTEST_STUBS
    reason=count=N first=a,b,c,d,e …` and ud-guest does **not** link.
+   Reuse of `lib/libCFTest.dylib` is keyed on `lib/libCFTest.dylib.inputs`
+   written at link time (sha256 of every linked object, the stub-set files,
+   the libSystem/libobjc tbds, and the linker argv) — never on a present
+   dylib whose sibling stub text files match the pin, and never on
+   existence. Matching stamp prints `reused=1 stamp=<sha>`. Mismatch
+   relinks with `reason=inputs <key> old->new`. If `stub-func-active.txt`
+   is newer than the dylib, that is `CANNOT_CFTEST_STALE` naming both
+   mtimes, never `satisfied` (`CFTEST_VERIFY_ONLY=1` refuses instead of
+   relinking). `bin/ud_guest.inputs` is the same rule for the guest
+   (objects + libCFTest sha + argv).
    Will not invent a stub dylib. `UD_CFTEST_DYLIB=` still stages a provided
-   x86 dylib when no leftover stub lists are next to the work tree.
+   x86 dylib as an explicit override.
    After a successful link, before `run_ud_guest.sh`, phase2 copies
    `scratch/ud-guest-x86_64/lib/libCFTest.dylib` into
    `scratch/mrroot_full-x86_64/darwin/usr/lib/libCFTest.dylib` (the arm64
    analogue is `build_cftest_harness.sh` copying into `$W/root` when that
    directory exists; `full/scripts/build_full.sh` does **not** stage
-   libCFTest). Prints `ENV_PREPARE libCFTest-run-root … path=… sha256=…`.
+   libCFTest). The copy decision compares source sha256 to destination
+   sha256 and recopies on any difference. Prints
+   `ENV_PREPARE libCFTest-run-root … path=… sha256=…`.
    Never copies onto the CoreFoundation.framework slot (byte-identical
    copy there is the duplicate-image refusal in `run_ud_guest.sh`).
    Then `ud-guest-dispatch` reuses the Reminder/Focus Linux Dispatch host

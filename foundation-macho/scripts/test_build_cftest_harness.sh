@@ -34,6 +34,11 @@ fi
 expect_grep 'check_cftest_stubs.sh' "$H" "harness invokes the stub pin"
 expect_grep 'CANNOT_CFTEST_STUBS' "$H" "harness names CANNOT_CFTEST_STUBS"
 expect_grep 'cftest-stub-func-active.txt' "$H" "harness names the committed func pin"
+expect_grep 'libCFTest.dylib.inputs' "$H" "harness writes an input stamp next to the dylib"
+expect_grep 'reused=1 stamp=' "$H" "matching stamp prints reused=1 stamp="
+expect_grep 'reason=inputs' "$H" "stamp mismatch prints reason=inputs"
+expect_grep 'CANNOT_CFTEST_STALE' "$H" "stub list newer than dylib is CANNOT_CFTEST_STALE"
+expect_grep 'CFTEST_VERIFY_ONLY' "$H" "verify-only refuses instead of relinking"
 
 echo "== matching fixture is OK"
 fix=$(mktemp -d /tmp/cftest-stubs-ok.XXXXXX)
@@ -71,6 +76,166 @@ else
     die_test "differing fixture got exit $bad_st: $bad_out"
 fi
 rm -rf "$fix"
+
+echo "== input stamp: matching reused=1, stale stub list CANNOT, object sha relink"
+HW=$(mktemp -d /tmp/cftest-stamp.XXXXXX)
+mkdir -p "$HW/cfobjc/obj" "$HW/nscfobj" "$HW/lib" \
+    "$HW/sdk/usr/lib" "$HW/sdk/usr/include"
+emit_tbd() {
+    local dest=$1 install=$2
+    mkdir -p "$(dirname "$dest")"
+    cat >"$dest" <<EOF
+--- !tapi-tbd
+tbd-version:     4
+targets:         [ x86_64-macos ]
+install-name:    '$install'
+current-version: 1
+compatibility-version: 1
+exports:
+  - targets:   [ x86_64-macos ]
+    symbols:   [
+                  '_dummy_tbd',
+               ]
+...
+EOF
+}
+emit_tbd "$HW/sdk/usr/lib/libSystem.B.tbd" "/usr/lib/libSystem.B.dylib"
+ln -sfn libSystem.B.tbd "$HW/sdk/usr/lib/libSystem.tbd"
+emit_tbd "$HW/sdk/usr/lib/libobjc.A.tbd" "/usr/lib/libobjc.A.dylib"
+ln -sfn libobjc.A.tbd "$HW/sdk/usr/lib/libobjc.tbd"
+mkdir -p "$HW/sdk/usr/include/objc"
+cat >"$HW/sdk/usr/include/objc/NSObject.h" <<'EOF'
+#ifndef _TEST_NSOBJECT_H_
+#define _TEST_NSOBJECT_H_
+typedef struct objc_class *Class;
+typedef struct objc_object { Class isa; } *id;
+typedef struct objc_selector *SEL;
+@interface NSObject
++ (void)initialize;
+- (void)doesNotRecognizeSelector:(SEL)s;
+@end
+#endif
+EOF
+TRIPLE=x86_64-apple-macos13.0
+echo 'int cfobjc_probe=1;' | clang-18 -target "$TRIPLE" -c -o "$HW/cfobjc/obj/CFString.o" -x c -
+echo 'int nscf_probe=1;' | clang-18 -target "$TRIPLE" -c -o "$HW/nscfobj/NSCFConstantString.o" -x c -
+: > "$HW/expect-func.txt"
+: > "$HW/expect-data.txt"
+
+run_h() {
+    W="$HW" SDK="$HW/sdk" LIB="$HW/lib" \
+        CFOBJC_OBJ="$HW/cfobjc/obj" NSCF_OBJ="$HW/nscfobj" \
+        R="$FM" PROBE_SRC="$FM/tests/probe_sysctl.c" \
+        CFTEST_EXPECT_FUNC="$HW/expect-func.txt" \
+        CFTEST_EXPECT_DATA="$HW/expect-data.txt" \
+        TRIPLE="$TRIPLE" \
+        LLD_BIN=/usr/lib/llvm-18/bin \
+        "$@" bash "$H"
+}
+
+set +e
+first=$(run_h 2>&1)
+first_st=$?
+set -e
+if [ "$first_st" -eq 0 ] && echo "$first" | grep -q 'libCFTest relinked' \
+    && [ -f "$HW/lib/libCFTest.dylib" ] \
+    && [ -f "$HW/lib/libCFTest.dylib.inputs" ]
+then
+    ok "first harness run relinks and writes libCFTest.dylib.inputs"
+else
+    die_test "first harness run exit $first_st: $first"
+fi
+grep -q '^obj:cfobjc/CFString.o=' "$HW/lib/libCFTest.dylib.inputs" \
+    && grep -q '^obj:nscfobj/NSCFConstantString.o=' "$HW/lib/libCFTest.dylib.inputs" \
+    && grep -q '^obj:cfstubs.o=' "$HW/lib/libCFTest.dylib.inputs" \
+    && grep -q '^stub-func-active=' "$HW/lib/libCFTest.dylib.inputs" \
+    && grep -q '^tbd:libSystem=' "$HW/lib/libCFTest.dylib.inputs" \
+    && grep -q '^tbd:libobjc=' "$HW/lib/libCFTest.dylib.inputs" \
+    && grep -q '^argv=' "$HW/lib/libCFTest.dylib.inputs" \
+    && ok "stamp records objects, stub-set, tbds, argv" \
+    || die_test "stamp contents: $(tr '\n' ' ' < "$HW/lib/libCFTest.dylib.inputs")"
+
+old_sha=$(sha256sum "$HW/lib/libCFTest.dylib" | awk '{print $1}')
+set +e
+second=$(run_h 2>&1)
+second_st=$?
+set -e
+new_sha=$(sha256sum "$HW/lib/libCFTest.dylib" | awk '{print $1}')
+if [ "$second_st" -eq 0 ] && echo "$second" | grep -q 'libCFTest reused=1 stamp=' \
+    && [ "$old_sha" = "$new_sha" ]
+then
+    ok "matching stamp is reused=1 (dylib sha unchanged)"
+else
+    die_test "second harness run exit $second_st sha $old_sha->$new_sha: $second"
+fi
+
+set +e
+v_ok=$(CFTEST_VERIFY_ONLY=1 run_h 2>&1)
+v_ok_st=$?
+set -e
+if [ "$v_ok_st" -eq 0 ] && echo "$v_ok" | grep -q 'libCFTest reused=1 stamp='; then
+    ok "verify-only matching stamp is reused=1"
+else
+    die_test "verify-only match exit $v_ok_st: $v_ok"
+fi
+
+# Regenerated stub list, old dylib: CANNOT in verify-only.
+touch -d '2020-01-01 00:00:00 UTC' "$HW/lib/libCFTest.dylib"
+touch "$HW/stub-func-active.txt"
+set +e
+stale=$(CFTEST_VERIFY_ONLY=1 run_h 2>&1)
+stale_st=$?
+set -e
+if [ "$stale_st" -eq 2 ] \
+    && echo "$stale" | grep -q '^CANNOT_CFTEST_STALE ' \
+    && echo "$stale" | grep -q 'stub-func-active.txt=' \
+    && echo "$stale" | grep -q 'libCFTest.dylib=' \
+    && echo "$stale" | grep -qv 'reused=1'
+then
+    ok "stale dylib + fresh stub list is CANNOT_CFTEST_STALE (verify-only, not satisfied)"
+else
+    die_test "stale stub list verify-only exit $stale_st: $stale"
+fi
+
+# Same stale pair without verify-only must relink, not reuse.
+set +e
+relink_stale=$(run_h 2>&1)
+relink_stale_st=$?
+set -e
+if [ "$relink_stale_st" -eq 0 ] && echo "$relink_stale" | grep -q 'libCFTest relinked' \
+    && echo "$relink_stale" | grep -qv 'reused=1'
+then
+    ok "stale dylib + fresh stub list relinks (not reused)"
+else
+    die_test "stale stub list relink exit $relink_stale_st: $relink_stale"
+fi
+
+# Changed object sha → reason=inputs obj:… old->new
+echo 'int cfobjc_probe=2;' | clang-18 -target "$TRIPLE" -c -o "$HW/cfobjc/obj/CFString.o" -x c -
+set +e
+chg=$(CFTEST_VERIFY_ONLY=1 run_h 2>&1)
+chg_st=$?
+set -e
+if [ "$chg_st" -eq 2 ] \
+    && echo "$chg" | grep -q 'reason=inputs obj:cfobjc/CFString.o ' \
+    && echo "$chg" | grep -q 'CANNOT_CFTEST_INPUTS'
+then
+    ok "changed object sha is reason=inputs obj:cfobjc/CFString.o (verify-only)"
+else
+    die_test "changed object verify-only exit $chg_st: $chg"
+fi
+set +e
+chg_link=$(run_h 2>&1)
+chg_link_st=$?
+set -e
+if [ "$chg_link_st" -eq 0 ] && echo "$chg_link" | grep -q 'reason=inputs obj:cfobjc/CFString.o ' \
+    && echo "$chg_link" | grep -q 'libCFTest relinked'
+then
+    ok "changed object sha relinks with reason=inputs obj:cfobjc/CFString.o"
+else
+    die_test "changed object relink exit $chg_link_st: $chg_link"
+fi
+rm -rf "$HW"
 
 echo "test_build_cftest_harness: pass=$pass fail=$fail"
 [ "$fail" -eq 0 ]
