@@ -117,7 +117,25 @@ for id in "${ids[@]}"; do
         printf '%d\n' "$rc" > "$ACTUAL/$id.exit"
         n_run=$((n_run + 1))
 
-        if [[ ! -f "$EXPECTED/$id.exit" ]]; then
+        if [[ -f "$X86_EXPECTED/$id.exit" ]]; then
+            # An operator-recorded Darwin/x86_64 (Rosetta) baseline wins over
+            # the arm64 one: exact bytes, no arch mask. Measured 2026-09-03:
+            # the eight NEEDS_DARWIN_X86_BASELINE fixtures stayed flagged after
+            # the baselines were committed because this branch did not exist.
+            ee=$(cat "$X86_EXPECTED/$id.exit")
+            ae=$(cat "$ACTUAL/$id.exit")
+            if [[ "$ee" == "$ae" ]] \
+               && cmp -s "$X86_EXPECTED/$id.stdout" "$ACTUAL/$id.stdout" \
+               && { [[ ! -f "$X86_EXPECTED/$id.stderr" ]] || cmp -s "$X86_EXPECTED/$id.stderr" "$ACTUAL/$id.stderr"; }; then
+                verdict="MATCH"
+                detail="x86_64 Darwin baseline (tests/expected-x86_64)"
+                n_match=$((n_match + 1))
+            else
+                verdict="FAIL"
+                detail="differs from tests/expected-x86_64/$id (exit $ee vs $ae); diff tests/actual-x86_64/$id.stdout tests/expected-x86_64/$id.stdout"
+                n_fail=$((n_fail + 1))
+            fi
+        elif [[ ! -f "$EXPECTED/$id.exit" ]]; then
             verdict="NO-ORACLE"
             detail="no tests/expected/$id.exit (parse-only on Darwin too)"
             n_norun=$((n_norun + 1))
