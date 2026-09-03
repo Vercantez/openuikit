@@ -103,6 +103,14 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     fi
 done
 
+echo "== patch_cf_system_allocator.py"
+if python3 "$ROOT/scripts/x86/test_patch_cf_system_allocator.py" >/tmp/test_patch_cf_system_allocator.out 2>&1; then
+    ok "patch_cf_system_allocator unit tests"
+else
+    die_test "patch_cf_system_allocator unit tests"
+    cat /tmp/test_patch_cf_system_allocator.out >&2 || true
+fi
+
 echo "== operator command + marker grammar"
 expect_grep 'bash scripts/x86/phase2.sh /opt/openuikit/x86-verify/openuikit' "$PHASE2" \
     "operator one-command path"
@@ -365,8 +373,15 @@ expect_grep 'cannot carry ioctl.h (CFSocket census)' "$ROOT/full/foundation/buil
     "build_os_module.sh forwards extra swiftc argv (overlay-posix -I on a VM)"
 expect_grep 'rm -rf "${UD_GUEST_W:-$ud_w}/runroot"' "$PHASE2" \
     "rung a drops a stale runroot clone so libCFTest content is fresh"
-expect_not_grep 'patch_cf_system_allocator' "$UDINC" \
-    "ud-guest compiles the pinned CF tree (operator box path; no allocator rewrite)"
+expect_file "$ROOT/scripts/x86/patch_cf_system_allocator.py"
+expect_grep 'phase2_ud_guest_patch_cf_system_allocator' "$UDINC" \
+    "ud-guest copies CF and rewrites only the Mac system-allocator callbacks"
+expect_grep 'never prefix-store a custom allocator' "$UDINC" \
+    "ud-guest refuses a copy that still pointer-identifies the system allocator"
+expect_grep 'static system default only' "$UDINC" \
+    "ud-guest refuses a copy whose default allocator still comes from TSD"
+expect_grep 'allocator-as-zone malloc_zone_malloc' "$UDINC" \
+    "ud-guest refuses a copy that still passes a CFAllocator to malloc_zone_malloc"
 expect_grep 'CFOBJC_FORCE_COPY=1' "$UDINC" \
     "cfobjc recopies the pin (existence of OUT/src is not freshness)"
 expect_not_grep 'fe_malloc_zone_as_malloc.h' "$STAGE" \
@@ -2136,7 +2151,8 @@ if phase2_is_x86_macho "$UDWORK/libCFTest.dylib"; then
         "$STAMPW/cfobjc/obj/CFBase.o" \
         "$ROOT/foundation-macho/scripts/build_cfobjc.sh" \
         "$SYS/usr/include/malloc/malloc.h" \
-        "$PHASE2_UD_GUEST_CF_COMMIT")"
+        "$PHASE2_UD_GUEST_CF_COMMIT" \
+        "$ROOT/scripts/x86/patch_cf_system_allocator.py")"
     : > "$STAMPW/expect-func.txt"
     : > "$STAMPW/expect-data.txt"
     set +e
