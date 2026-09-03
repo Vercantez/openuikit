@@ -399,6 +399,7 @@ my @FRAMEWORK_MODULES = (
     [ 'SwiftUI', 7 ],
     [ 'OpenUIKit', 9 ],
     [ 'OpenCoreGraphics', 16 ],
+    [ 'FoundationEssentials', 20 ],
     [ 'Combine', 7 ],
     [ 'OpenCombine', 11 ],
 );
@@ -502,6 +503,7 @@ sub conformance_classifier_selftest {
         SwiftUI => 'libSwiftUI',
         OpenUIKit => 'libOpenUIKit',
         OpenCoreGraphics => 'libOpenCoreGraphics',
+        FoundationEssentials => 'libFoundationEssentials',
         Combine => 'libCombine',
         OpenCombine => 'libOpenCombine',
     );
@@ -540,6 +542,16 @@ sub conformance_classifier_selftest {
             'SwiftUI',
             'libSwiftUI',
         ],
+        [
+            '_$s20FoundationEssentials15AttributeScopesO7SwiftUIE7swiftUISdvg',
+            'SwiftUI',
+            'libSwiftUI',
+        ],
+        [
+            '_$s20FoundationEssentials22AttributeDynamicLookupO7SwiftUIEyxqd__cluig',
+            'SwiftUI',
+            'libSwiftUI',
+        ],
     );
     for my $fixture (@positive) {
         my ($symbol, $expected_module, $defining_image) = @$fixture;
@@ -551,10 +563,16 @@ sub conformance_classifier_selftest {
             unless $definition_owner{$actual} eq $defining_image;
     }
 
-    # Nominal type descriptor for the same foreign CGFloat: still owned by
-    # OpenCoreGraphics. libSwiftUI defining it must keep failing.
+    # Nominal type descriptors for the foreign CGFloat / AttributeScopes types:
+    # still owned by OpenCoreGraphics / FoundationEssentials. libSwiftUI
+    # defining them must keep failing.
     my @negative = (
         [ '_$s16OpenCoreGraphics7CGFloatVMn', 'OpenCoreGraphics', 'libSwiftUI' ],
+        [
+            '_$s20FoundationEssentials15AttributeScopesOMn',
+            'FoundationEssentials',
+            'libSwiftUI',
+        ],
     );
     for my $fixture (@negative) {
         my ($symbol, $expected_module, $wrong_image) = @$fixture;
@@ -575,6 +593,7 @@ sub prefixed_swift_module {
     return 'SwiftUI' if $symbol =~ /^_?\$s7SwiftUI/;
     return 'OpenUIKit' if $symbol =~ /^_?\$s9OpenUIKit/;
     return 'OpenCoreGraphics' if $symbol =~ /^_?\$s16OpenCoreGraphics/;
+    return 'FoundationEssentials' if $symbol =~ /^_?\$s20FoundationEssentials/;
     return 'Combine' if $symbol =~ /^_?\$s7Combine/;
     return 'OpenCombine' if $symbol =~ /^_?\$s11OpenCombine/;
     my $objc_module = objc_swift_module($symbol);
@@ -585,7 +604,7 @@ sub prefixed_swift_module {
 sub framework_tokens {
     my ($symbol) = @_;
     return grep { index($symbol, length($_) . $_) >= 0 }
-        qw(SwiftUI OpenUIKit OpenCoreGraphics Combine OpenCombine);
+        qw(SwiftUI OpenUIKit OpenCoreGraphics FoundationEssentials Combine OpenCombine);
 }
 
 sub demangle_compact {
@@ -597,9 +616,9 @@ sub demangle_compact {
 }
 
 # Owning module from compact demangle, in this order:
-#   1. `(extension in M):` anywhere → M (SwiftUI's CGFloat.magnitudeSquared MV
-#      and AttributeScopes.swiftUI; compact form is often
-#      `property descriptor for (extension in SwiftUI):…`, not a leading match)
+#   1. `(extension in M):` anywhere → M (SwiftUI's CGFloat.magnitudeSquared MV,
+#      AttributeScopes.swiftUI, AttributeDynamicLookup subscript; compact form
+#      is often `property descriptor for (extension in SwiftUI):…`, not leading)
 #   2. `… : M.Protocol in M2` conformance/witness (Mc/WP/Wp) → protocol module M
 #   3. otherwise undef (caller falls back to the leading nominal-type module)
 sub owning_module_from_demangle {
@@ -624,7 +643,7 @@ sub classify_framework_symbol {
     return ($prefix, $expanded) if defined $prefix;
 
     my @owners;
-    for my $module (qw(SwiftUI OpenUIKit OpenCoreGraphics Combine OpenCombine)) {
+    for my $module (qw(SwiftUI OpenUIKit OpenCoreGraphics FoundationEssentials Combine OpenCombine)) {
         push @owners, $module
             if $expanded =~ /^associated type descriptor for \Q$module\E\./
             || $expanded =~ /\bin \Q$module\E\z/;
@@ -650,7 +669,7 @@ sub symbol_records {
 sub provider_command {
     my (@args) = @_;
     my ($nm, $objdump, $demangle, $openuikit, $opencoregraphics, $swiftui,
-        $combine, $opencombine, $executable);
+        $foundationessentials, $combine, $opencombine, $executable);
     GetOptionsFromArray(
         \@args,
         'nm=s'         => \$nm,
@@ -659,14 +678,16 @@ sub provider_command {
         'openuikit=s'  => \$openuikit,
         'opencoregraphics=s' => \$opencoregraphics,
         'swiftui=s'    => \$swiftui,
+        'foundationessentials=s' => \$foundationessentials,
         'combine=s'    => \$combine,
         'opencombine=s' => \$opencombine,
         'executable=s' => \$executable,
     ) or fail('invalid provider options');
     fail('providers takes no positional arguments') if @args;
-    fail('providers requires --nm, --objdump, --demangle, --openuikit, --opencoregraphics, --swiftui, --combine, --opencombine, and --executable')
+    fail('providers requires --nm, --objdump, --demangle, --openuikit, --opencoregraphics, --swiftui, --foundationessentials, --combine, --opencombine, and --executable')
         unless defined($nm) && defined($objdump) && defined($demangle) && defined($openuikit)
             && defined($opencoregraphics) && defined($swiftui)
+            && defined($foundationessentials)
             && defined($combine) && defined($opencombine)
             && defined($executable);
 
@@ -674,6 +695,7 @@ sub provider_command {
         libOpenUIKit => $openuikit,
         libOpenCoreGraphics => $opencoregraphics,
         libSwiftUI => $swiftui,
+        libFoundationEssentials => $foundationessentials,
         libCombine => $combine,
         libOpenCombine => $opencombine,
         executable => $executable,
@@ -686,6 +708,7 @@ sub provider_command {
         SwiftUI => 'libSwiftUI',
         OpenUIKit => 'libOpenUIKit',
         OpenCoreGraphics => 'libOpenCoreGraphics',
+        FoundationEssentials => 'libFoundationEssentials',
         Combine => 'libCombine',
         OpenCombine => 'libCombine',
     );
@@ -693,6 +716,7 @@ sub provider_command {
         SwiftUI => 'libSwiftUI',
         OpenUIKit => 'libOpenUIKit',
         OpenCoreGraphics => 'libOpenCoreGraphics',
+        FoundationEssentials => 'libFoundationEssentials',
         Combine => 'libCombine',
         OpenCombine => 'libOpenCombine',
     );
@@ -766,6 +790,8 @@ sub provider_command {
         [ 'libOpenCombine', 'defined', 'OpenCombine' ],
         [ 'libSwiftUI', 'undefined', 'OpenUIKit' ],
         [ 'libSwiftUI', 'undefined', 'OpenCoreGraphics' ],
+        [ 'libFoundationEssentials', 'defined', 'FoundationEssentials' ],
+        [ 'libSwiftUI', 'undefined', 'FoundationEssentials' ],
         [ 'libSwiftUI', 'undefined', 'OpenCombine' ],
         [ 'executable', 'undefined', 'SwiftUI' ],
         [ 'executable', 'undefined', 'OpenUIKit' ],
@@ -778,7 +804,7 @@ sub provider_command {
     print "format\tfocus-widget-framework-providers-v2\n";
     for my $image (sort keys %paths) {
         for my $kind (qw(defined undefined)) {
-            for my $module (qw(SwiftUI OpenUIKit OpenCoreGraphics Combine OpenCombine)) {
+            for my $module (qw(SwiftUI OpenUIKit OpenCoreGraphics FoundationEssentials Combine OpenCombine)) {
                 printf "count\t%s\t%s\t%s\t%d\n", $image, $kind, $module,
                     ($counts{$image}{$kind}{$module} || 0);
             }
