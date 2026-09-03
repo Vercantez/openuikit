@@ -1,0 +1,156 @@
+### file
+<machorun>/tests/bin/libcache_emptyfix.dylib: Mach-O 64-bit dynamically linked shared library arm64
+
+### mach header
+<machorun>/tests/bin/libcache_emptyfix.dylib:
+Mach header
+      magic  cputype cpusubtype  caps    filetype ncmds sizeofcmds      flags
+ 0xfeedfacf 16777228          0  0x00           6    12        688 0x00100085
+
+### dependencies
+<machorun>/tests/bin/libcache_emptyfix.dylib:
+	@rpath/libcache_emptyfix.dylib (compatibility version 0.0.0, current version 0.0.0)
+
+### load commands
+<machorun>/tests/bin/libcache_emptyfix.dylib:
+Load command 0
+      cmd LC_SEGMENT_64
+  cmdsize 152
+  segname __TEXT
+   vmaddr 0x0000000000000000
+   vmsize 0x0000000000004000
+  fileoff 0
+ filesize 16384
+  maxprot 0x00000005
+ initprot 0x00000005
+   nsects 1
+    flags 0x0
+Section
+  sectname __text
+   segname __TEXT
+      addr 0x00000000000002f0
+      size 0x0000000000000000
+    offset 752
+     align 2^0 (1)
+    reloff 0
+    nreloc 0
+     flags 0x80000000
+ reserved1 0
+ reserved2 0
+Load command 1
+      cmd LC_SEGMENT_64
+  cmdsize 152
+  segname __DATA_CONST
+   vmaddr 0x0000000000004000
+   vmsize 0x0000000000004000
+  fileoff 16384
+ filesize 16384
+  maxprot 0x00000003
+ initprot 0x00000003
+   nsects 1
+    flags 0x10
+Section
+  sectname __const
+   segname __DATA_CONST
+      addr 0x0000000000004000
+      size 0x0000000000000020
+    offset 16384
+     align 2^2 (4)
+    reloff 0
+    nreloc 0
+     flags 0x00000000
+ reserved1 0
+ reserved2 0
+Load command 2
+      cmd LC_SEGMENT_64
+  cmdsize 72
+  segname __LINKEDIT
+   vmaddr 0x0000000000008000
+   vmsize 0x0000000000000200
+  fileoff 32768
+ filesize 512
+  maxprot 0x00000001
+ initprot 0x00000001
+   nsects 0
+    flags 0x0
+Load command 3
+     cmd LC_SYMTAB
+ cmdsize 24
+  symoff 32808
+   nsyms 1
+  stroff 32824
+ strsize 24
+Load command 4
+            cmd LC_DYSYMTAB
+        cmdsize 80
+      ilocalsym 0
+      nlocalsym 0
+     iextdefsym 0
+     nextdefsym 1
+      iundefsym 1
+      nundefsym 0
+         tocoff 0
+           ntoc 0
+      modtaboff 0
+        nmodtab 0
+   extrefsymoff 0
+    nextrefsyms 0
+ indirectsymoff 0
+  nindirectsyms 0
+      extreloff 0
+        nextrel 0
+      locreloff 0
+        nlocrel 0
+Load command 5
+          cmd LC_ID_DYLIB
+      cmdsize 56
+         name @rpath/libcache_emptyfix.dylib (offset 24)
+   time stamp 0 Wed Dec 31 18:00:00 1969
+      current version 0.0.0
+compatibility version 0.0.0
+Load command 6
+     cmd LC_UUID
+ cmdsize 24
+    uuid 4C4C44F9-5555-3144-A116-48441ED9D4CE
+Load command 7
+      cmd LC_BUILD_VERSION
+  cmdsize 32
+ platform 1
+    minos 11.0
+      sdk 11.0
+   ntools 1
+     tool 4
+  version 18.1.3
+Load command 8
+      cmd LC_FUNCTION_STARTS
+  cmdsize 16
+  dataoff 32800
+ datasize 8
+Load command 9
+      cmd LC_DATA_IN_CODE
+  cmdsize 16
+  dataoff 32808
+ datasize 0
+Load command 10
+      cmd LC_CODE_SIGNATURE
+  cmdsize 16
+  dataoff 32848
+ datasize 432
+Load command 11
+            cmd LC_DYLD_INFO_ONLY
+        cmdsize 48
+     rebase_off 0
+    rebase_size 0
+       bind_off 0
+      bind_size 0
+  weak_bind_off 0
+ weak_bind_size 0
+  lazy_bind_off 0
+ lazy_bind_size 0
+     export_off 0
+    export_size 0
+
+### undefined symbols
+
+### defined external symbols
+0000000000004000 S _emptyfix_table
