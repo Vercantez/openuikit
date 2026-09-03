@@ -318,6 +318,26 @@ expect_grep 'phase2_stage_overlay_tbds_into_sysroot' "$STAGE" \
     "stager emits overlay tbds from x86 dylibs"
 expect_grep 'phase2_twelve_overlay_names' "$COMMON" \
     "durable overlay set is twelve (nine FE + Concurrency/ObjectiveC/Observation)"
+fe_n=$(phase2_fe_overlay_names | grep -c .)
+[ "$fe_n" -eq 9 ] \
+    && ok "phase2_fe_overlay_names stays nine (lockstep with build_full FE_OVERLAYS)" \
+    || die_test "phase2_fe_overlay_names count=$fe_n want 9"
+twelve_n=$(phase2_twelve_overlay_names | grep -c .)
+[ "$twelve_n" -eq 12 ] \
+    && ok "phase2_twelve_overlay_names is twelve" \
+    || die_test "phase2_twelve_overlay_names count=$twelve_n want 12"
+for extra in libswift_Concurrency.dylib libswiftObjectiveC.dylib libswiftObservation.dylib
+do
+    phase2_twelve_overlay_names | grep -qx "$extra" \
+        && ok "twelve-overlay set includes $extra" \
+        || die_test "twelve-overlay set missing $extra"
+    phase2_fe_overlay_names | grep -qx "$extra" \
+        && die_test "FE overlay set must not include $extra (widget load, not FE_OVERLAYS)" \
+        || ok "FE overlay set does not include $extra"
+done
+phase2_consumer_tbd_relpaths | grep -qiE 'ARKit|AppKit|AVFoundation' \
+    && die_test "consumer tbd set must not name Apple-SDK extras (ARKit/AppKit/…)" \
+    || ok "consumer tbd set has no ARKit/AppKit/AVFoundation names"
 expect_grep 'gen_swift_tbd.sh' "$COMMON" \
     "overlay tbds come from the committed TAPI writer"
 expect_grep 'phase2_consumer_tbd_relpaths' "$COMMON" \
@@ -585,13 +605,15 @@ if [ -f "$core_src" ] && phase2_is_x86_macho "$core_src"; then
     overlay_ok=$(phase2_sysroot_tbd_resolve "$TBDWORK/x86" "$TBDWORK/arm" || true)
     case "$overlay_ok" in
         OK) ok "resolve OK after gen_tbd aliases + twelve overlay tbds" ;;
-        MISSING=*libswiftObjectiveC.tbd*)
+        MISSING=*)
             if echo "$overlay_ok" | grep -q 'usr/lib/swift/libswiftCore.tbd'; then
                 die_test "libswiftCore.tbd still missing after emit: $overlay_ok"
             fi
-            ok "resolve names remaining Apple-SDK overlay tbds after Core ($overlay_ok)"
+            echo "$overlay_ok" | grep -qE 'ARKit|AppKit' \
+                && die_test "resolve must not name Apple-SDK extras after Core emit: $overlay_ok"
+            ok "resolve names remaining consumer overlay tbds after Core ($overlay_ok)"
             ;;
-        *) die_test "expected OK or MISSING ObjectiveC after emitting overlay tbd, got: $overlay_ok" ;;
+        *) die_test "expected OK or MISSING consumer overlays after emitting Core tbd, got: $overlay_ok" ;;
     esac
 else
     ok "skip live libswiftCore overlay emit (no x86 dylib in artifacts)"
@@ -628,8 +650,14 @@ if [ -d "$ROOT/scratch/sysroot_fe4-x86_64/usr/lib" ] \
         "$ROOT/scratch/sysroot_fe4-x86_64" "$ROOT/scratch/sysroot_fe4" || true)
     case "$live_res" in
         OK) ok "live x86 sysroot tbd resolve vs arm64 inventory: OK" ;;
-        MISSING=*libswiftObjectiveC.tbd*)
-            ok "live resolve names Apple-SDK overlay holes (ObjectiveC/_DarwinFoundation/_errno): $live_res"
+        MISSING=*)
+            if echo "$live_res" | grep -qE 'libswiftObjectiveC|libswift_DarwinFoundation|libswift_errno|libswift_Concurrency|libswiftObservation'; then
+                ok "live resolve names remaining consumer overlay holes: $live_res"
+            else
+                die_test "live resolve MISSING is not a consumer overlay: $live_res"
+            fi
+            echo "$live_res" | grep -qE 'ARKit|AppKit|AVFoundation' \
+                && die_test "live resolve must not name Apple-SDK extras: $live_res"
             ;;
         *) die_test "live resolve unexpected: $live_res" ;;
     esac
@@ -995,7 +1023,7 @@ HOME=$OVERLAY_HOME
 overlay_report=$(phase2_stage_x86_fe_overlays "$OVERLAY_DEST/mrroot_fe-x86_64" || true)
 expected_missing='MISSING=libswiftDarwin.dylib,libswiftSynchronization.dylib,libswift_Builtin_float.dylib,libswift_DarwinFoundation1.dylib,libswift_DarwinFoundation2.dylib,libswift_DarwinFoundation3.dylib,libswift_RegexParser.dylib,libswift_StringProcessing.dylib,libswift_errno.dylib,libswift_Concurrency.dylib,libswiftObjectiveC.dylib,libswiftObservation.dylib'
 if [ "$overlay_report" = "$expected_missing" ]; then
-    ok "overlay stage lists every missing FE dylib ($overlay_report)"
+    ok "overlay stage lists every missing overlay of the twelve ($overlay_report)"
 else
     die_test "overlay MISSING list expected $expected_missing got: $overlay_report"
 fi
@@ -1275,13 +1303,18 @@ layout_miss=$(phase2_stage_x86_mrroot_layout \
 W=$ROOT
 case "$layout_miss" in
     MISSING=*)
-        if echo "$layout_miss" | grep -q 'libswiftcompat.dylib' \
-            && echo "$layout_miss" | grep -q 'libswiftObjectiveC.dylib' \
-            && echo "$layout_miss" | grep -q 'Foundation' \
-            && echo "$layout_miss" | grep -q 'CoreFoundation'; then
-            ok "empty dest MISSING= includes Foundation, CoreFoundation ($layout_miss)"
+        layout_ok=1
+        for need in libswiftcompat.dylib Foundation CoreFoundation; do
+            echo "$layout_miss" | grep -q "$need" || layout_ok=0
+        done
+        while IFS= read -r name; do
+            [ -n "$name" ] || continue
+            echo "$layout_miss" | grep -q "$name" || layout_ok=0
+        done < <(phase2_twelve_overlay_names)
+        if [ "$layout_ok" -eq 1 ]; then
+            ok "empty dest MISSING= includes Foundation + all twelve overlays ($layout_miss)"
         else
-            die_test "empty dest MISSING incomplete: $layout_miss"
+            die_test "empty dest MISSING incomplete (need twelve overlays): $layout_miss"
         fi
         ;;
     *) die_test "empty dest layout expected MISSING=… got: $layout_miss" ;;
