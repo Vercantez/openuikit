@@ -98,13 +98,13 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn("post-run-Focus", text)
         self.assertIn("post-run-OpenUIKit", text)
 
-    def test_framework_graph_uses_nine_real_macho_dylibs(self) -> None:
+    def test_framework_graph_uses_ten_real_macho_dylibs(self) -> None:
         text = BUILD.read_text()
         self.assertIn("-parse-stdlib -typecheck", text)
         self.assertIn("-e 'import Swift'", text)
         names = (
             "FoundationEssentials", "OpenCoreGraphics", "OpenUIKit", "Foundation",
-            "OpenCombine", "Combine", "SwiftUI", "Widget", "Onboarding",
+            "OpenCombine", "Combine", "Symbols", "SwiftUI", "Widget", "Onboarding",
         )
         for name in names:
             self.assertIn(f"lib{name}.dylib", text)
@@ -112,6 +112,9 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn('actual_id=$(llvm-otool-18 -D', text)
         self.assertIn('focus_widget_guest_attest.pl" closure', text)
         self.assertIn('"$MRROOT/machorun" ./focus_onboarding_guest', text)
+        self.assertIn("compile the first-party Symbols value model while Foundation is hidden", text)
+        self.assertIn("libSymbols Apple Symbols load count", text)
+        self.assertIn("-lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols", text)
 
     def test_foundation_umbrella_preserves_one_essentials_provider(self) -> None:
         source = FOUNDATION.read_text()

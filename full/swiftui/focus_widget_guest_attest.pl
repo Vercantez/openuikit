@@ -121,6 +121,7 @@ sub inventory_command {
         [ "$full/inc/CSTBTrueType", 'build-full/inc/CSTBTrueType' ],
         [ "$w/full/hostclock/include", 'project/full/hostclock/include' ],
         [ "$uikit/Sources/CQuartz/include", 'openuikit/Sources/CQuartz/include' ],
+        [ "$uikit/Sources/Symbols", 'openuikit/Sources/Symbols' ],
         [ "$uikit/Sources/SwiftUI", 'openuikit/Sources/SwiftUI' ],
         [ "$w/scratch/swift-foundation/Sources/_FoundationCShims/include", 'upstream/swift-foundation/_FoundationCShims/include' ],
         [ "$full/foundation/essentials", 'build-full/foundation/essentials' ],
