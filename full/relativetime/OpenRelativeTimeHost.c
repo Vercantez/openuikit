@@ -38,7 +38,7 @@ static URelativeDateTimeUnit relative_unit(int32_t unit, bool *valid)
     }
 }
 
-int32_t openui_relative_time_v1_format(
+OPENUI_RELATIVE_TIME_API int32_t openui_relative_time_v1_format(
     uint32_t abi_version,
     const uint8_t *locale_bytes,
     uint64_t locale_count,
