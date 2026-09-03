@@ -885,7 +885,8 @@ expected_swiftui_loads=$(printf '%s\n' \
     /usr/lib/libobjc.A.dylib \
     /usr/lib/libquartz.dylib \
     /usr/lib/swift/libswift_Concurrency.dylib \
-    /usr/lib/swift/libswiftObjectiveC.dylib)
+    /usr/lib/swift/libswiftObjectiveC.dylib \
+    /usr/lib/swift/libswiftObservation.dylib)
 expected_opencombine_loads=$(printf '%s\n' \
     @rpath/libOpenCombine.dylib \
     /usr/lib/swift/libswift_Concurrency.dylib \
