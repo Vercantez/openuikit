@@ -6,9 +6,10 @@ set -euo pipefail
 W=${W:-/w}
 SYS=${SYS:-$W/scratch/sysroot_fe4}
 OUT=${OUT:-$W/scratch/fe4_os}
+MC=${MC:-$W/scratch/modcache_fe4}
 mkdir -p "$OUT"
 swiftc -target "${TARGET:-arm64-apple-macos15.0}" -sdk "$SYS" \
-    -module-cache-path "$W/scratch/modcache_fe4" \
+    -module-cache-path "$MC" \
     -module-name os -wmo -parse-as-library \
     -runtime-compatibility-version none \
     -emit-module -emit-module-path "$OUT/os.swiftmodule" \

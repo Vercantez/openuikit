@@ -41,11 +41,18 @@ done
 # _Concurrency (already on), Synchronization, experimental StringProcessing.
 # Darwin/ObjectiveC SDK overlays stay OFF: SWIFT_BUILD_SDK_OVERLAY needs
 # Xcode module maps this Linux sysroot does not have. See docs/X86_64.md.
+#
+# Phase-2 guests load _Concurrency + _StringProcessing + Synchronization.
+# Overlays therefore also fetch/pass libdispatch (BUILD_LOG §16): CMake with
+# STRING_PROCESSING=ON and an empty SWIFT_PATH_TO_STRING_PROCESSING_SOURCE
+# dies at stdlib/public/StringProcessing/CMakeLists.txt:41 ("No SOURCES
+# given to target") forty lines into the log. Refuse *before* cmake.
 OVERLAY_STRING=OFF
 OVERLAY_SYNC=OFF
 if [ "${SWIFTCORE_OVERLAYS:-0}" = 1 ]; then
   OVERLAY_STRING=ON
   OVERLAY_SYNC=ON
+  SWIFTCORE_BUILD_DISPATCH=${SWIFTCORE_BUILD_DISPATCH:-1}
 fi
 
 SYNTAX_FLAG=()
@@ -53,9 +60,59 @@ if [ -d "$W/swift-syntax" ]; then
   SYNTAX_FLAG=(-DSWIFT_PATH_TO_SWIFT_SYNTAX_SOURCE="$W/swift-syntax")
 fi
 
+STRING_PROCESSING_SRC=${SWIFT_PATH_TO_STRING_PROCESSING_SOURCE:-$W/swift-experimental-string-processing}
+LIBDISPATCH_SRC=${SWIFT_PATH_TO_LIBDISPATCH_SOURCE:-$W/libdispatch}
+
+STRING_FLAG=()
 DISPATCH_FLAG=()
-if [ "${SWIFTCORE_BUILD_DISPATCH:-0}" = 1 ] && [ -d "${SWIFT_PATH_TO_LIBDISPATCH_SOURCE:-$W/libdispatch}" ]; then
-  DISPATCH_FLAG=(-DSWIFT_PATH_TO_LIBDISPATCH_SOURCE="${SWIFT_PATH_TO_LIBDISPATCH_SOURCE:-$W/libdispatch}")
+
+refuse_checkout() {
+  local marker=$1 checkout=$2 pin=$3 expected=$4
+  echo "$marker checkout=$checkout pin=$pin tag=$SWIFT_PIN_TAG expected=$expected" >&2
+  echo "  bootstrap: SWIFTCORE_OVERLAYS=1 bash $SCRIPT_DIR/bootstrap_box.sh" >&2
+  echo "  do not invoke CMake with an empty sibling path" >&2
+  exit 2
+}
+
+# --print-flags is a dry dump (test_configure_arch.sh). The refuse is for the
+# real configure, before cmake, so the operator sees the missing checkout
+# instead of CMakeLists.txt:41.
+if [ "$PRINT_FLAGS" != 1 ]; then
+  if [ "$OVERLAY_STRING" = ON ]; then
+    if [ ! -d "$STRING_PROCESSING_SRC/Sources/_StringProcessing" ]; then
+      refuse_checkout CANNOT_FETCH_STRING_PROCESSING_SOURCE \
+        swift-experimental-string-processing "$STRING_PROCESSING_PIN_COMMIT" \
+        "$STRING_PROCESSING_SRC"
+    fi
+    if [ -d "$STRING_PROCESSING_SRC/.git" ]; then
+      got=$(git -C "$STRING_PROCESSING_SRC" rev-parse HEAD)
+      if [ "$got" != "$STRING_PROCESSING_PIN_COMMIT" ]; then
+        echo "CANNOT_FETCH_STRING_PROCESSING_SOURCE checkout=swift-experimental-string-processing reason=commit-mismatch have=$got want=$STRING_PROCESSING_PIN_COMMIT" >&2
+        exit 2
+      fi
+    fi
+  fi
+  if [ "${SWIFTCORE_BUILD_DISPATCH:-0}" = 1 ]; then
+    if [ ! -d "$LIBDISPATCH_SRC" ] || [ ! -f "$LIBDISPATCH_SRC/CMakeLists.txt" ]; then
+      refuse_checkout CANNOT_FETCH_LIBDISPATCH_SOURCE \
+        swift-corelibs-libdispatch "$LIBDISPATCH_PIN_COMMIT" \
+        "$LIBDISPATCH_SRC"
+    fi
+    if [ -d "$LIBDISPATCH_SRC/.git" ]; then
+      got=$(git -C "$LIBDISPATCH_SRC" rev-parse HEAD)
+      if [ "$got" != "$LIBDISPATCH_PIN_COMMIT" ]; then
+        echo "CANNOT_FETCH_LIBDISPATCH_SOURCE checkout=swift-corelibs-libdispatch reason=commit-mismatch have=$got want=$LIBDISPATCH_PIN_COMMIT" >&2
+        exit 2
+      fi
+    fi
+  fi
+fi
+
+if [ "$OVERLAY_STRING" = ON ]; then
+  STRING_FLAG=(-DSWIFT_PATH_TO_STRING_PROCESSING_SOURCE="$STRING_PROCESSING_SRC")
+fi
+if [ "${SWIFTCORE_BUILD_DISPATCH:-0}" = 1 ]; then
+  DISPATCH_FLAG=(-DSWIFT_PATH_TO_LIBDISPATCH_SOURCE="$LIBDISPATCH_SRC")
 fi
 
 CMAKE_ARGS=(
@@ -106,6 +163,7 @@ CMAKE_ARGS=(
   -DSWIFT_ENABLE_BACKTRACING=OFF
   -DSWIFT_STDLIB_ENABLE_OBJC_INTEROP=ON
   -DSWIFT_INCLUDE_APINOTES=ON
+  "${STRING_FLAG[@]}"
   "${DISPATCH_FLAG[@]}"
   "${CMAKE_EXTRA[@]}"
 )
@@ -120,6 +178,10 @@ if [ "$PRINT_FLAGS" = 1 ]; then
   printf 'SDK=%s\n' "$SDK"
   printf 'SRC=%s\n' "$SRC"
   printf 'B=%s\n' "$B"
+  printf 'SWIFTCORE_OVERLAYS=%s\n' "${SWIFTCORE_OVERLAYS:-0}"
+  printf 'SWIFTCORE_BUILD_DISPATCH=%s\n' "${SWIFTCORE_BUILD_DISPATCH:-0}"
+  printf 'STRING_PROCESSING_SRC=%s\n' "$STRING_PROCESSING_SRC"
+  printf 'LIBDISPATCH_SRC=%s\n' "$LIBDISPATCH_SRC"
   printf 'cmake'
   for a in "${CMAKE_ARGS[@]}"; do
     printf ' %q' "$a"

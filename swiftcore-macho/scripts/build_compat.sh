@@ -27,7 +27,7 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 W=${W:-$HOME/work}
 SDK=${SDK:-$W/sdk/MacOSX.sdk}
-# TC already set by guest_arch.inc ( /opt/swift624/usr or /usr ).
+# TC already set by guest_arch.inc (SWIFT_TOOLCHAIN, PATH, /opt/swift624/usr, or /usr).
 SRC=${SRC:-$W/compat}
 # machorun's built userland -- the thing we must not collide with.
 MRLIB=${MRLIB:-$W/machorun/darwin/usr/lib}

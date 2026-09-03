@@ -5,11 +5,18 @@
 # Arm64 on Graviton is still the default on an aarch64 host. This script on an
 # x86_64 host produces the x86_64 slice beside the committed arm64 artifacts.
 #
-# Operator (16 vCPU x86_64 Ubuntu 24.04, clang-18, Swift 6.2.4):
+# Operator (16 vCPU x86_64 Ubuntu 24.04, clang-18, Swift 6.2.4).
+# SWIFT_TOOLCHAIN honors /opt/swift (do not symlink it to /opt/swift624):
 #
 #   NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 \
+#     SWIFTCORE_BUILD_DISPATCH=1 SWIFT_TOOLCHAIN=/opt/swift \
 #     bash swiftcore-macho/scripts/build_stdlib.sh
 #
+# SWIFTCORE_OVERLAYS=1 fetches swift-experimental-string-processing and
+# (via BUILD_DISPATCH default 1) swift-corelibs-libdispatch at the
+# swift-6.2.4-RELEASE commits in guest_arch.inc. CMake is refused with
+# CANNOT_FETCH_*_SOURCE if either checkout is missing.
+
 # This 4-vCPU / 15 GiB cloud-agent VM uses NINJA_JOBS=2. It will configure and
 # compile as far as RAM/time allow; it will not fake a dylib. Execution of the
 # linked guest is refused here — that is the operator host's job.
@@ -25,7 +32,15 @@ B=${B:-$W/build}
 MACHORUN=${MACHORUN:-$OPENUIKIT_ROOT/machorun}
 NINJA_JOBS=${NINJA_JOBS:-2}
 STOP_AFTER=${STOP_AFTER:-}   # configure | ninja-first | link | all
+# Overlays imply dispatch: phase-2 needs _Concurrency as well as
+# _StringProcessing / Synchronization. Operator may still set
+# SWIFTCORE_BUILD_DISPATCH=1 explicitly.
+if [ "${SWIFTCORE_OVERLAYS:-0}" = 1 ]; then
+  SWIFTCORE_BUILD_DISPATCH=${SWIFTCORE_BUILD_DISPATCH:-1}
+fi
 export W B TC SWIFTCORE_DARWIN_ARCH SWIFT_HOST_VARIANT_ARCH
+export SWIFTCORE_OVERLAYS SWIFTCORE_BUILD_DISPATCH
+export SWIFT_TOOLCHAIN SWIFT_PATH_TO_STRING_PROCESSING_SOURCE SWIFT_PATH_TO_LIBDISPATCH_SOURCE
 
 mkdir -p "$W"
 step() { printf '\n==== %s ====\n' "$*"; }
@@ -181,6 +196,7 @@ else
   echo "objects compiled: $obj_n"
   echo "This VM did not produce the dylib. Operator command:"
   echo "  NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 \\"
+  echo "    SWIFTCORE_BUILD_DISPATCH=1 SWIFT_TOOLCHAIN=/opt/swift \\"
   echo "    bash swiftcore-macho/scripts/build_stdlib.sh"
   exit 2
 fi
