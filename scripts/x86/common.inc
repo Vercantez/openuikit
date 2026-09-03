@@ -168,7 +168,7 @@ phase2_probe_focus_pin() {
 # output directory existing. A sysroot staged before x86 libswiftCore landed
 # would otherwise be reused while OpenCombine looks in usr/lib/swift and finds
 # nothing. Recipe bump forces a restage when the stager itself gains steps.
-PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.10
+PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.11
 PHASE2_SYSROOT_STAMP=.phase2-stage-inputs
 
 phase2_sha_or_absent() {
@@ -1633,7 +1633,36 @@ phase2_expand_darwin_modulemap_for_fe() {
         echo "  Darwin.modulemap sys/time.h is textual (SwiftOverlayShims.timeval)" >&2
     fi
     echo "phase2: Darwin.modulemap FE expand added=$added" >&2
+    phase2_ensure_darwin_named_submodules "$sys"
     return 0
+}
+
+# `import Darwin.sysdir` / `import Darwin.uuid` need named submodules, not a
+# flat `header "sysdir.h"` on Darwin. FE FileManager and UUID_Wrappers use them.
+phase2_ensure_darwin_named_submodules() {
+    local sys=$1
+    python3 - "$sys" <<'PY'
+import sys
+from pathlib import Path
+root = Path(sys.argv[1])
+map_path = root / "usr/include/Darwin.modulemap"
+if not map_path.is_file():
+    raise SystemExit(0)
+text = map_path.read_text()
+subs = []
+if (root / "usr/include/sysdir.h").is_file() and "module sysdir" not in text:
+    subs.append('  module sysdir {\n    header "sysdir.h"\n    export *\n  }\n')
+if (root / "usr/include/uuid/uuid.h").is_file() and "module uuid" not in text:
+    subs.append('  module uuid {\n    header "uuid/uuid.h"\n    export *\n  }\n')
+if not subs:
+    raise SystemExit(0)
+idx = text.rfind("}")
+if idx < 0:
+    raise SystemExit(0)
+text = text[:idx] + "".join(subs) + text[idx:]
+map_path.write_text(text)
+print("  Darwin.modulemap named submodules added", len(subs), file=sys.stderr)
+PY
 }
 
 # Empty-by-design Foundation / CoreFoundation Mach-Os into a RUN root
