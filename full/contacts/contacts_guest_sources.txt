@@ -1,0 +1,8 @@
+full/contacts/CNChangeHistory.swift
+full/contacts/CNConstants.swift
+full/contacts/CNContact.swift
+full/contacts/CNContactStore.swift
+full/contacts/CNError.swift
+full/contacts/CNFormatters.swift
+full/contacts/CNTypes.swift
+full/contacts/Contacts.swift
