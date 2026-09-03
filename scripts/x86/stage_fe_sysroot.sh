@@ -135,13 +135,9 @@ if [ -d "$gaps" ]; then
     done < <(find "$gaps" -type f -print0)
 fi
 
-if ! grep -q 'vm_copy' "$SYS/usr/include/mach/vm_map.h" 2>/dev/null; then
-    cat >> "$SYS/usr/include/mach/vm_map.h" <<'EOF'
-/* APPENDED by scripts/x86/stage_fe_sysroot.sh -- MEASUREMENT ONLY. */
-extern kern_return_t vm_copy(vm_map_t target_task, vm_address_t source_address,
-                             vm_size_t size, vm_address_t dest_address);
-EOF
-fi
+echo "== measurement headers (shared list; stage_absent from arm64 sysroot_fe4)"
+phase2_stage_measurement_headers_from_arm "$SYS" "$ARM_SYS"
+fe_sysroot_append_vm_copy "$SYS/usr/include/mach/vm_map.h"
 
 if [ -f "$ARM_SYS/usr/include/_DarwinFoundation2.apinotes" ]; then
     cp "$ARM_SYS/usr/include/_DarwinFoundation2.apinotes" \
@@ -220,7 +216,8 @@ phase2_write_sysroot_stamp "$SYS/$PHASE2_SYSROOT_STAMP" \
     "$x86_core" "$x86_mod" "$x86_bf_mod" \
     "$MACHORUN/scripts/gen_darwin_modulemap.py" \
     "${overlay_if:-}" \
-    "$ARM_SYS/usr/include/Darwin.modulemap"
+    "$ARM_SYS/usr/include/Darwin.modulemap" \
+    "$FE_SYSROOT_MEASUREMENT_HEADERS_FILE"
 echo "  wrote $SYS/$PHASE2_SYSROOT_STAMP (input-keyed; restage when these shas change)"
 
 echo "== $SYS"
@@ -244,6 +241,12 @@ if [ -f "$SYS/usr/include/Darwin.modulemap" ]; then
     fi
 else
     echo "  Darwin.modulemap: ABSENT (underlying Objective-C module Darwin will not be found)"
+fi
+meas_miss=$(phase2_measurement_headers_missing "$SYS" || true)
+if [ -n "$meas_miss" ]; then
+    echo "  measurement headers missing: $meas_miss"
+else
+    echo "  measurement headers: all present"
 fi
 if [ -f "$SYS/usr/lib/swift/libswiftCore.dylib" ]; then
     echo "  libswiftCore: $(phase2_macho_cpu "$SYS/usr/lib/swift/libswiftCore.dylib") at usr/lib/swift/libswiftCore.dylib"

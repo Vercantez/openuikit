@@ -1,0 +1,15 @@
+# Headers staged for FoundationEssentials measurement (stage_absent).
+# Both stagers read this file; do not duplicate the list in either script.
+# complex.h comes from full/sdk-gaps. The rest come from the Darwin SDK
+# (arm64 stager) or from scratch/sysroot_fe4 (x86 stager).
+# vm_copy is not a file copy: both stagers call fe_sysroot_append_vm_copy.
+complex.h
+sysdir.h
+sys/xattr.h
+copyfile.h
+removefile.h
+fts.h
+pwd.h
+grp.h
+sys/utsname.h
+sys/quota.h

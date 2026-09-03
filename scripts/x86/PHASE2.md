@@ -95,16 +95,40 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    that names the generator; enumerate from the arm64 sysroot, do not hard-code
    the 44 shim names). After restage, every `header "…"` path in every staged
    modulemap must resolve; otherwise `CANNOT_DARWIN_MODULEMAP_HEADERS` with
-   `missing=`. Apple's Darwin overlay is textual `.swiftinterface` (no prebuilt
+   `missing=`. The FileManager/sdk-gap measurement set (`complex.h`, `sysdir.h`,
+   `sys/xattr.h`, `copyfile.h`, `removefile.h`, `fts.h`, `pwd.h`, `grp.h`,
+   `sys/utsname.h`, `sys/quota.h`) is a **shared list** in
+   `full/foundation/fe_sysroot_measurement_headers.txt` — both stagers read it;
+   neither duplicates the literal. x86 `stage_absent`s missing members from
+   arm64 `scratch/sysroot_fe4` (same rule as `_modules`). `vm_copy` is appended
+   to `mach/vm_map.h` by the shared helper, not copied as a file. After restage
+   every path in that list must exist in the x86 sysroot; otherwise
+   `CANNOT_FE_MEASUREMENT_HEADERS` with `missing=` (the operator's 14 FE errors
+   were all `removefile.h`). Apple's Darwin overlay is textual `.swiftinterface` (no prebuilt
    `.swiftmodule` on the arm64 sysroot). Arm64 compiles that interface with
    Swift 6.2.4; the 6.2.1-vs-6.2.4 "SDK is not supported" line is the fallback
    when Clang Darwin fails (missing maps or missing `_modules` headers), not a
    flag. x86 takes the same compile-the-interface path. Idempotency keys on
-   input shas (artifact, generator, overlay text) written to `.phase2-stage-inputs`
-   (recipe `stage_fe_sysroot_x86.2`); a sysroot staged before those inputs
+   input shas (artifact, generator, overlay text, **measurement-header list**)
+   written to `.phase2-stage-inputs`
+   (recipe `stage_fe_sysroot_x86.3`); a sysroot staged before those inputs
    existed is restaged, and the CANNOT/cold-built line names which input
    changed. Apple's `os.swiftmodule` is not copied (FE uses
    `full/foundation/os-module`).
+   `build_fe.sh` is Swift-only on both arches. Arm64 compiles
+   `full/foundation/removefile_compat.c` in `full/scripts/build_full.sh` and
+   links `removefile_compat.o` with `FoundationEssentials.o`. The x86 runner
+   compiles that same `.c` (same clang argv) into
+   `build/full-x86_64/foundation/essentials/removefile_compat.o` after a
+   successful `build_fe.sh`. Darwin userland already `EXPORT`s
+   `copyfile`/`fcopyfile`, `fts_*`, xattr, `getgrnam_r`, `uname`, `quotactl`
+   (and stub `removefile*`; the `.o` wins at link). Next operator **link** of
+   FE is still expected to miss, unless `fm_unimplemented.o` / `uuid_compat.o`
+   are also in the link (arm64 `build_full.sh` compiles both; phase2 does not):
+   `chflags`, `confstr`, `fchmod`, `getattrlist`, `link`, `mktemp`,
+   `sysctlbyname`, `utimes`, `uuid_generate_random`, `uuid_parse`,
+   `uuid_unparse_upper`. `vm_copy` is in machorun `darwin/src/mach.c` (should
+   resolve from x86 libSystem). Confirm or refute that list on the next rerun.
 2. OpenCombine: `scripts/x86/build_opencombine.sh` writes `export-x86_64/`.
    Source hashes from `policy.json` still apply. Object SHAs stay the arm64
    durable pin in `export/`. Focus/core-package scripts hash those objects
