@@ -389,8 +389,8 @@ expect_not_grep 'fe_malloc_zone_as_malloc.h' "$STAGE" \
 expect_grep 'stamp_key "$cfbase"' "$UDINC" \
     "cfobjc objects rebuild when malloc/malloc.h or the CF pin changes; existence is not freshness"
 expect_file "$ROOT/scripts/x86/Darwin.apinotes"
-expect_grep 'Darwin.apinotes' "$STAGE" \
-    "x86 stager stages Darwin.apinotes so CLOCK_REALTIME is the Swift name of _CLOCK_REALTIME"
+expect_grep 'Darwin.apinotes' "$COMMON" \
+    "FE clang snapshot stages Darwin.apinotes so CLOCK_REALTIME is the Swift name of _CLOCK_REALTIME"
 expect_grep 'build_foundation_placeholder.sh' "$COMMON" \
     "run-root Foundation slots are empty placeholders, not loud-abort stubs"
 expect_grep 'Work dir MUST sit outside dest' "$COMMON" \
