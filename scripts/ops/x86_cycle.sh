@@ -211,8 +211,12 @@ else
 fi
 
 # 6. overlays AFTER tbd. PR #64 argv. Child log is tailed on failure.
+# OPENUIKIT_CYCLE_SKIP_OVERLAYS=1 (run_box.sh --only) reuses the artifacts as
+# they are -- reported as a reused stage, never as rebuilt.
 # shellcheck disable=SC2086
-if run_logged overlays "$LOGDIR/overlays.log" \
+if [ "${OPENUIKIT_CYCLE_SKIP_OVERLAYS:-0}" = 1 ]; then
+    emit_stage overlays reused "$TREE/swiftcore-macho/artifacts/swift-macosx/x86_64 (skipped by request)"
+elif run_logged overlays "$LOGDIR/overlays.log" \
     env NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 \
         SWIFTCORE_BUILD_DISPATCH=1 SWIFT_TOOLCHAIN=/opt/swift \
         bash "$TREE/swiftcore-macho/scripts/build_stdlib.sh"; then

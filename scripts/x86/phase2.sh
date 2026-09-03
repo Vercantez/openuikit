@@ -1228,8 +1228,18 @@ find_existing_file() {
     return 1
 }
 
+
+# PHASE2_RUNGS (default abc): which rungs to run. A rung that is not selected is
+# reported as SKIP on the scoreboard -- never as a pass -- so a sharded cycle
+# (run_box.sh x86 cycle --only b) stays honest about what it did not measure.
+PHASE2_RUNGS=${PHASE2_RUNGS:-abc}
+phase2_rung_selected() {
+    case "$PHASE2_RUNGS" in *"$1"*) return 0 ;; esac
+    echo "== rung $1: SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
+    return 1
+}
 # Rung a: ud_guest smoke (14) + scoreboard + persist
-if [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]; then
+if phase2_rung_selected a && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]; then
     echo "== rung a: foundation-macho run_ud_guest.sh + run_ud_persist.sh"
     # The committed runners take a NAMED root and a binary. If this tree has
     # not yet linked ud_guest for x86, refuse rather than invent a new linker.
@@ -1399,7 +1409,7 @@ try_normalize_focus_bundles() {
     return 1
 }
 
-if [ "$OC_OK" -eq 1 ] && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] \
+if phase2_rung_selected b && [ "$OC_OK" -eq 1 ] && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] \
     && [ "$LIBSWIFTCORE_X86" -eq 1 ] && [ "$HOST_RUNTIME_OK" -eq 1 ] \
     && [ "$LAYOUT_OK" -eq 1 ] && [ "$SYSROOT_TBDS_OK" -eq 1 ] \
     && [ "${ITEM_STATUS[focus-pin]:-}" = satisfied ]; then
@@ -1467,7 +1477,7 @@ reminder_src=$(find_existing_dir \
     "$W/scratch/ladder-corpus/reminder/source" \
     "$W/scratch/ladder-corpus/reminder" \
     "$W/scratch/ladder-corpus/Reminder" || true)
-if [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ] \
+if phase2_rung_selected c && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ] \
     && [ "$HOST_RUNTIME_OK" -eq 1 ] && [ "$LAYOUT_OK" -eq 1 ] \
     && [ "$SYSROOT_TBDS_OK" -eq 1 ] \
     && [ -n "$reminder_inv" ] && [ -n "$reminder_src" ]; then

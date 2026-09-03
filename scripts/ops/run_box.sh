@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Operator runner: replace hand-typed SSM chains.
 #
-#   scripts/ops/run_box.sh [--dry-run] <arm64|x86> <verify|onboarding|cycle> [main-sha]
+#   scripts/ops/run_box.sh [--dry-run] [--only <rungs>] <arm64|x86> <verify|onboarding|cycle> [main-sha]
+#   --only b   : x86 cycle runs only rung b and skips the overlay stage (others report SKIPPED)
 #
 # Run from the operator Mac. Builds a git bundle, uploads it to the S3 prefix
 # in env/contract.json, refuses to launch when the instance has any InProgress
@@ -18,10 +19,15 @@ ROOT=$(ops_root)
 CONTRACT=$ROOT/env/contract.json
 
 DRY=0
-if [ "${1:-}" = "--dry-run" ]; then
-    DRY=1
-    shift
-fi
+ONLY=
+while :; do
+    case "${1:-}" in
+        --dry-run) DRY=1; shift ;;
+        --only) ONLY=${2:?--only needs a rung list like b or ac}; shift 2 ;;
+        --only=*) ONLY=${1#--only=}; shift ;;
+        *) break ;;
+    esac
+done
 
 usage() {
     echo "usage: scripts/ops/run_box.sh [--dry-run] <arm64|x86> <verify|onboarding|cycle> [main-sha]" >&2
@@ -77,6 +83,7 @@ cd $TREE
 export OPENUIKIT_BUNDLE_URI='$bundle_s3'
 export OPENUIKIT_SHA='$SHA'
 export OPENUIKIT_S3_REGION='$REGION'
+$( [ -n "$ONLY" ] && printf "export PHASE2_RUNGS='%s'\nexport OPENUIKIT_CYCLE_SKIP_OVERLAYS=1\n" "$ONLY" )
 aws s3 cp '$bundle_s3' /tmp/openuikit-$SHA.bundle --region $REGION --only-show-errors
 git stash push -q -m "run_box \$(date -u +%FT%TZ)" >/dev/null 2>&1 || true
 git fetch -q /tmp/openuikit-$SHA.bundle refs/ops/bundle
