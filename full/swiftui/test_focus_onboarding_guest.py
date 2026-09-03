@@ -298,8 +298,8 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         )[1].split("== FoundationGuest/UIKit notification identity compile proof", 1)[0]
         self.assertIn('-target "$TARGET"', swiftc)
         self.assertIn('-sdk "$SYS"', swiftc)
-        self.assertIn('-Xcc -isysroot "$SYS"', swiftc)
-        self.assertIn('-Xcc -target "$TARGET"', swiftc)
+        self.assertIn('-Xcc -isysroot -Xcc "$SYS"', swiftc)
+        self.assertIn('-Xcc -target -Xcc "$TARGET"', swiftc)
         self.assertIn(
             '-Xcc -fmodule-map-file="$PACKAGE/include/CoreFoundation/module.modulemap"',
             package_cinc,

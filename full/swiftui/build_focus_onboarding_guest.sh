@@ -321,8 +321,8 @@ SWIFTC=(swiftc -target "$TARGET" -sdk "$SYS"
     -module-cache-path "$MODULE_CACHE" -runtime-compatibility-version none -wmo
     -Xfrontend -disable-implicit-string-processing-module-import
     -Xfrontend -disable-objc-attr-requires-foundation-module
-    -Xcc -isysroot "$SYS"
-    -Xcc -target "$TARGET")
+    -Xcc -isysroot -Xcc "$SYS"
+    -Xcc -target -Xcc "$TARGET")
 LD=(ld64.lld-18 -arch "$ARCH" -platform_version macos 15.0 15.0
     -syslibroot "$SYS" -rpath /usr/lib/swift)
 PACKAGE_CINC=(-Xcc -I"$PACKAGE/include/CPortableIO"
