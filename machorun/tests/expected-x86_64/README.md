@@ -13,3 +13,16 @@ Each differs from `tests/expected/` only on the documented arch-dependent lines
 (`sizeof(long double)` 16, `machine [x86_64]`, 4 KiB page sums, `ld80_bit_survives yes`,
 `strtold_l width 16`). Built by the arm64 fixture script with the two target
 variables switched to x86_64 and a separate bin dir; run with `arch -x86_64`.
+
+## Recorded 2026-09-03: `cache_layout_oversize` (loader diagnostic, no Darwin twin)
+
+`tests/manifest.tsv` marks this fixture `norun` on Darwin ("segment filesize
+exceeds the file; Darwin has no twin for the loader diagnostic"): the arm64
+`tests/expected/` files are machorun's own diagnostic, not an oracle record,
+and there is nothing to run under Rosetta. The x86_64 expectation here is the
+same diagnostic from the x86_64 loader on the Linux box at main eaf71dd9,
+reviewed against arm64: identical shape, 4 KiB packed layout instead of 16 KiB
+(`offset 8192+153 exceed the file (8344 bytes)` vs `16384+457 … 16840`), exit 70.
+`llvm-otool -l` on the packed x86_64 binary confirms the __LINKEDIT
+fileoff+filesize extend past EOF, which is the condition the fixture exists to
+diagnose.
