@@ -1,0 +1,136 @@
+precise	status	evidence	notes
+c:@E@RPCameraPosition	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+c:@E@RPCameraPosition@RPCameraPositionBack	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+c:@E@RPCameraPosition@RPCameraPositionFront	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorActivePhoneCall	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorAttemptToStartInRecordingState	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorAttemptToStopNonRecording	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorBroadcastInvalidSession	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorBroadcastSetupFailed	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorCarPlay	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorCodeSuccessful	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorContentResize	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorDisabled	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorEntitlements	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorExportClipToURLInProgress	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailed	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedApplicationConnectionInterrupted	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedApplicationConnectionInvalid	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedAssetWriterExportCanceled	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedAssetWriterExportFailed	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedAssetWriterFailedToSave	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedAssetWriterInWrongState	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedIncorrectTimeStamps	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedMediaServicesFailure	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedNoAssetWriter	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedNoMatchingApplicationContext	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedToObtainURL	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedToProcessFirstSample	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedToRemoveFile	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedToSave	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedToStart	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFailedToStartCaptureStack	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorFilePermissions	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorInsufficientStorage	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorInterrupted	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorInvalidParameter	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorPhotoFailure	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorRecordingInvalidSession	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorSystemDormancy	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorUnknown	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorUserDeclined	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPRecordingErrorCode@RPRecordingErrorVideoMixingFailure	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+c:@E@RPSampleBufferType	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+c:@E@RPSampleBufferType@RPSampleBufferTypeAudioApp	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+c:@E@RPSampleBufferType@RPSampleBufferTypeAudioMic	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+c:@E@RPSampleBufferType@RPSampleBufferTypeVideo	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+c:@RPApplicationInfoBundleIdentifierKey	declared	ReplayKit.swift;ReplayKitRuntime.swift:assertConstants	Linux-local identifier spelling; Darwin NSString bytes unobserved.
+c:@RPRecordingErrorDomain	declared	ReplayKit.swift;ReplayKitRuntime.swift:assertConstants	Linux-local spelling RPRecordingErrorDomain from pinned-independent-bindings ErrorDomain attribute; Darwin NSString bytes unobserved.
+c:@RPVideoSampleOrientationKey	declared	ReplayKit.swift;ReplayKitRuntime.swift:assertConstants	Linux-local identifier spelling; Darwin NSString bytes unobserved.
+c:@SCStreamErrorDomain	declared	ReplayKit.swift;ReplayKitRuntime.swift:assertConstants	Linux-local identifier spelling; Darwin/ScreenCaptureKit payload unobserved.
+c:objc(cs)NSExtensionContext(im)completeRequestWithBroadcastURL:broadcastConfiguration:setupInfo:	unavailable		Omitted on isolated Linux: requires Foundation.NSExtensionContext. No ReplayKit lookalike.
+c:objc(cs)NSExtensionContext(im)completeRequestWithBroadcastURL:setupInfo:	unavailable		Omitted on isolated Linux: requires Foundation.NSExtensionContext. No ReplayKit lookalike.
+c:objc(cs)NSExtensionContext(im)loadBroadcastingApplicationInfoWithCompletion:	unavailable		Omitted on isolated Linux: requires Foundation.NSExtensionContext and UIKit.UIImage.
+c:objc(cs)RPBroadcastActivityViewController	unavailable		Omitted on isolated Linux: must be UIKit.UIViewController. No ReplayKit lookalike.
+c:objc(cs)RPBroadcastActivityViewController(cm)loadBroadcastActivityViewControllerWithHandler:	unavailable		Omitted with the UIKit view controller. Future EC2 path remains fail-closed.
+c:objc(cs)RPBroadcastActivityViewController(cm)loadBroadcastActivityViewControllerWithPreferredExtension:handler:	unavailable		Omitted with the UIKit view controller. Future EC2 path remains fail-closed.
+c:objc(cs)RPBroadcastActivityViewController(py)delegate	unavailable		Omitted with RPBroadcastActivityViewController (UIKit).
+c:objc(cs)RPBroadcastConfiguration	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastConfiguration	Get/set and NSSecureCoding round-trip of clipDuration exercised.
+c:objc(cs)RPBroadcastConfiguration(py)clipDuration	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastConfiguration	Get/set and NSSecureCoding round-trip of clipDuration exercised.
+c:objc(cs)RPBroadcastConfiguration(py)videoCompressionProperties	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastConfiguration	Get/set and NSSecureCoding round-trip of clipDuration exercised.
+c:objc(cs)RPBroadcastController	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Fail-closed start/finish and inert pause/resume exercised; isBroadcasting stays false.
+c:objc(cs)RPBroadcastController(im)finishBroadcastWithHandler:	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Fail-closed start/finish and inert pause/resume exercised; isBroadcasting stays false.
+c:objc(cs)RPBroadcastController(im)pauseBroadcast	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Fail-closed start/finish and inert pause/resume exercised; isBroadcasting stays false.
+c:objc(cs)RPBroadcastController(im)resumeBroadcast	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Fail-closed start/finish and inert pause/resume exercised; isBroadcasting stays false.
+c:objc(cs)RPBroadcastController(im)startBroadcastWithHandler:	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Fail-closed start/finish and inert pause/resume exercised; isBroadcasting stays false.
+c:objc(cs)RPBroadcastController(py)broadcastExtensionBundleID	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Fail-closed start/finish and inert pause/resume exercised; isBroadcasting stays false.
+c:objc(cs)RPBroadcastController(py)broadcastURL	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Fail-closed start/finish and inert pause/resume exercised; isBroadcasting stays false.
+c:objc(cs)RPBroadcastController(py)broadcasting	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Fail-closed start/finish and inert pause/resume exercised; isBroadcasting stays false.
+c:objc(cs)RPBroadcastController(py)delegate	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Fail-closed start/finish and inert pause/resume exercised; isBroadcasting stays false.
+c:objc(cs)RPBroadcastController(py)paused	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Fail-closed start/finish and inert pause/resume exercised; isBroadcasting stays false.
+c:objc(cs)RPBroadcastController(py)serviceInfo	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Fail-closed start/finish and inert pause/resume exercised; isBroadcasting stays false.
+c:objc(cs)RPBroadcastHandler	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastHandlers	updateBroadcast/updateServiceInfo store values locally; no Apple service.
+c:objc(cs)RPBroadcastHandler(im)updateBroadcastURL:	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastHandlers	updateBroadcast/updateServiceInfo store values locally; no Apple service.
+c:objc(cs)RPBroadcastHandler(im)updateServiceInfo:	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastHandlers	updateBroadcast/updateServiceInfo store values locally; no Apple service.
+c:objc(cs)RPBroadcastMP4ClipHandler	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastHandlers	process/finished entry points invoked; no clip is produced.
+c:objc(cs)RPBroadcastMP4ClipHandler(im)finishedProcessingMP4ClipWithUpdatedBroadcastConfiguration:error:	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastHandlers	process/finished entry points invoked; no clip is produced.
+c:objc(cs)RPBroadcastMP4ClipHandler(im)processMP4ClipWithURL:setupInfo:finished:	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastHandlers	process/finished entry points invoked; no clip is produced.
+c:objc(cs)RPBroadcastSampleHandler	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastHandlers	Subclass overrides dispatched through the RPBroadcastSampleHandler class.
+c:objc(cs)RPBroadcastSampleHandler(im)broadcastAnnotatedWithApplicationInfo:	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastHandlers	Subclass overrides dispatched through the RPBroadcastSampleHandler class.
+c:objc(cs)RPBroadcastSampleHandler(im)broadcastFinished	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastHandlers	Subclass overrides dispatched through the RPBroadcastSampleHandler class.
+c:objc(cs)RPBroadcastSampleHandler(im)broadcastPaused	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastHandlers	Subclass overrides dispatched through the RPBroadcastSampleHandler class.
+c:objc(cs)RPBroadcastSampleHandler(im)broadcastResumed	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastHandlers	Subclass overrides dispatched through the RPBroadcastSampleHandler class.
+c:objc(cs)RPBroadcastSampleHandler(im)broadcastStartedWithSetupInfo:	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastHandlers	Subclass overrides dispatched through the RPBroadcastSampleHandler class.
+c:objc(cs)RPBroadcastSampleHandler(im)finishBroadcastWithError:	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastHandlers	Subclass overrides dispatched through the RPBroadcastSampleHandler class.
+c:objc(cs)RPBroadcastSampleHandler(im)processSampleBuffer:withType:	unavailable		Omitted on isolated Linux: requires CoreMedia.CMSampleBuffer. No ReplayKit lookalike.
+c:objc(cs)RPPreviewViewController	unavailable		Omitted on isolated Linux: must be UIKit.UIViewController. No ReplayKit lookalike.
+c:objc(cs)RPPreviewViewController(py)previewControllerDelegate	unavailable		Omitted with RPPreviewViewController (UIKit).
+c:objc(cs)RPScreenRecorder	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(cm)sharedRecorder	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(im)discardRecordingWithHandler:	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(im)exportClipToURL:duration:completionHandler:	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(im)startCaptureWithHandler:completionHandler:	unavailable		Omitted on isolated Linux: capture handler requires CoreMedia.CMSampleBuffer.
+c:objc(cs)RPScreenRecorder(im)startClipBufferingWithCompletionHandler:	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(im)startRecordingWithHandler:	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(im)startRecordingWithMicrophoneEnabled:handler:	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(im)stopCaptureWithHandler:	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(im)stopClipBufferingWithCompletionHandler:	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(im)stopRecordingWithHandler:	unavailable		Omitted on isolated Linux: completion type is RPPreviewViewController? (UIKit). stopRecording(withOutput:) remains.
+c:objc(cs)RPScreenRecorder(im)stopRecordingWithOutputURL:completionHandler:	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(py)available	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(py)cameraEnabled	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(py)cameraPosition	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(py)cameraPreviewView	unavailable		Omitted on isolated Linux: type is UIKit.UIView?.
+c:objc(cs)RPScreenRecorder(py)delegate	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(py)microphoneEnabled	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPScreenRecorder(py)recording	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertScreenRecorder	Shared instance, stored flags, and fail-closed recording/clip/capture APIs exercised.
+c:objc(cs)RPSystemBroadcastPickerView	unavailable		Omitted on isolated Linux: must be UIKit.UIView. No ReplayKit lookalike.
+c:objc(cs)RPSystemBroadcastPickerView(py)preferredExtension	unavailable		Omitted with RPSystemBroadcastPickerView (UIKit).
+c:objc(cs)RPSystemBroadcastPickerView(py)showsMicrophoneButton	unavailable		Omitted with RPSystemBroadcastPickerView (UIKit).
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)RPBroadcastConfiguration	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastConfiguration	Get/set and NSSecureCoding round-trip of clipDuration exercised.
+c:objc(pl)RPBroadcastActivityViewControllerDelegate	unavailable		Omitted because every requirement names RPBroadcastActivityViewController (UIKit).
+c:objc(pl)RPBroadcastActivityViewControllerDelegate(im)broadcastActivityViewController:didFinishWithBroadcastController:error:	unavailable		Omitted with the UIKit activity view controller protocol.
+c:objc(pl)RPBroadcastControllerDelegate	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Protocol requirements plus existential override dispatch exercised.
+c:objc(pl)RPBroadcastControllerDelegate(im)broadcastController:didFinishWithError:	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Protocol requirements plus existential override dispatch exercised.
+c:objc(pl)RPBroadcastControllerDelegate(im)broadcastController:didUpdateBroadcastURL:	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Protocol requirements plus existential override dispatch exercised.
+c:objc(pl)RPBroadcastControllerDelegate(im)broadcastController:didUpdateServiceInfo:	implemented	RPBroadcast.swift;ReplayKitRuntime.swift:assertBroadcastController	Protocol requirements plus existential override dispatch exercised.
+c:objc(pl)RPPreviewViewControllerDelegate	unavailable		Omitted because every requirement names RPPreviewViewController (UIKit).
+c:objc(pl)RPPreviewViewControllerDelegate(im)previewController:didFinishWithActivityTypes:	unavailable		Omitted with the UIKit preview protocol.
+c:objc(pl)RPPreviewViewControllerDelegate(im)previewControllerDidFinish:	unavailable		Omitted with the UIKit preview protocol.
+c:objc(pl)RPScreenRecorderDelegate	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertDelegates	screenRecorderDidChangeAvailability dispatched through any RPScreenRecorderDelegate.
+c:objc(pl)RPScreenRecorderDelegate(im)screenRecorder:didStopRecordingWithError:previewViewController:	unavailable		Omitted on isolated Linux: parameter type is RPPreviewViewController (UIKit).
+c:objc(pl)RPScreenRecorderDelegate(im)screenRecorder:didStopRecordingWithPreviewViewController:error:	unavailable		Omitted on isolated Linux: parameter type is RPPreviewViewController (UIKit).
+c:objc(pl)RPScreenRecorderDelegate(im)screenRecorderDidChangeAvailability:	implemented	RPScreenRecorder.swift;ReplayKitRuntime.swift:assertDelegates	screenRecorderDidChangeAvailability dispatched through any RPScreenRecorderDelegate.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@RPCameraPosition	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@RPRecordingErrorCode	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@RPSampleBufferType	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@RPCameraPosition	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@RPRecordingErrorCode	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@RPSampleBufferType	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@RPCameraPosition	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@RPRecordingErrorCode	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@RPSampleBufferType	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+s:So16RPCameraPositionV8rawValueABSgSi_tcfc	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+s:So18RPSampleBufferTypeV8rawValueABSgSi_tcfc	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised constructibility, inequality, hashing, and rawValue round-trip.
+s:So20RPRecordingErrorCodeV8rawValueABSgSi_tcfc	implemented	ReplayKit.swift;ReplayKitRuntime.swift:assertEnums	Exercised every public case, inequality, hashing, and rawValue round-trip.
