@@ -221,6 +221,15 @@ run_stdlib_ninja() {
         fi
       done
     fi
+    if [ "${SWIFTCORE_NINJA_HARNESS:-0}" != 1 ]; then
+      set +e
+      overlay_build_xcode_shells "$B" "$SWIFTCORE_DARWIN_ARCH"
+      local shells_st=$?
+      set -e
+      if [ "$shells_st" -ne 0 ] && [ "$overlay_rc" -eq 0 ]; then
+        overlay_rc=$shells_st
+      fi
+    fi
     overlay_print_scoreboard "$SWIFTCORE_DARWIN_ARCH"
     overlay_list_products "$B/lib/swift/macosx"
     if [ "$overlay_rc" -ne 0 ]; then

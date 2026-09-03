@@ -1,0 +1,28 @@
+{
+  "ABIRoot": {
+    "kind": "Root",
+    "name": "_DarwinFoundation3",
+    "printedName": "_DarwinFoundation3",
+    "children": [
+      {
+        "kind": "Import",
+        "name": "_DarwinFoundation3",
+        "printedName": "_DarwinFoundation3",
+        "declKind": "Import",
+        "moduleName": "_DarwinFoundation3",
+        "declAttributes": [
+          "Exported"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "Swift",
+        "printedName": "Swift",
+        "declKind": "Import",
+        "moduleName": "_DarwinFoundation3"
+      }
+    ],
+    "json_format_version": 8
+  },
+  "ConstValues": []
+}

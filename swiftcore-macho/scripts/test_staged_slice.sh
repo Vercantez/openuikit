@@ -67,9 +67,18 @@ for n in libswift_Concurrency.dylib libswiftObservation.dylib; do
   [ "$id" = "/usr/lib/swift/$n" ] && ok "$n LC_ID_DYLIB" || bad "$n id $id"
 done
 for n in libswift_DarwinFoundation1.dylib libswift_DarwinFoundation2.dylib \
-         libswift_DarwinFoundation3.dylib libswift_errno.dylib; do
-  [ ! -e "$ART/x86_64/$n" ] && ok "$n absent (CANNOT_STAGE_XCODE_DARWIN_OVERLAYS)" \
-    || bad "must not stage fake $n"
+         libswift_DarwinFoundation3.dylib libswift_errno.dylib \
+         libswiftObjectiveC.dylib; do
+  f=$ART/x86_64/$n
+  [ -f "$f" ] || { bad "missing $n (sdk overlay recipe)"; continue; }
+  hdr=$("$OTOOL" -hv "$f")
+  echo "$hdr" | grep -Eq 'MH_MAGIC_64[[:space:]]+X86_64' && ok "$n MH_MAGIC_64 X86_64" \
+    || bad "$n header"
+  if echo "$hdr" | grep -q ARM64; then bad "$n has ARM64 token"; fi
+  id=$("$OTOOL" -D "$f" | tail -1)
+  [ "$id" = "/usr/lib/swift/$n" ] && ok "$n LC_ID_DYLIB" || bad "$n id $id"
+  "$OTOOL" -l "$f" | grep -q LC_DYLD_INFO && ok "$n LC_DYLD_INFO" \
+    || bad "$n missing LC_DYLD_INFO (shared-cache Apple copies are a dead end)"
 done
 
 echo

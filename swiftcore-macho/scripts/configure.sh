@@ -43,10 +43,9 @@ done
 # _Concurrency (already on), Synchronization, experimental StringProcessing.
 # -DSWIFT_BUILD_SDK_OVERLAY=OFF is passed below but Swift 6.2.4 overwrites
 # it from SWIFT_BUILD_DYNAMIC_SDK_OVERLAY (default TRUE on a non-Apple host),
-# so Platform/swiftDarwin *is* in the ninja graph. ObjectiveC is not a
-# CMake target on Linux. build_stdlib.sh derives overlay names from
-# `ninja -t targets` and prints CANNOT_STAGE_XCODE_DARWIN_OVERLAYS rather
-# than invoking a missing name. See docs/X86_64.md.
+# so Platform/swiftDarwin *is* in the ninja graph. ObjectiveC /
+# _DarwinFoundation* / _errno are not CMake targets on Linux; build_stdlib.sh
+# compiles them via overlay_build_xcode_shells after the ninja overlay loop.
 #
 # Phase-2 guests load _Concurrency + _StringProcessing + Synchronization.
 # Overlays therefore also fetch/pass libdispatch (BUILD_LOG §16): CMake with

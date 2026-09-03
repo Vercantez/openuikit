@@ -1,6 +1,6 @@
 {
   "arch": "x86_64",
-  "fileCount": 49,
+  "fileCount": 79,
   "files": {
     "swift-macosx/Darwin.swiftmodule/x86_64-apple-macos.abi.json": {
       "bytes": 149,
@@ -21,6 +21,26 @@
     "swift-macosx/Darwin.swiftmodule/x86_64-apple-macos.swiftmodule": {
       "bytes": 146536,
       "sha256": "c771da6a13289b73552e960ed030197d5fb2a9c1b8caf20a1bc90873849b1056"
+    },
+    "swift-macosx/ObjectiveC.swiftmodule/x86_64-apple-macos.abi.json": {
+      "bytes": 58033,
+      "sha256": "597ffd6cd7946426abe9f87976bbb7ae72bc04d36b3a0a431d8652e1ca8e1d23"
+    },
+    "swift-macosx/ObjectiveC.swiftmodule/x86_64-apple-macos.private.swiftinterface": {
+      "bytes": 3371,
+      "sha256": "b00ab87c9609f20685895219881ac7a17ef046a5a73c6e0567a45ba5e90892d4"
+    },
+    "swift-macosx/ObjectiveC.swiftmodule/x86_64-apple-macos.swiftdoc": {
+      "bytes": 376,
+      "sha256": "dfb7d169a06ab2251f00868b7447f37dce2155cc20cf6bcecc8039ee37da83e9"
+    },
+    "swift-macosx/ObjectiveC.swiftmodule/x86_64-apple-macos.swiftinterface": {
+      "bytes": 3371,
+      "sha256": "b00ab87c9609f20685895219881ac7a17ef046a5a73c6e0567a45ba5e90892d4"
+    },
+    "swift-macosx/ObjectiveC.swiftmodule/x86_64-apple-macos.swiftmodule": {
+      "bytes": 42852,
+      "sha256": "278d75195dc20ea86a813b861d53d957d99ebf08afd250fe49dc1f48047efdee"
     },
     "swift-macosx/Observation.swiftmodule/x86_64-apple-macos.abi.json": {
       "bytes": 149,
@@ -122,6 +142,66 @@
       "bytes": 895888,
       "sha256": "de481b4440e0ba6c7487da059dabc4fb68ddb47dc99f9f5e34c116e37bb078aa"
     },
+    "swift-macosx/_DarwinFoundation1.swiftmodule/x86_64-apple-macos.abi.json": {
+      "bytes": 650,
+      "sha256": "c5f5f280f8d13092e752473e5439362265f5c6925af6c60a916e8e0426a58b45"
+    },
+    "swift-macosx/_DarwinFoundation1.swiftmodule/x86_64-apple-macos.private.swiftinterface": {
+      "bytes": 527,
+      "sha256": "49b37694cb3f598c6a1b8448750d0e8c8b449bd2269b35ed70156ecc91fba165"
+    },
+    "swift-macosx/_DarwinFoundation1.swiftmodule/x86_64-apple-macos.swiftdoc": {
+      "bytes": 384,
+      "sha256": "212adf99c86295f07a351fd6a1f435a885c5a06c1a8c84001af7b523a86f8020"
+    },
+    "swift-macosx/_DarwinFoundation1.swiftmodule/x86_64-apple-macos.swiftinterface": {
+      "bytes": 527,
+      "sha256": "49b37694cb3f598c6a1b8448750d0e8c8b449bd2269b35ed70156ecc91fba165"
+    },
+    "swift-macosx/_DarwinFoundation1.swiftmodule/x86_64-apple-macos.swiftmodule": {
+      "bytes": 18000,
+      "sha256": "f5aa043de40d560a80243e267ace9e2dcd6c691b584cf5435d32a0872448fba6"
+    },
+    "swift-macosx/_DarwinFoundation2.swiftmodule/x86_64-apple-macos.abi.json": {
+      "bytes": 623,
+      "sha256": "69aef1d99a10c45c8a5d4c9dd14146f099fb5266670c486c534a66aea467a858"
+    },
+    "swift-macosx/_DarwinFoundation2.swiftmodule/x86_64-apple-macos.private.swiftinterface": {
+      "bytes": 527,
+      "sha256": "4c84083dc2a153ecfa0bcb8cd8289fdb89d9930d56db8c6d720f4a4e94ad4d79"
+    },
+    "swift-macosx/_DarwinFoundation2.swiftmodule/x86_64-apple-macos.swiftdoc": {
+      "bytes": 384,
+      "sha256": "fe4e699c7927ce8fcf2c35a61ba5c867909b8db82639f6614e25b2fa03154172"
+    },
+    "swift-macosx/_DarwinFoundation2.swiftmodule/x86_64-apple-macos.swiftinterface": {
+      "bytes": 527,
+      "sha256": "4c84083dc2a153ecfa0bcb8cd8289fdb89d9930d56db8c6d720f4a4e94ad4d79"
+    },
+    "swift-macosx/_DarwinFoundation2.swiftmodule/x86_64-apple-macos.swiftmodule": {
+      "bytes": 18000,
+      "sha256": "546f9ca1b499197d88c5ad0e04e31f338452b15f50acf879d21f63b48a97420b"
+    },
+    "swift-macosx/_DarwinFoundation3.swiftmodule/x86_64-apple-macos.abi.json": {
+      "bytes": 623,
+      "sha256": "7b854c6887091953633e9c9f4fdbd7c66159507a8e13d05654999568e4fe1ba7"
+    },
+    "swift-macosx/_DarwinFoundation3.swiftmodule/x86_64-apple-macos.private.swiftinterface": {
+      "bytes": 527,
+      "sha256": "28bd16a252a2d7e4abf28e684093b56666eebf4b688058b93fc7f85d5fa03cfc"
+    },
+    "swift-macosx/_DarwinFoundation3.swiftmodule/x86_64-apple-macos.swiftdoc": {
+      "bytes": 384,
+      "sha256": "5ceb119060e65d5295b8bab4ad0efa67366b32ca95c1c765c943d6eccb5ffd91"
+    },
+    "swift-macosx/_DarwinFoundation3.swiftmodule/x86_64-apple-macos.swiftinterface": {
+      "bytes": 527,
+      "sha256": "28bd16a252a2d7e4abf28e684093b56666eebf4b688058b93fc7f85d5fa03cfc"
+    },
+    "swift-macosx/_DarwinFoundation3.swiftmodule/x86_64-apple-macos.swiftmodule": {
+      "bytes": 18000,
+      "sha256": "fb909a27310b314100784f5f10d1b11c212de6b6c87c7620370da22ded445d82"
+    },
     "swift-macosx/_RegexParser.swiftmodule/x86_64-apple-macos.abi.json": {
       "bytes": 149,
       "sha256": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728"
@@ -162,6 +242,26 @@
       "bytes": 474464,
       "sha256": "84dceebcadca640a4701b715927baf232ceae5631463d9f57327899b9fe17699"
     },
+    "swift-macosx/_errno.swiftmodule/x86_64-apple-macos.abi.json": {
+      "bytes": 2964,
+      "sha256": "0981db3cfcde1bc6fc457985bdcd9e32a1993a9d6a38aa766212affad5467f2f"
+    },
+    "swift-macosx/_errno.swiftmodule/x86_64-apple-macos.private.swiftinterface": {
+      "bytes": 617,
+      "sha256": "53595fbb0f65559f97831df24acf713710ce775892edbfce5703b69c1b4590a1"
+    },
+    "swift-macosx/_errno.swiftmodule/x86_64-apple-macos.swiftdoc": {
+      "bytes": 372,
+      "sha256": "56e0a13ad156641bbf65c658d654a1c0a7da0830a748cb28bbc29351cf3ec321"
+    },
+    "swift-macosx/_errno.swiftmodule/x86_64-apple-macos.swiftinterface": {
+      "bytes": 617,
+      "sha256": "53595fbb0f65559f97831df24acf713710ce775892edbfce5703b69c1b4590a1"
+    },
+    "swift-macosx/_errno.swiftmodule/x86_64-apple-macos.swiftmodule": {
+      "bytes": 18408,
+      "sha256": "4aa22c60f46d3b545604d1163aa68626e33d6e808243f63008d0acb04d6448f6"
+    },
     "swift-macosx/x86_64/libswiftCommandLineSupport.a": {
       "bytes": 1504,
       "sha256": "49661771ad903553be90f8ba7c5a3b8b01cda9c36c823f1f9b5450af858dfa21"
@@ -173,6 +273,10 @@
     "swift-macosx/x86_64/libswiftDarwin.dylib": {
       "bytes": 76352,
       "sha256": "0978b970cbc665274b55dfbd918ff6692d6fafa2eda55261db053f3636afae24"
+    },
+    "swift-macosx/x86_64/libswiftObjectiveC.dylib": {
+      "bytes": 38648,
+      "sha256": "a0d04413cfc5d610b6add6b20b68117c4ea321d11102ce94848b899e2bc06089"
     },
     "swift-macosx/x86_64/libswiftObservation.dylib": {
       "bytes": 131024,
@@ -190,6 +294,18 @@
       "bytes": 913464,
       "sha256": "7440d8620700fad7d281a175daf93d10322e93d06788e40f50b5b078c4c4887b"
     },
+    "swift-macosx/x86_64/libswift_DarwinFoundation1.dylib": {
+      "bytes": 8560,
+      "sha256": "578df5acb3b5cb0a8b9ca042117faf3d059a85640779e4c3b85ee990d2fd9f84"
+    },
+    "swift-macosx/x86_64/libswift_DarwinFoundation2.dylib": {
+      "bytes": 8400,
+      "sha256": "c1c0f56563c88931f8ee03b815063a5d2138c7e7d0f3835417d819de9e137be3"
+    },
+    "swift-macosx/x86_64/libswift_DarwinFoundation3.dylib": {
+      "bytes": 8600,
+      "sha256": "fb5342d7a63b480038fd72f9d5b4d9d82582d7452461ee764fadfc5e88db04c9"
+    },
     "swift-macosx/x86_64/libswift_RegexParser.dylib": {
       "bytes": 1333320,
       "sha256": "43d5fa0b18fddf6c05a33412addf259e4b9401beaa3a78be87297743c81a837e"
@@ -197,6 +313,10 @@
     "swift-macosx/x86_64/libswift_StringProcessing.dylib": {
       "bytes": 993328,
       "sha256": "54339958e847c49fa5444248455a21fe8c427a5b472b2c84a92fd9c6f121a1b9"
+    },
+    "swift-macosx/x86_64/libswift_errno.dylib": {
+      "bytes": 17432,
+      "sha256": "6c5720b6a87949042b6fccf3057e5b701a0549928cc9fc71a7c70012c3626593"
     }
   },
   "flags": {
@@ -212,7 +332,7 @@
     "SWIFT_SDK_OSX_ARCHITECTURES": "x86_64",
     "SWIFT_STDLIB_ENABLE_OBJC_INTEROP": "ON"
   },
-  "generatedAtUtc": "2026-09-03T03:24:18Z",
+  "generatedAtUtc": "2026-09-03T07:08:48Z",
   "host": "x86_64-unknown-linux-gnu",
   "moduleTriple": "x86_64-apple-macos",
   "patches": "scripts/apply_patches.py 1-5+7+8; patch 5 via SWIFTCORE_MACHO_LEGACY_IMAGE_REG=1; patch 6 (isa widen) off; patch 8 Darwin-target skips CMake dispatch link lib",

@@ -1,0 +1,5 @@
+module _DarwinFoundation2 [system] [extern_c] {
+  header "_time.h"
+  header "_locale.h"
+  export *
+}
