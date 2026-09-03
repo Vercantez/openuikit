@@ -306,7 +306,7 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         )
         self.assertIn('-Xcc -I"$PACKAGE/include/CoreFoundation"', package_cinc)
         self.assertIn(
-            'cp "$SYS/usr/include/CoreFoundation/CoreFoundation.h"',
+            'cp "$CF_HEADER_DIR/CoreFoundation.h"',
             text,
         )
         for blob in (swiftc, package_cinc, fe_flags, umbrella):

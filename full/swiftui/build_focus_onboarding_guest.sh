@@ -138,9 +138,14 @@ for tool in git swiftc clang-18 clang++-18 ld64.lld-18 llvm-nm-18 llvm-otool-18 
 done
 [ -x "$MRROOT/machorun" ] || die "built machorun root is missing: $MRROOT"
 [ -d "$SYS/usr/include" ] || die "FoundationEssentials sysroot is missing: $SYS"
-[ -f "$SYS/usr/include/CoreFoundation/CoreFoundation.h" ] && \
-    [ ! -L "$SYS/usr/include/CoreFoundation/CoreFoundation.h" ] \
-    || die "Darwin sysroot CoreFoundation.h is missing: $SYS/usr/include/CoreFoundation/CoreFoundation.h"
+# The Darwin CoreFoundation header is the project-owned clean-room one
+# (full/foundation/include/CoreFoundation, 55ff468e), beside its module map;
+# the sysroot has no CoreFoundation.h at all (the arm64 authority's
+# scratch/sysroot_fe4 carries none), and the Linux toolchain's copy must
+# never be reached from a Darwin compile.
+CF_HEADER_DIR=$W/full/foundation/include/CoreFoundation
+[ -f "$CF_HEADER_DIR/CoreFoundation.h" ] && [ ! -L "$CF_HEADER_DIR/CoreFoundation.h" ] \
+    || die "project CoreFoundation.h is missing: $CF_HEADER_DIR/CoreFoundation.h"
 [ -f "$FOUNDATION_INTERNATIONALIZATION_BUILDER" ] && \
     [ ! -L "$FOUNDATION_INTERNATIONALIZATION_BUILDER" ] \
     || die "FoundationInternationalization builder is missing: $FOUNDATION_INTERNATIONALIZATION_BUILDER"
@@ -300,9 +305,9 @@ cp "$OPENCOMBINE_HELPERS/include/COpenCombineHelpers.h" \
 # Darwin CoreFoundation clang module: the header comes from the Darwin sysroot
 # only. Never -I the host toolchain's lib/swift (that is the Linux overlay
 # that pulls /usr/lib/swift/CoreFoundation/CoreFoundation.h and setjmp.h).
-cp "$SYS/usr/include/CoreFoundation/CoreFoundation.h" \
+cp "$CF_HEADER_DIR/CoreFoundation.h" \
     "$PACKAGE/include/CoreFoundation/CoreFoundation.h"
-cp "$W/full/foundation/include/CoreFoundation/module.modulemap" \
+cp "$CF_HEADER_DIR/module.modulemap" \
     "$PACKAGE/include/CoreFoundation/module.modulemap"
 cp "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftmodule" \
     "$OPENCOMBINE_ARTIFACTS/OpenCombine.swiftdoc" "$PACKAGE/"
