@@ -1,0 +1,6 @@
+precise	question	risk	reason
+c:@kVTCouldNotFindVideoEncoderErr	Does Darwin VTErrors.h assign -12907 or -12908 to kVTCouldNotFindVideoEncoderErr on iPhoneOS 26.1?	c-abi-deps	Pinned macios VTDefs maps CouldNotCreateInstance=-12907 and CouldNotFindVideoEncoder=-12908; some published header copies differ.
+c:@kVTCompressionPropertyKey_AverageBitRate	What CFString payload does Darwin export for kVTCompressionPropertyKey_AverageBitRate?	c-abi-deps	Linux currently stores the C identifier; Darwin CFSTR bytes were not observed.
+c:@F@VTCompressionSessionCreate	When no encoder exists, does VTCompressionSessionCreate return kVTCouldNotFindVideoEncoderErr, kVTVideoEncoderNotAvailableNowErr, or another code, and is the out-session always NULL?	codec	Linux returns kVTCouldNotFindVideoEncoderErr with a nil session; Apple runtime mapping is unobserved.
+c:@F@VTPixelTransferSessionTransferImage	Which VTStatus does a valid session return for unsupported source/destination pixel formats on iPhoneOS 26.1?	gpu	Linux software sessions return kVTPixelTransferNotSupportedErr without converting buffers.
+module	What are the Darwin CFTypeID values for VTPixelTransferSession, VTPixelRotationSession, VTRAWProcessingSession, and VTHDRPerFrameMetadataGenerationSession?	c-abi-deps	Linux GetTypeID helpers return 0; CF runtime type IDs are unavailable.
