@@ -391,8 +391,8 @@ cp "$MEDIUM_FONT" "$OUT/fonts/DejaVuSans-Bold.ttf"
 # without touching arm64 Mach-O outputs.
 HARNESS_FONT_DIR=$W/build/swiftui-guest/fonts
 mkdir -p "$HARNESS_FONT_DIR"
-cp -f "$OUT/fonts/DejaVuSans.ttf" "$HARNESS_FONT_DIR/"
-cp -f "$OUT/fonts/DejaVuSans-Bold.ttf" "$HARNESS_FONT_DIR/"
+[ "$OUT/fonts/DejaVuSans.ttf" -ef "$HARNESS_FONT_DIR/DejaVuSans.ttf" ] || cp -f "$OUT/fonts/DejaVuSans.ttf" "$HARNESS_FONT_DIR/"
+[ "$OUT/fonts/DejaVuSans-Bold.ttf" -ef "$HARNESS_FONT_DIR/DejaVuSans-Bold.ttf" ] || cp -f "$OUT/fonts/DejaVuSans-Bold.ttf" "$HARNESS_FONT_DIR/"
 if [ -d /w/build ] || mkdir -p /w/build/swiftui-guest/fonts 2>/dev/null; then
     mkdir -p /w/build/swiftui-guest/fonts
     [ "$OUT/fonts/DejaVuSans.ttf" -ef "/w/build/swiftui-guest/fonts/DejaVuSans.ttf" ] || cp -f "$OUT/fonts/DejaVuSans.ttf" "/w/build/swiftui-guest/fonts/"
