@@ -190,6 +190,19 @@ echo "== SKIP_PHASE2 / SKIP_OVERLAYS / ensure_machorun / real roots"
 grep -q 'OPENUIKIT_CYCLE_SKIP_PHASE2' "$ROOT/scripts/ops/x86_cycle.sh" \
     && ok "cycle honours OPENUIKIT_CYCLE_SKIP_PHASE2" \
     || die_test "missing SKIP_PHASE2"
+# The SKIP_PHASE2 branch must not grep phase2.log (that file is not written).
+python3 - "$ROOT/scripts/ops/x86_cycle.sh" <<'PY' && ok "SKIP_PHASE2 does not grep a missing phase2.log" || die_test "SKIP_PHASE2 still greps phase2.log"
+import pathlib, sys
+text = pathlib.Path(sys.argv[1]).read_text()
+start = text.find('if [ "${OPENUIKIT_CYCLE_SKIP_PHASE2:-0}" = 1 ]; then')
+if start < 0:
+    raise SystemExit(1)
+chunk = text[start:]
+# First branch is skip; grep of phase2.log must not appear before elif.
+skip, _, rest = chunk.partition("elif ")
+if "phase2.log" in skip:
+    raise SystemExit(1)
+PY
 grep -q 'scripts/x86/ensure_machorun.sh' "$ROOT/scripts/ops/x86_cycle.sh" \
     && ok "cycle calls ensure_machorun before tbd" \
     || die_test "missing ensure_machorun"

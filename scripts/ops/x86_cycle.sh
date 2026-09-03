@@ -314,11 +314,11 @@ if [ "${OPENUIKIT_CYCLE_SKIP_PHASE2:-0}" = 1 ]; then
 elif run_logged phase2 "$LOGDIR/phase2.log" \
     bash "$TREE/scripts/x86/phase2.sh" "$TREE"; then
     emit_stage phase2 "$(status_from_log "$LOGDIR/phase2.log")" "$TREE"
+    grep -E 'RUNG_SCOREBOARD|GUEST SCOREBOARD|ENV_PREPARE_SUMMARY|CANNOT_' \
+        "$LOGDIR/phase2.log" || true
 else
     emit_stage phase2 cannot "$TREE"
     grep -E 'RUNG_SCOREBOARD|GUEST SCOREBOARD|CANNOT_' "$LOGDIR/phase2.log" || true
     exit 2
 fi
-grep -E 'RUNG_SCOREBOARD|GUEST SCOREBOARD|ENV_PREPARE_SUMMARY|CANNOT_' \
-    "$LOGDIR/phase2.log" || true
 exit 0
