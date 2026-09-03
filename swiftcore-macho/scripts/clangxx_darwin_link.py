@@ -1,23 +1,15 @@
 #!/usr/bin/env python3
-"""clang++ / clang driver shim: pick the linker per link, not globally.
+"""clang++ / clang driver shim: pick the linker per OUTPUT FILE, not globally.
 
-Ninja's CXX_SHARED_LIBRARY rule is generated from Modules/Platform/Linux.cmake,
-so it always injects `-shared` and `$SONAME_FLAG$SONAME` (`-Wl,-soname`).
-A Darwin-target line (`-target …-apple-…`, or a `.dylib` output) must still
-become the Mach-O recipe in link_macho_dylib.sh and use **ld64.lld**. An ELF
-host line (`-target …-linux-…`, or a `.so` output without an Apple triple)
-must keep `-soname` and use **ld.lld**. Putting ld64.lld on PATH / `-B` for
-every job is what made the operator core link die:
+Classify from `-o`:
+  `*.so`  → ELF / ld.lld, keep `-soname`
+  `*.dylib` (or `-install_name` / apple triple) → Darwin / ld64.lld
 
-    ld64.lld: error: unknown argument '-soname'
+Never from directory names (`macosx` in the path is the Darwin-target
+stdlib's host-side ELF helper). Clang 18+ wants `--ld-path=` rather than
+`-fuse-ld=<absolute path>`. Every shared link prints one line:
 
-stdlib/CMakeLists.txt overwrites CMAKE_CXX_COMPILER to
-`${SWIFT_NATIVE_CLANG_TOOLS_PATH}/clang++` unless
-SWIFT_BUILD_RUNTIME_WITH_HOST_COMPILER is ON. configure.sh points that path
-at this shim so `/opt/swift/usr/bin/clang++` cannot skip the rewrite.
-
-Every shared link prints `clangxx_darwin_link: linker=ld.lld` or
-`linker=ld64.lld`.
+    clangxx_darwin_link: -o <path> decision=elf|darwin linker=ld.lld|ld64.lld
 """
 from __future__ import annotations
 
@@ -94,17 +86,22 @@ def linker_label(path: str) -> str:
     return base or path
 
 
-def _fuse_ld_flag(linker_path: str) -> str:
-    return f"-fuse-ld={linker_path}"
+def _ld_path_flag(linker_path: str) -> str:
+    """Clang 18+: `--ld-path=` is the non-deprecated way to pass an absolute linker."""
+    return f"--ld-path={linker_path}"
 
 
-def _set_fuse_ld(argv: list[str], linker_path: str) -> list[str]:
-    """Replace every -fuse-ld=* with an absolute linker; append if missing."""
+def _is_linker_select_flag(tok: str) -> bool:
+    return tok.startswith("-fuse-ld=") or tok.startswith("--ld-path=")
+
+
+def _set_ld_path(argv: list[str], linker_path: str) -> list[str]:
+    """Drop -fuse-ld=* / --ld-path=* and set `--ld-path=<absolute linker>` once."""
     out: list[str] = []
     replaced = False
-    flag = _fuse_ld_flag(linker_path)
+    flag = _ld_path_flag(linker_path)
     for a in argv:
-        if a.startswith("-fuse-ld="):
+        if _is_linker_select_flag(a):
             if not replaced:
                 out.append(flag)
                 replaced = True
@@ -145,43 +142,55 @@ def _output_path(argv: list[str]) -> str | None:
     return None
 
 
+def _output_is_elf_so(path: str) -> bool:
+    """True for a shared-object output. Basename only — never the directory."""
+    base = os.path.basename(path)
+    return base.endswith(".so") or ".so." in base
+
+
+def _output_is_dylib(path: str) -> bool:
+    return os.path.basename(path).endswith(".dylib")
+
+
+def _has_install_name(argv: list[str]) -> bool:
+    for i, a in enumerate(argv):
+        if a.startswith("-Wl,-install_name") or a.startswith("-install_name"):
+            return True
+        if a in ("-install_name", "-Wl,-install_name") and i + 1 < len(argv):
+            return True
+        if a == "-Xlinker" and i + 1 < len(argv) and "install_name" in argv[i + 1]:
+            return True
+    return False
+
+
 def link_flavor(argv: list[str]) -> str | None:
     """Classify a driver invocation: 'darwin', 'elf', or None (not a shared link).
 
-    Decision is per argv, from the target triple and/or the output's .so/.dylib
-    — never from a global PATH / CMAKE_LINKER / -B that contains both ld.lld
-    and ld64.lld.
+    Output file first: `-o …*.so` is always ELF (the Darwin-target stdlib's
+    host-side helper is still named libswiftCore.so and lives under macosx/).
+    `.dylib`, `-install_name`, or an apple triple selects ld64.lld.
     """
     if _is_compile(argv):
         return None
     if not (_is_shared(argv) or _has_soname_flag(argv)):
         return None
-    t = _target(argv)
     out = _output_path(argv) or ""
-    if t and APPLE_MARKER in t:
+    if _output_is_elf_so(out):
+        return "elf"
+    if _output_is_dylib(out):
         return "darwin"
-    if out.endswith(".dylib"):
+    if _has_install_name(argv):
+        return "darwin"
+    t = _target(argv)
+    if t and APPLE_MARKER in t:
         return "darwin"
     if "-dynamiclib" in argv:
         return "darwin"
-    if t and ("linux" in t.lower() or "unknown-linux" in t.lower()):
-        return "elf"
-    if out.endswith(".so") or ".so." in os.path.basename(out):
-        return "elf"
     return "elf"
 
 
 def _is_darwin_target(argv: list[str]) -> bool:
-    """True when this argv is a Darwin-target link (triple or .dylib)."""
-    t = _target(argv)
-    if t and APPLE_MARKER in t:
-        return True
-    out = _output_path(argv) or ""
-    if out.endswith(".dylib"):
-        return True
-    if "-dynamiclib" in argv:
-        return True
-    return False
+    return link_flavor(argv) == "darwin"
 
 
 def _soname_payload(tok: str) -> str | None:
@@ -219,7 +228,7 @@ def is_darwin_shared_link(argv: list[str]) -> bool:
 
 def rewrite_elf_shared(argv: list[str]) -> list[str]:
     """ELF shared link: keep -soname / -shared; force ld.lld (never ld64.lld)."""
-    return _set_fuse_ld(argv, _ld_lld())
+    return _set_ld_path(argv, _ld_lld())
 
 
 def _is_host_elf_input(arg: str) -> bool:
@@ -306,10 +315,10 @@ def rewrite_darwin_shared(argv: list[str]) -> list[str]:
             have_dynamiclib = True
             out.append(a)
             continue
-        if a.startswith("-fuse-ld="):
-            # Darwin-target: absolute ld64.lld, never gold / host ld.lld.
+        if _is_linker_select_flag(a):
+            # Darwin-target: --ld-path=ld64.lld, never gold / host ld.lld.
             have_fuse = True
-            out.append(_fuse_ld_flag(_ld64_lld()))
+            out.append(_ld_path_flag(_ld64_lld()))
             continue
         if a.startswith("-B"):
             have_B = True
@@ -385,7 +394,7 @@ def rewrite_darwin_shared(argv: list[str]) -> list[str]:
     if not have_dynamiclib:
         extra.append("-dynamiclib")
     if not have_fuse:
-        extra.append(_fuse_ld_flag(_ld64_lld()))
+        extra.append(_ld_path_flag(_ld64_lld()))
     if not have_B:
         extra.append(f"-B{_lld_bin()}")
     if not have_nostdlib:
@@ -441,15 +450,38 @@ def log_link(
     original: list[str],
     rewritten: list[str] | None = None,
 ) -> None:
-    sys.stderr.write(f"clangxx_darwin_link: linker={linker} kind={kind}\n")
+    out = _output_path(original) or "ABSENT"
+    # One line the operator can grep: -o and the decision together.
+    sys.stderr.write(f"clangxx_darwin_link: -o {out} decision={kind} linker={linker}\n")
     sys.stderr.write("clangxx_darwin_link: ninja argv: " + shlex.join(original) + "\n")
     if rewritten is not None:
         sys.stderr.write("clangxx_darwin_link: rewritten argv: " + shlex.join(rewritten) + "\n")
     sys.stderr.flush()
 
 
-def log_darwin_rewrite(original: list[str], rewritten: list[str]) -> None:
-    log_link("darwin", "ld64.lld", original, rewritten)
+def _run_compiler(real: str, compiler_argv: list[str]) -> int:
+    """Invoke the real clang/clang++. Map exec failures so ninja does not see a bare 126."""
+    if not os.path.isfile(real):
+        sys.stderr.write(f"CANNOT_COMPILER_NOT_EXECUTABLE path={real} reason=missing\n")
+        return 2
+    if not os.access(real, os.X_OK):
+        sys.stderr.write(
+            f"CANNOT_COMPILER_NOT_EXECUTABLE path={real} reason=not-executable "
+            "(bash/ninja would report rc=126)\n"
+        )
+        return 2
+    try:
+        rc = subprocess.call([real] + compiler_argv)
+    except OSError as e:
+        sys.stderr.write(
+            f"CANNOT_COMPILER_NOT_EXECUTABLE path={real} errno={e.errno} {e}\n"
+        )
+        return 2
+    if rc == 126:
+        sys.stderr.write(
+            f"clangxx_darwin_link: compiler rc=126 (not executable / ENOEXEC) path={real}\n"
+        )
+    return rc
 
 
 def mirror_so_to_dylib(argv: list[str]) -> None:
@@ -477,7 +509,7 @@ def main(argv: list[str]) -> int:
         if print_rewritten:
             print(" ".join(rewritten))
             return 0
-        rc = subprocess.call([real] + rewritten)
+        rc = _run_compiler(real, rewritten)
         if rc == 0:
             mirror_so_to_dylib(rewritten)
         return rc
@@ -487,13 +519,11 @@ def main(argv: list[str]) -> int:
         if print_rewritten:
             print(" ".join(rewritten))
             return 0
-        os.execv(real, [real] + rewritten)
-        return 127
+        return _run_compiler(real, rewritten)
     if print_rewritten:
         print(" ".join(args))
         return 0
-    os.execv(real, [real] + args)
-    return 127
+    return _run_compiler(real, args)
 
 
 if __name__ == "__main__":

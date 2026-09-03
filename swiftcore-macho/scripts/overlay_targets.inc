@@ -271,10 +271,8 @@ overlay_print_overlay_module_evidence() {
     done
 }
 
-# Print the exact Darwin overlay dylib link ninja will run, and the argv
-# clangxx_darwin_link.py rewrites it to (no -soname, linker=ld64.lld).
-# Operator log must show both: the Linux CMake line and the ld64.lld line.
-# ELF core .so links print linker=ld.lld and keep -soname.
+# Print the ninja link for libswiftDarwin.so and the argv the shim would
+# run. `-o …*.so` is ELF (keep -soname, linker=ld.lld) even under macosx/.
 # overlay_print_darwin_link_from_ninja <build_dir> <arch>
 overlay_print_darwin_link_from_ninja() {
     local build_dir=${1:?overlay_print_darwin_link_from_ninja: build dir}
@@ -342,12 +340,33 @@ if err:
     for eline in err.splitlines():
         print(eline)
 print("overlay_link: rewritten", rewritten if rewritten else "ABSENT")
-if "soname" in rewritten:
-    print("overlay_link: rewritten still has soname")
+outp = ""
+for i, a in enumerate(args):
+    if a == "-o" and i + 1 < len(args):
+        outp = args[i + 1]
+        break
+base = os.path.basename(outp)
+decision = next((l for l in err.splitlines() if l.startswith("clangxx_darwin_link: -o ")), "")
+if not decision:
+    print("overlay_link: missing -o decision line")
     sys.exit(1)
-if rewritten and "-install_name" not in rewritten and "-Wl,-install_name" not in rewritten:
-    print("overlay_link: rewritten missing -install_name")
-    sys.exit(1)
+if base.endswith(".so") or ".so." in base:
+    if "decision=elf" not in decision or "linker=ld.lld" not in decision:
+        print("overlay_link: .so output must be decision=elf linker=ld.lld")
+        sys.exit(1)
+    if "soname" not in rewritten:
+        print("overlay_link: ELF rewritten dropped soname")
+        sys.exit(1)
+    if "ld64.lld" in rewritten:
+        print("overlay_link: ELF .so routed to ld64.lld")
+        sys.exit(1)
+else:
+    if "soname" in rewritten:
+        print("overlay_link: rewritten still has soname")
+        sys.exit(1)
+    if rewritten and "-install_name" not in rewritten and "-Wl,-install_name" not in rewritten:
+        print("overlay_link: rewritten missing -install_name")
+        sys.exit(1)
 PY
 }
 

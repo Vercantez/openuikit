@@ -455,14 +455,12 @@ printf '%s\n' "$out" | grep -q -- '-Wl,-soname,libswiftDarwin.so' \
   && echo "  OK  ninja line has -soname" || { echo "  FAIL ninja line missing -soname"; fail=1; }
 printf '%s\n' "$out" | grep -q 'overlay_link: rewritten' \
   && echo "  OK  printed rewritten link" || { echo "  FAIL missing rewritten"; fail=1; }
-printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -Eq -- '(^|[[:space:]])(-Wl,)?-?-soname' \
-  && { echo "  FAIL rewritten still has -soname"; fail=1; } \
-  || echo "  OK  rewritten has no -soname"
-printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -q -- '-install_name' \
-  && echo "  OK  rewritten has -install_name" || { echo "  FAIL rewritten missing install_name"; fail=1; }
-printf '%s\n' "$out" | grep -q 'clangxx_darwin_link: linker=ld64.lld' \
-  && echo "  OK  Darwin overlay link printed linker=ld64.lld" \
-  || { echo "  FAIL missing linker=ld64.lld"; fail=1; }
+printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -q -- '-Wl,-soname,libswiftDarwin.so' \
+  && echo "  OK  ELF .so rewritten keeps -soname" \
+  || { echo "  FAIL rewritten dropped ELF -soname"; fail=1; }
+printf '%s\n' "$out" | grep -q 'clangxx_darwin_link: -o lib/swift/macosx/x86_64/libswiftDarwin.so decision=elf linker=ld.lld' \
+  && echo "  OK  .so output printed decision=elf linker=ld.lld" \
+  || { echo "  FAIL missing -o decision=elf line"; fail=1; }
 
 echo
 echo "=== cmake : && clang++ && : wrapper is stripped before rewrite ==="
@@ -496,8 +494,8 @@ printf '%s\n' "$out"
 printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -q '&&' \
   && { echo "  FAIL rewritten kept cmake && wrapper"; fail=1; } \
   || echo "  OK  rewritten dropped cmake && wrapper"
-printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -q -- '-install_name' \
-  && echo "  OK  wrapper line still rewrites install_name" \
+printf '%s\n' "$out" | grep -q 'decision=elf linker=ld.lld' \
+  && echo "  OK  wrapper line still classifies .so as elf" \
   || { echo "  FAIL wrapper rewrite"; fail=1; }
 
 echo

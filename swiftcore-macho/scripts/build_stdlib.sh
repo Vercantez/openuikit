@@ -70,6 +70,12 @@ run_stdlib_ninja() {
   step "ninja $SWIFTCORE_NINJA_CORE -j$NINJA_JOBS"
   ninja_checked "$W/build.log" -C "$B" -j "$NINJA_JOBS" \
     "$SWIFTCORE_NINJA_CORE" || core_st=$?
+  echo "build_stdlib: ninja-core rc=$core_st"
+  if [ "$core_st" -eq 126 ]; then
+    echo "CANNOT_NOT_EXECUTABLE step=ninja-core rc=126 means a command was found but not executable (EACCES/ENOEXEC), not a link error." >&2
+    ls -l "$W/shims/clang++" "$W/shims/clang" "$(command -v python3)" \
+      "${LD_LLD:-}" "${LD64_LLD:-}" "${TC}/bin/clang++" 2>&1 | sed 's/^/  /' >&2
+  fi
   obj_n=$(find "$B" -name '*.o' 2>/dev/null | wc -l)
   echo "objects=$obj_n"
   so=$B/lib/swift/macosx/${SWIFTCORE_DARWIN_ARCH}/libswiftCore.so
@@ -128,6 +134,10 @@ run_stdlib_ninja() {
         tlog=$W/overlay.${t}.log
         : > "$tlog"
         ninja_checked "$tlog" -C "$B" -j "$NINJA_JOBS" "$t" || ninja_st=$?
+        echo "build_stdlib: ninja-overlay $t rc=$ninja_st"
+        if [ "$ninja_st" -eq 126 ]; then
+          echo "CANNOT_NOT_EXECUTABLE step=ninja-overlay target=$t rc=126" >&2
+        fi
         if [ -f "$tlog" ]; then
           cat "$tlog" >> "$W/build.log" 2>/dev/null || true
         fi
@@ -147,11 +157,13 @@ run_stdlib_ninja() {
     overlay_list_products "$B/lib/swift/macosx"
     if [ "$overlay_rc" -ne 0 ]; then
       echo "overlay: FAILED rc=$overlay_rc" >&2
+      echo "build_stdlib: returning overlay_rc=$overlay_rc"
       return "$overlay_rc"
     fi
   fi
   if [ "$core_st" -ne 0 ]; then
     echo "core: FAILED rc=$core_st" >&2
+    echo "build_stdlib: returning core_st=$core_st"
     return "$core_st"
   fi
 }

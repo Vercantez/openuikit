@@ -172,6 +172,15 @@ SHIM_LIPO=$W/shims/lipo
 mkdir -p "$SHIM_DIR"
 write_clang_shim() {
   local dest=$1 driver=$2
+  local pyexe
+  pyexe=$(command -v python3 || true)
+  if [ -z "$pyexe" ]; then
+    pyexe=python3
+  elif [ ! -x "$pyexe" ]; then
+    echo "CANNOT_PYTHON3_NOT_EXECUTABLE path=$pyexe (bash would report rc=126)" >&2
+    [ "$PRINT_FLAGS" = 1 ] || exit 2
+  fi
+  chmod +x "$SCRIPT_DIR/clangxx_darwin_link.py" 2>/dev/null || true
   {
     printf '#!/bin/bash\n'
     printf 'export SWIFTCORE_CLANG_DRIVER=%q\n' "$driver"
@@ -181,7 +190,7 @@ write_clang_shim() {
     printf 'export LD_LLD=%q\n' "${LD_LLD:-}"
     printf 'export LD64_LLD=%q\n' "${LD64_LLD:-}"
     printf 'export TC=%q\n' "${TC}"
-    printf 'exec python3 %q "$@"\n' "$SCRIPT_DIR/clangxx_darwin_link.py"
+    printf 'exec %q %q "$@"\n' "$pyexe" "$SCRIPT_DIR/clangxx_darwin_link.py"
   } > "$dest"
   chmod +x "$dest"
 }
