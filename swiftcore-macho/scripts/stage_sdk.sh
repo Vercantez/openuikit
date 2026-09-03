@@ -10,8 +10,27 @@
 #
 # Output: ~/work/sdk/MacOSX.sdk
 set -euo pipefail
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/guest_arch.inc"
 W=${W:-$HOME/work}
+SWIFTCORE_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
+OPENUIKIT_ROOT=$(cd "$SWIFTCORE_ROOT/.." && pwd)
 SDK=$W/sdk/MacOSX.sdk
+mkdir -p "$W"
+
+# Fill the work-dir inputs from the in-repo trees when the operator has not
+# already populated ~/work. Never overwrite a real checkout.
+[ -d "$W/machorun-sdk" ] || ln -sfn "$OPENUIKIT_ROOT/machorun/sdk" "$W/machorun-sdk"
+[ -d "$W/objc4-runtime" ] || ln -sfn "$OPENUIKIT_ROOT/machorun/vendor/objc4/runtime" "$W/objc4-runtime"
+[ -d "$W/objc4-priv" ] || {
+  if [ -d "$OPENUIKIT_ROOT/machorun/vendor/objc4-priv" ]; then
+    ln -sfn "$OPENUIKIT_ROOT/machorun/vendor/objc4-priv" "$W/objc4-priv"
+  fi
+}
+[ -d "$W/foundation" ] || ln -sfn "$SWIFTCORE_ROOT/sdk/foundation" "$W/foundation"
+[ -d "$W/libc" ] || ln -sfn "$SWIFTCORE_ROOT/sdk/libc" "$W/libc"
+
 rm -rf "$W/sdk"
 mkdir -p "$SDK"
 
@@ -38,7 +57,7 @@ fi
   cp -f "$W/machorun-sdk/local/TargetConditionals.h" "$SDK/usr/include/TargetConditionals.h"
 
 # 3b. Clean-room libc headers machorun's SDK does not carry because objc4 never
-#     reached them (setjmp.h, MacTypes.h). See sdk/libc/.
+#     reached them (setjmp.h). See sdk/libc/.
 #
 # THIS USED TO BE A BARE `cp -f` AND IT COST A DAY. The premise -- "machorun's
 # SDK does not carry these" -- is true when written and decays silently. It
@@ -53,7 +72,11 @@ fi
 # consumer instead of at the copy. So the copy now REFUSES rather than
 # overwrites: if machorun's SDK has grown a real version of one of these, that
 # is good news and the right response is to delete ours, not to bury it.
+#
+# 2026-09-03: MacTypes.h was that case (machorun 201 lines, ours 54). Deleted
+# from sdk/libc/; only setjmp.h remains here.
 for h in "$W/libc/"*.h; do
+  [ -e "$h" ] || continue
   b=${h##*/}
   if [ -e "$SDK/usr/include/$b" ]; then
     echo "stage_sdk: REFUSING to overwrite $SDK/usr/include/$b" >&2
@@ -111,7 +134,7 @@ mkdir -p "$SDK/usr/share"
 # configure_sdk_darwin hard-requires SDKSettings.plist to exist before it will
 # accept a path; the JSON is what our patched version actually reads (Linux has
 # no `defaults`).
-cat > "$SDK/SDKSettings.plist" <<'EOF'
+cat > "$SDK/SDKSettings.plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -122,7 +145,7 @@ cat > "$SDK/SDKSettings.plist" <<'EOF'
   <key>MaximumDeploymentTarget</key><string>15.0.99</string>
   <key>SupportedTargets</key>
   <dict><key>macosx</key><dict>
-    <key>Archs</key><array><string>arm64</string></array>
+    <key>Archs</key><array><string>${SWIFTCORE_DARWIN_ARCH}</string></array>
     <key>LLVMTargetTripleSys</key><string>macos</string>
     <key>LLVMTargetTripleVendor</key><string>apple</string>
   </dict></dict>

@@ -35,22 +35,34 @@ Focus/full-build attestation pin.
 This is the likeliest hard wall. The runner measures it before any later Swift
 guest work:
 
-- `swiftcore-macho/artifacts/swift-macosx/` ships only an **arm64**
-  `libswiftCore.dylib` and `Swift.swiftmodule/arm64-apple-macos.*`
+- `swiftcore-macho/artifacts/swift-macosx/` ships **arm64**
+  `libswiftCore.dylib` and `Swift.swiftmodule/arm64-apple-macos.*` plus the
+  **x86_64 sibling** at `swift-macosx/x86_64/` (sha256 in
+  `artifacts/x86_64.manifest.json`). `_Concurrency` for x86_64 is still the
+  BUILD_LOG §16 / libdispatch wall.
 - stdlib source is not in this tree (`swiftcore-macho/swift`, `scratch/swift`,
   `/opt/swift-source` all absent; no CMakeLists)
-- `swiftcore-macho/scripts/configure.sh` hardcodes
-  `SWIFT_HOST_VARIANT_ARCH=aarch64`, `SWIFT_SDK_OSX_ARCHITECTURES=arm64`,
-  `SWIFT_HOST_TRIPLE=aarch64-unknown-linux-gnu`
+- `swiftcore-macho/scripts/configure.sh` used to hardcode
+  `SWIFT_HOST_VARIANT_ARCH=aarch64` / `SWIFT_SDK_OSX_ARCHITECTURES=arm64`.
+  That is now `scripts/guest_arch.inc` (`SWIFTCORE_DARWIN_ARCH`); the arm64
+  argv is still the default on an aarch64 host. The x86_64 slice lives at
+  `artifacts/swift-macosx/x86_64/` beside arm64. See `docs/X86_64.md`.
 - `swiftc -target x86_64-apple-macos15.0 -sdk scratch/sysroot_fe4` fails:
   `could not find module '_Concurrency' for target 'x86_64-apple-macos'; found: arm64-apple-macos`
 
 Cross-building libswiftCore is the CMake+Ninja stdlib-only recipe in
 `swiftcore-macho/docs/BUILD_LOG.md`, historically on a Graviton box against a
 full swift.org 6.2.4 checkout. **Do not stage the arm64 dylib under an x86
-name.** Until an x86_64 slice exists, rungs a/b/c CANNOT with
-`CANNOT_BUILD_LIBSWIFTCORE_X86`. clang-18 can still emit x86_64 Mach-O against
-sysroot headers (loader, darwin, objc4, quartz, `.tbd`, cshims).
+name.** The x86_64 `libswiftCore.dylib` + `Swift.swiftmodule` now sit beside
+arm64; `_Concurrency` is still the BUILD_LOG §16 wall. Without that overlay,
+rungs a/b/c that `import _Concurrency` still CANNOT. clang-18 can still emit
+x86_64 Mach-O against sysroot headers (loader, darwin, objc4, quartz, `.tbd`,
+cshims).
+
+The configure hardcoding is gone: `swiftcore-macho/scripts/guest_arch.inc`
+keeps the arm64 argv as `SWIFTCORE_DARWIN_ARCH=arm64` and selects x86_64 on
+this host. One-command recipe: `docs/X86_64.md` §3 /
+`bash swiftcore-macho/scripts/build_stdlib.sh`.
 
 ## In-VM (this Cursor x86_64 VM) vs operator host
 
@@ -60,7 +72,7 @@ sysroot headers (loader, darwin, objc4, quartz, `.tbd`, cshims).
 | `build.sh` loader + darwin + tbd | yes | same |
 | `build_objc4.sh` / `build_quartz.sh` | yes — unblocks the `objc` fixture | same |
 | `scripts/x86/stage_fe_sysroot.sh` | headers + x86 dylibs; `CANNOT_STAGE_XCODE_DARWIN_OVERLAYS` unless textual Darwin overlays exist in the arm64 `sysroot_fe4` | same |
-| FoundationEssentials / collections / OpenCombine / `build_full.sh` | blocked by missing x86 Swift.swiftmodule | needs x86 libswiftCore + Darwin overlays |
+| FoundationEssentials / collections / OpenCombine / `build_full.sh` | x86 `libswiftCore` + `Swift.swiftmodule` are in artifacts; `_Concurrency` overlay is not (libdispatch wall). Darwin overlays still `CANNOT_STAGE_XCODE_DARWIN_OVERLAYS` | needs x86 libswiftCore + `_Concurrency` + Darwin overlays |
 | rung a `run_ud_guest.sh` | cannot run a real FE guest without x86 libswiftCore + named MACHORUN_ROOT + `ud_guest` binary | smoke 14/14 + persist under the ported loader |
 | rung b Focus widget + onboarding | scripts retargeted; `NEEDS_X86_OPENCOMBINE` resolved by `export-x86_64/` (arm64 SHA untouched) | same gates under the ported loader |
 | rung c Reminder scene | inner script no longer refuses x86-on-x86; still needs Reminder 22-source inventory | one `UIWindow` + three paced turns |

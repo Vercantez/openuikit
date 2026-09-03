@@ -134,7 +134,7 @@ mkdir -p "$W/scratch"
     echo "x86_64_core $( [ -f "$x86_core" ] && file -b "$x86_core" || echo ABSENT )"
     echo "x86_64_swiftmodule $( [ -f "$x86_mod" ] && echo PRESENT || echo ABSENT )"
     echo "stdlib_source ABSENT (no swiftcore-macho/swift, scratch/swift, /opt/swift-source)"
-    echo "configure_sh_pins SWIFT_HOST_VARIANT_ARCH=aarch64 SWIFT_SDK_OSX_ARCHITECTURES=arm64 SWIFT_DARWIN_SUPPORTED_ARCHS=arm64 SWIFT_HOST_TRIPLE=aarch64-unknown-linux-gnu"
+    echo "configure_sh guest_arch.inc SWIFTCORE_DARWIN_ARCH (arm64 argv intact; x86_64 default on x86_64 Linux). pin swift-6.2.4-RELEASE ee343b46aef81c3ac7c5d7960cb35a41a88c5a9b"
     echo "cmake_lists $( [ -f "$W/swiftcore-macho/CMakeLists.txt" ] && echo PRESENT || echo ABSENT -- source not vendored )"
 } > "$measure_log"
 
@@ -160,7 +160,7 @@ if [ -f "$x86_core" ] && phase2_is_x86_macho "$x86_core" && [ -f "$x86_mod" ]; t
     echo "  (x86_64 libswiftCore + swiftmodule present under artifacts/)"
 else
     cannot libswiftCore-x86 BUILD_LIBSWIFTCORE_X86 \
-        "no x86_64 slice in swiftcore-macho/artifacts (only arm64/libswiftCore.dylib + Swift.swiftmodule/arm64-apple-macos.*); stdlib source is not in this tree; configure.sh hardcodes aarch64-host/arm64-Darwin; swiftc -target $TARGET against sysroot_fe4 fails looking for x86_64-apple-macos _Concurrency/Swift modules (found: arm64-apple-macos). Cross-building libswiftCore is the CMake+Ninja stdlib-only recipe in swiftcore-macho/docs/BUILD_LOG.md, historically on a Graviton box against a full swift.org 6.2.4 checkout. Do not stage the arm64 dylib under an x86 name. measurement=$measure_log"
+        "no x86_64 slice in swiftcore-macho/artifacts (need swift-macosx/x86_64/libswiftCore.dylib + Swift.swiftmodule/x86_64-apple-macos.swiftmodule). configure.sh is guest_arch.inc (SWIFTCORE_DARWIN_ARCH), not a hardcoded aarch64 rewrite. Cross-build: NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 bash swiftcore-macho/scripts/build_stdlib.sh (docs/X86_64.md). Do not stage the arm64 dylib under an x86 name. measurement=$measure_log"
     cat "$measure_log" | sed 's/^/  /'
 fi
 

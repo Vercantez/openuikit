@@ -1,0 +1,149 @@
+{
+  "arch": "arm64",
+  "fileCount": 33,
+  "files": {
+    "concurrency/libswiftcompat.dylib": {
+      "bytes": 52848,
+      "sha256": "1f39acf8f78a7949a6ec1931735f75f6b7c4fdbd2093cc5e59af48b7d6aa096a"
+    },
+    "concurrency/swift-macosx/Swift.swiftmodule/Swift.opt.bitstream": {
+      "bytes": 1803972,
+      "sha256": "b51a75a283ffd56b17e785b9a2da21af9c6426b4d0d0e160bfab64f61cdc839b"
+    },
+    "concurrency/swift-macosx/Swift.swiftmodule/arm64-apple-macos.abi.json": {
+      "bytes": 149,
+      "sha256": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728"
+    },
+    "concurrency/swift-macosx/Swift.swiftmodule/arm64-apple-macos.private.swiftinterface": {
+      "bytes": 2269394,
+      "sha256": "dfc34a9441f635202f07996d52645dd4793ec51a73c6f6efaeeccd7620826cd1"
+    },
+    "concurrency/swift-macosx/Swift.swiftmodule/arm64-apple-macos.swiftdoc": {
+      "bytes": 4067904,
+      "sha256": "e7ae0b1601eebcbb60868be903154924f40788cb4c269fb64ff88cd3120fc09e"
+    },
+    "concurrency/swift-macosx/Swift.swiftmodule/arm64-apple-macos.swiftinterface": {
+      "bytes": 2247589,
+      "sha256": "6daf38f050c17ca762475206f1311654606cbac7fd29d5c212bedce2851cd0da"
+    },
+    "concurrency/swift-macosx/Swift.swiftmodule/arm64-apple-macos.swiftmodule": {
+      "bytes": 16115812,
+      "sha256": "23b2acd808d87a9382a9a0964f4b580db9fe2d7c9bb4998ca444ef6aa421dfd8"
+    },
+    "concurrency/swift-macosx/_Builtin_float.swiftmodule/_Builtin_float.opt.bitstream": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "concurrency/swift-macosx/_Builtin_float.swiftmodule/arm64-apple-macos.abi.json": {
+      "bytes": 149,
+      "sha256": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728"
+    },
+    "concurrency/swift-macosx/_Builtin_float.swiftmodule/arm64-apple-macos.private.swiftinterface": {
+      "bytes": 4222,
+      "sha256": "2c9ec122612901fe19e8ac33b0c379d1ecc70b656939b17420a109224de0a26c"
+    },
+    "concurrency/swift-macosx/_Builtin_float.swiftmodule/arm64-apple-macos.swiftdoc": {
+      "bytes": 380,
+      "sha256": "0eb7732989456f0e51d17b21a6f2fea5e77b5950e02c300a6be5bafc76880f7c"
+    },
+    "concurrency/swift-macosx/_Builtin_float.swiftmodule/arm64-apple-macos.swiftinterface": {
+      "bytes": 4222,
+      "sha256": "2c9ec122612901fe19e8ac33b0c379d1ecc70b656939b17420a109224de0a26c"
+    },
+    "concurrency/swift-macosx/_Builtin_float.swiftmodule/arm64-apple-macos.swiftmodule": {
+      "bytes": 22908,
+      "sha256": "0cb1c979242adb9f1ad0bfd83ed0ec6a8deb26b375f3faf007fad0207fb7fdb8"
+    },
+    "concurrency/swift-macosx/_Concurrency.swiftmodule/_Concurrency.opt.bitstream": {
+      "bytes": 33656,
+      "sha256": "176a6273d0ab422204848de5a06cb960d86892cc6dcc35206fdf86c3952357ba"
+    },
+    "concurrency/swift-macosx/_Concurrency.swiftmodule/arm64-apple-macos.abi.json": {
+      "bytes": 149,
+      "sha256": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728"
+    },
+    "concurrency/swift-macosx/_Concurrency.swiftmodule/arm64-apple-macos.private.swiftinterface": {
+      "bytes": 407596,
+      "sha256": "b0d96af77a4025f2fa2333ac3021f59c1ee12f9ad10deb4d7cd3cda05d7d13f2"
+    },
+    "concurrency/swift-macosx/_Concurrency.swiftmodule/arm64-apple-macos.swiftdoc": {
+      "bytes": 403244,
+      "sha256": "e3a9042a10560b476a62caf216197376304fec037368bb91e73f4d15ef8e493e"
+    },
+    "concurrency/swift-macosx/_Concurrency.swiftmodule/arm64-apple-macos.swiftinterface": {
+      "bytes": 405507,
+      "sha256": "ca01122e8ed685f2116c42d462d9a6eba41b812be8f079d73a1b63ce6ba764e8"
+    },
+    "concurrency/swift-macosx/_Concurrency.swiftmodule/arm64-apple-macos.swiftmodule": {
+      "bytes": 884300,
+      "sha256": "a6fae0ed5f0eeb85c6b525db945b5a9686ed3aab38f5971b1e0340f3bbb72aa4"
+    },
+    "concurrency/swift-macosx/arm64/libswiftCommandLineSupport.a": {
+      "bytes": 1464,
+      "sha256": "9b90c116a39448659d68e151119184b0997073d6645f03d0602b261da517ead7"
+    },
+    "concurrency/swift-macosx/arm64/libswiftCore.dylib": {
+      "bytes": 9908448,
+      "sha256": "dd01686e06c81a21755bb864b43dad446c011e6c60c6b387b3b332c0a12708cb"
+    },
+    "concurrency/swift-macosx/arm64/libswift_Concurrency.dylib": {
+      "bytes": 878400,
+      "sha256": "403047e913f73ad29d06ab32b45edf921842187b5f8f33f346ac20569fca30ce"
+    },
+    "libswiftCore.machorun-wideisa.dylib": {
+      "bytes": 9908448,
+      "sha256": "5bf411dd38f4519a6497d09713013136d626da9ddea8eb31fdd27c3828f3acc6"
+    },
+    "libswiftCore.machorun-wideisa.manifest.json": {
+      "bytes": 8061,
+      "sha256": "c84e3849248ffba4c43e00feafe47d0324db06768b395710924e83c4f7a34957"
+    },
+    "libswiftcompat.dylib": {
+      "bytes": 52848,
+      "sha256": "d038be7a050624241339a43f794005ea376a8e54609fc14d0a689d6ea5fb7593"
+    },
+    "swift-macosx/Swift.swiftmodule/Swift.opt.bitstream": {
+      "bytes": 1803972,
+      "sha256": "b51a75a283ffd56b17e785b9a2da21af9c6426b4d0d0e160bfab64f61cdc839b"
+    },
+    "swift-macosx/Swift.swiftmodule/arm64-apple-macos.abi.json": {
+      "bytes": 149,
+      "sha256": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728"
+    },
+    "swift-macosx/Swift.swiftmodule/arm64-apple-macos.private.swiftinterface": {
+      "bytes": 2269394,
+      "sha256": "dfc34a9441f635202f07996d52645dd4793ec51a73c6f6efaeeccd7620826cd1"
+    },
+    "swift-macosx/Swift.swiftmodule/arm64-apple-macos.swiftdoc": {
+      "bytes": 4067904,
+      "sha256": "e7ae0b1601eebcbb60868be903154924f40788cb4c269fb64ff88cd3120fc09e"
+    },
+    "swift-macosx/Swift.swiftmodule/arm64-apple-macos.swiftinterface": {
+      "bytes": 2247589,
+      "sha256": "6daf38f050c17ca762475206f1311654606cbac7fd29d5c212bedce2851cd0da"
+    },
+    "swift-macosx/Swift.swiftmodule/arm64-apple-macos.swiftmodule": {
+      "bytes": 16115812,
+      "sha256": "23b2acd808d87a9382a9a0964f4b580db9fe2d7c9bb4998ca444ef6aa421dfd8"
+    },
+    "swift-macosx/arm64/libswiftCommandLineSupport.a": {
+      "bytes": 1464,
+      "sha256": "9b90c116a39448659d68e151119184b0997073d6645f03d0602b261da517ead7"
+    },
+    "swift-macosx/arm64/libswiftCore.dylib": {
+      "bytes": 9908448,
+      "sha256": "dd01686e06c81a21755bb864b43dad446c011e6c60c6b387b3b332c0a12708cb"
+    }
+  },
+  "generatedAtUtc": "2026-08-27T00:00:00Z",
+  "host": "aarch64-unknown-linux-gnu",
+  "moduleTriple": "arm64-apple-macos",
+  "note": "Measured in-tree 2026-09-03 from the committed arm64 slice. Source pin from docs/BUILD_LOG.md (tag swift-6.2.4-RELEASE, commit ee343b46) and full/observation/UPSTREAM.md (full hash). fileCount includes concurrency/ and the wide-isa sibling; they are recorded so a later overwrite is visible.",
+  "schema": "swiftcore-macho/artifacts/manifest.schema.json",
+  "source": {
+    "commit": "ee343b46aef81c3ac7c5d7960cb35a41a88c5a9b",
+    "repository": "https://github.com/swiftlang/swift.git",
+    "tag": "swift-6.2.4-RELEASE"
+  },
+  "toolchain": "Swift version 6.2.4 (swift-6.2.4-RELEASE)"
+}
