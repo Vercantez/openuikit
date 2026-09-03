@@ -13,6 +13,8 @@ W=${W:-$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)}
 . "$W/scripts/vendor_tree.sh"
 # shellcheck disable=SC1091
 . "$(cd "$(dirname "$0")" && pwd)/../scripts/guest_arch.inc"
+# shellcheck disable=SC1091
+. "$(cd "$(dirname "$0")" && pwd)/guest_gate_inventories.inc"
 UIKIT=${UIKIT:-$W/uikit}
 MACHORUN=${MACHORUN:-$W/machorun}
 RESOURCE_INPUT=${1:?usage: build_focus_widget_guest.sh <normalized-Focus_Widget.bundle>}
@@ -89,8 +91,8 @@ EXPECTED_SECOND_SHA=f71bc94e686809660d920da6f7804174097e038302a843c3533da45ceda4
 EXPECTED_RESOURCE_TREE_SHA=144c49c747d4689d9ca98d353cb5474b311473629383a779d99f1b705969a04d
 EXPECTED_RESOURCE_FILE_COUNT=16
 EXPECTED_RESOURCE_DIRECTORY_COUNT=7
-EXPECTED_PACKAGE_FILE_COUNT=101
-EXPECTED_PACKAGE_DIRECTORY_COUNT=12
+EXPECTED_PACKAGE_FILE_COUNT=$(guest_gate_inventory widget package file_count)
+EXPECTED_PACKAGE_DIRECTORY_COUNT=$(guest_gate_inventory widget package directory_count)
 BUILD_INPUT_MANIFEST=$FULL/focus-widget-build-inputs.manifest
 RUNTIME_CLOSURE_MANIFEST=$FULL/focus-widget-runtime-closure.manifest
 ATTEST=$W/full/swiftui/focus_widget_guest_attest.pl
@@ -143,6 +145,8 @@ support_digest() {
             "$W/full/swiftui/FocusWidgetBundle.generated.swift" \
             "$W/full/swiftui/FocusWidgetGuestMain.swift" \
             "$W/full/swiftui/focus_widget_guest_attest.pl" \
+            "$W/full/swiftui/guest_gate_inventories.py" \
+            "$W/full/swiftui/guest_gate_inventories.inc" \
             "$W/full/oracle-opencombine/Combine.swift" \
             "$W/full/oracle-opencombine/patches/COpenCombineHelpers-pthread-recursive.patch" \
             "$W/full/scripts/build_full.sh" \
@@ -686,76 +690,15 @@ package_directory_count=$(find "$PACKAGE" -mindepth 1 -type d | wc -l | tr -d '[
     echo "focus_widget_guest: package has $package_directory_count directories, expected $EXPECTED_PACKAGE_DIRECTORY_COUNT" >&2
     exit 2
 }
-expected_package_names=$(printf '%s\n' \
-    Combine.abi.json \
-    Combine.swiftdoc \
-    Combine.swiftmodule \
-    Combine.swiftsourceinfo \
-    OpenCombine.swiftdoc \
-    OpenCombine.swiftmodule \
-    OpenCoreGraphics.abi.json \
-    OpenCoreGraphics.swiftdoc \
-    OpenCoreGraphics.swiftmodule \
-    OpenCoreGraphics.swiftsourceinfo \
-    OpenUIKit.abi.json \
-    OpenUIKit.swiftdoc \
-    OpenUIKit.swiftmodule \
-    OpenUIKit.swiftsourceinfo \
-    SwiftUI.abi.json \
-    SwiftUI.swiftdoc \
-    SwiftUI.swiftmodule \
-    SwiftUI.swiftsourceinfo \
-    Symbols.abi.json \
-    Symbols.swiftdoc \
-    Symbols.swiftmodule \
-    Symbols.swiftsourceinfo \
-    libCombine.dylib \
-    libFoundationEssentials.dylib \
-    libOpenCombine.dylib \
-    libOpenCoreGraphics.dylib \
-    libOpenUIKit.dylib \
-    libSwiftUI.dylib \
-    libSymbols.dylib)
+expected_package_names=$(guest_gate_inventory widget package names)
 actual_package_names=$(find "$PACKAGE" -maxdepth 1 -type f -exec basename {} \; | LC_ALL=C sort)
 assert_exact_text "package top-level inventory" "$actual_package_names" "$expected_package_names"
-expected_package_directories=$(printf '%s\n' \
-    include \
-    include/CHostClock \
-    include/COpenCombineHelpers \
-    include/CPortableIO \
-    include/CQuartz \
-    include/CQuartz/quartz \
-    include/CSTBTrueType \
-    include/_FoundationCShims \
-    modules \
-    modules/Collections \
-    modules/FoundationEssentials \
-    modules/os)
+expected_package_directories=$(guest_gate_inventory widget package directories)
 actual_package_directories=$(find "$PACKAGE" -mindepth 1 -type d | \
     sed "s#^$PACKAGE/##" | LC_ALL=C sort)
 assert_exact_text "package directory inventory" \
     "$actual_package_directories" "$expected_package_directories"
-expected_fe_module_files=$(printf '%s\n' \
-    Collections/InternalCollectionsUtilities.abi.json \
-    Collections/InternalCollectionsUtilities.swiftdoc \
-    Collections/InternalCollectionsUtilities.swiftmodule \
-    Collections/InternalCollectionsUtilities.swiftsourceinfo \
-    Collections/OrderedCollections.abi.json \
-    Collections/OrderedCollections.swiftdoc \
-    Collections/OrderedCollections.swiftmodule \
-    Collections/OrderedCollections.swiftsourceinfo \
-    Collections/_RopeModule.abi.json \
-    Collections/_RopeModule.swiftdoc \
-    Collections/_RopeModule.swiftmodule \
-    Collections/_RopeModule.swiftsourceinfo \
-    FoundationEssentials/FoundationEssentials.abi.json \
-    FoundationEssentials/FoundationEssentials.swiftdoc \
-    FoundationEssentials/FoundationEssentials.swiftmodule \
-    FoundationEssentials/FoundationEssentials.swiftsourceinfo \
-    os/os.abi.json \
-    os/os.swiftdoc \
-    os/os.swiftmodule \
-    os/os.swiftsourceinfo)
+expected_fe_module_files=$(guest_gate_inventory widget package fe_module_files)
 actual_fe_module_files=$(find "$PACKAGE/modules" -type f | \
     sed "s#^$PACKAGE/modules/##" | LC_ALL=C sort)
 assert_exact_text "FoundationEssentials module inventory" \
@@ -856,82 +799,14 @@ assert_exact_text "guest LC_RPATH set" \
     "$(rpaths "$OUT/focus_widget_guest")" \
     "$(printf '%s\n' /usr/lib/swift @loader_path/package)"
 
-expected_openuikit_loads=$(printf '%s\n' \
-    @rpath/libOpenUIKit.dylib \
-    @rpath/libFoundationEssentials.dylib \
-    @rpath/libOpenCoreGraphics.dylib \
-    /usr/lib/swift/libswiftCore.dylib \
-    /usr/lib/libswiftcompat.dylib \
-    /usr/lib/libSystem.B.dylib \
-    /usr/lib/libobjc.A.dylib \
-    /usr/lib/libquartz.dylib \
-    /usr/lib/swift/libswift_Concurrency.dylib \
-    /usr/lib/swift/libswiftObjectiveC.dylib \
-    /usr/lib/swift/libswift_errno.dylib)
-expected_foundationessentials_loads=$(printf '%s\n' \
-    @rpath/libFoundationEssentials.dylib \
-    /usr/lib/swift/libswiftCore.dylib \
-    /usr/lib/libswiftcompat.dylib \
-    /usr/lib/libSystem.B.dylib \
-    /usr/lib/swift/libswiftDarwin.dylib \
-    /usr/lib/swift/libswift_StringProcessing.dylib \
-    /usr/lib/swift/libswiftSynchronization.dylib \
-    /usr/lib/libobjc.A.dylib \
-    /usr/lib/swift/libswift_errno.dylib)
-expected_opencoregraphics_loads=$(printf '%s\n' \
-    @rpath/libOpenCoreGraphics.dylib \
-    /usr/lib/swift/libswiftCore.dylib \
-    /usr/lib/libswiftcompat.dylib \
-    /usr/lib/libSystem.B.dylib \
-    /usr/lib/libquartz.dylib \
-    /usr/lib/libobjc.A.dylib)
-expected_swiftui_loads=$(printf '%s\n' \
-    @rpath/libSwiftUI.dylib \
-    @rpath/libOpenUIKit.dylib \
-    @rpath/libOpenCoreGraphics.dylib \
-    @rpath/libCombine.dylib \
-    @rpath/libOpenCombine.dylib \
-    @rpath/libSymbols.dylib \
-    @rpath/libFoundationEssentials.dylib \
-    /usr/lib/swift/libswiftCore.dylib \
-    /usr/lib/libswiftcompat.dylib \
-    /usr/lib/libSystem.B.dylib \
-    /usr/lib/libobjc.A.dylib \
-    /usr/lib/libquartz.dylib \
-    /usr/lib/swift/libswift_Concurrency.dylib \
-    /usr/lib/swift/libswiftObjectiveC.dylib \
-    /usr/lib/swift/libswiftObservation.dylib)
-expected_opencombine_loads=$(printf '%s\n' \
-    @rpath/libOpenCombine.dylib \
-    /usr/lib/swift/libswift_Concurrency.dylib \
-    /usr/lib/swift/libswiftCore.dylib \
-    /usr/lib/libc++abi.dylib \
-    /usr/lib/libSystem.B.dylib \
-    /usr/lib/libSystem.real.dylib \
-    /usr/lib/libobjc.A.dylib)
-expected_combine_loads=$(printf '%s\n' \
-    @rpath/libCombine.dylib \
-    @rpath/libOpenCombine.dylib \
-    @rpath/libOpenCombine.dylib \
-    /usr/lib/swift/libswiftCore.dylib \
-    /usr/lib/libSystem.B.dylib)
-expected_symbols_loads=$(printf '%s\n' \
-    @rpath/libSymbols.dylib \
-    /usr/lib/swift/libswiftCore.dylib \
-    /usr/lib/libswiftcompat.dylib \
-    /usr/lib/libSystem.B.dylib)
-expected_guest_loads=$(printf '%s\n' \
-    @rpath/libSwiftUI.dylib \
-    @rpath/libOpenUIKit.dylib \
-    @rpath/libFoundationEssentials.dylib \
-    @rpath/libOpenCoreGraphics.dylib \
-    @rpath/libSymbols.dylib \
-    /usr/lib/swift/libswiftCore.dylib \
-    /usr/lib/libswiftcompat.dylib \
-    /usr/lib/libSystem.B.dylib \
-    /usr/lib/libobjc.A.dylib \
-    /usr/lib/libquartz.dylib \
-    /usr/lib/swift/libswiftObjectiveC.dylib)
+expected_openuikit_loads=$(guest_gate_inventory widget loads openuikit)
+expected_foundationessentials_loads=$(guest_gate_inventory widget loads foundationessentials)
+expected_opencoregraphics_loads=$(guest_gate_inventory widget loads opencoregraphics)
+expected_swiftui_loads=$(guest_gate_inventory widget loads swiftui)
+expected_opencombine_loads=$(guest_gate_inventory widget loads opencombine)
+expected_combine_loads=$(guest_gate_inventory widget loads combine)
+expected_symbols_loads=$(guest_gate_inventory widget loads symbols)
+expected_guest_loads=$(guest_gate_inventory widget loads guest)
 assert_exact_text "libOpenUIKit dylib loads" \
     "$(load_paths "$PACKAGE/libOpenUIKit.dylib")" "$expected_openuikit_loads"
 assert_exact_text "libFoundationEssentials dylib loads" \
@@ -1046,107 +921,24 @@ grep -Fqx $'import\tlibSwiftUI\tOpenUIKit\tlibOpenUIKit\t'"$foreign_extension" \
 # that compatibility entry point; the project-owned libSystem umbrella does,
 # and is already the image behind the exact /usr/lib/libSystem.B.dylib load.
 # Keep the physical provider explicit in the link-input allowlist.
-expected_openuikit_inputs=$(printf '%s\n' \
-    'linker synthesized' \
-    "$PACKAGE/libFoundationEssentials.dylib" \
-    "$PACKAGE/libOpenCoreGraphics.dylib" \
-    "$SYS/usr/lib/swift/libswiftCore.tbd" \
-    "$SYS/usr/lib/libSystem.tbd" \
-    "$SYS/usr/lib/libobjc.tbd" \
-    "$MRROOT/darwin/usr/lib/libquartz.dylib" \
-    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
-    "$FULL/openuikit.o" \
-    "$FULL/cportableio.o" \
-    "$FULL/cstbtruetype.o" \
-    "$FULL/hostclock.o" \
-    "$FULL/swiftcorepatch.o" \
-    "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
-    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd")
-expected_foundationessentials_inputs=$(printf '%s\n' \
-    'linker synthesized' \
-    "$SYS/usr/lib/swift/libswiftCore.tbd" \
-    "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
-    "$SYS/usr/lib/libSystem.tbd" \
-    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
-    "$FE_OUT/FoundationEssentials.o" \
-    "$FE_COLLECTIONS/InternalCollectionsUtilities.o" \
-    "$FE_COLLECTIONS/OrderedCollections.o" \
-    "$FE_COLLECTIONS/_RopeModule.o" \
-    "$FE_OS/os.o" \
-    "$FE_CSHIMS/platform_shims.o" \
-    "$FE_CSHIMS/string_shims.o" \
-    "$FE_CSHIMS/uuid.o" \
-    "$FE_OUT/fm_unimplemented.o" \
-    "$FE_OUT/uuid_compat.o" \
-    "$FULL/swiftcorepatch.o" \
-    "$SYS/usr/lib/swift/libswiftDarwin.tbd" \
-    "$SYS/usr/lib/swift/libswift_StringProcessing.tbd" \
-    "$SYS/usr/lib/swift/libswiftSynchronization.tbd" \
-    "$SYS/usr/lib/libobjc.tbd")
+expected_openuikit_inputs=$(guest_gate_inventory widget inputs openuikit)
+expected_foundationessentials_inputs=$(guest_gate_inventory widget inputs foundationessentials)
 # libSystem.B.dylib (mrroot) resolves _remquo and _nan for
 # OpenCoreGraphics/PortableCGFloat.swift's CGFloat remquo(_:_:) / nan(_:)
 # wrappers: the sysroot libSystem.tbd re-exports libsystem_m, but the sysroot
 # carries no usr/lib/system/*.tbd to follow, so lld binds the real image --
 # the same image the loader maps for /usr/lib/libSystem.B.dylib.
-expected_opencoregraphics_inputs=$(printf '%s\n' \
-    'linker synthesized' \
-    "$SYS/usr/lib/swift/libswiftCore.tbd" \
-    "$SYS/usr/lib/libSystem.tbd" \
-    "$MRROOT/darwin/usr/lib/libquartz.dylib" \
-    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
-    "$FULL/opencoregraphics.o" \
-    "$SYS/usr/lib/libobjc.tbd")
-expected_swiftui_inputs=$(printf '%s\n' \
-    'linker synthesized' \
-    "$PACKAGE/libOpenUIKit.dylib" \
-    "$PACKAGE/libOpenCoreGraphics.dylib" \
-    "$PACKAGE/libCombine.dylib" \
-    "$PACKAGE/libSymbols.dylib" \
-    "$PACKAGE/libFoundationEssentials.dylib" \
-    "$SYS/usr/lib/swift/libswiftCore.tbd" \
-    "$SYS/usr/lib/libSystem.tbd" \
-    "$SYS/usr/lib/libobjc.tbd" \
-    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
-    "$OUT/swiftui.o" \
-    "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
-    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd" \
-    "$SYS/usr/lib/swift/libswiftObservation.tbd")
-expected_opencombine_inputs=$(printf '%s\n' \
-    'linker synthesized' \
-    "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" \
-    "$OUT/copencombinehelpers.o" \
-    "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
-    "$SYS/usr/lib/swift/libswiftCore.tbd" \
-    "$MRROOT/darwin/usr/lib/libc++abi.dylib" \
-    "$SYS/usr/lib/libSystem.tbd" \
-    "$SYS/usr/lib/libobjc.tbd")
-expected_combine_inputs=$(printf '%s\n' \
-    'linker synthesized' \
-    "$OUT/combine.o" \
-    "$SYS/usr/lib/libSystem.tbd")
+expected_opencoregraphics_inputs=$(guest_gate_inventory widget inputs opencoregraphics)
+expected_swiftui_inputs=$(guest_gate_inventory widget inputs swiftui)
+expected_opencombine_inputs=$(guest_gate_inventory widget inputs opencombine)
+expected_combine_inputs=$(guest_gate_inventory widget inputs combine)
 # libswiftcompat.dylib is on libSymbols' link line and in its load commands,
 # but symbols.o binds nothing from it, so lld's map omits it (the map lists
 # inputs that contributed symbols, not the command line).
-expected_symbols_inputs=$(printf '%s\n' \
-    'linker synthesized' \
-    "$OUT/symbols.o" \
-    "$SYS/usr/lib/swift/libswiftCore.tbd" \
-    "$SYS/usr/lib/libSystem.tbd")
+expected_symbols_inputs=$(guest_gate_inventory widget inputs symbols)
 # libSymbols.dylib is a guest load command (expected_guest_loads) but the
 # widget binds no Symbols symbol, so it is absent from the guest link map.
-expected_guest_inputs=$(printf '%s\n' \
-    'linker synthesized' \
-    "$PACKAGE/libSwiftUI.dylib" \
-    "$PACKAGE/libOpenUIKit.dylib" \
-    "$PACKAGE/libFoundationEssentials.dylib" \
-    "$PACKAGE/libOpenCoreGraphics.dylib" \
-    "$SYS/usr/lib/swift/libswiftCore.tbd" \
-    "$SYS/usr/lib/libSystem.tbd" \
-    "$SYS/usr/lib/libobjc.tbd" \
-    "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
-    "$OUT/guest-main.o" \
-    "$OUT/focuswidget.o" \
-    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd")
+expected_guest_inputs=$(guest_gate_inventory widget inputs guest)
 assert_exact_text "libOpenUIKit linker inputs" \
     "$(link_map_inputs "$AUDIT/libOpenUIKit.link-map")" "$expected_openuikit_inputs"
 assert_exact_text "libFoundationEssentials linker inputs" \

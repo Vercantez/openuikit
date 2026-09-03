@@ -50,12 +50,16 @@ REMINDER=$ROOT/full/xcodeplan/build_and_run_reminder_scene_guest.sh
 UD_RUNNER=$ROOT/foundation-macho/tests/ud_guest_runner.swift
 PREPARE=$ROOT/scripts/env/prepare.py
 BUILD_FULL=$ROOT/full/scripts/build_full.sh
+INVENTORIES=$ROOT/full/swiftui/guest_gate_inventories.py
+INVENTORIES_INC=$ROOT/full/swiftui/guest_gate_inventories.inc
 
 expect_file "$PHASE2"
 expect_file "$COMMON"
 expect_file "$STAGE"
 expect_file "$OC"
 expect_file "$GUEST"
+expect_file "$INVENTORIES"
+expect_file "$INVENTORIES_INC"
 
 echo "== bash -n"
 for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
@@ -67,6 +71,7 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/scripts/x86/ud_guest.inc" \
     "$ROOT/scripts/x86/gen_swift_tbd.sh" \
     "$ROOT/scripts/x86/test_gen_swift_tbd.sh" \
+    "$ROOT/full/swiftui/guest_gate_inventories.inc" \
     "$ROOT/scripts/build_runtime_shims.sh" \
     "$ROOT/swiftcore-macho/scripts/test_compat_source.sh"; do
     if bash -n "$s"; then
@@ -347,9 +352,12 @@ expect_grep 'NOTE extra Apple-SDK' "$PHASE2" \
 expect_grep 'libquartz.tbd' "$COMMON" "consumer set includes libquartz.tbd"
 expect_grep '[-]lobjc' "$BUILD_FULL" "build_full link names -lobjc"
 expect_grep '[-]lSystem' "$BUILD_FULL" "build_full link names -lSystem"
-expect_grep 'libswift_Concurrency.dylib' "$WIDGET" "widget expected loads name Concurrency"
-expect_grep 'libswiftObjectiveC.dylib' "$WIDGET" "widget expected loads name ObjectiveC"
-expect_grep 'libswiftObservation.dylib' "$WIDGET" "widget expected loads name Observation"
+expect_grep 'libswift_Concurrency.dylib' "$INVENTORIES" "widget expected loads name Concurrency"
+expect_grep 'libswiftObjectiveC.dylib' "$INVENTORIES" "widget expected loads name ObjectiveC"
+expect_grep 'libswiftObservation.dylib' "$INVENTORIES" "widget expected loads name Observation"
+expect_grep 'libswift_DarwinFoundation1.dylib' "$INVENTORIES" \
+    "x86 widget loads name DarwinFoundation1"
+expect_grep 'libswift_errno.dylib' "$INVENTORIES" "arm64 widget loads still name errno"
 expect_grep 'libswiftCore.tbd' "$ROOT/full/swiftui/focus_widget_guest_attest.pl" \
     "widget attest requires named libswiftCore.tbd"
 expect_grep '[-]lswiftCore' "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
@@ -361,13 +369,13 @@ want=$(phase2_consumer_tbd_relpaths)
 derived=$(
     {
         grep -hoE 'libswift[A-Za-z0-9_]+\.tbd' \
-            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" 2>/dev/null \
+            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" "$INVENTORIES" 2>/dev/null \
             | sed 's|^|usr/lib/swift/|'
         grep -hoE 'lib(System(\.B)?|objc(\.A)?|c\+\+(\.1)?|c\+\+abi|quartz)\.tbd' \
-            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" 2>/dev/null \
+            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" "$INVENTORIES" 2>/dev/null \
             | sed 's|^|usr/lib/|'
         grep -hoE -- '-l(swift[A-Za-z0-9_]+|objc|System)' \
-            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" 2>/dev/null \
+            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" "$INVENTORIES" 2>/dev/null \
             | while IFS= read -r flag; do
                 name=${flag#-l}
                 case "$name" in
@@ -377,7 +385,7 @@ derived=$(
                 esac
             done
         grep -hoE '/usr/lib/swift/libswift[A-Za-z0-9_]+\.dylib' \
-            "$WIDGET" "$ONBOARD" "$LINK_UD" 2>/dev/null \
+            "$WIDGET" "$ONBOARD" "$LINK_UD" "$INVENTORIES" 2>/dev/null \
             | sed 's|^/||; s/\.dylib$/.tbd/'
     } | grep -E '^usr/lib/' | sort -u
 )

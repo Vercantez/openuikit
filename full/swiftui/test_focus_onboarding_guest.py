@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Regression teeth for the unchanged Focus onboarding guest boundary."""
 
+import importlib.util
 from pathlib import Path
 import re
 import subprocess
@@ -32,6 +33,14 @@ FOUNDATION_RUNTIME_UNDEFINED_CONTRACT = (
     ("EXPECTED_FOUNDATION_SYNCHRONIZATION_UNDEFINEDS", 2, "15Synchronization"),
     ("EXPECTED_FOUNDATION_REGEX_PARSER_UNDEFINEDS", 0, "12_RegexParser"),
 )
+
+_inv_spec = importlib.util.spec_from_file_location(
+    "guest_gate_inventories",
+    ROOT / "full/swiftui/guest_gate_inventories.py",
+)
+inventories = importlib.util.module_from_spec(_inv_spec)
+assert _inv_spec.loader is not None
+_inv_spec.loader.exec_module(inventories)
 
 
 def validate_foundation_runtime_contract(source: str) -> None:
@@ -179,14 +188,17 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn("run_link libFoundationEssentials ", text)
         self.assertIn("run_link libWidget ", text)
         self.assertIn("run_link libOnboarding ", text)
-        foundation_expected = text.split("expected_foundation_inputs=", 1)[1].split(
-            "expected_widget_inputs=", 1
-        )[0]
+        self.assertIn(
+            'guest_gate_inventory onboarding inputs foundation', text
+        )
+        foundation_expected = "\n".join(
+            inventories.inputs("onboarding", "foundation", "arm64")
+        )
         for required in (
             "libswift_Concurrency.tbd",
             "libswiftDarwin.tbd",
             "libOpenCoreGraphics.dylib",
-            "$RELATIVE_TIME_RUNTIME",
+            "{RELATIVE_TIME_RUNTIME}",
         ):
             self.assertIn(required, foundation_expected)
         self.assertIn(

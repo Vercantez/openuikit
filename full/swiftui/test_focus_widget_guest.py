@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Static regression teeth for the source-unchanged guest proof boundary."""
 
+import importlib.util
 import os
 from pathlib import Path
 import subprocess
@@ -15,6 +16,21 @@ HARNESS = ROOT / "full/swiftui/FocusWidgetGuestMain.swift"
 ATTEST = ROOT / "full/swiftui/focus_widget_guest_attest.pl"
 ADVERSARIAL = ROOT / "full/swiftui/test_focus_widget_guest_adversarial.sh"
 BUILD_FULL = ROOT / "full/scripts/build_full.sh"
+INVENTORIES_PY = ROOT / "full/swiftui/guest_gate_inventories.py"
+INVENTORIES_INC = ROOT / "full/swiftui/guest_gate_inventories.inc"
+GUEST_ARCH_PY = ROOT / "full/scripts/guest_arch.py"
+
+
+def _load_module(path: Path, name: str):
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
+
+
+inventories = _load_module(INVENTORIES_PY, "guest_gate_inventories")
+guest_arch = _load_module(GUEST_ARCH_PY, "guest_arch")
 
 
 class FocusWidgetGuestProofTests(unittest.TestCase):
@@ -173,23 +189,16 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("expected_swiftui_inputs", text)
         self.assertIn("expected_symbols_loads", text)
         self.assertIn("expected_guest_loads", text)
-        swiftui_loads = text.split("expected_swiftui_loads=", 1)[1].split(
-            "expected_opencombine_loads=", 1
-        )[0]
-        self.assertIn("@rpath/libFoundationEssentials.dylib", swiftui_loads)
-        # FE's own Darwin/StringProcessing/Synchronization/errno loads stay on
-        # libFoundationEssentials, matching OpenUIKit's existing -lFoundationEssentials
-        # edge. The recursive runtime-closure manifest walks those at runtime.
-        self.assertNotIn("libswiftDarwin.dylib", swiftui_loads)
-        self.assertNotIn("libswift_StringProcessing.dylib", swiftui_loads)
-        self.assertNotIn("libswiftSynchronization.dylib", swiftui_loads)
-        self.assertNotIn("libswift_errno.dylib", swiftui_loads)
-        swiftui_inputs = text.split("expected_swiftui_inputs=", 1)[1].split(
-            "expected_opencombine_inputs=", 1
-        )[0]
-        self.assertIn('"$PACKAGE/libFoundationEssentials.dylib"', swiftui_inputs)
-        self.assertIn("EXPECTED_PACKAGE_FILE_COUNT=101", text)
-        self.assertIn("EXPECTED_PACKAGE_DIRECTORY_COUNT=12", text)
+        self.assertIn('guest_gate_inventory widget loads swiftui', text)
+        self.assertIn('guest_gate_inventory widget inputs swiftui', text)
+        self.assertIn(
+            "EXPECTED_PACKAGE_FILE_COUNT=$(guest_gate_inventory widget package file_count)",
+            text,
+        )
+        self.assertIn(
+            "EXPECTED_PACKAGE_DIRECTORY_COUNT=$(guest_gate_inventory widget package directory_count)",
+            text,
+        )
         self.assertIn('assert_exact_text "package top-level inventory"', text)
         self.assertIn('assert_exact_text "package directory inventory"', text)
         self.assertIn('assert_exact_text "FoundationEssentials module inventory"', text)
@@ -228,11 +237,10 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
 
     def test_openuikit_link_inputs_cover_main_actor_deinit_provider(self) -> None:
         text = BUILD.read_text()
-        expected = text.split("expected_openuikit_inputs=", 1)[1].split(
-            "expected_swiftui_inputs=", 1
-        )[0]
-        self.assertIn('"$MRROOT/darwin/usr/lib/libSystem.B.dylib"', expected)
-        self.assertIn('"$FULL/openuikit.o"', expected)
+        self.assertIn('guest_gate_inventory widget inputs openuikit', text)
+        expected = inventories.inputs("widget", "openuikit", "arm64")
+        self.assertIn("{MRROOT}/darwin/usr/lib/libSystem.B.dylib", expected)
+        self.assertIn("{FULL}/openuikit.o", expected)
 
     def test_swiftui_package_compiles_and_attests_complete_source_directory(self) -> None:
         text = BUILD.read_text()
@@ -354,6 +362,8 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         self.assertIn("DejaVuSans.ttf", text)
         self.assertIn("DejaVuSans-Bold.ttf", text)
         self.assertIn("support_before=$(support_digest)", text)
+        self.assertIn("guest_gate_inventories.py", text)
+        self.assertIn("guest_gate_inventories.inc", text)
         self.assertIn("runtime_before=$(runtime_fingerprint)", text)
         self.assertIn("runtime_after=$(runtime_fingerprint)", text)
         self.assertIn("BUILD_INPUT_MANIFEST=$FULL/focus-widget-build-inputs.manifest", text)
@@ -374,6 +384,8 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
             "build-full/foundation/os",
             "build-full/foundation/cshims",
             "sdk/sysroot_fe4",
+            "guest_gate_inventories.py",
+            "guest_gate_inventories.inc",
             '"$full/OpenUIKit.$_"',
             '"$full/OpenCoreGraphics.$_"',
             "qw(swiftmodule swiftdoc swiftsourceinfo abi.json)",
@@ -689,6 +701,300 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
                 proc.stdout,
                 r"id=sysroot_fe4 .*scratch/sysroot_fe4(?:/|\s)",
             )
+
+
+# Arm64 hashes of the inventories Gate B asserted at e93727e0 / current main.
+# Changing an arm64 list without updating these pins is a false-green: the
+# operator's arm64 widget gate would then diverge from what this file records.
+_ARM64_WIDGET_LOAD_SHA256 = {
+    "combine": "de782fb75c10a6708b718b419a715b0ed820a27cf643a5148ec277e520895039",
+    "foundationessentials": "4d3801b04b67184a933564c1bcb608884a2b76a40ab0000bd3a4391dc51552e4",
+    "guest": "ef127146815795ff4d28287450c8d3dcf45b7b02d763da1b025c998bb64b5d81",
+    "opencombine": "cb7dd88fea0eee87eb156ebd2a1a2191366a1bcfef4579cc6306764297fc2c36",
+    "opencoregraphics": "8ca2ac9655c5d0e3854addfa8d08e0258a4da34d22d379ab6b4ce0789c8709e8",
+    "openuikit": "9042a6ca8b30f5f7f8c017401449e737d139a86a40239240a8a72219bfbe663f",
+    "swiftui": "f1285a0e3a49dc1aebf1c8753a14f1a51ba39f7323ae2577042c8b7abf4025a5",
+    "symbols": "33355a1f20997221c9fd5a7557f44ff0fcbc8a235fbb5a7b35ea5015aa6984bf",
+}
+_X86_WIDGET_LOAD_SHA256 = {
+    "openuikit": "9ace743214c8f1e735b4c0226167e698f73c6485d0772e7379e7893bb8da49f8",
+    "foundationessentials": "da582aef71d6a72f3fad3128b08d2aa7eff41046193836badd5d0ab3bd5134e5",
+}
+_ARM64_WIDGET_INPUT_SHA256 = {
+    "combine": "2fb8cf23b974cfc6272337e5992a6273ddbcfe8f7b3748b82e3a4868c2fac00e",
+    "foundationessentials": "78afd92924bdac73f65eb37fef87f163f88ff5f9b7e74d1b0fca969fc9d4459e",
+    "guest": "fe87b72e55f03dac218cd9cc6069fdc501eed9814d0870ff6920a4c890bfc1b3",
+    "opencombine": "1759c45b9efb1161ab8fda800dd89285d13aa8393ade080ff1a1fc70fa8b3f7c",
+    "opencoregraphics": "24691bdfddb9f4f2a5e8d3dcab92f0cbce3f935ea661630aba5eddb800e9bd2f",
+    "openuikit": "420fde904d3f834b0448821995abc3596a9845599f290bee04f2aab8d1bf052f",
+    "swiftui": "c3e54e497e1a5a77603407803c0581a6b50443114a77434e5da3a776bec4e608",
+    "symbols": "028d043be0132451b21a39d37dc0e368b3a5299638ba3393df108f79d647531b",
+}
+_ARM64_ONBOARDING_INPUT_SHA256 = {
+    "combine": "2fb8cf23b974cfc6272337e5992a6273ddbcfe8f7b3748b82e3a4868c2fac00e",
+    "foundation": "aeda8311f2404b181030892be67d698cffe1e0444f7e7b14ac37e608b2f5db34",
+    "foundationessentials": "b92946a085dfec9da20d0cfb2d013adedd2823f92718716e399c6eaf132c59b4",
+    "onboarding": "3f9f79428632bbf02dd3be042c9f3aa36bc0a1e41df9e179d0334cc1188248d2",
+    "opencombine": "1759c45b9efb1161ab8fda800dd89285d13aa8393ade080ff1a1fc70fa8b3f7c",
+    "opencoregraphics": "24691bdfddb9f4f2a5e8d3dcab92f0cbce3f935ea661630aba5eddb800e9bd2f",
+    "openuikit": "e69497be0b2108c1292902c44201b3dae932a9722aa76525561f1e942a946280",
+    "swiftui": "c3e54e497e1a5a77603407803c0581a6b50443114a77434e5da3a776bec4e608",
+    "symbols": "028d043be0132451b21a39d37dc0e368b3a5299638ba3393df108f79d647531b",
+    "widget": "37110da55798084f729b85ab7c2f5b3898ad4ac19edfcb43e67bfb0299a3b537",
+}
+_ARM64_PACKAGE_SHA256 = {
+    "names": "f7f24a6f88a070a04f7c2225a991d42379d5bcfe6681541dc87a3864dc035cef",
+    "directories": "6f919ab8362dc40f9cea64edd9b93a1e59aee0be48fdb2622c956392b02406be",
+    "fe_module_files": "f3bdd5f1c2f371c76a19a96bab86c624318d21b8e85d253c805cbe033d9f50cb",
+}
+
+
+class FocusWidgetGuestInventoryTests(unittest.TestCase):
+    """Arch-conditional inventories: arm64 byte-identical, x86 present for every check."""
+
+    def test_gate_scripts_resolve_inventories_from_one_place(self) -> None:
+        widget = BUILD.read_text()
+        onboarding = (
+            ROOT / "full/swiftui/build_focus_onboarding_guest.sh"
+        ).read_text()
+        self.assertIn("guest_gate_inventories.inc", widget)
+        self.assertIn("guest_gate_inventories.inc", onboarding)
+        self.assertIn("guest_gate_inventory widget loads", widget)
+        self.assertIn("guest_gate_inventory widget inputs", widget)
+        self.assertIn("guest_gate_inventory widget package", widget)
+        self.assertIn("guest_gate_inventory onboarding inputs", onboarding)
+        self.assertNotIn("libswift_errno.dylib", widget)
+        self.assertNotIn("/usr/lib/swift/libswift_DarwinFoundation1.dylib", widget)
+        self.assertIn("MH_MAGIC_64[[:space:]]+${OTOOL_CPU}", widget)
+        self.assertIn("MH_MAGIC_64[[:space:]]+${OTOOL_CPU}", onboarding)
+
+    def test_arm64_widget_loads_are_hash_pinned(self) -> None:
+        self.assertEqual(
+            tuple(sorted(_ARM64_WIDGET_LOAD_SHA256)),
+            inventories.check_names("widget", "loads"),
+        )
+        for name, digest in _ARM64_WIDGET_LOAD_SHA256.items():
+            items = inventories.loads("widget", name, "arm64")
+            self.assertEqual(inventories.inventory_sha256(items), digest, name)
+            self.assertEqual(
+                inventories.loads("widget", name, "arm64"),
+                inventories.WIDGET_LOADS_ARM64[name],
+                name,
+            )
+
+    def test_arm64_widget_inputs_are_hash_pinned(self) -> None:
+        self.assertEqual(
+            tuple(sorted(_ARM64_WIDGET_INPUT_SHA256)),
+            inventories.check_names("widget", "inputs"),
+        )
+        for name, digest in _ARM64_WIDGET_INPUT_SHA256.items():
+            items = inventories.inputs("widget", name, "arm64")
+            self.assertEqual(inventories.inventory_sha256(items), digest, name)
+
+    def test_arm64_onboarding_inputs_are_hash_pinned(self) -> None:
+        self.assertEqual(
+            tuple(sorted(_ARM64_ONBOARDING_INPUT_SHA256)),
+            inventories.check_names("onboarding", "inputs"),
+        )
+        for name, digest in _ARM64_ONBOARDING_INPUT_SHA256.items():
+            items = inventories.inputs("onboarding", name, "arm64")
+            self.assertEqual(inventories.inventory_sha256(items), digest, name)
+
+    def test_arm64_package_inventories_are_hash_pinned(self) -> None:
+        self.assertEqual(inventories.WIDGET_PACKAGE_FILE_COUNT, 101)
+        self.assertEqual(inventories.WIDGET_PACKAGE_DIRECTORY_COUNT, 12)
+        self.assertEqual(
+            inventories.package_scalar("file_count", "arm64"), "101"
+        )
+        self.assertEqual(
+            inventories.package_scalar("directory_count", "arm64"), "12"
+        )
+        for name, digest in _ARM64_PACKAGE_SHA256.items():
+            items = inventories.package_items(name, "arm64")
+            self.assertEqual(inventories.inventory_sha256(items), digest, name)
+
+    def test_x86_64_has_every_widget_check(self) -> None:
+        for kind in ("loads", "inputs", "package"):
+            names = inventories.check_names("widget", kind)
+            self.assertTrue(names, kind)
+            for name in names:
+                if kind == "loads":
+                    arm = inventories.loads("widget", name, "arm64")
+                    x86 = inventories.loads("widget", name, "x86_64")
+                elif kind == "inputs":
+                    arm = inventories.inputs("widget", name, "arm64")
+                    x86 = inventories.inputs("widget", name, "x86_64")
+                else:
+                    if name in ("file_count", "directory_count"):
+                        arm = inventories.package_scalar(name, "arm64")
+                        x86 = inventories.package_scalar(name, "x86_64")
+                        self.assertEqual(arm, x86, name)
+                        continue
+                    arm = inventories.package_items(name, "arm64")
+                    x86 = inventories.package_items(name, "x86_64")
+                self.assertEqual(len(x86), len(arm), f"{kind}/{name}")
+                self.assertTrue(x86, f"{kind}/{name} empty")
+        self.assertEqual(
+            inventories.otool_cpu("x86_64"), guest_arch.otool_cpu("x86_64")
+        )
+        self.assertEqual(
+            inventories.otool_cpu("arm64"), guest_arch.otool_cpu("arm64")
+        )
+        self.assertEqual(inventories.otool_cpu("x86_64"), "X86_64")
+        self.assertEqual(inventories.otool_cpu("arm64"), "ARM64")
+
+    def test_x86_64_has_every_onboarding_input_check(self) -> None:
+        for name in inventories.check_names("onboarding", "inputs"):
+            arm = inventories.inputs("onboarding", name, "arm64")
+            x86 = inventories.inputs("onboarding", name, "x86_64")
+            self.assertEqual(x86, arm, name)
+            self.assertEqual(
+                inventories.inventory_sha256(x86),
+                _ARM64_ONBOARDING_INPUT_SHA256[name],
+                name,
+            )
+
+    def test_x86_overlay_autolink_is_darwinfoundation1_not_errno(self) -> None:
+        for name in ("openuikit", "foundationessentials"):
+            arm = inventories.loads("widget", name, "arm64")
+            x86 = inventories.loads("widget", name, "x86_64")
+            self.assertIn(inventories.ARM64_OVERLAY_AUTOLINK, arm)
+            self.assertNotIn(inventories.ARM64_OVERLAY_AUTOLINK, x86)
+            self.assertIn(inventories.X86_OVERLAY_AUTOLINK, x86)
+            self.assertNotIn(inventories.X86_OVERLAY_AUTOLINK, arm)
+            self.assertEqual(
+                inventories.macos_overlay_autolink_loads(arm, "x86_64"), x86
+            )
+            self.assertEqual(
+                inventories.inventory_sha256(x86),
+                _X86_WIDGET_LOAD_SHA256[name],
+                name,
+            )
+        # FE Darwin/StringProcessing/Synchronization/errno stay off libSwiftUI
+        # on both arches; DarwinFoundation1 is the x86 errno stand-in and must
+        # not leak onto SwiftUI either.
+        swiftui_arm = inventories.loads("widget", "swiftui", "arm64")
+        swiftui_x86 = inventories.loads("widget", "swiftui", "x86_64")
+        self.assertEqual(swiftui_arm, swiftui_x86)
+        for forbidden in (
+            "libswiftDarwin.dylib",
+            "libswift_StringProcessing.dylib",
+            "libswiftSynchronization.dylib",
+            "libswift_errno.dylib",
+            "libswift_DarwinFoundation1.dylib",
+        ):
+            self.assertFalse(
+                any(forbidden in item for item in swiftui_arm), forbidden
+            )
+        self.assertIn("@rpath/libFoundationEssentials.dylib", swiftui_arm)
+        swiftui_inputs = inventories.inputs("widget", "swiftui", "arm64")
+        self.assertIn("{PACKAGE}/libFoundationEssentials.dylib", swiftui_inputs)
+
+    def test_cli_emits_printf_compatible_lists(self) -> None:
+        arm = subprocess.check_output(
+            [
+                "python3",
+                str(INVENTORIES_PY),
+                "--arch",
+                "arm64",
+                "--gate",
+                "widget",
+                "--kind",
+                "loads",
+                "--name",
+                "openuikit",
+            ],
+            text=True,
+        )
+        x86 = subprocess.check_output(
+            [
+                "python3",
+                str(INVENTORIES_PY),
+                "--arch",
+                "x86_64",
+                "--gate",
+                "widget",
+                "--kind",
+                "loads",
+                "--name",
+                "openuikit",
+            ],
+            text=True,
+        )
+        self.assertTrue(arm.endswith("libswift_errno.dylib\n"))
+        self.assertTrue(x86.endswith("libswift_DarwinFoundation1.dylib\n"))
+        binds = [
+            "--bind",
+            "PACKAGE=/pkg",
+            "--bind",
+            "SYS=/sys",
+            "--bind",
+            "MRROOT=/mr",
+            "--bind",
+            "FULL=/full",
+            "--bind",
+            "OUT=/out",
+            "--bind",
+            "FE_OUT=/fe",
+            "--bind",
+            "FE_COLLECTIONS=/col",
+            "--bind",
+            "FE_OS=/os",
+            "--bind",
+            "FE_CSHIMS=/cs",
+            "--bind",
+            "OPENCOMBINE_ARTIFACTS=/oc",
+            "--bind",
+            "RELATIVE_TIME_RUNTIME=/rt",
+        ]
+        emitted = subprocess.check_output(
+            [
+                "python3",
+                str(INVENTORIES_PY),
+                "--arch",
+                "arm64",
+                "--gate",
+                "widget",
+                "--kind",
+                "inputs",
+                "--name",
+                "openuikit",
+                *binds,
+            ],
+            text=True,
+        )
+        self.assertIn("/pkg/libFoundationEssentials.dylib\n", emitted)
+        self.assertIn("/full/openuikit.o\n", emitted)
+        self.assertIn("/mr/darwin/usr/lib/libSystem.B.dylib\n", emitted)
+
+    def test_inc_and_python_are_present(self) -> None:
+        self.assertTrue(INVENTORIES_PY.is_file())
+        self.assertTrue(INVENTORIES_INC.is_file())
+        self.assertIn("guest_gate_inventory()", INVENTORIES_INC.read_text())
+
+    def test_bash_helper_emits_arch_conditional_openuikit_loads(self) -> None:
+        script = r"""
+set -euo pipefail
+W=%s
+. "$W/full/scripts/guest_arch.inc"
+. "$W/full/swiftui/guest_gate_inventories.inc"
+ARCH=arm64
+guest_gate_inventory widget loads openuikit
+printf '==SPLIT==\n'
+ARCH=x86_64
+guest_gate_inventory widget loads openuikit
+""" % ROOT
+        result = subprocess.run(
+            ["bash", "-c", script],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        arm, x86 = result.stdout.split("==SPLIT==\n", 1)
+        self.assertTrue(arm.strip().endswith("libswift_errno.dylib"))
+        self.assertTrue(x86.strip().endswith("libswift_DarwinFoundation1.dylib"))
+        self.assertNotIn("libswift_DarwinFoundation1.dylib", arm)
+        self.assertNotIn("libswift_errno.dylib", x86)
 
 
 if __name__ == "__main__":
