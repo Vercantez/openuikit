@@ -889,8 +889,13 @@ class FocusWidgetGuestInventoryTests(unittest.TestCase):
                 expected = arm + (inventories.X86_OVERLAY_AUTOLINK_TBD,)
             self.assertEqual(x86, expected, name)
             self.assertEqual(
-                inventories.inventory_sha256(x86),
+                inventories.inventory_sha256(arm),
                 _ARM64_ONBOARDING_INPUT_SHA256[name],
+                name,
+            )
+            self.assertEqual(
+                inventories.inventory_sha256(x86),
+                inventories.inventory_sha256(expected),
                 name,
             )
 
