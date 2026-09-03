@@ -205,8 +205,35 @@ build_inside() {
             >open-uikit-runtime-resources.sha256
     )
 
+    # The host driver depends on PortableUIKitLiveTransport (646a9285), whose
+    # C half is the COpenUIKitLiveTransport clang module: same module map,
+    # sources and flags as build_portable_application_guest.sh.
+    local live_transport_root="$W/full/live-transport"
+    local live_transport_include="$live_transport_root/include"
+    [ -f "$live_transport_include/module.modulemap" ] \
+        || die "live transport Clang module map is missing: $live_transport_include/module.modulemap"
+    local live_transport_build="$SCENE_OUT/live-transport-build"
+    rm -rf "$live_transport_build" && mkdir -p "$live_transport_build"
+    local -a live_transport_objects=()
+    local live_transport_index=0 live_transport_source
+    for live_transport_source in \
+        "$live_transport_root/OpenUIKitLiveTransportCommon.c" \
+        "$live_transport_root/OpenUIKitLiveTransportGuest.c"; do
+        echo "== compile platform live transport [$live_transport_index]"
+        clang-18 -target "$TARGET" -isysroot "$sys" -std=c11 -O2 \
+            -Wall -Wextra -Werror -fvisibility=hidden -fno-common \
+            -I "$live_transport_include" -I "$live_transport_root" \
+            -c "$live_transport_source" -o "$live_transport_build/$live_transport_index.o" \
+            || die "live transport C compiler failed on $live_transport_source"
+        live_transport_objects+=("$live_transport_build/$live_transport_index.o")
+        live_transport_index=$((live_transport_index + 1))
+    done
+    [ "${#live_transport_objects[@]}" -eq 2 ] || die "live transport object count drifted"
+
     echo "== unchanged Reminder scene slice (2 app sources; generated entry point; FE-backed production host loop)"
     "${swiftc_flags[@]}" "${c_flags[@]}" "${fe_flags[@]}" \
+        -Xcc -fmodule-map-file="$live_transport_include/module.modulemap" \
+        -Xcc -I"$live_transport_include" \
         -I "$full" -I "$full/uikitinc" -I "$full/appinc" \
         -default-isolation MainActor -module-name "$module" \
         -emit-object -o "$SCENE_OUT/reminder-scene-guest.o" \
@@ -224,6 +251,7 @@ build_inside() {
         "$rootdir/darwin/usr/lib/libSystem.B.dylib" \
         -o "$SCENE_OUT/reminder-scene-guest" \
         "$SCENE_OUT/reminder-scene-guest.o" \
+        "${live_transport_objects[@]}" \
         "$full/uikitshim.o" "$full/foundation.o" "$full/openuikit.o" \
         "$full/opencoregraphics.o" "$full/cportableio.o" "$full/cstbtruetype.o" \
         "$full/hostclock.o" "$full/swiftcorepatch.o" \
