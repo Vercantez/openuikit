@@ -86,10 +86,15 @@ xcrun swiftc -swift-version 6 -strict-concurrency=complete \
     -module-name AppIntents "$ROOT/full/appintents/AppIntents.swift" \
     -emit-module-path "$BUILD/modules/AppIntents.swiftmodule" \
     -o "$BUILD/lib/libAppIntents.dylib"
+mapfile -t WK_SOURCES < "$ROOT/full/widgetkit/widgetkit_guest_sources.txt"
+WK_PATHS=()
+for relative in "${WK_SOURCES[@]}"; do
+    WK_PATHS+=("$ROOT/$relative")
+done
 xcrun swiftc -swift-version 6 -strict-concurrency=complete \
     -warnings-as-errors -parse-as-library -I "$BUILD/modules" \
     -L "$BUILD/lib" -lAppIntents -emit-module -emit-library \
-    -module-name WidgetKit "$ROOT/full/widgetkit/WidgetKit.swift" \
+    -module-name WidgetKit "${WK_PATHS[@]}" \
     -emit-module-path "$BUILD/modules/WidgetKit.swiftmodule" \
     -o "$BUILD/lib/libWidgetKit.dylib"
 
