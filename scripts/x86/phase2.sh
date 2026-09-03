@@ -1233,8 +1233,12 @@ find_existing_file() {
 # reported as SKIP on the scoreboard -- never as a pass -- so a sharded cycle
 # (run_box.sh x86 cycle --only b) stays honest about what it did not measure.
 PHASE2_RUNGS=${PHASE2_RUNGS:-abc}
-phase2_rung_selected() {
+phase2_rung_selected_quiet() {
     case "$PHASE2_RUNGS" in *"$1"*) return 0 ;; esac
+    return 1
+}
+phase2_rung_selected() {
+    phase2_rung_selected_quiet "$1" && return 0
     echo "== rung $1: SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
     return 1
 }
@@ -1316,7 +1320,11 @@ if phase2_rung_selected a && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "
 else
     cannot rung-a-ud_guest UD_GUEST_SUBSTRATE \
         "needs x86 FE (fe=$FE_OK) + x86 mrroot with libswiftCore (mrroot=$MRROOT_OK libswiftCore=$LIBSWIFTCORE_X86). Committed runners: run_ud_guest.sh smoke $UD_SMOKE_CHECKS/$UD_SMOKE_CHECKS in tests/ud_guest_runner.swift; run_ud_persist.sh persist board. Denominators unchanged."
-    RUNG_A_DETAIL="blocked by substrate"
+    if phase2_rung_selected_quiet a; then
+        RUNG_A_DETAIL="blocked by substrate"
+    else
+        RUNG_A_DETAIL="SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
+    fi
 fi
 
 # Rung b: Focus widget + onboarding. Same source-preservation contracts.
@@ -1463,7 +1471,11 @@ if phase2_rung_selected b && [ "$OC_OK" -eq 1 ] && [ "$FE_OK" -eq 1 ] && [ "$MRR
 else
             cannot rung-b-focus SWIFTUI_SUBSTRATE \
         "needs x86 OpenCombine.o (oc=$OC_OK; else NEEDS_X86_OPENCOMBINE), x86 FE (fe=$FE_OK), x86 mrroot (mrroot=$MRROOT_OK), x86 libswiftCore ($LIBSWIFTCORE_X86), x86 host runtime (host=$HOST_RUNTIME_OK; else CANNOT_X86_HOST_RUNTIME), x86 mrroot layout (layout=$LAYOUT_OK; else CANNOT_X86_MRROOT_LAYOUT), x86 sysroot tbds (tbds=$SYSROOT_TBDS_OK; else CANNOT_X86_SYSROOT_TBDS), Focus pin $FOCUS_PIN. Source-preservation contracts in full/swiftui/*_guest.sh are unchanged; arm64 object SHAs are not rewritten."
-    RUNG_B_DETAIL="blocked by substrate"
+    if phase2_rung_selected_quiet b; then
+        RUNG_B_DETAIL="blocked by substrate"
+    else
+        RUNG_B_DETAIL="SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
+    fi
 fi
 
 # Rung c: Reminder scene -- one active UIWindow + three paced turns.
@@ -1513,7 +1525,11 @@ elif [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1
 else
     cannot rung-c-reminder REMINDER_SUBSTRATE \
         "needs x86 FE+mrroot+libswiftCore+host runtime+layout+sysroot tbds (fe=$FE_OK mrroot=$MRROOT_OK libswiftCore=$LIBSWIFTCORE_X86 host=$HOST_RUNTIME_OK layout=$LAYOUT_OK tbds=$SYSROOT_TBDS_OK) plus Reminder 22-source inventory. Success bar: 1 UIWindow + 3 paced turns under the ported loader. Denominator from the committed inner script, not invented here."
-    RUNG_C_DETAIL="blocked by substrate"
+    if phase2_rung_selected_quiet c; then
+        RUNG_C_DETAIL="blocked by substrate"
+    else
+        RUNG_C_DETAIL="SKIPPED (PHASE2_RUNGS=$PHASE2_RUNGS)"
+    fi
 fi
 
 # ---------------------------------------------------------------------------
