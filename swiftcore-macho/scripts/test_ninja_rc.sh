@@ -70,6 +70,7 @@ run() {
     env PATH="$fake:$PATH" NINJA="$fake/ninja" \
       SWIFTCORE_NINJA_HARNESS=1 SWIFTCORE_DARWIN_ARCH=x86_64 \
       SWIFTCORE_OVERLAYS="$overlays" \
+      SWIFTCORE_TEST_RC126_EXEC="${SWIFTCORE_TEST_RC126_EXEC:-}" \
       W="$tmp/work" B="$tmp/work/build" \
       bash "$build" 2>&1
   )
@@ -255,6 +256,79 @@ printf '%s\n' "$out" | grep -q 'expected ELF gold wall' \
 printf '%s\n' "$out" | grep -q 'build_stdlib done' \
   && { echo "  FAIL printed done after gold failure"; fail=1; } \
   || echo "  OK  did not claim done"
+
+echo
+echo "=== helper rc=126 (not ninja) prints CANNOT_NOT_EXECUTABLE + ls -l ==="
+# Core ninja succeeds. A non-+x helper after ninja is the stamp-restage
+# case: ninja already returned 0/1, then bash 126s with no CANNOT line
+# unless ERR is trapped. Also plant shims without +x so the pre-ninja
+# chmod + ls -l is visible.
+cat > "$fake/ninja" <<'EOF'
+#!/bin/bash
+args=("$@")
+i=0
+while [ $i -lt ${#args[@]} ]; do
+  a=${args[$i]}
+  case "$a" in
+    -C) i=$((i+2)); continue ;;
+    -j) i=$((i+2)); continue ;;
+    -t)
+      i=$((i+1)); tool=${args[$i]:-}; i=$((i+1))
+      case "$tool" in
+        targets)
+          echo "swiftCore-macosx-x86_64: phony"
+          echo "swiftDarwin-macosx-x86_64: phony"
+          exit 0 ;;
+        commands)
+          echo "clang++ -target x86_64-apple-macosx13.0 -sdk /sdk/MacOSX.sdk -isysroot /sdk/MacOSX.sdk -c Darwin.swift"
+          exit 0 ;;
+        query)
+          echo "${args[$i]:-unknown}:"
+          echo "  input: phony"
+          exit 0 ;;
+      esac
+      continue ;;
+    *) i=$((i+1)); continue ;;
+  esac
+done
+exit 0
+EOF
+chmod +x "$fake/ninja"
+mkdir -p "$tmp/work/shims"
+printf '#!/bin/bash\nexit 0\n' > "$tmp/work/shims/clang++"
+printf '#!/bin/bash\nexit 0\n' > "$tmp/work/shims/clang"
+printf '#!/bin/bash\nexit 0\n' > "$tmp/work/shims/lipo"
+chmod a-x "$tmp/work/shims/clang++" "$tmp/work/shims/clang" "$tmp/work/shims/lipo"
+noexec=$tmp/not-executable
+printf '#!/bin/bash\necho should-not-run\n' > "$noexec"
+chmod a-x "$noexec"
+SWIFTCORE_TEST_RC126_EXEC=$noexec run rc126 1
+unset SWIFTCORE_TEST_RC126_EXEC
+if [ "$rc" -eq 126 ]; then
+  echo "  OK  rc=126"
+else
+  echo "  FAIL expected rc=126 got rc=$rc"; fail=1
+fi
+printf '%s\n' "$out" | grep -q 'CANNOT_NOT_EXECUTABLE rc=126 cmd=' \
+  && echo "  OK  named CANNOT_NOT_EXECUTABLE with cmd=" \
+  || { echo "  FAIL missing CANNOT_NOT_EXECUTABLE cmd="; fail=1; }
+printf '%s\n' "$out" | grep -q 'tried-exec ls -l:' \
+  && echo "  OK  printed ls -l of the attempted exec" \
+  || { echo "  FAIL missing tried-exec ls -l"; fail=1; }
+printf '%s\n' "$out" | grep -F "$noexec" \
+  && echo "  OK  named the non-+x helper" \
+  || { echo "  FAIL missing helper path"; fail=1; }
+printf '%s\n' "$out" | grep -q 'build_stdlib: compiler shims (ls -l):' \
+  && echo "  OK  printed shims ls -l before ninja" \
+  || { echo "  FAIL missing shims ls -l"; fail=1; }
+# chmod +x must have restored the planted shims before ninja.
+if printf '%s\n' "$out" | grep -E 'compiler shims \(ls -l\):' -A6 | grep -E 'rwx.*clang\+\+' >/dev/null; then
+  echo "  OK  clang++ shim is +x in pre-ninja ls -l"
+else
+  echo "  FAIL clang++ shim was not +x after ensure_compiler_shims"
+  printf '%s\n' "$out" | grep -E 'compiler shims' -A8 || true
+  fail=1
+fi
 
 echo
 if [ "$fail" -eq 0 ]; then

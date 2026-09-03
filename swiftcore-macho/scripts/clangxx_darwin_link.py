@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
-"""clang++ / clang driver shim: pick the linker per OUTPUT FILE, not globally.
+"""clang++ / clang driver shim: pick the linker from `-target`, not `.so`.
 
-Classify from `-o`:
-  `*.so`  → ELF / ld.lld, keep `-soname`
-  `*.dylib` (or `-install_name` / apple triple) → Darwin / ld64.lld
+Linux CMake names the Darwin-target stdlib `libswiftCore.so`
+(CMAKE_SHARED_LIBRARY_SUFFIX). That file is the Mach-O dylib guests load;
+clang's Darwin driver already emits `-dynamic -dylib -arch -syslibroot
+-platform_version` from `-target …-apple-…` and `-isysroot …MacOSX.sdk`.
+Forcing ld.lld at that argv made:
 
-Never from directory names (`macosx` in the path is the Darwin-target
-stdlib's host-side ELF helper). Clang 18+ wants `--ld-path=` rather than
-`-fuse-ld=<absolute path>`. Every shared link prints one line:
+    ld.lld: error: unknown argument '-dynamic' / '-dylib' / '-arch' / '-syslibroot'
 
-    clangxx_darwin_link: -o <path> decision=elf|darwin linker=ld.lld|ld64.lld
+Apple triple → leave the driver's flags alone, only resolve ld64.lld via
+`--ld-path=`. Linux/unknown-linux-gnu → ld.lld, keep `-soname`.
+`-soname` is rewritten to `-install_name` only so ld64 never sees the GNU
+flag; nothing else is rewritten (PR #40's -dynamiclib/-nostdlib pass
+dropped -platform_version/-arch).
 """
 from __future__ import annotations
 
@@ -142,47 +146,25 @@ def _output_path(argv: list[str]) -> str | None:
     return None
 
 
-def _output_is_elf_so(path: str) -> bool:
-    """True for a shared-object output. Basename only — never the directory."""
-    base = os.path.basename(path)
-    return base.endswith(".so") or ".so." in base
-
-
 def _output_is_dylib(path: str) -> bool:
     return os.path.basename(path).endswith(".dylib")
 
 
-def _has_install_name(argv: list[str]) -> bool:
-    for i, a in enumerate(argv):
-        if a.startswith("-Wl,-install_name") or a.startswith("-install_name"):
-            return True
-        if a in ("-install_name", "-Wl,-install_name") and i + 1 < len(argv):
-            return True
-        if a == "-Xlinker" and i + 1 < len(argv) and "install_name" in argv[i + 1]:
-            return True
-    return False
-
-
 def link_flavor(argv: list[str]) -> str | None:
-    """Classify a driver invocation: 'darwin', 'elf', or None (not a shared link).
-
-    Output file first: `-o …*.so` is always ELF (the Darwin-target stdlib's
-    host-side helper is still named libswiftCore.so and lives under macosx/).
-    `.dylib`, `-install_name`, or an apple triple selects ld64.lld.
-    """
+    """Classify from `-target`: apple → darwin, linux → elf. Not from `.so`."""
     if _is_compile(argv):
         return None
     if not (_is_shared(argv) or _has_soname_flag(argv)):
         return None
-    out = _output_path(argv) or ""
-    if _output_is_elf_so(out):
-        return "elf"
-    if _output_is_dylib(out):
-        return "darwin"
-    if _has_install_name(argv):
-        return "darwin"
     t = _target(argv)
     if t and APPLE_MARKER in t:
+        return "darwin"
+    if t and ("linux" in t.lower() or "unknown-linux" in t.lower()):
+        return "elf"
+    if any("MacOSX.sdk" in a for a in argv):
+        return "darwin"
+    out = _output_path(argv) or ""
+    if _output_is_dylib(out):
         return "darwin"
     if "-dynamiclib" in argv:
         return "darwin"
@@ -231,36 +213,6 @@ def rewrite_elf_shared(argv: list[str]) -> list[str]:
     return _set_ld_path(argv, _ld_lld())
 
 
-def _is_host_elf_input(arg: str) -> bool:
-    base = os.path.basename(arg)
-    if not (base.endswith(".so") or ".so." in base):
-        return False
-    if "/lib/swift/macosx/" in arg.replace("\\", "/"):
-        return False
-    prefixes = (
-        "/usr/lib/llvm-",
-        "/usr/lib/",
-        "/lib/",
-        "/usr/bin/../lib",
-    )
-    return arg.startswith(prefixes)
-
-
-def _drop_libdir(arg: str) -> bool:
-    if not arg.startswith("-L"):
-        return False
-    path = arg[2:]
-    if "/lib/swift/macosx" in path and "/usr/bin/" not in path:
-        return False
-    if path.startswith("/usr/lib/llvm-"):
-        return True
-    if path.startswith("/usr/bin/") or path.startswith("/usr/lib/x86_64-linux"):
-        return True
-    if path in ("/usr/lib", "/lib", "/usr/lib64", "/lib64"):
-        return True
-    return False
-
-
 def _darwin_install_name(soname: str) -> str:
     """Map Linux CMake soname libswiftX.so to the Darwin LC_ID_DYLIB guests load."""
     base = os.path.basename(soname)
@@ -269,16 +221,6 @@ def _darwin_install_name(soname: str) -> str:
     if base.startswith("libswift") and base.endswith(".dylib") and not soname.startswith("/"):
         return "/usr/lib/swift/" + base
     return soname
-
-
-_ELF_DROP = {
-    "--as-needed",
-    "-as-needed",
-    "-Wl,--as-needed",
-    "-Wl,-as-needed",
-    "--no-as-needed",
-    "-Wl,--no-as-needed",
-}
 
 
 def _take_next_value(argv: list[str], i: int) -> tuple[str, int]:
@@ -290,46 +232,13 @@ def _take_next_value(argv: list[str], i: int) -> tuple[str, int]:
     return argv[i], i + 1
 
 
-def rewrite_darwin_shared(argv: list[str]) -> list[str]:
-    """Return clang++ argv for a Mach-O dylib link (same intent as link_macho_dylib.sh)."""
+def rewrite_darwin_soname(argv: list[str]) -> list[str]:
+    """Map GNU -soname to Darwin -install_name; keep every other driver flag."""
     out: list[str] = []
-    skip_next = False
-    have_fuse = False
-    have_B = False
-    have_dynamiclib = False
-    have_nostdlib = False
-    have_undef = False
-    have_lSystem = False
-    have_lcxx = False
-    have_lobjc = False
     i = 0
     while i < len(argv):
         a = argv[i]
         i += 1
-        if skip_next:
-            skip_next = False
-            continue
-        if a == "-shared":
-            continue
-        if a == "-dynamiclib":
-            have_dynamiclib = True
-            out.append(a)
-            continue
-        if _is_linker_select_flag(a):
-            # Darwin-target: --ld-path=ld64.lld, never gold / host ld.lld.
-            have_fuse = True
-            out.append(_ld_path_flag(_ld64_lld()))
-            continue
-        if a.startswith("-B"):
-            have_B = True
-            out.append(f"-B{_lld_bin()}")
-            continue
-        if a in _ELF_DROP:
-            continue
-        if a.startswith("-Wl,-rpath-link") or a in ("-rpath-link", "-Wl,-rpath-link"):
-            if a in ("-rpath-link", "-Wl,-rpath-link") and not a.startswith("-Wl,-rpath-link,"):
-                skip_next = True
-            continue
         if a == "-Xlinker" and i < len(argv):
             nxt = argv[i]
             sn = _soname_payload(nxt)
@@ -339,9 +248,6 @@ def rewrite_darwin_shared(argv: list[str]) -> list[str]:
                     sn, i = _take_next_value(argv, i)
                 if sn:
                     out.append(f"-Wl,-install_name,{_darwin_install_name(sn)}")
-                continue
-            if nxt in _ELF_DROP or nxt.startswith("-rpath-link") or nxt.startswith("--rpath-link"):
-                i += 1
                 continue
             out.append(a)
             out.append(nxt)
@@ -354,94 +260,19 @@ def rewrite_darwin_shared(argv: list[str]) -> list[str]:
             if sn:
                 out.append(f"-Wl,-install_name,{_darwin_install_name(sn)}")
             continue
-        if a.startswith("-Wl,-install_name,"):
-            out.append(
-                "-Wl,-install_name," + _darwin_install_name(a[len("-Wl,-install_name,"):])
-            )
-            continue
-        if a in ("-lstdc++", "-lgcc_s", "-lgcc", "-lc", "-ldl", "-lpthread", "-lm"):
-            continue
-        if a == "-lSystem":
-            have_lSystem = True
-            out.append(a)
-            continue
-        if a == "-lc++":
-            have_lcxx = True
-            out.append(a)
-            continue
-        if a == "-lobjc":
-            have_lobjc = True
-            out.append(a)
-            continue
-        if a == "-nostdlib":
-            have_nostdlib = True
-            out.append(a)
-            continue
-        if a in ("-Wl,-undefined,dynamic_lookup", "-undefined"):
-            if a == "-undefined":
-                if i < len(argv):
-                    i += 1
-            have_undef = True
-            out.append("-Wl,-undefined,dynamic_lookup")
-            continue
-        if _drop_libdir(a):
-            continue
-        if not a.startswith("-") and _is_host_elf_input(a):
-            continue
-        out.append(a)
-
-    extra: list[str] = []
-    if not have_dynamiclib:
-        extra.append("-dynamiclib")
-    if not have_fuse:
-        extra.append(_ld_path_flag(_ld64_lld()))
-    if not have_B:
-        extra.append(f"-B{_lld_bin()}")
-    if not have_nostdlib:
-        extra.append("-nostdlib")
-    if not have_lSystem:
-        extra.append("-lSystem")
-    if not have_lobjc:
-        extra.append("-lobjc")
-    if not have_lcxx:
-        extra.append("-lc++")
-    if not have_undef:
-        extra.append("-Wl,-undefined,dynamic_lookup")
-
-    rewritten = out + extra
-    return _drop_leftover_elf_link_flags(rewritten)
-
-
-def _drop_leftover_elf_link_flags(argv: list[str]) -> list[str]:
-    """Last pass: ld64.lld must never see -soname / --as-needed / -rpath-link."""
-    out: list[str] = []
-    i = 0
-    while i < len(argv):
-        a = argv[i]
-        i += 1
-        if a in _ELF_DROP:
-            continue
-        if a.startswith("-Wl,-rpath-link") or a in ("-rpath-link",):
-            continue
-        if _soname_payload(a) is not None:
-            if _soname_payload(a) == "":
-                if i < len(argv) and argv[i] == "-Xlinker":
-                    i += 1
-                if i < len(argv):
-                    i += 1
-            continue
-        if a == "-Xlinker" and i < len(argv):
-            nxt = argv[i]
-            if _soname_payload(nxt) is not None or nxt in _ELF_DROP or nxt.startswith("-rpath-link"):
-                i += 1
-                if _soname_payload(nxt) == "":
-                    if i < len(argv) and argv[i] == "-Xlinker":
-                        i += 1
-                    if i < len(argv):
-                        i += 1
-                continue
         out.append(a)
     return out
+
+
+def rewrite_darwin_shared(argv: list[str]) -> list[str]:
+    """Do not re-compose the Mach-O link. Only pick ld64.lld and translate -soname.
+
+    Clang's Darwin driver turns -target/-isysroot/-shared into
+    -dynamic/-dylib/-arch/-syslibroot/-platform_version for ld64. Replacing
+    -shared with -dynamiclib and injecting -nostdlib (PR #40) dropped those
+    driver-provided arguments.
+    """
+    return _set_ld_path(rewrite_darwin_soname(argv), _ld64_lld())
 
 
 def log_link(
