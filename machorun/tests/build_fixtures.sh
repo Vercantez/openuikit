@@ -157,6 +157,51 @@ if want dylib_classic; then
     echo "==> dylib_classic"; build_dylib_pair "$CLASSIC_TARGET" libdylib_greet_classic.dylib dylib_classic; built+=(dylib_classic)
 fi
 
+# ---------------------------------------------------------------- cache_layout / cache_layout_packed / cache_layout_oversize
+# The dyld-shared-cache mapping rung. Apple-built page-aligned dylib + the
+# same bytes rewritten by scripts/pack_macho.py into packed, non-page-aligned
+# vmaddr/fileoff. Both executables must print the same output. The packed
+# dylib cannot run on macOS (arm64 dyld SIGKILLs unaligned segments), so its
+# baseline is the normal layout's, copied not re-recorded. The oversize
+# fixture is main_ret with one segment's filesize past EOF; Darwin has no
+# twin for the loader diagnostic.
+#
+# Packed is NEVER linked against: ld64 requires aligned segments. Link the
+# executable against the Apple-built dylib, then rewrite LC_LOAD_DYLIB to
+# name the packed file.
+if want cache_layout || want cache_layout_packed; then
+    echo "==> cache_layout"
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 -dynamiclib \
+        -o "$BIN/libcache_layout.dylib" "$SRC/cache_layout_lib.c" \
+        -install_name "@rpath/libcache_layout.dylib" \
+        -Wl,-U,_exe_callback
+    "$CC" -target "$CHAINED_TARGET" "${SDKFLAGS[@]}" -g0 -O1 \
+        -o "$BIN/cache_layout" "$SRC/cache_layout.c" "$BIN/libcache_layout.dylib" \
+        -Wl,-rpath,@loader_path \
+        -Wl,-export_dynamic
+    built+=(cache_layout)
+    echo "==> cache_layout_packed"
+    python3 "$ROOT/scripts/pack_macho.py" pack "$BIN/libcache_layout.dylib" \
+        -o "$BIN/libcache_packed.dylib" \
+        --id "@rpath/libcache_packed.dylib"
+    python3 "$ROOT/scripts/pack_macho.py" rename "$BIN/cache_layout" \
+        -o "$BIN/cache_layout_packed" \
+        --from "@rpath/libcache_layout.dylib" \
+        --to "@rpath/libcache_packed.dylib"
+    chmod +x "$BIN/cache_layout_packed"
+    built+=(cache_layout_packed)
+fi
+if want cache_layout_oversize; then
+    echo "==> cache_layout_oversize"
+    # Built from the committed main_ret, not from source: the defect is in
+    # the load commands, not in C. main_ret must already exist (it is
+    # committed); this only rewrites a copy.
+    python3 "$ROOT/scripts/pack_macho.py" oversize "$BIN/main_ret" \
+        -o "$BIN/cache_layout_oversize" --segment __LINKEDIT
+    chmod +x "$BIN/cache_layout_oversize"
+    built+=(cache_layout_oversize)
+fi
+
 # ---------------------------------------------------------------- the `pthread` rung
 want pthread          && build pthread          "$CHAINED_TARGET" pthread          pthread.c -- -pthread
 
