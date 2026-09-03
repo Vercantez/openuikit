@@ -743,11 +743,11 @@ phase2_ud_guest_run_cftest_harness() {
     fi
 }
 
-# Copy the pinned CoreFoundation tree and rewrite the TARGET_OS_MAC
-# system-allocator callbacks to malloc/free plus the system-default
-# identity (never prefix-store a custom allocator; ignore TSD default).
-# The pin checkout stays clean. Existence of dest is not freshness:
-# stamp includes the patcher and the three files it rewrites.
+# Copy the pinned CoreFoundation tree and bind CFAllocator's isa/class
+# plus TSD-key-before-getspecific. Does not rewrite the malloc_zone_t*
+# branch (CF is designed to accept a raw zone). The pin checkout stays
+# clean. Existence of dest is not freshness: stamp includes the patcher
+# and the two files it rewrites.
 phase2_ud_guest_patch_cf_system_allocator() {
     local pin=$1 dest=$2 repo=$3
     local patcher=$repo/scripts/x86/patch_cf_system_allocator.py
@@ -757,14 +757,9 @@ phase2_ud_guest_patch_cf_system_allocator() {
             "no x86_64 Mach-O. pinned CF tree missing $pin/CFBase.c. Will not invent a stub dylib."
         return 1
     fi
-    if [ ! -f "$pin/include/CFRuntime.h" ]; then
+    if [ ! -f "$pin/CFPlatform.c" ]; then
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. pinned CF tree missing $pin/include/CFRuntime.h. Will not invent a stub dylib."
-        return 1
-    fi
-    if [ ! -f "$pin/internalInclude/CFInternal.h" ]; then
-        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. pinned CF tree missing $pin/internalInclude/CFInternal.h. Will not invent a stub dylib."
+            "no x86_64 Mach-O. pinned CF tree missing $pin/CFPlatform.c. Will not invent a stub dylib."
         return 1
     fi
     if [ ! -f "$patcher" ]; then
@@ -774,10 +769,9 @@ phase2_ud_guest_patch_cf_system_allocator() {
     fi
     key=$(stamp_key "$dest" "$patcher" \
         "$pin/CFBase.c" \
-        "$pin/include/CFRuntime.h" \
-        "$pin/internalInclude/CFInternal.h" \
+        "$pin/CFPlatform.c" \
         "$PHASE2_UD_GUEST_CF_COMMIT")
-    if stamp_reuse "$dest" "$key" && [ -f "$dest/CFBase.c" ]; then
+    if stamp_reuse "$dest" "$key" && [ -f "$dest/CFBase.c" ] && [ -f "$dest/CFPlatform.c" ]; then
         return 0
     fi
     stamp_rebuild_reason "$dest" "$key"
@@ -793,26 +787,27 @@ phase2_ud_guest_patch_cf_system_allocator() {
             "no x86_64 Mach-O. $patcher exit $st on a copy of $pin (pin $PHASE2_UD_GUEST_CF_COMMIT). Will not invent a stub dylib."
         return 1
     fi
-    if grep -q 'malloc_zone_malloc(zone, size)' "$dest/CFBase.c"; then
+    if ! grep -q 'malloc_zone_malloc((malloc_zone_t \*)allocator' "$dest/CFBase.c"; then
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. $patcher left malloc_zone_malloc(zone) in $dest/CFBase.c. Will not invent a stub dylib."
+            "no x86_64 Mach-O. $patcher removed allocator-as-zone malloc_zone_malloc from $dest/CFBase.c (CF is designed to accept a raw zone). Will not invent a stub dylib."
         return 1
     fi
-    if grep -q 'malloc_zone_malloc((malloc_zone_t \*)allocator' "$dest/CFBase.c"; then
+    if ! grep -q 'openuikit-x86: static CFAllocator isa is __NSCFType' \
+            "$dest/CFBase.c"; then
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. $patcher left allocator-as-zone malloc_zone_malloc in $dest/CFBase.c. Will not invent a stub dylib."
+            "no x86_64 Mach-O. $patcher left static CFAllocator isa as STATIC_CLASS_REF NULL in $dest/CFBase.c. Will not invent a stub dylib."
         return 1
     fi
-    if ! grep -q 'openuikit-x86: never prefix-store a custom allocator' \
-            "$dest/include/CFRuntime.h"; then
+    if ! grep -q 'openuikit-x86: bind CFAllocator class before first CFStringCreate' \
+            "$dest/CFBase.c"; then
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. $patcher left _CFAllocatorIsSystemDefault as pointer identity in $dest/include/CFRuntime.h. Will not invent a stub dylib."
+            "no x86_64 Mach-O. $patcher left CFAllocator class table unbound in $dest/CFBase.c. Will not invent a stub dylib."
         return 1
     fi
-    if ! grep -q 'openuikit-x86: static system default only' \
-            "$dest/internalInclude/CFInternal.h"; then
+    if ! grep -q 'openuikit-x86: TSD key before getspecific' \
+            "$dest/CFPlatform.c"; then
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. $patcher left __CFGetDefaultAllocator reading TSD in $dest/internalInclude/CFInternal.h. Will not invent a stub dylib."
+            "no x86_64 Mach-O. $patcher left TSD getspecific on an uninitialized key in $dest/CFPlatform.c. Will not invent a stub dylib."
         return 1
     fi
     stamp_write "$dest" "$key"
@@ -854,7 +849,7 @@ phase2_ud_guest_ensure_cftest() {
     fi
 
     # Existence of cfobjc/obj is not freshness. Rebuild when the recipe, the
-    # CF pin, or the system-allocator rewrite changes. Do not key off a
+    # CF pin, or the CFAllocator isa/TSD patcher changes. Do not key off a
     # present dylib.
     cfbase=$ud_w/cfobjc/obj/CFBase.o
     patcher=$repo/scripts/x86/patch_cf_system_allocator.py

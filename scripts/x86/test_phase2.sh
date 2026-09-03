@@ -375,13 +375,13 @@ expect_grep 'rm -rf "${UD_GUEST_W:-$ud_w}/runroot"' "$PHASE2" \
     "rung a drops a stale runroot clone so libCFTest content is fresh"
 expect_file "$ROOT/scripts/x86/patch_cf_system_allocator.py"
 expect_grep 'phase2_ud_guest_patch_cf_system_allocator' "$UDINC" \
-    "ud-guest copies CF and rewrites only the Mac system-allocator callbacks"
-expect_grep 'never prefix-store a custom allocator' "$UDINC" \
-    "ud-guest refuses a copy that still pointer-identifies the system allocator"
-expect_grep 'static system default only' "$UDINC" \
-    "ud-guest refuses a copy whose default allocator still comes from TSD"
-expect_grep 'allocator-as-zone malloc_zone_malloc' "$UDINC" \
-    "ud-guest refuses a copy that still passes a CFAllocator to malloc_zone_malloc"
+    "ud-guest copies CF and binds CFAllocator isa/class plus TSD-key-before-getspecific"
+expect_grep 'static CFAllocator isa is __NSCFType' "$UDINC" \
+    "ud-guest refuses a copy whose static CFAllocator isa is still STATIC_CLASS_REF NULL"
+expect_grep 'TSD key before getspecific' "$UDINC" \
+    "ud-guest refuses a copy whose TSD getspecific still runs on an uninitialized key"
+expect_grep 'removed allocator-as-zone malloc_zone_malloc' "$UDINC" \
+    "ud-guest refuses a copy that deleted CF's malloc_zone_t* allocator branch"
 expect_grep 'CFOBJC_FORCE_COPY=1' "$UDINC" \
     "cfobjc recopies the pin (existence of OUT/src is not freshness)"
 expect_not_grep 'fe_malloc_zone_as_malloc.h' "$STAGE" \
