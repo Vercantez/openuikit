@@ -68,6 +68,8 @@ public final class UIColor: NSObject {
     public static let clear = UIColor(red: 0, green: 0, blue: 0, alpha: 0)
 }
 
+public final class UIImage: NSObject {}
+
 @MainActor
 open class UIView: NSObject {
     open var frame: CGRect
@@ -101,3 +103,10 @@ open class UIView: NSObject {
 
 @MainActor
 open class UIScrollView: UIView {}
+
+@MainActor
+open class UIViewController: NSObject {
+    public override init() {
+        super.init()
+    }
+}
