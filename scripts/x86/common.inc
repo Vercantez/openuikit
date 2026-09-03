@@ -257,3 +257,90 @@ phase2_install_darwin_modulemaps() {
     echo "  no Darwin.modulemap (generator needs Xcode; arm64 sysroot had none to copy)"
     return 1
 }
+
+# Swift overlay or local -I module for $name, requiring the guest module triple
+# (x86_64-apple-macos), never an arm64 slice under an x86 name.
+phase2_swift_module_present() {
+    local name=$1
+    local root=$2
+    local triple=${3:-${SWIFT_MODULE_TRIPLE:-x86_64-apple-macos}}
+    local dir
+    [ -n "$root" ] || return 1
+    if [ -d "$root/usr/lib/swift" ]; then
+        dir=$root/usr/lib/swift
+    else
+        dir=$root
+    fi
+    [ -f "$dir/$name.swiftmodule" ] && return 0
+    [ -f "$dir/$name.swiftinterface" ] && return 0
+    [ -f "$dir/$name.swiftmodule/$triple.swiftmodule" ] && return 0
+    [ -f "$dir/$name.swiftmodule/$triple.swiftinterface" ] && return 0
+    return 1
+}
+
+# FE import census before the 202-file compile. One line, never silent:
+#   MATCH present=... optional_absent=...
+#   MISSING present=... absent=... optional_absent=...
+# Required (compile fails if missing on the Darwin path): Darwin, os, Swift,
+# _Builtin_float, _StringProcessing (Regex in URLTemplate/RegexPatternCache;
+# build_fe.sh does not pass -disable-implicit-string-processing-module-import),
+# _Concurrency (Swift.swiftmodule / stdlib).
+# Optional (canImport-guarded in standalone FE): Synchronization.
+# os is the local module at OSMOD, not Apple's overlay.
+# phase2_probe_fe_imports <sysroot> [osmod]
+phase2_probe_fe_imports() {
+    local sys=$1 osmod=${2:-}
+    local triple=${SWIFT_MODULE_TRIPLE:-x86_64-apple-macos}
+    local present="" absent="" opt_absent=""
+    local name ok
+
+    _fe_add() {
+        local bucket=$1 item=$2
+        if [ -z "${!bucket}" ]; then
+            eval "$bucket=\$item"
+        else
+            eval "$bucket=\${!bucket},\$item"
+        fi
+    }
+
+    for name in Darwin os Swift _Builtin_float _StringProcessing _Concurrency; do
+        ok=0
+        case "$name" in
+            Darwin)
+                if phase2_swift_module_present Darwin "$sys" "$triple" \
+                    && [ -f "$sys/usr/include/Darwin.modulemap" ]; then
+                    ok=1
+                fi
+                ;;
+            os)
+                if phase2_swift_module_present os "$osmod" "$triple"; then
+                    ok=1
+                fi
+                ;;
+            *)
+                if phase2_swift_module_present "$name" "$sys" "$triple"; then
+                    ok=1
+                fi
+                ;;
+        esac
+        if [ "$ok" -eq 1 ]; then
+            _fe_add present "$name"
+        else
+            _fe_add absent "$name"
+        fi
+    done
+    name=Synchronization
+    if phase2_swift_module_present Synchronization "$sys" "$triple"; then
+        _fe_add present Synchronization
+    else
+        _fe_add opt_absent Synchronization
+    fi
+    unset -f _fe_add
+    if [ -n "$absent" ]; then
+        printf 'MISSING present=%s absent=%s optional_absent=%s\n' \
+            "${present:--}" "$absent" "${opt_absent:--}"
+        return 1
+    fi
+    printf 'MATCH present=%s optional_absent=%s\n' "$present" "${opt_absent:--}"
+    return 0
+}

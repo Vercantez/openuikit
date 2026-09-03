@@ -315,6 +315,76 @@ else
 fi
 rm -rf "$MMWORK"
 
+echo "== os-module-x86 before build_fe + fe-imports census"
+expect_grep 'full/foundation/build_os_module.sh' "$PHASE2" \
+    "phase2 builds the local os module"
+expect_grep 'OSMOD="$OSMOD"' "$PHASE2" \
+    "phase2 passes OSMOD into build_fe.sh"
+expect_grep 'cannot fe-imports FE_IMPORTS' "$PHASE2" \
+    "fe-imports refusal is CANNOT_FE_IMPORTS"
+expect_grep 'try_os_module || true' "$PHASE2" \
+    "os-module runs in the FE chain"
+expect_grep 'os.swiftmodule|os.swiftmodule/\*' "$STAGE" \
+    "stager skips Apple os overlay (FE uses os-module)"
+OSMOD_SH=$ROOT/full/foundation/build_os_module.sh
+expect_grep 'TARGET:-arm64-apple-macos15.0' "$OSMOD_SH" \
+    "os-module script is TARGET-retargetable"
+expect_grep 'MC:-$W/scratch/modcache_fe4' "$OSMOD_SH" \
+    "os-module cache is overridable (x86 uses a suffixed cache)"
+# Order: build_os_module.sh must appear before build_fe.sh invocation.
+awk '
+    /full\/foundation\/build_os_module.sh/ { os=NR }
+    /full\/foundation\/build_fe.sh/ { fe=NR }
+    END {
+        if (!os || !fe || !(os<fe)) { print "ORDER os="os" fe="fe; exit 1 }
+        print "OK"
+    }
+' "$PHASE2" | grep -q OK && ok "os-module step is before build_fe.sh" \
+    || die_test "os-module is not before build_fe.sh"
+
+FEWORK=$(mktemp -d /tmp/phase2-fe-imports.XXXXXX)
+mkdir -p "$FEWORK/sys/usr/include" \
+    "$FEWORK/sys/usr/lib/swift/Darwin.swiftmodule" \
+    "$FEWORK/sys/usr/lib/swift/Swift.swiftmodule" \
+    "$FEWORK/sys/usr/lib/swift/_Builtin_float.swiftmodule" \
+    "$FEWORK/os"
+touch "$FEWORK/sys/usr/include/Darwin.modulemap"
+touch "$FEWORK/sys/usr/lib/swift/Darwin.swiftmodule/x86_64-apple-macos.swiftinterface"
+touch "$FEWORK/sys/usr/lib/swift/Swift.swiftmodule/x86_64-apple-macos.swiftmodule"
+touch "$FEWORK/sys/usr/lib/swift/_Builtin_float.swiftmodule/x86_64-apple-macos.swiftmodule"
+touch "$FEWORK/os/os.swiftmodule"
+missing=$(phase2_probe_fe_imports "$FEWORK/sys" "$FEWORK/os" || true)
+case "$missing" in
+    MISSING*"present=Darwin,os,Swift,_Builtin_float"*"absent=_StringProcessing,_Concurrency"*"optional_absent=Synchronization"*)
+        ok "fe-imports names _StringProcessing,_Concurrency absent in one line ($missing)"
+        ;;
+    *) die_test "fe-imports MISSING census expected, got: $missing" ;;
+esac
+mkdir -p "$FEWORK/sys/usr/lib/swift/_StringProcessing.swiftmodule" \
+    "$FEWORK/sys/usr/lib/swift/_Concurrency.swiftmodule" \
+    "$FEWORK/sys/usr/lib/swift/Synchronization.swiftmodule"
+touch "$FEWORK/sys/usr/lib/swift/_StringProcessing.swiftmodule/x86_64-apple-macos.swiftinterface"
+touch "$FEWORK/sys/usr/lib/swift/_Concurrency.swiftmodule/x86_64-apple-macos.swiftinterface"
+touch "$FEWORK/sys/usr/lib/swift/Synchronization.swiftmodule/x86_64-apple-macos.swiftinterface"
+match=$(phase2_probe_fe_imports "$FEWORK/sys" "$FEWORK/os" || true)
+case "$match" in
+    MATCH*"present=Darwin,os,Swift,_Builtin_float,_StringProcessing,_Concurrency,Synchronization"*)
+        ok "fe-imports MATCH when required modules and Synchronization are present"
+        ;;
+    *) die_test "fe-imports MATCH expected, got: $match" ;;
+esac
+# Arm64 slice under an x86 sysroot is not presence.
+rm -f "$FEWORK/sys/usr/lib/swift/_Concurrency.swiftmodule/x86_64-apple-macos.swiftinterface"
+touch "$FEWORK/sys/usr/lib/swift/_Concurrency.swiftmodule/arm64-apple-macos.swiftinterface"
+armonly=$(phase2_probe_fe_imports "$FEWORK/sys" "$FEWORK/os" || true)
+case "$armonly" in
+    MISSING*"absent=_Concurrency"*)
+        ok "fe-imports refuses an arm64 _Concurrency slice as x86 presence"
+        ;;
+    *) die_test "arm64-only _Concurrency should be absent, got: $armonly" ;;
+esac
+rm -rf "$FEWORK"
+
 echo
 echo "test_phase2: pass=$pass fail=$fail"
 [ "$fail" -eq 0 ]

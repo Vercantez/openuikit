@@ -403,7 +403,11 @@ echo "==== FoundationEssentials / collections / cshims ($TARGET) ===="
 FE_OK=0
 COL_OK=0
 CSHIMS_OK=0
+OS_OK=0
+FE_IMPORTS_OK=0
 FE_OUT=$W/build/full${FULL_OUT_SUFFIX}/foundation
+OSMOD=$FE_OUT/os
+MC=$W/scratch/modcache_fe4${FULL_OUT_SUFFIX}
 
 try_collections() {
     local out=$FE_OUT/collections
@@ -460,6 +464,55 @@ try_cshims() {
     return 1
 }
 
+try_os_module() {
+    local out=$OSMOD
+    if [ -f "$out/os.o" ] && phase2_is_x86_macho "$out/os.o" && [ -f "$out/os.swiftmodule" ]; then
+        note os-module-x86 satisfied
+        OS_OK=1
+        return 0
+    fi
+    [ "$SYSROOT_OK" -eq 1 ] || {
+        cannot os-module-x86 NEEDS_X86_SYSROOT "os.swift @_exported-imports Darwin; needs $SYS"
+        return 1
+    }
+    [ "$LIBSWIFTCORE_X86" -eq 1 ] || {
+        cannot os-module-x86 BUILD_LIBSWIFTCORE_X86 "os-module compile needs x86_64 Swift.swiftmodule"
+        return 1
+    }
+    mkdir -p "$out"
+    set +e
+    W="$W" SYS="$SYS" OUT="$out" TARGET="$TARGET" MC="$MC" \
+        bash "$W/full/foundation/build_os_module.sh"
+    st=$?
+    set -e
+    if [ "$st" -eq 0 ] && [ -f "$out/os.o" ] && phase2_is_x86_macho "$out/os.o" \
+        && [ -f "$out/os.swiftmodule" ]; then
+        note os-module-x86 cold-built
+        OS_OK=1
+        return 0
+    fi
+    cannot os-module-x86 BUILD_OS_MODULE \
+        "build_os_module.sh exit $st OUT=$out (beside arm64 scratch/fe4_os, never overwrite). Calendar.swift import os is live because canImport(Darwin) is true."
+    return 1
+}
+
+try_fe_imports() {
+    local report
+    report=$(phase2_probe_fe_imports "$SYS" "$OSMOD" || true)
+    case "$report" in
+        MATCH*)
+            note fe-imports satisfied
+            FE_IMPORTS_OK=1
+            echo "  $report"
+            return 0
+            ;;
+        *)
+            cannot fe-imports FE_IMPORTS "$report"
+            return 1
+            ;;
+    esac
+}
+
 try_fe() {
     local out=$FE_OUT/essentials
     if [ -f "$out/FoundationEssentials.o" ] && phase2_is_x86_macho "$out/FoundationEssentials.o"; then
@@ -473,9 +526,19 @@ try_fe() {
         cannot foundationessentials-x86 BUILD_LIBSWIFTCORE_X86 "swiftc -target $TARGET cannot compile 202 FE files without x86_64 Swift/_Concurrency modules"
         return 1
     }
+    [ "$OS_OK" -eq 1 ] || {
+        cannot foundationessentials-x86 NEEDS_X86_OS_MODULE \
+            "canImport(Darwin) is true so Calendar.swift:14 import os is live; os-module-x86 did not produce $OSMOD/os.swiftmodule"
+        return 1
+    }
+    [ "$FE_IMPORTS_OK" -eq 1 ] || {
+        cannot foundationessentials-x86 NEEDS_FE_IMPORTS \
+            "fe-imports probe refused; not invoking 202-file build_fe.sh"
+        return 1
+    }
     mkdir -p "$out"
     set +e
-    W="$W" SF="$SF" SYS="$SYS" TARGET="$TARGET" \
+    W="$W" SF="$SF" SYS="$SYS" TARGET="$TARGET" OSMOD="$OSMOD" \
         COLLECTIONS="$FE_OUT/collections" \
         bash "$W/full/foundation/build_fe.sh" \
             -emit-module -emit-module-path "$out/FoundationEssentials.swiftmodule" \
@@ -493,6 +556,8 @@ try_fe() {
 
 try_cshims || true
 try_collections || true
+try_os_module || true
+try_fe_imports || true
 try_fe || true
 
 # ---------------------------------------------------------------------------

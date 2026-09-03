@@ -164,6 +164,11 @@ if [ -d "$ARM_SYS/usr/lib/swift" ]; then
             *.dylib|*.tbd|*.a) continue ;;
             */arm64-apple-macos.*|arm64-apple-macos.*) continue ;;
             */arm64e-apple-macos.*|arm64e-apple-macos.*) continue ;;
+            os.swiftmodule|os.swiftmodule/*)
+                # Apple's os overlay @_exported-imports Clang os.*, which this
+                # sysroot does not declare. FE uses full/foundation/os-module.
+                continue
+                ;;
         esac
         case "$(file -b "$item")" in
             Mach-O*) continue ;;
