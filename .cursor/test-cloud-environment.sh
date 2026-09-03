@@ -146,24 +146,58 @@ check fingerprint_has_digest \
     _ "$script_dir/toolchain-fingerprint.sh"
 
 # --- environment.json install order ---
-check install_order grep -q 'install-scratch-corpus.sh' "$script_dir/environment.json"
-check install_products grep -q 'install-built-products.sh' "$script_dir/environment.json"
+check install_wrapper grep -q 'install.sh' "$script_dir/environment.json"
+check install_has_start grep -q 'start.sh' "$script_dir/environment.json"
+check start_rebuild_0 grep -q 'CURSOR_ENV_START_OK rebuild=0' "$script_dir/start.sh"
+check install_calls_evidence grep -q 'install-static-evidence.sh' "$script_dir/install.sh"
+check install_calls_corpus grep -q 'install-scratch-corpus.sh' "$script_dir/install.sh"
+check install_calls_products grep -q 'install-built-products.sh' "$script_dir/install.sh"
+check install_calls_verify grep -q 'verify-cloud-environment.sh' "$script_dir/install.sh"
+check install_prints_timing grep -q 'CURSOR_INSTALL_TIMING' "$script_dir/install.sh"
+check install_warns_45min grep -q 'CURSOR_INSTALL_STEP_OVER_45MIN' "$script_dir/install.sh"
 
-# --- install-built-products: x86 runs the cycle; empty .tbd is still a lie ---
+# --- install-built-products: x86 runs the cycle including PHASE2_RUNGS=a ---
 check products_x86_cycle \
     grep -q 'scripts/ops/x86_cycle.sh' "$script_dir/install-built-products.sh"
 check products_x86_skip_overlays \
     grep -q 'OPENUIKIT_CYCLE_SKIP_OVERLAYS=1' "$script_dir/install-built-products.sh"
-check products_x86_skip_phase2 \
-    grep -q 'OPENUIKIT_CYCLE_SKIP_PHASE2=1' "$script_dir/install-built-products.sh"
+check products_x86_unsets_skip_phase2 \
+    grep -q 'unset OPENUIKIT_CYCLE_SKIP_PHASE2' "$script_dir/install-built-products.sh"
+check products_x86_does_not_skip_phase2 \
+    bash -c '! grep -E "^[[:space:]]*export OPENUIKIT_CYCLE_SKIP_PHASE2=1" "$1"' \
+    _ "$script_dir/install-built-products.sh"
+check products_x86_rung_a \
+    grep -q 'PHASE2_RUNGS=a' "$script_dir/install-built-products.sh"
+check products_x86_fixtures \
+    grep -q 'install-x86-fixtures.sh' "$script_dir/install-built-products.sh"
+check products_x86_ud_cfobjc \
+    grep -q 'cfobjc/obj' "$script_dir/install-built-products.sh"
+check products_x86_ud_cftest \
+    grep -q 'libCFTest.dylib' "$script_dir/install-built-products.sh"
+check products_x86_ud_guest \
+    grep -q 'ud_score_guest' "$script_dir/install-built-products.sh"
 check products_refuse_empty_tbd \
     grep -q 'empty .tbd is a linker lie' "$script_dir/install-built-products.sh"
 check products_x86_placeholder \
     grep -q '_machorun_foundation_placeholder' "$script_dir/install-built-products.sh"
+check fixtures_wraps_vendor_script \
+    grep -q 'build_fixtures_linux_x86_64.sh' "$script_dir/install-x86-fixtures.sh"
+check fixtures_stamp_keyed \
+    grep -q 'stamp_reuse' "$script_dir/install-x86-fixtures.sh"
 check verify_runs_rung_a \
     grep -q 'PHASE2_RUNGS=a' "$script_dir/verify-cloud-environment.sh"
 check verify_can_execute_x86 \
     grep -q 'CURSOR_ENV_CAN_EXECUTE arch=x86_64' "$script_dir/verify-cloud-environment.sh"
+check verify_ud_products_marker \
+    grep -q 'CURSOR_ENV_UD_PRODUCTS_OK' "$script_dir/verify-cloud-environment.sh"
+check verify_fixtures_marker \
+    grep -q 'CURSOR_ENV_X86_FIXTURES_OK' "$script_dir/verify-cloud-environment.sh"
+check verify_reuse_marker \
+    grep -q 'CURSOR_ENV_PHASE2_REUSE_LINES' "$script_dir/verify-cloud-environment.sh"
+check readme_rung_a_command \
+    grep -q 'PHASE2_RUNGS=a bash scripts/x86/phase2.sh' "$script_dir/README"
+check readme_verify_command \
+    grep -q 'verify-cloud-environment.sh' "$script_dir/README"
 check install_contract_checkouts_by_id \
     grep -q 'checkouts_by_id(load_contract' "$script_dir/install-scratch-corpus.sh"
 check install_contract_icu \

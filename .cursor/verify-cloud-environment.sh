@@ -376,7 +376,29 @@ phase2_ms=0
 if [ "$host_arch" = x86_64 ] && [ "$can_execute" -eq 1 ]; then
     printf 'CURSOR_ENV_CAN_EXECUTE arch=x86_64 loader=%s\n' \
         "$(sha256sum "$repo_root/machorun/build/machorun" | awk '{print substr($1,1,12)}')"
-    echo "== phase2 rung a (PHASE2_RUNGS=a)"
+
+    fixtures_bin=$repo_root/machorun/tests/bin-x86_64
+    [ -s "$fixtures_bin/.built_count" ] \
+        || { printf 'cursor-environment: missing x86 fixtures at %s\n' "$fixtures_bin" >&2; exit 1; }
+    fixtures_built=$(tr -d '[:space:]' < "$fixtures_bin/.built_count")
+    [ "$fixtures_built" -gt 0 ] \
+        || { printf 'cursor-environment: x86 fixtures built=0\n' >&2; exit 1; }
+    printf 'CURSOR_ENV_X86_FIXTURES_OK built=%s out=%s\n' "$fixtures_built" "$fixtures_bin"
+
+    ud=$repo_root/scratch/ud-guest-x86_64
+    [ -d "$ud/cfobjc/obj" ] && ls "$ud/cfobjc/obj"/*.o >/dev/null 2>&1 \
+        || { printf 'cursor-environment: missing %s/cfobjc/obj\n' "$ud" >&2; exit 1; }
+    [ -f "$ud/lib/libCFTest.dylib" ] \
+        || { printf 'cursor-environment: missing %s/lib/libCFTest.dylib\n' "$ud" >&2; exit 1; }
+    [ -x "$ud/bin/ud_guest" ] \
+        || { printf 'cursor-environment: missing %s/bin/ud_guest\n' "$ud" >&2; exit 1; }
+    [ -x "$ud/bin/ud_score_guest" ] \
+        || { printf 'cursor-environment: missing %s/bin/ud_score_guest\n' "$ud" >&2; exit 1; }
+    [ -d "$repo_root/scratch/mrroot_full-x86_64" ] \
+        || { printf 'cursor-environment: missing scratch/mrroot_full-x86_64\n' >&2; exit 1; }
+    printf 'CURSOR_ENV_UD_PRODUCTS_OK cfobjc_obj=1 libCFTest=1 ud_guest=1 ud_score_guest=1 mrroot_full-x86_64=1\n'
+
+    echo "== phase2 rung a (PHASE2_RUNGS=a; expected stamp reuse after install)"
     phase2_start_ns=$(date +%s%N)
     set +e
     PHASE2_RUNGS=a bash "$repo_root/scripts/x86/phase2.sh" "$repo_root" \
@@ -384,19 +406,33 @@ if [ "$host_arch" = x86_64 ] && [ "$can_execute" -eq 1 ]; then
     phase2_rc=${PIPESTATUS[0]}
     set -e
     phase2_ms=$(( ( $(date +%s%N) - phase2_start_ns ) / 1000000 ))
-    grep -E 'ENV_PREPARE_SUMMARY|RUNG_SCOREBOARD|GUEST SCOREBOARD|CANNOT_' \
+    grep -E 'ENV_PREPARE_SUMMARY|RUNG_SCOREBOARD|GUEST SCOREBOARD|CANNOT_|reused=1 stamp=' \
         "$repo_root/scratch/phase2-verify-rung-a.log" || true
-    if [ "$phase2_rc" -ne 0 ]; then
+    reuse_n=$(grep -c 'reused=1 stamp=' "$repo_root/scratch/phase2-verify-rung-a.log" || true)
+    printf 'CURSOR_ENV_PHASE2_REUSE_LINES=%s rc=%s\n' "$reuse_n" "$phase2_rc"
+    [ "$reuse_n" -ge 1 ] \
+        || { printf 'cursor-environment: PHASE2_RUNGS=a rerun had no reused=1 stamp= lines\n' >&2; exit 1; }
+    if [ "$phase2_rc" -ne 0 ] && [ "$phase2_rc" -ne 2 ]; then
         printf 'cursor-environment: phase2 rung a failed rc=%s (scoreboard quoted above)\n' \
             "$phase2_rc" >&2
         exit 1
     fi
-    if ! grep -q '^RUNG_SCOREBOARD a=PASS' "$repo_root/scratch/phase2-verify-rung-a.log"; then
-        printf 'cursor-environment: phase2 rung a did not PASS (see RUNG_SCOREBOARD)\n' >&2
+    if grep -q '^RUNG_SCOREBOARD a=PASS' "$repo_root/scratch/phase2-verify-rung-a.log"; then
+        printf 'CURSOR_ENV_RUNG_A=PASS\n'
+        if [ "$phase2_rc" -ne 0 ]; then
+            printf 'cursor-environment: rung a PASS but phase2 rc=%s\n' "$phase2_rc" >&2
+            exit 1
+        fi
+    elif grep -q '^RUNG_SCOREBOARD a=CANNOT' "$repo_root/scratch/phase2-verify-rung-a.log"; then
+        printf 'CURSOR_ENV_RUNG_A=CANNOT (compile products present; scoreboard quoted above)\n'
+    else
+        printf 'cursor-environment: phase2 rung a did not print RUNG_SCOREBOARD a=PASS|CANNOT\n' >&2
         exit 1
     fi
 fi
 
+printf 'CURSOR_ENV_OK=1 arch=%s fixtures=%s ud_products=1\n' \
+    "$host_arch" "${fixtures_built:-n/a}"
 printf 'CURSOR_ENV_SUMMARY can=toolchain,corpus-pins[%s/%s],%s-macho-emit,%s,darwin-userland-dylibs cannot=arm64-macho-execute-on-%s,simruntime-overlay-dylibs,opencombine-export,modcache-swiftui-guest,macos-oracle unavailable=%s fingerprint=%s\n' \
     "$corpus_ok" "$corpus_count" "$host_arch" "$sysroot_surface" "$host_arch" "$unavailable_count" "$fingerprint_sha"
 if [ "$host_arch" != aarch64 ] && [ "$host_arch" != arm64 ]; then

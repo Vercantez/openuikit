@@ -29,17 +29,26 @@ export DARWIN_CLANG=clang-18
 # the pinned Ubuntu LLVM 18 that ld64.lld-18 belongs with.
 export CC=clang-18
 
-# ---- x86_64: run the committed cycle (substrate only). ----
-# Overlays come from swiftcore-macho/artifacts (SKIP_OVERLAYS). Phase2 rungs
-# run in verify-cloud-environment.sh (SKIP_PHASE2) so install stays bounded.
+# ---- x86_64: run the committed cycle, including PHASE2_RUNGS=a. ----
+# Overlays come from swiftcore-macho/artifacts (SKIP_OVERLAYS). Do NOT set
+# OPENUIKIT_CYCLE_SKIP_PHASE2: the Build snapshot must contain rung-a
+# compile/link products so an agent rerun is stamp reuse, not a cold CF build.
+# Rungs b/c are not selected (PHASE2_RUNGS=a); they stay SKIPPED here and
+# would be named CANNOT until Focus bundles / Reminder inventory exist.
 if [ "$host" = x86_64 ]; then
     export W=$repo_root
     # shellcheck disable=SC1091
     . "$repo_root/full/scripts/guest_arch.inc"
     export OPENUIKIT_CYCLE_SKIP_OVERLAYS=1
-    export OPENUIKIT_CYCLE_SKIP_PHASE2=1
-    echo "== x86 cycle substrate (SKIP_OVERLAYS=1 SKIP_PHASE2=1 tree=$repo_root)"
-    bash "$repo_root/scripts/ops/x86_cycle.sh" "$repo_root"
+    unset OPENUIKIT_CYCLE_SKIP_PHASE2
+    export PHASE2_RUNGS=a
+    echo "== x86 cycle (SKIP_OVERLAYS=1 PHASE2_RUNGS=a tree=$repo_root)"
+    cycle_log=$scratch/x86-cycle-install.log
+    set +e
+    bash "$repo_root/scripts/ops/x86_cycle.sh" "$repo_root" 2>&1 | tee "$cycle_log"
+    cycle_rc=$?
+    set -e
+    printf 'CURSOR_INSTALL_CYCLE_RC rc=%s log=%s\n' "$cycle_rc" "$cycle_log"
 
     loader=$machorun/build/machorun
     [ -x "$loader" ] || { printf 'cursor-products: missing x86 loader\n' >&2; exit 1; }
@@ -88,6 +97,41 @@ if [ "$host" = x86_64 ]; then
     empty_tbd=$(find "$sys" -name '*.tbd' -size 0 -print -quit)
     [ -z "$empty_tbd" ] \
         || { printf 'cursor-products: empty .tbd is a linker lie: %s\n' "$empty_tbd" >&2; exit 1; }
+
+    # Loader scoreboard inputs. objc4 was already built stamp-keyed by
+    # ensure_machorun (`build.sh objc4`); do not invoke it again here.
+    bash "$repo_root/.cursor/install-x86-fixtures.sh" "$repo_root"
+    fixtures_bin=$machorun/tests/bin-x86_64
+    [ -s "$fixtures_bin/.built_count" ] \
+        || { printf 'cursor-products: missing x86 fixtures at %s\n' "$fixtures_bin" >&2; exit 1; }
+    fixtures_built=$(tr -d '[:space:]' < "$fixtures_bin/.built_count")
+    [ "$fixtures_built" -gt 0 ] \
+        || { printf 'cursor-products: x86 fixtures built=0\n' >&2; exit 1; }
+
+    ud=$scratch/ud-guest-x86_64
+    [ -d "$ud/cfobjc/obj" ] && ls "$ud/cfobjc/obj"/*.o >/dev/null 2>&1 \
+        || { printf 'cursor-products: missing %s/cfobjc/obj\n' "$ud" >&2; exit 1; }
+    [ -f "$ud/lib/libCFTest.dylib" ] \
+        || { printf 'cursor-products: missing %s/lib/libCFTest.dylib\n' "$ud" >&2; exit 1; }
+    llvm-otool-18 -hv "$ud/lib/libCFTest.dylib" | grep -Eq 'MH_MAGIC_64[[:space:]]+X86_64' \
+        || { printf 'cursor-products: libCFTest.dylib is not X86_64 Mach-O\n' >&2; exit 1; }
+    [ -x "$ud/bin/ud_guest" ] \
+        || { printf 'cursor-products: missing %s/bin/ud_guest\n' "$ud" >&2; exit 1; }
+    [ -x "$ud/bin/ud_score_guest" ] \
+        || { printf 'cursor-products: missing %s/bin/ud_score_guest\n' "$ud" >&2; exit 1; }
+    [ -d "$mrroot" ] && [ -x "$mrroot/machorun" ] \
+        || { printf 'cursor-products: missing run root %s\n' "$mrroot" >&2; exit 1; }
+
+    machorun_status=$(git -C "$repo_root" status --short --untracked-files=all -- machorun)
+    [ -z "$machorun_status" ] \
+        || { printf 'cursor-products: machorun subtree is dirty: %s\n' "$machorun_status" >&2; exit 1; }
+
+    if [ "$cycle_rc" -ne 0 ]; then
+        printf 'CURSOR_INSTALL_CYCLE_NONZERO rc=%s (rung-a compile products are present; quoting scoreboard)\n' \
+            "$cycle_rc"
+        grep -E 'RUNG_SCOREBOARD|GUEST SCOREBOARD|CANNOT_|reused=1 stamp=' \
+            "$cycle_log" || true
+    fi
 
     note_unavailable "CURSOR_ENV_CANNOT_STAGE_SIMRUNTIME_OVERLAY_DYLIBS host=$host reason=full/foundation/stage_swift_overlays.sh copies overlay dylibs from an iOS CoreSimulator runtime on macOS. This VM stages the committed x86_64 artifacts (swiftcore-macho/artifacts/swift-macosx/x86_64) instead; it does not materialize Apple's simulator copies."
     if [ ! -d "$scratch/opencombine-core-durable-20260828-r2/export" ]; then

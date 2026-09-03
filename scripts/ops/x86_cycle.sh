@@ -260,8 +260,8 @@ else
     exit 2
 fi
 
-# 7. stage roots. Operator box lets phase2 do this; a fresh VM that skips
-# phase2 at install (OPENUIKIT_CYCLE_SKIP_PHASE2=1) still needs the trees.
+# 7. stage roots. Operator box lets phase2 do this; SKIP_PHASE2 callers
+# (tests, box -o) still need the trees. Cursor install no longer skips phase2.
 # Mirror phase2's helpers (base + host + layout + run-root placeholders).
 if run_logged roots "$LOGDIR/roots.log" \
     bash "$TREE/scripts/x86/stage_cycle_roots.sh" "$TREE"; then
@@ -311,8 +311,9 @@ fi
 
 # 8. phase2 rungs. Quote POSITIVE boards (phase2 already does; do not tail -1
 # the persist log past NEGATIVE CONTROL).
-# OPENUIKIT_CYCLE_SKIP_PHASE2=1: install builds substrate only; verify runs
-# PHASE2_RUNGS=a. Same skip contract as OPENUIKIT_CYCLE_SKIP_OVERLAYS.
+# OPENUIKIT_CYCLE_SKIP_PHASE2=1: substrate only (tests / run_box.sh -o).
+# Cursor install does not set this; it exports PHASE2_RUNGS=a so rung a is
+# snapshotted. Same skip contract as OPENUIKIT_CYCLE_SKIP_OVERLAYS.
 if [ "${OPENUIKIT_CYCLE_SKIP_PHASE2:-0}" = 1 ]; then
     emit_stage phase2 reused "$TREE (skipped by OPENUIKIT_CYCLE_SKIP_PHASE2=1)"
 elif run_logged phase2 "$LOGDIR/phase2.log" \
