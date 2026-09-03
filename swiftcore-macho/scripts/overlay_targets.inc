@@ -272,7 +272,8 @@ overlay_print_overlay_module_evidence() {
 }
 
 # Print the ninja link for libswiftDarwin.so and the argv the shim would
-# run. `-o …*.so` is ELF (keep -soname, linker=ld.lld) even under macosx/.
+# run. Classify by `-target` (apple → Darwin/ld64.lld even when CMake names
+# the output .so). GNU -soname becomes -install_name; driver flags stay.
 # overlay_print_darwin_link_from_ninja <build_dir> <arch>
 overlay_print_darwin_link_from_ninja() {
     local build_dir=${1:?overlay_print_darwin_link_from_ninja: build dir}
@@ -340,32 +341,55 @@ if err:
     for eline in err.splitlines():
         print(eline)
 print("overlay_link: rewritten", rewritten if rewritten else "ABSENT")
-outp = ""
-for i, a in enumerate(args):
-    if a == "-o" and i + 1 < len(args):
-        outp = args[i + 1]
-        break
-base = os.path.basename(outp)
+
+def flavor_from_argv(tokens):
+    for i, tok in enumerate(tokens):
+        if tok in ("-target", "--target") and i + 1 < len(tokens):
+            t = tokens[i + 1].lower()
+            if "apple" in t:
+                return "darwin"
+            if "linux" in t or "unknown-linux" in t:
+                return "elf"
+        if tok.startswith("--target=") or tok.startswith("-target="):
+            t = tok.split("=", 1)[1].lower()
+            if "apple" in t:
+                return "darwin"
+            if "linux" in t or "unknown-linux" in t:
+                return "elf"
+    if any("MacOSX.sdk" in t for t in tokens) or any(t.endswith(".dylib") for t in tokens):
+        return "darwin"
+    return "elf"
+
 decision = next((l for l in err.splitlines() if l.startswith("clangxx_darwin_link: -o ")), "")
 if not decision:
     print("overlay_link: missing -o decision line")
     sys.exit(1)
-if base.endswith(".so") or ".so." in base:
+flavor = flavor_from_argv(args)
+if flavor == "elf":
     if "decision=elf" not in decision or "linker=ld.lld" not in decision:
-        print("overlay_link: .so output must be decision=elf linker=ld.lld")
+        print("overlay_link: linux-target .so must be decision=elf linker=ld.lld")
         sys.exit(1)
     if "soname" not in rewritten:
         print("overlay_link: ELF rewritten dropped soname")
         sys.exit(1)
     if "ld64.lld" in rewritten:
-        print("overlay_link: ELF .so routed to ld64.lld")
+        print("overlay_link: ELF linux-target link still targets ld64.lld")
         sys.exit(1)
 else:
+    if "decision=darwin" not in decision or "linker=ld64.lld" not in decision:
+        print("overlay_link: apple-target .so must be decision=darwin linker=ld64.lld")
+        sys.exit(1)
     if "soname" in rewritten:
-        print("overlay_link: rewritten still has soname")
+        print("overlay_link: Darwin rewritten still has GNU -soname")
         sys.exit(1)
     if rewritten and "-install_name" not in rewritten and "-Wl,-install_name" not in rewritten:
         print("overlay_link: rewritten missing -install_name")
+        sys.exit(1)
+    if "ld64.lld" not in rewritten:
+        print("overlay_link: Darwin rewritten missing ld64.lld")
+        sys.exit(1)
+    if "-dynamiclib" in rewritten.split() or "-nostdlib" in rewritten.split():
+        print("overlay_link: Darwin rewritten injected -dynamiclib/-nostdlib")
         sys.exit(1)
 PY
 }
