@@ -1,6 +1,5 @@
 import Foundation
 
-@MainActor
 public protocol PHContentEditingController: AnyObject {
     var shouldShowCancelConfirmation: Bool { get }
 

@@ -17,7 +17,6 @@ public enum PHLivePhotoViewPlaybackStyle: Int, Hashable, Sendable {
     case hint = 2
 }
 
-@MainActor
 public protocol PHLivePhotoViewDelegate: AnyObject {
     func livePhotoView(
         _ livePhotoView: PHLivePhotoView,
@@ -79,7 +78,6 @@ extension PHLivePhotoViewDelegate {
     }
 }
 
-@MainActor
 open class PHLivePhotoView: NSObject {
     public weak var delegate: (any PHLivePhotoViewDelegate)?
     public var livePhoto: PHLivePhoto?

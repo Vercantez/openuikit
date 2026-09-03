@@ -39,12 +39,10 @@ public struct PHPickerResult: Hashable, @unchecked Sendable {
     }
 }
 
-@MainActor
 public protocol PHPickerViewControllerDelegate: AnyObject {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult])
 }
 
-@MainActor
 public final class PHPickerViewController: NSObject {
     public let configuration: PHPickerConfiguration
     public weak var delegate: (any PHPickerViewControllerDelegate)?
