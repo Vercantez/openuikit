@@ -803,6 +803,44 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+# 6d. x86_64 ud_guest via foundation-macho's committed linker. Work tree is
+#     scratch/ud-guest-x86_64 (never the unsuffixed arm64 path). FE objects
+#     are reused from build/full-x86_64/foundation; this does not compile FE
+#     again. Link-time does not need the nine overlay dylibs (tbd-first);
+#     rung a still needs them at load.
+echo "==== ud-guest-x86 (committed $PHASE2_UD_GUEST_LINKER) ===="
+UD_GUEST_ITEM_OK=0
+ud_report=$(phase2_try_ud_guest \
+    "$W" \
+    "$FE_OUT" \
+    "$SYS" \
+    "$TARGET" \
+    "$MC" \
+    "$MACHORUN/darwin/usr/lib" \
+    "$MACHORUN/build/machorun" \
+    || true)
+case "$ud_report" in
+    OK\ bin=*)
+        UD_GUEST_BIN=${ud_report#*bin=}
+        UD_GUEST_BIN=${UD_GUEST_BIN%% *}
+        UD_GUEST_W=$W/scratch/ud-guest-x86_64
+        export UD_GUEST_BIN UD_GUEST_W
+        note ud-guest-x86 cold-built "$ud_report"
+        UD_GUEST_ITEM_OK=1
+        echo "  $ud_report"
+        ;;
+    CANNOT_UD_GUEST_*)
+        ud_marker=${ud_report#CANNOT_UD_GUEST_}
+        ud_marker=${ud_marker%% *}
+        ud_rest=${ud_report#CANNOT_UD_GUEST_${ud_marker} }
+        cannot ud-guest-x86 "UD_GUEST_$ud_marker" "$ud_rest"
+        ;;
+    *)
+        cannot ud-guest-x86 UD_GUEST_UNKNOWN "ud-guest-x86 produced: ${ud_report:-empty}"
+        ;;
+esac
+
+# ---------------------------------------------------------------------------
 # 7. Rungs. Reuse committed gates. Never invent new denominators.
 echo "==== rungs (committed runners only) ===="
 
@@ -897,7 +935,7 @@ if [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]
         fi
     else
         cannot rung-a-ud_guest UD_GUEST_BINARY \
-            "no x86_64 ud_guest Mach-O. Committed linker is foundation-macho/scripts/link_ud_guest.sh (objects in \$W/fe of a named foundation-macho work tree). Will not invent a second linker. Operator: stage CF+FE objects, link_ud_guest.sh, then re-run; or set UD_GUEST_BIN."
+            "no x86_64 ud_guest Mach-O after ud-guest-x86. Committed linker is foundation-macho/scripts/link_ud_guest.sh against scratch/ud-guest-x86_64 (never a second linker). See ENV_PREPARE ud-guest-x86 CANNOT_UD_GUEST_* file=."
         RUNG_A_DETAIL="no ud_guest binary"
     fi
 else
