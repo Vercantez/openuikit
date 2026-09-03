@@ -497,16 +497,19 @@ done
     # so the umbrella must NOT define it.
     for sym in _nan _remquo; do
         llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" 2>/dev/null \
-            | awk '{print $NF}' | grep -qx "$sym" || {
+            | awk -v s="$sym" '$NF==s{f=1} END{exit !f}' || {
             echo "build_full: the libSystem umbrella does not define $sym -- it is not an umbrella, it is a copy" >&2
             exit 1; }
     done
+    # awk consumes the whole listing: `grep -q` exits at the first match and the
+    # still-writing nm takes SIGPIPE, which pipefail reports as failure (measured
+    # 2026-09-03 on both boxes: the symbol was present and the check still failed).
     llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.real.dylib" 2>/dev/null \
-        | awk '{print $NF}' | grep -qx __NSGetMachExecuteHeader || {
+        | awk '$NF=="__NSGetMachExecuteHeader"{f=1} END{exit !f}' || {
         echo "build_full: libSystem.real does not define __NSGetMachExecuteHeader -- it belongs in machorun, not the umbrella" >&2
         exit 1; }
     if llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" 2>/dev/null \
-            | awk '{print $NF}' | grep -qx __NSGetMachExecuteHeader; then
+            | awk '$NF=="__NSGetMachExecuteHeader"{f=1} END{exit !f}'; then
         echo "build_full: the libSystem umbrella still defines __NSGetMachExecuteHeader -- delete it from syspatch; a definition here beats .real" >&2
         exit 1
     fi
