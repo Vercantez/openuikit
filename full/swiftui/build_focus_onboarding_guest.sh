@@ -959,7 +959,7 @@ run_link libFoundation "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -L"$PACKAGE" -lFoundationEssentials -lFoundationInternationalization \
     -lDispatch -lOpenUIKit -lCombine -lOpenCombine \
     "$PACKAGE/libOpenCoreGraphics.dylib" \
-    "$RELATIVE_TIME_DARWIN" \
+    -L"$RUNROOT/darwin/usr/lib" "$RELATIVE_TIME_DARWIN" \
     -L"$SYS/usr/lib/swift" "${FOUNDATION_RUNTIME_LINK_FLAGS[@]}" \
     "$SYS/usr/lib/swift/libswiftDarwin.tbd" \
     "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
@@ -1120,7 +1120,7 @@ expected_foundation_inputs=$(printf '%s\n' \
     "$PACKAGE/libOpenUIKit.dylib" \
     "$PACKAGE/libCombine.dylib" \
     "$PACKAGE/libOpenCoreGraphics.dylib" \
-    "$RELATIVE_TIME_DARWIN" \
+    -L"$RUNROOT/darwin/usr/lib" "$RELATIVE_TIME_DARWIN" \
     "$SYS/usr/lib/swift/libswift_StringProcessing.tbd" \
     "$SYS/usr/lib/swift/libswiftSynchronization.tbd" \
     "$SYS/usr/lib/swift/libswiftDarwin.tbd" \
