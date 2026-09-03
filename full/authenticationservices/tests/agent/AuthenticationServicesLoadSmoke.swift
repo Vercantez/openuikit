@@ -1,0 +1,3 @@
+import AuthenticationServices
+
+let frameworkLoadSmokeMarker = "AUTHENTICATIONSERVICES_AGENT_RUNTIME_OK"

@@ -1,1 +1,6 @@
 full/authenticationservices/AuthenticationServices.swift
+full/authenticationservices/AuthenticationServicesAuthorization.swift
+full/authenticationservices/AuthenticationServicesCredentials.swift
+full/authenticationservices/AuthenticationServicesErrors.swift
+full/authenticationservices/AuthenticationServicesImportExport.swift
+full/authenticationservices/AuthenticationServicesWebSession.swift
