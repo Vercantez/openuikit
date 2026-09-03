@@ -14,6 +14,11 @@ STAGE=${STAGE:?STAGE is required}
 WORK=${WORK:?WORK is required}
 TARGET=${TARGET:-arm64-apple-macos15.0}
 LINK_ARCH=${TARGET%%-*}
+case "$LINK_ARCH" in
+    arm64) OTOOL_ARCH=ARM64 ;;
+    x86_64) OTOOL_ARCH=X86_64 ;;
+    *) echo "foundation_internationalization: unsupported TARGET arch $LINK_ARCH" >&2; exit 2 ;;
+esac
 MIN_OS=${MIN_OS:-15.0}
 LINK_PLATFORM=${LINK_PLATFORM:-macos}
 LINK_SDK_VERSION=${LINK_SDK_VERSION:-$MIN_OS}
@@ -376,8 +381,8 @@ ld64.lld-18 -arch "$LINK_ARCH" \
 
 for dylib in lib_FoundationICU.dylib libFoundationInternationalization.dylib; do
     llvm-otool-18 -hv "$STAGE/lib/$dylib" \
-        | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB' \
-        || die "$dylib is not an ARM64 Mach-O dylib"
+        | grep -Eq "MH_MAGIC_64[[:space:]]+$OTOOL_ARCH.*[[:space:]]DYLIB" \
+        || die "$dylib is not an $OTOOL_ARCH Mach-O dylib"
 done
 [ "$(llvm-otool-18 -D "$STAGE/lib/lib_FoundationICU.dylib" | tail -n 1)" = \
     "$DYLIB_INSTALL_PREFIX/lib_FoundationICU.dylib" ] \
