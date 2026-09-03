@@ -11,7 +11,15 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from env.contract import checkouts_by_id, demanded_by, load_contract, validate_against_locks
+from env.contract import (
+    ContractError,
+    check_focus_widget_attestation_pins,
+    checkouts_by_id,
+    demanded_by,
+    load_contract,
+    load_guest_gate_inventories,
+    validate_against_locks,
+)
 from env.markers import (
     CANNOT_PREFIX,
     MARKERS,
@@ -88,8 +96,41 @@ class ContractLockTests(unittest.TestCase):
         notes = validate_against_locks(ROOT)
         pin_notes = [n for n in notes if n.startswith("focus_widget_attestation_pins ")]
         self.assertEqual(len(pin_notes), 1)
-        self.assertIn("25/25", pin_notes[0])
+        self.assertEqual(
+            pin_notes[0],
+            "focus_widget_attestation_pins 25/25 agree "
+            "(23 literal, 2 via guest_gate_inventories arm64)",
+        )
         print(pin_notes[0])
+
+    def test_inventory_lookup_pin_resolves_and_agrees(self) -> None:
+        inventories = load_guest_gate_inventories(ROOT)
+        gate = (
+            "EXPECTED_PACKAGE_FILE_COUNT="
+            "$(guest_gate_inventory widget package file_count)\n"
+        )
+        literal_n, inventory_n = check_focus_widget_attestation_pins(
+            {"EXPECTED_PACKAGE_FILE_COUNT": 101},
+            gate,
+            inventories,
+        )
+        self.assertEqual((literal_n, inventory_n), (0, 1))
+
+    def test_changed_inventory_value_fails_naming_the_key(self) -> None:
+        inventories = load_guest_gate_inventories(ROOT)
+        original = inventories.WIDGET_PACKAGE_FILE_COUNT
+        gate = (
+            "EXPECTED_PACKAGE_FILE_COUNT="
+            "$(guest_gate_inventory widget package file_count)\n"
+        )
+        pins = {"EXPECTED_PACKAGE_FILE_COUNT": 101}
+        inventories.WIDGET_PACKAGE_FILE_COUNT = original + 1
+        try:
+            with self.assertRaises(ContractError) as ctx:
+                check_focus_widget_attestation_pins(pins, gate, inventories)
+        finally:
+            inventories.WIDGET_PACKAGE_FILE_COUNT = original
+        self.assertIn("EXPECTED_PACKAGE_FILE_COUNT", str(ctx.exception))
 
 
 class MarkerRegistryTests(unittest.TestCase):

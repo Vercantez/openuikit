@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 from pathlib import Path
@@ -84,6 +85,85 @@ def _perl_spec(text: str, key: str, field: str) -> str:
     if not match:
         raise ContractError(f"pinned_inputs.pl {key} is missing {field}")
     return match.group(1)
+
+
+# env/contract.json hosts.ec2-aarch64.role is execution-authority (arch
+# aarch64/arm64); proof_split.execution is arm64-ec2-authority. Attestation
+# pin values are that host's, even when this process is running on x86_64.
+FOCUS_WIDGET_ATTESTATION_ARCH = "arm64"
+
+
+def load_guest_gate_inventories(root: Path) -> Any:
+    relative = "full/swiftui/guest_gate_inventories.py"
+    path = root / relative
+    if not path.is_file() or path.is_symlink():
+        raise ContractError(f"lock is missing or a symlink: {relative}")
+    spec = importlib.util.spec_from_file_location("guest_gate_inventories", path)
+    if spec is None or spec.loader is None:
+        raise ContractError(f"cannot load {relative}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _inventory_assignment(gate: str, key: str) -> tuple[str, str] | None:
+    """Parse `KEY=$(guest_gate_inventory widget <kind> <field>)` from the gate."""
+    match = re.search(
+        rf"^{re.escape(key)}=\$\(guest_gate_inventory widget (\S+) (\S+)\)\s*$",
+        gate,
+        re.MULTILINE,
+    )
+    if not match:
+        return None
+    return match.group(1), match.group(2)
+
+
+def _resolve_widget_inventory(
+    inventories: Any, kind: str, field: str, *, arch: str = FOCUS_WIDGET_ATTESTATION_ARCH
+) -> str:
+    try:
+        raw = inventories.emit(arch, "widget", kind, field, {})
+    except (KeyError, ValueError) as exc:
+        raise ContractError(
+            f"guest_gate_inventories {arch} widget {kind} {field} is not resolvable"
+        ) from exc
+    return str(raw).rstrip("\n")
+
+
+def check_focus_widget_attestation_pins(
+    pins: dict[str, Any],
+    gate: str,
+    inventories: Any,
+) -> tuple[int, int]:
+    """Return (literal_count, inventory_count). Raise ContractError on drift.
+
+    A pin agrees if the gate still contains the literal `KEY=VALUE`, or if it
+    assigns `KEY=$(guest_gate_inventory widget <kind> <field>)` and that lookup
+    resolves on the attestation arch to exactly VALUE.
+    """
+    literal_n = 0
+    inventory_n = 0
+    for key, value in pins.items():
+        if key == "notes":
+            continue
+        token = f"{key}={value}"
+        if token in gate:
+            literal_n += 1
+            continue
+        assignment = _inventory_assignment(gate, key)
+        if assignment is not None:
+            kind, field = assignment
+            try:
+                resolved = _resolve_widget_inventory(inventories, kind, field)
+            except ContractError as exc:
+                raise ContractError(
+                    f"focus-widget pin {token} is missing from the gate"
+                ) from exc
+            if resolved == str(value):
+                inventory_n += 1
+                continue
+        raise ContractError(f"focus-widget pin {token} is missing from the gate")
+    return literal_n, inventory_n
 
 
 def validate_against_locks(root: Path | None = None) -> list[str]:
@@ -179,17 +259,15 @@ def validate_against_locks(root: Path | None = None) -> list[str]:
 
     widget = contract["focus_widget_attestation_pins"]
     gate = _read(root, "full/swiftui/build_focus_widget_guest.sh")
-    compared = 0
-    for key, value in widget.items():
-        if key == "notes":
-            continue
-        token = f"{key}={value}"
-        if token not in gate:
-            raise ContractError(f"focus-widget pin {token} is missing from the gate")
-        compared += 1
+    inventories = load_guest_gate_inventories(root)
+    literal_n, inventory_n = check_focus_widget_attestation_pins(
+        widget, gate, inventories
+    )
+    compared = literal_n + inventory_n
     notes.append(
-        f"focus_widget_attestation_pins {compared}/{compared} agree with "
-        "full/swiftui/build_focus_widget_guest.sh"
+        f"focus_widget_attestation_pins {compared}/{compared} agree "
+        f"({literal_n} literal, {inventory_n} via guest_gate_inventories "
+        f"{FOCUS_WIDGET_ATTESTATION_ARCH})"
     )
 
     every_row = 0
