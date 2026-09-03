@@ -41,6 +41,7 @@ elif [ ! -f "$_swift_linux_lib/libdispatch.so" ]; then
             && _swift_linux_lib=$(cd "$_swiftc_dir/../lib/swift/linux" && pwd -P)
     fi
 fi
+HOST_SWIFT_INCLUDE_ROOT=$(cd "$_swift_linux_lib/.." && pwd -P)   # <toolchain>/usr/lib/swift: dispatch/dispatch.h, Block.h
 HOST_DISPATCH_SOURCE=$_swift_linux_lib/libdispatch.so
 HOST_BLOCKS_RUNTIME_SOURCE=$_swift_linux_lib/libBlocksRuntime.so
 EXPECTED_HOST_DISPATCH_SHA256=39e502b3a8b016073947574a932172c1dafff8c41abd15b9b9f11bef7aaf1b6b
@@ -128,13 +129,13 @@ cp "$HOST_BLOCKS_RUNTIME_SOURCE" "$HOST_DIR/libBlocksRuntime.so"
 
 DISPATCH_HOST=$HOST_DIR/libOpenDispatchHost.so
 clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
-    -I "$W/full/dispatch/include" -I /usr/lib/swift -shared \
+    -I "$W/full/dispatch/include" -I "$HOST_SWIFT_INCLUDE_ROOT" -shared \
     "$W/full/dispatch/OpenDispatchHost.c" \
     -L "$HOST_DIR" -Wl,-rpath,'$ORIGIN' \
     -ldispatch -Wl,--no-as-needed -lBlocksRuntime -Wl,--as-needed -pthread \
     -o "$DISPATCH_HOST"
 clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
-    -I "$W/full/dispatch/include" -I /usr/lib/swift \
+    -I "$W/full/dispatch/include" -I "$HOST_SWIFT_INCLUDE_ROOT" \
     "$W/full/dispatch/OpenDispatchHost.c" \
     "$W/full/dispatch/OpenDispatchHostTests.c" \
     -L "$HOST_DIR" -Wl,-rpath,"$HOST_DIR" \
