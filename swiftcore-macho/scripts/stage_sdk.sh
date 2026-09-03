@@ -68,9 +68,13 @@ done
 
 # 3. machorun's clean-room private SPI headers (TargetConditionals, ptrauth,
 #    os/*, mach-o/dyld_priv.h, ...) sit at the sysroot root the same way
-#    machorun's own builds consume them.
+#    machorun's own builds consume them. include_next wrappers (objc4-priv
+#    crt_externs.h) go to usr/local/include — clang Darwin -isysroot searches
+#    that dir first, then usr/include, where the public machorun-sdk header
+#    already landed in step 1. Flattening the wrapper onto usr/include left
+#    no later SDK dir; Darwin.o died at crt_externs.h:13.
 if [ -d "$W/objc4-priv" ]; then
-  (cd "$W/objc4-priv" && find . -name '*.h' -exec install -D {} "$SDK/usr/include/{}" \; ) || true
+  overlay_sysroot_install_objc4_priv "$W/objc4-priv" "$SDK"
 fi
 [ -f "$W/machorun-sdk/local/TargetConditionals.h" ] && \
   cp -f "$W/machorun-sdk/local/TargetConditionals.h" "$SDK/usr/include/TargetConditionals.h"

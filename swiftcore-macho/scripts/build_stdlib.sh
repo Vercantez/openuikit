@@ -342,7 +342,9 @@ file -b "$MACHORUN/darwin/usr/lib/libSystem.B.dylib"
 ls "$MACHORUN/sdk/usr/lib"/*.tbd | wc -l | sed 's/^/tbds generated: /'
 
 # ---------------------------------------------------------------------------
-# 3. Stage the Swift sysroot
+# 3. Stage the Swift sysroot. .tbd stubs are copied from
+#    scratch/sysroot_fe4[-x86_64] (phase2 stages machorun gen_tbd into that
+#    tree), not from a leftover MacOSX.sdk whose stamp ignored tbd bytes.
 # ---------------------------------------------------------------------------
 step "stage_sdk"
 ln -sfn "$MACHORUN" "$W/machorun"
