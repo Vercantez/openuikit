@@ -157,7 +157,6 @@ if [ -f "$MACHORUN/sdk/usr/include/MacTypes.h" ]; then
     cp -f "$MACHORUN/sdk/usr/include/MacTypes.h" "$SYS/usr/include/MacTypes.h"
     echo "  restored machorun/sdk MacTypes.h after overlay-darwin"
 fi
-phase2_expand_darwin_modulemap_for_fe "$SYS" || true
 
 echo "== POSIX semaphore.h (Darwin.swiftinterface); real ioctl stays out of sysroot"
 posix_sem=$W/swiftcore-macho/sdk/overlay-posix/semaphore.h
@@ -178,27 +177,6 @@ if [ -f "$ioctl_stub" ]; then
         cp -f "$ioctl_stub" "$ioctl_dest"
         echo "  + sys/ioctl.h   [fe_ioctl_stub.h; no FIONBIO, CFSocket stays FAIL]"
     fi
-fi
-
-echo "== CLOCK_REALTIME as clockid_t (Clang modules hide Darwin clock ids)"
-cp -f "$W/scripts/x86/fe_clock_realtime.h" "$SYS/usr/include/fe_clock_realtime.h"
-if [ -f "$SYS/usr/include/Darwin.modulemap" ] \
-    && ! grep -q 'fe_clock_realtime.h' "$SYS/usr/include/Darwin.modulemap"; then
-    sed -i '$i\  textual header "fe_clock_realtime.h"' "$SYS/usr/include/Darwin.modulemap"
-    echo "  Darwin.modulemap textual header fe_clock_realtime.h"
-fi
-# Swift imports enumerator _CLOCK_REALTIME, not `#define CLOCK_REALTIME`.
-if [ -f "$W/scripts/x86/Darwin.apinotes" ]; then
-    cp -f "$W/scripts/x86/Darwin.apinotes" "$SYS/usr/include/Darwin.apinotes"
-    echo "  Darwin.apinotes SwiftName CLOCK_REALTIME <- _CLOCK_REALTIME"
-fi
-
-# SwiftOverlayShims expects timespec/timeval from the Clang Darwin module.
-# Linux LibcOverlayShims.h does not include sys/time.h.
-if [ -f "$SYS/usr/include/sys/types.h" ] \
-    && ! grep -q 'sys/time.h' "$SYS/usr/include/sys/types.h"; then
-    printf '\n#include <sys/time.h>\n' >> "$SYS/usr/include/sys/types.h"
-    echo "  sys/types.h now includes sys/time.h (timespec in SwiftOverlayShims)"
 fi
 
 echo "== textual Darwin overlays from the arm64 sysroot, if any (no dylibs, no arm64 .swiftmodule slices)"
@@ -323,4 +301,13 @@ else
 fi
 if [ -f "$SYS/usr/lib/swift/libswiftCore.dylib" ]; then
     echo "  libswiftCore: $(phase2_macho_cpu "$SYS/usr/lib/swift/libswiftCore.dylib") at usr/lib/swift/libswiftCore.dylib"
+fi
+
+# Overlay SDK copies $SYS (unexpanded Darwin.modulemap). FE Swift compile uses
+# the sibling snapshot with Darwin.write / sysdir / CLOCK_REALTIME visible.
+echo "== FE clang sysroot (expanded Darwin.modulemap; overlay SDK is not this tree)"
+phase2_stage_fe_clang_sysroot "$SYS" "$W" || true
+fe_clang=$(phase2_fe_clang_sysroot "$SYS")
+if [ -f "$fe_clang/usr/include/Darwin.modulemap" ]; then
+    echo "  FE clang Darwin.modulemap: $(wc -l < "$fe_clang/usr/include/Darwin.modulemap" | tr -d ' ') lines at $fe_clang"
 fi

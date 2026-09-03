@@ -38,7 +38,7 @@ SHA=${OPENUIKIT_SHA:-}
 STUB=${OPENUIKIT_CYCLE_STUB:-0}
 S3_REGION=${OPENUIKIT_S3_REGION:-}
 
-OVERLAY_CMD='NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 SWIFTCORE_BUILD_DISPATCH=1 SWIFT_TOOLCHAIN=/opt/swift bash swiftcore-macho/scripts/build_stdlib.sh'
+OVERLAY_CMD='NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 SWIFTCORE_BUILD_DISPATCH=1 SWIFTCORE_FE_SYSROOT=$TREE/scratch/sysroot_fe4-x86_64 SWIFT_TOOLCHAIN=/opt/swift bash swiftcore-macho/scripts/build_stdlib.sh'
 
 stage_names() {
     printf '%s\n' \
@@ -252,6 +252,7 @@ if [ "${OPENUIKIT_CYCLE_SKIP_OVERLAYS:-0}" = 1 ]; then
 elif run_logged overlays "$LOGDIR/overlays.log" \
     env NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 \
         SWIFTCORE_BUILD_DISPATCH=1 SWIFT_TOOLCHAIN="$SWIFT_TOOLCHAIN" \
+        SWIFTCORE_FE_SYSROOT="$TREE/scratch/sysroot_fe4-x86_64" \
         bash "$TREE/swiftcore-macho/scripts/build_stdlib.sh"; then
     emit_stage overlays "$(status_from_log "$LOGDIR/overlays.log")" "$TREE/swiftcore-macho/artifacts/swift-macosx/x86_64"
 else

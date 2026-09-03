@@ -50,6 +50,7 @@ export PATH="/usr/lib/llvm-18/bin:${PATH:-}"
 
 MACHORUN=$W/machorun
 SYS=$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}
+FE_CLANG_SYS=$SYS
 ARM_SYS=$W/scratch/sysroot_fe4
 # Base runtime (loader + x86 darwin userland + x86 libswiftCore). Same role as
 # arm64 scratch/mrroot from scripts/stage_swift_runtime.sh. build_full.sh
@@ -466,6 +467,16 @@ if [ -f "$SYS/usr/lib/libSystem.B.dylib" ] && phase2_is_arm64_macho "$SYS/usr/li
     SYSROOT_OK=0
 fi
 
+# Overlay SDK copies $SYS unexpanded. FE Swift / Clang modules use the sibling.
+if [ "$SYSROOT_OK" -eq 1 ] || [ "$SYSROOT_HEADERS" -eq 1 ]; then
+    if [ ! -d "$(phase2_fe_clang_sysroot "$SYS")" ]; then
+        phase2_stage_fe_clang_sysroot "$SYS" "$W" || true
+    fi
+    if [ -d "$(phase2_fe_clang_sysroot "$SYS")" ]; then
+        FE_CLANG_SYS=$(phase2_fe_clang_sysroot "$SYS")
+    fi
+fi
+
 # ---------------------------------------------------------------------------
 # 4. FoundationEssentials + collections + cshims for x86
 echo "==== FoundationEssentials / collections / cshims ($TARGET) ===="
@@ -499,7 +510,7 @@ try_collections() {
     }
     mkdir -p "$out"
     set +e
-    W="$W" SC="$SC" SYS="$SYS" OUT="$out" TARGET="$TARGET" MC="$MC" \
+    W="$W" SC="$SC" SYS="$FE_CLANG_SYS" OUT="$out" TARGET="$TARGET" MC="$MC" \
         bash "$W/full/foundation/build_collections.sh"
     st=$?
     set -e
@@ -533,7 +544,7 @@ try_cshims() {
     }
     mkdir -p "$out"
     set +e
-    W="$W" SF="$SF" SYS="$SYS" OUT="$out" TARGET="$TARGET" \
+    W="$W" SF="$SF" SYS="$FE_CLANG_SYS" OUT="$out" TARGET="$TARGET" \
         bash "$W/full/foundation/build_cshims.sh"
     st=$?
     set -e
@@ -575,7 +586,7 @@ try_os_module() {
     }
     mkdir -p "$out"
     set +e
-    W="$W" SYS="$SYS" OUT="$out" TARGET="$TARGET" MC="$MC" \
+    W="$W" SYS="$FE_CLANG_SYS" OUT="$out" TARGET="$TARGET" MC="$MC" \
         bash "$W/full/foundation/build_os_module.sh" "${posix_xcc[@]}"
     st=$?
     set -e
@@ -593,7 +604,7 @@ try_os_module() {
 
 try_fe_imports() {
     local report
-    report=$(phase2_probe_fe_imports "$SYS" "$OSMOD" || true)
+    report=$(phase2_probe_fe_imports "$FE_CLANG_SYS" "$OSMOD" || true)
     case "$report" in
         MATCH*)
             note fe-imports satisfied
@@ -643,7 +654,7 @@ try_fe() {
         local cst
         mkdir -p "$out"
         set +e
-        phase2_compile_removefile_compat "$SYS" "$out/removefile_compat.o" "$TARGET" "$W"
+        phase2_compile_removefile_compat "$FE_CLANG_SYS" "$out/removefile_compat.o" "$TARGET" "$W"
         cst=$?
         set -e
         if [ "$cst" -eq 0 ] && [ -f "$out/removefile_compat.o" ] \
@@ -685,7 +696,7 @@ try_fe() {
     }
     mkdir -p "$out"
     set +e
-    W="$W" SF="$SF" SYS="$SYS" TARGET="$TARGET" OSMOD="$OSMOD" \
+    W="$W" SF="$SF" SYS="$FE_CLANG_SYS" TARGET="$TARGET" OSMOD="$OSMOD" \
         COLLECTIONS="$FE_OUT/collections" MC="$MC" \
         bash "$W/full/foundation/build_fe.sh" \
             -emit-module -emit-module-path "$out/FoundationEssentials.swiftmodule" \
@@ -725,7 +736,7 @@ if stamp_reuse "$oc_obj" "$oc_key"; then
 else
     stamp_rebuild_reason "$oc_obj" "$oc_key"
     set +e
-    W="$W" SYS="$SYS" OPENCOMBINE_ROOT="$OPENCOMBINE_ROOT" MC="$MC" \
+    W="$W" SYS="$FE_CLANG_SYS" OPENCOMBINE_ROOT="$OPENCOMBINE_ROOT" MC="$MC" \
         bash "$HERE/build_opencombine.sh"
     st=$?
     set -e

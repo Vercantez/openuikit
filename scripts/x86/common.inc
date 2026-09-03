@@ -168,7 +168,7 @@ phase2_probe_focus_pin() {
 # output directory existing. A sysroot staged before x86 libswiftCore landed
 # would otherwise be reused while OpenCombine looks in usr/lib/swift and finds
 # nothing. Recipe bump forces a restage when the stager itself gains steps.
-PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.18
+PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.19
 PHASE2_SYSROOT_STAMP=.phase2-stage-inputs
 
 phase2_sha_or_absent() {
@@ -1672,6 +1672,51 @@ phase2_expand_darwin_modulemap_for_fe() {
     phase2_ensure_darwin_named_submodules "$sys"
     phase2_ensure_macho_modulemap "$sys"
     return 0
+}
+
+# Overlay ninja -sdk copies scratch/sysroot_fe4-x86_64 into sdk/MacOSX.sdk.
+# Expanding Darwin.modulemap there (unistd.h, …) makes _DarwinFoundation3 /
+# Darwin fail (`#error "Do not include this header directly, include
+# <inttypes.h> instead"`). FE Swift still needs that expansion. Snapshot the
+# overlay-clean tree, then mutate only the copy (same split as CF compile
+# vs machorun/sdk).
+phase2_fe_clang_sysroot() {
+    printf '%s-fe-clang\n' "${1%/}"
+}
+
+phase2_apply_darwin_modulemap_fe_mutations() {
+    local sys=$1
+    local repo=${2:-}
+    phase2_expand_darwin_modulemap_for_fe "$sys" || true
+    if [ -n "$repo" ] && [ -f "$repo/scripts/x86/fe_clock_realtime.h" ]; then
+        cp -f "$repo/scripts/x86/fe_clock_realtime.h" "$sys/usr/include/fe_clock_realtime.h"
+        if [ -f "$sys/usr/include/Darwin.modulemap" ] \
+            && ! grep -q 'fe_clock_realtime.h' "$sys/usr/include/Darwin.modulemap"; then
+            sed -i '$i\  textual header "fe_clock_realtime.h"' "$sys/usr/include/Darwin.modulemap"
+            echo "  Darwin.modulemap textual header fe_clock_realtime.h" >&2
+        fi
+        if [ -f "$repo/scripts/x86/Darwin.apinotes" ]; then
+            cp -f "$repo/scripts/x86/Darwin.apinotes" "$sys/usr/include/Darwin.apinotes"
+            echo "  Darwin.apinotes SwiftName CLOCK_REALTIME <- _CLOCK_REALTIME" >&2
+        fi
+    fi
+    if [ -f "$sys/usr/include/sys/types.h" ] \
+        && ! grep -q 'sys/time.h' "$sys/usr/include/sys/types.h"; then
+        printf '\n#include <sys/time.h>\n' >> "$sys/usr/include/sys/types.h"
+        echo "  sys/types.h now includes sys/time.h (timespec in SwiftOverlayShims)" >&2
+    fi
+}
+
+phase2_stage_fe_clang_sysroot() {
+    local sys=$1
+    local repo=${2:-}
+    local fe
+    [ -d "$sys/usr/include" ] || return 1
+    fe=$(phase2_fe_clang_sysroot "$sys")
+    rm -rf "$fe"
+    cp -a "$sys" "$fe"
+    phase2_apply_darwin_modulemap_fe_mutations "$fe" "$repo"
+    echo "phase2: FE clang sysroot $fe (Darwin.modulemap expanded; overlay SDK copies $sys unexpanded)" >&2
 }
 
 # `import Darwin.sysdir` / `import Darwin.uuid` need named submodules, not a

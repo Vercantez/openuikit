@@ -329,8 +329,8 @@ expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
     "missing Darwin.modulemap is its own CANNOT, not folded into overlays"
 expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
-expect_grep 'stage_fe_sysroot_x86.18' "$COMMON" \
-    "recipe bump restages a clean malloc.h without global zone macros"
+expect_grep 'stage_fe_sysroot_x86.19' "$COMMON" \
+    "recipe bump restages so overlay SDK does not inherit the FE Darwin.modulemap expand"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
     "stamp records the shared measurement-header list sha"
 expect_grep 'phase2_measurement_headers_missing' "$COMMON" \
@@ -339,8 +339,14 @@ expect_grep 'FE_MEASUREMENT_HEADERS' "$PHASE2" \
     "missing measurement headers are CANNOT_FE_MEASUREMENT_HEADERS"
 expect_grep 'phase2_copy_artifact_swift_overlays' "$STAGE" \
     "x86 stager copies Darwin overlays from committed artifacts on a fresh VM"
-expect_grep 'phase2_expand_darwin_modulemap_for_fe' "$STAGE" \
-    "x86 stager expands Darwin.modulemap so Darwin.write is visible"
+expect_grep 'phase2_stage_fe_clang_sysroot' "$STAGE" \
+    "x86 stager expands Darwin.modulemap on an FE-only snapshot, not the overlay-copied sysroot"
+expect_not_grep 'phase2_expand_darwin_modulemap_for_fe "$SYS"' "$STAGE" \
+    "stager does not expand Darwin.modulemap in-place on the overlay-copied FE sysroot"
+expect_grep 'phase2_fe_clang_sysroot' "$PHASE2" \
+    "phase2 compiles FE against the expanded clang snapshot"
+expect_grep 'SWIFTCORE_FE_SYSROOT' "$ROOT/scripts/ops/x86_cycle.sh" \
+    "x86_cycle overlays stage points SWIFTCORE_FE_SYSROOT at the unexpanded sysroot"
 expect_grep 'phase2_ensure_swift_onone_support' "$STAGE" \
     "x86 stager stages a SwiftOnoneSupport stub for collections without -O"
 expect_grep 'overlay-posix' "$STAGE" \
@@ -928,6 +934,36 @@ else
     die_test "expected no missing headers after copy, got: $after"
 fi
 rm -rf "$MMWORK"
+
+echo "== FE clang snapshot: expand does not rewrite the overlay-copied Darwin.modulemap"
+SNAP=$(mktemp -d /tmp/phase2-fe-clang.XXXXXX)
+mkdir -p "$SNAP/sys/usr/include"
+printf '%s\n' 'module Darwin [system] {' '  header "math.h"' '  export *' '}' \
+    > "$SNAP/sys/usr/include/Darwin.modulemap"
+printf '/* math */\n' > "$SNAP/sys/usr/include/math.h"
+printf '/* unistd */\n' > "$SNAP/sys/usr/include/unistd.h"
+cp -a "$SNAP/sys/usr/include/Darwin.modulemap" "$SNAP/overlay-clean.modulemap"
+if phase2_stage_fe_clang_sysroot "$SNAP/sys" "$ROOT"; then
+    fe_clang=$(phase2_fe_clang_sysroot "$SNAP/sys")
+    if cmp -s "$SNAP/sys/usr/include/Darwin.modulemap" "$SNAP/overlay-clean.modulemap"; then
+        ok "overlay-copied Darwin.modulemap is unchanged after FE clang snapshot"
+    else
+        die_test "overlay-copied Darwin.modulemap was mutated"
+    fi
+    if grep -q 'header "unistd.h"' "$fe_clang/usr/include/Darwin.modulemap"; then
+        ok "FE clang snapshot Darwin.modulemap names unistd.h for Darwin.write"
+    else
+        die_test "FE clang snapshot missing unistd.h"
+    fi
+    if grep -q 'header "unistd.h"' "$SNAP/sys/usr/include/Darwin.modulemap"; then
+        die_test "overlay-copied Darwin.modulemap names unistd.h (would break _DarwinFoundation3)"
+    else
+        ok "overlay-copied Darwin.modulemap does not name unistd.h"
+    fi
+else
+    die_test "phase2_stage_fe_clang_sysroot failed on fixture"
+fi
+rm -rf "$SNAP"
 
 echo "== FileManager measurement headers: fail before copy, pass after arm64 stage_absent"
 n_hdr=$(fe_sysroot_measurement_headers | wc -l | tr -d ' ')
