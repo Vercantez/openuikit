@@ -5,6 +5,7 @@
 
 use strict;
 use warnings;
+use Cwd qw(abs_path);
 use Digest::SHA qw(sha256_hex);
 use File::Basename qw(dirname basename);
 use Getopt::Long qw(GetOptionsFromArray);
@@ -308,19 +309,43 @@ sub require_runtime_image {
     }
 }
 
+sub inventories_py {
+    my $dir = dirname($0);
+    $dir = abs_path($dir) if defined $dir && $dir ne '';
+    my $path = "$dir/guest_gate_inventories.py";
+    fail("guest_gate_inventories.py is missing next to attest: $path")
+        unless -f $path && !-l $path;
+    return $path;
+}
+
+sub inventory_stub_set {
+    my ($arch, $name) = @_;
+    fail("unsupported closure arch $arch")
+        unless defined($arch) && ($arch eq 'arm64' || $arch eq 'x86_64');
+    my $text = capture_command(
+        'python3', inventories_py(),
+        '--arch', $arch, '--gate', 'widget', '--kind', 'stubs', '--name', $name,
+    );
+    return grep { length } split /\n/, $text;
+}
+
 sub closure_command {
     my (@args) = @_;
-    my ($otool, $executable, $package, $guest_root);
+    my ($otool, $executable, $package, $guest_root, $arch);
     GetOptionsFromArray(
         \@args,
         'otool=s'      => \$otool,
         'executable=s' => \$executable,
         'package=s'    => \$package,
         'guest-root=s' => \$guest_root,
+        'arch=s'       => \$arch,
     ) or fail('invalid closure options');
     fail('closure takes no positional arguments') if @args;
-    fail('closure requires --otool, --executable, --package, and --guest-root')
-        unless defined($otool) && defined($executable) && defined($package) && defined($guest_root);
+    fail('closure requires --otool, --executable, --package, --guest-root, and --arch')
+        unless defined($otool) && defined($executable) && defined($package)
+            && defined($guest_root) && defined($arch);
+    fail("unsupported closure arch $arch")
+        unless $arch eq 'arm64' || $arch eq 'x86_64';
     $executable = normalize_absolute($executable);
     $package = normalize_absolute($package);
     $guest_root = normalize_absolute($guest_root);
@@ -387,12 +412,27 @@ sub closure_command {
     $files{'loader/machorun'} = file_sha256($loader);
     $files{'attestation/guest-root.manifest'} = file_sha256($root_manifest);
 
-    for my $stub (
-        'guest-root/darwin/System/Library/Frameworks/Foundation.framework/Foundation',
-        'guest-root/darwin/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation',
-    ) {
-        fail("known substrate stub is absent from recursive closure: $stub")
+    my @expected = inventory_stub_set($arch, 'substrate');
+    my @universe = inventory_stub_set($arch, 'universe');
+    my %expected = map { $_ => 1 } @expected;
+    my %universe = map { $_ => 1 } @universe;
+    my $dump_closure = sub {
+        my $expected_text = @expected
+            ? join('', map { "expected\t$_\n" } @expected)
+            : "expected\t(none)\n";
+        my $listed = join('', map { "file\t$_\n" } sort keys %files);
+        return "arch\t$arch\n$expected_text$listed";
+    };
+    for my $stub (@expected) {
+        fail("known substrate stub is absent from recursive closure: $stub\n"
+            . $dump_closure->())
             unless exists $files{$stub};
+    }
+    for my $label (sort keys %files) {
+        next unless $universe{$label};
+        next if $expected{$label};
+        fail("substrate stub is not in the expected closure set: $label\n"
+            . $dump_closure->());
     }
 
     print "format\tfocus-widget-runtime-closure-v2\n";

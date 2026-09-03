@@ -1098,6 +1098,7 @@ llvm-otool-18 -hv "$OUT/focus_onboarding_guest" \
 perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 --executable "$OUT/focus_onboarding_guest" \
     --package "$PACKAGE" --guest-root "$RUNROOT" \
+    --arch "$ARCH" \
     > "$AUDIT/runtime-closure.manifest"
 awk -F '\t' '
     $1 == "file" && $2 == "package/libOpenFoundationInternationalization.dylib" {

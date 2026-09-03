@@ -416,6 +416,31 @@ openuikit_x86=$(python3 "$INVENTORIES" --arch x86_64 --gate widget --kind loads 
     && ! printf '%s\n' "$openuikit_x86" | grep -q 'DarwinFoundation1' \
     && ok "x86 OpenUIKit loads drop errno without DarwinFoundation1" \
     || die_test "x86 OpenUIKit loads drifted: $(echo "$openuikit_x86" | tr '\n' '|')"
+arm_stubs=$(python3 "$INVENTORIES" --arch arm64 --gate widget --kind stubs --name substrate)
+x86_stubs=$(python3 "$INVENTORIES" --arch x86_64 --gate widget --kind stubs --name substrate)
+onboarding_x86_stubs=$(python3 "$INVENTORIES" --arch x86_64 --gate onboarding --kind stubs --name substrate)
+printf '%s\n' "$arm_stubs" | grep -qx 'guest-root/darwin/System/Library/Frameworks/Foundation.framework/Foundation' \
+    && printf '%s\n' "$arm_stubs" | grep -qx 'guest-root/darwin/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation' \
+    && [ -z "$x86_stubs" ] && [ -z "$onboarding_x86_stubs" ] \
+    && ok "x86 closure stubs are empty; arm64 still requires Foundation+CoreFoundation" \
+    || die_test "closure stub inventory drifted arm=$(printf '%s' "$arm_stubs" | tr '\n' '|') x86=$(printf '%s' "$x86_stubs" | tr '\n' '|')"
+expect_grep 'closure requires --otool, --executable, --package, --guest-root, and --arch' \
+    "$ROOT/full/swiftui/focus_widget_guest_attest.pl" \
+    "widget/onboarding closure attest requires --arch"
+command -v llvm-objdump-18 >/dev/null \
+    || die_test "llvm-objdump-18 missing; cannot measure committed x86 overlays"
+overlay_foundation_hits=0
+for overlay in "$ROOT"/swiftcore-macho/artifacts/swift-macosx/x86_64/*.dylib; do
+    [ -f "$overlay" ] || die_test "committed x86 overlay missing: $overlay"
+    if llvm-objdump-18 --macho --private-headers "$overlay" \
+        | grep -qE '(^|[[:space:]])name .*(/| )(Core)?Foundation\.framework'; then
+        overlay_foundation_hits=$((overlay_foundation_hits + 1))
+        echo "FOUNDATION_LC $(basename "$overlay")" >&2
+    fi
+done
+[ "$overlay_foundation_hits" -eq 0 ] \
+    && ok "committed x86 overlays declare no Foundation/CoreFoundation" \
+    || die_test "committed x86 overlays naming Foundation.framework: $overlay_foundation_hits"
 expect_grep 'libswiftCore.tbd' "$ROOT/full/swiftui/focus_widget_guest_attest.pl" \
     "widget attest requires named libswiftCore.tbd"
 expect_grep '[-]lswiftCore' "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
