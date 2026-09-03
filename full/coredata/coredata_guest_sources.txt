@@ -1,0 +1,8 @@
+full/coredata/CoreData.swift
+full/coredata/CoreDataFailClosed.swift
+full/coredata/NSFetchRequest.swift
+full/coredata/NSManagedObject.swift
+full/coredata/NSManagedObjectContext.swift
+full/coredata/NSManagedObjectModel.swift
+full/coredata/NSMergePolicy.swift
+full/coredata/NSPersistentStore.swift
