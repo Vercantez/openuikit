@@ -303,6 +303,20 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    binary is exported as `UD_GUEST_BIN` for rung a, with
    `bin/ud_guest.otool.txt` (`MH_MAGIC_64 X86_64` + expected loads). Overlay
    dylibs are not required at link time; rung a still needs them at load.
+   The scoreboard guest is the same pipeline through the committed
+   `foundation-macho/scripts/build_ud_score_guest.sh`: same FE objects,
+   libCFTest, libswiftcompat, x86 tbds, clang-18, `-nostdlib`, one
+   `_RopeModule.o`. Output is `scratch/ud-guest-x86_64/bin/ud_score_guest`
+   with `ud_score_guest.otool.txt` beside it. The golden is the carried
+   `full/oracle-userdefaults/darwin-golden-2026-08-28.txt` embedded by
+   `gen_guest_golden.py` (the arm64 recipe still requires a pre-staged
+   `$W/oracle/GuestGolden.swift`; no-arg argv is unchanged). Stamp is
+   `bin/ud_score_guest.inputs` (object shas + libCFTest sha + link argv);
+   reuse only on match. Prints `ENV_PREPARE ud-score-guest
+   cold-built|satisfied`. Rung a then runs `run_ud_persist.sh` (already
+   wired, success bar unchanged) and reports that script's `GUEST
+   SCOREBOARD` / `PORT: scored` denominators. Absent binary is still
+   `CANNOT_UD_SCOREBOARD` — persist is not faked.
 10. `scratch/mrroot-x86_64/host/` is the Linux host runtime boundary
     `build_full.sh` copies (`HOST_RUNTIME_FILES`: libdispatch.so and
     libBlocksRuntime.so from the Swift linux toolchain, **plus** four
