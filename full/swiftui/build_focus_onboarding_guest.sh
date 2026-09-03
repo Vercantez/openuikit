@@ -780,10 +780,9 @@ run_link libOpenRelativeTime "${LD[@]}" -dylib -dead_strip -undefined dynamic_lo
     -install_name @rpath/libOpenRelativeTime.dylib -rpath @loader_path \
     -map "$AUDIT/libOpenRelativeTime.link-map" \
     -o "$RELATIVE_TIME_DARWIN" "$OUT/open-relative-time-bridge.o"
-clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
-    -I "$PACKAGE/include/COpenRelativeTime" -shared \
-    "$W/full/relativetime/OpenRelativeTimeHost.c" \
-    -o "$RELATIVE_TIME_HOST" -licui18n -licuuc -lm
+bash "$W/full/relativetime/build_host_helper.sh" \
+    --repo "$W" --host-dir "$HOST_BRIDGE_DIR" \
+    --include-dir "$PACKAGE/include/COpenRelativeTime"
 clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
     -I "$PACKAGE/include/COpenRelativeTime" \
     "$W/full/relativetime/OpenRelativeTimeHost.c" \
@@ -1135,7 +1134,6 @@ awk -F '\t' '
 echo '== run exact Focus interaction path on Linux/machorun'
 echo '== build Linux Dispatch host bridge'
 DISPATCH_HOST=$HOST_BRIDGE_DIR/libOpenDispatchHost.so
-EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$RELATIVE_TIME_HOST
 host_bridge_args=(
     --repo "$W"
     --host-dir "$HOST_BRIDGE_DIR"
@@ -1152,6 +1150,18 @@ fi
 bash "$W/full/dispatch/build_host_bridge.sh" "${host_bridge_args[@]}"
 [ -f "$DISPATCH_HOST" ] && [ ! -L "$DISPATCH_HOST" ] \
     || die "Linux Dispatch host helper is missing: $DISPATCH_HOST"
+
+echo '== compose Linux host preload'
+# Frameworks PLATFORM_HOST_PRELOAD order is dispatch, FI, URL transport,
+# relative-time. This harness excludes URLSession.swift, so it does not
+# bind OpenURLTransport and omits that helper.
+for helper in "$DISPATCH_HOST" "$FOUNDATION_INTL_HOST" "$RELATIVE_TIME_HOST"; do
+    [ -f "$helper" ] && [ ! -L "$helper" ] \
+        || die "Linux host helper is missing from the run preload: $helper"
+done
+EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$RELATIVE_TIME_HOST
+printf 'LD_PRELOAD=%s\n' \
+    "$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}"
 if [ "$ARCH" = arm64 ] && [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
     echo "focus_onboarding_guest: compile/link may proceed on this VM; execution of arm64 guests cannot" >&2
     bash "${W:-$(git rev-parse --show-toplevel)}/.cursor/refuse-arm64-execution.sh" \
