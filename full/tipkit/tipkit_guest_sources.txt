@@ -1,0 +1,6 @@
+full/tipkit/TipGroup.swift
+full/tipkit/TipKit.swift
+full/tipkit/TipsAction.swift
+full/tipkit/TipsEvent.swift
+full/tipkit/TipsRuleParameter.swift
+full/tipkit/TipsTypes.swift
