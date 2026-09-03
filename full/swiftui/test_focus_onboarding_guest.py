@@ -115,6 +115,14 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn("compile the first-party Symbols value model while Foundation is hidden", text)
         self.assertIn("libSymbols Apple Symbols load count", text)
         self.assertIn("-lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols", text)
+        swiftui_link = text.split(
+            "-install_name @rpath/libSwiftUI.dylib", 1
+        )[1].split("-install_name @rpath/libWidget.dylib", 1)[0]
+        self.assertIn(
+            "-lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols "
+            "-lFoundationEssentials",
+            swiftui_link,
+        )
 
     def test_foundation_umbrella_preserves_one_essentials_provider(self) -> None:
         source = FOUNDATION.read_text()

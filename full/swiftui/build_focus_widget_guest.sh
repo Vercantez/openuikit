@@ -582,7 +582,7 @@ echo "== package OpenUIKit as SwiftUI's UI framework dependency"
 
 echo "== package reusable libSwiftUI.dylib"
 "${LD[@]}" -dylib -install_name @rpath/libSwiftUI.dylib -rpath @loader_path \
-    -L"$PACKAGE" -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols \
+    -L"$PACKAGE" -lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols -lFoundationEssentials \
     -L"$MRROOT/darwin/usr/lib" \
     -L/usr/lib/swift -lswiftCore "$MRROOT/darwin/usr/lib/libswiftcompat.dylib" \
     -L/usr/lib -lSystem -lobjc "$MRROOT/darwin/usr/lib/libquartz.dylib" \
@@ -878,6 +878,7 @@ expected_swiftui_loads=$(printf '%s\n' \
     @rpath/libCombine.dylib \
     @rpath/libOpenCombine.dylib \
     @rpath/libSymbols.dylib \
+    @rpath/libFoundationEssentials.dylib \
     /usr/lib/swift/libswiftCore.dylib \
     /usr/lib/libswiftcompat.dylib \
     /usr/lib/libSystem.B.dylib \
@@ -1078,6 +1079,7 @@ expected_swiftui_inputs=$(printf '%s\n' \
     "$PACKAGE/libOpenCoreGraphics.dylib" \
     "$PACKAGE/libCombine.dylib" \
     "$PACKAGE/libSymbols.dylib" \
+    "$PACKAGE/libFoundationEssentials.dylib" \
     "$SYS/usr/lib/swift/libswiftCore.tbd" \
     "$SYS/usr/lib/libSystem.tbd" \
     "$SYS/usr/lib/libobjc.tbd" \
