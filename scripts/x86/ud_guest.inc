@@ -747,7 +747,7 @@ phase2_ud_guest_ensure_cftest() {
     local ud_w=$1 repo=$2
     local sys=${3:-$ud_w/fe/sysroot}
     local dest=$ud_w/lib/libCFTest.dylib
-    local found recipe linker cf icu log st
+    local found recipe linker cf icu log st cfbase cf_key
     mkdir -p "$ud_w/lib"
     # Explicit override only. A present dest (or a copy from another scratch
     # tree) is not reusable just because sibling stub text files match the
@@ -778,9 +778,13 @@ phase2_ud_guest_ensure_cftest() {
         return 1
     fi
 
-    # Objects already on disk: the harness stamp decides reuse vs relink.
-    # Do not skip this just because dest + stub pin files exist.
-    if [ -d "$ud_w/cfobjc/obj" ] && [ -n "$(find "$ud_w/cfobjc/obj" -maxdepth 1 -name '*.o' -print -quit 2>/dev/null)" ]; then
+    # Existence of cfobjc/obj is not freshness. Rebuild when the recipe or
+    # sysroot malloc mapping (one-zone libSystem) changes.
+    cfbase=$ud_w/cfobjc/obj/CFBase.o
+    cf_key=$(stamp_key "$cfbase" "$recipe" \
+        "$sys/usr/include/malloc/malloc.h" \
+        "$PHASE2_UD_GUEST_CF_COMMIT")
+    if stamp_reuse "$cfbase" "$cf_key"; then
         if [ ! -d "$sys/usr/include" ]; then
             phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
                 "no x86_64 Mach-O. Darwin sysroot missing at $sys (need usr/include). Committed recipe is foundation-macho/scripts/build_cfobjc.sh; committed CF linker is foundation-macho/scripts/build_cftest_harness.sh. Will not invent a stub dylib."
@@ -790,6 +794,7 @@ phase2_ud_guest_ensure_cftest() {
             "${ud_w}/cfobjc/src"
         return $?
     fi
+    stamp_rebuild_reason "$cfbase" "$cf_key"
 
     if ! phase2_ud_guest_ensure_cf_checkout "$ud_w" "$repo"; then
         return 1
@@ -836,6 +841,7 @@ phase2_ud_guest_ensure_cftest() {
             "build_cfobjc.sh exit $st log=$log. Committed recipe is foundation-macho/scripts/build_cfobjc.sh; committed CF linker is foundation-macho/scripts/build_cftest_harness.sh. Will not invent a stub dylib."
         return 1
     fi
+    stamp_write "$cfbase" "$cf_key"
 
     phase2_ud_guest_run_cftest_harness "$ud_w" "$repo" "$sys" "$cf"
 }
