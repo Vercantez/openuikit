@@ -1,21 +1,5 @@
 import Foundation
 
-public struct PHPickerCapabilities: OptionSet, Hashable, Sendable {
-    public let rawValue: UInt
-
-    public init(rawValue: UInt) {
-        self.rawValue = rawValue
-    }
-
-    public static var search: PHPickerCapabilities { PHPickerCapabilities(rawValue: 1 << 0) }
-    public static var stagingArea: PHPickerCapabilities { PHPickerCapabilities(rawValue: 1 << 1) }
-    public static var collectionNavigation: PHPickerCapabilities { PHPickerCapabilities(rawValue: 1 << 2) }
-    public static var selectionActions: PHPickerCapabilities { PHPickerCapabilities(rawValue: 1 << 3) }
-    public static var sensitivityAnalysisIntervention: PHPickerCapabilities {
-        PHPickerCapabilities(rawValue: 1 << 4)
-    }
-}
-
 public struct PHPickerResult: Hashable, @unchecked Sendable {
     public let itemProvider: NSItemProvider
     public var assetIdentifier: String? { storedIdentifier }

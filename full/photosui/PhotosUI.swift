@@ -5,6 +5,9 @@
 #if canImport(UniformTypeIdentifiers)
 @_exported import UniformTypeIdentifiers
 #endif
+#if canImport(UIKit)
+import UIKit
+#endif
 
 public struct PHPickerMode: Equatable, Hashable, Sendable {
     private let rawValue: UInt8
@@ -29,6 +32,38 @@ public enum PHPickerConfigurationSelection: Int, Hashable, Sendable {
     case continuous = 2
     case continuousAndOrdered = 3
 }
+
+public struct PHPickerCapabilities: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static var search: PHPickerCapabilities { PHPickerCapabilities(rawValue: 1 << 0) }
+    public static var stagingArea: PHPickerCapabilities { PHPickerCapabilities(rawValue: 1 << 1) }
+    public static var collectionNavigation: PHPickerCapabilities { PHPickerCapabilities(rawValue: 1 << 2) }
+    public static var selectionActions: PHPickerCapabilities { PHPickerCapabilities(rawValue: 1 << 3) }
+    public static var sensitivityAnalysisIntervention: PHPickerCapabilities {
+        PHPickerCapabilities(rawValue: 1 << 4)
+    }
+}
+
+#if !canImport(UIKit)
+public struct NSDirectionalRectEdge: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt
+
+    public init(rawValue: UInt) {
+        self.rawValue = rawValue
+    }
+
+    public static let top = NSDirectionalRectEdge(rawValue: 1 << 0)
+    public static let leading = NSDirectionalRectEdge(rawValue: 1 << 1)
+    public static let bottom = NSDirectionalRectEdge(rawValue: 1 << 2)
+    public static let trailing = NSDirectionalRectEdge(rawValue: 1 << 3)
+    public static let all: NSDirectionalRectEdge = [.top, .leading, .bottom, .trailing]
+}
+#endif
 
 public struct PHPickerFilter: Equatable, Hashable, Sendable {
     fileprivate indirect enum Storage: Equatable, Hashable, Sendable {
