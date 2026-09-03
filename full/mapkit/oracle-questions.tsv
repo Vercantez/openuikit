@@ -1,0 +1,6 @@
+precise	question	risk	reason
+c:@MKErrorDomain	What is the exact NSString payload of MKErrorDomain on iPhoneOS 26.1?	fail-closed	Linux uses the C identifier as a placeholder; TBD exports the symbol but not the bytes.
+c:@F@MKMapPointForCoordinate	What is the exact iPhoneOS 26.1 Mercator world size and ellipsoid used by MKMapPointForCoordinate / MKCoordinateForMapPoint?	location	Linux meter conversion uses a documented Web Mercator stand-in; Apple projection math is unobserved.
+module	When CoreLocation and UIKit are linked on the integration host, which MapKit APIs must be re-declared over the real CLLocationCoordinate2D / UIView types rather than Double-only geometry?	ui	Isolated host cannot import those modules; inventing stand-in types is forbidden.
+c:objc(cs)MKDirections(im)calculateDirectionsWithCompletionHandler:	What is the exact fail-closed NSError code/domain Apple returns for MKDirections when the device is offline or entitlement-less?	network	No Apple Maps service exists on Linux; do not invent a successful route.
+c:@MKPointOfInterestCategoryAirport	Are MKPointOfInterestCategory NSString payloads identical to the exported C identifiers on iPhoneOS 26.1?	os-service	Linux declared the C identifier; that is not runtime evidence.
