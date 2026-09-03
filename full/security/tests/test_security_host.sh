@@ -32,8 +32,10 @@ done
     "${SOURCE_PATHS[@]}"
 
 "${SWIFTC[@]}" -swift-version 5 \
-    -I "$OUT" -L "$OUT" -lSecurity \
-    "$HERE/SecurityHostRuntime.swift" -o "$OUT/SecurityHostRuntime"
+    -I "$OUT" \
+    "$HERE/SecurityHostRuntime.swift" \
+    "$OUT/libSecurity.dylib" \
+    -o "$OUT/SecurityHostRuntime"
 
 if command -v otool >/dev/null 2>&1 || command -v xcrun >/dev/null 2>&1; then
     if xcrun otool -L "$OUT/libSecurity.dylib" 2>/dev/null \

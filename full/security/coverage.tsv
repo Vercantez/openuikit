@@ -880,7 +880,7 @@ c:@T@SecKeyAlgorithm	implemented	test:full/security/tests/agent/SecurityTests.sw
 c:@T@SecKeyKeyExchangeParameter	implemented	test:full/security/tests/agent/SecurityTests.swift#testKeyAlgorithmIdentities	-
 c:@T@SecKeyRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
 c:@T@SecPolicyRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
-c:@T@SecRandomRef	declared	source:full/security/SecurityTypes.swift#SecRandomRef	-
+c:@T@SecRandomRef	declared	source:full/security/Security.swift#SecRandomRef	-
 c:@T@SecTrustCallback	declared	source:full/security/SecurityTypes.swift#SecTrustCallback	-
 c:@T@SecTrustRef	implemented	test:full/security/tests/agent/SecurityTests.swift#testCFLikeTypeIdentities	-
 c:@T@SecTrustWithErrorCallback	declared	source:full/security/SecurityTypes.swift#SecTrustWithErrorCallback	-
