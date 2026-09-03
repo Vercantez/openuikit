@@ -103,6 +103,7 @@ struct mr_image {
     int is_main;
     int fixed_up;
     int init_state;      /* 0 none, 1 running, 2 done */
+    int mapped_by_copy;  /* 1 = anonymous copy of non-page-aligned segments */
 
     /* ObjC image-notification state (src/objc_notify.c). Both are set by us,
      * never by libobjc, and exist to make the map-before-load ordering a
