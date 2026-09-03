@@ -743,81 +743,61 @@ phase2_ud_guest_run_cftest_harness() {
     fi
 }
 
-# Copy the pinned CoreFoundation tree and bind CFAllocator's isa/class
-# plus TSD-key-before-getspecific. Does not rewrite the malloc_zone_t*
-# branch (CF is designed to accept a raw zone). The pin checkout stays
-# clean. Existence of dest is not freshness: stamp includes the patcher
-# and the two files it rewrites.
-phase2_ud_guest_patch_cf_system_allocator() {
-    local pin=$1 dest=$2 repo=$3
-    local patcher=$repo/scripts/x86/patch_cf_system_allocator.py
-    local key st
-    if [ ! -f "$pin/CFBase.c" ]; then
+# CF objects compile against a snapshot of machorun/sdk, not the FE
+# sysroot. On a fresh VM, stage_fe_sysroot.sh runs overlay-darwin (no
+# Xcode Darwin.modulemap) which replaces math.h with Libm Intel; it also
+# appends sys/time.h to sys/types.h and plants an ioctl stub. The operator
+# box at main 9586f803 skips overlay-darwin (arm64 sysroot already has
+# Darwin.modulemap) so CFBase.o there sees machorun's malloc.h / math.h /
+# TargetConditionals.h. Snapshot dest so machorun/sdk is not mutated
+# (SDKSettings.json, objc4 NSObject.h). Existence of dest is not freshness.
+phase2_ud_guest_stage_cf_compile_sdk() {
+    local dest=$1 repo=$2
+    local src=$repo/machorun/sdk
+    local objc4=$repo/machorun/vendor/objc4/runtime
+    local key h
+    if [ ! -d "$src/usr/include" ]; then
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. pinned CF tree missing $pin/CFBase.c. Will not invent a stub dylib."
+            "no x86_64 Mach-O. machorun/sdk missing $src/usr/include. Will not invent a stub dylib."
         return 1
     fi
-    if [ ! -f "$pin/CFPlatform.c" ]; then
+    if [ ! -f "$src/usr/include/malloc/malloc.h" ]; then
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. pinned CF tree missing $pin/CFPlatform.c. Will not invent a stub dylib."
+            "no x86_64 Mach-O. machorun/sdk missing malloc/malloc.h. Will not invent a stub dylib."
         return 1
     fi
-    if [ ! -f "$patcher" ]; then
-        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. missing $patcher. Will not invent a stub dylib."
-        return 1
-    fi
-    key=$(stamp_key "$dest" "$patcher" \
-        "$pin/CFBase.c" \
-        "$pin/CFPlatform.c" \
-        "$PHASE2_UD_GUEST_CF_COMMIT")
-    if stamp_reuse "$dest" "$key" && [ -f "$dest/CFBase.c" ] && [ -f "$dest/CFPlatform.c" ]; then
+    key=$(stamp_key "$dest/usr/include/malloc/malloc.h" \
+        "$src/usr/include/malloc/malloc.h" \
+        "$src/usr/include/TargetConditionals.h" \
+        "$src/usr/include/objc/objc.h" \
+        "$src/usr/include/math.h")
+    if stamp_reuse "$dest/usr/include/malloc/malloc.h" "$key" \
+        && [ -f "$dest/SDKSettings.json" ] \
+        && [ -f "$dest/usr/include/malloc/malloc.h" ]; then
         return 0
     fi
-    stamp_rebuild_reason "$dest" "$key"
+    stamp_rebuild_reason "$dest/usr/include/malloc/malloc.h" "$key"
     rm -rf "$dest"
     mkdir -p "$dest"
-    cp -a "$pin/." "$dest/"
-    set +e
-    python3 "$patcher" "$dest" >&2
-    st=$?
-    set -e
-    if [ "$st" -ne 0 ]; then
-        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. $patcher exit $st on a copy of $pin (pin $PHASE2_UD_GUEST_CF_COMMIT). Will not invent a stub dylib."
-        return 1
-    fi
-    if ! grep -q 'malloc_zone_malloc((malloc_zone_t \*)allocator' "$dest/CFBase.c"; then
-        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. $patcher removed allocator-as-zone malloc_zone_malloc from $dest/CFBase.c (CF is designed to accept a raw zone). Will not invent a stub dylib."
-        return 1
-    fi
-    if ! grep -q 'openuikit-x86: static CFAllocator isa is __NSCFType' \
-            "$dest/CFBase.c"; then
-        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. $patcher left static CFAllocator isa as STATIC_CLASS_REF NULL in $dest/CFBase.c. Will not invent a stub dylib."
-        return 1
-    fi
-    if ! grep -q 'openuikit-x86: bind CFAllocator class before first CFStringCreate' \
-            "$dest/CFBase.c"; then
-        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. $patcher left CFAllocator class table unbound in $dest/CFBase.c. Will not invent a stub dylib."
-        return 1
-    fi
-    if ! grep -q 'openuikit-x86: TSD key before getspecific' \
-            "$dest/CFPlatform.c"; then
-        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. $patcher left TSD getspecific on an uninitialized key in $dest/CFPlatform.c. Will not invent a stub dylib."
-        return 1
-    fi
-    stamp_write "$dest" "$key"
+    cp -a "$src/." "$dest/"
+    phase2_ensure_sdk_settings "$dest"
+    mkdir -p "$dest/usr/include/objc"
+    for h in NSObject.h NSObjCRuntime.h Protocol.h; do
+        if [ -f "$objc4/$h" ] && [ ! -e "$dest/usr/include/objc/$h" ]; then
+            cp "$objc4/$h" "$dest/usr/include/objc/$h"
+        fi
+    done
+    stamp_write "$dest/usr/include/malloc/malloc.h" "$key"
 }
 
+# Objects rebuild when the recipe, Darwin malloc.h, or the CF pin
+# change. Existence of cfobjc/obj is not freshness. The pin checkout is
+# the CF source (same as the operator box); do not rewrite allocators.
 phase2_ud_guest_ensure_cftest() {
     local ud_w=$1 repo=$2
     local sys=${3:-$ud_w/fe/sysroot}
     local dest=$ud_w/lib/libCFTest.dylib
-    local found recipe linker cf icu log st cfbase cf_key patcher pin patched
+    local found recipe linker cf icu log st cfbase cf_key cf_sdk
     mkdir -p "$ud_w/lib"
     # Explicit override only. A present dest (or a copy from another scratch
     # tree) is not reusable just because sibling stub text files match the
@@ -849,14 +829,17 @@ phase2_ud_guest_ensure_cftest() {
     fi
 
     # Existence of cfobjc/obj is not freshness. Rebuild when the recipe, the
-    # CF pin, or the CFAllocator isa/TSD patcher changes. Do not key off a
-    # present dylib.
+    # CF pin, or the CF compile-sysroot malloc.h changes. Do not key off a
+    # present dylib. Compile against machorun/sdk (box), not the FE sysroot
+    # (VM overlay-darwin mutates math.h / sys/types.h).
+    cf_sdk=$ud_w/cfobjc/sdk
+    if ! phase2_ud_guest_stage_cf_compile_sdk "$cf_sdk" "$repo"; then
+        return 1
+    fi
     cfbase=$ud_w/cfobjc/obj/CFBase.o
-    patcher=$repo/scripts/x86/patch_cf_system_allocator.py
     cf_key=$(stamp_key "$cfbase" "$recipe" \
-        "$sys/usr/include/malloc/malloc.h" \
-        "$PHASE2_UD_GUEST_CF_COMMIT" \
-        "$patcher")
+        "$cf_sdk/usr/include/malloc/malloc.h" \
+        "$PHASE2_UD_GUEST_CF_COMMIT")
     if stamp_reuse "$cfbase" "$cf_key"; then
         if [ ! -d "$sys/usr/include" ]; then
             phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
@@ -875,17 +858,12 @@ phase2_ud_guest_ensure_cftest() {
     if ! phase2_ud_guest_ensure_icu_checkout "$repo"; then
         return 1
     fi
-    pin=$ud_w/cf/$PHASE2_UD_GUEST_CF_SOURCES_REL
-    if [ ! -f "$pin/CFRuntime.c" ]; then
+    cf=$ud_w/cf/$PHASE2_UD_GUEST_CF_SOURCES_REL
+    if [ ! -f "$cf/CFRuntime.c" ]; then
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-            "no x86_64 Mach-O. pinned CF checkout $PHASE2_UD_GUEST_CF_COMMIT missing $pin. Will not invent a stub dylib."
+            "no x86_64 Mach-O. pinned CF checkout $PHASE2_UD_GUEST_CF_COMMIT missing $cf. Will not invent a stub dylib."
         return 1
     fi
-    patched=$ud_w/cf-system-allocator
-    if ! phase2_ud_guest_patch_cf_system_allocator "$pin" "$patched" "$repo"; then
-        return 1
-    fi
-    cf=$patched
     if [ ! -d "$sys/usr/include" ]; then
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
             "no x86_64 Mach-O. Darwin sysroot missing at $sys (need usr/include). Committed recipe is foundation-macho/scripts/build_cfobjc.sh; committed CF linker is foundation-macho/scripts/build_cftest_harness.sh. Will not invent a stub dylib."
@@ -901,7 +879,7 @@ phase2_ud_guest_ensure_cftest() {
     log=$ud_w/lib/build_cfobjc.log
     set +e
     W="$ud_w" \
-        SDK="$sys" \
+        SDK="$cf_sdk" \
         CF="$cf" \
         OUT="$ud_w/cfobjc" \
         ICU_INC="$icu" \

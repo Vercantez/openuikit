@@ -103,14 +103,6 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     fi
 done
 
-echo "== patch_cf_system_allocator.py"
-if python3 "$ROOT/scripts/x86/test_patch_cf_system_allocator.py" >/tmp/test_patch_cf_system_allocator.out 2>&1; then
-    ok "patch_cf_system_allocator unit tests"
-else
-    die_test "patch_cf_system_allocator unit tests"
-    cat /tmp/test_patch_cf_system_allocator.out >&2 || true
-fi
-
 echo "== operator command + marker grammar"
 expect_grep 'bash scripts/x86/phase2.sh /opt/openuikit/x86-verify/openuikit' "$PHASE2" \
     "operator one-command path"
@@ -373,15 +365,17 @@ expect_grep 'cannot carry ioctl.h (CFSocket census)' "$ROOT/full/foundation/buil
     "build_os_module.sh forwards extra swiftc argv (overlay-posix -I on a VM)"
 expect_grep 'rm -rf "${UD_GUEST_W:-$ud_w}/runroot"' "$PHASE2" \
     "rung a drops a stale runroot clone so libCFTest content is fresh"
-expect_file "$ROOT/scripts/x86/patch_cf_system_allocator.py"
-expect_grep 'phase2_ud_guest_patch_cf_system_allocator' "$UDINC" \
-    "ud-guest copies CF and binds CFAllocator isa/class plus TSD-key-before-getspecific"
-expect_grep 'static CFAllocator isa is __NSCFType' "$UDINC" \
-    "ud-guest refuses a copy whose static CFAllocator isa is still STATIC_CLASS_REF NULL"
-expect_grep 'TSD key before getspecific' "$UDINC" \
-    "ud-guest refuses a copy whose TSD getspecific still runs on an uninitialized key"
-expect_grep 'removed allocator-as-zone malloc_zone_malloc' "$UDINC" \
-    "ud-guest refuses a copy that deleted CF's malloc_zone_t* allocator branch"
+if [ ! -f "$ROOT/scripts/x86/patch_cf_system_allocator.py" ]; then
+    ok "allocator rewrite patcher is gone"
+else
+    die_test "allocator rewrite patcher still present"
+fi
+expect_not_grep 'phase2_ud_guest_patch_cf_system_allocator' "$UDINC" \
+    "ud-guest does not rewrite CFAllocator isa/TSD (box cold-compile of the pin is the authority)"
+expect_not_grep 'cf-system-allocator' "$UDINC" \
+    "ud-guest compiles the CF pin, not a patched copy"
+expect_grep 'phase2_ud_guest_stage_cf_compile_sdk' "$UDINC" \
+    "CF objects compile against a machorun/sdk snapshot, not the FE sysroot overlay-darwin mutated"
 expect_grep 'CFOBJC_FORCE_COPY=1' "$UDINC" \
     "cfobjc recopies the pin (existence of OUT/src is not freshness)"
 expect_not_grep 'fe_malloc_zone_as_malloc.h' "$STAGE" \
@@ -2151,8 +2145,7 @@ if phase2_is_x86_macho "$UDWORK/libCFTest.dylib"; then
         "$STAMPW/cfobjc/obj/CFBase.o" \
         "$ROOT/foundation-macho/scripts/build_cfobjc.sh" \
         "$SYS/usr/include/malloc/malloc.h" \
-        "$PHASE2_UD_GUEST_CF_COMMIT" \
-        "$ROOT/scripts/x86/patch_cf_system_allocator.py")"
+        "$PHASE2_UD_GUEST_CF_COMMIT")"
     : > "$STAMPW/expect-func.txt"
     : > "$STAMPW/expect-data.txt"
     set +e
