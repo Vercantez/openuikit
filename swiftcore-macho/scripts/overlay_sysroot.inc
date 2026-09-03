@@ -17,9 +17,10 @@
 # before the live MacOSX.sdk is moved aside.
 #
 # Staged Darwin*.modulemap files name headers (complex.h, …). Those files must
-# resolve under usr/include before cmake — the same closure phase2 already
-# checks (phase2_darwin_modulemap_missing_headers). Source them from the FE
-# sysroot / full/sdk-gaps / machorun / overlay-darwin pins.
+# resolve under usr/include before cmake. Closure is the Darwin Clang maps
+# overlay compiles load via -sdk (usr/include/module.modulemap + Darwin*.modulemap),
+# not libc++ usr/include/c++/v1/module.modulemap. Source Darwin headers from the
+# FE sysroot / full/sdk-gaps / machorun / overlay-darwin pins.
 
 if [ -n "${SWIFTCORE_OVERLAY_SYSROOT_INC:-}" ]; then
     return 0 2>/dev/null || exit 0
@@ -37,7 +38,7 @@ OPENUIKIT_ROOT=${OPENUIKIT_ROOT:-$(cd "$SWIFTCORE_ROOT/.." && pwd)}
 
 # Bump when staging steps, the Darwin.modulemap header list, modulemap
 # header closure, or the required staged-header / tbd completeness gate change.
-OVERLAY_SYSROOT_RECIPE=overlay-darwin.3
+OVERLAY_SYSROOT_RECIPE=overlay-darwin.4
 OVERLAY_SYSROOT_STAMP=.overlay-sysroot-inputs
 
 # Same enumeration as stage_overlay_darwin.sh DARWIN_MODULE_HEADERS.
@@ -112,7 +113,7 @@ overlay_sysroot_input_lines() {
         "$(printf '%s\n' "${OVERLAY_DARWIN_MODULE_HEADERS[@]}" | sha256sum | awk '{print $1}')"
     printf 'required.headers=%s\n' \
         "$(printf '%s\n' "${OVERLAY_SYSROOT_REQUIRED_HEADERS[@]}" | sha256sum | awk '{print $1}')"
-    printf 'modulemap.closure=phase2_darwin_modulemap_missing_headers\n'
+    printf 'modulemap.closure=darwin_clang_overlay_maps\n'
     printf 'machorun.sys/proc.h=%s\n' "$(overlay_sysroot_sha_or_absent "${proc:-}")"
 }
 
@@ -231,7 +232,96 @@ overlay_sysroot_headers_ok() {
         overlay_sysroot_has_fmaxl "$sdk/usr/include/math.h" || return 1
     fi
     overlay_sysroot_has_extern_proc "$sdk/usr/include/sys/proc.h" || return 1
-    phase2_darwin_modulemap_headers_ok "$sdk" || return 1
+    overlay_sysroot_modulemap_headers_ok "$sdk" || return 1
+}
+
+# Clang module maps overlay Swift compiles load via -sdk (no -fmodule-map-file).
+# Live ninja Darwin / Synchronization / _Concurrency / _StringProcessing /
+# _Builtin_float / _RegexParser / Observation: -sdk=$W/sdk/MacOSX.sdk.
+# swiftinterfaces import Darwin / Swift / SwiftShims / SwiftOverlayShims /
+# _Concurrency / _Builtin_float — not std / Cxx. libc++ lives in
+# usr/include/c++/v1/module.modulemap (stage_sdk.sh copies Ubuntu llvm-18);
+# that map is outside this closure. full/foundation/stage_fe_sysroot.sh does
+# not stage libc++ into the FE sysroot.
+# overlay_sysroot_clang_overlay_modulemaps <sdk>
+overlay_sysroot_clang_overlay_modulemaps() {
+    local sdk=${1:?overlay_sysroot_clang_overlay_modulemaps: sdk}
+    local inc=$sdk/usr/include
+    local f
+    [ -d "$inc" ] || return 0
+    for f in "$inc"/module.modulemap "$inc"/Darwin*.modulemap; do
+        [ -f "$f" ] || continue
+        printf '%s\n' "$f"
+    done | sort -u
+}
+
+# Relpaths of *.modulemap under usr/include that overlay compiles do not load.
+# overlay_sysroot_skipped_modulemaps <sdk>
+overlay_sysroot_skipped_modulemaps() {
+    local sdk=${1:?overlay_sysroot_skipped_modulemaps: sdk}
+    local inc=$sdk/usr/include
+    local map ov kept
+    [ -d "$inc" ] || return 0
+    while IFS= read -r map; do
+        [ -n "$map" ] || continue
+        kept=0
+        while IFS= read -r ov; do
+            [ -n "$ov" ] || continue
+            if [ "$map" = "$ov" ]; then
+                kept=1
+                break
+            fi
+        done < <(overlay_sysroot_clang_overlay_modulemaps "$sdk")
+        if [ "$kept" -eq 0 ]; then
+            printf '%s\n' "${map#"$sdk/"}"
+        fi
+    done < <(find "$inc" -name '*.modulemap' -print | sort)
+}
+
+# One "header<TAB>rel_map" per missing quoted header in overlay Clang maps.
+# Return 1 if any are missing. Uses phase2_modulemap_quoted_headers.
+# overlay_sysroot_modulemap_missing_entries <sdk>
+overlay_sysroot_modulemap_missing_entries() {
+    local sdk=${1:?overlay_sysroot_modulemap_missing_entries: sdk}
+    local inc=$sdk/usr/include
+    local map rel maprel any=0
+    [ -d "$inc" ] || return 0
+    while IFS= read -r map; do
+        [ -n "$map" ] || continue
+        maprel=${map#"$sdk/"}
+        while IFS= read -r rel; do
+            [ -n "$rel" ] || continue
+            if [ -f "$inc/$rel" ] || [ -f "$(dirname "$map")/$rel" ]; then
+                continue
+            fi
+            printf '%s\t%s\n' "$rel" "$maprel"
+            any=1
+        done < <(phase2_modulemap_quoted_headers "$map")
+    done < <(overlay_sysroot_clang_overlay_modulemaps "$sdk")
+    [ "$any" -eq 0 ]
+}
+
+# Comma-separated header paths (no map). Return 1 if any missing.
+overlay_sysroot_modulemap_missing_headers() {
+    local sdk=$1
+    local rel map miss="" any=0
+    while IFS=$'\t' read -r rel map; do
+        [ -n "$rel" ] || continue
+        any=1
+        case ",$miss," in
+            *",$rel,"*) ;;
+            *) miss="${miss:+$miss,}$rel" ;;
+        esac
+    done < <(overlay_sysroot_modulemap_missing_entries "$sdk" || true)
+    if [ "$any" -eq 1 ]; then
+        printf '%s\n' "$miss"
+        return 1
+    fi
+    return 0
+}
+
+overlay_sysroot_modulemap_headers_ok() {
+    overlay_sysroot_modulemap_missing_entries "$1" >/dev/null
 }
 
 # usr/include search roots for headers named by staged modulemaps. Same
@@ -272,7 +362,7 @@ overlay_sysroot_fill_modulemap_headers() {
     local inc=$dest/usr/include
     local miss_csv rel src_root src n=0
     mkdir -p "$inc"
-    miss_csv=$(phase2_darwin_modulemap_missing_headers "$dest" || true)
+    miss_csv=$(overlay_sysroot_modulemap_missing_headers "$dest" || true)
     if [ -z "$miss_csv" ]; then
         echo "overlay_sysroot: modulemap headers complete tree=$dest"
         return 0
@@ -301,25 +391,40 @@ overlay_sysroot_fill_modulemap_headers() {
 
 overlay_sysroot_print_modulemap_closure() {
     local sdk=${1:?overlay_sysroot_print_modulemap_closure: sdk}
-    local miss
-    miss=$(phase2_darwin_modulemap_missing_headers "$sdk" || true)
-    if [ -n "$miss" ]; then
-        echo "overlay_sysroot: modulemap missing=$miss"
-    else
+    local map rel maprel skip any=0
+    while IFS= read -r map; do
+        [ -n "$map" ] || continue
+        echo "overlay_sysroot: modulemap consider ${map#"$sdk/"}"
+    done < <(overlay_sysroot_clang_overlay_modulemaps "$sdk")
+    while IFS= read -r skip; do
+        [ -n "$skip" ] || continue
+        echo "overlay_sysroot: modulemap skip $skip reason=not a Darwin Clang overlay map (libc++ std / nested; ninja overlay compiles pass -sdk only, no -fmodule-map-file for c++/v1; swiftinterfaces import Darwin/Swift/SwiftShims not std)"
+    done < <(overlay_sysroot_skipped_modulemaps "$sdk")
+    while IFS=$'\t' read -r rel maprel; do
+        [ -n "$rel" ] || continue
+        echo "overlay_sysroot: modulemap missing header=$rel map=$maprel"
+        any=1
+    done < <(overlay_sysroot_modulemap_missing_entries "$sdk" || true)
+    if [ "$any" -eq 0 ]; then
         echo "overlay_sysroot: modulemap headers complete"
     fi
 }
 
-# Named CANNOT. Exit 2. overlay_sysroot_refuse_modulemap_headers <sdk>
+# Named CANNOT. Exit 2. Each missing name is header@map.
+# overlay_sysroot_refuse_modulemap_headers <sdk>
 overlay_sysroot_refuse_modulemap_headers() {
     local sdk=${1:?overlay_sysroot_refuse_modulemap_headers: sdk}
-    local miss resolved
-    miss=$(phase2_darwin_modulemap_missing_headers "$sdk" || true)
-    if [ -z "$miss" ]; then
+    local rel maprel resolved entries="" 
+    while IFS=$'\t' read -r rel maprel; do
+        [ -n "$rel" ] || continue
+        echo "overlay_sysroot: modulemap missing header=$rel map=$maprel" >&2
+        entries="${entries:+$entries,}$rel@$maprel"
+    done < <(overlay_sysroot_modulemap_missing_entries "$sdk" || true)
+    if [ -z "$entries" ]; then
         return 0
     fi
     resolved=$(realpath "$sdk" 2>/dev/null || printf '%s' "$sdk")
-    echo "CANNOT_OVERLAY_SYSROOT_MODULEMAP_HEADER tree=$sdk realpath=$resolved missing=$miss reason=staged modulemaps name these headers; overlay sysroot must stage the same header set the modulemaps reference (phase2_darwin_modulemap_missing_headers; complex.h comes from full/sdk-gaps)" >&2
+    echo "CANNOT_OVERLAY_SYSROOT_MODULEMAP_HEADER tree=$sdk realpath=$resolved missing=$entries reason=Darwin Clang overlay maps (usr/include/module.modulemap + Darwin*.modulemap) name these headers; libc++ usr/include/c++/v1 is outside this closure (overlay compiles do not import std)" >&2
     return 2
 }
 

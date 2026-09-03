@@ -2,8 +2,9 @@
 # Overlay sysroot staging is input-keyed. A pre-existing MacOSX.sdk with
 # clean-room math.h / no stamp is displaced, never rm'd; mismatch restages
 # into a fresh directory. Refuse-before-cmake if math.h lacks fmaxl,
-# sys/proc.h lacks extern_proc, or a staged modulemap names a header that
-# is not on disk (phase2_darwin_modulemap_missing_headers).
+# sys/proc.h lacks extern_proc, or a Darwin Clang overlay map names a header
+# that is not on disk. libc++ usr/include/c++/v1/module.modulemap is outside
+# that closure and must not refuse.
 set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
@@ -204,7 +205,7 @@ printf '%s\n' "$tbd_ref" | grep -q "tree=$tmp/notbd" \
   && echo "  OK  TBDS refuse names the tree" || { echo "  FAIL TBDS tree path"; fail=1; }
 
 echo
-echo "=== modulemap header closure (phase2_darwin_modulemap_missing_headers) ==="
+echo "=== modulemap header closure (Darwin Clang maps, not libc++) ==="
 mkdir -p "$tmp/mm/usr/include" "$tmp/mm/usr/lib"
 fill_required_headers "$tmp/mm"
 echo '--- !tapi-tbd-v3' > "$tmp/mm/usr/lib/libSystem.B.tbd"
@@ -214,9 +215,9 @@ module _DarwinFoundation1 [system] {
   export *
 }
 EOF
-need '! phase2_darwin_modulemap_headers_ok "$tmp/mm"' \
-  "maps naming complex.h fail phase2 closure before fill"
-before=$(phase2_darwin_modulemap_missing_headers "$tmp/mm" || true)
+need '! overlay_sysroot_modulemap_headers_ok "$tmp/mm"' \
+  "DarwinFoundation1 naming complex.h fails overlay closure before fill"
+before=$(overlay_sysroot_modulemap_missing_headers "$tmp/mm" || true)
 printf '%s\n' "$before" | grep -q 'complex.h' \
   && echo "  OK  missing=complex.h ($before)" \
   || { echo "  FAIL missing headers: $before"; fail=1; }
@@ -229,8 +230,9 @@ printf '%s\n' "$refuse_mm"
 printf '%s\n' "$refuse_mm" | grep -q 'CANNOT_OVERLAY_SYSROOT_MODULEMAP_HEADER' \
   && echo "  OK  CANNOT_OVERLAY_SYSROOT_MODULEMAP_HEADER" \
   || { echo "  FAIL missing MODULEMAP_HEADER marker"; fail=1; }
-printf '%s\n' "$refuse_mm" | grep -q 'complex.h' \
-  && echo "  OK  refuse names complex.h" || { echo "  FAIL refuse path"; fail=1; }
+printf '%s\n' "$refuse_mm" | grep -q 'complex.h@usr/include/DarwinFoundation1.modulemap' \
+  && echo "  OK  refuse names complex.h@DarwinFoundation1.modulemap" \
+  || { echo "  FAIL refuse map attribution: $refuse_mm"; fail=1; }
 if overlay_sysroot_tree_complete "$tmp/mm"; then
   echo "  FAIL tree_complete true with modulemap header missing"
   fail=1
@@ -246,10 +248,10 @@ grep -q 'staged modulemap header complex.h' "$tmp/mm.fill" \
 cmp -s "$OPENUIKIT_ROOT/full/sdk-gaps/usr/include/complex.h" \
        "$tmp/mm/usr/include/complex.h" \
   && echo "  OK  complex.h is the sdk-gaps stub" || { echo "  FAIL complex.h contents"; fail=1; }
-if phase2_darwin_modulemap_headers_ok "$tmp/mm"; then
-  echo "  OK  phase2 closure after fill"
+if overlay_sysroot_modulemap_headers_ok "$tmp/mm"; then
+  echo "  OK  overlay closure after fill"
 else
-  echo "  FAIL still missing $(phase2_darwin_modulemap_missing_headers "$tmp/mm" || true)"
+  echo "  FAIL still missing $(overlay_sysroot_modulemap_missing_headers "$tmp/mm" || true)"
   fail=1
 fi
 set +e
@@ -263,6 +265,51 @@ else
   echo "  FAIL tree_complete still false"
   fail=1
 fi
+
+echo
+echo "=== libc++ modulemap naming algorithm does not refuse ==="
+mkdir -p "$tmp/libcxx/usr/include/c++/v1" "$tmp/libcxx/usr/lib"
+fill_required_headers "$tmp/libcxx"
+echo '--- !tapi-tbd-v3' > "$tmp/libcxx/usr/lib/libSystem.B.tbd"
+cat > "$tmp/libcxx/usr/include/c++/v1/module.modulemap" <<'EOF'
+module std_algorithm [system] {
+  header "algorithm"
+  export *
+}
+EOF
+# algorithm is not on disk; overlay compiles do not import std.
+print_cxx=$(overlay_sysroot_print_modulemap_closure "$tmp/libcxx" 2>&1)
+printf '%s\n' "$print_cxx"
+printf '%s\n' "$print_cxx" | grep -q 'modulemap skip usr/include/c++/v1/module.modulemap' \
+  && echo "  OK  skip names c++/v1/module.modulemap" \
+  || { echo "  FAIL no skip for libc++ map"; fail=1; }
+printf '%s\n' "$print_cxx" | grep -q 'modulemap missing header=algorithm' \
+  && { echo "  FAIL overlay closure walked libc++ algorithm"; fail=1; } \
+  || echo "  OK  algorithm is not an overlay missing header"
+printf '%s\n' "$print_cxx" | grep -q 'modulemap headers complete' \
+  && echo "  OK  Darwin overlay maps complete with libc++ map present" \
+  || { echo "  FAIL libc++ map broke overlay complete"; fail=1; }
+set +e
+refuse_cxx=$(overlay_sysroot_refuse_modulemap_headers "$tmp/libcxx" 2>&1)
+st=$?
+set -e
+printf '%s\n' "$refuse_cxx"
+[ "$st" -eq 0 ] && echo "  OK  libc++ map refuse rc=0" \
+  || { echo "  FAIL libc++ map refuse rc=$st"; fail=1; }
+printf '%s\n' "$refuse_cxx" | grep -q 'CANNOT_OVERLAY_SYSROOT_MODULEMAP_HEADER' \
+  && { echo "  FAIL libc++ map produced CANNOT"; fail=1; } \
+  || echo "  OK  no CANNOT for libc++-only missing names"
+if overlay_sysroot_tree_complete "$tmp/libcxx"; then
+  echo "  OK  tree_complete with libc++ map outside closure"
+else
+  echo "  FAIL tree_complete false despite Darwin maps complete"
+  fail=1
+fi
+# phase2's all-maps walk still sees algorithm (proves we scoped, not deleted the map)
+phase2_miss=$(phase2_darwin_modulemap_missing_headers "$tmp/libcxx" || true)
+printf '%s\n' "$phase2_miss" | grep -q 'algorithm' \
+  && echo "  OK  phase2 all-maps walk still names algorithm (out of overlay scope)" \
+  || { echo "  FAIL phase2 miss=$phase2_miss"; fail=1; }
 
 echo
 echo "=== configure.sh refuses before cmake when modulemap header is missing ==="
@@ -288,6 +335,9 @@ printf '%s\n' "$out" | tail -20
 printf '%s\n' "$out" | grep -q 'CANNOT_OVERLAY_SYSROOT_MODULEMAP_HEADER' \
   && echo "  OK  configure named MODULEMAP_HEADER" \
   || { echo "  FAIL configure MODULEMAP_HEADER"; fail=1; }
+printf '%s\n' "$out" | grep -q 'complex.h@usr/include/DarwinFoundation1.modulemap' \
+  && echo "  OK  configure names map for complex.h" \
+  || { echo "  FAIL configure map attribution"; fail=1; }
 [ -f "$W/configure.log" ] && grep -q cmake "$W/configure.log" 2>/dev/null \
   && { echo "  FAIL cmake ran after modulemap refuse"; fail=1; } \
   || echo "  OK  cmake not invoked after modulemap refuse"
@@ -594,6 +644,13 @@ if [ -f "$live/build.ninja" ]; then
   grep -q 'ninja Darwin.o -sdk=' "$tmp/live_sdk" \
     && echo "  OK  live Darwin.o -sdk printed" \
     || { echo "  FAIL live -sdk"; fail=1; }
+  overlay_print_overlay_module_evidence "$live" x86_64 | tee "$tmp/live_mod"
+  grep -q -- '-fmodule-map-file=ABSENT' "$tmp/live_mod" \
+    && echo "  OK  live overlay compiles have no -fmodule-map-file" \
+    || { echo "  FAIL live -fmodule-map-file"; fail=1; }
+  grep -q 'import Darwin' "$tmp/live_mod" \
+    && echo "  OK  live Darwin.swiftinterface imports Darwin" \
+    || echo "  skip live swiftinterface imports (not staged)"
 else
   echo "  skip live graph (no $live/build.ninja)"
 fi

@@ -117,9 +117,9 @@ if [ "$PRINT_FLAGS" != 1 ]; then
 fi
 
 # Overlay sysroot must carry Intel math.h (fmaxl) + machorun sys/proc.h
-# (extern_proc) *and* every header staged modulemaps name (complex.h from
-# full/sdk-gaps) *before* cmake bakes -DSWIFT_SDK_OSX_PATH. A stale
-# MacOSX.sdk from an earlier refuse-overwrite is CANNOT, not a ninja surprise.
+# (extern_proc) *and* every header Darwin Clang overlay maps name (complex.h
+# from full/sdk-gaps). libc++ usr/include/c++/v1 is outside that closure.
+# Refuse *before* cmake bakes -DSWIFT_SDK_OSX_PATH.
 if [ "$PRINT_FLAGS" != 1 ] && [ "$SWIFTCORE_DARWIN_ARCH" = x86_64 ]; then
   overlay_sysroot_print_headers "$SDK"
   overlay_sysroot_refuse_incomplete "$SDK" || exit 2
