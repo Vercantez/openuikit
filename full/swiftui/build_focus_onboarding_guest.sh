@@ -117,6 +117,27 @@ run_link() {
     "$@"
 }
 
+assert_no_glibc_host_imports() {
+    local image=$1 label=$2
+    if llvm-nm-18 --undefined-only --extern-only --just-symbol-name "$image" \
+        | grep -q '^_glibc_'; then
+        die "$label imports _glibc_*; keep those in the run-local Darwin-root bridge"
+    fi
+}
+
+# Every machorun invocation must print a site banner and use the same
+# composed host preload plus the run-local Darwin overlay. Site names are
+# how the log identifies which invocation printed rc=73.
+run_machorun_site() {
+    local site=$1
+    shift
+    echo "== machorun site: $site"
+    LD_LIBRARY_PATH="$HOST_BRIDGE_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+    MACHORUN_ROOT="$RUNROOT" \
+    "$MRROOT/machorun" "$@"
+}
+
 assert_clean_commit() {
     local repo=$1 expected=$2 label=$3 expected_tree=${4:-} actual status actual_tree
     [ -d "$repo/.git" ] || die "$label is not a Git checkout: $repo"
@@ -235,6 +256,16 @@ mkdir -p "$PACKAGE/include/CPortableIO" "$PACKAGE/include/CSTBTrueType" \
     "$PACKAGE/include/COpenDispatch" "$PACKAGE/include/COpenRelativeTime" \
     "$PACKAGE/include/CQuartz" "$PACKAGE/include/CoreFoundation" \
     "$MODULE_CACHE" "$AUDIT" "$OUT/fonts" "$OUT/host"
+echo '== clone shared machorun root into a writable run-local overlay'
+# machorun's host_lookup/_glibc_ path only runs for images served from the
+# darwin-root prefix map (is_runtime). The shared MRROOT is read-only, so
+# stage those bridges in a per-run copy rather than $PACKAGE @rpath images.
+[ "$RUNROOT" != "$MRROOT" ] \
+    || die 'run-local overlay path collided with the shared machorun root'
+mkdir -p "$RUNROOT"
+cp -a "$MRROOT/." "$RUNROOT/"
+chmod -R u+w "$RUNROOT"
+mkdir -p "$RUNROOT/darwin/usr/lib"
 
 git -C "$FOCUS_ROOT" ls-tree -r -z "$EXPECTED_FOCUS_COMMIT" -- focus-ios \
     | while IFS= read -r -d '' record; do
@@ -369,10 +400,15 @@ PACKAGE_CINC=(-Xcc -I"$PACKAGE/include/CPortableIO"
     -Xcc -fmodule-map-file="$PACKAGE/include/CoreFoundation/module.modulemap"
     -Xcc -I"$PACKAGE/include/CoreFoundation")
 HOST_BRIDGE_DIR=$OUT/host
+RUNROOT=$OUT/runroot
+RELATIVE_TIME_RUNTIME=$RUNROOT/darwin/usr/lib/libOpenRelativeTime.dylib
 RELATIVE_TIME_DARWIN=$PACKAGE/libOpenRelativeTime.dylib
 RELATIVE_TIME_HOST=$HOST_BRIDGE_DIR/libOpenRelativeTimeHost.so
+DISPATCH_DARWIN=$RUNROOT/darwin/usr/lib/libOpenDispatch.dylib
+FOUNDATION_INTL_RUNTIME=$RUNROOT/darwin/usr/lib/libOpenFoundationInternationalization.dylib
 FOUNDATION_INTL_DARWIN=$PACKAGE/libOpenFoundationInternationalization.dylib
 FOUNDATION_INTL_HOST=$HOST_BRIDGE_DIR/libOpenFoundationInternationalizationHost.so
+HOST_PRELOAD_DLSYM_PROBE=$W/full/swiftui/host_preload_dlsym_probe.c
 MACHO_DEPENDENCY_REWRITER=$W/full/xcodeplan/rewrite_macho_dependency.py
 FE_OUT=$FULL/foundation/essentials
 FE_COLLECTIONS=$FULL/foundation/collections
@@ -516,7 +552,8 @@ done
 # the umbrella cannot be bounded without that module. Build it from the
 # committed FI script against the same Darwin sysroot / FE module the
 # gate already uses. Do not write the Darwin bridge into the shared
-# machorun root: this harness keeps that tree read-only.
+# machorun root: this harness keeps that tree read-only and stages the
+# `_glibc_*` image in the run-local overlay so machorun will host-lookup.
 echo '== build pinned FoundationInternationalization against the same sysroot'
 for fe_artifact in FoundationEssentials.swiftmodule FoundationEssentials.swiftdoc; do
     [ -f "$FE_OUT/$fe_artifact" ] && [ ! -L "$FE_OUT/$fe_artifact" ] \
@@ -574,13 +611,20 @@ clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
     -I "$W/full/foundationinternationalization/include" \
     -c "$W/full/foundationinternationalization/OpenFoundationInternationalizationBridge.c" \
     -o "$OUT/open-foundation-internationalization-bridge.o"
+run_link libOpenFoundationInternationalizationRuntime "${LD[@]}" -dylib \
+    -dead_strip -undefined dynamic_lookup \
+    -install_name /usr/lib/libOpenFoundationInternationalization.dylib \
+    -map "$AUDIT/libOpenFoundationInternationalizationRuntime.link-map" \
+    -o "$FOUNDATION_INTL_RUNTIME" \
+    "$OUT/open-foundation-internationalization-bridge.o"
 run_link libOpenFoundationInternationalization "${LD[@]}" -dylib -dead_strip \
-    -undefined dynamic_lookup \
+    -ignore_auto_link \
     -install_name @rpath/libOpenFoundationInternationalization.dylib \
     -rpath @loader_path \
     -map "$AUDIT/libOpenFoundationInternationalization.link-map" \
     -o "$FOUNDATION_INTL_DARWIN" \
-    "$OUT/open-foundation-internationalization-bridge.o"
+    -reexport_library "$FOUNDATION_INTL_RUNTIME" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib"
 bash "$W/full/foundationinternationalization/build_host_helper.sh" \
     --repo "$W" --host-dir "$HOST_BRIDGE_DIR" \
     --include-dir "$W/full/foundationinternationalization/include"
@@ -597,6 +641,8 @@ grep -Fx \
     || die 'FoundationInternationalization host marker is missing'
 [ -f "$FOUNDATION_INTL_DARWIN" ] && [ ! -L "$FOUNDATION_INTL_DARWIN" ] \
     || die 'libOpenFoundationInternationalization.dylib is missing after build'
+[ -f "$FOUNDATION_INTL_RUNTIME" ] && [ ! -L "$FOUNDATION_INTL_RUNTIME" ] \
+    || die 'run-local OpenFoundationInternationalization Darwin bridge is missing'
 [ -f "$FOUNDATION_INTL_HOST" ] && [ ! -L "$FOUNDATION_INTL_HOST" ] \
     || die 'libOpenFoundationInternationalizationHost.so is missing after build'
 printf 'openui_foundation_intl_v1_realpath\n' \
@@ -608,10 +654,10 @@ readelf --wide --syms "$FOUNDATION_INTL_HOST" \
     | awk '$5 == "GLOBAL" && $7 != "UND" && $8 ~ /^openui_foundation_intl_v1_/ { print $8 }' \
     | LC_ALL=C sort -u > "$AUDIT/foundation-intl-elf-exports.txt"
 llvm-nm-18 --defined-only --extern-only --just-symbol-name \
-    "$FOUNDATION_INTL_DARWIN" | LC_ALL=C sort -u \
+    "$FOUNDATION_INTL_RUNTIME" | LC_ALL=C sort -u \
     > "$AUDIT/foundation-intl-mach-exports.txt"
 llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
-    "$FOUNDATION_INTL_DARWIN" | LC_ALL=C sort -u \
+    "$FOUNDATION_INTL_RUNTIME" | LC_ALL=C sort -u \
     > "$AUDIT/foundation-intl-mach-imports.txt"
 cmp "$AUDIT/foundation-intl-expected-elf.txt" \
     "$AUDIT/foundation-intl-elf-exports.txt" \
@@ -622,9 +668,21 @@ cmp "$AUDIT/foundation-intl-expected-mach-exports.txt" \
 cmp "$AUDIT/foundation-intl-expected-mach-imports.txt" \
     "$AUDIT/foundation-intl-mach-imports.txt" \
     || die 'FoundationInternationalization Mach-O bridge host import drifted'
+[ "$(llvm-otool-18 -D "$FOUNDATION_INTL_RUNTIME" | tail -n 1)" = \
+    /usr/lib/libOpenFoundationInternationalization.dylib ] \
+    || die 'run-local FoundationInternationalization Mach-O bridge ID drifted'
 [ "$(llvm-otool-18 -D "$FOUNDATION_INTL_DARWIN" | tail -n 1)" = \
     @rpath/libOpenFoundationInternationalization.dylib ] \
     || die 'packaged FoundationInternationalization Mach-O bridge ID drifted'
+assert_no_glibc_host_imports "$FOUNDATION_INTL_DARWIN" \
+    'packaged OpenFoundationInternationalization facade'
+fi_runtime_reexport_count=$(llvm-otool-18 -l "$FOUNDATION_INTL_DARWIN" \
+    | awk '$1 == "cmd" { command = $2 }
+        $1 == "name" && $2 == "/usr/lib/libOpenFoundationInternationalization.dylib" \
+            && command == "LC_REEXPORT_DYLIB" { count++ }
+        END { print count + 0 }')
+[ "$fi_runtime_reexport_count" -eq 1 ] \
+    || die "packaged FI facade Darwin-root reexport count $fi_runtime_reexport_count, expected 1"
 icu_bridge_old=$(llvm-otool-18 -L "$PACKAGE/lib_FoundationICU.dylib" \
     | awk '$1 == "/usr/lib/libOpenFoundationInternationalization.dylib" { count++ } END { print count + 0 }')
 icu_bridge_new=$(llvm-otool-18 -L "$PACKAGE/lib_FoundationICU.dylib" \
@@ -667,6 +725,17 @@ clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
     -I "$PACKAGE/include/COpenDispatch" \
     -c "$W/full/dispatch/OpenDispatchBridge.c" \
     -o "$OUT/open-dispatch-bridge.o"
+run_link libOpenDispatch "${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+    -install_name /usr/lib/libOpenDispatch.dylib \
+    -map "$AUDIT/libOpenDispatch.link-map" \
+    -o "$DISPATCH_DARWIN" "$OUT/open-dispatch-bridge.o"
+[ "$(llvm-otool-18 -D "$DISPATCH_DARWIN" | tail -n 1)" = \
+    /usr/lib/libOpenDispatch.dylib ] \
+    || die 'run-local OpenDispatch Mach-O bridge ID drifted'
+dispatch_glibc=$(llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
+    "$DISPATCH_DARWIN" | grep -c '^_glibc_openui_dispatch_host_v1_' || true)
+[ "$dispatch_glibc" -eq 12 ] \
+    || die "run-local OpenDispatch host import count $dispatch_glibc, expected 12"
 "${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" \
     -I "$PACKAGE" \
     -module-name Dispatch -module-link-name Dispatch -emit-module \
@@ -676,7 +745,7 @@ run_link libDispatch "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined 
     -install_name @rpath/libDispatch.dylib -rpath @loader_path \
     -map "$AUDIT/libDispatch.link-map" \
     -o "$PACKAGE/libDispatch.dylib" \
-    "$OUT/dispatch.o" "$OUT/open-dispatch-bridge.o" \
+    "$OUT/dispatch.o" "$DISPATCH_DARWIN" \
     -L"$PACKAGE" -lOpenCombine \
     -L"$MRROOT/darwin/usr/lib" -L/usr/lib/swift \
     -lswiftCore \
@@ -688,6 +757,11 @@ run_link libDispatch "${LD[@]}" -dylib -dead_strip -ignore_auto_link -undefined 
     || die 'project Dispatch swiftmodule is missing after build'
 [ -f "$PACKAGE/libDispatch.dylib" ] && [ ! -L "$PACKAGE/libDispatch.dylib" ] \
     || die 'libDispatch.dylib is missing after build'
+assert_no_glibc_host_imports "$PACKAGE/libDispatch.dylib" 'packaged libDispatch'
+dispatch_open_load_count=$(llvm-otool-18 -L "$PACKAGE/libDispatch.dylib" \
+    | awk '$1 == "/usr/lib/libOpenDispatch.dylib" { count++ } END { print count + 0 }')
+[ "$dispatch_open_load_count" -eq 1 ] \
+    || die "packaged libDispatch OpenDispatch load count $dispatch_open_load_count, expected 1"
 
 echo '== compile the bounded Foundation umbrella after SwiftUI'
 [ -f "$PACKAGE/include/COpenCombineHelpers/module.modulemap" ] && \
@@ -776,10 +850,17 @@ clang-18 -target "$TARGET" -isysroot "$SYS" -std=c11 -O2 \
     -I "$PACKAGE/include/COpenRelativeTime" \
     -c "$W/full/relativetime/OpenRelativeTimeBridge.c" \
     -o "$OUT/open-relative-time-bridge.o"
-run_link libOpenRelativeTime "${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup \
+run_link libOpenRelativeTimeRuntime "${LD[@]}" -dylib -dead_strip \
+    -undefined dynamic_lookup \
+    -install_name /usr/lib/libOpenRelativeTime.dylib \
+    -map "$AUDIT/libOpenRelativeTimeRuntime.link-map" \
+    -o "$RELATIVE_TIME_RUNTIME" "$OUT/open-relative-time-bridge.o"
+run_link libOpenRelativeTime "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libOpenRelativeTime.dylib -rpath @loader_path \
     -map "$AUDIT/libOpenRelativeTime.link-map" \
-    -o "$RELATIVE_TIME_DARWIN" "$OUT/open-relative-time-bridge.o"
+    -o "$RELATIVE_TIME_DARWIN" \
+    -reexport_library "$RELATIVE_TIME_RUNTIME" \
+    "$MRROOT/darwin/usr/lib/libSystem.B.dylib"
 bash "$W/full/relativetime/build_host_helper.sh" \
     --repo "$W" --host-dir "$HOST_BRIDGE_DIR" \
     --include-dir "$PACKAGE/include/COpenRelativeTime"
@@ -796,6 +877,8 @@ grep -Fx \
     || die 'native relative-time semantic marker is missing'
 [ -f "$RELATIVE_TIME_DARWIN" ] && [ ! -L "$RELATIVE_TIME_DARWIN" ] \
     || die 'libOpenRelativeTime.dylib is missing after build'
+[ -f "$RELATIVE_TIME_RUNTIME" ] && [ ! -L "$RELATIVE_TIME_RUNTIME" ] \
+    || die 'run-local OpenRelativeTime Darwin bridge is missing'
 [ -f "$RELATIVE_TIME_HOST" ] && [ ! -L "$RELATIVE_TIME_HOST" ] \
     || die 'libOpenRelativeTimeHost.so is missing after build'
 printf 'openui_relative_time_v1_format\n' \
@@ -808,10 +891,10 @@ readelf --wide --syms "$RELATIVE_TIME_HOST" \
     | awk '$5 == "GLOBAL" && $7 != "UND" && $8 ~ /^openui_relative_time_v1_/ { print $8 }' \
     | LC_ALL=C sort -u > "$AUDIT/relative-time-elf-exports.txt"
 llvm-nm-18 --defined-only --extern-only --just-symbol-name \
-    "$RELATIVE_TIME_DARWIN" | LC_ALL=C sort -u \
+    "$RELATIVE_TIME_RUNTIME" | LC_ALL=C sort -u \
     > "$AUDIT/relative-time-mach-exports.txt"
 llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
-    "$RELATIVE_TIME_DARWIN" | LC_ALL=C sort -u \
+    "$RELATIVE_TIME_RUNTIME" | LC_ALL=C sort -u \
     > "$AUDIT/relative-time-mach-imports.txt"
 cmp "$AUDIT/relative-time-expected-elf.txt" \
     "$AUDIT/relative-time-elf-exports.txt" \
@@ -822,6 +905,21 @@ cmp "$AUDIT/relative-time-expected-mach-exports.txt" \
 cmp "$AUDIT/relative-time-expected-mach-imports.txt" \
     "$AUDIT/relative-time-mach-imports.txt" \
     || die 'Mach-O relative-time host imports drifted'
+[ "$(llvm-otool-18 -D "$RELATIVE_TIME_RUNTIME" | tail -n 1)" = \
+    /usr/lib/libOpenRelativeTime.dylib ] \
+    || die 'run-local relative-time Mach-O bridge ID drifted'
+[ "$(llvm-otool-18 -D "$RELATIVE_TIME_DARWIN" | tail -n 1)" = \
+    @rpath/libOpenRelativeTime.dylib ] \
+    || die 'packaged relative-time Mach-O facade ID drifted'
+assert_no_glibc_host_imports "$RELATIVE_TIME_DARWIN" \
+    'packaged OpenRelativeTime facade'
+relative_time_runtime_reexport_count=$(llvm-otool-18 -l "$RELATIVE_TIME_DARWIN" \
+    | awk '$1 == "cmd" { command = $2 }
+        $1 == "name" && $2 == "/usr/lib/libOpenRelativeTime.dylib" \
+            && command == "LC_REEXPORT_DYLIB" { count++ }
+        END { print count + 0 }')
+[ "$relative_time_runtime_reexport_count" -eq 1 ] \
+    || die "packaged relative-time facade Darwin-root reexport count $relative_time_runtime_reexport_count, expected 1"
 
 echo '== package ten reusable guest dylibs'
 run_link libFoundationEssentials "${LD[@]}" -dylib -dead_strip \
@@ -998,8 +1096,9 @@ expected_symbols_inputs=$(printf '%s\n' \
     "$SYS/usr/lib/libSystem.tbd")
 # Umbrella objects plus the four input classes the failed link named:
 # libswift_Concurrency.tbd, libswiftDarwin.tbd, libOpenCoreGraphics.dylib,
-# and the packaged OpenRelativeTime Darwin dylib. -ignore_auto_link means
-# Darwin/Concurrency cannot ride in through autolink the way they do on FE.
+# and the packaged OpenRelativeTime facade (which reexports the run-local
+# /usr/lib Darwin-root bridge). -ignore_auto_link means Darwin/Concurrency
+# cannot ride in through autolink the way they do on FE.
 expected_foundation_inputs=$(printf '%s\n' \
     'linker synthesized' \
     "$OUT/foundation.o" \
@@ -1112,7 +1211,7 @@ llvm-otool-18 -hv "$OUT/focus_onboarding_guest" \
 
 perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 --executable "$OUT/focus_onboarding_guest" \
-    --package "$PACKAGE" --guest-root "$MRROOT" \
+    --package "$PACKAGE" --guest-root "$RUNROOT" \
     > "$AUDIT/runtime-closure.manifest"
 awk -F '\t' '
     $1 == "file" && $2 == "package/libOpenFoundationInternationalization.dylib" {
@@ -1121,6 +1220,27 @@ awk -F '\t' '
     END { exit files == 1 ? 0 : 1 }
 ' "$AUDIT/runtime-closure.manifest" \
     || die 'runtime-closure inventory omitted package/libOpenFoundationInternationalization.dylib'
+awk -F '\t' '
+    $1 == "file" && $2 == "guest-root/darwin/usr/lib/libOpenFoundationInternationalization.dylib" {
+        files++
+    }
+    END { exit files == 1 ? 0 : 1 }
+' "$AUDIT/runtime-closure.manifest" \
+    || die 'runtime-closure inventory omitted the run-local OpenFoundationInternationalization Darwin bridge'
+awk -F '\t' '
+    $1 == "file" && $2 == "guest-root/darwin/usr/lib/libOpenRelativeTime.dylib" {
+        files++
+    }
+    END { exit files == 1 ? 0 : 1 }
+' "$AUDIT/runtime-closure.manifest" \
+    || die 'runtime-closure inventory omitted the run-local OpenRelativeTime Darwin bridge'
+awk -F '\t' '
+    $1 == "file" && $2 == "guest-root/darwin/usr/lib/libOpenDispatch.dylib" {
+        files++
+    }
+    END { exit files == 1 ? 0 : 1 }
+' "$AUDIT/runtime-closure.manifest" \
+    || die 'runtime-closure inventory omitted the run-local OpenDispatch Darwin bridge'
 awk -F '\t' '
     $1 == "edge" && $2 == "package/lib_FoundationICU.dylib" \
         && $4 == "@rpath/libOpenFoundationInternationalization.dylib" \
@@ -1162,6 +1282,26 @@ done
 EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST:$FOUNDATION_INTL_HOST:$RELATIVE_TIME_HOST
 printf 'LD_PRELOAD=%s\n' \
     "$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}"
+
+echo '== host dlsym probe of composed LD_PRELOAD (loader-process RTLD_DEFAULT)'
+[ -f "$HOST_PRELOAD_DLSYM_PROBE" ] && [ ! -L "$HOST_PRELOAD_DLSYM_PROBE" ] \
+    || die "host dlsym probe source is missing: $HOST_PRELOAD_DLSYM_PROBE"
+clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
+    -o "$OUT/host_preload_dlsym_probe" "$HOST_PRELOAD_DLSYM_PROBE"
+LD_LIBRARY_PATH="$HOST_BRIDGE_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+    "$OUT/host_preload_dlsym_probe" \
+        openui_relative_time_v1_format \
+        openui_dispatch_host_v1_get_global_queue \
+        openui_foundation_intl_v1_realpath \
+    | tee "$OUT/host-preload-dlsym.log"
+for probe_symbol in openui_relative_time_v1_format \
+    openui_dispatch_host_v1_get_global_queue \
+    openui_foundation_intl_v1_realpath; do
+    grep -Fx "dlsym hit: $probe_symbol" "$OUT/host-preload-dlsym.log" >/dev/null \
+        || die "composed LD_PRELOAD did not export $probe_symbol to RTLD_DEFAULT"
+done
+
 if [ "$ARCH" = arm64 ] && [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
     echo "focus_onboarding_guest: compile/link may proceed on this VM; execution of arm64 guests cannot" >&2
     bash "${W:-$(git rev-parse --show-toplevel)}/.cursor/refuse-arm64-execution.sh" \
@@ -1169,9 +1309,7 @@ if [ "$ARCH" = arm64 ] && [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm
 fi
 (
     cd "$OUT"
-    LD_LIBRARY_PATH="$HOST_BRIDGE_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
-    LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
-    MACHORUN_ROOT="$MRROOT" "$MRROOT/machorun" ./focus_onboarding_guest \
+    run_machorun_site interaction-path ./focus_onboarding_guest \
         "$OUT/Focus_Onboarding.bundle" \
         "$OUT/Focus_Widget.bundle" \
         "$UIKIT/Sources/OpenUIKit/Resources" "$OUT/fonts"

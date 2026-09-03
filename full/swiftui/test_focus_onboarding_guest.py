@@ -117,7 +117,8 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn("MH_MAGIC_64[[:space:]]+${OTOOL_CPU}", text)
         self.assertIn('actual_id=$(llvm-otool-18 -D', text)
         self.assertIn('focus_widget_guest_attest.pl" closure', text)
-        self.assertIn('"$MRROOT/machorun" ./focus_onboarding_guest', text)
+        self.assertIn('"$MRROOT/machorun"', text)
+        self.assertIn("run_machorun_site interaction-path ./focus_onboarding_guest", text)
         self.assertIn("compile the first-party Symbols value model while Foundation is hidden", text)
         self.assertIn("libSymbols Apple Symbols load count", text)
         self.assertIn("-lOpenUIKit -lOpenCoreGraphics -lCombine -lOpenCombine -lSymbols", text)
@@ -200,7 +201,9 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn("full/relativetime/OpenRelativeTimeHost.c", text)
         self.assertIn("full/relativetime/OpenRelativeTimeHostTests.c", text)
         self.assertIn("run_link libOpenRelativeTime ", text)
+        self.assertIn("run_link libOpenRelativeTimeRuntime ", text)
         self.assertIn("full/relativetime/build_host_helper.sh", text)
+        self.assertIn("RELATIVE_TIME_RUNTIME=$RUNROOT/darwin/usr/lib/libOpenRelativeTime.dylib", text)
         self.assertIn("RELATIVE_TIME_DARWIN=$PACKAGE/libOpenRelativeTime.dylib", text)
         self.assertIn(
             "RELATIVE_TIME_HOST=$HOST_BRIDGE_DIR/libOpenRelativeTimeHost.so",
@@ -216,8 +219,15 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
             text,
         )
         self.assertIn("@rpath/libOpenRelativeTime.dylib", text)
-        self.assertNotIn(
+        self.assertIn(
             "-install_name /usr/lib/libOpenRelativeTime.dylib",
+            text,
+        )
+        self.assertIn("-reexport_library \"$RELATIVE_TIME_RUNTIME\"", text)
+        self.assertIn("LC_REEXPORT_DYLIB", text)
+        self.assertIn("assert_no_glibc_host_imports \"$RELATIVE_TIME_DARWIN\"", text)
+        self.assertIn(
+            "== clone shared machorun root into a writable run-local overlay",
             text,
         )
 
@@ -241,6 +251,10 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         )
         self.assertIn("run_link libOpenFoundationInternationalization ", text)
         self.assertIn(
+            "FOUNDATION_INTL_RUNTIME=$RUNROOT/darwin/usr/lib/libOpenFoundationInternationalization.dylib",
+            text,
+        )
+        self.assertIn(
             "FOUNDATION_INTL_DARWIN=$PACKAGE/libOpenFoundationInternationalization.dylib",
             text,
         )
@@ -252,8 +266,13 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
             "-install_name @rpath/libOpenFoundationInternationalization.dylib",
             text,
         )
-        self.assertNotIn(
+        self.assertIn(
             "-install_name /usr/lib/libOpenFoundationInternationalization.dylib",
+            text,
+        )
+        self.assertIn("-reexport_library \"$FOUNDATION_INTL_RUNTIME\"", text)
+        self.assertIn(
+            "assert_no_glibc_host_imports \"$FOUNDATION_INTL_DARWIN\"",
             text,
         )
         self.assertIn("full/xcodeplan/rewrite_macho_dependency.py", text)
@@ -280,6 +299,12 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
             "runtime-closure inventory omitted package/libOpenFoundationInternationalization.dylib",
             text,
         )
+        self.assertIn(
+            "runtime-closure inventory omitted the run-local OpenFoundationInternationalization Darwin bridge",
+            text,
+        )
+        self.assertIn('--guest-root "$RUNROOT"', text)
+        self.assertNotIn('--guest-root "$MRROOT"', text)
 
     def test_run_step_preloads_every_built_host_helper(self) -> None:
         text = BUILD.read_text()
@@ -320,6 +345,8 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
             self.assertIn(f"${inverse[helper]}", preload_line)
         self.assertIn("== compose Linux host preload", run)
         self.assertIn("printf 'LD_PRELOAD=%s\\n'", run)
+        self.assertIn("== host dlsym probe of composed LD_PRELOAD", run)
+        self.assertIn("run_machorun_site interaction-path ./focus_onboarding_guest", run)
         self.assertLess(
             run.index('bash "$W/full/dispatch/build_host_bridge.sh"'),
             run.index("EARLY_PLATFORM_HOST_PRELOAD="),
@@ -328,6 +355,20 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
             run.index("EARLY_PLATFORM_HOST_PRELOAD="),
             run.index('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD'),
         )
+        self.assertLess(
+            run.index("== compose Linux host preload"),
+            run.index("== host dlsym probe of composed LD_PRELOAD"),
+        )
+        self.assertLess(
+            run.index("== host dlsym probe of composed LD_PRELOAD"),
+            run.index("run_machorun_site interaction-path"),
+        )
+        self.assertIn('MACHORUN_ROOT="$RUNROOT"', text)
+        self.assertNotIn('MACHORUN_ROOT="$MRROOT"', text)
+        self.assertIn("full/swiftui/host_preload_dlsym_probe.c", text)
+        self.assertEqual(text.count('"$MRROOT/machorun" "$@"'), 1)
+        self.assertEqual(text.count("echo \"== machorun site: $site\""), 1)
+        self.assertEqual(len(re.findall(r"\brun_machorun_site \S+", text)), 1)
 
     def test_foundation_runtime_closure_is_exact_and_mutation_sensitive(self) -> None:
         source = BUILD.read_text()
@@ -555,6 +596,14 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         )[1].split("== FoundationGuest/UIKit notification identity compile proof", 1)[0]
         self.assertIn('"$W/full/dispatch/Dispatch.swift"', dispatch)
         self.assertIn('"$W/full/dispatch/OpenDispatchBridge.c"', dispatch)
+        self.assertIn("DISPATCH_DARWIN=$RUNROOT/darwin/usr/lib/libOpenDispatch.dylib", text)
+        self.assertIn("-install_name /usr/lib/libOpenDispatch.dylib", dispatch)
+        self.assertIn('"$DISPATCH_DARWIN"', dispatch)
+        self.assertIn(
+            'assert_no_glibc_host_imports "$PACKAGE/libDispatch.dylib"',
+            dispatch,
+        )
+        self.assertNotIn('"$OUT/open-dispatch-bridge.o" \\', dispatch.split("run_link libDispatch", 1)[1])
         self.assertIn('-module-name Dispatch', dispatch)
         self.assertIn('-emit-module-path "$PACKAGE/Dispatch.swiftmodule"', dispatch)
         self.assertIn('-I "$PACKAGE"', dispatch)
@@ -600,6 +649,28 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
             self.assertNotIn("/usr/lib/swift/CoreFoundation", blob)
             self.assertNotIn("arm64e-apple-macos", blob)
         self.assertIn("arm64-apple-macos", (ROOT / "full/scripts/guest_arch.inc").read_text())
+
+    def test_machorun_sites_share_composed_preload_and_runtime_overlay(self) -> None:
+        text = BUILD.read_text()
+        helper = (ROOT / "full/swiftui/host_preload_dlsym_probe.c").read_text()
+        resolve = (ROOT / "machorun/src/resolve.c").read_text()
+        image = (ROOT / "machorun/src/image.c").read_text()
+        deny = (ROOT / "machorun/src/host_deny.c").read_text()
+        self.assertIn("run_machorun_site()", text)
+        self.assertIn('echo "== machorun site: $site"', text)
+        self.assertIn('LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}"', text)
+        self.assertIn('MACHORUN_ROOT="$RUNROOT"', text)
+        self.assertIn("cp -a \"$MRROOT/.\" \"$RUNROOT/\"", text)
+        self.assertIn("dlsym(RTLD_DEFAULT", helper)
+        self.assertIn("from->is_runtime", resolve)
+        self.assertIn("host_lookup(name)", resolve)
+        self.assertIn("*is_runtime = 1;", image)
+        self.assertIn("A Darwin absolute path.", image)
+        self.assertIn("`_glibc_*` IS NOT AND MUST NOT BE DENIED", deny)
+        self.assertIn(
+            "if (!*found && from->is_runtime)",
+            resolve,
+        )
 
     def test_success_marker_is_exact_and_fail_closed(self) -> None:
         build = BUILD.read_text()
