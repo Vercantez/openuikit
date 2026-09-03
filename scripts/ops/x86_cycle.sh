@@ -68,13 +68,19 @@ if [ "$DRY" -eq 1 ]; then
 fi
 
 run_logged() {
-    local name=$1 log=$2
+    # Capture the child's rc BEFORE restoring set -e. `if cmd; then; fi` leaves
+    # $? = 0 even when cmd failed, so a failed tbd used to print "failed rc=0"
+    # and look like success to callers that inspect rc.
+    local name=$1 log=$2 rc
     shift 2
     echo "== $name: $*" >&2
-    if "$@" >"$log" 2>&1; then
+    set +e
+    "$@" >"$log" 2>&1
+    rc=$?
+    set -e
+    if [ "$rc" -eq 0 ]; then
         return 0
     fi
-    rc=$?
     echo "x86_cycle: $name failed rc=$rc log=$log (child log follows, not hidden by ERR trap)" >&2
     tail -n 80 "$log" >&2 || true
     return "$rc"
@@ -108,6 +114,25 @@ if [ "$STUB" = 1 ]; then
 fi
 
 cd "$TREE"
+# A fresh Cursor VM is not the operator EC2 tree: export W / FULL_OUT_SUFFIX so
+# stage_fe_sysroot.sh and phase2 helpers resolve suffixed x86 paths, and point
+# SWIFT_TOOLCHAIN at the image's Swift (not a hardcoded /opt/swift).
+export W=$TREE
+# shellcheck disable=SC1091
+. "$TREE/full/scripts/guest_arch.inc"
+export CC="${CC:-clang-18}"
+export DARWIN_CLANG="${DARWIN_CLANG:-clang-18}"
+if [ -z "${SWIFT_TOOLCHAIN:-}" ]; then
+    if [ -x /opt/swift/usr/bin/swiftc ]; then
+        SWIFT_TOOLCHAIN=/opt/swift
+    elif [ -x /opt/swift624/usr/bin/swiftc ]; then
+        SWIFT_TOOLCHAIN=/opt/swift624
+    else
+        SWIFT_TOOLCHAIN=/usr
+    fi
+fi
+export SWIFT_TOOLCHAIN
+
 LOGDIR=${OPENUIKIT_CYCLE_LOGDIR:-$TREE/scratch/x86-cycle-logs}
 mkdir -p "$LOGDIR"
 
@@ -164,13 +189,22 @@ else
     emit_stage checkout reused "$TREE"
 fi
 
-# 3. prepare.py (loader/darwin/tbd through stamps)
-if run_logged prepare "$LOGDIR/prepare.log" python3 "$TREE/scripts/env/prepare.py"; then
-    emit_stage prepare "$(status_from_log "$LOGDIR/prepare.log")" "$TREE/machorun/build/machorun"
-else
+# 3. prepare.py (loader/darwin/tbd through stamps). On x86_64 a missing
+# loader is CANNOT (the operator EC2 already has one). A fresh VM then
+# cold-builds via ensure_machorun.sh and parks leftover arm64 dylibs
+# before tbd. STAGE prepare names the loader that actually exists.
+if ! run_logged prepare "$LOGDIR/prepare.log" python3 "$TREE/scripts/env/prepare.py"; then
     emit_stage prepare cannot "$TREE/machorun/build/machorun"
     exit 2
 fi
+if ! run_logged ensure_machorun "$LOGDIR/ensure_machorun.log" \
+    bash "$TREE/scripts/x86/ensure_machorun.sh" "$TREE"; then
+    echo "x86_cycle: ensure_machorun failed (loader/darwin/objc4/quartz or arm64 park)" >&2
+    emit_stage prepare cannot "$TREE/machorun/build/machorun"
+    exit 2
+fi
+emit_stage prepare "$(status_from_log "$LOGDIR/ensure_machorun.log")" \
+    "$TREE/machorun/build/machorun"
 
 # 4. build.sh tbd must be clean (after darwin, before overlays)
 if run_logged tbd "$LOGDIR/tbd.log" sh "$TREE/machorun/scripts/build.sh" tbd; then
@@ -218,7 +252,7 @@ if [ "${OPENUIKIT_CYCLE_SKIP_OVERLAYS:-0}" = 1 ]; then
     emit_stage overlays reused "$TREE/swiftcore-macho/artifacts/swift-macosx/x86_64 (skipped by request)"
 elif run_logged overlays "$LOGDIR/overlays.log" \
     env NINJA_JOBS=16 SWIFTCORE_DARWIN_ARCH=x86_64 SWIFTCORE_OVERLAYS=1 \
-        SWIFTCORE_BUILD_DISPATCH=1 SWIFT_TOOLCHAIN=/opt/swift \
+        SWIFTCORE_BUILD_DISPATCH=1 SWIFT_TOOLCHAIN="$SWIFT_TOOLCHAIN" \
         bash "$TREE/swiftcore-macho/scripts/build_stdlib.sh"; then
     emit_stage overlays "$(status_from_log "$LOGDIR/overlays.log")" "$TREE/swiftcore-macho/artifacts/swift-macosx/x86_64"
 else
@@ -226,8 +260,16 @@ else
     exit 2
 fi
 
-# 7. stage roots happens inside phase2; call it out so the scoreboard names it
-emit_stage roots rebuilt "$TREE/scratch/mrroot-x86_64"
+# 7. stage roots. Operator box lets phase2 do this; a fresh VM that skips
+# phase2 at install (OPENUIKIT_CYCLE_SKIP_PHASE2=1) still needs the trees.
+# Mirror phase2's helpers (base + host + layout + run-root placeholders).
+if run_logged roots "$LOGDIR/roots.log" \
+    bash "$TREE/scripts/x86/stage_cycle_roots.sh" "$TREE"; then
+    emit_stage roots "$(status_from_log "$LOGDIR/roots.log")" "$TREE/scratch/mrroot-x86_64"
+else
+    emit_stage roots cannot "$TREE/scratch/mrroot-x86_64"
+    exit 2
+fi
 
 # 7b. inputs phase2 needs that the proven operator driver staged by hand
 # (measured 2026-09-03, first committed cycle: rung b CANNOT_FOCUS_BUNDLE, rung c
@@ -265,7 +307,11 @@ fi
 
 # 8. phase2 rungs. Quote POSITIVE boards (phase2 already does; do not tail -1
 # the persist log past NEGATIVE CONTROL).
-if run_logged phase2 "$LOGDIR/phase2.log" \
+# OPENUIKIT_CYCLE_SKIP_PHASE2=1: install builds substrate only; verify runs
+# PHASE2_RUNGS=a. Same skip contract as OPENUIKIT_CYCLE_SKIP_OVERLAYS.
+if [ "${OPENUIKIT_CYCLE_SKIP_PHASE2:-0}" = 1 ]; then
+    emit_stage phase2 reused "$TREE (skipped by OPENUIKIT_CYCLE_SKIP_PHASE2=1)"
+elif run_logged phase2 "$LOGDIR/phase2.log" \
     bash "$TREE/scripts/x86/phase2.sh" "$TREE"; then
     emit_stage phase2 "$(status_from_log "$LOGDIR/phase2.log")" "$TREE"
 else

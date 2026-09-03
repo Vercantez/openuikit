@@ -172,6 +172,34 @@ echo "$cyc" | grep -q 'RUNG_SCOREBOARD' && ok "cycle stub quotes scoreboard" \
 echo "$cyc" | grep -q 'positive board' && ok "cycle stub quotes positive persist board" \
     || die_test "missing positive board"
 
+echo "== run_logged captures child rc (not the if-status)"
+python3 - "$ROOT/scripts/ops/x86_cycle.sh" <<'PY'
+import pathlib, sys
+text = pathlib.Path(sys.argv[1]).read_text()
+start = text.index("run_logged()")
+end = text.index("emit_stage()", start)
+body = text[start:end]
+assert "set +e" in body, body
+assert "rc=$?" in body, body
+assert 'if "$@" >"$log" 2>&1; then' not in body, body
+print("run_logged ok")
+PY
+ok "run_logged saves rc under set +e (failed child is a failure)"
+
+echo "== SKIP_PHASE2 / SKIP_OVERLAYS / ensure_machorun / real roots"
+grep -q 'OPENUIKIT_CYCLE_SKIP_PHASE2' "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "cycle honours OPENUIKIT_CYCLE_SKIP_PHASE2" \
+    || die_test "missing SKIP_PHASE2"
+grep -q 'scripts/x86/ensure_machorun.sh' "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "cycle calls ensure_machorun before tbd" \
+    || die_test "missing ensure_machorun"
+grep -q 'scripts/x86/stage_cycle_roots.sh' "$ROOT/scripts/ops/x86_cycle.sh" \
+    && ok "cycle roots stage calls stage_cycle_roots.sh" \
+    || die_test "roots still a no-op stamp"
+grep -q 'phase2_park_arm64_darwin_dylibs' "$ROOT/scripts/x86/ensure_machorun.sh" \
+    && ok "ensure_machorun parks leftover arm64 dylibs" \
+    || die_test "ensure_machorun missing park"
+
 echo "== premerge"
 cat > "$STUBDIR/gh" <<'EOF'
 #!/usr/bin/env bash

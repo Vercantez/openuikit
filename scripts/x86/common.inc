@@ -168,7 +168,7 @@ phase2_probe_focus_pin() {
 # output directory existing. A sysroot staged before x86 libswiftCore landed
 # would otherwise be reused while OpenCombine looks in usr/lib/swift and finds
 # nothing. Recipe bump forces a restage when the stager itself gains steps.
-PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.6
+PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.9
 PHASE2_SYSROOT_STAMP=.phase2-stage-inputs
 
 phase2_sha_or_absent() {
@@ -1545,6 +1545,162 @@ phase2_stage_x86_mrroot_layout() {
     uniq=$(printf '%s\n' "${missing[@]}" | sort -u)
     printf 'MISSING=%s\n' "$(printf '%s\n' "$uniq" | paste -sd, -)"
     return 1
+}
+
+# Park leftover arm64 Mach-O dylibs beside darwin/usr/lib so gen_tbd CHECK 4
+# does not mix slices. Sibling directory (not a library path). check_undefined.sh
+# prunes `*-park`. Always scans content; never skips because the park exists.
+phase2_park_arm64_darwin_dylibs() {
+    local libdir=$1
+    local park parked=0 d rel
+    [ -d "$libdir" ] || return 0
+    park=$(dirname "$libdir")/lib-arm64-park
+    mkdir -p "$park"
+    while IFS= read -r -d '' d; do
+        phase2_is_arm64_macho "$d" || continue
+        rel=${d#"$libdir"/}
+        mkdir -p "$park/$(dirname "$rel")"
+        mv "$d" "$park/$rel"
+        echo "  parked arm64 $rel -> $(basename "$park")" >&2
+        parked=$((parked + 1))
+    done < <(find "$libdir" -type f -name '*.dylib' -print0 2>/dev/null)
+    echo "phase2: parked $parked arm64 dylib(s) from $libdir" >&2
+}
+
+# C headers FoundationEssentials / os-module / Darwin.swiftinterface actually
+# name. overlay-darwin's generated map is pruned (~11 headers) and omits
+# unistd.h, so Darwin.write is invisible until these are appended.
+phase2_darwin_fe_extra_headers() {
+    printf '%s\n' \
+        unistd.h \
+        fcntl.h \
+        sys/stat.h \
+        errno.h \
+        time.h \
+        semaphore.h \
+        signal.h \
+        stdio.h \
+        pwd.h \
+        grp.h \
+        dlfcn.h \
+        math.h \
+        sys/mman.h \
+        sys/mount.h \
+        sys/quota.h \
+        sys/sysctl.h \
+        sys/time.h \
+        os/base.h \
+        os/lock.h \
+        mach/mach_time.h
+}
+
+# Append missing `header "…"` lines before the outer Darwin module close.
+# Does not rewrite a map that already names the header. Requires the file
+# to exist under usr/include (do not name an absent header).
+phase2_expand_darwin_modulemap_for_fe() {
+    local sys=$1
+    local map=$sys/usr/include/Darwin.modulemap
+    local h added=0
+    [ -f "$map" ] || return 1
+    while IFS= read -r h; do
+        [ -n "$h" ] || continue
+        [ -f "$sys/usr/include/$h" ] || continue
+        grep -q "header \"$h\"" "$map" && continue
+        sed -i '$i\  header "'"$h"'"' "$map"
+        echo "  Darwin.modulemap now names $h" >&2
+        added=$((added + 1))
+    done < <(phase2_darwin_fe_extra_headers)
+    echo "phase2: Darwin.modulemap FE expand added=$added" >&2
+    return 0
+}
+
+# Empty-by-design Foundation / CoreFoundation Mach-Os into a RUN root
+# (mrroot_full-x86_64). Loud-abort stubs stay in BASE (mrroot-x86_64) for
+# build_full. run_ud_guest.sh looks here; a loud-abort stub in this slot
+# loads a second libSystem and aborts on a foreign malloc zone (exit 71).
+phase2_stage_x86_foundation_placeholders() {
+    local dest=$1 repo=$2 sys=$3
+    local fw=$dest/darwin/System/Library/Frameworks
+    local work=$dest/placeholder-work
+    local log=$work/build_foundation_placeholder.log
+    local src=$repo/foundation-macho/src/placeholder/FoundationPlaceholder.c
+    local script=$repo/foundation-macho/scripts/build_foundation_placeholder.sh
+    local fslot=$fw/Foundation.framework/Foundation
+    local cslot=$fw/CoreFoundation.framework/CoreFoundation
+    local key
+    mkdir -p "$fw/Foundation.framework" "$fw/CoreFoundation.framework" "$work"
+    [ -f "$src" ] && [ -f "$script" ] || return 1
+    key=$(stamp_key "$fslot" "$script" "$src" "$sys" "${TARGET:-x86_64-apple-macos15.0}")
+    if stamp_reuse "$fslot" "$key" && stamp_reuse "$cslot" "$key"; then
+        return 0
+    fi
+    stamp_rebuild_reason "$fslot" "$key"
+    rm -f "$fslot" "$cslot"
+    set +e
+    PATH="/usr/lib/llvm-18/bin:/usr/bin:${PATH:-}" \
+        W="$work" R="$repo/foundation-macho" SDK="$sys" EXTRA= REPLACE=1 \
+        bash "$script" "$dest" >"$log" 2>&1
+    local st=$?
+    set -e
+    if [ "$st" -ne 0 ] \
+        || ! phase2_is_x86_macho "$fslot" \
+        || ! phase2_is_x86_macho "$cslot"; then
+        echo "phase2: foundation placeholders failed rc=$st log=$log" >&2
+        return 1
+    fi
+    stamp_write "$fslot" "$key"
+    stamp_write "$cslot" "$key"
+}
+
+# Copy x86_64 Swift overlay modules (Darwin, ObjectiveC, …) from committed
+# artifacts. A fresh VM has no arm64 sysroot_fe4 Xcode overlays.
+phase2_copy_artifact_swift_overlays() {
+    local sys=$1 artifacts=$2
+    local d name f copied=0
+    [ -d "$artifacts" ] || return 0
+    mkdir -p "$sys/usr/lib/swift"
+    for d in "$artifacts"/*.swiftmodule; do
+        [ -d "$d" ] || continue
+        name=$(basename "$d")
+        mkdir -p "$sys/usr/lib/swift/$name"
+        for f in "$d"/x86_64-apple-macos.*; do
+            [ -f "$f" ] || continue
+            cp -f "$f" "$sys/usr/lib/swift/$name/$(basename "$f")"
+            copied=$((copied + 1))
+        done
+    done
+    echo "  + $copied x86_64 overlay module files from $artifacts" >&2
+}
+
+# SwiftOnoneSupport is required when collections / os-module compile without
+# -O. Committed Darwin artifacts do not ship it; the Linux toolchain module
+# is x86_64-unknown-linux-gnu. Compile an empty -O parse-as-library stub.
+phase2_ensure_swift_onone_support() {
+    local sys=$1 target=${2:-${TARGET:-x86_64-apple-macos15.0}}
+    local dest=$sys/usr/lib/swift/SwiftOnoneSupport.swiftmodule
+    local src=$sys/.swift-onone-stub.swift
+    local log=$sys/.swift-onone-stub.log
+    local key
+    mkdir -p "$dest"
+    printf 'public enum _SwiftOnoneSupportStub {}\n' > "$src"
+    key=$(stamp_key "$dest/x86_64-apple-macos.swiftmodule" "$src" "$target")
+    if stamp_reuse "$dest/x86_64-apple-macos.swiftmodule" "$key"; then
+        return 0
+    fi
+    stamp_rebuild_reason "$dest/x86_64-apple-macos.swiftmodule" "$key"
+    phase2_ensure_sdk_settings "$sys"
+    set +e
+    swiftc -parse-as-library -O -emit-module -module-name SwiftOnoneSupport \
+        -target "$target" -sdk "$sys" \
+        -emit-module-path "$dest/x86_64-apple-macos.swiftmodule" \
+        "$src" >"$log" 2>&1
+    local st=$?
+    set -e
+    if [ "$st" -ne 0 ] || [ ! -f "$dest/x86_64-apple-macos.swiftmodule" ]; then
+        echo "phase2: SwiftOnoneSupport stub failed rc=$st log=$log" >&2
+        return 1
+    fi
+    stamp_write "$dest/x86_64-apple-macos.swiftmodule" "$key"
 }
 
 # shellcheck source=ud_guest.inc
