@@ -1,0 +1,539 @@
+precise	status	evidence	notes
+c:@CLLocationPushServiceErrorDomain	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+c:@E@CLAccuracyAuthorization	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLAccuracyAuthorization@CLAccuracyAuthorizationFullAccuracy	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLAccuracyAuthorization@CLAccuracyAuthorizationReducedAccuracy	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLActivityType	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLActivityType@CLActivityTypeAirborne	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLActivityType@CLActivityTypeAutomotiveNavigation	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLActivityType@CLActivityTypeFitness	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLActivityType@CLActivityTypeOther	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLActivityType@CLActivityTypeOtherNavigation	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLAuthorizationStatus	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testAuthorizationFailClosed	-
+c:@E@CLAuthorizationStatus@kCLAuthorizationStatusAuthorized	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testAuthorizationFailClosed	-
+c:@E@CLAuthorizationStatus@kCLAuthorizationStatusAuthorizedAlways	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testAuthorizationFailClosed	-
+c:@E@CLAuthorizationStatus@kCLAuthorizationStatusAuthorizedWhenInUse	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testAuthorizationFailClosed	-
+c:@E@CLAuthorizationStatus@kCLAuthorizationStatusDenied	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testAuthorizationFailClosed	-
+c:@E@CLAuthorizationStatus@kCLAuthorizationStatusNotDetermined	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testAuthorizationFailClosed	-
+c:@E@CLAuthorizationStatus@kCLAuthorizationStatusRestricted	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testAuthorizationFailClosed	-
+c:@E@CLDeviceOrientation	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLDeviceOrientation@CLDeviceOrientationFaceDown	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLDeviceOrientation@CLDeviceOrientationFaceUp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLDeviceOrientation@CLDeviceOrientationLandscapeLeft	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLDeviceOrientation@CLDeviceOrientationLandscapeRight	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLDeviceOrientation@CLDeviceOrientationPortrait	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLDeviceOrientation@CLDeviceOrientationPortraitUpsideDown	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLDeviceOrientation@CLDeviceOrientationUnknown	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorDeferredAccuracyTooLow	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorDeferredCanceled	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorDeferredDistanceFiltered	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorDeferredFailed	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorDeferredNotUpdatingLocation	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorDenied	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorGeocodeCanceled	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorGeocodeFoundNoResult	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorGeocodeFoundPartialResult	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorHeadingFailure	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorHistoricalLocationError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorLocationUnknown	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorNetwork	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorPromptDeclined	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorRangingFailure	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorRangingUnavailable	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorRegionMonitoringDenied	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorRegionMonitoringFailure	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorRegionMonitoringResponseDelayed	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLError@kCLErrorRegionMonitoringSetupDelayed	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+c:@E@CLLocationPushServiceError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+c:@E@CLLocationPushServiceError@CLLocationPushServiceErrorMissingEntitlement	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+c:@E@CLLocationPushServiceError@CLLocationPushServiceErrorMissingPushExtension	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+c:@E@CLLocationPushServiceError@CLLocationPushServiceErrorMissingPushServerEnvironment	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+c:@E@CLLocationPushServiceError@CLLocationPushServiceErrorUnknown	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+c:@E@CLLocationPushServiceError@CLLocationPushServiceErrorUnsupportedPlatform	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+c:@E@CLProximity	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLProximity@CLProximityFar	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLProximity@CLProximityImmediate	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLProximity@CLProximityNear	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLProximity@CLProximityUnknown	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLRegionState	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLRegionState@CLRegionStateInside	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLRegionState@CLRegionStateOutside	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@E@CLRegionState@CLRegionStateUnknown	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+c:@T@CLBeaconMajorValue	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:@T@CLBeaconMinorValue	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:@T@CLGeocodeCompletionHandler	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testGeocoderFailClosedAndHostInjection	-
+c:@T@CLHeadingComponentValue	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:@kCLErrorDomain	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCoordinateValidityAndConstants	-
+c:@kCLErrorUserInfoAlternateRegionKey	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCoordinateValidityAndConstants	-
+c:@kCLHeadingFilterNone	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCoordinateValidityAndConstants	-
+c:@macro@CL_TARGET_SUPPORTS_CONDITIONS	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCoordinateValidityAndConstants	-
+c:objc(cs)CLBeacon	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeacon(py)UUID	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeacon(py)accuracy	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeacon(py)major	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeacon(py)minor	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeacon(py)proximity	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeacon(py)proximityUUID	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeacon(py)rssi	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeacon(py)timestamp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeaconIdentityConstraint	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeaconRegion	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeaconRegion(im)initWithBeaconIdentityConstraint:identifier:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeaconRegion(im)initWithProximityUUID:identifier:	declared	source:full/corelocation/CoreLocation.swift#init	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLBeaconRegion(im)initWithProximityUUID:major:identifier:	declared	source:full/corelocation/CoreLocation.swift#init	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLBeaconRegion(im)initWithProximityUUID:major:minor:identifier:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeaconRegion(im)initWithUUID:identifier:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeaconRegion(im)initWithUUID:identifier:::SYNTHESIZED::c:objc(cs)CLBeaconRegion	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeaconRegion(im)initWithUUID:major:identifier:	declared	source:full/corelocation/CoreLocation.swift#init	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLBeaconRegion(im)initWithUUID:major:identifier:::SYNTHESIZED::c:objc(cs)CLBeaconRegion	declared	source:full/corelocation/CoreLocation.swift#init	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLBeaconRegion(im)initWithUUID:major:minor:identifier:	declared	source:full/corelocation/CoreLocation.swift#init	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLBeaconRegion(im)initWithUUID:major:minor:identifier:::SYNTHESIZED::c:objc(cs)CLBeaconRegion	declared	source:full/corelocation/CoreLocation.swift#init	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLBeaconRegion(im)peripheralDataWithMeasuredPower:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeaconRegion(py)UUID	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeaconRegion(py)beaconIdentityConstraint	declared	source:full/corelocation/CoreLocation.swift#beaconIdentityConstraint	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLBeaconRegion(py)major	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeaconRegion(py)minor	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLBeaconRegion(py)notifyEntryStateOnDisplay	declared	source:full/corelocation/CoreLocation.swift#notifyEntryStateOnDisplay	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLBeaconRegion(py)proximityUUID	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+c:objc(cs)CLCircularRegion	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testWGS84DistanceAndCircularRegion	-
+c:objc(cs)CLCircularRegion(im)containsCoordinate:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testWGS84DistanceAndCircularRegion	-
+c:objc(cs)CLCircularRegion(im)initWithCenter:radius:identifier:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testWGS84DistanceAndCircularRegion	-
+c:objc(cs)CLCircularRegion(py)center	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testWGS84DistanceAndCircularRegion	-
+c:objc(cs)CLCircularRegion(py)radius	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testWGS84DistanceAndCircularRegion	-
+c:objc(cs)CLGeocoder	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testGeocoderFailClosedAndHostInjection	-
+c:objc(cs)CLGeocoder(im)cancelGeocode	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testGeocoderFailClosedAndHostInjection	-
+c:objc(cs)CLGeocoder(im)geocodeAddressDictionary:completionHandler:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testGeocodeAddressDictionaryAndLocaleOverloads	-
+c:objc(cs)CLGeocoder(im)geocodeAddressString:completionHandler:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testGeocoderFailClosedAndHostInjection	-
+c:objc(cs)CLGeocoder(im)geocodeAddressString:inRegion:completionHandler:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testGeocodeAddressDictionaryAndLocaleOverloads	-
+c:objc(cs)CLGeocoder(im)geocodeAddressString:inRegion:preferredLocale:completionHandler:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testGeocodeAddressDictionaryAndLocaleOverloads	-
+c:objc(cs)CLGeocoder(im)geocodePostalAddress:completionHandler:	deferred		CNPostalAddress is owned by Contacts; the isolated host may import Foundation only and must not ship a framework-local lookalike.
+c:objc(cs)CLGeocoder(im)geocodePostalAddress:preferredLocale:completionHandler:	deferred		CNPostalAddress is owned by Contacts; the isolated host may import Foundation only and must not ship a framework-local lookalike.
+c:objc(cs)CLGeocoder(im)reverseGeocodeLocation:completionHandler:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testGeocoderFailClosedAndHostInjection	-
+c:objc(cs)CLGeocoder(im)reverseGeocodeLocation:preferredLocale:completionHandler:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testGeocodeAddressDictionaryAndLocaleOverloads	-
+c:objc(cs)CLGeocoder(py)geocoding	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testGeocoderFailClosedAndHostInjection	-
+c:objc(cs)CLHeading	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLHeading(py)headingAccuracy	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLHeading(py)magneticHeading	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLHeading(py)timestamp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLHeading(py)trueHeading	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLHeading(py)x	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLHeading(py)y	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLHeading(py)z	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLLocationManager	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLLocationManager(cm)authorizationStatus	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testAuthorizationFailClosed	-
+c:objc(cs)CLLocationManager(cm)deferredLocationUpdatesAvailable	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(cs)CLLocationManager(cm)headingAvailable	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLLocationManager(cm)isMonitoringAvailableForClass:	declared	source:full/corelocation/CoreLocation.swift#isMonitoringAvailable	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLLocationManager(cm)isRangingAvailable	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(cs)CLLocationManager(cm)locationServicesEnabled	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLLocationManager(cm)significantLocationChangeMonitoringAvailable	declared	source:full/corelocation/CoreLocation.swift#significantLocationChangeMonitoringAvailable	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLLocationManager(im)allowDeferredLocationUpdatesUntilTraveled:timeout:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(cs)CLLocationManager(im)disallowDeferredLocationUpdates	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(cs)CLLocationManager(im)dismissHeadingCalibrationDisplay	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLLocationManager(im)requestAlwaysAuthorization	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testAuthorizationFailClosed	-
+c:objc(cs)CLLocationManager(im)requestLocation	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testAuthorizationFailClosed	-
+c:objc(cs)CLLocationManager(im)requestStateForRegion:	declared	source:full/corelocation/CoreLocation.swift#requestState	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLLocationManager(im)requestTemporaryFullAccuracyAuthorizationWithPurposeKey:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testTemporaryFullAccuracyAndLocationPushesFailClosed	-
+c:objc(cs)CLLocationManager(im)requestTemporaryFullAccuracyAuthorizationWithPurposeKey:completion:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testTemporaryFullAccuracyAndLocationPushesFailClosed	-
+c:objc(cs)CLLocationManager(im)requestWhenInUseAuthorization	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testAuthorizationFailClosed	-
+c:objc(cs)CLLocationManager(im)startMonitoringForRegion:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLLocationManager(im)startMonitoringLocationPushesWithCompletion:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testTemporaryFullAccuracyAndLocationPushesFailClosed	-
+c:objc(cs)CLLocationManager(im)startMonitoringSignificantLocationChanges	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLLocationManager(im)startMonitoringVisits	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(cs)CLLocationManager(im)startRangingBeaconsInRegion:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(cs)CLLocationManager(im)startRangingBeaconsSatisfyingConstraint:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(cs)CLLocationManager(im)startUpdatingHeading	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLLocationManager(im)startUpdatingLocation	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLLocationManager(im)stopMonitoringForRegion:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLLocationManager(im)stopMonitoringLocationPushes	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testTemporaryFullAccuracyAndLocationPushesFailClosed	-
+c:objc(cs)CLLocationManager(im)stopMonitoringSignificantLocationChanges	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLLocationManager(im)stopMonitoringVisits	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(cs)CLLocationManager(im)stopRangingBeaconsInRegion:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(cs)CLLocationManager(im)stopRangingBeaconsSatisfyingConstraint:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(cs)CLLocationManager(im)stopUpdatingHeading	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLLocationManager(im)stopUpdatingLocation	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLLocationManager(py)accuracyAuthorization	declared	source:full/corelocation/CoreLocation.swift#accuracyAuthorization	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLLocationManager(py)activityType	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLLocationManager(py)allowsBackgroundLocationUpdates	declared	source:full/corelocation/CoreLocation.swift#allowsBackgroundLocationUpdates	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLLocationManager(py)authorizationStatus	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testAuthorizationFailClosed	-
+c:objc(cs)CLLocationManager(py)authorizedForWidgetUpdates	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(cs)CLLocationManager(py)delegate	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLLocationManager(py)desiredAccuracy	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLLocationManager(py)distanceFilter	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLLocationManager(py)heading	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLLocationManager(py)headingFilter	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLLocationManager(py)headingOrientation	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLLocationManager(py)location	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLLocationManager(py)maximumRegionMonitoringDistance	declared	source:full/corelocation/CoreLocation.swift#maximumRegionMonitoringDistance	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLLocationManager(py)monitoredRegions	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(cs)CLLocationManager(py)pausesLocationUpdatesAutomatically	declared	source:full/corelocation/CoreLocation.swift#pausesLocationUpdatesAutomatically	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLLocationManager(py)rangedBeaconConstraints	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(cs)CLLocationManager(py)rangedRegions	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(cs)CLLocationManager(py)showsBackgroundLocationIndicator	declared	source:full/corelocation/CoreLocation.swift#showsBackgroundLocationIndicator	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLPlacemark	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(cs)CLPlacemark(im)initWithPlacemark:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(cs)CLPlacemark(py)ISOcountryCode	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(cs)CLPlacemark(py)addressDictionary	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(cs)CLPlacemark(py)administrativeArea	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(cs)CLPlacemark(py)areasOfInterest	declared	source:full/corelocation/CoreLocation.swift#areasOfInterest	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLPlacemark(py)country	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(cs)CLPlacemark(py)inlandWater	declared	source:full/corelocation/CoreLocation.swift#inlandWater	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLPlacemark(py)locality	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(cs)CLPlacemark(py)location	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(cs)CLPlacemark(py)name	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(cs)CLPlacemark(py)ocean	declared	source:full/corelocation/CoreLocation.swift#ocean	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLPlacemark(py)postalAddress	deferred		CNPostalAddress is owned by Contacts; the isolated host may import Foundation only and must not ship a framework-local lookalike.
+c:objc(cs)CLPlacemark(py)postalCode	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(cs)CLPlacemark(py)region	declared	source:full/corelocation/CoreLocation.swift#region	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLPlacemark(py)subAdministrativeArea	declared	source:full/corelocation/CoreLocation.swift#subAdministrativeArea	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLPlacemark(py)subLocality	declared	source:full/corelocation/CoreLocation.swift#subLocality	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLPlacemark(py)subThoroughfare	declared	source:full/corelocation/CoreLocation.swift#subThoroughfare	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLPlacemark(py)thoroughfare	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(cs)CLPlacemark(py)timeZone	declared	source:full/corelocation/CoreLocation.swift#timeZone	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(cs)CLRegion	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testWGS84DistanceAndCircularRegion	-
+c:objc(cs)CLRegion(py)identifier	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testWGS84DistanceAndCircularRegion	-
+c:objc(cs)CLRegion(py)notifyOnEntry	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testWGS84DistanceAndCircularRegion	-
+c:objc(cs)CLRegion(py)notifyOnExit	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testWGS84DistanceAndCircularRegion	-
+c:objc(cs)CLVisit	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLVisit(py)arrivalDate	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLVisit(py)coordinate	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLVisit(py)departureDate	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(cs)CLVisit(py)horizontalAccuracy	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHeadingVisitAndManagerDefaults	-
+c:objc(pl)CLLocationManagerDelegate	declared	source:full/corelocation/CoreLocation.swift#CLLocationManagerDelegate	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:didChangeAuthorizationStatus:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testAuthorizationFailClosed	-
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:didDetermineState:forRegion:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:didEnterRegion:	declared	source:full/corelocation/CoreLocation.swift#locationManager	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:didExitRegion:	declared	source:full/corelocation/CoreLocation.swift#locationManager	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:didFailRangingBeaconsForConstraint:error:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:didFailWithError:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testAuthorizationFailClosed	-
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:didFinishDeferredUpdatesWithError:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:didRangeBeacons:inRegion:	declared	source:full/corelocation/CoreLocation.swift#locationManager	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:didRangeBeacons:satisfyingConstraint:	declared	source:full/corelocation/CoreLocation.swift#locationManager	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:didStartMonitoringForRegion:	declared	source:full/corelocation/CoreLocation.swift#locationManager	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:didUpdateHeading:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:didUpdateLocations:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:didVisit:	declared	source:full/corelocation/CoreLocation.swift#locationManager	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:monitoringDidFailForRegion:withError:	declared	source:full/corelocation/CoreLocation.swift#locationManager	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(pl)CLLocationManagerDelegate(im)locationManager:rangingBeaconsDidFailForRegion:withError:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testRangingVisitsAndDeferredFailClosed	-
+c:objc(pl)CLLocationManagerDelegate(im)locationManagerDidChangeAuthorization:	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testHostInjectedLocationHeadingRegion	-
+c:objc(pl)CLLocationManagerDelegate(im)locationManagerDidPauseLocationUpdates:	declared	source:full/corelocation/CoreLocation.swift#locationManagerDidPauseLocationUpdates	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(pl)CLLocationManagerDelegate(im)locationManagerDidResumeLocationUpdates:	declared	source:full/corelocation/CoreLocation.swift#locationManagerDidResumeLocationUpdates	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(pl)CLLocationManagerDelegate(im)locationManagerShouldDisplayHeadingCalibration:	declared	source:full/corelocation/CoreLocation.swift#locationManagerShouldDisplayHeadingCalibration	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(pl)CLLocationPushServiceExtension	declared	source:full/corelocation/CoreLocation.swift#CLLocationPushServiceExtension	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(pl)CLLocationPushServiceExtension(im)didReceiveLocationPushPayload:completion:	declared	source:full/corelocation/CoreLocation.swift#didReceiveLocationPushPayload	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(pl)CLLocationPushServiceExtension(im)serviceExtensionWillTerminate	declared	source:full/corelocation/CoreLocation.swift#serviceExtensionWillTerminate	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CLBeacon	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CLHeading	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CLPlacemark	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CLRegion	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CLVisit	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testPlacemarkCopyAndAddressDictionary	-
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CLError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@CLLocationPushServiceError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CLError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CLLocationPushServiceError	declared	source:full/corelocation/CoreLocation.swift#errorUserInfo	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CLError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CLLocationPushServiceError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CLError	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@CLLocationPushServiceError	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CLError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@CLLocationPushServiceError	declared	source:full/corelocation/CoreLocation.swift#errorUserInfo	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CLError	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@CLLocationPushServiceError	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CLError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@CLLocationPushServiceError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLError	declared	source:full/corelocation/CoreLocation.swift#hash	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLLocationPushServiceError	declared	source:full/corelocation/CoreLocation.swift#hash	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CLError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@CLLocationPushServiceError	declared	source:full/corelocation/CoreLocation.swift#userInfo	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CLError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@CLLocationPushServiceError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CLError	declared	source:full/corelocation/CoreLocation.swift#hashValue	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@CLLocationPushServiceError	declared	source:full/corelocation/CoreLocation.swift#hashValue	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CLError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@CLLocationPushServiceError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+s:12CoreLocation11CLConditionP	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation16CLLocationUpdateV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV10stationarySbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV11liveUpdatesyAC0F0VAC17LiveConfigurationOFZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV12isStationarySbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV15accuracyLimitedSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV17LiveConfigurationO	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV17LiveConfigurationO15otherNavigationyA2EmF	declared	source:full/corelocation/CoreLocation.swift#otherNavigation	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation16CLLocationUpdateV17LiveConfigurationO20automotiveNavigationyA2EmF	declared	source:full/corelocation/CoreLocation.swift#automotiveNavigation	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation16CLLocationUpdateV17LiveConfigurationO2eeoiySbAE_AEtFZ	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:12CoreLocation16CLLocationUpdateV17LiveConfigurationO4hash4intoys6HasherVz_tF	declared	source:full/corelocation/CoreLocation.swift#hash	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation16CLLocationUpdateV17LiveConfigurationO7defaultyA2EmF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+s:12CoreLocation16CLLocationUpdateV17LiveConfigurationO7fitnessyA2EmF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+s:12CoreLocation16CLLocationUpdateV17LiveConfigurationO8airborneyA2EmF	declared	source:full/corelocation/CoreLocation.swift#airborne	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation16CLLocationUpdateV17LiveConfigurationO9hashValueSivp	declared	source:full/corelocation/CoreLocation.swift#hashValue	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation16CLLocationUpdateV19authorizationDeniedSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV19insufficientlyInUseSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV19locationUnavailableSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV22serviceSessionRequiredSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV23authorizationRestrictedSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV27authorizationDeniedGloballySbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV30authorizationRequestInProgressSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV7UpdatesV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV7UpdatesV13AsyncIteratora	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV7UpdatesV17makeAsyncIteratorAE0H0VyF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV7UpdatesV7Elementa	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV7UpdatesV8IteratorV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV7UpdatesV8IteratorV4nextACSgyYaKF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV7UpdatesV8IteratorV7Elementa	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLLocationUpdateV8locationSo0C0CSgvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:12CoreLocation16CLServiceSessionC	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC10DiagnosticV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC10DiagnosticV07serviceD8RequiredSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC10DiagnosticV18fullAccuracyDeniedSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC10DiagnosticV19authorizationDeniedSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC10DiagnosticV19insufficientlyInUseSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC10DiagnosticV23authorizationRestrictedSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC10DiagnosticV25alwaysAuthorizationDeniedSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC10DiagnosticV27authorizationDeniedGloballySbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC10DiagnosticV30authorizationRequestInProgressSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC10invalidateyyF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC11DiagnosticsC	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC11DiagnosticsC13AsyncIteratora	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC11DiagnosticsC17makeAsyncIteratorAE0H0VyF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC11DiagnosticsC7Elementa	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC11DiagnosticsC8IteratorV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC11DiagnosticsC8IteratorV4nextAC10DiagnosticVSgyYaKF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC11DiagnosticsC8IteratorV7Elementa	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC11diagnosticsAC11DiagnosticsCvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC13authorization22fullAccuracyPurposeKeyA2C24AuthorizationRequirementO_SStcfc	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC13authorizationA2C24AuthorizationRequirementO_tcfc	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC24AuthorizationRequirementO	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:12CoreLocation16CLServiceSessionC24AuthorizationRequirementO2eeoiySbAE_AEtFZ	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:12CoreLocation16CLServiceSessionC24AuthorizationRequirementO4hash4intoys6HasherVz_tF	declared	source:full/corelocation/CoreLocation.swift#hash	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation16CLServiceSessionC24AuthorizationRequirementO4noneyA2EmF	declared	source:full/corelocation/CoreLocationModern.swift#none	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation16CLServiceSessionC24AuthorizationRequirementO6alwaysyA2EmF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+s:12CoreLocation16CLServiceSessionC24AuthorizationRequirementO9hashValueSivp	declared	source:full/corelocation/CoreLocation.swift#hashValue	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation16CLServiceSessionC24AuthorizationRequirementO9whenInUseyA2EmF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testEnumRawValues	-
+s:12CoreLocation27CLBackgroundActivitySessionC	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC10DiagnosticV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC10DiagnosticV07serviceE8RequiredSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC10DiagnosticV19authorizationDeniedSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC10DiagnosticV19insufficientlyInUseSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC10DiagnosticV23authorizationRestrictedSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC10DiagnosticV27authorizationDeniedGloballySbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC10DiagnosticV30authorizationRequestInProgressSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC10invalidateyyF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC13AsyncIteratora	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC17makeAsyncIteratorAE0I0VyF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC7Elementa	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC8IteratorV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC8IteratorV4nextAC10DiagnosticVSgyYaKF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC8IteratorV7Elementa	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionC11diagnosticsAC11DiagnosticsCvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation27CLBackgroundActivitySessionCACycfc	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:12CoreLocation9CLMonitorC	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC11identifiersSaySSGvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC15unownedExecutorScevp	not-applicable		Swift.Actor isolation witness; CoreLocation does not redeclare this protocol member.
+s:12CoreLocation9CLMonitorC23BeaconIdentityConditionV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC23BeaconIdentityConditionV4fromAEs7Decoder_p_tKcfc	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC23BeaconIdentityConditionV4uuid10Foundation4UUIDVvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC23BeaconIdentityConditionV4uuid5major5minorAE10Foundation4UUIDV_s6UInt16VAMtcfc	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC23BeaconIdentityConditionV4uuid5majorAE10Foundation4UUIDV_s6UInt16Vtcfc	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC23BeaconIdentityConditionV4uuidAE10Foundation4UUIDV_tcfc	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC23BeaconIdentityConditionV5majors6UInt16VSgvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC23BeaconIdentityConditionV5minors6UInt16VSgvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC23BeaconIdentityConditionV6encode2toys7Encoder_p_tKF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC27CircularGeographicConditionV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC27CircularGeographicConditionV4fromAEs7Decoder_p_tKcfc	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC27CircularGeographicConditionV6center6radiusAESo22CLLocationCoordinate2DV_Sdtcfc	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC27CircularGeographicConditionV6centerSo22CLLocationCoordinate2DVvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC27CircularGeographicConditionV6encode2toys7Encoder_p_tKF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC27CircularGeographicConditionV6radiusSdvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorConditionCodableRoundTrip	-
+s:12CoreLocation9CLMonitorC3add_10identifier8assumingyAA11CLCondition_p_SSSo17CLMonitoringStateVtF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC3add_10identifieryAA11CLCondition_p_SStF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC5EventV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC5EventV10identifierSSvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC5EventV10refinementAA11CLCondition_pSgvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC5EventV15accuracyLimitedSbvp	declared	source:full/corelocation/CoreLocationModern.swift#accuracyLimited	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation9CLMonitorC5EventV19authorizationDeniedSbvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC5EventV19insufficientlyInUseSbvp	declared	source:full/corelocation/CoreLocationModern.swift#insufficientlyInUse	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation9CLMonitorC5EventV20conditionUnsupportedSbvp	declared	source:full/corelocation/CoreLocationModern.swift#conditionUnsupported	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation9CLMonitorC5EventV22conditionLimitExceededSbvp	declared	source:full/corelocation/CoreLocationModern.swift#conditionLimitExceeded	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation9CLMonitorC5EventV22persistenceUnavailableSbvp	declared	source:full/corelocation/CoreLocationModern.swift#persistenceUnavailable	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation9CLMonitorC5EventV22serviceSessionRequiredSbvp	declared	source:full/corelocation/CoreLocationModern.swift#serviceSessionRequired	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation9CLMonitorC5EventV23authorizationRestrictedSbvp	declared	source:full/corelocation/CoreLocationModern.swift#authorizationRestricted	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation9CLMonitorC5EventV27authorizationDeniedGloballySbvp	declared	source:full/corelocation/CoreLocationModern.swift#authorizationDeniedGlobally	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation9CLMonitorC5EventV30authorizationRequestInProgressSbvp	declared	source:full/corelocation/CoreLocationModern.swift#authorizationRequestInProgress	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:12CoreLocation9CLMonitorC5EventV4date10Foundation4DateVvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC5EventV5Statea	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC5EventV5stateSo17CLMonitoringStateVvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC6EventsV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC6EventsV13AsyncIteratora	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC6EventsV17makeAsyncIteratorAE0G0VyF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC6EventsV7Elementa	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC6EventsV8IteratorV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC6EventsV8IteratorV4nextAC5EventVSgyYaKF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC6EventsV8IteratorV7Elementa	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC6RecordV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC6RecordV9conditionAA11CLCondition_pvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC6RecordV9lastEventAC0F0Vvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC6eventsAC6EventsVvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC6record3forAC6RecordVSgSS_tF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorC6removeyySSF	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:12CoreLocation9CLMonitorCyACSSYacfc	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:SC26CLLocationPushServiceErrorLeV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+s:SC26CLLocationPushServiceErrorLeV07missingB17ServerEnvironmentSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+s:SC26CLLocationPushServiceErrorLeV07missingB9ExtensionSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+s:SC26CLLocationPushServiceErrorLeV11errorDomainSSvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+s:SC26CLLocationPushServiceErrorLeV18missingEntitlementSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+s:SC26CLLocationPushServiceErrorLeV19unsupportedPlatformSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+s:SC26CLLocationPushServiceErrorLeV7unknownSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
+s:SC7CLErrorLeV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV11errorDomainSSvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV12CoreLocationE15alternateRegionSo8CLRegionCSgvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV14deferredFailedSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV14headingFailureSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV14promptDeclinedSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV14rangingFailureSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV15geocodeCanceledSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV15locationUnknownSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV16deferredCanceledSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV18rangingUnavailableSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV20geocodeFoundNoResultSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV22deferredAccuracyTooLowSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV22regionMonitoringDeniedSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV23historicalLocationErrorSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV23regionMonitoringFailureSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV24deferredDistanceFilteredSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV25geocodeFoundPartialResultSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV27deferredNotUpdatingLocationSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV28regionMonitoringSetupDelayedSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV31regionMonitoringResponseDelayedSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV6deniedSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SC7CLErrorLeV7networkSoAAVvpZ	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLAccuracyAuthorization	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLActivityType	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLAuthorizationStatus	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLDeviceOrientation	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLError	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLLocationPushServiceError	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLProximity	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLRegionState	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV17LiveConfigurationO	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC24AuthorizationRequirementO	not-applicable		Swift Equatable/pattern-match operator witness; the operator spelling is not a source identifier the coverage gate can anchor.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLAccuracyAuthorization	declared	source:full/corelocation/CoreLocation.swift#hashValue	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLActivityType	declared	source:full/corelocation/CoreLocation.swift#hashValue	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLAuthorizationStatus	declared	source:full/corelocation/CoreLocation.swift#hashValue	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLDeviceOrientation	declared	source:full/corelocation/CoreLocation.swift#hashValue	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLError	declared	source:full/corelocation/CoreLocation.swift#hashValue	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLLocationPushServiceError	declared	source:full/corelocation/CoreLocation.swift#hashValue	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLProximity	declared	source:full/corelocation/CoreLocation.swift#hashValue	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLRegionState	declared	source:full/corelocation/CoreLocation.swift#hashValue	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLAccuracyAuthorization	declared	source:full/corelocation/CoreLocation.swift#hash	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLActivityType	declared	source:full/corelocation/CoreLocation.swift#hash	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLAuthorizationStatus	declared	source:full/corelocation/CoreLocation.swift#hash	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLDeviceOrientation	declared	source:full/corelocation/CoreLocation.swift#hash	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLError	declared	source:full/corelocation/CoreLocation.swift#hash	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLLocationPushServiceError	declared	source:full/corelocation/CoreLocation.swift#hash	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLProximity	declared	source:full/corelocation/CoreLocation.swift#hash	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLRegionState	declared	source:full/corelocation/CoreLocation.swift#hash	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:ScA12_ConcurrencyE14assertIsolated_4file4lineySSyXK_s12StaticStringVSutF::SYNTHESIZED::s:12CoreLocation9CLMonitorC	not-applicable		Swift.Actor isolation witness; CoreLocation does not redeclare this protocol member.
+s:ScA12_ConcurrencyE14assumeIsolated_4file4lineqd__qd__xYiKXE_s12StaticStringVSutKs8SendableRd__lF::SYNTHESIZED::s:12CoreLocation9CLMonitorC	not-applicable		Swift.Actor isolation witness; CoreLocation does not redeclare this protocol member.
+s:ScA12_ConcurrencyE20preconditionIsolated_4file4lineySSyXK_s12StaticStringVSutF::SYNTHESIZED::s:12CoreLocation9CLMonitorC	not-applicable		Swift.Actor isolation witness; CoreLocation does not redeclare this protocol member.
+s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV8IteratorV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationUpdateLiveUpdatesFailClosed	-
+s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC8IteratorV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testServiceSessionDiagnosticsFailClosed	-
+s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC8IteratorV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBackgroundActivitySessionFailClosed	-
+s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV8IteratorV	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testMonitorStoresConditionWithoutHardwareEvents	-
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV8IteratorV	declared	source:full/corelocation/CoreLocationModern.swift#next	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC8IteratorV	declared	source:full/corelocation/CoreLocationModern.swift#next	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC8IteratorV	declared	source:full/corelocation/CoreLocationModern.swift#next	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV8IteratorV	declared	source:full/corelocation/CoreLocationModern.swift#next	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:12CoreLocation16CLLocationUpdateV7UpdatesV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:12CoreLocation16CLServiceSessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:12CoreLocation27CLBackgroundActivitySessionC11DiagnosticsC	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:12CoreLocation9CLMonitorC6EventsV	not-applicable		Swift.AsyncSequence protocol extension; CoreLocation does not redeclare this witness.
+s:So11CLProximityV8rawValueABSgSi_tcfc	declared	source:full/corelocation/CoreLocation.swift#init	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:So13CLRegionStateV8rawValueABSgSi_tcfc	declared	source:full/corelocation/CoreLocation.swift#init	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:So14CLActivityTypeV8rawValueABSgSi_tcfc	declared	source:full/corelocation/CoreLocation.swift#init	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:So19CLDeviceOrientationV8rawValueABSgs5Int32V_tcfc	declared	source:full/corelocation/CoreLocation.swift#init	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:So21CLAuthorizationStatusV8rawValueABSgs5Int32V_tcfc	declared	source:full/corelocation/CoreLocation.swift#init	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:So23CLAccuracyAuthorizationV8rawValueABSgSi_tcfc	declared	source:full/corelocation/CoreLocation.swift#init	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:So26CLBeaconIdentityConstraintC12CoreLocationE5majors6UInt16VSgvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+s:So26CLBeaconIdentityConstraintC12CoreLocationE5minors6UInt16VSgvp	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testBeaconIdentityAndPeripheralData	-
+s:So26CLLocationPushServiceErrorV8rawValueABSgSi_tcfc	declared	source:full/corelocation/CoreLocation.swift#init	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:So7CLErrorV8rawValueABSgSi_tcfc	declared	source:full/corelocation/CoreLocation.swift#init	Source-compatible declaration; focused runtime evidence is not claimed for this identifier.
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CLError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testCLErrorCodesAndBridging	-
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@CLLocationPushServiceError	implemented	test:full/corelocation/tests/agent/CoreLocationTests.swift#testLocationPushServiceError	-
