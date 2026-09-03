@@ -1,0 +1,9 @@
+lib ctor
+exe ctor
+name=libgreet
+counter-before=10
+greet(5) from libgreet counter=15
+counter-after=15
+greet(1) from libgreet counter=101
+exe_callback(3)
+via-callback=7

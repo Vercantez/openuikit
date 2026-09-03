@@ -44,6 +44,7 @@ class PackMachoTests(unittest.TestCase):
         text = PACK.read_text(encoding="utf-8")
         for token in (
             "CACHE_UNALIGN = 0x720",
+            "CACHE_SPARSE_DELTA = 0x22256720",
             "def pack_bytes",
             "def oversize_bytes",
             "dyld-shared-cache",
@@ -128,6 +129,48 @@ class PackMachoTests(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         self.assertIn("test_copy_map ok", r.stdout)
         self.assertIn("gap +0x4008 PROT_NONE", r.stdout)
+        self.assertIn("DATA_CONST +0x22256720", r.stdout)
+        self.assertIn("no union VMA", r.stdout)
+
+    def test_committed_sparse_dylib_is_cache_wide(self) -> None:
+        pm = _pack_mod()
+        path = BIN / "libcache_sparse.dylib"
+        self.assertTrue(path.is_file(), path)
+        img = pm.Image(path.read_bytes())
+        text = next(s for s in img.segs if s.name == "__TEXT")
+        data_c = next(s for s in img.segs if s.name == "__DATA_CONST")
+        data_s = next(s for s in img.segs if s.name == "__DATA")
+        self.assertTrue(pm.aligned(text.vmaddr))
+        self.assertFalse(pm.aligned(data_c.vmaddr), hex(data_c.vmaddr))
+        self.assertFalse(pm.aligned(data_c.fileoff), data_c.fileoff)
+        self.assertEqual(data_c.vmaddr - text.vmaddr, pm.CACHE_SPARSE_DELTA)
+        self.assertEqual(
+            data_c.vmaddr & ~(pm.HOST_PAGE - 1),
+            data_s.vmaddr & ~(pm.HOST_PAGE - 1),
+        )
+        sparse = pm.pack_bytes(
+            (BIN / "libcache_layout.dylib").read_bytes(),
+            install_name="@rpath/libcache_sparse.dylib",
+            sparse=True,
+        )
+        self.assertEqual(path.read_bytes(), sparse)
+
+    def test_stubs_adrp_targets_sparse_got_page(self) -> None:
+        """Apple cache extracts already have matching ADRP; the rewriter must too."""
+        pm = _pack_mod()
+        sparse = (BIN / "libcache_sparse.dylib").read_bytes()
+        img = pm.Image(sparse)
+        text = next(s for s in img.segs if s.name == "__TEXT")
+        data_c = next(s for s in img.segs if s.name == "__DATA_CONST")
+        stubs = next(s for s in text.sects if s["name"] == "__stubs")
+        got_page = data_c.vmaddr & ~(pm.HOST_PAGE - 1)
+        self.assertEqual(got_page, pm.CACHE_SPARSE_DELTA & ~(pm.HOST_PAGE - 1))
+        for off in range(0, stubs["size"], 12):
+            pc = stubs["addr"] + off
+            insn = int.from_bytes(sparse[stubs["offset"] + off:][:4], "little")
+            adrp = pm.decode_adrp(insn, pc)
+            self.assertIsNotNone(adrp, hex(insn))
+            self.assertEqual(adrp[1], got_page, f"stub ADRP at {pc:#x} -> {adrp[1]:#x}")
 
     def test_committed_rename_roundtrip(self) -> None:
         pm = _pack_mod()
@@ -138,6 +181,16 @@ class PackMachoTests(unittest.TestCase):
         )
         self.assertGreaterEqual(n, 1)
         self.assertEqual(bytes(layout), packed_exe)
+
+    def test_committed_sparse_rename_roundtrip(self) -> None:
+        pm = _pack_mod()
+        layout = bytearray((BIN / "cache_layout").read_bytes())
+        sparse_exe = (BIN / "cache_layout_sparse").read_bytes()
+        n = pm.set_lc_string(
+            layout, "@rpath/libcache_layout.dylib", "@rpath/libcache_sparse.dylib"
+        )
+        self.assertGreaterEqual(n, 1)
+        self.assertEqual(bytes(layout), sparse_exe)
 
 
 if __name__ == "__main__":
