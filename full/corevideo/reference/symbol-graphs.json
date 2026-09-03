@@ -1,0 +1,25 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload_then-index-v1",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CoreVideo.symbols.json",
+      "relationshipCount": 732,
+      "sha256": "1d966edb7e0b985b71dbd586ba1349dde1bf7ea79a9db5efbf108441b3214903",
+      "symbolCount": 979
+    },
+    {
+      "path": "reference/symbol-graphs/CoreVideo@CoreFoundation.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "3ff5f077358ed5fed8e546f1fac7af83cbe427e9358098a1b8245bd52535be7a",
+      "symbolCount": 1
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CoreVideo",
+  "relationshipCount": 733,
+  "schema": 1,
+  "symbolCount": 980,
+  "target": "arm64-apple-ios26.0"
+}
