@@ -145,7 +145,8 @@ phase2_ud_guest_stage_fe() {
         "$fe_out/collections/_RopeModule.swiftmodule" \
         "$ud_w/fe/collections/_RopeModule.swiftmodule" \
         _RopeModule.swiftmodule ROPEMODULE 0 || return 1
-    # link_ud_guest.sh also looks at $W/fe/_RopeModule.o (optional duplicate).
+    # Fallback path for link_ud_guest.sh when collections/ is absent.
+    # The linker takes collections/_RopeModule.o XOR this file, never both.
     phase2_ud_guest_stage_file \
         "$fe_out/collections/_RopeModule.o" \
         "$ud_w/fe/_RopeModule.o" \
@@ -580,25 +581,29 @@ phase2_ud_guest_ensure_cftest() {
 phase2_ud_guest_link() {
     local repo=$1 ud_w=$2 sys=$3 out=$4
     local linker=$repo/$PHASE2_UD_GUEST_LINKER
-    local log=$ud_w/bin/ud_guest.link.log
+    local log=$ud_w/link_ud_guest.log
     local st
     if [ ! -f "$linker" ]; then
         phase2_ud_guest_cannot UD_GUEST ud_guest "missing committed linker $linker"
         return 1
     fi
-    mkdir -p "$(dirname "$out")"
+    mkdir -p "$(dirname "$out")" "$ud_w"
     set +e
     W="$ud_w" SDK="$sys" OUT="$out" LLD_BIN=/usr/lib/llvm-18/bin \
         bash "$linker" >"$log" 2>&1
     st=$?
     set -e
     if [ "$st" -ne 0 ] || [ ! -f "$out" ]; then
+        # Spill to the work-tree root (same rule as the swiftc logs). Do not
+        # flatten ld64 text onto the CANNOT line — the inputs listing alone
+        # buries the diagnostic.
         phase2_ud_guest_cannot UD_GUEST ud_guest \
-            "link_ud_guest.sh exit $st $(phase2_flatten < "$log")"
+            "link_ud_guest.sh exit $st log=$log"
         return 1
     fi
     if ! phase2_is_x86_macho "$out"; then
-        phase2_ud_guest_cannot UD_GUEST ud_guest "linked file is not X86_64 Mach-O: $out"
+        phase2_ud_guest_cannot UD_GUEST ud_guest \
+            "linked file is not X86_64 Mach-O: $out log=$log"
         return 1
     fi
 }

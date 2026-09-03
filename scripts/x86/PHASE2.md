@@ -240,7 +240,12 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    (runner: `fe/runner.swiftc.log`); the CANNOT line names `log=` that path
    instead of inlining swiftc text. Link is **only**
    `foundation-macho/scripts/link_ud_guest.sh` (macos13 `TRIPLE`, tbd-first
-   `-L` order). `fm_unimplemented.o` is compiled once into essentials/ with
+   `-L` order, clang-18, `-nostdlib`). stdout+stderr land in
+   `scratch/ud-guest-x86_64/link_ud_guest.log`; a failed link is
+   `CANNOT_UD_GUEST_UD_GUEST file=ud_guest` naming `log=` that path (same
+   spill as the swiftc logs — do not flatten ld64 onto the CANNOT line).
+   `collections/_RopeModule.o` and `fe/_RopeModule.o` are the same object;
+   the linker takes one, never both. `fm_unimplemented.o` is compiled once into essentials/ with
    `build_full.sh`'s clang argv. `libswiftcompat.dylib` comes from an existing
    x86 Mach-O or `swiftcore-macho/scripts/build_compat.sh`. `libCFTest.dylib`
    comes from `foundation-macho/scripts/build_cfobjc.sh` (objects under
