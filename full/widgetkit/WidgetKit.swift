@@ -7,11 +7,20 @@
 // pretends that an Apple widget daemon accepted a request.
 //===----------------------------------------------------------------------===//
 
-@_exported import AppIntents
-import CoreGraphics
 @_exported import Foundation
+
+#if canImport(CoreGraphics)
+import CoreGraphics
+#endif
+#if canImport(AppIntents)
+@_exported import AppIntents
+#endif
+#if canImport(Intents)
 @preconcurrency import Intents
+#endif
+#if canImport(SwiftUI)
 @_exported import SwiftUI
+#endif
 
 // MARK: - Timeline values
 
@@ -185,6 +194,24 @@ public protocol AppIntentTimelineProvider {
 
 public extension AppIntentTimelineProvider {
     func recommendations() -> [AppIntentRecommendation<Intent>] { [] }
+
+    func relevance() async -> WidgetRelevance<Intent> {
+        WidgetRelevance()
+    }
+}
+
+public extension TimelineProvider {
+    func relevance() async -> WidgetRelevance<Void> {
+        WidgetRelevance()
+    }
+}
+
+public extension IntentTimelineProvider {
+    func recommendations() -> [IntentRecommendation<Intent>] { [] }
+
+    func relevance() async -> WidgetRelevance<Intent> {
+        WidgetRelevance()
+    }
 }
 
 public struct AppIntentRecommendation<Intent: WidgetConfigurationIntent>:
@@ -210,6 +237,7 @@ public struct AppIntentRecommendation<Intent: WidgetConfigurationIntent>:
 
 // MARK: - Executable provider runtime
 
+@_spi(OpenUIKitHost)
 public enum WidgetTimelineRuntimeError: Error, Equatable, Sendable {
     case emptyTimeline
     case entriesOutOfOrder
@@ -217,6 +245,7 @@ public enum WidgetTimelineRuntimeError: Error, Equatable, Sendable {
     case reloadDateBeforeLastEntry(Date)
 }
 
+@_spi(OpenUIKitHost)
 public struct WidgetTimelineEvaluation<Entry: TimelineEntry>: @unchecked Sendable {
     public let timeline: Timeline<Entry>
     public let nextReload: Date?
@@ -230,6 +259,7 @@ public struct WidgetTimelineEvaluation<Entry: TimelineEntry>: @unchecked Sendabl
 /// Executes providers without an Apple widget daemon.  The runtime validates
 /// ordering and computes the next host wake-up rather than silently accepting
 /// malformed timelines that WidgetKit itself would reject or reschedule.
+@_spi(OpenUIKitHost)
 public actor WidgetTimelineRuntime {
     public static let shared = WidgetTimelineRuntime()
 
@@ -317,6 +347,11 @@ public struct WidgetInfo: Hashable, Identifiable, @unchecked Sendable,
         self.configuration = configuration
     }
 
+    public func widgetConfigurationIntent<Intent>(of intentType: Intent.Type) -> Intent? {
+        _ = intentType
+        return nil
+    }
+
     public static func == (lhs: WidgetInfo, rhs: WidgetInfo) -> Bool {
         lhs.kind == rhs.kind
             && lhs.family == rhs.family
@@ -336,6 +371,7 @@ public struct WidgetInfo: Hashable, Identifiable, @unchecked Sendable,
     }
 }
 
+@_spi(OpenUIKitHost)
 public struct WidgetReloadRequest: Equatable, Sendable {
     public enum Scope: Equatable, Sendable {
         case kind(String)
@@ -372,6 +408,14 @@ public final class WidgetCenter: @unchecked Sendable {
     }
 
     public func invalidateConfigurationRecommendations() {}
+
+    public func invalidateRelevance(ofKind kind: String) {
+        _ = kind
+    }
+
+    public var currentPushInfo: WidgetPushInfo? {
+        get async { nil }
+    }
 
     public func getCurrentConfigurations(
         _ completion: @escaping @Sendable (Result<[WidgetInfo], any Error>) -> Void
@@ -428,6 +472,7 @@ public final class WidgetCenter: @unchecked Sendable {
 
 // MARK: - Configuration model
 
+@_spi(OpenUIKitHost)
 public struct WidgetConfigurationDescriptor: Equatable, Sendable {
     public var kind: String
     public var displayName: String?
@@ -453,6 +498,7 @@ public struct WidgetConfigurationDescriptor: Equatable, Sendable {
     }
 }
 
+@_spi(OpenUIKitHost)
 public enum WidgetKitPortable {
     public enum PresentationCapability: String, Sendable {
         case hostDriven
@@ -474,19 +520,14 @@ public enum WidgetKitPortable {
     }
 }
 
-#if OPENUIKIT_PORTABLE_SWIFTUI
+#if !canImport(SwiftUI) || OPENUIKIT_PORTABLE_SWIFTUI
 @MainActor
 public protocol WidgetConfiguration {
     associatedtype Body: WidgetConfiguration
     @WidgetConfigurationBuilder var body: Body { get }
 }
 
-extension Never: WidgetConfiguration {
-    public typealias Body = Never
-    public var body: Never {
-        fatalError("Never has no WidgetConfiguration value")
-    }
-}
+extension Never: WidgetConfiguration {}
 
 @MainActor
 @resultBuilder
@@ -675,7 +716,7 @@ public struct _ModifiedWidgetConfiguration<Base>: @unchecked Sendable {
     }
 }
 
-#if OPENUIKIT_PORTABLE_SWIFTUI
+#if !canImport(SwiftUI) || OPENUIKIT_PORTABLE_SWIFTUI
 extension StaticConfiguration: WidgetConfiguration {
     public typealias Body = Never
     public var body: Never { fatalError("Widget configurations are host-driven") }
@@ -729,6 +770,90 @@ public extension WidgetConfiguration {
         var descriptor = _portableWidgetDescriptor(self)
         descriptor.containerBackgroundRemovable = isRemovable
         return _ModifiedWidgetConfiguration(base: self, descriptor: descriptor)
+    }
+
+    func configurationDisplayName(_ key: LocalizedStringKey) -> some WidgetConfiguration {
+        configurationDisplayName(String(describing: key))
+    }
+
+    func configurationDisplayName(_ resource: LocalizedStringResource) -> some WidgetConfiguration {
+        configurationDisplayName(resource.key)
+    }
+
+    func configurationDisplayName<S: StringProtocol>(_ value: S) -> some WidgetConfiguration {
+        configurationDisplayName(String(value))
+    }
+
+    func description(_ key: LocalizedStringKey) -> some WidgetConfiguration {
+        description(String(describing: key))
+    }
+
+    func description(_ resource: LocalizedStringResource) -> some WidgetConfiguration {
+        description(resource.key)
+    }
+
+    func description(_ text: Text) -> some WidgetConfiguration {
+        description(String(describing: text))
+    }
+
+    func promptsForUserConfiguration() -> some WidgetConfiguration {
+        _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func pushHandler(_ pushHandlerType: any WidgetPushHandler.Type) -> some WidgetConfiguration {
+        _ = pushHandlerType
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func associatedKind(_ associatedKind: String?) -> some WidgetConfiguration {
+        _ = associatedKind
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func disfavoredLocations(
+        _ locations: [WidgetLocation],
+        for families: [WidgetFamily]
+    ) -> some WidgetConfiguration {
+        _ = locations
+        _ = families
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func supportedMountingStyles(_ styles: [WidgetMountingStyle]) -> some WidgetConfiguration {
+        _ = styles
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func onBackgroundURLSessionEvents(
+        matching matchingString: String,
+        _ urlSessionEvent: @escaping (String, @escaping () -> Void) -> Void
+    ) -> some WidgetConfiguration {
+        _ = matchingString
+        _ = urlSessionEvent
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func onBackgroundURLSessionEvents(
+        matching matchingBlock: ((String) -> Bool)? = nil,
+        _ urlSessionEvent: @escaping (String, @escaping () -> Void) -> Void
+    ) -> some WidgetConfiguration {
+        _ = matchingBlock
+        _ = urlSessionEvent
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func supplementalActivityFamilies(_ families: [ActivityFamily]) -> some WidgetConfiguration {
+        _ = families
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func backgroundTask<D: Sendable, R: Sendable>(
+        _ task: BackgroundTask<D, R>,
+        action: @escaping (D) async -> R
+    ) -> some WidgetConfiguration {
+        _ = task
+        _ = action
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
     }
 }
 #else
@@ -786,6 +911,90 @@ public extension SwiftUI.WidgetConfiguration {
         descriptor.containerBackgroundRemovable = isRemovable
         return _ModifiedWidgetConfiguration(base: self, descriptor: descriptor)
     }
+
+    func configurationDisplayName(_ key: LocalizedStringKey) -> some SwiftUI.WidgetConfiguration {
+        configurationDisplayName(String(describing: key))
+    }
+
+    func configurationDisplayName(_ resource: LocalizedStringResource) -> some SwiftUI.WidgetConfiguration {
+        configurationDisplayName(String(describing: resource))
+    }
+
+    func configurationDisplayName<S: StringProtocol>(_ value: S) -> some SwiftUI.WidgetConfiguration {
+        configurationDisplayName(String(value))
+    }
+
+    func description(_ key: LocalizedStringKey) -> some SwiftUI.WidgetConfiguration {
+        description(String(describing: key))
+    }
+
+    func description(_ resource: LocalizedStringResource) -> some SwiftUI.WidgetConfiguration {
+        description(String(describing: resource))
+    }
+
+    func description(_ text: Text) -> some SwiftUI.WidgetConfiguration {
+        description(String(describing: text))
+    }
+
+    func promptsForUserConfiguration() -> some SwiftUI.WidgetConfiguration {
+        _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func pushHandler(_ pushHandlerType: any WidgetPushHandler.Type) -> some SwiftUI.WidgetConfiguration {
+        _ = pushHandlerType
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func associatedKind(_ associatedKind: String?) -> some SwiftUI.WidgetConfiguration {
+        _ = associatedKind
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func disfavoredLocations(
+        _ locations: [WidgetLocation],
+        for families: [WidgetFamily]
+    ) -> some SwiftUI.WidgetConfiguration {
+        _ = locations
+        _ = families
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func supportedMountingStyles(_ styles: [WidgetMountingStyle]) -> some SwiftUI.WidgetConfiguration {
+        _ = styles
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func onBackgroundURLSessionEvents(
+        matching matchingString: String,
+        _ urlSessionEvent: @escaping (String, @escaping () -> Void) -> Void
+    ) -> some SwiftUI.WidgetConfiguration {
+        _ = matchingString
+        _ = urlSessionEvent
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func onBackgroundURLSessionEvents(
+        matching matchingBlock: ((String) -> Bool)? = nil,
+        _ urlSessionEvent: @escaping (String, @escaping () -> Void) -> Void
+    ) -> some SwiftUI.WidgetConfiguration {
+        _ = matchingBlock
+        _ = urlSessionEvent
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func supplementalActivityFamilies(_ families: [ActivityFamily]) -> some SwiftUI.WidgetConfiguration {
+        _ = families
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
+
+    func backgroundTask<D: Sendable, R: Sendable>(
+        _ task: BackgroundTask<D, R>,
+        action: @escaping (D) async -> R
+    ) -> some SwiftUI.WidgetConfiguration {
+        _ = task
+        _ = action
+        return _ModifiedWidgetConfiguration(base: self, descriptor: _portableWidgetDescriptor(self))
+    }
 }
 
 public extension SwiftUI.WidgetBundle {
@@ -802,30 +1011,36 @@ private func _portableWidgetDescriptor<T>(_ value: T) -> WidgetConfigurationDesc
 }
 
 @MainActor
-private protocol _PortableConfigurationDescriptorProvider {
+protocol _PortableConfigurationDescriptorProvider {
     var _portableDescriptor: WidgetConfigurationDescriptor { get }
 }
 
+extension ActivityConfiguration: _PortableConfigurationDescriptorProvider {
+    var _portableDescriptor: WidgetConfigurationDescriptor {
+        portableDescriptor
+    }
+}
+
 extension StaticConfiguration: _PortableConfigurationDescriptorProvider {
-    fileprivate var _portableDescriptor: WidgetConfigurationDescriptor {
+    var _portableDescriptor: WidgetConfigurationDescriptor {
         portableDescriptor
     }
 }
 
 extension AppIntentConfiguration: _PortableConfigurationDescriptorProvider {
-    fileprivate var _portableDescriptor: WidgetConfigurationDescriptor {
+    var _portableDescriptor: WidgetConfigurationDescriptor {
         portableDescriptor
     }
 }
 
 extension IntentConfiguration: _PortableConfigurationDescriptorProvider {
-    fileprivate var _portableDescriptor: WidgetConfigurationDescriptor {
+    var _portableDescriptor: WidgetConfigurationDescriptor {
         portableDescriptor
     }
 }
 
 extension _ModifiedWidgetConfiguration: _PortableConfigurationDescriptorProvider {
-    fileprivate var _portableDescriptor: WidgetConfigurationDescriptor {
+    var _portableDescriptor: WidgetConfigurationDescriptor {
         portableDescriptor
     }
 }
@@ -880,6 +1095,45 @@ public extension EnvironmentValues {
     }
 
     var showsWidgetContainerBackground: Bool { true }
+
+    var showsWidgetLabel: Bool {
+        get { false }
+        set { _ = newValue }
+    }
+
+    var levelOfDetail: LevelOfDetail {
+        get { self[_LevelOfDetailEnvironmentKey.self] }
+        set { self[_LevelOfDetailEnvironmentKey.self] = newValue }
+    }
+
+    var activityFamily: ActivityFamily {
+        get { self[_ActivityFamilyEnvironmentKey.self] }
+        set { self[_ActivityFamilyEnvironmentKey.self] = newValue }
+    }
+
+    var isActivityFullscreen: Bool { false }
+
+    var isActivityUpdateReduced: Bool {
+        get { false }
+        set { _ = newValue }
+    }
+
+    var supportedActivityFamilies: Set<ActivityFamily> {
+        get { self[_SupportedActivityFamiliesEnvironmentKey.self] }
+        set { self[_SupportedActivityFamiliesEnvironmentKey.self] = newValue }
+    }
+}
+
+private enum _LevelOfDetailEnvironmentKey: EnvironmentKey {
+    static let defaultValue = LevelOfDetail.default
+}
+
+private enum _ActivityFamilyEnvironmentKey: EnvironmentKey {
+    static let defaultValue = ActivityFamily.small
+}
+
+private enum _SupportedActivityFamiliesEnvironmentKey: EnvironmentKey {
+    static let defaultValue = Set<ActivityFamily>()
 }
 
 public extension View {
@@ -892,9 +1146,96 @@ public extension View {
         _ = accentable
         return self
     }
+
+    func widgetCurvesContent(_ curves: Bool = true) -> some View {
+        _ = curves
+        return self
+    }
+
+    func widgetLabel<Label: View>(@ViewBuilder label: () -> Label) -> some View {
+        _ = label
+        return self
+    }
+
+    func widgetLabel(_ title: Text) -> some View {
+        _ = title
+        return self
+    }
+
+    func widgetLabel(_ titleKey: LocalizedStringKey) -> some View {
+        _ = titleKey
+        return self
+    }
+
+    func widgetLabel<S: StringProtocol>(_ title: S) -> some View {
+        _ = title
+        return self
+    }
+
+    func controlWidgetActionHint(_ hint: Text) -> some View {
+        _ = hint
+        return self
+    }
+
+    func controlWidgetActionHint(_ hintKey: LocalizedStringKey) -> some View {
+        _ = hintKey
+        return self
+    }
+
+    func controlWidgetActionHint(_ hint: LocalizedStringResource) -> some View {
+        _ = hint
+        return self
+    }
+
+    func controlWidgetActionHint<S: StringProtocol>(_ hint: S) -> some View {
+        _ = hint
+        return self
+    }
+
+    func controlWidgetStatus(_ status: Text) -> some View {
+        _ = status
+        return self
+    }
+
+    func controlWidgetStatus(_ statusKey: LocalizedStringKey) -> some View {
+        _ = statusKey
+        return self
+    }
+
+    func controlWidgetStatus(_ status: LocalizedStringResource) -> some View {
+        _ = status
+        return self
+    }
+
+    func controlWidgetStatus<S: StringProtocol>(_ status: S) -> some View {
+        _ = status
+        return self
+    }
+
+    func activityBackgroundTint(_ color: Color?) -> some View {
+        _ = color
+        return self
+    }
+
+    func activitySystemActionForegroundColor(_ color: Color?) -> some View {
+        _ = color
+        return self
+    }
+
+    func dynamicIsland(verticalPlacement: DynamicIslandExpandedRegionVerticalPlacement) -> some View {
+        _ = verticalPlacement
+        return self
+    }
 }
 
-#if OPENUIKIT_PORTABLE_SWIFTUI
+public extension Image {
+    func widgetAccentedRenderingMode(_ renderingMode: WidgetAccentedRenderingMode?) -> some View {
+        _ = renderingMode
+        return self
+    }
+}
+
+#if !canImport(SwiftUI) || OPENUIKIT_PORTABLE_SWIFTUI
 public struct ContainerBackgroundPlacement: Hashable, Sendable {
     private let rawValue: UInt8
     private init(_ rawValue: UInt8) { self.rawValue = rawValue }
