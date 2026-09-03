@@ -477,9 +477,9 @@ printf '%s\n' "$out" | grep -q 'clangxx_darwin_link: cxx_runtime=/root/work/sdk/
   && echo "  OK  cxx_runtime= sysroot libc++.tbd" \
   || { echo "  FAIL missing cxx_runtime tbd"; fail=1; }
 printf '%s\n' "$out" | grep -q 'clangxx_darwin_link: compiler_rt=' \
-  && printf '%s\n' "$out" | grep 'overlay_link: driver argv' | grep -q 'libclang_rt.osx.a' \
-  && echo "  OK  driver argv passes compiler-rt builtins" \
-  || { echo "  FAIL missing compiler_rt / libclang_rt.osx.a on Darwin link"; fail=1; }
+  && printf '%s\n' "$out" | grep 'overlay_link: driver argv' | grep -q 'os_version_check' \
+  && echo "  OK  driver argv passes compiler-rt availability object" \
+  || { echo "  FAIL missing compiler_rt / os_version_check.o on Darwin link"; fail=1; }
 
 echo
 echo "=== cmake : && clang++ && : wrapper is stripped before rewrite ==="

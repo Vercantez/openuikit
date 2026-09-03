@@ -41,6 +41,9 @@ if [ -f "$SDK/usr/include/Darwin.modulemap" ] \
     && echo "  OK  cxx_runtime printed" || { echo "  FAIL missing cxx_runtime"; fail=1; }
   printf '%s\n' "$out" | grep -q 'compiler_rt=' \
     && echo "  OK  compiler_rt printed" || { echo "  FAIL missing compiler_rt"; fail=1; }
+  printf '%s\n' "$out" | grep -q 'os_version_check' \
+    && echo "  OK  availability object on overlay link" \
+    || { echo "  FAIL missing os_version_check.o on overlay link"; fail=1; }
   printf '%s\n' "$out" | grep -q '/usr/lib/llvm-18/lib' \
     && { echo "  FAIL Darwin link still has /usr/lib/llvm-18/lib"; fail=1; } \
     || echo "  OK  no host llvm-18/lib on Darwin links"

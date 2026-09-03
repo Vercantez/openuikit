@@ -112,3 +112,17 @@ STRING_PROCESSING_PIN_COMMIT=91177e6225c63e885872b83d48e254b1270fa15a
 LIBDISPATCH_PIN_COMMIT=2df91f94651f2d924d7506c9d14685929386d779
 STRING_PROCESSING_REPO=https://github.com/swiftlang/swift-experimental-string-processing.git
 LIBDISPATCH_REPO=https://github.com/swiftlang/swift-corelibs-libdispatch.git
+
+# Darwin compiler-rt availability object (arch-parametric). Apple puts this
+# TU in libclang_rt.osx.a; we link os_version_check.${arch}.o into each overlay.
+# SWIFTCORE_COMPILER_RT_OSX, if set, is the concrete path (configure shim).
+swiftcore_compiler_rt_object() {
+    local arch=${1:-${SWIFTCORE_DARWIN_ARCH:?}}
+    if [ -n "${SWIFTCORE_COMPILER_RT_OSX:-}" ]; then
+        printf '%s\n' "$SWIFTCORE_COMPILER_RT_OSX"
+        return 0
+    fi
+    local work=${SWIFTCORE_WORK:-${W:-$HOME/work}}
+    local bdir=${B:-$work/build}
+    printf '%s\n' "$bdir/compiler-rt/os_version_check.${arch}.o"
+}

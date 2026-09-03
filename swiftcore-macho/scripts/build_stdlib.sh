@@ -105,7 +105,7 @@ ensure_compiler_rt_osx() {
     echo "build_stdlib: skip compiler-rt osx (no SDK at $sdk)"
     return 0
   fi
-  local out="${SWIFTCORE_COMPILER_RT_OSX:-$W/build/libclang_rt.osx.a}"
+  local out="${SWIFTCORE_COMPILER_RT_OSX:-$W/build/compiler-rt/os_version_check.${SWIFTCORE_DARWIN_ARCH}.o}"
   export SWIFTCORE_SDKROOT="$sdk"
   export SWIFTCORE_WORK="$W"
   export SWIFTCORE_COMPILER_RT_OSX="$out"

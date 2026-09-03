@@ -9,32 +9,25 @@
 // This file implements the function __isOSVersionAtLeast, used by
 // Objective-C's @available
 //
-// Vendored from llvm-project compiler-rt builtins at llvmorg-18.1.8 (the
-// Ubuntu clang 18.1.3 toolchain). Apple ships this in libclang_rt.osx.a.
-// This Linux Darwin-cross clang has no Darwin compiler-rt in its resource
-// dir, so overlay links fail with undefined __isPlatformVersionAtLeast.
+// Vendored from llvm-project compiler-rt builtins at llvmorg-18.1.8
+// (commit 76caf4176cd7877ad5952737d56da6f515ee4602). See SOURCE.txt and
+// LICENSE.TXT in this directory. Apple ships this TU in libclang_rt.osx.a.
+// Linux clang has no Darwin compiler-rt in its resource dir, so Darwin
+// overlay links (NOUNDEFS) fail with undefined __isPlatformVersionAtLeast
+// unless this object is on the link line.
 //
-// Route (b) — export these from gen_tbd libSystem — is closed:
-// machorun/docs/UNIMPLEMENTED.md (the libSystem definition was added then
-// reverted; gen_tbd CHECK 4 already sees them in libswiftcompat).
-// machorun/darwin/src has no implementation. host-bound-allowed.txt does
-// not list them (glibc has no such symbol).
+// libswiftCore's Mach-O link (link_macho_dylib.sh) uses
+// -undefined dynamic_lookup, so the same symbol can stay undefined there.
+// Overlay ninja links do not. libswiftcompat defines the symbol for the
+// ELF compat dylib; that is not a Darwin overlay link input (CHECK 4
+// already refuses exporting it from gen_tbd libSystem).
 //
-// __isPlatformOrVariantPlatformVersionAtLeast is not in llvmorg-18.1.8; it
-// was added on llvm-project main. Copied below so both clang availability
-// hooks are satisfied from one x86_64-apple-macos archive.
+// __isPlatformOrVariantPlatformVersionAtLeast is not in llvmorg-18.1.8;
+// copied from llvm-project main into this TU.
 //
-// Runtime agrees with libswiftcompat (swiftcompat.c): every check returns
-// yes because we emulate a full deployment target. The strong
-// _availability_version_check in this TU makes compiler-rt take the new-API
-// path and return 1. Vanilla compiler-rt would dlopen CoreFoundation, fail
-// to parse SystemVersion.plist under machorun, leave GlobalMajor=0, and
-// hide @available APIs. Not a CHECK 5 host-bind.
-//
-// dispatch_once_f is not in gen_tbd libSystem.tbd (it lives in libdispatch
-// on Apple). This TU uses a local once so overlay NOUNDEFS links do not
-// grow that undefined. Remaining libc symbols (fopen, malloc, …) are in
-// the tbd and are only used on the unused plist fallback path.
+// When SystemVersion.plist is absent (machorun), fopen fails, globals stay
+// (0,0,0), and every __isOSVersionAtLeast check against a real macOS
+// version returns 0. No crash. See SOURCE.txt.
 //
 //===----------------------------------------------------------------------===//
 
@@ -42,25 +35,28 @@
 
 #include <TargetConditionals.h>
 #include <assert.h>
+#include <dispatch/dispatch.h>
+#include <dlfcn.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dlfcn.h>
 
 /* gen_tbd libSystem.tbd does not export dispatch_once_f (Apple puts it in
- * libdispatch via libSystem). A local once keeps this TU self-contained so
- * overlay NOUNDEFS links do not grow a new undefined. Semantics match
- * dispatch_once for a single-threaded init of the always-yes checker. */
-typedef intptr_t dispatch_once_t;
-static void dispatch_once_f(dispatch_once_t *predicate, void *context,
-                            void (*function)(void *)) {
+ * libdispatch). Overlay NOUNDEFS links must not grow that undefined. The
+ * compile still includes <dispatch/dispatch.h> so a sysroot without it
+ * fails here. Darwin's once.h macros dispatch_once_f to _dispatch_once_f;
+ * undef that so the local once is what this TU calls. */
+static void crt_os_version_once_f(dispatch_once_t *predicate, void *context,
+                                  void (*function)(void *)) {
   if (*predicate == 0) {
     function(context);
     *predicate = ~((dispatch_once_t)0);
   }
 }
+#undef dispatch_once_f
+#define dispatch_once_f crt_os_version_once_f
 
 // These three variables hold the host's OS version.
 static int32_t GlobalMajor, GlobalMinor, GlobalSubminor;
@@ -127,15 +123,9 @@ typedef Boolean (*CFStringGetCStringFuncTy)(CFStringRef, char *, CFIndex,
                                             CFStringEncoding);
 typedef void (*CFReleaseFuncTy)(CFTypeRef);
 
-/* Strong always-yes: matches libswiftcompat, not a glibc host-bind.
- * Replaces the upstream weak_import so Darwin overlay dylibs do not depend
- * on dyld finding this in another image (overlays do not -lswiftcompat). */
+extern __attribute__((weak_import))
 bool _availability_version_check(uint32_t count,
-                                 dyld_build_version_t versions[]) {
-  (void)count;
-  (void)versions;
-  return true;
-}
+                                 dyld_build_version_t versions[]);
 
 static void _initializeAvailabilityCheck(bool LoadPlist) {
   if (AvailabilityVersionCheck && !LoadPlist) {
@@ -144,9 +134,12 @@ static void _initializeAvailabilityCheck(bool LoadPlist) {
     return;
   }
 
-  // Strong local _availability_version_check (always-yes, matching
-  // libswiftcompat). Upstream tests a weak_import pointer here.
-  AvailabilityVersionCheck = &_availability_version_check;
+  // Use the new API if it's is available. Weak-import: NULL under machorun
+  // when dyld does not provide it. Then the plist path runs; fopen of
+  // SystemVersion.plist fails, GlobalMajor/Minor/Subminor stay 0, and
+  // __isOSVersionAtLeast returns 0. No crash.
+  if (_availability_version_check)
+    AvailabilityVersionCheck = &_availability_version_check;
 
   if (AvailabilityVersionCheck && !LoadPlist) {
     // New API is supported and we're not being asked to load the plist,
@@ -331,7 +324,7 @@ int32_t __isPlatformVersionAtLeast(uint32_t Platform, uint32_t Major,
 
 #define PLATFORM_MACOS 1
 
-/* From llvm-project main (post-18.1.8). Darwin clang may emit this sibling. */
+/* From llvm-project main (post llvmorg-18.1.8). Darwin clang may emit this. */
 int32_t __isPlatformOrVariantPlatformVersionAtLeast(
     uint32_t Platform, uint32_t Major, uint32_t Minor, uint32_t Subminor,
     uint32_t Platform2, uint32_t Major2, uint32_t Minor2, uint32_t Subminor2) {
@@ -349,7 +342,6 @@ int32_t __isPlatformOrVariantPlatformVersionAtLeast(
       {Platform2, ConstructVersion(Major2, Minor2, Subminor2)}};
   return AvailabilityVersionCheck(2, Versions);
 }
-
 
 #elif __ANDROID__
 

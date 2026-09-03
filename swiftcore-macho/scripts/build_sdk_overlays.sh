@@ -6,7 +6,7 @@
 # Not ninja targets (stdlib/public/CMakeLists.txt:359). Compile with the
 # Darwin overlay argv shape (no -parse-stdlib; -autolink-force-load) and
 # link with the Darwin clang++ shim so ld64.lld gets sysroot libc++.tbd,
-# never /usr/lib/llvm-18/lib, plus libclang_rt.osx.a for availability checks.
+# never /usr/lib/llvm-18/lib, plus os_version_check.<arch>.o for availability.
 #
 # Prefer a sysroot .swiftinterface when present (scratch/sysroot_fe4[-x86_64]
 # usr/lib/swift/<module>.swiftmodule/<triple>.swiftinterface). Otherwise
@@ -40,11 +40,13 @@ fi
 mkdir -p "$work" "$out_lib" "$out_mod" "$work/modcache"
 
 # Overlay links are NOUNDEFS; clang's __isPlatformVersionAtLeast lives in
-# compiler-rt builtins, not gen_tbd libSystem.
+# compiler-rt builtins, not gen_tbd libSystem. Link the static object
+# (Apple's libclang_rt.osx.a member) into every overlay, including the
+# five @_exported-import shells that do not reference the symbol.
 if [ -d "$SDK" ] && [ "${SWIFTCORE_NINJA_HARNESS:-0}" != 1 ]; then
   export SWIFTCORE_SDKROOT="$SDK"
   export SWIFTCORE_WORK="$W"
-  export SWIFTCORE_COMPILER_RT_OSX="${SWIFTCORE_COMPILER_RT_OSX:-$B/libclang_rt.osx.a}"
+  export SWIFTCORE_COMPILER_RT_OSX="${SWIFTCORE_COMPILER_RT_OSX:-$B/compiler-rt/os_version_check.${ARCH}.o}"
   bash "$SCRIPT_DIR/build_compiler_rt_osx.sh" "$SWIFTCORE_COMPILER_RT_OSX"
 fi
 
@@ -163,7 +165,8 @@ link_overlay() {
   local dylib=$out_lib/${lib}.dylib
   local so=$out_lib/${lib}.so
   local err=$work/${lib}.link.err
-  echo "sdk_overlay: link $lib install_name=/usr/lib/swift/${lib}.dylib"
+  local builtin="${SWIFTCORE_COMPILER_RT_OSX:-$BUILD_DIR/compiler-rt/os_version_check.${ARCH}.o}"
+  echo "sdk_overlay: link $lib install_name=/usr/lib/swift/${lib}.dylib builtin=$builtin"
   set +e
   "${CLANGXX[@]}" \
     -target "$target" \
@@ -174,6 +177,7 @@ link_overlay() {
     -Wl,-install_name,/usr/lib/swift/${lib}.dylib \
     -o "$dylib" \
     "$obj" \
+    "$builtin" \
     -L "$out_lib" \
     -lswiftCore \
     -lSystem \
@@ -190,7 +194,7 @@ link_overlay() {
     echo "sdk_overlay: REFUSING Darwin link still mentions /usr/lib/llvm-18/lib" >&2
     return 2
   fi
-  grep -E 'cxx_runtime=' "$err" || true
+  grep -E 'cxx_runtime=|compiler_rt=' "$err" || true
   cp -f "$dylib" "$so"
   echo "sdk_overlay: linked $dylib"
 }

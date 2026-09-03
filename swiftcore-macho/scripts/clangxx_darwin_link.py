@@ -15,9 +15,10 @@ Apple triple → exec the real clang++ with the original argv plus
 `-L/usr/lib/llvm-18/lib`; drop that on Darwin links and pass
 `-nostdlib++` plus the sysroot `usr/lib/libc++.tbd` / `libc++abi.tbd`
 so ld64 never opens the host ELF `libc++.so`. Print
-`cxx_runtime=<tbd>`. Pass `libclang_rt.osx.a` (compiler-rt
-`os_version_check.c` for `__isPlatformVersionAtLeast`) and print
-`compiler_rt=<archive>`. Linux/unknown-linux-gnu → ld.lld, keep `-soname`.
+`cxx_runtime=<tbd>`. Pass the Darwin compiler-rt availability object
+(`os_version_check.<arch>.o` from `os_version_check.c`, Apple's
+`libclang_rt.osx.a` piece for `__isPlatformVersionAtLeast`) and print
+`compiler_rt=<object>`. Linux/unknown-linux-gnu → ld.lld, keep `-soname`.
 `-soname` is rewritten to `-install_name` only so ld64 never sees the GNU
 flag; nothing else is rewritten (PR #40's -dynamiclib/-nostdlib pass
 dropped -platform_version/-arch).
@@ -369,32 +370,43 @@ def darwin_cxx_runtime_path(argv: list[str]) -> str:
     return tbds[0] if tbds else "ABSENT"
 
 
-def darwin_compiler_rt_osx_path() -> str:
-    """x86_64-apple-macos compiler-rt builtins archive (os_version_check.c)."""
+def _darwin_arch_from_argv(argv: list[str]) -> str:
+    """Slice from -target (x86_64 or arm64). Env is the fallback."""
+    t = (_target(argv) or "").lower()
+    if t.startswith("arm64") or t.startswith("aarch64"):
+        return "arm64"
+    if t.startswith("x86_64"):
+        return "x86_64"
+    env = os.environ.get("SWIFTCORE_DARWIN_ARCH", "x86_64")
+    return "arm64" if env in ("arm64", "aarch64") else "x86_64"
+
+
+def darwin_compiler_rt_osx_path(argv: list[str] | None = None) -> str:
+    """Arch-parametric Darwin compiler-rt availability object (.o, not .a)."""
     env = os.environ.get("SWIFTCORE_COMPILER_RT_OSX")
     if env:
         return env
+    arch = _darwin_arch_from_argv(argv or [])
     work = os.environ.get("SWIFTCORE_WORK") or os.path.join(
         os.path.expanduser("~"), "work"
     )
-    return os.path.join(work, "build", "libclang_rt.osx.a")
+    return os.path.join(work, "build", "compiler-rt", f"os_version_check.{arch}.o")
 
 
 def darwin_compiler_rt_link_flags(argv: list[str]) -> list[str]:
-    """Pass Darwin compiler-rt builtins so availability checks resolve.
+    """Pass the availability .o so __isPlatformVersionAtLeast resolves.
 
-    Linux clang has no libclang_rt.osx.a in its resource dir. Overlay links
-    are NOUNDEFS (no -undefined dynamic_lookup), so clang's
-    __isPlatformVersionAtLeast must come from this archive — not libSystem
-    (gen_tbd CHECK 4 vs libswiftcompat) and not a glibc host-bind.
+    Linux clang has no libclang_rt.osx.a. Overlay links are NOUNDEFS, so
+    the compiler-rt TU must be a static object on the link — Apple's
+    shape, not a dylib export (gen_tbd CHECK 4 vs libswiftcompat).
 
-    Do not -force_load: that would pull the member into every Darwin dylib
-    (including ones that never emit an availability check) and surface any
-    leftover undefineds from the TU. Regular archive search is enough when
-    the object refs the symbol.
+    A .o is always linked (the five @_exported-import shells do not
+    reference the symbol; the seven ninja overlays do). Do not wrap it
+    in an archive: GNU ar writes no Mach-O index, and archive search
+    dropped the member on the operator overlay links.
     """
-    path = darwin_compiler_rt_osx_path()
-    if any("libclang_rt.osx.a" in a for a in argv):
+    path = darwin_compiler_rt_osx_path(argv)
+    if any("os_version_check" in a and a.endswith(".o") for a in argv):
         return []
     return [path]
 
@@ -495,7 +507,7 @@ def log_link(
             f"clangxx_darwin_link: cxx_runtime={darwin_cxx_runtime_path(original)}\n"
         )
         sys.stderr.write(
-            f"clangxx_darwin_link: compiler_rt={darwin_compiler_rt_osx_path()}\n"
+            f"clangxx_darwin_link: compiler_rt={darwin_compiler_rt_osx_path(original)}\n"
         )
     elif rewritten is not None:
         sys.stderr.write("clangxx_darwin_link: rewritten argv: " + shlex.join(rewritten) + "\n")

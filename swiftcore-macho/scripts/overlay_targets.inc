@@ -430,8 +430,11 @@ else:
         print("overlay_link: missing cxx_runtime= sysroot libc++.tbd")
         sys.exit(1)
     crt = next((l for l in err.splitlines() if l.startswith("clangxx_darwin_link: compiler_rt=")), "")
-    if "libclang_rt.osx.a" not in crt or "libclang_rt.osx.a" not in executed:
-        print("overlay_link: missing compiler_rt= libclang_rt.osx.a")
+    if "os_version_check" not in crt or ".o" not in crt:
+        print("overlay_link: missing compiler_rt= os_version_check object")
+        sys.exit(1)
+    if "os_version_check" not in executed:
+        print("overlay_link: missing os_version_check.o on Darwin driver argv")
         sys.exit(1)
     if "-platform_version" in executed.split() or (
         "-arch" in executed.split() and "ld64" not in executed

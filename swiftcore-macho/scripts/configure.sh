@@ -190,7 +190,7 @@ write_clang_shim() {
     printf 'export LD64_LLD=%q\n' "${LD64_LLD:-}"
     printf 'export TC=%q\n' "${TC}"
     printf 'export SWIFTCORE_WORK=%q\n' "${W}"
-    printf 'export SWIFTCORE_COMPILER_RT_OSX=%q\n' "${W}/build/libclang_rt.osx.a"
+    printf 'export SWIFTCORE_COMPILER_RT_OSX=%q\n' "${W}/build/compiler-rt/os_version_check.${SWIFTCORE_DARWIN_ARCH}.o"
     printf 'exec %q %q "$@"\n' "$pyexe" "$SCRIPT_DIR/clangxx_darwin_link.py"
   } > "$dest"
   chmod +x "$dest"
@@ -318,6 +318,6 @@ python3 "$SCRIPT_DIR/lipo_single_arch.py" --rewrite-ninja "$B"
 if [ -d "$SDK" ]; then
   export SWIFTCORE_SDKROOT="$SDK"
   export SWIFTCORE_WORK="$W"
-  export SWIFTCORE_COMPILER_RT_OSX="$B/libclang_rt.osx.a"
+  export SWIFTCORE_COMPILER_RT_OSX="$B/compiler-rt/os_version_check.${SWIFTCORE_DARWIN_ARCH}.o"
   bash "$SCRIPT_DIR/build_compiler_rt_osx.sh" "$SWIFTCORE_COMPILER_RT_OSX"
 fi
