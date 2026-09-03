@@ -1,0 +1,1269 @@
+precise	status	evidence	notes
+c:@E@GCControllerPlayerIndex	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCControllerPlayerIndex@GCControllerPlayerIndex1	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCControllerPlayerIndex@GCControllerPlayerIndex2	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCControllerPlayerIndex@GCControllerPlayerIndex3	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCControllerPlayerIndex@GCControllerPlayerIndex4	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCControllerPlayerIndex@GCControllerPlayerIndexUnset	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDeviceBatteryState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDeviceBatteryState@GCDeviceBatteryStateCharging	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDeviceBatteryState@GCDeviceBatteryStateDischarging	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDeviceBatteryState@GCDeviceBatteryStateFull	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDeviceBatteryState@GCDeviceBatteryStateUnknown	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDevicePhysicalInputElementChange	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDevicePhysicalInputElementChange@GCDevicePhysicalInputElementChanged	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDevicePhysicalInputElementChange@GCDevicePhysicalInputElementNoChange	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDevicePhysicalInputElementChange@GCDevicePhysicalInputElementUnknownChange	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerMode	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerMode@GCDualSenseAdaptiveTriggerModeFeedback	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:@E@GCDualSenseAdaptiveTriggerMode@GCDualSenseAdaptiveTriggerModeOff	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:@E@GCDualSenseAdaptiveTriggerMode@GCDualSenseAdaptiveTriggerModeSlopeFeedback	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerMode@GCDualSenseAdaptiveTriggerModeVibration	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerMode@GCDualSenseAdaptiveTriggerModeWeapon	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerStatus	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerStatus@GCDualSenseAdaptiveTriggerStatusFeedbackLoadApplied	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerStatus@GCDualSenseAdaptiveTriggerStatusFeedbackNoLoad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerStatus@GCDualSenseAdaptiveTriggerStatusSlopeFeedbackApplyingLoad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerStatus@GCDualSenseAdaptiveTriggerStatusSlopeFeedbackFinished	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerStatus@GCDualSenseAdaptiveTriggerStatusSlopeFeedbackReady	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerStatus@GCDualSenseAdaptiveTriggerStatusUnknown	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:@E@GCDualSenseAdaptiveTriggerStatus@GCDualSenseAdaptiveTriggerStatusVibrationIsVibrating	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerStatus@GCDualSenseAdaptiveTriggerStatusVibrationNotVibrating	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerStatus@GCDualSenseAdaptiveTriggerStatusWeaponFired	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerStatus@GCDualSenseAdaptiveTriggerStatusWeaponFiring	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCDualSenseAdaptiveTriggerStatus@GCDualSenseAdaptiveTriggerStatusWeaponReady	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCExtendedGamepadSnapshotDataVersion	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCExtendedGamepadSnapshotDataVersion@GCExtendedGamepadSnapshotDataVersion1	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCExtendedGamepadSnapshotDataVersion@GCExtendedGamepadSnapshotDataVersion2	declared	full/gamecontroller/GameController.swift	compiled enum case; Apple current version unobserved
+c:@E@GCMicroGamepadSnapshotDataVersion	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCMicroGamepadSnapshotDataVersion@GCMicroGamepadSnapshotDataVersion1	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCPhysicalInputSourceDirection	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCPhysicalInputSourceDirection@GCPhysicalInputSourceDirectionDown	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCPhysicalInputSourceDirection@GCPhysicalInputSourceDirectionLeft	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCPhysicalInputSourceDirection@GCPhysicalInputSourceDirectionRight	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCPhysicalInputSourceDirection@GCPhysicalInputSourceDirectionUp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCSystemGestureState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCSystemGestureState@GCSystemGestureStateAlwaysReceive	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCSystemGestureState@GCSystemGestureStateDisabled	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCSystemGestureState@GCSystemGestureStateEnabled	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCTouchState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCTouchState@GCTouchStateDown	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCTouchState@GCTouchStateMoving	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCTouchState@GCTouchStateUp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCUIEventTypes	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@E@GCUIEventTypes@GCUIEventTypeGamepad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@Ea@GCDualSenseAdaptiveTriggerDiscretePositionCount@GCDualSenseAdaptiveTriggerDiscretePositionCount	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@F@GCExtendedGamepadSnapShotDataV100FromNSData	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@F@GCExtendedGamepadSnapshotDataFromNSData	declared	full/gamecontroller/GCSnapshots.swift	Linux-portable snapshot layout; Apple packed ABI unobserved
+c:@F@GCGamepadSnapShotDataV100FromNSData	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@F@GCMicroGamepadSnapShotDataV100FromNSData	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@F@GCMicroGamepadSnapshotDataFromNSData	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@F@GCPoint2Equal	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:@F@GCPoint2Make	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:@F@NSDataFromGCExtendedGamepadSnapShotDataV100	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@F@NSDataFromGCExtendedGamepadSnapshotData	declared	full/gamecontroller/GCSnapshots.swift	Linux-portable snapshot layout; Apple packed ABI unobserved
+c:@F@NSDataFromGCGamepadSnapShotDataV100	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@F@NSDataFromGCMicroGamepadSnapShotDataV100	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@F@NSDataFromGCMicroGamepadSnapshotData	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@F@NSStringFromGCPoint2	declared	full/gamecontroller/GameController.swift	compiled helper; Apple NSString format unobserved
+c:@GCControllerDidBecomeCurrentNotification	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCControllerDidConnectNotification	declared	full/gamecontroller/GameController.swift	compiled notification name; Apple raw payload unobserved
+c:@GCControllerDidDisconnectNotification	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCControllerDidStopBeingCurrentNotification	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCControllerUserCustomizationsDidChangeNotification	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCCurrentExtendedGamepadSnapshotDataVersion	declared	full/gamecontroller/GameController.swift	compiled version token; Apple default unobserved
+c:@GCCurrentMicroGamepadSnapshotDataVersion	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCDeviceAxisInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCDeviceButtonInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCDeviceDirectionPad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCDeviceElement	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCDeviceTouchpad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCHapticDurationInfinite	declared	full/gamecontroller/GameController.swift	compiled constant; Apple payload unobserved
+c:@GCHapticsLocalityAll	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCHapticsLocalityDefault	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCHapticsLocalityHandles	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCHapticsLocalityLeftHandle	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCHapticsLocalityLeftTrigger	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCHapticsLocalityRightHandle	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCHapticsLocalityRightTrigger	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCHapticsLocalityTriggers	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCInputDirectionalCardinalDpad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCInputDirectionalCenterButton	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCInputDirectionalDpad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCInputDirectionalTouchSurfaceButton	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCInputMicroGamepadButtonA	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCInputMicroGamepadButtonMenu	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCInputMicroGamepadButtonX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCInputMicroGamepadDpad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCKeyA	declared	full/gamecontroller/GCKeys.swift	compiled key-name string; Apple NSString payload unobserved
+c:@GCKeyApplication	declared	full/gamecontroller/GCKeys.swift	compiled key-name string; Apple NSString payload unobserved
+c:@GCKeyB	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyBackslash	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyC	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyCapsLock	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyCloseBracket	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyCodeApplication	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeBackslash	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeCapsLock	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeCloseBracket	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeComma	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeDeleteForward	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeDeleteOrBackspace	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeDownArrow	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeEight	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeEnd	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeEqualSign	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeEscape	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:@GCKeyCodeF1	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF10	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF11	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF12	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF13	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF14	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF15	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF16	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF17	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF18	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF19	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF2	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF20	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF3	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF4	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF5	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF6	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF7	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF8	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeF9	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeFive	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeFour	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeGraveAccentAndTilde	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeHome	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeHyphen	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeInsert	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeInternational1	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeInternational2	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeInternational3	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeInternational4	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeInternational5	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeInternational6	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeInternational7	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeInternational8	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeInternational9	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyA	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:@GCKeyCodeKeyB	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyC	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyD	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyE	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyF	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyG	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyH	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyI	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyJ	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyK	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyL	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyM	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyN	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyO	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyP	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyQ	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyR	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyS	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyT	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyU	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyV	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyW	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyX	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyY	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeyZ	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypad0	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypad1	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypad2	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypad3	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypad4	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypad5	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypad6	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypad7	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypad8	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypad9	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypadAsterisk	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypadEnter	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypadEqualSign	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypadHyphen	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypadNumLock	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypadPeriod	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypadPlus	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeKeypadSlash	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeLANG1	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeLANG2	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeLANG3	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeLANG4	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeLANG5	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeLANG6	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeLANG7	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeLANG8	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeLANG9	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeLeftAlt	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeLeftArrow	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeLeftControl	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeLeftGUI	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeLeftShift	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeNine	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeNonUSBackslash	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeNonUSPound	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeOne	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeOpenBracket	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodePageDown	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodePageUp	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodePause	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodePeriod	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodePower	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodePrintScreen	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeQuote	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeReturnOrEnter	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeRightAlt	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeRightArrow	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeRightControl	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeRightGUI	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeRightShift	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeScrollLock	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeSemicolon	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeSeven	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeSix	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeSlash	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeSpacebar	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeTab	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeThree	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeTwo	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeUpArrow	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyCodeZero	declared	full/gamecontroller/GCKeys.swift	HID usage-page key code declared
+c:@GCKeyComma	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyD	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyDeleteForward	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyDeleteOrBackspace	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyDownArrow	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyE	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyEight	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyEnd	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyEqualSign	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyEscape	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF1	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF10	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF11	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF12	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF13	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF14	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF15	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF16	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF17	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF18	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF19	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF2	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF20	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF3	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF4	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF5	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF6	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF7	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF8	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyF9	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyFive	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyFour	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyG	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyGraveAccentAndTilde	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyH	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyHome	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyHyphen	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyI	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyInsert	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyInternational1	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyInternational2	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyInternational3	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyInternational4	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyInternational5	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyInternational6	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyInternational7	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyInternational8	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyInternational9	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyJ	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyK	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypad0	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypad1	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypad2	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypad3	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypad4	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypad5	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypad6	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypad7	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypad8	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypad9	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypadAsterisk	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypadEnter	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypadEqualSign	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypadHyphen	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypadNumLock	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypadPeriod	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypadPlus	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyKeypadSlash	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyL	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyLANG1	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyLANG2	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyLANG3	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyLANG4	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyLANG5	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyLANG6	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyLANG7	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyLANG8	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyLANG9	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyLeftAlt	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyLeftArrow	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyLeftControl	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyLeftGUI	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyLeftShift	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyM	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyN	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyNine	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyNonUSBackslash	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyNonUSPound	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyO	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyOne	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyOpenBracket	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyP	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyPageDown	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyPageUp	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyPause	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyPeriod	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyPower	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyPrintScreen	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyQ	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyQuote	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyR	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyReturnOrEnter	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyRightAlt	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyRightArrow	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyRightControl	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyRightGUI	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyRightShift	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyS	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyScrollLock	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeySemicolon	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeySeven	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeySix	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeySlash	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeySpacebar	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyT	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyTab	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyThree	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyTwo	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyU	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyUpArrow	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyV	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyW	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyX	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyY	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyZ	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyZero	declared	full/gamecontroller/GCKeys.swift	portable key-name constant declared
+c:@GCKeyboardDidConnectNotification	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCKeyboardDidDisconnectNotification	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCMouseDidBecomeCurrentNotification	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCMouseDidConnectNotification	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCMouseDidDisconnectNotification	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCMouseDidStopBeingCurrentNotification	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCPoint2Zero	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:@GCProductCategoryArcadeStick	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCProductCategoryCoalescedRemote	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCProductCategoryControlCenterRemote	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCProductCategoryDualSense	declared	full/gamecontroller/GameController.swift	compiled category token; Apple NSString payload unobserved
+c:@GCProductCategoryDualShock4	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCProductCategoryHID	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:@GCProductCategoryKeyboard	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCProductCategoryMFi	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCProductCategoryMouse	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCProductCategorySiriRemote1stGen	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCProductCategorySiriRemote2ndGen	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCProductCategorySpatialController	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCProductCategoryUniversalElectronicsRemote	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@GCProductCategoryXboxOne	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@S@GCPoint2	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:@S@GCPoint2@FI@x	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:@S@GCPoint2@FI@y	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:@S@GCQuaternion	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@S@GCQuaternion@FI@w	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@S@GCQuaternion@FI@x	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@S@GCQuaternion@FI@y	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@S@GCQuaternion@FI@z	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCAcceleration	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCAcceleration@FI@x	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCAcceleration@FI@y	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCAcceleration@FI@z	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCDualSenseAdaptiveTriggerPositionalAmplitudes	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCDualSenseAdaptiveTriggerPositionalAmplitudes@FI@values	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCDualSenseAdaptiveTriggerPositionalResistiveStrengths	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCDualSenseAdaptiveTriggerPositionalResistiveStrengths@FI@values	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCEulerAngles	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCEulerAngles@FI@pitch	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCEulerAngles@FI@roll	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCEulerAngles@FI@yaw	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@buttonA	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@buttonB	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@buttonX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@buttonY	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@dpadX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@dpadY	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@leftShoulder	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@leftThumbstickX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@leftThumbstickY	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@leftTrigger	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@rightShoulder	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@rightThumbstickX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@rightThumbstickY	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@rightTrigger	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@size	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapShotDataV100@FI@version	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData	declared	full/gamecontroller/GCSnapshots.swift	struct declared; Apple packed field layout unobserved
+c:@SA@GCExtendedGamepadSnapshotData@FI@buttonA	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@buttonB	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@buttonX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@buttonY	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@dpadX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@dpadY	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@leftShoulder	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@leftThumbstickButton	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@leftThumbstickX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@leftThumbstickY	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@leftTrigger	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@rightShoulder	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@rightThumbstickButton	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@rightThumbstickX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@rightThumbstickY	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@rightTrigger	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@size	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@supportsClickableThumbsticks	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCExtendedGamepadSnapshotData@FI@version	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCGamepadSnapShotDataV100	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCGamepadSnapShotDataV100@FI@buttonA	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCGamepadSnapShotDataV100@FI@buttonB	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCGamepadSnapShotDataV100@FI@buttonX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCGamepadSnapShotDataV100@FI@buttonY	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCGamepadSnapShotDataV100@FI@dpadX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCGamepadSnapShotDataV100@FI@dpadY	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCGamepadSnapShotDataV100@FI@leftShoulder	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCGamepadSnapShotDataV100@FI@rightShoulder	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCGamepadSnapShotDataV100@FI@size	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCGamepadSnapShotDataV100@FI@version	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCMicroGamepadSnapShotDataV100	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCMicroGamepadSnapShotDataV100@FI@buttonA	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCMicroGamepadSnapShotDataV100@FI@buttonX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCMicroGamepadSnapShotDataV100@FI@dpadX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCMicroGamepadSnapShotDataV100@FI@dpadY	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCMicroGamepadSnapShotDataV100@FI@size	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCMicroGamepadSnapShotDataV100@FI@version	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCMicroGamepadSnapshotData	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCMicroGamepadSnapshotData@FI@buttonA	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCMicroGamepadSnapshotData@FI@buttonX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCMicroGamepadSnapshotData@FI@dpadX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCMicroGamepadSnapshotData@FI@dpadY	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCMicroGamepadSnapshotData@FI@size	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCMicroGamepadSnapshotData@FI@version	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCRotationRate	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCRotationRate@FI@x	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCRotationRate@FI@y	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@SA@GCRotationRate@FI@z	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@T@GCControllerAxisValueChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@T@GCControllerButtonTouchedChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@T@GCControllerButtonValueChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@T@GCControllerDirectionPadValueChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@T@GCControllerTouchpadHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@T@GCExtendedGamepadValueChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@T@GCGamepadValueChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@T@GCHapticsLocality	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@T@GCKeyCode	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:@T@GCKeyboardValueChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@T@GCMicroGamepadValueChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@T@GCMotionValueChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@T@GCMouseMoved	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:@macro@kIOHIDGCSyntheticDeviceKey	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCColor	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCColor(im)initWithRed:green:blue:	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCColor(py)blue	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCColor(py)green	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCColor(py)red	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCController	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCController(cm)controllerWithExtendedGamepad	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCController(cm)controllerWithMicroGamepad	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCController(cm)controllers	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCController(cm)startWirelessControllerDiscoveryWithCompletionHandler:	implemented	tests/agent/GameControllerRuntime.swift	completion is non-inline and fires exactly once
+c:objc(cs)GCController(cm)stopWirelessControllerDiscovery	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCController(cpy)current	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCController(cpy)shouldMonitorBackgroundEvents	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCController(im)capture	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCController(py)attachedToDevice	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCController(py)battery	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCController(py)controllerPausedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCController(py)extendedGamepad	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCController(py)gamepad	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCController(py)haptics	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCController(py)input	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCController(py)light	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCController(py)microGamepad	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCController(py)motion	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCController(py)physicalInputProfile	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCController(py)playerIndex	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCController(py)snapshot	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCControllerAxisInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerAxisInput(im)setValue:	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCControllerAxisInput(py)value	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCControllerAxisInput(py)valueChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerButtonInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerButtonInput(im)setValue:	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCControllerButtonInput(py)pressed	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCControllerButtonInput(py)pressedChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerButtonInput(py)touched	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerButtonInput(py)touchedChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerButtonInput(py)value	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCControllerButtonInput(py)valueChangedHandler	implemented	tests/agent/GameControllerRuntime.swift	handler fired asynchronously on GCDevice.handlerQueue
+c:objc(cs)GCControllerDirectionPad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerDirectionPad(im)setValueForXAxis:yAxis:	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCControllerDirectionPad(py)down	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerDirectionPad(py)left	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCControllerDirectionPad(py)right	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCControllerDirectionPad(py)up	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerDirectionPad(py)valueChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerDirectionPad(py)xAxis	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCControllerDirectionPad(py)yAxis	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCControllerElement	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerElement(py)aliases	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerElement(py)analog	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerElement(py)boundToSystemGesture	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerElement(py)collection	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerElement(py)localizedName	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerElement(py)preferredSystemGestureState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerElement(py)sfSymbolsName	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerElement(py)unmappedLocalizedName	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerElement(py)unmappedSfSymbolsName	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerInputState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerLiveInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerLiveInput(im)capture	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerLiveInput(im)nextInputState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerLiveInput(py)unmappedInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerTouchpad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerTouchpad(im)setValueForXAxis:yAxis:touchDown:buttonValue:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerTouchpad(py)button	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerTouchpad(py)reportsAbsoluteTouchSurfaceValues	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerTouchpad(py)touchDown	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerTouchpad(py)touchMoved	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerTouchpad(py)touchState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerTouchpad(py)touchSurface	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCControllerTouchpad(py)touchUp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDeviceBattery	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDeviceBattery(py)batteryLevel	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDeviceBattery(py)batteryState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDeviceCursor	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDeviceHaptics	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDeviceHaptics(im)createEngineWithLocality:	unavailable	unavailable	CoreHaptics CHHapticEngine is not present on Linux
+c:objc(cs)GCDeviceHaptics(py)supportedLocalities	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDeviceLight	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDeviceLight(py)color	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDirectionalGamepad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualSenseAdaptiveTrigger	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCDualSenseAdaptiveTrigger(im)setModeFeedbackWithResistiveStrengths:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualSenseAdaptiveTrigger(im)setModeFeedbackWithStartPosition:resistiveStrength:	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCDualSenseAdaptiveTrigger(im)setModeOff	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCDualSenseAdaptiveTrigger(im)setModeSlopeFeedbackWithStartPosition:endPosition:startStrength:endStrength:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualSenseAdaptiveTrigger(im)setModeVibrationWithAmplitudes:frequency:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualSenseAdaptiveTrigger(im)setModeVibrationWithStartPosition:amplitude:frequency:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualSenseAdaptiveTrigger(im)setModeWeaponWithStartPosition:endPosition:resistiveStrength:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualSenseAdaptiveTrigger(py)armPosition	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualSenseAdaptiveTrigger(py)mode	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCDualSenseAdaptiveTrigger(py)status	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCDualSenseGamepad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualSenseGamepad(py)leftTrigger	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualSenseGamepad(py)rightTrigger	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualSenseGamepad(py)touchpadButton	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualSenseGamepad(py)touchpadPrimary	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualSenseGamepad(py)touchpadSecondary	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualShockGamepad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualShockGamepad(py)touchpadButton	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualShockGamepad(py)touchpadPrimary	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCDualShockGamepad(py)touchpadSecondary	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCEventInteraction	deferred	full/gamecontroller/GameController.swift	omitted until real UIKit is imported; not replaced with NSObject
+c:objc(cs)GCEventInteraction(im)init	deferred	full/gamecontroller/GameController.swift	omitted until real UIKit is imported; not replaced with NSObject
+c:objc(cs)GCEventInteraction(py)handledEventTypes	deferred	full/gamecontroller/GameController.swift	omitted until real UIKit is imported; not replaced with NSObject
+c:objc(cs)GCEventInteraction(py)receivesEventsInView	deferred	full/gamecontroller/GameController.swift	omitted until real UIKit is imported; not replaced with NSObject
+c:objc(cs)GCEventViewController	deferred	full/gamecontroller/GameController.swift	omitted until real UIKit is imported; not replaced with NSObject
+c:objc(cs)GCEventViewController(py)controllerUserInteractionEnabled	deferred	full/gamecontroller/GameController.swift	omitted until real UIKit is imported; not replaced with NSObject
+c:objc(cs)GCExtendedGamepad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(im)saveSnapshot	declared	full/gamecontroller/GCSnapshots.swift	portable snapshot helper; Apple binary layout unobserved
+c:objc(cs)GCExtendedGamepad(im)setStateFromExtendedGamepad:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)buttonA	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCExtendedGamepad(py)buttonB	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)buttonHome	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)buttonMenu	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)buttonOptions	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)buttonX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)buttonY	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)controller	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)dpad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)leftShoulder	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)leftThumbstick	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCExtendedGamepad(py)leftThumbstickButton	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)leftTrigger	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)rightShoulder	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)rightThumbstick	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)rightThumbstickButton	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)rightTrigger	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepad(py)valueChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepadSnapshot	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepadSnapshot(im)initWithController:snapshotData:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepadSnapshot(im)initWithSnapshotData:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCExtendedGamepadSnapshot(py)snapshotData	declared	full/gamecontroller/GCSnapshots.swift	portable snapshot bytes; Apple ABI unobserved
+c:objc(cs)GCGameControllerActivationContext	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGameControllerActivationContext(py)previousApplicationBundleID	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGamepad	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCGamepad(im)saveSnapshot	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGamepad(py)buttonA	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGamepad(py)buttonB	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGamepad(py)buttonX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGamepad(py)buttonY	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGamepad(py)controller	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGamepad(py)dpad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGamepad(py)leftShoulder	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGamepad(py)rightShoulder	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGamepad(py)valueChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGamepadSnapshot	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGamepadSnapshot(im)initWithController:snapshotData:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGamepadSnapshot(im)initWithSnapshotData:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCGamepadSnapshot(py)snapshotData	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCKeyboard	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCKeyboard(cpy)coalescedKeyboard	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCKeyboard(py)keyboardInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCKeyboardInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCKeyboardInput(im)buttonForKeyCode:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCKeyboardInput(py)anyKeyPressed	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCKeyboardInput(py)keyChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMicroGamepad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMicroGamepad(im)saveSnapshot	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMicroGamepad(im)setStateFromMicroGamepad:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMicroGamepad(py)allowsRotation	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMicroGamepad(py)buttonA	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCMicroGamepad(py)buttonMenu	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMicroGamepad(py)buttonX	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMicroGamepad(py)controller	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMicroGamepad(py)dpad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMicroGamepad(py)reportsAbsoluteDpadValues	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMicroGamepad(py)valueChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMicroGamepadSnapshot	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMicroGamepadSnapshot(im)initWithController:snapshotData:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMicroGamepadSnapshot(im)initWithSnapshotData:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMicroGamepadSnapshot(py)snapshotData	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(im)setAcceleration:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(im)setAttitude:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(im)setGravity:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(im)setRotationRate:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(im)setStateFromMotion:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(im)setUserAcceleration:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(py)acceleration	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(py)attitude	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(py)controller	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(py)gravity	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(py)hasAttitude	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCMotion(py)hasAttitudeAndRotationRate	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(py)hasGravityAndUserAcceleration	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(py)hasRotationRate	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(py)rotationRate	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(py)sensorsActive	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(py)sensorsRequireManualActivation	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(py)userAcceleration	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMotion(py)valueChangedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMouse	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMouse(cm)mice	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCMouse(cpy)current	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCMouse(py)mouseInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMouseInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMouseInput(py)auxiliaryButtons	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMouseInput(py)leftButton	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMouseInput(py)middleButton	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMouseInput(py)mouseMovedHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMouseInput(py)rightButton	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCMouseInput(py)scroll	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCPhysicalInputProfile(im)capture	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(im)mappedElementAliasForPhysicalInputName:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(im)mappedPhysicalInputNamesForElementAlias:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(im)objectForKeyedSubscript:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(im)setStateFromPhysicalInput:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(py)allAxes	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(py)allButtons	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(py)allDpads	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(py)allElements	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(py)allTouchpads	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(py)axes	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(py)buttons	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(py)device	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(py)dpads	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(py)elements	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(py)hasRemappedElements	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(py)lastEventTimestamp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(py)touchpads	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCPhysicalInputProfile(py)valueDidChangeHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCVirtualController	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCVirtualController(im)connectWithReplyHandler:	implemented	tests/agent/GameControllerRuntime.swift	fail-closed error is non-inline and fires exactly once
+c:objc(cs)GCVirtualController(im)disconnect	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCVirtualController(im)initWithConfiguration:	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCVirtualController(im)setPosition:forDirectionPadElement:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCVirtualController(im)setValue:forButtonElement:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCVirtualController(im)updateConfigurationForElement:configuration:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCVirtualController(py)controller	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCVirtualControllerConfiguration	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+c:objc(cs)GCVirtualControllerConfiguration(py)elements	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCVirtualControllerConfiguration(py)hidden	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCVirtualControllerElementConfiguration	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCVirtualControllerElementConfiguration(py)actsAsTouchpad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCVirtualControllerElementConfiguration(py)hidden	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCVirtualControllerElementConfiguration(py)path	deferred	full/gamecontroller/GCControllerCore.swift	omitted until real UIKit.UIBezierPath is imported
+c:objc(cs)GCXboxGamepad	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCXboxGamepad(py)buttonShare	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCXboxGamepad(py)paddleButton1	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCXboxGamepad(py)paddleButton2	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCXboxGamepad(py)paddleButton3	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)GCXboxGamepad(py)paddleButton4	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(cs)NSValue(cm)valueWithGCPoint2:	declared	full/gamecontroller/GameController.swift	compiled boxing helper; Apple objCType layout unobserved
+c:objc(cs)NSValue(py)GCPoint2Value	declared	full/gamecontroller/GameController.swift	compiled boxing helper; Apple objCType layout unobserved
+c:objc(cs)UISceneConnectionOptions(py)gameControllerActivationContext	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxis2DInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxis2DInput(py)analog	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxis2DInput(py)canWrap	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxis2DInput(py)lastValueLatency	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxis2DInput(py)lastValueTimestamp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxis2DInput(py)sources	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxis2DInput(py)value	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxis2DInput(py)valueDidChangeHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxisElement	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxisElement(py)absoluteInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxisElement(py)relativeInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxisInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxisInput(py)analog	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxisInput(py)canWrap	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxisInput(py)lastValueLatency	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxisInput(py)lastValueTimestamp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxisInput(py)sources	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxisInput(py)value	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCAxisInput(py)valueDidChangeHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCButtonElement	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCButtonElement(py)forceInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCButtonElement(py)pressedInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCButtonElement(py)touchedInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevice	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevice(py)handlerQueue	implemented	tests/agent/GameControllerRuntime.swift	DispatchSpecificKey probe confirmed the configured handlerQueue
+c:objc(pl)GCDevice(py)physicalInputProfile	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevice(py)productCategory	implemented	tests/agent/GameControllerRuntime.swift	snapshot productCategory matches GCProductCategoryHID
+c:objc(pl)GCDevice(py)vendorName	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInput(im)capture	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInput(im)nextInputState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInput(py)device	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInput(py)elementValueDidChangeHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInput(py)inputStateAvailableHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInput(py)inputStateQueueDepth	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInput(py)queue	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInputState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInputState(im)objectForKeyedSubscript:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInputState(py)device	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInputState(py)lastEventLatency	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInputState(py)lastEventTimestamp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInputStateDiff	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDevicePhysicalInputStateDiff(im)changeForElement:	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDirectionPadElement	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDirectionPadElement(py)down	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDirectionPadElement(py)left	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDirectionPadElement(py)right	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDirectionPadElement(py)up	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDirectionPadElement(py)xAxis	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDirectionPadElement(py)xyAxes	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCDirectionPadElement(py)yAxis	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCGameControllerSceneDelegate	deferred	full/gamecontroller/GameController.swift	omitted until real UIKit is imported; not replaced with NSObject
+c:objc(pl)GCGameControllerSceneDelegate(im)scene:didActivateGameControllerWithContext:	deferred	full/gamecontroller/GameController.swift	omitted until real UIKit.UIScene is imported
+c:objc(pl)GCLinearInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCLinearInput(py)analog	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCLinearInput(py)canWrap	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCLinearInput(py)lastValueLatency	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCLinearInput(py)lastValueTimestamp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCLinearInput(py)sources	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCLinearInput(py)value	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCLinearInput(py)valueDidChangeHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPhysicalInputElement	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPhysicalInputElement(py)aliases	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPhysicalInputElement(py)localizedName	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPhysicalInputElement(py)sfSymbolsName	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPhysicalInputSource	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPhysicalInputSource(py)direction	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPhysicalInputSource(py)elementAliases	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPhysicalInputSource(py)elementLocalizedName	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPhysicalInputSource(py)sfSymbolsName	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPressedStateInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPressedStateInput(py)lastPressedStateLatency	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPressedStateInput(py)lastPressedStateTimestamp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPressedStateInput(py)pressed	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPressedStateInput(py)pressedDidChangeHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCPressedStateInput(py)sources	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCRelativeInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCRelativeInput(py)analog	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCRelativeInput(py)delta	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCRelativeInput(py)deltaDidChangeHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCRelativeInput(py)lastDeltaLatency	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCRelativeInput(py)lastDeltaTimestamp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCRelativeInput(py)sources	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCSwitchElement	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCSwitchElement(py)positionInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCSwitchPositionInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCSwitchPositionInput(py)canWrap	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCSwitchPositionInput(py)lastPositionLatency	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCSwitchPositionInput(py)lastPositionTimestamp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCSwitchPositionInput(py)position	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCSwitchPositionInput(py)positionDidChangeHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCSwitchPositionInput(py)positionRange	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCSwitchPositionInput(py)sequential	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCSwitchPositionInput(py)sources	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCTouchedStateInput	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCTouchedStateInput(py)lastTouchedStateLatency	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCTouchedStateInput(py)lastTouchedStateTimestamp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCTouchedStateInput(py)sources	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCTouchedStateInput(py)touched	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)GCTouchedStateInput(py)touchedDidChangeHandler	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)GCColor	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController14GCInputButtonASSvp	declared	full/gamecontroller/GameController.swift	compiled input name; Apple NSString payload unobserved
+s:14GameController14GCInputButtonBSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController14GCInputButtonXSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController14GCInputButtonYSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController17GCAxisElementNameV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController17GCAxisElementNameV013PhysicalInputD0a	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController17GCAxisElementNameV8RawValuea	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController17GCAxisElementNameV8rawValueACSS_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController17GCAxisElementNameV8rawValueSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController17GCInputButtonHomeSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController17GCInputButtonMenuSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController18GCInputButtonShareSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController18GCInputLeftTriggerSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+s:14GameController19GCButtonElementNameV013PhysicalInputD0a	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV10leftBumperACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV11leftTriggerACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV11rightBumperACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV12arcadeButton3row6columnACSi_SitFZ	declared	full/gamecontroller/GCPhysicalInput.swift	compiled name factory; not exercised by the isolated probe
+s:14GameController19GCButtonElementNameV12leftShoulderACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV12rightTriggerACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV13rightShoulderACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV14backLeftButton8positionACSi_tFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV15backRightButton8positionACSi_tFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV16thumbstickButtonACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV1aACvpZ	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+s:14GameController19GCButtonElementNameV1bACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV1xACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV1yACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV20leftThumbstickButtonACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV21rightThumbstickButtonACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV4gripACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV4homeACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV4menuACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV5shareACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV7optionsACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV7triggerACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV8RawValuea	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV8rawValueACSS_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCButtonElementNameV8rawValueSSvp	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+s:14GameController19GCInputDirectionPadSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCInputLeftShoulderSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCInputRightTriggerSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCSwitchElementNameV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCSwitchElementNameV013PhysicalInputD0a	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCSwitchElementNameV8RawValuea	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCSwitchElementNameV8rawValueACSS_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController19GCSwitchElementNameV8rawValueSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController20GCInputButtonOptionsSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController20GCInputRightShoulderSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController20GCInputXboxPaddleOneSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController20GCInputXboxPaddleTwoSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController21GCInputLeftThumbstickSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController21GCInputXboxPaddleFourSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController22GCInputRightThumbstickSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController22GCInputXboxPaddleThreeSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController25GCDirectionPadElementNameV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController25GCDirectionPadElementNameV013PhysicalInputE0a	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController25GCDirectionPadElementNameV09directionD0ACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController25GCDirectionPadElementNameV10thumbstickACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController25GCDirectionPadElementNameV14leftThumbstickACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController25GCDirectionPadElementNameV15rightThumbstickACvpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController25GCDirectionPadElementNameV8RawValuea	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController25GCDirectionPadElementNameV8rawValueACSS_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController25GCDirectionPadElementNameV8rawValueSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController26GCPhysicalInputElementNameV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController26GCPhysicalInputElementNameV08PhysicaldE0a	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController26GCPhysicalInputElementNameV8RawValuea	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController26GCPhysicalInputElementNameV8rawValueACSS_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController26GCPhysicalInputElementNameV8rawValueSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController27GCInputDualShockTouchpadOneSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController27GCInputDualShockTouchpadTwoSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController27GCInputLeftThumbstickButtonSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController28GCInputRightThumbstickButtonSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController30GCInputDualShockTouchpadButtonSSvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController31GCPhysicalInputElementTypedNameP	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController31GCPhysicalInputElementTypedNameP08PhysicaldE0Qa	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController32GCPhysicalInputElementCollectionV	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+s:14GameController32GCPhysicalInputElementCollectionV0E0a	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController32GCPhysicalInputElementCollectionV10startIndexAC0H0Vyx_Gvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController32GCPhysicalInputElementCollectionV11SubSequencea	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController32GCPhysicalInputElementCollectionV5IndexV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController32GCPhysicalInputElementCollectionV5IndexV1loiySbAEyx_G_AGtFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController32GCPhysicalInputElementCollectionV5IndexV2eeoiySbAEyx_G_AGtFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController32GCPhysicalInputElementCollectionV5index5afterAC5IndexVyx_GAH_tF	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController32GCPhysicalInputElementCollectionV7Indicesa	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController32GCPhysicalInputElementCollectionV8Iteratora	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController32GCPhysicalInputElementCollectionV8endIndexAC0H0Vyx_Gvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:14GameController32GCPhysicalInputElementCollectionVAASo014GCDirectionPadE0_pRszrlEySoAD_pSgAA0ghE4NameVcip	declared	full/gamecontroller/GCPhysicalInput.swift	specialized dpad subscript compiles; not selected by the isolated probe
+s:14GameController32GCPhysicalInputElementCollectionVAASo06GCAxisE0_pRszrlEySoAD_pSgAA0gE4NameVcip	declared	full/gamecontroller/GCPhysicalInput.swift	specialized axis subscript compiles; not selected by the isolated probe
+s:14GameController32GCPhysicalInputElementCollectionVAASo08GCButtonE0_pRszrlEySoAD_pSgAA0gE4NameVcip	declared	full/gamecontroller/GCPhysicalInput.swift	specialized button subscript compiles; not selected by the isolated probe
+s:14GameController32GCPhysicalInputElementCollectionVAASo08GCSwitchE0_pRszrlEySoAD_pSgAA0gE4NameVcip	declared	full/gamecontroller/GCPhysicalInput.swift	specialized switch subscript compiles; not selected by the isolated probe
+s:14GameController32GCPhysicalInputElementCollectionVAASo0cdE0_pRszrlEySoAD_pSgAA0cdE4NameVcip	declared	full/gamecontroller/GCPhysicalInput.swift	specialized element-name subscript compiles; not selected by the isolated probe
+s:14GameController32GCPhysicalInputElementCollectionVy08PhysicaldE0Qyd__Sgqd__cAA0cdE9TypedNameRd__luip	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+s:14GameController32GCPhysicalInputElementCollectionVySo0cdE0_pSgqd__cSoAD_pRszAA0cdE9TypedNameRd__luip	declared	full/gamecontroller/GCPhysicalInput.swift	constrained typed-name subscript compiles; not selected by the isolated probe
+s:14GameController32GCPhysicalInputElementCollectionVyxAC5IndexVyx_Gcip	declared	full/gamecontroller/GCPhysicalInput.swift	index subscript compiles; not selected by the isolated probe
+s:14GameController32GCPhysicalInputElementCollectionVyxSgSScip	declared	full/gamecontroller/GCPhysicalInput.swift	string subscript compiles; not selected by the isolated probe
+s:23_GameController_SwiftUI0aB20EventHandlingOptionsV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:23_GameController_SwiftUI0aB20EventHandlingOptionsV20receivesEventsInViewyACSbFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:23_GameController_SwiftUI0aB20EventHandlingOptionsVACycfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:7SwiftUI4ViewP016_GameController_aB0E07handlesdE6Events8matching11withOptionsQrSo14GCUIEventTypesV_AD0de13EventHandlingJ0VSgtF	not-applicable	not-applicable	SwiftUI View overlay; no SwiftUI module on this host
+s:7SwiftUI4ViewP016_GameController_aB0E07handlesdE6Events8matchingQrSo14GCUIEventTypesV_tF	not-applicable	not-applicable	SwiftUI View overlay; no SwiftUI module on this host
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV5IndexV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV5IndexV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV5IndexV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV5IndexV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV5IndexV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV5IndexV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV5IndexV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV5IndexV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GCControllerPlayerIndex	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GCDeviceBatteryState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GCDevicePhysicalInputElementChange	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GCDualSenseAdaptiveTriggerMode	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GCDualSenseAdaptiveTriggerStatus	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GCExtendedGamepadSnapshotDataVersion	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GCMicroGamepadSnapshotDataVersion	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GCSystemGestureState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GCTouchState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GCUIEventTypes	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@GCHapticsLocality	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@GCKeyCode	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:14GameController17GCAxisElementNameV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:14GameController19GCButtonElementNameV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:14GameController19GCSwitchElementNameV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:14GameController25GCDirectionPadElementNameV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:14GameController26GCPhysicalInputElementNameV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV5IndexV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tAA14SortComparatorRd__8ComparedQyd__AERSlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tSTRd__AA14SortComparatorRd_0_ADQyd__Rsd_0_8ComparedQyd_0_AERSr0_lF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:ST10FoundationE7compareySo18NSComparisonResultV8ComparedQyd___AFtAA14SortComparatorRd__7ElementQzRsd__lF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:ST10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:ST7CombineE9publisherAA10PublishersO8SequenceVy_xs5NeverOGvp::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Combine publisher overlay is absent
+s:STsE10allSatisfyyS2b7ElementQzKXEKF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE10compactMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE10enumerateds18EnumeratedSequenceVyxGyF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE13elementsEqual_2bySbqd___Sb7ElementQz_ACQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE25lexicographicallyPrecedes_2bySbqd___Sb7ElementQz_ADtKXEtKSTRd__ACQyd__ADRSlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE32withContiguousStorageIfAvailableyqd__Sgqd__SRy7ElementQzGKXEKlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE3max2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE3min2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE4lazys12LazySequenceVyxGvp::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Combine publisher overlay is absent
+s:STsE5count5whereSiSb7ElementQzqd__YKXE_tqd__YKs5ErrorRd__lF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE5first5where7ElementQzSgSbADKXE_tKF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE6filterySay7ElementQzGSbACKXEKF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE6reduce4into_qd__qd__n_yqd__z_7ElementQztKXEtKlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE6reduceyqd__qd___qd__qd___7ElementQztKXEtKlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE6sorted2bySay7ElementQzGSbAD_ADtKXE_tKF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE6starts4with2bySbqd___Sb7ElementQz_ADQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE7flatMapySay7ElementQyd__Gqd__ABQzKXEKSTRd__lF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE7flatMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE7forEachyyy7ElementQzKXEKF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE8contains5whereS2b7ElementQzKXE_tKF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE8reversedSay7ElementQzGyF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE8shuffled5usingSay7ElementQzGqd__z_tSGRd__lF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsE8shuffledSay7ElementQzGyF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsSL7ElementRpzrlE25lexicographicallyPrecedesySbqd__STRd__AAQyd__ABRSlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsSL7ElementRpzrlE3maxABSgyF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsSL7ElementRpzrlE3minABSgyF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsSL7ElementRpzrlE6sortedSayABGyF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsSQ7ElementRpzrlE13elementsEqualySbqd__STRd__AAQyd__ABRSlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsSQ7ElementRpzrlE5split9separator9maxSplits25omittingEmptySubsequencesSays10ArraySliceVyABGGAB_SiSbtF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsSQ7ElementRpzrlE6starts4withSbqd___tSTRd__AAQyd__ABRSlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsSQ7ElementRpzrlE8containsySbABF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsST7ElementRpzrlE6joined9separators14JoinedSequenceVyxGqd___tSTRd__AA_AAQZAARtd__lF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsST7ElementRpzrlE6joineds15FlattenSequenceVyxGyF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:STsSy7ElementRpzrlE6joined9separatorS2S_tF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GCControllerPlayerIndex	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GCDeviceBatteryState	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GCDevicePhysicalInputElementChange	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GCDualSenseAdaptiveTriggerMode	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GCDualSenseAdaptiveTriggerStatus	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GCExtendedGamepadSnapshotDataVersion	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GCMicroGamepadSnapshotDataVersion	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GCSystemGestureState	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GCTouchState	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:14GameController17GCAxisElementNameV	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:14GameController19GCButtonElementNameV	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:14GameController19GCSwitchElementNameV	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:14GameController25GCDirectionPadElementNameV	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:14GameController26GCPhysicalInputElementNameV	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GCControllerPlayerIndex	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GCDeviceBatteryState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GCDevicePhysicalInputElementChange	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GCDualSenseAdaptiveTriggerMode	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GCDualSenseAdaptiveTriggerStatus	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GCExtendedGamepadSnapshotDataVersion	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GCMicroGamepadSnapshotDataVersion	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GCSystemGestureState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GCTouchState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:14GameController17GCAxisElementNameV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:14GameController19GCButtonElementNameV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:14GameController19GCSwitchElementNameV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:14GameController25GCDirectionPadElementNameV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:14GameController26GCPhysicalInputElementNameV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:Sl17_StringProcessingE14trimmingPrefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:Sl17_StringProcessingSQ7ElementRpzrlE10firstRange2ofSny5IndexQzGSgqd___tSlRd__ABQyd__ACRSlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:Sl17_StringProcessingSQ7ElementRpzrlE14trimmingPrefixy11SubSequenceQzqd__STRd__ABQyd__ACRSlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:Sl17_StringProcessingSQ7ElementRpzrlE5split9separator9maxSplits25omittingEmptySubsequencesSay11SubSequenceQzGqd___SiSbtSlRd__ABQyd__ACRSlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:Sl17_StringProcessingSQ7ElementRpzrlE6ranges2ofSaySny5IndexQzGGqd___tSlRd__ABQyd__ACRSlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:Sl17_StringProcessingSQ7ElementRpzrlE8containsySbqd__SlRd__ABQyd__ACRSlF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE10firstIndex5where0B0QzSgSb7ElementQzKXE_tKF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE13randomElement0B0QzSgyF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE13randomElement5using0B0QzSgqd__z_tSGRd__lF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE17removingSubrangesys18DiscontiguousSliceVyxGs8RangeSetVy5IndexQzGF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE19underestimatedCountSivp::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE4drop5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE5countSivp::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE5first7ElementQzSgvp::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE5index_8offsetBy07limitedC05IndexQzSgAE_SiAEtF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE5index_8offsetBy5IndexQzAD_SitF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE5split9maxSplits25omittingEmptySubsequences14whereSeparatorSay11SubSequenceQzGSi_S2b7ElementQzKXEtKF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE6prefix4upTo11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE6prefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE6prefix7through11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE6prefixy11SubSequenceQzSiF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE6suffix4from11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE6suffixy11SubSequenceQzSiF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE7indices5wheres8RangeSetVy5IndexQzGSb7ElementQzKXE_tKF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE7isEmptySbvp::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE8distance4from2toSi5IndexQz_AEtF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE8dropLasty11SubSequenceQzSiF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE9dropFirsty11SubSequenceQzSiF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE9formIndex5aftery0B0Qzz_tF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE9formIndex_8offsetBy07limitedD0Sb0B0Qzz_SiAEtF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsE9formIndex_8offsetByy0B0Qzz_SitF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsEy11SubSequenceQzqd__cSXRd__5BoundQyd__5IndexRtzluip::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection range subscript witness; not claimed as GameController evidence
+s:SlsEy11SubSequenceQzys15UnboundedRange_OXEcip::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection range subscript witness; not claimed as GameController evidence
+s:SlsEys18DiscontiguousSliceVyxGs8RangeSetVy5IndexQzGcip::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection range subscript witness; not claimed as GameController evidence
+s:SlsSIyxG7IndicesRtzrlE7indicesAAvp::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsSQ7ElementRpzrlE10firstIndex2of0C0QzSgAB_tF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsSQ7ElementRpzrlE5index2of5IndexQzSgAB_tF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsSQ7ElementRpzrlE5split9separator9maxSplits25omittingEmptySubsequencesSay11SubSequenceQzGAB_SiSbtF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:SlsSQ7ElementRpzrlE7indices2ofs8RangeSetVy5IndexQzGAB_tF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:Slss16IndexingIteratorVyxG0B0RtzrlE04makeB0ACyF::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection/Sequence stdlib witness
+s:Slss5SliceVyxG11SubSequenceRtzrlEyACSny5IndexQzGcip::SYNTHESIZED::s:14GameController32GCPhysicalInputElementCollectionV	not-applicable	not-applicable	Swift Collection range subscript witness; not claimed as GameController evidence
+s:So10GCKeyboardC14GameControllerE17DidConnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So10GCKeyboardC14GameControllerE17DidConnectMessageV04makeF0yAESg10Foundation12NotificationVFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So10GCKeyboardC14GameControllerE17DidConnectMessageV4nameSo18NSNotificationNameavpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So10GCKeyboardC14GameControllerE17DidConnectMessageV7Subjecta	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So10GCKeyboardC14GameControllerE17DidConnectMessageV8keyboardABvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So10GCKeyboardC14GameControllerE17DidConnectMessageV8keyboardAeB_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So10GCKeyboardC14GameControllerE20DidDisconnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So10GCKeyboardC14GameControllerE20DidDisconnectMessageV04makeF0yAESg10Foundation12NotificationVFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So10GCKeyboardC14GameControllerE20DidDisconnectMessageV4nameSo18NSNotificationNameavpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So10GCKeyboardC14GameControllerE20DidDisconnectMessageV7Subjecta	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So10GCKeyboardC14GameControllerE20DidDisconnectMessageV8keyboardABvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So10GCKeyboardC14GameControllerE20DidDisconnectMessageV8keyboardAeB_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE17DidConnectMessageV	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+s:So12GCControllerC14GameControllerE17DidConnectMessageV04makeF0yAESg10Foundation12NotificationVFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE17DidConnectMessageV10controllerABvp	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+s:So12GCControllerC14GameControllerE17DidConnectMessageV10controllerAeB_tcfc	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+s:So12GCControllerC14GameControllerE17DidConnectMessageV4nameSo18NSNotificationNameavpZ	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+s:So12GCControllerC14GameControllerE17DidConnectMessageV7Subjecta	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE20DidDisconnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE20DidDisconnectMessageV04makeF0yAESg10Foundation12NotificationVFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE20DidDisconnectMessageV10controllerABvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE20DidDisconnectMessageV10controllerAeB_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE20DidDisconnectMessageV4nameSo18NSNotificationNameavpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE20DidDisconnectMessageV7Subjecta	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE23DidBecomeCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE23DidBecomeCurrentMessageV04makeG0yAESg10Foundation12NotificationVFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE23DidBecomeCurrentMessageV10controllerABvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE23DidBecomeCurrentMessageV10controllerAeB_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE23DidBecomeCurrentMessageV4nameSo18NSNotificationNameavpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE23DidBecomeCurrentMessageV7Subjecta	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE26DidStopBeingCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE26DidStopBeingCurrentMessageV04makeH0yAESg10Foundation12NotificationVFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE26DidStopBeingCurrentMessageV10controllerABvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE26DidStopBeingCurrentMessageV10controllerAeB_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE26DidStopBeingCurrentMessageV4nameSo18NSNotificationNameavpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCControllerC14GameControllerE26DidStopBeingCurrentMessageV7Subjecta	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCQuaternionV1x1y1z1wABSd_S3dtcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCQuaternionVABycfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So12GCTouchStateV8rawValueABSgSi_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So13GCEulerAnglesa5pitch3yaw4rollABSd_S2dtcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So13GCEulerAnglesaABycfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So14GCAccelerationa1x1y1zABSd_S2dtcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So14GCAccelerationaABycfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So14GCRotationRatea1x1y1zABSd_S2dtcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So14GCRotationRateaABycfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So14GCUIEventTypesV8rawValueABSu_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So17GCHapticsLocalitya8rawValueABSS_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20GCDeviceBatteryStateV8rawValueABSgSi_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20GCSystemGestureStateV8rawValueABSgSi_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE04makeF0yxSgAC12NotificationVFZ::SYNTHESIZED::s:So10GCKeyboardC14GameControllerE17DidConnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE04makeF0yxSgAC12NotificationVFZ::SYNTHESIZED::s:So10GCKeyboardC14GameControllerE20DidDisconnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE04makeF0yxSgAC12NotificationVFZ::SYNTHESIZED::s:So12GCControllerC14GameControllerE17DidConnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE04makeF0yxSgAC12NotificationVFZ::SYNTHESIZED::s:So12GCControllerC14GameControllerE20DidDisconnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE04makeF0yxSgAC12NotificationVFZ::SYNTHESIZED::s:So12GCControllerC14GameControllerE23DidBecomeCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE04makeF0yxSgAC12NotificationVFZ::SYNTHESIZED::s:So12GCControllerC14GameControllerE26DidStopBeingCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE04makeF0yxSgAC12NotificationVFZ::SYNTHESIZED::s:So7GCMouseC14GameControllerE17DidConnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE04makeF0yxSgAC12NotificationVFZ::SYNTHESIZED::s:So7GCMouseC14GameControllerE20DidDisconnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE04makeF0yxSgAC12NotificationVFZ::SYNTHESIZED::s:So7GCMouseC14GameControllerE23DidBecomeCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE04makeF0yxSgAC12NotificationVFZ::SYNTHESIZED::s:So7GCMouseC14GameControllerE26DidStopBeingCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE16makeNotificationyAC0H0VxFZ::SYNTHESIZED::s:So10GCKeyboardC14GameControllerE17DidConnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE16makeNotificationyAC0H0VxFZ::SYNTHESIZED::s:So10GCKeyboardC14GameControllerE20DidDisconnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE16makeNotificationyAC0H0VxFZ::SYNTHESIZED::s:So12GCControllerC14GameControllerE17DidConnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE16makeNotificationyAC0H0VxFZ::SYNTHESIZED::s:So12GCControllerC14GameControllerE20DidDisconnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE16makeNotificationyAC0H0VxFZ::SYNTHESIZED::s:So12GCControllerC14GameControllerE23DidBecomeCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE16makeNotificationyAC0H0VxFZ::SYNTHESIZED::s:So12GCControllerC14GameControllerE26DidStopBeingCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE16makeNotificationyAC0H0VxFZ::SYNTHESIZED::s:So7GCMouseC14GameControllerE17DidConnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE16makeNotificationyAC0H0VxFZ::SYNTHESIZED::s:So7GCMouseC14GameControllerE20DidDisconnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE16makeNotificationyAC0H0VxFZ::SYNTHESIZED::s:So7GCMouseC14GameControllerE23DidBecomeCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE16makeNotificationyAC0H0VxFZ::SYNTHESIZED::s:So7GCMouseC14GameControllerE26DidStopBeingCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE4nameSo0A4NameavpZ::SYNTHESIZED::s:So10GCKeyboardC14GameControllerE17DidConnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE4nameSo0A4NameavpZ::SYNTHESIZED::s:So10GCKeyboardC14GameControllerE20DidDisconnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE4nameSo0A4NameavpZ::SYNTHESIZED::s:So12GCControllerC14GameControllerE17DidConnectMessageV	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE4nameSo0A4NameavpZ::SYNTHESIZED::s:So12GCControllerC14GameControllerE20DidDisconnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE4nameSo0A4NameavpZ::SYNTHESIZED::s:So12GCControllerC14GameControllerE23DidBecomeCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE4nameSo0A4NameavpZ::SYNTHESIZED::s:So12GCControllerC14GameControllerE26DidStopBeingCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE4nameSo0A4NameavpZ::SYNTHESIZED::s:So7GCMouseC14GameControllerE17DidConnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE4nameSo0A4NameavpZ::SYNTHESIZED::s:So7GCMouseC14GameControllerE20DidDisconnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE4nameSo0A4NameavpZ::SYNTHESIZED::s:So7GCMouseC14GameControllerE23DidBecomeCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE16MainActorMessagePACE4nameSo0A4NameavpZ::SYNTHESIZED::s:So7GCMouseC14GameControllerE26DidStopBeingCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So20NSNotificationCenterC10FoundationE17MessageIdentifierP14GameControllerAbCE04BasedE0Vy_So10GCKeyboardCAFE010DidConnectD0VGRszrlE03didK0AMvpZ	unavailable	unavailable	typed NotificationCenter.MessageIdentifier is absent from Linux Foundation
+s:So20NSNotificationCenterC10FoundationE17MessageIdentifierP14GameControllerAbCE04BasedE0Vy_So10GCKeyboardCAFE013DidDisconnectD0VGRszrlE03didK0AMvpZ	unavailable	unavailable	typed NotificationCenter.MessageIdentifier is absent from Linux Foundation
+s:So20NSNotificationCenterC10FoundationE17MessageIdentifierP14GameControllerAbCE04BasedE0Vy_So12GCControllerCAFE010DidConnectD0VGRszrlE03didK0AMvpZ	unavailable	unavailable	typed NotificationCenter.MessageIdentifier is absent from Linux Foundation
+s:So20NSNotificationCenterC10FoundationE17MessageIdentifierP14GameControllerAbCE04BasedE0Vy_So12GCControllerCAFE013DidDisconnectD0VGRszrlE03didK0AMvpZ	unavailable	unavailable	typed NotificationCenter.MessageIdentifier is absent from Linux Foundation
+s:So20NSNotificationCenterC10FoundationE17MessageIdentifierP14GameControllerAbCE04BasedE0Vy_So12GCControllerCAFE016DidBecomeCurrentD0VGRszrlE03didkL0AMvpZ	unavailable	unavailable	typed NotificationCenter.MessageIdentifier is absent from Linux Foundation
+s:So20NSNotificationCenterC10FoundationE17MessageIdentifierP14GameControllerAbCE04BasedE0Vy_So12GCControllerCAFE019DidStopBeingCurrentD0VGRszrlE03didklM0AMvpZ	unavailable	unavailable	typed NotificationCenter.MessageIdentifier is absent from Linux Foundation
+s:So20NSNotificationCenterC10FoundationE17MessageIdentifierP14GameControllerAbCE04BasedE0Vy_So7GCMouseCAFE010DidConnectD0VGRszrlE03didK0AMvpZ	unavailable	unavailable	typed NotificationCenter.MessageIdentifier is absent from Linux Foundation
+s:So20NSNotificationCenterC10FoundationE17MessageIdentifierP14GameControllerAbCE04BasedE0Vy_So7GCMouseCAFE013DidDisconnectD0VGRszrlE03didK0AMvpZ	unavailable	unavailable	typed NotificationCenter.MessageIdentifier is absent from Linux Foundation
+s:So20NSNotificationCenterC10FoundationE17MessageIdentifierP14GameControllerAbCE04BasedE0Vy_So7GCMouseCAFE016DidBecomeCurrentD0VGRszrlE03didkL0AMvpZ	unavailable	unavailable	typed NotificationCenter.MessageIdentifier is absent from Linux Foundation
+s:So20NSNotificationCenterC10FoundationE17MessageIdentifierP14GameControllerAbCE04BasedE0Vy_So7GCMouseCAFE019DidStopBeingCurrentD0VGRszrlE03didklM0AMvpZ	unavailable	unavailable	typed NotificationCenter.MessageIdentifier is absent from Linux Foundation
+s:So23GCControllerPlayerIndexV8rawValueABSgSi_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So25GCGamepadSnapShotDataV100a7version4size5dpadX0H1Y7buttonA0I1B0I1X0I1Y12leftShoulder05rightK0ABs6UInt16V_ANS8ftcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So25GCGamepadSnapShotDataV100aABycfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So26GCDevicePhysicalInputStateP14GameControllerE4axesAC010GCPhysicalC17ElementCollectionVySo06GCAxisI0_pGvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So26GCDevicePhysicalInputStateP14GameControllerE4axesAC010GCPhysicalC17ElementCollectionVySo06GCAxisI0_pGvp::SYNTHESIZED::c:objc(cs)GCControllerInputState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So26GCDevicePhysicalInputStateP14GameControllerE5dpadsAC010GCPhysicalC17ElementCollectionVySo014GCDirectionPadI0_pGvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So26GCDevicePhysicalInputStateP14GameControllerE5dpadsAC010GCPhysicalC17ElementCollectionVySo014GCDirectionPadI0_pGvp::SYNTHESIZED::c:objc(cs)GCControllerInputState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So26GCDevicePhysicalInputStateP14GameControllerE7buttonsAC010GCPhysicalC17ElementCollectionVySo08GCButtonI0_pGvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So26GCDevicePhysicalInputStateP14GameControllerE7buttonsAC010GCPhysicalC17ElementCollectionVySo08GCButtonI0_pGvp::SYNTHESIZED::c:objc(cs)GCControllerInputState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So26GCDevicePhysicalInputStateP14GameControllerE8elementsAC010GCPhysicalC17ElementCollectionVySo0hcI0_pGvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So26GCDevicePhysicalInputStateP14GameControllerE8elementsAC010GCPhysicalC17ElementCollectionVySo0hcI0_pGvp::SYNTHESIZED::c:objc(cs)GCControllerInputState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So26GCDevicePhysicalInputStateP14GameControllerE8switchesAC010GCPhysicalC17ElementCollectionVySo08GCSwitchI0_pGvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So26GCDevicePhysicalInputStateP14GameControllerE8switchesAC010GCPhysicalC17ElementCollectionVySo08GCSwitchI0_pGvp::SYNTHESIZED::c:objc(cs)GCControllerInputState	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So26GCMicroGamepadSnapshotDataa7version4size5dpadX0G1Y7buttonA0H1XABs6UInt16V_AJS4ftcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So26GCMicroGamepadSnapshotDataaABycfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So29GCExtendedGamepadSnapshotDataa7version4size5dpadX0G1Y7buttonA0H1B0H1X0H1Y12leftShoulder05rightJ00I11ThumbstickX0iL1Y0kL1X0kL1Y0I7Trigger0kM028supportsClickableThumbsticks0iL6Button0klQ0ABs6UInt16V_AWS14f10ObjectiveC8ObjCBoolVA2Ztcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So29GCExtendedGamepadSnapshotDataaABycfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So30GCDevicePhysicalInputStateDiffP14GameControllerE15changedElementsQrSgyF	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So30GCDevicePhysicalInputStateDiffP14GameControllerE15changedElementsSo12NSEnumeratorCSgyF	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So30GCDualSenseAdaptiveTriggerModeV8rawValueABSgSi_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So30GCMicroGamepadSnapShotDataV100a7version4size5dpadX0I1Y7buttonA0J1XABs6UInt16V_AJS4ftcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So30GCMicroGamepadSnapShotDataV100aABycfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So30GCPhysicalInputSourceDirectionV8rawValueABSu_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So32GCDualSenseAdaptiveTriggerStatusV8rawValueABSgSi_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So33GCExtendedGamepadSnapShotDataV100a7version4size5dpadX0I1Y7buttonA0J1B0J1X0J1Y12leftShoulder05rightL00K11ThumbstickX0kN1Y0mN1X0mN1Y0K7Trigger0mO0ABs6UInt16V_ATS14ftcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So33GCExtendedGamepadSnapShotDataV100aABycfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So33GCMicroGamepadSnapshotDataVersionV8rawValueABSgSi_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So34GCDevicePhysicalInputElementChangeV8rawValueABSgSi_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So36GCExtendedGamepadSnapshotDataVersionV8rawValueABSgSi_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So46GCDualSenseAdaptiveTriggerPositionalAmplitudesa6valuesABSf_S9ft_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So46GCDualSenseAdaptiveTriggerPositionalAmplitudesaABycfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So54GCDualSenseAdaptiveTriggerPositionalResistiveStrengthsa6valuesABSf_S9ft_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So54GCDualSenseAdaptiveTriggerPositionalResistiveStrengthsaABycfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE17DidConnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE17DidConnectMessageV04makeF0yAESg10Foundation12NotificationVFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE17DidConnectMessageV4nameSo18NSNotificationNameavpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE17DidConnectMessageV5mouseABvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE17DidConnectMessageV5mouseAeB_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE17DidConnectMessageV7Subjecta	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE20DidDisconnectMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE20DidDisconnectMessageV04makeF0yAESg10Foundation12NotificationVFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE20DidDisconnectMessageV4nameSo18NSNotificationNameavpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE20DidDisconnectMessageV5mouseABvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE20DidDisconnectMessageV5mouseAeB_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE20DidDisconnectMessageV7Subjecta	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE23DidBecomeCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE23DidBecomeCurrentMessageV04makeG0yAESg10Foundation12NotificationVFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE23DidBecomeCurrentMessageV4nameSo18NSNotificationNameavpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE23DidBecomeCurrentMessageV5mouseABvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE23DidBecomeCurrentMessageV5mouseAeB_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE23DidBecomeCurrentMessageV7Subjecta	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE26DidStopBeingCurrentMessageV	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE26DidStopBeingCurrentMessageV04makeH0yAESg10Foundation12NotificationVFZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE26DidStopBeingCurrentMessageV4nameSo18NSNotificationNameavpZ	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE26DidStopBeingCurrentMessageV5mouseABvp	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE26DidStopBeingCurrentMessageV5mouseAeB_tcfc	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So7GCMouseC14GameControllerE26DidStopBeingCurrentMessageV7Subjecta	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:So8GCPoint2V1x1yABSf_Sftcfc	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+s:So8GCPoint2VABycfc	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+s:So9GCKeyCodea8rawValueABSi_tcfc	implemented	tests/agent/GameControllerRuntime.swift	exercised by the agent runtime probe
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@GCHapticsLocality	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@GCKeyCode	not-applicable	not-applicable	Hashable.hashValue is compiler-synthesized
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@GCHapticsLocality	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@GCKeyCode	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@GCUIEventTypes	not-applicable	not-applicable	OptionSet stdlib witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@GCPhysicalInputSourceDirection	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@GCUIEventTypes	declared	full/gamecontroller/GameController.swift	compiled Linux starting declaration
