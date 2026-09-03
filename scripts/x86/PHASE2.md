@@ -78,7 +78,11 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    only when `ARCH=arm64`; on x86 they require `MH_MAGIC_64 X86_64` instead of
    rewriting the SHA (`NEEDS_X86_OPENCOMBINE` until the x86 `.o` exists).
 3. Focus pin `a2832521c1daa0c23419c73705ae043ed60c9791` is checked, not
-   rewritten. Normalized bundles come from the committed
+   rewritten. The probe resolves `git rev-parse --show-toplevel` from
+   `scratch/ladder-corpus/focus-ios/focus-ios` (app subtree; git root is the
+   parent) with explicit `safe.directory` on that path and its parents, and
+   a CANNOT line always names `expected=` and `observed=` (plus `git_error=`
+   if git itself failed). Normalized bundles come from the committed
    `onboarding_resources_proof.py` or `FOCUS_WIDGET_BUNDLE`.
 4. `build_full.sh` / mrroot refuse to copy an arm64 `libswiftCore.dylib` into
    an x86-named root (`require_macho_cpu`).
