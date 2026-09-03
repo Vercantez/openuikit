@@ -342,7 +342,7 @@ expect_grep 'phase2_posix_overlay_dir' "$COMMON" \
     "overlay-posix dir helper exists for Swift -Xcc -I (UD guest)"
 expect_file "$ROOT/scripts/x86/fe_ioctl_stub.h"
 expect_grep 'phase2_posix_overlay_dir' "$PHASE2" \
-    "os-module and FE swiftc get overlay-posix -I so Darwin/SwiftOverlayShims compile"
+    "os-module and FE still receive overlay-posix -I (sysroot stub is what Clang modules see)"
 expect_grep 'cannot carry ioctl.h (CFSocket census)' "$ROOT/full/foundation/build_os_module.sh" \
     "build_os_module.sh forwards extra swiftc argv (overlay-posix -I on a VM)"
 expect_grep 'fe_clock_realtime.h' "$STAGE" \
