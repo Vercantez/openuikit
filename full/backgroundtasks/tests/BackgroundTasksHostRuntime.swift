@@ -87,8 +87,9 @@ private struct BackgroundTasksHostRuntime {
       try scheduler.submit(BGAppRefreshTaskRequest(identifier: "unavailable"))
       preconditionFailure("unavailable scheduler accepted work")
     } catch let error as BGTaskScheduler.Error {
-      precondition(error == .unavailable)
+      precondition(error.code == .unavailable)
       precondition((error as NSError).code == BGTaskScheduler.Error.Code.unavailable.rawValue)
+      precondition((error as NSError).domain == BGTaskScheduler.errorDomain)
     } catch {
       preconditionFailure("unexpected scheduler error")
     }
