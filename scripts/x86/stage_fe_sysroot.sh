@@ -125,6 +125,12 @@ fi
 echo "== measurement headers (shared list; stage_absent from arm64 sysroot_fe4)"
 phase2_stage_measurement_headers_from_arm "$SYS" "$ARM_SYS"
 fe_sysroot_append_vm_copy "$SYS/usr/include/mach/vm_map.h"
+# Fresh VM: arm64 sysroot_fe4 has no Darwin SDK copy of removefile.h.
+if [ ! -e "$SYS/usr/include/removefile.h" ] \
+    && [ -f "$W/full/foundation/removefile_compat.h" ]; then
+    cp "$W/full/foundation/removefile_compat.h" "$SYS/usr/include/removefile.h"
+    echo "  + removefile.h   [full/foundation/removefile_compat.h; arm64 sysroot_fe4 absent]"
+fi
 
 if [ -f "$ARM_SYS/usr/include/_DarwinFoundation2.apinotes" ]; then
     cp "$ARM_SYS/usr/include/_DarwinFoundation2.apinotes" \
@@ -136,7 +142,48 @@ fi
 echo "== Darwin family Clang modulemaps (underlying Objective-C module Darwin)"
 phase2_install_darwin_modulemaps \
     "$SYS" "$ARM_SYS" "$MACHORUN/scripts/gen_darwin_modulemap.py" \
-    || echo "  (Darwin family incomplete; FE will fail with 'underlying Objective-C module Darwin not found' or a missing header named by Darwin_C.modulemap)"
+    || echo "  (Darwin family incomplete; trying overlay-darwin / artifact fallback)"
+
+if [ ! -f "$SYS/usr/include/Darwin.modulemap" ]; then
+    echo "== Darwin.modulemap via stage_overlay_darwin.sh (no Xcode, no arm64 sysroot)"
+    set +e
+    SWIFTCORE_DARWIN_ARCH=x86_64 W="$W" \
+        bash "$W/swiftcore-macho/scripts/stage_overlay_darwin.sh" "$SYS"
+    set -e
+fi
+# overlay-darwin replaces MacTypes.h with CarbonHeaders UnsignedWide, which
+# collides with CoreFoundation. Restore machorun's clean-room header.
+if [ -f "$MACHORUN/sdk/usr/include/MacTypes.h" ]; then
+    cp -f "$MACHORUN/sdk/usr/include/MacTypes.h" "$SYS/usr/include/MacTypes.h"
+    echo "  restored machorun/sdk MacTypes.h after overlay-darwin"
+fi
+phase2_expand_darwin_modulemap_for_fe "$SYS" || true
+
+echo "== POSIX semaphore.h (Darwin.swiftinterface); ioctl stays out of sysroot"
+posix_sem=$W/swiftcore-macho/sdk/overlay-posix/semaphore.h
+if [ -f "$posix_sem" ] && [ ! -e "$SYS/usr/include/semaphore.h" ]; then
+    cp "$posix_sem" "$SYS/usr/include/semaphore.h"
+    echo "  + semaphore.h   [swiftcore-macho/sdk/overlay-posix; ioctl family not staged]"
+fi
+# ioctl.h in the Darwin sysroot makes CFSocket compile and then the
+# foundation-macho census reports CANNOT_CFOBJC_OBJECTS extra=CFSocket.
+# UserDefaultsGuest gets overlay-posix via -Xcc -I in ud_guest.inc.
+
+echo "== CLOCK_REALTIME as clockid_t (Clang modules hide Darwin clock ids)"
+cp -f "$W/scripts/x86/fe_clock_realtime.h" "$SYS/usr/include/fe_clock_realtime.h"
+if [ -f "$SYS/usr/include/Darwin.modulemap" ] \
+    && ! grep -q 'fe_clock_realtime.h' "$SYS/usr/include/Darwin.modulemap"; then
+    sed -i '$i\  textual header "fe_clock_realtime.h"' "$SYS/usr/include/Darwin.modulemap"
+    echo "  Darwin.modulemap textual header fe_clock_realtime.h"
+fi
+
+# SwiftOverlayShims expects timespec/timeval from the Clang Darwin module.
+# Linux LibcOverlayShims.h does not include sys/time.h.
+if [ -f "$SYS/usr/include/sys/types.h" ] \
+    && ! grep -q 'sys/time.h' "$SYS/usr/include/sys/types.h"; then
+    printf '\n#include <sys/time.h>\n' >> "$SYS/usr/include/sys/types.h"
+    echo "  sys/types.h now includes sys/time.h (timespec in SwiftOverlayShims)"
+fi
 
 echo "== textual Darwin overlays from the arm64 sysroot, if any (no dylibs, no arm64 .swiftmodule slices)"
 OVERLAYS_COPIED=0
@@ -161,6 +208,15 @@ if [ -d "$ARM_SYS/usr/lib/swift" ]; then
         cp -a "$item" "$dest"
         OVERLAYS_COPIED=$((OVERLAYS_COPIED + 1))
     done < <(find "$ARM_SYS/usr/lib/swift" -type f -print0)
+fi
+
+echo "== x86 overlay modules from committed artifacts (fresh VM has no arm64 sysroot_fe4)"
+phase2_copy_artifact_swift_overlays "$SYS" "$artifacts/swift-macosx"
+if [ -d "$artifacts/swift-macosx/x86_64" ]; then
+    for dylib in "$artifacts/swift-macosx/x86_64"/*.dylib; do
+        [ -f "$dylib" ] || continue
+        copy_if_x86_macho "$dylib" "$SYS/usr/lib/swift/$(basename "$dylib")"
+    done
 fi
 
 echo "== x86 Swift runtime into $SYS/usr/lib/swift (toolchain layout; not left only in artifacts/)"
@@ -196,6 +252,10 @@ echo "== overlay .tbd from x86 overlay dylibs (never copy arm64 usr/lib/swift tb
 phase2_stage_overlay_tbds_into_sysroot "$SYS"
 echo "  usr/lib/swift tbds: $(find "$SYS/usr/lib/swift" -maxdepth 1 -name '*.tbd' | wc -l | tr -d ' ')"
 
+echo "== SwiftOnoneSupport stub (collections/os compile without -O)"
+phase2_ensure_swift_onone_support "$SYS" "$TARGET" \
+    || echo "  SwiftOnoneSupport stub failed; collections without -O will not compile"
+
 empty_tbd=$(find "$SYS" -name '*.tbd' -size 0 -print -quit)
 [ -z "$empty_tbd" ] || {
     echo "stage_fe_sysroot_x86: empty .tbd is a linker lie: $empty_tbd" >&2
@@ -203,11 +263,18 @@ empty_tbd=$(find "$SYS" -name '*.tbd' -size 0 -print -quit)
 }
 
 overlay_if=$(phase2_arm_overlay_interface "$ARM_SYS" || true)
+if [ -z "$overlay_if" ]; then
+    overlay_if=$artifacts/swift-macosx/Darwin.swiftmodule/x86_64-apple-macos.swiftinterface
+fi
+dmap_for_stamp=$ARM_SYS/usr/include/Darwin.modulemap
+if [ ! -f "$dmap_for_stamp" ]; then
+    dmap_for_stamp=$SYS/usr/include/Darwin.modulemap
+fi
 phase2_write_sysroot_stamp "$SYS/$PHASE2_SYSROOT_STAMP" \
     "$x86_core" "$x86_mod" "$x86_bf_mod" \
     "$MACHORUN/scripts/gen_darwin_modulemap.py" \
     "${overlay_if:-}" \
-    "$ARM_SYS/usr/include/Darwin.modulemap" \
+    "$dmap_for_stamp" \
     "$FE_SYSROOT_MEASUREMENT_HEADERS_FILE"
 echo "  wrote $SYS/$PHASE2_SYSROOT_STAMP (input-keyed; restage when these shas change)"
 
@@ -217,7 +284,7 @@ echo "  modulemaps  : $(find "$SYS/usr/include" -maxdepth 1 -name '*.modulemap' 
 echo "  textual overlays copied from arm64 sysroot: $OVERLAYS_COPIED"
 if [ ! -d "$SYS/usr/lib/swift/Darwin.swiftmodule" ] \
     && [ ! -f "$SYS/usr/lib/swift/Darwin.swiftinterface" ]; then
-    echo "  CANNOT_STAGE_XCODE_DARWIN_OVERLAYS: no Darwin.swiftmodule/swiftinterface in $ARM_SYS (Linux cannot materialize Apple's overlay interfaces)"
+    echo "  CANNOT_STAGE_XCODE_DARWIN_OVERLAYS: no Darwin.swiftmodule/swiftinterface in artifacts or $ARM_SYS (Linux cannot materialize Apple's overlay interfaces)"
     exit 3
 fi
 if [ -e "$SYS/usr/lib/libobjc.tbd" ] && phase2_tbd_is_x86_target "$SYS/usr/lib/libobjc.tbd"; then

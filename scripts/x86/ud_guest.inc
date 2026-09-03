@@ -289,6 +289,10 @@ phase2_ud_guest_compile_port() {
     if [ -n "$fe_out" ] && [ -d "$fe_out/collections" ]; then
         collections_i=(-I "$fe_out/collections")
     fi
+    local posix_i=()
+    if [ -d "$repo/swiftcore-macho/sdk/overlay-posix" ]; then
+        posix_i=(-Xcc -I"$repo/swiftcore-macho/sdk/overlay-posix")
+    fi
     set +e
     swiftc -c -O -wmo -parse-as-library \
         -module-name PortedUserDefaultsGuest \
@@ -300,6 +304,7 @@ phase2_ud_guest_compile_port() {
         "${collections_i[@]}" \
         -I "$repo/foundation-macho/include/CFPreferencesMinimal" \
         "${cshims_args[@]}" \
+        "${posix_i[@]}" \
         "$src_ud" "$src_bridge" \
         -o "$out" >"$log" 2>&1
     st=$?
@@ -338,6 +343,10 @@ phase2_ud_guest_compile_runner() {
     if [ -n "$fe_out" ] && [ -d "$fe_out/collections" ]; then
         collections_i=(-I "$fe_out/collections")
     fi
+    local posix_i=()
+    if [ -d "$repo/swiftcore-macho/sdk/overlay-posix" ]; then
+        posix_i=(-Xcc -I"$repo/swiftcore-macho/sdk/overlay-posix")
+    fi
     set +e
     swiftc -c -O -wmo \
         -module-name ud_guest \
@@ -348,6 +357,7 @@ phase2_ud_guest_compile_runner() {
         "${collections_i[@]}" \
         -I "$repo/foundation-macho/include/CFPreferencesMinimal" \
         "${cshims_args[@]}" \
+        "${posix_i[@]}" \
         "$builddir/main.swift" \
         -o "$out" >"$log" 2>&1
     st=$?

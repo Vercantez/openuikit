@@ -1683,11 +1683,11 @@ phase2_ensure_swift_onone_support() {
     local key
     mkdir -p "$dest"
     printf 'public enum _SwiftOnoneSupportStub {}\n' > "$src"
-    key=$(stamp_key "$dest/x86_64-apple-macos.swiftmodule" "$src" "$target")
-    if stamp_reuse "$dest/x86_64-apple-macos.swiftmodule" "$key"; then
+    key=$(stamp_key "$dest" "$src" "$target")
+    if stamp_reuse "$dest" "$key"; then
         return 0
     fi
-    stamp_rebuild_reason "$dest/x86_64-apple-macos.swiftmodule" "$key"
+    stamp_rebuild_reason "$dest" "$key"
     phase2_ensure_sdk_settings "$sys"
     set +e
     swiftc -parse-as-library -O -emit-module -module-name SwiftOnoneSupport \
@@ -1700,7 +1700,7 @@ phase2_ensure_swift_onone_support() {
         echo "phase2: SwiftOnoneSupport stub failed rc=$st log=$log" >&2
         return 1
     fi
-    stamp_write "$dest/x86_64-apple-macos.swiftmodule" "$key"
+    stamp_write "$dest" "$key"
 }
 
 # shellcheck source=ud_guest.inc

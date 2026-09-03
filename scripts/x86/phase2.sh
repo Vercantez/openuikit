@@ -947,6 +947,16 @@ else
         "no $MRROOT to stage overlays into (mrroot-x86 did not produce a dest)"
 fi
 
+echo "==== mrroot_full-x86_64 Foundation placeholders (empty; not loud-abort) ===="
+if [ -d "$MRROOT" ]; then
+    if phase2_stage_x86_foundation_placeholders "$MRROOT" "$W" "$SYS"; then
+        note mrroot-placeholders-x86 satisfied
+    else
+        cannot mrroot-placeholders-x86 STAGE_FOUNDATION_PLACEHOLDERS \
+            "build_foundation_placeholder.sh failed for $MRROOT; run_ud_guest.sh refuses empty Foundation slots. Loud-abort stubs stay in $BASE_MRROOT."
+    fi
+fi
+
 # ---------------------------------------------------------------------------
 # 6c. Guest-visible /w layout (FocusWidgetGuestMain.swift fonts)
 echo "==== /w layout (guest-visible fonts path) ===="

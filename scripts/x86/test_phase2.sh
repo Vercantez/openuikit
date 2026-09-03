@@ -318,16 +318,26 @@ expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
     "missing Darwin.modulemap is its own CANNOT, not folded into overlays"
 expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
-expect_grep 'stage_fe_sysroot_x86.6' "$COMMON" \
-    "recipe bump restages a sysroot that lacked libobjc.tbd aliases"
+expect_grep 'stage_fe_sysroot_x86.9' "$COMMON" \
+    "recipe bump restages a sysroot that lacked artifact Darwin overlays"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
     "stamp records the shared measurement-header list sha"
 expect_grep 'phase2_measurement_headers_missing' "$COMMON" \
     "every header in the FileManager/sdk-gap list is checked after restage"
 expect_grep 'FE_MEASUREMENT_HEADERS' "$PHASE2" \
     "missing measurement headers are CANNOT_FE_MEASUREMENT_HEADERS"
-expect_grep 'phase2_stage_measurement_headers_from_arm' "$STAGE" \
-    "x86 stager stages the shared list from arm64 sysroot_fe4"
+expect_grep 'phase2_copy_artifact_swift_overlays' "$STAGE" \
+    "x86 stager copies Darwin overlays from committed artifacts on a fresh VM"
+expect_grep 'phase2_expand_darwin_modulemap_for_fe' "$STAGE" \
+    "x86 stager expands Darwin.modulemap so Darwin.write is visible"
+expect_grep 'phase2_ensure_swift_onone_support' "$STAGE" \
+    "x86 stager stages a SwiftOnoneSupport stub for collections without -O"
+expect_grep 'overlay-posix' "$STAGE" \
+    "x86 stager stages POSIX semaphore.h; ioctl stays out of the Darwin sysroot"
+expect_grep 'fe_clock_realtime.h' "$STAGE" \
+    "x86 stager exposes CLOCK_REALTIME as clockid_t"
+expect_grep 'build_foundation_placeholder.sh' "$COMMON" \
+    "run-root Foundation slots are empty placeholders, not loud-abort stubs"
 expect_grep 'fe_sysroot_append_vm_copy' "$STAGE" \
     "x86 stager uses the shared vm_copy append"
 expect_grep 'fe_sysroot_measurement.inc' "$ROOT/full/foundation/stage_fe_sysroot.sh" \
@@ -1663,6 +1673,8 @@ expect_grep 'CANNOT_CFTEST_STUBS' "$PHASE2" "phase2 maps CANNOT_CFTEST_STUBS to 
 expect_grep 'Will not link ud_guest against it' "$PHASE2" \
     "unexpected stub set does not proceed to link_ud_guest.sh"
 expect_grep 'USERDEFAULTSGUEST UserDefaultsGuest.o' "$UDINC" "port hole names file=UserDefaultsGuest.o"
+expect_grep 'overlay-posix' "$UDINC" \
+    "UserDefaultsGuest swiftc gets overlay-posix -I (ioctl not in Darwin sysroot)"
 expect_grep 'UserDefaultsGuest.swiftc.log' "$UDINC" "port swiftc output is spilled to a file"
 expect_grep 'runner.swiftc.log' "$UDINC" "runner swiftc output is spilled to a file"
 expect_grep '_FoundationCShims' "$UDINC" "port/runner pass the CShims module map"
