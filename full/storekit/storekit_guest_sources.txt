@@ -1,1 +1,6 @@
 full/storekit/StoreKit.swift
+full/storekit/StoreKitGenerated.swift
+full/storekit/StoreKitLookalikes.swift
+full/storekit/StoreKitSwiftUIStubs.swift
+full/storekit/StoreKitSwiftUISurface.swift
+full/storekit/StoreKitViewSurface.swift
