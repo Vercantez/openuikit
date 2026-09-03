@@ -79,26 +79,12 @@ if [ -d "$MACHORUN/darwin/usr/lib" ]; then
     done < <(find "$MACHORUN/darwin/usr/lib" -type f \( -name '*.dylib' -o -name '*.so' \) -print0)
 fi
 
-echo "== .tbd from machorun/sdk (generated against the x86 loader + dylibs)"
-if [ -d "$MACHORUN/sdk/usr/lib" ]; then
-    while IFS= read -r -d '' tbd; do
-        [ -s "$tbd" ] || {
-            echo "stage_fe_sysroot_x86: empty .tbd is a linker lie: $tbd" >&2
-            exit 2
-        }
-        cp -f "$tbd" "$SYS/usr/lib/$(basename "$tbd")"
-    done < <(find "$MACHORUN/sdk/usr/lib" -maxdepth 1 -type f -name '*.tbd' -print0)
-    if [ -d "$MACHORUN/sdk/usr/lib/swift" ]; then
-        mkdir -p "$SYS/usr/lib/swift"
-        while IFS= read -r -d '' tbd; do
-            [ -s "$tbd" ] || {
-                echo "stage_fe_sysroot_x86: empty .tbd is a linker lie: $tbd" >&2
-                exit 2
-            }
-            cp -f "$tbd" "$SYS/usr/lib/swift/$(basename "$tbd")"
-        done < <(find "$MACHORUN/sdk/usr/lib/swift" -maxdepth 1 -type f -name '*.tbd' -print0 2>/dev/null || true)
-    fi
-fi
+echo "== .tbd from x86 darwin dylibs via machorun gen_tbd (never copy arm64 tbds)"
+# find -type f skipped gen_tbd's libobjc.tbd symlink; -lobjc needs that name.
+phase2_stage_darwin_tbds_into_sysroot "$SYS" "$MACHORUN" || {
+    echo "stage_fe_sysroot_x86: darwin .tbd stage failed (run machorun/scripts/gen_tbd.sh first)" >&2
+    exit 2
+}
 
 artifacts=$W/swiftcore-macho/artifacts
 x86_core=$artifacts/swift-macosx/x86_64/libswiftCore.dylib
@@ -206,6 +192,10 @@ else
     echo "  no x86_64-apple-macos _Builtin_float.swiftmodule"
 fi
 
+echo "== overlay .tbd from x86 overlay dylibs (never copy arm64 usr/lib/swift tbds)"
+phase2_stage_overlay_tbds_into_sysroot "$SYS"
+echo "  usr/lib/swift tbds: $(find "$SYS/usr/lib/swift" -maxdepth 1 -name '*.tbd' | wc -l | tr -d ' ')"
+
 empty_tbd=$(find "$SYS" -name '*.tbd' -size 0 -print -quit)
 [ -z "$empty_tbd" ] || {
     echo "stage_fe_sysroot_x86: empty .tbd is a linker lie: $empty_tbd" >&2
@@ -229,6 +219,11 @@ if [ ! -d "$SYS/usr/lib/swift/Darwin.swiftmodule" ] \
     && [ ! -f "$SYS/usr/lib/swift/Darwin.swiftinterface" ]; then
     echo "  CANNOT_STAGE_XCODE_DARWIN_OVERLAYS: no Darwin.swiftmodule/swiftinterface in $ARM_SYS (Linux cannot materialize Apple's overlay interfaces)"
     exit 3
+fi
+if [ -e "$SYS/usr/lib/libobjc.tbd" ] && phase2_tbd_is_x86_target "$SYS/usr/lib/libobjc.tbd"; then
+    echo "  libobjc.tbd: x86_64-macos (alias for gen_tbd libobjc.A.tbd)"
+else
+    echo "  libobjc.tbd: ABSENT or not x86_64-macos (-lobjc will not resolve render_full.o)"
 fi
 echo "  Darwin overlays: present (textual, from $ARM_SYS)"
 phase2_report_darwin_overlay_path "$SYS" "$ARM_SYS"

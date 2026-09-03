@@ -371,6 +371,9 @@ run_sysroot_stager() {
         elif [ "$need_core" -eq 1 ] && { [ ! -f "$SYS/usr/lib/swift/libswiftCore.dylib" ] || ! phase2_is_x86_macho "$SYS/usr/lib/swift/libswiftCore.dylib"; }; then
             cannot sysroot-fe4-x86 STAGE_LIBSWIFTCORE \
                 "x86 libswiftCore is in artifacts but was not staged into $SYS/usr/lib/swift"
+        elif [ ! -e "$SYS/usr/lib/libobjc.tbd" ] || ! phase2_tbd_is_x86_target "$SYS/usr/lib/libobjc.tbd"; then
+            cannot sysroot-fe4-x86 X86_SYSROOT_TBDS \
+                "libobjc.tbd absent or not x86_64-macos after restage; -lobjc cannot resolve render_full.o's _objc_sync_exit/_objc_sync_enter/_objc_setAssociatedObject/_objc_getAssociatedObject/_objc_opt_self/_objc_getClassList/_objc_getClass/__objc_empty_cache"
         else
             cannot sysroot-fe4-x86 STAGE_FE_SYSROOT \
                 "stage_fe_sysroot.sh exit 0 but sysroot is incomplete at $SYS"
@@ -785,6 +788,22 @@ else
     esac
 fi
 
+# 6a3. Every arm64 sysroot usr/lib + usr/lib/swift .tbd exists for x86 and
+# names x86_64-macos. BEFORE build_full: -lobjc looks for libobjc.tbd.
+echo "==== x86 sysroot .tbd set (arm64 inventory; gen_tbd + overlay dylibs) ===="
+SYSROOT_TBDS_OK=0
+tbd_report=$(phase2_sysroot_tbd_resolve "$SYS" "$ARM_SYS" || true)
+case "$tbd_report" in
+    OK)
+        note sysroot-tbds-x86 satisfied
+        SYSROOT_TBDS_OK=1
+        ;;
+    *)
+        cannot sysroot-tbds-x86 X86_SYSROOT_TBDS \
+            "${tbd_report:-empty}; every .tbd in arm64 $ARM_SYS usr/lib and usr/lib/swift must exist for x86 and name x86_64-macos. Generated from the x86 darwin tree by machorun gen_tbd and from x86 overlay dylibs (never copied arm64 tbds). render_full.o link needs -lobjc (_objc_sync_exit/_objc_sync_enter/_objc_setAssociatedObject/_objc_getAssociatedObject/_objc_opt_self/_objc_getClassList/_objc_getClass/__objc_empty_cache)."
+        ;;
+esac
+
 # ---------------------------------------------------------------------------
 # 6b. mrroot_full-x86_64 beside mrroot_full
 echo "==== mrroot_full-x86_64 (beside $ARM_MRROOT) ===="
@@ -965,7 +984,7 @@ if [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]
             BIN=$ud_bin \
             MRUN=$MRROOT/machorun \
             bash "$ud_r/scripts/run_ud_guest.sh" "$MRROOT" \
-            | tee "$W/scratch/phase2-rung-a-smoke.log"
+            2>&1 | tee "$W/scratch/phase2-rung-a-smoke.log"
         smoke_rc=${PIPESTATUS[0]}
         set -e
         smoke_pass=$(grep -E 'guest runner: pass ' "$W/scratch/phase2-rung-a-smoke.log" | tail -1 || true)
@@ -978,7 +997,7 @@ if [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]
                     BIN=$ud_score \
                     MRUN=$MRROOT/machorun \
                     bash "$ud_r/scripts/run_ud_persist.sh" "$MRROOT" \
-                    | tee "$W/scratch/phase2-rung-a-persist.log"
+                    2>&1 | tee "$W/scratch/phase2-rung-a-persist.log"
                 persist_rc=${PIPESTATUS[0]}
                 set -e
                 if [ "$persist_rc" -eq 0 ]; then
@@ -1097,7 +1116,7 @@ try_normalize_focus_bundles() {
 
 if [ "$OC_OK" -eq 1 ] && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] \
     && [ "$LIBSWIFTCORE_X86" -eq 1 ] && [ "$HOST_RUNTIME_OK" -eq 1 ] \
-    && [ "$LAYOUT_OK" -eq 1 ] \
+    && [ "$LAYOUT_OK" -eq 1 ] && [ "$SYSROOT_TBDS_OK" -eq 1 ] \
     && [ "${ITEM_STATUS[focus-pin]:-}" = satisfied ]; then
     echo "== rung b: full/swiftui Focus widget + onboarding (x86, source pins unchanged)"
     widget_bundle=$(find_widget_bundle || true)
@@ -1114,7 +1133,7 @@ if [ "$OC_OK" -eq 1 ] && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] \
         set +e
         W="$W" UIKIT="$W/uikit" MACHORUN="$MACHORUN" OPENCOMBINE_ROOT="$OPENCOMBINE_ROOT" \
             bash "$W/full/swiftui/build_focus_widget_guest.sh" "$widget_bundle" \
-            | tee "$W/scratch/phase2-rung-b-widget.log"
+            2>&1 | tee "$W/scratch/phase2-rung-b-widget.log"
         widget_rc=${PIPESTATUS[0]}
         set -e
         onboard_dir=$(find_onboarding_bundles_dir || true)
@@ -1124,7 +1143,7 @@ if [ "$OC_OK" -eq 1 ] && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] \
             set +e
             W="$W" UIKIT="$W/uikit" MACHORUN="$MACHORUN" OPENCOMBINE_ROOT="$OPENCOMBINE_ROOT" \
                 bash "$W/full/swiftui/build_focus_onboarding_guest.sh" "$onboard_dir" \
-                | tee "$W/scratch/phase2-rung-b-onboarding.log"
+                2>&1 | tee "$W/scratch/phase2-rung-b-onboarding.log"
             onboard_rc=${PIPESTATUS[0]}
             set -e
         elif [ "$widget_rc" -eq 0 ]; then
@@ -1147,8 +1166,8 @@ if [ "$OC_OK" -eq 1 ] && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] \
         fi
     fi
 else
-    cannot rung-b-focus SWIFTUI_SUBSTRATE \
-        "needs x86 OpenCombine.o (oc=$OC_OK; else NEEDS_X86_OPENCOMBINE), x86 FE (fe=$FE_OK), x86 mrroot (mrroot=$MRROOT_OK), x86 libswiftCore ($LIBSWIFTCORE_X86), x86 host runtime (host=$HOST_RUNTIME_OK; else CANNOT_X86_HOST_RUNTIME), x86 mrroot layout (layout=$LAYOUT_OK; else CANNOT_X86_MRROOT_LAYOUT), Focus pin $FOCUS_PIN. Source-preservation contracts in full/swiftui/*_guest.sh are unchanged; arm64 object SHAs are not rewritten."
+            cannot rung-b-focus SWIFTUI_SUBSTRATE \
+        "needs x86 OpenCombine.o (oc=$OC_OK; else NEEDS_X86_OPENCOMBINE), x86 FE (fe=$FE_OK), x86 mrroot (mrroot=$MRROOT_OK), x86 libswiftCore ($LIBSWIFTCORE_X86), x86 host runtime (host=$HOST_RUNTIME_OK; else CANNOT_X86_HOST_RUNTIME), x86 mrroot layout (layout=$LAYOUT_OK; else CANNOT_X86_MRROOT_LAYOUT), x86 sysroot tbds (tbds=$SYSROOT_TBDS_OK; else CANNOT_X86_SYSROOT_TBDS), Focus pin $FOCUS_PIN. Source-preservation contracts in full/swiftui/*_guest.sh are unchanged; arm64 object SHAs are not rewritten."
     RUNG_B_DETAIL="blocked by substrate"
 fi
 
@@ -1165,6 +1184,7 @@ reminder_src=$(find_existing_dir \
     "$W/scratch/ladder-corpus/Reminder" || true)
 if [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ] \
     && [ "$HOST_RUNTIME_OK" -eq 1 ] && [ "$LAYOUT_OK" -eq 1 ] \
+    && [ "$SYSROOT_TBDS_OK" -eq 1 ] \
     && [ -n "$reminder_inv" ] && [ -n "$reminder_src" ]; then
     echo "== rung c: full/xcodeplan/build_and_run_reminder_scene_guest.sh"
     set +e
@@ -1173,7 +1193,7 @@ if [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]
     OPENUIKIT_HOST_TURNS=3 \
         bash "$W/full/xcodeplan/build_and_run_reminder_scene_guest.sh" \
             "$reminder_inv" "$reminder_src" \
-        | tee "$W/scratch/phase2-rung-c-reminder.log"
+        2>&1 | tee "$W/scratch/phase2-rung-c-reminder.log"
     rem_rc=${PIPESTATUS[0]}
     set -e
     rem_log=$W/scratch/phase2-rung-c-reminder.log
@@ -1190,13 +1210,14 @@ if [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ]
         RUNG_C_DETAIL="scene guest failed"
     fi
 elif [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "$LIBSWIFTCORE_X86" -eq 1 ] \
-    && [ "$HOST_RUNTIME_OK" -eq 1 ] && [ "$LAYOUT_OK" -eq 1 ]; then
+    && [ "$HOST_RUNTIME_OK" -eq 1 ] && [ "$LAYOUT_OK" -eq 1 ] \
+    && [ "$SYSROOT_TBDS_OK" -eq 1 ]; then
     cannot rung-c-reminder REMINDER_INVENTORY \
         "substrate ready enough to invoke full/xcodeplan/build_and_run_reminder_scene_guest.sh, but Reminder 22-source inventory + source root are absent. Looked at scratch/ladder-corpus/reminder and REMINDER_INVENTORY/REMINDER_SOURCE_ROOT. Success bar remains: REMINDER_UNCHANGED_WILL_CONNECT_OK + PORTABLE_UIKIT_HOST_ACTIVE windows=1 + PORTABLE_UIKIT_HOST_LOOP_OK turns=3 paced=true."
     RUNG_C_DETAIL="needs Reminder inventory json + source root"
 else
     cannot rung-c-reminder REMINDER_SUBSTRATE \
-        "needs x86 FE+mrroot+libswiftCore+host runtime+layout (fe=$FE_OK mrroot=$MRROOT_OK libswiftCore=$LIBSWIFTCORE_X86 host=$HOST_RUNTIME_OK layout=$LAYOUT_OK) plus Reminder 22-source inventory. Success bar: 1 UIWindow + 3 paced turns under the ported loader. Denominator from the committed inner script, not invented here."
+        "needs x86 FE+mrroot+libswiftCore+host runtime+layout+sysroot tbds (fe=$FE_OK mrroot=$MRROOT_OK libswiftCore=$LIBSWIFTCORE_X86 host=$HOST_RUNTIME_OK layout=$LAYOUT_OK tbds=$SYSROOT_TBDS_OK) plus Reminder 22-source inventory. Success bar: 1 UIWindow + 3 paced turns under the ported loader. Denominator from the committed inner script, not invented here."
     RUNG_C_DETAIL="blocked by substrate"
 fi
 

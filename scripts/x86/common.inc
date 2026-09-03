@@ -114,7 +114,7 @@ phase2_probe_focus_pin() {
 # output directory existing. A sysroot staged before x86 libswiftCore landed
 # would otherwise be reused while OpenCombine looks in usr/lib/swift and finds
 # nothing. Recipe bump forces a restage when the stager itself gains steps.
-PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.4
+PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.5
 PHASE2_SYSROOT_STAMP=.phase2-stage-inputs
 
 phase2_sha_or_absent() {
@@ -124,6 +124,238 @@ phase2_sha_or_absent() {
     else
         printf 'ABSENT\n'
     fi
+}
+
+# Apple unsuffixed aliases gen_tbd emits as symlinks. -lobjc looks for
+# libobjc.tbd, not libobjc.A.tbd. The x86.4 stager used find -type f and
+# dropped them; render_full.o then died on _objc_sync_exit and friends.
+phase2_required_darwin_tbd_relpaths() {
+    printf '%s\n' \
+        usr/lib/libSystem.B.tbd \
+        usr/lib/libSystem.tbd \
+        usr/lib/libc++.1.tbd \
+        usr/lib/libc++.tbd \
+        usr/lib/libc++abi.tbd \
+        usr/lib/libobjc.A.tbd \
+        usr/lib/libobjc.tbd
+}
+
+# render_full.o undefineds that -lobjc must resolve (operator link at
+# a447787a). Each must appear in the staged x86 libobjc.tbd.
+phase2_render_full_objc_undefs() {
+    printf '%s\n' \
+        _objc_sync_exit \
+        _objc_sync_enter \
+        _objc_setAssociatedObject \
+        _objc_getAssociatedObject \
+        _objc_opt_self \
+        _objc_getClassList \
+        _objc_getClass \
+        __objc_empty_cache
+}
+
+phase2_sysroot_tbd_relpaths() {
+    local root=$1 t
+    {
+        if [ -d "$root/usr/lib" ]; then
+            for t in "$root/usr/lib"/*.tbd; do
+                [ -e "$t" ] || [ -L "$t" ] || continue
+                printf 'usr/lib/%s\n' "$(basename "$t")"
+            done
+        fi
+        if [ -d "$root/usr/lib/swift" ]; then
+            for t in "$root/usr/lib/swift"/*.tbd; do
+                [ -e "$t" ] || [ -L "$t" ] || continue
+                printf 'usr/lib/swift/%s\n' "$(basename "$t")"
+            done
+        fi
+    } | sort -u
+}
+
+phase2_arm_tbd_set_id() {
+    local arm=$1 list
+    if [ -z "$arm" ] || [ ! -d "$arm" ]; then
+        printf 'EMPTY\n'
+        return 0
+    fi
+    list=$(phase2_sysroot_tbd_relpaths "$arm")
+    if [ -z "$list" ]; then
+        printf 'EMPTY\n'
+        return 0
+    fi
+    printf '%s\n' "$list" | sha256sum | awk '{print $1}'
+}
+
+phase2_darwin_tbd_source_id() {
+    local root=${MACHORUN:-${W:+$W/machorun}} d lib
+    if [ -z "$root" ]; then
+        printf 'ABSENT\n'
+        return 0
+    fi
+    {
+        for lib in libSystem.B.dylib libc++.1.dylib libc++abi.dylib \
+            libobjc.A.dylib libquartz.dylib; do
+            phase2_sha_or_absent "$root/darwin/usr/lib/$lib"
+        done
+    } | sha256sum | awk '{print $1}'
+}
+
+phase2_tbd_is_x86_target() {
+    local tbd=$1
+    [ -e "$tbd" ] || [ -L "$tbd" ] || return 1
+    grep -q 'x86_64-macos' "$tbd"
+}
+
+# tapi-v4, same shape as machorun/scripts/gen_tbd.sh emit_tbd. Never copy
+# an arm64 .tbd and rewrite the target; symbols come from this x86 dylib.
+phase2_emit_tbd_from_dylib() {
+    local dylib=$1 install=$2 dest=$3
+    local nm c tmp
+    [ -f "$dylib" ] || return 1
+    phase2_is_x86_macho "$dylib" || return 1
+    nm=
+    for c in llvm-nm-18 llvm-nm nm; do
+        command -v "$c" >/dev/null 2>&1 && { nm=$c; break; }
+    done
+    [ -n "$nm" ] || return 1
+    tmp=$(mktemp)
+    "$nm" --defined-only --extern-only --format=just-symbols "$dylib" 2>/dev/null \
+        | sed 's/[[:space:]]*$//' \
+        | grep -vE '^$|\(for architecture .*\):$|^[^ ]*:$' \
+        | sort -u > "$tmp"
+    if [ ! -s "$tmp" ]; then
+        rm -f "$tmp"
+        return 1
+    fi
+    mkdir -p "$(dirname "$dest")"
+    {
+        echo "--- !tapi-tbd"
+        echo "tbd-version:     4"
+        echo "targets:         [ x86_64-macos ]"
+        echo "install-name:    '$install'"
+        echo "current-version: 1"
+        echo "compatibility-version: 1"
+        echo "exports:"
+        echo "  - targets:   [ x86_64-macos ]"
+        echo "    symbols:   ["
+        sed "s/^/                  '/; s/\$/',/" "$tmp"
+        echo "               ]"
+        echo "..."
+    } > "$dest"
+    rm -f "$tmp"
+    [ -s "$dest" ]
+}
+
+# Copy machorun gen_tbd output into the x86 sysroot, including the unsuffixed
+# aliases. Never copy arm64 sysroot .tbd files (they name arm64-macos).
+phase2_stage_darwin_tbds_into_sysroot() {
+    local sys=$1 machorun=$2
+    local src=$machorun/sdk/usr/lib t bn
+    mkdir -p "$sys/usr/lib"
+    if [ -d "$src" ]; then
+        for t in "$src"/*.tbd; do
+            [ -e "$t" ] || [ -L "$t" ] || continue
+            bn=$(basename "$t")
+            [ -s "$t" ] || {
+                echo "phase2: empty .tbd is a linker lie: $t" >&2
+                return 1
+            }
+            if ! phase2_tbd_is_x86_target "$t"; then
+                echo "phase2: refusing non-x86 .tbd $t (never copy arm64 tbds)" >&2
+                return 1
+            fi
+            cp -a "$t" "$sys/usr/lib/$bn"
+        done
+    fi
+    [ -s "$sys/usr/lib/libobjc.A.tbd" ] || {
+        echo "phase2: no libobjc.A.tbd from gen_tbd at $src" >&2
+        return 1
+    }
+    ln -sfn libSystem.B.tbd "$sys/usr/lib/libSystem.tbd"
+    ln -sfn libobjc.A.tbd "$sys/usr/lib/libobjc.tbd"
+    ln -sfn libc++.1.tbd "$sys/usr/lib/libc++.tbd"
+    return 0
+}
+
+# Emit usr/lib/swift/*.tbd from x86 overlay dylibs (sysroot copy, FE search,
+# ObjectiveC/Concurrency). Never copy arm64 overlay tbds.
+phase2_stage_overlay_tbds_into_sysroot() {
+    local sys=$1
+    local dylib base dest install src name extra emitted
+    mkdir -p "$sys/usr/lib/swift"
+    emitted=" "
+    _phase2_emit_overlay_tbd() {
+        local dylib=$1
+        local base dest install
+        [ -f "$dylib" ] || return 0
+        phase2_is_x86_macho "$dylib" || return 0
+        base=$(basename "$dylib" .dylib)
+        case " $emitted " in *" $base "*) return 0 ;; esac
+        dest="$sys/usr/lib/swift/$base.tbd"
+        install="/usr/lib/swift/$base.dylib"
+        if phase2_emit_tbd_from_dylib "$dylib" "$install" "$dest"; then
+            emitted="$emitted $base "
+        fi
+    }
+    if [ -d "$sys/usr/lib/swift" ]; then
+        for dylib in "$sys/usr/lib/swift"/*.dylib; do
+            [ -e "$dylib" ] || continue
+            _phase2_emit_overlay_tbd "$dylib"
+        done
+    fi
+    while IFS= read -r name; do
+        [ -n "$name" ] || continue
+        src=$(phase2_find_x86_overlay "$name" || true)
+        [ -n "$src" ] || continue
+        _phase2_emit_overlay_tbd "$src"
+    done < <(phase2_fe_overlay_names)
+    for extra in libswiftCore.dylib libswiftObjectiveC.dylib libswift_Concurrency.dylib; do
+        src=$(phase2_find_x86_overlay "$extra" || true)
+        [ -n "$src" ] || continue
+        _phase2_emit_overlay_tbd "$src"
+    done
+    return 0
+}
+
+# Every .tbd the arm64 sysroot's usr/lib and usr/lib/swift carry, plus the
+# darwin aliases -lSystem/-lobjc/-lc++ need, must exist for x86 and name
+# x86_64-macos. Prints OK or MISSING=… WRONG_TARGET=….
+phase2_sysroot_tbd_resolve() {
+    local sys=$1 arm=$2
+    local rel path missing=() wrong=() want
+    want=$(
+        {
+            phase2_required_darwin_tbd_relpaths
+            if [ -n "$arm" ] && [ -d "$arm" ]; then
+                phase2_sysroot_tbd_relpaths "$arm"
+            fi
+        } | sort -u
+    )
+    while IFS= read -r rel; do
+        [ -n "$rel" ] || continue
+        path=$sys/$rel
+        if [ ! -e "$path" ] && [ ! -L "$path" ]; then
+            missing+=("$rel")
+            continue
+        fi
+        if ! phase2_tbd_is_x86_target "$path"; then
+            wrong+=("$rel")
+        fi
+    done <<EOF
+$want
+EOF
+    if [ "${#missing[@]}" -eq 0 ] && [ "${#wrong[@]}" -eq 0 ]; then
+        printf 'OK\n'
+        return 0
+    fi
+    local IFS=,
+    [ "${#missing[@]}" -eq 0 ] || printf 'MISSING=%s' "${missing[*]}"
+    if [ "${#wrong[@]}" -ne 0 ]; then
+        [ "${#missing[@]}" -eq 0 ] || printf ' '
+        printf 'WRONG_TARGET=%s' "${wrong[*]}"
+    fi
+    printf '\n'
+    return 1
 }
 
 # Linux swiftc warns (and some compiles then fail) when -sdk has no
@@ -192,6 +424,8 @@ phase2_sysroot_input_lines() {
     printf 'Darwin.modulemap=%s\n' "$(phase2_sha_or_absent "$6")"
     printf 'fe_sysroot_measurement_headers=%s\n' \
         "$(phase2_sha_or_absent "${7:-$FE_SYSROOT_MEASUREMENT_HEADERS_FILE}")"
+    printf 'tbd-set=%s\n' "$(phase2_arm_tbd_set_id "${ARM_SYS:-${W:+$W/scratch/sysroot_fe4}}")"
+    printf 'tbd-darwin-dylibs=%s\n' "$(phase2_darwin_tbd_source_id)"
 }
 
 phase2_write_sysroot_stamp() {
@@ -233,6 +467,10 @@ phase2_sysroot_complete() {
     [ -d "$sys/usr/include" ] || return 1
     [ -f "$sys/usr/lib/libSystem.B.dylib" ] || return 1
     phase2_is_x86_macho "$sys/usr/lib/libSystem.B.dylib" || return 1
+    # -lobjc looks for libobjc.tbd (Apple unsuffixed alias). libobjc.A.tbd
+    # alone is not enough; x86.4 find -type f dropped the symlink.
+    [ -e "$sys/usr/lib/libobjc.tbd" ] || return 1
+    phase2_tbd_is_x86_target "$sys/usr/lib/libobjc.tbd" || return 1
     { [ -d "$sys/usr/lib/swift/Darwin.swiftmodule" ] \
         || [ -f "$sys/usr/lib/swift/Darwin.swiftinterface" ]; } || return 1
     [ -f "$sys/usr/include/Darwin.modulemap" ] || return 1

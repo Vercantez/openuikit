@@ -123,10 +123,26 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    flag. x86 takes the same compile-the-interface path. Idempotency keys on
    input shas (artifact, generator, overlay text, **measurement-header list**)
    written to `.phase2-stage-inputs`
-   (recipe `stage_fe_sysroot_x86.4`); a sysroot staged before those inputs
+   (recipe `stage_fe_sysroot_x86.5`); a sysroot staged before those inputs
    existed is restaged, and the CANNOT/cold-built line names which input
    changed. Apple's `os.swiftmodule` is not copied (FE uses
    `full/foundation/os-module`).
+   The x86 sysroot's `usr/lib` `.tbd` set is generated from the **x86 darwin
+   tree** by `machorun/scripts/gen_tbd.sh` (never copied from the arm64
+   sysroot). `gen_tbd` emits Apple unsuffixed aliases (`libobjc.tbd` →
+   `libobjc.A.tbd`); `-lobjc` looks for that name. Overlay `.tbd` files under
+   `usr/lib/swift` are derived from the x86 overlay dylibs phase2 stages
+   (same tapi-v4 / `x86_64-macos` shape). The stamp records `tbd-set` (arm64
+   inventory of `usr/lib` + `usr/lib/swift` `.tbd` names) and
+   `tbd-darwin-dylibs`. Before `build_full` runs, `sysroot-tbds-x86` requires
+   every arm64 sysroot `.tbd` to exist for x86 and name `x86_64-macos`
+   (`CANNOT_X86_SYSROOT_TBDS`). Extra Apple-SDK `.tbd` names in the arm64
+   sysroot with no matching x86 dylib fail that check honestly (never copy
+   an `arm64-macos` `.tbd`). Acceptance: `render_full.o`'s undefined
+   `_objc_sync_exit` / `_objc_sync_enter` / associated-object /
+   `_objc_opt_self` / `_objc_getClass*` / `__objc_empty_cache` are in the
+   staged `libobjc.tbd`. Rung logs `2>&1 | tee` so `build_full` ld64 stderr
+   is in `scratch/phase2-rung-b-widget.log` (not only `phase2f.log`).
    `build_fe.sh` is Swift-only on both arches. Arm64 compiles
    `full/foundation/removefile_compat.c` in `full/scripts/build_full.sh` and
    links `removefile_compat.o` with `FoundationEssentials.o`. The x86 runner
