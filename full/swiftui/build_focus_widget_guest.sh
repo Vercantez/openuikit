@@ -700,8 +700,8 @@ expected_package_names=$(printf '%s\n' \
     libOpenCombine.dylib \
     libOpenCoreGraphics.dylib \
     libOpenUIKit.dylib \
-    libSymbols.dylib \
-    libSwiftUI.dylib)
+    libSwiftUI.dylib \
+    libSymbols.dylib)
 actual_package_names=$(find "$PACKAGE" -maxdepth 1 -type f -exec basename {} \; | LC_ALL=C sort)
 assert_exact_text "package top-level inventory" "$actual_package_names" "$expected_package_names"
 expected_package_directories=$(printf '%s\n' \
