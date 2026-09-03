@@ -1,0 +1,4 @@
+module _DarwinFoundation3 [system] [extern_c] {
+  header "pthread.h"
+  export *
+}
