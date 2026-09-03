@@ -77,6 +77,7 @@ printf '%s\n' "$dump" | grep -F -- "-DSWIFT_ENABLE_SYNCHRONIZATION=ON" >/dev/nul
 echo
 echo "=== default (overlays off) dump has no empty string-processing -D ==="
 def=$(
+  unset SWIFTCORE_OVERLAYS SWIFTCORE_BUILD_DISPATCH
   SWIFTCORE_DARWIN_ARCH=x86_64 SWIFT_HOST_VARIANT_ARCH=x86_64 \
     SWIFT_HOST_TRIPLE=x86_64-unknown-linux-gnu \
     W=/tmp/swiftcore-print bash "$cfg" --print-flags

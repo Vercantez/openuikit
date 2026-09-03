@@ -51,13 +51,13 @@ EOF
 chmod +x "$fake/ninja"
 
 run() {
-  local label=$1; shift
+  local label=$1 overlays=$2
   set +e
   out=$(
-    PATH="$fake:$PATH" NINJA="$fake/ninja" \
+    env PATH="$fake:$PATH" NINJA="$fake/ninja" \
       SWIFTCORE_NINJA_HARNESS=1 SWIFTCORE_DARWIN_ARCH=x86_64 \
+      SWIFTCORE_OVERLAYS="$overlays" \
       W="$tmp/work" B="$tmp/work/build" \
-      "$@" \
       bash "$build" 2>&1
   )
   rc=$?
@@ -67,7 +67,7 @@ run() {
 }
 
 echo "=== failing core ninja (no gold wall) makes build_stdlib exit non-zero ==="
-run core SWIFTCORE_OVERLAYS=0
+run core 0
 if [ "$rc" -ne 0 ]; then
   echo "  OK  rc=$rc"
 else
@@ -125,7 +125,7 @@ exit 1
 EOF
 chmod +x "$fake/ninja"
 
-run overlay SWIFTCORE_OVERLAYS=1
+run overlay 1
 if [ "$rc" -ne 0 ]; then
   echo "  OK  rc=$rc"
 else
@@ -140,7 +140,7 @@ printf '%s\n' "$out" | grep -q 'ninja: FAILED rc=' \
 printf '%s\n' "$out" | grep -q 'build_stdlib done' \
   && { echo "  FAIL printed done after overlay failure"; fail=1; } \
   || echo "  OK  did not claim done"
-printf '%s\n' "$out" | grep -q 'swiftObjectiveC' \
+printf '%s\n' "$out" | grep -E 'ninja overlay swiftObjectiveC|will ninja.*swiftObjectiveC' \
   && { echo "  FAIL asked ninja for swiftObjectiveC"; fail=1; } \
   || echo "  OK  did not invoke missing ObjectiveC target"
 

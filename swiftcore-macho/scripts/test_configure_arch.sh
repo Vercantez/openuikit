@@ -8,7 +8,8 @@ fail=0
 
 dump() {
   local arch=$1 host=$2 triple=$3
-  SWIFTCORE_DARWIN_ARCH=$arch SWIFT_HOST_VARIANT_ARCH=$host SWIFT_HOST_TRIPLE=$triple \
+  SWIFTCORE_OVERLAYS=0 SWIFTCORE_BUILD_DISPATCH=0 \
+    SWIFTCORE_DARWIN_ARCH=$arch SWIFT_HOST_VARIANT_ARCH=$host SWIFT_HOST_TRIPLE=$triple \
     W=/tmp/swiftcore-print SRC=/tmp/swiftcore-print/swift B=/tmp/swiftcore-print/build \
     bash "$cfg" --print-flags
 }
