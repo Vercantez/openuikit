@@ -196,19 +196,28 @@ fi
 # 2. machorun substrate: loader, darwin, objc4, quartz, tbd
 echo "==== machorun substrate (build.sh all, objc4, quartz, tbd) ===="
 
+phase2_machorun_key() {
+    local product=$1
+    shift
+    local tree
+    tree=$(phase2_git "$W" rev-parse HEAD:machorun 2>/dev/null | tr -d '[:space:]') || tree=missing
+    stamp_key "$product" "$tree" "$@"
+}
+
 ensure_loader() {
     local bin=$MACHORUN/build/machorun
-    local reason
-    reason=$(phase2_source_tree_reason "$W" "$bin")
-    if phase2_is_elf_x86_loader "$bin" && [ -z "$reason" ]; then
-        note machorun-loader satisfied "reused=1"
+    local key
+    key=$(phase2_machorun_key "$bin" loader)
+    if stamp_reuse "$bin" "$key"; then
+        note machorun-loader satisfied "reused=1 stamp=$(stamp_short "$key")"
         return 0
     fi
-    echo "== cold-build loader (CC=$CC${reason:+; reason=$reason})"
+    stamp_rebuild_reason "$bin" "$key"
+    echo "== cold-build loader (CC=$CC)"
     sh "$MACHORUN/scripts/build.sh" loader
     if phase2_is_elf_x86_loader "$bin"; then
-        phase2_write_source_tree_stamp "$W" "$bin" || true
-        note machorun-loader cold-built "${reason:+reason=$reason}"
+        stamp_write "$bin" "$key"
+        note machorun-loader cold-built
         return 0
     fi
     cannot machorun-loader BUILD_LOADER "scripts/build.sh loader did not produce an x86-64 ELF PIE at $bin"
@@ -217,17 +226,18 @@ ensure_loader() {
 
 ensure_darwin() {
     local dylib=$MACHORUN/darwin/usr/lib/libSystem.B.dylib
-    local reason
-    reason=$(phase2_source_tree_reason "$W" "$dylib")
-    if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib" && [ -z "$reason" ]; then
-        note machorun-darwin satisfied "reused=1"
+    local key
+    key=$(phase2_machorun_key "$dylib" darwin)
+    if stamp_reuse "$dylib" "$key"; then
+        note machorun-darwin satisfied "reused=1 stamp=$(stamp_short "$key")"
         return 0
     fi
-    echo "== cold-build darwin userland (x86_64-apple-macos${reason:+; reason=$reason})"
+    stamp_rebuild_reason "$dylib" "$key"
+    echo "== cold-build darwin userland (x86_64-apple-macos)"
     sh "$MACHORUN/scripts/build.sh" darwin
-    if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib"; then
-        phase2_write_source_tree_stamp "$W" "$dylib" || true
-        note machorun-darwin cold-built "${reason:+reason=$reason}"
+    if stamp_expected_kind "$dylib"; then
+        stamp_write "$dylib" "$key"
+        note machorun-darwin cold-built
         return 0
     fi
     cannot machorun-darwin BUILD_DARWIN "libSystem.B.dylib is not X86_64 Mach-O after build.sh darwin ($(file -b "$dylib" 2>/dev/null || echo missing))"
@@ -236,17 +246,18 @@ ensure_darwin() {
 
 ensure_objc4() {
     local dylib=$MACHORUN/darwin/usr/lib/libobjc.A.dylib
-    local reason
-    reason=$(phase2_source_tree_reason "$W" "$dylib")
-    if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib" && [ -z "$reason" ]; then
-        note machorun-objc4 satisfied "reused=1"
+    local key
+    key=$(phase2_machorun_key "$dylib" objc4)
+    if stamp_reuse "$dylib" "$key"; then
+        note machorun-objc4 satisfied "reused=1 stamp=$(stamp_short "$key")"
         return 0
     fi
-    echo "== cold-build objc4 (unblocks the objc fixture CANNOT_BUILD_LIBOBJC_X86${reason:+; reason=$reason})"
+    stamp_rebuild_reason "$dylib" "$key"
+    echo "== cold-build objc4 (unblocks the objc fixture CANNOT_BUILD_LIBOBJC_X86)"
     bash "$MACHORUN/scripts/build_objc4.sh"
-    if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib"; then
-        phase2_write_source_tree_stamp "$W" "$dylib" || true
-        note machorun-objc4 cold-built "${reason:+reason=$reason}"
+    if stamp_expected_kind "$dylib"; then
+        stamp_write "$dylib" "$key"
+        note machorun-objc4 cold-built
         return 0
     fi
     cannot machorun-objc4 BUILD_LIBOBJC_X86 "libobjc.A.dylib is not X86_64 Mach-O after build_objc4.sh"
@@ -255,17 +266,18 @@ ensure_objc4() {
 
 ensure_quartz() {
     local dylib=$MACHORUN/darwin/usr/lib/libquartz.dylib
-    local reason
-    reason=$(phase2_source_tree_reason "$W" "$dylib")
-    if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib" && [ -z "$reason" ]; then
-        note machorun-quartz satisfied "reused=1"
+    local key
+    key=$(phase2_machorun_key "$dylib" quartz)
+    if stamp_reuse "$dylib" "$key"; then
+        note machorun-quartz satisfied "reused=1 stamp=$(stamp_short "$key")"
         return 0
     fi
-    echo "== cold-build quartz${reason:+; reason=$reason}"
+    stamp_rebuild_reason "$dylib" "$key"
+    echo "== cold-build quartz"
     bash "$MACHORUN/scripts/build_quartz.sh"
-    if [ -f "$dylib" ] && phase2_is_x86_macho "$dylib"; then
-        phase2_write_source_tree_stamp "$W" "$dylib" || true
-        note machorun-quartz cold-built "${reason:+reason=$reason}"
+    if stamp_expected_kind "$dylib"; then
+        stamp_write "$dylib" "$key"
+        note machorun-quartz cold-built
         return 0
     fi
     cannot machorun-quartz BUILD_QUARTZ_X86 "libquartz.dylib is not X86_64 Mach-O after build_quartz.sh"
@@ -274,20 +286,18 @@ ensure_quartz() {
 
 ensure_tbd() {
     local tbd=$MACHORUN/sdk/usr/lib/libSystem.tbd
-    local reason
-    reason=$(phase2_source_tree_reason "$W" "$tbd")
-    if [ -s "$tbd" ] && grep -q x86_64 "$tbd" && [ -x "$MACHORUN/build/machorun" ] && [ -z "$reason" ]; then
-        # Idempotent: a non-empty x86_64-macos tbd plus a live loader is enough.
-        if grep -q 'x86_64-macos' "$tbd" 2>/dev/null || grep -q x86_64 "$tbd"; then
-            note machorun-tbd satisfied "reused=1"
-            return 0
-        fi
+    local key
+    key=$(phase2_machorun_key "$tbd" tbd "$MACHORUN/build/machorun")
+    if stamp_reuse "$tbd" "$key" && grep -q x86_64 "$tbd"; then
+        note machorun-tbd satisfied "reused=1 stamp=$(stamp_short "$key")"
+        return 0
     fi
+    stamp_rebuild_reason "$tbd" "$key"
     if ! phase2_is_elf_x86_loader "$MACHORUN/build/machorun"; then
         cannot machorun-tbd GENERATE_TBD "gen_tbd.sh CHECK 1 needs the host ELF loader; loader is missing"
         return 1
     fi
-    echo "== cold-generate .tbd (CHECK 1 against this loader${reason:+; reason=$reason})"
+    echo "== cold-generate .tbd (CHECK 1 against this loader)"
     # CHECK 4 scans every dylib under darwin/usr/lib. An arm64 staged
     # libswiftcompat beside a freshly built x86 libSystem is a mixed-slice
     # coin toss, not a generated stub. Park arm64 dylibs beside (do not
@@ -311,8 +321,8 @@ ensure_tbd() {
     st=$?
     set -e
     if [ "$st" -eq 0 ] && [ -s "$tbd" ]; then
-        phase2_write_source_tree_stamp "$W" "$tbd" || true
-        note machorun-tbd cold-built "${reason:+reason=$reason}"
+        stamp_write "$tbd" "$key"
+        note machorun-tbd cold-built
         return 0
     fi
     tbd_state=missing
@@ -466,11 +476,18 @@ OSMOD=$FE_OUT/os
 
 try_collections() {
     local out=$FE_OUT/collections
-    if [ -f "$out/OrderedCollections.o" ] && phase2_is_x86_macho "$out/OrderedCollections.o"; then
-        note collections-x86 satisfied "mc=$MC"
+    local key tree
+    tree=$(phase2_git "$SC" rev-parse 'HEAD^{tree}' 2>/dev/null | tr -d '[:space:]') || tree=missing
+    key=$(stamp_key "$out/OrderedCollections.o" \
+        "$W/full/foundation/build_collections.sh" \
+        "$W/full/foundation/pinned_inputs.pl" \
+        "$tree" "$TARGET")
+    if stamp_reuse "$out/OrderedCollections.o" "$key"; then
+        note collections-x86 satisfied "mc=$MC stamp=$(stamp_short "$key")"
         COL_OK=1
         return 0
     fi
+    stamp_rebuild_reason "$out/OrderedCollections.o" "$key"
     [ -d "$SC" ] || { cannot collections-x86 PINNED_SWIFT_COLLECTIONS "no $SC"; return 1; }
     [ "$SYSROOT_OK" -eq 1 ] || { cannot collections-x86 NEEDS_X86_SYSROOT "collections compile needs $SYS"; return 1; }
     [ "$LIBSWIFTCORE_X86" -eq 1 ] || {
@@ -484,6 +501,7 @@ try_collections() {
     st=$?
     set -e
     if [ "$st" -eq 0 ] && phase2_is_x86_macho "$out/OrderedCollections.o"; then
+        stamp_write "$out/OrderedCollections.o" "$key"
         note collections-x86 cold-built "mc=$MC"
         COL_OK=1
         return 0
@@ -494,11 +512,17 @@ try_collections() {
 
 try_cshims() {
     local out=$FE_OUT/cshims
-    if [ -f "$out/uuid.o" ] && phase2_is_x86_macho "$out/uuid.o"; then
-        note cshims-x86 satisfied
+    local key tree
+    tree=$(phase2_git "$SF" rev-parse 'HEAD^{tree}' 2>/dev/null | tr -d '[:space:]') || tree=missing
+    key=$(stamp_key "$out/uuid.o" \
+        "$W/full/foundation/build_cshims.sh" \
+        "$tree" "$TARGET")
+    if stamp_reuse "$out/uuid.o" "$key"; then
+        note cshims-x86 satisfied "stamp=$(stamp_short "$key")"
         CSHIMS_OK=1
         return 0
     fi
+    stamp_rebuild_reason "$out/uuid.o" "$key"
     [ -d "$SF" ] || { cannot cshims-x86 PINNED_SWIFT_FOUNDATION "no $SF"; return 1; }
     [ "$SYSROOT_HEADERS" -eq 1 ] || [ "$SYSROOT_OK" -eq 1 ] || {
         cannot cshims-x86 NEEDS_X86_SYSROOT "cshims compile needs $SYS"
@@ -511,6 +535,7 @@ try_cshims() {
     st=$?
     set -e
     if [ "$st" -eq 0 ] && [ -f "$out/uuid.o" ] && phase2_is_x86_macho "$out/uuid.o"; then
+        stamp_write "$out/uuid.o" "$key"
         note cshims-x86 cold-built
         CSHIMS_OK=1
         return 0
@@ -521,11 +546,16 @@ try_cshims() {
 
 try_os_module() {
     local out=$OSMOD
-    if [ -f "$out/os.o" ] && phase2_is_x86_macho "$out/os.o" && [ -f "$out/os.swiftmodule" ]; then
-        note os-module-x86 satisfied "mc=$MC"
+    local key
+    key=$(stamp_key "$out/os.o" \
+        "$W/full/foundation/build_os_module.sh" \
+        "$TARGET")
+    if stamp_reuse "$out/os.o" "$key" && [ -f "$out/os.swiftmodule" ]; then
+        note os-module-x86 satisfied "mc=$MC stamp=$(stamp_short "$key")"
         OS_OK=1
         return 0
     fi
+    stamp_rebuild_reason "$out/os.o" "$key"
     [ "$SYSROOT_OK" -eq 1 ] || {
         cannot os-module-x86 NEEDS_X86_SYSROOT "os.swift @_exported-imports Darwin; needs $SYS"
         return 1
@@ -542,6 +572,7 @@ try_os_module() {
     set -e
     if [ "$st" -eq 0 ] && [ -f "$out/os.o" ] && phase2_is_x86_macho "$out/os.o" \
         && [ -f "$out/os.swiftmodule" ]; then
+        stamp_write "$out/os.o" "$key"
         note os-module-x86 cold-built "mc=$MC"
         OS_OK=1
         return 0
@@ -571,17 +602,27 @@ try_fe_imports() {
 try_fe() {
     local out=$FE_OUT/essentials
     local have_fe=0 have_compat=0
-    if [ -f "$out/FoundationEssentials.o" ] && phase2_is_x86_macho "$out/FoundationEssentials.o"; then
+    local fe_key compat_key tree
+    tree=$(phase2_git "$SF" rev-parse 'HEAD^{tree}' 2>/dev/null | tr -d '[:space:]') || tree=missing
+    fe_key=$(stamp_key "$out/FoundationEssentials.o" \
+        "$W/full/foundation/build_fe.sh" \
+        "$tree" "$TARGET")
+    compat_key=$(stamp_key "$out/removefile_compat.o" \
+        "$W/full/foundation/removefile_compat.c" \
+        "$TARGET")
+    if stamp_reuse "$out/FoundationEssentials.o" "$fe_key"; then
         have_fe=1
     fi
-    if [ -f "$out/removefile_compat.o" ] && phase2_is_x86_macho "$out/removefile_compat.o"; then
+    if stamp_reuse "$out/removefile_compat.o" "$compat_key"; then
         have_compat=1
     fi
     if [ "$have_fe" -eq 1 ] && [ "$have_compat" -eq 1 ]; then
-        note foundationessentials-x86 satisfied "mc=$MC"
+        note foundationessentials-x86 satisfied "mc=$MC stamp=$(stamp_short "$fe_key")"
         FE_OK=1
         return 0
     fi
+    [ "$have_fe" -eq 1 ] || stamp_rebuild_reason "$out/FoundationEssentials.o" "$fe_key"
+    [ "$have_compat" -eq 1 ] || stamp_rebuild_reason "$out/removefile_compat.o" "$compat_key"
 
     compile_fe_removefile_compat() {
         local cst
@@ -592,6 +633,7 @@ try_fe() {
         set -e
         if [ "$cst" -eq 0 ] && [ -f "$out/removefile_compat.o" ] \
             && phase2_is_x86_macho "$out/removefile_compat.o"; then
+            stamp_write "$out/removefile_compat.o" "$compat_key"
             return 0
         fi
         cannot foundationessentials-x86 BUILD_FE_REMOVEFILE_COMPAT \
@@ -636,6 +678,7 @@ try_fe() {
     st=$?
     set -e
     if [ "$st" -eq 0 ] && phase2_is_x86_macho "$out/FoundationEssentials.o"; then
+        stamp_write "$out/FoundationEssentials.o" "$fe_key"
         compile_fe_removefile_compat || return 1
         note foundationessentials-x86 cold-built "mc=$MC removefile_compat=ok"
         FE_OK=1
@@ -656,16 +699,22 @@ try_fe || true
 echo "==== OpenCombine x86 (beside $OPENCOMBINE_ROOT/export) ===="
 OC_OK=0
 oc_obj=$OPENCOMBINE_ROOT/export-x86_64/artifacts/OpenCombine.o
-if [ -f "$oc_obj" ] && phase2_is_x86_macho "$oc_obj"; then
-    note opencombine-x86 satisfied "mc=$MC"
+oc_key=$(stamp_key "$oc_obj" \
+    "$HERE/build_opencombine.sh" \
+    "$W/full/oracle-opencombine/policy.json" \
+    "$TARGET")
+if stamp_reuse "$oc_obj" "$oc_key"; then
+    note opencombine-x86 satisfied "mc=$MC stamp=$(stamp_short "$oc_key")"
     OC_OK=1
 else
+    stamp_rebuild_reason "$oc_obj" "$oc_key"
     set +e
     W="$W" SYS="$SYS" OPENCOMBINE_ROOT="$OPENCOMBINE_ROOT" MC="$MC" \
         bash "$HERE/build_opencombine.sh"
     st=$?
     set -e
     if [ "$st" -eq 0 ] && [ -f "$oc_obj" ] && phase2_is_x86_macho "$oc_obj"; then
+        stamp_write "$oc_obj" "$oc_key"
         note opencombine-x86 cold-built "mc=$MC"
         OC_OK=1
     else
@@ -693,12 +742,16 @@ BASE_MRROOT_OK=0
 [ "$BASE_MRROOT" != "$ARM_BASE_MRROOT" ] || {
     cannot mrroot-base-x86 MRROOT_COLLIDES_ARM64 "x86 base mrroot path equals arm64 scratch/mrroot"
 }
-if [ -x "$BASE_MRROOT/machorun" ] && phase2_is_elf_x86_loader "$BASE_MRROOT/machorun" \
+BASE_KEY=$(stamp_key "$BASE_MRROOT/machorun" \
+    "$MACHORUN/build/machorun" \
+    "${x86_core:-missing-core}")
+if stamp_reuse "$BASE_MRROOT/machorun" "$BASE_KEY" \
     && [ -f "$BASE_MRROOT/darwin/usr/lib/swift/libswiftCore.dylib" ] \
     && phase2_is_x86_macho "$BASE_MRROOT/darwin/usr/lib/swift/libswiftCore.dylib"; then
-    note mrroot-base-x86 satisfied
+    note mrroot-base-x86 satisfied "stamp=$(stamp_short "$BASE_KEY")"
     BASE_MRROOT_OK=1
 else
+    stamp_rebuild_reason "$BASE_MRROOT/machorun" "$BASE_KEY"
     echo "== staging $BASE_MRROOT from machorun darwin + x86 libswiftCore"
     phase2_stage_x86_base_mrroot \
         "$BASE_MRROOT" \
@@ -709,6 +762,7 @@ else
         && [ -f "$BASE_MRROOT/darwin/usr/lib/swift/libswiftCore.dylib" ] \
         && phase2_is_x86_macho "$BASE_MRROOT/darwin/usr/lib/swift/libswiftCore.dylib"; then
         note mrroot-base-x86 cold-built
+        stamp_write "$BASE_MRROOT/machorun" "$BASE_KEY"
         BASE_MRROOT_OK=1
     elif [ "$LIBSWIFTCORE_X86" -ne 1 ]; then
         cannot mrroot-base-x86 BUILD_LIBSWIFTCORE_X86 \
@@ -1116,20 +1170,21 @@ if [ "$UD_GUEST_ITEM_OK" -eq 1 ]; then
     esac
 fi
 
-# Rung a does not invoke build_full.sh, whose `-nt` copy is what refreshes
+# Rung a does not invoke build_full.sh, whose stamp copy is what refreshes
 # $MRROOT/machorun for rungs b/c. The mrroot-x86 "satisfied" path also skips
 # the copy. Refresh here so rung a execs the loader just built, not a stale
 # $MRROOT/machorun from an earlier tree (the DF2 exit-74 vs manual-run split).
-echo "==== run-root loader refresh (build_full -nt rule, before rung a) ===="
+echo "==== run-root loader refresh (stamp, before rung a) ===="
 if [ -x "$MACHORUN/build/machorun" ] && [ -d "$MRROOT" ]; then
-    if [ ! -x "$MRROOT/machorun" ] \
-        || [ "$MACHORUN/build/machorun" -nt "$MRROOT/machorun" ]
-    then
+    loader_key=$(stamp_key "$MRROOT/machorun" "$MACHORUN/build/machorun")
+    if stamp_reuse "$MRROOT/machorun" "$loader_key"; then
+        echo "  $MRROOT/machorun reused stamp=$(stamp_short "$loader_key") sha256=$(sha256sum "$MRROOT/machorun" | awk '{print $1}')"
+    else
+        stamp_rebuild_reason "$MRROOT/machorun" "$loader_key"
         cp -f "$MACHORUN/build/machorun" "$MRROOT/machorun"
         chmod a+x "$MRROOT/machorun"
+        stamp_write "$MRROOT/machorun" "$loader_key"
         echo "  refreshed $MRROOT/machorun from $MACHORUN/build/machorun sha256=$(sha256sum "$MRROOT/machorun" | awk '{print $1}')"
-    else
-        echo "  $MRROOT/machorun is current sha256=$(sha256sum "$MRROOT/machorun" | awk '{print $1}')"
     fi
 fi
 

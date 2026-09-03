@@ -29,6 +29,8 @@ set -euo pipefail
 W=${W:-$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd -P)}
 # shellcheck source=../../scripts/vendor_tree.sh
 . "$W/scripts/vendor_tree.sh"
+# shellcheck source=../../scripts/x86/stamp.inc
+. "$W/scripts/x86/stamp.inc"
 die() {
     echo "build_full: $*" >&2
     exit 2
@@ -260,24 +262,29 @@ esac
 # crashed taken against a loader predating machorun's malloc_type fix (0f39750,
 # "the 46 scenes it was smashing"). HALF A ROOT FROM ONE VERSION AND HALF FROM
 # ANOTHER READS AS A REAL RESULT.
-# Restage when the loader OR any base runtime input is newer than its copy.
+# Restage when the loader OR any base runtime input's CONTENT changes.
 # Measured 2026-09-03 (x86_64, main 3ed87cab): the BASE root's libswiftcompat
 # was rebuilt at 11:47 from the current source, but mrroot_full kept the 08:33
 # copy because only the loader's mtime was consulted; FoundationEssentials
 # then linked against a shim that no longer matched arm64's.
-base_runtime_newer() {
+# Existence and -nt are not a key: stamp_key hashes the loader + compat +
+# overlay dylibs (except libswiftCore, which is staged separately).
+base_runtime_key() {
     local f
-    [ -d "$ROOTDIR" ] || return 0
-    [ "$MACHORUN/build/machorun" -nt "$ROOTDIR/machorun" ] && return 0
-    [ "$BASE_RUNTIME_SOURCE/darwin/usr/lib/libswiftcompat.dylib" -nt "$ROOTDIR/darwin/usr/lib/libswiftcompat.dylib" ] && return 0
+    set -- "$MACHORUN/build/machorun" \
+        "$BASE_RUNTIME_SOURCE/darwin/usr/lib/libswiftcompat.dylib"
     for f in "$BASE_RUNTIME_SOURCE/darwin/usr/lib/swift/"*.dylib; do
         [ -e "$f" ] || continue
         [ "$(basename "$f")" = libswiftCore.dylib ] && continue
-        [ "$f" -nt "$ROOTDIR/darwin/usr/lib/swift/$(basename "$f")" ] && return 0
+        set -- "$@" "$f"
     done
-    return 1
+    stamp_key "$ROOTDIR/machorun" "$@"
 }
-if base_runtime_newer; then
+_base_runtime_stamp_key=$(base_runtime_key)
+if stamp_reuse "$ROOTDIR/machorun" "$_base_runtime_stamp_key"; then
+    echo "build_full: guest root reused stamp=$(stamp_short "$_base_runtime_stamp_key")" >&2
+else
+    stamp_rebuild_reason "$ROOTDIR/machorun" "$_base_runtime_stamp_key"
     echo "== staging guest root from $MACHORUN"
     mkdir -p "$ROOTDIR/darwin/usr/lib/swift"
     cp "$MACHORUN/build/machorun" "$ROOTDIR/machorun"
@@ -303,6 +310,8 @@ if base_runtime_newer; then
         esac
         cp "$d" "$ROOTDIR/darwin/usr/lib/"
     done
+    chmod a+x "$ROOTDIR/machorun" || true
+    stamp_write "$ROOTDIR/machorun" "$_base_runtime_stamp_key"
 fi
 
 # Synchronise every runtime independently of the root-staging condition above.

@@ -375,8 +375,13 @@ phase2_ud_guest_find_x86_dylib() {
 phase2_ud_guest_ensure_swiftcompat() {
     local repo=$1 sys=$2 ud_w=$3 mrlib=$4 loader=$5
     local dest=$ud_w/lib/libswiftcompat.dylib
-    local found src_dir
+    local found src_dir want
     mkdir -p "$ud_w/lib"
+    src_dir=$repo/swiftcore-macho/sdk/compat
+    want=$(stamp_key "$dest" \
+        "$src_dir/swiftcompat.c" \
+        "$src_dir/shim.cpp" \
+        "$repo/swiftcore-macho/scripts/build_compat.sh")
     found=$(phase2_ud_guest_find_x86_dylib libswiftcompat.dylib \
         "${UD_SWIFTCOMPAT_DYLIB:-}" \
         "$dest" \
@@ -385,9 +390,11 @@ phase2_ud_guest_ensure_swiftcompat() {
         || true)
     if [ -n "$found" ]; then
         [ "$found" = "$dest" ] || cp -a "$found" "$dest"
-        return 0
+        if stamp_reuse "$dest" "$want"; then
+            return 0
+        fi
+        stamp_rebuild_reason "$dest" "$want"
     fi
-    src_dir=$repo/swiftcore-macho/sdk/compat
     if [ ! -f "$src_dir/swiftcompat.c" ] || [ ! -f "$src_dir/shim.cpp" ]; then
         phase2_ud_guest_cannot LIBSWIFTCOMPAT libswiftcompat.dylib \
             "no x86_64 Mach-O and swiftcore-macho/sdk/compat sources missing"
@@ -418,6 +425,7 @@ phase2_ud_guest_ensure_swiftcompat() {
         rm -f "$log"
         return 1
     fi
+    stamp_write "$dest" "$want"
     rm -f "$log"
 }
 
@@ -433,6 +441,13 @@ phase2_ud_guest_ensure_cf_checkout() {
     local cloner=$repo/.cursor/clone-pinned-repo.sh
     local live_commit live_tree tree_root lock_dir lock log st
     local sources=$dest/$PHASE2_UD_GUEST_CF_SOURCES_REL
+    local key
+    key=$(stamp_key "$dest" "$commit" "$tree" "$origin")
+
+    if stamp_reuse "$dest" "$key" \
+        && [ -f "$sources/CFRuntime.c" ] && [ -f "$sources/CFPreferences.c" ]; then
+        return 0
+    fi
 
     if [ -e "$dest" ]; then
         if [ -d "$dest/.git" ]; then
@@ -440,6 +455,8 @@ phase2_ud_guest_ensure_cf_checkout() {
             live_tree=$(git -c "safe.directory=$dest" -C "$dest" rev-parse 'HEAD^{tree}' 2>/dev/null || true)
             if [ "$live_commit" = "$commit" ] && [ "$live_tree" = "$tree" ]; then
                 if [ -f "$sources/CFRuntime.c" ] && [ -f "$sources/CFPreferences.c" ]; then
+                    stamp_write "$dest" "$key"
+                    stamp_reuse "$dest" "$key" && return 0
                     return 0
                 fi
                 phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
@@ -507,6 +524,7 @@ phase2_ud_guest_ensure_cf_checkout() {
             "no x86_64 Mach-O. pinned CF checkout $commit at $dest is missing $PHASE2_UD_GUEST_CF_SOURCES_REL. Will not invent a stub dylib."
         return 1
     fi
+    stamp_write "$dest" "$key"
     return 0
 }
 
@@ -536,14 +554,22 @@ phase2_ud_guest_ensure_icu_checkout() {
     local origin=$PHASE2_UD_GUEST_ICU_REPO
     local cloner=$repo/.cursor/clone-pinned-repo.sh
     local live_commit live_tree lock_dir lock log st include
+    local key
 
     include=$dest/icuSources/include
+    key=$(stamp_key "$dest" "$commit" "$tree" "$origin")
+    if stamp_reuse "$dest" "$key" && [ -d "$include/_foundation_unicode" ]; then
+        return 0
+    fi
+
     if [ -e "$dest" ]; then
         if [ -d "$dest/.git" ]; then
             live_commit=$(git -c "safe.directory=$dest" -C "$dest" rev-parse HEAD 2>/dev/null || true)
             live_tree=$(git -c "safe.directory=$dest" -C "$dest" rev-parse 'HEAD^{tree}' 2>/dev/null || true)
             if [ "$live_commit" = "$commit" ] && [ "$live_tree" = "$tree" ]; then
                 if [ -d "$include/_foundation_unicode" ]; then
+                    stamp_write "$dest" "$key"
+                    stamp_reuse "$dest" "$key" && return 0
                     return 0
                 fi
                 phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
@@ -608,6 +634,7 @@ phase2_ud_guest_ensure_icu_checkout() {
             "no x86_64 Mach-O. pinned ICU checkout $commit at $dest is missing icuSources/include/_foundation_unicode. Will not invent a stub dylib."
         return 1
     fi
+    stamp_write "$dest" "$key"
     return 0
 }
 
@@ -888,16 +915,15 @@ phase2_stage_cftest_into_run_root() {
     fi
     mkdir -p "$(dirname "$dest")"
     src_sha=$(sha256sum "$src" | awk '{print $1}')
-    if [ -f "$dest" ]; then
+    key=$(stamp_key "$dest" "$src")
+    if stamp_reuse "$dest" "$key"; then
         dest_sha=$(sha256sum "$dest" | awk '{print $1}')
-    else
-        dest_sha=ABSENT
-    fi
-    if [ "$src_sha" = "$dest_sha" ]; then
         already=1
     else
+        stamp_rebuild_reason "$dest" "$key"
         cp -f "$src" "$dest"
         dest_sha=$(sha256sum "$dest" | awk '{print $1}')
+        stamp_write "$dest" "$key"
     fi
     # Decision uses the sha already printed on the ENV_PREPARE line, not
     # existence / cmp of a dest that may be a copy of a stale source.
@@ -928,18 +954,19 @@ phase2_ud_guest_ensure_dispatch() {
     local repo=$1 ud_w=$2 sys=$3 target=$4
     local existing_host=${5:-}
     local host_dir host dest obj log st arch darwin_sha host_ok=0 darwin_ok=0
-    local built_host=0 built_darwin=0
+    local built_host=0 built_darwin=0 darwin_key host_key
 
     phase2_ud_guest_refuse_unsuffixed "$ud_w" || return 1
     mkdir -p "$ud_w/lib" "$ud_w/host" "$ud_w/host-work"
 
     host=$ud_w/host/libOpenDispatchHost.so
-    if [ -f "$existing_host" ] && [ ! -L "$existing_host" ] \
-        && phase2_is_elf_x86_so "$existing_host"
-    then
+    host_key=$(stamp_key "$host" \
+        "$repo/full/dispatch/build_host_bridge.sh" \
+        "ELF64-$(uname -m)")
+    if [ -n "$existing_host" ] && stamp_reuse "$existing_host" "$host_key"; then
         host=$existing_host
         host_ok=1
-    elif [ -f "$host" ] && [ ! -L "$host" ] && phase2_is_elf_x86_so "$host"; then
+    elif stamp_reuse "$host" "$host_key"; then
         host_ok=1
     fi
 
@@ -968,6 +995,7 @@ phase2_ud_guest_ensure_dispatch() {
         fi
         built_host=1
         host_ok=1
+        stamp_write "$host" "$host_key"
     fi
 
     dest=$ud_w/lib/libOpenDispatch.dylib
@@ -980,7 +1008,10 @@ phase2_ud_guest_ensure_dispatch() {
             return 1
             ;;
     esac
-    if [ -f "$dest" ] && phase2_is_x86_macho "$dest" \
+    darwin_key=$(stamp_key "$dest" \
+        "$repo/full/dispatch/OpenDispatchBridge.c" \
+        "$target" "/usr/lib/libOpenDispatch.dylib")
+    if stamp_reuse "$dest" "$darwin_key" \
         && [ "$(llvm-otool-18 -D "$dest" 2>/dev/null | tail -n 1)" = \
             /usr/lib/libOpenDispatch.dylib ]
     then
@@ -1025,6 +1056,7 @@ phase2_ud_guest_ensure_dispatch() {
         fi
         built_darwin=1
         darwin_ok=1
+        stamp_write "$dest" "$darwin_key"
     fi
 
     darwin_sha=$(sha256sum "$dest" | awk '{print $1}')

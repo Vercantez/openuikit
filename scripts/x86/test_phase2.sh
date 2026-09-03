@@ -65,6 +65,14 @@ expect_file "$X86_ORACLE"
 
 echo "== bash -n"
 for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
+    "$ROOT/scripts/x86/stamp.inc" \
+    "$ROOT/scripts/x86/test_stamp.sh" \
+    "$ROOT/scripts/x86/test_no_existence_reuse.sh" \
+    "$ROOT/scripts/ops/x86_cycle.sh" \
+    "$ROOT/scripts/ops/run_box.sh" \
+    "$ROOT/scripts/ops/premerge.sh" \
+    "$ROOT/scripts/ops/test_ops.sh" \
+    "$ROOT/scripts/ops/common.inc" \
     "$ROOT/full/foundation/fe_sysroot_measurement.inc" \
     "$ROOT/full/dispatch/swift_linux_lib.inc" \
     "$ROOT/full/urltransport/build_host_helper.sh" \
@@ -102,48 +110,31 @@ expect_grep 'Column 2 is cputype' "$COMMON" "x86 Mach-O check documents cputype 
 expect_grep 'RUNG_SCOREBOARD' "$PHASE2" "RUNG_SCOREBOARD"
 expect_grep 'ENV_PREPARE_SUMMARY' "$PHASE2" "ENV_PREPARE_SUMMARY"
 expect_grep 'never overwrite' "$PHASE2" "arm64 overwrite refusal in header"
-expect_grep 'phase2_source_tree_reason' "$PHASE2" \
-    "machorun substrate reuse consults HEAD:machorun stamp"
-expect_grep 'phase2_write_source_tree_stamp' "$PHASE2" \
-    "cold-build writes .source-tree next to the product"
+expect_grep 'stamp_reuse' "$PHASE2" \
+    "machorun substrate reuse goes through stamp_reuse"
+expect_grep 'stamp_write' "$PHASE2" \
+    "cold-build writes <out>.inputs-sha256"
 expect_grep 'reused=1' "$PHASE2" "satisfied loader/darwin/objc4/quartz/tbd print reused=1"
-expect_grep ':+reason=' "$PHASE2" "cold-built prints reason=source-tree or no-stamp"
+expect_grep 'stamp_rebuild_reason' "$PHASE2" "cold-built prints rebuilt reason= via stamp.inc"
 
-echo "== source-tree stamp helpers (HEAD:machorun, not existence)"
-# shellcheck source=common.inc
-. "$COMMON"
-STAMP_FIX=$(mktemp -d /tmp/phase2-source-tree.XXXXXX)
-mkdir -p "$STAMP_FIX/machorun/src" "$STAMP_FIX/machorun/build"
-printf 'int x;\n' > "$STAMP_FIX/machorun/src/util.c"
-git -C "$STAMP_FIX" -c init.defaultBranch=main init -q >/dev/null
-git -C "$STAMP_FIX" add machorun
-git -C "$STAMP_FIX" -c user.email=phase2-test@example.com -c user.name=phase2-test \
-    commit -q -m init
-LIVE_TREE=$(phase2_git "$STAMP_FIX" rev-parse HEAD:machorun)
-LOADER_BIN=$STAMP_FIX/machorun/build/machorun
-reason=$(phase2_source_tree_reason "$STAMP_FIX" "$LOADER_BIN")
-if [ "$reason" = no-stamp ]; then
-    ok "missing stamp is reason=no-stamp"
+echo "== stamp.inc (content hash, not existence)"
+# shellcheck source=stamp.inc
+. "$ROOT/scripts/x86/stamp.inc"
+STAMP_FIX=$(mktemp -d /tmp/phase2-stamp-inc.XXXXXX)
+python3 - "$STAMP_FIX/loader" <<'PY'
+import pathlib, struct, sys
+pathlib.Path(sys.argv[1]).parent.mkdir(parents=True, exist_ok=True)
+# ELF-looking is not required here; stamp unit test covers Mach-O. Touch a file
+# and rely on test_stamp.sh for kind checks.
+pathlib.Path(sys.argv[1]).write_bytes(b"not-a-product")
+PY
+printf 'input\n' > "$STAMP_FIX/src.c"
+key=$(stamp_key "$STAMP_FIX/loader" "$STAMP_FIX/src.c")
+if stamp_reuse "$STAMP_FIX/loader" "$key" 2>/dev/null; then
+    die_test "existence without .inputs-sha256 reused"
 else
-    die_test "missing stamp expected no-stamp, got: $reason"
+    ok "missing .inputs-sha256 does not reuse"
 fi
-phase2_write_source_tree_stamp "$STAMP_FIX" "$LOADER_BIN"
-reason=$(phase2_source_tree_reason "$STAMP_FIX" "$LOADER_BIN")
-if [ -z "$reason" ]; then
-    ok "matching HEAD:machorun stamp is reusable"
-else
-    die_test "matching stamp should be empty reason, got: $reason"
-fi
-printf '%s\n' aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa > "$(phase2_source_tree_stamp_path "$LOADER_BIN")"
-reason=$(phase2_source_tree_reason "$STAMP_FIX" "$LOADER_BIN")
-case "$reason" in
-    source-tree\ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa→"$LIVE_TREE")
-        ok "stale stamp is source-tree old→HEAD:machorun ($reason)"
-        ;;
-    *)
-        die_test "stale stamp expected source-tree old→$LIVE_TREE, got: $reason"
-        ;;
-esac
 rm -rf "$STAMP_FIX"
 
 echo "== denominators (committed runners, not invented)"
@@ -1621,7 +1612,7 @@ expect_grep 'build_host_bridge.sh' "$UDINC" \
 expect_grep 'OpenDispatchBridge.c' "$UDINC" \
     "ud-guest-dispatch links the Darwin OpenDispatch facade"
 expect_grep 'run-root loader refresh' "$PHASE2" \
-    "phase2 refreshes \$MRROOT/machorun before rung a (build_full -nt rule)"
+    "phase2 refreshes \$MRROOT/machorun before rung a (stamp, not -nt)"
 expect_grep 'ud_dispatch_loader_line' "$ROOT/foundation-macho/scripts/run_ud_guest.sh" \
     "run_ud_guest.sh prints loader sha256 on == binary"
 expect_grep 'LD_PRELOAD' "$ROOT/foundation-macho/scripts/ud_dispatch_run.inc" \
@@ -2082,7 +2073,7 @@ else
     die_test "could not emit an x86 libCFTest.dylib fixture"
 fi
 
-echo "== ud-guest-dispatch reuses an ELF host bridge and links the Darwin facade"
+echo "== ud-guest-dispatch stamps the host bridge; unstamped ELF is not reused"
 DISP_HOST_DIR=$UDWORK/existing-host
 mkdir -p "$DISP_HOST_DIR"
 echo 'int openui_dispatch_host_v1_runtime_check(void){return 0;}' \
@@ -2100,14 +2091,15 @@ case "$disp_report" in
         drun=${drun%% *}
         dsha=${disp_report##*sha256=}
         want=$(sha256sum "$wt/lib/libOpenDispatch.dylib" | awk '{print $1}')
-        if [ "$dhost" = "$DISP_HOST_DIR/libOpenDispatchHost.so" ] \
+        if [ "$dhost" = "$wt/host/libOpenDispatchHost.so" ] \
+            && [ "$dhost" != "$DISP_HOST_DIR/libOpenDispatchHost.so" ] \
             && [ "$drun" = "$wt/lib/libOpenDispatch.dylib" ] \
             && [ "$dsha" = "$want" ] \
             && [ "$(llvm-otool-18 -D "$drun" | tail -n 1)" = \
                 /usr/lib/libOpenDispatch.dylib ] \
             && llvm-nm-18 -u "$drun" | grep -q '_glibc_openui_dispatch_host_v1_get_global_queue'
         then
-            ok "ensure_dispatch reuses ELF host and links Darwin LC_ID /usr/lib/libOpenDispatch.dylib"
+            ok "ensure_dispatch rebuilds unstamped ELF and links Darwin LC_ID /usr/lib/libOpenDispatch.dylib"
         else
             die_test "ensure_dispatch dest mismatch: '$disp_report' id=$(llvm-otool-18 -D "$drun" 2>/dev/null | tail -n 1)"
         fi
@@ -2292,6 +2284,23 @@ else
     W=$saved_w
     HOME=$saved_home
     rm -rf "$PROV_DEST" "$STALE_DEST" "$REFUSE_DEST" "$EXTRACT_W"
+fi
+
+echo "== stamp library + existence-reuse + ops"
+if bash "$ROOT/scripts/x86/test_stamp.sh"; then
+    ok "test_stamp.sh"
+else
+    die_test "test_stamp.sh"
+fi
+if bash "$ROOT/scripts/x86/test_no_existence_reuse.sh"; then
+    ok "test_no_existence_reuse.sh"
+else
+    die_test "test_no_existence_reuse.sh"
+fi
+if bash "$ROOT/scripts/ops/test_ops.sh"; then
+    ok "test_ops.sh"
+else
+    die_test "test_ops.sh"
 fi
 
 echo "== gen_swift_tbd.sh round-trip (libswiftCore + overlays)"
