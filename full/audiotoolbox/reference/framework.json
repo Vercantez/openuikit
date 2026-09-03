@@ -1,0 +1,80 @@
+{
+  "apiCrosswalk": "reference/api-crosswalk.tsv",
+  "apiDigester": "reference/api-digester.json",
+  "corpusSummary": "reference/corpus-summary.json",
+  "coveragePolicy": {
+    "allowedStatuses": [
+      "implemented",
+      "declared",
+      "deferred",
+      "unavailable",
+      "not-applicable"
+    ],
+    "minimumNondeferredCount": 150,
+    "nondeferredStatuses": [
+      "implemented",
+      "declared"
+    ],
+    "rule": "min(150, max(50, ceil(10% of exact public symbols)))"
+  },
+  "dependencies": [
+    "CoreAudioTypes",
+    "CoreFoundation",
+    "Foundation"
+  ],
+  "externalEvidence": "reference/external-evidence.json",
+  "guestManifest": "audiotoolbox_guest_sources.txt",
+  "lane": "large-partitioned",
+  "module": "AudioToolbox",
+  "provenance": {
+    "apiCrosswalkAmbiguousCount": 0,
+    "apiCrosswalkExactUSRCount": 7,
+    "apiCrosswalkImportNameCount": 5,
+    "apiCrosswalkUnmatchedCount": 3222,
+    "apiDeclarationNodeCount": 47,
+    "apiDigesterFormatVersion": 8,
+    "apiDigesterNodeCount": 79,
+    "apiDigesterPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-api-digester",
+    "apiDigesterSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+    "apiDigesterVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+    "apiOwnedDeclarationNodeCount": 44,
+    "arm64TBDExportCount": 779,
+    "externalEvidenceLockPath": "full/framework-fanout/external-evidence-sources.json",
+    "externalEvidenceLockSHA256": "a0b7ebf22affede443bc79ae75fb8ac7b9f450a407f666147efa3ba93878b752",
+    "frameworkSDKRelativePath": "System/Library/Frameworks/AudioToolbox.framework",
+    "generatorPath": "scripts/framework-fanout/generate_seed_v2.py",
+    "generatorSHA256": "e44f6bde16e79ca2275fd7b518384d4c2b860d3e5b9293e68770a53eb118923c",
+    "rawSDKInputCount": 36,
+    "roadmapPath": "full/framework-roadmap/framework-roadmap.json",
+    "roadmapSHA256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a",
+    "sdkName": "iphoneos",
+    "sdkVersion": "26.1",
+    "symbolGraphExtractorPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-symbolgraph-extract",
+    "symbolGraphExtractorSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+    "symbolGraphExtractorVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+    "symbolGraphRelationshipMultisetSHA256": "2cbd120cd2a9883a074e1ab128fca368a19a0d21dbb40e4657902fc12dd5fd6d",
+    "symbolGraphSymbolMultisetSHA256": "a8e9f62e65333d6c924eefffe68fd3057e731c3e2515ebd6a217f7e9d2c0e1a0",
+    "target": "arm64-apple-ios26.0",
+    "tbdInputCount": 6,
+    "xcodeBuild": "17B55",
+    "xcodeVersion": "26.1"
+  },
+  "publicSurface": "reference/public-surface.tsv",
+  "relationshipCount": 2002,
+  "risks": [
+    "audio",
+    "realtime",
+    "c-abi",
+    "callbacks",
+    "buffer-ownership",
+    "fail-closed"
+  ],
+  "runtimeMarker": "AUDIOTOOLBOX_AGENT_RUNTIME_OK",
+  "schema": 2,
+  "sdkInputs": "reference/sdk-inputs.tsv",
+  "slug": "audiotoolbox",
+  "symbolConflicts": "reference/symbol-conflicts.tsv",
+  "symbolCount": 3234,
+  "symbolGraph": "reference/symbol-graphs.json",
+  "tbdExports": "reference/tbd-exports.tsv"
+}

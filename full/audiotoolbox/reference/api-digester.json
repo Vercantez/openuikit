@@ -1,0 +1,748 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "_DarwinFoundation1.availability.Availability",
+        "printedName": "_DarwinFoundation1.availability.Availability"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "_DarwinFoundation1.TargetConditionals",
+        "printedName": "_DarwinFoundation1.TargetConditionals"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AudioCodec",
+        "printedName": "AudioToolbox.AudioCodec"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AUAudioUnit",
+        "printedName": "AudioToolbox.AUAudioUnit"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AUAudioUnitImplementation",
+        "printedName": "AudioToolbox.AUAudioUnitImplementation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AUComponent",
+        "printedName": "AudioToolbox.AUComponent"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AUGraph",
+        "printedName": "AudioToolbox.AUGraph"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AUParameters",
+        "printedName": "AudioToolbox.AUParameters"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AudioComponent",
+        "printedName": "AudioToolbox.AudioComponent"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AudioConverter",
+        "printedName": "AudioToolbox.AudioConverter"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AudioFile",
+        "printedName": "AudioToolbox.AudioFile"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AudioFileStream",
+        "printedName": "AudioToolbox.AudioFileStream"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AudioFormat",
+        "printedName": "AudioToolbox.AudioFormat"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AudioOutputUnit",
+        "printedName": "AudioToolbox.AudioOutputUnit"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AudioQueue",
+        "printedName": "AudioToolbox.AudioQueue"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AudioServices",
+        "printedName": "AudioToolbox.AudioServices"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AudioUnitParameters",
+        "printedName": "AudioToolbox.AudioUnitParameters"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AudioUnitProperties",
+        "printedName": "AudioToolbox.AudioUnitProperties"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AudioUnitUtilities",
+        "printedName": "AudioToolbox.AudioUnitUtilities"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AudioWorkInterval",
+        "printedName": "AudioToolbox.AudioWorkInterval"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.CAFFile",
+        "printedName": "AudioToolbox.CAFFile"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.CAShow",
+        "printedName": "AudioToolbox.CAShow"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.CASpatialAudioExperience",
+        "printedName": "AudioToolbox.CASpatialAudioExperience"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.ExtendedAudioFile",
+        "printedName": "AudioToolbox.ExtendedAudioFile"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.MusicDevice",
+        "printedName": "AudioToolbox.MusicDevice"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.MusicPlayer",
+        "printedName": "AudioToolbox.MusicPlayer"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox.AudioSession",
+        "printedName": "AudioToolbox.AudioSession"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "_DarwinFoundation2._stdio",
+        "printedName": "_DarwinFoundation2._stdio"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "kind": "TypeNameAlias",
+            "name": "OSStatus",
+            "printedName": "Darwin.OSStatus"
+          },
+          {
+            "kind": "TypeNominal",
+            "name": "CFURL",
+            "printedName": "CoreFoundation.CFURL",
+            "usr": "c:@T@CFURLRef"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CFArray",
+                        "printedName": "CoreFoundation.CFArray",
+                        "usr": "c:@T@CFArrayRef"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Unmanaged",
+                    "printedName": "Swift.Unmanaged<CoreFoundation.CFArray>",
+                    "usr": "s:s9UnmanagedV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Unmanaged<CoreFoundation.CFArray>?",
+                "usr": "s:Sq"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.Unmanaged<CoreFoundation.CFArray>?>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "DiscardableResult",
+          "Available"
+        ],
+        "declKind": "Func",
+        "funcSelfKind": "NonMutating",
+        "intro_iOS": "7.0",
+        "kind": "Function",
+        "moduleName": "AudioToolbox",
+        "name": "CopyInstrumentInfoFromSoundBank",
+        "printedName": "CopyInstrumentInfoFromSoundBank(_:_:)",
+        "usr": "c:@F@CopyInstrumentInfoFromSoundBank"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "kind": "TypeNameAlias",
+            "name": "OSStatus",
+            "printedName": "Darwin.OSStatus"
+          },
+          {
+            "kind": "TypeNominal",
+            "name": "CFURL",
+            "printedName": "CoreFoundation.CFURL",
+            "usr": "c:@T@CFURLRef"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CFString",
+                        "printedName": "CoreFoundation.CFString",
+                        "usr": "c:@T@CFStringRef"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Unmanaged",
+                    "printedName": "Swift.Unmanaged<CoreFoundation.CFString>",
+                    "usr": "s:s9UnmanagedV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Unmanaged<CoreFoundation.CFString>?",
+                "usr": "s:Sq"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.Unmanaged<CoreFoundation.CFString>?>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "DiscardableResult",
+          "Available"
+        ],
+        "declKind": "Func",
+        "funcSelfKind": "NonMutating",
+        "intro_iOS": "7.0",
+        "kind": "Function",
+        "moduleName": "AudioToolbox",
+        "name": "CopyNameFromSoundBank",
+        "printedName": "CopyNameFromSoundBank(_:_:)",
+        "usr": "c:@F@CopyNameFromSoundBank"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "AudioToolbox",
+        "printedName": "AudioToolbox"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AudioToolbox",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int32",
+                "printedName": "Swift.Int32",
+                "usr": "s:s5Int32V"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC21AUDIO_TOOLBOX_VERSIONs5Int32Vvg",
+            "moduleName": "AudioToolbox",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC21AUDIO_TOOLBOX_VERSIONs5Int32Vvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int32",
+            "printedName": "Swift.Int32",
+            "usr": "s:s5Int32V"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "AudioToolbox",
+        "name": "AUDIO_TOOLBOX_VERSION",
+        "printedName": "AUDIO_TOOLBOX_VERSION",
+        "usr": "c:@macro@AUDIO_TOOLBOX_VERSION"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC22kInstrumentInfoKey_LSBSSvg",
+            "moduleName": "AudioToolbox",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC22kInstrumentInfoKey_LSBSSvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "String",
+            "printedName": "Swift.String",
+            "usr": "s:SS"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "AudioToolbox",
+        "name": "kInstrumentInfoKey_LSB",
+        "printedName": "kInstrumentInfoKey_LSB",
+        "usr": "c:@macro@kInstrumentInfoKey_LSB"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC22kInstrumentInfoKey_MSBSSvg",
+            "moduleName": "AudioToolbox",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC22kInstrumentInfoKey_MSBSSvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "String",
+            "printedName": "Swift.String",
+            "usr": "s:SS"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "AudioToolbox",
+        "name": "kInstrumentInfoKey_MSB",
+        "printedName": "kInstrumentInfoKey_MSB",
+        "usr": "c:@macro@kInstrumentInfoKey_MSB"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC23kInstrumentInfoKey_NameSSvg",
+            "moduleName": "AudioToolbox",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC23kInstrumentInfoKey_NameSSvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "String",
+            "printedName": "Swift.String",
+            "usr": "s:SS"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "AudioToolbox",
+        "name": "kInstrumentInfoKey_Name",
+        "printedName": "kInstrumentInfoKey_Name",
+        "usr": "c:@macro@kInstrumentInfoKey_Name"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC26kInstrumentInfoKey_ProgramSSvg",
+            "moduleName": "AudioToolbox",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC26kInstrumentInfoKey_ProgramSSvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "String",
+            "printedName": "Swift.String",
+            "usr": "s:SS"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "AudioToolbox",
+        "name": "kInstrumentInfoKey_Program",
+        "printedName": "kInstrumentInfoKey_Program",
+        "usr": "c:@macro@kInstrumentInfoKey_Program"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "AudioToolbox",
+    "printedName": "AudioToolbox"
+  }
+}
