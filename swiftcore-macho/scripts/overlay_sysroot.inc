@@ -960,7 +960,7 @@ overlay_sysroot_copy_tbds_from() {
     local src=${1:?overlay_sysroot_copy_tbds_from: src}
     local dest=${2:?overlay_sysroot_copy_tbds_from: dest}
     local overwrite=${3:-0}
-    local lib t bn n=0 swift_n=0 rel f
+    local lib t bn n=0 swift_n=0 skipped_self=0 rel f
     lib=$src/usr/lib
     [ -d "$lib" ] || return 0
     mkdir -p "$dest/usr/lib"
@@ -988,6 +988,24 @@ overlay_sysroot_copy_tbds_from() {
         while IFS= read -r f; do
             [ -n "$f" ] || continue
             rel=${f#"$src/usr/lib/swift/"}
+            # Never seed the SDK copy with the modules THIS build produces
+            # (the twelve overlays). Measured 2026-09-03 (x86_64, main
+            # a9e85d41): Apple's _DarwinFoundation1.swiftinterface copied
+            # here shadowed the in-tree shell -- build_sdk_overlays fed the
+            # interface to `swiftc -c` ("unexpected input file") and the
+            # _errno shell resolved _DarwinFoundation1 to Apple's interface,
+            # which names lgammaf_r that this libSystem does not export.
+            # The overlay build's own -resource-dir must win for these.
+            case "${rel%%/*}" in
+                Darwin.swiftmodule|_Concurrency.swiftmodule|_StringProcessing.swiftmodule|\
+                _RegexParser.swiftmodule|_Builtin_float.swiftmodule|Observation.swiftmodule|\
+                Synchronization.swiftmodule|_DarwinFoundation1.swiftmodule|\
+                _DarwinFoundation2.swiftmodule|_DarwinFoundation3.swiftmodule|\
+                _errno.swiftmodule|ObjectiveC.swiftmodule)
+                    skipped_self=$((skipped_self + 1))
+                    continue
+                    ;;
+            esac
             if [ "$overwrite" != 1 ] && [ -e "$dest/usr/lib/swift/$rel" ]; then
                 continue
             fi
@@ -995,6 +1013,14 @@ overlay_sysroot_copy_tbds_from() {
             cp -a "$f" "$dest/usr/lib/swift/$rel"
             swift_n=$((swift_n + 1))
         done < <(find "$src/usr/lib/swift" -path '*.swiftmodule/*' \( -type f -o -type l \) | LC_ALL=C sort)
+        [ "$skipped_self" -eq 0 ] || echo "overlay_sysroot: skipped $skipped_self swift inputs of self-built overlay modules (resource-dir wins)"
+        # A previous staging (recipe overlay-darwin.6) may have seeded them.
+        for selfmod in Darwin _Concurrency _StringProcessing _RegexParser _Builtin_float Observation Synchronization _DarwinFoundation1 _DarwinFoundation2 _DarwinFoundation3 _errno ObjectiveC; do
+            if [ -d "$dest/usr/lib/swift/${selfmod}.swiftmodule" ]; then
+                rm -rf "$dest/usr/lib/swift/${selfmod}.swiftmodule"
+                echo "overlay_sysroot: removed seeded self-built module ${selfmod}.swiftmodule from $dest"
+            fi
+        done
     fi
     if [ "$n" -gt 0 ] || [ "$swift_n" -gt 0 ]; then
         echo "overlay_sysroot: copied $n tbds + $swift_n swift inputs from $src → $dest"

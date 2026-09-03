@@ -262,10 +262,12 @@ build_one_shell() {
   obj=$work/${module}.o
   kind=synthesized
   src=$OVERLAY_SRC/${module}.swift
+  # The in-tree shell is the source. A sysroot .swiftinterface is not a
+  # `swiftc -c` input ("error: unexpected input file", measured 2026-09-03
+  # once PR #69 seeded the SDK copy with Apple's interfaces); it is only
+  # reported here so a divergence from Apple's interface is visible.
   if iface=$(find_interface "$module"); then
-    kind=interface
-    src=$iface
-    echo "sdk_overlay: $module source=interface path=$iface"
+    echo "sdk_overlay: $module source=synthesized path=$src (sysroot interface present at $iface, not compiled)"
   else
     echo "sdk_overlay: $module source=synthesized path=$src (sysroot interface absent)"
   fi

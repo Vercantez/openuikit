@@ -165,7 +165,7 @@ need '[ -f "$stale/CANARY" ]' "stale canary still exists after reuse"
 echo
 echo "=== tbd-only change in FE source → stamp=MISMATCH and restage ==="
 fe=$W/scratch/sysroot_fe4-x86_64
-mkdir -p "$fe/usr/lib" "$fe/usr/lib/swift/Darwin.swiftmodule"
+mkdir -p "$fe/usr/lib" "$fe/usr/lib/swift/System.swiftmodule" "$fe/usr/lib/swift/Darwin.swiftmodule"
 cat > "$fe/usr/lib/libSystem.B.tbd" <<'TBD'
 --- !tapi-tbd-v3
 archs: [ x86_64 ]
@@ -176,6 +176,9 @@ exports:
 TBD
 ln -sfn libSystem.B.tbd "$fe/usr/lib/libSystem.tbd"
 echo '--- !tapi-tbd-v3' > "$fe/usr/lib/swift/libswiftCore.tbd"
+echo 'module System {}' > "$fe/usr/lib/swift/System.swiftmodule/x86_64-apple-macos.swiftinterface"
+# Darwin is one of the twelve overlays the build produces itself: its
+# swiftmodule must NOT be seeded into the SDK copy (resource-dir wins).
 echo 'module Darwin {}' > "$fe/usr/lib/swift/Darwin.swiftmodule/x86_64-apple-macos.swiftinterface"
 
 sdk_tbd=$tmp/sdkTbd
@@ -205,9 +208,12 @@ grep -q '_fmaxl' "$sdk_tbd/MacOSX.sdk/usr/lib/libSystem.tbd" \
 [ -f "$sdk_tbd/MacOSX.sdk/usr/lib/swift/libswiftCore.tbd" ] \
   && echo "  OK  dest has usr/lib/swift/libswiftCore.tbd" \
   || { echo "  FAIL dest missing swift tbd"; fail=1; }
-[ -f "$sdk_tbd/MacOSX.sdk/usr/lib/swift/Darwin.swiftmodule/x86_64-apple-macos.swiftinterface" ] \
-  && echo "  OK  dest has Darwin.swiftmodule slice" \
+[ -f "$sdk_tbd/MacOSX.sdk/usr/lib/swift/System.swiftmodule/x86_64-apple-macos.swiftinterface" ] \
+  && echo "  OK  dest has System.swiftmodule slice" \
   || { echo "  FAIL dest missing swiftmodule"; fail=1; }
+[ ! -e "$sdk_tbd/MacOSX.sdk/usr/lib/swift/Darwin.swiftmodule" ] \
+  && echo "  OK  dest does not seed the self-built Darwin.swiftmodule" \
+  || { echo "  FAIL dest seeded Darwin.swiftmodule (self-built overlay module must come from -resource-dir)"; fail=1; }
 grep -q "overlay_sysroot: source=$fe tbd_sha=" "$tmp/fe.finish1" \
   && echo "  OK  finish print_headers source= FE sysroot" \
   || { echo "  FAIL finish source line"; fail=1; }

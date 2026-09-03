@@ -661,10 +661,14 @@ overlay_build_xcode_shells() {
     script=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/build_sdk_overlays.sh
     log=${W:-/tmp}/sdk-overlays.log
     echo "==== overlay_build_xcode_shells arch=$arch ===="
-    set +e
-    bash "$script" "$arch" "$build_dir" >"$log" 2>&1
-    st=$?
-    set -e
+    # An `if` condition is exempt from the ERR trap; `set +e` alone is not
+    # (measured 2026-09-03: _on_err exited before `cat "$log"`, so the
+    # child's failure was silent in the operator log).
+    if bash "$script" "$arch" "$build_dir" >"$log" 2>&1; then
+        st=0
+    else
+        st=$?
+    fi
     cat "$log"
     while IFS= read -r line; do
         case "$line" in
