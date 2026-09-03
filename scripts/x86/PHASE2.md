@@ -259,6 +259,14 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    `Sources/CoreFoundation`. A failed fetch/compile/link is
    `CANNOT_UD_GUEST_LIBCFTEST file=libCFTest.dylib`. Will not invent a stub
    dylib. `UD_CFTEST_DYLIB=` still stages a provided x86 dylib.
+   After a successful link, before `run_ud_guest.sh`, phase2 copies
+   `scratch/ud-guest-x86_64/lib/libCFTest.dylib` into
+   `scratch/mrroot_full-x86_64/darwin/usr/lib/libCFTest.dylib` (the arm64
+   analogue is `build_cftest_harness.sh` copying into `$W/root` when that
+   directory exists; `full/scripts/build_full.sh` does **not** stage
+   libCFTest). Prints `ENV_PREPARE libCFTest-run-root … path=… sha256=…`.
+   Never copies onto the CoreFoundation.framework slot (byte-identical
+   copy there is the duplicate-image refusal in `run_ud_guest.sh`).
    `link_ud_guest.sh` stays the only ud_guest linker. Any other
    missing piece is `CANNOT_UD_GUEST_<FILE> file=<basename>`. On success the
    binary is exported as `UD_GUEST_BIN` for rung a, with
@@ -298,10 +306,17 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
     from `mrroot-base-x86`), and the **twelve** overlay dylibs
     (`phase2_twelve_overlay_names`: nine FE + `libswift_Concurrency.dylib` /
     `libswiftObjectiveC.dylib` / `libswiftObservation.dylib`) in both
-    `mrroot-x86_64` and `mrroot_fe-x86_64`. ObjectiveC /
+    `mrroot-x86_64` and `mrroot_fe-x86_64`, then **restages the same twelve
+    into the run root** `scratch/mrroot_full-x86_64` (always overwrite from
+    artifacts; a dest that is already an x86 Mach-O is not kept — that skip
+    is how `libswiftObjectiveC` stayed the Apple dyld-cache extract while
+    Darwin / `_errno` / `_Concurrency` came from artifacts). ObjectiveC /
     `_DarwinFoundation*` / `_errno` come from
-    `swiftcore-macho/artifacts/swift-macosx/x86_64` (in-tree shells;
-    Apple dyld-cache copies have no `LC_DYLD_INFO`). Host ELF files
+    `swiftcore-macho/artifacts/swift-macosx/x86_64` (in-tree shells).
+    A dyld-cache extract (no `LC_DYLD_INFO`, no `LC_DYLD_CHAINED_FIXUPS`)
+    is `CANNOT_STAGE_CACHE_EXTRACT name=… src=…`, not staged. End of
+    staging prints one `OVERLAY_PROVENANCE name=… srcdir=… sha256=… fixups=dyld_info|chained`
+    line per overlay (`llvm-objdump --macho --private-headers`). Host ELF files
     are the same closed set as `mrroot-host-x86`. Incomplete layout is
     `CANNOT_X86_MRROOT_LAYOUT missing=…` (leaf names). Not a PR3
     `CURSOR_ENV_CANNOT_*` marker. Rungs b/c wait on `LAYOUT_OK`; rung a does
@@ -319,4 +334,6 @@ extracted from the dyld shared cache. Those binaries carry **no**
 stripped. They cannot be loaded. `_DarwinFoundation1/2/3`, `_errno`, and
 `ObjectiveC` are built from in-tree `.swiftinterface` / re-export shells
 and `overlays/ObjectiveC.swift` (`overlay_build_xcode_shells`) and staged
-in `swiftcore-macho/artifacts/swift-macosx/x86_64`.
+in `swiftcore-macho/artifacts/swift-macosx/x86_64`. Staging into a run
+root refuses a cache extract (`CANNOT_STAGE_CACHE_EXTRACT`) rather than
+falling back to `scratch/apple-x86-overlays`.
