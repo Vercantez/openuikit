@@ -18,6 +18,7 @@ ADVERSARIAL = ROOT / "full/swiftui/test_focus_widget_guest_adversarial.sh"
 BUILD_FULL = ROOT / "full/scripts/build_full.sh"
 INVENTORIES_PY = ROOT / "full/swiftui/guest_gate_inventories.py"
 INVENTORIES_INC = ROOT / "full/swiftui/guest_gate_inventories.inc"
+X86_ORACLE = ROOT / "full/swiftui/test_guest_gate_inventories_x86_oracle.sh"
 GUEST_ARCH_PY = ROOT / "full/scripts/guest_arch.py"
 
 
@@ -717,8 +718,8 @@ _ARM64_WIDGET_LOAD_SHA256 = {
     "symbols": "33355a1f20997221c9fd5a7557f44ff0fcbc8a235fbb5a7b35ea5015aa6984bf",
 }
 _X86_WIDGET_LOAD_SHA256 = {
-    "openuikit": "9ace743214c8f1e735b4c0226167e698f73c6485d0772e7379e7893bb8da49f8",
-    "foundationessentials": "da582aef71d6a72f3fad3128b08d2aa7eff41046193836badd5d0ab3bd5134e5",
+    "openuikit": "555edf5bd64e8cca6f7046c84f86d627c8c5eb0df6ecc24d307af7f918bba18c",
+    "foundationessentials": "92d52ef2b005a80128e7ee17bd90aff3cd271af3b8df21543825ca8262ddba86",
 }
 _ARM64_WIDGET_INPUT_SHA256 = {
     "combine": "2fb8cf23b974cfc6272337e5992a6273ddbcfe8f7b3748b82e3a4868c2fac00e",
@@ -832,7 +833,20 @@ class FocusWidgetGuestInventoryTests(unittest.TestCase):
                         continue
                     arm = inventories.package_items(name, "arm64")
                     x86 = inventories.package_items(name, "x86_64")
-                self.assertEqual(len(x86), len(arm), f"{kind}/{name}")
+                if kind == "loads":
+                    self.assertEqual(
+                        x86,
+                        inventories.macos_overlay_autolink_loads(arm, "x86_64"),
+                        f"{kind}/{name}",
+                    )
+                    dropped = inventories.ARM64_OVERLAY_AUTOLINK in arm
+                    self.assertEqual(
+                        len(x86),
+                        len(arm) - (1 if dropped else 0),
+                        f"{kind}/{name}",
+                    )
+                else:
+                    self.assertEqual(x86, arm, f"{kind}/{name}")
                 self.assertTrue(x86, f"{kind}/{name} empty")
         self.assertEqual(
             inventories.otool_cpu("x86_64"), guest_arch.otool_cpu("x86_64")
@@ -854,25 +868,53 @@ class FocusWidgetGuestInventoryTests(unittest.TestCase):
                 name,
             )
 
-    def test_x86_overlay_autolink_is_darwinfoundation1_not_errno(self) -> None:
+    def test_x86_overlay_autolink_drops_errno_keeps_darwin(self) -> None:
         for name in ("openuikit", "foundationessentials"):
             arm = inventories.loads("widget", name, "arm64")
             x86 = inventories.loads("widget", name, "x86_64")
             self.assertIn(inventories.ARM64_OVERLAY_AUTOLINK, arm)
             self.assertNotIn(inventories.ARM64_OVERLAY_AUTOLINK, x86)
-            self.assertIn(inventories.X86_OVERLAY_AUTOLINK, x86)
-            self.assertNotIn(inventories.X86_OVERLAY_AUTOLINK, arm)
+            self.assertEqual(
+                x86,
+                tuple(
+                    item
+                    for item in arm
+                    if item != inventories.ARM64_OVERLAY_AUTOLINK
+                ),
+            )
             self.assertEqual(
                 inventories.macos_overlay_autolink_loads(arm, "x86_64"), x86
+            )
+            self.assertFalse(
+                any("DarwinFoundation1" in item for item in x86), name
             )
             self.assertEqual(
                 inventories.inventory_sha256(x86),
                 _X86_WIDGET_LOAD_SHA256[name],
                 name,
             )
+        fe_x86 = inventories.loads("widget", "foundationessentials", "x86_64")
+        self.assertIn("/usr/lib/swift/libswiftDarwin.dylib", fe_x86)
+        # Link-map inputs: Darwin.tbd already listed on arm64; drop errno.tbd
+        # rather than substituting the DarwinFoundation1 tbd.
+        for gate in ("widget", "onboarding"):
+            fe_in_arm = inventories.inputs(gate, "foundationessentials", "arm64")
+            fe_in_x86 = inventories.inputs(gate, "foundationessentials", "x86_64")
+            self.assertIn("{SYS}/usr/lib/swift/libswiftDarwin.tbd", fe_in_arm)
+            self.assertEqual(fe_in_x86, fe_in_arm)
+            self.assertNotIn(inventories.ARM64_OVERLAY_AUTOLINK_TBD, fe_in_arm)
+        self.assertEqual(
+            inventories.macos_overlay_autolink_inputs(
+                (
+                    "{SYS}/usr/lib/swift/libswiftDarwin.tbd",
+                    inventories.ARM64_OVERLAY_AUTOLINK_TBD,
+                ),
+                "x86_64",
+            ),
+            ("{SYS}/usr/lib/swift/libswiftDarwin.tbd",),
+        )
         # FE Darwin/StringProcessing/Synchronization/errno stay off libSwiftUI
-        # on both arches; DarwinFoundation1 is the x86 errno stand-in and must
-        # not leak onto SwiftUI either.
+        # on both arches; DarwinFoundation1 must not leak onto SwiftUI either.
         swiftui_arm = inventories.loads("widget", "swiftui", "arm64")
         swiftui_x86 = inventories.loads("widget", "swiftui", "x86_64")
         self.assertEqual(swiftui_arm, swiftui_x86)
@@ -922,7 +964,9 @@ class FocusWidgetGuestInventoryTests(unittest.TestCase):
             text=True,
         )
         self.assertTrue(arm.endswith("libswift_errno.dylib\n"))
-        self.assertTrue(x86.endswith("libswift_DarwinFoundation1.dylib\n"))
+        self.assertTrue(x86.endswith("libswiftObjectiveC.dylib\n"))
+        self.assertNotIn("libswift_errno.dylib", x86)
+        self.assertNotIn("DarwinFoundation1", x86)
         binds = [
             "--bind",
             "PACKAGE=/pkg",
@@ -992,9 +1036,28 @@ guest_gate_inventory widget loads openuikit
         )
         arm, x86 = result.stdout.split("==SPLIT==\n", 1)
         self.assertTrue(arm.strip().endswith("libswift_errno.dylib"))
-        self.assertTrue(x86.strip().endswith("libswift_DarwinFoundation1.dylib"))
+        self.assertTrue(x86.strip().endswith("libswiftObjectiveC.dylib"))
         self.assertNotIn("libswift_DarwinFoundation1.dylib", arm)
         self.assertNotIn("libswift_errno.dylib", x86)
+        self.assertNotIn("DarwinFoundation1", x86)
+
+    def test_x86_oracle_ld64_attributes_reexports_to_libswiftDarwin(self) -> None:
+        result = subprocess.run(
+            ["bash", str(X86_ORACLE)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(
+            result.returncode,
+            0,
+            result.stderr or result.stdout,
+        )
+        self.assertIn(
+            "GUEST_GATE_X86_ORACLE_OK "
+            "loads=libswiftDarwin,libSystem.B bind=libswiftDarwin",
+            result.stdout,
+        )
 
 
 if __name__ == "__main__":
