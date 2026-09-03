@@ -40,6 +40,18 @@ W=${W:-/work}
 SDK=${SDK:-$W/fe/sysroot}
 LLD=${LLD_BIN:-/usr/lib/llvm-18/bin}
 OUT=${OUT:-$W/bin/ud_guest}
+# Swift's /usr/bin/clang is clang-17; its bundled lld refuses macOS. Distro
+# clang-18 + ld64.lld-18 is the Darwin driver this tree measures (same as
+# build_cftest_harness.sh / machorun guest_arch.inc DARWIN_CLANG).
+CC=${CC:-}
+if [ -z "$CC" ]; then
+    if command -v clang-18 >/dev/null 2>&1; then CC=clang-18
+    elif command -v clang >/dev/null 2>&1; then CC=clang
+    else
+        echo "link_ud_guest: no clang-18/clang" >&2
+        exit 2
+    fi
+fi
 
 OBJS=(
   "${RUNNER:-$W/fe/runner.o}"
@@ -47,16 +59,21 @@ OBJS=(
   "$W/fe/module/FoundationEssentials.o"
   "$W/fe/collections/OrderedCollections.o"
   "$W/fe/collections/InternalCollectionsUtilities.o"
-  "$W/fe/collections/_RopeModule.o"
-  "$W/fe/_RopeModule.o"
   "$W/fe/os/os.o"
   "$W/fe/cshims/platform_shims.o"
   "$W/fe/cshims/string_shims.o"
   "$W/fe/cshims/uuid.o"
   "$W/fe/fm_unimplemented.o"
 )
-# The optional entry above keeps the list honest if the tree is rearranged;
-# drop anything that is not there rather than failing on a path that moved.
+# collections/_RopeModule.o is the #87 staged path. fe/_RopeModule.o is a
+# fallback when collections/ was not staged. Never both: they are the same
+# object and ld64 reports duplicate symbols for every Rope export.
+if [ -f "$W/fe/collections/_RopeModule.o" ]; then
+    OBJS+=("$W/fe/collections/_RopeModule.o")
+elif [ -f "$W/fe/_RopeModule.o" ]; then
+    OBJS+=("$W/fe/_RopeModule.o")
+fi
+# Drop anything that is not there rather than failing on a path that moved.
 INPUTS=()
 for o in "${OBJS[@]}"; do [ -f "$o" ] && INPUTS+=("$o"); done
 
@@ -96,10 +113,12 @@ for o in "${INPUTS[@]}"; do
         "$(date -r "$o" -u '+%H:%M:%S')"
 done
 
-echo "==> linking $OUT"
+echo "==> linking $OUT CC=$CC"
 mkdir -p "$(dirname "$OUT")"
-clang -target $TRIPLE -isysroot "$SDK" \
-  -fuse-ld=lld -B "$LLD" \
+# -nostdlib: Linux-hosted Darwin links must not pull host crt. Same as
+# run_bundle_guest.sh / run_tests.sh. clang-18 still passes -syslibroot.
+"$CC" -target "$TRIPLE" -isysroot "$SDK" \
+  -fuse-ld=lld -B "$LLD" -nostdlib \
   "${LIBDIRS[@]}" \
   -Wl,-rpath,/usr/lib/swift -Wl,-rpath,@loader_path \
   "${INPUTS[@]}" "${DYLIBS[@]}" \
