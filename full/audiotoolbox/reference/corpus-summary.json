@@ -1,0 +1,102 @@
+{
+  "module": "AudioToolbox",
+  "moduleRecord": {
+    "app_coverage_count": 7,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS public-framework runtime-port allowlist",
+    "file_count": 28,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "7101aa4af8e04098ed5c5ae8dab6b443596fadbfabbcb02a0203bab9704f0ecd",
+      "main_target_file_count": 1,
+      "repository_file_count": 1
+    },
+    "iphoneos_runtime_app_coverage_rank": 43,
+    "iphoneos_runtime_focus_launch_build_rank": 14,
+    "module": "AudioToolbox",
+    "occurrence_count": 28,
+    "per_app": {
+      "Signal-iOS": {
+        "evidence_sha256": "4c9d2f7d91c4418a21fb4ccbf9a75de41ca7725583e224cf2cee779c740e2e78",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "SignalServiceKit/Util/Sounds.swift"
+        ]
+      },
+      "Telegram-iOS": {
+        "evidence_sha256": "9cb8555fdc8779314500670c623b3ea8c7ee0d3b13c9f1a4f18fe5f7f811aee4",
+        "file_count": 17,
+        "occurrence_count": 17,
+        "sample_paths": [
+          "Telegram/BroadcastUpload/BroadcastUploadExtension.swift",
+          "submodules/DatePickerNode/Sources/TapeNode.swift",
+          "submodules/Display/Source/HapticFeedback.swift",
+          "submodules/TelegramUI/Components/Chat/ChatTextInputPanelNode/Sources/ChatTextInputPanelNode.swift",
+          "submodules/TelegramUI/Components/ChatEntityKeyboardInputNode/Sources/ChatEntityKeyboardInputNode.swift",
+          "submodules/TelegramUI/Components/ComposePollScreen/Sources/ComposePollScreen.swift",
+          "submodules/TelegramUI/Components/ComposeTodoScreen/Sources/ComposeTodoScreen.swift",
+          "submodules/TelegramUI/Components/EntityKeyboard/Sources/EmojiPagerContentComponent.swift"
+        ]
+      },
+      "element-ios": {
+        "evidence_sha256": "64d78a44bf51b8e933d30aabfdf05cbe98d559fce174ee8ab9a8b95ea2e63a81",
+        "file_count": 2,
+        "occurrence_count": 2,
+        "sample_paths": [
+          "Riot/Modules/Application/LegacyAppDelegate.m",
+          "Riot/Modules/MatrixKit/Utils/MXKSoundPlayer.m"
+        ]
+      },
+      "firefox-ios": {
+        "evidence_sha256": "7101aa4af8e04098ed5c5ae8dab6b443596fadbfabbcb02a0203bab9704f0ecd",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "focus-ios/Blockzilla/UIComponents/ShortcutView+UIContextMenuInteractionDelegate.swift"
+        ]
+      },
+      "focus-ios": {
+        "evidence_sha256": "7101aa4af8e04098ed5c5ae8dab6b443596fadbfabbcb02a0203bab9704f0ecd",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "focus-ios/Blockzilla/UIComponents/ShortcutView+UIContextMenuInteractionDelegate.swift"
+        ]
+      },
+      "home-assistant-ios": {
+        "evidence_sha256": "6b9d8db11ae80593ed4809ff3b2542b465cbc24d43ace6bc15f9adf280ee891f",
+        "file_count": 5,
+        "occurrence_count": 5,
+        "sample_paths": [
+          "Sources/App/Cameras/CameraPlayer/WebRTC/WebRTCClient.swift",
+          "Sources/Extensions/AppIntents/Widget/Details/WidgetDetailsAppIntent.swift",
+          "Sources/Extensions/AppIntents/Widget/Gauge/WidgetGaugeAppIntent.swift",
+          "Sources/Extensions/AppIntents/Widget/Sensor/WidgetSensorsAppIntent.swift",
+          "Sources/Extensions/Widgets/Custom/AppIntents/AppIntentHaptics.swift"
+        ]
+      },
+      "nextcloud-ios": {
+        "evidence_sha256": "6c08a3a091703eff866ae9b74e74e75460647a884d693eb873ab098a4b14a1fb",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "iOSClient/Utility/TOPasscodeViewController/Views/Shared/TOPasscodeInputField.m"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 43,
+    "byFocusLaunchBuildRelevance": 14
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}
