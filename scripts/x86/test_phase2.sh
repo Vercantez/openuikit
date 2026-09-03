@@ -94,6 +94,49 @@ expect_grep 'Column 2 is cputype' "$COMMON" "x86 Mach-O check documents cputype 
 expect_grep 'RUNG_SCOREBOARD' "$PHASE2" "RUNG_SCOREBOARD"
 expect_grep 'ENV_PREPARE_SUMMARY' "$PHASE2" "ENV_PREPARE_SUMMARY"
 expect_grep 'never overwrite' "$PHASE2" "arm64 overwrite refusal in header"
+expect_grep 'phase2_source_tree_reason' "$PHASE2" \
+    "machorun substrate reuse consults HEAD:machorun stamp"
+expect_grep 'phase2_write_source_tree_stamp' "$PHASE2" \
+    "cold-build writes .source-tree next to the product"
+expect_grep 'reused=1' "$PHASE2" "satisfied loader/darwin/objc4/quartz/tbd print reused=1"
+expect_grep ':+reason=' "$PHASE2" "cold-built prints reason=source-tree or no-stamp"
+
+echo "== source-tree stamp helpers (HEAD:machorun, not existence)"
+# shellcheck source=common.inc
+. "$COMMON"
+STAMP_FIX=$(mktemp -d /tmp/phase2-source-tree.XXXXXX)
+mkdir -p "$STAMP_FIX/machorun/src" "$STAMP_FIX/machorun/build"
+printf 'int x;\n' > "$STAMP_FIX/machorun/src/util.c"
+git -C "$STAMP_FIX" -c init.defaultBranch=main init -q >/dev/null
+git -C "$STAMP_FIX" add machorun
+git -C "$STAMP_FIX" -c user.email=phase2-test@example.com -c user.name=phase2-test \
+    commit -q -m init
+LIVE_TREE=$(phase2_git "$STAMP_FIX" rev-parse HEAD:machorun)
+LOADER_BIN=$STAMP_FIX/machorun/build/machorun
+reason=$(phase2_source_tree_reason "$STAMP_FIX" "$LOADER_BIN")
+if [ "$reason" = no-stamp ]; then
+    ok "missing stamp is reason=no-stamp"
+else
+    die_test "missing stamp expected no-stamp, got: $reason"
+fi
+phase2_write_source_tree_stamp "$STAMP_FIX" "$LOADER_BIN"
+reason=$(phase2_source_tree_reason "$STAMP_FIX" "$LOADER_BIN")
+if [ -z "$reason" ]; then
+    ok "matching HEAD:machorun stamp is reusable"
+else
+    die_test "matching stamp should be empty reason, got: $reason"
+fi
+printf '%s\n' aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa > "$(phase2_source_tree_stamp_path "$LOADER_BIN")"
+reason=$(phase2_source_tree_reason "$STAMP_FIX" "$LOADER_BIN")
+case "$reason" in
+    source-tree\ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa→"$LIVE_TREE")
+        ok "stale stamp is source-tree old→HEAD:machorun ($reason)"
+        ;;
+    *)
+        die_test "stale stamp expected source-tree old→$LIVE_TREE, got: $reason"
+        ;;
+esac
+rm -rf "$STAMP_FIX"
 
 echo "== denominators (committed runners, not invented)"
 smoke=$(grep -c '^check(' "$UD_RUNNER" || true)
