@@ -29,6 +29,157 @@ export DARWIN_CLANG=clang-18
 # the pinned Ubuntu LLVM 18 that ld64.lld-18 belongs with.
 export CC=clang-18
 
+# ---- x86_64: run the committed cycle (substrate only). ----
+# Overlays come from swiftcore-macho/artifacts (SKIP_OVERLAYS). Phase2 rungs
+# run in verify-cloud-environment.sh (SKIP_PHASE2) so install stays bounded.
+if [ "$host" = x86_64 ]; then
+    export W=$repo_root
+    # shellcheck disable=SC1091
+    . "$repo_root/full/scripts/guest_arch.inc"
+    export OPENUIKIT_CYCLE_SKIP_OVERLAYS=1
+    export OPENUIKIT_CYCLE_SKIP_PHASE2=1
+    echo "== x86 cycle substrate (SKIP_OVERLAYS=1 SKIP_PHASE2=1 tree=$repo_root)"
+    bash "$repo_root/scripts/ops/x86_cycle.sh" "$repo_root"
+
+    loader=$machorun/build/machorun
+    [ -x "$loader" ] || { printf 'cursor-products: missing x86 loader\n' >&2; exit 1; }
+    file -b "$loader" | grep -q 'ELF 64-bit LSB pie executable, x86-64' \
+        || { printf 'cursor-products: loader is not x86-64 ELF PIE: %s\n' "$(file -b "$loader")" >&2; exit 1; }
+    loader_ok=1
+    tbd=$machorun/sdk/usr/lib/libSystem.tbd
+    [ -s "$tbd" ] && grep -q 'x86_64-macos' "$tbd" \
+        || { printf 'cursor-products: missing x86 libSystem.tbd\n' >&2; exit 1; }
+    tbd_ok=1
+
+    for dylib in \
+        "$machorun/darwin/usr/lib/libSystem.B.dylib" \
+        "$machorun/darwin/usr/lib/libc++.1.dylib" \
+        "$machorun/darwin/usr/lib/libc++abi.dylib" \
+        "$machorun/darwin/usr/lib/libobjc.A.dylib" \
+        "$machorun/darwin/usr/lib/libquartz.dylib" \
+        "$machorun/darwin/usr/lib/libswiftcompat.dylib"
+    do
+        [ -f "$dylib" ] || { printf 'cursor-products: missing %s\n' "$dylib" >&2; exit 1; }
+        llvm-otool-18 -hv "$dylib" | grep -Eq 'MH_MAGIC_64[[:space:]]+X86_64' \
+            || { printf 'cursor-products: not X86_64 Mach-O: %s\n' "$dylib" >&2; exit 1; }
+    done
+    core=$repo_root/swiftcore-macho/artifacts/swift-macosx/x86_64/libswiftCore.dylib
+    [ -f "$core" ] || { printf 'cursor-products: missing x86 libswiftCore.dylib\n' >&2; exit 1; }
+
+    sys=$scratch/sysroot_fe4-x86_64
+    mrroot=$scratch/mrroot_full-x86_64
+    [ -d "$sys/usr/include" ] || { printf 'cursor-products: missing %s\n' "$sys" >&2; exit 1; }
+    [ -f "$sys/usr/include/Darwin.modulemap" ] \
+        || { printf 'cursor-products: sysroot missing Darwin.modulemap\n' >&2; exit 1; }
+    { [ -d "$sys/usr/lib/swift/Darwin.swiftmodule" ] \
+        || [ -f "$sys/usr/lib/swift/Darwin.swiftinterface" ]; } \
+        || { printf 'cursor-products: sysroot missing Darwin overlay\n' >&2; exit 1; }
+    [ -x "$mrroot/machorun" ] || { printf 'cursor-products: missing %s/machorun\n' "$mrroot" >&2; exit 1; }
+    fw=$mrroot/darwin/System/Library/Frameworks
+    [ -f "$fw/Foundation.framework/Foundation" ] \
+        || { printf 'cursor-products: missing Foundation placeholder in mrroot_full-x86_64\n' >&2; exit 1; }
+    [ -f "$fw/CoreFoundation.framework/CoreFoundation" ] \
+        || { printf 'cursor-products: missing CoreFoundation placeholder in mrroot_full-x86_64\n' >&2; exit 1; }
+    llvm-nm-18 -g "$fw/Foundation.framework/Foundation" | grep -q _machorun_foundation_placeholder \
+        || { printf 'cursor-products: Foundation slot is not the empty placeholder\n' >&2; exit 1; }
+    llvm-nm-18 -g "$fw/CoreFoundation.framework/CoreFoundation" | grep -q _machorun_foundation_placeholder \
+        || { printf 'cursor-products: CoreFoundation slot is not the empty placeholder\n' >&2; exit 1; }
+
+    empty_tbd=$(find "$sys" -name '*.tbd' -size 0 -print -quit)
+    [ -z "$empty_tbd" ] \
+        || { printf 'cursor-products: empty .tbd is a linker lie: %s\n' "$empty_tbd" >&2; exit 1; }
+
+    note_unavailable "CURSOR_ENV_CANNOT_STAGE_SIMRUNTIME_OVERLAY_DYLIBS host=$host reason=full/foundation/stage_swift_overlays.sh copies overlay dylibs from an iOS CoreSimulator runtime on macOS. This VM stages the committed x86_64 artifacts (swiftcore-macho/artifacts/swift-macosx/x86_64) instead; it does not materialize Apple's simulator copies."
+    if [ ! -d "$scratch/opencombine-core-durable-20260828-r2/export" ]; then
+        note_unavailable "CURSOR_ENV_CANNOT_BUILD_OPENCOMBINE_EXPORT host=$host reason=full/oracle-opencombine/build_and_run.sh compiles and RUNS the core under machorun inside a pinned fm-build container. x86 OpenCombine lands in export-x86_64/ from scripts/x86/build_opencombine.sh when phase2 runs it; the arm64 durable export/ is not rewritten."
+    fi
+    if [ ! -d "$scratch/modcache_swiftui_guest" ]; then
+        note_unavailable "CURSOR_ENV_CANNOT_BUILD_MODCACHE_SWIFTUI_GUEST host=$host reason=scratch/modcache_swiftui_guest is the arm64 SwiftUI guest module cache. x86 uses scratch/modcache_fe4-x86_64 (created by phase2). Leaving the unsuffixed path absent is the honest state."
+    fi
+    if ! ls -d /tmp/focus-resources-x86-staged.*/bundles/Focus_Widget.bundle >/dev/null 2>&1; then
+        note_unavailable "CURSOR_ENV_CANNOT_STAGE_FOCUS_BUNDLES host=$host reason=normalized Focus_Widget.bundle lives at /tmp/focus-resources-x86-staged.*/bundles on the operator box (S3-staged; needs pdftocairo + onboarding_resources_proof.py). Rung b is not this install's job."
+    fi
+
+    expected_markers=(
+        CURSOR_ENV_CANNOT_STAGE_SIMRUNTIME_OVERLAY_DYLIBS
+    )
+    [ -d "$scratch/opencombine-core-durable-20260828-r2/export" ] \
+        || expected_markers+=(CURSOR_ENV_CANNOT_BUILD_OPENCOMBINE_EXPORT)
+    [ -d "$scratch/modcache_swiftui_guest" ] \
+        || expected_markers+=(CURSOR_ENV_CANNOT_BUILD_MODCACHE_SWIFTUI_GUEST)
+    ls -d /tmp/focus-resources-x86-staged.*/bundles/Focus_Widget.bundle >/dev/null 2>&1 \
+        || expected_markers+=(CURSOR_ENV_CANNOT_STAGE_FOCUS_BUNDLES)
+
+    expected_count=${#expected_markers[@]}
+    logged_count=0
+    missing_expected=0
+    for marker in "${expected_markers[@]}"; do
+        if grep -q "^$marker " "$unavailable"; then
+            logged_count=$((logged_count + 1))
+        else
+            printf 'cursor-products: missing expected unavailable marker: %s\n' "$marker" >&2
+            missing_expected=$((missing_expected + 1))
+        fi
+    done
+    [ "$missing_expected" -eq 0 ] \
+        || { printf 'cursor-products: expected unavailable markers %s/%s\n' \
+            "$logged_count" "$expected_count" >&2; exit 1; }
+    total_logged=$(grep -c '^CURSOR_ENV_CANNOT_' "$unavailable" || true)
+
+    sys_hash=$(tree_digest "$sys")
+    mrroot_hash=$(tree_digest "$mrroot")
+    darwin_hash=$(tree_digest "$machorun/darwin/usr/lib")
+
+    python3 - "$manifest" "$host" "$loader_ok" "$tbd_ok" "$sys_hash" "$mrroot_hash" "$darwin_hash" \
+        "$sys" "$mrroot" "$machorun" "$core" "$loader" <<'PY'
+import hashlib, json, sys
+from pathlib import Path
+
+manifest, host, loader_ok, tbd_ok, sys_hash, mrroot_hash, darwin_hash, sysroot, mrroot, machorun, core, loader = sys.argv[1:]
+
+def sha256(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+files = {}
+for label, path in [
+    ("libSystem.B.dylib", Path(machorun) / "darwin/usr/lib/libSystem.B.dylib"),
+    ("libc++.1.dylib", Path(machorun) / "darwin/usr/lib/libc++.1.dylib"),
+    ("libobjc.A.dylib", Path(machorun) / "darwin/usr/lib/libobjc.A.dylib"),
+    ("libquartz.dylib", Path(machorun) / "darwin/usr/lib/libquartz.dylib"),
+    ("libswiftCore.dylib", Path(core)),
+    ("libswiftcompat.dylib", Path(machorun) / "darwin/usr/lib/libswiftcompat.dylib"),
+    ("machorun", Path(loader)),
+]:
+    files[label] = {"path": str(path), "sha256": sha256(path), "bytes": path.stat().st_size}
+
+payload = {
+    "host": host,
+    "arch": "x86_64",
+    "loaderBuilt": loader_ok == "1",
+    "tbdGenerated": tbd_ok == "1",
+    "sysrootFe4TreeSha256": sys_hash,
+    "mrrootFullTreeSha256": mrroot_hash,
+    "darwinUserlandTreeSha256": darwin_hash,
+    "sysrootFe4": sysroot,
+    "mrrootFull": mrroot,
+    "files": files,
+}
+Path(manifest).write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+PY
+
+    printf 'CURSOR_BUILT_PRODUCTS_OK host=%s loader=%s tbd=%s arch=x86_64 sysroot_fe4-x86_64=%s mrroot_full-x86_64=%s darwin_dylibs=6/6\n' \
+        "$host" "$loader_ok" "$tbd_ok" "$sys_hash" "$mrroot_hash"
+    printf 'CURSOR_UNAVAILABLE_COUNT expected=%s/%s logged=%s (see %s)\n' \
+        "$logged_count" "$expected_count" "$total_logged" "$unavailable"
+    exit 0
+fi
+
+# ---- aarch64: cold-build in-repo arm64 Mach-O products (historical path). ----
+
 # ---- machorun host loader (aarch64 assembly; cannot assemble on x86_64) ----
 loader_ok=0
 if [ "$host" = aarch64 ] || [ "$host" = arm64 ]; then

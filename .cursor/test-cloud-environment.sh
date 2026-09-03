@@ -149,11 +149,25 @@ check fingerprint_has_digest \
 check install_order grep -q 'install-scratch-corpus.sh' "$script_dir/environment.json"
 check install_products grep -q 'install-built-products.sh' "$script_dir/environment.json"
 
-# --- install-built-products does not emit .tbd without the loader ---
-check products_skip_tbd_without_loader \
-    grep -q 'CURSOR_ENV_CANNOT_GENERATE_TBD' "$script_dir/install-built-products.sh"
+# --- install-built-products: x86 runs the cycle; empty .tbd is still a lie ---
+check products_x86_cycle \
+    grep -q 'scripts/ops/x86_cycle.sh' "$script_dir/install-built-products.sh"
+check products_x86_skip_overlays \
+    grep -q 'OPENUIKIT_CYCLE_SKIP_OVERLAYS=1' "$script_dir/install-built-products.sh"
+check products_x86_skip_phase2 \
+    grep -q 'OPENUIKIT_CYCLE_SKIP_PHASE2=1' "$script_dir/install-built-products.sh"
 check products_refuse_empty_tbd \
     grep -q 'empty .tbd is a linker lie' "$script_dir/install-built-products.sh"
+check products_x86_placeholder \
+    grep -q '_machorun_foundation_placeholder' "$script_dir/install-built-products.sh"
+check verify_runs_rung_a \
+    grep -q 'PHASE2_RUNGS=a' "$script_dir/verify-cloud-environment.sh"
+check verify_can_execute_x86 \
+    grep -q 'CURSOR_ENV_CAN_EXECUTE arch=x86_64' "$script_dir/verify-cloud-environment.sh"
+check corpus_pins_icu \
+    grep -q 'swift-foundation-icu' "$script_dir/scratch-corpus-pins.json"
+check corpus_pins_cf \
+    grep -q 'swift-corelibs-foundation' "$script_dir/scratch-corpus-pins.json"
 
 # --- attested Linux-half gates are bash (this VM has no zsh) ---
 check linux_verify_bash_shebang \

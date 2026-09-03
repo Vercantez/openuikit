@@ -298,28 +298,57 @@ PY
 
 can_execute=0
 host_arch=$(uname -m)
-if [ "$host_arch" = aarch64 ] || [ "$host_arch" = arm64 ]; then
-    can_execute=1
-fi
 loader_built=$(jq -r '.loaderBuilt | tostring' "$products_manifest")
 tbd_generated=$(jq -r '.tbdGenerated | tostring' "$products_manifest")
 file_count=$(jq -r '.files | length | tostring' "$products_manifest")
+product_arch=$(jq -r '.arch // empty' "$products_manifest")
+if [ "$host_arch" = aarch64 ] || [ "$host_arch" = arm64 ]; then
+    can_execute=1
+elif [ "$host_arch" = x86_64 ] && [ "$loader_built" = true ]; then
+    can_execute=1
+fi
 
 printf 'CURSOR_TOOLCHAIN_INVENTORY_OK swift=swift,swiftc clang=clang,clang++,clang-18,clang++-18 linker=ld64.lld,ld64.lld-18 llvm=llvm-nm,llvm-nm-18,llvm-otool,llvm-otool-18,llvm-objdump,llvm-objdump-18 utilities=perl,patch,jq,sha256sum,shasum,cmp,file,git,python3,pkg-config\n'
 printf 'CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=scratch-corpus evidence=dotnet-macios\n'
 printf 'CURSOR_SCRATCH_CORPUS_VERIFIED sources=%s/%s\n' "$corpus_ok" "$corpus_count"
-printf 'CURSOR_BUILT_PRODUCTS_VERIFIED files=%s sysroot_fe4=tree mrroot_full=tree loader=%s tbd=%s\n' \
-    "$file_count" "$loader_built" "$tbd_generated"
-printf 'CURSOR_ENV_PROOF_SPLIT compile_link_static=in-vm execution=arm64-ec2-authority macos_oracle=local-only\n'
+printf 'CURSOR_BUILT_PRODUCTS_VERIFIED files=%s sysroot_fe4=tree mrroot_full=tree loader=%s tbd=%s arch=%s\n' \
+    "$file_count" "$loader_built" "$tbd_generated" "${product_arch:-unknown}"
+printf 'CURSOR_ENV_PROOF_SPLIT compile_link_static=in-vm execution=host-arch macos_oracle=local-only\n'
 sysroot_surface=sysroot-headers+dylibs+swiftcore-module
 if [ "$tbd_generated" = true ]; then
     sysroot_surface=sysroot-headers+tbd+dylibs+swiftcore-module
 fi
-printf 'CURSOR_ENV_SUMMARY can=toolchain,corpus-pins[%s/%s],arm64-macho-emit,%s,darwin-userland-dylibs cannot=arm64-execute,machorun-loader-on-%s,tbd-without-loader,xcode-darwin-overlays,simruntime-overlay-dylibs,opencombine-export,modcache-swiftui-guest,macos-oracle unavailable=%s fingerprint=%s\n' \
-    "$corpus_ok" "$corpus_count" "$sysroot_surface" "$host_arch" "$unavailable_count" "$fingerprint_sha"
-if [ "$can_execute" -eq 0 ]; then
-    printf 'CURSOR_ENV_CANNOT_EXECUTE_ARM64 host=%s machorun=arm64-linux-native split=compile-link-static-in-vm/execution-arm64-ec2/macos-oracle-local-only\n' \
-        "$host_arch"
+
+phase2_ms=0
+if [ "$host_arch" = x86_64 ] && [ "$can_execute" -eq 1 ]; then
+    printf 'CURSOR_ENV_CAN_EXECUTE arch=x86_64 loader=%s\n' \
+        "$(sha256sum "$repo_root/machorun/build/machorun" | awk '{print substr($1,1,12)}')"
+    echo "== phase2 rung a (PHASE2_RUNGS=a)"
+    phase2_start_ns=$(date +%s%N)
+    set +e
+    PHASE2_RUNGS=a bash "$repo_root/scripts/x86/phase2.sh" "$repo_root" \
+        | tee "$repo_root/scratch/phase2-verify-rung-a.log"
+    phase2_rc=${PIPESTATUS[0]}
+    set -e
+    phase2_ms=$(( ( $(date +%s%N) - phase2_start_ns ) / 1000000 ))
+    grep -E 'ENV_PREPARE_SUMMARY|RUNG_SCOREBOARD|GUEST SCOREBOARD|CANNOT_' \
+        "$repo_root/scratch/phase2-verify-rung-a.log" || true
+    if [ "$phase2_rc" -ne 0 ]; then
+        printf 'cursor-environment: phase2 rung a failed rc=%s (scoreboard quoted above)\n' \
+            "$phase2_rc" >&2
+        exit 1
+    fi
+    if ! grep -q '^RUNG_SCOREBOARD a=PASS' "$repo_root/scratch/phase2-verify-rung-a.log"; then
+        printf 'cursor-environment: phase2 rung a did not PASS (see RUNG_SCOREBOARD)\n' >&2
+        exit 1
+    fi
 fi
-printf 'CURSOR_ENVIRONMENT_METRICS total_ms=%d cleanup_ms=%d tools_ms=%d evidence_ms=%d corpus_ms=%d products_ms=%d swift_ms=%d\n' \
-    "$total_ms" "$cleanup_ms" "$tools_ms" "$evidence_ms" "$corpus_ms" "$products_ms" "$swift_ms"
+
+printf 'CURSOR_ENV_SUMMARY can=toolchain,corpus-pins[%s/%s],%s-macho-emit,%s,darwin-userland-dylibs cannot=arm64-macho-execute-on-%s,simruntime-overlay-dylibs,opencombine-export,modcache-swiftui-guest,macos-oracle unavailable=%s fingerprint=%s\n' \
+    "$corpus_ok" "$corpus_count" "$host_arch" "$sysroot_surface" "$host_arch" "$unavailable_count" "$fingerprint_sha"
+if [ "$host_arch" != aarch64 ] && [ "$host_arch" != arm64 ]; then
+    printf 'CURSOR_ENV_CANNOT_EXECUTE_ARM64_MACHO host=%s needed=arm64 can_execute_x86_64=%s split=compile-link-static-in-vm/execution-host-arch/macos-oracle-local-only\n' \
+        "$host_arch" "$can_execute"
+fi
+printf 'CURSOR_ENVIRONMENT_METRICS total_ms=%d cleanup_ms=%d tools_ms=%d evidence_ms=%d corpus_ms=%d products_ms=%d swift_ms=%d phase2_ms=%d\n' \
+    "$total_ms" "$cleanup_ms" "$tools_ms" "$evidence_ms" "$corpus_ms" "$products_ms" "$swift_ms" "$phase2_ms"
