@@ -16,8 +16,9 @@ Apple triple → exec the real clang++ with the original argv plus
 `-nostdlib++` plus the sysroot `usr/lib/libc++.tbd` / `libc++abi.tbd`
 so ld64 never opens the host ELF `libc++.so`. Print
 `cxx_runtime=<tbd>`. Pass `libclang_rt.osx.a` (compiler-rt
-`os_version_check.c` for `__isPlatformVersionAtLeast`) and print
-`compiler_rt=<archive>`. Linux/unknown-linux-gnu → ld.lld, keep `-soname`.
+generic Darwin builtins, including `__isPlatformVersionAtLeast` /
+`__divti3`) and print `compiler_rt=<archive>`. Linux/unknown-linux-gnu
+→ ld.lld, keep `-soname`.
 `-soname` is rewritten to `-install_name` only so ld64 never sees the GNU
 flag; nothing else is rewritten (PR #40's -dynamiclib/-nostdlib pass
 dropped -platform_version/-arch).
@@ -369,8 +370,99 @@ def darwin_cxx_runtime_path(argv: list[str]) -> str:
     return tbds[0] if tbds else "ABSENT"
 
 
+# Apple's libswiftDarwin.dylib LC_REEXPORT_DYLIB set (measured on the
+# x86_64 extract). Only Darwin; no other overlay grows re-exports.
+DARWIN_REEXPORT_SHELLS = (
+    "libswift_Builtin_float",
+    "libswift_DarwinFoundation1",
+    "libswift_DarwinFoundation2",
+    "libswift_DarwinFoundation3",
+)
+
+
+def _is_libswift_darwin_output(path: str | None) -> bool:
+    if not path:
+        return False
+    base = os.path.basename(path)
+    return base in ("libswiftDarwin.dylib", "libswiftDarwin.so")
+
+
+def _search_dirs_for_reexport(argv: list[str], out_path: str | None) -> list[str]:
+    dirs: list[str] = []
+    seen: set[str] = set()
+
+    def add(p: str) -> None:
+        if not p:
+            return
+        n = os.path.normpath(p)
+        if n in seen:
+            return
+        seen.add(n)
+        dirs.append(n)
+
+    if out_path:
+        d = os.path.dirname(os.path.abspath(out_path))
+        add(d)
+        add(os.path.dirname(d))
+    i = 0
+    while i < len(argv):
+        a = argv[i]
+        i += 1
+        if a in ("-L", "-Wl,-L") and i < len(argv):
+            add(argv[i])
+            i += 1
+            continue
+        if a.startswith("-L") and len(a) > 2:
+            add(a[2:])
+            continue
+        if a.startswith("-Wl,-L,"):
+            add(a.split(",", 2)[-1])
+    return dirs
+
+
+def find_darwin_reexport_shells(argv: list[str]) -> list[str]:
+    """Absolute paths of the four Darwin re-export shells, or [].
+
+    All four must exist (Apple's LC_REEXPORT_DYLIB set is exactly these).
+    Prefer .dylib over the ninja .so sibling.
+    """
+    if not _is_libswift_darwin_output(_output_path(argv)):
+        return []
+    dirs = _search_dirs_for_reexport(argv, _output_path(argv))
+    found: list[str] = []
+    for name in DARWIN_REEXPORT_SHELLS:
+        hit = ""
+        for d in dirs:
+            for ext in (".dylib", ".so"):
+                cand = os.path.join(d, name + ext)
+                if os.path.isfile(cand):
+                    hit = cand
+                    break
+            if hit:
+                break
+        if not hit:
+            return []
+        found.append(hit)
+    return found
+
+
+def darwin_reexport_link_flags(argv: list[str]) -> list[str]:
+    """-Xlinker -reexport_library for Apple's four Darwin shells.
+
+    Only when linking libswiftDarwin and all four dylibs are on disk.
+    Do not -reexport any other overlay.
+    """
+    paths = find_darwin_reexport_shells(argv)
+    if not paths:
+        return []
+    flags: list[str] = []
+    for p in paths:
+        flags.extend(["-Xlinker", "-reexport_library", "-Xlinker", p])
+    return flags
+
+
 def darwin_compiler_rt_osx_path() -> str:
-    """x86_64-apple-macos compiler-rt builtins archive (os_version_check.c)."""
+    """Darwin-target compiler-rt builtins archive (generic C + os_version_check)."""
     env = os.environ.get("SWIFTCORE_COMPILER_RT_OSX")
     if env:
         return env
@@ -460,6 +552,7 @@ def darwin_driver_argv(argv: list[str]) -> list[str]:
     for t in tbds:
         kept.append(t)
     kept.extend(darwin_compiler_rt_link_flags(kept))
+    kept.extend(darwin_reexport_link_flags(kept))
     # clang ignores argv after -###; keep diagnostics last.
     diag = [a for a in kept if a in ("-###", "-v", "--verbose")]
     if diag:
@@ -497,6 +590,10 @@ def log_link(
         sys.stderr.write(
             f"clangxx_darwin_link: compiler_rt={darwin_compiler_rt_osx_path()}\n"
         )
+        shells = find_darwin_reexport_shells(driver_argv or original)
+        if shells:
+            names = ",".join(os.path.basename(p) for p in shells)
+            sys.stderr.write(f"clangxx_darwin_link: darwin_reexport={names}\n")
     elif rewritten is not None:
         sys.stderr.write("clangxx_darwin_link: rewritten argv: " + shlex.join(rewritten) + "\n")
     sys.stderr.flush()

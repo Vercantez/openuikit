@@ -69,6 +69,68 @@ while IFS= read -r name; do
     n_checked=$((n_checked + 1))
 done < <({ printf 'libswiftCore.dylib\n'; phase2_twelve_overlay_names; })
 
+# Synthetic Darwin with Apple's four LC_REEXPORT_DYLIB: gen_swift_tbd must
+# record them under reexported-libraries. Committed artifacts may still lack
+# re-exports until the operator rebuilds; this tooth does not wait on that.
+echo
+echo "=== synthetic Darwin LC_REEXPORT_DYLIB round-trip ==="
+clang_c=$(command -v clang-18 || command -v clang)
+echo 'void _swift_reexport_stub(void) {}' | "$clang_c" -target x86_64-apple-macosx13.0 -c -o "$WORK/stub.o" -x c -
+for n in libswift_Builtin_float libswift_DarwinFoundation1 \
+         libswift_DarwinFoundation2 libswift_DarwinFoundation3; do
+    /usr/lib/llvm-18/bin/ld64.lld -arch x86_64 -dylib \
+        -platform_version macos 13.0.0 13.0.0 \
+        -install_name /usr/lib/swift/${n}.dylib \
+        -o "$WORK/${n}.dylib" "$WORK/stub.o"
+done
+echo 'int darwin_overlay(void) { return 1; }' | "$clang_c" -target x86_64-apple-macosx13.0 -c -o "$WORK/Darwin.o" -x c -
+/usr/lib/llvm-18/bin/ld64.lld -arch x86_64 -dylib \
+    -platform_version macos 13.0.0 13.0.0 \
+    -install_name /usr/lib/swift/libswiftDarwin.dylib \
+    -reexport_library "$WORK/libswift_Builtin_float.dylib" \
+    -reexport_library "$WORK/libswift_DarwinFoundation1.dylib" \
+    -reexport_library "$WORK/libswift_DarwinFoundation2.dylib" \
+    -reexport_library "$WORK/libswift_DarwinFoundation3.dylib" \
+    -o "$WORK/libswiftDarwin.reexport.dylib" "$WORK/Darwin.o"
+dest=$WORK/libswiftDarwin.reexport.tbd
+if bash "$GEN" "$WORK/libswiftDarwin.reexport.dylib" "$dest"; then
+    ok "emit tbd from Darwin with four LC_REEXPORT_DYLIB"
+else
+    die_test "emit failed for synthetic Darwin reexport dylib"
+fi
+if grep -q 'reexported-libraries:' "$dest"; then
+    ok "libswiftDarwin.tbd has reexported-libraries"
+else
+    die_test "synthetic Darwin tbd missing reexported-libraries"
+fi
+for n in libswift_Builtin_float.dylib libswift_DarwinFoundation1.dylib \
+         libswift_DarwinFoundation2.dylib libswift_DarwinFoundation3.dylib; do
+    grep -q "/usr/lib/swift/$n" "$dest" \
+        && ok "tbd reexports /usr/lib/swift/$n" \
+        || die_test "tbd missing reexport $n"
+done
+# Live artifact Darwin (pre-rebuild) is allowed to lack re-exports; if it
+# already has them, require exactly those four.
+art=$ROOT/swiftcore-macho/artifacts/swift-macosx/x86_64/libswiftDarwin.dylib
+if [ -f "$art" ]; then
+    rx=$(llvm-otool-18 -l "$art" 2>/dev/null \
+        | awk '/LC_REEXPORT_DYLIB/{f=1} f&&/^ *name /{print $2; f=0}' | sort -u)
+    if [ -z "$rx" ]; then
+        ok "artifact libswiftDarwin has no LC_REEXPORT yet (operator rebuild adds the four)"
+    else
+        want=$(printf '%s\n' \
+            /usr/lib/swift/libswift_Builtin_float.dylib \
+            /usr/lib/swift/libswift_DarwinFoundation1.dylib \
+            /usr/lib/swift/libswift_DarwinFoundation2.dylib \
+            /usr/lib/swift/libswift_DarwinFoundation3.dylib | sort -u)
+        if [ "$rx" = "$want" ]; then
+            ok "artifact libswiftDarwin has exactly four LC_REEXPORT_DYLIB"
+        else
+            die_test "artifact libswiftDarwin LC_REEXPORT drifted: $rx"
+        fi
+    fi
+fi
+
 [ "$n_want" -eq 13 ] \
     && ok "round-trip inventory is libswiftCore + twelve overlays" \
     || die_test "inventory count=$n_want want 13 (Core + twelve)"
