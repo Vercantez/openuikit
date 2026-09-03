@@ -1,7 +1,10 @@
 #!/bin/bash
-# Darwin.o -fsyntax-only against the staged sysroot must not report the
+# Darwin overlay syntax-only against the staged sysroot must not report the
 # operator log names (sig_t, FILE, OSStatus, extern_proc, MAP_FAILED, libm
 # f/l variants, ilogb/scalbn/remquo prototype mismatch).
+#
+# clang -fsyntax-only @import Darwin is the Clang module. swiftc -typecheck
+# (Swift has no -fsyntax-only) is Darwin.o's importer against the same SDK.
 set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 SWIFTCORE_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
@@ -14,9 +17,9 @@ tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 
 SWIFTC=${SWIFTC:-$TC/bin/swiftc}
-if [ ! -x "$SWIFTC" ]; then
-  echo "SKIP -- no swiftc at $SWIFTC"
-  exit 0
+CLANG=${CLANG:-${TC}/bin/clang}
+if [ ! -x "$CLANG" ]; then
+  CLANG=$(command -v clang)
 fi
 
 SDK=$tmp/sdk
@@ -27,23 +30,94 @@ if [ ! -d "$MACHORUN_SDK/usr/include" ]; then
   exit 0
 fi
 cp -a "$MACHORUN_SDK/usr" "$SDK/usr"
-# POSIX + Darwin overlay staging (same order as stage_sdk.sh).
 bash "$SCRIPT_DIR/stage_overlay_posix.sh" "$SDK"
 SWIFTCORE_DARWIN_ARCH=x86_64 bash "$SCRIPT_DIR/stage_overlay_darwin.sh" "$SDK"
 cat > "$SDK/SDKSettings.plist" <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0"><dict>
+<plist version="1.0">
+<dict>
   <key>CanonicalName</key><string>macosx15.0</string>
+  <key>DisplayName</key><string>macOS 15.0</string>
   <key>Version</key><string>15.0</string>
-</dict></plist>
+  <key>MaximumDeploymentTarget</key><string>15.0.99</string>
+</dict>
+</plist>
 EOF
 cat > "$SDK/SDKSettings.json" <<'EOF'
 { "DefaultProperties": { "PLATFORM_NAME": "macosx" },
-  "Version": "15.0", "CanonicalName": "macosx15.0" }
+  "DisplayName": "macOS 15.0", "Version": "15.0",
+  "MaximumDeploymentTarget": "15.0.99",
+  "CanonicalName": "macosx15.0" }
 EOF
 
-# Probe the names the operator log reported. import Darwin is the Clang module.
+check_log() {
+  local log=$1
+  if grep -Eq "no such module 'Darwin'|underlying Objective-C module 'Darwin' not found|cannot load underlying module for 'Darwin'|module 'Darwin' not found" "$log"; then
+    echo "  FAIL Clang module Darwin not found"
+    fail=1
+  else
+    echo "  OK  Clang module Darwin resolved"
+  fi
+  local name
+  for name in sig_t FILE OSStatus extern_proc MAP_FAILED \
+              acosf acosl asinhf asinhl atan2f atan2l cbrtf cbrtl \
+              copysignf copysignl coshf coshl erff erfl erfcf erfcl \
+              expm1f expm1l fdimf fdiml fmaxf fmaxl fminf fminl \
+              hypotf hypotl log1pf log1pl logbf logbl nanf nanl \
+              nextafterf nextafterl powf powl remquof remquol \
+              sinhf sinhl tanf tanl tanhf tanhl tgammaf tgammal; do
+    if grep -E "cannot find (type )?'$name'|cannot find '$name' in scope|unknown type name '$name'|use of undeclared identifier '$name'" "$log" >/dev/null; then
+      echo "  FAIL still cannot find $name"
+      fail=1
+    else
+      echo "  OK  no 'cannot find' for $name"
+    fi
+  done
+  if grep -E "cannot convert value of type 'Int32' to expected argument type 'Int'|extra argument in call" "$log" >/dev/null; then
+    echo "  FAIL ilogb/scalbn/remquo prototype mismatch still in log"
+    grep -E "cannot convert value of type 'Int32'|extra argument in call" "$log" || true
+    fail=1
+  else
+    echo "  OK  no Int32/Int or extra-argument prototype mismatch"
+  fi
+}
+
+echo "=== clang -fsyntax-only @import Darwin ==="
+cat > "$tmp/probe.m" <<'EOF'
+@import Darwin;
+void probe(sig_t h, FILE *f, OSStatus s, struct extern_proc *p) {
+  (void)h; (void)f; (void)s; (void)p;
+  (void)acosf; (void)acosl; (void)asinhf; (void)asinhl;
+  (void)atan2f; (void)atan2l; (void)cbrtf; (void)cbrtl;
+  (void)copysignf; (void)copysignl; (void)coshf; (void)coshl;
+  (void)erff; (void)erfl; (void)erfcf; (void)erfcl;
+  (void)expm1f; (void)expm1l; (void)fdimf; (void)fdiml;
+  (void)fmaxf; (void)fmaxl; (void)fminf; (void)fminl;
+  (void)hypotf; (void)hypotl; (void)log1pf; (void)log1pl;
+  (void)logbf; (void)logbl; (void)nanf; (void)nanl;
+  (void)nextafterf; (void)nextafterl; (void)powf; (void)powl;
+  (void)remquof; (void)remquol; (void)sinhf; (void)sinhl;
+  (void)tanf; (void)tanl; (void)tanhf; (void)tanhl;
+  (void)tgammaf; (void)tgammal;
+  (void)ilogb; (void)scalbn; (void)remquo;
+}
+EOF
+clang_log=$tmp/clang.log
+set +e
+"$CLANG" -fsyntax-only -fmodules -fimplicit-module-maps \
+  -target "$SWIFTCORE_CLANG_TARGET" -isysroot "$SDK" \
+  "$tmp/probe.m" >"$clang_log" 2>&1
+clang_rc=$?
+set -e
+echo "clang -fsyntax-only rc=$clang_rc"
+sed -n '1,80p' "$clang_log"
+check_log "$clang_log"
+[ "$clang_rc" -eq 0 ] && echo "  OK  clang rc=0" \
+  || { echo "  FAIL clang rc=$clang_rc"; fail=1; }
+
+echo
+echo "=== swiftc -typecheck import Darwin ==="
 cat > "$tmp/probe.swift" <<'EOF'
 import Darwin
 
@@ -107,53 +181,34 @@ public func _probe_libm() {
 }
 EOF
 
-log=$tmp/syntax.log
-set +e
-"$SWIFTC" -target "$SWIFTCORE_SWIFTC_TARGET" -sdk "$SDK" \
-  -parse-as-library -fsyntax-only -parse-as-library \
-  "$tmp/probe.swift" >"$log" 2>&1
-rc=$?
-set -e
-echo "=== swiftc -fsyntax-only rc=$rc ==="
-sed -n '1,80p' "$log"
-
-if grep -Eq "no such module 'Darwin'|underlying Objective-C module 'Darwin' not found|cannot load underlying module for 'Darwin'" "$log"; then
-  echo "  FAIL Clang module Darwin not found"
-  fail=1
+if [ ! -x "$SWIFTC" ]; then
+  echo "SKIP swiftc -- no $SWIFTC (clang -fsyntax-only already ran)"
 else
-  echo "  OK  Clang module Darwin resolved"
+  RES=
+  for d in "${B:-$HOME/work/build}/lib/swift" \
+           "$SWIFTCORE_ROOT/artifacts/swift-macosx" \
+           /usr/lib/swift; do
+    if [ -d "$d" ]; then RES=$d; break; fi
+  done
+  swift_log=$tmp/swift.log
+  set +e
+  extra=()
+  [ -n "$RES" ] && extra+=(-resource-dir "$RES")
+  "$SWIFTC" -target "$SWIFTCORE_SWIFTC_TARGET" -sdk "$SDK" \
+    -parse-as-library -typecheck "${extra[@]}" \
+    "$tmp/probe.swift" >"$swift_log" 2>&1
+  swift_rc=$?
+  set -e
+  echo "swiftc -typecheck rc=$swift_rc resource-dir=${RES:-none}"
+  sed -n '1,80p' "$swift_log"
+  check_log "$swift_log"
+  [ "$swift_rc" -eq 0 ] && echo "  OK  swiftc rc=0" \
+    || { echo "  FAIL swiftc rc=$swift_rc"; fail=1; }
 fi
 
-# The names from the operator log must not appear as 'cannot find'.
-for name in sig_t FILE OSStatus extern_proc MAP_FAILED \
-            acosf acosl asinhf asinhl atan2f atan2l cbrtf cbrtl \
-            copysignf copysignl coshf coshl erff erfl erfcf erfcl \
-            expm1f expm1l fdimf fdiml fmaxf fmaxl fminf fminl \
-            hypotf hypotl log1pf log1pl logbf logbl nanf nanl \
-            nextafterf nextafterl powf powl remquof remquol \
-            sinhf sinhl tanf tanl tanhf tanhl tgammaf tgammal; do
-  if grep -E "cannot find (type )?'$name'|cannot find '$name' in scope" "$log" >/dev/null; then
-    echo "  FAIL still cannot find $name"
-    fail=1
-  else
-    echo "  OK  no 'cannot find' for $name"
-  fi
-done
-
-if grep -E "cannot convert value of type 'Int32' to expected argument type 'Int'|extra argument in call" "$log" >/dev/null; then
-  echo "  FAIL ilogb/scalbn/remquo prototype mismatch still in log"
-  grep -E "cannot convert value of type 'Int32'|extra argument in call" "$log" || true
-  fail=1
-else
-  echo "  OK  no Int32/Int or extra-argument prototype mismatch"
-fi
-
+echo
 if [ "$fail" -eq 0 ]; then
-  echo "PASS -- Darwin.o names are visible against the staged sysroot (swiftc rc=$rc is a later wall if non-zero)"
-  # A remaining error (missing Darwin submodule, SwiftShims, …) is allowed
-  # only if it is not one of the enumerated names. Non-zero rc is OK when
-  # the log is clean of those names; the operator overlay compile still
-  # has to produce Darwin.o. If rc is 0, even better.
+  echo "PASS -- Darwin names typecheck against the staged sysroot"
   exit 0
 fi
 echo "FAIL -- operator names still reported"

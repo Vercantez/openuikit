@@ -206,5 +206,13 @@ fi
 
 echo "stage_overlay_darwin: done sysroot=$SDK"
 echo "  Darwin.modulemap: $([ -f "$SDK/usr/include/Darwin.modulemap" ] && echo present || echo ABSENT)"
-echo "  math.h: $(wc -l < "$SDK/usr/include/math.h" 2>/dev/null || echo missing) lines"
-echo "  MacTypes.h: $(wc -l < "$SDK/usr/include/MacTypes.h" 2>/dev/null || echo missing) lines"
+if [ -f "$SDK/usr/include/math.h" ]; then
+  echo "  math.h: $(wc -l < "$SDK/usr/include/math.h") lines"
+else
+  echo "  math.h: missing"
+fi
+if [ -f "$SDK/usr/include/MacTypes.h" ]; then
+  echo "  MacTypes.h: $(wc -l < "$SDK/usr/include/MacTypes.h") lines"
+else
+  echo "  MacTypes.h: missing"
+fi
