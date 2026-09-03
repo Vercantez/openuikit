@@ -1,1 +1,5 @@
 full/avkit/AVKit.swift
+full/avkit/AVKitHostLookalikes.swift
+full/avkit/AVKitSurface.swift
+full/avkit/AVKitSwiftUICore.swift
+full/avkit/AVKitViewModifiers.swift
