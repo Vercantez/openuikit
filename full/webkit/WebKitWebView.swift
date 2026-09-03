@@ -2,11 +2,7 @@
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
-#if canImport(UIKit)
-@_exported import UIKit
-#elseif canImport(OpenUIKit)
-@_exported import OpenUIKit
-#endif
+// UIKit/OpenUIKit types come from WebKit.swift (real import or Linux lookalikes).
 
 @preconcurrency @MainActor
 open class WKWebView: UIView {
@@ -19,6 +15,27 @@ open class WKWebView: UIView {
     open var allowsBackForwardNavigationGestures = false
     open var allowsLinkPreview = true
     open var customUserAgent: String? = ""
+    open var isInspectable = false
+    open var isFindInteractionEnabled = false
+    open var interactionState: Any?
+    open var mediaType: String?
+    open var pageZoom: CGFloat = 1
+    public private(set) var cameraCaptureState: WKMediaCaptureState = .none
+    public private(set) var microphoneCaptureState: WKMediaCaptureState = .none
+    public private(set) var fullscreenState: FullscreenState = .notInFullscreen
+    public private(set) var isBlockedByScreenTime = false
+    public private(set) var isWritingToolsActive = false
+    public private(set) var certificateChain: [Any] = []
+    public private(set) var themeColor: UIColor?
+    public private(set) var minimumViewportInset: UIEdgeInsets = .zero
+    public private(set) var maximumViewportInset: UIEdgeInsets = .zero
+
+    public enum FullscreenState: Int, Hashable, Sendable {
+        case notInFullscreen = 0
+        case enteringFullscreen = 1
+        case inFullscreen = 2
+        case exitingFullscreen = 3
+    }
 
     private var _obscuredContentInsets: UIEdgeInsets = .zero
     /// Insets covered by app-owned chrome. WebKit requires every edge to be
@@ -245,6 +262,240 @@ open class WKWebView: UIView {
         )
     }
 
+    open func evaluateJavaScript(_ javaScriptString: String) async throws -> Any? {
+        try await withCheckedThrowingContinuation { continuation in
+            evaluateJavaScript(javaScriptString) { value, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: value)
+                }
+            }
+        }
+    }
+
+    open func evaluateJavaScript(
+        _ javaScriptString: String,
+        in frame: WKFrameInfo?,
+        in contentWorld: WKContentWorld,
+        completionHandler: ((Any?, Error?) -> Void)? = nil
+    ) {
+        _ = (frame, contentWorld)
+        evaluateJavaScript(javaScriptString, completionHandler: completionHandler)
+    }
+
+    open func evaluateJavaScript(
+        _ javaScriptString: String,
+        in frame: WKFrameInfo?,
+        contentWorld: WKContentWorld
+    ) async throws -> Any? {
+        try await withCheckedThrowingContinuation { continuation in
+            evaluateJavaScript(
+                javaScriptString,
+                in: frame,
+                in: contentWorld
+            ) { value, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: value)
+                }
+            }
+        }
+    }
+
+    open func callAsyncJavaScript(
+        _ functionBody: String,
+        arguments: [String: Any] = [:],
+        in frame: WKFrameInfo?,
+        in contentWorld: WKContentWorld,
+        completionHandler: ((Any?, Error?) -> Void)? = nil
+    ) {
+        _ = (functionBody, arguments, frame, contentWorld)
+        completionHandler?(nil, WKPortableUnknown("callAsyncJavaScript"))
+    }
+
+    open func callAsyncJavaScript(
+        _ functionBody: String,
+        arguments: [String: Any] = [:],
+        in frame: WKFrameInfo?,
+        contentWorld: WKContentWorld
+    ) async throws -> Any? {
+        try await withCheckedThrowingContinuation { continuation in
+            callAsyncJavaScript(
+                functionBody,
+                arguments: arguments,
+                in: frame,
+                in: contentWorld
+            ) { value, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: value)
+                }
+            }
+        }
+    }
+
+    public class func handlesURLScheme(_ urlScheme: String) -> Bool {
+        _ = urlScheme
+        return false
+    }
+
+    open func closeAllMediaPresentations() {
+        closeAllMediaPresentations(completionHandler: nil)
+    }
+
+    open func closeAllMediaPresentations(completionHandler: (@MainActor () -> Void)? = nil) {
+        if let completionHandler {
+            WKPortableCompleteAfterReturn(completionHandler)
+        }
+    }
+
+    open func pauseAllMediaPlayback(completionHandler: (@MainActor () -> Void)? = nil) {
+        if let completionHandler {
+            WKPortableCompleteAfterReturn(completionHandler)
+        }
+    }
+
+    open func requestMediaPlaybackState(
+        completionHandler: @escaping @MainActor (WKMediaPlaybackState) -> Void
+    ) {
+        WKPortableCompleteAfterReturn {
+            completionHandler(.none)
+        }
+    }
+
+    open func setCameraCaptureState(_ state: WKMediaCaptureState) async {
+        cameraCaptureState = state
+    }
+
+    open func setMicrophoneCaptureState(_ state: WKMediaCaptureState) async {
+        microphoneCaptureState = state
+    }
+
+    open func setMinimumViewportInset(
+        _ minimumViewportInset: UIEdgeInsets,
+        maximumViewportInset: UIEdgeInsets
+    ) {
+        self.minimumViewportInset = minimumViewportInset
+        self.maximumViewportInset = maximumViewportInset
+    }
+
+    @discardableResult
+    open func loadFileRequest(
+        _ request: URLRequest,
+        allowingReadAccessTo readAccessURL: URL
+    ) -> WKNavigation? {
+        _ = readAccessURL
+        return _beginUnavailableNavigation(
+            request: request,
+            navigationType: .other,
+            operation: "loadFileRequest(_:allowingReadAccessTo:)"
+        )
+    }
+
+    @discardableResult
+    open func loadSimulatedRequest(
+        _ request: URLRequest,
+        responseHTML string: String
+    ) -> WKNavigation {
+        _ = string
+        return _beginUnavailableNavigation(
+            request: request,
+            navigationType: .other,
+            operation: "loadSimulatedRequest(_:responseHTML:)"
+        )
+    }
+
+    @discardableResult
+    open func loadSimulatedRequest(
+        _ request: URLRequest,
+        withResponseHTML string: String
+    ) -> WKNavigation {
+        loadSimulatedRequest(request, responseHTML: string)
+    }
+
+    @discardableResult
+    open func loadSimulatedRequest(
+        _ request: URLRequest,
+        response: URLResponse,
+        responseData data: Data
+    ) -> WKNavigation {
+        _ = (response, data)
+        return _beginUnavailableNavigation(
+            request: request,
+            navigationType: .other,
+            operation: "loadSimulatedRequest(_:response:responseData:)"
+        )
+    }
+
+    @discardableResult
+    open func loadSimulatedRequest(
+        _ request: URLRequest,
+        with response: URLResponse,
+        responseData data: Data
+    ) -> WKNavigation {
+        loadSimulatedRequest(request, response: response, responseData: data)
+    }
+
+    open func fetchData(of dataTypes: WKWebViewDataType) async throws -> Data {
+        _ = dataTypes
+        throw WKPortableUnknown("fetchData(of:)")
+    }
+
+    open func restoreData(_ data: Data) async throws {
+        _ = data
+        throw WKPortableUnknown("restoreData")
+    }
+
+    open func startDownload(using request: URLRequest) async -> WKDownload {
+        WKDownload(request: request, webView: self, userInitiated: true)
+    }
+
+    open func resumeDownload(fromResumeData resumeData: Data) async -> WKDownload {
+        _ = resumeData
+        return WKDownload(request: nil, webView: self)
+    }
+
+    open func takeSnapshot(configuration snapshotConfiguration: WKSnapshotConfiguration?) async throws -> UIImage {
+        _ = snapshotConfiguration
+        throw WKPortableUnknown("takeSnapshot")
+    }
+
+    open func createPDF(
+        configuration: WKPDFConfiguration,
+        completionHandler: @escaping (Result<Data, any Error>) -> Void
+    ) {
+        _ = configuration
+        completionHandler(.failure(WKPortableUnknown("createPDF")))
+    }
+
+    open func pdf(configuration: WKPDFConfiguration) async throws -> Data {
+        throw WKPortableUnknown("pdf(configuration:)")
+    }
+
+    open func createWebArchiveData(completionHandler: @escaping (Result<Data, any Error>) -> Void) {
+        completionHandler(.failure(WKPortableUnknown("createWebArchiveData")))
+    }
+
+    open func find(
+        _ string: String,
+        configuration: WKFindConfiguration,
+        completionHandler: @escaping (WKFindResult) -> Void
+    ) {
+        _ = (string, configuration)
+        completionHandler(WKFindResult(matchFound: false))
+    }
+
+    open func find(_ string: String, configuration: WKFindConfiguration) async -> WKFindResult {
+        await withCheckedContinuation { continuation in
+            find(string, configuration: configuration) { result in
+                continuation.resume(returning: result)
+            }
+        }
+    }
+
     /// String-keypath KVO used by Focus. Typed `observe(\.url)` is delivered
     /// through Foundation's portable observation substrate; this path delivers
     /// the classic `addObserver` seam deterministically without an ObjC runtime.
@@ -461,7 +712,7 @@ open class WKWebView: UIView {
         to newValue: Value
     ) {
         let oldValue = storage
-        #if !PORTABLE_WEBKIT_HOST
+        #if !PORTABLE_WEBKIT_HOST && (canImport(UIKit) || canImport(OpenUIKit))
         _portableWillChangeValue(for: keyPath, oldValue: oldValue)
         #endif
         if let stringKey {
@@ -474,7 +725,7 @@ open class WKWebView: UIView {
             )
         }
         storage = newValue
-        #if !PORTABLE_WEBKIT_HOST
+        #if !PORTABLE_WEBKIT_HOST && (canImport(UIKit) || canImport(OpenUIKit))
         _portableDidChangeValue(
             for: keyPath, oldValue: oldValue, newValue: newValue
         )

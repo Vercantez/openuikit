@@ -9,7 +9,7 @@ import class ObjectiveC.NSObject
 import class Foundation.NSObject
 #endif
 
-public enum WKNavigationType: Int, Sendable {
+public enum WKNavigationType: Int, Hashable, Sendable {
     case linkActivated = 0
     case formSubmitted = 1
     case backForward = 2
@@ -18,13 +18,13 @@ public enum WKNavigationType: Int, Sendable {
     case other = -1
 }
 
-public enum WKNavigationActionPolicy: Int, Sendable {
+public enum WKNavigationActionPolicy: Int, Hashable, Sendable {
     case cancel = 0
     case allow = 1
     case download = 2
 }
 
-public enum WKNavigationResponsePolicy: Int, Sendable {
+public enum WKNavigationResponsePolicy: Int, Hashable, Sendable {
     case cancel = 0
     case allow = 1
     case download = 2
@@ -34,13 +34,19 @@ public enum WKNavigationResponsePolicy: Int, Sendable {
 open class WKFrameInfo: NSObject {
     public let isMainFrame: Bool
     public let request: URLRequest
+    public let securityOrigin: WKSecurityOrigin
+    public weak var webView: WKWebView?
 
     public init(
         isMainFrame: Bool = true,
-        request: URLRequest = URLRequest(url: URL(string: "about:blank")!)
+        request: URLRequest = URLRequest(url: URL(string: "about:blank")!),
+        securityOrigin: WKSecurityOrigin? = nil,
+        webView: WKWebView? = nil
     ) {
         self.isMainFrame = isMainFrame
         self.request = request
+        self.securityOrigin = securityOrigin ?? WKSecurityOrigin()
+        self.webView = webView
         super.init()
     }
 }
@@ -50,15 +56,24 @@ open class WKNavigationAction: NSObject {
     public let request: URLRequest
     public let navigationType: WKNavigationType
     public let targetFrame: WKFrameInfo?
+    public let sourceFrame: WKFrameInfo
+    public let shouldPerformDownload: Bool
+    public let isContentRuleListRedirect: Bool
 
     internal init(
         request: URLRequest,
         navigationType: WKNavigationType,
-        targetFrame: WKFrameInfo?
+        targetFrame: WKFrameInfo?,
+        sourceFrame: WKFrameInfo? = nil,
+        shouldPerformDownload: Bool = false,
+        isContentRuleListRedirect: Bool = false
     ) {
         self.request = request
         self.navigationType = navigationType
         self.targetFrame = targetFrame
+        self.sourceFrame = sourceFrame ?? targetFrame ?? WKFrameInfo(isMainFrame: true, request: request)
+        self.shouldPerformDownload = shouldPerformDownload
+        self.isContentRuleListRedirect = isContentRuleListRedirect
         super.init()
     }
 }
@@ -165,7 +180,37 @@ open class WKBackForwardList: NSObject {
 }
 
 @preconcurrency @MainActor
-open class WKWindowFeatures: NSObject {}
+open class WKWindowFeatures: NSObject {
+    public let menuBarVisibility: NSNumber?
+    public let statusBarVisibility: NSNumber?
+    public let toolbarsVisibility: NSNumber?
+    public let allowsResizing: NSNumber?
+    public let x: NSNumber?
+    public let y: NSNumber?
+    public let width: NSNumber?
+    public let height: NSNumber?
+
+    public init(
+        menuBarVisibility: NSNumber? = nil,
+        statusBarVisibility: NSNumber? = nil,
+        toolbarsVisibility: NSNumber? = nil,
+        allowsResizing: NSNumber? = nil,
+        x: NSNumber? = nil,
+        y: NSNumber? = nil,
+        width: NSNumber? = nil,
+        height: NSNumber? = nil
+    ) {
+        self.menuBarVisibility = menuBarVisibility
+        self.statusBarVisibility = statusBarVisibility
+        self.toolbarsVisibility = toolbarsVisibility
+        self.allowsResizing = allowsResizing
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        super.init()
+    }
+}
 
 @preconcurrency @MainActor
 open class WKContextMenuElementInfo: NSObject {
@@ -207,6 +252,27 @@ public protocol WKNavigationDelegate: AnyObject {
         _ webView: WKWebView,
         decidePolicyFor navigationResponse: WKNavigationResponse,
         decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void
+    )
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView)
+    func webView(
+        _ webView: WKWebView,
+        navigationAction: WKNavigationAction,
+        didBecome download: WKDownload
+    )
+    func webView(
+        _ webView: WKWebView,
+        navigationResponse: WKNavigationResponse,
+        didBecome download: WKDownload
+    )
+    func webView(
+        _ webView: WKWebView,
+        authenticationChallenge challenge: URLAuthenticationChallenge,
+        shouldAllowDeprecatedTLS decisionHandler: @escaping (Bool) -> Void
+    )
+    func webView(
+        _ webView: WKWebView,
+        didReceive challenge: URLAuthenticationChallenge,
+        completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
     )
 }
 
@@ -251,6 +317,39 @@ public extension WKNavigationDelegate {
     ) {
         decisionHandler(.allow)
     }
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        _ = webView
+    }
+    func webView(
+        _ webView: WKWebView,
+        navigationAction: WKNavigationAction,
+        didBecome download: WKDownload
+    ) {
+        _ = (webView, navigationAction, download)
+    }
+    func webView(
+        _ webView: WKWebView,
+        navigationResponse: WKNavigationResponse,
+        didBecome download: WKDownload
+    ) {
+        _ = (webView, navigationResponse, download)
+    }
+    func webView(
+        _ webView: WKWebView,
+        authenticationChallenge challenge: URLAuthenticationChallenge,
+        shouldAllowDeprecatedTLS decisionHandler: @escaping (Bool) -> Void
+    ) {
+        _ = (webView, challenge)
+        decisionHandler(false)
+    }
+    func webView(
+        _ webView: WKWebView,
+        didReceive challenge: URLAuthenticationChallenge,
+        completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+    ) {
+        _ = (webView, challenge)
+        completionHandler(.cancelAuthenticationChallenge, nil)
+    }
 }
 
 @preconcurrency @MainActor
@@ -261,6 +360,44 @@ public protocol WKUIDelegate: AnyObject {
         for navigationAction: WKNavigationAction,
         windowFeatures: WKWindowFeatures
     ) -> WKWebView?
+    func webViewDidClose(_ webView: WKWebView)
+    func webView(
+        _ webView: WKWebView,
+        runJavaScriptAlertPanelWithMessage message: String,
+        initiatedByFrame frame: WKFrameInfo
+    ) async
+    func webView(
+        _ webView: WKWebView,
+        runJavaScriptConfirmPanelWithMessage message: String,
+        initiatedByFrame frame: WKFrameInfo
+    ) async -> Bool
+    func webView(
+        _ webView: WKWebView,
+        runJavaScriptTextInputPanelWithPrompt prompt: String,
+        defaultText: String?,
+        initiatedByFrame frame: WKFrameInfo
+    ) async -> String?
+    func webView(
+        _ webView: WKWebView,
+        requestDeviceOrientationAndMotionPermissionFor origin: WKSecurityOrigin,
+        initiatedByFrame frame: WKFrameInfo,
+        decisionHandler: @escaping (WKPermissionDecision) -> Void
+    )
+    func webView(
+        _ webView: WKWebView,
+        decideMediaCapturePermissionsFor origin: WKSecurityOrigin,
+        initiatedBy frame: WKFrameInfo,
+        type: WKMediaCaptureType
+    ) async -> WKPermissionDecision
+    func webView(
+        _ webView: WKWebView,
+        showLockdownModeFirstUseMessage message: String
+    ) async -> WKDialogResult
+    func webView(
+        _ webView: WKWebView,
+        runOpenPanelWith parameters: WKOpenPanelParameters,
+        initiatedByFrame frame: WKFrameInfo
+    ) async -> [URL]?
 }
 
 @MainActor
@@ -272,5 +409,65 @@ public extension WKUIDelegate {
         windowFeatures: WKWindowFeatures
     ) -> WKWebView? {
         nil
+    }
+    func webViewDidClose(_ webView: WKWebView) {
+        _ = webView
+    }
+    func webView(
+        _ webView: WKWebView,
+        runJavaScriptAlertPanelWithMessage message: String,
+        initiatedByFrame frame: WKFrameInfo
+    ) async {
+        _ = (webView, message, frame)
+    }
+    func webView(
+        _ webView: WKWebView,
+        runJavaScriptConfirmPanelWithMessage message: String,
+        initiatedByFrame frame: WKFrameInfo
+    ) async -> Bool {
+        _ = (webView, message, frame)
+        return false
+    }
+    func webView(
+        _ webView: WKWebView,
+        runJavaScriptTextInputPanelWithPrompt prompt: String,
+        defaultText: String?,
+        initiatedByFrame frame: WKFrameInfo
+    ) async -> String? {
+        _ = (webView, prompt, defaultText, frame)
+        return nil
+    }
+    func webView(
+        _ webView: WKWebView,
+        requestDeviceOrientationAndMotionPermissionFor origin: WKSecurityOrigin,
+        initiatedByFrame frame: WKFrameInfo,
+        decisionHandler: @escaping (WKPermissionDecision) -> Void
+    ) {
+        _ = (webView, origin, frame)
+        decisionHandler(.deny)
+    }
+    func webView(
+        _ webView: WKWebView,
+        decideMediaCapturePermissionsFor origin: WKSecurityOrigin,
+        initiatedBy frame: WKFrameInfo,
+        type: WKMediaCaptureType
+    ) async -> WKPermissionDecision {
+        _ = (webView, origin, frame, type)
+        return .deny
+    }
+    func webView(
+        _ webView: WKWebView,
+        showLockdownModeFirstUseMessage message: String
+    ) async -> WKDialogResult {
+        _ = (webView, message)
+        return .showDefault
+    }
+    func webView(
+        _ webView: WKWebView,
+        runOpenPanelWith parameters: WKOpenPanelParameters,
+        initiatedByFrame frame: WKFrameInfo
+    ) async -> [URL]? {
+        _ = (webView, parameters, frame)
+        return nil
     }
 }
