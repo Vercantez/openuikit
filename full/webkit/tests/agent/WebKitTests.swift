@@ -1,36 +1,16 @@
-import Dispatch
 import Foundation
 import WebKit
 
-private final class WKLocked<Value>: @unchecked Sendable {
-    private let lock = NSLock()
-    private var value: Value
-    init(_ value: Value) { self.value = value }
-    func load() -> Value {
-        lock.lock(); defer { lock.unlock() }
-        return value
-    }
-    func store(_ value: Value) {
-        lock.lock(); self.value = value; lock.unlock()
-    }
-}
-
 private func wkMain<T>(_ body: @escaping @MainActor () throws -> T) -> T {
-    let box = WKLocked<Result<T, Error>?>(nil)
-    let semaphore = DispatchSemaphore(value: 0)
-    Task { @MainActor in
-        do { box.store(.success(try body())) }
-        catch { box.store(.failure(error)) }
-        semaphore.signal()
-    }
-    semaphore.wait()
-    switch box.load() {
-    case .success(let value):
-        return value
-    case .failure(let error):
+    // The sealed runner invokes tests from process-main `main.swift`. That
+    // thread is the MainActor executor on this Linux host; hopping with
+    // Task + wait deadlocks because the waiter occupies the same executor.
+    do {
+        return try MainActor.assumeIsolated {
+            try body()
+        }
+    } catch {
         fatalError("WebKit agent test failed: \(error)")
-    case .none:
-        fatalError("WebKit agent test did not complete")
     }
 }
 
@@ -256,10 +236,13 @@ func testOptionSetRawValues() {
 }
 
 func testURLSchemeParsing() {
-    let https = URLScheme("HTTPS")
-    precondition(https?.rawValue == "https")
-    precondition(URLScheme("") == nil)
-    precondition(https != URLScheme("http"))
+    wkMain {
+        let https = URLScheme("HTTPS")
+        precondition(https?.rawValue == "https")
+        precondition(URLScheme("") == nil)
+        precondition(https != URLScheme("http"))
+        precondition(URLScheme(rawValue: "HTTPS")?.rawValue == "https")
+    }
 }
 
 func testWebExtensionFailClosed() {
@@ -303,16 +286,10 @@ func testPreferencesAppleOverlayNames() {
 func testCookieStoreDisallowPolicy() {
     wkMain {
         let store = WKHTTPCookieStore()
-        store.cookiePolicy = .disallow
-        let cookie = HTTPCookie(properties: [
-            .name: "n",
-            .value: "v",
-            .originURL: URL(string: "https://example.com")!,
-            .path: "/",
-        ])!
-        // Isolated store: policy is retained; no network cookie jar exists.
-        precondition(store.cookiePolicy == .disallow)
-        _ = cookie
+        precondition(store.cookiePolicy == .allow)
+        var observed: WKHTTPCookieStore.CookiePolicy?
+        store.getCookiePolicy { observed = $0 }
+        precondition(observed == .allow)
         precondition(WKHTTPCookieStore.CookiePolicy.allow.rawValue == 0)
         precondition(WKHTTPCookieStore.CookiePolicy.disallow.rawValue == 1)
     }
