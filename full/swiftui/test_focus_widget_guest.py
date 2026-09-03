@@ -93,6 +93,10 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
             'python3 "$PREPARE_TOOL" --contract "$W/env/contract.json" --root "$W"',
             text,
         )
+        self.assertLess(
+            text.index('export FULL_OUT_SUFFIX'),
+            text.index('--gate focus-widget'),
+        )
         self.assertIn('--gate focus-widget', text)
         self.assertIn(
             'python3 "$LEDGER_TOOL" --style focus-widget require-hash "$1" "$2" "$3"',
@@ -605,6 +609,60 @@ for dependency in dependencies.get(Path(sys.argv[-1]).name, []):
         helper = ATTEST.read_text()
         self.assertIn("require_regular_beneath_no_links", helper)
         self.assertIn("path component is a symlink", helper)
+
+    def test_x86_suffix_env_prepare_resolves_only_suffixed_trees(self) -> None:
+        import re
+        import shutil
+
+        text = BUILD.read_text()
+        self.assertIn("export FULL_OUT_SUFFIX", text)
+        self.assertIn(
+            'OPENCOMBINE_RESULT=$OPENCOMBINE_ROOT/export${FULL_OUT_SUFFIX}/RESULT.txt',
+            text,
+        )
+        self.assertIn("export-x86_64/RESULT.txt", ATTEST.read_text())
+        unsuffixed = re.compile(
+            r"/scratch/(mrroot_full|mrroot_fe|sysroot_fe4|mrroot)(?!-x86_64)(?=/|\s|$)"
+        )
+        with tempfile.TemporaryDirectory(prefix="widget-x86-suffix.") as tmp:
+            fixture = Path(tmp)
+            (fixture / "env").mkdir()
+            shutil.copy2(ROOT / "env/contract.json", fixture / "env/contract.json")
+            for trap in (
+                "scratch/sysroot_fe4/usr/include",
+                "scratch/mrroot/darwin/usr/lib/swift",
+                "scratch/mrroot_full/darwin/usr/lib",
+                "scratch/mrroot_fe/darwin/usr/lib/swift",
+            ):
+                path = fixture / trap
+                path.mkdir(parents=True)
+                (path / ".trap").write_text("arm64-only\n", encoding="utf-8")
+            proc = subprocess.run(
+                [
+                    "python3",
+                    str(ROOT / "scripts/env/prepare.py"),
+                    "--root",
+                    str(fixture),
+                    "--gate",
+                    "focus-widget",
+                    "--verify-only",
+                    "--no-fetch",
+                ],
+                env={**os.environ, "FULL_OUT_SUFFIX": "-x86_64"},
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(proc.returncode, 0, proc.stderr + proc.stdout)
+            for line in proc.stdout.splitlines():
+                if line.startswith("ENV_PREPARE_"):
+                    self.assertIsNone(unsuffixed.search(line), line)
+            self.assertRegex(proc.stdout, r"id=sysroot_fe4 .*sysroot_fe4-x86_64")
+            self.assertRegex(proc.stdout, r"id=mrroot_full .*mrroot_full-x86_64")
+            self.assertRegex(proc.stdout, r"id=mrroot-base-runtime .*mrroot-x86_64")
+            self.assertNotRegex(
+                proc.stdout,
+                r"id=sysroot_fe4 .*scratch/sysroot_fe4(?:/|\s)",
+            )
 
 
 if __name__ == "__main__":
