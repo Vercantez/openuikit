@@ -338,6 +338,8 @@ expect_grep 'fe_clock_realtime.h' "$STAGE" \
     "x86 stager exposes CLOCK_REALTIME as clockid_t"
 expect_grep 'build_foundation_placeholder.sh' "$COMMON" \
     "run-root Foundation slots are empty placeholders, not loud-abort stubs"
+expect_grep 'Work dir MUST sit outside dest' "$COMMON" \
+    "placeholder work dir is outside the run root so CHECK 0 control is not a CHECK 1 bind"
 expect_grep 'fe_sysroot_append_vm_copy' "$STAGE" \
     "x86 stager uses the shared vm_copy append"
 expect_grep 'fe_sysroot_measurement.inc' "$ROOT/full/foundation/stage_fe_sysroot.sh" \

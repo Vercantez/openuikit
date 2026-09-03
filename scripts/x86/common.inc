@@ -1621,7 +1621,12 @@ phase2_expand_darwin_modulemap_for_fe() {
 phase2_stage_x86_foundation_placeholders() {
     local dest=$1 repo=$2 sys=$3
     local fw=$dest/darwin/System/Library/Frameworks
-    local work=$dest/placeholder-work
+    # Work dir MUST sit outside dest. build_foundation_placeholder CHECK 0
+    # writes a positive-control dylib that binds Foundation; CHECK 1 then
+    # sweeps dest. A work dir under dest makes that control look like a
+    # real overlay bind and the recipe refuses (rc=6).
+    local work
+    work=$(cd "$(dirname "$dest")" && pwd)/placeholder-work-$(basename "$dest")
     local log=$work/build_foundation_placeholder.log
     local src=$repo/foundation-macho/src/placeholder/FoundationPlaceholder.c
     local script=$repo/foundation-macho/scripts/build_foundation_placeholder.sh
