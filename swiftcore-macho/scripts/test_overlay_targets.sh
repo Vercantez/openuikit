@@ -19,9 +19,10 @@ swiftDarwin-macosx-x86_64: phony
 swiftCore-macosx-x86_64: phony
 EOF
 set +e
-out=$(NINJA_TARGETS_DUMP="$tmp/targets" overlay_select_targets /no/build x86_64 2>&1)
+NINJA_TARGETS_DUMP="$tmp/targets" overlay_select_targets /no/build x86_64 >"$tmp/out1" 2>&1
 rc=$?
 set -e
+out=$(cat "$tmp/out1")
 printf '%s\n' "$out"
 [ "$rc" -eq 0 ] && echo "  OK  rc=0" || { echo "  FAIL rc=$rc"; fail=1; }
 printf '%s\n' "$out" | grep -q 'will ninja.*swiftDarwin-macosx-x86_64' \
@@ -31,6 +32,9 @@ printf '%s\n' "$out" | grep -q 'CANNOT_STAGE_XCODE_DARWIN_OVERLAYS target=swiftO
 printf '%s\n' "$out" | grep -q 'will ninja.*swiftObjectiveC' \
   && { echo "  FAIL ObjectiveC still in will-ninja list"; fail=1; } \
   || echo "  OK  ObjectiveC not ninja'd"
+[ "${OVERLAY_STATUS[swiftObjectiveC-macosx-x86_64]:-}" = CANNOT_STAGE_XCODE_DARWIN_OVERLAYS ] \
+  && echo "  OK  OVERLAY_STATUS ObjectiveC CANNOT" \
+  || { echo "  FAIL OVERLAY_STATUS ObjectiveC=${OVERLAY_STATUS[swiftObjectiveC-macosx-x86_64]:-unset}"; fail=1; }
 
 echo
 echo "=== missing required _StringProcessing is CANNOT_OVERLAY_TARGET_ABSENT ==="
@@ -41,14 +45,21 @@ swift_Builtin_float-macosx-x86_64: phony
 swiftDarwin-macosx-x86_64: phony
 EOF
 set +e
-out=$(NINJA_TARGETS_DUMP="$tmp/targets" overlay_select_targets /no/build x86_64 2>&1)
+NINJA_TARGETS_DUMP="$tmp/targets" overlay_select_targets /no/build x86_64 >"$tmp/out2" 2>&1
 rc=$?
 set -e
+out=$(cat "$tmp/out2")
 printf '%s\n' "$out"
 [ "$rc" -eq 2 ] && echo "  OK  rc=2" || { echo "  FAIL rc=$rc want 2"; fail=1; }
 printf '%s\n' "$out" | grep -q 'CANNOT_OVERLAY_TARGET_ABSENT target=swift_StringProcessing-macosx-x86_64' \
   && echo "  OK  named the missing required target" \
   || { echo "  FAIL missing CANNOT_OVERLAY_TARGET_ABSENT"; fail=1; }
+[ "${OVERLAY_STATUS[swift_StringProcessing-macosx-x86_64]:-}" = CANNOT_OVERLAY_TARGET_ABSENT ] \
+  && echo "  OK  OVERLAY_STATUS StringProcessing CANNOT" \
+  || { echo "  FAIL OVERLAY_STATUS StringProcessing=${OVERLAY_STATUS[swift_StringProcessing-macosx-x86_64]:-unset}"; fail=1; }
+printf '%s\n' "${OVERLAY_NINJA_TARGETS[*]}" | grep -q 'swift_Concurrency-macosx-x86_64' \
+  && echo "  OK  still selected Concurrency for ninja" \
+  || { echo "  FAIL missing required did not keep other ninja targets"; fail=1; }
 
 echo
 echo "=== live ninja -t targets from overlay-cmake-proof (if present) ==="

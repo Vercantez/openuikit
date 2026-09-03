@@ -143,6 +143,20 @@ printf '%s\n' "$out" | grep -q 'build_stdlib done' \
 printf '%s\n' "$out" | grep -E 'ninja overlay swiftObjectiveC|will ninja.*swiftObjectiveC' \
   && { echo "  FAIL asked ninja for swiftObjectiveC"; fail=1; } \
   || echo "  OK  did not invoke missing ObjectiveC target"
+# Fail-fast is gone: every selected overlay is still attempted.
+for t in swift_Concurrency-macosx-x86_64 swiftSynchronization-macosx-x86_64 \
+         swift_StringProcessing-macosx-x86_64 swift_Builtin_float-macosx-x86_64 \
+         swiftDarwin-macosx-x86_64; do
+  printf '%s\n' "$out" | grep -q "ninja overlay $t" \
+    && echo "  OK  attempted $t" \
+    || { echo "  FAIL did not attempt $t"; fail=1; }
+  printf '%s\n' "$out" | grep -q "OVERLAY $t FAILED" \
+    && echo "  OK  scoreboard FAILED $t" \
+    || { echo "  FAIL missing OVERLAY $t FAILED"; fail=1; }
+done
+printf '%s\n' "$out" | grep -q 'OVERLAY swiftObjectiveC-macosx-x86_64 CANNOT_STAGE_XCODE_DARWIN_OVERLAYS' \
+  && echo "  OK  scoreboard ObjectiveC CANNOT" \
+  || { echo "  FAIL missing ObjectiveC scoreboard CANNOT"; fail=1; }
 
 echo
 if [ "$fail" -eq 0 ]; then
