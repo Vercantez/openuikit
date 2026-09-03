@@ -10,6 +10,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[2]
 BUILD = ROOT / "full/swiftui/build_focus_onboarding_guest.sh"
 FI_BUILDER = ROOT / "full/foundationinternationalization/build_foundation_internationalization.sh"
+RELATIVE_TIME_REEXPORT_LINK = ROOT / "full/swiftui/test_relative_time_reexport_link.sh"
 HARNESS = ROOT / "full/swiftui/FocusOnboardingGuestMain.swift"
 UUID_PROBE = ROOT / "full/swiftui/FocusOnboardingUUIDProbe.c"
 UUID_COMPAT = ROOT / "full/foundation/uuid_compat.c"
@@ -55,6 +56,7 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
     def test_build_script_has_valid_shell_syntax(self) -> None:
         subprocess.run(["bash", "-n", str(BUILD)], check=True)
         subprocess.run(["bash", "-n", str(FI_BUILDER)], check=True)
+        subprocess.run(["bash", "-n", str(RELATIVE_TIME_REEXPORT_LINK)], check=True)
 
     def test_exact_twelve_source_boundary_is_hash_pinned_and_direct(self) -> None:
         text = BUILD.read_text()
@@ -152,7 +154,8 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn("libswift_Concurrency.tbd", foundation_link)
         self.assertIn("libswiftDarwin.tbd", foundation_link)
         self.assertIn("libOpenCoreGraphics.dylib", foundation_link)
-        self.assertIn("$RELATIVE_TIME_DARWIN", foundation_link)
+        self.assertIn("$RELATIVE_TIME_RUNTIME", foundation_link)
+        self.assertNotIn("$RELATIVE_TIME_DARWIN", foundation_link)
         self.assertIn('"$SYS/usr/lib/swift/libswiftDarwin.tbd"', foundation_link)
         self.assertIn('"$SYS/usr/lib/swift/libswift_Concurrency.tbd"', foundation_link)
         self.assertIn('"$PACKAGE/libOpenCoreGraphics.dylib"', foundation_link)
@@ -183,7 +186,7 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
             "libswift_Concurrency.tbd",
             "libswiftDarwin.tbd",
             "libOpenCoreGraphics.dylib",
-            "$RELATIVE_TIME_DARWIN",
+            "$RELATIVE_TIME_RUNTIME",
         ):
             self.assertIn(required, foundation_expected)
         self.assertIn(
@@ -229,6 +232,37 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn(
             "== clone shared machorun root into a writable run-local overlay",
             text,
+        )
+        self.assertIn('"$RELATIVE_TIME_RUNTIME"', text)
+        foundation_link = text.split("run_link libFoundation ", 1)[1].split(
+            "run_link libSwiftUI ", 1
+        )[0]
+        self.assertIn('"$RELATIVE_TIME_RUNTIME"', foundation_link)
+        self.assertNotIn('"$RELATIVE_TIME_DARWIN"', foundation_link)
+        self.assertIn(
+            'awk \'$1 == "/usr/lib/libOpenRelativeTime.dylib"',
+            text,
+        )
+        self.assertIn("-L$PACKAGE first (same basename as the empty", text)
+
+    def test_relative_time_reexport_link_binds_via_explicit_runtime(self) -> None:
+        result = subprocess.run(
+            ["bash", str(RELATIVE_TIME_REEXPORT_LINK)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(
+            result.returncode,
+            0,
+            result.stderr or result.stdout,
+        )
+        self.assertIn(
+            "RELATIVE_TIME_REEXPORT_LINK_OK "
+            "facade=package-L-shadows-runtime "
+            "runtime=explicit-input "
+            "id=/usr/lib/libOpenRelativeTime.dylib",
+            result.stdout,
         )
 
     def test_foundation_intl_bridge_is_packaged_preloaded_and_in_closure(self) -> None:
