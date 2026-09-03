@@ -3,9 +3,10 @@
 
 One source for expected_*_loads, expected_*_inputs, package file lists, and
 otool CPU strings. Arm64 tuples are the historical literals (Gate B at
-e93727e0). x86_64 load lists apply the operator-evidenced overlay autolink
-swap; x86_64 input/package lists start as the arm64 lists (paths already go
-through $SYS/$PACKAGE/$FULL which carry FULL_OUT_SUFFIX).
+e93727e0). x86_64 load lists drop the arm64 libswift_errno.dylib autolink
+(libswiftDarwin already carries those binds on macOS); x86_64 input/package
+lists start as the arm64 lists (paths already go through $SYS/$PACKAGE/$FULL
+which carry FULL_OUT_SUFFIX).
 
 Operator dumps on the x86_64 EC2 box (FULL_OUT_SUFFIX=-x86_64):
 
@@ -56,16 +57,36 @@ ARCHES = ("arm64", "x86_64")
 GATES = ("widget", "onboarding")
 KINDS = ("loads", "inputs", "package", "otool-cpu")
 
-# Operator evidence (x86_64 EC2, main e93727e0): the packaged dylib records
-# LC_LOAD_DYLIB of libswift_DarwinFoundation1.dylib where arm64 records
-# libswift_errno.dylib. Arm64 overlays are the iOS simulator runtime; x86_64
-# overlays are Apple's macOS dyld shared cache (scratch/apple-x86-overlays).
-# libswift_errno there re-exports _DarwinFoundation1, and the toolchain's
-# autolink/-l choice follows the re-export target.
+# Apple ld oracle (MacOSX26.1 SDK, x86_64-apple-macos14.0), operator-run:
+#
+#   import Darwin
+#   public func probe() -> (Int32, Int32) {
+#       let c = POSIXErrorCode(rawValue: EAGAIN)
+#       return (c?.rawValue ?? 0, errno)
+#   }
+#   swiftc -target x86_64-apple-macos14.0 -emit-library
+#   otool -L:
+#     /usr/lib/libSystem.B.dylib
+#     /usr/lib/swift/libswiftDarwin.dylib
+#   dyld_info -fixups: all three binds
+#     POSIXErrorCode.init(rawValue:), POSIXErrorCode.rawValue.getter,
+#     Darwin.errno.getter
+#   are attributed to libswiftDarwin.
+#
+# Apple's libswiftDarwin.tbd re-exports _Builtin_float, _DarwinFoundation1/2/3
+# and defines zero POSIXErrorCode symbols itself (those live in the
+# DarwinFoundation1 tbd). libswift_errno.tbd re-exports DarwinFoundation1 and
+# carries $ld$previous$/usr/lib/swift/libswiftDarwin.dylib$$1$10.14.4$15.0$$,
+# so the errno accessor is also recorded against libswiftDarwin on macOS.
+#
+# Therefore x86_64 drops ARM64_OVERLAY_AUTOLINK (libswift_errno.dylib) from
+# every loads list that carries it, and drops the matching .tbd from inputs.
+# libswiftDarwin is already in the FE loads/inputs; do not substitute the
+# DarwinFoundation1 image. Measured LC_LOAD_DYLIB on the restaged x86_64 box
+# matches this drop. Tied to linker behaviour by
+# test_guest_gate_inventories_x86_oracle.sh (ld64.lld re-export attribution).
 ARM64_OVERLAY_AUTOLINK = "/usr/lib/swift/libswift_errno.dylib"
-X86_OVERLAY_AUTOLINK = "/usr/lib/swift/libswift_DarwinFoundation1.dylib"
 ARM64_OVERLAY_AUTOLINK_TBD = "{SYS}/usr/lib/swift/libswift_errno.tbd"
-X86_OVERLAY_AUTOLINK_TBD = "{SYS}/usr/lib/swift/libswift_DarwinFoundation1.tbd"
 
 BIND_NAMES = (
     "PACKAGE",
@@ -100,10 +121,7 @@ def macos_overlay_autolink_loads(items: tuple[str, ...], arch: str) -> tuple[str
         return items
     if arch != "x86_64":
         raise ValueError(f"unsupported arch {arch!r}")
-    return tuple(
-        X86_OVERLAY_AUTOLINK if item == ARM64_OVERLAY_AUTOLINK else item
-        for item in items
-    )
+    return tuple(item for item in items if item != ARM64_OVERLAY_AUTOLINK)
 
 
 def macos_overlay_autolink_inputs(items: tuple[str, ...], arch: str) -> tuple[str, ...]:
@@ -111,10 +129,7 @@ def macos_overlay_autolink_inputs(items: tuple[str, ...], arch: str) -> tuple[st
         return items
     if arch != "x86_64":
         raise ValueError(f"unsupported arch {arch!r}")
-    return tuple(
-        X86_OVERLAY_AUTOLINK_TBD if item == ARM64_OVERLAY_AUTOLINK_TBD else item
-        for item in items
-    )
+    return tuple(item for item in items if item != ARM64_OVERLAY_AUTOLINK_TBD)
 
 
 # --- widget LC_LOAD_DYLIB inventories (otool -L, no path binds) ---

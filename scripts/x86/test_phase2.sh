@@ -52,6 +52,7 @@ PREPARE=$ROOT/scripts/env/prepare.py
 BUILD_FULL=$ROOT/full/scripts/build_full.sh
 INVENTORIES=$ROOT/full/swiftui/guest_gate_inventories.py
 INVENTORIES_INC=$ROOT/full/swiftui/guest_gate_inventories.inc
+X86_ORACLE=$ROOT/full/swiftui/test_guest_gate_inventories_x86_oracle.sh
 
 expect_file "$PHASE2"
 expect_file "$COMMON"
@@ -60,6 +61,7 @@ expect_file "$OC"
 expect_file "$GUEST"
 expect_file "$INVENTORIES"
 expect_file "$INVENTORIES_INC"
+expect_file "$X86_ORACLE"
 
 echo "== bash -n"
 for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
@@ -74,6 +76,7 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/scripts/x86/gen_swift_tbd.sh" \
     "$ROOT/scripts/x86/test_gen_swift_tbd.sh" \
     "$ROOT/full/swiftui/guest_gate_inventories.inc" \
+    "$ROOT/full/swiftui/test_guest_gate_inventories_x86_oracle.sh" \
     "$ROOT/scripts/build_runtime_shims.sh" \
     "$ROOT/swiftcore-macho/scripts/test_compat_source.sh"; do
     if bash -n "$s"; then
@@ -357,9 +360,20 @@ expect_grep '[-]lSystem' "$BUILD_FULL" "build_full link names -lSystem"
 expect_grep 'libswift_Concurrency.dylib' "$INVENTORIES" "widget expected loads name Concurrency"
 expect_grep 'libswiftObjectiveC.dylib' "$INVENTORIES" "widget expected loads name ObjectiveC"
 expect_grep 'libswiftObservation.dylib' "$INVENTORIES" "widget expected loads name Observation"
-expect_grep 'libswift_DarwinFoundation1.dylib' "$INVENTORIES" \
-    "x86 widget loads name DarwinFoundation1"
+expect_grep 'x86_64 drops ARM64_OVERLAY_AUTOLINK' "$INVENTORIES" \
+    "x86 widget loads drop errno rather than substituting DarwinFoundation1"
 expect_grep 'libswift_errno.dylib' "$INVENTORIES" "arm64 widget loads still name errno"
+fe_x86=$(python3 "$INVENTORIES" --arch x86_64 --gate widget --kind loads --name foundationessentials)
+printf '%s\n' "$fe_x86" | grep -qx '/usr/lib/swift/libswiftDarwin.dylib' \
+    && ! printf '%s\n' "$fe_x86" | grep -q 'libswift_errno.dylib' \
+    && ! printf '%s\n' "$fe_x86" | grep -q 'DarwinFoundation1' \
+    && ok "x86 FE loads keep Darwin, drop errno, no DarwinFoundation1" \
+    || die_test "x86 FE loads drifted: $(echo "$fe_x86" | tr '\n' '|')"
+openuikit_x86=$(python3 "$INVENTORIES" --arch x86_64 --gate widget --kind loads --name openuikit)
+! printf '%s\n' "$openuikit_x86" | grep -q 'libswift_errno.dylib' \
+    && ! printf '%s\n' "$openuikit_x86" | grep -q 'DarwinFoundation1' \
+    && ok "x86 OpenUIKit loads drop errno without DarwinFoundation1" \
+    || die_test "x86 OpenUIKit loads drifted: $(echo "$openuikit_x86" | tr '\n' '|')"
 expect_grep 'libswiftCore.tbd' "$ROOT/full/swiftui/focus_widget_guest_attest.pl" \
     "widget attest requires named libswiftCore.tbd"
 expect_grep '[-]lswiftCore' "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
@@ -1775,6 +1789,13 @@ if bash "$ROOT/scripts/x86/test_gen_swift_tbd.sh"; then
     ok "test_gen_swift_tbd.sh"
 else
     die_test "test_gen_swift_tbd.sh"
+fi
+
+echo "== x86 Darwin re-export oracle (ld64.lld attributes POSIXErrorCode to libswiftDarwin)"
+if bash "$X86_ORACLE"; then
+    ok "test_guest_gate_inventories_x86_oracle.sh"
+else
+    die_test "test_guest_gate_inventories_x86_oracle.sh"
 fi
 
 echo
