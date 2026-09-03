@@ -1089,7 +1089,6 @@ open class AVMutableVideoCompositionLayerInstruction: AVVideoCompositionLayerIns
 }
 
 extension AVURLAsset {
-  convenience init(url: URL) { self.init() }
   public class func audiovisualTypes() -> [AVFileType] { [] }
   public class func audiovisualMIMETypes() -> [String] { [] }
   public class func isPlayableExtendedMIMEType(_ extendedMIMEType: String) -> Bool { false }

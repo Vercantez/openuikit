@@ -153,6 +153,10 @@ public struct AVFileType: RawRepresentable, Hashable, Sendable,
         self.rawValue = rawValue
     }
 
+    public init(_ rawValue: String) {
+        self.init(rawValue: rawValue)
+    }
+
     public init(stringLiteral value: String) {
         self.init(rawValue: value)
     }

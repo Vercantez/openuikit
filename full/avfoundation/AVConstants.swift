@@ -1,7 +1,5 @@
 import Foundation
 
-import Foundation
-
 // Linux string fallbacks: payloads match the public identifier, not a claimed Apple C-string ABI.
 
 public let AVMovieReferenceRestrictionsKey: String = "AVMovieReferenceRestrictionsKey"
