@@ -318,8 +318,8 @@ expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
     "missing Darwin.modulemap is its own CANNOT, not folded into overlays"
 expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
-expect_grep 'stage_fe_sysroot_x86.12' "$COMMON" \
-    "recipe bump restages a sysroot that lacked MachO.dyld"
+expect_grep 'stage_fe_sysroot_x86.13' "$COMMON" \
+    "recipe bump restages a sysroot whose Darwin map lacked libc/FileManager headers"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
     "stamp records the shared measurement-header list sha"
 expect_grep 'phase2_measurement_headers_missing' "$COMMON" \
@@ -338,8 +338,8 @@ expect_grep 'fe_ioctl_stub.h' "$STAGE" \
     "x86 stager stages a FIONBIO-free ioctl stub so SwiftOverlayShims builds"
 expect_grep 'phase2_ensure_darwin_named_submodules' "$COMMON" \
     "Darwin.modulemap grows sysdir and uuid submodules for import Darwin.sysdir"
-expect_grep 'phase2_ensure_macho_modulemap' "$COMMON" \
-    "sysroot grows MachO.dyld for FoundationEssentials Platform.swift"
+expect_grep 'malloc/malloc.h' "$COMMON" \
+    "Darwin.modulemap names malloc_good_size's header for FoundationEssentials Data.swift"
 expect_file "$ROOT/scripts/x86/MachO.modulemap"
 expect_grep 'SwiftOverlayShims.timeval' "$COMMON" \
     "sys/time.h is textual so SwiftOverlayShims.timeval is visible"

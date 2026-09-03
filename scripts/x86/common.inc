@@ -168,7 +168,7 @@ phase2_probe_focus_pin() {
 # output directory existing. A sysroot staged before x86 libswiftCore landed
 # would otherwise be reused while OpenCombine looks in usr/lib/swift and finds
 # nothing. Recipe bump forces a restage when the stager itself gains steps.
-PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.12
+PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.13
 PHASE2_SYSROOT_STAMP=.phase2-stage-inputs
 
 phase2_sha_or_absent() {
@@ -1601,6 +1601,18 @@ phase2_darwin_fe_extra_headers() {
         sys/quota.h \
         sys/sysctl.h \
         sys/time.h \
+        stdlib.h \
+        string.h \
+        strings.h \
+        ctype.h \
+        dirent.h \
+        fts.h \
+        copyfile.h \
+        removefile.h \
+        pthread.h \
+        malloc/malloc.h \
+        sys/xattr.h \
+        sys/utsname.h \
         os/base.h \
         os/lock.h \
         mach/mach_time.h

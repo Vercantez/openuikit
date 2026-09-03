@@ -18,7 +18,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-static const clockid_t CLOCK_REALTIME = 0;
+/* Swift does not import `#define CLOCK_REALTIME _CLOCK_REALTIME`. An
+   enumerator named CLOCK_REALTIME is what Date.swift looks up. */
+enum {
+    CLOCK_REALTIME = 0
+};
 #ifdef __cplusplus
 }
 #endif
