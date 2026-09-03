@@ -1,8 +1,9 @@
 #!/bin/bash
 # Overlay sysroot staging is input-keyed. A pre-existing MacOSX.sdk with
 # clean-room math.h / no stamp is displaced, never rm'd; mismatch restages
-# into a fresh directory. Refuse-before-cmake if math.h lacks fmaxl or
-# sys/proc.h lacks extern_proc.
+# into a fresh directory. Refuse-before-cmake if math.h lacks fmaxl,
+# sys/proc.h lacks extern_proc, or a staged modulemap names a header that
+# is not on disk (phase2_darwin_modulemap_missing_headers).
 set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
@@ -203,6 +204,95 @@ printf '%s\n' "$tbd_ref" | grep -q "tree=$tmp/notbd" \
   && echo "  OK  TBDS refuse names the tree" || { echo "  FAIL TBDS tree path"; fail=1; }
 
 echo
+echo "=== modulemap header closure (phase2_darwin_modulemap_missing_headers) ==="
+mkdir -p "$tmp/mm/usr/include" "$tmp/mm/usr/lib"
+fill_required_headers "$tmp/mm"
+echo '--- !tapi-tbd-v3' > "$tmp/mm/usr/lib/libSystem.B.tbd"
+cat > "$tmp/mm/usr/include/DarwinFoundation1.modulemap" <<'EOF'
+module _DarwinFoundation1 [system] {
+  header "complex.h"
+  export *
+}
+EOF
+need '! phase2_darwin_modulemap_headers_ok "$tmp/mm"' \
+  "maps naming complex.h fail phase2 closure before fill"
+before=$(phase2_darwin_modulemap_missing_headers "$tmp/mm" || true)
+printf '%s\n' "$before" | grep -q 'complex.h' \
+  && echo "  OK  missing=complex.h ($before)" \
+  || { echo "  FAIL missing headers: $before"; fail=1; }
+set +e
+refuse_mm=$(overlay_sysroot_refuse_modulemap_headers "$tmp/mm" 2>&1)
+st=$?
+set -e
+printf '%s\n' "$refuse_mm"
+[ "$st" -eq 2 ] && echo "  OK  modulemap refuse rc=2" || { echo "  FAIL modulemap refuse rc=$st"; fail=1; }
+printf '%s\n' "$refuse_mm" | grep -q 'CANNOT_OVERLAY_SYSROOT_MODULEMAP_HEADER' \
+  && echo "  OK  CANNOT_OVERLAY_SYSROOT_MODULEMAP_HEADER" \
+  || { echo "  FAIL missing MODULEMAP_HEADER marker"; fail=1; }
+printf '%s\n' "$refuse_mm" | grep -q 'complex.h' \
+  && echo "  OK  refuse names complex.h" || { echo "  FAIL refuse path"; fail=1; }
+if overlay_sysroot_tree_complete "$tmp/mm"; then
+  echo "  FAIL tree_complete true with modulemap header missing"
+  fail=1
+else
+  echo "  OK  tree_complete false while complex.h absent"
+fi
+overlay_sysroot_fill_modulemap_headers "$tmp/mm" | tee "$tmp/mm.fill"
+grep -q 'staged modulemap header complex.h' "$tmp/mm.fill" \
+  && echo "  OK  fill staged complex.h from sdk-gaps" \
+  || { echo "  FAIL fill did not stage complex.h"; cat "$tmp/mm.fill"; fail=1; }
+[ -f "$tmp/mm/usr/include/complex.h" ] \
+  && echo "  OK  complex.h now on disk" || { echo "  FAIL complex.h still absent"; fail=1; }
+cmp -s "$OPENUIKIT_ROOT/full/sdk-gaps/usr/include/complex.h" \
+       "$tmp/mm/usr/include/complex.h" \
+  && echo "  OK  complex.h is the sdk-gaps stub" || { echo "  FAIL complex.h contents"; fail=1; }
+if phase2_darwin_modulemap_headers_ok "$tmp/mm"; then
+  echo "  OK  phase2 closure after fill"
+else
+  echo "  FAIL still missing $(phase2_darwin_modulemap_missing_headers "$tmp/mm" || true)"
+  fail=1
+fi
+set +e
+overlay_sysroot_refuse_modulemap_headers "$tmp/mm"
+st=$?
+set -e
+[ "$st" -eq 0 ] && echo "  OK  refuse rc=0 after fill" || { echo "  FAIL refuse after fill rc=$st"; fail=1; }
+if overlay_sysroot_tree_complete "$tmp/mm"; then
+  echo "  OK  tree_complete after fill"
+else
+  echo "  FAIL tree_complete still false"
+  fail=1
+fi
+
+echo
+echo "=== configure.sh refuses before cmake when modulemap header is missing ==="
+mkdir -p "$W/swift-experimental-string-processing/Sources/_StringProcessing"
+mkdir -p "$W/libdispatch"
+touch "$W/libdispatch/CMakeLists.txt"
+mkdir -p "$W/sdk/MacOSX.sdk/usr/include/sys" "$W/sdk/MacOSX.sdk/usr/lib"
+fill_required_headers "$W/sdk/MacOSX.sdk"
+echo '--- !tapi-tbd-v3' > "$W/sdk/MacOSX.sdk/usr/lib/libSystem.B.tbd"
+cat > "$W/sdk/MacOSX.sdk/usr/include/DarwinFoundation1.modulemap" <<'EOF'
+module _DarwinFoundation1 [system] { header "complex.h" export * }
+EOF
+set +e
+out=$(
+  SWIFTCORE_OVERLAYS=1 SWIFTCORE_DARWIN_ARCH=x86_64 \
+    W="$W" B="$W/build-mm" \
+    bash "$SCRIPT_DIR/configure.sh" 2>&1
+)
+rc=$?
+set -e
+printf '%s\n' "$out" | tail -20
+[ "$rc" -eq 2 ] && echo "  OK  configure modulemap rc=2" || { echo "  FAIL configure modulemap rc=$rc"; fail=1; }
+printf '%s\n' "$out" | grep -q 'CANNOT_OVERLAY_SYSROOT_MODULEMAP_HEADER' \
+  && echo "  OK  configure named MODULEMAP_HEADER" \
+  || { echo "  FAIL configure MODULEMAP_HEADER"; fail=1; }
+[ -f "$W/configure.log" ] && grep -q cmake "$W/configure.log" 2>/dev/null \
+  && { echo "  FAIL cmake ran after modulemap refuse"; fail=1; } \
+  || echo "  OK  cmake not invoked after modulemap refuse"
+
+echo
 echo "=== stage_sdk.sh does not rm -rf \$W/sdk ==="
 if grep -n 'rm -rf "$W/sdk"' "$SCRIPT_DIR/stage_sdk.sh"; then
   echo "  FAIL stage_sdk.sh still rm -rf \$W/sdk"
@@ -278,6 +368,84 @@ printf '%s\n' "$out" | grep -q -- '-sdk=/root/work/sdk/MacOSX.sdk' \
   && echo "  OK  printed -sdk from ninja commands" || { echo "  FAIL missing -sdk"; fail=1; }
 printf '%s\n' "$out" | grep -q -- '-isysroot=/root/work/sdk/MacOSX.sdk' \
   && echo "  OK  printed -isysroot from ninja commands" || { echo "  FAIL missing -isysroot"; fail=1; }
+
+echo
+echo "=== ninja Darwin dylib link is printed and -soname rewritten ==="
+cat > "$fake/ninja" <<'EOF'
+#!/bin/bash
+args=("$@")
+i=0
+tool=""
+node=""
+while [ $i -lt ${#args[@]} ]; do
+  a=${args[$i]}
+  case "$a" in
+    -C) i=$((i+2)); continue ;;
+    -t)
+      i=$((i+1)); tool=${args[$i]:-}; i=$((i+1)); continue ;;
+    *) node=$a; i=$((i+1)); continue ;;
+  esac
+done
+if [ "$tool" = commands ]; then
+  echo "clang++ -target x86_64-apple-macosx13.0 -shared -Wl,-soname,libswiftDarwin.so -o lib/swift/macosx/x86_64/libswiftDarwin.so Darwin.o"
+  exit 0
+fi
+exit 0
+EOF
+chmod +x "$fake/ninja"
+set +e
+out=$(NINJA="$fake/ninja" overlay_print_darwin_link_from_ninja "$tmp/ninjabuild" x86_64)
+st=$?
+set -e
+printf '%s\n' "$out"
+[ "$st" -eq 0 ] && echo "  OK  print_darwin_link rc=0" || { echo "  FAIL print_darwin_link rc=$st"; fail=1; }
+printf '%s\n' "$out" | grep -q 'overlay_link: ninja' \
+  && echo "  OK  printed ninja Darwin link" || { echo "  FAIL missing ninja link"; fail=1; }
+printf '%s\n' "$out" | grep -q -- '-Wl,-soname,libswiftDarwin.so' \
+  && echo "  OK  ninja line has -soname" || { echo "  FAIL ninja line missing -soname"; fail=1; }
+printf '%s\n' "$out" | grep -q 'overlay_link: rewritten' \
+  && echo "  OK  printed rewritten link" || { echo "  FAIL missing rewritten"; fail=1; }
+printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -Eq -- '(^|[[:space:]])(-Wl,)?-?-soname' \
+  && { echo "  FAIL rewritten still has -soname"; fail=1; } \
+  || echo "  OK  rewritten has no -soname"
+printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -q -- '-install_name' \
+  && echo "  OK  rewritten has -install_name" || { echo "  FAIL rewritten missing install_name"; fail=1; }
+
+echo
+echo "=== cmake : && clang++ && : wrapper is stripped before rewrite ==="
+cat > "$fake/ninja" <<'EOF'
+#!/bin/bash
+args=("$@")
+i=0
+tool=""
+while [ $i -lt ${#args[@]} ]; do
+  a=${args[$i]}
+  case "$a" in
+    -C) i=$((i+2)); continue ;;
+    -t)
+      i=$((i+1)); tool=${args[$i]:-}; i=$((i+1)); continue ;;
+    *) i=$((i+1)); continue ;;
+  esac
+done
+if [ "$tool" = commands ]; then
+  echo ": && /root/work/shims/clang++ -target x86_64-apple-macosx13.0 -shared -Wl,-soname,libswiftDarwin.so -o lib/swift/macosx/x86_64/libswiftDarwin.so Darwin.o && :"
+  exit 0
+fi
+exit 0
+EOF
+chmod +x "$fake/ninja"
+set +e
+out=$(NINJA="$fake/ninja" overlay_print_darwin_link_from_ninja "$tmp/ninjabuild" x86_64)
+st=$?
+set -e
+printf '%s\n' "$out"
+[ "$st" -eq 0 ] && echo "  OK  cmake-wrapper print rc=0" || { echo "  FAIL cmake-wrapper rc=$st"; fail=1; }
+printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -q '&&' \
+  && { echo "  FAIL rewritten kept cmake && wrapper"; fail=1; } \
+  || echo "  OK  rewritten dropped cmake && wrapper"
+printf '%s\n' "$out" | grep 'overlay_link: rewritten' | grep -q -- '-install_name' \
+  && echo "  OK  wrapper line still rewrites install_name" \
+  || { echo "  FAIL wrapper rewrite"; fail=1; }
 
 echo
 echo "=== overlay FAILED dep=swiftDarwin vs first_error from the graph ==="
