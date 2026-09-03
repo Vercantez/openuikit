@@ -1072,6 +1072,16 @@ expect_grep 'CANNOT_X86_OVERLAYS_NOT_BUILT' "$PREPARE" "widget env-prepare overl
 expect_grep 'try_generate_tbd' "$PREPARE" "tbd-stubs tries gen_tbd instead of host=x86_64"
 expect_not_grep 'CURSOR_ENV_CANNOT_STAGE_SIMRUNTIME_OVERLAY_DYLIBS' "$PHASE2" \
     "phase2 overlay staging does not use the macOS CoreSimulator marker"
+expect_grep 'phase2_find_x86_overlay' "$COMMON" "overlay search helper"
+expect_grep 'phase2_is_cache_extract' "$COMMON" "cache-extract detector"
+expect_grep 'phase2_stage_x86_run_root_overlays' "$COMMON" "run-root overlay stager"
+expect_grep 'CANNOT_STAGE_CACHE_EXTRACT' "$COMMON" "cache-extract refusal marker"
+expect_grep 'OVERLAY_PROVENANCE' "$COMMON" "overlay provenance line"
+expect_grep 'llvm-objdump' "$COMMON" "provenance reads llvm-objdump private-headers"
+expect_grep 'phase2_stage_x86_run_root_overlays' "$PHASE2" \
+    "phase2 restages overlays into the run root"
+expect_not_grep 'if phase2_is_x86_macho "$swift/$name"; then' "$COMMON" \
+    "BASE fill no longer keeps an existing x86 Mach-O (ObjectiveC Apple-extract skip)"
 for overlay in libswiftDarwin.dylib libswiftSynchronization.dylib \
     libswift_Builtin_float.dylib libswift_DarwinFoundation1.dylib \
     libswift_DarwinFoundation2.dylib libswift_DarwinFoundation3.dylib \
@@ -1420,14 +1430,19 @@ if [ -d "$SYS/usr/lib" ]; then
         die_test "libswift_Concurrency.dylib was not staged as x86 Mach-O"
     fi
     if [ -f "$STUB_DEST/darwin/usr/lib/swift/libswiftObjectiveC.dylib" ]; then
-        if phase2_is_x86_macho \
+        if phase2_is_loadable_x86_overlay \
             "$STUB_DEST/darwin/usr/lib/swift/libswiftObjectiveC.dylib"; then
-            ok "layout staged x86 libswiftObjectiveC.dylib when overlay search found it"
+            art=$ROOT/swiftcore-macho/artifacts/swift-macosx/x86_64/libswiftObjectiveC.dylib
+            if cmp -s "$STUB_DEST/darwin/usr/lib/swift/libswiftObjectiveC.dylib" "$art"; then
+                ok "layout stages loadable libswiftObjectiveC.dylib from artifacts"
+            else
+                die_test "staged libswiftObjectiveC.dylib does not match artifacts"
+            fi
         else
-            die_test "libswiftObjectiveC.dylib present but not x86 Mach-O"
+            die_test "libswiftObjectiveC.dylib present but is a cache extract"
         fi
     else
-        ok "libswiftObjectiveC.dylib absent (Apple-SDK overlay; named in MISSING=)"
+        die_test "libswiftObjectiveC.dylib absent (artifacts has a from-source build)"
     fi
     rm -rf "$STUB_DEST"
 else
@@ -1519,6 +1534,17 @@ expect_grep 'scratch/ud-guest-x86_64' "$UDINC" "work tree is suffixed"
 expect_grep 'refusing unsuffixed/arm64 ud-guest work tree' "$UDINC" \
     "unsuffixed work tree is a named CANNOT"
 expect_grep 'export UD_GUEST_BIN' "$PHASE2" "successful link exports UD_GUEST_BIN for rung a"
+expect_grep 'phase2_stage_cftest_into_run_root' "$UDINC" \
+    "libCFTest is staged into the run root after link"
+expect_grep 'phase2_stage_cftest_into_run_root' "$PHASE2" \
+    "phase2 stages libCFTest after ud-guest link, before rung a"
+expect_grep 'libCFTest-run-root' "$PHASE2" "ENV_PREPARE item names libCFTest-run-root"
+expect_grep 'darwin/usr/lib/libCFTest.dylib' "$PHASE2" \
+    "libCFTest stage names the run-root path"
+expect_grep 'CoreFoundation slot is a byte-identical copy' "$UDINC" \
+    "run-root stager refuses a duplicate CF framework slot"
+expect_grep 'build_full.sh does not stage libCFTest' "$UDINC" \
+    "libCFTest staging is not routed through build_full.sh"
 expect_grep 'CANNOT_UD_GUEST_' "$UDINC" "refusal markers use CANNOT_UD_GUEST_"
 expect_grep 'LIBCFTEST libCFTest.dylib' "$UDINC" "CF hole names file=libCFTest.dylib"
 expect_grep 'USERDEFAULTSGUEST UserDefaultsGuest.o' "$UDINC" "port hole names file=UserDefaultsGuest.o"
@@ -1718,6 +1744,48 @@ if phase2_is_x86_macho "$UDWORK/libCFTest.dylib"; then
     else
         die_test "UD_CFTEST_DYLIB resolution got: '$cfok'"
     fi
+    echo "== libCFTest stage into the run root (after link, before run)"
+    CFROOT=$(mktemp -d /tmp/phase2-cftest-root.XXXXXX)
+    cstage=$(phase2_stage_cftest_into_run_root "$UDWORK/libCFTest.dylib" "$CFROOT" || true)
+    case "$cstage" in
+        status=cold-built\ path=*sha256=*)
+            dest=${cstage#*path=}
+            dest=${dest%% *}
+            sha=${cstage##*sha256=}
+            want=$(sha256sum "$CFROOT/darwin/usr/lib/libCFTest.dylib" | awk '{print $1}')
+            env_line=$(phase2_prepare libCFTest-run-root "cold-built path=$dest sha256=$sha")
+            if [ "$dest" = "$CFROOT/darwin/usr/lib/libCFTest.dylib" ] \
+                && [ "$sha" = "$want" ] \
+                && [ -f "$CFROOT/darwin/usr/lib/libCFTest.dylib" ] \
+                && phase2_is_x86_macho "$CFROOT/darwin/usr/lib/libCFTest.dylib" \
+                && [ ! -e "$CFROOT/darwin/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation" ] \
+                && echo "$env_line" | grep -q "ENV_PREPARE libCFTest-run-root cold-built path=$dest sha256=$sha"
+            then
+                ok "libCFTest stages into run-root darwin/usr/lib (ENV_PREPARE path+sha256; not the CF slot)"
+            else
+                die_test "libCFTest stage dest/sha/ENV_PREPARE mismatch: '$cstage' env='$env_line'"
+            fi
+            ;;
+        *) die_test "libCFTest run-root stage got: '$cstage'" ;;
+    esac
+    again=$(phase2_stage_cftest_into_run_root "$UDWORK/libCFTest.dylib" "$CFROOT" || true)
+    case "$again" in
+        status=satisfied\ path=*sha256=*)
+            ok "libCFTest re-stage of an identical dest is satisfied"
+            ;;
+        *) die_test "identical re-stage got: '$again'" ;;
+    esac
+    mkdir -p "$CFROOT/darwin/System/Library/Frameworks/CoreFoundation.framework"
+    cp -f "$UDWORK/libCFTest.dylib" \
+        "$CFROOT/darwin/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation"
+    dup=$(phase2_stage_cftest_into_run_root "$UDWORK/libCFTest.dylib" "$CFROOT" || true)
+    case "$dup" in
+        CANNOT_UD_GUEST_LIBCFTEST\ file=libCFTest.dylib*byte-identical*)
+            ok "libCFTest stage refuses a byte-identical CoreFoundation slot"
+            ;;
+        *) die_test "duplicate CF slot got: '$dup'" ;;
+    esac
+    rm -rf "$CFROOT"
     unset UD_CFTEST_DYLIB
 else
     die_test "could not emit an x86 libCFTest.dylib fixture"
@@ -1783,6 +1851,78 @@ else
     die_test "port compile log-spill got: $port_report"
 fi
 rm -rf "$UDWORK"
+
+echo "== overlay provenance from artifacts + cache-extract refusal"
+# shellcheck source=common.inc
+. "$COMMON"
+ART_OC=$ROOT/swiftcore-macho/artifacts/swift-macosx/x86_64/libswiftObjectiveC.dylib
+PACK=$ROOT/machorun/scripts/pack_macho.py
+if [ ! -f "$ART_OC" ]; then
+    die_test "missing from-source $ART_OC"
+elif [ ! -f "$PACK" ]; then
+    die_test "missing $PACK (PR #55 strip-fixups)"
+else
+    saved_w=$W
+    saved_home=$HOME
+    W=$ROOT
+    PROV_DEST=$(mktemp -d /tmp/phase2-overlay-prov.XXXXXX)
+    prov=$(phase2_stage_x86_run_root_overlays "$PROV_DEST" || true)
+    oc_line=$(printf '%s\n' "$prov" | grep 'name=libswiftObjectiveC.dylib' | head -1 || true)
+    art_dir=$ROOT/swiftcore-macho/artifacts/swift-macosx/x86_64
+    art_sha=$(sha256sum "$ART_OC" | awk '{print substr($1,1,12)}')
+    if echo "$oc_line" | grep -q "OVERLAY_PROVENANCE name=libswiftObjectiveC.dylib" \
+        && echo "$oc_line" | grep -q "srcdir=$art_dir" \
+        && echo "$oc_line" | grep -q "sha256=$art_sha" \
+        && echo "$oc_line" | grep -q 'fixups=dyld_info' \
+        && cmp -s "$PROV_DEST/darwin/usr/lib/swift/libswiftObjectiveC.dylib" "$ART_OC"
+    then
+        ok "OVERLAY_PROVENANCE names artifacts libswiftObjectiveC (sha256 prefix, fixups=dyld_info)"
+    else
+        die_test "ObjectiveC provenance expected artifacts+$art_sha+dyld_info got: '$oc_line'"
+    fi
+    # Stale Apple extract already in the dest must be overwritten, not kept.
+    EXTRACT_W=$(mktemp -d /tmp/phase2-overlay-extract.XXXXXX)
+    mkdir -p "$EXTRACT_W/scratch/apple-x86-overlays" \
+        "$EXTRACT_W/swiftcore-macho/artifacts/swift-macosx/x86_64"
+    python3 "$PACK" strip-fixups "$ART_OC" \
+        -o "$EXTRACT_W/scratch/apple-x86-overlays/libswiftObjectiveC.dylib"
+    if ! phase2_is_cache_extract \
+        "$EXTRACT_W/scratch/apple-x86-overlays/libswiftObjectiveC.dylib"
+    then
+        die_test "strip-fixups fixture is not a cache extract"
+    fi
+    STALE_DEST=$(mktemp -d /tmp/phase2-overlay-stale.XXXXXX)
+    mkdir -p "$STALE_DEST/darwin/usr/lib/swift"
+    cp -f "$EXTRACT_W/scratch/apple-x86-overlays/libswiftObjectiveC.dylib" \
+        "$STALE_DEST/darwin/usr/lib/swift/libswiftObjectiveC.dylib"
+    W=$ROOT
+    stale_prov=$(phase2_stage_x86_run_root_overlays "$STALE_DEST" || true)
+    if cmp -s "$STALE_DEST/darwin/usr/lib/swift/libswiftObjectiveC.dylib" "$ART_OC" \
+        && echo "$stale_prov" | grep -q "OVERLAY_PROVENANCE name=libswiftObjectiveC.dylib" \
+        && echo "$stale_prov" | grep -q "srcdir=$art_dir" \
+        && ! echo "$stale_prov" | grep -q '^CANNOT_STAGE_CACHE_EXTRACT'
+    then
+        ok "stale dest cache extract is overwritten from artifacts (not kept)"
+    else
+        die_test "stale overwrite failed: $(sha256sum "$STALE_DEST/darwin/usr/lib/swift/libswiftObjectiveC.dylib" "$ART_OC"); $stale_prov"
+    fi
+    # Isolated tree: only the cache extract is findable. Must refuse, not stage.
+    W=$EXTRACT_W
+    HOME=$EXTRACT_W
+    REFUSE_DEST=$(mktemp -d /tmp/phase2-overlay-refuse.XXXXXX)
+    refuse=$(phase2_stage_x86_run_root_overlays "$REFUSE_DEST" || true)
+    extract_src=$EXTRACT_W/scratch/apple-x86-overlays/libswiftObjectiveC.dylib
+    if echo "$refuse" | grep -q "CANNOT_STAGE_CACHE_EXTRACT name=libswiftObjectiveC.dylib src=$extract_src" \
+        && [ ! -f "$REFUSE_DEST/darwin/usr/lib/swift/libswiftObjectiveC.dylib" ]
+    then
+        ok "cache extract is CANNOT_STAGE_CACHE_EXTRACT name=… src=… (not staged)"
+    else
+        die_test "cache-extract refusal got: '$refuse' dest=$(ls -l "$REFUSE_DEST/darwin/usr/lib/swift" 2>/dev/null)"
+    fi
+    W=$saved_w
+    HOME=$saved_home
+    rm -rf "$PROV_DEST" "$STALE_DEST" "$REFUSE_DEST" "$EXTRACT_W"
+fi
 
 echo "== gen_swift_tbd.sh round-trip (libswiftCore + overlays)"
 if bash "$ROOT/scripts/x86/test_gen_swift_tbd.sh"; then
