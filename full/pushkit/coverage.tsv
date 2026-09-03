@@ -1,0 +1,25 @@
+precise	status	evidence	notes
+c:@PKPushTypeComplication	implemented	PushKit.swift;tests/agent/PushKitRuntime.swift:assertPushTypes	Linux raw value is Field identifier PKPushTypeComplication; Apple NSString payload unobserved.
+c:@PKPushTypeFileProvider	implemented	PushKit.swift;tests/agent/PushKitRuntime.swift:assertPushTypes	Linux raw value is Field identifier PKPushTypeFileProvider; Apple NSString payload unobserved.
+c:@PKPushTypeVoIP	implemented	PushKit.swift;tests/agent/PushKitRuntime.swift:assertPushTypes	Linux raw value is Field identifier PKPushTypeVoIP; Apple NSString payload unobserved.
+c:@T@PKPushType	implemented	PushKit.swift;tests/agent/PushKitRuntime.swift:assertPushTypes	RawRepresentable Hashable struct matching the typed-enum overlay.
+c:objc(cs)PKPushCredentials	implemented	PushKit.swift;tests/agent/PushKitRuntime.swift:exerciseCredentialsAndPayload	NSObject; no public default init; host SPI constructs in-process instances only.
+c:objc(cs)PKPushCredentials(py)token	implemented	PushKit.swift;tests/agent/PushKitRuntime.swift:exerciseCredentialsAndPayload	Copy of stored Data; not an APNs token.
+c:objc(cs)PKPushCredentials(py)type	implemented	PushKit.swift;tests/agent/PushKitRuntime.swift:exerciseCredentialsAndPayload	Stored PKPushType.
+c:objc(cs)PKPushPayload	implemented	PushKit.swift;tests/agent/PushKitRuntime.swift:exerciseCredentialsAndPayload	NSObject; no public default init; host SPI constructs in-process instances only.
+c:objc(cs)PKPushPayload(py)dictionaryPayload	implemented	PushKit.swift;tests/agent/PushKitRuntime.swift:exerciseCredentialsAndPayload	Returned dictionary is a copy; mutating it does not change the payload.
+c:objc(cs)PKPushPayload(py)type	implemented	PushKit.swift;tests/agent/PushKitRuntime.swift:exerciseCredentialsAndPayload	Stored PKPushType.
+c:objc(cs)PKPushRegistry	implemented	PKPushRegistry.swift;tests/agent/PushKitRuntime.swift:exerciseRegistryStorage	Fail-closed registry; no APNs.
+c:objc(cs)PKPushRegistry(im)initWithQueue:	implemented	PKPushRegistry.swift;tests/agent/PushKitRuntime.swift:exerciseRegistryStorage	Captures DispatchQueue?; nil uses a private serial queue (Linux choice).
+c:objc(cs)PKPushRegistry(im)pushTokenForType:	implemented	PKPushRegistry.swift;tests/agent/PushKitRuntime.swift:exerciseRegistryStorage	Always nil; Linux never obtains an Apple push token.
+c:objc(cs)PKPushRegistry(py)delegate	implemented	PKPushRegistry.swift;tests/agent/PushKitRuntime.swift:exerciseDelegateDispatch	Weak stored delegate; read back after assignment.
+c:objc(cs)PKPushRegistry(py)desiredPushTypes	implemented	PKPushRegistry.swift;tests/agent/PushKitRuntime.swift:exerciseRegistryStorage	Stores the set; does not register with APNs or fire didUpdate.
+c:objc(pl)PKPushRegistryDelegate	implemented	PKPushRegistry.swift;tests/agent/PushKitRuntime.swift:exerciseDelegateDispatch	NSObjectProtocol; test type conforms and receives host-test callbacks.
+c:objc(pl)PKPushRegistryDelegate(im)pushRegistry:didInvalidatePushTokenForType:	implemented	PKPushRegistry.swift;tests/agent/PushKitRuntime.swift:exerciseDelegateDispatch	Host-test SPI dispatch only; Linux has no Apple token to invalidate.
+c:objc(pl)PKPushRegistryDelegate(im)pushRegistry:didReceiveIncomingPushWithPayload:forType:	declared	PKPushRegistry.swift	Deprecated iOS 8–11 path compiles with an empty default; Linux incoming-push SPI uses the iOS 11+ completion selector.
+c:objc(pl)PKPushRegistryDelegate(im)pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:	implemented	PKPushRegistry.swift;tests/agent/PushKitRuntime.swift:exerciseDelegateDispatch	Host-test SPI hops onto the callback queue and invokes the completion-handler form; not APNs. Async overlay forwards to that form.
+c:objc(pl)PKPushRegistryDelegate(im)pushRegistry:didUpdatePushCredentials:forType:	implemented	PKPushRegistry.swift;tests/agent/PushKitRuntime.swift:exerciseDelegateDispatch	Required method. Host-test SPI hops a locally constructed credentials object; setting desiredPushTypes does not call this.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PKPushType	implemented	PushKit.swift;tests/agent/PushKitRuntime.swift:assertPushTypes	Synthesized Equatable !=.
+s:So10PKPushTypea8rawValueABSS_tcfc	implemented	PushKit.swift;tests/agent/PushKitRuntime.swift:assertPushTypes	RawRepresentable initializer; unknown raw values stay distinct from the three named lets.
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PKPushType	declared	PushKit.swift	Hashable synthesis provides hashValue; accessing it is deprecated and fails warnings-as-errors.
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PKPushType	implemented	PushKit.swift;tests/agent/PushKitRuntime.swift:assertPushTypes	Hashable via Hasher and Set membership.
