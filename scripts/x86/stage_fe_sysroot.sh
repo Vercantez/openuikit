@@ -159,16 +159,26 @@ if [ -f "$MACHORUN/sdk/usr/include/MacTypes.h" ]; then
 fi
 phase2_expand_darwin_modulemap_for_fe "$SYS" || true
 
-echo "== POSIX semaphore.h (Darwin.swiftinterface); ioctl stays out of sysroot"
+echo "== POSIX semaphore.h (Darwin.swiftinterface); real ioctl stays out of sysroot"
 posix_sem=$W/swiftcore-macho/sdk/overlay-posix/semaphore.h
 if [ -f "$posix_sem" ] && [ ! -e "$SYS/usr/include/semaphore.h" ]; then
     cp "$posix_sem" "$SYS/usr/include/semaphore.h"
     echo "  + semaphore.h   [swiftcore-macho/sdk/overlay-posix; ioctl family not staged]"
 fi
-# ioctl.h in the Darwin sysroot makes CFSocket compile and then the
-# foundation-macho census reports CANNOT_CFOBJC_OBJECTS extra=CFSocket.
-# os-module, FE, and UserDefaultsGuest get overlay-posix via -Xcc -I
-# (phase2_posix_overlay_dir / ud_guest.inc), not via usr/include.
+# SwiftOverlayShims includes <sys/ioctl.h>. A real Darwin ioctl.h (FIONBIO)
+# makes CFSocket.c compile; census extra=CFSocket. A stub satisfies the
+# include. Do not overwrite a header that already defines FIONBIO.
+ioctl_stub=$W/scripts/x86/fe_ioctl_stub.h
+ioctl_dest=$SYS/usr/include/sys/ioctl.h
+if [ -f "$ioctl_stub" ]; then
+    mkdir -p "$SYS/usr/include/sys"
+    if [ -e "$ioctl_dest" ] && grep -q FIONBIO "$ioctl_dest"; then
+        echo "  REFUSED to replace real ioctl.h (has FIONBIO; CFSocket would compile)" >&2
+    else
+        cp -f "$ioctl_stub" "$ioctl_dest"
+        echo "  + sys/ioctl.h   [fe_ioctl_stub.h; no FIONBIO, CFSocket stays FAIL]"
+    fi
+fi
 
 echo "== CLOCK_REALTIME as clockid_t (Clang modules hide Darwin clock ids)"
 cp -f "$W/scripts/x86/fe_clock_realtime.h" "$SYS/usr/include/fe_clock_realtime.h"

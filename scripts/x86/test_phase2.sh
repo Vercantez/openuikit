@@ -318,8 +318,8 @@ expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
     "missing Darwin.modulemap is its own CANNOT, not folded into overlays"
 expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
-expect_grep 'stage_fe_sysroot_x86.9' "$COMMON" \
-    "recipe bump restages a sysroot that lacked artifact Darwin overlays"
+expect_grep 'stage_fe_sysroot_x86.10' "$COMMON" \
+    "recipe bump restages a sysroot that lacked ioctl stub + textual sys/time.h"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
     "stamp records the shared measurement-header list sha"
 expect_grep 'phase2_measurement_headers_missing' "$COMMON" \
@@ -333,9 +333,14 @@ expect_grep 'phase2_expand_darwin_modulemap_for_fe' "$STAGE" \
 expect_grep 'phase2_ensure_swift_onone_support' "$STAGE" \
     "x86 stager stages a SwiftOnoneSupport stub for collections without -O"
 expect_grep 'overlay-posix' "$STAGE" \
-    "x86 stager stages POSIX semaphore.h; ioctl stays out of the Darwin sysroot"
+    "x86 stager stages POSIX semaphore.h; real ioctl stays out of the Darwin sysroot"
+expect_grep 'fe_ioctl_stub.h' "$STAGE" \
+    "x86 stager stages a FIONBIO-free ioctl stub so SwiftOverlayShims builds"
+expect_grep 'SwiftOverlayShims.timeval' "$COMMON" \
+    "sys/time.h is textual so SwiftOverlayShims.timeval is visible"
 expect_grep 'phase2_posix_overlay_dir' "$COMMON" \
-    "ioctl is injected via -Xcc -I overlay-posix, not Darwin usr/include"
+    "overlay-posix dir helper exists for Swift -Xcc -I (UD guest)"
+expect_file "$ROOT/scripts/x86/fe_ioctl_stub.h"
 expect_grep 'phase2_posix_overlay_dir' "$PHASE2" \
     "os-module and FE swiftc get overlay-posix -I so Darwin/SwiftOverlayShims compile"
 expect_grep 'cannot carry ioctl.h (CFSocket census)' "$ROOT/full/foundation/build_os_module.sh" \

@@ -168,7 +168,7 @@ phase2_probe_focus_pin() {
 # output directory existing. A sysroot staged before x86 libswiftCore landed
 # would otherwise be reused while OpenCombine looks in usr/lib/swift and finds
 # nothing. Recipe bump forces a restage when the stager itself gains steps.
-PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.9
+PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.10
 PHASE2_SYSROOT_STAMP=.phase2-stage-inputs
 
 phase2_sha_or_absent() {
@@ -1612,16 +1612,26 @@ phase2_darwin_fe_extra_headers() {
 phase2_expand_darwin_modulemap_for_fe() {
     local sys=$1
     local map=$sys/usr/include/Darwin.modulemap
-    local h added=0
+    local h added=0 kind
     [ -f "$map" ] || return 1
     while IFS= read -r h; do
         [ -n "$h" ] || continue
         [ -f "$sys/usr/include/$h" ] || continue
         grep -q "header \"$h\"" "$map" && continue
-        sed -i '$i\  header "'"$h"'"' "$map"
-        echo "  Darwin.modulemap now names $h" >&2
+        kind="header"
+        # timeval must land in SwiftOverlayShims (Darwin.swiftinterface names
+        # SwiftOverlayShims.timeval). A modular Darwin sys/time.h hides it.
+        if [ "$h" = "sys/time.h" ]; then
+            kind="textual header"
+        fi
+        sed -i '$i\  '"$kind"' "'"$h"'"' "$map"
+        echo "  Darwin.modulemap now names $h ($kind)" >&2
         added=$((added + 1))
     done < <(phase2_darwin_fe_extra_headers)
+    if grep -q '^  header "sys/time.h"' "$map"; then
+        sed -i 's/^  header "sys\/time.h"/  textual header "sys\/time.h"/' "$map"
+        echo "  Darwin.modulemap sys/time.h is textual (SwiftOverlayShims.timeval)" >&2
+    fi
     echo "phase2: Darwin.modulemap FE expand added=$added" >&2
     return 0
 }
