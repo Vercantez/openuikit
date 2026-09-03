@@ -43,8 +43,8 @@ set +e
 ok_out=$(bash "$C" "$fix/func.txt" "$fix/data.txt")
 ok_st=$?
 set -e
-if [ "$ok_st" -eq 0 ] && echo "$ok_out" | grep -q 'CFTEST_STUBS_OK func=218 data=2'; then
-    ok "matching fixture CFTEST_STUBS_OK func=218 data=2"
+if [ "$ok_st" -eq 0 ] && echo "$ok_out" | grep -q 'CFTEST_STUBS_OK func=214 data=2'; then
+    ok "matching fixture CFTEST_STUBS_OK func=214 data=2"
 else
     die_test "matching fixture got exit $ok_st: $ok_out"
 fi

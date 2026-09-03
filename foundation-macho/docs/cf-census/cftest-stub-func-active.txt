@@ -19,16 +19,13 @@ NXGetLocalArchInfo
 UCNV_FROM_U_CALLBACK_STOP
 UCNV_TO_U_CALLBACK_STOP
 _CFThreadSetName
-_NSGetMachExecuteHeader
 __CFRunLoopClass
 __CFRunLoopModeClass
 __CFRunLoopObserverClass
 __CFRunLoopSourceClass
 __CFRunLoopTimerClass
 __CFSocketClass
-__udivti3
 dlopen_preflight
-dyld_image_path_containing_address
 fprintf_l
 getsectbynamefromheader_64
 getsegbyname
@@ -36,7 +33,6 @@ mach_vm_region
 pthread_attr_set_qos_class_np
 qos_class_main
 strncasecmp_l
-strtod_l
 strtol_l
 strtoll_l
 strtoul_l
