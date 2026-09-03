@@ -203,13 +203,25 @@ open class ASAuthorizationSingleSignOnRequest: ASAuthorizationOpenIDRequest {
 }
 
 public protocol ASAuthorizationControllerDelegate: AnyObject {
-    func authorizationController(_ controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization)
-    func authorizationController(_ controller: ASAuthorizationController, didCompleteWithError error: Error)
+    func authorizationController(
+        controller: ASAuthorizationController,
+        didCompleteWithAuthorization authorization: ASAuthorization
+    )
+    func authorizationController(
+        controller: ASAuthorizationController,
+        didCompleteWithError error: Error
+    )
 }
 
 extension ASAuthorizationControllerDelegate {
-    public func authorizationController(_ controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {}
-    public func authorizationController(_ controller: ASAuthorizationController, didCompleteWithError error: Error) {}
+    public func authorizationController(
+        controller: ASAuthorizationController,
+        didCompleteWithAuthorization authorization: ASAuthorization
+    ) {}
+    public func authorizationController(
+        controller: ASAuthorizationController,
+        didCompleteWithError error: Error
+    ) {}
 }
 
 open class ASAuthorizationController: NSObject {
@@ -238,7 +250,10 @@ open class ASAuthorizationController: NSObject {
         let error = ASAuthorizationError(.notInteractive)
         AuthenticationServicesHostCallback.queue.async { [weak self] in
             guard let self else { return }
-            self.delegate?.authorizationController(self, didCompleteWithError: error)
+            self.delegate?.authorizationController(
+                controller: self,
+                didCompleteWithError: error
+            )
         }
     }
 

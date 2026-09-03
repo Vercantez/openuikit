@@ -115,15 +115,8 @@ open class ASWebAuthenticationSession: NSObject {
         started = true
         lock.unlock()
 
-        let work = {
-            MainActor.assumeIsolated {
-                self.startOnMain()
-            }
-        }
-        if Thread.isMainThread {
-            work()
-        } else {
-            DispatchQueue.main.sync(execute: work)
+        Task {
+            self.startOnMain()
         }
         return true
     }
@@ -134,22 +127,12 @@ open class ASWebAuthenticationSession: NSObject {
         canStart = false
         let alreadyFinished = finished
         lock.unlock()
-        let hop = {
-            MainActor.assumeIsolated {
-                AuthenticationServicesPortable._cancelActiveIfAny()
-            }
-        }
-        if Thread.isMainThread {
-            hop()
-        } else {
-            DispatchQueue.main.sync(execute: hop)
-        }
+        AuthenticationServicesPortable._cancelActiveIfAny()
         if !alreadyFinished {
             deliver(nil, ASWebAuthenticationSessionError(.canceledLogin))
         }
     }
 
-    @MainActor
     private func startOnMain() {
         if snapshotCancelled() {
             deliver(nil, ASWebAuthenticationSessionError(.canceledLogin))
@@ -172,7 +155,7 @@ open class ASWebAuthenticationSession: NSObject {
             return
         }
         canStart = false
-        Task { @MainActor in
+        Task {
             do {
                 let result = try await AuthenticationServicesPortable._authenticate(
                     using: self.url,

@@ -92,8 +92,10 @@ public struct ASWebAuthenticationSessionError:
 /// and return the callback through `_hostDidComplete`. Missing integration,
 /// malformed requests, mismatched callback schemes, concurrent sessions and
 /// cancellation all fail closed with typed errors.
-@MainActor
-public enum AuthenticationServicesPortable {
+///
+/// State is lock-protected rather than `@MainActor`-isolated so Linux host
+/// tests can wait on the main thread without deadlocking Swift concurrency.
+public enum AuthenticationServicesPortable: Sendable {
     public struct Request: Equatable, Sendable {
         public let id: UInt64
         public let url: URL
@@ -119,7 +121,7 @@ public enum AuthenticationServicesPortable {
         case cancel(id: UInt64)
     }
 
-    public typealias EventHandler = @MainActor @Sendable (Event) -> Void
+    public typealias EventHandler = @Sendable (Event) -> Void
 
     private struct ActiveRequest {
         let request: Request
@@ -127,9 +129,9 @@ public enum AuthenticationServicesPortable {
         let continuation: CheckedContinuation<URL, Error>
     }
 
-    /// Cancellation handlers are permitted to run away from the main actor.
-    /// Keep the terminal bit in a tiny locked box so cancellation is claimed
-    /// synchronously, before a queued main-actor cleanup can race a callback.
+    /// Cancellation handlers are permitted to run away from the installing
+    /// thread. Keep the terminal bit in a tiny locked box so cancellation is
+    /// claimed synchronously, before a queued cleanup can race a callback.
     private final class CancellationState: @unchecked Sendable {
         private let lock = NSLock()
         private var cancelled = false
@@ -143,19 +145,30 @@ public enum AuthenticationServicesPortable {
         }
     }
 
-    private static var eventHandler: EventHandler?
-    private static var activeRequest: ActiveRequest?
-    private static var nextRequestID: UInt64 = 0
-    private static var startupConfigurationLocked = false
+    private final class State: @unchecked Sendable {
+        let lock = NSLock()
+        var eventHandler: EventHandler?
+        var activeRequest: ActiveRequest?
+        var nextRequestID: UInt64 = 0
+        var startupConfigurationLocked = false
+    }
 
-    public static var isHostConfigured: Bool { eventHandler != nil }
-    public static var hasActiveRequest: Bool { activeRequest != nil }
+    private static let state = State()
+
+    public static var isHostConfigured: Bool {
+        state.lock.withLock { state.eventHandler != nil }
+    }
+
+    public static var hasActiveRequest: Bool {
+        state.lock.withLock { state.activeRequest != nil }
+    }
 
     /// Cancel the live portable request, if any, without clearing the host handler.
     @_spi(OpenUIKitHost)
     public static func _cancelActiveIfAny() {
-        guard let active = activeRequest else { return }
-        cancel(requestID: active.request.id)
+        let id = state.lock.withLock { state.activeRequest?.request.id }
+        guard let id else { return }
+        cancel(requestID: id)
     }
 
     /// Install the browser boundary before the first authentication request.
@@ -165,10 +178,12 @@ public enum AuthenticationServicesPortable {
     public static func _installEventHandler(
         _ handler: EventHandler?
     ) -> Bool {
-        guard !startupConfigurationLocked, activeRequest == nil else {
+        state.lock.lock()
+        defer { state.lock.unlock() }
+        guard !state.startupConfigurationLocked, state.activeRequest == nil else {
             return false
         }
-        eventHandler = handler
+        state.eventHandler = handler
         return true
     }
 
@@ -177,8 +192,13 @@ public enum AuthenticationServicesPortable {
         requestID: UInt64,
         callbackURL: URL
     ) {
-        guard let active = activeRequest,
-              active.request.id == requestID else { return }
+        state.lock.lock()
+        guard let active = state.activeRequest,
+              active.request.id == requestID else {
+            state.lock.unlock()
+            return
+        }
+        state.lock.unlock()
         guard !active.cancellation.isCancelled else {
             cancel(requestID: requestID)
             return
@@ -199,8 +219,13 @@ public enum AuthenticationServicesPortable {
 
     @_spi(OpenUIKitHost)
     public static func _hostDidCancel(requestID: UInt64) {
-        guard let active = activeRequest,
-              active.request.id == requestID else { return }
+        state.lock.lock()
+        guard let active = state.activeRequest,
+              active.request.id == requestID else {
+            state.lock.unlock()
+            return
+        }
+        state.lock.unlock()
         finish(
             active,
             with: .failure(ASWebAuthenticationSessionError(.canceledLogin))
@@ -210,15 +235,45 @@ public enum AuthenticationServicesPortable {
     /// Test/host teardown seam. Any live waiter is resumed as canceled.
     @_spi(OpenUIKitHost)
     public static func _reset() {
-        if let active = activeRequest {
-            activeRequest = nil
-            active.continuation.resume(
-                throwing: ASWebAuthenticationSessionError(.canceledLogin)
-            )
-        }
-        eventHandler = nil
-        nextRequestID = 0
-        startupConfigurationLocked = false
+        state.lock.lock()
+        let active = state.activeRequest
+        state.activeRequest = nil
+        state.eventHandler = nil
+        state.nextRequestID = 0
+        state.startupConfigurationLocked = false
+        state.lock.unlock()
+        active?.continuation.resume(
+            throwing: ASWebAuthenticationSessionError(.canceledLogin)
+        )
+    }
+
+    private static func lockStartupAndSnapshot() -> (EventHandler?, Bool) {
+        state.lock.lock()
+        defer { state.lock.unlock() }
+        state.startupConfigurationLocked = true
+        return (state.eventHandler, state.activeRequest != nil)
+    }
+
+    private static func nextRequest(
+        url: URL,
+        callbackURLScheme: String,
+        prefersEphemeralBrowserSession: Bool
+    ) -> Request {
+        state.lock.lock()
+        defer { state.lock.unlock() }
+        state.nextRequestID &+= 1
+        return Request(
+            id: state.nextRequestID,
+            url: url,
+            callbackURLScheme: callbackURLScheme,
+            prefersEphemeralBrowserSession: prefersEphemeralBrowserSession
+        )
+    }
+
+    private static func storeActive(_ active: ActiveRequest) {
+        state.lock.lock()
+        state.activeRequest = active
+        state.lock.unlock()
     }
 
     @_spi(OpenUIKitHost)
@@ -227,7 +282,6 @@ public enum AuthenticationServicesPortable {
         callbackURLScheme: String,
         prefersEphemeralBrowserSession: Bool
     ) async throws -> URL {
-        startupConfigurationLocked = true
         guard isValidInitialURL(url),
               isValidCallbackScheme(callbackURLScheme) else {
             throw ASWebAuthenticationSessionError(
@@ -235,12 +289,14 @@ public enum AuthenticationServicesPortable {
                 reason: "Web authentication requires HTTP(S) and a valid callback scheme"
             )
         }
-        guard let eventHandler else {
+
+        let (handler, hasActive) = lockStartupAndSnapshot()
+        guard let handler else {
             throw ASWebAuthenticationSessionError(
                 .presentationContextNotProvided
             )
         }
-        guard activeRequest == nil else {
+        guard !hasActive else {
             throw ASWebAuthenticationSessionError(
                 .presentationContextInvalid,
                 reason: "A web authentication request is already active"
@@ -250,9 +306,7 @@ public enum AuthenticationServicesPortable {
             throw ASWebAuthenticationSessionError(.canceledLogin)
         }
 
-        nextRequestID &+= 1
-        let request = Request(
-            id: nextRequestID,
+        let request = nextRequest(
             url: url,
             callbackURLScheme: callbackURLScheme,
             prefersEphemeralBrowserSession: prefersEphemeralBrowserSession
@@ -266,40 +320,51 @@ public enum AuthenticationServicesPortable {
                     )
                     return
                 }
-                activeRequest = ActiveRequest(
-                    request: request,
-                    cancellation: cancellation,
-                    continuation: continuation
+                storeActive(
+                    ActiveRequest(
+                        request: request,
+                        cancellation: cancellation,
+                        continuation: continuation
+                    )
                 )
-                eventHandler(.start(request))
+                handler(.start(request))
             }
         } onCancel: {
             cancellation.cancel()
-            Task { @MainActor in
-                cancel(requestID: request.id)
-            }
+            cancel(requestID: request.id)
         }
     }
 
     private static func cancel(requestID: UInt64) {
-        guard let active = activeRequest,
-              active.request.id == requestID else { return }
+        state.lock.lock()
+        guard let active = state.activeRequest,
+              active.request.id == requestID else {
+            state.lock.unlock()
+            return
+        }
         // Claim and resume the terminal state before notifying the host. A
         // reentrant host callback must observe no live request and cannot turn
         // cancellation into a successful credential URL.
-        activeRequest = nil
+        state.activeRequest = nil
+        let handler = state.eventHandler
+        state.lock.unlock()
         active.continuation.resume(
             throwing: ASWebAuthenticationSessionError(.canceledLogin)
         )
-        eventHandler?(.cancel(id: requestID))
+        handler?(.cancel(id: requestID))
     }
 
     private static func finish(
         _ active: ActiveRequest,
         with result: Result<URL, Error>
     ) {
-        guard activeRequest?.request.id == active.request.id else { return }
-        activeRequest = nil
+        state.lock.lock()
+        guard state.activeRequest?.request.id == active.request.id else {
+            state.lock.unlock()
+            return
+        }
+        state.activeRequest = nil
+        state.lock.unlock()
         switch result {
         case .success(let url): active.continuation.resume(returning: url)
         case .failure(let error): active.continuation.resume(throwing: error)
@@ -351,7 +416,7 @@ public struct WebAuthenticationSession: Sendable {
 
     nonisolated public init() {}
 
-    public func authenticate(
+    nonisolated public func authenticate(
         using url: URL,
         callbackURLScheme: String,
         preferredBrowserSession: BrowserSession? = nil
@@ -364,7 +429,7 @@ public struct WebAuthenticationSession: Sendable {
         )
     }
 
-    public func authenticate(
+    nonisolated public func authenticate(
         using url: URL,
         callback: ASWebAuthenticationSession.Callback,
         preferredBrowserSession: BrowserSession? = nil,

@@ -3,13 +3,22 @@
 import Foundation
 import SwiftUI
 
-@MainActor
-private final class EventRecorder {
-    var events: [AuthenticationServicesPortable.Event] = []
+private final class EventRecorder: @unchecked Sendable {
+    private let lock = NSLock()
+    private var storedEvents: [AuthenticationServicesPortable.Event] = []
     var reentrantCompletion: URL?
 
+    var events: [AuthenticationServicesPortable.Event] {
+        lock.lock()
+        defer { lock.unlock() }
+        return storedEvents
+    }
+
     func record(_ event: AuthenticationServicesPortable.Event) {
-        events.append(event)
+        lock.lock()
+        storedEvents.append(event)
+        let reentrantCompletion = self.reentrantCompletion
+        lock.unlock()
         if case .cancel(let id) = event,
            let reentrantCompletion
         {
