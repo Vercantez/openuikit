@@ -42,8 +42,10 @@ overlay_sysroot_begin "$W/sdk"
 if [ "${OVERLAY_SYSROOT_REUSE:-0}" = 1 ]; then
   SDK=$OVERLAY_SYSROOT_DEST
   echo "staged: $W/sdk/MacOSX.sdk (reused, overlay stamp MATCH)"
+  overlay_sysroot_copy_tbds "$W/sdk/MacOSX.sdk"
   overlay_sysroot_print_headers "$W/sdk/MacOSX.sdk"
   overlay_sysroot_refuse_incomplete "$W/sdk/MacOSX.sdk" || exit 2
+  overlay_sysroot_refuse_empty_tbds "$W/sdk/MacOSX.sdk" || exit 2
   find "$W/sdk/MacOSX.sdk" -name '*.h' | wc -l | sed 's/^/headers: /'
   find "$W/sdk/MacOSX.sdk" -name '*.tbd' | wc -l | sed 's/^/tbds:    /'
   exit 0

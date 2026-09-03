@@ -46,7 +46,7 @@ if [ "${SWIFTCORE_OVERLAYS:-0}" = 1 ]; then
   SWIFTCORE_BUILD_DISPATCH=${SWIFTCORE_BUILD_DISPATCH:-1}
 fi
 export W B TC SWIFTCORE_DARWIN_ARCH SWIFT_HOST_VARIANT_ARCH
-export SWIFTCORE_OVERLAYS SWIFTCORE_BUILD_DISPATCH
+export SWIFTCORE_OVERLAYS SWIFTCORE_BUILD_DISPATCH MACHORUN
 export SWIFT_TOOLCHAIN SWIFT_PATH_TO_STRING_PROCESSING_SOURCE SWIFT_PATH_TO_LIBDISPATCH_SOURCE
 
 # Dry path: dump cmake argv and exit. Does not touch MACHORUN/darwin, does not
@@ -227,12 +227,9 @@ ln -sfn "$SWIFTCORE_ROOT/sdk/compat" "$W/compat"
 ln -sfn "$SWIFTCORE_ROOT/tests" "$W/tests" 2>/dev/null || true
 bash "$SCRIPT_DIR/stage_sdk.sh"
 overlay_sysroot_print_headers "$W/sdk/MacOSX.sdk"
-tbd_n=$(find "$W/sdk/MacOSX.sdk" -name '*.tbd' | wc -l)
-echo "sysroot tbds: $tbd_n"
-[ "$tbd_n" -gt 0 ] || {
-  echo "build_stdlib: REFUSING empty tbd set — ld64 would see a lie" >&2
-  exit 2
-}
+tbd_n=$(overlay_sysroot_tbd_count "$W/sdk/MacOSX.sdk")
+echo "sysroot tbds: $tbd_n tree=$W/sdk/MacOSX.sdk realpath=$(realpath "$W/sdk/MacOSX.sdk" 2>/dev/null || echo UNRESOLVED)"
+overlay_sysroot_refuse_empty_tbds "$W/sdk/MacOSX.sdk" || exit 2
 
 # ---------------------------------------------------------------------------
 # 4. Patches. Legacy image-reg is opt-in and load-bearing for machorun.

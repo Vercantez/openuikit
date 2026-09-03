@@ -26,6 +26,18 @@ need() {
   fi
 }
 
+fill_required_headers() {
+  local sdk=$1
+  mkdir -p "$sdk/usr/include/sys" "$sdk/usr/lib"
+  cp "$ROOT/sdk/overlay-darwin/math.h" "$sdk/usr/include/math.h"
+  cp "$ROOT/sdk/overlay-darwin/MacTypes.h" "$sdk/usr/include/MacTypes.h"
+  cp "$ROOT/sdk/overlay-darwin/ConditionalMacros.h" "$sdk/usr/include/ConditionalMacros.h"
+  cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/sys/proc.h" \
+    "$sdk/usr/include/sys/proc.h"
+  echo 'module Darwin [system] { header "math.h" header "sys/proc.h" export * }' \
+    > "$sdk/usr/include/Darwin.modulemap"
+}
+
 echo "=== stamp MATCH vs ABSENT / recipe mismatch ==="
 mkdir -p "$tmp/sdkA/usr/include/sys"
 cp "$ROOT/sdk/overlay-darwin/math.h" "$tmp/sdkA/usr/include/math.h"
@@ -86,21 +98,22 @@ printf '%s\n' "$refuse" | grep -q 'lacks extern_proc' \
 
 echo
 echo "=== pre-existing MacOSX.sdk is displaced, never rm'd; restage is a fresh dir ==="
-mkdir -p "$tmp/sdk/MacOSX.sdk/usr/include"
+mkdir -p "$tmp/sdk/MacOSX.sdk/usr/include" "$tmp/sdk/MacOSX.sdk/usr/lib"
 echo 'OPERATOR_CANARY' > "$tmp/sdk/MacOSX.sdk/CANARY"
 echo '/* clean-room */' > "$tmp/sdk/MacOSX.sdk/usr/include/math.h"
+# gen_tbd output lives in the old tree; restage must copy it into the fresh dest.
+cat > "$tmp/sdk/MacOSX.sdk/usr/lib/libSystem.B.tbd" <<'TBD'
+--- !tapi-tbd-v3
+archs: [ x86_64 ]
+install-name: /usr/lib/libSystem.B.dylib
+TBD
 overlay_sysroot_begin "$tmp/sdk"
 need '[ "${OVERLAY_SYSROOT_REUSE}" = 0 ]' "begin restage (REUSE=0)"
 need '[ -d "$OVERLAY_SYSROOT_DEST" ]' "fresh dest exists"
 need '[[ "$OVERLAY_SYSROOT_DEST" == *MacOSX.sdk.overlay-* ]]' "fresh dest is MacOSX.sdk.overlay-*"
 need '[ -f "$tmp/sdk/MacOSX.sdk/CANARY" ]' "live canary still in place during stage"
 fresh=$OVERLAY_SYSROOT_DEST
-mkdir -p "$fresh/usr/include/sys"
-cp "$ROOT/sdk/overlay-darwin/math.h" "$fresh/usr/include/math.h"
-cp "$OPENUIKIT_ROOT/machorun/sdk/usr/include/sys/proc.h" \
-  "$fresh/usr/include/sys/proc.h"
-echo 'module Darwin [system] { header "math.h" header "sys/proc.h" export * }' \
-  > "$fresh/usr/include/Darwin.modulemap"
+fill_required_headers "$fresh"
 set +e
 overlay_sysroot_finish "$tmp/sdk" "$fresh"
 fin_st=$?
@@ -123,12 +136,71 @@ grep -q fmaxl "$tmp/sdk/MacOSX.sdk/usr/include/math.h" \
   && echo "  OK  live math.h has fmaxl" || { echo "  FAIL live math.h"; fail=1; }
 [ -f "$tmp/sdk/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP" ] \
   && echo "  OK  live stamp written" || { echo "  FAIL no stamp"; fail=1; }
+[ -f "$tmp/sdk/MacOSX.sdk/usr/lib/libSystem.B.tbd" ] \
+  && echo "  OK  displace → tbds present in the new tree" \
+  || { echo "  FAIL new tree missing libSystem.B.tbd"; ls -la "$tmp/sdk/MacOSX.sdk/usr/lib" || true; fail=1; }
+grep -q 'install-name: /usr/lib/libSystem.B.dylib' "$tmp/sdk/MacOSX.sdk/usr/lib/libSystem.B.tbd" \
+  && echo "  OK  copied tbd is the displaced stub" || { echo "  FAIL tbd contents"; fail=1; }
+[ -f "$stale/usr/lib/libSystem.B.tbd" ] \
+  && echo "  OK  displaced tree still has the tbd (not rm'd)" \
+  || { echo "  FAIL stale missing tbd"; fail=1; }
 
 echo
 echo "=== matching stamp + complete headers → reuse, no second dest ==="
 overlay_sysroot_begin "$tmp/sdk"
 need '[ "${OVERLAY_SYSROOT_REUSE}" = 1 ]' "second begin reuses"
 need '[ -f "$stale/CANARY" ]' "stale canary still exists after reuse"
+
+echo
+echo "=== listed required header missing → refuse (not stamp MATCH) ==="
+mkdir -p "$tmp/noCM/usr/lib"
+fill_required_headers "$tmp/noCM"
+echo '--- !tapi-tbd-v3' > "$tmp/noCM/usr/lib/libSystem.B.tbd"
+rm -f "$tmp/noCM/usr/include/ConditionalMacros.h"
+overlay_sysroot_write_stamp "$tmp/noCM"
+set +e
+print_cm=$(overlay_sysroot_print_headers "$tmp/noCM" 2>&1)
+refuse_cm=$(overlay_sysroot_refuse_incomplete "$tmp/noCM" 2>&1)
+st=$?
+set -e
+printf '%s\n' "$print_cm" | tail -15
+printf '%s\n' "$refuse_cm"
+[ "$st" -eq 2 ] && echo "  OK  missing ConditionalMacros.h refuse rc=2" \
+  || { echo "  FAIL missing header rc=$st"; fail=1; }
+printf '%s\n' "$refuse_cm" | grep -q 'CANNOT_OVERLAY_SYSROOT_HEADER' \
+  && echo "  OK  CANNOT_OVERLAY_SYSROOT_HEADER" || { echo "  FAIL missing HEADER marker"; fail=1; }
+printf '%s\n' "$refuse_cm" | grep -q 'usr/include/ConditionalMacros.h' \
+  && echo "  OK  HEADER names ConditionalMacros.h" || { echo "  FAIL HEADER path"; fail=1; }
+printf '%s\n' "$print_cm" | grep -q 'header usr/include/ConditionalMacros.h ABSENT' \
+  && echo "  OK  print lists ConditionalMacros.h ABSENT" || { echo "  FAIL print ABSENT"; fail=1; }
+printf '%s\n' "$print_cm" | grep -q 'stamp=MATCH recipe=' \
+  && { echo "  FAIL stamp=MATCH while required header ABSENT"; fail=1; } \
+  || echo "  OK  did not print stamp=MATCH for incomplete tree"
+printf '%s\n' "$print_cm" | grep -q 'tree=INCOMPLETE' \
+  && echo "  OK  stamp=MATCH-inputs tree=INCOMPLETE" \
+  || { echo "  FAIL missing INCOMPLETE"; fail=1; }
+if overlay_sysroot_tree_complete "$tmp/noCM"; then
+  echo "  FAIL tree_complete true without ConditionalMacros.h"
+  fail=1
+else
+  echo "  OK  tree_complete false"
+fi
+
+echo
+echo "=== empty tbd set names the tree ==="
+mkdir -p "$tmp/notbd"
+fill_required_headers "$tmp/notbd"
+# usr/lib exists from fill but has no .tbd
+set +e
+tbd_ref=$(overlay_sysroot_refuse_empty_tbds "$tmp/notbd" 2>&1)
+st=$?
+set -e
+printf '%s\n' "$tbd_ref"
+[ "$st" -eq 2 ] && echo "  OK  empty tbd refuse rc=2" || { echo "  FAIL tbd refuse rc=$st"; fail=1; }
+printf '%s\n' "$tbd_ref" | grep -q 'CANNOT_OVERLAY_SYSROOT_TBDS' \
+  && echo "  OK  CANNOT_OVERLAY_SYSROOT_TBDS" || { echo "  FAIL missing TBDS marker"; fail=1; }
+printf '%s\n' "$tbd_ref" | grep -q "tree=$tmp/notbd" \
+  && echo "  OK  TBDS refuse names the tree" || { echo "  FAIL TBDS tree path"; fail=1; }
 
 echo
 echo "=== stage_sdk.sh does not rm -rf \$W/sdk ==="

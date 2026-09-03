@@ -109,6 +109,9 @@ grep -q 'extern float acosf' "$tmp/sdk4/usr/include/math.h" \
   && echo "  OK  FE math.h copied" || { echo "  FAIL FE math.h missing"; fail=1; }
 grep -q fmaxl "$tmp/sdk4/usr/include/math.h" \
   && echo "  OK  FE math.h kept (has fmaxl)" || { echo "  FAIL FE math.h lost fmaxl"; fail=1; }
+[ -f "$tmp/sdk4/usr/include/ConditionalMacros.h" ] \
+  && echo "  OK  FE missing ConditionalMacros.h repaired from pin" \
+  || { echo "  FAIL FE ConditionalMacros.h still absent"; fail=1; }
 
 echo
 echo "=== FE math.h without fmaxl is repaired from overlay-darwin Intel pin ==="
