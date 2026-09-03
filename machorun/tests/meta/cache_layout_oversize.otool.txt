@@ -68,7 +68,7 @@ Load command 2
    vmaddr 0x0000000100004000
    vmsize 0x0000000000004000
   fileoff 16384
- filesize 456
+ filesize 457 (past end of file)
   maxprot 0x00000001
  initprot 0x00000001
    nsects 0
@@ -163,8 +163,3 @@ Load command 15
 ### undefined symbols
 
 ### defined external symbols
-0000000100000000 T __mh_execute_header
-0000000100000328 T _main
-
-### pack_macho oversize
-__LINKEDIT filesize rewritten to 457 (file is 16840 bytes; fileoff+filesize exceeds EOF by 1).

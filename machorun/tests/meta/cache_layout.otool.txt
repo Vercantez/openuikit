@@ -41,9 +41,9 @@ Load command 1
 Section
   sectname __text
    segname __TEXT
-      addr 0x0000000100000508
+      addr 0x0000000100000510
       size 0x00000000000000e4
-    offset 1288
+    offset 1296
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -53,9 +53,9 @@ Section
 Section
   sectname __stubs
    segname __TEXT
-      addr 0x00000001000005ec
+      addr 0x00000001000005f4
       size 0x0000000000000030
-    offset 1516
+    offset 1524
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -65,9 +65,9 @@ Section
 Section
   sectname __init_offsets
    segname __TEXT
-      addr 0x000000010000061c
+      addr 0x0000000100000624
       size 0x0000000000000004
-    offset 1564
+    offset 1572
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -77,9 +77,9 @@ Section
 Section
   sectname __cstring
    segname __TEXT
-      addr 0x0000000100000620
+      addr 0x0000000100000628
       size 0x000000000000005a
-    offset 1568
+    offset 1576
      align 2^0 (1)
     reloff 0
     nreloc 0
@@ -89,9 +89,9 @@ Section
 Section
   sectname __unwind_info
    segname __TEXT
-      addr 0x000000010000067c
+      addr 0x0000000100000684
       size 0x0000000000000060
-    offset 1660
+    offset 1668
      align 2^2 (4)
     reloff 0
     nreloc 0
@@ -129,7 +129,7 @@ Load command 3
    vmaddr 0x0000000100008000
    vmsize 0x0000000000004000
   fileoff 32768
- filesize 984
+ filesize 992
   maxprot 0x00000001
  initprot 0x00000001
    nsects 0
@@ -179,7 +179,7 @@ Load command 8
 Load command 9
      cmd LC_UUID
  cmdsize 24
-    uuid 6EC3039B-6024-31F4-9624-26C579931D05
+    uuid A9FA4E78-2310-314F-BF00-6918752DB17E
 Load command 10
       cmd LC_BUILD_VERSION
   cmdsize 32
@@ -196,7 +196,7 @@ Load command 11
 Load command 12
        cmd LC_MAIN
    cmdsize 24
-  entryoff 1356
+  entryoff 1364
  stacksize 0
 Load command 13
           cmd LC_LOAD_DYLIB
@@ -230,7 +230,7 @@ Load command 18
       cmd LC_CODE_SIGNATURE
   cmdsize 16
   dataoff 33344
- datasize 408
+ datasize 416
 
 ### undefined symbols
 _greet
@@ -242,5 +242,5 @@ _puts
 
 ### defined external symbols
 0000000100000000 T __mh_execute_header
-0000000100000514 T _exe_callback
-000000010000054c T _main
+000000010000051c T _exe_callback
+0000000100000554 T _main

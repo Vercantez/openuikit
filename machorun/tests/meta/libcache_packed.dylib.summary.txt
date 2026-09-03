@@ -12,4 +12,3 @@ loader-relevant sections (segment,section,flags):
   __TEXT,__init_offsets,0x00000016
   __DATA_CONST,__got,0x00000006
 undefined-symbol-count: 3
-note: packed non-page-aligned layout from scripts/pack_macho.py; DATA_CONST vmaddr 0x14720 fileoff 1668

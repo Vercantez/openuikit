@@ -9,4 +9,3 @@ dylibs: /usr/lib/libSystem.B.dylib
 rpaths: 
 loader-relevant sections (segment,section,flags):
 undefined-symbol-count: 0
-note: scripts/pack_macho.py oversize of main_ret; __LINKEDIT filesize past EOF
