@@ -1298,6 +1298,12 @@ if phase2_rung_selected a && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "
         if [ "$smoke_rc" -eq 0 ]; then
             RUNG_A_DETAIL="smoke $UD_SMOKE_CHECKS/$UD_SMOKE_CHECKS ($smoke_pass)"
             if [ -n "$ud_score" ] && phase2_is_x86_macho "$ud_score"; then
+                # run_ud_persist.sh defaults PREFS=/root/Library/Preferences
+                # (operator EC2 is root). The guest writes under $HOME; a
+                # Cursor cloud agent is not root, so the witness must look
+                # there. Do not edit the committed runner.
+                : "${PREFS:=$HOME/Library/Preferences}"
+                mkdir -p "$PREFS"
                 set +e
                 W=${UD_GUEST_W:-$ud_w} \
                     R=$ud_r \
@@ -1305,6 +1311,7 @@ if phase2_rung_selected a && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "
                     MRUN=$MRROOT/machorun \
                     DISPATCH_HOST=${UD_DISPATCH_HOST:-} \
                     DISPATCH_DARWIN=${UD_DISPATCH_DARWIN:-} \
+                    PREFS=$PREFS \
                     bash "$ud_r/scripts/run_ud_persist.sh" "$MRROOT" \
                     2>&1 | tee "$W/scratch/phase2-rung-a-persist.log"
                 persist_rc=${PIPESTATUS[0]}

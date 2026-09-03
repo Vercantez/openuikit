@@ -1750,6 +1750,8 @@ expect_grep 'GUEST SCOREBOARD' "$PHASE2" \
     "phase2 reports run_ud_persist.sh GUEST SCOREBOARD denominators"
 expect_grep 'Success bar unchanged' "$PHASE2" \
     "persist success bar is still committed run_ud_persist.sh"
+expect_grep 'PREFS:=$HOME/Library/Preferences' "$PHASE2" \
+    "persist witness looks at \$HOME/Library/Preferences (Cursor HOME is not /root)"
 expect_grep 'OrderedCollections.swiftmodule' "$UDINC" \
     "ud-guest stages OrderedCollections.swiftmodule next to the .o"
 expect_grep '_RopeModule.swiftmodule' "$UDINC" \
