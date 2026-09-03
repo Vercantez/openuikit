@@ -1,0 +1,2 @@
+precise	kind	title	path	declaration
+c:@macro@AUDIO_UNIT_VERSION	swift.var	AUDIO_UNIT_VERSION	AUDIO_UNIT_VERSION	var AUDIO_UNIT_VERSION: Int32 { get }
