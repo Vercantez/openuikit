@@ -354,6 +354,54 @@ expect_grep 'libswiftCore.tbd' "$ROOT/full/swiftui/focus_widget_guest_attest.pl"
     "widget attest requires named libswiftCore.tbd"
 expect_grep '[-]lswiftCore' "$ROOT/foundation-macho/scripts/link_ud_guest.sh" \
     "link_ud_guest -lswiftCore"
+# Required set is grepped from those consumers, not the arm64 Apple-SDK overlay list.
+ATTEST=$ROOT/full/swiftui/focus_widget_guest_attest.pl
+LINK_UD=$ROOT/foundation-macho/scripts/link_ud_guest.sh
+want=$(phase2_consumer_tbd_relpaths)
+derived=$(
+    {
+        grep -hoE 'libswift[A-Za-z0-9_]+\.tbd' \
+            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" 2>/dev/null \
+            | sed 's|^|usr/lib/swift/|'
+        grep -hoE 'lib(System(\.B)?|objc(\.A)?|c\+\+(\.1)?|c\+\+abi|quartz)\.tbd' \
+            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" 2>/dev/null \
+            | sed 's|^|usr/lib/|'
+        grep -hoE -- '-l(swift[A-Za-z0-9_]+|objc|System)' \
+            "$BUILD_FULL" "$WIDGET" "$ONBOARD" "$ATTEST" "$LINK_UD" 2>/dev/null \
+            | while IFS= read -r flag; do
+                name=${flag#-l}
+                case "$name" in
+                    swift*) printf 'usr/lib/swift/lib%s.tbd\n' "$name" ;;
+                    objc) printf 'usr/lib/libobjc.tbd\n' ;;
+                    System) printf 'usr/lib/libSystem.tbd\n' ;;
+                esac
+            done
+        grep -hoE '/usr/lib/swift/libswift[A-Za-z0-9_]+\.dylib' \
+            "$WIDGET" "$ONBOARD" "$LINK_UD" 2>/dev/null \
+            | sed 's|^/||; s/\.dylib$/.tbd/'
+    } | grep -E '^usr/lib/' | sort -u
+)
+derived_ok=1
+while IFS= read -r rel; do
+    [ -n "$rel" ] || continue
+    case "$rel" in
+        *ARKit*|*AppKit*|*AVFoundation*|*Accelerate*|*AppleArchive*)
+            die_test "consumer grep produced Apple-SDK extra $rel"
+            derived_ok=0
+            continue
+            ;;
+    esac
+    if ! printf '%s\n' "$want" | grep -qx "$rel"; then
+        die_test "consumer names $rel but required set lacks it"
+        derived_ok=0
+    fi
+done <<< "$derived"
+[ "$derived_ok" -eq 1 ] \
+    && ok "consumer -l/.tbd/expected_* names are a subset of the required set"
+printf '%s\n' "$derived" | grep -q 'usr/lib/swift/libswiftCore.tbd' \
+    && printf '%s\n' "$derived" | grep -q 'usr/lib/libobjc.tbd' \
+    && ok "consumer grep found libswiftCore.tbd and libobjc.tbd" \
+    || die_test "consumer grep missed Core/objc (derived=$(echo "$derived" | tr '\n' ','))"
 expect_grep 'never copy arm64' "$STAGE" "stager comment refuses arm64 tbd copies"
 expect_grep 'phase2_sysroot_tbd_resolve' "$PHASE2" \
     "phase2 resolves the tbd set before build_full"
