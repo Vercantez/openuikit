@@ -334,6 +334,7 @@ static void parse_load_commands(mr_image *im)
         case LC_DYLD_CHAINED_FIXUPS: {
             const struct linkedit_data_command *l = (const void *)c;
             im->chained_off = l->dataoff; im->chained_size = l->datasize;
+            im->has_chained_fixups = 1;
             break;
         }
         case LC_DYLD_EXPORTS_TRIE: {
@@ -476,10 +477,11 @@ mr_image *mr_image_load(const char *want, mr_image *loader, int weak, int is_mai
     parse_load_commands(im);
 
     /* Cache extracts (plain `ipsw dyld extract` and `--slide --objc --stubs`)
-     * keep cache VAs / cache-resident binds in __DATA* and have no rebase or
-     * bind tables for a loader to apply. Sliding intra-image pointers would
-     * still leave every cross-image call pointing into the missing cache.
-     * Refuse before mapping: Apple's TEXT-to-DATA hole is hundreds of MB. */
+     * keep cache VAs / cache-resident binds in __DATA* and have neither
+     * LC_DYLD_INFO(_ONLY) nor LC_DYLD_CHAINED_FIXUPS. A linker-emitted
+     * LC_DYLD_INFO_ONLY with every size zero (libCombine.dylib) is not that
+     * case. Refuse only the extract shape, before mapping: Apple's
+     * TEXT-to-DATA hole is hundreds of MB. */
     if (mr_image_is_cache_extract_without_fixups(im)) {
         fflush(stdout);
         fprintf(stderr,

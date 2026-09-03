@@ -10,6 +10,7 @@ rebuild that forgot the pack/rename/oversize steps cannot land an aligned
 dylib under the packed name.
 """
 import importlib.util
+import struct
 import subprocess
 import sys
 import unittest
@@ -48,6 +49,7 @@ class PackMachoTests(unittest.TestCase):
             "def pack_bytes",
             "def oversize_bytes",
             "def strip_fixup_lcs",
+            "def empty_dyld_info_lcs",
             "dyld-shared-cache",
         ):
             self.assertIn(token, text)
@@ -222,6 +224,59 @@ class PackMachoTests(unittest.TestCase):
         )
         self.assertGreaterEqual(n, 1)
         self.assertEqual(bytes(layout), nofix_exe)
+
+    def test_empty_dyld_info_has_zero_sized_command(self) -> None:
+        pm = _pack_mod()
+        greet = (BIN / "libdylib_greet.dylib").read_bytes()
+        out = pm.empty_dyld_info_lcs(greet)
+        img = pm.Image(out)
+        self.assertFalse(img.find_cmd(pm.LC_DYLD_CHAINED_FIXUPS))
+        info = img.find_cmd(pm.LC_DYLD_INFO) + img.find_cmd(pm.LC_DYLD_INFO_ONLY)
+        self.assertTrue(info)
+        off, cs = info[0]
+        self.assertGreaterEqual(cs, 48)
+        fields = struct.unpack_from("<10I", out, off + 8)
+        self.assertEqual(fields, (0,) * 10)
+        data_c = next(s for s in img.segs if s.name == "__DATA_CONST")
+        self.assertGreater(data_c.filesize, 0)
+
+    def test_committed_emptyfix_dylib_is_libcombine_shape(self) -> None:
+        pm = _pack_mod()
+        path = BIN / "libcache_emptyfix.dylib"
+        self.assertTrue(path.is_file(), path)
+        data = path.read_bytes()
+        img = pm.Image(data)
+        self.assertFalse(img.find_cmd(pm.LC_DYLD_CHAINED_FIXUPS))
+        info = img.find_cmd(pm.LC_DYLD_INFO_ONLY)
+        self.assertTrue(info, "committed emptyfix dylib lost LC_DYLD_INFO_ONLY")
+        off, cs = info[0]
+        self.assertGreaterEqual(cs, 48)
+        fields = struct.unpack_from("<10I", data, off + 8)
+        self.assertEqual(fields, (0,) * 10)
+        data_c = next(s for s in img.segs if s.name == "__DATA_CONST")
+        self.assertGreater(data_c.filesize, 0)
+        rebuilt = pm.empty_dyld_info_lcs(data)
+        # Idempotent on the committed bytes (already empty).
+        self.assertEqual(
+            struct.unpack_from(
+                "<10I", rebuilt, pm.Image(rebuilt).find_cmd(pm.LC_DYLD_INFO_ONLY)[0][0] + 8
+            ),
+            (0,) * 10,
+        )
+
+    def test_committed_emptyfix_exe_loads_the_dylib(self) -> None:
+        pm = _pack_mod()
+        path = BIN / "cache_layout_emptyfix"
+        self.assertTrue(path.is_file(), path)
+        data = path.read_bytes()
+        img = pm.Image(data)
+        found = 0
+        for off, cs in img.find_cmd(pm.LC_LOAD_DYLIB):
+            name_off, = struct.unpack_from("<I", data, off + 8)
+            name = data[off + name_off:off + cs].split(b"\0", 1)[0]
+            if name == b"@rpath/libcache_emptyfix.dylib":
+                found += 1
+        self.assertGreaterEqual(found, 1, "exe is missing LC_LOAD_DYLIB of the emptyfix dylib")
 
 
 if __name__ == "__main__":

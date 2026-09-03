@@ -2,7 +2,7 @@
  * cache_layout_sparse / cache_layout_nofix. Built Apple-aligned;
  * scripts/pack_macho.py then rewrites copies into dyld-shared-cache
  * layout, or strips fixup load commands, without changing these bytes'
- * meaning.
+ * meaning. cache_layout_emptyfix is a separate const-table dylib.
  */
 #include <stdio.h>
 

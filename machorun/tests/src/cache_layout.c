@@ -9,7 +9,9 @@
  * with Apple's cache-wide TEXT-to-DATA gap (0x22256720). All three
  * executables must print the same bytes. `libcache_nofix.dylib` is the
  * aligned dylib with rebase/bind load commands stripped — the loader
- * must refuse it. See docs/FIXTURES.md.
+ * must refuse it. `libcache_emptyfix.dylib` is the libCombine shape:
+ * LC_DYLD_INFO_ONLY present, every size zero; the loader must LOAD it.
+ * See docs/FIXTURES.md.
  */
 #include <stdio.h>
 
