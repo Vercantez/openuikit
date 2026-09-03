@@ -1512,8 +1512,16 @@ expect_grep 'phase2_ud_guest_compile_port "$ud_w" "$repo" "$sys" "$compile_tripl
 expect_grep 'build_full.sh argv -O1 -nostdinc' "$UDINC" \
     "fm_unimplemented uses build_full.sh clang argv"
 expect_grep 'build_cftest_harness.sh' "$UDINC" "CF path names the committed CF linker"
-expect_grep 'Will not invent a CF compiler or a stub' "$UDINC" \
-    "does not invent a CF compiler"
+expect_file "$ROOT/foundation-macho/scripts/build_cfobjc.sh"
+expect_grep 'build_cfobjc.sh' "$UDINC" "CF path names the committed cfobjc recipe"
+expect_grep 'build_cfobjc.sh' "$ROOT/scripts/x86/PHASE2.md" \
+    "PHASE2.md names the committed cfobjc recipe"
+expect_grep 'Will not invent a stub dylib' "$UDINC" \
+    "does not invent a stub libCFTest.dylib"
+expect_not_grep 'no committed recipe (shell-history only)' "$UDINC" \
+    "recipe is committed; no longer a shell-history hole"
+expect_not_grep 'Will not invent a CF compiler or a stub' "$UDINC" \
+    "recipe exists; CF compiler is build_cfobjc.sh"
 for load in libswiftCore libswiftDarwin libswift_StringProcessing \
     libswiftSynchronization libswift_errno libobjc libSystem libCFTest libswiftcompat
 do
@@ -1598,10 +1606,20 @@ else
     die_test "x86 sysroot missing; cannot compile staging fixtures"
 fi
 
-cfreport=$(phase2_ud_guest_ensure_cftest "$wt" "$ROOT" || true)
+cfreport=$(
+    CF=/no/such/cfobjc-corefoundation
+    HOME=/no/such/cfobjc-home
+    export CF HOME
+    phase2_ud_guest_ensure_cftest "$wt" "$ROOT" || true
+)
 case "$cfreport" in
     CANNOT_UD_GUEST_LIBCFTEST\ file=libCFTest.dylib*)
-        ok "absent libCFTest.dylib is CANNOT_UD_GUEST_LIBCFTEST file=libCFTest.dylib"
+        if echo "$cfreport" | grep -q 'build_cfobjc.sh' \
+            && echo "$cfreport" | grep -q 'Will not invent a stub dylib'; then
+            ok "absent libCFTest.dylib is CANNOT_UD_GUEST_LIBCFTEST file=libCFTest.dylib (recipe named, no stub)"
+        else
+            die_test "libCFTest refusal did not name the recipe: $cfreport"
+        fi
         ;;
     *) die_test "libCFTest refusal got: $cfreport" ;;
 esac
@@ -1629,6 +1647,13 @@ if phase2_is_x86_macho "$UDWORK/libCFTest.dylib"; then
     unset UD_CFTEST_DYLIB
 else
     die_test "could not emit an x86 libCFTest.dylib fixture"
+fi
+
+echo "== cfobjc recipe argv is the documented flag set"
+if CFOBJC_SKIP_COMPILE=1 bash "$ROOT/foundation-macho/scripts/test_build_cfobjc.sh"; then
+    ok "test_build_cfobjc.sh (argv + missing-CF)"
+else
+    die_test "test_build_cfobjc.sh"
 fi
 
 echo "== ud-guest-x86 compiler log is a file path, not inlined swiftc text"

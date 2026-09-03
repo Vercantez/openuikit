@@ -581,9 +581,14 @@ cat > "$X/CFShimCarbon.h" <<'EOF'
 #define _CFSHIM_CARBON_H
 
 /* RECONSTRUCTION 1 -- AbsoluteTime.
- * A CarbonCore type CFRunLoop still names on Darwin. Documented layout. */
+ * A CarbonCore type CFRunLoop still names on Darwin. Documented layout.
+ * Current machorun MacTypes.h already typedefs AbsoluteTime as UInt64
+ * (the Darwin layout, guard __MACTYPES__). Filling the gap a second time
+ * is a 'UnsignedWide' vs 'UInt64' redefinition and wipes every CF TU. */
 typedef struct { unsigned int hi, lo; } UnsignedWide;
+#ifndef __MACTYPES__
 typedef UnsignedWide AbsoluteTime;
+#endif
 
 /* RECONSTRUCTION 2 -- the _CFThread* types.
  * Defined ONLY in include/ForSwiftFoundationOnly.h:401-414, which is included
@@ -625,9 +630,14 @@ int _CFThreadSetName(pthread_t, const char *);
 
 /* _NSGetMachExecuteHeader is Darwin's accessor for the main executable's
  * Mach-O header; CFBundle_Binary and CFBundle_Grok use it to find the running
- * image. Real Darwin API, declared here because our sysroot omits it. */
+ * image. Real Darwin API, declared here because older sysroots omit it.
+ * machorun's crt_externs.h now ships the LP64-correct
+ * `struct mach_header_64 *` declaration; repeating a `const struct
+ * mach_header *` here is a conflicting-types wipe of CFRuntime.o. */
+#if !__has_include(<crt_externs.h>)
 struct mach_header;
 const struct mach_header *_NSGetMachExecuteHeader(void);
+#endif
 
 /* The Mach declarations CFRunLoop/CFUtilities need. See sys/mach_port_extra.h
  * for why these are declared but must NOT be implemented by us. */
