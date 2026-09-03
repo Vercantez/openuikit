@@ -1095,7 +1095,8 @@ expected_swiftui_inputs=$(printf '%s\n' \
     "$MRROOT/darwin/usr/lib/libSystem.B.dylib" \
     "$OUT/swiftui.o" \
     "$SYS/usr/lib/swift/libswift_Concurrency.tbd" \
-    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd")
+    "$SYS/usr/lib/swift/libswiftObjectiveC.tbd" \
+    "$SYS/usr/lib/swift/libswiftObservation.tbd")
 expected_opencombine_inputs=$(printf '%s\n' \
     'linker synthesized' \
     "$OPENCOMBINE_ARTIFACTS/OpenCombine.o" \
