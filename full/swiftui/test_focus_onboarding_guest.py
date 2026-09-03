@@ -323,15 +323,66 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
     def test_umbrella_compile_passes_opencombine_helpers_module_map(self) -> None:
         text = BUILD.read_text()
         self.assertIn(
-            '-Xcc -fmodule-map-file="$PACKAGE/include/COpenCombineHelpers/module.modulemap"',
+            'cp "$OPENCOMBINE_HELPERS/include/COpenCombineHelpers.h"',
             text,
         )
-        self.assertIn('-Xcc -I"$PACKAGE/include/COpenCombineHelpers"', text)
+        self.assertIn(
+            '"$OPENCOMBINE_HELPERS/include/module.modulemap" '
+            '"$PACKAGE/include/COpenCombineHelpers/"',
+            text,
+        )
+        self.assertIn(
+            'packaged COpenCombineHelpers module map is missing from PACKAGE/include',
+            text,
+        )
         umbrella = text.split(
             "== compile the bounded Foundation umbrella after SwiftUI", 1
         )[1].split("== FoundationGuest/UIKit notification identity compile proof", 1)[0]
+        self.assertIn('umbrella_swiftc=(', umbrella)
+        self.assertIn('printf \'umbrella-swiftc\'', umbrella)
+        self.assertIn('printf \' %q\' "${umbrella_swiftc[@]}"', umbrella)
+        self.assertIn('"${umbrella_swiftc[@]}"', umbrella)
         self.assertIn('"${PACKAGE_CINC[@]}"', umbrella)
-        self.assertIn('"${SWIFTC[@]}"', umbrella)
+        self.assertIn(
+            '-Xcc -fmodule-map-file="$PACKAGE/include/COpenCombineHelpers/module.modulemap"',
+            umbrella,
+        )
+        self.assertIn('-Xcc -I"$PACKAGE/include/COpenCombineHelpers"', umbrella)
+        package_cinc = text.split("PACKAGE_CINC=(", 1)[1].split("FE_OUT=", 1)[0]
+        self.assertIn(
+            '-Xcc -fmodule-map-file="$PACKAGE/include/COpenCombineHelpers/module.modulemap"',
+            package_cinc,
+        )
+        self.assertIn('-Xcc -I"$PACKAGE/include/COpenCombineHelpers"', package_cinc)
+
+    def test_umbrella_imports_project_dispatch_not_sysroot(self) -> None:
+        text = BUILD.read_text()
+        self.assertNotIn("-disable-implicit-swift-module-map", text)
+        self.assertNotIn("SWIFT_FORCE_MODULE_LOADING", text)
+        dispatch = text.split(
+            "== compile the project Dispatch module before the Foundation umbrella", 1
+        )[1].split("== compile the bounded Foundation umbrella after SwiftUI", 1)[0]
+        umbrella = text.split(
+            "== compile the bounded Foundation umbrella after SwiftUI", 1
+        )[1].split("== FoundationGuest/UIKit notification identity compile proof", 1)[0]
+        self.assertIn('"$W/full/dispatch/Dispatch.swift"', dispatch)
+        self.assertIn('"$W/full/dispatch/OpenDispatchBridge.c"', dispatch)
+        self.assertIn('-module-name Dispatch', dispatch)
+        self.assertIn('-emit-module-path "$PACKAGE/Dispatch.swiftmodule"', dispatch)
+        self.assertIn('-I "$PACKAGE"', dispatch)
+        self.assertNotIn("-I \"$SYS/usr/lib/swift\"", dispatch)
+        self.assertNotIn("-I$SYS/usr/lib/swift", dispatch)
+        self.assertNotIn("-I \"$SYS/usr/lib/swift\"", umbrella)
+        self.assertNotIn("-I$SYS/usr/lib/swift", umbrella)
+        self.assertIn('-I "$PACKAGE"', umbrella)
+        package_index = umbrella.index('-I "$PACKAGE"')
+        sys_index = umbrella.find("$SYS/usr/lib/swift")
+        if sys_index != -1:
+            self.assertLess(package_index, sys_index)
+        self.assertIn("project Dispatch swiftmodule is missing after build", dispatch)
+        swiftc = text.split("SWIFTC=(", 1)[1].split("LD=(", 1)[0]
+        self.assertNotIn("-I \"$SYS/usr/lib/swift\"", swiftc)
+        self.assertNotIn("-I$SYS/usr/lib/swift", swiftc)
 
     def test_darwin_compiles_do_not_include_host_toolchain_swift(self) -> None:
         text = BUILD.read_text()
