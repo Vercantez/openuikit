@@ -9,13 +9,15 @@
 # Every HAVE_* below is pre-seeded so the check is SKIPPED rather than run — a
 # configure-time override, not a patch.
 set -euo pipefail
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/guest_arch.inc"
 W=${W:-$HOME/work}
 SDK=$W/sdk/MacOSX.sdk
-TC=${TC:-/opt/swift624/usr}
 SRC=$W/libdispatch
 B=${B:-$W/build-dispatch}
 
-TARGET_FLAGS="-target arm64-apple-macos13.0 -isysroot $SDK -fblocks"
+TARGET_FLAGS="-target $SWIFTCORE_CLANG_TARGET -isysroot $SDK -fblocks"
 # -fcf-runtime-abi=objc: the CF census hit ld64.lld rejecting __DATA,__cfstring
 # with "symbol l__unnamed_cfstring_.N at misaligned offset" under the default
 # swift ABI. Not an undefined symbol -- a record-layout error, invisible until
