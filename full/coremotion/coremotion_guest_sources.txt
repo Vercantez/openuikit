@@ -1,0 +1,4 @@
+full/coremotion/CMGeometry.swift
+full/coremotion/CMManagers.swift
+full/coremotion/CMSamples.swift
+full/coremotion/CoreMotion.swift
