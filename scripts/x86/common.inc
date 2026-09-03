@@ -11,6 +11,11 @@ if [ -n "${PHASE2_COMMON_INC:-}" ]; then
 fi
 PHASE2_COMMON_INC=1
 
+_phase2_tree=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
+# shellcheck source=../../full/foundation/fe_sysroot_measurement.inc
+. "$_phase2_tree/full/foundation/fe_sysroot_measurement.inc"
+unset _phase2_tree
+
 phase2_prepare() {
     printf 'ENV_PREPARE %s %s\n' "$1" "$2"
 }
@@ -106,7 +111,7 @@ phase2_probe_focus_pin() {
 # output directory existing. A sysroot staged before x86 libswiftCore landed
 # would otherwise be reused while OpenCombine looks in usr/lib/swift and finds
 # nothing. Recipe bump forces a restage when the stager itself gains steps.
-PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.2
+PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.3
 PHASE2_SYSROOT_STAMP=.phase2-stage-inputs
 
 phase2_sha_or_absent() {
@@ -137,6 +142,7 @@ phase2_arm_overlay_interface() {
 
 # phase2_sysroot_input_lines <libswiftCore> <Swift.swiftmodule> <_Builtin_float.swiftmodule>
 #                          <gen_darwin_modulemap.py> <Darwin.swiftinterface> <Darwin.modulemap>
+#                          [fe_sysroot_measurement_headers.txt]
 phase2_sysroot_input_lines() {
     printf 'recipe=%s\n' "$PHASE2_SYSROOT_RECIPE"
     printf 'libswiftCore=%s\n' "$(phase2_sha_or_absent "$1")"
@@ -145,6 +151,8 @@ phase2_sysroot_input_lines() {
     printf 'gen_darwin_modulemap.py=%s\n' "$(phase2_sha_or_absent "$4")"
     printf 'Darwin.swiftinterface=%s\n' "$(phase2_sha_or_absent "$5")"
     printf 'Darwin.modulemap=%s\n' "$(phase2_sha_or_absent "$6")"
+    printf 'fe_sysroot_measurement_headers=%s\n' \
+        "$(phase2_sha_or_absent "${7:-$FE_SYSROOT_MEASUREMENT_HEADERS_FILE}")"
 }
 
 phase2_write_sysroot_stamp() {
@@ -199,7 +207,10 @@ phase2_sysroot_complete() {
             || return 1
     fi
     # Maps that name a header which is not on disk are not a working Clang Darwin.
-    phase2_darwin_modulemap_headers_ok "$sys"
+    phase2_darwin_modulemap_headers_ok "$sys" || return 1
+    # FileManager/sdk-gap measurement set (shared list). Missing removefile.h
+    # is the class that failed FE with 14 errors after recipe x86.2.
+    phase2_measurement_headers_ok "$sys"
 }
 
 # Print one `header "…"` path per line. Skip `exclude header`.
@@ -237,6 +248,61 @@ phase2_darwin_modulemap_missing_headers() {
 
 phase2_darwin_modulemap_headers_ok() {
     phase2_darwin_modulemap_missing_headers "$1" >/dev/null
+}
+
+# Comma-separated paths from the shared measurement-header list that are not
+# under $sys/usr/include. Return 1 if any are missing (so a restage that
+# skipped the FileManager set cannot look satisfied).
+phase2_measurement_headers_missing() {
+    local sys=$1 inc=$1/usr/include
+    local h miss=""
+    while IFS= read -r h; do
+        [ -n "$h" ] || continue
+        [ -f "$inc/$h" ] && continue
+        case ",$miss," in
+            *",$h,"*) ;;
+            *) miss="${miss:+$miss,}$h" ;;
+        esac
+    done < <(fe_sysroot_measurement_headers)
+    if [ -n "$miss" ]; then
+        printf '%s\n' "$miss"
+        return 1
+    fi
+    return 0
+}
+
+phase2_measurement_headers_ok() {
+    phase2_measurement_headers_missing "$1" >/dev/null
+}
+
+# stage_absent semantics from arm64 sysroot_fe4: skip if already present
+# (would shadow machorun/sdk or sdk-gaps); copy if the arm64 tree has it.
+phase2_stage_measurement_headers_from_arm() {
+    local sys=$1 arm=$2
+    local h dest
+    while IFS= read -r h; do
+        [ -n "$h" ] || continue
+        dest="$sys/usr/include/$h"
+        if [ -e "$dest" ]; then
+            echo "  REFUSED (already present, would shadow): $h" >&2
+            continue
+        fi
+        [ -f "$arm/usr/include/$h" ] || continue
+        mkdir -p "$(dirname "$dest")"
+        cp "$arm/usr/include/$h" "$dest"
+        echo "  + $h   [measurement set from arm64 sysroot_fe4]"
+    done < <(fe_sysroot_measurement_headers)
+}
+
+# Same clang argv as full/scripts/build_full.sh. build_fe.sh is Swift-only
+# on both arches; arm64 compiles this .c in the full link step, not there.
+phase2_compile_removefile_compat() {
+    local sys=$1 dest=$2 target=$3 src_tree=$4
+    mkdir -p "$(dirname "$dest")"
+    clang-18 -target "$target" -isysroot "$sys" -std=c11 -O2 \
+        -Wall -Wextra -Werror -I "$src_tree/full/foundation" \
+        -c "$src_tree/full/foundation/removefile_compat.c" \
+        -o "$dest"
 }
 
 # Enumerate files the arm64 generator run wrote: Darwin-family maps,

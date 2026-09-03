@@ -57,7 +57,8 @@ expect_file "$OC"
 expect_file "$GUEST"
 
 echo "== bash -n"
-for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh"; do
+for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
+    "$ROOT/full/foundation/fe_sysroot_measurement.inc"; do
     if bash -n "$s"; then
         ok "bash -n $(basename "$s")"
     else
@@ -247,10 +248,48 @@ expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
     "missing Darwin.modulemap is its own CANNOT, not folded into overlays"
 expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
-expect_grep 'stage_fe_sysroot_x86.2' "$COMMON" \
-    "recipe bump restages a maps-only sysroot from x86.1"
+expect_grep 'stage_fe_sysroot_x86.3' "$COMMON" \
+    "recipe bump restages a sysroot that lacked the FileManager header set"
+expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
+    "stamp records the shared measurement-header list sha"
+expect_grep 'phase2_measurement_headers_missing' "$COMMON" \
+    "every header in the FileManager/sdk-gap list is checked after restage"
+expect_grep 'FE_MEASUREMENT_HEADERS' "$PHASE2" \
+    "missing measurement headers are CANNOT_FE_MEASUREMENT_HEADERS"
+expect_grep 'phase2_stage_measurement_headers_from_arm' "$STAGE" \
+    "x86 stager stages the shared list from arm64 sysroot_fe4"
+expect_grep 'fe_sysroot_append_vm_copy' "$STAGE" \
+    "x86 stager uses the shared vm_copy append"
+expect_grep 'fe_sysroot_measurement.inc' "$ROOT/full/foundation/stage_fe_sysroot.sh" \
+    "arm64 stager reads the shared measurement inc"
+expect_grep 'fe_sysroot_measurement_headers' "$ROOT/full/foundation/stage_fe_sysroot.sh" \
+    "arm64 stager iterates the shared header list"
+expect_not_grep 'for h in sys/xattr.h copyfile.h removefile.h fts.h pwd.h grp.h sys/utsname.h sys/quota.h' \
+    "$ROOT/full/foundation/stage_fe_sysroot.sh" \
+    "arm64 stager does not duplicate the FileManager header literal"
+expect_not_grep 'for h in sys/xattr.h copyfile.h removefile.h fts.h pwd.h grp.h sys/utsname.h sys/quota.h' \
+    "$STAGE" \
+    "x86 stager does not duplicate the FileManager header literal"
+expect_file "$ROOT/full/foundation/fe_sysroot_measurement_headers.txt"
+expect_file "$ROOT/full/foundation/fe_sysroot_measurement.inc"
+expect_grep 'removefile.h' "$ROOT/full/foundation/fe_sysroot_measurement_headers.txt" \
+    "shared list includes removefile.h"
+expect_grep 'complex.h' "$ROOT/full/foundation/fe_sysroot_measurement_headers.txt" \
+    "shared list includes complex.h"
+expect_grep 'sysdir.h' "$ROOT/full/foundation/fe_sysroot_measurement_headers.txt" \
+    "shared list includes sysdir.h"
+expect_grep 'BUILD_FE_REMOVEFILE_COMPAT' "$PHASE2" \
+    "x86 FE chain compiles removefile_compat.c (build_fe.sh is Swift-only)"
+expect_grep 'phase2_compile_removefile_compat' "$PHASE2" \
+    "phase2 invokes the shared removefile_compat clang helper"
+expect_not_grep 'removefile_compat.c' "$ROOT/full/foundation/build_fe.sh" \
+    "build_fe.sh does not compile removefile_compat.c (Swift-only on both arches)"
+expect_grep 'removefile_compat.c' "$BUILD_FULL" \
+    "arm64 full link compiles removefile_compat.c"
 expect_grep 'usr/include/_modules' "$COMMON" \
     "Linux Darwin fallback copies _modules from the arm64 sysroot"
+
+echo "== measurement headers: shared list, stage_absent from arm64, stamp recipe .3"
 expect_grep 'phase2_darwin_modulemap_missing_headers' "$COMMON" \
     "every header path named by staged modulemaps is checked"
 expect_grep 'compiles Darwin.swiftinterface' "$COMMON" \
@@ -275,12 +314,16 @@ echo f > "$STAMPWORK/bf"
 echo g > "$STAMPWORK/gen"
 echo o > "$STAMPWORK/overlay"
 echo d > "$STAMPWORK/dmap"
+echo list-a > "$STAMPWORK/meas-a"
+echo list-b > "$STAMPWORK/meas-b"
 phase2_write_sysroot_stamp "$STAMPWORK/stamp" \
     "$STAMPWORK/core-a" "$STAMPWORK/mod" "$STAMPWORK/bf" \
-    "$STAMPWORK/gen" "$STAMPWORK/overlay" "$STAMPWORK/dmap"
+    "$STAMPWORK/gen" "$STAMPWORK/overlay" "$STAMPWORK/dmap" \
+    "$STAMPWORK/meas-a"
 match=$(phase2_sysroot_stamp_diff "$STAMPWORK/stamp" \
     "$STAMPWORK/core-a" "$STAMPWORK/mod" "$STAMPWORK/bf" \
-    "$STAMPWORK/gen" "$STAMPWORK/overlay" "$STAMPWORK/dmap" && echo MATCH || echo FAIL)
+    "$STAMPWORK/gen" "$STAMPWORK/overlay" "$STAMPWORK/dmap" \
+    "$STAMPWORK/meas-a" && echo MATCH || echo FAIL)
 if [ "$match" = MATCH ]; then
     ok "stamp matches when inputs are unchanged"
 else
@@ -288,17 +331,29 @@ else
 fi
 diff=$(phase2_sysroot_stamp_diff "$STAMPWORK/stamp" \
     "$STAMPWORK/core-b" "$STAMPWORK/mod" "$STAMPWORK/bf" \
-    "$STAMPWORK/gen" "$STAMPWORK/overlay" "$STAMPWORK/dmap" || true)
+    "$STAMPWORK/gen" "$STAMPWORK/overlay" "$STAMPWORK/dmap" \
+    "$STAMPWORK/meas-a" || true)
 case "$diff" in
     *"libswiftCore "*) ok "stamp names libswiftCore when the artifact sha changes ($diff)" ;;
     *) die_test "expected libswiftCore old->new, got: $diff" ;;
 esac
 missing_stamp=$(phase2_sysroot_stamp_diff "$STAMPWORK/absent" \
     "$STAMPWORK/core-a" "$STAMPWORK/mod" "$STAMPWORK/bf" \
-    "$STAMPWORK/gen" "$STAMPWORK/overlay" "$STAMPWORK/dmap" || true)
+    "$STAMPWORK/gen" "$STAMPWORK/overlay" "$STAMPWORK/dmap" \
+    "$STAMPWORK/meas-a" || true)
 case "$missing_stamp" in
     stamp=ABSENT) ok "missing stamp is stamp=ABSENT (restage, do not reuse)" ;;
     *) die_test "missing stamp expected stamp=ABSENT, got: $missing_stamp" ;;
+esac
+meas_diff=$(phase2_sysroot_stamp_diff "$STAMPWORK/stamp" \
+    "$STAMPWORK/core-a" "$STAMPWORK/mod" "$STAMPWORK/bf" \
+    "$STAMPWORK/gen" "$STAMPWORK/overlay" "$STAMPWORK/dmap" \
+    "$STAMPWORK/meas-b" || true)
+case "$meas_diff" in
+    *"fe_sysroot_measurement_headers "*)
+        ok "stamp names fe_sysroot_measurement_headers when the shared list sha changes ($meas_diff)"
+        ;;
+    *) die_test "expected fe_sysroot_measurement_headers old->new, got: $meas_diff" ;;
 esac
 rm -rf "$STAMPWORK"
 
@@ -364,6 +419,88 @@ else
     die_test "expected no missing headers after copy, got: $after"
 fi
 rm -rf "$MMWORK"
+
+echo "== FileManager measurement headers: fail before copy, pass after arm64 stage_absent"
+n_hdr=$(fe_sysroot_measurement_headers | wc -l | tr -d ' ')
+if [ "$n_hdr" = 10 ]; then
+    ok "shared measurement list has 10 headers"
+else
+    die_test "shared measurement list count is $n_hdr, not 10"
+fi
+MHWORK=$(mktemp -d /tmp/phase2-meas-hdr.XXXXXX)
+mkdir -p "$MHWORK/arm/usr/include/sys" "$MHWORK/sys/usr/include/sys" \
+    "$MHWORK/sys/usr/include/mach"
+# Arm64 fixture has the full shared list (what PR #17's sysroot_fe4 carries).
+while IFS= read -r h; do
+    [ -n "$h" ] || continue
+    mkdir -p "$MHWORK/arm/usr/include/$(dirname "$h")"
+    printf '/* ARM %s */\n' "$h" > "$MHWORK/arm/usr/include/$h"
+done < <(fe_sysroot_measurement_headers)
+# x86 restage without removefile.h (the operator failure class).
+while IFS= read -r h; do
+    [ -n "$h" ] || continue
+    [ "$h" = removefile.h ] && continue
+    mkdir -p "$MHWORK/sys/usr/include/$(dirname "$h")"
+    printf '/* X86 %s */\n' "$h" > "$MHWORK/sys/usr/include/$h"
+done < <(fe_sysroot_measurement_headers)
+before_mh=$(phase2_measurement_headers_missing "$MHWORK/sys" || true)
+if [ "$before_mh" = removefile.h ]; then
+    ok "restage without removefile.h fails header-resolve before the compiler ($before_mh)"
+else
+    die_test "expected missing=removefile.h, got: $before_mh"
+fi
+# stage_absent: already-present copyfile.h must not be shadowed.
+printf '/* X86 copyfile.h must survive */\n' > "$MHWORK/sys/usr/include/copyfile.h"
+printf '/* ARM copyfile.h would shadow */\n' > "$MHWORK/arm/usr/include/copyfile.h"
+phase2_stage_measurement_headers_from_arm "$MHWORK/sys" "$MHWORK/arm"
+if [ -f "$MHWORK/sys/usr/include/removefile.h" ] \
+    && grep -q 'ARM removefile.h' "$MHWORK/sys/usr/include/removefile.h" \
+    && grep -q 'X86 copyfile.h must survive' "$MHWORK/sys/usr/include/copyfile.h"; then
+    ok "stage_absent copies missing removefile.h from arm64 and refuses to shadow copyfile.h"
+else
+    die_test "stage_absent did not copy removefile.h / preserve copyfile.h"
+fi
+after_mh=$(phase2_measurement_headers_missing "$MHWORK/sys" && echo NONE || true)
+if [ "$after_mh" = NONE ]; then
+    ok "after restage every header in the shared measurement list exists in the x86 sysroot"
+else
+    die_test "expected no missing measurement headers after copy, got: $after_mh"
+fi
+# vm_copy append (shared helper; not a file copy).
+printf '/* empty vm_map.h */\n' > "$MHWORK/sys/usr/include/mach/vm_map.h"
+fe_sysroot_append_vm_copy "$MHWORK/sys/usr/include/mach/vm_map.h"
+if grep -q 'extern kern_return_t vm_copy' "$MHWORK/sys/usr/include/mach/vm_map.h"; then
+    ok "shared helper appends vm_copy to mach/vm_map.h"
+else
+    die_test "vm_copy was not appended"
+fi
+fe_sysroot_append_vm_copy "$MHWORK/sys/usr/include/mach/vm_map.h"
+vm_n=$(grep -c 'extern kern_return_t vm_copy' "$MHWORK/sys/usr/include/mach/vm_map.h" || true)
+if [ "$vm_n" = 1 ]; then
+    ok "vm_copy append is idempotent"
+else
+    die_test "vm_copy appended twice (count=$vm_n)"
+fi
+rm -rf "$MHWORK"
+
+# Compile removefile_compat.c the way try_fe will (same clang line as build_full.sh).
+if command -v clang-18 >/dev/null && [ -d "$ROOT/scratch/sysroot_fe4-x86_64/usr/include" ]; then
+    COMPAT_OUT=$(mktemp -d /tmp/phase2-removefile-compat.XXXXXX)
+    if phase2_compile_removefile_compat \
+        "$ROOT/scratch/sysroot_fe4-x86_64" \
+        "$COMPAT_OUT/removefile_compat.o" \
+        x86_64-apple-macos15.0 \
+        "$ROOT" \
+        && phase2_is_x86_macho "$COMPAT_OUT/removefile_compat.o"; then
+        ok "removefile_compat.c compiles to X86_64 Mach-O against the x86 sysroot"
+        rm -rf "$COMPAT_OUT"
+    else
+        die_test "removefile_compat.c failed to compile against scratch/sysroot_fe4-x86_64"
+        rm -rf "$COMPAT_OUT"
+    fi
+else
+    echo "SKIP: clang-18 / x86 sysroot not present for removefile_compat compile"
+fi
 
 echo "== os-module-x86 before build_fe + fe-imports census"
 expect_grep 'full/foundation/build_os_module.sh' "$PHASE2" \
@@ -445,7 +582,14 @@ for s in "$OSMOD_SH" "$COL_SH" "$FE_SH"; do
     fi
 done
 # /w -> physical tree is the same inode; clang treats two spellings as two pcm defs.
-MCWORK=$(mktemp -d /tmp/phase2-modcache.XXXXXX)
+# macOS: /tmp is a symlink to /private/tmp, so mktemp may return /tmp/... while
+# realpath -P returns /private/tmp/.... Reproduce that split on Linux with a
+# tmp -> private/tmp alias, then compare pwd -P paths on both sides.
+MC_HOST=$(mktemp -d /tmp/phase2-modcache-host.XXXXXX)
+mkdir -p "$MC_HOST/private/tmp"
+ln -sfn "$MC_HOST/private/tmp" "$MC_HOST/tmp"
+MC_REAL=$(mktemp -d "$MC_HOST/private/tmp/phase2-modcache.XXXXXX")
+MCWORK="$MC_HOST/tmp/$(basename "$MC_REAL")"
 mkdir -p "$MCWORK/physical/scratch/modcache_fe4-x86_64"
 ln -sfn "$MCWORK/physical" "$MCWORK/wlink"
 via_w=$(phase2_canonical_dir "$MCWORK/wlink/scratch/modcache_fe4-x86_64")
@@ -455,11 +599,16 @@ if [ -n "$via_w" ] && [ "$via_w" = "$via_phys" ]; then
 else
     die_test "canonical cache mismatch via_w=$via_w via_phys=$via_phys"
 fi
-case "$via_w" in
-    "$MCWORK/wlink"*) die_test "canonical cache still uses symlink spelling $via_w" ;;
-    "$MCWORK/physical"*) ok "canonical cache is the physical spelling ($via_w)" ;;
-    *) die_test "canonical cache is neither symlink nor physical: $via_w" ;;
-esac
+phys_canon=$(cd "$MCWORK/physical/scratch/modcache_fe4-x86_64" && pwd -P)
+link_unresolved="$MCWORK/wlink/scratch/modcache_fe4-x86_64"
+if [ "$via_w" = "$link_unresolved" ]; then
+    die_test "canonical cache still uses symlink spelling $via_w"
+fi
+if [ "$via_w" = "$phys_canon" ]; then
+    ok "canonical cache is the physical spelling ($via_w)"
+else
+    die_test "canonical cache is neither symlink nor physical: $via_w (physical=$phys_canon)"
+fi
 # Same canonicalize the os-module script applies on a hand-run with W=/w.
 hand=$(
     unset MC
@@ -486,7 +635,7 @@ if [ "$handed_symlink" = "$via_phys" ]; then
 else
     die_test "passed /w-style MC $handed_symlink != $via_phys"
 fi
-rm -rf "$MCWORK"
+rm -rf "$MC_HOST"
 
 FEWORK=$(mktemp -d /tmp/phase2-fe-imports.XXXXXX)
 mkdir -p "$FEWORK/sys/usr/include" \

@@ -324,7 +324,8 @@ sysroot_input_changed() {
     local diff
     diff=$(phase2_sysroot_stamp_diff "$stamp" \
         "$x86_core" "$x86_mod" "$x86_bf" "$gen_py" \
-        "${overlay_if:-}" "$arm_dmap" || true)
+        "${overlay_if:-}" "$arm_dmap" \
+        "$FE_SYSROOT_MEASUREMENT_HEADERS_FILE" || true)
     if [ -n "$diff" ]; then
         printf '%s\n' "$diff"
         return 0
@@ -341,7 +342,7 @@ run_sysroot_stager() {
     if [ "$st" -eq 0 ] && [ -d "$SYS/usr/include" ]; then
         SYSROOT_HEADERS=1
         if phase2_sysroot_complete "$SYS" "$need_core" "$need_bf"; then
-            note sysroot-fe4-x86 cold-built "darwin_headers=ok"
+            note sysroot-fe4-x86 cold-built "darwin_headers=ok measurement_headers=ok"
             SYSROOT_OK=1
         elif [ ! -d "$SYS/usr/lib/swift/Darwin.swiftmodule" ] \
             && [ ! -f "$SYS/usr/lib/swift/Darwin.swiftinterface" ]; then
@@ -353,6 +354,9 @@ run_sysroot_stager() {
         elif ! phase2_darwin_modulemap_headers_ok "$SYS"; then
             cannot sysroot-fe4-x86 DARWIN_MODULEMAP_HEADERS \
                 "Darwin.modulemap present but header paths named by staged modulemaps are absent: missing=$(phase2_darwin_modulemap_missing_headers "$SYS" || true). The Linux fallback must copy generator outputs from the arm64 sysroot including usr/include/_modules, not maps alone."
+        elif ! phase2_measurement_headers_ok "$SYS"; then
+            cannot sysroot-fe4-x86 FE_MEASUREMENT_HEADERS \
+                "FileManager/sdk-gap measurement headers absent after restage: missing=$(phase2_measurement_headers_missing "$SYS" || true). x86 stages this set from arm64 sysroot_fe4 with stage_absent (shared list full/foundation/fe_sysroot_measurement_headers.txt)."
         elif [ "$need_core" -eq 1 ] && { [ ! -f "$SYS/usr/lib/swift/libswiftCore.dylib" ] || ! phase2_is_x86_macho "$SYS/usr/lib/swift/libswiftCore.dylib"; }; then
             cannot sysroot-fe4-x86 STAGE_LIBSWIFTCORE \
                 "x86 libswiftCore is in artifacts but was not staged into $SYS/usr/lib/swift"
@@ -375,14 +379,14 @@ run_sysroot_stager() {
 
 changed=$(sysroot_input_changed || true)
 if [ -z "$changed" ] && phase2_sysroot_complete "$SYS" "$need_core" "$need_bf"; then
-    note sysroot-fe4-x86 satisfied "darwin_headers=ok"
+    note sysroot-fe4-x86 satisfied "darwin_headers=ok measurement_headers=ok"
     SYSROOT_OK=1
     SYSROOT_HEADERS=1
 elif [ -n "$changed" ]; then
     echo "  re-stage sysroot-fe4-x86 (input changed: $(echo "$changed" | tr '\n' ' '))"
     run_sysroot_stager
 elif phase2_sysroot_complete "$SYS" "$need_core" "$need_bf"; then
-    note sysroot-fe4-x86 satisfied "darwin_headers=ok"
+    note sysroot-fe4-x86 satisfied "darwin_headers=ok measurement_headers=ok"
     SYSROOT_OK=1
     SYSROOT_HEADERS=1
 else
@@ -403,6 +407,9 @@ else
     elif [ -f "$SYS/usr/include/Darwin.modulemap" ] \
         && ! phase2_darwin_modulemap_headers_ok "$SYS"; then
         echo "  re-stage sysroot-fe4-x86 (Darwin modulemap headers missing: $(phase2_darwin_modulemap_missing_headers "$SYS" || true))"
+        run_sysroot_stager
+    elif ! phase2_measurement_headers_ok "$SYS"; then
+        echo "  re-stage sysroot-fe4-x86 (measurement headers missing: $(phase2_measurement_headers_missing "$SYS" || true))"
         run_sysroot_stager
     elif [ "$need_core" -eq 1 ] && { [ ! -f "$SYS/usr/lib/swift/libswiftCore.dylib" ] || ! phase2_is_x86_macho "$SYS/usr/lib/swift/libswiftCore.dylib"; }; then
         echo "  re-stage sysroot-fe4-x86 (libswiftCore artifact present, not in sysroot; stamp should have caught this)"
@@ -534,11 +541,46 @@ try_fe_imports() {
 
 try_fe() {
     local out=$FE_OUT/essentials
+    local have_fe=0 have_compat=0
     if [ -f "$out/FoundationEssentials.o" ] && phase2_is_x86_macho "$out/FoundationEssentials.o"; then
+        have_fe=1
+    fi
+    if [ -f "$out/removefile_compat.o" ] && phase2_is_x86_macho "$out/removefile_compat.o"; then
+        have_compat=1
+    fi
+    if [ "$have_fe" -eq 1 ] && [ "$have_compat" -eq 1 ]; then
         note foundationessentials-x86 satisfied "mc=$MC"
         FE_OK=1
         return 0
     fi
+
+    compile_fe_removefile_compat() {
+        local cst
+        mkdir -p "$out"
+        set +e
+        phase2_compile_removefile_compat "$SYS" "$out/removefile_compat.o" "$TARGET" "$W"
+        cst=$?
+        set -e
+        if [ "$cst" -eq 0 ] && [ -f "$out/removefile_compat.o" ] \
+            && phase2_is_x86_macho "$out/removefile_compat.o"; then
+            return 0
+        fi
+        cannot foundationessentials-x86 BUILD_FE_REMOVEFILE_COMPAT \
+            "removefile_compat.c clang exit $cst (build_fe.sh is Swift-only on both arches; arm64 compiles this in build_full.sh). out=$out"
+        return 1
+    }
+
+    if [ "$have_fe" -eq 1 ]; then
+        [ "$SYSROOT_HEADERS" -eq 1 ] || [ "$SYSROOT_OK" -eq 1 ] || {
+            cannot foundationessentials-x86 NEEDS_X86_SYSROOT "removefile_compat.c needs $SYS"
+            return 1
+        }
+        compile_fe_removefile_compat || return 1
+        note foundationessentials-x86 cold-built "mc=$MC removefile_compat=ok"
+        FE_OK=1
+        return 0
+    fi
+
     [ -d "$SF" ] || { cannot foundationessentials-x86 PINNED_SWIFT_FOUNDATION "no $SF"; return 1; }
     [ "$SYSROOT_OK" -eq 1 ] || { cannot foundationessentials-x86 NEEDS_X86_SYSROOT "FE compile needs $SYS"; return 1; }
     [ "$LIBSWIFTCORE_X86" -eq 1 ] || {
@@ -565,7 +607,8 @@ try_fe() {
     st=$?
     set -e
     if [ "$st" -eq 0 ] && phase2_is_x86_macho "$out/FoundationEssentials.o"; then
-        note foundationessentials-x86 cold-built "mc=$MC"
+        compile_fe_removefile_compat || return 1
+        note foundationessentials-x86 cold-built "mc=$MC removefile_compat=ok"
         FE_OK=1
         return 0
     fi
