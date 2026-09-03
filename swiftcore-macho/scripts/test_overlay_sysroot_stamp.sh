@@ -1,10 +1,12 @@
 #!/bin/bash
 # Overlay sysroot staging is input-keyed. A pre-existing MacOSX.sdk with
 # clean-room math.h / no stamp is displaced, never rm'd; mismatch restages
-# into a fresh directory. Refuse-before-cmake if math.h lacks fmaxl,
-# sys/proc.h lacks extern_proc, or a Darwin Clang overlay map names a header
-# that is not on disk. libc++ usr/include/c++/v1/module.modulemap is outside
-# that closure and must not refuse.
+# into a fresh directory. Stamp also keys usr/lib/*.tbd from the FE sysroot
+# (scratch/sysroot_fe4[-x86_64], phase2 / machorun gen_tbd): a tbd-only
+# source change is MISMATCH, not MATCH. Refuse-before-cmake if math.h lacks
+# fmaxl, sys/proc.h lacks extern_proc, or a Darwin Clang overlay map names a
+# header that is not on disk. libc++ usr/include/c++/v1/module.modulemap is
+# outside that closure and must not refuse.
 set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
@@ -79,6 +81,9 @@ grep -q 'fmaxl=yes' "$tmp/print1" \
   && echo "  OK  fmaxl=yes" || { echo "  FAIL fmaxl not yes"; cat "$tmp/print1"; fail=1; }
 grep -q 'extern_proc=yes' "$tmp/print1" \
   && echo "  OK  extern_proc=yes" || { echo "  FAIL extern_proc not yes"; fail=1; }
+grep -q 'overlay_sysroot: source=ABSENT tbd_sha=ABSENT' "$tmp/print1" \
+  && echo "  OK  source=ABSENT tbd_sha=ABSENT (no FE sysroot)" \
+  || { echo "  FAIL source/tbd_sha line"; cat "$tmp/print1"; fail=1; }
 
 mkdir -p "$tmp/bad/usr/include/sys"
 echo '/* clean-room math.h — no fmaxl */' > "$tmp/bad/usr/include/math.h"
@@ -152,6 +157,136 @@ echo "=== matching stamp + complete headers → reuse, no second dest ==="
 overlay_sysroot_begin "$tmp/sdk"
 need '[ "${OVERLAY_SYSROOT_REUSE}" = 1 ]' "second begin reuses"
 need '[ -f "$stale/CANARY" ]' "stale canary still exists after reuse"
+
+echo
+echo "=== tbd-only change in FE source → stamp=MISMATCH and restage ==="
+fe=$W/scratch/sysroot_fe4-x86_64
+mkdir -p "$fe/usr/lib" "$fe/usr/lib/swift/Darwin.swiftmodule"
+cat > "$fe/usr/lib/libSystem.B.tbd" <<'TBD'
+--- !tapi-tbd-v3
+archs: [ x86_64 ]
+install-name: /usr/lib/libSystem.B.dylib
+exports:
+  - archs: [ x86_64 ]
+    symbols: [ _fmaxl ]
+TBD
+ln -sfn libSystem.B.tbd "$fe/usr/lib/libSystem.tbd"
+echo '--- !tapi-tbd-v3' > "$fe/usr/lib/swift/libswiftCore.tbd"
+echo 'module Darwin {}' > "$fe/usr/lib/swift/Darwin.swiftmodule/x86_64-apple-macos.swiftinterface"
+
+sdk_tbd=$tmp/sdkTbd
+mkdir -p "$sdk_tbd"
+overlay_sysroot_begin "$sdk_tbd" >"$tmp/begin_fe" 2>&1
+st=$?
+cat "$tmp/begin_fe"
+[ "$st" -eq 0 ] && echo "  OK  first FE begin rc=0" || { echo "  FAIL first FE begin rc=$st"; fail=1; }
+grep -q "overlay_sysroot: source=$fe tbd_sha=" "$tmp/begin_fe" \
+  && echo "  OK  begin source=scratch/sysroot_fe4-x86_64" \
+  || { echo "  FAIL begin source line"; cat "$tmp/begin_fe"; fail=1; }
+grep -q 'tbd_sha=ABSENT' "$tmp/begin_fe" \
+  && { echo "  FAIL tbd_sha=ABSENT with FE tbds present"; fail=1; } \
+  || echo "  OK  tbd_sha is not ABSENT"
+need '[ "${OVERLAY_SYSROOT_REUSE}" = 0 ]' "first FE begin restages"
+fresh_fe=$OVERLAY_SYSROOT_DEST
+fill_required_headers "$fresh_fe"
+set +e
+overlay_sysroot_finish "$sdk_tbd" "$fresh_fe" >"$tmp/fe.finish1" 2>&1
+fin_st=$?
+set -e
+cat "$tmp/fe.finish1"
+[ "$fin_st" -eq 0 ] && echo "  OK  first FE finish rc=0" || { echo "  FAIL first FE finish rc=$fin_st"; fail=1; }
+grep -q '_fmaxl' "$sdk_tbd/MacOSX.sdk/usr/lib/libSystem.tbd" \
+  && echo "  OK  dest libSystem.tbd came from FE source" \
+  || { echo "  FAIL dest missing FE tbd"; fail=1; }
+[ -f "$sdk_tbd/MacOSX.sdk/usr/lib/swift/libswiftCore.tbd" ] \
+  && echo "  OK  dest has usr/lib/swift/libswiftCore.tbd" \
+  || { echo "  FAIL dest missing swift tbd"; fail=1; }
+[ -f "$sdk_tbd/MacOSX.sdk/usr/lib/swift/Darwin.swiftmodule/x86_64-apple-macos.swiftinterface" ] \
+  && echo "  OK  dest has Darwin.swiftmodule slice" \
+  || { echo "  FAIL dest missing swiftmodule"; fail=1; }
+grep -q "overlay_sysroot: source=$fe tbd_sha=" "$tmp/fe.finish1" \
+  && echo "  OK  finish print_headers source= FE sysroot" \
+  || { echo "  FAIL finish source line"; fail=1; }
+grep -q '^machorun.HEAD=' "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP" \
+  && echo "  OK  stamp records machorun.HEAD (darwin tbds from gen_tbd)" \
+  || { echo "  FAIL stamp missing machorun.HEAD"; fail=1; }
+grep -q '^usr/lib/libSystem.tbd=' "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP" \
+  && echo "  OK  stamp records usr/lib/libSystem.tbd" \
+  || { echo "  FAIL stamp missing libSystem.tbd key"; cat "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP"; fail=1; }
+
+echo
+echo "=== nothing changed in FE source → stamp=MATCH ==="
+overlay_sysroot_begin "$sdk_tbd" >"$tmp/begin_match" 2>&1
+st=$?
+cat "$tmp/begin_match"
+[ "$st" -eq 0 ] && echo "  OK  MATCH begin rc=0" || { echo "  FAIL MATCH begin rc=$st"; fail=1; }
+need '[ "${OVERLAY_SYSROOT_REUSE}" = 1 ]' "unchanged FE source reuses (stamp MATCH)"
+grep -q 'stamp MATCH' "$tmp/begin_match" \
+  && echo "  OK  begin printed stamp MATCH" \
+  || { echo "  FAIL MATCH text"; cat "$tmp/begin_match"; fail=1; }
+grep -q "overlay_sysroot: source=$fe tbd_sha=" "$tmp/begin_match" \
+  && echo "  OK  MATCH run still prints source= tbd_sha=" \
+  || { echo "  FAIL MATCH source line"; fail=1; }
+
+echo
+echo "=== only libSystem.tbd changes in FE source → stamp=MISMATCH, displace, restage ==="
+# Simulate PR #67: gen_tbd / phase2 updated _fmal in the FE tree; overlay
+# headers and HEAD:machorun are unchanged.
+cat > "$fe/usr/lib/libSystem.B.tbd" <<'TBD'
+--- !tapi-tbd-v3
+archs: [ x86_64 ]
+install-name: /usr/lib/libSystem.B.dylib
+exports:
+  - archs: [ x86_64 ]
+    symbols: [ _fmaxl, _fmal ]
+TBD
+overlay_sysroot_begin "$sdk_tbd" >"$tmp/begin_mis" 2>&1
+st=$?
+cat "$tmp/begin_mis"
+[ "$st" -eq 0 ] && echo "  OK  tbd-mismatch begin rc=0" || { echo "  FAIL tbd-mismatch begin rc=$st"; fail=1; }
+need '[ "${OVERLAY_SYSROOT_REUSE}" = 0 ]' "tbd-only change restages (REUSE=0)"
+grep -q 'overlay_sysroot: stamp=MISMATCH' "$tmp/begin_mis" \
+  && echo "  OK  stamp=MISMATCH" \
+  || { echo "  FAIL missing stamp=MISMATCH"; cat "$tmp/begin_mis"; fail=1; }
+grep -qE 'overlay_sysroot: usr/lib/libSystem\.tbd [0-9a-f]+->[0-9a-f]+' "$tmp/begin_mis" \
+  && echo "  OK  libSystem.tbd old->new" \
+  || { echo "  FAIL libSystem.tbd diff"; cat "$tmp/begin_mis"; fail=1; }
+grep -q 'overlay-darwin.math.h' "$tmp/begin_mis" \
+  && { echo "  FAIL header keys also mismatched on tbd-only change"; fail=1; } \
+  || echo "  OK  overlay-darwin headers did not mismatch"
+need '[[ "$OVERLAY_SYSROOT_DEST" == *MacOSX.sdk.overlay-* ]]' "tbd mismatch fresh dest"
+fresh_mis=$OVERLAY_SYSROOT_DEST
+fill_required_headers "$fresh_mis"
+set +e
+overlay_sysroot_finish "$sdk_tbd" "$fresh_mis" >"$tmp/fe.finish2" 2>&1
+fin_st=$?
+set -e
+cat "$tmp/fe.finish2"
+[ "$fin_st" -eq 0 ] && echo "  OK  tbd restage finish rc=0" || { echo "  FAIL tbd restage finish rc=$fin_st"; fail=1; }
+grep -q '_fmal' "$sdk_tbd/MacOSX.sdk/usr/lib/libSystem.tbd" \
+  && echo "  OK  restaged dest libSystem.tbd has _fmal" \
+  || { echo "  FAIL restaged dest still lacks _fmal"; fail=1; }
+stale_tbd=$(ls -d "$sdk_tbd"/MacOSX.sdk.stale-* 2>/dev/null | head -1)
+if [ -n "$stale_tbd" ] && [ -f "$stale_tbd/usr/lib/libSystem.B.tbd" ]; then
+  echo "  OK  previous SDK displaced to $stale_tbd (not rm'd)"
+  grep -q '_fmal' "$stale_tbd/usr/lib/libSystem.B.tbd" \
+    && { echo "  FAIL displaced tree already has _fmal"; fail=1; } \
+    || echo "  OK  displaced tree still has the pre-_fmal tbd"
+else
+  echo "  FAIL no stale tree after tbd restage"
+  ls -la "$sdk_tbd" || true
+  fail=1
+fi
+
+echo
+echo "=== after tbd restage, nothing changed → MATCH again ==="
+overlay_sysroot_begin "$sdk_tbd" >"$tmp/begin_again" 2>&1
+st=$?
+cat "$tmp/begin_again"
+need '[ "${OVERLAY_SYSROOT_REUSE}" = 1 ]' "post-restage unchanged source MATCH"
+grep -q 'stamp MATCH' "$tmp/begin_again" \
+  && echo "  OK  post-restage stamp MATCH" \
+  || { echo "  FAIL post-restage MATCH"; cat "$tmp/begin_again"; fail=1; }
 
 echo
 echo "=== listed required header missing → refuse (not stamp MATCH) ==="

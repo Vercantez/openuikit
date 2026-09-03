@@ -10,11 +10,14 @@
 # not create this run; displace the live MacOSX.sdk aside (.stale-<utc>).
 #
 # Stamp covers the overlay-darwin header set + Darwin.modulemap recipe
-# (stage_overlay_darwin.sh + enumerated module headers) + machorun sys/proc.h.
+# (stage_overlay_darwin.sh + enumerated module headers) + machorun sys/proc.h
+# + the SDK copy's link inputs: usr/lib/*.tbd, usr/lib/swift/*.tbd,
+# usr/lib/swift/*.swiftmodule/*, and HEAD:machorun (darwin tbds originate in
+# machorun gen_tbd; phase2 copies them into scratch/sysroot_fe4[-x86_64]).
 # Required *staged* headers (ConditionalMacros.h included) must be present in
 # the dest tree: input-sha MATCH of the pin is not completeness. .tbd stubs
-# from machorun gen_tbd / the displaced tree are copied into the fresh dest
-# before the live MacOSX.sdk is moved aside.
+# are copied FROM that FE sysroot (fallback: machorun gen_tbd output / the
+# displaced tree) into the fresh dest before the live MacOSX.sdk is moved aside.
 #
 # Staged Darwin*.modulemap files name headers (complex.h, …). Those files must
 # resolve under usr/include before cmake. Closure is the Darwin Clang maps
@@ -37,8 +40,9 @@ OPENUIKIT_ROOT=${OPENUIKIT_ROOT:-$(cd "$SWIFTCORE_ROOT/.." && pwd)}
 . "$OPENUIKIT_ROOT/scripts/x86/common.inc"
 
 # Bump when staging steps, the Darwin.modulemap header list, modulemap
-# header closure, or the required staged-header / tbd completeness gate change.
-OVERLAY_SYSROOT_RECIPE=overlay-darwin.4
+# header closure, the required staged-header / tbd completeness gate, or the
+# tbd / swiftmodule / HEAD:machorun stamp inputs change.
+OVERLAY_SYSROOT_RECIPE=overlay-darwin.5
 OVERLAY_SYSROOT_STAMP=.overlay-sysroot-inputs
 
 # Same enumeration as stage_overlay_darwin.sh DARWIN_MODULE_HEADERS.
@@ -69,6 +73,9 @@ OVERLAY_SYSROOT_DEST=
 OVERLAY_SYSROOT_REUSE=0
 OVERLAY_SYSROOT_DISPLACED=
 OVERLAY_SYSROOT_TBD_SEARCHED=()
+OVERLAY_SYSROOT_SOURCE=ABSENT
+OVERLAY_SYSROOT_SOURCE_KIND=
+OVERLAY_SYSROOT_TBD_SHA=ABSENT
 
 overlay_sysroot_sha_or_absent() {
     local f=$1
@@ -94,12 +101,170 @@ overlay_sysroot_proc_h() {
     return 1
 }
 
+# Darwin usr/lib/*.tbd in the FE sysroot are copied from machorun gen_tbd
+# (phase2_stage_darwin_tbds_into_sysroot). Swift usr/lib/swift/*.tbd come from
+# scripts/x86/gen_swift_tbd.sh, not gen_tbd. Stamp HEAD:machorun for the
+# gen_tbd origin; stamp the tbd bytes themselves so a gen_tbd rerun without a
+# new commit (e.g. PR #67 _fmal) restages the overlay SDK copy.
+overlay_sysroot_machorun_head() {
+    local live
+    live=$(phase2_git "$OPENUIKIT_ROOT" rev-parse HEAD:machorun 2>/dev/null | tr -d '[:space:]') || live=
+    if [ -n "$live" ]; then
+        printf '%s\n' "$live"
+    else
+        printf 'ABSENT\n'
+    fi
+}
+
+# scratch/sysroot_fe4[-x86_64]: the tree phase2 stages from machorun gen_tbd.
+# Never the unsuffixed arm64 sysroot_fe4 on an x86_64 overlay.
+overlay_sysroot_source_candidates() {
+    local arch=${SWIFTCORE_DARWIN_ARCH:-x86_64}
+    [ -n "${SWIFTCORE_FE_SYSROOT:-}" ] && printf '%s\n' "$SWIFTCORE_FE_SYSROOT"
+    if [ -n "${W:-}" ]; then
+        printf '%s\n' "$W/scratch/sysroot_fe4-${arch}"
+        if [ "$arch" = x86_64 ]; then
+            printf '%s\n' "$W/scratch/sysroot_fe4-x86_64"
+        else
+            printf '%s\n' "$W/scratch/sysroot_fe4"
+        fi
+    fi
+    if [ "$arch" = x86_64 ]; then
+        printf '%s\n' "$OPENUIKIT_ROOT/scratch/sysroot_fe4-x86_64"
+    else
+        printf '%s\n' "$OPENUIKIT_ROOT/scratch/sysroot_fe4"
+    fi
+}
+
+overlay_sysroot_gen_tbd_candidates() {
+    [ -n "${W:-}" ] && printf '%s\n' "$W/machorun-sdk"
+    [ -n "${MACHORUN:-}" ] && printf '%s\n' "$MACHORUN/sdk"
+    [ -n "${W:-}" ] && printf '%s\n' "$W/machorun/sdk"
+    printf '%s\n' "$OPENUIKIT_ROOT/machorun/sdk"
+}
+
+overlay_sysroot_tree_has_tbds() {
+    local root=$1
+    local f
+    [ -n "$root" ] || return 1
+    [ -d "$root/usr/lib" ] || return 1
+    for f in "$root/usr/lib"/*.tbd; do
+        [ -e "$f" ] || [ -L "$f" ] || continue
+        return 0
+    done
+    return 1
+}
+
+overlay_sysroot_resolve_source() {
+    local cand root
+    OVERLAY_SYSROOT_SOURCE=ABSENT
+    OVERLAY_SYSROOT_SOURCE_KIND=
+    while IFS= read -r cand; do
+        [ -n "$cand" ] || continue
+        [ -e "$cand" ] || [ -L "$cand" ] || continue
+        overlay_sysroot_tree_has_tbds "$cand" || continue
+        root=$(realpath "$cand" 2>/dev/null || printf '%s' "$cand")
+        OVERLAY_SYSROOT_SOURCE=$root
+        OVERLAY_SYSROOT_SOURCE_KIND=fe
+        printf '%s\n' "$root"
+        return 0
+    done < <(overlay_sysroot_source_candidates)
+    while IFS= read -r cand; do
+        [ -n "$cand" ] || continue
+        [ -e "$cand" ] || [ -L "$cand" ] || continue
+        overlay_sysroot_tree_has_tbds "$cand" || continue
+        root=$(realpath "$cand" 2>/dev/null || printf '%s' "$cand")
+        OVERLAY_SYSROOT_SOURCE=$root
+        OVERLAY_SYSROOT_SOURCE_KIND=gen_tbd
+        printf '%s\n' "$root"
+        return 0
+    done < <(overlay_sysroot_gen_tbd_candidates)
+    return 1
+}
+
+overlay_sysroot_tbd_relpaths() {
+    local root=$1
+    local dir f
+    [ -n "$root" ] && [ "$root" != ABSENT ] || return 0
+    for dir in usr/lib usr/lib/swift; do
+        [ -d "$root/$dir" ] || continue
+        for f in "$root/$dir"/*.tbd; do
+            [ -e "$f" ] || [ -L "$f" ] || continue
+            printf '%s\n' "$dir/$(basename "$f")"
+        done
+    done | LC_ALL=C sort -u
+}
+
+overlay_sysroot_hash_tbds() {
+    local root=$1
+    local rel list
+    if [ -z "$root" ] || [ "$root" = ABSENT ]; then
+        printf 'ABSENT\n'
+        return 0
+    fi
+    list=$(overlay_sysroot_tbd_relpaths "$root")
+    if [ -z "$list" ]; then
+        printf 'ABSENT\n'
+        return 0
+    fi
+    {
+        while IFS= read -r rel; do
+            [ -n "$rel" ] || continue
+            printf '%s %s\n' "$rel" "$(overlay_sysroot_sha_or_absent "$root/$rel")"
+        done <<EOF
+$list
+EOF
+    } | sha256sum | awk '{print $1}'
+}
+
+overlay_sysroot_hash_swiftmodules() {
+    local root=$1
+    local f rel lines=""
+    if [ -z "$root" ] || [ "$root" = ABSENT ] || [ ! -d "$root/usr/lib/swift" ]; then
+        printf 'ABSENT\n'
+        return 0
+    fi
+    while IFS= read -r f; do
+        [ -n "$f" ] || continue
+        rel=${f#"$root/"}
+        lines="${lines}${rel} $(overlay_sysroot_sha_or_absent "$f")"$'\n'
+    done < <(find "$root/usr/lib/swift" -path '*.swiftmodule/*' \( -type f -o -type l \) | LC_ALL=C sort)
+    if [ -z "$lines" ]; then
+        printf 'ABSENT\n'
+        return 0
+    fi
+    printf '%s' "$lines" | sha256sum | awk '{print $1}'
+}
+
+# overlay_sysroot: source=<path> tbd_sha=<…> on every run.
+overlay_sysroot_print_source() {
+    local src tbd_sha
+    src=$(overlay_sysroot_resolve_source || true)
+    [ -n "$src" ] || src=ABSENT
+    tbd_sha=$(overlay_sysroot_hash_tbds "$src")
+    OVERLAY_SYSROOT_SOURCE=$src
+    OVERLAY_SYSROOT_TBD_SHA=$tbd_sha
+    echo "overlay_sysroot: source=${src} tbd_sha=${tbd_sha}"
+}
+
+overlay_sysroot_print_stamp_diff() {
+    local stamp=$1
+    local line
+    while IFS= read -r line; do
+        [ -n "$line" ] || continue
+        echo "overlay_sysroot: $line"
+    done < <(overlay_sysroot_stamp_diff "$stamp" || true)
+}
+
 # overlay_sysroot_input_lines
-# recipe + sha of the overlay-darwin header set + modulemap recipe + proc.h.
+# recipe + sha of the overlay-darwin header set + modulemap recipe + proc.h
+# + source usr/lib/*.tbd + usr/lib/swift/*.tbd + swiftmodules + HEAD:machorun.
 overlay_sysroot_input_lines() {
     local src=$SWIFTCORE_ROOT/sdk/overlay-darwin
-    local proc
+    local proc tbd_src tbd_rel
     proc=$(overlay_sysroot_proc_h || true)
+    tbd_src=$(overlay_sysroot_resolve_source || true)
+    [ -n "$tbd_src" ] || tbd_src=ABSENT
     printf 'recipe=%s\n' "$OVERLAY_SYSROOT_RECIPE"
     printf 'overlay-darwin.math.h=%s\n' "$(overlay_sysroot_sha_or_absent "$src/math.h")"
     printf 'overlay-darwin.MacTypes.h=%s\n' "$(overlay_sysroot_sha_or_absent "$src/MacTypes.h")"
@@ -115,6 +280,18 @@ overlay_sysroot_input_lines() {
         "$(printf '%s\n' "${OVERLAY_SYSROOT_REQUIRED_HEADERS[@]}" | sha256sum | awk '{print $1}')"
     printf 'modulemap.closure=darwin_clang_overlay_maps\n'
     printf 'machorun.sys/proc.h=%s\n' "$(overlay_sysroot_sha_or_absent "${proc:-}")"
+    # gen_tbd origin (darwin usr/lib/*.tbd). Not a substitute for hashing the
+    # generated tbd bytes: PR #67 updated gen_tbd output without this tree
+    # hash changing between overlay stamp writes.
+    printf 'machorun.HEAD=%s\n' "$(overlay_sysroot_machorun_head)"
+    printf 'tbd_sha=%s\n' "$(overlay_sysroot_hash_tbds "$tbd_src")"
+    printf 'usr/lib/swift.modules=%s\n' "$(overlay_sysroot_hash_swiftmodules "$tbd_src")"
+    if [ "$tbd_src" != ABSENT ]; then
+        while IFS= read -r tbd_rel; do
+            [ -n "$tbd_rel" ] || continue
+            printf '%s=%s\n' "$tbd_rel" "$(overlay_sysroot_sha_or_absent "$tbd_src/$tbd_rel")"
+        done < <(overlay_sysroot_tbd_relpaths "$tbd_src")
+    fi
 }
 
 overlay_sysroot_write_stamp() {
@@ -165,6 +342,7 @@ overlay_sysroot_print_headers() {
     local sdk=${1:?overlay_sysroot_print_headers: sdk}
     local rel h
     echo "overlay_sysroot: tree=$sdk"
+    overlay_sysroot_print_source
     if [ -L "$sdk" ]; then
         echo "overlay_sysroot: symlink -> $(readlink "$sdk")"
     fi
@@ -213,6 +391,7 @@ overlay_sysroot_print_headers() {
             fi
         else
             echo "overlay_sysroot: stamp=MISMATCH recipe=$OVERLAY_SYSROOT_RECIPE"
+            overlay_sysroot_print_stamp_diff "$sdk/$OVERLAY_SYSROOT_STAMP"
         fi
     else
         echo "overlay_sysroot: stamp=ABSENT"
@@ -454,16 +633,72 @@ overlay_sysroot_print_tbds() {
     echo "overlay_sysroot: tbds tree=$sdk realpath=$resolved count=$n"
 }
 
-# Copy *.tbd into dest/usr/lib from each source tree's usr/lib. Never
-# overwrite a tbd already in dest. Search: extra args, live MacOSX.sdk,
-# displaced tree, machorun gen_tbd output.
+# Copy *.tbd (and swiftmodule files) into dest from src. overwrite=1 replaces
+# dest files so scratch/sysroot_fe4[-x86_64] wins over a stale machorun-sdk
+# copy stage_sdk.sh already laid down.
+# overlay_sysroot_copy_tbds_from <src> <dest> <overwrite 0|1>
+overlay_sysroot_copy_tbds_from() {
+    local src=${1:?overlay_sysroot_copy_tbds_from: src}
+    local dest=${2:?overlay_sysroot_copy_tbds_from: dest}
+    local overwrite=${3:-0}
+    local lib t bn n=0 swift_n=0 rel f
+    lib=$src/usr/lib
+    [ -d "$lib" ] || return 0
+    mkdir -p "$dest/usr/lib"
+    OVERLAY_SYSROOT_TBD_SEARCHED+=("$lib")
+    for t in "$lib"/*.tbd; do
+        [ -e "$t" ] || [ -L "$t" ] || continue
+        bn=$(basename "$t")
+        if [ "$overwrite" != 1 ] && [ -e "$dest/usr/lib/$bn" ]; then
+            continue
+        fi
+        cp -a "$t" "$dest/usr/lib/$bn"
+        n=$((n + 1))
+    done
+    if [ -d "$src/usr/lib/swift" ]; then
+        mkdir -p "$dest/usr/lib/swift"
+        for t in "$src/usr/lib/swift"/*.tbd; do
+            [ -e "$t" ] || [ -L "$t" ] || continue
+            bn=$(basename "$t")
+            if [ "$overwrite" != 1 ] && [ -e "$dest/usr/lib/swift/$bn" ]; then
+                continue
+            fi
+            cp -a "$t" "$dest/usr/lib/swift/$bn"
+            swift_n=$((swift_n + 1))
+        done
+        while IFS= read -r f; do
+            [ -n "$f" ] || continue
+            rel=${f#"$src/usr/lib/swift/"}
+            if [ "$overwrite" != 1 ] && [ -e "$dest/usr/lib/swift/$rel" ]; then
+                continue
+            fi
+            mkdir -p "$(dirname "$dest/usr/lib/swift/$rel")"
+            cp -a "$f" "$dest/usr/lib/swift/$rel"
+            swift_n=$((swift_n + 1))
+        done < <(find "$src/usr/lib/swift" -path '*.swiftmodule/*' \( -type f -o -type l \) | LC_ALL=C sort)
+    fi
+    if [ "$n" -gt 0 ] || [ "$swift_n" -gt 0 ]; then
+        echo "overlay_sysroot: copied $n tbds + $swift_n swift inputs from $src → $dest"
+    else
+        echo "overlay_sysroot: tbd search $lib (none new)"
+    fi
+}
+
+# Copy *.tbd into dest from each source tree's usr/lib. The FE sysroot
+# (scratch/sysroot_fe4[-x86_64]) is the primary source and overwrites; other
+# trees (live MacOSX.sdk, displaced, machorun gen_tbd) fill gaps only.
 # overlay_sysroot_copy_tbds <dest> [src_sdk...]
 overlay_sysroot_copy_tbds() {
     local dest=${1:?overlay_sysroot_copy_tbds: dest}
     shift
-    local src root lib t bn n srcs
+    local src root srcs primary seen=""
     OVERLAY_SYSROOT_TBD_SEARCHED=()
     mkdir -p "$dest/usr/lib"
+    primary=$(overlay_sysroot_resolve_source || true)
+    if [ -n "$primary" ]; then
+        overlay_sysroot_copy_tbds_from "$primary" "$dest" 1
+        seen=" $primary "
+    fi
     srcs=("$@")
     for src in \
         ${W:+$W/sdk/MacOSX.sdk} \
@@ -476,8 +711,7 @@ overlay_sysroot_copy_tbds() {
         [ -n "$src" ] || continue
         srcs+=("$src")
     done
-    local seen="" s
-    for src in "${srcs[@]}"; do
+    for src in "${srcs[@]+"${srcs[@]}"}"; do
         [ -n "$src" ] || continue
         [ -e "$src" ] || [ -L "$src" ] || continue
         root=$(realpath "$src" 2>/dev/null || printf '%s' "$src")
@@ -488,24 +722,7 @@ overlay_sysroot_copy_tbds() {
             OVERLAY_SYSROOT_TBD_SEARCHED+=("$root (dest)")
             continue
         fi
-        lib=$root/usr/lib
-        OVERLAY_SYSROOT_TBD_SEARCHED+=("$lib")
-        [ -d "$lib" ] || continue
-        n=0
-        for t in "$lib"/*.tbd; do
-            [ -f "$t" ] || continue
-            bn=$(basename "$t")
-            if [ -e "$dest/usr/lib/$bn" ]; then
-                continue
-            fi
-            cp -a "$t" "$dest/usr/lib/$bn"
-            n=$((n + 1))
-        done
-        if [ "$n" -gt 0 ]; then
-            echo "overlay_sysroot: copied $n tbds from $lib → $dest/usr/lib"
-        else
-            echo "overlay_sysroot: tbd search $lib (none new)"
-        fi
+        overlay_sysroot_copy_tbds_from "$root" "$dest" 0
     done
     echo "overlay_sysroot: tbd dest=$dest/usr/lib count=$(overlay_sysroot_tbd_count "$dest")"
 }
@@ -522,7 +739,7 @@ overlay_sysroot_refuse_empty_tbds() {
     resolved=$(realpath "$sdk" 2>/dev/null || printf '%s' "$sdk")
     searched=$(printf '%s,' "${OVERLAY_SYSROOT_TBD_SEARCHED[@]:-}" | sed 's/,$//')
     [ -n "$searched" ] || searched=none
-    echo "CANNOT_OVERLAY_SYSROOT_TBDS tree=$sdk realpath=$resolved count=0 searched=$searched reason=no .tbd stubs in this sysroot; ld64 would see a lie. machorun gen_tbd output and the displaced MacOSX.sdk usr/lib must be copied into the fresh overlay dest." >&2
+    echo "CANNOT_OVERLAY_SYSROOT_TBDS tree=$sdk realpath=$resolved count=0 searched=$searched reason=no .tbd stubs in this sysroot; ld64 would see a lie. scratch/sysroot_fe4[-x86_64] (phase2, from machorun gen_tbd) and the displaced MacOSX.sdk usr/lib must be copied into the fresh overlay dest." >&2
     return 2
 }
 
@@ -624,6 +841,7 @@ overlay_sysroot_begin() {
     OVERLAY_SYSROOT_DEST=
     OVERLAY_SYSROOT_DISPLACED=
     mkdir -p "$parent"
+    overlay_sysroot_print_source
     if [ -e "$live" ] || [ -L "$live" ]; then
         if overlay_sysroot_stamp_matches "$live" && overlay_sysroot_tree_complete "$live"; then
             echo "overlay_sysroot: reuse $live (stamp MATCH recipe=$OVERLAY_SYSROOT_RECIPE)"
@@ -632,7 +850,14 @@ overlay_sysroot_begin() {
             return 0
         fi
         echo "overlay_sysroot: live $live will not be reused:"
-        overlay_sysroot_stamp_diff "$live/$OVERLAY_SYSROOT_STAMP" || true
+        if [ ! -f "$live/$OVERLAY_SYSROOT_STAMP" ]; then
+            echo "overlay_sysroot: stamp=ABSENT"
+        elif overlay_sysroot_stamp_matches "$live"; then
+            echo "overlay_sysroot: stamp=MATCH recipe=$OVERLAY_SYSROOT_RECIPE"
+        else
+            echo "overlay_sysroot: stamp=MISMATCH recipe=$OVERLAY_SYSROOT_RECIPE"
+            overlay_sysroot_print_stamp_diff "$live/$OVERLAY_SYSROOT_STAMP"
+        fi
         if ! overlay_sysroot_tree_complete "$live"; then
             echo "overlay_sysroot: live tree incomplete (required headers or usr/lib/*.tbd)"
         fi
@@ -656,8 +881,9 @@ overlay_sysroot_begin() {
 }
 
 # overlay_sysroot_finish <sdk_parent> <fresh_dir>
-# Copy .tbd stubs from the still-live MacOSX.sdk (and machorun gen_tbd)
-# into dest *before* displacing the live tree.
+# Copy .tbd stubs from scratch/sysroot_fe4[-x86_64] (phase2 / machorun gen_tbd)
+# into dest *before* displacing the live tree. Gap-fill from the still-live
+# MacOSX.sdk and machorun/sdk.
 overlay_sysroot_finish() {
     local parent=${1:?overlay_sysroot_finish: sdk parent}
     local fresh=${2:?overlay_sysroot_finish: fresh}
