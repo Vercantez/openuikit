@@ -1,0 +1,3 @@
+import UniformTypeIdentifiers
+
+let frameworkLoadSmokeMarker = "UNIFORMTYPEIDENTIFIERS_AGENT_RUNTIME_OK"
