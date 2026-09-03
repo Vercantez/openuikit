@@ -1,4 +1,4 @@
-@_spi(OpenUIKitHost) import AuthenticationServices
+import AuthenticationServices
 import Foundation
 
 // Future clean EC2 dependency-identity client. Isolated host-gate success
