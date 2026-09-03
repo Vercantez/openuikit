@@ -128,6 +128,7 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
         self.assertIn("MH_MAGIC_64[[:space:]]+${OTOOL_CPU}", text)
         self.assertIn('actual_id=$(llvm-otool-18 -D', text)
         self.assertIn('focus_widget_guest_attest.pl" closure', text)
+        self.assertIn('--arch "$ARCH"', text)
         self.assertIn('"$MRROOT/machorun"', text)
         self.assertIn("run_machorun_site interaction-path ./focus_onboarding_guest", text)
         self.assertIn("compile the first-party Symbols value model while Foundation is hidden", text)

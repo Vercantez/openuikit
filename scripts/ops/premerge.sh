@@ -140,6 +140,19 @@ while IFS= read -r script; do
     [ -n "$script" ] || continue
     [ -f "$WT/$script" ] || continue
     case "$script" in
+        *tests/acceptance/test_host.sh)
+            # A framework lane's acceptance gate needs the Linux toolchain
+            # (swift 6.2.4 linux, ld64.lld-18). On macOS it cannot run and
+            # must not read as FAIL (measured 2026-09-03: PR #75 CoreMotion
+            # graded FAIL here while its Linux VM printed
+            # FRAMEWORK_FANOUT_HOST_OK). Grade it on a Linux box
+            # (lane gate) or from the PR's quoted marker lines.
+            if [ "$(uname -s)" = Linux ]; then
+                run "pr:$script" bash "$script" || true
+            else
+                NOTES="${NOTES:+$NOTES,}needs-linux:pr:$script"
+            fi
+            ;;
         *.py) run "pr:$script" python3 "$script" || true ;;
         *.sh) run "pr:$script" bash "$script" || true ;;
         *) run "pr:$script" "$script" || true ;;

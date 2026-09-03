@@ -158,17 +158,6 @@ for id in "${ids[@]}"; do
                 verdict="MATCH"
                 detail="x86_64 Darwin baseline (tests/expected-x86_64)"
                 n_match=$((n_match + 1))
-            elif [[ "$ee" == "$ae" ]] \
-               && { [[ ! -f "$X86_EXPECTED/$id.stderr" ]] || cmp -s "$X86_EXPECTED/$id.stderr" "$ACTUAL/$id.stderr"; } \
-               && cmp -s \
-                    <(sed -E -e 's/vm_allocate aligned=(yes|no)/vm_allocate aligned=ARCH/' "$X86_EXPECTED/$id.stdout") \
-                    <(sed -E -e 's/vm_allocate aligned=(yes|no)/vm_allocate aligned=ARCH/' "$ACTUAL/$id.stdout"); then
-                # The fixture tests 16 KiB alignment; Darwin/x86 and Linux/x86
-                # both page at 4 KiB, so yes vs no is luck, not a port bug.
-                # Any other byte against the Rosetta baseline stays FAIL.
-                verdict="MATCH"
-                detail="x86_64 Darwin baseline (vm_allocate aligned= is 16KiB luck on 4KiB)"
-                n_match=$((n_match + 1))
             else
                 verdict="FAIL"
                 detail="differs from tests/expected-x86_64/$id (exit $ee vs $ae); diff tests/actual-x86_64/$id.stdout tests/expected-x86_64/$id.stdout"
@@ -187,8 +176,11 @@ for id in "${ids[@]}"; do
             linux_col="${MAN_LINUX[$id]:-}"
             is_xfail=0
             [[ "$linux_col" == xfail:* ]] && is_xfail=1
-            if [[ "$ee" == "$ae" && "$stdout_ok" == 1 && "$stderr_ok" == 1 ]] \
-               && ! grep -q 'vm_allocate aligned=' "$ACTUAL/$id.stdout"; then
+            if [[ "$ee" == "$ae" && "$stdout_ok" == 1 && "$stderr_ok" == 1 ]]; then
+                # Exact match. (The old vm_allocate aligned= luck guard is gone:
+                # the fixture now tests vm_page_size alignment, which Darwin
+                # promises on both arches, and tests/expected-x86_64 carries
+                # the recorded x86 answer.)
                 if [[ "$is_xfail" == 1 ]]; then
                     verdict="XPASS"
                     detail="manifest says xfail but it matched tests/expected/"

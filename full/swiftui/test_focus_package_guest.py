@@ -385,6 +385,7 @@ class FocusPackageGuestProofTests(unittest.TestCase):
         self.assertIn("printf 'widget-bundle-accessor\\t%s\\n'", text)
         self.assertIn("printf 'licenses-bundle-accessor\\t%s\\n'", text)
         self.assertGreaterEqual(text.count('focus_widget_guest_attest.pl" closure'), 4)
+        self.assertGreaterEqual(text.count('--arch "$ARCH"'), 4)
         self.assertIn("package probe recursive runtime closure drifted", text)
         self.assertIn("Licenses recursive runtime closure drifted", text)
         self.assertIn('"$MRROOT/machorun"', text)

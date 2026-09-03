@@ -184,7 +184,8 @@ assert_build_input_inventory() {
 generate_runtime_closure() {
     perl "$ATTEST" closure --otool llvm-otool-18 \
         --executable "$OUT/focus_widget_guest" \
-        --package "$PACKAGE" --guest-root "$MRROOT"
+        --package "$PACKAGE" --guest-root "$MRROOT" \
+        --arch "$ARCH"
 }
 
 assert_runtime_closure() {
@@ -1015,9 +1016,11 @@ MACHORUN="$MACHORUN" bash "$W/scripts/require_fresh_root.sh" "$MRROOT"
 
 # Resolve the executable's complete transitive Mach-O load graph, including
 # re-exports, weak-load declarations, the loader, the root manifest, and the
-# extensionless Foundation/CoreFoundation loud-abort substrate stubs. An
-# ordinary build records it atomically; a resume may only match that prior
-# record. Never overwrite the record from a resume-only invocation.
+# arch-conditional substrate stubs (arm64: Foundation/CoreFoundation
+# loud-abort placeholders named by iOS-simulator overlays; x86_64: none,
+# matching Apple macOS overlays). An ordinary build records it atomically; a
+# resume may only match that prior record. Never overwrite the record from a
+# resume-only invocation.
 if [ "$skip_full_build" != 1 ]; then
     runtime_closure_recording=$(mktemp "$FULL/.focus-widget-runtime-closure.recording.XXXXXX")
     generate_runtime_closure > "$runtime_closure_recording"

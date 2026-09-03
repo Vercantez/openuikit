@@ -255,7 +255,10 @@ fi
 FB=$(ls -d /tmp/focus-resources-x86-staged.* 2>/dev/null | head -1)
 if [ -n "$FB" ] && [ -d "$FB/bundles/Focus_Widget.bundle" ]; then
     export FOCUS_WIDGET_BUNDLE="$FB/bundles/Focus_Widget.bundle"
-    emit_stage focus-bundle reused "$FOCUS_WIDGET_BUNDLE"
+    # The onboarding gate takes the normalized-bundles DIRECTORY (phase2 asks
+    # for FOCUS_ONBOARDING_BUNDLES once the widget guest has passed).
+    export FOCUS_ONBOARDING_BUNDLES="$FB/bundles"
+    emit_stage focus-bundle reused "$FOCUS_WIDGET_BUNDLE (+onboarding bundles dir $FOCUS_ONBOARDING_BUNDLES)"
 else
     emit_stage focus-bundle cannot "/tmp/focus-resources-x86-staged.*/bundles/Focus_Widget.bundle"
 fi

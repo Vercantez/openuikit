@@ -169,7 +169,7 @@ validate_bundle() {
     [ "$actual_digest" = "$digest" ] || die "$label tree drifted: $actual_digest"
 }
 
-[ "$OUT" = "$W/build/focus-onboarding-guest" ] \
+[ "$OUT" = "$W/build/focus-onboarding-guest${FULL_OUT_SUFFIX}" ] \
     || die "derived output path invariant changed"
 assert_vendor_tree "$W" uikit "$UIKIT" "$EXPECTED_UIKIT_TREE" OpenUIKit
 assert_vendor_tree "$W" machorun "$MACHORUN" "$EXPECTED_INREPO_MACHORUN_TREE" machorun
@@ -1098,6 +1098,7 @@ llvm-otool-18 -hv "$OUT/focus_onboarding_guest" \
 perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     --otool llvm-otool-18 --executable "$OUT/focus_onboarding_guest" \
     --package "$PACKAGE" --guest-root "$RUNROOT" \
+    --arch "$ARCH" \
     > "$AUDIT/runtime-closure.manifest"
 awk -F '\t' '
     $1 == "file" && $2 == "package/libOpenFoundationInternationalization.dylib" {

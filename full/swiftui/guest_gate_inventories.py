@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 """Arch-keyed inventories the Focus widget/onboarding gates assert.
 
-One source for expected_*_loads, expected_*_inputs, package file lists, and
-otool CPU strings. Arm64 tuples are the historical literals (Gate B at
-e93727e0). x86_64 load lists drop the arm64 libswift_errno.dylib autolink
-(libswiftDarwin already carries those binds on macOS); x86_64 input/package
-lists start as the arm64 lists (paths already go through $SYS/$PACKAGE/$FULL
-which carry FULL_OUT_SUFFIX).
+One source for expected_*_loads, expected_*_inputs, package file lists,
+otool CPU strings, and the recursive-closure substrate-stub set. Arm64
+tuples are the historical literals (Gate B at e93727e0). x86_64 load lists
+drop the arm64 libswift_errno.dylib autolink (libswiftDarwin already carries
+those binds on macOS); x86_64 input/package lists start as the arm64 lists
+(paths already go through $SYS/$PACKAGE/$FULL which carry FULL_OUT_SUFFIX).
+x86_64 closure stubs are empty: the cross-built overlays do not LC_LOAD
+Foundation, so the loud-abort placeholders stay out of the walk. Overlay
+autolink is also per-ARCH: ARM64_OVERLAY_AUTOLINK becomes X86_OVERLAY_AUTOLINK
+in place; x86_64 drops ARM64_OVERLAY_AUTOLINK rather than substituting
+DarwinFoundation1.
 
 Operator dumps on the x86_64 EC2 box (FULL_OUT_SUFFIX=-x86_64):
 
@@ -55,7 +60,38 @@ import sys
 
 ARCHES = ("arm64", "x86_64")
 GATES = ("widget", "onboarding")
-KINDS = ("loads", "inputs", "package", "otool-cpu")
+KINDS = ("loads", "inputs", "package", "otool-cpu", "stubs")
+
+# Closure substrate stubs. The attest walks the guest's recursive dylib
+# closure and exact-matches the known Foundation/CoreFoundation loud-abort
+# placeholders against this set. Missing an expected stub fails closed;
+# a universe image that the arch inventory does not list also fails closed.
+#
+# arm64: Apple's iOS-simulator overlays (staged in mrroot_full) declare
+# Foundation.framework/Foundation and CoreFoundation.framework/CoreFoundation
+# in LC_LOAD_DYLIB. Measured 2026-08-28 (foundation-macho census; 2,858 binds
+# across the twelve overlays, 0 attributed to either framework) the four
+# images that name both placeholders and bind none of their symbols are:
+#   libswift_Builtin_float  libswift_RegexParser
+#   libswiftSynchronization libswift_StringProcessing
+# Operator re-measure on the arm64 box:
+#   llvm-otool-18 -L scratch/mrroot_full/darwin/usr/lib/swift/*.dylib
+# x86_64: the twelve overlays are cross-built from source (swiftcore-macho
+# ninja + in-tree shells), like Apple's macOS overlays, and do not load
+# Foundation at all. Measured on committed artifacts:
+#   llvm-objdump-18 --macho --private-headers \
+#     swiftcore-macho/artifacts/swift-macosx/x86_64/*.dylib
+# none of the 13 dylibs name Foundation.framework or CoreFoundation.framework.
+FOUNDATION_STUB = (
+    "guest-root/darwin/System/Library/Frameworks/Foundation.framework/Foundation"
+)
+COREFOUNDATION_STUB = (
+    "guest-root/darwin/System/Library/Frameworks/"
+    "CoreFoundation.framework/CoreFoundation"
+)
+CLOSURE_STUB_UNIVERSE: tuple[str, ...] = (FOUNDATION_STUB, COREFOUNDATION_STUB)
+CLOSURE_STUBS_ARM64: tuple[str, ...] = CLOSURE_STUB_UNIVERSE
+CLOSURE_STUBS_X86_64: tuple[str, ...] = ()
 
 # Apple ld oracle (MacOSX26.1 SDK, x86_64-apple-macos14.0), operator-run:
 #
@@ -647,6 +683,22 @@ def otool_cpu(arch: str) -> str:
         raise ValueError(f"unsupported arch {arch!r}") from exc
 
 
+def stubs(gate: str, name: str, arch: str) -> tuple[str, ...]:
+    """Arch-conditional substrate stubs. `gate` is accepted for the CLI
+    shape; widget and onboarding share one overlay-driven set."""
+    if gate not in GATES:
+        raise KeyError(f"unknown gate {gate!r}")
+    if arch not in ARCHES:
+        raise ValueError(f"unsupported arch {arch!r}")
+    if name == "universe":
+        return CLOSURE_STUB_UNIVERSE
+    if name != "substrate":
+        raise KeyError(f"unknown stubs inventory {name!r}")
+    if arch == "arm64":
+        return CLOSURE_STUBS_ARM64
+    return CLOSURE_STUBS_X86_64
+
+
 def expand(items: tuple[str, ...], binds: dict[str, str]) -> tuple[str, ...]:
     expanded = []
     for item in items:
@@ -684,6 +736,8 @@ def emit(arch: str, gate: str, kind: str, name: str, binds: dict[str, str]) -> s
         return canonical_text(loads(gate, name, arch))
     if kind == "inputs":
         return canonical_text(expand(inputs(gate, name, arch), binds))
+    if kind == "stubs":
+        return canonical_text(stubs(gate, name, arch))
     raise ValueError(f"unknown kind {kind!r}")
 
 
@@ -704,6 +758,8 @@ def check_names(gate: str, kind: str) -> tuple[str, ...]:
         )
     if kind == "otool-cpu":
         return ("otool-cpu",)
+    if kind == "stubs":
+        return ("substrate", "universe")
     raise KeyError(f"unknown kind {kind!r}")
 
 
