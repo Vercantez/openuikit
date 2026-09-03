@@ -193,7 +193,7 @@
       "id": "machorun-inrepo",
       "kind": "in-repo-subtree",
       "path": "machorun",
-      "tree": "bf65d344e5e4dabbfe8963910ff43551132a951d",
+      "tree": "8ad42c209c866d29266a9d598ec4d9e08753ae24",
       "lock": "scripts/vendor_pins.sh",
       "attestation": "git rev-parse HEAD:machorun",
       "demanded_by": ["focus-widget", "focus-onboarding", "focus-package", "build-full", "core-guest-package"]
