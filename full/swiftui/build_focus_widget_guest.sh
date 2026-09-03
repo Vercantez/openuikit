@@ -146,6 +146,7 @@ support_digest() {
             "$W/full/oracle-opencombine/Combine.swift" \
             "$W/full/oracle-opencombine/patches/COpenCombineHelpers-pthread-recursive.patch" \
             "$W/full/scripts/build_full.sh" \
+            "$W/full/dispatch/build_host_bridge.sh" \
             "$W/full/swiftui/build_focus_widget_guest.sh"; do
             printf '%s\t%s\n' "${file#"$W"/}" "$(hash_file "$file")"
         done
@@ -223,6 +224,7 @@ runtime_fingerprint() {
         printf 'medium-font\t%s\n' "$(hash_file "$MEDIUM_FONT")"
         printf 'staged-system-font\t%s\n' "$(hash_file "$OUT/fonts/DejaVuSans.ttf")"
         printf 'staged-medium-font\t%s\n' "$(hash_file "$OUT/fonts/DejaVuSans-Bold.ttf")"
+        printf 'host-libOpenDispatchHost.so\t%s\n' "$(hash_file "$DISPATCH_HOST")"
     } | hash_stream
 }
 
@@ -333,6 +335,7 @@ for required in \
     "$W/full/swiftui/FocusWidgetBundle.generated.swift" \
     "$W/full/swiftui/FocusWidgetGuestMain.swift" \
     "$ATTEST" \
+    "$W/full/dispatch/build_host_bridge.sh" \
     "$MACHORUN/build/machorun"; do
     [ -f "$required" ] || { echo "focus_widget_guest: missing $required" >&2; exit 2; }
 done
@@ -1221,6 +1224,28 @@ runtime_closure_edge_count=$(grep -Ec '^(edge|weak-missing)'"$(printf '\t')" "$R
     echo "focus_widget_guest: recursive runtime closure is vacuous ($runtime_closure_file_count files, $runtime_closure_edge_count edges)" >&2
     exit 2
 }
+
+echo "== build Linux Dispatch host bridge"
+HOST_BRIDGE_DIR=$OUT/host
+DISPATCH_HOST=$HOST_BRIDGE_DIR/libOpenDispatchHost.so
+EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST
+host_bridge_args=(
+    --repo "$W"
+    --host-dir "$HOST_BRIDGE_DIR"
+    --work-dir "$OUT/host-work"
+    --attestation-dir "$AUDIT"
+    --ledger-style focus-widget
+    --refuse-prefix 'focus_widget_guest: '
+)
+if [ "$(uname -m)" = aarch64 ] || [ "$(uname -m)" = arm64 ]; then
+    host_bridge_args+=(--host-abi ELF64-AArch64)
+else
+    host_bridge_args+=(--skip-runtime-pin --host-abi "ELF64-$(uname -m)")
+fi
+bash "$W/full/dispatch/build_host_bridge.sh" "${host_bridge_args[@]}"
+[ -f "$DISPATCH_HOST" ] && [ ! -L "$DISPATCH_HOST" ] \
+    || die "Linux Dispatch host helper is missing: $DISPATCH_HOST"
+
 runtime_before=$(runtime_fingerprint)
 
 echo "== run $ARCH Mach-O under machorun on Linux"
@@ -1231,12 +1256,16 @@ if [ "$ARCH" = arm64 ] && [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm
 fi
 export MACHORUN_ROOT="$MRROOT"
 cd "$OUT"
+LD_LIBRARY_PATH="$HOST_BRIDGE_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
 "$MRROOT/machorun" ./focus_widget_guest \
     "$OUT/Focus_Widget.bundle" \
     "$OUT/focus-search-widget.png" | tee guest-first.log
 cp "$OUT/focus-search-widget.png" "$OUT/focus-search-widget.first.png"
 assert_build_input_inventory
 assert_runtime_closure
+LD_LIBRARY_PATH="$HOST_BRIDGE_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
 "$MRROOT/machorun" ./focus_widget_guest \
     "$OUT/Focus_Widget.bundle" \
     "$OUT/focus-search-widget.png" | tee guest-repeat.log
@@ -1270,6 +1299,8 @@ cp "$PACKAGE/libOpenUIKit.dylib" "$PACKAGE/libCombine.dylib" \
 set +e
 (
     cd "$missing_control"
+    LD_LIBRARY_PATH="$HOST_BRIDGE_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
     "$MRROOT/machorun" ./focus_widget_guest \
         "$OUT/Focus_Widget.bundle" \
         "$OUT/missing-control-must-not-exist.png"
@@ -1303,6 +1334,8 @@ cp "$PACKAGE/libSwiftUI.dylib" "$PACKAGE/libCombine.dylib" \
 set +e
 (
     cd "$missing_openuikit"
+    LD_LIBRARY_PATH="$HOST_BRIDGE_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+    LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
     "$MRROOT/machorun" ./focus_widget_guest \
         "$OUT/Focus_Widget.bundle" \
         "$OUT/missing-openuikit-must-not-exist.png"
@@ -1341,6 +1374,8 @@ run_missing_observation_control() {
     set +e
     (
         cd "$control"
+        LD_LIBRARY_PATH="$HOST_BRIDGE_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+        LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
         "$MRROOT/machorun" ./focus_widget_guest \
             "$OUT/Focus_Widget.bundle" "$artifact"
     ) > "$stdout" 2> "$stderr"
@@ -1456,6 +1491,7 @@ require_hash "$FOCUS_WIDGET/SearchWidgetView.swift" "$EXPECTED_VIEW_SHA" SearchW
     printf 'libCombine.dylib\t%s\n' "$(hash_file "$PACKAGE/libCombine.dylib")"
     printf 'libOpenCombine.dylib\t%s\n' "$(hash_file "$PACKAGE/libOpenCombine.dylib")"
     printf 'libSymbols.dylib\t%s\n' "$(hash_file "$PACKAGE/libSymbols.dylib")"
+    printf 'host-libOpenDispatchHost.so\t%s\n' "$(hash_file "$DISPATCH_HOST")"
     printf 'focus_widget_guest\t%s\n' "$(hash_file "$OUT/focus_widget_guest")"
     printf 'focus-search-widget.png\t%s\n' "$(hash_file "$OUT/focus-search-widget.png")"
 } > "$OUT/artifacts.sha256"

@@ -2450,97 +2450,19 @@ ldd "$RELATIVE_TIME_HOST" \
 } >> "$RUNTIME/.manifest"
 
 echo '== build and pin the Linux libdispatch scheduling boundary'
-for host_runtime_input in "$HOST_DISPATCH_SOURCE" "$HOST_BLOCKS_RUNTIME_SOURCE"; do
-    [ -f "$host_runtime_input" ] && [ ! -L "$host_runtime_input" ] \
-        || die "host Dispatch runtime input is not a regular file: $host_runtime_input"
-done
-require_hash "$HOST_DISPATCH_SOURCE" "$EXPECTED_HOST_DISPATCH_SHA256" \
-    host-libdispatch
-require_hash "$HOST_BLOCKS_RUNTIME_SOURCE" \
-    "$EXPECTED_HOST_BLOCKS_RUNTIME_SHA256" host-BlocksRuntime
-cp "$HOST_DISPATCH_SOURCE" "$RUNTIME/host/libdispatch.so"
-cp "$HOST_BLOCKS_RUNTIME_SOURCE" "$RUNTIME/host/libBlocksRuntime.so"
-
 DISPATCH_HOST=$RUNTIME/host/libOpenDispatchHost.so
-clang-18 -std=c11 -O2 -fPIC -fvisibility=hidden -Wall -Wextra -Werror \
-    -I "$W/full/dispatch/include" -I /usr/lib/swift -shared \
-    "$W/full/dispatch/OpenDispatchHost.c" \
-    -L "$RUNTIME/host" -Wl,-rpath,'$ORIGIN' \
-    -ldispatch -Wl,--no-as-needed -lBlocksRuntime -Wl,--as-needed -pthread \
-    -o "$DISPATCH_HOST"
-clang-18 -std=c11 -O2 -Wall -Wextra -Werror \
-    -I "$W/full/dispatch/include" -I /usr/lib/swift \
-    "$W/full/dispatch/OpenDispatchHost.c" \
-    "$W/full/dispatch/OpenDispatchHostTests.c" \
-    -L "$RUNTIME/host" -Wl,-rpath,"$RUNTIME/host" \
-    -ldispatch -Wl,--no-as-needed -lBlocksRuntime -Wl,--as-needed -pthread \
-    -o "$WORK/open-dispatch-host-tests"
-LD_LIBRARY_PATH="$RUNTIME/host" "$WORK/open-dispatch-host-tests" \
-    > "$WORK/open-dispatch-host-test.log" 2>&1
-grep -Fx \
-    'OPEN_DISPATCH_HOST_OK global=minted private=serial specific=typed semaphore=signal,timeout async=worker after=timer tokens=contained glibc>=2.38' \
-    "$WORK/open-dispatch-host-test.log" >/dev/null \
-    || die 'native Dispatch host semantic marker is missing'
-
-DISPATCH_HOST_EXPECTED_EXPORTS=$WORK/open-dispatch-host-expected-exports.txt
-{
-    printf '%s\n' \
-        openui_dispatch_host_v1_after \
-        openui_dispatch_host_v1_async \
-        openui_dispatch_host_v1_create_queue \
-        openui_dispatch_host_v1_get_global_queue \
-        openui_dispatch_host_v1_get_specific \
-        openui_dispatch_host_v1_main \
-        openui_dispatch_host_v1_monotonic_nanoseconds \
-        openui_dispatch_host_v1_queue_set_specific \
-        openui_dispatch_host_v1_release_queue \
-        openui_dispatch_host_v1_runtime_check \
-        openui_dispatch_host_v1_semaphore_create \
-        openui_dispatch_host_v1_semaphore_release \
-        openui_dispatch_host_v1_semaphore_signal \
-        openui_dispatch_host_v1_semaphore_wait
-} > "$DISPATCH_HOST_EXPECTED_EXPORTS"
-readelf --wide --syms "$DISPATCH_HOST" \
-    | awk '$5 == "GLOBAL" && $7 != "UND" && $8 ~ /^openui_dispatch_host_v1_/ { print $8 }' \
-    | LC_ALL=C sort -u > "$WORK/open-dispatch-host-exports.txt"
-cmp "$DISPATCH_HOST_EXPECTED_EXPORTS" "$WORK/open-dispatch-host-exports.txt" \
-    || die 'Linux Dispatch helper exports drifted'
-
-dispatch_glibc_max=$(readelf --version-info "$RUNTIME/host/libdispatch.so" \
-    | grep -o 'GLIBC_[0-9][0-9.]*' | sort -Vu | tail -n 1)
-blocks_glibc_max=$(readelf --version-info "$RUNTIME/host/libBlocksRuntime.so" \
-    | grep -o 'GLIBC_[0-9][0-9.]*' | sort -Vu | tail -n 1)
-[ "$dispatch_glibc_max" = GLIBC_2.38 ] \
-    || die "staged libdispatch maximum glibc requirement is $dispatch_glibc_max, expected GLIBC_2.38"
-[ "$blocks_glibc_max" = GLIBC_2.17 ] \
-    || die "staged BlocksRuntime maximum glibc requirement is $blocks_glibc_max, expected GLIBC_2.17"
-readelf --wide --dynamic "$DISPATCH_HOST" \
-    | awk '$2 == "(NEEDED)" { value=$5; gsub(/^\[|\]$/, "", value); print value }' \
-    | LC_ALL=C sort -u > "$WORK/open-dispatch-host-sonames.txt"
-for required_soname in libdispatch.so libBlocksRuntime.so; do
-    grep -Fx "$required_soname" "$WORK/open-dispatch-host-sonames.txt" >/dev/null \
-        || die "Linux Dispatch helper does not pin $required_soname"
-done
-{
-    printf 'format\topen-dispatch-host-v1\n'
-    printf 'host-abi\tELF64-AArch64\n'
-    printf 'glibc-minimum\t2.38\tsource=staged-libdispatch-version-needs\n'
-    printf 'runtime\tlibdispatch.so\t%s\tmax-version=%s\n' \
-        "$(hash_file "$RUNTIME/host/libdispatch.so")" "$dispatch_glibc_max"
-    printf 'runtime\tlibBlocksRuntime.so\t%s\tmax-version=%s\n' \
-        "$(hash_file "$RUNTIME/host/libBlocksRuntime.so")" "$blocks_glibc_max"
-    printf 'helper\tlibOpenDispatchHost.so\t%s\trpath=$ORIGIN\n' \
-        "$(hash_file "$DISPATCH_HOST")"
-    while IFS= read -r soname; do
-        printf 'direct-soname\t%s\n' "$soname"
-    done < "$WORK/open-dispatch-host-sonames.txt"
-    printf 'queue-policy\tmain=kind-only\tglobal=helper-minted-only\tprivate=helper-minted,serial-or-concurrent\n'
-    printf 'specific-policy\tkey=opaque\tvalue=retained\tdestructor=guest-callback\n'
-    printf 'semaphore-policy\thandle=helper-minted\twait=bounded-or-forever\n'
-    printf 'job-policy\tguest-callback=opaque\thost-dispatch=dispatch_async_f\n'
-} > "$STAGE/attestation/open-dispatch-host.tsv"
-cp "$WORK/open-dispatch-host-test.log" \
-    "$STAGE/attestation/open-dispatch-host-test.log"
+bash "$W/full/dispatch/build_host_bridge.sh" \
+    --repo "$W" \
+    --host-dir "$RUNTIME/host" \
+    --work-dir "$WORK" \
+    --attestation-dir "$STAGE/attestation" \
+    --ledger-style core \
+    --refuse-prefix 'core_guest_package: REFUSING -- ' \
+    --host-dispatch-source "$HOST_DISPATCH_SOURCE" \
+    --host-blocks-runtime-source "$HOST_BLOCKS_RUNTIME_SOURCE" \
+    --expected-libdispatch-sha256 "$EXPECTED_HOST_DISPATCH_SHA256" \
+    --expected-blocks-sha256 "$EXPECTED_HOST_BLOCKS_RUNTIME_SHA256"
+# Shared host-libdispatch verifies staged libdispatch max-version is GLIBC_2.38.
 
 clang-18 -target "$TARGET" -isysroot "$STAGE/sdk" -std=c11 -O2 \
     -fvisibility=hidden -Wall -Wextra -Werror \

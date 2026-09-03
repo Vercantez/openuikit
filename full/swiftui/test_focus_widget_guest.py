@@ -126,6 +126,32 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
         for forbidden in ("Foundation.framework", "SwiftUI.framework", "SwiftUICore.framework"):
             self.assertIn(forbidden.replace(".", r"\."), text)
 
+    def test_run_step_preloads_shared_dispatch_host_bridge(self) -> None:
+        text = BUILD.read_text()
+        self.assertIn('bash "$W/full/dispatch/build_host_bridge.sh"', text)
+        self.assertIn("EARLY_PLATFORM_HOST_PRELOAD=$DISPATCH_HOST", text)
+        preload = (
+            'LD_PRELOAD="$EARLY_PLATFORM_HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}"'
+        )
+        self.assertIn(preload, text)
+        self.assertEqual(text.count(preload), 5)
+        self.assertEqual(text.count('"$MRROOT/machorun" ./focus_widget_guest'), 5)
+        self.assertIn(
+            'LD_LIBRARY_PATH="$HOST_BRIDGE_DIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"',
+            text,
+        )
+        self.assertIn("host-libOpenDispatchHost.so", text)
+        helper = (ROOT / "full/dispatch/build_host_bridge.sh").read_text()
+        self.assertIn("OPEN_DISPATCH_HOST_OK", helper)
+        self.assertIn("openui_dispatch_host_v1_get_global_queue", helper)
+        self.assertIn("GLIBC_2.38", helper)
+        self.assertIn("libBlocksRuntime.so", helper)
+        builder = (
+            ROOT / "full/frameworks/build_core_guest_package.sh"
+        ).read_text()
+        self.assertIn('bash "$W/full/dispatch/build_host_bridge.sh"', builder)
+        self.assertIn("GLIBC_2.38", builder)
+
     def test_frameworks_are_real_dylibs_with_exact_identity_and_rpaths(self) -> None:
         text = BUILD.read_text()
         self.assertIn("-dylib -install_name @rpath/libOpenUIKit.dylib", text)
