@@ -112,3 +112,12 @@ STRING_PROCESSING_PIN_COMMIT=91177e6225c63e885872b83d48e254b1270fa15a
 LIBDISPATCH_PIN_COMMIT=2df91f94651f2d924d7506c9d14685929386d779
 STRING_PROCESSING_REPO=https://github.com/swiftlang/swift-experimental-string-processing.git
 LIBDISPATCH_REPO=https://github.com/swiftlang/swift-corelibs-libdispatch.git
+# compiler-rt builtins for Darwin overlay links (libclang_rt.osx.a).
+# Same pin as PR #60's os_version_check.c (llvmorg-18.1.8). Sources live in
+# scratch/ — do not commit them. Tarball sha256 is the GitHub release asset
+# compiler-rt-18.1.8.src.tar.xz; commit is llvm-project llvmorg-18.1.8^{}.
+LLVM_PROJECT_PIN_TAG=llvmorg-18.1.8
+LLVM_PROJECT_PIN_COMMIT=3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff
+LLVM_PROJECT_REPO=https://github.com/llvm/llvm-project.git
+COMPILER_RT_SRC_TAR_URL=https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/compiler-rt-18.1.8.src.tar.xz
+COMPILER_RT_SRC_TAR_SHA256=e054e99a9c9240720616e927cb52363abbc8b4f1ef0286bad3df79ec8fdf892f
