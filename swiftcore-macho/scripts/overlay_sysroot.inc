@@ -28,12 +28,17 @@
 # FE sysroot / full/sdk-gaps / machorun / overlay-darwin pins.
 #
 # clang -target x86_64-apple-macos -isysroot $SDK searches usr/local/include
-# then usr/include. objc4-priv/crt_externs.h is a wrapper (`#include_next
-# <crt_externs.h>`). Flattening it onto usr/include (stage_sdk used to) leaves
-# no later dir for the public header — Darwin.o dies at crt_externs.h:13.
-# The working (stale) copy had the public machorun-sdk / FE file at
-# usr/include/crt_externs.h. Restage puts the wrapper at usr/local/include
-# and the public header at usr/include.
+# then usr/include. objc4-priv/crt_externs.h is a wrapper: after comments and
+# an include guard, its FIRST preprocessor directive is `#include_next
+# <crt_externs.h>` (same basename). Flattening that onto usr/include leaves
+# no later SDK dir — Darwin.o dies at crt_externs.h:13. Apple's
+# i386/limits.h and arm/limits.h also contain `#include_next <limits.h>`,
+# but only after `#if defined(__i386__)` / `__arm__` and other includes:
+# that include_next is clang's resource-dir limits.h, not an SDK wrapper.
+# machine/limits.h dispatches `#include <i386/limits.h>` vs `<arm/limits.h>`
+# under those same macros; arm/limits.h is absent from an x86_64-only
+# sysroot and must not refuse. Restage: wrapper at usr/local/include,
+# public header at usr/include.
 
 if [ -n "${SWIFTCORE_OVERLAY_SYSROOT_INC:-}" ]; then
     return 0 2>/dev/null || exit 0
@@ -51,8 +56,10 @@ OPENUIKIT_ROOT=${OPENUIKIT_ROOT:-$(cd "$SWIFTCORE_ROOT/.." && pwd)}
 
 # Bump when staging steps, the Darwin.modulemap header list, modulemap
 # header closure, the required staged-header / tbd completeness gate, the
-# tbd / swiftmodule / HEAD:machorun stamp inputs, or the include_next
-# wrapper layout change.
+# tbd / swiftmodule / HEAD:machorun stamp inputs, the include_next wrapper
+# layout, or the include_next wrapper predicate (first directive after
+# comments/guard is `#include_next <same-basename>`; not every
+# `#include_next` in Apple's i386/arm limits.h).
 OVERLAY_SYSROOT_RECIPE=overlay-darwin.6
 OVERLAY_SYSROOT_STAMP=.overlay-sysroot-inputs
 
@@ -267,17 +274,111 @@ overlay_sysroot_print_stamp_diff() {
     done < <(overlay_sysroot_stamp_diff "$stamp" || true)
 }
 
-# Names from `#include_next <foo.h>` / `"foo.h"` in a header. Empty if none.
-overlay_sysroot_include_next_names() {
+# First non-comment preprocessor directive, skipping a leading include
+# guard (`#ifndef NAME` / `#define NAME`) or `#pragma once`. Empty if none.
+overlay_sysroot_first_pp_directive() {
     local f=$1
     [ -f "$f" ] || return 0
-    sed -n 's/^[[:space:]]*#[[:space:]]*include_next[[:space:]]*[<"]\([^>"]*\)[>"].*/\1/p' "$f"
+    awk '
+    BEGIN { in_c=0; phase=0; guard=""; guard_line="" }
+    {
+      s = $0
+      out = ""
+      n = length(s)
+      i = 1
+      while (i <= n) {
+        nxt = substr(s, i, 2)
+        c = substr(s, i, 1)
+        if (in_c) {
+          if (nxt == "*/") { in_c=0; i+=2; continue }
+          i++
+          continue
+        }
+        if (nxt == "/*") { in_c=1; i+=2; continue }
+        if (nxt == "//") break
+        out = out c
+        i++
+      }
+      gsub(/^[ \t]+/, "", out)
+      gsub(/[ \t]+$/, "", out)
+      if (out == "") next
+      if (phase == 0) {
+        if (out ~ /^#[ \t]*pragma[ \t]+once$/) next
+        if (out ~ /^#[ \t]*ifndef[ \t]+[A-Za-z_][A-Za-z0-9_]*$/) {
+          guard_line = out
+          g = out
+          sub(/^#[ \t]*ifndef[ \t]+/, "", g)
+          guard = g
+          phase = 1
+          next
+        }
+        print out
+        exit
+      }
+      if (phase == 1) {
+        if (out ~ /^#[ \t]*define[ \t]+/) {
+          d = out
+          sub(/^#[ \t]*define[ \t]+/, "", d)
+          split(d, a, /[ \t]+/)
+          if (a[1] == guard) { phase = 2; next }
+        }
+        print guard_line
+        exit
+      }
+      print out
+      exit
+    }
+    ' "$f"
 }
 
+# objc4-priv wrapper shape: first real directive is `#include_next <basename>`
+# (or `"basename"`) matching this file's basename. Apple's i386/arm limits.h
+# bury include_next after an arch `#if` — those are not wrappers.
 overlay_sysroot_is_include_next_wrapper() {
     local f=$1
+    local bn first name
     [ -f "$f" ] || return 1
-    overlay_sysroot_include_next_names "$f" | grep -q .
+    bn=$(basename "$f")
+    first=$(overlay_sysroot_first_pp_directive "$f")
+    [ -n "$first" ] || return 1
+    name=$(printf '%s\n' "$first" | sed -n \
+        's/^#[ \t]*include_next[ \t]*[<"]\([^>"]*\)[>"].*/\1/p')
+    [ -n "$name" ] && [ "$name" = "$bn" ]
+}
+
+# Basename of an include_next wrapper's target. Empty if this file is not
+# the objc4-priv wrapper shape (do not grep every include_next in the tree).
+overlay_sysroot_include_next_names() {
+    local f=$1
+    overlay_sysroot_is_include_next_wrapper "$f" || return 0
+    basename "$f"
+}
+
+# Skip arch-dispatched SDK dirs that clang will not open for THIS target.
+# machine/limits.h picks i386/ vs arm/ under __x86_64__ / __arm64__; the
+# off-arch file is legitimately absent from a single-arch sysroot.
+overlay_sysroot_header_applies_to_arch() {
+    local f=$1
+    local arch=${SWIFTCORE_DARWIN_ARCH:-x86_64}
+    case "$arch" in
+        x86_64|i386)
+            case "$f" in
+                */usr/include/arm/*|*/usr/include/arm64/*|\
+                */usr/local/include/arm/*|*/usr/local/include/arm64/*)
+                    return 1
+                    ;;
+            esac
+            ;;
+        arm64|aarch64|arm)
+            case "$f" in
+                */usr/include/i386/*|*/usr/include/x86_64/*|\
+                */usr/local/include/i386/*|*/usr/local/include/x86_64/*)
+                    return 1
+                    ;;
+            esac
+            ;;
+    esac
+    return 0
 }
 
 # clang -target *-apple-macos -isysroot $SDK (overlay -sdk): usr/local/include
@@ -329,6 +430,8 @@ overlay_sysroot_include_next_missing_entries() {
         [ -d "$dir" ] || continue
         while IFS= read -r f; do
             [ -n "$f" ] || continue
+            overlay_sysroot_header_applies_to_arch "$f" || continue
+            overlay_sysroot_is_include_next_wrapper "$f" || continue
             while IFS= read -r name; do
                 [ -n "$name" ] || continue
                 found=0

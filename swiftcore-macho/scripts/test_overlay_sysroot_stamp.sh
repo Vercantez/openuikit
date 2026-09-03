@@ -6,8 +6,11 @@
 # source change is MISMATCH, not MATCH. Refuse-before-cmake if math.h lacks
 # fmaxl, sys/proc.h lacks extern_proc, a Darwin Clang overlay map names a
 # header that is not on disk, or an include_next wrapper (objc4-priv
-# crt_externs.h) has no later -isysroot target. libc++ usr/include/c++/v1
-# module.modulemap is outside that closure and must not refuse.
+# crt_externs.h: first directive `#include_next <same-basename>`) has no
+# later -isysroot target. Apple's limits.h / machine/limits.h / i386/limits.h
+# are not that shape (buried include_next is clang's resource dir; arm/
+# limits.h is off-arch on x86_64). libc++ usr/include/c++/v1 module.modulemap
+# is outside that closure and must not refuse.
 set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
@@ -500,9 +503,85 @@ grep -q 'overlay_sysroot_install_objc4_priv' "$SCRIPT_DIR/stage_sdk.sh" \
   || { echo "  FAIL stage_sdk missing overlay_sysroot_install_objc4_priv"; fail=1; }
 
 echo
-echo "=== objc4-priv include_next wrapper at usr/include is refused ==="
+echo "=== include_next wrapper predicate: objc4 vs Apple limits.h ==="
 wrap=$OPENUIKIT_ROOT/machorun/vendor/objc4-priv/crt_externs.h
 pub=$OPENUIKIT_ROOT/machorun/sdk/usr/include/crt_externs.h
+apple_limits=$OPENUIKIT_ROOT/machorun/sdk/usr/include/limits.h
+machine_limits=$OPENUIKIT_ROOT/machorun/sdk/usr/include/machine/limits.h
+i386_limits=$OPENUIKIT_ROOT/machorun/sdk/usr/include/i386/limits.h
+arm_limits=$OPENUIKIT_ROOT/machorun/sdk/usr/include/arm/limits.h
+need '[ -f "$wrap" ]' "objc4-priv crt_externs.h present"
+need '[ -f "$pub" ]' "machorun-sdk public crt_externs.h present"
+need '[ -f "$apple_limits" ]' "Apple limits.h present"
+need '[ -f "$machine_limits" ]' "machine/limits.h present"
+need '[ -f "$i386_limits" ]' "i386/limits.h present"
+need '[ -f "$arm_limits" ]' "arm/limits.h present"
+overlay_sysroot_is_include_next_wrapper "$wrap" \
+  && echo "  OK  objc4-priv crt_externs.h is the wrapper shape" \
+  || { echo "  FAIL objc4 wrapper not recognized"; fail=1; }
+overlay_sysroot_is_include_next_wrapper "$pub" \
+  && { echo "  FAIL public crt_externs.h classified as wrapper"; fail=1; } \
+  || echo "  OK  public crt_externs.h is not a wrapper"
+overlay_sysroot_is_include_next_wrapper "$apple_limits" \
+  && { echo "  FAIL Apple limits.h classified as wrapper"; fail=1; } \
+  || echo "  OK  Apple limits.h is not a wrapper"
+overlay_sysroot_is_include_next_wrapper "$machine_limits" \
+  && { echo "  FAIL machine/limits.h classified as wrapper"; fail=1; } \
+  || echo "  OK  machine/limits.h is not a wrapper"
+overlay_sysroot_is_include_next_wrapper "$i386_limits" \
+  && { echo "  FAIL i386/limits.h classified as wrapper (buried include_next)"; fail=1; } \
+  || echo "  OK  i386/limits.h is not a wrapper"
+overlay_sysroot_is_include_next_wrapper "$arm_limits" \
+  && { echo "  FAIL arm/limits.h classified as wrapper (buried include_next)"; fail=1; } \
+  || echo "  OK  arm/limits.h is not a wrapper"
+grep -q include_next "$i386_limits" \
+  && echo "  OK  i386/limits.h still contains include_next (clang resource dir)" \
+  || { echo "  FAIL i386/limits.h lost include_next"; fail=1; }
+
+echo
+echo "=== Apple limits.h + machine/limits.h, only i386/limits.h → complete on x86_64 ==="
+mkdir -p "$tmp/lim/usr/include/machine" "$tmp/lim/usr/include/i386" \
+  "$tmp/lim/usr/lib"
+fill_required_headers "$tmp/lim"
+echo '--- !tapi-tbd-v3' > "$tmp/lim/usr/lib/libSystem.B.tbd"
+cp "$apple_limits" "$tmp/lim/usr/include/limits.h"
+cp "$machine_limits" "$tmp/lim/usr/include/machine/limits.h"
+cp "$i386_limits" "$tmp/lim/usr/include/i386/limits.h"
+need '[ ! -e "$tmp/lim/usr/include/arm/limits.h" ]' \
+  "arm/limits.h absent (x86_64-only sysroot)"
+SWIFTCORE_DARWIN_ARCH=x86_64
+if overlay_sysroot_tree_complete "$tmp/lim"; then
+  echo "  OK  tree_complete true (Apple limits.h, no arm/limits.h)"
+else
+  echo "  FAIL tree_complete false on Apple limits.h x86_64 shape"
+  overlay_sysroot_include_next_missing_entries "$tmp/lim" || true
+  fail=1
+fi
+set +e
+print_lim=$(overlay_sysroot_print_headers "$tmp/lim" 2>&1)
+refuse_lim=$(overlay_sysroot_refuse_incomplete "$tmp/lim" 2>&1)
+st=$?
+set -e
+[ "$st" -eq 0 ] && echo "  OK  Apple limits.h refuse rc=0" \
+  || { echo "  FAIL Apple limits.h refuse rc=$st"; printf '%s\n' "$refuse_lim"; fail=1; }
+printf '%s\n' "$refuse_lim" | grep -q CANNOT_OVERLAY_SYSROOT_INCLUDE_NEXT \
+  && { echo "  FAIL Apple limits.h still INCLUDE_NEXT"; printf '%s\n' "$refuse_lim"; fail=1; } \
+  || echo "  OK  Apple limits.h is not INCLUDE_NEXT"
+printf '%s\n' "$print_lim$refuse_lim" | grep -q 'limits.h@usr/include/' \
+  && { echo "  FAIL still attributes missing limits.h"; printf '%s\n' "$print_lim$refuse_lim"; fail=1; } \
+  || echo "  OK  did not name i386/arm limits.h as a missing wrapper"
+mkdir -p "$tmp/lim/usr/include/arm"
+cp "$arm_limits" "$tmp/lim/usr/include/arm/limits.h"
+if overlay_sysroot_tree_complete "$tmp/lim"; then
+  echo "  OK  tree_complete still true with off-arch arm/limits.h present"
+else
+  echo "  FAIL arm/limits.h presence made tree incomplete"
+  overlay_sysroot_include_next_missing_entries "$tmp/lim" || true
+  fail=1
+fi
+
+echo
+echo "=== objc4-priv include_next wrapper at usr/include is refused ==="
 need '[ -f "$wrap" ]' "objc4-priv crt_externs.h present"
 need '[ -f "$pub" ]' "machorun-sdk public crt_externs.h present"
 grep -q include_next "$wrap" \
