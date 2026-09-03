@@ -3,7 +3,9 @@
 #
 # Produces x86_64 ud_guest through foundation-macho's committed pipeline:
 #   objects in $W/scratch/ud-guest-x86_64/fe  (never scratch/ud-guest)
-#   libCFTest.dylib + libswiftcompat.dylib in that tree's lib/
+#   libCFTest.dylib from build_cfobjc.sh + build_cftest_harness.sh
+#     (never a stub dylib; link_ud_guest.sh stays the only ud_guest linker)
+#   libswiftcompat.dylib in that tree's lib/
 #   link via foundation-macho/scripts/link_ud_guest.sh  (no second linker)
 #   binary at $W/scratch/ud-guest-x86_64/bin/ud_guest, handed to rung a as
 #   UD_GUEST_BIN.
@@ -376,10 +378,49 @@ phase2_ud_guest_ensure_swiftcompat() {
     rm -f "$log"
 }
 
+# Same search list as foundation-macho/scripts/build_cfobjc.sh find_cf.
+# Keep the two in sync; this copy exists so a missing-CF refusal does not
+# invoke clang.
+phase2_ud_guest_find_cf() {
+    local ud_w=$1 repo=$2
+    local c
+    for c in \
+        "${CF:-}" \
+        "$ud_w/cf" \
+        /work/cf \
+        "$HOME/scf-full/Sources/CoreFoundation" \
+        "$repo/scratch/swift-corelibs-foundation/Sources/CoreFoundation" \
+        "$repo/scratch/scf/Sources/CoreFoundation"
+    do
+        [ -n "$c" ] || continue
+        [ -f "$c/CFRuntime.c" ] && [ -f "$c/CFPreferences.c" ] || continue
+        printf '%s\n' "$c"
+        return 0
+    done
+    return 1
+}
+
+phase2_ud_guest_find_icu() {
+    local repo=$1
+    local c
+    for c in \
+        "${ICU_INC:-}" \
+        "$repo/scratch/swift-foundation-icu/icuSources/include" \
+        "$HOME/swift-foundation-icu/icuSources/include"
+    do
+        [ -n "$c" ] || continue
+        [ -d "$c" ] || continue
+        printf '%s\n' "$c"
+        return 0
+    done
+    return 1
+}
+
 phase2_ud_guest_ensure_cftest() {
     local ud_w=$1 repo=$2
+    local sys=${3:-$ud_w/fe/sysroot}
     local dest=$ud_w/lib/libCFTest.dylib
-    local found
+    local found recipe linker cf icu log st
     mkdir -p "$ud_w/lib"
     found=$(phase2_ud_guest_find_x86_dylib libCFTest.dylib \
         "${UD_CFTEST_DYLIB:-}" \
@@ -390,12 +431,71 @@ phase2_ud_guest_ensure_cftest() {
         [ "$found" = "$dest" ] || cp -a "$found" "$dest"
         return 0
     fi
-    # /work/cfobjc has no committed compile recipe (docs/CF_PREFERENCES_EXECUTION.md).
-    # build_cftest_harness.sh only relinks objects that already exist. Do not
-    # invent a second CF compiler or a stub dylib.
-    phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
-        "no x86_64 Mach-O. Committed CF linker is foundation-macho/scripts/build_cftest_harness.sh; cfobjc objects have no committed recipe (shell-history only). Will not invent a CF compiler or a stub. Operator: provide UD_CFTEST_DYLIB=x86_64 libCFTest.dylib."
-    return 1
+
+    recipe=$repo/foundation-macho/scripts/build_cfobjc.sh
+    linker=$repo/foundation-macho/scripts/build_cftest_harness.sh
+    if [ ! -f "$recipe" ]; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "no x86_64 Mach-O. missing committed recipe $recipe. Will not invent a stub dylib. Operator: set CF= to Sources/CoreFoundation or UD_CFTEST_DYLIB=x86_64 libCFTest.dylib."
+        return 1
+    fi
+    if [ ! -f "$linker" ]; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "no x86_64 Mach-O. missing committed CF linker $linker. Will not invent a stub dylib."
+        return 1
+    fi
+
+    cf=$(phase2_ud_guest_find_cf "$ud_w" "$repo" || true)
+    if [ -z "$cf" ]; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "no x86_64 Mach-O. CF sources missing (looked at \$CF, $ud_w/cf, /work/cf, \$HOME/scf-full/Sources/CoreFoundation, $repo/scratch/swift-corelibs-foundation, $repo/scratch/scf). Committed recipe is foundation-macho/scripts/build_cfobjc.sh; committed CF linker is foundation-macho/scripts/build_cftest_harness.sh. Will not invent a stub dylib. Operator: set CF= to Sources/CoreFoundation or UD_CFTEST_DYLIB=x86_64 libCFTest.dylib."
+        return 1
+    fi
+    if [ ! -d "$sys/usr/include" ]; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "no x86_64 Mach-O. Darwin sysroot missing at $sys (need usr/include). Committed recipe is foundation-macho/scripts/build_cfobjc.sh; committed CF linker is foundation-macho/scripts/build_cftest_harness.sh. Will not invent a stub dylib."
+        return 1
+    fi
+
+    icu=$(phase2_ud_guest_find_icu "$repo" || true)
+    log=$ud_w/lib/build_cfobjc.log
+    set +e
+    W="$ud_w" \
+        SDK="$sys" \
+        CF="$cf" \
+        OUT="$ud_w/cfobjc" \
+        ICU_INC="${icu:-}" \
+        TRIPLE=x86_64-apple-macos13.0 \
+        bash "$recipe" >"$log" 2>&1
+    st=$?
+    set -e
+    if [ "$st" -ne 0 ]; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "build_cfobjc.sh exit $st log=$log. Committed recipe is foundation-macho/scripts/build_cfobjc.sh; committed CF linker is foundation-macho/scripts/build_cftest_harness.sh. Will not invent a stub dylib."
+        return 1
+    fi
+
+    log=$ud_w/lib/build_cftest_harness.log
+    set +e
+    W="$ud_w" \
+        SDK="$sys" \
+        CF="$ud_w/cfobjc/src" \
+        CF_FALLBACK="$cf" \
+        LIB="$ud_w/lib" \
+        CFOBJC_OBJ="$ud_w/cfobjc/obj" \
+        NSCF_OBJ="$ud_w/nscfobj" \
+        R="$repo/foundation-macho" \
+        PROBE_SRC="$repo/foundation-macho/tests/probe_sysctl.c" \
+        TRIPLE=x86_64-apple-macos13.0 \
+        LLD_BIN=/usr/lib/llvm-18/bin \
+        bash "$linker" >"$log" 2>&1
+    st=$?
+    set -e
+    if [ "$st" -ne 0 ] || [ ! -f "$dest" ] || ! phase2_is_x86_macho "$dest"; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "build_cftest_harness.sh exit $st (committed CF linker; objects from build_cfobjc.sh) log=$log. Will not invent a stub dylib."
+        return 1
+    fi
 }
 
 phase2_ud_guest_link() {
@@ -502,7 +602,7 @@ phase2_try_ud_guest() {
     report=$(phase2_ud_guest_ensure_swiftcompat "$repo" "$sys" "$ud_w" "$mrlib" "$loader" || true)
     case "$report" in CANNOT_*) printf '%s\n' "$report"; return 1 ;; esac
 
-    report=$(phase2_ud_guest_ensure_cftest "$ud_w" "$repo" || true)
+    report=$(phase2_ud_guest_ensure_cftest "$ud_w" "$repo" "$sys" || true)
     case "$report" in CANNOT_*) printf '%s\n' "$report"; return 1 ;; esac
 
     out=$ud_w/bin/ud_guest
