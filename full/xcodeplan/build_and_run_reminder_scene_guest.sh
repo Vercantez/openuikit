@@ -266,8 +266,32 @@ build_inside() {
         "$full/foundation/essentials/uuid_compat.o" \
         "$full/foundation/essentials/fm_unimplemented.o"
 
+    # The libSystem.B umbrella (concpatch) imports the _glibc_openui_dispatch_host_v1_*
+    # host bridge; build it with the shared script and preload it, exactly as
+    # the Focus widget gate does (Gate B, main fa4d8647).
+    echo "== build Linux Dispatch host bridge"
+    local host_bridge_dir="$SCENE_OUT/host" dispatch_host
+    dispatch_host="$SCENE_OUT/host/libOpenDispatchHost.so"
+    mkdir -p "$SCENE_OUT/host-audit"
+    local -a host_bridge_args=(
+        --repo "$W"
+        --host-dir "$host_bridge_dir"
+        --work-dir "$SCENE_OUT/host-work"
+        --attestation-dir "$SCENE_OUT/host-audit"
+        --refuse-prefix 'reminder_scene_guest: '
+    )
+    case "$(uname -m)" in
+        aarch64|arm64) host_bridge_args+=(--host-abi ELF64-AArch64) ;;
+        *)             host_bridge_args+=(--skip-runtime-pin --host-abi "ELF64-$(uname -m)") ;;
+    esac
+    bash "$W/full/dispatch/build_host_bridge.sh" "${host_bridge_args[@]}"
+    [ -f "$dispatch_host" ] && [ ! -L "$dispatch_host" ] \
+        || die "Linux Dispatch host helper is missing: $dispatch_host"
+
     (
         cd "$SCENE_OUT"
+        LD_PRELOAD="$dispatch_host${LD_PRELOAD:+:$LD_PRELOAD}" \
+        LD_LIBRARY_PATH="$host_bridge_dir${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
         MACHORUN_ROOT="$rootdir" OPENUIKIT_HOST_TURNS="$turns" \
             "$rootdir/machorun" ./reminder-scene-guest
     ) | tee "$SCENE_OUT/runtime.log"
