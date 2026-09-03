@@ -45,7 +45,10 @@
 #   CHECK 4  no two dylibs in darwin/usr/lib define the same symbol (below).
 #   CHECK 5  every symbol the darwin root leaves to the loader's HOST FALLBACK
 #            is accounted for by a decision -- the `_glibc_*` label, the loader
-#            export list, src/host_deny.c, or darwin/host-bound-allowed.txt.
+#            export list, src/host_deny.c (ABI-divergent names AND compiler-rt
+#            builtins: a builtin reaching glibc means a dylib was linked without
+#            libclang_rt.osx.a -- never host-bound-allowed), or
+#            darwin/host-bound-allowed.txt.
 #            The only one of the five that is not about the .tbd surface at
 #            all; it is here because it sweeps the same "every dylib present"
 #            scope CHECK 4 does. Delegated to scripts/check_undefined.sh,
@@ -605,7 +608,10 @@ fi  # libobjc+libquartz present; CHECK 3 ran
 # Delegated rather than inlined, because the same check has to run against
 # GUEST roots (~/swift-macho-linux/scratch/mrroot_fe and its siblings), which
 # is where it found the eight names #73 is about. Two copies of one symbol
-# checker would drift exactly as a .tbd drifts from its dylib.
+# checker would drift exactly as a .tbd drifts from its dylib. Compiler-rt
+# builtins (___divti3, ___isPlatform*, …) are host_deny compiler-rt rows, not
+# host-bound-allowed: a builtin reaching glibc means a dylib was linked without
+# libclang_rt.osx.a.
 echo "   CHECK 5: the host-fallback surface of darwin/"
 # Overlay/stdlib cross-builds need .tbd files (CHECKs 0–4), not a host-fallback
 # audit of an operator mrroot they do not own. Phase2 still runs this check.

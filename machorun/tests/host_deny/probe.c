@@ -27,6 +27,18 @@ extern long double  strtold(const char *, char **);
 extern double       remquo(double, double, int *);
 extern float        nanf(const char *);
 
+/* compiler-rt builtins. The C names match src/host_deny.c's X() cname. asm
+ * labels are the Mach-O spelling so clang will not rewrite them as libcalls.
+ * We only need the call to hit the deny stub; signatures do not matter. */
+extern void rt_divti3(void) __asm("___divti3");
+extern void rt_modti3(void) __asm("___modti3");
+extern void rt_udivti3(void) __asm("___udivti3");
+extern void rt_umodti3(void) __asm("___umodti3");
+extern void rt_truncsfhf2(void) __asm("___truncsfhf2");
+extern void rt_isPlatformVersionAtLeast(void) __asm("___isPlatformVersionAtLeast");
+extern void rt_isPlatformOrVariantPlatformVersionAtLeast(void)
+    __asm("___isPlatformOrVariantPlatformVersionAtLeast");
+
 static int probe_vdprintf(const char *fmt, ...)
 {
     __builtin_va_list ap;
@@ -73,6 +85,41 @@ int deny_probe(const char *what)
         long double v = strtold("1.5", (char **)0);
         printf("strtold(\"1.5\") returned %.1f -- REACHED GLIBC, the deny-list "
                "did not fire\n", (double)v);
+        return 1;
+    }
+    if (strcmp(what, "__divti3") == 0) {
+        rt_divti3();
+        printf("__divti3 returned -- REACHED GLIBC, the deny-list did not fire\n");
+        return 1;
+    }
+    if (strcmp(what, "__modti3") == 0) {
+        rt_modti3();
+        printf("__modti3 returned -- REACHED GLIBC, the deny-list did not fire\n");
+        return 1;
+    }
+    if (strcmp(what, "__udivti3") == 0) {
+        rt_udivti3();
+        printf("__udivti3 returned -- REACHED GLIBC, the deny-list did not fire\n");
+        return 1;
+    }
+    if (strcmp(what, "__umodti3") == 0) {
+        rt_umodti3();
+        printf("__umodti3 returned -- REACHED GLIBC, the deny-list did not fire\n");
+        return 1;
+    }
+    if (strcmp(what, "__truncsfhf2") == 0) {
+        rt_truncsfhf2();
+        printf("__truncsfhf2 returned -- REACHED GLIBC, the deny-list did not fire\n");
+        return 1;
+    }
+    if (strcmp(what, "__isPlatformVersionAtLeast") == 0) {
+        rt_isPlatformVersionAtLeast();
+        printf("__isPlatformVersionAtLeast returned -- REACHED GLIBC, the deny-list did not fire\n");
+        return 1;
+    }
+    if (strcmp(what, "__isPlatformOrVariantPlatformVersionAtLeast") == 0) {
+        rt_isPlatformOrVariantPlatformVersionAtLeast();
+        printf("__isPlatformOrVariantPlatformVersionAtLeast returned -- REACHED GLIBC, the deny-list did not fire\n");
         return 1;
     }
     printf("probe: no such probe '%s'\n", what);

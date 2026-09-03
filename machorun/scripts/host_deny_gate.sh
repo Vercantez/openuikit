@@ -45,7 +45,10 @@ docker info >/dev/null 2>&1 || die "docker daemon not reachable"
 
 # ------------------------------------------------------------- the table
 # X(mangled, "cname", ... -- one row per denied symbol.
-DENIED=$(grep -oE '^ *X\([a-z_0-9]+, "[a-z_0-9]+"' "$ROOT/src/host_deny.c" \
+# C names, including mixed-case compiler-rt hooks (__isPlatformVersionAtLeast).
+# [a-z_0-9]+ dropped those rows, so CHECK 5 and this gate would grade an
+# incomplete table while the deny stubs still existed in the loader.
+DENIED=$(grep -oE '^ *X\([A-Za-z_][A-Za-z_0-9]*, "[A-Za-z_][A-Za-z_0-9]*"' "$ROOT/src/host_deny.c" \
            | sed 's/.*"\(.*\)"/\1/' | LC_ALL=C sort -u)
 CONTROLS="remquo nanf"
 
@@ -101,7 +104,7 @@ for f in /work/darwin/usr/lib/*.dylib; do ln -s "$f" "$W/root/usr/lib/"; done
 UFLAGS=""
 for s in $DENY_NAMES $CONTROL_NAMES; do UFLAGS="$UFLAGS -U _$s"; done
 
-$CLANG -target $TARGET -isysroot $SDK -fPIC -O1 -c \
+$CLANG -target $TARGET -isysroot $SDK -fPIC -O1 -fno-builtin -c \
        /work/tests/host_deny/probe.c -o "$W/probe.o" 2>"$W/cc.log" || {
     echo "PROBE-COMPILE-FAILED"; sed 's/^/    /' "$W/cc.log"; exit 0; }
 
