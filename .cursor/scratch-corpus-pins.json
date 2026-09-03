@@ -33,20 +33,6 @@
       "commit": "1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b",
       "tree": "66a9d91efc910c7577e40b2dec166a2de427594a",
       "destination": "scratch/opencombine-core-durable-20260828-r2/source"
-    },
-    {
-      "id": "swift-foundation-icu",
-      "repository": "https://github.com/apple/swift-foundation-icu.git",
-      "commit": "87dbab99780e277b6a4c2a397ab1a894f877b39a",
-      "tree": "823a4a2a13f60a0fd2715db85a754dda11d5fd39",
-      "destination": "scratch/swift-foundation-icu"
-    },
-    {
-      "id": "swift-corelibs-foundation",
-      "repository": "https://github.com/swiftlang/swift-corelibs-foundation.git",
-      "commit": "f3a7a34302317a95665bf4ff1a62ee1b459c1695",
-      "tree": "2f9136f253a51406f2bcb0a612bcb6a9eba03570",
-      "destination": "scratch/ud-guest-x86_64/cf"
     }
   ]
 }

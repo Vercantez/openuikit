@@ -164,10 +164,16 @@ check verify_runs_rung_a \
     grep -q 'PHASE2_RUNGS=a' "$script_dir/verify-cloud-environment.sh"
 check verify_can_execute_x86 \
     grep -q 'CURSOR_ENV_CAN_EXECUTE arch=x86_64' "$script_dir/verify-cloud-environment.sh"
-check corpus_pins_icu \
-    grep -q 'swift-foundation-icu' "$script_dir/scratch-corpus-pins.json"
-check corpus_pins_cf \
-    grep -q 'swift-corelibs-foundation' "$script_dir/scratch-corpus-pins.json"
+check install_contract_checkouts_by_id \
+    grep -q 'checkouts_by_id(load_contract' "$script_dir/install-scratch-corpus.sh"
+check install_contract_icu \
+    grep -q 'swift-foundation-icu' "$script_dir/install-scratch-corpus.sh"
+check install_contract_cf \
+    grep -q 'swift-corelibs-foundation' "$script_dir/install-scratch-corpus.sh"
+check verify_contract_icu \
+    grep -q 'swift-foundation-icu' "$script_dir/verify-cloud-environment.sh"
+check verify_contract_cf \
+    grep -q 'swift-corelibs-foundation' "$script_dir/verify-cloud-environment.sh"
 
 # --- attested Linux-half gates are bash (this VM has no zsh) ---
 check linux_verify_bash_shebang \

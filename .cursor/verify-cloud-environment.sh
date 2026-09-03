@@ -189,6 +189,59 @@ $corpus_ids
 EOF
 [ "$corpus_count" -gt 0 ] && [ "$corpus_ok" -eq "$corpus_count" ] \
     || { printf 'cursor-environment: corpus pins %s/%s\n' "$corpus_ok" "$corpus_count" >&2; exit 1; }
+
+# Same two checkouts the install path clones from env/contract.json (not the
+# corpus pin file). A checkout cannot be locked in two places.
+contract_rows=$(python3 - "$repo_root" <<'PY'
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+sys.path.insert(0, str(root / "scripts"))
+from env.contract import checkouts_by_id, load_contract
+
+ids = ("swift-foundation-icu", "swift-corelibs-foundation")
+by_id = checkouts_by_id(load_contract(root))
+for ident in ids:
+    row = by_id[ident]
+    print(
+        "\t".join(
+            [
+                ident,
+                row["repository"],
+                row["commit"],
+                row["tree"],
+                row["destination"],
+            ]
+        )
+    )
+PY
+)
+contract_count=0
+contract_ok=0
+while IFS=$'\t' read -r corpus_id repository commit tree destination; do
+    [ -n "$corpus_id" ] || continue
+    contract_count=$((contract_count + 1))
+    dest=$repo_root/$destination
+    [ -d "$dest/.git" ] && [ ! -L "$dest" ] \
+        || { printf 'cursor-environment: missing contract checkout: %s\n' "$destination" >&2; exit 1; }
+    git_corpus() { git -c safe.directory="$dest" -C "$dest" "$@"; }
+    [ "$(git_corpus rev-parse HEAD)" = "$commit" ] \
+        || { printf 'cursor-environment: %s commit differs\n' "$corpus_id" >&2; exit 1; }
+    [ "$(git_corpus rev-parse 'HEAD^{tree}')" = "$tree" ] \
+        || { printf 'cursor-environment: %s tree differs\n' "$corpus_id" >&2; exit 1; }
+    bash "$origin_guard" "$dest" "$repository"
+    corpus_status=$(git_corpus --no-optional-locks status \
+        --porcelain=v1 --untracked-files=all --ignored) \
+        || { printf 'cursor-environment: cannot inspect %s status\n' "$corpus_id" >&2; exit 1; }
+    [ -z "$corpus_status" ] \
+        || { printf 'cursor-environment: %s checkout is dirty\n' "$corpus_id" >&2; exit 1; }
+    contract_ok=$((contract_ok + 1))
+done <<EOF
+$contract_rows
+EOF
+[ "$contract_count" -eq 2 ] && [ "$contract_ok" -eq "$contract_count" ] \
+    || { printf 'cursor-environment: contract checkouts %s/%s\n' "$contract_ok" "$contract_count" >&2; exit 1; }
 pinned_inputs=$repo_root/full/foundation/pinned_inputs.pl
 if [ -f "$pinned_inputs" ] && [ ! -L "$pinned_inputs" ]; then
     perl "$pinned_inputs" verify \
