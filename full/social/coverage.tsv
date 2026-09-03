@@ -1,0 +1,68 @@
+precise	status	evidence	notes
+c:@E@SLComposeViewControllerResult	implemented	Social.swift;SocialRuntime.swift:assertEnums	Int NS_ENUM overlay; raw values follow declaration order pending oracle.
+c:@E@SLComposeViewControllerResult@SLComposeViewControllerResultCancelled	implemented	Social.swift;SocialRuntime.swift:assertEnums	case cancelled; rawValue 0 by NS_ENUM order.
+c:@E@SLComposeViewControllerResult@SLComposeViewControllerResultDone	implemented	Social.swift;SocialRuntime.swift:assertEnums	case done; rawValue 1 by NS_ENUM order.
+c:@E@SLRequestMethod	implemented	Social.swift;SocialRuntime.swift:assertEnums	Int NS_ENUM overlay; raw values follow declaration order pending oracle.
+c:@E@SLRequestMethod@SLRequestMethodDELETE	implemented	Social.swift;SocialRuntime.swift:assertEnums	case DELETE; rawValue 2 by NS_ENUM order.
+c:@E@SLRequestMethod@SLRequestMethodGET	implemented	Social.swift;SocialRuntime.swift:assertEnums	case GET; rawValue 0 by NS_ENUM order.
+c:@E@SLRequestMethod@SLRequestMethodPOST	implemented	Social.swift;SocialRuntime.swift:assertEnums	case POST; rawValue 1 by NS_ENUM order.
+c:@E@SLRequestMethod@SLRequestMethodPUT	implemented	Social.swift;SocialRuntime.swift:assertEnums	case PUT; rawValue 3 by NS_ENUM order.
+c:@SLServiceTypeFacebook	declared	Social.swift	Provisional com.apple.social.facebook; Darwin bytes unobserved.
+c:@SLServiceTypeLinkedIn	declared	Social.swift	Provisional com.apple.social.linkedin; Darwin bytes unobserved.
+c:@SLServiceTypeSinaWeibo	declared	Social.swift	Provisional com.apple.social.sinaweibo; Darwin bytes unobserved.
+c:@SLServiceTypeTencentWeibo	declared	Social.swift	Provisional com.apple.social.tencentweibo; Darwin bytes unobserved.
+c:@SLServiceTypeTwitter	declared	Social.swift	Provisional com.apple.social.twitter; Darwin bytes unobserved.
+c:@T@SLComposeSheetConfigurationItemTapHandler	implemented	Social.swift;SocialRuntime.swift:assertConfigurationItem	typealias () -> Void; invoked from tapHandler.
+c:@T@SLComposeViewControllerCompletionHandler	implemented	Social.swift;SocialRuntime.swift:assertComposeViewController	typealias (SLComposeViewControllerResult) -> Void; cleared after invoke.
+c:@T@SLRequestHandler	implemented	Social.swift;SocialRuntime.swift:assertPerformFailClosed	typealias (Data?, HTTPURLResponse?, Error?) -> Void; fail-closed perform.
+c:objc(cs)SLComposeServiceViewController	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	UIViewController + UITextViewDelegate; standalone fixture types on this host.
+c:objc(cs)SLComposeServiceViewController(im)cancel	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Calls didSelectCancel once; recursion guard.
+c:objc(cs)SLComposeServiceViewController(im)configurationItems	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Default empty array.
+c:objc(cs)SLComposeServiceViewController(im)didSelectCancel	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Partial local count; no NSExtensionContext completion.
+c:objc(cs)SLComposeServiceViewController(im)didSelectPost	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Partial local count; no Apple post pipeline.
+c:objc(cs)SLComposeServiceViewController(im)isContentValid	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Default true.
+c:objc(cs)SLComposeServiceViewController(im)loadPreviewView	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Returns a local UIView; not Apple preview UI.
+c:objc(cs)SLComposeServiceViewController(im)popConfigurationViewController	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Clears the single pushed controller.
+c:objc(cs)SLComposeServiceViewController(im)presentationAnimationDidFinish	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Sets isolated-host flag.
+c:objc(cs)SLComposeServiceViewController(im)pushConfigurationViewController:	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	At most one pushed controller.
+c:objc(cs)SLComposeServiceViewController(im)reloadConfigurationItems	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Reinvokes configurationItems; increments reload count.
+c:objc(cs)SLComposeServiceViewController(im)validateContent	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Stores isContentValid result.
+c:objc(cs)SLComposeServiceViewController(py)autoCompletionViewController	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Stored UIViewController property.
+c:objc(cs)SLComposeServiceViewController(py)charactersRemaining	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Stored NSNumber property.
+c:objc(cs)SLComposeServiceViewController(py)contentText	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Reads textView.text.
+c:objc(cs)SLComposeServiceViewController(py)placeholder	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Stored string; not Apple placeholder rendering.
+c:objc(cs)SLComposeServiceViewController(py)textView	implemented	SLComposeServiceViewController.swift;SocialRuntime.swift:assertComposeService	Wired UITextView with delegate = self.
+c:objc(cs)SLComposeSheetConfigurationItem	implemented	SLComposeSheetConfigurationItem.swift;SocialRuntime.swift:assertConfigurationItem	NSObject row model.
+c:objc(cs)SLComposeSheetConfigurationItem(im)init	implemented	SLComposeSheetConfigurationItem.swift;SocialRuntime.swift:assertConfigurationItem	Stronger nonfailable override of NSObject.init; pinned Darwin is init!().
+c:objc(cs)SLComposeSheetConfigurationItem(py)tapHandler	implemented	SLComposeSheetConfigurationItem.swift;SocialRuntime.swift:assertConfigurationItem	Stored IUO handler.
+c:objc(cs)SLComposeSheetConfigurationItem(py)title	implemented	SLComposeSheetConfigurationItem.swift;SocialRuntime.swift:assertConfigurationItem	Stored IUO string.
+c:objc(cs)SLComposeSheetConfigurationItem(py)value	implemented	SLComposeSheetConfigurationItem.swift;SocialRuntime.swift:assertConfigurationItem	Stored IUO string.
+c:objc(cs)SLComposeSheetConfigurationItem(py)valuePending	implemented	SLComposeSheetConfigurationItem.swift;SocialRuntime.swift:assertConfigurationItem	Stored Bool.
+c:objc(cs)SLComposeViewController	implemented	SLComposeViewController.swift;SocialRuntime.swift:assertComposeViewController	UIViewController; public init returns nil because unavailable.
+c:objc(cs)SLComposeViewController(cm)composeViewControllerForServiceType:	implemented	SLComposeViewController.swift;SocialRuntime.swift:assertComposeViewController	Returns nil when isAvailable is false.
+c:objc(cs)SLComposeViewController(cm)isAvailableForServiceType:	implemented	SLComposeViewController.swift;SocialRuntime.swift:assertComposeViewController	Always false; no Apple compose UI.
+c:objc(cs)SLComposeViewController(im)addImage:	implemented	SLComposeViewController.swift;SocialRuntime.swift:assertComposeViewController	Local draft list via isolated-host instance; not presented UI.
+c:objc(cs)SLComposeViewController(im)addURL:	implemented	SLComposeViewController.swift;SocialRuntime.swift:assertComposeViewController	Local draft list via isolated-host instance.
+c:objc(cs)SLComposeViewController(im)removeAllImages	implemented	SLComposeViewController.swift;SocialRuntime.swift:assertComposeViewController	Clears local image list.
+c:objc(cs)SLComposeViewController(im)removeAllURLs	implemented	SLComposeViewController.swift;SocialRuntime.swift:assertComposeViewController	Clears local URL list.
+c:objc(cs)SLComposeViewController(im)setInitialText:	implemented	SLComposeViewController.swift;SocialRuntime.swift:assertComposeViewController	Stores draft text on isolated-host instance.
+c:objc(cs)SLComposeViewController(py)completionHandler	implemented	SLComposeViewController.swift;SocialRuntime.swift:assertComposeViewController	Cleared after a single isolated-host invoke.
+c:objc(cs)SLComposeViewController(py)serviceType	implemented	SLComposeViewController.swift;SocialRuntime.swift:assertComposeViewController	Stored on isolated-host instance.
+c:objc(cs)SLRequest	implemented	SLRequest.swift;SocialRuntime.swift:assertRequestSurface	NSObject request builder; no networking.
+c:objc(cs)SLRequest(cm)requestForServiceType:requestMethod:URL:parameters:	implemented	SLRequest.swift;SocialRuntime.swift:assertRequestSurface	init!(forServiceType:requestMethod:url:parameters:).
+c:objc(cs)SLRequest(cm)requestForServiceType:requestMethod:URL:parameters:::SYNTHESIZED::c:objc(cs)SLRequest	declared	SLRequest.swift	Swift-3-obsoleted URL: label; compiles, not callable from Swift 6.
+c:objc(cs)SLRequest(im)addMultipartData:withName:type:filename:	implemented	SLRequest.swift;SocialRuntime.swift:assertMultipart	Rejects CR/LF/quote metadata; stores safe parts.
+c:objc(cs)SLRequest(im)performRequestWithHandler:	implemented	SLRequest.swift;SocialRuntime.swift:assertPerformFailClosed	Async fail-closed; no HTTP.
+c:objc(cs)SLRequest(im)preparedURLRequest	implemented	SLRequest.swift;SocialRuntime.swift:assertRequestSurface;assertAccountFailClosed;assertMultipart	Nil when account set or URL/metadata invalid.
+c:objc(cs)SLRequest(py)URL	implemented	SLRequest.swift;SocialRuntime.swift:assertRequestSurface	Stored URL.
+c:objc(cs)SLRequest(py)account	implemented	SLRequest.swift;SocialRuntime.swift:assertAccountFailClosed	Setter exercised with standalone ACAccount fixture; UIKit/Accounts identity unproven.
+c:objc(cs)SLRequest(py)parameters	implemented	SLRequest.swift;SocialRuntime.swift:assertRequestSurface	Stored dictionary.
+c:objc(cs)SLRequest(py)requestMethod	implemented	SLRequest.swift;SocialRuntime.swift:assertRequestSurface	Stored SLRequestMethod.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SLComposeViewControllerResult	implemented	Social.swift;SocialRuntime.swift:assertEnums	Synthesized Equatable !=.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SLRequestMethod	implemented	Social.swift;SocialRuntime.swift:assertEnums	Synthesized Equatable !=.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SLComposeViewControllerResult	implemented	Social.swift;SocialRuntime.swift:assertEnums	Hashable hashValue.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@SLRequestMethod	implemented	Social.swift;SocialRuntime.swift:assertEnums	Hashable hashValue.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SLComposeViewControllerResult	implemented	Social.swift;SocialRuntime.swift:assertEnums	Hashable hash(into:).
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@SLRequestMethod	implemented	Social.swift;SocialRuntime.swift:assertEnums	Hashable hash(into:).
+s:So15SLRequestMethodV8rawValueABSgSi_tcfc	implemented	Social.swift;SocialRuntime.swift:assertEnums	init?(rawValue:).
+s:So29SLComposeViewControllerResultV8rawValueABSgSi_tcfc	implemented	Social.swift;SocialRuntime.swift:assertEnums	init?(rawValue:).

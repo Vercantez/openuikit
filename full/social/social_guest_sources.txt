@@ -1,0 +1,6 @@
+full/social/SLComposeServiceViewController.swift
+full/social/SLComposeSheetConfigurationItem.swift
+full/social/SLComposeViewController.swift
+full/social/SLRequest.swift
+full/social/Social.swift
+full/social/SocialHostTypes.swift
