@@ -1,0 +1,11 @@
+precise	question	risk	reason
+c:@CTCallStateConnected	What is the exact Darwin string payload of CTCallStateConnected?	telephony	macios loads the constant with Dlfcn from the Apple dylib; this overlay uses a symbol-name fallback only.
+c:@CTCallStateDialing	What is the exact Darwin string payload of CTCallStateDialing?	telephony	Public Field name is known; the Apple string bytes are not in the sealed seed.
+c:@CTCallStateDisconnected	What is the exact Darwin string payload of CTCallStateDisconnected?	telephony	Public Field name is known; the Apple string bytes are not in the sealed seed.
+c:@CTCallStateIncoming	What is the exact Darwin string payload of CTCallStateIncoming?	telephony	Public Field name is known; the Apple string bytes are not in the sealed seed.
+c:@CTRadioAccessTechnologyLTE	What is the exact Darwin string payload of CTRadioAccessTechnologyLTE?	telephony	macios [Field] names the symbol; payload bytes are unobserved here.
+c:@CTRadioAccessTechnologyDidChangeNotification	What is the exact NSNotification.Name rawValue for CTRadioAccessTechnologyDidChange?	telephony	Foundation overlay names the symbol; Apple notification string bytes are unobserved.
+c:@CTServiceRadioAccessTechnologyDidChangeNotification	What is the exact NSNotification.Name rawValue for CTServiceRadioAccessTechnologyDidChange?	telephony	Foundation overlay names the symbol; Apple notification string bytes are unobserved.
+c:@CTSubscriberTokenRefreshed	What is the exact Darwin string payload of CTSubscriberTokenRefreshed?	telephony	Public symbol exists in the TBD; payload bytes are unobserved.
+c:objc(cs)CTCellularData(py)cellularDataRestrictionDidUpdateNotifier	On Darwin, is the initial cellularDataRestrictionDidUpdateNotifier invocation always asynchronous relative to the setter, and is it skipped when replacing an already non-nil handler?	privacy	Linux hops the first nil-to-nonnil assignment; Apple queue/timing/replacement rules are unobserved.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CTCellularPlanProvisioningRequest	What keyed-archive keys and classes does Darwin use for CTCellularPlanProvisioningRequest NSSecureCoding?	fail-closed	Linux init(coder:) returns nil because Apple archive keys are not in the seed.
