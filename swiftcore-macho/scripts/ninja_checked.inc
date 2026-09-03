@@ -1,22 +1,22 @@
 # ninja_checked.inc -- sourced. Run ninja and propagate its exit status.
 #
-# The Darwin stdlib ninja graph links ELF .so with -fuse-ld=gold (BUILD_LOG
-# wall 7). That invocation is allowed to fail *only* when the log is that
-# gold wall. Every other ninja invocation — overlays included — must fail
-# the caller. PIPESTATUS[0] is ninja, not tee.
+# Every ninja invocation — core and overlays — must fail the caller on a
+# non-zero status. The previous gold-wall allow (`-fuse-ld=gold` is an
+# invalid linker name for Swift's clang) hid overlay compiles: every
+# overlay target depends on libswiftCore.so. configure.sh now passes
+# -DSWIFT_USE_LINKER=lld. PIPESTATUS[0] is ninja, not tee.
 
 if [ -n "${SWIFTCORE_NINJA_CHECKED_INC:-}" ]; then
     return 0 2>/dev/null || exit 0
 fi
 SWIFTCORE_NINJA_CHECKED_INC=1
 
-# ninja_checked [--allow-gold-wall] <logfile> [ninja-args...]
-# Honors NINJA (default: ninja). Returns ninja's status; 0 on the expected
-# gold wall when --allow-gold-wall is set.
+# ninja_checked <logfile> [ninja-args...]
+# Honors NINJA (default: ninja). Returns ninja's status. Never swallows
+# -fuse-ld=gold: that is a misconfigure, not an allowed wall.
 ninja_checked() {
-    local allow_gold=0
     if [ "${1:-}" = --allow-gold-wall ]; then
-        allow_gold=1
+        echo "ninja_checked: --allow-gold-wall is retired; configure with -DSWIFT_USE_LINKER=lld" >&2
         shift
     fi
     local log=${1:?ninja_checked: logfile}
@@ -42,21 +42,10 @@ ninja_checked() {
         rm -f "$chunk"
         return 0
     fi
-    if [ "$allow_gold" = 1 ] && _sc_gold_wall_only "$chunk"; then
-        echo "ninja: expected ELF gold wall (BUILD_LOG wall 7: -fuse-ld=gold); continuing"
-        rm -f "$chunk"
-        return 0
+    if grep -q "invalid linker name in argument '-fuse-ld=gold'" "$chunk"; then
+        echo "CANNOT_LINKER_GOLD_REJECTED: ninja still passed -fuse-ld=gold; Swift's clang rejects that name. cmake must be -DSWIFT_USE_LINKER=lld." >&2
     fi
     echo "ninja: FAILED rc=$st" >&2
     rm -f "$chunk"
     return "$st"
-}
-
-_sc_gold_wall_only() {
-    local chunk=$1
-    grep -q "invalid linker name in argument '-fuse-ld=gold'" "$chunk" || return 1
-    # A real compile/unknown-target failure alongside gold is not the wall.
-    grep -q 'ninja: error:' "$chunk" && return 1
-    grep -Eq "error: '.+' file not found" "$chunk" && return 1
-    return 0
 }

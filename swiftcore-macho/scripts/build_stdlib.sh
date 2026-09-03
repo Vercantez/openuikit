@@ -57,26 +57,55 @@ fi
 mkdir -p "$W"
 step() { printf '\n==== %s ====\n' "$*"; }
 
-# Every ninja invocation reports its status. The core target may hit the
-# expected ELF gold wall (BUILD_LOG wall 7). Overlay targets are attempted
-# independently (scoreboard OVERLAY <name> built|FAILED|CANNOT_*); any
-# overlay failure keeps the script rc non-zero.
+# Every ninja invocation reports its status. Core must link with lld
+# (-DSWIFT_USE_LINKER=lld). Overlay targets are attempted independently
+# (scoreboard OVERLAY <name> built|FAILED|CANNOT_*); any overlay failure
+# keeps the script rc non-zero. A core ninja failure is not swallowed so
+# overlays can still run (they depend on libswiftCore.so; lld is what
+# lets that edge succeed).
 run_stdlib_ninja() {
+  local core_st=0 overlay_rc=0
   step "ninja $SWIFTCORE_NINJA_CORE -j$NINJA_JOBS"
-  ninja_checked --allow-gold-wall "$W/build.log" -C "$B" -j "$NINJA_JOBS" \
-    "$SWIFTCORE_NINJA_CORE"
+  ninja_checked "$W/build.log" -C "$B" -j "$NINJA_JOBS" \
+    "$SWIFTCORE_NINJA_CORE" || core_st=$?
   obj_n=$(find "$B" -name '*.o' 2>/dev/null | wc -l)
   echo "objects=$obj_n"
+  so=$B/lib/swift/macosx/${SWIFTCORE_DARWIN_ARCH}/libswiftCore.so
+  dylib=$B/lib/swift/${SWIFTCORE_STDLIB_DIR}/libswiftCore.dylib
+  if [ "$core_st" -ne 0 ]; then
+    overlay_rc=$core_st
+    if [ ! -e "$so" ]; then
+      # Linux CMake still emits -shared; the clang++ shim rewrites it. If
+      # ninja did not produce .so, try the recorded Mach-O link from the
+      # object list (same recipe) so overlay deps are not stuck on gold.
+      if grep -q -- "-o lib/swift/macosx/${SWIFTCORE_DARWIN_ARCH}/libswiftCore.so" "$W/build.log" 2>/dev/null; then
+        bash "$SCRIPT_DIR/link_macho_dylib.sh" "$W/build.log" libswiftCore || true
+      fi
+    fi
+    if [ ! -e "$so" ] && [ -f "$dylib" ]; then
+      cp -f "$dylib" "$so"
+      echo "staged ninja .so from $dylib"
+    fi
+    if [ ! -e "$so" ]; then
+      echo "CANNOT_ELF_SO_LINUX_SHARED: ninja $SWIFTCORE_NINJA_CORE rc=$core_st did not produce $so. Linker is lld (not gold). Linux CMake still emits -shared/-soname; Darwin objects need the clang++ shim (-dynamiclib -nostdlib -lSystem) or link_macho_dylib.sh." >&2
+    fi
+  fi
   if [ "$STOP_AFTER" = ninja-first ]; then
-    echo "STOP_AFTER=ninja-first — first ninja finished. objects=$obj_n"
+    echo "STOP_AFTER=ninja-first — first ninja finished. objects=$obj_n core_st=$core_st"
+    if [ "$core_st" -ne 0 ]; then
+      exit "$core_st"
+    fi
     exit 0
   fi
   if [ "${SWIFTCORE_OVERLAYS:-0}" = 1 ]; then
-    local sel_rc=0 ninja_st=0 overlay_rc=0 t
+    local sel_rc=0 ninja_st=0 t
     # Attempt every selected overlay even if select named a CANNOT, so one
-    # operator run measures all five. ninja itself rebuilds real deps of
-    # the requested target; we do not skip later names because an earlier
-    # ninja failed.
+    # operator run measures the nine FE dylibs plus _Concurrency / Observation.
+    # ninja itself rebuilds real deps of the requested target; we do not skip
+    # later names because an earlier ninja failed.
+    overlay_flatten_unarch "$B" "$SWIFTCORE_DARWIN_ARCH"
+    overlay_copy_so_as_dylib "$B" "$SWIFTCORE_DARWIN_ARCH"
+    python3 "$SCRIPT_DIR/lipo_single_arch.py" --rewrite-ninja "$B" || true
     set +e
     overlay_select_targets "$B" "$SWIFTCORE_DARWIN_ARCH"
     sel_rc=$?
@@ -91,6 +120,8 @@ run_stdlib_ninja() {
         ninja_checked "$W/build.log" -C "$B" -j "$NINJA_JOBS" "$t" || ninja_st=$?
         if [ "$ninja_st" -eq 0 ]; then
           OVERLAY_STATUS[$t]=built
+          overlay_flatten_unarch "$B" "$SWIFTCORE_DARWIN_ARCH"
+          overlay_copy_so_as_dylib "$B" "$SWIFTCORE_DARWIN_ARCH"
         else
           OVERLAY_STATUS[$t]=FAILED
           if [ "$overlay_rc" -eq 0 ]; then
@@ -105,6 +136,10 @@ run_stdlib_ninja() {
       echo "overlay: FAILED rc=$overlay_rc" >&2
       return "$overlay_rc"
     fi
+  fi
+  if [ "$core_st" -ne 0 ]; then
+    echo "core: FAILED rc=$core_st" >&2
+    return "$core_st"
   fi
 }
 
@@ -207,10 +242,9 @@ if [ "$STOP_AFTER" = configure ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# 6. Build. The ninja link edge is ELF (.so); that is expected (BUILD_LOG wall 7)
-#    and is the only ninja failure that is allowed to continue. Overlay ninja
-#    failures are recorded on the scoreboard; every selected overlay is still
-#    attempted, then the script exits non-zero if any failed.
+# 6. Build. Darwin-target shared links use -fuse-ld=lld (not gold). Overlay
+#    ninja failures are recorded on the scoreboard; every selected overlay is
+#    still attempted, then the script exits non-zero if any failed.
 # ---------------------------------------------------------------------------
 run_stdlib_ninja
 
@@ -220,7 +254,10 @@ run_stdlib_ninja
 step "link Mach-O dylibs"
 for lib in libswiftCore libswift_Concurrency libswiftSynchronization \
            libswift_StringProcessing libswift_Builtin_float \
-           libswiftDarwin libswiftObjectiveC; do
+           libswift_RegexParser libswiftObservation \
+           libswiftDarwin libswiftObjectiveC \
+           libswift_DarwinFoundation1 libswift_DarwinFoundation2 \
+           libswift_DarwinFoundation3 libswift_errno; do
   if grep -q -- "-o lib/swift/macosx/${SWIFTCORE_DARWIN_ARCH}/${lib}.so" "$W/build.log" 2>/dev/null; then
     bash "$SCRIPT_DIR/link_macho_dylib.sh" "$W/build.log" "$lib" || echo "link $lib failed (recorded)"
   else

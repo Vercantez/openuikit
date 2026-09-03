@@ -15,6 +15,8 @@ swift_Concurrency-macosx-x86_64: phony
 swiftSynchronization-macosx-x86_64: phony
 swift_StringProcessing-macosx-x86_64: phony
 swift_Builtin_float-macosx-x86_64: phony
+swift_RegexParser-macosx-x86_64: phony
+swiftObservation-macosx-x86_64: phony
 swiftDarwin-macosx-x86_64: phony
 swiftCore-macosx-x86_64: phony
 EOF
@@ -29,6 +31,14 @@ printf '%s\n' "$out" | grep -q 'will ninja.*swiftDarwin-macosx-x86_64' \
   && echo "  OK  Darwin in ninja list" || { echo "  FAIL Darwin not selected"; fail=1; }
 printf '%s\n' "$out" | grep -q 'CANNOT_STAGE_XCODE_DARWIN_OVERLAYS target=swiftObjectiveC-macosx-x86_64' \
   && echo "  OK  ObjectiveC named CANNOT" || { echo "  FAIL missing ObjectiveC CANNOT"; fail=1; }
+printf '%s\n' "$out" | grep -q 'CANNOT_STAGE_XCODE_DARWIN_OVERLAYS target=swift_DarwinFoundation1-macosx-x86_64' \
+  && echo "  OK  DarwinFoundation1 named CANNOT" || { echo "  FAIL missing DarwinFoundation1 CANNOT"; fail=1; }
+printf '%s\n' "$out" | grep -q 'CANNOT_STAGE_XCODE_DARWIN_OVERLAYS target=swift_DarwinFoundation2-macosx-x86_64' \
+  && echo "  OK  DarwinFoundation2 named CANNOT" || { echo "  FAIL missing DarwinFoundation2 CANNOT"; fail=1; }
+printf '%s\n' "$out" | grep -q 'CANNOT_STAGE_XCODE_DARWIN_OVERLAYS target=swift_DarwinFoundation3-macosx-x86_64' \
+  && echo "  OK  DarwinFoundation3 named CANNOT" || { echo "  FAIL missing DarwinFoundation3 CANNOT"; fail=1; }
+printf '%s\n' "$out" | grep -q 'CANNOT_STAGE_XCODE_DARWIN_OVERLAYS target=swift_errno-macosx-x86_64' \
+  && echo "  OK  _errno named CANNOT" || { echo "  FAIL missing _errno CANNOT"; fail=1; }
 printf '%s\n' "$out" | grep -q 'will ninja.*swiftObjectiveC' \
   && { echo "  FAIL ObjectiveC still in will-ninja list"; fail=1; } \
   || echo "  OK  ObjectiveC not ninja'd"
@@ -42,6 +52,8 @@ cat > "$tmp/targets" <<'EOF'
 swift_Concurrency-macosx-x86_64: phony
 swiftSynchronization-macosx-x86_64: phony
 swift_Builtin_float-macosx-x86_64: phony
+swift_RegexParser-macosx-x86_64: phony
+swiftObservation-macosx-x86_64: phony
 swiftDarwin-macosx-x86_64: phony
 EOF
 set +e
@@ -83,6 +95,17 @@ if [ -f "$proof/build.ninja" ]; then
 else
   echo "  skip (no $proof/build.ninja)"
 fi
+
+echo
+echo "=== overlay_flatten_unarch / overlay_copy_so_as_dylib ==="
+mkdir -p "$tmp/build/lib/swift/macosx/x86_64"
+echo so > "$tmp/build/lib/swift/macosx/x86_64/libswiftCore.so"
+overlay_flatten_unarch "$tmp/build" x86_64
+overlay_copy_so_as_dylib "$tmp/build" x86_64
+[ -L "$tmp/build/lib/swift/macosx/libswiftCore.so" ] \
+  && echo "  OK  unarch symlink" || { echo "  FAIL missing unarch symlink"; fail=1; }
+[ -f "$tmp/build/lib/swift/macosx/x86_64/libswiftCore.dylib" ] \
+  && echo "  OK  .dylib beside .so" || { echo "  FAIL missing .dylib"; fail=1; }
 
 echo
 if [ "$fail" -eq 0 ]; then
