@@ -22,4 +22,3 @@ public enum INMediaDestination: Hashable, Sendable {
 }
 
 extension INShortcut { public typealias ReferenceType = INShortcutReference }
-extension INMediaDestination { public typealias ReferenceType = INMediaDestinationReference }

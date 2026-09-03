@@ -930,9 +930,6 @@ public protocol INVisualCodeDomainHandling: INGetVisualCodeIntentHandling {
 public protocol INWorkoutsDomainHandling: INCancelWorkoutIntentHandling, INEndWorkoutIntentHandling, INPauseWorkoutIntentHandling, INResumeWorkoutIntentHandling, INStartWorkoutIntentHandling {
 }
 
-public protocol INIntentSetImageKeyPath: _INIntentSetImageKeyPath {
-}
-
 public protocol INCallsDomainHandling: INSearchCallHistoryIntentHandling, INStartAudioCallIntentHandling, INStartVideoCallIntentHandling {
 }
 

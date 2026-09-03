@@ -504,7 +504,7 @@ open class INImage: NSObject, @unchecked Sendable {
         super.init()
     }
 
-    public init(named name: String) {
+    public required init(named name: String) {
         self.imageData = nil
         self.namedImage = name
         self.imageURL = nil
@@ -535,7 +535,7 @@ open class INImage: NSObject, @unchecked Sendable {
     }
 
     open class func systemImageNamed(_ systemImageName: String) -> Self {
-        Self(named: systemImageName)
+        self.init(named: systemImageName)
     }
 }
 

@@ -196,16 +196,16 @@ public enum INCarAirCirculationMode: Int, Hashable, Sendable {
 }
 
 public enum INCarAudioSource: Int, Hashable, Sendable {
-    case sourceAUX
-    case sourceBluetooth
-    case sourceCarPlay
-    case sourceHardDrive
-    case sourceMemoryCard
-    case sourceOpticalDrive
-    case sourceRadio
-    case sourceUSB
-    case sourceUnknown
-    case sourceiPod
+    case sourceAUX = 0
+    case sourceBluetooth = 1
+    case sourceCarPlay = 2
+    case sourceHardDrive = 3
+    case sourceMemoryCard = 4
+    case sourceOpticalDrive = 5
+    case sourceRadio = 6
+    case sourceUSB = 7
+    case sourceUnknown = 8
+    case sourceiPod = 9
 }
 
 public enum INCarDefroster: Int, Hashable, Sendable {
@@ -276,8 +276,8 @@ public enum INDeleteTasksTaskListUnsupportedReason: Int, Hashable, Sendable {
 }
 
 public enum INDeleteTasksTaskUnsupportedReason: Int, Hashable, Sendable {
-    case noTasksFound
-    case noTasksInApp
+    case noTasksFound = 0
+    case noTasksInApp = 1
 }
 
 public enum INEditMessageIntentResponseCode: Int, Hashable, Sendable {
@@ -519,8 +519,8 @@ public enum INNotebookItemType: Int, Hashable, Sendable {
 }
 
 public enum INOutgoingMessageType: Int, Hashable, Sendable {
-    case outgoingMessageAudio
-    case outgoingMessageText
+    case outgoingMessageAudio = 1
+    case outgoingMessageText = 2
     case unknown = 0
 }
 
@@ -651,9 +651,9 @@ public enum INRelevantShortcutRole: Int, Hashable, Sendable {
 }
 
 public enum INRequestPaymentCurrencyAmountUnsupportedReason: Int, Hashable, Sendable {
-    case paymentsAmountAboveMaximum
-    case paymentsAmountBelowMinimum
-    case paymentsCurrencyUnsupported
+    case paymentsAmountAboveMaximum = 0
+    case paymentsAmountBelowMinimum = 1
+    case paymentsCurrencyUnsupported = 2
 }
 
 public enum INRequestPaymentIntentResponseCode: Int, Hashable, Sendable {
@@ -849,9 +849,9 @@ public enum INSendMessageRecipientUnsupportedReason: Int, Hashable, Sendable {
 }
 
 public enum INSendPaymentCurrencyAmountUnsupportedReason: Int, Hashable, Sendable {
-    case paymentsAmountAboveMaximum
-    case paymentsAmountBelowMinimum
-    case paymentsCurrencyUnsupported
+    case paymentsAmountAboveMaximum = 0
+    case paymentsAmountBelowMinimum = 1
+    case paymentsCurrencyUnsupported = 2
 }
 
 public enum INSendPaymentIntentResponseCode: Int, Hashable, Sendable {
@@ -1057,7 +1057,7 @@ public enum INStartCallIntentResponseCode: Int, Hashable, Sendable {
     case failureCallingServiceNotAvailable = 6
     case failureContactNotSupportedByApp = 7
     case failureRequiringAppLaunch = 5
-    case failureRequiringInAppAuthentication
+    case failureRequiringInAppAuthentication = 12
     case failureUnableToHandOff = 9
     case ready = 1
     case unspecified = 0

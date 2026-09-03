@@ -31,7 +31,7 @@ public struct INDayOfWeekOptions: OptionSet, Hashable, Sendable {
     public let rawValue: UInt
     public init(rawValue: UInt) { self.rawValue = rawValue }
     public static let friday = INDayOfWeekOptions(rawValue: 4)
-    public static let monday = INDayOfWeekOptions(rawValue: 0)
+    public static let monday = INDayOfWeekOptions(rawValue: 1)
     public static let saturday = INDayOfWeekOptions(rawValue: 5)
     public static let sunday = INDayOfWeekOptions(rawValue: 6)
     public static let thursday = INDayOfWeekOptions(rawValue: 3)
@@ -59,7 +59,7 @@ public struct INPhotoAttributeOptions: OptionSet, Hashable, Sendable {
     public static let favorite = INPhotoAttributeOptions(rawValue: 64)
     public static let flash = INPhotoAttributeOptions(rawValue: 8)
     public static let frontFacingCamera = INPhotoAttributeOptions(rawValue: 256)
-    public static let GIF = INPhotoAttributeOptions(rawValue: 0)
+    public static let GIF = INPhotoAttributeOptions(rawValue: 1)
     public static let hdrPhoto = INPhotoAttributeOptions(rawValue: 2048)
     public static let instantFilter = INPhotoAttributeOptions(rawValue: 262144)
     public static let landscapeOrientation = INPhotoAttributeOptions(rawValue: 16)
@@ -93,19 +93,19 @@ public struct INRideFeedbackTypeOptions: OptionSet, Hashable, Sendable {
 public struct INShortcutAvailabilityOptions: OptionSet, Hashable, Sendable {
     public let rawValue: UInt
     public init(rawValue: UInt) { self.rawValue = rawValue }
-    public static let sleepJournaling = INShortcutAvailabilityOptions(rawValue: 0)
-    public static let sleepMindfulness = INShortcutAvailabilityOptions(rawValue: 0)
-    public static let sleepMusic = INShortcutAvailabilityOptions(rawValue: 0)
-    public static let sleepPodcasts = INShortcutAvailabilityOptions(rawValue: 0)
-    public static let sleepReading = INShortcutAvailabilityOptions(rawValue: 0)
-    public static let sleepWrapUpYourDay = INShortcutAvailabilityOptions(rawValue: 0)
-    public static let sleepYogaAndStretching = INShortcutAvailabilityOptions(rawValue: 0)
+    public static let sleepJournaling = INShortcutAvailabilityOptions(rawValue: 1)
+    public static let sleepMindfulness = INShortcutAvailabilityOptions(rawValue: 2)
+    public static let sleepMusic = INShortcutAvailabilityOptions(rawValue: 4)
+    public static let sleepPodcasts = INShortcutAvailabilityOptions(rawValue: 8)
+    public static let sleepReading = INShortcutAvailabilityOptions(rawValue: 16)
+    public static let sleepWrapUpYourDay = INShortcutAvailabilityOptions(rawValue: 32)
+    public static let sleepYogaAndStretching = INShortcutAvailabilityOptions(rawValue: 64)
 }
 
 public struct INTemporalEventTriggerTypeOptions: OptionSet, Hashable, Sendable {
     public let rawValue: UInt
     public init(rawValue: UInt) { self.rawValue = rawValue }
-    public static let notScheduled = INTemporalEventTriggerTypeOptions(rawValue: 0)
+    public static let notScheduled = INTemporalEventTriggerTypeOptions(rawValue: 1)
     public static let scheduledNonRecurring = INTemporalEventTriggerTypeOptions(rawValue: 1)
     public static let scheduledRecurring = INTemporalEventTriggerTypeOptions(rawValue: 2)
 }
