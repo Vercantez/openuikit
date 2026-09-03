@@ -5,6 +5,12 @@
 #   objects in $W/scratch/ud-guest-x86_64/fe  (never scratch/ud-guest)
 #   libCFTest.dylib from build_cfobjc.sh + build_cftest_harness.sh
 #     (never a stub dylib; link_ud_guest.sh stays the only ud_guest linker)
+#     ICU headers are required (swift-foundation-icu pin). Without them
+#     CFString.c does not compile and the harness would stub
+#     CFStringCreateWithBytes. The derived stub set is compared to
+#     foundation-macho/docs/cf-census/cftest-stub-{func-active,data}.txt;
+#     a mismatch is CANNOT_CFTEST_STUBS (own ENV_PREPARE line) and does
+#     not proceed to link_ud_guest.sh.
 #   after link, before run: stage that dylib into
 #     scratch/mrroot_full-x86_64/darwin/usr/lib/libCFTest.dylib
 #     (arm64 analogue: build_cftest_harness.sh -> $W/root; not build_full.sh)
@@ -49,6 +55,14 @@ PHASE2_UD_GUEST_CF_COMMIT=f3a7a34302317a95665bf4ff1a62ee1b459c1695
 PHASE2_UD_GUEST_CF_TREE=2f9136f253a51406f2bcb0a612bcb6a9eba03570
 PHASE2_UD_GUEST_CF_DEST_REL=scratch/ud-guest-x86_64/cf
 PHASE2_UD_GUEST_CF_SOURCES_REL=Sources/CoreFoundation
+# ICU headers CFString.c / CFCalendar.c / CFLocale.c include. Same pin as
+# env/contract.json swift-foundation-icu. Destination is the repo-level
+# scratch tree other guests already use, not under ud-guest-x86_64.
+PHASE2_UD_GUEST_ICU_ID=swift-foundation-icu
+PHASE2_UD_GUEST_ICU_REPO=https://github.com/apple/swift-foundation-icu.git
+PHASE2_UD_GUEST_ICU_COMMIT=87dbab99780e277b6a4c2a397ab1a894f877b39a
+PHASE2_UD_GUEST_ICU_TREE=823a4a2a13f60a0fd2715db85a754dda11d5fd39
+PHASE2_UD_GUEST_ICU_DEST_REL=scratch/swift-foundation-icu
 PHASE2_UD_GUEST_EXPECTED_LOADS=(
     libswiftCore
     libswiftDarwin
@@ -499,20 +513,143 @@ phase2_ud_guest_find_icu() {
     return 1
 }
 
+# Pin from env/contract.json. dest is scratch/swift-foundation-icu at the
+# repo root (other guests share it). Wrong-tree dest is a named refusal.
+phase2_ud_guest_ensure_icu_checkout() {
+    local repo=$1
+    local dest=$repo/$PHASE2_UD_GUEST_ICU_DEST_REL
+    local commit=$PHASE2_UD_GUEST_ICU_COMMIT
+    local tree=$PHASE2_UD_GUEST_ICU_TREE
+    local origin=$PHASE2_UD_GUEST_ICU_REPO
+    local cloner=$repo/.cursor/clone-pinned-repo.sh
+    local live_commit live_tree lock_dir lock log st include
+
+    include=$dest/icuSources/include
+    if [ -e "$dest" ]; then
+        if [ -d "$dest/.git" ]; then
+            live_commit=$(git -c "safe.directory=$dest" -C "$dest" rev-parse HEAD 2>/dev/null || true)
+            live_tree=$(git -c "safe.directory=$dest" -C "$dest" rev-parse 'HEAD^{tree}' 2>/dev/null || true)
+            if [ "$live_commit" = "$commit" ] && [ "$live_tree" = "$tree" ]; then
+                if [ -d "$include/_foundation_unicode" ]; then
+                    return 0
+                fi
+                phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+                    "no x86_64 Mach-O. pinned ICU checkout $commit at $dest is missing icuSources/include/_foundation_unicode (CFString.c includes it). Will not invent a stub dylib."
+                return 1
+            fi
+            phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+                "no x86_64 Mach-O. ICU checkout tree differs at $dest live_commit=${live_commit:-unreadable} want=$commit live_tree=${live_tree:-unreadable} want=$tree (env/contract.json $PHASE2_UD_GUEST_ICU_ID). Will not invent a stub dylib."
+            return 1
+        fi
+        if [ -d "$dest" ] && [ -z "$(ls -A "$dest" 2>/dev/null || true)" ]; then
+            rmdir "$dest" || {
+                phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+                    "no x86_64 Mach-O. empty $dest could not be cleared to fetch $commit (env/contract.json $PHASE2_UD_GUEST_ICU_ID). Will not invent a stub dylib."
+                return 1
+            }
+        else
+            phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+                "no x86_64 Mach-O. $dest exists and is not a git checkout of $commit (env/contract.json $PHASE2_UD_GUEST_ICU_ID). Will not invent a stub dylib."
+            return 1
+        fi
+    fi
+
+    if [ ! -f "$cloner" ]; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "no x86_64 Mach-O. missing $cloner; cannot fetch $PHASE2_UD_GUEST_ICU_ID commit=$commit. Will not invent a stub dylib."
+        return 1
+    fi
+    lock_dir=$(mktemp -d "$repo/scratch/.icu-pin-lock.XXXXXX")
+    lock=$lock_dir/lock.json
+    printf '%s\n' "{
+  \"sources\": [{
+    \"id\": \"$PHASE2_UD_GUEST_ICU_ID\",
+    \"repository\": \"$origin\",
+    \"commit\": \"$commit\",
+    \"tree\": \"$tree\",
+    \"destination\": \"$PHASE2_UD_GUEST_ICU_DEST_REL\"
+  }]
+}" >"$lock"
+    log=$repo/scratch/ud-guest-x86_64/lib/icu-checkout.log
+    mkdir -p "$(dirname "$log")"
+    set +e
+    bash "$cloner" --lock "$lock" --id "$PHASE2_UD_GUEST_ICU_ID" --repo-root "$repo" \
+        >"$log" 2>&1
+    st=$?
+    set -e
+    rm -rf "$lock_dir"
+    if [ "$st" -ne 0 ] || [ ! -d "$dest/.git" ]; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "no x86_64 Mach-O. failed to fetch $PHASE2_UD_GUEST_ICU_ID commit=$commit tree=$tree dest=$PHASE2_UD_GUEST_ICU_DEST_REL log=$log. Will not invent a stub dylib."
+        return 1
+    fi
+    live_commit=$(git -c "safe.directory=$dest" -C "$dest" rev-parse HEAD)
+    live_tree=$(git -c "safe.directory=$dest" -C "$dest" rev-parse 'HEAD^{tree}')
+    if [ "$live_commit" != "$commit" ] || [ "$live_tree" != "$tree" ]; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "no x86_64 Mach-O. ICU checkout tree differs at $dest live_commit=$live_commit want=$commit live_tree=$live_tree want=$tree (env/contract.json $PHASE2_UD_GUEST_ICU_ID). Will not invent a stub dylib."
+        return 1
+    fi
+    if [ ! -d "$include/_foundation_unicode" ]; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "no x86_64 Mach-O. pinned ICU checkout $commit at $dest is missing icuSources/include/_foundation_unicode. Will not invent a stub dylib."
+        return 1
+    fi
+    return 0
+}
+
+# Turn the harness CANNOT_CFTEST_STUBS extra= missing= line into the ENV_PREPARE
+# payload: count of unexpected names and the first five.
+phase2_ud_guest_format_stub_cannot() {
+    local line=$1
+    local extra miss count first
+    extra=${line#*extra=}
+    extra=${extra%% missing=*}
+    miss=${line#*missing=}
+    if [ -n "$extra" ]; then
+        count=$(printf '%s\n' "$extra" | tr ',' '\n' | grep -c . || true)
+        first=$(printf '%s\n' "$extra" | tr ',' '\n' | grep -v '^$' | head -5 | paste -sd, -)
+    else
+        count=$(printf '%s\n' "$miss" | tr ',' '\n' | grep -c . || true)
+        first=$(printf '%s\n' "$miss" | tr ',' '\n' | grep -v '^$' | head -5 | paste -sd, -)
+    fi
+    printf 'CANNOT_CFTEST_STUBS file=libCFTest.dylib count=%s first=%s extra=%s missing=%s\n' \
+        "${count:-0}" "$first" "$extra" "$miss"
+}
+
 phase2_ud_guest_ensure_cftest() {
     local ud_w=$1 repo=$2
     local sys=${3:-$ud_w/fe/sysroot}
     local dest=$ud_w/lib/libCFTest.dylib
-    local found recipe linker cf icu log st
+    local found recipe linker cf icu log st checker stub_line
     mkdir -p "$ud_w/lib"
     found=$(phase2_ud_guest_find_x86_dylib libCFTest.dylib \
         "${UD_CFTEST_DYLIB:-}" \
         "$dest" \
         "$repo/scratch/ud-guest-x86_64/lib/libCFTest.dylib" \
         || true)
+    checker=$repo/foundation-macho/scripts/check_cftest_stubs.sh
+    # Reuse a present dylib only when:
+    #   * stub pin files exist and match (the 80-object / 220-stub set), or
+    #   * no stub pin files exist (UD_CFTEST_DYLIB test dummy / override
+    #     without leftover stub lists).
+    # A leftover 143-name stub-func-active.txt must not count as satisfied.
     if [ -n "$found" ]; then
-        [ "$found" = "$dest" ] || cp -a "$found" "$dest"
-        return 0
+        if [ -f "$ud_w/stub-func-active.txt" ] && [ -f "$ud_w/stub-data.txt" ] \
+            && [ -f "$checker" ]
+        then
+            stub_line=$(bash "$checker" "$ud_w/stub-func-active.txt" "$ud_w/stub-data.txt" || true)
+            case "$stub_line" in
+                CFTEST_STUBS_OK*)
+                    [ "$found" = "$dest" ] || cp -a "$found" "$dest"
+                    return 0
+                    ;;
+            esac
+            # Mismatch: rebuild through the recipe. Do not reuse.
+        else
+            [ "$found" = "$dest" ] || cp -a "$found" "$dest"
+            return 0
+        fi
     fi
 
     recipe=$repo/foundation-macho/scripts/build_cfobjc.sh
@@ -531,6 +668,9 @@ phase2_ud_guest_ensure_cftest() {
     if ! phase2_ud_guest_ensure_cf_checkout "$ud_w" "$repo"; then
         return 1
     fi
+    if ! phase2_ud_guest_ensure_icu_checkout "$repo"; then
+        return 1
+    fi
     cf=$ud_w/cf/$PHASE2_UD_GUEST_CF_SOURCES_REL
     if [ ! -f "$cf/CFRuntime.c" ]; then
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
@@ -544,18 +684,28 @@ phase2_ud_guest_ensure_cftest() {
     fi
 
     icu=$(phase2_ud_guest_find_icu "$repo" || true)
+    if [ -z "$icu" ]; then
+        phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+            "no x86_64 Mach-O. ICU headers missing after $PHASE2_UD_GUEST_ICU_ID pin (need icuSources/include/_foundation_unicode). CFString.c will not compile; the harness would stub CFStringCreateWithBytes. Will not invent a stub dylib."
+        return 1
+    fi
     log=$ud_w/lib/build_cfobjc.log
     set +e
     W="$ud_w" \
         SDK="$sys" \
         CF="$cf" \
         OUT="$ud_w/cfobjc" \
-        ICU_INC="${icu:-}" \
+        ICU_INC="$icu" \
         TRIPLE=x86_64-apple-macos13.0 \
         bash "$recipe" >"$log" 2>&1
     st=$?
     set -e
     if [ "$st" -ne 0 ]; then
+        if grep -q '^CANNOT_CFOBJC_OBJECTS ' "$log"; then
+            phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
+                "$(grep '^CANNOT_CFOBJC_OBJECTS ' "$log" | tail -1 | phase2_flatten) log=$log. Will not invent a stub dylib."
+            return 1
+        fi
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
             "build_cfobjc.sh exit $st log=$log. Committed recipe is foundation-macho/scripts/build_cfobjc.sh; committed CF linker is foundation-macho/scripts/build_cftest_harness.sh. Will not invent a stub dylib."
         return 1
@@ -577,6 +727,10 @@ phase2_ud_guest_ensure_cftest() {
         bash "$linker" >"$log" 2>&1
     st=$?
     set -e
+    if grep -q '^CANNOT_CFTEST_STUBS ' "$log"; then
+        phase2_ud_guest_format_stub_cannot "$(grep '^CANNOT_CFTEST_STUBS ' "$log" | tail -1)"
+        return 1
+    fi
     if [ "$st" -ne 0 ] || [ ! -f "$dest" ] || ! phase2_is_x86_macho "$dest"; then
         phase2_ud_guest_cannot LIBCFTEST libCFTest.dylib \
             "build_cftest_harness.sh exit $st (committed CF linker; objects from build_cfobjc.sh) log=$log. Will not invent a stub dylib."

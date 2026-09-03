@@ -145,6 +145,19 @@ awk "/^k[A-Z]/ || /^OBJC_CLASS/ {print > \"$W/stub-data.txt\"; next} {print > \"
 
 llvm-nm-18 --defined-only "$W/probe_sysctl.o" | awk '$2=="T"{print substr($3,2)}' | sort -u > "$W/probe-defines.txt"
 comm -23 "$W/stub-func.txt" "$W/probe-defines.txt" > "$W/stub-func-active.txt"
+
+# The stub set is derived every run, then pinned against
+# docs/cf-census/cftest-stub-func-active.txt and cftest-stub-data.txt.
+# A 143-name set from a 64-object ICU-less compile looks exactly like a
+# real gap (STUB CALLED: CFStringCreateWithBytes). check_cftest_stubs.sh
+# prints CANNOT_CFTEST_STUBS extra=<names> missing=<names> and we stop
+# before generating abort stubs.
+stub_check=$(bash "$HERE/check_cftest_stubs.sh" "$W/stub-func-active.txt" "$W/stub-data.txt") || {
+    echo "$stub_check"
+    echo "build_cftest_harness: refusing to link libCFTest with an unexpected stub set (docs/cf-census/cftest-stubs.md)." >&2
+    exit 2
+}
+echo "$stub_check"
 {
 echo "#import <objc/NSObject.h>"
 echo "extern void abort(void);"

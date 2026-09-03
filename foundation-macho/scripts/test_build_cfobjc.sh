@@ -12,8 +12,8 @@ FM=$(cd "$HERE/.." && pwd)
 ROOT=$(cd "$FM/.." && pwd)
 S=$HERE/build_cfobjc.sh
 DOC=$FM/docs/CF_PREFERENCES_EXECUTION.md
-PASS79=$FM/docs/cf-census/pass-79.txt
-FAIL3=$FM/docs/cf-census/fail-3.txt
+CFOBJC_PASS=$FM/docs/cf-census/cfobjc-pass.txt
+CFOBJC_FAIL=$FM/docs/cf-census/cfobjc-fail.txt
 pass=0
 fail=0
 
@@ -21,7 +21,7 @@ ok() { echo "PASS: $*"; pass=$((pass + 1)); }
 die_test() { echo "FAIL: $*" >&2; fail=$((fail + 1)); }
 
 expect_grep() {
-    local needle=$1 hay=$2 label=$3
+    local needle="$1" hay="$2" label="$3"
     if printf '%s\n' "$hay" | grep -q -- "$needle"; then
         ok "$label"
     else
@@ -43,6 +43,16 @@ script_head=$(sed -n '1,60p' "$S")
 doc_text=$(cat "$DOC")
 expect_grep 'CFOBJC_ARGV:' "$argv_out" "prints CFOBJC_ARGV"
 expect_grep 'CFOBJC_RECIPE=cfobjc.1' "$argv_out" "recipe id cfobjc.1"
+if grep -q 'CANNOT_CFOBJC_OBJECTS' "$S"; then
+    ok "recipe names CANNOT_CFOBJC_OBJECTS"
+else
+    die_test "recipe names CANNOT_CFOBJC_OBJECTS"
+fi
+if grep -q 'no ICU headers' "$S"; then
+    ok "recipe refuses a compile without ICU"
+else
+    die_test "recipe refuses a compile without ICU"
+fi
 expect_grep 'build_cfobjc.sh' "$doc_text" "doc names the committed recipe"
 expect_grep 'CFOBJC_ARGV:' "$doc_text" "doc names the printed argv line"
 
@@ -108,6 +118,36 @@ else
 fi
 rm -rf "$miss"
 
+echo "== missing ICU headers refuse (exit 2), no objects invented"
+icu_miss=$(mktemp -d /tmp/cfobjc-noicu.XXXXXX)
+mkdir -p "$icu_miss/cf" "$icu_miss/sdk/usr/include" "$icu_miss/w"
+: > "$icu_miss/cf/CFRuntime.c"
+: > "$icu_miss/cf/CFPreferences.c"
+set +e
+icu_out=$(
+    W="$icu_miss/w"
+    HOME=/no/such-icu-home
+    OUT="$icu_miss/out"
+    ICU_INC=/no/such/icuSources/include
+    CF="$icu_miss/cf"
+    SDK="$icu_miss/sdk"
+    export W HOME OUT ICU_INC CF SDK
+    bash "$S" 2>&1
+)
+icu_st=$?
+set -e
+if [ "$icu_st" -eq 2 ] && echo "$icu_out" | grep -q 'no ICU headers'; then
+    ok "missing ICU exits 2"
+else
+    die_test "missing ICU got exit $icu_st: $icu_out"
+fi
+if ls "$icu_miss"/out/obj/*.o >/dev/null 2>&1; then
+    die_test "missing ICU invented objects under $icu_miss/out/obj"
+else
+    ok "missing ICU does not invent objects"
+fi
+rm -rf "$icu_miss"
+
 if [ "${CFOBJC_SKIP_COMPILE:-0}" = 1 ]; then
     echo "SKIP compile (CFOBJC_SKIP_COMPILE=1)"
     echo "test_build_cfobjc: pass=$pass fail=$fail"
@@ -115,13 +155,14 @@ if [ "${CFOBJC_SKIP_COMPILE:-0}" = 1 ]; then
     exit 0
 fi
 
-echo "== arm64 rebuild vs committed census (comparison, not identity claim)"
+echo "== arm64 rebuild vs committed cfobjc-pass.txt (identity)"
 cf=
 for c in \
     "${CF:-}" \
     /tmp/cfsrc/swift-corelibs-foundation/Sources/CoreFoundation \
     "$HOME/scf-full/Sources/CoreFoundation" \
-    "$ROOT/scratch/swift-corelibs-foundation/Sources/CoreFoundation"
+    "$ROOT/scratch/swift-corelibs-foundation/Sources/CoreFoundation" \
+    "$ROOT/scratch/ud-guest-x86_64/cf/Sources/CoreFoundation"
 do
     [ -n "$c" ] && [ -f "$c/CFRuntime.c" ] && [ -f "$c/CFPreferences.c" ] || continue
     cf=$c
@@ -184,15 +225,15 @@ fi
 ok "arm64 build_cfobjc.sh exit 0"
 
 sort -u "$cmpdir/PASS.txt" >"$cmpdir/PASS.sorted"
-sort -u "$PASS79" >"$cmpdir/pass-79.sorted"
-comm -23 "$cmpdir/pass-79.sorted" "$cmpdir/PASS.sorted" >"$cmpdir/missing-vs-pass79.txt" || true
-comm -13 "$cmpdir/pass-79.sorted" "$cmpdir/PASS.sorted" >"$cmpdir/extra-vs-pass79.txt" || true
+sort -u "$CFOBJC_PASS" >"$cmpdir/cfobjc-pass.sorted"
+comm -23 "$cmpdir/cfobjc-pass.sorted" "$cmpdir/PASS.sorted" >"$cmpdir/missing-vs-cfobjc-pass.txt" || true
+comm -13 "$cmpdir/cfobjc-pass.sorted" "$cmpdir/PASS.sorted" >"$cmpdir/extra-vs-cfobjc-pass.txt" || true
 
-echo "--- PASS vs docs/cf-census/pass-79.txt ---"
-echo "missing from this build (in pass-79, not in PASS.txt):"
-sed 's/^/  /' "$cmpdir/missing-vs-pass79.txt" || true
-echo "extra in this build (in PASS.txt, not in pass-79):"
-sed 's/^/  /' "$cmpdir/extra-vs-pass79.txt" || true
+echo "--- PASS vs docs/cf-census/cfobjc-pass.txt ---"
+echo "missing from this build:"
+sed 's/^/  /' "$cmpdir/missing-vs-cfobjc-pass.txt" || true
+echo "extra in this build:"
+sed 's/^/  /' "$cmpdir/extra-vs-cfobjc-pass.txt" || true
 if [ -s "$cmpdir/FAIL.txt" ]; then
     echo "FAIL.txt:"
     sed 's/^/  /' "$cmpdir/FAIL.txt"
@@ -202,25 +243,31 @@ if [ -s "$cmpdir/EMPTY.txt" ]; then
     sed 's/^/  /' "$cmpdir/EMPTY.txt"
 fi
 
-miss_n=$(grep -c . "$cmpdir/missing-vs-pass79.txt" || true)
-extra_n=$(grep -c . "$cmpdir/extra-vs-pass79.txt" || true)
+miss_n=$(grep -c . "$cmpdir/missing-vs-cfobjc-pass.txt" || true)
+extra_n=$(grep -c . "$cmpdir/extra-vs-cfobjc-pass.txt" || true)
 if [ "$miss_n" -eq 0 ] && [ "$extra_n" -eq 0 ]; then
-    ok "PASS set matches pass-79.txt ($(wc -l < "$cmpdir/PASS.sorted") files)"
+    ok "PASS set matches cfobjc-pass.txt ($(wc -l < "$cmpdir/PASS.sorted") files)"
 else
-    echo "DIFF: PASS set is not identical to pass-79.txt (missing=$miss_n extra=$extra_n). Not claiming identical."
-    ok "recorded PASS-set difference vs pass-79.txt (missing=$miss_n extra=$extra_n)"
+    die_test "PASS set differs from cfobjc-pass.txt (missing=$miss_n extra=$extra_n)"
 fi
 
 if [ -f "$cmpdir/FAIL.txt" ]; then
     sort -u "$cmpdir/FAIL.txt" >"$cmpdir/FAIL.sorted"
-    sort -u "$FAIL3" >"$cmpdir/fail-3.sorted"
-    comm -23 "$cmpdir/fail-3.sorted" "$cmpdir/FAIL.sorted" >"$cmpdir/fail3-not-in-fail.txt" || true
-    comm -13 "$cmpdir/fail-3.sorted" "$cmpdir/FAIL.sorted" >"$cmpdir/fail-not-in-fail3.txt" || true
-    echo "--- FAIL vs docs/cf-census/fail-3.txt ---"
-    echo "in fail-3, not in this FAIL:"
-    sed 's/^/  /' "$cmpdir/fail3-not-in-fail.txt" || true
-    echo "in this FAIL, not in fail-3:"
-    sed 's/^/  /' "$cmpdir/fail-not-in-fail3.txt" || true
+    sort -u "$CFOBJC_FAIL" >"$cmpdir/cfobjc-fail.sorted"
+    comm -23 "$cmpdir/cfobjc-fail.sorted" "$cmpdir/FAIL.sorted" >"$cmpdir/fail-pin-not-in-fail.txt" || true
+    comm -13 "$cmpdir/cfobjc-fail.sorted" "$cmpdir/FAIL.sorted" >"$cmpdir/fail-not-in-pin.txt" || true
+    echo "--- FAIL vs docs/cf-census/cfobjc-fail.txt ---"
+    echo "in pin, not in this FAIL:"
+    sed 's/^/  /' "$cmpdir/fail-pin-not-in-fail.txt" || true
+    echo "in this FAIL, not in pin:"
+    sed 's/^/  /' "$cmpdir/fail-not-in-pin.txt" || true
+    fail_miss=$(grep -c . "$cmpdir/fail-pin-not-in-fail.txt" || true)
+    fail_extra=$(grep -c . "$cmpdir/fail-not-in-pin.txt" || true)
+    if [ "$fail_miss" -eq 0 ] && [ "$fail_extra" -eq 0 ]; then
+        ok "FAIL set matches cfobjc-fail.txt (CFRunLoop, CFSocket)"
+    else
+        die_test "FAIL set differs from cfobjc-fail.txt (missing=$fail_miss extra=$fail_extra)"
+    fi
 fi
 
 NM=${NM:-llvm-nm-18}

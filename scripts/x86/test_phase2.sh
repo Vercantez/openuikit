@@ -77,6 +77,8 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/foundation-macho/scripts/ud_dispatch_run.inc" \
     "$ROOT/foundation-macho/scripts/test_link_ud_guest.sh" \
     "$ROOT/foundation-macho/scripts/test_run_ud_guest.sh" \
+    "$ROOT/foundation-macho/scripts/check_cftest_stubs.sh" \
+    "$ROOT/foundation-macho/scripts/test_build_cftest_harness.sh" \
     "$ROOT/scripts/x86/gen_swift_tbd.sh" \
     "$ROOT/scripts/x86/test_gen_swift_tbd.sh" \
     "$ROOT/full/swiftui/guest_gate_inventories.inc" \
@@ -1616,6 +1618,15 @@ expect_grep 'build_full.sh does not stage libCFTest' "$UDINC" \
     "libCFTest staging is not routed through build_full.sh"
 expect_grep 'CANNOT_UD_GUEST_' "$UDINC" "refusal markers use CANNOT_UD_GUEST_"
 expect_grep 'LIBCFTEST libCFTest.dylib' "$UDINC" "CF hole names file=libCFTest.dylib"
+expect_grep 'CANNOT_CFTEST_STUBS' "$UDINC" "stub-set refusal is CANNOT_CFTEST_STUBS"
+expect_grep 'phase2_ud_guest_format_stub_cannot' "$UDINC" \
+    "ud-guest formats count= and first= for the stub CANNOT"
+expect_grep 'phase2_ud_guest_ensure_icu_checkout' "$UDINC" \
+    "ud-guest fetches the pinned ICU checkout"
+expect_grep 'cftest-stubs' "$PHASE2" "ENV_PREPARE item names cftest-stubs"
+expect_grep 'CANNOT_CFTEST_STUBS' "$PHASE2" "phase2 maps CANNOT_CFTEST_STUBS to cftest-stubs"
+expect_grep 'Will not link ud_guest against it' "$PHASE2" \
+    "unexpected stub set does not proceed to link_ud_guest.sh"
 expect_grep 'USERDEFAULTSGUEST UserDefaultsGuest.o' "$UDINC" "port hole names file=UserDefaultsGuest.o"
 expect_grep 'UserDefaultsGuest.swiftc.log' "$UDINC" "port swiftc output is spilled to a file"
 expect_grep 'runner.swiftc.log' "$UDINC" "runner swiftc output is spilled to a file"
@@ -1646,6 +1657,9 @@ expect_grep 'PHASE2_UD_GUEST_CF_COMMIT=f3a7a34302317a95665bf4ff1a62ee1b459c1695'
     "$UDINC" "ud-guest-x86 pins the census CF commit"
 expect_grep 'PHASE2_UD_GUEST_CF_TREE=2f9136f253a51406f2bcb0a612bcb6a9eba03570' \
     "$UDINC" "ud-guest-x86 pins the census CF tree"
+expect_grep 'PHASE2_UD_GUEST_ICU_COMMIT=87dbab99780e277b6a4c2a397ab1a894f877b39a' \
+    "$UDINC" "ud-guest-x86 pins the ICU headers commit"
+expect_grep 'scratch/swift-foundation-icu' "$UDINC" "ICU checkout dest is the contract tree"
 expect_grep 'scratch/ud-guest-x86_64/cf' "$UDINC" "CF checkout dest is under the suffixed work tree"
 expect_grep 'phase2_ud_guest_ensure_cf_checkout' "$UDINC" "ud-guest fetches the pinned CF checkout"
 expect_grep '"id": "swift-corelibs-foundation"' "$ROOT/env/contract.json" \
@@ -1662,6 +1676,10 @@ expect_not_grep 'CF sources missing' "$UDINC" \
     "does not ask the operator to stage CF sources"
 expect_grep 'build_cfobjc.sh' "$ROOT/scripts/x86/PHASE2.md" \
     "PHASE2.md names the committed cfobjc recipe"
+expect_grep 'cftest-stubs' "$ROOT/scripts/x86/PHASE2.md" \
+    "PHASE2.md names the cftest-stubs ENV_PREPARE item"
+expect_grep 'CANNOT_CFTEST_STUBS' "$ROOT/scripts/x86/PHASE2.md" \
+    "PHASE2.md names CANNOT_CFTEST_STUBS"
 expect_grep 'Will not invent a stub dylib' "$UDINC" \
     "does not invent a stub libCFTest.dylib"
 expect_not_grep 'no committed recipe (shell-history only)' "$UDINC" \
@@ -1696,6 +1714,18 @@ if [ "$wt" = "$UDWORK/scratch/ud-guest-x86_64" ]; then
 else
     die_test "worktree helper got $wt"
 fi
+
+echo "== CANNOT_CFTEST_STUBS ENV_PREPARE payload is count= + first five names"
+stub_line=$(phase2_ud_guest_format_stub_cannot \
+    'CANNOT_CFTEST_STUBS extra=CFStringCreateWithBytes,CFCalendarCreateWithIdentifier,CFCharacterSetCreateWithCharactersInString,CFLocaleCreate,CFRunLoopGetCurrent,CFBundleAllowMixedLocalizations missing=' || true)
+case "$stub_line" in
+    CANNOT_CFTEST_STUBS\ file=libCFTest.dylib\ count=6\ first=CFStringCreateWithBytes,CFCalendarCreateWithIdentifier,CFCharacterSetCreateWithCharactersInString,CFLocaleCreate,CFRunLoopGetCurrent\ extra=CFStringCreateWithBytes,*)
+        ok "format_stub_cannot count=6 first= five names (CFStringCreateWithBytes first)"
+        ;;
+    *)
+        die_test "format_stub_cannot got: $stub_line"
+        ;;
+esac
 
 missing=$(phase2_ud_guest_stage_fe "$UDWORK/foundation" "$wt" || true)
 case "$missing" in
@@ -1931,9 +1961,16 @@ fi
 
 echo "== cfobjc recipe argv is the documented flag set"
 if CFOBJC_SKIP_COMPILE=1 bash "$ROOT/foundation-macho/scripts/test_build_cfobjc.sh"; then
-    ok "test_build_cfobjc.sh (argv + missing-CF)"
+    ok "test_build_cfobjc.sh (argv + missing-CF + missing-ICU)"
 else
     die_test "test_build_cfobjc.sh"
+fi
+
+echo "== libCFTest stub pin: matching fixture OK, differing fixture CANNOT"
+if bash "$ROOT/foundation-macho/scripts/test_build_cftest_harness.sh"; then
+    ok "test_build_cftest_harness.sh"
+else
+    die_test "test_build_cftest_harness.sh"
 fi
 
 echo "== link_ud_guest.sh clang-18, one rope, dummy X86_64 binary"

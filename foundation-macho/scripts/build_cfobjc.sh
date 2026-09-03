@@ -55,6 +55,12 @@
 #   census does not delete ___CFConstantStringClassReference from CFRuntime.c
 #   census does not append the CFLocaleKeys .set aliases
 #   census may omit ICU_INC, so CFLocaleKeys.o loses kCFNumberFormatter*
+#
+# ICU_INC is REQUIRED for a compile (not --print-argv). Without it 16 TUs
+# including CFString.c fail on <_foundation_unicode/uchar.h> and the harness
+# stubs CFStringCreateWithBytes — a 64-object library that looks like a real
+# gap (the x86 143-stub failure). Named walls are CFRunLoop and CFSocket only
+# (docs/cf-census/cfobjc-fail.txt). Anything else is CANNOT_CFOBJC_OBJECTS.
 set -uo pipefail
 
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -121,14 +127,21 @@ find_sdk() {
 }
 
 find_icu() {
+    # An explicit ICU_INC is the whole search. Empty/unset still walks the
+    # defaults. A set-but-missing path must not silently pick up another tree
+    # (that is how a test, or a typo, would compile 80 objects from the wrong
+    # headers and call it success).
     local c
+    if [ -n "${ICU_INC:-}" ]; then
+        [ -d "$ICU_INC" ] || return 1
+        printf '%s\n' "$ICU_INC"
+        return 0
+    fi
     for c in \
-        "${ICU_INC:-}" \
         "$W/icuSources/include" \
         "$MONO/scratch/swift-foundation-icu/icuSources/include" \
         "$HOME/swift-foundation-icu/icuSources/include"
     do
-        [ -n "$c" ] || continue
         [ -d "$c" ] || continue
         printf '%s\n' "$c"
         return 0
@@ -256,6 +269,10 @@ if [ ! -f "$OURINC/CFFoundationInterfaces.h" ] || [ ! -f "$OURINC/CFNSForwards.h
     echo "build_cfobjc: missing $OURINC/CFFoundationInterfaces.h or CFNSForwards.h" >&2
     exit 2
 fi
+if [ -z "$ICU_INC" ]; then
+    echo "build_cfobjc: no ICU headers (set ICU_INC= to swift-foundation-icu icuSources/include). CFString.c includes <_foundation_unicode/uchar.h>; without it CFStringCreateWithBytes becomes a loud stub. That is a CANNOT, not a 64-object build." >&2
+    exit 2
+fi
 
 NM=${NM:-llvm-nm-18}
 command -v "$NM" >/dev/null 2>&1 || NM=llvm-nm
@@ -365,7 +382,50 @@ if [ "$pass" -eq 0 ]; then
     echo "build_cfobjc: zero passing objects; refusing to call this a CF build." >&2
     exit 2
 fi
-# The shipped libCFTest linked the non-empty set. A handful of remaining
-# FAILs is a named wall (cf_census.sh FAIL.txt), not a reason to throw away
-# the objects that did compile.
+
+# Object-set pin: both arches must match docs/cf-census/cfobjc-{pass,fail,empty}.txt.
+# Unexpected FAILs used to be dropped and the remaining objects linked; that is
+# how x86 shipped 64 objects and stubbed CFStringCreateWithBytes. Named walls
+# (CFRunLoop, CFSocket) stay; everything else is CANNOT_CFOBJC_OBJECTS.
+expect_dir=$FM/docs/cf-census
+comma_names() {
+    if [ ! -s "$1" ]; then
+        printf ''
+        return 0
+    fi
+    paste -sd, "$1"
+}
+diff_set() {
+    local got=$1 exp=$2 extra_out=$3 miss_out=$4
+    sort -u "$got" | grep -v '^$' >"$OUT/.got" || true
+    sort -u "$exp" | grep -v '^$' >"$OUT/.exp"
+    comm -13 "$OUT/.exp" "$OUT/.got" >"$extra_out" || true
+    comm -23 "$OUT/.exp" "$OUT/.got" >"$miss_out" || true
+}
+: >>"$OUT/PASS.txt"
+: >>"$OUT/FAIL.txt"
+: >>"$OUT/EMPTY.txt"
+diff_set "$OUT/PASS.txt" "$expect_dir/cfobjc-pass.txt" "$OUT/pass-extra.txt" "$OUT/pass-missing.txt"
+diff_set "$OUT/FAIL.txt" "$expect_dir/cfobjc-fail.txt" "$OUT/fail-extra.txt" "$OUT/fail-missing.txt"
+diff_set "$OUT/EMPTY.txt" "$expect_dir/cfobjc-empty.txt" "$OUT/empty-extra.txt" "$OUT/empty-missing.txt"
+obj_drift=0
+for side in pass fail empty; do
+    if [ -s "$OUT/${side}-extra.txt" ] || [ -s "$OUT/${side}-missing.txt" ]; then
+        obj_drift=1
+    fi
+done
+if [ "$obj_drift" -ne 0 ]; then
+    echo "CANNOT_CFOBJC_OBJECTS extra=$(comma_names "$OUT/pass-extra.txt") missing=$(comma_names "$OUT/pass-missing.txt")" >&2
+    echo "build_cfobjc: object set differs from $expect_dir/cfobjc-pass.txt. Named FAILs are CFRunLoop (epoll.h) and CFSocket (ioctl.h) only." >&2
+    if [ -s "$OUT/FAIL.txt" ]; then
+        while read -r b; do
+            printf '  FAIL %-32s %s\n' "$b" \
+                "$(grep -m1 -E 'error:' "$OUT/log/$b.err" 2>/dev/null | sed 's/.*error: //' | cut -c1-80)"
+        done < "$OUT/FAIL.txt" >&2
+    fi
+    echo "  pass extra=$(comma_names "$OUT/pass-extra.txt") missing=$(comma_names "$OUT/pass-missing.txt")" >&2
+    echo "  fail extra=$(comma_names "$OUT/fail-extra.txt") missing=$(comma_names "$OUT/fail-missing.txt")" >&2
+    echo "  empty extra=$(comma_names "$OUT/empty-extra.txt") missing=$(comma_names "$OUT/empty-missing.txt")" >&2
+    exit 2
+fi
 exit 0
