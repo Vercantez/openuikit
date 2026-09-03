@@ -92,6 +92,9 @@ translate_ldflag() {
         -Wl,-undefined,dynamic_lookup) echo "-undefined"; echo "dynamic_lookup" ;;
         -Wl,-U,*) echo "-U"; echo "${a#-Wl,-U,}" ;;
         -Wl,-rpath,*) echo "-rpath"; echo "${a#-Wl,-rpath,}" ;;
+        -nostdlib) ;;
+        -static) echo "-static" ;;
+        -e) printf '%s\n' "-e" ;;
         -Wl,*)
             local rest="${a#-Wl,}"
             IFS=',' read -r -a parts <<<"$rest"
@@ -217,17 +220,65 @@ build_dylib() {
     link_dylib "$out" "$target" "$install_name" "$obj" ${extra_ld[@]+"${extra_ld[@]}"}
 }
 
+# Pack a Mach-O (or convert LC_MAIN → LC_UNIXTHREAD) and surface packer
+# CANNOT_* refusals as named scoreboard reasons. Defined before the rungs
+# because exit_unixthread uses it.
+pack_or_refuse() {
+    local id="$1"
+    shift
+    local err="$META/${id}.pack.err"
+    if python3 "$ROOT/scripts/pack_macho.py" "$@" 2>"$err"; then
+        rm -f "$err"
+        return 0
+    fi
+    local marker why
+    marker=$(grep -oE 'CANNOT_[A-Z0-9_]+' "$err" | head -1)
+    marker="${marker:-CANNOT_PACK_X86}"
+    why=$(tr '\n' ' ' < "$err")
+    why="${why:-pack_macho.py failed}"
+    refuse "$marker" "$id" "$why"
+    return 1
+}
+
 # ---------------------------------------------------------------- rungs
 # Same order and same sources as tests/build_fixtures.sh. Flags are the Darwin
 # clang flags that script passes; this file translates them for ld64.
 
 if want exit_raw; then
-    refuse "CANNOT_ASSEMBLE_X86" "exit_raw" \
-        "tests/src/exit_raw.s is arm64 assembly; no x86_64 translation in tests/src"
+    echo "==> exit_raw"
+    src="$SRC/exit_raw_x86_64.s"
+    if [ ! -f "$src" ]; then
+        refuse "CANNOT_ASSEMBLE_X86" "exit_raw" \
+            "tests/src/exit_raw.s is arm64 assembly; no x86_64 translation in tests/src"
+    elif compile_one "$src" "$OBJ/exit_raw.o" "$CLASSIC_TARGET" && \
+         link_exe "$BIN/exit_raw" "$CLASSIC_TARGET" "$OBJ/exit_raw.o" -e _start; then
+        built_ids+=(exit_raw); BUILT=$((BUILT + 1))
+    else
+        refuse "CANNOT_ASSEMBLE_X86" "exit_raw" \
+            "assemble or link of tests/src/exit_raw_x86_64.s failed"
+    fi
 fi
 if want exit_unixthread; then
-    refuse "CANNOT_ASSEMBLE_X86" "exit_unixthread" \
-        "tests/src/exit_raw.s is arm64 assembly; LC_UNIXTHREAD x86_64 needs a distinct .s living beside, not instead"
+    echo "==> exit_unixthread"
+    src="$SRC/exit_unixthread_x86_64.s"
+    if [ ! -f "$src" ]; then
+        refuse "CANNOT_ASSEMBLE_X86" "exit_unixthread" \
+            "tests/src/exit_raw.s is arm64 assembly; LC_UNIXTHREAD x86_64 needs a distinct .s living beside, not instead"
+    elif compile_one "$src" "$OBJ/exit_unixthread.o" "$CLASSIC_TARGET" && \
+         link_exe "$BIN/exit_unixthread.tmp" "$CLASSIC_TARGET" "$OBJ/exit_unixthread.o" -e _start; then
+        # ld64.lld-18 does not implement -static; rewrite LC_MAIN → LC_UNIXTHREAD.
+        # pack_or_refuse already records a named CANNOT on failure — do not
+        # overwrite that marker with CANNOT_ASSEMBLE_X86.
+        if pack_or_refuse exit_unixthread unixthread "$BIN/exit_unixthread.tmp" \
+                -o "$BIN/exit_unixthread"; then
+            rm -f "$BIN/exit_unixthread.tmp"
+            chmod +x "$BIN/exit_unixthread"
+            built_ids+=(exit_unixthread); BUILT=$((BUILT + 1))
+        fi
+    else
+        refuse "CANNOT_ASSEMBLE_X86" "exit_unixthread" \
+            "assemble or link of tests/src/exit_unixthread_x86_64.s failed"
+    fi
 fi
 
 want main_ret         && build main_ret         "$CHAINED_TARGET" main_ret         main_ret.c --
@@ -275,6 +326,104 @@ if want dylib_classic; then
         built_ids+=(dylib_classic); BUILT=$((BUILT + 1))
     else
         refuse "CANNOT_LINK_X86" "dylib_classic" "classic dylib pair link failed"
+    fi
+fi
+
+# cache_layout family: same sources as tests/build_fixtures.sh. Packed/sparse
+# rewrite RIP-relative disp32 in pack_macho.py (the x86_64 equivalent of the
+# ARM64 ADRP/LDR rewriter). A relocation shape the packer does not handle
+# is a named CANNOT, never a silently broken image.
+if want cache_layout || want cache_layout_packed || want cache_layout_sparse || want cache_layout_nofix; then
+    echo "==> cache_layout"
+    if build_dylib "$CHAINED_TARGET" cache_layout_lib.c "$BIN/libcache_layout.dylib" \
+            "@rpath/libcache_layout.dylib" -Wl,-U,_exe_callback && \
+       compile_one "$SRC/cache_layout.c" "$OBJ/cache_layout.o" "$CHAINED_TARGET" && \
+       link_exe "$BIN/cache_layout" "$CHAINED_TARGET" "$OBJ/cache_layout.o" \
+            "$BIN/libcache_layout.dylib" \
+            -Wl,-rpath,@loader_path -Wl,-export_dynamic; then
+        built_ids+=(cache_layout); BUILT=$((BUILT + 1))
+    else
+        refuse "CANNOT_LINK_X86" "cache_layout" "cache_layout dylib/exe link failed"
+    fi
+    if [[ " ${built_ids[*]} " == *" cache_layout "* ]]; then
+        if want cache_layout_packed; then
+            echo "==> cache_layout_packed"
+            if pack_or_refuse cache_layout_packed pack "$BIN/libcache_layout.dylib" \
+                    -o "$BIN/libcache_packed.dylib" \
+                    --id "@rpath/libcache_packed.dylib" && \
+               pack_or_refuse cache_layout_packed rename "$BIN/cache_layout" \
+                    -o "$BIN/cache_layout_packed" \
+                    --from "@rpath/libcache_layout.dylib" \
+                    --to "@rpath/libcache_packed.dylib"; then
+                chmod +x "$BIN/cache_layout_packed"
+                built_ids+=(cache_layout_packed); BUILT=$((BUILT + 1))
+            fi
+        fi
+        if want cache_layout_sparse; then
+            echo "==> cache_layout_sparse"
+            if pack_or_refuse cache_layout_sparse pack "$BIN/libcache_layout.dylib" \
+                    -o "$BIN/libcache_sparse.dylib" \
+                    --id "@rpath/libcache_sparse.dylib" \
+                    --sparse && \
+               pack_or_refuse cache_layout_sparse rename "$BIN/cache_layout" \
+                    -o "$BIN/cache_layout_sparse" \
+                    --from "@rpath/libcache_layout.dylib" \
+                    --to "@rpath/libcache_sparse.dylib"; then
+                chmod +x "$BIN/cache_layout_sparse"
+                built_ids+=(cache_layout_sparse); BUILT=$((BUILT + 1))
+            fi
+        fi
+        if want cache_layout_nofix; then
+            echo "==> cache_layout_nofix"
+            if pack_or_refuse cache_layout_nofix strip-fixups "$BIN/libcache_layout.dylib" \
+                    -o "$BIN/libcache_nofix.dylib" \
+                    --id "@rpath/libcache_nofix.dylib" && \
+               pack_or_refuse cache_layout_nofix rename "$BIN/cache_layout" \
+                    -o "$BIN/cache_layout_nofix" \
+                    --from "@rpath/libcache_layout.dylib" \
+                    --to "@rpath/libcache_nofix.dylib"; then
+                chmod +x "$BIN/cache_layout_nofix"
+                built_ids+=(cache_layout_nofix); BUILT=$((BUILT + 1))
+            fi
+        fi
+    fi
+fi
+
+if want cache_layout_emptyfix; then
+    echo "==> cache_layout_emptyfix"
+    if compile_one "$SRC/cache_emptyfix_lib.c" "$OBJ/cache_emptyfix_lib.o" "$CLASSIC_TARGET" && \
+       link_dylib "$BIN/libcache_emptyfix.dylib" "$CLASSIC_TARGET" \
+            "@rpath/libcache_emptyfix.dylib" "$OBJ/cache_emptyfix_lib.o" \
+            -Wl,-no_fixup_chains && \
+       pack_or_refuse cache_layout_emptyfix empty-dyld-info \
+            "$BIN/libcache_emptyfix.dylib" \
+            -o "$BIN/libcache_emptyfix.dylib" \
+            --id "@rpath/libcache_emptyfix.dylib" && \
+       compile_one "$SRC/cache_emptyfix.c" "$OBJ/cache_emptyfix.o" "$CLASSIC_TARGET" && \
+       link_exe "$BIN/cache_layout_emptyfix" "$CLASSIC_TARGET" "$OBJ/cache_emptyfix.o" \
+            "$BIN/libcache_emptyfix.dylib" \
+            -Wl,-needed_library,"$BIN/libcache_emptyfix.dylib" \
+            -Wl,-rpath,@loader_path; then
+        built_ids+=(cache_layout_emptyfix); BUILT=$((BUILT + 1))
+    else
+        [ -f "$META/cache_layout_emptyfix" ] || \
+            refuse "CANNOT_LINK_X86" "cache_layout_emptyfix" "emptyfix dylib/exe link failed"
+    fi
+fi
+
+if want cache_layout_oversize; then
+    echo "==> cache_layout_oversize"
+    if [ ! -f "$BIN/main_ret" ]; then
+        if ! compile_one "$SRC/main_ret.c" "$OBJ/main_ret.o" "$CHAINED_TARGET" || \
+           ! link_exe "$BIN/main_ret" "$CHAINED_TARGET" "$OBJ/main_ret.o"; then
+            refuse "CANNOT_LINK_X86" "cache_layout_oversize" "need main_ret to rewrite"
+        fi
+    fi
+    if [ -f "$BIN/main_ret" ] && \
+       pack_or_refuse cache_layout_oversize oversize "$BIN/main_ret" \
+            -o "$BIN/cache_layout_oversize" --segment __LINKEDIT; then
+        chmod +x "$BIN/cache_layout_oversize"
+        built_ids+=(cache_layout_oversize); BUILT=$((BUILT + 1))
     fi
 fi
 

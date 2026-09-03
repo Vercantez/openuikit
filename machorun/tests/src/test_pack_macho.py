@@ -50,7 +50,12 @@ class PackMachoTests(unittest.TestCase):
             "def oversize_bytes",
             "def strip_fixup_lcs",
             "def empty_dyld_info_lcs",
+            "def unixthread_bytes",
             "dyld-shared-cache",
+            "decode_x86_64",
+            "patch_x86_64_rip_relocs",
+            "CANNOT_RELOC_X86_VEX",
+            "CANNOT_RIP_DISP32",
         ):
             self.assertIn(token, text)
 
@@ -277,6 +282,128 @@ class PackMachoTests(unittest.TestCase):
             if name == b"@rpath/libcache_emptyfix.dylib":
                 found += 1
         self.assertGreaterEqual(found, 1, "exe is missing LC_LOAD_DYLIB of the emptyfix dylib")
+
+    def test_x86_decoder_known_encodings(self) -> None:
+        pm = _pack_mod()
+        cases = (
+            ("488d3dce000000", 7, "rip"),
+            ("8b0dbc290000", 6, "rip"),
+            ("890db4290000", 6, "rip"),
+            ("ff255a290000", 6, "rip"),
+            ("4c8d1d65290000", 7, "rip"),
+            ("e82d000000", 5, "rel32"),
+            ("e95f000000", 5, "rel32"),
+            ("c7051122334400000000", 10, "rip"),  # movl $0, disp32(%rip)
+            ("0fba251122334401", 8, "rip"),       # btl $1, disp32(%rip)
+            ("6666666666662e0f1f840000000000", 15, None),
+            ("55", 1, None),
+            ("c3", 1, None),
+        )
+        for hexb, want_len, want_kind in cases:
+            ln, disp, kind = pm.decode_x86_64(bytes.fromhex(hexb), 0)
+            self.assertEqual(ln, want_len, hexb)
+            self.assertEqual(kind, want_kind, hexb)
+            if want_kind in ("rip", "rel32"):
+                self.assertIsNotNone(disp, hexb)
+
+    def test_x86_decoder_refuses_vex(self) -> None:
+        pm = _pack_mod()
+        with self.assertRaises(pm.CannotPack) as ctx:
+            pm.decode_x86_64(bytes.fromhex("c5f877"), 0)
+        self.assertEqual(ctx.exception.marker, "CANNOT_RELOC_X86_VEX")
+
+    def test_x86_pack_rewrites_rip_to_packed_got(self) -> None:
+        """x86_64 stubs are `jmpq *disp32(%rip)`; packing must rewrite disp32."""
+        pm = _pack_mod()
+        src = ROOT / "tests" / "bin-x86_64" / "libdylib_greet.dylib"
+        if not src.is_file():
+            self.skipTest("tests/bin-x86_64/libdylib_greet.dylib not built")
+
+        def find_section(img, name: str):
+            for seg in img.segs:
+                for sec in seg.sects:
+                    if sec["name"] == name:
+                        return sec
+            return None
+
+        def ptr_range(img):
+            lo, hi = None, None
+            for name in ("__got", "__la_symbol_ptr"):
+                sec = find_section(img, name)
+                if sec is None:
+                    continue
+                a, b = sec["addr"], sec["addr"] + sec["size"]
+                lo = a if lo is None else min(lo, a)
+                hi = b if hi is None else max(hi, b)
+            self.assertIsNotNone(lo, "packed image has neither __got nor __la_symbol_ptr")
+            return lo, hi
+
+        data = src.read_bytes()
+        img0 = pm.Image(data)
+        self.assertEqual(img0.cputype, pm.CPU_TYPE_X86_64)
+        packed = pm.pack_bytes(data, install_name="@rpath/libcache_packed.dylib")
+        img = pm.Image(packed)
+        stubs = find_section(img, "__stubs")
+        self.assertIsNotNone(stubs)
+        glo, ghi = ptr_range(img)
+        i = 0
+        n_rip = 0
+        while i < stubs["size"]:
+            pc = stubs["addr"] + i
+            off = stubs["offset"] + i
+            ln, disp_off, kind = pm.decode_x86_64(packed, off)
+            if kind == "rip":
+                n_rip += 1
+                rel = int.from_bytes(packed[disp_off:disp_off + 4], "little", signed=True)
+                ea = pc + ln + rel
+                self.assertGreaterEqual(ea, glo, hex(pc))
+                self.assertLess(ea, ghi, hex(pc))
+            i += ln
+        self.assertGreater(n_rip, 0, "packed x86_64 stubs had no RIP-relative jmpq")
+        sparse = pm.pack_bytes(data, install_name="@rpath/libcache_sparse.dylib", sparse=True)
+        simg = pm.Image(sparse)
+        stext = next(s for s in simg.segs if s.name == "__TEXT")
+        sdc = next(s for s in simg.segs if s.name == "__DATA_CONST")
+        self.assertEqual(sdc.vmaddr - stext.vmaddr, pm.CACHE_SPARSE_DELTA)
+        sstubs = find_section(simg, "__stubs")
+        self.assertIsNotNone(sstubs)
+        slo, shi = ptr_range(simg)
+        i = 0
+        while i < sstubs["size"]:
+            pc = sstubs["addr"] + i
+            off = sstubs["offset"] + i
+            ln, disp_off, kind = pm.decode_x86_64(sparse, off)
+            if kind == "rip":
+                rel = int.from_bytes(sparse[disp_off:disp_off + 4], "little", signed=True)
+                ea = pc + ln + rel
+                self.assertGreaterEqual(ea, slo, hex(pc))
+                self.assertLess(ea, shi, hex(pc))
+            i += ln
+
+    def test_unixthread_rewrite_x86_drops_dyld(self) -> None:
+        pm = _pack_mod()
+        src = ROOT / "tests" / "bin-x86_64" / "exit_raw"
+        if not src.is_file():
+            self.skipTest("tests/bin-x86_64/exit_raw not built")
+        data = src.read_bytes()
+        img0 = pm.Image(data)
+        self.assertEqual(img0.cputype, pm.CPU_TYPE_X86_64)
+        self.assertTrue(img0.find_cmd(pm.LC_MAIN))
+        out = pm.unixthread_bytes(data)
+        img = pm.Image(out)
+        self.assertTrue(img.find_cmd(pm.LC_UNIXTHREAD))
+        self.assertFalse(img.find_cmd(pm.LC_MAIN))
+        self.assertFalse(img.find_cmd(pm.LC_LOAD_DYLINKER))
+        self.assertFalse(img.find_cmd(pm.LC_LOAD_DYLIB))
+        uoff, _ = img.find_cmd(pm.LC_UNIXTHREAD)[0]
+        flavor, count = struct.unpack_from("<II", out, uoff + 8)
+        self.assertEqual(flavor, pm.X86_THREAD_STATE64)
+        self.assertEqual(count, 42)
+        st = struct.unpack_from("<21Q", out, uoff + 16)
+        text = next(s for s in img.segs if s.name == "__TEXT")
+        moff, _ = img0.find_cmd(pm.LC_MAIN)[0]
+        entryoff, = struct.unpack_from("<Q", data, moff + 8)
+        self.assertEqual(st[16], text.vmaddr + entryoff)
 
 
 if __name__ == "__main__":

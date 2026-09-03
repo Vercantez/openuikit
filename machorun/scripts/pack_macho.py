@@ -11,8 +11,10 @@ Apple's binary.
 
 It never executes the guest. It rewrites load commands, section headers,
 LINKEDIT offsets, chained-fixup starts, export-trie image offsets, nlist
-n_value, ARM64 ADRP/LDR/ADD page immediates, and (format-6) rebase targets,
-then packs file bytes tightly.
+n_value, ARM64 ADRP/LDR/ADD page immediates, x86_64 RIP-relative disp32
+(lea/mov/jmp … (%rip)), and (format-6) rebase targets, then packs file
+bytes tightly. A relocation shape it does not handle is a named CANNOT,
+not a broken image.
 
     scripts/pack_macho.py pack IN.dylib -o OUT.dylib [--id INSTALL_NAME]
                                                 [--sparse | --gap N]
@@ -20,6 +22,7 @@ then packs file bytes tightly.
     scripts/pack_macho.py oversize IN -o OUT [--segment NAME]
     scripts/pack_macho.py strip-fixups IN.dylib -o OUT.dylib [--id INSTALL_NAME]
     scripts/pack_macho.py empty-dyld-info IN.dylib -o OUT.dylib [--id INSTALL_NAME]
+    scripts/pack_macho.py unixthread IN -o OUT
     scripts/pack_macho.py inspect FILE
     scripts/pack_macho.py --selftest
 """
@@ -32,12 +35,17 @@ import sys
 from typing import Callable
 
 MH_MAGIC_64 = 0xFEEDFACF
+CPU_TYPE_X86_64 = 0x01000007
+CPU_TYPE_ARM64 = 0x0100000C
 LC_REQ_DYLD = 0x80000000
 LC_SEGMENT_64 = 0x19
 LC_SYMTAB = 0x02
 LC_DYSYMTAB = 0x0B
 LC_LOAD_DYLIB = 0x0C
 LC_ID_DYLIB = 0x0D
+LC_LOAD_DYLINKER = 0x0E
+LC_UNIXTHREAD = 0x05
+LC_UUID = 0x1B
 LC_LOAD_WEAK_DYLIB = 0x18 | LC_REQ_DYLD
 LC_RPATH = 0x1C | LC_REQ_DYLD
 LC_REEXPORT_DYLIB = 0x1F | LC_REQ_DYLD
@@ -45,12 +53,24 @@ LC_DYLD_INFO = 0x22
 LC_DYLD_INFO_ONLY = 0x22 | LC_REQ_DYLD
 LC_FUNCTION_STARTS = 0x26
 LC_DATA_IN_CODE = 0x29
+LC_SOURCE_VERSION = 0x2A
 LC_CODE_SIGNATURE = 0x1D
 LC_DYLIB_CODE_SIGN_DRS = 0x2B
+LC_BUILD_VERSION = 0x32
+LC_VERSION_MIN_MACOSX = 0x24
+LC_MAIN = 0x28 | LC_REQ_DYLD
 LC_DYLD_EXPORTS_TRIE = 0x33 | LC_REQ_DYLD
 LC_DYLD_CHAINED_FIXUPS = 0x34 | LC_REQ_DYLD
 LC_SEGMENT_SPLIT_INFO = 0x1E
 LC_ATOM_INFO = 0x36
+
+MH_NOUNDEFS = 0x1
+MH_DYLDLINK = 0x4
+MH_TWOLEVEL = 0x80
+MH_PIE = 0x00200000
+
+X86_THREAD_STATE64 = 4
+ARM_THREAD_STATE64 = 6
 
 S_ZEROFILL = 0x1
 S_THREAD_LOCAL_ZEROFILL = 0x12
@@ -64,6 +84,15 @@ CACHE_UNALIGN = 0x720
 CACHE_GAP = 0x10000
 CACHE_SPARSE_DELTA = 0x22256720  # DATA_CONST.vmaddr - TEXT.vmaddr
 HOST_PAGE = 4096
+
+
+class CannotPack(ValueError):
+    """Named refusal: the rewriter will not emit a broken image."""
+
+    def __init__(self, marker: str, why: str):
+        self.marker = marker
+        self.why = why
+        super().__init__(f"{marker}: {why}")
 
 
 def uleb_decode(buf: bytes | bytearray, p: int) -> tuple[int, int]:
@@ -341,6 +370,302 @@ def encode_add_imm(insn: int, new_imm: int) -> int:
     return (insn & ~(0xFFF << 10)) | (new_imm << 10)
 
 
+# x86_64 RIP-relative: clang/ld64 bake a signed disp32 against the next
+# instruction's RIP (lea/mov … (%rip), jmpq *got(%rip)). Moving DATA
+# relative to __TEXT without rewriting those bytes is the x86 twin of
+# the 2026-09-03 ARM64 ADRP crash. Keeping the original TEXT-to-DATA
+# distance would make --sparse (TEXT+0x22256720) unrepresentable, so
+# the displacements are rewritten. A shape this decoder does not handle
+# is CANNOT_*, never a silently broken image.
+#
+# Per one-byte opcode: (has_modrm, imm) where imm is None, "ib", "iz",
+# "iw", "iv", "rel8", "rel32", "moffs", "enter". "iz" is 16 if 66-prefix
+# else 32; "iv" is 64 if REX.W else iz.
+_X86_OP1: dict[int, tuple[bool, str | None]] = {}
+
+
+def _fill_x86_op1() -> None:
+    def put(ops, modrm, imm=None):
+        for o in ops:
+            _X86_OP1[o] = (modrm, imm)
+
+    for base in (0x00, 0x08, 0x10, 0x18, 0x20, 0x28, 0x30, 0x38):
+        put([base + 0, base + 1, base + 2, base + 3], True)
+        put([base + 4], False, "ib")
+        put([base + 5], False, "iz")
+        put([base + 6, base + 7], False)
+    put([0x50 + i for i in range(16)], False)
+    put([0x63], True)
+    put([0x68], False, "iz")
+    put([0x69], True, "iz")
+    put([0x6A], False, "ib")
+    put([0x6B], True, "ib")
+    put([0x6C, 0x6D, 0x6E, 0x6F], False)
+    put([0x70 + i for i in range(16)], False, "rel8")
+    put([0x80, 0x82], True, "ib")
+    put([0x81], True, "iz")
+    put([0x83], True, "ib")
+    put(list(range(0x84, 0x90)), True)
+    put([0x90 + i for i in range(16)], False)
+    put([0xA0, 0xA1, 0xA2, 0xA3], False, "moffs")
+    put([0xA4, 0xA5, 0xA6, 0xA7], False)
+    put([0xA8], False, "ib")
+    put([0xA9], False, "iz")
+    put(list(range(0xAA, 0xB0)), False)
+    put([0xB0 + i for i in range(8)], False, "ib")
+    put([0xB8 + i for i in range(8)], False, "iv")
+    put([0xC0, 0xC1], True, "ib")
+    put([0xC2], False, "iw")
+    put([0xC3], False)
+    put([0xC6], True, "ib")
+    put([0xC7], True, "iz")
+    put([0xC8], False, "enter")
+    put([0xC9], False)
+    put([0xCA], False, "iw")
+    put([0xCB, 0xCC], False)
+    put([0xCD], False, "ib")
+    put([0xCE, 0xCF], False)
+    put([0xD0, 0xD1, 0xD2, 0xD3], True)
+    put([0xD4, 0xD5], False, "ib")
+    put([0xD6, 0xD7], False)
+    put([0xD8 + i for i in range(8)], True)
+    put([0xE0, 0xE1, 0xE2, 0xE3], False, "rel8")
+    put([0xE4, 0xE5, 0xE6, 0xE7], False, "ib")
+    put([0xE8, 0xE9], False, "rel32")
+    put([0xEB], False, "rel8")
+    put([0xEC, 0xED, 0xEE, 0xEF], False)
+    put([0xF1, 0xF4, 0xF5, 0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD], False)
+    put([0xF6, 0xF7], True)
+    put([0xFE, 0xFF], True)
+
+
+_fill_x86_op1()
+
+_X86_OP2_NO_MODRM = {
+    0x05, 0x06, 0x07, 0x08, 0x09, 0x0B, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35,
+    0x37, 0x77, 0xA0, 0xA1, 0xA2, 0xA8, 0xA9, 0xAA,
+}
+_X86_OP2_REL32 = set(range(0x80, 0x90))
+# 0F + ModR/M + imm8: pshufd/psrlw/bt/cmpps/pinsrw/pextrw/shufps.
+_X86_OP2_IB = {0x70, 0x71, 0x72, 0x73, 0xA4, 0xAC, 0xBA, 0xC2, 0xC4, 0xC5, 0xC6}
+
+
+def decode_x86_64(buf: bytes | bytearray, off: int) -> tuple[int, int | None, str | None]:
+    """Return (length, disp_file_off_or_None, kind).
+
+    kind is 'rip' (ModR/M RIP+disp32), 'rel32', 'rel8', or None.
+    """
+    n = len(buf)
+    if off >= n:
+        raise CannotPack("CANNOT_DECODE_X86", f"decode starts past end at {off:#x}")
+    p = off
+    rex_w = False
+    asz = False
+    osz_66 = False
+    npref = 0
+    while p < n and npref < 14:
+        b = buf[p]
+        if b in (0xF0, 0xF2, 0xF3, 0x2E, 0x36, 0x3E, 0x26, 0x64, 0x65):
+            p += 1
+            npref += 1
+            continue
+        if b == 0x66:
+            osz_66 = True
+            p += 1
+            npref += 1
+            continue
+        if b == 0x67:
+            asz = True
+            p += 1
+            npref += 1
+            continue
+        break
+    if p >= n:
+        raise CannotPack("CANNOT_DECODE_X86", f"truncated prefixes at {off:#x}")
+    if 0x40 <= buf[p] <= 0x4F:
+        rex_w = bool(buf[p] & 8)
+        p += 1
+        if p >= n:
+            raise CannotPack("CANNOT_DECODE_X86", f"truncated REX at {off:#x}")
+    op = buf[p]
+    p += 1
+    if op in (0xC4, 0xC5):
+        raise CannotPack(
+            "CANNOT_RELOC_X86_VEX",
+            f"VEX-coded instruction at {off:#x} (pack_macho rewrites RIP-relative disp32 only)",
+        )
+    if op == 0x62:
+        raise CannotPack(
+            "CANNOT_RELOC_X86_EVEX",
+            f"EVEX-coded instruction at {off:#x} (pack_macho rewrites RIP-relative disp32 only)",
+        )
+
+    two = False
+    if op == 0x0F:
+        two = True
+        if p >= n:
+            raise CannotPack("CANNOT_DECODE_X86", f"truncated 0F opcode at {off:#x}")
+        op2 = buf[p]
+        p += 1
+        if op2 in (0x38, 0x3A):
+            if p >= n:
+                raise CannotPack("CANNOT_DECODE_X86", f"truncated 3-byte opcode at {off:#x}")
+            p += 1
+            has_modrm = True
+            imm: str | None = "ib" if op2 == 0x3A else None
+        elif op2 in _X86_OP2_REL32:
+            has_modrm = False
+            imm = "rel32"
+        elif op2 in _X86_OP2_NO_MODRM:
+            has_modrm = False
+            imm = None
+        elif op2 in _X86_OP2_IB:
+            has_modrm = True
+            imm = "ib"
+        else:
+            has_modrm = True
+            imm = None
+    else:
+        if op not in _X86_OP1:
+            raise CannotPack(
+                "CANNOT_DECODE_X86",
+                f"unhandled opcode {op:#04x} at {off:#x}",
+            )
+        has_modrm, imm = _X86_OP1[op]
+
+    rip_disp_off = None
+    kind = None
+    if has_modrm:
+        if p >= n:
+            raise CannotPack("CANNOT_DECODE_X86", f"truncated ModR/M at {off:#x}")
+        modrm = buf[p]
+        p += 1
+        mod = (modrm >> 6) & 3
+        rm = modrm & 7
+        if not two and op in (0xF6, 0xF7) and ((modrm >> 3) & 7) <= 1:
+            imm = "ib" if op == 0xF6 else "iz"
+        if asz:
+            raise CannotPack(
+                "CANNOT_RELOC_X86_ADDR32",
+                f"67h address-size override at {off:#x}: not RIP-relative; refusing rather than guessing",
+            )
+        if mod != 3 and rm == 4:
+            if p >= n:
+                raise CannotPack("CANNOT_DECODE_X86", f"truncated SIB at {off:#x}")
+            p += 1
+        if mod == 0 and rm == 5:
+            if p + 4 > n:
+                raise CannotPack("CANNOT_DECODE_X86", f"truncated RIP disp32 at {off:#x}")
+            rip_disp_off = p
+            kind = "rip"
+            p += 4
+        elif mod == 1:
+            if p >= n:
+                raise CannotPack("CANNOT_DECODE_X86", f"truncated disp8 at {off:#x}")
+            p += 1
+        elif mod == 2:
+            if p + 4 > n:
+                raise CannotPack("CANNOT_DECODE_X86", f"truncated disp32 at {off:#x}")
+            p += 4
+
+    def take_imm(kind_s: str) -> None:
+        nonlocal p, kind, rip_disp_off
+        if kind_s in ("ib", "rel8"):
+            if p >= n:
+                raise CannotPack("CANNOT_DECODE_X86", f"truncated imm8 at {off:#x}")
+            if kind_s == "rel8":
+                kind = "rel8"
+                rip_disp_off = p
+            p += 1
+        elif kind_s == "iw":
+            if p + 2 > n:
+                raise CannotPack("CANNOT_DECODE_X86", f"truncated imm16 at {off:#x}")
+            p += 2
+        elif kind_s == "iz":
+            w = 2 if osz_66 else 4
+            if p + w > n:
+                raise CannotPack("CANNOT_DECODE_X86", f"truncated immz at {off:#x}")
+            p += w
+        elif kind_s == "iv":
+            w = 8 if rex_w else (2 if osz_66 else 4)
+            if p + w > n:
+                raise CannotPack("CANNOT_DECODE_X86", f"truncated immv at {off:#x}")
+            p += w
+        elif kind_s == "rel32":
+            if p + 4 > n:
+                raise CannotPack("CANNOT_DECODE_X86", f"truncated rel32 at {off:#x}")
+            kind = "rel32"
+            rip_disp_off = p
+            p += 4
+        elif kind_s == "moffs":
+            raise CannotPack(
+                "CANNOT_RELOC_X86_MOFFS",
+                f"absolute moffs move at {off:#x}: not a RIP-relative displacement",
+            )
+        elif kind_s == "enter":
+            if p + 3 > n:
+                raise CannotPack("CANNOT_DECODE_X86", f"truncated ENTER at {off:#x}")
+            p += 3
+
+    if imm:
+        take_imm(imm)
+
+    length = p - off
+    if length > 15:
+        raise CannotPack(
+            "CANNOT_DECODE_X86",
+            f"instruction at {off:#x} length {length} exceeds 15",
+        )
+    return length, rip_disp_off, kind
+
+
+def patch_x86_64_rip_relocs(img: Image) -> int:
+    """Rewrite RIP-relative disp32/rel32 whose target segment moved."""
+    n = 0
+    for seg in img.segs:
+        for sec in seg.sects:
+            if not (sec["flags"] & S_ATTR_PURE_INSTRUCTIONS):
+                continue
+            if sec["size"] == 0 or sec["offset"] == 0:
+                continue
+            start = sec["offset"]
+            size = sec["size"]
+            i = 0
+            while i < size:
+                p = start + i
+                pc = sec["addr"] + i
+                length, disp_off, kind = decode_x86_64(img.data, p)
+                if kind in ("rip", "rel32", "rel8") and disp_off is not None:
+                    insn_end = pc + length
+                    if kind == "rel8":
+                        rel = struct.unpack_from("<b", img.data, disp_off)[0]
+                    else:
+                        rel = struct.unpack_from("<i", img.data, disp_off)[0]
+                    old_ea = insn_end + rel
+                    new_ea = reloc_vm(img, old_ea)
+                    if new_ea != old_ea:
+                        new_rel = new_ea - insn_end
+                        if kind == "rel8":
+                            if new_rel < -128 or new_rel > 127:
+                                raise CannotPack(
+                                    "CANNOT_RIP_DISP8",
+                                    f"rel8 at {pc:#x} target moved {old_ea:#x} -> {new_ea:#x}, "
+                                    f"delta {new_rel} does not fit signed 8-bit",
+                                )
+                            struct.pack_into("<b", img.data, disp_off, new_rel)
+                        else:
+                            if new_rel < -(1 << 31) or new_rel >= (1 << 31):
+                                raise CannotPack(
+                                    "CANNOT_RIP_DISP32",
+                                    f"{kind} at {pc:#x} target moved {old_ea:#x} -> {new_ea:#x}, "
+                                    f"delta {new_rel} does not fit signed 32-bit",
+                                )
+                            struct.pack_into("<i", img.data, disp_off, new_rel)
+                        n += 1
+                i += length
+    return n
+
+
 def patch_arm64_page_relocs(img: Image) -> int:
     """Rewrite ADRP+LDR/STR/ADD pairs whose page moved with the packed layout.
 
@@ -390,17 +715,24 @@ def patch_arm64_page_relocs(img: Image) -> int:
                             if new_page is None:
                                 new_page = want_page
                             elif new_page != want_page:
-                                raise ValueError(
+                                raise CannotPack(
+                                    "CANNOT_RELOC_ARM64_ADRP",
                                     f"ADRP x{rd} at {pc:#x} uses split pages "
-                                    f"{new_page:#x} and {want_page:#x}"
+                                    f"{new_page:#x} and {want_page:#x}",
                                 )
                             new_off = new_ea - new_page
-                            if ldst is not None:
-                                struct.pack_into("<I", img.data, q,
-                                                 encode_ldst_uoff(follow, new_off))
-                            else:
-                                struct.pack_into("<I", img.data, q,
-                                                 encode_add_imm(follow, new_off))
+                            try:
+                                if ldst is not None:
+                                    struct.pack_into("<I", img.data, q,
+                                                     encode_ldst_uoff(follow, new_off))
+                                else:
+                                    struct.pack_into("<I", img.data, q,
+                                                     encode_add_imm(follow, new_off))
+                            except ValueError as e:
+                                raise CannotPack(
+                                    "CANNOT_RELOC_ARM64_ADRP",
+                                    f"ADRP x{rd} follower at {pc:#x}: {e}",
+                                ) from e
                             n += 1
                     j += 4
                     # Stop at another ADRP that redefines this register.
@@ -408,9 +740,25 @@ def patch_arm64_page_relocs(img: Image) -> int:
                     if nxt is not None and nxt[0] == rd:
                         break
                 if new_page is not None and new_page != old_page:
-                    struct.pack_into("<I", img.data, p,
-                                     encode_adrp(rd, pc, new_page))
+                    try:
+                        struct.pack_into("<I", img.data, p,
+                                         encode_adrp(rd, pc, new_page))
+                    except ValueError as e:
+                        raise CannotPack(
+                            "CANNOT_RELOC_ARM64_ADRP",
+                            f"ADRP x{rd} at {pc:#x}: {e}",
+                        ) from e
                     n += 1
+                elif new_page is None:
+                    # No LDR/STR/ADD follower. If the page itself moved, we
+                    # cannot guess the offset; refusing beats a stale ADRP.
+                    relocated = reloc_vm(img, old_page)
+                    if (relocated & ~0xFFF) != (old_page & ~0xFFF):
+                        raise CannotPack(
+                            "CANNOT_RELOC_ARM64_ADRP",
+                            f"ADRP x{rd} at {pc:#x} page {old_page:#x} moved to "
+                            f"{relocated:#x} with no LDR/STR/ADD follower",
+                        )
     return n
 
 
@@ -764,9 +1112,19 @@ def pack_bytes(data: bytes, install_name: str | None = None,
     img = Image(data)
     plan_pack(img, unalign=unalign, gap=gap, sparse=sparse)
 
-    # ADRP immediates live in TEXT at the old file offsets. Patch them
-    # before rebuild_file copies the used TEXT prefix out.
-    patch_arm64_page_relocs(img)
+    # Instruction-stream immediates live in TEXT at the old file offsets.
+    # Patch them before rebuild_file copies the used TEXT prefix out.
+    # Dispatch on cputype: running the ARM64 ADRP scanner over x86_64
+    # bytes can match 0x9xxxxxxx by accident and emit a broken image.
+    if img.cputype == CPU_TYPE_X86_64:
+        patch_x86_64_rip_relocs(img)
+    elif img.cputype == CPU_TYPE_ARM64:
+        patch_arm64_page_relocs(img)
+    else:
+        raise CannotPack(
+            "CANNOT_PACK_CPUTYPE",
+            f"cputype {img.cputype:#x} is neither ARM64 nor x86_64",
+        )
 
     # Patch LINKEDIT blobs and chained pointers while they still sit at old fileoffs.
     patch_chained(img)
@@ -893,6 +1251,81 @@ def empty_dyld_info_lcs(data: bytes) -> bytes:
     return bytes(out)
 
 
+def unixthread_bytes(data: bytes) -> bytes:
+    """Rewrite an LC_MAIN executable into the static LC_UNIXTHREAD shape.
+
+    ld64.lld-18 does not implement `-static`, so the x86_64 Linux builder
+    cannot emit LC_UNIXTHREAD the way Darwin clang does. Convert: keep
+    LC_SEGMENT_64 / LC_SYMTAB / LC_UUID / LC_SOURCE_VERSION, drop dyld
+    commands, insert a thread-state block whose pc/rip is TEXT.vmaddr +
+    LC_MAIN.entryoff. Flavor is x86_THREAD_STATE64 (RIP at uint64 16) or
+    ARM_THREAD_STATE64 (pc at uint64 32).
+    """
+    img = Image(data)
+    mains = img.find_cmd(LC_MAIN)
+    if not mains:
+        raise CannotPack("CANNOT_UNIXTHREAD", "no LC_MAIN to convert")
+    off, cs = mains[0]
+    entryoff, = struct.unpack_from("<Q", data, off + 8)
+    text = next((s for s in img.segs if s.name == "__TEXT"), None)
+    if text is None:
+        raise CannotPack("CANNOT_UNIXTHREAD", "no __TEXT")
+    pc = text.vmaddr + entryoff
+
+    if img.cputype == CPU_TYPE_X86_64:
+        flavor, nreg = X86_THREAD_STATE64, 21
+        state = [0] * nreg
+        state[16] = pc
+    elif img.cputype == CPU_TYPE_ARM64:
+        flavor, nreg = ARM_THREAD_STATE64, 34
+        state = [0] * nreg
+        state[32] = pc
+    else:
+        raise CannotPack(
+            "CANNOT_UNIXTHREAD",
+            f"cputype {img.cputype:#x}: LC_UNIXTHREAD needs x86_64 or arm64",
+        )
+    count = nreg * 2  # flavor count is in uint32s
+    cmdsize = 16 + nreg * 8
+    uth = struct.pack("<IIII", LC_UNIXTHREAD, cmdsize, flavor, count)
+    uth += b"".join(struct.pack("<Q", v) for v in state)
+
+    keep_cmds = {
+        LC_SEGMENT_64,
+        LC_SYMTAB,
+        LC_UUID,
+        LC_SOURCE_VERSION,
+        LC_BUILD_VERSION,
+        LC_VERSION_MIN_MACOSX,
+    }
+    blob = bytearray()
+    for o, cmd, cs in img.cmd_offs:
+        if cmd in keep_cmds:
+            blob += data[o:o + cs]
+    blob += uth
+    ncmds = sum(1 for _, cmd, _ in img.cmd_offs if cmd in keep_cmds) + 1
+    orig_sizeof = img.sizeofcmds
+    first_sec = min((sec["offset"] for sec in text.sects if sec["offset"]),
+                    default=text.filesize)
+    room = first_sec - 32
+    if len(blob) > room:
+        raise CannotPack(
+            "CANNOT_UNIXTHREAD",
+            f"LC_UNIXTHREAD rewrite does not fit: need {len(blob)} bytes, "
+            f"room before first section is {room}",
+        )
+    out = bytearray(data)
+    clear_to = max(orig_sizeof, len(blob))
+    struct.pack_into("<II", out, 16, ncmds, len(blob))
+    flags = struct.unpack_from("<I", out, 24)[0]
+    flags &= ~(MH_DYLDLINK | MH_TWOLEVEL | MH_PIE)
+    flags |= MH_NOUNDEFS
+    struct.pack_into("<I", out, 24, flags)
+    out[32:32 + clear_to] = bytes(clear_to)
+    out[32:32 + len(blob)] = blob
+    return bytes(out)
+
+
 def inspect(path: str) -> None:
     data = open(path, "rb").read()
     img = Image(data)
@@ -929,8 +1362,12 @@ def inspect(path: str) -> None:
 
 def cmd_pack(args: argparse.Namespace) -> int:
     data = open(args.input, "rb").read()
-    out = pack_bytes(data, install_name=args.id, unalign=args.unalign,
-                     gap=args.gap, sparse=args.sparse)
+    try:
+        out = pack_bytes(data, install_name=args.id, unalign=args.unalign,
+                         gap=args.gap, sparse=args.sparse)
+    except CannotPack as e:
+        print(str(e), file=sys.stderr)
+        return 1
     os.makedirs(os.path.dirname(os.path.abspath(args.output)) or ".", exist_ok=True)
     open(args.output, "wb").write(out)
     inspect(args.output)
@@ -995,6 +1432,19 @@ def cmd_empty_dyld_info(args: argparse.Namespace) -> int:
                 if n == 0:
                     raise ValueError(f"failed to set LC_ID_DYLIB to {args.id!r}")
         out = bytes(buf)
+    os.makedirs(os.path.dirname(os.path.abspath(args.output)) or ".", exist_ok=True)
+    open(args.output, "wb").write(out)
+    inspect(args.output)
+    return 0
+
+
+def cmd_unixthread(args: argparse.Namespace) -> int:
+    data = open(args.input, "rb").read()
+    try:
+        out = unixthread_bytes(data)
+    except CannotPack as e:
+        print(str(e), file=sys.stderr)
+        return 1
     os.makedirs(os.path.dirname(os.path.abspath(args.output)) or ".", exist_ok=True)
     open(args.output, "wb").write(out)
     inspect(args.output)
@@ -1148,6 +1598,42 @@ def _selftest() -> int:
     assert n >= 1
     assert bytes(buf) == data
 
+    # Decoder smoke: encodings measured on clang-18/ld64.lld-18 x86_64
+    # libdylib_greet.dylib (lea/mov (%rip), 15-byte nop, jmpq *got(%rip)).
+    for raw, want_len, want_kind in (
+        (bytes.fromhex("488d3dce000000"), 7, "rip"),
+        (bytes.fromhex("8b0dbc290000"), 6, "rip"),
+        (bytes.fromhex("ff255a290000"), 6, "rip"),
+        (bytes.fromhex("e82d000000"), 5, "rel32"),
+        (bytes.fromhex("6666666666662e0f1f840000000000"), 15, None),
+        (bytes.fromhex("55"), 1, None),
+    ):
+        ln, _disp, kind = decode_x86_64(raw, 0)
+        assert ln == want_len and kind == want_kind, (raw.hex(), ln, kind)
+    try:
+        decode_x86_64(bytes.fromhex("c5f877"), 0)
+        raise AssertionError("VEX must be a named CANNOT")
+    except CannotPack as e:
+        assert e.marker == "CANNOT_RELOC_X86_VEX", e
+
+    raw_path = os.path.join(root, "tests/bin/exit_raw")
+    if os.path.isfile(raw_path):
+        uth = unixthread_bytes(open(raw_path, "rb").read())
+        uimg = Image(uth)
+        assert uimg.find_cmd(LC_UNIXTHREAD), "unixthread rewrite lost LC_UNIXTHREAD"
+        assert not uimg.find_cmd(LC_MAIN), "unixthread rewrite left LC_MAIN"
+        assert not uimg.find_cmd(LC_LOAD_DYLINKER)
+        assert not uimg.find_cmd(LC_LOAD_DYLIB)
+        uoff, ucs = uimg.find_cmd(LC_UNIXTHREAD)[0]
+        flavor, count = struct.unpack_from("<II", uth, uoff + 8)
+        assert flavor == ARM_THREAD_STATE64, flavor
+        st = struct.unpack_from("<34Q", uth, uoff + 16)
+        utext = next(s for s in uimg.segs if s.name == "__TEXT")
+        orig = Image(open(raw_path, "rb").read())
+        moff, _ = orig.find_cmd(LC_MAIN)[0]
+        entryoff, = struct.unpack_from("<Q", orig.data, moff + 8)
+        assert st[32] == utext.vmaddr + entryoff, (hex(st[32]), hex(utext.vmaddr + entryoff))
+
     print("pack_macho --selftest ok")
     print(f"  packed {len(data)} -> {len(packed)} bytes; "
           f"DATA_CONST vm={data_c.vmaddr:#x} fileoff={data_c.fileoff}; "
@@ -1155,6 +1641,7 @@ def _selftest() -> int:
     print(f"  sparse {len(data)} -> {len(sparse)} bytes; "
           f"DATA_CONST vm={sdc.vmaddr:#x} (TEXT+{CACHE_SPARSE_DELTA:#x}); "
           f"GOT page {sgot_page:#x}")
+    print("  x86_64 decoder: lea/mov/jmp (%rip), rel32, 15-byte nop; VEX is CANNOT_RELOC_X86_VEX")
     return 0
 
 
@@ -1202,6 +1689,13 @@ def main(argv: list[str] | None = None) -> int:
     se.add_argument("-o", "--output", required=True)
     se.add_argument("--id", help="set LC_ID_DYLIB to this install name")
 
+    su = sub.add_parser(
+        "unixthread",
+        help="rewrite LC_MAIN + dyld commands into static LC_UNIXTHREAD (ld64.lld has no -static)",
+    )
+    su.add_argument("input")
+    su.add_argument("-o", "--output", required=True)
+
     si = sub.add_parser("inspect", help="print segment alignment and fixup load commands")
     si.add_argument("input")
 
@@ -1219,6 +1713,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_strip_fixups(args)
     if args.cmd == "empty-dyld-info":
         return cmd_empty_dyld_info(args)
+    if args.cmd == "unixthread":
+        return cmd_unixthread(args)
     if args.cmd == "inspect":
         return cmd_inspect(args)
     p.print_help()

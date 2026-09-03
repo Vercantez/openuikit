@@ -41,13 +41,15 @@ mkdir -p "$ACTUAL"
 rm -f "$ACTUAL"/*.stdout "$ACTUAL"/*.stderr "$ACTUAL"/*.exit "$ACTUAL"/*.verdict
 
 ids=()
-while IFS=$'\t' read -r id rest; do
+declare -A MAN_LINUX=()
+while IFS=$'\t' read -r id fixups oracle linux rest; do
     [[ "$id" == \#* || -z "$id" ]] && continue
     ids+=("$id")
+    MAN_LINUX["$id"]="$linux"
 done < "$MANIFEST"
 TOTAL=${#ids[@]}
 
-n_built=0 n_run=0 n_match=0 n_base=0 n_fail=0 n_refuse=0 n_norun=0
+n_built=0 n_run=0 n_match=0 n_base=0 n_fail=0 n_refuse=0 n_norun=0 n_xfail=0 n_xpass=0
 
 # Arch-dependent output the arm64 Darwin oracle recorded and Darwin/x86_64
 # (Rosetta) will itself disagree with. Confined to these measured substitutions;
@@ -63,6 +65,9 @@ is_arch_baseline() {
     # hostbound_surface's "strtold_l width", fmal/remquol's sizeof_ld / ld80 bit);
     # vm_copy checksums scale with Darwin's page (16 KiB arm64, 4 KiB x86_64)
     # and the fixture uses vm_page_size.
+    # cache_layout_oversize names fileoff/filesize from the guest layout
+    # (arm64 16 KiB segments vs x86_64 4 KiB); the diagnostic shape is the
+    # same, the numbers are not.
     local arch_sed=(
         -e 's/machine[[:space:]]+\[arm64\]/machine                 [ARCH]/'
         -e 's/machine[[:space:]]+\[x86_64\]/machine                 [ARCH]/'
@@ -76,15 +81,38 @@ is_arch_baseline() {
         -e 's/ld80_bit_survives       no/ld80_bit_survives       ARCH/'
         -e 's/vm_allocate aligned=(yes|no)/vm_allocate aligned=ARCH/'
         -e 's/last=[a-z] sum=[0-9]+/last=ARCH sum=ARCH/'
+        -e 's/file bytes at offset [0-9]+\+[0-9]+ exceed the file \([0-9]+ bytes\)/file bytes at offset ARCH+ARCH exceed the file (ARCH bytes)/'
     )
-    sed -E "${arch_sed[@]}" "$exp" > "$tmp/e"
-    sed -E "${arch_sed[@]}" "$act" > "$tmp/a"
+    _arch_sed() {
+        local src="$1" dst="$2"
+        if [[ -f "$src" ]]; then
+            sed -E "${arch_sed[@]}" "$src" > "$dst"
+        else
+            : > "$dst"
+        fi
+    }
+    _arch_sed "$exp" "$tmp/e"
+    _arch_sed "$act" "$tmp/a"
     if ! cmp -s "$tmp/e" "$tmp/a"; then
         rm -rf "$tmp"
         return 1
     fi
+    local exp_e="$EXPECTED/$id.stderr"
+    local act_e="$ACTUAL/$id.stderr"
+    if [[ -f "$exp_e" ]]; then
+        if [[ ! -f "$act_e" ]]; then
+            rm -rf "$tmp"
+            return 1
+        fi
+        sed -E "${arch_sed[@]}" "$exp_e" > "$tmp/ee"
+        sed -E "${arch_sed[@]}" "$act_e" > "$tmp/ae"
+        if ! cmp -s "$tmp/ee" "$tmp/ae"; then
+            rm -rf "$tmp"
+            return 1
+        fi
+    fi
     rm -rf "$tmp"
-    if cmp -s "$exp" "$act"; then
+    if cmp -s "$exp" "$act" && { [[ ! -f "$exp_e" ]] || cmp -s "$exp_e" "$act_e"; }; then
         return 1
     fi
     return 0
@@ -145,14 +173,27 @@ for id in "${ids[@]}"; do
             stdout_ok=0 stderr_ok=0
             cmp -s "$EXPECTED/$id.stdout" "$ACTUAL/$id.stdout" && stdout_ok=1
             cmp -s "$EXPECTED/$id.stderr" "$ACTUAL/$id.stderr" && stderr_ok=1
+            linux_col="${MAN_LINUX[$id]:-}"
+            is_xfail=0
+            [[ "$linux_col" == xfail:* ]] && is_xfail=1
             if [[ "$ee" == "$ae" && "$stdout_ok" == 1 && "$stderr_ok" == 1 ]]; then
                 # Exact match. (The old vm_allocate aligned= luck guard is gone:
                 # the fixture now tests vm_page_size alignment, which Darwin
                 # promises on both arches, and tests/expected-x86_64 carries
                 # the recorded x86 answer.)
-                verdict="MATCH"
-                n_match=$((n_match + 1))
-            elif [[ "$ee" == "$ae" && "$stderr_ok" == 1 ]] && is_arch_baseline "$id"; then
+                if [[ "$is_xfail" == 1 ]]; then
+                    verdict="XPASS"
+                    detail="manifest says xfail but it matched tests/expected/"
+                    n_xpass=$((n_xpass + 1))
+                else
+                    verdict="MATCH"
+                    n_match=$((n_match + 1))
+                fi
+            elif [[ "$is_xfail" == 1 ]]; then
+                verdict="XFAIL"
+                detail="${linux_col#xfail:}"
+                n_xfail=$((n_xfail + 1))
+            elif [[ "$ee" == "$ae" ]] && is_arch_baseline "$id"; then
                 verdict="NEEDS_DARWIN_X86_BASELINE"
                 detail="arch-dependent stdout vs tests/expected/ (do not bend the fixture)"
                 n_base=$((n_base + 1))
@@ -179,8 +220,8 @@ for id in "${ids[@]}"; do
 done
 
 printf '%s\n' "--------------------------------------------------------------------------------"
-printf 'SCOREBOARD  fixtures=%d  built=%d  run=%d  matching=%d  needs-new-baseline=%d  failing=%d  refused=%d  no-oracle=%d\n' \
-    "$TOTAL" "$n_built" "$n_run" "$n_match" "$n_base" "$n_fail" "$n_refuse" "$n_norun"
+printf 'SCOREBOARD  fixtures=%d  built=%d  run=%d  matching=%d  needs-new-baseline=%d  failing=%d  refused=%d  no-oracle=%d  xfail=%d\n' \
+    "$TOTAL" "$n_built" "$n_run" "$n_match" "$n_base" "$n_fail" "$n_refuse" "$n_norun" "$n_xfail"
 printf 'denominators: matching %d/%d built,  %d/%d run,  %d/%d manifest\n' \
     "$n_match" "$n_built" "$n_match" "$n_run" "$n_match" "$TOTAL"
 printf 'refused markers in %s\n' "$REFUSE"
@@ -195,6 +236,8 @@ printf 'refused markers in %s\n' "$REFUSE"
     echo "failing=$n_fail"
     echo "refused=$n_refuse"
     echo "no_oracle=$n_norun"
+    echo "xfail=$n_xfail"
+    echo "xpass=$n_xpass"
 } > "$ACTUAL/SCOREBOARD"
 
 # A run that refused everything is not a passing run. Failing fixtures are a
