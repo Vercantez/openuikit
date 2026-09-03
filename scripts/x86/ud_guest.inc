@@ -115,13 +115,25 @@ phase2_ud_guest_stage_fe() {
         "$ud_w/fe/collections/OrderedCollections.o" \
         OrderedCollections.o ORDEREDCOLLECTIONS || return 1
     phase2_ud_guest_stage_file \
+        "$fe_out/collections/OrderedCollections.swiftmodule" \
+        "$ud_w/fe/collections/OrderedCollections.swiftmodule" \
+        OrderedCollections.swiftmodule ORDEREDCOLLECTIONS 0 || return 1
+    phase2_ud_guest_stage_file \
         "$fe_out/collections/InternalCollectionsUtilities.o" \
         "$ud_w/fe/collections/InternalCollectionsUtilities.o" \
         InternalCollectionsUtilities.o INTERNALCOLLECTIONSUTILITIES || return 1
     phase2_ud_guest_stage_file \
+        "$fe_out/collections/InternalCollectionsUtilities.swiftmodule" \
+        "$ud_w/fe/collections/InternalCollectionsUtilities.swiftmodule" \
+        InternalCollectionsUtilities.swiftmodule INTERNALCOLLECTIONSUTILITIES 0 || return 1
+    phase2_ud_guest_stage_file \
         "$fe_out/collections/_RopeModule.o" \
         "$ud_w/fe/collections/_RopeModule.o" \
         _RopeModule.o ROPEMODULE || return 1
+    phase2_ud_guest_stage_file \
+        "$fe_out/collections/_RopeModule.swiftmodule" \
+        "$ud_w/fe/collections/_RopeModule.swiftmodule" \
+        _RopeModule.swiftmodule ROPEMODULE 0 || return 1
     # link_ud_guest.sh also looks at $W/fe/_RopeModule.o (optional duplicate).
     phase2_ud_guest_stage_file \
         "$fe_out/collections/_RopeModule.o" \
@@ -203,19 +215,21 @@ phase2_ud_guest_point_sysroot() {
 # Port compile: same shape as foundation-macho/scripts/build_ud_score_guest.sh
 # (COMPILE_TRIPLE, -O -wmo, CFPreferencesMinimal -I) plus the CShims clang
 # module map every FoundationEssentials consumer uses (build_url_runner.sh,
-# build_fe_host.sh). Without it, swiftc reports "no such module
-# 'FoundationEssentials'" at UserDefaults.swift:47 even when the staged
-# .swiftmodule is present. Compiler output is spilled to a file under the
-# work tree so the CANNOT line names the path instead of inlining a log
-# the operator logger truncates.
+# build_fe_host.sh). Collections modules are on argv twice: the staged
+# $ud_w/fe/collections tree (link_ud_guest.sh layout) and the authoritative
+# build/full-x86_64/foundation/collections output phase2 already built
+# (build_url_runner.sh / PR #28 FI search-path class). Without those -I
+# paths, swiftc reports missing required modules OrderedCollections and
+# _RopeModule.
 phase2_ud_guest_compile_port() {
     local ud_w=$1 repo=$2 sdk=$3 compile_triple=$4 mc=$5
+    local fe_out=${6:-}
     local src_ud=$repo/foundation-macho/src/overlay/UserDefaults.swift
     local src_bridge=$repo/foundation-macho/src/overlay/UserDefaultsBridge_Guest.swift
     local out=$ud_w/fe/UserDefaultsGuest.o
     local log=$ud_w/fe/UserDefaultsGuest.swiftc.log
     local st cshims
-    local -a cshims_args=()
+    local -a cshims_args=() collections_i=()
     if [ ! -f "$src_ud" ] || [ ! -f "$src_bridge" ]; then
         phase2_ud_guest_cannot USERDEFAULTSGUEST UserDefaultsGuest.o \
             "missing overlay sources under foundation-macho/src/overlay"
@@ -227,6 +241,9 @@ phase2_ud_guest_compile_port() {
     if [ -f "$cshims/module.modulemap" ]; then
         cshims_args=(-Xcc -fmodule-map-file="$cshims/module.modulemap" -Xcc -I"$cshims")
     fi
+    if [ -n "$fe_out" ] && [ -d "$fe_out/collections" ]; then
+        collections_i=(-I "$fe_out/collections")
+    fi
     set +e
     swiftc -c -O -wmo -parse-as-library \
         -module-name PortedUserDefaultsGuest \
@@ -235,6 +252,7 @@ phase2_ud_guest_compile_port() {
         -runtime-compatibility-version none \
         -module-cache-path "$mc" \
         -I "$ud_w/fe/module" -I "$ud_w/fe" -I "$ud_w/fe/collections" -I "$ud_w/fe/os" \
+        "${collections_i[@]}" \
         -I "$repo/foundation-macho/include/CFPreferencesMinimal" \
         "${cshims_args[@]}" \
         "$src_ud" "$src_bridge" \
@@ -252,12 +270,13 @@ phase2_ud_guest_compile_port() {
 # scoreboard recipe in build_ud_score_guest.sh).
 phase2_ud_guest_compile_runner() {
     local ud_w=$1 repo=$2 sdk=$3 compile_triple=$4 mc=$5
+    local fe_out=${6:-}
     local src=$repo/foundation-macho/tests/ud_guest_runner.swift
     local builddir=$ud_w/fe/runner-src
     local out=$ud_w/fe/runner.o
     local log=$ud_w/fe/runner.swiftc.log
     local st cshims
-    local -a cshims_args=()
+    local -a cshims_args=() collections_i=()
     if [ ! -f "$src" ]; then
         phase2_ud_guest_cannot RUNNER runner.o \
             "missing foundation-macho/tests/ud_guest_runner.swift"
@@ -271,6 +290,9 @@ phase2_ud_guest_compile_runner() {
     if [ -f "$cshims/module.modulemap" ]; then
         cshims_args=(-Xcc -fmodule-map-file="$cshims/module.modulemap" -Xcc -I"$cshims")
     fi
+    if [ -n "$fe_out" ] && [ -d "$fe_out/collections" ]; then
+        collections_i=(-I "$fe_out/collections")
+    fi
     set +e
     swiftc -c -O -wmo \
         -module-name ud_guest \
@@ -278,6 +300,7 @@ phase2_ud_guest_compile_runner() {
         -runtime-compatibility-version none \
         -module-cache-path "$mc" \
         -I "$ud_w/fe/module" -I "$ud_w/fe" -I "$ud_w/fe/collections" -I "$ud_w/fe/os" \
+        "${collections_i[@]}" \
         -I "$repo/foundation-macho/include/CFPreferencesMinimal" \
         "${cshims_args[@]}" \
         "$builddir/main.swift" \
@@ -325,12 +348,17 @@ phase2_ud_guest_ensure_swiftcompat() {
             "no x86_64 Mach-O and swiftcore-macho/sdk/compat sources missing"
         return 1
     fi
-    # Committed recipe: swiftcore-macho/scripts/build_compat.sh
-    local log st
-    log=$(mktemp)
+    # Committed recipe: swiftcore-macho/scripts/build_compat.sh. Alias SDK
+    # supplies libSystem.tbd / libc++.tbd names the link line uses; never copy
+    # artifacts/libswiftcompat.dylib (arm64).
+    local log st alias
+    log=$ud_w/lib/build_compat.log
+    alias=$ud_w/lib/compat-sdk
+    mkdir -p "$ud_w/lib"
+    phase2_prepare_compat_alias_sdk "$sys" "$alias"
     set +e
     W="$ud_w" \
-        SDK="$sys" \
+        SDK="$alias" \
         SRC="$src_dir" \
         MRLIB="$mrlib" \
         LOADER="$loader" \
@@ -464,10 +492,10 @@ phase2_try_ud_guest() {
         "$fe_out" "$sys" "$target" "$repo" "$ud_w" || true)
     case "$report" in CANNOT_*) printf '%s\n' "$report"; return 1 ;; esac
 
-    if ! phase2_ud_guest_compile_port "$ud_w" "$repo" "$sys" "$compile_triple" "$mc"; then
+    if ! phase2_ud_guest_compile_port "$ud_w" "$repo" "$sys" "$compile_triple" "$mc" "$fe_out"; then
         return 1
     fi
-    if ! phase2_ud_guest_compile_runner "$ud_w" "$repo" "$sys" "$compile_triple" "$mc"; then
+    if ! phase2_ud_guest_compile_runner "$ud_w" "$repo" "$sys" "$compile_triple" "$mc" "$fe_out"; then
         return 1
     fi
 
