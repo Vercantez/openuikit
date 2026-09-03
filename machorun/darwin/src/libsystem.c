@@ -788,6 +788,33 @@ EXPORT int dprintf(int fd, const char *fmt, ...)
     return n;
 }
 
+/* vdprintf cannot host-bind: Darwin arm64 va_list is 8 bytes (stack cursor)
+ * and glibc aarch64's is 32. The allow-list is not arch-split, so x86_64
+ * SysV agreement is not a host-bind either. Format on this side, write bytes. */
+EXPORT int vdprintf(int fd, const char *fmt, va_list ap)
+{
+    char stackbuf[512], *buf = stackbuf;
+    va_list ap2;
+    int n;
+
+    va_copy(ap2, ap);
+    n = vsnprintf(stackbuf, sizeof stackbuf, fmt, ap2);
+    va_end(ap2);
+    if (n < 0) return -1;
+
+    if ((size_t)n >= sizeof stackbuf) {
+        buf = glibc_malloc((size_t)n + 1);
+        if (!buf) return -1;
+        va_copy(ap2, ap);
+        vsnprintf(buf, (size_t)n + 1, fmt, ap2);
+        va_end(ap2);
+    }
+
+    n = (int)MR_ERRNO_CALL(glibc_write(fd, buf, (size_t)n));
+    if (buf != stackbuf) glibc_free(buf);
+    return n;
+}
+
 EXPORT int asprintf(char **out, const char *fmt, ...)
 {
     va_list ap; int n; char *buf;
@@ -1931,6 +1958,48 @@ EXPORT void dispatch_once_f(long *pred, void *ctx, void (*fn)(void *))
 #endif
         }
     }
+}
+
+/* memset_s: C11 Annex K. Darwin has it; glibc does not. Not host-bindable.
+ * ERANGE still wipes smax bytes. glibc_memset is the labelled seam so clang
+ * cannot elide the store (Darwin's "not optimised away" guarantee). */
+EXPORT int memset_s(void *s, size_t smax, int c, size_t n)
+{
+    if (s == NULL) return 22; /* EINVAL */
+    if (n > smax) {
+        glibc_memset(s, c, smax);
+        return 34; /* ERANGE */
+    }
+    glibc_memset(s, c, n);
+    return 0;
+}
+
+/* QOS_CLASS_DEFAULT from <sys/qos.h> (0x15). The Linux host does not
+ * translate thread priorities into Darwin QoS classes. */
+EXPORT unsigned qos_class_self(void)
+{
+    return 0x15;
+}
+
+/* Darwin vouchers are unavailable. NULL is the only value this libSystem
+ * mints or adopts; os_release of NULL is a no-op. A non-NULL voucher was
+ * not produced here -- ignore rather than abort, matching Swift's non-Apple
+ * voucher policy (documented no-op). Moved out of the full/ umbrella so a
+ * definition there cannot beat .real. */
+EXPORT void *voucher_copy(void)
+{
+    return NULL;
+}
+
+EXPORT void *voucher_adopt(void *voucher)
+{
+    (void)voucher;
+    return NULL;
+}
+
+EXPORT void os_release(void *object)
+{
+    (void)object;
 }
 
 /* The isa-mask heap constraint (src/map.c) is checked on the main thread,

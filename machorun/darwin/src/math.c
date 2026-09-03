@@ -115,7 +115,13 @@ extern float  glibc_fmaf(float, float, float)   GLIBCSYM(fmaf);
 #if defined(__x86_64__)
 /* Darwin x86_64 long double is 16-byte x87, matching glibc. Host-bind. */
 extern long double glibc_fmal(long double, long double, long double) GLIBCSYM(fmal);
+extern long double glibc_remquol(long double, long double, int *) GLIBCSYM(remquol);
+extern long double glibc_nanl(const char *) GLIBCSYM(nanl);
 #endif
+extern double glibc_remquo(double, double, int *) GLIBCSYM(remquo);
+extern float  glibc_remquof(float, float, int *)  GLIBCSYM(remquof);
+extern float  glibc_nanf(const char *)            GLIBCSYM(nanf);
+extern double glibc_nan(const char *)             GLIBCSYM(nan);
 extern long   glibc_lround(double)           GLIBCSYM(lround);
 extern float  glibc_lroundf(float)           GLIBCSYM(lroundf);
 extern long long glibc_llround(double)       GLIBCSYM(llround);
@@ -265,6 +271,39 @@ EXPORT long double fmal(long double a, long double b, long double c)
 EXPORT long double fmal(long double a, long double b, long double c)
 {
     return glibc_fma((double)a, (double)b, (double)c);
+}
+#endif
+
+/* remquo (double) is an umbrella own-def (full/shims/libsystem_math_compat.c,
+ * Apple 7-bit quotient). Do not define it here: a definition in machorun
+ * would be a second one the umbrella beats. remquof/remquol are not in the
+ * umbrella. nan (double) is likewise umbrella; nanf/nanl are here. */
+EXPORT float remquof(float x, float y, int *q)
+{
+    return glibc_remquof(x, y, q);
+}
+EXPORT float nanf(const char *tag)
+{
+    return glibc_nanf(tag);
+}
+#if defined(__x86_64__)
+EXPORT long double remquol(long double x, long double y, int *q)
+{
+    return glibc_remquol(x, y, q);
+}
+EXPORT long double nanl(const char *tag)
+{
+    return glibc_nanl(tag);
+}
+#else
+/* Same width trap as fmal: Darwin arm64 long double IS double. */
+EXPORT long double remquol(long double x, long double y, int *q)
+{
+    return glibc_remquo((double)x, (double)y, q);
+}
+EXPORT long double nanl(const char *tag)
+{
+    return glibc_nan(tag);
 }
 #endif
 EXPORT long   lround(double x)         { return glibc_lround(x); }

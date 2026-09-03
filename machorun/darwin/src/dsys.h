@@ -174,6 +174,19 @@ extern int     glibc_close(int)                             GLIBCSYM(close);
  * an AAPCS64 variadic callee spills x0-x7 to its save area on entry, so
  * ordinary argument passing lands exactly where its va_arg looks. */
 extern int     glibc_open(const char *, int, unsigned)      GLIBCSYM(open);
+/* Same non-variadic crossing as open: Darwin extracts the mode with va_arg
+ * (stack on arm64), then calls this 4-arg form so AAPCS64 lands the mode
+ * where glibc's variadic openat looks. dirfd is already translated. */
+extern int     glibc_openat(int, const char *, int, unsigned) GLIBCSYM(openat);
+/* Named POSIX semaphores. Darwin sem_t is int; glibc's is a 32-byte struct.
+ * Never host-bind the Darwin name. glibc SEM_FAILED is NULL; Darwin's is
+ * (sem_t *)-1. Non-variadic 4-arg form: same crossing as open. */
+extern void   *glibc_sem_open(const char *, int, unsigned, unsigned) GLIBCSYM(sem_open);
+extern int     glibc_sem_close(void *)                      GLIBCSYM(sem_close);
+extern int     glibc_sem_unlink(const char *)               GLIBCSYM(sem_unlink);
+extern int     glibc_sem_wait(void *)                       GLIBCSYM(sem_wait);
+extern int     glibc_sem_trywait(void *)                    GLIBCSYM(sem_trywait);
+extern int     glibc_sem_post(void *)                       GLIBCSYM(sem_post);
 extern off_t   glibc_lseek(int, off_t, int)                 GLIBCSYM(lseek);
 extern ssize_t glibc_getxattr(const char *, const char *, void *, size_t)   GLIBCSYM(getxattr);
 extern ssize_t glibc_lgetxattr(const char *, const char *, void *, size_t)  GLIBCSYM(lgetxattr);
@@ -319,6 +332,7 @@ extern void    glibc_qsort(void *, size_t, size_t, int (*)(const void *, const v
 extern char   *glibc_getenv(const char *)                   GLIBCSYM(getenv);
 extern time_t  glibc_time(time_t *)                         GLIBCSYM(time);
 extern int     glibc_clock_gettime(int, void *)             GLIBCSYM(clock_gettime);
+extern int     glibc_clock_getres(int, void *)              GLIBCSYM(clock_getres);
 extern int     glibc_gettimeofday(void *, void *)           GLIBCSYM(gettimeofday);
 extern int     glibc_nanosleep(const void *, void *)        GLIBCSYM(nanosleep);
 extern int     glibc_usleep(unsigned)                       GLIBCSYM(usleep);
