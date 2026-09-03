@@ -1,0 +1,896 @@
+precise	status	evidence	notes
+c:@E@MPChangeLanguageOptionSetting	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPChangeLanguageOptionSetting@MPChangeLanguageOptionSettingNone	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPChangeLanguageOptionSetting@MPChangeLanguageOptionSettingNowPlayingItemOnly	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPChangeLanguageOptionSetting@MPChangeLanguageOptionSettingPermanent	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPErrorCode@MPErrorCancelled	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPErrorCode@MPErrorCloudServiceCapabilityMissing	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPErrorCode@MPErrorNetworkConnectionFailed	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPErrorCode@MPErrorNotFound	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPErrorCode@MPErrorNotSupported	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPErrorCode@MPErrorPermissionDenied	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPErrorCode@MPErrorRequestTimedOut	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPErrorCode@MPErrorUnknown	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaGrouping	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaGrouping@MPMediaGroupingAlbum	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaGrouping@MPMediaGroupingAlbumArtist	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaGrouping@MPMediaGroupingArtist	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaGrouping@MPMediaGroupingComposer	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaGrouping@MPMediaGroupingGenre	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaGrouping@MPMediaGroupingPlaylist	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaGrouping@MPMediaGroupingPodcastTitle	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaGrouping@MPMediaGroupingTitle	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaLibraryAuthorizationStatus	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaLibraryAuthorizationStatus@MPMediaLibraryAuthorizationStatusAuthorized	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaLibraryAuthorizationStatus@MPMediaLibraryAuthorizationStatusDenied	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaLibraryAuthorizationStatus@MPMediaLibraryAuthorizationStatusNotDetermined	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaLibraryAuthorizationStatus@MPMediaLibraryAuthorizationStatusRestricted	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaPlaylistAttribute	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaPlaylistAttribute@MPMediaPlaylistAttributeGenius	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@E@MPMediaPlaylistAttribute@MPMediaPlaylistAttributeOnTheGo	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@E@MPMediaPlaylistAttribute@MPMediaPlaylistAttributeSmart	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaPredicateComparison	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaPredicateComparison@MPMediaPredicateComparisonContains	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaPredicateComparison@MPMediaPredicateComparisonEqualTo	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaType	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaType@MPMediaTypeAny	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaType@MPMediaTypeAnyAudio	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaType@MPMediaTypeAnyVideo	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@E@MPMediaType@MPMediaTypeAudioBook	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaType@MPMediaTypeAudioITunesU	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@E@MPMediaType@MPMediaTypeHomeVideo	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@E@MPMediaType@MPMediaTypeMovie	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaType@MPMediaTypeMusic	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaType@MPMediaTypeMusicVideo	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@E@MPMediaType@MPMediaTypePodcast	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMediaType@MPMediaTypeTVShow	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@E@MPMediaType@MPMediaTypeVideoITunesU	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@E@MPMediaType@MPMediaTypeVideoPodcast	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@E@MPMovieControlStyle	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieControlStyle@MPMovieControlStyleDefault	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@E@MPMovieControlStyle@MPMovieControlStyleEmbedded	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieControlStyle@MPMovieControlStyleFullscreen	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieControlStyle@MPMovieControlStyleNone	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieFinishReason	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieFinishReason@MPMovieFinishReasonPlaybackEnded	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieFinishReason@MPMovieFinishReasonPlaybackError	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieFinishReason@MPMovieFinishReasonUserExited	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieLoadState	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieLoadState@MPMovieLoadStatePlayable	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieLoadState@MPMovieLoadStatePlaythroughOK	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@E@MPMovieLoadState@MPMovieLoadStateStalled	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@E@MPMovieMediaTypeMask	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieMediaTypeMask@MPMovieMediaTypeMaskAudio	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieMediaTypeMask@MPMovieMediaTypeMaskVideo	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@E@MPMoviePlaybackState	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMoviePlaybackState@MPMoviePlaybackStateInterrupted	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMoviePlaybackState@MPMoviePlaybackStatePaused	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMoviePlaybackState@MPMoviePlaybackStatePlaying	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMoviePlaybackState@MPMoviePlaybackStateSeekingBackward	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMoviePlaybackState@MPMoviePlaybackStateSeekingForward	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMoviePlaybackState@MPMoviePlaybackStateStopped	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieRepeatMode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieRepeatMode@MPMovieRepeatModeNone	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieRepeatMode@MPMovieRepeatModeOne	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieScalingMode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieScalingMode@MPMovieScalingModeAspectFill	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieScalingMode@MPMovieScalingModeAspectFit	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieScalingMode@MPMovieScalingModeFill	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieScalingMode@MPMovieScalingModeNone	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieSourceType	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieSourceType@MPMovieSourceTypeFile	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieSourceType@MPMovieSourceTypeStreaming	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieSourceType@MPMovieSourceTypeUnknown	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieTimeOption	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieTimeOption@MPMovieTimeOptionExact	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMovieTimeOption@MPMovieTimeOptionNearestKeyFrame	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicPlaybackState	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicPlaybackState@MPMusicPlaybackStateInterrupted	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicPlaybackState@MPMusicPlaybackStatePaused	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicPlaybackState@MPMusicPlaybackStatePlaying	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicPlaybackState@MPMusicPlaybackStateSeekingBackward	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicPlaybackState@MPMusicPlaybackStateSeekingForward	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicPlaybackState@MPMusicPlaybackStateStopped	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicRepeatMode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicRepeatMode@MPMusicRepeatModeAll	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicRepeatMode@MPMusicRepeatModeDefault	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicRepeatMode@MPMusicRepeatModeNone	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicRepeatMode@MPMusicRepeatModeOne	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicShuffleMode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicShuffleMode@MPMusicShuffleModeAlbums	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicShuffleMode@MPMusicShuffleModeDefault	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicShuffleMode@MPMusicShuffleModeOff	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPMusicShuffleMode@MPMusicShuffleModeSongs	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPNowPlayingInfoLanguageOptionType	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPNowPlayingInfoLanguageOptionType@MPNowPlayingInfoLanguageOptionTypeAudible	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPNowPlayingInfoLanguageOptionType@MPNowPlayingInfoLanguageOptionTypeLegible	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPNowPlayingInfoMediaType	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPNowPlayingInfoMediaType@MPNowPlayingInfoMediaTypeAudio	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPNowPlayingInfoMediaType@MPNowPlayingInfoMediaTypeNone	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPNowPlayingInfoMediaType@MPNowPlayingInfoMediaTypeVideo	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPNowPlayingPlaybackState	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPNowPlayingPlaybackState@MPNowPlayingPlaybackStateInterrupted	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPNowPlayingPlaybackState@MPNowPlayingPlaybackStatePaused	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPNowPlayingPlaybackState@MPNowPlayingPlaybackStatePlaying	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPNowPlayingPlaybackState@MPNowPlayingPlaybackStateStopped	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPNowPlayingPlaybackState@MPNowPlayingPlaybackStateUnknown	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPRemoteCommandHandlerStatus	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPRemoteCommandHandlerStatus@MPRemoteCommandHandlerStatusCommandFailed	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPRemoteCommandHandlerStatus@MPRemoteCommandHandlerStatusDeviceNotFound	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPRemoteCommandHandlerStatus@MPRemoteCommandHandlerStatusNoActionableNowPlayingItem	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPRemoteCommandHandlerStatus@MPRemoteCommandHandlerStatusNoSuchContent	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPRemoteCommandHandlerStatus@MPRemoteCommandHandlerStatusSuccess	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPRepeatType	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPRepeatType@MPRepeatTypeAll	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPRepeatType@MPRepeatTypeOff	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPRepeatType@MPRepeatTypeOne	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPSeekCommandEventType	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPSeekCommandEventType@MPSeekCommandEventTypeBeginSeeking	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPSeekCommandEventType@MPSeekCommandEventTypeEndSeeking	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPShuffleType	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPShuffleType@MPShuffleTypeCollections	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPShuffleType@MPShuffleTypeItems	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@E@MPShuffleType@MPShuffleTypeOff	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@F@MPVolumeSettingsAlertHide	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@F@MPVolumeSettingsAlertIsVisible	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@F@MPVolumeSettingsAlertShow	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@MPErrorDomain	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:@MPLanguageOptionCharacteristicContainsOnlyForcedSubtitles	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPLanguageOptionCharacteristicDescribesMusicAndSound	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPLanguageOptionCharacteristicDescribesVideo	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPLanguageOptionCharacteristicDubbedTranslation	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPLanguageOptionCharacteristicEasyToRead	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPLanguageOptionCharacteristicIsAuxiliaryContent	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPLanguageOptionCharacteristicIsMainProgramContent	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPLanguageOptionCharacteristicLanguageTranslation	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPLanguageOptionCharacteristicTranscribesSpokenDialog	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPLanguageOptionCharacteristicVoiceOverTranslation	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaEntityPropertyPersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyAlbumArtist	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyAlbumArtistPersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyAlbumPersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyAlbumTitle	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyAlbumTrackCount	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyAlbumTrackNumber	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyArtist	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyArtistPersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyArtwork	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyAssetURL	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyBeatsPerMinute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyBookmarkTime	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyComments	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyComposer	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyComposerPersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyDateAdded	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyDiscCount	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyDiscNumber	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyGenre	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyGenrePersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyHasProtectedAsset	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyIsCloudItem	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyIsCompilation	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyIsExplicit	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyIsPreorder	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyLastPlayedDate	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyLyrics	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyPersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyPlayCount	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyPlaybackDuration	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyPlaybackStoreID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyPodcastPersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyPodcastTitle	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyRating	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyReleaseDate	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertySkipCount	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyTitle	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaItemPropertyUserGrouping	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaLibraryDidChangeNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaPlaybackIsPreparedToPlayDidChangeNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaPlaylistPropertyAuthorDisplayName	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaPlaylistPropertyCloudGlobalID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaPlaylistPropertyDescriptionText	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaPlaylistPropertyName	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaPlaylistPropertyPersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaPlaylistPropertyPlaylistAttributes	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMediaPlaylistPropertySeedItems	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMovieDurationAvailableNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMovieMediaTypesAvailableNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMovieNaturalSizeAvailableNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerDidEnterFullscreenNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerDidExitFullscreenNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerFullscreenAnimationCurveUserInfoKey	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerFullscreenAnimationDurationUserInfoKey	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerLoadStateDidChangeNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerNowPlayingMovieDidChangeNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerPlaybackDidFinishNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerPlaybackDidFinishReasonUserInfoKey	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerPlaybackStateDidChangeNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerReadyForDisplayDidChangeNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerScalingModeDidChangeNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerThumbnailErrorKey	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerThumbnailImageKey	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerThumbnailImageRequestDidFinishNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerThumbnailTimeKey	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerTimedMetadataKeyDataType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerTimedMetadataKeyInfo	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerTimedMetadataKeyLanguageCode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerTimedMetadataKeyMIMEType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerTimedMetadataKeyName	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerTimedMetadataUpdatedNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerTimedMetadataUserInfoKey	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerWillEnterFullscreenNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMoviePlayerWillExitFullscreenNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMovieSourceTypeAvailableNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMusicPlayerControllerNowPlayingItemDidChangeNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMusicPlayerControllerPlaybackStateDidChangeNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMusicPlayerControllerQueueDidChangeNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPMusicPlayerControllerVolumeDidChangeNotification	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoCollectionIdentifier	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoProperty1x1AnimatedArtwork	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoProperty3x4AnimatedArtwork	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyAdTimeRanges	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyAssetURL	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyAvailableLanguageOptions	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyChapterCount	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyChapterNumber	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyCreditsStartTime	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyCurrentLanguageOptions	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyCurrentPlaybackDate	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyDefaultPlaybackRate	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyElapsedPlaybackTime	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyExcludeFromSuggestions	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyExternalContentIdentifier	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyExternalUserProfileIdentifier	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyInternationalStandardRecordingCode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyIsLiveStream	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyPlaybackProgress	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyPlaybackQueueCount	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyPlaybackQueueIndex	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyPlaybackRate	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPNowPlayingInfoPropertyServiceIdentifier	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:@MPVolumeViewWirelessRouteActiveDidChangeNotification	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:@MPVolumeViewWirelessRoutesAvailableDidChangeNotification	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:@T@MPMediaEntityPersistentID	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)AVMediaSelectionGroup(im)makeNowPlayingInfoLanguageOptionGroup	deferred		Not in this starting implementation.
+c:objc(cs)AVMediaSelectionOption(im)makeNowPlayingInfoLanguageOption	deferred		Not in this starting implementation.
+c:objc(cs)AVPlayerItem(py)nowPlayingInfo	deferred		Not in this starting implementation.
+c:objc(cs)MPAdTimeRange	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPAdTimeRange(im)initWithTimeRange:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPAdTimeRange(im)initWithTimeRange:::SYNTHESIZED::c:objc(cs)MPAdTimeRange	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPAdTimeRange(py)timeRange	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPChangeLanguageOptionCommandEvent	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPChangeLanguageOptionCommandEvent(py)languageOption	deferred		Not in this starting implementation.
+c:objc(cs)MPChangeLanguageOptionCommandEvent(py)setting	deferred		Not in this starting implementation.
+c:objc(cs)MPChangePlaybackPositionCommand	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPChangePlaybackPositionCommandEvent	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPChangePlaybackPositionCommandEvent(py)positionTime	deferred		Not in this starting implementation.
+c:objc(cs)MPChangePlaybackRateCommand	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPChangePlaybackRateCommand(py)supportedPlaybackRates	deferred		Not in this starting implementation.
+c:objc(cs)MPChangePlaybackRateCommandEvent	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPChangePlaybackRateCommandEvent(py)playbackRate	deferred		Not in this starting implementation.
+c:objc(cs)MPChangeRepeatModeCommand	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPChangeRepeatModeCommand(py)currentRepeatType	deferred		Not in this starting implementation.
+c:objc(cs)MPChangeRepeatModeCommandEvent	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPChangeRepeatModeCommandEvent(py)preservesRepeatMode	deferred		Not in this starting implementation.
+c:objc(cs)MPChangeRepeatModeCommandEvent(py)repeatType	deferred		Not in this starting implementation.
+c:objc(cs)MPChangeShuffleModeCommand	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPChangeShuffleModeCommand(py)currentShuffleType	deferred		Not in this starting implementation.
+c:objc(cs)MPChangeShuffleModeCommandEvent	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPChangeShuffleModeCommandEvent(py)preservesShuffleMode	deferred		Not in this starting implementation.
+c:objc(cs)MPChangeShuffleModeCommandEvent(py)shuffleType	deferred		Not in this starting implementation.
+c:objc(cs)MPContentItem	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPContentItem(im)initWithIdentifier:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPContentItem(py)artwork	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPContentItem(py)container	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPContentItem(py)explicitContent	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPContentItem(py)identifier	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPContentItem(py)playable	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPContentItem(py)playbackProgress	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPContentItem(py)streamingContent	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPContentItem(py)subtitle	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPContentItem(py)title	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPFeedbackCommand	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPFeedbackCommand(py)active	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPFeedbackCommand(py)localizedShortTitle	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPFeedbackCommand(py)localizedTitle	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPFeedbackCommandEvent	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPFeedbackCommandEvent(py)negative	deferred		Not in this starting implementation.
+c:objc(cs)MPMediaEntity	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaEntity(cm)canFilterByProperty:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaEntity(im)enumerateValuesForProperties:usingBlock:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaEntity(im)objectForKeyedSubscript:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaEntity(im)valueForProperty:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaEntity(py)persistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(cm)persistentIDPropertyForGroupingType:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(cm)titlePropertyForGroupingType:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaItem(py)albumArtist	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)albumArtistPersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)albumPersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)albumTitle	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)albumTrackCount	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)albumTrackNumber	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)artist	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)artistPersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)artwork	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaItem(py)assetURL	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)beatsPerMinute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)bookmarkTime	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)cloudItem	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)comments	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)compilation	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)composer	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)composerPersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)dateAdded	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)discCount	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)discNumber	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)explicitItem	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)genre	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)genrePersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)lastPlayedDate	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)lyrics	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)mediaType	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaItem(py)persistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)playCount	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)playbackDuration	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)playbackStoreID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)podcastPersistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)podcastTitle	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)preorder	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)protectedAsset	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)rating	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)releaseDate	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)skipCount	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItem(py)title	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaItem(py)userGrouping	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaItemAnimatedArtwork	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaItemAnimatedArtwork(im)initWithArtworkID:previewImageRequestHandler:videoAssetFileURLRequestHandler:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaItemArtwork	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaItemArtwork(im)imageWithSize:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaItemArtwork(im)initWithBoundsSize:requestHandler:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaItemArtwork(im)initWithImage:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaItemArtwork(py)bounds	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaItemArtwork(py)imageCropRect	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaItemCollection	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaItemCollection(im)initWithItems:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaItemCollection(py)count	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaItemCollection(py)items	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaItemCollection(py)mediaTypes	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaItemCollection(py)representativeItem	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaLibrary	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaLibrary(cm)authorizationStatus	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaLibrary(cm)defaultMediaLibrary	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaLibrary(cm)requestAuthorization:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaLibrary(im)addItemWithProductID:completionHandler:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaLibrary(im)beginGeneratingLibraryChangeNotifications	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaLibrary(im)endGeneratingLibraryChangeNotifications	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaLibrary(im)getPlaylistWithUUID:creationMetadata:completionHandler:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaLibrary(py)lastModifiedDate	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPickerController	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaPickerController(im)initWithMediaTypes:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaPickerController(py)allowsPickingMultipleItems	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaPickerController(py)delegate	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaPickerController(py)mediaTypes	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaPickerController(py)prompt	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaPickerController(py)showsCloudItems	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaPickerController(py)showsItemsWithProtectedAssets	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMediaPlaylist	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPlaylist(im)addItemWithProductID:completionHandler:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPlaylist(im)addMediaItems:completionHandler:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPlaylist(py)authorDisplayName	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPlaylist(py)cloudGlobalID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPlaylist(py)descriptionText	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPlaylist(py)name	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPlaylist(py)persistentID	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPlaylist(py)playlistAttributes	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPlaylist(py)seedItems	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPlaylistCreationMetadata	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPlaylistCreationMetadata(im)initWithName:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPlaylistCreationMetadata(py)authorDisplayName	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPlaylistCreationMetadata(py)descriptionText	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPlaylistCreationMetadata(py)name	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPredicate	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaPropertyPredicate	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaPropertyPredicate(cm)predicateWithValue:forProperty:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaPropertyPredicate(cm)predicateWithValue:forProperty:comparisonType:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaPropertyPredicate(py)comparisonType	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaPropertyPredicate(py)property	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaPropertyPredicate(py)value	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaQuery	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuery(cm)albumsQuery	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuery(cm)artistsQuery	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuery(cm)audiobooksQuery	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuery(cm)compilationsQuery	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuery(cm)composersQuery	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuery(cm)genresQuery	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuery(cm)playlistsQuery	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuery(cm)podcastsQuery	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuery(cm)songsQuery	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaQuery(im)addFilterPredicate:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaQuery(im)initWithFilterPredicates:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaQuery(im)removeFilterPredicate:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuery(py)collectionSections	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuery(py)collections	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuery(py)filterPredicates	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuery(py)groupingType	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaQuery(py)itemSections	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuery(py)items	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMediaQuerySection	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuerySection(py)range	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMediaQuerySection(py)title	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMovieAccessLog	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMovieAccessLog(py)events	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMovieAccessLog(py)extendedLogData	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMovieAccessLog(py)extendedLogDataStringEncoding	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMovieAccessLogEvent	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMovieAccessLogEvent(py)URI	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieAccessLogEvent(py)durationWatched	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieAccessLogEvent(py)indicatedBitrate	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieAccessLogEvent(py)numberOfBytesTransferred	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieAccessLogEvent(py)numberOfDroppedVideoFrames	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieAccessLogEvent(py)numberOfSegmentsDownloaded	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieAccessLogEvent(py)numberOfServerAddressChanges	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieAccessLogEvent(py)numberOfStalls	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieAccessLogEvent(py)observedBitrate	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieAccessLogEvent(py)playbackSessionID	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieAccessLogEvent(py)playbackStartDate	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieAccessLogEvent(py)playbackStartOffset	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieAccessLogEvent(py)segmentsDownloadedDuration	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieAccessLogEvent(py)serverAddress	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieErrorLog	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMovieErrorLog(py)events	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMovieErrorLog(py)extendedLogData	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMovieErrorLog(py)extendedLogDataStringEncoding	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMovieErrorLogEvent	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMovieErrorLogEvent(py)URI	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieErrorLogEvent(py)date	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieErrorLogEvent(py)errorComment	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieErrorLogEvent(py)errorDomain	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieErrorLogEvent(py)errorStatusCode	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieErrorLogEvent(py)playbackSessionID	deferred		Not in this starting implementation.
+c:objc(cs)MPMovieErrorLogEvent(py)serverAddress	deferred		Not in this starting implementation.
+c:objc(cs)MPMoviePlayerController	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(im)cancelAllThumbnailImageRequests	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(im)initWithContentURL:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMoviePlayerController(im)requestThumbnailImagesAtTimes:timeOption:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(im)setFullscreen:animated:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(im)thumbnailImageAtTime:timeOption:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMoviePlayerController(py)accessLog	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)airPlayVideoActive	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)allowsAirPlay	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)backgroundView	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMoviePlayerController(py)contentURL	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)controlStyle	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)duration	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)endPlaybackTime	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)errorLog	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)fullscreen	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)initialPlaybackTime	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)loadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)movieMediaTypes	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)movieSourceType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)naturalSize	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMoviePlayerController(py)playableDuration	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)playbackState	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMoviePlayerController(py)readyForDisplay	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)repeatMode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)scalingMode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)shouldAutoplay	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)timedMetadata	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)useApplicationAudioSession	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMoviePlayerController(py)view	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMoviePlayerViewController	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMoviePlayerViewController(im)initWithContentURL:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMoviePlayerViewController(py)moviePlayer	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPMusicPlayerApplicationController	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMusicPlayerApplicationController(im)performQueueTransaction:completionHandler:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerController	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMusicPlayerController(cpy)applicationMusicPlayer	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMusicPlayerController(cpy)applicationQueuePlayer	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerController(cpy)iPodMusicPlayer	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerController(cpy)systemMusicPlayer	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMusicPlayerController(im)appendQueueDescriptor:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerController(im)beginGeneratingPlaybackNotifications	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerController(im)endGeneratingPlaybackNotifications	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerController(im)prepareToPlayWithCompletionHandler:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMusicPlayerController(im)prependQueueDescriptor:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerController(im)setQueueWithDescriptor:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMusicPlayerController(im)setQueueWithItemCollection:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMusicPlayerController(im)setQueueWithQuery:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMusicPlayerController(im)setQueueWithStoreIDs:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMusicPlayerController(im)skipToBeginning	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerController(im)skipToNextItem	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerController(im)skipToPreviousItem	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerController(py)indexOfNowPlayingItem	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerController(py)nowPlayingItem	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerController(py)playbackState	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMusicPlayerController(py)repeatMode	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerController(py)shuffleMode	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerControllerMutableQueue	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMusicPlayerControllerMutableQueue(im)insertQueueDescriptor:afterItem:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerControllerMutableQueue(im)removeItem:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerControllerQueue	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMusicPlayerControllerQueue(py)items	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor(im)initWithItemCollection:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor(im)initWithQuery:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor(im)setEndTime:forItem:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor(im)setStartTime:forItem:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor(py)itemCollection	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor(py)query	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerMediaItemQueueDescriptor(py)startItem	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerPlayParameters	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMusicPlayerPlayParameters(im)initWithDictionary:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerPlayParameters(py)dictionary	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerPlayParametersQueueDescriptor	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMusicPlayerPlayParametersQueueDescriptor(im)initWithPlayParametersQueue:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerPlayParametersQueueDescriptor(im)setEndTime:forItemWithPlayParameters:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerPlayParametersQueueDescriptor(im)setStartTime:forItemWithPlayParameters:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerPlayParametersQueueDescriptor(py)playParametersQueue	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerPlayParametersQueueDescriptor(py)startItemPlayParameters	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerQueueDescriptor	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMusicPlayerStoreQueueDescriptor	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPMusicPlayerStoreQueueDescriptor(im)initWithStoreIDs:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPMusicPlayerStoreQueueDescriptor(im)setEndTime:forItemWithStoreID:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerStoreQueueDescriptor(im)setStartTime:forItemWithStoreID:	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerStoreQueueDescriptor(py)startItemID	deferred		Not in this starting implementation.
+c:objc(cs)MPMusicPlayerStoreQueueDescriptor(py)storeIDs	deferred		Not in this starting implementation.
+c:objc(cs)MPNowPlayingInfoCenter	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPNowPlayingInfoCenter(cm)defaultCenter	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPNowPlayingInfoCenter(cpy)supportedAnimatedArtworkKeys	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingInfoCenter(py)nowPlayingInfo	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPNowPlayingInfoCenter(py)playbackState	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPNowPlayingInfoLanguageOption	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingInfoLanguageOption(im)initWithType:languageTag:characteristics:displayName:identifier:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingInfoLanguageOption(im)isAutomaticAudibleLanguageOption	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingInfoLanguageOption(im)isAutomaticLegibleLanguageOption	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingInfoLanguageOption(py)displayName	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingInfoLanguageOption(py)identifier	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingInfoLanguageOption(py)languageOptionCharacteristics	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingInfoLanguageOption(py)languageOptionType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingInfoLanguageOption(py)languageTag	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingInfoLanguageOptionGroup	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingInfoLanguageOptionGroup(im)initWithLanguageOptions:defaultLanguageOption:allowEmptySelection:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingInfoLanguageOptionGroup(py)allowEmptySelection	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingInfoLanguageOptionGroup(py)defaultLanguageOption	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingInfoLanguageOptionGroup(py)languageOptions	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingSession	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingSession(im)addPlayer:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPNowPlayingSession(im)becomeActiveIfPossibleWithCompletion:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingSession(im)initWithPlayers:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPNowPlayingSession(im)removePlayer:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPNowPlayingSession(py)active	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingSession(py)automaticallyPublishesNowPlayingInfo	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingSession(py)canBecomeActive	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingSession(py)delegate	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingSession(py)nowPlayingInfoCenter	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPNowPlayingSession(py)players	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPNowPlayingSession(py)remoteCommandCenter	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPPlayableContentManager	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPPlayableContentManager(cm)sharedContentManager	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPPlayableContentManager(im)beginUpdates	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPPlayableContentManager(im)endUpdates	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPPlayableContentManager(im)reloadData	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPPlayableContentManager(py)context	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPPlayableContentManager(py)dataSource	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPPlayableContentManager(py)delegate	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPPlayableContentManager(py)nowPlayingIdentifiers	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPPlayableContentManagerContext	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPPlayableContentManagerContext(py)contentLimitsEnabled	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPPlayableContentManagerContext(py)contentLimitsEnforced	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPPlayableContentManagerContext(py)endpointAvailable	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPPlayableContentManagerContext(py)enforcedContentItemsCount	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPPlayableContentManagerContext(py)enforcedContentTreeDepth	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPRatingCommand	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPRatingCommand(py)maximumRating	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPRatingCommand(py)minimumRating	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPRatingCommandEvent	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPRatingCommandEvent(py)rating	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommand	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPRemoteCommand(im)addTarget:action:	unavailable		Objective-C Selector targets are unavailable on this Linux toolchain.
+c:objc(cs)MPRemoteCommand(im)addTargetWithHandler:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPRemoteCommand(im)removeTarget:	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPRemoteCommand(im)removeTarget:action:	unavailable		Objective-C Selector targets are unavailable on this Linux toolchain.
+c:objc(cs)MPRemoteCommand(py)enabled	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPRemoteCommandCenter	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPRemoteCommandCenter(cm)sharedCommandCenter	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPRemoteCommandCenter(py)bookmarkCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)changePlaybackPositionCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)changePlaybackRateCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)changeRepeatModeCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)changeShuffleModeCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)disableLanguageOptionCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)dislikeCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)enableLanguageOptionCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)likeCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)nextTrackCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)pauseCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)playCommand	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPRemoteCommandCenter(py)previousTrackCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)ratingCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)seekBackwardCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)seekForwardCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)skipBackwardCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)skipForwardCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)stopCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandCenter(py)togglePlayPauseCommand	deferred		Not in this starting implementation.
+c:objc(cs)MPRemoteCommandEvent	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPRemoteCommandEvent(py)command	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPRemoteCommandEvent(py)timestamp	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(cs)MPSeekCommandEvent	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPSeekCommandEvent(py)type	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPSkipIntervalCommand	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPSkipIntervalCommand(py)preferredIntervals	deferred		Not in this starting implementation.
+c:objc(cs)MPSkipIntervalCommandEvent	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPSkipIntervalCommandEvent(py)interval	deferred		Not in this starting implementation.
+c:objc(cs)MPTimedMetadata	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPTimedMetadata(py)allMetadata	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPTimedMetadata(py)key	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPTimedMetadata(py)keyspace	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPTimedMetadata(py)timestamp	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPTimedMetadata(py)value	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(cs)MPVolumeView	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(im)maximumVolumeSliderImageForState:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(im)minimumVolumeSliderImageForState:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(im)routeButtonImageForState:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(im)routeButtonRectForBounds:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(im)setMaximumVolumeSliderImage:forState:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(im)setMinimumVolumeSliderImage:forState:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(im)setRouteButtonImage:forState:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(im)setVolumeThumbImage:forState:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(im)volumeSliderRectForBounds:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(im)volumeThumbImageForState:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(im)volumeThumbRectForBounds:volumeSliderRect:value:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(py)showsRouteButton	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(py)showsVolumeSlider	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(py)volumeWarningSliderImage	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(py)wirelessRouteActive	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)MPVolumeView(py)wirelessRoutesAvailable	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(cs)NSUserActivity(py)externalMediaContentIdentifier	deferred		Not in this starting implementation.
+c:objc(cs)UIViewController(im)dismissMoviePlayerViewControllerAnimated	deferred		Not in this starting implementation.
+c:objc(cs)UIViewController(im)presentMoviePlayerViewControllerAnimated:	deferred		Not in this starting implementation.
+c:objc(pl)MPMediaPickerControllerDelegate	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(pl)MPMediaPickerControllerDelegate(im)mediaPicker:didPickMediaItems:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(pl)MPMediaPickerControllerDelegate(im)mediaPickerDidCancel:	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+c:objc(pl)MPMediaPlayback	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(pl)MPMediaPlayback(im)beginSeekingBackward	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(pl)MPMediaPlayback(im)beginSeekingForward	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(pl)MPMediaPlayback(im)endSeeking	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(pl)MPMediaPlayback(im)pause	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(pl)MPMediaPlayback(im)play	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)MPMediaPlayback(im)prepareToPlay	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)MPMediaPlayback(im)stop	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(pl)MPMediaPlayback(py)currentPlaybackRate	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(pl)MPMediaPlayback(py)currentPlaybackTime	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(pl)MPMediaPlayback(py)isPreparedToPlay	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)MPNowPlayingSessionDelegate	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(pl)MPNowPlayingSessionDelegate(im)nowPlayingSessionDidChangeActive:	deferred		Not in this starting implementation.
+c:objc(pl)MPNowPlayingSessionDelegate(im)nowPlayingSessionDidChangeCanBecomeActive:	deferred		Not in this starting implementation.
+c:objc(pl)MPPlayableContentDataSource	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)MPPlayableContentDataSource(im)beginLoadingChildItemsAtIndexPath:completionHandler:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)MPPlayableContentDataSource(im)childItemsDisplayPlaybackProgressAtIndexPath:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)MPPlayableContentDataSource(im)contentItemAtIndexPath:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)MPPlayableContentDataSource(im)contentItemForIdentifier:completionHandler:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)MPPlayableContentDataSource(im)numberOfChildItemsAtIndexPath:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)MPPlayableContentDelegate	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)MPPlayableContentDelegate(im)playableContentManager:didUpdateContext:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)MPPlayableContentDelegate(im)playableContentManager:initializePlaybackQueueWithCompletionHandler:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)MPPlayableContentDelegate(im)playableContentManager:initializePlaybackQueueWithContentItems:completionHandler:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)MPPlayableContentDelegate(im)playableContentManager:initiatePlaybackOfContentItemAtIndexPath:completionHandler:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)MPSystemMusicPlayerController	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(pl)MPSystemMusicPlayerController(im)openToPlayQueueDescriptor:	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MPMediaEntity	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MPMediaLibrary	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MPMediaPredicate	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MPMediaQuery	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MPMediaQuerySection	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:SC11MPErrorCodeLeV	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:SC11MPErrorCodeLeV11errorDomainSSvpZ	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:SC11MPErrorCodeLeV12notSupportedSoAAVvpZ	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:SC11MPErrorCodeLeV15requestTimedOutSoAAVvpZ	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:SC11MPErrorCodeLeV16permissionDeniedSoAAVvpZ	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:SC11MPErrorCodeLeV23networkConnectionFailedSoAAVvpZ	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:SC11MPErrorCodeLeV29cloudServiceCapabilityMissingSoAAVvpZ	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:SC11MPErrorCodeLeV7unknownSoAAVvpZ	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:SC11MPErrorCodeLeV8notFoundSoAAVvpZ	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:SC11MPErrorCodeLeV9cancelledSoAAVvpZ	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPChangeLanguageOptionSetting	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMediaGrouping	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMediaLibraryAuthorizationStatus	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMediaPredicateComparison	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieControlStyle	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieFinishReason	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMoviePlaybackState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieRepeatMode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieScalingMode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieSourceType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMovieTimeOption	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMusicPlaybackState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMusicRepeatMode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPMusicShuffleMode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPNowPlayingInfoLanguageOptionType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPNowPlayingInfoMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPNowPlayingPlaybackState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPRemoteCommandHandlerStatus	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPRepeatType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPSeekCommandEventType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MPShuffleType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPChangeLanguageOptionSetting	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMediaGrouping	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMediaLibraryAuthorizationStatus	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMediaPredicateComparison	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMovieControlStyle	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMovieFinishReason	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMoviePlaybackState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMovieRepeatMode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMovieScalingMode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMovieSourceType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMovieTimeOption	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMusicPlaybackState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMusicRepeatMode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPMusicShuffleMode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPNowPlayingInfoLanguageOptionType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPNowPlayingInfoMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPNowPlayingPlaybackState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPRemoteCommandHandlerStatus	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPRepeatType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPSeekCommandEventType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@MPShuffleType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPChangeLanguageOptionSetting	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMediaGrouping	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMediaLibraryAuthorizationStatus	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMediaPredicateComparison	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMovieControlStyle	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMovieFinishReason	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMoviePlaybackState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMovieRepeatMode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMovieScalingMode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMovieSourceType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMovieTimeOption	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMusicPlaybackState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMusicRepeatMode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPMusicShuffleMode	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPNowPlayingInfoLanguageOptionType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPNowPlayingInfoMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPNowPlayingPlaybackState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPRemoteCommandHandlerStatus	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPRepeatType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPSeekCommandEventType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MPShuffleType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So11MPErrorCodeV8rawValueABSgSi_tcfc	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:So11MPMediaTypeV8rawValueABSu_tcfc	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:So12MPRepeatTypeV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So13MPShuffleTypeV8rawValueABSgSi_tcfc	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:So15MPMediaGroupingV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So16MPMovieLoadStateV8rawValueABSu_tcfc	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:So17MPMovieRepeatModeV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So17MPMovieSourceTypeV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So17MPMovieTimeOptionV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So17MPMusicRepeatModeV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So18MPMovieScalingModeV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So18MPMusicShuffleModeV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So19MPMovieControlStyleV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So19MPMovieFinishReasonV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So20MPMovieMediaTypeMaskV8rawValueABSu_tcfc	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:So20MPMoviePlaybackStateV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So20MPMusicPlaybackStateV8rawValueABSgSi_tcfc	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:So22MPSeekCommandEventTypeV8rawValueABSgSu_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So24MPMediaPlaylistAttributeV8rawValueABSu_tcfc	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:So25MPNowPlayingInfoMediaTypeV8rawValueABSgSu_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So25MPNowPlayingPlaybackStateV8rawValueABSgSu_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So26MPMediaItemAnimatedArtworkC11MediaPlayerE9artworkID26previewImageRequestHandler024videoAssetFileURLRequestL0ABSS_So7UIImageCSgSo6CGSizeVYac10Foundation3URLVSgAKYactcfc	unavailable		Requires UIKit/CoreGraphics/AVFoundation/CoreMedia; omitted rather than faked.
+s:So26MPMediaPredicateComparisonV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So27MPMusicPlayerPlayParametersC05MediaB0E4fromABs7Decoder_p_tKcfc	deferred		Codable surface not implemented in this starting point.
+s:So27MPMusicPlayerPlayParametersC05MediaB0E6encode2toys7Encoder_p_tKF	deferred		Codable surface not implemented in this starting point.
+s:So28MPRemoteCommandHandlerStatusV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So29MPChangeLanguageOptionSettingV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So33MPMediaLibraryAuthorizationStatusV8rawValueABSgSi_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:So34MPNowPlayingInfoLanguageOptionTypeV8rawValueABSgSu_tcfc	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MPMediaType	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MPMovieLoadState	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MPErrorCode	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MPMediaType	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MPMovieLoadState	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MPMediaType	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MPMovieLoadState	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	implemented	MPEnums.swift;MediaPlayerRuntime.swift	Exercised in MediaPlayerRuntime.swift. Darwin ABI unobserved where noted.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MPMediaPlaylistAttribute	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MPMediaType	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MPMovieLoadState	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@MPMovieMediaTypeMask	declared	full/mediaplayer	Compiles on Linux. Behavior not independently exercised or string bytes are Linux-local.

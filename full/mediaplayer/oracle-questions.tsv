@@ -1,0 +1,7 @@
+precise	question	risk	reason
+c:@MPErrorDomain	What are the exact NSString bytes of MPErrorDomain on Darwin iOS 26.1?	media	Linux uses a local MPErrorDomain fallback; Apple payload is unobserved in this seed.
+c:@E@MPErrorCode	What are the Darwin NS_ERROR_ENUM raw values for MPError.Code?	media	Cases are sequential Int; ABI was not extracted from the SDK.
+c:objc(pl)MPPlayableContentDataSource(im)beginLoadingChildItemsAtIndexPath:completionHandler:	Does beginLoadingChildItems(at:) default no-op complete synchronously on Darwin, and is the async overlay the canonical Swift form?	host-service	Repair models optional ObjC methods as protocol requirements with defaults; Apple completion-queue timing is unobserved.
+c:objc(pl)MPPlayableContentDelegate(im)playableContentManager:initiatePlaybackOfContentItemAtIndexPath:completionHandler:	When a CarPlay endpoint is absent, does Darwin invoke initiatePlaybackOfContentItemAt or only fail at the system UI?	host-service	Linux has no CarPlay endpoint; default throws MPError.notSupported.
+module	Which MPNowPlayingInfoProperty* and MPMediaItemProperty* NSString bytes match Darwin, and which now-playing keys require UIKit artwork types?	ui	Linux-local identifier strings are not claimed as Apple payloads; artwork keys stay empty without UIKit.
+c:objc(cs)MPMediaLibrary(cm)authorizationStatus	On a Linux host with no TCC/media library, is denied vs restricted vs notDetermined the Darwin mapping for a missing store?	media	This port always reports denied and never prompts.
