@@ -1344,29 +1344,29 @@ extension View {
 
     nonisolated func visualEffect(_ effect: @escaping (EmptyVisualEffect, GeometryProxy) -> some VisualEffect) -> some View { self }
 
-    nonisolated func accessibility(identifier: String) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibility(identifier: String) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibility(inputLabels: [Text]) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibility(inputLabels: [Text]) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibility(removeTraits traits: AccessibilityTraits) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibility(removeTraits traits: AccessibilityTraits) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibility(sortPriority: Double) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibility(sortPriority: Double) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibility(activationPoint: UnitPoint) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibility(activationPoint: UnitPoint) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibility(activationPoint: CGPoint) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibility(activationPoint: CGPoint) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibility(selectionIdentifier: AnyHashable) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibility(selectionIdentifier: AnyHashable) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibility(hint: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibility(hint: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibility(label: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibility(label: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibility(value: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibility(value: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibility(hidden: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibility(hidden: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibility(addTraits traits: AccessibilityTraits) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibility(addTraits traits: AccessibilityTraits) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func colorMultiply(_ color: Color) -> some View { self }
 
@@ -1588,21 +1588,21 @@ extension View {
 
     nonisolated func writingDirection(strategy: Text.WritingDirectionStrategy) -> some View { self }
 
-    nonisolated func accessibilityHint(_ hint: LocalizedStringResource, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityHint(_ hint: LocalizedStringResource, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityHint(_ hintKey: LocalizedStringKey, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityHint(_ hintKey: LocalizedStringKey, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityHint(_ hint: Text, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityHint(_ hint: Text, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityHint<S>(_ hint: S, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityHint<S>(_ hint: S, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityHint(_ hint: LocalizedStringResource) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityHint(_ hint: LocalizedStringResource) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityHint(_ hintKey: LocalizedStringKey) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityHint(_ hintKey: LocalizedStringKey) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityHint(_ hint: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityHint(_ hint: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityHint<S>(_ hint: S) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityHint<S>(_ hint: S) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func buttonBorderShape(_ shape: ButtonBorderShape) -> some View { self }
 
@@ -1654,21 +1654,21 @@ extension View {
 
     nonisolated func accessibilityLabel<V>(@ViewBuilder content: (PlaceholderContentView<Self>) -> V) -> some View where V : View { self }
 
-    nonisolated func accessibilityLabel(_ label: LocalizedStringResource, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityLabel(_ label: LocalizedStringResource, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityLabel(_ labelKey: LocalizedStringKey, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityLabel(_ labelKey: LocalizedStringKey, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityLabel(_ label: Text, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityLabel(_ label: Text, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityLabel<S>(_ label: S, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityLabel<S>(_ label: S, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityLabel(_ label: LocalizedStringResource) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityLabel(_ label: LocalizedStringResource) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityLabel(_ labelKey: LocalizedStringKey) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityLabel(_ labelKey: LocalizedStringKey) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityLabel(_ label: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityLabel(_ label: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityLabel<S>(_ label: S) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityLabel<S>(_ label: S) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func accessibilityRotor(_ label: LocalizedStringResource, textRanges: [Range<String.Index>]) -> some View { self }
 
@@ -1710,21 +1710,21 @@ extension View {
 
     nonisolated func accessibilityRotor<L, Content>(_ label: L, @AccessibilityRotorContentBuilder entries: @escaping () -> Content) -> some View where L : StringProtocol, Content : AccessibilityRotorContent { self }
 
-    nonisolated func accessibilityValue(_ valueResource: LocalizedStringResource, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityValue(_ valueResource: LocalizedStringResource, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityValue(_ valueKey: LocalizedStringKey, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityValue(_ valueKey: LocalizedStringKey, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityValue(_ valueDescription: Text, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityValue(_ valueDescription: Text, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityValue<S>(_ value: S, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityValue<S>(_ value: S, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityValue(_ valueResource: LocalizedStringResource) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityValue(_ valueResource: LocalizedStringResource) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityValue(_ valueKey: LocalizedStringKey) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityValue(_ valueKey: LocalizedStringKey) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityValue(_ valueDescription: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityValue(_ valueDescription: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityValue<S>(_ value: S) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityValue<S>(_ value: S) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func autocapitalization(_ style: UITextAutocapitalizationType) -> some View { self }
 
@@ -1836,21 +1836,21 @@ extension View {
 
     nonisolated func toolbarColorScheme(_ colorScheme: ColorScheme?, for bars: ToolbarPlacement...) -> some View { self }
 
-    nonisolated func accessibilityAction(named nameResource: LocalizedStringResource, _ handler: @escaping () -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityAction(named nameResource: LocalizedStringResource, _ handler: @escaping () -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityAction(named nameKey: LocalizedStringKey, _ handler: @escaping () -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityAction(named nameKey: LocalizedStringKey, _ handler: @escaping () -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityAction(named name: Text, _ handler: @escaping () -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityAction(named name: Text, _ handler: @escaping () -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityAction<S>(named name: S, _ handler: @escaping () -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityAction<S>(named name: S, _ handler: @escaping () -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func accessibilityAction<Label>(action: @escaping () -> Void, @ViewBuilder label: () -> Label) -> some View where Label : View { self }
 
-    nonisolated func accessibilityAction(_ actionKind: AccessibilityActionKind = .default, _ handler: @escaping () -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityAction(_ actionKind: AccessibilityActionKind = .default, _ handler: @escaping () -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityHidden(_ hidden: Bool, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityHidden(_ hidden: Bool, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityHidden(_ hidden: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityHidden(_ hidden: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func allowedDynamicRange(_ range: Image.DynamicRange?) -> some View { self }
 
@@ -1918,7 +1918,7 @@ extension View {
 
     nonisolated func accessibilityFocused(_ condition: AccessibilityFocusState<Bool>.Binding) -> some View { self }
 
-    nonisolated func accessibilityHeading(_ level: AccessibilityHeadingLevel) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityHeading(_ level: AccessibilityHeadingLevel) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func buttonRepeatBehavior(_ behavior: ButtonRepeatBehavior) -> some View { self }
 
@@ -1994,39 +1994,39 @@ extension View {
 
     nonisolated func textSelectionAffinity(_ affinity: TextSelectionAffinity) -> some View { self }
 
-    nonisolated func accessibilityAddTraits(_ traits: AccessibilityTraits) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityAddTraits(_ traits: AccessibilityTraits) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDragPoint(_ point: UnitPoint, description: LocalizedStringResource, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDragPoint(_ point: UnitPoint, description: LocalizedStringResource, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDragPoint(_ point: UnitPoint, description: LocalizedStringKey, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDragPoint(_ point: UnitPoint, description: LocalizedStringKey, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDragPoint(_ point: UnitPoint, description: Text, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDragPoint(_ point: UnitPoint, description: Text, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDragPoint<S>(_ point: UnitPoint, description: S, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDragPoint<S>(_ point: UnitPoint, description: S, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDragPoint(_ point: UnitPoint, description: LocalizedStringResource) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDragPoint(_ point: UnitPoint, description: LocalizedStringResource) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDragPoint(_ point: UnitPoint, description: LocalizedStringKey) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDragPoint(_ point: UnitPoint, description: LocalizedStringKey) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDragPoint(_ point: UnitPoint, description: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDragPoint(_ point: UnitPoint, description: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDragPoint<S>(_ point: UnitPoint, description: S) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDragPoint<S>(_ point: UnitPoint, description: S) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDropPoint(_ point: UnitPoint, description: LocalizedStringResource, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDropPoint(_ point: UnitPoint, description: LocalizedStringResource, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDropPoint(_ point: UnitPoint, description: LocalizedStringKey, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDropPoint(_ point: UnitPoint, description: LocalizedStringKey, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDropPoint(_ point: UnitPoint, description: Text, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDropPoint(_ point: UnitPoint, description: Text, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDropPoint<S>(_ point: UnitPoint, description: S, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDropPoint<S>(_ point: UnitPoint, description: S, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDropPoint(_ point: UnitPoint, description: LocalizedStringResource) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDropPoint(_ point: UnitPoint, description: LocalizedStringResource) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDropPoint(_ point: UnitPoint, description: LocalizedStringKey) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDropPoint(_ point: UnitPoint, description: LocalizedStringKey) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDropPoint(_ point: UnitPoint, description: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDropPoint(_ point: UnitPoint, description: Text) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityDropPoint<S>(_ point: UnitPoint, description: S) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDropPoint<S>(_ point: UnitPoint, description: S) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func autocorrectionDisabled(_ disable: Bool = true) -> some View { self }
 
@@ -2062,13 +2062,13 @@ extension View {
 
     nonisolated func toolbarForegroundStyle<S>(_ style: S, for bars: ToolbarPlacement...) -> some View where S : ShapeStyle { self }
 
-    nonisolated func accessibilityIdentifier(_ identifier: String, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityIdentifier(_ identifier: String, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityIdentifier(_ identifier: String) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityIdentifier(_ identifier: String) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func accessibilityRotorEntry<ID>(id: ID, in namespace: Namespace.ID) -> some View where ID : Hashable { self }
 
-    nonisolated func accessibilityZoomAction(_ handler: @escaping (AccessibilityZoomGestureAction) -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityZoomAction(_ handler: @escaping (AccessibilityZoomGestureAction) -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func dialogSuppressionToggle(isSuppressed: Binding<Bool>) -> some View { self }
 
@@ -2098,19 +2098,19 @@ extension View {
 
     nonisolated func toolbarTitleDisplayMode(_ mode: ToolbarTitleDisplayMode) -> some View { self }
 
-    nonisolated func accessibilityDirectTouch(_ isDirectTouchArea: Bool = true, options: AccessibilityDirectTouchOptions = []) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityDirectTouch(_ isDirectTouchArea: Bool = true, options: AccessibilityDirectTouchOptions = []) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityInputLabels(_ inputLabelKeys: [LocalizedStringKey], isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityInputLabels(_ inputLabelKeys: [LocalizedStringKey], isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityInputLabels(_ inputLabels: [Text], isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityInputLabels(_ inputLabels: [Text], isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityInputLabels<S>(_ inputLabels: [S], isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityInputLabels<S>(_ inputLabels: [S], isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityInputLabels(_ inputLabelKeys: [LocalizedStringKey]) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityInputLabels(_ inputLabelKeys: [LocalizedStringKey]) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityInputLabels(_ inputLabels: [Text]) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityInputLabels(_ inputLabels: [Text]) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityInputLabels<S>(_ inputLabels: [S]) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityInputLabels<S>(_ inputLabels: [S]) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where S : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func accessibilityLabeledPair<ID>(role: AccessibilityLabeledPairRole, id: ID, in namespace: Namespace.ID) -> some View where ID : Hashable { self }
 
@@ -2132,19 +2132,19 @@ extension View {
 
     nonisolated func accessibilityDefaultFocus<Value>(_ binding: AccessibilityFocusState<Value>.Binding, _ value: Value) -> some View where Value : Hashable { self }
 
-    nonisolated func accessibilityRemoveTraits(_ traits: AccessibilityTraits) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityRemoveTraits(_ traits: AccessibilityTraits) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityScrollAction(_ handler: @escaping (Edge) -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityScrollAction(_ handler: @escaping (Edge) -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityScrollStatus(_ status: LocalizedStringResource, isEnabled: Bool = true) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityScrollStatus(_ status: LocalizedStringResource, isEnabled: Bool = true) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityScrollStatus(_ statusKey: LocalizedStringKey, isEnabled: Bool = true) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityScrollStatus(_ statusKey: LocalizedStringKey, isEnabled: Bool = true) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityScrollStatus(_ status: Text, isEnabled: Bool = true) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityScrollStatus(_ status: Text, isEnabled: Bool = true) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityScrollStatus(_ status: some StringProtocol, isEnabled: Bool = true) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityScrollStatus(_ status: some StringProtocol, isEnabled: Bool = true) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilitySortPriority(_ sortPriority: Double) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilitySortPriority(_ sortPriority: Double) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     @MainActor @preconcurrency func backgroundExtensionEffect(isEnabled: Bool) -> some View { self }
 
@@ -2176,29 +2176,29 @@ extension View {
 
     nonisolated func transformAnchorPreference<A, K>(key _: K.Type = K.self, value: Anchor<A>.Source, transform: @escaping (inout K.Value, Anchor<A>) -> Void) -> some View where K : PreferenceKey { self }
 
-    nonisolated func accessibilityCustomContent(_ label: LocalizedStringResource, _ value: Text, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityCustomContent(_ label: LocalizedStringResource, _ value: Text, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityCustomContent(_ label: LocalizedStringResource, _ valueResource: LocalizedStringResource, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityCustomContent(_ label: LocalizedStringResource, _ valueResource: LocalizedStringResource, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityCustomContent<V>(_ label: LocalizedStringResource, _ value: V, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where V : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityCustomContent<V>(_ label: LocalizedStringResource, _ value: V, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where V : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityCustomContent(_ key: AccessibilityCustomContentKey, _ valueResource: LocalizedStringResource, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityCustomContent(_ key: AccessibilityCustomContentKey, _ valueResource: LocalizedStringResource, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityCustomContent(_ key: AccessibilityCustomContentKey, _ valueKey: LocalizedStringKey, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityCustomContent(_ key: AccessibilityCustomContentKey, _ valueKey: LocalizedStringKey, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityCustomContent(_ key: AccessibilityCustomContentKey, _ value: Text?, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityCustomContent(_ key: AccessibilityCustomContentKey, _ value: Text?, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityCustomContent<V>(_ key: AccessibilityCustomContentKey, _ value: V, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where V : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityCustomContent<V>(_ key: AccessibilityCustomContentKey, _ value: V, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where V : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityCustomContent(_ labelKey: LocalizedStringKey, _ value: Text, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityCustomContent(_ labelKey: LocalizedStringKey, _ value: Text, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityCustomContent(_ labelKey: LocalizedStringKey, _ valueKey: LocalizedStringKey, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityCustomContent(_ labelKey: LocalizedStringKey, _ valueKey: LocalizedStringKey, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityCustomContent<V>(_ labelKey: LocalizedStringKey, _ value: V, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where V : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityCustomContent<V>(_ labelKey: LocalizedStringKey, _ value: V, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where V : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityCustomContent(_ label: Text, _ value: Text, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityCustomContent(_ label: Text, _ value: Text, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityCustomContent<L, V>(_ label: L, _ value: V, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where L : StringProtocol, V : StringProtocol { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityCustomContent<L, V>(_ label: L, _ value: V, importance: AXCustomContent.Importance = .default) -> ModifiedContent<Self, AccessibilityAttachmentModifier> where L : StringProtocol, V : StringProtocol { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     @MainActor @preconcurrency func documentBrowserContextMenu(@ViewBuilder _ menu: @escaping ([URL]?) -> some View) -> some View { self }
 
@@ -2224,23 +2224,23 @@ extension View {
 
     nonisolated func toolbarBackgroundVisibility(_ visibility: Visibility, for bars: ToolbarPlacement...) -> some View { self }
 
-    nonisolated func accessibilityActivationPoint(_ activationPoint: UnitPoint, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityActivationPoint(_ activationPoint: UnitPoint, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityActivationPoint(_ activationPoint: CGPoint, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityActivationPoint(_ activationPoint: CGPoint, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityActivationPoint(_ activationPoint: UnitPoint) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityActivationPoint(_ activationPoint: UnitPoint) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityActivationPoint(_ activationPoint: CGPoint) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityActivationPoint(_ activationPoint: CGPoint) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func accessibilityChartDescriptor<R>(_ representable: R) -> some View where R : AXChartDescriptorRepresentable { self }
 
-    nonisolated func accessibilityTextContentType(_ value: AccessibilityTextContentType) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityTextContentType(_ value: AccessibilityTextContentType) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func allowsWindowActivationEvents() -> some View { self }
 
     nonisolated func allowsWindowActivationEvents(_ value: Bool?) -> some View { self }
 
-    nonisolated func accessibilityAdjustableAction(_ handler: @escaping (AccessibilityAdjustmentDirection) -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityAdjustableAction(_ handler: @escaping (AccessibilityAdjustmentDirection) -> Void) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func assistiveAccessNavigationIcon(systemImage: String) -> some View { self }
 
@@ -2294,9 +2294,9 @@ extension View {
 
     nonisolated func textInputFormattingControlVisibility(_ visibility: Visibility, for placement: TextInputFormattingControlPlacement.Set) -> some View { self }
 
-    nonisolated func accessibilityRespondsToUserInteraction(_ respondsToUserInteraction: Bool, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityRespondsToUserInteraction(_ respondsToUserInteraction: Bool, isEnabled: Bool) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
-    nonisolated func accessibilityRespondsToUserInteraction(_ respondsToUserInteraction: Bool = true) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: modifier) }
+    nonisolated func accessibilityRespondsToUserInteraction(_ respondsToUserInteraction: Bool = true) -> ModifiedContent<Self, AccessibilityAttachmentModifier> { ModifiedContent(content: self, modifier: AccessibilityAttachmentModifier()) }
 
     nonisolated func tag<V>(_ tag: V, includeOptional: Bool = true) -> some View where V : Hashable { self }
 
