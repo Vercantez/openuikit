@@ -278,14 +278,8 @@ empty_tbd=$(find "$SYS" -name '*.tbd' -size 0 -print -quit)
     exit 2
 }
 
-overlay_if=$(phase2_arm_overlay_interface "$ARM_SYS" || true)
-if [ -z "$overlay_if" ]; then
-    overlay_if=$artifacts/swift-macosx/Darwin.swiftmodule/x86_64-apple-macos.swiftinterface
-fi
-dmap_for_stamp=$ARM_SYS/usr/include/Darwin.modulemap
-if [ ! -f "$dmap_for_stamp" ]; then
-    dmap_for_stamp=$SYS/usr/include/Darwin.modulemap
-fi
+overlay_if=$(phase2_sysroot_overlay_if "$ARM_SYS" "$artifacts" || true)
+dmap_for_stamp=$(phase2_sysroot_dmap_input "$ARM_SYS")
 phase2_write_sysroot_stamp "$SYS/$PHASE2_SYSROOT_STAMP" \
     "$x86_core" "$x86_mod" "$x86_bf_mod" \
     "$MACHORUN/scripts/gen_darwin_modulemap.py" \

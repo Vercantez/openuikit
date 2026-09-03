@@ -168,7 +168,7 @@ phase2_probe_focus_pin() {
 # output directory existing. A sysroot staged before x86 libswiftCore landed
 # would otherwise be reused while OpenCombine looks in usr/lib/swift and finds
 # nothing. Recipe bump forces a restage when the stager itself gains steps.
-PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.17
+PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.18
 PHASE2_SYSROOT_STAMP=.phase2-stage-inputs
 
 phase2_sha_or_absent() {
@@ -482,6 +482,30 @@ phase2_arm_overlay_interface() {
         fi
     done
     return 1
+}
+
+# Same Darwin.swiftinterface the stager and the restage check hash. Arm64
+# sysroot first; artifacts on a fresh VM that has no Xcode tree.
+phase2_sysroot_overlay_if() {
+    local arm=$1 artifacts=$2 f
+    f=$(phase2_arm_overlay_interface "$arm" || true)
+    if [ -n "$f" ]; then
+        printf '%s\n' "$f"
+        return 0
+    fi
+    f=$artifacts/swift-macosx/Darwin.swiftmodule/x86_64-apple-macos.swiftinterface
+    if [ -f "$f" ]; then
+        printf '%s\n' "$f"
+        return 0
+    fi
+    return 1
+}
+
+# Darwin.modulemap INPUT is the arm64 pruned map when present. The staged
+# dest is not an input: hashing it made every VM restage (HASH->ABSENT)
+# because check used ARM_SYS (missing) and write used SYS (present).
+phase2_sysroot_dmap_input() {
+    printf '%s\n' "$1/usr/include/Darwin.modulemap"
 }
 
 # phase2_sysroot_input_lines <libswiftCore> <Swift.swiftmodule> <_Builtin_float.swiftmodule>

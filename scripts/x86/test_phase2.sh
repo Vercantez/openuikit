@@ -321,6 +321,16 @@ expect_grep '_Builtin_float.swiftmodule' "$STAGE" \
     "stager copies _Builtin_float into usr/lib/swift"
 expect_grep 'phase2_write_sysroot_stamp' "$STAGE" \
     "stager writes an input stamp"
+expect_grep 'phase2_sysroot_overlay_if' "$STAGE" \
+    "stager hashes the same Darwin.swiftinterface the restage check hashes"
+expect_grep 'phase2_sysroot_overlay_if' "$PHASE2" \
+    "restage check hashes artifacts Darwin.swiftinterface when arm64 overlay is absent"
+expect_grep 'phase2_sysroot_dmap_input' "$STAGE" \
+    "stager stamps the arm64 Darwin.modulemap path, not the dest"
+expect_grep 'phase2_sysroot_dmap_input' "$PHASE2" \
+    "restage check stamps the arm64 Darwin.modulemap path, not the dest"
+expect_not_grep 'dmap_for_stamp=$SYS/usr/include/Darwin.modulemap' "$STAGE" \
+    "stager does not hash the dest Darwin.modulemap (that was HASH->ABSENT every run)"
 expect_grep 're-stage sysroot-fe4-x86 (input changed:' "$PHASE2" \
     "phase2 restages when input shas change and prints which"
 expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
