@@ -39,6 +39,8 @@ if [ -f "$SDK/usr/include/Darwin.modulemap" ] \
     || echo "  note: sysroot interfaces were used (operator tree)"
   printf '%s\n' "$out" | grep -q 'cxx_runtime=' \
     && echo "  OK  cxx_runtime printed" || { echo "  FAIL missing cxx_runtime"; fail=1; }
+  printf '%s\n' "$out" | grep -q 'compiler_rt=' \
+    && echo "  OK  compiler_rt printed" || { echo "  FAIL missing compiler_rt"; fail=1; }
   printf '%s\n' "$out" | grep -q '/usr/lib/llvm-18/lib' \
     && { echo "  FAIL Darwin link still has /usr/lib/llvm-18/lib"; fail=1; } \
     || echo "  OK  no host llvm-18/lib on Darwin links"

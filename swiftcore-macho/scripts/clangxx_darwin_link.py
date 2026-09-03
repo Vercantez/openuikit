@@ -15,7 +15,9 @@ Apple triple → exec the real clang++ with the original argv plus
 `-L/usr/lib/llvm-18/lib`; drop that on Darwin links and pass
 `-nostdlib++` plus the sysroot `usr/lib/libc++.tbd` / `libc++abi.tbd`
 so ld64 never opens the host ELF `libc++.so`. Print
-`cxx_runtime=<tbd>`. Linux/unknown-linux-gnu → ld.lld, keep `-soname`.
+`cxx_runtime=<tbd>`. Pass `libclang_rt.osx.a` (compiler-rt
+`os_version_check.c` for `__isPlatformVersionAtLeast`) and print
+`compiler_rt=<archive>`. Linux/unknown-linux-gnu → ld.lld, keep `-soname`.
 `-soname` is rewritten to `-install_name` only so ld64 never sees the GNU
 flag; nothing else is rewritten (PR #40's -dynamiclib/-nostdlib pass
 dropped -platform_version/-arch).
@@ -367,6 +369,36 @@ def darwin_cxx_runtime_path(argv: list[str]) -> str:
     return tbds[0] if tbds else "ABSENT"
 
 
+def darwin_compiler_rt_osx_path() -> str:
+    """x86_64-apple-macos compiler-rt builtins archive (os_version_check.c)."""
+    env = os.environ.get("SWIFTCORE_COMPILER_RT_OSX")
+    if env:
+        return env
+    work = os.environ.get("SWIFTCORE_WORK") or os.path.join(
+        os.path.expanduser("~"), "work"
+    )
+    return os.path.join(work, "build", "libclang_rt.osx.a")
+
+
+def darwin_compiler_rt_link_flags(argv: list[str]) -> list[str]:
+    """Pass Darwin compiler-rt builtins so availability checks resolve.
+
+    Linux clang has no libclang_rt.osx.a in its resource dir. Overlay links
+    are NOUNDEFS (no -undefined dynamic_lookup), so clang's
+    __isPlatformVersionAtLeast must come from this archive — not libSystem
+    (gen_tbd CHECK 4 vs libswiftcompat) and not a glibc host-bind.
+
+    Do not -force_load: that would pull the member into every Darwin dylib
+    (including ones that never emit an availability check) and surface any
+    leftover undefineds from the TU. Regular archive search is enough when
+    the object refs the symbol.
+    """
+    path = darwin_compiler_rt_osx_path()
+    if any("libclang_rt.osx.a" in a for a in argv):
+        return []
+    return [path]
+
+
 def darwin_driver_argv(argv: list[str]) -> list[str]:
     """Exec clang++ with the original driver argv plus linker resolution.
 
@@ -427,6 +459,7 @@ def darwin_driver_argv(argv: list[str]) -> list[str]:
         kept.append("-nostdlib++")
     for t in tbds:
         kept.append(t)
+    kept.extend(darwin_compiler_rt_link_flags(kept))
     # clang ignores argv after -###; keep diagnostics last.
     diag = [a for a in kept if a in ("-###", "-v", "--verbose")]
     if diag:
@@ -460,6 +493,9 @@ def log_link(
             )
         sys.stderr.write(
             f"clangxx_darwin_link: cxx_runtime={darwin_cxx_runtime_path(original)}\n"
+        )
+        sys.stderr.write(
+            f"clangxx_darwin_link: compiler_rt={darwin_compiler_rt_osx_path()}\n"
         )
     elif rewritten is not None:
         sys.stderr.write("clangxx_darwin_link: rewritten argv: " + shlex.join(rewritten) + "\n")
