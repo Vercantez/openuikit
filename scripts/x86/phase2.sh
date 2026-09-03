@@ -1270,6 +1270,10 @@ if phase2_rung_selected a && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "
         "$W/scratch/ud-guest/bin/ud_score_guest" \
         "$ud_r/bin/ud_score_guest" || true)
     if [ -n "$ud_bin" ] && phase2_is_x86_macho "$ud_bin"; then
+        # ud_dispatch_run.inc reuses $W/runroot if Foundation is present
+        # (existence, not content). A stale clone keeps the pre-mapping
+        # libCFTest and the smoke still exits 71.
+        rm -rf "${UD_GUEST_W:-$ud_w}/runroot"
         set +e
         W=${UD_GUEST_W:-$ud_w} \
             R=$ud_r \

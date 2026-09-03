@@ -8,5 +8,6 @@
 #define malloc_zone_malloc(zone, size) malloc(size)
 #define malloc_zone_calloc(zone, n, size) calloc((n), (size))
 #define malloc_zone_realloc(zone, ptr, size) realloc((ptr), (size))
+#define malloc_zone_memalign(zone, align, size) malloc(size)
 #define malloc_zone_free(zone, ptr) free(ptr)
 #endif

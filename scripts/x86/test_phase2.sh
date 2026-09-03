@@ -318,8 +318,8 @@ expect_grep 'DARWIN_CLANG_MODULEMAP' "$PHASE2" \
     "missing Darwin.modulemap is its own CANNOT, not folded into overlays"
 expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
-expect_grep 'stage_fe_sysroot_x86.15' "$COMMON" \
-    "recipe bump restages a sysroot that lacked malloc_zone-as-malloc"
+expect_grep 'stage_fe_sysroot_x86.16' "$COMMON" \
+    "recipe bump restages malloc_zone_memalign mapping"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
     "stamp records the shared measurement-header list sha"
 expect_grep 'phase2_measurement_headers_missing' "$COMMON" \
@@ -352,12 +352,14 @@ expect_grep 'phase2_posix_overlay_dir' "$PHASE2" \
     "os-module and FE still receive overlay-posix -I (sysroot stub is what Clang modules see)"
 expect_grep 'cannot carry ioctl.h (CFSocket census)' "$ROOT/full/foundation/build_os_module.sh" \
     "build_os_module.sh forwards extra swiftc argv (overlay-posix -I on a VM)"
-expect_grep 'fe_malloc_zone_as_malloc.h' "$STAGE" \
-    "x86 stager maps malloc_zone_* to malloc/free so CF does not abort on a foreign zone"
+expect_grep 'rm -rf "${UD_GUEST_W:-$ud_w}/runroot"' "$PHASE2" \
+    "rung a drops a stale runroot clone so libCFTest content is fresh"
 expect_file "$ROOT/scripts/x86/fe_malloc_zone_as_malloc.h"
 expect_grep 'stamp_key "$cfbase"' "$UDINC" \
     "cfobjc objects rebuild when malloc/malloc.h changes; existence is not freshness"
 expect_file "$ROOT/scripts/x86/Darwin.apinotes"
+expect_grep 'Darwin.apinotes' "$STAGE" \
+    "x86 stager stages Darwin.apinotes so CLOCK_REALTIME is the Swift name of _CLOCK_REALTIME"
 expect_grep 'build_foundation_placeholder.sh' "$COMMON" \
     "run-root Foundation slots are empty placeholders, not loud-abort stubs"
 expect_grep 'Work dir MUST sit outside dest' "$COMMON" \
