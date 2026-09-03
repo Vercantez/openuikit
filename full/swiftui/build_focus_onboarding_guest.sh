@@ -256,6 +256,7 @@ mkdir -p "$PACKAGE/include/CPortableIO" "$PACKAGE/include/CSTBTrueType" \
     "$PACKAGE/include/COpenDispatch" "$PACKAGE/include/COpenRelativeTime" \
     "$PACKAGE/include/CQuartz" "$PACKAGE/include/CoreFoundation" \
     "$MODULE_CACHE" "$AUDIT" "$OUT/fonts" "$OUT/host"
+RUNROOT=$OUT/runroot
 echo '== clone shared machorun root into a writable run-local overlay'
 # machorun's host_lookup/_glibc_ path only runs for images served from the
 # darwin-root prefix map (is_runtime). The shared MRROOT is read-only, so
@@ -400,7 +401,6 @@ PACKAGE_CINC=(-Xcc -I"$PACKAGE/include/CPortableIO"
     -Xcc -fmodule-map-file="$PACKAGE/include/CoreFoundation/module.modulemap"
     -Xcc -I"$PACKAGE/include/CoreFoundation")
 HOST_BRIDGE_DIR=$OUT/host
-RUNROOT=$OUT/runroot
 RELATIVE_TIME_RUNTIME=$RUNROOT/darwin/usr/lib/libOpenRelativeTime.dylib
 RELATIVE_TIME_DARWIN=$PACKAGE/libOpenRelativeTime.dylib
 RELATIVE_TIME_HOST=$HOST_BRIDGE_DIR/libOpenRelativeTimeHost.so
