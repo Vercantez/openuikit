@@ -29,10 +29,14 @@ ninja_checked() {
     mkdir -p "$(dirname "$log")"
     local chunk
     chunk=$(mktemp)
+    # Save/restore errexit: this function must not `set -e` on the caller,
+    # or an overlay loop that wants to continue after a failure cannot.
+    local errexit_was_on=0
+    case $- in *e*) errexit_was_on=1 ;; esac
     set +e
     "$ninja_bin" "$@" 2>&1 | tee -a "$log" | tee "$chunk"
     local st=${PIPESTATUS[0]}
-    set -e
+    if [ "$errexit_was_on" = 1 ]; then set -e; fi
     echo "ninja $* exit=$st"
     if [ "$st" -eq 0 ]; then
         rm -f "$chunk"

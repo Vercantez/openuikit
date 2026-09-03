@@ -51,7 +51,9 @@ mkdir -p "$W"
 step() { printf '\n==== %s ====\n' "$*"; }
 
 # Every ninja invocation reports its status. The core target may hit the
-# expected ELF gold wall (BUILD_LOG wall 7); overlay targets may not.
+# expected ELF gold wall (BUILD_LOG wall 7). Overlay targets are attempted
+# independently (scoreboard OVERLAY <name> built|FAILED|CANNOT_*); any
+# overlay failure keeps the script rc non-zero.
 run_stdlib_ninja() {
   step "ninja $SWIFTCORE_NINJA_CORE -j$NINJA_JOBS"
   ninja_checked --allow-gold-wall "$W/build.log" -C "$B" -j "$NINJA_JOBS" \
@@ -63,12 +65,39 @@ run_stdlib_ninja() {
     exit 0
   fi
   if [ "${SWIFTCORE_OVERLAYS:-0}" = 1 ]; then
+    local sel_rc=0 ninja_st=0 overlay_rc=0 t
+    # Attempt every selected overlay even if select named a CANNOT, so one
+    # operator run measures all five. ninja itself rebuilds real deps of
+    # the requested target; we do not skip later names because an earlier
+    # ninja failed.
+    set +e
     overlay_select_targets "$B" "$SWIFTCORE_DARWIN_ARCH"
-    local t
-    for t in "${OVERLAY_NINJA_TARGETS[@]}"; do
-      step "ninja overlay $t"
-      ninja_checked "$W/build.log" -C "$B" -j "$NINJA_JOBS" "$t"
-    done
+    sel_rc=$?
+    set -e
+    if [ "$sel_rc" -ne 0 ]; then
+      overlay_rc=$sel_rc
+    fi
+    if [ ${#OVERLAY_NINJA_TARGETS[@]} -gt 0 ]; then
+      for t in "${OVERLAY_NINJA_TARGETS[@]}"; do
+        step "ninja overlay $t"
+        ninja_st=0
+        ninja_checked "$W/build.log" -C "$B" -j "$NINJA_JOBS" "$t" || ninja_st=$?
+        if [ "$ninja_st" -eq 0 ]; then
+          OVERLAY_STATUS[$t]=built
+        else
+          OVERLAY_STATUS[$t]=FAILED
+          if [ "$overlay_rc" -eq 0 ]; then
+            overlay_rc=$ninja_st
+          fi
+        fi
+      done
+    fi
+    overlay_print_scoreboard "$SWIFTCORE_DARWIN_ARCH"
+    overlay_list_products "$B/lib/swift/macosx"
+    if [ "$overlay_rc" -ne 0 ]; then
+      echo "overlay: FAILED rc=$overlay_rc" >&2
+      return "$overlay_rc"
+    fi
   fi
 }
 
@@ -168,7 +197,8 @@ fi
 # ---------------------------------------------------------------------------
 # 6. Build. The ninja link edge is ELF (.so); that is expected (BUILD_LOG wall 7)
 #    and is the only ninja failure that is allowed to continue. Overlay ninja
-#    failures (unknown target, missing header, compile error) exit non-zero.
+#    failures are recorded on the scoreboard; every selected overlay is still
+#    attempted, then the script exits non-zero if any failed.
 # ---------------------------------------------------------------------------
 run_stdlib_ninja
 

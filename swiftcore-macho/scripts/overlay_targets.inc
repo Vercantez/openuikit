@@ -42,6 +42,8 @@ overlay_xcode_only_target() {
 
 # Fill OVERLAY_NINJA_TARGETS. Print CANNOT_* for missing names. Exit 2 if a
 # required overlay is absent. Never emit a name that is not in `ninja -t targets`.
+# OVERLAY_STATUS[target] is built|FAILED|CANNOT_<reason> (CANNOT filled here;
+# built/FAILED filled by the caller after each independent ninja).
 #
 # overlay_select_targets <build_dir> <arch>
 overlay_select_targets() {
@@ -49,6 +51,8 @@ overlay_select_targets() {
     local arch=${2:?overlay_select_targets: arch}
     local dump n have
     OVERLAY_NINJA_TARGETS=()
+    declare -gA OVERLAY_STATUS
+    OVERLAY_STATUS=()
 
     if [ -n "${NINJA_TARGETS_DUMP:-}" ]; then
         dump=$(cat "$NINJA_TARGETS_DUMP")
@@ -70,18 +74,26 @@ overlay_select_targets() {
         fi
         if overlay_xcode_only_target "$n"; then
             echo "CANNOT_STAGE_XCODE_DARWIN_OVERLAYS target=$n reason=not in ninja -t targets; Swift 6.2.4 does not create an ObjectiveC overlay CMake target on Linux (Apple picks it up from the Xcode SDK)"
+            OVERLAY_STATUS[$n]=CANNOT_STAGE_XCODE_DARWIN_OVERLAYS
             continue
         fi
         if overlay_required_target "$n"; then
             echo "CANNOT_OVERLAY_TARGET_ABSENT target=$n reason=not in ninja -t targets; required overlay was not created by this CMake configuration" >&2
+            OVERLAY_STATUS[$n]=CANNOT_OVERLAY_TARGET_ABSENT
             missing_required=1
             continue
         fi
         # Darwin (and any other optional Platform overlay): named refusal, skip.
         echo "CANNOT_STAGE_XCODE_DARWIN_OVERLAYS target=$n reason=not in ninja -t targets"
+        OVERLAY_STATUS[$n]=CANNOT_STAGE_XCODE_DARWIN_OVERLAYS
     done < <(overlay_candidate_targets "$arch")
 
     if [ "$missing_required" = 1 ]; then
+        if [ ${#OVERLAY_NINJA_TARGETS[@]} -gt 0 ]; then
+            echo "overlay_select: will ninja ${OVERLAY_NINJA_TARGETS[*]}"
+        else
+            echo "overlay_select: will ninja"
+        fi
         return 2
     fi
     if [ ${#OVERLAY_NINJA_TARGETS[@]} -eq 0 ]; then
@@ -90,4 +102,35 @@ overlay_select_targets() {
     fi
     echo "overlay_select: will ninja ${OVERLAY_NINJA_TARGETS[*]}"
     return 0
+}
+
+# OVERLAY <ninja-target> built|FAILED|CANNOT_<reason>
+overlay_print_scoreboard() {
+    local arch=${1:?overlay_print_scoreboard: arch}
+    local n st
+    echo "==== overlay scoreboard ===="
+    while IFS= read -r n; do
+        [ -n "$n" ] || continue
+        st=${OVERLAY_STATUS[$n]:-UNKNOWN}
+        echo "OVERLAY $n $st"
+    done < <(overlay_candidate_targets "$arch")
+}
+
+# ls of produced overlay dylibs / ELF .so under lib/swift/macosx.
+overlay_list_products() {
+    local root=${1:?overlay_list_products: macosx dir}
+    echo "==== overlay products $root ===="
+    if [ ! -d "$root" ]; then
+        echo "(absent)"
+        return 0
+    fi
+    ls -la "$root"
+    local d
+    for d in "$root"/*/; do
+        [ -d "$d" ] || continue
+        echo "-- $d --"
+        ls -la "$d"
+    done
+    echo "-- libswift*.dylib / libswift*.so --"
+    find "$root" \( -name 'libswift*.dylib' -o -name 'libswift*.so' \) -print | sort
 }
