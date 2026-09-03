@@ -153,7 +153,7 @@ fi
 echo "== Darwin family Clang modulemaps (underlying Objective-C module Darwin)"
 phase2_install_darwin_modulemaps \
     "$SYS" "$ARM_SYS" "$MACHORUN/scripts/gen_darwin_modulemap.py" \
-    || echo "  (Darwin.modulemap still absent; FE will fail with 'underlying Objective-C module Darwin not found')"
+    || echo "  (Darwin family incomplete; FE will fail with 'underlying Objective-C module Darwin not found' or a missing header named by Darwin_C.modulemap)"
 
 echo "== textual Darwin overlays from the arm64 sysroot, if any (no dylibs, no arm64 .swiftmodule slices)"
 OVERLAYS_COPIED=0
@@ -233,8 +233,15 @@ if [ ! -d "$SYS/usr/lib/swift/Darwin.swiftmodule" ] \
     exit 3
 fi
 echo "  Darwin overlays: present (textual, from $ARM_SYS)"
+phase2_report_darwin_overlay_path "$SYS" "$ARM_SYS"
 if [ -f "$SYS/usr/include/Darwin.modulemap" ]; then
-    echo "  Darwin.modulemap: present"
+    miss=$(phase2_darwin_modulemap_missing_headers "$SYS" || true)
+    if [ -n "$miss" ]; then
+        echo "  Darwin.modulemap: present but headers missing: $miss"
+    else
+        echo "  Darwin.modulemap: present; all header paths resolve"
+        echo "  _modules shims: $(find "$SYS/usr/include/_modules" -type f 2>/dev/null | wc -l | tr -d ' ')"
+    fi
 else
     echo "  Darwin.modulemap: ABSENT (underlying Objective-C module Darwin will not be found)"
 fi

@@ -106,7 +106,7 @@ phase2_probe_focus_pin() {
 # output directory existing. A sysroot staged before x86 libswiftCore landed
 # would otherwise be reused while OpenCombine looks in usr/lib/swift and finds
 # nothing. Recipe bump forces a restage when the stager itself gains steps.
-PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.1
+PHASE2_SYSROOT_RECIPE=stage_fe_sysroot_x86.2
 PHASE2_SYSROOT_STAMP=.phase2-stage-inputs
 
 phase2_sha_or_absent() {
@@ -198,21 +198,94 @@ phase2_sysroot_complete() {
             || [ -f "$sys/usr/lib/swift/_Builtin_float.swiftmodule/x86_64-apple-macos.swiftinterface" ]; } \
             || return 1
     fi
+    # Maps that name a header which is not on disk are not a working Clang Darwin.
+    phase2_darwin_modulemap_headers_ok "$sys"
+}
+
+# Print one `header "…"` path per line. Skip `exclude header`.
+phase2_modulemap_quoted_headers() {
+    local map=$1
+    [ -f "$map" ] || return 0
+    grep -E 'header[[:space:]]+"' "$map" | grep -v 'exclude[[:space:]]\+header' \
+        | sed 's/.*header[[:space:]]*"\([^"]*\)".*/\1/'
+}
+
+# Comma-separated header paths named by staged modulemaps that do not resolve
+# under usr/include. Return 1 if any are missing (so a restage that wrote maps
+# without `_modules/*.h` cannot look satisfied).
+phase2_darwin_modulemap_missing_headers() {
+    local sys=$1 inc=$1/usr/include
+    local map rel miss=""
+    [ -d "$inc" ] || return 0
+    while IFS= read -r map; do
+        [ -n "$map" ] || continue
+        while IFS= read -r rel; do
+            [ -n "$rel" ] || continue
+            [ -f "$inc/$rel" ] && continue
+            case ",$miss," in
+                *",$rel,"*) ;;
+                *) miss="${miss:+$miss,}$rel" ;;
+            esac
+        done < <(phase2_modulemap_quoted_headers "$map")
+    done < <(find "$inc" -name '*.modulemap' -print | sort)
+    if [ -n "$miss" ]; then
+        printf '%s\n' "$miss"
+        return 1
+    fi
     return 0
+}
+
+phase2_darwin_modulemap_headers_ok() {
+    phase2_darwin_modulemap_missing_headers "$1" >/dev/null
+}
+
+# Enumerate files the arm64 generator run wrote: Darwin-family maps,
+# everything under usr/include/_modules/ (shim names come from Apple's maps,
+# not a hardcoded list), and any other usr/include file that names
+# gen_darwin_modulemap.py. Never copies module.modulemap (ObjectiveC; merge).
+phase2_arm_generator_include_files() {
+    local arm=$1 inc=$1/usr/include
+    local f
+    [ -d "$inc" ] || return 0
+    while IFS= read -r -d '' f; do
+        printf '%s\0' "$f"
+    done < <(find "$inc" -maxdepth 1 -type f -name '*.modulemap' -print0 2>/dev/null || true)
+    if [ -d "$inc/_modules" ]; then
+        while IFS= read -r -d '' f; do
+            printf '%s\0' "$f"
+        done < <(find "$inc/_modules" -type f -print0)
+    fi
+    if grep -rl --include='*' 'gen_darwin_modulemap.py' "$inc" >/dev/null 2>&1; then
+        while IFS= read -r -d '' f; do
+            printf '%s\0' "$f"
+        done < <(grep -rlZ 'gen_darwin_modulemap.py' "$inc")
+    fi
 }
 
 phase2_copy_darwin_modulemaps_from_arm() {
     local sys=$1 arm=$2
-    local m base copied=0 line
+    local f rel dest base copied_maps=0 copied_extra=0 line
+    local -A seen=()
     [ -d "$arm/usr/include" ] || return 1
     mkdir -p "$sys/usr/include"
-    for m in "$arm"/usr/include/*.modulemap; do
-        [ -f "$m" ] || continue
-        base=$(basename "$m")
-        [ "$base" = module.modulemap ] && continue
-        cp "$m" "$sys/usr/include/$base"
-        copied=$((copied + 1))
-    done
+    while IFS= read -r -d '' f; do
+        [ -f "$f" ] || continue
+        rel=${f#"$arm/usr/include/"}
+        [ -n "$rel" ] || continue
+        [ "${seen[$rel]+x}" ] && continue
+        seen[$rel]=1
+        base=$(basename "$rel")
+        if [ "$rel" = module.modulemap ] || [ "$base" = module.modulemap ]; then
+            continue
+        fi
+        dest="$sys/usr/include/$rel"
+        mkdir -p "$(dirname "$dest")"
+        cp -a "$f" "$dest"
+        case "$rel" in
+            *.modulemap) copied_maps=$((copied_maps + 1)) ;;
+            *) copied_extra=$((copied_extra + 1)) ;;
+        esac
+    done < <(phase2_arm_generator_include_files "$arm")
     if [ -f "$arm/usr/include/module.modulemap" ] && [ -f "$sys/usr/include/module.modulemap" ]; then
         while IFS= read -r line; do
             grep -qxF "$line" "$sys/usr/include/module.modulemap" && continue
@@ -220,8 +293,20 @@ phase2_copy_darwin_modulemaps_from_arm() {
         done < <(grep -E '^(extern module |// Appended by machorun)' \
             "$arm/usr/include/module.modulemap" || true)
     fi
-    echo "  copied $copied Darwin-family modulemaps from $arm"
-    [ "$copied" -gt 0 ]
+    # Any header a staged map names that still is not in the x86 include tree
+    # but is on the arm64 sysroot (generator output we did not classify above).
+    while IFS= read -r rel; do
+        [ -n "$rel" ] || continue
+        [ -f "$sys/usr/include/$rel" ] && continue
+        [ -f "$arm/usr/include/$rel" ] || continue
+        mkdir -p "$(dirname "$sys/usr/include/$rel")"
+        cp -a "$arm/usr/include/$rel" "$sys/usr/include/$rel"
+        copied_extra=$((copied_extra + 1))
+    done < <(find "$sys/usr/include" -name '*.modulemap' -print | sort | while IFS= read -r map; do
+        phase2_modulemap_quoted_headers "$map"
+    done)
+    echo "  copied $copied_maps Darwin-family modulemaps and $copied_extra generator files from $arm"
+    [ "$copied_maps" -gt 0 ]
 }
 
 # Mirror full/foundation/stage_fe_sysroot.sh: base module.modulemap is already
@@ -231,7 +316,7 @@ phase2_copy_darwin_modulemaps_from_arm() {
 # instead of folding them into "not at pin" / "overlays absent".
 phase2_install_darwin_modulemaps() {
     local sys=$1 arm=$2 gen=$3
-    local err rc
+    local err rc miss
     mkdir -p "$sys/usr/include"
     if [ -f "$gen" ]; then
         err=$(mktemp)
@@ -242,6 +327,12 @@ phase2_install_darwin_modulemaps() {
         if [ "$rc" -eq 0 ] && [ -f "$sys/usr/include/Darwin.modulemap" ]; then
             echo "  Darwin family: generated by gen_darwin_modulemap.py against $sys"
             rm -f "$err"
+            miss=$(phase2_darwin_modulemap_missing_headers "$sys" || true)
+            if [ -n "$miss" ]; then
+                echo "  Darwin.modulemap present but header paths do not resolve: $miss"
+                return 1
+            fi
+            echo "  Darwin.modulemap present; all header paths resolve"
             return 0
         fi
         echo "  gen_darwin_modulemap.py exit ${rc:-ABSENT} ($(phase2_flatten < "$err")); copying pruned maps from arm64 sysroot"
@@ -251,11 +342,51 @@ phase2_install_darwin_modulemaps() {
     fi
     phase2_copy_darwin_modulemaps_from_arm "$sys" "$arm" || true
     if [ -f "$sys/usr/include/Darwin.modulemap" ]; then
-        echo "  Darwin.modulemap present"
+        miss=$(phase2_darwin_modulemap_missing_headers "$sys" || true)
+        if [ -n "$miss" ]; then
+            echo "  Darwin.modulemap present but header paths do not resolve: $miss"
+            return 1
+        fi
+        echo "  Darwin.modulemap present; all header paths resolve"
         return 0
     fi
     echo "  no Darwin.modulemap (generator needs Xcode; arm64 sysroot had none to copy)"
     return 1
+}
+
+# One line: swiftmodule=PRESENT|ABSENT swiftinterface=PRESENT|ABSENT
+# Arm64 FE compiles Darwin.swiftinterface with 6.2.4; Apple's overlay is
+# textual (SPIKE.md: 0 binary modules under usr/lib/swift). A prebuilt
+# .swiftmodule would skip compiling the interface; x86 copies the x86_64
+# sibling when that file exists, and otherwise takes the same compile-the-
+# interface path. The 6.2.1-vs-6.2.4 "SDK is not supported" line is the
+# fallback when Clang Darwin fails (missing maps or missing _modules headers),
+# not a flag arm64 passes.
+phase2_darwin_overlay_slice() {
+    local root=$1 triple=$2
+    local dir=$root/usr/lib/swift/Darwin.swiftmodule
+    local sm=ABSENT si=ABSENT
+    [ -f "$dir/${triple}.swiftmodule" ] && sm=PRESENT
+    [ -f "$dir/${triple}.swiftinterface" ] && si=PRESENT
+    [ -f "$root/usr/lib/swift/Darwin.swiftinterface" ] && si=PRESENT
+    printf 'swiftmodule=%s swiftinterface=%s' "$sm" "$si"
+}
+
+phase2_report_darwin_overlay_path() {
+    local sys=$1 arm=$2
+    local arm_s x86_s
+    arm_s=$(phase2_darwin_overlay_slice "$arm" arm64-apple-macos)
+    x86_s=$(phase2_darwin_overlay_slice "$sys" x86_64-apple-macos)
+    echo "  Darwin overlay arm64-apple-macos ($arm): $arm_s"
+    echo "  Darwin overlay x86_64-apple-macos ($sys): $x86_s"
+    case "$arm_s" in
+        swiftmodule=PRESENT*)
+            echo "  arm64 has a prebuilt Darwin.swiftmodule beside the interface (interface is not compiled). x86 uses the x86_64 sibling if PRESENT; no version-check disable."
+            ;;
+        *)
+            echo "  arm64 compiles Darwin.swiftinterface (no prebuilt .swiftmodule). 6.2.1-vs-6.2.4 is a fallback when Clang Darwin fails; x86 takes the same path. No version-check disable."
+            ;;
+    esac
 }
 
 # One directory spelling per inode. phase2's /w -> $W symlink makes

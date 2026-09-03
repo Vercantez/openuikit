@@ -341,7 +341,7 @@ run_sysroot_stager() {
     if [ "$st" -eq 0 ] && [ -d "$SYS/usr/include" ]; then
         SYSROOT_HEADERS=1
         if phase2_sysroot_complete "$SYS" "$need_core" "$need_bf"; then
-            note sysroot-fe4-x86 cold-built
+            note sysroot-fe4-x86 cold-built "darwin_headers=ok"
             SYSROOT_OK=1
         elif [ ! -d "$SYS/usr/lib/swift/Darwin.swiftmodule" ] \
             && [ ! -f "$SYS/usr/lib/swift/Darwin.swiftinterface" ]; then
@@ -350,6 +350,9 @@ run_sysroot_stager() {
         elif [ ! -f "$SYS/usr/include/Darwin.modulemap" ]; then
             cannot sysroot-fe4-x86 DARWIN_CLANG_MODULEMAP \
                 "Darwin.swiftinterface is present but usr/include/Darwin.modulemap is not (underlying Objective-C module Darwin). Generator needs Xcode; arm64 sysroot_fe4 had no pruned maps to copy. FE fails with 'underlying Objective-C module Darwin not found' / '_DarwinFoundation1._errno'."
+        elif ! phase2_darwin_modulemap_headers_ok "$SYS"; then
+            cannot sysroot-fe4-x86 DARWIN_MODULEMAP_HEADERS \
+                "Darwin.modulemap present but header paths named by staged modulemaps are absent: missing=$(phase2_darwin_modulemap_missing_headers "$SYS" || true). The Linux fallback must copy generator outputs from the arm64 sysroot including usr/include/_modules, not maps alone."
         elif [ "$need_core" -eq 1 ] && { [ ! -f "$SYS/usr/lib/swift/libswiftCore.dylib" ] || ! phase2_is_x86_macho "$SYS/usr/lib/swift/libswiftCore.dylib"; }; then
             cannot sysroot-fe4-x86 STAGE_LIBSWIFTCORE \
                 "x86 libswiftCore is in artifacts but was not staged into $SYS/usr/lib/swift"
@@ -372,14 +375,14 @@ run_sysroot_stager() {
 
 changed=$(sysroot_input_changed || true)
 if [ -z "$changed" ] && phase2_sysroot_complete "$SYS" "$need_core" "$need_bf"; then
-    note sysroot-fe4-x86 satisfied
+    note sysroot-fe4-x86 satisfied "darwin_headers=ok"
     SYSROOT_OK=1
     SYSROOT_HEADERS=1
 elif [ -n "$changed" ]; then
     echo "  re-stage sysroot-fe4-x86 (input changed: $(echo "$changed" | tr '\n' ' '))"
     run_sysroot_stager
 elif phase2_sysroot_complete "$SYS" "$need_core" "$need_bf"; then
-    note sysroot-fe4-x86 satisfied
+    note sysroot-fe4-x86 satisfied "darwin_headers=ok"
     SYSROOT_OK=1
     SYSROOT_HEADERS=1
 else
@@ -397,6 +400,10 @@ else
     elif [ ! -f "$SYS/usr/include/Darwin.modulemap" ]; then
         cannot sysroot-fe4-x86 DARWIN_CLANG_MODULEMAP \
             "Darwin.swiftinterface is present at $SYS but usr/include/Darwin.modulemap is not. Inputs unchanged; generator needs Xcode and arm64 sysroot_fe4 has no pruned maps to copy."
+    elif [ -f "$SYS/usr/include/Darwin.modulemap" ] \
+        && ! phase2_darwin_modulemap_headers_ok "$SYS"; then
+        echo "  re-stage sysroot-fe4-x86 (Darwin modulemap headers missing: $(phase2_darwin_modulemap_missing_headers "$SYS" || true))"
+        run_sysroot_stager
     elif [ "$need_core" -eq 1 ] && { [ ! -f "$SYS/usr/lib/swift/libswiftCore.dylib" ] || ! phase2_is_x86_macho "$SYS/usr/lib/swift/libswiftCore.dylib"; }; then
         echo "  re-stage sysroot-fe4-x86 (libswiftCore artifact present, not in sysroot; stamp should have caught this)"
         run_sysroot_stager

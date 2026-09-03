@@ -90,13 +90,20 @@ Static tests: `bash scripts/x86/test_phase2.sh`.
    `scratch/sysroot_fe4-x86_64` only. Copies textual Darwin overlays from the
    arm64 sysroot when present; refuses arm64 dylibs. After the ObjectiveC
    `module.modulemap` it runs `machorun/scripts/gen_darwin_modulemap.py` against
-   the x86 sysroot (Linux fallback: copy the pruned Darwin-family maps from the
-   arm64 sysroot) and stages `libswiftCore.dylib`, `Swift.swiftmodule/x86_64-apple-macos.*`,
-   and `_Builtin_float.swiftmodule/x86_64-apple-macos.*` into
-   `usr/lib/swift`. Idempotency keys on input shas (artifact, generator,
-   overlay text) written to `.phase2-stage-inputs`; a sysroot staged before
-   those inputs existed is restaged, and the CANNOT/cold-built line names
-   which input changed. Apple's `os.swiftmodule` is not copied (FE uses
+   the x86 sysroot (Linux fallback: copy **everything the arm64 generator wrote**
+   — Darwin-family maps **and** `usr/include/_modules/*.h` and any other file
+   that names the generator; enumerate from the arm64 sysroot, do not hard-code
+   the 44 shim names). After restage, every `header "…"` path in every staged
+   modulemap must resolve; otherwise `CANNOT_DARWIN_MODULEMAP_HEADERS` with
+   `missing=`. Apple's Darwin overlay is textual `.swiftinterface` (no prebuilt
+   `.swiftmodule` on the arm64 sysroot). Arm64 compiles that interface with
+   Swift 6.2.4; the 6.2.1-vs-6.2.4 "SDK is not supported" line is the fallback
+   when Clang Darwin fails (missing maps or missing `_modules` headers), not a
+   flag. x86 takes the same compile-the-interface path. Idempotency keys on
+   input shas (artifact, generator, overlay text) written to `.phase2-stage-inputs`
+   (recipe `stage_fe_sysroot_x86.2`); a sysroot staged before those inputs
+   existed is restaged, and the CANNOT/cold-built line names which input
+   changed. Apple's `os.swiftmodule` is not copied (FE uses
    `full/foundation/os-module`).
 2. OpenCombine: `scripts/x86/build_opencombine.sh` writes `export-x86_64/`.
    Source hashes from `policy.json` still apply. Object SHAs stay the arm64
