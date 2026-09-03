@@ -875,8 +875,13 @@ llvm-objdump-18 --macho --bind "$OUT/focus_widget_guest" \
 # manglings fail closed.
 # Every import is matched to every bind-table row and the exact defining
 # sibling; every definition is checked for reverse ownership.
+# swift-demangle lives beside whichever swiftc this gate compiles with; on
+# the x86_64 box (2026-09-03) swiftc resolved but a bare `swift-demangle`
+# did not, so the attestation died with "cannot execute swift-demangle".
+SWIFT_DEMANGLE=$(dirname "$(command -v swiftc)")/swift-demangle
+[ -x "$SWIFT_DEMANGLE" ] || SWIFT_DEMANGLE=swift-demangle
 perl "$ATTEST" providers --nm llvm-nm-18 --objdump llvm-objdump-18 \
-    --demangle swift-demangle \
+    --demangle "$SWIFT_DEMANGLE" \
     --openuikit "$PACKAGE/libOpenUIKit.dylib" \
     --opencoregraphics "$PACKAGE/libOpenCoreGraphics.dylib" \
     --swiftui "$PACKAGE/libSwiftUI.dylib" \
