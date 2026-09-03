@@ -1,1 +1,10 @@
 full/intents/Intents.swift
+full/intents/IntentsConstants.swift
+full/intents/IntentsEnums.swift
+full/intents/IntentsExtraStructs.swift
+full/intents/IntentsGeneratedClasses.swift
+full/intents/IntentsHostOverlays.swift
+full/intents/IntentsOptionSets.swift
+full/intents/IntentsProtocols.swift
+full/intents/IntentsTypealiases.swift
+full/intents/IntentsTypedValues.swift
