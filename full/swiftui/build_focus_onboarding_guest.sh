@@ -24,11 +24,11 @@ PACKAGE=$OUT/package
 MODULE_CACHE=$OUT/module-cache
 AUDIT=$OUT/audit
 FULL=$W/build/full${FULL_OUT_SUFFIX}
-SYS=$W/scratch/sysroot_fe4
+SYS=$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}
 MRROOT=$W/scratch/mrroot_full${FULL_OUT_SUFFIX}
 SWIFT_FOUNDATION=$W/scratch/swift-foundation
 OPENCOMBINE_ROOT=${OPENCOMBINE_ROOT:-$W/scratch/opencombine-core-durable-20260828-r2}
-OPENCOMBINE_ARTIFACTS=$OPENCOMBINE_ROOT/export/artifacts
+OPENCOMBINE_ARTIFACTS=${OPENCOMBINE_ARTIFACTS:-$OPENCOMBINE_ROOT/export${FULL_OUT_SUFFIX}/artifacts}
 OPENCOMBINE_SOURCE=$OPENCOMBINE_ROOT/source
 OPENCOMBINE_HELPERS=$OPENCOMBINE_SOURCE/Sources/COpenCombineHelpers
 FOUNDATION_GUEST_MANIFEST=$W/full/foundation/foundation_guest_sources.txt
@@ -584,8 +584,8 @@ perl "$W/full/swiftui/focus_widget_guest_attest.pl" closure \
     > "$AUDIT/runtime-closure.manifest"
 
 echo '== run exact Focus interaction path on Linux/machorun'
-if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
-    echo "focus_onboarding_guest: compile/link may proceed on this VM; execution cannot" >&2
+if [ "$ARCH" = arm64 ] && [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    echo "focus_onboarding_guest: compile/link may proceed on this VM; execution of arm64 guests cannot" >&2
     bash "${W:-$(git rev-parse --show-toplevel)}/.cursor/refuse-arm64-execution.sh" \
         || exit $?
 fi

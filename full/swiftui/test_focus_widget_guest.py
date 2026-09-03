@@ -116,7 +116,7 @@ class FocusWidgetGuestProofTests(unittest.TestCase):
     def test_foundation_hidden_and_mach_o_runtime_gates_exist(self) -> None:
         text = BUILD.read_text()
         self.assertIn("foundationessentials_import_guard.swift", text)
-        self.assertIn('SYS=$W/scratch/sysroot_fe4', text)
+        self.assertIn('SYS=$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}', text)
         self.assertIn('-target "$TARGET"', text)
         self.assertIn('"${FE_FLAGS[@]}"', text)
         self.assertIn("llvm-otool-18 -hv", text)

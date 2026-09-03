@@ -39,7 +39,7 @@ UIKIT=${UIKIT:-$W/uikit}
 MINOS=${MINOS:-15.0}
 LINK_PLATFORM=${LINK_PLATFORM:-macos}
 LINK_SDK_VERSION=${LINK_SDK_VERSION:-$MINOS}
-SYS=${SYS:-$W/scratch/sysroot_fe4}     # Darwin + FE compile sysroot
+SYS=${SYS:-$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}}     # Darwin + FE compile sysroot; x86_64 writes beside
 APPLE_SWIFT_USER_OVERLAYS=${APPLE_SWIFT_USER_OVERLAYS:-}
 OUT=${OUT:-$W/build/full${FULL_OUT_SUFFIX}}
 ROOTDIR=${ROOTDIR:-$W/scratch/mrroot_full${FULL_OUT_SUFFIX}}
@@ -68,7 +68,7 @@ BUILD_FULL_DEVELOPER_TOOLS_SUPPORT_DISABLED_OWNER=${BUILD_FULL_DEVELOPER_TOOLS_S
 # enough because ignored .build* directories can contain Swift files that an
 # unrestricted recursive walk would consume.
 [ -d "$SYS/usr/include" ] || {
-    echo "build_full: no FE sysroot at $SYS; run full/foundation/stage_fe_sysroot.sh" >&2
+    echo "build_full: no FE sysroot at $SYS; run full/foundation/stage_fe_sysroot.sh (Darwin) or scripts/x86/stage_fe_sysroot.sh (Linux x86_64 sibling)" >&2
     exit 2
 }
 [ -f "$PINNED_INPUTS_TOOL" ] || {
@@ -309,6 +309,8 @@ python3 -B "$SWIFT_CORE_RUNTIME_STAGER" \
     --destination "$swift_core_target" \
     --expected-sha256 "$SWIFT_CORE_RUNTIME_EXPECTED_SHA256" \
     --report "$OUT/swift-core-runtime-stage.json"
+require_macho_cpu "$swift_core_target" "staged libswiftCore.dylib" \
+    || die "refusing to keep a libswiftCore.dylib whose Mach-O CPU is not $OTOOL_CPU (would mix $ARCH guests with a foreign slice)"
 SWIFTCOMPAT=$ROOTDIR/darwin/usr/lib/libswiftcompat.dylib
 
 # FoundationEssentials pulls this nine-dylib Swift overlay closure. The source
@@ -339,6 +341,8 @@ for name in "${FE_OVERLAYS[@]}"; do
         cp "$source" "$target"
         echo "   staged $name"
     fi
+    require_macho_cpu "$target" "FE overlay $name" \
+        || die "FE overlay $name is not $OTOOL_CPU Mach-O (arm64 simruntime dylibs cannot be copied into an x86 mrroot)"
 done
 
 # The Darwin dispatch bridge deliberately crosses into a small, versioned

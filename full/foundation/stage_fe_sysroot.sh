@@ -2,6 +2,9 @@
 # stage_fe_sysroot.sh -- MACOS ONLY.  Build scratch/sysroot_fe4, the sysroot the
 # FoundationEssentials port compiles against, with canImport(Darwin) TRUE.
 #
+# Linux x86_64 sibling (does not read Xcode; writes scratch/sysroot_fe4-x86_64
+# beside this tree, never overwrites it): scripts/x86/stage_fe_sysroot.sh.
+#
 # RESTAGE, NEVER REUSE.  scratch/sysroot was staged 2026-08-27 12:22:24 and
 # machorun's sdk/ was last touched at 12:26:30 -- four minutes of skew that
 # every git-level check reports as "current", because the staleness lives in a

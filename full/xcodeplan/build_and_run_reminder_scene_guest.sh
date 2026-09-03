@@ -20,10 +20,11 @@ die() {
 prepare() {
     [ "$#" -eq 2 ] || die "usage: $0 INVENTORY_JSON REMINDER_SOURCE_ROOT"
     command -v python3 >/dev/null || die "python3 is required on the host"
-    if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+    # Arm64 guests cannot execute on this x86 VM (CURSOR_ENV_CANNOT_EXECUTE_ARM64).
+    # x86_64 guests on an x86_64 host are the phase-2 path: do not refuse them.
+    if [ "$ARCH" = arm64 ] && [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
         bash "$W/.cursor/refuse-arm64-execution.sh" || exit $?
     fi
-    command -v docker >/dev/null || die "docker is required on the host"
 
     local inventory source_root uikit_checkout machorun_checkout turns
     inventory=$(realpath "$1")
@@ -105,6 +106,17 @@ PY
         x86_64) DOCKER_PLATFORM=linux/amd64 ;;
         *)      DOCKER_PLATFORM=linux/arm64 ;;
     esac
+    # Native x86_64 host with the pinned toolchain: skip docker. The inner
+    # half already follows $TARGET / suffixed build/full. Arm64 keeps the
+    # historical swift-macho-spike:noble wrapper.
+    if [ "$ARCH" = x86_64 ] && [ "$(uname -m)" = x86_64 ] \
+        && command -v swiftc >/dev/null && command -v ld64.lld-18 >/dev/null; then
+        UIKIT="$uikit_checkout" MACHORUN="$machorun_checkout" \
+            OPENUIKIT_HOST_TURNS="$turns" \
+            bash "$SCRIPT_DIR/build_and_run_reminder_scene_guest.sh" --inside "$source_root"
+        return
+    fi
+    command -v docker >/dev/null || die "docker is required on the host"
     docker run --rm --platform "$DOCKER_PLATFORM" \
         -e OPENUIKIT_HOST_TURNS="$turns" \
         -v "$W:/w" \
@@ -128,11 +140,12 @@ build_inside() {
     bash "$W/full/scripts/build_full.sh"
 
     local full="$W/build/full${FULL_OUT_SUFFIX}"
-    local sys="$W/scratch/sysroot_fe4"
+    local sys="$W/scratch/sysroot_fe4${FULL_OUT_SUFFIX}"
     local rootdir="$W/scratch/mrroot_full${FULL_OUT_SUFFIX}"
     local module turns expected_subject actual_subject
+    local uikit=${UIKIT:-/uikit}
     [ -s "$full/uihelpers-subject.sha256" ] || die "build_full success marker is missing"
-    expected_subject=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" /uikit)
+    expected_subject=$(bash "$W/full/scripts/uihelpers_subject.sh" "$W" "$uikit")
     actual_subject=$(tr -d '\n' <"$full/uihelpers-subject.sha256")
     [ "$expected_subject" = "$actual_subject" ] || die "build_full subject marker does not match mounted sources"
     module=$(tr -d '\n' <"$SCENE_OUT/module-name.txt")
@@ -159,7 +172,7 @@ build_inside() {
         -Xfrontend -disable-implicit-string-processing-module-import
         -Xfrontend -disable-objc-attr-requires-foundation-module)
     c_flags=(-Xcc -I"$full/inc/CPortableIO" -Xcc -I"$full/inc/CSTBTrueType"
-        -Xcc -I"$W/full/hostclock/include" -Xcc -I"/uikit/Sources/CQuartz/include")
+        -Xcc -I"$W/full/hostclock/include" -Xcc -I"$uikit/Sources/CQuartz/include")
     fe_flags=(-I "$full/foundation/essentials"
         -I "$full/foundation/collections" -I "$full/foundation/os"
         -Xcc -fmodule-map-file="$W/scratch/swift-foundation/Sources/_FoundationCShims/include/module.modulemap"
@@ -171,11 +184,11 @@ build_inside() {
     # contract as complete application bundles. Keep this older 2/22 proof
     # honest by staging its semantic data and fonts beside the standalone
     # executable; Bundle.main resolves to SCENE_OUT for a non-bundled image.
-    if find /uikit/Sources/OpenUIKit/Resources -type l -print -quit | grep -q .; then
+    if find "$uikit/Sources/OpenUIKit/Resources" -type l -print -quit | grep -q .; then
         die "OpenUIKit runtime resources contain a symlink"
     fi
     mkdir -p "$SCENE_OUT/OpenUIKit/fonts"
-    cp -R "/uikit/Sources/OpenUIKit/Resources/." "$SCENE_OUT/OpenUIKit/"
+    cp -R "$uikit/Sources/OpenUIKit/Resources/." "$SCENE_OUT/OpenUIKit/"
     install -m 0644 /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf \
         "$SCENE_OUT/OpenUIKit/fonts/DejaVuSans.ttf"
     install -m 0644 /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf \

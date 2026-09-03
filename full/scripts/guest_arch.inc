@@ -30,3 +30,15 @@ case "$ARCH" in
     x86_64) OTOOL_CPU=X86_64 ;;
     arm64)  OTOOL_CPU=ARM64 ;;
 esac
+# Compile sysroot lives beside the arm64 tree on x86 (scratch/sysroot_fe4-x86_64).
+# Arm64 keeps the historical unsuffixed path. Never overwrite one with the other.
+SYSROOT_SUFFIX=$FULL_OUT_SUFFIX
+# Durable OpenCombine export/ is arm64. x86 cold-builds land in export-x86_64/.
+OPENCOMBINE_EXPORT_SUFFIX=$FULL_OUT_SUFFIX
+
+require_macho_cpu() {
+    local f=$1 label=${2:-$1}
+    llvm-otool-18 -hv "$f" 2>/dev/null \
+        | grep -Eq "MH_MAGIC_64[[:space:]]+${OTOOL_CPU}" \
+        || { echo "guest_arch: $label is not ${OTOOL_CPU} Mach-O: $f" >&2; return 1; }
+}

@@ -8,6 +8,8 @@ export GIT_OPTIONAL_LOCKS=0
 export PYTHONDONTWRITEBYTECODE=1
 
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/../scripts/guest_arch.inc"
 PHYSICAL_REPLAY_TOOL=$SCRIPT_DIR/physical_replay.py
 
 SUPPORT_CHECKOUT=''
@@ -162,10 +164,11 @@ case "$EXPECTED_MACHORUN_OBJC_SHA256" in
     *[!0-9a-f]*) die 'machorun Objective-C runtime SHA-256 must be lowercase 64-hex' ;;
 esac
 
-if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
+if [ "$ARCH" = arm64 ] && [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
     # Isolation (single bind, no network, read-only root) remains required on
-    # aarch64. On x86_64 nothing can execute the guest; emit the canonical
-    # marker rather than a docker-missing skip.
+    # aarch64. Arm64 guests cannot execute on this x86_64 host; x86_64 guests
+    # under the ported loader are the phase-2 path and must not be refused here
+    # (argument validation still runs).
     bash "$SCRIPT_DIR/../../.cursor/refuse-arm64-execution.sh" || exit $?
 fi
 for tool in docker git mktemp python3 tee awk shasum; do
