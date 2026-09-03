@@ -2,11 +2,7 @@
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
-#if canImport(UIKit)
-@_exported import UIKit
-#elseif canImport(OpenUIKit)
-@_exported import OpenUIKit
-#endif
+// UIKit/OpenUIKit types come from WebKit.swift (real import or Linux lookalikes).
 
 @preconcurrency @MainActor
 open class WKWebView: UIView {
@@ -461,7 +457,7 @@ open class WKWebView: UIView {
         to newValue: Value
     ) {
         let oldValue = storage
-        #if !PORTABLE_WEBKIT_HOST
+        #if !PORTABLE_WEBKIT_HOST && (canImport(UIKit) || canImport(OpenUIKit))
         _portableWillChangeValue(for: keyPath, oldValue: oldValue)
         #endif
         if let stringKey {
@@ -474,7 +470,7 @@ open class WKWebView: UIView {
             )
         }
         storage = newValue
-        #if !PORTABLE_WEBKIT_HOST
+        #if !PORTABLE_WEBKIT_HOST && (canImport(UIKit) || canImport(OpenUIKit))
         _portableDidChangeValue(
             for: keyPath, oldValue: oldValue, newValue: newValue
         )

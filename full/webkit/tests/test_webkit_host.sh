@@ -62,7 +62,9 @@ while IFS= read -r relative; do
     SOURCE_PATHS+=("$ROOT/$relative")
     source_count=$((source_count + 1))
 done < "$WEBKIT/webkit_guest_sources.txt"
-[ "$source_count" -eq 5 ] || die "WebKit source count $source_count, expected 5"
+[ "$source_count" -ge 6 ] || die "WebKit source count $source_count, expected at least 6"
+grep -qx 'full/webkit/WebKit.swift' "$WEBKIT/webkit_guest_sources.txt" \
+    || die 'guest source manifest lacks primary WebKit.swift'
 
 uname_s=$(uname -s)
 if [ "$uname_s" = Darwin ]; then
@@ -166,6 +168,6 @@ if [ "$uname_s" = Darwin ]; then
     fi
 fi
 
-printf 'WEBKIT_HOST_DYLIB_OK platform=%s apple-webkit-load=absent exported-WK-symbols=%s sources=5/5\n' \
-    "$uname_s" "$exported"
+printf 'WEBKIT_HOST_DYLIB_OK platform=%s apple-webkit-load=absent exported-WK-symbols=%s sources=%s\n' \
+    "$uname_s" "$exported" "$source_count"
 printf 'WEBKIT_HOST_GATE_OK module=WebKit warnings-as-errors=1 ordinary-import=hidden runtime=fail-closed\n'

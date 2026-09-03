@@ -9,13 +9,7 @@
 #if canImport(FoundationNetworking)
 import FoundationNetworking
 #endif
-#if canImport(UIKit)
-@_exported import UIKit
-#elseif canImport(OpenUIKit)
-@_exported import OpenUIKit
-#else
-#error("WebKit requires UIKit or OpenUIKit")
-#endif
+// UIKit/OpenUIKit types come from WebKit.swift (real import or Linux lookalikes).
 
 #if canImport(ObjectiveC)
 import class ObjectiveC.NSObject
