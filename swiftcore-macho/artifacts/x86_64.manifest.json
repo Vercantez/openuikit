@@ -1,0 +1,75 @@
+{
+  "arch": "x86_64",
+  "fileCount": 12,
+  "files": {
+    "swift-macosx/Swift.swiftmodule/x86_64-apple-macos.abi.json": {
+      "bytes": 149,
+      "sha256": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728"
+    },
+    "swift-macosx/Swift.swiftmodule/x86_64-apple-macos.private.swiftinterface": {
+      "bytes": 2252535,
+      "sha256": "6d6a91ebbc336608e724df908bcf347e1cd13df5fb2ada42d97fe7728bd123db"
+    },
+    "swift-macosx/Swift.swiftmodule/x86_64-apple-macos.swiftdoc": {
+      "bytes": 4050804,
+      "sha256": "4b76a33eefc7b15a54347cd88dfe6de2c8ec8b0ea7ea991bd301fcbf6e28d5c1"
+    },
+    "swift-macosx/Swift.swiftmodule/x86_64-apple-macos.swiftinterface": {
+      "bytes": 2230730,
+      "sha256": "7117bdfa508a73fcb5155cf8aca177bdccf03358fb06d5581f69367341f8e568"
+    },
+    "swift-macosx/Swift.swiftmodule/x86_64-apple-macos.swiftmodule": {
+      "bytes": 16169376,
+      "sha256": "9ed1d86d3ad0c79256349abf67d69d79047ec13c38240fe7e0d07388ca7af28d"
+    },
+    "swift-macosx/_Builtin_float.swiftmodule/x86_64-apple-macos.abi.json": {
+      "bytes": 149,
+      "sha256": "4277ac6b49f8511196028a5ac20f5b1b1dfa754c24615d34068089f0b1739728"
+    },
+    "swift-macosx/_Builtin_float.swiftmodule/x86_64-apple-macos.private.swiftinterface": {
+      "bytes": 5736,
+      "sha256": "79120d2a28e5eb6c693443b4c0a6d0985690c7867420bf27318e13281303de1d"
+    },
+    "swift-macosx/_Builtin_float.swiftmodule/x86_64-apple-macos.swiftdoc": {
+      "bytes": 380,
+      "sha256": "307b453680c9a784e6902bb077b5b700bc27b8960c8d22ae9ca37d1617ed6f13"
+    },
+    "swift-macosx/_Builtin_float.swiftmodule/x86_64-apple-macos.swiftinterface": {
+      "bytes": 5736,
+      "sha256": "79120d2a28e5eb6c693443b4c0a6d0985690c7867420bf27318e13281303de1d"
+    },
+    "swift-macosx/_Builtin_float.swiftmodule/x86_64-apple-macos.swiftmodule": {
+      "bytes": 25220,
+      "sha256": "cdb050df99fa59d709efa855da619dd50bb0ffbf9fee40aa9dc51c14c72851c8"
+    },
+    "swift-macosx/x86_64/libswiftCommandLineSupport.a": {
+      "bytes": 1504,
+      "sha256": "49661771ad903553be90f8ba7c5a3b8b01cda9c36c823f1f9b5450af858dfa21"
+    },
+    "swift-macosx/x86_64/libswiftCore.dylib": {
+      "bytes": 10123624,
+      "sha256": "8de09dbae55b672287985812c64fe859029197aaf70458aa3097bbbdce4c39fb"
+    }
+  },
+  "flags": {
+    "SWIFTCORE_DARWIN_ARCH": "x86_64",
+    "SWIFTCORE_MACHO_LEGACY_IMAGE_REG": "1",
+    "SWIFT_BUILD_SDK_OVERLAY": "OFF",
+    "SWIFT_BUILD_STDLIB": "ON",
+    "SWIFT_ENABLE_EXPERIMENTAL_CONCURRENCY": "ON",
+    "SWIFT_INCLUDE_TOOLS": "OFF",
+    "SWIFT_SDK_OSX_ARCHITECTURES": "x86_64",
+    "SWIFT_STDLIB_ENABLE_OBJC_INTEROP": "ON"
+  },
+  "generatedAtUtc": "2026-09-03T00:42:18Z",
+  "host": "x86_64-unknown-linux-gnu",
+  "moduleTriple": "x86_64-apple-macos",
+  "patches": "scripts/apply_patches.py 1-5+7; patch 5 via SWIFTCORE_MACHO_LEGACY_IMAGE_REG=1; patch 6 (isa widen) off",
+  "schema": "swiftcore-macho/artifacts/manifest.schema.json",
+  "source": {
+    "commit": "ee343b46aef81c3ac7c5d7960cb35a41a88c5a9b",
+    "repository": "https://github.com/swiftlang/swift.git",
+    "tag": "swift-6.2.4-RELEASE"
+  },
+  "toolchain": "Swift version 6.2.4 (swift-6.2.4-RELEASE)"
+}
