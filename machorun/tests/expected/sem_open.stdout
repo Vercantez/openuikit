@@ -1,0 +1,6 @@
+sem_open_not_FAILED     yes
+sem_wait                rc=0
+sem_post                rc=0
+sem_close               rc=0
+sem_unlink              rc=0
+done
