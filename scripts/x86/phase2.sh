@@ -1324,7 +1324,7 @@ if phase2_rung_selected a && [ "$FE_OK" -eq 1 ] && [ "$MRROOT_OK" -eq 1 ] && [ "
                 # board was 579/579.
                 persist_board=$(sed -n '1,/NEGATIVE CONTROL/p' "$W/scratch/phase2-rung-a-persist.log" | grep 'GUEST SCOREBOARD' | head -1 | phase2_flatten || true)
                 persist_port=$(sed -n '1,/NEGATIVE CONTROL/p' "$W/scratch/phase2-rung-a-persist.log" | grep 'PORT: scored' | head -1 | phase2_flatten || true)
-                persist_presence=$(grep 'presence:' "$W/scratch/phase2-rung-a-persist.log" | tail -1 | phase2_flatten || true)
+                persist_presence=$(sed -n '1,/NEGATIVE CONTROL/p' "$W/scratch/phase2-rung-a-persist.log" | grep 'presence:' | head -1 | phase2_flatten || true)
                 if [ -n "$persist_board" ]; then
                     RUNG_A_DETAIL="smoke $UD_SMOKE_CHECKS/$UD_SMOKE_CHECKS ($smoke_pass); persist $persist_board"
                 fi

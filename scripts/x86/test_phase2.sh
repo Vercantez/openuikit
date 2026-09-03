@@ -1752,6 +1752,10 @@ expect_grep 'Success bar unchanged' "$PHASE2" \
     "persist success bar is still committed run_ud_persist.sh"
 expect_grep 'PREFS:=$HOME/Library/Preferences' "$PHASE2" \
     "persist witness looks at \$HOME/Library/Preferences (Cursor HOME is not /root)"
+expect_grep 'persist_presence=$(sed -n' "$PHASE2" \
+    "presence line is taken from the positive persist board, not the control"
+expect_not_grep "grep 'presence:' \"\$W/scratch/phase2-rung-a-persist.log\" | tail -1" "$PHASE2" \
+    "does not quote the NEGATIVE CONTROL presence 0/17 on the scoreboard"
 expect_grep 'OrderedCollections.swiftmodule' "$UDINC" \
     "ud-guest stages OrderedCollections.swiftmodule next to the .o"
 expect_grep '_RopeModule.swiftmodule' "$UDINC" \
