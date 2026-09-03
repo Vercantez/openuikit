@@ -1,5 +1,5 @@
 #!/bin/bash
-# Rebuild probe + stubs, link libCFTest, run the CF_IS_OBJC test.
+# Rebuild probe + stubs, link libCFTest.
 #
 # THE STUB SET IS DERIVED EVERY RUN, NOT CACHED. It used to read
 # /work/stub-{data,func}.txt written by an earlier session. The moment CF began
@@ -9,29 +9,142 @@
 # claim with no version in it, which is the same defect as a transcribed alias
 # list or a stale backup. So: link once to find out what is undefined, then
 # stub exactly that.
+#
+# Objects come from scripts/build_cfobjc.sh ($W/cfobjc/obj/*.o) and from the
+# NS* surface compiled here ($W/nscfobj/*.o) with the argv build_cf_probes.sh
+# already committed for NSCFConstantString.m. This script is the LINKER
+# (and the nscf compile). It does not compile CoreFoundation.
 set -uo pipefail
+HERE=$(cd "$(dirname "$0")" && pwd)
+FM=$(cd "$HERE/.." && pwd)
 # shellcheck disable=SC1091
-. "$(cd "$(dirname "$0")" && pwd)/guest_arch.inc"
-SDK=/work/sdk/MacOSX.sdk
+. "$HERE/guest_arch.inc"
 
-clang -target "$TRIPLE" -isysroot $SDK -Os -c /repo/tests/probe_sysctl.c \
-  -o /work/probe_sysctl.o 2>/tmp/probe.err || { echo "PROBE BUILD FAILED"; grep -m3 error: /tmp/probe.err; exit 2; }
+W=${W:-/work}
+R=${R:-$FM}
+SDK=${SDK:-$W/sdk/MacOSX.sdk}
+if [ ! -d "$SDK/usr/include" ]; then
+    echo "build_cftest_harness: no sysroot at SDK=$SDK" >&2
+    exit 2
+fi
+CC=${CC:-}
+if [ -z "$CC" ]; then
+    if command -v clang-18 >/dev/null 2>&1; then CC=clang-18
+    elif command -v clang >/dev/null 2>&1; then CC=clang
+    else
+        echo "build_cftest_harness: no clang-18/clang" >&2
+        exit 2
+    fi
+fi
+LLD=${LLD_BIN:-/usr/lib/llvm-18/bin}
+LIB=${LIB:-$W/lib}
+CFOBJC_OBJ=${CFOBJC_OBJ:-$W/cfobjc/obj}
+NSCF_OBJ=${NSCF_OBJ:-$W/nscfobj}
+PROBE_SRC=${PROBE_SRC:-$R/tests/probe_sysctl.c}
+CF=${CF:-$W/cfobjc/src}
+[ -f "$CF/CFRuntime.c" ] || CF=${CF_FALLBACK:-$W/cf}
+CFEXTRA=${CFEXTRA:-$W/cfobjc/cfextra}
+if [ ! -d "$CFEXTRA" ]; then
+    CFEXTRA=$(dirname "$CFOBJC_OBJ")/cfextra
+fi
+extra_inc=()
+if [ -d "$CFEXTRA" ]; then
+    extra_inc=(-idirafter "$CFEXTRA")
+fi
+
+mkdir -p "$LIB" "$NSCF_OBJ" "$W" /tmp
+shopt -s nullglob
+
+# nscf argv: build_cf_probes.sh rebuild_nscf (NSCFConstantString.m), applied
+# to every src/nscf/*.m. harvest_ns_classes.sh recorded 7 objects from
+# /work/nscfobj; eight .m files exist now (NSCFConstantString is the eighth).
+compile_nscf() {
+    local f b
+    local -a nscf_argv
+    if [ ! -d "$R/src/nscf" ]; then
+        echo "build_cftest_harness: no $R/src/nscf" >&2
+        return 2
+    fi
+    nscf_argv=(
+        "$CC" -target "$TRIPLE" -isysroot "$SDK"
+        -fobjc-runtime=macosx-13.0 -fno-objc-arc
+        -I"$R/include" -I"$CF/include" -I"$CF/internalInclude"
+        "${extra_inc[@]}"
+        -Wno-objc-root-class -Os
+    )
+    echo "NSCF_ARGV: ${nscf_argv[*]}"
+    for f in "$R/src/nscf"/*.m; do
+        b=$(basename "$f" .m)
+        "$CC" -target "$TRIPLE" -isysroot "$SDK" \
+            -fobjc-runtime=macosx-13.0 -fno-objc-arc \
+            -I"$R/include" -I"$CF/include" -I"$CF/internalInclude" \
+            "${extra_inc[@]}" \
+            -Wno-objc-root-class -Os \
+            -c "$f" -o "$NSCF_OBJ/$b.o" 2>"/tmp/nscf-$b.err" || {
+            echo "NSCF BUILD FAILED: $b"
+            grep -m3 error: "/tmp/nscf-$b.err" || true
+            return 2
+        }
+    done
+}
+
+need_nscf=0
+nscf_objs=("$NSCF_OBJ"/*.o)
+if [ "${#nscf_objs[@]}" -eq 0 ]; then
+    need_nscf=1
+fi
+if [ "$need_nscf" -eq 1 ] || [ "${CFOBJC_REBUILD_NSCF:-0}" = 1 ]; then
+    compile_nscf || exit 2
+fi
+
+cf_objs=("$CFOBJC_OBJ"/*.o)
+if [ "${#cf_objs[@]}" -eq 0 ]; then
+    echo "build_cftest_harness: no objects in $CFOBJC_OBJ (run scripts/build_cfobjc.sh)" >&2
+    exit 2
+fi
+
+"$CC" -target "$TRIPLE" -isysroot "$SDK" -Os "${extra_inc[@]}" -c "$PROBE_SRC" \
+  -o "$W/probe_sysctl.o" 2>/tmp/probe.err || { echo "PROBE BUILD FAILED"; grep -m3 error: /tmp/probe.err; exit 2; }
+
+DISPATCH=
+if [ -f "${LIBDISPATCH_DYLIB:-}" ]; then
+    DISPATCH=$LIBDISPATCH_DYLIB
+elif [ -f "$LIB/libdispatch.dylib" ]; then
+    DISPATCH=$LIB/libdispatch.dylib
+elif [ -f "$SDK/usr/lib/libdispatch.dylib" ]; then
+    DISPATCH=$SDK/usr/lib/libdispatch.dylib
+fi
+SWIFTCOMPAT=
+if [ -f "$LIB/libswiftcompat.dylib" ]; then
+    SWIFTCOMPAT=$LIB/libswiftcompat.dylib
+fi
 
 # Pass 1: what is actually undefined, with the probe and real objects in place.
-clang -target "$TRIPLE" -isysroot $SDK -fuse-ld=lld -B /usr/lib/llvm-18/bin \
-  -nostdlib -dynamiclib -Wl,--error-limit=0 \
-  -L$SDK/usr/lib -L/work/lib \
-  /work/probe_sysctl.o /work/cfobjc/obj/*.o /work/nscfobj/*.o \
-  -lSystem -lobjc /work/lib/libdispatch.dylib /work/lib/libswiftcompat.dylib \
-  -o /tmp/probe-pass1.dylib 2>/tmp/pass1.err
-grep -oE "undefined symbol: [^ ]*" /tmp/pass1.err | sed "s/undefined symbol: //" | grep -v "^glibc_" | sort -u > /work/undef-now.txt   # _glibc_* are LOADER-resolved by design; stubbing them replaces a working dlsym bind with an abort
-: > /work/stub-data.txt; : > /work/stub-func.txt   # awk only truncates when it WRITES; with no matching lines the old file survives and stubs something that now exists
-awk "/^k[A-Z]/ || /^OBJC_CLASS/ {print > \"/work/stub-data.txt\"; next} {print > \"/work/stub-func.txt\"}" /work/undef-now.txt
-[ -s /work/stub-func.txt ] || : > /work/stub-func.txt
-[ -s /work/stub-data.txt ] || : > /work/stub-data.txt
+extra_libs=()
+[ -n "$DISPATCH" ] && extra_libs+=("$DISPATCH")
+[ -n "$SWIFTCOMPAT" ] && extra_libs+=("$SWIFTCOMPAT")
 
-llvm-nm-18 --defined-only /work/probe_sysctl.o | awk '$2=="T"{print substr($3,2)}' | sort -u > /work/probe-defines.txt
-comm -23 /work/stub-func.txt /work/probe-defines.txt > /work/stub-func-active.txt
+"$CC" -target "$TRIPLE" -isysroot "$SDK" -fuse-ld=lld -B "$LLD" \
+  -nostdlib -dynamiclib -Wl,--error-limit=0 \
+  -L"$SDK/usr/lib" -L"$LIB" \
+  "$W/probe_sysctl.o" "$CFOBJC_OBJ"/*.o "$NSCF_OBJ"/*.o \
+  -lSystem -lobjc "${extra_libs[@]}" \
+  -o /tmp/probe-pass1.dylib 2>/tmp/pass1.err
+grep -oE "undefined symbol: [^ ]*" /tmp/pass1.err | sed "s/undefined symbol: //" \
+  | grep -v "^glibc_" \
+  | if [ -n "$DISPATCH" ]; then cat; else grep -vE '^_?dispatch_' || true; fi \
+  | sort -u > "$W/undef-now.txt"
+# _glibc_* are LOADER-resolved by design; stubbing them replaces a working
+# dlsym bind with an abort. dispatch_* are the same when libdispatch.dylib
+# is not on the pass-1 line (x86 may not have built it yet): they must bind
+# at load, not become loud stubs.
+: > "$W/stub-data.txt"; : > "$W/stub-func.txt"
+awk "/^k[A-Z]/ || /^OBJC_CLASS/ {print > \"$W/stub-data.txt\"; next} {print > \"$W/stub-func.txt\"}" "$W/undef-now.txt"
+[ -s "$W/stub-func.txt" ] || : > "$W/stub-func.txt"
+[ -s "$W/stub-data.txt" ] || : > "$W/stub-data.txt"
+
+llvm-nm-18 --defined-only "$W/probe_sysctl.o" | awk '$2=="T"{print substr($3,2)}' | sort -u > "$W/probe-defines.txt"
+comm -23 "$W/stub-func.txt" "$W/probe-defines.txt" > "$W/stub-func-active.txt"
 {
 echo "#import <objc/NSObject.h>"
 echo "extern void abort(void);"
@@ -64,18 +177,20 @@ cat <<'CLS'
 @end
 CLS
 i=0
-grep -v OBJC_CLASS /work/stub-data.txt | while read s; do i=$((i+1)); echo "void *sd_$i __asm__(\"_$s\") = 0;"; done
+grep -v OBJC_CLASS "$W/stub-data.txt" | while read s; do i=$((i+1)); echo "void *sd_$i __asm__(\"_$s\") = 0;"; done
 i=0
-while read -r s; do i=$((i+1)); echo "void sf_$i(void) __asm__(\"_$s\");"; echo "void sf_$i(void){say(\"STUB CALLED: $s\n\");abort();}"; done < /work/stub-func-active.txt
-} > /work/cfstubs.m
-clang -target "$TRIPLE" -isysroot $SDK -fobjc-runtime=macosx-13.0 -fno-objc-arc \
-  -Wno-objc-root-class -Os -c /work/cfstubs.m -o /work/cfstubs.o 2>/tmp/st.err || { echo "STUB BUILD FAILED"; grep -m3 error: /tmp/st.err; exit 2; }
+while read -r s; do i=$((i+1)); echo "void sf_$i(void) __asm__(\"_$s\");"; echo "void sf_$i(void){say(\"STUB CALLED: $s\n\");abort();}"; done < "$W/stub-func-active.txt"
+} > "$W/cfstubs.m"
+"$CC" -target "$TRIPLE" -isysroot "$SDK" -fobjc-runtime=macosx-13.0 -fno-objc-arc \
+  -Wno-objc-root-class -Os "${extra_inc[@]}" -c "$W/cfstubs.m" -o "$W/cfstubs.o" 2>/tmp/st.err || { echo "STUB BUILD FAILED"; grep -m3 error: /tmp/st.err; exit 2; }
 
-clang -target "$TRIPLE" -isysroot $SDK -fuse-ld=lld -B /usr/lib/llvm-18/bin \
+"$CC" -target "$TRIPLE" -isysroot "$SDK" -fuse-ld=lld -B "$LLD" \
   -nostdlib -dynamiclib -install_name /usr/lib/libCFTest.dylib -Wl,--error-limit=0 \
-  -Wl,-undefined,dynamic_lookup -L$SDK/usr/lib -L/work/lib \
-  /work/probe_sysctl.o /work/cfobjc/obj/*.o /work/nscfobj/*.o /work/cfstubs.o \
-  -lSystem -lobjc /work/lib/libdispatch.dylib /work/lib/libswiftcompat.dylib \
-  -o /work/lib/libCFTest.dylib 2>/tmp/lk.err || { echo "LINK FAILED"; grep -m5 -E "undefined|duplicate" /tmp/lk.err; exit 2; }
-cp -f /work/lib/libCFTest.dylib /work/root/darwin/usr/lib/libCFTest.dylib
-echo "libCFTest relinked ($(wc -l < /work/undef-now.txt) stubbed)"
+  -Wl,-undefined,dynamic_lookup -L"$SDK/usr/lib" -L"$LIB" \
+  "$W/probe_sysctl.o" "$CFOBJC_OBJ"/*.o "$NSCF_OBJ"/*.o "$W/cfstubs.o" \
+  -lSystem -lobjc "${extra_libs[@]}" \
+  -o "$LIB/libCFTest.dylib" 2>/tmp/lk.err || { echo "LINK FAILED"; grep -m5 -E "undefined|duplicate" /tmp/lk.err; exit 2; }
+if [ -d "$W/root/darwin/usr/lib" ]; then
+    cp -f "$LIB/libCFTest.dylib" "$W/root/darwin/usr/lib/libCFTest.dylib"
+fi
+echo "libCFTest relinked ($(wc -l < "$W/undef-now.txt") stubbed) dest=$LIB/libCFTest.dylib"
