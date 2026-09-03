@@ -35,6 +35,11 @@ public macro Preview(
     module: "OpenUIKitPreviewMacros",
     type: "UIKitPreviewMacro"
 )
+#endif
+
+// Everything below is arch- and Foundation-independent SwiftUI surface
+// (LocalizedStringKey, StrokeStyle, AnyView, Animatable, GeometryEffect, …)
+// and must compile in the Foundation-hidden guest build.
 
 /// The source-facing key retained by SwiftUI controls until their strings are
 /// resolved in the active bundle/locale. The portable renderer currently uses
@@ -353,4 +358,3 @@ public extension _OpenLabel where Title == _OpenText, Icon == _OpenImage {
         self.init(LocalizedStringKey(String(title)), image: resource)
     }
 }
-#endif
