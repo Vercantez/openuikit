@@ -158,6 +158,10 @@ extern void   glibc_rewind(void *)                          GLIBCSYM(rewind);
  * glibc aarch64's 216, but the FILE* a guest can hold is glibc's object:
  * fopen is forwarded and __stdinp/out/err are re-pointed at bootstrap. */
 extern ssize_t glibc_getline(char **, size_t *, void *)     GLIBCSYM(getline);
+/* POSIX flockfile/funlockfile. Same FILE* identity as getline: the object
+ * behind every FILE* we hand out is glibc's, so these lock that object. */
+extern void    glibc_flockfile(void *)                      GLIBCSYM(flockfile);
+extern void    glibc_funlockfile(void *)                    GLIBCSYM(funlockfile);
 extern void  *glibc_stdout GLIBCSYM(stdout);
 extern void  *glibc_stderr GLIBCSYM(stderr);
 extern void  *glibc_stdin  GLIBCSYM(stdin);

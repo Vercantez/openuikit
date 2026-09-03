@@ -491,18 +491,26 @@ done
         -reexport_library "$LIB/libSystem.real.dylib"
 
     # The umbrella must DEFINE the symbols that are its whole reason to exist.
-    # __NSGetMachExecuteHeader is the discriminator: no machorun libSystem has
-    # ever exported it (checked with nm and `git log -S`), it comes only from
-    # full/shims/concpatch.c, and every scene dies at load without it. That is
-    # exactly the state a `MRROOT_REFRESH=1` left this root in for most of
-    # 2026-08-27 -- so the property is asserted here, at the moment it is built.
-    for sym in __NSGetMachExecuteHeader _nan _remquo; do
+    # _nan / _remquo come from full/shims/libsystem_math_compat.c. Discriminator
+    # used to be __NSGetMachExecuteHeader; that moved into machorun's libSystem
+    # (darwin/src/objcsupport.c). A definition here would beat libSystem.real,
+    # so the umbrella must NOT define it.
+    for sym in _nan _remquo; do
         llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" 2>/dev/null \
             | awk '{print $NF}' | grep -qx "$sym" || {
             echo "build_full: the libSystem umbrella does not define $sym -- it is not an umbrella, it is a copy" >&2
             exit 1; }
     done
-    echo "   umbrella libSystem.B: $(llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" | wc -l) own defs (incl. __NSGetMachExecuteHeader), reexporting libSystem.real"
+    llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.real.dylib" 2>/dev/null \
+        | awk '{print $NF}' | grep -qx __NSGetMachExecuteHeader || {
+        echo "build_full: libSystem.real does not define __NSGetMachExecuteHeader -- it belongs in machorun, not the umbrella" >&2
+        exit 1; }
+    if llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" 2>/dev/null \
+            | awk '{print $NF}' | grep -qx __NSGetMachExecuteHeader; then
+        echo "build_full: the libSystem umbrella still defines __NSGetMachExecuteHeader -- delete it from syspatch; a definition here beats .real" >&2
+        exit 1
+    fi
+    echo "   umbrella libSystem.B: $(llvm-nm-18 --extern-only --defined-only "$LIB/libSystem.B.dylib" | wc -l) own defs (incl. _nan,_remquo; __NSGetMachExecuteHeader is in .real), reexporting libSystem.real"
 
     touch "$ROOTDIR/.umbrellas"
 }
@@ -559,7 +567,7 @@ echo "== manifest ($ROOTDIR/.manifest)"
     done
     printf 'renamed\tdarwin/usr/lib/libSystem.real.dylib\tdarwin/usr/lib/libSystem.B.dylib\n'
     printf 'renamed\tdarwin/usr/lib/libc++.real.dylib\tdarwin/usr/lib/libc++.1.dylib\n'
-    printf 'umbrella\tdarwin/usr/lib/libSystem.B.dylib\t-\t__NSGetMachExecuteHeader,_nan,_remquo\tdarwin/usr/lib/libSystem.real.dylib\tspike/syspatch.c\tfull/shims/libsystem_math_compat.c\tfull/shims/concpatch.c\n'
+    printf 'umbrella\tdarwin/usr/lib/libSystem.B.dylib\t-\t_nan,_remquo\tdarwin/usr/lib/libSystem.real.dylib\tspike/syspatch.c\tfull/shims/libsystem_math_compat.c\tfull/shims/concpatch.c\n'
     printf 'umbrella\tdarwin/usr/lib/libc++.1.dylib\t-\t-\tdarwin/usr/lib/libc++.real.dylib\tspike/cxxpatch.cpp\tfull/shims/conccxx.cpp\n'
     printf 'local\tdarwin/usr/lib/libquartz.dylib\tdarwin/usr/lib/libquartz.dylib\tbuilt from /uikit Sources/CQuartz; machorun'"'"'s copy is an older sync without the codec entry points\n'
     printf 'local\tdarwin/usr/lib/libSystem.B.lowheap.dylib\t-\ta FAILED experiment kept deliberately; see full/shims/lowheap.c\n'

@@ -966,6 +966,27 @@ EXPORT const void *_dyld_get_image_header(unsigned i)     { return mr_dyld_image
 EXPORT const char *_dyld_get_image_name(unsigned i)       { return mr_dyld_image_name(i); }
 EXPORT long        _dyld_get_image_vmaddr_slide(unsigned i) { return mr_dyld_image_slide(i); }
 
+/* _dyld_is_objc_constant(kind, ptr): dyld SPI answering "is this pointer a
+ * shared-cache ObjC constant string". There is no shared cache here, so the
+ * honest answer is false. Apple's signature is
+ *     bool _dyld_is_objc_constant(enum dyld_objc_constant_kind, const void *);
+ * kind is ignored because every kind is absent. */
+EXPORT int _dyld_is_objc_constant(int kind, const void *addr)
+{
+    (void)kind;
+    (void)addr;
+    return 0;
+}
+
+/* The main executable's mach_header. Index 0 of MR.images is the main image
+ * by construction (registered before its dependencies). Moved here from the
+ * full/ umbrella: a definition in the umbrella beats libSystem.real, so the
+ * umbrella copy was deleted rather than shadowed. */
+EXPORT const void *_NSGetMachExecuteHeader(void)
+{
+    return mr_dyld_image_header(0);
+}
+
 /* ------------------------------------------- the rest of the string family */
 
 /* Plain forwards, and glibc really does export all three -- checked with

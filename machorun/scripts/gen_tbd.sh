@@ -365,6 +365,30 @@ done
 sort -u "$TMP/sym.libSystem.B" "$TMP/loader_public" > "$TMP/sym.libSystem.B.tmp"
 mv "$TMP/sym.libSystem.B.tmp" "$TMP/sym.libSystem.B"
 
+# Overlay NOUNDEFS: symbols the x86 Swift overlay links import from Apple's
+# libSystem / libc++ that this tree must export. A missing name here is a
+# short .tbd that manufactures phantom undefineds at ld64.lld time.
+require_syms() { # require_syms <sym-file> <label> <sym...>
+    local file=$1 label=$2; shift 2
+    local s miss=
+    for s in "$@"; do
+        grep -qx "$s" "$file" && continue
+        miss="$miss $s"
+    done
+    if [ -n "$miss" ]; then
+        echo "!! $label is missing overlay-required symbol(s):$miss" >&2
+        echo "   darwin/src must export these; regenerate after the dylib grows them." >&2
+        exit 1
+    fi
+}
+require_syms "$TMP/sym.libSystem.B" "libSystem.B" \
+    _fmal _flockfile _funlockfile _dispatch_once_f \
+    __dyld_is_objc_constant __NSGetMachExecuteHeader
+require_syms "$TMP/sym.libc++.1" "libc++.1" \
+    __ZNSt3__122__libcpp_verbose_abortEPKcz \
+    __ZNSt3__16thread20hardware_concurrencyEv \
+    __ZNSt3__1plIcNS_11char_traitsIcEENS_9allocatorIcEEEENS_12basic_stringIT_T0_T1_EEPKS6_RKS9_
+
 emit_tbd() { # emit_tbd <install-name> <symbol-file> <dest>
     {
         echo "--- !tapi-tbd"

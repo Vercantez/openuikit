@@ -444,6 +444,8 @@ want statfs              && build statfs              "$CHAINED_TARGET" statfs  
 want copyfile            && build copyfile            "$CHAINED_TARGET" copyfile            copyfile.c --
 want hostbound_surface   && build hostbound_surface   "$CHAINED_TARGET" hostbound_surface   hostbound_surface.c --
 want hostbound_osver     && build hostbound_osver     "$CHAINED_TARGET" hostbound_osver     hostbound_osver.c --
+want fmal                && build fmal                "$CHAINED_TARGET" fmal                fmal.c -- -fno-builtin
+want dyld_objc_constant  && build dyld_objc_constant  "$CHAINED_TARGET" dyld_objc_constant  dyld_objc_constant.c --
 want dirent              && build dirent              "$CHAINED_TARGET" dirent              dirent.c --
 
 # quartz / objc_quartz / objc_shapes live in tests/draw_manifest.tsv, not the

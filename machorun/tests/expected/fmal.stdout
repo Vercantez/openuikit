@@ -1,0 +1,5 @@
+sizeof_ld               8
+fmal_1.5_2.0_3.0        6
+fmal_exact_6            yes
+ld80_bit_survives       no
+done

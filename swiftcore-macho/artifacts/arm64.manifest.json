@@ -99,8 +99,8 @@
       "sha256": "c84e3849248ffba4c43e00feafe47d0324db06768b395710924e83c4f7a34957"
     },
     "libswiftcompat.dylib": {
-      "bytes": 52848,
-      "sha256": "d038be7a050624241339a43f794005ea376a8e54609fc14d0a689d6ea5fb7593"
+      "bytes": 51792,
+      "sha256": "c3dec553a1b483d7f272932b643020eba28ef68522743af8c45092c80ba31623"
     },
     "swift-macosx/Swift.swiftmodule/Swift.opt.bitstream": {
       "bytes": 1803972,

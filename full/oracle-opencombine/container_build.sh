@@ -610,9 +610,13 @@ while IFS= read -r -d '' base_file; do
     cmp -s "$base_file" "$GUEST/$rel" || {
         say "REFUSED: staging changed base runtime file: $rel" >&2; exit 5; }
 done < <(find "$BASE_ROOT" -type f -print0)
-llvm-nm-18 -gj --defined-only "$GUEST/darwin/usr/lib/libSystem.B.dylib" \
+llvm-nm-18 -gj --defined-only "$GUEST/darwin/usr/lib/libSystem.real.dylib" \
     | grep -Fxq '__NSGetMachExecuteHeader' || {
-        say "REFUSED: staged root lost __NSGetMachExecuteHeader" >&2; exit 5; }
+        say "REFUSED: staged root lost __NSGetMachExecuteHeader from libSystem.real" >&2; exit 5; }
+if llvm-nm-18 -gj --defined-only "$GUEST/darwin/usr/lib/libSystem.B.dylib" \
+        | grep -Fxq '__NSGetMachExecuteHeader'; then
+    say "REFUSED: umbrella still defines __NSGetMachExecuteHeader (would beat .real)" >&2; exit 5
+fi
 
 cp -a "$GUEST" "$MISSING"
 MISSING_TARGET=$MISSING/darwin/usr/lib/swift/libOpenCombine.dylib

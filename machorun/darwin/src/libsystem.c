@@ -1038,6 +1038,10 @@ FWDE(size_t, fread,  (void *p, size_t a, size_t b, void *f),       (p, a, b, f))
  * host-bound allow is that the FILE identity is a libSystem invariant, not a
  * CHECK 5 coincidence. */
 FWDE(ssize_t, getline, (char **p, size_t *n, void *f), (p, n, f))
+/* flockfile / funlockfile. POSIX on both sides; not host-bound because the
+ * FILE identity is a libSystem invariant (same reason getline is a wrapper). */
+FWDV(flockfile, (void *f), (f))
+FWDV(funlockfile, (void *f), (f))
 FWD(int, ungetc,  (int c, void *f), (c, f))
 FWDV(rewind, (void *f), (f))
 EXPORT int putc(int c, void *f) { return glibc_fputc(c, f); }
@@ -1900,6 +1904,33 @@ EXPORT int pthread_once(void *once, void (*fn)(void))
 {
     struct darwin_opaque *o = once;
     return mr_pthread_rc(glibc_pthread_once(adopt(o, DARWIN_ONCE_SIG, 1), fn));
+}
+
+/* dispatch_once_f. Apple's libSystem.B re-exports libdispatch; gen_tbd
+ * merges re-exports INLINE (no reexported-libraries stanza), and machorun
+ * has no Mach-O libdispatch.dylib, so the primitive is flattened here.
+ * The DONE sentinel libdispatch uses (and libswiftCore's inlined fast path
+ * checks) is ~0l. MUST be per-token, not a shared lock: the Swift runtime
+ * nests swift_once on DIFFERENT tokens, and a global mutex deadlocks the
+ * moment the fn() body enters a second once. */
+#define MR_ONCE_RUNNING 1l
+EXPORT void dispatch_once_f(long *pred, void *ctx, void (*fn)(void *))
+{
+    if (__atomic_load_n(pred, __ATOMIC_ACQUIRE) == ~0l) return;
+    long expected = 0;
+    if (__atomic_compare_exchange_n(pred, &expected, MR_ONCE_RUNNING, 0,
+                                    __ATOMIC_ACQ_REL, __ATOMIC_ACQUIRE)) {
+        fn(ctx);
+        __atomic_store_n(pred, ~0l, __ATOMIC_RELEASE);
+    } else {
+        while (__atomic_load_n(pred, __ATOMIC_ACQUIRE) != ~0l) {
+#if defined(__aarch64__)
+            __asm__ __volatile__("yield");
+#elif defined(__x86_64__)
+            __asm__ __volatile__("pause");
+#endif
+        }
+    }
 }
 
 /* The isa-mask heap constraint (src/map.c) is checked on the main thread,

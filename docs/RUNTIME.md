@@ -71,11 +71,12 @@ trie reexports), adding only the missing symbols.
   program never reaches. Loud-abort stubs, so they exist for binding and shout
   if ever entered.
 
-- **`spike/cxxpatch.cpp` → `libc++.1.dylib` umbrella (+5 symbols).**
-  `__libcpp_verbose_abort`, `__cxa_demangle`, `__gxx_personality_v0` (abort/EH,
-  stubbed), `std::thread::hardware_concurrency` (real), and
-  `operator+(const char*, string)` (real, via explicit template instantiation
-  from the same LLVM-18 headers, so it is libc++'s own code).
+- **`spike/cxxpatch.cpp` → `libc++.1.dylib` umbrella (+2 remaining).**
+  `__cxa_demangle` and `__gxx_personality_v0` (abort/EH, stubbed).
+  `__libcpp_verbose_abort`, `std::thread::hardware_concurrency`, and
+  `operator+(const char*, string)` moved into machorun's `libc++.1.dylib`
+  (`darwin/src/libcxx_std.cpp`); they must not be redefined here — a
+  definition in the umbrella beats `.real`.
 
 - **`spike/syspatch.c` plus `full/shims/libsystem_math_compat.c` →
   `libSystem.B.dylib` umbrella.** In addition to the original runtime closure,
@@ -95,11 +96,14 @@ trie reexports), adding only the missing symbols.
     gets the Swift enum, everything else the objc enum. Without this, Swift's
     conformance/type-metadata registration reads objc sections as Swift records
     and dies with a wild pointer.
-  - **`dispatch_once_f` — per-token, not a shared lock.** The Swift runtime
-    nests `swift_once` on *different* tokens; a single global mutex deadlocks the
-    instant the once-body enters a second once. A per-token CAS state machine
-    (`0 → RUNNING → DONE=~0l`) has no cross-token lock. (This one cost a
-    `print`-hangs-forever afternoon.)
+  - **`dispatch_once_f`** and **`_NSGetMachExecuteHeader`** live in
+    machorun's libSystem (`darwin/src/libsystem.c` / `objcsupport.c`). The
+    umbrella used to define both; those copies were deleted so they cannot
+    beat `libSystem.real`. `dispatch_once_f` is flattened into libSystem
+    (Apple re-exports libdispatch; gen_tbd merges re-exports inline and
+    there is no Mach-O `libdispatch.dylib` here). It is per-token, not a
+    shared lock: the Swift runtime nests `swift_once` on *different* tokens.
+    DONE sentinel is `~0l`.
   - **reserved-key TLS.** `libswiftCore`'s `tls_init_once` claims Darwin
     reserved pthread key **100** and registers a destructor with
     `pthread_key_init_np(100, …)`; machorun caps direct-TSD at 64 and returns
@@ -112,11 +116,12 @@ trie reexports), adding only the missing symbols.
     mapping; Swift then treats heap metadata as a stack scratch buffer and writes
     past the stack top — a SIGSEGV in `swift_initClassMetadataImpl`. The shim
     reports the true bounds via glibc `pthread_getattr_np`.
-  - **`getsectiondata`, `_NSGetMachExecuteHeader`, `malloc_type_*`, the
+  - **`getsectiondata`, `malloc_type_*`, the
     `strtod_l` family, compiler-rt `__divti3`/`__udivti3`/…**, and the dyld
     shared-cache SPIs (`_dyld_find_protocol_conformance`, …) stubbed to *"no
     preoptimized data"* — which is the **truth** under machorun, so Swift falls
-    back to scanning the sections `getsectiondata` hands it.
+    back to scanning the sections `getsectiondata` hands it. `_dyld_is_objc_constant`
+    and `_NSGetMachExecuteHeader` are in machorun's libSystem.
 
 ## 5. One wall left, and the workaround
 

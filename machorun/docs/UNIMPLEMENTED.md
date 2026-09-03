@@ -2162,8 +2162,11 @@ need `libswiftcompat.dylib` to define them; that dylib must drop the overlap
 (its own rule: never define a symbol machorun already does).
 
 What remains of the 29-symbol gap is compiler-rt's 128-bit division (`__*ti3`),
-`flockfile` / `funlockfile`, `_NSGetMachExecuteHeader`, the availability
-checks, and C++ pieces still only in the compat dylib. They are supplied by a
+the availability checks, and a handful of C++ pieces still only in the compat
+dylib. `flockfile` / `funlockfile`, `_NSGetMachExecuteHeader`,
+`_dyld_is_objc_constant`, `dispatch_once_f`, and the three libc++ overlay
+symbols now live in `darwin/src/` (and the cxxpatch umbrella must not redefine
+the libc++ three). The rest is supplied by a
 separate `libswiftcompat.dylib` which **the guest** has to name on its link
 line — libswiftCore carries no `LC_LOAD_DYLIB` for it.
 

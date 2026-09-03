@@ -1,0 +1,5 @@
+dyld_is_objc_constant   false=1
+NSGetMachExecuteHeader  non-NULL=1
+  magic is MH_MAGIC_64: yes
+  filetype is MH_EXECUTE: yes
+done
