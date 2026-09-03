@@ -269,7 +269,10 @@ ensure_tbd() {
     # CHECK 4 scans every dylib under darwin/usr/lib. An arm64 staged
     # libswiftcompat beside a freshly built x86 libSystem is a mixed-slice
     # coin toss, not a generated stub. Park arm64 dylibs beside (do not
-    # delete) so the x86 .tbd projection is honest.
+    # delete) so the x86 .tbd projection is honest. The park lives at
+    # darwin/usr/lib-arm64-park (sibling of usr/lib, not a library path);
+    # check_undefined.sh prunes `*-park` directories so CHECK 5 does not
+    # grade the parked slice as part of the x86 root.
     park=$MACHORUN/darwin/usr/lib-arm64-park
     if [ -d "$MACHORUN/darwin/usr/lib" ]; then
         mkdir -p "$park"

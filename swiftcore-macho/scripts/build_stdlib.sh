@@ -36,7 +36,7 @@ W=${W:-$HOME/work}
 B=${B:-$W/build}
 MACHORUN=${MACHORUN:-$OPENUIKIT_ROOT/machorun}
 NINJA_JOBS=${NINJA_JOBS:-2}
-STOP_AFTER=${STOP_AFTER:-}   # configure | ninja-first | link | all
+STOP_AFTER=${STOP_AFTER:-}   # print-flags | configure | ninja-first | link | all
 # Overlays imply dispatch: phase-2 needs _Concurrency as well as
 # _StringProcessing / Synchronization. Operator may still set
 # SWIFTCORE_BUILD_DISPATCH=1 explicitly.
@@ -46,6 +46,13 @@ fi
 export W B TC SWIFTCORE_DARWIN_ARCH SWIFT_HOST_VARIANT_ARCH
 export SWIFTCORE_OVERLAYS SWIFTCORE_BUILD_DISPATCH
 export SWIFT_TOOLCHAIN SWIFT_PATH_TO_STRING_PROCESSING_SOURCE SWIFT_PATH_TO_LIBDISPATCH_SOURCE
+
+# Dry path: dump cmake argv and exit. Does not touch MACHORUN/darwin, does not
+# run check_undefined. Operator overlay runs still go through ninja + scoreboard.
+if [ "${1:-}" = --print-flags ] || [ "${STOP_AFTER:-}" = print-flags ]; then
+  bash "$SCRIPT_DIR/configure.sh" --print-flags
+  exit 0
+fi
 
 mkdir -p "$W"
 step() { printf '\n==== %s ====\n' "$*"; }
@@ -156,6 +163,11 @@ bash "$MACHORUN/scripts/build_objc4.sh"
 if [ "${SWIFTCORE_BUILD_QUARTZ:-0}" = 1 ]; then
   bash "$MACHORUN/scripts/build_quartz.sh"
 fi
+# Overlay/stdlib needs .tbd files (gen_tbd CHECKs 0–4). CHECK 5 is a
+# host-fallback audit of $MACHORUN/darwin — a tree this script does not own
+# on the operator box (phase2 parks arm64 libswiftCore at usr/lib-arm64-park).
+# Probe the loader later in verify_hello.sh; do not gate overlays on that audit.
+export MACHORUN_SKIP_HOSTFALLBACK_CHECK=1
 sh "$MACHORUN/scripts/build.sh" tbd
 file -b "$MACHORUN/darwin/usr/lib/libSystem.B.dylib"
 ls "$MACHORUN/sdk/usr/lib"/*.tbd | wc -l | sed 's/^/tbds generated: /'
