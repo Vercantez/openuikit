@@ -418,8 +418,19 @@ symbols_apple_load_count=$(llvm-otool-18 -L "$PACKAGE/libSymbols.dylib" \
     || die "libSymbols Apple Symbols load count $symbols_apple_load_count, expected 0"
 
 echo '== compile SwiftUI with Foundation deliberately hidden'
+# The complete authoritative SwiftUI source directory, as the widget gate
+# packages it: a hand-pinned count (seven, then eleven) silently refuses every
+# new first-party runtime file (State.swift, TextAttributes.swift, ...) that
+# View.swift already depends on. Refuse an empty or impure directory instead.
 swiftui_sources=("$UIKIT"/Sources/SwiftUI/*.swift)
-[ "${#swiftui_sources[@]}" -eq 7 ] || die "expected the complete seven-source SwiftUI directory"
+[ "${#swiftui_sources[@]}" -gt 0 ] || die "SwiftUI source inventory is empty"
+invalid_swiftui_source=$(find "$UIKIT/Sources/SwiftUI" -mindepth 1 -maxdepth 1 \
+    \( ! -type f -o ! -name '*.swift' \) -print -quit)
+[ -z "$invalid_swiftui_source" ] || die "unsupported SwiftUI source node: $invalid_swiftui_source"
+for swiftui_source in "${swiftui_sources[@]}"; do
+    [ -f "$swiftui_source" ] && [ ! -L "$swiftui_source" ] \
+        || die "SwiftUI source is not a regular non-symlink file: $swiftui_source"
+done
 "${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" "${FE_FLAGS[@]}" \
     -I "$PACKAGE" -module-name SwiftUI \
     -emit-module -emit-module-path "$PACKAGE/SwiftUI.swiftmodule" \

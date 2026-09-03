@@ -55,7 +55,9 @@ class FocusOnboardingGuestProofTests(unittest.TestCase):
     def test_exact_twelve_source_boundary_is_hash_pinned_and_direct(self) -> None:
         text = BUILD.read_text()
         self.assertIn("EXPECTED_FOCUS_COMMIT=a2832521c1daa0c23419c73705ae043ed60c9791", text)
-        self.assertIn("expected the complete seven-source SwiftUI directory", text)
+        self.assertIn("SwiftUI source inventory is empty", text)
+        self.assertIn("unsupported SwiftUI source node", text)
+        self.assertNotIn("seven-source", text)
         relatives = re.findall(r"^    '([^']+\.swift)'$", text, re.MULTILINE)
         self.assertEqual(len(relatives), 12)
         hashes = re.search(
