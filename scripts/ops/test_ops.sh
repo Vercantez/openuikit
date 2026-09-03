@@ -214,6 +214,48 @@ grep -q 'scripts/x86/stage_cycle_roots.sh' "$ROOT/scripts/ops/x86_cycle.sh" \
 grep -q 'phase2_park_arm64_darwin_dylibs' "$ROOT/scripts/x86/ensure_machorun.sh" \
     && ok "ensure_machorun parks leftover arm64 dylibs" \
     || die_test "ensure_machorun missing park"
+grep -q 'ensure_machorun_assert_vendor_clean' "$ROOT/scripts/x86/ensure_machorun.sh" \
+    && ok "ensure_machorun asserts git status --short machorun is empty" \
+    || die_test "ensure_machorun missing vendor-clean assertion"
+grep -q 'git status --short --untracked-files=all -- machorun' "$ROOT/scripts/x86/ensure_machorun.sh" \
+    && ok "ensure_machorun git-status pathspec is machorun" \
+    || die_test "ensure_machorun missing git status --short machorun"
+grep -q 'MACHORUN/build/machorun' "$ROOT/scripts/x86/ensure_machorun.sh" \
+    && ok "ensure_machorun loader product is machorun/build/machorun" \
+    || die_test "ensure_machorun loader path is not build/machorun"
+
+echo "== ensure_machorun --layout-only moves stray loader and leaves git status empty"
+LAYOUT=$STUBDIR/ensure-layout
+mkdir -p "$LAYOUT/machorun"
+printf 'tracked\n' > "$LAYOUT/machorun/README"
+cp "$ROOT/machorun/.gitignore" "$LAYOUT/machorun/.gitignore"
+git -C "$LAYOUT" init -q
+git -C "$LAYOUT" add machorun/README machorun/.gitignore
+git -C "$LAYOUT" commit -qm 'machorun pin'
+# Box finding: cold-build left an untracked ELF at the subtree root.
+printf 'ELF-STRAY-LOADER\n' > "$LAYOUT/machorun/machorun"
+chmod +x "$LAYOUT/machorun/machorun"
+dirty=$(git -C "$LAYOUT" status --short --untracked-files=all -- machorun)
+printf '%s\n' "$dirty" | grep -q 'machorun/machorun' \
+    && ok "fixture starts with ?? machorun/machorun" \
+    || die_test "fixture not dirty: $dirty"
+if bash "$ROOT/scripts/x86/ensure_machorun.sh" --layout-only "$LAYOUT" \
+        >"$STUBDIR/layout.out" 2>"$STUBDIR/layout.err"; then
+    ok "ensure_machorun --layout-only exits 0"
+else
+    die_test "layout-only rc!=0 err=$(cat "$STUBDIR/layout.err") out=$(cat "$STUBDIR/layout.out")"
+fi
+[ -x "$LAYOUT/machorun/build/machorun" ] \
+    && grep -q ELF-STRAY-LOADER "$LAYOUT/machorun/build/machorun" \
+    && ok "stray loader moved to machorun/build/machorun" \
+    || die_test "missing committed-layout loader at build/machorun"
+[ ! -e "$LAYOUT/machorun/machorun" ] \
+    && ok "subtree-root machorun/machorun is gone" \
+    || die_test "stray loader still at machorun/machorun"
+clean=$(git -C "$LAYOUT" status --short --untracked-files=all -- machorun)
+[ -z "$clean" ] \
+    && ok "git status --short machorun is empty after ensure_machorun" \
+    || die_test "machorun still dirty: $clean"
 
 echo "== premerge"
 cat > "$STUBDIR/gh" <<'EOF'
