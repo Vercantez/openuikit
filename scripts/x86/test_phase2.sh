@@ -781,16 +781,19 @@ expect_grep 'foundation-macho/scripts/link_ud_guest.sh' "$UDINC" \
     "producer names the committed linker"
 expect_grep 'foundation-macho/scripts/link_ud_guest.sh' "$PHASE2" \
     "phase2 still names the committed linker"
-expect_not_grep 'build_fe.sh' "$UDINC" \
-    "ud-guest-x86 does not compile FE a second time"
+if grep -E '^[^#]*build_fe\.sh' "$UDINC" >/dev/null; then
+    die_test "ud-guest-x86 invokes build_fe.sh"
+else
+    ok "ud-guest-x86 does not compile FE a second time"
+fi
 expect_grep 'scratch/ud-guest-x86_64' "$UDINC" "work tree is suffixed"
 expect_grep 'refusing unsuffixed/arm64 ud-guest work tree' "$UDINC" \
     "unsuffixed work tree is a named CANNOT"
 expect_grep 'export UD_GUEST_BIN' "$PHASE2" "successful link exports UD_GUEST_BIN for rung a"
 expect_grep 'CANNOT_UD_GUEST_' "$UDINC" "refusal markers use CANNOT_UD_GUEST_"
-expect_grep 'file=libCFTest.dylib' "$UDINC" "CF hole names file=libCFTest.dylib"
-expect_grep 'file=UserDefaultsGuest.o' "$UDINC" "port hole names file=UserDefaultsGuest.o"
-expect_grep 'file=runner.o' "$UDINC" "runner hole names file=runner.o"
+expect_grep 'LIBCFTEST libCFTest.dylib' "$UDINC" "CF hole names file=libCFTest.dylib"
+expect_grep 'USERDEFAULTSGUEST UserDefaultsGuest.o' "$UDINC" "port hole names file=UserDefaultsGuest.o"
+expect_grep 'RUNNER runner.o' "$UDINC" "runner hole names file=runner.o"
 expect_grep 'build_ud_score_guest.sh' "$UDINC" "port/runner argv follows the committed scoreboard compile"
 expect_grep 'build_full.sh argv -O1 -nostdinc' "$UDINC" \
     "fm_unimplemented uses build_full.sh clang argv"
