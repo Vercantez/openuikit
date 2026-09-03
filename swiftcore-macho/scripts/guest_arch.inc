@@ -60,20 +60,55 @@ case "$SWIFTCORE_DARWIN_ARCH" in
         ;;
 esac
 
-# Stock swift.org 6.2.4: /opt/swift624 on the Graviton box, /usr on the
-# swift:6.2-noble image this VM boots from.
-if [ -z "${TC:-}" ]; then
-    if [ -x /opt/swift624/usr/bin/swiftc ]; then
-        TC=/opt/swift624/usr
-    elif [ -x /usr/bin/swiftc ]; then
-        TC=/usr
-    else
-        echo "guest_arch: no swiftc at /opt/swift624/usr/bin or /usr/bin" >&2
+# Toolchain prefix (directory that contains bin/swiftc). Honor SWIFT_TOOLCHAIN
+# first — the operator x86 host keeps Swift 6.2.4 at /opt/swift, not the
+# Graviton path /opt/swift624. Then TC, then well-known prefixes, then
+# `command -v swiftc`.
+_sc_tc_from() {
+    local root=$1
+    if [ -x "$root/bin/swiftc" ]; then
+        printf '%s\n' "$root"
+        return 0
+    fi
+    if [ -x "$root/usr/bin/swiftc" ]; then
+        printf '%s\n' "$root/usr"
+        return 0
+    fi
+    return 1
+}
+if [ -n "${SWIFT_TOOLCHAIN:-}" ]; then
+    TC=$(_sc_tc_from "$SWIFT_TOOLCHAIN") || {
+        echo "guest_arch: SWIFT_TOOLCHAIN=$SWIFT_TOOLCHAIN has no bin/swiftc" >&2
+        exit 1
+    }
+elif [ -z "${TC:-}" ]; then
+    TC=""
+    for _sc_cand in /opt/swift624/usr /opt/swift624 /opt/swift/usr /opt/swift /usr; do
+        if TC=$(_sc_tc_from "$_sc_cand"); then
+            break
+        fi
+        TC=""
+    done
+    if [ -z "$TC" ]; then
+        _sc_swiftc=$(command -v swiftc 2>/dev/null || true)
+        if [ -n "$_sc_swiftc" ]; then
+            TC=$(cd "$(dirname "$_sc_swiftc")/.." && pwd)
+        fi
+    fi
+    if [ -z "$TC" ] || [ ! -x "$TC/bin/swiftc" ]; then
+        echo "guest_arch: no swiftc (set SWIFT_TOOLCHAIN or TC, or put swiftc on PATH)" >&2
         exit 1
     fi
 fi
+unset -f _sc_tc_from
+unset _sc_cand _sc_swiftc
 
 # Pinned by BUILD_LOG.md and full/observation/UPSTREAM.md. Tag is a label;
-# the commit is the pin.
+# the commit is the pin. Sibling tags are the same label on each repo;
+# ls-remote of swift-6.2.4-RELEASE on 2026-09-03.
 SWIFT_PIN_TAG=swift-6.2.4-RELEASE
 SWIFT_PIN_COMMIT=ee343b46aef81c3ac7c5d7960cb35a41a88c5a9b
+STRING_PROCESSING_PIN_COMMIT=91177e6225c63e885872b83d48e254b1270fa15a
+LIBDISPATCH_PIN_COMMIT=2df91f94651f2d924d7506c9d14685929386d779
+STRING_PROCESSING_REPO=https://github.com/swiftlang/swift-experimental-string-processing.git
+LIBDISPATCH_REPO=https://github.com/swiftlang/swift-corelibs-libdispatch.git
