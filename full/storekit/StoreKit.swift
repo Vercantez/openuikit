@@ -52,7 +52,6 @@ public enum StoreKitError: Error, Sendable {
     case unsupported
 }
 
-@MainActor
 open class SKStoreReviewController: NSObject {
     public private(set) static var portableRequestCount = 0
     public static let portableError = StoreKitPortableError(.serviceUnavailable)
@@ -63,14 +62,12 @@ open class SKStoreReviewController: NSObject {
         portableRequestCount += 1
     }
 
-    @MainActor
     public class func requestReview(in windowScene: UIWindowScene) {
         _ = windowScene
         portableRequestCount += 1
     }
 }
 
-@MainActor
 public enum AppStore {
     public private(set) static var portableReviewRequestCount = 0
 
