@@ -1,0 +1,436 @@
+precise	status	evidence	notes
+c:@CMErrorDomain	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux fallback spelling CMErrorDomain; Darwin payload unobserved.
+c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+c:@E@CMAttitudeReferenceFrame@CMAttitudeReferenceFrameXArbitraryCorrectedZVertical	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+c:@E@CMAttitudeReferenceFrame@CMAttitudeReferenceFrameXArbitraryZVertical	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+c:@E@CMAttitudeReferenceFrame@CMAttitudeReferenceFrameXMagneticNorthZVertical	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+c:@E@CMAttitudeReferenceFrame@CMAttitudeReferenceFrameXTrueNorthZVertical	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+c:@E@CMAuthorizationStatus	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMAuthorizationStatus@CMAuthorizationStatusAuthorized	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMAuthorizationStatus@CMAuthorizationStatusDenied	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMAuthorizationStatus@CMAuthorizationStatusNotDetermined	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMAuthorizationStatus@CMAuthorizationStatusRestricted	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMDeviceMotionSensorLocation	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMDeviceMotionSensorLocation@CMDeviceMotionSensorLocationDefault	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMDeviceMotionSensorLocation@CMDeviceMotionSensorLocationHeadphoneLeft	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMDeviceMotionSensorLocation@CMDeviceMotionSensorLocationHeadphoneRight	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMHeadphoneActivityStatus	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMHeadphoneActivityStatus@CMHeadphoneActivityStatusConnected	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMHeadphoneActivityStatus@CMHeadphoneActivityStatusDisconnected	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMHighFrequencyHeartRateDataConfidence	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMHighFrequencyHeartRateDataConfidence@CMHighFrequencyHeartRateDataConfidenceHigh	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMHighFrequencyHeartRateDataConfidence@CMHighFrequencyHeartRateDataConfidenceHighest	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMHighFrequencyHeartRateDataConfidence@CMHighFrequencyHeartRateDataConfidenceLow	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMHighFrequencyHeartRateDataConfidence@CMHighFrequencyHeartRateDataConfidenceMedium	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMMagneticFieldCalibrationAccuracy	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@E@CMMagneticFieldCalibrationAccuracy@CMMagneticFieldCalibrationAccuracyHigh	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@E@CMMagneticFieldCalibrationAccuracy@CMMagneticFieldCalibrationAccuracyLow	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@E@CMMagneticFieldCalibrationAccuracy@CMMagneticFieldCalibrationAccuracyMedium	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@E@CMMagneticFieldCalibrationAccuracy@CMMagneticFieldCalibrationAccuracyUncalibrated	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@E@CMMotionActivityConfidence	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMMotionActivityConfidence@CMMotionActivityConfidenceHigh	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMMotionActivityConfidence@CMMotionActivityConfidenceLow	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMMotionActivityConfidence@CMMotionActivityConfidenceMedium	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMOdometerOriginDevice	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMOdometerOriginDevice@CMOdometerOriginDeviceLocal	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMOdometerOriginDevice@CMOdometerOriginDeviceRemote	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMOdometerOriginDevice@CMOdometerOriginDeviceUnknown	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMPedometerEventType	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMPedometerEventType@CMPedometerEventTypePause	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMPedometerEventType@CMPedometerEventTypeResume	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMWaterSubmersionDepthState	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMWaterSubmersionDepthState@CMWaterSubmersionDepthStateApproachingMaxDepth	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMWaterSubmersionDepthState@CMWaterSubmersionDepthStateNotSubmerged	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMWaterSubmersionDepthState@CMWaterSubmersionDepthStatePastMaxDepth	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMWaterSubmersionDepthState@CMWaterSubmersionDepthStateSensorDepthError	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMWaterSubmersionDepthState@CMWaterSubmersionDepthStateSubmergedDeep	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMWaterSubmersionDepthState@CMWaterSubmersionDepthStateSubmergedShallow	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMWaterSubmersionDepthState@CMWaterSubmersionDepthStateUnknown	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMWaterSubmersionState	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMWaterSubmersionState@CMWaterSubmersionStateNotSubmerged	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMWaterSubmersionState@CMWaterSubmersionStateSubmerged	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@E@CMWaterSubmersionState@CMWaterSubmersionStateUnknown	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+c:@EA@CMError	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Exercised by the isolated host runtime.
+c:@EA@CMError@CMErrorDeviceRequiresMovement	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux sequential fallback raw value; Darwin numeric ABI unobserved.
+c:@EA@CMError@CMErrorInvalidAction	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux sequential fallback raw value; Darwin numeric ABI unobserved.
+c:@EA@CMError@CMErrorInvalidParameter	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux sequential fallback raw value; Darwin numeric ABI unobserved.
+c:@EA@CMError@CMErrorMotionActivityNotAuthorized	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux sequential fallback raw value; Darwin numeric ABI unobserved.
+c:@EA@CMError@CMErrorMotionActivityNotAvailable	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux sequential fallback raw value; Darwin numeric ABI unobserved.
+c:@EA@CMError@CMErrorMotionActivityNotEntitled	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux sequential fallback raw value; Darwin numeric ABI unobserved.
+c:@EA@CMError@CMErrorNULL	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux sequential fallback raw value; Darwin numeric ABI unobserved.
+c:@EA@CMError@CMErrorNilData	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux sequential fallback raw value; Darwin numeric ABI unobserved.
+c:@EA@CMError@CMErrorNotAuthorized	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux sequential fallback raw value; Darwin numeric ABI unobserved.
+c:@EA@CMError@CMErrorNotAvailable	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux sequential fallback raw value; Darwin numeric ABI unobserved.
+c:@EA@CMError@CMErrorNotEntitled	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux sequential fallback raw value; Darwin numeric ABI unobserved.
+c:@EA@CMError@CMErrorSize	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux sequential fallback raw value; Darwin numeric ABI unobserved.
+c:@EA@CMError@CMErrorTrueNorthNotAvailable	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux sequential fallback raw value; Darwin numeric ABI unobserved.
+c:@EA@CMError@CMErrorUnknown	declared	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Linux sequential fallback raw value; Darwin numeric ABI unobserved.
+c:@SA@CMAcceleration	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMAcceleration@FI@x	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMAcceleration@FI@y	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMAcceleration@FI@z	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMCalibratedMagneticField	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMCalibratedMagneticField@FI@accuracy	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMCalibratedMagneticField@FI@field	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMMagneticField	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMMagneticField@FI@x	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMMagneticField@FI@y	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMMagneticField@FI@z	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMQuaternion	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMQuaternion@FI@w	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMQuaternion@FI@x	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMQuaternion@FI@y	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMQuaternion@FI@z	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMRotationMatrix	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMRotationMatrix@FI@m11	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMRotationMatrix@FI@m12	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMRotationMatrix@FI@m13	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMRotationMatrix@FI@m21	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMRotationMatrix@FI@m22	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMRotationMatrix@FI@m23	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMRotationMatrix@FI@m31	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMRotationMatrix@FI@m32	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMRotationMatrix@FI@m33	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMRotationRate	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMRotationRate@FI@x	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMRotationRate@FI@y	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@SA@CMRotationRate@FI@z	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:@T@CMAbsoluteAltitudeHandler	implemented	CoreMotion.swift;CMManagers.swift	Public handler alias; invoked from fail-closed manager tests.
+c:@T@CMAccelerometerHandler	implemented	CoreMotion.swift;CMManagers.swift	Public handler alias; invoked from fail-closed manager tests.
+c:@T@CMAltitudeHandler	implemented	CoreMotion.swift;CMManagers.swift	Public handler alias; invoked from fail-closed manager tests.
+c:@T@CMDeviceMotionHandler	implemented	CoreMotion.swift;CMManagers.swift	Public handler alias; invoked from fail-closed manager tests.
+c:@T@CMGyroHandler	implemented	CoreMotion.swift;CMManagers.swift	Public handler alias; invoked from fail-closed manager tests.
+c:@T@CMHeadphoneActivityHandler	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Public handler alias; invoked from fail-closed manager tests.
+c:@T@CMHeadphoneActivityStatusHandler	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Public handler alias; invoked from fail-closed manager tests.
+c:@T@CMHeadphoneDeviceMotionHandler	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Public handler alias; invoked from fail-closed manager tests.
+c:@T@CMMagnetometerHandler	implemented	CoreMotion.swift;CMManagers.swift	Public handler alias; invoked from fail-closed manager tests.
+c:@T@CMMotionActivityHandler	implemented	CoreMotion.swift;CMManagers.swift	Public handler alias; invoked from fail-closed manager tests.
+c:@T@CMMotionActivityQueryHandler	implemented	CoreMotion.swift;CMManagers.swift	Public handler alias; invoked from fail-closed manager tests.
+c:@T@CMPedometerEventHandler	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Public handler alias; invoked from fail-closed manager tests.
+c:@T@CMPedometerHandler	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Public handler alias; invoked from fail-closed manager tests.
+c:@T@CMStepQueryHandler	implemented	CoreMotion.swift;CMManagers.swift	Public handler alias; invoked from fail-closed manager tests.
+c:@T@CMStepUpdateHandler	implemented	CoreMotion.swift;CMManagers.swift	Public handler alias; invoked from fail-closed manager tests.
+c:objc(cs)CMAbsoluteAltitudeData	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMAbsoluteAltitudeData(py)accuracy	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMAbsoluteAltitudeData(py)altitude	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMAbsoluteAltitudeData(py)precision	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMAccelerometerData	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMAccelerometerData(py)acceleration	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMAltimeter	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMAltimeter(cm)authorizationStatus	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMAltimeter(cm)isAbsoluteAltitudeAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMAltimeter(cm)isRelativeAltitudeAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMAltimeter(im)startAbsoluteAltitudeUpdatesToQueue:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMAltimeter(im)startRelativeAltitudeUpdatesToQueue:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMAltimeter(im)stopAbsoluteAltitudeUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMAltimeter(im)stopRelativeAltitudeUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMAltitudeData	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMAltitudeData(py)pressure	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMAltitudeData(py)relativeAltitude	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMAmbientPressureData	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMAmbientPressureData(py)pressure	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMAmbientPressureData(py)temperature	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMAttitude	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertAttitudeMath	Exercised by the isolated host runtime.
+c:objc(cs)CMAttitude(im)multiplyByInverseOfAttitude:	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertAttitudeMath	Exercised by the isolated host runtime.
+c:objc(cs)CMAttitude(py)pitch	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertAttitudeMath	Internal ZYX extraction; Apple convention unobserved.
+c:objc(cs)CMAttitude(py)quaternion	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertAttitudeMath	Returned and mutated. ZYX Euler is Linux-internal, not Apple convention.
+c:objc(cs)CMAttitude(py)roll	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertAttitudeMath	Internal ZYX extraction; Apple convention unobserved.
+c:objc(cs)CMAttitude(py)rotationMatrix	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertAttitudeMath	Exercised by the isolated host runtime.
+c:objc(cs)CMAttitude(py)yaw	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertAttitudeMath	Internal ZYX extraction; Apple convention unobserved.
+c:objc(cs)CMBatchedSensorManager	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMBatchedSensorManager(cpy)accelerometerSupported	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMBatchedSensorManager(cpy)authorizationStatus	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMBatchedSensorManager(cpy)deviceMotionSupported	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMBatchedSensorManager(im)startAccelerometerUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMBatchedSensorManager(im)startAccelerometerUpdatesWithHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMBatchedSensorManager(im)startDeviceMotionUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMBatchedSensorManager(im)startDeviceMotionUpdatesWithHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMBatchedSensorManager(im)stopAccelerometerUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMBatchedSensorManager(im)stopDeviceMotionUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMBatchedSensorManager(py)accelerometerActive	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMBatchedSensorManager(py)accelerometerBatch	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMBatchedSensorManager(py)accelerometerDataFrequency	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMBatchedSensorManager(py)deviceMotionActive	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMBatchedSensorManager(py)deviceMotionBatch	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMBatchedSensorManager(py)deviceMotionDataFrequency	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMDeviceMotion	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMDeviceMotion(py)attitude	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMDeviceMotion(py)gravity	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMDeviceMotion(py)heading	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Stored Double. Host fixtures may use -1; Darwin sentinel unobserved.
+c:objc(cs)CMDeviceMotion(py)magneticField	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMDeviceMotion(py)rotationRate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMDeviceMotion(py)sensorLocation	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMDeviceMotion(py)userAcceleration	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMDyskineticSymptomResult	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMDyskineticSymptomResult(py)endDate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMDyskineticSymptomResult(py)percentLikely	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMDyskineticSymptomResult(py)percentUnlikely	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMDyskineticSymptomResult(py)startDate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMGyroData	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMGyroData(py)rotationRate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneActivityManager	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneActivityManager(cm)authorizationStatus	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMHeadphoneActivityManager(im)startActivityUpdatesToQueue:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneActivityManager(im)startStatusUpdatesToQueue:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneActivityManager(im)stopActivityUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneActivityManager(im)stopStatusUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneActivityManager(py)activityActive	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneActivityManager(py)activityAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMHeadphoneActivityManager(py)statusActive	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneActivityManager(py)statusAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMHeadphoneMotionManager	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneMotionManager(cm)authorizationStatus	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMHeadphoneMotionManager(im)startConnectionStatusUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneMotionManager(im)startDeviceMotionUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneMotionManager(im)startDeviceMotionUpdatesToQueue:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneMotionManager(im)stopConnectionStatusUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneMotionManager(im)stopDeviceMotionUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneMotionManager(py)connectionStatusActive	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneMotionManager(py)delegate	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneMotionManager(py)deviceMotion	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneMotionManager(py)deviceMotionActive	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMHeadphoneMotionManager(py)deviceMotionAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMHighFrequencyHeartRateData	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMHighFrequencyHeartRateData(py)confidence	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMHighFrequencyHeartRateData(py)date	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMHighFrequencyHeartRateData(py)heartRate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMLogItem	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMLogItem(py)timestamp	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMMagnetometerData	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMMagnetometerData(py)magneticField	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionActivity	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionActivity(py)automotive	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionActivity(py)confidence	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionActivity(py)cycling	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionActivity(py)running	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionActivity(py)startDate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionActivity(py)stationary	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionActivity(py)unknown	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionActivity(py)walking	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionActivityManager	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionActivityManager(cm)authorizationStatus	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMMotionActivityManager(cm)isActivityAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMMotionActivityManager(im)queryActivityStartingFromDate:toDate:toQueue:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionActivityManager(im)startActivityUpdatesToQueue:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionActivityManager(im)stopActivityUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(cm)availableAttitudeReferenceFrames	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(im)startAccelerometerUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Pull-model start stays inactive; no invented samples.
+c:objc(cs)CMMotionManager(im)startAccelerometerUpdatesToQueue:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(im)startDeviceMotionUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Pull-model start stays inactive; no invented samples.
+c:objc(cs)CMMotionManager(im)startDeviceMotionUpdatesToQueue:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(im)startDeviceMotionUpdatesUsingReferenceFrame:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(im)startDeviceMotionUpdatesUsingReferenceFrame:toQueue:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(im)startGyroUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Pull-model start stays inactive; no invented samples.
+c:objc(cs)CMMotionManager(im)startGyroUpdatesToQueue:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(im)startMagnetometerUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Pull-model start stays inactive; no invented samples.
+c:objc(cs)CMMotionManager(im)startMagnetometerUpdatesToQueue:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(im)stopAccelerometerUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(im)stopDeviceMotionUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(im)stopGyroUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(im)stopMagnetometerUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(py)accelerometerActive	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(py)accelerometerAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMMotionManager(py)accelerometerData	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(py)accelerometerUpdateInterval	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Get/set stored. Linux default 0; Darwin default unobserved.
+c:objc(cs)CMMotionManager(py)attitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(py)deviceMotion	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(py)deviceMotionActive	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(py)deviceMotionAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMMotionManager(py)deviceMotionUpdateInterval	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Get/set stored. Linux default 0; Darwin default unobserved.
+c:objc(cs)CMMotionManager(py)gyroActive	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(py)gyroAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMMotionManager(py)gyroData	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(py)gyroUpdateInterval	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Get/set stored. Linux default 0; Darwin default unobserved.
+c:objc(cs)CMMotionManager(py)magnetometerActive	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(py)magnetometerAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMMotionManager(py)magnetometerData	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMMotionManager(py)magnetometerUpdateInterval	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Get/set stored. Linux default 0; Darwin default unobserved.
+c:objc(cs)CMMotionManager(py)showsDeviceMovementDisplay	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertMotionManagerFailClosed	Exercised by the isolated host runtime.
+c:objc(cs)CMOdometerData	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMOdometerData(py)deltaAltitude	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMOdometerData(py)deltaDistance	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMOdometerData(py)deltaDistanceAccuracy	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMOdometerData(py)endDate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMOdometerData(py)gpsDate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMOdometerData(py)originDevice	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMOdometerData(py)speed	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMOdometerData(py)speedAccuracy	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMOdometerData(py)startDate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMOdometerData(py)verticalAccuracy	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometer	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometer(cm)authorizationStatus	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMPedometer(cm)isCadenceAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMPedometer(cm)isDistanceAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMPedometer(cm)isFloorCountingAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMPedometer(cm)isPaceAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMPedometer(cm)isPedometerEventTrackingAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMPedometer(cm)isStepCountingAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMPedometer(im)queryPedometerDataFromDate:toDate:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometer(im)startPedometerEventUpdatesWithHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometer(im)startPedometerUpdatesFromDate:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometer(im)stopPedometerEventUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometer(im)stopPedometerUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometerData	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometerData(py)averageActivePace	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometerData(py)currentCadence	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometerData(py)currentPace	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometerData(py)distance	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometerData(py)endDate	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometerData(py)floorsAscended	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometerData(py)floorsDescended	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometerData(py)numberOfSteps	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometerData(py)startDate	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometerEvent	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometerEvent(py)date	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMPedometerEvent(py)type	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMRecordedAccelerometerData	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMRecordedAccelerometerData(py)identifier	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMRecordedAccelerometerData(py)startDate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMRecordedPressureData	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMRecordedPressureData(py)identifier	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMRecordedPressureData(py)startDate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMRecordedRotationRateData	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMRecordedRotationRateData(py)startDate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMRotationRateData	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:objc(cs)CMRotationRateData(py)rotationRate	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+c:objc(cs)CMSensorDataList	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMSensorRecorder	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMSensorRecorder(cm)authorizationStatus	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMSensorRecorder(cm)isAccelerometerRecordingAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMSensorRecorder(cm)isAuthorizedForRecording	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMSensorRecorder(im)accelerometerDataFromDate:toDate:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMSensorRecorder(im)recordAccelerometerForDuration:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMStepCounter	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMStepCounter(cm)isStepCountingAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMStepCounter(im)queryStepCountStartingFrom:to:toQueue:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMStepCounter(im)startStepCountingUpdatesToQueue:updateOn:withHandler:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMStepCounter(im)stopStepCountingUpdates	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMTremorResult	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMTremorResult(py)endDate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMTremorResult(py)percentMild	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMTremorResult(py)percentModerate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMTremorResult(py)percentNone	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMTremorResult(py)percentSlight	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMTremorResult(py)percentStrong	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMTremorResult(py)percentUnknown	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMTremorResult(py)startDate	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterSubmersionEvent	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterSubmersionEvent(py)date	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterSubmersionEvent(py)state	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterSubmersionManager	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterSubmersionManager(cpy)authorizationStatus	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMWaterSubmersionManager(cpy)waterSubmersionAvailable	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Linux reports false / denied; no motion hardware.
+c:objc(cs)CMWaterSubmersionManager(py)delegate	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterSubmersionManager(py)maximumDepth	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterSubmersionMeasurement	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterSubmersionMeasurement(py)date	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterSubmersionMeasurement(py)depth	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterSubmersionMeasurement(py)pressure	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterSubmersionMeasurement(py)submersionState	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterSubmersionMeasurement(py)surfacePressure	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterTemperature	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterTemperature(py)date	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterTemperature(py)temperature	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(cs)CMWaterTemperature(py)temperatureUncertainty	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(pl)CMHeadphoneMotionManagerDelegate	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(pl)CMHeadphoneMotionManagerDelegate(im)headphoneMotionManagerDidConnect:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(pl)CMHeadphoneMotionManagerDelegate(im)headphoneMotionManagerDidDisconnect:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(pl)CMWaterSubmersionManagerDelegate	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(pl)CMWaterSubmersionManagerDelegate(im)manager:didUpdateEvent:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(pl)CMWaterSubmersionManagerDelegate(im)manager:didUpdateMeasurement:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(pl)CMWaterSubmersionManagerDelegate(im)manager:didUpdateTemperature:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(pl)CMWaterSubmersionManagerDelegate(im)manager:errorOccurred:	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMAttitude	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertAttitudeMath	Exercised by the isolated host runtime.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMDyskineticSymptomResult	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMLogItem	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMOdometerData	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMPedometerData	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMPedometerEvent	implemented	CMManagers.swift;CoreMotionRuntime.swift:assertOtherManagers	Exercised by the isolated host runtime.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMTremorResult	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMWaterSubmersionEvent	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMWaterSubmersionMeasurement	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CMWaterTemperature	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMAuthorizationStatus	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMDeviceMotionSensorLocation	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMHeadphoneActivityStatus	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMHighFrequencyHeartRateDataConfidence	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMMagneticFieldCalibrationAccuracy	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMMotionActivityConfidence	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMOdometerOriginDevice	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMPedometerEventType	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMWaterSubmersionDepthState	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CMWaterSubmersionState	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@CMError	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMAuthorizationStatus	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMDeviceMotionSensorLocation	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMHeadphoneActivityStatus	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMHighFrequencyHeartRateDataConfidence	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMMagneticFieldCalibrationAccuracy	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMMotionActivityConfidence	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMOdometerOriginDevice	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMPedometerEventType	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMWaterSubmersionDepthState	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CMWaterSubmersionState	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@CMError	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMAuthorizationStatus	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMDeviceMotionSensorLocation	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMHeadphoneActivityStatus	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMHighFrequencyHeartRateDataConfidence	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMMagneticFieldCalibrationAccuracy	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMMotionActivityConfidence	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMOdometerOriginDevice	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMPedometerEventType	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMWaterSubmersionDepthState	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CMWaterSubmersionState	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@CMError	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Exercised by the isolated host runtime.
+s:So12CMQuaterniona1x1y1z1wABSd_S3dtcfc	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:So12CMQuaternionaABycfc	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:So14CMAccelerationa1x1y1zABSd_S2dtcfc	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:So14CMAccelerationaABycfc	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:So14CMOdometerDataC10CoreMotionE11maxAbsSlopeSdSgvp	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+s:So14CMOdometerDataC10CoreMotionE5slopeSdSgvp	implemented	CMSamples.swift;CoreMotionRuntime.swift:assertSamplesAndCoding	Exercised by the isolated host runtime.
+s:So14CMRotationRatea1x1y1zABSd_S2dtcfc	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:So14CMRotationRateaABycfc	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:So15CMMagneticFielda1x1y1zABSd_S2dtcfc	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:So15CMMagneticFieldaABycfc	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:So16CMRotationMatrixa3m113m123m133m213m223m233m313m323m33ABSd_S8dtcfc	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:So16CMRotationMatrixaABycfc	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:So20CMPedometerEventTypeV8rawValueABSgSi_tcfc	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:So21CMAuthorizationStatusV8rawValueABSgSi_tcfc	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:So22CMOdometerOriginDeviceV8rawValueABSgSi_tcfc	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:So22CMWaterSubmersionStateV8rawValueABSgSi_tcfc	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:So24CMAttitudeReferenceFrameV8rawValueABSu_tcfc	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:So25CMCalibratedMagneticFielda5field8accuracyABSo010CMMagneticC0a_So0fC19CalibrationAccuracyVtcfc	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:So25CMCalibratedMagneticFieldaABycfc	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:So25CMHeadphoneActivityStatusV8rawValueABSgSi_tcfc	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:So26CMMotionActivityConfidenceV8rawValueABSgSi_tcfc	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:So27CMWaterSubmersionDepthStateV8rawValueABSgSi_tcfc	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:So28CMDeviceMotionSensorLocationV8rawValueABSgSi_tcfc	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:So34CMMagneticFieldCalibrationAccuracyV8rawValueABSgs5Int32V_tcfc	implemented	CMGeometry.swift;CoreMotionRuntime.swift:assertValueTypes	Exercised by the isolated host runtime.
+s:So38CMHighFrequencyHeartRateDataConfidenceV8rawValueABSgSi_tcfc	implemented	CoreMotionRuntime.swift:assertEnums	Exercised by the isolated host runtime.
+s:So7CMErrora8rawValueABs6UInt32V_tcfc	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Exercised by the isolated host runtime.
+s:So7CMErrora8rawValues6UInt32Vvp	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Exercised by the isolated host runtime.
+s:So7CMErrorayABs6UInt32Vcfc	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertErrorSurface	Exercised by the isolated host runtime.
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@CMAttitudeReferenceFrame	implemented	CoreMotion.swift;CoreMotionRuntime.swift:assertOptionSet	Exercised by the isolated host runtime.
