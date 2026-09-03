@@ -85,6 +85,9 @@ printf '%s\n' "$dump" | grep -F -- "-DSWIFT_USE_LINKER=lld" >/dev/null \
 printf '%s\n' "$dump" | grep -F -- "CMAKE_CXX_COMPILER=$fake/shims/clang++" >/dev/null \
   && echo "  OK  CXX compiler is Darwin-link shim" \
   || { echo "  FAIL missing shim CXX"; fail=1; }
+printf '%s\n' "$dump" | grep -F -- "-DSWIFT_LIPO=$fake/shims/lipo" >/dev/null \
+  && echo "  OK  SWIFT_LIPO is single-arch shim" \
+  || { echo "  FAIL missing SWIFT_LIPO"; fail=1; }
 
 echo
 echo "=== default (overlays off) dump has no empty string-processing -D ==="

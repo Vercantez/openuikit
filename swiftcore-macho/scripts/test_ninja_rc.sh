@@ -164,6 +164,12 @@ printf '%s\n' "$out" | grep -q 'OVERLAY swiftObjectiveC-macosx-x86_64 CANNOT_STA
 printf '%s\n' "$out" | grep -q 'OVERLAY swift_DarwinFoundation1-macosx-x86_64 CANNOT_STAGE_XCODE_DARWIN_OVERLAYS' \
   && echo "  OK  scoreboard DarwinFoundation1 CANNOT" \
   || { echo "  FAIL missing DarwinFoundation1 scoreboard CANNOT"; fail=1; }
+printf '%s\n' "$out" | grep -q 'OVERLAY swift_DarwinFoundation2-macosx-x86_64 CANNOT_STAGE_XCODE_DARWIN_OVERLAYS' \
+  && echo "  OK  scoreboard DarwinFoundation2 CANNOT" \
+  || { echo "  FAIL missing DarwinFoundation2 scoreboard CANNOT"; fail=1; }
+printf '%s\n' "$out" | grep -q 'OVERLAY swift_DarwinFoundation3-macosx-x86_64 CANNOT_STAGE_XCODE_DARWIN_OVERLAYS' \
+  && echo "  OK  scoreboard DarwinFoundation3 CANNOT" \
+  || { echo "  FAIL missing DarwinFoundation3 scoreboard CANNOT"; fail=1; }
 
 echo
 echo "=== core gold wall is NOT allowed (lld is the linker) ==="

@@ -14,6 +14,8 @@ This wrapper leaves compile / host-ELF links alone. Darwin-target -shared /
 from __future__ import annotations
 
 import os
+import shutil
+import subprocess
 import sys
 
 APPLE_MARKER = "-apple-"
@@ -201,6 +203,28 @@ def rewrite_darwin_shared(argv: list[str]) -> list[str]:
     return out + extra
 
 
+def _output_path(argv: list[str]) -> str | None:
+    for i, a in enumerate(argv):
+        if a == "-o" and i + 1 < len(argv):
+            return argv[i + 1]
+        if a.startswith("-o") and len(a) > 2:
+            return a[2:]
+    return None
+
+
+def mirror_so_to_dylib(argv: list[str]) -> None:
+    """Ninja names Darwin dylibs .so; phase2 / stage_artifacts want .dylib."""
+    out = _output_path(argv)
+    if not out or not out.endswith(".so"):
+        return
+    if "/lib/swift/macosx/" not in out.replace("\\", "/"):
+        return
+    if not os.path.isfile(out):
+        return
+    dylib = out[: -len(".so")] + ".dylib"
+    shutil.copy2(out, dylib)
+
+
 def main(argv: list[str]) -> int:
     real = _real_clangxx()
     # argv[0] is this script; clang++ driver args follow.
@@ -210,6 +234,13 @@ def main(argv: list[str]) -> int:
         if os.environ.get("SWIFTCORE_CLANGXX_LOG"):
             sys.stderr.write("clangxx_darwin_link: Darwin shared rewrite\n")
             sys.stderr.write("  " + " ".join(args) + "\n")
+        if os.environ.get("SWIFTCORE_CLANGXX_PRINT_REWRITTEN"):
+            print(" ".join(args))
+            return 0
+        rc = subprocess.call([real] + args)
+        if rc == 0:
+            mirror_so_to_dylib(args)
+        return rc
     if os.environ.get("SWIFTCORE_CLANGXX_PRINT_REWRITTEN"):
         print(" ".join(args))
         return 0

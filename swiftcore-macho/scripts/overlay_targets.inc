@@ -8,8 +8,9 @@
 # _StringProcessing, _Builtin_float, _RegexParser (with STRING_PROCESSING),
 # Observation (with OBSERVATION), Darwin (Platform/). Not CMake targets on
 # Linux: ObjectiveC, _DarwinFoundation1/2/3, _errno — those are Apple SDK
-# overlays ("On Apple platforms, we aren't building any overlays. Instead,
-# we're picking them up from the SDK."). Named CANNOT, never ninja'd.
+# overlays (stdlib/public/CMakeLists.txt:359: "On Apple platforms, we aren't
+# building any overlays. Instead, we're picking them up from the SDK.").
+# Named CANNOT, never ninja'd.
 
 if [ -n "${SWIFTCORE_OVERLAY_TARGETS_INC:-}" ]; then
     return 0 2>/dev/null || exit 0
@@ -82,7 +83,7 @@ overlay_select_targets() {
             continue
         fi
         if overlay_xcode_only_target "$n"; then
-            echo "CANNOT_STAGE_XCODE_DARWIN_OVERLAYS target=$n reason=not in ninja -t targets; Swift 6.2.4 Linux-host OSX stdlib does not add_subdirectory Apple SDK overlays (_DarwinFoundation1/2/3, _errno, ObjectiveC — Platform/CMakeLists.txt:358-359 'picking them up from the SDK')"
+            echo "CANNOT_STAGE_XCODE_DARWIN_OVERLAYS target=$n reason=not in ninja -t targets; Swift 6.2.4 Linux-host OSX stdlib does not add_subdirectory Apple SDK overlays (_DarwinFoundation1/2/3, _errno, ObjectiveC — stdlib/public/CMakeLists.txt:359 'picking them up from the SDK')"
             OVERLAY_STATUS[$n]=CANNOT_STAGE_XCODE_DARWIN_OVERLAYS
             continue
         fi
@@ -150,4 +151,39 @@ overlay_list_products() {
     done
     echo "-- libswift*.dylib / libswift*.so --"
     find "$root" \( -name 'libswift*.dylib' -o -name 'libswift*.so' \) -print | sort
+}
+
+# Flatten lib/swift/macosx/<arch>/libswiftX.{so,dylib,a} to
+# lib/swift/macosx/libswiftX.* (the unarch path overlay ninja depends on).
+# overlay_flatten_unarch <build_dir> <arch>
+overlay_flatten_unarch() {
+    local build_dir=${1:?overlay_flatten_unarch: build dir}
+    local arch=${2:?overlay_flatten_unarch: arch}
+    local arch_dir=$build_dir/lib/swift/macosx/$arch
+    local unarch=$build_dir/lib/swift/macosx
+    local f bn
+    [ -d "$arch_dir" ] || return 0
+    mkdir -p "$unarch"
+    for f in "$arch_dir"/libswift*.so "$arch_dir"/libswift*.dylib "$arch_dir"/libswift*.a; do
+        [ -e "$f" ] || continue
+        bn=$(basename "$f")
+        ln -sfn "$arch/$bn" "$unarch/$bn"
+    done
+}
+
+# Ninja's Linux rule writes .so; phase2 / stage_artifacts look for .dylib.
+# overlay_copy_so_as_dylib <build_dir> <arch>
+overlay_copy_so_as_dylib() {
+    local build_dir=${1:?overlay_copy_so_as_dylib: build dir}
+    local arch=${2:?overlay_copy_so_as_dylib: arch}
+    local arch_dir=$build_dir/lib/swift/macosx/$arch
+    local so dylib
+    [ -d "$arch_dir" ] || return 0
+    for so in "$arch_dir"/libswift*.so; do
+        [ -e "$so" ] || continue
+        dylib=${so%.so}.dylib
+        if [ ! -e "$dylib" ] || [ "$so" -nt "$dylib" ]; then
+            cp -f "$so" "$dylib"
+        fi
+    done
 }

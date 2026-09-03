@@ -46,6 +46,8 @@ need "$arm" "SWIFT_USE_LINKER=lld" "arm64 dump records lld"
 need "$x86" "SWIFT_USE_LINKER=lld" "x86 dump records lld"
 need "$arm" "CMAKE_CXX_COMPILER=/tmp/swiftcore-print/shims/clang++" "arm64 CXX is Darwin-link shim"
 need "$x86" "CMAKE_CXX_COMPILER=/tmp/swiftcore-print/shims/clang++" "x86 CXX is Darwin-link shim"
+need "$arm" "SWIFT_LIPO=/tmp/swiftcore-print/shims/lipo" "arm64 SWIFT_LIPO is single-arch shim"
+need "$x86" "SWIFT_LIPO=/tmp/swiftcore-print/shims/lipo" "x86 SWIFT_LIPO is single-arch shim"
 
 printf '%s\n' "$arm" | grep -F -- "-DSWIFT_USE_LINKER=gold" >/dev/null \
   && { echo "  FAIL arm64 dump still asks for gold"; fail=1; } \

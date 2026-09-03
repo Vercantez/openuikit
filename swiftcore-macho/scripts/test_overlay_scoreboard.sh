@@ -135,6 +135,12 @@ printf '%s\n' "$out" | grep -q 'OVERLAY swiftObjectiveC-macosx-x86_64 CANNOT_STA
 printf '%s\n' "$out" | grep -q 'OVERLAY swift_DarwinFoundation1-macosx-x86_64 CANNOT_STAGE_XCODE_DARWIN_OVERLAYS' \
   && echo "  OK  DarwinFoundation1 CANNOT" \
   || { echo "  FAIL missing DarwinFoundation1 CANNOT"; fail=1; }
+printf '%s\n' "$out" | grep -q 'OVERLAY swift_DarwinFoundation2-macosx-x86_64 CANNOT_STAGE_XCODE_DARWIN_OVERLAYS' \
+  && echo "  OK  DarwinFoundation2 CANNOT" \
+  || { echo "  FAIL missing DarwinFoundation2 CANNOT"; fail=1; }
+printf '%s\n' "$out" | grep -q 'OVERLAY swift_DarwinFoundation3-macosx-x86_64 CANNOT_STAGE_XCODE_DARWIN_OVERLAYS' \
+  && echo "  OK  DarwinFoundation3 CANNOT" \
+  || { echo "  FAIL missing DarwinFoundation3 CANNOT"; fail=1; }
 printf '%s\n' "$out" | grep -q 'OVERLAY swift_errno-macosx-x86_64 CANNOT_STAGE_XCODE_DARWIN_OVERLAYS' \
   && echo "  OK  _errno CANNOT" \
   || { echo "  FAIL missing _errno CANNOT"; fail=1; }

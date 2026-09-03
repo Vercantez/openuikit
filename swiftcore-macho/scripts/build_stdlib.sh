@@ -100,9 +100,12 @@ run_stdlib_ninja() {
   if [ "${SWIFTCORE_OVERLAYS:-0}" = 1 ]; then
     local sel_rc=0 ninja_st=0 t
     # Attempt every selected overlay even if select named a CANNOT, so one
-    # operator run measures all five. ninja itself rebuilds real deps of
-    # the requested target; we do not skip later names because an earlier
-    # ninja failed.
+    # operator run measures the nine FE dylibs plus _Concurrency / Observation.
+    # ninja itself rebuilds real deps of the requested target; we do not skip
+    # later names because an earlier ninja failed.
+    overlay_flatten_unarch "$B" "$SWIFTCORE_DARWIN_ARCH"
+    overlay_copy_so_as_dylib "$B" "$SWIFTCORE_DARWIN_ARCH"
+    python3 "$SCRIPT_DIR/lipo_single_arch.py" --rewrite-ninja "$B" || true
     set +e
     overlay_select_targets "$B" "$SWIFTCORE_DARWIN_ARCH"
     sel_rc=$?
@@ -117,6 +120,8 @@ run_stdlib_ninja() {
         ninja_checked "$W/build.log" -C "$B" -j "$NINJA_JOBS" "$t" || ninja_st=$?
         if [ "$ninja_st" -eq 0 ]; then
           OVERLAY_STATUS[$t]=built
+          overlay_flatten_unarch "$B" "$SWIFTCORE_DARWIN_ARCH"
+          overlay_copy_so_as_dylib "$B" "$SWIFTCORE_DARWIN_ARCH"
         else
           OVERLAY_STATUS[$t]=FAILED
           if [ "$overlay_rc" -eq 0 ]; then

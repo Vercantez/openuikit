@@ -77,6 +77,24 @@ printf '%s\n' "$got" | grep -F -- 'libswiftCore.so' >/dev/null \
   && echo "  OK  Darwin .so input kept" || { echo "  FAIL dropped overlay dep .so"; fail=1; }
 
 echo
+echo "=== Darwin .so output is mirrored to .dylib ==="
+mkdir -p "$tmp/lib/swift/macosx/x86_64"
+echo so > "$tmp/lib/swift/macosx/x86_64/libswiftDarwin.so"
+python3 -c "
+import sys
+sys.path.insert(0, '$SCRIPT_DIR')
+import clangxx_darwin_link as m
+m.mirror_so_to_dylib(['-o', '$tmp/lib/swift/macosx/x86_64/libswiftDarwin.so'])
+"
+if [ -f "$tmp/lib/swift/macosx/x86_64/libswiftDarwin.dylib" ]; then
+  cmp -s "$tmp/lib/swift/macosx/x86_64/libswiftDarwin.so" \
+         "$tmp/lib/swift/macosx/x86_64/libswiftDarwin.dylib" \
+    && echo "  OK  .dylib mirrors .so" || { echo "  FAIL dylib mismatch"; fail=1; }
+else
+  echo "  FAIL no .dylib written"; fail=1
+fi
+
+echo
 if [ "$fail" -eq 0 ]; then
   echo "PASS -- Darwin shared link rewrite (lld, not gold; no host ELF libc++)"
   exit 0

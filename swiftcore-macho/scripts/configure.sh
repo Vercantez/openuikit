@@ -147,6 +147,7 @@ fi
 # becomes -dynamiclib -fuse-ld=lld -nostdlib -lSystem (not gold, not host
 # ELF libc++). Compile / host-ELF links pass through.
 SHIM_CXX=$W/shims/clang++
+SHIM_LIPO=$W/shims/lipo
 mkdir -p "$W/shims"
 {
   printf '#!/bin/bash\n'
@@ -156,6 +157,13 @@ mkdir -p "$W/shims"
   printf 'exec python3 %q "$@"\n' "$SCRIPT_DIR/clangxx_darwin_link.py"
 } > "$SHIM_CXX"
 chmod +x "$SHIM_CXX"
+# Empty SWIFT_LIPO makes ninja run `cmake -E env -create` (Ubuntu cmake
+# rejects that). Single-arch copy stands in for Apple lipo.
+{
+  printf '#!/bin/bash\n'
+  printf 'exec python3 %q "$@"\n' "$SCRIPT_DIR/lipo_single_arch.py"
+} > "$SHIM_LIPO"
+chmod +x "$SHIM_LIPO"
 
 LINKER_B_FLAGS=()
 if [ -n "${LLD_BIN:-}" ]; then
@@ -172,6 +180,7 @@ CMAKE_ARGS=(
   -DCMAKE_BUILD_TYPE=Release
   -DCMAKE_C_COMPILER="${TC}/bin/clang"
   -DCMAKE_CXX_COMPILER="${SHIM_CXX}"
+  -DSWIFT_LIPO="${SHIM_LIPO}"
   -DSWIFT_USE_LINKER=lld
   "${LINKER_B_FLAGS[@]}"
   -DSWIFT_INCLUDE_TOOLS=OFF
@@ -241,6 +250,7 @@ if [ "$PRINT_FLAGS" = 1 ]; then
   printf 'LD_LLD=%s\n' "${LD_LLD:-}"
   printf 'LD64_LLD=%s\n' "${LD64_LLD:-}"
   printf 'CMAKE_CXX_COMPILER=%s\n' "${SHIM_CXX}"
+  printf 'SWIFT_LIPO=%s\n' "${SHIM_LIPO}"
   printf 'SWIFT_ENABLE_EXPERIMENTAL_OBSERVATION=%s\n' "${OVERLAY_OBS}"
   printf 'cmake'
   for a in "${CMAKE_ARGS[@]}"; do
@@ -257,3 +267,6 @@ cmake "${CMAKE_ARGS[@]}" 2>&1 | tee "$W/configure.log"
 
 echo "configure exit: ${PIPESTATUS[0]}"
 echo "darwin_arch=${SWIFTCORE_DARWIN_ARCH} host_arch=${SWIFT_HOST_VARIANT_ARCH} ninja_core=${SWIFTCORE_NINJA_CORE}"
+# Belt: rewrite any leftover empty-lipo `cmake -E env -create` if CMake still
+# expanded SWIFT_LIPO to nothing (cache, or an incremental generate).
+python3 "$SCRIPT_DIR/lipo_single_arch.py" --rewrite-ninja "$B"

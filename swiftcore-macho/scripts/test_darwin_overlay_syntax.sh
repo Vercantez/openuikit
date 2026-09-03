@@ -61,6 +61,8 @@ check_log() {
   fi
   local name
   for name in sig_t FILE OSStatus extern_proc MAP_FAILED \
+              os_unfair_lock os_unfair_lock_lock os_unfair_lock_trylock \
+              os_unfair_lock_unlock dlopen dlsym RTLD_NOLOAD \
               acosf acosl asinhf asinhl atan2f atan2l cbrtf cbrtl \
               copysignf copysignl coshf coshl erff erfl erfcf erfcl \
               expm1f expm1l fdimf fdiml fmaxf fmaxl fminf fminl \
@@ -88,6 +90,8 @@ cat > "$tmp/probe.m" <<'EOF'
 @import Darwin;
 void probe(sig_t h, FILE *f, OSStatus s, struct extern_proc *p) {
   (void)h; (void)f; (void)s; (void)p;
+  (void)os_unfair_lock_lock; (void)os_unfair_lock_trylock; (void)os_unfair_lock_unlock;
+  (void)dlopen; (void)dlsym; (void)RTLD_NOLOAD;
   (void)acosf; (void)acosl; (void)asinhf; (void)asinhl;
   (void)atan2f; (void)atan2l; (void)cbrtf; (void)cbrtl;
   (void)copysignf; (void)copysignl; (void)coshf; (void)coshl;
@@ -112,6 +116,11 @@ clang_rc=$?
 set -e
 echo "clang -fsyntax-only rc=$clang_rc"
 sed -n '1,80p' "$clang_log"
+for h in os/lock.h dlfcn.h; do
+  grep -q "header \"$h\"" "$SDK/usr/include/Darwin.modulemap" \
+    && echo "  OK  Darwin.modulemap names $h" \
+    || { echo "  FAIL Darwin.modulemap missing $h"; fail=1; }
+done
 check_log "$clang_log"
 [ "$clang_rc" -eq 0 ] && echo "  OK  clang rc=0" \
   || { echo "  FAIL clang rc=$clang_rc"; fail=1; }
@@ -126,6 +135,15 @@ public func _probe_file(_ f: UnsafeMutablePointer<FILE>?) {}
 public func _probe_osstatus(_ s: OSStatus) {}
 public func _probe_extern_proc(_ p: extern_proc) {}
 public let _probe_map_failed: UnsafeMutableRawPointer! = UnsafeMutableRawPointer(bitPattern: -1)
+public func _probe_unfair_lock(_ l: os_unfair_lock) {}
+public func _probe_sync_dl() {
+  _ = os_unfair_lock_lock
+  _ = os_unfair_lock_trylock
+  _ = os_unfair_lock_unlock
+  _ = dlopen
+  _ = dlsym
+  _ = RTLD_NOLOAD
+}
 
 public func _probe_libm() {
   _ = acosf

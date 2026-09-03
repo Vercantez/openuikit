@@ -31,8 +31,11 @@ LIBM_COMMIT=17a5f9daa3f5679f7536b26f133b40cc078753c3
 CARBON_TAG=CarbonHeaders-18.1
 CARBON_COMMIT=214a9ae7ab3c0c78ddb50328ca226e6313c4c782
 
-# Headers Darwin.o actually named. A modulemap line is emitted only when the
-# file exists after staging. Submodule MacTypes matches Apple's Darwin.MacTypes.
+# Headers Darwin.o / Synchronization.o / CFExecutor.swift actually named.
+# A modulemap line is emitted only when the file exists after staging.
+# Submodule MacTypes matches Apple's Darwin.MacTypes. os/lock.h is
+# Synchronization/Mutex/DarwinImpl.swift (os_unfair_lock_*); dlfcn.h is
+# Concurrency/CFExecutor.swift (dlopen / dlsym / RTLD_NOLOAD).
 DARWIN_MODULE_HEADERS=(
   signal.h
   sys/signal.h
@@ -41,6 +44,9 @@ DARWIN_MODULE_HEADERS=(
   sys/proc.h
   sys/mman.h
   math.h
+  os/base.h
+  os/lock.h
+  dlfcn.h
 )
 
 resolve_fe_sysroot() {
@@ -147,7 +153,7 @@ copy_fe_darwin() {
   # Error-enumerated headers: take Apple's from FE when present.
   for rel in math.h MacTypes.h ConditionalMacros.h sys/proc.h signal.h \
              sys/signal.h stdio.h _stdio.h sys/mman.h architecture/i386/math.h \
-             tgmath.h; do
+             tgmath.h os/base.h os/lock.h dlfcn.h; do
     if [ -f "$fe/usr/include/$rel" ]; then
       mkdir -p "$(dirname "$SDK/usr/include/$rel")"
       cp -f "$fe/usr/include/$rel" "$SDK/usr/include/$rel"
