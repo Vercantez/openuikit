@@ -617,7 +617,7 @@ run_link libOpenFoundationInternationalizationRuntime "${LD[@]}" -dylib \
     -map "$AUDIT/libOpenFoundationInternationalizationRuntime.link-map" \
     -o "$FOUNDATION_INTL_RUNTIME" \
     "$OUT/open-foundation-internationalization-bridge.o"
-run_link libOpenFoundationInternationalization "${LD[@]}" -dylib -dead_strip \
+run_link libOpenFoundationInternationalization "${LD[@]}" -L"$MRROOT/darwin/usr/lib" -dylib -dead_strip \
     -ignore_auto_link \
     -install_name @rpath/libOpenFoundationInternationalization.dylib \
     -rpath @loader_path \
@@ -855,7 +855,7 @@ run_link libOpenRelativeTimeRuntime "${LD[@]}" -dylib -dead_strip \
     -install_name /usr/lib/libOpenRelativeTime.dylib \
     -map "$AUDIT/libOpenRelativeTimeRuntime.link-map" \
     -o "$RELATIVE_TIME_RUNTIME" "$OUT/open-relative-time-bridge.o"
-run_link libOpenRelativeTime "${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+run_link libOpenRelativeTime "${LD[@]}" -L"$MRROOT/darwin/usr/lib" -dylib -dead_strip -ignore_auto_link \
     -install_name @rpath/libOpenRelativeTime.dylib -rpath @loader_path \
     -map "$AUDIT/libOpenRelativeTime.link-map" \
     -o "$RELATIVE_TIME_DARWIN" \
