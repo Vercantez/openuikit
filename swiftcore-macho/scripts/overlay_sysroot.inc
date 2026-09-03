@@ -10,12 +10,15 @@
 # not create this run; displace the live MacOSX.sdk aside (.stale-<utc>).
 #
 # Stamp covers the overlay-darwin header set + Darwin.modulemap recipe
-# (stage_overlay_darwin.sh + enumerated module headers) + machorun sys/proc.h
-# + the SDK copy's link inputs: usr/lib/*.tbd, usr/lib/swift/*.tbd,
-# usr/lib/swift/*.swiftmodule/*, HEAD:machorun (darwin tbds originate in
-# machorun gen_tbd; phase2 copies them into scratch/sysroot_fe4[-x86_64]),
-# and the crt_externs.h include_next chain (objc4-priv wrapper in front of
-# the public machorun-sdk / FE header).
+# (stage_overlay_darwin.sh + enumerated module headers) + the FE source
+# usr/include/Darwin.modulemap *bytes* (an expanded map copied into
+# sdk/MacOSX.sdk must restage when main regenerates the unexpanded FE
+# sysroot map) + machorun sys/proc.h + the SDK copy's link inputs:
+# usr/lib/*.tbd, usr/lib/swift/*.tbd, usr/lib/swift/*.swiftmodule/*,
+# HEAD:machorun (darwin tbds originate in machorun gen_tbd; phase2 copies
+# them into scratch/sysroot_fe4[-x86_64]), and the crt_externs.h
+# include_next chain (objc4-priv wrapper in front of the public
+# machorun-sdk / FE header).
 # Required *staged* headers (ConditionalMacros.h included) must be present in
 # the dest tree: input-sha MATCH of the pin is not completeness. .tbd stubs
 # are copied FROM that FE sysroot (fallback: machorun gen_tbd output / the
@@ -56,11 +59,11 @@ OPENUIKIT_ROOT=${OPENUIKIT_ROOT:-$(cd "$SWIFTCORE_ROOT/.." && pwd)}
 
 # Bump when staging steps, the Darwin.modulemap header list, modulemap
 # header closure, the required staged-header / tbd completeness gate, the
-# tbd / swiftmodule / HEAD:machorun stamp inputs, the include_next wrapper
-# layout, or the include_next wrapper predicate (first directive after
-# comments/guard is `#include_next <same-basename>`; not every
-# `#include_next` in Apple's i386/arm limits.h).
-OVERLAY_SYSROOT_RECIPE=overlay-darwin.6
+# tbd / swiftmodule / HEAD:machorun stamp inputs, the FE Darwin.modulemap
+# byte hash, the include_next wrapper layout, or the include_next wrapper
+# predicate (first directive after comments/guard is `#include_next
+# <same-basename>`; not every `#include_next` in Apple's i386/arm limits.h).
+OVERLAY_SYSROOT_RECIPE=overlay-darwin.7
 OVERLAY_SYSROOT_STAMP=.overlay-sysroot-inputs
 
 # Same enumeration as stage_overlay_darwin.sh DARWIN_MODULE_HEADERS.
@@ -567,8 +570,9 @@ overlay_sysroot_refuse_include_next() {
 
 # overlay_sysroot_input_lines
 # recipe + sha of the overlay-darwin header set + modulemap recipe + proc.h
-# + source usr/lib/*.tbd + usr/lib/swift/*.tbd + swiftmodules + HEAD:machorun
-# + public crt_externs.h / objc4-priv wrapper (include_next chain).
+# + FE usr/include/Darwin.modulemap bytes + source usr/lib/*.tbd +
+# usr/lib/swift/*.tbd + swiftmodules + HEAD:machorun + public crt_externs.h /
+# objc4-priv wrapper (include_next chain).
 overlay_sysroot_input_lines() {
     local src=$SWIFTCORE_ROOT/sdk/overlay-darwin
     local proc tbd_src tbd_rel public_crt priv_crt
@@ -588,6 +592,15 @@ overlay_sysroot_input_lines() {
         "$(overlay_sysroot_sha_or_absent "$_overlay_sysroot_inc_dir/stage_overlay_darwin.sh")"
     printf 'Darwin.modulemap.headers=%s\n' \
         "$(printf '%s\n' "${OVERLAY_DARWIN_MODULE_HEADERS[@]}" | sha256sum | awk '{print $1}')"
+    # Bytes of the FE source map, not the dest copy. Hashing only the
+    # enumerated header *names* left sdk/MacOSX.sdk holding an expanded
+    # Darwin.modulemap after main regenerated the unexpanded sysroot map.
+    if [ "$tbd_src" != ABSENT ]; then
+        printf 'usr/include/Darwin.modulemap=%s\n' \
+            "$(overlay_sysroot_sha_or_absent "$tbd_src/usr/include/Darwin.modulemap")"
+    else
+        printf 'usr/include/Darwin.modulemap=ABSENT\n'
+    fi
     printf 'required.headers=%s\n' \
         "$(printf '%s\n' "${OVERLAY_SYSROOT_REQUIRED_HEADERS[@]}" | sha256sum | awk '{print $1}')"
     printf 'modulemap.closure=darwin_clang_overlay_maps\n'

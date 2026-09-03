@@ -3,7 +3,9 @@
 # clean-room math.h / no stamp is displaced, never rm'd; mismatch restages
 # into a fresh directory. Stamp also keys usr/lib/*.tbd from the FE sysroot
 # (scratch/sysroot_fe4[-x86_64], phase2 / machorun gen_tbd): a tbd-only
-# source change is MISMATCH, not MATCH. Refuse-before-cmake if math.h lacks
+# source change is MISMATCH, not MATCH. Stamp also keys the FE source
+# usr/include/Darwin.modulemap bytes: regenerating that map (main unexpanded
+# vs an expanded overlay copy) is MISMATCH, not MATCH. Refuse-before-cmake if math.h lacks
 # fmaxl, sys/proc.h lacks extern_proc, a Darwin Clang overlay map names a
 # header that is not on disk, or an include_next wrapper (objc4-priv
 # crt_externs.h: first directive `#include_next <same-basename>`) has no
@@ -223,6 +225,9 @@ grep -q '^machorun.HEAD=' "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP" \
 grep -q '^usr/lib/libSystem.tbd=' "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP" \
   && echo "  OK  stamp records usr/lib/libSystem.tbd" \
   || { echo "  FAIL stamp missing libSystem.tbd key"; cat "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP"; fail=1; }
+grep -q '^usr/include/Darwin.modulemap=' "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP" \
+  && echo "  OK  stamp records usr/include/Darwin.modulemap" \
+  || { echo "  FAIL stamp missing Darwin.modulemap key"; cat "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP"; fail=1; }
 
 echo
 echo "=== nothing changed in FE source → stamp=MATCH ==="
@@ -297,6 +302,68 @@ need '[ "${OVERLAY_SYSROOT_REUSE}" = 1 ]' "post-restage unchanged source MATCH"
 grep -q 'stamp MATCH' "$tmp/begin_again" \
   && echo "  OK  post-restage stamp MATCH" \
   || { echo "  FAIL post-restage MATCH"; cat "$tmp/begin_again"; fail=1; }
+
+echo
+echo "=== Darwin.modulemap byte change in FE source → stamp=MISMATCH and restage ==="
+# Operator box: main regenerated the unexpanded FE sysroot map, but
+# sdk/MacOSX.sdk kept the expanded copy because the stamp keyed header
+# names, not map bytes.
+mkdir -p "$fe/usr/include"
+echo 'module Darwin [system] { header "math.h" export * }' \
+  > "$fe/usr/include/Darwin.modulemap"
+overlay_sysroot_begin "$sdk_tbd" >"$tmp/begin_dmap" 2>&1
+st=$?
+cat "$tmp/begin_dmap"
+[ "$st" -eq 0 ] && echo "  OK  Darwin.modulemap-mismatch begin rc=0" \
+  || { echo "  FAIL Darwin.modulemap-mismatch begin rc=$st"; fail=1; }
+need '[ "${OVERLAY_SYSROOT_REUSE}" = 0 ]' "Darwin.modulemap byte change restages (REUSE=0)"
+grep -q 'overlay_sysroot: stamp=MISMATCH' "$tmp/begin_dmap" \
+  && echo "  OK  Darwin.modulemap stamp=MISMATCH" \
+  || { echo "  FAIL missing Darwin.modulemap stamp=MISMATCH"; cat "$tmp/begin_dmap"; fail=1; }
+grep -qE 'overlay_sysroot: usr/include/Darwin.modulemap ' "$tmp/begin_dmap" \
+  && echo "  OK  Darwin.modulemap old->new" \
+  || { echo "  FAIL Darwin.modulemap diff"; cat "$tmp/begin_dmap"; fail=1; }
+grep -q 'overlay-darwin.math.h' "$tmp/begin_dmap" \
+  && { echo "  FAIL header keys also mismatched on Darwin.modulemap-only change"; fail=1; } \
+  || echo "  OK  overlay-darwin headers did not mismatch"
+fresh_dmap=$OVERLAY_SYSROOT_DEST
+fill_required_headers "$fresh_dmap"
+set +e
+overlay_sysroot_finish "$sdk_tbd" "$fresh_dmap" >"$tmp/fe.finish_dmap" 2>&1
+fin_st=$?
+set -e
+cat "$tmp/fe.finish_dmap"
+[ "$fin_st" -eq 0 ] && echo "  OK  Darwin.modulemap restage finish rc=0" \
+  || { echo "  FAIL Darwin.modulemap restage finish rc=$fin_st"; fail=1; }
+grep -q '^usr/include/Darwin.modulemap=' "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP" \
+  && ! grep -q '^usr/include/Darwin.modulemap=ABSENT$' "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP" \
+  && echo "  OK  restaged stamp hashes FE Darwin.modulemap bytes" \
+  || { echo "  FAIL restaged stamp still ABSENT or missing map key"; cat "$sdk_tbd/MacOSX.sdk/$OVERLAY_SYSROOT_STAMP"; fail=1; }
+
+echo
+echo "=== expanded Darwin.modulemap in FE source → MISMATCH again ==="
+echo 'module Darwin [system] { header "math.h" header "unistd.h" export * }' \
+  > "$fe/usr/include/Darwin.modulemap"
+overlay_sysroot_begin "$sdk_tbd" >"$tmp/begin_dmap2" 2>&1
+st=$?
+cat "$tmp/begin_dmap2"
+need '[ "${OVERLAY_SYSROOT_REUSE}" = 0 ]' "expanded Darwin.modulemap restages"
+grep -q 'overlay_sysroot: stamp=MISMATCH' "$tmp/begin_dmap2" \
+  && echo "  OK  expanded map stamp=MISMATCH" \
+  || { echo "  FAIL expanded map did not mismatch"; cat "$tmp/begin_dmap2"; fail=1; }
+fresh_dmap2=$OVERLAY_SYSROOT_DEST
+fill_required_headers "$fresh_dmap2"
+set +e
+overlay_sysroot_finish "$sdk_tbd" "$fresh_dmap2" >"$tmp/fe.finish_dmap2" 2>&1
+fin_st=$?
+set -e
+[ "$fin_st" -eq 0 ] && echo "  OK  expanded map restage finish rc=0" \
+  || { echo "  FAIL expanded map restage finish rc=$fin_st"; fail=1; }
+overlay_sysroot_begin "$sdk_tbd" >"$tmp/begin_dmap_match" 2>&1
+need '[ "${OVERLAY_SYSROOT_REUSE}" = 1 ]' "unchanged Darwin.modulemap MATCH"
+grep -q 'stamp MATCH' "$tmp/begin_dmap_match" \
+  && echo "  OK  post-map-restage stamp MATCH" \
+  || { echo "  FAIL post-map-restage MATCH"; cat "$tmp/begin_dmap_match"; fail=1; }
 
 echo
 echo "=== listed required header missing → refuse (not stamp MATCH) ==="

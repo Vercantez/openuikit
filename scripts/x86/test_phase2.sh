@@ -92,6 +92,7 @@ for s in "$PHASE2" "$STAGE" "$OC" "$COMMON" "$ROOT/scripts/x86/test_phase2.sh" \
     "$ROOT/foundation-macho/scripts/test_build_cftest_harness.sh" \
     "$ROOT/scripts/x86/gen_swift_tbd.sh" \
     "$ROOT/scripts/x86/test_gen_swift_tbd.sh" \
+    "$ROOT/scripts/x86/ensure_machorun.sh" \
     "$ROOT/full/swiftui/guest_gate_inventories.inc" \
     "$ROOT/full/swiftui/test_guest_gate_inventories_x86_oracle.sh" \
     "$ROOT/scripts/build_runtime_shims.sh" \
@@ -331,6 +332,15 @@ expect_grep 'DARWIN_MODULEMAP_HEADERS' "$PHASE2" \
     "missing modulemap header files are CANNOT_DARWIN_MODULEMAP_HEADERS"
 expect_grep 'stage_fe_sysroot_x86.19' "$COMMON" \
     "recipe bump restages so overlay SDK does not inherit the FE Darwin.modulemap expand"
+expect_grep 'overlay-darwin.7' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "overlay sysroot stamp recipe keys Darwin.modulemap bytes"
+expect_grep 'usr/include/Darwin.modulemap=' "$ROOT/swiftcore-macho/scripts/overlay_sysroot.inc" \
+    "overlay stamp hashes FE Darwin.modulemap bytes so a regenerated map restages"
+expect_grep 'ensure_machorun_assert_vendor_clean' "$ROOT/scripts/x86/ensure_machorun.sh" \
+    "ensure_machorun refuses a dirty machorun vendor subtree"
+expect_grep 'git status --short --untracked-files=all -- machorun' \
+    "$ROOT/scripts/x86/ensure_machorun.sh" \
+    "ensure_machorun asserts git status --short machorun is empty"
 expect_grep 'fe_sysroot_measurement_headers=' "$COMMON" \
     "stamp records the shared measurement-header list sha"
 expect_grep 'phase2_measurement_headers_missing' "$COMMON" \
