@@ -76,7 +76,7 @@ class ContractLockTests(unittest.TestCase):
         )
         self.assertEqual(
             checkouts["machorun-inrepo"]["tree"],
-            "3860474dea42a7850c5da4dd618b16b83e367eb3",
+            "33dd4d797a6d554027ac3121643333d0312f9786",
         )
 
     def test_ud_guest_x86_demands_pinned_corelibs_foundation(self) -> None:
