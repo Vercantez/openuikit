@@ -1,0 +1,82 @@
+#!/bin/bash
+# Overlay ninja names come from `ninja -t targets`. Missing required targets
+# refuse with CANNOT_OVERLAY_TARGET_ABSENT. ObjectiveC is not invoked.
+set -euo pipefail
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+# shellcheck disable=SC1091
+. "$SCRIPT_DIR/overlay_targets.inc"
+fail=0
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+echo "=== dump with required overlays + Darwin, no ObjectiveC ==="
+cat > "$tmp/targets" <<'EOF'
+swift_Concurrency-macosx-x86_64: phony
+swiftSynchronization-macosx-x86_64: phony
+swift_StringProcessing-macosx-x86_64: phony
+swift_Builtin_float-macosx-x86_64: phony
+swiftDarwin-macosx-x86_64: phony
+swiftCore-macosx-x86_64: phony
+EOF
+set +e
+out=$(NINJA_TARGETS_DUMP="$tmp/targets" overlay_select_targets /no/build x86_64 2>&1)
+rc=$?
+set -e
+printf '%s\n' "$out"
+[ "$rc" -eq 0 ] && echo "  OK  rc=0" || { echo "  FAIL rc=$rc"; fail=1; }
+printf '%s\n' "$out" | grep -q 'will ninja.*swiftDarwin-macosx-x86_64' \
+  && echo "  OK  Darwin in ninja list" || { echo "  FAIL Darwin not selected"; fail=1; }
+printf '%s\n' "$out" | grep -q 'CANNOT_STAGE_XCODE_DARWIN_OVERLAYS target=swiftObjectiveC-macosx-x86_64' \
+  && echo "  OK  ObjectiveC named CANNOT" || { echo "  FAIL missing ObjectiveC CANNOT"; fail=1; }
+printf '%s\n' "$out" | grep -q 'will ninja.*swiftObjectiveC' \
+  && { echo "  FAIL ObjectiveC still in will-ninja list"; fail=1; } \
+  || echo "  OK  ObjectiveC not ninja'd"
+
+echo
+echo "=== missing required _StringProcessing is CANNOT_OVERLAY_TARGET_ABSENT ==="
+cat > "$tmp/targets" <<'EOF'
+swift_Concurrency-macosx-x86_64: phony
+swiftSynchronization-macosx-x86_64: phony
+swift_Builtin_float-macosx-x86_64: phony
+swiftDarwin-macosx-x86_64: phony
+EOF
+set +e
+out=$(NINJA_TARGETS_DUMP="$tmp/targets" overlay_select_targets /no/build x86_64 2>&1)
+rc=$?
+set -e
+printf '%s\n' "$out"
+[ "$rc" -eq 2 ] && echo "  OK  rc=2" || { echo "  FAIL rc=$rc want 2"; fail=1; }
+printf '%s\n' "$out" | grep -q 'CANNOT_OVERLAY_TARGET_ABSENT target=swift_StringProcessing-macosx-x86_64' \
+  && echo "  OK  named the missing required target" \
+  || { echo "  FAIL missing CANNOT_OVERLAY_TARGET_ABSENT"; fail=1; }
+
+echo
+echo "=== live ninja -t targets from overlay-cmake-proof (if present) ==="
+proof=/tmp/overlay-cmake-proof
+if [ -f "$proof/build.ninja" ]; then
+  set +e
+  out=$(unset NINJA_TARGETS_DUMP; overlay_select_targets "$proof" x86_64 2>&1)
+  rc=$?
+  set -e
+  printf '%s\n' "$out"
+  [ "$rc" -eq 0 ] && echo "  OK  live graph rc=0" || { echo "  FAIL live rc=$rc"; fail=1; }
+  printf '%s\n' "$out" | grep -q 'swiftObjectiveC' && ! printf '%s\n' "$out" | grep -q 'will ninja.*swiftObjectiveC' \
+    && echo "  OK  live graph does not ninja ObjectiveC" \
+    || {
+      if printf '%s\n' "$out" | grep -q 'will ninja.*swiftObjectiveC'; then
+        echo "  FAIL live graph selected ObjectiveC"; fail=1
+      else
+        echo "  OK  live graph has no ObjectiveC to ninja"
+      fi
+    }
+else
+  echo "  skip (no $proof/build.ninja)"
+fi
+
+echo
+if [ "$fail" -eq 0 ]; then
+  echo "PASS -- overlay targets derived from ninja -t targets; ObjectiveC gated"
+  exit 0
+fi
+echo "FAIL"
+exit 1

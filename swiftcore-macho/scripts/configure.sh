@@ -39,8 +39,12 @@ done
 # (configure.sh's checked-in defaults). SWIFTCORE_OVERLAYS=1 turns on the
 # guest-needed in-tree overlays that do not require an Xcode Darwin SDK:
 # _Concurrency (already on), Synchronization, experimental StringProcessing.
-# Darwin/ObjectiveC SDK overlays stay OFF: SWIFT_BUILD_SDK_OVERLAY needs
-# Xcode module maps this Linux sysroot does not have. See docs/X86_64.md.
+# -DSWIFT_BUILD_SDK_OVERLAY=OFF is passed below but Swift 6.2.4 overwrites
+# it from SWIFT_BUILD_DYNAMIC_SDK_OVERLAY (default TRUE on a non-Apple host),
+# so Platform/swiftDarwin *is* in the ninja graph. ObjectiveC is not a
+# CMake target on Linux. build_stdlib.sh derives overlay names from
+# `ninja -t targets` and prints CANNOT_STAGE_XCODE_DARWIN_OVERLAYS rather
+# than invoking a missing name. See docs/X86_64.md.
 #
 # Phase-2 guests load _Concurrency + _StringProcessing + Synchronization.
 # Overlays therefore also fetch/pass libdispatch (BUILD_LOG §16): CMake with
