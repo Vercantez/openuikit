@@ -25,10 +25,21 @@ if [ -n "${SWIFT_TOOLCHAIN:-}" ] && [ -d "$SWIFT_TOOLCHAIN/usr/lib/swift/linux" 
     _swift_linux_lib=$SWIFT_TOOLCHAIN/usr/lib/swift/linux
 elif [ -n "${SWIFT_TOOLCHAIN:-}" ] && [ -d "$SWIFT_TOOLCHAIN/lib/swift/linux" ]; then
     _swift_linux_lib=$SWIFT_TOOLCHAIN/lib/swift/linux
-elif [ ! -f "$_swift_linux_lib/libdispatch.so" ] && command -v swiftc >/dev/null 2>&1; then
-    _swiftc_dir=$(cd "$(dirname "$(command -v swiftc)")" && pwd -P)
-    [ -f "$_swiftc_dir/../lib/swift/linux/libdispatch.so" ] \
-        && _swift_linux_lib=$(cd "$_swiftc_dir/../lib/swift/linux" && pwd -P)
+elif [ ! -f "$_swift_linux_lib/libdispatch.so" ]; then
+    # Same order as full/scripts/guest_arch.inc: the pinned EC2 prefixes, then
+    # whatever swiftc is on PATH (SSM sessions carry a minimal PATH, so the
+    # prefixes must come first).
+    for _cand in /opt/swift624/usr /opt/swift/usr; do
+        if [ -f "$_cand/lib/swift/linux/libdispatch.so" ]; then
+            _swift_linux_lib=$_cand/lib/swift/linux
+            break
+        fi
+    done
+    if [ ! -f "$_swift_linux_lib/libdispatch.so" ] && command -v swiftc >/dev/null 2>&1; then
+        _swiftc_dir=$(cd "$(dirname "$(command -v swiftc)")" && pwd -P)
+        [ -f "$_swiftc_dir/../lib/swift/linux/libdispatch.so" ] \
+            && _swift_linux_lib=$(cd "$_swiftc_dir/../lib/swift/linux" && pwd -P)
+    fi
 fi
 HOST_DISPATCH_SOURCE=$_swift_linux_lib/libdispatch.so
 HOST_BLOCKS_RUNTIME_SOURCE=$_swift_linux_lib/libBlocksRuntime.so
