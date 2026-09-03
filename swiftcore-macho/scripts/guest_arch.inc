@@ -60,17 +60,43 @@ case "$SWIFTCORE_DARWIN_ARCH" in
         ;;
 esac
 
-# Stock swift.org 6.2.4: /opt/swift624 on the Graviton box, /usr on the
-# swift:6.2-noble image this VM boots from.
+# Linux Swift toolchain prefix (directory that contains bin/swiftc).
+# SWIFT_TOOLCHAIN and PATH win over the recorded Graviton / docker paths: a
+# host whose swiftc is neither /opt/swift624/usr/bin nor /usr/bin still has to
+# configure overlays. TC already set by the caller is left alone.
 if [ -z "${TC:-}" ]; then
-    if [ -x /opt/swift624/usr/bin/swiftc ]; then
+    _sc_pick_tc() {
+        local cand=$1
+        if [ -x "$cand/usr/bin/swiftc" ]; then
+            printf '%s\n' "$cand/usr"
+            return 0
+        fi
+        if [ -x "$cand/bin/swiftc" ]; then
+            printf '%s\n' "$cand"
+            return 0
+        fi
+        return 1
+    }
+    if [ -n "${SWIFT_TOOLCHAIN:-}" ]; then
+        TC=$(_sc_pick_tc "$SWIFT_TOOLCHAIN") || {
+            echo "guest_arch: SWIFT_TOOLCHAIN=$SWIFT_TOOLCHAIN has no bin/swiftc (tried \$SWIFT_TOOLCHAIN/usr/bin and \$SWIFT_TOOLCHAIN/bin)" >&2
+            exit 1
+        }
+    elif command -v swiftc >/dev/null 2>&1; then
+        TC=$(cd "$(dirname "$(command -v swiftc)")/.." && pwd)
+        if [ ! -x "$TC/bin/swiftc" ]; then
+            echo "guest_arch: command -v swiftc is $(command -v swiftc) but $TC/bin/swiftc is not executable" >&2
+            exit 1
+        fi
+    elif [ -x /opt/swift624/usr/bin/swiftc ]; then
         TC=/opt/swift624/usr
     elif [ -x /usr/bin/swiftc ]; then
         TC=/usr
     else
-        echo "guest_arch: no swiftc at /opt/swift624/usr/bin or /usr/bin" >&2
+        echo "guest_arch: no swiftc (SWIFT_TOOLCHAIN unset, not on PATH, not at /opt/swift624/usr/bin or /usr/bin)" >&2
         exit 1
     fi
+    unset -f _sc_pick_tc
 fi
 
 # Pinned by BUILD_LOG.md and full/observation/UPSTREAM.md. Tag is a label;

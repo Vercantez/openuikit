@@ -62,6 +62,36 @@ printf '%s\n' "$x86" | grep -F -- "-DSWIFT_SDK_OSX_ARCHITECTURES=arm64" >/dev/nu
   && { echo "  FAIL x86 dump carries arm64 SDK arch"; fail=1; } \
   || echo "  OK  x86 dump has no arm64 SDK arch"
 
+# SWIFT_TOOLCHAIN / PATH, not only /opt/swift624 and /usr/bin.
+tcroot=$(mktemp -d)
+mkdir -p "$tcroot/usr/bin"
+printf '#!/bin/sh\nexit 0\n' > "$tcroot/usr/bin/swiftc"
+chmod +x "$tcroot/usr/bin/swiftc"
+toolchain_dump=$(
+  SWIFTCORE_DARWIN_ARCH=x86_64 SWIFT_HOST_VARIANT_ARCH=x86_64 \
+    SWIFT_HOST_TRIPLE=x86_64-unknown-linux-gnu \
+    SWIFT_TOOLCHAIN="$tcroot" \
+    W=/tmp/swiftcore-print SRC=/tmp/swiftcore-print/swift B=/tmp/swiftcore-print/build \
+    bash "$cfg" --print-flags
+)
+need "$toolchain_dump" "TC=$tcroot/usr" "SWIFT_TOOLCHAIN selects TC"
+rm -rf "$tcroot"
+
+pathroot=$(mktemp -d)
+mkdir -p "$pathroot/bin"
+printf '#!/bin/sh\nexit 0\n' > "$pathroot/bin/swiftc"
+chmod +x "$pathroot/bin/swiftc"
+path_dump=$(
+  PATH="$pathroot/bin:/bin:/usr/bin" \
+    SWIFTCORE_DARWIN_ARCH=x86_64 SWIFT_HOST_VARIANT_ARCH=x86_64 \
+    SWIFT_HOST_TRIPLE=x86_64-unknown-linux-gnu \
+    SWIFT_TOOLCHAIN= TC= \
+    W=/tmp/swiftcore-print SRC=/tmp/swiftcore-print/swift B=/tmp/swiftcore-print/build \
+    bash "$cfg" --print-flags
+)
+need "$path_dump" "TC=$pathroot" "command -v swiftc selects TC"
+rm -rf "$pathroot"
+
 echo
 if [ "$fail" -eq 0 ]; then
   echo "PASS -- 2 dumps, arm64 path intact, x86_64 is the same argv with arch swapped"
