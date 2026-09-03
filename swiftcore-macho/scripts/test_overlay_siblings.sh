@@ -85,6 +85,15 @@ printf '%s\n' "$dump" | grep -F -- "-DSWIFT_USE_LINKER=lld" >/dev/null \
 printf '%s\n' "$dump" | grep -F -- "CMAKE_CXX_COMPILER=$fake/shims/clang++" >/dev/null \
   && echo "  OK  CXX compiler is Darwin-link shim" \
   || { echo "  FAIL missing shim CXX"; fail=1; }
+printf '%s\n' "$dump" | grep -F -- "CMAKE_C_COMPILER=$fake/shims/clang" >/dev/null \
+  && echo "  OK  C compiler is Darwin-link shim" \
+  || { echo "  FAIL missing shim C"; fail=1; }
+printf '%s\n' "$dump" | grep -F -- "-DSWIFT_NATIVE_CLANG_TOOLS_PATH=$fake/shims" >/dev/null \
+  && echo "  OK  native clang tools path is shims (stdlib cannot pick /opt/swift clang++)" \
+  || { echo "  FAIL native clang path not shims"; fail=1; }
+printf '%s\n' "$dump" | grep -F -- "-DSWIFT_BUILD_RUNTIME_WITH_HOST_COMPILER=ON" >/dev/null \
+  && echo "  OK  HOST_COMPILER=ON so stdlib does not overwrite CXX" \
+  || { echo "  FAIL missing SWIFT_BUILD_RUNTIME_WITH_HOST_COMPILER=ON"; fail=1; }
 printf '%s\n' "$dump" | grep -F -- "-DSWIFT_LIPO=$fake/shims/lipo" >/dev/null \
   && echo "  OK  SWIFT_LIPO is single-arch shim" \
   || { echo "  FAIL missing SWIFT_LIPO"; fail=1; }

@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
-"""clang++ driver shim for Darwin-target shared links on a Linux CMake host.
+"""clang++ / clang driver shim: pick the linker per link, not globally.
 
 Ninja's CXX_SHARED_LIBRARY rule is generated from Modules/Platform/Linux.cmake,
-so it always injects `-shared` (and historically `-Wl,-soname`) even when every
-object is Mach-O `x86_64-apple-macosx`. Swift's clang then picks ld64.lld (via
--fuse-ld=lld -B) and the Mach-O linker rejects ELF host libc++ / -soname, or
-leaves Darwin symbols undefined because the recipe never passed -lSystem.
+so it always injects `-shared` and `$SONAME_FLAG$SONAME` (`-Wl,-soname`).
+A Darwin-target line (`-target …-apple-…`, or a `.dylib` output) must still
+become the Mach-O recipe in link_macho_dylib.sh and use **ld64.lld**. An ELF
+host line (`-target …-linux-…`, or a `.so` output without an Apple triple)
+must keep `-soname` and use **ld.lld**. Putting ld64.lld on PATH / `-B` for
+every job is what made the operator core link die:
 
-This wrapper leaves compile / host-ELF links alone. Darwin-target -shared /
--dynamiclib invocations are rewritten to the recipe in link_macho_dylib.sh:
--dynamiclib -fuse-ld=lld -nostdlib -lSystem -lc++ -Wl,-undefined,dynamic_lookup.
+    ld64.lld: error: unknown argument '-soname'
 
-Linux CMake concatenates $SONAME_FLAG$SONAME (`-Wl,-soname,` + `libswiftX.so`)
-or emits `-Xlinker -soname`. ld64.lld does not accept `-soname`; rewrite to
-`-install_name` and drop `--as-needed` / `-rpath-link`. Always print the
-ninja argv and the rewritten argv so the operator log shows both.
+stdlib/CMakeLists.txt overwrites CMAKE_CXX_COMPILER to
+`${SWIFT_NATIVE_CLANG_TOOLS_PATH}/clang++` unless
+SWIFT_BUILD_RUNTIME_WITH_HOST_COMPILER is ON. configure.sh points that path
+at this shim so `/opt/swift/usr/bin/clang++` cannot skip the rewrite.
+
+Every shared link prints `clangxx_darwin_link: linker=ld.lld` or
+`linker=ld64.lld`.
 """
 from __future__ import annotations
 
@@ -41,8 +44,75 @@ def _real_clangxx() -> str:
     return "clang++"
 
 
+def _real_clang() -> str:
+    env = os.environ.get("SWIFTCORE_REAL_CLANG")
+    if env:
+        return env
+    tc = os.environ.get("TC")
+    if tc:
+        cand = os.path.join(tc, "bin", "clang")
+        if os.path.isfile(cand) and os.access(cand, os.X_OK):
+            return cand
+    return "/usr/bin/clang"
+
+
+def _real_compiler() -> str:
+    driver = os.environ.get("SWIFTCORE_CLANG_DRIVER", "clang++")
+    if driver.endswith("++"):
+        return _real_clangxx()
+    return _real_clang()
+
+
 def _lld_bin() -> str:
     return os.environ.get("LLD_BIN") or "/usr/lib/llvm-18/bin"
+
+
+def _ld_lld() -> str:
+    env = os.environ.get("LD_LLD")
+    if env:
+        return env
+    return os.path.join(_lld_bin(), "ld.lld")
+
+
+def _ld64_lld() -> str:
+    env = os.environ.get("LD64_LLD")
+    if env:
+        return env
+    for name in ("ld64.lld", "ld64.lld-18"):
+        cand = os.path.join(_lld_bin(), name)
+        if os.path.isfile(cand):
+            return cand
+    return os.path.join(_lld_bin(), "ld64.lld")
+
+
+def linker_label(path: str) -> str:
+    base = os.path.basename(path)
+    if "ld64" in base:
+        return "ld64.lld"
+    if base.startswith("ld.lld") or base == "ld.lld":
+        return "ld.lld"
+    return base or path
+
+
+def _fuse_ld_flag(linker_path: str) -> str:
+    return f"-fuse-ld={linker_path}"
+
+
+def _set_fuse_ld(argv: list[str], linker_path: str) -> list[str]:
+    """Replace every -fuse-ld=* with an absolute linker; append if missing."""
+    out: list[str] = []
+    replaced = False
+    flag = _fuse_ld_flag(linker_path)
+    for a in argv:
+        if a.startswith("-fuse-ld="):
+            if not replaced:
+                out.append(flag)
+                replaced = True
+            continue
+        out.append(a)
+    if not replaced:
+        out.append(flag)
+    return out
 
 
 def _is_compile(argv: list[str]) -> bool:
@@ -66,17 +136,51 @@ def _is_shared(argv: list[str]) -> bool:
     )
 
 
+def _output_path(argv: list[str]) -> str | None:
+    for i, a in enumerate(argv):
+        if a == "-o" and i + 1 < len(argv):
+            return argv[i + 1]
+        if a.startswith("-o") and len(a) > 2:
+            return a[2:]
+    return None
+
+
+def link_flavor(argv: list[str]) -> str | None:
+    """Classify a driver invocation: 'darwin', 'elf', or None (not a shared link).
+
+    Decision is per argv, from the target triple and/or the output's .so/.dylib
+    — never from a global PATH / CMAKE_LINKER / -B that contains both ld.lld
+    and ld64.lld.
+    """
+    if _is_compile(argv):
+        return None
+    if not (_is_shared(argv) or _has_soname_flag(argv)):
+        return None
+    t = _target(argv)
+    out = _output_path(argv) or ""
+    if t and APPLE_MARKER in t:
+        return "darwin"
+    if out.endswith(".dylib"):
+        return "darwin"
+    if "-dynamiclib" in argv:
+        return "darwin"
+    if t and ("linux" in t.lower() or "unknown-linux" in t.lower()):
+        return "elf"
+    if out.endswith(".so") or ".so." in os.path.basename(out):
+        return "elf"
+    return "elf"
+
+
 def _is_darwin_target(argv: list[str]) -> bool:
+    """True when this argv is a Darwin-target link (triple or .dylib)."""
     t = _target(argv)
     if t and APPLE_MARKER in t:
         return True
-    for a in argv:
-        if APPLE_MARKER in a:
-            return True
-        if "MacOSX.sdk" in a:
-            return True
-        if a.startswith("-mmacosx-version-min"):
-            return True
+    out = _output_path(argv) or ""
+    if out.endswith(".dylib"):
+        return True
+    if "-dynamiclib" in argv:
+        return True
     return False
 
 
@@ -110,11 +214,12 @@ def _has_soname_flag(argv: list[str]) -> bool:
 
 
 def is_darwin_shared_link(argv: list[str]) -> bool:
-    if _is_compile(argv):
-        return False
-    if not _is_darwin_target(argv):
-        return False
-    return _is_shared(argv) or _has_soname_flag(argv)
+    return link_flavor(argv) == "darwin"
+
+
+def rewrite_elf_shared(argv: list[str]) -> list[str]:
+    """ELF shared link: keep -soname / -shared; force ld.lld (never ld64.lld)."""
+    return _set_fuse_ld(argv, _ld_lld())
 
 
 def _is_host_elf_input(arg: str) -> bool:
@@ -201,14 +306,10 @@ def rewrite_darwin_shared(argv: list[str]) -> list[str]:
             have_dynamiclib = True
             out.append(a)
             continue
-        if a == "-fuse-ld=lld" or a.startswith("-fuse-ld=lld"):
-            have_fuse = True
-            out.append("-fuse-ld=lld")
-            continue
         if a.startswith("-fuse-ld="):
-            # Never pass gold / bfd through a Darwin-target link.
+            # Darwin-target: absolute ld64.lld, never gold / host ld.lld.
             have_fuse = True
-            out.append("-fuse-ld=lld")
+            out.append(_fuse_ld_flag(_ld64_lld()))
             continue
         if a.startswith("-B"):
             have_B = True
@@ -284,7 +385,7 @@ def rewrite_darwin_shared(argv: list[str]) -> list[str]:
     if not have_dynamiclib:
         extra.append("-dynamiclib")
     if not have_fuse:
-        extra.append("-fuse-ld=lld")
+        extra.append(_fuse_ld_flag(_ld64_lld()))
     if not have_B:
         extra.append(f"-B{_lld_bin()}")
     if not have_nostdlib:
@@ -334,19 +435,21 @@ def _drop_leftover_elf_link_flags(argv: list[str]) -> list[str]:
     return out
 
 
-def log_darwin_rewrite(original: list[str], rewritten: list[str]) -> None:
+def log_link(
+    kind: str,
+    linker: str,
+    original: list[str],
+    rewritten: list[str] | None = None,
+) -> None:
+    sys.stderr.write(f"clangxx_darwin_link: linker={linker} kind={kind}\n")
     sys.stderr.write("clangxx_darwin_link: ninja argv: " + shlex.join(original) + "\n")
-    sys.stderr.write("clangxx_darwin_link: rewritten argv: " + shlex.join(rewritten) + "\n")
+    if rewritten is not None:
+        sys.stderr.write("clangxx_darwin_link: rewritten argv: " + shlex.join(rewritten) + "\n")
     sys.stderr.flush()
 
 
-def _output_path(argv: list[str]) -> str | None:
-    for i, a in enumerate(argv):
-        if a == "-o" and i + 1 < len(argv):
-            return argv[i + 1]
-        if a.startswith("-o") and len(a) > 2:
-            return a[2:]
-    return None
+def log_darwin_rewrite(original: list[str], rewritten: list[str]) -> None:
+    log_link("darwin", "ld64.lld", original, rewritten)
 
 
 def mirror_so_to_dylib(argv: list[str]) -> None:
@@ -363,20 +466,30 @@ def mirror_so_to_dylib(argv: list[str]) -> None:
 
 
 def main(argv: list[str]) -> int:
-    real = _real_clangxx()
-    # argv[0] is this script; clang++ driver args follow.
+    real = _real_compiler()
+    # argv[0] is this script; clang++ / clang driver args follow.
     args = argv[1:]
-    if is_darwin_shared_link(args):
+    flavor = link_flavor(args)
+    print_rewritten = bool(os.environ.get("SWIFTCORE_CLANGXX_PRINT_REWRITTEN"))
+    if flavor == "darwin":
         rewritten = rewrite_darwin_shared(args)
-        log_darwin_rewrite(args, rewritten)
-        if os.environ.get("SWIFTCORE_CLANGXX_PRINT_REWRITTEN"):
+        log_link("darwin", linker_label(_ld64_lld()), args, rewritten)
+        if print_rewritten:
             print(" ".join(rewritten))
             return 0
         rc = subprocess.call([real] + rewritten)
         if rc == 0:
             mirror_so_to_dylib(rewritten)
         return rc
-    if os.environ.get("SWIFTCORE_CLANGXX_PRINT_REWRITTEN"):
+    if flavor == "elf":
+        rewritten = rewrite_elf_shared(args)
+        log_link("elf", linker_label(_ld_lld()), args, rewritten)
+        if print_rewritten:
+            print(" ".join(rewritten))
+            return 0
+        os.execv(real, [real] + rewritten)
+        return 127
+    if print_rewritten:
         print(" ".join(args))
         return 0
     os.execv(real, [real] + args)

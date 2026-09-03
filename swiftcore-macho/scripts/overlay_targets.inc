@@ -272,8 +272,9 @@ overlay_print_overlay_module_evidence() {
 }
 
 # Print the exact Darwin overlay dylib link ninja will run, and the argv
-# clangxx_darwin_link.py rewrites it to (no -soname). Operator log must
-# show both: the Linux CMake line and the ld64.lld line.
+# clangxx_darwin_link.py rewrites it to (no -soname, linker=ld64.lld).
+# Operator log must show both: the Linux CMake line and the ld64.lld line.
+# ELF core .so links print linker=ld.lld and keep -soname.
 # overlay_print_darwin_link_from_ninja <build_dir> <arch>
 overlay_print_darwin_link_from_ninja() {
     local build_dir=${1:?overlay_print_darwin_link_from_ninja: build dir}

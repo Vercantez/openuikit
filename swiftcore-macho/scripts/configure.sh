@@ -137,7 +137,11 @@ else
 fi
 LLD_BIN=${LLD_BIN:-/usr/lib/llvm-18/bin}
 export LLD_BIN LD_LLD LD64_LLD
-# Ubuntu ld64.lld before ${TC}/bin: the swift.org lld refuses platform macOS.
+# Shims first so ninja/ccache cannot pick ${TC}/bin/clang++. Do not put
+# ld64.lld ahead of ld.lld globally: clangxx_darwin_link.py selects
+# ld.lld vs ld64.lld per link from the triple / output. LLD_BIN still
+# precedes ${TC}/bin so Ubuntu ld64.lld wins *when the Darwin driver
+# asks for it* (swift.org lld refuses platform macOS).
 export PATH="${W}/shims:${LLD_BIN}:${TC}/bin:${PATH}"
 
 if [ "$OVERLAY_STRING" = ON ]; then
@@ -154,20 +158,35 @@ if [ "${SWIFTCORE_BUILD_DISPATCH:-0}" = 1 ]; then
   )
 fi
 
-# Darwin-target shared links: wrap clang++ so ninja's Linux -shared rule
-# becomes -dynamiclib -fuse-ld=lld -nostdlib -lSystem (not gold, not host
-# ELF libc++). Compile / host-ELF links pass through.
+# Wrap clang *and* clang++. Swift stdlib/CMakeLists.txt overwrites
+# CMAKE_CXX_COMPILER to ${SWIFT_NATIVE_CLANG_TOOLS_PATH}/clang++ unless
+# SWIFT_BUILD_RUNTIME_WITH_HOST_COMPILER is ON — that is how the operator
+# core link became `/opt/swift/usr/bin/clang++` and handed ELF `-soname`
+# to ld64.lld. Point the native tools path at this shim dir and keep the
+# host-compiler flag ON so ninja CXX_SHARED_LIBRARY cannot skip the
+# per-link ld.lld / ld64.lld rewrite.
+SHIM_DIR=$W/shims
 SHIM_CXX=$W/shims/clang++
+SHIM_CC=$W/shims/clang
 SHIM_LIPO=$W/shims/lipo
-mkdir -p "$W/shims"
-{
-  printf '#!/bin/bash\n'
-  printf 'export SWIFTCORE_REAL_CLANGXX=%q\n' "${TC}/bin/clang++"
-  printf 'export LLD_BIN=%q\n' "${LLD_BIN}"
-  printf 'export TC=%q\n' "${TC}"
-  printf 'exec python3 %q "$@"\n' "$SCRIPT_DIR/clangxx_darwin_link.py"
-} > "$SHIM_CXX"
-chmod +x "$SHIM_CXX"
+mkdir -p "$SHIM_DIR"
+write_clang_shim() {
+  local dest=$1 driver=$2
+  {
+    printf '#!/bin/bash\n'
+    printf 'export SWIFTCORE_CLANG_DRIVER=%q\n' "$driver"
+    printf 'export SWIFTCORE_REAL_CLANGXX=%q\n' "${TC}/bin/clang++"
+    printf 'export SWIFTCORE_REAL_CLANG=%q\n' "${TC}/bin/clang"
+    printf 'export LLD_BIN=%q\n' "${LLD_BIN}"
+    printf 'export LD_LLD=%q\n' "${LD_LLD:-}"
+    printf 'export LD64_LLD=%q\n' "${LD64_LLD:-}"
+    printf 'export TC=%q\n' "${TC}"
+    printf 'exec python3 %q "$@"\n' "$SCRIPT_DIR/clangxx_darwin_link.py"
+  } > "$dest"
+  chmod +x "$dest"
+}
+write_clang_shim "$SHIM_CXX" clang++
+write_clang_shim "$SHIM_CC" clang
 # Empty SWIFT_LIPO makes ninja run `cmake -E env -create` (Ubuntu cmake
 # rejects that). Single-arch copy stands in for Apple lipo.
 {
@@ -189,7 +208,7 @@ fi
 CMAKE_ARGS=(
   -G Ninja "$SRC"
   -DCMAKE_BUILD_TYPE=Release
-  -DCMAKE_C_COMPILER="${TC}/bin/clang"
+  -DCMAKE_C_COMPILER="${SHIM_CC}"
   -DCMAKE_CXX_COMPILER="${SHIM_CXX}"
   -DSWIFT_LIPO="${SHIM_LIPO}"
   -DSWIFT_USE_LINKER=lld
@@ -206,8 +225,9 @@ CMAKE_ARGS=(
   -DSWIFT_INCLUDE_DOCS=OFF
   -DSWIFT_ENABLE_SWIFT_IN_SWIFT=OFF
   -DBOOTSTRAPPING_MODE=OFF
+  -DSWIFT_BUILD_RUNTIME_WITH_HOST_COMPILER=ON
   -DSWIFT_NATIVE_SWIFT_TOOLS_PATH="${TC}/bin"
-  -DSWIFT_NATIVE_CLANG_TOOLS_PATH="${TC}/bin"
+  -DSWIFT_NATIVE_CLANG_TOOLS_PATH="${SHIM_DIR}"
   "${SYNTAX_FLAG[@]}"
   -DLLVM_DIR=/usr/lib/llvm-18/lib/cmake/llvm
   -DClang_DIR=/usr/lib/llvm-18/lib/cmake/clang
@@ -260,7 +280,10 @@ if [ "$PRINT_FLAGS" = 1 ]; then
   printf 'LLD_BIN=%s\n' "${LLD_BIN:-}"
   printf 'LD_LLD=%s\n' "${LD_LLD:-}"
   printf 'LD64_LLD=%s\n' "${LD64_LLD:-}"
+  printf 'CMAKE_C_COMPILER=%s\n' "${SHIM_CC}"
   printf 'CMAKE_CXX_COMPILER=%s\n' "${SHIM_CXX}"
+  printf 'SWIFT_NATIVE_CLANG_TOOLS_PATH=%s\n' "${SHIM_DIR}"
+  printf 'SWIFT_BUILD_RUNTIME_WITH_HOST_COMPILER=ON\n'
   printf 'SWIFT_LIPO=%s\n' "${SHIM_LIPO}"
   printf 'SWIFT_ENABLE_EXPERIMENTAL_OBSERVATION=%s\n' "${OVERLAY_OBS}"
   printf 'cmake'

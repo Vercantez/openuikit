@@ -1,6 +1,7 @@
 #!/bin/bash
-# Darwin-target -shared from a Linux CMake rule must be rewritten to
-# -dynamiclib -fuse-ld=lld -nostdlib -lSystem; gold / host ELF libc++ dropped.
+# Per-link linker: ELF -soname stays for ld.lld; Darwin -shared is rewritten
+# for ld64.lld. Decision is the target triple / output .so vs .dylib, not a
+# global PATH or -B that contains both linkers.
 set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 py=$SCRIPT_DIR/clangxx_darwin_link.py
@@ -8,8 +9,25 @@ fail=0
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 
+export LLD_BIN=${LLD_BIN:-/usr/lib/llvm-18/bin}
+export LD_LLD=${LD_LLD:-$LLD_BIN/ld.lld}
+export LD64_LLD=${LD64_LLD:-$LLD_BIN/ld64.lld}
+
 rewrite() {
-  SWIFTCORE_CLANGXX_PRINT_REWRITTEN=1 python3 "$py" "$@"
+  SWIFTCORE_CLANGXX_PRINT_REWRITTEN=1 python3 "$py" "$@" 2>"$tmp/link.err"
+}
+
+assert_linker() {
+  local want=$1
+  if grep -q "^clangxx_darwin_link: linker=${want} " "$tmp/link.err" \
+     || grep -q "^clangxx_darwin_link: linker=${want}$" "$tmp/link.err"; then
+    echo "  OK  printed linker=${want}"
+    grep '^clangxx_darwin_link: linker=' "$tmp/link.err"
+  else
+    echo "  FAIL expected linker=${want} in:"
+    cat "$tmp/link.err"
+    fail=1
+  fi
 }
 
 echo "=== Darwin -shared is rewritten ==="
@@ -23,11 +41,12 @@ printf '%s\n' "$got" | grep -F -- '-dynamiclib' >/dev/null \
 printf '%s\n' "$got" | grep -F -- '-shared' >/dev/null \
   && { echo "  FAIL still has -shared"; fail=1; } \
   || echo "  OK  no -shared"
-printf '%s\n' "$got" | grep -F -- '-fuse-ld=lld' >/dev/null \
-  && echo "  OK  -fuse-ld=lld" || { echo "  FAIL missing lld"; fail=1; }
+printf '%s\n' "$got" | grep -F -- "-fuse-ld=${LD64_LLD}" >/dev/null \
+  && echo "  OK  -fuse-ld=ld64.lld" || { echo "  FAIL missing ld64.lld fuse-ld"; fail=1; }
 printf '%s\n' "$got" | grep -F -- '-fuse-ld=gold' >/dev/null \
   && { echo "  FAIL gold survived"; fail=1; } \
   || echo "  OK  gold dropped"
+assert_linker ld64.lld
 printf '%s\n' "$got" | grep -F -- '-Wl,-soname' >/dev/null \
   && { echo "  FAIL -soname survived"; fail=1; } \
   || echo "  OK  no -soname"
@@ -60,13 +79,32 @@ printf '%s\n' "$got" | grep -F -- '-c' >/dev/null \
   && echo "  OK  still -c" || { echo "  FAIL lost -c"; fail=1; }
 
 echo
-echo "=== host ELF -shared is not rewritten ==="
-got=$(rewrite -target x86_64-unknown-linux-gnu -shared -o libfoo.so foo.o)
+echo "=== host ELF -shared with -soname is left for ld.lld ==="
+got=$(rewrite -target x86_64-unknown-linux-gnu -shared \
+  -Wl,-soname,libswiftCore.so -o libswiftCore.so foo.o)
+printf '%s\n' "$got"
 printf '%s\n' "$got" | grep -F -- '-shared' >/dev/null \
   && echo "  OK  host -shared kept" || { echo "  FAIL host -shared dropped"; fail=1; }
+printf '%s\n' "$got" | grep -F -- '-Wl,-soname,libswiftCore.so' >/dev/null \
+  && echo "  OK  ELF -soname kept" || { echo "  FAIL ELF -soname rewritten"; fail=1; }
 printf '%s\n' "$got" | grep -F -- '-dynamiclib' >/dev/null \
   && { echo "  FAIL host link grew -dynamiclib"; fail=1; } \
   || echo "  OK  host not Darwin-rewritten"
+printf '%s\n' "$got" | grep -F -- "-fuse-ld=${LD_LLD}" >/dev/null \
+  && echo "  OK  -fuse-ld=ld.lld" || { echo "  FAIL missing ld.lld fuse-ld"; fail=1; }
+printf '%s\n' "$got" | grep -F -- 'ld64.lld' >/dev/null \
+  && { echo "  FAIL ELF link selected ld64.lld"; fail=1; } \
+  || echo "  OK  ELF link did not select ld64.lld"
+assert_linker ld.lld
+
+echo
+echo "=== linux triple wins over MacOSX.sdk on an ELF .so ==="
+got=$(rewrite -target x86_64-unknown-linux-gnu \
+  -isysroot /root/work/sdk/MacOSX.sdk -shared \
+  -Wl,-soname,libswiftCore.so -o libswiftCore.so foo.o)
+printf '%s\n' "$got" | grep -F -- '-Wl,-soname,libswiftCore.so' >/dev/null \
+  && echo "  OK  linux triple keeps -soname" || { echo "  FAIL SDK heuristic stole ELF link"; fail=1; }
+assert_linker ld.lld
 
 echo
 echo "=== overlay link keeps Darwin-named .so input ==="
@@ -130,7 +168,7 @@ printf '%s\n' "$got" | grep -F -- '-Wl,-install_name,/usr/lib/swift/libswiftDarw
   && echo "  OK  -Xlinker -soname -> Darwin install_name" \
   || { echo "  FAIL -Xlinker -soname"; fail=1; }
 
-got=$(rewrite -isysroot /root/work/sdk/MacOSX.sdk -shared \
+got=$(rewrite -target x86_64-apple-macosx13.0 -shared \
   --as-needed -Wl,-rpath-link,/usr/lib -Wl,-soname,libswiftCore.so \
   -o libswiftCore.so foo.o)
 printf '%s\n' "$got"
@@ -141,13 +179,31 @@ printf '%s\n' "$got" | grep -F -- '--as-needed' >/dev/null \
 printf '%s\n' "$got" | grep -F -- '-rpath-link' >/dev/null \
   && { echo "  FAIL -rpath-link survived"; fail=1; } \
   || echo "  OK  -rpath-link dropped"
-printf '%s\n' "$got" | grep -F -- '-dynamiclib' >/dev/null \
-  && echo "  OK  MacOSX.sdk -shared rewritten without -target" \
-  || { echo "  FAIL MacOSX.sdk path not treated as Darwin"; fail=1; }
+assert_linker ld64.lld
+
+echo
+echo "=== apple-triple core .so (Linux CMake ELF flags) is still Darwin/ld64 ==="
+got=$(rewrite -fPIC -fno-semantic-interposition \
+  -target x86_64-apple-macosx13.0 -shared -Wl,-soname,libswiftCore.so \
+  -o lib/swift/macosx/x86_64/libswiftCore.so foo.o)
+printf '%s\n' "$got"
+assert_no_soname "$got"
+printf '%s\n' "$got" | grep -F -- "-fuse-ld=${LD64_LLD}" >/dev/null \
+  && echo "  OK  apple-triple core uses ld64.lld" \
+  || { echo "  FAIL apple-triple core not ld64.lld"; fail=1; }
+assert_linker ld64.lld
+
+echo
+echo "=== .dylib output without -target is Darwin/ld64 ==="
+got=$(rewrite -shared -Wl,-soname,libswiftDarwin.dylib \
+  -o libswiftDarwin.dylib Darwin.o)
+printf '%s\n' "$got"
+assert_no_soname "$got"
+assert_linker ld64.lld
 
 echo
 if [ "$fail" -eq 0 ]; then
-  echo "PASS -- Darwin shared link rewrite (lld, not gold; no host ELF libc++)"
+  echo "PASS -- ELF -soname → ld.lld; Darwin -shared → ld64.lld; linker printed"
   exit 0
 fi
 echo "FAIL"
