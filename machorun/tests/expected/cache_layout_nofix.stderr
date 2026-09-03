@@ -1,0 +1,1 @@
+machorun: ./libcache_nofix.dylib: dyld-shared-cache image without fixup info; not loadable

@@ -1,7 +1,8 @@
 /* cache_layout_lib -- the dylib for cache_layout / cache_layout_packed /
- * cache_layout_sparse. Built Apple-aligned; scripts/pack_macho.py then
- * rewrites copies into dyld-shared-cache layout without changing these
- * bytes' meaning.
+ * cache_layout_sparse / cache_layout_nofix. Built Apple-aligned;
+ * scripts/pack_macho.py then rewrites copies into dyld-shared-cache
+ * layout, or strips fixup load commands, without changing these bytes'
+ * meaning.
  */
 #include <stdio.h>
 
